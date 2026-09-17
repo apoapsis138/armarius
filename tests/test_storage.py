@@ -26,9 +26,13 @@ def _sample_saga() -> Saga:
                 covenant_id="cov_1",
                 characteristics=Characteristics(intelligence=3),
                 arts={"creo": 10, "ignem": 5},
-                abilities=[Ability(name="Magic Theory", score=5, specialty="Lab Totals")],
+                abilities=[
+                    Ability(name="Magic Theory", score=5, specialty="Lab Totals")
+                ],
                 virtues_flaws=[
-                    VirtueFlawInstance(vf_id="vf_affinity_with_art", params={"art": "creo"})
+                    VirtueFlawInstance(
+                        vf_id="vf_affinity_with_art", params={"art": "creo"}
+                    )
                 ],
                 assigned_lab_id="lab_1",
             )
@@ -39,7 +43,13 @@ def _sample_saga() -> Saga:
             Book(id="book_1", type="Summa", subject="Magic Theory", quality=6, level=8)
         ],
         spells=[
-            Spell(id="spell_1", name="Test Spell", technique="Creo", form="Ignem", level=10)
+            Spell(
+                id="spell_1",
+                name="Test Spell",
+                technique="Creo",
+                form="Ignem",
+                level=10,
+            )
         ],
     )
 

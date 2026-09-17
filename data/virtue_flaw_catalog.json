@@ -1,7 +1,7 @@
 [
   {
     "id": "vf_affinity_with_art",
-    "name": "Affinity with (Art)",
+    "name": "Affinity with {art}",
     "type": "Virtue",
     "category": "Hermetic",
     "cost": 1,
@@ -13,7 +13,7 @@
   },
   {
     "id": "vf_puissant_art",
-    "name": "Puissant (Art)",
+    "name": "Puissant {art}",
     "type": "Virtue",
     "category": "Hermetic",
     "cost": 1,

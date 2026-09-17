@@ -3,9 +3,23 @@ from textual.widgets import Input, ListView
 
 from ars_magica_manager import storage
 from ars_magica_manager.app import ArsMagicaManagerApp
-from ars_magica_manager.models import Character, Covenant, Laboratory, Library, Saga
+from ars_magica_manager.models import (
+    Ability,
+    Book,
+    Character,
+    Characteristics,
+    Covenant,
+    Laboratory,
+    Library,
+    Saga,
+    Spell,
+    VirtueFlawInstance,
+)
 from ars_magica_manager.screens import (
+    CharacterDetailScreen,
     CovenantDetailScreen,
+    LaboratoryDetailScreen,
+    LibraryDetailScreen,
     SagaCreateScreen,
     SagaDetailScreen,
     SagaPickerScreen,
@@ -97,8 +111,8 @@ async def test_saga_detail_shows_empty_state_with_no_covenants():
         assert covenant_list.index is None
 
 
-async def test_covenant_browsing_shows_counts_and_detail():
-    saga = Saga(
+def _sample_saga_with_covenant() -> Saga:
+    return Saga(
         id="test_saga",
         name="Test Saga",
         storyguide="Alex",
@@ -113,12 +127,68 @@ async def test_covenant_browsing_shows_counts_and_detail():
             )
         ],
         characters=[
-            Character(id="char1", name="Leandro", type="magus", covenant_id="cov1")
+            Character(
+                id="char1",
+                name="Leandro",
+                type="magus",
+                covenant_id="cov1",
+                characteristics=Characteristics(intelligence=3, stamina=1),
+                arts={"creo": 10, "ignem": 5},
+                abilities=[
+                    Ability(name="Magic Theory", score=5, specialty="Lab Totals")
+                ],
+                virtues_flaws=[
+                    VirtueFlawInstance(
+                        vf_id="vf_affinity_with_art", params={"art": "creo"}
+                    )
+                ],
+                spells_known=["spell1"],
+                assigned_lab_id="lab1",
+            )
         ],
-        laboratories=[Laboratory(id="lab1", covenant_id="cov1")],
+        laboratories=[
+            Laboratory(
+                id="lab1",
+                covenant_id="cov1",
+                owner_id="char1",
+                size=1,
+                aura=3,
+                features=["Well-Stocked"],
+                virtues_flaws=[VirtueFlawInstance(vf_id="vf_superior_lab_equipment")],
+            )
+        ],
         libraries=[Library(id="lib1", covenant_id="cov1", books=["book1", "book2"])],
+        books=[
+            Book(
+                id="book1",
+                type="Summa",
+                subject="Magic Theory",
+                quality=6,
+                level=8,
+                author="Bonisagus",
+            ),
+            Book(
+                id="book2",
+                type="Lab Text",
+                subject="Ignem",
+                quality=9,
+                spell_id="spell1",
+            ),
+        ],
+        spells=[
+            Spell(
+                id="spell1",
+                name="Ball of Abysmal Flame",
+                technique="Creo",
+                form="Ignem",
+                level=20,
+            )
+        ],
     )
-    storage.save_saga(saga)
+
+
+async def test_covenant_browsing_shows_summary_and_lists():
+    storage.save_saga(_sample_saga_with_covenant())
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
@@ -138,7 +208,73 @@ async def test_covenant_browsing_shows_counts_and_detail():
         assert "Covenant: Test Covenant" in summary
         assert "Notes: A nice place" in summary
         assert "Ignem: 5" in summary
-        assert "Library: 2 book(s)" in summary
-        assert "Characters (1):" in summary
-        assert "- Leandro (magus)" in summary
-        assert "Laboratories (1):" in summary
+
+        assert len(app.screen.query_one("#character-list", ListView).children) == 1
+        assert len(app.screen.query_one("#laboratory-list", ListView).children) == 1
+        assert len(app.screen.query_one("#library-list", ListView).children) == 1
+
+
+async def test_character_detail_shows_sheet_fields():
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await pilot.press("enter")  # picker -> saga detail
+        await pilot.pause()
+        await pilot.press("enter")  # saga detail -> covenant detail
+        await pilot.pause()
+        await pilot.press(
+            "enter"
+        )  # covenant detail -> character detail (default focus)
+        await pilot.pause()
+
+        assert isinstance(app.screen, CharacterDetailScreen)
+        summary = app.screen._summary()
+        assert "Character: Leandro" in summary
+        assert "Covenant: Test Covenant" in summary
+        assert "Assigned Laboratory: yes" in summary
+        assert "Int 3" in summary
+        assert "Creo: 10" in summary
+        assert "Magic Theory 5 (Lab Totals)" in summary
+        assert "Affinity with Creo" in summary
+        assert "Ball of Abysmal Flame (Creo Ignem 20)" in summary
+
+
+async def test_laboratory_detail_shows_owner_and_virtues():
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await pilot.press("enter")
+        await pilot.pause()
+        await pilot.press("enter")
+        await pilot.pause()
+
+        await pilot.click("#laboratory-lab1")
+        await pilot.pause()
+
+        assert isinstance(app.screen, LaboratoryDetailScreen)
+        summary = app.screen._summary()
+        assert "Owner: Leandro" in summary
+        assert "Aura: 3" in summary
+        assert "Well-Stocked" in summary
+        assert "Superior Lab Equipment" in summary
+
+
+async def test_library_detail_shows_books_and_lab_text_spell():
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await pilot.press("enter")
+        await pilot.pause()
+        await pilot.press("enter")
+        await pilot.pause()
+
+        await pilot.click("#library-lib1")
+        await pilot.pause()
+
+        assert isinstance(app.screen, LibraryDetailScreen)
+        summary = app.screen._summary()
+        assert "[Summa] Magic Theory L8 Q6 by Bonisagus" in summary
+        assert "[Lab Text] Ignem Q9 -- Ball of Abysmal Flame" in summary

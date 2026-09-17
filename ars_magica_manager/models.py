@@ -168,9 +168,7 @@ class Character:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Character:
         d = dict(data)
-        d["characteristics"] = Characteristics.from_dict(
-            d.get("characteristics") or {}
-        )
+        d["characteristics"] = Characteristics.from_dict(d.get("characteristics") or {})
         d["abilities"] = [Ability.from_dict(a) for a in d.get("abilities", [])]
         d["virtues_flaws"] = [
             VirtueFlawInstance(**vf) for vf in d.get("virtues_flaws", [])

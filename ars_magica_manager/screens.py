@@ -20,11 +20,14 @@ from textual.widgets import (
     Static,
 )
 
-from . import storage
-from .models import SEASONS, Covenant, Saga
+from . import catalog, storage
+from .models import SEASONS, Character, Covenant, Laboratory, Library, Saga
 
 _SAGA_ITEM_ID_PREFIX = "saga-"
 _COVENANT_ITEM_ID_PREFIX = "covenant-"
+_CHARACTER_ITEM_ID_PREFIX = "character-"
+_LABORATORY_ITEM_ID_PREFIX = "laboratory-"
+_LIBRARY_ITEM_ID_PREFIX = "library-"
 
 
 class SagaCreateScreen(ModalScreen[str | None]):
@@ -193,9 +196,7 @@ class SagaDetailScreen(Screen[None]):
                 f"{lab_count} lab(s)"
             )
             list_view.append(
-                ListItem(
-                    Label(summary), id=f"{_COVENANT_ITEM_ID_PREFIX}{covenant.id}"
-                )
+                ListItem(Label(summary), id=f"{_COVENANT_ITEM_ID_PREFIX}{covenant.id}")
             )
         list_view.index = 0
 
@@ -209,7 +210,7 @@ class SagaDetailScreen(Screen[None]):
 
 
 class CovenantDetailScreen(Screen[None]):
-    """Read-only covenant summary: vis stock, library, residents."""
+    """Covenant summary (vis stock, notes) plus browsable Character/Lab/Library lists."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
         ("escape", "app.pop_screen", "Back"),
@@ -224,17 +225,22 @@ class CovenantDetailScreen(Screen[None]):
     def compose(self) -> ComposeResult:
         yield Header()
         yield Static(self._summary(), id="covenant-detail")
+        yield Static("Characters", id="character-list-heading")
+        yield ListView(id="character-list")
+        yield Static("Laboratories", id="laboratory-list-heading")
+        yield ListView(id="laboratory-list")
+        yield Static("Library", id="library-list-heading")
+        yield ListView(id="library-list")
         yield Footer()
 
-    def _summary(self) -> str:
-        saga, covenant = self.saga, self.covenant
-        characters = [c for c in saga.characters if c.covenant_id == covenant.id]
-        labs = [lab for lab in saga.laboratories if lab.covenant_id == covenant.id]
-        library = next(
-            (lib for lib in saga.libraries if lib.id == covenant.library_id), None
-        )
+    def on_mount(self) -> None:
+        self._populate_character_list()
+        self._populate_laboratory_list()
+        self._populate_library_list()
 
-        lines = [f"Covenant: {covenant.name}", f"Saga: {saga.name}"]
+    def _summary(self) -> str:
+        covenant = self.covenant
+        lines = [f"Covenant: {covenant.name}", f"Saga: {self.saga.name}"]
         if covenant.notes:
             lines.append(f"Notes: {covenant.notes}")
 
@@ -246,29 +252,297 @@ class CovenantDetailScreen(Screen[None]):
             ]
         else:
             lines.append("Vis stock: (none recorded)")
+        return "\n".join(lines)
 
-        lines.append("")
-        lines.append(f"Library: {len(library.books)} book(s)" if library else "Library: (none)")
+    def _populate_character_list(self) -> None:
+        list_view = self.query_one("#character-list", ListView)
+        list_view.clear()
 
-        lines.append("")
-        lines.append(f"Characters ({len(characters)}):")
-        if characters:
-            lines += [f"  - {c.name} ({c.type})" for c in characters]
-        else:
-            lines.append("  (none)")
+        characters = [
+            c for c in self.saga.characters if c.covenant_id == self.covenant.id
+        ]
+        if not characters:
+            list_view.append(ListItem(Label("(none)")))
+            return
 
-        lines.append("")
-        lines.append(f"Laboratories ({len(labs)}):")
-        if labs:
-            lines += [f"  - lab {lab.id}" for lab in labs]
-        else:
-            lines.append("  (none)")
+        for character in characters:
+            list_view.append(
+                ListItem(
+                    Label(f"{character.name} ({character.type})"),
+                    id=f"{_CHARACTER_ITEM_ID_PREFIX}{character.id}",
+                )
+            )
+        list_view.index = 0
 
+    def _populate_laboratory_list(self) -> None:
+        list_view = self.query_one("#laboratory-list", ListView)
+        list_view.clear()
+
+        labs = [
+            lab for lab in self.saga.laboratories if lab.covenant_id == self.covenant.id
+        ]
+        if not labs:
+            list_view.append(ListItem(Label("(none)")))
+            return
+
+        for lab in labs:
+            owner = next(
+                (c for c in self.saga.characters if c.id == lab.owner_id), None
+            )
+            label = f"Lab (owner: {owner.name if owner else 'unassigned'})"
+            list_view.append(
+                ListItem(Label(label), id=f"{_LABORATORY_ITEM_ID_PREFIX}{lab.id}")
+            )
+        list_view.index = 0
+
+    def _populate_library_list(self) -> None:
+        list_view = self.query_one("#library-list", ListView)
+        list_view.clear()
+
+        library = next(
+            (lib for lib in self.saga.libraries if lib.id == self.covenant.library_id),
+            None,
+        )
+        if library is None:
+            list_view.append(ListItem(Label("(none)")))
+            return
+
+        list_view.append(
+            ListItem(
+                Label(f"Library ({len(library.books)} book(s))"),
+                id=f"{_LIBRARY_ITEM_ID_PREFIX}{library.id}",
+            )
+        )
+        list_view.index = 0
+
+    def on_list_view_selected(self, event: ListView.Selected) -> None:
+        item_id = event.item.id
+        if item_id is None:
+            return
+
+        if event.list_view.id == "character-list" and item_id.startswith(
+            _CHARACTER_ITEM_ID_PREFIX
+        ):
+            character_id = item_id.removeprefix(_CHARACTER_ITEM_ID_PREFIX)
+            character = next(c for c in self.saga.characters if c.id == character_id)
+            self.app.push_screen(CharacterDetailScreen(self.saga, character))
+        elif event.list_view.id == "laboratory-list" and item_id.startswith(
+            _LABORATORY_ITEM_ID_PREFIX
+        ):
+            lab_id = item_id.removeprefix(_LABORATORY_ITEM_ID_PREFIX)
+            lab = next(lab for lab in self.saga.laboratories if lab.id == lab_id)
+            self.app.push_screen(LaboratoryDetailScreen(self.saga, lab))
+        elif event.list_view.id == "library-list" and item_id.startswith(
+            _LIBRARY_ITEM_ID_PREFIX
+        ):
+            library_id = item_id.removeprefix(_LIBRARY_ITEM_ID_PREFIX)
+            library = next(lib for lib in self.saga.libraries if lib.id == library_id)
+            self.app.push_screen(LibraryDetailScreen(self.saga, library))
+
+
+class CharacterDetailScreen(Screen[None]):
+    """Read-only character sheet summary."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [
+        ("escape", "app.pop_screen", "Back"),
+        ("q", "quit", "Quit"),
+    ]
+
+    def __init__(self, saga: Saga, character: Character) -> None:
+        super().__init__()
+        self.saga = saga
+        self.character = character
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield Static(self._summary(), id="character-detail")
+        yield Footer()
+
+    def _summary(self) -> str:
+        saga, character = self.saga, self.character
+        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
+
+        covenant = next(
+            (c for c in saga.covenants if c.id == character.covenant_id), None
+        )
+
+        lines = [
+            f"Character: {character.name}",
+            f"Type: {character.type}",
+            f"Covenant: {covenant.name if covenant else '(none)'}",
+        ]
+
+        if character.type == "magus":
+            lab = next(
+                (
+                    lab
+                    for lab in saga.laboratories
+                    if lab.id == character.assigned_lab_id
+                ),
+                None,
+            )
+            lines.append(f"Assigned Laboratory: {'yes' if lab else '(none)'}")
+
+        c = character.characteristics
         lines += [
             "",
-            "(Browsing into individual characters/labs/library books is coming",
-            " in a future Phase 1 slice.)",
+            "Characteristics:",
+            f"  Int {c.intelligence}, Per {c.perception}, Str {c.strength}, "
+            f"Sta {c.stamina}",
+            f"  Pre {c.presence}, Com {c.communication}, Dex {c.dexterity}, "
+            f"Qik {c.quickness}",
         ]
+
+        if character.type == "magus":
+            lines.append("")
+            if character.arts:
+                lines.append("Arts:")
+                lines += [
+                    f"  {art.title()}: {score}" for art, score in character.arts.items()
+                ]
+            else:
+                lines.append("Arts: (none recorded)")
+
+        lines.append("")
+        if character.abilities:
+            lines.append("Abilities:")
+            for ability in character.abilities:
+                specialty = f" ({ability.specialty})" if ability.specialty else ""
+                lines.append(f"  {ability.name} {ability.score}{specialty}")
+        else:
+            lines.append("Abilities: (none recorded)")
+
+        lines.append("")
+        if character.virtues_flaws:
+            lines.append("Virtues & Flaws:")
+            lines += [
+                f"  {catalog.describe_virtue_flaw(vf, vf_catalog)}"
+                for vf in character.virtues_flaws
+            ]
+        else:
+            lines.append("Virtues & Flaws: (none recorded)")
+
+        if character.type == "magus":
+            lines.append("")
+            if character.spells_known:
+                spell_lookup = {s.id: s for s in saga.spells}
+                lines.append("Spells known:")
+                for spell_id in character.spells_known:
+                    spell = spell_lookup.get(spell_id)
+                    if spell is None:
+                        lines.append(f"  {spell_id} (unknown spell)")
+                    else:
+                        lines.append(
+                            f"  {spell.name} ({spell.technique} {spell.form} "
+                            f"{spell.level})"
+                        )
+            else:
+                lines.append("Spells known: (none recorded)")
+
+        return "\n".join(lines)
+
+
+class LaboratoryDetailScreen(Screen[None]):
+    """Read-only laboratory summary."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [
+        ("escape", "app.pop_screen", "Back"),
+        ("q", "quit", "Quit"),
+    ]
+
+    def __init__(self, saga: Saga, laboratory: Laboratory) -> None:
+        super().__init__()
+        self.saga = saga
+        self.laboratory = laboratory
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield Static(self._summary(), id="laboratory-detail")
+        yield Footer()
+
+    def _summary(self) -> str:
+        saga, lab = self.saga, self.laboratory
+        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
+
+        covenant = next((c for c in saga.covenants if c.id == lab.covenant_id), None)
+        owner = next((c for c in saga.characters if c.id == lab.owner_id), None)
+
+        lines = [
+            f"Laboratory (id: {lab.id})",
+            f"Covenant: {covenant.name if covenant else '(none)'}",
+            f"Owner: {owner.name if owner else '(unassigned)'}",
+            f"Size: {lab.size}",
+            f"Aura: {lab.aura}",
+        ]
+
+        lines.append("")
+        if lab.features:
+            lines.append("Features:")
+            lines += [f"  - {feature}" for feature in lab.features]
+        else:
+            lines.append("Features: (none recorded)")
+
+        lines.append("")
+        if lab.virtues_flaws:
+            lines.append("Virtues & Flaws:")
+            lines += [
+                f"  {catalog.describe_virtue_flaw(vf, vf_catalog)}"
+                for vf in lab.virtues_flaws
+            ]
+        else:
+            lines.append("Virtues & Flaws: (none recorded)")
+
+        return "\n".join(lines)
+
+
+class LibraryDetailScreen(Screen[None]):
+    """Read-only library summary: every book it holds."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [
+        ("escape", "app.pop_screen", "Back"),
+        ("q", "quit", "Quit"),
+    ]
+
+    def __init__(self, saga: Saga, library: Library) -> None:
+        super().__init__()
+        self.saga = saga
+        self.library = library
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield Static(self._summary(), id="library-detail")
+        yield Footer()
+
+    def _summary(self) -> str:
+        saga, library = self.saga, self.library
+        covenant = next(
+            (c for c in saga.covenants if c.id == library.covenant_id), None
+        )
+        book_lookup = {b.id: b for b in saga.books}
+        spell_lookup = {s.id: s for s in saga.spells}
+
+        lines = [f"Library (covenant: {covenant.name if covenant else '(none)'})", ""]
+
+        if not library.books:
+            lines.append("Books: (none recorded)")
+            return "\n".join(lines)
+
+        lines.append(f"Books ({len(library.books)}):")
+        for book_id in library.books:
+            book = book_lookup.get(book_id)
+            if book is None:
+                lines.append(f"  - {book_id} (unknown book)")
+                continue
+
+            level = f" L{book.level}" if book.level is not None else ""
+            line = f"  - [{book.type}] {book.subject}{level} Q{book.quality}"
+            if book.author:
+                line += f" by {book.author}"
+            if book.type == "Lab Text" and book.spell_id:
+                spell = spell_lookup.get(book.spell_id)
+                line += f" -- {spell.name}" if spell else " -- (unknown spell)"
+            lines.append(line)
+
         return "\n".join(lines)
 
 
