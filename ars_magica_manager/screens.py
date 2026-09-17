@@ -21,13 +21,23 @@ from textual.widgets import (
 )
 
 from . import catalog, storage
-from .models import SEASONS, Character, Covenant, Laboratory, Library, Saga
+from .models import (
+    SEASONS,
+    Character,
+    Covenant,
+    Laboratory,
+    Library,
+    Saga,
+    VirtueFlawDef,
+    VirtueFlawInstance,
+)
 
 _SAGA_ITEM_ID_PREFIX = "saga-"
 _COVENANT_ITEM_ID_PREFIX = "covenant-"
 _CHARACTER_ITEM_ID_PREFIX = "character-"
 _LABORATORY_ITEM_ID_PREFIX = "laboratory-"
 _LIBRARY_ITEM_ID_PREFIX = "library-"
+_VIRTUE_FLAW_ITEM_ID_PREFIX = "vf-"
 
 
 class SagaCreateScreen(ModalScreen[str | None]):
@@ -546,10 +556,156 @@ class CharacterCreateScreen(ModalScreen[str | None]):
         self.dismiss(character.id)
 
 
+class VirtueFlawParamScreen(ModalScreen[dict[str, str] | None]):
+    """Prompts for a catalog entry's parameters (e.g. which Art for Affinity).
+
+    Dismisses with a dict of param name -> value, or None if cancelled.
+    """
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    VirtueFlawParamScreen {
+        align: center middle;
+    }
+
+    #param-dialog {
+        width: 60;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    #param-error {
+        color: $error;
+        height: auto;
+        margin-top: 1;
+    }
+    """
+
+    def __init__(self, entry: VirtueFlawDef) -> None:
+        super().__init__()
+        self.entry = entry
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="param-dialog"):
+            yield Label(self.entry.name, id="param-title")
+            for param in self.entry.parameters:
+                yield Label(param.title())
+                yield Input(placeholder="e.g. Creo", id=f"input-param-{param}")
+            yield Static("", id="param-error")
+            with Horizontal():
+                yield Button("Confirm", id="btn-confirm", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-confirm":
+            self._try_confirm()
+
+    def _try_confirm(self) -> None:
+        error = self.query_one("#param-error", Static)
+        params: dict[str, str] = {}
+        for param in self.entry.parameters:
+            value = self.query_one(f"#input-param-{param}", Input).value.strip()
+            if not value:
+                error.update(f"{param.title()} is required.")
+                return
+            params[param] = value.lower()
+        self.dismiss(params)
+
+
+class VirtueFlawPickerScreen(ModalScreen[VirtueFlawInstance | None]):
+    """Pick a Virtue/Flaw from the catalog, prompting for parameters if needed.
+
+    Reused for both Character and Laboratory Virtues/Flaws -- both attach
+    the same VirtueFlawInstance shape. Dismisses with the new instance, or
+    None if cancelled.
+    """
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    VirtueFlawPickerScreen {
+        align: center middle;
+    }
+
+    #picker-dialog {
+        width: 76;
+        height: auto;
+        max-height: 24;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+    """
+
+    def __init__(self, exclude_ids: set[str] | None = None) -> None:
+        super().__init__()
+        self._exclude_ids = exclude_ids or set()
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="picker-dialog"):
+            yield Label("Add a Virtue or Flaw", id="picker-title")
+            yield ListView(id="vf-picker-list")
+            yield Button("Cancel", id="btn-cancel")
+
+    def on_mount(self) -> None:
+        list_view = self.query_one("#vf-picker-list", ListView)
+        entries = [
+            entry
+            for entry in catalog.load_virtue_flaw_catalog()
+            if entry.id not in self._exclude_ids
+        ]
+        if not entries:
+            list_view.append(ListItem(Label("(no more Virtues/Flaws available)")))
+            return
+
+        for entry in entries:
+            needs = (
+                f"  (needs: {', '.join(entry.parameters)})" if entry.parameters else ""
+            )
+            label = f"{entry.name}  [{entry.type}, cost {entry.cost}]{needs}"
+            list_view.append(
+                ListItem(Label(label), id=f"{_VIRTUE_FLAW_ITEM_ID_PREFIX}{entry.id}")
+            )
+        list_view.index = 0
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+
+    def on_list_view_selected(self, event: ListView.Selected) -> None:
+        item_id = event.item.id
+        if item_id is None or not item_id.startswith(_VIRTUE_FLAW_ITEM_ID_PREFIX):
+            return
+        vf_id = item_id.removeprefix(_VIRTUE_FLAW_ITEM_ID_PREFIX)
+        entry = catalog.load_virtue_flaw_catalog_by_id()[vf_id]
+
+        if not entry.parameters:
+            self.dismiss(VirtueFlawInstance(vf_id=entry.id))
+            return
+
+        def handle_params(params: dict[str, str] | None) -> None:
+            if params is not None:
+                self.dismiss(VirtueFlawInstance(vf_id=entry.id, params=params))
+
+        self.app.push_screen(VirtueFlawParamScreen(entry), handle_params)
+
+
 class CharacterDetailScreen(Screen[None]):
-    """Read-only character sheet summary."""
+    """Character sheet summary; can add Virtues/Flaws from the catalog."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
+        ("a", "add_virtue_flaw", "Add Virtue/Flaw"),
         ("escape", "app.pop_screen", "Back"),
         ("q", "quit", "Quit"),
     ]
@@ -563,6 +719,20 @@ class CharacterDetailScreen(Screen[None]):
         yield Header()
         yield Static(self._summary(), id="character-detail")
         yield Footer()
+
+    def action_add_virtue_flaw(self) -> None:
+        existing_ids = {vf.vf_id for vf in self.character.virtues_flaws}
+
+        def handle_result(instance: VirtueFlawInstance | None) -> None:
+            if instance is not None:
+                self.character.virtues_flaws.append(instance)
+                storage.save_saga(self.saga)
+                self._refresh_summary()
+
+        self.app.push_screen(VirtueFlawPickerScreen(existing_ids), handle_result)
+
+    def _refresh_summary(self) -> None:
+        self.query_one("#character-detail", Static).update(self._summary())
 
     def _summary(self) -> str:
         saga, character = self.saga, self.character
@@ -649,9 +819,10 @@ class CharacterDetailScreen(Screen[None]):
 
 
 class LaboratoryDetailScreen(Screen[None]):
-    """Read-only laboratory summary."""
+    """Laboratory summary; can add Virtues/Flaws from the catalog."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
+        ("a", "add_virtue_flaw", "Add Virtue/Flaw"),
         ("escape", "app.pop_screen", "Back"),
         ("q", "quit", "Quit"),
     ]
@@ -665,6 +836,20 @@ class LaboratoryDetailScreen(Screen[None]):
         yield Header()
         yield Static(self._summary(), id="laboratory-detail")
         yield Footer()
+
+    def action_add_virtue_flaw(self) -> None:
+        existing_ids = {vf.vf_id for vf in self.laboratory.virtues_flaws}
+
+        def handle_result(instance: VirtueFlawInstance | None) -> None:
+            if instance is not None:
+                self.laboratory.virtues_flaws.append(instance)
+                storage.save_saga(self.saga)
+                self._refresh_summary()
+
+        self.app.push_screen(VirtueFlawPickerScreen(existing_ids), handle_result)
+
+    def _refresh_summary(self) -> None:
+        self.query_one("#laboratory-detail", Static).update(self._summary())
 
     def _summary(self) -> str:
         saga, lab = self.saga, self.laboratory

@@ -25,6 +25,8 @@ from ars_magica_manager.screens import (
     SagaCreateScreen,
     SagaDetailScreen,
     SagaPickerScreen,
+    VirtueFlawParamScreen,
+    VirtueFlawPickerScreen,
 )
 
 
@@ -423,3 +425,152 @@ async def test_library_detail_shows_books_and_lab_text_spell():
         summary = app.screen._summary()
         assert "[Summa] Magic Theory L8 Q6 by Bonisagus" in summary
         assert "[Lab Text] Ignem Q9 -- Ball of Abysmal Flame" in summary
+
+
+def _saga_with_bare_character() -> Saga:
+    return Saga(
+        id="test_saga",
+        name="Test Saga",
+        storyguide="Alex",
+        covenants=[Covenant(id="cov1", saga_id="test_saga", name="Test Covenant")],
+        characters=[
+            Character(id="char1", name="Leandro", type="magus", covenant_id="cov1")
+        ],
+    )
+
+
+async def _open_character_detail(pilot) -> None:
+    await pilot.press("enter")  # picker -> saga detail
+    await pilot.pause()
+    await pilot.press("enter")  # saga detail -> covenant detail
+    await pilot.pause()
+    await pilot.press("enter")  # covenant detail -> character detail
+    await pilot.pause()
+
+
+async def test_add_virtue_flaw_without_parameters_to_character():
+    storage.save_saga(_saga_with_bare_character())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_character_detail(pilot)
+        assert isinstance(app.screen, CharacterDetailScreen)
+
+        await pilot.press("a")
+        await pilot.pause()
+        assert isinstance(app.screen, VirtueFlawPickerScreen)
+
+        await pilot.click("#vf-vf_superior_lab_equipment")
+        await pilot.pause()
+
+        assert isinstance(app.screen, CharacterDetailScreen)
+        assert "Superior Lab Equipment" in app.screen._summary()
+
+    saga = storage.load_saga("test_saga")
+    character = saga.characters[0]
+    assert len(character.virtues_flaws) == 1
+    assert character.virtues_flaws[0].vf_id == "vf_superior_lab_equipment"
+
+
+async def test_add_virtue_flaw_with_parameters_to_character():
+    storage.save_saga(_saga_with_bare_character())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_character_detail(pilot)
+
+        await pilot.press("a")
+        await pilot.pause()
+
+        # Catalog order puts "Affinity with {art}" (which needs a parameter) first.
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, VirtueFlawParamScreen)
+
+        app.screen.query_one("#input-param-art", Input).value = "Creo"
+        await pilot.click("#btn-confirm")
+        await pilot.pause()
+
+        assert isinstance(app.screen, CharacterDetailScreen)
+        assert "Affinity with Creo" in app.screen._summary()
+
+    saga = storage.load_saga("test_saga")
+    character = saga.characters[0]
+    assert len(character.virtues_flaws) == 1
+    assert character.virtues_flaws[0].vf_id == "vf_affinity_with_art"
+    assert character.virtues_flaws[0].params == {"art": "creo"}
+
+
+async def test_cancelling_param_screen_returns_to_picker_without_adding():
+    storage.save_saga(_saga_with_bare_character())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_character_detail(pilot)
+
+        await pilot.press("a")
+        await pilot.pause()
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, VirtueFlawParamScreen)
+
+        await pilot.press("escape")
+        await pilot.pause()
+
+        assert isinstance(app.screen, VirtueFlawPickerScreen)
+
+    saga = storage.load_saga("test_saga")
+    assert saga.characters[0].virtues_flaws == []
+
+
+async def test_virtue_flaw_picker_excludes_already_held_entries():
+    saga = _saga_with_bare_character()
+    saga.characters[0].virtues_flaws.append(
+        VirtueFlawInstance(vf_id="vf_affinity_with_art", params={"art": "creo"})
+    )
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_character_detail(pilot)
+
+        await pilot.press("a")
+        await pilot.pause()
+
+        picker_list = app.screen.query_one("#vf-picker-list", ListView)
+        item_ids = [item.id for item in picker_list.children]
+        assert "vf-vf_affinity_with_art" not in item_ids
+
+
+async def test_add_virtue_flaw_to_laboratory_reuses_same_picker():
+    saga = _saga_with_bare_character()
+    saga.laboratories.append(
+        Laboratory(id="lab1", covenant_id="cov1", owner_id="char1")
+    )
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await pilot.press("enter")  # picker -> saga detail
+        await pilot.pause()
+        await pilot.press("enter")  # saga detail -> covenant detail
+        await pilot.pause()
+
+        await pilot.click("#laboratory-lab1")
+        await pilot.pause()
+        assert isinstance(app.screen, LaboratoryDetailScreen)
+
+        await pilot.press("a")
+        await pilot.pause()
+        assert isinstance(app.screen, VirtueFlawPickerScreen)
+
+        await pilot.click("#vf-vf_superior_lab_equipment")
+        await pilot.pause()
+
+        assert isinstance(app.screen, LaboratoryDetailScreen)
+        assert "Superior Lab Equipment" in app.screen._summary()
+
+    saga = storage.load_saga("test_saga")
+    lab = saga.laboratories[0]
+    assert len(lab.virtues_flaws) == 1
+    assert lab.virtues_flaws[0].vf_id == "vf_superior_lab_equipment"
