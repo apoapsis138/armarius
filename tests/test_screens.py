@@ -17,6 +17,7 @@ from ars_magica_manager.models import (
 )
 from ars_magica_manager.screens import (
     CharacterDetailScreen,
+    CovenantCreateScreen,
     CovenantDetailScreen,
     LaboratoryDetailScreen,
     LibraryDetailScreen,
@@ -109,6 +110,61 @@ async def test_saga_detail_shows_empty_state_with_no_covenants():
         covenant_list = app.screen.query_one("#covenant-list", ListView)
         assert len(covenant_list.children) == 1
         assert covenant_list.index is None
+
+
+async def test_create_covenant_flow_saves_covenant_and_empty_library():
+    storage.save_saga(Saga(id="test_saga", name="Test Saga", storyguide="Alex"))
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await pilot.press("enter")  # picker -> saga detail
+        await pilot.pause()
+
+        await pilot.press("n")
+        await pilot.pause()
+        assert isinstance(app.screen, CovenantCreateScreen)
+
+        app.screen.query_one("#input-name", Input).value = "Fengheld"
+        app.screen.query_one("#input-notes", Input).value = "A border covenant"
+
+        await pilot.click("#btn-create")
+        await pilot.pause()
+
+        assert isinstance(app.screen, SagaDetailScreen)
+        covenant_list = app.screen.query_one("#covenant-list", ListView)
+        assert len(covenant_list.children) == 1
+
+    saga = storage.load_saga("test_saga")
+    assert len(saga.covenants) == 1
+    covenant = saga.covenants[0]
+    assert covenant.name == "Fengheld"
+    assert covenant.notes == "A border covenant"
+    assert covenant.id == "fengheld"
+
+    assert len(saga.libraries) == 1
+    library = saga.libraries[0]
+    assert library.id == covenant.library_id
+    assert library.covenant_id == covenant.id
+    assert library.books == []
+
+
+async def test_create_covenant_requires_name():
+    storage.save_saga(Saga(id="test_saga", name="Test Saga", storyguide="Alex"))
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await pilot.press("enter")
+        await pilot.pause()
+        await pilot.press("n")
+        await pilot.pause()
+
+        await pilot.click("#btn-create")
+        await pilot.pause()
+
+        assert isinstance(app.screen, CovenantCreateScreen)
+
+    saga = storage.load_saga("test_saga")
+    assert saga.covenants == []
 
 
 def _sample_saga_with_covenant() -> Saga:

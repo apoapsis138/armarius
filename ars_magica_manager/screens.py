@@ -132,6 +132,7 @@ class SagaDetailScreen(Screen[None]):
     """Saga summary plus a browsable list of its covenants."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
+        ("n", "create_covenant", "New Covenant"),
         ("escape", "app.pop_screen", "Back"),
         ("q", "quit", "Quit"),
     ]
@@ -149,6 +150,13 @@ class SagaDetailScreen(Screen[None]):
 
     def on_mount(self) -> None:
         self._populate_covenant_list()
+
+    def action_create_covenant(self) -> None:
+        def handle_result(covenant_id: str | None) -> None:
+            if covenant_id is not None:
+                self._populate_covenant_list()
+
+        self.app.push_screen(CovenantCreateScreen(self.saga), handle_result)
 
     def _summary(self) -> str:
         saga = self.saga
@@ -207,6 +215,91 @@ class SagaDetailScreen(Screen[None]):
         covenant_id = item_id.removeprefix(_COVENANT_ITEM_ID_PREFIX)
         covenant = next(c for c in self.saga.covenants if c.id == covenant_id)
         self.app.push_screen(CovenantDetailScreen(self.saga, covenant))
+
+
+class CovenantCreateScreen(ModalScreen[str | None]):
+    """Creates a covenant (with an empty library) within a saga.
+
+    Dismisses with the new covenant's id, or None if cancelled.
+    """
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    CovenantCreateScreen {
+        align: center middle;
+    }
+
+    #create-dialog {
+        width: 64;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    #create-error {
+        color: $error;
+        height: auto;
+        margin-top: 1;
+    }
+    """
+
+    def __init__(self, saga: Saga) -> None:
+        super().__init__()
+        self.saga = saga
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="create-dialog"):
+            yield Label("Create a New Covenant", id="create-title")
+            yield Label("Covenant name")
+            yield Input(placeholder="e.g. Fengheld", id="input-name")
+            yield Label("Notes (optional)")
+            yield Input(
+                placeholder="A one-line note about the covenant", id="input-notes"
+            )
+            yield Static("", id="create-error")
+            with Horizontal():
+                yield Button("Create", id="btn-create", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-create":
+            self._try_create()
+
+    def _try_create(self) -> None:
+        error = self.query_one("#create-error", Static)
+
+        name = self.query_one("#input-name", Input).value.strip()
+        if not name:
+            error.update("Covenant name is required.")
+            return
+
+        notes = self.query_one("#input-notes", Input).value.strip()
+
+        covenant_id = storage.generate_unique_id(
+            name, [c.id for c in self.saga.covenants]
+        )
+        # Every covenant gets an (initially empty) library -- there's no
+        # separate "create library" step, since a covenant without one
+        # isn't a meaningful state to leave dangling.
+        library = Library(id=f"{covenant_id}_library", covenant_id=covenant_id)
+        covenant = Covenant(
+            id=covenant_id,
+            saga_id=self.saga.id,
+            name=name,
+            notes=notes,
+            library_id=library.id,
+        )
+        self.saga.covenants.append(covenant)
+        self.saga.libraries.append(library)
+        storage.save_saga(self.saga)
+        self.dismiss(covenant_id)
 
 
 class CovenantDetailScreen(Screen[None]):

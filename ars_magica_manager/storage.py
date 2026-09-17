@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+from collections.abc import Iterable
 from dataclasses import asdict
 from pathlib import Path
 
@@ -16,19 +17,30 @@ _SLUG_RE = re.compile(r"[^a-z0-9]+")
 
 def slugify(text: str) -> str:
     slug = _SLUG_RE.sub("_", text.strip().lower()).strip("_")
-    return slug or "saga"
+    return slug or "id"
 
 
-def generate_saga_id(name: str) -> str:
-    """A filesystem-safe, unique saga id derived from its name."""
+def generate_unique_id(name: str, existing_ids: Iterable[str]) -> str:
+    """A slug derived from `name`, disambiguated against `existing_ids`.
+
+    Used for saga ids (checked against ids on disk) and for covenant/
+    character/laboratory/book ids (checked against ids already in that
+    saga) -- anywhere we need a filesystem- and JSON-key-safe id from a
+    human-entered name.
+    """
     base = slugify(name)
-    existing = set(list_sagas())
+    existing = set(existing_ids)
     if base not in existing:
         return base
     suffix = 2
     while f"{base}_{suffix}" in existing:
         suffix += 1
     return f"{base}_{suffix}"
+
+
+def generate_saga_id(name: str) -> str:
+    """A filesystem-safe, unique saga id derived from its name."""
+    return generate_unique_id(name, list_sagas())
 
 
 def saga_path(saga_id: str) -> Path:
