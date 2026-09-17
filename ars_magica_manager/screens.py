@@ -21,9 +21,10 @@ from textual.widgets import (
 )
 
 from . import storage
-from .models import SEASONS, Saga
+from .models import SEASONS, Covenant, Saga
 
-_LIST_ITEM_ID_PREFIX = "saga-"
+_SAGA_ITEM_ID_PREFIX = "saga-"
+_COVENANT_ITEM_ID_PREFIX = "covenant-"
 
 
 class SagaCreateScreen(ModalScreen[str | None]):
@@ -125,7 +126,7 @@ class SagaCreateScreen(ModalScreen[str | None]):
 
 
 class SagaDetailScreen(Screen[None]):
-    """Read-only saga summary. Browsing covenants/etc. lands in a later Phase 1 slice."""
+    """Saga summary plus a browsable list of its covenants."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
         ("escape", "app.pop_screen", "Back"),
@@ -139,7 +140,12 @@ class SagaDetailScreen(Screen[None]):
     def compose(self) -> ComposeResult:
         yield Header()
         yield Static(self._summary(), id="saga-detail")
+        yield Static("Covenants", id="covenant-list-heading")
+        yield ListView(id="covenant-list")
         yield Footer()
+
+    def on_mount(self) -> None:
+        self._populate_covenant_list()
 
     def _summary(self) -> str:
         saga = self.saga
@@ -152,15 +158,116 @@ class SagaDetailScreen(Screen[None]):
             lines.append(f"Description: {saga.description}")
         lines += [
             "",
-            f"Covenants: {len(saga.covenants)}",
             f"Characters: {len(saga.characters)}",
             f"Laboratories: {len(saga.laboratories)}",
             f"Libraries: {len(saga.libraries)}",
             f"Books: {len(saga.books)}",
             f"Spells: {len(saga.spells)}",
+        ]
+        return "\n".join(lines)
+
+    def _populate_covenant_list(self) -> None:
+        list_view = self.query_one("#covenant-list", ListView)
+        list_view.clear()
+
+        if not self.saga.covenants:
+            list_view.append(
+                ListItem(
+                    Label(
+                        "No covenants yet -- covenant creation is coming in a "
+                        "future Phase 1 slice."
+                    )
+                )
+            )
+            return
+
+        for covenant in self.saga.covenants:
+            character_count = sum(
+                1 for c in self.saga.characters if c.covenant_id == covenant.id
+            )
+            lab_count = sum(
+                1 for lab in self.saga.laboratories if lab.covenant_id == covenant.id
+            )
+            summary = (
+                f"{covenant.name}  —  {character_count} character(s), "
+                f"{lab_count} lab(s)"
+            )
+            list_view.append(
+                ListItem(
+                    Label(summary), id=f"{_COVENANT_ITEM_ID_PREFIX}{covenant.id}"
+                )
+            )
+        list_view.index = 0
+
+    def on_list_view_selected(self, event: ListView.Selected) -> None:
+        item_id = event.item.id
+        if item_id is None or not item_id.startswith(_COVENANT_ITEM_ID_PREFIX):
+            return
+        covenant_id = item_id.removeprefix(_COVENANT_ITEM_ID_PREFIX)
+        covenant = next(c for c in self.saga.covenants if c.id == covenant_id)
+        self.app.push_screen(CovenantDetailScreen(self.saga, covenant))
+
+
+class CovenantDetailScreen(Screen[None]):
+    """Read-only covenant summary: vis stock, library, residents."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [
+        ("escape", "app.pop_screen", "Back"),
+        ("q", "quit", "Quit"),
+    ]
+
+    def __init__(self, saga: Saga, covenant: Covenant) -> None:
+        super().__init__()
+        self.saga = saga
+        self.covenant = covenant
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield Static(self._summary(), id="covenant-detail")
+        yield Footer()
+
+    def _summary(self) -> str:
+        saga, covenant = self.saga, self.covenant
+        characters = [c for c in saga.characters if c.covenant_id == covenant.id]
+        labs = [lab for lab in saga.laboratories if lab.covenant_id == covenant.id]
+        library = next(
+            (lib for lib in saga.libraries if lib.id == covenant.library_id), None
+        )
+
+        lines = [f"Covenant: {covenant.name}", f"Saga: {saga.name}"]
+        if covenant.notes:
+            lines.append(f"Notes: {covenant.notes}")
+
+        lines.append("")
+        if covenant.vis_stock:
+            lines.append("Vis stock:")
+            lines += [
+                f"  {form}: {amount}" for form, amount in covenant.vis_stock.items()
+            ]
+        else:
+            lines.append("Vis stock: (none recorded)")
+
+        lines.append("")
+        lines.append(f"Library: {len(library.books)} book(s)" if library else "Library: (none)")
+
+        lines.append("")
+        lines.append(f"Characters ({len(characters)}):")
+        if characters:
+            lines += [f"  - {c.name} ({c.type})" for c in characters]
+        else:
+            lines.append("  (none)")
+
+        lines.append("")
+        lines.append(f"Laboratories ({len(labs)}):")
+        if labs:
+            lines += [f"  - lab {lab.id}" for lab in labs]
+        else:
+            lines.append("  (none)")
+
+        lines += [
             "",
-            "(Browsing covenants/characters/labs/libraries is coming in the",
-            " next Phase 1 slice.)",
+            "(Browsing into individual characters/labs/library books is coming",
+            " in a future Phase 1 slice.)",
         ]
         return "\n".join(lines)
 
@@ -203,7 +310,7 @@ class SagaPickerScreen(Screen[None]):
                 f"  —  {saga.current_season} {saga.current_year}"
             )
             list_view.append(
-                ListItem(Label(summary), id=f"{_LIST_ITEM_ID_PREFIX}{saga_id}")
+                ListItem(Label(summary), id=f"{_SAGA_ITEM_ID_PREFIX}{saga_id}")
             )
         # append()/extend() don't set an initial highlight the way construction-time
         # children do, so keyboard/enter selection wouldn't work without this.
@@ -218,8 +325,8 @@ class SagaPickerScreen(Screen[None]):
 
     def on_list_view_selected(self, event: ListView.Selected) -> None:
         item_id = event.item.id
-        if item_id is None or not item_id.startswith(_LIST_ITEM_ID_PREFIX):
+        if item_id is None or not item_id.startswith(_SAGA_ITEM_ID_PREFIX):
             return
-        saga_id = item_id.removeprefix(_LIST_ITEM_ID_PREFIX)
+        saga_id = item_id.removeprefix(_SAGA_ITEM_ID_PREFIX)
         saga = storage.load_saga(saga_id)
         self.app.push_screen(SagaDetailScreen(saga))

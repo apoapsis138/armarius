@@ -3,8 +3,9 @@ from textual.widgets import Input, ListView
 
 from ars_magica_manager import storage
 from ars_magica_manager.app import ArsMagicaManagerApp
-from ars_magica_manager.models import Saga
+from ars_magica_manager.models import Character, Covenant, Laboratory, Library, Saga
 from ars_magica_manager.screens import (
+    CovenantDetailScreen,
     SagaCreateScreen,
     SagaDetailScreen,
     SagaPickerScreen,
@@ -80,3 +81,64 @@ async def test_selecting_a_saga_opens_its_detail_screen():
 
         assert isinstance(app.screen, SagaDetailScreen)
         assert app.screen.saga.id == "test_saga"
+
+
+async def test_saga_detail_shows_empty_state_with_no_covenants():
+    storage.save_saga(Saga(id="test_saga", name="Test Saga", storyguide="Alex"))
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await pilot.press("enter")
+        await pilot.pause()
+
+        assert isinstance(app.screen, SagaDetailScreen)
+        covenant_list = app.screen.query_one("#covenant-list", ListView)
+        assert len(covenant_list.children) == 1
+        assert covenant_list.index is None
+
+
+async def test_covenant_browsing_shows_counts_and_detail():
+    saga = Saga(
+        id="test_saga",
+        name="Test Saga",
+        storyguide="Alex",
+        covenants=[
+            Covenant(
+                id="cov1",
+                saga_id="test_saga",
+                name="Test Covenant",
+                notes="A nice place",
+                vis_stock={"Ignem": 5},
+                library_id="lib1",
+            )
+        ],
+        characters=[
+            Character(id="char1", name="Leandro", type="magus", covenant_id="cov1")
+        ],
+        laboratories=[Laboratory(id="lab1", covenant_id="cov1")],
+        libraries=[Library(id="lib1", covenant_id="cov1", books=["book1", "book2"])],
+    )
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await pilot.press("enter")  # saga picker -> saga detail
+        await pilot.pause()
+
+        covenant_list = app.screen.query_one("#covenant-list", ListView)
+        assert covenant_list.index == 0
+
+        await pilot.press("enter")  # saga detail -> covenant detail
+        await pilot.pause()
+
+        assert isinstance(app.screen, CovenantDetailScreen)
+        assert app.screen.covenant.id == "cov1"
+
+        summary = app.screen._summary()
+        assert "Covenant: Test Covenant" in summary
+        assert "Notes: A nice place" in summary
+        assert "Ignem: 5" in summary
+        assert "Library: 2 book(s)" in summary
+        assert "Characters (1):" in summary
+        assert "- Leandro (magus)" in summary
+        assert "Laboratories (1):" in summary
