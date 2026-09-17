@@ -35,6 +35,18 @@
     "description": "The laboratory's equipment is unusually good, adding +3 to Lab Totals for work done in it."
   },
   {
+    "id": "vf_gifted_researcher",
+    "name": "Gifted Researcher",
+    "type": "Virtue",
+    "category": "Hermetic",
+    "cost": 1,
+    "modifiers": [
+      { "applies_to": "lab_total", "activity": "original_research", "amount": 3 },
+      { "applies_to": "lab_total", "activity": "invent_spells", "amount": 6 }
+    ],
+    "description": "Illustrative example: a single Virtue carrying two Lab Total modifiers of different sizes, scoped to different lab activities (+3 for Original Research, +6 for Inventing Spells)."
+  },
+  {
     "id": "vf_poor_aging",
     "name": "Poor Aging",
     "type": "Flaw",

@@ -111,26 +111,39 @@ tags**, not just flat descriptive text:
   ]
 },
 {
-  "id": "vf_superior_lab_equipment",
-  "name": "Superior Lab Equipment",
+  "id": "vf_gifted_researcher",
+  "name": "Gifted Researcher",
   "type": "Virtue",
-  "category": "General",
+  "category": "Hermetic",
   "cost": 1,
   "modifiers": [
-    { "applies_to": "lab_total", "amount": 3 }
+    { "applies_to": "lab_total", "activity": "original_research", "amount": 3 },
+    { "applies_to": "lab_total", "activity": "invent_spells", "amount": 6 }
   ]
 }
 ```
 
-- `applies_to` names a **Total** (`lab_total`, `casting_total`,
-  `spontaneous_total`, `study_total`, `soak`, `aging_roll`, …) or a
-  resource flow (`art_xp_gain`, `vis_extraction`, …).
+- `applies_to` names a **modifier type** (`lab_total`, `casting_total`,
+  `spontaneous_total`, `study_total`, `soak`, `aging_roll`, …, or a resource
+  flow like `art_xp_gain`, `vis_extraction`), validated against the
+  registry in [`ars_magica_manager/totals.py`](ars_magica_manager/totals.py)
+  — an unrecognized value fails loudly at load time rather than silently
+  vanishing from a future calculation.
+- `activity` optionally narrows `applies_to` to one specific activity within
+  that type (see `totals.ACTIVITIES_BY_TYPE`) — e.g. Lab Total differs by
+  whether you're Inventing Spells, Extracting Vis, doing a Longevity Ritual,
+  etc. Since `modifiers` is a list, one Virtue/Flaw can carry several
+  differently-scoped, differently-sized modifiers, as in the
+  "Gifted Researcher" example above (+3 for Original Research, +6 for
+  Inventing Spells) — this is also validated, so an activity that isn't
+  valid for its `applies_to` type is rejected the same way.
 - Modifiers on a Character instance and on that Character's assigned
   Laboratory instance both feed the same Total calculation.
-- v1 stores and displays these tags but does **not** need every Total
-  formula implemented — the schema just has to make "sum all modifiers
-  tagged `lab_total` for this character + their lab" a trivial query once
-  we build that engine, instead of a schema migration.
+- v1 stores, validates, and displays these tags but does **not** need every
+  Total formula implemented — the schema just has to make "sum all
+  `lab_total` modifiers for this character + their lab, filtered to this
+  activity" a trivial query once we build that engine, instead of a schema
+  migration.
 
 ## 6. Data Shape (illustrative)
 

@@ -9,6 +9,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
+from .totals import validate_modifier_type
+
 CharacterType = Literal["magus", "companion", "grog"]
 BookType = Literal["Summa", "Tractatus", "Lab Text"]
 VirtueFlawType = Literal["Virtue", "Flaw"]
@@ -18,16 +20,31 @@ VirtueFlawType = Literal["Virtue", "Flaw"]
 class Modifier:
     """A structured effect a Virtue/Flaw has on a Total or resource flow.
 
-    `applies_to` names a Total (e.g. "lab_total", "casting_total",
-    "study_total", "aging_roll") or a resource flow (e.g. "art_xp_gain").
-    `target` optionally narrows the modifier to a specific Art/Ability
-    named by one of the catalog entry's `parameters`.
+    `applies_to` names a modifier type from totals.MODIFIER_TYPES (e.g.
+    "lab_total", "casting_total", "study_total", "aging_roll", "art_xp_gain").
+    `target` optionally narrows the modifier to a specific Art/Ability named
+    by one of the catalog entry's `parameters` (e.g. "{art}").
+
+    `activity` optionally narrows it further to one specific activity within
+    that type -- e.g. two modifiers both applying to "lab_total" but one
+    scoped to "invent_spells" and the other to "extract_vis", each with its
+    own amount. A single Virtue/Flaw can carry several such modifiers (it's
+    a list on VirtueFlawDef), so different amounts for different activities
+    from the same source are just multiple Modifier entries, disambiguated
+    by `activity`. See totals.ACTIVITIES_BY_TYPE for the valid activities
+    per type; both fields are validated against that registry so a typo or
+    an unmodeled type/activity fails loudly at load time rather than
+    silently disappearing from a future totals calculation.
     """
 
     applies_to: str
     amount: float | None = None
     multiplier: float | None = None
     target: str | None = None
+    activity: str | None = None
+
+    def __post_init__(self) -> None:
+        validate_modifier_type(self.applies_to, self.activity)
 
 
 @dataclass
