@@ -3,12 +3,32 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import asdict
 from pathlib import Path
 
 from .models import Saga
 
 SAGAS_DIR = Path(__file__).resolve().parent.parent / "data" / "sagas"
+
+_SLUG_RE = re.compile(r"[^a-z0-9]+")
+
+
+def slugify(text: str) -> str:
+    slug = _SLUG_RE.sub("_", text.strip().lower()).strip("_")
+    return slug or "saga"
+
+
+def generate_saga_id(name: str) -> str:
+    """A filesystem-safe, unique saga id derived from its name."""
+    base = slugify(name)
+    existing = set(list_sagas())
+    if base not in existing:
+        return base
+    suffix = 2
+    while f"{base}_{suffix}" in existing:
+        suffix += 1
+    return f"{base}_{suffix}"
 
 
 def saga_path(saga_id: str) -> Path:

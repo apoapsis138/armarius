@@ -15,6 +15,8 @@ CharacterType = Literal["magus", "companion", "grog"]
 BookType = Literal["Summa", "Tractatus", "Lab Text"]
 VirtueFlawType = Literal["Virtue", "Flaw"]
 
+SEASONS: tuple[str, ...] = ("Spring", "Summer", "Autumn", "Winter")
+
 
 @dataclass
 class Modifier:
@@ -190,6 +192,8 @@ class Covenant:
 class Saga:
     id: str
     name: str
+    storyguide: str = ""
+    description: str = ""
     current_year: int = 1220
     current_season: str = "Spring"
     covenants: list[Covenant] = field(default_factory=list)
