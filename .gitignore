@@ -1,0 +1,18 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Tool caches
+.ruff_cache/
+.pytest_cache/
+
+# Per-saga save data -- not source, these are user campaign data
+data/sagas/*.json
+!data/sagas/.gitkeep

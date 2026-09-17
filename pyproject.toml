@@ -1,0 +1,21 @@
+[project]
+name = "ars-magica-manager"
+version = "0.1.0"
+description = "A GM-facing management tool for Ars Magica 5th Edition covenants, characters, laboratories, and libraries."
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "textual>=8.2.8",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.8",
+    "pytest>=8.0.0",
+]
+
+[tool.ruff.lint]
+ignore = ["UP045", "ISC004"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

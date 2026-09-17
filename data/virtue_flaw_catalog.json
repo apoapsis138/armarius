@@ -1,0 +1,48 @@
+[
+  {
+    "id": "vf_affinity_with_art",
+    "name": "Affinity with (Art)",
+    "type": "Virtue",
+    "category": "Hermetic",
+    "cost": 1,
+    "parameters": ["art"],
+    "modifiers": [
+      { "applies_to": "art_xp_gain", "target": "{art}", "multiplier": 1.5 }
+    ],
+    "description": "The character advances the chosen Art 50% faster."
+  },
+  {
+    "id": "vf_puissant_art",
+    "name": "Puissant (Art)",
+    "type": "Virtue",
+    "category": "Hermetic",
+    "cost": 1,
+    "parameters": ["art"],
+    "modifiers": [
+      { "applies_to": "art_score_effective", "target": "{art}", "amount": 3 }
+    ],
+    "description": "Adds +3 to the chosen Art whenever it is used, without spending experience on it."
+  },
+  {
+    "id": "vf_superior_lab_equipment",
+    "name": "Superior Lab Equipment",
+    "type": "Virtue",
+    "category": "General",
+    "cost": 1,
+    "modifiers": [
+      { "applies_to": "lab_total", "amount": 3 }
+    ],
+    "description": "The laboratory's equipment is unusually good, adding +3 to Lab Totals for work done in it."
+  },
+  {
+    "id": "vf_poor_aging",
+    "name": "Poor Aging",
+    "type": "Flaw",
+    "category": "General",
+    "cost": -1,
+    "modifiers": [
+      { "applies_to": "aging_roll", "amount": -3 }
+    ],
+    "description": "The character's aging rolls suffer a -3 penalty."
+  }
+]
