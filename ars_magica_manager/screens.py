@@ -306,6 +306,7 @@ class CovenantDetailScreen(Screen[None]):
     """Covenant summary (vis stock, notes) plus browsable Character/Lab/Library lists."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
+        ("n", "create_character", "New Character"),
         ("escape", "app.pop_screen", "Back"),
         ("q", "quit", "Quit"),
     ]
@@ -330,6 +331,16 @@ class CovenantDetailScreen(Screen[None]):
         self._populate_character_list()
         self._populate_laboratory_list()
         self._populate_library_list()
+
+    def action_create_character(self) -> None:
+        def handle_result(character_id: str | None) -> None:
+            if character_id is not None:
+                self._populate_character_list()
+
+        self.app.push_screen(
+            CharacterCreateScreen(self.saga, default_covenant_id=self.covenant.id),
+            handle_result,
+        )
 
     def _summary(self) -> str:
         covenant = self.covenant
@@ -431,6 +442,108 @@ class CovenantDetailScreen(Screen[None]):
             library_id = item_id.removeprefix(_LIBRARY_ITEM_ID_PREFIX)
             library = next(lib for lib in self.saga.libraries if lib.id == library_id)
             self.app.push_screen(LibraryDetailScreen(self.saga, library))
+
+
+class CharacterCreateScreen(ModalScreen[str | None]):
+    """Creates a bare character: name, type, and covenant.
+
+    Abilities, Virtues/Flaws, Arts, and lab assignment are left for later
+    edit actions -- see DESIGN.md's Phase 1 forms slices. Dismisses with
+    the new character's id, or None if cancelled.
+    """
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    CharacterCreateScreen {
+        align: center middle;
+    }
+
+    #create-dialog {
+        width: 64;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    #create-error {
+        color: $error;
+        height: auto;
+        margin-top: 1;
+    }
+    """
+
+    _CHARACTER_TYPES: ClassVar[list[tuple[str, str]]] = [
+        ("Magus", "magus"),
+        ("Companion", "companion"),
+        ("Grog", "grog"),
+    ]
+
+    def __init__(self, saga: Saga, default_covenant_id: str | None = None) -> None:
+        super().__init__()
+        self.saga = saga
+        self.default_covenant_id = default_covenant_id
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="create-dialog"):
+            yield Label("Create a New Character", id="create-title")
+            yield Label("Character name")
+            yield Input(placeholder="e.g. Leandro", id="input-name")
+            yield Label("Type")
+            yield Select(
+                self._CHARACTER_TYPES,
+                value="magus",
+                allow_blank=False,
+                id="select-type",
+            )
+            yield Label("Covenant (optional)")
+            yield Select(
+                [(c.name, c.id) for c in self.saga.covenants],
+                value=self.default_covenant_id or Select.NULL,
+                allow_blank=True,
+                prompt="(no covenant)",
+                id="select-covenant",
+            )
+            yield Static("", id="create-error")
+            with Horizontal():
+                yield Button("Create", id="btn-create", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-create":
+            self._try_create()
+
+    def _try_create(self) -> None:
+        error = self.query_one("#create-error", Static)
+
+        name = self.query_one("#input-name", Input).value.strip()
+        if not name:
+            error.update("Character name is required.")
+            return
+
+        character_type = self.query_one("#select-type", Select).value
+        if not isinstance(character_type, str):
+            error.update("Type is required.")
+            return
+
+        covenant_value = self.query_one("#select-covenant", Select).value
+        covenant_id = covenant_value if isinstance(covenant_value, str) else None
+
+        character = Character(
+            id=storage.generate_unique_id(name, [c.id for c in self.saga.characters]),
+            name=name,
+            type=character_type,
+            covenant_id=covenant_id,
+        )
+        self.saga.characters.append(character)
+        storage.save_saga(self.saga)
+        self.dismiss(character.id)
 
 
 class CharacterDetailScreen(Screen[None]):

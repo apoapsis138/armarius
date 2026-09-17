@@ -1,5 +1,5 @@
 import pytest
-from textual.widgets import Input, ListView
+from textual.widgets import Input, ListView, Select
 
 from ars_magica_manager import storage
 from ars_magica_manager.app import ArsMagicaManagerApp
@@ -16,6 +16,7 @@ from ars_magica_manager.models import (
     VirtueFlawInstance,
 )
 from ars_magica_manager.screens import (
+    CharacterCreateScreen,
     CharacterDetailScreen,
     CovenantCreateScreen,
     CovenantDetailScreen,
@@ -165,6 +166,94 @@ async def test_create_covenant_requires_name():
 
     saga = storage.load_saga("test_saga")
     assert saga.covenants == []
+
+
+def _saga_with_empty_covenant() -> Saga:
+    return Saga(
+        id="test_saga",
+        name="Test Saga",
+        storyguide="Alex",
+        covenants=[Covenant(id="cov1", saga_id="test_saga", name="Test Covenant")],
+    )
+
+
+async def test_create_character_defaults_to_current_covenant():
+    storage.save_saga(_saga_with_empty_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await pilot.press("enter")  # picker -> saga detail
+        await pilot.pause()
+        await pilot.press("enter")  # saga detail -> covenant detail
+        await pilot.pause()
+
+        await pilot.press("n")
+        await pilot.pause()
+        assert isinstance(app.screen, CharacterCreateScreen)
+
+        app.screen.query_one("#input-name", Input).value = "Leandro"
+
+        await pilot.click("#btn-create")
+        await pilot.pause()
+
+        assert isinstance(app.screen, CovenantDetailScreen)
+        character_list = app.screen.query_one("#character-list", ListView)
+        assert len(character_list.children) == 1
+
+    saga = storage.load_saga("test_saga")
+    assert len(saga.characters) == 1
+    character = saga.characters[0]
+    assert character.name == "Leandro"
+    assert character.type == "magus"
+    assert character.covenant_id == "cov1"
+
+
+async def test_create_character_with_no_covenant():
+    storage.save_saga(_saga_with_empty_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await pilot.press("enter")
+        await pilot.pause()
+        await pilot.press("enter")
+        await pilot.pause()
+        await pilot.press("n")
+        await pilot.pause()
+
+        form = app.screen
+        form.query_one("#input-name", Input).value = "Wandering Grog"
+        form.query_one("#select-type", Select).value = "grog"
+        form.query_one("#select-covenant", Select).value = Select.NULL
+
+        await pilot.click("#btn-create")
+        await pilot.pause()
+
+    saga = storage.load_saga("test_saga")
+    character = saga.characters[0]
+    assert character.name == "Wandering Grog"
+    assert character.type == "grog"
+    assert character.covenant_id is None
+
+
+async def test_create_character_requires_name():
+    storage.save_saga(_saga_with_empty_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await pilot.press("enter")
+        await pilot.pause()
+        await pilot.press("enter")
+        await pilot.pause()
+        await pilot.press("n")
+        await pilot.pause()
+
+        await pilot.click("#btn-create")
+        await pilot.pause()
+
+        assert isinstance(app.screen, CharacterCreateScreen)
+
+    saga = storage.load_saga("test_saga")
+    assert saga.characters == []
 
 
 def _sample_saga_with_covenant() -> Saga:
