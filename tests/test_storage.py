@@ -37,7 +37,11 @@ def _sample_saga() -> Saga:
                 assigned_lab_id="lab_1",
             )
         ],
-        laboratories=[Laboratory(id="lab_1", covenant_id="cov_1", owner_id="char_1")],
+        laboratories=[
+            Laboratory(
+                id="lab_1", covenant_id="cov_1", name="Test Lab", owner_id="char_1"
+            )
+        ],
         libraries=[Library(id="lib_1", covenant_id="cov_1", books=["book_1"])],
         books=[
             Book(id="book_1", type="Summa", subject="Magic Theory", quality=6, level=8)

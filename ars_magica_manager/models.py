@@ -137,6 +137,7 @@ class Library:
 class Laboratory:
     id: str
     covenant_id: str
+    name: str
     owner_id: str | None = None
     size: int = 0
     aura: int = 0

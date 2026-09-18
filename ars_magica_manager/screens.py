@@ -317,6 +317,7 @@ class CovenantDetailScreen(Screen[None]):
 
     BINDINGS: ClassVar[list[BindingType]] = [
         ("n", "create_character", "New Character"),
+        ("l", "create_laboratory", "New Laboratory"),
         ("escape", "app.pop_screen", "Back"),
         ("q", "quit", "Quit"),
     ]
@@ -341,6 +342,15 @@ class CovenantDetailScreen(Screen[None]):
         self._populate_character_list()
         self._populate_laboratory_list()
         self._populate_library_list()
+
+    def action_create_laboratory(self) -> None:
+        def handle_result(lab_id: str | None) -> None:
+            if lab_id is not None:
+                self._populate_laboratory_list()
+
+        self.app.push_screen(
+            LaboratoryCreateScreen(self.saga, self.covenant), handle_result
+        )
 
     def action_create_character(self) -> None:
         def handle_result(character_id: str | None) -> None:
@@ -403,7 +413,7 @@ class CovenantDetailScreen(Screen[None]):
             owner = next(
                 (c for c in self.saga.characters if c.id == lab.owner_id), None
             )
-            label = f"Lab (owner: {owner.name if owner else 'unassigned'})"
+            label = f"{lab.name}  —  owner: {owner.name if owner else 'unassigned'}"
             list_view.append(
                 ListItem(Label(label), id=f"{_LABORATORY_ITEM_ID_PREFIX}{lab.id}")
             )
@@ -818,6 +828,99 @@ class CharacterDetailScreen(Screen[None]):
         return "\n".join(lines)
 
 
+class LaboratoryCreateScreen(ModalScreen[str | None]):
+    """Creates a bare laboratory within a covenant.
+
+    Owner assignment and Features are left for later edit actions, same
+    reasoning as Character creation leaving lab assignment for later.
+    Dismisses with the new laboratory's id, or None if cancelled.
+    """
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    LaboratoryCreateScreen {
+        align: center middle;
+    }
+
+    #create-dialog {
+        width: 64;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    #create-error {
+        color: $error;
+        height: auto;
+        margin-top: 1;
+    }
+    """
+
+    def __init__(self, saga: Saga, covenant: Covenant) -> None:
+        super().__init__()
+        self.saga = saga
+        self.covenant = covenant
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="create-dialog"):
+            yield Label("Create a New Laboratory", id="create-title")
+            yield Label("Laboratory name")
+            yield Input(placeholder="e.g. The Alchemical Tower", id="input-name")
+            with Horizontal():
+                yield Label("Size")
+                yield Input(value="0", type="integer", id="input-size")
+                yield Label("Aura")
+                yield Input(value="0", type="integer", id="input-aura")
+            yield Static("", id="create-error")
+            with Horizontal():
+                yield Button("Create", id="btn-create", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-create":
+            self._try_create()
+
+    def _try_create(self) -> None:
+        error = self.query_one("#create-error", Static)
+
+        name = self.query_one("#input-name", Input).value.strip()
+        if not name:
+            error.update("Laboratory name is required.")
+            return
+
+        try:
+            size = int(self.query_one("#input-size", Input).value.strip())
+        except ValueError:
+            error.update("Size must be a whole number.")
+            return
+
+        try:
+            aura = int(self.query_one("#input-aura", Input).value.strip())
+        except ValueError:
+            error.update("Aura must be a whole number.")
+            return
+
+        laboratory = Laboratory(
+            id=storage.generate_unique_id(
+                name, [lab.id for lab in self.saga.laboratories]
+            ),
+            covenant_id=self.covenant.id,
+            name=name,
+            size=size,
+            aura=aura,
+        )
+        self.saga.laboratories.append(laboratory)
+        storage.save_saga(self.saga)
+        self.dismiss(laboratory.id)
+
+
 class LaboratoryDetailScreen(Screen[None]):
     """Laboratory summary; can add Virtues/Flaws from the catalog."""
 
@@ -859,7 +962,7 @@ class LaboratoryDetailScreen(Screen[None]):
         owner = next((c for c in saga.characters if c.id == lab.owner_id), None)
 
         lines = [
-            f"Laboratory (id: {lab.id})",
+            f"Laboratory: {lab.name}",
             f"Covenant: {covenant.name if covenant else '(none)'}",
             f"Owner: {owner.name if owner else '(unassigned)'}",
             f"Size: {lab.size}",

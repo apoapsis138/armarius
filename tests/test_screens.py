@@ -20,6 +20,7 @@ from ars_magica_manager.screens import (
     CharacterDetailScreen,
     CovenantCreateScreen,
     CovenantDetailScreen,
+    LaboratoryCreateScreen,
     LaboratoryDetailScreen,
     LibraryDetailScreen,
     SagaCreateScreen,
@@ -297,6 +298,7 @@ def _sample_saga_with_covenant() -> Saga:
             Laboratory(
                 id="lab1",
                 covenant_id="cov1",
+                name="Leandro's Sanctum",
                 owner_id="char1",
                 size=1,
                 aura=3,
@@ -439,11 +441,15 @@ def _saga_with_bare_character() -> Saga:
     )
 
 
-async def _open_character_detail(pilot) -> None:
+async def _open_covenant_detail(pilot) -> None:
     await pilot.press("enter")  # picker -> saga detail
     await pilot.pause()
     await pilot.press("enter")  # saga detail -> covenant detail
     await pilot.pause()
+
+
+async def _open_character_detail(pilot) -> None:
+    await _open_covenant_detail(pilot)
     await pilot.press("enter")  # covenant detail -> character detail
     await pilot.pause()
 
@@ -545,16 +551,13 @@ async def test_virtue_flaw_picker_excludes_already_held_entries():
 async def test_add_virtue_flaw_to_laboratory_reuses_same_picker():
     saga = _saga_with_bare_character()
     saga.laboratories.append(
-        Laboratory(id="lab1", covenant_id="cov1", owner_id="char1")
+        Laboratory(id="lab1", covenant_id="cov1", name="Test Lab", owner_id="char1")
     )
     storage.save_saga(saga)
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await pilot.press("enter")  # picker -> saga detail
-        await pilot.pause()
-        await pilot.press("enter")  # saga detail -> covenant detail
-        await pilot.pause()
+        await _open_covenant_detail(pilot)
 
         await pilot.click("#laboratory-lab1")
         await pilot.pause()
@@ -574,3 +577,76 @@ async def test_add_virtue_flaw_to_laboratory_reuses_same_picker():
     lab = saga.laboratories[0]
     assert len(lab.virtues_flaws) == 1
     assert lab.virtues_flaws[0].vf_id == "vf_superior_lab_equipment"
+
+
+async def test_create_laboratory_flow_saves_laboratory():
+    storage.save_saga(_saga_with_bare_character())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_covenant_detail(pilot)
+
+        await pilot.press("l")
+        await pilot.pause()
+        assert isinstance(app.screen, LaboratoryCreateScreen)
+
+        app.screen.query_one("#input-name", Input).value = "The Alchemical Tower"
+        app.screen.query_one("#input-size", Input).value = "1"
+        app.screen.query_one("#input-aura", Input).value = "3"
+
+        await pilot.click("#btn-create")
+        await pilot.pause()
+
+        assert isinstance(app.screen, CovenantDetailScreen)
+        lab_list = app.screen.query_one("#laboratory-list", ListView)
+        assert len(lab_list.children) == 1
+
+    saga = storage.load_saga("test_saga")
+    assert len(saga.laboratories) == 1
+    lab = saga.laboratories[0]
+    assert lab.name == "The Alchemical Tower"
+    assert lab.covenant_id == "cov1"
+    assert lab.size == 1
+    assert lab.aura == 3
+    assert lab.owner_id is None
+
+
+async def test_create_laboratory_requires_name():
+    storage.save_saga(_saga_with_bare_character())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_covenant_detail(pilot)
+
+        await pilot.press("l")
+        await pilot.pause()
+
+        await pilot.click("#btn-create")
+        await pilot.pause()
+
+        assert isinstance(app.screen, LaboratoryCreateScreen)
+
+    saga = storage.load_saga("test_saga")
+    assert saga.laboratories == []
+
+
+async def test_create_laboratory_requires_integer_size():
+    storage.save_saga(_saga_with_bare_character())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_covenant_detail(pilot)
+
+        await pilot.press("l")
+        await pilot.pause()
+
+        app.screen.query_one("#input-name", Input).value = "The Tower"
+        app.screen.query_one("#input-size", Input).value = "not a number"
+
+        await pilot.click("#btn-create")
+        await pilot.pause()
+
+        assert isinstance(app.screen, LaboratoryCreateScreen)
+
+    saga = storage.load_saga("test_saga")
+    assert saga.laboratories == []
