@@ -391,7 +391,7 @@ async def test_character_detail_shows_sheet_fields():
         assert "Covenant: Test Covenant" in summary
         assert "Assigned Laboratory: yes" in summary
         assert "Int 3" in summary
-        assert "Creo: 10/55" in summary
+        assert "Creo (Cr): 10/55" in summary
         assert "Magic Theory 5 (Lab Totals)" in summary
         assert "Affinity with Creo" in summary
         assert "Ball of Abysmal Flame (Creo Ignem 20)" in summary
@@ -958,6 +958,53 @@ async def test_edit_arts_cancel_discards_changes():
     }
 
 
+async def test_edit_arts_grid_fits_default_terminal_and_accepts_real_typing():
+    # A default-sized terminal (80x24) is what run_test uses unless told
+    # otherwise, and matches a typical real terminal -- this test drives
+    # actual clicks and keystrokes (not direct .value assignment) so a
+    # layout wide enough to push columns off-screen, or to block real
+    # keyboard input, actually fails here.
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(80, 24)) as pilot:
+        await _open_character_detail(pilot)
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, EditArtsScreen)
+
+        screen_width = app.screen.size.width
+        # One field from each of the 3 columns: Techniques, Forms col A, Forms col B.
+        for field_id in (
+            "#input-art-rego-level",
+            "#input-art-herbam-level",
+            "#input-art-vim-level",
+        ):
+            field = app.screen.query_one(field_id, Input)
+            assert field.region.x + field.region.width <= screen_width, (
+                f"{field_id} is rendered outside the {screen_width}-wide screen"
+            )
+
+            await pilot.click(field_id)
+            await pilot.pause()
+            # Clear whatever's there regardless of where the click landed the
+            # cursor, then type -- this is exercising real keystrokes, not
+            # asserting exact cursor/selection placement from the click.
+            await pilot.press("end", "backspace", "backspace", "backspace")
+            await pilot.press("7")
+            await pilot.pause()
+            assert field.value == "7"
+
+        await pilot.click("#btn-save")
+        await pilot.pause()
+
+    saga = storage.load_saga("test_saga")
+    arts = saga.characters[0].arts
+    assert arts["rego"].level == 7
+    assert arts["herbam"].level == 7
+    assert arts["vim"].level == 7
+
+
 async def test_edit_arts_is_unavailable_for_non_magi():
     saga = _saga_with_empty_covenant()
     saga.characters.append(
@@ -975,3 +1022,43 @@ async def test_edit_arts_is_unavailable_for_non_magi():
 
         # Arts editing doesn't apply to non-magi -- the binding is disabled.
         assert isinstance(app.screen, CharacterDetailScreen)
+
+
+async def test_creating_a_second_character_after_viewing_the_first_does_not_crash():
+    storage.save_saga(_saga_with_empty_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_covenant_detail(pilot)
+
+        # Create the first character.
+        await pilot.press("n")
+        await pilot.pause()
+        app.screen.query_one("#input-name", Input).value = "Leandro"
+        await pilot.click("#btn-create")
+        await pilot.pause()
+        assert isinstance(app.screen, CovenantDetailScreen)
+
+        # Open it (the reported repro: view a character before adding another).
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, CharacterDetailScreen)
+        await pilot.press("escape")
+        await pilot.pause()
+        assert isinstance(app.screen, CovenantDetailScreen)
+
+        # Create a second character -- this used to raise Textual's
+        # DuplicateIds because the character-list wasn't awaiting clear()
+        # before re-adding the (still-present) first character's item.
+        await pilot.press("n")
+        await pilot.pause()
+        app.screen.query_one("#input-name", Input).value = "Guillame"
+        await pilot.click("#btn-create")
+        await pilot.pause()
+
+        assert isinstance(app.screen, CovenantDetailScreen)
+        character_list = app.screen.query_one("#character-list", ListView)
+        assert len(character_list.children) == 2
+
+    saga = storage.load_saga("test_saga")
+    assert {c.name for c in saga.characters} == {"Leandro", "Guillame"}

@@ -164,13 +164,13 @@ class SagaDetailScreen(Screen[None]):
         yield ListView(id="covenant-list")
         yield Footer()
 
-    def on_mount(self) -> None:
-        self._populate_covenant_list()
+    async def on_mount(self) -> None:
+        await self._populate_covenant_list()
 
     def action_create_covenant(self) -> None:
-        def handle_result(covenant_id: str | None) -> None:
+        async def handle_result(covenant_id: str | None) -> None:
             if covenant_id is not None:
-                self._populate_covenant_list()
+                await self._populate_covenant_list()
 
         self.app.push_screen(CovenantCreateScreen(self.saga), handle_result)
 
@@ -193,12 +193,15 @@ class SagaDetailScreen(Screen[None]):
         ]
         return "\n".join(lines)
 
-    def _populate_covenant_list(self) -> None:
+    async def _populate_covenant_list(self) -> None:
         list_view = self.query_one("#covenant-list", ListView)
-        list_view.clear()
+        # Must be awaited before re-adding items below, or a same-id item not
+        # yet removed collides with its freshly-mounted replacement and
+        # Textual raises DuplicateIds.
+        await list_view.clear()
 
         if not self.saga.covenants:
-            list_view.append(
+            await list_view.append(
                 ListItem(
                     Label(
                         "No covenants yet -- covenant creation is coming in a "
@@ -208,6 +211,7 @@ class SagaDetailScreen(Screen[None]):
             )
             return
 
+        items = []
         for covenant in self.saga.covenants:
             character_count = sum(
                 1 for c in self.saga.characters if c.covenant_id == covenant.id
@@ -219,9 +223,10 @@ class SagaDetailScreen(Screen[None]):
                 f"{covenant.name}  —  {character_count} character(s), "
                 f"{lab_count} lab(s)"
             )
-            list_view.append(
+            items.append(
                 ListItem(Label(summary), id=f"{_COVENANT_ITEM_ID_PREFIX}{covenant.id}")
             )
+        await list_view.extend(items)
         list_view.index = 0
 
     def on_list_view_selected(self, event: ListView.Selected) -> None:
@@ -344,24 +349,24 @@ class CovenantDetailScreen(Screen[None]):
         yield ListView(id="library-list")
         yield Footer()
 
-    def on_mount(self) -> None:
-        self._populate_character_list()
-        self._populate_laboratory_list()
-        self._populate_library_list()
+    async def on_mount(self) -> None:
+        await self._populate_character_list()
+        await self._populate_laboratory_list()
+        await self._populate_library_list()
 
     def action_create_laboratory(self) -> None:
-        def handle_result(lab_id: str | None) -> None:
+        async def handle_result(lab_id: str | None) -> None:
             if lab_id is not None:
-                self._populate_laboratory_list()
+                await self._populate_laboratory_list()
 
         self.app.push_screen(
             LaboratoryCreateScreen(self.saga, self.covenant), handle_result
         )
 
     def action_create_character(self) -> None:
-        def handle_result(character_id: str | None) -> None:
+        async def handle_result(character_id: str | None) -> None:
             if character_id is not None:
-                self._populate_character_list()
+                await self._populate_character_list()
 
         self.app.push_screen(
             CharacterCreateScreen(self.saga, default_covenant_id=self.covenant.id),
@@ -384,60 +389,63 @@ class CovenantDetailScreen(Screen[None]):
             lines.append("Vis stock: (none recorded)")
         return "\n".join(lines)
 
-    def _populate_character_list(self) -> None:
+    async def _populate_character_list(self) -> None:
         list_view = self.query_one("#character-list", ListView)
-        list_view.clear()
+        await list_view.clear()
 
         characters = [
             c for c in self.saga.characters if c.covenant_id == self.covenant.id
         ]
         if not characters:
-            list_view.append(ListItem(Label("(none)")))
+            await list_view.append(ListItem(Label("(none)")))
             return
 
-        for character in characters:
-            list_view.append(
-                ListItem(
-                    Label(f"{character.name} ({character.type})"),
-                    id=f"{_CHARACTER_ITEM_ID_PREFIX}{character.id}",
-                )
+        items = [
+            ListItem(
+                Label(f"{character.name} ({character.type})"),
+                id=f"{_CHARACTER_ITEM_ID_PREFIX}{character.id}",
             )
+            for character in characters
+        ]
+        await list_view.extend(items)
         list_view.index = 0
 
-    def _populate_laboratory_list(self) -> None:
+    async def _populate_laboratory_list(self) -> None:
         list_view = self.query_one("#laboratory-list", ListView)
-        list_view.clear()
+        await list_view.clear()
 
         labs = [
             lab for lab in self.saga.laboratories if lab.covenant_id == self.covenant.id
         ]
         if not labs:
-            list_view.append(ListItem(Label("(none)")))
+            await list_view.append(ListItem(Label("(none)")))
             return
 
+        items = []
         for lab in labs:
             owner = next(
                 (c for c in self.saga.characters if c.id == lab.owner_id), None
             )
             label = f"{lab.name}  —  owner: {owner.name if owner else 'unassigned'}"
-            list_view.append(
+            items.append(
                 ListItem(Label(label), id=f"{_LABORATORY_ITEM_ID_PREFIX}{lab.id}")
             )
+        await list_view.extend(items)
         list_view.index = 0
 
-    def _populate_library_list(self) -> None:
+    async def _populate_library_list(self) -> None:
         list_view = self.query_one("#library-list", ListView)
-        list_view.clear()
+        await list_view.clear()
 
         library = next(
             (lib for lib in self.saga.libraries if lib.id == self.covenant.library_id),
             None,
         )
         if library is None:
-            list_view.append(ListItem(Label("(none)")))
+            await list_view.append(ListItem(Label("(none)")))
             return
 
-        list_view.append(
+        await list_view.append(
             ListItem(
                 Label(f"Library ({len(library.books)} book(s))"),
                 id=f"{_LIBRARY_ITEM_ID_PREFIX}{library.id}",
@@ -964,6 +972,7 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
 
     #arts-dialog {
         width: auto;
+        max-width: 100%;
         height: auto;
         border: round $accent;
         padding: 1 2;
@@ -977,7 +986,7 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
 
     .art-column {
         width: auto;
-        margin-right: 3;
+        margin-right: 2;
     }
 
     .column-heading {
@@ -985,11 +994,12 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
     }
 
     .art-row {
+        width: auto;
         height: auto;
     }
 
     .art-row Label {
-        width: 14;
+        width: 10;
         content-align: right middle;
         padding-right: 1;
     }
@@ -1000,7 +1010,9 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
     }
 
     .art-row Input {
-        width: 6;
+        width: 5;
+        height: 1;
+        border: none;
     }
 
     #arts-error {
@@ -1018,7 +1030,7 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
         def row(art_name: str):
             key = art_name.lower()
             score = self.arts.get(key, ArtScore())
-            yield Label(f"{art_name} ({ART_ABBREVIATIONS[art_name]})")
+            yield Label(art_name)
             yield Input(
                 value=str(score.level),
                 type="integer",
@@ -1224,7 +1236,8 @@ class CharacterDetailScreen(Screen[None]):
             if character.arts:
                 lines.append("Arts:")
                 lines += [
-                    f"  {art.title()}: {score.level}/{score.xp}"
+                    f"  {art.title()} ({ART_ABBREVIATIONS.get(art.title(), '?')}): "
+                    f"{score.level}/{score.xp}"
                     for art, score in character.arts.items()
                 ]
             else:
@@ -1520,37 +1533,42 @@ class SagaPickerScreen(Screen[None]):
         yield ListView(id="saga-list")
         yield Footer()
 
-    def on_mount(self) -> None:
-        self.refresh_list()
+    async def on_mount(self) -> None:
+        await self.refresh_list()
 
-    def refresh_list(self) -> None:
+    async def refresh_list(self) -> None:
         list_view = self.query_one("#saga-list", ListView)
-        list_view.clear()
+        # Must be awaited before re-adding items below, or a same-id item not
+        # yet removed collides with its freshly-mounted replacement and
+        # Textual raises DuplicateIds.
+        await list_view.clear()
 
         saga_ids = storage.list_sagas()
         if not saga_ids:
-            list_view.append(
+            await list_view.append(
                 ListItem(Label("No sagas yet -- press 'n' to create one."))
             )
             return
 
+        items = []
         for saga_id in saga_ids:
             saga = storage.load_saga(saga_id)
             summary = (
                 f"{saga.name}  —  Storyguide: {saga.storyguide or '(unset)'}"
                 f"  —  {saga.current_season} {saga.current_year}"
             )
-            list_view.append(
+            items.append(
                 ListItem(Label(summary), id=f"{_SAGA_ITEM_ID_PREFIX}{saga_id}")
             )
+        await list_view.extend(items)
         # append()/extend() don't set an initial highlight the way construction-time
         # children do, so keyboard/enter selection wouldn't work without this.
         list_view.index = 0
 
     def action_create_saga(self) -> None:
-        def handle_result(saga_id: str | None) -> None:
+        async def handle_result(saga_id: str | None) -> None:
             if saga_id is not None:
-                self.refresh_list()
+                await self.refresh_list()
 
         self.app.push_screen(SagaCreateScreen(), handle_result)
 
