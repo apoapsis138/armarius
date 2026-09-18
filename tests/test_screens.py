@@ -5,6 +5,7 @@ from ars_magica_manager import storage
 from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     Ability,
+    ArtScore,
     Book,
     Character,
     Characteristics,
@@ -285,7 +286,10 @@ def _sample_saga_with_covenant() -> Saga:
                 type="magus",
                 covenant_id="cov1",
                 characteristics=Characteristics(intelligence=3, stamina=1),
-                arts={"creo": 10, "ignem": 5},
+                arts={
+                    "creo": ArtScore(level=10, xp=55),
+                    "ignem": ArtScore(level=5, xp=15),
+                },
                 abilities=[
                     Ability(name="Magic Theory", score=5, specialty="Lab Totals")
                 ],
@@ -387,7 +391,7 @@ async def test_character_detail_shows_sheet_fields():
         assert "Covenant: Test Covenant" in summary
         assert "Assigned Laboratory: yes" in summary
         assert "Int 3" in summary
-        assert "Creo: 10" in summary
+        assert "Creo: 10/55" in summary
         assert "Magic Theory 5 (Lab Totals)" in summary
         assert "Affinity with Creo" in summary
         assert "Ball of Abysmal Flame (Creo Ignem 20)" in summary
@@ -881,11 +885,15 @@ async def test_edit_arts_prefills_existing_scores_and_saves_full_grid():
         await pilot.pause()
         assert isinstance(app.screen, EditArtsScreen)
 
-        assert app.screen.query_one("#input-art-creo", Input).value == "10"
-        assert app.screen.query_one("#input-art-ignem", Input).value == "5"
-        assert app.screen.query_one("#input-art-rego", Input).value == "0"
+        assert app.screen.query_one("#input-art-creo-level", Input).value == "10"
+        assert app.screen.query_one("#input-art-creo-xp", Input).value == "55"
+        assert app.screen.query_one("#input-art-ignem-level", Input).value == "5"
+        assert app.screen.query_one("#input-art-ignem-xp", Input).value == "15"
+        assert app.screen.query_one("#input-art-rego-level", Input).value == "0"
+        assert app.screen.query_one("#input-art-rego-xp", Input).value == "0"
 
-        app.screen.query_one("#input-art-rego", Input).value = "3"
+        app.screen.query_one("#input-art-rego-level", Input).value = "3"
+        app.screen.query_one("#input-art-rego-xp", Input).value = "6"
 
         await pilot.click("#btn-save")
         await pilot.pause()
@@ -894,12 +902,12 @@ async def test_edit_arts_prefills_existing_scores_and_saves_full_grid():
 
     saga = storage.load_saga("test_saga")
     arts = saga.characters[0].arts
-    assert arts["creo"] == 10
-    assert arts["ignem"] == 5
-    assert arts["rego"] == 3
+    assert arts["creo"] == ArtScore(level=10, xp=55)
+    assert arts["ignem"] == ArtScore(level=5, xp=15)
+    assert arts["rego"] == ArtScore(level=3, xp=6)
     # Every one of the 15 Arts is written, not just the ones that were nonzero.
     assert len(arts) == 15
-    assert arts["vim"] == 0
+    assert arts["vim"] == ArtScore(level=0, xp=0)
 
 
 async def test_edit_arts_requires_integers():
@@ -912,7 +920,7 @@ async def test_edit_arts_requires_integers():
         await pilot.press("e")
         await pilot.pause()
 
-        app.screen.query_one("#input-art-rego", Input).value = "not a number"
+        app.screen.query_one("#input-art-rego-level", Input).value = "not a number"
 
         await pilot.click("#btn-save")
         await pilot.pause()
@@ -920,7 +928,10 @@ async def test_edit_arts_requires_integers():
         assert isinstance(app.screen, EditArtsScreen)
 
     saga = storage.load_saga("test_saga")
-    assert saga.characters[0].arts == {"creo": 10, "ignem": 5}
+    assert saga.characters[0].arts == {
+        "creo": ArtScore(level=10, xp=55),
+        "ignem": ArtScore(level=5, xp=15),
+    }
 
 
 async def test_edit_arts_cancel_discards_changes():
@@ -933,7 +944,7 @@ async def test_edit_arts_cancel_discards_changes():
         await pilot.press("e")
         await pilot.pause()
 
-        app.screen.query_one("#input-art-rego", Input).value = "9"
+        app.screen.query_one("#input-art-rego-level", Input).value = "9"
 
         await pilot.press("escape")
         await pilot.pause()
@@ -941,7 +952,10 @@ async def test_edit_arts_cancel_discards_changes():
         assert isinstance(app.screen, CharacterDetailScreen)
 
     saga = storage.load_saga("test_saga")
-    assert saga.characters[0].arts == {"creo": 10, "ignem": 5}
+    assert saga.characters[0].arts == {
+        "creo": ArtScore(level=10, xp=55),
+        "ignem": ArtScore(level=5, xp=15),
+    }
 
 
 async def test_edit_arts_is_unavailable_for_non_magi():

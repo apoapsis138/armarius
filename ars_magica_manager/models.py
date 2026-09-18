@@ -37,6 +37,23 @@ FORMS: tuple[str, ...] = (
     "Terram",
     "Vim",
 )
+ART_ABBREVIATIONS: dict[str, str] = {
+    "Creo": "Cr",
+    "Intellego": "In",
+    "Muto": "Mu",
+    "Perdo": "Pe",
+    "Rego": "Re",
+    "Animal": "An",
+    "Aquam": "Aq",
+    "Auram": "Au",
+    "Corpus": "Co",
+    "Herbam": "He",
+    "Ignem": "Ig",
+    "Imaginem": "Im",
+    "Mentem": "Me",
+    "Terram": "Te",
+    "Vim": "Vi",
+}
 
 
 @dataclass
@@ -204,13 +221,30 @@ class Laboratory:
 
 
 @dataclass
+class ArtScore:
+    """A magus's score in one Art: the working Level, and total XP spent.
+
+    These are stored independently rather than deriving Level from XP --
+    v1 is a tracker, not a rules engine (see DESIGN.md section 2), so
+    there's no XP-to-Level formula applied here yet.
+    """
+
+    level: int = 0
+    xp: int = 0
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> ArtScore:
+        return cls(**data)
+
+
+@dataclass
 class Character:
     id: str
     name: str
     type: CharacterType
     covenant_id: str | None = None
     characteristics: Characteristics = field(default_factory=Characteristics)
-    arts: dict[str, int] = field(default_factory=dict)
+    arts: dict[str, ArtScore] = field(default_factory=dict)
     abilities: list[Ability] = field(default_factory=list)
     virtues_flaws: list[VirtueFlawInstance] = field(default_factory=list)
     spells_known: list[str] = field(default_factory=list)  # Spell ids
@@ -220,6 +254,9 @@ class Character:
     def from_dict(cls, data: dict[str, Any]) -> Character:
         d = dict(data)
         d["characteristics"] = Characteristics.from_dict(d.get("characteristics") or {})
+        d["arts"] = {
+            art: ArtScore.from_dict(score) for art, score in d.get("arts", {}).items()
+        }
         d["abilities"] = [Ability.from_dict(a) for a in d.get("abilities", [])]
         d["virtues_flaws"] = [
             VirtueFlawInstance(**vf) for vf in d.get("virtues_flaws", [])

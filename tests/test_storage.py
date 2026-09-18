@@ -1,6 +1,7 @@
 from ars_magica_manager import storage
 from ars_magica_manager.models import (
     Ability,
+    ArtScore,
     Book,
     Character,
     Characteristics,
@@ -25,7 +26,10 @@ def _sample_saga() -> Saga:
                 type="magus",
                 covenant_id="cov_1",
                 characteristics=Characteristics(intelligence=3),
-                arts={"creo": 10, "ignem": 5},
+                arts={
+                    "creo": ArtScore(level=10, xp=55),
+                    "ignem": ArtScore(level=5, xp=15),
+                },
                 abilities=[
                     Ability(name="Magic Theory", score=5, specialty="Lab Totals")
                 ],

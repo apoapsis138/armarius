@@ -22,10 +22,12 @@ from textual.widgets import (
 
 from . import catalog, storage
 from .models import (
+    ART_ABBREVIATIONS,
     FORMS,
     SEASONS,
     TECHNIQUES,
     Ability,
+    ArtScore,
     Character,
     Covenant,
     Laboratory,
@@ -943,12 +945,14 @@ class RemovalPickerScreen(ModalScreen[int | None]):
         self.dismiss(index)
 
 
-class EditArtsScreen(ModalScreen[dict[str, int] | None]):
+class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
     """Edits all 15 Hermetic Arts at once -- a fixed grid, not an addable list.
 
-    Forms (10, in two columns of 5) on the left, Techniques (5, one
-    column) on the right. Dismisses with a dict of every art's lowercase
-    name -> score, or None if cancelled.
+    Three columns of 5: Techniques (left, its own header), then Forms
+    split across the middle and right columns (header only on the middle
+    one, since the right column is just its continuation). Each Art shows
+    a Level / XP pair. Dismisses with a dict of every art's lowercase name
+    -> ArtScore, or None if cancelled.
     """
 
     BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
@@ -966,9 +970,18 @@ class EditArtsScreen(ModalScreen[dict[str, int] | None]):
         background: $surface;
     }
 
+    #arts-subtitle {
+        color: $text-muted;
+        margin-bottom: 1;
+    }
+
     .art-column {
         width: auto;
         margin-right: 3;
+    }
+
+    .column-heading {
+        text-style: bold;
     }
 
     .art-row {
@@ -976,13 +989,18 @@ class EditArtsScreen(ModalScreen[dict[str, int] | None]):
     }
 
     .art-row Label {
-        width: 11;
+        width: 14;
         content-align: right middle;
         padding-right: 1;
     }
 
+    .art-row .art-sep {
+        width: 1;
+        content-align: center middle;
+    }
+
     .art-row Input {
-        width: 8;
+        width: 6;
     }
 
     #arts-error {
@@ -992,39 +1010,46 @@ class EditArtsScreen(ModalScreen[dict[str, int] | None]):
     }
     """
 
-    def __init__(self, arts: dict[str, int]) -> None:
+    def __init__(self, arts: dict[str, ArtScore]) -> None:
         super().__init__()
         self.arts = arts
 
     def compose(self) -> ComposeResult:
         def row(art_name: str):
             key = art_name.lower()
-            yield Label(art_name)
+            score = self.arts.get(key, ArtScore())
+            yield Label(f"{art_name} ({ART_ABBREVIATIONS[art_name]})")
             yield Input(
-                value=str(self.arts.get(key, 0)),
+                value=str(score.level),
                 type="integer",
-                id=f"input-art-{key}",
+                id=f"input-art-{key}-level",
+            )
+            yield Label("/", classes="art-sep")
+            yield Input(
+                value=str(score.xp),
+                type="integer",
+                id=f"input-art-{key}-xp",
             )
 
         with Vertical(id="arts-dialog"):
             yield Label("Edit Arts", id="arts-title")
+            yield Label("Each score is Level / XP", id="arts-subtitle")
             with Horizontal():
-                with Vertical(classes="art-column"):
-                    yield Label("Forms", classes="column-heading")
-                    with Horizontal():
-                        with Vertical():
-                            for form in FORMS[:5]:
-                                with Horizontal(classes="art-row"):
-                                    yield from row(form)
-                        with Vertical():
-                            for form in FORMS[5:]:
-                                with Horizontal(classes="art-row"):
-                                    yield from row(form)
                 with Vertical(classes="art-column"):
                     yield Label("Techniques", classes="column-heading")
                     for technique in TECHNIQUES:
                         with Horizontal(classes="art-row"):
                             yield from row(technique)
+                with Vertical(classes="art-column"):
+                    yield Label("Forms", classes="column-heading")
+                    for form in FORMS[:5]:
+                        with Horizontal(classes="art-row"):
+                            yield from row(form)
+                with Vertical(classes="art-column"):
+                    yield Label("", classes="column-heading")
+                    for form in FORMS[5:]:
+                        with Horizontal(classes="art-row"):
+                            yield from row(form)
             yield Static("", id="arts-error")
             with Horizontal():
                 yield Button("Save", id="btn-save", variant="success")
@@ -1041,15 +1066,18 @@ class EditArtsScreen(ModalScreen[dict[str, int] | None]):
 
     def _try_save(self) -> None:
         error = self.query_one("#arts-error", Static)
-        result: dict[str, int] = {}
+        result: dict[str, ArtScore] = {}
         for art_name in (*TECHNIQUES, *FORMS):
             key = art_name.lower()
-            raw = self.query_one(f"#input-art-{key}", Input).value.strip()
+            level_raw = self.query_one(f"#input-art-{key}-level", Input).value.strip()
+            xp_raw = self.query_one(f"#input-art-{key}-xp", Input).value.strip()
             try:
-                result[key] = int(raw)
+                level = int(level_raw)
+                xp = int(xp_raw)
             except ValueError:
-                error.update(f"{art_name} must be a whole number.")
+                error.update(f"{art_name} needs whole numbers for Level and XP.")
                 return
+            result[key] = ArtScore(level=level, xp=xp)
         self.dismiss(result)
 
 
@@ -1082,7 +1110,7 @@ class CharacterDetailScreen(Screen[None]):
         return action != "edit_arts" or self.character.type == "magus"
 
     def action_edit_arts(self) -> None:
-        def handle_result(arts: dict[str, int] | None) -> None:
+        def handle_result(arts: dict[str, ArtScore] | None) -> None:
             if arts is not None:
                 self.character.arts = arts
                 storage.save_saga(self.saga)
@@ -1196,7 +1224,8 @@ class CharacterDetailScreen(Screen[None]):
             if character.arts:
                 lines.append("Arts:")
                 lines += [
-                    f"  {art.title()}: {score}" for art, score in character.arts.items()
+                    f"  {art.title()}: {score.level}/{score.xp}"
+                    for art, score in character.arts.items()
                 ]
             else:
                 lines.append("Arts: (none recorded)")
