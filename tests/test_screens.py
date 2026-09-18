@@ -16,6 +16,8 @@ from ars_magica_manager.models import (
     VirtueFlawInstance,
 )
 from ars_magica_manager.screens import (
+    AbilityDetailsScreen,
+    AbilityPickerScreen,
     CharacterCreateScreen,
     CharacterDetailScreen,
     CovenantCreateScreen,
@@ -23,10 +25,10 @@ from ars_magica_manager.screens import (
     LaboratoryCreateScreen,
     LaboratoryDetailScreen,
     LibraryDetailScreen,
+    ParamPromptScreen,
     SagaCreateScreen,
     SagaDetailScreen,
     SagaPickerScreen,
-    VirtueFlawParamScreen,
     VirtueFlawPickerScreen,
 )
 
@@ -462,7 +464,7 @@ async def test_add_virtue_flaw_without_parameters_to_character():
         await _open_character_detail(pilot)
         assert isinstance(app.screen, CharacterDetailScreen)
 
-        await pilot.press("a")
+        await pilot.press("v")
         await pilot.pause()
         assert isinstance(app.screen, VirtueFlawPickerScreen)
 
@@ -485,13 +487,13 @@ async def test_add_virtue_flaw_with_parameters_to_character():
     async with app.run_test() as pilot:
         await _open_character_detail(pilot)
 
-        await pilot.press("a")
+        await pilot.press("v")
         await pilot.pause()
 
         # Catalog order puts "Affinity with {art}" (which needs a parameter) first.
         await pilot.press("enter")
         await pilot.pause()
-        assert isinstance(app.screen, VirtueFlawParamScreen)
+        assert isinstance(app.screen, ParamPromptScreen)
 
         app.screen.query_one("#input-param-art", Input).value = "Creo"
         await pilot.click("#btn-confirm")
@@ -514,11 +516,11 @@ async def test_cancelling_param_screen_returns_to_picker_without_adding():
     async with app.run_test() as pilot:
         await _open_character_detail(pilot)
 
-        await pilot.press("a")
+        await pilot.press("v")
         await pilot.pause()
         await pilot.press("enter")
         await pilot.pause()
-        assert isinstance(app.screen, VirtueFlawParamScreen)
+        assert isinstance(app.screen, ParamPromptScreen)
 
         await pilot.press("escape")
         await pilot.pause()
@@ -540,7 +542,7 @@ async def test_virtue_flaw_picker_excludes_already_held_entries():
     async with app.run_test() as pilot:
         await _open_character_detail(pilot)
 
-        await pilot.press("a")
+        await pilot.press("v")
         await pilot.pause()
 
         picker_list = app.screen.query_one("#vf-picker-list", ListView)
@@ -563,7 +565,7 @@ async def test_add_virtue_flaw_to_laboratory_reuses_same_picker():
         await pilot.pause()
         assert isinstance(app.screen, LaboratoryDetailScreen)
 
-        await pilot.press("a")
+        await pilot.press("v")
         await pilot.pause()
         assert isinstance(app.screen, VirtueFlawPickerScreen)
 
@@ -650,3 +652,112 @@ async def test_create_laboratory_requires_integer_size():
 
     saga = storage.load_saga("test_saga")
     assert saga.laboratories == []
+
+
+async def test_add_ability_without_parameters_to_character():
+    storage.save_saga(_saga_with_bare_character())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_character_detail(pilot)
+
+        await pilot.press("a")
+        await pilot.pause()
+        assert isinstance(app.screen, AbilityPickerScreen)
+
+        await pilot.click("#ability-ab_athletics")
+        await pilot.pause()
+        assert isinstance(app.screen, AbilityDetailsScreen)
+
+        app.screen.query_one("#input-score", Input).value = "3"
+        app.screen.query_one("#input-specialty", Input).value = "Running"
+
+        await pilot.click("#btn-confirm")
+        await pilot.pause()
+
+        assert isinstance(app.screen, CharacterDetailScreen)
+        assert "Athletics 3 (Running)" in app.screen._summary()
+
+    saga = storage.load_saga("test_saga")
+    character = saga.characters[0]
+    assert len(character.abilities) == 1
+    assert character.abilities[0].name == "Athletics"
+    assert character.abilities[0].score == 3
+    assert character.abilities[0].specialty == "Running"
+
+
+async def test_add_ability_with_parameters_to_character():
+    storage.save_saga(_saga_with_bare_character())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_character_detail(pilot)
+
+        await pilot.press("a")
+        await pilot.pause()
+
+        await pilot.click("#ability-ab_craft")
+        await pilot.pause()
+        assert isinstance(app.screen, ParamPromptScreen)
+
+        app.screen.query_one("#input-param-craft", Input).value = "Blacksmith"
+        await pilot.click("#btn-confirm")
+        await pilot.pause()
+
+        assert isinstance(app.screen, AbilityDetailsScreen)
+        assert app.screen.ability_name == "Craft: Blacksmith"
+
+        app.screen.query_one("#input-score", Input).value = "2"
+
+        await pilot.click("#btn-confirm")
+        await pilot.pause()
+
+        assert isinstance(app.screen, CharacterDetailScreen)
+
+    saga = storage.load_saga("test_saga")
+    character = saga.characters[0]
+    assert len(character.abilities) == 1
+    assert character.abilities[0].name == "Craft: Blacksmith"
+    assert character.abilities[0].score == 2
+
+
+async def test_cancelling_ability_details_returns_to_picker_without_adding():
+    storage.save_saga(_saga_with_bare_character())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_character_detail(pilot)
+
+        await pilot.press("a")
+        await pilot.pause()
+
+        await pilot.click("#ability-ab_athletics")
+        await pilot.pause()
+        assert isinstance(app.screen, AbilityDetailsScreen)
+
+        await pilot.press("escape")
+        await pilot.pause()
+
+        assert isinstance(app.screen, AbilityPickerScreen)
+
+    saga = storage.load_saga("test_saga")
+    assert saga.characters[0].abilities == []
+
+
+async def test_ability_picker_excludes_non_templated_duplicates_but_keeps_templated():
+    saga = _saga_with_bare_character()
+    saga.characters[0].abilities.append(Ability(name="Athletics", score=1))
+    saga.characters[0].abilities.append(Ability(name="Craft: Blacksmith", score=1))
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_character_detail(pilot)
+
+        await pilot.press("a")
+        await pilot.pause()
+
+        picker_list = app.screen.query_one("#ability-picker-list", ListView)
+        item_ids = [item.id for item in picker_list.children]
+        assert "ability-ab_athletics" not in item_ids
+        assert "ability-ab_craft" in item_ids

@@ -23,12 +23,12 @@ from textual.widgets import (
 from . import catalog, storage
 from .models import (
     SEASONS,
+    Ability,
     Character,
     Covenant,
     Laboratory,
     Library,
     Saga,
-    VirtueFlawDef,
     VirtueFlawInstance,
 )
 
@@ -38,6 +38,7 @@ _CHARACTER_ITEM_ID_PREFIX = "character-"
 _LABORATORY_ITEM_ID_PREFIX = "laboratory-"
 _LIBRARY_ITEM_ID_PREFIX = "library-"
 _VIRTUE_FLAW_ITEM_ID_PREFIX = "vf-"
+_ABILITY_ITEM_ID_PREFIX = "ability-"
 
 
 class SagaCreateScreen(ModalScreen[str | None]):
@@ -566,16 +567,20 @@ class CharacterCreateScreen(ModalScreen[str | None]):
         self.dismiss(character.id)
 
 
-class VirtueFlawParamScreen(ModalScreen[dict[str, str] | None]):
-    """Prompts for a catalog entry's parameters (e.g. which Art for Affinity).
+class ParamPromptScreen(ModalScreen[dict[str, str] | None]):
+    """Prompts for a catalog entry's placeholder parameters.
 
-    Dismisses with a dict of param name -> value, or None if cancelled.
+    Generic over any catalog entry shape that has a `name` (shown as a
+    title) and a list of `parameters` to fill in -- e.g. VirtueFlawDef's
+    "Affinity with {art}" needing "art", or AbilityDef's "Craft: {craft}"
+    needing "craft". Dismisses with a dict of param name -> value, or
+    None if cancelled.
     """
 
     BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
-    VirtueFlawParamScreen {
+    ParamPromptScreen {
         align: center middle;
     }
 
@@ -594,14 +599,15 @@ class VirtueFlawParamScreen(ModalScreen[dict[str, str] | None]):
     }
     """
 
-    def __init__(self, entry: VirtueFlawDef) -> None:
+    def __init__(self, prompt_title: str, parameters: list[str]) -> None:
         super().__init__()
-        self.entry = entry
+        self.prompt_title = prompt_title
+        self.parameters = parameters
 
     def compose(self) -> ComposeResult:
         with Vertical(id="param-dialog"):
-            yield Label(self.entry.name, id="param-title")
-            for param in self.entry.parameters:
+            yield Label(self.prompt_title, id="param-title")
+            for param in self.parameters:
                 yield Label(param.title())
                 yield Input(placeholder="e.g. Creo", id=f"input-param-{param}")
             yield Static("", id="param-error")
@@ -621,7 +627,7 @@ class VirtueFlawParamScreen(ModalScreen[dict[str, str] | None]):
     def _try_confirm(self) -> None:
         error = self.query_one("#param-error", Static)
         params: dict[str, str] = {}
-        for param in self.entry.parameters:
+        for param in self.parameters:
             value = self.query_one(f"#input-param-{param}", Input).value.strip()
             if not value:
                 error.update(f"{param.title()} is required.")
@@ -708,14 +714,173 @@ class VirtueFlawPickerScreen(ModalScreen[VirtueFlawInstance | None]):
             if params is not None:
                 self.dismiss(VirtueFlawInstance(vf_id=entry.id, params=params))
 
-        self.app.push_screen(VirtueFlawParamScreen(entry), handle_params)
+        self.app.push_screen(
+            ParamPromptScreen(entry.name, entry.parameters), handle_params
+        )
+
+
+class AbilityDetailsScreen(ModalScreen[Ability | None]):
+    """Prompts for score/specialty once an Ability's name is resolved.
+
+    Dismisses with the finished Ability, or None if cancelled.
+    """
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    AbilityDetailsScreen {
+        align: center middle;
+    }
+
+    #details-dialog {
+        width: 60;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    #details-error {
+        color: $error;
+        height: auto;
+        margin-top: 1;
+    }
+    """
+
+    def __init__(self, name: str) -> None:
+        super().__init__()
+        self.ability_name = name
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="details-dialog"):
+            yield Label(self.ability_name, id="details-title")
+            yield Label("Score")
+            yield Input(value="0", type="integer", id="input-score")
+            yield Label("Specialty (optional)")
+            yield Input(placeholder="e.g. Swords", id="input-specialty")
+            yield Static("", id="details-error")
+            with Horizontal():
+                yield Button("Confirm", id="btn-confirm", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-confirm":
+            self._try_confirm()
+
+    def _try_confirm(self) -> None:
+        error = self.query_one("#details-error", Static)
+        try:
+            score = int(self.query_one("#input-score", Input).value.strip())
+        except ValueError:
+            error.update("Score must be a whole number.")
+            return
+
+        specialty = self.query_one("#input-specialty", Input).value.strip() or None
+        self.dismiss(Ability(name=self.ability_name, score=score, specialty=specialty))
+
+
+class AbilityPickerScreen(ModalScreen[Ability | None]):
+    """Pick an Ability from the catalog, resolve any parameter, set score/specialty.
+
+    Non-templated entries already held are excluded (no point in a second
+    "Athletics" row); templated entries ("Craft: {craft}") stay available
+    since a character can hold several distinct instances of the same
+    family. Dismisses with the new Ability, or None if cancelled.
+    """
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    AbilityPickerScreen {
+        align: center middle;
+    }
+
+    #picker-dialog {
+        width: 76;
+        height: auto;
+        max-height: 24;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+    """
+
+    def __init__(self, exclude_names: set[str] | None = None) -> None:
+        super().__init__()
+        self._exclude_names = exclude_names or set()
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="picker-dialog"):
+            yield Label("Add an Ability", id="picker-title")
+            yield ListView(id="ability-picker-list")
+            yield Button("Cancel", id="btn-cancel")
+
+    def on_mount(self) -> None:
+        list_view = self.query_one("#ability-picker-list", ListView)
+        entries = [
+            entry
+            for entry in catalog.load_ability_catalog()
+            if entry.parameters or entry.name not in self._exclude_names
+        ]
+        if not entries:
+            list_view.append(ListItem(Label("(no more Abilities available)")))
+            return
+
+        for entry in entries:
+            needs = (
+                f"  (needs: {', '.join(entry.parameters)})" if entry.parameters else ""
+            )
+            label = f"{entry.name}  [{entry.category}]{needs}"
+            list_view.append(
+                ListItem(Label(label), id=f"{_ABILITY_ITEM_ID_PREFIX}{entry.id}")
+            )
+        list_view.index = 0
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+
+    def on_list_view_selected(self, event: ListView.Selected) -> None:
+        item_id = event.item.id
+        if item_id is None or not item_id.startswith(_ABILITY_ITEM_ID_PREFIX):
+            return
+        ability_id = item_id.removeprefix(_ABILITY_ITEM_ID_PREFIX)
+        entry = catalog.load_ability_catalog_by_id()[ability_id]
+
+        if entry.parameters:
+
+            def handle_params(params: dict[str, str] | None) -> None:
+                if params is not None:
+                    self._prompt_details(catalog.resolve_ability_name(entry, params))
+
+            self.app.push_screen(
+                ParamPromptScreen(entry.name, entry.parameters), handle_params
+            )
+        else:
+            self._prompt_details(entry.name)
+
+    def _prompt_details(self, name: str) -> None:
+        def handle_ability(ability: Ability | None) -> None:
+            if ability is not None:
+                self.dismiss(ability)
+
+        self.app.push_screen(AbilityDetailsScreen(name), handle_ability)
 
 
 class CharacterDetailScreen(Screen[None]):
-    """Character sheet summary; can add Virtues/Flaws from the catalog."""
+    """Character sheet summary; can add Abilities and Virtues/Flaws from the catalog."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
-        ("a", "add_virtue_flaw", "Add Virtue/Flaw"),
+        ("a", "add_ability", "Add Ability"),
+        ("v", "add_virtue_flaw", "Add Virtue/Flaw"),
         ("escape", "app.pop_screen", "Back"),
         ("q", "quit", "Quit"),
     ]
@@ -729,6 +894,17 @@ class CharacterDetailScreen(Screen[None]):
         yield Header()
         yield Static(self._summary(), id="character-detail")
         yield Footer()
+
+    def action_add_ability(self) -> None:
+        exclude_names = {a.name for a in self.character.abilities}
+
+        def handle_result(ability: Ability | None) -> None:
+            if ability is not None:
+                self.character.abilities.append(ability)
+                storage.save_saga(self.saga)
+                self._refresh_summary()
+
+        self.app.push_screen(AbilityPickerScreen(exclude_names), handle_result)
 
     def action_add_virtue_flaw(self) -> None:
         existing_ids = {vf.vf_id for vf in self.character.virtues_flaws}
@@ -925,7 +1101,7 @@ class LaboratoryDetailScreen(Screen[None]):
     """Laboratory summary; can add Virtues/Flaws from the catalog."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
-        ("a", "add_virtue_flaw", "Add Virtue/Flaw"),
+        ("v", "add_virtue_flaw", "Add Virtue/Flaw"),
         ("escape", "app.pop_screen", "Back"),
         ("q", "quit", "Quit"),
     ]
