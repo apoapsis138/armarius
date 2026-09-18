@@ -26,6 +26,7 @@ from ars_magica_manager.screens import (
     LaboratoryDetailScreen,
     LibraryDetailScreen,
     ParamPromptScreen,
+    RemovalPickerScreen,
     SagaCreateScreen,
     SagaDetailScreen,
     SagaPickerScreen,
@@ -761,3 +762,108 @@ async def test_ability_picker_excludes_non_templated_duplicates_but_keeps_templa
         item_ids = [item.id for item in picker_list.children]
         assert "ability-ab_athletics" not in item_ids
         assert "ability-ab_craft" in item_ids
+
+
+async def test_remove_ability_from_character():
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_character_detail(pilot)
+        assert "Magic Theory" in app.screen._summary()
+
+        await pilot.press("A")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)
+
+        await pilot.press("enter")
+        await pilot.pause()
+
+        assert isinstance(app.screen, CharacterDetailScreen)
+        assert "Magic Theory" not in app.screen._summary()
+
+    saga = storage.load_saga("test_saga")
+    assert saga.characters[0].abilities == []
+
+
+async def test_remove_virtue_flaw_from_character():
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_character_detail(pilot)
+        assert "Affinity with Creo" in app.screen._summary()
+
+        await pilot.press("V")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)
+
+        await pilot.press("enter")
+        await pilot.pause()
+
+        assert isinstance(app.screen, CharacterDetailScreen)
+        assert "Affinity with Creo" not in app.screen._summary()
+
+    saga = storage.load_saga("test_saga")
+    assert saga.characters[0].virtues_flaws == []
+
+
+async def test_remove_virtue_flaw_from_laboratory():
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_covenant_detail(pilot)
+
+        await pilot.click("#laboratory-lab1")
+        await pilot.pause()
+        assert isinstance(app.screen, LaboratoryDetailScreen)
+        assert "Superior Lab Equipment" in app.screen._summary()
+
+        await pilot.press("V")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)
+
+        await pilot.press("enter")
+        await pilot.pause()
+
+        assert isinstance(app.screen, LaboratoryDetailScreen)
+        assert "Superior Lab Equipment" not in app.screen._summary()
+
+    saga = storage.load_saga("test_saga")
+    assert saga.laboratories[0].virtues_flaws == []
+
+
+async def test_remove_with_nothing_to_remove_stays_on_same_screen():
+    storage.save_saga(_saga_with_bare_character())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_character_detail(pilot)
+
+        await pilot.press("A")
+        await pilot.pause()
+
+        # Nothing to remove -- stays on the character screen, no picker opened.
+        assert isinstance(app.screen, CharacterDetailScreen)
+
+
+async def test_cancelling_removal_picker_keeps_the_item():
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_character_detail(pilot)
+
+        await pilot.press("V")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)
+
+        await pilot.press("escape")
+        await pilot.pause()
+
+        assert isinstance(app.screen, CharacterDetailScreen)
+        assert "Affinity with Creo" in app.screen._summary()
+
+    saga = storage.load_saga("test_saga")
+    assert len(saga.characters[0].virtues_flaws) == 1

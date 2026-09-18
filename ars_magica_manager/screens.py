@@ -39,6 +39,7 @@ _LABORATORY_ITEM_ID_PREFIX = "laboratory-"
 _LIBRARY_ITEM_ID_PREFIX = "library-"
 _VIRTUE_FLAW_ITEM_ID_PREFIX = "vf-"
 _ABILITY_ITEM_ID_PREFIX = "ability-"
+_REMOVAL_ITEM_ID_PREFIX = "remove-"
 
 
 class SagaCreateScreen(ModalScreen[str | None]):
@@ -875,12 +876,79 @@ class AbilityPickerScreen(ModalScreen[Ability | None]):
         self.app.push_screen(AbilityDetailsScreen(name), handle_ability)
 
 
+class RemovalPickerScreen(ModalScreen[int | None]):
+    """Pick an item to remove from a list of display labels, by index.
+
+    Generic over what's being removed -- Character/Laboratory Virtues &
+    Flaws, Character Abilities, etc. -- the caller supplies the labels and
+    is responsible for deleting the corresponding item from its own list
+    using the returned index. Dismisses with that index, or None if
+    cancelled.
+    """
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    RemovalPickerScreen {
+        align: center middle;
+    }
+
+    #picker-dialog {
+        width: 76;
+        height: auto;
+        max-height: 24;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+    """
+
+    def __init__(self, title: str, labels: list[str]) -> None:
+        super().__init__()
+        self.prompt_title = title
+        self.labels = labels
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="picker-dialog"):
+            yield Label(self.prompt_title, id="picker-title")
+            yield ListView(id="removal-picker-list")
+            yield Button("Cancel", id="btn-cancel")
+
+    def on_mount(self) -> None:
+        list_view = self.query_one("#removal-picker-list", ListView)
+        if not self.labels:
+            list_view.append(ListItem(Label("(nothing to remove)")))
+            return
+
+        for index, label in enumerate(self.labels):
+            list_view.append(
+                ListItem(Label(label), id=f"{_REMOVAL_ITEM_ID_PREFIX}{index}")
+            )
+        list_view.index = 0
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+
+    def on_list_view_selected(self, event: ListView.Selected) -> None:
+        item_id = event.item.id
+        if item_id is None or not item_id.startswith(_REMOVAL_ITEM_ID_PREFIX):
+            return
+        index = int(item_id.removeprefix(_REMOVAL_ITEM_ID_PREFIX))
+        self.dismiss(index)
+
+
 class CharacterDetailScreen(Screen[None]):
     """Character sheet summary; can add Abilities and Virtues/Flaws from the catalog."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
         ("a", "add_ability", "Add Ability"),
+        ("A", "remove_ability", "Remove Ability"),
         ("v", "add_virtue_flaw", "Add Virtue/Flaw"),
+        ("V", "remove_virtue_flaw", "Remove Virtue/Flaw"),
         ("escape", "app.pop_screen", "Back"),
         ("q", "quit", "Quit"),
     ]
@@ -906,6 +974,26 @@ class CharacterDetailScreen(Screen[None]):
 
         self.app.push_screen(AbilityPickerScreen(exclude_names), handle_result)
 
+    def action_remove_ability(self) -> None:
+        if not self.character.abilities:
+            self.notify("No Abilities to remove.")
+            return
+
+        labels = [
+            f"{a.name} {a.score}" + (f" ({a.specialty})" if a.specialty else "")
+            for a in self.character.abilities
+        ]
+
+        def handle_result(index: int | None) -> None:
+            if index is not None:
+                del self.character.abilities[index]
+                storage.save_saga(self.saga)
+                self._refresh_summary()
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove an Ability", labels), handle_result
+        )
+
     def action_add_virtue_flaw(self) -> None:
         existing_ids = {vf.vf_id for vf in self.character.virtues_flaws}
 
@@ -916,6 +1004,27 @@ class CharacterDetailScreen(Screen[None]):
                 self._refresh_summary()
 
         self.app.push_screen(VirtueFlawPickerScreen(existing_ids), handle_result)
+
+    def action_remove_virtue_flaw(self) -> None:
+        if not self.character.virtues_flaws:
+            self.notify("No Virtues/Flaws to remove.")
+            return
+
+        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
+        labels = [
+            catalog.describe_virtue_flaw(vf, vf_catalog)
+            for vf in self.character.virtues_flaws
+        ]
+
+        def handle_result(index: int | None) -> None:
+            if index is not None:
+                del self.character.virtues_flaws[index]
+                storage.save_saga(self.saga)
+                self._refresh_summary()
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove a Virtue or Flaw", labels), handle_result
+        )
 
     def _refresh_summary(self) -> None:
         self.query_one("#character-detail", Static).update(self._summary())
@@ -1102,6 +1211,7 @@ class LaboratoryDetailScreen(Screen[None]):
 
     BINDINGS: ClassVar[list[BindingType]] = [
         ("v", "add_virtue_flaw", "Add Virtue/Flaw"),
+        ("V", "remove_virtue_flaw", "Remove Virtue/Flaw"),
         ("escape", "app.pop_screen", "Back"),
         ("q", "quit", "Quit"),
     ]
@@ -1126,6 +1236,27 @@ class LaboratoryDetailScreen(Screen[None]):
                 self._refresh_summary()
 
         self.app.push_screen(VirtueFlawPickerScreen(existing_ids), handle_result)
+
+    def action_remove_virtue_flaw(self) -> None:
+        if not self.laboratory.virtues_flaws:
+            self.notify("No Virtues/Flaws to remove.")
+            return
+
+        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
+        labels = [
+            catalog.describe_virtue_flaw(vf, vf_catalog)
+            for vf in self.laboratory.virtues_flaws
+        ]
+
+        def handle_result(index: int | None) -> None:
+            if index is not None:
+                del self.laboratory.virtues_flaws[index]
+                storage.save_saga(self.saga)
+                self._refresh_summary()
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove a Virtue or Flaw", labels), handle_result
+        )
 
     def _refresh_summary(self) -> None:
         self.query_one("#laboratory-detail", Static).update(self._summary())
