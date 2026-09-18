@@ -1,5 +1,5 @@
 import pytest
-from textual.widgets import Input, ListView, Select
+from textual.widgets import Input, ListView, Select, Tree
 
 from ars_magica_manager import storage
 from ars_magica_manager.app import ArsMagicaManagerApp
@@ -20,25 +20,50 @@ from ars_magica_manager.screens import (
     AbilityDetailsScreen,
     AbilityPickerScreen,
     CharacterCreateScreen,
-    CharacterDetailScreen,
     CovenantCreateScreen,
-    CovenantDetailScreen,
     EditArtsScreen,
     LaboratoryCreateScreen,
-    LaboratoryDetailScreen,
-    LibraryDetailScreen,
     ParamPromptScreen,
     RemovalPickerScreen,
     SagaCreateScreen,
-    SagaDetailScreen,
     SagaPickerScreen,
     VirtueFlawPickerScreen,
+    WorkspaceScreen,
 )
 
 
 @pytest.fixture(autouse=True)
 def isolated_sagas_dir(tmp_path, monkeypatch):
     monkeypatch.setattr(storage, "SAGAS_DIR", tmp_path)
+
+
+def _find_node(tree, data):
+    """Walk a Tree looking for the node whose `.data` matches, by value."""
+
+    def walk(node):
+        if node.data == data:
+            return node
+        for child in node.children:
+            found = walk(child)
+            if found is not None:
+                return found
+        return None
+
+    return walk(tree.root)
+
+
+async def _select(pilot, app, data) -> None:
+    """Select a nav-tree node by its `.data`, the same way a click/enter would."""
+    tree = app.screen.query_one("#nav-tree", Tree)
+    node = _find_node(tree, data)
+    assert node is not None, f"tree node with data={data!r} not found"
+    tree.select_node(node)
+    await pilot.pause()
+
+
+async def _open_workspace(pilot) -> None:
+    await pilot.press("enter")  # picker -> workspace
+    await pilot.pause()
 
 
 async def test_picker_shows_placeholder_with_no_sagas():
@@ -90,7 +115,7 @@ async def test_create_saga_requires_name_and_storyguide():
     assert storage.list_sagas() == []
 
 
-async def test_selecting_a_saga_opens_its_detail_screen():
+async def test_selecting_a_saga_opens_the_workspace():
     storage.save_saga(
         Saga(id="test_saga", name="Test Saga", storyguide="Alex", current_year=1220)
     )
@@ -103,22 +128,20 @@ async def test_selecting_a_saga_opens_its_detail_screen():
         await pilot.press("enter")
         await pilot.pause()
 
-        assert isinstance(app.screen, SagaDetailScreen)
+        assert isinstance(app.screen, WorkspaceScreen)
         assert app.screen.saga.id == "test_saga"
+        assert app.screen.selected_kind == "saga"
 
 
-async def test_saga_detail_shows_empty_state_with_no_covenants():
+async def test_workspace_tree_has_no_covenants_for_a_fresh_saga():
     storage.save_saga(Saga(id="test_saga", name="Test Saga", storyguide="Alex"))
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await pilot.press("enter")
-        await pilot.pause()
+        await _open_workspace(pilot)
 
-        assert isinstance(app.screen, SagaDetailScreen)
-        covenant_list = app.screen.query_one("#covenant-list", ListView)
-        assert len(covenant_list.children) == 1
-        assert covenant_list.index is None
+        tree = app.screen.query_one("#nav-tree", Tree)
+        assert len(tree.root.children) == 0
 
 
 async def test_create_covenant_flow_saves_covenant_and_empty_library():
@@ -126,8 +149,7 @@ async def test_create_covenant_flow_saves_covenant_and_empty_library():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await pilot.press("enter")  # picker -> saga detail
-        await pilot.pause()
+        await _open_workspace(pilot)
 
         await pilot.press("n")
         await pilot.pause()
@@ -139,9 +161,11 @@ async def test_create_covenant_flow_saves_covenant_and_empty_library():
         await pilot.click("#btn-create")
         await pilot.pause()
 
-        assert isinstance(app.screen, SagaDetailScreen)
-        covenant_list = app.screen.query_one("#covenant-list", ListView)
-        assert len(covenant_list.children) == 1
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert app.screen.selected_covenant is not None
+        assert app.screen.selected_covenant.name == "Fengheld"
+        tree = app.screen.query_one("#nav-tree", Tree)
+        assert len(tree.root.children) == 1
 
     saga = storage.load_saga("test_saga")
     assert len(saga.covenants) == 1
@@ -162,8 +186,8 @@ async def test_create_covenant_requires_name():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await pilot.press("enter")
-        await pilot.pause()
+        await _open_workspace(pilot)
+
         await pilot.press("n")
         await pilot.pause()
 
@@ -185,17 +209,40 @@ def _saga_with_empty_covenant() -> Saga:
     )
 
 
+async def _select_covenant(pilot, app, covenant_id: str = "cov1") -> None:
+    await _open_workspace(pilot)
+    await _select(pilot, app, ("covenant", covenant_id))
+
+
+async def _select_character(pilot, app, character_id: str = "char1") -> None:
+    await _select_covenant(pilot, app)
+    await _select(pilot, app, ("character", character_id))
+
+
+async def test_create_character_action_disabled_without_covenant_selected():
+    storage.save_saga(Saga(id="test_saga", name="Test Saga", storyguide="Alex"))
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_workspace(pilot)
+        assert app.screen.selected_kind == "saga"
+
+        await pilot.press("c")
+        await pilot.pause()
+
+        # "New Character" only applies once a covenant is selected -- the
+        # binding is disabled at the saga root, so nothing should open.
+        assert isinstance(app.screen, WorkspaceScreen)
+
+
 async def test_create_character_defaults_to_current_covenant():
     storage.save_saga(_saga_with_empty_covenant())
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await pilot.press("enter")  # picker -> saga detail
-        await pilot.pause()
-        await pilot.press("enter")  # saga detail -> covenant detail
-        await pilot.pause()
+        await _select_covenant(pilot, app)
 
-        await pilot.press("n")
+        await pilot.press("c")
         await pilot.pause()
         assert isinstance(app.screen, CharacterCreateScreen)
 
@@ -204,9 +251,9 @@ async def test_create_character_defaults_to_current_covenant():
         await pilot.click("#btn-create")
         await pilot.pause()
 
-        assert isinstance(app.screen, CovenantDetailScreen)
-        character_list = app.screen.query_one("#character-list", ListView)
-        assert len(character_list.children) == 1
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert app.screen.selected_character is not None
+        assert app.screen.selected_character.name == "Leandro"
 
     saga = storage.load_saga("test_saga")
     assert len(saga.characters) == 1
@@ -221,11 +268,9 @@ async def test_create_character_with_no_covenant():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await pilot.press("enter")
-        await pilot.pause()
-        await pilot.press("enter")
-        await pilot.pause()
-        await pilot.press("n")
+        await _select_covenant(pilot, app)
+
+        await pilot.press("c")
         await pilot.pause()
 
         form = app.screen
@@ -248,11 +293,9 @@ async def test_create_character_requires_name():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await pilot.press("enter")
-        await pilot.pause()
-        await pilot.press("enter")
-        await pilot.pause()
-        await pilot.press("n")
+        await _select_covenant(pilot, app)
+
+        await pilot.press("c")
         await pilot.pause()
 
         await pilot.click("#btn-create")
@@ -344,49 +387,35 @@ def _sample_saga_with_covenant() -> Saga:
     )
 
 
-async def test_covenant_browsing_shows_summary_and_lists():
+async def test_selecting_covenant_shows_summary_and_tree_children():
     storage.save_saga(_sample_saga_with_covenant())
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await pilot.press("enter")  # saga picker -> saga detail
-        await pilot.pause()
+        await _select_covenant(pilot, app)
 
-        covenant_list = app.screen.query_one("#covenant-list", ListView)
-        assert covenant_list.index == 0
-
-        await pilot.press("enter")  # saga detail -> covenant detail
-        await pilot.pause()
-
-        assert isinstance(app.screen, CovenantDetailScreen)
-        assert app.screen.covenant.id == "cov1"
-
-        summary = app.screen._summary()
+        assert app.screen.selected_covenant.id == "cov1"
+        summary = app.screen._covenant_summary(app.screen.selected_covenant)
         assert "Covenant: Test Covenant" in summary
         assert "Notes: A nice place" in summary
         assert "Ignem: 5" in summary
 
-        assert len(app.screen.query_one("#character-list", ListView).children) == 1
-        assert len(app.screen.query_one("#laboratory-list", ListView).children) == 1
-        assert len(app.screen.query_one("#library-list", ListView).children) == 1
+        tree = app.screen.query_one("#nav-tree", Tree)
+        assert _find_node(tree, ("character_group", "cov1")) is not None
+        assert _find_node(tree, ("laboratory_group", "cov1")) is not None
+        assert _find_node(tree, ("library", "cov1")) is not None
+        assert _find_node(tree, ("character", "char1")) is not None
+        assert _find_node(tree, ("laboratory", "lab1")) is not None
 
 
-async def test_character_detail_shows_sheet_fields():
+async def test_selecting_character_shows_sheet_fields():
     storage.save_saga(_sample_saga_with_covenant())
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await pilot.press("enter")  # picker -> saga detail
-        await pilot.pause()
-        await pilot.press("enter")  # saga detail -> covenant detail
-        await pilot.pause()
-        await pilot.press(
-            "enter"
-        )  # covenant detail -> character detail (default focus)
-        await pilot.pause()
+        await _select_character(pilot, app)
 
-        assert isinstance(app.screen, CharacterDetailScreen)
-        summary = app.screen._summary()
+        summary = app.screen._character_summary(app.screen.selected_character)
         assert "Character: Leandro" in summary
         assert "Covenant: Test Covenant" in summary
         assert "Assigned Laboratory: yes" in summary
@@ -397,42 +426,31 @@ async def test_character_detail_shows_sheet_fields():
         assert "Ball of Abysmal Flame (Creo Ignem 20)" in summary
 
 
-async def test_laboratory_detail_shows_owner_and_virtues():
+async def test_selecting_laboratory_shows_owner_and_virtues():
     storage.save_saga(_sample_saga_with_covenant())
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await pilot.press("enter")
-        await pilot.pause()
-        await pilot.press("enter")
-        await pilot.pause()
+        await _select_covenant(pilot, app)
+        await _select(pilot, app, ("laboratory", "lab1"))
 
-        await pilot.click("#laboratory-lab1")
-        await pilot.pause()
-
-        assert isinstance(app.screen, LaboratoryDetailScreen)
-        summary = app.screen._summary()
+        summary = app.screen._laboratory_summary(app.screen.selected_laboratory)
         assert "Owner: Leandro" in summary
         assert "Aura: 3" in summary
         assert "Well-Stocked" in summary
         assert "Superior Lab Equipment" in summary
 
 
-async def test_library_detail_shows_books_and_lab_text_spell():
+async def test_selecting_library_shows_books_and_lab_text_spell():
     storage.save_saga(_sample_saga_with_covenant())
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await pilot.press("enter")
-        await pilot.pause()
-        await pilot.press("enter")
-        await pilot.pause()
+        await _select_covenant(pilot, app)
+        await _select(pilot, app, ("library", "cov1"))
 
-        await pilot.click("#library-lib1")
-        await pilot.pause()
-
-        assert isinstance(app.screen, LibraryDetailScreen)
-        summary = app.screen._summary()
+        library = next(lib for lib in app.screen.saga.libraries if lib.id == "lib1")
+        summary = app.screen._library_summary(library)
         assert "[Summa] Magic Theory L8 Q6 by Bonisagus" in summary
         assert "[Lab Text] Ignem Q9 -- Ball of Abysmal Flame" in summary
 
@@ -449,26 +467,12 @@ def _saga_with_bare_character() -> Saga:
     )
 
 
-async def _open_covenant_detail(pilot) -> None:
-    await pilot.press("enter")  # picker -> saga detail
-    await pilot.pause()
-    await pilot.press("enter")  # saga detail -> covenant detail
-    await pilot.pause()
-
-
-async def _open_character_detail(pilot) -> None:
-    await _open_covenant_detail(pilot)
-    await pilot.press("enter")  # covenant detail -> character detail
-    await pilot.pause()
-
-
 async def test_add_virtue_flaw_without_parameters_to_character():
     storage.save_saga(_saga_with_bare_character())
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_character_detail(pilot)
-        assert isinstance(app.screen, CharacterDetailScreen)
+        await _select_character(pilot, app)
 
         await pilot.press("v")
         await pilot.pause()
@@ -477,8 +481,10 @@ async def test_add_virtue_flaw_without_parameters_to_character():
         await pilot.click("#vf-vf_superior_lab_equipment")
         await pilot.pause()
 
-        assert isinstance(app.screen, CharacterDetailScreen)
-        assert "Superior Lab Equipment" in app.screen._summary()
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert "Superior Lab Equipment" in app.screen._character_summary(
+            app.screen.selected_character
+        )
 
     saga = storage.load_saga("test_saga")
     character = saga.characters[0]
@@ -491,7 +497,7 @@ async def test_add_virtue_flaw_with_parameters_to_character():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_character_detail(pilot)
+        await _select_character(pilot, app)
 
         await pilot.press("v")
         await pilot.pause()
@@ -505,8 +511,10 @@ async def test_add_virtue_flaw_with_parameters_to_character():
         await pilot.click("#btn-confirm")
         await pilot.pause()
 
-        assert isinstance(app.screen, CharacterDetailScreen)
-        assert "Affinity with Creo" in app.screen._summary()
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert "Affinity with Creo" in app.screen._character_summary(
+            app.screen.selected_character
+        )
 
     saga = storage.load_saga("test_saga")
     character = saga.characters[0]
@@ -520,7 +528,7 @@ async def test_cancelling_param_screen_returns_to_picker_without_adding():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_character_detail(pilot)
+        await _select_character(pilot, app)
 
         await pilot.press("v")
         await pilot.pause()
@@ -546,7 +554,7 @@ async def test_virtue_flaw_picker_excludes_already_held_entries():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_character_detail(pilot)
+        await _select_character(pilot, app)
 
         await pilot.press("v")
         await pilot.pause()
@@ -565,11 +573,8 @@ async def test_add_virtue_flaw_to_laboratory_reuses_same_picker():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_covenant_detail(pilot)
-
-        await pilot.click("#laboratory-lab1")
-        await pilot.pause()
-        assert isinstance(app.screen, LaboratoryDetailScreen)
+        await _select_covenant(pilot, app)
+        await _select(pilot, app, ("laboratory", "lab1"))
 
         await pilot.press("v")
         await pilot.pause()
@@ -578,8 +583,10 @@ async def test_add_virtue_flaw_to_laboratory_reuses_same_picker():
         await pilot.click("#vf-vf_superior_lab_equipment")
         await pilot.pause()
 
-        assert isinstance(app.screen, LaboratoryDetailScreen)
-        assert "Superior Lab Equipment" in app.screen._summary()
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert "Superior Lab Equipment" in app.screen._laboratory_summary(
+            app.screen.selected_laboratory
+        )
 
     saga = storage.load_saga("test_saga")
     lab = saga.laboratories[0]
@@ -592,7 +599,7 @@ async def test_create_laboratory_flow_saves_laboratory():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_covenant_detail(pilot)
+        await _select_covenant(pilot, app)
 
         await pilot.press("l")
         await pilot.pause()
@@ -605,9 +612,9 @@ async def test_create_laboratory_flow_saves_laboratory():
         await pilot.click("#btn-create")
         await pilot.pause()
 
-        assert isinstance(app.screen, CovenantDetailScreen)
-        lab_list = app.screen.query_one("#laboratory-list", ListView)
-        assert len(lab_list.children) == 1
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert app.screen.selected_laboratory is not None
+        assert app.screen.selected_laboratory.name == "The Alchemical Tower"
 
     saga = storage.load_saga("test_saga")
     assert len(saga.laboratories) == 1
@@ -624,7 +631,7 @@ async def test_create_laboratory_requires_name():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_covenant_detail(pilot)
+        await _select_covenant(pilot, app)
 
         await pilot.press("l")
         await pilot.pause()
@@ -643,7 +650,7 @@ async def test_create_laboratory_requires_integer_size():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_covenant_detail(pilot)
+        await _select_covenant(pilot, app)
 
         await pilot.press("l")
         await pilot.pause()
@@ -665,7 +672,7 @@ async def test_add_ability_without_parameters_to_character():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_character_detail(pilot)
+        await _select_character(pilot, app)
 
         await pilot.press("a")
         await pilot.pause()
@@ -681,8 +688,10 @@ async def test_add_ability_without_parameters_to_character():
         await pilot.click("#btn-confirm")
         await pilot.pause()
 
-        assert isinstance(app.screen, CharacterDetailScreen)
-        assert "Athletics 3 (Running)" in app.screen._summary()
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert "Athletics 3 (Running)" in app.screen._character_summary(
+            app.screen.selected_character
+        )
 
     saga = storage.load_saga("test_saga")
     character = saga.characters[0]
@@ -697,7 +706,7 @@ async def test_add_ability_with_parameters_to_character():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_character_detail(pilot)
+        await _select_character(pilot, app)
 
         await pilot.press("a")
         await pilot.pause()
@@ -718,7 +727,7 @@ async def test_add_ability_with_parameters_to_character():
         await pilot.click("#btn-confirm")
         await pilot.pause()
 
-        assert isinstance(app.screen, CharacterDetailScreen)
+        assert isinstance(app.screen, WorkspaceScreen)
 
     saga = storage.load_saga("test_saga")
     character = saga.characters[0]
@@ -732,7 +741,7 @@ async def test_cancelling_ability_details_returns_to_picker_without_adding():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_character_detail(pilot)
+        await _select_character(pilot, app)
 
         await pilot.press("a")
         await pilot.pause()
@@ -758,7 +767,7 @@ async def test_ability_picker_excludes_non_templated_duplicates_but_keeps_templa
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_character_detail(pilot)
+        await _select_character(pilot, app)
 
         await pilot.press("a")
         await pilot.pause()
@@ -774,8 +783,10 @@ async def test_remove_ability_from_character():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_character_detail(pilot)
-        assert "Magic Theory" in app.screen._summary()
+        await _select_character(pilot, app)
+        assert "Magic Theory" in app.screen._character_summary(
+            app.screen.selected_character
+        )
 
         await pilot.press("A")
         await pilot.pause()
@@ -784,8 +795,10 @@ async def test_remove_ability_from_character():
         await pilot.press("enter")
         await pilot.pause()
 
-        assert isinstance(app.screen, CharacterDetailScreen)
-        assert "Magic Theory" not in app.screen._summary()
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert "Magic Theory" not in app.screen._character_summary(
+            app.screen.selected_character
+        )
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].abilities == []
@@ -796,8 +809,10 @@ async def test_remove_virtue_flaw_from_character():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_character_detail(pilot)
-        assert "Affinity with Creo" in app.screen._summary()
+        await _select_character(pilot, app)
+        assert "Affinity with Creo" in app.screen._character_summary(
+            app.screen.selected_character
+        )
 
         await pilot.press("V")
         await pilot.pause()
@@ -806,8 +821,10 @@ async def test_remove_virtue_flaw_from_character():
         await pilot.press("enter")
         await pilot.pause()
 
-        assert isinstance(app.screen, CharacterDetailScreen)
-        assert "Affinity with Creo" not in app.screen._summary()
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert "Affinity with Creo" not in app.screen._character_summary(
+            app.screen.selected_character
+        )
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].virtues_flaws == []
@@ -818,12 +835,11 @@ async def test_remove_virtue_flaw_from_laboratory():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_covenant_detail(pilot)
-
-        await pilot.click("#laboratory-lab1")
-        await pilot.pause()
-        assert isinstance(app.screen, LaboratoryDetailScreen)
-        assert "Superior Lab Equipment" in app.screen._summary()
+        await _select_covenant(pilot, app)
+        await _select(pilot, app, ("laboratory", "lab1"))
+        assert "Superior Lab Equipment" in app.screen._laboratory_summary(
+            app.screen.selected_laboratory
+        )
 
         await pilot.press("V")
         await pilot.pause()
@@ -832,8 +848,10 @@ async def test_remove_virtue_flaw_from_laboratory():
         await pilot.press("enter")
         await pilot.pause()
 
-        assert isinstance(app.screen, LaboratoryDetailScreen)
-        assert "Superior Lab Equipment" not in app.screen._summary()
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert "Superior Lab Equipment" not in app.screen._laboratory_summary(
+            app.screen.selected_laboratory
+        )
 
     saga = storage.load_saga("test_saga")
     assert saga.laboratories[0].virtues_flaws == []
@@ -844,13 +862,13 @@ async def test_remove_with_nothing_to_remove_stays_on_same_screen():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_character_detail(pilot)
+        await _select_character(pilot, app)
 
         await pilot.press("A")
         await pilot.pause()
 
-        # Nothing to remove -- stays on the character screen, no picker opened.
-        assert isinstance(app.screen, CharacterDetailScreen)
+        # Nothing to remove -- stays on the workspace, no picker opened.
+        assert isinstance(app.screen, WorkspaceScreen)
 
 
 async def test_cancelling_removal_picker_keeps_the_item():
@@ -858,7 +876,7 @@ async def test_cancelling_removal_picker_keeps_the_item():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_character_detail(pilot)
+        await _select_character(pilot, app)
 
         await pilot.press("V")
         await pilot.pause()
@@ -867,8 +885,10 @@ async def test_cancelling_removal_picker_keeps_the_item():
         await pilot.press("escape")
         await pilot.pause()
 
-        assert isinstance(app.screen, CharacterDetailScreen)
-        assert "Affinity with Creo" in app.screen._summary()
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert "Affinity with Creo" in app.screen._character_summary(
+            app.screen.selected_character
+        )
 
     saga = storage.load_saga("test_saga")
     assert len(saga.characters[0].virtues_flaws) == 1
@@ -879,7 +899,7 @@ async def test_edit_arts_prefills_existing_scores_and_saves_full_grid():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_character_detail(pilot)
+        await _select_character(pilot, app)
 
         await pilot.press("e")
         await pilot.pause()
@@ -898,7 +918,7 @@ async def test_edit_arts_prefills_existing_scores_and_saves_full_grid():
         await pilot.click("#btn-save")
         await pilot.pause()
 
-        assert isinstance(app.screen, CharacterDetailScreen)
+        assert isinstance(app.screen, WorkspaceScreen)
 
     saga = storage.load_saga("test_saga")
     arts = saga.characters[0].arts
@@ -915,7 +935,7 @@ async def test_edit_arts_requires_integers():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_character_detail(pilot)
+        await _select_character(pilot, app)
 
         await pilot.press("e")
         await pilot.pause()
@@ -939,7 +959,7 @@ async def test_edit_arts_cancel_discards_changes():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_character_detail(pilot)
+        await _select_character(pilot, app)
 
         await pilot.press("e")
         await pilot.pause()
@@ -949,7 +969,7 @@ async def test_edit_arts_cancel_discards_changes():
         await pilot.press("escape")
         await pilot.pause()
 
-        assert isinstance(app.screen, CharacterDetailScreen)
+        assert isinstance(app.screen, WorkspaceScreen)
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].arts == {
@@ -968,7 +988,7 @@ async def test_edit_arts_grid_fits_default_terminal_and_accepts_real_typing():
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(80, 24)) as pilot:
-        await _open_character_detail(pilot)
+        await _select_character(pilot, app)
         await pilot.press("e")
         await pilot.pause()
         assert isinstance(app.screen, EditArtsScreen)
@@ -1014,51 +1034,47 @@ async def test_edit_arts_is_unavailable_for_non_magi():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_character_detail(pilot)
-        assert app.screen.character.type == "grog"
+        await _select_covenant(pilot, app)
+        await _select(pilot, app, ("character", "grog1"))
+        assert app.screen.selected_character.type == "grog"
 
         await pilot.press("e")
         await pilot.pause()
 
         # Arts editing doesn't apply to non-magi -- the binding is disabled.
-        assert isinstance(app.screen, CharacterDetailScreen)
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert app.screen.selected_kind == "character"
 
 
-async def test_creating_a_second_character_after_viewing_the_first_does_not_crash():
+async def test_creating_a_second_character_after_viewing_the_first_works():
     storage.save_saga(_saga_with_empty_covenant())
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _open_covenant_detail(pilot)
+        await _select_covenant(pilot, app)
 
         # Create the first character.
-        await pilot.press("n")
+        await pilot.press("c")
         await pilot.pause()
         app.screen.query_one("#input-name", Input).value = "Leandro"
         await pilot.click("#btn-create")
         await pilot.pause()
-        assert isinstance(app.screen, CovenantDetailScreen)
+        assert app.screen.selected_character.name == "Leandro"
 
-        # Open it (the reported repro: view a character before adding another).
-        await pilot.press("enter")
-        await pilot.pause()
-        assert isinstance(app.screen, CharacterDetailScreen)
-        await pilot.press("escape")
-        await pilot.pause()
-        assert isinstance(app.screen, CovenantDetailScreen)
+        # View it explicitly, then go back to the covenant before adding a
+        # second one -- the reported repro was a crash on this exact sequence.
+        await _select(pilot, app, ("character", "leandro"))
+        await _select(pilot, app, ("covenant", "cov1"))
 
-        # Create a second character -- this used to raise Textual's
-        # DuplicateIds because the character-list wasn't awaiting clear()
-        # before re-adding the (still-present) first character's item.
-        await pilot.press("n")
+        await pilot.press("c")
         await pilot.pause()
         app.screen.query_one("#input-name", Input).value = "Guillame"
         await pilot.click("#btn-create")
         await pilot.pause()
 
-        assert isinstance(app.screen, CovenantDetailScreen)
-        character_list = app.screen.query_one("#character-list", ListView)
-        assert len(character_list.children) == 2
+        tree = app.screen.query_one("#nav-tree", Tree)
+        char_group = _find_node(tree, ("character_group", "cov1"))
+        assert len(char_group.children) == 2
 
     saga = storage.load_saga("test_saga")
     assert {c.name for c in saga.characters} == {"Leandro", "Guillame"}

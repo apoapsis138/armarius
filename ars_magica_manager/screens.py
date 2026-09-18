@@ -6,8 +6,9 @@ from typing import ClassVar
 
 from textual.app import ComposeResult
 from textual.binding import BindingType
-from textual.containers import Horizontal, Vertical
+from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.screen import ModalScreen, Screen
+from textual.widget import Widget
 from textual.widgets import (
     Button,
     Footer,
@@ -18,6 +19,7 @@ from textual.widgets import (
     ListView,
     Select,
     Static,
+    Tree,
 )
 
 from . import catalog, storage
@@ -37,10 +39,6 @@ from .models import (
 )
 
 _SAGA_ITEM_ID_PREFIX = "saga-"
-_COVENANT_ITEM_ID_PREFIX = "covenant-"
-_CHARACTER_ITEM_ID_PREFIX = "character-"
-_LABORATORY_ITEM_ID_PREFIX = "laboratory-"
-_LIBRARY_ITEM_ID_PREFIX = "library-"
 _VIRTUE_FLAW_ITEM_ID_PREFIX = "vf-"
 _ABILITY_ITEM_ID_PREFIX = "ability-"
 _REMOVAL_ITEM_ID_PREFIX = "remove-"
@@ -144,100 +142,6 @@ class SagaCreateScreen(ModalScreen[str | None]):
         self.dismiss(saga.id)
 
 
-class SagaDetailScreen(Screen[None]):
-    """Saga summary plus a browsable list of its covenants."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [
-        ("n", "create_covenant", "New Covenant"),
-        ("escape", "app.pop_screen", "Back"),
-        ("q", "quit", "Quit"),
-    ]
-
-    def __init__(self, saga: Saga) -> None:
-        super().__init__()
-        self.saga = saga
-
-    def compose(self) -> ComposeResult:
-        yield Header()
-        yield Static(self._summary(), id="saga-detail")
-        yield Static("Covenants", id="covenant-list-heading")
-        yield ListView(id="covenant-list")
-        yield Footer()
-
-    async def on_mount(self) -> None:
-        await self._populate_covenant_list()
-
-    def action_create_covenant(self) -> None:
-        async def handle_result(covenant_id: str | None) -> None:
-            if covenant_id is not None:
-                await self._populate_covenant_list()
-
-        self.app.push_screen(CovenantCreateScreen(self.saga), handle_result)
-
-    def _summary(self) -> str:
-        saga = self.saga
-        lines = [
-            f"Saga: {saga.name}",
-            f"Storyguide: {saga.storyguide}",
-            f"Start date: {saga.current_season} {saga.current_year}",
-        ]
-        if saga.description:
-            lines.append(f"Description: {saga.description}")
-        lines += [
-            "",
-            f"Characters: {len(saga.characters)}",
-            f"Laboratories: {len(saga.laboratories)}",
-            f"Libraries: {len(saga.libraries)}",
-            f"Books: {len(saga.books)}",
-            f"Spells: {len(saga.spells)}",
-        ]
-        return "\n".join(lines)
-
-    async def _populate_covenant_list(self) -> None:
-        list_view = self.query_one("#covenant-list", ListView)
-        # Must be awaited before re-adding items below, or a same-id item not
-        # yet removed collides with its freshly-mounted replacement and
-        # Textual raises DuplicateIds.
-        await list_view.clear()
-
-        if not self.saga.covenants:
-            await list_view.append(
-                ListItem(
-                    Label(
-                        "No covenants yet -- covenant creation is coming in a "
-                        "future Phase 1 slice."
-                    )
-                )
-            )
-            return
-
-        items = []
-        for covenant in self.saga.covenants:
-            character_count = sum(
-                1 for c in self.saga.characters if c.covenant_id == covenant.id
-            )
-            lab_count = sum(
-                1 for lab in self.saga.laboratories if lab.covenant_id == covenant.id
-            )
-            summary = (
-                f"{covenant.name}  —  {character_count} character(s), "
-                f"{lab_count} lab(s)"
-            )
-            items.append(
-                ListItem(Label(summary), id=f"{_COVENANT_ITEM_ID_PREFIX}{covenant.id}")
-            )
-        await list_view.extend(items)
-        list_view.index = 0
-
-    def on_list_view_selected(self, event: ListView.Selected) -> None:
-        item_id = event.item.id
-        if item_id is None or not item_id.startswith(_COVENANT_ITEM_ID_PREFIX):
-            return
-        covenant_id = item_id.removeprefix(_COVENANT_ITEM_ID_PREFIX)
-        covenant = next(c for c in self.saga.covenants if c.id == covenant_id)
-        self.app.push_screen(CovenantDetailScreen(self.saga, covenant))
-
-
 class CovenantCreateScreen(ModalScreen[str | None]):
     """Creates a covenant (with an empty library) within a saga.
 
@@ -321,161 +225,6 @@ class CovenantCreateScreen(ModalScreen[str | None]):
         self.saga.libraries.append(library)
         storage.save_saga(self.saga)
         self.dismiss(covenant_id)
-
-
-class CovenantDetailScreen(Screen[None]):
-    """Covenant summary (vis stock, notes) plus browsable Character/Lab/Library lists."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [
-        ("n", "create_character", "New Character"),
-        ("l", "create_laboratory", "New Laboratory"),
-        ("escape", "app.pop_screen", "Back"),
-        ("q", "quit", "Quit"),
-    ]
-
-    def __init__(self, saga: Saga, covenant: Covenant) -> None:
-        super().__init__()
-        self.saga = saga
-        self.covenant = covenant
-
-    def compose(self) -> ComposeResult:
-        yield Header()
-        yield Static(self._summary(), id="covenant-detail")
-        yield Static("Characters", id="character-list-heading")
-        yield ListView(id="character-list")
-        yield Static("Laboratories", id="laboratory-list-heading")
-        yield ListView(id="laboratory-list")
-        yield Static("Library", id="library-list-heading")
-        yield ListView(id="library-list")
-        yield Footer()
-
-    async def on_mount(self) -> None:
-        await self._populate_character_list()
-        await self._populate_laboratory_list()
-        await self._populate_library_list()
-
-    def action_create_laboratory(self) -> None:
-        async def handle_result(lab_id: str | None) -> None:
-            if lab_id is not None:
-                await self._populate_laboratory_list()
-
-        self.app.push_screen(
-            LaboratoryCreateScreen(self.saga, self.covenant), handle_result
-        )
-
-    def action_create_character(self) -> None:
-        async def handle_result(character_id: str | None) -> None:
-            if character_id is not None:
-                await self._populate_character_list()
-
-        self.app.push_screen(
-            CharacterCreateScreen(self.saga, default_covenant_id=self.covenant.id),
-            handle_result,
-        )
-
-    def _summary(self) -> str:
-        covenant = self.covenant
-        lines = [f"Covenant: {covenant.name}", f"Saga: {self.saga.name}"]
-        if covenant.notes:
-            lines.append(f"Notes: {covenant.notes}")
-
-        lines.append("")
-        if covenant.vis_stock:
-            lines.append("Vis stock:")
-            lines += [
-                f"  {form}: {amount}" for form, amount in covenant.vis_stock.items()
-            ]
-        else:
-            lines.append("Vis stock: (none recorded)")
-        return "\n".join(lines)
-
-    async def _populate_character_list(self) -> None:
-        list_view = self.query_one("#character-list", ListView)
-        await list_view.clear()
-
-        characters = [
-            c for c in self.saga.characters if c.covenant_id == self.covenant.id
-        ]
-        if not characters:
-            await list_view.append(ListItem(Label("(none)")))
-            return
-
-        items = [
-            ListItem(
-                Label(f"{character.name} ({character.type})"),
-                id=f"{_CHARACTER_ITEM_ID_PREFIX}{character.id}",
-            )
-            for character in characters
-        ]
-        await list_view.extend(items)
-        list_view.index = 0
-
-    async def _populate_laboratory_list(self) -> None:
-        list_view = self.query_one("#laboratory-list", ListView)
-        await list_view.clear()
-
-        labs = [
-            lab for lab in self.saga.laboratories if lab.covenant_id == self.covenant.id
-        ]
-        if not labs:
-            await list_view.append(ListItem(Label("(none)")))
-            return
-
-        items = []
-        for lab in labs:
-            owner = next(
-                (c for c in self.saga.characters if c.id == lab.owner_id), None
-            )
-            label = f"{lab.name}  —  owner: {owner.name if owner else 'unassigned'}"
-            items.append(
-                ListItem(Label(label), id=f"{_LABORATORY_ITEM_ID_PREFIX}{lab.id}")
-            )
-        await list_view.extend(items)
-        list_view.index = 0
-
-    async def _populate_library_list(self) -> None:
-        list_view = self.query_one("#library-list", ListView)
-        await list_view.clear()
-
-        library = next(
-            (lib for lib in self.saga.libraries if lib.id == self.covenant.library_id),
-            None,
-        )
-        if library is None:
-            await list_view.append(ListItem(Label("(none)")))
-            return
-
-        await list_view.append(
-            ListItem(
-                Label(f"Library ({len(library.books)} book(s))"),
-                id=f"{_LIBRARY_ITEM_ID_PREFIX}{library.id}",
-            )
-        )
-        list_view.index = 0
-
-    def on_list_view_selected(self, event: ListView.Selected) -> None:
-        item_id = event.item.id
-        if item_id is None:
-            return
-
-        if event.list_view.id == "character-list" and item_id.startswith(
-            _CHARACTER_ITEM_ID_PREFIX
-        ):
-            character_id = item_id.removeprefix(_CHARACTER_ITEM_ID_PREFIX)
-            character = next(c for c in self.saga.characters if c.id == character_id)
-            self.app.push_screen(CharacterDetailScreen(self.saga, character))
-        elif event.list_view.id == "laboratory-list" and item_id.startswith(
-            _LABORATORY_ITEM_ID_PREFIX
-        ):
-            lab_id = item_id.removeprefix(_LABORATORY_ITEM_ID_PREFIX)
-            lab = next(lab for lab in self.saga.laboratories if lab.id == lab_id)
-            self.app.push_screen(LaboratoryDetailScreen(self.saga, lab))
-        elif event.list_view.id == "library-list" and item_id.startswith(
-            _LIBRARY_ITEM_ID_PREFIX
-        ):
-            library_id = item_id.removeprefix(_LIBRARY_ITEM_ID_PREFIX)
-            library = next(lib for lib in self.saga.libraries if lib.id == library_id)
-            self.app.push_screen(LibraryDetailScreen(self.saga, library))
 
 
 class CharacterCreateScreen(ModalScreen[str | None]):
@@ -1093,195 +842,6 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
         self.dismiss(result)
 
 
-class CharacterDetailScreen(Screen[None]):
-    """Character sheet summary; can add Abilities, Virtues/Flaws, and (for
-    magi) edit Arts.
-    """
-
-    BINDINGS: ClassVar[list[BindingType]] = [
-        ("a", "add_ability", "Add Ability"),
-        ("A", "remove_ability", "Remove Ability"),
-        ("v", "add_virtue_flaw", "Add Virtue/Flaw"),
-        ("V", "remove_virtue_flaw", "Remove Virtue/Flaw"),
-        ("e", "edit_arts", "Edit Arts"),
-        ("escape", "app.pop_screen", "Back"),
-        ("q", "quit", "Quit"),
-    ]
-
-    def __init__(self, saga: Saga, character: Character) -> None:
-        super().__init__()
-        self.saga = saga
-        self.character = character
-
-    def compose(self) -> ComposeResult:
-        yield Header()
-        yield Static(self._summary(), id="character-detail")
-        yield Footer()
-
-    def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
-        return action != "edit_arts" or self.character.type == "magus"
-
-    def action_edit_arts(self) -> None:
-        def handle_result(arts: dict[str, ArtScore] | None) -> None:
-            if arts is not None:
-                self.character.arts = arts
-                storage.save_saga(self.saga)
-                self._refresh_summary()
-
-        self.app.push_screen(EditArtsScreen(self.character.arts), handle_result)
-
-    def action_add_ability(self) -> None:
-        exclude_names = {a.name for a in self.character.abilities}
-
-        def handle_result(ability: Ability | None) -> None:
-            if ability is not None:
-                self.character.abilities.append(ability)
-                storage.save_saga(self.saga)
-                self._refresh_summary()
-
-        self.app.push_screen(AbilityPickerScreen(exclude_names), handle_result)
-
-    def action_remove_ability(self) -> None:
-        if not self.character.abilities:
-            self.notify("No Abilities to remove.")
-            return
-
-        labels = [
-            f"{a.name} {a.score}" + (f" ({a.specialty})" if a.specialty else "")
-            for a in self.character.abilities
-        ]
-
-        def handle_result(index: int | None) -> None:
-            if index is not None:
-                del self.character.abilities[index]
-                storage.save_saga(self.saga)
-                self._refresh_summary()
-
-        self.app.push_screen(
-            RemovalPickerScreen("Remove an Ability", labels), handle_result
-        )
-
-    def action_add_virtue_flaw(self) -> None:
-        existing_ids = {vf.vf_id for vf in self.character.virtues_flaws}
-
-        def handle_result(instance: VirtueFlawInstance | None) -> None:
-            if instance is not None:
-                self.character.virtues_flaws.append(instance)
-                storage.save_saga(self.saga)
-                self._refresh_summary()
-
-        self.app.push_screen(VirtueFlawPickerScreen(existing_ids), handle_result)
-
-    def action_remove_virtue_flaw(self) -> None:
-        if not self.character.virtues_flaws:
-            self.notify("No Virtues/Flaws to remove.")
-            return
-
-        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
-        labels = [
-            catalog.describe_virtue_flaw(vf, vf_catalog)
-            for vf in self.character.virtues_flaws
-        ]
-
-        def handle_result(index: int | None) -> None:
-            if index is not None:
-                del self.character.virtues_flaws[index]
-                storage.save_saga(self.saga)
-                self._refresh_summary()
-
-        self.app.push_screen(
-            RemovalPickerScreen("Remove a Virtue or Flaw", labels), handle_result
-        )
-
-    def _refresh_summary(self) -> None:
-        self.query_one("#character-detail", Static).update(self._summary())
-
-    def _summary(self) -> str:
-        saga, character = self.saga, self.character
-        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
-
-        covenant = next(
-            (c for c in saga.covenants if c.id == character.covenant_id), None
-        )
-
-        lines = [
-            f"Character: {character.name}",
-            f"Type: {character.type}",
-            f"Covenant: {covenant.name if covenant else '(none)'}",
-        ]
-
-        if character.type == "magus":
-            lab = next(
-                (
-                    lab
-                    for lab in saga.laboratories
-                    if lab.id == character.assigned_lab_id
-                ),
-                None,
-            )
-            lines.append(f"Assigned Laboratory: {'yes' if lab else '(none)'}")
-
-        c = character.characteristics
-        lines += [
-            "",
-            "Characteristics:",
-            f"  Int {c.intelligence}, Per {c.perception}, Str {c.strength}, "
-            f"Sta {c.stamina}",
-            f"  Pre {c.presence}, Com {c.communication}, Dex {c.dexterity}, "
-            f"Qik {c.quickness}",
-        ]
-
-        if character.type == "magus":
-            lines.append("")
-            if character.arts:
-                lines.append("Arts:")
-                lines += [
-                    f"  {art.title()} ({ART_ABBREVIATIONS.get(art.title(), '?')}): "
-                    f"{score.level}/{score.xp}"
-                    for art, score in character.arts.items()
-                ]
-            else:
-                lines.append("Arts: (none recorded)")
-
-        lines.append("")
-        if character.abilities:
-            lines.append("Abilities:")
-            for ability in character.abilities:
-                specialty = f" ({ability.specialty})" if ability.specialty else ""
-                lines.append(f"  {ability.name} {ability.score}{specialty}")
-        else:
-            lines.append("Abilities: (none recorded)")
-
-        lines.append("")
-        if character.virtues_flaws:
-            lines.append("Virtues & Flaws:")
-            lines += [
-                f"  {catalog.describe_virtue_flaw(vf, vf_catalog)}"
-                for vf in character.virtues_flaws
-            ]
-        else:
-            lines.append("Virtues & Flaws: (none recorded)")
-
-        if character.type == "magus":
-            lines.append("")
-            if character.spells_known:
-                spell_lookup = {s.id: s for s in saga.spells}
-                lines.append("Spells known:")
-                for spell_id in character.spells_known:
-                    spell = spell_lookup.get(spell_id)
-                    if spell is None:
-                        lines.append(f"  {spell_id} (unknown spell)")
-                    else:
-                        lines.append(
-                            f"  {spell.name} ({spell.technique} {spell.form} "
-                            f"{spell.level})"
-                        )
-            else:
-                lines.append("Spells known: (none recorded)")
-
-        return "\n".join(lines)
-
-
 class LaboratoryCreateScreen(ModalScreen[str | None]):
     """Creates a bare laboratory within a covenant.
 
@@ -1375,63 +935,248 @@ class LaboratoryCreateScreen(ModalScreen[str | None]):
         self.dismiss(laboratory.id)
 
 
-class LaboratoryDetailScreen(Screen[None]):
-    """Laboratory summary; can add Virtues/Flaws from the catalog."""
+class WorkspaceScreen(Screen[None]):
+    """Persistent nav tree (left) + detail pane (right) for one open saga.
+
+    Replaces the old Saga -> Covenant -> Character/Lab/Library drill-down
+    screens with a single workspace: the whole saga's structure is always
+    visible in the tree, and selecting any node swaps the detail pane on
+    the right, so comparing siblings doesn't mean popping all the way back
+    up and down again.
+    """
 
     BINDINGS: ClassVar[list[BindingType]] = [
+        ("n", "create_covenant", "New Covenant"),
+        ("c", "create_character", "New Character"),
+        ("l", "create_laboratory", "New Laboratory"),
+        ("a", "add_ability", "Add Ability"),
+        ("A", "remove_ability", "Remove Ability"),
         ("v", "add_virtue_flaw", "Add Virtue/Flaw"),
         ("V", "remove_virtue_flaw", "Remove Virtue/Flaw"),
+        ("e", "edit_arts", "Edit Arts"),
         ("escape", "app.pop_screen", "Back"),
         ("q", "quit", "Quit"),
     ]
 
-    def __init__(self, saga: Saga, laboratory: Laboratory) -> None:
+    DEFAULT_CSS = """
+    #workspace-body {
+        height: 1fr;
+    }
+
+    #nav-tree {
+        width: 34;
+        border-right: solid $accent;
+    }
+
+    #detail-pane {
+        width: 1fr;
+        padding: 1 2;
+    }
+    """
+
+    def __init__(self, saga: Saga) -> None:
         super().__init__()
         self.saga = saga
-        self.laboratory = laboratory
+        self.selected_kind: str = "saga"
+        self.selected_covenant: Covenant | None = None
+        self.selected_character: Character | None = None
+        self.selected_laboratory: Laboratory | None = None
 
     def compose(self) -> ComposeResult:
         yield Header()
-        yield Static(self._summary(), id="laboratory-detail")
+        with Horizontal(id="workspace-body"):
+            yield Tree(self.saga.name, data=("saga",), id="nav-tree")
+            yield VerticalScroll(id="detail-pane")
         yield Footer()
 
-    def action_add_virtue_flaw(self) -> None:
-        existing_ids = {vf.vf_id for vf in self.laboratory.virtues_flaws}
+    async def on_mount(self) -> None:
+        self._rebuild_tree()
+        await self._show_saga_detail()
 
-        def handle_result(instance: VirtueFlawInstance | None) -> None:
-            if instance is not None:
-                self.laboratory.virtues_flaws.append(instance)
-                storage.save_saga(self.saga)
-                self._refresh_summary()
+    def _rebuild_tree(self) -> None:
+        tree = self.query_one("#nav-tree", Tree)
+        tree.reset(self.saga.name, data=("saga",))
+        tree.root.expand()
 
-        self.app.push_screen(VirtueFlawPickerScreen(existing_ids), handle_result)
+        for covenant in self.saga.covenants:
+            cov_node = tree.root.add(
+                covenant.name, data=("covenant", covenant.id), expand=True
+            )
 
-    def action_remove_virtue_flaw(self) -> None:
-        if not self.laboratory.virtues_flaws:
-            self.notify("No Virtues/Flaws to remove.")
+            characters = [
+                c for c in self.saga.characters if c.covenant_id == covenant.id
+            ]
+            char_group = cov_node.add(
+                f"Characters ({len(characters)})",
+                data=("character_group", covenant.id),
+                expand=True,
+            )
+            for character in characters:
+                char_group.add_leaf(
+                    f"{character.name} ({character.type})",
+                    data=("character", character.id),
+                )
+
+            labs = [
+                lab for lab in self.saga.laboratories if lab.covenant_id == covenant.id
+            ]
+            lab_group = cov_node.add(
+                f"Laboratories ({len(labs)})",
+                data=("laboratory_group", covenant.id),
+                expand=True,
+            )
+            for lab in labs:
+                lab_group.add_leaf(lab.name, data=("laboratory", lab.id))
+
+            library = next(
+                (lib for lib in self.saga.libraries if lib.id == covenant.library_id),
+                None,
+            )
+            library_label = "Library"
+            if library is not None:
+                library_label += f" ({len(library.books)} book(s))"
+            cov_node.add_leaf(library_label, data=("library", covenant.id))
+
+    async def on_tree_node_selected(self, event: Tree.NodeSelected) -> None:
+        data = event.node.data
+        if data is None:
             return
 
-        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
-        labels = [
-            catalog.describe_virtue_flaw(vf, vf_catalog)
-            for vf in self.laboratory.virtues_flaws
+        kind = data[0]
+        self.selected_kind = kind
+
+        if kind == "saga":
+            self.selected_covenant = None
+            self.selected_character = None
+            self.selected_laboratory = None
+            await self._show_saga_detail()
+        elif kind == "covenant":
+            covenant = next(c for c in self.saga.covenants if c.id == data[1])
+            self.selected_covenant = covenant
+            self.selected_character = None
+            self.selected_laboratory = None
+            await self._show_covenant_detail(covenant)
+        elif kind == "character_group":
+            covenant = next(c for c in self.saga.covenants if c.id == data[1])
+            self.selected_covenant = covenant
+            self.selected_character = None
+            await self._show_placeholder_detail(
+                f"Characters in {covenant.name}",
+                "Select a character from the tree, or press 'c' to add one.",
+            )
+        elif kind == "character":
+            character = next(c for c in self.saga.characters if c.id == data[1])
+            self.selected_character = character
+            self.selected_covenant = next(
+                (c for c in self.saga.covenants if c.id == character.covenant_id),
+                None,
+            )
+            await self._show_character_detail(character)
+        elif kind == "laboratory_group":
+            covenant = next(c for c in self.saga.covenants if c.id == data[1])
+            self.selected_covenant = covenant
+            self.selected_laboratory = None
+            await self._show_placeholder_detail(
+                f"Laboratories in {covenant.name}",
+                "Select a laboratory from the tree, or press 'l' to add one.",
+            )
+        elif kind == "laboratory":
+            lab = next(lab for lab in self.saga.laboratories if lab.id == data[1])
+            self.selected_laboratory = lab
+            self.selected_covenant = next(
+                (c for c in self.saga.covenants if c.id == lab.covenant_id), None
+            )
+            await self._show_laboratory_detail(lab)
+        elif kind == "library":
+            covenant = next(c for c in self.saga.covenants if c.id == data[1])
+            self.selected_covenant = covenant
+            library = next(
+                (lib for lib in self.saga.libraries if lib.id == covenant.library_id),
+                None,
+            )
+            await self._show_library_detail(library)
+
+        self.refresh_bindings()
+
+    def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
+        if action == "create_covenant":
+            return self.selected_kind == "saga"
+        if action == "create_character":
+            return self.selected_kind in ("covenant", "character_group", "character")
+        if action == "create_laboratory":
+            return self.selected_kind in (
+                "covenant",
+                "laboratory_group",
+                "laboratory",
+            )
+        if action in ("add_ability", "remove_ability"):
+            return self.selected_kind == "character"
+        if action == "edit_arts":
+            return (
+                self.selected_kind == "character"
+                and self.selected_character is not None
+                and self.selected_character.type == "magus"
+            )
+        if action in ("add_virtue_flaw", "remove_virtue_flaw"):
+            return self.selected_kind in ("character", "laboratory")
+        return True
+
+    async def _set_detail(self, *widgets: Widget) -> None:
+        detail_pane = self.query_one("#detail-pane", VerticalScroll)
+        # Must be awaited before mounting replacements below, or a same-id
+        # widget not yet removed collides with its freshly-mounted
+        # replacement and Textual raises DuplicateIds.
+        await detail_pane.remove_children()
+        await detail_pane.mount(*widgets)
+
+    async def _show_placeholder_detail(self, title: str, hint: str) -> None:
+        await self._set_detail(Static(f"{title}\n\n{hint}"))
+
+    async def _show_saga_detail(self) -> None:
+        saga = self.saga
+        lines = [
+            f"Saga: {saga.name}",
+            f"Storyguide: {saga.storyguide}",
+            f"Start date: {saga.current_season} {saga.current_year}",
         ]
+        if saga.description:
+            lines.append(f"Description: {saga.description}")
+        lines += [
+            "",
+            f"Covenants: {len(saga.covenants)}",
+            f"Characters: {len(saga.characters)}",
+            f"Laboratories: {len(saga.laboratories)}",
+            f"Libraries: {len(saga.libraries)}",
+            f"Books: {len(saga.books)}",
+            f"Spells: {len(saga.spells)}",
+        ]
+        await self._set_detail(Static("\n".join(lines)))
 
-        def handle_result(index: int | None) -> None:
-            if index is not None:
-                del self.laboratory.virtues_flaws[index]
-                storage.save_saga(self.saga)
-                self._refresh_summary()
+    async def _show_covenant_detail(self, covenant: Covenant) -> None:
+        await self._set_detail(Static(self._covenant_summary(covenant)))
 
-        self.app.push_screen(
-            RemovalPickerScreen("Remove a Virtue or Flaw", labels), handle_result
+    def _covenant_summary(self, covenant: Covenant) -> str:
+        lines = [f"Covenant: {covenant.name}", f"Saga: {self.saga.name}"]
+        if covenant.notes:
+            lines.append(f"Notes: {covenant.notes}")
+
+        lines.append("")
+        if covenant.vis_stock:
+            lines.append("Vis stock:")
+            lines += [
+                f"  {form}: {amount}" for form, amount in covenant.vis_stock.items()
+            ]
+        else:
+            lines.append("Vis stock: (none recorded)")
+        return "\n".join(lines)
+
+    async def _show_laboratory_detail(self, lab: Laboratory) -> None:
+        await self._set_detail(
+            Static(self._laboratory_summary(lab), id="laboratory-detail")
         )
 
-    def _refresh_summary(self) -> None:
-        self.query_one("#laboratory-detail", Static).update(self._summary())
-
-    def _summary(self) -> str:
-        saga, lab = self.saga, self.laboratory
+    def _laboratory_summary(self, lab: Laboratory) -> str:
+        saga = self.saga
         vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
 
         covenant = next((c for c in saga.covenants if c.id == lab.covenant_id), None)
@@ -1464,27 +1209,14 @@ class LaboratoryDetailScreen(Screen[None]):
 
         return "\n".join(lines)
 
+    async def _show_library_detail(self, library: Library | None) -> None:
+        await self._set_detail(Static(self._library_summary(library)))
 
-class LibraryDetailScreen(Screen[None]):
-    """Read-only library summary: every book it holds."""
+    def _library_summary(self, library: Library | None) -> str:
+        saga = self.saga
+        if library is None:
+            return "Library: (none)"
 
-    BINDINGS: ClassVar[list[BindingType]] = [
-        ("escape", "app.pop_screen", "Back"),
-        ("q", "quit", "Quit"),
-    ]
-
-    def __init__(self, saga: Saga, library: Library) -> None:
-        super().__init__()
-        self.saga = saga
-        self.library = library
-
-    def compose(self) -> ComposeResult:
-        yield Header()
-        yield Static(self._summary(), id="library-detail")
-        yield Footer()
-
-    def _summary(self) -> str:
-        saga, library = self.saga, self.library
         covenant = next(
             (c for c in saga.covenants if c.id == library.covenant_id), None
         )
@@ -1514,6 +1246,257 @@ class LibraryDetailScreen(Screen[None]):
             lines.append(line)
 
         return "\n".join(lines)
+
+    async def _show_character_detail(self, character: Character) -> None:
+        await self._set_detail(
+            Static(self._character_summary(character), id="character-detail")
+        )
+
+    def _character_summary(self, character: Character) -> str:
+        saga = self.saga
+        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
+
+        covenant = next(
+            (c for c in saga.covenants if c.id == character.covenant_id), None
+        )
+
+        lines = [
+            f"Character: {character.name}",
+            f"Type: {character.type}",
+            f"Covenant: {covenant.name if covenant else '(none)'}",
+        ]
+
+        if character.type == "magus":
+            lab = next(
+                (
+                    lab
+                    for lab in saga.laboratories
+                    if lab.id == character.assigned_lab_id
+                ),
+                None,
+            )
+            lines.append(f"Assigned Laboratory: {'yes' if lab else '(none)'}")
+
+        c = character.characteristics
+        lines += [
+            "",
+            "Characteristics:",
+            f"  Int {c.intelligence}, Per {c.perception}, Str {c.strength}, "
+            f"Sta {c.stamina}",
+            f"  Pre {c.presence}, Com {c.communication}, Dex {c.dexterity}, "
+            f"Qik {c.quickness}",
+        ]
+
+        if character.type == "magus":
+            lines.append("")
+            if character.arts:
+                lines.append("Arts:")
+                lines += [
+                    f"  {art.title()} ({ART_ABBREVIATIONS.get(art.title(), '?')}): "
+                    f"{score.level}/{score.xp}"
+                    for art, score in character.arts.items()
+                ]
+            else:
+                lines.append("Arts: (none recorded)")
+
+        lines.append("")
+        if character.abilities:
+            lines.append("Abilities:")
+            for ability in character.abilities:
+                specialty = f" ({ability.specialty})" if ability.specialty else ""
+                lines.append(f"  {ability.name} {ability.score}{specialty}")
+        else:
+            lines.append("Abilities: (none recorded)")
+
+        lines.append("")
+        if character.virtues_flaws:
+            lines.append("Virtues & Flaws:")
+            lines += [
+                f"  {catalog.describe_virtue_flaw(vf, vf_catalog)}"
+                for vf in character.virtues_flaws
+            ]
+        else:
+            lines.append("Virtues & Flaws: (none recorded)")
+
+        if character.type == "magus":
+            lines.append("")
+            if character.spells_known:
+                spell_lookup = {s.id: s for s in saga.spells}
+                lines.append("Spells known:")
+                for spell_id in character.spells_known:
+                    spell = spell_lookup.get(spell_id)
+                    if spell is None:
+                        lines.append(f"  {spell_id} (unknown spell)")
+                    else:
+                        lines.append(
+                            f"  {spell.name} ({spell.technique} {spell.form} "
+                            f"{spell.level})"
+                        )
+            else:
+                lines.append("Spells known: (none recorded)")
+
+        return "\n".join(lines)
+
+    def _refresh_character_detail(self) -> None:
+        if self.selected_character is None:
+            return
+        self.query_one("#character-detail", Static).update(
+            self._character_summary(self.selected_character)
+        )
+
+    def _refresh_laboratory_detail(self) -> None:
+        if self.selected_laboratory is None:
+            return
+        self.query_one("#laboratory-detail", Static).update(
+            self._laboratory_summary(self.selected_laboratory)
+        )
+
+    # -- creation actions --
+
+    def action_create_covenant(self) -> None:
+        async def handle_result(covenant_id: str | None) -> None:
+            if covenant_id is not None:
+                self._rebuild_tree()
+                covenant = next(c for c in self.saga.covenants if c.id == covenant_id)
+                self.selected_covenant = covenant
+                self.selected_kind = "covenant"
+                await self._show_covenant_detail(covenant)
+
+        self.app.push_screen(CovenantCreateScreen(self.saga), handle_result)
+
+    def action_create_character(self) -> None:
+        covenant = self.selected_covenant
+        if covenant is None:
+            self.notify("Select a covenant first.")
+            return
+
+        async def handle_result(character_id: str | None) -> None:
+            if character_id is not None:
+                self._rebuild_tree()
+                character = next(
+                    c for c in self.saga.characters if c.id == character_id
+                )
+                self.selected_character = character
+                self.selected_kind = "character"
+                await self._show_character_detail(character)
+
+        self.app.push_screen(
+            CharacterCreateScreen(self.saga, default_covenant_id=covenant.id),
+            handle_result,
+        )
+
+    def action_create_laboratory(self) -> None:
+        covenant = self.selected_covenant
+        if covenant is None:
+            self.notify("Select a covenant first.")
+            return
+
+        async def handle_result(lab_id: str | None) -> None:
+            if lab_id is not None:
+                self._rebuild_tree()
+                lab = next(lab for lab in self.saga.laboratories if lab.id == lab_id)
+                self.selected_laboratory = lab
+                self.selected_kind = "laboratory"
+                await self._show_laboratory_detail(lab)
+
+        self.app.push_screen(LaboratoryCreateScreen(self.saga, covenant), handle_result)
+
+    # -- character-only actions --
+
+    def action_add_ability(self) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        exclude_names = {a.name for a in character.abilities}
+
+        def handle_result(ability: Ability | None) -> None:
+            if ability is not None:
+                character.abilities.append(ability)
+                storage.save_saga(self.saga)
+                self._refresh_character_detail()
+
+        self.app.push_screen(AbilityPickerScreen(exclude_names), handle_result)
+
+    def action_remove_ability(self) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        if not character.abilities:
+            self.notify("No Abilities to remove.")
+            return
+
+        labels = [
+            f"{a.name} {a.score}" + (f" ({a.specialty})" if a.specialty else "")
+            for a in character.abilities
+        ]
+
+        def handle_result(index: int | None) -> None:
+            if index is not None:
+                del character.abilities[index]
+                storage.save_saga(self.saga)
+                self._refresh_character_detail()
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove an Ability", labels), handle_result
+        )
+
+    def action_edit_arts(self) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+
+        def handle_result(arts: dict[str, ArtScore] | None) -> None:
+            if arts is not None:
+                character.arts = arts
+                storage.save_saga(self.saga)
+                self._refresh_character_detail()
+
+        self.app.push_screen(EditArtsScreen(character.arts), handle_result)
+
+    # -- shared Character/Laboratory Virtue & Flaw actions --
+
+    def action_add_virtue_flaw(self) -> None:
+        target = self.selected_character or self.selected_laboratory
+        if target is None:
+            return
+        existing_ids = {vf.vf_id for vf in target.virtues_flaws}
+
+        def handle_result(instance: VirtueFlawInstance | None) -> None:
+            if instance is not None:
+                target.virtues_flaws.append(instance)
+                storage.save_saga(self.saga)
+                if self.selected_character is not None:
+                    self._refresh_character_detail()
+                else:
+                    self._refresh_laboratory_detail()
+
+        self.app.push_screen(VirtueFlawPickerScreen(existing_ids), handle_result)
+
+    def action_remove_virtue_flaw(self) -> None:
+        target = self.selected_character or self.selected_laboratory
+        if target is None:
+            return
+        if not target.virtues_flaws:
+            self.notify("No Virtues/Flaws to remove.")
+            return
+
+        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
+        labels = [
+            catalog.describe_virtue_flaw(vf, vf_catalog) for vf in target.virtues_flaws
+        ]
+
+        def handle_result(index: int | None) -> None:
+            if index is not None:
+                del target.virtues_flaws[index]
+                storage.save_saga(self.saga)
+                if self.selected_character is not None:
+                    self._refresh_character_detail()
+                else:
+                    self._refresh_laboratory_detail()
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove a Virtue or Flaw", labels), handle_result
+        )
 
 
 class SagaPickerScreen(Screen[None]):
@@ -1578,4 +1561,4 @@ class SagaPickerScreen(Screen[None]):
             return
         saga_id = item_id.removeprefix(_SAGA_ITEM_ID_PREFIX)
         saga = storage.load_saga(saga_id)
-        self.app.push_screen(SagaDetailScreen(saga))
+        self.app.push_screen(WorkspaceScreen(saga))
