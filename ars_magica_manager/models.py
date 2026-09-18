@@ -24,6 +24,20 @@ ABILITY_CATEGORIES: tuple[str, ...] = (
     "Supernatural",
 )
 
+TECHNIQUES: tuple[str, ...] = ("Creo", "Intellego", "Muto", "Perdo", "Rego")
+FORMS: tuple[str, ...] = (
+    "Animal",
+    "Aquam",
+    "Auram",
+    "Corpus",
+    "Herbam",
+    "Ignem",
+    "Imaginem",
+    "Mentem",
+    "Terram",
+    "Vim",
+)
+
 
 @dataclass
 class Modifier:

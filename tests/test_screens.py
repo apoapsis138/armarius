@@ -22,6 +22,7 @@ from ars_magica_manager.screens import (
     CharacterDetailScreen,
     CovenantCreateScreen,
     CovenantDetailScreen,
+    EditArtsScreen,
     LaboratoryCreateScreen,
     LaboratoryDetailScreen,
     LibraryDetailScreen,
@@ -867,3 +868,96 @@ async def test_cancelling_removal_picker_keeps_the_item():
 
     saga = storage.load_saga("test_saga")
     assert len(saga.characters[0].virtues_flaws) == 1
+
+
+async def test_edit_arts_prefills_existing_scores_and_saves_full_grid():
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_character_detail(pilot)
+
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, EditArtsScreen)
+
+        assert app.screen.query_one("#input-art-creo", Input).value == "10"
+        assert app.screen.query_one("#input-art-ignem", Input).value == "5"
+        assert app.screen.query_one("#input-art-rego", Input).value == "0"
+
+        app.screen.query_one("#input-art-rego", Input).value = "3"
+
+        await pilot.click("#btn-save")
+        await pilot.pause()
+
+        assert isinstance(app.screen, CharacterDetailScreen)
+
+    saga = storage.load_saga("test_saga")
+    arts = saga.characters[0].arts
+    assert arts["creo"] == 10
+    assert arts["ignem"] == 5
+    assert arts["rego"] == 3
+    # Every one of the 15 Arts is written, not just the ones that were nonzero.
+    assert len(arts) == 15
+    assert arts["vim"] == 0
+
+
+async def test_edit_arts_requires_integers():
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_character_detail(pilot)
+
+        await pilot.press("e")
+        await pilot.pause()
+
+        app.screen.query_one("#input-art-rego", Input).value = "not a number"
+
+        await pilot.click("#btn-save")
+        await pilot.pause()
+
+        assert isinstance(app.screen, EditArtsScreen)
+
+    saga = storage.load_saga("test_saga")
+    assert saga.characters[0].arts == {"creo": 10, "ignem": 5}
+
+
+async def test_edit_arts_cancel_discards_changes():
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_character_detail(pilot)
+
+        await pilot.press("e")
+        await pilot.pause()
+
+        app.screen.query_one("#input-art-rego", Input).value = "9"
+
+        await pilot.press("escape")
+        await pilot.pause()
+
+        assert isinstance(app.screen, CharacterDetailScreen)
+
+    saga = storage.load_saga("test_saga")
+    assert saga.characters[0].arts == {"creo": 10, "ignem": 5}
+
+
+async def test_edit_arts_is_unavailable_for_non_magi():
+    saga = _saga_with_empty_covenant()
+    saga.characters.append(
+        Character(id="grog1", name="Guard", type="grog", covenant_id="cov1")
+    )
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_character_detail(pilot)
+        assert app.screen.character.type == "grog"
+
+        await pilot.press("e")
+        await pilot.pause()
+
+        # Arts editing doesn't apply to non-magi -- the binding is disabled.
+        assert isinstance(app.screen, CharacterDetailScreen)

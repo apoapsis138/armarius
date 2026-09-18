@@ -22,7 +22,9 @@ from textual.widgets import (
 
 from . import catalog, storage
 from .models import (
+    FORMS,
     SEASONS,
+    TECHNIQUES,
     Ability,
     Character,
     Covenant,
@@ -941,14 +943,127 @@ class RemovalPickerScreen(ModalScreen[int | None]):
         self.dismiss(index)
 
 
+class EditArtsScreen(ModalScreen[dict[str, int] | None]):
+    """Edits all 15 Hermetic Arts at once -- a fixed grid, not an addable list.
+
+    Forms (10, in two columns of 5) on the left, Techniques (5, one
+    column) on the right. Dismisses with a dict of every art's lowercase
+    name -> score, or None if cancelled.
+    """
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    EditArtsScreen {
+        align: center middle;
+    }
+
+    #arts-dialog {
+        width: auto;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    .art-column {
+        width: auto;
+        margin-right: 3;
+    }
+
+    .art-row {
+        height: auto;
+    }
+
+    .art-row Label {
+        width: 11;
+        content-align: right middle;
+        padding-right: 1;
+    }
+
+    .art-row Input {
+        width: 8;
+    }
+
+    #arts-error {
+        color: $error;
+        height: auto;
+        margin-top: 1;
+    }
+    """
+
+    def __init__(self, arts: dict[str, int]) -> None:
+        super().__init__()
+        self.arts = arts
+
+    def compose(self) -> ComposeResult:
+        def row(art_name: str):
+            key = art_name.lower()
+            yield Label(art_name)
+            yield Input(
+                value=str(self.arts.get(key, 0)),
+                type="integer",
+                id=f"input-art-{key}",
+            )
+
+        with Vertical(id="arts-dialog"):
+            yield Label("Edit Arts", id="arts-title")
+            with Horizontal():
+                with Vertical(classes="art-column"):
+                    yield Label("Forms", classes="column-heading")
+                    with Horizontal():
+                        with Vertical():
+                            for form in FORMS[:5]:
+                                with Horizontal(classes="art-row"):
+                                    yield from row(form)
+                        with Vertical():
+                            for form in FORMS[5:]:
+                                with Horizontal(classes="art-row"):
+                                    yield from row(form)
+                with Vertical(classes="art-column"):
+                    yield Label("Techniques", classes="column-heading")
+                    for technique in TECHNIQUES:
+                        with Horizontal(classes="art-row"):
+                            yield from row(technique)
+            yield Static("", id="arts-error")
+            with Horizontal():
+                yield Button("Save", id="btn-save", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-save":
+            self._try_save()
+
+    def _try_save(self) -> None:
+        error = self.query_one("#arts-error", Static)
+        result: dict[str, int] = {}
+        for art_name in (*TECHNIQUES, *FORMS):
+            key = art_name.lower()
+            raw = self.query_one(f"#input-art-{key}", Input).value.strip()
+            try:
+                result[key] = int(raw)
+            except ValueError:
+                error.update(f"{art_name} must be a whole number.")
+                return
+        self.dismiss(result)
+
+
 class CharacterDetailScreen(Screen[None]):
-    """Character sheet summary; can add Abilities and Virtues/Flaws from the catalog."""
+    """Character sheet summary; can add Abilities, Virtues/Flaws, and (for
+    magi) edit Arts.
+    """
 
     BINDINGS: ClassVar[list[BindingType]] = [
         ("a", "add_ability", "Add Ability"),
         ("A", "remove_ability", "Remove Ability"),
         ("v", "add_virtue_flaw", "Add Virtue/Flaw"),
         ("V", "remove_virtue_flaw", "Remove Virtue/Flaw"),
+        ("e", "edit_arts", "Edit Arts"),
         ("escape", "app.pop_screen", "Back"),
         ("q", "quit", "Quit"),
     ]
@@ -962,6 +1077,18 @@ class CharacterDetailScreen(Screen[None]):
         yield Header()
         yield Static(self._summary(), id="character-detail")
         yield Footer()
+
+    def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
+        return action != "edit_arts" or self.character.type == "magus"
+
+    def action_edit_arts(self) -> None:
+        def handle_result(arts: dict[str, int] | None) -> None:
+            if arts is not None:
+                self.character.arts = arts
+                storage.save_saga(self.saga)
+                self._refresh_summary()
+
+        self.app.push_screen(EditArtsScreen(self.character.arts), handle_result)
 
     def action_add_ability(self) -> None:
         exclude_names = {a.name for a in self.character.abilities}
