@@ -7,6 +7,7 @@ from typing import ClassVar
 from textual.app import ComposeResult
 from textual.binding import BindingType
 from textual.containers import Horizontal, Vertical, VerticalScroll
+from textual.css.query import NoMatches
 from textual.screen import ModalScreen, Screen
 from textual.widget import Widget
 from textual.widgets import (
@@ -19,11 +20,14 @@ from textual.widgets import (
     ListView,
     Select,
     Static,
+    TabbedContent,
+    TabPane,
     Tree,
 )
 
 from . import catalog, storage
 from .models import (
+    ABILITY_CATEGORIES,
     ART_ABBREVIATIONS,
     FORMS,
     SEASONS,
@@ -31,10 +35,12 @@ from .models import (
     Ability,
     ArtScore,
     Character,
+    Characteristics,
     Covenant,
     Laboratory,
     Library,
     Saga,
+    Spell,
     VirtueFlawInstance,
 )
 
@@ -42,6 +48,7 @@ _SAGA_ITEM_ID_PREFIX = "saga-"
 _VIRTUE_FLAW_ITEM_ID_PREFIX = "vf-"
 _ABILITY_ITEM_ID_PREFIX = "ability-"
 _REMOVAL_ITEM_ID_PREFIX = "remove-"
+_SPELL_ITEM_ID_PREFIX = "spell-"
 
 
 class SagaCreateScreen(ModalScreen[str | None]):
@@ -482,9 +489,11 @@ class VirtueFlawPickerScreen(ModalScreen[VirtueFlawInstance | None]):
 
 
 class AbilityDetailsScreen(ModalScreen[Ability | None]):
-    """Prompts for score/specialty once an Ability's name is resolved.
+    """Prompts for level/xp/specialty once an Ability's name+category are known.
 
-    Dismisses with the finished Ability, or None if cancelled.
+    Used both to add a new Ability (existing=None) and to edit one already
+    on the sheet (existing provided, prefilled). Dismisses with the
+    finished Ability, or None if cancelled.
     """
 
     BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
@@ -509,17 +518,29 @@ class AbilityDetailsScreen(ModalScreen[Ability | None]):
     }
     """
 
-    def __init__(self, name: str) -> None:
+    def __init__(
+        self, name: str, category: str, existing: Ability | None = None
+    ) -> None:
         super().__init__()
         self.ability_name = name
+        self.category = category
+        self.existing = existing
 
     def compose(self) -> ComposeResult:
+        level = self.existing.level if self.existing else 0
+        xp = self.existing.xp if self.existing else 0
+        specialty = self.existing.specialty if self.existing else ""
+
         with Vertical(id="details-dialog"):
             yield Label(self.ability_name, id="details-title")
-            yield Label("Score")
-            yield Input(value="0", type="integer", id="input-score")
+            yield Label("Level")
+            yield Input(value=str(level), type="integer", id="input-level")
+            yield Label("XP")
+            yield Input(value=str(xp), type="integer", id="input-xp")
             yield Label("Specialty (optional)")
-            yield Input(placeholder="e.g. Swords", id="input-specialty")
+            yield Input(
+                value=specialty or "", placeholder="e.g. Swords", id="input-specialty"
+            )
             yield Static("", id="details-error")
             with Horizontal():
                 yield Button("Confirm", id="btn-confirm", variant="success")
@@ -537,13 +558,22 @@ class AbilityDetailsScreen(ModalScreen[Ability | None]):
     def _try_confirm(self) -> None:
         error = self.query_one("#details-error", Static)
         try:
-            score = int(self.query_one("#input-score", Input).value.strip())
+            level = int(self.query_one("#input-level", Input).value.strip())
+            xp = int(self.query_one("#input-xp", Input).value.strip())
         except ValueError:
-            error.update("Score must be a whole number.")
+            error.update("Level and XP must be whole numbers.")
             return
 
         specialty = self.query_one("#input-specialty", Input).value.strip() or None
-        self.dismiss(Ability(name=self.ability_name, score=score, specialty=specialty))
+        self.dismiss(
+            Ability(
+                name=self.ability_name,
+                category=self.category,
+                level=level,
+                xp=xp,
+                specialty=specialty,
+            )
+        )
 
 
 class AbilityPickerScreen(ModalScreen[Ability | None]):
@@ -621,20 +651,22 @@ class AbilityPickerScreen(ModalScreen[Ability | None]):
 
             def handle_params(params: dict[str, str] | None) -> None:
                 if params is not None:
-                    self._prompt_details(catalog.resolve_ability_name(entry, params))
+                    self._prompt_details(
+                        catalog.resolve_ability_name(entry, params), entry.category
+                    )
 
             self.app.push_screen(
                 ParamPromptScreen(entry.name, entry.parameters), handle_params
             )
         else:
-            self._prompt_details(entry.name)
+            self._prompt_details(entry.name, entry.category)
 
-    def _prompt_details(self, name: str) -> None:
+    def _prompt_details(self, name: str, category: str) -> None:
         def handle_ability(ability: Ability | None) -> None:
             if ability is not None:
                 self.dismiss(ability)
 
-        self.app.push_screen(AbilityDetailsScreen(name), handle_ability)
+        self.app.push_screen(AbilityDetailsScreen(name, category), handle_ability)
 
 
 class RemovalPickerScreen(ModalScreen[int | None]):
@@ -705,11 +737,12 @@ class RemovalPickerScreen(ModalScreen[int | None]):
 class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
     """Edits all 15 Hermetic Arts at once -- a fixed grid, not an addable list.
 
-    Three columns of 5: Techniques (left, its own header), then Forms
-    split across the middle and right columns (header only on the middle
-    one, since the right column is just its continuation). Each Art shows
-    a Level / XP pair. Dismisses with a dict of every art's lowercase name
-    -> ArtScore, or None if cancelled.
+    A single column, Techniques first then Forms -- matching how Abilities
+    are organized on the sheet by category. (An earlier version split this
+    into 3 side-by-side columns; that was reverted after it turned out to
+    overflow a normal terminal width and corrupt click hit-testing.) Each
+    Art shows a Level / XP pair. Dismisses with a dict of every art's
+    lowercase name -> ArtScore, or None if cancelled.
     """
 
     BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
@@ -721,11 +754,23 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
 
     #arts-dialog {
         width: auto;
-        max-width: 100%;
         height: auto;
+        max-height: 22;
         border: round $accent;
         padding: 1 2;
         background: $surface;
+    }
+
+    #arts-scroll {
+        width: auto;
+        height: auto;
+        max-height: 13;
+        overflow-y: auto;
+    }
+
+    #arts-buttons {
+        width: auto;
+        height: auto;
     }
 
     #arts-subtitle {
@@ -733,13 +778,9 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
         margin-bottom: 1;
     }
 
-    .art-column {
-        width: auto;
-        margin-right: 2;
-    }
-
     .column-heading {
         text-style: bold;
+        margin-top: 1;
     }
 
     .art-row {
@@ -779,7 +820,7 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
         def row(art_name: str):
             key = art_name.lower()
             score = self.arts.get(key, ArtScore())
-            yield Label(art_name)
+            yield Label(f"{art_name} ({ART_ABBREVIATIONS[art_name]})")
             yield Input(
                 value=str(score.level),
                 type="integer",
@@ -794,25 +835,18 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
 
         with Vertical(id="arts-dialog"):
             yield Label("Edit Arts", id="arts-title")
-            yield Label("Each score is Level / XP", id="arts-subtitle")
-            with Horizontal():
-                with Vertical(classes="art-column"):
-                    yield Label("Techniques", classes="column-heading")
-                    for technique in TECHNIQUES:
-                        with Horizontal(classes="art-row"):
-                            yield from row(technique)
-                with Vertical(classes="art-column"):
-                    yield Label("Forms", classes="column-heading")
-                    for form in FORMS[:5]:
-                        with Horizontal(classes="art-row"):
-                            yield from row(form)
-                with Vertical(classes="art-column"):
-                    yield Label("", classes="column-heading")
-                    for form in FORMS[5:]:
-                        with Horizontal(classes="art-row"):
-                            yield from row(form)
+            with VerticalScroll(id="arts-scroll"):
+                yield Label("Each score is Level / XP", id="arts-subtitle")
+                yield Label("Techniques", classes="column-heading")
+                for technique in TECHNIQUES:
+                    with Horizontal(classes="art-row"):
+                        yield from row(technique)
+                yield Label("Forms", classes="column-heading")
+                for form in FORMS:
+                    with Horizontal(classes="art-row"):
+                        yield from row(form)
             yield Static("", id="arts-error")
-            with Horizontal():
+            with Horizontal(id="arts-buttons"):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -935,6 +969,517 @@ class LaboratoryCreateScreen(ModalScreen[str | None]):
         self.dismiss(laboratory.id)
 
 
+class IdentityEditScreen(ModalScreen[dict[str, str | None] | None]):
+    """Edits a character's Name, Covenant, and (for magi) Laboratory.
+
+    Type is fixed at creation -- changing it after Arts/Spells already
+    exist would leave the sheet in an inconsistent state, so it isn't
+    editable here. Dismisses with
+    {"name": ..., "covenant_id": ..., "laboratory_id": ...}, or None if
+    cancelled.
+    """
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    IdentityEditScreen {
+        align: center middle;
+    }
+
+    #edit-dialog {
+        width: 64;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    #edit-error {
+        color: $error;
+        height: auto;
+        margin-top: 1;
+    }
+    """
+
+    def __init__(self, saga: Saga, character: Character) -> None:
+        super().__init__()
+        self.saga = saga
+        self.character = character
+
+    def compose(self) -> ComposeResult:
+        character = self.character
+        with Vertical(id="edit-dialog"):
+            yield Label("Edit Identity", id="edit-title")
+            yield Label("Name")
+            yield Input(value=character.name, id="input-name")
+            yield Label("Covenant")
+            yield Select(
+                [(c.name, c.id) for c in self.saga.covenants],
+                value=character.covenant_id or Select.NULL,
+                allow_blank=True,
+                prompt="(unassigned)",
+                id="select-covenant",
+            )
+            if character.type == "magus":
+                yield Label("Assigned Laboratory")
+                yield Select(
+                    [(lab.name, lab.id) for lab in self.saga.laboratories],
+                    value=character.assigned_lab_id or Select.NULL,
+                    allow_blank=True,
+                    prompt="(unassigned)",
+                    id="select-laboratory",
+                )
+            yield Static("", id="edit-error")
+            with Horizontal():
+                yield Button("Save", id="btn-save", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-save":
+            self._try_save()
+
+    def _try_save(self) -> None:
+        error = self.query_one("#edit-error", Static)
+
+        name = self.query_one("#input-name", Input).value.strip()
+        if not name:
+            error.update("Name is required.")
+            return
+
+        covenant_value = self.query_one("#select-covenant", Select).value
+        covenant_id = covenant_value if isinstance(covenant_value, str) else None
+
+        laboratory_id: str | None = None
+        if self.character.type == "magus":
+            lab_value = self.query_one("#select-laboratory", Select).value
+            laboratory_id = lab_value if isinstance(lab_value, str) else None
+
+        self.dismiss(
+            {"name": name, "covenant_id": covenant_id, "laboratory_id": laboratory_id}
+        )
+
+
+class EditCharacteristicsScreen(ModalScreen[Characteristics | None]):
+    """Edits all 8 Characteristics at once: Int/Per/Str/Sta, Pre/Com/Dex/Qik.
+
+    Dismisses with the finished Characteristics, or None if cancelled.
+    """
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    EditCharacteristicsScreen {
+        align: center middle;
+    }
+
+    #char-dialog {
+        width: auto;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    .char-row {
+        width: auto;
+        height: auto;
+    }
+
+    .char-row Label {
+        width: 5;
+        content-align: right middle;
+        padding-right: 1;
+    }
+
+    .char-row Input {
+        width: 5;
+        height: 1;
+        border: none;
+        margin-right: 2;
+    }
+
+    #char-error {
+        color: $error;
+        height: auto;
+        margin-top: 1;
+    }
+
+    #char-buttons {
+        width: auto;
+        height: auto;
+    }
+    """
+
+    _ROW1: ClassVar[list[tuple[str, str]]] = [
+        ("Int", "intelligence"),
+        ("Per", "perception"),
+        ("Str", "strength"),
+        ("Sta", "stamina"),
+    ]
+    _ROW2: ClassVar[list[tuple[str, str]]] = [
+        ("Pre", "presence"),
+        ("Com", "communication"),
+        ("Dex", "dexterity"),
+        ("Qik", "quickness"),
+    ]
+
+    def __init__(self, characteristics: Characteristics) -> None:
+        super().__init__()
+        self.characteristics = characteristics
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="char-dialog"):
+            yield Label("Edit Characteristics", id="char-title")
+            for row in (self._ROW1, self._ROW2):
+                with Horizontal(classes="char-row"):
+                    for label, field_name in row:
+                        yield Label(label)
+                        yield Input(
+                            value=str(getattr(self.characteristics, field_name)),
+                            type="integer",
+                            id=f"input-char-{field_name}",
+                        )
+            yield Static("", id="char-error")
+            with Horizontal(id="char-buttons"):
+                yield Button("Save", id="btn-save", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-save":
+            self._try_save()
+
+    def _try_save(self) -> None:
+        error = self.query_one("#char-error", Static)
+        values: dict[str, int] = {}
+        for label, field_name in (*self._ROW1, *self._ROW2):
+            raw = self.query_one(f"#input-char-{field_name}", Input).value.strip()
+            try:
+                values[field_name] = int(raw)
+            except ValueError:
+                error.update(f"{label} must be a whole number.")
+                return
+        self.dismiss(Characteristics(**values))
+
+
+class SpellPickerScreen(ModalScreen[str | None]):
+    """Pick a spell (by id) from the saga's spells, to add as known.
+
+    Only lists spells not already known. There's no custom spell creation
+    yet (see the backlog in DESIGN.md); this just wires up the "known
+    spells" relationship against whatever spells already exist in the
+    saga. Dismisses with the spell id, or None if cancelled.
+    """
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    SpellPickerScreen {
+        align: center middle;
+    }
+
+    #picker-dialog {
+        width: 76;
+        height: auto;
+        max-height: 24;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+    """
+
+    def __init__(self, available_spells: list[Spell]) -> None:
+        super().__init__()
+        self.available_spells = available_spells
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="picker-dialog"):
+            yield Label("Add a Known Spell", id="picker-title")
+            yield ListView(id="spell-picker-list")
+            yield Button("Cancel", id="btn-cancel")
+
+    def on_mount(self) -> None:
+        list_view = self.query_one("#spell-picker-list", ListView)
+        if not self.available_spells:
+            list_view.append(ListItem(Label("(no spells available)")))
+            return
+
+        for spell in self.available_spells:
+            technique = ART_ABBREVIATIONS.get(spell.technique, spell.technique[:2])
+            form = ART_ABBREVIATIONS.get(spell.form, spell.form[:2])
+            label = f"{spell.name} ({technique}{form} {spell.level})"
+            list_view.append(
+                ListItem(Label(label), id=f"{_SPELL_ITEM_ID_PREFIX}{spell.id}")
+            )
+        list_view.index = 0
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+
+    def on_list_view_selected(self, event: ListView.Selected) -> None:
+        item_id = event.item.id
+        if item_id is None or not item_id.startswith(_SPELL_ITEM_ID_PREFIX):
+            return
+        self.dismiss(item_id.removeprefix(_SPELL_ITEM_ID_PREFIX))
+
+
+class ItemAddScreen(ModalScreen[str | None]):
+    """Freeform text entry for an inventory item.
+
+    Dismisses with the item description, or None if cancelled.
+    """
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    ItemAddScreen {
+        align: center middle;
+    }
+
+    #create-dialog {
+        width: 60;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    #create-error {
+        color: $error;
+        height: auto;
+        margin-top: 1;
+    }
+    """
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="create-dialog"):
+            yield Label("Add an Item", id="create-title")
+            yield Input(placeholder="e.g. Fine wool cloak", id="input-item")
+            yield Static("", id="create-error")
+            with Horizontal():
+                yield Button("Add", id="btn-create", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-create":
+            self._try_create()
+
+    def _try_create(self) -> None:
+        error = self.query_one("#create-error", Static)
+        item = self.query_one("#input-item", Input).value.strip()
+        if not item:
+            error.update("Item description is required.")
+            return
+        self.dismiss(item)
+
+
+class CharacterSheetView(Vertical):
+    """The tabbed character sheet mounted into WorkspaceScreen's detail pane.
+
+    Each section is its own tab, rendered as plain text for now (matching
+    the rest of the app's read-then-refresh style): Identity,
+    Characteristics, Abilities (grouped by category), Virtues & Flaws
+    (grouped Virtue/Flaw, tagged Minor/Major), and -- magi only -- Arts
+    (Techniques then Forms), Spells known, and Inventory.
+    """
+
+    DEFAULT_CSS = """
+    CharacterSheetView {
+        height: 1fr;
+    }
+
+    CharacterSheetView TabPane {
+        padding: 1 0;
+    }
+    """
+
+    def __init__(self, saga: Saga, character: Character) -> None:
+        super().__init__()
+        self.saga = saga
+        self.character = character
+
+    def compose(self) -> ComposeResult:
+        with TabbedContent(initial="tab-identity"):
+            with TabPane("Identity", id="tab-identity"):
+                yield Static(self._identity_text(), id="identity-content")
+            with TabPane("Characteristics", id="tab-characteristics"):
+                yield Static(self._characteristics_text(), id="characteristics-content")
+            with TabPane("Abilities", id="tab-abilities"):
+                yield Static(self._abilities_text(), id="abilities-content")
+            with TabPane("Virtues & Flaws", id="tab-vf"):
+                yield Static(self._vf_text(), id="vf-content")
+            if self.character.type == "magus":
+                with TabPane("Arts", id="tab-arts"):
+                    yield Static(self._arts_text(), id="arts-content")
+                with TabPane("Spells", id="tab-spells"):
+                    yield Static(self._spells_text(), id="spells-content")
+            with TabPane("Inventory", id="tab-inventory"):
+                yield Static(self._inventory_text(), id="inventory-content")
+
+    _TAB_CONTENT: ClassVar[dict[str, str]] = {
+        "tab-identity": "#identity-content",
+        "tab-characteristics": "#characteristics-content",
+        "tab-abilities": "#abilities-content",
+        "tab-vf": "#vf-content",
+        "tab-arts": "#arts-content",
+        "tab-spells": "#spells-content",
+        "tab-inventory": "#inventory-content",
+    }
+    _TAB_TEXT: ClassVar[dict[str, str]] = {
+        "tab-identity": "_identity_text",
+        "tab-characteristics": "_characteristics_text",
+        "tab-abilities": "_abilities_text",
+        "tab-vf": "_vf_text",
+        "tab-arts": "_arts_text",
+        "tab-spells": "_spells_text",
+        "tab-inventory": "_inventory_text",
+    }
+
+    def refresh_tab(self, tab_id: str) -> None:
+        selector = self._TAB_CONTENT.get(tab_id)
+        text_method = self._TAB_TEXT.get(tab_id)
+        if selector is None or text_method is None:
+            return
+        try:
+            static = self.query_one(selector, Static)
+        except NoMatches:
+            return
+        static.update(getattr(self, text_method)())
+
+    def _identity_text(self) -> str:
+        saga, character = self.saga, self.character
+        covenant = next(
+            (c for c in saga.covenants if c.id == character.covenant_id), None
+        )
+        lines = [
+            f"Name: {character.name}",
+            f"Type: {character.type}",
+            f"Covenant: {covenant.name if covenant else '(unassigned)'}",
+        ]
+        if character.type == "magus":
+            lab = next(
+                (
+                    lab
+                    for lab in saga.laboratories
+                    if lab.id == character.assigned_lab_id
+                ),
+                None,
+            )
+            lines.append(f"Assigned Laboratory: {lab.name if lab else '(unassigned)'}")
+        return "\n".join(lines)
+
+    def _characteristics_text(self) -> str:
+        c = self.character.characteristics
+        return (
+            f"Int {c.intelligence}   Per {c.perception}   "
+            f"Str {c.strength}   Sta {c.stamina}\n"
+            f"Pre {c.presence}   Com {c.communication}   "
+            f"Dex {c.dexterity}   Qik {c.quickness}"
+        )
+
+    def _abilities_text(self) -> str:
+        if not self.character.abilities:
+            return "(none recorded)"
+
+        lines: list[str] = []
+        for category in ABILITY_CATEGORIES:
+            abilities = [a for a in self.character.abilities if a.category == category]
+            if not abilities:
+                continue
+            lines.append(f"{category}:")
+            for ability in abilities:
+                specialty = f" ({ability.specialty})" if ability.specialty else ""
+                lines.append(
+                    f"  {ability.name}{specialty} {ability.level}/{ability.xp}"
+                )
+            lines.append("")
+        return "\n".join(lines).rstrip()
+
+    def _vf_text(self) -> str:
+        if not self.character.virtues_flaws:
+            return "(none recorded)"
+
+        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
+        lines: list[str] = []
+        for vf_type in ("Virtue", "Flaw"):
+            entries = [
+                vf
+                for vf in self.character.virtues_flaws
+                if (definition := vf_catalog.get(vf.vf_id)) is not None
+                and definition.type == vf_type
+            ]
+            if not entries:
+                continue
+            lines.append(f"{vf_type}s:")
+            for vf in entries:
+                definition = vf_catalog.get(vf.vf_id)
+                tier = (
+                    catalog.virtue_flaw_tier(definition.cost)
+                    if definition is not None
+                    else "?"
+                )
+                lines.append(
+                    f"  {catalog.describe_virtue_flaw(vf, vf_catalog)} ({tier})"
+                )
+            lines.append("")
+        return "\n".join(lines).rstrip()
+
+    def _arts_text(self) -> str:
+        lines = ["Techniques:"]
+        for art in TECHNIQUES:
+            score = self.character.arts.get(art.lower(), ArtScore())
+            lines.append(
+                f"  {art} ({ART_ABBREVIATIONS[art]}): {score.level}/{score.xp}"
+            )
+        lines.append("")
+        lines.append("Forms:")
+        for art in FORMS:
+            score = self.character.arts.get(art.lower(), ArtScore())
+            lines.append(
+                f"  {art} ({ART_ABBREVIATIONS[art]}): {score.level}/{score.xp}"
+            )
+        return "\n".join(lines)
+
+    def _spells_text(self) -> str:
+        if not self.character.spells_known:
+            return "(none recorded)"
+
+        spell_lookup = {s.id: s for s in self.saga.spells}
+        lines = []
+        for spell_id in self.character.spells_known:
+            spell = spell_lookup.get(spell_id)
+            if spell is None:
+                lines.append(f"  {spell_id} (unknown spell)")
+                continue
+            technique = ART_ABBREVIATIONS.get(spell.technique, spell.technique[:2])
+            form = ART_ABBREVIATIONS.get(spell.form, spell.form[:2])
+            lines.append(f"  {spell.name} ({technique}{form} {spell.level})")
+        return "\n".join(lines)
+
+    def _inventory_text(self) -> str:
+        if not self.character.inventory:
+            return "(none recorded)"
+        return "\n".join(f"  - {item}" for item in self.character.inventory)
+
+
 class WorkspaceScreen(Screen[None]):
     """Persistent nav tree (left) + detail pane (right) for one open saga.
 
@@ -949,14 +1494,27 @@ class WorkspaceScreen(Screen[None]):
         ("n", "create_covenant", "New Covenant"),
         ("c", "create_character", "New Character"),
         ("l", "create_laboratory", "New Laboratory"),
-        ("a", "add_ability", "Add Ability"),
-        ("A", "remove_ability", "Remove Ability"),
+        ("a", "add", "Add"),
+        ("A", "remove", "Remove"),
+        ("e", "edit", "Edit"),
         ("v", "add_virtue_flaw", "Add Virtue/Flaw"),
         ("V", "remove_virtue_flaw", "Remove Virtue/Flaw"),
-        ("e", "edit_arts", "Edit Arts"),
         ("escape", "app.pop_screen", "Back"),
         ("q", "quit", "Quit"),
     ]
+
+    #: Which character-sheet tabs support the generic Add/Remove/Edit
+    #: bindings. 'a'/'A'/'e' dispatch by whichever tab is active instead of
+    #: each having their own dedicated key, since a fully-built sheet has
+    #: too many addable/editable sections for that to scale.
+    _ADD_TABS: ClassVar[set[str]] = {"tab-abilities", "tab-spells", "tab-inventory"}
+    _REMOVE_TABS: ClassVar[set[str]] = {"tab-abilities", "tab-spells", "tab-inventory"}
+    _EDIT_TABS: ClassVar[set[str]] = {
+        "tab-identity",
+        "tab-characteristics",
+        "tab-abilities",
+        "tab-arts",
+    }
 
     DEFAULT_CSS = """
     #workspace-body {
@@ -981,6 +1539,7 @@ class WorkspaceScreen(Screen[None]):
         self.selected_covenant: Covenant | None = None
         self.selected_character: Character | None = None
         self.selected_laboratory: Laboratory | None = None
+        self._character_sheet_view: CharacterSheetView | None = None
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -1044,6 +1603,7 @@ class WorkspaceScreen(Screen[None]):
 
         kind = data[0]
         self.selected_kind = kind
+        self._character_sheet_view = None
 
         if kind == "saga":
             self.selected_covenant = None
@@ -1109,17 +1669,32 @@ class WorkspaceScreen(Screen[None]):
                 "laboratory_group",
                 "laboratory",
             )
-        if action in ("add_ability", "remove_ability"):
-            return self.selected_kind == "character"
-        if action == "edit_arts":
-            return (
-                self.selected_kind == "character"
-                and self.selected_character is not None
-                and self.selected_character.type == "magus"
-            )
+        if action == "add":
+            return self._active_character_tab() in self._ADD_TABS
+        if action == "remove":
+            return self._active_character_tab() in self._REMOVE_TABS
+        if action == "edit":
+            return self._active_character_tab() in self._EDIT_TABS
         if action in ("add_virtue_flaw", "remove_virtue_flaw"):
-            return self.selected_kind in ("character", "laboratory")
+            if self.selected_kind == "laboratory":
+                return True
+            return self._active_character_tab() == "tab-vf"
         return True
+
+    def _active_character_tab(self) -> str | None:
+        if self.selected_kind != "character" or self._character_sheet_view is None:
+            return None
+        try:
+            return self._character_sheet_view.query_one(TabbedContent).active
+        except NoMatches:
+            return None
+
+    def on_tabbed_content_tab_activated(
+        self, event: TabbedContent.TabActivated
+    ) -> None:
+        # Keep the Footer's binding hints (and check_action gating) in sync
+        # with whichever tab the user just switched to.
+        self.refresh_bindings()
 
     async def _set_detail(self, *widgets: Widget) -> None:
         detail_pane = self.query_one("#detail-pane", VerticalScroll)
@@ -1248,101 +1823,40 @@ class WorkspaceScreen(Screen[None]):
         return "\n".join(lines)
 
     async def _show_character_detail(self, character: Character) -> None:
-        await self._set_detail(
-            Static(self._character_summary(character), id="character-detail")
-        )
+        view = CharacterSheetView(self.saga, character)
+        await self._set_detail(view)
+        self._character_sheet_view = view
 
-    def _character_summary(self, character: Character) -> str:
+    def _refresh_character_tab(self, tab_id: str) -> None:
+        if self._character_sheet_view is not None:
+            self._character_sheet_view.refresh_tab(tab_id)
+
+    def _assign_laboratory(self, character: Character, new_lab_id: str | None) -> None:
+        """Keeps Character.assigned_lab_id and Laboratory.owner_id in sync
+        from both directions: the character's old lab (if any) is freed,
+        and if the newly-assigned lab already had a different owner, that
+        character is unassigned too, so a lab never has an owner who
+        doesn't point back at it or vice versa.
+        """
         saga = self.saga
-        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
-
-        covenant = next(
-            (c for c in saga.covenants if c.id == character.covenant_id), None
+        old_lab = next(
+            (lab for lab in saga.laboratories if lab.id == character.assigned_lab_id),
+            None,
         )
+        if old_lab is not None:
+            old_lab.owner_id = None
 
-        lines = [
-            f"Character: {character.name}",
-            f"Type: {character.type}",
-            f"Covenant: {covenant.name if covenant else '(none)'}",
-        ]
-
-        if character.type == "magus":
-            lab = next(
-                (
-                    lab
-                    for lab in saga.laboratories
-                    if lab.id == character.assigned_lab_id
-                ),
-                None,
-            )
-            lines.append(f"Assigned Laboratory: {'yes' if lab else '(none)'}")
-
-        c = character.characteristics
-        lines += [
-            "",
-            "Characteristics:",
-            f"  Int {c.intelligence}, Per {c.perception}, Str {c.strength}, "
-            f"Sta {c.stamina}",
-            f"  Pre {c.presence}, Com {c.communication}, Dex {c.dexterity}, "
-            f"Qik {c.quickness}",
-        ]
-
-        if character.type == "magus":
-            lines.append("")
-            if character.arts:
-                lines.append("Arts:")
-                lines += [
-                    f"  {art.title()} ({ART_ABBREVIATIONS.get(art.title(), '?')}): "
-                    f"{score.level}/{score.xp}"
-                    for art, score in character.arts.items()
-                ]
-            else:
-                lines.append("Arts: (none recorded)")
-
-        lines.append("")
-        if character.abilities:
-            lines.append("Abilities:")
-            for ability in character.abilities:
-                specialty = f" ({ability.specialty})" if ability.specialty else ""
-                lines.append(f"  {ability.name} {ability.score}{specialty}")
-        else:
-            lines.append("Abilities: (none recorded)")
-
-        lines.append("")
-        if character.virtues_flaws:
-            lines.append("Virtues & Flaws:")
-            lines += [
-                f"  {catalog.describe_virtue_flaw(vf, vf_catalog)}"
-                for vf in character.virtues_flaws
-            ]
-        else:
-            lines.append("Virtues & Flaws: (none recorded)")
-
-        if character.type == "magus":
-            lines.append("")
-            if character.spells_known:
-                spell_lookup = {s.id: s for s in saga.spells}
-                lines.append("Spells known:")
-                for spell_id in character.spells_known:
-                    spell = spell_lookup.get(spell_id)
-                    if spell is None:
-                        lines.append(f"  {spell_id} (unknown spell)")
-                    else:
-                        lines.append(
-                            f"  {spell.name} ({spell.technique} {spell.form} "
-                            f"{spell.level})"
-                        )
-            else:
-                lines.append("Spells known: (none recorded)")
-
-        return "\n".join(lines)
-
-    def _refresh_character_detail(self) -> None:
-        if self.selected_character is None:
+        character.assigned_lab_id = new_lab_id
+        if new_lab_id is None:
             return
-        self.query_one("#character-detail", Static).update(
-            self._character_summary(self.selected_character)
+
+        new_lab = next(lab for lab in saga.laboratories if lab.id == new_lab_id)
+        previous_owner = next(
+            (c for c in saga.characters if c.id == new_lab.owner_id), None
         )
+        if previous_owner is not None:
+            previous_owner.assigned_lab_id = None
+        new_lab.owner_id = character.id
 
     def _refresh_laboratory_detail(self) -> None:
         if self.selected_laboratory is None:
@@ -1401,9 +1915,75 @@ class WorkspaceScreen(Screen[None]):
 
         self.app.push_screen(LaboratoryCreateScreen(self.saga, covenant), handle_result)
 
-    # -- character-only actions --
+    # -- generic Add/Remove/Edit dispatch, by active character-sheet tab --
 
-    def action_add_ability(self) -> None:
+    def action_add(self) -> None:
+        tab = self._active_character_tab()
+        if tab == "tab-abilities":
+            self._add_ability()
+        elif tab == "tab-spells":
+            self._add_spell()
+        elif tab == "tab-inventory":
+            self._add_item()
+
+    def action_remove(self) -> None:
+        tab = self._active_character_tab()
+        if tab == "tab-abilities":
+            self._remove_ability()
+        elif tab == "tab-spells":
+            self._remove_spell()
+        elif tab == "tab-inventory":
+            self._remove_item()
+
+    def action_edit(self) -> None:
+        tab = self._active_character_tab()
+        if tab == "tab-identity":
+            self._edit_identity()
+        elif tab == "tab-characteristics":
+            self._edit_characteristics()
+        elif tab == "tab-abilities":
+            self._edit_ability()
+        elif tab == "tab-arts":
+            self._edit_arts()
+
+    # -- Identity / Characteristics --
+
+    def _edit_identity(self) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+
+        def handle_result(result: dict[str, str | None] | None) -> None:
+            if result is None:
+                return
+            character.name = result["name"]
+            character.covenant_id = result["covenant_id"]
+            if character.type == "magus":
+                self._assign_laboratory(character, result["laboratory_id"])
+            storage.save_saga(self.saga)
+            self._rebuild_tree()
+            self._refresh_character_tab("tab-identity")
+
+        self.app.push_screen(IdentityEditScreen(self.saga, character), handle_result)
+
+    def _edit_characteristics(self) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+
+        def handle_result(characteristics: Characteristics | None) -> None:
+            if characteristics is not None:
+                character.characteristics = characteristics
+                storage.save_saga(self.saga)
+                self._refresh_character_tab("tab-characteristics")
+
+        self.app.push_screen(
+            EditCharacteristicsScreen(character.characteristics), handle_result
+        )
+
+    # -- Abilities --
+
+    def _add_ability(self) -> None:
         character = self.selected_character
         if character is None:
             return
@@ -1413,11 +1993,11 @@ class WorkspaceScreen(Screen[None]):
             if ability is not None:
                 character.abilities.append(ability)
                 storage.save_saga(self.saga)
-                self._refresh_character_detail()
+                self._refresh_character_tab("tab-abilities")
 
         self.app.push_screen(AbilityPickerScreen(exclude_names), handle_result)
 
-    def action_remove_ability(self) -> None:
+    def _remove_ability(self) -> None:
         character = self.selected_character
         if character is None:
             return
@@ -1426,7 +2006,7 @@ class WorkspaceScreen(Screen[None]):
             return
 
         labels = [
-            f"{a.name} {a.score}" + (f" ({a.specialty})" if a.specialty else "")
+            f"{a.name} {a.level}/{a.xp}" + (f" ({a.specialty})" if a.specialty else "")
             for a in character.abilities
         ]
 
@@ -1434,13 +2014,48 @@ class WorkspaceScreen(Screen[None]):
             if index is not None:
                 del character.abilities[index]
                 storage.save_saga(self.saga)
-                self._refresh_character_detail()
+                self._refresh_character_tab("tab-abilities")
 
         self.app.push_screen(
             RemovalPickerScreen("Remove an Ability", labels), handle_result
         )
 
-    def action_edit_arts(self) -> None:
+    def _edit_ability(self) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        if not character.abilities:
+            self.notify("No Abilities to edit.")
+            return
+
+        labels = [
+            f"{a.name} {a.level}/{a.xp}" + (f" ({a.specialty})" if a.specialty else "")
+            for a in character.abilities
+        ]
+
+        def handle_index(index: int | None) -> None:
+            if index is None:
+                return
+            existing = character.abilities[index]
+
+            def handle_result(ability: Ability | None) -> None:
+                if ability is not None:
+                    character.abilities[index] = ability
+                    storage.save_saga(self.saga)
+                    self._refresh_character_tab("tab-abilities")
+
+            self.app.push_screen(
+                AbilityDetailsScreen(existing.name, existing.category, existing),
+                handle_result,
+            )
+
+        self.app.push_screen(
+            RemovalPickerScreen("Edit which Ability?", labels), handle_index
+        )
+
+    # -- Arts (magi only) --
+
+    def _edit_arts(self) -> None:
         character = self.selected_character
         if character is None:
             return
@@ -1449,14 +2064,89 @@ class WorkspaceScreen(Screen[None]):
             if arts is not None:
                 character.arts = arts
                 storage.save_saga(self.saga)
-                self._refresh_character_detail()
+                self._refresh_character_tab("tab-arts")
 
         self.app.push_screen(EditArtsScreen(character.arts), handle_result)
+
+    # -- Spells known (magi only) --
+
+    def _add_spell(self) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        known = set(character.spells_known)
+        available = [s for s in self.saga.spells if s.id not in known]
+
+        def handle_result(spell_id: str | None) -> None:
+            if spell_id is not None:
+                character.spells_known.append(spell_id)
+                storage.save_saga(self.saga)
+                self._refresh_character_tab("tab-spells")
+
+        self.app.push_screen(SpellPickerScreen(available), handle_result)
+
+    def _remove_spell(self) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        if not character.spells_known:
+            self.notify("No Spells to remove.")
+            return
+
+        spell_lookup = {s.id: s for s in self.saga.spells}
+        labels = [
+            spell_lookup[sid].name if sid in spell_lookup else f"{sid} (unknown spell)"
+            for sid in character.spells_known
+        ]
+
+        def handle_result(index: int | None) -> None:
+            if index is not None:
+                del character.spells_known[index]
+                storage.save_saga(self.saga)
+                self._refresh_character_tab("tab-spells")
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove a Known Spell", labels), handle_result
+        )
+
+    # -- Inventory --
+
+    def _add_item(self) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+
+        def handle_result(item: str | None) -> None:
+            if item is not None:
+                character.inventory.append(item)
+                storage.save_saga(self.saga)
+                self._refresh_character_tab("tab-inventory")
+
+        self.app.push_screen(ItemAddScreen(), handle_result)
+
+    def _remove_item(self) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        if not character.inventory:
+            self.notify("No Items to remove.")
+            return
+
+        def handle_result(index: int | None) -> None:
+            if index is not None:
+                del character.inventory[index]
+                storage.save_saga(self.saga)
+                self._refresh_character_tab("tab-inventory")
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove an Item", list(character.inventory)),
+            handle_result,
+        )
 
     # -- shared Character/Laboratory Virtue & Flaw actions --
 
     def action_add_virtue_flaw(self) -> None:
-        target = self.selected_character or self.selected_laboratory
+        target = self._virtue_flaw_target()
         if target is None:
             return
         existing_ids = {vf.vf_id for vf in target.virtues_flaws}
@@ -1465,15 +2155,15 @@ class WorkspaceScreen(Screen[None]):
             if instance is not None:
                 target.virtues_flaws.append(instance)
                 storage.save_saga(self.saga)
-                if self.selected_character is not None:
-                    self._refresh_character_detail()
+                if self.selected_kind == "character":
+                    self._refresh_character_tab("tab-vf")
                 else:
                     self._refresh_laboratory_detail()
 
         self.app.push_screen(VirtueFlawPickerScreen(existing_ids), handle_result)
 
     def action_remove_virtue_flaw(self) -> None:
-        target = self.selected_character or self.selected_laboratory
+        target = self._virtue_flaw_target()
         if target is None:
             return
         if not target.virtues_flaws:
@@ -1489,14 +2179,24 @@ class WorkspaceScreen(Screen[None]):
             if index is not None:
                 del target.virtues_flaws[index]
                 storage.save_saga(self.saga)
-                if self.selected_character is not None:
-                    self._refresh_character_detail()
+                if self.selected_kind == "character":
+                    self._refresh_character_tab("tab-vf")
                 else:
                     self._refresh_laboratory_detail()
 
         self.app.push_screen(
             RemovalPickerScreen("Remove a Virtue or Flaw", labels), handle_result
         )
+
+    def _virtue_flaw_target(self) -> Character | Laboratory | None:
+        if self.selected_kind == "laboratory":
+            return self.selected_laboratory
+        if (
+            self.selected_kind == "character"
+            and self._active_character_tab() == "tab-vf"
+        ):
+            return self.selected_character
+        return None
 
 
 class SagaPickerScreen(Screen[None]):

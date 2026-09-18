@@ -47,6 +47,20 @@ def describe_virtue_flaw(
     return _fill_placeholders(definition.name, instance.params)
 
 
+def virtue_flaw_tier(cost: float) -> str:
+    """ "Minor"/"Major" for the standard 1/3-point costs, else the raw cost.
+
+    Flaws are stored with a negative cost (see the seed catalog), so this
+    compares magnitude rather than sign.
+    """
+    magnitude = abs(cost)
+    if magnitude == 1:
+        return "Minor"
+    if magnitude == 3:
+        return "Major"
+    return f"{magnitude:g} pt"
+
+
 def load_ability_catalog(path: Path = ABILITY_CATALOG_PATH) -> list[AbilityDef]:
     data = json.loads(path.read_text(encoding="utf-8"))
     return [AbilityDef.from_dict(entry) for entry in data]

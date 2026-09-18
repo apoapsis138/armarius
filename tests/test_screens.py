@@ -1,5 +1,5 @@
 import pytest
-from textual.widgets import Input, ListView, Select, Tree
+from textual.widgets import Input, ListView, Select, TabbedContent, Tree
 
 from ars_magica_manager import storage
 from ars_magica_manager.app import ArsMagicaManagerApp
@@ -22,11 +22,15 @@ from ars_magica_manager.screens import (
     CharacterCreateScreen,
     CovenantCreateScreen,
     EditArtsScreen,
+    EditCharacteristicsScreen,
+    IdentityEditScreen,
+    ItemAddScreen,
     LaboratoryCreateScreen,
     ParamPromptScreen,
     RemovalPickerScreen,
     SagaCreateScreen,
     SagaPickerScreen,
+    SpellPickerScreen,
     VirtueFlawPickerScreen,
     WorkspaceScreen,
 )
@@ -63,6 +67,19 @@ async def _select(pilot, app, data) -> None:
 
 async def _open_workspace(pilot) -> None:
     await pilot.press("enter")  # picker -> workspace
+    await pilot.pause()
+
+
+async def _switch_tab(pilot, app, tab_id: str) -> None:
+    """Activate a character-sheet tab, the same way clicking it would.
+
+    The generic Add/Remove/Edit bindings dispatch by whichever tab is
+    active, so most character-mutation tests need this before pressing
+    'a'/'A'/'e'/'v'/'V'.
+    """
+    view = app.screen._character_sheet_view
+    assert view is not None, "no character sheet is currently shown"
+    view.query_one(TabbedContent).active = tab_id
     await pilot.pause()
 
 
@@ -334,7 +351,13 @@ def _sample_saga_with_covenant() -> Saga:
                     "ignem": ArtScore(level=5, xp=15),
                 },
                 abilities=[
-                    Ability(name="Magic Theory", score=5, specialty="Lab Totals")
+                    Ability(
+                        name="Magic Theory",
+                        category="Academic",
+                        level=5,
+                        xp=75,
+                        specialty="Lab Totals",
+                    )
                 ],
                 virtues_flaws=[
                     VirtueFlawInstance(
@@ -415,15 +438,16 @@ async def test_selecting_character_shows_sheet_fields():
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
 
-        summary = app.screen._character_summary(app.screen.selected_character)
-        assert "Character: Leandro" in summary
-        assert "Covenant: Test Covenant" in summary
-        assert "Assigned Laboratory: yes" in summary
-        assert "Int 3" in summary
-        assert "Creo (Cr): 10/55" in summary
-        assert "Magic Theory 5 (Lab Totals)" in summary
-        assert "Affinity with Creo" in summary
-        assert "Ball of Abysmal Flame (Creo Ignem 20)" in summary
+        view = app.screen._character_sheet_view
+        assert "Name: Leandro" in view._identity_text()
+        assert "Covenant: Test Covenant" in view._identity_text()
+        assert "Assigned Laboratory: Leandro's Sanctum" in view._identity_text()
+        assert "Int 3" in view._characteristics_text()
+        assert "Academic:" in view._abilities_text()
+        assert "Magic Theory (Lab Totals) 5/75" in view._abilities_text()
+        assert "Affinity with Creo" in view._vf_text()
+        assert "Creo (Cr): 10/55" in view._arts_text()
+        assert "Ball of Abysmal Flame (CrIg 20)" in view._spells_text()
 
 
 async def test_selecting_laboratory_shows_owner_and_virtues():
@@ -473,6 +497,7 @@ async def test_add_virtue_flaw_without_parameters_to_character():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-vf")
 
         await pilot.press("v")
         await pilot.pause()
@@ -482,9 +507,7 @@ async def test_add_virtue_flaw_without_parameters_to_character():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert "Superior Lab Equipment" in app.screen._character_summary(
-            app.screen.selected_character
-        )
+        assert "Superior Lab Equipment" in app.screen._character_sheet_view._vf_text()
 
     saga = storage.load_saga("test_saga")
     character = saga.characters[0]
@@ -498,6 +521,7 @@ async def test_add_virtue_flaw_with_parameters_to_character():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-vf")
 
         await pilot.press("v")
         await pilot.pause()
@@ -512,9 +536,7 @@ async def test_add_virtue_flaw_with_parameters_to_character():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert "Affinity with Creo" in app.screen._character_summary(
-            app.screen.selected_character
-        )
+        assert "Affinity with Creo" in app.screen._character_sheet_view._vf_text()
 
     saga = storage.load_saga("test_saga")
     character = saga.characters[0]
@@ -529,6 +551,7 @@ async def test_cancelling_param_screen_returns_to_picker_without_adding():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-vf")
 
         await pilot.press("v")
         await pilot.pause()
@@ -555,6 +578,7 @@ async def test_virtue_flaw_picker_excludes_already_held_entries():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-vf")
 
         await pilot.press("v")
         await pilot.pause()
@@ -673,6 +697,7 @@ async def test_add_ability_without_parameters_to_character():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-abilities")
 
         await pilot.press("a")
         await pilot.pause()
@@ -682,22 +707,24 @@ async def test_add_ability_without_parameters_to_character():
         await pilot.pause()
         assert isinstance(app.screen, AbilityDetailsScreen)
 
-        app.screen.query_one("#input-score", Input).value = "3"
+        app.screen.query_one("#input-level", Input).value = "3"
         app.screen.query_one("#input-specialty", Input).value = "Running"
 
         await pilot.click("#btn-confirm")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert "Athletics 3 (Running)" in app.screen._character_summary(
-            app.screen.selected_character
+        assert (
+            "Athletics (Running) 3/0"
+            in app.screen._character_sheet_view._abilities_text()
         )
 
     saga = storage.load_saga("test_saga")
     character = saga.characters[0]
     assert len(character.abilities) == 1
     assert character.abilities[0].name == "Athletics"
-    assert character.abilities[0].score == 3
+    assert character.abilities[0].category == "General"
+    assert character.abilities[0].level == 3
     assert character.abilities[0].specialty == "Running"
 
 
@@ -707,6 +734,7 @@ async def test_add_ability_with_parameters_to_character():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-abilities")
 
         await pilot.press("a")
         await pilot.pause()
@@ -722,7 +750,7 @@ async def test_add_ability_with_parameters_to_character():
         assert isinstance(app.screen, AbilityDetailsScreen)
         assert app.screen.ability_name == "Craft: Blacksmith"
 
-        app.screen.query_one("#input-score", Input).value = "2"
+        app.screen.query_one("#input-level", Input).value = "2"
 
         await pilot.click("#btn-confirm")
         await pilot.pause()
@@ -733,7 +761,8 @@ async def test_add_ability_with_parameters_to_character():
     character = saga.characters[0]
     assert len(character.abilities) == 1
     assert character.abilities[0].name == "Craft: Blacksmith"
-    assert character.abilities[0].score == 2
+    assert character.abilities[0].category == "General"
+    assert character.abilities[0].level == 2
 
 
 async def test_cancelling_ability_details_returns_to_picker_without_adding():
@@ -742,6 +771,7 @@ async def test_cancelling_ability_details_returns_to_picker_without_adding():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-abilities")
 
         await pilot.press("a")
         await pilot.pause()
@@ -761,13 +791,14 @@ async def test_cancelling_ability_details_returns_to_picker_without_adding():
 
 async def test_ability_picker_excludes_non_templated_duplicates_but_keeps_templated():
     saga = _saga_with_bare_character()
-    saga.characters[0].abilities.append(Ability(name="Athletics", score=1))
-    saga.characters[0].abilities.append(Ability(name="Craft: Blacksmith", score=1))
+    saga.characters[0].abilities.append(Ability(name="Athletics", level=1))
+    saga.characters[0].abilities.append(Ability(name="Craft: Blacksmith", level=1))
     storage.save_saga(saga)
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-abilities")
 
         await pilot.press("a")
         await pilot.pause()
@@ -784,9 +815,8 @@ async def test_remove_ability_from_character():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        assert "Magic Theory" in app.screen._character_summary(
-            app.screen.selected_character
-        )
+        await _switch_tab(pilot, app, "tab-abilities")
+        assert "Magic Theory" in app.screen._character_sheet_view._abilities_text()
 
         await pilot.press("A")
         await pilot.pause()
@@ -796,9 +826,7 @@ async def test_remove_ability_from_character():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert "Magic Theory" not in app.screen._character_summary(
-            app.screen.selected_character
-        )
+        assert "Magic Theory" not in app.screen._character_sheet_view._abilities_text()
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].abilities == []
@@ -810,9 +838,8 @@ async def test_remove_virtue_flaw_from_character():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        assert "Affinity with Creo" in app.screen._character_summary(
-            app.screen.selected_character
-        )
+        await _switch_tab(pilot, app, "tab-vf")
+        assert "Affinity with Creo" in app.screen._character_sheet_view._vf_text()
 
         await pilot.press("V")
         await pilot.pause()
@@ -822,9 +849,7 @@ async def test_remove_virtue_flaw_from_character():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert "Affinity with Creo" not in app.screen._character_summary(
-            app.screen.selected_character
-        )
+        assert "Affinity with Creo" not in app.screen._character_sheet_view._vf_text()
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].virtues_flaws == []
@@ -863,6 +888,7 @@ async def test_remove_with_nothing_to_remove_stays_on_same_screen():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-abilities")
 
         await pilot.press("A")
         await pilot.pause()
@@ -877,6 +903,7 @@ async def test_cancelling_removal_picker_keeps_the_item():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-vf")
 
         await pilot.press("V")
         await pilot.pause()
@@ -886,9 +913,7 @@ async def test_cancelling_removal_picker_keeps_the_item():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert "Affinity with Creo" in app.screen._character_summary(
-            app.screen.selected_character
-        )
+        assert "Affinity with Creo" in app.screen._character_sheet_view._vf_text()
 
     saga = storage.load_saga("test_saga")
     assert len(saga.characters[0].virtues_flaws) == 1
@@ -900,6 +925,7 @@ async def test_edit_arts_prefills_existing_scores_and_saves_full_grid():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-arts")
 
         await pilot.press("e")
         await pilot.pause()
@@ -936,6 +962,7 @@ async def test_edit_arts_requires_integers():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-arts")
 
         await pilot.press("e")
         await pilot.pause()
@@ -960,6 +987,7 @@ async def test_edit_arts_cancel_discards_changes():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-arts")
 
         await pilot.press("e")
         await pilot.pause()
@@ -982,25 +1010,31 @@ async def test_edit_arts_grid_fits_default_terminal_and_accepts_real_typing():
     # A default-sized terminal (80x24) is what run_test uses unless told
     # otherwise, and matches a typical real terminal -- this test drives
     # actual clicks and keystrokes (not direct .value assignment) so a
-    # layout wide enough to push columns off-screen, or to block real
+    # layout tall/wide enough to push rows off-screen, or to block real
     # keyboard input, actually fails here.
     storage.save_saga(_sample_saga_with_covenant())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(80, 24)) as pilot:
         await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-arts")
         await pilot.press("e")
         await pilot.pause()
         assert isinstance(app.screen, EditArtsScreen)
 
         screen_width = app.screen.size.width
-        # One field from each of the 3 columns: Techniques, Forms col A, Forms col B.
+        # One Technique row and two Form rows, from opposite ends of the
+        # single-column (scrollable) list -- Herbam and Vim aren't visible
+        # without scrolling, exercising that the scroll-then-click path
+        # itself works, not just whatever's on-screen by default.
         for field_id in (
             "#input-art-rego-level",
             "#input-art-herbam-level",
             "#input-art-vim-level",
         ):
             field = app.screen.query_one(field_id, Input)
+            field.scroll_visible(animate=False)
+            await pilot.pause()
             assert field.region.x + field.region.width <= screen_width, (
                 f"{field_id} is rendered outside the {screen_width}-wide screen"
             )
@@ -1025,7 +1059,7 @@ async def test_edit_arts_grid_fits_default_terminal_and_accepts_real_typing():
     assert arts["vim"].level == 7
 
 
-async def test_edit_arts_is_unavailable_for_non_magi():
+async def test_arts_and_spells_tabs_are_absent_for_non_magi():
     saga = _saga_with_empty_covenant()
     saga.characters.append(
         Character(id="grog1", name="Guard", type="grog", covenant_id="cov1")
@@ -1038,12 +1072,20 @@ async def test_edit_arts_is_unavailable_for_non_magi():
         await _select(pilot, app, ("character", "grog1"))
         assert app.screen.selected_character.type == "grog"
 
+        tabbed = app.screen._character_sheet_view.query_one(TabbedContent)
+        tab_ids = {pane.id for pane in tabbed.query("TabPane")}
+        assert "tab-arts" not in tab_ids
+        assert "tab-spells" not in tab_ids
+        # Sections that do apply to every character type are still present.
+        assert "tab-identity" in tab_ids
+        assert "tab-abilities" in tab_ids
+        assert "tab-inventory" in tab_ids
+
+        # With no Arts tab to switch to, 'e' on the default Identity tab
+        # opens Edit Identity rather than doing nothing.
         await pilot.press("e")
         await pilot.pause()
-
-        # Arts editing doesn't apply to non-magi -- the binding is disabled.
-        assert isinstance(app.screen, WorkspaceScreen)
-        assert app.screen.selected_kind == "character"
+        assert isinstance(app.screen, IdentityEditScreen)
 
 
 async def test_creating_a_second_character_after_viewing_the_first_works():
@@ -1078,3 +1120,247 @@ async def test_creating_a_second_character_after_viewing_the_first_works():
 
     saga = storage.load_saga("test_saga")
     assert {c.name for c in saga.characters} == {"Leandro", "Guillame"}
+
+
+def _saga_with_two_labs() -> Saga:
+    return Saga(
+        id="test_saga",
+        name="Test Saga",
+        storyguide="Alex",
+        covenants=[
+            Covenant(id="cov1", saga_id="test_saga", name="Test Covenant"),
+            Covenant(id="cov2", saga_id="test_saga", name="Other Covenant"),
+        ],
+        characters=[
+            Character(
+                id="char1",
+                name="Leandro",
+                type="magus",
+                covenant_id="cov1",
+                assigned_lab_id="lab1",
+            )
+        ],
+        laboratories=[
+            Laboratory(id="lab1", covenant_id="cov1", name="Lab One", owner_id="char1"),
+            Laboratory(id="lab2", covenant_id="cov1", name="Lab Two"),
+        ],
+    )
+
+
+async def test_edit_identity_updates_name_covenant_and_laboratory():
+    storage.save_saga(_saga_with_two_labs())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_character(pilot, app)  # defaults to the Identity tab
+
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, IdentityEditScreen)
+
+        app.screen.query_one("#input-name", Input).value = "Leandro the Elder"
+        app.screen.query_one("#select-covenant", Select).value = "cov2"
+        app.screen.query_one("#select-laboratory", Select).value = "lab2"
+
+        await pilot.click("#btn-save")
+        await pilot.pause()
+
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert (
+            "Name: Leandro the Elder"
+            in app.screen._character_sheet_view._identity_text()
+        )
+
+    saga = storage.load_saga("test_saga")
+    character = saga.characters[0]
+    assert character.name == "Leandro the Elder"
+    assert character.covenant_id == "cov2"
+    assert character.assigned_lab_id == "lab2"
+
+    lab1 = next(lab for lab in saga.laboratories if lab.id == "lab1")
+    lab2 = next(lab for lab in saga.laboratories if lab.id == "lab2")
+    assert lab1.owner_id is None
+    assert lab2.owner_id == "char1"
+
+
+async def test_edit_identity_requires_name():
+    storage.save_saga(_saga_with_bare_character())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_character(pilot, app)
+
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, IdentityEditScreen)
+
+        app.screen.query_one("#input-name", Input).value = ""
+
+        await pilot.click("#btn-save")
+        await pilot.pause()
+
+        assert isinstance(app.screen, IdentityEditScreen)
+
+    saga = storage.load_saga("test_saga")
+    assert saga.characters[0].name == "Leandro"
+
+
+async def test_edit_characteristics_updates_values():
+    storage.save_saga(_saga_with_bare_character())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-characteristics")
+
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, EditCharacteristicsScreen)
+
+        app.screen.query_one("#input-char-intelligence", Input).value = "3"
+        app.screen.query_one("#input-char-quickness", Input).value = "-1"
+
+        # An explicit interior offset: this button's default (0, 0) --
+        # its exact top-left corner pixel -- doesn't register through the
+        # full click pipeline here even though get_widget_at() confirms
+        # the button owns that pixel; an interior point is the documented
+        # workaround (see the pilot.click() docstring's own example).
+        await pilot.click("#btn-save", offset=(8, 1))
+        await pilot.pause()
+
+        assert isinstance(app.screen, WorkspaceScreen)
+        text = app.screen._character_sheet_view._characteristics_text()
+        assert "Int 3" in text
+        assert "Qik -1" in text
+
+    saga = storage.load_saga("test_saga")
+    c = saga.characters[0].characteristics
+    assert c.intelligence == 3
+    assert c.quickness == -1
+
+
+async def test_edit_ability_updates_existing_entry():
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-abilities")
+
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)
+
+        await pilot.press("enter")  # only one ability -- select it
+        await pilot.pause()
+        assert isinstance(app.screen, AbilityDetailsScreen)
+        assert app.screen.query_one("#input-level", Input).value == "5"
+        assert app.screen.query_one("#input-xp", Input).value == "75"
+
+        app.screen.query_one("#input-level", Input).value = "6"
+        app.screen.query_one("#input-xp", Input).value = "90"
+
+        await pilot.click("#btn-confirm")
+        await pilot.pause()
+
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert (
+            "Magic Theory (Lab Totals) 6/90"
+            in app.screen._character_sheet_view._abilities_text()
+        )
+
+    saga = storage.load_saga("test_saga")
+    ability = saga.characters[0].abilities[0]
+    assert ability.level == 6
+    assert ability.xp == 90
+    assert ability.category == "Academic"
+
+
+def _saga_with_character_and_spell() -> Saga:
+    saga = _saga_with_bare_character()
+    saga.spells.append(
+        Spell(
+            id="spell1", name="Pilum of Fire", technique="Creo", form="Ignem", level=20
+        )
+    )
+    return saga
+
+
+async def test_add_and_remove_spell_known():
+    storage.save_saga(_saga_with_character_and_spell())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-spells")
+
+        await pilot.press("a")
+        await pilot.pause()
+        assert isinstance(app.screen, SpellPickerScreen)
+
+        await pilot.click("#spell-spell1")
+        await pilot.pause()
+
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert (
+            "Pilum of Fire (CrIg 20)" in app.screen._character_sheet_view._spells_text()
+        )
+
+        await pilot.press("A")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)
+
+        await pilot.press("enter")
+        await pilot.pause()
+
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert app.screen._character_sheet_view._spells_text() == "(none recorded)"
+
+    saga = storage.load_saga("test_saga")
+    assert saga.characters[0].spells_known == []
+
+
+async def test_add_and_remove_inventory_item():
+    storage.save_saga(_saga_with_bare_character())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_character(pilot, app)
+        await _switch_tab(pilot, app, "tab-inventory")
+
+        await pilot.press("a")
+        await pilot.pause()
+        assert isinstance(app.screen, ItemAddScreen)
+
+        app.screen.query_one("#input-item", Input).value = "Fine wool cloak"
+        await pilot.click("#btn-create")
+        await pilot.pause()
+
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert "Fine wool cloak" in app.screen._character_sheet_view._inventory_text()
+
+        await pilot.press("A")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)
+
+        await pilot.press("enter")
+        await pilot.pause()
+
+        assert isinstance(app.screen, WorkspaceScreen)
+
+    saga = storage.load_saga("test_saga")
+    assert saga.characters[0].inventory == []
+
+
+async def test_add_action_disabled_on_tabs_without_addable_lists():
+    storage.save_saga(_saga_with_bare_character())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_character(pilot, app)  # defaults to the Identity tab
+
+        await pilot.press("a")
+        await pilot.pause()
+
+        # Identity has nothing to "add" -- the binding is disabled there.
+        assert isinstance(app.screen, WorkspaceScreen)

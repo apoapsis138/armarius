@@ -31,7 +31,13 @@ def _sample_saga() -> Saga:
                     "ignem": ArtScore(level=5, xp=15),
                 },
                 abilities=[
-                    Ability(name="Magic Theory", score=5, specialty="Lab Totals")
+                    Ability(
+                        name="Magic Theory",
+                        category="Academic",
+                        level=5,
+                        xp=75,
+                        specialty="Lab Totals",
+                    )
                 ],
                 virtues_flaws=[
                     VirtueFlawInstance(

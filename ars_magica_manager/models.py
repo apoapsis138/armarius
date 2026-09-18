@@ -163,12 +163,19 @@ class Characteristics:
 @dataclass
 class Ability:
     name: str
-    score: int = 0
+    category: str = "General"
+    level: int = 0
+    xp: int = 0
     specialty: str | None = None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Ability:
-        return cls(**data)
+        d = dict(data)
+        if "score" in d and "level" not in d:
+            # Pre-Phase-1b saves used "score"; migrate on load so existing
+            # characters don't become unreadable over a field rename.
+            d["level"] = d.pop("score")
+        return cls(**d)
 
 
 @dataclass
@@ -248,6 +255,7 @@ class Character:
     abilities: list[Ability] = field(default_factory=list)
     virtues_flaws: list[VirtueFlawInstance] = field(default_factory=list)
     spells_known: list[str] = field(default_factory=list)  # Spell ids
+    inventory: list[str] = field(default_factory=list)  # freeform item descriptions
     assigned_lab_id: str | None = None
 
     @classmethod
