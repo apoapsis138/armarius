@@ -16,3 +16,7 @@ wheels/
 # Per-saga save data -- not source, these are user campaign data
 data/sagas/*.json
 !data/sagas/.gitkeep
+
+# AI-session handoff notes -- internal project/dev notes, not meant for
+# the public repo (same convention as Ars-Magica-Solo).
+HANDOFF.md
