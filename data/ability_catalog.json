@@ -1,0 +1,41 @@
+[
+  { "id": "ab_animal_handling", "name": "Animal Handling", "category": "General", "description": "Calming, controlling, and training animals." },
+  { "id": "ab_athletics", "name": "Athletics", "category": "General", "description": "Running, jumping, climbing, and other physical feats." },
+  { "id": "ab_awareness", "name": "Awareness", "category": "General", "description": "Noticing things and avoiding surprise." },
+  { "id": "ab_bargain", "name": "Bargain", "category": "General", "description": "Negotiating prices and trades." },
+  { "id": "ab_charm", "name": "Charm", "category": "General", "description": "Making a good impression and putting people at ease." },
+  { "id": "ab_chirurgy", "name": "Chirurgy", "category": "General", "description": "Treating wounds and injuries." },
+  { "id": "ab_craft", "name": "Craft: {craft}", "category": "General", "parameters": ["craft"], "description": "Making things by hand in a specific trade." },
+  { "id": "ab_etiquette", "name": "Etiquette", "category": "General", "description": "Behaving correctly in polite or courtly society." },
+  { "id": "ab_folk_ken", "name": "Folk Ken", "category": "General", "description": "Reading a stranger's character and social station at a glance." },
+  { "id": "ab_guile", "name": "Guile", "category": "General", "description": "Lying convincingly." },
+  { "id": "ab_leadership", "name": "Leadership", "category": "General", "description": "Directing and inspiring a group of people." },
+  { "id": "ab_living_language", "name": "Living Language: {language}", "category": "General", "parameters": ["language"], "description": "Speaking a language currently in common use." },
+  { "id": "ab_profession", "name": "Profession: {profession}", "category": "General", "parameters": ["profession"], "description": "Working a specific trade or occupation." },
+  { "id": "ab_ride", "name": "Ride", "category": "General", "description": "Riding and controlling a mount." },
+  { "id": "ab_survival", "name": "Survival", "category": "General", "description": "Living off the land in the wild." },
+  { "id": "ab_swim", "name": "Swim", "category": "General", "description": "Swimming and surviving in water." },
+
+  { "id": "ab_artes_liberales", "name": "Artes Liberales", "category": "Academic", "description": "The seven liberal arts underlying a formal medieval education." },
+  { "id": "ab_civil_and_canon_law", "name": "Civil and Canon Law", "category": "Academic", "description": "Secular and church law and legal procedure." },
+  { "id": "ab_medicine", "name": "Medicine", "category": "Academic", "description": "Formal, book-learned diagnosis and treatment of illness." },
+  { "id": "ab_philosophiae", "name": "Philosophiae", "category": "Academic", "description": "Natural philosophy and formal logic." },
+  { "id": "ab_theology", "name": "Theology", "category": "Academic", "description": "Formal study of religious doctrine." },
+  { "id": "ab_dead_language", "name": "Dead Language: {language}", "category": "Academic", "parameters": ["language"], "description": "Reading and writing a language no longer in common speech." },
+  { "id": "ab_area_lore", "name": "Area Lore: {region}", "category": "Academic", "parameters": ["region"], "description": "Knowledge of a specific region's people, geography, and politics." },
+
+  { "id": "ab_single_weapon", "name": "Single Weapon", "category": "Martial", "description": "Fighting with one one-handed weapon." },
+  { "id": "ab_great_weapon", "name": "Great Weapon", "category": "Martial", "description": "Fighting with a large two-handed weapon." },
+  { "id": "ab_bows", "name": "Bows", "category": "Martial", "description": "Fighting with a bow." },
+  { "id": "ab_brawl", "name": "Brawl", "category": "Martial", "description": "Unarmed and improvised-weapon combat." },
+  { "id": "ab_thrown_weapon", "name": "Thrown Weapon", "category": "Martial", "description": "Fighting with a thrown weapon." },
+
+  { "id": "ab_parma_magica", "name": "Parma Magica", "category": "Arcane", "description": "The Hermetic art of magic resistance." },
+  { "id": "ab_magic_theory", "name": "Magic Theory", "category": "Arcane", "description": "Understanding of Hermetic magic theory, underlying lab work and spell design." },
+  { "id": "ab_penetration", "name": "Penetration", "category": "Arcane", "description": "Pushing a magical effect through resistance." },
+  { "id": "ab_certamen", "name": "Certamen", "category": "Arcane", "description": "The Hermetic ritual duel of magical strength." },
+  { "id": "ab_code_of_hermes", "name": "Code of Hermes", "category": "Arcane", "description": "Knowledge of Hermetic law and politics." },
+  { "id": "ab_finesse", "name": "Finesse", "category": "Arcane", "description": "Precise, subtle control over a magical effect." },
+
+  { "id": "ab_second_sight", "name": "Second Sight", "category": "Supernatural", "description": "Perceiving supernatural auras and creatures normally hidden from mundane senses." }
+]

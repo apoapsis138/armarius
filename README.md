@@ -11,9 +11,10 @@ mechanics.
 
 ## Status
 
-Phase 0 (scaffolding): data model, JSON persistence, and an empty Textual
-shell are in place. No saga-editing UI yet — see DESIGN.md §7 for the
-roadmap.
+Phase 1 (core tracker) is underway: you can create and browse sagas,
+covenants, characters, and laboratories, and add Virtues/Flaws to a
+character or lab from the shared catalog. Book/Spell creation and the
+Ability picker aren't wired up yet — see DESIGN.md §7 for the roadmap.
 
 ## Getting started
 
@@ -29,12 +30,17 @@ uv run ruff check .      # lint
 ## Layout
 
 - `ars_magica_manager/models.py` — dataclasses for Saga, Covenant,
-  Character, Laboratory, Library, Book, Spell, and the Virtue/Flaw
-  catalog + modifier system.
+  Character, Laboratory, Library, Book, Spell, and the Virtue/Flaw and
+  Ability catalog entry types.
 - `ars_magica_manager/storage.py` — JSON load/save, one file per saga
   under `data/sagas/` (git-ignored — that's campaign data, not source).
 - `ars_magica_manager/catalog.py` — loads the shared Virtue/Flaw catalog
-  from `data/virtue_flaw_catalog.json`.
-- `ars_magica_manager/app.py` — the Textual TUI.
-- `data/virtue_flaw_catalog.json` — seed Virtue/Flaw catalog entries
-  (a handful of examples, not exhaustive yet).
+  (`data/virtue_flaw_catalog.json`) and Ability catalog
+  (`data/ability_catalog.json`).
+- `ars_magica_manager/screens.py` — the Textual TUI's screens: saga/
+  covenant/character/laboratory creation and browsing, and the shared
+  Virtue/Flaw picker.
+- `ars_magica_manager/app.py` — the Textual app entry point.
+- `data/virtue_flaw_catalog.json`, `data/ability_catalog.json` — seed
+  catalog entries (a starting point, not exhaustive — cross-check and
+  expand against the rulebook as you need more).

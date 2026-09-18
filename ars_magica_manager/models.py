@@ -16,6 +16,13 @@ BookType = Literal["Summa", "Tractatus", "Lab Text"]
 VirtueFlawType = Literal["Virtue", "Flaw"]
 
 SEASONS: tuple[str, ...] = ("Spring", "Summer", "Autumn", "Winter")
+ABILITY_CATEGORIES: tuple[str, ...] = (
+    "General",
+    "Academic",
+    "Martial",
+    "Arcane",
+    "Supernatural",
+)
 
 
 @dataclass
@@ -67,6 +74,35 @@ class VirtueFlawDef:
         d = dict(data)
         d["modifiers"] = [Modifier(**m) for m in d.get("modifiers", [])]
         return cls(**d)
+
+
+@dataclass
+class AbilityDef:
+    """A catalog entry for an Ability name (shared reference data, not per-saga).
+
+    Some Abilities are really a family with a blank to fill in -- "Craft:
+    {craft}", "Area Lore: {region}", "Language: {language}" -- named the
+    same way Virtue/Flaw templating works. `parameters` lists which
+    placeholders `name` contains; resolve them with resolve_ability_name()
+    in catalog.py.
+    """
+
+    id: str
+    name: str
+    category: str
+    parameters: list[str] = field(default_factory=list)
+    description: str = ""
+
+    def __post_init__(self) -> None:
+        if self.category not in ABILITY_CATEGORIES:
+            raise ValueError(
+                f"Unknown ability category {self.category!r}; "
+                f"must be one of {ABILITY_CATEGORIES}"
+            )
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> AbilityDef:
+        return cls(**data)
 
 
 @dataclass
