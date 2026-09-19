@@ -6,12 +6,26 @@ from ars_magica_manager.models import Modifier, VirtueFlawDef
 
 def test_seed_catalog_loads_and_validates():
     entries = catalog.load_virtue_flaw_catalog()
-    assert any(entry.id == "vf_gifted_researcher" for entry in entries)
+    assert any(entry.id == "vf_the_gift" for entry in entries)
 
 
 def test_single_virtue_can_have_differently_scoped_modifiers():
-    entries = catalog.load_virtue_flaw_catalog()
-    gifted_researcher = next(e for e in entries if e.id == "vf_gifted_researcher")
+    # A single Virtue carrying two Lab Total modifiers of different sizes,
+    # scoped to different lab activities -- not sourced from the catalog,
+    # since none of the real Virtues/Flaws have had their modifiers encoded
+    # yet (see HANDOFF.md); this just proves the Modifier shape itself.
+    gifted_researcher = VirtueFlawDef(
+        id="vf_gifted_researcher",
+        name="Gifted Researcher",
+        type="Virtue",
+        category="Hermetic",
+        tier="Minor",
+        cost=1,
+        modifiers=[
+            Modifier(applies_to="lab_total", activity="original_research", amount=3),
+            Modifier(applies_to="lab_total", activity="invent_spells", amount=6),
+        ],
+    )
 
     by_activity = {m.activity: m.amount for m in gifted_researcher.modifiers}
     assert by_activity == {"original_research": 3, "invent_spells": 6}
@@ -42,6 +56,7 @@ def test_virtue_flaw_def_from_dict_propagates_validation():
                 "name": "Bad Data",
                 "type": "Virtue",
                 "category": "General",
+                "tier": "Minor",
                 "cost": 1,
                 "modifiers": [{"applies_to": "not_a_real_total", "amount": 1}],
             }

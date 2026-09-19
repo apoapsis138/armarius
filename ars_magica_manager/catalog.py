@@ -5,13 +5,25 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from .models import AbilityDef, VirtueFlawDef, VirtueFlawInstance
+from .models import (
+    AbilityDef,
+    HouseDef,
+    LabVirtueFlawDef,
+    VirtueFlawDef,
+    VirtueFlawInstance,
+)
 
 CATALOG_PATH = (
     Path(__file__).resolve().parent.parent / "data" / "virtue_flaw_catalog.json"
 )
 ABILITY_CATALOG_PATH = (
     Path(__file__).resolve().parent.parent / "data" / "ability_catalog.json"
+)
+HOUSE_CATALOG_PATH = (
+    Path(__file__).resolve().parent.parent / "data" / "house_catalog.json"
+)
+LAB_VF_CATALOG_PATH = (
+    Path(__file__).resolve().parent.parent / "data" / "lab_virtue_flaw_catalog.json"
 )
 
 
@@ -47,20 +59,6 @@ def describe_virtue_flaw(
     return _fill_placeholders(definition.name, instance.params)
 
 
-def virtue_flaw_tier(cost: float) -> str:
-    """ "Minor"/"Major" for the standard 1/3-point costs, else the raw cost.
-
-    Flaws are stored with a negative cost (see the seed catalog), so this
-    compares magnitude rather than sign.
-    """
-    magnitude = abs(cost)
-    if magnitude == 1:
-        return "Minor"
-    if magnitude == 3:
-        return "Major"
-    return f"{magnitude:g} pt"
-
-
 def load_ability_catalog(path: Path = ABILITY_CATALOG_PATH) -> list[AbilityDef]:
     data = json.loads(path.read_text(encoding="utf-8"))
     return [AbilityDef.from_dict(entry) for entry in data]
@@ -82,3 +80,25 @@ def resolve_ability_name(entry: AbilityDef, params: dict[str, str]) -> str:
     Ability family (e.g. two different Crafts) more than once.
     """
     return _fill_placeholders(entry.name, params)
+
+
+def load_house_catalog(path: Path = HOUSE_CATALOG_PATH) -> list[HouseDef]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return [HouseDef.from_dict(entry) for entry in data]
+
+
+def load_house_catalog_by_id(path: Path = HOUSE_CATALOG_PATH) -> dict[str, HouseDef]:
+    return {entry.id: entry for entry in load_house_catalog(path)}
+
+
+def load_lab_virtue_flaw_catalog(
+    path: Path = LAB_VF_CATALOG_PATH,
+) -> list[LabVirtueFlawDef]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return [LabVirtueFlawDef.from_dict(entry) for entry in data]
+
+
+def load_lab_virtue_flaw_catalog_by_id(
+    path: Path = LAB_VF_CATALOG_PATH,
+) -> dict[str, LabVirtueFlawDef]:
+    return {entry.id: entry for entry in load_lab_virtue_flaw_catalog(path)}
