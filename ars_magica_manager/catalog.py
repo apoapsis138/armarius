@@ -6,7 +6,9 @@ import json
 from pathlib import Path
 
 from .models import (
+    BOON_HOOK_DETAIL,
     AbilityDef,
+    CovenantBoonHookDef,
     HouseDef,
     LabVirtueFlawDef,
     VirtueFlawDef,
@@ -21,6 +23,9 @@ ABILITY_CATALOG_PATH = (
 )
 HOUSE_CATALOG_PATH = (
     Path(__file__).resolve().parent.parent / "data" / "house_catalog.json"
+)
+COVENANT_BOON_HOOK_CATALOG_PATH = (
+    Path(__file__).resolve().parent.parent / "data" / "covenant_boon_hook_catalog.json"
 )
 LAB_VF_CATALOG_PATH = (
     Path(__file__).resolve().parent.parent / "data" / "lab_virtue_flaw_catalog.json"
@@ -102,3 +107,29 @@ def load_lab_virtue_flaw_catalog_by_id(
     path: Path = LAB_VF_CATALOG_PATH,
 ) -> dict[str, LabVirtueFlawDef]:
     return {entry.id: entry for entry in load_lab_virtue_flaw_catalog(path)}
+
+
+def load_covenant_boon_hook_catalog(
+    path: Path = COVENANT_BOON_HOOK_CATALOG_PATH,
+) -> list[CovenantBoonHookDef]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return [CovenantBoonHookDef.from_dict(entry) for entry in data]
+
+
+def load_covenant_boon_hook_catalog_by_id(
+    path: Path = COVENANT_BOON_HOOK_CATALOG_PATH,
+) -> dict[str, CovenantBoonHookDef]:
+    return {entry.id: entry for entry in load_covenant_boon_hook_catalog(path)}
+
+
+def describe_boon_hook(
+    instance: VirtueFlawInstance, catalog_by_id: dict[str, CovenantBoonHookDef]
+) -> str:
+    """A human-readable label for a covenant Boon/Hook instance: its name,
+    then " - " and the optional detail if one was given ("Edifice - Tower of
+    the Silver Iris")."""
+    definition = catalog_by_id.get(instance.vf_id)
+    if definition is None:
+        return f"{instance.vf_id} (not in catalog)"
+    detail = instance.params.get(BOON_HOOK_DETAIL, "").strip()
+    return f"{definition.name} - {detail}" if detail else definition.name

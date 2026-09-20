@@ -15,6 +15,7 @@ CharacterType = Literal["magus", "companion", "grog"]
 BookType = Literal["Summa", "Tractatus", "Lab Text"]
 VirtueFlawType = Literal["Virtue", "Flaw"]
 VirtueFlawTier = Literal["Free", "Minor", "Major"]
+BoonHookType = Literal["Boon", "Hook"]
 Handedness = Literal["right", "left", "ambidextrous"]
 FatigueLevel = Literal["fresh", "winded", "weary", "tired", "dazed", "unconscious"]
 
@@ -211,6 +212,90 @@ class LabVirtueFlawDef:
         return cls(**data)
 
 
+#: Covenant scores a Boon/Hook can modify (see CovenantBoonHookDef.modifiers).
+COVENANT_MODIFIER_KEYS: tuple[str, ...] = ("aura",)
+
+#: The "types" the Covenants book (Chapter Two: Boons & Hooks) sorts every
+#: Boon and Hook into, in the order the book lists them.
+COVENANT_BOON_HOOK_CATEGORIES: tuple[str, ...] = (
+    "Site",
+    "Fortifications",
+    "Resources",
+    "Residents",
+    "External Relations",
+    "Surroundings",
+)
+
+
+@dataclass
+class CovenantBoonHookDef:
+    """A catalog entry for a covenant Boon or Hook (ArM5 Chapter 6) --
+    shared reference data, not per-saga. They work like Virtues & Flaws:
+    Hooks are the Flaw-like story features and provide points (cost < 0),
+    Boons are the Virtue-like advantages and spend them (cost > 0), in the
+    same Free/Minor/Major tiers costing 0/1/3. The same name can appear as
+    both a Boon and a Hook, and at both tiers (Regio, for one), so ids
+    carry type and tier.
+
+    `category` is the entry's type from the Covenants book (one of
+    COVENANT_BOON_HOOK_CATEGORIES: Site, Fortifications, Resources, Residents,
+    External Relations, Surroundings), or "" for the rare entry the book does
+    not file under one (the Unknown Hook). The book's "Free Choices" -- options
+    with no cost that don't count toward balancing -- are stored as Free-tier
+    Boons (cost 0). One entry can carry only one category, so an entry the
+    book lists under two (the Major Monster Hook) takes one of them.
+
+    `requires` and `excludes` list other catalog ids (Shell Keep requires the
+    Major Castle Hook; Seclusion excludes the Road and Urban Hooks). They are
+    recorded for display and future use only -- nothing enforces them yet.
+
+    `modifiers` is the parsed numeric effect on a covenant score, from
+    COVENANT_MODIFIER_KEYS (the Minor Aura Boon -> {"aura": 1}, the Weak Aura
+    Hook -> {"aura": -1}); everything
+    else stays prose in `description`. `repeatable` marks entries that may be
+    taken more than once.
+    """
+
+    id: str
+    name: str
+    type: BoonHookType
+    tier: VirtueFlawTier
+    cost: float
+    category: str = ""
+    repeatable: bool = False
+    requires: list[str] = field(default_factory=list)
+    excludes: list[str] = field(default_factory=list)
+    modifiers: dict[str, int] = field(default_factory=dict)
+    description: str = ""
+
+    def __post_init__(self) -> None:
+        _validate_vf_tier_cost(self.id, self.tier, self.cost)
+        if self.category and self.category not in COVENANT_BOON_HOOK_CATEGORIES:
+            raise ValueError(
+                f"Unknown category {self.category!r} for {self.id!r}; "
+                f"must be one of {COVENANT_BOON_HOOK_CATEGORIES} (or empty)"
+            )
+        if self.type not in ("Boon", "Hook"):
+            raise ValueError(f"Unknown type {self.type!r} for {self.id!r}")
+        if (self.type == "Boon" and self.cost < 0) or (
+            self.type == "Hook" and self.cost > 0
+        ):
+            raise ValueError(
+                f"{self.id!r}: Boons cost points (cost >= 0) and Hooks provide "
+                f"them (cost <= 0), but this {self.type} has cost {self.cost!r}"
+            )
+        for key in self.modifiers:
+            if key not in COVENANT_MODIFIER_KEYS:
+                raise ValueError(
+                    f"Unknown covenant modifier {key!r} for {self.id!r}; "
+                    f"must be one of {COVENANT_MODIFIER_KEYS}"
+                )
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> CovenantBoonHookDef:
+        return cls(**data)
+
+
 @dataclass
 class AbilityDef:
     """A catalog entry for an Ability name (shared reference data, not per-saga).
@@ -369,11 +454,15 @@ class DiaryEntry:
 @dataclass
 class Laboratory:
     id: str
-    covenant_id: str
+    #: None while the lab isn't assigned to a covenant (a legal state).
+    covenant_id: str | None
     name: str
     owner_id: str | None = None
     location: str = ""
     build_points: int = 0
+    #: Manual adjustment on top of the covenant's aura this lab inherits
+    #: (e.g. from Virtues) -- see lab_aura_total().
+    aura_modifier: int = 0
     characteristics: LabCharacteristics = field(default_factory=LabCharacteristics)
     features: list[str] = field(default_factory=list)
     specialties: list[str] = field(default_factory=list)
@@ -401,6 +490,12 @@ class Laboratory:
             VirtueFlawInstance(**vf) for vf in d.get("virtues_flaws", [])
         ]
         return cls(**d)
+
+
+def lab_aura_total(lab: Laboratory, covenant_aura: int) -> int:
+    """The lab's effective aura: the covenant's inherited aura plus the lab's
+    own manual modifier."""
+    return covenant_aura + lab.aura_modifier
 
 
 def lab_net_vf_points(
@@ -631,6 +726,224 @@ def character_age(year_born: int | None, current_year: int) -> int | None:
     return None if year_born is None else current_year - year_born
 
 
+#: The kinds of covenant inhabitant, in the order the Inhabitants tab lists them.
+INHABITANT_KINDS: tuple[str, ...] = (
+    "magus",
+    "companion",
+    "specialist",
+    "craftsperson",
+    "turb",
+    "inhabitant",
+    "horse",
+    "livestock",
+)
+
+#: The Covenant Role choices for a Companion or Specialist.
+COVENANT_ROLES: tuple[str, ...] = (
+    "Teacher",
+    "Steward",
+    "Chamberlain",
+    "Turb Captain",
+    "Other",
+)
+
+#: The field of work of a Craftsperson.
+CRAFT_FIELDS: tuple[str, ...] = (
+    "None",
+    "Building",
+    "Consumables",
+    "Laboratories",
+    "Provisions",
+    "Writing Materials",
+    "Books",
+)
+
+#: Loyalty situational-modifier choices (Equipment, Money), default first noted.
+LOYALTY_EQUIPMENT: tuple[str, ...] = (
+    "Only inexpensive",
+    "Standard",
+    "Standard + 1 expensive piece",
+    "Anything they need",
+)
+LOYALTY_EQUIPMENT_DEFAULT = "Standard"
+LOYALTY_MONEY: tuple[str, ...] = (
+    "No salary",
+    "Half salary",
+    "Standard salary",
+    "Generous salary",
+    "Lavish salary",
+)
+LOYALTY_MONEY_DEFAULT = "Standard salary"
+
+#: Catalog ids of the covenant Boons that are a "Style of Governance" (Free
+#: Choices under Residents). The Loyalty section's Type of Governance follows
+#: whichever of these the covenant has.
+GOVERNANCE_STYLE_IDS: tuple[str, ...] = (
+    "covbh_boon_free_autocracy",
+    "covbh_boon_free_council",
+    "covbh_boon_free_democracy",
+    "covbh_boon_free_faux_feudalism",
+    "covbh_boon_free_gerontocracy",
+    "covbh_boon_free_militocracy",
+    "covbh_boon_free_theocracy",
+)
+
+
+#: The kinds of covenant possession, in the order the Possessions tab lists them.
+POSSESSION_KINDS: tuple[str, ...] = (
+    "property",
+    "sanctum",
+    "weapon",
+    "armor",
+    "vis_source",
+    "vis_store",
+    "item",
+)
+
+#: How heavily a sanctum's laboratory is used (default: Standard).
+SANCTUM_USAGES: tuple[str, ...] = (
+    "Light (1 Season or Less)",
+    "Standard (2 Seasons)",
+    "Heavy (3+ Seasons)",
+)
+SANCTUM_USAGE_DEFAULT = "Standard (2 Seasons)"
+
+
+@dataclass
+class Possession:
+    """One stored entry on a covenant's Possessions tab.
+
+    A single flat record for every kind (see POSSESSION_KINDS); each kind only
+    uses the fields that suit it:
+
+    * property: name, location, dimensions, inhabitants (free text), description.
+    * sanctum: name, owner (text), location, quality, upkeep, build_points,
+      usage, description. The covenant's laboratories are listed as sanctums
+      automatically; a record with `lab_id` only holds the covenant-side extras
+      (quality, upkeep, usage, description) for that laboratory, while a record
+      without one is a manually-added sanctum.
+    * weapon / armor / item: name, quantity, description.
+    * vis_source: name, art, pawns, season (when it is harvested), location,
+      physical_form, description.
+    * vis_store (Raw Vis Stores): name, art, pawns, location, physical_form.
+
+    `description` is user-written text that supports inline emphasis.
+    """
+
+    id: str
+    kind: str
+    name: str = ""
+    lab_id: str | None = None
+    description: str = ""
+    location: str = ""
+    quantity: int = 1
+    dimensions: str = ""
+    inhabitants: str = ""
+    owner: str = ""
+    quality: int | None = None
+    upkeep: int | None = None
+    build_points: int | None = None
+    usage: str = SANCTUM_USAGE_DEFAULT
+    art: str = ""
+    pawns: int = 0
+    season: str = ""  # one of SEASONS
+    physical_form: str = ""
+
+    def __post_init__(self) -> None:
+        if self.kind not in POSSESSION_KINDS:
+            raise ValueError(
+                f"Unknown possession kind {self.kind!r}; must be one of {POSSESSION_KINDS}"
+            )
+
+
+@dataclass
+class Inhabitant:
+    """One stored entry on a covenant's Inhabitants tab.
+
+    A single flat record for every kind (see INHABITANT_KINDS); each kind only
+    uses the fields that make sense for it. `character_id` links it to a
+    character sheet:
+
+    * For a grog assigned to Specialists/Craftspeople/Turb/Inhabitants it is the
+      grog it came from (name and year born were copied in when it was added and
+      can be edited; the link is kept so the grog counts as assigned and its
+      Abilities can be picked from).
+    * For Magi/Companions, characters of that type in the covenant are listed
+      automatically from their sheets; a record with their `character_id` only
+      holds the covenant-side extras (loyalty, description, responsibility, role),
+      or, once `departed`, records that they are no longer counted.
+    * With no `character_id` it is a manually-added person or animal (e.g. an NPC
+      magus without a character sheet).
+
+    `description` is user-written text that supports inline emphasis.
+    """
+
+    id: str
+    kind: str
+    name: str = ""
+    character_id: str | None = None
+    year_born: int | None = None
+    house: str | None = None  # NPC magus: a house_catalog.json id
+    loyalty: int = 0
+    quantity: int = 1
+    responsibility: str = ""
+    role: str = ""  # one of COVENANT_ROLES, or ""
+    skill_value: int = 0  # Craftsperson: value of the crafting skill
+    field_of_work: str = "None"  # Craftsperson: one of CRAFT_FIELDS
+    rare: bool = False  # Craftsperson
+    linked_ability: str = ""  # Craftsperson: the Ability name they use
+    description: str = ""
+    #: Magi/Companions only: the character is still in the covenant on their
+    #: sheet but no longer counts as an inhabitant (died, left...). A departed
+    #: record just marks that; it is not listed and not counted.
+    departed: bool = False
+
+    def __post_init__(self) -> None:
+        if self.kind not in INHABITANT_KINDS:
+            raise ValueError(
+                f"Unknown inhabitant kind {self.kind!r}; must be one of {INHABITANT_KINDS}"
+            )
+
+
+@dataclass
+class Loyalty:
+    """The covenant's Loyalty block. Tracked manually for now -- the totals and
+    scores are meant to be calculated from the situational modifiers later."""
+
+    governance: str = ""  # Type of Governance; only used if no governance Boon
+    base_points: int = 0
+    total_modifiers: int = 0
+    current_points: int = 0
+    prevailing_score: int = 0
+    living_conditions: int = 0
+    equipment: str = LOYALTY_EQUIPMENT_DEFAULT
+    equipment_modifier: int = 0
+    money: str = LOYALTY_MONEY_DEFAULT
+    money_modifier: int = 0
+    specialists: int = 0
+    familiarity: int = 0
+    actions_and_events: int = 0
+
+
+@dataclass
+class Population:
+    """The Inhabitants summary block and the Miscellaneous block, all manual for
+    now. The covenant's Total Inhabitants is calculated, not stored (see
+    inhabitants.total_inhabitants)."""
+
+    teamsters: int = 0
+    teamsters_needed: int = 0
+    servants: int = 0
+    servants_needed: int = 0
+    other_people: int = 0
+    aging_magi: int = 0
+    aging_mundane: int = 0
+    magic_laborers: int = 0
+    magic_servants: int = 0
+    magic_teamsters: int = 0
+    magic_turbula: int = 0
+
+
 @dataclass
 class Covenant:
     id: str
@@ -640,6 +953,114 @@ class Covenant:
     library_id: str | None = None
     notes: str = ""
     aura: int = 0  # inherited by all of the covenant's laboratories
+    tribunal: str = ""
+    year_founded: int | None = None
+    aegis_of_the_hearth: int = 0
+    aegis_penetration: int = 0
+    living_conditions_magi: int = 0
+    living_conditions_mundane: int = 0
+    #: The covenant's life stage (ArM5 Chapter 6, "Covenant Seasons") -- one
+    #: of SEASONS. Not the calendar season, which lives on the Saga.
+    covenant_season: str = "Spring"
+    #: Boons and Hooks attached to this covenant, resolved against the
+    #: covenant Boon/Hook catalog (vf_id holds the catalog id).
+    #: An optional free-text descriptor lives in `params["detail"]` (which
+    #: Edifice, which resource...), blank by default -- see BOON_HOOK_DETAIL.
+    boons_hooks: list[VirtueFlawInstance] = field(default_factory=list)
+    #: Covenant Reputations: a name and a score from -3 to +3 (the range is
+    #: enforced by the edit dialog, not here).
+    reputations: list[ScoredTrait] = field(default_factory=list)
+    #: The Inhabitants tab (see Inhabitant, Loyalty and Population).
+    inhabitants: list[Inhabitant] = field(default_factory=list)
+    loyalty: Loyalty = field(default_factory=Loyalty)
+    population: Population = field(default_factory=Population)
+    #: The Possessions tab (see Possession).
+    possessions: list[Possession] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Covenant:
+        d = dict(data)
+        d["boons_hooks"] = [VirtueFlawInstance(**bh) for bh in d.get("boons_hooks", [])]
+        d["reputations"] = [ScoredTrait(**r) for r in d.get("reputations", [])]
+        d["inhabitants"] = [Inhabitant(**i) for i in d.get("inhabitants", [])]
+        d["loyalty"] = Loyalty(**d.get("loyalty", {}))
+        d["population"] = Population(**d.get("population", {}))
+        d["possessions"] = [Possession(**p) for p in d.get("possessions", [])]
+        # Older saves kept a bare Art -> pawns `vis_stock`; those are now Raw Vis
+        # stores on the Possessions tab.
+        stock = d.get("vis_stock") or {}
+        if stock:
+            arts = {a.lower(): a for a in (*TECHNIQUES, *FORMS)}
+            for art, pawns in stock.items():
+                art_name = arts.get(str(art).lower(), str(art))
+                d["possessions"].append(
+                    Possession(
+                        id=f"vis_store_{art_name.lower()}",
+                        kind="vis_store",
+                        name=f"{art_name} Vis",
+                        art=art_name,
+                        pawns=int(pawns),
+                    )
+                )
+            d["vis_stock"] = {}
+        return cls(**d)
+
+
+#: The `VirtueFlawInstance.params` key holding a covenant Boon/Hook's
+#: optional descriptor.
+BOON_HOOK_DETAIL = "detail"
+
+#: The `params` key holding the user's own multi-line description of an
+#: attached Boon/Hook (what the Hidden Resources actually contain...), shown
+#: in the details panel ahead of the official rules text.
+BOON_HOOK_DESCRIPTION = "description"
+
+
+def covenant_boon_points(
+    covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
+) -> int:
+    """Total points the covenant's attached Boons cost."""
+    return sum(
+        definition.cost
+        for bh in covenant.boons_hooks
+        if (definition := catalog_by_id.get(bh.vf_id)) is not None
+        and definition.type == "Boon"
+    )
+
+
+def covenant_hook_points(
+    covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
+) -> int:
+    """Total points the covenant's attached Hooks provide (a positive
+    number -- Hooks are stored with negative costs, like Flaws)."""
+    return sum(
+        -definition.cost
+        for bh in covenant.boons_hooks
+        if (definition := catalog_by_id.get(bh.vf_id)) is not None
+        and definition.type == "Hook"
+    )
+
+
+def covenant_effective_aura(
+    covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
+) -> int:
+    """The covenant's Aura score: its base `aura` plus the "aura" modifier of
+    every attached Boon/Hook (each Minor Aura Boon adds 1). This is what its
+    laboratories inherit."""
+    return covenant.aura + sum(
+        catalog_by_id[bh.vf_id].modifiers.get("aura", 0)
+        for bh in covenant.boons_hooks
+        if bh.vf_id in catalog_by_id
+    )
+
+
+def next_season(season: str, year: int) -> tuple[str, int]:
+    """The season after (season, year). The ArM5 year begins in Spring, so
+    Winter rolls over into Spring of the following year."""
+    index = SEASONS.index(season)
+    if index == len(SEASONS) - 1:
+        return SEASONS[0], year + 1
+    return SEASONS[index + 1], year
 
 
 @dataclass
@@ -660,7 +1081,7 @@ class Saga:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Saga:
         d = dict(data)
-        d["covenants"] = [Covenant(**c) for c in d.get("covenants", [])]
+        d["covenants"] = [Covenant.from_dict(c) for c in d.get("covenants", [])]
         d["characters"] = [Character.from_dict(c) for c in d.get("characters", [])]
         d["laboratories"] = [
             Laboratory.from_dict(lab) for lab in d.get("laboratories", [])

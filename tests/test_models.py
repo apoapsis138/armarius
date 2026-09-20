@@ -1,3 +1,5 @@
+from dataclasses import asdict
+
 from ars_magica_manager.models import (
     Aging,
     Background,
@@ -10,11 +12,13 @@ from ars_magica_manager.models import (
     VirtueFlawInstance,
     Wounds,
     character_age,
+    lab_aura_total,
     lab_base_safety,
     lab_characteristic_total,
     lab_free_virtues,
     lab_net_vf_points,
     lab_occupied_size,
+    next_season,
 )
 
 
@@ -137,3 +141,29 @@ def test_lab_occupied_size_and_free_virtues_and_base_safety():
     assert lab_free_virtues(lab, _LAB_VF_CATALOG) == 1
     # refinement - max(occupied_size, 0) = 0 - 1
     assert lab_base_safety(lab, _LAB_VF_CATALOG) == -1
+
+
+def test_laboratory_aura_modifier_defaults_to_zero_for_pre_existing_saves():
+    lab = Laboratory.from_dict(
+        {"id": "lab_1", "covenant_id": "cov_1", "name": "Obsidian Crucible"}
+    )
+    assert lab.aura_modifier == 0
+
+
+def test_laboratory_aura_modifier_survives_a_dict_round_trip():
+    lab = Laboratory(id="lab_1", covenant_id="cov_1", name="Lab", aura_modifier=-2)
+    assert Laboratory.from_dict(asdict(lab)).aura_modifier == -2
+
+
+def test_lab_aura_total_adds_the_modifier_to_the_covenant_aura():
+    lab = Laboratory(id="lab_1", covenant_id="cov_1", name="Lab", aura_modifier=2)
+    assert lab_aura_total(lab, covenant_aura=3) == 5
+    lab.aura_modifier = -4
+    assert lab_aura_total(lab, covenant_aura=3) == -1
+
+
+def test_next_season_steps_through_the_year_and_rolls_over_after_winter():
+    assert next_season("Spring", 1220) == ("Summer", 1220)
+    assert next_season("Summer", 1220) == ("Autumn", 1220)
+    assert next_season("Autumn", 1220) == ("Winter", 1220)
+    assert next_season("Winter", 1220) == ("Spring", 1221)
