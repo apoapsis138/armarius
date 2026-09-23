@@ -668,6 +668,16 @@ Spells tab lists them through the same resolver (unknown ids are shown as such),
 Mastery, and a details panel for a known spell, come with the Character screen
 rework.
 
+**Importing spells.** Import Data (`I` on the saga) offers **Spells**, which opens
+an **Import Spells** helper: the columns and what each holds (`name`, `technique`,
+`form` required; `level` a number or Gen/blank for General; `requisites`, `range`,
+`duration`, `target`, `ritual` yes/no, `base_level`, `description`, `source`), an
+example row, and **Save example CSV** (writes `spells_example.csv` -- never
+overwriting -- in the app's folder to start from). Then the file explorer, the same
+preview as books (skipped rows with reasons), and the Duplicate / Duplicate All /
+Skip / Skip All prompt for a name already used (by any spell, or earlier in the
+file). Imported spells become the saga's own. Arts and R/D/T may be abbreviated.
+
 **Building the catalog.** The page's index is the authority for a spell's level: it
 matches the Base + magnitudes arithmetic for 371 spells, while an entry's own
 "Level N" line almost never does (it belongs to a variant it describes). Index

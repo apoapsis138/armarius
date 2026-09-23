@@ -27,6 +27,7 @@ from .models import (
     Spell,
     round_away_from_zero,
 )
+from .storage import read_text_any
 
 #: Book types whose subject is an Art / an Ability (a Tractatus depends on its
 #: `subject_kind`).
@@ -651,12 +652,7 @@ def parse_books_csv(text: str) -> CsvImport:
 def read_books_csv(path: Path) -> CsvImport:
     """parse_books_csv on a file: UTF-8 (with or without Excel's byte-order
     mark), falling back to Windows-1252 for older spreadsheets."""
-    data = path.read_bytes()
-    try:
-        text = data.decode("utf-8-sig")
-    except UnicodeDecodeError:
-        text = data.decode("cp1252")
-    return parse_books_csv(text)
+    return parse_books_csv(read_text_any(path))
 
 
 def duplicate_names(books: list[Book], existing_names: set[str]) -> list[Book]:

@@ -24,6 +24,7 @@ from ars_magica_manager import catalog, storage
 from ars_magica_manager import economics as eco
 from ars_magica_manager import inhabitants as inh
 from ars_magica_manager import possessions as pos
+from ars_magica_manager import spells as spl
 from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     FORMS,
@@ -90,6 +91,7 @@ from ars_magica_manager.screens import (
     SelectableList,
     SetDateScreen,
     SpellChooserScreen,
+    SpellImportHelperScreen,
     SpellListView,
     VirtueFlawPickerScreen,
     WorkspaceScreen,
@@ -7140,6 +7142,7 @@ def _write_books_csv(folder) -> str:
 async def _pick_csv(pilot, app, path: str) -> None:
     """In the file picker, type the file's path and press Enter."""
     await _wait_until(pilot, lambda: isinstance(app.screen, CsvFilePickerScreen))
+    await pilot.pause()  # let it mount first: mounting moves the focus
     box = app.screen.query_one("#picker-path", Input)
     box.value = path
     box.focus()
@@ -7147,7 +7150,7 @@ async def _pick_csv(pilot, app, path: str) -> None:
     await _wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
 
 
-async def test_saga_import_offers_only_books_and_files_them_as_unassigned(tmp_path):
+async def test_saga_import_offers_books_and_spells_and_files_books_unassigned(tmp_path):
     storage.save_saga(_sample_saga_with_covenant())
     csv_path = _write_books_csv(tmp_path)
 
@@ -7163,6 +7166,7 @@ async def test_saga_import_offers_only_books_and_files_them_as_unassigned(tmp_pa
             ("covenants", True),
             ("laboratories", True),
             ("books", False),
+            ("spells", False),
         ]
         await pilot.press("enter")  # Books is the one highlighted
         await _wait_until(pilot, lambda: isinstance(app.screen, CsvFilePickerScreen))
@@ -7935,3 +7939,105 @@ async def test_importing_lab_texts_links_them_to_their_spells(tmp_path):
     saved = {b.name: b for b in _saved_books().values()}
     assert saved["Pilum notes"].spell_id == "spell_pilum_of_fire"
     assert (saved["Mystery notes"].spell_id, saved["Mystery notes"].level) == (None, 15)
+
+
+# -- Importing spells from a CSV file ---------------------------------------------
+
+
+async def test_import_data_offers_spells_with_a_helper_and_an_example_file(
+    tmp_path, monkeypatch
+):
+    storage.save_saga(_sample_saga_with_covenant())
+    monkeypatch.chdir(tmp_path)  # the app's folder: where the example goes
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 50)) as pilot:
+        await _open_workspace(pilot)
+        await pilot.press("I")
+        await _wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
+        options = app.screen.query_one("#import-list", OptionList)
+        options.highlighted = next(
+            i
+            for i in range(options.option_count)
+            if options.get_option_at_index(i).id == "spells"
+        )
+        await pilot.press("enter")
+        await _wait_until(
+            pilot, lambda: isinstance(app.screen, SpellImportHelperScreen)
+        )
+        helper = str(app.screen.query_one("#spell-import-help", Static).render())
+        assert "technique" in helper and "Gen (or blank)" in helper
+
+        app.screen.query_one("#btn-spell-import-example", Button).press()
+        await pilot.pause()
+        example = tmp_path / "spells_example.csv"
+        assert example.read_text(encoding="utf-8") == spl.EXAMPLE_CSV
+        status = str(app.screen.query_one("#spell-import-status", Static).render())
+        assert "Saved spells_example.csv" in status
+        # A second save doesn't overwrite the first.
+        app.screen.query_one("#btn-spell-import-example", Button).press()
+        await pilot.pause()
+        assert (tmp_path / "spells_example_2.csv").exists()
+
+        app.screen.query_one("#btn-spell-import-choose", Button).press()
+        await _pick_csv(pilot, app, str(example))
+        message = str(app.screen.query_one("#confirm-message", Static).render())
+        assert "Import 2 spells from spells_example.csv" in message
+        await pilot.press("y")
+        await _wait_until(pilot, lambda: len(app.screen.saga.spells) == 3)
+        tree = app.screen.query_one("#nav-tree", Tree)
+        total = len(catalog.load_spell_catalog()) + 3
+        assert str(_find_node(tree, ("spells",)).label) == f"Spells ({total})"
+
+    saved = {s.name: s for s in storage.load_saga("test_saga").spells}
+    assert saved["Ward of the Quiet Hearth"].id == "saga_ward_of_the_quiet_hearth"
+    assert saved["Ward of the Quiet Hearth"].level is None
+
+
+async def test_importing_spells_twice_asks_about_duplicates(tmp_path):
+    saga = _sample_saga_with_covenant()
+    saga.spells = []
+    storage.save_saga(saga)
+    csv_path = tmp_path / "spells.csv"
+    csv_path.write_text(spl.EXAMPLE_CSV, encoding="utf-8")
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 50)) as pilot:
+        await _open_workspace(pilot)
+        for answers in ([], ["skip-all"]):
+            app.screen._import_spells()
+            await _wait_until(
+                pilot, lambda: isinstance(app.screen, SpellImportHelperScreen)
+            )
+            await pilot.pause()
+            app.screen.query_one("#btn-spell-import-choose", Button).press()
+            await _pick_csv(pilot, app, str(csv_path))
+            await pilot.press("y")
+            for answer in answers:
+                await _wait_until(
+                    pilot, lambda: isinstance(app.screen, DuplicateBookScreen)
+                )
+                message = str(
+                    app.screen.query_one("#duplicate-message", Static).render()
+                )
+                assert "A spell named Palm of Warming Flame" in message
+                app.screen.query_one(f"#btn-{answer}", Button).press()
+                await pilot.pause()
+            await _wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+            await pilot.pause()
+        assert len(app.screen.saga.spells) == 2  # the second import added none
+
+
+async def test_the_spell_import_helper_fits_a_small_terminal():
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(80, 24)) as pilot:
+        await _open_workspace(pilot)
+        app.screen._import_spells()
+        await _wait_until(
+            pilot, lambda: isinstance(app.screen, SpellImportHelperScreen)
+        )
+        await pilot.pause()
+        for button in app.screen.query(Button):
+            assert button.region.height > 0 and button.region.bottom <= 24, button.id

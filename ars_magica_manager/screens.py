@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import re
 from collections import Counter
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -893,9 +892,9 @@ def _spell_problem(values: dict[str, Any]) -> str | None:
     ):
         if values.get(key) == _OTHER and not values.get(f"{key}_other", "").strip():
             return f"Type the {label}, or choose one of the standard ones."
-    typed = [t for t in re.split(r"[,;/]", values.get("requisites", "")) if t.strip()]
-    if len(spl.parse_requisites(values.get("requisites", ""))) < len(typed):
-        return "Requisites must be Arts (e.g. Rego, Corpus)."
+    unknown = spl.unknown_requisites(values.get("requisites", ""))
+    if unknown:
+        return f"Requisites must be Arts (e.g. Rego, Corpus), not {', '.join(unknown)}."
     return None
 
 
@@ -4021,6 +4020,7 @@ IMPORT_KINDS: tuple[tuple[str, str, bool], ...] = (
     ("covenants", "Covenants", False),
     ("laboratories", "Laboratories", False),
     ("books", "Books", True),
+    ("spells", "Spells", True),
 )
 
 
@@ -4143,10 +4143,11 @@ class DuplicateBookScreen(ModalScreen[str]):
         ("skip_all", "Skip All"),
     )
 
-    def __init__(self, name: str, remaining: int) -> None:
+    def __init__(self, name: str, remaining: int, *, noun: str = "book") -> None:
         super().__init__()
         self.book_name = name
         self.remaining = remaining
+        self.noun = noun
 
     def compose(self) -> ComposeResult:
         more = (
@@ -4156,8 +4157,8 @@ class DuplicateBookScreen(ModalScreen[str]):
         )
         with Vertical(id="duplicate-dialog"):
             yield Static(
-                f"A book named [b]{escape(self.book_name)}[/] is already in the "
-                f"saga. Add this one as well?{more}",
+                f"A {self.noun} named [b]{escape(self.book_name)}[/] is already "
+                f"in the saga. Add this one as well?{more}",
                 id="duplicate-message",
             )
             with Horizontal(id="duplicate-buttons"):
@@ -4173,6 +4174,121 @@ class DuplicateBookScreen(ModalScreen[str]):
     def on_button_pressed(self, event: Button.Pressed) -> None:
         event.stop()
         self.dismiss((event.button.id or "btn-skip")[len("btn-") :].replace("-", "_"))
+
+
+class SpellImportHelperScreen(ModalScreen[str | None]):
+    """What a spell CSV looks like, with a way to save an example to start
+    from. Dismisses with "choose" to go on to picking the file, or None."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    SpellImportHelperScreen {
+        align: center middle;
+    }
+
+    #spell-import-dialog {
+        width: 96;
+        max-width: 100%;
+        height: auto;
+        max-height: 100%;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    #spell-import-body {
+        height: auto;
+        max-height: 30;
+    }
+
+    #spell-import-status {
+        height: auto;
+        margin-top: 1;
+    }
+
+    #spell-import-buttons {
+        width: 100%;
+        height: auto;
+        margin-top: 1;
+    }
+
+    #spell-import-buttons Button {
+        margin-right: 1;
+    }
+    """
+
+    def __init__(self, folder: Path) -> None:
+        super().__init__()
+        self.folder = folder
+
+    def compose(self) -> ComposeResult:
+        columns = "\n".join(
+            f"  [b]{name}[/]: {escape(meaning)}"
+            for name, meaning in spl.CSV_COLUMN_HELP
+        )
+        example = escape(spl.EXAMPLE_CSV.splitlines()[1])
+        with Vertical(id="spell-import-dialog"):
+            yield Label("Import Spells", id="spell-import-title")
+            with VerticalScroll(id="spell-import-body"):
+                yield Static(
+                    "Spells are imported from a CSV file with a header row into the "
+                    "saga's own spells. Columns, in any order and any case:\n\n"
+                    f"{columns}\n\n[b]An example row:[/]\n  [dim]{example}[/]",
+                    id="spell-import-help",
+                )
+            yield Static("", id="spell-import-status")
+            with Horizontal(id="spell-import-buttons"):
+                yield Button(
+                    "Choose CSV file...",
+                    id="btn-spell-import-choose",
+                    variant="success",
+                )
+                yield Button("Save example CSV", id="btn-spell-import-example")
+                yield Button("Cancel", id="btn-spell-import-cancel")
+
+    def on_mount(self) -> None:
+        self._fit()
+        self.query_one("#btn-spell-import-choose", Button).focus()
+
+    def on_resize(self) -> None:
+        self._fit()
+
+    def _fit(self) -> None:
+        """The help scrolls, so the buttons stay on screen however short the
+        terminal is."""
+        self.query_one("#spell-import-body").styles.max_height = max(
+            4, min(30, self.size.height - 12)
+        )
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def _save_example(self) -> None:
+        target = self.folder / "spells_example.csv"
+        n = 2
+        while target.exists():
+            target = self.folder / f"spells_example_{n}.csv"
+            n += 1
+        status = self.query_one("#spell-import-status", Static)
+        try:
+            target.write_text(spl.EXAMPLE_CSV, encoding="utf-8")
+        except OSError as problem:
+            status.update(f"[red]Couldn't save the example: {escape(str(problem))}[/]")
+            return
+        status.update(
+            f"Saved [b]{escape(target.name)}[/] in {escape(str(self.folder))}. "
+            "Edit it, then choose it to import."
+        )
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        event.stop()
+        if event.button.id == "btn-spell-import-choose":
+            self.dismiss("choose")
+        elif event.button.id == "btn-spell-import-example":
+            self._save_example()
+        else:
+            self.dismiss(None)
 
 
 class _CsvDirectoryTree(DirectoryTree):
@@ -8030,13 +8146,15 @@ class WorkspaceScreen(Screen[None]):
         self._pick_book("Remove a Book", confirm)
 
     def action_import_data(self) -> None:
-        """'I': on the saga, choose what to import (only Books works yet);
+        """'I': on the saga, choose what to import (Books or Spells so far);
         on a covenant's Library tab, import books straight into its library."""
         if self.selected_kind == "saga":
 
             def handle_kind(kind: str | None) -> None:
                 if kind == "books":
                     self._import_books(None)
+                elif kind == "spells":
+                    self._import_spells()
 
             self.app.push_screen(ImportScreen(), handle_kind)
         elif (
@@ -8104,42 +8222,8 @@ class WorkspaceScreen(Screen[None]):
         already taken (Duplicate / Duplicate All / Skip / Skip All). Nothing
         is added until every question is answered."""
         saga = self.saga
-        pending = list(books)
-        accepted: list[Book] = []
-        names = {b.name for b in saga.books}
-        state: dict[str, Any] = {"all": None, "skipped": 0}
 
-        def take(book: Book, answer: str) -> None:
-            if answer == "skip":
-                state["skipped"] += 1
-            else:
-                accepted.append(book)
-                names.add(book.name)
-
-        def step() -> None:
-            while pending:
-                book = pending[0]
-                if book.name in names and state["all"] is None:
-                    remaining = len(bk.duplicate_names(pending[1:], names))
-
-                    def handle_answer(answer: str | None, book=book) -> None:
-                        answer = answer or "skip"
-                        if answer.endswith("_all"):
-                            answer = answer[: -len("_all")]
-                            state["all"] = answer
-                        pending.pop(0)
-                        take(book, answer)
-                        step()
-
-                    self.app.push_screen(
-                        DuplicateBookScreen(book.name, remaining), handle_answer
-                    )
-                    return
-                pending.pop(0)
-                take(book, state["all"] if book.name in names else "duplicate")
-            finish()
-
-        def finish() -> None:
+        def finish(accepted: list[Book], skipped: int) -> None:
             ids = [b.id for b in saga.books]
             for book in accepted:
                 spell = bk.book_spell(saga, book)
@@ -8156,14 +8240,129 @@ class WorkspaceScreen(Screen[None]):
                 if self.selected_kind == "saga":
                     self.call_later(self._show_saga_detail)  # its Books count
             count = len(accepted)
-            skipped = state["skipped"]
             message = f"Imported {count} book{'s' if count != 1 else ''}"
             message += f" {destination}" if count else ""
             if skipped:
                 message += f"; skipped {skipped} duplicate{'s' if skipped != 1 else ''}"
             self.notify(escape(message + "."))
 
+        self._ask_about_duplicates(books, {b.name for b in saga.books}, "book", finish)
+
+    def _ask_about_duplicates(
+        self,
+        items: list[Any],
+        names: set[str],
+        noun: str,
+        finish: Callable[[list[Any], int], None],
+    ) -> None:
+        """Go through imported items (anything with a `.name`), asking about
+        each whose name is already taken -- by `names` or earlier in `items` --
+        (Duplicate / Duplicate All / Skip / Skip All), then call
+        `finish(accepted, skipped)`. Nothing is added until every question is
+        answered."""
+        pending = list(items)
+        accepted: list[Any] = []
+        taken = set(names)
+        state: dict[str, Any] = {"all": None, "skipped": 0}
+
+        def take(item: Any, answer: str) -> None:
+            if answer == "skip":
+                state["skipped"] += 1
+            else:
+                accepted.append(item)
+                taken.add(item.name)
+
+        def step() -> None:
+            while pending:
+                item = pending[0]
+                if item.name in taken and state["all"] is None:
+                    remaining = len(bk.duplicate_names(pending[1:], taken))
+
+                    def handle_answer(answer: str | None, item=item) -> None:
+                        answer = answer or "skip"
+                        if answer.endswith("_all"):
+                            answer = answer[: -len("_all")]
+                            state["all"] = answer
+                        pending.pop(0)
+                        take(item, answer)
+                        step()
+
+                    self.app.push_screen(
+                        DuplicateBookScreen(item.name, remaining, noun=noun),
+                        handle_answer,
+                    )
+                    return
+                pending.pop(0)
+                take(item, state["all"] if item.name in taken else "duplicate")
+            finish(accepted, state["skipped"])
+
         step()
+
+    def _import_spells(self) -> None:
+        """The Import Spells helper, then pick a CSV, preview it, and add its
+        spells to the saga's own (asking about duplicate names)."""
+        saga = self.saga
+
+        def handle_path(path: Path | None) -> None:
+            if path is None:
+                return
+            try:
+                result = spl.read_spells_csv(path)
+            except (OSError, ValueError) as problem:
+                self.notify(
+                    f"Couldn't read {escape(path.name)}: {escape(str(problem))}",
+                    severity="error",
+                )
+                return
+            if not result.spells:
+                reason = f" {escape(result.skipped[0])}" if result.skipped else ""
+                self.notify(
+                    f"No spells to import from {escape(path.name)}.{reason}",
+                    severity="warning",
+                )
+                return
+            existing = {sp.name for sp in spl.all_spells(saga)}
+
+            def finish(accepted: list[Spell], skipped: int) -> None:
+                ids = spl.all_spell_ids(saga)
+                for spell in accepted:
+                    spell.id = storage.generate_unique_id(f"saga {spell.name}", ids)
+                    ids.add(spell.id)
+                    saga.spells.append(spell)
+                if accepted:
+                    storage.save_saga(saga)
+                    self._spells_changed()
+                count = len(accepted)
+                message = f"Imported {count} spell{'s' if count != 1 else ''}"
+                if skipped:
+                    message += (
+                        f"; skipped {skipped} duplicate{'s' if skipped != 1 else ''}"
+                    )
+                self.notify(escape(message + "."))
+
+            def handle_confirmed(confirmed: bool | None) -> None:
+                if confirmed:
+                    self._ask_about_duplicates(result.spells, existing, "spell", finish)
+
+            self.app.push_screen(
+                ConfirmScreen(
+                    spl.spell_import_preview(result, path.name, existing),
+                    yes_label="Import",
+                    yes_variant="success",
+                ),
+                handle_confirmed,
+            )
+
+        def handle_helper(choice: str | None) -> None:
+            if choice == "choose":
+                self.app.push_screen(
+                    CsvFilePickerScreen(
+                        "Import spells (into the saga's own spells)", Path.cwd()
+                    ),
+                    handle_path,
+                )
+
+        self.app.push_screen(SpellImportHelperScreen(Path.cwd()), handle_helper)
 
     def _books_changed(self) -> None:
         """After any book edit: re-render the book list on show, and keep the

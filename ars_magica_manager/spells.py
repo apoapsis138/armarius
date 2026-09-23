@@ -8,8 +8,12 @@ Range/Duration/Target notation the rulebook and the Grand Grimoire use.
 
 from __future__ import annotations
 
+import csv
+import io
 import math
 import re
+from dataclasses import dataclass, field
+from pathlib import Path
 
 from . import catalog
 from .markup import escape
@@ -24,6 +28,7 @@ from .models import (
     Saga,
     Spell,
 )
+from .storage import read_text_any
 
 # ------------------------------------------------------------ where they live
 
@@ -191,6 +196,20 @@ def normalise_target(value: str) -> str:
 _ART_NAMES = {a.lower(): a for a in (*TECHNIQUES, *FORMS)} | {
     abbr.lower(): art for art, abbr in ART_ABBREVIATIONS.items()
 }
+
+
+def _requisite_tokens(text: str) -> list[str]:
+    return [
+        t.strip().strip(".")
+        for t in re.split(r"[,;/&]|\band\b|\s+", text)
+        if t.strip().strip(".")
+    ]
+
+
+def unknown_requisites(text: str) -> list[str]:
+    """The words of a typed requisites list that aren't Arts ("Magic" in
+    "Rego Magic"), for rejecting user input."""
+    return [t for t in _requisite_tokens(text) if t.lower() not in _ART_NAMES]
 
 
 def parse_requisites(text: str) -> list[str]:
@@ -404,4 +423,193 @@ def detail_text(saga: Saga, spell: Spell | None) -> str:
         lines.append(f"[dim]From {escape(book)} (catalog spell, read-only).[/]")
     if spell.description.strip():
         lines += ["", escape(spell.description.strip())]
+    return "\n".join(lines)
+
+
+# ------------------------------------------------------------- CSV import
+
+#: Columns a spell import reads (any case, any order); `name`, `technique` and
+#: `form` are required.
+CSV_COLUMNS: tuple[str, ...] = (
+    "name",
+    "technique",
+    "form",
+    "level",
+    "requisites",
+    "range",
+    "duration",
+    "target",
+    "ritual",
+    "base_level",
+    "description",
+    "source",
+)
+
+#: What each column holds, for the Import Spells helper.
+CSV_COLUMN_HELP: tuple[tuple[str, str], ...] = (
+    ("name", "the spell's name (required)"),
+    ("technique", "Creo, Intellego, Muto, Perdo or Rego, or Cr/In/Mu/Pe/Re (required)"),
+    ("form", "one of the ten Forms, or its abbreviation (required)"),
+    ("level", "a number, or Gen (or blank) for a General spell"),
+    ("requisites", "extra Arts, e.g. Rego, Corpus"),
+    ("range", "Personal, Touch, Eye, Voice, Sight, Arcane Connection (or Per, Arc...)"),
+    (
+        "duration",
+        "Momentary, Concentration, Diameter, Sun, Ring, Moon, Year (or Mom...)",
+    ),
+    (
+        "target",
+        "Individual, Circle, Part, Group, Room, Structure, Boundary, a sense...",
+    ),
+    ("ritual", "yes or no (blank is no)"),
+    ("base_level", "the guideline level before R/D/T (optional)"),
+    ("description", "the spell's effect"),
+    ("source", "where it's from, e.g. a house rule"),
+)
+
+#: The file "Save example CSV" writes.
+EXAMPLE_CSV = (
+    "name,technique,form,level,requisites,range,duration,target,ritual,"
+    "base_level,description,source\n"
+    "Palm of Warming Flame,Creo,Ignem,5,,Touch,Diameter,Individual,no,2,"
+    '"A gentle flame dances in your palm, warming but never burning.",House rule\n'
+    "Ward of the Quiet Hearth,Rego,Vim,Gen,Mentem,Touch,Year,Boundary,yes,,"
+    '"A general ward over the covenant hall, cast at any level.",House rule\n'
+)
+
+_YES = {"yes", "y", "true", "1", "x", "ritual"}
+_NO = {"", "no", "n", "false", "0", "formulaic"}
+
+
+@dataclass
+class SpellCsvImport:
+    """What a spell CSV holds: the spells (not yet given ids), the rows that
+    couldn't be read and why, and the columns that weren't used."""
+
+    spells: list[Spell] = field(default_factory=list)
+    skipped: list[str] = field(default_factory=list)
+    unused_columns: list[str] = field(default_factory=list)
+
+
+def _art(raw: str, kind: tuple[str, ...], label: str) -> str:
+    art = _ART_NAMES.get(raw.strip().lower())
+    if art is None or art not in kind:
+        if raw.strip():
+            raise ValueError(f"unknown {label} {raw.strip()!r}")
+        raise ValueError(f"no {label}")
+    return art
+
+
+def _spell_from_row(row: dict[str, str]) -> Spell:
+    """One CSV row as a Spell, or ValueError saying what's wrong with it."""
+    name = row.get("name", "").strip()
+    if not name:
+        raise ValueError("no name")
+    level_text = row.get("level", "").strip()
+    if level_text.lower() in ("", "gen", "general"):
+        level = None
+    else:
+        try:
+            level = int(level_text)
+        except ValueError:
+            raise ValueError(f"Level {level_text!r} isn't a number or Gen") from None
+        if level < 1:
+            raise ValueError("a Level below 1")
+    requisites_text = row.get("requisites", "")
+    requisites = parse_requisites(requisites_text)
+    if unknown_requisites(requisites_text):
+        raise ValueError(f"requisites {requisites_text.strip()!r} aren't all Arts")
+    ritual_text = row.get("ritual", "").strip().lower()
+    if ritual_text not in _YES | _NO:
+        raise ValueError(f"Ritual {row.get('ritual', '').strip()!r} isn't yes or no")
+    base_text = row.get("base_level", "").strip()
+    try:
+        base_level = int(base_text) if base_text else None
+    except ValueError:
+        raise ValueError(f"base level {base_text!r} isn't a number") from None
+    return Spell(
+        id="",
+        name=name,
+        technique=_art(row.get("technique", ""), TECHNIQUES, "Technique"),
+        form=_art(row.get("form", ""), FORMS, "Form"),
+        level=level,
+        requisites=requisites,
+        range=normalise_range(row.get("range", "")),
+        duration=normalise_duration(row.get("duration", "")),
+        target=normalise_target(row.get("target", "")),
+        ritual=ritual_text in _YES,
+        base_level=base_level,
+        description=row.get("description", "").strip(),
+        source=row.get("source", "").strip(),
+    )
+
+
+def parse_spells_csv(text: str) -> SpellCsvImport:
+    """Read spells from CSV text with a header row (see CSV_COLUMNS). Raises
+    ValueError without a name, technique or form column; a bad row is skipped
+    and reported, not fatal."""
+    reader = csv.DictReader(io.StringIO(text))
+    headers = [h.strip().lower() for h in reader.fieldnames or []]
+    missing = [c for c in ("name", "technique", "form") if c not in headers]
+    if missing:
+        raise ValueError(f"no {', '.join(missing)} column in the header row")
+    result = SpellCsvImport(unused_columns=[h for h in headers if h not in CSV_COLUMNS])
+    for line, raw in enumerate(reader, start=2):
+        row = {
+            (key or "").strip().lower(): (value or "")
+            for key, value in raw.items()
+            if not isinstance(value, list)
+        }
+        if not any(v.strip() for v in row.values()):
+            continue
+        try:
+            result.spells.append(_spell_from_row(row))
+        except ValueError as problem:
+            name = row.get("name", "").strip()
+            label = f"Row {line}" + (f" ({name})" if name else "")
+            result.skipped.append(f"{label}: {problem}.")
+    return result
+
+
+def read_spells_csv(path: Path) -> SpellCsvImport:
+    """parse_spells_csv on a file (UTF-8, with or without a byte-order mark,
+    or Windows-1252)."""
+    return parse_spells_csv(read_text_any(path))
+
+
+def spell_import_preview(
+    result: SpellCsvImport, file_name: str, existing_names: set[str]
+) -> str:
+    """The confirmation shown before importing spells (markup)."""
+    count = len(result.spells)
+    lines = [
+        f"Import {count} spell{'s' if count != 1 else ''} from "
+        f"[b]{escape(file_name)}[/] into the saga's own spells?"
+    ]
+    if result.unused_columns:
+        lines.append(
+            "[dim]Unrecognised columns ignored: "
+            f"{escape(', '.join(result.unused_columns))}.[/]"
+        )
+    seen = {n.lower() for n in existing_names}
+    repeats = 0
+    for spell in result.spells:
+        if spell.name.lower() in seen:
+            repeats += 1
+        seen.add(spell.name.lower())
+    if repeats:
+        verb = "has" if repeats == 1 else "have"
+        lines.append(
+            f"{repeats} {verb} the same name as another spell; you'll be asked "
+            "whether to add or skip each."
+        )
+    general = sum(1 for s in result.spells if s.level is None)
+    if general:
+        lines.append(f"[dim]{general} General-level (no level given).[/]")
+    if result.skipped:
+        shown = result.skipped[:5]
+        lines += ["", f"[red]{len(result.skipped)} row(s) will be skipped:[/]"]
+        lines += [f"  {escape(s)}" for s in shown]
+        if len(result.skipped) > len(shown):
+            lines.append(f"  ...and {len(result.skipped) - len(shown)} more.")
     return "\n".join(lines)

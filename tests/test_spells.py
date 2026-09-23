@@ -337,3 +337,78 @@ def test_details_panel_shows_the_figures_and_where_the_spell_is_from():
     assert "press e to edit it" in sp.detail_text(saga, own)
     aegis = catalog.load_spell_catalog_by_id()["spell_aegis_of_the_hearth"]
     assert "General (cast at any level)" in sp.detail_text(saga, aegis)
+
+
+# ---------------------------------------------------------------- CSV import
+
+
+def test_the_example_csv_imports_cleanly():
+    result = sp.parse_spells_csv(sp.EXAMPLE_CSV)
+    assert result.skipped == [] and result.unused_columns == []
+    palm, ward = result.spells
+    assert (sp.shorthand(palm), palm.range, palm.duration, palm.ritual) == (
+        "CrIg 5",
+        "Touch",
+        "Diameter",
+        False,
+    )
+    assert (sp.shorthand(ward), ward.ritual, ward.target, ward.source) == (
+        "ReVi(Me) Gen",
+        True,
+        "Boundary",
+        "House rule",
+    )
+    assert all(s.id == "" for s in result.spells)  # ids come on import
+
+
+def test_spell_rows_accept_abbreviations_and_report_bad_rows():
+    text = (
+        "Name,Technique,Form,Level,Requisites,Range,Duration,Target,Ritual,Shelf\n"
+        "Short,cr,ig,10,re,Per,Mom,Ind,,3\n"
+        ",Creo,Ignem,5,,,,,,\n"
+        "Bad Art,Creo,Fire,5,,,,,,\n"
+        "Bad Level,Creo,Ignem,high,,,,,,\n"
+        "Bad Req,Creo,Ignem,5,Rego Magic,,,,,\n"
+        "Bad Ritual,Creo,Ignem,5,,,,,maybe,\n"
+        "Zero,Creo,Ignem,0,,,,,,\n"
+    )
+    result = sp.parse_spells_csv(text)
+    (short,) = result.spells
+    assert (short.technique, short.form, short.requisites) == (
+        "Creo",
+        "Ignem",
+        ["Rego"],
+    )
+    assert (short.range, short.duration, short.target) == (
+        "Personal",
+        "Momentary",
+        "Individual",
+    )
+    assert result.unused_columns == ["shelf"]
+    assert result.skipped == [
+        "Row 3: no name.",
+        "Row 4 (Bad Art): unknown Form 'Fire'.",
+        "Row 5 (Bad Level): Level 'high' isn't a number or Gen.",
+        "Row 6 (Bad Req): requisites 'Rego Magic' aren't all Arts.",
+        "Row 7 (Bad Ritual): Ritual 'maybe' isn't yes or no.",
+        "Row 8 (Zero): a Level below 1.",
+    ]
+
+
+def test_a_spell_csv_needs_name_technique_and_form_columns():
+    with pytest.raises(ValueError, match="no technique, form column"):
+        sp.parse_spells_csv("name,level\nX,5\n")
+
+
+def test_the_spell_import_preview():
+    result = sp.parse_spells_csv(
+        sp.EXAMPLE_CSV
+        + "Palm of Warming Flame,Creo,Ignem,5,,,,,,,,\nOops,Creo,Nope,5\n"
+    )
+    preview = sp.spell_import_preview(result, "mine.csv", {"Pilum of Fire"})
+    assert preview.startswith(
+        "Import 3 spells from [b]mine.csv[/] into the saga's own spells?"
+    )
+    assert "1 has the same name as another spell" in preview
+    assert "1 General-level" in preview
+    assert "1 row(s) will be skipped" in preview
