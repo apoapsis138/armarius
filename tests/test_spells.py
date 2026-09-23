@@ -1,0 +1,284 @@
+import sys
+from pathlib import Path
+
+import pytest
+
+from ars_magica_manager import catalog
+from ars_magica_manager import spells as sp
+from ars_magica_manager.models import (
+    FORMS,
+    SPELL_SOURCES,
+    TECHNIQUES,
+    Character,
+    Saga,
+    Spell,
+)
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
+import build_spell_catalog as build
+
+
+def _spell(**kwargs) -> Spell:
+    fields = {"id": "x", "name": "X", "technique": "Creo", "form": "Ignem"}
+    return Spell(**(fields | kwargs))
+
+
+# ------------------------------------------------------------------ figures
+
+
+@pytest.mark.parametrize(
+    ("level", "expected"), [(1, 1), (5, 1), (10, 2), (12, 3), (20, 4), (None, None)]
+)
+def test_magnitude(level, expected):
+    assert sp.magnitude(_spell(level=level)) == expected
+
+
+def test_shorthand_places_requisites_after_the_art_they_qualify():
+    assert sp.shorthand(_spell(level=20)) == "CrIg 20"
+    muto = _spell(technique="Muto", form="Terram", level=15, requisites=["Rego"])
+    assert sp.shorthand(muto) == "Mu(Re)Te 15"
+    rego = _spell(technique="Rego", form="Corpus", level=10, requisites=["Mentem"])
+    assert sp.shorthand(rego) == "ReCo(Me) 10"
+    both = _spell(
+        technique="Perdo", form="Animal", level=20, requisites=["Rego", "Corpus", "Vim"]
+    )
+    assert sp.shorthand(both) == "Pe(Re)An(Co/Vi) 20"
+    assert sp.shorthand(_spell(technique="Rego", form="Vim")) == "ReVi Gen"
+
+
+def test_ritual_vis_cost_and_casting_time():
+    formulaic = _spell(level=20)
+    assert (sp.vis_cost(formulaic), sp.casting_time(formulaic)) == (0, "1 round")
+    ritual = _spell(level=20, ritual=True)
+    assert (sp.vis_cost(ritual), sp.casting_time(ritual)) == (4, "60 minutes")
+    general = _spell(ritual=True)  # the Aegis of the Hearth
+    assert sp.vis_cost(general) is None
+    assert sp.casting_time(general) == "15 minutes per magnitude"
+
+
+# ------------------------------------------------------- Range/Duration/Target
+
+
+@pytest.mark.parametrize(
+    ("line", "expected"),
+    [
+        (
+            "R: Voice, D: Mom, T: Ind",
+            ("Voice", "Momentary", "Individual", False, []),
+        ),
+        (
+            "R: Touch, D: Year, T: Bound, Ritual",
+            ("Touch", "Year", "Boundary", True, []),
+        ),
+        (
+            "R: Touch, D: Moon, T: Group, Ritual; Req: Rego",
+            ("Touch", "Moon", "Group", True, ["Rego"]),
+        ),
+        (
+            "R: Eye, D: Mom, T: Ind Req: Perdo, Corpus",
+            ("Eye", "Momentary", "Individual", False, ["Perdo", "Corpus"]),
+        ),
+        (
+            "R: Per, D: Conc, T: Part; Requisites: Auram",
+            ("Personal", "Concentration", "Part", False, ["Auram"]),
+        ),
+        (
+            "R: Arc, D: Diam, T: Str, Requisite: Rego, InAn 45",
+            ("Arcane Connection", "Diameter", "Structure", False, ["Rego"]),
+        ),
+        (
+            "R: Sight, D: Sun & Year, T: Vision.",
+            ("Sight", "Sun & Year", "Vision", False, []),
+        ),
+    ],
+)
+def test_parse_rdt_reads_every_spelling_on_the_page(line, expected):
+    parsed = sp.parse_rdt(line)
+    assert (
+        parsed["range"],
+        parsed["duration"],
+        parsed["target"],
+        parsed["ritual"],
+        parsed["requisites"],
+    ) == expected
+
+
+def test_parse_rdt_ignores_other_lines():
+    assert sp.parse_rdt("A 2-foot jet of fire flies from your palms.") is None
+
+
+def test_parse_requisites_accepts_names_and_abbreviations():
+    assert sp.parse_requisites("Au/Im, and Terram") == ["Auram", "Imaginem", "Terram"]
+    assert sp.parse_requisites("Rego (for the motion)") == ["Rego"]
+
+
+# ------------------------------------------------------------ where they live
+
+
+def test_find_spell_looks_in_the_catalog_then_the_saga_then_the_magi():
+    saga = Saga(
+        id="s",
+        name="S",
+        spells=[_spell(id="saga_spell", name="House Rule")],
+        characters=[
+            Character(
+                id="c",
+                name="Leandro",
+                type="magus",
+                invented_spells=[_spell(id="inv_spell", name="Leandro's Light")],
+            )
+        ],
+    )
+    assert sp.find_spell(saga, "spell_pilum_of_fire").name == "Pilum of Fire"
+    assert sp.find_spell(saga, "saga_spell").name == "House Rule"
+    assert sp.find_spell(saga, "inv_spell").name == "Leandro's Light"
+    assert sp.find_spell(saga, "nope") is None
+    assert sp.find_spell(saga, None) is None
+    ids = sp.all_spell_ids(saga)
+    assert {"spell_pilum_of_fire", "saga_spell", "inv_spell"} <= ids
+
+
+def test_spells_load_from_older_saves_and_invented_spells_round_trip():
+    saga = Saga.from_dict(
+        {
+            "id": "s",
+            "name": "S",
+            "spells": [
+                {
+                    "id": "a",
+                    "name": "A",
+                    "technique": "Creo",
+                    "form": "Ignem",
+                    "level": 5,
+                }
+            ],
+            "characters": [
+                {
+                    "id": "c",
+                    "name": "C",
+                    "type": "magus",
+                    "invented_spells": [
+                        {"id": "b", "name": "B", "technique": "Rego", "form": "Vim"}
+                    ],
+                }
+            ],
+        }
+    )
+    assert saga.spells[0].level == 5 and saga.spells[0].source == "ArM5"
+    invented = saga.characters[0].invented_spells[0]
+    assert (invented.name, invented.level) == ("B", None)
+
+
+# ------------------------------------------------------------------ the catalog
+
+
+def test_the_catalog_loads_with_valid_arts_and_unique_ids():
+    spells = catalog.load_spell_catalog()
+    assert len(spells) > 400
+    assert len({s.id for s in spells}) == len(spells)
+    for spell in spells:
+        assert spell.technique in TECHNIQUES, spell.name
+        assert spell.form in FORMS, spell.name
+        assert all(r in TECHNIQUES or r in FORMS for r in spell.requisites)
+        assert spell.source in SPELL_SOURCES, spell.name
+        if not spell.details_missing:
+            assert spell.range and spell.duration and spell.target, spell.name
+
+
+def test_the_catalog_has_the_well_known_spells_right():
+    by_id = catalog.load_spell_catalog_by_id()
+    pilum = by_id["spell_pilum_of_fire"]
+    assert (sp.shorthand(pilum), pilum.range, pilum.base_level) == (
+        "CrIg 20",
+        "Voice",
+        10,
+    )
+    aegis = by_id["spell_aegis_of_the_hearth"]
+    assert (aegis.level, aegis.ritual, aegis.target) == (None, True, "Boundary")
+    healing = by_id["spell_the_chirurgeon_s_healing_touch"]
+    assert (healing.level, healing.ritual) == (20, True)
+    assert by_id["spell_eyes_of_the_cat"].requisites == ["Animal"]
+    assert {s.source for s in by_id.values()} >= {"ArM5", "HoHTL", "TMRE"}
+
+
+# --------------------------------------------------------------- the builder
+
+_PAGE = """
+<table>
+<tr><th>Form \\ Technique</th><th>Creo</th><th>Intellego</th><th>Muto</th>
+<th>Perdo</th><th>Rego</th></tr>
+<tr><th>Ignem</th>
+<td><a href="#Pilum_of_Fire">Pilum of Fire 20</a><br>
+<a href="#Ball_of_Flame">Ball of FlameBall of Flame 35</a></td>
+<td><a href="#Exactly_to_Warm">Excatly To Warm 5</a></td>
+<td></td><td><a href="#Lost_Spell">The Lost Spell 15</a></td>
+<td><a href="#Ward_Against_Heat">Ward Against Heat Gen</a></td></tr>
+</table>
+<div class="mw-heading mw-heading2"><h2 id="Ignem_Spells">Ignem Spells</h2></div>
+<div class="mw-heading mw-heading3"><h3 id="Creo_Ignem">Creo Ignem Spells</h3></div>
+<div class="mw-heading mw-heading4"><h4 id="Pilum_of_Fire">Pilum of Fire</h4></div>
+<p>R: Voice, D: Mom, T: Ind</p>
+<p>A jet of fire flies from your palms.</p>
+<p>(Base 10, +2 Voice)</p>
+<p>A variant Potent Spell is given in TMRE.</p>
+<p>Level 25</p>
+<div class="mw-heading mw-heading4"><h4 id="Level_55">Level 55</h4></div>
+<div class="mw-heading mw-heading4"><h4 id="x1">Ball of Flame (CrIg 35)</h4></div>
+<p>R: Voice, D: Mom, T: Ind, Ritual; Req: Rego</p>
+<p>A great ball of flame.</p>
+<p>Source: HoHS.</p>
+<div class="mw-heading mw-heading4"><h4 id="Unlisted">The Unlisted Flame</h4></div>
+<p>R: Touch, D: Sun, T: Ind</p>
+<p>Not in the index.</p>
+<p>(Base 3, +1 Touch, +2 Sun)</p>
+<div class="mw-heading mw-heading3"><h3 id="Intellego_Ignem">Intellego Ignem</h3></div>
+<div class="mw-heading mw-heading4"><h4 id="x2">Exactly To Warm</h4></div>
+<p>R: Per, D: Conc, T: Ind</p>
+<p>Senses warmth.</p>
+<div class="mw-heading mw-heading3"><h3 id="Rego_Ignem">Rego Ignem Spells</h3></div>
+<div class="mw-heading mw-heading4"><h4 id="Ward_Against_Heat">Ward Against Heat</h4></div>
+<p>R: Touch, D: Sun, T: Ind</p>
+<p>(As ward guideline)</p>
+<p>Protects from fire.</p>
+"""
+
+
+def test_the_builder_matches_the_index_to_the_page_and_ignores_variant_levels():
+    spells, report = build.parse_page(_PAGE)
+    by_name = {s["name"]: s for s in spells}
+    assert set(by_name) == {
+        "Pilum of Fire",
+        "Ball of Flame",
+        "The Unlisted Flame",
+        "Exactly To Warm",
+        "Ward Against Heat",
+        "The Lost Spell",
+    }
+    pilum = by_name["Pilum of Fire"]
+    assert (pilum["level"], pilum["base_level"], pilum["source"]) == (20, 10, "ArM5")
+    assert "variant Potent Spell" in pilum["description"]
+    ball = by_name["Ball of Flame"]  # a doubled index name and a "(CrIg 35)" tag
+    assert (ball["level"], ball["ritual"], ball["requisites"], ball["source"]) == (
+        35,
+        True,
+        ["Rego"],
+        "HoHS",
+    )
+    # Matched to the index despite its typo; the heading's spelling wins.
+    assert (
+        by_name["Exactly To Warm"]["technique"],
+        by_name["Exactly To Warm"]["level"],
+    ) == (
+        "Intellego",
+        5,
+    )
+    assert by_name["Ward Against Heat"]["level"] is None  # General
+    # Not in the index: level from its Base line (3 -> 4 -> 5 -> 10).
+    assert by_name["The Unlisted Flame"]["level"] == 10
+    assert report["not_in_index"] == ["The Unlisted Flame"]
+    # In the index with no section: kept, details missing, Arts from the grid.
+    lost = by_name["The Lost Spell"]
+    assert (lost["technique"], lost["form"], lost["level"]) == ("Perdo", "Ignem", 15)
+    assert lost["details_missing"] is True
+    assert report["details_missing"] == ["The Lost Spell"]
+    assert len({s["id"] for s in spells}) == len(spells)

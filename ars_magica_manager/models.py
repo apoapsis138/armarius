@@ -398,12 +398,84 @@ class Ability:
 
 @dataclass
 class Spell:
+    """A Hermetic spell. The shared catalog (data/spell_catalog.json) holds the
+    published ones; `Saga.spells` holds the saga's own (added by hand or
+    imported); a magus's `Character.invented_spells` holds theirs. All share
+    one id namespace -- spells.find_spell() resolves an id from any of them.
+
+    `level` is None for a General-level spell (the Aegis of the Hearth, the
+    Wards), which is cast at any level. Range/Duration/Target are plain
+    strings: the core values (SPELL_RANGES etc.) or a supplement's own.
+    `requisites` are extra Arts (Techniques or Forms) the spell also needs.
+    Magnitude, the "CrIg 20" shorthand and a Ritual's vis cost and casting time
+    are worked out in spells.py, never stored."""
+
     id: str
     name: str
     technique: str
     form: str
-    level: int
+    level: int | None = None
     description: str = ""
+    requisites: list[str] = field(default_factory=list)
+    range: str = ""
+    duration: str = ""
+    target: str = ""
+    ritual: bool = False
+    #: The guideline level before Range/Duration/Target (None if not given).
+    base_level: int | None = None
+    #: Where it's published: one of SPELL_SOURCES, or free text.
+    source: str = "ArM5"
+    #: A catalog entry listed without its details (the source page lacks them).
+    details_missing: bool = False
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Spell:
+        return cls(**known_fields(cls, data))
+
+
+#: Standard Hermetic Ranges, Durations and Targets (ArM5 Chapter Nine), in the
+#: book's order. Supplements add their own (Road, Bargain...), kept as typed.
+SPELL_RANGES: tuple[str, ...] = (
+    "Personal",
+    "Touch",
+    "Eye",
+    "Voice",
+    "Sight",
+    "Arcane Connection",
+)
+SPELL_DURATIONS: tuple[str, ...] = (
+    "Momentary",
+    "Concentration",
+    "Diameter",
+    "Sun",
+    "Ring",
+    "Moon",
+    "Year",
+)
+SPELL_TARGETS: tuple[str, ...] = (
+    "Individual",
+    "Circle",
+    "Part",
+    "Group",
+    "Room",
+    "Structure",
+    "Boundary",
+    "Taste",
+    "Touch",
+    "Smell",
+    "Hearing",
+    "Vision",
+)
+#: Where spells are published: the Definitive Edition core rules, then the
+#: supplements the Grand Grimoire collects.
+SPELL_SOURCES: dict[str, str] = {
+    "ArM5": "Ars Magica Definitive Edition",
+    "HoHTL": "Houses of Hermes: True Lineages",
+    "HoHMC": "Houses of Hermes: Mystery Cults",
+    "HoHS": "Houses of Hermes: Societates",
+    "TMRE": "The Mysteries Revised Edition",
+    "A&A": "Art & Academe",
+}
 
 
 #: The kinds of book a library holds (reference/Libraries.md).
@@ -747,6 +819,9 @@ class Character:
     abilities: list[Ability] = field(default_factory=list)
     virtues_flaws: list[VirtueFlawInstance] = field(default_factory=list)
     spells_known: list[str] = field(default_factory=list)  # Spell ids
+    #: Spells this magus invented: they live with the magus, not the catalog
+    #: (see Spell). Invention itself comes with the lab activities.
+    invented_spells: list[Spell] = field(default_factory=list)
     inventory: list[str] = field(default_factory=list)  # freeform item descriptions
     assigned_lab_id: str | None = None
     background: Background = field(default_factory=Background)
@@ -779,6 +854,9 @@ class Character:
         ]
         d["reputations"] = [ScoredTrait(**t) for t in d.get("reputations", [])]
         d["hermetic"] = HermeticBackground.from_dict(d.get("hermetic") or {})
+        d["invented_spells"] = [
+            Spell.from_dict(sp) for sp in d.get("invented_spells", [])
+        ]
         return cls(**d)
 
 
@@ -1347,7 +1425,7 @@ class Saga:
         d["laboratories"] = [
             Laboratory.from_dict(lab) for lab in d.get("laboratories", [])
         ]
-        d["spells"] = [Spell(**s) for s in d.get("spells", [])]
+        d["spells"] = [Spell.from_dict(s) for s in d.get("spells", [])]
         spell_names = {s.id: s.name for s in d["spells"]}
         d["books"] = [Book.from_dict(b, spell_names) for b in d.get("books", [])]
         # Older saves kept a Library record per covenant listing its book ids;

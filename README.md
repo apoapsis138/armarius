@@ -41,6 +41,13 @@ uv run ruff check .      # lint
   covenant/character/laboratory creation and browsing, and the shared
   Virtue/Flaw picker.
 - `ars_magica_manager/app.py` — the Textual app entry point.
+- `ars_magica_manager/spells.py` — spell logic: where a spell id resolves
+  (catalog, saga, a magus's invented spells), magnitude, the "CrIg 20"
+  shorthand, Ritual vis and casting time, reading R/D/T notation.
+- `data/spell_catalog.json` — the published Hermetic spells, built from
+  Project: Redcap's [Grand Grimoire](https://www.redcap.org/page/The_Grand_Grimoire)
+  by `tools/build_spell_catalog.py` (rerun it to refresh; it prints a report
+  of anything that needs a look).
 - `data/virtue_flaw_catalog.json`, `data/ability_catalog.json` — seed
   catalog entries (a starting point, not exhaustive — cross-check and
   expand against the rulebook as you need more).

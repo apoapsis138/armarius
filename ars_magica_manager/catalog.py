@@ -1,8 +1,10 @@
-"""Loads the shared Virtue/Flaw and Ability catalogs (reference data, not per-saga)."""
+"""Loads the shared catalogs -- Virtues/Flaws, Abilities, Houses, Boons & Hooks,
+Laboratory Virtues/Flaws and Spells (reference data, not per-saga)."""
 
 from __future__ import annotations
 
 import json
+from functools import lru_cache
 from pathlib import Path
 
 from .models import (
@@ -11,6 +13,7 @@ from .models import (
     CovenantBoonHookDef,
     HouseDef,
     LabVirtueFlawDef,
+    Spell,
     VirtueFlawDef,
     VirtueFlawInstance,
 )
@@ -30,6 +33,31 @@ COVENANT_BOON_HOOK_CATALOG_PATH = (
 LAB_VF_CATALOG_PATH = (
     Path(__file__).resolve().parent.parent / "data" / "lab_virtue_flaw_catalog.json"
 )
+SPELL_CATALOG_PATH = (
+    Path(__file__).resolve().parent.parent / "data" / "spell_catalog.json"
+)
+
+
+@lru_cache(maxsize=4)
+def _spell_catalog(path: Path) -> tuple[Spell, ...]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return tuple(Spell.from_dict(entry) for entry in data["spells"])
+
+
+def load_spell_catalog(path: Path = SPELL_CATALOG_PATH) -> list[Spell]:
+    """The published spells (built by tools/build_spell_catalog.py from the
+    Grand Grimoire). Cached: it's large and read-only, and spells are looked
+    up for every Lab Text and known spell shown."""
+    return list(_spell_catalog(path))
+
+
+@lru_cache(maxsize=4)
+def _spell_catalog_by_id(path: Path) -> dict[str, Spell]:
+    return {spell.id: spell for spell in _spell_catalog(path)}
+
+
+def load_spell_catalog_by_id(path: Path = SPELL_CATALOG_PATH) -> dict[str, Spell]:
+    return _spell_catalog_by_id(path)
 
 
 def _fill_placeholders(name: str, params: dict[str, str]) -> str:

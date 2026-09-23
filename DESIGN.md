@@ -617,6 +617,37 @@ Text helpers shared by the UI and pure-logic modules (`escape`,
 Loyalty and the shared Inhabitant-points math) lives in
 `ars_magica_manager/inhabitants.py` so it can be tested without a terminal.
 
+### 9.6 Spells
+
+**Where spells live.** One `Spell` shape, three homes, one id namespace:
+- the shared, read-only **catalog** (`data/spell_catalog.json`): the published
+  spells, built from Project: Redcap's Grand Grimoire by
+  `tools/build_spell_catalog.py` -- the core rules plus five supplements, each spell
+  tagged with its `source` (for a future "sources allowed" saga option);
+- the saga's **own spells** (`Saga.spells`): added by hand or imported;
+- a magus's **invented spells** (`Character.invented_spells`): they stay with the
+  magus, not the catalog (making one available to the saga is a backlog story).
+`spells.find_spell()` resolves an id from any of them, in that order, so a known
+spell or a Lab Text can point at any spell. (A Lab Text is what a magus produces
+when inventing a spell, which is why it must be able to link an invented one.)
+
+**The record.** Name, Technique, Form, `level` (None for a **General** spell, cast
+at any level: the Aegis of the Hearth, the Wards), requisites (Techniques or
+Forms), Range / Duration / Target (the standard values, or a supplement's own,
+kept as written), Ritual, base level, description, source, and `details_missing`
+for catalog entries the page lists without details. Magnitude (level / 5, rounded
+up, at least 1), the shorthand ("CrIg 20", "Mu(Re)Te 15": a requisite follows the
+Art it qualifies), a Ritual's vis (a pawn per magnitude) and casting time (15
+minutes per magnitude) are worked out, never stored. Spell Mastery belongs to the
+magus's known-spell record, not the spell (with the Character screen rework).
+
+**Building the catalog.** The page's index is the authority for a spell's level: it
+matches the Base + magnitudes arithmetic for 371 spells, while an entry's own
+"Level N" line almost never does (it belongs to a variant it describes). Index
+links and headings are matched by anchor, then name, then close spelling; entries
+with no section are kept as details-missing; a heading missing from the index gets
+its level from its Base line. The script prints what it couldn't place.
+
 ## 10. Backlog (not scheduled)
 
 Wanted, but not pressing; pick up when convenient.
