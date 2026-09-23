@@ -36,6 +36,7 @@ from ars_magica_manager.models import (
     Characteristics,
     Covenant,
     DiaryEntry,
+    Economics,
     HermeticBackground,
     IncomeSource,
     Inhabitant,
@@ -2975,6 +2976,10 @@ async def test_advancing_past_winter_rolls_the_year_and_cancel_changes_nothing()
         await pilot.pause()
         app.screen.query_one("#btn-advance", Button).press()
         await pilot.pause()
+        # No income, and Sundry is at least 1: a deficit, so it asks first.
+        assert isinstance(app.screen, ConfirmScreen)
+        await pilot.press("n")
+        await pilot.pause()
         assert "Spring 1221" in app.screen.sub_title
 
     saga = storage.load_saga("test_saga")
@@ -3896,6 +3901,7 @@ async def test_details_panel_shows_prerequisites_exclusions_and_repeatability():
             "covbh_boon_minor_shell_keep",
             "covbh_boon_minor_seclusion",
             "covbh_boon_minor_aura",
+            "covbh_boon_minor_wealth",
             "covbh_boon_minor_edifice",
         )
     )
@@ -3911,9 +3917,13 @@ async def test_details_panel_shows_prerequisites_exclusions_and_repeatability():
 
         assert "Requires: Castle" in info(0)
         assert "Not with: Road, Urban" in info(1)
-        assert "May be taken more than once" in info(2)
+        assert "May be taken more than once; the effects stack." in info(2)
+        assert "Effect: The covenant's Magic aura +1" in info(2)
         assert "Requires" not in info(3) and "Not with" not in info(3)
-        assert "May be taken" not in info(3)
+        assert "May be taken" not in info(3) and "Effect:" not in info(3)
+        # A building Boon: its Buildings surcharge, and it may be repeated.
+        assert "Effect: Yearly expenditure: Buildings +2" in info(4)
+        assert "May be taken more than once" in info(4)
 
 
 async def test_details_panel_shows_the_detail_and_escapes_markup():
@@ -7428,3 +7438,227 @@ async def test_the_subject_column_widens_with_the_terminal():
             label = rows._rows[2][1]
             # Leandro owns this book; the header carries 4 marker columns.
             assert label.index("Leandro") == header.index("Location") - 4
+
+
+# -- Emergency Savings and the year's end -----------------------------------------
+
+
+def _saga_with_a_deficit(deficit: int, wealth: int) -> Saga:
+    saga = _saga_for_economics()
+    cov = saga.covenants[0]
+    cov.economics.tithes = 0
+    cov.economics.tithes = eco.summarize(saga, cov).surplus_deficit + deficit
+    cov.economics.wealth = wealth
+    return saga
+
+
+def _economics() -> Economics:
+    return storage.load_saga("test_saga").covenants[0].economics
+
+
+async def _edit_emergency_savings(pilot, app) -> None:
+    view = app.screen._covenant_sheet_view
+    rows = view.query_one("#eco-savings-list", SelectableList)
+    await _select_eco_row(pilot, app, "savings", len(rows._rows) - 1)
+    await pilot.press("e")
+    await pilot.pause()
+
+
+async def test_editing_emergency_savings_offers_to_draw_from_wealth():
+    storage.save_saga(_saga_with_a_deficit(36, wealth=100))
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _select_covenant(pilot, app)
+        await _edit_emergency_savings(pilot, app)
+        assert isinstance(app.screen, ConfirmScreen)
+        message = str(app.screen.query_one("#confirm-message", Static).render())
+        assert message.startswith(
+            "Do you wish to draw from Wealth to cover the deficit?"
+        )
+        assert "Deficit: 36    Wealth: 100" in message
+        await pilot.press("y")
+        await _wait_until(pilot, lambda: _economics().emergency_savings == 36)
+        assert _economics().wealth == 64
+        rows = app.screen._covenant_sheet_view.query_one(
+            "#eco-savings-list", SelectableList
+        )
+        assert "deficit" not in rows._rows[-1][1]  # covered: the warning goes
+
+
+async def test_declining_the_draw_opens_the_ordinary_form():
+    storage.save_saga(_saga_with_a_deficit(36, wealth=100))
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _select_covenant(pilot, app)
+        await _edit_emergency_savings(pilot, app)
+        await pilot.press("n")
+        await _wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        assert app.screen.query_one("#fld-emergency_savings", Input).value == "0"
+        await pilot.press("escape")
+        await pilot.pause()
+    assert (_economics().emergency_savings, _economics().wealth) == (0, 100)
+
+
+async def test_a_short_draw_empties_wealth_and_the_covenant_is_broke():
+    storage.save_saga(_saga_with_a_deficit(36, wealth=10))
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _select_covenant(pilot, app)
+        await _edit_emergency_savings(pilot, app)
+        message = str(app.screen.query_one("#confirm-message", Static).render())
+        assert "Wealth only covers 10 of it" in message
+        assert "26 stays uncovered" in message
+        await pilot.press("y")
+        await _wait_until(pilot, lambda: _economics().wealth == 0)
+        assert _economics().emergency_savings == 10
+        rows = app.screen._covenant_sheet_view.query_one(
+            "#eco-savings-list", SelectableList
+        )
+        assert "Covenant is broke" in rows._rows[-1][1]
+        # With no Wealth left there's nothing to offer: straight to the form.
+        await _edit_emergency_savings(pilot, app)
+        assert isinstance(app.screen, FieldsDialog)
+
+
+async def test_the_new_year_adds_each_covenants_surplus_to_its_wealth():
+    saga = _saga_for_economics()
+    saga.current_season = "Winter"
+    cov = saga.covenants[0]
+    cov.economics.wealth = 5
+    cov.economics.emergency_savings = 3
+    surplus = eco.summarize(saga, cov).surplus_deficit
+    assert surplus > 0
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _open_workspace(pilot)
+        await pilot.press("t")
+        await pilot.pause()
+        assert isinstance(app.screen, AdvanceSeasonScreen)
+        note = str(app.screen.query_one("#advance-year-note", Static).render())
+        assert "surplus is added to its Wealth" in note
+        # The dialog hugs its content rather than filling the screen.
+        assert app.screen.query_one("#advance-dialog").region.height < 20
+        app.screen.query_one("#btn-advance", Button).press()
+        await _wait_until(pilot, lambda: _economics().wealth == 5 + surplus)
+
+    loaded = storage.load_saga("test_saga")
+    assert (loaded.current_season, loaded.current_year) == ("Spring", 1221)
+    assert loaded.covenants[0].economics.emergency_savings == 0
+
+
+async def test_other_seasons_leave_wealth_alone():
+    saga = _saga_for_economics()
+    saga.current_season = "Autumn"
+    saga.covenants[0].economics.wealth = 5
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _open_workspace(pilot)
+        await pilot.press("t")
+        await pilot.pause()
+        assert not app.screen.query("#advance-year-note")
+        app.screen.query_one("#btn-advance", Button).press()
+        await _wait_until(
+            pilot, lambda: storage.load_saga("test_saga").current_season == "Winter"
+        )
+    assert _economics().wealth == 5
+
+
+async def _advance_from_winter(pilot, app) -> None:
+    """Press t and confirm the Advance Time dialog."""
+    await pilot.press("t")
+    await _wait_until(pilot, lambda: isinstance(app.screen, AdvanceSeasonScreen))
+    app.screen.query_one("#btn-advance", Button).press()
+    await pilot.pause()
+
+
+def _winter_saga_with_a_deficit() -> Saga:
+    saga = _saga_with_a_deficit(36, wealth=100)
+    saga.current_season = "Winter"
+    return saga
+
+
+async def test_rolling_the_year_over_in_deficit_offers_to_resolve_it_first():
+    storage.save_saga(_winter_saga_with_a_deficit())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _open_workspace(pilot)
+        await _advance_from_winter(pilot, app)
+        assert isinstance(app.screen, ConfirmScreen)
+        message = str(app.screen.query_one("#confirm-message", Static).render())
+        assert message.startswith(
+            "The Covenant is currently in a deficit - do you wish to attempt to "
+            "resolve this?"
+        )
+        assert "Test Covenant: -36" in message
+        # Yes is the safe answer here: it has the focus.
+        assert app.screen.focused.id == "btn-yes"
+        await pilot.press("y")
+        await _wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+
+    saga = storage.load_saga("test_saga")
+    assert (saga.current_season, saga.current_year) == ("Winter", 1220)
+    assert saga.covenants[0].economics.wealth == 100
+
+
+async def test_escape_at_the_deficit_prompt_also_keeps_the_year():
+    storage.save_saga(_winter_saga_with_a_deficit())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _open_workspace(pilot)
+        await _advance_from_winter(pilot, app)
+        assert isinstance(app.screen, ConfirmScreen)
+        await pilot.press("escape")
+        await _wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+    assert storage.load_saga("test_saga").current_season == "Winter"
+
+
+async def test_answering_no_advances_the_year_regardless():
+    storage.save_saga(_winter_saga_with_a_deficit())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _open_workspace(pilot)
+        await _advance_from_winter(pilot, app)
+        await pilot.press("n")
+        await _wait_until(
+            pilot, lambda: storage.load_saga("test_saga").current_season == "Spring"
+        )
+
+    saga = storage.load_saga("test_saga")
+    assert saga.current_year == 1221
+    # The deficit isn't taken from Wealth by itself.
+    assert saga.covenants[0].economics.wealth == 100
+
+
+async def test_no_deficit_prompt_without_a_deficit_or_outside_winter():
+    saga = _saga_for_economics()  # a surplus
+    saga.current_season = "Winter"
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _open_workspace(pilot)
+        await _advance_from_winter(pilot, app)
+        await _wait_until(
+            pilot, lambda: storage.load_saga("test_saga").current_season == "Spring"
+        )
+        assert not isinstance(app.screen, ConfirmScreen)
+
+    saga = _saga_with_a_deficit(36, wealth=100)
+    saga.current_season = "Autumn"  # a deficit, but not the year's end
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _open_workspace(pilot)
+        await _advance_from_winter(pilot, app)
+        await _wait_until(
+            pilot, lambda: storage.load_saga("test_saga").current_season == "Winter"
+        )

@@ -28,6 +28,9 @@ MODIFIER_TYPES: dict[str, str] = {
     "ability_xp_gain": "Experience gained toward a specific Ability",
     "ability_score_effective": "Flat bonus to an Ability's effective score, without spending xp",
     "vis_extraction": "Vis gained from the Extract Vis lab activity",
+    # Covenant scores, changed by Boons and Hooks (see DESIGN.md section 5).
+    "covenant_aura": "The covenant's Magic aura",
+    "covenant_expense": "A category of the covenant's yearly expenditure, in pounds",
 }
 
 ACTIVITIES_BY_TYPE: dict[str, dict[str, str]] = {
@@ -43,7 +46,32 @@ ACTIVITIES_BY_TYPE: dict[str, dict[str, str]] = {
         "teaching": "Being taught by another character",
         "practice": "Practising unsupervised",
     },
+    # Which category of expenditure (the "activity" here is the expense line).
+    "covenant_expense": {
+        "buildings": "Buildings",
+    },
 }
+
+
+def describe_modifier(
+    applies_to: str,
+    activity: str | None,
+    amount: float | None,
+    multiplier: float | None,
+) -> str:
+    """A modifier in words, e.g. "Yearly expenditure: Buildings +2" or
+    "The covenant's Magic aura +1"."""
+    what = MODIFIER_TYPES.get(applies_to, applies_to)
+    if applies_to == "covenant_expense":
+        what = "Yearly expenditure"
+    if activity:
+        what += f": {ACTIVITIES_BY_TYPE.get(applies_to, {}).get(activity, activity)}"
+    effects = []
+    if amount is not None:
+        effects.append(f"{amount:+g}")
+    if multiplier is not None:
+        effects.append(f"x{multiplier:g}")
+    return f"{what} {' '.join(effects)}".strip()
 
 
 def validate_modifier_type(applies_to: str, activity: str | None) -> None:

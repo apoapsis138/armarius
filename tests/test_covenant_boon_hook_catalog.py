@@ -5,7 +5,6 @@ import pytest
 from ars_magica_manager import catalog
 from ars_magica_manager.models import (
     COVENANT_BOON_HOOK_CATEGORIES,
-    COVENANT_MODIFIER_KEYS,
     VIRTUE_FLAW_TIER_COST,
     Covenant,
     CovenantBoonHookDef,
@@ -178,7 +177,9 @@ def test_unknown_category_is_rejected():
 
 def test_weak_aura_hook_subtracts_from_the_covenant_aura():
     by_id = catalog.load_covenant_boon_hook_catalog_by_id()
-    assert by_id["covbh_hook_minor_weak_aura"].modifiers == {"aura": -1}
+    assert _effects(by_id["covbh_hook_minor_weak_aura"]) == [
+        ("covenant_aura", None, -1)
+    ]
     covenant = Covenant(id="c", saga_id="s", name="C", aura=3)
     covenant.boons_hooks = [
         VirtueFlawInstance(vf_id="covbh_boon_minor_aura"),
@@ -259,27 +260,77 @@ def test_repeatable_entries_are_flagged():
     assert by_id["covbh_boon_minor_wealth"].repeatable is False
 
 
+def _effects(entry) -> list[tuple[str, str | None, float | None]]:
+    return [(m.applies_to, m.activity, m.amount) for m in entry.modifiers]
+
+
 def test_only_the_two_minor_aura_entries_change_the_covenant_aura():
     by_id = catalog.load_covenant_boon_hook_catalog_by_id()
-    assert by_id["covbh_boon_minor_aura"].modifiers == {"aura": 1}
+    assert _effects(by_id["covbh_boon_minor_aura"]) == [("covenant_aura", None, 1)]
     # The Major Aura Boon only raises a limited area, not the covenant's score.
-    assert by_id["covbh_boon_major_aura"].modifiers == {}
-    modified = sorted(e.id for e in by_id.values() if e.modifiers)
+    assert by_id["covbh_boon_major_aura"].modifiers == []
+    aura = sorted(
+        e.id
+        for e in by_id.values()
+        if any(m.applies_to == "covenant_aura" for m in e.modifiers)
+    )
     # The Minor Aura Boon (+1) and the Weak Aura Hook (-1) are the only ones.
-    assert modified == ["covbh_boon_minor_aura", "covbh_hook_minor_weak_aura"]
-    for entry in by_id.values():
-        assert set(entry.modifiers) <= set(COVENANT_MODIFIER_KEYS)
+    assert aura == ["covbh_boon_minor_aura", "covbh_hook_minor_weak_aura"]
+
+
+#: The Boons that add to the size, magnificence or quantity of the covenant's
+#: buildings or fortifications (the user's list, 2026-09-23): +2 Minor, +5 Major
+#: to the Buildings expense.
+BUILDING_BOONS = {
+    "covbh_boon_minor_artillery": 2,
+    "covbh_boon_major_curtain_walls_and_mural_towers": 5,
+    "covbh_boon_minor_edifice": 2,
+    "covbh_boon_minor_important_building": 2,
+    "covbh_boon_minor_shell_keep": 2,
+    "covbh_boon_minor_tower_keep": 2,
+}
+
+
+def test_building_boons_add_to_the_buildings_expense():
+    by_id = catalog.load_covenant_boon_hook_catalog_by_id()
+    tagged = {
+        e.id: m.amount
+        for e in by_id.values()
+        for m in e.modifiers
+        if m.applies_to == "covenant_expense" and m.activity == "buildings"
+    }
+    assert tagged == BUILDING_BOONS
+    for entry_id, amount in BUILDING_BOONS.items():
+        assert amount == {"Minor": 2, "Major": 5}[by_id[entry_id].tier], entry_id
+    # Edifice and Important Building may be taken several times; each counts.
+    assert by_id["covbh_boon_minor_edifice"].repeatable
+    assert by_id["covbh_boon_minor_important_building"].repeatable
 
 
 def test_unknown_modifier_is_rejected():
-    with pytest.raises(ValueError, match="modifier"):
-        CovenantBoonHookDef(
-            id="covbh_bogus",
-            name="Bogus",
-            type="Boon",
-            tier="Minor",
-            cost=1,
-            modifiers={"not_a_score": 1},
+    with pytest.raises(ValueError, match="applies_to"):
+        CovenantBoonHookDef.from_dict(
+            {
+                "id": "covbh_bogus",
+                "name": "Bogus",
+                "type": "Boon",
+                "tier": "Minor",
+                "cost": 1,
+                "modifiers": [{"applies_to": "not_a_score", "amount": 1}],
+            }
+        )
+    with pytest.raises(ValueError, match="activity"):
+        CovenantBoonHookDef.from_dict(
+            {
+                "id": "covbh_bogus",
+                "name": "Bogus",
+                "type": "Boon",
+                "tier": "Minor",
+                "cost": 1,
+                "modifiers": [
+                    {"applies_to": "covenant_expense", "activity": "moat", "amount": 1}
+                ],
+            }
         )
 
 

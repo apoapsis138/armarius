@@ -19,6 +19,7 @@ from ars_magica_manager.models import (
     Laboratory,
     Possession,
     Saga,
+    VirtueFlawInstance,
 )
 
 
@@ -214,6 +215,24 @@ def test_each_expenditure_category_follows_its_rule():
     assert summary.before_savings == 10 + 20 + 50 + 20 + 7 + 1 + 0 + 1
     assert summary.cost_savings == 0
     assert summary.total_expenditure == summary.before_savings
+
+
+def test_building_boons_add_to_the_buildings_expense_and_stack():
+    saga, cov = _sized_covenant()  # Buildings is 10 without any Boons
+    cov.boons_hooks = [
+        VirtueFlawInstance(vf_id="covbh_boon_minor_shell_keep"),  # +2
+        VirtueFlawInstance(vf_id="covbh_boon_major_curtain_walls_and_mural_towers"),
+        VirtueFlawInstance(vf_id="covbh_boon_minor_important_building"),  # +2
+        VirtueFlawInstance(vf_id="covbh_boon_minor_important_building"),  # +2 again
+        VirtueFlawInstance(vf_id="covbh_boon_minor_aura"),  # not a building Boon
+    ]
+    row = _row(eco.summarize(saga, cov).expenditure, "buildings")
+    assert row.first == 10 + 2 + 5 + 2 + 2
+    assert row.basis == (
+        "100 pts of inhabitants / 10 + Shell Keep +2, "
+        "Curtain Walls and Mural Towers +5, Important Building +2, "
+        "Important Building +2"
+    )
 
 
 def test_wages_follow_the_salary_in_loyalty():
@@ -603,3 +622,80 @@ def test_a_covenant_saved_before_economics_existed_loads_with_defaults():
     loaded = Covenant.from_dict(data)
     assert loaded.economics == Economics()
     assert loaded.population.other_people == 0
+
+
+def _with_deficit(deficit: int, wealth: int) -> tuple[Saga, Covenant]:
+    """A covenant running a `deficit`-pound deficit (Tithes set to make it)."""
+    saga, cov = _sized_covenant()
+    # Enough income for a surplus before Tithes, so Tithes can make the deficit.
+    cov.economics.income_sources = [
+        IncomeSource(id="i", name="Mine", type="Typical", income=500)
+    ]
+    cov.economics.tithes = 0
+    surplus = eco.summarize(saga, cov).surplus_deficit
+    cov.economics.tithes = surplus + deficit
+    cov.economics.wealth = wealth
+    assert eco.summarize(saga, cov).surplus_deficit == -deficit
+    return saga, cov
+
+
+def test_emergency_savings_warns_of_a_deficit_and_of_being_broke():
+    saga, cov = _with_deficit(36, wealth=100)
+    row = _row(eco.summarize(saga, cov).savings, "emergency_savings")
+    assert row.status == "Covenant operating at a deficit"
+    assert "[red]Covenant operating at a deficit[/]" in eco.row_label(row)
+    assert "Covenant operating at a deficit" in _plain(eco.row_detail_text(row, "Q"))
+
+    cov.economics.wealth = 35  # one short of the deficit
+    row = _row(eco.summarize(saga, cov).savings, "emergency_savings")
+    assert row.status == (
+        "Covenant is broke - see rulebook for narrative and mechanical consequences"
+    )
+
+    cov.economics.tithes = 0  # no deficit: no warning
+    assert _row(eco.summarize(saga, cov).savings, "emergency_savings").status == ""
+
+
+def test_drawing_from_wealth_covers_the_deficit():
+    saga, cov = _with_deficit(36, wealth=100)
+    draw = eco.emergency_draw(eco.summarize(saga, cov))
+    assert draw == 36
+    eco.draw_from_wealth(cov, draw)
+    assert (cov.economics.emergency_savings, cov.economics.wealth) == (36, 64)
+    summary = eco.summarize(saga, cov)
+    assert summary.surplus_deficit == 0
+    assert _row(summary.savings, "emergency_savings").status == ""
+    assert eco.emergency_draw(summary) == 0  # nothing left to cover
+
+
+def test_drawing_takes_all_the_wealth_when_it_falls_short():
+    saga, cov = _with_deficit(36, wealth=10)
+    draw = eco.emergency_draw(eco.summarize(saga, cov))
+    assert draw == 10
+    eco.draw_from_wealth(cov, draw)
+    assert (cov.economics.emergency_savings, cov.economics.wealth) == (10, 0)
+    summary = eco.summarize(saga, cov)
+    assert summary.surplus_deficit == -26
+    assert _row(summary.savings, "emergency_savings").status.startswith(
+        "Covenant is broke"
+    )
+    assert eco.emergency_draw(summary) == 0  # no Wealth left
+
+
+def test_the_year_end_adds_the_surplus_to_wealth_and_resets_emergency_savings():
+    saga, cov = _sized_covenant()
+    cov.economics.income_sources = [
+        IncomeSource(id="i", name="Mine", type="Typical", income=200)
+    ]
+    cov.economics.wealth = 5
+    cov.economics.emergency_savings = 7
+    surplus = eco.summarize(saga, cov).surplus_deficit
+    assert surplus > 0
+    assert eco.close_year(saga, cov) == surplus
+    assert cov.economics.wealth == 5 + surplus
+    assert cov.economics.emergency_savings == 0
+
+    # A deficit doesn't take from Wealth by itself: that's the draw's job.
+    saga, cov = _with_deficit(20, wealth=50)
+    assert eco.close_year(saga, cov) == 0
+    assert cov.economics.wealth == 50

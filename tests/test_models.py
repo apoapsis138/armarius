@@ -167,3 +167,29 @@ def test_next_season_steps_through_the_year_and_rolls_over_after_winter():
     assert next_season("Summer", 1220) == ("Autumn", 1220)
     assert next_season("Autumn", 1220) == ("Winter", 1220)
     assert next_season("Winter", 1220) == ("Spring", 1221)
+
+
+def test_covenant_modifiers_count_every_instance_and_filter_by_activity():
+    from ars_magica_manager import catalog
+    from ars_magica_manager.models import (
+        Covenant,
+        VirtueFlawInstance,
+        covenant_effective_aura,
+        covenant_modifier_total,
+        covenant_modifiers,
+    )
+
+    by_id = catalog.load_covenant_boon_hook_catalog_by_id()
+    cov = Covenant(id="c", saga_id="s", name="C", aura=3)
+    cov.boons_hooks = [
+        VirtueFlawInstance(vf_id="covbh_boon_minor_aura"),
+        VirtueFlawInstance(vf_id="covbh_boon_minor_aura"),
+        VirtueFlawInstance(vf_id="covbh_boon_minor_edifice"),
+        VirtueFlawInstance(vf_id="covbh_boon_minor_edifice"),
+        VirtueFlawInstance(vf_id="not_in_the_catalog"),
+    ]
+    assert covenant_effective_aura(cov, by_id) == 5  # 3 + 1 + 1: they stack
+    pairs = covenant_modifiers(cov, by_id, "covenant_expense", "buildings")
+    assert [entry.name for entry, _ in pairs] == ["Edifice", "Edifice"]
+    assert covenant_modifier_total(cov, by_id, "covenant_expense", "buildings") == 4
+    assert covenant_modifier_total(cov, by_id, "lab_total") == 0

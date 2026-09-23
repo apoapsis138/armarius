@@ -152,6 +152,35 @@ tags**, not just flat descriptive text:
   activity" a trivial query once we build that engine, instead of a schema
   migration.
 
+### 5.1 Decision: one effect model for every catalog (2026-09-23)
+
+**Decided -- don't re-open.** Every catalog that can change a number -- character
+Virtues & Flaws, laboratory Virtues & Flaws, covenant Boons & Hooks, and any
+user-made entries later -- carries its effects in the **same `Modifier` shape**
+(`applies_to`, `amount`/`multiplier`, `target`, `activity`), checked at load time
+against the one registry in `totals.py`. Nothing looks up a catalog entry by name
+or id to decide what it does; the effect is data on the entry. Each total is then
+worked out by the same kind of query: collect every modifier of a type (and
+activity/target) from everything attached to the records involved -- a magus's
+Virtues, their laboratory's, the covenant's Boons -- where each attached
+*instance* counts, so a repeatable entry taken twice applies twice.
+
+Considered and rejected: per-purpose flags with the rule in code (e.g. a
+"buildings" tag and +2/+5 hard-coded in Economics), more one-off key -> number
+maps, and per-entry code hooks. Each keeps effects out of the catalog data or
+splits them into formats the Totals Engine would have to reconcile.
+
+**Staged migration.** Rather than converting everything at once, each catalog
+moves to the shared shape when a real calculation needs it:
+- Character Virtues & Flaws: already in this shape (effects not yet filled in).
+- Covenant Boons & Hooks: **converted** -- `covenant_aura` (the Aura Boon / Weak
+  Aura Hook) and `covenant_expense` / `buildings` (the Buildings surcharge),
+  collected by `models.covenant_modifiers()`.
+- Laboratory Virtues & Flaws: still the older `characteristic_modifiers` map
+  (`{"safety": 1}`); convert when the Totals Engine starts, since that's when lab
+  Characteristics feed Lab Totals (board: STORY-804).
+- Still to settle then: how flat amounts and multipliers combine when both apply.
+
 ## 6. Data Shape (illustrative)
 
 ```json
@@ -445,7 +474,12 @@ see below):
   otherwise): 2 Servants per 10 points of inhabitants excluding Other Covenfolk
   tagged Servant, Laborer or Teamster; 1 Teamster per 10 points excluding
   Laborer/Teamster-tagged entries, minus 2 per Laborer.
-- **Yearly Expenditure**: Buildings 1 per 10 points of inhabitants, Consumables 2,
+- **Yearly Expenditure**: Buildings 1 per 10 points of inhabitants, plus 2 / 5 per
+  Minor / Major Boon that adds to the size, magnificence or quantity of the
+  covenant's buildings or fortifications (Artillery, Curtain Walls and Mural Towers,
+  Edifice, Important Building, Shell Keep, Tower Keep; each instance counts, and the
+  amounts live on the Boons as `covenant_expense`/`buildings` modifiers, see 5.1);
+  Consumables 2,
   Provisions 5, Wages 2 times the salary multiplier (Loyalty > Money: none 0, half
   0.5, standard 1, generous 1.5, lavish 2), Laboratories 1 per 10 lab points, Weapons
   1 per 320, Writing Materials 1 per magus and Books craftsperson; Tithes, Inflation
@@ -455,13 +489,26 @@ see below):
   (at most half of Provisions); Craftspeople 1 + Ability/2 each (rare: the Ability),
   where each *craft* (same linked Ability, else same Responsibility, else each person
   alone) saves at most 50% or 20% of its category, and a category never saves more
-  than it costs; Magic and Emergency Savings are typed pounds-saved numbers (Magic
-  gives items 1/magnitude and Rituals ~5/magnitude different rates, so the user works
-  out the total by hand and enters it; Emergency Savings has no formula in the
-  reference text at all yet).
-- Not modelled yet: the extra 2 / 5 pounds for buildings-and-fortifications Boons
-  (outstanding -- needs a pass over the Boons catalog to tag which ones qualify), and
-  income scaling by magus count (see "Saga-level options" below).
+  than it costs; Magic Savings is a typed pounds-saved number (items give 1/magnitude
+  and Rituals ~5/magnitude, so the user works out the total by hand and enters it).
+- **Wealth, deficits and Emergency Savings** -- an operation, not a formula.
+  Wealth is typed by the user and also grows at the **end of the year**: advancing
+  Winter to Spring adds each covenant's surplus to its Wealth and starts the new
+  year's Emergency Savings at 0 (a deficit takes nothing from Wealth by itself). With
+  a deficit, the Emergency Savings row shows in red "Covenant operating at a
+  deficit", or "Covenant is broke - see rulebook for narrative and mechanical
+  consequences" when Wealth can't cover it. Editing that row then first asks "Do you
+  wish to draw from Wealth to cover the deficit?": Yes moves the deficit (or all the
+  Wealth there is, if less) from Wealth into Emergency Savings -- *added* to any
+  Emergency Savings already there, so what leaves Wealth always equals what arrives;
+  No opens the ordinary form, where the figure can still be typed. A deficit is never
+  taken from Wealth automatically: covering it is the user's choice (other ways, such
+  as cutting pay or equipment, will affect Loyalty). Advancing Winter to Spring with
+  any covenant in deficit first asks "The Covenant is currently in a deficit - do you
+  wish to attempt to resolve this?": Yes (focused; also Escape) keeps the date so the
+  books can be balanced, No advances regardless. Broke has no further consequences
+  yet.
+- Not modelled yet: income scaling by magus count (see "Saga-level options" below).
 
 **Improving a source of income** (`economics.py`: `income_multiplier_text`,
 `projected_income`, `improvement_note`; `screens.ImproveIncomeScreen`, key `i`
@@ -581,3 +628,7 @@ Wanted, but not pressing; pick up when convenient.
   record (e.g. a character from the saga, its covenant, or a Characters group;
   a laboratory from Laboratories groups) and remove the rest, keeping creation
   easy to find.
+- **User-made catalog entries, per saga.** Let the user create their own Boons,
+  Hooks, laboratory Virtues & Flaws and character Virtues & Flaws at saga level
+  (house rules, entries from other books), alongside the shared catalogs. They'd
+  carry effects in the same `Modifier` shape as everything else (5.1).

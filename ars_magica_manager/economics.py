@@ -23,6 +23,7 @@ from .models import (
     Covenant,
     IncomeSource,
     Saga,
+    covenant_modifiers,
     lab_characteristic_total,
     round_away_from_zero,
 )
@@ -121,6 +122,9 @@ class Row:
     notes: str
     basis: str = ""
     note: str = ""  # a short tag shown by the name, e.g. "x1.5"
+    #: A warning worked out from the figures, shown in red ahead of the notes
+    #: (the Emergency Savings row's deficit / broke status).
+    status: str = ""
     #: Names of the `Economics` attributes the user types for this row.
     typed: tuple[str, ...] = ()
 
@@ -150,8 +154,18 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
     craftspeople = inh.entries_for_kind(saga, covenant, "craftsperson")
     writers = magi + sum(e.quantity for e in craftspeople if e.field_of_work == "Books")
 
+    # Boons that add to the size, magnificence or quantity of the covenant's
+    # buildings or fortifications: +2 per Minor, +5 per Major, carried on the
+    # Boons themselves as covenant_expense/buildings modifiers (each instance
+    # counts, so a Boon taken twice adds twice).
+    boon_catalog = catalog.load_covenant_boon_hook_catalog_by_id()
+    building_boons = covenant_modifiers(
+        covenant, boon_catalog, "covenant_expense", "buildings"
+    )
+    building_surcharge = sum(m.amount or 0 for _, m in building_boons)
+
     costs = {
-        "buildings": people / 10,
+        "buildings": people / 10 + building_surcharge,
         "consumables": people * 2 / 10,
         "laboratories": labs / 10,
         "provisions": people * 5 / 10,
@@ -205,11 +219,21 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
         Row(
             "buildings",
             "Buildings",
-            "1 pound per 10 pts Inhabitants (50% per craft)",
+            "1 pound per 10 pts Inhabitants, +2/+5 per Minor/Major building "
+            "Boon (50% per craft)",
             cost["buildings"],
             saved["buildings"],
             note("buildings"),
-            f"{people} pts of inhabitants / 10",
+            f"{people} pts of inhabitants / 10"
+            + (
+                " + "
+                + ", ".join(
+                    f"{entry.name} {modifier.amount:+g}"
+                    for entry, modifier in building_boons
+                )
+                if building_boons
+                else ""
+            ),
         ),
         Row(
             "consumables",
@@ -333,7 +357,7 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
         Row(
             "emergency_savings",
             "Emergency Savings",
-            "Reduced privileges, cut wages, layoffs... (no formula yet)",
+            "Drawn from Wealth to cover a deficit (press e), or entered by hand",
             0,
             eco.emergency_savings,
             note("emergency_savings"),
@@ -349,6 +373,9 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
     cost_savings = sum(saved.values()) + eco.magic_savings + eco.emergency_savings
     income = sum(s.current_income for s in eco.income_sources)
     total_expenditure = before - cost_savings
+    surplus_deficit = income - total_expenditure
+    emergency = next(r for r in savings if r.key == "emergency_savings")
+    emergency.status = emergency_status(surplus_deficit, eco.wealth)
     return Summary(
         inhabitant_points=people,
         laboratory_points=labs,
@@ -360,8 +387,49 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
         before_savings=before,
         cost_savings=cost_savings,
         total_expenditure=total_expenditure,
-        surplus_deficit=income - total_expenditure,
+        surplus_deficit=surplus_deficit,
     )
+
+
+# ----------------------------------------------------- deficits and the year
+
+DEFICIT_STATUS = "Covenant operating at a deficit"
+BROKE_STATUS = (
+    "Covenant is broke - see rulebook for narrative and mechanical consequences"
+)
+
+
+def emergency_status(surplus_deficit: int, wealth: int) -> str:
+    """The Emergency Savings row's warning: none without a deficit; broke when
+    Wealth can't cover the deficit; otherwise a plain deficit."""
+    if surplus_deficit >= 0:
+        return ""
+    return BROKE_STATUS if wealth < -surplus_deficit else DEFICIT_STATUS
+
+
+def emergency_draw(summary: Summary) -> int:
+    """How much drawing from Wealth would put into Emergency Savings: the
+    whole deficit, or all the Wealth there is if that's less."""
+    if summary.surplus_deficit >= 0:
+        return 0
+    return max(0, min(-summary.surplus_deficit, summary.wealth))
+
+
+def draw_from_wealth(covenant: Covenant, amount: int) -> None:
+    """Move `amount` pounds from Wealth into this year's Emergency Savings."""
+    covenant.economics.emergency_savings += amount
+    covenant.economics.wealth -= amount
+
+
+def close_year(saga: Saga, covenant: Covenant) -> int:
+    """The end of the year (Winter -> Spring): add the year's surplus to
+    Wealth, and start the new year's Emergency Savings at 0 (it covered last
+    year's deficit). A deficit leaves Wealth alone: covering it is the
+    Emergency Savings draw. Returns the amount added."""
+    surplus = max(0, summarize(saga, covenant).surplus_deficit)
+    covenant.economics.wealth += surplus
+    covenant.economics.emergency_savings = 0
+    return surplus
 
 
 # --------------------------------------------------------------------- text
@@ -409,6 +477,8 @@ _NAME_WIDTH = 20
 _FIRST_WIDTH = 8
 _SAVINGS_WIDTH = 9
 _NOTES_WIDTH = 34
+#: A status warning may run longer than a note (it fits a 140-wide terminal).
+_STATUS_WIDTH = 48
 
 
 def table_header(first_title: str) -> str:
@@ -421,14 +491,17 @@ def table_header(first_title: str) -> str:
 
 
 def row_label(row: Row) -> str:
-    """One table row (markup), columns lined up with `table_header`."""
+    """One table row (markup), columns lined up with `table_header`. A status
+    warning takes the Notes column, in red (the notes are in the panel)."""
     name = row.name + (f" ({row.note})" if row.note else "")
-    notes = row.notes.replace("\n", " ")
-    if len(notes) > _NOTES_WIDTH:
-        notes = notes[: _NOTES_WIDTH - 1] + "…"
+    notes = (row.status or row.notes).replace("\n", " ")
+    width = _STATUS_WIDTH if row.status else _NOTES_WIDTH
+    if len(notes) > width:
+        notes = notes[: width - 1] + "…"
+    notes = f"[red]{escape(notes)}[/]" if row.status else escape(notes)
     return (
         f"{escape(name.ljust(_NAME_WIDTH))}{money(row.first):>{_FIRST_WIDTH}}"
-        f"{money(row.savings):>{_SAVINGS_WIDTH}}  {escape(notes)}"
+        f"{money(row.savings):>{_SAVINGS_WIDTH}}  {notes}"
     )
 
 
@@ -444,6 +517,8 @@ def row_detail_text(row: Row | None, first_title: str) -> str:
         if row.basis != "typed"
         else "[b]Entered by hand:[/] press e to change it",
     ]
+    if row.status:
+        lines.append(f"[red][b]{escape(row.status)}[/b][/]")
     if row.notes.strip():
         lines += ["", "[b]Notes:[/]", escape(row.notes.strip())]
     return "\n".join(lines)

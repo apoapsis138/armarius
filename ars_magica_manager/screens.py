@@ -112,6 +112,7 @@ from .models import (
     lab_occupied_size,
     next_season,
 )
+from .totals import describe_modifier
 
 _SAGA_ITEM_ID_PREFIX = "saga-"
 _VIRTUE_FLAW_ITEM_ID_PREFIX = "vf-"
@@ -3513,6 +3514,17 @@ class AdvanceSeasonScreen(ModalScreen[bool]):
         height: auto;
         margin-top: 1;
     }
+
+    #advance-year-note {
+        height: auto;
+        margin-top: 1;
+    }
+
+    #advance-buttons {
+        width: 100%;
+        height: auto;
+        margin-top: 1;
+    }
     """
 
     def __init__(self, season: str, year: int) -> None:
@@ -3529,11 +3541,18 @@ class AdvanceSeasonScreen(ModalScreen[bool]):
                 f"to {new_season} {new_year}?",
                 id="advance-message",
             )
+            if new_year != self.year:
+                yield Static(
+                    "A new year: each covenant's surplus is added to its Wealth, "
+                    "and Emergency Savings start again at 0.",
+                    id="advance-year-note",
+                )
             yield Static(
-                "Advanced by mistake? Use Set Date (T) to put it back.",
+                "Advanced by mistake? Use Set Date (T) to put the date back"
+                + (" (Wealth isn't changed back)." if new_year != self.year else "."),
                 id="advance-note",
             )
-            with Horizontal():
+            with Horizontal(id="advance-buttons"):
                 yield Button("Advance", id="btn-advance", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -3739,7 +3758,7 @@ class ConfirmScreen(ModalScreen[bool]):
     markup, so escape any user text in it."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
-        ("escape", "no", "No"),
+        ("escape", "escape", "Cancel"),
         ("n", "no", "No"),
         ("y", "yes", "Yes"),
     ]
@@ -3769,12 +3788,21 @@ class ConfirmScreen(ModalScreen[bool]):
     """
 
     def __init__(
-        self, message: str, *, yes_label: str = "Yes", yes_variant: str = "error"
+        self,
+        message: str,
+        *,
+        yes_label: str = "Yes",
+        yes_variant: str = "error",
+        safe_answer: bool = False,
     ) -> None:
+        """`safe_answer` is the answer a stray key should give: False (No) for
+        the usual "Delete X?"; True when No is the risky choice, which also
+        focuses Yes and makes Escape answer Yes."""
         super().__init__()
         self.message = message
         self.yes_label = yes_label
         self.yes_variant = yes_variant
+        self.safe_answer = safe_answer
 
     def compose(self) -> ComposeResult:
         with Vertical(id="confirm-dialog"):
@@ -3784,7 +3812,10 @@ class ConfirmScreen(ModalScreen[bool]):
                 yield Button("No", id="btn-no")
 
     def on_mount(self) -> None:
-        self.query_one("#btn-no", Button).focus()
+        self.query_one("#btn-yes" if self.safe_answer else "#btn-no", Button).focus()
+
+    def action_escape(self) -> None:
+        self.dismiss(self.safe_answer)
 
     def action_yes(self) -> None:
         self.dismiss(True)
@@ -6375,8 +6406,16 @@ class CovenantSheetView(Vertical):
             lines.append(
                 f"[b]Not with:[/] {_boon_hook_names(definition.excludes, by_id)}"
             )
+        for modifier in definition.modifiers:
+            effect = describe_modifier(
+                modifier.applies_to,
+                modifier.activity,
+                modifier.amount,
+                modifier.multiplier,
+            )
+            lines.append(f"[b]Effect:[/] {escape(effect)}")
         if definition.repeatable:
-            lines.append("[dim]May be taken more than once.[/]")
+            lines.append("[dim]May be taken more than once; the effects stack.[/]")
         # The user's own description leads; the official rules text follows.
         description = instance.params.get(BOON_HOOK_DESCRIPTION, "").strip()
         if description:
@@ -7916,6 +7955,50 @@ class WorkspaceScreen(Screen[None]):
             ImproveIncomeScreen(source, self.saga.current_year), handle_result
         )
 
+    def _offer_emergency_draw(
+        self, which: str, row: eco.Row, summary: eco.Summary
+    ) -> None:
+        """With a deficit, editing Emergency Savings first offers to cover it
+        from Wealth: all of it, or as much as Wealth holds. No (or no Wealth to
+        draw from) goes on to the ordinary form."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        deficit = -summary.surplus_deficit
+        draw = eco.emergency_draw(summary)
+        if draw == 0:
+            self.notify(
+                "There's no Wealth to draw from: the covenant is broke.",
+                severity="warning",
+            )
+            self._economics_row_form(which, row, offer_draw=False)
+            return
+        outcome = (
+            f"This moves {draw} from Wealth into Emergency Savings."
+            if draw == deficit
+            else f"Wealth only covers {draw} of it: all of it is drawn, and "
+            f"{deficit - draw} stays uncovered."
+        )
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if not confirmed:
+                self._economics_row_form(which, row, offer_draw=False)
+                return
+            eco.draw_from_wealth(covenant, draw)
+            storage.save_saga(self.saga)
+            self._refresh_covenant_section("section-eco-savings")
+            self.notify(f"Drew {draw} from Wealth to cover the deficit.")
+
+        self.app.push_screen(
+            ConfirmScreen(
+                "Do you wish to draw from Wealth to cover the deficit?\n\n"
+                f"Deficit: {deficit}    Wealth: {summary.wealth}\n{outcome}",
+                yes_label="Draw",
+                yes_variant="success",
+            ),
+            handle_confirmed,
+        )
+
     def _edit_economics_row(self, which: str) -> None:
         """Edit the chosen Yearly Expenditure / Cost Savings row (its Notes, and
         the numbers that are typed rather than calculated); with none chosen,
@@ -7939,10 +8022,17 @@ class WorkspaceScreen(Screen[None]):
             handle_index,
         )
 
-    def _economics_row_form(self, which: str, row: eco.Row) -> None:
+    def _economics_row_form(
+        self, which: str, row: eco.Row, *, offer_draw: bool = True
+    ) -> None:
         covenant = self.selected_covenant
         if covenant is None:
             return
+        if offer_draw and row.key == "emergency_savings":
+            summary = eco.summarize(self.saga, covenant)
+            if summary.surplus_deficit < 0:
+                self._offer_emergency_draw(which, row, summary)
+                return
         economics = covenant.economics
         first = "Cost" if which == "expenditure" else "Quantity"
         fields = [DialogField("_n", "Row", "info", row.name)]
@@ -8653,14 +8743,69 @@ class WorkspaceScreen(Screen[None]):
         async def handle_result(confirmed: bool | None) -> None:
             if not confirmed:
                 return
+            if saga.current_season == SEASONS[-1]:
+                in_deficit = [
+                    (c.name, eco.summarize(saga, c).surplus_deficit)
+                    for c in saga.covenants
+                ]
+                in_deficit = [(name, d) for name, d in in_deficit if d < 0]
+                if in_deficit:
+                    self._offer_to_resolve_deficit(in_deficit, advance)
+                    return
+            await advance()
+
+        async def advance() -> None:
+            new_year = saga.current_season == SEASONS[-1]
+            # A new year (Winter -> Spring): each covenant's surplus goes into
+            # its Wealth before the date moves on.
+            added = (
+                [(c.name, eco.close_year(saga, c)) for c in saga.covenants]
+                if new_year
+                else []
+            )
             await self._apply_saga_date(
                 *next_season(saga.current_season, saga.current_year)
             )
-            self.notify(f"It is now {saga.current_season} {saga.current_year}.")
+            message = f"It is now {saga.current_season} {saga.current_year}."
+            if added:
+                message += " Added to Wealth: " + ", ".join(
+                    f"{name} {amount}" for name, amount in added
+                )
+                message += "."
+                self._refresh_covenant_section("section-eco-wealth")
+            self.notify(escape(message))
 
         self.app.push_screen(
             AdvanceSeasonScreen(saga.current_season, saga.current_year),
             handle_result,
+        )
+
+    def _offer_to_resolve_deficit(
+        self, in_deficit: list[tuple[str, int]], advance: Callable[[], Any]
+    ) -> None:
+        """Before the year rolls over with a covenant in deficit: Yes (the
+        focused, Escape answer) leaves the date alone so the books can be
+        balanced; No advances anyway."""
+        lines = "\n".join(
+            f"  {escape(name)}: {deficit}" for name, deficit in in_deficit
+        )
+
+        async def handle_answer(resolve: bool | None) -> None:
+            if resolve:
+                self.notify(
+                    "The year hasn't advanced. Balance the books, then press t again."
+                )
+                return
+            await advance()
+
+        self.app.push_screen(
+            ConfirmScreen(
+                "The Covenant is currently in a deficit - do you wish to attempt "
+                f"to resolve this?\n\n{lines}",
+                yes_variant="primary",
+                safe_answer=True,
+            ),
+            handle_answer,
         )
 
     def action_set_date(self) -> None:

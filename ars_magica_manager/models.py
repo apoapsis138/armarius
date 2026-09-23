@@ -230,9 +230,6 @@ class LabVirtueFlawDef:
         return cls(**data)
 
 
-#: Covenant scores a Boon/Hook can modify (see CovenantBoonHookDef.modifiers).
-COVENANT_MODIFIER_KEYS: tuple[str, ...] = ("aura",)
-
 #: The "types" the Covenants book (Chapter Two: Boons & Hooks) sorts every
 #: Boon and Hook into, in the order the book lists them.
 COVENANT_BOON_HOOK_CATEGORIES: tuple[str, ...] = (
@@ -267,11 +264,12 @@ class CovenantBoonHookDef:
     Major Castle Hook; Seclusion excludes the Road and Urban Hooks). They are
     recorded for display and future use only -- nothing enforces them yet.
 
-    `modifiers` is the parsed numeric effect on a covenant score, from
-    COVENANT_MODIFIER_KEYS (the Minor Aura Boon -> {"aura": 1}, the Weak Aura
-    Hook -> {"aura": -1}); everything
-    else stays prose in `description`. `repeatable` marks entries that may be
-    taken more than once.
+    `modifiers` are the entry's structured effects, in the same `Modifier`
+    shape Virtues & Flaws use (DESIGN.md section 5): the Minor Aura Boon is
+    `covenant_aura` +1, Shell Keep is `covenant_expense`/`buildings` +2.
+    Everything else stays prose in `description`. `repeatable` marks entries
+    that may be taken more than once; each instance's effects count (they
+    stack) -- see covenant_modifiers().
     """
 
     id: str
@@ -283,7 +281,7 @@ class CovenantBoonHookDef:
     repeatable: bool = False
     requires: list[str] = field(default_factory=list)
     excludes: list[str] = field(default_factory=list)
-    modifiers: dict[str, int] = field(default_factory=dict)
+    modifiers: list[Modifier] = field(default_factory=list)
     description: str = ""
 
     def __post_init__(self) -> None:
@@ -302,16 +300,14 @@ class CovenantBoonHookDef:
                 f"{self.id!r}: Boons cost points (cost >= 0) and Hooks provide "
                 f"them (cost <= 0), but this {self.type} has cost {self.cost!r}"
             )
-        for key in self.modifiers:
-            if key not in COVENANT_MODIFIER_KEYS:
-                raise ValueError(
-                    f"Unknown covenant modifier {key!r} for {self.id!r}; "
-                    f"must be one of {COVENANT_MODIFIER_KEYS}"
-                )
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> CovenantBoonHookDef:
-        return cls(**data)
+        d = dict(data)
+        # Each Modifier checks its applies_to/activity against the registry
+        # in totals.py, so a typo in the catalog fails at load time.
+        d["modifiers"] = [Modifier(**m) for m in d.get("modifiers", [])]
+        return cls(**d)
 
 
 @dataclass
@@ -1266,13 +1262,57 @@ def covenant_hook_points(
 def covenant_effective_aura(
     covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
 ) -> int:
-    """The covenant's Aura score: its base `aura` plus the "aura" modifier of
-    every attached Boon/Hook (each Minor Aura Boon adds 1). This is what its
-    laboratories inherit."""
-    return covenant.aura + sum(
-        catalog_by_id[bh.vf_id].modifiers.get("aura", 0)
-        for bh in covenant.boons_hooks
-        if bh.vf_id in catalog_by_id
+    """The covenant's Aura score: its base `aura` plus every `covenant_aura`
+    modifier of its Boons/Hooks (each Minor Aura Boon adds 1). This is what
+    its laboratories inherit."""
+    return covenant.aura + round_away_from_zero(
+        covenant_modifier_total(covenant, catalog_by_id, "covenant_aura")
+    )
+
+
+def covenant_modifiers(
+    covenant: Covenant,
+    catalog_by_id: dict[str, CovenantBoonHookDef],
+    applies_to: str,
+    activity: str | None = None,
+) -> list[tuple[CovenantBoonHookDef, Modifier]]:
+    """Every modifier of type `applies_to` on the covenant's Boons/Hooks, with
+    the entry it comes from -- one pair per attached *instance*, so a Boon
+    taken three times appears three times (effects stack). Given an
+    `activity`, modifiers for that activity and general ones (no activity)
+    both count, per Modifier's rules.
+
+    This is the covenant end of the one lookup every total will use (DESIGN.md
+    section 5, "Effects on totals"): Virtues & Flaws on characters and
+    laboratories will be collected the same way."""
+    found = []
+    for instance in covenant.boons_hooks:
+        entry = catalog_by_id.get(instance.vf_id)
+        if entry is None:
+            continue
+        for modifier in entry.modifiers:
+            if modifier.applies_to != applies_to:
+                continue
+            if activity is not None and modifier.activity not in (None, activity):
+                continue
+            found.append((entry, modifier))
+    return found
+
+
+def covenant_modifier_total(
+    covenant: Covenant,
+    catalog_by_id: dict[str, CovenantBoonHookDef],
+    applies_to: str,
+    activity: str | None = None,
+) -> float:
+    """The sum of the flat `amount`s of covenant_modifiers(). (No covenant
+    effect uses a multiplier yet; how multipliers stack with amounts is for
+    the Totals Engine to settle.)"""
+    return sum(
+        modifier.amount or 0
+        for _, modifier in covenant_modifiers(
+            covenant, catalog_by_id, applies_to, activity
+        )
     )
 
 
