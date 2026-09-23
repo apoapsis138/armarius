@@ -46,6 +46,40 @@ def find_spell(saga: Saga, spell_id: str | None) -> Spell | None:
     return None
 
 
+def _name_key(name: str) -> str:
+    return " ".join(name.replace("’", "'").lower().split())
+
+
+def find_spell_by_name(saga: Saga, name: str) -> Spell | None:
+    """The spell with this name (any case, typographic apostrophes allowed),
+    wherever it lives: the catalog, then the saga's own, then any magus's
+    invented spells. How a book whose spell was typed (or imported) links."""
+    key = _name_key(name)
+    if not key:
+        return None
+    for spell in catalog.load_spell_catalog():
+        if _name_key(spell.name) == key:
+            return spell
+    for spell in saga.spells:
+        if _name_key(spell.name) == key:
+            return spell
+    for character in saga.characters:
+        for spell in character.invented_spells:
+            if _name_key(spell.name) == key:
+                return spell
+    return None
+
+
+def pickable_spells(saga: Saga) -> list[tuple[Spell, str]]:
+    """Every spell a book or a magus can point at, with where it's from:
+    the catalog, the saga's own, then each magus's invented spells."""
+    found = [(s, s.source) for s in catalog.load_spell_catalog()]
+    found += [(s, "Saga") for s in saga.spells]
+    for character in saga.characters:
+        found += [(s, f"{character.name}'s") for s in character.invented_spells]
+    return found
+
+
 def all_spell_ids(saga: Saga) -> set[str]:
     """Every spell id in use, for generating a new unique one."""
     ids = set(catalog.load_spell_catalog_by_id())

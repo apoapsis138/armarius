@@ -89,6 +89,7 @@ from ars_magica_manager.screens import (
     ScoredTraitPromptScreen,
     SelectableList,
     SetDateScreen,
+    SpellChooserScreen,
     SpellListView,
     SpellPickerScreen,
     VirtueFlawPickerScreen,
@@ -6905,6 +6906,21 @@ async def test_adding_a_book_for_a_laboratory_shows_it_in_the_lab_inventory():
     assert (saved.ability, saved.spell_name, saved.subject_kind) == ("", "", "")
 
 
+async def _pick_spell(pilot, app, name: str) -> None:
+    """In a book form, open the Spell picker, search for `name`, take the top
+    match."""
+    app.screen.query_one("#fld-spell_id", Button).press()
+    await _wait_until(pilot, lambda: isinstance(app.screen, SpellChooserScreen))
+    await pilot.pause()
+    search = app.screen.query_one("#picker-search", Input)
+    search.value = name
+    await pilot.pause()
+    search.focus()
+    await pilot.press("enter")
+    await _wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+    await pilot.pause()
+
+
 async def test_book_form_shows_the_fields_the_type_needs():
     storage.save_saga(_sample_saga_with_covenant())
 
@@ -6917,7 +6933,7 @@ async def test_book_form_shows_the_fields_the_type_needs():
         dialog = app.screen
 
         def shown() -> set[str]:
-            keys = ("subject_kind", "art", "ability", "ability_detail", "spell_name")
+            keys = ("subject_kind", "art", "ability", "ability_detail", "spell_id")
             keys += ("level", "quality")
             return {k for k in keys if dialog.query_one(f"#fdw-{k}").display}
 
@@ -6932,9 +6948,12 @@ async def test_book_form_shows_the_fields_the_type_needs():
         _fill(app, subject_kind="Ability")
         await pilot.pause()
         assert shown() == {"subject_kind", "ability", "quality"}
-        _fill(app, type="Casting Tablet", name="Tablet", spell_name="Aegis")
+        _fill(app, type="Casting Tablet", name="Tablet")
         await pilot.pause()
-        assert shown() == {"spell_name", "level"}
+        # No spell chosen yet: the spell comes first.
+        assert shown() == {"spell_id"}
+        await _pick_spell(pilot, app, "Aegis of the Hearth")  # a General spell
+        assert shown() == {"spell_id", "level"}
         _fill(app, level="12")
         await pilot.pause()
         assert "Cost: 5 Build Points" in live()
@@ -6943,9 +6962,10 @@ async def test_book_form_shows_the_fields_the_type_needs():
 
     saved = next(b for b in _saved_books().values() if b.name == "Tablet")
     # The Tractatus Subject picked earlier was hidden on save, so it's not kept.
-    assert (saved.type, saved.spell_name, saved.level) == (
+    assert (saved.type, saved.spell_id, saved.spell_name, saved.level) == (
         "Casting Tablet",
-        "Aegis",
+        "spell_aegis_of_the_hearth",
+        "Aegis of the Hearth",
         12,
     )
     assert (saved.subject_kind, saved.quality) == ("", None)
@@ -7068,7 +7088,7 @@ async def test_book_form_fits_a_small_terminal():
         await pilot.press("e")
         await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
-        for button in app.screen.query(Button):
+        for button in app.screen.query("#btn-save, #btn-cancel"):
             assert button.region.height > 0 and button.region.bottom <= 24, button.id
 
 
@@ -7797,3 +7817,94 @@ async def test_adding_editing_and_deleting_the_sagas_own_spells():
         assert _shown_names(view) == []
 
     assert storage.load_saga("test_saga").spells == []
+
+
+# -- Lab Texts and Casting Tablets link to spells ----------------------------------
+
+
+async def test_choosing_a_spell_gives_a_lab_text_its_level():
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 50)) as pilot:
+        await _select_covenant(pilot, app)
+        await _show_library_tab(pilot, app)
+        await pilot.press("a")
+        await pilot.pause()
+        _fill(app, name="Notes on the Pilum", type="Lab Text")
+        await pilot.pause()
+        await _save_dialog(pilot, app)  # no spell chosen yet
+        error = str(app.screen.query_one("#fields-error", Static).render())
+        assert "Choose the spell" in error
+        await _pick_spell(pilot, app, "Pilum of Fire")
+        button = app.screen.query_one("#fld-spell_id", Button)
+        assert "Pilum of Fire" in str(button.label) and "CrIg 20" in str(button.label)
+        # A spell with a fixed level: the book's Level isn't asked for.
+        assert not app.screen.query_one("#fdw-level").display
+        live = str(app.screen.query_one("#fields-live", Static).render())
+        assert "Cost: 4 Build Points" in live and "Level 20, from the spell" in live
+        await _save_dialog(pilot, app)
+        await _wait_until(pilot, lambda: "Notes on the Pilum" in _book_names(app))
+
+    saved = next(b for b in _saved_books().values() if b.name == "Notes on the Pilum")
+    assert (saved.spell_id, saved.spell_name, saved.level) == (
+        "spell_pilum_of_fire",
+        "Pilum of Fire",
+        20,
+    )
+
+
+async def test_the_spell_picker_lists_the_sagas_own_and_invented_spells():
+    saga = _sample_saga_with_covenant()
+    saga.characters[0].invented_spells = [
+        Spell(
+            id="inv_x",
+            name="Leandro's Lantern",
+            technique="Creo",
+            form="Ignem",
+            level=5,
+        )
+    ]
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 50)) as pilot:
+        await _select_covenant(pilot, app)
+        await _show_library_tab(pilot, app)
+        await pilot.press("a")
+        await pilot.pause()
+        _fill(app, name="Lantern notes", type="Lab Text")
+        await pilot.pause()
+        await _pick_spell(pilot, app, "Lantern")
+        await _save_dialog(pilot, app)
+        await _wait_until(pilot, lambda: "Lantern notes" in _book_names(app))
+
+    saved = next(b for b in _saved_books().values() if b.name == "Lantern notes")
+    assert (saved.spell_id, saved.level) == ("inv_x", 5)
+
+
+async def test_importing_lab_texts_links_them_to_their_spells(tmp_path):
+    storage.save_saga(_sample_saga_with_covenant())
+    csv_path = tmp_path / "texts.csv"
+    csv_path.write_text(
+        "name,type,level,spell\n"
+        "Pilum notes,Lab Text,,pilum of fire\n"
+        "Mystery notes,Lab Text,15,The Lost Art\n",
+        encoding="utf-8",
+    )
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 50)) as pilot:
+        await _select_covenant(pilot, app)
+        await _show_library_tab(pilot, app)
+        await pilot.press("I")
+        await _pick_csv(pilot, app, str(csv_path))
+        await pilot.press("y")
+        await _wait_until(pilot, lambda: "Mystery notes" in _book_names(app))
+        labels = [label for _, label in app.screen._book_view()._rows()]
+        mystery = next(label for label in labels if "Mystery notes" in label)
+        assert mystery.startswith("[red]")  # Unknown spell
+
+    saved = {b.name: b for b in _saved_books().values()}
+    assert saved["Pilum notes"].spell_id == "spell_pilum_of_fire"
+    assert (saved["Mystery notes"].spell_id, saved["Mystery notes"].level) == (None, 15)

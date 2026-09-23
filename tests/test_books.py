@@ -465,3 +465,48 @@ def test_subject_width_uses_the_spare_room_within_limits():
     header, row = bk.table_header(wide), bk.row_label(saga, book, wide)
     assert header.index("Location") - 2 == row.index("Covenant Library")
     assert "Subject" in header
+
+
+def test_lab_texts_link_to_spells_by_id_or_typed_name():
+    saga = _saga()
+    by_id = _book("Lab Text", spell_id="spell_pilum_of_fire", spell_name="whatever")
+    by_name = _book("Casting Tablet", spell_name="wizard\u2019s sidestep", level=15)
+    unknown = _book("Lab Text", spell_name="The Lost Art", level=10)
+    assert bk.book_spell(saga, by_id).name == "Pilum of Fire"
+    assert bk.book_spell(saga, by_name).id == "spell_wizard_s_sidestep"
+    assert bk.book_spell(saga, unknown) is None
+    assert bk.book_spell(saga, _book("Art Summa", art="Ignem")) is None
+
+
+def test_a_linked_books_level_and_cost_come_from_its_spell():
+    saga = _saga()
+    # Stench of the Twenty Corpses is level 10; the typed 15 doesn't count.
+    tablet = _book(
+        "Casting Tablet", spell_name="Stench of the Twenty Corpses", level=15
+    )
+    assert bk.level_of(tablet, saga) == 10
+    assert bk.cost(tablet, saga) == 4  # 2 per 5 levels
+    assert bk.cost(tablet) == 6  # without the saga, only the stored level
+    # A General spell (the Aegis) keeps the book's own level.
+    aegis = _book("Lab Text", spell_id="spell_aegis_of_the_hearth", level=30)
+    assert bk.level_of(aegis, saga) == 30 and bk.cost(aegis, saga) == 6
+    text = bk.detail_text(saga, aegis)
+    assert "Aegis of the Hearth (ReVi Gen)" in text
+    assert "30 (General spell)" in text
+    assert "10 (the spell's)" in bk.detail_text(saga, tablet)
+    row = bk.row_label(saga, tablet)
+    assert "Stench of the Tw" in row and "   10 " in row  # the column is 17 wide
+
+
+def test_a_book_whose_spell_cant_be_found_is_flagged():
+    saga = _saga()
+    lost = _book("Lab Text", spell_name="The Lost Art", level=10)
+    assert bk.status_problems(lost, saga) == [
+        "Unknown spell: 'The Lost Art' isn't in the spell list; edit the book to "
+        "choose one."
+    ]
+    assert bk.row_label(saga, lost).startswith("[red]")
+    assert bk.level_of(lost, saga) == 10  # its typed level is kept
+    assert bk.status_problems(lost) == []  # without the saga, no lookup
+    linked = _book("Lab Text", spell_id="spell_pilum_of_fire")
+    assert bk.status_problems(linked, saga) == []

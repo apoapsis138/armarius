@@ -498,8 +498,8 @@ BOOK_OWNER_KINDS: tuple[str, ...] = ("covenant", "laboratory", "character")
 class Book:
     """One book. Fields a type doesn't use stay blank: `art` is for Art Summae
     and Art Tractatus, `ability` for Ability Summae and Ability Tractatus,
-    `spell_name` for Lab Texts and Casting Tablets (whose `level` is the
-    spell's level). The Build Point cost is always calculated (books.cost)."""
+    `spell_id`/`spell_name` for Lab Texts and Casting Tablets. The Build Point
+    cost is always calculated (books.cost)."""
 
     id: str
     name: str
@@ -516,6 +516,11 @@ class Book:
     level: int | None = None
     quality: int | None = None
     spell_name: str = ""
+    #: A Lab Text's / Casting Tablet's spell (any spell id; see Spell). Its
+    #: Level comes from the spell, unless the spell is General-level, when
+    #: `level` is the book's own. `spell_name` stays as typed (imported books
+    #: link by it until a spell is chosen).
+    spell_id: str | None = None
 
     @classmethod
     def from_dict(

@@ -14,6 +14,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from . import catalog
+from . import spells as spl
 from .markup import escape, markdown_inline
 from .models import (
     ART_ABBREVIATIONS,
@@ -23,6 +24,7 @@ from .models import (
     Book,
     Covenant,
     Saga,
+    Spell,
     round_away_from_zero,
 )
 
@@ -53,13 +55,41 @@ def has_quality(book_type: str) -> bool:
     return book_type in SUMMA_TYPES or book_type == "Tractatus"
 
 
+# ------------------------------------------------------- the linked spell
+
+
+def book_spell(saga: Saga, book: Book) -> Spell | None:
+    """A Lab Text's or Casting Tablet's spell: the one its `spell_id` names,
+    else the one its typed `spell_name` matches (how imported books link).
+    None for other books, or when nothing matches."""
+    if book.type not in SPELL_TYPES:
+        return None
+    if book.spell_id:
+        found = spl.find_spell(saga, book.spell_id)
+        if found is not None:
+            return found
+    return spl.find_spell_by_name(saga, book.spell_name)
+
+
+def level_of(book: Book, saga: Saga | None = None) -> int | None:
+    """The book's Level. A Lab Text's or Casting Tablet's is its spell's,
+    unless the spell is General-level (or unknown), when the book's own
+    `level` counts. Without a saga the stored level is all there is."""
+    if saga is not None and book.type in SPELL_TYPES:
+        spell = book_spell(saga, book)
+        if spell is not None and spell.level is not None:
+            return spell.level
+    return book.level
+
+
 # ------------------------------------------------------------------- rules
 
 
-def cost(book: Book) -> int:
+def cost(book: Book, saga: Saga | None = None) -> int:
     """Build Points the book costs at covenant creation. A blank level or
-    quality counts as 0; Other books cost nothing."""
-    level = book.level or 0
+    quality counts as 0; Other books cost nothing. Given the saga, a Lab
+    Text or Casting Tablet uses its spell's level (see level_of)."""
+    level = level_of(book, saga) or 0
     quality = book.quality or 0
     if book.type == "Art Summa":
         return level + quality
@@ -74,9 +104,9 @@ def cost(book: Book) -> int:
     return 0
 
 
-def cost_formula(book: Book) -> str:
+def cost_formula(book: Book, saga: Saga | None = None) -> str:
     """How `cost` was worked out, e.g. "Level 12 + Quality 10"."""
-    level = book.level or 0
+    level = level_of(book, saga) or 0
     quality = book.quality or 0
     if book.type == "Art Summa":
         return f"Level {level} + Quality {quality}"
@@ -152,10 +182,11 @@ def canonical_ability(name: str) -> str | None:
     return None
 
 
-def status_problems(book: Book) -> list[str]:
-    """Things about the book the user should fix (the row shows in red): for
-    now, an Ability that isn't in the ability catalog (typically from an
-    import), which studying from the book will need."""
+def status_problems(book: Book, saga: Saga | None = None) -> list[str]:
+    """Things about the book the user should fix (the row shows in red): an
+    Ability that isn't in the ability catalog (typically from an import),
+    which studying from the book will need; and, given the saga, a Lab Text
+    or Casting Tablet whose spell can't be found."""
     if (
         is_ability_book(book.type, book.subject_kind)
         and book.ability
@@ -165,6 +196,13 @@ def status_problems(book: Book) -> list[str]:
             f"Unknown ability: {book.ability!r} isn't in the ability list; "
             "edit the book to choose one."
         ]
+    if saga is not None and book.type in SPELL_TYPES and book_spell(saga, book) is None:
+        named = (
+            f"{book.spell_name!r} isn't in the spell list"
+            if book.spell_name
+            else "no spell chosen"
+        )
+        return [f"Unknown spell: {named}; edit the book to choose one."]
     return []
 
 
@@ -265,10 +303,11 @@ def location_label(saga: Saga, book: Book) -> str:
 # -------------------------------------------------------------------- text
 
 
-def subject(book: Book) -> str:
+def subject(book: Book, saga: Saga | None = None) -> str:
     """The Art, Ability or spell the book is about ("" if not set)."""
     if book.type in SPELL_TYPES:
-        return book.spell_name
+        spell = book_spell(saga, book) if saga is not None else None
+        return spell.name if spell is not None else book.spell_name
     if is_art_book(book.type, book.subject_kind):
         return book.art
     if is_ability_book(book.type, book.subject_kind):
@@ -340,12 +379,28 @@ def row_label(saga: Saga, book: Book, subject_cols: int = SUBJECT_MIN_WIDTH) -> 
     row = (
         f"{escape(_fit(book.name or '(untitled)', _NAME_WIDTH))} "
         f"{escape(_fit(book.type, _TYPE_WIDTH))} "
-        f"{escape(_fit(subject(book) or '-', subject_cols))} "
-        f"{_number(book.level):>{_LEVEL_WIDTH}}"
+        f"{escape(_fit(subject(book, saga) or '-', subject_cols))} "
+        f"{_number(level_of(book, saga)):>{_LEVEL_WIDTH}}"
         f"{_number(book.quality):>{_QUALITY_WIDTH}}  "
         f"{escape(location)}"
     )
-    return f"[red]{row}[/]" if status_problems(book) else row
+    return f"[red]{row}[/]" if status_problems(book, saga) else row
+
+
+def _level_text(saga: Saga, book: Book) -> str:
+    """The details panel's Level: a Lab Text's or Casting Tablet's says
+    whether it comes from the spell or is the book's own (General spell)."""
+    level = _number(level_of(book, saga))
+    if book.type not in SPELL_TYPES:
+        return level
+    spell = book_spell(saga, book)
+    if spell is None:
+        return level
+    return (
+        f"{level} (the spell's)"
+        if spell.level is not None
+        else f"{level} (General spell)"
+    )
 
 
 def _cell(label: str, value: object) -> tuple[str, int]:
@@ -354,7 +409,7 @@ def _cell(label: str, value: object) -> tuple[str, int]:
     return f"[b]{label}:[/] {escape(text)}", len(label) + 2 + len(text)
 
 
-def summary_texts(books: list[Book]) -> tuple[str, str]:
+def summary_texts(books: list[Book], saga: Saga | None = None) -> tuple[str, str]:
     """The Library tab's Summary (markup, read-only): Summae and Tractatus by
     Ability/Art down the left; Lab Texts, Casting Tablets, Other and the
     totals down the right."""
@@ -406,7 +461,7 @@ def summary_texts(books: list[Book]) -> tuple[str, str]:
             ("Other", count("Other")),
             ("", ""),
             ("Total Books", len(books)),
-            ("Total Cost", f"{sum(cost(b) for b in books)} Build Points"),
+            ("Total Cost", f"{sum(cost(b, saga) for b in books)} Build Points"),
         ]
     )
     return left, right
@@ -420,14 +475,17 @@ def detail_text(saga: Saga, book: Book | None) -> str:
     if book is None:
         return "[dim]Select a book to see its details.[/]"
     not_set = "(not set)"
-    subject_text = subject(book)
+    subject_text = subject(book, saga)
+    spell = book_spell(saga, book)
+    if spell is not None:
+        subject_text = f"{spell.name} ({spl.shorthand(spell)})"
     if book.type == "Tractatus" and book.subject_kind:
         subject_text = f"{subject_text or not_set} ({book.subject_kind})"
     year = "(unknown)" if book.year_published is None else book.year_published
     left = [
         _cell("Type", book.type),
         _cell(subject_title(book), subject_text or not_set),
-        _cell("Level", _number(book.level)),
+        _cell("Level", _level_text(saga, book)),
         _cell("Quality", _number(book.quality)),
     ]
     right = [
@@ -437,10 +495,14 @@ def detail_text(saga: Saga, book: Book | None) -> str:
         _cell("Owner", owner_label(saga, book)),
     ]
     width = max(w for _, w in left) + 4
-    lines = [f"[red][b]{escape(p)}[/b][/]" for p in status_problems(book)]
+    lines = [f"[red][b]{escape(p)}[/b][/]" for p in status_problems(book, saga)]
     lines.append(_cell("Name", book.name or "(untitled)")[0])
     lines += [f"{lm}{' ' * (width - lw)}{rm}" for (lm, lw), (rm, _) in zip(left, right)]
-    lines.append(_cell("Cost", f"{cost(book)} Build Points ({cost_formula(book)})")[0])
+    lines.append(
+        _cell("Cost", f"{cost(book, saga)} Build Points ({cost_formula(book, saga)})")[
+            0
+        ]
+    )
     lines += [f"[red]{escape(w)}[/]" for w in limit_warnings(book)]
     if book.description.strip():
         lines += ["", "[b]Description:[/]", markdown_inline(book.description.strip())]
@@ -547,7 +609,8 @@ def _book_from_row(row: dict[str, str]) -> Book:
             raise ValueError("no spell")
     if has_level(book_type):
         book.level = _whole_number(row.get("level", ""), "Level")
-        if book.level is None:
+        # A Lab Text or Casting Tablet can take its Level from its spell.
+        if book.level is None and book_type not in SPELL_TYPES:
             raise ValueError("no Level")
     if has_quality(book_type):
         book.quality = _whole_number(row.get("quality", ""), "Quality")

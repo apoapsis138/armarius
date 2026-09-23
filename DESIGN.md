@@ -90,7 +90,7 @@ Key relationship notes:
   sheet list their own; books with no owner (or one that no longer exists)
   appear under "Unassigned Books" in the saga tree. A Summa or Tractatus is
   on an Art or an Ability; a Lab Text or Casting Tablet records a spell by
-  name and level (spells aren't linked yet). See 9.5 for costs.
+  name and level, linked to the spell record (see 9.6). See 9.5 for costs.
 - Virtues and Flaws are catalog entries (name, category, cost, description)
   referenced by *instances* attached to a Character or a Laboratory, each
   instance carrying any per-case parameters (e.g. "Affinity with
@@ -651,6 +651,16 @@ own"), and a level range (General spells pass any range); the section title read
 catalog spells are read-only. The spell form's Range/Duration/Target offer the
 standard values plus "Other..." for a supplement's own, and a live line shows the
 shorthand, magnitude and, for a Ritual, its vis and casting time.
+
+**Lab Texts and Casting Tablets link to spells.** A book's `spell_id` names any
+spell (catalog, saga's own, or a magus's invented one); a book without one links
+by its typed `spell_name` (any case), which is how imported books connect -- and an
+import records the id once matched. The book form's Spell field is a searchable
+picker (name or Arts, e.g. "CrIg"). The book's **Level is its spell's**, and so is
+its cost; only a **General** spell's book keeps its own Level (asked for once that
+spell is chosen). A book whose spell can't be found keeps its typed name and level
+and shows red "Unknown spell". `FieldsDialog` gained a "picker" field kind for this:
+a button showing the choice, which opens a chooser screen.
 
 **Building the catalog.** The page's index is the authority for a spell's level: it
 matches the Base + magnitudes arithmetic for 371 spells, while an entry's own

@@ -576,6 +576,28 @@ def _book_fields(
     def templated(values: dict[str, Any]) -> bool:
         return ability_book(values) and "{" in (values.get("ability") or "")
 
+    # A Lab Text / Casting Tablet takes its spell's Level; only a General (or
+    # not yet chosen) spell needs the book's own.
+    linked = bk.book_spell(saga, book) if book is not None else None
+    spell_id = linked.id if linked is not None else None
+
+    def spell_display(chosen_id: str) -> str:
+        spell = spl.find_spell(saga, chosen_id)
+        if spell is None:
+            return chosen_id
+        return f"{spell.name}  ({spl.shorthand(spell)})"
+
+    def needs_level(values: dict[str, Any]) -> bool:
+        kind = book_type(values)
+        if kind not in bk.SPELL_TYPES:
+            return bk.has_level(kind)
+        spell = spl.find_spell(saga, values.get("spell_id"))
+        if spell is None:
+            # No spell chosen: ask for the spell first -- unless this is a book
+            # whose typed spell is unknown, which keeps its own Level.
+            return bool(value("spell_name", ""))
+        return spell.level is None
+
     if book is None:
         owner = default_owner
     elif bk.is_unassigned(saga, book):
@@ -636,11 +658,17 @@ def _book_fields(
             show_if=templated,
         ),
         DialogField(
-            "spell_name",
+            "spell_id",
             "Spell",
-            "text",
-            value("spell_name", ""),
-            required=True,
+            "picker",
+            spell_id,
+            placeholder=(
+                f"Unknown: {value('spell_name', '')} -- choose the spell..."
+                if spell_id is None and value("spell_name", "")
+                else "(choose the spell...)"
+            ),
+            picker=lambda _current: SpellChooserScreen(saga),
+            display=spell_display,
             show_if=lambda v: book_type(v) in bk.SPELL_TYPES,
         ),
         DialogField(
@@ -649,7 +677,8 @@ def _book_fields(
             "optint",
             value("level", None),
             required=True,
-            show_if=lambda v: bk.has_level(book_type(v)),
+            hint="",
+            show_if=needs_level,
         ),
         DialogField(
             "quality",
@@ -678,7 +707,7 @@ def _book_fields(
     ]
 
 
-def _book_from_values(book: Book, values: dict[str, Any]) -> None:
+def _book_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
     """Write a book form's result onto `book`. Fields the chosen Type doesn't
     use (hidden in the form, so absent from `values`) are cleared."""
     book.name = values["name"]
@@ -695,12 +724,22 @@ def _book_from_values(book: Book, values: dict[str, Any]) -> None:
     if prefix is not None:
         ability = prefix + values.get("ability_detail", "")
     book.ability = ability
-    book.spell_name = values.get("spell_name", "")
+    book.spell_id = values.get("spell_id") if book.type in bk.SPELL_TYPES else None
+    if book.type not in bk.SPELL_TYPES:
+        book.spell_name = ""
     book.level = values.get("level")
+    spell = spl.find_spell(saga, book.spell_id)
+    if spell is not None:
+        # A copy for display without the saga; level_of() reads the spell.
+        book.spell_name = spell.name
+        if spell.level is not None:
+            book.level = spell.level
     book.quality = values.get("quality")
 
 
 def _book_problem(values: dict[str, Any]) -> str | None:
+    if values.get("type") in bk.SPELL_TYPES and not values.get("spell_id"):
+        return "Choose the spell (use the Spells view to add one of your own)."
     ability = values.get("ability") or ""
     if "{" in ability and not values.get("ability_detail"):
         return f"{ability} needs its Ability detail filled in."
@@ -710,15 +749,27 @@ def _book_problem(values: dict[str, Any]) -> str | None:
     return None
 
 
-def _book_live(values: dict[str, Any]) -> str:
-    """The form's live line: the Build Point cost and any covenant-creation
-    limit the values go over (a warning, not an error)."""
+def _book_live_for(saga: Saga) -> Callable[[dict[str, Any]], str]:
+    def live(values: dict[str, Any]) -> str:
+        return _book_live(values, saga)
+
+    return live
+
+
+def _book_live(values: dict[str, Any], saga: Saga | None = None) -> str:
+    """The form's live line: the Build Point cost (a Lab Text's or Casting
+    Tablet's from its spell's level) and any covenant-creation limit the
+    values go over (a warning, not an error)."""
     if not values.get("type"):
         return "[dim]Cost: choose a Type.[/]"
     probe = Book(id="", name="", type=values["type"])
     probe.level = values.get("level") if bk.has_level(probe.type) else None
     probe.quality = values.get("quality") if bk.has_quality(probe.type) else None
-    lines = [f"[b]Cost:[/] {bk.cost(probe)} Build Points"]
+    probe.spell_id = values.get("spell_id") if probe.type in bk.SPELL_TYPES else None
+    lines = [f"[b]Cost:[/] {bk.cost(probe, saga)} Build Points"]
+    spell = spl.find_spell(saga, probe.spell_id) if saga is not None else None
+    if spell is not None and spell.level is not None:
+        lines[0] += f"  [dim](Level {spell.level}, from the spell)[/]"
     lines += [f"[red]{escape(w)}[/]" for w in bk.limit_warnings(probe)]
     return "\n".join(lines)
 
@@ -1697,6 +1748,44 @@ class AbilityPickerScreen(SearchablePickerScreen):
                 self.dismiss(ability)
 
         self.app.push_screen(AbilityDetailsScreen(name, category), handle_ability)
+
+
+class SpellChooserScreen(SearchablePickerScreen):
+    """Pick a spell for a Lab Text or Casting Tablet: every spell a book can
+    point at (the catalog, the saga's own, any magus's invented spells),
+    searchable by name or shorthand. Dismisses with the spell id."""
+
+    PICKER_TITLE: ClassVar[str] = "Choose the spell"
+    EMPTY_MESSAGE: ClassVar[str] = "(no spells)"
+    SEARCH_PLACEHOLDER: ClassVar[str] = "Search spells by name or Arts (e.g. CrIg)..."
+    LIST_VIEW_ID: ClassVar[str] = "spell-chooser-list"
+
+    def __init__(self, saga: Saga) -> None:
+        super().__init__()
+        self.saga = saga
+        self._origin: dict[str, str] = {}
+
+    def _load_entries(self) -> list[Spell]:
+        entries = []
+        for spell, origin in spl.pickable_spells(self.saga):
+            self._origin[spell.id] = origin
+            entries.append(spell)
+        return entries
+
+    def _search_text(self, entry: Spell) -> str:
+        return f"{entry.name} {spl.shorthand(entry)}"
+
+    def _label_for(self, entry: Spell) -> str:
+        return (
+            f"{escape(entry.name)}  [dim]{escape(spl.shorthand(entry))}  "
+            f"{escape(self._origin.get(entry.id, ''))}[/]"
+        )
+
+    def _item_id(self, entry: Spell) -> str:
+        return f"spellpick-{entry.id}"
+
+    def _on_entry_selected(self, entry: Spell) -> None:
+        self.dismiss(entry.id)
 
 
 class RemovalPickerScreen(ModalScreen[int | None]):
@@ -4685,7 +4774,9 @@ class DialogField:
     `kind`: "text" (a stripped string), "int" (a whole number), "optint" (a
     whole number or blank -> None), "select" (one of `options` as (label,
     value) pairs; blank -> None when `allow_blank`), "check" (a boolean),
-    "area" (multi-line text) or "info" (read-only text, not returned).
+    "area" (multi-line text), "picker" (a button showing `display(value)`
+    that opens the screen `picker(value)` returns; its result becomes the
+    value) or "info" (read-only text, not returned).
     """
 
     key: str
@@ -4701,6 +4792,10 @@ class DialogField:
     #: (`FieldsDialog.current_values`); re-checked as the user edits. A hidden
     #: field is left out of the result and isn't checked.
     show_if: Callable[[dict[str, Any]], bool] | None = None
+    #: A "picker" field's chooser (a screen dismissing with the new value, or
+    #: None to keep the old one) and how it shows its value on the button.
+    picker: Callable[[Any], Screen[Any]] | None = None
+    display: Callable[[Any], str] | None = None
 
 
 class FieldsDialog(ModalScreen[dict[str, Any] | None]):
@@ -4748,8 +4843,13 @@ class FieldsDialog(ModalScreen[dict[str, Any] | None]):
         width: 30;
     }
 
-    .fd-row Input, .fd-row Select {
+    .fd-row Input, .fd-row Select, .fd-row .fd-picker {
         width: 1fr;
+    }
+
+    .fd-row .fd-picker {
+        content-align: left middle;
+        text-align: left;
     }
 
     .fd-value {
@@ -4800,6 +4900,7 @@ class FieldsDialog(ModalScreen[dict[str, Any] | None]):
         self.fields = fields
         self.validate = validate
         self.live = live
+        self._picked: dict[str, Any] = {}  # "picker" fields' current values
 
     def compose(self) -> ComposeResult:
         with Vertical(id="fields-dialog"):
@@ -4857,6 +4958,14 @@ class FieldsDialog(ModalScreen[dict[str, Any] | None]):
                 )
             elif spec.kind == "check":
                 yield Checkbox("", value=bool(spec.value), id=widget_id, compact=True)
+            elif spec.kind == "picker":
+                self._picked[spec.key] = spec.value
+                yield Button(
+                    self._picker_label(spec),
+                    id=widget_id,
+                    compact=True,
+                    classes="fd-picker",
+                )
             else:  # info
                 yield Static(str(spec.value), classes="fd-value")
         if spec.hint:
@@ -4898,9 +5007,27 @@ class FieldsDialog(ModalScreen[dict[str, Any] | None]):
                 )
             elif spec.kind == "check":
                 values[spec.key] = bool(widget.value)
+            elif spec.kind == "picker":
+                values[spec.key] = self._picked.get(spec.key)
             else:  # area
                 values[spec.key] = widget.text.strip()
         return values
+
+    def _picker_label(self, spec: DialogField) -> str:
+        value = self._picked.get(spec.key)
+        if value in (None, ""):
+            return escape(spec.placeholder or "(choose...)")
+        return escape(spec.display(value) if spec.display else str(value))
+
+    def _open_picker(self, spec: DialogField) -> None:
+        def handle_choice(choice: Any) -> None:
+            if choice is None:
+                return
+            self._picked[spec.key] = choice
+            self.query_one(f"#fld-{spec.key}", Button).label = self._picker_label(spec)
+            self._react()
+
+        self.app.push_screen(spec.picker(self._picked.get(spec.key)), handle_choice)
 
     def _shown(self, spec: DialogField, values: dict[str, Any]) -> bool:
         return spec.show_if is None or bool(spec.show_if(values))
@@ -4933,6 +5060,14 @@ class FieldsDialog(ModalScreen[dict[str, Any] | None]):
             self.dismiss(None)
         elif event.button.id == "btn-save":
             self._save()
+        else:
+            key = (event.button.id or "").removeprefix("fld-")
+            spec = next(
+                (f for f in self.fields if f.key == key and f.kind == "picker"), None
+            )
+            if spec is not None and spec.picker is not None:
+                event.stop()
+                self._open_picker(spec)
 
     def _save(self) -> None:
         error = self.query_one("#fields-error", Static)
@@ -4967,6 +5102,11 @@ class FieldsDialog(ModalScreen[dict[str, Any] | None]):
                     return
             elif spec.kind == "check":
                 value = bool(widget.value)
+            elif spec.kind == "picker":
+                value = self._picked.get(spec.key)
+                if spec.required and value in (None, ""):
+                    error.update(f"{spec.label} is required.")
+                    return
             else:  # area
                 value = widget.text.strip()
             result[spec.key] = value
@@ -5112,7 +5252,7 @@ class BookListView(Vertical):
         self._subject_cols = bk.SUBJECT_MIN_WIDTH
 
     def _title(self, checked: int = 0) -> str:
-        total = sum(bk.cost(b) for b in self._books)
+        total = sum(bk.cost(b, self.saga) for b in self._books)
         title = f"{self.title_text} ({len(self._books)}) - {total} Build Points"
         return title + (f" - {checked} marked" if checked else "")
 
@@ -5154,7 +5294,7 @@ class BookListView(Vertical):
             return
         with Vertical(classes="books-body"):
             if self.summary:
-                left, right = bk.summary_texts(self._books)
+                left, right = bk.summary_texts(self._books, self.saga)
                 with (
                     SheetSection(title="Summary", id="section-lib-summary"),
                     Horizontal(id="lib-summary-body"),
@@ -5208,7 +5348,7 @@ class BookListView(Vertical):
             self._books = self._books_source()
             self.query_one(f"#{self.section_id}", Collapsible).title = self._title()
             if self.summary:
-                left, right = bk.summary_texts(self._books)
+                left, right = bk.summary_texts(self._books, self.saga)
                 self.query_one("#lib-summary-left", Static).update(left)
                 self.query_one("#lib-summary-right", Static).update(right)
             rows = self.query_one(SelectableList)
@@ -7893,7 +8033,7 @@ class WorkspaceScreen(Screen[None]):
                     type=values["type"],
                 )
                 saga.books.append(target)
-            _book_from_values(target, values)
+            _book_from_values(target, values, saga)
             storage.save_saga(saga)
             self._books_changed()
 
@@ -7902,7 +8042,7 @@ class WorkspaceScreen(Screen[None]):
                 title,
                 _book_fields(saga, book, self._default_book_owner()),
                 validate=_book_problem,
-                live=_book_live,
+                live=_book_live_for(saga),
             ),
             handle_result,
         )
@@ -8058,6 +8198,9 @@ class WorkspaceScreen(Screen[None]):
         def finish() -> None:
             ids = [b.id for b in saga.books]
             for book in accepted:
+                spell = bk.book_spell(saga, book)
+                if spell is not None:
+                    book.spell_id = spell.id  # link it now it's matched by name
                 book.id = storage.generate_unique_id(book.name, ids)
                 ids.append(book.id)
                 if covenant is not None:
