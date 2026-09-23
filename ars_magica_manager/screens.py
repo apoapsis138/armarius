@@ -6,6 +6,7 @@ from collections import Counter
 from collections.abc import Callable
 from dataclasses import dataclass
 from dataclasses import field as dataclass_field
+from pathlib import Path
 from typing import Any, ClassVar
 
 from textual.app import ComposeResult
@@ -21,6 +22,7 @@ from textual.widgets import (
     Button,
     Checkbox,
     Collapsible,
+    DirectoryTree,
     Footer,
     Header,
     Input,
@@ -37,6 +39,7 @@ from textual.widgets import (
 )
 from textual.widgets.option_list import Option
 
+from . import books as bk
 from . import catalog, storage
 from . import economics as eco
 from . import inhabitants as inh
@@ -45,6 +48,7 @@ from .markup import escape, markdown_inline
 from .models import (
     ABILITY_CATEGORIES,
     ART_ABBREVIATIONS,
+    BOOK_TYPES,
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
     COVENANT_BOON_HOOK_CATEGORIES,
@@ -69,11 +73,13 @@ from .models import (
     SANCTUM_USAGES,
     SEASONS,
     TECHNIQUES,
+    TRACTATUS_SUBJECTS,
     Ability,
     AbilityDef,
     Aging,
     ArtScore,
     Background,
+    Book,
     Character,
     Characteristics,
     Covenant,
@@ -87,7 +93,6 @@ from .models import (
     LabCharacteristics,
     Laboratory,
     LabVirtueFlawDef,
-    Library,
     NamedDescription,
     Possession,
     Saga,
@@ -520,6 +525,197 @@ def _possession_problem(values: dict[str, Any]) -> str | None:
     return None
 
 
+def _ability_template_prefix(name: str) -> str | None:
+    """ "Area Lore: " for a templated catalog name like "Area Lore: {region}"."""
+    return name.split("{", 1)[0] if "{" in name else None
+
+
+def _book_ability_choice(ability: str, names: list[str]) -> tuple[str, str]:
+    """(Ability select value, Ability detail) for a book's stored ability: a
+    catalog name as is, or a templated family plus the filled-in blank."""
+    if not ability or ability in names:
+        return ability, ""
+    for name in names:
+        prefix = _ability_template_prefix(name)
+        if prefix and ability.startswith(prefix):
+            return name, ability[len(prefix) :]
+    return ability, ""  # not in the catalog: kept as its own option
+
+
+def _book_fields(
+    saga: Saga, book: Book | None, default_owner: str
+) -> list[DialogField]:
+    """The add/edit form for a book. Which of Art/Ability/Spell, Level and
+    Quality are shown follows the Type (and a Tractatus's Subject) live."""
+
+    def value(attribute: str, default):
+        return getattr(book, attribute) if book is not None else default
+
+    ability_names = [a.name for a in catalog.load_ability_catalog()]
+    ability, ability_detail = _book_ability_choice(value("ability", ""), ability_names)
+    ability_options = [(n, n) for n in ability_names]
+    if ability and ability not in ability_names:
+        ability_options.insert(0, (ability, ability))
+
+    def book_type(values: dict[str, Any]) -> str:
+        return values.get("type") or ""
+
+    def art_book(values: dict[str, Any]) -> bool:
+        return bk.is_art_book(book_type(values), values.get("subject_kind") or "")
+
+    def ability_book(values: dict[str, Any]) -> bool:
+        return bk.is_ability_book(book_type(values), values.get("subject_kind") or "")
+
+    def templated(values: dict[str, Any]) -> bool:
+        return ability_book(values) and "{" in (values.get("ability") or "")
+
+    if book is None:
+        owner = default_owner
+    elif bk.is_unassigned(saga, book):
+        owner = ""
+    else:
+        owner = bk.owner_value(book.owner_kind, book.owner_id)
+    return [
+        DialogField("name", "Name", "text", value("name", ""), required=True),
+        DialogField(
+            "type",
+            "Type",
+            "select",
+            value("type", ""),
+            options=[(t, t) for t in BOOK_TYPES],
+            required=True,
+            allow_blank=True,
+            placeholder="(choose a Type)",
+        ),
+        DialogField(
+            "subject_kind",
+            "Subject",
+            "select",
+            value("subject_kind", ""),
+            options=[(t, t) for t in TRACTATUS_SUBJECTS],
+            required=True,
+            allow_blank=True,
+            placeholder="(Art or Ability)",
+            show_if=lambda v: book_type(v) == "Tractatus",
+        ),
+        DialogField(
+            "art",
+            "Art",
+            "select",
+            value("art", ""),
+            options=[(a, a) for a in _ARTS],
+            required=True,
+            allow_blank=True,
+            placeholder="(choose an Art)",
+            show_if=art_book,
+        ),
+        DialogField(
+            "ability",
+            "Ability",
+            "select",
+            ability,
+            options=ability_options,
+            required=True,
+            allow_blank=True,
+            placeholder="(choose an Ability)",
+            show_if=ability_book,
+        ),
+        DialogField(
+            "ability_detail",
+            "Ability detail",
+            "text",
+            ability_detail,
+            placeholder="fills the {blank}, e.g. Rhine Tribunal",
+            show_if=templated,
+        ),
+        DialogField(
+            "spell_name",
+            "Spell",
+            "text",
+            value("spell_name", ""),
+            required=True,
+            show_if=lambda v: book_type(v) in bk.SPELL_TYPES,
+        ),
+        DialogField(
+            "level",
+            "Level",
+            "optint",
+            value("level", None),
+            required=True,
+            show_if=lambda v: bk.has_level(book_type(v)),
+        ),
+        DialogField(
+            "quality",
+            "Quality",
+            "optint",
+            value("quality", None),
+            required=True,
+            show_if=lambda v: bk.has_quality(book_type(v)),
+        ),
+        DialogField("language", "Language", "text", value("language", "Latin")),
+        DialogField("author", "Author", "text", value("author", "")),
+        DialogField(
+            "year_published",
+            "Year Published",
+            "optint",
+            value("year_published", None),
+        ),
+        DialogField("owner", "Owner", "select", owner, options=bk.owner_options(saga)),
+        DialogField(
+            "description",
+            "Description",
+            "area",
+            value("description", ""),
+            hint="Supports **bold** and *italic*.",
+        ),
+    ]
+
+
+def _book_from_values(book: Book, values: dict[str, Any]) -> None:
+    """Write a book form's result onto `book`. Fields the chosen Type doesn't
+    use (hidden in the form, so absent from `values`) are cleared."""
+    book.name = values["name"]
+    book.type = values["type"]
+    book.language = values.get("language", "")
+    book.author = values.get("author", "")
+    book.year_published = values.get("year_published")
+    book.description = values.get("description", "")
+    book.owner_kind, book.owner_id = bk.parse_owner_value(values.get("owner"))
+    book.subject_kind = values.get("subject_kind") or ""
+    book.art = values.get("art") or ""
+    ability = values.get("ability") or ""
+    prefix = _ability_template_prefix(ability)
+    if prefix is not None:
+        ability = prefix + values.get("ability_detail", "")
+    book.ability = ability
+    book.spell_name = values.get("spell_name", "")
+    book.level = values.get("level")
+    book.quality = values.get("quality")
+
+
+def _book_problem(values: dict[str, Any]) -> str | None:
+    ability = values.get("ability") or ""
+    if "{" in ability and not values.get("ability_detail"):
+        return f"{ability} needs its Ability detail filled in."
+    for key in ("level", "quality"):
+        if (values.get(key) or 0) < 0:
+            return f"{key.capitalize()} can't be negative."
+    return None
+
+
+def _book_live(values: dict[str, Any]) -> str:
+    """The form's live line: the Build Point cost and any covenant-creation
+    limit the values go over (a warning, not an error)."""
+    if not values.get("type"):
+        return "[dim]Cost: choose a Type.[/]"
+    probe = Book(id="", name="", type=values["type"])
+    probe.level = values.get("level") if bk.has_level(probe.type) else None
+    probe.quality = values.get("quality") if bk.has_quality(probe.type) else None
+    lines = [f"[b]Cost:[/] {bk.cost(probe)} Build Points"]
+    lines += [f"[red]{escape(w)}[/]" for w in bk.limit_warnings(probe)]
+    return "\n".join(lines)
+
+
 def _inhabitant_problem(values: dict[str, Any]) -> str | None:
     if values.get("quantity", 1) < 1:
         return "Quantity must be at least 1."
@@ -645,7 +841,7 @@ class SagaCreateScreen(ModalScreen[str | None]):
 
 
 class CovenantCreateScreen(ModalScreen[str | None]):
-    """Creates a covenant (with an empty library) within a saga.
+    """Creates a covenant within a saga.
 
     Dismisses with the new covenant's id, or None if cancelled.
     """
@@ -712,19 +908,10 @@ class CovenantCreateScreen(ModalScreen[str | None]):
         covenant_id = storage.generate_unique_id(
             name, [c.id for c in self.saga.covenants]
         )
-        # Every covenant gets an (initially empty) library -- there's no
-        # separate "create library" step, since a covenant without one
-        # isn't a meaningful state to leave dangling.
-        library = Library(id=f"{covenant_id}_library", covenant_id=covenant_id)
         covenant = Covenant(
-            id=covenant_id,
-            saga_id=self.saga.id,
-            name=name,
-            notes=notes,
-            library_id=library.id,
+            id=covenant_id, saga_id=self.saga.id, name=name, notes=notes
         )
         self.saga.covenants.append(covenant)
-        self.saga.libraries.append(library)
         storage.save_saga(self.saga)
         self.dismiss(covenant_id)
 
@@ -3581,16 +3768,19 @@ class ConfirmScreen(ModalScreen[bool]):
     }
     """
 
-    def __init__(self, message: str, *, yes_label: str = "Yes") -> None:
+    def __init__(
+        self, message: str, *, yes_label: str = "Yes", yes_variant: str = "error"
+    ) -> None:
         super().__init__()
         self.message = message
         self.yes_label = yes_label
+        self.yes_variant = yes_variant
 
     def compose(self) -> ComposeResult:
         with Vertical(id="confirm-dialog"):
             yield Static(self.message, id="confirm-message")
             with Horizontal(id="confirm-buttons"):
-                yield Button(self.yes_label, id="btn-yes", variant="error")
+                yield Button(self.yes_label, id="btn-yes", variant=self.yes_variant)
                 yield Button("No", id="btn-no")
 
     def on_mount(self) -> None:
@@ -3604,6 +3794,305 @@ class ConfirmScreen(ModalScreen[bool]):
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         self.dismiss(event.button.id == "btn-yes")
+
+
+#: What the saga's Import Data dialog offers: (key, label, works yet?). The
+#: ones that don't work yet are listed greyed out, as what's planned.
+IMPORT_KINDS: tuple[tuple[str, str, bool], ...] = (
+    ("characters", "Characters", False),
+    ("covenants", "Covenants", False),
+    ("laboratories", "Laboratories", False),
+    ("books", "Books", True),
+)
+
+
+class ImportScreen(ModalScreen[str | None]):
+    """Choose what to import into the saga. Kinds that can't be imported yet
+    are shown greyed out and can't be chosen. Dismisses with the chosen
+    IMPORT_KINDS key, or None if cancelled."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    ImportScreen {
+        align: center middle;
+    }
+
+    #import-dialog {
+        width: 50;
+        max-width: 100%;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    #import-hint {
+        color: $text-muted;
+        height: auto;
+        margin-bottom: 1;
+    }
+
+    #import-list {
+        height: auto;
+    }
+
+    #import-buttons {
+        width: 100%;
+        height: auto;
+        margin-top: 1;
+    }
+    """
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="import-dialog"):
+            yield Label("Import Data", id="import-title")
+            yield Static("What would you like to import?", id="import-hint")
+            yield OptionList(id="import-list", compact=True)
+            with Horizontal(id="import-buttons"):
+                yield Button("Cancel", id="btn-import-cancel")
+
+    def on_mount(self) -> None:
+        options = self.query_one("#import-list", OptionList)
+        options.add_options(
+            Option(label, id=key)
+            if works
+            else Option(f"{label}  (not available yet)", id=key, disabled=True)
+            for key, label, works in IMPORT_KINDS
+        )
+        options.highlighted = next(i for i, k in enumerate(IMPORT_KINDS) if k[2])
+        options.focus()
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
+        event.stop()
+        self.dismiss(event.option.id)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        self.dismiss(None)
+
+
+class DuplicateBookScreen(ModalScreen[str]):
+    """Asked during an import for a book whose name is already taken.
+    Dismisses with "duplicate", "duplicate_all", "skip" or "skip_all" (the
+    "_all" answers apply to every later duplicate of the same import). Skip
+    is focused, and Escape skips, so a stray key never adds a copy."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [
+        ("escape", "choose('skip')", "Skip"),
+        ("d", "choose('duplicate')", "Duplicate"),
+        ("D", "choose('duplicate_all')", "Duplicate All"),
+        ("s", "choose('skip')", "Skip"),
+        ("S", "choose('skip_all')", "Skip All"),
+    ]
+
+    DEFAULT_CSS = """
+    DuplicateBookScreen {
+        align: center middle;
+    }
+
+    #duplicate-dialog {
+        width: 72;
+        max-width: 100%;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    #duplicate-message {
+        height: auto;
+        margin-bottom: 1;
+    }
+
+    #duplicate-buttons {
+        width: 100%;
+        height: auto;
+    }
+
+    #duplicate-buttons Button {
+        margin-right: 1;
+    }
+    """
+
+    #: (answer, button label), in button order.
+    CHOICES: ClassVar[tuple[tuple[str, str], ...]] = (
+        ("duplicate", "Duplicate"),
+        ("duplicate_all", "Duplicate All"),
+        ("skip", "Skip"),
+        ("skip_all", "Skip All"),
+    )
+
+    def __init__(self, name: str, remaining: int) -> None:
+        super().__init__()
+        self.book_name = name
+        self.remaining = remaining
+
+    def compose(self) -> ComposeResult:
+        more = (
+            f"\n[dim]{self.remaining} more duplicate(s) after this one.[/]"
+            if self.remaining
+            else ""
+        )
+        with Vertical(id="duplicate-dialog"):
+            yield Static(
+                f"A book named [b]{escape(self.book_name)}[/] is already in the "
+                f"saga. Add this one as well?{more}",
+                id="duplicate-message",
+            )
+            with Horizontal(id="duplicate-buttons"):
+                for answer, label in self.CHOICES:
+                    yield Button(label, id=f"btn-{answer.replace('_', '-')}")
+
+    def on_mount(self) -> None:
+        self.query_one("#btn-skip", Button).focus()
+
+    def action_choose(self, answer: str) -> None:
+        self.dismiss(answer)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        event.stop()
+        self.dismiss((event.button.id or "btn-skip")[len("btn-") :].replace("-", "_"))
+
+
+class _CsvDirectoryTree(DirectoryTree):
+    """Folders and .csv files only (hidden entries left out)."""
+
+    def filter_paths(self, paths):
+        return [
+            path
+            for path in paths
+            if not path.name.startswith(".")
+            and (path.is_dir() or path.suffix.lower() == ".csv")
+        ]
+
+
+class CsvFilePickerScreen(ModalScreen[Path | None]):
+    """A small file explorer for choosing a .csv file: browse the folders
+    below `start` (Enter opens a folder or picks a file), Up goes to the
+    parent folder, and the path box takes a typed folder or file. Dismisses
+    with the chosen file, or None if cancelled."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    CsvFilePickerScreen {
+        align: center middle;
+    }
+
+    #picker-dialog {
+        width: 90;
+        max-width: 100%;
+        height: 80%;
+        max-height: 100%;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    #picker-path-row {
+        width: 100%;
+        height: 1;
+        margin: 1 0;
+    }
+
+    #picker-path {
+        width: 1fr;
+    }
+
+    #btn-picker-up {
+        margin-right: 1;
+    }
+
+    #picker-tree {
+        height: 1fr;
+    }
+
+    #picker-error {
+        color: $error;
+        height: auto;
+    }
+
+    #picker-buttons {
+        width: 100%;
+        height: auto;
+        margin-top: 1;
+    }
+    """
+
+    def __init__(self, title: str, start: Path) -> None:
+        super().__init__()
+        self.title_text = title
+        self.start = start
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="picker-dialog"):
+            yield Label(self.title_text, id="picker-title")
+            with Horizontal(id="picker-path-row"):
+                yield Button("Up", id="btn-picker-up", compact=True)
+                yield Input(str(self.start), id="picker-path", compact=True)
+            yield _CsvDirectoryTree(self.start, id="picker-tree")
+            yield Static("", id="picker-error")
+            with Horizontal(id="picker-buttons"):
+                yield Button("Open", id="btn-picker-open", variant="success")
+                yield Button("Cancel", id="btn-picker-cancel")
+
+    def on_mount(self) -> None:
+        self.query_one("#picker-tree", DirectoryTree).focus()
+
+    def _show_folder(self, folder: Path) -> None:
+        self.query_one("#picker-tree", DirectoryTree).path = folder
+        self.query_one("#picker-path", Input).value = str(folder)
+        self.query_one("#picker-error", Static).update("")
+
+    def _choose(self, raw: str) -> None:
+        """Open a typed folder, or pick a typed .csv file."""
+        path = Path(raw.strip().strip('"')).expanduser()
+        error = self.query_one("#picker-error", Static)
+        if path.is_dir():
+            self._show_folder(path)
+        elif path.is_file() and path.suffix.lower() == ".csv":
+            self.dismiss(path)
+        elif path.is_file():
+            error.update(f"{escape(path.name)} isn't a .csv file.")
+        else:
+            error.update(f"No such file or folder: {escape(str(path))}")
+
+    def on_directory_tree_file_selected(
+        self, event: DirectoryTree.FileSelected
+    ) -> None:
+        event.stop()
+        self.dismiss(event.path)
+
+    def on_directory_tree_directory_selected(
+        self, event: DirectoryTree.DirectorySelected
+    ) -> None:
+        event.stop()
+        self.query_one("#picker-path", Input).value = str(event.path)
+
+    def on_input_submitted(self, event: Input.Submitted) -> None:
+        event.stop()
+        self._choose(event.value)
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        event.stop()
+        if event.button.id == "btn-picker-up":
+            tree = self.query_one("#picker-tree", DirectoryTree)
+            self._show_folder(Path(tree.path).resolve().parent)
+        elif event.button.id == "btn-picker-open":
+            tree = self.query_one("#picker-tree", DirectoryTree)
+            node = tree.cursor_node
+            if tree.has_focus and node is not None and node.data is not None:
+                self._choose(str(node.data.path))
+            else:
+                self._choose(self.query_one("#picker-path", Input).value)
+        else:
+            self.dismiss(None)
 
 
 class ImproveIncomeScreen(ModalScreen[tuple[int, str] | None]):
@@ -3834,7 +4323,16 @@ class SelectableList(OptionList):
     `SelectableList.Chosen(data_index)`; the owning view reacts (fills a
     details panel, clears a sibling list...). Nothing is chosen until the
     user picks a row, and `set_rows()` clears the choice.
+
+    With `multi=True`, rows can also be *checked* for acting on several at
+    once: Space (or Ctrl+click) toggles a green check in front of a row,
+    independently of the chosen one, and posts `SelectableList.Checked`.
+    `set_rows()` clears the checks too.
     """
+
+    BINDINGS: ClassVar[list[BindingType]] = [
+        Binding("space", "toggle_check", "Mark"),
+    ]
 
     DEFAULT_CSS = """
     SelectableList,
@@ -3869,18 +4367,42 @@ class SelectableList(OptionList):
         def control(self) -> SelectableList:
             return self.selectable_list
 
+    class Checked(Message):
+        """The set of checked rows changed (multi lists only)."""
+
+        def __init__(self, selectable_list: SelectableList) -> None:
+            super().__init__()
+            self.selectable_list = selectable_list
+
+        @property
+        def control(self) -> SelectableList:
+            return self.selectable_list
+
     def __init__(
-        self, rows: list[tuple[int, str]] | None = None, *, id: str | None = None
+        self,
+        rows: list[tuple[int, str]] | None = None,
+        *,
+        id: str | None = None,
+        multi: bool = False,
     ) -> None:
         super().__init__(id=id, compact=True)
+        self.multi = multi
         self._rows: list[tuple[int, str]] = []
         self._marked: int | None = None
+        self._checked: set[int] = set()  # list positions
         self._add_rows(rows or [])
 
-    @staticmethod
-    def _prompt(label: str, *, selected: bool) -> str:
-        marker = "[dodgerblue]●[/]" if selected else "[dim]○[/]"
-        return f"{marker} {label}"
+    def _prompt(self, position: int) -> str:
+        label = self._rows[position][1]
+        marker = "[dodgerblue]●[/]" if position == self._marked else "[dim]○[/]"
+        if not self.multi:
+            return f"{marker} {label}"
+        check = "[green]✔[/]" if position in self._checked else " "
+        return f"{check} {marker} {label}"
+
+    def _render_row(self, position: int | None) -> None:
+        if position is not None and position < len(self._rows):
+            self.replace_option_prompt_at_index(position, self._prompt(position))
 
     def _add_rows(self, rows: list[tuple[int, str]]) -> None:
         # Added after construction on purpose: OptionList(*options)
@@ -3891,21 +4413,37 @@ class SelectableList(OptionList):
             self.add_option(Option("[dim](none recorded)[/]", disabled=True))
             return
         self.add_options(
-            Option(self._prompt(label, selected=False), id=str(index))
-            for index, label in self._rows
+            Option(self._prompt(position), id=str(index))
+            for position, (index, _) in enumerate(self._rows)
         )
 
     def set_rows(self, rows: list[tuple[int, str]]) -> None:
-        """Replace all rows (synchronous; nothing is chosen afterwards)."""
+        """Replace all rows (synchronous; nothing is chosen or checked
+        afterwards)."""
         self.clear_options()
         self._marked = None
+        self._checked = set()
         self._add_rows(rows)
+
+    def relabel(self, labels: list[str]) -> None:
+        """New labels for the same rows, in order (e.g. re-laid-out columns);
+        the chosen row and any checks stay as they are."""
+        if len(labels) != len(self._rows):
+            return
+        self._rows = [(index, label) for (index, _), label in zip(self._rows, labels)]
+        for position in range(len(self._rows)):
+            self._render_row(position)
 
     @property
     def selected_data_index(self) -> int | None:
         """Data index of the chosen row, or None if none is chosen."""
         option = self.highlighted_option
         return int(option.id) if option is not None and option.id else None
+
+    @property
+    def checked_data_indexes(self) -> list[int]:
+        """Data indexes of the checked rows, in list order."""
+        return [self._rows[p][0] for p in sorted(self._checked)]
 
     def clear_selection(self) -> None:
         """Unchoose everything. Posts no message."""
@@ -3917,15 +4455,35 @@ class SelectableList(OptionList):
         previous = self._marked
         if previous == row:
             return
-        if previous is not None and previous < len(self._rows):
-            self.replace_option_prompt_at_index(
-                previous, self._prompt(self._rows[previous][1], selected=False)
-            )
-        if row is not None and row < len(self._rows):
-            self.replace_option_prompt_at_index(
-                row, self._prompt(self._rows[row][1], selected=True)
-            )
         self._marked = row
+        self._render_row(previous)
+        self._render_row(row)
+
+    def toggle_check(self, position: int) -> None:
+        """Check or uncheck the row at list position `position`."""
+        if not self.multi or not 0 <= position < len(self._rows):
+            return
+        self._checked ^= {position}
+        self._render_row(position)
+        self.post_message(self.Checked(self))
+
+    def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
+        if action == "toggle_check":
+            return self.multi and bool(self._rows)
+        return True
+
+    def action_toggle_check(self) -> None:
+        if self.highlighted is not None:
+            self.toggle_check(self.highlighted)
+
+    async def _on_click(self, event: Click) -> None:
+        if self.multi and event.ctrl:
+            clicked = event.style.meta.get("option")
+            if clicked is not None:
+                event.stop()
+                self.toggle_check(clicked)
+                return
+        await super()._on_click(event)
 
     def on_option_list_option_highlighted(
         self, event: OptionList.OptionHighlighted
@@ -3956,13 +4514,21 @@ class DialogField:
     allow_blank: bool = False
     placeholder: str = ""
     hint: str = ""
+    #: Shown only while this returns True for the form's current values
+    #: (`FieldsDialog.current_values`); re-checked as the user edits. A hidden
+    #: field is left out of the result and isn't checked.
+    show_if: Callable[[dict[str, Any]], bool] | None = None
 
 
 class FieldsDialog(ModalScreen[dict[str, Any] | None]):
     """A config-driven form: one compact row per DialogField, scrolling if the
     terminal is short (Save/Cancel stay put). Dismisses with {key: value} for
     every non-info field, or None if cancelled. `validate` gets the finished
-    dict and returns an error message, or None if it's fine."""
+    dict and returns an error message, or None if it's fine.
+
+    Fields can depend on each other while the form is open: a field's
+    `show_if` shows/hides it, and `live` (markup, from the current values)
+    fills a line above the error, both refreshed on every change."""
 
     BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
@@ -3982,6 +4548,11 @@ class FieldsDialog(ModalScreen[dict[str, Any] | None]):
     }
 
     #fields-scroll {
+        height: auto;
+    }
+
+    .fd-field {
+        width: 100%;
         height: auto;
     }
 
@@ -4016,6 +4587,11 @@ class FieldsDialog(ModalScreen[dict[str, Any] | None]):
         height: auto;
     }
 
+    #fields-live {
+        height: auto;
+        margin-top: 1;
+    }
+
     #fields-error {
         color: $error;
         height: auto;
@@ -4034,18 +4610,23 @@ class FieldsDialog(ModalScreen[dict[str, Any] | None]):
         fields: list[DialogField],
         *,
         validate: Callable[[dict[str, Any]], str | None] | None = None,
+        live: Callable[[dict[str, Any]], str] | None = None,
     ) -> None:
         super().__init__()
         self.title_text = title
         self.fields = fields
         self.validate = validate
+        self.live = live
 
     def compose(self) -> ComposeResult:
         with Vertical(id="fields-dialog"):
             yield Label(self.title_text, id="fields-title")
             with VerticalScroll(id="fields-scroll"):
                 for spec in self.fields:
-                    yield from self._widgets(spec)
+                    with Vertical(classes="fd-field", id=f"fdw-{spec.key}"):
+                        yield from self._widgets(spec)
+            if self.live is not None:
+                yield Static("", id="fields-live")
             yield Static("", id="fields-error")
             with Horizontal(id="fields-buttons"):
                 yield Button("Save", id="btn-save", variant="success")
@@ -4100,6 +4681,7 @@ class FieldsDialog(ModalScreen[dict[str, Any] | None]):
 
     def on_mount(self) -> None:
         self._fit()
+        self._react()
 
     def on_resize(self) -> None:
         self._fit()
@@ -4107,9 +4689,58 @@ class FieldsDialog(ModalScreen[dict[str, Any] | None]):
     def _fit(self) -> None:
         """Cap the scrolling region so the title, error line and buttons always
         stay on screen, however short the terminal is."""
+        reserved = 11 + (2 if self.live is not None else 0)
         self.query_one("#fields-scroll").styles.max_height = max(
-            4, self.size.height - 11
+            4, self.size.height - reserved
         )
+
+    def current_values(self) -> dict[str, Any]:
+        """Every non-info field's value as it stands, leniently: a number
+        that doesn't parse (yet) is None; nothing is validated."""
+        values: dict[str, Any] = {}
+        for spec in self.fields:
+            if spec.kind == "info":
+                continue
+            widget = self.query_one(f"#fld-{spec.key}")
+            if spec.kind == "text":
+                values[spec.key] = widget.value.strip()
+            elif spec.kind in ("int", "optint"):
+                try:
+                    values[spec.key] = int(widget.value.strip())
+                except ValueError:
+                    values[spec.key] = None
+            elif spec.kind == "select":
+                values[spec.key] = (
+                    widget.value if isinstance(widget.value, str) else None
+                )
+            elif spec.kind == "check":
+                values[spec.key] = bool(widget.value)
+            else:  # area
+                values[spec.key] = widget.text.strip()
+        return values
+
+    def _shown(self, spec: DialogField, values: dict[str, Any]) -> bool:
+        return spec.show_if is None or bool(spec.show_if(values))
+
+    def _react(self) -> None:
+        """Show/hide fields and refresh the live line for the current values."""
+        if self.live is None and not any(f.show_if for f in self.fields):
+            return
+        values = self.current_values()
+        for spec in self.fields:
+            if spec.show_if is not None:
+                self.query_one(f"#fdw-{spec.key}").display = self._shown(spec, values)
+        if self.live is not None:
+            self.query_one("#fields-live", Static).update(self.live(values))
+
+    def on_select_changed(self, event: Select.Changed) -> None:
+        self._react()
+
+    def on_input_changed(self, event: Input.Changed) -> None:
+        self._react()
+
+    def on_checkbox_changed(self, event: Checkbox.Changed) -> None:
+        self._react()
 
     def action_cancel(self) -> None:
         self.dismiss(None)
@@ -4123,8 +4754,9 @@ class FieldsDialog(ModalScreen[dict[str, Any] | None]):
     def _save(self) -> None:
         error = self.query_one("#fields-error", Static)
         result: dict[str, Any] = {}
+        current = self.current_values()
         for spec in self.fields:
-            if spec.kind == "info":
+            if spec.kind == "info" or not self._shown(spec, current):
                 continue
             widget = self.query_one(f"#fld-{spec.key}")
             if spec.kind == "text":
@@ -4171,6 +4803,243 @@ class SheetSection(Collapsible):
     def __init__(self, *children: Widget, title: str, **kwargs: Any) -> None:
         kwargs.setdefault("collapsed", False)
         super().__init__(*children, title=title, **kwargs)
+
+
+#: The covenant Library tab's sections, where 'I' imports books into the
+#: covenant's library.
+_LIBRARY_SECTIONS: frozenset[str] = frozenset(
+    {"section-lib-summary", "section-lib-books"}
+)
+#: Section ids of every book list (see BookListView); 'a' in any of them adds
+#: a book, and 'e'/'A' act on books everywhere but the read-only Summary.
+BOOK_SECTIONS: frozenset[str] = frozenset(
+    {
+        "section-lib-summary",
+        "section-lib-books",
+        "section-lab-books",
+        "section-books",
+        "section-unassigned-books",
+    }
+)
+
+
+class BookListView(Vertical):
+    """A list of books (the standard selectable list, under a column header)
+    with a details panel for the chosen one.
+
+    `books` is called whenever the list is (re)built, so it always reflects
+    the saga: the covenant Library tab passes "every book in the covenant", a
+    laboratory or character its own books, the saga's Unassigned Books node
+    the books with no owner. Docked (Library tab, Unassigned Books), the
+    list stretches down to the details panel docked below it (the Library
+    tab adds a read-only Summary above it); inline (a laboratory's or
+    character's Books section) the panel follows the list inside the section.
+    """
+
+    DEFAULT_CSS = """
+    BookListView {
+        height: auto;
+    }
+
+    BookListView.docked {
+        height: 1fr;
+    }
+
+    BookListView .books-body {
+        height: 1fr;
+    }
+
+    BookListView #lib-summary-body {
+        width: 1fr;
+        height: auto;
+    }
+
+    BookListView #lib-summary-left {
+        width: 1fr;
+        height: auto;
+        margin-right: 4;
+    }
+
+    BookListView #lib-summary-right {
+        width: 1fr;
+        height: auto;
+    }
+
+    /* Docked, the book list fills the space down to the details panel. */
+    BookListView.docked .books-section {
+        height: 1fr;
+    }
+
+    BookListView.docked .books-section.-collapsed {
+        height: auto;
+    }
+
+    BookListView.docked .books-section > Contents {
+        height: 1fr;
+    }
+
+    BookListView.docked SelectableList,
+    BookListView.docked SelectableList:focus {
+        height: 1fr;
+        max-height: 100%;
+    }
+
+    BookListView .books-header {
+        width: 1fr;
+        height: auto;
+        color: $text-muted;
+    }
+
+    BookListView .books-panel {
+        width: 1fr;
+        height: auto;
+        padding: 0 1;
+    }
+
+    /* With the book section's own bottom padding, two rows between the list
+       and the panel. */
+    BookListView.docked .books-panel {
+        min-height: 6;
+        max-height: 14;
+        margin-top: 1;
+        padding: 1 2;
+        background: $panel;
+    }
+    """
+
+    def __init__(
+        self,
+        saga: Saga,
+        books: Callable[[], list[Book]],
+        *,
+        section_id: str,
+        title: str = "Books",
+        summary: bool = False,
+        docked: bool = True,
+    ) -> None:
+        super().__init__(classes="docked" if docked else "")
+        self.saga = saga
+        self._books_source = books
+        self.section_id = section_id
+        self.title_text = title
+        self.summary = summary
+        self.docked = docked
+        self._books: list[Book] = books()
+        #: Width of the Subject column, fitted to the list (see on_resize).
+        self._subject_cols = bk.SUBJECT_MIN_WIDTH
+
+    def _title(self, checked: int = 0) -> str:
+        total = sum(bk.cost(b) for b in self._books)
+        title = f"{self.title_text} ({len(self._books)}) - {total} Build Points"
+        return title + (f" - {checked} marked" if checked else "")
+
+    def _rows(self) -> list[tuple[int, str]]:
+        return [
+            (i, bk.row_label(self.saga, b, self._subject_cols))
+            for i, b in enumerate(self._books)
+        ]
+
+    def _header(self) -> str:
+        # Two more columns than the header's own indent: the check mark.
+        return "  " + bk.table_header(self._subject_cols)
+
+    def on_resize(self) -> None:
+        """Give the Subject column whatever room the list has."""
+        # The section's padding, then the check mark and selector (4 chars).
+        cols = bk.subject_width(self.size.width - 4 - 4)
+        if cols == self._subject_cols:
+            return
+        self._subject_cols = cols
+        try:
+            self.query_one(".books-header", Static).update(self._header())
+            self.query_one(SelectableList).relabel([label for _, label in self._rows()])
+        except NoMatches:
+            return
+
+    def _book_list(self) -> ComposeResult:
+        with SheetSection(
+            title=self._title(), id=self.section_id, classes="books-section"
+        ):
+            yield Static(self._header(), classes="books-header")
+            yield SelectableList(self._rows(), id=f"{self.section_id}-list", multi=True)
+            if not self.docked:
+                yield Static(bk.detail_text(self.saga, None), classes="books-panel")
+
+    def compose(self) -> ComposeResult:
+        if not self.docked:
+            yield from self._book_list()
+            return
+        with Vertical(classes="books-body"):
+            if self.summary:
+                left, right = bk.summary_texts(self._books)
+                with (
+                    SheetSection(title="Summary", id="section-lib-summary"),
+                    Horizontal(id="lib-summary-body"),
+                ):
+                    yield Static(left, id="lib-summary-left")
+                    yield Static(right, id="lib-summary-right")
+            yield from self._book_list()
+        yield Static(bk.detail_text(self.saga, None), classes="books-panel")
+
+    @property
+    def books(self) -> list[Book]:
+        """The books listed, in row order."""
+        return self._books
+
+    def checked_books(self) -> list[Book]:
+        """The books marked (Space / Ctrl+click) for acting on together."""
+        try:
+            indexes = self.query_one(SelectableList).checked_data_indexes
+        except NoMatches:
+            return []
+        return [self._books[i] for i in indexes if i < len(self._books)]
+
+    def on_selectable_list_checked(self, event: SelectableList.Checked) -> None:
+        event.stop()
+        section = self.query_one(f"#{self.section_id}", Collapsible)
+        section.title = self._title(len(self.checked_books()))
+
+    def selected_book(self) -> Book | None:
+        index = self.query_one(SelectableList).selected_data_index
+        return (
+            self._books[index]
+            if index is not None and index < len(self._books)
+            else None
+        )
+
+    def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
+        event.stop()
+        book = (
+            self._books[event.data_index]
+            if event.data_index < len(self._books)
+            else None
+        )
+        self.query_one(".books-panel", Static).update(bk.detail_text(self.saga, book))
+
+    def rebuild(self) -> None:
+        """Re-read the books (an edit can add one, remove one or move it to
+        another owner's list) and re-render; the chosen book stays chosen if
+        it's still listed, with its panel refreshed."""
+        try:
+            chosen = self.selected_book()
+            self._books = self._books_source()
+            self.query_one(f"#{self.section_id}", Collapsible).title = self._title()
+            if self.summary:
+                left, right = bk.summary_texts(self._books)
+                self.query_one("#lib-summary-left", Static).update(left)
+                self.query_one("#lib-summary-right", Static).update(right)
+            rows = self.query_one(SelectableList)
+            rows.set_rows(self._rows())
+            panel = self.query_one(".books-panel", Static)
+            if chosen is not None and any(b is chosen for b in self._books):
+                # Posts Chosen, which refreshes the panel.
+                rows.highlighted = next(
+                    i for i, b in enumerate(self._books) if b is chosen
+                )
+            else:
+                panel.update(bk.detail_text(self.saga, None))
+        except NoMatches:
+            return  # the sheet is being replaced
 
 
 class CharacterSheetView(Vertical):
@@ -4252,6 +5121,12 @@ class CharacterSheetView(Vertical):
                     yield Static(self._fatigue_text(), id="fatigue-content")
                 with SheetSection(title="Inventory", id="section-inventory"):
                     yield Static(self._inventory_text(), id="inventory-content")
+                yield BookListView(
+                    self.saga,
+                    lambda: bk.books_owned_by(self.saga, "character", character.id),
+                    section_id="section-books",
+                    docked=False,
+                )
             if character.type == "magus":
                 with TabPane("Hermetic", id="tab-hermetic"), VerticalScroll():
                     with SheetSection(title="Magical Arts", id="section-arts"):
@@ -4660,6 +5535,14 @@ class LaboratorySheetView(Vertical):
                     yield Static(self._raw_vis_text(), id="lab-raw-vis-content")
                 with SheetSection(title="Items", id="section-lab-items"):
                     yield Static(self._items_text(), id="lab-items-content")
+                yield BookListView(
+                    self.saga,
+                    lambda: bk.books_owned_by(
+                        self.saga, "laboratory", self.laboratory.id
+                    ),
+                    section_id="section-lab-books",
+                    docked=False,
+                )
             with TabPane("Diary", id="tab-lab-diary"):
                 yield Static(self._diary_text(), id="lab-diary-content")
 
@@ -4848,7 +5731,7 @@ class CovenantSheetView(Vertical):
 
     A permanent info panel (not inside any tab) above six tabs mirroring
     the covenant record sheet: Attributes, Inhabitants, Possessions,
-    Economics, Library, Diary. The tabs are mostly placeholders for now.
+    Economics, Library, Diary (still a placeholder).
 
     The panel's saga-level values (Saga, Storyguide, Current Season,
     Current Year) are inherited from the Saga and shown dimmed/read-only;
@@ -5034,7 +5917,12 @@ class CovenantSheetView(Vertical):
             with TabPane("Economics", id="tab-cov-economics"):
                 yield from self._economics_tab()
             with TabPane("Library", id="tab-cov-library"):
-                yield Static(self._placeholder("Library"))
+                yield BookListView(
+                    self.saga,
+                    lambda: bk.books_in_covenant(self.saga, self.covenant),
+                    section_id="section-lib-books",
+                    summary=True,
+                )
             with TabPane("Diary", id="tab-cov-diary"):
                 yield Static(self._placeholder("Diary"))
 
@@ -5497,6 +6385,17 @@ class CovenantSheetView(Vertical):
         return "\n".join(lines)
 
 
+def _tree_node_with_data(tree: Tree, data: tuple) -> Any:
+    """The first node of `tree` whose `.data` is `data`, or None."""
+    pending = [tree.root]
+    while pending:
+        node = pending.pop()
+        if node.data == data:
+            return node
+        pending.extend(node.children)
+    return None
+
+
 class WorkspaceScreen(Screen[None]):
     """Persistent nav tree (left) + detail pane (right) for one open saga.
 
@@ -5515,6 +6414,7 @@ class WorkspaceScreen(Screen[None]):
         ("A", "remove", "Remove"),
         ("e", "edit", "Edit"),
         ("i", "improve", "Improve"),
+        ("I", "import_data", "Import"),
         ("t", "advance_season", "Advance Season"),
         ("T", "set_date", "Set Date"),
         ("v", "add_virtue_flaw", "Add Virtue/Flaw"),
@@ -5551,6 +6451,7 @@ class WorkspaceScreen(Screen[None]):
         "section-eco-income",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
+        *BOOK_SECTIONS,
     }
     _REMOVE_SECTIONS: ClassVar[set[str]] = {
         "section-abilities",
@@ -5571,6 +6472,7 @@ class WorkspaceScreen(Screen[None]):
         "section-eco-income",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
+        *(BOOK_SECTIONS - {"section-lib-summary"}),
     }
     _EDIT_SECTIONS: ClassVar[set[str]] = {
         "section-identity",
@@ -5605,6 +6507,7 @@ class WorkspaceScreen(Screen[None]):
         "section-eco-savings",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
+        *(BOOK_SECTIONS - {"section-lib-summary"}),
     }
 
     #: Covenant tabs that own their own a/A/e dispatch (keyed by tab id).
@@ -5692,15 +6595,6 @@ class WorkspaceScreen(Screen[None]):
             for lab in labs:
                 lab_group.add_leaf(lab.name, data=("laboratory", lab.id))
 
-            library = next(
-                (lib for lib in self.saga.libraries if lib.id == covenant.library_id),
-                None,
-            )
-            library_label = "Library"
-            if library is not None:
-                library_label += f" ({len(library.books)} book(s))"
-            cov_node.add_leaf(library_label, data=("library", covenant.id))
-
         # Characters and labs with no (or a no-longer-existing) covenant live
         # directly under the saga -- assigning to a covenant is optional, and
         # this is where things land if they're taken out of one.
@@ -5730,6 +6624,12 @@ class WorkspaceScreen(Screen[None]):
             )
             for lab in loose_labs:
                 group.add_leaf(lab.name, data=("laboratory", lab.id))
+        # Books with no owner file under the saga.
+        loose_books = bk.unassigned_books(self.saga)
+        if loose_books:
+            tree.root.add_leaf(
+                f"Unassigned Books ({len(loose_books)})", data=("book_group",)
+            )
 
     def _covenant_by_id(self, covenant_id: str | None) -> Covenant | None:
         return next((c for c in self.saga.covenants if c.id == covenant_id), None)
@@ -5797,14 +6697,16 @@ class WorkspaceScreen(Screen[None]):
                 (c for c in self.saga.covenants if c.id == lab.covenant_id), None
             )
             await self._show_laboratory_detail(lab)
-        elif kind == "library":
-            covenant = next(c for c in self.saga.covenants if c.id == data[1])
-            self.selected_covenant = covenant
-            library = next(
-                (lib for lib in self.saga.libraries if lib.id == covenant.library_id),
-                None,
+        elif kind == "book_group":
+            self.selected_covenant = None
+            await self._set_detail(
+                BookListView(
+                    self.saga,
+                    lambda: bk.unassigned_books(self.saga),
+                    section_id="section-unassigned-books",
+                    title="Unassigned Books",
+                )
             )
-            await self._show_library_detail(library)
 
         self.refresh_bindings()
 
@@ -5821,6 +6723,11 @@ class WorkspaceScreen(Screen[None]):
             return self._active_section() in self._EDIT_SECTIONS
         if action == "improve":
             return self._active_section() == "section-eco-income"
+        if action == "import_data":
+            return (
+                self.selected_kind == "saga"
+                or self._active_section() in _LIBRARY_SECTIONS
+            )
         if action in ("add_virtue_flaw", "remove_virtue_flaw"):
             if self.selected_kind == "laboratory":
                 return self._active_section() == "tab-lab-vf"
@@ -5836,6 +6743,8 @@ class WorkspaceScreen(Screen[None]):
             return self._active_laboratory_section()
         if self.selected_kind == "covenant":
             return self._active_covenant_section()
+        if self.selected_kind == "book_group":
+            return "section-unassigned-books"
         return None
 
     def _active_covenant_section(self) -> str | None:
@@ -6052,7 +6961,6 @@ class WorkspaceScreen(Screen[None]):
             f"Covenants: {len(saga.covenants)}",
             f"Characters: {len(saga.characters)}",
             f"Laboratories: {len(saga.laboratories)}",
-            f"Libraries: {len(saga.libraries)}",
             f"Books: {len(saga.books)}",
             f"Spells: {len(saga.spells)}",
         ]
@@ -6069,44 +6977,6 @@ class WorkspaceScreen(Screen[None]):
         await self._set_detail(view)
         self._laboratory_sheet_view = view
         self._focus_first_section(initial=True)
-
-    async def _show_library_detail(self, library: Library | None) -> None:
-        await self._set_detail(Static(self._library_summary(library)))
-
-    def _library_summary(self, library: Library | None) -> str:
-        saga = self.saga
-        if library is None:
-            return "Library: (none)"
-
-        covenant = next(
-            (c for c in saga.covenants if c.id == library.covenant_id), None
-        )
-        book_lookup = {b.id: b for b in saga.books}
-        spell_lookup = {s.id: s for s in saga.spells}
-
-        lines = [f"Library (covenant: {covenant.name if covenant else '(none)'})", ""]
-
-        if not library.books:
-            lines.append("Books: (none recorded)")
-            return "\n".join(lines)
-
-        lines.append(f"Books ({len(library.books)}):")
-        for book_id in library.books:
-            book = book_lookup.get(book_id)
-            if book is None:
-                lines.append(f"  - {book_id} (unknown book)")
-                continue
-
-            level = f" L{book.level}" if book.level is not None else ""
-            line = f"  - [{book.type}] {book.subject}{level} Q{book.quality}"
-            if book.author:
-                line += f" by {book.author}"
-            if book.type == "Lab Text" and book.spell_id:
-                spell = spell_lookup.get(book.spell_id)
-                line += f" -- {spell.name}" if spell else " -- (unknown spell)"
-            lines.append(line)
-
-        return "\n".join(lines)
 
     async def _show_character_detail(self, character: Character) -> None:
         view = CharacterSheetView(self.saga, character)
@@ -6221,7 +7091,9 @@ class WorkspaceScreen(Screen[None]):
 
     def action_add(self) -> None:
         section = self._active_section()
-        if section == "section-abilities":
+        if section in BOOK_SECTIONS:
+            self._book_form(None)
+        elif section == "section-abilities":
             self._add_ability()
         elif section == "tab-spells":
             self._add_spell()
@@ -6260,7 +7132,9 @@ class WorkspaceScreen(Screen[None]):
 
     def action_remove(self) -> None:
         section = self._active_section()
-        if section == "section-abilities":
+        if section in BOOK_SECTIONS:
+            self._remove_book()
+        elif section == "section-abilities":
             self._remove_ability()
         elif section == "tab-spells":
             self._remove_spell()
@@ -6299,7 +7173,9 @@ class WorkspaceScreen(Screen[None]):
 
     def action_edit(self) -> None:
         section = self._active_section()
-        if section == "section-identity":
+        if section in BOOK_SECTIONS:
+            self._edit_book()
+        elif section == "section-identity":
             self._edit_identity()
         elif section == "section-background":
             self._edit_background()
@@ -6361,6 +7237,341 @@ class WorkspaceScreen(Screen[None]):
             self._edit_inhabitant(kind)
         elif (kind := self._possession_kind(section)) is not None:
             self._edit_possession(kind)
+
+    # -- Books (Library tab, laboratory/character Books, Unassigned Books) --
+
+    def _book_view(self) -> BookListView | None:
+        """The book list showing in the detail pane, if any (a sheet shows at
+        most one)."""
+        try:
+            return self.query_one("#detail-pane").query(BookListView).first()
+        except NoMatches:
+            return None
+
+    def _default_book_owner(self) -> str:
+        """Owner a new book starts with: wherever it's being added from."""
+        if self.selected_kind == "character" and self.selected_character:
+            return bk.owner_value("character", self.selected_character.id)
+        if self.selected_kind == "laboratory" and self.selected_laboratory:
+            return bk.owner_value("laboratory", self.selected_laboratory.id)
+        if self.selected_kind == "covenant" and self.selected_covenant:
+            return bk.owner_value("covenant", self.selected_covenant.id)
+        return ""
+
+    def _pick_book(self, title: str, then: Callable[[Book], None]) -> None:
+        """Act on the chosen book; with none chosen, ask which one."""
+        view = self._book_view()
+        if view is None:
+            return
+        chosen = view.selected_book()
+        if chosen is not None:
+            then(chosen)
+            return
+        listed = list(view.books)
+        if not listed:
+            self.notify("No books here yet.")
+            return
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                then(listed[index])
+
+        self.app.push_screen(
+            RemovalPickerScreen(title, [b.name or "(untitled)" for b in listed]),
+            handle_index,
+        )
+
+    def _marked_books(self) -> list[Book]:
+        view = self._book_view()
+        return view.checked_books() if view is not None else []
+
+    def _edit_book(self) -> None:
+        """Edit the chosen book; with books marked, change their owner."""
+        marked = self._marked_books()
+        if marked:
+            self._change_owner_of(marked)
+            return
+        self._pick_book("Edit which book?", self._book_form)
+
+    def _change_owner_of(self, books: list[Book]) -> None:
+        """Give several books one new owner (the only edit that makes sense
+        for many at once), confirming first."""
+        saga = self.saga
+        count = len(books)
+        plural = "s" if count != 1 else ""
+        owners = {bk.owner_value(b.owner_kind, b.owner_id) for b in books}
+        current = owners.pop() if len(owners) == 1 else None
+        if current is not None and bk.is_unassigned(saga, books[0]):
+            current = ""
+
+        def handle_owner(values: dict[str, Any] | None) -> None:
+            if values is None:
+                return
+            owner = values["owner"]
+            label = next(lbl for lbl, value in bk.owner_options(saga) if value == owner)
+
+            def handle_confirmed(confirmed: bool | None) -> None:
+                if not confirmed:
+                    return
+                kind, owner_id = bk.parse_owner_value(owner)
+                for book in books:
+                    book.owner_kind, book.owner_id = kind, owner_id
+                storage.save_saga(saga)
+                self._books_changed()
+
+            self.app.push_screen(
+                ConfirmScreen(
+                    f"Changing ownership of {count} book{plural} to "
+                    f"[b]{escape(label)}[/]. Continue?",
+                    yes_label="Change",
+                    yes_variant="success",
+                ),
+                handle_confirmed,
+            )
+
+        self.app.push_screen(
+            FieldsDialog(
+                f"Change the owner of {count} book{plural}",
+                [
+                    DialogField(
+                        "_books",
+                        "Books",
+                        "info",
+                        ", ".join(b.name or "(untitled)" for b in books),
+                    ),
+                    DialogField(
+                        "owner",
+                        "New owner",
+                        "select",
+                        current,
+                        options=bk.owner_options(saga),
+                        required=True,
+                        allow_blank=True,
+                        placeholder="(choose the new owner)",
+                    ),
+                ],
+            ),
+            handle_owner,
+        )
+
+    def _book_form(self, book: Book | None) -> None:
+        saga = self.saga
+        title = "Add a Book" if book is None else f"Edit {book.name or 'this book'}"
+
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is None:
+                return
+            target = book
+            if target is None:
+                target = Book(
+                    id=storage.generate_unique_id(
+                        values["name"], [b.id for b in saga.books]
+                    ),
+                    name=values["name"],
+                    type=values["type"],
+                )
+                saga.books.append(target)
+            _book_from_values(target, values)
+            storage.save_saga(saga)
+            self._books_changed()
+
+        self.app.push_screen(
+            FieldsDialog(
+                title,
+                _book_fields(saga, book, self._default_book_owner()),
+                validate=_book_problem,
+                live=_book_live,
+            ),
+            handle_result,
+        )
+
+    def _remove_book(self) -> None:
+        """Delete the chosen book, or every marked one, after confirming."""
+        marked = self._marked_books()
+        if marked:
+            count = len(marked)
+
+            def handle_all(confirmed: bool | None) -> None:
+                if not confirmed:
+                    return
+                for book in marked:
+                    if book in self.saga.books:
+                        self.saga.books.remove(book)
+                storage.save_saga(self.saga)
+                self._books_changed()
+
+            self.app.push_screen(
+                ConfirmScreen(
+                    f"Are you sure you want to delete {count} "
+                    f"book{'s' if count != 1 else ''}?"
+                ),
+                handle_all,
+            )
+            return
+
+        def confirm(book: Book) -> None:
+            def handle_confirmed(confirmed: bool | None) -> None:
+                if confirmed and book in self.saga.books:
+                    self.saga.books.remove(book)
+                    storage.save_saga(self.saga)
+                    self._books_changed()
+
+            self.app.push_screen(
+                ConfirmScreen(f"Delete {escape(book.name or 'this book')}?"),
+                handle_confirmed,
+            )
+
+        self._pick_book("Remove a Book", confirm)
+
+    def action_import_data(self) -> None:
+        """'I': on the saga, choose what to import (only Books works yet);
+        on a covenant's Library tab, import books straight into its library."""
+        if self.selected_kind == "saga":
+
+            def handle_kind(kind: str | None) -> None:
+                if kind == "books":
+                    self._import_books(None)
+
+            self.app.push_screen(ImportScreen(), handle_kind)
+        elif (
+            self.selected_covenant is not None
+            and self._active_section() in _LIBRARY_SECTIONS
+        ):
+            self._import_books(self.selected_covenant)
+
+    def _import_books(self, covenant: Covenant | None) -> None:
+        """Pick a CSV file, preview what it holds, then add its books: all
+        owned by `covenant`, or all unassigned when it's None (the file's own
+        owner column isn't used)."""
+        saga = self.saga
+        destination = (
+            f"into {covenant.name}'s library"
+            if covenant is not None
+            else "as unassigned books"
+        )
+
+        def handle_path(path: Path | None) -> None:
+            if path is None:
+                return
+            try:
+                result = bk.read_books_csv(path)
+            except (OSError, ValueError) as problem:
+                self.notify(
+                    f"Couldn't read {escape(path.name)}: {escape(str(problem))}",
+                    severity="error",
+                )
+                return
+            if not result.books:
+                reason = f" {escape(result.skipped[0])}" if result.skipped else ""
+                self.notify(
+                    f"No books to import from {escape(path.name)}.{reason}",
+                    severity="warning",
+                )
+                return
+
+            def handle_confirmed(confirmed: bool | None) -> None:
+                if confirmed:
+                    self._add_imported_books(result.books, covenant, destination)
+
+            self.app.push_screen(
+                ConfirmScreen(
+                    bk.import_preview(
+                        result, path.name, destination, {b.name for b in saga.books}
+                    ),
+                    yes_label="Import",
+                    yes_variant="success",
+                ),
+                handle_confirmed,
+            )
+
+        title = (
+            f"Import books into {covenant.name}'s library"
+            if covenant is not None
+            else "Import books (as unassigned books)"
+        )
+        self.app.push_screen(CsvFilePickerScreen(title, Path.cwd()), handle_path)
+
+    def _add_imported_books(
+        self, books: list[Book], covenant: Covenant | None, destination: str
+    ) -> None:
+        """Add confirmed imported books, asking about each one whose name is
+        already taken (Duplicate / Duplicate All / Skip / Skip All). Nothing
+        is added until every question is answered."""
+        saga = self.saga
+        pending = list(books)
+        accepted: list[Book] = []
+        names = {b.name for b in saga.books}
+        state: dict[str, Any] = {"all": None, "skipped": 0}
+
+        def take(book: Book, answer: str) -> None:
+            if answer == "skip":
+                state["skipped"] += 1
+            else:
+                accepted.append(book)
+                names.add(book.name)
+
+        def step() -> None:
+            while pending:
+                book = pending[0]
+                if book.name in names and state["all"] is None:
+                    remaining = len(bk.duplicate_names(pending[1:], names))
+
+                    def handle_answer(answer: str | None, book=book) -> None:
+                        answer = answer or "skip"
+                        if answer.endswith("_all"):
+                            answer = answer[: -len("_all")]
+                            state["all"] = answer
+                        pending.pop(0)
+                        take(book, answer)
+                        step()
+
+                    self.app.push_screen(
+                        DuplicateBookScreen(book.name, remaining), handle_answer
+                    )
+                    return
+                pending.pop(0)
+                take(book, state["all"] if book.name in names else "duplicate")
+            finish()
+
+        def finish() -> None:
+            ids = [b.id for b in saga.books]
+            for book in accepted:
+                book.id = storage.generate_unique_id(book.name, ids)
+                ids.append(book.id)
+                if covenant is not None:
+                    book.owner_kind, book.owner_id = "covenant", covenant.id
+                saga.books.append(book)
+            if accepted:
+                storage.save_saga(saga)
+                self._books_changed()
+                if self.selected_kind == "saga":
+                    self.call_later(self._show_saga_detail)  # its Books count
+            count = len(accepted)
+            skipped = state["skipped"]
+            message = f"Imported {count} book{'s' if count != 1 else ''}"
+            message += f" {destination}" if count else ""
+            if skipped:
+                message += f"; skipped {skipped} duplicate{'s' if skipped != 1 else ''}"
+            self.notify(escape(message + "."))
+
+        step()
+
+    def _books_changed(self) -> None:
+        """After any book edit: re-render the book list on show, and keep the
+        tree's Unassigned Books node in step (it appears, changes count or goes
+        away as books lose and gain owners)."""
+        view = self._book_view()
+        if view is not None:
+            view.rebuild()
+        tree = self.query_one("#nav-tree", Tree)
+        node = _tree_node_with_data(tree, ("book_group",))
+        count = len(bk.unassigned_books(self.saga))
+        if node is not None and count:
+            node.set_label(f"Unassigned Books ({count})")
+        elif node is not None:
+            node.remove()
+        elif count:
+            tree.root.add_leaf(f"Unassigned Books ({count})", data=("book_group",))
 
     # -- Covenant: Possessions tab --
 

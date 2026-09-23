@@ -30,7 +30,7 @@ uv run ruff check .      # lint
 ## Layout
 
 - `ars_magica_manager/models.py` — dataclasses for Saga, Covenant,
-  Character, Laboratory, Library, Book, Spell, and the Virtue/Flaw and
+  Character, Laboratory, Book, Spell, and the Virtue/Flaw and
   Ability catalog entry types.
 - `ars_magica_manager/storage.py` — JSON load/save, one file per saga
   under `data/sagas/` (git-ignored — that's campaign data, not source).

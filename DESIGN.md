@@ -66,10 +66,11 @@ Saga
      ├─ Laboratory (n)
      │    ├─ owner: Character (0 or 1)
      │    └─ Virtue/Flaw instances (lab-specific, from catalog)
-     └─ Library (0 or 1, or n if you split by building)
-          └─ Book (n)
-               ├─ type: Summa | Tractatus | Lab Text
-               └─ if Lab Text: embodies a Spell
+     └─ Library tab: every Book kept in the covenant (see below)
+
+Book (n per saga)
+ ├─ type: Art Summa | Ability Summa | Tractatus | Lab Text | Casting Tablet | Other
+ └─ owner: the Covenant, a Laboratory, a Character -- or none (files under the saga)
 
 VirtueFlaw catalog (shared reference data, not per-saga)
 Spell catalog / instances (a Spell can be "known" by a character and/or
@@ -82,8 +83,14 @@ Key relationship notes:
 - A Laboratory belongs to exactly one Covenant, and has at most one resident
   owner Character at a time, but ownership can change over time (track
   history later if needed — not v1).
-- A Book's `subject` is either an Ability or an Art (matching what it
-  teaches); a Lab Text additionally references a specific Spell.
+- A Book has a single owner (`owner_kind` + `owner_id`): a covenant, a
+  laboratory or a character, or none. There is no separate Library record:
+  a covenant's Library tab lists the books it owns plus those owned by its
+  laboratories and characters; a laboratory's Inventory and a character's
+  sheet list their own; books with no owner (or one that no longer exists)
+  appear under "Unassigned Books" in the saga tree. A Summa or Tractatus is
+  on an Art or an Ability; a Lab Text or Casting Tablet records a spell by
+  name and level (spells aren't linked yet). See 9.5 for costs.
 - Virtues and Flaws are catalog entries (name, category, cost, description)
   referenced by *instances* attached to a Character or a Laboratory, each
   instance carrying any per-case parameters (e.g. "Affinity with
@@ -151,7 +158,7 @@ tags**, not just flat descriptive text:
 {
   "saga": { "id": "saga_dammerstein", "name": "Dammerstein", "current_year": 1220, "current_season": "Spring" },
   "covenants": [
-    { "id": "cov_1", "saga_id": "saga_dammerstein", "name": "...", "vis_stock": {}, "library_id": "lib_1" }
+    { "id": "cov_1", "saga_id": "saga_dammerstein", "name": "...", "vis_stock": {} }
   ],
   "characters": [
     {
@@ -171,9 +178,10 @@ tags**, not just flat descriptive text:
       "virtues_flaws": [ { "vf_id": "vf_superior_lab_equipment" } ]
     }
   ],
-  "libraries": [ { "id": "lib_1", "covenant_id": "cov_1", "books": ["book_1"] } ],
   "books": [
-    { "id": "book_1", "type": "Summa", "subject": "Magic Theory", "level": 8, "quality": 6, "author": "..." }
+    { "id": "book_1", "name": "...", "type": "Ability Summa", "ability": "Magic Theory",
+      "level": 8, "quality": 6, "language": "Latin", "author": "...",
+      "owner_kind": "covenant", "owner_id": "cov_1", "year_published": null, "description": "" }
   ],
   "spells": [
     { "id": "spell_1", "name": "...", "technique": "Creo", "form": "Ignem", "level": 10 }
@@ -379,6 +387,14 @@ come from elsewhere (a name taken from a character sheet, a governance type
 provided by a Boon, a calculated total) so nothing that isn't editable *looks*
 editable. Description fields in forms carry the emphasis hint (see 9.1).
 
+When fields depend on each other while the form is open, `FieldsDialog` stays
+the tool: a field's `show_if` hides it until the other values call for it
+(hidden fields are neither checked nor returned), and the dialog's `live`
+callback fills a line above the error with something computed from the current
+values. The book form uses both: the Type picks which of Art/Ability/Spell,
+Level and Quality appear, and the live line shows the Build Point cost and any
+covenant-creation limit warning before saving.
+
 ### 9.4 Calculated figures (covenant Economics and Loyalty)
 
 Anything that can be worked out from the rest of the sheet is **calculated on
@@ -494,8 +510,74 @@ options" concept -- settings decided once per saga (not per covenant) that
 individual formulas would consult, the same way `covenant_season` already
 picks a column of a table. Revisit when a second such toggle shows up.
 
+### 9.5 Books and the Library tab
+
+A book's Build Point cost (for creating a covenant) is calculated, never
+stored: Art Summa Level + Quality; Ability Summa Quality + 3 x Level; Tractatus
+Quality; Lab Text 1 per 5 levels of its spell and Casting Tablet 2 per 5, both
+rounded up with the same rule as 9.4; Other books cost nothing. The
+covenant-creation limits (Art Summa level 20 and quality 11 + (20 - level),
+Ability Summa level 8 and quality 11 + 3 x (8 - level), both capped at 22;
+Tractatus quality 11) only **warn**, since books found in play may exceed them.
+Lab Text and Casting Tablet level limits aren't checked yet (their power-level
+table hasn't been provided).
+
+The Library tab has a read-only Summary section in two columns (left: Summae
+and Tractatus, each with its Ability/Art split; right: Lab Texts, Casting
+Tablets, Other, Total Books and Total Cost) above one list of every book in the
+covenant, which stretches down to two rows above the details panel (its Subject
+column -- the Art, Ability or spell -- widens to use spare room, 17 to 40
+characters), (Name, Type, Art/Ability/Spell, Level, Quality,
+Location: "Covenant Library", "Lab: <name>" or the owning character), and a
+details panel listing every field and the cost. The same list widget
+(`BookListView`) is used, inline, for a laboratory's and a character's Books
+section, and for the saga's Unassigned Books node. A new book starts owned by
+wherever it's added from.
+
+**Importing books from CSV.** `I` on the saga opens *Import Data* (Characters,
+Covenants and Laboratories are listed greyed out for later; only Books works),
+then a small file explorer that starts in the folder the app runs in. `I` on a
+covenant's Library tab goes straight to the explorer. The file needs a header
+row with at least `name` and `type`; the other columns read are `language`,
+`author`, `year_published`, `description`, `art`, `ability`, `level`, `quality`,
+`tractatus_type` and `spell` (any case or order). Types may be plural ("Art
+Summae"), Arts may be abbreviated ("Ig"). A preview confirms before anything is
+added: the count, rows that will be skipped and why, duplicate names, unknown
+abilities and books over the creation limits. Then each book whose name is
+already taken (in the saga, or earlier in the same file) asks **Duplicate /
+Duplicate All / Skip / Skip All** (Skip is focused; Escape skips). The file's
+`owner` and `cost` columns are not used: a saga import leaves every book
+unassigned, a Library import gives them all to that covenant, and cost is
+always calculated.
+
+**Unknown abilities.** An Ability summa or tractatus whose Ability isn't in the
+ability catalog (matched regardless of case; a templated family like "Area Lore:
+Rhine" counts as known) is kept as typed, but its row shows in red and its panel
+leads with "Unknown ability: ...", prompting the user to pick a real one. Study
+from books will rely on it.
+
+**Several books at once.** Book lists are multi-select: Space (or Ctrl+click)
+puts a green check on a row, and the section title counts the marked ones.
+With books marked, `A` deletes them all after "Are you sure you want to delete N
+books?", and `e` changes only their owner (a one-field form, then "Changing
+ownership of N books to ..."). With nothing marked, `e`/`A` act on the chosen
+book as usual. `SelectableList(multi=True)` provides this; other lists are
+unchanged.
+
 Text helpers shared by the UI and pure-logic modules (`escape`,
 `markdown_inline`) live in `ars_magica_manager/markup.py`; logic that needs no UI
 (what each Inhabitants list shows, headcounts, totals, row and panel text, all of
 Loyalty and the shared Inhabitant-points math) lives in
 `ars_magica_manager/inhabitants.py` so it can be tested without a terminal.
+
+## 10. Backlog (not scheduled)
+
+Wanted, but not pressing; pick up when convenient.
+
+- **Tidy up where things can be created.** Too many screens offer to create
+  records: `c` (New Character) and `l` (New Laboratory) work from every screen of
+  the workspace -- any tree node, any sheet, any tab -- because `check_action`
+  allows them everywhere. Decide the few sensible places to create each kind of
+  record (e.g. a character from the saga, its covenant, or a Characters group;
+  a laboratory from Laboratories groups) and remove the rest, keeping creation
+  easy to find.

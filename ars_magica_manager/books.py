@@ -1,0 +1,661 @@
+"""Logic behind books and the covenant Library tab -- no UI in here.
+
+Build Point costs and covenant-creation limits (reference/Libraries.md), who
+owns a book, which books a covenant's Library lists, the text for list rows
+and the details panel, and reading books from a CSV file.
+"""
+
+from __future__ import annotations
+
+import csv
+import io
+from dataclasses import dataclass, field
+from functools import lru_cache
+from pathlib import Path
+
+from . import catalog
+from .markup import escape, markdown_inline
+from .models import (
+    ART_ABBREVIATIONS,
+    BOOK_TYPES,
+    FORMS,
+    TECHNIQUES,
+    Book,
+    Covenant,
+    Saga,
+    round_away_from_zero,
+)
+
+#: Book types whose subject is an Art / an Ability (a Tractatus depends on its
+#: `subject_kind`).
+SUMMA_TYPES: tuple[str, ...] = ("Art Summa", "Ability Summa")
+#: Book types that record a spell (name + level) instead of an Art or Ability.
+SPELL_TYPES: tuple[str, ...] = ("Lab Text", "Casting Tablet")
+
+
+def is_art_book(book_type: str, subject_kind: str = "") -> bool:
+    return book_type == "Art Summa" or (
+        book_type == "Tractatus" and subject_kind == "Art"
+    )
+
+
+def is_ability_book(book_type: str, subject_kind: str = "") -> bool:
+    return book_type == "Ability Summa" or (
+        book_type == "Tractatus" and subject_kind == "Ability"
+    )
+
+
+def has_level(book_type: str) -> bool:
+    return book_type in SUMMA_TYPES or book_type in SPELL_TYPES
+
+
+def has_quality(book_type: str) -> bool:
+    return book_type in SUMMA_TYPES or book_type == "Tractatus"
+
+
+# ------------------------------------------------------------------- rules
+
+
+def cost(book: Book) -> int:
+    """Build Points the book costs at covenant creation. A blank level or
+    quality counts as 0; Other books cost nothing."""
+    level = book.level or 0
+    quality = book.quality or 0
+    if book.type == "Art Summa":
+        return level + quality
+    if book.type == "Ability Summa":
+        return quality + 3 * level
+    if book.type == "Tractatus":
+        return quality
+    if book.type == "Lab Text":
+        return round_away_from_zero(level / 5)
+    if book.type == "Casting Tablet":
+        return round_away_from_zero(2 * level / 5)
+    return 0
+
+
+def cost_formula(book: Book) -> str:
+    """How `cost` was worked out, e.g. "Level 12 + Quality 10"."""
+    level = book.level or 0
+    quality = book.quality or 0
+    if book.type == "Art Summa":
+        return f"Level {level} + Quality {quality}"
+    if book.type == "Ability Summa":
+        return f"Quality {quality} + 3 x Level {level}"
+    if book.type == "Tractatus":
+        return f"Quality {quality}"
+    if book.type == "Lab Text":
+        return f"1 per 5 levels of a level {level} spell, rounded up"
+    if book.type == "Casting Tablet":
+        return f"2 per 5 levels of a level {level} spell, rounded up"
+    return "Other books cost nothing"
+
+
+def quality_limit(book_type: str, level: int) -> int | None:
+    """The highest quality allowed at covenant creation, or None if there's no
+    limit for this type."""
+    if book_type == "Art Summa":
+        return min(22, 11 + (20 - level))
+    if book_type == "Ability Summa":
+        return min(22, 11 + 3 * (8 - level))
+    if book_type == "Tractatus":
+        return 11
+    return None
+
+
+#: The highest summa level allowed at covenant creation.
+LEVEL_LIMITS: dict[str, int] = {"Art Summa": 20, "Ability Summa": 8}
+
+
+def limit_warnings(book: Book) -> list[str]:
+    """Covenant-creation limits this book goes over (plain text). Books found in
+    play may exceed them, so these are warnings, never errors. Lab Texts and
+    Casting Tablets aren't checked: their limit comes from a power-level
+    table not yet provided."""
+    warnings: list[str] = []
+    level = book.level or 0
+    level_limit = LEVEL_LIMITS.get(book.type)
+    if level_limit is not None and level > level_limit:
+        warnings.append(
+            f"Level {level} is over the covenant-creation limit of {level_limit}."
+        )
+    limit = quality_limit(book.type, level)
+    if limit is not None and (book.quality or 0) > limit:
+        warnings.append(
+            f"Quality {book.quality} is over the covenant-creation limit of {limit}."
+        )
+    return warnings
+
+
+# ---------------------------------------------------------------- abilities
+
+
+@lru_cache(maxsize=1)
+def _ability_names() -> tuple[str, ...]:
+    return tuple(a.name for a in catalog.load_ability_catalog())
+
+
+def canonical_ability(name: str) -> str | None:
+    """The ability catalog's spelling of `name` -- a catalog name, or a
+    templated family with its blank filled in ("area lore: rhine" ->
+    "Area Lore: rhine") -- matched regardless of case; None if it isn't one."""
+    wanted = name.strip().lower()
+    for known in _ability_names():
+        if "{" not in known:
+            if known.lower() == wanted:
+                return known
+            continue
+        prefix = known.split("{", 1)[0]
+        detail = name.strip()[len(prefix) :].strip()
+        if wanted.startswith(prefix.lower()) and detail:
+            return prefix + detail
+    return None
+
+
+def status_problems(book: Book) -> list[str]:
+    """Things about the book the user should fix (the row shows in red): for
+    now, an Ability that isn't in the ability catalog (typically from an
+    import), which studying from the book will need."""
+    if (
+        is_ability_book(book.type, book.subject_kind)
+        and book.ability
+        and canonical_ability(book.ability) is None
+    ):
+        return [
+            f"Unknown ability: {book.ability!r} isn't in the ability list; "
+            "edit the book to choose one."
+        ]
+    return []
+
+
+# ------------------------------------------------------------------ owners
+
+
+def owner_record(saga: Saga, book: Book):
+    """The covenant, laboratory or character that owns the book, or None
+    (unowned, or the owner no longer exists)."""
+    records = {
+        "covenant": saga.covenants,
+        "laboratory": saga.laboratories,
+        "character": saga.characters,
+    }.get(book.owner_kind or "", [])
+    return next((r for r in records if r.id == book.owner_id), None)
+
+
+def is_unassigned(saga: Saga, book: Book) -> bool:
+    return owner_record(saga, book) is None
+
+
+def unassigned_books(saga: Saga) -> list[Book]:
+    """Books filed under the saga: no owner, or one that no longer exists."""
+    return [b for b in saga.books if is_unassigned(saga, b)]
+
+
+def books_owned_by(saga: Saga, kind: str, owner_id: str) -> list[Book]:
+    return [b for b in saga.books if b.owner_kind == kind and b.owner_id == owner_id]
+
+
+def covenant_of(saga: Saga, book: Book) -> str | None:
+    """The id of the covenant the book is kept in: its owner, or the covenant
+    of the laboratory or character that owns it."""
+    owner = owner_record(saga, book)
+    if owner is None:
+        return None
+    if book.owner_kind == "covenant":
+        return owner.id
+    return owner.covenant_id
+
+
+def books_in_covenant(saga: Saga, covenant: Covenant) -> list[Book]:
+    """Everything the covenant's Library lists: books it owns, and books owned
+    by its laboratories and characters, in the order added."""
+    return [b for b in saga.books if covenant_of(saga, b) == covenant.id]
+
+
+def owner_value(kind: str | None, owner_id: str | None) -> str:
+    """The Owner select's value for an owner ("" for none)."""
+    return f"{kind}:{owner_id}" if kind and owner_id else ""
+
+
+def parse_owner_value(value: str | None) -> tuple[str | None, str | None]:
+    if not value:
+        return None, None
+    kind, _, owner_id = value.partition(":")
+    return kind, owner_id
+
+
+def owner_options(saga: Saga) -> list[tuple[str, str]]:
+    """(label, value) for every possible owner: each covenant, laboratory and
+    character of the saga, then nobody."""
+    options = [
+        (f"Covenant: {c.name}", owner_value("covenant", c.id)) for c in saga.covenants
+    ]
+    options += [
+        (f"Laboratory: {lab.name}", owner_value("laboratory", lab.id))
+        for lab in saga.laboratories
+    ]
+    options += [
+        (f"Character: {c.name}", owner_value("character", c.id))
+        for c in saga.characters
+    ]
+    options.append(("(none - unassigned)", ""))
+    return options
+
+
+def owner_label(saga: Saga, book: Book) -> str:
+    owner = owner_record(saga, book)
+    if owner is None:
+        return "(none - unassigned)"
+    return f"{book.owner_kind.capitalize()}: {owner.name}"
+
+
+def location_label(saga: Saga, book: Book) -> str:
+    """Where the book is kept: the covenant's library, a laboratory, or on the
+    character who owns it."""
+    owner = owner_record(saga, book)
+    if owner is None:
+        return "Unassigned"
+    if book.owner_kind == "covenant":
+        return "Covenant Library"
+    if book.owner_kind == "laboratory":
+        return f"Lab: {owner.name}"
+    return owner.name
+
+
+# -------------------------------------------------------------------- text
+
+
+def subject(book: Book) -> str:
+    """The Art, Ability or spell the book is about ("" if not set)."""
+    if book.type in SPELL_TYPES:
+        return book.spell_name
+    if is_art_book(book.type, book.subject_kind):
+        return book.art
+    if is_ability_book(book.type, book.subject_kind):
+        return book.ability
+    return ""
+
+
+def subject_title(book: Book) -> str:
+    """What the Art/Ability/Spell field is called for this book."""
+    if book.type in SPELL_TYPES:
+        return "Spell"
+    if is_art_book(book.type, book.subject_kind):
+        return "Art"
+    if is_ability_book(book.type, book.subject_kind):
+        return "Ability"
+    return "Subject"
+
+
+def _fit(text: str, width: int) -> str:
+    text = text.replace("\n", " ")
+    if len(text) > width:
+        text = text[: width - 1] + "…"
+    return text.ljust(width)
+
+
+_NAME_WIDTH = 20
+_TYPE_WIDTH = 14
+_LEVEL_WIDTH = 5
+_QUALITY_WIDTH = 8
+_LOCATION_WIDTH = 17
+#: The Subject column (Art, Ability or spell) takes whatever room the list
+#: has, between these two widths (see subject_width).
+SUBJECT_MIN_WIDTH = 17
+SUBJECT_MAX_WIDTH = 40
+#: Everything in a row but the Subject column: the columns, their spacing,
+#: and room for a scrollbar.
+_ROW_WIDTH_WITHOUT_SUBJECT = (
+    (_NAME_WIDTH + 1 + _TYPE_WIDTH + 1 + 1 + _LEVEL_WIDTH + _QUALITY_WIDTH + 2)
+    + _LOCATION_WIDTH
+    + 2
+)
+
+
+def subject_width(row_width: int) -> int:
+    """How wide the Subject column can be in a row `row_width` characters wide
+    (after the list's markers)."""
+    spare = row_width - _ROW_WIDTH_WITHOUT_SUBJECT
+    return max(SUBJECT_MIN_WIDTH, min(SUBJECT_MAX_WIDTH, spare))
+
+
+def table_header(subject_cols: int = SUBJECT_MIN_WIDTH) -> str:
+    """The column titles above the book list; the two-character indent is the
+    list's selector marker. Long values are cut short with an ellipsis."""
+    return (
+        f"  {'Name':<{_NAME_WIDTH}} {'Type':<{_TYPE_WIDTH}} "
+        f"{'Subject':<{subject_cols}} {'Level':>{_LEVEL_WIDTH}}"
+        f"{'Quality':>{_QUALITY_WIDTH}}  Location"
+    )
+
+
+def _number(value: int | None) -> str:
+    return "-" if value is None else str(value)
+
+
+def row_label(saga: Saga, book: Book, subject_cols: int = SUBJECT_MIN_WIDTH) -> str:
+    """One list row (markup), columns lined up with `table_header`; red when
+    the book has a status problem (see status_problems)."""
+    location = _fit(location_label(saga, book), _LOCATION_WIDTH).rstrip()
+    row = (
+        f"{escape(_fit(book.name or '(untitled)', _NAME_WIDTH))} "
+        f"{escape(_fit(book.type, _TYPE_WIDTH))} "
+        f"{escape(_fit(subject(book) or '-', subject_cols))} "
+        f"{_number(book.level):>{_LEVEL_WIDTH}}"
+        f"{_number(book.quality):>{_QUALITY_WIDTH}}  "
+        f"{escape(location)}"
+    )
+    return f"[red]{row}[/]" if status_problems(book) else row
+
+
+def _cell(label: str, value: object) -> tuple[str, int]:
+    """A "Label: value" cell as (markup, plain-text width)."""
+    text = str(value)
+    return f"[b]{label}:[/] {escape(text)}", len(label) + 2 + len(text)
+
+
+def summary_texts(books: list[Book]) -> tuple[str, str]:
+    """The Library tab's Summary (markup, read-only): Summae and Tractatus by
+    Ability/Art down the left; Lab Texts, Casting Tablets, Other and the
+    totals down the right."""
+
+    def count(book_type: str, subject_kind: str | None = None) -> int:
+        return sum(
+            1
+            for b in books
+            if b.type == book_type
+            and (
+                subject_kind is None
+                or (book_type == "Tractatus" and b.subject_kind == subject_kind)
+            )
+        )
+
+    ability_summae, art_summae = count("Ability Summa"), count("Art Summa")
+    ability_tracts, art_tracts = (
+        count("Tractatus", "Ability"),
+        count("Tractatus", "Art"),
+    )
+
+    def rows(pairs: list[tuple[str, object]]) -> str:
+        """Values lined up in one column; indented rows are sub-counts (not
+        bold); ("", "") is a blank line."""
+        width = max(len(label) for label, _ in pairs) + 2
+        lines = []
+        for label, value in pairs:
+            text = f"{label}:".ljust(width) if label else ""
+            if label and not label.startswith(" "):
+                text = f"[b]{text}[/]"
+            lines.append(f"{text}{value}")
+        return "\n".join(lines)
+
+    left = rows(
+        [
+            ("Summae", ability_summae + art_summae),
+            ("  • Ability", ability_summae),
+            ("  • Art", art_summae),
+            ("", ""),
+            ("Tractatus", count("Tractatus")),
+            ("  • Ability", ability_tracts),
+            ("  • Art", art_tracts),
+        ]
+    )
+    right = rows(
+        [
+            ("Lab Texts", count("Lab Text")),
+            ("Casting Tablets", count("Casting Tablet")),
+            ("Other", count("Other")),
+            ("", ""),
+            ("Total Books", len(books)),
+            ("Total Cost", f"{sum(cost(b) for b in books)} Build Points"),
+        ]
+    )
+    return left, right
+
+
+def detail_text(saga: Saga, book: Book | None) -> str:
+    """The details panel (markup): every field of the book in the sheet's
+    order -- Name; then Type, Art/Ability/Spell, Level, Quality down the left
+    and Language, Author, Year Published, Owner down the right; then Cost,
+    any covenant-creation limit warnings, and the Description."""
+    if book is None:
+        return "[dim]Select a book to see its details.[/]"
+    not_set = "(not set)"
+    subject_text = subject(book)
+    if book.type == "Tractatus" and book.subject_kind:
+        subject_text = f"{subject_text or not_set} ({book.subject_kind})"
+    year = "(unknown)" if book.year_published is None else book.year_published
+    left = [
+        _cell("Type", book.type),
+        _cell(subject_title(book), subject_text or not_set),
+        _cell("Level", _number(book.level)),
+        _cell("Quality", _number(book.quality)),
+    ]
+    right = [
+        _cell("Language", book.language or not_set),
+        _cell("Author", book.author or "(unknown)"),
+        _cell("Year Published", year),
+        _cell("Owner", owner_label(saga, book)),
+    ]
+    width = max(w for _, w in left) + 4
+    lines = [f"[red][b]{escape(p)}[/b][/]" for p in status_problems(book)]
+    lines.append(_cell("Name", book.name or "(untitled)")[0])
+    lines += [f"{lm}{' ' * (width - lw)}{rm}" for (lm, lw), (rm, _) in zip(left, right)]
+    lines.append(_cell("Cost", f"{cost(book)} Build Points ({cost_formula(book)})")[0])
+    lines += [f"[red]{escape(w)}[/]" for w in limit_warnings(book)]
+    if book.description.strip():
+        lines += ["", "[b]Description:[/]", markdown_inline(book.description.strip())]
+    return "\n".join(lines)
+
+
+# ------------------------------------------------------------ CSV import
+
+#: Every spelling of a book type an import accepts (lower case), e.g. the
+#: plural "Art Summae" used by the rulebook's headings.
+_TYPE_ALIASES: dict[str, str] = {t.lower(): t for t in BOOK_TYPES} | {
+    "art summae": "Art Summa",
+    "ability summae": "Ability Summa",
+    "lab texts": "Lab Text",
+    "laboratory text": "Lab Text",
+    "laboratory texts": "Lab Text",
+    "casting tablets": "Casting Tablet",
+}
+
+#: Art names by lower-case name or abbreviation ("ignem", "ig" -> "Ignem").
+_ART_NAMES: dict[str, str] = {a.lower(): a for a in (*TECHNIQUES, *FORMS)} | {
+    abbr.lower(): art for art, abbr in ART_ABBREVIATIONS.items()
+}
+
+#: Columns an import reads. `owner` and `cost` are recognised but not used:
+#: imported books all go to one place, and cost is always calculated.
+CSV_COLUMNS: tuple[str, ...] = (
+    "name",
+    "type",
+    "language",
+    "author",
+    "year_published",
+    "description",
+    "art",
+    "ability",
+    "level",
+    "quality",
+    "tractatus_type",
+    "spell",
+)
+CSV_UNUSED_COLUMNS: tuple[str, ...] = ("owner", "cost")
+
+
+@dataclass
+class CsvImport:
+    """What a CSV file holds: the books it describes (not yet given ids or an
+    owner), the rows that couldn't be read and why, and the columns that
+    were not used."""
+
+    books: list[Book] = field(default_factory=list)
+    skipped: list[str] = field(default_factory=list)
+    unused_columns: list[str] = field(default_factory=list)
+
+
+def _whole_number(raw: str, label: str) -> int | None:
+    raw = raw.strip()
+    if not raw:
+        return None
+    try:
+        return int(raw)
+    except ValueError:
+        raise ValueError(f"{label} {raw!r} isn't a whole number") from None
+
+
+def _book_from_row(row: dict[str, str]) -> Book:
+    """One CSV row as a Book, or ValueError saying what's wrong with it."""
+    name = row.get("name", "").strip()
+    if not name:
+        raise ValueError("no name")
+    raw_type = row.get("type", "").strip()
+    book_type = _TYPE_ALIASES.get(" ".join(raw_type.lower().split()))
+    if book_type is None:
+        raise ValueError(f"unknown type {raw_type!r}" if raw_type else "no type")
+    book = Book(
+        id="",
+        name=name,
+        type=book_type,
+        language=row.get("language", "").strip() or "Latin",
+        author=row.get("author", "").strip(),
+        description=row.get("description", "").strip(),
+        year_published=_whole_number(row.get("year_published", ""), "Year"),
+    )
+    art = row.get("art", "").strip()
+    ability = row.get("ability", "").strip()
+    if book_type == "Tractatus":
+        kind = row.get("tractatus_type", "").strip().capitalize()
+        if not kind:  # not given: whichever subject the row fills in
+            kind = "Art" if art and not ability else "Ability" if ability else ""
+        if kind not in ("Art", "Ability"):
+            raise ValueError("a Tractatus needs a tractatus_type of Art or Ability")
+        book.subject_kind = kind
+    if is_art_book(book_type, book.subject_kind):
+        if art.lower() not in _ART_NAMES:
+            raise ValueError(f"unknown Art {art!r}" if art else "no Art")
+        book.art = _ART_NAMES[art.lower()]
+    elif is_ability_book(book_type, book.subject_kind):
+        if not ability:
+            raise ValueError("no Ability")
+        # Kept even if unknown: the book is flagged for the user to fix.
+        book.ability = canonical_ability(ability) or ability
+    elif book_type in SPELL_TYPES:
+        book.spell_name = row.get("spell", "").strip()
+        if not book.spell_name:
+            raise ValueError("no spell")
+    if has_level(book_type):
+        book.level = _whole_number(row.get("level", ""), "Level")
+        if book.level is None:
+            raise ValueError("no Level")
+    if has_quality(book_type):
+        book.quality = _whole_number(row.get("quality", ""), "Quality")
+        if book.quality is None:
+            raise ValueError("no Quality")
+    if (book.level or 0) < 0 or (book.quality or 0) < 0:
+        raise ValueError("a negative Level or Quality")
+    return book
+
+
+def parse_books_csv(text: str) -> CsvImport:
+    """Read books from CSV text with a header row (column names in any case
+    and order; see CSV_COLUMNS). Raises ValueError if there's no `name` or
+    `type` column; a bad row is skipped and reported, not fatal."""
+    reader = csv.DictReader(io.StringIO(text))
+    headers = [h.strip().lower() for h in reader.fieldnames or []]
+    missing = [c for c in ("name", "type") if c not in headers]
+    if missing:
+        raise ValueError(f"no {' or '.join(missing)} column in the header row")
+    result = CsvImport(unused_columns=[h for h in headers if h not in CSV_COLUMNS])
+    for line, raw in enumerate(reader, start=2):
+        row = {
+            (key or "").strip().lower(): (value or "")
+            for key, value in raw.items()
+            if not isinstance(value, list)  # extra cells beyond the header
+        }
+        if not any(v.strip() for v in row.values()):
+            continue  # a blank line
+        try:
+            result.books.append(_book_from_row(row))
+        except ValueError as problem:
+            name = row.get("name", "").strip()
+            label = f"Row {line}" + (f" ({name})" if name else "")
+            result.skipped.append(f"{label}: {problem}.")
+    return result
+
+
+def read_books_csv(path: Path) -> CsvImport:
+    """parse_books_csv on a file: UTF-8 (with or without Excel's byte-order
+    mark), falling back to Windows-1252 for older spreadsheets."""
+    data = path.read_bytes()
+    try:
+        text = data.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        text = data.decode("cp1252")
+    return parse_books_csv(text)
+
+
+def duplicate_names(books: list[Book], existing_names: set[str]) -> list[Book]:
+    """The books whose name is already taken: by a book in the saga, or by
+    one earlier in `books` (a file listing the same title twice)."""
+    seen = set(existing_names)
+    repeats = []
+    for book in books:
+        if book.name in seen:
+            repeats.append(book)
+        seen.add(book.name)
+    return repeats
+
+
+def import_preview(
+    result: CsvImport, file_name: str, destination: str, existing_names: set[str]
+) -> str:
+    """The confirmation shown before importing (markup): how many books go
+    where (`destination`, e.g. "into Dammerstein's library"), and anything
+    worth knowing first."""
+    count = len(result.books)
+    lines = [
+        f"Import {count} book{'s' if count != 1 else ''} from "
+        f"[b]{escape(file_name)}[/] {escape(destination)}?"
+    ]
+    unused = [c for c in result.unused_columns if c in CSV_UNUSED_COLUMNS]
+    if unused:
+        plural = "s" if len(unused) > 1 else ""
+        lines.append(
+            f"[dim]Not used: the {' and '.join(unused)} column{plural} (where "
+            "imported books go is set by the import; cost is calculated).[/]"
+        )
+    unknown = [c for c in result.unused_columns if c not in CSV_UNUSED_COLUMNS]
+    if unknown:
+        lines.append(
+            f"[dim]Unrecognised columns ignored: {escape(', '.join(unknown))}.[/]"
+        )
+    repeats = len(duplicate_names(result.books, existing_names))
+    if repeats:
+        verb = "has" if repeats == 1 else "have"
+        lines.append(
+            f"{repeats} {verb} the same name as another book; you'll be asked "
+            "whether to add or skip each."
+        )
+    unknown_abilities = sum(1 for b in result.books if status_problems(b))
+    if unknown_abilities:
+        verb = "names" if unknown_abilities == 1 else "name"
+        lines.append(
+            f"[red]{unknown_abilities} {verb} an unknown ability[/] (imported, "
+            "shown in red to fix)."
+        )
+    over = sum(1 for b in result.books if limit_warnings(b))
+    if over:
+        verb = "goes" if over == 1 else "go"
+        lines.append(
+            f"{over} {verb} over covenant-creation limits (flagged on the book, "
+            "not blocked)."
+        )
+    if result.skipped:
+        shown = result.skipped[:5]
+        lines += ["", f"[red]{len(result.skipped)} row(s) will be skipped:[/]"]
+        lines += [f"  {escape(s)}" for s in shown]
+        if len(result.skipped) > len(shown):
+            lines.append(f"  ...and {len(result.skipped) - len(shown)} more.")
+    return "\n".join(lines)

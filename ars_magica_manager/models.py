@@ -1,4 +1,4 @@
-"""Data model for sagas, covenants, characters, laboratories, and libraries.
+"""Data model for sagas, covenants, characters, laboratories, and books.
 
 See DESIGN.md sections 4-6 for the entity relationships and the reasoning
 behind the Virtue/Flaw modifier system.
@@ -13,7 +13,6 @@ from typing import Any, Literal
 from .totals import validate_modifier_type
 
 CharacterType = Literal["magus", "companion", "grog"]
-BookType = Literal["Summa", "Tractatus", "Lab Text"]
 VirtueFlawType = Literal["Virtue", "Flaw"]
 VirtueFlawTier = Literal["Free", "Minor", "Major"]
 BoonHookType = Literal["Boon", "Hook"]
@@ -411,23 +410,70 @@ class Spell:
     description: str = ""
 
 
+#: The kinds of book a library holds (reference/Libraries.md).
+BOOK_TYPES: tuple[str, ...] = (
+    "Art Summa",
+    "Ability Summa",
+    "Tractatus",
+    "Lab Text",
+    "Casting Tablet",
+    "Other",
+)
+#: What a Tractatus is written on.
+TRACTATUS_SUBJECTS: tuple[str, ...] = ("Art", "Ability")
+#: Who can own a book (`Book.owner_kind`). A book with no owner is unassigned
+#: and files under the saga.
+BOOK_OWNER_KINDS: tuple[str, ...] = ("covenant", "laboratory", "character")
+
+
 @dataclass
 class Book:
+    """One book. Fields a type doesn't use stay blank: `art` is for Art Summae
+    and Art Tractatus, `ability` for Ability Summae and Ability Tractatus,
+    `spell_name` for Lab Texts and Casting Tablets (whose `level` is the
+    spell's level). The Build Point cost is always calculated (books.cost)."""
+
     id: str
-    type: BookType
-    subject: str
-    quality: int = 0
-    level: int | None = None  # Summa and Lab Texts have a level; Tractatus does not
+    name: str
+    type: str  # one of BOOK_TYPES
+    language: str = "Latin"
     author: str = ""
-    spell_id: str | None = None  # set when type == "Lab Text"
-    notes: str = ""
+    owner_kind: str | None = None  # one of BOOK_OWNER_KINDS, or None
+    owner_id: str | None = None
+    year_published: int | None = None
+    description: str = ""
+    subject_kind: str = ""  # a Tractatus's TRACTATUS_SUBJECTS entry
+    art: str = ""
+    ability: str = ""
+    level: int | None = None
+    quality: int | None = None
+    spell_name: str = ""
 
-
-@dataclass
-class Library:
-    id: str
-    covenant_id: str
-    books: list[str] = field(default_factory=list)  # Book ids
+    @classmethod
+    def from_dict(
+        cls, data: dict[str, Any], spell_names: dict[str, str] | None = None
+    ) -> Book:
+        d = dict(data)
+        if "subject" in d:
+            # The pre-Library-tab stub: Summa/Tractatus/Lab Text on one `subject`.
+            subject = str(d.pop("subject") or "")
+            art = {a.lower(): a for a in (*TECHNIQUES, *FORMS)}.get(subject.lower())
+            old_type = d.get("type")
+            if old_type == "Summa":
+                d["type"] = "Art Summa" if art else "Ability Summa"
+            if old_type in ("Summa", "Tractatus"):
+                if art:
+                    d["art"] = art
+                else:
+                    d["ability"] = subject
+            if old_type == "Tractatus":
+                d["subject_kind"] = "Art" if art else "Ability"
+            if old_type == "Lab Text":
+                d["spell_name"] = (spell_names or {}).get(d.get("spell_id") or "", "")
+            d.setdefault("name", d.get("spell_name") or subject)
+            if d.get("notes"):
+                d.setdefault("description", d["notes"])
+        return cls(**known_fields(cls, d))
 
 
 @dataclass
@@ -1120,7 +1166,6 @@ class Covenant:
     saga_id: str
     name: str
     vis_stock: dict[str, int] = field(default_factory=dict)
-    library_id: str | None = None
     notes: str = ""
     aura: int = 0  # inherited by all of the covenant's laboratories
     tribunal: str = ""
@@ -1180,7 +1225,7 @@ class Covenant:
                     )
                 )
             d["vis_stock"] = {}
-        return cls(**d)
+        return cls(**known_fields(cls, d))  # drops the retired `library_id`
 
 
 #: The `VirtueFlawInstance.params` key holding a covenant Boon/Hook's
@@ -1251,7 +1296,6 @@ class Saga:
     covenants: list[Covenant] = field(default_factory=list)
     characters: list[Character] = field(default_factory=list)
     laboratories: list[Laboratory] = field(default_factory=list)
-    libraries: list[Library] = field(default_factory=list)
     books: list[Book] = field(default_factory=list)
     spells: list[Spell] = field(default_factory=list)
 
@@ -1263,7 +1307,15 @@ class Saga:
         d["laboratories"] = [
             Laboratory.from_dict(lab) for lab in d.get("laboratories", [])
         ]
-        d["libraries"] = [Library(**lib) for lib in d.get("libraries", [])]
-        d["books"] = [Book(**b) for b in d.get("books", [])]
         d["spells"] = [Spell(**s) for s in d.get("spells", [])]
-        return cls(**d)
+        spell_names = {s.id: s.name for s in d["spells"]}
+        d["books"] = [Book.from_dict(b, spell_names) for b in d.get("books", [])]
+        # Older saves kept a Library record per covenant listing its book ids;
+        # ownership now lives on the book itself.
+        for library in d.pop("libraries", None) or []:
+            ids = set(library.get("books") or [])
+            for book in d["books"]:
+                if book.id in ids and book.owner_kind is None:
+                    book.owner_kind = "covenant"
+                    book.owner_id = library.get("covenant_id")
+        return cls(**known_fields(cls, d))

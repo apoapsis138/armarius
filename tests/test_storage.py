@@ -13,7 +13,6 @@ from ars_magica_manager.models import (
     HermeticBackground,
     LabCharacteristics,
     Laboratory,
-    Library,
     NamedDescription,
     Saga,
     ScoredTrait,
@@ -93,9 +92,17 @@ def _sample_saga() -> Saga:
                 virtues_flaws=[VirtueFlawInstance(vf_id="labvf_superior_construction")],
             )
         ],
-        libraries=[Library(id="lib_1", covenant_id="cov_1", books=["book_1"])],
         books=[
-            Book(id="book_1", type="Summa", subject="Magic Theory", quality=6, level=8)
+            Book(
+                id="book_1",
+                name="Theory",
+                type="Ability Summa",
+                ability="Magic Theory",
+                quality=6,
+                level=8,
+                owner_kind="covenant",
+                owner_id="cov_1",
+            )
         ],
         spells=[
             Spell(
