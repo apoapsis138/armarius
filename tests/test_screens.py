@@ -91,7 +91,6 @@ from ars_magica_manager.screens import (
     SetDateScreen,
     SpellChooserScreen,
     SpellListView,
-    SpellPickerScreen,
     VirtueFlawPickerScreen,
     WorkspaceScreen,
     _CsvDirectoryTree,
@@ -1664,16 +1663,31 @@ async def test_add_and_remove_spell_known():
         await _open_section(pilot, app, "tab-spells")
 
         await pilot.press("a")
+        await _wait_until(pilot, lambda: isinstance(app.screen, SpellChooserScreen))
         await pilot.pause()
-        assert isinstance(app.screen, SpellPickerScreen)
-
-        await pilot.click("#spell-spell1")
+        # The saga's own spell and the catalog's are both offered.
+        assert "spellpick-spell1" in app.screen._by_item_id
+        assert "spellpick-spell_pilum_of_fire" in app.screen._by_item_id
+        # Search, then pick the second match (the saga's own; the catalog's
+        # Pilum of Fire comes first).
+        app.screen.query_one("#picker-search", Input).value = "pilum"
+        await pilot.pause()
+        await pilot.pause()
+        app.screen.query_one("#picker-search", Input).focus()
+        await pilot.press("down", "down", "enter")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
         assert (
             "Pilum of Fire (CrIg 20)" in app.screen._character_sheet_view._spells_text()
         )
+        # A spell already known isn't offered again.
+        await pilot.press("a")
+        await _wait_until(pilot, lambda: isinstance(app.screen, SpellChooserScreen))
+        await pilot.pause()
+        assert "spellpick-spell1" not in app.screen._by_item_id
+        await pilot.press("escape")
+        await pilot.pause()
 
         await pilot.press("A")
         await pilot.pause()
@@ -1687,6 +1701,19 @@ async def test_add_and_remove_spell_known():
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].spells_known == []
+
+
+async def test_known_spells_can_be_catalog_spells():
+    saga = _saga_with_character_and_spell()
+    saga.characters[0].spells_known = ["spell_aegis_of_the_hearth", "gone"]
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_character(pilot, app)
+        text = app.screen._character_sheet_view._spells_text()
+        assert "Aegis of the Hearth (ReVi Gen, Ritual)" in text
+        assert "gone (unknown spell)" in text
 
 
 async def test_add_and_remove_inventory_item():

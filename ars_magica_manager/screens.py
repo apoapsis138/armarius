@@ -1751,23 +1751,34 @@ class AbilityPickerScreen(SearchablePickerScreen):
 
 
 class SpellChooserScreen(SearchablePickerScreen):
-    """Pick a spell for a Lab Text or Casting Tablet: every spell a book can
-    point at (the catalog, the saga's own, any magus's invented spells),
-    searchable by name or shorthand. Dismisses with the spell id."""
+    """Pick a spell -- for a Lab Text or Casting Tablet, or a spell a magus
+    knows: every spell there is (the catalog, the saga's own, any magus's
+    invented spells) less any in `exclude`, searchable by name or shorthand.
+    Dismisses with the spell id."""
 
     PICKER_TITLE: ClassVar[str] = "Choose the spell"
     EMPTY_MESSAGE: ClassVar[str] = "(no spells)"
     SEARCH_PLACEHOLDER: ClassVar[str] = "Search spells by name or Arts (e.g. CrIg)..."
     LIST_VIEW_ID: ClassVar[str] = "spell-chooser-list"
 
-    def __init__(self, saga: Saga) -> None:
+    def __init__(
+        self, saga: Saga, *, exclude: set[str] | None = None, title: str = ""
+    ) -> None:
         super().__init__()
         self.saga = saga
+        self.exclude = exclude or set()
+        self.title_text = title or self.PICKER_TITLE
         self._origin: dict[str, str] = {}
+
+    def on_mount(self) -> Any:
+        self.query_one("#picker-title", Label).update(self.title_text)
+        return super().on_mount()
 
     def _load_entries(self) -> list[Spell]:
         entries = []
         for spell, origin in spl.pickable_spells(self.saga):
+            if spell.id in self.exclude:
+                continue
             self._origin[spell.id] = origin
             entries.append(spell)
         return entries
@@ -2289,71 +2300,6 @@ class EditCharacteristicsScreen(ModalScreen[Characteristics | None]):
                 error.update(f"{label} must be a whole number.")
                 return
         self.dismiss(Characteristics(**values))
-
-
-class SpellPickerScreen(ModalScreen[str | None]):
-    """Pick a spell (by id) from the saga's spells, to add as known.
-
-    Only lists spells not already known. There's no custom spell creation
-    yet (see the backlog in DESIGN.md); this just wires up the "known
-    spells" relationship against whatever spells already exist in the
-    saga. Dismisses with the spell id, or None if cancelled.
-    """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
-
-    DEFAULT_CSS = """
-    SpellPickerScreen {
-        align: center middle;
-    }
-
-    #picker-dialog {
-        width: 76;
-        height: auto;
-        max-height: 24;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-    """
-
-    def __init__(self, available_spells: list[Spell]) -> None:
-        super().__init__()
-        self.available_spells = available_spells
-
-    def compose(self) -> ComposeResult:
-        with Vertical(id="picker-dialog"):
-            yield Label("Add a Known Spell", id="picker-title")
-            yield ListView(id="spell-picker-list")
-            yield Button("Cancel", id="btn-cancel")
-
-    def on_mount(self) -> None:
-        list_view = self.query_one("#spell-picker-list", ListView)
-        if not self.available_spells:
-            list_view.append(ListItem(Label("(no spells available)")))
-            return
-
-        for spell in self.available_spells:
-            technique = ART_ABBREVIATIONS.get(spell.technique, spell.technique[:2])
-            form = ART_ABBREVIATIONS.get(spell.form, spell.form[:2])
-            label = f"{spell.name} ({technique}{form} {spell.level})"
-            list_view.append(
-                ListItem(Label(label), id=f"{_SPELL_ITEM_ID_PREFIX}{spell.id}")
-            )
-        list_view.index = 0
-
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.dismiss(None)
-
-    def on_list_view_selected(self, event: ListView.Selected) -> None:
-        item_id = event.item.id
-        if item_id is None or not item_id.startswith(_SPELL_ITEM_ID_PREFIX):
-            return
-        self.dismiss(item_id.removeprefix(_SPELL_ITEM_ID_PREFIX))
 
 
 class ItemAddScreen(ModalScreen[str | None]):
@@ -5946,16 +5892,14 @@ class CharacterSheetView(Vertical):
         if not self.character.spells_known:
             return "(none recorded)"
 
-        spell_lookup = {s.id: s for s in self.saga.spells}
         lines = []
         for spell_id in self.character.spells_known:
-            spell = spell_lookup.get(spell_id)
+            spell = spl.find_spell(self.saga, spell_id)
             if spell is None:
-                lines.append(f"  {spell_id} (unknown spell)")
+                lines.append(f"  {escape(spell_id)} (unknown spell)")
                 continue
-            technique = ART_ABBREVIATIONS.get(spell.technique, spell.technique[:2])
-            form = ART_ABBREVIATIONS.get(spell.form, spell.form[:2])
-            lines.append(f"  {spell.name} ({technique}{form} {spell.level})")
+            ritual = ", Ritual" if spell.ritual else ""
+            lines.append(f"  {escape(spell.name)} ({spl.shorthand(spell)}{ritual})")
         return "\n".join(lines)
 
     def _inventory_text(self) -> str:
@@ -9772,8 +9716,6 @@ class WorkspaceScreen(Screen[None]):
         character = self.selected_character
         if character is None:
             return
-        known = set(character.spells_known)
-        available = [s for s in self.saga.spells if s.id not in known]
 
         def handle_result(spell_id: str | None) -> None:
             if spell_id is not None:
@@ -9781,7 +9723,14 @@ class WorkspaceScreen(Screen[None]):
                 storage.save_saga(self.saga)
                 self._refresh_character_section("tab-spells")
 
-        self.app.push_screen(SpellPickerScreen(available), handle_result)
+        self.app.push_screen(
+            SpellChooserScreen(
+                self.saga,
+                exclude=set(character.spells_known),
+                title=f"Add a spell {character.name} knows",
+            ),
+            handle_result,
+        )
 
     def _remove_spell(self) -> None:
         character = self.selected_character
@@ -9791,11 +9740,10 @@ class WorkspaceScreen(Screen[None]):
             self.notify("No Spells to remove.")
             return
 
-        spell_lookup = {s.id: s for s in self.saga.spells}
-        labels = [
-            spell_lookup[sid].name if sid in spell_lookup else f"{sid} (unknown spell)"
-            for sid in character.spells_known
-        ]
+        labels = []
+        for spell_id in character.spells_known:
+            spell = spl.find_spell(self.saga, spell_id)
+            labels.append(spell.name if spell else f"{spell_id} (unknown spell)")
 
         def handle_result(index: int | None) -> None:
             if index is not None:

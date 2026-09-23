@@ -74,7 +74,7 @@ Book (n per saga)
 
 VirtueFlaw catalog (shared reference data, not per-saga)
 Spell catalog / instances (a Spell can be "known" by a character and/or
-  "embodied" in a Lab Text book)
+  "embodied" in a Lab Text book; see 9.6)
 ```
 
 Key relationship notes:
@@ -661,6 +661,12 @@ its cost; only a **General** spell's book keeps its own Level (asked for once th
 spell is chosen). A book whose spell can't be found keeps its typed name and level
 and shows red "Unknown spell". `FieldsDialog` gained a "picker" field kind for this:
 a button showing the choice, which opens a chooser screen.
+
+**Known spells.** A character's `spells_known` holds spell ids of any kind; the
+Spells tab lists them through the same resolver (unknown ids are shown as such), and
+`a` adds one through the same searchable picker, leaving out those already known.
+Mastery, and a details panel for a known spell, come with the Character screen
+rework.
 
 **Building the catalog.** The page's index is the authority for a spell's level: it
 matches the Base + magnitudes arithmetic for 371 spells, while an entry's own
