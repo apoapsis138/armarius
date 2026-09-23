@@ -6,7 +6,8 @@ behind the Virtue/Flaw modifier system.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+import math
+from dataclasses import dataclass, field, fields
 from typing import Any, Literal
 
 from .totals import validate_modifier_type
@@ -39,6 +40,24 @@ FATIGUE_LEVELS: tuple[FatigueLevel, ...] = (
 # `tier` -- enforced in VirtueFlawDef.__post_init__ so a typo in the catalog
 # JSON fails loudly at load time instead of silently giving a wrong total.
 VIRTUE_FLAW_TIER_COST: dict[str, int] = {"Free": 0, "Minor": 1, "Major": 3}
+
+
+def round_away_from_zero(value: float) -> int:
+    """Round a fraction to a whole number by increasing its magnitude (2.4 ->
+    3, -2.4 -> -3), per the user's "round up fractions" rule for covenant
+    finances. A plain `math.ceil` would be wrong for a negative figure (Base
+    Loyalty can be negative): `ceil(-2.4)` is -2, which softens the number
+    instead of rounding it up."""
+    return math.ceil(value) if value >= 0 else -math.ceil(-value)
+
+
+def known_fields(cls: type, data: dict[str, Any]) -> dict[str, Any]:
+    """`data` filtered down to keys that are still fields of `cls`, so
+    `cls(**known_fields(cls, data))` tolerates a stale key from an older save
+    (a field since removed) instead of raising a TypeError."""
+    names = {f.name for f in fields(cls)}
+    return {k: v for k, v in data.items() if k in names}
+
 
 SEASONS: tuple[str, ...] = ("Spring", "Summer", "Autumn", "Winter")
 
@@ -650,6 +669,11 @@ class ScoredTrait:
 
     name: str
     score: int
+    #: Covenant Reputations only: whether the covenant is aware of this
+    #: reputation (an unknown bad Reputation can't yet hurt Loyalty -- see
+    #: inhabitants.reputation_loyalty_penalty). Always True and never edited
+    #: for a Character's own Personality Traits/Reputations.
+    known: bool = True
 
 
 @dataclass
@@ -738,22 +762,44 @@ INHABITANT_KINDS: tuple[str, ...] = (
     "livestock",
 )
 
-#: The Covenant Role choices for a Companion or Specialist.
+#: The Covenant Role choices for a Companion or Specialist. Steward,
+#: Chamberlain, Turb Captain and Autocrat each earn the covenant a Loyalty
+#: bonus (Presence + a specific Ability) -- see
+#: inhabitants.ROLE_ABILITY_MAP / specialists_loyalty().
 COVENANT_ROLES: tuple[str, ...] = (
     "Teacher",
     "Steward",
     "Chamberlain",
     "Turb Captain",
+    "Autocrat",
     "Other",
 )
 
-#: The field of work of a Craftsperson.
+#: A magus's Gift, for the manual (not sheet-linked) case -- see
+#: inhabitants.InhabitantEntry.gift / base_loyalty(). "" means not yet set
+#: (base_loyalty() then assumes "Normal", the default expectation for a
+#: magus); "None" is a deliberate choice that the magus has no Gift at all,
+#: distinct from leaving it blank.
+GIFT_CHOICES: tuple[str, ...] = ("Gentle", "Normal", "Blatant", "None")
+
+#: The Covenant Role choices for the "inhabitant" kind (Other Covenfolk),
+#: distinct from COVENANT_ROLES (Companions/Specialists): which of the book's
+#: covenfolk categories this entry belongs to. Required -- unlike
+#: COVENANT_ROLES it has no blank/"Other" option -- and feeds the
+#: Teamsters/Servants/Laborers counts on the Inhabitants summary (see
+#: inhabitants.other_covenfolk_count).
+OTHER_COVENFOLK_ROLES: tuple[str, ...] = ("Laborer", "Servant", "Teamster", "Dependent")
+
+#: The field of work of a Craftsperson. Each field but None and Books saves
+#: money in one category of the covenant's yearly expenditure (see
+#: economics.CRAFT_SAVINGS); Books (binders, illuminators) saves nothing.
 CRAFT_FIELDS: tuple[str, ...] = (
     "None",
     "Building",
     "Consumables",
     "Laboratories",
     "Provisions",
+    "Weapons and Armor",
     "Writing Materials",
     "Books",
 )
@@ -808,6 +854,62 @@ SANCTUM_USAGES: tuple[str, ...] = (
 )
 SANCTUM_USAGE_DEFAULT = "Standard (2 Seasons)"
 
+#: Points of a Weapon or Armor entry (ArM5 "Points of Weapons and Armor"):
+#: type -> quality -> points each. Siege engines only come Expensive.
+GEAR_QUALITIES: tuple[str, ...] = ("Inexpensive", "Standard", "Expensive")
+GEAR_QUALITY_DEFAULT = "Standard"
+GEAR_POINTS: dict[str, dict[str, int]] = {
+    "Weapon or shield": {"Inexpensive": 1, "Standard": 4, "Expensive": 16},
+    "Partial armor": {"Inexpensive": 2, "Standard": 8, "Expensive": 32},
+    "Full armor": {"Inexpensive": 4, "Standard": 16, "Expensive": 64},
+    "Ballista or light catapult": {"Expensive": 16},
+    "Heavy catapult or trebuchet": {"Expensive": 32},
+}
+#: Which types each list offers (a shield is a weapon; armor is worn).
+GEAR_TYPES_BY_KIND: dict[str, tuple[str, ...]] = {
+    "weapon": (
+        "Weapon or shield",
+        "Ballista or light catapult",
+        "Heavy catapult or trebuchet",
+    ),
+    "armor": ("Partial armor", "Full armor"),
+}
+
+#: The kinds of covenant income source and the yearly income (pounds) each
+#: typically provides -- the default for a source's Current Income.
+INCOME_TYPES: tuple[str, ...] = ("None", "Lesser", "Typical", "Greater", "Legendary")
+INCOME_TYPE_DEFAULTS: dict[str, int] = {
+    "None": 0,
+    "Lesser": 40,
+    "Typical": 100,
+    "Greater": 250,
+    "Legendary": 1000,
+}
+
+#: Income Modification (the book's yearly random-event table): the Effect a
+#: storyguide picks for a source of income, and the multiplier it applies to
+#: that year's income -- see economics.projected_income() / the covenant
+#: Economics tab's "Improve" action (a manual stand-in for the yearly/
+#: automated advancement the book describes; not run automatically here).
+INCOME_EFFECTS: tuple[str, ...] = (
+    "Slump",
+    "Contraction",
+    "Stagnation",
+    "Status Quo",
+    "Growth",
+    "Expansion",
+    "Boom",
+)
+INCOME_EFFECT_MULTIPLIERS: dict[str, float] = {
+    "Slump": 0.5,
+    "Contraction": 0.8,
+    "Stagnation": 0.95,
+    "Status Quo": 1.0,
+    "Growth": 1.05,
+    "Expansion": 1.2,
+    "Boom": 1.5,
+}
+
 
 @dataclass
 class Possession:
@@ -822,7 +924,9 @@ class Possession:
       automatically; a record with `lab_id` only holds the covenant-side extras
       (quality, upkeep, usage, description) for that laboratory, while a record
       without one is a manually-added sanctum.
-    * weapon / armor / item: name, quantity, description.
+    * weapon / armor: name, quantity, gear_type, gear_quality (they give its
+      points, which feed the covenant's finances), description.
+    * item: name, quantity, description.
     * vis_source: name, art, pawns, season (when it is harvested), location,
       physical_form, description.
     * vis_store (Raw Vis Stores): name, art, pawns, location, physical_form.
@@ -844,6 +948,8 @@ class Possession:
     upkeep: int | None = None
     build_points: int | None = None
     usage: str = SANCTUM_USAGE_DEFAULT
+    gear_type: str = ""  # weapon / armor: a key of GEAR_POINTS ("" = not set)
+    gear_quality: str = GEAR_QUALITY_DEFAULT  # weapon / armor: one of GEAR_QUALITIES
     art: str = ""
     pawns: int = 0
     season: str = ""  # one of SEASONS
@@ -870,7 +976,7 @@ class Inhabitant:
       Abilities can be picked from).
     * For Magi/Companions, characters of that type in the covenant are listed
       automatically from their sheets; a record with their `character_id` only
-      holds the covenant-side extras (loyalty, description, responsibility, role),
+      holds the covenant-side extras (description, responsibility, role),
       or, once `departed`, records that they are no longer counted.
     * With no `character_id` it is a manually-added person or animal (e.g. an NPC
       magus without a character sheet).
@@ -884,14 +990,21 @@ class Inhabitant:
     character_id: str | None = None
     year_born: int | None = None
     house: str | None = None  # NPC magus: a house_catalog.json id
-    loyalty: int = 0
+    gift: str = ""  # manual (non-sheet) magus: one of GIFT_CHOICES, or ""
     quantity: int = 1
     responsibility: str = ""
     role: str = ""  # one of COVENANT_ROLES, or ""
-    skill_value: int = 0  # Craftsperson: value of the crafting skill
+    #: Craftsperson: value of the crafting skill, unless linked_ability
+    #: resolves one from a sheet. Steward/Chamberlain/Turb Captain/Autocrat:
+    #: the manual Ability portion of the role's Loyalty bonus, unless the
+    #: entry is tied to a character sheet (see inhabitants.ROLE_ABILITY_MAP).
+    skill_value: int = 0
     field_of_work: str = "None"  # Craftsperson: one of CRAFT_FIELDS
     rare: bool = False  # Craftsperson
     linked_ability: str = ""  # Craftsperson: the Ability name they use
+    #: Steward/Chamberlain/Turb Captain/Autocrat: the manual Presence portion
+    #: of the role's Loyalty bonus, unless tied to a character sheet.
+    presence: int = 0
     description: str = ""
     #: Magi/Companions only: the character is still in the covenant on their
     #: sheet but no longer counts as an inhabitant (died, left...). A departed
@@ -907,34 +1020,35 @@ class Inhabitant:
 
 @dataclass
 class Loyalty:
-    """The covenant's Loyalty block. Tracked manually for now -- the totals and
-    scores are meant to be calculated from the situational modifiers later."""
+    """The covenant's Loyalty block. Base Loyalty, Total Modifiers, Current
+    Loyalty Points and Prevailing Loyalty Score are all calculated (see
+    inhabitants.py) from the fields below plus data read from elsewhere on the
+    sheet (magi's Gift, Equipment/Money's own point tables, the covenant's
+    Living Conditions (Mundane), Specialists' role bonuses, Reputations).
+    Familiarity, Actions and Events, and Magical Influence stay free-form
+    (meant to come from Diary entries once that tab exists)."""
 
     governance: str = ""  # Type of Governance; only used if no governance Boon
-    base_points: int = 0
-    total_modifiers: int = 0
-    current_points: int = 0
-    prevailing_score: int = 0
-    living_conditions: int = 0
     equipment: str = LOYALTY_EQUIPMENT_DEFAULT
-    equipment_modifier: int = 0
     money: str = LOYALTY_MONEY_DEFAULT
-    money_modifier: int = 0
-    specialists: int = 0
+    #: The covenant provides a pension (half Wages until death) to retirees:
+    #: +10 Loyalty points on top of the Money selection's own points.
+    pension: bool = False
     familiarity: int = 0
     actions_and_events: int = 0
+    magical_influence: int = 0
 
 
 @dataclass
 class Population:
-    """The Inhabitants summary block and the Miscellaneous block, all manual for
-    now. The covenant's Total Inhabitants is calculated, not stored (see
-    inhabitants.total_inhabitants)."""
+    """The Inhabitants summary block and the Miscellaneous block. The
+    covenant's Total Inhabitants, the minimum Servants/Teamsters needed, and
+    the actual Teamsters/Servants/Laborers counts are all calculated from the
+    Other Covenfolk list (see inhabitants.total_inhabitants /
+    minimum_servants / minimum_teamsters / other_covenfolk_count), not
+    stored; `other_people` is the one figure left with no list behind it, so
+    it stays manual."""
 
-    teamsters: int = 0
-    teamsters_needed: int = 0
-    servants: int = 0
-    servants_needed: int = 0
     other_people: int = 0
     aging_magi: int = 0
     aging_mundane: int = 0
@@ -942,6 +1056,62 @@ class Population:
     magic_servants: int = 0
     magic_teamsters: int = 0
     magic_turbula: int = 0
+
+
+@dataclass
+class IncomeSource:
+    """One of a covenant's sources of income. `income` is the Current Income in
+    pounds per year; None means "follow the type" (INCOME_TYPE_DEFAULTS), an
+    int is a value the user typed over it."""
+
+    id: str
+    name: str = ""
+    type: str = "Typical"  # one of INCOME_TYPES
+    income: int | None = None
+    description: str = ""  # supports inline emphasis
+    #: A record of the last "Improve" action taken on this source (see
+    #: economics.improvement_note); plain text, replaced wholesale each time,
+    #: not user-editable directly.
+    note: str = ""
+
+    def __post_init__(self) -> None:
+        if self.type not in INCOME_TYPES:
+            raise ValueError(
+                f"Unknown income type {self.type!r}; must be one of {INCOME_TYPES}"
+            )
+
+    @property
+    def current_income(self) -> int:
+        if self.income is not None:
+            return self.income
+        return INCOME_TYPE_DEFAULTS[self.type]
+
+
+@dataclass
+class Economics:
+    """What is stored for the covenant's Economics tab. Every figure that can be
+    worked out from the rest of the sheet (points, costs, savings, totals) is
+    calculated on demand (see economics.py), not stored: only what the user
+    types is kept here."""
+
+    income_sources: list[IncomeSource] = field(default_factory=list)
+    wealth: int = 0  # the covenant's stores, in pounds
+    tithes: int = 0
+    inflation: int = 0
+    #: There's a cost of at least 1 pound of sundries every year.
+    sundry: int = 1
+    #: Cost-saving rows the book gives no formula for, so the user works the
+    #: figure out and types the pounds saved directly.
+    magic_savings: int = 0
+    emergency_savings: int = 0
+    #: Free-text notes by row key ("buildings", "laborers"...).
+    notes: dict[str, str] = field(default_factory=dict)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Economics:
+        d = known_fields(cls, data)
+        d["income_sources"] = [IncomeSource(**s) for s in d.get("income_sources", [])]
+        return cls(**d)
 
 
 @dataclass
@@ -976,15 +1146,22 @@ class Covenant:
     population: Population = field(default_factory=Population)
     #: The Possessions tab (see Possession).
     possessions: list[Possession] = field(default_factory=list)
+    #: The Economics tab (see Economics).
+    economics: Economics = field(default_factory=Economics)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Covenant:
         d = dict(data)
+        d["economics"] = Economics.from_dict(d.get("economics", {}))
         d["boons_hooks"] = [VirtueFlawInstance(**bh) for bh in d.get("boons_hooks", [])]
         d["reputations"] = [ScoredTrait(**r) for r in d.get("reputations", [])]
-        d["inhabitants"] = [Inhabitant(**i) for i in d.get("inhabitants", [])]
-        d["loyalty"] = Loyalty(**d.get("loyalty", {}))
-        d["population"] = Population(**d.get("population", {}))
+        d["inhabitants"] = [
+            Inhabitant(**known_fields(Inhabitant, i)) for i in d.get("inhabitants", [])
+        ]
+        d["loyalty"] = Loyalty(**known_fields(Loyalty, d.get("loyalty", {})))
+        d["population"] = Population(
+            **known_fields(Population, d.get("population", {}))
+        )
         d["possessions"] = [Possession(**p) for p in d.get("possessions", [])]
         # Older saves kept a bare Art -> pawns `vis_stock`; those are now Raw Vis
         # stores on the Possessions tab.

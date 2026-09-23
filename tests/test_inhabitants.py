@@ -12,10 +12,12 @@ from ars_magica_manager.models import (
     Ability,
     Background,
     Character,
+    Characteristics,
     Covenant,
     HermeticBackground,
     Inhabitant,
     Saga,
+    ScoredTrait,
     VirtueFlawInstance,
 )
 
@@ -94,7 +96,7 @@ def test_a_record_for_a_listed_character_only_overrides_covenant_side_fields():
             character_id="mag1",
             name="IGNORED",
             year_born=1,
-            loyalty=4,
+            responsibility="IGNORED TOO",
             description="Trusted.",
         )
     )
@@ -102,7 +104,7 @@ def test_a_record_for_a_listed_character_only_overrides_covenant_side_fields():
     assert len(entries) == 1  # not listed twice
     entry = entries[0]
     assert entry.name == "Corvinus" and entry.year_born == 1195  # live from the sheet
-    assert entry.loyalty == 4 and entry.description == "Trusted."
+    assert entry.description == "Trusted."
 
 
 def test_a_departed_magus_or_companion_is_neither_listed_nor_counted():
@@ -208,8 +210,23 @@ def test_total_inhabitants_is_calculated_from_every_list_and_other_people():
         Inhabitant(id="h1", kind="horse", name="Grey", quantity=2),
         Inhabitant(id="l1", kind="livestock", name="Sheep", quantity=10),
     ]
-    # 4 other + 1 magus + 1 companion + 2 craft + 3 turb + 2 horses + 10 livestock
-    assert inh.total_inhabitants(saga, cov) == 4 + 1 + 1 + 2 + 3 + 2 + 10
+    # 4 other + 1 magus + 1 companion + 2 craft + 3 turb + 2 horses (livestock
+    # aren't inhabitants at all, per the rules -- not counted here)
+    assert inh.total_inhabitants(saga, cov) == 4 + 1 + 1 + 2 + 3 + 2
+
+
+def test_livestock_are_tracked_but_never_counted():
+    saga, cov = _saga()
+    points_before = inh.inhabitant_points(saga, cov)
+    total_before = inh.total_inhabitants(saga, cov)
+    cov.inhabitants.append(
+        Inhabitant(id="l1", kind="livestock", name="Sheep", quantity=50)
+    )
+    # Neither Total Inhabitants nor the Economics points move.
+    assert inh.total_inhabitants(saga, cov) == total_before
+    assert inh.inhabitant_points(saga, cov) == points_before
+    # Still listed and headcount-able on its own list.
+    assert inh.headcount(inh.entries_for_kind(saga, cov, "livestock")) == 50
 
 
 # --------------------------------------------------------------------- grogs
@@ -245,16 +262,16 @@ def test_governance_styles_are_real_free_residents_boons():
 
 
 def test_governance_follows_the_boon_else_the_typed_value():
-    _, cov = _saga()
+    saga, cov = _saga()
     assert inh.governance_names(cov) == []
-    assert "(not set)" in inh.loyalty_left_text(cov)
+    assert "(not set)" in inh.loyalty_left_text(saga, cov)
 
     cov.loyalty.governance = "Guild of Mercers"
-    assert "Guild of Mercers" in inh.loyalty_left_text(cov)
+    assert "Guild of Mercers" in inh.loyalty_left_text(saga, cov)
 
     cov.boons_hooks.append(VirtueFlawInstance(vf_id="covbh_boon_free_autocracy"))
     assert inh.governance_names(cov) == ["Autocracy"]
-    left = inh.loyalty_left_text(cov)
+    left = inh.loyalty_left_text(saga, cov)
     assert "Autocracy" in left and "Guild of Mercers" not in left  # the Boon wins
     assert "[dim]Autocracy[/]" in left  # shown as inherited
 
@@ -265,7 +282,7 @@ def test_governance_follows_the_boon_else_the_typed_value():
 def test_row_labels_follow_the_paper_sheet_per_kind():
     saga, cov = _saga()
     cov.inhabitants += [
-        Inhabitant(id="m", kind="magus", name="NPC", year_born=None),
+        Inhabitant(id="m", kind="magus", name="NPC", year_born=None, gift="Blatant"),
         Inhabitant(
             id="cr",
             kind="craftsperson",
@@ -274,23 +291,84 @@ def test_row_labels_follow_the_paper_sheet_per_kind():
             responsibility="Blacksmithing",
             skill_value=7,
         ),
-        Inhabitant(
-            id="t", kind="turb", name="Thomae", responsibility="Shield Grog", loyalty=2
-        ),
+        Inhabitant(id="t", kind="turb", name="Thomae", responsibility="Shield Grog"),
         Inhabitant(id="h", kind="horse", name="Grey", quantity=3),
     ]
     magi = _labels(saga, cov, "magus")
-    assert magi[0] == "Corvinus | House Bonisagus | Year Born: 1195 | Loyalty: 0"
-    assert magi[1] == "NPC | House Unknown | Year Born: Unknown | Loyalty: 0"
+    assert magi[0] == "Corvinus | House Bonisagus | Year Born: 1195 | The Gift"
+    assert magi[1] == "NPC | House Unknown | Year Born: Unknown | Blatant Gift"
     assert _labels(saga, cov, "craftsperson") == [
-        "Gerhard | Blacksmithing | Score: 7 | Qty: 1 | Year Born: 1187 | Loyalty: 0"
+        "Gerhard | Blacksmithing | Score: 7 | Qty: 1 | Year Born: 1187"
     ]
     assert _labels(saga, cov, "turb") == [
-        "Thomae | Shield Grog | Qty: 1 | Year Born: Unknown | Loyalty: 2"
+        "Thomae | Shield Grog | Qty: 1 | Year Born: Unknown"
     ]
-    assert _labels(saga, cov, "horse") == [
-        "Grey | Qty: 3 | Year Born: Unknown | Loyalty: 0"
+    assert _labels(saga, cov, "horse") == ["Grey | Qty: 3 | Year Born: Unknown"]
+
+
+def test_other_covenfolk_row_label_shows_role_qty_and_year_born_only_if_one():
+    saga, cov = _saga()
+    cov.inhabitants += [
+        # A named individual: role shown, Year Born shown (Qty is 1).
+        Inhabitant(
+            id="a",
+            kind="inhabitant",
+            name="Old Marta",
+            role="Dependent",
+            year_born=1180,
+        ),
+        # A named group: role shown, Year Born left out (Qty > 1).
+        Inhabitant(
+            id="b",
+            kind="inhabitant",
+            name="The Miller Family",
+            role="Dependent",
+            quantity=4,
+            year_born=1190,
+        ),
+        # Name is exactly the role's plural: role left out as redundant.
+        Inhabitant(
+            id="c", kind="inhabitant", name="Servants", role="Servant", quantity=3
+        ),
+        # Plural name but a DIFFERENT role: still shown (not a match).
+        Inhabitant(
+            id="d", kind="inhabitant", name="Servants", role="Dependent", quantity=2
+        ),
     ]
+    labels = _labels(saga, cov, "inhabitant")
+    assert labels[0] == "Old Marta | Dependent | Qty: 1 | Year Born: 1180"
+    assert labels[1] == "The Miller Family | Dependent | Qty: 4"
+    assert labels[2] == "Servants | Qty: 3"
+    assert labels[3] == "Servants | Dependent | Qty: 2"
+
+
+def test_other_covenfolk_detail_panel_shows_the_role():
+    saga, cov = _saga()
+    cov.inhabitants.append(
+        Inhabitant(
+            id="a",
+            kind="inhabitant",
+            name="Old Marta",
+            role="Dependent",
+            responsibility="Nursemaid",
+            year_born=1180,
+        )
+    )
+    text = _plain(
+        inh.detail_text(inh.entries_for_kind(saga, cov, "inhabitant")[0], 1220)
+    )
+    for expected in (
+        "Name: Old Marta",
+        "Responsibility: Nursemaid",
+        "Covenant Role: Dependent",
+        "Quantity: 1",
+    ):
+        assert expected in text, expected
+    assert "Loyalty Bonus" not in text  # not one of the Specialist bonus roles
+
+
+def test_the_inhabitant_kind_is_titled_other_covenfolk():
+    assert inh.KIND_TITLES["inhabitant"] == "Other Covenfolk"
 
 
 def test_row_labels_escape_user_text():
@@ -312,7 +390,6 @@ def test_detail_text_shows_the_fields_and_renders_description_emphasis():
             field_of_work="Building",
             rare=True,
             linked_ability="Craft: Smith",
-            loyalty=1,
             quantity=2,
             description="Master **smith**. Works *only* in iron.",
         )
@@ -329,7 +406,6 @@ def test_detail_text_shows_the_fields_and_renders_description_emphasis():
         "Rare: Yes",
         "Linked Ability: Craft: Smith",
         "Quantity: 2",
-        "Loyalty: 1",
         "Description:",
         "Master smith. Works only in iron.",
     ):
@@ -348,20 +424,374 @@ def test_detail_text_for_a_listed_character_and_for_nothing():
     assert "Select an inhabitant" in _plain(inh.detail_text(None, 1220))
 
 
-def test_loyalty_and_population_text():
+def test_loyalty_left_text_shows_the_derived_totals():
     saga, cov = _saga()
-    cov.loyalty.base_points = -30
+    cov.loyalty.equipment = "Anything they need"  # +20
+    left = _plain(inh.loyalty_left_text(saga, cov))
+    # 1 magus, The Gift (no Virtues/Flaws on the fixture's Corvinus) -> -30.
+    assert re.search(r"Base Loyalty Points:\s+-30", left)
+    assert re.search(r"Total modifiers:\s+20\b", left)
+    assert re.search(r"Current Loyalty Points:\s+-10\b", left)
+    assert re.search(r"Prevailing Loyalty Score:\s+-1\b", left)
+
+
+def test_loyalty_right_text_shows_every_situational_modifier():
+    saga, cov = _saga()
     cov.loyalty.equipment = "Anything they need"
-    cov.loyalty.equipment_modifier = 2
-    cov.population.teamsters, cov.population.teamsters_needed = 1, 3
-    cov.population.other_people = 5
-    right = _plain(inh.loyalty_right_text(cov))
+    cov.loyalty.money = "Lavish salary"
+    cov.loyalty.pension = True
+    cov.loyalty.familiarity = 4
+    cov.loyalty.actions_and_events = -2
+    cov.loyalty.magical_influence = 3
+    cov.reputations.append(ScoredTrait(name="Litigious", score=-2, known=True))
+    right = _plain(inh.loyalty_right_text(saga, cov))
     assert "Situational Modifiers for:" in right
-    assert "Anything they need  (2)" in right and "Standard salary  (0)" in right
-    assert re.search(r"Base Loyalty Points:\s+-30", _plain(inh.loyalty_left_text(cov)))
+    assert "Anything they need  (+20)" in right
+    assert "Lavish salary  (+20)" in right and "+ pension" in right
+    assert re.search(r"Familiarity:\s+4\b", right)
+    assert re.search(r"Reputation:\s+-10\b", right)  # -5 * 2
+    assert re.search(r"Actions and events:\s+-2\b", right)
+    assert re.search(r"Magical Influence:\s+3\b", right)
+
+
+def test_population_text_colors_the_needed_pair_green_or_red():
+    saga, cov = _saga()
+    cov.population.other_people = 5
+    # Enough inhabitant points (1 magus + 1 companion + 5 other = 8+3+5=16) that
+    # some servants/teamsters are required.
     population = inh.population_text(saga, cov)
-    assert "1 / 3" in population
+    minimum = inh.minimum_servants(saga, cov)
+    assert f"[red]0 / {minimum}[/]" in population  # none hired yet: red
+    # Hiring them (excluded from the minimum's own formula, so it stays put).
+    cov.inhabitants.append(
+        Inhabitant(
+            id="s", kind="inhabitant", name="Servants", quantity=minimum, role="Servant"
+        )
+    )
+    assert f"[green]{minimum} / {minimum}[/]" in inh.population_text(saga, cov)
     assert re.search(r"Total Inhabitants:\s+7\b", population)  # 5 + magus + companion
+
+
+# ----------------------------------------------------------------- gift
+
+
+def test_gift_is_read_from_a_sheets_virtues_or_a_manual_choice():
+    saga, cov = _saga()  # Corvinus has no Gift-related Virtue/Flaw
+    magus = inh.entries_for_kind(saga, cov, "magus")[0]
+    assert magus.gift == "The Gift"  # the default assumption
+
+    gentle = next(c for c in saga.characters if c.id == "mag1")
+    gentle.virtues_flaws = [VirtueFlawInstance(vf_id="vf_gentle_gift")]
+    assert inh.entries_for_kind(saga, cov, "magus")[0].gift == "Gentle Gift"
+    gentle.virtues_flaws = [VirtueFlawInstance(vf_id="vf_blatant_gift")]
+    assert inh.entries_for_kind(saga, cov, "magus")[0].gift == "Blatant Gift"
+
+    for choice, expected in (
+        ("", ""),
+        ("Gentle", "Gentle Gift"),
+        ("Normal", "The Gift"),
+        ("Blatant", "Blatant Gift"),
+        ("None", "No Gift"),
+    ):
+        cov.inhabitants = [Inhabitant(id="npc", kind="magus", name="NPC", gift=choice)]
+        entry = inh.entries_for_kind(saga, cov, "magus")[1]
+        assert entry.gift == expected, choice
+
+
+def test_gift_does_not_apply_to_non_magi():
+    saga, cov = _saga()
+    companion = inh.entries_for_kind(saga, cov, "companion")[0]
+    assert companion.gift == ""
+
+
+def test_base_loyalty_averages_gift_modifiers_and_rounds_away_from_zero():
+    saga, cov = _saga()
+    saga.characters = [
+        Character(id=f"m{i}", name=f"M{i}", type="magus", covenant_id="cov1")
+        for i in range(5)
+    ]
+    saga.characters.append(
+        Character(
+            id="m5",
+            name="M5",
+            type="magus",
+            covenant_id="cov1",
+            virtues_flaws=[VirtueFlawInstance(vf_id="vf_blatant_gift")],
+        )
+    )
+    # 5 x The Gift (-30) + 1 x Blatant Gift (-105) = -255 / 6 = -42.5 -> -43.
+    assert inh.base_loyalty(saga, cov) == -43
+
+
+def test_base_loyalty_is_zero_with_no_magi():
+    saga, cov = _saga()
+    saga.characters = [c for c in saga.characters if c.type != "magus"]
+    assert inh.base_loyalty(saga, cov) == 0
+
+
+def test_gentle_and_no_gift_both_avoid_the_social_penalty():
+    saga, cov = _saga()
+    gentle = next(c for c in saga.characters if c.id == "mag1")
+    gentle.virtues_flaws = [VirtueFlawInstance(vf_id="vf_gentle_gift")]
+    assert inh.base_loyalty(saga, cov) == 0
+    gentle.virtues_flaws = []
+    cov.inhabitants = []  # manual "None" magus instead of the sheet-linked one
+    saga.characters = [c for c in saga.characters if c.id != "mag1"]
+    cov.inhabitants.append(Inhabitant(id="npc", kind="magus", name="NPC", gift="None"))
+    assert inh.base_loyalty(saga, cov) == 0
+
+
+# -------------------------------------------------------------- specialists
+
+
+def _presence(value: int) -> Characteristics:
+    return Characteristics(presence=value)
+
+
+def test_role_bonus_is_presence_plus_the_roles_ability_from_the_sheet():
+    saga, cov = _saga()
+    grog = next(c for c in saga.characters if c.id == "grog1")
+    grog.characteristics = _presence(2)
+    grog.abilities.append(Ability(name="Leadership", level=5))
+    cov.inhabitants.append(
+        Inhabitant(
+            id="s",
+            kind="specialist",
+            name="Old Thomae",
+            character_id="grog1",
+            role="Turb Captain",
+        )
+    )
+    entry = inh.entries_for_kind(saga, cov, "specialist")[0]
+    assert entry.role_presence == 2 and entry.role_ability_total == 5
+    assert entry.role_bonus == 7
+
+
+def test_autocrat_sums_both_profession_abilities():
+    saga, cov = _saga()
+    grog = next(c for c in saga.characters if c.id == "grog1")
+    grog.characteristics = _presence(1)
+    grog.abilities += [
+        Ability(name="Profession: Steward", level=3),
+        Ability(name="Profession: Chamberlain", level=4),
+    ]
+    cov.inhabitants.append(
+        Inhabitant(
+            id="s",
+            kind="specialist",
+            name="Old Thomae",
+            character_id="grog1",
+            role="Autocrat",
+        )
+    )
+    entry = inh.entries_for_kind(saga, cov, "specialist")[0]
+    assert entry.role_ability_total == 7  # 3 + 4
+    assert entry.role_bonus == 8  # + Presence 1
+
+
+def test_role_bonus_is_manual_without_a_sheet_and_none_for_other_roles():
+    saga, cov = _saga()
+    cov.inhabitants += [
+        Inhabitant(
+            id="s",
+            kind="specialist",
+            name="Hired Steward",
+            role="Steward",
+            presence=1,
+            skill_value=6,
+        ),
+        Inhabitant(id="t", kind="specialist", name="A Teacher", role="Teacher"),
+    ]
+    entries = inh.entries_for_kind(saga, cov, "specialist")
+    assert entries[0].role_bonus == 7  # manual Presence + manual Ability
+    assert entries[1].role_bonus is None  # not one of the four bonus roles
+
+
+def test_specialists_loyalty_sums_companions_and_specialists_bonuses():
+    saga, cov = _saga()
+    comp = next(c for c in saga.characters if c.id == "comp1")
+    comp.characteristics = _presence(3)
+    comp.abilities.append(Ability(name="Profession: Steward", level=2))
+    cov.inhabitants = [
+        Inhabitant(id="a", kind="companion", character_id="comp1", role="Steward"),
+        Inhabitant(
+            id="b",
+            kind="specialist",
+            name="Hired Hand",
+            role="Chamberlain",
+            presence=1,
+            skill_value=4,
+        ),
+        Inhabitant(id="c", kind="specialist", name="Idle", role="Other"),
+    ]
+    assert inh.specialists_loyalty(saga, cov) == (3 + 2) + (1 + 4)
+
+
+# ----------------------------------------------------------- loyalty lookups
+
+
+def test_equipment_and_money_loyalty_points_match_the_tables():
+    _, cov = _saga()
+    for option, points in inh.EQUIPMENT_LOYALTY_POINTS.items():
+        cov.loyalty.equipment = option
+        assert inh.equipment_loyalty(cov) == points
+    for option, points in inh.MONEY_LOYALTY_POINTS.items():
+        cov.loyalty.money = option
+        cov.loyalty.pension = False
+        assert inh.money_loyalty(cov) == points
+        cov.loyalty.pension = True
+        assert inh.money_loyalty(cov) == points + 10
+
+
+def test_living_conditions_loyalty_follows_the_covenants_mundane_field():
+    _, cov = _saga()
+    cov.living_conditions_mundane = 1
+    assert inh.living_conditions_loyalty(cov) == 10
+    cov.living_conditions_mundane = -2
+    assert inh.living_conditions_loyalty(cov) == -20
+
+
+def test_reputation_penalty_only_counts_known_bad_reputations():
+    _, cov = _saga()
+    cov.reputations = [
+        ScoredTrait(name="Feared", score=2, known=True),  # good: no penalty
+        ScoredTrait(name="Litigious", score=-2, known=True),
+        ScoredTrait(name="Secret Cult", score=-3, known=False),  # not known yet
+    ]
+    assert inh.reputation_loyalty_penalty(cov) == -10  # only the known -2
+
+
+def test_prevailing_loyalty_score_is_symmetric_and_clamps_beyond_the_table():
+    for points, score in ((0, 0), (5, 1), (104, 5), (105, 6), (500, 6)):
+        assert inh.prevailing_loyalty_score(points) == score
+        assert inh.prevailing_loyalty_score(-points) == -score
+
+
+def test_current_loyalty_points_is_base_plus_total_modifiers():
+    saga, cov = _saga()
+    cov.loyalty.familiarity = 10
+    assert inh.current_loyalty_points(saga, cov) == (
+        inh.base_loyalty(saga, cov) + inh.total_modifiers(saga, cov)
+    )
+    assert inh.current_loyalty_points(saga, cov) == -30 + 10
+
+
+def test_a_covenants_season_picks_the_column_of_the_points_table():
+    saga, cov = _saga()
+    saga.characters = [c for c in saga.characters if c.type == "grog"]
+    cov.covenant_season = "Spring"
+    cov.inhabitants = [Inhabitant(id="m", kind="magus", name="M", quantity=1)]
+    # A manual magus with no listed grogs/other categories: just the one.
+    assert inh.inhabitant_points(saga, cov) == 5
+    cov.covenant_season = "Winter"
+    assert inh.inhabitant_points(saga, cov) == 5
+    cov.covenant_season = "Summer"
+    assert inh.inhabitant_points(saga, cov) == 10
+    cov.covenant_season = "Autumn"
+    assert inh.inhabitant_points(saga, cov) == 10
+
+
+def test_inhabitant_points_count_each_kind_and_everyone_counted_by_number():
+    saga, cov = _saga()
+    cov.inhabitants = [
+        Inhabitant(id="a", kind="specialist", name="Steward"),  # 2
+        Inhabitant(id="b", kind="craftsperson", name="Smith"),  # 2
+        Inhabitant(id="c", kind="turb", name="Guards", quantity=4),  # 4
+        Inhabitant(id="d", kind="horse", name="Mules", quantity=2),  # 2
+        Inhabitant(id="e", kind="livestock", name="Sheep", quantity=9),  # 0
+        # Other Covenfolk, each tagged with its Covenant Role: 1 point each.
+        Inhabitant(
+            id="f", kind="inhabitant", name="Servants", quantity=3, role="Servant"
+        ),
+        Inhabitant(
+            id="g", kind="inhabitant", name="Teamsters", quantity=1, role="Teamster"
+        ),
+        Inhabitant(
+            id="h", kind="inhabitant", name="Laborers", quantity=2, role="Laborer"
+        ),
+    ]
+    cov.population.other_people = 1
+    # 8 (magus + companion) + 2 + 2 + 4 + 2 + 0 + (3 + 1 + 2) covenfolk + 1 other
+    assert inh.inhabitant_points(saga, cov) == 8 + 10 + 7
+
+
+def test_a_departed_magus_no_longer_counts_toward_the_points():
+    saga, cov = _saga()
+    cov.inhabitants.append(
+        Inhabitant(id="d", kind="magus", character_id="mag1", departed=True)
+    )
+    assert inh.inhabitant_points(saga, cov) == 3  # just the companion
+
+
+def test_exclude_roles_leaves_matching_other_covenfolk_entries_out_of_the_total():
+    saga, cov = _saga()
+    cov.inhabitants.append(
+        Inhabitant(
+            id="f", kind="inhabitant", name="Laborers", quantity=4, role="Laborer"
+        )
+    )
+    with_ = inh.inhabitant_points(saga, cov)
+    without = inh.inhabitant_points(saga, cov, exclude_roles=("Laborer",))
+    assert with_ - without == 4  # 1 point per laborer at Spring
+    # A role that doesn't appear on the list changes nothing.
+    assert inh.inhabitant_points(saga, cov, exclude_roles=("Servant",)) == with_
+
+
+# ------------------------------------------------------- servants/teamsters
+
+
+def test_other_covenfolk_count_sums_quantities_by_role():
+    saga, cov = _saga()
+    cov.inhabitants += [
+        Inhabitant(id="a", kind="inhabitant", name="Old Thomae", role="Teamster"),
+        Inhabitant(
+            id="b", kind="inhabitant", name="Servants", role="Servant", quantity=4
+        ),
+        Inhabitant(
+            id="c", kind="inhabitant", name="More Servants", role="Servant", quantity=2
+        ),
+        Inhabitant(id="d", kind="inhabitant", name="Unassigned"),  # no role: ignored
+    ]
+    assert inh.other_covenfolk_count(saga, cov, "Teamster") == 1
+    assert inh.other_covenfolk_count(saga, cov, "Servant") == 6
+    assert inh.other_covenfolk_count(saga, cov, "Laborer") == 0
+
+
+def test_minimum_servants_and_teamsters_follow_the_formulas():
+    saga, cov = _saga()
+    cov.inhabitants.append(Inhabitant(id="t", kind="turb", name="Turb", quantity=17))
+    # Points excluding servants/laborers/teamsters: 1 magus(5) + 1 companion(3)
+    # + 17 turb(1 each) = 25 -> 2 servants per 10 -> 5.
+    assert inh.minimum_servants(saga, cov) == 5
+    # Points excluding laborers/teamsters: same 25 (no servants/laborers
+    # hired yet) -> 1 teamster per 10 -> 3 (rounded up from 2.5).
+    assert inh.minimum_teamsters(saga, cov) == 3
+
+
+def test_laborers_reduce_the_minimum_teamsters_but_not_servants():
+    saga, cov = _saga()
+    cov.inhabitants += [
+        Inhabitant(id="t", kind="turb", name="Turb", quantity=17),
+        Inhabitant(
+            id="f", kind="inhabitant", name="Laborers", quantity=5, role="Laborer"
+        ),
+    ]
+    # The servants formula excludes laborers entirely, so hiring some doesn't
+    # change it: still 25 points -> 5.
+    assert inh.minimum_servants(saga, cov) == 5
+    # The teamsters formula also excludes laborers' own points, then
+    # subtracts 2 per laborer on top: 25 - 2*5 = 15 -> 2 (rounded up from 1.5).
+    assert inh.minimum_teamsters(saga, cov) == 2
+
+
+def test_minimum_teamsters_never_goes_negative():
+    saga, cov = _saga()
+    cov.inhabitants.append(
+        Inhabitant(
+            id="f", kind="inhabitant", name="Laborers", quantity=100, role="Laborer"
+        )
+    )
+    assert inh.minimum_teamsters(saga, cov) == 0
 
 
 # -------------------------------------------------------------------- model
@@ -370,15 +800,54 @@ def test_loyalty_and_population_text():
 def test_covenant_inhabitant_data_round_trips_and_old_saves_default():
     _, cov = _saga()
     cov.inhabitants.append(Inhabitant(id="i", kind="horse", name="Grey", quantity=2))
-    cov.loyalty.base_points = -30
+    cov.loyalty.familiarity = 4
     cov.population.aging_magi = 1
     again = Covenant.from_dict(asdict(cov))
     assert again.inhabitants == cov.inhabitants
-    assert again.loyalty.base_points == -30 and again.population.aging_magi == 1
+    assert again.loyalty.familiarity == 4 and again.population.aging_magi == 1
 
     old = Covenant.from_dict({"id": "c", "saga_id": "s", "name": "Old"})
     assert old.inhabitants == [] and old.loyalty.equipment == "Standard"
     assert old.loyalty.money == "Standard salary"
+
+
+def test_a_save_from_before_this_session_loads_and_drops_the_stale_fields():
+    """Simulates an older saved covenant that still has the removed Loyalty/
+    Population/Inhabitant fields: from_dict must not choke on them."""
+    data = {
+        "id": "c",
+        "saga_id": "s",
+        "name": "Old",
+        "inhabitants": [
+            {"id": "i", "kind": "turb", "name": "Guard", "loyalty": 3},
+        ],
+        "loyalty": {
+            "base_points": -30,
+            "current_points": -10,
+            "prevailing_score": -1,
+            "living_conditions": 10,
+            "equipment_modifier": 5,
+            "money_modifier": 0,
+            "specialists": 2,
+            "familiarity": 1,
+        },
+        "population": {
+            "teamsters_needed": 2,
+            "servants_needed": 4,
+            "teamsters": 1,
+            "servants": 3,
+            "laborers": 2,
+            "other_people": 6,
+        },
+    }
+    cov = Covenant.from_dict(data)
+    assert cov.inhabitants[0].name == "Guard"  # the stale "loyalty" key is dropped
+    assert not hasattr(cov.inhabitants[0], "loyalty")
+    assert cov.loyalty.familiarity == 1  # the still-valid key survives
+    assert cov.population.other_people == 6  # the still-valid key survives
+    assert not hasattr(cov.population, "teamsters")
+    assert not hasattr(cov.population, "servants")
+    assert not hasattr(cov.population, "laborers")
 
 
 def test_unknown_inhabitant_kind_is_rejected():

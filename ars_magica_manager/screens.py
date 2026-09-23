@@ -9,7 +9,7 @@ from dataclasses import field as dataclass_field
 from typing import Any, ClassVar
 
 from textual.app import ComposeResult
-from textual.binding import BindingType
+from textual.binding import Binding, BindingType
 from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.content import Content
 from textual.css.query import NoMatches
@@ -38,6 +38,7 @@ from textual.widgets import (
 from textual.widgets.option_list import Option
 
 from . import catalog, storage
+from . import economics as eco
 from . import inhabitants as inh
 from . import possessions as pos
 from .markup import escape, markdown_inline
@@ -51,10 +52,19 @@ from .models import (
     CRAFT_FIELDS,
     FATIGUE_LEVELS,
     FORMS,
+    GEAR_POINTS,
+    GEAR_QUALITIES,
+    GEAR_QUALITY_DEFAULT,
+    GEAR_TYPES_BY_KIND,
+    GIFT_CHOICES,
+    INCOME_EFFECTS,
+    INCOME_TYPE_DEFAULTS,
+    INCOME_TYPES,
     INHABITANT_KINDS,
     LAB_CHARACTERISTICS,
     LOYALTY_EQUIPMENT,
     LOYALTY_MONEY,
+    OTHER_COVENFOLK_ROLES,
     POSSESSION_KINDS,
     SANCTUM_USAGES,
     SEASONS,
@@ -72,6 +82,7 @@ from .models import (
     DiaryEntry,
     FatigueLevel,
     HermeticBackground,
+    IncomeSource,
     Inhabitant,
     LabCharacteristics,
     Laboratory,
@@ -192,6 +203,8 @@ def _inhabitant_fields(
         fields.append(
             DialogField("_y", "Year Born", "info", "Unknown" if year is None else year)
         )
+        if kind == "magus":
+            fields.append(DialogField("_g", "Gift", "info", entry.gift))
     else:
         name = entry.name if entry is not None else (grog.name if grog else "")
         year_born = (
@@ -213,6 +226,18 @@ def _inhabitant_fields(
                 )
             )
         fields.append(_year_born_field(year_born))
+        if kind == "magus":
+            fields.append(
+                DialogField(
+                    "gift",
+                    "Gift",
+                    "select",
+                    entry.record.gift if entry and entry.record else "",
+                    options=[(c, c) for c in GIFT_CHOICES],
+                    allow_blank=True,
+                    placeholder="Unknown (assumed The Gift)",
+                )
+            )
 
     if kind in ("companion", "specialist", "craftsperson", "turb", "inhabitant"):
         fields.append(
@@ -232,6 +257,50 @@ def _inhabitant_fields(
                 entry.role if entry else "",
                 options=[(r, r) for r in COVENANT_ROLES],
                 allow_blank=True,
+            )
+        )
+        # Steward/Chamberlain/Turb Captain/Autocrat earn the covenant a
+        # Loyalty bonus (Presence + a specific Ability). The role has to be
+        # chosen and saved first -- editing again then shows this.
+        if entry is not None and entry.role in inh.ROLE_ABILITY_MAP:
+            ability_label = " + ".join(inh.ROLE_ABILITY_MAP[entry.role])
+            if entry.character is not None:
+                fields.append(
+                    DialogField(
+                        "_rb",
+                        "Loyalty Bonus",
+                        "info",
+                        f"{entry.role_bonus} (Presence {entry.role_presence:+d}, "
+                        f"{ability_label} {entry.role_ability_total}, from the "
+                        "character sheet)",
+                    )
+                )
+            else:
+                fields += [
+                    DialogField(
+                        "presence",
+                        "Presence (for the Loyalty Bonus)",
+                        "int",
+                        entry.record.presence if entry.record else 0,
+                    ),
+                    DialogField(
+                        "skill_value",
+                        f"{ability_label} (for the Loyalty Bonus)",
+                        "int",
+                        entry.record.skill_value if entry.record else 0,
+                    ),
+                ]
+    if kind == "inhabitant":
+        fields.append(
+            DialogField(
+                "role",
+                "Covenant Role",
+                "select",
+                entry.role if entry else "",
+                options=[(r, r) for r in OTHER_COVENFOLK_ROLES],
+                required=True,
+                allow_blank=True,
+                placeholder="(choose a Covenant Role)",
             )
         )
     if kind == "craftsperson":
@@ -289,9 +358,6 @@ def _inhabitant_fields(
         fields.append(
             DialogField("quantity", "Quantity", "int", entry.quantity if entry else 1)
         )
-    fields.append(
-        DialogField("loyalty", "Loyalty", "int", entry.loyalty if entry else 0)
-    )
     fields.append(
         DialogField(
             "description",
@@ -377,6 +443,24 @@ def _possession_fields(
             )
         )
     elif kind in pos.QUANTITY_KINDS:
+        if kind in GEAR_TYPES_BY_KIND:
+            types = GEAR_TYPES_BY_KIND[kind]
+            fields += [
+                DialogField(
+                    "gear_type",
+                    "Type",
+                    "select",
+                    value("gear_type", types[0]) or types[0],
+                    options=[(t, t) for t in types],
+                ),
+                DialogField(
+                    "gear_quality",
+                    "Quality",
+                    "select",
+                    value("gear_quality", GEAR_QUALITY_DEFAULT),
+                    options=[(q, q) for q in GEAR_QUALITIES],
+                ),
+            ]
         fields.append(DialogField("quantity", "Quantity", "int", value("quantity", 1)))
     elif kind in ("vis_source", "vis_store"):
         fields.append(
@@ -430,6 +514,9 @@ def _possession_problem(values: dict[str, Any]) -> str | None:
         return "Quantity must be at least 1."
     if values.get("pawns", 1) < 1:
         return "Pawns must be at least 1."
+    gear_type = values.get("gear_type")
+    if gear_type and values.get("gear_quality") not in GEAR_POINTS[gear_type]:
+        return f"{gear_type} only comes {' or '.join(GEAR_POINTS[gear_type]).lower()}."
     return None
 
 
@@ -1944,6 +2031,7 @@ class ScoredTraitPromptScreen(ModalScreen[ScoredTrait | None]):
         *,
         min_score: int | None = None,
         max_score: int | None = None,
+        include_known: bool = False,
     ) -> None:
         super().__init__()
         self.title_text = title
@@ -1952,6 +2040,11 @@ class ScoredTraitPromptScreen(ModalScreen[ScoredTrait | None]):
         #: Optional inclusive bounds (covenant Reputations are -3..+3).
         self.min_score = min_score
         self.max_score = max_score
+        #: Covenant Reputations only: whether a bad Reputation the covenant
+        #: doesn't know about should count against Loyalty -- see
+        #: inhabitants.reputation_loyalty_penalty(). Character Personality
+        #: Traits/Reputations never show this (always known=True).
+        self.include_known = include_known
 
     def _score_label(self) -> str:
         if self.min_score is None or self.max_score is None:
@@ -1973,6 +2066,12 @@ class ScoredTraitPromptScreen(ModalScreen[ScoredTrait | None]):
                 type="integer",
                 id="input-trait-score",
             )
+            if self.include_known:
+                yield Checkbox(
+                    "Known by the covenant?",
+                    value=self.existing.known if self.existing else True,
+                    id="input-trait-known",
+                )
             yield Static("", id="trait-error")
             with Horizontal():
                 yield Button("Save", id="btn-save", variant="success")
@@ -2004,7 +2103,12 @@ class ScoredTraitPromptScreen(ModalScreen[ScoredTrait | None]):
         ):
             error.update(f"Score must be between {self._score_label()[6:-1]}.")
             return
-        self.dismiss(ScoredTrait(name=name, score=score))
+        known = (
+            self.query_one("#input-trait-known", Checkbox).value
+            if self.include_known
+            else True
+        )
+        self.dismiss(ScoredTrait(name=name, score=score, known=known))
 
 
 class RawVisPromptScreen(ModalScreen[tuple[str, int] | None]):
@@ -3502,6 +3606,165 @@ class ConfirmScreen(ModalScreen[bool]):
         self.dismiss(event.button.id == "btn-yes")
 
 
+class ImproveIncomeScreen(ModalScreen[tuple[int, str] | None]):
+    """Manually simulates a year's Income Modification (ArM5's automated/
+    yearly advancement isn't built yet -- this is a deliberate stand-in for
+    it). Choosing an Effect updates the Multiplier and Projected Income live;
+    Commit confirms via ConfirmScreen, then dismisses with (new income, the
+    Note to record), or None if cancelled."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    ImproveIncomeScreen {
+        align: center middle;
+    }
+
+    #improve-dialog {
+        width: 70;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    .improve-row {
+        width: 100%;
+        height: 1;
+    }
+
+    .improve-label {
+        width: 26;
+    }
+
+    .improve-value {
+        width: 1fr;
+        color: $text-muted;
+    }
+
+    #improve-effect {
+        width: 1fr;
+    }
+
+    #improve-note-label {
+        margin-top: 1;
+        height: 1;
+    }
+
+    #improve-note {
+        color: $text-muted;
+        height: auto;
+    }
+
+    #improve-error {
+        color: $error;
+        height: auto;
+        margin-top: 1;
+    }
+
+    #improve-buttons {
+        width: 100%;
+        height: auto;
+        margin-top: 1;
+    }
+    """
+
+    def __init__(self, source: IncomeSource, current_year: int) -> None:
+        super().__init__()
+        self.source = source
+        self.current_year = current_year
+
+    def compose(self) -> ComposeResult:
+        source = self.source
+        with Vertical(id="improve-dialog"):
+            yield Label(
+                f"Improve {source.name or 'this source of income'}", id="improve-title"
+            )
+            with Horizontal(classes="improve-row"):
+                yield Label("Name", classes="improve-label")
+                yield Static(
+                    escape(source.name or "(unnamed)"), classes="improve-value"
+                )
+            with Horizontal(classes="improve-row"):
+                yield Label("Current Income", classes="improve-label")
+                yield Static(str(source.current_income), classes="improve-value")
+            with Horizontal(classes="improve-row"):
+                yield Label("Annual Improvement Effect", classes="improve-label")
+                yield Select(
+                    [(e, e) for e in INCOME_EFFECTS],
+                    value="Status Quo",
+                    id="improve-effect",
+                    compact=True,
+                )
+            with Horizontal(classes="improve-row"):
+                yield Label("Income Multiplier", classes="improve-label")
+                yield Static(
+                    eco.income_multiplier_text("Status Quo"),
+                    classes="improve-value",
+                    id="improve-multiplier",
+                )
+            with Horizontal(classes="improve-row"):
+                yield Label("Projected Income", classes="improve-label")
+                yield Static(
+                    str(source.current_income),
+                    classes="improve-value",
+                    id="improve-projected",
+                )
+            yield Label("Note", id="improve-note-label")
+            yield Static(
+                escape(source.note.strip()) if source.note.strip() else "(none)",
+                id="improve-note",
+            )
+            yield Static("", id="improve-error")
+            with Horizontal(id="improve-buttons"):
+                yield Button("Commit", id="btn-commit", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-commit":
+            self._try_commit()
+
+    def on_select_changed(self, event: Select.Changed) -> None:
+        if event.select.id != "improve-effect" or not isinstance(event.value, str):
+            return
+        effect = event.value
+        self.query_one("#improve-multiplier", Static).update(
+            eco.income_multiplier_text(effect)
+        )
+        self.query_one("#improve-projected", Static).update(
+            str(eco.projected_income(self.source.current_income, effect))
+        )
+
+    def _try_commit(self) -> None:
+        effect = self.query_one("#improve-effect", Select).value
+        if not isinstance(effect, str):
+            self.query_one("#improve-error", Static).update("Choose an Effect.")
+            return
+        current = self.source.current_income
+        projected = eco.projected_income(current, effect)
+        note = eco.improvement_note(
+            self.current_year, self.source.name, effect, current, projected
+        )
+        name = escape(self.source.name or "this source of income")
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
+                self.dismiss((projected, note))
+
+        self.app.push_screen(
+            ConfirmScreen(
+                f"Update {name}'s income from {current} to {projected}?",
+                yes_label="Update",
+            ),
+            handle_confirmed,
+        )
+
+
 class EditCovenantDescriptionScreen(ModalScreen[str | None]):
     """A multi-line text editor for the covenant's description. Dismisses
     with the new text, or None if cancelled."""
@@ -3832,6 +4095,8 @@ class FieldsDialog(ModalScreen[dict[str, Any] | None]):
                 yield Checkbox("", value=bool(spec.value), id=widget_id, compact=True)
             else:  # info
                 yield Static(str(spec.value), classes="fd-value")
+        if spec.hint:
+            yield Static(spec.hint, classes="fd-hint")
 
     def on_mount(self) -> None:
         self._fit()
@@ -4680,6 +4945,42 @@ class CovenantSheetView(Vertical):
         background: $panel;
     }
 
+    CovenantSheetView #eco-body {
+        height: 1fr;
+    }
+
+    CovenantSheetView #eco-wealth-body {
+        width: 1fr;
+        height: auto;
+    }
+
+    CovenantSheetView #eco-wealth-left {
+        width: 1fr;
+        height: auto;
+        margin-right: 4;
+    }
+
+    CovenantSheetView #eco-wealth-right {
+        width: 1fr;
+        height: auto;
+    }
+
+    CovenantSheetView .eco-header {
+        width: 1fr;
+        height: auto;
+        color: $text-muted;
+    }
+
+    CovenantSheetView #eco-panel {
+        width: 1fr;
+        height: auto;
+        min-height: 6;
+        max-height: 14;
+        margin-top: 1;
+        padding: 1 2;
+        background: $panel;
+    }
+
     CovenantSheetView #cov-bh-info {
         width: 1fr;
         height: auto;
@@ -4731,7 +5032,7 @@ class CovenantSheetView(Vertical):
             with TabPane("Possessions", id="tab-cov-possessions"):
                 yield from self._possessions_tab()
             with TabPane("Economics", id="tab-cov-economics"):
-                yield Static(self._placeholder("Economics"))
+                yield from self._economics_tab()
             with TabPane("Library", id="tab-cov-library"):
                 yield Static(self._placeholder("Library"))
             with TabPane("Diary", id="tab-cov-diary"):
@@ -4748,9 +5049,11 @@ class CovenantSheetView(Vertical):
                     SheetSection(title="Loyalty", id="section-inh-loyalty"),
                     Horizontal(id="inh-loyalty-body"),
                 ):
-                    yield Static(inh.loyalty_left_text(covenant), id="inh-loyalty-left")
                     yield Static(
-                        inh.loyalty_right_text(covenant), id="inh-loyalty-right"
+                        inh.loyalty_left_text(saga, covenant), id="inh-loyalty-left"
+                    )
+                    yield Static(
+                        inh.loyalty_right_text(saga, covenant), id="inh-loyalty-right"
                     )
                 with SheetSection(title="Inhabitants", id="section-inh-population"):
                     yield Static(
@@ -4783,6 +5086,83 @@ class CovenantSheetView(Vertical):
                             self._pos_rows(kind), id=f"pos-{kind}-list"
                         )
             yield Static(pos.detail_text(None), id="pos-panel")
+
+    #: The three lists of the Economics tab (one selection across them).
+    _ECO_LISTS: ClassVar[tuple[str, ...]] = ("income", "expenditure", "savings")
+
+    def _economics_tab(self) -> ComposeResult:
+        """Wealth, Sources of Income, Yearly Expenditure and Cost Savings over
+        the details panel of the chosen row (docked below the scrolling part)."""
+        summary = eco.summarize(self.saga, self.covenant)
+        left, right = eco.wealth_texts(summary)
+        with Vertical(id="eco-body"):
+            with VerticalScroll(id="eco-scroll"):
+                with (
+                    SheetSection(title="Wealth", id="section-eco-wealth"),
+                    Horizontal(id="eco-wealth-body"),
+                ):
+                    yield Static(left, id="eco-wealth-left")
+                    yield Static(right, id="eco-wealth-right")
+                with SheetSection(title="Sources of Income", id="section-eco-income"):
+                    yield SelectableList(
+                        self._eco_rows("income", summary), id="eco-income-list"
+                    )
+                with SheetSection(
+                    title="Yearly Expenditure", id="section-eco-expenditure"
+                ):
+                    yield Static(eco.table_header("Cost"), classes="eco-header")
+                    yield SelectableList(
+                        self._eco_rows("expenditure", summary),
+                        id="eco-expenditure-list",
+                    )
+                with SheetSection(title="Cost Savings", id="section-eco-savings"):
+                    yield Static(eco.table_header("Quantity"), classes="eco-header")
+                    yield SelectableList(
+                        self._eco_rows("savings", summary), id="eco-savings-list"
+                    )
+            yield Static(eco.source_detail_text(None), id="eco-panel")
+
+    def _eco_rows(self, which: str, summary: eco.Summary) -> list[tuple[int, str]]:
+        if which == "income":
+            sources = self.covenant.economics.income_sources
+            return [(i, eco.source_row_label(s)) for i, s in enumerate(sources)]
+        rows = summary.expenditure if which == "expenditure" else summary.savings
+        return [(i, eco.row_label(row)) for i, row in enumerate(rows)]
+
+    def selected_economics(self, which: str) -> int | None:
+        """Index of the chosen row of the `which` list ("income" indexes the
+        covenant's income sources; the others index the summary's rows)."""
+        return self.query_one(f"#eco-{which}-list", SelectableList).selected_data_index
+
+    def _eco_panel_text(self, which: str, index: int, summary: eco.Summary) -> str:
+        if which == "income":
+            sources = self.covenant.economics.income_sources
+            return eco.source_detail_text(
+                sources[index] if index < len(sources) else None
+            )
+        rows = summary.expenditure if which == "expenditure" else summary.savings
+        first = "Cost" if which == "expenditure" else "Quantity"
+        return eco.row_detail_text(rows[index] if index < len(rows) else None, first)
+
+    def _rebuild_economics(self) -> None:
+        """Recalculate everything on the tab. Anything on the sheet can move a
+        figure (a new inhabitant, a laboratory's usage, the salary), so this
+        also runs after edits made on other tabs. The chosen row stays chosen
+        and its panel is refreshed."""
+        summary = eco.summarize(self.saga, self.covenant)
+        left, right = eco.wealth_texts(summary)
+        self.query_one("#eco-wealth-left", Static).update(left)
+        self.query_one("#eco-wealth-right", Static).update(right)
+        any_chosen = False
+        for which in self._ECO_LISTS:
+            rows_list = self.query_one(f"#eco-{which}-list", SelectableList)
+            chosen = rows_list.selected_data_index
+            rows_list.set_rows(self._eco_rows(which, summary))
+            if chosen is not None and chosen < len(rows_list._rows):
+                any_chosen = True
+                rows_list.highlighted = chosen  # posts Chosen -> refreshes the panel
+        if not any_chosen:
+            self.query_one("#eco-panel", Static).update(eco.source_detail_text(None))
 
     def _pos_entries(self, kind: str) -> list[pos.PossessionEntry]:
         return pos.entries_for_kind(self.saga, self.covenant, kind)
@@ -4837,10 +5217,29 @@ class CovenantSheetView(Vertical):
     def refresh_section(self, section_id: str) -> None:
         try:
             self._refresh_section(section_id)
+            if section_id.startswith(("section-inh-", "section-pos-", "section-cov-")):
+                # These feed the Economics tab's figures.
+                self._rebuild_economics()
+            if section_id in ("section-cov-info", "section-cov-reputations") or (
+                section_id.startswith("section-inh-")
+                and section_id != "section-inh-loyalty"
+            ):
+                # Magi (Gift), Specialists/Companions (role bonus), covenant
+                # Reputations and Living Conditions (Mundane) all feed the
+                # Loyalty block, which lives on a different section.
+                self._refresh_loyalty_text()
         except NoMatches:
             # The sheet is being replaced or torn down (a refresh from a
             # dialog callback can land after that) -- nothing left to update.
             return
+
+    def _refresh_loyalty_text(self) -> None:
+        self.query_one("#inh-loyalty-left", Static).update(
+            inh.loyalty_left_text(self.saga, self.covenant)
+        )
+        self.query_one("#inh-loyalty-right", Static).update(
+            inh.loyalty_right_text(self.saga, self.covenant)
+        )
 
     def _refresh_section(self, section_id: str) -> None:
         if section_id == "section-cov-info":
@@ -4856,12 +5255,7 @@ class CovenantSheetView(Vertical):
                 self._reputation_rows()
             )
         elif section_id == "section-inh-loyalty":
-            self.query_one("#inh-loyalty-left", Static).update(
-                inh.loyalty_left_text(self.covenant)
-            )
-            self.query_one("#inh-loyalty-right", Static).update(
-                inh.loyalty_right_text(self.covenant)
-            )
+            self._refresh_loyalty_text()
         elif section_id in ("section-inh-population", "section-inh-misc"):
             self.query_one("#inh-population-content", Static).update(
                 inh.population_text(self.saga, self.covenant)
@@ -4873,6 +5267,8 @@ class CovenantSheetView(Vertical):
             self._rebuild_inhabitants()
         elif section_id.startswith("section-pos-"):
             self._rebuild_possessions()
+        elif section_id.startswith("section-eco-"):
+            self._rebuild_economics()
         elif section_id in ("section-cov-boons", "section-cov-hooks"):
             self._rebuild_boons_hooks()
             # An Aura Boon changes the Aura shown in the info panel.
@@ -4922,6 +5318,20 @@ class CovenantSheetView(Vertical):
         """A Boon or Hook row was chosen: fill the details panel. (Reputations
         have no panel -- a name and a score have nothing more to show.)"""
         list_id = event.selectable_list.id or ""
+        if list_id.startswith("eco-") and list_id.endswith("-list"):
+            event.stop()
+            which = list_id[len("eco-") : -len("-list")]
+            for other in self._ECO_LISTS:  # one selection across the lists
+                if other != which:
+                    self.query_one(
+                        f"#eco-{other}-list", SelectableList
+                    ).clear_selection()
+            self.query_one("#eco-panel", Static).update(
+                self._eco_panel_text(
+                    which, event.data_index, eco.summarize(self.saga, self.covenant)
+                )
+            )
+            return
         if list_id.startswith("inh-") and list_id.endswith("-list"):
             event.stop()
             kind = list_id[len("inh-") : -len("-list")]
@@ -5019,9 +5429,15 @@ class CovenantSheetView(Vertical):
         return markdown_inline(text) if text else "(no description)"
 
     def _reputation_rows(self) -> list[tuple[int, str]]:
-        """The covenant's Reputations as (index, label) rows."""
+        """The covenant's Reputations as (index, label) rows. A bad Reputation
+        the covenant doesn't know about is marked -- it doesn't count against
+        Loyalty until it's known (see inhabitants.reputation_loyalty_penalty)."""
         return [
-            (index, f"{escape(r.name)}: {r.score:+d}")
+            (
+                index,
+                f"{escape(r.name)}: {r.score:+d}"
+                + ("" if r.known else " [dim](not known by the covenant)[/]"),
+            )
             for index, r in enumerate(self.covenant.reputations)
         ]
 
@@ -5098,6 +5514,7 @@ class WorkspaceScreen(Screen[None]):
         ("a", "add", "Add"),
         ("A", "remove", "Remove"),
         ("e", "edit", "Edit"),
+        ("i", "improve", "Improve"),
         ("t", "advance_season", "Advance Season"),
         ("T", "set_date", "Set Date"),
         ("v", "add_virtue_flaw", "Add Virtue/Flaw"),
@@ -5131,6 +5548,7 @@ class WorkspaceScreen(Screen[None]):
         "section-cov-reputations",
         "section-cov-boons",
         "section-cov-hooks",
+        "section-eco-income",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
     }
@@ -5150,6 +5568,7 @@ class WorkspaceScreen(Screen[None]):
         "section-cov-reputations",
         "section-cov-boons",
         "section-cov-hooks",
+        "section-eco-income",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
     }
@@ -5180,6 +5599,10 @@ class WorkspaceScreen(Screen[None]):
         "section-inh-loyalty",
         "section-inh-population",
         "section-inh-misc",
+        "section-eco-wealth",
+        "section-eco-income",
+        "section-eco-expenditure",
+        "section-eco-savings",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
     }
@@ -5396,6 +5819,8 @@ class WorkspaceScreen(Screen[None]):
             return self._active_section() in self._REMOVE_SECTIONS
         if action == "edit":
             return self._active_section() in self._EDIT_SECTIONS
+        if action == "improve":
+            return self._active_section() == "section-eco-income"
         if action in ("add_virtue_flaw", "remove_virtue_flaw"):
             if self.selected_kind == "laboratory":
                 return self._active_section() == "tab-lab-vf"
@@ -5826,6 +6251,8 @@ class WorkspaceScreen(Screen[None]):
             self._add_boon_hook("Boon")
         elif section == "section-cov-hooks":
             self._add_boon_hook("Hook")
+        elif section == "section-eco-income":
+            self._add_income_source()
         elif (kind := self._inhabitant_kind(section)) is not None:
             self._add_inhabitant(kind)
         elif (kind := self._possession_kind(section)) is not None:
@@ -5863,6 +6290,8 @@ class WorkspaceScreen(Screen[None]):
             self._remove_boon_hook("Boon")
         elif section == "section-cov-hooks":
             self._remove_boon_hook("Hook")
+        elif section == "section-eco-income":
+            self._remove_income_source()
         elif (kind := self._inhabitant_kind(section)) is not None:
             self._remove_inhabitant(kind)
         elif (kind := self._possession_kind(section)) is not None:
@@ -5916,6 +6345,12 @@ class WorkspaceScreen(Screen[None]):
             self._edit_boon_hook("Boon")
         elif section == "section-cov-hooks":
             self._edit_boon_hook("Hook")
+        elif section == "section-eco-wealth":
+            self._edit_wealth()
+        elif section == "section-eco-income":
+            self._edit_income_source()
+        elif section in ("section-eco-expenditure", "section-eco-savings"):
+            self._edit_economics_row(section.removeprefix("section-eco-"))
         elif section == "section-inh-loyalty":
             self._edit_loyalty()
         elif section == "section-inh-population":
@@ -6058,6 +6493,291 @@ class WorkspaceScreen(Screen[None]):
         self.app.push_screen(
             ConfirmScreen(f"Delete {escape(entry.name or 'this entry')}?"),
             handle_confirmed,
+        )
+
+    # -- Covenant: Economics tab --
+
+    #: What the user types on a table row, by `Economics` attribute.
+    _ECONOMICS_TYPED_LABELS: ClassVar[dict[str, str]] = {
+        "tithes": "Amount (pounds a year)",
+        "inflation": "Amount (pounds a year)",
+        "sundry": "Amount (pounds a year, at least 1)",
+        "magic_savings": "Savings (pounds a year)",
+        "emergency_savings": "Savings (pounds a year)",
+    }
+
+    def _selected_economics(self, which: str) -> int | None:
+        view = self._covenant_sheet_view
+        return view.selected_economics(which) if view is not None else None
+
+    def _edit_wealth(self) -> None:
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        economics = covenant.economics
+
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is None:
+                return
+            economics.wealth = values["wealth"]
+            storage.save_saga(self.saga)
+            self._refresh_covenant_section("section-eco-wealth")
+
+        self.app.push_screen(
+            FieldsDialog(
+                "Edit Wealth",
+                [
+                    DialogField(
+                        "wealth", "Wealth (pounds in stores)", "int", economics.wealth
+                    )
+                ],
+            ),
+            handle_result,
+        )
+
+    def _add_income_source(self) -> None:
+        self._income_form(None)
+
+    def _edit_income_source(self) -> None:
+        """Edit the chosen source of income; with none chosen, ask which one."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        sources = covenant.economics.income_sources
+        selected = self._selected_economics("income")
+        if selected is not None and selected < len(sources):
+            self._income_form(sources[selected])
+            return
+        if not sources:
+            self.notify("No sources of income to edit.")
+            return
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._income_form(sources[index])
+
+        self.app.push_screen(
+            RemovalPickerScreen(
+                "Edit which source of income?", [s.name or "(unnamed)" for s in sources]
+            ),
+            handle_index,
+        )
+
+    def _income_form(self, source: IncomeSource | None) -> None:
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        sources = covenant.economics.income_sources
+        title = (
+            "Add a Source of Income"
+            if source is None
+            else f"Edit {source.name or 'this source of income'}"
+        )
+        usual = ", ".join(f"{t} {n}" for t, n in INCOME_TYPE_DEFAULTS.items())
+        fields = [
+            DialogField(
+                "name", "Name", "text", source.name if source else "", required=True
+            ),
+            DialogField(
+                "type",
+                "Type",
+                "select",
+                source.type if source else "Typical",
+                options=[(t, t) for t in INCOME_TYPES],
+                required=True,
+            ),
+            DialogField(
+                "income",
+                "Current Income (blank = usual)",
+                "optint",
+                source.income if source else None,
+                hint=f"Usual per year: {usual}.",
+            ),
+            DialogField(
+                "description",
+                "Description",
+                "area",
+                source.description if source else "",
+                hint="Supports **bold** and *italic*.",
+            ),
+        ]
+
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is None:
+                return
+            if source is None:
+                sources.append(
+                    IncomeSource(
+                        id=storage.generate_unique_id(
+                            values["name"], [s.id for s in sources]
+                        ),
+                        **values,
+                    )
+                )
+            else:
+                for key, value in values.items():
+                    setattr(source, key, value)
+            storage.save_saga(self.saga)
+            self._refresh_covenant_section("section-eco-income")
+
+        self.app.push_screen(FieldsDialog(title, fields), handle_result)
+
+    def _remove_income_source(self) -> None:
+        """Delete the chosen source of income (after confirming); with none
+        chosen, ask which one."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        sources = covenant.economics.income_sources
+        selected = self._selected_economics("income")
+        if selected is not None and selected < len(sources):
+            self._confirm_remove_income_source(sources[selected])
+            return
+        if not sources:
+            self.notify("No sources of income to remove.")
+            return
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._confirm_remove_income_source(sources[index])
+
+        self.app.push_screen(
+            RemovalPickerScreen(
+                "Remove a source of income", [s.name or "(unnamed)" for s in sources]
+            ),
+            handle_index,
+        )
+
+    def _confirm_remove_income_source(self, source: IncomeSource) -> None:
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed and source in covenant.economics.income_sources:
+                covenant.economics.income_sources.remove(source)
+                storage.save_saga(self.saga)
+                self._refresh_covenant_section("section-eco-income")
+
+        self.app.push_screen(
+            ConfirmScreen(f"Delete {escape(source.name or 'this source of income')}?"),
+            handle_confirmed,
+        )
+
+    def _improve_income_source(self) -> None:
+        """Improve the chosen source of income (manually simulating a year's
+        Income Modification); with none chosen, ask which one."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        sources = covenant.economics.income_sources
+        selected = self._selected_economics("income")
+        if selected is not None and selected < len(sources):
+            self._improve_form(sources[selected])
+            return
+        if not sources:
+            self.notify("No sources of income to improve.")
+            return
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._improve_form(sources[index])
+
+        self.app.push_screen(
+            RemovalPickerScreen(
+                "Improve which source of income?",
+                [s.name or "(unnamed)" for s in sources],
+            ),
+            handle_index,
+        )
+
+    def _improve_form(self, source: IncomeSource) -> None:
+        def handle_result(result: tuple[int, str] | None) -> None:
+            if result is None:
+                return
+            new_income, note = result
+            source.income = new_income
+            source.note = note
+            storage.save_saga(self.saga)
+            self._refresh_covenant_section("section-eco-income")
+
+        self.app.push_screen(
+            ImproveIncomeScreen(source, self.saga.current_year), handle_result
+        )
+
+    def _edit_economics_row(self, which: str) -> None:
+        """Edit the chosen Yearly Expenditure / Cost Savings row (its Notes, and
+        the numbers that are typed rather than calculated); with none chosen,
+        ask which one."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        summary = eco.summarize(self.saga, covenant)
+        rows = summary.expenditure if which == "expenditure" else summary.savings
+        selected = self._selected_economics(which)
+        if selected is not None and selected < len(rows):
+            self._economics_row_form(which, rows[selected])
+            return
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._economics_row_form(which, rows[index])
+
+        self.app.push_screen(
+            RemovalPickerScreen("Edit which row?", [row.name for row in rows]),
+            handle_index,
+        )
+
+    def _economics_row_form(self, which: str, row: eco.Row) -> None:
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        economics = covenant.economics
+        first = "Cost" if which == "expenditure" else "Quantity"
+        fields = [DialogField("_n", "Row", "info", row.name)]
+        if row.typed:
+            fields += [
+                DialogField(
+                    attribute,
+                    self._ECONOMICS_TYPED_LABELS[attribute],
+                    "int",
+                    getattr(economics, attribute),
+                )
+                for attribute in row.typed
+            ]
+        else:
+            fields += [
+                DialogField(
+                    "_c", f"{first} (calculated)", "info", eco.money(row.first)
+                ),
+                DialogField(
+                    "_s", "Savings (calculated)", "info", eco.money(row.savings)
+                ),
+            ]
+        fields.append(
+            DialogField("notes", "Notes", "text", economics.notes.get(row.key, ""))
+        )
+
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is None:
+                return
+            notes = values.pop("notes")
+            for attribute, value in values.items():
+                setattr(economics, attribute, value)
+            if notes:
+                economics.notes[row.key] = notes
+            else:
+                economics.notes.pop(row.key, None)
+            storage.save_saga(self.saga)
+            self._refresh_covenant_section(f"section-eco-{which}")
+
+        def validate(values: dict[str, Any]) -> str | None:
+            if row.key == "sundry" and values.get("sundry", 1) < 1:
+                return "There's a cost of at least 1 pound of sundries every year."
+            return None
+
+        self.app.push_screen(
+            FieldsDialog(f"Edit {row.name}", fields, validate=validate), handle_result
         )
 
     # -- Covenant: Inhabitants tab --
@@ -6275,31 +6995,24 @@ class WorkspaceScreen(Screen[None]):
             governance = DialogField(
                 "governance", "Type of Governance", "text", loyalty.governance
             )
+        base = inh.base_loyalty(self.saga, covenant)
+        modifiers = inh.total_modifiers(self.saga, covenant)
         fields = [
             governance,
+            DialogField("_bp", "Base Loyalty Points", "info", base),
+            DialogField("_tm", "Total modifiers", "info", modifiers),
+            DialogField("_cp", "Current Loyalty Points", "info", base + modifiers),
             DialogField(
-                "base_points", "Base Loyalty Points", "int", loyalty.base_points
-            ),
-            DialogField(
-                "total_modifiers", "Total modifiers", "int", loyalty.total_modifiers
-            ),
-            DialogField(
-                "current_points",
-                "Current Loyalty Points",
-                "int",
-                loyalty.current_points,
-            ),
-            DialogField(
-                "prevailing_score",
+                "_ps",
                 "Prevailing Loyalty Score",
-                "int",
-                loyalty.prevailing_score,
+                "info",
+                inh.prevailing_loyalty_score(base + modifiers),
             ),
             DialogField(
-                "living_conditions",
-                "Living Conditions",
-                "int",
-                loyalty.living_conditions,
+                "_lc",
+                "Living Conditions (from the covenant's Living Conditions (Mundane))",
+                "info",
+                inh.living_conditions_loyalty(covenant),
             ),
             DialogField(
                 "equipment",
@@ -6309,12 +7022,6 @@ class WorkspaceScreen(Screen[None]):
                 options=[(o, o) for o in LOYALTY_EQUIPMENT],
             ),
             DialogField(
-                "equipment_modifier",
-                "  Equipment modifier",
-                "int",
-                loyalty.equipment_modifier,
-            ),
-            DialogField(
                 "money",
                 "Money",
                 "select",
@@ -6322,15 +7029,36 @@ class WorkspaceScreen(Screen[None]):
                 options=[(o, o) for o in LOYALTY_MONEY],
             ),
             DialogField(
-                "money_modifier", "  Money modifier", "int", loyalty.money_modifier
+                "pension",
+                "  Pension? (half Wages until death)",
+                "check",
+                loyalty.pension,
             ),
-            DialogField("specialists", "Specialists", "int", loyalty.specialists),
+            DialogField(
+                "_sp",
+                "Specialists (Presence + Ability of Steward/Chamberlain/Turb "
+                "Captain/Autocrat)",
+                "info",
+                inh.specialists_loyalty(self.saga, covenant),
+            ),
             DialogField("familiarity", "Familiarity", "int", loyalty.familiarity),
+            DialogField(
+                "_rp",
+                "Reputation (-5 per point of a known bad Reputation)",
+                "info",
+                inh.reputation_loyalty_penalty(covenant),
+            ),
             DialogField(
                 "actions_and_events",
                 "Actions and events",
                 "int",
                 loyalty.actions_and_events,
+            ),
+            DialogField(
+                "magical_influence",
+                "Magical Influence",
+                "int",
+                loyalty.magical_influence,
             ),
         ]
 
@@ -6350,13 +7078,35 @@ class WorkspaceScreen(Screen[None]):
             return
         pop = covenant.population
         fields = [
-            DialogField("teamsters", "Number of Teamsters", "int", pop.teamsters),
             DialogField(
-                "teamsters_needed", "Teamsters Needed", "int", pop.teamsters_needed
+                "_tm",
+                "Number of Teamsters",
+                "info",
+                inh.other_covenfolk_count(self.saga, covenant, "Teamster"),
             ),
-            DialogField("servants", "Number of Servants", "int", pop.servants),
             DialogField(
-                "servants_needed", "Servants Needed", "int", pop.servants_needed
+                "_tn",
+                "Teamsters Needed",
+                "info",
+                inh.minimum_teamsters(self.saga, covenant),
+            ),
+            DialogField(
+                "_sv",
+                "Number of Servants",
+                "info",
+                inh.other_covenfolk_count(self.saga, covenant, "Servant"),
+            ),
+            DialogField(
+                "_sn",
+                "Servants Needed",
+                "info",
+                inh.minimum_servants(self.saga, covenant),
+            ),
+            DialogField(
+                "_lb",
+                "Number of Laborers",
+                "info",
+                inh.other_covenfolk_count(self.saga, covenant, "Laborer"),
             ),
             DialogField("other_people", "Other People", "int", pop.other_people),
             DialogField(
@@ -6430,6 +7180,7 @@ class WorkspaceScreen(Screen[None]):
             existing,
             min_score=low,
             max_score=high,
+            include_known=True,
         )
 
     def _add_covenant_reputation(self) -> None:
@@ -7493,6 +8244,9 @@ class WorkspaceScreen(Screen[None]):
             section_id="tab-lab-diary",
         )
 
+    def action_improve(self) -> None:
+        self._improve_income_source()
+
     # -- shared Character/Laboratory Virtue & Flaw actions --
 
     def action_add_virtue_flaw(self) -> None:
@@ -7557,17 +8311,20 @@ class WorkspaceScreen(Screen[None]):
 
 
 class SagaPickerScreen(Screen[None]):
-    """Lists existing sagas and offers to create a new one."""
+    """Lists existing sagas; offers to create a new one or delete one."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
         ("n", "create_saga", "New Saga"),
+        ("A", "delete_saga", "Delete Saga"),
+        Binding("delete", "delete_saga", "Delete Saga", show=False),
         ("q", "quit", "Quit"),
     ]
 
     def compose(self) -> ComposeResult:
         yield Header()
         yield Static(
-            "Select a saga to open, or press 'n' to create a new one.",
+            "Select a saga to open, press 'n' to create a new one, "
+            "or 'A' to delete the highlighted one.",
             id="picker-hint",
         )
         yield ListView(id="saga-list")
@@ -7594,7 +8351,8 @@ class SagaPickerScreen(Screen[None]):
         for saga_id in saga_ids:
             saga = storage.load_saga(saga_id)
             summary = (
-                f"{saga.name}  —  Storyguide: {saga.storyguide or '(unset)'}"
+                f"{escape(saga.name)}  —  "
+                f"Storyguide: {escape(saga.storyguide) or '(unset)'}"
                 f"  —  {saga.current_season} {saga.current_year}"
             )
             items.append(
@@ -7611,6 +8369,43 @@ class SagaPickerScreen(Screen[None]):
                 await self.refresh_list()
 
         self.app.push_screen(SagaCreateScreen(), handle_result)
+
+    def action_delete_saga(self) -> None:
+        """Delete the highlighted saga's file, after confirming: this is
+        permanent, so the message says so and No is the default."""
+        item = self.query_one("#saga-list", ListView).highlighted_child
+        if (
+            item is None
+            or item.id is None
+            or not item.id.startswith(_SAGA_ITEM_ID_PREFIX)
+        ):
+            self.notify("No saga to delete.")
+            return
+        saga_id = item.id.removeprefix(_SAGA_ITEM_ID_PREFIX)
+        try:
+            name = storage.load_saga(saga_id).name
+        except OSError, ValueError, TypeError, KeyError:
+            name = saga_id  # unreadable file: still let it be deleted by id
+
+        async def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
+                storage.delete_saga(saga_id)
+                list_view = self.query_one("#saga-list", ListView)
+                index = list_view.index or 0
+                await self.refresh_list()
+                remaining = len(storage.list_sagas())
+                if remaining:  # keep the highlight near where it was
+                    list_view.index = min(index, remaining - 1)
+
+        self.app.push_screen(
+            ConfirmScreen(
+                f"Delete the saga {escape(name)}?\n\n"
+                "Everything in it (covenants, characters, laboratories, "
+                "library) is deleted for good. This cannot be undone.",
+                yes_label="Delete",
+            ),
+            handle_confirmed,
+        )
 
     def on_list_view_selected(self, event: ListView.Selected) -> None:
         item_id = event.item.id

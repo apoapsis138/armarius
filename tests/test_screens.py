@@ -18,6 +18,7 @@ from textual.widgets import (
     Tree,
 )
 
+from ars_magica_manager import economics as eco
 from ars_magica_manager import inhabitants as inh
 from ars_magica_manager import possessions as pos
 from ars_magica_manager import storage
@@ -34,6 +35,7 @@ from ars_magica_manager.models import (
     Covenant,
     DiaryEntry,
     HermeticBackground,
+    IncomeSource,
     Inhabitant,
     LabCharacteristics,
     Laboratory,
@@ -69,6 +71,7 @@ from ars_magica_manager.screens import (
     EditWoundsScreen,
     FieldsDialog,
     IdentityEditScreen,
+    ImproveIncomeScreen,
     ItemAddScreen,
     LaboratoryCreateScreen,
     LabVirtueFlawPickerScreen,
@@ -2836,9 +2839,10 @@ async def test_opening_a_covenant_focuses_info_panel_so_edit_hotkey_works():
         await pilot.press("escape")
         await pilot.pause()
 
-        # Still available after switching to any other tab.
+        # Still available after switching to a tab with nothing to focus (Library
+        # is still a placeholder).
         view = app.screen._covenant_sheet_view
-        view.query_one(TabbedContent).active = "tab-cov-economics"
+        view.query_one(TabbedContent).active = "tab-cov-library"
         await pilot.pause()
         assert app.screen._active_section() == "section-cov-info"
         await pilot.press("e")
@@ -3712,7 +3716,7 @@ async def test_switching_back_to_the_attributes_tab_focuses_its_first_section():
         await pilot.pause()
 
         tabbed = view.query_one(TabbedContent)
-        tabbed.active = "tab-cov-economics"  # a flat tab
+        tabbed.active = "tab-cov-library"  # a flat tab (still a placeholder)
         await pilot.pause()
         assert app.screen._active_section() == "section-cov-info"  # fallback
 
@@ -4795,7 +4799,7 @@ async def test_inhabitants_tab_has_all_its_sections_with_headcount_titles():
             "Specialists (0)",
             "Craftspeople (0)",
             "Turb (3)",
-            "Inhabitants (3)",
+            "Other Covenfolk (3)",
             "Horses (0)",
             "Livestock (0)",
         ]
@@ -4815,11 +4819,9 @@ async def test_magi_and_companions_are_listed_from_sheets_and_choosing_fills_the
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_covenant(pilot, app)
         assert _inh_labels(app, "magus") == [
-            "Corvinus | House Bonisagus | Year Born: 1195 | Loyalty: 0"
+            "Corvinus | House Bonisagus | Year Born: 1195 | The Gift"
         ]
-        assert _inh_labels(app, "companion") == [
-            "Alys | Year Born: Unknown | Loyalty: 0"
-        ]
+        assert _inh_labels(app, "companion") == ["Alys | Year Born: Unknown"]
 
         await _select_inh_row(pilot, app, "magus", 0)
         panel = _inh_view(app).query_one("#inh-panel", Static)
@@ -4843,14 +4845,14 @@ async def test_add_an_npc_magus_with_an_unknown_year():
         await pilot.press("a")
         await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)  # straight to the form
-        _fill(app, name="Hidden Hermit", house="house_criamon", loyalty=2)
+        _fill(app, name="Hidden Hermit", house="house_criamon", gift="Blatant")
         assert app.screen.query_one("#fld-year_born", Input).value == ""  # blank
         _fill(app, description="Lives in a *sealed* tower.")
         await _save_dialog(pilot, app)
         await _wait_until(pilot, lambda: len(_inh_labels(app, "magus")) == 2)
 
         assert _inh_labels(app, "magus")[1] == (
-            "Hidden Hermit | House Criamon | Year Born: Unknown | Loyalty: 2"
+            "Hidden Hermit | House Criamon | Year Born: Unknown | Blatant Gift"
         )
         assert _inh_title(app, "magus") == "Magi (2)"
 
@@ -4876,13 +4878,15 @@ async def test_editing_a_listed_magus_only_changes_covenant_side_fields():
         # Name/house/year come from the sheet: shown, not editable.
         assert not app.screen.query("#fld-name")
         assert not app.screen.query("#fld-house")
-        _fill(app, loyalty=3, description="Trusted **completely**.")
+        # Gift too: read straight from the sheet's Virtues, not editable here.
+        assert not app.screen.query("#fld-gift")
+        _fill(app, description="Trusted **completely**.")
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: "Loyalty: 3" in _inh_labels(app, "magus")[0])
+        await _wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         assert _inh_labels(app, "magus")[0].startswith("Corvinus | House Bonisagus")
 
     [record] = _records("magus")
-    assert record.character_id == "mag1" and record.loyalty == 3
+    assert record.character_id == "mag1" and record.description.startswith("Trusted")
     assert not record.departed
 
 
@@ -4890,7 +4894,7 @@ async def test_removing_a_listed_magus_keeps_them_in_the_covenant_but_stops_coun
     saga = _saga_with_people()
     # Already edited once, so a covenant-side record exists to be marked.
     saga.covenants[0].inhabitants = [
-        Inhabitant(id="m", kind="magus", character_id="mag1", loyalty=3)
+        Inhabitant(id="m", kind="magus", character_id="mag1", description="Trusted.")
     ]
     storage.save_saga(saga)
 
@@ -4919,7 +4923,8 @@ async def test_removing_a_listed_magus_keeps_them_in_the_covenant_but_stops_coun
     saved = storage.load_saga("test_saga")
     assert next(c for c in saved.characters if c.id == "mag1").covenant_id == "cov1"
     [record] = _records("magus")
-    assert record.departed and record.loyalty == 3 and record.character_id == "mag1"
+    assert record.departed
+    assert record.description == "Trusted." and record.character_id == "mag1"
     assert inh.entries_for_kind(saved, saved.covenants[0], "magus") == []
 
 
@@ -4971,7 +4976,7 @@ async def test_specialist_from_an_unassigned_grog_prefills_and_marks_it_assigned
         await _save_dialog(pilot, app)
         await _wait_until(pilot, lambda: len(_inh_labels(app, "specialist")) == 1)
         assert _inh_labels(app, "specialist") == [
-            "Old Thomae | Teaches Latin | Teacher | Year Born: 1193 | Loyalty: 0"
+            "Old Thomae | Teaches Latin | Teacher | Year Born: 1193"
         ]
 
         # Now assigned, so he's no longer offered.
@@ -5007,7 +5012,7 @@ async def test_a_brand_new_grog_type_person_needs_a_name_but_year_born_may_stay_
         await _save_dialog(pilot, app)  # no year: fine
         await _wait_until(pilot, lambda: len(_inh_labels(app, "specialist")) == 1)
         assert _inh_labels(app, "specialist") == [
-            "Visiting Steward | Steward | Year Born: Unknown | Loyalty: 0"
+            "Visiting Steward | Steward | Year Born: Unknown"
         ]
 
     [record] = _records("specialist")
@@ -5031,6 +5036,74 @@ async def test_a_grog_without_a_year_born_is_assigned_with_it_unknown():
         await _save_dialog(pilot, app)
         await _wait_until(pilot, lambda: len(_inh_labels(app, "turb")) == 1)
         assert "Year Born: Unknown" in _inh_labels(app, "turb")[0]
+
+
+async def test_other_covenfolk_requires_a_covenant_role_and_suppresses_it_when_redundant():
+    storage.save_saga(_saga_with_people())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        await _open_inh_section(pilot, app, "section-inh-inhabitant")
+        await pilot.press("a")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)  # a GROG_KINDS section
+        await pilot.press("enter")  # "(New person...)"
+        await pilot.pause()
+        assert isinstance(app.screen, FieldsDialog)
+
+        _fill(app, name="Old Marta", responsibility="Nursemaid")
+        await _save_dialog(pilot, app)
+        assert isinstance(app.screen, FieldsDialog)  # refused: no Covenant Role
+        assert "Covenant Role is required" in str(
+            app.screen.query_one("#fields-error").render()
+        )
+        options = [
+            v
+            for _, v in app.screen.query_one("#fld-role", Select)._options
+            if isinstance(v, str)
+        ]
+        assert options == ["Laborer", "Servant", "Teamster", "Dependent"]
+        _fill(app, role="Dependent", year_born=1180)
+        await _save_dialog(pilot, app)
+        await _wait_until(pilot, lambda: len(_inh_labels(app, "inhabitant")) == 1)
+        assert _inh_labels(app, "inhabitant") == [
+            "Old Marta | Dependent | Qty: 1 | Year Born: 1180"
+        ]
+
+        await _select_inh_row(pilot, app, "inhabitant", 0)
+        panel = _inh_view(app).query_one("#inh-panel", Static)
+        text = str(panel.render())
+        assert "Covenant Role: Dependent" in text
+        assert "Responsibility: Nursemaid" in text
+
+    [record] = _records("inhabitant")
+    assert (record.name, record.role, record.year_born) == (
+        "Old Marta",
+        "Dependent",
+        1180,
+    )
+
+
+async def test_other_covenfolk_named_the_plural_of_its_role_hides_the_role_in_the_row():
+    saga = _saga_with_people()
+    saga.covenants[0].inhabitants = [
+        Inhabitant(
+            id="a", kind="inhabitant", name="Servants", role="Servant", quantity=4
+        )
+    ]
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        # Qty > 1: the role is redundant with the name, and Year Born is left
+        # out entirely (no single birth year for a group).
+        assert _inh_labels(app, "inhabitant") == ["Servants | Qty: 4"]
+
+        await _select_inh_row(pilot, app, "inhabitant", 0)
+        panel = str(_inh_view(app).query_one("#inh-panel", Static).render())
+        assert "Covenant Role: Servant" in panel  # still shown in the panel
 
 
 async def test_craftsperson_links_one_of_the_grogs_abilities_and_stores_craft_fields():
@@ -5068,7 +5141,7 @@ async def test_craftsperson_links_one_of_the_grogs_abilities_and_stores_craft_fi
         await _wait_until(pilot, lambda: len(_inh_labels(app, "craftsperson")) == 1)
         # Tied to the sheet's Brawl (Level 4): that wins over the typed 7.
         assert _inh_labels(app, "craftsperson") == [
-            "Old Thomae | Blacksmithing | Score: 4 | Qty: 1 | Year Born: 1193 | Loyalty: 0"
+            "Old Thomae | Blacksmithing | Score: 4 | Qty: 1 | Year Born: 1193"
         ]
 
         # Editing again shows the score as read-only, taken from the Ability.
@@ -5185,9 +5258,7 @@ async def test_horses_and_livestock_take_a_blank_year_and_a_quantity():
             _fill(app, name=name, quantity=4)
             await _save_dialog(pilot, app)
             await _wait_until(pilot, lambda kind=kind: len(_inh_labels(app, kind)) == 1)
-            assert _inh_labels(app, kind) == [
-                f"{name} | Qty: 4 | Year Born: Unknown | Loyalty: 0"
-            ]
+            assert _inh_labels(app, kind) == [f"{name} | Qty: 4 | Year Born: Unknown"]
         assert _inh_title(app, "horse") == "Horses (4)"
 
 
@@ -5291,16 +5362,14 @@ async def test_loyalty_governance_is_typed_unless_a_governance_boon_provides_it(
         assert isinstance(app.screen, FieldsDialog)
         assert app.screen.query_one("#fld-equipment", Select).value == "Standard"
         assert app.screen.query_one("#fld-money", Select).value == "Standard salary"
+        # The four totals are calculated, not typed.
+        for key in ("base_points", "current_points", "prevailing_score"):
+            assert not app.screen.query(f"#fld-{key}")
         _fill(
             app,
             governance="Guild of Mercers",
-            base_points=-30,
-            current_points=-28,
-            prevailing_score=-3,
             equipment="Anything they need",
-            equipment_modifier=2,
             money="Lavish salary",
-            money_modifier=-1,
             familiarity=1,
         )
         await _save_dialog(pilot, app)
@@ -5314,11 +5383,15 @@ async def test_loyalty_governance_is_typed_unless_a_governance_boon_provides_it(
         left = str(_inh_view(app).query_one("#inh-loyalty-left", Static).render())
         right = str(_inh_view(app).query_one("#inh-loyalty-right", Static).render())
         assert "Guild of Mercers" in left
+        # 1 magus, The Gift (-30); +20 Equipment, +20 Money, +1 Familiarity -> 11.
         assert re.search(r"Base Loyalty Points:\s+-30", left)
-        assert "Anything they need  (2)" in right and "Lavish salary  (-1)" in right
+        assert re.search(r"Total modifiers:\s+41", left)
+        assert re.search(r"Current Loyalty Points:\s+11", left)
+        assert re.search(r"Prevailing Loyalty Score:\s+1\b", left)
+        assert "Anything they need  (+20)" in right and "Lavish salary  (+20)" in right
 
     loyalty = storage.load_saga("test_saga").covenants[0].loyalty
-    assert (loyalty.governance, loyalty.base_points) == ("Guild of Mercers", -30)
+    assert loyalty.governance == "Guild of Mercers"
     assert (loyalty.equipment, loyalty.money) == ("Anything they need", "Lavish salary")
 
     # With a governance Boon the type isn't typed in: the field becomes info.
@@ -5341,7 +5414,13 @@ async def test_loyalty_governance_is_typed_unless_a_governance_boon_provides_it(
 
 
 async def test_population_and_miscellaneous_fields_are_editable_and_total_is_calculated():
-    storage.save_saga(_saga_with_people())
+    saga = _saga_with_people()
+    saga.covenants[0].inhabitants = [
+        Inhabitant(
+            id="s", kind="inhabitant", name="Servants", role="Servant", quantity=3
+        )
+    ]
+    storage.save_saga(saga)
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
@@ -5352,27 +5431,26 @@ async def test_population_and_miscellaneous_fields_are_editable_and_total_is_cal
         await pilot.press("e")
         await pilot.pause()
         assert not app.screen.query("#fld-total")  # calculated: not an input
-        _fill(
-            app,
-            teamsters=1,
-            teamsters_needed=2,
-            servants=3,
-            servants_needed=4,
-            other_people=6,
-        )
+        # Teamsters/Servants/Laborers and their two "Needed" minimums are all
+        # calculated now, from the Other Covenfolk list -- nothing to type.
+        for key in ("teamsters", "teamsters_needed", "servants", "servants_needed"):
+            assert not app.screen.query(f"#fld-{key}")
+        assert not app.screen.query("#fld-laborers")
+        _fill(app, other_people=6)
         await _save_dialog(pilot, app)
         await _wait_until(
             pilot,
-            lambda: (
-                "1 / 2"
-                in str(view.query_one("#inh-population-content", Static).render())
+            lambda: re.search(
+                r"Total Inhabitants:\s+11\b",
+                str(view.query_one("#inh-population-content", Static).render()),
             ),
         )
         text = str(view.query_one("#inh-population-content", Static).render())
-        assert "3 / 4" in text
+        minimum = inh.minimum_servants(view.saga, view.covenant)
+        assert f"3 / {minimum}" in text  # 3 servants already on the list
         assert re.search(
-            r"Total Inhabitants:\s+8\b", text
-        )  # 6 other + magus + companion
+            r"Total Inhabitants:\s+11\b", text
+        )  # 6 other + magus + companion + 3 servants
 
         await _open_inh_section(pilot, app, "section-inh-misc")
         await pilot.press("e")
@@ -5385,7 +5463,7 @@ async def test_population_and_miscellaneous_fields_are_editable_and_total_is_cal
         )
 
     pop = storage.load_saga("test_saga").covenants[0].population
-    assert (pop.teamsters_needed, pop.other_people) == (2, 6)
+    assert pop.other_people == 6
     assert (pop.aging_magi, pop.magic_laborers, pop.magic_turbula) == (1, 2, 5)
 
 
@@ -5713,11 +5791,56 @@ async def test_weapons_armor_and_items_need_a_name_and_a_quantity_defaulting_to_
             _fill(app, quantity=3, description="Well **kept**.")
             await _save_dialog(pilot, app)
             await _wait_until(pilot, lambda kind=kind: len(_pos_labels(app, kind)) == 1)
-            assert _pos_labels(app, kind) == [f"{name} | Qty: 3"]
+            # Weapons and armor carry a Type and Quality (their points); items don't.
+            gear = {
+                "weapon": "Weapon or shield, Standard | ",
+                "armor": "Partial armor, Standard | ",
+                "item": "",
+            }[kind]
+            assert _pos_labels(app, kind) == [f"{name} | {gear}Qty: 3"]
 
         await _select_pos_row(pilot, app, "item", 0)
         panel = _pos_panel(app)
         assert "Quantity: 3" in panel and "Well kept." in panel
+        assert "Points" not in panel
+
+        await _select_pos_row(pilot, app, "weapon", 0)
+        panel = _pos_panel(app)
+        for expected in (
+            "Type: Weapon or shield",
+            "Quality: Standard",
+            "Quantity: 3",
+            "Points: 12 (4 each",
+        ):
+            assert expected in panel, expected
+
+
+async def test_siege_engines_only_come_expensive_and_points_follow_the_table():
+    storage.save_saga(_saga_with_a_lab())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        await _open_pos_section(pilot, app, "weapon")
+        await pilot.press("a")
+        await pilot.pause()
+        types = app.screen.query_one("#fld-gear_type", Select)
+        assert [v for _, v in types._options if isinstance(v, str)] == [
+            "Weapon or shield",
+            "Ballista or light catapult",
+            "Heavy catapult or trebuchet",
+        ]
+        _fill(app, name="Ballista", gear_type="Ballista or light catapult")
+        await _save_dialog(pilot, app)  # still Standard
+        assert isinstance(app.screen, FieldsDialog)
+        assert "only comes expensive" in str(
+            app.screen.query_one("#fields-error").render()
+        )
+        _fill(app, gear_quality="Expensive")
+        await _save_dialog(pilot, app)
+        await _wait_until(pilot, lambda: len(_pos_labels(app, "weapon")) == 1)
+        cov = app.screen.selected_covenant
+        assert pos.gear_points(app.screen.saga, cov) == 16
 
 
 async def test_vis_source_requires_name_art_season_and_pawns():
@@ -5918,3 +6041,708 @@ async def test_possession_forms_fit_a_small_terminal_and_hug_content_on_a_tall_o
         await pilot.press("a")
         await pilot.pause()
         assert app.screen.query_one("#fields-dialog").region.height < 30
+
+
+# -- Covenant Economics tab ------------------------------------------------------
+
+
+def _saga_for_economics() -> Saga:
+    """Corvinus (magus) and Alys (companion) plus six turb and three laborers:
+    17 points of inhabitants, one source of income."""
+    saga = _saga_with_people()
+    cov = saga.covenants[0]
+    cov.inhabitants = [
+        Inhabitant(id="t", kind="turb", name="Guards", quantity=6),
+        Inhabitant(
+            id="l", kind="inhabitant", name="Laborers", role="Laborer", quantity=3
+        ),
+    ]
+    cov.economics.income_sources = [
+        IncomeSource(
+            id="a", name="Salt Mine", type="Typical", description="A **rich** seam."
+        )
+    ]
+    return saga
+
+
+async def _show_economics_tab(pilot, app) -> None:
+    view = app.screen._covenant_sheet_view
+    await _wait_until(pilot, lambda: view.initial_tab_seen)
+    await pilot.pause()
+    view.query_one(TabbedContent).active = "tab-cov-economics"
+    await pilot.pause()
+
+
+async def _open_eco_section(pilot, app, which: str) -> None:
+    """Focus an Economics section (so its a/A/e keys apply)."""
+    await _show_economics_tab(pilot, app)
+    view = app.screen._covenant_sheet_view
+    view.query_one(f"#section-eco-{which}", Collapsible).query_one(
+        "CollapsibleTitle"
+    ).focus()
+    await pilot.pause()
+    await _wait_until(
+        pilot, lambda: app.screen._active_section() == f"section-eco-{which}"
+    )
+
+
+async def _select_eco_row(pilot, app, which: str, row: int) -> None:
+    await _show_economics_tab(pilot, app)
+    rows = app.screen._covenant_sheet_view.query_one(
+        f"#eco-{which}-list", SelectableList
+    )
+    rows.focus()
+    await pilot.pause()
+    rows.highlighted = row
+    await pilot.pause()
+
+
+def _eco_view(app):
+    return app.screen._covenant_sheet_view
+
+
+def _eco_panel(app) -> str:
+    return str(_eco_view(app).query_one("#eco-panel", Static).render())
+
+
+def _eco_labels(app, which: str) -> list[str]:
+    view = _eco_view(app)
+    summary = eco.summarize(view.saga, view.covenant)
+    return [re.sub(r"\s+", " ", label) for _, label in view._eco_rows(which, summary)]
+
+
+def _eco_wealth(app) -> str:
+    view = _eco_view(app)
+    return "\n".join(
+        str(view.query_one(f"#eco-wealth-{side}", Static).render())
+        for side in ("left", "right")
+    )
+
+
+def _saved_economics():
+    return storage.load_saga("test_saga").covenants[0].economics
+
+
+async def test_economics_tab_shows_calculated_wealth_and_all_its_sections():
+    storage.save_saga(_saga_for_economics())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        await _show_economics_tab(pilot, app)
+        view = _eco_view(app)
+
+        sections = [
+            view.query_one(f"#section-eco-{k}", Collapsible)
+            for k in ("wealth", "income", "expenditure", "savings")
+        ]
+        assert [_plain_title(x) for x in sections] == [
+            "Wealth",
+            "Sources of Income",
+            "Yearly Expenditure",
+            "Cost Savings",
+        ]
+        assert all(not x.collapsed for x in sections)
+
+        wealth = _eco_wealth(app)
+        # 5 (magus) + 3 (companion) + 6 turb + 3 laborers
+        assert re.search(r"Points of Inhabitants:\s+17\b", wealth)
+        assert re.search(r"Points of Laboratories:\s+0\b", wealth)
+        assert re.search(r"Points of Weapons and Armor:\s+0\b", wealth)
+        assert re.search(r"Wealth:\s+0\b", wealth)
+        assert re.search(r"Total Income:\s+100\b", wealth)
+        # 2 + 4 + 9 + 4 + 1 writing + 1 sundry (the minimum) = 21; laborers save 3
+        assert re.search(r"Expenditure \(Before Cost Savings\):\s+21\b", wealth)
+        assert re.search(r"Cost Savings:\s+3\b", wealth)
+        assert re.search(r"Total Expenditure:\s+18\b", wealth)
+
+        names = lambda which: [x.split(" ")[0] for x in _eco_labels(app, which)]
+        assert names("expenditure") == [
+            "Buildings",
+            "Consumables",
+            "Laboratories",
+            "Provisions",
+            "Wages",
+            "Weapons",
+            "Writing",
+            "Tithes",
+            "Inflation",
+            "Sundry",
+        ]
+        assert names("savings") == ["Laborers", "Craftspeople", "Magic", "Emergency"]
+        headers = [str(w.render()) for w in view.query(".eco-header").results(Static)]
+        assert "Cost" in headers[0] and "Quantity" in headers[1]
+        assert "Savings" in headers[0] and "Notes" in headers[0]
+        assert _eco_labels(app, "income") == [
+            "Salt Mine | Type: Typical | Current Income: 100"
+        ]
+        assert "Select a source" in _eco_panel(app)
+
+
+async def test_wealth_is_typed_with_e():
+    storage.save_saga(_saga_for_economics())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        await _open_eco_section(pilot, app, "wealth")
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, FieldsDialog)
+        assert app.screen.query_one("#fld-wealth", Input).value == "0"
+        _fill(app, wealth=25)
+        await _save_dialog(pilot, app)
+        await _wait_until(
+            pilot, lambda: re.search(r"Wealth:\s+25\b", _eco_wealth(app)) is not None
+        )
+
+    assert _saved_economics().wealth == 25
+
+
+async def _add_income(pilot, app, **values) -> None:
+    before = len(_eco_labels(app, "income"))
+    await _open_eco_section(pilot, app, "income")
+    await pilot.press("a")
+    await pilot.pause()
+    assert isinstance(app.screen, FieldsDialog)
+    _fill(app, **values)
+    await _save_dialog(pilot, app)
+    await _wait_until(pilot, lambda: len(_eco_labels(app, "income")) > before)
+
+
+async def test_a_new_income_source_takes_its_income_from_its_type_unless_typed_over():
+    storage.save_saga(_saga_for_economics())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        await _open_eco_section(pilot, app, "income")
+        await pilot.press("a")
+        await pilot.pause()
+        assert app.screen.query_one("#fld-type", Select).value == "Typical"
+        assert app.screen.query_one("#fld-income", Input).value == ""  # follows type
+        types = app.screen.query_one("#fld-type", Select)
+        assert [v for _, v in types._options if isinstance(v, str)] == [
+            "None",
+            "Lesser",
+            "Typical",
+            "Greater",
+            "Legendary",
+        ]
+        await _save_dialog(pilot, app)
+        assert isinstance(app.screen, FieldsDialog)  # a name is required
+        assert "Name is required" in str(app.screen.query_one("#fields-error").render())
+        _fill(app, name="Old Quarry", type="Legendary")
+        await _save_dialog(pilot, app)
+        await _wait_until(pilot, lambda: len(_eco_labels(app, "income")) == 2)
+
+        await _add_income(pilot, app, name="Toll", type="Lesser", income=55)
+        await _add_income(pilot, app, name="Idle Land", type="None")
+        assert _eco_labels(app, "income") == [
+            "Salt Mine | Type: Typical | Current Income: 100",
+            "Old Quarry | Type: Legendary | Current Income: 1000",
+            "Toll | Type: Lesser | Current Income: 55",
+            "Idle Land | Type: None | Current Income: 0",
+        ]
+        # 100 + 1000 + 55 + 0
+        assert re.search(r"Total Income:\s+1155\b", _eco_wealth(app))
+
+    sources = _saved_economics().income_sources
+    assert [s.income for s in sources] == [None, None, 55, None]  # only typed ones kept
+
+
+async def test_choosing_rows_fills_the_panel_with_one_selection_across_the_lists():
+    storage.save_saga(_saga_for_economics())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        await _select_eco_row(pilot, app, "income", 0)
+        panel = _eco_panel(app)
+        assert "Name: Salt Mine" in panel and "Type: Typical" in panel
+        assert "Current Income: 100 (the usual for Typical)" in panel
+        assert "A rich seam." in panel and "**" not in panel  # emphasis rendered
+
+        await _select_eco_row(pilot, app, "expenditure", 3)
+        view = _eco_view(app)
+        assert view.selected_economics("income") is None  # unchosen
+        panel = _eco_panel(app)
+        assert "Name: Provisions" in panel
+        assert "Rule: 5 pounds per 10 pts Inhabitants" in panel
+        assert "Cost: 9" in panel and "Savings: 3" in panel
+        assert "17 pts of inhabitants x 5 / 10" in panel
+
+        await _select_eco_row(pilot, app, "savings", 0)
+        assert view.selected_economics("expenditure") is None
+        panel = _eco_panel(app)
+        assert "Name: Laborers" in panel and "Quantity: 3" in panel
+
+
+async def test_e_and_A_act_on_the_selected_income_source_and_delete_confirms():
+    saga = _saga_for_economics()
+    saga.covenants[0].economics.income_sources.append(
+        IncomeSource(id="b", name="[Toll] bridge", type="Lesser")
+    )
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        # The brackets are escaped so they aren't read as markup.
+        assert _eco_labels(app, "income")[1].startswith("\\[Toll] bridge")
+        await _select_eco_row(pilot, app, "income", 1)
+
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, FieldsDialog)  # no "which one?" picker
+        assert app.screen.query_one("#fld-name", Input).value == "[Toll] bridge"
+        assert app.screen.query_one("#fld-income", Input).value == ""
+        _fill(app, type="Greater", income=260)
+        await _save_dialog(pilot, app)
+        await _wait_until(pilot, lambda: "260" in _eco_labels(app, "income")[1])
+        assert "Current Income: 260 (typed; Greater is usually 250)" in _eco_panel(app)
+
+        await _select_eco_row(pilot, app, "income", 1)
+        await pilot.press("A")
+        await pilot.pause()
+        assert isinstance(app.screen, ConfirmScreen)
+        message = str(app.screen.query_one("#confirm-message", Static).render())
+        assert message == "Delete [Toll] bridge?"
+        await pilot.press("n")
+        await pilot.pause()
+        assert len(_eco_labels(app, "income")) == 2
+
+        await pilot.press("A")
+        await pilot.pause()
+        await pilot.press("y")
+        await _wait_until(pilot, lambda: len(_eco_labels(app, "income")) == 1)
+        assert re.search(r"Total Income:\s+100\b", _eco_wealth(app))
+
+        # Nothing chosen any more: 'A' and 'e' fall back to asking which one.
+        await pilot.press("A")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)
+        await pilot.press("escape")
+        await pilot.pause()
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)
+
+    assert [s.name for s in _saved_economics().income_sources] == ["Salt Mine"]
+
+
+async def test_improve_updates_multiplier_and_projected_income_live_then_confirms():
+    storage.save_saga(_saga_for_economics())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        await _select_eco_row(pilot, app, "income", 0)  # Salt Mine, income 100
+
+        await pilot.press("i")
+        await pilot.pause()
+        assert isinstance(app.screen, ImproveIncomeScreen)
+        assert app.screen.query_one("#improve-effect", Select).value == "Status Quo"
+        multiplier = lambda: str(
+            app.screen.query_one("#improve-multiplier", Static).render()
+        )
+        projected = lambda: str(
+            app.screen.query_one("#improve-projected", Static).render()
+        )
+        assert multiplier() == "x1" and projected() == "100"
+
+        app.screen.query_one("#improve-effect", Select).value = "Boom"
+        await pilot.pause()
+        assert multiplier() == "x1.5" and projected() == "150"
+
+        app.screen.query_one("#btn-commit", Button).press()
+        await pilot.pause()
+        assert isinstance(app.screen, ConfirmScreen)
+        message = str(app.screen.query_one("#confirm-message", Static).render())
+        assert message == "Update Salt Mine's income from 100 to 150?"
+
+        await pilot.press("n")  # decline: still on the Improve dialog, unchanged
+        await pilot.pause()
+        assert isinstance(app.screen, ImproveIncomeScreen)
+
+        app.screen.query_one("#btn-commit", Button).press()
+        await pilot.pause()
+        await pilot.press("y")
+        await _wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+
+        await _wait_until(
+            pilot, lambda: "experienced Boom" in _eco_labels(app, "income")[0]
+        )
+        label = _eco_labels(app, "income")[0]
+        assert label == (
+            "Salt Mine | Type: Typical | Current Income: 150 | "
+            "1220 - Salt Mine experienced Boom changing Income from 100 to 150."
+        )
+        await _select_eco_row(pilot, app, "income", 0)
+        panel = _eco_panel(app)
+        assert panel.index("Note:") < panel.index("Description:")
+        assert "A rich seam." in panel  # the description, still there afterward
+
+    source = _saved_economics().income_sources[0]
+    assert source.income == 150
+    assert source.note == (
+        "1220 - Salt Mine experienced Boom changing Income from 100 to 150."
+    )
+
+
+async def test_improve_with_status_quo_records_the_no_change_note():
+    storage.save_saga(_saga_for_economics())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        await _select_eco_row(pilot, app, "income", 0)
+        await pilot.press("i")
+        await pilot.pause()
+        app.screen.query_one("#btn-commit", Button).press()
+        await pilot.pause()
+        assert isinstance(app.screen, ConfirmScreen)
+        assert "from 100 to 100" in str(
+            app.screen.query_one("#confirm-message", Static).render()
+        )
+        await pilot.press("y")
+        await _wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+
+    source = _saved_economics().income_sources[0]
+    assert source.income == 100
+    assert source.note == (
+        "1220 - Salt Mine experienced no growth or setbacks. Status Quo maintained."
+    )
+
+
+async def test_improve_cancel_and_the_which_one_fallback():
+    storage.save_saga(_saga_for_economics())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        # Nothing chosen: 'i' falls back to asking which one, same as e/A.
+        await _open_eco_section(pilot, app, "income")
+        await pilot.press("i")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)
+        await pilot.press("enter")  # Salt Mine
+        await pilot.pause()
+        assert isinstance(app.screen, ImproveIncomeScreen)
+        await pilot.press("escape")
+        await pilot.pause()
+        assert isinstance(app.screen, WorkspaceScreen)
+
+    assert _saved_economics().income_sources[0].income is None  # untouched
+
+
+async def test_expenditure_rows_take_notes_and_the_typed_ones_take_amounts():
+    storage.save_saga(_saga_for_economics())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+
+        # A calculated row: only its Notes can be typed.
+        await _select_eco_row(pilot, app, "expenditure", 0)
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, FieldsDialog)
+        assert not app.screen.query("#fld-tithes")
+        _fill(app, notes="Roof of the north tower")
+        await _save_dialog(pilot, app)
+        await _wait_until(
+            pilot,
+            lambda: "Roof of the north tower" in _eco_labels(app, "expenditure")[0],
+        )
+        assert "Roof of the north tower" in _eco_panel(app)  # panel refreshed too
+
+        # A typed row: an amount, which feeds the totals.
+        await _select_eco_row(pilot, app, "expenditure", 7)
+        await pilot.press("e")
+        await pilot.pause()
+        assert app.screen.query_one("#fld-tithes", Input).value == "0"
+        _fill(app, tithes=4, notes="Church")
+        await _save_dialog(pilot, app)
+        await _wait_until(
+            pilot, lambda: _eco_labels(app, "expenditure")[7].startswith("Tithes 4")
+        )
+        assert re.search(r"Before Cost Savings\):\s+25\b", _eco_wealth(app))  # 21 + 4
+
+        # An empty note is removed, not stored blank.
+        await _select_eco_row(pilot, app, "expenditure", 0)
+        await pilot.press("e")
+        await pilot.pause()
+        _fill(app, notes="")
+        await _save_dialog(pilot, app)
+        await _wait_until(
+            pilot, lambda: "Roof" not in _eco_labels(app, "expenditure")[0]
+        )
+
+    economics = _saved_economics()
+    assert economics.tithes == 4
+    assert economics.notes == {"tithes": "Church"}
+
+
+async def test_without_a_chosen_row_e_asks_which_row_to_edit():
+    storage.save_saga(_saga_for_economics())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        await _open_eco_section(pilot, app, "expenditure")
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)
+        await pilot.press("down", "enter")  # Consumables (the picker starts on row 0)
+        await pilot.pause()
+        assert isinstance(app.screen, FieldsDialog)
+        assert "Consumables" in str(app.screen.query_one("#fields-title").render())
+
+
+async def test_cost_savings_rows_are_calculated_except_magic_and_emergency_savings():
+    storage.save_saga(_saga_for_economics())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        await _select_eco_row(pilot, app, "savings", 0)  # Laborers
+        await pilot.press("e")
+        await pilot.pause()
+        assert not app.screen.query("#fld-magic_savings")
+        await pilot.press("escape")
+        await pilot.pause()
+
+        await _select_eco_row(pilot, app, "savings", 2)  # Magic
+        await pilot.press("e")
+        await pilot.pause()
+        _fill(app, magic_savings=6, notes="A self-sweeping broom")
+        await _save_dialog(pilot, app)
+        await _wait_until(
+            pilot, lambda: _eco_labels(app, "savings")[2].startswith("Magic 0 6")
+        )
+
+        await _select_eco_row(pilot, app, "savings", 3)  # Emergency Savings
+        await pilot.press("e")
+        await pilot.pause()
+        _fill(app, emergency_savings=4)
+        await _save_dialog(pilot, app)
+        await _wait_until(
+            pilot,
+            lambda: _eco_labels(app, "savings")[3].startswith("Emergency Savings 0 4"),
+        )
+        # 3 (laborers) + 6 + 4
+        assert re.search(r"Cost Savings:\s+13\b", _eco_wealth(app))
+        assert re.search(r"Total Expenditure:\s+8\b", _eco_wealth(app))  # 21 - 13
+
+    economics = _saved_economics()
+    assert (economics.magic_savings, economics.emergency_savings) == (6, 4)
+    assert economics.notes == {"magic": "A self-sweeping broom"}
+
+
+async def test_economics_follows_changes_made_on_other_tabs_and_keeps_the_chosen_row():
+    storage.save_saga(_saga_for_economics())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        await _select_eco_row(pilot, app, "expenditure", 3)  # Provisions
+        assert "Cost: 9" in _eco_panel(app)
+
+        # Four more turb on the Inhabitants tab: 17 -> 21 points.
+        await _open_inh_section(pilot, app, "section-inh-turb")
+        await pilot.press("a")
+        await pilot.pause()
+        await pilot.press("enter")  # (New person)
+        await pilot.pause()
+        _fill(app, name="More Guards", quantity=4)
+        await _save_dialog(pilot, app)
+        await _wait_until(pilot, lambda: len(_inh_labels(app, "turb")) == 2)
+
+        await _show_economics_tab(pilot, app)
+        assert re.search(r"Points of Inhabitants:\s+21\b", _eco_wealth(app))
+        view = _eco_view(app)
+        assert view.selected_economics("expenditure") == 3  # still chosen
+        await _wait_until(pilot, lambda: "Cost: 11" in _eco_panel(app))
+        assert "Name: Provisions" in _eco_panel(app)
+
+        # The salary in Loyalty drives the Wages multiplier.
+        view.covenant.loyalty.money = "Generous salary"
+        view.refresh_section("section-inh-loyalty")
+        assert "Wages (x1.5)" in _eco_labels(app, "expenditure")[4]
+
+
+async def test_a_laboratorys_upkeep_and_a_weapons_type_feed_the_points():
+    saga = _saga_with_a_lab()
+    saga.laboratories[0].characteristics = LabCharacteristics(upkeep=2)
+    saga.covenants[0].possessions = [
+        Possession(
+            id="w",
+            kind="weapon",
+            name="Swords",
+            quantity=10,
+            gear_type="Weapon or shield",
+            gear_quality="Expensive",
+        )
+    ]
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        await _show_economics_tab(pilot, app)
+        wealth = _eco_wealth(app)
+        assert re.search(r"Points of Laboratories:\s+30\b", wealth)  # Upkeep +2
+        assert re.search(r"Points of Weapons and Armor:\s+160\b", wealth)  # 10 x 16
+
+
+async def test_the_economics_forms_fit_an_80_by_24_terminal():
+    storage.save_saga(_saga_for_economics())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(80, 24)) as pilot:
+        await _select_covenant(pilot, app)
+        await _open_eco_section(pilot, app, "income")
+        await pilot.press("a")
+        await pilot.pause()
+        region = app.screen.query_one("#fields-dialog").region
+        assert region.right <= 80 and region.bottom <= 24
+        # The usual income of each type is shown as a hint.
+        hints = " ".join(str(h.render()) for h in app.screen.query(".fd-hint"))
+        assert "Lesser 40" in hints and "Legendary 1000" in hints
+        await pilot.press("escape")
+        await pilot.pause()
+
+        await _open_eco_section(pilot, app, "expenditure")
+        await pilot.press("e")
+        await pilot.pause()
+        await pilot.press("enter")  # the first row of the picker
+        await pilot.pause()
+        region = app.screen.query_one("#fields-dialog").region
+        assert region.right <= 80 and region.bottom <= 24
+
+
+async def test_the_economics_forms_do_not_stretch_on_a_tall_terminal():
+    storage.save_saga(_saga_for_economics())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        await _open_eco_section(pilot, app, "income")
+        await pilot.press("a")
+        await pilot.pause()
+        assert app.screen.query_one("#fields-dialog").region.height < 30
+
+
+def _save_sagas(*names: str) -> None:
+    for name in names:
+        storage.save_saga(
+            Saga(id=storage.generate_saga_id(name), name=name, storyguide="Alex")
+        )
+
+
+def _picker_labels(app) -> list[str]:
+    return [
+        str(item.query_one(Label).render())
+        for item in app.screen.query_one("#saga-list", ListView).children
+    ]
+
+
+async def test_A_deletes_the_highlighted_saga_only_after_confirmation():
+    _save_sagas("Alpha", "[Beta] Saga", "Gamma")
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        list_view = app.screen.query_one("#saga-list", ListView)
+        list_view.index = 1
+        await pilot.pause()
+        assert len(_picker_labels(app)) == 3
+        assert _picker_labels(app)[1].startswith("[Beta] Saga")  # not read as markup
+
+        await pilot.press("A")
+        await pilot.pause()
+        assert isinstance(app.screen, ConfirmScreen)
+        message = str(app.screen.query_one("#confirm-message", Static).render())
+        assert "Delete the saga [Beta] Saga?" in message  # brackets survive
+        assert "cannot be undone" in message
+
+        # No (and Escape) keep it; so does Enter on the default No.
+        await pilot.press("n")
+        await pilot.pause()
+        assert storage.list_sagas() == ["alpha", "beta_saga", "gamma"]
+        await pilot.press("A")
+        await pilot.pause()
+        await pilot.press("escape")
+        await pilot.pause()
+        await pilot.press("A")
+        await pilot.pause()
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, SagaPickerScreen)
+        assert storage.list_sagas() == ["alpha", "beta_saga", "gamma"]
+
+        await pilot.press("A")
+        await pilot.pause()
+        await pilot.press("y")
+        await _wait_until(pilot, lambda: len(_picker_labels(app)) == 2)
+        assert storage.list_sagas() == ["alpha", "gamma"]  # exactly that one
+        assert [l.split("  ")[0] for l in _picker_labels(app)] == ["Alpha", "Gamma"]
+        assert app.screen.query_one("#saga-list", ListView).index == 1  # stays put
+
+        # Opening still works on what is left.
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert app.screen.saga.id == "gamma"
+
+
+async def test_the_delete_key_works_and_deleting_the_last_saga_shows_the_placeholder():
+    _save_sagas("Only")
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await pilot.press("delete")
+        await pilot.pause()
+        assert isinstance(app.screen, ConfirmScreen)
+        await pilot.press("y")
+        await _wait_until(pilot, lambda: storage.list_sagas() == [])
+        await _wait_until(
+            pilot, lambda: any("No sagas yet" in l for l in _picker_labels(app))
+        )
+        assert len(_picker_labels(app)) == 1
+
+        # Nothing left to delete: no dialog, just a notice.
+        await pilot.press("A")
+        await pilot.pause()
+        assert isinstance(app.screen, SagaPickerScreen)
+
+
+async def test_a_saga_can_still_be_created_after_deleting_all_of_them():
+    _save_sagas("Old")
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await pilot.press("A")
+        await pilot.pause()
+        await pilot.press("y")
+        await _wait_until(pilot, lambda: storage.list_sagas() == [])
+
+        await pilot.press("n")
+        await pilot.pause()
+        assert isinstance(app.screen, SagaCreateScreen)
+        app.screen.query_one("#input-name", Input).value = "Old"  # the same name
+        app.screen.query_one("#input-storyguide", Input).value = "Alex"
+        app.screen.query_one("#input-year", Input).value = "1220"
+        await pilot.click("#btn-create")
+        await pilot.pause()
+        assert isinstance(app.screen, SagaPickerScreen)
+
+    assert storage.list_sagas() == ["old"]
+
+
+def test_delete_saga_removes_the_file_and_ignores_a_missing_one():
+    _save_sagas("Doomed", "Kept")
+    storage.delete_saga("doomed")
+    assert storage.list_sagas() == ["kept"]
+    storage.delete_saga("doomed")  # already gone: not an error
+    assert storage.list_sagas() == ["kept"]

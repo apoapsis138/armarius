@@ -9,7 +9,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .markup import escape, markdown_inline
-from .models import Covenant, Laboratory, Possession, Saga
+from .models import (
+    GEAR_POINTS,
+    GEAR_QUALITY_DEFAULT,
+    Covenant,
+    Laboratory,
+    Possession,
+    Saga,
+)
 
 #: Section titles on the tab.
 KIND_TITLES: dict[str, str] = {
@@ -121,6 +128,25 @@ class PossessionEntry:
     def description(self) -> str:
         return self._own("description", "")
 
+    @property
+    def gear_type(self) -> str:
+        return self._own("gear_type", "")
+
+    @property
+    def gear_quality(self) -> str:
+        return self._own("gear_quality", GEAR_QUALITY_DEFAULT)
+
+    @property
+    def points_each(self) -> int:
+        """Points of one weapon/armor of this type and quality (0 if the type
+        isn't set, or the quality doesn't exist for it)."""
+        return GEAR_POINTS.get(self.gear_type, {}).get(self.gear_quality, 0)
+
+    @property
+    def points(self) -> int:
+        """Points of the whole entry: points each times the Quantity."""
+        return self.points_each * self.quantity
+
 
 def entries_for_kind(
     saga: Saga, covenant: Covenant, kind: str
@@ -172,6 +198,8 @@ def row_label(entry: PossessionEntry) -> str:
         add(f"Quality: {entry.quality}" if entry.quality is not None else "")
         add(f"Upkeep: {entry.upkeep} Points" if entry.upkeep is not None else "")
     elif kind in ("weapon", "armor", "item"):
+        if kind != "item" and entry.gear_type:
+            add(f"{entry.gear_type}, {entry.gear_quality}")
         add(f"Qty: {entry.quantity}")
     elif kind == "vis_source":
         add(f"Art: {entry.art}")
@@ -212,7 +240,18 @@ def detail_text(entry: PossessionEntry | None) -> str:
         optional("Build Points", entry.build_points)
         lines.append(_line("Usage", entry.usage))
     elif kind in QUANTITY_KINDS:
+        if kind != "item":
+            lines.append(_line("Type", entry.gear_type or "(not set)"))
+            lines.append(_line("Quality", entry.gear_quality))
         lines.append(_line("Quantity", entry.quantity))
+        if kind != "item" and entry.gear_type:
+            lines.append(
+                _line(
+                    "Points",
+                    f"{entry.points} ({entry.points_each} each, for the "
+                    "covenant's finances)",
+                )
+            )
     elif kind == "vis_source":
         lines.append(_line("Art", entry.art))
         lines.append(_line("Pawns", entry.pawns))
@@ -232,6 +271,15 @@ def detail_text(entry: PossessionEntry | None) -> str:
     if entry.description.strip():
         lines += ["", "[b]Description:[/]", markdown_inline(entry.description.strip())]
     return "\n".join(lines)
+
+
+def gear_points(saga: Saga, covenant: Covenant) -> int:
+    """Points of Weapons and Armor: every weapon and armor entry's points."""
+    return sum(
+        entry.points
+        for kind in ("weapon", "armor")
+        for entry in entries_for_kind(saga, covenant, kind)
+    )
 
 
 def total_pawns(saga: Saga, covenant: Covenant, kind: str) -> int:

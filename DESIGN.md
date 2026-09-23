@@ -379,7 +379,123 @@ come from elsewhere (a name taken from a character sheet, a governance type
 provided by a Boon, a calculated total) so nothing that isn't editable *looks*
 editable. Description fields in forms carry the emphasis hint (see 9.1).
 
+### 9.4 Calculated figures (covenant Economics and Loyalty)
+
+Anything that can be worked out from the rest of the sheet is **calculated on
+demand and never stored**; only what the user types is saved
+(`Covenant.economics`: income sources, Wealth, Tithes / Inflation / Sundry,
+Magic and Emergency Savings, and Notes; `Covenant.loyalty`: Governance (unless
+a Boon provides it), Equipment/Money *choices* (not their points), Pension,
+Familiarity, Actions and Events, Magical Influence). The rules live in
+`ars_magica_manager/economics.py` and `ars_magica_manager/inhabitants.py` (no
+UI) and follow `reference/Economics.md` / `reference/Loyalty.md`. Every screen
+that shows a figure re-derives it after an edit anywhere on the covenant
+sheet, keeping the chosen row chosen. Every computed money/points figure is a
+whole number, rounded **away from zero** (`models.round_away_from_zero`: 2.4
+→ 3, -2.4 → -3 -- plain `ceil` would soften a negative figure instead of
+rounding it up). The one exception the rules call out explicitly: a common
+craftsperson's `1 + Ability // 2` keeps its floor division.
+
+**The "inhabitant" kind is the Other Covenfolk list** (`KIND_TITLES["inhabitant"]`;
+the paper sheet's Dependents/Servants/Teamsters/Laborers, all in one list, each
+entry tagged with a required Covenant Role -- `OTHER_COVENFOLK_ROLES` in
+models.py: Laborer, Servant, Teamster, Dependent, distinct from `COVENANT_ROLES`
+which is Companions'/Specialists' admin roles). `inhabitants.other_covenfolk_count(
+saga, covenant, role)` sums the quantities tagged with a role -- what the
+Inhabitants summary's Teamsters/Servants/Laborers counts are read from (no
+longer typed fields on `Population`; only `other_people` still is, since it has
+no list of its own behind it). An entry's row shows its Role unless the Role is
+redundant with the Name (e.g. a "Servants" entry tagged Servant), and only shows
+Year Born when Quantity is 1 (a group has no one shared birth year).
+**Livestock are tracked but never counted** -- not in `total_inhabitants`, and
+already 0 points in `INHABITANT_POINTS`; the book doesn't consider them
+inhabitants at all.
+
+**Points and Yearly Expenditure** (`economics.py`, `inhabitant_points` lives
+in `inhabitants.py` since the Inhabitants tab's own minimums need it too --
+see below):
+- **Points of Inhabitants**: each list's headcount times its kind's points (Magus
+  5/10, Companion 3/5, Specialist and Craftsperson 2/3, Turb and Other Covenfolk
+  1/2, Horse 1, Livestock 0 and never counted; the covenant's Covenant Season
+  picks Spring/Winter or Summer/Autumn), plus Other People at 1/2 (the one
+  figure with no list behind it).
+- **Points of Laboratories**: for each sanctum, its laboratory's Upkeep total (a
+  manual sanctum: the Upkeep typed on it) through the book's Upkeep-to-points table
+  (beyond +5: 5 x n x (n + 1)), times its Usage (Light 0.5, Standard 1, Heavy 1.5).
+- **Points of Weapons and Armor**: each weapon or armor entry's Type and Quality from
+  the book's table, times its Quantity.
+- **Minimum Servants / Teamsters** (shown as the second number of the
+  Inhabitants tab's "actual / needed" pairs, coloured green when met, red
+  otherwise): 2 Servants per 10 points of inhabitants excluding Other Covenfolk
+  tagged Servant, Laborer or Teamster; 1 Teamster per 10 points excluding
+  Laborer/Teamster-tagged entries, minus 2 per Laborer.
+- **Yearly Expenditure**: Buildings 1 per 10 points of inhabitants, Consumables 2,
+  Provisions 5, Wages 2 times the salary multiplier (Loyalty > Money: none 0, half
+  0.5, standard 1, generous 1.5, lavish 2), Laboratories 1 per 10 lab points, Weapons
+  1 per 320, Writing Materials 1 per magus and Books craftsperson; Tithes, Inflation
+  and Sundry are typed (Sundry defaults to, and should stay at, at least 1). Total
+  Expenditure is the total before savings minus all savings.
+- **Cost Savings** -- the book's actual four categories, no more: Laborers 1 each
+  (at most half of Provisions); Craftspeople 1 + Ability/2 each (rare: the Ability),
+  where each *craft* (same linked Ability, else same Responsibility, else each person
+  alone) saves at most 50% or 20% of its category, and a category never saves more
+  than it costs; Magic and Emergency Savings are typed pounds-saved numbers (Magic
+  gives items 1/magnitude and Rituals ~5/magnitude different rates, so the user works
+  out the total by hand and enters it; Emergency Savings has no formula in the
+  reference text at all yet).
+- Not modelled yet: the extra 2 / 5 pounds for buildings-and-fortifications Boons
+  (outstanding -- needs a pass over the Boons catalog to tag which ones qualify), and
+  income scaling by magus count (see "Saga-level options" below).
+
+**Improving a source of income** (`economics.py`: `income_multiplier_text`,
+`projected_income`, `improvement_note`; `screens.ImproveIncomeScreen`, key `i`
+on the Sources of Income section) is a manual stand-in for the book's yearly
+automated advancement, which isn't built. It applies one year's Income
+Modification at a time: pick an Effect (Slump x0.5, Contraction x0.8,
+Stagnation x0.95, Status Quo x1, Growth x1.05, Expansion x1.2, Boom x1.5 --
+`INCOME_EFFECTS`/`INCOME_EFFECT_MULTIPLIERS` in models.py), see the resulting
+Multiplier and Projected Income (Current Income x Multiplier, rounded) update
+live as the Effect changes, then Commit asks to confirm before setting
+`IncomeSource.income` to the projected value (permanent, like the book
+describes) and replacing `IncomeSource.note` with a generated sentence naming
+the year, source, effect and the income change (a distinct wording for Status
+Quo, since nothing changed). The Note is shown at the end of the source's row
+and before its Description in the details panel.
+
+**Loyalty** (`inhabitants.py`): Base Loyalty is the average, across the
+covenant's magi, of each one's Gift modifier (Gentle Gift or no Gift: 0; The
+Gift: -30; Blatant Gift: -105) -- read from a sheet-linked magus's
+Virtues/Flaws (`vf_gentle_gift`/`vf_blatant_gift`; anything else assumes The
+Gift), or from a manual magus's own Gift choice (blank also assumes The
+Gift). Total Modifiers sums: Living Conditions (10 x the covenant's Living
+Conditions (Mundane) -- covenfolk are mundane, so Living Conditions (Magi)
+doesn't apply here), Equipment and Money (fixed point tables keyed by their
+selects, Money +10 more with Pension on), Specialists (every Companion/
+Specialist holding Steward/Chamberlain/Turb Captain/Autocrat earns Presence +
+a role-specific Ability -- Leadership for Turb Captain, Profession: Steward /
+Profession: Chamberlain for the others, Autocrat gets both -- read from a
+linked character sheet, or typed manually with no sheet), Familiarity,
+Reputation (-5 per point of every *known* bad covenant Reputation --
+Reputations can be marked "known by the covenant" or not), Actions and
+Events, and Magical Influence. Current Loyalty Points = Base + Total
+Modifiers; Prevailing Loyalty Score comes from a fixed cumulative table (the
+same shape as Ability Advancement, symmetric for a negative total, clamped
+beyond ±105/±6 since the reference doesn't extend it further). **Individual
+inhabitants do not have a Loyalty score** -- only the covenant does; an
+earlier per-`Inhabitant` `loyalty` field was removed because nothing read it
+and it has no basis in the rules.
+
+**Saga-level options** (not built): Economics.md scales a Typical/Lesser
+income source's usual annual income by how many magi the covenant has
+(±15/±6 pounds per magus over/under 6), which is a real rule but the first
+one that's really a *per-saga house-rule toggle* rather than something always
+true. Rather than hard-code it, this is a placeholder for a future "saga-level
+options" concept -- settings decided once per saga (not per covenant) that
+individual formulas would consult, the same way `covenant_season` already
+picks a column of a table. Revisit when a second such toggle shows up.
+
 Text helpers shared by the UI and pure-logic modules (`escape`,
 `markdown_inline`) live in `ars_magica_manager/markup.py`; logic that needs no UI
-(what each Inhabitants list shows, headcounts, totals, row and panel text) lives
-in `ars_magica_manager/inhabitants.py` so it can be tested without a terminal.
+(what each Inhabitants list shows, headcounts, totals, row and panel text, all of
+Loyalty and the shared Inhabitant-points math) lives in
+`ars_magica_manager/inhabitants.py` so it can be tested without a terminal.

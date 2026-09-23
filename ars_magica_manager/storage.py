@@ -59,6 +59,11 @@ def load_saga(saga_id: str) -> Saga:
     return Saga.from_dict(data)
 
 
+def delete_saga(saga_id: str) -> None:
+    """Permanently delete a saga's file (no-op if it is already gone)."""
+    saga_path(saga_id).unlink(missing_ok=True)
+
+
 def list_sagas() -> list[str]:
     if not SAGAS_DIR.exists():
         return []
