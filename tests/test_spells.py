@@ -282,3 +282,58 @@ def test_the_builder_matches_the_index_to_the_page_and_ignores_variant_levels():
     assert lost["details_missing"] is True
     assert report["details_missing"] == ["The Lost Spell"]
     assert len({s["id"] for s in spells}) == len(spells)
+
+
+# ------------------------------------------------------------ the list view
+
+
+def _saga_with_own_spell() -> tuple[Saga, Spell]:
+    own = _spell(
+        id="saga_candle", name="Candle of Truth", technique="Intellego", level=5
+    )
+    return Saga(id="s", name="S", spells=[own]), own
+
+
+def test_filters_narrow_the_list_and_combine():
+    saga, own = _saga_with_own_spell()
+    everything = sp.all_spells(saga)
+    assert everything[-1] is own
+    names = lambda **f: [s.name for s in sp.filter_spells(saga, everything, **f)]
+    assert names(text="pilum") == ["Pilum of Fire"]
+    assert names(text="FIRE pilum") == ["Pilum of Fire"]  # every word, any case
+    assert names(source=sp.OWN_SOURCE) == ["Candle of Truth"]
+    assert "Candle of Truth" not in names(source="ArM5")
+    rituals = sp.filter_spells(saga, everything, ritual=True)
+    assert rituals and all(s.ritual for s in rituals)
+    # A Form also matches a requisite: Eyes of the Cat is MuCo(An).
+    assert "Eyes of the Cat" in names(form="Animal")
+    ranged = sp.filter_spells(saga, everything, min_level=30, max_level=30)
+    assert {s.level for s in ranged} == {30, None}  # General passes any range
+    both = names(technique="Creo", form="Ignem", max_level=20)
+    assert "Pilum of Fire" in both and "Ball of Abysmal Flame" not in both
+
+
+def test_rows_line_up_with_the_header_and_mark_the_saga_own():
+    saga, own = _saga_with_own_spell()
+    header = sp.table_header()
+    pilum = catalog.load_spell_catalog_by_id()["spell_pilum_of_fire"]
+    row = sp.row_label(saga, pilum)
+    assert header.index("Arts") - 2 == row.index("CrIg")
+    assert header.index("Source") - 2 == row.index("ArM5")
+    assert "Voice/Mom/Ind" in row
+    assert sp.row_label(saga, own).rstrip().endswith("Saga")
+    aegis = catalog.load_spell_catalog_by_id()["spell_aegis_of_the_hearth"]
+    assert "  Gen  " in sp.row_label(saga, aegis)
+
+
+def test_details_panel_shows_the_figures_and_where_the_spell_is_from():
+    saga, own = _saga_with_own_spell()
+    healing = catalog.load_spell_catalog_by_id()["spell_the_chirurgeon_s_healing_touch"]
+    text = sp.detail_text(saga, healing)
+    assert "CrCo 20" in text and "Ritual" in text
+    assert "Level:[/] 20 (magnitude 4)" in text
+    assert "Vis:[/] 4 pawn(s)" in text and "60 minutes" in text
+    assert "catalog spell, read-only" in text
+    assert "press e to edit it" in sp.detail_text(saga, own)
+    aegis = catalog.load_spell_catalog_by_id()["spell_aegis_of_the_hearth"]
+    assert "General (cast at any level)" in sp.detail_text(saga, aegis)

@@ -641,6 +641,17 @@ Art it qualifies), a Ritual's vis (a pawn per magnitude) and casting time (15
 minutes per magnitude) are worked out, never stored. Spell Mastery belongs to the
 magus's known-spell record, not the spell (with the Character screen rework).
 
+**The Spells view.** A **Spells (n)** node under the saga lists the catalog and the
+saga's own spells (Name, Arts, Level, Range/Duration/Target, Ritual, Source) over a
+details panel, the two sharing the height 2:1. A filter bar narrows it as you type:
+a search over name and description (every word must match, any case), Technique
+and Form (either also matches a requisite), Ritual, Source (a book, or "the saga's
+own"), and a level range (General spells pass any range); the section title reads
+"Spells (n of N)". `a`/`e`/`A` add, edit and delete the saga's own spells;
+catalog spells are read-only. The spell form's Range/Duration/Target offer the
+standard values plus "Other..." for a supplement's own, and a live line shows the
+shorthand, magnitude and, for a Ritual, its vis and casting time.
+
 **Building the catalog.** The page's index is the authority for a spell's level: it
 matches the Base + magnitudes arithmetic for 371 spells, while an entry's own
 "Level N" line almost never does (it belongs to a variant it describes). Index

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from collections import Counter
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -44,6 +45,7 @@ from . import catalog, storage
 from . import economics as eco
 from . import inhabitants as inh
 from . import possessions as pos
+from . import spells as spl
 from .markup import escape, markdown_inline
 from .models import (
     ABILITY_CATEGORIES,
@@ -72,6 +74,10 @@ from .models import (
     POSSESSION_KINDS,
     SANCTUM_USAGES,
     SEASONS,
+    SPELL_DURATIONS,
+    SPELL_RANGES,
+    SPELL_SOURCES,
+    SPELL_TARGETS,
     TECHNIQUES,
     TRACTATUS_SUBJECTS,
     Ability,
@@ -715,6 +721,152 @@ def _book_live(values: dict[str, Any]) -> str:
     lines = [f"[b]Cost:[/] {bk.cost(probe)} Build Points"]
     lines += [f"[red]{escape(w)}[/]" for w in bk.limit_warnings(probe)]
     return "\n".join(lines)
+
+
+#: The choice in a Range/Duration/Target select that opens a free-text box.
+_OTHER = "__other__"
+
+
+def _rdt_field(
+    key: str, label: str, standard: tuple[str, ...], value: str
+) -> list[DialogField]:
+    """A Range/Duration/Target select of the standard values plus "Other...",
+    which shows a text box for a supplement's own value."""
+    other = bool(value) and value not in standard
+    return [
+        DialogField(
+            key,
+            label,
+            "select",
+            _OTHER if other else value,
+            options=[(v, v) for v in standard] + [("Other...", _OTHER)],
+            required=True,
+            allow_blank=True,
+            placeholder=f"(choose a {label})",
+        ),
+        DialogField(
+            f"{key}_other",
+            f"{label} (other)",
+            "text",
+            value if other else "",
+            placeholder="e.g. Road, Special",
+            show_if=lambda v, k=key: v.get(k) == _OTHER,
+        ),
+    ]
+
+
+def _spell_fields(spell: Spell | None) -> list[DialogField]:
+    def value(attribute: str, default):
+        return getattr(spell, attribute) if spell is not None else default
+
+    return [
+        DialogField("name", "Name", "text", value("name", ""), required=True),
+        DialogField(
+            "technique",
+            "Technique",
+            "select",
+            value("technique", ""),
+            options=[(t, t) for t in TECHNIQUES],
+            required=True,
+            allow_blank=True,
+            placeholder="(choose a Technique)",
+        ),
+        DialogField(
+            "form",
+            "Form",
+            "select",
+            value("form", ""),
+            options=[(f, f) for f in FORMS],
+            required=True,
+            allow_blank=True,
+            placeholder="(choose a Form)",
+        ),
+        DialogField(
+            "level",
+            "Level",
+            "optint",
+            value("level", None),
+            hint="Leave blank for a General spell (cast at any level).",
+        ),
+        DialogField(
+            "requisites",
+            "Requisites",
+            "text",
+            ", ".join(value("requisites", [])),
+            placeholder="e.g. Rego, Corpus",
+        ),
+        *_rdt_field("range", "Range", SPELL_RANGES, value("range", "")),
+        *_rdt_field("duration", "Duration", SPELL_DURATIONS, value("duration", "")),
+        *_rdt_field("target", "Target", SPELL_TARGETS, value("target", "")),
+        DialogField("ritual", "Ritual", "check", value("ritual", False)),
+        DialogField("base_level", "Base level", "optint", value("base_level", None)),
+        DialogField(
+            "source",
+            "Source",
+            "text",
+            value("source", ""),
+            placeholder="e.g. a house rule, or a book",
+        ),
+        DialogField("description", "Description", "area", value("description", "")),
+    ]
+
+
+def _spell_rdt(values: dict[str, Any], key: str) -> str:
+    chosen = values.get(key) or ""
+    return values.get(f"{key}_other", "").strip() if chosen == _OTHER else chosen
+
+
+def _spell_from_values(spell: Spell, values: dict[str, Any]) -> None:
+    spell.name = values["name"]
+    spell.technique = values["technique"]
+    spell.form = values["form"]
+    spell.level = values.get("level")
+    spell.requisites = spl.parse_requisites(values.get("requisites", ""))
+    spell.range = _spell_rdt(values, "range")
+    spell.duration = _spell_rdt(values, "duration")
+    spell.target = _spell_rdt(values, "target")
+    spell.ritual = bool(values.get("ritual"))
+    spell.base_level = values.get("base_level")
+    spell.source = values.get("source", "")
+    spell.description = values.get("description", "")
+    spell.details_missing = False
+
+
+def _spell_problem(values: dict[str, Any]) -> str | None:
+    if values.get("level") is not None and values["level"] < 1:
+        return "Level must be at least 1 (or blank for a General spell)."
+    for key, label in (
+        ("range", "Range"),
+        ("duration", "Duration"),
+        ("target", "Target"),
+    ):
+        if values.get(key) == _OTHER and not values.get(f"{key}_other", "").strip():
+            return f"Type the {label}, or choose one of the standard ones."
+    typed = [t for t in re.split(r"[,;/]", values.get("requisites", "")) if t.strip()]
+    if len(spl.parse_requisites(values.get("requisites", ""))) < len(typed):
+        return "Requisites must be Arts (e.g. Rego, Corpus)."
+    return None
+
+
+def _spell_live(values: dict[str, Any]) -> str:
+    """The form's live line: the spell's shorthand and magnitude."""
+    if not values.get("technique") or not values.get("form"):
+        return "[dim]Choose a Technique and a Form.[/]"
+    probe = Spell(
+        id="",
+        name="",
+        technique=values["technique"],
+        form=values["form"],
+        level=values.get("level"),
+        requisites=spl.parse_requisites(values.get("requisites", "")),
+        ritual=bool(values.get("ritual")),
+    )
+    mag = spl.magnitude(probe)
+    text = f"[b]{escape(spl.shorthand(probe))}[/]"
+    text += "  General level" if mag is None else f"  magnitude {mag}"
+    if probe.ritual and mag is not None:
+        text += f"  ({spl.vis_cost(probe)} pawns, {spl.casting_time(probe)})"
+    return text
 
 
 def _inhabitant_problem(values: dict[str, Any]) -> str | None:
@@ -5073,6 +5225,235 @@ class BookListView(Vertical):
             return  # the sheet is being replaced
 
 
+#: The Spells view's list section (a/A/e act on the saga's own spells).
+SPELL_SECTION = "section-spells"
+
+
+class SpellListView(Vertical):
+    """The saga's Spells view: a filter bar, the list of spells (the catalog
+    plus the saga's own) stretching down to a scrolling details panel.
+
+    Filters apply as they change: a search over name and description (every
+    word must match), Technique, Form (both also match a requisite), Ritual,
+    Source (a book, or the saga's own), and a level range (General spells pass
+    any range). The section title shows how many of how many are listed.
+    """
+
+    DEFAULT_CSS = """
+    SpellListView {
+        height: 1fr;
+    }
+
+    SpellListView #spell-filters {
+        height: auto;
+        padding: 0 1;
+    }
+
+    SpellListView .spell-filter-row {
+        height: 1;
+        width: 1fr;
+        margin-bottom: 1;
+    }
+
+    SpellListView #spell-search {
+        width: 1fr;
+        margin-right: 2;
+    }
+
+    SpellListView .spell-filter-row Select {
+        width: 20;
+        margin-right: 1;
+    }
+
+    SpellListView .spell-filter-label {
+        width: auto;
+        margin-right: 1;
+        color: $text-muted;
+    }
+
+    SpellListView .spell-level {
+        width: 7;
+        margin-right: 1;
+    }
+
+    /* The list and the panel share the height 2:1, so both stay usable on
+       a small terminal. */
+    SpellListView #section-spells {
+        height: 2fr;
+    }
+
+    SpellListView #section-spells.-collapsed {
+        height: auto;
+    }
+
+    SpellListView #section-spells > Contents {
+        height: 1fr;
+    }
+
+    SpellListView .spells-header {
+        width: 1fr;
+        height: auto;
+        color: $text-muted;
+    }
+
+    SpellListView SelectableList,
+    SpellListView SelectableList:focus {
+        height: 1fr;
+        max-height: 100%;
+    }
+
+    SpellListView #spell-panel {
+        height: 1fr;
+        min-height: 4;
+        margin-top: 1;
+        padding: 1 2;
+        background: $panel;
+    }
+    """
+
+    def __init__(self, saga: Saga) -> None:
+        super().__init__()
+        self.saga = saga
+        self._all: list[Spell] = spl.all_spells(saga)
+        self._shown: list[Spell] = list(self._all)
+
+    def compose(self) -> ComposeResult:
+        arts_blank = "(any)"
+        with Vertical(id="spell-filters"):
+            with Horizontal(classes="spell-filter-row"):
+                yield Input(
+                    placeholder="Search spell names and descriptions...",
+                    id="spell-search",
+                    compact=True,
+                )
+                yield Select(
+                    [(f"{key} - {name}", key) for key, name in SPELL_SOURCES.items()]
+                    + [("The saga's own", spl.OWN_SOURCE)],
+                    prompt="Source: any",
+                    id="spell-source",
+                    compact=True,
+                )
+            with Horizontal(classes="spell-filter-row"):
+                yield Select(
+                    [(t, t) for t in TECHNIQUES],
+                    prompt=f"Technique: {arts_blank}",
+                    id="spell-technique",
+                    compact=True,
+                )
+                yield Select(
+                    [(f, f) for f in FORMS],
+                    prompt=f"Form: {arts_blank}",
+                    id="spell-form",
+                    compact=True,
+                )
+                yield Select(
+                    [("Rituals", "yes"), ("Formulaic", "no")],
+                    prompt="Ritual: any",
+                    id="spell-ritual",
+                    compact=True,
+                )
+                yield Label("Level", classes="spell-filter-label")
+                yield Input(
+                    placeholder="from",
+                    type="integer",
+                    id="spell-min-level",
+                    classes="spell-level",
+                    compact=True,
+                )
+                yield Input(
+                    placeholder="to",
+                    type="integer",
+                    id="spell-max-level",
+                    classes="spell-level",
+                    compact=True,
+                )
+        with SheetSection(title=self._title(), id=SPELL_SECTION):
+            yield Static(spl.table_header(), classes="spells-header")
+            yield SelectableList(self._rows(), id="spell-list")
+        with VerticalScroll(id="spell-panel"):
+            yield Static(spl.detail_text(self.saga, None), id="spell-panel-text")
+
+    def _title(self) -> str:
+        return f"Spells ({len(self._shown)} of {len(self._all)})"
+
+    def _rows(self) -> list[tuple[int, str]]:
+        return [(i, spl.row_label(self.saga, s)) for i, s in enumerate(self._shown)]
+
+    @property
+    def shown(self) -> list[Spell]:
+        """The spells listed, in row order (after the filters)."""
+        return self._shown
+
+    def selected_spell(self) -> Spell | None:
+        index = self.query_one("#spell-list", SelectableList).selected_data_index
+        return (
+            self._shown[index]
+            if index is not None and index < len(self._shown)
+            else None
+        )
+
+    def _filters(self) -> dict[str, Any]:
+        def select(widget_id: str) -> str | None:
+            value = self.query_one(widget_id, Select).value
+            return value if isinstance(value, str) else None
+
+        def number(widget_id: str) -> int | None:
+            try:
+                return int(self.query_one(widget_id, Input).value)
+            except ValueError:
+                return None
+
+        ritual = select("#spell-ritual")
+        return {
+            "text": self.query_one("#spell-search", Input).value,
+            "technique": select("#spell-technique"),
+            "form": select("#spell-form"),
+            "ritual": None if ritual is None else ritual == "yes",
+            "source": select("#spell-source"),
+            "min_level": number("#spell-min-level"),
+            "max_level": number("#spell-max-level"),
+        }
+
+    def refilter(self) -> None:
+        """Re-apply the filters (and re-read the spells, after an edit); the
+        chosen spell stays chosen if it's still listed."""
+        try:
+            chosen = self.selected_spell()
+            self._all = spl.all_spells(self.saga)
+            self._shown = spl.filter_spells(self.saga, self._all, **self._filters())
+            self.query_one(f"#{SPELL_SECTION}", Collapsible).title = self._title()
+            rows = self.query_one("#spell-list", SelectableList)
+            rows.set_rows(self._rows())
+            position = next(
+                (i for i, sp in enumerate(self._shown) if sp is chosen), None
+            )
+            if position is not None:
+                rows.highlighted = position  # posts Chosen -> refreshes the panel
+            else:
+                self._show(None)
+        except NoMatches:
+            return
+
+    def _show(self, spell: Spell | None) -> None:
+        self.query_one("#spell-panel-text", Static).update(
+            spl.detail_text(self.saga, spell)
+        )
+        self.query_one("#spell-panel", VerticalScroll).scroll_home(animate=False)
+
+    def on_input_changed(self, event: Input.Changed) -> None:
+        event.stop()
+        self.refilter()
+
+    def on_select_changed(self, event: Select.Changed) -> None:
+        event.stop()
+        self.refilter()
+
+    def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
+        event.stop()
+        index = event.data_index
+        self._show(self._shown[index] if index < len(self._shown) else None)
+
+
 class CharacterSheetView(Vertical):
     """The character sheet mounted into WorkspaceScreen's detail pane.
 
@@ -6491,6 +6872,7 @@ class WorkspaceScreen(Screen[None]):
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
         *BOOK_SECTIONS,
+        SPELL_SECTION,
     }
     _REMOVE_SECTIONS: ClassVar[set[str]] = {
         "section-abilities",
@@ -6512,6 +6894,7 @@ class WorkspaceScreen(Screen[None]):
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
         *(BOOK_SECTIONS - {"section-lib-summary"}),
+        SPELL_SECTION,
     }
     _EDIT_SECTIONS: ClassVar[set[str]] = {
         "section-identity",
@@ -6547,6 +6930,7 @@ class WorkspaceScreen(Screen[None]):
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
         *(BOOK_SECTIONS - {"section-lib-summary"}),
+        SPELL_SECTION,
     }
 
     #: Covenant tabs that own their own a/A/e dispatch (keyed by tab id).
@@ -6669,6 +7053,7 @@ class WorkspaceScreen(Screen[None]):
             tree.root.add_leaf(
                 f"Unassigned Books ({len(loose_books)})", data=("book_group",)
             )
+        tree.root.add_leaf(self._spells_label(), data=("spells",))
 
     def _covenant_by_id(self, covenant_id: str | None) -> Covenant | None:
         return next((c for c in self.saga.covenants if c.id == covenant_id), None)
@@ -6736,6 +7121,9 @@ class WorkspaceScreen(Screen[None]):
                 (c for c in self.saga.covenants if c.id == lab.covenant_id), None
             )
             await self._show_laboratory_detail(lab)
+        elif kind == "spells":
+            self.selected_covenant = None
+            await self._set_detail(SpellListView(self.saga))
         elif kind == "book_group":
             self.selected_covenant = None
             await self._set_detail(
@@ -6784,6 +7172,8 @@ class WorkspaceScreen(Screen[None]):
             return self._active_covenant_section()
         if self.selected_kind == "book_group":
             return "section-unassigned-books"
+        if self.selected_kind == "spells":
+            return SPELL_SECTION
         return None
 
     def _active_covenant_section(self) -> str | None:
@@ -7130,7 +7520,9 @@ class WorkspaceScreen(Screen[None]):
 
     def action_add(self) -> None:
         section = self._active_section()
-        if section in BOOK_SECTIONS:
+        if section == SPELL_SECTION:
+            self._spell_form(None)
+        elif section in BOOK_SECTIONS:
             self._book_form(None)
         elif section == "section-abilities":
             self._add_ability()
@@ -7171,7 +7563,9 @@ class WorkspaceScreen(Screen[None]):
 
     def action_remove(self) -> None:
         section = self._active_section()
-        if section in BOOK_SECTIONS:
+        if section == SPELL_SECTION:
+            self._remove_saga_spell()
+        elif section in BOOK_SECTIONS:
             self._remove_book()
         elif section == "section-abilities":
             self._remove_ability()
@@ -7212,7 +7606,9 @@ class WorkspaceScreen(Screen[None]):
 
     def action_edit(self) -> None:
         section = self._active_section()
-        if section in BOOK_SECTIONS:
+        if section == SPELL_SECTION:
+            self._edit_saga_spell()
+        elif section in BOOK_SECTIONS:
             self._edit_book()
         elif section == "section-identity":
             self._edit_identity()
@@ -7276,6 +7672,93 @@ class WorkspaceScreen(Screen[None]):
             self._edit_inhabitant(kind)
         elif (kind := self._possession_kind(section)) is not None:
             self._edit_possession(kind)
+
+    # -- Spells (the saga's Spells view) --
+
+    def _spells_label(self) -> str:
+        return f"Spells ({len(spl.all_spells(self.saga))})"
+
+    def _spell_view(self) -> SpellListView | None:
+        try:
+            return self.query_one("#detail-pane").query(SpellListView).first()
+        except NoMatches:
+            return None
+
+    def _spells_changed(self) -> None:
+        view = self._spell_view()
+        if view is not None:
+            view.refilter()
+        node = _tree_node_with_data(self.query_one("#nav-tree", Tree), ("spells",))
+        if node is not None:
+            node.set_label(self._spells_label())
+
+    def _chosen_own_spell(self, verb: str) -> Spell | None:
+        """The chosen spell if it's one of the saga's own; otherwise say why
+        not (nothing chosen, or a read-only catalog spell)."""
+        view = self._spell_view()
+        spell = view.selected_spell() if view is not None else None
+        if spell is None:
+            self.notify(f"Choose a spell to {verb} first.")
+            return None
+        if not spl.is_own(self.saga, spell):
+            self.notify(
+                f"{spell.name} is a catalog spell, so it's read-only. To make "
+                "your own version, add a spell with a."
+            )
+            return None
+        return spell
+
+    def _edit_saga_spell(self) -> None:
+        spell = self._chosen_own_spell("edit")
+        if spell is not None:
+            self._spell_form(spell)
+
+    def _spell_form(self, spell: Spell | None) -> None:
+        saga = self.saga
+        title = "Add a Spell" if spell is None else f"Edit {spell.name}"
+
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is None:
+                return
+            target = spell
+            if target is None:
+                target = Spell(
+                    id=storage.generate_unique_id(
+                        f"saga {values['name']}", spl.all_spell_ids(saga)
+                    ),
+                    name=values["name"],
+                    technique=values["technique"],
+                    form=values["form"],
+                )
+                saga.spells.append(target)
+            _spell_from_values(target, values)
+            storage.save_saga(saga)
+            self._spells_changed()
+
+        self.app.push_screen(
+            FieldsDialog(
+                title,
+                _spell_fields(spell),
+                validate=_spell_problem,
+                live=_spell_live,
+            ),
+            handle_result,
+        )
+
+    def _remove_saga_spell(self) -> None:
+        spell = self._chosen_own_spell("delete")
+        if spell is None:
+            return
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed and spell in self.saga.spells:
+                self.saga.spells.remove(spell)
+                storage.save_saga(self.saga)
+                self._spells_changed()
+
+        self.app.push_screen(
+            ConfirmScreen(f"Delete {escape(spell.name)}?"), handle_confirmed
+        )
 
     # -- Books (Library tab, laboratory/character Books, Unassigned Books) --
 
