@@ -41,6 +41,7 @@ from ars_magica_manager.models import (
     HermeticBackground,
     IncomeSource,
     Inhabitant,
+    KnownSpell,
     LabCharacteristics,
     Laboratory,
     NamedDescription,
@@ -81,6 +82,8 @@ from ars_magica_manager.screens import (
     ItemAddScreen,
     LaboratoryCreateScreen,
     LabVirtueFlawPickerScreen,
+    MasteryAbilityPromptScreen,
+    MasteryEditScreen,
     NamedDescriptionPromptScreen,
     ParamPromptScreen,
     RawVisPromptScreen,
@@ -186,6 +189,27 @@ async def _select_vf_picker_entry(pilot, app, vf_id: str) -> None:
     await pilot.pause()
     await pilot.press("enter")
     await pilot.pause()
+
+
+def _character_vf_labels(view) -> str:
+    """All of a CharacterSheetView's Virtue and Flaw row labels, joined --
+    the character V&F section is two selectable lists, not one text blob."""
+    rows = view._vf_rows("Virtue") + view._vf_rows("Flaw")
+    return " | ".join(label for _, label in rows)
+
+
+def _ability_labels(view) -> str:
+    """All of a CharacterSheetView's Ability row labels (headers excluded),
+    joined -- Abilities is one selectable list, not one text blob."""
+    return " | ".join(
+        label for index, label in view._ability_rows() if index is not None
+    )
+
+
+def _known_spell_labels(view) -> str:
+    """All of a CharacterSheetView's known-spell row labels, joined -- the
+    Spells tab is a selectable list, not one text blob."""
+    return " | ".join(label for _, label in view._known_spell_rows())
 
 
 #: Which top-level character-sheet tab each Collapsible section lives in.
@@ -572,7 +596,7 @@ def _sample_saga_with_covenant() -> Saga:
                         vf_id="vf_affinity_with_art", params={"art": "creo"}
                     )
                 ],
-                spells_known=["spell1"],
+                spells_known=[KnownSpell(spell_id="spell1")],
                 assigned_lab_id="lab1",
             )
         ],
@@ -659,11 +683,14 @@ async def test_selecting_character_shows_sheet_fields():
         assert "Covenant: Test Covenant" in view._identity_text()
         assert "Assigned Laboratory: Leandro's Sanctum" in view._identity_text()
         assert "Int 3" in view._characteristics_text()
-        assert "Academic:" in view._abilities_text()
-        assert "Magic Theory (Lab Totals) 5/75" in view._abilities_text()
-        assert "Affinity with Creo" in view._vf_text()
+        labels = _ability_labels(view)
+        assert "Magic Theory (Lab Totals) 5 75/0" in labels
+        assert "Academic" in [
+            label for index, label in view._ability_rows() if index is None
+        ]
+        assert "Affinity with Creo" in _character_vf_labels(view)
         assert "Creo (Cr): 10/55" in view._arts_text()
-        assert "Ball of Abysmal Flame (CrIg 20)" in view._spells_text()
+        assert "Ball of Abysmal Flame" in _known_spell_labels(view)
 
 
 async def test_selecting_laboratory_shows_owner_and_virtues():
@@ -733,7 +760,7 @@ async def test_add_virtue_flaw_without_parameters_to_character():
         await _select_vf_picker_entry(pilot, app, "vf_common_sense")
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert "Common Sense" in app.screen._character_sheet_view._vf_text()
+        assert "Common Sense" in _character_vf_labels(app.screen._character_sheet_view)
 
     saga = storage.load_saga("test_saga")
     character = saga.characters[0]
@@ -760,7 +787,9 @@ async def test_add_virtue_flaw_with_parameters_to_character():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert "Affinity with Creo" in app.screen._character_sheet_view._vf_text()
+        assert "Affinity with Creo" in _character_vf_labels(
+            app.screen._character_sheet_view
+        )
 
     saga = storage.load_saga("test_saga")
     character = saga.characters[0]
@@ -871,7 +900,7 @@ async def test_virtue_flaw_picker_enter_in_search_activates_top_match():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert "Common Sense" in app.screen._character_sheet_view._vf_text()
+        assert "Common Sense" in _character_vf_labels(app.screen._character_sheet_view)
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].virtues_flaws[0].vf_id == "vf_common_sense"
@@ -1080,9 +1109,8 @@ async def test_add_ability_without_parameters_to_character():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert (
-            "Athletics (Running) 3/0"
-            in app.screen._character_sheet_view._abilities_text()
+        assert "Athletics (Running) 3 0/0" in _ability_labels(
+            app.screen._character_sheet_view
         )
 
     saga = storage.load_saga("test_saga")
@@ -1182,7 +1210,7 @@ async def test_remove_ability_from_character():
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
         await _open_section(pilot, app, "section-abilities")
-        assert "Magic Theory" in app.screen._character_sheet_view._abilities_text()
+        assert "Magic Theory" in _ability_labels(app.screen._character_sheet_view)
 
         await pilot.press("A")
         await pilot.pause()
@@ -1190,9 +1218,12 @@ async def test_remove_ability_from_character():
 
         await pilot.press("enter")
         await pilot.pause()
+        assert isinstance(app.screen, ConfirmScreen)
+        await pilot.press("y")
+        await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert "Magic Theory" not in app.screen._character_sheet_view._abilities_text()
+        assert "Magic Theory" not in _ability_labels(app.screen._character_sheet_view)
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].abilities == []
@@ -1205,7 +1236,9 @@ async def test_remove_virtue_flaw_from_character():
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
         await _open_section(pilot, app, "section-vf")
-        assert "Affinity with Creo" in app.screen._character_sheet_view._vf_text()
+        assert "Affinity with Creo" in _character_vf_labels(
+            app.screen._character_sheet_view
+        )
 
         await pilot.press("V")
         await pilot.pause()
@@ -1213,9 +1246,14 @@ async def test_remove_virtue_flaw_from_character():
 
         await pilot.press("enter")
         await pilot.pause()
+        assert isinstance(app.screen, ConfirmScreen)
+        await pilot.press("y")
+        await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert "Affinity with Creo" not in app.screen._character_sheet_view._vf_text()
+        assert "Affinity with Creo" not in _character_vf_labels(
+            app.screen._character_sheet_view
+        )
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].virtues_flaws == []
@@ -1278,7 +1316,9 @@ async def test_cancelling_removal_picker_keeps_the_item():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert "Affinity with Creo" in app.screen._character_sheet_view._vf_text()
+        assert "Affinity with Creo" in _character_vf_labels(
+            app.screen._character_sheet_view
+        )
 
     saga = storage.load_saga("test_saga")
     assert len(saga.characters[0].virtues_flaws) == 1
@@ -1634,9 +1674,8 @@ async def test_edit_ability_updates_existing_entry():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert (
-            "Magic Theory (Lab Totals) 6/90"
-            in app.screen._character_sheet_view._abilities_text()
+        assert "Magic Theory (Lab Totals) 6 90/0" in _ability_labels(
+            app.screen._character_sheet_view
         )
 
     saga = storage.load_saga("test_saga")
@@ -1680,9 +1719,8 @@ async def test_add_and_remove_spell_known():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert (
-            "Pilum of Fire (CrIg 20)" in app.screen._character_sheet_view._spells_text()
-        )
+        labels = _known_spell_labels(app.screen._character_sheet_view)
+        assert "Pilum of Fire" in labels and "CrIg" in labels
         # A spell already known isn't offered again.
         await pilot.press("a")
         await _wait_until(pilot, lambda: isinstance(app.screen, SpellChooserScreen))
@@ -1697,9 +1735,12 @@ async def test_add_and_remove_spell_known():
 
         await pilot.press("enter")
         await pilot.pause()
+        assert isinstance(app.screen, ConfirmScreen)
+        await pilot.press("y")
+        await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert app.screen._character_sheet_view._spells_text() == "(none recorded)"
+        assert app.screen._character_sheet_view._known_spell_rows() == []
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].spells_known == []
@@ -1707,15 +1748,69 @@ async def test_add_and_remove_spell_known():
 
 async def test_known_spells_can_be_catalog_spells():
     saga = _saga_with_character_and_spell()
-    saga.characters[0].spells_known = ["spell_aegis_of_the_hearth", "gone"]
+    saga.characters[0].spells_known = [
+        KnownSpell(spell_id="spell_aegis_of_the_hearth"),
+        KnownSpell(spell_id="gone"),
+    ]
     storage.save_saga(saga)
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        text = app.screen._character_sheet_view._spells_text()
-        assert "Aegis of the Hearth (ReVi Gen, Ritual)" in text
-        assert "gone (unknown spell)" in text
+        labels = _known_spell_labels(app.screen._character_sheet_view)
+        assert "Aegis of the Hearth" in labels and "Ritual" in labels
+        assert "gone (unknown spell)" in labels
+
+
+async def test_edit_spell_mastery_sets_score_xp_and_abilities():
+    saga = _saga_with_character_and_spell()
+    saga.characters[0].spells_known = [KnownSpell(spell_id="spell1")]
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_character(pilot, app)
+        await _open_section(pilot, app, "tab-spells")
+
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)  # only one known spell
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, MasteryEditScreen)
+
+        app.screen.query_one("#input-mastery-score", Input).value = "2"
+        app.screen.query_one("#input-mastery-xp", Input).value = "10"
+        await pilot.click("#btn-add-ability")
+        await pilot.pause()
+        assert isinstance(app.screen, MasteryAbilityPromptScreen)
+        app.screen.query_one(
+            "#input-mastery-ability-name", Input
+        ).value = "Fast Casting"
+        app.screen.query_one("#input-mastery-ability-level", Input).value = "1"
+        await pilot.click("#btn-save")
+        await pilot.pause()
+        assert isinstance(app.screen, MasteryEditScreen)
+
+        await pilot.click("#btn-save")
+        await pilot.pause()
+        assert isinstance(app.screen, WorkspaceScreen)
+
+    saga = storage.load_saga("test_saga")
+    known = saga.characters[0].spells_known[0]
+    assert known.mastery_score == 2
+    assert known.mastery_xp == 10
+    assert len(known.mastery_abilities) == 1
+    assert known.mastery_abilities[0].name == "Fast Casting"
+    assert known.mastery_abilities[0].level == 1
+
+
+def _inventory_labels(view) -> str:
+    """All of a CharacterSheetView's Inventory row labels (headers excluded),
+    joined -- Inventory is one selectable list, not one text blob."""
+    return " | ".join(
+        label for index, label in view._inventory_rows() if index is not None
+    )
 
 
 async def test_add_and_remove_inventory_item():
@@ -1728,20 +1823,27 @@ async def test_add_and_remove_inventory_item():
 
         await pilot.press("a")
         await pilot.pause()
-        assert isinstance(app.screen, ItemAddScreen)
-
-        app.screen.query_one("#input-item", Input).value = "Fine wool cloak"
-        await pilot.click("#btn-create")
+        assert isinstance(app.screen, RemovalPickerScreen)  # which kind?
+        await pilot.press("down")  # Weapon, Armor, [Item]
+        await pilot.press("down")
+        await pilot.press("enter")
         await pilot.pause()
+        assert isinstance(app.screen, FieldsDialog)
+
+        _fill(app, name="Fine wool cloak")
+        await _save_dialog(pilot, app)
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert "Fine wool cloak" in app.screen._character_sheet_view._inventory_text()
+        assert "Fine wool cloak" in _inventory_labels(app.screen._character_sheet_view)
 
         await pilot.press("A")
         await pilot.pause()
         assert isinstance(app.screen, RemovalPickerScreen)
 
         await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, ConfirmScreen)
+        await pilot.press("y")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
@@ -1928,13 +2030,16 @@ async def test_add_and_remove_personality_trait():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        text = app.screen._character_sheet_view._personality_traits_text()
-        assert "Curious: +3" in text
+        rows = app.screen._character_sheet_view._personality_trait_rows()
+        assert "Curious: +3" in rows[0][1]
 
         await pilot.press("A")
         await pilot.pause()
         assert isinstance(app.screen, RemovalPickerScreen)
         await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, ConfirmScreen)
+        await pilot.press("y")
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)
 
@@ -1960,13 +2065,16 @@ async def test_add_and_remove_reputation():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        text = app.screen._character_sheet_view._reputations_text()
-        assert "Skilled Enchanter: 2" in text
+        rows = app.screen._character_sheet_view._reputation_rows()
+        assert "Skilled Enchanter: 2" in rows[0][1]
 
         await pilot.press("A")
         await pilot.pause()
         assert isinstance(app.screen, RemovalPickerScreen)
         await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, ConfirmScreen)
+        await pilot.press("y")
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)
 
@@ -1992,8 +2100,8 @@ async def test_add_and_remove_raw_vis():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        text = app.screen._character_sheet_view._raw_vis_text()
-        assert "Creo: 5 pawn(s)" in text
+        rows = app.screen._character_sheet_view._raw_vis_rows()
+        assert "Creo: 5 pawn(s)" in rows[0][1]
 
         # Adding the same Art again accumulates rather than overwriting.
         await pilot.press("a")
@@ -2002,12 +2110,16 @@ async def test_add_and_remove_raw_vis():
         app.screen.query_one("#input-vis-pawns", Input).value = "3"
         await pilot.click("#btn-create", offset=(8, 1))
         await pilot.pause()
-        assert "Creo: 8 pawn(s)" in (app.screen._character_sheet_view._raw_vis_text())
+        rows = app.screen._character_sheet_view._raw_vis_rows()
+        assert "Creo: 8 pawn(s)" in rows[0][1]
 
         await pilot.press("A")
         await pilot.pause()
         assert isinstance(app.screen, RemovalPickerScreen)
         await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, ConfirmScreen)
+        await pilot.press("y")
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)
 

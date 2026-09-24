@@ -48,6 +48,40 @@ def test_character_from_dict_defaults_new_fields_for_pre_existing_saves():
     assert character.hermetic == HermeticBackground()
 
 
+def test_character_from_dict_migrates_legacy_inventory_strings():
+    # Pre-STORY-203 saves held Inventory as plain description strings.
+    character = Character.from_dict(
+        {
+            "id": "char_1",
+            "name": "Leandro",
+            "type": "magus",
+            "inventory": ["Fine wool cloak", "A dagger"],
+        }
+    )
+    assert [item.name for item in character.inventory] == [
+        "Fine wool cloak",
+        "A dagger",
+    ]
+    assert all(item.kind == "item" for item in character.inventory)
+
+
+def test_character_from_dict_migrates_legacy_spells_known_ids():
+    # Pre-STORY-203 saves held spells_known as bare spell ids.
+    character = Character.from_dict(
+        {
+            "id": "char_1",
+            "name": "Leandro",
+            "type": "magus",
+            "spells_known": ["spell_pilum_of_fire"],
+        }
+    )
+    assert len(character.spells_known) == 1
+    known = character.spells_known[0]
+    assert known.spell_id == "spell_pilum_of_fire"
+    assert known.mastery_score == 0
+    assert known.mastery_abilities == []
+
+
 def test_laboratory_from_dict_migrates_legacy_size_and_drops_legacy_aura():
     # Simulates a save from before this session: flat "size", and "aura"
     # which has since moved to Covenant.

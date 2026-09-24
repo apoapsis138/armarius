@@ -95,9 +95,11 @@ from .models import (
     HermeticBackground,
     IncomeSource,
     Inhabitant,
+    KnownSpell,
     LabCharacteristics,
     Laboratory,
     LabVirtueFlawDef,
+    MasteryAbility,
     NamedDescription,
     Possession,
     Saga,
@@ -1644,6 +1646,7 @@ class AbilityDetailsScreen(ModalScreen[Ability | None]):
     def compose(self) -> ComposeResult:
         level = self.existing.level if self.existing else 0
         xp = self.existing.xp if self.existing else 0
+        xp_to_next = self.existing.xp_to_next if self.existing else 0
         specialty = self.existing.specialty if self.existing else ""
 
         with Vertical(id="details-dialog"):
@@ -1652,6 +1655,8 @@ class AbilityDetailsScreen(ModalScreen[Ability | None]):
             yield Input(value=str(level), type="integer", id="input-level")
             yield Label("XP")
             yield Input(value=str(xp), type="integer", id="input-xp")
+            yield Label("XP to next level")
+            yield Input(value=str(xp_to_next), type="integer", id="input-xp-to-next")
             yield Label("Specialty (optional)")
             yield Input(
                 value=specialty or "", placeholder="e.g. Swords", id="input-specialty"
@@ -1675,8 +1680,9 @@ class AbilityDetailsScreen(ModalScreen[Ability | None]):
         try:
             level = int(self.query_one("#input-level", Input).value.strip())
             xp = int(self.query_one("#input-xp", Input).value.strip())
+            xp_to_next = int(self.query_one("#input-xp-to-next", Input).value.strip())
         except ValueError:
-            error.update("Level and XP must be whole numbers.")
+            error.update("Level, XP and XP to next level must be whole numbers.")
             return
 
         specialty = self.query_one("#input-specialty", Input).value.strip() or None
@@ -1686,6 +1692,7 @@ class AbilityDetailsScreen(ModalScreen[Ability | None]):
                 category=self.category,
                 level=level,
                 xp=xp,
+                xp_to_next=xp_to_next,
                 specialty=specialty,
             )
         )
@@ -2483,6 +2490,217 @@ class ScoredTraitPromptScreen(ModalScreen[ScoredTrait | None]):
             else True
         )
         self.dismiss(ScoredTrait(name=name, score=score, known=known))
+
+
+class MasteryAbilityPromptScreen(ModalScreen[MasteryAbility | None]):
+    """Name/Level/XP prompt for one Mastery Ability (Fast Casting,
+    Penetration, ...). Dismisses with the finished MasteryAbility, or None
+    if cancelled."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    MasteryAbilityPromptScreen {
+        align: center middle;
+    }
+
+    #mastery-ability-dialog {
+        width: 60;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    #mastery-ability-error {
+        color: $error;
+        height: auto;
+        margin-top: 1;
+    }
+    """
+
+    def __init__(self, title: str, existing: MasteryAbility | None = None) -> None:
+        super().__init__()
+        self.title_text = title
+        self.existing = existing
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="mastery-ability-dialog"):
+            yield Label(self.title_text, id="mastery-ability-title")
+            yield Label("Name")
+            yield Input(
+                value=self.existing.name if self.existing else "",
+                placeholder="e.g. Fast Casting",
+                id="input-mastery-ability-name",
+            )
+            yield Label("Level")
+            yield Input(
+                value=str(self.existing.level) if self.existing else "0",
+                type="integer",
+                id="input-mastery-ability-level",
+            )
+            yield Label("XP")
+            yield Input(
+                value=str(self.existing.xp) if self.existing else "0",
+                type="integer",
+                id="input-mastery-ability-xp",
+            )
+            yield Static("", id="mastery-ability-error")
+            with Horizontal():
+                yield Button("Save", id="btn-save", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-save":
+            self._try_save()
+
+    def _try_save(self) -> None:
+        error = self.query_one("#mastery-ability-error", Static)
+        name = self.query_one("#input-mastery-ability-name", Input).value.strip()
+        if not name:
+            error.update("Name is required.")
+            return
+        try:
+            level = int(self.query_one("#input-mastery-ability-level", Input).value)
+            xp = int(self.query_one("#input-mastery-ability-xp", Input).value)
+        except ValueError:
+            error.update("Level and XP must be whole numbers.")
+            return
+        self.dismiss(MasteryAbility(name=name, level=level, xp=xp))
+
+
+class MasteryEditScreen(ModalScreen[KnownSpell | None]):
+    """Edits a known spell's Mastery: score, xp, and its Mastery Abilities
+    (each with its own name/level/xp -- see MasteryAbility). Abilities are
+    added/removed here and only committed to the character on Save.
+    Dismisses with the finished KnownSpell, or None if cancelled."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    MasteryEditScreen {
+        align: center middle;
+    }
+
+    #mastery-dialog {
+        width: 70;
+        height: auto;
+        max-height: 30;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    #mastery-abilities-list {
+        height: auto;
+        max-height: 8;
+        border: solid $accent;
+    }
+
+    #mastery-error {
+        color: $error;
+        height: auto;
+        margin-top: 1;
+    }
+    """
+
+    def __init__(self, spell_name: str, existing: KnownSpell) -> None:
+        super().__init__()
+        self.spell_name = spell_name
+        self.spell_id = existing.spell_id
+        self.mastery_score = existing.mastery_score
+        self.mastery_xp = existing.mastery_xp
+        #: A working copy -- only becomes real on Save.
+        self._abilities: list[MasteryAbility] = list(existing.mastery_abilities)
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="mastery-dialog"):
+            yield Label(f"Mastery: {self.spell_name}", id="mastery-title")
+            yield Label("Score")
+            yield Input(
+                value=str(self.mastery_score), type="integer", id="input-mastery-score"
+            )
+            yield Label("XP")
+            yield Input(
+                value=str(self.mastery_xp), type="integer", id="input-mastery-xp"
+            )
+            yield Label("Mastery Abilities")
+            yield ListView(id="mastery-abilities-list")
+            with Horizontal():
+                yield Button("Add Ability", id="btn-add-ability", compact=True)
+                yield Button("Remove Ability", id="btn-remove-ability", compact=True)
+            yield Static("", id="mastery-error")
+            with Horizontal():
+                yield Button("Save", id="btn-save", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def on_mount(self) -> None:
+        self._render_abilities()
+
+    def _render_abilities(self) -> None:
+        list_view = self.query_one("#mastery-abilities-list", ListView)
+        list_view.clear()
+        if not self._abilities:
+            list_view.append(ListItem(Label("[dim](none)[/]")))
+            return
+        for ability in self._abilities:
+            list_view.append(
+                ListItem(Label(f"{ability.name} {ability.level}/{ability.xp}"))
+            )
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-save":
+            self._try_save()
+        elif event.button.id == "btn-add-ability":
+            self._add_ability()
+        elif event.button.id == "btn-remove-ability":
+            self._remove_ability()
+
+    def _add_ability(self) -> None:
+        def handle_result(ability: MasteryAbility | None) -> None:
+            if ability is not None:
+                self._abilities.append(ability)
+                self._render_abilities()
+
+        self.app.push_screen(
+            MasteryAbilityPromptScreen("Add a Mastery Ability"), handle_result
+        )
+
+    def _remove_ability(self) -> None:
+        if not self._abilities:
+            return
+        list_view = self.query_one("#mastery-abilities-list", ListView)
+        index = list_view.index
+        if index is not None and index < len(self._abilities):
+            del self._abilities[index]
+            self._render_abilities()
+
+    def _try_save(self) -> None:
+        error = self.query_one("#mastery-error", Static)
+        try:
+            score = int(self.query_one("#input-mastery-score", Input).value)
+            xp = int(self.query_one("#input-mastery-xp", Input).value)
+        except ValueError:
+            error.update("Score and XP must be whole numbers.")
+            return
+        self.dismiss(
+            KnownSpell(
+                spell_id=self.spell_id,
+                mastery_score=score,
+                mastery_xp=xp,
+                mastery_abilities=self._abilities,
+            )
+        )
 
 
 class RawVisPromptScreen(ModalScreen[tuple[str, int] | None]):
@@ -4653,6 +4871,12 @@ class SelectableList(OptionList):
     the label is markup -- escape user text with `escape()` first. An empty
     list shows one disabled "(none recorded)" row.
 
+    A row with a `None` data index is a **header**: a disabled, unselectable
+    separator (bold text, no marker) for sections whose data doesn't split
+    cleanly into two side-by-side lists (e.g. Abilities' several categories,
+    unlike Virtues/Flaws' two). Headers are skipped by keyboard navigation
+    the same way the empty-list placeholder already is.
+
     Choosing a row (arrow keys or click) moves the marker and posts
     `SelectableList.Chosen(data_index)`; the owning view reacts (fills a
     details panel, clears a sibling list...). Nothing is chosen until the
@@ -4714,20 +4938,22 @@ class SelectableList(OptionList):
 
     def __init__(
         self,
-        rows: list[tuple[int, str]] | None = None,
+        rows: list[tuple[int | None, str]] | None = None,
         *,
         id: str | None = None,
         multi: bool = False,
     ) -> None:
         super().__init__(id=id, compact=True)
         self.multi = multi
-        self._rows: list[tuple[int, str]] = []
+        self._rows: list[tuple[int | None, str]] = []
         self._marked: int | None = None
         self._checked: set[int] = set()  # list positions
         self._add_rows(rows or [])
 
     def _prompt(self, position: int) -> str:
-        label = self._rows[position][1]
+        index, label = self._rows[position]
+        if index is None:  # header row
+            return f"[b]{label}[/]"
         marker = "[dodgerblue]●[/]" if position == self._marked else "[dim]○[/]"
         if not self.multi:
             return f"{marker} {label}"
@@ -4738,7 +4964,7 @@ class SelectableList(OptionList):
         if position is not None and position < len(self._rows):
             self.replace_option_prompt_at_index(position, self._prompt(position))
 
-    def _add_rows(self, rows: list[tuple[int, str]]) -> None:
+    def _add_rows(self, rows: list[tuple[int | None, str]]) -> None:
         # Added after construction on purpose: OptionList(*options)
         # highlights its first row, and nothing should be chosen until the
         # user picks one.
@@ -4747,11 +4973,15 @@ class SelectableList(OptionList):
             self.add_option(Option("[dim](none recorded)[/]", disabled=True))
             return
         self.add_options(
-            Option(self._prompt(position), id=str(index))
+            Option(
+                self._prompt(position),
+                id=(str(index) if index is not None else None),
+                disabled=index is None,
+            )
             for position, (index, _) in enumerate(self._rows)
         )
 
-    def set_rows(self, rows: list[tuple[int, str]]) -> None:
+    def set_rows(self, rows: list[tuple[int | None, str]]) -> None:
         """Replace all rows (synchronous; nothing is chosen or checked
         afterwards)."""
         self.clear_options()
@@ -5687,6 +5917,21 @@ class CharacterSheetView(Vertical):
         height: 1fr;
         width: 1fr;
     }
+
+    /* Every selectable-list details panel: a gap below the list, its own
+       shaded background so it reads as a distinct panel (matching the saga
+       Spells view and every covenant list). */
+    CharacterSheetView #ability-info,
+    CharacterSheetView #vf-info,
+    CharacterSheetView #inventory-info,
+    CharacterSheetView #known-spells-info {
+        width: 1fr;
+        height: auto;
+        min-height: 6;
+        margin-top: 1;
+        padding: 1 2;
+        background: $panel;
+    }
     """
 
     def __init__(self, saga: Saga, character: Character) -> None:
@@ -5711,9 +5956,21 @@ class CharacterSheetView(Vertical):
                         self._characteristics_text(), id="characteristics-content"
                     )
                 with SheetSection(title="Abilities", id="section-abilities"):
-                    yield Static(self._abilities_text(), id="abilities-content")
+                    yield SelectableList(self._ability_rows(), id="abilities-list")
+                    yield Static(self._ability_info_text(None), id="ability-info")
                 with SheetSection(title="Virtues & Flaws", id="section-vf"):
-                    yield Static(self._vf_text(), id="vf-content")
+                    with Horizontal(id="vf-row"):
+                        with Vertical(id="vf-virtues-col"):
+                            yield Static("Virtues", id="vf-virtues-title")
+                            yield SelectableList(
+                                self._vf_rows("Virtue"), id="vf-virtues-list"
+                            )
+                        with Vertical(id="vf-flaws-col"):
+                            yield Static("Flaws", id="vf-flaws-title")
+                            yield SelectableList(
+                                self._vf_rows("Flaw"), id="vf-flaws-list"
+                            )
+                    yield Static(self._vf_info_text(None), id="vf-info")
                 with SheetSection(title="Aging & Warping", id="section-aging"):
                     yield Static(self._aging_text(), id="aging-content")
             with (
@@ -5723,18 +5980,20 @@ class CharacterSheetView(Vertical):
                 with SheetSection(
                     title="Personality Traits", id="section-personality-traits"
                 ):
-                    yield Static(
-                        self._personality_traits_text(),
-                        id="personality-traits-content",
+                    yield SelectableList(
+                        self._personality_trait_rows(), id="personality-traits-list"
                     )
                 with SheetSection(title="Reputations", id="section-reputations"):
-                    yield Static(self._reputations_text(), id="reputations-content")
+                    yield SelectableList(
+                        self._reputation_rows(), id="character-reputations-list"
+                    )
                 with SheetSection(title="Wounds", id="section-wounds"):
                     yield Static(self._wounds_text(), id="wounds-content")
                 with SheetSection(title="Fatigue", id="section-fatigue"):
                     yield Static(self._fatigue_text(), id="fatigue-content")
                 with SheetSection(title="Inventory", id="section-inventory"):
-                    yield Static(self._inventory_text(), id="inventory-content")
+                    yield SelectableList(self._inventory_rows(), id="inventory-list")
+                    yield Static(self._inventory_info_text(None), id="inventory-info")
                 yield BookListView(
                     self.saga,
                     lambda: bk.books_owned_by(self.saga, "character", character.id),
@@ -5746,7 +6005,7 @@ class CharacterSheetView(Vertical):
                     with SheetSection(title="Magical Arts", id="section-arts"):
                         yield Static(self._arts_text(), id="arts-content")
                     with SheetSection(title="Raw Vis", id="section-raw-vis"):
-                        yield Static(self._raw_vis_text(), id="raw-vis-content")
+                        yield SelectableList(self._raw_vis_rows(), id="raw-vis-list")
                     with SheetSection(
                         title="Hermetic Background",
                         id="section-hermetic-background",
@@ -5755,8 +6014,13 @@ class CharacterSheetView(Vertical):
                             self._hermetic_background_text(),
                             id="hermetic-background-content",
                         )
-                with TabPane("Spells", id="tab-spells"):
-                    yield Static(self._spells_text(), id="spells-content")
+                with TabPane("Spells", id="tab-spells"), VerticalScroll():
+                    yield SelectableList(
+                        self._known_spell_rows(), id="known-spells-list"
+                    )
+                    yield Static(
+                        self._known_spell_info_text(None), id="known-spells-info"
+                    )
 
     #: Bare Collapsible-section ids, except "tab-spells" which has no
     #: sub-sections (a single flat pane, keyed by its own tab id) -- see
@@ -5766,39 +6030,94 @@ class CharacterSheetView(Vertical):
         "section-background": "#background-content",
         "section-description": "#description-content",
         "section-characteristics": "#characteristics-content",
-        "section-abilities": "#abilities-content",
-        "section-vf": "#vf-content",
         "section-aging": "#aging-content",
-        "section-personality-traits": "#personality-traits-content",
-        "section-reputations": "#reputations-content",
         "section-wounds": "#wounds-content",
         "section-fatigue": "#fatigue-content",
-        "section-inventory": "#inventory-content",
         "section-arts": "#arts-content",
-        "section-raw-vis": "#raw-vis-content",
         "section-hermetic-background": "#hermetic-background-content",
-        "tab-spells": "#spells-content",
     }
     _SECTION_TEXT: ClassVar[dict[str, str]] = {
         "section-identity": "_identity_text",
         "section-background": "_background_text",
         "section-description": "_description_text",
         "section-characteristics": "_characteristics_text",
-        "section-abilities": "_abilities_text",
-        "section-vf": "_vf_text",
         "section-aging": "_aging_text",
-        "section-personality-traits": "_personality_traits_text",
-        "section-reputations": "_reputations_text",
         "section-wounds": "_wounds_text",
         "section-fatigue": "_fatigue_text",
-        "section-inventory": "_inventory_text",
         "section-arts": "_arts_text",
-        "section-raw-vis": "_raw_vis_text",
         "section-hermetic-background": "_hermetic_background_text",
-        "tab-spells": "_spells_text",
     }
 
     def refresh_section(self, section_id: str) -> None:
+        if section_id == "section-abilities":
+            try:
+                self.query_one("#abilities-list", SelectableList).set_rows(
+                    self._ability_rows()
+                )
+                self.query_one("#ability-info", Static).update(
+                    self._ability_info_text(None)
+                )
+            except NoMatches:
+                pass
+            return
+        if section_id == "tab-spells":
+            try:
+                self.query_one("#known-spells-list", SelectableList).set_rows(
+                    self._known_spell_rows()
+                )
+                self.query_one("#known-spells-info", Static).update(
+                    self._known_spell_info_text(None)
+                )
+            except NoMatches:
+                pass
+            return
+        if section_id == "section-inventory":
+            try:
+                self.query_one("#inventory-list", SelectableList).set_rows(
+                    self._inventory_rows()
+                )
+                self.query_one("#inventory-info", Static).update(
+                    self._inventory_info_text(None)
+                )
+            except NoMatches:
+                pass
+            return
+        if section_id == "section-personality-traits":
+            try:
+                self.query_one("#personality-traits-list", SelectableList).set_rows(
+                    self._personality_trait_rows()
+                )
+            except NoMatches:
+                pass
+            return
+        if section_id == "section-reputations":
+            try:
+                self.query_one("#character-reputations-list", SelectableList).set_rows(
+                    self._reputation_rows()
+                )
+            except NoMatches:
+                pass
+            return
+        if section_id == "section-raw-vis":
+            try:
+                self.query_one("#raw-vis-list", SelectableList).set_rows(
+                    self._raw_vis_rows()
+                )
+            except NoMatches:
+                pass
+            return
+        if section_id == "section-vf":
+            try:
+                self.query_one("#vf-virtues-list", SelectableList).set_rows(
+                    self._vf_rows("Virtue")
+                )
+                self.query_one("#vf-flaws-list", SelectableList).set_rows(
+                    self._vf_rows("Flaw")
+                )
+                self.query_one("#vf-info", Static).update(self._vf_info_text(None))
+            except NoMatches:
+                pass
+            return
         selector = self._SECTION_CONTENT.get(section_id)
         text_method = self._SECTION_TEXT.get(section_id)
         if selector is None or text_method is None:
@@ -5808,6 +6127,71 @@ class CharacterSheetView(Vertical):
         except NoMatches:
             return
         static.update(getattr(self, text_method)())
+
+    def selected_personality_trait(self) -> int | None:
+        """Index into character.personality_traits of the chosen row, or None."""
+        return self.query_one(
+            "#personality-traits-list", SelectableList
+        ).selected_data_index
+
+    def selected_reputation(self) -> int | None:
+        """Index into character.reputations of the chosen row, or None."""
+        return self.query_one(
+            "#character-reputations-list", SelectableList
+        ).selected_data_index
+
+    def selected_raw_vis(self) -> int | None:
+        """Index into sorted(character.raw_vis) of the chosen row, or None."""
+        return self.query_one("#raw-vis-list", SelectableList).selected_data_index
+
+    def selected_known_spell(self) -> int | None:
+        """Index into character.spells_known of the chosen row, or None."""
+        return self.query_one("#known-spells-list", SelectableList).selected_data_index
+
+    def selected_inventory_item(self) -> int | None:
+        """Index into character.inventory of the chosen row, or None."""
+        return self.query_one("#inventory-list", SelectableList).selected_data_index
+
+    def selected_ability(self) -> int | None:
+        """Index into character.abilities of the chosen row, or None."""
+        return self.query_one("#abilities-list", SelectableList).selected_data_index
+
+    def selected_virtue_flaw(self) -> int | None:
+        """Index into character.virtues_flaws of the row chosen in either
+        the Virtues or the Flaws list, or None if neither has one chosen."""
+        virtues = self.query_one("#vf-virtues-list", SelectableList).selected_data_index
+        if virtues is not None:
+            return virtues
+        return self.query_one("#vf-flaws-list", SelectableList).selected_data_index
+
+    def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
+        list_id = event.selectable_list.id or ""
+        if list_id == "abilities-list":
+            event.stop()
+            self.query_one("#ability-info", Static).update(
+                self._ability_info_text(event.data_index)
+            )
+            return
+        if list_id == "inventory-list":
+            event.stop()
+            self.query_one("#inventory-info", Static).update(
+                self._inventory_info_text(event.data_index)
+            )
+            return
+        if list_id == "known-spells-list":
+            event.stop()
+            self.query_one("#known-spells-info", Static).update(
+                self._known_spell_info_text(event.data_index)
+            )
+            return
+        if list_id not in ("vf-virtues-list", "vf-flaws-list"):
+            return
+        event.stop()
+        # A Virtue or Flaw row was chosen: unchoose the sibling list (one
+        # selection across both) and fill the details panel.
+        other = "vf-flaws-list" if list_id == "vf-virtues-list" else "vf-virtues-list"
+        self.query_one(f"#{other}", SelectableList).clear_selection()
+        self.query_one("#vf-info", Static).update(self._vf_info_text(event.data_index))
 
     def _identity_text(self) -> str:
         saga, character = self.saga, self.character
@@ -5875,48 +6259,98 @@ class CharacterSheetView(Vertical):
             f"Dex {c.dexterity}   Qik {c.quickness}"
         )
 
-    def _abilities_text(self) -> str:
-        if not self.character.abilities:
-            return "(none recorded)"
-
-        lines: list[str] = []
+    def _ability_rows(self) -> list[tuple[int | None, str]]:
+        """One selectable list for every Ability, with a header (non-
+        selectable) row before each non-empty category -- unlike Virtues/
+        Flaws, Abilities has too many categories for side-by-side lists."""
+        rows: list[tuple[int | None, str]] = []
         for category in ABILITY_CATEGORIES:
-            abilities = [a for a in self.character.abilities if a.category == category]
-            if not abilities:
-                continue
-            lines.append(f"{category}:")
-            for ability in abilities:
-                specialty = f" ({ability.specialty})" if ability.specialty else ""
-                lines.append(
-                    f"  {ability.name}{specialty} {ability.level}/{ability.xp}"
-                )
-            lines.append("")
-        return "\n".join(lines).rstrip()
-
-    def _vf_text(self) -> str:
-        if not self.character.virtues_flaws:
-            return "(none recorded)"
-
-        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
-        lines: list[str] = []
-        for vf_type in ("Virtue", "Flaw"):
-            entries = [
-                vf
-                for vf in self.character.virtues_flaws
-                if (definition := vf_catalog.get(vf.vf_id)) is not None
-                and definition.type == vf_type
+            indexed = [
+                (i, a)
+                for i, a in enumerate(self.character.abilities)
+                if a.category == category
             ]
-            if not entries:
+            if not indexed:
                 continue
-            lines.append(f"{vf_type}s:")
-            for vf in entries:
-                definition = vf_catalog.get(vf.vf_id)
-                tier = definition.tier if definition is not None else "?"
-                lines.append(
-                    f"  {catalog.describe_virtue_flaw(vf, vf_catalog)} ({tier})"
+            rows.append((None, category))
+            for index, ability in indexed:
+                specialty = f" ({ability.specialty})" if ability.specialty else ""
+                rows.append(
+                    (
+                        index,
+                        f"{escape(ability.name)}{escape(specialty)} "
+                        f"{ability.level} {ability.xp}/{ability.xp_to_next}",
+                    )
                 )
-            lines.append("")
-        return "\n".join(lines).rstrip()
+        return rows
+
+    def _ability_definition(self, name: str) -> AbilityDef | None:
+        """The ability catalog entry matching `name`, resolving a templated
+        family ("Area Lore: Rhine" -> "Area Lore: {region}") the same way
+        books.canonical_ability() does; None if it isn't a known ability."""
+        canonical = bk.canonical_ability(name)
+        if canonical is None:
+            return None
+        for entry in catalog.load_ability_catalog():
+            if entry.name == canonical:
+                return entry
+            if "{" in entry.name and canonical.startswith(entry.name.split("{", 1)[0]):
+                return entry
+        return None
+
+    def _ability_info_text(self, index: int | None) -> str:
+        if index is None:
+            return "[dim]Select an Ability for its description.[/]"
+        ability = self.character.abilities[index]
+        definition = self._ability_definition(ability.name)
+        if definition is None or not definition.description:
+            return "[dim](no catalog description)[/]"
+        return escape(definition.description)
+
+    def _vf_rows(self, vf_type: str) -> list[tuple[int | None, str]]:
+        """The character's attached Virtues or Flaws (`vf_type`) as (true
+        index into character.virtues_flaws, label) pairs, so a filtered list
+        still maps back to the real entry."""
+        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
+        return [
+            (
+                index,
+                f"{escape(catalog.describe_virtue_flaw(vf, vf_catalog))} "
+                f"({definition.tier})",
+            )
+            for index, vf in enumerate(self.character.virtues_flaws)
+            if (definition := vf_catalog.get(vf.vf_id)) is not None
+            and definition.type == vf_type
+        ]
+
+    def _vf_info_text(self, index: int | None) -> str:
+        """The details panel for the attached Virtue/Flaw at `index` into
+        character.virtues_flaws: its name, category, tier, effects, and the
+        official rules text."""
+        if index is None:
+            return "[dim]Select a Virtue or Flaw to read its rules.[/]"
+        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
+        instance = self.character.virtues_flaws[index]
+        definition = vf_catalog.get(instance.vf_id)
+        if definition is None:
+            return escape(f"{instance.vf_id} (not in catalog)")
+
+        lines = [
+            f"[b]Name:[/] {escape(catalog.describe_virtue_flaw(instance, vf_catalog))}"
+        ]
+        if definition.category:
+            lines.append(f"[b]Category:[/] {definition.category}")
+        lines.append(f"[b]Tier:[/] {definition.tier}")
+        for modifier in definition.modifiers:
+            effect = describe_modifier(
+                modifier.applies_to,
+                modifier.activity,
+                modifier.amount,
+                modifier.multiplier,
+            )
+            lines.append(f"[b]Effect:[/] {escape(effect)}")
+        lines += ["", "[b]Rules:[/]", escape(definition.description)]
+        return "\n".join(lines)
 
     def _aging_text(self) -> str:
         a = self.character.aging
@@ -5930,24 +6364,17 @@ class CharacterSheetView(Vertical):
             ]
         )
 
-    def _personality_traits_text(self) -> str:
-        return self._scored_traits_text(
-            self.character.personality_traits, "(none recorded)", signed=True
-        )
+    def _personality_trait_rows(self) -> list[tuple[int | None, str]]:
+        return [
+            (index, f"{escape(t.name)}: {t.score:+d}")
+            for index, t in enumerate(self.character.personality_traits)
+        ]
 
-    def _reputations_text(self) -> str:
-        return self._scored_traits_text(
-            self.character.reputations, "(none recorded)", signed=False
-        )
-
-    @staticmethod
-    def _scored_traits_text(
-        traits: list[ScoredTrait], empty_message: str, *, signed: bool
-    ) -> str:
-        if not traits:
-            return empty_message
-        fmt = "{name}: {score:+d}" if signed else "{name}: {score}"
-        return "\n".join(fmt.format(name=t.name, score=t.score) for t in traits)
+    def _reputation_rows(self) -> list[tuple[int | None, str]]:
+        return [
+            (index, f"{escape(t.name)}: {t.score}")
+            for index, t in enumerate(self.character.reputations)
+        ]
 
     def _wounds_text(self) -> str:
         w = self.character.wounds
@@ -5964,13 +6391,11 @@ class CharacterSheetView(Vertical):
     def _fatigue_text(self) -> str:
         return f"Fatigue Level: {self.character.fatigue_level.title()}"
 
-    def _raw_vis_text(self) -> str:
-        if not self.character.raw_vis:
-            return "(none recorded)"
-        return "\n".join(
-            f"{art.title()}: {pawns} pawn(s)"
-            for art, pawns in sorted(self.character.raw_vis.items())
-        )
+    def _raw_vis_rows(self) -> list[tuple[int | None, str]]:
+        return [
+            (index, f"{art.title()}: {self.character.raw_vis[art]} pawn(s)")
+            for index, art in enumerate(sorted(self.character.raw_vis))
+        ]
 
     def _hermetic_background_text(self) -> str:
         h = self.character.hermetic
@@ -6004,24 +6429,70 @@ class CharacterSheetView(Vertical):
             )
         return "\n".join(lines)
 
-    def _spells_text(self) -> str:
-        if not self.character.spells_known:
-            return "(none recorded)"
-
-        lines = []
-        for spell_id in self.character.spells_known:
-            spell = spl.find_spell(self.saga, spell_id)
+    def _known_spell_rows(self) -> list[tuple[int | None, str]]:
+        rows: list[tuple[int | None, str]] = []
+        for index, known in enumerate(self.character.spells_known):
+            spell = spl.find_spell(self.saga, known.spell_id)
             if spell is None:
-                lines.append(f"  {escape(spell_id)} (unknown spell)")
+                rows.append((index, f"{escape(known.spell_id)} (unknown spell)"))
                 continue
-            ritual = ", Ritual" if spell.ritual else ""
-            lines.append(f"  {escape(spell.name)} ({spl.shorthand(spell)}{ritual})")
+            label = spl.row_label(self.saga, spell)
+            if known.mastery_score:
+                label += f"  [b]Mastery {known.mastery_score}[/]"
+            rows.append((index, label))
+        return rows
+
+    def _known_spell_info_text(self, index: int | None) -> str:
+        if index is None:
+            return "[dim]Select a spell to see its details.[/]"
+        known = self.character.spells_known[index]
+        spell = spl.find_spell(self.saga, known.spell_id)
+        if spell is None:
+            lines = [f"[red]Unknown spell: {escape(known.spell_id)}[/]"]
+        else:
+            lines = [spl.detail_text(self.saga, spell)]
+        lines += [
+            "",
+            "[b]Mastery:[/]",
+            f"Score {known.mastery_score}, XP {known.mastery_xp}",
+        ]
+        if known.mastery_abilities:
+            for ability in known.mastery_abilities:
+                lines.append(f"  {escape(ability.name)} {ability.level}/{ability.xp}")
+        else:
+            lines.append("  (no Mastery Abilities)")
         return "\n".join(lines)
 
-    def _inventory_text(self) -> str:
-        if not self.character.inventory:
-            return "(none recorded)"
-        return "\n".join(f"  - {item}" for item in self.character.inventory)
+    #: Character Inventory's group headers, in display order.
+    _INVENTORY_KINDS: ClassVar[tuple[str, ...]] = ("weapon", "armor", "item")
+    _INVENTORY_HEADERS: ClassVar[dict[str, str]] = {
+        "weapon": "Weapons",
+        "armor": "Armor",
+        "item": "Other Items",
+    }
+
+    def _inventory_rows(self) -> list[tuple[int | None, str]]:
+        """One selectable list for all of Inventory, with a header row before
+        each non-empty kind (Weapons, Armor, Other Items)."""
+        rows: list[tuple[int | None, str]] = []
+        for kind in self._INVENTORY_KINDS:
+            indexed = [
+                (i, item)
+                for i, item in enumerate(self.character.inventory)
+                if item.kind == kind
+            ]
+            if not indexed:
+                continue
+            rows.append((None, self._INVENTORY_HEADERS[kind]))
+            for index, item in indexed:
+                rows.append((index, pos.row_label(pos.PossessionEntry(kind, item))))
+        return rows
+
+    def _inventory_info_text(self, index: int | None) -> str:
+        if index is None:
+            return "[dim]Select an item for its details.[/]"
+        item = self.character.inventory[index]
+        return pos.detail_text(pos.PossessionEntry(item.kind, item))
 
 
 class PinnedCollapsible(Collapsible):
@@ -7107,6 +7578,11 @@ class WorkspaceScreen(Screen[None]):
         "section-fatigue",
         "section-arts",
         "section-hermetic-background",
+        "section-personality-traits",
+        "section-reputations",
+        "section-raw-vis",
+        "section-inventory",
+        "tab-spells",
         "section-lab-identity",
         "section-lab-characteristics",
         "section-lab-specialties",
@@ -7830,6 +8306,16 @@ class WorkspaceScreen(Screen[None]):
             self._edit_arts()
         elif section == "section-hermetic-background":
             self._edit_hermetic_background()
+        elif section == "section-personality-traits":
+            self._edit_personality_trait()
+        elif section == "section-reputations":
+            self._edit_reputation()
+        elif section == "section-raw-vis":
+            self._edit_raw_vis()
+        elif section == "section-inventory":
+            self._edit_item()
+        elif section == "tab-spells":
+            self._edit_spell_mastery()
         elif section == "section-lab-identity":
             self._edit_lab_identity()
         elif section == "section-lab-characteristics":
@@ -9686,60 +10172,91 @@ class WorkspaceScreen(Screen[None]):
 
         self.app.push_screen(AbilityPickerScreen(exclude_names), handle_result)
 
+    def _selected_ability(self) -> int | None:
+        view = self._character_sheet_view
+        return view.selected_ability() if view is not None else None
+
+    @staticmethod
+    def _ability_label(a: Ability) -> str:
+        specialty = f" ({a.specialty})" if a.specialty else ""
+        return f"{a.name}{specialty} {a.level} {a.xp}/{a.xp_to_next}"
+
     def _remove_ability(self) -> None:
+        """Delete the chosen Ability (after confirming); with none chosen,
+        ask which one first."""
         character = self.selected_character
         if character is None:
+            return
+        selected = self._selected_ability()
+        if selected is not None:
+            self._confirm_remove_ability(selected)
             return
         if not character.abilities:
             self.notify("No Abilities to remove.")
             return
 
-        labels = [
-            f"{a.name} {a.level}/{a.xp}" + (f" ({a.specialty})" if a.specialty else "")
-            for a in character.abilities
-        ]
+        labels = [self._ability_label(a) for a in character.abilities]
 
-        def handle_result(index: int | None) -> None:
+        def handle_index(index: int | None) -> None:
             if index is not None:
+                self._confirm_remove_ability(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove an Ability", labels), handle_index
+        )
+
+    def _confirm_remove_ability(self, index: int) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        name = character.abilities[index].name
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
                 del character.abilities[index]
                 storage.save_saga(self.saga)
                 self._refresh_character_section("section-abilities")
 
-        self.app.push_screen(
-            RemovalPickerScreen("Remove an Ability", labels), handle_result
-        )
+        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
     def _edit_ability(self) -> None:
+        """Edit the chosen Ability; with none chosen, ask which one."""
         character = self.selected_character
         if character is None:
+            return
+        selected = self._selected_ability()
+        if selected is not None:
+            self._edit_ability_at(selected)
             return
         if not character.abilities:
             self.notify("No Abilities to edit.")
             return
 
-        labels = [
-            f"{a.name} {a.level}/{a.xp}" + (f" ({a.specialty})" if a.specialty else "")
-            for a in character.abilities
-        ]
+        labels = [self._ability_label(a) for a in character.abilities]
 
         def handle_index(index: int | None) -> None:
-            if index is None:
-                return
-            existing = character.abilities[index]
-
-            def handle_result(ability: Ability | None) -> None:
-                if ability is not None:
-                    character.abilities[index] = ability
-                    storage.save_saga(self.saga)
-                    self._refresh_character_section("section-abilities")
-
-            self.app.push_screen(
-                AbilityDetailsScreen(existing.name, existing.category, existing),
-                handle_result,
-            )
+            if index is not None:
+                self._edit_ability_at(index)
 
         self.app.push_screen(
             RemovalPickerScreen("Edit which Ability?", labels), handle_index
+        )
+
+    def _edit_ability_at(self, index: int) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        existing = character.abilities[index]
+
+        def handle_result(ability: Ability | None) -> None:
+            if ability is not None:
+                character.abilities[index] = ability
+                storage.save_saga(self.saga)
+                self._refresh_character_section("section-abilities")
+
+        self.app.push_screen(
+            AbilityDetailsScreen(existing.name, existing.category, existing),
+            handle_result,
         )
 
     # -- Personality Traits / Reputations / Wounds / Fatigue --
@@ -9760,9 +10277,62 @@ class WorkspaceScreen(Screen[None]):
             handle_result,
         )
 
-    def _remove_personality_trait(self) -> None:
+    def _selected_personality_trait(self) -> int | None:
+        view = self._character_sheet_view
+        return view.selected_personality_trait() if view is not None else None
+
+    def _edit_personality_trait(self) -> None:
+        """Edit the chosen Personality Trait; with none chosen, ask which."""
         character = self.selected_character
         if character is None:
+            return
+        selected = self._selected_personality_trait()
+        if selected is not None:
+            self._edit_personality_trait_at(selected)
+            return
+        if not character.personality_traits:
+            self.notify("No Personality Traits to edit.")
+            return
+
+        labels = [f"{t.name}: {t.score:+d}" for t in character.personality_traits]
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._edit_personality_trait_at(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Edit which Personality Trait?", labels), handle_index
+        )
+
+    def _edit_personality_trait_at(self, index: int) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+
+        def handle_result(trait: ScoredTrait | None) -> None:
+            if trait is not None:
+                character.personality_traits[index] = trait
+                storage.save_saga(self.saga)
+                self._refresh_character_section("section-personality-traits")
+
+        self.app.push_screen(
+            ScoredTraitPromptScreen(
+                "Edit a Personality Trait",
+                "e.g. Brave",
+                character.personality_traits[index],
+            ),
+            handle_result,
+        )
+
+    def _remove_personality_trait(self) -> None:
+        """Delete the chosen Personality Trait (after confirming); with none
+        chosen, ask which one first."""
+        character = self.selected_character
+        if character is None:
+            return
+        selected = self._selected_personality_trait()
+        if selected is not None:
+            self._confirm_remove_personality_trait(selected)
             return
         if not character.personality_traits:
             self.notify("No Personality Traits to remove.")
@@ -9770,15 +10340,27 @@ class WorkspaceScreen(Screen[None]):
 
         labels = [f"{t.name}: {t.score:+d}" for t in character.personality_traits]
 
-        def handle_result(index: int | None) -> None:
+        def handle_index(index: int | None) -> None:
             if index is not None:
+                self._confirm_remove_personality_trait(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove a Personality Trait", labels), handle_index
+        )
+
+    def _confirm_remove_personality_trait(self, index: int) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        name = character.personality_traits[index].name
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
                 del character.personality_traits[index]
                 storage.save_saga(self.saga)
                 self._refresh_character_section("section-personality-traits")
 
-        self.app.push_screen(
-            RemovalPickerScreen("Remove a Personality Trait", labels), handle_result
-        )
+        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
     def _add_reputation(self) -> None:
         character = self.selected_character
@@ -9796,9 +10378,62 @@ class WorkspaceScreen(Screen[None]):
             handle_result,
         )
 
-    def _remove_reputation(self) -> None:
+    def _selected_character_reputation(self) -> int | None:
+        view = self._character_sheet_view
+        return view.selected_reputation() if view is not None else None
+
+    def _edit_reputation(self) -> None:
+        """Edit the chosen Reputation; with none chosen, ask which one."""
         character = self.selected_character
         if character is None:
+            return
+        selected = self._selected_character_reputation()
+        if selected is not None:
+            self._edit_reputation_at(selected)
+            return
+        if not character.reputations:
+            self.notify("No Reputations to edit.")
+            return
+
+        labels = [f"{t.name}: {t.score}" for t in character.reputations]
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._edit_reputation_at(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Edit which Reputation?", labels), handle_index
+        )
+
+    def _edit_reputation_at(self, index: int) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+
+        def handle_result(trait: ScoredTrait | None) -> None:
+            if trait is not None:
+                character.reputations[index] = trait
+                storage.save_saga(self.saga)
+                self._refresh_character_section("section-reputations")
+
+        self.app.push_screen(
+            ScoredTraitPromptScreen(
+                "Edit a Reputation",
+                "e.g. Skilled Enchanter",
+                character.reputations[index],
+            ),
+            handle_result,
+        )
+
+    def _remove_reputation(self) -> None:
+        """Delete the chosen Reputation (after confirming); with none chosen,
+        ask which one first."""
+        character = self.selected_character
+        if character is None:
+            return
+        selected = self._selected_character_reputation()
+        if selected is not None:
+            self._confirm_remove_reputation(selected)
             return
         if not character.reputations:
             self.notify("No Reputations to remove.")
@@ -9806,15 +10441,27 @@ class WorkspaceScreen(Screen[None]):
 
         labels = [f"{t.name}: {t.score}" for t in character.reputations]
 
-        def handle_result(index: int | None) -> None:
+        def handle_index(index: int | None) -> None:
             if index is not None:
+                self._confirm_remove_reputation(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove a Reputation", labels), handle_index
+        )
+
+    def _confirm_remove_reputation(self, index: int) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        name = character.reputations[index].name
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
                 del character.reputations[index]
                 storage.save_saga(self.saga)
                 self._refresh_character_section("section-reputations")
 
-        self.app.push_screen(
-            RemovalPickerScreen("Remove a Reputation", labels), handle_result
-        )
+        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
     def _edit_wounds(self) -> None:
         character = self.selected_character
@@ -9873,9 +10520,65 @@ class WorkspaceScreen(Screen[None]):
 
         self.app.push_screen(RawVisPromptScreen(), handle_result)
 
-    def _remove_raw_vis(self) -> None:
+    def _selected_raw_vis(self) -> int | None:
+        view = self._character_sheet_view
+        return view.selected_raw_vis() if view is not None else None
+
+    def _edit_raw_vis(self) -> None:
+        """Edit the chosen Raw Vis entry; with none chosen, ask which one."""
         character = self.selected_character
         if character is None:
+            return
+        selected = self._selected_raw_vis()
+        if selected is not None:
+            self._edit_raw_vis_at(selected)
+            return
+        if not character.raw_vis:
+            self.notify("No Raw Vis to edit.")
+            return
+
+        arts = sorted(character.raw_vis)
+        labels = [f"{art.title()}: {character.raw_vis[art]} pawn(s)" for art in arts]
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._edit_raw_vis_at(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Edit which Raw Vis entry?", labels), handle_index
+        )
+
+    def _edit_raw_vis_at(self, index: int) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        arts = sorted(character.raw_vis)
+        old_art = arts[index]
+
+        def handle_result(result: tuple[str, int] | None) -> None:
+            if result is not None:
+                art, pawns = result
+                del character.raw_vis[old_art]
+                # Re-pointing an entry at an Art that's already held merges
+                # the pawns into it, same as adding Raw Vis of a held Art does.
+                character.raw_vis[art] = character.raw_vis.get(art, 0) + pawns
+                storage.save_saga(self.saga)
+                self._refresh_character_section("section-raw-vis")
+
+        self.app.push_screen(
+            RawVisPromptScreen(existing=(old_art, character.raw_vis[old_art])),
+            handle_result,
+        )
+
+    def _remove_raw_vis(self) -> None:
+        """Delete the chosen Raw Vis entry (after confirming); with none
+        chosen, ask which one first."""
+        character = self.selected_character
+        if character is None:
+            return
+        selected = self._selected_raw_vis()
+        if selected is not None:
+            self._confirm_remove_raw_vis(selected)
             return
         if not character.raw_vis:
             self.notify("No Raw Vis to remove.")
@@ -9884,14 +10587,28 @@ class WorkspaceScreen(Screen[None]):
         arts = sorted(character.raw_vis)
         labels = [f"{art.title()}: {character.raw_vis[art]} pawn(s)" for art in arts]
 
-        def handle_result(index: int | None) -> None:
+        def handle_index(index: int | None) -> None:
             if index is not None:
-                del character.raw_vis[arts[index]]
+                self._confirm_remove_raw_vis(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove a Raw Vis entry", labels), handle_index
+        )
+
+    def _confirm_remove_raw_vis(self, index: int) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        art = sorted(character.raw_vis)[index]
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
+                del character.raw_vis[art]
                 storage.save_saga(self.saga)
                 self._refresh_character_section("section-raw-vis")
 
         self.app.push_screen(
-            RemovalPickerScreen("Remove a Raw Vis entry", labels), handle_result
+            ConfirmScreen(f"Delete {escape(art.title())}?"), handle_confirmed
         )
 
     def _edit_hermetic_background(self) -> None:
@@ -9918,75 +10635,235 @@ class WorkspaceScreen(Screen[None]):
 
         def handle_result(spell_id: str | None) -> None:
             if spell_id is not None:
-                character.spells_known.append(spell_id)
+                character.spells_known.append(KnownSpell(spell_id=spell_id))
                 storage.save_saga(self.saga)
                 self._refresh_character_section("tab-spells")
 
         self.app.push_screen(
             SpellChooserScreen(
                 self.saga,
-                exclude=set(character.spells_known),
+                exclude={k.spell_id for k in character.spells_known},
                 title=f"Add a spell {character.name} knows",
             ),
             handle_result,
         )
 
-    def _remove_spell(self) -> None:
+    def _known_spell_labels(self, character: Character) -> list[str]:
+        labels = []
+        for known in character.spells_known:
+            spell = spl.find_spell(self.saga, known.spell_id)
+            labels.append(spell.name if spell else f"{known.spell_id} (unknown spell)")
+        return labels
+
+    def _selected_known_spell(self) -> int | None:
+        view = self._character_sheet_view
+        return view.selected_known_spell() if view is not None else None
+
+    def _edit_spell_mastery(self) -> None:
+        """Edit the chosen known spell's Mastery; with none chosen, ask
+        which one."""
         character = self.selected_character
         if character is None:
+            return
+        selected = self._selected_known_spell()
+        if selected is not None:
+            self._edit_spell_mastery_at(selected)
+            return
+        if not character.spells_known:
+            self.notify("No Spells to edit.")
+            return
+
+        labels = self._known_spell_labels(character)
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._edit_spell_mastery_at(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Edit Mastery for which spell?", labels), handle_index
+        )
+
+    def _edit_spell_mastery_at(self, index: int) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        known = character.spells_known[index]
+        spell = spl.find_spell(self.saga, known.spell_id)
+        name = spell.name if spell else known.spell_id
+
+        def handle_result(result: KnownSpell | None) -> None:
+            if result is not None:
+                character.spells_known[index] = result
+                storage.save_saga(self.saga)
+                self._refresh_character_section("tab-spells")
+
+        self.app.push_screen(MasteryEditScreen(name, known), handle_result)
+
+    def _remove_spell(self) -> None:
+        """Delete the chosen known spell (after confirming); with none
+        chosen, ask which one first."""
+        character = self.selected_character
+        if character is None:
+            return
+        selected = self._selected_known_spell()
+        if selected is not None:
+            self._confirm_remove_spell(selected)
             return
         if not character.spells_known:
             self.notify("No Spells to remove.")
             return
 
-        labels = []
-        for spell_id in character.spells_known:
-            spell = spl.find_spell(self.saga, spell_id)
-            labels.append(spell.name if spell else f"{spell_id} (unknown spell)")
+        labels = self._known_spell_labels(character)
 
-        def handle_result(index: int | None) -> None:
+        def handle_index(index: int | None) -> None:
             if index is not None:
+                self._confirm_remove_spell(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove a Known Spell", labels), handle_index
+        )
+
+    def _confirm_remove_spell(self, index: int) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        name = self._known_spell_labels(character)[index]
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
                 del character.spells_known[index]
                 storage.save_saga(self.saga)
                 self._refresh_character_section("tab-spells")
 
-        self.app.push_screen(
-            RemovalPickerScreen("Remove a Known Spell", labels), handle_result
-        )
+        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
     # -- Inventory --
 
+    def _selected_inventory_item(self) -> int | None:
+        view = self._character_sheet_view
+        return view.selected_inventory_item() if view is not None else None
+
     def _add_item(self) -> None:
+        """Add an item: ask which kind first (the section is one combined
+        list, unlike the covenant Possessions tab's per-kind sections)."""
         character = self.selected_character
         if character is None:
             return
 
-        def handle_result(item: str | None) -> None:
-            if item is not None:
-                character.inventory.append(item)
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-inventory")
+        def handle_kind(index: int | None) -> None:
+            if index is not None:
+                self._inventory_item_form(("weapon", "armor", "item")[index], None)
 
-        self.app.push_screen(ItemAddScreen(), handle_result)
+        self.app.push_screen(
+            RemovalPickerScreen("Add which kind of item?", ["Weapon", "Armor", "Item"]),
+            handle_kind,
+        )
 
-    def _remove_item(self) -> None:
+    def _inventory_item_form(self, kind: str, index: int | None) -> None:
         character = self.selected_character
         if character is None:
+            return
+        existing = character.inventory[index] if index is not None else None
+        entry = pos.PossessionEntry(kind, existing) if existing is not None else None
+        title = (
+            f"Add a {pos.KIND_SINGULAR[kind]}"
+            if index is None
+            else f"Edit {existing.name or 'this item'}"
+        )
+
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is None:
+                return
+            if index is not None and existing is not None:
+                for key, value in values.items():
+                    setattr(existing, key, value)
+            else:
+                character.inventory.append(
+                    Possession(
+                        id=storage.generate_unique_id(
+                            values.get("name") or kind,
+                            [item.id for item in character.inventory],
+                        ),
+                        kind=kind,
+                        **values,
+                    )
+                )
+            storage.save_saga(self.saga)
+            self._refresh_character_section("section-inventory")
+
+        self.app.push_screen(
+            FieldsDialog(
+                title, _possession_fields(kind, entry), validate=_possession_problem
+            ),
+            handle_result,
+        )
+
+    def _edit_item(self) -> None:
+        """Edit the chosen item; with none chosen, ask which one."""
+        character = self.selected_character
+        if character is None:
+            return
+        selected = self._selected_inventory_item()
+        if selected is not None:
+            self._inventory_item_form(character.inventory[selected].kind, selected)
+            return
+        if not character.inventory:
+            self.notify("No Items to edit.")
+            return
+
+        labels = [
+            pos.row_label(pos.PossessionEntry(item.kind, item))
+            for item in character.inventory
+        ]
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._inventory_item_form(character.inventory[index].kind, index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Edit which item?", labels), handle_index
+        )
+
+    def _remove_item(self) -> None:
+        """Delete the chosen item (after confirming); with none chosen, ask
+        which one first."""
+        character = self.selected_character
+        if character is None:
+            return
+        selected = self._selected_inventory_item()
+        if selected is not None:
+            self._confirm_remove_item(selected)
             return
         if not character.inventory:
             self.notify("No Items to remove.")
             return
 
-        def handle_result(index: int | None) -> None:
+        labels = [
+            pos.row_label(pos.PossessionEntry(item.kind, item))
+            for item in character.inventory
+        ]
+
+        def handle_index(index: int | None) -> None:
             if index is not None:
+                self._confirm_remove_item(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove an Item", labels), handle_index
+        )
+
+    def _confirm_remove_item(self, index: int) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        name = character.inventory[index].name or "this item"
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
                 del character.inventory[index]
                 storage.save_saga(self.saga)
                 self._refresh_character_section("section-inventory")
 
-        self.app.push_screen(
-            RemovalPickerScreen("Remove an Item", list(character.inventory)),
-            handle_result,
-        )
+        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
     # -- Laboratory: Identity / Characteristics --
 
@@ -10398,6 +11275,11 @@ class WorkspaceScreen(Screen[None]):
         self.app.push_screen(picker(existing_ids), handle_result)
 
     def action_remove_virtue_flaw(self) -> None:
+        is_lab = self.selected_kind == "laboratory"
+        if not is_lab and self._active_section() == "section-vf":
+            self._remove_character_virtue_flaw()
+            return
+
         target = self._virtue_flaw_target()
         if target is None:
             return
@@ -10405,7 +11287,6 @@ class WorkspaceScreen(Screen[None]):
             self.notify("No Virtues/Flaws to remove.")
             return
 
-        is_lab = self.selected_kind == "laboratory"
         vf_catalog = (
             catalog.load_lab_virtue_flaw_catalog_by_id()
             if is_lab
@@ -10427,6 +11308,53 @@ class WorkspaceScreen(Screen[None]):
         self.app.push_screen(
             RemovalPickerScreen("Remove a Virtue or Flaw", labels), handle_result
         )
+
+    def _selected_character_virtue_flaw(self) -> int | None:
+        view = self._character_sheet_view
+        return view.selected_virtue_flaw() if view is not None else None
+
+    def _remove_character_virtue_flaw(self) -> None:
+        """Delete the chosen character Virtue/Flaw (after confirming); with
+        none chosen, ask which one first."""
+        character = self.selected_character
+        if character is None:
+            return
+        selected = self._selected_character_virtue_flaw()
+        if selected is not None:
+            self._confirm_remove_character_virtue_flaw(selected)
+            return
+        if not character.virtues_flaws:
+            self.notify("No Virtues/Flaws to remove.")
+            return
+
+        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
+        labels = [
+            catalog.describe_virtue_flaw(vf, vf_catalog)
+            for vf in character.virtues_flaws
+        ]
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._confirm_remove_character_virtue_flaw(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove a Virtue or Flaw", labels), handle_index
+        )
+
+    def _confirm_remove_character_virtue_flaw(self, index: int) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
+        name = catalog.describe_virtue_flaw(character.virtues_flaws[index], vf_catalog)
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
+                del character.virtues_flaws[index]
+                storage.save_saga(self.saga)
+                self._refresh_character_section("section-vf")
+
+        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
     def _virtue_flaw_target(self) -> Character | Laboratory | None:
         if (

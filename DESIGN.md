@@ -380,12 +380,17 @@ renders as bold/italic *spans* while literal asterisks and the official Rules
 text do not; dialogs fit
 80×24 *and* do not stretch on a tall terminal.
 
-**Adoption.** Applied to covenant Boons, Hooks and Reputations, and to every list on
-the covenant Inhabitants and Possessions tabs. Character
-Abilities, Virtues & Flaws, Personality Traits, Reputations, Inventory, Raw
-Vis and Spells, and the laboratory's lists (Virtues & Flaws, Specialties,
-Features, Rooms, Raw Vis, Items, Diary), still use the older picker style and
-remove without confirming; they move over as their screens are reworked.
+**Adoption.** Applied to covenant Boons, Hooks and Reputations, every list on
+the covenant Inhabitants and Possessions tabs, and (STORY-203) every list on
+the Character sheet: Abilities (one list, category header rows, a catalog-
+description panel), Virtues & Flaws (two side-by-side lists, mirroring
+Boons/Hooks), Personality Traits and Reputations (list only, no panel, like
+covenant Reputations), Inventory (`Possession` records scoped to weapon/
+armor/item, header rows), Raw Vis, and known Spells (a spell details panel
+plus a Mastery block -- score/xp and Mastery Abilities, each with its own
+score/xp). The laboratory's lists (Virtues & Flaws, Specialties, Features,
+Rooms, Raw Vis, Items, Diary) still use the older picker style and remove
+without confirming; they move over with STORY-303.
 
 ### 9.2 Related sheet conventions
 
@@ -662,11 +667,13 @@ spell is chosen). A book whose spell can't be found keeps its typed name and lev
 and shows red "Unknown spell". `FieldsDialog` gained a "picker" field kind for this:
 a button showing the choice, which opens a chooser screen.
 
-**Known spells.** A character's `spells_known` holds spell ids of any kind; the
-Spells tab lists them through the same resolver (unknown ids are shown as such), and
-`a` adds one through the same searchable picker, leaving out those already known.
-Mastery, and a details panel for a known spell, come with the Character screen
-rework.
+**Known spells.** A character's `spells_known` holds `KnownSpell` records (spell id
+plus Mastery), resolved through the same spell lookup (unknown ids are shown as
+such); `a` adds one through the same searchable picker, leaving out those already
+known. The Spells tab is a selectable list (spell name, Arts, Level, R/D/T, Ritual,
+Source, plus "Mastery N" once mastered) over a details panel: the spell's full info,
+then a Mastery block (score, xp, and each Mastery Ability with its own name/level/
+xp -- see `MasteryAbility`). `e` opens `MasteryEditScreen` for the chosen spell.
 
 **Importing spells.** Import Data (`I` on the saga) offers **Spells**, which opens
 an **Import Spells** helper: the columns and what each holds (`name`, `technique`,

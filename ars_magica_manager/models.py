@@ -384,6 +384,9 @@ class Ability:
     category: str = "General"
     level: int = 0
     xp: int = 0
+    #: XP needed for the next level, typed by hand -- a placeholder, not a
+    #: computed formula (see DESIGN.md's "tracker, not rules engine" stance).
+    xp_to_next: int = 0
     specialty: str | None = None
 
     @classmethod
@@ -431,6 +434,43 @@ class Spell:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Spell:
         return cls(**known_fields(cls, data))
+
+
+@dataclass
+class MasteryAbility:
+    """One Mastery Ability a magus has bought on a known spell (Fast
+    Casting, Penetration, ...) -- its own name/level/xp, since some (e.g.
+    Multiple Casting) carry a score that matters. No catalog or rules
+    validation yet (see DESIGN.md's "tracker, not rules engine" stance)."""
+
+    name: str
+    level: int = 0
+    xp: int = 0
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> MasteryAbility:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class KnownSpell:
+    """One spell a character knows, plus their Spell Mastery in it (ArM5
+    Chapter Seven): a score/xp track and the Mastery Abilities bought with
+    it. `spell_id` resolves through spells.find_spell() like any other
+    spell reference (catalog, saga's own, or the magus's invented spells)."""
+
+    spell_id: str
+    mastery_score: int = 0
+    mastery_xp: int = 0
+    mastery_abilities: list[MasteryAbility] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> KnownSpell:
+        d = dict(data)
+        d["mastery_abilities"] = [
+            MasteryAbility.from_dict(m) for m in d.get("mastery_abilities", [])
+        ]
+        return cls(**known_fields(cls, d))
 
 
 #: Standard Hermetic Ranges, Durations and Targets (ArM5 Chapter Nine), in the
@@ -823,11 +863,15 @@ class Character:
     arts: dict[str, ArtScore] = field(default_factory=dict)
     abilities: list[Ability] = field(default_factory=list)
     virtues_flaws: list[VirtueFlawInstance] = field(default_factory=list)
-    spells_known: list[str] = field(default_factory=list)  # Spell ids
+    #: Spells known, each with its own Spell Mastery.
+    spells_known: list[KnownSpell] = field(default_factory=list)
     #: Spells this magus invented: they live with the magus, not the catalog
     #: (see Spell). Invention itself comes with the lab activities.
     invented_spells: list[Spell] = field(default_factory=list)
-    inventory: list[str] = field(default_factory=list)  # freeform item descriptions
+    #: Personal gear -- Possession records scoped to kind in
+    #: {"weapon", "armor", "item"} (a character-scale subset of what the
+    #: covenant Possessions tab holds; no sanctums/vis on a character sheet).
+    inventory: list[Possession] = field(default_factory=list)
     assigned_lab_id: str | None = None
     background: Background = field(default_factory=Background)
     description: Description = field(default_factory=Description)
@@ -861,6 +905,20 @@ class Character:
         d["hermetic"] = HermeticBackground.from_dict(d.get("hermetic") or {})
         d["invented_spells"] = [
             Spell.from_dict(sp) for sp in d.get("invented_spells", [])
+        ]
+        d["inventory"] = [
+            # Pre-STORY-203 saves held plain description strings.
+            Possession(id=f"{data['id']}-inv-{i}", kind="item", name=item)
+            if isinstance(item, str)
+            else Possession(**known_fields(Possession, item))
+            for i, item in enumerate(d.get("inventory", []))
+        ]
+        d["spells_known"] = [
+            # Pre-STORY-203 saves held bare spell ids.
+            KnownSpell(spell_id=entry)
+            if isinstance(entry, str)
+            else KnownSpell.from_dict(entry)
+            for entry in d.get("spells_known", [])
         ]
         return cls(**d)
 
