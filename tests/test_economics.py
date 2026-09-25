@@ -504,9 +504,7 @@ def test_surplus_deficit_of_exactly_zero_is_colored_cyan():
 
 def test_source_text_shows_where_the_income_comes_from_and_renders_emphasis():
     usual = IncomeSource(id="a", name="[Mine]", type="Greater")
-    assert eco.source_row_label(usual) == (
-        "\\[Mine] | Type: Greater | Current Income: 250"
-    )
+    assert eco.source_row_label(usual) == "\\[Mine]              Greater        250"
     assert "(the usual for Greater)" in eco.source_detail_text(usual)
     typed = IncomeSource(
         id="b", name="Toll", type="Lesser", income=55, description="Paid **in kind**."
@@ -519,7 +517,7 @@ def test_source_text_shows_where_the_income_comes_from_and_renders_emphasis():
 
 def test_source_row_and_panel_show_the_note():
     plain = IncomeSource(id="a", name="Mine", type="Typical")
-    assert eco.source_row_label(plain) == "Mine | Type: Typical | Current Income: 100"
+    assert eco.source_row_label(plain) == "Mine                Typical        100"
     assert "Note" not in eco.source_detail_text(plain)
 
     noted = IncomeSource(
@@ -531,8 +529,7 @@ def test_source_row_and_panel_show_the_note():
     )
     label = eco.source_row_label(noted)
     assert label == (
-        "\\[Toll] bridge | Type: Typical | Current Income: 100 | "
-        "1220 - Toll experienced Boom"
+        "\\[Toll] bridge       Typical        100  1220 - Toll experienced Boom"
     )
     text = eco.source_detail_text(noted)
     # The Note comes before the Description.

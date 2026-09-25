@@ -524,14 +524,26 @@ def row_detail_text(row: Row | None, first_title: str) -> str:
     return "\n".join(lines)
 
 
+_INCOME_TYPE_WIDTH = 10
+
+
+def source_table_header() -> str:
+    """The column titles above the Sources of Income list; the two-character
+    indent is the list's selector marker."""
+    return (
+        f"  {'':<{_NAME_WIDTH}}{'Type':<{_INCOME_TYPE_WIDTH}}"
+        f"{'Income':>{_FIRST_WIDTH}}  Note"
+    )
+
+
 def source_row_label(source: IncomeSource) -> str:
-    parts = [
-        f"{escape(source.name or '(unnamed)')} | Type: {escape(source.type)}"
-        f" | Current Income: {source.current_income}"
-    ]
-    if source.note.strip():
-        parts.append(escape(source.note.strip()))
-    return " | ".join(parts)
+    """One Sources of Income row (markup), columns lined up with
+    `source_table_header`."""
+    name = escape((source.name or "(unnamed)").ljust(_NAME_WIDTH))
+    type_ = escape(source.type.ljust(_INCOME_TYPE_WIDTH))
+    note = escape(source.note.strip()) if source.note.strip() else ""
+    row = f"{name}{type_}{money(source.current_income):>{_FIRST_WIDTH}}  {note}"
+    return row.rstrip()
 
 
 def source_detail_text(source: IncomeSource | None) -> str:

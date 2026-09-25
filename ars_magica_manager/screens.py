@@ -7658,6 +7658,7 @@ class CovenantSheetView(Vertical):
                     yield Static(left, id="eco-wealth-left")
                     yield Static(right, id="eco-wealth-right")
                 with SheetSection(title="Sources of Income", id="section-eco-income"):
+                    yield Static(eco.source_table_header(), classes="eco-header")
                     yield SelectableList(
                         self._eco_rows("income", summary), id="eco-income-list"
                     )

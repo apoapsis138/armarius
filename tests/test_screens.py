@@ -6476,11 +6476,10 @@ async def test_economics_tab_shows_calculated_wealth_and_all_its_sections():
         ]
         assert names("savings") == ["Laborers", "Craftspeople", "Magic", "Emergency"]
         headers = [str(w.render()) for w in view.query(".eco-header").results(Static)]
-        assert "Cost" in headers[0] and "Quantity" in headers[1]
-        assert "Savings" in headers[0] and "Notes" in headers[0]
-        assert _eco_labels(app, "income") == [
-            "Salt Mine | Type: Typical | Current Income: 100"
-        ]
+        assert "Type" in headers[0] and "Income" in headers[0]  # income source header
+        assert "Cost" in headers[1] and "Quantity" in headers[2]
+        assert "Savings" in headers[1] and "Notes" in headers[1]
+        assert _eco_labels(app, "income") == ["Salt Mine Typical 100"]
         assert "Select a source" in _eco_panel(app)
 
 
@@ -6544,10 +6543,10 @@ async def test_a_new_income_source_takes_its_income_from_its_type_unless_typed_o
         await _add_income(pilot, app, name="Toll", type="Lesser", income=55)
         await _add_income(pilot, app, name="Idle Land", type="None")
         assert _eco_labels(app, "income") == [
-            "Salt Mine | Type: Typical | Current Income: 100",
-            "Old Quarry | Type: Legendary | Current Income: 1000",
-            "Toll | Type: Lesser | Current Income: 55",
-            "Idle Land | Type: None | Current Income: 0",
+            "Salt Mine Typical 100",
+            "Old Quarry Legendary 1000",
+            "Toll Lesser 55",
+            "Idle Land None 0",
         ]
         # 100 + 1000 + 55 + 0
         assert re.search(r"Total Income:\s+1155\b", _eco_wealth(app))
@@ -6680,8 +6679,8 @@ async def test_improve_updates_multiplier_and_projected_income_live_then_confirm
         )
         label = _eco_labels(app, "income")[0]
         assert label == (
-            "Salt Mine | Type: Typical | Current Income: 150 | "
-            "1220 - Salt Mine experienced Boom changing Income from 100 to 150."
+            "Salt Mine Typical 150 1220 - Salt Mine experienced Boom "
+            "changing Income from 100 to 150."
         )
         await _select_eco_row(pilot, app, "income", 0)
         panel = _eco_panel(app)
