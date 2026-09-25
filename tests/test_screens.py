@@ -5117,7 +5117,7 @@ async def test_magi_and_companions_are_listed_from_sheets_and_choosing_fills_the
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_covenant(pilot, app)
         assert _inh_labels(app, "magus") == [
-            "Corvinus | House Bonisagus | Year Born: 1195 | The Gift"
+            "Corvinus            Bonisagus             1195  The Gift"
         ]
         assert _inh_labels(app, "companion") == ["Alys | Year Born: Unknown"]
 
@@ -5150,7 +5150,7 @@ async def test_add_an_npc_magus_with_an_unknown_year():
         await _wait_until(pilot, lambda: len(_inh_labels(app, "magus")) == 2)
 
         assert _inh_labels(app, "magus")[1] == (
-            "Hidden Hermit | House Criamon | Year Born: Unknown | Blatant Gift"
+            "Hidden Hermit       Criamon            Unknown  Blatant Gift"
         )
         assert _inh_title(app, "magus") == "Magi (2)"
 
@@ -5181,7 +5181,7 @@ async def test_editing_a_listed_magus_only_changes_covenant_side_fields():
         _fill(app, description="Trusted **completely**.")
         await _save_dialog(pilot, app)
         await _wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
-        assert _inh_labels(app, "magus")[0].startswith("Corvinus | House Bonisagus")
+        assert _inh_labels(app, "magus")[0].startswith("Corvinus            Bonisagus")
 
     [record] = _records("magus")
     assert record.character_id == "mag1" and record.description.startswith("Trusted")

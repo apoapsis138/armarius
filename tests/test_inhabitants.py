@@ -294,9 +294,6 @@ def test_row_labels_follow_the_paper_sheet_per_kind():
         Inhabitant(id="t", kind="turb", name="Thomae", responsibility="Shield Grog"),
         Inhabitant(id="h", kind="horse", name="Grey", quantity=3),
     ]
-    magi = _labels(saga, cov, "magus")
-    assert magi[0] == "Corvinus | House Bonisagus | Year Born: 1195 | The Gift"
-    assert magi[1] == "NPC | House Unknown | Year Born: Unknown | Blatant Gift"
     assert _labels(saga, cov, "craftsperson") == [
         "Gerhard | Blacksmithing | Score: 7 | Qty: 1 | Year Born: 1187"
     ]
@@ -304,6 +301,23 @@ def test_row_labels_follow_the_paper_sheet_per_kind():
         "Thomae | Shield Grog | Qty: 1 | Year Born: Unknown"
     ]
     assert _labels(saga, cov, "horse") == ["Grey | Qty: 3 | Year Born: Unknown"]
+
+
+def test_magus_row_label_lines_up_under_the_table_header():
+    saga, cov = _saga()
+    cov.inhabitants.append(
+        Inhabitant(id="m", kind="magus", name="NPC", year_born=None, gift="Blatant")
+    )
+    header = inh.magus_table_header()
+    rows = [inh.magus_row_label(e) for e in inh.entries_for_kind(saga, cov, "magus")]
+    assert rows == [
+        "Corvinus            Bonisagus             1195  The Gift",
+        "NPC                 Unknown            Unknown  Blatant Gift",
+    ]
+    assert header == "  Name                House            Year Born  Gift"
+    # The House and Year Born columns line up between the header and rows.
+    assert header.index("House") == 2 + inh._MAGUS_NAME_WIDTH
+    assert header.index("Gift") == 2 + rows[0].index("The Gift")
 
 
 def test_other_covenfolk_row_label_shows_role_qty_and_year_born_only_if_one():

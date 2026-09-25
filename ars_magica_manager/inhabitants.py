@@ -501,6 +501,37 @@ def house_name(house_id: str | None) -> str:
     return house.name if house is not None else house_id
 
 
+def _fit(text: str, width: int) -> str:
+    text = text.replace("\n", " ")
+    if len(text) > width:
+        text = text[: width - 1] + "…"
+    return text.ljust(width)
+
+
+_MAGUS_NAME_WIDTH = 20
+_MAGUS_HOUSE_WIDTH = 16
+_MAGUS_YEAR_WIDTH = 10
+
+
+def magus_table_header() -> str:
+    """The column titles above the Magi list; the two-character indent is the
+    list's selector marker."""
+    return (
+        f"  {'Name':<{_MAGUS_NAME_WIDTH}}{'House':<{_MAGUS_HOUSE_WIDTH}}"
+        f"{'Year Born':>{_MAGUS_YEAR_WIDTH}}  Gift"
+    )
+
+
+def magus_row_label(entry: InhabitantEntry) -> str:
+    """One Magi list row (markup), columns lined up with `magus_table_header`."""
+    name = _fit(entry.name or "(unnamed)", _MAGUS_NAME_WIDTH)
+    house = _fit(house_name(entry.house_id) or "Unknown", _MAGUS_HOUSE_WIDTH)
+    return (
+        f"{escape(name)}{escape(house)}"
+        f"{_year(entry.year_born):>{_MAGUS_YEAR_WIDTH}}  {escape(entry.gift)}"
+    )
+
+
 def row_label(entry: InhabitantEntry) -> str:
     """One list row (markup), following the layout of the paper sheet."""
     kind = entry.kind

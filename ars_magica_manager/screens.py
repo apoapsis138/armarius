@@ -7506,6 +7506,12 @@ class CovenantSheetView(Vertical):
         color: $text-muted;
     }
 
+    CovenantSheetView .inh-header {
+        width: 1fr;
+        height: auto;
+        color: $text-muted;
+    }
+
     CovenantSheetView #eco-panel {
         width: 1fr;
         height: auto;
@@ -7608,6 +7614,8 @@ class CovenantSheetView(Vertical):
                     with SheetSection(
                         title=self._inh_title(kind), id=f"section-inh-{kind}"
                     ):
+                        if kind == "magus":
+                            yield Static(inh.magus_table_header(), classes="inh-header")
                         yield SelectableList(
                             self._inh_rows(kind), id=f"inh-{kind}-list"
                         )
@@ -7728,7 +7736,8 @@ class CovenantSheetView(Vertical):
         return inh.entries_for_kind(self.saga, self.covenant, kind)
 
     def _inh_rows(self, kind: str) -> list[tuple[int, str]]:
-        return [(i, inh.row_label(e)) for i, e in enumerate(self._inh_entries(kind))]
+        label = inh.magus_row_label if kind == "magus" else inh.row_label
+        return [(i, label(e)) for i, e in enumerate(self._inh_entries(kind))]
 
     def _inh_title(self, kind: str) -> str:
         """ "Magi (1)": the list's headcount -- quantities added up."""
