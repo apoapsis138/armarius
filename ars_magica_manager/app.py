@@ -8,6 +8,7 @@ from textual.app import App
 from textual.binding import BindingType
 
 from .screens import SagaPickerScreen
+from .themes import SCRIPTORUM, SCRIPTORUM_DARK
 
 
 class ArsMagicaManagerApp(App[None]):
@@ -17,4 +18,6 @@ class ArsMagicaManagerApp(App[None]):
     BINDINGS: ClassVar[list[BindingType]] = [("q", "quit", "Quit")]
 
     def on_mount(self) -> None:
+        self.register_theme(SCRIPTORUM)
+        self.register_theme(SCRIPTORUM_DARK)
         self.push_screen(SagaPickerScreen())
