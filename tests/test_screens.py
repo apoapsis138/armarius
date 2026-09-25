@@ -5119,7 +5119,9 @@ async def test_magi_and_companions_are_listed_from_sheets_and_choosing_fills_the
         assert _inh_labels(app, "magus") == [
             "Corvinus            Bonisagus             1195  The Gift"
         ]
-        assert _inh_labels(app, "companion") == ["Alys | Year Born: Unknown"]
+        assert _inh_labels(app, "companion") == [
+            "Alys                                                   Unknown"
+        ]
 
         await _select_inh_row(pilot, app, "magus", 0)
         panel = _inh_view(app).query_one("#inh-panel", Static)
@@ -5274,7 +5276,7 @@ async def test_specialist_from_an_unassigned_grog_prefills_and_marks_it_assigned
         await _save_dialog(pilot, app)
         await _wait_until(pilot, lambda: len(_inh_labels(app, "specialist")) == 1)
         assert _inh_labels(app, "specialist") == [
-            "Old Thomae | Teaches Latin | Teacher | Year Born: 1193"
+            "Old Thomae          Teaches Latin     Teacher             1193"
         ]
 
         # Now assigned, so he's no longer offered.
@@ -5310,7 +5312,7 @@ async def test_a_brand_new_grog_type_person_needs_a_name_but_year_born_may_stay_
         await _save_dialog(pilot, app)  # no year: fine
         await _wait_until(pilot, lambda: len(_inh_labels(app, "specialist")) == 1)
         assert _inh_labels(app, "specialist") == [
-            "Visiting Steward | Steward | Year Born: Unknown"
+            "Visiting Steward                      Steward          Unknown"
         ]
 
     [record] = _records("specialist")
@@ -5333,7 +5335,7 @@ async def test_a_grog_without_a_year_born_is_assigned_with_it_unknown():
         assert app.screen.query_one("#fld-year_born", Input).value == ""
         await _save_dialog(pilot, app)
         await _wait_until(pilot, lambda: len(_inh_labels(app, "turb")) == 1)
-        assert "Year Born: Unknown" in _inh_labels(app, "turb")[0]
+        assert _inh_labels(app, "turb")[0].endswith("Unknown")
 
 
 async def test_other_covenfolk_requires_a_covenant_role_and_suppresses_it_when_redundant():
@@ -5366,7 +5368,7 @@ async def test_other_covenfolk_requires_a_covenant_role_and_suppresses_it_when_r
         await _save_dialog(pilot, app)
         await _wait_until(pilot, lambda: len(_inh_labels(app, "inhabitant")) == 1)
         assert _inh_labels(app, "inhabitant") == [
-            "Old Marta | Dependent | Qty: 1 | Year Born: 1180"
+            "Old Marta           Dependent         1        1180"
         ]
 
         await _select_inh_row(pilot, app, "inhabitant", 0)
@@ -5395,9 +5397,11 @@ async def test_other_covenfolk_named_the_plural_of_its_role_hides_the_role_in_th
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_covenant(pilot, app)
-        # Qty > 1: the role is redundant with the name, and Year Born is left
-        # out entirely (no single birth year for a group).
-        assert _inh_labels(app, "inhabitant") == ["Servants | Qty: 4"]
+        # Qty > 1: the role is redundant with the name, and the Year Born
+        # column is "-" (no single birth year for a group).
+        assert _inh_labels(app, "inhabitant") == [
+            "Servants                              4           -"
+        ]
 
         await _select_inh_row(pilot, app, "inhabitant", 0)
         panel = str(_inh_view(app).query_one("#inh-panel", Static).render())
@@ -5439,7 +5443,7 @@ async def test_craftsperson_links_one_of_the_grogs_abilities_and_stores_craft_fi
         await _wait_until(pilot, lambda: len(_inh_labels(app, "craftsperson")) == 1)
         # Tied to the sheet's Brawl (Level 4): that wins over the typed 7.
         assert _inh_labels(app, "craftsperson") == [
-            "Old Thomae | Blacksmithing | Score: 4 | Qty: 1 | Year Born: 1193"
+            "Old Thomae          Blacksmithing           4    1        1193"
         ]
 
         # Editing again shows the score as read-only, taken from the Ability.
@@ -5509,7 +5513,9 @@ async def test_craftsperson_score_is_typed_when_there_is_no_sheet_ability():
         _fill(app, name="Travelling Smith", responsibility="Smith", skill_value=6)
         await _save_dialog(pilot, app)
         await _wait_until(pilot, lambda: len(_inh_labels(app, "craftsperson")) == 1)
-        assert "Score: 6" in _inh_labels(app, "craftsperson")[0]
+        assert _inh_labels(app, "craftsperson")[0] == (
+            "Travelling Smith    Smith                   6    1     Unknown"
+        )
 
         await _select_inh_row(pilot, app, "craftsperson", 0)
         await pilot.press("e")
@@ -5556,7 +5562,7 @@ async def test_horses_and_livestock_take_a_blank_year_and_a_quantity():
             _fill(app, name=name, quantity=4)
             await _save_dialog(pilot, app)
             await _wait_until(pilot, lambda kind=kind: len(_inh_labels(app, kind)) == 1)
-            assert _inh_labels(app, kind) == [f"{name} | Qty: 4 | Year Born: Unknown"]
+            assert _inh_labels(app, kind) == [f"{name:<20}    4     Unknown"]
         assert _inh_title(app, "horse") == "Horses (4)"
 
 

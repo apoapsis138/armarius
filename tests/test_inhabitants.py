@@ -169,7 +169,7 @@ def test_a_craftspersons_score_is_manual_unless_tied_to_a_sheets_ability():
     entries = inh.entries_for_kind(saga, cov, "craftsperson")
     assert [e.skill_value for e in entries] == [6, 3, 4, 2]
     assert [e.skill_from_ability for e in entries] == [None, None, 4, None]
-    assert "Score: 4" in _plain(inh.row_label(entries[2]))
+    assert _plain(inh.row_label(entries[2])).split() == ["B", "4", "1", "Unknown"]
     assert "(from the linked Ability)" in inh.detail_text(entries[2], 1220)
     assert "(from the linked Ability)" not in inh.detail_text(entries[1], 1220)
 
@@ -295,12 +295,12 @@ def test_row_labels_follow_the_paper_sheet_per_kind():
         Inhabitant(id="h", kind="horse", name="Grey", quantity=3),
     ]
     assert _labels(saga, cov, "craftsperson") == [
-        "Gerhard | Blacksmithing | Score: 7 | Qty: 1 | Year Born: 1187"
+        "Gerhard             Blacksmithing           7    1        1187"
     ]
     assert _labels(saga, cov, "turb") == [
-        "Thomae | Shield Grog | Qty: 1 | Year Born: Unknown"
+        "Thomae              Shield Grog           1     Unknown"
     ]
-    assert _labels(saga, cov, "horse") == ["Grey | Qty: 3 | Year Born: Unknown"]
+    assert _labels(saga, cov, "horse") == ["Grey                    3     Unknown"]
 
 
 def test_magus_row_label_lines_up_under_the_table_header():
@@ -308,15 +308,15 @@ def test_magus_row_label_lines_up_under_the_table_header():
     cov.inhabitants.append(
         Inhabitant(id="m", kind="magus", name="NPC", year_born=None, gift="Blatant")
     )
-    header = inh.magus_table_header()
-    rows = [inh.magus_row_label(e) for e in inh.entries_for_kind(saga, cov, "magus")]
+    header = inh.table_header("magus")
+    rows = [inh.row_label(e) for e in inh.entries_for_kind(saga, cov, "magus")]
     assert rows == [
         "Corvinus            Bonisagus             1195  The Gift",
         "NPC                 Unknown            Unknown  Blatant Gift",
     ]
     assert header == "  Name                House            Year Born  Gift"
     # The House and Year Born columns line up between the header and rows.
-    assert header.index("House") == 2 + inh._MAGUS_NAME_WIDTH
+    assert header.index("House") == 2 + inh._NAME_WIDTH
     assert header.index("Gift") == 2 + rows[0].index("The Gift")
 
 
@@ -331,7 +331,7 @@ def test_other_covenfolk_row_label_shows_role_qty_and_year_born_only_if_one():
             role="Dependent",
             year_born=1180,
         ),
-        # A named group: role shown, Year Born left out (Qty > 1).
+        # A named group: role shown, Year Born column is "-" (Qty > 1).
         Inhabitant(
             id="b",
             kind="inhabitant",
@@ -350,10 +350,10 @@ def test_other_covenfolk_row_label_shows_role_qty_and_year_born_only_if_one():
         ),
     ]
     labels = _labels(saga, cov, "inhabitant")
-    assert labels[0] == "Old Marta | Dependent | Qty: 1 | Year Born: 1180"
-    assert labels[1] == "The Miller Family | Dependent | Qty: 4"
-    assert labels[2] == "Servants | Qty: 3"
-    assert labels[3] == "Servants | Dependent | Qty: 2"
+    assert labels[0] == "Old Marta           Dependent         1        1180"
+    assert labels[1] == "The Miller Family   Dependent         4           -"
+    assert labels[2] == "Servants                              3           -"
+    assert labels[3] == "Servants            Dependent         2           -"
 
 
 def test_other_covenfolk_detail_panel_shows_the_role():

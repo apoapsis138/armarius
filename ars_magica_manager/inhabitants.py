@@ -508,68 +508,77 @@ def _fit(text: str, width: int) -> str:
     return text.ljust(width)
 
 
-_MAGUS_NAME_WIDTH = 20
-_MAGUS_HOUSE_WIDTH = 16
-_MAGUS_YEAR_WIDTH = 10
+_NAME_WIDTH = 20
+_HOUSE_WIDTH = 16
+_YEAR_WIDTH = 10
+_RESPONSIBILITY_WIDTH = 18
+_ROLE_WIDTH = 14
+_SCORE_WIDTH = 7
+_QTY_WIDTH = 5
 
 
-def magus_table_header() -> str:
-    """The column titles above the Magi list; the two-character indent is the
-    list's selector marker."""
-    return (
-        f"  {'Name':<{_MAGUS_NAME_WIDTH}}{'House':<{_MAGUS_HOUSE_WIDTH}}"
-        f"{'Year Born':>{_MAGUS_YEAR_WIDTH}}  Gift"
-    )
-
-
-def magus_row_label(entry: InhabitantEntry) -> str:
-    """One Magi list row (markup), columns lined up with `magus_table_header`."""
-    name = _fit(entry.name or "(unnamed)", _MAGUS_NAME_WIDTH)
-    house = _fit(house_name(entry.house_id) or "Unknown", _MAGUS_HOUSE_WIDTH)
-    return (
-        f"{escape(name)}{escape(house)}"
-        f"{_year(entry.year_born):>{_MAGUS_YEAR_WIDTH}}  {escape(entry.gift)}"
-    )
+def table_header(kind: str) -> str:
+    """The column titles above one kind's Inhabitants list; the two-character
+    indent is the list's selector marker."""
+    name = f"{'Name':<{_NAME_WIDTH}}"
+    year = f"{'Year Born':>{_YEAR_WIDTH}}"
+    if kind == "magus":
+        return f"  {name}{'House':<{_HOUSE_WIDTH}}{year}  Gift"
+    if kind in ("companion", "specialist"):
+        return (
+            f"  {name}{'Responsibility':<{_RESPONSIBILITY_WIDTH}}"
+            f"{'Role':<{_ROLE_WIDTH}}{year}"
+        )
+    if kind == "craftsperson":
+        return (
+            f"  {name}{'Responsibility':<{_RESPONSIBILITY_WIDTH}}"
+            f"{'Score':>{_SCORE_WIDTH}}{'Qty':>{_QTY_WIDTH}}  {year}"
+        )
+    if kind == "turb":
+        return (
+            f"  {name}{'Responsibility':<{_RESPONSIBILITY_WIDTH}}"
+            f"{'Qty':>{_QTY_WIDTH}}  {year}"
+        )
+    if kind == "inhabitant":
+        return f"  {name}{'Role':<{_ROLE_WIDTH}}{'Qty':>{_QTY_WIDTH}}  {year}"
+    return f"  {name}{'Qty':>{_QTY_WIDTH}}  {year}"  # horse, livestock
 
 
 def row_label(entry: InhabitantEntry) -> str:
-    """One list row (markup), following the layout of the paper sheet."""
+    """One list row (markup), columns lined up with `table_header`."""
     kind = entry.kind
-    parts: list[str] = [escape(entry.name or "(unnamed)")]
-
-    def add(text: str) -> None:
-        if text:
-            parts.append(escape(text))
-
+    name = escape(_fit(entry.name or "(unnamed)", _NAME_WIDTH))
+    year = f"{_year(entry.year_born):>{_YEAR_WIDTH}}"
     if kind == "magus":
-        add(f"House {house_name(entry.house_id) or 'Unknown'}")
-        add(f"Year Born: {_year(entry.year_born)}")
-        add(entry.gift)
-    elif kind == "companion" or kind == "specialist":
-        add(entry.responsibility)
-        add(entry.role)
-        add(f"Year Born: {_year(entry.year_born)}")
-    elif kind == "craftsperson":
-        add(entry.responsibility)
-        add(f"Score: {entry.skill_value}")
-        add(f"Qty: {entry.quantity}")
-        add(f"Year Born: {_year(entry.year_born)}")
-    elif kind == "turb":
-        add(entry.responsibility)
-        add(f"Qty: {entry.quantity}")
-        add(f"Year Born: {_year(entry.year_born)}")
-    elif kind == "inhabitant":
-        # The role is redundant (and left out) when the name is already its
+        house = escape(_fit(house_name(entry.house_id) or "Unknown", _HOUSE_WIDTH))
+        return f"{name}{house}{year}  {escape(entry.gift)}"
+    if kind in ("companion", "specialist"):
+        resp = escape(_fit(entry.responsibility, _RESPONSIBILITY_WIDTH))
+        role = escape(_fit(entry.role, _ROLE_WIDTH))
+        return f"{name}{resp}{role}{year}"
+    if kind == "craftsperson":
+        resp = escape(_fit(entry.responsibility, _RESPONSIBILITY_WIDTH))
+        score = f"{entry.skill_value:>{_SCORE_WIDTH}}"
+        qty = f"{entry.quantity:>{_QTY_WIDTH}}"
+        return f"{name}{resp}{score}{qty}  {year}"
+    if kind == "turb":
+        resp = escape(_fit(entry.responsibility, _RESPONSIBILITY_WIDTH))
+        qty = f"{entry.quantity:>{_QTY_WIDTH}}"
+        return f"{name}{resp}{qty}  {year}"
+    if kind == "inhabitant":
+        # The role is redundant (and left blank) when the name is already its
         # plural, e.g. a "Teamsters" entry tagged Teamster.
-        if entry.role and entry.name != OTHER_COVENFOLK_ROLE_PLURALS.get(entry.role):
-            add(entry.role)
-        add(f"Qty: {entry.quantity}")
-        if entry.quantity == 1:
-            add(f"Year Born: {_year(entry.year_born)}")
-    else:  # horse, livestock
-        add(f"Qty: {entry.quantity}")
-        add(f"Year Born: {_year(entry.year_born)}")
-    return " | ".join(parts)
+        role_text = (
+            entry.role
+            if entry.role and entry.name != OTHER_COVENFOLK_ROLE_PLURALS.get(entry.role)
+            else ""
+        )
+        role = escape(_fit(role_text, _ROLE_WIDTH))
+        qty = f"{entry.quantity:>{_QTY_WIDTH}}"
+        shown_year = year if entry.quantity == 1 else f"{'-':>{_YEAR_WIDTH}}"
+        return f"{name}{role}{qty}  {shown_year}"
+    qty = f"{entry.quantity:>{_QTY_WIDTH}}"  # horse, livestock
+    return f"{name}{qty}  {year}"
 
 
 def detail_text(entry: InhabitantEntry | None, current_year: int) -> str:
