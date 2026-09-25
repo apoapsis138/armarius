@@ -415,6 +415,13 @@ def _possession_fields(
                 "(not set)" if entry.build_points is None else entry.build_points,
             )
         )
+        if kind == "sanctum":
+            fields.append(
+                DialogField("_q", "Quality", "info", str(entry.quality) + note)
+            )
+            fields.append(
+                DialogField("_u", "Upkeep (Points)", "info", str(entry.upkeep) + note)
+            )
     else:
         fields.append(
             DialogField("name", "Name", "text", value("name", ""), required=True)
@@ -432,20 +439,17 @@ def _possession_fields(
                 # Unowned sanctums are "Free": narratively, visitors can use them.
                 DialogField("owner", "Owner", "text", value("owner", "Free")),
                 DialogField("location", "Location", "text", value("location", "")),
-            ]
-        fields += [
-            DialogField("quality", "Quality", "optint", value("quality", None)),
-            DialogField("upkeep", "Upkeep (Points)", "optint", value("upkeep", None)),
-        ]
-        if not auto:
-            fields.append(
+                DialogField("quality", "Quality", "optint", value("quality", None)),
+                DialogField(
+                    "upkeep", "Upkeep (Points)", "optint", value("upkeep", None)
+                ),
                 DialogField(
                     "build_points",
                     "Build Points",
                     "optint",
                     value("build_points", None),
-                )
-            )
+                ),
+            ]
         fields.append(
             DialogField(
                 "usage",
@@ -7701,7 +7705,9 @@ class CovenantSheetView(Vertical):
             self.query_one("#eco-panel", Static).update(eco.source_detail_text(None))
 
     def _pos_entries(self, kind: str) -> list[pos.PossessionEntry]:
-        return pos.entries_for_kind(self.saga, self.covenant, kind)
+        return pos.entries_for_kind(
+            self.saga, self.covenant, kind, catalog.load_lab_virtue_flaw_catalog_by_id()
+        )
 
     def _pos_rows(self, kind: str) -> list[tuple[int, str]]:
         return [(i, pos.row_label(e)) for i, e in enumerate(self._pos_entries(kind))]
@@ -9486,7 +9492,9 @@ class WorkspaceScreen(Screen[None]):
         covenant = self.selected_covenant
         if covenant is None:
             return []
-        return pos.entries_for_kind(self.saga, covenant, kind)
+        return pos.entries_for_kind(
+            self.saga, covenant, kind, catalog.load_lab_virtue_flaw_catalog_by_id()
+        )
 
     def _add_possession(self, kind: str) -> None:
         self._possession_form(kind, None)

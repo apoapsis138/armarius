@@ -5910,8 +5910,11 @@ async def test_possessions_tab_has_its_seven_sections_and_lists_the_labs_as_sanc
             "Items",
         ]
         assert all(not section.collapsed for section in sections)
-        # The laboratory is a sanctum without anyone adding it.
-        assert _pos_labels(app, "sanctum") == ["Test Lab | Owner: Leandro"]
+        # The laboratory is a sanctum without anyone adding it, Quality/Upkeep
+        # read live from its Lab Characteristics.
+        assert _pos_labels(app, "sanctum") == [
+            "Test Lab | Owner: Leandro | Quality: 0 | Upkeep: 0 Points"
+        ]
         assert "Select a possession" in _pos_panel(app)
 
 
@@ -5987,22 +5990,19 @@ async def test_a_laboratory_sanctum_edits_only_covenant_side_fields_and_cannot_b
         await pilot.press("e")
         await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
-        for key in ("name", "owner", "location", "build_points"):
+        for key in ("name", "owner", "location", "build_points", "quality", "upkeep"):
             assert not app.screen.query(f"#fld-{key}"), key  # from the laboratory
         assert (
             app.screen.query_one("#fld-usage", Select).value == "Standard (2 Seasons)"
         )  # the default
         _fill(
             app,
-            quality=3,
-            upkeep=30,
             usage="Heavy (3+ Seasons)",
             description="Busy *all* year.",
         )
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: "Quality: 3" in _pos_labels(app, "sanctum")[0])
         assert _pos_labels(app, "sanctum") == [
-            "Test Lab | Owner: Leandro | Quality: 3 | Upkeep: 30 Points"
+            "Test Lab | Owner: Leandro | Quality: 0 | Upkeep: 0 Points"
         ]
 
         await _select_pos_row(pilot, app, "sanctum", 0)

@@ -9,6 +9,7 @@ from ars_magica_manager.models import (
     POSSESSION_KINDS,
     Character,
     Covenant,
+    LabCharacteristics,
     Laboratory,
     Possession,
     Saga,
@@ -30,6 +31,7 @@ def _saga() -> tuple[Saga, Covenant]:
                 owner_id="mag1",
                 location="The north tower",
                 build_points=30,
+                characteristics=LabCharacteristics(general_quality=4, upkeep=12),
             ),
             Laboratory(id="lab2", covenant_id="cov2", name="Not Ours"),
             Laboratory(id="lab3", covenant_id=None, name="Loose Lab"),
@@ -78,8 +80,8 @@ def test_a_record_for_a_laboratory_only_adds_covenant_side_fields():
             name="IGNORED",
             owner="IGNORED",
             location="IGNORED",
-            quality=4,
-            upkeep=12,
+            quality=999,  # ignored -- Quality comes from the laboratory
+            upkeep=999,  # ignored -- Upkeep comes from the laboratory
             usage="Heavy (3+ Seasons)",
             description="Very busy.",
         )
@@ -94,6 +96,22 @@ def test_a_record_for_a_laboratory_only_adds_covenant_side_fields():
     )  # live from the laboratory
     assert (entry.quality, entry.upkeep, entry.usage) == (4, 12, "Heavy (3+ Seasons)")
     assert entry.description == "Very busy."
+
+
+def test_sanctum_quality_and_upkeep_come_from_the_laboratory():
+    """A laboratory's General Quality and Upkeep Characteristics (manual plus
+    any Virtue/Flaw modifiers) map directly onto its Sanctum entry."""
+    saga, cov = _saga()
+    lab = saga.laboratories[0]
+    entry = pos.entries_for_kind(saga, cov, "sanctum")[0]
+    assert (entry.quality, entry.upkeep) == (
+        lab.characteristics.general_quality,
+        lab.characteristics.upkeep,
+    )
+    lab.characteristics.general_quality = 0
+    lab.characteristics.upkeep = 0
+    entry = pos.entries_for_kind(saga, cov, "sanctum")[0]
+    assert (entry.quality, entry.upkeep) == (0, 0)
 
 
 def test_other_kinds_list_only_their_records_in_order():
@@ -151,7 +169,9 @@ def test_row_labels_show_the_fields_the_sheet_lists():
         "Bare Plot",  # every field but the name is optional
     ]
     sanctums = _labels(saga, cov, "sanctum")
-    assert sanctums[0] == "Obsidian Crucible | Owner: Corvinus"
+    assert sanctums[0] == (
+        "Obsidian Crucible | Owner: Corvinus | Quality: 4 | Upkeep: 12 Points"
+    )
     assert sanctums[1] == "Study | Owner: Leandro | Quality: 3 | Upkeep: 10 Points"
     assert _labels(saga, cov, "weapon") == ["Crossbows | Qty: 6"]
     assert _labels(saga, cov, "vis_source") == [
@@ -173,8 +193,6 @@ def test_detail_text_shows_everything_for_a_sanctum_and_renders_emphasis():
             id="o",
             kind="sanctum",
             lab_id="lab1",
-            quality=4,
-            upkeep=12,
             description="Works **all** year, *never* idle.",
         )
     )

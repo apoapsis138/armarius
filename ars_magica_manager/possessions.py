@@ -14,8 +14,10 @@ from .models import (
     GEAR_QUALITY_DEFAULT,
     Covenant,
     Laboratory,
+    LabVirtueFlawDef,
     Possession,
     Saga,
+    lab_characteristic_total,
 )
 
 #: Section titles on the tab.
@@ -58,6 +60,7 @@ class PossessionEntry:
     record: Possession | None
     lab: Laboratory | None = None
     lab_owner: str = ""
+    lab_catalog: dict[str, LabVirtueFlawDef] | None = None
 
     def _own(self, attribute: str, default):
         return getattr(self.record, attribute) if self.record is not None else default
@@ -86,10 +89,20 @@ class PossessionEntry:
 
     @property
     def quality(self) -> int | None:
+        if self.lab is not None:
+            _, _, _, total = lab_characteristic_total(
+                self.lab, self.lab_catalog or {}, "general_quality"
+            )
+            return total
         return self._own("quality", None)
 
     @property
     def upkeep(self) -> int | None:
+        if self.lab is not None:
+            _, _, _, total = lab_characteristic_total(
+                self.lab, self.lab_catalog or {}, "upkeep"
+            )
+            return total
         return self._own("upkeep", None)
 
     @property
@@ -149,7 +162,10 @@ class PossessionEntry:
 
 
 def entries_for_kind(
-    saga: Saga, covenant: Covenant, kind: str
+    saga: Saga,
+    covenant: Covenant,
+    kind: str,
+    lab_catalog: dict[str, LabVirtueFlawDef] | None = None,
 ) -> list[PossessionEntry]:
     """The rows of `kind`'s list, in display order: for Sanctums the covenant's
     laboratories first, then stored entries in the order added."""
@@ -167,7 +183,11 @@ def entries_for_kind(
                 None,
             )
             owner = next((c.name for c in saga.characters if c.id == lab.owner_id), "")
-            entries.append(PossessionEntry(kind, record, lab, lab_owner=owner))
+            entries.append(
+                PossessionEntry(
+                    kind, record, lab, lab_owner=owner, lab_catalog=lab_catalog
+                )
+            )
     for record in covenant.possessions:
         if record.kind != kind:
             continue
