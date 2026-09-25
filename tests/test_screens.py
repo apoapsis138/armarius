@@ -65,18 +65,17 @@ from ars_magica_manager.screens import (
     DuplicateBookScreen,
     EditAgingScreen,
     EditArtsScreen,
-    EditBackgroundScreen,
+    EditBiographicalDetailScreen,
+    EditCharacterInfoScreen,
     EditCharacteristicsScreen,
     EditCovenantDescriptionScreen,
     EditCovenantScreen,
-    EditDescriptionScreen,
     EditFatigueScreen,
     EditHermeticBackgroundScreen,
     EditLabCharacteristicsScreen,
     EditLabIdentityScreen,
     EditWoundsScreen,
     FieldsDialog,
-    IdentityEditScreen,
     ImportScreen,
     ImproveIncomeScreen,
     ItemAddScreen,
@@ -213,25 +212,27 @@ def _known_spell_labels(view) -> str:
 
 
 #: Which top-level character-sheet tab each Collapsible section lives in.
-#: "tab-spells" maps to itself -- the one tab with no sub-sections, keyed by
-#: its own tab id (see WorkspaceScreen._active_character_section()).
+#: "tab-abilities" maps to itself -- the one tab with no sub-sections, keyed
+#: by its own tab id (see WorkspaceScreen._active_character_section()). The
+#: top-panel sections (Info/Characteristics) aren't inside any tab -- see
+#: _open_section()'s handling of them, mirroring _open_lab_section().
 _SECTION_TAB: dict[str, str] = {
-    "section-identity": "tab-identity",
-    "section-background": "tab-identity",
-    "section-description": "tab-identity",
-    "section-characteristics": "tab-identity",
-    "section-abilities": "tab-identity",
-    "section-vf": "tab-identity",
-    "section-aging": "tab-identity",
-    "section-personality-traits": "tab-personality",
-    "section-reputations": "tab-personality",
-    "section-wounds": "tab-personality",
-    "section-fatigue": "tab-personality",
-    "section-inventory": "tab-personality",
+    "section-char-info": "tab-description",  # top panel, not inside any tab
+    "section-char-characteristics": "tab-description",
+    "section-char-biographical": "tab-description",
+    "tab-abilities": "tab-abilities",
+    "section-vf-virtues": "tab-vf",
+    "section-vf-flaws": "tab-vf",
+    "section-personality-traits": "tab-description",
+    "section-reputations": "tab-description",
+    "section-aging": "tab-description",
+    "section-char-health": "tab-description",
+    "section-inventory": "tab-inventory",
+    "section-raw-vis-inventory": "tab-inventory",
     "section-arts": "tab-hermetic",
-    "section-raw-vis": "tab-hermetic",
-    "section-hermetic-background": "tab-hermetic",
-    "tab-spells": "tab-spells",
+    "section-raw-vis-hermetic": "tab-hermetic",
+    "section-known-spells": "tab-hermetic",
+    "section-hermetic-background": "tab-description",
 }
 
 
@@ -242,11 +243,20 @@ async def _open_section(pilot, app, section_id: str) -> None:
     section currently has focus (its title, since CollapsibleTitle is the
     focusable part -- see WorkspaceScreen._active_character_section()), so
     most character-mutation tests need this before pressing
-    'a'/'A'/'e'/'v'/'V'. `section_id` may also be "tab-spells", the one tab
-    with no sub-sections.
+    'a'/'A'/'e'/'v'/'V'. `section_id` may also be "tab-abilities", the one
+    tab with no sub-sections, or one of the top-panel sections (Info/
+    Characteristics), which are focused directly regardless of which tab is
+    active.
     """
     view = app.screen._character_sheet_view
     assert view is not None, "no character sheet is currently shown"
+    if section_id in ("section-char-info", "section-char-characteristics"):
+        await _wait_until(pilot, lambda: view.initial_tab_seen)
+        await pilot.pause()
+        collapsible = view.query_one(f"#{section_id}", Collapsible)
+        collapsible.query_one("CollapsibleTitle").focus()
+        await pilot.pause()
+        return
     tab_id = _SECTION_TAB[section_id]
     view.query_one(TabbedContent).active = tab_id
     await pilot.pause()
@@ -679,17 +689,18 @@ async def test_selecting_character_shows_sheet_fields():
         await _select_character(pilot, app)
 
         view = app.screen._character_sheet_view
-        assert "Name: Leandro" in view._identity_text()
-        assert "Covenant: Test Covenant" in view._identity_text()
-        assert "Assigned Laboratory: Leandro's Sanctum" in view._identity_text()
-        assert "Int 3" in view._characteristics_text()
+        assert view.query_one("#section-char-info", Collapsible).title == "Leandro"
+        assert "Test Covenant" in view._info_right_text()
+        assert "Leandro's Sanctum" in view._info_right_text()
+        assert "Int: +3" in view._characteristics_text()
         labels = _ability_labels(view)
         assert "Magic Theory (Lab Totals) 5 75/0" in labels
         assert "Academic" in [
             label for index, label in view._ability_rows() if index is None
         ]
         assert "Affinity with Creo" in _character_vf_labels(view)
-        assert "Creo (Cr): 10/55" in view._arts_text()
+        creo_row = view._art_row_label("Creo")
+        assert "Creo (Cr)" in creo_row and "10" in creo_row and "55" in creo_row
         assert "Ball of Abysmal Flame" in _known_spell_labels(view)
 
 
@@ -751,7 +762,7 @@ async def test_add_virtue_flaw_without_parameters_to_character():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-vf")
+        await _open_section(pilot, app, "section-vf-virtues")
 
         await pilot.press("v")
         await pilot.pause()
@@ -774,7 +785,7 @@ async def test_add_virtue_flaw_with_parameters_to_character():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-vf")
+        await _open_section(pilot, app, "section-vf-virtues")
 
         await pilot.press("v")
         await pilot.pause()
@@ -804,7 +815,7 @@ async def test_cancelling_param_screen_returns_to_picker_without_adding():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-vf")
+        await _open_section(pilot, app, "section-vf-virtues")
 
         await pilot.press("v")
         await pilot.pause()
@@ -831,7 +842,7 @@ async def test_virtue_flaw_picker_excludes_already_held_entries():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-vf")
+        await _open_section(pilot, app, "section-vf-virtues")
 
         await pilot.press("v")
         await pilot.pause()
@@ -847,7 +858,7 @@ async def test_virtue_flaw_picker_search_filters_by_typed_text():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-vf")
+        await _open_section(pilot, app, "section-vf-virtues")
 
         await pilot.press("v")
         await pilot.pause()
@@ -869,7 +880,7 @@ async def test_virtue_flaw_picker_search_shows_no_matches_message():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-vf")
+        await _open_section(pilot, app, "section-vf-virtues")
 
         await pilot.press("v")
         await pilot.pause()
@@ -888,7 +899,7 @@ async def test_virtue_flaw_picker_enter_in_search_activates_top_match():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-vf")
+        await _open_section(pilot, app, "section-vf-virtues")
 
         await pilot.press("v")
         await pilot.pause()
@@ -939,7 +950,7 @@ async def test_ability_picker_search_filters_by_typed_text():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-abilities")
+        await _open_section(pilot, app, "tab-abilities")
 
         await pilot.press("a")
         await pilot.pause()
@@ -961,7 +972,7 @@ async def test_picker_down_key_moves_focus_from_search_to_list():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-abilities")
+        await _open_section(pilot, app, "tab-abilities")
 
         await pilot.press("a")
         await pilot.pause()
@@ -1092,7 +1103,7 @@ async def test_add_ability_without_parameters_to_character():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-abilities")
+        await _open_section(pilot, app, "tab-abilities")
 
         await pilot.press("a")
         await pilot.pause()
@@ -1128,7 +1139,7 @@ async def test_add_ability_with_parameters_to_character():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-abilities")
+        await _open_section(pilot, app, "tab-abilities")
 
         await pilot.press("a")
         await pilot.pause()
@@ -1165,7 +1176,7 @@ async def test_cancelling_ability_details_returns_to_picker_without_adding():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-abilities")
+        await _open_section(pilot, app, "tab-abilities")
 
         await pilot.press("a")
         await pilot.pause()
@@ -1192,7 +1203,7 @@ async def test_ability_picker_excludes_non_templated_duplicates_but_keeps_templa
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-abilities")
+        await _open_section(pilot, app, "tab-abilities")
 
         await pilot.press("a")
         await pilot.pause()
@@ -1209,7 +1220,7 @@ async def test_remove_ability_from_character():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-abilities")
+        await _open_section(pilot, app, "tab-abilities")
         assert "Magic Theory" in _ability_labels(app.screen._character_sheet_view)
 
         await pilot.press("A")
@@ -1235,7 +1246,7 @@ async def test_remove_virtue_flaw_from_character():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-vf")
+        await _open_section(pilot, app, "section-vf-virtues")
         assert "Affinity with Creo" in _character_vf_labels(
             app.screen._character_sheet_view
         )
@@ -1291,7 +1302,7 @@ async def test_remove_with_nothing_to_remove_stays_on_same_screen():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-abilities")
+        await _open_section(pilot, app, "tab-abilities")
 
         await pilot.press("A")
         await pilot.pause()
@@ -1306,7 +1317,7 @@ async def test_cancelling_removal_picker_keeps_the_item():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-vf")
+        await _open_section(pilot, app, "section-vf-virtues")
 
         await pilot.press("V")
         await pilot.pause()
@@ -1411,6 +1422,44 @@ async def test_edit_arts_cancel_discards_changes():
     }
 
 
+async def test_hermetic_magic_arts_and_spells_share_one_details_panel():
+    """Magical Arts' two columns and Known Spells are three separate
+    SelectableLists that share a single details panel docked at the
+    bottom of the Hermetic Magic tab -- choosing a row in any one of them
+    must clear the other two's selection (see
+    CharacterSheetView.on_selectable_list_chosen())."""
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_character(pilot, app)
+        view = app.screen._character_sheet_view
+        await _open_section(pilot, app, "section-arts")
+
+        techniques = view.query_one("#arts-techniques-list", SelectableList)
+        forms = view.query_one("#arts-forms-list", SelectableList)
+        spells = view.query_one("#known-spells-list", SelectableList)
+        info = view.query_one("#hermetic-info", Static)
+
+        techniques.highlighted = 0  # Creo
+        await pilot.pause()
+        assert "Creo (Cr)" in str(info.render())
+        assert forms.selected_data_index is None
+        assert spells.selected_data_index is None
+
+        forms.highlighted = 5  # Ignem
+        await pilot.pause()
+        assert "Ignem (Ig)" in str(info.render())
+        assert techniques.selected_data_index is None
+        assert spells.selected_data_index is None
+
+        spells.highlighted = 0  # Ball of Abysmal Flame
+        await pilot.pause()
+        assert "Ball of Abysmal Flame" in str(info.render())
+        assert techniques.selected_data_index is None
+        assert forms.selected_data_index is None
+
+
 async def test_edit_arts_grid_fits_default_terminal_and_accepts_real_typing():
     # A default-sized terminal (80x24) is what run_test uses unless told
     # otherwise, and matches a typical real terminal -- this test drives
@@ -1481,21 +1530,62 @@ async def test_arts_and_spells_tabs_are_absent_for_non_magi():
         tabbed = view.query_one(TabbedContent)
         tab_ids = {pane.id for pane in tabbed.query("TabPane")}
         assert "tab-hermetic" not in tab_ids
-        assert "tab-spells" not in tab_ids
+        assert "tab-lab" not in tab_ids
         # Tabs/sections that do apply to every character type are still present.
-        assert "tab-identity" in tab_ids
-        assert "tab-personality" in tab_ids
+        assert "tab-description" in tab_ids
+        assert "tab-abilities" in tab_ids
+        assert "tab-vf" in tab_ids
+        assert "tab-inventory" in tab_ids
+        assert "tab-diary" in tab_ids
         section_ids = {c.id for c in view.query(Collapsible)}
-        assert "section-abilities" in section_ids
         assert "section-inventory" in section_ids
         assert "section-arts" not in section_ids
         assert "section-hermetic-background" not in section_ids
+        assert "section-known-spells" not in section_ids
+        assert "section-raw-vis-inventory" not in section_ids
 
-        # With no Arts tab to switch to, 'e' on the default Identity tab
-        # opens Edit Identity rather than doing nothing.
+        # With no Arts tab to switch to, 'e' on the default view (focus
+        # lands on the top panel) opens Edit Character Info rather than
+        # doing nothing.
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, IdentityEditScreen)
+        assert isinstance(app.screen, EditCharacterInfoScreen)
+
+
+async def test_switching_to_laboratory_or_diary_tab_falls_back_to_top_panel():
+    """Laboratory and Diary are flat placeholder tabs (no Collapsible) --
+    switching to either must clear a stale Collapsible focus from whatever
+    tab was active before, so 'e' falls back to editing the top panel
+    instead of silently re-dispatching to the section that's no longer
+    visible (see CLAUDE.md's flat-tab focus-tracking gotcha)."""
+    storage.save_saga(_saga_with_bare_character())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_character(pilot, app)
+        # Focus a real Collapsible section first (Aging, in Description).
+        await _open_section(pilot, app, "section-aging")
+        assert app.screen._active_character_section() == "section-aging"
+
+        view = app.screen._character_sheet_view
+        view.query_one(TabbedContent).active = "tab-lab"
+        await pilot.pause()
+
+        assert app.screen._active_character_section() == "section-char-info"
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, EditCharacterInfoScreen)
+        await pilot.press("escape")
+        await pilot.pause()
+
+        # Same check for Diary, switching from a tab with no Collapsible
+        # (Laboratory) to another flat tab.
+        view.query_one(TabbedContent).active = "tab-diary"
+        await pilot.pause()
+        assert app.screen._active_character_section() == "section-char-info"
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, EditCharacterInfoScreen)
 
 
 async def test_creating_a_second_character_after_viewing_the_first_works():
@@ -1557,28 +1647,28 @@ def _saga_with_two_labs() -> Saga:
     )
 
 
-async def test_edit_identity_updates_name_covenant_and_laboratory():
+async def test_edit_character_info_updates_name_covenant_and_laboratory():
     storage.save_saga(_saga_with_two_labs())
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _select_character(pilot, app)  # defaults to the Identity tab
+        await _select_character(pilot, app)  # defaults to the top panel
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, IdentityEditScreen)
+        assert isinstance(app.screen, EditCharacterInfoScreen)
 
-        app.screen.query_one("#input-name", Input).value = "Leandro the Elder"
-        app.screen.query_one("#select-covenant", Select).value = "cov2"
-        app.screen.query_one("#select-laboratory", Select).value = "lab2"
+        app.screen.query_one("#input-charinfo-name", Input).value = "Leandro the Elder"
+        app.screen.query_one("#select-charinfo-covenant", Select).value = "cov2"
+        app.screen.query_one("#select-charinfo-laboratory", Select).value = "lab2"
 
         await pilot.click("#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert (
-            "Name: Leandro the Elder"
-            in app.screen._character_sheet_view._identity_text()
+        view = app.screen._character_sheet_view
+        assert view.query_one("#section-char-info", Collapsible).title == (
+            "Leandro the Elder"
         )
 
     saga = storage.load_saga("test_saga")
@@ -1593,7 +1683,7 @@ async def test_edit_identity_updates_name_covenant_and_laboratory():
     assert lab2.owner_id == "char1"
 
 
-async def test_edit_identity_requires_name():
+async def test_edit_character_info_requires_name():
     storage.save_saga(_saga_with_bare_character())
 
     app = ArsMagicaManagerApp()
@@ -1602,14 +1692,14 @@ async def test_edit_identity_requires_name():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, IdentityEditScreen)
+        assert isinstance(app.screen, EditCharacterInfoScreen)
 
-        app.screen.query_one("#input-name", Input).value = ""
+        app.screen.query_one("#input-charinfo-name", Input).value = ""
 
         await pilot.click("#btn-save")
         await pilot.pause()
 
-        assert isinstance(app.screen, IdentityEditScreen)
+        assert isinstance(app.screen, EditCharacterInfoScreen)
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].name == "Leandro"
@@ -1621,7 +1711,7 @@ async def test_edit_characteristics_updates_values():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-characteristics")
+        await _open_section(pilot, app, "section-char-characteristics")
 
         await pilot.press("e")
         await pilot.pause()
@@ -1640,8 +1730,8 @@ async def test_edit_characteristics_updates_values():
 
         assert isinstance(app.screen, WorkspaceScreen)
         text = app.screen._character_sheet_view._characteristics_text()
-        assert "Int 3" in text
-        assert "Qik -1" in text
+        assert "Int: +3" in text
+        assert "Qik: -1" in text
 
     saga = storage.load_saga("test_saga")
     c = saga.characters[0].characteristics
@@ -1655,7 +1745,7 @@ async def test_edit_ability_updates_existing_entry():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-abilities")
+        await _open_section(pilot, app, "tab-abilities")
 
         await pilot.press("e")
         await pilot.pause()
@@ -1701,7 +1791,7 @@ async def test_add_and_remove_spell_known():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "tab-spells")
+        await _open_section(pilot, app, "section-known-spells")
 
         await pilot.press("a")
         await _wait_until(pilot, lambda: isinstance(app.screen, SpellChooserScreen))
@@ -1770,7 +1860,7 @@ async def test_edit_spell_mastery_sets_score_xp_and_abilities():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "tab-spells")
+        await _open_section(pilot, app, "section-known-spells")
 
         await pilot.press("e")
         await pilot.pause()
@@ -1857,74 +1947,57 @@ async def test_add_action_disabled_on_tabs_without_addable_lists():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await _select_character(pilot, app)  # defaults to the Identity tab
+        await _select_character(pilot, app)  # defaults to the top panel
 
         await pilot.press("a")
         await pilot.pause()
 
-        # Identity has nothing to "add" -- the binding is disabled there.
+        # The top panel has nothing to "add" -- the binding is disabled there.
         assert isinstance(app.screen, WorkspaceScreen)
 
 
-async def test_edit_background_updates_fields():
+async def test_edit_biographical_detail_updates_background_and_description():
     storage.save_saga(_saga_with_bare_character())
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-background")
+        await _open_section(pilot, app, "section-char-biographical")
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditBackgroundScreen)
+        assert isinstance(app.screen, EditBiographicalDetailScreen)
 
-        app.screen.query_one("#input-bg-player", Input).value = "Alex"
-        app.screen.query_one("#input-bg-year_born", Input).value = "1180"
+        app.screen.query_one("#input-bio-player", Input).value = "Alex"
+        app.screen.query_one("#input-bio-year_born", Input).value = "1180"
+        app.screen.query_one("#input-bio-height", Input).value = "1.8"
+        app.screen.query_one("#select-bio-handedness", Select).value = "left"
+        app.screen.query_one("#biodetail-biography", TextArea).text = "Born in Aachen."
 
-        # The Background dialog has 10 fields, taller than the default
-        # 80x24 test terminal -- pilot.click() needs an on-screen target,
-        # so trigger the button directly rather than by pixel coordinate.
+        # The dialog has many fields, taller than the default 80x24 test
+        # terminal -- pilot.click() needs an on-screen target, so trigger
+        # the button directly rather than by pixel coordinate.
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        text = app.screen._character_sheet_view._background_text()
-        assert "Player: Alex" in text
-        assert "Age: 40" in text  # current_year 1220 (default) - 1180
+        view = app.screen._character_sheet_view
+        left = view._biographical_left_text()
+        assert "Player: Alex" in left
+        assert "Height: 1.8" in left
+        assert "Handedness: left" in left
+        assert view._biographical_right_text() == "Born in Aachen."
+        # Age (derived from Year Born) lives in the top panel, refreshed
+        # alongside Biographical Detail since they share Year Born.
+        assert re.search(r"Age:\s+40\b", view._info_left_text())  # 1220 - 1180
 
     saga = storage.load_saga("test_saga")
-    background = saga.characters[0].background
-    assert background.player == "Alex"
-    assert background.year_born == 1180
-
-
-async def test_edit_description_updates_fields_including_handedness():
-    storage.save_saga(_saga_with_bare_character())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-description")
-
-        await pilot.press("e")
-        await pilot.pause()
-        assert isinstance(app.screen, EditDescriptionScreen)
-
-        app.screen.query_one("#input-desc-height", Input).value = "1.8"
-        app.screen.query_one("#select-desc-handedness", Select).value = "left"
-
-        app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
-
-        assert isinstance(app.screen, WorkspaceScreen)
-        text = app.screen._character_sheet_view._description_text()
-        assert "Height: 1.8" in text
-        assert "Handedness: left" in text
-
-    saga = storage.load_saga("test_saga")
-    description = saga.characters[0].description
-    assert description.height == 1.8
-    assert description.handedness == "left"
+    character = saga.characters[0]
+    assert character.background.player == "Alex"
+    assert character.background.year_born == 1180
+    assert character.description.height == 1.8
+    assert character.description.handedness == "left"
+    assert character.description.biography == "Born in Aachen."
 
 
 async def test_edit_aging_updates_decrepitude_and_warping():
@@ -1964,8 +2037,9 @@ async def test_edit_wounds_updates_counts_and_flags():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-wounds")
+        await _open_section(pilot, app, "section-char-health")
 
+        # 'e' on the merged Health section defaults to Wounds (column 1).
         await pilot.press("e")
         await pilot.pause()
         assert isinstance(app.screen, EditWoundsScreen)
@@ -1993,9 +2067,13 @@ async def test_edit_fatigue_updates_level():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-fatigue")
+        await _open_section(pilot, app, "section-char-health")
 
-        await pilot.press("e")
+        # Fatigue is the merged Health section's second column -- reached
+        # via its own Edit button, not the 'e' keybinding (which defaults
+        # to Wounds, column 1).
+        view = app.screen._character_sheet_view
+        view.query_one("#btn-char-health-fatigue-edit", Button).press()
         await pilot.pause()
         assert isinstance(app.screen, EditFatigueScreen)
 
@@ -2088,7 +2166,7 @@ async def test_add_and_remove_raw_vis():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-raw-vis")
+        await _open_section(pilot, app, "section-raw-vis-hermetic")
 
         await pilot.press("a")
         await pilot.pause()
@@ -2127,6 +2205,82 @@ async def test_add_and_remove_raw_vis():
     assert saga.characters[0].raw_vis == {}
 
 
+async def test_raw_vis_stays_live_across_both_tabs():
+    """Raw Vis deliberately appears twice (Hermetic Magic and Inventory),
+    both backed by character.raw_vis -- adding/editing/removing from one
+    tab's list must also update the other tab's list, even though it's not
+    the active tab when the mutation happens (see STORY-207's draft2 note:
+    "the first section in the app that deliberately appears twice")."""
+    storage.save_saga(_saga_with_bare_character())
+
+    def rows(view, list_id: str) -> list[str]:
+        widget = view.query_one(f"#{list_id}", SelectableList)
+        return [str(o.prompt) for o in widget.options]
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_character(pilot, app)
+        view = app.screen._character_sheet_view
+
+        # Add from the Hermetic Magic tab.
+        await _open_section(pilot, app, "section-raw-vis-hermetic")
+        await pilot.press("a")
+        await pilot.pause()
+        app.screen.query_one("#select-vis-art", Select).value = "creo"
+        app.screen.query_one("#input-vis-pawns", Input).value = "5"
+        await pilot.click("#btn-create", offset=(8, 1))
+        await pilot.pause()
+
+        assert any(
+            "Creo: 5 pawn(s)" in row for row in rows(view, "raw-vis-list-hermetic")
+        )
+        # Switch to Inventory: its list already reflects the addition, even
+        # though it wasn't the active tab when the add happened.
+        view.query_one(TabbedContent).active = "tab-inventory"
+        await pilot.pause()
+        assert any(
+            "Creo: 5 pawn(s)" in row for row in rows(view, "raw-vis-list-inventory")
+        )
+
+        # Edit from the Inventory tab.
+        await _open_section(pilot, app, "section-raw-vis-inventory")
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)  # only one entry
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, RawVisPromptScreen)
+        app.screen.query_one("#input-vis-pawns", Input).value = "3"
+        await pilot.click("#btn-create", offset=(8, 1))
+        await pilot.pause()
+
+        assert any(
+            "Creo: 3 pawn(s)" in row for row in rows(view, "raw-vis-list-inventory")
+        )
+        await _open_section(pilot, app, "section-raw-vis-hermetic")
+        assert any(
+            "Creo: 3 pawn(s)" in row for row in rows(view, "raw-vis-list-hermetic")
+        )
+
+        # Remove from the Hermetic Magic tab.
+        await pilot.press("A")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)  # only one entry
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, ConfirmScreen)
+        await pilot.press("y")
+        await pilot.pause()
+
+        assert "none recorded" in rows(view, "raw-vis-list-hermetic")[0]
+        view.query_one(TabbedContent).active = "tab-inventory"
+        await pilot.pause()
+        assert "none recorded" in rows(view, "raw-vis-list-inventory")[0]
+
+    saga = storage.load_saga("test_saga")
+    assert saga.characters[0].raw_vis == {}
+
+
 async def test_edit_hermetic_background_sets_house_and_fields():
     storage.save_saga(_saga_with_bare_character())
 
@@ -2146,9 +2300,9 @@ async def test_edit_hermetic_background_sets_house_and_fields():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        text = app.screen._character_sheet_view._hermetic_background_text()
-        assert "House: Bonisagus" in text
-        assert "Parens: Trianoma" in text
+        view = app.screen._character_sheet_view
+        assert "House: Bonisagus" in view._hermetic_background_left_text()
+        assert "Parens: Trianoma" in view._hermetic_background_left_text()
 
     saga = storage.load_saga("test_saga")
     hermetic = saga.characters[0].hermetic
@@ -3312,11 +3466,11 @@ async def test_character_can_be_moved_out_of_a_covenant_and_back():
         assert _parent_data(tree, ("character", "char1")) == ("character_group", "cov1")
 
         async def set_covenant(value) -> None:
-            await _open_section(pilot, app, "section-identity")
+            await _open_section(pilot, app, "section-char-info")
             await pilot.press("e")
             await pilot.pause()
-            assert isinstance(app.screen, IdentityEditScreen)
-            app.screen.query_one("#select-covenant", Select).value = value
+            assert isinstance(app.screen, EditCharacterInfoScreen)
+            app.screen.query_one("#select-charinfo-covenant", Select).value = value
             app.screen.query_one("#btn-save", Button).press()
             await pilot.pause()
 
@@ -7192,7 +7346,7 @@ async def test_character_books_section_and_delete_confirms():
     async with app.run_test(size=(140, 50)) as pilot:
         await _select_character(pilot, app)
         view = app.screen._character_sheet_view
-        view.query_one(TabbedContent).active = "tab-personality"
+        view.query_one(TabbedContent).active = "tab-inventory"
         await pilot.pause()
         section = view.query_one("#section-books", Collapsible)
         assert section.title == "Books (1) - 8 Build Points"

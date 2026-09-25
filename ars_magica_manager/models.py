@@ -783,6 +783,10 @@ class Description:
     eyes: str = ""
     handedness: Handedness = "right"
     physical_description: str = ""
+    #: Free-text biography, distinct from physical_description (the paper
+    #: sheet's short free-text box) -- added for STORY-207's Biographical
+    #: Detail section.
+    biography: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Description:

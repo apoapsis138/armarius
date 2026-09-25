@@ -1871,14 +1871,12 @@ class RemovalPickerScreen(ModalScreen[int | None]):
 
 
 class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
-    """Edits all 15 Hermetic Arts at once -- a fixed grid, not an addable list.
-
-    A single column, Techniques first then Forms -- matching how Abilities
-    are organized on the sheet by category. (An earlier version split this
-    into 3 side-by-side columns; that was reverted after it turned out to
-    overflow a normal terminal width and corrupt click hit-testing.) Each
-    Art shows a Level / XP pair. Dismisses with a dict of every art's
-    lowercase name -> ArtScore, or None if cancelled.
+    """Edits all 15 Hermetic Arts at once -- a fixed grid, not an addable
+    list. Two side-by-side columns (Techniques, Forms), mirroring the sheet's
+    own two-column Magical Arts display -- sized to fit every row without a
+    scrollbar (Forms, the taller column, is only 10 rows). Each Art shows a
+    Level / XP pair. Dismisses with a dict of every art's lowercase name ->
+    ArtScore, or None if cancelled.
     """
 
     BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
@@ -1891,22 +1889,10 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
     #arts-dialog {
         width: auto;
         height: auto;
-        max-height: 22;
+        max-height: 100%;
         border: round $accent;
         padding: 1 2;
         background: $surface;
-    }
-
-    #arts-scroll {
-        width: auto;
-        height: auto;
-        max-height: 13;
-        overflow-y: auto;
-    }
-
-    #arts-buttons {
-        width: auto;
-        height: auto;
     }
 
     #arts-subtitle {
@@ -1914,9 +1900,25 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
         margin-bottom: 1;
     }
 
+    #arts-columns {
+        width: auto;
+        height: auto;
+    }
+
+    #arts-techniques-col {
+        width: auto;
+        height: auto;
+        margin-right: 3;
+    }
+
+    #arts-forms-col {
+        width: auto;
+        height: auto;
+    }
+
     .column-heading {
         text-style: bold;
-        margin-top: 1;
+        margin-bottom: 1;
     }
 
     .art-row {
@@ -1925,7 +1927,7 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
     }
 
     .art-row Label {
-        width: 10;
+        width: 14;
         content-align: right middle;
         padding-right: 1;
     }
@@ -1937,8 +1939,11 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
 
     .art-row Input {
         width: 5;
-        height: 1;
-        border: none;
+    }
+
+    #arts-buttons {
+        width: auto;
+        height: auto;
     }
 
     #arts-error {
@@ -1961,26 +1966,30 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
                 value=str(score.level),
                 type="integer",
                 id=f"input-art-{key}-level",
+                compact=True,
             )
             yield Label("/", classes="art-sep")
             yield Input(
                 value=str(score.xp),
                 type="integer",
                 id=f"input-art-{key}-xp",
+                compact=True,
             )
 
         with Vertical(id="arts-dialog"):
             yield Label("Edit Arts", id="arts-title")
-            with VerticalScroll(id="arts-scroll"):
-                yield Label("Each score is Level / XP", id="arts-subtitle")
-                yield Label("Techniques", classes="column-heading")
-                for technique in TECHNIQUES:
-                    with Horizontal(classes="art-row"):
-                        yield from row(technique)
-                yield Label("Forms", classes="column-heading")
-                for form in FORMS:
-                    with Horizontal(classes="art-row"):
-                        yield from row(form)
+            yield Label("Each score is Level / XP", id="arts-subtitle")
+            with Horizontal(id="arts-columns"):
+                with Vertical(id="arts-techniques-col"):
+                    yield Label("Techniques", classes="column-heading")
+                    for technique in TECHNIQUES:
+                        with Horizontal(classes="art-row"):
+                            yield from row(technique)
+                with Vertical(id="arts-forms-col"):
+                    yield Label("Forms", classes="column-heading")
+                    for form in FORMS:
+                        with Horizontal(classes="art-row"):
+                            yield from row(form)
             yield Static("", id="arts-error")
             with Horizontal(id="arts-buttons"):
                 yield Button("Save", id="btn-save", variant="success")
@@ -2106,35 +2115,50 @@ class LaboratoryCreateScreen(ModalScreen[str | None]):
         self.dismiss(laboratory.id)
 
 
-class IdentityEditScreen(ModalScreen[dict[str, str | None] | None]):
-    """Edits a character's Name, Covenant, and (for magi) Laboratory.
-
-    Type is fixed at creation -- changing it after Arts/Spells already
-    exist would leave the sheet in an inconsistent state, so it isn't
-    editable here. Dismisses with
-    {"name": ..., "covenant_id": ..., "laboratory_id": ...}, or None if
-    cancelled.
+class EditCharacterInfoScreen(ModalScreen[dict[str, object] | None]):
+    """Edits the character sheet's top-panel info: Name, Covenant, Assigned
+    Laboratory (magi only), Setting, Confidence, and Size. Type, Age,
+    Current Year and Current Season are derived/fixed and aren't editable
+    here. Dismisses with a dict of field values, or None if cancelled.
     """
 
     BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
-    IdentityEditScreen {
+    EditCharacterInfoScreen {
         align: center middle;
     }
 
-    #edit-dialog {
+    #charinfo-dialog {
         width: 64;
         height: auto;
+        max-height: 100%;
         border: round $accent;
         padding: 1 2;
         background: $surface;
     }
 
-    #edit-error {
+    .charinfo-row {
+        width: 100%;
+        height: 1;
+    }
+
+    .charinfo-row Label {
+        width: 20;
+    }
+
+    .charinfo-row Input, .charinfo-row Select {
+        width: 1fr;
+    }
+
+    #charinfo-error {
         color: $error;
         height: auto;
-        margin-top: 1;
+    }
+
+    #charinfo-buttons {
+        width: 100%;
+        height: auto;
     }
     """
 
@@ -2145,29 +2169,56 @@ class IdentityEditScreen(ModalScreen[dict[str, str | None] | None]):
 
     def compose(self) -> ComposeResult:
         character = self.character
-        with Vertical(id="edit-dialog"):
-            yield Label("Edit Identity", id="edit-title")
-            yield Label("Name")
-            yield Input(value=character.name, id="input-name")
-            yield Label("Covenant")
-            yield Select(
-                [(c.name, c.id) for c in self.saga.covenants],
-                value=character.covenant_id or Select.NULL,
-                allow_blank=True,
-                prompt="(unassigned)",
-                id="select-covenant",
-            )
-            if character.type == "magus":
-                yield Label("Assigned Laboratory")
+        b = character.background
+        with Vertical(id="charinfo-dialog"):
+            yield Label("Edit Character Info")
+            with Horizontal(classes="charinfo-row"):
+                yield Label("Name")
+                yield Input(
+                    value=character.name, id="input-charinfo-name", compact=True
+                )
+            with Horizontal(classes="charinfo-row"):
+                yield Label("Covenant")
                 yield Select(
-                    [(lab.name, lab.id) for lab in self.saga.laboratories],
-                    value=character.assigned_lab_id or Select.NULL,
+                    [(c.name, c.id) for c in self.saga.covenants],
+                    value=character.covenant_id or Select.NULL,
                     allow_blank=True,
                     prompt="(unassigned)",
-                    id="select-laboratory",
+                    id="select-charinfo-covenant",
+                    compact=True,
                 )
-            yield Static("", id="edit-error")
-            with Horizontal():
+            if character.type == "magus":
+                with Horizontal(classes="charinfo-row"):
+                    yield Label("Assigned Laboratory")
+                    yield Select(
+                        [(lab.name, lab.id) for lab in self.saga.laboratories],
+                        value=character.assigned_lab_id or Select.NULL,
+                        allow_blank=True,
+                        prompt="(unassigned)",
+                        id="select-charinfo-laboratory",
+                        compact=True,
+                    )
+            with Horizontal(classes="charinfo-row"):
+                yield Label("Setting")
+                yield Input(value=b.setting, id="input-charinfo-setting", compact=True)
+            with Horizontal(classes="charinfo-row"):
+                yield Label("Confidence")
+                yield Input(
+                    value=str(b.confidence),
+                    type="integer",
+                    id="input-charinfo-confidence",
+                    compact=True,
+                )
+            with Horizontal(classes="charinfo-row"):
+                yield Label("Size")
+                yield Input(
+                    value=str(b.size),
+                    type="integer",
+                    id="input-charinfo-size",
+                    compact=True,
+                )
+            yield Static("", id="charinfo-error")
+            with Horizontal(id="charinfo-buttons"):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -2181,24 +2232,37 @@ class IdentityEditScreen(ModalScreen[dict[str, str | None] | None]):
             self._try_save()
 
     def _try_save(self) -> None:
-        error = self.query_one("#edit-error", Static)
+        error = self.query_one("#charinfo-error", Static)
 
-        name = self.query_one("#input-name", Input).value.strip()
+        name = self.query_one("#input-charinfo-name", Input).value.strip()
         if not name:
             error.update("Name is required.")
             return
 
-        covenant_value = self.query_one("#select-covenant", Select).value
+        covenant_value = self.query_one("#select-charinfo-covenant", Select).value
         covenant_id = covenant_value if isinstance(covenant_value, str) else None
 
         laboratory_id: str | None = None
         if self.character.type == "magus":
-            lab_value = self.query_one("#select-laboratory", Select).value
+            lab_value = self.query_one("#select-charinfo-laboratory", Select).value
             laboratory_id = lab_value if isinstance(lab_value, str) else None
 
-        self.dismiss(
-            {"name": name, "covenant_id": covenant_id, "laboratory_id": laboratory_id}
-        )
+        result: dict[str, object] = {
+            "name": name,
+            "covenant_id": covenant_id,
+            "laboratory_id": laboratory_id,
+            "setting": self.query_one("#input-charinfo-setting", Input).value.strip(),
+        }
+
+        for label, field_name in (("Confidence", "confidence"), ("Size", "size")):
+            raw = self.query_one(f"#input-charinfo-{field_name}", Input).value.strip()
+            try:
+                result[field_name] = int(raw)
+            except ValueError:
+                error.update(f"{label} must be a whole number.")
+                return
+
+        self.dismiss(result)
 
 
 class EditCharacteristicsScreen(ModalScreen[Characteristics | None]):
@@ -2215,7 +2279,7 @@ class EditCharacteristicsScreen(ModalScreen[Characteristics | None]):
     }
 
     #char-dialog {
-        width: auto;
+        width: 50;
         height: auto;
         border: round $accent;
         padding: 1 2;
@@ -2223,20 +2287,16 @@ class EditCharacteristicsScreen(ModalScreen[Characteristics | None]):
     }
 
     .char-row {
-        width: auto;
-        height: auto;
+        width: 100%;
+        height: 1;
     }
 
     .char-row Label {
         width: 5;
-        content-align: right middle;
-        padding-right: 1;
     }
 
     .char-row Input {
-        width: 5;
-        height: 1;
-        border: none;
+        width: 1fr;
         margin-right: 2;
     }
 
@@ -2247,7 +2307,7 @@ class EditCharacteristicsScreen(ModalScreen[Characteristics | None]):
     }
 
     #char-buttons {
-        width: auto;
+        width: 100%;
         height: auto;
     }
     """
@@ -2280,6 +2340,7 @@ class EditCharacteristicsScreen(ModalScreen[Characteristics | None]):
                             value=str(getattr(self.characteristics, field_name)),
                             type="integer",
                             id=f"input-char-{field_name}",
+                            compact=True,
                         )
             yield Static("", id="char-error")
             with Horizontal(id="char-buttons"):
@@ -2787,36 +2848,82 @@ class RawVisPromptScreen(ModalScreen[tuple[str, int] | None]):
         self.dismiss((art, pawns))
 
 
-class EditBackgroundScreen(ModalScreen[Background | None]):
-    """Edits the sheet's page-1 biographical block. Dismisses with the
-    finished Background, or None if cancelled."""
+class EditBiographicalDetailScreen(ModalScreen[dict[str, object] | None]):
+    """Edits the Description tab's Biographical Detail section: the
+    remaining Background fields (Setting/Confidence/Size live in the top
+    panel's EditCharacterInfoScreen) plus every Description field,
+    including the new free-text Biography. Dismisses with
+    {"background": Background, "description": Description}, or None if
+    cancelled -- one dialog edits two dataclasses at once, so the caller
+    assigns each half back to character.background/character.description.
+    """
 
     BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
-    EditBackgroundScreen {
+    EditBiographicalDetailScreen {
         align: center middle;
     }
 
-    #background-dialog {
-        width: 70;
+    #biodetail-dialog {
+        width: 92;
         height: auto;
-        max-height: 30;
+        max-height: 100%;
         border: round $accent;
         padding: 1 2;
         background: $surface;
     }
 
-    #background-error {
+    #biodetail-scroll {
+        height: auto;
+        max-height: 14;
+    }
+
+    #biodetail-columns {
+        height: auto;
+    }
+
+    #biodetail-fields {
+        width: 1fr;
+        height: auto;
+        margin-right: 2;
+    }
+
+    .biodetail-row {
+        width: 100%;
+        height: 1;
+    }
+
+    .biodetail-row Label {
+        width: 22;
+    }
+
+    .biodetail-row Input, .biodetail-row Select {
+        width: 1fr;
+    }
+
+    #biodetail-biography-col {
+        width: 1fr;
+        height: auto;
+    }
+
+    #biodetail-biography {
+        height: 13;
+    }
+
+    #biodetail-error {
         color: $error;
         height: auto;
-        margin-top: 1;
+    }
+
+    #biodetail-buttons {
+        width: 100%;
+        height: auto;
     }
     """
 
-    _STR_FIELDS: ClassVar[list[tuple[str, str]]] = [
+    _BACKGROUND_STR_FIELDS: ClassVar[list[tuple[str, str]]] = [
         ("Player", "player"),
-        ("Setting", "setting"),
         ("Birth Name", "birth_name"),
         ("Race/Nationality", "race_nationality"),
         ("Place of Origin", "place_of_origin"),
@@ -2824,139 +2931,111 @@ class EditBackgroundScreen(ModalScreen[Background | None]):
         ("Title/Profession", "title_profession"),
     ]
 
-    def __init__(self, background: Background) -> None:
-        super().__init__()
-        self.background = background
-
-    def compose(self) -> ComposeResult:
-        b = self.background
-        with VerticalScroll(id="background-dialog"):
-            yield Label("Edit Background", id="background-title")
-            for label, field_name in self._STR_FIELDS:
-                yield Label(label)
-                yield Input(value=getattr(b, field_name), id=f"input-bg-{field_name}")
-            yield Label("Size")
-            yield Input(value=str(b.size), type="integer", id="input-bg-size")
-            yield Label("Confidence")
-            yield Input(
-                value=str(b.confidence), type="integer", id="input-bg-confidence"
-            )
-            yield Label("Year Born")
-            yield Input(
-                value="" if b.year_born is None else str(b.year_born),
-                type="integer",
-                id="input-bg-year_born",
-            )
-            yield Static("", id="background-error")
-            with Horizontal():
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.dismiss(None)
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#background-error", Static)
-        values: dict[str, object] = {}
-        for _label, field_name in self._STR_FIELDS:
-            values[field_name] = self.query_one(
-                f"#input-bg-{field_name}", Input
-            ).value.strip()
-
-        for label, field_name in (("Size", "size"), ("Confidence", "confidence")):
-            raw = self.query_one(f"#input-bg-{field_name}", Input).value.strip()
-            try:
-                values[field_name] = int(raw)
-            except ValueError:
-                error.update(f"{label} must be a whole number.")
-                return
-
-        raw_year_born = self.query_one("#input-bg-year_born", Input).value.strip()
-        if raw_year_born:
-            try:
-                values["year_born"] = int(raw_year_born)
-            except ValueError:
-                error.update("Year Born must be a whole number.")
-                return
-        else:
-            values["year_born"] = None
-
-        self.dismiss(Background(**values))
-
-
-class EditDescriptionScreen(ModalScreen[Description | None]):
-    """Edits the sheet's Description box (page 1). Dismisses with the
-    finished Description, or None if cancelled."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
-
-    DEFAULT_CSS = """
-    EditDescriptionScreen {
-        align: center middle;
-    }
-
-    #description-dialog {
-        width: 70;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #description-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-    """
-
     _HANDEDNESS_OPTIONS: ClassVar[list[tuple[str, str]]] = [
         ("Right", "right"),
         ("Left", "left"),
         ("Ambidextrous", "ambidextrous"),
     ]
 
-    def __init__(self, description: Description) -> None:
+    def __init__(self, background: Background, description: Description) -> None:
         super().__init__()
+        self.background = background
         self.description = description
 
     def compose(self) -> ComposeResult:
-        d = self.description
-        with Vertical(id="description-dialog"):
-            yield Label("Edit Description", id="description-title")
-            yield Label("Height")
-            yield Input(
-                value="" if d.height is None else str(d.height),
-                id="input-desc-height",
-            )
-            yield Label("Weight")
-            yield Input(
-                value="" if d.weight is None else str(d.weight),
-                id="input-desc-weight",
-            )
-            yield Label("Hair")
-            yield Input(value=d.hair, id="input-desc-hair")
-            yield Label("Eyes")
-            yield Input(value=d.eyes, id="input-desc-eyes")
-            yield Label("Handedness")
-            yield Select(
-                self._HANDEDNESS_OPTIONS,
-                value=d.handedness,
-                allow_blank=False,
-                id="select-desc-handedness",
-            )
-            yield Label("Physical Description")
-            yield Input(
-                value=d.physical_description, id="input-desc-physical_description"
-            )
-            yield Static("", id="description-error")
-            with Horizontal():
+        b, d = self.background, self.description
+        with Vertical(id="biodetail-dialog"):
+            yield Label("Edit Biographical Detail")
+            with (
+                VerticalScroll(id="biodetail-scroll"),
+                Horizontal(id="biodetail-columns"),
+            ):
+                with Vertical(id="biodetail-fields"):
+                    with Horizontal(classes="biodetail-row"):
+                        yield Label("Player")
+                        yield Input(value=b.player, id="input-bio-player", compact=True)
+                    with Horizontal(classes="biodetail-row"):
+                        yield Label("Birth Name")
+                        yield Input(
+                            value=b.birth_name,
+                            id="input-bio-birth_name",
+                            compact=True,
+                        )
+                    with Horizontal(classes="biodetail-row"):
+                        yield Label("Year Born")
+                        yield Input(
+                            value="" if b.year_born is None else str(b.year_born),
+                            type="integer",
+                            id="input-bio-year_born",
+                            compact=True,
+                        )
+                    with Horizontal(classes="biodetail-row"):
+                        yield Label("Race/Nationality")
+                        yield Input(
+                            value=b.race_nationality,
+                            id="input-bio-race_nationality",
+                            compact=True,
+                        )
+                    with Horizontal(classes="biodetail-row"):
+                        yield Label("Place of Origin")
+                        yield Input(
+                            value=b.place_of_origin,
+                            id="input-bio-place_of_origin",
+                            compact=True,
+                        )
+                    with Horizontal(classes="biodetail-row"):
+                        yield Label("Religion")
+                        yield Input(
+                            value=b.religion, id="input-bio-religion", compact=True
+                        )
+                    with Horizontal(classes="biodetail-row"):
+                        yield Label("Title/Profession")
+                        yield Input(
+                            value=b.title_profession,
+                            id="input-bio-title_profession",
+                            compact=True,
+                        )
+                    with Horizontal(classes="biodetail-row"):
+                        yield Label("Height")
+                        yield Input(
+                            value="" if d.height is None else str(d.height),
+                            id="input-bio-height",
+                            compact=True,
+                        )
+                    with Horizontal(classes="biodetail-row"):
+                        yield Label("Weight")
+                        yield Input(
+                            value="" if d.weight is None else str(d.weight),
+                            id="input-bio-weight",
+                            compact=True,
+                        )
+                    with Horizontal(classes="biodetail-row"):
+                        yield Label("Hair")
+                        yield Input(value=d.hair, id="input-bio-hair", compact=True)
+                    with Horizontal(classes="biodetail-row"):
+                        yield Label("Eyes")
+                        yield Input(value=d.eyes, id="input-bio-eyes", compact=True)
+                    with Horizontal(classes="biodetail-row"):
+                        yield Label("Handedness")
+                        yield Select(
+                            self._HANDEDNESS_OPTIONS,
+                            value=d.handedness,
+                            allow_blank=False,
+                            id="select-bio-handedness",
+                            compact=True,
+                        )
+                    with Horizontal(classes="biodetail-row"):
+                        yield Label("Physical Description")
+                        yield Input(
+                            value=d.physical_description,
+                            id="input-bio-physical_description",
+                            compact=True,
+                        )
+                with Vertical(id="biodetail-biography-col"):
+                    yield Label("Biography")
+                    yield TextArea(d.biography, id="biodetail-biography")
+            yield Static("", id="biodetail-error")
+            with Horizontal(id="biodetail-buttons"):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -2970,10 +3049,31 @@ class EditDescriptionScreen(ModalScreen[Description | None]):
             self._try_save()
 
     def _try_save(self) -> None:
-        error = self.query_one("#description-error", Static)
+        error = self.query_one("#biodetail-error", Static)
+
+        background_values: dict[str, object] = {
+            # Not editable in this dialog -- seed through unchanged.
+            "setting": self.background.setting,
+            "confidence": self.background.confidence,
+            "size": self.background.size,
+        }
+        for _label, field_name in self._BACKGROUND_STR_FIELDS:
+            background_values[field_name] = self.query_one(
+                f"#input-bio-{field_name}", Input
+            ).value.strip()
+
+        raw_year_born = self.query_one("#input-bio-year_born", Input).value.strip()
+        if raw_year_born:
+            try:
+                background_values["year_born"] = int(raw_year_born)
+            except ValueError:
+                error.update("Year Born must be a whole number.")
+                return
+        else:
+            background_values["year_born"] = None
 
         height: float | None = None
-        raw_height = self.query_one("#input-desc-height", Input).value.strip()
+        raw_height = self.query_one("#input-bio-height", Input).value.strip()
         if raw_height:
             try:
                 height = float(raw_height)
@@ -2982,7 +3082,7 @@ class EditDescriptionScreen(ModalScreen[Description | None]):
                 return
 
         weight: float | None = None
-        raw_weight = self.query_one("#input-desc-weight", Input).value.strip()
+        raw_weight = self.query_one("#input-bio-weight", Input).value.strip()
         if raw_weight:
             try:
                 weight = float(raw_weight)
@@ -2990,18 +3090,21 @@ class EditDescriptionScreen(ModalScreen[Description | None]):
                 error.update("Weight must be a number.")
                 return
 
-        handedness = self.query_one("#select-desc-handedness", Select).value
+        handedness = self.query_one("#select-bio-handedness", Select).value
+        description = Description(
+            height=height,
+            weight=weight,
+            hair=self.query_one("#input-bio-hair", Input).value.strip(),
+            eyes=self.query_one("#input-bio-eyes", Input).value.strip(),
+            handedness=handedness,  # type: ignore[arg-type]
+            physical_description=self.query_one(
+                "#input-bio-physical_description", Input
+            ).value.strip(),
+            biography=self.query_one("#biodetail-biography", TextArea).text.rstrip(),
+        )
+
         self.dismiss(
-            Description(
-                height=height,
-                weight=weight,
-                hair=self.query_one("#input-desc-hair", Input).value.strip(),
-                eyes=self.query_one("#input-desc-eyes", Input).value.strip(),
-                handedness=handedness,  # type: ignore[arg-type]
-                physical_description=self.query_one(
-                    "#input-desc-physical_description", Input
-                ).value.strip(),
-            )
+            {"background": Background(**background_values), "description": description}
         )
 
 
@@ -3025,10 +3128,28 @@ class EditAgingScreen(ModalScreen[Aging | None]):
         background: $surface;
     }
 
+    .agingedit-row {
+        width: 100%;
+        height: 1;
+    }
+
+    .agingedit-row Label {
+        width: 18;
+    }
+
+    .agingedit-row Input {
+        width: 1fr;
+    }
+
     #aging-error {
         color: $error;
         height: auto;
         margin-top: 1;
+    }
+
+    #aging-buttons {
+        width: 100%;
+        height: auto;
     }
     """
 
@@ -3040,26 +3161,35 @@ class EditAgingScreen(ModalScreen[Aging | None]):
         a = self.aging
         with Vertical(id="aging-dialog"):
             yield Label("Edit Aging & Warping", id="aging-title")
-            yield Label("Decrepitude")
-            yield Input(
-                value=str(a.decrepitude), type="integer", id="input-aging-decrepitude"
-            )
-            yield Label("Effects of Aging")
-            yield Input(value=a.effects, id="input-aging-effects")
-            yield Label("Warping Score")
-            yield Input(
-                value=str(a.warping_score),
-                type="integer",
-                id="input-aging-warping_score",
-            )
-            yield Label("Warping Points")
-            yield Input(
-                value=str(a.warping_points),
-                type="integer",
-                id="input-aging-warping_points",
-            )
+            with Horizontal(classes="agingedit-row"):
+                yield Label("Decrepitude")
+                yield Input(
+                    value=str(a.decrepitude),
+                    type="integer",
+                    id="input-aging-decrepitude",
+                    compact=True,
+                )
+            with Horizontal(classes="agingedit-row"):
+                yield Label("Effects of Aging")
+                yield Input(value=a.effects, id="input-aging-effects", compact=True)
+            with Horizontal(classes="agingedit-row"):
+                yield Label("Warping Score")
+                yield Input(
+                    value=str(a.warping_score),
+                    type="integer",
+                    id="input-aging-warping_score",
+                    compact=True,
+                )
+            with Horizontal(classes="agingedit-row"):
+                yield Label("Warping Points")
+                yield Input(
+                    value=str(a.warping_points),
+                    type="integer",
+                    id="input-aging-warping_points",
+                    compact=True,
+                )
             yield Static("", id="aging-error")
-            with Horizontal():
+            with Horizontal(id="aging-buttons"):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -3111,10 +3241,28 @@ class EditWoundsScreen(ModalScreen[Wounds | None]):
         background: $surface;
     }
 
+    .woundsedit-row {
+        width: 100%;
+        height: 1;
+    }
+
+    .woundsedit-row Label {
+        width: 22;
+    }
+
+    .woundsedit-row Input {
+        width: 1fr;
+    }
+
     #wounds-error {
         color: $error;
         height: auto;
         margin-top: 1;
+    }
+
+    #wounds-buttons {
+        width: 100%;
+        height: auto;
     }
     """
 
@@ -3126,18 +3274,39 @@ class EditWoundsScreen(ModalScreen[Wounds | None]):
         w = self.wounds
         with Vertical(id="wounds-dialog"):
             yield Label("Edit Wounds", id="wounds-title")
-            yield Label("Light Wounds (-1 each)")
-            yield Input(value=str(w.light), type="integer", id="input-wounds-light")
-            yield Label("Medium Wounds (-3 each)")
-            yield Input(value=str(w.medium), type="integer", id="input-wounds-medium")
-            yield Label("Heavy Wounds (-5 each)")
-            yield Input(value=str(w.heavy), type="integer", id="input-wounds-heavy")
+            with Horizontal(classes="woundsedit-row"):
+                yield Label("Light Wounds (-1 each)")
+                yield Input(
+                    value=str(w.light),
+                    type="integer",
+                    id="input-wounds-light",
+                    compact=True,
+                )
+            with Horizontal(classes="woundsedit-row"):
+                yield Label("Medium Wounds (-3 each)")
+                yield Input(
+                    value=str(w.medium),
+                    type="integer",
+                    id="input-wounds-medium",
+                    compact=True,
+                )
+            with Horizontal(classes="woundsedit-row"):
+                yield Label("Heavy Wounds (-5 each)")
+                yield Input(
+                    value=str(w.heavy),
+                    type="integer",
+                    id="input-wounds-heavy",
+                    compact=True,
+                )
             yield Checkbox(
-                "Incapacitated", value=w.incapacitated, id="check-wounds-incapacitated"
+                "Incapacitated",
+                value=w.incapacitated,
+                id="check-wounds-incapacitated",
+                compact=True,
             )
-            yield Checkbox("Dead", value=w.dead, id="check-wounds-dead")
+            yield Checkbox("Dead", value=w.dead, id="check-wounds-dead", compact=True)
             yield Static("", id="wounds-error")
-            with Horizontal():
+            with Horizontal(id="wounds-buttons"):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -3189,6 +3358,24 @@ class EditFatigueScreen(ModalScreen[FatigueLevel | None]):
         padding: 1 2;
         background: $surface;
     }
+
+    .fatigueedit-row {
+        width: 100%;
+        height: 1;
+    }
+
+    .fatigueedit-row Label {
+        width: 14;
+    }
+
+    .fatigueedit-row Select {
+        width: 1fr;
+    }
+
+    #fatigue-buttons {
+        width: 100%;
+        height: auto;
+    }
     """
 
     def __init__(self, current: FatigueLevel) -> None:
@@ -3198,13 +3385,16 @@ class EditFatigueScreen(ModalScreen[FatigueLevel | None]):
     def compose(self) -> ComposeResult:
         with Vertical(id="fatigue-dialog"):
             yield Label("Edit Fatigue Level", id="fatigue-title")
-            yield Select(
-                [(level.title(), level) for level in FATIGUE_LEVELS],
-                value=self.current,
-                allow_blank=False,
-                id="select-fatigue-level",
-            )
-            with Horizontal():
+            with Horizontal(classes="fatigueedit-row"):
+                yield Label("Level")
+                yield Select(
+                    [(level.title(), level) for level in FATIGUE_LEVELS],
+                    value=self.current,
+                    allow_blank=False,
+                    id="select-fatigue-level",
+                    compact=True,
+                )
+            with Horizontal(id="fatigue-buttons"):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -3239,6 +3429,24 @@ class EditHermeticBackgroundScreen(ModalScreen[HermeticBackground | None]):
         padding: 1 2;
         background: $surface;
     }
+
+    .hermeticedit-row {
+        width: 100%;
+        height: 1;
+    }
+
+    .hermeticedit-row Label {
+        width: 26;
+    }
+
+    .hermeticedit-row Input, .hermeticedit-row Select {
+        width: 1fr;
+    }
+
+    #hermetic-buttons {
+        width: 100%;
+        height: auto;
+    }
     """
 
     _STR_FIELDS: ClassVar[list[tuple[str, str]]] = [
@@ -3258,20 +3466,25 @@ class EditHermeticBackgroundScreen(ModalScreen[HermeticBackground | None]):
         houses = catalog.load_house_catalog()
         with Vertical(id="hermetic-dialog"):
             yield Label("Edit Hermetic Background", id="hermetic-title")
-            yield Label("House")
-            yield Select(
-                [(house.name, house.id) for house in houses],
-                value=h.house or Select.NULL,
-                allow_blank=True,
-                prompt="(none selected)",
-                id="select-hermetic-house",
-            )
-            for label, field_name in self._STR_FIELDS:
-                yield Label(label)
-                yield Input(
-                    value=getattr(h, field_name), id=f"input-hermetic-{field_name}"
+            with Horizontal(classes="hermeticedit-row"):
+                yield Label("House")
+                yield Select(
+                    [(house.name, house.id) for house in houses],
+                    value=h.house or Select.NULL,
+                    allow_blank=True,
+                    prompt="(none selected)",
+                    id="select-hermetic-house",
+                    compact=True,
                 )
-            with Horizontal():
+            for label, field_name in self._STR_FIELDS:
+                with Horizontal(classes="hermeticedit-row"):
+                    yield Label(label)
+                    yield Input(
+                        value=getattr(h, field_name),
+                        id=f"input-hermetic-{field_name}",
+                        compact=True,
+                    )
+            with Horizontal(id="hermetic-buttons"):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -5420,6 +5633,12 @@ class SheetSection(Collapsible):
         super().__init__(*children, title=title, **kwargs)
 
 
+def _tab_placeholder(tab_name: str) -> str:
+    """Text for a not-yet-built flat placeholder tab (e.g. Diary, both on
+    the covenant and character sheets)."""
+    return f"{tab_name} aren't built yet -- coming in a future update."
+
+
 #: The covenant Library tab's sections, where 'I' imports books into the
 #: covenant's library.
 _LIBRARY_SECTIONS: frozenset[str] = frozenset(
@@ -5889,23 +6108,101 @@ class SpellListView(Vertical):
 class CharacterSheetView(Vertical):
     """The character sheet mounted into WorkspaceScreen's detail pane.
 
-    One tab per page of the official character sheet, each a scrolling
-    stack of collapsible sections (rendered as plain text for now, matching
-    the rest of the app's read-then-refresh style):
+    A fixed top panel (Info above Characteristics -- not inside any tab,
+    permanently expanded, same PinnedCollapsible pattern as
+    CovenantSheetView/LaboratorySheetView) above the tabbed body. This is
+    STORY-207's finished layout -- tab order: Description, Abilities,
+    Virtues & Flaws, Hermetic Magic (magi only), Inventory, Laboratory
+    (magi only), Diary.
 
-    - Identity (page 1): Identity, Background, Description, Characteristics,
-      Abilities (grouped by category), Virtues & Flaws (grouped
-      Virtue/Flaw, tagged Free/Minor/Major), Aging & Warping.
-    - Personality & Health (page 2): Personality Traits, Reputations,
-      Wounds, Fatigue, Inventory (the sheet's Equipment section).
-    - Hermetic (page 3, magi only): Magical Arts (Techniques then Forms),
-      Raw Vis, Hermetic Background.
-    - Spells (page 4, magi only): Spells known -- a single pane, no
-      sub-sections, since nothing new was added here.
+    - Description (tab, id "tab-description"): Hermetic Background (magi
+      only), Biographical Detail (merged Background + Description + the
+      new Biography field), Personality Traits and Reputations (side by
+      side), Aging & Warping, Health (merged Wounds + Fatigue, two
+      columns, two independent Edit affordances).
+    - Abilities (tab, id "tab-abilities"): a flat pane (no Collapsible)
+      with the Abilities list and its details panel.
+    - Virtues & Flaws (tab, id "tab-vf"): Virtues and Flaws as two
+      independently-collapsible sections side by side (mirroring
+      CovenantSheetView's Boons/Hooks), with one details panel below both,
+      separate from either section.
+    - Hermetic Magic (tab, id "tab-hermetic", magi only): Magical Arts
+      (a PinnedCollapsible, not a toggleable SheetSection -- two side-by-
+      side selectable columns, Techniques then Forms, each row Name/Level/
+      XP; 'e' still opens EditArtsScreen to edit every Art at once), Raw
+      Vis (the first of two duplicated instances, both backed by
+      character.raw_vis and both mounted at once -- refresh_section()
+      updates both lists regardless of which section id triggered it, so
+      switching tabs never shows stale data), and Known Spells (folded in
+      from the old "Spells" tab). The three lists (Techniques, Forms,
+      Known Spells) share one details panel docked at the tab's bottom,
+      outside every section -- see _refresh_hermetic_info().
+    - Inventory (tab, id "tab-inventory"): Raw Vis (magi only, the second
+      of the two duplicated instances -- see Hermetic Magic above),
+      Personal Gear (renamed from "Inventory", same character.inventory
+      data), Books.
+    - Laboratory (tab, id "tab-lab", magi only) and Diary (tab, id
+      "tab-diary", every character type): flat placeholder panes, no
+      Collapsible, mirroring CovenantSheetView's own Diary placeholder
+      (see the module-level _tab_placeholder() helper both share). Neither
+      is in _CHARACTER_DISPATCH_TABS, so switching to either clears focus
+      and 'e' falls back to editing the top panel -- the flat-tab
+      focus-fallback logic every earlier slice set up for exactly this.
     """
 
     DEFAULT_CSS = """
     CharacterSheetView {
+        height: 1fr;
+    }
+
+    CharacterSheetView #char-top-panel {
+        width: 1fr;
+        height: auto;
+    }
+
+    CharacterSheetView #char-info-body {
+        width: 1fr;
+        height: auto;
+    }
+
+    CharacterSheetView #char-info-left,
+    CharacterSheetView #char-info-right {
+        width: 1fr;
+        height: auto;
+    }
+
+    CharacterSheetView #char-biographical-row,
+    CharacterSheetView #hermetic-background-row,
+    CharacterSheetView #char-health-row,
+    CharacterSheetView #pt-rep-row {
+        width: 1fr;
+        height: auto;
+    }
+
+    CharacterSheetView #char-biographical-left,
+    CharacterSheetView #char-biographical-right,
+    CharacterSheetView #hermetic-background-left,
+    CharacterSheetView #hermetic-background-right,
+    CharacterSheetView #char-health-wounds-col,
+    CharacterSheetView #char-health-fatigue-col {
+        width: 1fr;
+        height: auto;
+    }
+
+    CharacterSheetView #pt-rep-row SheetSection {
+        width: 1fr;
+    }
+
+    CharacterSheetView #vf-row {
+        width: 1fr;
+        height: auto;
+    }
+
+    CharacterSheetView #section-vf-virtues {
+        margin-right: 2;
+    }
+
+    CharacterSheetView TabbedContent {
         height: 1fr;
     }
 
@@ -5924,7 +6221,7 @@ class CharacterSheetView(Vertical):
     CharacterSheetView #ability-info,
     CharacterSheetView #vf-info,
     CharacterSheetView #inventory-info,
-    CharacterSheetView #known-spells-info {
+    CharacterSheetView #hermetic-info {
         width: 1fr;
         height: auto;
         min-height: 6;
@@ -5932,66 +6229,191 @@ class CharacterSheetView(Vertical):
         padding: 1 2;
         background: $panel;
     }
+
+    CharacterSheetView #hermetic-body {
+        height: 1fr;
+    }
+
+    CharacterSheetView #arts-row {
+        width: 1fr;
+        height: auto;
+    }
+
+    CharacterSheetView #arts-techniques-col,
+    CharacterSheetView #arts-forms-col {
+        width: 1fr;
+        height: auto;
+    }
+
+    CharacterSheetView #arts-techniques-col {
+        margin-right: 2;
+    }
+
+    CharacterSheetView .arts-col-title {
+        text-style: bold;
+    }
+
+    CharacterSheetView .arts-header {
+        color: $text-muted;
+    }
     """
 
     def __init__(self, saga: Saga, character: Character) -> None:
         super().__init__()
         self.saga = saga
         self.character = character
+        #: Set once TabbedContent's initial TabActivated has been seen -- see
+        #: WorkspaceScreen.on_tabbed_content_tab_activated().
+        self.initial_tab_seen = False
 
     def compose(self) -> ComposeResult:
         character = self.character
-        with TabbedContent(initial="tab-identity"):
-            with TabPane("Identity", id="tab-identity"), VerticalScroll():
-                with SheetSection(title="Identity", id="section-identity"):
-                    yield Static(self._identity_text(), id="identity-content")
-                with SheetSection(title="Background", id="section-background"):
-                    yield Static(self._background_text(), id="background-content")
-                with SheetSection(title="Description", id="section-description"):
-                    yield Static(self._description_text(), id="description-content")
-                with SheetSection(
-                    title="Characteristics", id="section-characteristics"
+        with Vertical(id="char-top-panel"):
+            with PinnedCollapsible(title=character.name, id="section-char-info"):
+                with Horizontal(id="char-info-body"):
+                    yield Static(self._info_left_text(), id="char-info-left")
+                    yield Static(self._info_right_text(), id="char-info-right")
+                yield Button("Edit (e)", id="btn-char-info-edit", compact=True)
+            with PinnedCollapsible(
+                title="Characteristics", id="section-char-characteristics"
+            ):
+                yield Static(
+                    self._characteristics_text(), id="char-characteristics-content"
+                )
+                yield Button(
+                    "Edit (e)", id="btn-char-characteristics-edit", compact=True
+                )
+        with TabbedContent(initial="tab-description"):
+            with TabPane("Description", id="tab-description"), VerticalScroll():
+                if character.type == "magus":
+                    with (
+                        SheetSection(
+                            title="Hermetic Background",
+                            id="section-hermetic-background",
+                        ),
+                        Horizontal(id="hermetic-background-row"),
+                    ):
+                        yield Static(
+                            self._hermetic_background_left_text(),
+                            id="hermetic-background-left",
+                        )
+                        yield Static(
+                            self._hermetic_background_right_text(),
+                            id="hermetic-background-right",
+                        )
+                with (
+                    SheetSection(
+                        title="Biographical Detail", id="section-char-biographical"
+                    ),
+                    Horizontal(id="char-biographical-row"),
                 ):
                     yield Static(
-                        self._characteristics_text(), id="characteristics-content"
+                        self._biographical_left_text(), id="char-biographical-left"
                     )
-                with SheetSection(title="Abilities", id="section-abilities"):
-                    yield SelectableList(self._ability_rows(), id="abilities-list")
-                    yield Static(self._ability_info_text(None), id="ability-info")
-                with SheetSection(title="Virtues & Flaws", id="section-vf"):
-                    with Horizontal(id="vf-row"):
-                        with Vertical(id="vf-virtues-col"):
-                            yield Static("Virtues", id="vf-virtues-title")
-                            yield SelectableList(
-                                self._vf_rows("Virtue"), id="vf-virtues-list"
-                            )
-                        with Vertical(id="vf-flaws-col"):
-                            yield Static("Flaws", id="vf-flaws-title")
-                            yield SelectableList(
-                                self._vf_rows("Flaw"), id="vf-flaws-list"
-                            )
-                    yield Static(self._vf_info_text(None), id="vf-info")
+                    yield Static(
+                        self._biographical_right_text(),
+                        id="char-biographical-right",
+                    )
+                with Horizontal(id="pt-rep-row"):
+                    with SheetSection(
+                        title="Personality Traits", id="section-personality-traits"
+                    ):
+                        yield SelectableList(
+                            self._personality_trait_rows(),
+                            id="personality-traits-list",
+                        )
+                    with SheetSection(title="Reputations", id="section-reputations"):
+                        yield SelectableList(
+                            self._reputation_rows(), id="character-reputations-list"
+                        )
                 with SheetSection(title="Aging & Warping", id="section-aging"):
                     yield Static(self._aging_text(), id="aging-content")
+                with (
+                    SheetSection(title="Health", id="section-char-health"),
+                    Horizontal(id="char-health-row"),
+                ):
+                    with Vertical(id="char-health-wounds-col"):
+                        yield Static(self._wounds_text(), id="wounds-content")
+                        yield Button(
+                            "Edit Wounds (e)",
+                            id="btn-char-health-wounds-edit",
+                            compact=True,
+                        )
+                    with Vertical(id="char-health-fatigue-col"):
+                        yield Static(self._fatigue_text(), id="fatigue-content")
+                        yield Button(
+                            "Edit Fatigue",
+                            id="btn-char-health-fatigue-edit",
+                            compact=True,
+                        )
+            with TabPane("Abilities", id="tab-abilities"), VerticalScroll():
+                yield SelectableList(self._ability_rows(), id="abilities-list")
+                yield Static(self._ability_info_text(None), id="ability-info")
+            with TabPane("Virtues & Flaws", id="tab-vf"), VerticalScroll():
+                with Horizontal(id="vf-row"):
+                    with SheetSection(title="Virtues", id="section-vf-virtues"):
+                        yield SelectableList(
+                            self._vf_rows("Virtue"), id="vf-virtues-list"
+                        )
+                    with SheetSection(title="Flaws", id="section-vf-flaws"):
+                        yield SelectableList(self._vf_rows("Flaw"), id="vf-flaws-list")
+                yield Static(self._vf_info_text(None), id="vf-info")
+            if character.type == "magus":
+                with (
+                    TabPane("Hermetic Magic", id="tab-hermetic"),
+                    Vertical(id="hermetic-body"),
+                ):
+                    with VerticalScroll(id="hermetic-scroll"):
+                        with (
+                            PinnedCollapsible(title="Magical Arts", id="section-arts"),
+                            Horizontal(id="arts-row"),
+                        ):
+                            with Vertical(id="arts-techniques-col"):
+                                yield Static("Techniques", classes="arts-col-title")
+                                yield Static(
+                                    self._arts_header_text(),
+                                    classes="arts-header",
+                                )
+                                yield SelectableList(
+                                    self._arts_rows(TECHNIQUES),
+                                    id="arts-techniques-list",
+                                )
+                            with Vertical(id="arts-forms-col"):
+                                yield Static("Forms", classes="arts-col-title")
+                                yield Static(
+                                    self._arts_header_text(),
+                                    classes="arts-header",
+                                )
+                                yield SelectableList(
+                                    self._arts_rows(FORMS),
+                                    id="arts-forms-list",
+                                )
+                        with SheetSection(
+                            title="Raw Vis", id="section-raw-vis-hermetic"
+                        ):
+                            yield SelectableList(
+                                self._raw_vis_rows(), id="raw-vis-list-hermetic"
+                            )
+                        with SheetSection(
+                            title="Known Spells", id="section-known-spells"
+                        ):
+                            yield SelectableList(
+                                self._known_spell_rows(), id="known-spells-list"
+                            )
+                    yield Static(
+                        "[dim]Select an Art or a Known Spell to see its details.[/]",
+                        id="hermetic-info",
+                    )
             with (
-                TabPane("Personality & Health", id="tab-personality"),
+                TabPane("Inventory", id="tab-inventory"),
                 VerticalScroll(),
             ):
-                with SheetSection(
-                    title="Personality Traits", id="section-personality-traits"
-                ):
-                    yield SelectableList(
-                        self._personality_trait_rows(), id="personality-traits-list"
-                    )
-                with SheetSection(title="Reputations", id="section-reputations"):
-                    yield SelectableList(
-                        self._reputation_rows(), id="character-reputations-list"
-                    )
-                with SheetSection(title="Wounds", id="section-wounds"):
-                    yield Static(self._wounds_text(), id="wounds-content")
-                with SheetSection(title="Fatigue", id="section-fatigue"):
-                    yield Static(self._fatigue_text(), id="fatigue-content")
-                with SheetSection(title="Inventory", id="section-inventory"):
+                if character.type == "magus":
+                    with SheetSection(title="Raw Vis", id="section-raw-vis-inventory"):
+                        yield SelectableList(
+                            self._raw_vis_rows(), id="raw-vis-list-inventory"
+                        )
+                with SheetSection(title="Personal Gear", id="section-inventory"):
                     yield SelectableList(self._inventory_rows(), id="inventory-list")
                     yield Static(self._inventory_info_text(None), id="inventory-info")
                 yield BookListView(
@@ -6001,55 +6423,45 @@ class CharacterSheetView(Vertical):
                     docked=False,
                 )
             if character.type == "magus":
-                with TabPane("Hermetic", id="tab-hermetic"), VerticalScroll():
-                    with SheetSection(title="Magical Arts", id="section-arts"):
-                        yield Static(self._arts_text(), id="arts-content")
-                    with SheetSection(title="Raw Vis", id="section-raw-vis"):
-                        yield SelectableList(self._raw_vis_rows(), id="raw-vis-list")
-                    with SheetSection(
-                        title="Hermetic Background",
-                        id="section-hermetic-background",
-                    ):
-                        yield Static(
-                            self._hermetic_background_text(),
-                            id="hermetic-background-content",
-                        )
-                with TabPane("Spells", id="tab-spells"), VerticalScroll():
-                    yield SelectableList(
-                        self._known_spell_rows(), id="known-spells-list"
-                    )
-                    yield Static(
-                        self._known_spell_info_text(None), id="known-spells-info"
-                    )
+                with TabPane("Laboratory", id="tab-lab"):
+                    yield Static(_tab_placeholder("Laboratory"))
+            with TabPane("Diary", id="tab-diary"):
+                yield Static(_tab_placeholder("Diary"))
 
-    #: Bare Collapsible-section ids, except "tab-spells" which has no
+    #: Bare Collapsible-section ids, except "tab-abilities" which has no
     #: sub-sections (a single flat pane, keyed by its own tab id) -- see
-    #: WorkspaceScreen._active_character_section().
+    #: WorkspaceScreen._active_character_section(). Sections with more than
+    #: one Static (Biographical Detail, Hermetic Background, Health) are
+    #: special-cased in refresh_section() instead of listed here.
     _SECTION_CONTENT: ClassVar[dict[str, str]] = {
-        "section-identity": "#identity-content",
-        "section-background": "#background-content",
-        "section-description": "#description-content",
-        "section-characteristics": "#characteristics-content",
         "section-aging": "#aging-content",
-        "section-wounds": "#wounds-content",
-        "section-fatigue": "#fatigue-content",
-        "section-arts": "#arts-content",
-        "section-hermetic-background": "#hermetic-background-content",
     }
     _SECTION_TEXT: ClassVar[dict[str, str]] = {
-        "section-identity": "_identity_text",
-        "section-background": "_background_text",
-        "section-description": "_description_text",
-        "section-characteristics": "_characteristics_text",
         "section-aging": "_aging_text",
-        "section-wounds": "_wounds_text",
-        "section-fatigue": "_fatigue_text",
-        "section-arts": "_arts_text",
-        "section-hermetic-background": "_hermetic_background_text",
     }
 
     def refresh_section(self, section_id: str) -> None:
-        if section_id == "section-abilities":
+        if section_id == "section-char-info":
+            try:
+                self.query_one("#char-info-left", Static).update(self._info_left_text())
+                self.query_one("#char-info-right", Static).update(
+                    self._info_right_text()
+                )
+                self.query_one(
+                    "#section-char-info", Collapsible
+                ).title = self.character.name
+            except NoMatches:
+                pass
+            return
+        if section_id == "section-char-characteristics":
+            try:
+                self.query_one("#char-characteristics-content", Static).update(
+                    self._characteristics_text()
+                )
+            except NoMatches:
+                pass
+            return
+        if section_id == "tab-abilities":
             try:
                 self.query_one("#abilities-list", SelectableList).set_rows(
                     self._ability_rows()
@@ -6060,16 +6472,26 @@ class CharacterSheetView(Vertical):
             except NoMatches:
                 pass
             return
-        if section_id == "tab-spells":
+        if section_id == "section-known-spells":
             try:
                 self.query_one("#known-spells-list", SelectableList).set_rows(
                     self._known_spell_rows()
                 )
-                self.query_one("#known-spells-info", Static).update(
-                    self._known_spell_info_text(None)
+            except NoMatches:
+                pass
+            self._refresh_hermetic_info()
+            return
+        if section_id == "section-arts":
+            try:
+                self.query_one("#arts-techniques-list", SelectableList).set_rows(
+                    self._arts_rows(TECHNIQUES)
+                )
+                self.query_one("#arts-forms-list", SelectableList).set_rows(
+                    self._arts_rows(FORMS)
                 )
             except NoMatches:
                 pass
+            self._refresh_hermetic_info()
             return
         if section_id == "section-inventory":
             try:
@@ -6098,15 +6520,26 @@ class CharacterSheetView(Vertical):
             except NoMatches:
                 pass
             return
-        if section_id == "section-raw-vis":
+        if section_id in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
+            # Raw Vis deliberately appears twice (Hermetic Magic and
+            # Inventory tabs), both backed by character.raw_vis and both
+            # mounted at once (TabbedContent keeps inactive panes mounted,
+            # just hidden) -- refresh both lists regardless of which of the
+            # two section ids triggered this, so neither goes stale.
             try:
-                self.query_one("#raw-vis-list", SelectableList).set_rows(
+                self.query_one("#raw-vis-list-hermetic", SelectableList).set_rows(
+                    self._raw_vis_rows()
+                )
+            except NoMatches:
+                pass
+            try:
+                self.query_one("#raw-vis-list-inventory", SelectableList).set_rows(
                     self._raw_vis_rows()
                 )
             except NoMatches:
                 pass
             return
-        if section_id == "section-vf":
+        if section_id in ("section-vf-virtues", "section-vf-flaws"):
             try:
                 self.query_one("#vf-virtues-list", SelectableList).set_rows(
                     self._vf_rows("Virtue")
@@ -6115,6 +6548,35 @@ class CharacterSheetView(Vertical):
                     self._vf_rows("Flaw")
                 )
                 self.query_one("#vf-info", Static).update(self._vf_info_text(None))
+            except NoMatches:
+                pass
+            return
+        if section_id == "section-char-biographical":
+            try:
+                self.query_one("#char-biographical-left", Static).update(
+                    self._biographical_left_text()
+                )
+                self.query_one("#char-biographical-right", Static).update(
+                    self._biographical_right_text()
+                )
+            except NoMatches:
+                pass
+            return
+        if section_id == "section-hermetic-background":
+            try:
+                self.query_one("#hermetic-background-left", Static).update(
+                    self._hermetic_background_left_text()
+                )
+                self.query_one("#hermetic-background-right", Static).update(
+                    self._hermetic_background_right_text()
+                )
+            except NoMatches:
+                pass
+            return
+        if section_id == "section-char-health":
+            try:
+                self.query_one("#wounds-content", Static).update(self._wounds_text())
+                self.query_one("#fatigue-content", Static).update(self._fatigue_text())
             except NoMatches:
                 pass
             return
@@ -6140,9 +6602,17 @@ class CharacterSheetView(Vertical):
             "#character-reputations-list", SelectableList
         ).selected_data_index
 
-    def selected_raw_vis(self) -> int | None:
-        """Index into sorted(character.raw_vis) of the chosen row, or None."""
-        return self.query_one("#raw-vis-list", SelectableList).selected_data_index
+    def selected_raw_vis(self, section_id: str) -> int | None:
+        """Index into sorted(character.raw_vis) of the chosen row in
+        whichever of the two Raw Vis lists `section_id` (one of
+        "section-raw-vis-hermetic"/"section-raw-vis-inventory") names, or
+        None."""
+        list_id = (
+            "#raw-vis-list-hermetic"
+            if section_id == "section-raw-vis-hermetic"
+            else "#raw-vis-list-inventory"
+        )
+        return self.query_one(list_id, SelectableList).selected_data_index
 
     def selected_known_spell(self) -> int | None:
         """Index into character.spells_known of the chosen row, or None."""
@@ -6178,11 +6648,18 @@ class CharacterSheetView(Vertical):
                 self._inventory_info_text(event.data_index)
             )
             return
-        if list_id == "known-spells-list":
+        if list_id in ("arts-techniques-list", "arts-forms-list", "known-spells-list"):
             event.stop()
-            self.query_one("#known-spells-info", Static).update(
-                self._known_spell_info_text(event.data_index)
-            )
+            # Only one of the three Hermetic Magic lists has a selection at
+            # a time -- they share one details panel.
+            for other_id in (
+                "arts-techniques-list",
+                "arts-forms-list",
+                "known-spells-list",
+            ):
+                if other_id != list_id:
+                    self.query_one(f"#{other_id}", SelectableList).clear_selection()
+            self._refresh_hermetic_info()
             return
         if list_id not in ("vf-virtues-list", "vf-flaws-list"):
             return
@@ -6193,16 +6670,37 @@ class CharacterSheetView(Vertical):
         self.query_one(f"#{other}", SelectableList).clear_selection()
         self.query_one("#vf-info", Static).update(self._vf_info_text(event.data_index))
 
-    def _identity_text(self) -> str:
+    @staticmethod
+    def _aligned(rows: list[tuple[str, str]]) -> str:
+        width = max(len(label) for label, _ in rows)
+        return "\n".join(f"{label + ':':<{width + 1}} {value}" for label, value in rows)
+
+    @staticmethod
+    def _inherited(value: str) -> str:
+        """Dim a value that's derived/inherited and isn't edited here."""
+        return f"[dim]{escape(value)}[/]"
+
+    def _info_left_text(self) -> str:
+        b = self.character.background
+        age = character_age(b.year_born, self.saga.current_year)
+        return self._aligned(
+            [
+                ("Setting", b.setting or "(not set)"),
+                (
+                    "Age",
+                    age if age is not None else "(unknown -- set Year Born)",
+                ),
+                ("Current Year", self._inherited(str(self.saga.current_year))),
+                ("Current Season", self._inherited(self.saga.current_season)),
+            ]
+        )
+
+    def _info_right_text(self) -> str:
         saga, character = self.saga, self.character
         covenant = next(
             (c for c in saga.covenants if c.id == character.covenant_id), None
         )
-        lines = [
-            f"Name: {character.name}",
-            f"Type: {character.type}",
-            f"Covenant: {covenant.name if covenant else '(unassigned)'}",
-        ]
+        rows = [("Covenant", covenant.name if covenant else "(unassigned)")]
         if character.type == "magus":
             lab = next(
                 (
@@ -6212,52 +6710,73 @@ class CharacterSheetView(Vertical):
                 ),
                 None,
             )
-            lines.append(f"Assigned Laboratory: {lab.name if lab else '(unassigned)'}")
-        return "\n".join(lines)
+            rows.append(("Assigned Laboratory", lab.name if lab else "(unassigned)"))
+        b = character.background
+        rows += [
+            ("Type", character.type),
+            ("Confidence", str(b.confidence)),
+            ("Size", str(b.size)),
+        ]
+        return self._aligned(rows)
 
-    def _background_text(self) -> str:
-        b = self.character.background
-        age = character_age(b.year_born, self.saga.current_year)
+    def _biographical_left_text(self) -> str:
+        """Column 1 of Biographical Detail: every field except Biography
+        (column 2, see _biographical_right_text()) -- the remaining
+        Background fields (Setting/Confidence/Size live in the top panel)
+        plus every Description field but the free-text Biography box."""
+        b, d = self.character.background, self.character.description
         return "\n".join(
             [
                 f"Player: {b.player or '(not set)'}",
-                f"Setting: {b.setting or '(not set)'}",
-                f"Current Year: {self.saga.current_year}",
-                f"Age: {age if age is not None else '(unknown -- set Year Born)'}",
-                f"Size: {b.size}",
-                f"Confidence: {b.confidence}",
                 f"Birth Name: {b.birth_name or '(not set)'}",
                 f"Year Born: {b.year_born if b.year_born is not None else '(not set)'}",
                 f"Race/Nationality: {b.race_nationality or '(not set)'}",
                 f"Place of Origin: {b.place_of_origin or '(not set)'}",
                 f"Religion: {b.religion or '(not set)'}",
                 f"Title/Profession: {b.title_profession or '(not set)'}",
-            ]
-        )
-
-    def _description_text(self) -> str:
-        d = self.character.description
-        return "\n".join(
-            [
                 f"Height: {d.height if d.height is not None else '(not set)'}",
                 f"Weight: {d.weight if d.weight is not None else '(not set)'}",
                 f"Hair: {d.hair or '(not set)'}",
                 f"Eyes: {d.eyes or '(not set)'}",
                 f"Handedness: {d.handedness}",
-                "",
-                "Physical Description:",
-                d.physical_description or "(none recorded)",
+                f"Physical Description: {d.physical_description or '(not set)'}",
             ]
         )
 
+    def _biographical_right_text(self) -> str:
+        """Column 2 of Biographical Detail: just the free-text Biography
+        box (distinct from Physical Description -- see Description's
+        docstring in models.py)."""
+        return self.character.description.biography or "(none recorded)"
+
     def _characteristics_text(self) -> str:
+        """Int/Per/Str/Sta then Pre/Com/Dex/Qik, each value signed (a plain
+        "0" rather than "+0") and right-justified so the columns align."""
         c = self.character.characteristics
-        return (
-            f"Int {c.intelligence}   Per {c.perception}   "
-            f"Str {c.strength}   Sta {c.stamina}\n"
-            f"Pre {c.presence}   Com {c.communication}   "
-            f"Dex {c.dexterity}   Qik {c.quickness}"
+
+        def val(n: int) -> str:
+            s = f"+{n}" if n > 0 else str(n)
+            return f"{s:>2}"
+
+        row1 = "   ".join(
+            f"{label}: {val(value)}"
+            for label, value in (
+                ("Int", c.intelligence),
+                ("Per", c.perception),
+                ("Str", c.strength),
+                ("Sta", c.stamina),
+            )
         )
+        row2 = "   ".join(
+            f"{label}: {val(value)}"
+            for label, value in (
+                ("Pre", c.presence),
+                ("Com", c.communication),
+                ("Dex", c.dexterity),
+                ("Qik", c.quickness),
+            )
+        )
+        return f"{row1}\n{row2}"
 
     def _ability_rows(self) -> list[tuple[int | None, str]]:
         """One selectable list for every Ability, with a header (non-
@@ -6397,7 +6916,9 @@ class CharacterSheetView(Vertical):
             for index, art in enumerate(sorted(self.character.raw_vis))
         ]
 
-    def _hermetic_background_text(self) -> str:
+    def _hermetic_background_left_text(self) -> str:
+        """Column 1 of Hermetic Background: everything but Wizard's Sigil
+        (column 2, see _hermetic_background_right_text())."""
         h = self.character.hermetic
         house_catalog = catalog.load_house_catalog_by_id()
         house = house_catalog.get(h.house) if h.house else None
@@ -6409,25 +6930,69 @@ class CharacterSheetView(Vertical):
                 f"Parens: {h.parens or '(not set)'}",
                 f"Covenant of Apprenticeship: "
                 f"{h.covenant_of_apprenticeship or '(not set)'}",
-                f"Wizard's Sigil: {h.wizards_sigil or '(not set)'}",
             ]
         )
 
-    def _arts_text(self) -> str:
-        lines = ["Techniques:"]
-        for art in TECHNIQUES:
-            score = self.character.arts.get(art.lower(), ArtScore())
-            lines.append(
-                f"  {art} ({ART_ABBREVIATIONS[art]}): {score.level}/{score.xp}"
-            )
-        lines.append("")
-        lines.append("Forms:")
-        for art in FORMS:
-            score = self.character.arts.get(art.lower(), ArtScore())
-            lines.append(
-                f"  {art} ({ART_ABBREVIATIONS[art]}): {score.level}/{score.xp}"
-            )
-        return "\n".join(lines)
+    def _hermetic_background_right_text(self) -> str:
+        """Column 2 of Hermetic Background: just Wizard's Sigil."""
+        sigil = self.character.hermetic.wizards_sigil
+        return f"Wizard's Sigil: {sigil or '(not set)'}"
+
+    _ARTS_NAME_WIDTH: ClassVar[int] = 16
+    _ARTS_NUM_WIDTH: ClassVar[int] = 6
+
+    def _arts_header_text(self) -> str:
+        """Column titles above an Arts list, aligned with _art_row_label()
+        (the two-character indent is the list's selector marker)."""
+        return (
+            f"  {'':<{self._ARTS_NAME_WIDTH}}"
+            f"{'Level':>{self._ARTS_NUM_WIDTH}}{'XP':>{self._ARTS_NUM_WIDTH}}"
+        )
+
+    def _art_row_label(self, art: str) -> str:
+        score = self.character.arts.get(art.lower(), ArtScore())
+        name = f"{art} ({ART_ABBREVIATIONS[art]})"
+        return (
+            f"{name:<{self._ARTS_NAME_WIDTH}}"
+            f"{score.level:>{self._ARTS_NUM_WIDTH}}{score.xp:>{self._ARTS_NUM_WIDTH}}"
+        )
+
+    def _arts_rows(self, arts: list[str]) -> list[tuple[int, str]]:
+        return [(i, self._art_row_label(art)) for i, art in enumerate(arts)]
+
+    def _art_info_text(self, art: str) -> str:
+        score = self.character.arts.get(art.lower(), ArtScore())
+        return "\n".join(
+            [
+                f"[b]Name:[/] {art} ({ART_ABBREVIATIONS[art]})",
+                f"[b]Level:[/] {score.level}    [b]XP:[/] {score.xp}",
+                "",
+                # No catalog description exists for Arts yet -- see
+                # kanban's STORY-209 (Add descriptions to Hermetic Arts).
+                "[dim]No description available yet for this Art.[/]",
+            ]
+        )
+
+    def _refresh_hermetic_info(self) -> None:
+        """The Hermetic Magic tab's single details panel, shared by the
+        Magical Arts columns and Known Spells (only one of the three lists
+        has a selection at a time -- see on_selectable_list_chosen())."""
+        try:
+            info = self.query_one("#hermetic-info", Static)
+        except NoMatches:
+            return
+        index = self.query_one(
+            "#arts-techniques-list", SelectableList
+        ).selected_data_index
+        if index is not None:
+            info.update(self._art_info_text(TECHNIQUES[index]))
+            return
+        index = self.query_one("#arts-forms-list", SelectableList).selected_data_index
+        if index is not None:
+            info.update(self._art_info_text(FORMS[index]))
+            return
+        index = self.query_one("#known-spells-list", SelectableList).selected_data_index
+        info.update(self._known_spell_info_text(index))
 
     def _known_spell_rows(self) -> list[tuple[int | None, str]]:
         rows: list[tuple[int | None, str]] = []
@@ -7007,7 +7572,7 @@ class CovenantSheetView(Vertical):
                     summary=True,
                 )
             with TabPane("Diary", id="tab-cov-diary"):
-                yield Static(self._placeholder("Diary"))
+                yield Static(_tab_placeholder("Diary"))
 
     def _inhabitants_tab(self) -> ComposeResult:
         """Loyalty, the Inhabitants summary and Miscellaneous blocks, one
@@ -7391,9 +7956,6 @@ class CovenantSheetView(Vertical):
             ]
         )
 
-    def _placeholder(self, tab_name: str) -> str:
-        return f"{tab_name} aren't built yet -- coming in a future update."
-
     def _description_text(self) -> str:
         # Backed by Covenant.notes (the free-text field set at creation).
         text = self.covenant.notes.strip()
@@ -7520,16 +8082,17 @@ class WorkspaceScreen(Screen[None]):
     #: dedicated key, since a fully-built sheet has too many addable/
     #: editable sections for that to scale. Sections live inside
     #: Collapsibles (several per tab), so the dispatch key is normally a
-    #: Collapsible's id -- "tab-spells"/"tab-lab-vf"/"tab-lab-diary" are
+    #: Collapsible's id -- "tab-abilities"/"tab-lab-vf"/"tab-lab-diary" are
     #: the exceptions, tabs with no sub-sections, keyed by their own tab
     #: id (see _active_section()).
     _ADD_SECTIONS: ClassVar[set[str]] = {
-        "section-abilities",
+        "tab-abilities",
         "section-personality-traits",
         "section-reputations",
-        "section-raw-vis",
+        "section-raw-vis-hermetic",
+        "section-raw-vis-inventory",
+        "section-known-spells",
         "section-inventory",
-        "tab-spells",
         "section-lab-specialties",
         "section-lab-features",
         "section-lab-rooms",
@@ -7546,12 +8109,13 @@ class WorkspaceScreen(Screen[None]):
         SPELL_SECTION,
     }
     _REMOVE_SECTIONS: ClassVar[set[str]] = {
-        "section-abilities",
+        "tab-abilities",
         "section-personality-traits",
         "section-reputations",
-        "section-raw-vis",
+        "section-raw-vis-hermetic",
+        "section-raw-vis-inventory",
+        "section-known-spells",
         "section-inventory",
-        "tab-spells",
         "section-lab-specialties",
         "section-lab-features",
         "section-lab-rooms",
@@ -7568,21 +8132,20 @@ class WorkspaceScreen(Screen[None]):
         SPELL_SECTION,
     }
     _EDIT_SECTIONS: ClassVar[set[str]] = {
-        "section-identity",
-        "section-background",
-        "section-description",
-        "section-characteristics",
-        "section-abilities",
+        "section-char-info",
+        "section-char-characteristics",
+        "section-char-biographical",
+        "tab-abilities",
         "section-aging",
-        "section-wounds",
-        "section-fatigue",
+        "section-char-health",
         "section-arts",
         "section-hermetic-background",
         "section-personality-traits",
         "section-reputations",
-        "section-raw-vis",
+        "section-raw-vis-hermetic",
+        "section-raw-vis-inventory",
+        "section-known-spells",
         "section-inventory",
-        "tab-spells",
         "section-lab-identity",
         "section-lab-characteristics",
         "section-lab-specialties",
@@ -7613,6 +8176,12 @@ class WorkspaceScreen(Screen[None]):
     #: None yet -- every covenant tab is a placeholder, so the dispatch falls
     #: back to the always-visible info panel. See _active_covenant_section().
     _COVENANT_DISPATCH_TABS: ClassVar[set[str]] = set()
+
+    #: Character tabs that own their own a/A/e dispatch (keyed by tab id),
+    #: same idea as _COVENANT_DISPATCH_TABS -- "tab-abilities" is a flat
+    #: pane with no sub-sections, so it dispatches on its own tab id rather
+    #: than falling back to the top panel. See _active_character_section().
+    _CHARACTER_DISPATCH_TABS: ClassVar[set[str]] = {"tab-abilities"}
 
     DEFAULT_CSS = """
     #workspace-body {
@@ -7834,7 +8403,7 @@ class WorkspaceScreen(Screen[None]):
         if action in ("add_virtue_flaw", "remove_virtue_flaw"):
             if self.selected_kind == "laboratory":
                 return self._active_section() == "tab-lab-vf"
-            return self._active_section() == "section-vf"
+            return self._active_section() in ("section-vf-virtues", "section-vf-flaws")
         return True
 
     def _active_section(self) -> str | None:
@@ -7878,12 +8447,14 @@ class WorkspaceScreen(Screen[None]):
     def _active_character_section(self) -> str | None:
         """Which character-sheet section is "active" for a/A/e dispatch.
 
-        Sections live inside Collapsibles now (several per tab), so tab id
-        alone can no longer disambiguate -- resolve the nearest Collapsible
-        ancestor of whatever's currently focused instead. Falls back to the
-        bare tab id when nothing's focused inside a Collapsible (including
-        tabs with no sub-sections at all, like Spells), matching the old
-        whole-tab dispatch exactly for that case.
+        Same mechanism as _active_covenant_section(): resolve the nearest
+        Collapsible ancestor of whatever's currently focused (this also
+        covers the top panel's two PinnedCollapsibles, which live outside
+        the TabbedContent). With nothing focused inside a Collapsible, a tab
+        that owns its own flat dispatch (see _CHARACTER_DISPATCH_TABS, e.g.
+        Spells) reports its own tab id; every other tab falls back to the
+        always-visible top-panel info section, so 'e' edits the character
+        from any tab.
         """
         if self._character_sheet_view is None:
             return None
@@ -7899,7 +8470,9 @@ class WorkspaceScreen(Screen[None]):
             for widget in focused.ancestors_with_self:
                 if isinstance(widget, Collapsible) and widget.id:
                     return widget.id
-        return tab_id
+        if tab_id in self._CHARACTER_DISPATCH_TABS:
+            return tab_id
+        return "section-char-info"
 
     def _active_laboratory_section(self) -> str | None:
         """Same mechanism as _active_character_section(), against the
@@ -7928,6 +8501,7 @@ class WorkspaceScreen(Screen[None]):
         # tab's first section focus so 'e'/'a'/'A' work immediately without
         # requiring an explicit Tab-key navigation first.
         view = {
+            "character": self._character_sheet_view,
             "laboratory": self._laboratory_sheet_view,
             "covenant": self._covenant_sheet_view,
         }.get(self.selected_kind)
@@ -7951,10 +8525,22 @@ class WorkspaceScreen(Screen[None]):
         elif event.button.id == "btn-cov-edit":
             event.stop()
             self._edit_covenant()
+        elif event.button.id == "btn-char-info-edit":
+            event.stop()
+            self._edit_character_info()
+        elif event.button.id == "btn-char-characteristics-edit":
+            event.stop()
+            self._edit_characteristics()
+        elif event.button.id == "btn-char-health-wounds-edit":
+            event.stop()
+            self._edit_wounds()
+        elif event.button.id == "btn-char-health-fatigue-edit":
+            event.stop()
+            self._edit_fatigue()
 
     def _focus_first_section(self, *, initial: bool = False) -> None:
         if self.selected_kind == "character":
-            self._focus_first_character_section()
+            self._focus_first_character_section(initial=initial)
         elif self.selected_kind == "laboratory":
             self._focus_first_laboratory_section(initial=initial)
         elif self.selected_kind == "covenant":
@@ -7986,18 +8572,32 @@ class WorkspaceScreen(Screen[None]):
             return
         collapsible.query_one("CollapsibleTitle").focus()
 
-    def _focus_first_character_section(self) -> None:
+    def _focus_first_character_section(self, *, initial: bool = False) -> None:
+        """Same logic as _focus_first_covenant_section() (see that method's
+        docstring): unlike Laboratory, Character's default tab (Identity)
+        already has Collapsibles of its own, so an active-pane-first lookup
+        would never reach the top panel on first showing the character --
+        this always checks the whole view first when `initial`, so the
+        always-visible top panel gets focus straight away, matching
+        Covenant. On a later tab switch, scope to that tab's own Collapsibles
+        (or clear focus for a flat tab, e.g. a future placeholder tab), so
+        dispatch falls back to the top panel instead of a stale Collapsible
+        from the previous tab."""
         if self._character_sheet_view is None:
             return
+        view = self._character_sheet_view
         try:
-            tabbed = self._character_sheet_view.query_one(TabbedContent)
-            if not tabbed.active:
-                return
-            active_pane = self._character_sheet_view.query_one(
-                f"#{tabbed.active}", TabPane
-            )
-            collapsible = active_pane.query(Collapsible).first()
+            if initial:
+                collapsible = view.query(Collapsible).first()
+            else:
+                tabbed = view.query_one(TabbedContent)
+                if not tabbed.active:
+                    return
+                active_pane = view.query_one(f"#{tabbed.active}", TabPane)
+                collapsible = active_pane.query(Collapsible).first()
         except NoMatches:
+            if not initial:
+                self.screen.set_focus(None)
             return
         collapsible.query_one("CollapsibleTitle").focus()
 
@@ -8087,7 +8687,7 @@ class WorkspaceScreen(Screen[None]):
         view = CharacterSheetView(self.saga, character)
         await self._set_detail(view)
         self._character_sheet_view = view
-        self._focus_first_section()
+        self._focus_first_section(initial=True)
 
     def _refresh_character_section(self, section_id: str) -> None:
         if self._character_sheet_view is not None:
@@ -8200,9 +8800,9 @@ class WorkspaceScreen(Screen[None]):
             self._spell_form(None)
         elif section in BOOK_SECTIONS:
             self._book_form(None)
-        elif section == "section-abilities":
+        elif section == "tab-abilities":
             self._add_ability()
-        elif section == "tab-spells":
+        elif section == "section-known-spells":
             self._add_spell()
         elif section == "section-inventory":
             self._add_item()
@@ -8210,7 +8810,7 @@ class WorkspaceScreen(Screen[None]):
             self._add_personality_trait()
         elif section == "section-reputations":
             self._add_reputation()
-        elif section == "section-raw-vis":
+        elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
             self._add_raw_vis()
         elif section == "section-lab-specialties":
             self._add_specialty()
@@ -8243,9 +8843,9 @@ class WorkspaceScreen(Screen[None]):
             self._remove_saga_spell()
         elif section in BOOK_SECTIONS:
             self._remove_book()
-        elif section == "section-abilities":
+        elif section == "tab-abilities":
             self._remove_ability()
-        elif section == "tab-spells":
+        elif section == "section-known-spells":
             self._remove_spell()
         elif section == "section-inventory":
             self._remove_item()
@@ -8253,7 +8853,7 @@ class WorkspaceScreen(Screen[None]):
             self._remove_personality_trait()
         elif section == "section-reputations":
             self._remove_reputation()
-        elif section == "section-raw-vis":
+        elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
             self._remove_raw_vis()
         elif section == "section-lab-specialties":
             self._remove_specialty()
@@ -8286,22 +8886,22 @@ class WorkspaceScreen(Screen[None]):
             self._edit_saga_spell()
         elif section in BOOK_SECTIONS:
             self._edit_book()
-        elif section == "section-identity":
-            self._edit_identity()
-        elif section == "section-background":
-            self._edit_background()
-        elif section == "section-description":
-            self._edit_description()
-        elif section == "section-characteristics":
+        elif section == "section-char-info":
+            self._edit_character_info()
+        elif section == "section-char-characteristics":
             self._edit_characteristics()
-        elif section == "section-abilities":
+        elif section == "section-char-biographical":
+            self._edit_biographical_detail()
+        elif section == "tab-abilities":
             self._edit_ability()
         elif section == "section-aging":
             self._edit_aging()
-        elif section == "section-wounds":
+        elif section == "section-char-health":
+            # Health has two independent dialogs behind two Edit buttons
+            # (see the Health SheetSection's compose()) -- keyboard 'e'
+            # defaults to Wounds (column 1); Fatigue stays mouse-only via
+            # its own button.
             self._edit_wounds()
-        elif section == "section-fatigue":
-            self._edit_fatigue()
         elif section == "section-arts":
             self._edit_arts()
         elif section == "section-hermetic-background":
@@ -8310,11 +8910,11 @@ class WorkspaceScreen(Screen[None]):
             self._edit_personality_trait()
         elif section == "section-reputations":
             self._edit_reputation()
-        elif section == "section-raw-vis":
+        elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
             self._edit_raw_vis()
         elif section == "section-inventory":
             self._edit_item()
-        elif section == "tab-spells":
+        elif section == "section-known-spells":
             self._edit_spell_mastery()
         elif section == "section-lab-identity":
             self._edit_lab_identity()
@@ -10079,14 +10679,14 @@ class WorkspaceScreen(Screen[None]):
             SetDateScreen(saga.current_season, saga.current_year), handle_result
         )
 
-    # -- Identity / Characteristics --
+    # -- Character Info / Characteristics --
 
-    def _edit_identity(self) -> None:
+    def _edit_character_info(self) -> None:
         character = self.selected_character
         if character is None:
             return
 
-        def handle_result(result: dict[str, str | None] | None) -> None:
+        def handle_result(result: dict[str, object] | None) -> None:
             if result is None:
                 return
             character.name = result["name"]
@@ -10094,11 +10694,16 @@ class WorkspaceScreen(Screen[None]):
             self.selected_covenant = self._covenant_by_id(character.covenant_id)
             if character.type == "magus":
                 self._assign_laboratory(character, result["laboratory_id"])
+            character.background.setting = result["setting"]
+            character.background.confidence = result["confidence"]
+            character.background.size = result["size"]
             storage.save_saga(self.saga)
             self._rebuild_tree()
-            self._refresh_character_section("section-identity")
+            self._refresh_character_section("section-char-info")
 
-        self.app.push_screen(IdentityEditScreen(self.saga, character), handle_result)
+        self.app.push_screen(
+            EditCharacterInfoScreen(self.saga, character), handle_result
+        )
 
     def _edit_characteristics(self) -> None:
         character = self.selected_character
@@ -10109,38 +10714,29 @@ class WorkspaceScreen(Screen[None]):
             if characteristics is not None:
                 character.characteristics = characteristics
                 storage.save_saga(self.saga)
-                self._refresh_character_section("section-characteristics")
+                self._refresh_character_section("section-char-characteristics")
 
         self.app.push_screen(
             EditCharacteristicsScreen(character.characteristics), handle_result
         )
 
-    def _edit_background(self) -> None:
+    def _edit_biographical_detail(self) -> None:
         character = self.selected_character
         if character is None:
             return
 
-        def handle_result(background: Background | None) -> None:
-            if background is not None:
-                character.background = background
+        def handle_result(result: dict[str, object] | None) -> None:
+            if result is not None:
+                character.background = result["background"]
+                character.description = result["description"]
                 storage.save_saga(self.saga)
-                self._refresh_character_section("section-background")
-
-        self.app.push_screen(EditBackgroundScreen(character.background), handle_result)
-
-    def _edit_description(self) -> None:
-        character = self.selected_character
-        if character is None:
-            return
-
-        def handle_result(description: Description | None) -> None:
-            if description is not None:
-                character.description = description
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-description")
+                self._refresh_character_section("section-char-biographical")
+                # Age (derived from Year Born) lives in the top panel.
+                self._refresh_character_section("section-char-info")
 
         self.app.push_screen(
-            EditDescriptionScreen(character.description), handle_result
+            EditBiographicalDetailScreen(character.background, character.description),
+            handle_result,
         )
 
     def _edit_aging(self) -> None:
@@ -10168,7 +10764,7 @@ class WorkspaceScreen(Screen[None]):
             if ability is not None:
                 character.abilities.append(ability)
                 storage.save_saga(self.saga)
-                self._refresh_character_section("section-abilities")
+                self._refresh_character_section("tab-abilities")
 
         self.app.push_screen(AbilityPickerScreen(exclude_names), handle_result)
 
@@ -10215,7 +10811,7 @@ class WorkspaceScreen(Screen[None]):
             if confirmed:
                 del character.abilities[index]
                 storage.save_saga(self.saga)
-                self._refresh_character_section("section-abilities")
+                self._refresh_character_section("tab-abilities")
 
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
@@ -10252,7 +10848,7 @@ class WorkspaceScreen(Screen[None]):
             if ability is not None:
                 character.abilities[index] = ability
                 storage.save_saga(self.saga)
-                self._refresh_character_section("section-abilities")
+                self._refresh_character_section("tab-abilities")
 
         self.app.push_screen(
             AbilityDetailsScreen(existing.name, existing.category, existing),
@@ -10472,7 +11068,7 @@ class WorkspaceScreen(Screen[None]):
             if wounds is not None:
                 character.wounds = wounds
                 storage.save_saga(self.saga)
-                self._refresh_character_section("section-wounds")
+                self._refresh_character_section("section-char-health")
 
         self.app.push_screen(EditWoundsScreen(character.wounds), handle_result)
 
@@ -10485,7 +11081,7 @@ class WorkspaceScreen(Screen[None]):
             if level is not None:
                 character.fatigue_level = level
                 storage.save_saga(self.saga)
-                self._refresh_character_section("section-fatigue")
+                self._refresh_character_section("section-char-health")
 
         self.app.push_screen(EditFatigueScreen(character.fatigue_level), handle_result)
 
@@ -10516,13 +11112,19 @@ class WorkspaceScreen(Screen[None]):
                 art, pawns = result
                 character.raw_vis[art] = character.raw_vis.get(art, 0) + pawns
                 storage.save_saga(self.saga)
-                self._refresh_character_section("section-raw-vis")
+                self._refresh_character_section("section-raw-vis-hermetic")
 
         self.app.push_screen(RawVisPromptScreen(), handle_result)
 
     def _selected_raw_vis(self) -> int | None:
         view = self._character_sheet_view
-        return view.selected_raw_vis() if view is not None else None
+        section = self._active_character_section()
+        if view is None or section not in (
+            "section-raw-vis-hermetic",
+            "section-raw-vis-inventory",
+        ):
+            return None
+        return view.selected_raw_vis(section)
 
     def _edit_raw_vis(self) -> None:
         """Edit the chosen Raw Vis entry; with none chosen, ask which one."""
@@ -10563,7 +11165,7 @@ class WorkspaceScreen(Screen[None]):
                 # the pawns into it, same as adding Raw Vis of a held Art does.
                 character.raw_vis[art] = character.raw_vis.get(art, 0) + pawns
                 storage.save_saga(self.saga)
-                self._refresh_character_section("section-raw-vis")
+                self._refresh_character_section("section-raw-vis-hermetic")
 
         self.app.push_screen(
             RawVisPromptScreen(existing=(old_art, character.raw_vis[old_art])),
@@ -10605,7 +11207,7 @@ class WorkspaceScreen(Screen[None]):
             if confirmed:
                 del character.raw_vis[art]
                 storage.save_saga(self.saga)
-                self._refresh_character_section("section-raw-vis")
+                self._refresh_character_section("section-raw-vis-hermetic")
 
         self.app.push_screen(
             ConfirmScreen(f"Delete {escape(art.title())}?"), handle_confirmed
@@ -10637,7 +11239,7 @@ class WorkspaceScreen(Screen[None]):
             if spell_id is not None:
                 character.spells_known.append(KnownSpell(spell_id=spell_id))
                 storage.save_saga(self.saga)
-                self._refresh_character_section("tab-spells")
+                self._refresh_character_section("section-known-spells")
 
         self.app.push_screen(
             SpellChooserScreen(
@@ -10695,7 +11297,7 @@ class WorkspaceScreen(Screen[None]):
             if result is not None:
                 character.spells_known[index] = result
                 storage.save_saga(self.saga)
-                self._refresh_character_section("tab-spells")
+                self._refresh_character_section("section-known-spells")
 
         self.app.push_screen(MasteryEditScreen(name, known), handle_result)
 
@@ -10733,7 +11335,7 @@ class WorkspaceScreen(Screen[None]):
             if confirmed:
                 del character.spells_known[index]
                 storage.save_saga(self.saga)
-                self._refresh_character_section("tab-spells")
+                self._refresh_character_section("section-known-spells")
 
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
@@ -11270,13 +11872,16 @@ class WorkspaceScreen(Screen[None]):
                 if is_lab:
                     self._refresh_laboratory_section("tab-lab-vf")
                 else:
-                    self._refresh_character_section("section-vf")
+                    self._refresh_character_section("section-vf-virtues")
 
         self.app.push_screen(picker(existing_ids), handle_result)
 
     def action_remove_virtue_flaw(self) -> None:
         is_lab = self.selected_kind == "laboratory"
-        if not is_lab and self._active_section() == "section-vf":
+        if not is_lab and self._active_section() in (
+            "section-vf-virtues",
+            "section-vf-flaws",
+        ):
             self._remove_character_virtue_flaw()
             return
 
@@ -11303,7 +11908,7 @@ class WorkspaceScreen(Screen[None]):
                 if is_lab:
                     self._refresh_laboratory_section("tab-lab-vf")
                 else:
-                    self._refresh_character_section("section-vf")
+                    self._refresh_character_section("section-vf-virtues")
 
         self.app.push_screen(
             RemovalPickerScreen("Remove a Virtue or Flaw", labels), handle_result
@@ -11352,7 +11957,7 @@ class WorkspaceScreen(Screen[None]):
             if confirmed:
                 del character.virtues_flaws[index]
                 storage.save_saga(self.saga)
-                self._refresh_character_section("section-vf")
+                self._refresh_character_section("section-vf-virtues")
 
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
@@ -11362,7 +11967,10 @@ class WorkspaceScreen(Screen[None]):
             and self._active_section() == "tab-lab-vf"
         ):
             return self.selected_laboratory
-        if self.selected_kind == "character" and self._active_section() == "section-vf":
+        if self.selected_kind == "character" and self._active_section() in (
+            "section-vf-virtues",
+            "section-vf-flaws",
+        ):
             return self.selected_character
         return None
 
