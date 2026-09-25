@@ -7512,6 +7512,12 @@ class CovenantSheetView(Vertical):
         color: $text-muted;
     }
 
+    CovenantSheetView .pos-header {
+        width: 1fr;
+        height: auto;
+        color: $text-muted;
+    }
+
     CovenantSheetView #eco-panel {
         width: 1fr;
         height: auto;
@@ -7629,6 +7635,7 @@ class CovenantSheetView(Vertical):
                     with SheetSection(
                         title=pos.KIND_TITLES[kind], id=f"section-pos-{kind}"
                     ):
+                        yield Static(pos.table_header(kind), classes="pos-header")
                         yield SelectableList(
                             self._pos_rows(kind), id=f"pos-{kind}-list"
                         )

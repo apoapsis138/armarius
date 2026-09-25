@@ -670,7 +670,9 @@ async def test_selecting_covenant_shows_summary_and_tree_children():
         )
         assert "A nice place" in view._description_text()
         # The old bare vis_stock became a Raw Vis store on the Possessions tab.
-        assert view._pos_rows("vis_store") == [(0, "Ignem Vis | Art: Ignem | Pawns: 5")]
+        assert view._pos_rows("vis_store") == [
+            (0, "Ignem Vis           Ignem          5")
+        ]
 
         tree = app.screen.query_one("#nav-tree", Tree)
         assert _find_node(tree, ("character_group", "cov1")) is not None
@@ -5919,7 +5921,7 @@ async def test_possessions_tab_has_its_seven_sections_and_lists_the_labs_as_sanc
         # The laboratory is a sanctum without anyone adding it, Quality/Upkeep
         # read live from its Lab Characteristics.
         assert _pos_labels(app, "sanctum") == [
-            "Test Lab | Owner: Leandro | Quality: 0 | Upkeep: 0 Points"
+            "Test Lab            Leandro               0       0"
         ]
         assert "Select a possession" in _pos_panel(app)
 
@@ -5969,8 +5971,7 @@ async def test_property_needs_only_a_name_and_supports_edit_and_delete():
         await _save_dialog(pilot, app)
         await _wait_until(pilot, lambda: "Location" in _pos_labels(app, "property")[0])
         assert _pos_labels(app, "property") == [
-            "Bare Plot | Location: By the river | Dimensions: 40 acres | "
-            "Inhabitants: Two tenant families"
+            "Bare Plot           By the river      40 acres      Two tenant families"
         ]
         await _select_pos_row(pilot, app, "property", 0)
         panel = _pos_panel(app)
@@ -6008,7 +6009,7 @@ async def test_a_laboratory_sanctum_edits_only_covenant_side_fields_and_cannot_b
         )
         await _save_dialog(pilot, app)
         assert _pos_labels(app, "sanctum") == [
-            "Test Lab | Owner: Leandro | Quality: 0 | Upkeep: 0 Points"
+            "Test Lab            Leandro               0       0"
         ]
 
         await _select_pos_row(pilot, app, "sanctum", 0)
@@ -6056,7 +6057,7 @@ async def test_manual_sanctums_have_every_field_and_can_be_deleted():
         await _save_dialog(pilot, app)
         await _wait_until(pilot, lambda: len(_pos_labels(app, "sanctum")) == 2)
         assert _pos_labels(app, "sanctum")[1] == (
-            "Hidden Study | Owner: Corvinus | Quality: 2 | Upkeep: 5 Points"
+            "Hidden Study        Corvinus              2       5"
         )
         await _select_pos_row(pilot, app, "sanctum", 1)
         assert "Build Points: 15" in _pos_panel(app)
@@ -6096,12 +6097,12 @@ async def test_weapons_armor_and_items_need_a_name_and_a_quantity_defaulting_to_
             await _save_dialog(pilot, app)
             await _wait_until(pilot, lambda kind=kind: len(_pos_labels(app, kind)) == 1)
             # Weapons and armor carry a Type and Quality (their points); items don't.
-            gear = {
-                "weapon": "Weapon or shield, Standard | ",
-                "armor": "Partial armor, Standard | ",
-                "item": "",
+            expected = {
+                "weapon": "Crossbows           Weapon or shield    Standard        3",
+                "armor": "Mail Hauberks       Partial armor       Standard        3",
+                "item": "The Weeping Lens        3",
             }[kind]
-            assert _pos_labels(app, kind) == [f"{name} | {gear}Qty: 3"]
+            assert _pos_labels(app, kind) == [expected]
 
         await _select_pos_row(pilot, app, "item", 0)
         panel = _pos_panel(app)
@@ -6179,7 +6180,7 @@ async def test_vis_source_requires_name_art_season_and_pawns():
         await _save_dialog(pilot, app)
         await _wait_until(pilot, lambda: len(_pos_labels(app, "vis_source")) == 1)
         assert _pos_labels(app, "vis_source") == [
-            "Whispering Well | Art: Vim | Pawns: 3 | Season: Winter"
+            "Whispering Well     Vim            3  Winter"
         ]
 
         await _select_pos_row(pilot, app, "vis_source", 0)
@@ -6235,7 +6236,7 @@ async def test_raw_vis_stores_take_name_art_pawns_and_optional_location_and_form
         _fill(app, name="Vim Vis", art="Vim", pawns=9)  # location/form left blank
         await _save_dialog(pilot, app)
         await _wait_until(pilot, lambda: len(_pos_labels(app, "vis_store")) == 1)
-        assert _pos_labels(app, "vis_store") == ["Vim Vis | Art: Vim | Pawns: 9"]
+        assert _pos_labels(app, "vis_store") == ["Vim Vis             Vim            9"]
 
         await _select_pos_row(pilot, app, "vis_store", 0)
         await pilot.press("e")
@@ -6320,8 +6321,8 @@ async def test_legacy_vis_stock_shows_up_as_raw_vis_stores():
         await _select_covenant(pilot, app)
         await _show_possessions_tab(pilot, app)
         assert _pos_labels(app, "vis_store") == [
-            "Ignem Vis | Art: Ignem | Pawns: 5",
-            "Vim Vis | Art: Vim | Pawns: 2",
+            "Ignem Vis           Ignem          5",
+            "Vim Vis             Vim            2",
         ]
 
 

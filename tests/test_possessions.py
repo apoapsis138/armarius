@@ -165,19 +165,19 @@ def test_row_labels_show_the_fields_the_sheet_lists():
         Possession(id="r", kind="vis_store", name="Vim Vis", art="Vim", pawns=9),
     ]
     assert _labels(saga, cov, "property") == [
-        "North Field | Location: By the river | Dimensions: 40 acres | Inhabitants: Two families",
+        "North Field         By the river      40 acres      Two families",
         "Bare Plot",  # every field but the name is optional
     ]
     sanctums = _labels(saga, cov, "sanctum")
-    assert sanctums[0] == (
-        "Obsidian Crucible | Owner: Corvinus | Quality: 4 | Upkeep: 12 Points"
-    )
-    assert sanctums[1] == "Study | Owner: Leandro | Quality: 3 | Upkeep: 10 Points"
-    assert _labels(saga, cov, "weapon") == ["Crossbows | Qty: 6"]
-    assert _labels(saga, cov, "vis_source") == [
-        "Well | Art: Vim | Pawns: 3 | Season: Winter"
+    assert sanctums[0] == "Obsidian Crucible   Corvinus              4      12"
+    assert sanctums[1] == "Study               Leandro               3      10"
+    assert _labels(saga, cov, "weapon") == [
+        "Crossbows                               Standard        6"
     ]
-    assert _labels(saga, cov, "vis_store") == ["Vim Vis | Art: Vim | Pawns: 9"]
+    assert _labels(saga, cov, "vis_source") == [
+        "Well                Vim            3  Winter"
+    ]
+    assert _labels(saga, cov, "vis_store") == ["Vim Vis             Vim            9"]
 
 
 def test_row_labels_escape_user_text():

@@ -200,35 +200,84 @@ def entries_for_kind(
 # ------------------------------------------------------------------- text
 
 
-def row_label(entry: PossessionEntry) -> str:
-    """One list row (markup): the name, then the few fields the sheet shows."""
-    kind = entry.kind
-    parts = [escape(entry.name or "(unnamed)")]
+def _fit(text: str, width: int) -> str:
+    text = text.replace("\n", " ")
+    if len(text) > width:
+        text = text[: width - 1] + "…"
+    return text.ljust(width)
 
-    def add(text: str) -> None:
-        if text:
-            parts.append(escape(text))
 
+_NAME_WIDTH = 20
+_LOCATION_WIDTH = 18
+_DIMENSIONS_WIDTH = 14
+_OWNER_WIDTH = 16
+_QUALITY_WIDTH = 7
+_UPKEEP_WIDTH = 8
+_TYPE_WIDTH = 20
+_GEAR_QUALITY_WIDTH = 12
+_QTY_WIDTH = 5
+_ART_WIDTH = 10
+_PAWNS_WIDTH = 6
+_SEASON_WIDTH = 8
+
+
+def table_header(kind: str) -> str:
+    """The column titles above one kind's Possessions list; the two-character
+    indent is the list's selector marker."""
+    name = f"{'Name':<{_NAME_WIDTH}}"
     if kind == "property":
-        add(f"Location: {entry.location}" if entry.location else "")
-        add(f"Dimensions: {entry.dimensions}" if entry.dimensions else "")
-        add(f"Inhabitants: {entry.inhabitants}" if entry.inhabitants else "")
+        return (
+            f"  {name}{'Location':<{_LOCATION_WIDTH}}"
+            f"{'Dimensions':<{_DIMENSIONS_WIDTH}}Inhabitants"
+        )
+    if kind == "sanctum":
+        return (
+            f"  {name}{'Owner':<{_OWNER_WIDTH}}"
+            f"{'Quality':>{_QUALITY_WIDTH}}{'Upkeep':>{_UPKEEP_WIDTH}}"
+        )
+    if kind in ("weapon", "armor"):
+        return (
+            f"  {name}{'Type':<{_TYPE_WIDTH}}"
+            f"{'Quality':<{_GEAR_QUALITY_WIDTH}}{'Qty':>{_QTY_WIDTH}}"
+        )
+    if kind == "item":
+        return f"  {name}{'Qty':>{_QTY_WIDTH}}"
+    if kind == "vis_source":
+        return (
+            f"  {name}{'Art':<{_ART_WIDTH}}"
+            f"{'Pawns':>{_PAWNS_WIDTH}}  {'Season':<{_SEASON_WIDTH}}"
+        )
+    return f"  {name}{'Art':<{_ART_WIDTH}}{'Pawns':>{_PAWNS_WIDTH}}"  # vis_store
+
+
+def row_label(entry: PossessionEntry) -> str:
+    """One list row (markup), columns lined up with `table_header`. Trailing
+    whitespace from an unset last column is stripped."""
+    kind = entry.kind
+    name = escape(_fit(entry.name or "(unnamed)", _NAME_WIDTH))
+    if kind == "property":
+        location = escape(_fit(entry.location, _LOCATION_WIDTH))
+        dimensions = escape(_fit(entry.dimensions, _DIMENSIONS_WIDTH))
+        row = f"{name}{location}{dimensions}{escape(entry.inhabitants)}"
     elif kind == "sanctum":
-        add(f"Owner: {entry.owner}" if entry.owner else "")
-        add(f"Quality: {entry.quality}" if entry.quality is not None else "")
-        add(f"Upkeep: {entry.upkeep} Points" if entry.upkeep is not None else "")
-    elif kind in ("weapon", "armor", "item"):
-        if kind != "item" and entry.gear_type:
-            add(f"{entry.gear_type}, {entry.gear_quality}")
-        add(f"Qty: {entry.quantity}")
+        owner = escape(_fit(entry.owner, _OWNER_WIDTH))
+        quality = "" if entry.quality is None else entry.quality
+        upkeep = "" if entry.upkeep is None else entry.upkeep
+        row = f"{name}{owner}{quality:>{_QUALITY_WIDTH}}{upkeep:>{_UPKEEP_WIDTH}}"
+    elif kind in ("weapon", "armor"):
+        gear_type = escape(_fit(entry.gear_type, _TYPE_WIDTH))
+        gear_quality = escape(_fit(entry.gear_quality, _GEAR_QUALITY_WIDTH))
+        row = f"{name}{gear_type}{gear_quality}{entry.quantity:>{_QTY_WIDTH}}"
+    elif kind == "item":
+        row = f"{name}{entry.quantity:>{_QTY_WIDTH}}"
     elif kind == "vis_source":
-        add(f"Art: {entry.art}")
-        add(f"Pawns: {entry.pawns}")
-        add(f"Season: {entry.season}")
+        art = escape(_fit(entry.art, _ART_WIDTH))
+        season = escape(_fit(entry.season, _SEASON_WIDTH))
+        row = f"{name}{art}{entry.pawns:>{_PAWNS_WIDTH}}  {season}"
     else:  # vis_store
-        add(f"Art: {entry.art}")
-        add(f"Pawns: {entry.pawns}")
-    return " | ".join(parts)
+        art = escape(_fit(entry.art, _ART_WIDTH))
+        row = f"{name}{art}{entry.pawns:>{_PAWNS_WIDTH}}"
+    return row.rstrip()
 
 
 def _line(label: str, value: object) -> str:
