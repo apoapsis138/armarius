@@ -61,6 +61,7 @@ from ars_magica_manager.screens import (
     CovenantBoonHookPickerScreen,
     CovenantCreateScreen,
     CsvFilePickerScreen,
+    DialogField,
     DiaryEntryPromptScreen,
     DuplicateBookScreen,
     EditAgingScreen,
@@ -2366,6 +2367,65 @@ async def test_edit_hermetic_background_sets_house_and_fields():
     assert hermetic.house == "house_bonisagus"
     assert hermetic.parens == "Trianoma"
     assert hermetic.age_of_apprenticeship == 12
+
+
+async def test_bracketed_names_survive_the_nav_tree_and_top_panels():
+    """STORY-204: a name with [brackets] must not vanish -- Textual/Rich
+    markup would otherwise swallow "[Tower]" as an (invalid) tag. Covers the
+    nav tree (saga/covenant/character/lab labels) and the Collapsible
+    section titles that mirror a character's/covenant's own name."""
+    saga = _saga_with_bare_laboratory()
+    saga.name = "[Ars] Saga"
+    saga.covenants[0].name = "[Tower] Covenant"
+    saga.characters[0].name = "[Leandro] the Bracketed"
+    saga.laboratories[0].name = "[Vault] Lab"
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_character(pilot, app)
+        tree = app.screen.query_one("#nav-tree", Tree)
+        assert "[Ars] Saga" in str(tree.root.label)
+        assert "[Tower] Covenant" in str(_find_node(tree, ("covenant", "cov1")).label)
+        assert "[Leandro] the Bracketed" in str(
+            _find_node(tree, ("character", "char1")).label
+        )
+        assert "[Vault] Lab" in str(_find_node(tree, ("laboratory", "lab1")).label)
+
+        char_title = app.screen._character_sheet_view.query_one(
+            "#section-char-info", Collapsible
+        ).title
+        assert "[Leandro] the Bracketed" in str(char_title)
+
+        await _select_covenant(pilot, app)
+        cov_title = app.screen._covenant_sheet_view.query_one(
+            "#section-cov-info", Collapsible
+        ).title
+        assert "[Tower] Covenant" in str(cov_title)
+
+        await _select_laboratory(pilot, app)
+        identity = app.screen._laboratory_sheet_view._identity_text()
+        assert "[Vault] Lab" in identity
+
+
+async def test_fields_dialog_info_field_escapes_bracketed_values():
+    """STORY-204: FieldsDialog's read-only "info" row (screens.py's
+    `_widgets`, kind == "info") is a single shared render sink used by
+    dozens of DialogField call sites (Inhabitant "from the character
+    sheet" fields, Possession Owner/Location, Economics calculated rows,
+    Loyalty totals, ...). A bracketed value must render literally, not
+    vanish as a swallowed markup tag."""
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        app.push_screen(
+            FieldsDialog(
+                "Test",
+                [DialogField("_n", "Name", "info", "[Leandro] the Bracketed")],
+            )
+        )
+        await pilot.pause()
+        value = app.screen.query_one(".fd-value", Static)
+        assert "[Leandro] the Bracketed" in str(value.render())
 
 
 async def test_edit_lab_identity_updates_fields_and_owner():

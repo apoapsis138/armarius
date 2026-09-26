@@ -127,9 +127,9 @@ ART_DESCRIPTIONS: dict[str, str] = {
     "Imaginem": "'image' - This Form concerns the things in the world that the senses respond to. Natural philosophy calls them species (SPEH-kee-ayss, to be distinguished from species of animals and such). All things constantly give off species for each of the senses. Those for touch and taste do not travel far, while those for sight require light to get any distance from the originating body. Imaginem spells normally affect the process by which species are produced, rather than the species themselves. Thus, the species emanating from an illusion are not themselves magical.Form bonus: Rolls to resist confusion, deafening, or nausea caused by sights, sounds, smells, or tastes. Pronounced 'ih-MAH-gih-nem.'",
     "Mentem": "'mind' - This Form concerns minds, thoughts, and spirits. Mentem can also affect the 'bodies' of noncorporeal beings, such as ghosts, as these are maintained in the physical world directly by a spirit's will. Form bonus: Rolls to resist mundane persuasion, deception, or temptation. Pronounced 'MEN-tem.'",
     "Terram": "'earth' - This Form concerns solids, especially earth and stone. Form bonus: Soak against metal or stone weapons, rolls to resist mineral poisons. Pronounced 'TARE-rahm.'",
-    "Vim": "'power' - This Form concerns raw magical power. All the Arts rely on the raw energy and potential of magic, but this Art refines the use of magic itself, allowing magi to assume even greater control of their spells. Vim also affects magical, infernal, divine, and faerie creatures. Form bonus: Rolls to resist Twilight, but not rolls to comprehend it; soak total against damage inflicted by your own spell-casting, but not damage inflicted by your own spells. Pronounced 'WEEM.'"
-
+    "Vim": "'power' - This Form concerns raw magical power. All the Arts rely on the raw energy and potential of magic, but this Art refines the use of magic itself, allowing magi to assume even greater control of their spells. Vim also affects magical, infernal, divine, and faerie creatures. Form bonus: Rolls to resist Twilight, but not rolls to comprehend it; soak total against damage inflicted by your own spell-casting, but not damage inflicted by your own spells. Pronounced 'WEEM.'",
 }
+
 
 @dataclass
 class Modifier:
@@ -779,7 +779,8 @@ class Background:
     player: str = ""
     setting: str = ""
     size: int = 0
-    confidence: int = 0
+    confidence_score: int = 0
+    confidence_points: int = 0
     birth_name: str = ""
     year_born: int | None = None
     race_nationality: str = ""
@@ -789,7 +790,12 @@ class Background:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Background:
-        return cls(**data)
+        d = dict(data)
+        if "confidence" in d and "confidence_score" not in d:
+            # Pre-STORY-208 saves used a single "confidence"; migrate on load
+            # so existing characters don't become unreadable over the split.
+            d["confidence_score"] = d.pop("confidence")
+        return cls(**d)
 
 
 @dataclass
@@ -867,6 +873,8 @@ class HermeticBackground:
     primus: str = ""
     parens: str = ""
     covenant_of_apprenticeship: str = ""
+    #: Blank/unset means unknown, same convention as Background.year_born.
+    age_of_apprenticeship: int | None = None
     wizards_sigil: str = ""
 
     @classmethod

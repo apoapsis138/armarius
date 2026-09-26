@@ -82,6 +82,21 @@ def test_character_from_dict_migrates_legacy_spells_known_ids():
     assert known.mastery_abilities == []
 
 
+def test_character_from_dict_migrates_legacy_confidence():
+    # Pre-STORY-208 saves held a single "confidence" instead of the
+    # Score/Points pair.
+    character = Character.from_dict(
+        {
+            "id": "char_1",
+            "name": "Leandro",
+            "type": "magus",
+            "background": {"confidence": 3},
+        }
+    )
+    assert character.background.confidence_score == 3
+    assert character.background.confidence_points == 0
+
+
 def test_laboratory_from_dict_migrates_legacy_size_and_drops_legacy_aura():
     # Simulates a save from before this session: flat "size", and "aura"
     # which has since moved to Covenant.

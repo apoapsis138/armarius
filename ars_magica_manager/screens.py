@@ -1223,7 +1223,7 @@ class CharacterCreateScreen(ModalScreen[str | None]):
             )
             yield Label("Covenant (optional)")
             yield Select(
-                [(c.name, c.id) for c in self.saga.covenants],
+                [(escape(c.name), c.id) for c in self.saga.covenants],
                 value=self.default_covenant_id or Select.NULL,
                 allow_blank=True,
                 prompt="(no covenant)",
@@ -2112,7 +2112,7 @@ class LaboratoryCreateScreen(ModalScreen[str | None]):
             yield Input(value="0", type="integer", id="input-size")
             yield Label("Covenant (optional)")
             yield Select(
-                [(c.name, c.id) for c in self.saga.covenants],
+                [(escape(c.name), c.id) for c in self.saga.covenants],
                 value=self.covenant.id if self.covenant else Select.NULL,
                 allow_blank=True,
                 prompt="(no covenant)",
@@ -2227,7 +2227,7 @@ class EditCharacterInfoScreen(ModalScreen[dict[str, object] | None]):
             with Horizontal(classes="charinfo-row"):
                 yield Label("Covenant")
                 yield Select(
-                    [(c.name, c.id) for c in self.saga.covenants],
+                    [(escape(c.name), c.id) for c in self.saga.covenants],
                     value=character.covenant_id or Select.NULL,
                     allow_blank=True,
                     prompt="(unassigned)",
@@ -2238,7 +2238,7 @@ class EditCharacterInfoScreen(ModalScreen[dict[str, object] | None]):
                 with Horizontal(classes="charinfo-row"):
                     yield Label("Assigned Laboratory")
                     yield Select(
-                        [(lab.name, lab.id) for lab in self.saga.laboratories],
+                        [(escape(lab.name), lab.id) for lab in self.saga.laboratories],
                         value=character.assigned_lab_id or Select.NULL,
                         allow_blank=True,
                         prompt="(unassigned)",
@@ -3678,7 +3678,7 @@ class EditLabIdentityScreen(ModalScreen[dict[str, object] | None]):
             with Horizontal(classes="labid-row"):
                 yield Label("Covenant")
                 yield Select(
-                    [(c.name, c.id) for c in self.saga.covenants],
+                    [(escape(c.name), c.id) for c in self.saga.covenants],
                     value=lab.covenant_id or Select.NULL,
                     allow_blank=True,
                     prompt="(unassigned)",
@@ -3688,7 +3688,11 @@ class EditLabIdentityScreen(ModalScreen[dict[str, object] | None]):
             with Horizontal(classes="labid-row"):
                 yield Label("Owner")
                 yield Select(
-                    [(c.name, c.id) for c in self.saga.characters if c.type == "magus"],
+                    [
+                        (escape(c.name), c.id)
+                        for c in self.saga.characters
+                        if c.type == "magus"
+                    ],
                     value=lab.owner_id or Select.NULL,
                     allow_blank=True,
                     prompt="(unassigned)",
@@ -5561,7 +5565,7 @@ class FieldsDialog(ModalScreen[dict[str, Any] | None]):
                     classes="fd-picker",
                 )
             else:  # info
-                yield Static(str(spec.value), classes="fd-value")
+                yield Static(escape(str(spec.value)), classes="fd-value")
         if spec.hint:
             yield Static(spec.hint, classes="fd-hint")
 
@@ -6358,7 +6362,9 @@ class CharacterSheetView(Vertical):
     def compose(self) -> ComposeResult:
         character = self.character
         with Vertical(id="char-top-panel"):
-            with PinnedCollapsible(title=character.name, id="section-char-info"):
+            with PinnedCollapsible(
+                title=escape(character.name), id="section-char-info"
+            ):
                 with Horizontal(id="char-info-body"):
                     yield Static(self._info_left_text(), id="char-info-left")
                     yield Static(self._info_right_text(), id="char-info-right")
@@ -6789,7 +6795,7 @@ class CharacterSheetView(Vertical):
         covenant = next(
             (c for c in saga.covenants if c.id == character.covenant_id), None
         )
-        rows = [("Covenant", covenant.name if covenant else "(unassigned)")]
+        rows = [("Covenant", escape(covenant.name) if covenant else "(unassigned)")]
         if character.type == "magus":
             lab = next(
                 (
@@ -6799,7 +6805,9 @@ class CharacterSheetView(Vertical):
                 ),
                 None,
             )
-            rows.append(("Assigned Laboratory", lab.name if lab else "(unassigned)"))
+            rows.append(
+                ("Assigned Laboratory", escape(lab.name) if lab else "(unassigned)")
+            )
         b = character.background
         rows += [
             ("Type", character.type),
@@ -6817,19 +6825,20 @@ class CharacterSheetView(Vertical):
         b, d = self.character.background, self.character.description
         return "\n".join(
             [
-                f"Player: {b.player or '(not set)'}",
-                f"Birth Name: {b.birth_name or '(not set)'}",
+                f"Player: {escape(b.player) or '(not set)'}",
+                f"Birth Name: {escape(b.birth_name) or '(not set)'}",
                 f"Year Born: {b.year_born if b.year_born is not None else '(not set)'}",
-                f"Race/Nationality: {b.race_nationality or '(not set)'}",
-                f"Place of Origin: {b.place_of_origin or '(not set)'}",
-                f"Religion: {b.religion or '(not set)'}",
-                f"Title/Profession: {b.title_profession or '(not set)'}",
+                f"Race/Nationality: {escape(b.race_nationality) or '(not set)'}",
+                f"Place of Origin: {escape(b.place_of_origin) or '(not set)'}",
+                f"Religion: {escape(b.religion) or '(not set)'}",
+                f"Title/Profession: {escape(b.title_profession) or '(not set)'}",
                 f"Height: {d.height if d.height is not None else '(not set)'}",
                 f"Weight: {d.weight if d.weight is not None else '(not set)'}",
-                f"Hair: {d.hair or '(not set)'}",
-                f"Eyes: {d.eyes or '(not set)'}",
+                f"Hair: {escape(d.hair) or '(not set)'}",
+                f"Eyes: {escape(d.eyes) or '(not set)'}",
                 f"Handedness: {d.handedness}",
-                f"Physical Description: {d.physical_description or '(not set)'}",
+                f"Physical Description: "
+                f"{escape(d.physical_description) or '(not set)'}",
             ]
         )
 
@@ -6837,7 +6846,7 @@ class CharacterSheetView(Vertical):
         """Column 2 of Biographical Detail: just the free-text Biography
         box (distinct from Physical Description -- see Description's
         docstring in models.py)."""
-        return self.character.description.biography or "(none recorded)"
+        return escape(self.character.description.biography) or "(none recorded)"
 
     def _characteristics_text(self) -> str:
         """Int/Per/Str/Sta then Pre/Com/Dex/Qik, each value signed (a plain
@@ -6967,7 +6976,7 @@ class CharacterSheetView(Vertical):
             [
                 f"Decrepitude: {a.decrepitude}",
                 "Effects of Aging:",
-                a.effects or "(none recorded)",
+                escape(a.effects) or "(none recorded)",
                 "",
                 f"Warping: {a.warping_score}/{a.warping_points}",
             ]
@@ -7014,12 +7023,12 @@ class CharacterSheetView(Vertical):
         house = house_catalog.get(h.house) if h.house else None
         return "\n".join(
             [
-                f"House: {house.name if house else '(not set)'}",
-                f"Domus Magna: {h.domus_magna or '(not set)'}",
-                f"Primus: {h.primus or '(not set)'}",
-                f"Parens: {h.parens or '(not set)'}",
+                f"House: {escape(house.name) if house else '(not set)'}",
+                f"Domus Magna: {escape(h.domus_magna) or '(not set)'}",
+                f"Primus: {escape(h.primus) or '(not set)'}",
+                f"Parens: {escape(h.parens) or '(not set)'}",
                 f"Covenant of Apprenticeship: "
-                f"{h.covenant_of_apprenticeship or '(not set)'}",
+                f"{escape(h.covenant_of_apprenticeship) or '(not set)'}",
                 f"Age of Apprenticeship: "
                 f"{h.age_of_apprenticeship if h.age_of_apprenticeship is not None else '(not set)'}",
             ]
@@ -7028,7 +7037,7 @@ class CharacterSheetView(Vertical):
     def _hermetic_background_right_text(self) -> str:
         """Column 2 of Hermetic Background: just Wizard's Sigil."""
         sigil = self.character.hermetic.wizards_sigil
-        return f"Wizard's Sigil: {sigil or '(not set)'}"
+        return f"Wizard's Sigil: {escape(sigil) or '(not set)'}"
 
     _ARTS_NAME_WIDTH: ClassVar[int] = 16
     _ARTS_NUM_WIDTH: ClassVar[int] = 6
@@ -7339,11 +7348,11 @@ class LaboratorySheetView(Vertical):
         )
         return "\n".join(
             [
-                f"Name: {lab.name}",
-                f"Location: {lab.location or '(not set)'}",
+                f"Name: {escape(lab.name)}",
+                f"Location: {escape(lab.location) or '(not set)'}",
                 f"Points: {lab.build_points}",
-                f"Owner: {owner.name if owner else '(unassigned)'}",
-                f"Covenant: {covenant.name if covenant else '(none)'}",
+                f"Owner: {escape(owner.name) if owner else '(unassigned)'}",
+                f"Covenant: {escape(covenant.name) if covenant else '(none)'}",
                 f"Aura: {covenant_aura} (covenant) {lab.aura_modifier:+d} (modifier) "
                 f"= {lab_aura_total(lab, covenant_aura)}",
             ]
@@ -7414,7 +7423,8 @@ class LaboratorySheetView(Vertical):
                 definition = lab_catalog.get(vf.vf_id)
                 tier = definition.tier if definition is not None else "?"
                 lines.append(
-                    f"  {catalog.describe_virtue_flaw(vf, lab_catalog)} ({tier})"
+                    f"  {escape(catalog.describe_virtue_flaw(vf, lab_catalog))} "
+                    f"({tier})"
                 )
             lines.append("")
         return "\n".join(lines).rstrip()
@@ -7422,18 +7432,18 @@ class LaboratorySheetView(Vertical):
     def _specialties_text(self) -> str:
         if not self.laboratory.specialties:
             return "(none recorded)"
-        return "\n".join(f"  - {s}" for s in self.laboratory.specialties)
+        return "\n".join(f"  - {escape(s)}" for s in self.laboratory.specialties)
 
     def _features_text(self) -> str:
         if not self.laboratory.features:
             return "(none recorded)"
-        return "\n".join(f"  - {f}" for f in self.laboratory.features)
+        return "\n".join(f"  - {escape(f)}" for f in self.laboratory.features)
 
     def _rooms_text(self) -> str:
         if not self.laboratory.rooms:
             return "(none recorded)"
         return "\n".join(
-            f"  {room.name}: {room.description or '(no description)'}"
+            f"  {escape(room.name)}: {escape(room.description) or '(no description)'}"
             for room in self.laboratory.rooms
         )
 
@@ -7449,7 +7459,7 @@ class LaboratorySheetView(Vertical):
         if not self.laboratory.inventory_items:
             return "(none recorded)"
         return "\n".join(
-            f"  {item.name}: {item.description or '(no description)'}"
+            f"  {escape(item.name)}: {escape(item.description) or '(no description)'}"
             for item in self.laboratory.inventory_items
         )
 
@@ -7458,9 +7468,9 @@ class LaboratorySheetView(Vertical):
             return "(none recorded)"
         lines = []
         for entry in self.laboratory.diary:
-            lines.append(f"{entry.year} {entry.season} -- {entry.name}")
+            lines.append(f"{entry.year} {entry.season} -- {escape(entry.name)}")
             if entry.details:
-                lines.append(f"  {entry.details}")
+                lines.append(f"  {escape(entry.details)}")
         return "\n".join(lines)
 
 
@@ -7633,7 +7643,7 @@ class CovenantSheetView(Vertical):
         self.initial_tab_seen = False
 
     def compose(self) -> ComposeResult:
-        with PinnedCollapsible(title=self.covenant.name, id="section-cov-info"):
+        with PinnedCollapsible(title=escape(self.covenant.name), id="section-cov-info"):
             with Horizontal(id="cov-info-body"):
                 yield Static(self._info_left_text(), id="cov-info-left")
                 yield Static(self._info_right_text(), id="cov-info-right")
@@ -7886,7 +7896,9 @@ class CovenantSheetView(Vertical):
 
     def _refresh_section(self, section_id: str) -> None:
         if section_id == "section-cov-info":
-            self.query_one("#section-cov-info", Collapsible).title = self.covenant.name
+            self.query_one("#section-cov-info", Collapsible).title = escape(
+                self.covenant.name
+            )
             self.query_one("#cov-info-left", Static).update(self._info_left_text())
             self.query_one("#cov-info-right", Static).update(self._info_right_text())
         elif section_id == "section-cov-description":
@@ -8320,7 +8332,7 @@ class WorkspaceScreen(Screen[None]):
     def compose(self) -> ComposeResult:
         yield Header()
         with Horizontal(id="workspace-body"):
-            yield Tree(self.saga.name, data=("saga",), id="nav-tree")
+            yield Tree(escape(self.saga.name), data=("saga",), id="nav-tree")
             yield VerticalScroll(id="detail-pane")
         yield BottomBar()
 
@@ -8333,16 +8345,18 @@ class WorkspaceScreen(Screen[None]):
         """Shows the saga's current date in the Header, on every screen of
         the workspace -- the saga owns the calendar, everything inherits it."""
         saga = self.saga
-        self.sub_title = f"{saga.name} | {saga.current_season} {saga.current_year}"
+        self.sub_title = (
+            f"{escape(saga.name)} | {saga.current_season} {saga.current_year}"
+        )
 
     def _rebuild_tree(self) -> None:
         tree = self.query_one("#nav-tree", Tree)
-        tree.reset(self.saga.name, data=("saga",))
+        tree.reset(escape(self.saga.name), data=("saga",))
         tree.root.expand()
 
         for covenant in self.saga.covenants:
             cov_node = tree.root.add(
-                covenant.name, data=("covenant", covenant.id), expand=True
+                escape(covenant.name), data=("covenant", covenant.id), expand=True
             )
 
             characters = [
@@ -8355,7 +8369,7 @@ class WorkspaceScreen(Screen[None]):
             )
             for character in characters:
                 char_group.add_leaf(
-                    f"{character.name} ({character.type})",
+                    f"{escape(character.name)} ({character.type})",
                     data=("character", character.id),
                 )
 
@@ -8368,7 +8382,7 @@ class WorkspaceScreen(Screen[None]):
                 expand=True,
             )
             for lab in labs:
-                lab_group.add_leaf(lab.name, data=("laboratory", lab.id))
+                lab_group.add_leaf(escape(lab.name), data=("laboratory", lab.id))
 
         # Characters and labs with no (or a no-longer-existing) covenant live
         # directly under the saga -- assigning to a covenant is optional, and
@@ -8385,7 +8399,7 @@ class WorkspaceScreen(Screen[None]):
             )
             for character in loose_characters:
                 group.add_leaf(
-                    f"{character.name} ({character.type})",
+                    f"{escape(character.name)} ({character.type})",
                     data=("character", character.id),
                 )
         loose_labs = [
@@ -8398,7 +8412,7 @@ class WorkspaceScreen(Screen[None]):
                 expand=True,
             )
             for lab in loose_labs:
-                group.add_leaf(lab.name, data=("laboratory", lab.id))
+                group.add_leaf(escape(lab.name), data=("laboratory", lab.id))
         # Books with no owner file under the saga.
         loose_books = bk.unassigned_books(self.saga)
         if loose_books:
@@ -9095,8 +9109,8 @@ class WorkspaceScreen(Screen[None]):
             return None
         if not spl.is_own(self.saga, spell):
             self.notify(
-                f"{spell.name} is a catalog spell, so it's read-only. To make "
-                "your own version, add a spell with a."
+                f"{escape(spell.name)} is a catalog spell, so it's read-only. To "
+                "make your own version, add a spell with a."
             )
             return None
         return spell
@@ -9108,7 +9122,7 @@ class WorkspaceScreen(Screen[None]):
 
     def _spell_form(self, spell: Spell | None) -> None:
         saga = self.saga
-        title = "Add a Spell" if spell is None else f"Edit {spell.name}"
+        title = "Add a Spell" if spell is None else f"Edit {escape(spell.name)}"
 
         def handle_result(values: dict[str, Any] | None) -> None:
             if values is None:
@@ -9192,7 +9206,9 @@ class WorkspaceScreen(Screen[None]):
                 then(listed[index])
 
         self.app.push_screen(
-            RemovalPickerScreen(title, [b.name or "(untitled)" for b in listed]),
+            RemovalPickerScreen(
+                title, [escape(b.name) or "(untitled)" for b in listed]
+            ),
             handle_index,
         )
 
@@ -9271,7 +9287,9 @@ class WorkspaceScreen(Screen[None]):
 
     def _book_form(self, book: Book | None) -> None:
         saga = self.saga
-        title = "Add a Book" if book is None else f"Edit {book.name or 'this book'}"
+        title = (
+            "Add a Book" if book is None else f"Edit {escape(book.name or 'this book')}"
+        )
 
         def handle_result(values: dict[str, Any] | None) -> None:
             if values is None:
@@ -9618,7 +9636,7 @@ class WorkspaceScreen(Screen[None]):
         self.app.push_screen(
             RemovalPickerScreen(
                 f"Edit which {pos.KIND_SINGULAR[kind]}?",
-                [e.name or "(unnamed)" for e in entries],
+                [escape(e.name) or "(unnamed)" for e in entries],
             ),
             handle_index,
         )
@@ -9630,7 +9648,7 @@ class WorkspaceScreen(Screen[None]):
         title = (
             f"Add a {pos.KIND_SINGULAR[kind]}"
             if entry is None
-            else f"Edit {entry.name or 'this ' + pos.KIND_SINGULAR[kind].lower()}"
+            else f"Edit {escape(entry.name or 'this ' + pos.KIND_SINGULAR[kind].lower())}"
         )
 
         def handle_result(values: dict[str, Any] | None) -> None:
@@ -9682,7 +9700,7 @@ class WorkspaceScreen(Screen[None]):
         self.app.push_screen(
             RemovalPickerScreen(
                 f"Remove a {pos.KIND_SINGULAR[kind]}",
-                [e.name or "(unnamed)" for e in entries],
+                [escape(e.name) or "(unnamed)" for e in entries],
             ),
             handle_index,
         )
@@ -9693,8 +9711,9 @@ class WorkspaceScreen(Screen[None]):
             return
         if entry.auto:
             self.notify(
-                f"{entry.name} is a laboratory of this covenant, so it can't be deleted "
-                "here. Move it to another covenant from the laboratory's Identity instead."
+                f"{escape(entry.name)} is a laboratory of this covenant, so it "
+                "can't be deleted here. Move it to another covenant from the "
+                "laboratory's Identity instead."
             )
             return
 
@@ -9772,7 +9791,8 @@ class WorkspaceScreen(Screen[None]):
 
         self.app.push_screen(
             RemovalPickerScreen(
-                "Edit which source of income?", [s.name or "(unnamed)" for s in sources]
+                "Edit which source of income?",
+                [escape(s.name) or "(unnamed)" for s in sources],
             ),
             handle_index,
         )
@@ -9785,7 +9805,7 @@ class WorkspaceScreen(Screen[None]):
         title = (
             "Add a Source of Income"
             if source is None
-            else f"Edit {source.name or 'this source of income'}"
+            else f"Edit {escape(source.name or 'this source of income')}"
         )
         usual = ", ".join(f"{t} {n}" for t, n in INCOME_TYPE_DEFAULTS.items())
         fields = [
@@ -9857,7 +9877,8 @@ class WorkspaceScreen(Screen[None]):
 
         self.app.push_screen(
             RemovalPickerScreen(
-                "Remove a source of income", [s.name or "(unnamed)" for s in sources]
+                "Remove a source of income",
+                [escape(s.name) or "(unnamed)" for s in sources],
             ),
             handle_index,
         )
@@ -9900,7 +9921,7 @@ class WorkspaceScreen(Screen[None]):
         self.app.push_screen(
             RemovalPickerScreen(
                 "Improve which source of income?",
-                [s.name or "(unnamed)" for s in sources],
+                [escape(s.name) or "(unnamed)" for s in sources],
             ),
             handle_index,
         )
@@ -10079,7 +10100,7 @@ class WorkspaceScreen(Screen[None]):
 
         grogs = inh.available_grogs(self.saga, covenant)
         labels = ["(New person -- not from a character sheet)"] + [
-            g.name
+            escape(g.name)
             + (f"  (born {g.background.year_born})" if g.background.year_born else "")
             for g in grogs
         ]
@@ -10111,7 +10132,7 @@ class WorkspaceScreen(Screen[None]):
         self.app.push_screen(
             RemovalPickerScreen(
                 f"Edit which {inh.KIND_SINGULAR[kind]}?",
-                [e.name or "(unnamed)" for e in entries],
+                [escape(e.name) or "(unnamed)" for e in entries],
             ),
             handle_index,
         )
@@ -10125,7 +10146,7 @@ class WorkspaceScreen(Screen[None]):
         title = (
             f"Add a {inh.KIND_SINGULAR[kind]}"
             if entry is None
-            else f"Edit {entry.name or 'this ' + inh.KIND_SINGULAR[kind].lower()}"
+            else f"Edit {escape(entry.name or 'this ' + inh.KIND_SINGULAR[kind].lower())}"
         )
 
         def handle_result(values: dict[str, Any] | None) -> None:
@@ -10189,7 +10210,7 @@ class WorkspaceScreen(Screen[None]):
         self.app.push_screen(
             RemovalPickerScreen(
                 f"Remove a {inh.KIND_SINGULAR[kind]}",
-                [e.name or "(unnamed)" for e in entries],
+                [escape(e.name) or "(unnamed)" for e in entries],
             ),
             handle_index,
         )
@@ -10478,7 +10499,7 @@ class WorkspaceScreen(Screen[None]):
             self.notify("No Reputations to edit.")
             return
 
-        labels = [f"{r.name}: {r.score:+d}" for r in covenant.reputations]
+        labels = [f"{escape(r.name)}: {r.score:+d}" for r in covenant.reputations]
 
         def handle_index(index: int | None) -> None:
             if index is not None:
@@ -10518,7 +10539,7 @@ class WorkspaceScreen(Screen[None]):
             self.notify("No Reputations to remove.")
             return
 
-        labels = [f"{r.name}: {r.score:+d}" for r in covenant.reputations]
+        labels = [f"{escape(r.name)}: {r.score:+d}" for r in covenant.reputations]
 
         def handle_index(index: int | None) -> None:
             if index is not None:
@@ -10890,8 +10911,8 @@ class WorkspaceScreen(Screen[None]):
 
     @staticmethod
     def _ability_label(a: Ability) -> str:
-        specialty = f" ({a.specialty})" if a.specialty else ""
-        return f"{a.name}{specialty} {a.level} {a.xp}/{a.xp_to_next}"
+        specialty = f" ({escape(a.specialty)})" if a.specialty else ""
+        return f"{escape(a.name)}{specialty} {a.level} {a.xp}/{a.xp_to_next}"
 
     def _remove_ability(self) -> None:
         """Delete the chosen Ability (after confirming); with none chosen,
@@ -11006,7 +11027,9 @@ class WorkspaceScreen(Screen[None]):
             self.notify("No Personality Traits to edit.")
             return
 
-        labels = [f"{t.name}: {t.score:+d}" for t in character.personality_traits]
+        labels = [
+            f"{escape(t.name)}: {t.score:+d}" for t in character.personality_traits
+        ]
 
         def handle_index(index: int | None) -> None:
             if index is not None:
@@ -11050,7 +11073,9 @@ class WorkspaceScreen(Screen[None]):
             self.notify("No Personality Traits to remove.")
             return
 
-        labels = [f"{t.name}: {t.score:+d}" for t in character.personality_traits]
+        labels = [
+            f"{escape(t.name)}: {t.score:+d}" for t in character.personality_traits
+        ]
 
         def handle_index(index: int | None) -> None:
             if index is not None:
@@ -11107,7 +11132,7 @@ class WorkspaceScreen(Screen[None]):
             self.notify("No Reputations to edit.")
             return
 
-        labels = [f"{t.name}: {t.score}" for t in character.reputations]
+        labels = [f"{escape(t.name)}: {t.score}" for t in character.reputations]
 
         def handle_index(index: int | None) -> None:
             if index is not None:
@@ -11151,7 +11176,7 @@ class WorkspaceScreen(Screen[None]):
             self.notify("No Reputations to remove.")
             return
 
-        labels = [f"{t.name}: {t.score}" for t in character.reputations]
+        labels = [f"{escape(t.name)}: {t.score}" for t in character.reputations]
 
         def handle_index(index: int | None) -> None:
             if index is not None:
@@ -11361,7 +11386,7 @@ class WorkspaceScreen(Screen[None]):
             SpellChooserScreen(
                 self.saga,
                 exclude={k.spell_id for k in character.spells_known},
-                title=f"Add a spell {character.name} knows",
+                title=f"Add a spell {escape(character.name)} knows",
             ),
             handle_result,
         )
@@ -11370,7 +11395,11 @@ class WorkspaceScreen(Screen[None]):
         labels = []
         for known in character.spells_known:
             spell = spl.find_spell(self.saga, known.spell_id)
-            labels.append(spell.name if spell else f"{known.spell_id} (unknown spell)")
+            labels.append(
+                escape(spell.name)
+                if spell
+                else f"{escape(known.spell_id)} (unknown spell)"
+            )
         return labels
 
     def _selected_known_spell(self) -> int | None:
@@ -11486,7 +11515,7 @@ class WorkspaceScreen(Screen[None]):
         title = (
             f"Add a {pos.KIND_SINGULAR[kind]}"
             if index is None
-            else f"Edit {existing.name or 'this item'}"
+            else f"Edit {escape(existing.name or 'this item')}"
         )
 
         def handle_result(values: dict[str, Any] | None) -> None:
@@ -11651,7 +11680,9 @@ class WorkspaceScreen(Screen[None]):
                 self._refresh_laboratory_section("section-lab-specialties")
 
         self.app.push_screen(
-            RemovalPickerScreen("Remove a Specialty", list(lab.specialties)),
+            RemovalPickerScreen(
+                "Remove a Specialty", [escape(s) for s in lab.specialties]
+            ),
             handle_result,
         )
 
@@ -11683,7 +11714,8 @@ class WorkspaceScreen(Screen[None]):
                 self._refresh_laboratory_section("section-lab-features")
 
         self.app.push_screen(
-            RemovalPickerScreen("Remove a Feature", list(lab.features)), handle_result
+            RemovalPickerScreen("Remove a Feature", [escape(f) for f in lab.features]),
+            handle_result,
         )
 
     def _add_room(self) -> None:
@@ -11709,7 +11741,7 @@ class WorkspaceScreen(Screen[None]):
             self.notify("No Rooms to remove.")
             return
 
-        labels = [room.name for room in lab.rooms]
+        labels = [escape(room.name) for room in lab.rooms]
 
         def handle_result(index: int | None) -> None:
             if index is not None:
@@ -11782,7 +11814,7 @@ class WorkspaceScreen(Screen[None]):
             self.notify("No Items to remove.")
             return
 
-        labels = [item.name for item in lab.inventory_items]
+        labels = [escape(item.name) for item in lab.inventory_items]
 
         def handle_result(index: int | None) -> None:
             if index is not None:
@@ -11822,7 +11854,10 @@ class WorkspaceScreen(Screen[None]):
             self.notify("No Diary entries to remove.")
             return
 
-        labels = [f"{entry.year} {entry.season} -- {entry.name}" for entry in lab.diary]
+        labels = [
+            f"{entry.year} {entry.season} -- {escape(entry.name)}"
+            for entry in lab.diary
+        ]
 
         def handle_result(index: int | None) -> None:
             if index is not None:
@@ -11876,7 +11911,7 @@ class WorkspaceScreen(Screen[None]):
         self._edit_lab_entry(
             picker_title="Edit which Specialty?",
             empty_message="No Specialties to edit.",
-            labels=list(lab.specialties),
+            labels=[escape(s) for s in lab.specialties],
             screen_for=lambda i: ItemAddScreen(
                 "Edit a Specialty", existing=lab.specialties[i]
             ),
@@ -11891,7 +11926,7 @@ class WorkspaceScreen(Screen[None]):
         self._edit_lab_entry(
             picker_title="Edit which Feature?",
             empty_message="No Features to edit.",
-            labels=list(lab.features),
+            labels=[escape(f) for f in lab.features],
             screen_for=lambda i: ItemAddScreen(
                 "Edit a Feature", existing=lab.features[i]
             ),
@@ -11906,7 +11941,7 @@ class WorkspaceScreen(Screen[None]):
         self._edit_lab_entry(
             picker_title="Edit which Room?",
             empty_message="No Rooms to edit.",
-            labels=[room.name for room in lab.rooms],
+            labels=[escape(room.name) for room in lab.rooms],
             screen_for=lambda i: NamedDescriptionPromptScreen(
                 "Edit a Room", "e.g. Vault", existing=lab.rooms[i]
             ),
@@ -11921,7 +11956,7 @@ class WorkspaceScreen(Screen[None]):
         self._edit_lab_entry(
             picker_title="Edit which Item?",
             empty_message="No Items to edit.",
-            labels=[item.name for item in lab.inventory_items],
+            labels=[escape(item.name) for item in lab.inventory_items],
             screen_for=lambda i: NamedDescriptionPromptScreen(
                 "Edit an Item", "e.g. Silver Mirror", existing=lab.inventory_items[i]
             ),
@@ -12014,7 +12049,8 @@ class WorkspaceScreen(Screen[None]):
             else catalog.load_virtue_flaw_catalog_by_id()
         )
         labels = [
-            catalog.describe_virtue_flaw(vf, vf_catalog) for vf in target.virtues_flaws
+            escape(catalog.describe_virtue_flaw(vf, vf_catalog))
+            for vf in target.virtues_flaws
         ]
 
         def handle_result(index: int | None) -> None:
@@ -12050,7 +12086,7 @@ class WorkspaceScreen(Screen[None]):
 
         vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
         labels = [
-            catalog.describe_virtue_flaw(vf, vf_catalog)
+            escape(catalog.describe_virtue_flaw(vf, vf_catalog))
             for vf in character.virtues_flaws
         ]
 
