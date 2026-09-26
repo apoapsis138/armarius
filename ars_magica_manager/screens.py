@@ -4831,6 +4831,129 @@ class EditFamiliarCharacteristicsScreen(ModalScreen[dict[str, object] | None]):
         )
 
 
+class EditFamiliarWoundsScreen(ModalScreen[Wounds | None]):
+    """Edits a Familiar's Wound counts and Incapacitated/Dead -- same idea
+    as EditWoundsScreen, but with no Soak field: a Familiar's Soak is the
+    Characteristics tab's typed-in Base Soak (Familiar.base_soak), not a
+    per-Wounds figure like a Character's. Dismisses with the finished
+    Wounds (its `soak` untouched), or None if cancelled."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    EditFamiliarWoundsScreen {
+        align: center middle;
+    }
+
+    #fam-wounds-dialog {
+        width: 60;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    .famwoundsedit-row {
+        width: 100%;
+        height: 1;
+    }
+
+    .famwoundsedit-row Label {
+        width: 22;
+    }
+
+    .famwoundsedit-row Input {
+        width: 1fr;
+    }
+
+    #fam-wounds-error {
+        color: $error;
+        height: auto;
+        margin-top: 1;
+    }
+
+    #fam-wounds-buttons {
+        width: 100%;
+        height: auto;
+    }
+    """
+
+    def __init__(self, wounds: Wounds) -> None:
+        super().__init__()
+        self.wounds = wounds
+
+    def compose(self) -> ComposeResult:
+        w = self.wounds
+        with Vertical(id="fam-wounds-dialog"):
+            yield Label("Edit Wounds", id="fam-wounds-title")
+            with Horizontal(classes="famwoundsedit-row"):
+                yield Label("Light Wounds (-1 each)")
+                yield Input(
+                    value=str(w.light),
+                    type="integer",
+                    id="input-famwounds-light",
+                    compact=True,
+                )
+            with Horizontal(classes="famwoundsedit-row"):
+                yield Label("Medium Wounds (-3 each)")
+                yield Input(
+                    value=str(w.medium),
+                    type="integer",
+                    id="input-famwounds-medium",
+                    compact=True,
+                )
+            with Horizontal(classes="famwoundsedit-row"):
+                yield Label("Heavy Wounds (-5 each)")
+                yield Input(
+                    value=str(w.heavy),
+                    type="integer",
+                    id="input-famwounds-heavy",
+                    compact=True,
+                )
+            yield Checkbox(
+                "Incapacitated",
+                value=w.incapacitated,
+                id="check-famwounds-incapacitated",
+                compact=True,
+            )
+            yield Checkbox(
+                "Dead", value=w.dead, id="check-famwounds-dead", compact=True
+            )
+            yield Static("", id="fam-wounds-error")
+            with Horizontal(id="fam-wounds-buttons"):
+                yield Button("Save", id="btn-save", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-save":
+            self._try_save()
+
+    def _try_save(self) -> None:
+        error = self.query_one("#fam-wounds-error", Static)
+        values: dict[str, object] = {"soak": self.wounds.soak}
+        for label, field_name in (
+            ("Light Wounds", "light"),
+            ("Medium Wounds", "medium"),
+            ("Heavy Wounds", "heavy"),
+        ):
+            raw = self.query_one(f"#input-famwounds-{field_name}", Input).value.strip()
+            try:
+                values[field_name] = int(raw)
+            except ValueError:
+                error.update(f"{label} must be a whole number.")
+                return
+        values["incapacitated"] = self.query_one(
+            "#check-famwounds-incapacitated", Checkbox
+        ).value
+        values["dead"] = self.query_one("#check-famwounds-dead", Checkbox).value
+        self.dismiss(Wounds(**values))
+
+
 class EditCovenantScreen(ModalScreen[dict[str, object] | None]):
     """Edits the covenant-owned fields of the covenant sheet's top panel.
 
@@ -8282,10 +8405,12 @@ class FamiliarSheetView(Vertical):
     expanded, same PinnedCollapsible pattern as the other sheets) above a
     5-tab body mirroring reference/familiar-rules-and-sheet.md: Identity &
     Cords (Binding & Cords, Virtues & Flaws, Personality Traits &
-    Reputations) and Characteristics (the 8 Characteristics plus the typed-in
-    Base Soak/Magic Resistance figures) hold real content; three placeholder
-    tabs remain for STORY-206's later slices (Combat & Health; Abilities;
-    Bond Powers).
+    Reputations), Characteristics (the 8 Characteristics plus the typed-in
+    Base Soak/Magic Resistance figures) and Combat & Health (Wounds/Fatigue,
+    reusing Character's own dialogs; Natural Weapons & Attacks, a free
+    selectable list of weapon-kind Possessions -- same shape as Character's
+    weapon rows, see STORY-205) hold real content; two placeholder tabs
+    remain for STORY-206's later slices (Abilities; Bond Powers).
     """
 
     DEFAULT_CSS = """
@@ -8311,7 +8436,14 @@ class FamiliarSheetView(Vertical):
         width: 1fr;
     }
 
-    FamiliarSheetView #fam-vf-row, FamiliarSheetView #fam-pt-rep-row {
+    FamiliarSheetView #fam-vf-row, FamiliarSheetView #fam-pt-rep-row,
+    FamiliarSheetView #fam-health-row {
+        width: 1fr;
+        height: auto;
+    }
+
+    FamiliarSheetView #fam-health-wounds-col,
+    FamiliarSheetView #fam-health-fatigue-col {
         width: 1fr;
         height: auto;
     }
@@ -8372,8 +8504,41 @@ class FamiliarSheetView(Vertical):
                     fam.characteristics_text(self.familiar),
                     id="fam-characteristics-content",
                 )
-            with TabPane("Combat & Health", id="tab-fam-combat"):
-                yield Static(_tab_placeholder("Combat & Health"))
+            with TabPane("Combat & Health", id="tab-fam-combat"), VerticalScroll():
+                with (
+                    SheetSection(title="Health", id="section-fam-health"),
+                    Horizontal(id="fam-health-row"),
+                ):
+                    with Vertical(id="fam-health-wounds-col"):
+                        yield Static(
+                            fam.wounds_text(self.familiar), id="fam-wounds-content"
+                        )
+                        yield Button(
+                            "Edit Wounds (e)",
+                            id="btn-fam-health-wounds-edit",
+                            compact=True,
+                        )
+                    with Vertical(id="fam-health-fatigue-col"):
+                        yield Static(
+                            fam.fatigue_text(self.familiar), id="fam-fatigue-content"
+                        )
+                        yield Button(
+                            "Edit Fatigue",
+                            id="btn-fam-health-fatigue-edit",
+                            compact=True,
+                        )
+                with SheetSection(
+                    title="Natural Weapons & Attacks",
+                    id="section-fam-natural-weapons",
+                ):
+                    yield SelectableList(
+                        fam.natural_weapon_rows(self.familiar),
+                        id="fam-natural-weapons-list",
+                    )
+                    yield Static(
+                        fam.natural_weapon_info_text(self.familiar, None),
+                        id="fam-natural-weapons-info",
+                    )
             with TabPane("Abilities", id="tab-fam-abilities"):
                 yield Static(_tab_placeholder("Abilities"))
             with TabPane("Bond Powers", id="tab-fam-powers"):
@@ -8414,6 +8579,20 @@ class FamiliarSheetView(Vertical):
                 self.query_one("#fam-characteristics-content", Static).update(
                     fam.characteristics_text(self.familiar)
                 )
+            elif section_id == "section-fam-health":
+                self.query_one("#fam-wounds-content", Static).update(
+                    fam.wounds_text(self.familiar)
+                )
+                self.query_one("#fam-fatigue-content", Static).update(
+                    fam.fatigue_text(self.familiar)
+                )
+            elif section_id == "section-fam-natural-weapons":
+                self.query_one("#fam-natural-weapons-list", SelectableList).set_rows(
+                    fam.natural_weapon_rows(self.familiar)
+                )
+                self.query_one("#fam-natural-weapons-info", Static).update(
+                    fam.natural_weapon_info_text(self.familiar, None)
+                )
         except NoMatches:
             pass
 
@@ -8437,8 +8616,19 @@ class FamiliarSheetView(Vertical):
             "#fam-reputations-list", SelectableList
         ).selected_data_index
 
+    def selected_natural_weapon(self) -> int | None:
+        return self.query_one(
+            "#fam-natural-weapons-list", SelectableList
+        ).selected_data_index
+
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
         list_id = event.selectable_list.id or ""
+        if list_id == "fam-natural-weapons-list":
+            event.stop()
+            self.query_one("#fam-natural-weapons-info", Static).update(
+                fam.natural_weapon_info_text(self.familiar, event.data_index)
+            )
+            return
         if list_id not in ("fam-vf-virtues-list", "fam-vf-flaws-list"):
             return
         event.stop()
@@ -9205,6 +9395,7 @@ class WorkspaceScreen(Screen[None]):
         "section-eco-income",
         "section-fam-personality-traits",
         "section-fam-reputations",
+        "section-fam-natural-weapons",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
         *BOOK_SECTIONS,
@@ -9230,6 +9421,7 @@ class WorkspaceScreen(Screen[None]):
         "section-eco-income",
         "section-fam-personality-traits",
         "section-fam-reputations",
+        "section-fam-natural-weapons",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
         *(BOOK_SECTIONS - {"section-lib-summary"}),
@@ -9275,6 +9467,8 @@ class WorkspaceScreen(Screen[None]):
         "section-fam-personality-traits",
         "section-fam-reputations",
         "section-fam-characteristics",
+        "section-fam-health",
+        "section-fam-natural-weapons",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
         *(BOOK_SECTIONS - {"section-lib-summary"}),
@@ -9612,7 +9806,7 @@ class WorkspaceScreen(Screen[None]):
         return "section-cov-info"
 
     def _active_familiar_section(self) -> str | None:
-        """Same idea as _active_covenant_section(): the three remaining
+        """Same idea as _active_covenant_section(): the two remaining
         placeholder tabs own no dispatch of their own yet, so fall back to
         the always-visible info panel."""
         if self._familiar_sheet_view is None:
@@ -9728,6 +9922,12 @@ class WorkspaceScreen(Screen[None]):
         elif event.button.id == "btn-fam-info-edit":
             event.stop()
             self._edit_familiar_info()
+        elif event.button.id == "btn-fam-health-wounds-edit":
+            event.stop()
+            self._edit_familiar_wounds()
+        elif event.button.id == "btn-fam-health-fatigue-edit":
+            event.stop()
+            self._edit_familiar_fatigue()
 
     def _focus_first_section(self, *, initial: bool = False) -> None:
         if self.selected_kind == "character":
@@ -10076,6 +10276,8 @@ class WorkspaceScreen(Screen[None]):
             self._add_familiar_personality_trait()
         elif section == "section-fam-reputations":
             self._add_familiar_reputation()
+        elif section == "section-fam-natural-weapons":
+            self._add_familiar_natural_weapon()
         elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
             self._add_raw_vis()
         elif section == "section-lab-specialties":
@@ -10123,6 +10325,8 @@ class WorkspaceScreen(Screen[None]):
             self._remove_familiar_personality_trait()
         elif section == "section-fam-reputations":
             self._remove_familiar_reputation()
+        elif section == "section-fam-natural-weapons":
+            self._remove_familiar_natural_weapon()
         elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
             self._remove_raw_vis()
         elif section == "section-lab-specialties":
@@ -10193,6 +10397,12 @@ class WorkspaceScreen(Screen[None]):
             self._edit_familiar_reputation()
         elif section == "section-fam-characteristics":
             self._edit_familiar_characteristics()
+        elif section == "section-fam-health":
+            # Same idea as section-char-health: two dialogs behind two Edit
+            # buttons, keyboard 'e' defaults to Wounds.
+            self._edit_familiar_wounds()
+        elif section == "section-fam-natural-weapons":
+            self._edit_familiar_natural_weapon()
         elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
             self._edit_raw_vis()
         elif section == "section-inventory":
@@ -13383,6 +13593,149 @@ class WorkspaceScreen(Screen[None]):
             self._refresh_familiar_section("section-fam-characteristics")
 
         self.app.push_screen(EditFamiliarCharacteristicsScreen(familiar), handle_result)
+
+    # -- Familiar: Combat & Health --
+
+    def _edit_familiar_wounds(self) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+
+        def handle_result(wounds: Wounds | None) -> None:
+            if wounds is not None:
+                familiar.wounds = wounds
+                storage.save_saga(self.saga)
+                self._refresh_familiar_section("section-fam-health")
+
+        self.app.push_screen(EditFamiliarWoundsScreen(familiar.wounds), handle_result)
+
+    def _edit_familiar_fatigue(self) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+
+        def handle_result(level: FatigueLevel | None) -> None:
+            if level is not None:
+                familiar.fatigue_level = level
+                storage.save_saga(self.saga)
+                self._refresh_familiar_section("section-fam-health")
+
+        self.app.push_screen(EditFatigueScreen(familiar.fatigue_level), handle_result)
+
+    def _selected_familiar_natural_weapon(self) -> int | None:
+        view = self._familiar_sheet_view
+        return view.selected_natural_weapon() if view is not None else None
+
+    def _familiar_natural_weapon_form(self, index: int | None) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        existing = familiar.natural_weapons[index] if index is not None else None
+        entry = (
+            pos.PossessionEntry("weapon", existing) if existing is not None else None
+        )
+        title = (
+            "Add a Natural Weapon"
+            if index is None
+            else f"Edit {escape(existing.name or 'this attack')}"
+        )
+
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is None:
+                return
+            if index is not None and existing is not None:
+                for key, value in values.items():
+                    setattr(existing, key, value)
+            else:
+                familiar.natural_weapons.append(
+                    Possession(
+                        id=storage.generate_unique_id(
+                            values.get("name") or "weapon",
+                            [item.id for item in familiar.natural_weapons],
+                        ),
+                        kind="weapon",
+                        **values,
+                    )
+                )
+            storage.save_saga(self.saga)
+            self._refresh_familiar_section("section-fam-natural-weapons")
+
+        self.app.push_screen(
+            FieldsDialog(
+                title, _possession_fields("weapon", entry), validate=_possession_problem
+            ),
+            handle_result,
+        )
+
+    def _add_familiar_natural_weapon(self) -> None:
+        self._familiar_natural_weapon_form(None)
+
+    def _edit_familiar_natural_weapon(self) -> None:
+        """Edit the chosen attack; with none chosen, ask which one."""
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        selected = self._selected_familiar_natural_weapon()
+        if selected is not None:
+            self._familiar_natural_weapon_form(selected)
+            return
+        if not familiar.natural_weapons:
+            self.notify("No Natural Weapons to edit.")
+            return
+
+        labels = [
+            pos.row_label(pos.PossessionEntry("weapon", weapon))
+            for weapon in familiar.natural_weapons
+        ]
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._familiar_natural_weapon_form(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Edit which attack?", labels), handle_index
+        )
+
+    def _remove_familiar_natural_weapon(self) -> None:
+        """Delete the chosen attack (after confirming); with none chosen,
+        ask which one first."""
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        selected = self._selected_familiar_natural_weapon()
+        if selected is not None:
+            self._confirm_remove_familiar_natural_weapon(selected)
+            return
+        if not familiar.natural_weapons:
+            self.notify("No Natural Weapons to remove.")
+            return
+
+        labels = [
+            pos.row_label(pos.PossessionEntry("weapon", weapon))
+            for weapon in familiar.natural_weapons
+        ]
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._confirm_remove_familiar_natural_weapon(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove which attack?", labels), handle_index
+        )
+
+    def _confirm_remove_familiar_natural_weapon(self, index: int) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        name = familiar.natural_weapons[index].name or "this attack"
+
+        def handle_confirmed(confirmed: bool) -> None:
+            if confirmed:
+                del familiar.natural_weapons[index]
+                storage.save_saga(self.saga)
+                self._refresh_familiar_section("section-fam-natural-weapons")
+
+        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
     # -- Familiar: Personality Traits & Reputations --
 

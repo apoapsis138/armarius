@@ -75,6 +75,7 @@ from ars_magica_manager.screens import (
     EditFamiliarBindingScreen,
     EditFamiliarCharacteristicsScreen,
     EditFamiliarInfoScreen,
+    EditFamiliarWoundsScreen,
     EditFatigueScreen,
     EditHermeticBackgroundScreen,
     EditLabCharacteristicsScreen,
@@ -870,6 +871,8 @@ _FAM_SECTION_TAB: dict[str, str] = {
     "section-fam-personality-traits": "tab-fam-identity",
     "section-fam-reputations": "tab-fam-identity",
     "section-fam-characteristics": "tab-fam-characteristics",
+    "section-fam-health": "tab-fam-combat",
+    "section-fam-natural-weapons": "tab-fam-combat",
 }
 
 
@@ -1038,6 +1041,81 @@ async def test_editing_familiar_characteristics_updates_the_panel_and_saves():
     [familiar] = storage.load_saga("test_saga").familiars
     assert familiar.characteristics.stamina == 3
     assert (familiar.base_soak, familiar.magic_resistance) == (5, 12)
+
+
+async def test_editing_familiar_wounds_and_fatigue_updates_the_health_panel():
+    storage.save_saga(_saga_with_familiar())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_familiar(pilot, app)
+        await _open_familiar_section(pilot, app, "section-fam-health")
+        assert app.screen._active_section() == "section-fam-health"
+
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, EditFamiliarWoundsScreen)
+        app.screen.query_one("#input-famwounds-light", Input).value = "2"
+        app.screen.query_one("#check-famwounds-incapacitated", Checkbox).value = True
+        app.screen.query_one("#btn-save", Button).press()
+        await pilot.pause()
+
+        assert isinstance(app.screen, WorkspaceScreen)
+        view = app.screen._familiar_sheet_view
+        wounds_text = str(view.query_one("#fam-wounds-content", Static).render())
+        assert "Light Wounds:  2" in wounds_text
+        assert "Incapacitated: yes" in wounds_text
+
+        await pilot.click("#btn-fam-health-fatigue-edit")
+        await pilot.pause()
+        assert isinstance(app.screen, EditFatigueScreen)
+        app.screen.query_one("#select-fatigue-level", Select).value = "weary"
+        app.screen.query_one("#btn-save", Button).press()
+        await pilot.pause()
+
+        fatigue_text = str(view.query_one("#fam-fatigue-content", Static).render())
+        assert "Fatigue Level: Weary" in fatigue_text
+
+    [familiar] = storage.load_saga("test_saga").familiars
+    assert (familiar.wounds.light, familiar.wounds.incapacitated) == (2, True)
+    assert familiar.fatigue_level == "weary"
+
+
+async def test_familiar_natural_weapons_use_generic_add_edit_remove():
+    storage.save_saga(_saga_with_familiar())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_familiar(pilot, app)
+        await _open_familiar_section(pilot, app, "section-fam-natural-weapons")
+        assert app.screen.check_action("add", ()) is True
+
+        await pilot.press("a")
+        await pilot.pause()
+        assert isinstance(app.screen, FieldsDialog)
+        _fill(app, name="Bite", weapon_attack=5)
+        await _save_dialog(pilot, app)
+
+        [familiar] = storage.load_saga("test_saga").familiars
+        assert len(familiar.natural_weapons) == 1
+        assert familiar.natural_weapons[0].name == "Bite"
+        assert familiar.natural_weapons[0].weapon_attack == 5
+
+        view = app.screen._familiar_sheet_view
+        list_widget = view.query_one("#fam-natural-weapons-list", SelectableList)
+        assert any("Bite" in str(o.prompt) for o in list_widget.options)
+
+        await pilot.press("A")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, ConfirmScreen)
+        await pilot.press("y")
+        await pilot.pause()
+        assert isinstance(app.screen, WorkspaceScreen)
+
+    assert storage.load_saga("test_saga").familiars[0].natural_weapons == []
 
 
 async def test_familiar_virtues_flaws_add_via_v_and_remove_via_shift_v():

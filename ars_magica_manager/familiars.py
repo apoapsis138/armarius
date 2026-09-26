@@ -7,6 +7,7 @@ add Combat & Health, Abilities and Bond Powers here as they're built.
 from __future__ import annotations
 
 from . import catalog
+from . import possessions as pos
 from .markup import escape
 from .models import CORD_SCORE_COSTS, Character, Familiar, Saga
 from .totals import describe_modifier
@@ -190,3 +191,35 @@ def reputation_rows(familiar: Familiar) -> list[tuple[int, str]]:
         (i, f"{escape(t.name)}: {t.score:+d}")
         for i, t in enumerate(familiar.reputations)
     ]
+
+
+def wounds_text(familiar: Familiar) -> str:
+    """Same shape as the Character sheet's own _wounds_text()."""
+    w = familiar.wounds
+    return "\n".join(
+        [
+            f"Light Wounds:  {w.light} (-1 each)",
+            f"Medium Wounds: {w.medium} (-3 each)",
+            f"Heavy Wounds:  {w.heavy} (-5 each)",
+            f"Incapacitated: {'yes' if w.incapacitated else 'no'}",
+            f"Dead: {'yes' if w.dead else 'no'}",
+        ]
+    )
+
+
+def fatigue_text(familiar: Familiar) -> str:
+    return f"Fatigue Level: {familiar.fatigue_level.title()}"
+
+
+def natural_weapon_rows(familiar: Familiar) -> list[tuple[int, str]]:
+    return [
+        (index, pos.row_label(pos.PossessionEntry("weapon", weapon)))
+        for index, weapon in enumerate(familiar.natural_weapons)
+    ]
+
+
+def natural_weapon_info_text(familiar: Familiar, index: int | None) -> str:
+    if index is None:
+        return "[dim]Select an attack for its details.[/]"
+    weapon = familiar.natural_weapons[index]
+    return pos.detail_text(pos.PossessionEntry("weapon", weapon))

@@ -1021,6 +1021,12 @@ class Familiar:
     #: treatment as Wounds.soak (see DESIGN.md, STORY-205/206 Slice 2).
     base_soak: int = 0
     magic_resistance: int = 0
+    wounds: Wounds = field(default_factory=Wounds)
+    fatigue_level: FatigueLevel = "fresh"
+    #: Bite/Claws/Dodge etc. -- a free list of weapon-kind Possessions (same
+    #: shape as Character.inventory's weapons, see STORY-205), not a fixed
+    #: 3-row table.
+    natural_weapons: list[Possession] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Familiar:
@@ -1033,6 +1039,11 @@ class Familiar:
         ]
         d["reputations"] = [ScoredTrait(**t) for t in d.get("reputations", [])]
         d["characteristics"] = Characteristics.from_dict(d.get("characteristics") or {})
+        d["wounds"] = Wounds.from_dict(d.get("wounds") or {})
+        d["natural_weapons"] = [
+            Possession(**known_fields(Possession, w))
+            for w in d.get("natural_weapons", [])
+        ]
         return cls(**known_fields(cls, d))
 
 
