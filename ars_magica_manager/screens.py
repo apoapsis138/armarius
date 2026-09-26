@@ -49,6 +49,7 @@ from .markup import escape, markdown_inline
 from .models import (
     ABILITY_CATEGORIES,
     ART_ABBREVIATIONS,
+    ART_DESCRIPTIONS,
     BOOK_TYPES,
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
@@ -6971,9 +6972,7 @@ class CharacterSheetView(Vertical):
                 f"[b]Name:[/] {art} ({ART_ABBREVIATIONS[art]})",
                 f"[b]Level:[/] {score.level}    [b]XP:[/] {score.xp}",
                 "",
-                # No catalog description exists for Arts yet -- see
-                # kanban's STORY-209 (Add descriptions to Hermetic Arts).
-                "[dim]No description available yet for this Art.[/]",
+                f"[b]Description:[/] {ART_DESCRIPTIONS[art]}",
             ]
         )
 
