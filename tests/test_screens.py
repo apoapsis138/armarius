@@ -20,7 +20,7 @@ from textual.widgets import (
     Tree,
 )
 
-from ars_magica_manager import catalog, storage
+from ars_magica_manager import catalog, settings, storage
 from ars_magica_manager import economics as eco
 from ars_magica_manager import inhabitants as inh
 from ars_magica_manager import possessions as pos
@@ -95,6 +95,7 @@ from ars_magica_manager.screens import (
     SpellChooserScreen,
     SpellImportHelperScreen,
     SpellListView,
+    ThemeBar,
     VirtueFlawPickerScreen,
     WorkspaceScreen,
     _CsvDirectoryTree,
@@ -104,6 +105,15 @@ from ars_magica_manager.screens import (
 @pytest.fixture(autouse=True)
 def isolated_sagas_dir(tmp_path, monkeypatch):
     monkeypatch.setattr(storage, "SAGAS_DIR", tmp_path)
+
+
+@pytest.fixture(autouse=True)
+def isolated_settings_path(tmp_path, monkeypatch):
+    # A sibling dir, not tmp_path itself -- isolated_sagas_dir points
+    # storage.SAGAS_DIR at tmp_path and globs it for "*.json".
+    monkeypatch.setattr(
+        settings, "SETTINGS_PATH", tmp_path / "config" / "app_settings.json"
+    )
 
 
 def _find_node(tree, data):
@@ -318,6 +328,33 @@ async def test_picker_shows_placeholder_with_no_sagas():
         assert isinstance(app.screen, SagaPickerScreen)
         list_view = app.screen.query_one("#saga-list", ListView)
         assert len(list_view.children) == 1
+
+
+async def test_theme_bar_shows_active_theme():
+    app = ArsMagicaManagerApp()
+    async with app.run_test():
+        theme_bar = app.screen.query_one("#theme-bar", ThemeBar)
+        assert str(theme_bar.render()) == "Theme: Scriptorum"
+
+
+async def test_switching_theme_updates_theme_bar_and_persists():
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        app.theme = "scriptorum-dark"
+        await pilot.pause()
+
+        theme_bar = app.screen.query_one("#theme-bar", ThemeBar)
+        assert str(theme_bar.render()) == "Theme: Scriptorum Dark"
+
+    assert settings.load_settings() == {"theme": "scriptorum-dark"}
+
+
+async def test_saved_theme_is_restored_on_next_launch():
+    settings.save_settings({"theme": "scriptorum-dark"})
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test():
+        assert app.theme == "scriptorum-dark"
 
 
 async def test_create_saga_flow_saves_and_returns_to_picker():
@@ -1663,6 +1700,8 @@ async def test_edit_character_info_updates_name_covenant_and_laboratory():
         app.screen.query_one("#input-charinfo-name", Input).value = "Leandro the Elder"
         app.screen.query_one("#select-charinfo-covenant", Select).value = "cov2"
         app.screen.query_one("#select-charinfo-laboratory", Select).value = "lab2"
+        app.screen.query_one("#input-charinfo-confidence_score", Input).value = "2"
+        app.screen.query_one("#input-charinfo-confidence_points", Input).value = "5"
 
         await pilot.click("#btn-save")
         await pilot.pause()
@@ -1672,12 +1711,23 @@ async def test_edit_character_info_updates_name_covenant_and_laboratory():
         assert view.query_one("#section-char-info", Collapsible).title == (
             "Leandro the Elder"
         )
+        info_lines = view._info_right_text().splitlines()
+        assert any(
+            line.startswith("Confidence Score:") and line.endswith("2")
+            for line in info_lines
+        )
+        assert any(
+            line.startswith("Confidence Points:") and line.endswith("5")
+            for line in info_lines
+        )
 
     saga = storage.load_saga("test_saga")
     character = saga.characters[0]
     assert character.name == "Leandro the Elder"
     assert character.covenant_id == "cov2"
     assert character.assigned_lab_id == "lab2"
+    assert character.background.confidence_score == 2
+    assert character.background.confidence_points == 5
 
     lab1 = next(lab for lab in saga.laboratories if lab.id == "lab1")
     lab2 = next(lab for lab in saga.laboratories if lab.id == "lab2")
@@ -2297,19 +2347,25 @@ async def test_edit_hermetic_background_sets_house_and_fields():
 
         app.screen.query_one("#select-hermetic-house", Select).value = "house_bonisagus"
         app.screen.query_one("#input-hermetic-parens", Input).value = "Trianoma"
+        app.screen.query_one(
+            "#input-hermetic-age_of_apprenticeship", Input
+        ).value = "12"
 
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
         view = app.screen._character_sheet_view
-        assert "House: Bonisagus" in view._hermetic_background_left_text()
-        assert "Parens: Trianoma" in view._hermetic_background_left_text()
+        text = view._hermetic_background_left_text()
+        assert "House: Bonisagus" in text
+        assert "Parens: Trianoma" in text
+        assert "Age of Apprenticeship: 12" in text
 
     saga = storage.load_saga("test_saga")
     hermetic = saga.characters[0].hermetic
     assert hermetic.house == "house_bonisagus"
     assert hermetic.parens == "Trianoma"
+    assert hermetic.age_of_apprenticeship == 12
 
 
 async def test_edit_lab_identity_updates_fields_and_owner():

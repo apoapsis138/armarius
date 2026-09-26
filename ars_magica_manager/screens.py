@@ -953,6 +953,47 @@ def _sign_colored(value: float, text: str) -> str:
     return f"[{colour}]{text}[/]"
 
 
+class ThemeBar(Static):
+    """A one-line bar above the footer showing the app's active theme name."""
+
+    DEFAULT_CSS = """
+    ThemeBar {
+        height: 1;
+        content-align: left middle;
+        padding: 0 1;
+        color: $text-muted;
+    }
+    """
+
+    def on_mount(self) -> None:
+        self.watch(self.app, "theme", self._show_theme, init=True)
+
+    def _show_theme(self, theme_name: str) -> None:
+        self.update(f"Theme: {theme_name.replace('-', ' ').title()}")
+
+
+class BottomBar(Vertical):
+    """Docks the ThemeBar directly above the Footer.
+
+    Both dock to the same screen edge independently otherwise (Textual's
+    dock arrangement doesn't stack same-edge docked siblings -- they'd
+    overlap on the same row), so this wraps them in one bottom-docked
+    container where Footer's own `dock: bottom` pins it to the container's
+    last row and ThemeBar, undocked, takes the row above it in normal flow.
+    """
+
+    DEFAULT_CSS = """
+    BottomBar {
+        dock: bottom;
+        height: 2;
+    }
+    """
+
+    def compose(self) -> ComposeResult:
+        yield ThemeBar(id="theme-bar")
+        yield Footer()
+
+
 class SagaCreateScreen(ModalScreen[str | None]):
     """A form for creating a new saga. Dismisses with the new saga's id, or None if cancelled."""
 
@@ -2208,11 +2249,19 @@ class EditCharacterInfoScreen(ModalScreen[dict[str, object] | None]):
                 yield Label("Setting")
                 yield Input(value=b.setting, id="input-charinfo-setting", compact=True)
             with Horizontal(classes="charinfo-row"):
-                yield Label("Confidence")
+                yield Label("Confidence Score")
                 yield Input(
-                    value=str(b.confidence),
+                    value=str(b.confidence_score),
                     type="integer",
-                    id="input-charinfo-confidence",
+                    id="input-charinfo-confidence_score",
+                    compact=True,
+                )
+            with Horizontal(classes="charinfo-row"):
+                yield Label("Confidence Points")
+                yield Input(
+                    value=str(b.confidence_points),
+                    type="integer",
+                    id="input-charinfo-confidence_points",
                     compact=True,
                 )
             with Horizontal(classes="charinfo-row"):
@@ -2260,7 +2309,11 @@ class EditCharacterInfoScreen(ModalScreen[dict[str, object] | None]):
             "setting": self.query_one("#input-charinfo-setting", Input).value.strip(),
         }
 
-        for label, field_name in (("Confidence", "confidence"), ("Size", "size")):
+        for label, field_name in (
+            ("Confidence Score", "confidence_score"),
+            ("Confidence Points", "confidence_points"),
+            ("Size", "size"),
+        ):
             raw = self.query_one(f"#input-charinfo-{field_name}", Input).value.strip()
             try:
                 result[field_name] = int(raw)
@@ -3060,7 +3113,8 @@ class EditBiographicalDetailScreen(ModalScreen[dict[str, object] | None]):
         background_values: dict[str, object] = {
             # Not editable in this dialog -- seed through unchanged.
             "setting": self.background.setting,
-            "confidence": self.background.confidence,
+            "confidence_score": self.background.confidence_score,
+            "confidence_points": self.background.confidence_points,
             "size": self.background.size,
         }
         for _label, field_name in self._BACKGROUND_STR_FIELDS:
@@ -3455,11 +3509,13 @@ class EditHermeticBackgroundScreen(ModalScreen[HermeticBackground | None]):
     }
     """
 
-    _STR_FIELDS: ClassVar[list[tuple[str, str]]] = [
+    _STR_FIELDS_BEFORE_AGE: ClassVar[list[tuple[str, str]]] = [
         ("Domus Magna", "domus_magna"),
         ("Primus", "primus"),
         ("Parens", "parens"),
         ("Covenant of Apprenticeship", "covenant_of_apprenticeship"),
+    ]
+    _STR_FIELDS_AFTER_AGE: ClassVar[list[tuple[str, str]]] = [
         ("Wizard's Sigil", "wizards_sigil"),
     ]
 
@@ -3482,7 +3538,27 @@ class EditHermeticBackgroundScreen(ModalScreen[HermeticBackground | None]):
                     id="select-hermetic-house",
                     compact=True,
                 )
-            for label, field_name in self._STR_FIELDS:
+            for label, field_name in self._STR_FIELDS_BEFORE_AGE:
+                with Horizontal(classes="hermeticedit-row"):
+                    yield Label(label)
+                    yield Input(
+                        value=getattr(h, field_name),
+                        id=f"input-hermetic-{field_name}",
+                        compact=True,
+                    )
+            with Horizontal(classes="hermeticedit-row"):
+                yield Label("Age of Apprenticeship")
+                yield Input(
+                    value=(
+                        ""
+                        if h.age_of_apprenticeship is None
+                        else str(h.age_of_apprenticeship)
+                    ),
+                    type="integer",
+                    id="input-hermetic-age_of_apprenticeship",
+                    compact=True,
+                )
+            for label, field_name in self._STR_FIELDS_AFTER_AGE:
                 with Horizontal(classes="hermeticedit-row"):
                     yield Label(label)
                     yield Input(
@@ -3504,10 +3580,17 @@ class EditHermeticBackgroundScreen(ModalScreen[HermeticBackground | None]):
             house_value = self.query_one("#select-hermetic-house", Select).value
             house = house_value if isinstance(house_value, str) else None
             values: dict[str, object] = {"house": house}
-            for _label, field_name in self._STR_FIELDS:
+            for _label, field_name in (
+                *self._STR_FIELDS_BEFORE_AGE,
+                *self._STR_FIELDS_AFTER_AGE,
+            ):
                 values[field_name] = self.query_one(
                     f"#input-hermetic-{field_name}", Input
                 ).value.strip()
+            raw_age = self.query_one(
+                "#input-hermetic-age_of_apprenticeship", Input
+            ).value.strip()
+            values["age_of_apprenticeship"] = int(raw_age) if raw_age else None
             self.dismiss(HermeticBackground(**values))
 
 
@@ -6720,7 +6803,8 @@ class CharacterSheetView(Vertical):
         b = character.background
         rows += [
             ("Type", character.type),
-            ("Confidence", str(b.confidence)),
+            ("Confidence Score", str(b.confidence_score)),
+            ("Confidence Points", str(b.confidence_points)),
             ("Size", str(b.size)),
         ]
         return self._aligned(rows)
@@ -6936,6 +7020,8 @@ class CharacterSheetView(Vertical):
                 f"Parens: {h.parens or '(not set)'}",
                 f"Covenant of Apprenticeship: "
                 f"{h.covenant_of_apprenticeship or '(not set)'}",
+                f"Age of Apprenticeship: "
+                f"{h.age_of_apprenticeship if h.age_of_apprenticeship is not None else '(not set)'}",
             ]
         )
 
@@ -8236,7 +8322,7 @@ class WorkspaceScreen(Screen[None]):
         with Horizontal(id="workspace-body"):
             yield Tree(self.saga.name, data=("saga",), id="nav-tree")
             yield VerticalScroll(id="detail-pane")
-        yield Footer()
+        yield BottomBar()
 
     async def on_mount(self) -> None:
         self._update_saga_clock()
@@ -10720,7 +10806,12 @@ class WorkspaceScreen(Screen[None]):
                     character, cast("str | None", result["laboratory_id"])
                 )
             character.background.setting = cast(str, result["setting"])
-            character.background.confidence = cast(int, result["confidence"])
+            character.background.confidence_score = cast(
+                int, result["confidence_score"]
+            )
+            character.background.confidence_points = cast(
+                int, result["confidence_points"]
+            )
             character.background.size = cast(int, result["size"])
             storage.save_saga(self.saga)
             self._rebuild_tree()
@@ -12018,7 +12109,7 @@ class SagaPickerScreen(Screen[None]):
             id="picker-hint",
         )
         yield ListView(id="saga-list")
-        yield Footer()
+        yield BottomBar()
 
     async def on_mount(self) -> None:
         await self.refresh_list()

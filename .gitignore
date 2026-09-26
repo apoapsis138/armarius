@@ -17,6 +17,9 @@ wheels/
 data/sagas/*.json
 !data/sagas/.gitkeep
 
+# App-wide settings (e.g. selected theme) -- local machine state, not source
+data/app_settings.json
+
 # AI-session handoff notes -- internal project/dev notes, not meant for
 # the public repo (same convention as Ars-Magica-Solo).
 HANDOFF.md
