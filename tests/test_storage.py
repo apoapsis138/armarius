@@ -126,3 +126,36 @@ def test_saga_round_trip(tmp_path, monkeypatch):
     assert path.exists()
     assert loaded == saga
     assert storage.list_sagas() == ["saga_test"]
+
+
+def test_delete_saga_removes_the_file_and_ignores_a_missing_one():
+    storage.save_saga(Saga(id="doomed", name="Doomed"))
+    storage.save_saga(Saga(id="kept", name="Kept"))
+    storage.delete_saga("doomed")
+    assert storage.list_sagas() == ["kept"]
+    storage.delete_saga("doomed")  # already gone: not an error
+    assert storage.list_sagas() == ["kept"]
+
+
+def test_list_sagas_is_empty_when_the_sagas_folder_does_not_exist(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(storage, "SAGAS_DIR", tmp_path / "missing")
+    assert storage.list_sagas() == []
+
+
+def test_slugify_makes_a_filesystem_safe_id():
+    assert storage.slugify("  The Order of Hermes! ") == "the_order_of_hermes"
+    assert storage.slugify("???") == "id"
+
+
+def test_generate_unique_id_adds_the_first_free_numeric_suffix():
+    assert storage.generate_unique_id("Leandro", []) == "leandro"
+    assert storage.generate_unique_id("Leandro", ["leandro"]) == "leandro_2"
+    taken = ["leandro", "leandro_2", "leandro_3"]
+    assert storage.generate_unique_id("Leandro", taken) == "leandro_4"
+
+
+def test_generate_saga_id_avoids_sagas_already_on_disk():
+    storage.save_saga(Saga(id="dammerstein", name="Dammerstein"))
+    assert storage.generate_saga_id("Dammerstein") == "dammerstein_2"

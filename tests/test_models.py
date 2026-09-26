@@ -7,6 +7,7 @@ from ars_magica_manager.models import (
     BondPower,
     Character,
     Characteristics,
+    Covenant,
     Description,
     Familiar,
     HermeticBackground,
@@ -308,3 +309,15 @@ def test_covenant_modifiers_count_every_instance_and_filter_by_activity():
     assert [entry.name for entry, _ in pairs] == ["Edifice", "Edifice"]
     assert covenant_modifier_total(cov, by_id, "covenant_expense", "buildings") == 4
     assert covenant_modifier_total(cov, by_id, "lab_total") == 0
+
+
+def test_covenant_new_fields_default_for_pre_existing_saves():
+    covenant = Covenant(id="cov1", saga_id="s", name="Old Save")
+    assert covenant.tribunal == ""
+    assert covenant.year_founded is None
+    assert covenant.aegis_of_the_hearth == 0
+    assert covenant.aegis_penetration == 0
+    assert covenant.living_conditions_magi == 0
+    assert covenant.living_conditions_mundane == 0
+    assert covenant.aura == 0
+    assert covenant.covenant_season == "Spring"

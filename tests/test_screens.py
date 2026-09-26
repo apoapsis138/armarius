@@ -3662,18 +3662,6 @@ def _saga_with_configured_covenant() -> Saga:
     return saga
 
 
-def test_covenant_new_fields_default_for_pre_existing_saves():
-    covenant = Covenant(id="cov1", saga_id="s", name="Old Save")
-    assert covenant.tribunal == ""
-    assert covenant.year_founded is None
-    assert covenant.aegis_of_the_hearth == 0
-    assert covenant.aegis_penetration == 0
-    assert covenant.living_conditions_magi == 0
-    assert covenant.living_conditions_mundane == 0
-    assert covenant.aura == 0
-    assert covenant.covenant_season == "Spring"
-
-
 async def test_covenant_sheet_has_info_panel_and_six_tabs():
     storage.save_saga(_saga_with_configured_covenant())
 
@@ -7752,14 +7740,6 @@ async def test_a_saga_can_still_be_created_after_deleting_all_of_them():
         assert isinstance(app.screen, SagaPickerScreen)
 
     assert storage.list_sagas() == ["old"]
-
-
-def test_delete_saga_removes_the_file_and_ignores_a_missing_one():
-    _save_sagas("Doomed", "Kept")
-    storage.delete_saga("doomed")
-    assert storage.list_sagas() == ["kept"]
-    storage.delete_saga("doomed")  # already gone: not an error
-    assert storage.list_sagas() == ["kept"]
 
 
 # -- Books: covenant Library tab, laboratory/character Books, Unassigned Books ---
