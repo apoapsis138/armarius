@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections import Counter
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from dataclasses import field as dataclass_field
 from pathlib import Path
@@ -6215,7 +6215,7 @@ class SelectableList(OptionList):
 
     def __init__(
         self,
-        rows: list[tuple[int | None, str]] | None = None,
+        rows: Sequence[tuple[int | None, str]] | None = None,
         *,
         id: str | None = None,
         multi: bool = False,
@@ -6241,7 +6241,7 @@ class SelectableList(OptionList):
         if position is not None and position < len(self._rows):
             self.replace_option_prompt_at_index(position, self._prompt(position))
 
-    def _add_rows(self, rows: list[tuple[int | None, str]]) -> None:
+    def _add_rows(self, rows: Sequence[tuple[int | None, str]]) -> None:
         # Added after construction on purpose: OptionList(*options)
         # highlights its first row, and nothing should be chosen until the
         # user picks one.
@@ -6258,7 +6258,7 @@ class SelectableList(OptionList):
             for position, (index, _) in enumerate(self._rows)
         )
 
-    def set_rows(self, rows: list[tuple[int | None, str]]) -> None:
+    def set_rows(self, rows: Sequence[tuple[int | None, str]]) -> None:
         """Replace all rows (synchronous; nothing is chosen or checked
         afterwards)."""
         self.clear_options()
@@ -7737,7 +7737,7 @@ class CharacterSheetView(Vertical):
         self.query_one("#vf-info", Static).update(self._vf_info_text(event.data_index))
 
     @staticmethod
-    def _aligned(rows: list[tuple[str, str]]) -> str:
+    def _aligned(rows: Sequence[tuple[str, object]]) -> str:
         width = max(len(label) for label, _ in rows)
         return "\n".join(f"{label + ':':<{width + 1}} {value}" for label, value in rows)
 
@@ -8030,7 +8030,7 @@ class CharacterSheetView(Vertical):
             f"{score.level:>{self._ARTS_NUM_WIDTH}}{score.xp:>{self._ARTS_NUM_WIDTH}}"
         )
 
-    def _arts_rows(self, arts: list[str]) -> list[tuple[int, str]]:
+    def _arts_rows(self, arts: Sequence[str]) -> list[tuple[int, str]]:
         return [(i, self._art_row_label(art)) for i, art in enumerate(arts)]
 
     def _art_info_text(self, art: str) -> str:
@@ -9295,7 +9295,7 @@ class CovenantSheetView(Vertical):
         )
 
     @staticmethod
-    def _aligned(rows: list[tuple[str, str]]) -> str:
+    def _aligned(rows: Sequence[tuple[str, object]]) -> str:
         width = max(len(label) for label, _ in rows)
         return "\n".join(f"{label + ':':<{width + 1}} {value}" for label, value in rows)
 
@@ -13855,7 +13855,7 @@ class WorkspaceScreen(Screen[None]):
             return
         name = familiar.natural_weapons[index].name or "this attack"
 
-        def handle_confirmed(confirmed: bool) -> None:
+        def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
                 del familiar.natural_weapons[index]
                 storage.save_saga(self.saga)
@@ -13953,7 +13953,7 @@ class WorkspaceScreen(Screen[None]):
             return
         name = familiar.abilities[index].name
 
-        def handle_confirmed(confirmed: bool) -> None:
+        def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
                 del familiar.abilities[index]
                 storage.save_saga(self.saga)
@@ -14061,7 +14061,7 @@ class WorkspaceScreen(Screen[None]):
             return
         name = familiar.bond_powers[index].name or "this Bond Power"
 
-        def handle_confirmed(confirmed: bool) -> None:
+        def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
                 del familiar.bond_powers[index]
                 storage.save_saga(self.saga)
