@@ -125,6 +125,25 @@ def _find_node(tree, data):
     return walk(tree.root)
 
 
+async def _wait_for_screen(pilot, app, screen_type) -> None:
+    """Wait for a pushed screen of `screen_type` to be up and mounted -- a
+    bare pause after the key press isn't always enough under load."""
+    await wait_until(
+        pilot, lambda: isinstance(app.screen, screen_type) and app.screen.is_mounted
+    )
+    await pilot.pause()
+
+
+async def _wait_for_picker_ready(pilot, app) -> None:
+    """A searchable picker fills its list, then focuses its search box: wait
+    for that before typing, or the first fill and the search's refill
+    interleave (STORY-1109 B18)."""
+    await wait_until(
+        pilot,
+        lambda: app.focused is not None and app.focused.id == "picker-search",
+    )
+
+
 async def _wait_until_active(pilot, app, section_id: str) -> None:
     """Wait for `section_id` to be what a/A/e dispatch to, and fail clearly
     if it never becomes so."""
@@ -1078,7 +1097,7 @@ async def test_familiar_natural_weapons_use_generic_add_edit_remove():
         assert app.screen.check_action("add", ()) is True
 
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         _fill(app, name="Bite", weapon_attack=5)
         await _save_dialog(pilot, app)
@@ -1169,7 +1188,7 @@ async def test_familiar_bond_powers_use_generic_add_edit_remove():
         assert app.screen.check_action("add", ()) is True
 
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         _fill(app, name="Speak with Beasts", level=15, uses_per_day=3)
         await _save_dialog(pilot, app)
@@ -1189,7 +1208,7 @@ async def test_familiar_bond_powers_use_generic_add_edit_remove():
         await pilot.pause()
         assert isinstance(app.screen, RemovalPickerScreen)
         await pilot.press("enter")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         _fill(app, vis_spent=2)
         await _save_dialog(pilot, app)
@@ -1404,8 +1423,10 @@ async def test_virtue_flaw_picker_search_filters_by_typed_text():
         picker_list = app.screen.query_one("#vf-picker-list", ListView)
         assert len(picker_list.children) > 100  # the full 624-entry catalog
 
+        await _wait_for_picker_ready(pilot, app)
+
         app.screen.query_one("#picker-search", Input).value = "common sense"
-        await pilot.pause()
+        await wait_until(pilot, lambda: len(picker_list.children) == 1)
 
         item_ids = [item.id for item in picker_list.children]
         assert item_ids == ["vf-vf_common_sense"]
@@ -1422,10 +1443,12 @@ async def test_virtue_flaw_picker_search_shows_no_matches_message():
         await pilot.press("v")
         await pilot.pause()
 
-        app.screen.query_one("#picker-search", Input).value = "xyzzy nonexistent"
-        await pilot.pause()
+        await _wait_for_picker_ready(pilot, app)
 
+        app.screen.query_one("#picker-search", Input).value = "xyzzy nonexistent"
         picker_list = app.screen.query_one("#vf-picker-list", ListView)
+        await wait_until(pilot, lambda: len(picker_list.children) == 1)
+
         assert len(picker_list.children) == 1
         assert picker_list.children[0].id is None  # the "(no matches...)" row
 
@@ -1474,8 +1497,10 @@ async def test_lab_virtue_flaw_picker_search_filters_by_typed_text():
         picker_list = app.screen.query_one("#lab-vf-picker-list", ListView)
         assert len(picker_list.children) > 30  # the full 53-entry lab catalog
 
+        await _wait_for_picker_ready(pilot, app)
+
         app.screen.query_one("#picker-search", Input).value = "superior construction"
-        await pilot.pause()
+        await wait_until(pilot, lambda: len(picker_list.children) == 1)
 
         item_ids = [item.id for item in picker_list.children]
         assert item_ids == ["labvf-labvf_superior_construction"]
@@ -1496,8 +1521,10 @@ async def test_ability_picker_search_filters_by_typed_text():
         picker_list = app.screen.query_one("#ability-picker-list", ListView)
         assert len(picker_list.children) > 30  # the full 78-entry catalog
 
+        await _wait_for_picker_ready(pilot, app)
+
         app.screen.query_one("#picker-search", Input).value = "athletics"
-        await pilot.pause()
+        await wait_until(pilot, lambda: len(picker_list.children) == 1)
 
         item_ids = [item.id for item in picker_list.children]
         assert item_ids == ["ability-ab_athletics"]
@@ -2351,6 +2378,7 @@ async def test_add_and_remove_spell_known():
         assert "spellpick-spell_pilum_of_fire" in app.screen._by_item_id
         # Search, then pick the second match (the saga's own; the catalog's
         # Pilum of Fire comes first).
+        await _wait_for_picker_ready(pilot, app)
         app.screen.query_one("#picker-search", Input).value = "pilum"
         await pilot.pause()
         await pilot.pause()
@@ -2467,7 +2495,7 @@ async def test_add_and_remove_inventory_item():
         await pilot.press("down")  # Weapon, Armor, [Item]
         await pilot.press("down")
         await pilot.press("enter")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
 
         _fill(app, name="Fine wool cloak")
@@ -5518,11 +5546,28 @@ async def test_picker_search_finds_entries_by_their_type():
         await _select_covenant(pilot, app)
         await _open_cov_section(pilot, app, "section-cov-hooks")
         await pilot.press("a")
-        await pilot.pause()
+        await wait_until(
+            pilot, lambda: isinstance(app.screen, CovenantBoonHookPickerScreen)
+        )
+        picker_list = app.screen.query_one("#covbh-picker-list", ListView)
+
+        def shown() -> list[str]:
+            return [
+                str(item.query_one(Label).render()) for item in picker_list.children
+            ]
+
+        await _wait_for_picker_ready(pilot, app)
+
         app.screen.query_one("#picker-search", Input).value = "surroundings"
-        await pilot.pause()
-        items = list(app.screen.query_one("#covbh-picker-list", ListView).children)
-        labels = [str(item.query_one(Label).render()) for item in items]
+        # The list refills row by row: wait for the finished result.
+        await wait_until(
+            pilot,
+            lambda: (
+                all("[Surroundings," in x for x in shown())
+                and any(x.startswith("Pilgrimage Site") for x in shown())
+            ),
+        )
+        labels = shown()
         assert labels and all("[Surroundings," in label for label in labels)
         assert any(label.startswith("Pilgrimage Site") for label in labels)
 
@@ -5757,7 +5802,7 @@ async def test_add_an_npc_magus_with_an_unknown_year():
         await _select_covenant(pilot, app)
         await _open_inh_section(pilot, app, "section-inh-magus")
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)  # straight to the form
         _fill(app, name="Hidden Hermit", house="house_criamon", gift="Blatant")
         assert app.screen.query_one("#fld-year_born", Input).value == ""  # blank
@@ -5787,7 +5832,7 @@ async def test_editing_a_listed_magus_only_changes_covenant_side_fields():
         await _select_covenant(pilot, app)
         await _select_inh_row(pilot, app, "magus", 0)
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         # Name/house/year come from the sheet: shown, not editable.
         assert not app.screen.query("#fld-name")
@@ -5924,7 +5969,7 @@ async def test_specialist_from_an_unassigned_grog_prefills_and_marks_it_assigned
 
         await pilot.press("down")  # Old Thomae
         await pilot.press("enter")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         assert app.screen.query_one("#fld-name", Input).value == "Old Thomae"
         assert app.screen.query_one("#fld-year_born", Input).value == "1193"
@@ -5958,7 +6003,7 @@ async def test_a_brand_new_grog_type_person_needs_a_name_but_year_born_may_stay_
         await pilot.press("a")
         await pilot.pause()
         await pilot.press("enter")  # "(New person...)"
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
 
         await _save_dialog(pilot, app)
@@ -6005,7 +6050,7 @@ async def test_other_covenfolk_requires_a_covenant_role_and_suppresses_it_when_r
         await pilot.pause()
         assert isinstance(app.screen, RemovalPickerScreen)  # a GROG_KINDS section
         await pilot.press("enter")  # "(New person...)"
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
 
         _fill(app, name="Old Marta", responsibility="Nursemaid")
@@ -6077,7 +6122,7 @@ async def test_craftsperson_links_one_of_the_grogs_abilities_and_stores_craft_fi
         await pilot.pause()
         await pilot.press("down")
         await pilot.press("enter")  # Old Thomae
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
 
         ability = app.screen.query_one("#fld-linked_ability", Select)
@@ -6213,7 +6258,7 @@ async def test_horses_and_livestock_take_a_blank_year_and_a_quantity():
         for kind, name in (("horse", "Grey Mare"), ("livestock", "Sheep")):
             await _open_inh_section(pilot, app, f"section-inh-{kind}")
             await pilot.press("a")
-            await pilot.pause()
+            await _wait_for_screen(pilot, app, FieldsDialog)
             assert isinstance(app.screen, FieldsDialog)  # no picker for animals
             _fill(app, name=name, quantity=4)
             await _save_dialog(pilot, app)
@@ -6236,7 +6281,7 @@ async def test_e_and_A_act_on_the_selected_inhabitant_and_delete_confirms():
         await _select_inh_row(pilot, app, "turb", 1)
 
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)  # no "which one?" picker
         assert app.screen.query_one("#fld-name", Input).value == "Second [x]"
         await pilot.press("escape")
@@ -6318,7 +6363,7 @@ async def test_loyalty_governance_is_typed_unless_a_governance_boon_provides_it(
         await _select_covenant(pilot, app)
         await _open_inh_section(pilot, app, "section-inh-loyalty")
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         assert app.screen.query_one("#fld-equipment", Select).value == "Standard"
         assert app.screen.query_one("#fld-money", Select).value == "Standard salary"
@@ -6414,7 +6459,7 @@ async def test_population_and_miscellaneous_fields_are_editable_and_total_is_cal
 
         await _open_inh_section(pilot, app, "section-inh-misc")
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         _fill(app, aging_magi=1, magic_laborers=2, magic_turbula=5)
         await _save_dialog(pilot, app)
         await wait_until(
@@ -6443,7 +6488,7 @@ async def test_add_is_not_offered_on_the_summary_sections_but_edit_is():
             await pilot.pause()
             assert isinstance(app.screen, WorkspaceScreen), section  # nothing to add
             await pilot.press("e")
-            await pilot.pause()
+            await _wait_for_screen(pilot, app, FieldsDialog)
             assert isinstance(app.screen, FieldsDialog), section
             await pilot.press("escape")
             await pilot.pause()
@@ -6461,7 +6506,7 @@ async def test_inhabitant_dialogs_fit_a_small_terminal_and_hug_content_on_a_tall
         await pilot.pause()
         await pilot.press("down")
         await pilot.press("enter")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         for button in app.screen.query(Button):
             assert button.region.height > 0 and button.region.bottom <= 24, button.id
@@ -6480,7 +6525,7 @@ async def test_inhabitant_dialogs_fit_a_small_terminal_and_hug_content_on_a_tall
         await _select_covenant(pilot, app)
         await _open_inh_section(pilot, app, "section-inh-horse")
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         assert app.screen.query_one("#fields-dialog").region.height < 30
 
@@ -6538,7 +6583,7 @@ async def _add_possession(pilot, app, kind: str, **values) -> None:
     before = len(_pos_labels(app, kind))
     await _open_pos_section(pilot, app, kind)
     await pilot.press("a")
-    await pilot.pause()
+    await _wait_for_screen(pilot, app, FieldsDialog)
     assert isinstance(app.screen, FieldsDialog)
     _fill(app, **values)
     await _save_dialog(pilot, app)
@@ -6608,7 +6653,7 @@ async def test_property_needs_only_a_name_and_supports_edit_and_delete():
         # Edit it: all the fields, then the row and panel show them.
         await _select_pos_row(pilot, app, "property", 0)
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         _fill(
             app,
@@ -6644,7 +6689,7 @@ async def test_a_laboratory_sanctum_edits_only_covenant_side_fields_and_cannot_b
         await _select_covenant(pilot, app)
         await _select_pos_row(pilot, app, "sanctum", 0)
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         for key in ("name", "owner", "location", "build_points", "quality", "upkeep"):
             assert not app.screen.query(f"#fld-{key}"), key  # from the laboratory
@@ -6941,7 +6986,7 @@ async def test_raw_vis_stores_take_name_art_pawns_and_optional_location_and_form
 
         await _select_pos_row(pilot, app, "vis_store", 0)
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         _fill(app, location="The vault", physical_form="Lumps of amber")
         await _save_dialog(pilot, app)
         await _select_pos_row(pilot, app, "vis_store", 0)
@@ -6966,7 +7011,7 @@ async def test_e_and_A_act_on_the_chosen_possession_with_a_picker_fallback():
         await _select_pos_row(pilot, app, "item", 1)
 
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)  # no "which one?" picker
         assert app.screen.query_one("#fld-name", Input).value == "Second [x]"
         await pilot.press("escape")
@@ -7035,7 +7080,7 @@ async def test_possession_forms_fit_a_small_terminal_and_hug_content_on_a_tall_o
         await _select_covenant(pilot, app)
         await _open_pos_section(pilot, app, "vis_source")  # the busiest form
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         for button in app.screen.query(Button):
             assert button.region.height > 0 and button.region.bottom <= 24, button.id
@@ -7188,7 +7233,7 @@ async def test_wealth_is_typed_with_e():
         await _select_covenant(pilot, app)
         await _open_eco_section(pilot, app, "wealth")
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         assert app.screen.query_one("#fld-wealth", Input).value == "0"
         _fill(app, wealth=25)
@@ -7204,7 +7249,7 @@ async def _add_income(pilot, app, **values) -> None:
     before = len(_eco_labels(app, "income"))
     await _open_eco_section(pilot, app, "income")
     await pilot.press("a")
-    await pilot.pause()
+    await _wait_for_screen(pilot, app, FieldsDialog)
     assert isinstance(app.screen, FieldsDialog)
     _fill(app, **values)
     await _save_dialog(pilot, app)
@@ -7294,7 +7339,7 @@ async def test_e_and_A_act_on_the_selected_income_source_and_delete_confirms():
         await _select_eco_row(pilot, app, "income", 1)
 
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)  # no "which one?" picker
         assert app.screen.query_one("#fld-name", Input).value == "[Toll] bridge"
         assert app.screen.query_one("#fld-income", Input).value == ""
@@ -7447,7 +7492,7 @@ async def test_expenditure_rows_take_notes_and_the_typed_ones_take_amounts():
         # A calculated row: only its Notes can be typed.
         await _select_eco_row(pilot, app, "expenditure", 0)
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         assert not app.screen.query("#fld-tithes")
         _fill(app, notes="Roof of the north tower")
@@ -7474,7 +7519,7 @@ async def test_expenditure_rows_take_notes_and_the_typed_ones_take_amounts():
         # An empty note is removed, not stored blank.
         await _select_eco_row(pilot, app, "expenditure", 0)
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         _fill(app, notes="")
         await _save_dialog(pilot, app)
         await wait_until(
@@ -7497,7 +7542,7 @@ async def test_without_a_chosen_row_e_asks_which_row_to_edit():
         await pilot.pause()
         assert isinstance(app.screen, RemovalPickerScreen)
         await pilot.press("down", "enter")  # Consumables (the picker starts on row 0)
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         assert "Consumables" in str(app.screen.query_one("#fields-title").render())
 
@@ -7517,7 +7562,7 @@ async def test_cost_savings_rows_are_calculated_except_magic_and_emergency_savin
 
         await _select_eco_row(pilot, app, "savings", 2)  # Magic
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         _fill(app, magic_savings=6, notes="A self-sweeping broom")
         await _save_dialog(pilot, app)
         await wait_until(
@@ -7526,7 +7571,7 @@ async def test_cost_savings_rows_are_calculated_except_magic_and_emergency_savin
 
         await _select_eco_row(pilot, app, "savings", 3)  # Emergency Savings
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         _fill(app, emergency_savings=4)
         await _save_dialog(pilot, app)
         await wait_until(
@@ -7865,7 +7910,7 @@ async def test_adding_a_book_for_a_laboratory_shows_it_in_the_lab_inventory():
         await _show_library_tab(pilot, app)
         before = len(_book_names(app))
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         # A new book starts owned by wherever it's added from.
         assert app.screen.query_one("#fld-owner", Select).value == "covenant:cov1"
@@ -7968,7 +8013,7 @@ async def test_a_templated_ability_needs_its_detail_and_round_trips():
         await _select_covenant(pilot, app)
         await _show_library_tab(pilot, app)
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         _fill(app, name="Rhine Lore", type="Ability Summa")
         await pilot.pause()
         _fill(app, ability="Area Lore: {region}", level="3", quality="10")
@@ -8009,7 +8054,7 @@ async def test_an_unowned_book_files_under_the_saga():
         await _show_library_tab(pilot, app)
         await _choose_book(pilot, app, 0)
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         _fill(app, owner="")
         await _save_dialog(pilot, app)
         await wait_until(pilot, lambda: "Summa of Flame" not in _book_names(app))
@@ -8075,7 +8120,7 @@ async def test_book_form_fits_a_small_terminal():
         await _show_library_tab(pilot, app)
         await _choose_book(pilot, app, 0)
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         for button in app.screen.query("#btn-save, #btn-cancel"):
             assert button.region.height > 0 and button.region.bottom <= 24, button.id
@@ -8289,7 +8334,7 @@ async def test_e_with_books_marked_changes_only_their_owner():
         await _show_library_tab(pilot, app)
         await _mark_books(pilot, app, [0, 2])
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         assert [f.key for f in app.screen.fields] == ["_books", "owner"]
         # Different owners: nothing preselected, and one must be chosen.
@@ -8815,7 +8860,7 @@ async def test_choosing_a_spell_gives_a_lab_text_its_level():
         await _select_covenant(pilot, app)
         await _show_library_tab(pilot, app)
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         _fill(app, name="Notes on the Pilum", type="Lab Text")
         await pilot.pause()
         await _save_dialog(pilot, app)  # no spell chosen yet
@@ -8857,7 +8902,7 @@ async def test_the_spell_picker_lists_the_sagas_own_and_invented_spells():
         await _select_covenant(pilot, app)
         await _show_library_tab(pilot, app)
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         _fill(app, name="Lantern notes", type="Lab Text")
         await pilot.pause()
         await _pick_spell(pilot, app, "Lantern")
