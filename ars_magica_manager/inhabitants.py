@@ -438,7 +438,10 @@ def base_loyalty(saga: Saga, covenant: Covenant) -> int:
     magi = entries_for_kind(saga, covenant, "magus")
     if not magi:
         return 0
-    total = sum(GIFT_LOYALTY_MODIFIERS.get(entry.gift, -30) for entry in magi)
+    total = sum(
+        GIFT_LOYALTY_MODIFIERS.get(entry.gift, GIFT_LOYALTY_MODIFIERS["The Gift"])
+        for entry in magi
+    )
     return round_away_from_zero(total / len(magi))
 
 

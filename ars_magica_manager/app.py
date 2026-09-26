@@ -12,7 +12,7 @@ from .settings import load_settings, save_settings
 from .themes import SCRIPTORUM, SCRIPTORUM_DARK
 
 #: Theme applied on first launch, or if a saved theme name is no longer registered.
-DEFAULT_THEME = "scriptorum"
+DEFAULT_THEME = SCRIPTORUM.name
 
 
 class ArsMagicaManagerApp(App[None]):

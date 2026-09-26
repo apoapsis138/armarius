@@ -54,9 +54,11 @@ from .models import (
     ABILITY_CATEGORIES,
     ART_ABBREVIATIONS,
     ART_DESCRIPTIONS,
+    ARTS,
     BOOK_TYPES,
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
+    CORD_SCORE_COSTS,
     COVENANT_BOON_HOOK_CATEGORIES,
     COVENANT_ROLES,
     CRAFT_FIELDS,
@@ -76,6 +78,7 @@ from .models import (
     LOYALTY_MONEY,
     OTHER_COVENFOLK_ROLES,
     POSSESSION_KINDS,
+    SANCTUM_USAGE_DEFAULT,
     SANCTUM_USAGES,
     SEASONS,
     SPELL_DURATIONS,
@@ -388,9 +391,6 @@ def _inhabitant_fields(
     return fields
 
 
-_ARTS = (*TECHNIQUES, *FORMS)
-
-
 def _possession_fields(
     kind: str, entry: pos.PossessionEntry | None
 ) -> list[DialogField]:
@@ -460,7 +460,7 @@ def _possession_fields(
                 "usage",
                 "Usage",
                 "select",
-                value("usage", SANCTUM_USAGES[1]),
+                value("usage", SANCTUM_USAGE_DEFAULT),
                 options=[(u, u) for u in SANCTUM_USAGES],
             )
         )
@@ -504,7 +504,7 @@ def _possession_fields(
                 "Art",
                 "select",
                 value("art", ""),
-                options=[(a, a) for a in _ARTS],
+                options=[(a, a) for a in ARTS],
                 required=True,
                 allow_blank=True,
                 placeholder="(choose an Art)",
@@ -702,7 +702,7 @@ def _book_fields(
             "Art",
             "select",
             value("art", ""),
-            options=[(a, a) for a in _ARTS],
+            options=[(a, a) for a in ARTS],
             required=True,
             allow_blank=True,
             placeholder="(choose an Art)",
@@ -2237,7 +2237,7 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
     def _try_save(self) -> None:
         error = self.query_one("#arts-error", Static)
         result: dict[str, ArtScore] = {}
-        for art_name in (*TECHNIQUES, *FORMS):
+        for art_name in ARTS:
             key = art_name.lower()
             level_raw = self.query_one(f"#input-art-{key}-level", Input).value.strip()
             xp_raw = self.query_one(f"#input-art-{key}-xp", Input).value.strip()
@@ -3198,7 +3198,7 @@ class RawVisPromptScreen(ModalScreen[tuple[str, int] | None]):
             )
             yield Label("Art")
             yield Select(
-                [(art, art.lower()) for art in (*TECHNIQUES, *FORMS)],
+                [(art, art.lower()) for art in ARTS],
                 value=existing[0] if existing else Select.NULL,
                 id="select-vis-art",
             )
@@ -4655,7 +4655,7 @@ class EditFamiliarBindingScreen(ModalScreen[dict[str, object] | None]):
                 with Horizontal(classes="fambindingedit-row"):
                     yield Label(label)
                     yield Select(
-                        [(f"+{score}", score) for score in range(6)],
+                        [(f"+{score}", score) for score in CORD_SCORE_COSTS],
                         value=getattr(f, attribute),
                         allow_blank=False,
                         id=f"select-fam-{attribute}",

@@ -19,6 +19,7 @@ from . import catalog
 from .markup import escape, fit
 from .models import (
     ART_ABBREVIATIONS,
+    ART_LOOKUP,
     FORMS,
     SPELL_DURATIONS,
     SPELL_RANGES,
@@ -188,11 +189,6 @@ def normalise_target(value: str) -> str:
     return _normalise(value, _TARGET_NAMES)
 
 
-_ART_NAMES = {a.lower(): a for a in (*TECHNIQUES, *FORMS)} | {
-    abbr.lower(): art for art, abbr in ART_ABBREVIATIONS.items()
-}
-
-
 def _requisite_tokens(text: str) -> list[str]:
     return [
         t.strip().strip(".")
@@ -204,7 +200,7 @@ def _requisite_tokens(text: str) -> list[str]:
 def unknown_requisites(text: str) -> list[str]:
     """The words of a typed requisites list that aren't Arts ("Magic" in
     "Rego Magic"), for rejecting user input."""
-    return [t for t in _requisite_tokens(text) if t.lower() not in _ART_NAMES]
+    return [t for t in _requisite_tokens(text) if t.lower() not in ART_LOOKUP]
 
 
 def parse_requisites(text: str) -> list[str]:
@@ -212,7 +208,7 @@ def parse_requisites(text: str) -> list[str]:
     in order; anything that isn't an Art is ignored."""
     found = []
     for token in re.split(r"[,;/&]|\band\b|\s+", text):
-        art = _ART_NAMES.get(token.strip().strip(".").lower())
+        art = ART_LOOKUP.get(token.strip().strip(".").lower())
         if art and art not in found:
             found.append(art)
     return found
@@ -480,7 +476,7 @@ class SpellCsvImport:
 
 
 def _art(raw: str, kind: tuple[str, ...], label: str) -> str:
-    art = _ART_NAMES.get(raw.strip().lower())
+    art = ART_LOOKUP.get(raw.strip().lower())
     if art is None or art not in kind:
         if raw.strip():
             raise ValueError(f"unknown {label} {raw.strip()!r}")

@@ -12,6 +12,7 @@ from .markup import escape, fit, markdown_inline
 from .models import (
     GEAR_POINTS,
     GEAR_QUALITY_DEFAULT,
+    SANCTUM_USAGE_DEFAULT,
     Covenant,
     Laboratory,
     LabVirtueFlawDef,
@@ -107,7 +108,7 @@ class PossessionEntry:
 
     @property
     def usage(self) -> str:
-        return self._own("usage", "Standard (2 Seasons)")
+        return self._own("usage", SANCTUM_USAGE_DEFAULT)
 
     @property
     def quantity(self) -> int:

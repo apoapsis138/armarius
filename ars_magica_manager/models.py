@@ -112,6 +112,14 @@ ART_ABBREVIATIONS: dict[str, str] = {
     "Terram": "Te",
     "Vim": "Vi",
 }
+#: All fifteen Arts, Techniques then Forms.
+ARTS: tuple[str, ...] = (*TECHNIQUES, *FORMS)
+#: An Art's proper name from its name in any case ("creo" -> "Creo").
+ART_BY_NAME: dict[str, str] = {art.lower(): art for art in ARTS}
+#: The same, also accepting the two-letter abbreviation ("cr" -> "Creo").
+ART_LOOKUP: dict[str, str] = ART_BY_NAME | {
+    abbr.lower(): art for art, abbr in ART_ABBREVIATIONS.items()
+}
 ART_DESCRIPTIONS: dict[str, str] = {
     "Creo": "'I Create' - Creo magic makes things that exist independently into better things of their kind, which includes bringing them into existence from nothing. Things that exist independently are called substances, and include people, trees, and rocks, but do not include colors, weights, and sizes. Creo can thus both create and heal things. Pronounced 'CRAY-oh.'",
     "Intellego": "'I Perceive' - Intellego is the Art of perception. It allows a maga to gather information directly from the forms of things. This information does not deal with the appearances of things, unless Intellego Imaginem magic is used. Rather, it provides information about the actual nature of a thing. Thus, Intellego magic is not deceived by mundane disguises. Pronounced 'in-TEL-le-go.'",
@@ -587,7 +595,7 @@ class Book:
         if "subject" in d:
             # The pre-Library-tab stub: Summa/Tractatus/Lab Text on one `subject`.
             subject = str(d.pop("subject") or "")
-            art = {a.lower(): a for a in (*TECHNIQUES, *FORMS)}.get(subject.lower())
+            art = ART_BY_NAME.get(subject.lower())
             old_type = d.get("type")
             if old_type == "Summa":
                 d["type"] = "Art Summa" if art else "Ability Summa"
@@ -1496,9 +1504,8 @@ class Covenant:
         # stores on the Possessions tab.
         stock = d.get("vis_stock") or {}
         if stock:
-            arts = {a.lower(): a for a in (*TECHNIQUES, *FORMS)}
             for art, pawns in stock.items():
-                art_name = arts.get(str(art).lower(), str(art))
+                art_name = ART_BY_NAME.get(str(art).lower(), str(art))
                 d["possessions"].append(
                     Possession(
                         id=f"vis_store_{art_name.lower()}",

@@ -17,10 +17,8 @@ from . import catalog
 from . import spells as spl
 from .markup import escape, fit, markdown_inline
 from .models import (
-    ART_ABBREVIATIONS,
+    ART_LOOKUP,
     BOOK_TYPES,
-    FORMS,
-    TECHNIQUES,
     Book,
     Covenant,
     Saga,
@@ -517,10 +515,6 @@ _TYPE_ALIASES: dict[str, str] = {t.lower(): t for t in BOOK_TYPES} | {
 }
 
 #: Art names by lower-case name or abbreviation ("ignem", "ig" -> "Ignem").
-_ART_NAMES: dict[str, str] = {a.lower(): a for a in (*TECHNIQUES, *FORMS)} | {
-    abbr.lower(): art for art, abbr in ART_ABBREVIATIONS.items()
-}
-
 #: Columns an import reads. `owner` and `cost` are recognised but not used:
 #: imported books all go to one place, and cost is always calculated.
 CSV_COLUMNS: tuple[str, ...] = (
@@ -589,9 +583,9 @@ def _book_from_row(row: dict[str, str]) -> Book:
             raise ValueError("a Tractatus needs a tractatus_type of Art or Ability")
         book.subject_kind = kind
     if is_art_book(book_type, book.subject_kind):
-        if art.lower() not in _ART_NAMES:
+        if art.lower() not in ART_LOOKUP:
             raise ValueError(f"unknown Art {art!r}" if art else "no Art")
-        book.art = _ART_NAMES[art.lower()]
+        book.art = ART_LOOKUP[art.lower()]
     elif is_ability_book(book_type, book.subject_kind):
         if not ability:
             raise ValueError("no Ability")
