@@ -305,6 +305,31 @@ def entries_for_kind(
     return entries
 
 
+def departed_entries_for_kind(
+    saga: Saga, covenant: Covenant, kind: str
+) -> list[InhabitantEntry]:
+    """Departed Magi/Companions of `kind`: still in the covenant on their
+    sheet, but marked as no longer counting as an inhabitant (see
+    Inhabitant.departed). Not applicable to any other kind."""
+    if kind not in AUTO_KINDS:
+        return []
+    entries: list[InhabitantEntry] = []
+    for character in saga.characters:
+        if character.type != kind or character.covenant_id != covenant.id:
+            continue
+        record = next(
+            (
+                r
+                for r in covenant.inhabitants
+                if r.kind == kind and r.character_id == character.id
+            ),
+            None,
+        )
+        if record is not None and record.departed:
+            entries.append(InhabitantEntry(kind, record, character, auto=True))
+    return entries
+
+
 def headcount(entries: list[InhabitantEntry]) -> int:
     """How many people or animals a list stands for: quantities added up, so
     "Servants x2" counts as two, not one."""

@@ -136,6 +136,20 @@ def test_a_departed_record_only_hides_that_character_and_kind():
     assert [e.name for e in inh.entries_for_kind(saga, cov, "companion")] == ["Alys"]
 
 
+def test_departed_entries_for_kind_lists_only_departed_magi_and_companions():
+    saga, cov = _saga()
+    cov.inhabitants += [
+        Inhabitant(id="d1", kind="magus", character_id="mag1", departed=True),
+        Inhabitant(id="npc", kind="magus", name="Hidden Hermit"),
+    ]
+    departed = inh.departed_entries_for_kind(saga, cov, "magus")
+    assert [e.name for e in departed] == ["Corvinus"]
+    assert departed[0].auto and departed[0].record is not None
+    # Not departed, and not a Magus/Companion kind at all: nothing.
+    assert inh.departed_entries_for_kind(saga, cov, "companion") == []
+    assert inh.departed_entries_for_kind(saga, cov, "craftsperson") == []
+
+
 def test_a_craftspersons_score_is_manual_unless_tied_to_a_sheets_ability():
     saga, cov = _saga()
     brawl = next(a for a in saga.characters[3].abilities if a.name == "Brawl")

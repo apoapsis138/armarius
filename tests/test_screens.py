@@ -5365,6 +5365,48 @@ async def test_removing_a_listed_companion_with_no_record_creates_one():
     assert record.departed and record.character_id == "comp1"
 
 
+async def test_restoring_a_departed_magus_makes_them_count_again():
+    saga = _saga_with_people()
+    saga.covenants[0].inhabitants = [
+        Inhabitant(
+            id="m",
+            kind="magus",
+            character_id="mag1",
+            description="Trusted.",
+            departed=True,
+        )
+    ]
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        assert _inh_labels(app, "magus") == []  # departed: not listed
+        await _open_inh_section(pilot, app, "section-inh-magus")
+        await pilot.press("r")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)  # only one entry
+        await pilot.press("enter")
+        await _wait_until(pilot, lambda: len(_inh_labels(app, "magus")) == 1)
+        assert _inh_labels(app, "magus")[0].startswith("Corvinus")
+
+    [record] = _records("magus")
+    assert not record.departed
+    assert record.description == "Trusted."  # covenant-side extras kept
+
+
+async def test_restore_with_nothing_departed_notifies_and_does_nothing():
+    storage.save_saga(_saga_with_people())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        await _open_inh_section(pilot, app, "section-inh-companion")
+        await pilot.press("r")
+        await pilot.pause()
+        assert isinstance(app.screen, WorkspaceScreen)  # no picker popped
+
+
 async def test_specialist_from_an_unassigned_grog_prefills_and_marks_it_assigned():
     storage.save_saga(_saga_with_people())
 

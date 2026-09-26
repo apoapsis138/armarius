@@ -8265,6 +8265,7 @@ class WorkspaceScreen(Screen[None]):
         ("a", "add", "Add"),
         ("A", "remove", "Remove"),
         ("e", "edit", "Edit"),
+        ("r", "restore", "Restore"),
         ("i", "improve", "Improve"),
         ("I", "import_data", "Import"),
         ("t", "advance_season", "Advance Season"),
@@ -8369,6 +8370,10 @@ class WorkspaceScreen(Screen[None]):
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
         *(BOOK_SECTIONS - {"section-lib-summary"}),
         SPELL_SECTION,
+    }
+    #: Only Magi/Companions can go "departed" (see Inhabitant.departed).
+    _RESTORE_SECTIONS: ClassVar[set[str]] = {
+        f"section-inh-{kind}" for kind in inh.AUTO_KINDS
     }
 
     #: Covenant tabs that own their own a/A/e dispatch (keyed by tab id).
@@ -8594,6 +8599,8 @@ class WorkspaceScreen(Screen[None]):
             return self._active_section() in self._REMOVE_SECTIONS
         if action == "edit":
             return self._active_section() in self._EDIT_SECTIONS
+        if action == "restore":
+            return self._active_section() in self._RESTORE_SECTIONS
         if action == "improve":
             return self._active_section() == "section-eco-income"
         if action == "import_data":
@@ -9159,6 +9166,13 @@ class WorkspaceScreen(Screen[None]):
             self._edit_inhabitant(kind)
         elif (kind := self._possession_kind(section)) is not None:
             self._edit_possession(kind)
+
+    def action_restore(self) -> None:
+        section = self._active_section()
+        if (
+            kind := self._inhabitant_kind(section)
+        ) is not None and kind in inh.AUTO_KINDS:
+            self._restore_inhabitant(kind)
 
     # -- Spells (the saga's Spells view) --
 
@@ -10343,6 +10357,35 @@ class WorkspaceScreen(Screen[None]):
                 self._refresh_covenant_section(f"section-inh-{kind}")
 
         self.app.push_screen(ConfirmScreen(f"Delete {name}?"), handle_confirmed)
+
+    def _restore_inhabitant(self, kind: str) -> None:
+        """Bring back a departed Magus/Companion: still on their sheet, they
+        simply start counting as an inhabitant again."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        entries = inh.departed_entries_for_kind(self.saga, covenant, kind)
+        if not entries:
+            self.notify(f"No departed {inh.KIND_TITLES[kind]} to restore.")
+            return
+
+        def do_restore(entry: inh.InhabitantEntry) -> None:
+            if entry.record is not None:
+                entry.record.departed = False
+                storage.save_saga(self.saga)
+                self._refresh_covenant_section(f"section-inh-{kind}")
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                do_restore(entries[index])
+
+        self.app.push_screen(
+            RemovalPickerScreen(
+                f"Restore which {inh.KIND_SINGULAR[kind]}?",
+                [escape(e.name) or "(unnamed)" for e in entries],
+            ),
+            handle_index,
+        )
 
     def _edit_loyalty(self) -> None:
         covenant = self.selected_covenant
