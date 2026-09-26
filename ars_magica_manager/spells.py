@@ -16,7 +16,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from . import catalog
-from .markup import escape
+from .markup import escape, fit
 from .models import (
     ART_ABBREVIATIONS,
     FORMS,
@@ -325,13 +325,6 @@ def _short(value: str) -> str:
     return _SHORT_NAMES.get(value, value)
 
 
-def _fit(text: str, width: int) -> str:
-    text = text.replace("\n", " ")
-    if len(text) > width:
-        text = text[: width - 1] + "…"
-    return text.ljust(width)
-
-
 _NAME_WIDTH = 30
 _ARTS_WIDTH = 16
 _LEVEL_WIDTH = 5
@@ -363,8 +356,8 @@ def row_label(saga: Saga, spell: Spell) -> str:
     )
     source = "Saga" if is_own(saga, spell) else spell.source
     return (
-        f"{escape(_fit(spell.name, _NAME_WIDTH))} {escape(_fit(arts(spell), _ARTS_WIDTH))}"
-        f"{level:>{_LEVEL_WIDTH}}  {escape(_fit(rdt, _RDT_WIDTH))} "
+        f"{escape(fit(spell.name, _NAME_WIDTH))} {escape(fit(arts(spell), _ARTS_WIDTH))}"
+        f"{level:>{_LEVEL_WIDTH}}  {escape(fit(rdt, _RDT_WIDTH))} "
         f"{('Ritual' if spell.ritual else ''):<{_RITUAL_WIDTH}}{escape(source)}"
     )
 

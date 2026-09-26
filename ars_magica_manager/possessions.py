@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .markup import escape, markdown_inline
+from .markup import escape, fit, markdown_inline
 from .models import (
     GEAR_POINTS,
     GEAR_QUALITY_DEFAULT,
@@ -216,13 +216,6 @@ def entries_for_kind(
 # ------------------------------------------------------------------- text
 
 
-def _fit(text: str, width: int) -> str:
-    text = text.replace("\n", " ")
-    if len(text) > width:
-        text = text[: width - 1] + "…"
-    return text.ljust(width)
-
-
 _NAME_WIDTH = 20
 _LOCATION_WIDTH = 18
 _DIMENSIONS_WIDTH = 14
@@ -278,19 +271,19 @@ def row_label(entry: PossessionEntry) -> str:
     """One list row (markup), columns lined up with `table_header`. Trailing
     whitespace from an unset last column is stripped."""
     kind = entry.kind
-    name = escape(_fit(entry.name or "(unnamed)", _NAME_WIDTH))
+    name = escape(fit(entry.name or "(unnamed)", _NAME_WIDTH))
     if kind == "property":
-        location = escape(_fit(entry.location, _LOCATION_WIDTH))
-        dimensions = escape(_fit(entry.dimensions, _DIMENSIONS_WIDTH))
+        location = escape(fit(entry.location, _LOCATION_WIDTH))
+        dimensions = escape(fit(entry.dimensions, _DIMENSIONS_WIDTH))
         row = f"{name}{location}{dimensions}{escape(entry.inhabitants)}"
     elif kind == "sanctum":
-        owner = escape(_fit(entry.owner, _OWNER_WIDTH))
+        owner = escape(fit(entry.owner, _OWNER_WIDTH))
         quality = "" if entry.quality is None else entry.quality
         upkeep = "" if entry.upkeep is None else entry.upkeep
         row = f"{name}{owner}{quality:>{_QUALITY_WIDTH}}{upkeep:>{_UPKEEP_WIDTH}}"
     elif kind in ("weapon", "armor"):
-        gear_type = escape(_fit(entry.gear_type, _TYPE_WIDTH))
-        gear_quality = escape(_fit(entry.gear_quality, _GEAR_QUALITY_WIDTH))
+        gear_type = escape(fit(entry.gear_type, _TYPE_WIDTH))
+        gear_quality = escape(fit(entry.gear_quality, _GEAR_QUALITY_WIDTH))
         row = f"{name}{gear_type}{gear_quality}{entry.quantity:>{_QTY_WIDTH}}"
         if kind == "weapon":
             row += (
@@ -302,11 +295,11 @@ def row_label(entry: PossessionEntry) -> str:
     elif kind == "item":
         row = f"{name}{entry.quantity:>{_QTY_WIDTH}}"
     elif kind == "vis_source":
-        art = escape(_fit(entry.art, _ART_WIDTH))
-        season = escape(_fit(entry.season, _SEASON_WIDTH))
+        art = escape(fit(entry.art, _ART_WIDTH))
+        season = escape(fit(entry.season, _SEASON_WIDTH))
         row = f"{name}{art}{entry.pawns:>{_PAWNS_WIDTH}}  {season}"
     else:  # vis_store
-        art = escape(_fit(entry.art, _ART_WIDTH))
+        art = escape(fit(entry.art, _ART_WIDTH))
         row = f"{name}{art}{entry.pawns:>{_PAWNS_WIDTH}}"
     return row.rstrip()
 

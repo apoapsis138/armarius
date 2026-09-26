@@ -15,7 +15,7 @@ from pathlib import Path
 
 from . import catalog
 from . import spells as spl
-from .markup import escape, markdown_inline
+from .markup import escape, fit, markdown_inline
 from .models import (
     ART_ABBREVIATIONS,
     BOOK_TYPES,
@@ -327,13 +327,6 @@ def subject_title(book: Book) -> str:
     return "Subject"
 
 
-def _fit(text: str, width: int) -> str:
-    text = text.replace("\n", " ")
-    if len(text) > width:
-        text = text[: width - 1] + "…"
-    return text.ljust(width)
-
-
 _NAME_WIDTH = 20
 _TYPE_WIDTH = 14
 _LEVEL_WIDTH = 5
@@ -376,11 +369,11 @@ def _number(value: int | None) -> str:
 def row_label(saga: Saga, book: Book, subject_cols: int = SUBJECT_MIN_WIDTH) -> str:
     """One list row (markup), columns lined up with `table_header`; red when
     the book has a status problem (see status_problems)."""
-    location = _fit(location_label(saga, book), _LOCATION_WIDTH).rstrip()
+    location = fit(location_label(saga, book), _LOCATION_WIDTH).rstrip()
     row = (
-        f"{escape(_fit(book.name or '(untitled)', _NAME_WIDTH))} "
-        f"{escape(_fit(book.type, _TYPE_WIDTH))} "
-        f"{escape(_fit(subject(book, saga) or '-', subject_cols))} "
+        f"{escape(fit(book.name or '(untitled)', _NAME_WIDTH))} "
+        f"{escape(fit(book.type, _TYPE_WIDTH))} "
+        f"{escape(fit(subject(book, saga) or '-', subject_cols))} "
         f"{_number(level_of(book, saga)):>{_LEVEL_WIDTH}}"
         f"{_number(book.quality):>{_QUALITY_WIDTH}}  "
         f"{escape(location)}"

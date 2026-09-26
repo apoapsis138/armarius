@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from . import catalog
 from . import inhabitants as inh
 from . import possessions as pos
-from .markup import escape, markdown_inline
+from .markup import aligned, escape, markdown_inline
 from .models import (
     INCOME_EFFECT_MULTIPLIERS,
     INCOME_TYPE_DEFAULTS,
@@ -442,14 +442,9 @@ def money(value: float) -> str:
     return str(round_away_from_zero(value))
 
 
-def _aligned(rows: list[tuple[str, str]]) -> str:
-    width = max(len(label) for label, _ in rows)
-    return "\n".join(f"{label + ':':<{width + 1}} {value}" for label, value in rows)
-
-
 def wealth_texts(summary: Summary) -> tuple[str, str]:
     """The Wealth section as two columns."""
-    left = _aligned(
+    left = aligned(
         [
             ("Points of Inhabitants", money(summary.inhabitant_points)),
             ("Points of Laboratories", money(summary.laboratory_points)),
@@ -458,7 +453,7 @@ def wealth_texts(summary: Summary) -> tuple[str, str]:
         ]
     )
     surplus_color = "red" if summary.surplus_deficit < 0 else "cyan"
-    right = _aligned(
+    right = aligned(
         [
             ("Total Income", money(summary.income)),
             ("Expenditure (Before Cost Savings)", money(summary.before_savings)),

@@ -7,6 +7,22 @@ confirm messages); these keep it safe and let descriptions use inline emphasis.
 from __future__ import annotations
 
 import re
+from collections.abc import Sequence
+
+
+def fit(text: str, width: int) -> str:
+    """`text` on one line, cut to `width` with an ellipsis if it's longer and
+    padded to `width` if it's shorter -- one fixed-width table column."""
+    text = text.replace("\n", " ")
+    if len(text) > width:
+        text = text[: width - 1] + "…"
+    return text.ljust(width)
+
+
+def aligned(rows: Sequence[tuple[str, object]]) -> str:
+    """`label: value` lines with the values lined up in one column."""
+    width = max(len(label) for label, _ in rows)
+    return "\n".join(f"{label + ':':<{width + 1}} {value}" for label, value in rows)
 
 
 def escape(text: str) -> str:

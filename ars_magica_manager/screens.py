@@ -49,7 +49,7 @@ from . import familiars as fam
 from . import inhabitants as inh
 from . import possessions as pos
 from . import spells as spl
-from .markup import escape, markdown_inline
+from .markup import aligned, escape, markdown_inline
 from .models import (
     ABILITY_CATEGORIES,
     ART_ABBREVIATIONS,
@@ -7729,11 +7729,6 @@ class CharacterSheetView(Vertical):
         self.query_one("#vf-info", Static).update(self._vf_info_text(event.data_index))
 
     @staticmethod
-    def _aligned(rows: Sequence[tuple[str, object]]) -> str:
-        width = max(len(label) for label, _ in rows)
-        return "\n".join(f"{label + ':':<{width + 1}} {value}" for label, value in rows)
-
-    @staticmethod
     def _inherited(value: str) -> str:
         """Dim a value that's derived/inherited and isn't edited here."""
         return f"[dim]{escape(value)}[/]"
@@ -7741,7 +7736,7 @@ class CharacterSheetView(Vertical):
     def _info_left_text(self) -> str:
         b = self.character.background
         age = character_age(b.year_born, self.saga.current_year)
-        return self._aligned(
+        return aligned(
             [
                 ("Setting", b.setting or "(not set)"),
                 (
@@ -7778,7 +7773,7 @@ class CharacterSheetView(Vertical):
             ("Confidence Points", str(b.confidence_points)),
             ("Size", str(b.size)),
         ]
-        return self._aligned(rows)
+        return aligned(rows)
 
     def _biographical_left_text(self) -> str:
         """Column 1 of Biographical Detail: every field except Biography
@@ -9286,11 +9281,6 @@ class CovenantSheetView(Vertical):
         )
 
     @staticmethod
-    def _aligned(rows: Sequence[tuple[str, object]]) -> str:
-        width = max(len(label) for label, _ in rows)
-        return "\n".join(f"{label + ':':<{width + 1}} {value}" for label, value in rows)
-
-    @staticmethod
     def _inherited(value: str) -> str:
         """Dim a value that comes from the saga and isn't edited here."""
         return f"[dim]{escape(value)}[/]"
@@ -9308,7 +9298,7 @@ class CovenantSheetView(Vertical):
     def _info_left_text(self) -> str:
         cov, saga = self.covenant, self.saga
         founded = "(not set)" if cov.year_founded is None else str(cov.year_founded)
-        return self._aligned(
+        return aligned(
             [
                 ("Saga", self._inherited(saga.name)),
                 ("Storyguide", self._inherited(saga.storyguide or "(not set)")),
@@ -9321,7 +9311,7 @@ class CovenantSheetView(Vertical):
 
     def _info_right_text(self) -> str:
         cov, saga = self.covenant, self.saga
-        return self._aligned(
+        return aligned(
             [
                 ("Tribunal", escape(cov.tribunal) if cov.tribunal else "(not set)"),
                 ("Current Season", self._inherited(saga.current_season)),

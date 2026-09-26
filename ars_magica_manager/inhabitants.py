@@ -11,7 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from . import catalog
-from .markup import escape, markdown_inline
+from .markup import aligned, escape, fit, markdown_inline
 from .models import (
     GOVERNANCE_STYLE_IDS,
     INHABITANT_KINDS,
@@ -526,13 +526,6 @@ def house_name(house_id: str | None) -> str:
     return house.name if house is not None else house_id
 
 
-def _fit(text: str, width: int) -> str:
-    text = text.replace("\n", " ")
-    if len(text) > width:
-        text = text[: width - 1] + "…"
-    return text.ljust(width)
-
-
 _NAME_WIDTH = 20
 _HOUSE_WIDTH = 16
 _YEAR_WIDTH = 10
@@ -572,22 +565,22 @@ def table_header(kind: str) -> str:
 def row_label(entry: InhabitantEntry) -> str:
     """One list row (markup), columns lined up with `table_header`."""
     kind = entry.kind
-    name = escape(_fit(entry.name or "(unnamed)", _NAME_WIDTH))
+    name = escape(fit(entry.name or "(unnamed)", _NAME_WIDTH))
     year = f"{_year(entry.year_born):>{_YEAR_WIDTH}}"
     if kind == "magus":
-        house = escape(_fit(house_name(entry.house_id) or "Unknown", _HOUSE_WIDTH))
+        house = escape(fit(house_name(entry.house_id) or "Unknown", _HOUSE_WIDTH))
         return f"{name}{house}{year}  {escape(entry.gift)}"
     if kind in ("companion", "specialist"):
-        resp = escape(_fit(entry.responsibility, _RESPONSIBILITY_WIDTH))
-        role = escape(_fit(entry.role, _ROLE_WIDTH))
+        resp = escape(fit(entry.responsibility, _RESPONSIBILITY_WIDTH))
+        role = escape(fit(entry.role, _ROLE_WIDTH))
         return f"{name}{resp}{role}{year}"
     if kind == "craftsperson":
-        resp = escape(_fit(entry.responsibility, _RESPONSIBILITY_WIDTH))
+        resp = escape(fit(entry.responsibility, _RESPONSIBILITY_WIDTH))
         score = f"{entry.skill_value:>{_SCORE_WIDTH}}"
         qty = f"{entry.quantity:>{_QTY_WIDTH}}"
         return f"{name}{resp}{score}{qty}  {year}"
     if kind == "turb":
-        resp = escape(_fit(entry.responsibility, _RESPONSIBILITY_WIDTH))
+        resp = escape(fit(entry.responsibility, _RESPONSIBILITY_WIDTH))
         qty = f"{entry.quantity:>{_QTY_WIDTH}}"
         return f"{name}{resp}{qty}  {year}"
     if kind == "inhabitant":
@@ -598,7 +591,7 @@ def row_label(entry: InhabitantEntry) -> str:
             if entry.role and entry.name != OTHER_COVENFOLK_ROLE_PLURALS.get(entry.role)
             else ""
         )
-        role = escape(_fit(role_text, _ROLE_WIDTH))
+        role = escape(fit(role_text, _ROLE_WIDTH))
         qty = f"{entry.quantity:>{_QTY_WIDTH}}"
         shown_year = year if entry.quantity == 1 else f"{'-':>{_YEAR_WIDTH}}"
         return f"{name}{role}{qty}  {shown_year}"
@@ -651,11 +644,6 @@ def detail_text(entry: InhabitantEntry | None, current_year: int) -> str:
     return "\n".join(lines)
 
 
-def _aligned(rows: list[tuple[str, str]]) -> str:
-    width = max(len(label) for label, _ in rows)
-    return "\n".join(f"{label + ':':<{width + 1}} {value}" for label, value in rows)
-
-
 def loyalty_left_text(saga: Saga, covenant: Covenant) -> str:
     """Type of Governance and the four loyalty figures -- all calculated now
     except Governance (which follows the covenant's governance Boon if it has
@@ -669,7 +657,7 @@ def loyalty_left_text(saga: Saga, covenant: Covenant) -> str:
     base = base_loyalty(saga, covenant)
     modifiers = total_modifiers(saga, covenant)
     current = base + modifiers
-    return _aligned(
+    return aligned(
         [
             ("Type of Governance", governance),
             ("Base Loyalty Points", str(base)),
@@ -691,7 +679,7 @@ def loyalty_right_text(saga: Saga, covenant: Covenant) -> str:
     )
     if loyalty.pension:
         money += f" [dim]+ pension ({PENSION_LOYALTY_POINTS:+d})[/]"
-    body = _aligned(
+    body = aligned(
         [
             (
                 "Living Conditions",
@@ -720,7 +708,7 @@ def population_text(saga: Saga, covenant: Covenant) -> str:
     teamsters = other_covenfolk_count(saga, covenant, "Teamster")
     servants = other_covenfolk_count(saga, covenant, "Servant")
     laborers = other_covenfolk_count(saga, covenant, "Laborer")
-    return _aligned(
+    return aligned(
         [
             (
                 "Number of Teamsters / Needed",
@@ -748,14 +736,14 @@ def _min_colored(actual: int, minimum: int) -> str:
 def misc_text(covenant: Covenant) -> tuple[str, str]:
     """The Miscellaneous block as two columns."""
     p = covenant.population
-    left = _aligned(
+    left = aligned(
         [
             ("Aging for Magi", str(p.aging_magi)),
             ("Aging for Mundane", str(p.aging_mundane)),
             ("Magic Laborers", str(p.magic_laborers)),
         ]
     )
-    right = _aligned(
+    right = aligned(
         [
             ("Magic Servants", str(p.magic_servants)),
             ("Magic Teamsters", str(p.magic_teamsters)),
