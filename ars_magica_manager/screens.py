@@ -43,6 +43,7 @@ from textual.widgets.option_list import Option
 from . import books as bk
 from . import catalog, storage
 from . import economics as eco
+from . import familiars as fam
 from . import inhabitants as inh
 from . import possessions as pos
 from . import spells as spl
@@ -93,6 +94,7 @@ from .models import (
     CovenantBoonHookDef,
     Description,
     DiaryEntry,
+    Familiar,
     FatigueLevel,
     HermeticBackground,
     IncomeSource,
@@ -2308,6 +2310,121 @@ class LaboratoryCreateScreen(ModalScreen[str | None]):
         self.dismiss(laboratory.id)
 
 
+class FamiliarCreateScreen(ModalScreen[str | None]):
+    """Binds a new Familiar to a magus (see reference/familiar-rules-and-
+    sheet.md). Minimal fields only -- Name and which magus; everything else
+    (Cords, binding details, etc.) is filled in via the Familiar sheet's Edit
+    actions afterward, same "create minimal, edit the rest" pattern as every
+    other create screen.
+
+    True Friend (Virtue) and Loyal (Partner) +3 (Personality Trait) are
+    granted automatically to both the familiar and its magus -- not left for
+    the user to type in (see kanban STORY-206).
+
+    Dismisses with the new familiar's id, or None if cancelled.
+    """
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    FamiliarCreateScreen {
+        align: center middle;
+    }
+
+    #create-dialog {
+        width: 64;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    #create-error {
+        color: $error;
+        height: auto;
+        margin-top: 1;
+    }
+
+    #create-buttons {
+        width: 100%;
+        height: auto;
+    }
+    """
+
+    def __init__(self, saga: Saga, default_magus_id: str | None = None) -> None:
+        super().__init__()
+        self.saga = saga
+        self.default_magus_id = default_magus_id
+
+    def _eligible_magi(self) -> list[Character]:
+        """Magi with no Familiar bound yet -- one per magus at a time."""
+        bonded = {f.character_id for f in self.saga.familiars}
+        return [
+            c for c in self.saga.characters if c.type == "magus" and c.id not in bonded
+        ]
+
+    def compose(self) -> ComposeResult:
+        magi = self._eligible_magi()
+        with Vertical(id="create-dialog"):
+            yield Label("Bind a New Familiar", id="create-title")
+            yield Label("Familiar name")
+            yield Input(placeholder="e.g. Ashwing", id="input-name")
+            yield Label("Magus Partner")
+            yield Select(
+                [(escape(c.name), c.id) for c in magi],
+                value=self.default_magus_id
+                if self.default_magus_id in {c.id for c in magi}
+                else Select.NULL,
+                allow_blank=True,
+                prompt="(choose a magus)",
+                id="select-magus",
+            )
+            yield Static("", id="create-error")
+            with Horizontal(id="create-buttons"):
+                yield Button("Create", id="btn-create", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-create":
+            self._try_create()
+
+    def _try_create(self) -> None:
+        error = self.query_one("#create-error", Static)
+
+        name = self.query_one("#input-name", Input).value.strip()
+        if not name:
+            error.update("Familiar name is required.")
+            return
+
+        magus_id = self.query_one("#select-magus", Select).value
+        magus = (
+            next((c for c in self.saga.characters if c.id == magus_id), None)
+            if isinstance(magus_id, str)
+            else None
+        )
+        if magus is None:
+            error.update("A Magus Partner is required.")
+            return
+
+        familiar = Familiar(
+            id=storage.generate_unique_id(name, [f.id for f in self.saga.familiars]),
+            character_id=magus.id,
+            name=name,
+        )
+        familiar.virtues_flaws.append(VirtueFlawInstance(vf_id="vf_true_friend"))
+        familiar.personality_traits.append(ScoredTrait(name="Loyal (Partner)", score=3))
+        magus.virtues_flaws.append(VirtueFlawInstance(vf_id="vf_true_friend"))
+        magus.personality_traits.append(ScoredTrait(name="Loyal (Partner)", score=3))
+        self.saga.familiars.append(familiar)
+        storage.save_saga(self.saga)
+        self.dismiss(familiar.id)
+
+
 class EditCharacterInfoScreen(ModalScreen[dict[str, object] | None]):
     """Edits the character sheet's top-panel info: Name, Covenant, Assigned
     Laboratory (magi only), Setting, Confidence, and Size. Type, Age,
@@ -4229,6 +4346,489 @@ class DiaryEntryPromptScreen(ModalScreen[DiaryEntry | None]):
         season = self.query_one("#select-diary-season", Select).value
         details = self.query_one("#input-diary-details", Input).value.strip()
         self.dismiss(DiaryEntry(year=year, season=season, name=name, details=details))
+
+
+class EditFamiliarInfoScreen(ModalScreen[dict[str, object] | None]):
+    """Edits a Familiar's Partnership & Core Metadata (everything but its
+    Magus Partner, which is set once at creation and never changes).
+    Dismisses with a dict of field values, or None if cancelled."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    EditFamiliarInfoScreen {
+        align: center middle;
+    }
+
+    #fam-info-dialog {
+        width: 64;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    .faminfoedit-row {
+        width: 100%;
+        height: 1;
+    }
+
+    .faminfoedit-row Label {
+        width: 22;
+    }
+
+    .faminfoedit-row Input, .faminfoedit-row Select {
+        width: 1fr;
+    }
+
+    #fam-info-error {
+        color: $error;
+        height: auto;
+    }
+
+    #fam-info-buttons {
+        width: 100%;
+        height: auto;
+    }
+    """
+
+    def __init__(self, familiar: Familiar) -> None:
+        super().__init__()
+        self.familiar = familiar
+
+    def compose(self) -> ComposeResult:
+        f = self.familiar
+        with Vertical(id="fam-info-dialog"):
+            yield Label("Edit Familiar")
+            with Horizontal(classes="faminfoedit-row"):
+                yield Label("Name")
+                yield Input(value=f.name, id="input-fam-name", compact=True)
+            with Horizontal(classes="faminfoedit-row"):
+                yield Label("Species / Description")
+                yield Input(value=f.species, id="input-fam-species", compact=True)
+            with Horizontal(classes="faminfoedit-row"):
+                yield Label("Season Bound")
+                yield Select(
+                    [(s, s) for s in SEASONS],
+                    value=f.season_bound or Select.NULL,
+                    allow_blank=True,
+                    prompt="(not set)",
+                    id="select-fam-season",
+                    compact=True,
+                )
+            with Horizontal(classes="faminfoedit-row"):
+                yield Label("Year Bound")
+                yield Input(
+                    value="" if f.year_bound is None else str(f.year_bound),
+                    type="integer",
+                    id="input-fam-year",
+                    compact=True,
+                )
+            with Horizontal(classes="faminfoedit-row"):
+                yield Label("Magic Might Score")
+                yield Input(
+                    value=str(f.magic_might),
+                    type="integer",
+                    id="input-fam-might",
+                    compact=True,
+                )
+            with Horizontal(classes="faminfoedit-row"):
+                yield Label("Current Might Pool")
+                yield Input(
+                    value="" if f.might_pool is None else str(f.might_pool),
+                    type="integer",
+                    id="input-fam-might-pool",
+                    compact=True,
+                )
+            with Horizontal(classes="faminfoedit-row"):
+                yield Label("Size")
+                yield Input(
+                    value=str(f.size), type="integer", id="input-fam-size", compact=True
+                )
+            with Horizontal(classes="faminfoedit-row"):
+                yield Label("Wound Multiplier")
+                yield Input(
+                    value=str(f.wound_multiplier),
+                    type="integer",
+                    id="input-fam-wound-mult",
+                    compact=True,
+                )
+            yield Static("", id="fam-info-error")
+            with Horizontal(id="fam-info-buttons"):
+                yield Button("Save", id="btn-save", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-save":
+            self._try_save()
+
+    def _try_save(self) -> None:
+        error = self.query_one("#fam-info-error", Static)
+
+        name = self.query_one("#input-fam-name", Input).value.strip()
+        if not name:
+            error.update("Name is required.")
+            return
+
+        season_value = self.query_one("#select-fam-season", Select).value
+        result: dict[str, object] = {
+            "name": name,
+            "species": self.query_one("#input-fam-species", Input).value.strip(),
+            "season_bound": season_value if isinstance(season_value, str) else "",
+        }
+
+        for field_name, label in (
+            ("input-fam-year", "Year Bound"),
+            ("input-fam-might-pool", "Current Might Pool"),
+        ):
+            raw = self.query_one(f"#{field_name}", Input).value.strip()
+            key = field_name.removeprefix("input-fam-").replace("-", "_")
+            key = "year_bound" if key == "year" else "might_pool"
+            try:
+                result[key] = int(raw) if raw else None
+            except ValueError:
+                error.update(f"{label} must be a whole number.")
+                return
+
+        for field_name, key, label in (
+            ("input-fam-might", "magic_might", "Magic Might Score"),
+            ("input-fam-size", "size", "Size"),
+            ("input-fam-wound-mult", "wound_multiplier", "Wound Multiplier"),
+        ):
+            raw = self.query_one(f"#{field_name}", Input).value.strip()
+            try:
+                result[key] = int(raw)
+            except ValueError:
+                error.update(f"{label} must be a whole number.")
+                return
+
+        self.dismiss(result)
+
+
+class EditFamiliarBindingScreen(ModalScreen[dict[str, object] | None]):
+    """Edits a Familiar's Initial Binding details and the three Cords.
+    Dismisses with a dict of field values, or None if cancelled."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    EditFamiliarBindingScreen {
+        align: center middle;
+    }
+
+    #fam-binding-dialog {
+        width: 70;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    .fambindingedit-row {
+        width: 100%;
+        height: 1;
+    }
+
+    .fambindingedit-row Label {
+        width: 28;
+    }
+
+    .fambindingedit-row Input, .fambindingedit-row Select {
+        width: 1fr;
+    }
+
+    .fambindingedit-cost {
+        width: auto;
+        color: $text-muted;
+        padding-left: 1;
+    }
+
+    #fam-binding-error {
+        color: $error;
+        height: auto;
+    }
+
+    #fam-binding-buttons {
+        width: 100%;
+        height: auto;
+    }
+    """
+
+    def __init__(self, familiar: Familiar) -> None:
+        super().__init__()
+        self.familiar = familiar
+
+    def compose(self) -> ComposeResult:
+        f = self.familiar
+        with Vertical(id="fam-binding-dialog"):
+            yield Label("Edit Binding & Cords")
+            with Horizontal(classes="fambindingedit-row"):
+                yield Label("Binding Technique")
+                yield Select(
+                    [(t, t) for t in TECHNIQUES],
+                    value=f.binding_technique or Select.NULL,
+                    allow_blank=True,
+                    prompt="(not set)",
+                    id="select-fam-technique",
+                    compact=True,
+                )
+            with Horizontal(classes="fambindingedit-row"):
+                yield Label("Binding Form")
+                yield Select(
+                    [(x, x) for x in FORMS],
+                    value=f.binding_form or Select.NULL,
+                    allow_blank=True,
+                    prompt="(not set)",
+                    id="select-fam-form",
+                    compact=True,
+                )
+            with Horizontal(classes="fambindingedit-row"):
+                yield Label("Initial Binding Lab Total")
+                yield Input(
+                    value=str(f.binding_lab_total),
+                    type="integer",
+                    id="input-fam-lab-total",
+                    compact=True,
+                )
+            with Horizontal(classes="fambindingedit-row"):
+                yield Label("Target Binding Level")
+                yield Input(
+                    value=str(f.target_binding_level),
+                    type="integer",
+                    id="input-fam-target-level",
+                    compact=True,
+                )
+            with Horizontal(classes="fambindingedit-row"):
+                yield Label("Cumulative Vis Spent (pawns)")
+                yield Input(
+                    value=str(f.vis_spent_binding),
+                    type="integer",
+                    id="input-fam-vis-spent",
+                    compact=True,
+                )
+            for attribute, label, _blurb in fam.CORDS:
+                with Horizontal(classes="fambindingedit-row"):
+                    yield Label(label)
+                    yield Select(
+                        [(f"+{score}", score) for score in range(6)],
+                        value=getattr(f, attribute),
+                        allow_blank=False,
+                        id=f"select-fam-{attribute}",
+                        compact=True,
+                    )
+                    yield Static(
+                        f"{fam.cord_cost(getattr(f, attribute))} pts",
+                        id=f"cost-fam-{attribute}",
+                        classes="fambindingedit-cost",
+                    )
+            yield Static("", id="fam-binding-error")
+            with Horizontal(id="fam-binding-buttons"):
+                yield Button("Save", id="btn-save", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-save":
+            self._try_save()
+
+    def on_select_changed(self, event: Select.Changed) -> None:
+        select_id = event.select.id or ""
+        if not select_id.startswith("select-fam-"):
+            return
+        attribute = select_id.removeprefix("select-fam-")
+        if attribute not in {a for a, _, _ in fam.CORDS}:
+            return
+        score = event.value
+        if isinstance(score, int):
+            self.query_one(f"#cost-fam-{attribute}", Static).update(
+                f"{fam.cord_cost(score)} pts"
+            )
+
+    def _try_save(self) -> None:
+        error = self.query_one("#fam-binding-error", Static)
+
+        technique_value = self.query_one("#select-fam-technique", Select).value
+        form_value = self.query_one("#select-fam-form", Select).value
+        result: dict[str, object] = {
+            "binding_technique": technique_value
+            if isinstance(technique_value, str)
+            else "",
+            "binding_form": form_value if isinstance(form_value, str) else "",
+        }
+
+        for field_name, key, label in (
+            ("input-fam-lab-total", "binding_lab_total", "Initial Binding Lab Total"),
+            ("input-fam-target-level", "target_binding_level", "Target Binding Level"),
+            ("input-fam-vis-spent", "vis_spent_binding", "Cumulative Vis Spent"),
+        ):
+            raw = self.query_one(f"#{field_name}", Input).value.strip()
+            try:
+                result[key] = int(raw)
+            except ValueError:
+                error.update(f"{label} must be a whole number.")
+                return
+
+        for attribute, _label, _blurb in fam.CORDS:
+            result[attribute] = self.query_one(f"#select-fam-{attribute}", Select).value
+
+        self.dismiss(result)
+
+
+class EditFamiliarCharacteristicsScreen(ModalScreen[dict[str, object] | None]):
+    """Edits a Familiar's 8 Characteristics plus its two derived-defense
+    figures (Base Soak, Magic Resistance) -- both typed in, no formula
+    computed (see Familiar.base_soak/magic_resistance). Dismisses with
+    {"characteristics": Characteristics, "base_soak": int,
+    "magic_resistance": int}, or None if cancelled."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    EditFamiliarCharacteristicsScreen {
+        align: center middle;
+    }
+
+    #fam-char-dialog {
+        width: 64;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    .famcharedit-row {
+        width: 100%;
+        height: 1;
+    }
+
+    .famcharedit-row Label {
+        width: 22;
+    }
+
+    .famcharedit-row Input {
+        width: 1fr;
+    }
+
+    #fam-char-error {
+        color: $error;
+        height: auto;
+    }
+
+    #fam-char-buttons {
+        width: 100%;
+        height: auto;
+    }
+    """
+
+    _CHARACTERISTICS: ClassVar[list[tuple[str, str]]] = [
+        ("Intelligence (Int)", "intelligence"),
+        ("Perception (Per)", "perception"),
+        ("Presence (Pre)", "presence"),
+        ("Communication (Com)", "communication"),
+        ("Strength (Str)", "strength"),
+        ("Stamina (Sta)", "stamina"),
+        ("Dexterity (Dex)", "dexterity"),
+        ("Quickness (Qik)", "quickness"),
+    ]
+
+    def __init__(self, familiar: Familiar) -> None:
+        super().__init__()
+        self.familiar = familiar
+
+    def compose(self) -> ComposeResult:
+        c = self.familiar.characteristics
+        with Vertical(id="fam-char-dialog"):
+            yield Label("Edit Characteristics")
+            for label, field_name in self._CHARACTERISTICS:
+                with Horizontal(classes="famcharedit-row"):
+                    yield Label(label)
+                    yield Input(
+                        value=str(getattr(c, field_name)),
+                        type="integer",
+                        id=f"input-famchar-{field_name}",
+                        compact=True,
+                    )
+            with Horizontal(classes="famcharedit-row"):
+                yield Label("Base Soak")
+                yield Input(
+                    value=str(self.familiar.base_soak),
+                    type="integer",
+                    id="input-famchar-base-soak",
+                    compact=True,
+                )
+            with Horizontal(classes="famcharedit-row"):
+                yield Label("Magic Resistance")
+                yield Input(
+                    value=str(self.familiar.magic_resistance),
+                    type="integer",
+                    id="input-famchar-magic-resistance",
+                    compact=True,
+                )
+            yield Static("", id="fam-char-error")
+            with Horizontal(id="fam-char-buttons"):
+                yield Button("Save", id="btn-save", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-save":
+            self._try_save()
+
+    def _try_save(self) -> None:
+        error = self.query_one("#fam-char-error", Static)
+        values: dict[str, int] = {}
+        for label, field_name in self._CHARACTERISTICS:
+            raw = self.query_one(f"#input-famchar-{field_name}", Input).value.strip()
+            try:
+                values[field_name] = int(raw)
+            except ValueError:
+                error.update(f"{label} must be a whole number.")
+                return
+
+        for field_name, key, label in (
+            ("input-famchar-base-soak", "base_soak", "Base Soak"),
+            (
+                "input-famchar-magic-resistance",
+                "magic_resistance",
+                "Magic Resistance",
+            ),
+        ):
+            raw = self.query_one(f"#{field_name}", Input).value.strip()
+            try:
+                values[key] = int(raw)
+            except ValueError:
+                error.update(f"{label} must be a whole number.")
+                return
+
+        self.dismiss(
+            {
+                "characteristics": Characteristics(
+                    intelligence=values["intelligence"],
+                    perception=values["perception"],
+                    presence=values["presence"],
+                    communication=values["communication"],
+                    strength=values["strength"],
+                    stamina=values["stamina"],
+                    dexterity=values["dexterity"],
+                    quickness=values["quickness"],
+                ),
+                "base_soak": values["base_soak"],
+                "magic_resistance": values["magic_resistance"],
+            }
+        )
 
 
 class EditCovenantScreen(ModalScreen[dict[str, object] | None]):
@@ -7675,6 +8275,184 @@ class LaboratorySheetView(Vertical):
         return "\n".join(lines)
 
 
+class FamiliarSheetView(Vertical):
+    """The Familiar sheet mounted into WorkspaceScreen's detail pane.
+
+    A fixed top panel (Familiar Info -- not inside any tab, permanently
+    expanded, same PinnedCollapsible pattern as the other sheets) above a
+    5-tab body mirroring reference/familiar-rules-and-sheet.md: Identity &
+    Cords (Binding & Cords, Virtues & Flaws, Personality Traits &
+    Reputations) and Characteristics (the 8 Characteristics plus the typed-in
+    Base Soak/Magic Resistance figures) hold real content; three placeholder
+    tabs remain for STORY-206's later slices (Combat & Health; Abilities;
+    Bond Powers).
+    """
+
+    DEFAULT_CSS = """
+    FamiliarSheetView {
+        height: 1fr;
+    }
+
+    FamiliarSheetView #fam-top-panel {
+        width: 1fr;
+        height: auto;
+    }
+
+    FamiliarSheetView TabbedContent {
+        height: 1fr;
+    }
+
+    FamiliarSheetView TabPane {
+        padding: 1 0;
+    }
+
+    FamiliarSheetView VerticalScroll {
+        height: 1fr;
+        width: 1fr;
+    }
+
+    FamiliarSheetView #fam-vf-row, FamiliarSheetView #fam-pt-rep-row {
+        width: 1fr;
+        height: auto;
+    }
+    """
+
+    def __init__(self, saga: Saga, familiar: Familiar) -> None:
+        super().__init__()
+        self.saga = saga
+        self.familiar = familiar
+        #: Set once TabbedContent's initial TabActivated has been seen -- see
+        #: WorkspaceScreen.on_tabbed_content_tab_activated().
+        self.initial_tab_seen = False
+
+    def compose(self) -> ComposeResult:
+        with (
+            Vertical(id="fam-top-panel"),
+            PinnedCollapsible(title="Familiar Info", id="section-fam-info"),
+        ):
+            yield Static(
+                fam.identity_text(self.saga, self.familiar), id="fam-info-content"
+            )
+            yield Button("Edit (e)", id="btn-fam-info-edit", compact=True)
+        with TabbedContent(initial="tab-fam-identity"):
+            with TabPane("Identity & Cords", id="tab-fam-identity"), VerticalScroll():
+                with SheetSection(title="Binding & Cords", id="section-fam-binding"):
+                    yield Static(self._binding_text(), id="fam-binding-content")
+                with Horizontal(id="fam-vf-row"):
+                    with SheetSection(title="Virtues", id="section-fam-vf-virtues"):
+                        yield SelectableList(
+                            fam.vf_rows(self.familiar, "Virtue"),
+                            id="fam-vf-virtues-list",
+                        )
+                    with SheetSection(title="Flaws", id="section-fam-vf-flaws"):
+                        yield SelectableList(
+                            fam.vf_rows(self.familiar, "Flaw"), id="fam-vf-flaws-list"
+                        )
+                yield Static(fam.vf_info_text(self.familiar, None), id="fam-vf-info")
+                with Horizontal(id="fam-pt-rep-row"):
+                    with SheetSection(
+                        title="Personality Traits", id="section-fam-personality-traits"
+                    ):
+                        yield SelectableList(
+                            fam.personality_trait_rows(self.familiar),
+                            id="fam-personality-traits-list",
+                        )
+                    with SheetSection(
+                        title="Reputations", id="section-fam-reputations"
+                    ):
+                        yield SelectableList(
+                            fam.reputation_rows(self.familiar),
+                            id="fam-reputations-list",
+                        )
+            with (
+                TabPane("Characteristics", id="tab-fam-characteristics"),
+                SheetSection(title="Characteristics", id="section-fam-characteristics"),
+            ):
+                yield Static(
+                    fam.characteristics_text(self.familiar),
+                    id="fam-characteristics-content",
+                )
+            with TabPane("Combat & Health", id="tab-fam-combat"):
+                yield Static(_tab_placeholder("Combat & Health"))
+            with TabPane("Abilities", id="tab-fam-abilities"):
+                yield Static(_tab_placeholder("Abilities"))
+            with TabPane("Bond Powers", id="tab-fam-powers"):
+                yield Static(_tab_placeholder("Bond Powers"))
+
+    def _binding_text(self) -> str:
+        return f"{fam.binding_text(self.familiar)}\n\n{fam.cords_text(self.familiar)}"
+
+    def refresh_section(self, section_id: str) -> None:
+        try:
+            if section_id == "section-fam-info":
+                self.query_one("#fam-info-content", Static).update(
+                    fam.identity_text(self.saga, self.familiar)
+                )
+            elif section_id == "section-fam-binding":
+                self.query_one("#fam-binding-content", Static).update(
+                    self._binding_text()
+                )
+            elif section_id in ("section-fam-vf-virtues", "section-fam-vf-flaws"):
+                self.query_one("#fam-vf-virtues-list", SelectableList).set_rows(
+                    fam.vf_rows(self.familiar, "Virtue")
+                )
+                self.query_one("#fam-vf-flaws-list", SelectableList).set_rows(
+                    fam.vf_rows(self.familiar, "Flaw")
+                )
+                self.query_one("#fam-vf-info", Static).update(
+                    fam.vf_info_text(self.familiar, None)
+                )
+            elif section_id == "section-fam-personality-traits":
+                self.query_one("#fam-personality-traits-list", SelectableList).set_rows(
+                    fam.personality_trait_rows(self.familiar)
+                )
+            elif section_id == "section-fam-reputations":
+                self.query_one("#fam-reputations-list", SelectableList).set_rows(
+                    fam.reputation_rows(self.familiar)
+                )
+            elif section_id == "section-fam-characteristics":
+                self.query_one("#fam-characteristics-content", Static).update(
+                    fam.characteristics_text(self.familiar)
+                )
+        except NoMatches:
+            pass
+
+    def selected_virtue_flaw(self) -> int | None:
+        """Index into familiar.virtues_flaws of the row chosen in either the
+        Virtues or the Flaws list, or None if neither has one chosen."""
+        virtues = self.query_one(
+            "#fam-vf-virtues-list", SelectableList
+        ).selected_data_index
+        if virtues is not None:
+            return virtues
+        return self.query_one("#fam-vf-flaws-list", SelectableList).selected_data_index
+
+    def selected_personality_trait(self) -> int | None:
+        return self.query_one(
+            "#fam-personality-traits-list", SelectableList
+        ).selected_data_index
+
+    def selected_reputation(self) -> int | None:
+        return self.query_one(
+            "#fam-reputations-list", SelectableList
+        ).selected_data_index
+
+    def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
+        list_id = event.selectable_list.id or ""
+        if list_id not in ("fam-vf-virtues-list", "fam-vf-flaws-list"):
+            return
+        event.stop()
+        other = (
+            "fam-vf-flaws-list"
+            if list_id == "fam-vf-virtues-list"
+            else "fam-vf-virtues-list"
+        )
+        self.query_one(f"#{other}", SelectableList).clear_selection()
+        self.query_one("#fam-vf-info", Static).update(
+            fam.vf_info_text(self.familiar, event.data_index)
+        )
+
+
 class CovenantSheetView(Vertical):
     """The covenant sheet mounted into WorkspaceScreen's detail pane.
 
@@ -8383,6 +9161,7 @@ class WorkspaceScreen(Screen[None]):
         ("n", "create_covenant", "New Covenant"),
         ("c", "create_character", "New Character"),
         ("l", "create_laboratory", "New Laboratory"),
+        ("f", "create_familiar", "Bind Familiar"),
         ("a", "add", "Add"),
         ("A", "remove", "Remove"),
         ("e", "edit", "Edit"),
@@ -8424,6 +9203,8 @@ class WorkspaceScreen(Screen[None]):
         "section-cov-boons",
         "section-cov-hooks",
         "section-eco-income",
+        "section-fam-personality-traits",
+        "section-fam-reputations",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
         *BOOK_SECTIONS,
@@ -8447,6 +9228,8 @@ class WorkspaceScreen(Screen[None]):
         "section-cov-boons",
         "section-cov-hooks",
         "section-eco-income",
+        "section-fam-personality-traits",
+        "section-fam-reputations",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
         *(BOOK_SECTIONS - {"section-lib-summary"}),
@@ -8487,6 +9270,11 @@ class WorkspaceScreen(Screen[None]):
         "section-eco-income",
         "section-eco-expenditure",
         "section-eco-savings",
+        "section-fam-info",
+        "section-fam-binding",
+        "section-fam-personality-traits",
+        "section-fam-reputations",
+        "section-fam-characteristics",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
         *(BOOK_SECTIONS - {"section-lib-summary"}),
@@ -8531,9 +9319,11 @@ class WorkspaceScreen(Screen[None]):
         self.selected_covenant: Covenant | None = None
         self.selected_character: Character | None = None
         self.selected_laboratory: Laboratory | None = None
+        self.selected_familiar: Familiar | None = None
         self._character_sheet_view: CharacterSheetView | None = None
         self._laboratory_sheet_view: LaboratorySheetView | None = None
         self._covenant_sheet_view: CovenantSheetView | None = None
+        self._familiar_sheet_view: FamiliarSheetView | None = None
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -8574,10 +9364,7 @@ class WorkspaceScreen(Screen[None]):
                 expand=True,
             )
             for character in characters:
-                char_group.add_leaf(
-                    f"{escape(character.name)} ({character.type})",
-                    data=("character", character.id),
-                )
+                self._add_character_node(char_group, character)
 
             labs = [
                 lab for lab in self.saga.laboratories if lab.covenant_id == covenant.id
@@ -8604,10 +9391,7 @@ class WorkspaceScreen(Screen[None]):
                 expand=True,
             )
             for character in loose_characters:
-                group.add_leaf(
-                    f"{escape(character.name)} ({character.type})",
-                    data=("character", character.id),
-                )
+                self._add_character_node(group, character)
         loose_labs = [
             lab for lab in self.saga.laboratories if lab.covenant_id not in covenant_ids
         ]
@@ -8627,6 +9411,25 @@ class WorkspaceScreen(Screen[None]):
             )
         tree.root.add_leaf(self._spells_label(), data=("spells",))
 
+    def _add_character_node(self, parent, character: Character) -> None:
+        """A character's own tree node: a plain leaf, unless it's a magus
+        with a bound Familiar, in which case it becomes an expandable node
+        with the Familiar as its one child leaf (nested under its creator,
+        never its own group -- see kanban STORY-206)."""
+        label = f"{escape(character.name)} ({character.type})"
+        familiar = (
+            fam.familiar_of(self.saga, character.id)
+            if character.type == "magus"
+            else None
+        )
+        if familiar is None:
+            parent.add_leaf(label, data=("character", character.id))
+            return
+        node = parent.add(label, data=("character", character.id), expand=True)
+        node.add_leaf(
+            f"Familiar: {escape(familiar.name)}", data=("familiar", familiar.id)
+        )
+
     def _covenant_by_id(self, covenant_id: str | None) -> Covenant | None:
         return next((c for c in self.saga.covenants if c.id == covenant_id), None)
 
@@ -8640,17 +9443,20 @@ class WorkspaceScreen(Screen[None]):
         self._character_sheet_view = None
         self._laboratory_sheet_view = None
         self._covenant_sheet_view = None
+        self._familiar_sheet_view = None
 
         if kind == "saga":
             self.selected_covenant = None
             self.selected_character = None
             self.selected_laboratory = None
+            self.selected_familiar = None
             await self._show_saga_detail()
         elif kind == "covenant":
             covenant = next(c for c in self.saga.covenants if c.id == data[1])
             self.selected_covenant = covenant
             self.selected_character = None
             self.selected_laboratory = None
+            self.selected_familiar = None
             await self._show_covenant_detail(covenant)
         elif kind == "character_group":
             covenant = self._covenant_by_id(data[1])
@@ -8672,7 +9478,28 @@ class WorkspaceScreen(Screen[None]):
                 (c for c in self.saga.covenants if c.id == character.covenant_id),
                 None,
             )
+            self.selected_familiar = None
             await self._show_character_detail(character)
+        elif kind == "familiar":
+            familiar = next(f for f in self.saga.familiars if f.id == data[1])
+            self.selected_familiar = familiar
+            self.selected_character = next(
+                (c for c in self.saga.characters if c.id == familiar.character_id),
+                None,
+            )
+            self.selected_covenant = (
+                next(
+                    (
+                        c
+                        for c in self.saga.covenants
+                        if c.id == self.selected_character.covenant_id
+                    ),
+                    None,
+                )
+                if self.selected_character is not None
+                else None
+            )
+            await self._show_familiar_detail(familiar)
         elif kind == "laboratory_group":
             covenant = self._covenant_by_id(data[1])
             self.selected_covenant = covenant
@@ -8734,7 +9561,14 @@ class WorkspaceScreen(Screen[None]):
         if action in ("add_virtue_flaw", "remove_virtue_flaw"):
             if self.selected_kind == "laboratory":
                 return self._active_section() == "tab-lab-vf"
+            if self.selected_kind == "familiar":
+                return self._active_section() in (
+                    "section-fam-vf-virtues",
+                    "section-fam-vf-flaws",
+                )
             return self._active_section() in ("section-vf-virtues", "section-vf-flaws")
+        if action == "create_familiar":
+            return bool(self._eligible_magi_for_familiar())
         return True
 
     def _active_section(self) -> str | None:
@@ -8746,6 +9580,8 @@ class WorkspaceScreen(Screen[None]):
             return self._active_laboratory_section()
         if self.selected_kind == "covenant":
             return self._active_covenant_section()
+        if self.selected_kind == "familiar":
+            return self._active_familiar_section()
         if self.selected_kind == "book_group":
             return "section-unassigned-books"
         if self.selected_kind == "spells":
@@ -8774,6 +9610,26 @@ class WorkspaceScreen(Screen[None]):
         if tab_id in self._COVENANT_DISPATCH_TABS:
             return tab_id
         return "section-cov-info"
+
+    def _active_familiar_section(self) -> str | None:
+        """Same idea as _active_covenant_section(): the three remaining
+        placeholder tabs own no dispatch of their own yet, so fall back to
+        the always-visible info panel."""
+        if self._familiar_sheet_view is None:
+            return None
+        try:
+            tab_id = self._familiar_sheet_view.query_one(TabbedContent).active
+        except NoMatches:
+            return None
+        if not tab_id:
+            return None
+
+        focused = self.app.focused
+        if focused is not None:
+            for widget in focused.ancestors_with_self:
+                if isinstance(widget, Collapsible) and widget.id:
+                    return widget.id
+        return "section-fam-info"
 
     def _active_character_section(self) -> str | None:
         """Which character-sheet section is "active" for a/A/e dispatch.
@@ -8835,6 +9691,7 @@ class WorkspaceScreen(Screen[None]):
             "character": self._character_sheet_view,
             "laboratory": self._laboratory_sheet_view,
             "covenant": self._covenant_sheet_view,
+            "familiar": self._familiar_sheet_view,
         }.get(self.selected_kind)
         initial = False
         if view is not None:
@@ -8868,6 +9725,9 @@ class WorkspaceScreen(Screen[None]):
         elif event.button.id == "btn-char-health-fatigue-edit":
             event.stop()
             self._edit_fatigue()
+        elif event.button.id == "btn-fam-info-edit":
+            event.stop()
+            self._edit_familiar_info()
 
     def _focus_first_section(self, *, initial: bool = False) -> None:
         if self.selected_kind == "character":
@@ -8876,6 +9736,8 @@ class WorkspaceScreen(Screen[None]):
             self._focus_first_laboratory_section(initial=initial)
         elif self.selected_kind == "covenant":
             self._focus_first_covenant_section(initial=initial)
+        elif self.selected_kind == "familiar":
+            self._focus_first_familiar_section(initial=initial)
 
     def _focus_first_covenant_section(self, *, initial: bool = False) -> None:
         """Focus the always-visible info panel when a covenant is first
@@ -8963,6 +9825,29 @@ class WorkspaceScreen(Screen[None]):
                 return
         collapsible.query_one("CollapsibleTitle").focus()
 
+    def _focus_first_familiar_section(self, *, initial: bool = False) -> None:
+        """Same logic as _focus_first_character_section() (see that
+        method's docstring): the default tab (Identity & Cords) already has
+        Collapsibles of its own, so this always checks the whole view first
+        when `initial`, and scopes to the active tab otherwise."""
+        if self._familiar_sheet_view is None:
+            return
+        view = self._familiar_sheet_view
+        try:
+            if initial:
+                collapsible = view.query(Collapsible).first()
+            else:
+                tabbed = view.query_one(TabbedContent)
+                if not tabbed.active:
+                    return
+                active_pane = view.query_one(f"#{tabbed.active}", TabPane)
+                collapsible = active_pane.query(Collapsible).first()
+        except NoMatches:
+            if not initial:
+                self.screen.set_focus(None)
+            return
+        collapsible.query_one("CollapsibleTitle").focus()
+
     def on_descendant_focus(self, event: DescendantFocus) -> None:
         # Focus can move between Collapsible sections within the same tab
         # (no TabActivated message for that) -- keep bindings in sync then
@@ -9020,6 +9905,12 @@ class WorkspaceScreen(Screen[None]):
         self._character_sheet_view = view
         self._focus_first_section(initial=True)
 
+    async def _show_familiar_detail(self, familiar: Familiar) -> None:
+        view = FamiliarSheetView(self.saga, familiar)
+        await self._set_detail(view)
+        self._familiar_sheet_view = view
+        self._focus_first_section(initial=True)
+
     def _refresh_character_section(self, section_id: str) -> None:
         if self._character_sheet_view is not None:
             self._character_sheet_view.refresh_section(section_id)
@@ -9027,6 +9918,10 @@ class WorkspaceScreen(Screen[None]):
     def _refresh_covenant_section(self, section_id: str) -> None:
         if self._covenant_sheet_view is not None:
             self._covenant_sheet_view.refresh_section(section_id)
+
+    def _refresh_familiar_section(self, section_id: str) -> None:
+        if self._familiar_sheet_view is not None:
+            self._familiar_sheet_view.refresh_section(section_id)
 
     def _refresh_laboratory_section(self, section_id: str) -> None:
         if self._laboratory_sheet_view is not None:
@@ -9123,6 +10018,42 @@ class WorkspaceScreen(Screen[None]):
 
         self.app.push_screen(LaboratoryCreateScreen(self.saga, covenant), handle_result)
 
+    def _eligible_magi_for_familiar(self) -> list[Character]:
+        """Magi with no Familiar bound yet -- one per magus at a time."""
+        bonded = {f.character_id for f in self.saga.familiars}
+        return [
+            c for c in self.saga.characters if c.type == "magus" and c.id not in bonded
+        ]
+
+    def action_create_familiar(self) -> None:
+        if not self._eligible_magi_for_familiar():
+            self.notify("Every magus already has a bound Familiar.")
+            return
+        character = self.selected_character
+        default_magus_id = (
+            character.id
+            if character is not None
+            and character.type == "magus"
+            and fam.familiar_of(self.saga, character.id) is None
+            else None
+        )
+
+        async def handle_result(familiar_id: str | None) -> None:
+            if familiar_id is not None:
+                self._rebuild_tree()
+                familiar = next(f for f in self.saga.familiars if f.id == familiar_id)
+                self.selected_familiar = familiar
+                self.selected_character = next(
+                    (c for c in self.saga.characters if c.id == familiar.character_id),
+                    None,
+                )
+                self.selected_kind = "familiar"
+                await self._show_familiar_detail(familiar)
+
+        self.app.push_screen(
+            FamiliarCreateScreen(self.saga, default_magus_id), handle_result
+        )
+
     # -- generic Add/Remove/Edit dispatch, by active character-sheet section --
 
     def action_add(self) -> None:
@@ -9141,6 +10072,10 @@ class WorkspaceScreen(Screen[None]):
             self._add_personality_trait()
         elif section == "section-reputations":
             self._add_reputation()
+        elif section == "section-fam-personality-traits":
+            self._add_familiar_personality_trait()
+        elif section == "section-fam-reputations":
+            self._add_familiar_reputation()
         elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
             self._add_raw_vis()
         elif section == "section-lab-specialties":
@@ -9184,6 +10119,10 @@ class WorkspaceScreen(Screen[None]):
             self._remove_personality_trait()
         elif section == "section-reputations":
             self._remove_reputation()
+        elif section == "section-fam-personality-traits":
+            self._remove_familiar_personality_trait()
+        elif section == "section-fam-reputations":
+            self._remove_familiar_reputation()
         elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
             self._remove_raw_vis()
         elif section == "section-lab-specialties":
@@ -9244,6 +10183,16 @@ class WorkspaceScreen(Screen[None]):
             self._edit_personality_trait()
         elif section == "section-reputations":
             self._edit_reputation()
+        elif section == "section-fam-info":
+            self._edit_familiar_info()
+        elif section == "section-fam-binding":
+            self._edit_familiar_binding()
+        elif section == "section-fam-personality-traits":
+            self._edit_familiar_personality_trait()
+        elif section == "section-fam-reputations":
+            self._edit_familiar_reputation()
+        elif section == "section-fam-characteristics":
+            self._edit_familiar_characteristics()
         elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
             self._edit_raw_vis()
         elif section == "section-inventory":
@@ -12276,6 +13225,7 @@ class WorkspaceScreen(Screen[None]):
             return
         existing_ids = {vf.vf_id for vf in target.virtues_flaws}
         is_lab = self.selected_kind == "laboratory"
+        is_familiar = self.selected_kind == "familiar"
         picker = LabVirtueFlawPickerScreen if is_lab else VirtueFlawPickerScreen
 
         def handle_result(instance: VirtueFlawInstance | None) -> None:
@@ -12284,6 +13234,8 @@ class WorkspaceScreen(Screen[None]):
                 storage.save_saga(self.saga)
                 if is_lab:
                     self._refresh_laboratory_section("tab-lab-vf")
+                elif is_familiar:
+                    self._refresh_familiar_section("section-fam-vf-virtues")
                 else:
                     self._refresh_character_section("section-vf-virtues")
 
@@ -12291,9 +13243,15 @@ class WorkspaceScreen(Screen[None]):
 
     def action_remove_virtue_flaw(self) -> None:
         is_lab = self.selected_kind == "laboratory"
-        if not is_lab and self._active_section() in (
-            "section-vf-virtues",
-            "section-vf-flaws",
+        is_familiar = self.selected_kind == "familiar"
+        if (
+            not is_lab
+            and not is_familiar
+            and self._active_section()
+            in (
+                "section-vf-virtues",
+                "section-vf-flaws",
+            )
         ):
             self._remove_character_virtue_flaw()
             return
@@ -12321,6 +13279,8 @@ class WorkspaceScreen(Screen[None]):
                 storage.save_saga(self.saga)
                 if is_lab:
                     self._refresh_laboratory_section("tab-lab-vf")
+                elif is_familiar:
+                    self._refresh_familiar_section("section-fam-vf-virtues")
                 else:
                     self._refresh_character_section("section-vf-virtues")
 
@@ -12375,7 +13335,242 @@ class WorkspaceScreen(Screen[None]):
 
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
-    def _virtue_flaw_target(self) -> Character | Laboratory | None:
+    # -- Familiar: Info & Binding --
+
+    def _edit_familiar_info(self) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+
+        def handle_result(result: dict[str, object] | None) -> None:
+            if result is None:
+                return
+            for field_name, value in result.items():
+                setattr(familiar, field_name, value)
+            storage.save_saga(self.saga)
+            self._rebuild_tree()
+            self._refresh_familiar_section("section-fam-info")
+
+        self.app.push_screen(EditFamiliarInfoScreen(familiar), handle_result)
+
+    def _edit_familiar_binding(self) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+
+        def handle_result(result: dict[str, object] | None) -> None:
+            if result is None:
+                return
+            for field_name, value in result.items():
+                setattr(familiar, field_name, value)
+            storage.save_saga(self.saga)
+            self._refresh_familiar_section("section-fam-binding")
+
+        self.app.push_screen(EditFamiliarBindingScreen(familiar), handle_result)
+
+    def _edit_familiar_characteristics(self) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+
+        def handle_result(result: dict[str, object] | None) -> None:
+            if result is None:
+                return
+            familiar.characteristics = result["characteristics"]
+            familiar.base_soak = result["base_soak"]
+            familiar.magic_resistance = result["magic_resistance"]
+            storage.save_saga(self.saga)
+            self._refresh_familiar_section("section-fam-characteristics")
+
+        self.app.push_screen(EditFamiliarCharacteristicsScreen(familiar), handle_result)
+
+    # -- Familiar: Personality Traits & Reputations --
+
+    def _add_familiar_personality_trait(self) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+
+        def handle_result(trait: ScoredTrait | None) -> None:
+            if trait is not None:
+                familiar.personality_traits.append(trait)
+                storage.save_saga(self.saga)
+                self._refresh_familiar_section("section-fam-personality-traits")
+
+        self.app.push_screen(
+            ScoredTraitPromptScreen("Add a Personality Trait", "e.g. Loyal"),
+            handle_result,
+        )
+
+    def _selected_familiar_personality_trait(self) -> int | None:
+        view = self._familiar_sheet_view
+        return view.selected_personality_trait() if view is not None else None
+
+    def _edit_familiar_personality_trait(self) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        selected = self._selected_familiar_personality_trait()
+        if selected is not None:
+            self._edit_familiar_personality_trait_at(selected)
+            return
+        if not familiar.personality_traits:
+            self.notify("No Personality Traits to edit.")
+            return
+
+        labels = [
+            f"{escape(t.name)}: {t.score:+d}" for t in familiar.personality_traits
+        ]
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._edit_familiar_personality_trait_at(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Edit which Personality Trait?", labels), handle_index
+        )
+
+    def _edit_familiar_personality_trait_at(self, index: int) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+
+        def handle_result(trait: ScoredTrait | None) -> None:
+            if trait is not None:
+                familiar.personality_traits[index] = trait
+                storage.save_saga(self.saga)
+                self._refresh_familiar_section("section-fam-personality-traits")
+
+        self.app.push_screen(
+            ScoredTraitPromptScreen(
+                "Edit a Personality Trait",
+                "e.g. Loyal",
+                familiar.personality_traits[index],
+            ),
+            handle_result,
+        )
+
+    def _remove_familiar_personality_trait(self) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        selected = self._selected_familiar_personality_trait()
+        if selected is None and not familiar.personality_traits:
+            self.notify("No Personality Traits to remove.")
+            return
+
+        def do_remove(index: int) -> None:
+            del familiar.personality_traits[index]
+            storage.save_saga(self.saga)
+            self._refresh_familiar_section("section-fam-personality-traits")
+
+        if selected is not None:
+            do_remove(selected)
+            return
+
+        labels = [
+            f"{escape(t.name)}: {t.score:+d}" for t in familiar.personality_traits
+        ]
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                do_remove(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove a Personality Trait", labels), handle_index
+        )
+
+    def _add_familiar_reputation(self) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+
+        def handle_result(trait: ScoredTrait | None) -> None:
+            if trait is not None:
+                familiar.reputations.append(trait)
+                storage.save_saga(self.saga)
+                self._refresh_familiar_section("section-fam-reputations")
+
+        self.app.push_screen(
+            ScoredTraitPromptScreen("Add a Reputation", "e.g. Fierce Protector"),
+            handle_result,
+        )
+
+    def _selected_familiar_reputation(self) -> int | None:
+        view = self._familiar_sheet_view
+        return view.selected_reputation() if view is not None else None
+
+    def _edit_familiar_reputation(self) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        selected = self._selected_familiar_reputation()
+        if selected is not None:
+            self._edit_familiar_reputation_at(selected)
+            return
+        if not familiar.reputations:
+            self.notify("No Reputations to edit.")
+            return
+
+        labels = [f"{escape(t.name)}: {t.score}" for t in familiar.reputations]
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._edit_familiar_reputation_at(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Edit which Reputation?", labels), handle_index
+        )
+
+    def _edit_familiar_reputation_at(self, index: int) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+
+        def handle_result(trait: ScoredTrait | None) -> None:
+            if trait is not None:
+                familiar.reputations[index] = trait
+                storage.save_saga(self.saga)
+                self._refresh_familiar_section("section-fam-reputations")
+
+        self.app.push_screen(
+            ScoredTraitPromptScreen(
+                "Edit a Reputation",
+                "e.g. Fierce Protector",
+                familiar.reputations[index],
+            ),
+            handle_result,
+        )
+
+    def _remove_familiar_reputation(self) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        selected = self._selected_familiar_reputation()
+        if selected is None and not familiar.reputations:
+            self.notify("No Reputations to remove.")
+            return
+
+        def do_remove(index: int) -> None:
+            del familiar.reputations[index]
+            storage.save_saga(self.saga)
+            self._refresh_familiar_section("section-fam-reputations")
+
+        if selected is not None:
+            do_remove(selected)
+            return
+
+        labels = [f"{escape(t.name)}: {t.score}" for t in familiar.reputations]
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                do_remove(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove a Reputation", labels), handle_index
+        )
+
+    def _virtue_flaw_target(self) -> Character | Laboratory | Familiar | None:
         if (
             self.selected_kind == "laboratory"
             and self._active_section() == "tab-lab-vf"
@@ -12386,6 +13581,11 @@ class WorkspaceScreen(Screen[None]):
             "section-vf-flaws",
         ):
             return self.selected_character
+        if self.selected_kind == "familiar" and self._active_section() in (
+            "section-fam-vf-virtues",
+            "section-fam-vf-flaws",
+        ):
+            return self.selected_familiar
         return None
 
 

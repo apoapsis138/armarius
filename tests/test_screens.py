@@ -38,6 +38,7 @@ from ars_magica_manager.models import (
     Covenant,
     DiaryEntry,
     Economics,
+    Familiar,
     HermeticBackground,
     IncomeSource,
     Inhabitant,
@@ -71,12 +72,16 @@ from ars_magica_manager.screens import (
     EditCharacteristicsScreen,
     EditCovenantDescriptionScreen,
     EditCovenantScreen,
+    EditFamiliarBindingScreen,
+    EditFamiliarCharacteristicsScreen,
+    EditFamiliarInfoScreen,
     EditFatigueScreen,
     EditHermeticBackgroundScreen,
     EditLabCharacteristicsScreen,
     EditLabIdentityScreen,
     EditSagaScreen,
     EditWoundsScreen,
+    FamiliarCreateScreen,
     FieldsDialog,
     ImportScreen,
     ImproveIncomeScreen,
@@ -160,6 +165,7 @@ _SHEET_VIEW_ATTR: dict[str, str] = {
     "character": "_character_sheet_view",
     "laboratory": "_laboratory_sheet_view",
     "covenant": "_covenant_sheet_view",
+    "familiar": "_familiar_sheet_view",
 }
 
 
@@ -505,6 +511,11 @@ async def _select_laboratory(pilot, app, laboratory_id: str = "lab1") -> None:
     await _select(pilot, app, ("laboratory", laboratory_id))
 
 
+async def _select_familiar(pilot, app, familiar_id: str = "fam1") -> None:
+    await _select_covenant(pilot, app)
+    await _select(pilot, app, ("familiar", familiar_id))
+
+
 async def test_create_character_at_saga_level_is_unassigned_and_selectable():
     storage.save_saga(Saga(id="test_saga", name="Test Saga", storyguide="Alex"))
 
@@ -842,6 +853,258 @@ def _saga_with_bare_laboratory() -> Saga:
         Laboratory(id="lab1", covenant_id="cov1", name="Test Lab", owner_id="char1")
     )
     return saga
+
+
+def _saga_with_familiar() -> Saga:
+    saga = _saga_with_bare_character()
+    saga.familiars.append(Familiar(id="fam1", character_id="char1", name="Ashwing"))
+    return saga
+
+
+#: Same idea as _SECTION_TAB, for the familiar sheet.
+_FAM_SECTION_TAB: dict[str, str] = {
+    "section-fam-info": "tab-fam-identity",  # top panel, not inside any tab
+    "section-fam-binding": "tab-fam-identity",
+    "section-fam-vf-virtues": "tab-fam-identity",
+    "section-fam-vf-flaws": "tab-fam-identity",
+    "section-fam-personality-traits": "tab-fam-identity",
+    "section-fam-reputations": "tab-fam-identity",
+    "section-fam-characteristics": "tab-fam-characteristics",
+}
+
+
+async def _open_familiar_section(pilot, app, section_id: str) -> None:
+    """Switch to the tab containing `section_id` and focus that section (so
+    its a/A/e/v/V keys apply). Same idea as the character sheet's own
+    _open_section()."""
+    view = app.screen._familiar_sheet_view
+    assert view is not None, "no familiar sheet is currently shown"
+    await _wait_until(pilot, lambda: view.initial_tab_seen)
+    await pilot.pause()
+    tab_id = _FAM_SECTION_TAB[section_id]
+    view.query_one(TabbedContent).active = tab_id
+    await pilot.pause()
+    if section_id != tab_id:
+        collapsible = view.query_one(f"#{section_id}", Collapsible)
+        collapsible.query_one("CollapsibleTitle").focus()
+        await pilot.pause()
+
+
+async def test_binding_a_familiar_nests_it_under_its_magus_and_grants_shared_traits():
+    storage.save_saga(_saga_with_bare_character())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_character(pilot, app)
+        assert isinstance(app.screen, WorkspaceScreen)
+
+        await pilot.press("f")
+        await pilot.pause()
+        assert isinstance(app.screen, FamiliarCreateScreen)
+        # A magus was already selected: it's preselected as the default.
+        assert app.screen.query_one("#select-magus", Select).value == "char1"
+
+        app.screen.query_one("#input-name", Input).value = "Ashwing"
+        app.screen.query_one("#btn-create", Button).press()
+        await pilot.pause()
+        assert isinstance(app.screen, WorkspaceScreen)
+        assert app.screen.selected_kind == "familiar"
+
+        # The magus's tree node is now expandable, with the Familiar nested
+        # as its one child leaf.
+        tree = app.screen.query_one("#nav-tree", Tree)
+        magus_node = _find_node(tree, ("character", "char1"))
+        familiar_id = next(f.id for f in app.screen.saga.familiars)
+        assert [c.data for c in magus_node.children] == [("familiar", familiar_id)]
+
+    saga = storage.load_saga("test_saga")
+    [familiar] = saga.familiars
+    magus = saga.characters[0]
+    assert (familiar.character_id, familiar.name) == ("char1", "Ashwing")
+    # True Friend and Loyal (Partner) +3 granted to both partners.
+    assert {vf.vf_id for vf in familiar.virtues_flaws} == {"vf_true_friend"}
+    assert {vf.vf_id for vf in magus.virtues_flaws} == {"vf_true_friend"}
+    assert [(t.name, t.score) for t in familiar.personality_traits] == [
+        ("Loyal (Partner)", 3)
+    ]
+    assert [(t.name, t.score) for t in magus.personality_traits] == [
+        ("Loyal (Partner)", 3)
+    ]
+
+
+async def test_create_familiar_is_disabled_once_every_magus_has_one():
+    storage.save_saga(_saga_with_familiar())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_character(pilot, app)
+        assert app.screen.check_action("create_familiar", ()) is False
+        await pilot.press("f")
+        await pilot.pause()
+        assert isinstance(app.screen, WorkspaceScreen)  # refused, no dialog
+
+
+async def test_editing_familiar_info_updates_the_top_panel_and_tree():
+    storage.save_saga(_saga_with_familiar())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_familiar(pilot, app)
+        assert app.screen._active_section() == "section-fam-info"
+
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, EditFamiliarInfoScreen)
+        app.screen.query_one("#input-fam-name", Input).value = "Nightwing"
+        app.screen.query_one("#input-fam-species", Input).value = "Raven"
+        app.screen.query_one("#input-fam-might", Input).value = "8"
+        app.screen.query_one("#btn-save", Button).press()
+        await pilot.pause()
+
+        assert isinstance(app.screen, WorkspaceScreen)
+        view = app.screen._familiar_sheet_view
+        text = str(view.query_one("#fam-info-content", Static).render())
+        assert "Species / Description: Raven" in text
+        assert "Magic Might Score: 8" in text
+
+        tree = app.screen.query_one("#nav-tree", Tree)
+        magus_node = _find_node(tree, ("character", "char1"))
+        assert "Nightwing" in str(magus_node.children[0].label)
+
+    [familiar] = storage.load_saga("test_saga").familiars
+    assert (familiar.name, familiar.species, familiar.magic_might) == (
+        "Nightwing",
+        "Raven",
+        8,
+    )
+
+
+async def test_editing_familiar_binding_shows_live_cord_cost_and_saves():
+    storage.save_saga(_saga_with_familiar())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_familiar(pilot, app)
+        await _open_familiar_section(pilot, app, "section-fam-binding")
+        assert app.screen._active_section() == "section-fam-binding"
+
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, EditFamiliarBindingScreen)
+        app.screen.query_one("#select-fam-golden_cord", Select).value = 3
+        await pilot.pause()
+        assert (
+            str(app.screen.query_one("#cost-fam-golden_cord", Static).render())
+            == "30 pts"
+        )
+        app.screen.query_one("#input-fam-lab-total", Input).value = "45"
+        app.screen.query_one("#btn-save", Button).press()
+        await pilot.pause()
+
+        view = app.screen._familiar_sheet_view
+        text = str(view.query_one("#fam-binding-content", Static).render())
+        assert "Golden Cord: +3 (30 pts)" in text
+        assert "Initial Binding Lab Total: 45" in text
+
+    [familiar] = storage.load_saga("test_saga").familiars
+    assert (familiar.golden_cord, familiar.binding_lab_total) == (3, 45)
+
+
+async def test_editing_familiar_characteristics_updates_the_panel_and_saves():
+    storage.save_saga(_saga_with_familiar())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_familiar(pilot, app)
+        await _open_familiar_section(pilot, app, "section-fam-characteristics")
+        assert app.screen._active_section() == "section-fam-characteristics"
+
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, EditFamiliarCharacteristicsScreen)
+        app.screen.query_one("#input-famchar-stamina", Input).value = "3"
+        app.screen.query_one("#input-famchar-base-soak", Input).value = "5"
+        app.screen.query_one("#input-famchar-magic-resistance", Input).value = "12"
+        app.screen.query_one("#btn-save", Button).press()
+        await pilot.pause()
+
+        assert isinstance(app.screen, WorkspaceScreen)
+        view = app.screen._familiar_sheet_view
+        text = str(view.query_one("#fam-characteristics-content", Static).render())
+        assert "Sta: +3" in text
+        assert "Base Soak: 5" in text
+        assert "Magic Resistance: 12" in text
+
+    [familiar] = storage.load_saga("test_saga").familiars
+    assert familiar.characteristics.stamina == 3
+    assert (familiar.base_soak, familiar.magic_resistance) == (5, 12)
+
+
+async def test_familiar_virtues_flaws_add_via_v_and_remove_via_shift_v():
+    storage.save_saga(_saga_with_familiar())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_familiar(pilot, app)
+        await _open_familiar_section(pilot, app, "section-fam-vf-virtues")
+        assert app.screen.check_action("add_virtue_flaw", ()) is True
+
+        await pilot.press("v")
+        await pilot.pause()
+        assert isinstance(app.screen, VirtueFlawPickerScreen)
+        await pilot.press("escape")
+        await pilot.pause()
+        assert isinstance(app.screen, WorkspaceScreen)
+
+    saga = storage.load_saga("test_saga")
+    saga.familiars[0].virtues_flaws.append(VirtueFlawInstance(vf_id="vf_true_friend"))
+    storage.save_saga(saga)
+
+    app2 = ArsMagicaManagerApp()
+    async with app2.run_test(size=(140, 70)) as pilot:
+        await _select_familiar(pilot, app2)
+        await _open_familiar_section(pilot, app2, "section-fam-vf-virtues")
+        assert app2.screen.check_action("remove_virtue_flaw", ()) is True
+        await pilot.press("V")
+        await pilot.pause()
+        assert isinstance(app2.screen, RemovalPickerScreen)
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app2.screen, WorkspaceScreen)
+
+    assert storage.load_saga("test_saga").familiars[0].virtues_flaws == []
+
+
+async def test_familiar_personality_traits_use_generic_add_edit_remove():
+    storage.save_saga(_saga_with_familiar())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_familiar(pilot, app)
+        await _open_familiar_section(pilot, app, "section-fam-personality-traits")
+        assert app.screen.check_action("add", ()) is True
+
+        await pilot.press("a")
+        await pilot.pause()
+        assert isinstance(app.screen, ScoredTraitPromptScreen)
+        app.screen.query_one("#input-trait-name", Input).value = "Fearless"
+        app.screen.query_one("#input-trait-score", Input).value = "2"
+        app.screen.query_one("#btn-save", Button).press()
+        await pilot.pause()
+
+        [familiar] = storage.load_saga("test_saga").familiars
+        assert [(t.name, t.score) for t in familiar.personality_traits] == [
+            ("Fearless", 2)
+        ]
+
+        await pilot.press("A")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, WorkspaceScreen)
+
+    assert storage.load_saga("test_saga").familiars[0].personality_traits == []
 
 
 def _saga_with_populated_laboratory() -> Saga:

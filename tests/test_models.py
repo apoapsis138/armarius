@@ -4,11 +4,15 @@ from ars_magica_manager.models import (
     Aging,
     Background,
     Character,
+    Characteristics,
     Description,
+    Familiar,
     HermeticBackground,
     LabCharacteristics,
     Laboratory,
     LabVirtueFlawDef,
+    Saga,
+    ScoredTrait,
     VirtueFlawInstance,
     Wounds,
     character_age,
@@ -209,6 +213,49 @@ def test_lab_aura_total_adds_the_modifier_to_the_covenant_aura():
     assert lab_aura_total(lab, covenant_aura=3) == 5
     lab.aura_modifier = -4
     assert lab_aura_total(lab, covenant_aura=3) == -1
+
+
+def test_familiar_from_dict_defaults_for_pre_existing_saves():
+    familiar = Familiar.from_dict({"id": "fam1", "character_id": "mag1"})
+    assert familiar.name == ""
+    assert familiar.golden_cord == 0
+    assert familiar.virtues_flaws == []
+    assert familiar.personality_traits == []
+    assert familiar.characteristics == Characteristics()
+    assert familiar.base_soak == 0
+    assert familiar.magic_resistance == 0
+
+
+def test_familiar_survives_a_dict_round_trip():
+    familiar = Familiar(
+        id="fam1",
+        character_id="mag1",
+        name="Ashwing",
+        species="Raven",
+        golden_cord=3,
+        virtues_flaws=[VirtueFlawInstance(vf_id="vf_true_friend")],
+        personality_traits=[ScoredTrait(name="Loyal (Partner)", score=3)],
+        characteristics=Characteristics(stamina=3),
+        base_soak=5,
+        magic_resistance=12,
+    )
+    restored = Familiar.from_dict(asdict(familiar))
+    assert restored == familiar
+
+
+def test_saga_from_dict_restores_familiars():
+    saga = Saga(
+        id="s",
+        name="Saga",
+        familiars=[Familiar(id="fam1", character_id="mag1", name="Ashwing")],
+    )
+    restored = Saga.from_dict(asdict(saga))
+    assert restored.familiars == saga.familiars
+
+
+def test_saga_from_dict_defaults_familiars_for_pre_existing_saves():
+    saga = Saga.from_dict({"id": "s", "name": "Saga"})
+    assert saga.familiars == []
 
 
 def test_next_season_steps_through_the_year_and_rolls_over_after_winter():

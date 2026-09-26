@@ -965,6 +965,77 @@ def character_age(year_born: int | None, current_year: int) -> int | None:
     return None if year_born is None else current_year - year_born
 
 
+#: A Cord's score (0-5) -> its point cost from the binding Lab Total, per the
+#: Familiar rules (see familiars.py). An exact table, not a formula.
+CORD_SCORE_COSTS: dict[int, int] = {0: 0, 1: 5, 2: 15, 3: 30, 4: 50, 5: 75}
+
+
+@dataclass
+class Familiar:
+    """A magus's bound familiar (ArM5 Familiars). One per magus at a time,
+    nested under its magus in the nav tree, but its own top-level entity
+    (own sheet) rather than a field on Character -- see kanban STORY-206.
+
+    `character_id` is the magus who bound it: required, set once at
+    creation, and never reassigned to a different magus.
+
+    Built in slices (STORY-206); this is Slice 1 (Identity & Cords) only --
+    Characteristics, Combat & Health, Abilities and Bond Powers are added by
+    later slices onto this same dataclass, the same way Character grew over
+    many stories.
+
+    `virtues_flaws`/`personality_traits` reuse Character's own shapes
+    (VirtueFlawInstance/ScoredTrait) -- True Friend and Loyal (Partner) +3
+    are added automatically (to both partners) when the Familiar is
+    created, not left for the user to type in.
+
+    The three Cords (golden/silver/bronze) are typed-in scores 0-5; their
+    point cost is looked up from CORD_SCORE_COSTS, not stored separately.
+    """
+
+    id: str
+    character_id: str
+    name: str = ""
+    #: The sheet's single "Species / Description" free-text line.
+    species: str = ""
+    season_bound: str = ""  # one of SEASONS, or "" if unset
+    year_bound: int | None = None
+    magic_might: int = 0
+    might_pool: int | None = None  # None = not yet tracked, like year_born
+    size: int = 0
+    wound_multiplier: int = 1
+    virtues_flaws: list[VirtueFlawInstance] = field(default_factory=list)
+    personality_traits: list[ScoredTrait] = field(default_factory=list)
+    reputations: list[ScoredTrait] = field(default_factory=list)
+    #: Binding details -- typed in, no Lab Total formula computed.
+    binding_technique: str = ""  # one of TECHNIQUES, or ""
+    binding_form: str = ""  # one of FORMS, or ""
+    binding_lab_total: int = 0
+    target_binding_level: int = 0
+    vis_spent_binding: int = 0
+    golden_cord: int = 0  # 0-5
+    silver_cord: int = 0  # 0-5
+    bronze_cord: int = 0  # 0-5
+    characteristics: Characteristics = field(default_factory=Characteristics)
+    #: Both typed in, no formula computed -- same "tracker, not rules engine"
+    #: treatment as Wounds.soak (see DESIGN.md, STORY-205/206 Slice 2).
+    base_soak: int = 0
+    magic_resistance: int = 0
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Familiar:
+        d = dict(data)
+        d["virtues_flaws"] = [
+            VirtueFlawInstance(**vf) for vf in d.get("virtues_flaws", [])
+        ]
+        d["personality_traits"] = [
+            ScoredTrait(**t) for t in d.get("personality_traits", [])
+        ]
+        d["reputations"] = [ScoredTrait(**t) for t in d.get("reputations", [])]
+        d["characteristics"] = Characteristics.from_dict(d.get("characteristics") or {})
+        return cls(**known_fields(cls, d))
+
+
 #: The kinds of covenant inhabitant, in the order the Inhabitants tab lists them.
 INHABITANT_KINDS: tuple[str, ...] = (
     "magus",
@@ -1517,6 +1588,7 @@ class Saga:
     laboratories: list[Laboratory] = field(default_factory=list)
     books: list[Book] = field(default_factory=list)
     spells: list[Spell] = field(default_factory=list)
+    familiars: list[Familiar] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Saga:
@@ -1526,6 +1598,7 @@ class Saga:
         d["laboratories"] = [
             Laboratory.from_dict(lab) for lab in d.get("laboratories", [])
         ]
+        d["familiars"] = [Familiar.from_dict(f) for f in d.get("familiars", [])]
         d["spells"] = [Spell.from_dict(s) for s in d.get("spells", [])]
         spell_names = {s.id: s.name for s in d["spells"]}
         d["books"] = [Book.from_dict(b, spell_names) for b in d.get("books", [])]

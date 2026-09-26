@@ -2721,6 +2721,15 @@
     "description": "You have found the one person meant for you in all of creation, and the bond between the two of you cannot be sundered. Whenever you are suffering, in danger, or dejected, the thought of your love gives you strength to persevere. Thus, you may add +3 to appropriate Personality Trait rolls, and add additional bonuses as allowed by the storyguide (never in excess of +3) to activities that will return you to your love, or save her life. In dire need, she may even come to rescue you. On the other hand, you are tied to your lover, to whom you must return frequently. If you do not, you may suffer penalties to most actions requiring spirit due to melancholy. If any enchantment keeps you from your true love's side, the power of your devotion can probably break it. Your True Love is another player character, who must also have this Virtue. True Love is never one-sided. This Virtue may be renamed 'True Friend' to cover equally close attachments which are not romantic."
   },
   {
+    "id": "vf_true_friend",
+    "name": "True Friend",
+    "type": "Virtue",
+    "category": "General",
+    "tier": "Minor",
+    "cost": 1,
+    "description": "You share an unbreakable bond of mutual trust and loyalty with another -- not romantic, but no less profound. Whenever you are suffering, in danger, or dejected, the thought of your friend gives you strength to persevere, and you may add +3 to appropriate Personality Trait rolls. You are bound to help each other; if any enchantment keeps you apart, the strength of your bond can probably break it. This Virtue is granted automatically to a magus and their bound familiar (see the Familiar rules), and is otherwise the platonic counterpart to True Love -- your bonded partner must hold the same Virtue in return."
+  },
+  {
     "id": "vf_turb_trained",
     "name": "Turb Trained",
     "type": "Virtue",
