@@ -172,7 +172,9 @@ def test_row_labels_show_the_fields_the_sheet_lists():
     assert sanctums[0] == "Obsidian Crucible   Corvinus              4      12"
     assert sanctums[1] == "Study               Leandro               3      10"
     assert _labels(saga, cov, "weapon") == [
-        "Crossbows                               Standard        6"
+        # Weapons get four trailing combat-figure columns (Init/Attack/
+        # Defense/Damage), defaulting to 0 -- see STORY-205.
+        "Crossbows                               Standard        6    0    0    0    0"
     ]
     assert _labels(saga, cov, "vis_source") == [
         "Well                Vim            3  Winter"

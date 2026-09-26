@@ -160,6 +160,22 @@ class PossessionEntry:
         """Points of the whole entry: points each times the Quantity."""
         return self.points_each * self.quantity
 
+    @property
+    def weapon_init(self) -> int:
+        return self._own("weapon_init", 0)
+
+    @property
+    def weapon_attack(self) -> int:
+        return self._own("weapon_attack", 0)
+
+    @property
+    def weapon_defense(self) -> int:
+        return self._own("weapon_defense", 0)
+
+    @property
+    def weapon_damage(self) -> int:
+        return self._own("weapon_damage", 0)
+
 
 def entries_for_kind(
     saga: Saga,
@@ -219,6 +235,7 @@ _QTY_WIDTH = 5
 _ART_WIDTH = 10
 _PAWNS_WIDTH = 6
 _SEASON_WIDTH = 8
+_COMBAT_STAT_WIDTH = 5
 
 
 def table_header(kind: str) -> str:
@@ -235,7 +252,14 @@ def table_header(kind: str) -> str:
             f"  {name}{'Owner':<{_OWNER_WIDTH}}"
             f"{'Quality':>{_QUALITY_WIDTH}}{'Upkeep':>{_UPKEEP_WIDTH}}"
         )
-    if kind in ("weapon", "armor"):
+    if kind == "weapon":
+        return (
+            f"  {name}{'Type':<{_TYPE_WIDTH}}"
+            f"{'Quality':<{_GEAR_QUALITY_WIDTH}}{'Qty':>{_QTY_WIDTH}}"
+            f"{'Init':>{_COMBAT_STAT_WIDTH}}{'Atk':>{_COMBAT_STAT_WIDTH}}"
+            f"{'Def':>{_COMBAT_STAT_WIDTH}}{'Dmg':>{_COMBAT_STAT_WIDTH}}"
+        )
+    if kind == "armor":
         return (
             f"  {name}{'Type':<{_TYPE_WIDTH}}"
             f"{'Quality':<{_GEAR_QUALITY_WIDTH}}{'Qty':>{_QTY_WIDTH}}"
@@ -268,6 +292,13 @@ def row_label(entry: PossessionEntry) -> str:
         gear_type = escape(_fit(entry.gear_type, _TYPE_WIDTH))
         gear_quality = escape(_fit(entry.gear_quality, _GEAR_QUALITY_WIDTH))
         row = f"{name}{gear_type}{gear_quality}{entry.quantity:>{_QTY_WIDTH}}"
+        if kind == "weapon":
+            row += (
+                f"{entry.weapon_init:>{_COMBAT_STAT_WIDTH}}"
+                f"{entry.weapon_attack:>{_COMBAT_STAT_WIDTH}}"
+                f"{entry.weapon_defense:>{_COMBAT_STAT_WIDTH}}"
+                f"{entry.weapon_damage:>{_COMBAT_STAT_WIDTH}}"
+            )
     elif kind == "item":
         row = f"{name}{entry.quantity:>{_QTY_WIDTH}}"
     elif kind == "vis_source":
@@ -321,6 +352,11 @@ def detail_text(entry: PossessionEntry | None) -> str:
                     "covenant's finances)",
                 )
             )
+        if kind == "weapon":
+            lines.append(_line("Init", entry.weapon_init))
+            lines.append(_line("Attack", entry.weapon_attack))
+            lines.append(_line("Defense", entry.weapon_defense))
+            lines.append(_line("Damage", entry.weapon_damage))
     elif kind == "vis_source":
         lines.append(_line("Art", entry.art))
         lines.append(_line("Pawns", entry.pawns))

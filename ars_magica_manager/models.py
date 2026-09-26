@@ -842,6 +842,9 @@ class Wounds:
     heavy: int = 0
     incapacitated: bool = False
     dead: bool = False
+    #: Typed in, not derived from Stamina/armor/Virtues -- same "tracker, not
+    #: rules engine" treatment as everything else (see DESIGN.md, STORY-205).
+    soak: int = 0
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Wounds:
@@ -1137,7 +1140,9 @@ class Possession:
       (quality, upkeep, usage, description) for that laboratory, while a record
       without one is a manually-added sanctum.
     * weapon / armor: name, quantity, gear_type, gear_quality (they give its
-      points, which feed the covenant's finances), description.
+      points, which feed the covenant's finances), description. weapon only:
+      weapon_init/weapon_attack/weapon_defense/weapon_damage (typed-in combat
+      figures, no formula -- see DESIGN.md, STORY-205).
     * item: name, quantity, description.
     * vis_source: name, art, pawns, season (when it is harvested), location,
       physical_form, description.
@@ -1162,6 +1167,10 @@ class Possession:
     usage: str = SANCTUM_USAGE_DEFAULT
     gear_type: str = ""  # weapon / armor: a key of GEAR_POINTS ("" = not set)
     gear_quality: str = GEAR_QUALITY_DEFAULT  # weapon / armor: one of GEAR_QUALITIES
+    weapon_init: int = 0  # weapon only
+    weapon_attack: int = 0  # weapon only
+    weapon_defense: int = 0  # weapon only
+    weapon_damage: int = 0  # weapon only
     art: str = ""
     pawns: int = 0
     season: str = ""  # one of SEASONS

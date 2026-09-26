@@ -2161,6 +2161,7 @@ async def test_edit_wounds_updates_counts_and_flags():
         await pilot.pause()
         assert isinstance(app.screen, EditWoundsScreen)
 
+        app.screen.query_one("#input-wounds-soak", Input).value = "5"
         app.screen.query_one("#input-wounds-medium", Input).value = "2"
         app.screen.query_one("#check-wounds-incapacitated", Checkbox).value = True
 
@@ -2169,11 +2170,13 @@ async def test_edit_wounds_updates_counts_and_flags():
 
         assert isinstance(app.screen, WorkspaceScreen)
         text = app.screen._character_sheet_view._wounds_text()
+        assert "Soak: 5" in text
         assert "Medium Wounds: 2" in text
         assert "Incapacitated: yes" in text
 
     saga = storage.load_saga("test_saga")
     wounds = saga.characters[0].wounds
+    assert wounds.soak == 5
     assert wounds.medium == 2
     assert wounds.incapacitated is True
 
@@ -6320,7 +6323,13 @@ async def test_weapons_armor_and_items_need_a_name_and_a_quantity_defaulting_to_
             await _wait_until(pilot, lambda kind=kind: len(_pos_labels(app, kind)) == 1)
             # Weapons and armor carry a Type and Quality (their points); items don't.
             expected = {
-                "weapon": "Crossbows           Weapon or shield    Standard        3",
+                # Weapons get four extra trailing combat-figure columns
+                # (Init/Attack/Defense/Damage), defaulting to 0; armor/items
+                # don't (see STORY-205).
+                "weapon": (
+                    "Crossbows           Weapon or shield    Standard"
+                    "        3    0    0    0    0"
+                ),
                 "armor": "Mail Hauberks       Partial armor       Standard        3",
                 "item": "The Weeping Lens        3",
             }[kind]
@@ -6338,8 +6347,54 @@ async def test_weapons_armor_and_items_need_a_name_and_a_quantity_defaulting_to_
             "Quality: Standard",
             "Quantity: 3",
             "Points: 12 (4 each",
+            "Init: 0",
+            "Attack: 0",
+            "Defense: 0",
+            "Damage: 0",
         ):
             assert expected in panel, expected
+
+
+async def test_weapon_combat_figures_are_typed_in_and_shown_on_the_row_and_panel():
+    storage.save_saga(_saga_with_a_lab())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_covenant(pilot, app)
+        await _open_pos_section(pilot, app, "weapon")
+        await pilot.press("a")
+        await pilot.pause()
+        _fill(
+            app,
+            name="Longsword",
+            weapon_init=2,
+            weapon_attack=5,
+            weapon_defense=3,
+            weapon_damage=7,
+        )
+        await _save_dialog(pilot, app)
+        await _wait_until(pilot, lambda: len(_pos_labels(app, "weapon")) == 1)
+
+        assert _pos_labels(app, "weapon")[0].endswith("    2    5    3    7")
+
+        await _select_pos_row(pilot, app, "weapon", 0)
+        panel = _pos_panel(app)
+        for expected in ("Init: 2", "Attack: 5", "Defense: 3", "Damage: 7"):
+            assert expected in panel, expected
+
+        # Armor doesn't get these fields at all.
+        await _open_pos_section(pilot, app, "armor")
+        await pilot.press("a")
+        await pilot.pause()
+        assert not app.screen.query("#fld-weapon_init")
+
+    [record] = _pos_records("weapon")
+    assert (
+        record.weapon_init,
+        record.weapon_attack,
+        record.weapon_defense,
+        record.weapon_damage,
+    ) == (2, 5, 3, 7)
 
 
 async def test_siege_engines_only_come_expensive_and_points_follow_the_table():

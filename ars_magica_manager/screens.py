@@ -481,6 +481,19 @@ def _possession_fields(
                 ),
             ]
         fields.append(DialogField("quantity", "Quantity", "int", value("quantity", 1)))
+        if kind == "weapon":
+            fields += [
+                DialogField("weapon_init", "Init", "int", value("weapon_init", 0)),
+                DialogField(
+                    "weapon_attack", "Attack", "int", value("weapon_attack", 0)
+                ),
+                DialogField(
+                    "weapon_defense", "Defense", "int", value("weapon_defense", 0)
+                ),
+                DialogField(
+                    "weapon_damage", "Damage", "int", value("weapon_damage", 0)
+                ),
+            ]
     elif kind in ("vis_source", "vis_store"):
         fields.append(
             DialogField(
@@ -3444,7 +3457,7 @@ class EditAgingScreen(ModalScreen[Aging | None]):
 
 
 class EditWoundsScreen(ModalScreen[Wounds | None]):
-    """Edits Wound counts per severity, plus Incapacitated/Dead. Simple
+    """Edits Soak, Wound counts per severity, and Incapacitated/Dead. Simple
     counts, not individual wound records -- matches checking boxes on the
     paper sheet, not the calculated Wound Penalty (see Wounds's docstring).
     Dismisses with the finished Wounds, or None if cancelled."""
@@ -3498,6 +3511,14 @@ class EditWoundsScreen(ModalScreen[Wounds | None]):
         with Vertical(id="wounds-dialog"):
             yield Label("Edit Wounds", id="wounds-title")
             with Horizontal(classes="woundsedit-row"):
+                yield Label("Soak")
+                yield Input(
+                    value=str(w.soak),
+                    type="integer",
+                    id="input-wounds-soak",
+                    compact=True,
+                )
+            with Horizontal(classes="woundsedit-row"):
                 yield Label("Light Wounds (-1 each)")
                 yield Input(
                     value=str(w.light),
@@ -3546,6 +3567,7 @@ class EditWoundsScreen(ModalScreen[Wounds | None]):
         error = self.query_one("#wounds-error", Static)
         values: dict[str, object] = {}
         for label, field_name in (
+            ("Soak", "soak"),
             ("Light Wounds", "light"),
             ("Medium Wounds", "medium"),
             ("Heavy Wounds", "heavy"),
@@ -7176,6 +7198,7 @@ class CharacterSheetView(Vertical):
         w = self.character.wounds
         return "\n".join(
             [
+                f"Soak: {w.soak}",
                 f"Light Wounds:  {w.light} (-1 each)",
                 f"Medium Wounds: {w.medium} (-3 each)",
                 f"Heavy Wounds:  {w.heavy} (-5 each)",
