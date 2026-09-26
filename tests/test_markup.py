@@ -1,7 +1,7 @@
 import pytest
 from textual.content import Content
 
-from ars_magica_manager.screens import markdown_inline
+from ars_magica_manager.markup import markdown_inline
 
 
 @pytest.mark.parametrize(

@@ -1,6 +1,4 @@
-import sys
-from pathlib import Path
-
+import build_spell_catalog as build
 import pytest
 
 from ars_magica_manager import catalog
@@ -13,9 +11,6 @@ from ars_magica_manager.models import (
     Saga,
     Spell,
 )
-
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
-import build_spell_catalog as build
 
 
 def _spell(**kwargs) -> Spell:

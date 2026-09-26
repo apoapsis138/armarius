@@ -1,7 +1,7 @@
 import re
 from pathlib import Path
 
-import pytest
+from support import strip_markup
 from textual.app import App
 from textual.widgets import (
     Button,
@@ -109,20 +109,6 @@ from ars_magica_manager.screens import (
     WorkspaceScreen,
     _CsvDirectoryTree,
 )
-
-
-@pytest.fixture(autouse=True)
-def isolated_sagas_dir(tmp_path, monkeypatch):
-    monkeypatch.setattr(storage, "SAGAS_DIR", tmp_path)
-
-
-@pytest.fixture(autouse=True)
-def isolated_settings_path(tmp_path, monkeypatch):
-    # A sibling dir, not tmp_path itself -- isolated_sagas_dir points
-    # storage.SAGAS_DIR at tmp_path and globs it for "*.json".
-    monkeypatch.setattr(
-        settings, "SETTINGS_PATH", tmp_path / "config" / "app_settings.json"
-    )
 
 
 def _find_node(tree, data):
@@ -3057,7 +3043,7 @@ async def test_edit_lab_characteristics_updates_manual_values():
         )
         # Values line up in columns once the colour markup is stripped: every
         # row has its '=' in the same place.
-        plain = re.sub(r"\[/?[a-z]*\]", "", text)
+        plain = strip_markup(text)
         assert len({line.index("=") for line in plain.splitlines()}) == 1
 
     saga = storage.load_saga("test_saga")
@@ -3710,11 +3696,8 @@ async def test_covenant_sheet_has_info_panel_and_six_tabs():
         assert [pane.id for pane in tabs.query(TabPane)] == list(_COVENANT_TABS)
         assert tabs.active == "tab-cov-attributes"
 
-        def plain(text: str) -> str:
-            return re.sub(r"\[/?[a-z]*\]", "", text)
-
-        left = plain(view._info_left_text())
-        right = plain(view._info_right_text())
+        left = strip_markup(view._info_left_text())
+        right = strip_markup(view._info_right_text())
         # Saga-inherited values...
         assert re.search(r"Saga:\s+Pushing the Bounds", left)
         assert re.search(r"Storyguide:\s+Hedda", left)
@@ -4853,7 +4836,7 @@ async def test_details_panel_shows_prerequisites_exclusions_and_repeatability():
 
         def info(index: int) -> str:
             # entry index -> text with the colour/bold markup stripped
-            return re.sub(r"\[/?[a-z]*\]", "", view._bh_info_text(index))
+            return strip_markup(view._bh_info_text(index))
 
         assert "Requires: Castle" in info(0)
         assert "Not with: Road, Urban" in info(1)
@@ -5580,7 +5563,7 @@ async def test_details_panel_shows_the_type_and_omits_it_for_untyped_entries():
         view = app.screen._covenant_sheet_view
 
         def plain(index: int) -> str:
-            return re.sub(r"\[/?[a-z]*\]", "", view._bh_info_text(index))
+            return strip_markup(view._bh_info_text(index))
 
         assert "Type: Fortifications" in plain(0)
         assert "Tier: Free Boon" in plain(0)  # no cost line for a Free Choice

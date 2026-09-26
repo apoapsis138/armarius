@@ -2,6 +2,7 @@ import re
 from dataclasses import asdict
 
 import pytest
+from support import strip_markup
 
 from ars_magica_manager import economics as eco
 from ars_magica_manager import inhabitants as inh
@@ -51,10 +52,6 @@ def _saga(season: str = "Spring") -> tuple[Saga, Covenant]:
         laboratories=[],
     )
     return saga, covenant
-
-
-def _plain(markup: str) -> str:
-    return re.sub(r"\[/?[a-z]*\]", "", markup)
 
 
 def _row(rows: list[eco.Row], key: str) -> eco.Row:
@@ -462,7 +459,7 @@ def test_total_income_and_wealth_texts():
     cov.economics.wealth = 12
     summary = eco.summarize(saga, cov)
     assert summary.income == 155 and summary.wealth == 12
-    left, right = (_plain(t) for t in eco.wealth_texts(summary))
+    left, right = (strip_markup(t) for t in eco.wealth_texts(summary))
     assert re.search(r"Points of Inhabitants:\s+100\b", left)
     assert re.search(r"Points of Weapons and Armor:\s+320\b", left)
     assert re.search(r"Wealth:\s+12\b", left)
@@ -578,7 +575,7 @@ def test_table_rows_line_up_and_truncate_long_notes():
     saga, cov = _sized_covenant()
     cov.economics.notes["buildings"] = "x" * 100
     summary = eco.summarize(saga, cov)
-    label = _plain(eco.row_label(_row(summary.expenditure, "buildings")))
+    label = strip_markup(eco.row_label(_row(summary.expenditure, "buildings")))
     assert label.startswith("Buildings") and label.endswith("…")
     assert len(label) < 80
     header = eco.table_header("Cost")
@@ -641,7 +638,9 @@ def test_emergency_savings_warns_of_a_deficit_and_of_being_broke():
     row = _row(eco.summarize(saga, cov).savings, "emergency_savings")
     assert row.status == "Covenant operating at a deficit"
     assert "[red]Covenant operating at a deficit[/]" in eco.row_label(row)
-    assert "Covenant operating at a deficit" in _plain(eco.row_detail_text(row, "Q"))
+    assert "Covenant operating at a deficit" in strip_markup(
+        eco.row_detail_text(row, "Q")
+    )
 
     cov.economics.wealth = 35  # one short of the deficit
     row = _row(eco.summarize(saga, cov).savings, "emergency_savings")

@@ -2,6 +2,7 @@ import re
 from dataclasses import asdict
 
 import pytest
+from support import strip_markup
 from textual.content import Content
 
 from ars_magica_manager import catalog
@@ -54,10 +55,6 @@ def _saga() -> tuple[Saga, Covenant]:
         ],
     )
     return saga, covenant
-
-
-def _plain(markup: str) -> str:
-    return re.sub(r"\[/?[a-z]*\]", "", markup)
 
 
 def _labels(saga: Saga, cov: Covenant, kind: str) -> list[str]:
@@ -183,7 +180,7 @@ def test_a_craftspersons_score_is_manual_unless_tied_to_a_sheets_ability():
     entries = inh.entries_for_kind(saga, cov, "craftsperson")
     assert [e.skill_value for e in entries] == [6, 3, 4, 2]
     assert [e.skill_from_ability for e in entries] == [None, None, 4, None]
-    assert _plain(inh.row_label(entries[2])).split() == ["B", "4", "1", "Unknown"]
+    assert strip_markup(inh.row_label(entries[2])).split() == ["B", "4", "1", "Unknown"]
     assert "(from the linked Ability)" in inh.detail_text(entries[2], 1220)
     assert "(from the linked Ability)" not in inh.detail_text(entries[1], 1220)
 
@@ -382,7 +379,7 @@ def test_other_covenfolk_detail_panel_shows_the_role():
             year_born=1180,
         )
     )
-    text = _plain(
+    text = strip_markup(
         inh.detail_text(inh.entries_for_kind(saga, cov, "inhabitant")[0], 1220)
     )
     for expected in (
@@ -423,7 +420,7 @@ def test_detail_text_shows_the_fields_and_renders_description_emphasis():
         )
     )
     text = inh.detail_text(inh.entries_for_kind(saga, cov, "craftsperson")[0], 1220)
-    plain = _plain(text)
+    plain = strip_markup(text)
     for expected in (
         "Name: Gerhard",
         "Kind: Craftsperson",
@@ -445,17 +442,19 @@ def test_detail_text_shows_the_fields_and_renders_description_emphasis():
 
 def test_detail_text_for_a_listed_character_and_for_nothing():
     saga, cov = _saga()
-    text = _plain(inh.detail_text(inh.entries_for_kind(saga, cov, "magus")[0], 1220))
+    text = strip_markup(
+        inh.detail_text(inh.entries_for_kind(saga, cov, "magus")[0], 1220)
+    )
     assert "House: Bonisagus" in text and "Year Born: 1195 (age 25)" in text
     assert "From the character sheet of Corvinus." in text
     assert "Quantity" not in text  # a listed person is always one
-    assert "Select an inhabitant" in _plain(inh.detail_text(None, 1220))
+    assert "Select an inhabitant" in strip_markup(inh.detail_text(None, 1220))
 
 
 def test_loyalty_left_text_shows_the_derived_totals():
     saga, cov = _saga()
     cov.loyalty.equipment = "Anything they need"  # +20
-    left = _plain(inh.loyalty_left_text(saga, cov))
+    left = strip_markup(inh.loyalty_left_text(saga, cov))
     # 1 magus, The Gift (no Virtues/Flaws on the fixture's Corvinus) -> -30.
     assert re.search(r"Base Loyalty Points:\s+-30", left)
     assert re.search(r"Total modifiers:\s+20\b", left)
@@ -472,7 +471,7 @@ def test_loyalty_right_text_shows_every_situational_modifier():
     cov.loyalty.actions_and_events = -2
     cov.loyalty.magical_influence = 3
     cov.reputations.append(ScoredTrait(name="Litigious", score=-2, known=True))
-    right = _plain(inh.loyalty_right_text(saga, cov))
+    right = strip_markup(inh.loyalty_right_text(saga, cov))
     assert "Situational Modifiers for:" in right
     assert "Anything they need  (+20)" in right
     assert "Lavish salary  (+20)" in right and "+ pension" in right

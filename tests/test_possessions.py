@@ -1,7 +1,7 @@
-import re
 from dataclasses import asdict
 
 import pytest
+from support import strip_markup
 from textual.content import Content
 
 from ars_magica_manager import possessions as pos
@@ -38,10 +38,6 @@ def _saga() -> tuple[Saga, Covenant]:
         ],
     )
     return saga, covenant
-
-
-def _plain(markup: str) -> str:
-    return re.sub(r"\[/?[a-z]*\]", "", markup)
 
 
 def _labels(saga: Saga, cov: Covenant, kind: str) -> list[str]:
@@ -199,7 +195,7 @@ def test_detail_text_shows_everything_for_a_sanctum_and_renders_emphasis():
         )
     )
     text = pos.detail_text(pos.entries_for_kind(saga, cov, "sanctum")[0])
-    plain = _plain(text)
+    plain = strip_markup(text)
     for expected in (
         "Name: Obsidian Crucible",
         "Owner: Corvinus",
@@ -236,9 +232,11 @@ def test_detail_text_omits_empty_optional_fields():
         Possession(id="r", kind="vis_store", name="Vim Vis", art="Vim", pawns=9),
         Possession(id="w", kind="armor", name="Mail", quantity=2, description="Rusty."),
     ]
-    bare = _plain(pos.detail_text(pos.entries_for_kind(saga, cov, "property")[0]))
+    bare = strip_markup(pos.detail_text(pos.entries_for_kind(saga, cov, "property")[0]))
     assert bare == "Name: Bare Plot"
-    source = _plain(pos.detail_text(pos.entries_for_kind(saga, cov, "vis_source")[0]))
+    source = strip_markup(
+        pos.detail_text(pos.entries_for_kind(saga, cov, "vis_source")[0])
+    )
     for expected in (
         "Art: Vim",
         "Pawns: 3",
@@ -249,11 +247,13 @@ def test_detail_text_omits_empty_optional_fields():
         "Cold.",
     ):
         assert expected in source, expected
-    store = _plain(pos.detail_text(pos.entries_for_kind(saga, cov, "vis_store")[0]))
+    store = strip_markup(
+        pos.detail_text(pos.entries_for_kind(saga, cov, "vis_store")[0])
+    )
     assert "Location" not in store and "Physical Form" not in store
-    armor = _plain(pos.detail_text(pos.entries_for_kind(saga, cov, "armor")[0]))
+    armor = strip_markup(pos.detail_text(pos.entries_for_kind(saga, cov, "armor")[0]))
     assert "Quantity: 2" in armor and "Rusty." in armor
-    assert "Select a possession" in _plain(pos.detail_text(None))
+    assert "Select a possession" in strip_markup(pos.detail_text(None))
 
 
 # -------------------------------------------------------------------- model
