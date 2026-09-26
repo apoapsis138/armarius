@@ -1,7 +1,7 @@
 import re
 from pathlib import Path
 
-from support import strip_markup
+from support import strip_markup, wait_until
 from textual.app import App
 from textual.widgets import (
     Button,
@@ -125,28 +125,10 @@ def _find_node(tree, data):
     return walk(tree.root)
 
 
-async def _wait_until(
-    pilot, condition, timeout: float = 2.0, interval: float = 0.02
-) -> None:
-    """Poll `condition()` until it's truthy or `timeout` seconds pass.
-
-    A bare `pilot.pause()` (wait-for-idle) has occasionally not been
-    enough for a heavy sheet view to finish mounting under load (see
-    HANDOFF.md's Lessons Learned) -- a single fixed extra delay
-    (`pilot.pause(0.05)`) helped but wasn't fully reliable either. Polling
-    for the actual condition, rather than guessing a delay, is the more
-    robust fix: fast when mounting is quick, still correct under load.
-    """
-    elapsed = 0.0
-    while not condition() and elapsed < timeout:
-        await pilot.pause(interval)
-        elapsed += interval
-
-
 async def _wait_until_active(pilot, app, section_id: str) -> None:
     """Wait for `section_id` to be what a/A/e dispatch to, and fail clearly
     if it never becomes so."""
-    await _wait_until(pilot, lambda: app.screen._active_section() == section_id)
+    await wait_until(pilot, lambda: app.screen._active_section() == section_id)
     assert app.screen._active_section() == section_id, (
         f"{section_id!r} never became the active section "
         f"(got {app.screen._active_section()!r})"
@@ -175,7 +157,7 @@ async def _select(pilot, app, data) -> None:
     await pilot.pause()
     attr = _SHEET_VIEW_ATTR.get(data[0])
     if attr is not None:
-        await _wait_until(pilot, lambda: getattr(app.screen, attr) is not None)
+        await wait_until(pilot, lambda: getattr(app.screen, attr) is not None)
 
 
 async def _open_workspace(pilot) -> None:
@@ -274,7 +256,7 @@ async def _open_section(pilot, app, section_id: str) -> None:
     assert view is not None, "no character sheet is currently shown"
     # Let the view's own initial focus land first, or it can arrive after
     # ours and steal it back (see _open_lab_section).
-    await _wait_until(pilot, lambda: view.initial_tab_seen)
+    await wait_until(pilot, lambda: view.initial_tab_seen)
     await pilot.pause()
     if section_id not in ("section-char-info", "section-char-characteristics"):
         tab_id = _SECTION_TAB[section_id]
@@ -313,7 +295,7 @@ async def _open_lab_section(pilot, app, section_id: str) -> None:
     # Let the view's own initial focus (set when the lab is first shown, and
     # applied a message-loop cycle later) land before we move focus
     # ourselves -- otherwise it can arrive afterwards and steal it back.
-    await _wait_until(pilot, lambda: view.initial_tab_seen)
+    await wait_until(pilot, lambda: view.initial_tab_seen)
     await pilot.pause()
     if section_id in ("section-lab-identity", "section-lab-characteristics"):
         collapsible = view.query_one(f"#{section_id}", Collapsible)
@@ -330,7 +312,7 @@ async def _open_lab_section(pilot, app, section_id: str) -> None:
     else:
         # A flat tab: wait for the tab switch to clear focus so dispatch
         # resolves to the tab itself.
-        await _wait_until(pilot, lambda: app.screen._active_section() == section_id)
+        await wait_until(pilot, lambda: app.screen._active_section() == section_id)
 
 
 async def test_picker_shows_placeholder_with_no_sagas():
@@ -886,7 +868,7 @@ async def _open_familiar_section(pilot, app, section_id: str) -> None:
     _open_section()."""
     view = app.screen._familiar_sheet_view
     assert view is not None, "no familiar sheet is currently shown"
-    await _wait_until(pilot, lambda: view.initial_tab_seen)
+    await wait_until(pilot, lambda: view.initial_tab_seen)
     await pilot.pause()
     tab_id = _FAM_SECTION_TAB[section_id]
     view.query_one(TabbedContent).active = tab_id
@@ -2362,7 +2344,7 @@ async def test_add_and_remove_spell_known():
         await _open_section(pilot, app, "section-known-spells")
 
         await pilot.press("a")
-        await _wait_until(pilot, lambda: isinstance(app.screen, SpellChooserScreen))
+        await wait_until(pilot, lambda: isinstance(app.screen, SpellChooserScreen))
         await pilot.pause()
         # The saga's own spell and the catalog's are both offered.
         assert "spellpick-spell1" in app.screen._by_item_id
@@ -2381,7 +2363,7 @@ async def test_add_and_remove_spell_known():
         assert "Pilum of Fire" in labels and "CrIg" in labels
         # A spell already known isn't offered again.
         await pilot.press("a")
-        await _wait_until(pilot, lambda: isinstance(app.screen, SpellChooserScreen))
+        await wait_until(pilot, lambda: isinstance(app.screen, SpellChooserScreen))
         await pilot.pause()
         assert "spellpick-spell1" not in app.screen._by_item_id
         await pilot.press("escape")
@@ -4229,13 +4211,13 @@ async def _open_cov_section(pilot, app, section_id: str) -> None:
     view's own initial focus settle (see _open_lab_section)."""
     view = app.screen._covenant_sheet_view
     assert view is not None, "no covenant sheet is currently shown"
-    await _wait_until(pilot, lambda: view.initial_tab_seen)
+    await wait_until(pilot, lambda: view.initial_tab_seen)
     await pilot.pause()
     view.query_one(TabbedContent).active = "tab-cov-attributes"
     await pilot.pause()
     view.query_one(f"#{section_id}", Collapsible).query_one("CollapsibleTitle").focus()
     await pilot.pause()
-    await _wait_until(pilot, lambda: app.screen._active_section() == section_id)
+    await wait_until(pilot, lambda: app.screen._active_section() == section_id)
 
 
 async def _choose_in_list(pilot, app, list_id: str, item_id: str) -> None:
@@ -4277,7 +4259,7 @@ def _rep_labels(view) -> list[str]:
 
 async def _select_rep_row(pilot, app, list_index: int) -> None:
     view = app.screen._covenant_sheet_view
-    await _wait_until(pilot, lambda: view.initial_tab_seen)
+    await wait_until(pilot, lambda: view.initial_tab_seen)
     await pilot.pause()
     reputations = view.query_one("#cov-reputations-list", SelectableList)
     reputations.focus()
@@ -4321,7 +4303,7 @@ async def _add_boon_hook_via_picker(
     assert isinstance(app.screen, WorkspaceScreen)
     # The dialog's result callback (which stores and saves the entry) can land
     # a beat after the screen switches back, so wait for the real state change.
-    await _wait_until(pilot, lambda: len(covenant.boons_hooks) > before)
+    await wait_until(pilot, lambda: len(covenant.boons_hooks) > before)
     await pilot.pause()
 
 
@@ -4412,7 +4394,7 @@ async def test_covenant_reputations_add_edit_remove_within_range():
         await pilot.press("a")
         await pilot.pause()
         await submit("Well liked", "-3")
-        await _wait_until(pilot, lambda: len(_rep_labels(view)) == 2)
+        await wait_until(pilot, lambda: len(_rep_labels(view)) == 2)
         assert _rep_labels(view) == ["Feared by nobles: +3", "Well liked: -3"]
 
         # Edit the first one (pre-filled), then remove the second.
@@ -4425,7 +4407,7 @@ async def test_covenant_reputations_add_edit_remove_within_range():
             "Feared by nobles"
         )
         await submit("Feared by nobles", "1")
-        await _wait_until(pilot, lambda: "Feared by nobles: +1" in _rep_labels(view))
+        await wait_until(pilot, lambda: "Feared by nobles: +1" in _rep_labels(view))
 
         # Nothing is selected, so 'A' asks which one, then confirms.
         await pilot.press("A")
@@ -4435,7 +4417,7 @@ async def test_covenant_reputations_add_edit_remove_within_range():
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
-        await _wait_until(pilot, lambda: len(_rep_labels(view)) == 1)
+        await wait_until(pilot, lambda: len(_rep_labels(view)) == 1)
         assert _rep_labels(view) == ["Feared by nobles: +1"]
 
     reputations = storage.load_saga("test_saga").covenants[0].reputations
@@ -4638,7 +4620,7 @@ async def test_switching_back_to_the_attributes_tab_focuses_its_first_section():
     async with app.run_test(size=(140, 50)) as pilot:
         await _select_covenant(pilot, app)
         view = app.screen._covenant_sheet_view
-        await _wait_until(pilot, lambda: view.initial_tab_seen)
+        await wait_until(pilot, lambda: view.initial_tab_seen)
         await pilot.pause()
 
         tabbed = view.query_one(TabbedContent)
@@ -4647,7 +4629,7 @@ async def test_switching_back_to_the_attributes_tab_focuses_its_first_section():
         assert app.screen._active_section() == "section-cov-info"  # fallback
 
         tabbed.active = "tab-cov-attributes"
-        await _wait_until(
+        await wait_until(
             pilot, lambda: app.screen._active_section() == "section-cov-description"
         )
         assert app.screen._active_section() == "section-cov-description"
@@ -4900,7 +4882,7 @@ async def test_boon_list_works_from_the_keyboard_and_keeps_add_remove_dispatch()
     async with app.run_test(size=(140, 50)) as pilot:
         await _select_covenant(pilot, app)
         view = app.screen._covenant_sheet_view
-        await _wait_until(pilot, lambda: view.initial_tab_seen)
+        await wait_until(pilot, lambda: view.initial_tab_seen)
         await pilot.pause()
 
         boon_list = view.query_one("#cov-boons-list", OptionList)
@@ -4953,7 +4935,7 @@ async def _select_bh_row(pilot, app, kind: str, list_index: int) -> None:
     """Select a row of the Boons/Hooks list the way a user does: focus the
     list and highlight the row."""
     view = app.screen._covenant_sheet_view
-    await _wait_until(pilot, lambda: view.initial_tab_seen)
+    await wait_until(pilot, lambda: view.initial_tab_seen)
     await pilot.pause()
     view.query_one("#section-cov-" + kind.lower() + "s")  # exists
     option_list = view.query_one(f"#cov-{kind.lower()}s-list", OptionList)
@@ -5271,7 +5253,7 @@ async def test_e_edits_the_selected_reputation_directly():
         app.screen.query_one("#input-trait-name", Input).value = "Well liked"
         app.screen.query_one("#input-trait-score", Input).value = "3"
         app.screen.query_one("#btn-save", Button).press()
-        await _wait_until(pilot, lambda: "Well liked: +3" in _rep_labels(view))
+        await wait_until(pilot, lambda: "Well liked: +3" in _rep_labels(view))
 
     reputations = storage.load_saga("test_saga").covenants[0].reputations
     assert [(r.name, r.score) for r in reputations] == [
@@ -5303,7 +5285,7 @@ async def test_A_deletes_the_selected_reputation_only_after_confirmation():
         await pilot.press("A")
         await pilot.pause()
         await pilot.press("y")
-        await _wait_until(pilot, lambda: len(_rep_labels(view)) == 2)
+        await wait_until(pilot, lambda: len(_rep_labels(view)) == 2)
         assert _rep_labels(view) == ["Feared: +2", "Known: +0"]
         assert view.selected_reputation() is None  # selection reset
 
@@ -5318,7 +5300,7 @@ async def test_reputation_keys_work_from_the_list_and_fall_back_to_a_picker():
     async with app.run_test(size=(140, 50)) as pilot:
         await _select_covenant(pilot, app)
         view = app.screen._covenant_sheet_view
-        await _wait_until(pilot, lambda: view.initial_tab_seen)
+        await wait_until(pilot, lambda: view.initial_tab_seen)
         await pilot.pause()
 
         # List focused, nothing chosen: the section still owns the keys.
@@ -5633,7 +5615,7 @@ def _saga_with_people() -> Saga:
 
 async def _show_inhabitants_tab(pilot, app) -> None:
     view = app.screen._covenant_sheet_view
-    await _wait_until(pilot, lambda: view.initial_tab_seen)
+    await wait_until(pilot, lambda: view.initial_tab_seen)
     await pilot.pause()
     view.query_one(TabbedContent).active = "tab-cov-inhabitants"
     await pilot.pause()
@@ -5645,7 +5627,7 @@ async def _open_inh_section(pilot, app, section_id: str) -> None:
     view = app.screen._covenant_sheet_view
     view.query_one(f"#{section_id}", Collapsible).query_one("CollapsibleTitle").focus()
     await pilot.pause()
-    await _wait_until(pilot, lambda: app.screen._active_section() == section_id)
+    await wait_until(pilot, lambda: app.screen._active_section() == section_id)
 
 
 async def _select_inh_row(pilot, app, kind: str, row: int) -> None:
@@ -5676,7 +5658,7 @@ async def _save_dialog(pilot, app) -> None:
     dialog = app.screen
     dialog.query_one("#btn-save", Button).press()
     await pilot.pause()
-    await _wait_until(
+    await wait_until(
         pilot,
         lambda: (
             app.screen is not dialog
@@ -5793,7 +5775,7 @@ async def test_add_an_npc_magus_with_an_unknown_year():
         assert app.screen.query_one("#fld-year_born", Input).value == ""  # blank
         _fill(app, description="Lives in a *sealed* tower.")
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: len(_inh_labels(app, "magus")) == 2)
+        await wait_until(pilot, lambda: len(_inh_labels(app, "magus")) == 2)
 
         assert _inh_labels(app, "magus")[1] == (
             "Hidden Hermit       Criamon            Unknown  Blatant Gift"
@@ -5826,7 +5808,7 @@ async def test_editing_a_listed_magus_only_changes_covenant_side_fields():
         assert not app.screen.query("#fld-gift")
         _fill(app, description="Trusted **completely**.")
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         assert _inh_labels(app, "magus")[0].startswith("Corvinus            Bonisagus")
 
     [record] = _records("magus")
@@ -5859,7 +5841,7 @@ async def test_removing_a_listed_magus_keeps_them_in_the_covenant_but_stops_coun
         await pilot.press("A")
         await pilot.pause()
         await pilot.press("y")
-        await _wait_until(pilot, lambda: not _inh_labels(app, "magus"))
+        await wait_until(pilot, lambda: not _inh_labels(app, "magus"))
         assert _inh_title(app, "magus") == "Magi (0)"
         text = str(_cov_view(app).query_one("#inh-population-content", Static).render())
         assert re.search(r"Total Inhabitants:\s+1\b", text)  # only Alys now
@@ -5882,7 +5864,7 @@ async def test_removing_a_listed_companion_with_no_record_creates_one():
         await pilot.press("A")
         await pilot.pause()
         await pilot.press("y")
-        await _wait_until(pilot, lambda: not _inh_labels(app, "companion"))
+        await wait_until(pilot, lambda: not _inh_labels(app, "companion"))
         assert _inh_title(app, "companion") == "Companions (0)"
         # The magus is untouched.
         assert len(_inh_labels(app, "magus")) == 1
@@ -5913,7 +5895,7 @@ async def test_restoring_a_departed_magus_makes_them_count_again():
         await pilot.pause()
         assert isinstance(app.screen, RemovalPickerScreen)  # only one entry
         await pilot.press("enter")
-        await _wait_until(pilot, lambda: len(_inh_labels(app, "magus")) == 1)
+        await wait_until(pilot, lambda: len(_inh_labels(app, "magus")) == 1)
         assert _inh_labels(app, "magus")[0].startswith("Corvinus")
 
     [record] = _records("magus")
@@ -5960,7 +5942,7 @@ async def test_specialist_from_an_unassigned_grog_prefills_and_marks_it_assigned
         assert app.screen.query_one("#fld-year_born", Input).value == "1193"
         _fill(app, responsibility="Teaches Latin", role="Teacher")
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: len(_inh_labels(app, "specialist")) == 1)
+        await wait_until(pilot, lambda: len(_inh_labels(app, "specialist")) == 1)
         assert _inh_labels(app, "specialist") == [
             "Old Thomae          Teaches Latin     Teacher             1193"
         ]
@@ -5996,7 +5978,7 @@ async def test_a_brand_new_grog_type_person_needs_a_name_but_year_born_may_stay_
         assert "Name is required" in str(app.screen.query_one("#fields-error").render())
         _fill(app, name="Visiting Steward", role="Steward")
         await _save_dialog(pilot, app)  # no year: fine
-        await _wait_until(pilot, lambda: len(_inh_labels(app, "specialist")) == 1)
+        await wait_until(pilot, lambda: len(_inh_labels(app, "specialist")) == 1)
         assert _inh_labels(app, "specialist") == [
             "Visiting Steward                      Steward          Unknown"
         ]
@@ -6020,7 +6002,7 @@ async def test_a_grog_without_a_year_born_is_assigned_with_it_unknown():
         assert app.screen.query_one("#fld-name", Input).value == "Dieter"
         assert app.screen.query_one("#fld-year_born", Input).value == ""
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: len(_inh_labels(app, "turb")) == 1)
+        await wait_until(pilot, lambda: len(_inh_labels(app, "turb")) == 1)
         assert _inh_labels(app, "turb")[0].endswith("Unknown")
 
 
@@ -6052,7 +6034,7 @@ async def test_other_covenfolk_requires_a_covenant_role_and_suppresses_it_when_r
         assert options == ["Laborer", "Servant", "Teamster", "Dependent"]
         _fill(app, role="Dependent", year_born=1180)
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: len(_inh_labels(app, "inhabitant")) == 1)
+        await wait_until(pilot, lambda: len(_inh_labels(app, "inhabitant")) == 1)
         assert _inh_labels(app, "inhabitant") == [
             "Old Marta           Dependent         1        1180"
         ]
@@ -6126,7 +6108,7 @@ async def test_craftsperson_links_one_of_the_grogs_abilities_and_stores_craft_fi
             linked_ability="Brawl",
         )
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: len(_inh_labels(app, "craftsperson")) == 1)
+        await wait_until(pilot, lambda: len(_inh_labels(app, "craftsperson")) == 1)
         # Tied to the sheet's Brawl (Level 4): that wins over the typed 7.
         assert _inh_labels(app, "craftsperson") == [
             "Old Thomae          Blacksmithing           4    1        1193"
@@ -6198,7 +6180,7 @@ async def test_craftsperson_score_is_typed_when_there_is_no_sheet_ability():
         await pilot.pause()
         _fill(app, name="Travelling Smith", responsibility="Smith", skill_value=6)
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: len(_inh_labels(app, "craftsperson")) == 1)
+        await wait_until(pilot, lambda: len(_inh_labels(app, "craftsperson")) == 1)
         assert _inh_labels(app, "craftsperson")[0] == (
             "Travelling Smith    Smith                   6    1     Unknown"
         )
@@ -6228,7 +6210,7 @@ async def test_quantity_drives_the_headcounts_and_must_be_at_least_one():
         assert "at least 1" in str(app.screen.query_one("#fields-error").render())
         _fill(app, quantity=3)
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: _inh_title(app, "turb") == "Turb (3)")
+        await wait_until(pilot, lambda: _inh_title(app, "turb") == "Turb (3)")
 
         text = str(_cov_view(app).query_one("#inh-population-content", Static).render())
         assert re.search(r"Total Inhabitants:\s+5\b", text)  # magus + companion + 3
@@ -6247,7 +6229,7 @@ async def test_horses_and_livestock_take_a_blank_year_and_a_quantity():
             assert isinstance(app.screen, FieldsDialog)  # no picker for animals
             _fill(app, name=name, quantity=4)
             await _save_dialog(pilot, app)
-            await _wait_until(pilot, lambda kind=kind: len(_inh_labels(app, kind)) == 1)
+            await wait_until(pilot, lambda kind=kind: len(_inh_labels(app, kind)) == 1)
             assert _inh_labels(app, kind) == [f"{name:<20}    4     Unknown"]
         assert _inh_title(app, "horse") == "Horses (4)"
 
@@ -6284,7 +6266,7 @@ async def test_e_and_A_act_on_the_selected_inhabitant_and_delete_confirms():
         await pilot.press("A")
         await pilot.pause()
         await pilot.press("y")
-        await _wait_until(pilot, lambda: len(_inh_labels(app, "turb")) == 1)
+        await wait_until(pilot, lambda: len(_inh_labels(app, "turb")) == 1)
         assert _inh_labels(app, "turb")[0].startswith("First")
 
         # Nothing chosen any more: 'A' falls back to asking which one.
@@ -6309,7 +6291,7 @@ async def test_deleting_an_assigned_grog_returns_it_to_the_available_list():
         await pilot.press("A")
         await pilot.pause()
         await pilot.press("y")
-        await _wait_until(pilot, lambda: not _inh_labels(app, "specialist"))
+        await wait_until(pilot, lambda: not _inh_labels(app, "specialist"))
         cov = app.screen.selected_covenant
         assert "Old Thomae" in [
             g.name for g in inh.available_grogs(app.screen.saga, cov)
@@ -6363,7 +6345,7 @@ async def test_loyalty_governance_is_typed_unless_a_governance_boon_provides_it(
             familiarity=1,
         )
         await _save_dialog(pilot, app)
-        await _wait_until(
+        await wait_until(
             pilot,
             lambda: (
                 "Guild of Mercers"
@@ -6428,7 +6410,7 @@ async def test_population_and_miscellaneous_fields_are_editable_and_total_is_cal
         assert not app.screen.query("#fld-laborers")
         _fill(app, other_people=6)
         await _save_dialog(pilot, app)
-        await _wait_until(
+        await wait_until(
             pilot,
             lambda: re.search(
                 r"Total Inhabitants:\s+11\b",
@@ -6447,7 +6429,7 @@ async def test_population_and_miscellaneous_fields_are_editable_and_total_is_cal
         await pilot.pause()
         _fill(app, aging_magi=1, magic_laborers=2, magic_turbula=5)
         await _save_dialog(pilot, app)
-        await _wait_until(
+        await wait_until(
             pilot,
             lambda: "5" in str(view.query_one("#inh-misc-right", Static).render()),
         )
@@ -6520,7 +6502,7 @@ async def test_inhabitant_dialogs_fit_a_small_terminal_and_hug_content_on_a_tall
 
 async def _show_possessions_tab(pilot, app) -> None:
     view = app.screen._covenant_sheet_view
-    await _wait_until(pilot, lambda: view.initial_tab_seen)
+    await wait_until(pilot, lambda: view.initial_tab_seen)
     await pilot.pause()
     view.query_one(TabbedContent).active = "tab-cov-possessions"
     await pilot.pause()
@@ -6534,7 +6516,7 @@ async def _open_pos_section(pilot, app, kind: str) -> None:
         "CollapsibleTitle"
     ).focus()
     await pilot.pause()
-    await _wait_until(
+    await wait_until(
         pilot, lambda: app.screen._active_section() == f"section-pos-{kind}"
     )
 
@@ -6572,7 +6554,7 @@ async def _add_possession(pilot, app, kind: str, **values) -> None:
     assert isinstance(app.screen, FieldsDialog)
     _fill(app, **values)
     await _save_dialog(pilot, app)
-    await _wait_until(pilot, lambda: len(_pos_labels(app, kind)) > before)
+    await wait_until(pilot, lambda: len(_pos_labels(app, kind)) > before)
 
 
 async def test_possessions_tab_has_its_seven_sections_and_lists_the_labs_as_sanctums():
@@ -6632,7 +6614,7 @@ async def test_property_needs_only_a_name_and_supports_edit_and_delete():
         assert "Name is required" in str(app.screen.query_one("#fields-error").render())
         _fill(app, name="Bare Plot")
         await _save_dialog(pilot, app)  # every other field is optional
-        await _wait_until(pilot, lambda: len(_pos_labels(app, "property")) == 1)
+        await wait_until(pilot, lambda: len(_pos_labels(app, "property")) == 1)
         assert _pos_labels(app, "property") == ["Bare Plot"]
 
         # Edit it: all the fields, then the row and panel show them.
@@ -6648,7 +6630,7 @@ async def test_property_needs_only_a_name_and_supports_edit_and_delete():
             description="Rich **black** soil.",
         )
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: "Location" in _pos_labels(app, "property")[0])
+        await wait_until(pilot, lambda: "Location" in _pos_labels(app, "property")[0])
         assert _pos_labels(app, "property") == [
             "Bare Plot           By the river      40 acres      Two tenant families"
         ]
@@ -6661,7 +6643,7 @@ async def test_property_needs_only_a_name_and_supports_edit_and_delete():
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
-        await _wait_until(pilot, lambda: not _pos_labels(app, "property"))
+        await wait_until(pilot, lambda: not _pos_labels(app, "property"))
 
     assert _pos_records("property") == []
 
@@ -6734,7 +6716,7 @@ async def test_manual_sanctums_have_every_field_and_can_be_deleted():
             build_points=15,
         )
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: len(_pos_labels(app, "sanctum")) == 2)
+        await wait_until(pilot, lambda: len(_pos_labels(app, "sanctum")) == 2)
         assert _pos_labels(app, "sanctum")[1] == (
             "Hidden Study        Corvinus              2       5"
         )
@@ -6745,7 +6727,7 @@ async def test_manual_sanctums_have_every_field_and_can_be_deleted():
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
-        await _wait_until(pilot, lambda: len(_pos_labels(app, "sanctum")) == 1)
+        await wait_until(pilot, lambda: len(_pos_labels(app, "sanctum")) == 1)
 
     assert _pos_records("sanctum") == []
 
@@ -6774,7 +6756,7 @@ async def test_weapons_armor_and_items_need_a_name_and_a_quantity_defaulting_to_
             assert "at least 1" in str(app.screen.query_one("#fields-error").render())
             _fill(app, quantity=3, description="Well **kept**.")
             await _save_dialog(pilot, app)
-            await _wait_until(pilot, lambda kind=kind: len(_pos_labels(app, kind)) == 1)
+            await wait_until(pilot, lambda kind=kind: len(_pos_labels(app, kind)) == 1)
             # Weapons and armor carry a Type and Quality (their points); items don't.
             expected = {
                 # Weapons get four extra trailing combat-figure columns
@@ -6827,7 +6809,7 @@ async def test_weapon_combat_figures_are_typed_in_and_shown_on_the_row_and_panel
             weapon_damage=7,
         )
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: len(_pos_labels(app, "weapon")) == 1)
+        await wait_until(pilot, lambda: len(_pos_labels(app, "weapon")) == 1)
 
         assert _pos_labels(app, "weapon")[0].endswith("    2    5    3    7")
 
@@ -6874,7 +6856,7 @@ async def test_siege_engines_only_come_expensive_and_points_follow_the_table():
         )
         _fill(app, gear_quality="Expensive")
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: len(_pos_labels(app, "weapon")) == 1)
+        await wait_until(pilot, lambda: len(_pos_labels(app, "weapon")) == 1)
         cov = app.screen.selected_covenant
         assert pos.gear_points(app.screen.saga, cov) == 16
 
@@ -6909,7 +6891,7 @@ async def test_vis_source_requires_name_art_season_and_pawns():
             description="Only flows *after* midwinter.",
         )
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: len(_pos_labels(app, "vis_source")) == 1)
+        await wait_until(pilot, lambda: len(_pos_labels(app, "vis_source")) == 1)
         assert _pos_labels(app, "vis_source") == [
             "Whispering Well     Vim            3  Winter"
         ]
@@ -6966,7 +6948,7 @@ async def test_raw_vis_stores_take_name_art_pawns_and_optional_location_and_form
         assert "Name is required" in str(app.screen.query_one("#fields-error").render())
         _fill(app, name="Vim Vis", art="Vim", pawns=9)  # location/form left blank
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: len(_pos_labels(app, "vis_store")) == 1)
+        await wait_until(pilot, lambda: len(_pos_labels(app, "vis_store")) == 1)
         assert _pos_labels(app, "vis_store") == ["Vim Vis             Vim            9"]
 
         await _select_pos_row(pilot, app, "vis_store", 0)
@@ -6975,7 +6957,7 @@ async def test_raw_vis_stores_take_name_art_pawns_and_optional_location_and_form
         _fill(app, location="The vault", physical_form="Lumps of amber")
         await _save_dialog(pilot, app)
         await _select_pos_row(pilot, app, "vis_store", 0)
-        await _wait_until(pilot, lambda: "The vault" in _pos_panel(app))
+        await wait_until(pilot, lambda: "The vault" in _pos_panel(app))
         panel = _pos_panel(app)
         assert (
             "Location: The vault" in panel and "Physical Form: Lumps of amber" in panel
@@ -7013,7 +6995,7 @@ async def test_e_and_A_act_on_the_chosen_possession_with_a_picker_fallback():
         await pilot.press("A")
         await pilot.pause()
         await pilot.press("y")
-        await _wait_until(pilot, lambda: len(_pos_labels(app, "item")) == 1)
+        await wait_until(pilot, lambda: len(_pos_labels(app, "item")) == 1)
 
         # Nothing chosen any more: 'A' falls back to asking which one.
         await pilot.press("A")
@@ -7103,7 +7085,7 @@ def _saga_for_economics() -> Saga:
 
 async def _show_economics_tab(pilot, app) -> None:
     view = app.screen._covenant_sheet_view
-    await _wait_until(pilot, lambda: view.initial_tab_seen)
+    await wait_until(pilot, lambda: view.initial_tab_seen)
     await pilot.pause()
     view.query_one(TabbedContent).active = "tab-cov-economics"
     await pilot.pause()
@@ -7117,7 +7099,7 @@ async def _open_eco_section(pilot, app, which: str) -> None:
         "CollapsibleTitle"
     ).focus()
     await pilot.pause()
-    await _wait_until(
+    await wait_until(
         pilot, lambda: app.screen._active_section() == f"section-eco-{which}"
     )
 
@@ -7223,7 +7205,7 @@ async def test_wealth_is_typed_with_e():
         assert app.screen.query_one("#fld-wealth", Input).value == "0"
         _fill(app, wealth=25)
         await _save_dialog(pilot, app)
-        await _wait_until(
+        await wait_until(
             pilot, lambda: re.search(r"Wealth:\s+25\b", _eco_wealth(app)) is not None
         )
 
@@ -7238,7 +7220,7 @@ async def _add_income(pilot, app, **values) -> None:
     assert isinstance(app.screen, FieldsDialog)
     _fill(app, **values)
     await _save_dialog(pilot, app)
-    await _wait_until(pilot, lambda: len(_eco_labels(app, "income")) > before)
+    await wait_until(pilot, lambda: len(_eco_labels(app, "income")) > before)
 
 
 async def test_a_new_income_source_takes_its_income_from_its_type_unless_typed_over():
@@ -7265,7 +7247,7 @@ async def test_a_new_income_source_takes_its_income_from_its_type_unless_typed_o
         assert "Name is required" in str(app.screen.query_one("#fields-error").render())
         _fill(app, name="Old Quarry", type="Legendary")
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: len(_eco_labels(app, "income")) == 2)
+        await wait_until(pilot, lambda: len(_eco_labels(app, "income")) == 2)
 
         await _add_income(pilot, app, name="Toll", type="Lesser", income=55)
         await _add_income(pilot, app, name="Idle Land", type="None")
@@ -7330,7 +7312,7 @@ async def test_e_and_A_act_on_the_selected_income_source_and_delete_confirms():
         assert app.screen.query_one("#fld-income", Input).value == ""
         _fill(app, type="Greater", income=260)
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: "260" in _eco_labels(app, "income")[1])
+        await wait_until(pilot, lambda: "260" in _eco_labels(app, "income")[1])
         assert "Current Income: 260 (typed; Greater is usually 250)" in _eco_panel(app)
 
         await _select_eco_row(pilot, app, "income", 1)
@@ -7346,7 +7328,7 @@ async def test_e_and_A_act_on_the_selected_income_source_and_delete_confirms():
         await pilot.press("A")
         await pilot.pause()
         await pilot.press("y")
-        await _wait_until(pilot, lambda: len(_eco_labels(app, "income")) == 1)
+        await wait_until(pilot, lambda: len(_eco_labels(app, "income")) == 1)
         assert re.search(r"Total Income:\s+100\b", _eco_wealth(app))
 
         # Nothing chosen any more: 'A' and 'e' fall back to asking which one.
@@ -7399,9 +7381,9 @@ async def test_improve_updates_multiplier_and_projected_income_live_then_confirm
         app.screen.query_one("#btn-commit", Button).press()
         await pilot.pause()
         await pilot.press("y")
-        await _wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
-        await _wait_until(
+        await wait_until(
             pilot, lambda: "experienced Boom" in _eco_labels(app, "income")[0]
         )
         label = _eco_labels(app, "income")[0]
@@ -7437,7 +7419,7 @@ async def test_improve_with_status_quo_records_the_no_change_note():
             app.screen.query_one("#confirm-message", Static).render()
         )
         await pilot.press("y")
-        await _wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
     source = _saved_economics().income_sources[0]
     assert source.income == 100
@@ -7482,11 +7464,11 @@ async def test_expenditure_rows_take_notes_and_the_typed_ones_take_amounts():
         assert not app.screen.query("#fld-tithes")
         _fill(app, notes="Roof of the north tower")
         await _save_dialog(pilot, app)
-        await _wait_until(
+        await wait_until(
             pilot,
             lambda: "Roof of the north tower" in _eco_labels(app, "expenditure")[0],
         )
-        await _wait_until(pilot, lambda: "Roof of the north tower" in _eco_panel(app))
+        await wait_until(pilot, lambda: "Roof of the north tower" in _eco_panel(app))
         assert "Roof of the north tower" in _eco_panel(app)  # panel refreshed too
 
         # A typed row: an amount, which feeds the totals.
@@ -7496,7 +7478,7 @@ async def test_expenditure_rows_take_notes_and_the_typed_ones_take_amounts():
         assert app.screen.query_one("#fld-tithes", Input).value == "0"
         _fill(app, tithes=4, notes="Church")
         await _save_dialog(pilot, app)
-        await _wait_until(
+        await wait_until(
             pilot, lambda: _eco_labels(app, "expenditure")[7].startswith("Tithes 4")
         )
         assert re.search(r"Before Cost Savings\):\s+25\b", _eco_wealth(app))  # 21 + 4
@@ -7507,7 +7489,7 @@ async def test_expenditure_rows_take_notes_and_the_typed_ones_take_amounts():
         await pilot.pause()
         _fill(app, notes="")
         await _save_dialog(pilot, app)
-        await _wait_until(
+        await wait_until(
             pilot, lambda: "Roof" not in _eco_labels(app, "expenditure")[0]
         )
 
@@ -7550,7 +7532,7 @@ async def test_cost_savings_rows_are_calculated_except_magic_and_emergency_savin
         await pilot.pause()
         _fill(app, magic_savings=6, notes="A self-sweeping broom")
         await _save_dialog(pilot, app)
-        await _wait_until(
+        await wait_until(
             pilot, lambda: _eco_labels(app, "savings")[2].startswith("Magic 0 6")
         )
 
@@ -7559,7 +7541,7 @@ async def test_cost_savings_rows_are_calculated_except_magic_and_emergency_savin
         await pilot.pause()
         _fill(app, emergency_savings=4)
         await _save_dialog(pilot, app)
-        await _wait_until(
+        await wait_until(
             pilot,
             lambda: _eco_labels(app, "savings")[3].startswith("Emergency Savings 0 4"),
         )
@@ -7589,13 +7571,13 @@ async def test_economics_follows_changes_made_on_other_tabs_and_keeps_the_chosen
         await pilot.pause()
         _fill(app, name="More Guards", quantity=4)
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: len(_inh_labels(app, "turb")) == 2)
+        await wait_until(pilot, lambda: len(_inh_labels(app, "turb")) == 2)
 
         await _show_economics_tab(pilot, app)
         assert re.search(r"Points of Inhabitants:\s+21\b", _eco_wealth(app))
         view = _cov_view(app)
         assert view.selected_economics("expenditure") == 3  # still chosen
-        await _wait_until(pilot, lambda: "Cost: 11" in _eco_panel(app))
+        await wait_until(pilot, lambda: "Cost: 11" in _eco_panel(app))
         assert "Name: Provisions" in _eco_panel(app)
 
         # The salary in Loyalty drives the Wages multiplier.
@@ -7716,7 +7698,7 @@ async def test_A_deletes_the_highlighted_saga_only_after_confirmation():
         await pilot.press("A")
         await pilot.pause()
         await pilot.press("y")
-        await _wait_until(pilot, lambda: len(_picker_labels(app)) == 2)
+        await wait_until(pilot, lambda: len(_picker_labels(app)) == 2)
         assert storage.list_sagas() == ["alpha", "gamma"]  # exactly that one
         assert [l.split("  ")[0] for l in _picker_labels(app)] == ["Alpha", "Gamma"]
         assert app.screen.query_one("#saga-list", ListView).index == 1  # stays put
@@ -7737,8 +7719,8 @@ async def test_the_delete_key_works_and_deleting_the_last_saga_shows_the_placeho
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
-        await _wait_until(pilot, lambda: storage.list_sagas() == [])
-        await _wait_until(
+        await wait_until(pilot, lambda: storage.list_sagas() == [])
+        await wait_until(
             pilot, lambda: any("No sagas yet" in l for l in _picker_labels(app))
         )
         assert len(_picker_labels(app)) == 1
@@ -7757,7 +7739,7 @@ async def test_a_saga_can_still_be_created_after_deleting_all_of_them():
         await pilot.press("A")
         await pilot.pause()
         await pilot.press("y")
-        await _wait_until(pilot, lambda: storage.list_sagas() == [])
+        await wait_until(pilot, lambda: storage.list_sagas() == [])
 
         await pilot.press("n")
         await pilot.pause()
@@ -7834,16 +7816,14 @@ def _saga_with_books() -> Saga:
 async def _show_library_tab(pilot, app) -> None:
     """Open the covenant's Library tab and focus its Books section."""
     view = app.screen._covenant_sheet_view
-    await _wait_until(pilot, lambda: view.initial_tab_seen)
+    await wait_until(pilot, lambda: view.initial_tab_seen)
     await pilot.pause()
     view.query_one(TabbedContent).active = "tab-cov-library"
     await pilot.pause()
     view.query_one("#section-lib-books", Collapsible).query_one(
         "CollapsibleTitle"
     ).focus()
-    await _wait_until(
-        pilot, lambda: app.screen._active_section() == "section-lib-books"
-    )
+    await wait_until(pilot, lambda: app.screen._active_section() == "section-lib-books")
 
 
 def _book_names(app) -> list[str]:
@@ -7913,7 +7893,7 @@ async def test_adding_a_book_for_a_laboratory_shows_it_in_the_lab_inventory():
         await pilot.pause()
         _fill(app, art="Aquam", level="10", quality="12", owner="laboratory:lab1")
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: len(_book_names(app)) > before)
+        await wait_until(pilot, lambda: len(_book_names(app)) > before)
         assert _book_names(app)[-1] == "Summa [Aquam]"
 
         await _select(pilot, app, ("laboratory", "lab1"))
@@ -7939,14 +7919,14 @@ async def _pick_spell(pilot, app, name: str) -> None:
     """In a book form, open the Spell picker, search for `name`, take the top
     match."""
     app.screen.query_one("#fld-spell_id", Button).press()
-    await _wait_until(pilot, lambda: isinstance(app.screen, SpellChooserScreen))
+    await wait_until(pilot, lambda: isinstance(app.screen, SpellChooserScreen))
     await pilot.pause()
     search = app.screen.query_one("#picker-search", Input)
     search.value = name
     await pilot.pause()
     search.focus()
     await pilot.press("enter")
-    await _wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+    await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
     await pilot.pause()
 
 
@@ -7987,7 +7967,7 @@ async def test_book_form_shows_the_fields_the_type_needs():
         await pilot.pause()
         assert "Cost: 5 Build Points" in live()
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: "Tablet" in _book_names(app))
+        await wait_until(pilot, lambda: "Tablet" in _book_names(app))
 
     saved = next(b for b in _saved_books().values() if b.name == "Tablet")
     # The Tractatus Subject picked earlier was hidden on save, so it's not kept.
@@ -8019,7 +7999,7 @@ async def test_a_templated_ability_needs_its_detail_and_round_trips():
         assert "needs its Ability detail" in error
         _fill(app, ability_detail="Rhine Tribunal")
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: "Rhine Lore" in _book_names(app))
+        await wait_until(pilot, lambda: "Rhine Lore" in _book_names(app))
 
         # Editing it again splits the name back into the family + detail.
         await _choose_book(pilot, app, _book_names(app).index("Rhine Lore"))
@@ -8052,7 +8032,7 @@ async def test_an_unowned_book_files_under_the_saga():
         await pilot.pause()
         _fill(app, owner="")
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: "Summa of Flame" not in _book_names(app))
+        await wait_until(pilot, lambda: "Summa of Flame" not in _book_names(app))
         assert str(_find_node(tree, ("book_group",)).label) == "Unassigned Books (2)"
 
         await _select(pilot, app, ("book_group",))
@@ -8067,7 +8047,7 @@ async def test_an_unowned_book_files_under_the_saga():
             assert app.screen.query_one("#fld-owner", Select).value == ""
             _fill(app, owner="covenant:cov1")
             await _save_dialog(pilot, app)
-            await _wait_until(pilot, lambda b=before: len(_book_names(app)) < b)
+            await wait_until(pilot, lambda b=before: len(_book_names(app)) < b)
         assert _find_node(tree, ("book_group",)) is None
 
     assert _saved_books()["b5"].owner_id == "cov1"
@@ -8097,7 +8077,7 @@ async def test_character_books_section_and_delete_confirms():
         await pilot.press("A")
         await pilot.pause()
         await pilot.press("y")
-        await _wait_until(pilot, lambda: _book_names(app) == [])
+        await wait_until(pilot, lambda: _book_names(app) == [])
         # Nothing left: 'A' says so instead of opening an empty picker.
         await pilot.press("A")
         await pilot.pause()
@@ -8141,13 +8121,13 @@ def _write_books_csv(folder) -> str:
 
 async def _pick_csv(pilot, app, path: str) -> None:
     """In the file picker, type the file's path and press Enter."""
-    await _wait_until(pilot, lambda: isinstance(app.screen, CsvFilePickerScreen))
+    await wait_until(pilot, lambda: isinstance(app.screen, CsvFilePickerScreen))
     await pilot.pause()  # let it mount first: mounting moves the focus
     box = app.screen.query_one("#picker-path", Input)
     box.value = path
     box.focus()
     await pilot.press("enter")
-    await _wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+    await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
 
 
 async def test_saga_import_offers_books_and_spells_and_files_books_unassigned(tmp_path):
@@ -8158,7 +8138,7 @@ async def test_saga_import_offers_books_and_spells_and_files_books_unassigned(tm
     async with app.run_test(size=(140, 50)) as pilot:
         await _open_workspace(pilot)
         await pilot.press("I")
-        await _wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
+        await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
         options = app.screen.query_one("#import-list", OptionList)
         kinds = [options.get_option_at_index(i) for i in range(options.option_count)]
         assert [(o.id, o.disabled) for o in kinds] == [
@@ -8169,7 +8149,7 @@ async def test_saga_import_offers_books_and_spells_and_files_books_unassigned(tm
             ("spells", False),
         ]
         await pilot.press("enter")  # Books is the one highlighted
-        await _wait_until(pilot, lambda: isinstance(app.screen, CsvFilePickerScreen))
+        await wait_until(pilot, lambda: isinstance(app.screen, CsvFilePickerScreen))
         # The explorer starts in the folder the app runs in.
         assert app.screen.query_one("#picker-path", Input).value == str(Path.cwd())
 
@@ -8178,7 +8158,7 @@ async def test_saga_import_offers_books_and_spells_and_files_books_unassigned(tm
         assert message.startswith("Import 3 books from books.csv as unassigned books?")
         assert "Row 5 (Oddity): unknown type 'Scroll'." in message
         await pilot.press("y")
-        await _wait_until(pilot, lambda: len(app.screen.saga.books) == 5)
+        await wait_until(pilot, lambda: len(app.screen.saga.books) == 5)
         tree = app.screen.query_one("#nav-tree", Tree)
         assert str(_find_node(tree, ("book_group",)).label) == "Unassigned Books (3)"
 
@@ -8209,7 +8189,7 @@ async def test_library_import_puts_every_book_in_the_covenant(tmp_path):
         await pilot.press("I")
         await _pick_csv(pilot, app, csv_path)
         await pilot.press("y")
-        await _wait_until(pilot, lambda: len(_book_names(app)) == before + 3)
+        await wait_until(pilot, lambda: len(_book_names(app)) == before + 3)
         assert _book_names(app)[-3:] == ["On Flame", "Notes", "Pilum"]
         assert (
             _find_node(app.screen.query_one("#nav-tree", Tree), ("book_group",)) is None
@@ -8240,9 +8220,9 @@ async def test_file_picker_browses_folders_and_rejects_other_files(tmp_path):
     async with app.run_test(size=(80, 24)) as pilot:
         await _open_workspace(pilot)
         await pilot.press("I")
-        await _wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
+        await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
         await pilot.press("enter")
-        await _wait_until(pilot, lambda: isinstance(app.screen, CsvFilePickerScreen))
+        await wait_until(pilot, lambda: isinstance(app.screen, CsvFilePickerScreen))
         picker = app.screen
         for button in picker.query(Button):  # fits a small terminal
             assert button.region.height > 0 and button.region.bottom <= 24, button.id
@@ -8314,7 +8294,7 @@ async def test_space_marks_books_and_A_deletes_them_all_after_confirming():
         await pilot.press("A")
         await pilot.pause()
         await pilot.press("y")
-        await _wait_until(pilot, lambda: _book_names(app) == ["Pocket Tract"])
+        await wait_until(pilot, lambda: _book_names(app) == ["Pocket Tract"])
         assert not section.title.endswith("marked")  # the marks went with them
 
     assert set(_saved_books()) == {"b3", "b4", "b5"}
@@ -8338,15 +8318,13 @@ async def test_e_with_books_marked_changes_only_their_owner():
         assert isinstance(app.screen, FieldsDialog)
         _fill(app, owner="laboratory:lab1")
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         message = str(app.screen.query_one("#confirm-message", Static).render())
         assert message == (
             "Changing ownership of 2 books to Laboratory: Leandro's Sanctum. Continue?"
         )
         await pilot.press("y")
-        await _wait_until(
-            pilot, lambda: _saved_books()["b3"].owner_kind == "laboratory"
-        )
+        await wait_until(pilot, lambda: _saved_books()["b3"].owner_kind == "laboratory")
 
     saved = _saved_books()
     assert {(saved[i].owner_kind, saved[i].owner_id) for i in ("b1", "b3")} == {
@@ -8374,10 +8352,10 @@ async def _import_with_answers(pilot, app, csv_path: str, answers: list[str]) ->
     await _pick_csv(pilot, app, csv_path)
     await pilot.press("y")
     for answer in answers:
-        await _wait_until(pilot, lambda: isinstance(app.screen, DuplicateBookScreen))
+        await wait_until(pilot, lambda: isinstance(app.screen, DuplicateBookScreen))
         app.screen.query_one(f"#btn-{answer}", Button).press()
         await pilot.pause()
-    await _wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+    await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
 
 async def test_importing_duplicates_asks_about_each(tmp_path):
@@ -8394,11 +8372,11 @@ async def test_importing_duplicates_asks_about_each(tmp_path):
     async with app.run_test(size=(140, 50)) as pilot:
         await _open_workspace(pilot)
         await pilot.press("I")
-        await _wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
+        await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
         await pilot.press("enter")
         await _pick_csv(pilot, app, csv_path)
         await pilot.press("y")
-        await _wait_until(pilot, lambda: isinstance(app.screen, DuplicateBookScreen))
+        await wait_until(pilot, lambda: isinstance(app.screen, DuplicateBookScreen))
         message = str(app.screen.query_one("#duplicate-message", Static).render())
         assert "A book named On Flame is already in the saga" in message
         assert "2 more duplicate(s) after this one." in message
@@ -8406,8 +8384,8 @@ async def test_importing_duplicates_asks_about_each(tmp_path):
         app.screen.query_one("#btn-duplicate", Button).press()  # add On Flame
         await pilot.pause()
         app.screen.query_one("#btn-skip-all", Button).press()  # skip the rest
-        await _wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
-        await _wait_until(pilot, lambda: len(app.screen.saga.books) == 4)
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        await wait_until(pilot, lambda: len(app.screen.saga.books) == 4)
 
     names = [b.name for b in storage.load_saga("test_saga").books]
     assert names == ["On Flame", "Notes", "Pilum", "On Flame"]
@@ -8422,10 +8400,10 @@ async def test_duplicate_all_adds_every_duplicate_without_asking_again(tmp_path)
         await _select_covenant(pilot, app)
         await _show_library_tab(pilot, app)
         await _import_with_answers(pilot, app, csv_path, [])  # nothing to ask
-        await _wait_until(pilot, lambda: len(_book_names(app)) == 5)
+        await wait_until(pilot, lambda: len(_book_names(app)) == 5)
         # The same file again: all three are duplicates now.
         await _import_with_answers(pilot, app, csv_path, ["skip", "duplicate-all"])
-        await _wait_until(pilot, lambda: len(_book_names(app)) == 7)
+        await wait_until(pilot, lambda: len(_book_names(app)) == 7)
         assert _book_names(app)[-2:] == ["Notes", "Pilum"]
 
 
@@ -8454,7 +8432,7 @@ async def test_library_summary_is_read_only_and_the_list_reaches_the_panel():
         view.query_one("#section-lib-summary", Collapsible).query_one(
             "CollapsibleTitle"
         ).focus()
-        await _wait_until(
+        await wait_until(
             pilot, lambda: app.screen._active_section() == "section-lib-summary"
         )
         assert app.screen.check_action("edit", ()) is False
@@ -8466,7 +8444,7 @@ async def test_library_summary_is_read_only_and_the_list_reaches_the_panel():
         await pilot.press("A")
         await pilot.pause()
         await pilot.press("y")
-        await _wait_until(pilot, lambda: len(_book_names(app)) == 2)
+        await wait_until(pilot, lambda: len(_book_names(app)) == 2)
         right = str(view.query_one("#lib-summary-right", Static).render())
         assert "Total Books:     2" in right
 
@@ -8483,7 +8461,7 @@ async def test_the_subject_column_widens_with_the_terminal():
             await _select_covenant(pilot, app)
             await _show_library_tab(pilot, app)
             books = app.screen._book_view()
-            await _wait_until(pilot, lambda b=books, e=expected: b._subject_cols == e)
+            await wait_until(pilot, lambda b=books, e=expected: b._subject_cols == e)
             assert books._subject_cols == expected, width
             header = str(books.query_one(".books-header", Static).render())
             assert "Subject" in header and "Art/Ability/Spell" not in header
@@ -8528,7 +8506,7 @@ async def test_editing_emergency_savings_offers_to_draw_from_wealth():
         )
         assert "Deficit: 36    Wealth: 100" in message
         await pilot.press("y")
-        await _wait_until(pilot, lambda: _saved_economics().emergency_savings == 36)
+        await wait_until(pilot, lambda: _saved_economics().emergency_savings == 36)
         assert _saved_economics().wealth == 64
         rows = app.screen._covenant_sheet_view.query_one(
             "#eco-savings-list", SelectableList
@@ -8544,7 +8522,7 @@ async def test_declining_the_draw_opens_the_ordinary_form():
         await _select_covenant(pilot, app)
         await _edit_emergency_savings(pilot, app)
         await pilot.press("n")
-        await _wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         assert app.screen.query_one("#fld-emergency_savings", Input).value == "0"
         await pilot.press("escape")
         await pilot.pause()
@@ -8562,7 +8540,7 @@ async def test_a_short_draw_empties_wealth_and_the_covenant_is_broke():
         assert "Wealth only covers 10 of it" in message
         assert "26 stays uncovered" in message
         await pilot.press("y")
-        await _wait_until(pilot, lambda: _saved_economics().wealth == 0)
+        await wait_until(pilot, lambda: _saved_economics().wealth == 0)
         assert _saved_economics().emergency_savings == 10
         rows = app.screen._covenant_sheet_view.query_one(
             "#eco-savings-list", SelectableList
@@ -8594,7 +8572,7 @@ async def test_the_new_year_adds_each_covenants_surplus_to_its_wealth():
         # The dialog hugs its content rather than filling the screen.
         assert app.screen.query_one("#advance-dialog").region.height < 20
         app.screen.query_one("#btn-advance", Button).press()
-        await _wait_until(pilot, lambda: _saved_economics().wealth == 5 + surplus)
+        await wait_until(pilot, lambda: _saved_economics().wealth == 5 + surplus)
 
     loaded = storage.load_saga("test_saga")
     assert (loaded.current_season, loaded.current_year) == ("Spring", 1221)
@@ -8614,7 +8592,7 @@ async def test_other_seasons_leave_wealth_alone():
         await pilot.pause()
         assert not app.screen.query("#advance-year-note")
         app.screen.query_one("#btn-advance", Button).press()
-        await _wait_until(
+        await wait_until(
             pilot, lambda: storage.load_saga("test_saga").current_season == "Winter"
         )
     assert _saved_economics().wealth == 5
@@ -8623,7 +8601,7 @@ async def test_other_seasons_leave_wealth_alone():
 async def _advance_from_winter(pilot, app) -> None:
     """Press t and confirm the Advance Time dialog."""
     await pilot.press("t")
-    await _wait_until(pilot, lambda: isinstance(app.screen, AdvanceSeasonScreen))
+    await wait_until(pilot, lambda: isinstance(app.screen, AdvanceSeasonScreen))
     app.screen.query_one("#btn-advance", Button).press()
     await pilot.pause()
 
@@ -8651,7 +8629,7 @@ async def test_rolling_the_year_over_in_deficit_offers_to_resolve_it_first():
         # Yes is the safe answer here: it has the focus.
         assert app.screen.focused.id == "btn-yes"
         await pilot.press("y")
-        await _wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
     saga = storage.load_saga("test_saga")
     assert (saga.current_season, saga.current_year) == ("Winter", 1220)
@@ -8667,7 +8645,7 @@ async def test_escape_at_the_deficit_prompt_also_keeps_the_year():
         await _advance_from_winter(pilot, app)
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("escape")
-        await _wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
     assert storage.load_saga("test_saga").current_season == "Winter"
 
 
@@ -8679,7 +8657,7 @@ async def test_answering_no_advances_the_year_regardless():
         await _open_workspace(pilot)
         await _advance_from_winter(pilot, app)
         await pilot.press("n")
-        await _wait_until(
+        await wait_until(
             pilot, lambda: storage.load_saga("test_saga").current_season == "Spring"
         )
 
@@ -8697,7 +8675,7 @@ async def test_no_deficit_prompt_without_a_deficit_or_outside_winter():
     async with app.run_test(size=(140, 60)) as pilot:
         await _open_workspace(pilot)
         await _advance_from_winter(pilot, app)
-        await _wait_until(
+        await wait_until(
             pilot, lambda: storage.load_saga("test_saga").current_season == "Spring"
         )
         assert not isinstance(app.screen, ConfirmScreen)
@@ -8709,7 +8687,7 @@ async def test_no_deficit_prompt_without_a_deficit_or_outside_winter():
     async with app.run_test(size=(140, 60)) as pilot:
         await _open_workspace(pilot)
         await _advance_from_winter(pilot, app)
-        await _wait_until(
+        await wait_until(
             pilot, lambda: storage.load_saga("test_saga").current_season == "Winter"
         )
 
@@ -8720,7 +8698,7 @@ async def test_no_deficit_prompt_without_a_deficit_or_outside_winter():
 async def _open_spells(pilot, app) -> SpellListView:
     await _open_workspace(pilot)
     await _select(pilot, app, ("spells",))
-    await _wait_until(pilot, lambda: bool(app.screen.query(SpellListView)))
+    await wait_until(pilot, lambda: bool(app.screen.query(SpellListView)))
     return app.screen.query_one(SpellListView)
 
 
@@ -8789,7 +8767,7 @@ async def test_adding_editing_and_deleting_the_sagas_own_spells():
     async with app.run_test(size=(140, 50)) as pilot:
         view = await _open_spells(pilot, app)
         await pilot.press("a")
-        await _wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         live = lambda: str(app.screen.query_one("#fields-live", Static).render())
         assert "Choose a Technique and a Form" in live()
         _fill(
@@ -8816,7 +8794,7 @@ async def test_adding_editing_and_deleting_the_sagas_own_spells():
         assert "Requisites must be Arts" in error
         _fill(app, requisites="Rego")
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: len(app.screen.saga.spells) == 1)
+        await wait_until(pilot, lambda: len(app.screen.saga.spells) == 1)
 
         spell = app.screen.saga.spells[0]
         assert spell.id == "saga_lantern_of_truth"
@@ -8829,18 +8807,18 @@ async def test_adding_editing_and_deleting_the_sagas_own_spells():
 
         await _choose_spell(pilot, view, "Lantern [of] Truth")
         await pilot.press("e")
-        await _wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         assert app.screen.query_one("#fld-range", Select).value == "__other__"
         assert app.screen.query_one("#fld-range_other", Input).value == "Road"
         _fill(app, level="", ritual=False)  # make it General
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: app.screen.saga.spells[0].level is None)
+        await wait_until(pilot, lambda: app.screen.saga.spells[0].level is None)
 
         await pilot.press("A")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
-        await _wait_until(pilot, lambda: app.screen.saga.spells == [])
+        await wait_until(pilot, lambda: app.screen.saga.spells == [])
         assert _shown_names(view) == []
 
     assert storage.load_saga("test_saga").spells == []
@@ -8871,7 +8849,7 @@ async def test_choosing_a_spell_gives_a_lab_text_its_level():
         live = str(app.screen.query_one("#fields-live", Static).render())
         assert "Cost: 4 Build Points" in live and "Level 20, from the spell" in live
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: "Notes on the Pilum" in _book_names(app))
+        await wait_until(pilot, lambda: "Notes on the Pilum" in _book_names(app))
 
     saved = next(b for b in _saved_books().values() if b.name == "Notes on the Pilum")
     assert (saved.spell_id, saved.spell_name, saved.level) == (
@@ -8904,7 +8882,7 @@ async def test_the_spell_picker_lists_the_sagas_own_and_invented_spells():
         await pilot.pause()
         await _pick_spell(pilot, app, "Lantern")
         await _save_dialog(pilot, app)
-        await _wait_until(pilot, lambda: "Lantern notes" in _book_names(app))
+        await wait_until(pilot, lambda: "Lantern notes" in _book_names(app))
 
     saved = next(b for b in _saved_books().values() if b.name == "Lantern notes")
     assert (saved.spell_id, saved.level) == ("inv_x", 5)
@@ -8927,7 +8905,7 @@ async def test_importing_lab_texts_links_them_to_their_spells(tmp_path):
         await pilot.press("I")
         await _pick_csv(pilot, app, str(csv_path))
         await pilot.press("y")
-        await _wait_until(pilot, lambda: "Mystery notes" in _book_names(app))
+        await wait_until(pilot, lambda: "Mystery notes" in _book_names(app))
         labels = [label for _, label in app.screen._book_view()._rows()]
         mystery = next(label for label in labels if "Mystery notes" in label)
         assert mystery.startswith("[red]")  # Unknown spell
@@ -8950,7 +8928,7 @@ async def test_import_data_offers_spells_with_a_helper_and_an_example_file(
     async with app.run_test(size=(140, 50)) as pilot:
         await _open_workspace(pilot)
         await pilot.press("I")
-        await _wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
+        await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
         options = app.screen.query_one("#import-list", OptionList)
         options.highlighted = next(
             i
@@ -8958,9 +8936,7 @@ async def test_import_data_offers_spells_with_a_helper_and_an_example_file(
             if options.get_option_at_index(i).id == "spells"
         )
         await pilot.press("enter")
-        await _wait_until(
-            pilot, lambda: isinstance(app.screen, SpellImportHelperScreen)
-        )
+        await wait_until(pilot, lambda: isinstance(app.screen, SpellImportHelperScreen))
         helper = str(app.screen.query_one("#spell-import-help", Static).render())
         assert "technique" in helper and "Gen (or blank)" in helper
 
@@ -8980,7 +8956,7 @@ async def test_import_data_offers_spells_with_a_helper_and_an_example_file(
         message = str(app.screen.query_one("#confirm-message", Static).render())
         assert "Import 2 spells from spells_example.csv" in message
         await pilot.press("y")
-        await _wait_until(pilot, lambda: len(app.screen.saga.spells) == 3)
+        await wait_until(pilot, lambda: len(app.screen.saga.spells) == 3)
         tree = app.screen.query_one("#nav-tree", Tree)
         total = len(catalog.load_spell_catalog()) + 3
         assert str(_find_node(tree, ("spells",)).label) == f"Spells ({total})"
@@ -9002,7 +8978,7 @@ async def test_importing_spells_twice_asks_about_duplicates(tmp_path):
         await _open_workspace(pilot)
         for answers in ([], ["skip-all"]):
             app.screen._import_spells()
-            await _wait_until(
+            await wait_until(
                 pilot, lambda: isinstance(app.screen, SpellImportHelperScreen)
             )
             await pilot.pause()
@@ -9010,7 +8986,7 @@ async def test_importing_spells_twice_asks_about_duplicates(tmp_path):
             await _pick_csv(pilot, app, str(csv_path))
             await pilot.press("y")
             for answer in answers:
-                await _wait_until(
+                await wait_until(
                     pilot, lambda: isinstance(app.screen, DuplicateBookScreen)
                 )
                 message = str(
@@ -9019,7 +8995,7 @@ async def test_importing_spells_twice_asks_about_duplicates(tmp_path):
                 assert "A spell named Palm of Warming Flame" in message
                 app.screen.query_one(f"#btn-{answer}", Button).press()
                 await pilot.pause()
-            await _wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+            await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
             await pilot.pause()
         assert len(app.screen.saga.spells) == 2  # the second import added none
 
@@ -9031,9 +9007,7 @@ async def test_the_spell_import_helper_fits_a_small_terminal():
     async with app.run_test(size=(80, 24)) as pilot:
         await _open_workspace(pilot)
         app.screen._import_spells()
-        await _wait_until(
-            pilot, lambda: isinstance(app.screen, SpellImportHelperScreen)
-        )
+        await wait_until(pilot, lambda: isinstance(app.screen, SpellImportHelperScreen))
         await pilot.pause()
         for button in app.screen.query(Button):
             assert button.region.height > 0 and button.region.bottom <= 24, button.id

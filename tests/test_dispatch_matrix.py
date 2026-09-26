@@ -18,6 +18,7 @@ import os
 from pathlib import Path
 
 import pytest
+from support import wait_until
 from textual.widgets import Collapsible, TabbedContent, TabPane, Tree
 
 from ars_magica_manager import catalog, storage
@@ -192,14 +193,6 @@ def _title(screen) -> str:
     return ""
 
 
-async def _wait_until(pilot, condition, timeout: float = 2.0) -> bool:
-    elapsed = 0.0
-    while not condition() and elapsed < timeout:
-        await pilot.pause(0.02)
-        elapsed += 0.02
-    return bool(condition())
-
-
 async def _back_to_workspace(pilot, app, workspace) -> None:
     for _ in range(6):
         if app.screen is workspace:
@@ -225,7 +218,7 @@ async def _focus_target(pilot, app, view, target) -> None:
         await pilot.pause()
     if isinstance(target, Collapsible):
         target.query_one("CollapsibleTitle").focus()
-        await _wait_until(pilot, lambda: app.screen._active_section() == target.id)
+        await wait_until(pilot, lambda: app.screen._active_section() == target.id)
     else:
         app.screen.set_focus(None)
         await pilot.pause()
@@ -240,7 +233,7 @@ async def _record_keys(pilot, app, workspace, notices: list[str]) -> dict[str, s
         notices.clear()
         await pilot.press(key)
         await pilot.pause()
-        await _wait_until(
+        await wait_until(
             pilot, lambda: app.screen is not workspace or notices, timeout=1.0
         )
         if app.screen is not workspace:
@@ -266,7 +259,7 @@ async def _matrix_for(
     notices: list[str] = []
     async with app.run_test(size=(140, 70)) as pilot:
         await pilot.press("enter")  # picker -> workspace
-        assert await _wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         workspace = app.screen
         original_notify = app.notify
 
@@ -297,9 +290,9 @@ async def _matrix_for(
             }
             return {"(node)": record}, ["(node)"]
 
-        assert await _wait_until(pilot, lambda: getattr(workspace, attr) is not None)
+        assert await wait_until(pilot, lambda: getattr(workspace, attr) is not None)
         view = getattr(workspace, attr)
-        assert await _wait_until(pilot, lambda: view.initial_tab_seen)
+        assert await wait_until(pilot, lambda: view.initial_tab_seen)
         await pilot.pause()
         targets = [w for w in view.query("Collapsible, TabPane") if w.id]
         labels = [f"{type(t).__name__}#{t.id}" for t in targets]
