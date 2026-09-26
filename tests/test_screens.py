@@ -75,6 +75,7 @@ from ars_magica_manager.screens import (
     EditHermeticBackgroundScreen,
     EditLabCharacteristicsScreen,
     EditLabIdentityScreen,
+    EditSagaScreen,
     EditWoundsScreen,
     FieldsDialog,
     ImportScreen,
@@ -530,6 +531,69 @@ async def test_create_character_at_saga_level_is_unassigned_and_selectable():
         assert app.screen.selected_covenant is None
 
     assert storage.load_saga("test_saga").characters[0].covenant_id is None
+
+
+async def test_edit_saga_saves_name_storyguide_and_description():
+    storage.save_saga(Saga(id="test_saga", name="Test Saga", storyguide="Alex"))
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_workspace(pilot)
+        assert app.screen.selected_kind == "saga"
+
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, EditSagaScreen)
+        dialog = app.screen
+        dialog.query_one("#input-saga-name", Input).value = "Dammerstein [Solo]"
+        dialog.query_one("#input-saga-storyguide", Input).value = "Robin"
+        dialog.query_one("#input-saga-description", Input).value = "A one-magus saga."
+        dialog.query_one("#btn-save", Button).press()
+        await pilot.pause()
+        assert isinstance(app.screen, WorkspaceScreen)
+
+        # Header and tree pick up the rename, brackets escaped.
+        assert app.screen.sub_title.startswith(r"Dammerstein \[Solo]")
+        tree = app.screen.query_one("#nav-tree", Tree)
+        assert str(tree.root.label) == "Dammerstein [Solo]"  # brackets survive, literal
+        # The saga detail panel too (re-shown after saving).
+        panel = app.screen.query_one("#detail-pane").query_one(Static)
+        assert "Dammerstein [Solo]" in str(panel.render())
+
+    saga = storage.load_saga("test_saga")
+    assert (saga.name, saga.storyguide, saga.description) == (
+        "Dammerstein [Solo]",
+        "Robin",
+        "A one-magus saga.",
+    )
+
+
+async def test_edit_saga_requires_name_and_storyguide():
+    storage.save_saga(Saga(id="test_saga", name="Test Saga", storyguide="Alex"))
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _open_workspace(pilot)
+        await pilot.press("e")
+        await pilot.pause()
+        dialog = app.screen
+        assert isinstance(dialog, EditSagaScreen)
+
+        dialog.query_one("#input-saga-name", Input).value = "  "
+        dialog.query_one("#btn-save", Button).press()
+        await pilot.pause()
+        assert isinstance(app.screen, EditSagaScreen)  # refused
+
+        dialog.query_one("#input-saga-name", Input).value = "Test Saga"
+        dialog.query_one("#input-saga-storyguide", Input).value = ""
+        dialog.query_one("#btn-save", Button).press()
+        await pilot.pause()
+        assert isinstance(app.screen, EditSagaScreen)  # still refused
+
+        dialog.query_one("#input-saga-storyguide", Input).value = "Alex"
+        dialog.query_one("#btn-save", Button).press()
+        await pilot.pause()
+        assert isinstance(app.screen, WorkspaceScreen)
 
 
 async def test_create_character_defaults_to_current_covenant():

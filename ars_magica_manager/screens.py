@@ -1102,6 +1102,104 @@ class SagaCreateScreen(ModalScreen[str | None]):
         self.dismiss(saga.id)
 
 
+class EditSagaScreen(ModalScreen[dict[str, object] | None]):
+    """Edits the saga's own Name, Storyguide and Description.
+
+    The calendar (current year/season) has its own Set Date screen, and
+    isn't touched here. Dismisses with a dict of {"name", "storyguide",
+    "description"}, or None if cancelled.
+    """
+
+    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    DEFAULT_CSS = """
+    EditSagaScreen {
+        align: center middle;
+    }
+
+    #saga-edit-dialog {
+        width: 64;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    .sagaedit-row {
+        width: 100%;
+        height: 1;
+    }
+
+    .sagaedit-row Label {
+        width: 16;
+    }
+
+    .sagaedit-row Input {
+        width: 1fr;
+    }
+
+    #saga-edit-error {
+        color: $error;
+        height: auto;
+    }
+
+    #saga-edit-buttons {
+        width: 100%;
+        height: auto;
+    }
+    """
+
+    def __init__(self, saga: Saga) -> None:
+        super().__init__()
+        self.saga = saga
+
+    def compose(self) -> ComposeResult:
+        saga = self.saga
+        with Vertical(id="saga-edit-dialog"):
+            yield Label("Edit Saga")
+            with Horizontal(classes="sagaedit-row"):
+                yield Label("Name")
+                yield Input(value=saga.name, id="input-saga-name", compact=True)
+            with Horizontal(classes="sagaedit-row"):
+                yield Label("Storyguide")
+                yield Input(
+                    value=saga.storyguide, id="input-saga-storyguide", compact=True
+                )
+            yield Label("Description (optional)")
+            yield Input(value=saga.description, id="input-saga-description")
+            yield Static("", id="saga-edit-error")
+            with Horizontal(id="saga-edit-buttons"):
+                yield Button("Save", id="btn-save", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-cancel":
+            self.dismiss(None)
+        elif event.button.id == "btn-save":
+            self._try_save()
+
+    def _try_save(self) -> None:
+        error = self.query_one("#saga-edit-error", Static)
+
+        name = self.query_one("#input-saga-name", Input).value.strip()
+        if not name:
+            error.update("Saga name is required.")
+            return
+
+        storyguide = self.query_one("#input-saga-storyguide", Input).value.strip()
+        if not storyguide:
+            error.update("Storyguide name is required.")
+            return
+
+        description = self.query_one("#input-saga-description", Input).value.strip()
+        self.dismiss(
+            {"name": name, "storyguide": storyguide, "description": description}
+        )
+
+
 class CovenantCreateScreen(ModalScreen[str | None]):
     """Creates a covenant within a saga.
 
@@ -8598,6 +8696,8 @@ class WorkspaceScreen(Screen[None]):
         if action == "remove":
             return self._active_section() in self._REMOVE_SECTIONS
         if action == "edit":
+            if self.selected_kind == "saga":
+                return True
             return self._active_section() in self._EDIT_SECTIONS
         if action == "restore":
             return self._active_section() in self._RESTORE_SECTIONS
@@ -8863,12 +8963,12 @@ class WorkspaceScreen(Screen[None]):
     async def _show_saga_detail(self) -> None:
         saga = self.saga
         lines = [
-            f"Saga: {saga.name}",
-            f"Storyguide: {saga.storyguide}",
+            f"Saga: {escape(saga.name)}",
+            f"Storyguide: {escape(saga.storyguide)}",
             f"Current date: {saga.current_season} {saga.current_year}",
         ]
         if saga.description:
-            lines.append(f"Description: {saga.description}")
+            lines.append(f"Description: {escape(saga.description)}")
         lines += [
             "",
             f"Covenants: {len(saga.covenants)}",
@@ -9089,6 +9189,9 @@ class WorkspaceScreen(Screen[None]):
             self._remove_possession(kind)
 
     def action_edit(self) -> None:
+        if self.selected_kind == "saga":
+            self._edit_saga()
+            return
         section = self._active_section()
         if section == SPELL_SECTION:
             self._edit_saga_spell()
@@ -10830,6 +10933,19 @@ class WorkspaceScreen(Screen[None]):
             self._refresh_covenant_section("section-cov-info")
 
         self.app.push_screen(EditCovenantScreen(covenant), handle_result)
+
+    def _edit_saga(self) -> None:
+        async def handle_result(result: dict[str, object] | None) -> None:
+            if result is None:
+                return
+            for field, value in result.items():
+                setattr(self.saga, field, value)
+            storage.save_saga(self.saga)
+            self._rebuild_tree()
+            self._update_saga_clock()
+            await self._show_saga_detail()
+
+        self.app.push_screen(EditSagaScreen(self.saga), handle_result)
 
     # -- Saga time --
 
