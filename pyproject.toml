@@ -13,10 +13,17 @@ dev = [
     "ruff>=0.16.8",
     "pytest>=8.0.0",
     "pytest-asyncio>=0.24.0",
+    "pyright>=1.1.414",
+    "pytest-xdist>=3.8.0",
 ]
 
 [tool.ruff.lint]
 ignore = ["UP045", "ISC004"]
+
+[tool.pyright]
+include = ["ars_magica_manager", "tools", "main.py"]
+typeCheckingMode = "basic"
+pythonVersion = "3.14"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
