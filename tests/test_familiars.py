@@ -2,6 +2,7 @@ import pytest
 
 from ars_magica_manager import familiars as fam
 from ars_magica_manager.models import (
+    Ability,
     Character,
     Characteristics,
     Familiar,
@@ -128,3 +129,27 @@ def test_characteristics_text_shows_signed_scores_and_typed_in_defenses():
     assert "Qik: +1" in text
     assert "Base Soak: 5" in text
     assert "Magic Resistance: 12" in text
+
+
+def test_ability_rows_groups_by_category_with_headers():
+    _, _magus, familiar = _saga()
+    familiar.abilities = [
+        Ability(name="Athletics", category="General", level=3, specialty="Running"),
+        Ability(name="Magic Theory", category="Arcane", level=2),
+    ]
+    rows = fam.ability_rows(familiar)
+    assert rows == [
+        (None, "General"),
+        (0, "Athletics (Running) 3 0/0"),
+        (None, "Arcane"),
+        (1, "Magic Theory 2 0/0"),
+    ]
+
+
+def test_ability_info_text_shows_catalog_description():
+    _, _magus, familiar = _saga()
+    familiar.abilities = [Ability(name="Athletics", category="General")]
+    assert fam.ability_info_text(familiar, None) == (
+        "[dim]Select an Ability for its description.[/]"
+    )
+    assert "General physical prowess" in fam.ability_info_text(familiar, 0)

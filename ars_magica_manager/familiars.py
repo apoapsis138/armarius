@@ -1,15 +1,24 @@
 """Logic behind a Familiar's sheet -- no UI in here.
 
-Slices 1-2 (Identity & Cords, Characteristics) of STORY-206; later slices
-add Combat & Health, Abilities and Bond Powers here as they're built.
+Slices 1-3 (Identity & Cords, Characteristics, Combat & Health) of
+STORY-206; later slices add Abilities and Bond Powers here as they're
+built.
 """
 
 from __future__ import annotations
 
+from . import books as bk
 from . import catalog
 from . import possessions as pos
 from .markup import escape
-from .models import CORD_SCORE_COSTS, Character, Familiar, Saga
+from .models import (
+    ABILITY_CATEGORIES,
+    CORD_SCORE_COSTS,
+    AbilityDef,
+    Character,
+    Familiar,
+    Saga,
+)
 from .totals import describe_modifier
 
 
@@ -223,3 +232,49 @@ def natural_weapon_info_text(familiar: Familiar, index: int | None) -> str:
         return "[dim]Select an attack for its details.[/]"
     weapon = familiar.natural_weapons[index]
     return pos.detail_text(pos.PossessionEntry("weapon", weapon))
+
+
+def ability_rows(familiar: Familiar) -> list[tuple[int | None, str]]:
+    """Same shape as CharacterSheetView._ability_rows() -- one selectable
+    list for every Ability, with a non-selectable header row before each
+    non-empty category."""
+    rows: list[tuple[int | None, str]] = []
+    for category in ABILITY_CATEGORIES:
+        indexed = [
+            (i, a) for i, a in enumerate(familiar.abilities) if a.category == category
+        ]
+        if not indexed:
+            continue
+        rows.append((None, category))
+        for index, ability in indexed:
+            specialty = f" ({ability.specialty})" if ability.specialty else ""
+            rows.append(
+                (
+                    index,
+                    f"{escape(ability.name)}{escape(specialty)} "
+                    f"{ability.level} {ability.xp}/{ability.xp_to_next}",
+                )
+            )
+    return rows
+
+
+def _ability_definition(name: str) -> AbilityDef | None:
+    canonical = bk.canonical_ability(name)
+    if canonical is None:
+        return None
+    for entry in catalog.load_ability_catalog():
+        if entry.name == canonical:
+            return entry
+        if "{" in entry.name and canonical.startswith(entry.name.split("{", 1)[0]):
+            return entry
+    return None
+
+
+def ability_info_text(familiar: Familiar, index: int | None) -> str:
+    if index is None:
+        return "[dim]Select an Ability for its description.[/]"
+    ability = familiar.abilities[index]
+    definition = _ability_definition(ability.name)
+    if definition is None or not definition.description:
+        return "[dim](no catalog description)[/]"
+    return escape(definition.description)

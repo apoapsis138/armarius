@@ -8539,8 +8539,17 @@ class FamiliarSheetView(Vertical):
                         fam.natural_weapon_info_text(self.familiar, None),
                         id="fam-natural-weapons-info",
                     )
-            with TabPane("Abilities", id="tab-fam-abilities"):
-                yield Static(_tab_placeholder("Abilities"))
+            with TabPane("Abilities", id="tab-fam-abilities"), VerticalScroll():
+                yield Static(
+                    "[dim]Languages: shares the Magus partner's Language "
+                    "scores automatically.[/]"
+                )
+                yield SelectableList(
+                    fam.ability_rows(self.familiar), id="fam-abilities-list"
+                )
+                yield Static(
+                    fam.ability_info_text(self.familiar, None), id="fam-ability-info"
+                )
             with TabPane("Bond Powers", id="tab-fam-powers"):
                 yield Static(_tab_placeholder("Bond Powers"))
 
@@ -8593,6 +8602,13 @@ class FamiliarSheetView(Vertical):
                 self.query_one("#fam-natural-weapons-info", Static).update(
                     fam.natural_weapon_info_text(self.familiar, None)
                 )
+            elif section_id == "tab-fam-abilities":
+                self.query_one("#fam-abilities-list", SelectableList).set_rows(
+                    fam.ability_rows(self.familiar)
+                )
+                self.query_one("#fam-ability-info", Static).update(
+                    fam.ability_info_text(self.familiar, None)
+                )
         except NoMatches:
             pass
 
@@ -8621,12 +8637,21 @@ class FamiliarSheetView(Vertical):
             "#fam-natural-weapons-list", SelectableList
         ).selected_data_index
 
+    def selected_ability(self) -> int | None:
+        return self.query_one("#fam-abilities-list", SelectableList).selected_data_index
+
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
         list_id = event.selectable_list.id or ""
         if list_id == "fam-natural-weapons-list":
             event.stop()
             self.query_one("#fam-natural-weapons-info", Static).update(
                 fam.natural_weapon_info_text(self.familiar, event.data_index)
+            )
+            return
+        if list_id == "fam-abilities-list":
+            event.stop()
+            self.query_one("#fam-ability-info", Static).update(
+                fam.ability_info_text(self.familiar, event.data_index)
             )
             return
         if list_id not in ("fam-vf-virtues-list", "fam-vf-flaws-list"):
@@ -9396,6 +9421,7 @@ class WorkspaceScreen(Screen[None]):
         "section-fam-personality-traits",
         "section-fam-reputations",
         "section-fam-natural-weapons",
+        "tab-fam-abilities",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
         *BOOK_SECTIONS,
@@ -9422,6 +9448,7 @@ class WorkspaceScreen(Screen[None]):
         "section-fam-personality-traits",
         "section-fam-reputations",
         "section-fam-natural-weapons",
+        "tab-fam-abilities",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
         *(BOOK_SECTIONS - {"section-lib-summary"}),
@@ -9469,6 +9496,7 @@ class WorkspaceScreen(Screen[None]):
         "section-fam-characteristics",
         "section-fam-health",
         "section-fam-natural-weapons",
+        "tab-fam-abilities",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
         *(BOOK_SECTIONS - {"section-lib-summary"}),
@@ -9489,6 +9517,11 @@ class WorkspaceScreen(Screen[None]):
     #: pane with no sub-sections, so it dispatches on its own tab id rather
     #: than falling back to the top panel. See _active_character_section().
     _CHARACTER_DISPATCH_TABS: ClassVar[set[str]] = {"tab-abilities"}
+
+    #: Familiar tabs that own their own a/A/e dispatch (keyed by tab id),
+    #: same idea as _CHARACTER_DISPATCH_TABS -- "tab-fam-abilities" is a flat
+    #: pane with no sub-sections. See _active_familiar_section().
+    _FAMILIAR_DISPATCH_TABS: ClassVar[set[str]] = {"tab-fam-abilities"}
 
     DEFAULT_CSS = """
     #workspace-body {
@@ -9806,9 +9839,11 @@ class WorkspaceScreen(Screen[None]):
         return "section-cov-info"
 
     def _active_familiar_section(self) -> str | None:
-        """Same idea as _active_covenant_section(): the two remaining
-        placeholder tabs own no dispatch of their own yet, so fall back to
-        the always-visible info panel."""
+        """Same idea as _active_character_section(): "tab-fam-abilities" is
+        a flat pane with no sub-sections, so it dispatches on its own tab id
+        (see _FAMILIAR_DISPATCH_TABS); the one remaining placeholder tab
+        (Bond Powers) owns no dispatch yet, so it falls back to the
+        always-visible info panel."""
         if self._familiar_sheet_view is None:
             return None
         try:
@@ -9823,6 +9858,8 @@ class WorkspaceScreen(Screen[None]):
             for widget in focused.ancestors_with_self:
                 if isinstance(widget, Collapsible) and widget.id:
                     return widget.id
+        if tab_id in self._FAMILIAR_DISPATCH_TABS:
+            return tab_id
         return "section-fam-info"
 
     def _active_character_section(self) -> str | None:
@@ -10278,6 +10315,8 @@ class WorkspaceScreen(Screen[None]):
             self._add_familiar_reputation()
         elif section == "section-fam-natural-weapons":
             self._add_familiar_natural_weapon()
+        elif section == "tab-fam-abilities":
+            self._add_familiar_ability()
         elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
             self._add_raw_vis()
         elif section == "section-lab-specialties":
@@ -10327,6 +10366,8 @@ class WorkspaceScreen(Screen[None]):
             self._remove_familiar_reputation()
         elif section == "section-fam-natural-weapons":
             self._remove_familiar_natural_weapon()
+        elif section == "tab-fam-abilities":
+            self._remove_familiar_ability()
         elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
             self._remove_raw_vis()
         elif section == "section-lab-specialties":
@@ -10403,6 +10444,8 @@ class WorkspaceScreen(Screen[None]):
             self._edit_familiar_wounds()
         elif section == "section-fam-natural-weapons":
             self._edit_familiar_natural_weapon()
+        elif section == "tab-fam-abilities":
+            self._edit_familiar_ability()
         elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
             self._edit_raw_vis()
         elif section == "section-inventory":
@@ -13734,6 +13777,104 @@ class WorkspaceScreen(Screen[None]):
                 del familiar.natural_weapons[index]
                 storage.save_saga(self.saga)
                 self._refresh_familiar_section("section-fam-natural-weapons")
+
+        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
+
+    # -- Familiar: Abilities --
+
+    def _selected_familiar_ability(self) -> int | None:
+        view = self._familiar_sheet_view
+        return view.selected_ability() if view is not None else None
+
+    def _add_familiar_ability(self) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        exclude_names = {a.name for a in familiar.abilities}
+
+        def handle_result(ability: Ability | None) -> None:
+            if ability is not None:
+                familiar.abilities.append(ability)
+                storage.save_saga(self.saga)
+                self._refresh_familiar_section("tab-fam-abilities")
+
+        self.app.push_screen(AbilityPickerScreen(exclude_names), handle_result)
+
+    def _edit_familiar_ability(self) -> None:
+        """Edit the chosen Ability; with none chosen, ask which one."""
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        selected = self._selected_familiar_ability()
+        if selected is not None:
+            self._edit_familiar_ability_at(selected)
+            return
+        if not familiar.abilities:
+            self.notify("No Abilities to edit.")
+            return
+
+        labels = [self._ability_label(a) for a in familiar.abilities]
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._edit_familiar_ability_at(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Edit which Ability?", labels), handle_index
+        )
+
+    def _edit_familiar_ability_at(self, index: int) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        existing = familiar.abilities[index]
+
+        def handle_result(ability: Ability | None) -> None:
+            if ability is not None:
+                familiar.abilities[index] = ability
+                storage.save_saga(self.saga)
+                self._refresh_familiar_section("tab-fam-abilities")
+
+        self.app.push_screen(
+            AbilityDetailsScreen(existing.name, existing.category, existing),
+            handle_result,
+        )
+
+    def _remove_familiar_ability(self) -> None:
+        """Delete the chosen Ability (after confirming); with none chosen,
+        ask which one first."""
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        selected = self._selected_familiar_ability()
+        if selected is not None:
+            self._confirm_remove_familiar_ability(selected)
+            return
+        if not familiar.abilities:
+            self.notify("No Abilities to remove.")
+            return
+
+        labels = [self._ability_label(a) for a in familiar.abilities]
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._confirm_remove_familiar_ability(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove an Ability", labels), handle_index
+        )
+
+    def _confirm_remove_familiar_ability(self, index: int) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        name = familiar.abilities[index].name
+
+        def handle_confirmed(confirmed: bool) -> None:
+            if confirmed:
+                del familiar.abilities[index]
+                storage.save_saga(self.saga)
+                self._refresh_familiar_section("tab-fam-abilities")
 
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 

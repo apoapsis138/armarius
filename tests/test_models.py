@@ -1,6 +1,7 @@
 from dataclasses import asdict
 
 from ars_magica_manager.models import (
+    Ability,
     Aging,
     Background,
     Character,
@@ -224,6 +225,7 @@ def test_familiar_from_dict_defaults_for_pre_existing_saves():
     assert familiar.characteristics == Characteristics()
     assert familiar.base_soak == 0
     assert familiar.magic_resistance == 0
+    assert familiar.abilities == []
 
 
 def test_familiar_survives_a_dict_round_trip():
@@ -238,6 +240,7 @@ def test_familiar_survives_a_dict_round_trip():
         characteristics=Characteristics(stamina=3),
         base_soak=5,
         magic_resistance=12,
+        abilities=[Ability(name="Athletics", level=3, specialty="Running")],
     )
     restored = Familiar.from_dict(asdict(familiar))
     assert restored == familiar

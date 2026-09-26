@@ -22,6 +22,7 @@ from textual.widgets import (
 
 from ars_magica_manager import catalog, settings, storage
 from ars_magica_manager import economics as eco
+from ars_magica_manager import familiars as fam
 from ars_magica_manager import inhabitants as inh
 from ars_magica_manager import possessions as pos
 from ars_magica_manager import spells as spl
@@ -221,6 +222,13 @@ def _ability_labels(view) -> str:
     joined -- Abilities is one selectable list, not one text blob."""
     return " | ".join(
         label for index, label in view._ability_rows() if index is not None
+    )
+
+
+def _fam_ability_labels(view) -> str:
+    """Same idea as _ability_labels(), for a FamiliarSheetView."""
+    return " | ".join(
+        label for index, label in fam.ability_rows(view.familiar) if index is not None
     )
 
 
@@ -873,6 +881,7 @@ _FAM_SECTION_TAB: dict[str, str] = {
     "section-fam-characteristics": "tab-fam-characteristics",
     "section-fam-health": "tab-fam-combat",
     "section-fam-natural-weapons": "tab-fam-combat",
+    "tab-fam-abilities": "tab-fam-abilities",
 }
 
 
@@ -1116,6 +1125,60 @@ async def test_familiar_natural_weapons_use_generic_add_edit_remove():
         assert isinstance(app.screen, WorkspaceScreen)
 
     assert storage.load_saga("test_saga").familiars[0].natural_weapons == []
+
+
+async def test_familiar_abilities_use_generic_add_edit_remove():
+    storage.save_saga(_saga_with_familiar())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_familiar(pilot, app)
+        await _open_familiar_section(pilot, app, "tab-fam-abilities")
+        assert app.screen.check_action("add", ()) is True
+
+        await pilot.press("a")
+        await pilot.pause()
+        assert isinstance(app.screen, AbilityPickerScreen)
+        await pilot.click("#ability-ab_athletics")
+        await pilot.pause()
+        assert isinstance(app.screen, AbilityDetailsScreen)
+        app.screen.query_one("#input-level", Input).value = "3"
+        app.screen.query_one("#input-specialty", Input).value = "Running"
+        await pilot.click("#btn-confirm")
+        await pilot.pause()
+
+        assert isinstance(app.screen, WorkspaceScreen)
+        view = app.screen._familiar_sheet_view
+        assert "Athletics (Running) 3 0/0" in _fam_ability_labels(view)
+
+        [familiar] = storage.load_saga("test_saga").familiars
+        assert len(familiar.abilities) == 1
+        assert familiar.abilities[0].name == "Athletics"
+        assert familiar.abilities[0].level == 3
+        assert familiar.abilities[0].specialty == "Running"
+
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, AbilityDetailsScreen)
+        app.screen.query_one("#input-level", Input).value = "4"
+        await pilot.click("#btn-confirm")
+        await pilot.pause()
+        assert "Athletics (Running) 4 0/0" in _fam_ability_labels(view)
+
+        await pilot.press("A")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, ConfirmScreen)
+        await pilot.press("y")
+        await pilot.pause()
+        assert isinstance(app.screen, WorkspaceScreen)
+
+    assert storage.load_saga("test_saga").familiars[0].abilities == []
 
 
 async def test_familiar_virtues_flaws_add_via_v_and_remove_via_shift_v():

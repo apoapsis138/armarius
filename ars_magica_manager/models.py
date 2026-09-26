@@ -979,10 +979,8 @@ class Familiar:
     `character_id` is the magus who bound it: required, set once at
     creation, and never reassigned to a different magus.
 
-    Built in slices (STORY-206); this is Slice 1 (Identity & Cords) only --
-    Characteristics, Combat & Health, Abilities and Bond Powers are added by
-    later slices onto this same dataclass, the same way Character grew over
-    many stories.
+    Built in slices (STORY-206); Bond Powers are added by a later slice onto
+    this same dataclass, the same way Character grew over many stories.
 
     `virtues_flaws`/`personality_traits` reuse Character's own shapes
     (VirtueFlawInstance/ScoredTrait) -- True Friend and Loyal (Partner) +3
@@ -1027,6 +1025,11 @@ class Familiar:
     #: shape as Character.inventory's weapons, see STORY-205), not a fixed
     #: 3-row table.
     natural_weapons: list[Possession] = field(default_factory=list)
+    #: Same shape/catalog as Character.abilities -- Languages are just
+    #: ordinary Abilities here too (per the rules, a familiar shares its
+    #: magus's Language scores automatically, so none need typing in
+    #: unless the user wants to note an exception).
+    abilities: list[Ability] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Familiar:
@@ -1044,6 +1047,7 @@ class Familiar:
             Possession(**known_fields(Possession, w))
             for w in d.get("natural_weapons", [])
         ]
+        d["abilities"] = [Ability.from_dict(a) for a in d.get("abilities", [])]
         return cls(**known_fields(cls, d))
 
 
