@@ -1,4 +1,6 @@
-"""Saga picker/creator screens. See DESIGN.md section 7, Phase 1."""
+"""Every Textual screen, dialog and widget: the saga picker, the workspace
+(navigation tree + sheet pane), the Character/Laboratory/Familiar/Covenant
+sheets, the Book and Spell lists, and the add/edit dialogs and pickers."""
 
 from __future__ import annotations
 
@@ -1530,7 +1532,7 @@ class SearchablePickerScreen(ModalScreen[Any]):
     search box above it.
 
     The Ability and Virtue/Flaw catalogs are large (78 and 624 entries) --
-    a flat unsearchable list doesn't scale, so both pickers share this:
+    a flat unsearchable list doesn't scale, so every catalog picker shares this:
     an Input above the ListView that re-filters it on every keystroke.
     Subclasses supply the entry list and how to search/render/activate
     each one; this owns the Input<->ListView wiring, so that trickier bit
@@ -2044,13 +2046,12 @@ class SpellChooserScreen(SearchablePickerScreen):
 
 
 class RemovalPickerScreen(ModalScreen[int | None]):
-    """Pick an item to remove from a list of display labels, by index.
+    """Pick one entry from a list of display labels, by index.
 
-    Generic over what's being removed -- Character/Laboratory Virtues &
-    Flaws, Character Abilities, etc. -- the caller supplies the labels and
-    is responsible for deleting the corresponding item from its own list
-    using the returned index. Dismisses with that index, or None if
-    cancelled.
+    Despite the name it's the generic "which one?" picker: used to choose
+    what to remove, edit, restore or improve. The caller supplies the labels
+    and acts on its own list using the returned index. Dismisses with that
+    index, or None if cancelled.
     """
 
     BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
@@ -2740,7 +2741,8 @@ class EditCharacteristicsScreen(ModalScreen[Characteristics | None]):
 
 
 class ItemAddScreen(ModalScreen[str | None]):
-    """Freeform text entry for an inventory item.
+    """Freeform text entry for one line of text -- today, a laboratory
+    Specialty or Feature.
 
     Dismisses with the item description, or None if cancelled.
     """
@@ -3947,8 +3949,8 @@ class EditHermeticBackgroundScreen(ModalScreen[HermeticBackground | None]):
 class EditLabIdentityScreen(ModalScreen[dict[str, object] | None]):
     """Edits a Laboratory's Name/Location/Build Points/Aura modifier, and (unlike
     character Identity editing) lets you reassign its Owner from the
-    lab's own side -- WorkspaceScreen._assign_laboratory() already
-    handles the bidirectional sync, this just calls it from here too.
+    lab's own side. It only returns the chosen `owner_id`;
+    WorkspaceScreen._assign_laboratory_owner() does the two-way sync.
     Dismisses with {"name", "location", "build_points", "aura_modifier",
     "covenant_id", "owner_id"}, or None if cancelled.
     """
@@ -6687,7 +6689,7 @@ class FieldsDialog(ModalScreen[dict[str, Any] | None]):
 
 
 class SheetSection(Collapsible):
-    """A character/laboratory sheet section: a Collapsible that starts
+    """A sheet section (on every sheet): a Collapsible that starts
     expanded. Textual's own default is collapsed, so every sheet section
     goes through this (project convention: sections are open by default,
     the user can still collapse them)."""
@@ -8134,9 +8136,9 @@ class CharacterSheetView(Vertical):
 class PinnedCollapsible(Collapsible):
     """A Collapsible that is permanently expanded and ignores toggling.
 
-    Used for the laboratory sheet's always-visible top panel. It stays a
-    real Collapsible (with a focusable CollapsibleTitle) so the focus-
-    ancestry dispatch in WorkspaceScreen treats it like every other
+    Used for each sheet's always-visible top panel (and the Arts panel). It
+    stays a real Collapsible (with a focusable CollapsibleTitle) so the
+    focus-ancestry dispatch in WorkspaceScreen treats it like every other
     section, but it can never be collapsed.
     """
 
@@ -8164,9 +8166,9 @@ class LaboratorySheetView(Vertical):
     A fixed top panel (Identity above Characteristics -- not inside any
     tab, permanently expanded) above a 5-tab body mirroring the
     sheet's own pages: Planning (placeholder), Virtues & Flaws, Attributes
-    (Specialties/Features/Rooms), Inventory (Raw Vis/Items), Diary. Same
-    Collapsible-section + read-then-refresh Static pattern as
-    CharacterSheetView.
+    (Specialties/Features/Rooms), Inventory (Raw Vis/Items), Diary. Its
+    lists are still read-only Statics edited through pickers, not the
+    selectable lists the other sheets use (STORY-303).
     """
 
     DEFAULT_CSS = """
@@ -8457,8 +8459,7 @@ class FamiliarSheetView(Vertical):
     Base Soak/Magic Resistance figures) and Combat & Health (Wounds/Fatigue,
     reusing Character's own dialogs; Natural Weapons & Attacks, a free
     selectable list of weapon-kind Possessions -- same shape as Character's
-    weapon rows, see STORY-205) hold real content; two placeholder tabs
-    remain for STORY-206's later slices (Abilities; Bond Powers).
+    weapon rows, see STORY-205), Abilities and Bond Powers.
     """
 
     DEFAULT_CSS = """
@@ -9463,7 +9464,7 @@ class WorkspaceScreen(Screen[None]):
         ("q", "quit", "Quit"),
     ]
 
-    #: Which character-sheet and laboratory-sheet sections support the
+    #: Which sheet sections (on every kind of sheet) support the
     #: generic Add/Remove/Edit bindings. 'a'/'A'/'e' dispatch by whichever
     #: section currently has focus instead of each having their own
     #: dedicated key, since a fully-built sheet has too many addable/
@@ -9583,8 +9584,9 @@ class WorkspaceScreen(Screen[None]):
     }
 
     #: Covenant tabs that own their own a/A/e dispatch (keyed by tab id).
-    #: None yet -- every covenant tab is a placeholder, so the dispatch falls
-    #: back to the always-visible info panel. See _active_covenant_section().
+    #: None: every covenant tab's content is in Collapsible sections, so with
+    #: nothing focused in one the dispatch falls back to the always-visible
+    #: info panel. See _active_covenant_section().
     _COVENANT_DISPATCH_TABS: ClassVar[set[str]] = set()
 
     #: Character tabs that own their own a/A/e dispatch (keyed by tab id),
@@ -9894,10 +9896,10 @@ class WorkspaceScreen(Screen[None]):
         return None
 
     def _active_covenant_section(self) -> str | None:
-        """Same idea as _active_laboratory_section(), except that every
-        covenant tab is a placeholder for now: with nothing focused inside a
-        Collapsible (and no tab owning its own dispatch), fall back to the
-        always-visible info panel so 'e' edits the covenant from any tab."""
+        """Same idea as _active_laboratory_section(), except that with
+        nothing focused inside a Collapsible (and no tab owning its own
+        dispatch), fall back to the always-visible info panel so 'e' edits
+        the covenant from any tab."""
         if self._covenant_sheet_view is None:
             return None
         try:
@@ -10081,7 +10083,7 @@ class WorkspaceScreen(Screen[None]):
 
     def _focus_first_character_section(self, *, initial: bool = False) -> None:
         """Same logic as _focus_first_covenant_section() (see that method's
-        docstring): unlike Laboratory, Character's default tab (Identity)
+        docstring): unlike Laboratory, Character's default tab (Description)
         already has Collapsibles of its own, so an active-pane-first lookup
         would never reach the top panel on first showing the character --
         this always checks the whole view first when `initial`, so the
@@ -10368,7 +10370,7 @@ class WorkspaceScreen(Screen[None]):
             FamiliarCreateScreen(self.saga, default_magus_id), handle_result
         )
 
-    # -- generic Add/Remove/Edit dispatch, by active character-sheet section --
+    # -- generic Add/Remove/Edit dispatch, by the active section of any sheet --
 
     def action_add(self) -> None:
         section = self._active_section()
@@ -13553,7 +13555,7 @@ class WorkspaceScreen(Screen[None]):
     def action_improve(self) -> None:
         self._improve_income_source()
 
-    # -- shared Character/Laboratory Virtue & Flaw actions --
+    # -- shared Character/Laboratory/Familiar Virtue & Flaw actions --
 
     def action_add_virtue_flaw(self) -> None:
         target = self._virtue_flaw_target()

@@ -1571,7 +1571,7 @@ def covenant_modifiers(
     both count, per Modifier's rules.
 
     This is the covenant end of the one lookup every total will use (DESIGN.md
-    section 5, "Effects on totals"): Virtues & Flaws on characters and
+    section 5.1): Virtues & Flaws on characters and
     laboratories will be collected the same way."""
     found = []
     for instance in covenant.boons_hooks:

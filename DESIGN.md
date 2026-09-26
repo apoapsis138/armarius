@@ -63,7 +63,8 @@ Saga
      │    ├─ Ability scores
      │    ├─ Art scores            (magi only)
      │    ├─ Spells known          (magi only)
-     │    └─ assigned Laboratory   (0 or 1, magi only)
+     │    ├─ assigned Laboratory   (0 or 1, magi only)
+     │    └─ Familiar              (0 or 1, magi only)
      ├─ Laboratory (n)
      │    ├─ owner: Character (0 or 1)
      │    └─ Virtue/Flaw instances (lab-specific, from catalog)
@@ -77,6 +78,10 @@ VirtueFlaw catalog (shared reference data, not per-saga)
 Spell catalog / instances (a Spell can be "known" by a character and/or
   "embodied" in a Lab Text book; see reference/UI_Conventions.md §6)
 ```
+
+The tree shows ownership, not storage: a saga file keeps flat lists of
+covenants, characters, laboratories, familiars, books and spells, linked by
+id (see §6).
 
 Key relationship notes:
 - A Character's `covenant_id` is nullable (not every character is attached
@@ -105,7 +110,8 @@ your call: there are enough Virtues/Flaws (on both characters *and* labs)
 that affect Lab Total, Casting Total, Study/Aging rolls, etc. that bolting
 a calculation layer on after the fact would mean reshaping the data model
 later. Instead, every catalog Virtue/Flaw carries **structured modifier
-tags**, not just flat descriptive text:
+tags**, not just flat descriptive text (illustrative entries: the shipped
+catalog's character Virtues & Flaws don't carry their modifiers yet):
 
 ```json
 {
@@ -113,6 +119,7 @@ tags**, not just flat descriptive text:
   "name": "Affinity with (Art)",
   "type": "Virtue",
   "category": "Hermetic",
+  "tier": "Minor",
   "cost": 1,
   "parameters": ["art"],
   "modifiers": [
@@ -124,6 +131,7 @@ tags**, not just flat descriptive text:
   "name": "Gifted Researcher",
   "type": "Virtue",
   "category": "Hermetic",
+  "tier": "Minor",
   "cost": 1,
   "modifiers": [
     { "applies_to": "lab_total", "activity": "original_research", "amount": 3 },
@@ -183,6 +191,14 @@ moves to the shared shape when a real calculation needs it:
   Characteristics feed Lab Totals (board: STORY-804).
 - Still to settle then: how flat amounts and multipliers combine when both apply.
 
+**Known exceptions in the code today** (predating this decision; each should
+move onto its catalog entry when its calculation is next touched):
+`inhabitants.py` picks the Gentle/Blatant Gift Loyalty modifier by the ids
+`vf_gentle_gift`/`vf_blatant_gift`; `models.GOVERNANCE_STYLE_IDS` lists the
+governance Boons/Hooks by id; binding a Familiar grants `vf_true_friend` by id
+(`screens.py`); and `totals.describe_modifier` words `covenant_expense`
+specially.
+
 ## 6. Data Shape (illustrative)
 
 The actual field-by-field shape lives in the dataclasses in
@@ -229,19 +245,15 @@ which entity owns which relationship.
 
 ## 8. Open Questions (deferred, not blocking)
 
-- Do we ever need combat *stats* (Soak, weapon damage) recorded on a
-  character sheet even without resolving combat? Likely yes eventually
-  (it's sheet data) — revisit when Phase 1 character sheet fields are
-  finalized.
-- Covenant "build points"/resource-generation rules (boons/hooks, income)
-  — model loosely now (free-form resources) or adopt the full Covenants
-  chapter point-buy system? Leaning loose-now, revisit in a covenant-focused
-  phase.
-- Familiars: full familiar bond mechanics (Cord, Golden Cord virtues, etc.)
-  or just "familiar: yes/no + notes" for v1?
 - History/audit trail for lab ownership changes, character covenant moves,
   etc. — not needed until someone actually asks "who owned this lab in
   1215?"
+
+Settled since first written: combat stats are sheet data (Soak and
+per-weapon Init/Attack/Defense/Damage are recorded, combat isn't resolved);
+covenants use the Covenants chapter's Boons & Hooks with points plus a
+calculated Economics tab; familiars have the full bond mechanics (cords,
+bond powers).
 
 ## 9. UI Conventions
 

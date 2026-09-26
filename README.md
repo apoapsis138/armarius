@@ -11,10 +11,21 @@ mechanics.
 
 ## Status
 
-Phase 1 (core tracker) is underway: you can create and browse sagas,
-covenants, characters, and laboratories, and add Virtues/Flaws to a
-character or lab from the shared catalog. Book/Spell creation and the
-Ability picker aren't wired up yet — see DESIGN.md §7 for the roadmap.
+Phase 1 (core tracker) is mostly built. You can create and browse sagas and
+keep, per saga:
+
+- **Covenants** — info panel, Boons & Hooks, Reputations, Inhabitants and
+  Loyalty, Possessions, Economics (income, expenditure, savings, the yearly
+  close) and a Library tab.
+- **Characters** — the full sheet: identity, Characteristics, Abilities,
+  Virtues & Flaws, Arts, Raw Vis, known spells with Mastery, inventory,
+  Personality Traits, Reputations, aging, wounds and fatigue, and books.
+- **Laboratories** and **Familiars** (bond mechanics, cords, bond powers).
+- **Books** (owned by a covenant, lab or character, with CSV import) and
+  **spells** (the published catalog, the saga's own spells and CSV import).
+
+Not built yet: deleting characters, labs and covenants, the covenant Diary,
+the Totals engine (Phase 2) and running seasons (Phase 3) — see DESIGN.md §7.
 
 ## Getting started
 
@@ -22,32 +33,38 @@ Requires Python 3.14+ and [`uv`](https://docs.astral.sh/uv/).
 
 ```bash
 uv sync
-uv run python main.py    # launches the Textual TUI
-uv run pytest            # run tests
-uv run ruff check .      # lint
+uv run python main.py                         # launches the Textual TUI
+uv run pytest -q -n 16 --dist worksteal       # run tests in parallel (~1 min)
+uv run ruff check . && uv run ruff format .   # lint and format
+uv run pyright                                # type-check
 ```
 
 ## Layout
 
-- `ars_magica_manager/models.py` — dataclasses for Saga, Covenant,
-  Character, Laboratory, Book, Spell, and the Virtue/Flaw and
-  Ability catalog entry types.
-- `ars_magica_manager/storage.py` — JSON load/save, one file per saga
-  under `data/sagas/` (git-ignored — that's campaign data, not source).
-- `ars_magica_manager/catalog.py` — loads the shared Virtue/Flaw catalog
-  (`data/virtue_flaw_catalog.json`) and Ability catalog
-  (`data/ability_catalog.json`).
-- `ars_magica_manager/screens.py` — the Textual TUI's screens: saga/
-  covenant/character/laboratory creation and browsing, and the shared
-  Virtue/Flaw picker.
-- `ars_magica_manager/app.py` — the Textual app entry point.
-- `ars_magica_manager/spells.py` — spell logic: where a spell id resolves
-  (catalog, saga, a magus's invented spells), magnitude, the "CrIg 20"
-  shorthand, Ritual vis and casting time, reading R/D/T notation.
+- `main.py`, `ars_magica_manager/app.py` — the Textual app entry point.
+- `ars_magica_manager/screens.py` — every screen and widget: the saga
+  picker, the workspace (navigation tree + sheet pane), the Character,
+  Laboratory, Familiar and Covenant sheets, the Book and Spell lists, and
+  the add/edit dialogs and pickers.
+- `ars_magica_manager/models.py` — the dataclasses (Saga, Covenant,
+  Character, Laboratory, Familiar, Book, Spell, Possession, Inhabitant,
+  Economics, catalog entry types, ...) and their load-time migrations.
+- Domain logic, one module per area, with no widgets in them:
+  `books.py`, `spells.py` (where a spell id resolves, magnitude, the
+  "CrIg 20" shorthand, R/D/T), `economics.py`, `inhabitants.py` (and
+  Loyalty), `possessions.py`, `familiars.py`.
+- `ars_magica_manager/catalog.py` — loads the shared catalogs in `data/`
+  (Virtues & Flaws, laboratory Virtues & Flaws, Abilities, Houses, covenant
+  Boons & Hooks, spells); `totals.py` — the registry of modifier types the
+  catalogs' effects are checked against.
+- `ars_magica_manager/storage.py` — JSON load/save, one file per saga under
+  `data/sagas/` (git-ignored — that's campaign data, not source);
+  `settings.py` — app settings (the chosen theme).
+- `ars_magica_manager/markup.py` — escaping and `**bold**`/`*italic*` for
+  user-written text; `themes.py` — the Scriptorum light/dark themes.
 - `data/spell_catalog.json` — the published Hermetic spells, built from
   Project: Redcap's [Grand Grimoire](https://www.redcap.org/page/The_Grand_Grimoire)
   by `tools/build_spell_catalog.py` (rerun it to refresh; it prints a report
   of anything that needs a look).
-- `data/virtue_flaw_catalog.json`, `data/ability_catalog.json` — seed
-  catalog entries (a starting point, not exhaustive — cross-check and
-  expand against the rulebook as you need more).
+- `data/*_catalog.json` — the other catalogs (a starting point, not
+  exhaustive — cross-check and expand against the rulebook as you need more).
