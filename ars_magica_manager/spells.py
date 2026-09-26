@@ -96,11 +96,6 @@ def all_spell_ids(saga: Saga) -> set[str]:
 # ------------------------------------------------------------------ figures
 
 
-def is_general(spell: Spell) -> bool:
-    """A General-level spell has no fixed level; it's cast at any level."""
-    return spell.level is None
-
-
 def magnitude(spell: Spell) -> int | None:
     """Level / 5, rounded up (levels 1-5 are magnitude 1); None for a General
     spell, whose magnitude depends on the level it's cast at."""

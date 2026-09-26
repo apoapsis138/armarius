@@ -133,7 +133,6 @@ _VIRTUE_FLAW_ITEM_ID_PREFIX = "vf-"
 _LAB_VIRTUE_FLAW_ITEM_ID_PREFIX = "labvf-"
 _ABILITY_ITEM_ID_PREFIX = "ability-"
 _REMOVAL_ITEM_ID_PREFIX = "remove-"
-_SPELL_ITEM_ID_PREFIX = "spell-"
 _COVENANT_BOON_HOOK_ITEM_ID_PREFIX = "covbhpick-"
 
 
@@ -197,7 +196,6 @@ def _inhabitant_fields(
     kind: str,
     entry: inh.InhabitantEntry | None,
     grog: Character | None,
-    covenant_year: int,
 ) -> list[DialogField]:
     """The add/edit form for one kind of inhabitant. For a person listed from a
     character sheet, name/house/year are shown read-only (edit them on the
@@ -821,14 +819,7 @@ def _book_problem(values: dict[str, Any]) -> str | None:
     return None
 
 
-def _book_live_for(saga: Saga) -> Callable[[dict[str, Any]], str]:
-    def live(values: dict[str, Any]) -> str:
-        return _book_live(values, saga)
-
-    return live
-
-
-def _book_live(values: dict[str, Any], saga: Saga | None = None) -> str:
+def _book_live(values: dict[str, Any], saga: Saga) -> str:
     """The form's live line: the Build Point cost (a Lab Text's or Casting
     Tablet's from its spell's level) and any covenant-creation limit the
     values go over (a warning, not an error)."""
@@ -839,7 +830,7 @@ def _book_live(values: dict[str, Any], saga: Saga | None = None) -> str:
     probe.quality = values.get("quality") if bk.has_quality(probe.type) else None
     probe.spell_id = values.get("spell_id") if probe.type in bk.SPELL_TYPES else None
     lines = [f"[b]Cost:[/] {bk.cost(probe, saga)} Build Points"]
-    spell = spl.find_spell(saga, probe.spell_id) if saga is not None else None
+    spell = spl.find_spell(saga, probe.spell_id)
     if spell is not None and spell.level is not None:
         lines[0] += f"  [dim](Level {spell.level}, from the spell)[/]"
     lines += [f"[red]{escape(w)}[/]" for w in bk.limit_warnings(probe)]
@@ -4537,8 +4528,7 @@ class EditFamiliarInfoScreen(ModalScreen[dict[str, object] | None]):
             ("input-fam-might-pool", "Current Might Pool"),
         ):
             raw = self.query_one(f"#{field_name}", Input).value.strip()
-            key = field_name.removeprefix("input-fam-").replace("-", "_")
-            key = "year_bound" if key == "year" else "might_pool"
+            key = "year_bound" if field_name == "input-fam-year" else "might_pool"
             try:
                 result[key] = int(raw) if raw else None
             except ValueError:
@@ -10820,7 +10810,7 @@ class WorkspaceScreen(Screen[None]):
                 title,
                 _book_fields(saga, book, self._default_book_owner()),
                 validate=_book_problem,
-                live=_book_live_for(saga),
+                live=lambda values: _book_live(values, saga),
             ),
             handle_result,
         )
@@ -11691,7 +11681,7 @@ class WorkspaceScreen(Screen[None]):
         self.app.push_screen(
             FieldsDialog(
                 title,
-                _inhabitant_fields(kind, entry, grog, self.saga.current_year),
+                _inhabitant_fields(kind, entry, grog),
                 validate=_inhabitant_problem,
             ),
             handle_result,
