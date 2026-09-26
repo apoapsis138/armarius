@@ -7,7 +7,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from dataclasses import field as dataclass_field
 from pathlib import Path
-from typing import Any, ClassVar
+from typing import Any, ClassVar, cast
 
 from textual.app import ComposeResult
 from textual.binding import Binding, BindingType
@@ -37,6 +37,7 @@ from textual.widgets import (
     TextArea,
     Tree,
 )
+from textual.widgets._collapsible import CollapsibleTitle
 from textual.widgets.option_list import Option
 
 from . import books as bk
@@ -7864,7 +7865,7 @@ class CovenantSheetView(Vertical):
         (Hooks (7 pts) turning red) would otherwise leave the old colour
         showing."""
         section.title = title
-        title_widget = section.query_one("CollapsibleTitle")
+        title_widget = section.query_one(CollapsibleTitle)
         # The label reactive skips "unchanged" values too, so store the new
         # Content directly (set_reactive bypasses that check), then repaint.
         title_widget.set_reactive(type(title_widget).label, Content.from_text(title))
@@ -10711,14 +10712,16 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(result: dict[str, object] | None) -> None:
             if result is None:
                 return
-            character.name = result["name"]
-            character.covenant_id = result["covenant_id"]
+            character.name = cast(str, result["name"])
+            character.covenant_id = cast("str | None", result["covenant_id"])
             self.selected_covenant = self._covenant_by_id(character.covenant_id)
             if character.type == "magus":
-                self._assign_laboratory(character, result["laboratory_id"])
-            character.background.setting = result["setting"]
-            character.background.confidence = result["confidence"]
-            character.background.size = result["size"]
+                self._assign_laboratory(
+                    character, cast("str | None", result["laboratory_id"])
+                )
+            character.background.setting = cast(str, result["setting"])
+            character.background.confidence = cast(int, result["confidence"])
+            character.background.size = cast(int, result["size"])
             storage.save_saga(self.saga)
             self._rebuild_tree()
             self._refresh_character_section("section-char-info")
@@ -10749,8 +10752,8 @@ class WorkspaceScreen(Screen[None]):
 
         def handle_result(result: dict[str, object] | None) -> None:
             if result is not None:
-                character.background = result["background"]
-                character.description = result["description"]
+                character.background = cast(Background, result["background"])
+                character.description = cast(Description, result["description"])
                 storage.save_saga(self.saga)
                 self._refresh_character_section("section-char-biographical")
                 # Age (derived from Year Born) lives in the top panel.
@@ -11499,13 +11502,13 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(result: dict[str, object] | None) -> None:
             if result is None:
                 return
-            lab.name = result["name"]
-            lab.location = result["location"]
-            lab.build_points = result["build_points"]
-            lab.aura_modifier = result["aura_modifier"]
-            lab.covenant_id = result["covenant_id"]
+            lab.name = cast(str, result["name"])
+            lab.location = cast(str, result["location"])
+            lab.build_points = cast(int, result["build_points"])
+            lab.aura_modifier = cast(int, result["aura_modifier"])
+            lab.covenant_id = cast("str | None", result["covenant_id"])
             self.selected_covenant = self._covenant_by_id(lab.covenant_id)
-            self._assign_laboratory_owner(lab, result["owner_id"])
+            self._assign_laboratory_owner(lab, cast("str | None", result["owner_id"]))
             storage.save_saga(self.saga)
             self._rebuild_tree()
             self._refresh_laboratory_section("section-lab-identity")
