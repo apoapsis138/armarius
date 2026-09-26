@@ -1017,6 +1017,16 @@ class SagaCreateScreen(ModalScreen[str | None]):
         height: auto;
         margin-top: 1;
     }
+
+    #create-year-row {
+        width: 100%;
+        height: auto;
+    }
+
+    #create-buttons {
+        width: 100%;
+        height: auto;
+    }
     """
 
     def compose(self) -> ComposeResult:
@@ -1026,7 +1036,7 @@ class SagaCreateScreen(ModalScreen[str | None]):
             yield Input(placeholder="e.g. Dammerstein", id="input-name")
             yield Label("Storyguide name")
             yield Input(placeholder="e.g. Alex", id="input-storyguide")
-            with Horizontal():
+            with Horizontal(id="create-year-row"):
                 yield Input(value="1220", type="integer", id="input-year")
                 yield Select(
                     [(season, season) for season in SEASONS],
@@ -1040,7 +1050,7 @@ class SagaCreateScreen(ModalScreen[str | None]):
                 id="input-description",
             )
             yield Static("", id="create-error")
-            with Horizontal():
+            with Horizontal(id="create-buttons"):
                 yield Button("Create", id="btn-create", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -1118,6 +1128,11 @@ class CovenantCreateScreen(ModalScreen[str | None]):
         height: auto;
         margin-top: 1;
     }
+
+    #create-buttons {
+        width: 100%;
+        height: auto;
+    }
     """
 
     def __init__(self, saga: Saga) -> None:
@@ -1134,7 +1149,7 @@ class CovenantCreateScreen(ModalScreen[str | None]):
                 placeholder="A one-line note about the covenant", id="input-notes"
             )
             yield Static("", id="create-error")
-            with Horizontal():
+            with Horizontal(id="create-buttons"):
                 yield Button("Create", id="btn-create", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -1196,6 +1211,11 @@ class CharacterCreateScreen(ModalScreen[str | None]):
         height: auto;
         margin-top: 1;
     }
+
+    #create-buttons {
+        width: 100%;
+        height: auto;
+    }
     """
 
     _CHARACTER_TYPES: ClassVar[list[tuple[str, str]]] = [
@@ -1230,7 +1250,7 @@ class CharacterCreateScreen(ModalScreen[str | None]):
                 id="select-covenant",
             )
             yield Static("", id="create-error")
-            with Horizontal():
+            with Horizontal(id="create-buttons"):
                 yield Button("Create", id="btn-create", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -1300,6 +1320,11 @@ class ParamPromptScreen(ModalScreen[dict[str, str] | None]):
         height: auto;
         margin-top: 1;
     }
+
+    #param-buttons {
+        width: 100%;
+        height: auto;
+    }
     """
 
     def __init__(self, prompt_title: str, parameters: list[str]) -> None:
@@ -1314,7 +1339,7 @@ class ParamPromptScreen(ModalScreen[dict[str, str] | None]):
                 yield Label(param.title())
                 yield Input(placeholder="e.g. Creo", id=f"input-param-{param}")
             yield Static("", id="param-error")
-            with Horizontal():
+            with Horizontal(id="param-buttons"):
                 yield Button("Confirm", id="btn-confirm", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -1680,6 +1705,11 @@ class AbilityDetailsScreen(ModalScreen[Ability | None]):
         height: auto;
         margin-top: 1;
     }
+
+    #details-buttons {
+        width: 100%;
+        height: auto;
+    }
     """
 
     def __init__(
@@ -1709,7 +1739,7 @@ class AbilityDetailsScreen(ModalScreen[Ability | None]):
                 value=specialty or "", placeholder="e.g. Swords", id="input-specialty"
             )
             yield Static("", id="details-error")
-            with Horizontal():
+            with Horizontal(id="details-buttons"):
                 yield Button("Confirm", id="btn-confirm", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -2096,6 +2126,11 @@ class LaboratoryCreateScreen(ModalScreen[str | None]):
         height: auto;
         margin-top: 1;
     }
+
+    #create-buttons {
+        width: 100%;
+        height: auto;
+    }
     """
 
     def __init__(self, saga: Saga, covenant: Covenant | None = None) -> None:
@@ -2119,7 +2154,7 @@ class LaboratoryCreateScreen(ModalScreen[str | None]):
                 id="select-covenant",
             )
             yield Static("", id="create-error")
-            with Horizontal():
+            with Horizontal(id="create-buttons"):
                 yield Button("Create", id="btn-create", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -2454,6 +2489,11 @@ class ItemAddScreen(ModalScreen[str | None]):
         height: auto;
         margin-top: 1;
     }
+
+    #create-buttons {
+        width: 100%;
+        height: auto;
+    }
     """
 
     def __init__(self, title: str = "Add an Item", existing: str | None = None) -> None:
@@ -2470,7 +2510,7 @@ class ItemAddScreen(ModalScreen[str | None]):
                 id="input-item",
             )
             yield Static("", id="create-error")
-            with Horizontal():
+            with Horizontal(id="create-buttons"):
                 yield Button(
                     "Add" if self.existing is None else "Save",
                     id="btn-create",
@@ -2521,6 +2561,11 @@ class ScoredTraitPromptScreen(ModalScreen[ScoredTrait | None]):
         color: $error;
         height: auto;
         margin-top: 1;
+    }
+
+    #trait-buttons {
+        width: 100%;
+        height: auto;
     }
     """
 
@@ -2574,7 +2619,7 @@ class ScoredTraitPromptScreen(ModalScreen[ScoredTrait | None]):
                     id="input-trait-known",
                 )
             yield Static("", id="trait-error")
-            with Horizontal():
+            with Horizontal(id="trait-buttons"):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -2637,6 +2682,11 @@ class MasteryAbilityPromptScreen(ModalScreen[MasteryAbility | None]):
         height: auto;
         margin-top: 1;
     }
+
+    #mastery-ability-buttons {
+        width: 100%;
+        height: auto;
+    }
     """
 
     def __init__(self, title: str, existing: MasteryAbility | None = None) -> None:
@@ -2666,7 +2716,7 @@ class MasteryAbilityPromptScreen(ModalScreen[MasteryAbility | None]):
                 id="input-mastery-ability-xp",
             )
             yield Static("", id="mastery-ability-error")
-            with Horizontal():
+            with Horizontal(id="mastery-ability-buttons"):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -2727,6 +2777,16 @@ class MasteryEditScreen(ModalScreen[KnownSpell | None]):
         height: auto;
         margin-top: 1;
     }
+
+    #mastery-ability-row-buttons {
+        width: 100%;
+        height: auto;
+    }
+
+    #mastery-buttons {
+        width: 100%;
+        height: auto;
+    }
     """
 
     def __init__(self, spell_name: str, existing: KnownSpell) -> None:
@@ -2751,11 +2811,11 @@ class MasteryEditScreen(ModalScreen[KnownSpell | None]):
             )
             yield Label("Mastery Abilities")
             yield ListView(id="mastery-abilities-list")
-            with Horizontal():
+            with Horizontal(id="mastery-ability-row-buttons"):
                 yield Button("Add Ability", id="btn-add-ability", compact=True)
                 yield Button("Remove Ability", id="btn-remove-ability", compact=True)
             yield Static("", id="mastery-error")
-            with Horizontal():
+            with Horizontal(id="mastery-buttons"):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -2850,6 +2910,11 @@ class RawVisPromptScreen(ModalScreen[tuple[str, int] | None]):
         height: auto;
         margin-top: 1;
     }
+
+    #vis-buttons {
+        width: 100%;
+        height: auto;
+    }
     """
 
     def __init__(self, existing: tuple[str, int] | None = None) -> None:
@@ -2875,7 +2940,7 @@ class RawVisPromptScreen(ModalScreen[tuple[str, int] | None]):
                 id="input-vis-pawns",
             )
             yield Static("", id="vis-error")
-            with Horizontal():
+            with Horizontal(id="vis-buttons"):
                 yield Button(
                     "Add" if existing is None else "Save",
                     id="btn-create",
@@ -3883,6 +3948,11 @@ class NamedDescriptionPromptScreen(ModalScreen[NamedDescription | None]):
         height: auto;
         margin-top: 1;
     }
+
+    #named-desc-buttons {
+        width: 100%;
+        height: auto;
+    }
     """
 
     def __init__(
@@ -3912,7 +3982,7 @@ class NamedDescriptionPromptScreen(ModalScreen[NamedDescription | None]):
                 id="input-named-desc-description",
             )
             yield Static("", id="named-desc-error")
-            with Horizontal():
+            with Horizontal(id="named-desc-buttons"):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -3962,6 +4032,11 @@ class DiaryEntryPromptScreen(ModalScreen[DiaryEntry | None]):
         height: auto;
         margin-top: 1;
     }
+
+    #diary-buttons {
+        width: 100%;
+        height: auto;
+    }
     """
 
     def __init__(
@@ -4006,7 +4081,7 @@ class DiaryEntryPromptScreen(ModalScreen[DiaryEntry | None]):
                 value=existing.details if existing else "", id="input-diary-details"
             )
             yield Static("", id="diary-error")
-            with Horizontal():
+            with Horizontal(id="diary-buttons"):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
@@ -5141,6 +5216,11 @@ class EditCovenantDescriptionScreen(ModalScreen[str | None]):
         height: auto;
         margin-bottom: 1;
     }
+
+    #cov-desc-buttons {
+        width: 100%;
+        height: auto;
+    }
     """
 
     def __init__(self, text: str) -> None:
@@ -5152,7 +5232,7 @@ class EditCovenantDescriptionScreen(ModalScreen[str | None]):
             yield Label("Edit Covenant Description")
             yield TextArea(self.text, id="cov-desc-text")
             yield Static("Supports **bold** and *italic*.", id="cov-desc-hint")
-            with Horizontal():
+            with Horizontal(id="cov-desc-buttons"):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
