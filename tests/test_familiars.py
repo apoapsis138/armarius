@@ -3,6 +3,7 @@ import pytest
 from ars_magica_manager import familiars as fam
 from ars_magica_manager.models import (
     Ability,
+    BondPower,
     Character,
     Characteristics,
     Familiar,
@@ -153,3 +154,34 @@ def test_ability_info_text_shows_catalog_description():
         "[dim]Select an Ability for its description.[/]"
     )
     assert "General physical prowess" in fam.ability_info_text(familiar, 0)
+
+
+def test_bond_power_rows_and_info_text():
+    _, _magus, familiar = _saga()
+    familiar.bond_powers = [
+        BondPower(
+            id="p1",
+            name="Speak with Beasts",
+            level=15,
+            technique="Creo",
+            form="Animal",
+            target_controller="Familiar (controlled by Magus)",
+            uses_per_day=3,
+            penetration=5,
+            vis_spent=2,
+            cosmetic_trait="A feathered crest",
+        )
+    ]
+    assert fam.bond_power_rows(familiar) == [(0, "Speak with Beasts")]
+    assert fam.bond_power_info_text(familiar, None) == (
+        "[dim]Select a Bond Power for its details.[/]"
+    )
+    text = fam.bond_power_info_text(familiar, 0)
+    assert "Speak with Beasts" in text
+    assert "Level:[/] 15" in text
+    assert "Creo / Animal" in text
+    assert "Familiar (controlled by Magus)" in text
+    assert "Uses/Day:[/] 3" in text
+    assert "Penetration:[/] 5" in text
+    assert "Vis Spent:[/] 2" in text
+    assert "A feathered crest" in text

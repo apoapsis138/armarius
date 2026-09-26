@@ -971,6 +971,25 @@ CORD_SCORE_COSTS: dict[int, int] = {0: 0, 1: 5, 2: 15, 3: 30, 4: 50, 5: 75}
 
 
 @dataclass
+class BondPower:
+    """One Empowered Bond Power (invested effect) on a Familiar -- typed in,
+    no Lab Total formula computed (see DESIGN.md's "tracker, not rules
+    engine" stance and STORY-206 Slice 5)."""
+
+    id: str
+    name: str = ""
+    level: int = 0
+    technique: str = ""  # one of TECHNIQUES, or ""
+    form: str = ""  # one of FORMS, or ""
+    #: e.g. "Magus (controlled by Familiar)" -- free text, not a fixed enum.
+    target_controller: str = ""
+    uses_per_day: int = 0
+    penetration: int = 0
+    vis_spent: int = 0
+    cosmetic_trait: str = ""
+
+
+@dataclass
 class Familiar:
     """A magus's bound familiar (ArM5 Familiars). One per magus at a time,
     nested under its magus in the nav tree, but its own top-level entity
@@ -979,8 +998,8 @@ class Familiar:
     `character_id` is the magus who bound it: required, set once at
     creation, and never reassigned to a different magus.
 
-    Built in slices (STORY-206); Bond Powers are added by a later slice onto
-    this same dataclass, the same way Character grew over many stories.
+    Built in slices (STORY-206), all now landed onto this one dataclass, the
+    same way Character grew over many stories.
 
     `virtues_flaws`/`personality_traits` reuse Character's own shapes
     (VirtueFlawInstance/ScoredTrait) -- True Friend and Loyal (Partner) +3
@@ -1030,6 +1049,7 @@ class Familiar:
     #: magus's Language scores automatically, so none need typing in
     #: unless the user wants to note an exception).
     abilities: list[Ability] = field(default_factory=list)
+    bond_powers: list[BondPower] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Familiar:
@@ -1048,6 +1068,9 @@ class Familiar:
             for w in d.get("natural_weapons", [])
         ]
         d["abilities"] = [Ability.from_dict(a) for a in d.get("abilities", [])]
+        d["bond_powers"] = [
+            BondPower(**known_fields(BondPower, p)) for p in d.get("bond_powers", [])
+        ]
         return cls(**known_fields(cls, d))
 
 

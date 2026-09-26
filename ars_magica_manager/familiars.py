@@ -1,8 +1,7 @@
 """Logic behind a Familiar's sheet -- no UI in here.
 
-Slices 1-3 (Identity & Cords, Characteristics, Combat & Health) of
-STORY-206; later slices add Abilities and Bond Powers here as they're
-built.
+All five slices of STORY-206 (Identity & Cords, Characteristics, Combat &
+Health, Abilities, Bond Powers) are built.
 """
 
 from __future__ import annotations
@@ -278,3 +277,28 @@ def ability_info_text(familiar: Familiar, index: int | None) -> str:
     if definition is None or not definition.description:
         return "[dim](no catalog description)[/]"
     return escape(definition.description)
+
+
+def bond_power_rows(familiar: Familiar) -> list[tuple[int, str]]:
+    return [
+        (index, escape(power.name) or "(unnamed)")
+        for index, power in enumerate(familiar.bond_powers)
+    ]
+
+
+def bond_power_info_text(familiar: Familiar, index: int | None) -> str:
+    if index is None:
+        return "[dim]Select a Bond Power for its details.[/]"
+    power = familiar.bond_powers[index]
+    tech_form = " / ".join(t for t in (power.technique, power.form) if t) or "(none)"
+    lines = [
+        f"[b]Name:[/] {escape(power.name) or '(unnamed)'}",
+        f"[b]Level:[/] {power.level}",
+        f"[b]Technique / Form:[/] {escape(tech_form)}",
+        f"[b]Target & Controller:[/] {escape(power.target_controller) or '(not set)'}",
+        f"[b]Uses/Day:[/] {power.uses_per_day}",
+        f"[b]Penetration:[/] {power.penetration}",
+        f"[b]Vis Spent:[/] {power.vis_spent}",
+        f"[b]Cosmetic Trait:[/] {escape(power.cosmetic_trait) or '(none)'}",
+    ]
+    return "\n".join(lines)

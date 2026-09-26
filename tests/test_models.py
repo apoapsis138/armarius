@@ -4,6 +4,7 @@ from ars_magica_manager.models import (
     Ability,
     Aging,
     Background,
+    BondPower,
     Character,
     Characteristics,
     Description,
@@ -226,6 +227,7 @@ def test_familiar_from_dict_defaults_for_pre_existing_saves():
     assert familiar.base_soak == 0
     assert familiar.magic_resistance == 0
     assert familiar.abilities == []
+    assert familiar.bond_powers == []
 
 
 def test_familiar_survives_a_dict_round_trip():
@@ -241,6 +243,20 @@ def test_familiar_survives_a_dict_round_trip():
         base_soak=5,
         magic_resistance=12,
         abilities=[Ability(name="Athletics", level=3, specialty="Running")],
+        bond_powers=[
+            BondPower(
+                id="speak_with_beasts",
+                name="Speak with Beasts",
+                level=15,
+                technique="Creo",
+                form="Animal",
+                target_controller="Familiar (controlled by Magus)",
+                uses_per_day=3,
+                penetration=5,
+                vis_spent=2,
+                cosmetic_trait="A feathered crest",
+            )
+        ],
     )
     restored = Familiar.from_dict(asdict(familiar))
     assert restored == familiar

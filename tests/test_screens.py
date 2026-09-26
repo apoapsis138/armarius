@@ -882,6 +882,7 @@ _FAM_SECTION_TAB: dict[str, str] = {
     "section-fam-health": "tab-fam-combat",
     "section-fam-natural-weapons": "tab-fam-combat",
     "tab-fam-abilities": "tab-fam-abilities",
+    "tab-fam-powers": "tab-fam-powers",
 }
 
 
@@ -1179,6 +1180,57 @@ async def test_familiar_abilities_use_generic_add_edit_remove():
         assert isinstance(app.screen, WorkspaceScreen)
 
     assert storage.load_saga("test_saga").familiars[0].abilities == []
+
+
+async def test_familiar_bond_powers_use_generic_add_edit_remove():
+    storage.save_saga(_saga_with_familiar())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_familiar(pilot, app)
+        await _open_familiar_section(pilot, app, "tab-fam-powers")
+        assert app.screen.check_action("add", ()) is True
+
+        await pilot.press("a")
+        await pilot.pause()
+        assert isinstance(app.screen, FieldsDialog)
+        _fill(app, name="Speak with Beasts", level=15, uses_per_day=3)
+        await _save_dialog(pilot, app)
+
+        [familiar] = storage.load_saga("test_saga").familiars
+        assert len(familiar.bond_powers) == 1
+        assert familiar.bond_powers[0].name == "Speak with Beasts"
+        assert familiar.bond_powers[0].level == 15
+        assert familiar.bond_powers[0].uses_per_day == 3
+        assert familiar.bond_powers[0].technique == ""
+
+        view = app.screen._familiar_sheet_view
+        list_widget = view.query_one("#fam-bond-powers-list", SelectableList)
+        assert any("Speak with Beasts" in str(o.prompt) for o in list_widget.options)
+
+        await pilot.press("e")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, FieldsDialog)
+        _fill(app, vis_spent=2)
+        await _save_dialog(pilot, app)
+
+        [familiar] = storage.load_saga("test_saga").familiars
+        assert familiar.bond_powers[0].vis_spent == 2
+
+        await pilot.press("A")
+        await pilot.pause()
+        assert isinstance(app.screen, RemovalPickerScreen)
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, ConfirmScreen)
+        await pilot.press("y")
+        await pilot.pause()
+        assert isinstance(app.screen, WorkspaceScreen)
+
+    assert storage.load_saga("test_saga").familiars[0].bond_powers == []
 
 
 async def test_familiar_virtues_flaws_add_via_v_and_remove_via_shift_v():

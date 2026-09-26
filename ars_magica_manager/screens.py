@@ -87,6 +87,7 @@ from .models import (
     Aging,
     ArtScore,
     Background,
+    BondPower,
     Book,
     Character,
     Characteristics,
@@ -552,6 +553,53 @@ def _possession_problem(values: dict[str, Any]) -> str | None:
     if gear_type and values.get("gear_quality") not in GEAR_POINTS[gear_type]:
         return f"{gear_type} only comes {' or '.join(GEAR_POINTS[gear_type]).lower()}."
     return None
+
+
+def _bond_power_fields(power: BondPower | None) -> list[DialogField]:
+    """The add/edit form for one Empowered Bond Power -- all typed-in, no
+    Lab Total formula computed (see BondPower's docstring)."""
+
+    def value(attribute: str, default):
+        return getattr(power, attribute) if power is not None else default
+
+    return [
+        DialogField("name", "Power Name", "text", value("name", ""), required=True),
+        DialogField("level", "Level", "int", value("level", 0)),
+        DialogField(
+            "technique",
+            "Technique",
+            "select",
+            value("technique", ""),
+            options=[(t, t) for t in TECHNIQUES],
+            allow_blank=True,
+            placeholder="(none)",
+        ),
+        DialogField(
+            "form",
+            "Form",
+            "select",
+            value("form", ""),
+            options=[(f, f) for f in FORMS],
+            allow_blank=True,
+            placeholder="(none)",
+        ),
+        DialogField(
+            "target_controller",
+            "Target & Controller",
+            "text",
+            value("target_controller", ""),
+            placeholder="e.g. Magus (controlled by Familiar)",
+        ),
+        DialogField("uses_per_day", "Uses/Day", "int", value("uses_per_day", 0)),
+        DialogField("penetration", "Penetration", "int", value("penetration", 0)),
+        DialogField("vis_spent", "Vis Spent", "int", value("vis_spent", 0)),
+        DialogField(
+            "cosmetic_trait",
+            "Cosmetic Trait Manifested",
+            "text",
+            value("cosmetic_trait", ""),
+        ),
+    ]
 
 
 def _ability_template_prefix(name: str) -> str | None:
@@ -8550,8 +8598,14 @@ class FamiliarSheetView(Vertical):
                 yield Static(
                     fam.ability_info_text(self.familiar, None), id="fam-ability-info"
                 )
-            with TabPane("Bond Powers", id="tab-fam-powers"):
-                yield Static(_tab_placeholder("Bond Powers"))
+            with TabPane("Bond Powers", id="tab-fam-powers"), VerticalScroll():
+                yield SelectableList(
+                    fam.bond_power_rows(self.familiar), id="fam-bond-powers-list"
+                )
+                yield Static(
+                    fam.bond_power_info_text(self.familiar, None),
+                    id="fam-bond-powers-info",
+                )
 
     def _binding_text(self) -> str:
         return f"{fam.binding_text(self.familiar)}\n\n{fam.cords_text(self.familiar)}"
@@ -8609,6 +8663,13 @@ class FamiliarSheetView(Vertical):
                 self.query_one("#fam-ability-info", Static).update(
                     fam.ability_info_text(self.familiar, None)
                 )
+            elif section_id == "tab-fam-powers":
+                self.query_one("#fam-bond-powers-list", SelectableList).set_rows(
+                    fam.bond_power_rows(self.familiar)
+                )
+                self.query_one("#fam-bond-powers-info", Static).update(
+                    fam.bond_power_info_text(self.familiar, None)
+                )
         except NoMatches:
             pass
 
@@ -8640,6 +8701,11 @@ class FamiliarSheetView(Vertical):
     def selected_ability(self) -> int | None:
         return self.query_one("#fam-abilities-list", SelectableList).selected_data_index
 
+    def selected_bond_power(self) -> int | None:
+        return self.query_one(
+            "#fam-bond-powers-list", SelectableList
+        ).selected_data_index
+
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
         list_id = event.selectable_list.id or ""
         if list_id == "fam-natural-weapons-list":
@@ -8652,6 +8718,12 @@ class FamiliarSheetView(Vertical):
             event.stop()
             self.query_one("#fam-ability-info", Static).update(
                 fam.ability_info_text(self.familiar, event.data_index)
+            )
+            return
+        if list_id == "fam-bond-powers-list":
+            event.stop()
+            self.query_one("#fam-bond-powers-info", Static).update(
+                fam.bond_power_info_text(self.familiar, event.data_index)
             )
             return
         if list_id not in ("fam-vf-virtues-list", "fam-vf-flaws-list"):
@@ -9422,6 +9494,7 @@ class WorkspaceScreen(Screen[None]):
         "section-fam-reputations",
         "section-fam-natural-weapons",
         "tab-fam-abilities",
+        "tab-fam-powers",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
         *BOOK_SECTIONS,
@@ -9449,6 +9522,7 @@ class WorkspaceScreen(Screen[None]):
         "section-fam-reputations",
         "section-fam-natural-weapons",
         "tab-fam-abilities",
+        "tab-fam-powers",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
         *(BOOK_SECTIONS - {"section-lib-summary"}),
@@ -9497,6 +9571,7 @@ class WorkspaceScreen(Screen[None]):
         "section-fam-health",
         "section-fam-natural-weapons",
         "tab-fam-abilities",
+        "tab-fam-powers",
         *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
         *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
         *(BOOK_SECTIONS - {"section-lib-summary"}),
@@ -9519,9 +9594,12 @@ class WorkspaceScreen(Screen[None]):
     _CHARACTER_DISPATCH_TABS: ClassVar[set[str]] = {"tab-abilities"}
 
     #: Familiar tabs that own their own a/A/e dispatch (keyed by tab id),
-    #: same idea as _CHARACTER_DISPATCH_TABS -- "tab-fam-abilities" is a flat
-    #: pane with no sub-sections. See _active_familiar_section().
-    _FAMILIAR_DISPATCH_TABS: ClassVar[set[str]] = {"tab-fam-abilities"}
+    #: same idea as _CHARACTER_DISPATCH_TABS -- both are flat panes with no
+    #: sub-sections. See _active_familiar_section().
+    _FAMILIAR_DISPATCH_TABS: ClassVar[set[str]] = {
+        "tab-fam-abilities",
+        "tab-fam-powers",
+    }
 
     DEFAULT_CSS = """
     #workspace-body {
@@ -9839,11 +9917,10 @@ class WorkspaceScreen(Screen[None]):
         return "section-cov-info"
 
     def _active_familiar_section(self) -> str | None:
-        """Same idea as _active_character_section(): "tab-fam-abilities" is
-        a flat pane with no sub-sections, so it dispatches on its own tab id
-        (see _FAMILIAR_DISPATCH_TABS); the one remaining placeholder tab
-        (Bond Powers) owns no dispatch yet, so it falls back to the
-        always-visible info panel."""
+        """Same idea as _active_character_section(): "tab-fam-abilities" and
+        "tab-fam-powers" are flat panes with no sub-sections, so they
+        dispatch on their own tab id (see _FAMILIAR_DISPATCH_TABS); every
+        other tab falls back to the always-visible info panel."""
         if self._familiar_sheet_view is None:
             return None
         try:
@@ -10317,6 +10394,8 @@ class WorkspaceScreen(Screen[None]):
             self._add_familiar_natural_weapon()
         elif section == "tab-fam-abilities":
             self._add_familiar_ability()
+        elif section == "tab-fam-powers":
+            self._add_familiar_bond_power()
         elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
             self._add_raw_vis()
         elif section == "section-lab-specialties":
@@ -10368,6 +10447,8 @@ class WorkspaceScreen(Screen[None]):
             self._remove_familiar_natural_weapon()
         elif section == "tab-fam-abilities":
             self._remove_familiar_ability()
+        elif section == "tab-fam-powers":
+            self._remove_familiar_bond_power()
         elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
             self._remove_raw_vis()
         elif section == "section-lab-specialties":
@@ -10446,6 +10527,8 @@ class WorkspaceScreen(Screen[None]):
             self._edit_familiar_natural_weapon()
         elif section == "tab-fam-abilities":
             self._edit_familiar_ability()
+        elif section == "tab-fam-powers":
+            self._edit_familiar_bond_power()
         elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
             self._edit_raw_vis()
         elif section == "section-inventory":
@@ -13875,6 +13958,114 @@ class WorkspaceScreen(Screen[None]):
                 del familiar.abilities[index]
                 storage.save_saga(self.saga)
                 self._refresh_familiar_section("tab-fam-abilities")
+
+        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
+
+    # -- Familiar: Bond Powers --
+
+    def _selected_familiar_bond_power(self) -> int | None:
+        view = self._familiar_sheet_view
+        return view.selected_bond_power() if view is not None else None
+
+    def _familiar_bond_power_form(self, index: int | None) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        existing = familiar.bond_powers[index] if index is not None else None
+        title = (
+            "Add a Bond Power"
+            if existing is None
+            else f"Edit {escape(existing.name) or 'this Bond Power'}"
+        )
+
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is None:
+                return
+            # "select" fields with allow_blank dismiss None for "not set";
+            # BondPower uses "" like Familiar.binding_technique/_form do.
+            values["technique"] = values.get("technique") or ""
+            values["form"] = values.get("form") or ""
+            if existing is not None:
+                for key, value in values.items():
+                    setattr(existing, key, value)
+            else:
+                familiar.bond_powers.append(
+                    BondPower(
+                        id=storage.generate_unique_id(
+                            values.get("name") or "power",
+                            [p.id for p in familiar.bond_powers],
+                        ),
+                        **values,
+                    )
+                )
+            storage.save_saga(self.saga)
+            self._refresh_familiar_section("tab-fam-powers")
+
+        self.app.push_screen(
+            FieldsDialog(title, _bond_power_fields(existing)), handle_result
+        )
+
+    def _add_familiar_bond_power(self) -> None:
+        self._familiar_bond_power_form(None)
+
+    def _edit_familiar_bond_power(self) -> None:
+        """Edit the chosen Bond Power; with none chosen, ask which one."""
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        selected = self._selected_familiar_bond_power()
+        if selected is not None:
+            self._familiar_bond_power_form(selected)
+            return
+        if not familiar.bond_powers:
+            self.notify("No Bond Powers to edit.")
+            return
+
+        labels = [escape(p.name) or "(unnamed)" for p in familiar.bond_powers]
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._familiar_bond_power_form(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Edit which Bond Power?", labels), handle_index
+        )
+
+    def _remove_familiar_bond_power(self) -> None:
+        """Delete the chosen Bond Power (after confirming); with none
+        chosen, ask which one first."""
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        selected = self._selected_familiar_bond_power()
+        if selected is not None:
+            self._confirm_remove_familiar_bond_power(selected)
+            return
+        if not familiar.bond_powers:
+            self.notify("No Bond Powers to remove.")
+            return
+
+        labels = [escape(p.name) or "(unnamed)" for p in familiar.bond_powers]
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._confirm_remove_familiar_bond_power(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove a Bond Power", labels), handle_index
+        )
+
+    def _confirm_remove_familiar_bond_power(self, index: int) -> None:
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        name = familiar.bond_powers[index].name or "this Bond Power"
+
+        def handle_confirmed(confirmed: bool) -> None:
+            if confirmed:
+                del familiar.bond_powers[index]
+                storage.save_saga(self.saga)
+                self._refresh_familiar_section("tab-fam-powers")
 
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
