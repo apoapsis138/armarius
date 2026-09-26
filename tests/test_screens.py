@@ -38,7 +38,6 @@ from ars_magica_manager.models import (
     Characteristics,
     Covenant,
     DiaryEntry,
-    Economics,
     Familiar,
     HermeticBackground,
     IncomeSource,
@@ -142,6 +141,16 @@ async def _wait_until(
     while not condition() and elapsed < timeout:
         await pilot.pause(interval)
         elapsed += interval
+
+
+async def _wait_until_active(pilot, app, section_id: str) -> None:
+    """Wait for `section_id` to be what a/A/e dispatch to, and fail clearly
+    if it never becomes so."""
+    await _wait_until(pilot, lambda: app.screen._active_section() == section_id)
+    assert app.screen._active_section() == section_id, (
+        f"{section_id!r} never became the active section "
+        f"(got {app.screen._active_section()!r})"
+    )
 
 
 #: Selecting one of these tree-node kinds mounts a heavy sheet view
@@ -263,20 +272,19 @@ async def _open_section(pilot, app, section_id: str) -> None:
     """
     view = app.screen._character_sheet_view
     assert view is not None, "no character sheet is currently shown"
-    if section_id in ("section-char-info", "section-char-characteristics"):
-        await _wait_until(pilot, lambda: view.initial_tab_seen)
-        await pilot.pause()
-        collapsible = view.query_one(f"#{section_id}", Collapsible)
-        collapsible.query_one("CollapsibleTitle").focus()
-        await pilot.pause()
-        return
-    tab_id = _SECTION_TAB[section_id]
-    view.query_one(TabbedContent).active = tab_id
+    # Let the view's own initial focus land first, or it can arrive after
+    # ours and steal it back (see _open_lab_section).
+    await _wait_until(pilot, lambda: view.initial_tab_seen)
     await pilot.pause()
-    if section_id != tab_id:
+    if section_id not in ("section-char-info", "section-char-characteristics"):
+        tab_id = _SECTION_TAB[section_id]
+        view.query_one(TabbedContent).active = tab_id
+        await pilot.pause()
+    if section_id != _SECTION_TAB[section_id]:
         collapsible = view.query_one(f"#{section_id}", Collapsible)
         collapsible.query_one("CollapsibleTitle").focus()
         await pilot.pause()
+    await _wait_until_active(pilot, app, section_id)
 
 
 #: Same idea as _SECTION_TAB, for the laboratory sheet.
@@ -887,6 +895,7 @@ async def _open_familiar_section(pilot, app, section_id: str) -> None:
         collapsible = view.query_one(f"#{section_id}", Collapsible)
         collapsible.query_one("CollapsibleTitle").focus()
         await pilot.pause()
+    await _wait_until_active(pilot, app, section_id)
 
 
 async def test_binding_a_familiar_nests_it_under_its_magus_and_grants_shared_traits():
@@ -5662,8 +5671,19 @@ def _fill(app, **values) -> None:
 
 
 async def _save_dialog(pilot, app) -> None:
-    app.screen.query_one("#btn-save", Button).press()
+    """Press a FieldsDialog's Save, then wait for it to close -- or to show a
+    validation error and stay open."""
+    dialog = app.screen
+    dialog.query_one("#btn-save", Button).press()
     await pilot.pause()
+    await _wait_until(
+        pilot,
+        lambda: (
+            app.screen is not dialog
+            or str(dialog.query_one("#fields-error", Static).render()).strip()
+        ),
+    )
+    await pilot.pause()  # the result callback can land a beat after the switch
 
 
 def _records(kind: str | None = None) -> list[Inhabitant]:
@@ -5671,16 +5691,16 @@ def _records(kind: str | None = None) -> list[Inhabitant]:
     return [r for r in cov.inhabitants if kind is None or r.kind == kind]
 
 
-def _inh_view(app):
+def _cov_view(app):
     return app.screen._covenant_sheet_view
 
 
 def _inh_labels(app, kind: str) -> list[str]:
-    return [label for _, label in _inh_view(app)._inh_rows(kind)]
+    return [label for _, label in _cov_view(app)._inh_rows(kind)]
 
 
 def _inh_title(app, kind: str) -> str:
-    return _plain_title(_inh_view(app).query_one(f"#section-inh-{kind}", Collapsible))
+    return _plain_title(_cov_view(app).query_one(f"#section-inh-{kind}", Collapsible))
 
 
 async def test_inhabitants_tab_has_all_its_sections_with_headcount_titles():
@@ -5699,7 +5719,7 @@ async def test_inhabitants_tab_has_all_its_sections_with_headcount_titles():
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_covenant(pilot, app)
         await _show_inhabitants_tab(pilot, app)
-        view = _inh_view(app)
+        view = _cov_view(app)
 
         ids = [
             "section-inh-loyalty",
@@ -5748,14 +5768,14 @@ async def test_magi_and_companions_are_listed_from_sheets_and_choosing_fills_the
         ]
 
         await _select_inh_row(pilot, app, "magus", 0)
-        panel = _inh_view(app).query_one("#inh-panel", Static)
+        panel = _cov_view(app).query_one("#inh-panel", Static)
         text = str(panel.render())
         assert "House: Bonisagus" in text and "Year Born: 1195 (age 25)" in text
         assert "From the character sheet of Corvinus." in text
 
         # One selection across all the lists.
         await _select_inh_row(pilot, app, "companion", 0)
-        assert _inh_view(app).selected_inhabitant("magus") is None
+        assert _cov_view(app).selected_inhabitant("magus") is None
         assert "Name: Alys" in str(panel.render())
 
 
@@ -5841,7 +5861,7 @@ async def test_removing_a_listed_magus_keeps_them_in_the_covenant_but_stops_coun
         await pilot.press("y")
         await _wait_until(pilot, lambda: not _inh_labels(app, "magus"))
         assert _inh_title(app, "magus") == "Magi (0)"
-        text = str(_inh_view(app).query_one("#inh-population-content", Static).render())
+        text = str(_cov_view(app).query_one("#inh-population-content", Static).render())
         assert re.search(r"Total Inhabitants:\s+1\b", text)  # only Alys now
 
     saved = storage.load_saga("test_saga")
@@ -6038,7 +6058,7 @@ async def test_other_covenfolk_requires_a_covenant_role_and_suppresses_it_when_r
         ]
 
         await _select_inh_row(pilot, app, "inhabitant", 0)
-        panel = _inh_view(app).query_one("#inh-panel", Static)
+        panel = _cov_view(app).query_one("#inh-panel", Static)
         text = str(panel.render())
         assert "Covenant Role: Dependent" in text
         assert "Responsibility: Nursemaid" in text
@@ -6070,7 +6090,7 @@ async def test_other_covenfolk_named_the_plural_of_its_role_hides_the_role_in_th
         ]
 
         await _select_inh_row(pilot, app, "inhabitant", 0)
-        panel = str(_inh_view(app).query_one("#inh-panel", Static).render())
+        panel = str(_cov_view(app).query_one("#inh-panel", Static).render())
         assert "Covenant Role: Servant" in panel  # still shown in the panel
 
 
@@ -6210,7 +6230,7 @@ async def test_quantity_drives_the_headcounts_and_must_be_at_least_one():
         await _save_dialog(pilot, app)
         await _wait_until(pilot, lambda: _inh_title(app, "turb") == "Turb (3)")
 
-        text = str(_inh_view(app).query_one("#inh-population-content", Static).render())
+        text = str(_cov_view(app).query_one("#inh-population-content", Static).render())
         assert re.search(r"Total Inhabitants:\s+5\b", text)  # magus + companion + 3
 
 
@@ -6313,7 +6333,7 @@ async def test_the_panel_renders_description_emphasis_for_the_chosen_inhabitant(
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_covenant(pilot, app)
         await _select_inh_row(pilot, app, "craftsperson", 0)
-        panel = _inh_view(app).query_one("#inh-panel", Static)
+        panel = _cov_view(app).query_one("#inh-panel", Static)
         assert "Master smith, works only in iron. 5 * 3 stays." in str(panel.render())
         styled = _styled_words(panel)
         assert ("smith", "b") in styled and ("only", "i") in styled
@@ -6347,11 +6367,11 @@ async def test_loyalty_governance_is_typed_unless_a_governance_boon_provides_it(
             pilot,
             lambda: (
                 "Guild of Mercers"
-                in str(_inh_view(app).query_one("#inh-loyalty-left", Static).render())
+                in str(_cov_view(app).query_one("#inh-loyalty-left", Static).render())
             ),
         )
-        left = str(_inh_view(app).query_one("#inh-loyalty-left", Static).render())
-        right = str(_inh_view(app).query_one("#inh-loyalty-right", Static).render())
+        left = str(_cov_view(app).query_one("#inh-loyalty-left", Static).render())
+        right = str(_cov_view(app).query_one("#inh-loyalty-right", Static).render())
         assert "Guild of Mercers" in left
         # 1 magus, The Gift (-30); +20 Equipment, +20 Money, +1 Familiarity -> 11.
         assert re.search(r"Base Loyalty Points:\s+-30", left)
@@ -6379,7 +6399,7 @@ async def test_loyalty_governance_is_typed_unless_a_governance_boon_provides_it(
         assert not app.screen.query("#fld-governance")
         await pilot.press("escape")
         await pilot.pause()
-        left = str(_inh_view(app).query_one("#inh-loyalty-left", Static).render())
+        left = str(_cov_view(app).query_one("#inh-loyalty-left", Static).render())
         assert "Council" in left and "Guild of Mercers" not in left
 
 
@@ -6395,7 +6415,7 @@ async def test_population_and_miscellaneous_fields_are_editable_and_total_is_cal
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_covenant(pilot, app)
-        view = _inh_view(app)
+        view = _cov_view(app)
 
         await _open_inh_section(pilot, app, "section-inh-population")
         await pilot.press("e")
@@ -6498,11 +6518,6 @@ async def test_inhabitant_dialogs_fit_a_small_terminal_and_hug_content_on_a_tall
 # -- Covenant Possessions tab ---------------------------------------------------
 
 
-def _saga_with_a_lab() -> Saga:
-    """Covenant cov1 with one laboratory ("Test Lab", owned by Leandro)."""
-    return _saga_with_bare_laboratory()
-
-
 async def _show_possessions_tab(pilot, app) -> None:
     view = app.screen._covenant_sheet_view
     await _wait_until(pilot, lambda: view.initial_tab_seen)
@@ -6561,7 +6576,7 @@ async def _add_possession(pilot, app, kind: str, **values) -> None:
 
 
 async def test_possessions_tab_has_its_seven_sections_and_lists_the_labs_as_sanctums():
-    storage.save_saga(_saga_with_a_lab())
+    storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
@@ -6591,7 +6606,7 @@ async def test_possessions_tab_has_its_seven_sections_and_lists_the_labs_as_sanc
 
 
 async def test_the_panel_is_docked_below_the_lists_and_stays_on_screen():
-    storage.save_saga(_saga_with_a_lab())
+    storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
@@ -6605,7 +6620,7 @@ async def test_the_panel_is_docked_below_the_lists_and_stays_on_screen():
 
 
 async def test_property_needs_only_a_name_and_supports_edit_and_delete():
-    storage.save_saga(_saga_with_a_lab())
+    storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
@@ -6652,7 +6667,7 @@ async def test_property_needs_only_a_name_and_supports_edit_and_delete():
 
 
 async def test_a_laboratory_sanctum_edits_only_covenant_side_fields_and_cannot_be_deleted():
-    storage.save_saga(_saga_with_a_lab())
+    storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
@@ -6696,7 +6711,7 @@ async def test_a_laboratory_sanctum_edits_only_covenant_side_fields_and_cannot_b
 
 
 async def test_manual_sanctums_have_every_field_and_can_be_deleted():
-    storage.save_saga(_saga_with_a_lab())
+    storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
@@ -6736,7 +6751,7 @@ async def test_manual_sanctums_have_every_field_and_can_be_deleted():
 
 
 async def test_weapons_armor_and_items_need_a_name_and_a_quantity_defaulting_to_one():
-    storage.save_saga(_saga_with_a_lab())
+    storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
@@ -6795,7 +6810,7 @@ async def test_weapons_armor_and_items_need_a_name_and_a_quantity_defaulting_to_
 
 
 async def test_weapon_combat_figures_are_typed_in_and_shown_on_the_row_and_panel():
-    storage.save_saga(_saga_with_a_lab())
+    storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
@@ -6837,7 +6852,7 @@ async def test_weapon_combat_figures_are_typed_in_and_shown_on_the_row_and_panel
 
 
 async def test_siege_engines_only_come_expensive_and_points_follow_the_table():
-    storage.save_saga(_saga_with_a_lab())
+    storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
@@ -6865,7 +6880,7 @@ async def test_siege_engines_only_come_expensive_and_points_follow_the_table():
 
 
 async def test_vis_source_requires_name_art_season_and_pawns():
-    storage.save_saga(_saga_with_a_lab())
+    storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
@@ -6914,7 +6929,7 @@ async def test_vis_source_requires_name_art_season_and_pawns():
 
 
 async def test_art_and_season_choices_are_the_real_lists():
-    storage.save_saga(_saga_with_a_lab())
+    storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
@@ -6937,7 +6952,7 @@ async def test_art_and_season_choices_are_the_real_lists():
 
 
 async def test_raw_vis_stores_take_name_art_pawns_and_optional_location_and_form():
-    storage.save_saga(_saga_with_a_lab())
+    storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
@@ -6968,7 +6983,7 @@ async def test_raw_vis_stores_take_name_art_pawns_and_optional_location_and_form
 
 
 async def test_e_and_A_act_on_the_chosen_possession_with_a_picker_fallback():
-    saga = _saga_with_a_lab()
+    saga = _saga_with_bare_laboratory()
     saga.covenants[0].possessions = [
         Possession(id="a", kind="item", name="First"),
         Possession(id="b", kind="item", name="Second [x]"),
@@ -7009,7 +7024,7 @@ async def test_e_and_A_act_on_the_chosen_possession_with_a_picker_fallback():
 
 
 async def test_one_selection_across_the_possession_lists():
-    saga = _saga_with_a_lab()
+    saga = _saga_with_bare_laboratory()
     saga.covenants[0].possessions = [
         Possession(id="a", kind="weapon", name="Crossbows"),
         Possession(id="b", kind="armor", name="Mail"),
@@ -7028,7 +7043,7 @@ async def test_one_selection_across_the_possession_lists():
 
 
 async def test_legacy_vis_stock_shows_up_as_raw_vis_stores():
-    saga = _saga_with_a_lab()
+    saga = _saga_with_bare_laboratory()
     saga.covenants[0].vis_stock = {"Ignem": 5, "Vim": 2}
     storage.save_saga(saga)
 
@@ -7043,7 +7058,7 @@ async def test_legacy_vis_stock_shows_up_as_raw_vis_stores():
 
 
 async def test_possession_forms_fit_a_small_terminal_and_hug_content_on_a_tall_one():
-    storage.save_saga(_saga_with_a_lab())
+    storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(80, 24)) as pilot:
@@ -7118,22 +7133,18 @@ async def _select_eco_row(pilot, app, which: str, row: int) -> None:
     await pilot.pause()
 
 
-def _eco_view(app):
-    return app.screen._covenant_sheet_view
-
-
 def _eco_panel(app) -> str:
-    return str(_eco_view(app).query_one("#eco-panel", Static).render())
+    return str(_cov_view(app).query_one("#eco-panel", Static).render())
 
 
 def _eco_labels(app, which: str) -> list[str]:
-    view = _eco_view(app)
+    view = _cov_view(app)
     summary = eco.summarize(view.saga, view.covenant)
     return [re.sub(r"\s+", " ", label) for _, label in view._eco_rows(which, summary)]
 
 
 def _eco_wealth(app) -> str:
-    view = _eco_view(app)
+    view = _cov_view(app)
     return "\n".join(
         str(view.query_one(f"#eco-wealth-{side}", Static).render())
         for side in ("left", "right")
@@ -7151,7 +7162,7 @@ async def test_economics_tab_shows_calculated_wealth_and_all_its_sections():
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_covenant(pilot, app)
         await _show_economics_tab(pilot, app)
-        view = _eco_view(app)
+        view = _cov_view(app)
 
         sections = [
             view.query_one(f"#section-eco-{k}", Collapsible)
@@ -7284,7 +7295,7 @@ async def test_choosing_rows_fills_the_panel_with_one_selection_across_the_lists
         assert "A rich seam." in panel and "**" not in panel  # emphasis rendered
 
         await _select_eco_row(pilot, app, "expenditure", 3)
-        view = _eco_view(app)
+        view = _cov_view(app)
         assert view.selected_economics("income") is None  # unchosen
         panel = _eco_panel(app)
         assert "Name: Provisions" in panel
@@ -7475,6 +7486,7 @@ async def test_expenditure_rows_take_notes_and_the_typed_ones_take_amounts():
             pilot,
             lambda: "Roof of the north tower" in _eco_labels(app, "expenditure")[0],
         )
+        await _wait_until(pilot, lambda: "Roof of the north tower" in _eco_panel(app))
         assert "Roof of the north tower" in _eco_panel(app)  # panel refreshed too
 
         # A typed row: an amount, which feeds the totals.
@@ -7581,7 +7593,7 @@ async def test_economics_follows_changes_made_on_other_tabs_and_keeps_the_chosen
 
         await _show_economics_tab(pilot, app)
         assert re.search(r"Points of Inhabitants:\s+21\b", _eco_wealth(app))
-        view = _eco_view(app)
+        view = _cov_view(app)
         assert view.selected_economics("expenditure") == 3  # still chosen
         await _wait_until(pilot, lambda: "Cost: 11" in _eco_panel(app))
         assert "Name: Provisions" in _eco_panel(app)
@@ -7593,7 +7605,7 @@ async def test_economics_follows_changes_made_on_other_tabs_and_keeps_the_chosen
 
 
 async def test_a_laboratorys_upkeep_and_a_weapons_type_feed_the_points():
-    saga = _saga_with_a_lab()
+    saga = _saga_with_bare_laboratory()
     saga.laboratories[0].characteristics = LabCharacteristics(upkeep=2)
     saga.covenants[0].possessions = [
         Possession(
@@ -8494,10 +8506,6 @@ def _saga_with_a_deficit(deficit: int, wealth: int) -> Saga:
     return saga
 
 
-def _economics() -> Economics:
-    return storage.load_saga("test_saga").covenants[0].economics
-
-
 async def _edit_emergency_savings(pilot, app) -> None:
     view = app.screen._covenant_sheet_view
     rows = view.query_one("#eco-savings-list", SelectableList)
@@ -8520,8 +8528,8 @@ async def test_editing_emergency_savings_offers_to_draw_from_wealth():
         )
         assert "Deficit: 36    Wealth: 100" in message
         await pilot.press("y")
-        await _wait_until(pilot, lambda: _economics().emergency_savings == 36)
-        assert _economics().wealth == 64
+        await _wait_until(pilot, lambda: _saved_economics().emergency_savings == 36)
+        assert _saved_economics().wealth == 64
         rows = app.screen._covenant_sheet_view.query_one(
             "#eco-savings-list", SelectableList
         )
@@ -8540,7 +8548,7 @@ async def test_declining_the_draw_opens_the_ordinary_form():
         assert app.screen.query_one("#fld-emergency_savings", Input).value == "0"
         await pilot.press("escape")
         await pilot.pause()
-    assert (_economics().emergency_savings, _economics().wealth) == (0, 100)
+    assert (_saved_economics().emergency_savings, _saved_economics().wealth) == (0, 100)
 
 
 async def test_a_short_draw_empties_wealth_and_the_covenant_is_broke():
@@ -8554,8 +8562,8 @@ async def test_a_short_draw_empties_wealth_and_the_covenant_is_broke():
         assert "Wealth only covers 10 of it" in message
         assert "26 stays uncovered" in message
         await pilot.press("y")
-        await _wait_until(pilot, lambda: _economics().wealth == 0)
-        assert _economics().emergency_savings == 10
+        await _wait_until(pilot, lambda: _saved_economics().wealth == 0)
+        assert _saved_economics().emergency_savings == 10
         rows = app.screen._covenant_sheet_view.query_one(
             "#eco-savings-list", SelectableList
         )
@@ -8586,7 +8594,7 @@ async def test_the_new_year_adds_each_covenants_surplus_to_its_wealth():
         # The dialog hugs its content rather than filling the screen.
         assert app.screen.query_one("#advance-dialog").region.height < 20
         app.screen.query_one("#btn-advance", Button).press()
-        await _wait_until(pilot, lambda: _economics().wealth == 5 + surplus)
+        await _wait_until(pilot, lambda: _saved_economics().wealth == 5 + surplus)
 
     loaded = storage.load_saga("test_saga")
     assert (loaded.current_season, loaded.current_year) == ("Spring", 1221)
@@ -8609,7 +8617,7 @@ async def test_other_seasons_leave_wealth_alone():
         await _wait_until(
             pilot, lambda: storage.load_saga("test_saga").current_season == "Winter"
         )
-    assert _economics().wealth == 5
+    assert _saved_economics().wealth == 5
 
 
 async def _advance_from_winter(pilot, app) -> None:
