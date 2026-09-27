@@ -1,0 +1,154 @@
+===== tab-description
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Leandro
+
+      Setting:           Covenant:
+      (not set)          Keep
+      Age:               Assigned
+      (unknown -- set    Laboratory: Tower
+      Year Born)         Type:
+      Current Year:      magus
+      1220               Confidence Score:
+      Current Season:    0
+      Spring             Confidence Points:
+                         0
+                         Size:
+                         0
+          Edit (e)
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+
+===== tab-abilities
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Leandro
+
+      Setting:           Covenant:
+      (not set)          Keep
+      Age:               Assigned
+      (unknown -- set    Laboratory: Tower
+      Year Born)         Type:
+      Current Year:      magus
+      1220               Confidence Score:
+      Current Season:    0
+      Spring             Confidence Points:
+                         0
+                         Size:
+                         0
+          Edit (e)
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+
+===== tab-vf
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Leandro
+
+      Setting:           Covenant:
+      (not set)          Keep
+      Age:               Assigned
+      (unknown -- set    Laboratory: Tower
+      Year Born)         Type:
+      Current Year:      magus
+      1220               Confidence Score:
+      Current Season:    0
+      Spring             Confidence Points:
+                         0
+                         Size:
+                         0
+          Edit (e)
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+
+===== tab-hermetic
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Leandro
+
+      Setting:           Covenant:
+      (not set)          Keep
+      Age:               Assigned
+      (unknown -- set    Laboratory: Tower
+      Year Born)         Type:
+      Current Year:      magus
+      1220               Confidence Score:
+      Current Season:    0
+      Spring             Confidence Points:
+                         0
+                         Size:
+                         0
+          Edit (e)
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+
+===== tab-inventory
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Leandro
+
+      Setting:           Covenant:
+      (not set)          Keep
+      Age:               Assigned
+      (unknown -- set    Laboratory: Tower
+      Year Born)         Type:
+      Current Year:      magus
+      1220               Confidence Score:
+      Current Season:    0
+      Spring             Confidence Points:
+                         0
+                         Size:
+                         0
+          Edit (e)
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+
+===== tab-lab
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Leandro
+
+      Setting:           Covenant:
+      (not set)          Keep
+      Age:               Assigned
+      (unknown -- set    Laboratory: Tower
+      Year Born)         Type:
+      Current Year:      magus
+      1220               Confidence Score:
+      Current Season:    0
+      Spring             Confidence Points:
+                         0
+                         Size:
+                         0
+          Edit (e)
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+
+===== tab-diary
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Leandro
+
+      Setting:           Covenant:
+      (not set)          Keep
+      Age:               Assigned
+      (unknown -- set    Laboratory: Tower
+      Year Born)         Type:
+      Current Year:      magus
+      1220               Confidence Score:
+      Current Season:    0
+      Spring             Confidence Points:
+                         0
+                         Size:
+                         0
+          Edit (e)
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+

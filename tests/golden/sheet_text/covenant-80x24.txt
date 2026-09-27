@@ -1,0 +1,132 @@
+===== tab-cov-attributes
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Keep
+
+      Saga:                Tribunal:
+      Matrix               (not set)
+      Storyguide:          Current Season:
+      (not set)            Spring
+      Year Founded:        Current Year:
+      (not set)            1220
+      Aegis of the         Aegis'
+      Hearth:      0       Penetration:
+      Living Conditions    0
+      (Magi): 0            Living Conditions
+      Aura:                (Mundane): 0
+      1 (base 0, +1        Covenant Season:
+      Boons)               Spring
+          Edit (e)
+
+   Attributes  Inhabitants  Possessions  Eco
+
+===== tab-cov-inhabitants
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Keep
+
+      Saga:                Tribunal:
+      Matrix               (not set)
+      Storyguide:          Current Season:
+      (not set)            Spring
+      Year Founded:        Current Year:
+      (not set)            1220
+      Aegis of the         Aegis'
+      Hearth:      0       Penetration:
+      Living Conditions    0
+      (Magi): 0            Living Conditions
+      Aura:                (Mundane): 0
+      1 (base 0, +1        Covenant Season:
+      Boons)               Spring
+          Edit (e)
+
+   Attributes  Inhabitants  Possessions  Eco
+
+===== tab-cov-possessions
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Keep
+
+      Saga:                Tribunal:
+      Matrix               (not set)
+      Storyguide:          Current Season:
+      (not set)            Spring
+      Year Founded:        Current Year:
+      (not set)            1220
+      Aegis of the         Aegis'
+      Hearth:      0       Penetration:
+      Living Conditions    0
+      (Magi): 0            Living Conditions
+      Aura:                (Mundane): 0
+      1 (base 0, +1        Covenant Season:
+      Boons)               Spring
+          Edit (e)
+
+    Inhabitants  Possessions  Economics  Lib
+
+===== tab-cov-economics
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Keep
+
+      Saga:                Tribunal:
+      Matrix               (not set)
+      Storyguide:          Current Season:
+      (not set)            Spring
+      Year Founded:        Current Year:
+      (not set)            1220
+      Aegis of the         Aegis'
+      Hearth:      0       Penetration:
+      Living Conditions    0
+      (Magi): 0            Living Conditions
+      Aura:                (Mundane): 0
+      1 (base 0, +1        Covenant Season:
+      Boons)               Spring
+          Edit (e)
+
+  s  Possessions  Economics  Library  Diary
+
+===== tab-cov-library
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Keep
+
+      Saga:                Tribunal:
+      Matrix               (not set)
+      Storyguide:          Current Season:
+      (not set)            Spring
+      Year Founded:        Current Year:
+      (not set)            1220
+      Aegis of the         Aegis'
+      Hearth:      0       Penetration:
+      Living Conditions    0
+      (Magi): 0            Living Conditions
+      Aura:                (Mundane): 0
+      1 (base 0, +1        Covenant Season:
+      Boons)               Spring
+          Edit (e)
+
+  s  Possessions  Economics  Library  Diary
+
+===== tab-cov-diary
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Keep
+
+      Saga:                Tribunal:
+      Matrix               (not set)
+      Storyguide:          Current Season:
+      (not set)            Spring
+      Year Founded:        Current Year:
+      (not set)            1220
+      Aegis of the         Aegis'
+      Hearth:      0       Penetration:
+      Living Conditions    0
+      (Magi): 0            Living Conditions
+      Aura:                (Mundane): 0
+      1 (base 0, +1        Covenant Season:
+      Boons)               Spring
+          Edit (e)
+
+  s  Possessions  Economics  Library  Diary
+
