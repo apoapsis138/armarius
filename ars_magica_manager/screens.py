@@ -8,8 +8,9 @@ from collections import Counter
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from dataclasses import field as dataclass_field
+from functools import cached_property, partial
 from pathlib import Path
-from typing import Any, ClassVar, cast
+from typing import Any, ClassVar, NamedTuple, cast
 
 from textual.app import ComposeResult
 from textual.binding import Binding, BindingType
@@ -937,6 +938,16 @@ def _boon_hook_names(ids: list[str], by_id: dict[str, CovenantBoonHookDef]) -> s
 
 #: Covenant Reputations run from -3 to +3.
 _COVENANT_REPUTATION_RANGE = (-3, 3)
+
+
+class _SectionOps(NamedTuple):
+    """What the a / A / e / r keys do in one sheet section (None: nothing,
+    and the key is disabled there). See WorkspaceScreen._section_ops()."""
+
+    add: Callable[[], None] | None = None
+    remove: Callable[[], None] | None = None
+    edit: Callable[[], None] | None = None
+    restore: Callable[[], None] | None = None
 
 
 @dataclass(frozen=True)
@@ -9293,125 +9304,6 @@ class WorkspaceScreen(Screen[None]):
         ("q", "quit", "Quit"),
     ]
 
-    #: Which sheet sections (on every kind of sheet) support the
-    #: generic Add/Remove/Edit bindings. 'a'/'A'/'e' dispatch by whichever
-    #: section currently has focus instead of each having their own
-    #: dedicated key, since a fully-built sheet has too many addable/
-    #: editable sections for that to scale. Sections live inside
-    #: Collapsibles (several per tab), so the dispatch key is normally a
-    #: Collapsible's id -- "tab-abilities"/"tab-lab-vf"/"tab-lab-diary" are
-    #: the exceptions, tabs with no sub-sections, keyed by their own tab
-    #: id (see _active_section()).
-    _ADD_SECTIONS: ClassVar[set[str]] = {
-        "tab-abilities",
-        "section-personality-traits",
-        "section-reputations",
-        "section-raw-vis-hermetic",
-        "section-raw-vis-inventory",
-        "section-known-spells",
-        "section-inventory",
-        "section-lab-specialties",
-        "section-lab-features",
-        "section-lab-rooms",
-        "section-lab-raw-vis",
-        "section-lab-items",
-        "tab-lab-diary",
-        "section-cov-reputations",
-        "section-cov-boons",
-        "section-cov-hooks",
-        "section-eco-income",
-        "section-fam-personality-traits",
-        "section-fam-reputations",
-        "section-fam-natural-weapons",
-        "tab-fam-abilities",
-        "tab-fam-powers",
-        *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
-        *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
-        *BOOK_SECTIONS,
-        SPELL_SECTION,
-    }
-    _REMOVE_SECTIONS: ClassVar[set[str]] = {
-        "tab-abilities",
-        "section-personality-traits",
-        "section-reputations",
-        "section-raw-vis-hermetic",
-        "section-raw-vis-inventory",
-        "section-known-spells",
-        "section-inventory",
-        "section-lab-specialties",
-        "section-lab-features",
-        "section-lab-rooms",
-        "section-lab-raw-vis",
-        "section-lab-items",
-        "tab-lab-diary",
-        "section-cov-reputations",
-        "section-cov-boons",
-        "section-cov-hooks",
-        "section-eco-income",
-        "section-fam-personality-traits",
-        "section-fam-reputations",
-        "section-fam-natural-weapons",
-        "tab-fam-abilities",
-        "tab-fam-powers",
-        *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
-        *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
-        *(BOOK_SECTIONS - {"section-lib-summary"}),
-        SPELL_SECTION,
-    }
-    _EDIT_SECTIONS: ClassVar[set[str]] = {
-        "section-char-info",
-        "section-char-characteristics",
-        "section-char-biographical",
-        "tab-abilities",
-        "section-aging",
-        "section-char-health",
-        "section-arts",
-        "section-hermetic-background",
-        "section-personality-traits",
-        "section-reputations",
-        "section-raw-vis-hermetic",
-        "section-raw-vis-inventory",
-        "section-known-spells",
-        "section-inventory",
-        "section-lab-identity",
-        "section-lab-characteristics",
-        "section-lab-specialties",
-        "section-lab-features",
-        "section-lab-rooms",
-        "section-lab-raw-vis",
-        "section-lab-items",
-        "tab-lab-diary",
-        "section-cov-info",
-        "section-cov-description",
-        "section-cov-reputations",
-        "section-cov-boons",
-        "section-cov-hooks",
-        "section-inh-loyalty",
-        "section-inh-population",
-        "section-inh-misc",
-        "section-eco-wealth",
-        "section-eco-income",
-        "section-eco-expenditure",
-        "section-eco-savings",
-        "section-fam-info",
-        "section-fam-binding",
-        "section-fam-personality-traits",
-        "section-fam-reputations",
-        "section-fam-characteristics",
-        "section-fam-health",
-        "section-fam-natural-weapons",
-        "tab-fam-abilities",
-        "tab-fam-powers",
-        *(f"section-inh-{kind}" for kind in INHABITANT_KINDS),
-        *(f"section-pos-{kind}" for kind in POSSESSION_KINDS),
-        *(BOOK_SECTIONS - {"section-lib-summary"}),
-        SPELL_SECTION,
-    }
-    #: Only Magi/Companions can go "departed" (see Inhabitant.departed).
-    _RESTORE_SECTIONS: ClassVar[set[str]] = {
-        f"section-inh-{kind}" for kind in inh.AUTO_KINDS
-    }
-
     #: Covenant tabs that own their own a/A/e dispatch (keyed by tab id).
     #: None: every covenant tab's content is in Collapsible sections, so with
     #: nothing focused in one the dispatch falls back to the always-visible
@@ -9669,16 +9561,10 @@ class WorkspaceScreen(Screen[None]):
             return self.selected_kind == "saga"
         # Characters and labs may be created anywhere: a selected covenant
         # is just the default for the dialog's optional Covenant field.
-        if action == "add":
-            return self._active_section() in self._ADD_SECTIONS
-        if action == "remove":
-            return self._active_section() in self._REMOVE_SECTIONS
-        if action == "edit":
-            if self.selected_kind == "saga":
-                return True
-            return self._active_section() in self._EDIT_SECTIONS
-        if action == "restore":
-            return self._active_section() in self._RESTORE_SECTIONS
+        if action == "edit" and self.selected_kind == "saga":
+            return True
+        if action in ("add", "remove", "edit", "restore"):
+            return self._section_op(action) is not None
         if action == "improve":
             return self._active_section() == "section-eco-income"
         if action == "import_data":
@@ -9747,36 +9633,22 @@ class WorkspaceScreen(Screen[None]):
         self.refresh_bindings()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-lab-identity-edit":
+        """The sheets' Edit buttons."""
+        handler = {
+            "btn-lab-identity-edit": self._edit_lab_identity,
+            "btn-lab-characteristics-edit": self._edit_lab_characteristics,
+            "btn-cov-edit": self._edit_covenant,
+            "btn-char-info-edit": self._edit_character_info,
+            "btn-char-characteristics-edit": self._edit_characteristics,
+            "btn-char-health-wounds-edit": self._edit_wounds,
+            "btn-char-health-fatigue-edit": self._edit_fatigue,
+            "btn-fam-info-edit": self._edit_familiar_info,
+            "btn-fam-health-wounds-edit": self._edit_familiar_wounds,
+            "btn-fam-health-fatigue-edit": self._edit_familiar_fatigue,
+        }.get(event.button.id or "")
+        if handler is not None:
             event.stop()
-            self._edit_lab_identity()
-        elif event.button.id == "btn-lab-characteristics-edit":
-            event.stop()
-            self._edit_lab_characteristics()
-        elif event.button.id == "btn-cov-edit":
-            event.stop()
-            self._edit_covenant()
-        elif event.button.id == "btn-char-info-edit":
-            event.stop()
-            self._edit_character_info()
-        elif event.button.id == "btn-char-characteristics-edit":
-            event.stop()
-            self._edit_characteristics()
-        elif event.button.id == "btn-char-health-wounds-edit":
-            event.stop()
-            self._edit_wounds()
-        elif event.button.id == "btn-char-health-fatigue-edit":
-            event.stop()
-            self._edit_fatigue()
-        elif event.button.id == "btn-fam-info-edit":
-            event.stop()
-            self._edit_familiar_info()
-        elif event.button.id == "btn-fam-health-wounds-edit":
-            event.stop()
-            self._edit_familiar_wounds()
-        elif event.button.id == "btn-fam-health-fatigue-edit":
-            event.stop()
-            self._edit_familiar_fatigue()
+            handler()
 
     def _focus_first_section(self, *, initial: bool = False) -> None:
         """Give the sheet a focused section, so 'e'/'a'/'A' work straight away.
@@ -10110,220 +9982,187 @@ class WorkspaceScreen(Screen[None]):
 
     # -- generic Add/Remove/Edit dispatch, by the active section of any sheet --
 
+    @cached_property
+    def _section_ops(self) -> dict[str, _SectionOps]:
+        """What a/A/e/r do in each sheet section, keyed by the section id
+        _active_section() reports. check_action enables a key only where it
+        has an entry here, so a binding and its action can't disagree. Built
+        once: check_action runs on every Footer refresh."""
+        ops: dict[str, _SectionOps] = {
+            SPELL_SECTION: _SectionOps(
+                lambda: self._spell_form(None),
+                self._remove_saga_spell,
+                self._edit_saga_spell,
+            ),
+            # Character sheet
+            "section-char-info": _SectionOps(edit=self._edit_character_info),
+            "section-char-characteristics": _SectionOps(
+                edit=self._edit_characteristics
+            ),
+            "section-char-biographical": _SectionOps(
+                edit=self._edit_biographical_detail
+            ),
+            "tab-abilities": _SectionOps(
+                self._add_ability, self._remove_ability, self._edit_ability
+            ),
+            "section-aging": _SectionOps(edit=self._edit_aging),
+            # Health has two dialogs behind two Edit buttons (Wounds and
+            # Fatigue); 'e' opens Wounds, Fatigue is button-only.
+            "section-char-health": _SectionOps(edit=self._edit_wounds),
+            "section-arts": _SectionOps(edit=self._edit_arts),
+            "section-hermetic-background": _SectionOps(
+                edit=self._edit_hermetic_background
+            ),
+            "section-known-spells": _SectionOps(
+                self._add_spell, self._remove_spell, self._edit_spell_mastery
+            ),
+            "section-inventory": _SectionOps(
+                self._add_item, self._remove_item, self._edit_item
+            ),
+            "section-raw-vis-hermetic": _SectionOps(
+                self._add_raw_vis, self._remove_raw_vis, self._edit_raw_vis
+            ),
+            "section-raw-vis-inventory": _SectionOps(
+                self._add_raw_vis, self._remove_raw_vis, self._edit_raw_vis
+            ),
+            # Familiar sheet
+            "section-fam-info": _SectionOps(edit=self._edit_familiar_info),
+            "section-fam-binding": _SectionOps(edit=self._edit_familiar_binding),
+            "section-fam-characteristics": _SectionOps(
+                edit=self._edit_familiar_characteristics
+            ),
+            "section-fam-health": _SectionOps(edit=self._edit_familiar_wounds),
+            "section-fam-natural-weapons": _SectionOps(
+                self._add_familiar_natural_weapon,
+                self._remove_familiar_natural_weapon,
+                self._edit_familiar_natural_weapon,
+            ),
+            "tab-fam-abilities": _SectionOps(
+                self._add_familiar_ability,
+                self._remove_familiar_ability,
+                self._edit_familiar_ability,
+            ),
+            "tab-fam-powers": _SectionOps(
+                self._add_familiar_bond_power,
+                self._remove_familiar_bond_power,
+                self._edit_familiar_bond_power,
+            ),
+            # Laboratory sheet
+            "section-lab-identity": _SectionOps(edit=self._edit_lab_identity),
+            "section-lab-characteristics": _SectionOps(
+                edit=self._edit_lab_characteristics
+            ),
+            "section-lab-specialties": _SectionOps(
+                self._add_specialty, self._remove_specialty, self._edit_specialty
+            ),
+            "section-lab-features": _SectionOps(
+                self._add_feature, self._remove_feature, self._edit_feature
+            ),
+            "section-lab-rooms": _SectionOps(
+                self._add_room, self._remove_room, self._edit_room
+            ),
+            "section-lab-raw-vis": _SectionOps(
+                self._add_lab_raw_vis, self._remove_lab_raw_vis, self._edit_lab_raw_vis
+            ),
+            "section-lab-items": _SectionOps(
+                self._add_inventory_item,
+                self._remove_inventory_item,
+                self._edit_inventory_item,
+            ),
+            "tab-lab-diary": _SectionOps(
+                self._add_diary_entry, self._remove_diary_entry, self._edit_diary_entry
+            ),
+            # Covenant sheet
+            "section-cov-info": _SectionOps(edit=self._edit_covenant),
+            "section-cov-description": _SectionOps(
+                edit=self._edit_covenant_description
+            ),
+            "section-cov-boons": _SectionOps(
+                lambda: self._add_boon_hook("Boon"),
+                lambda: self._remove_boon_hook("Boon"),
+                lambda: self._edit_boon_hook("Boon"),
+            ),
+            "section-cov-hooks": _SectionOps(
+                lambda: self._add_boon_hook("Hook"),
+                lambda: self._remove_boon_hook("Hook"),
+                lambda: self._edit_boon_hook("Hook"),
+            ),
+            "section-eco-wealth": _SectionOps(edit=self._edit_wealth),
+            "section-eco-income": _SectionOps(
+                self._add_income_source,
+                self._remove_income_source,
+                self._edit_income_source,
+            ),
+            "section-eco-expenditure": _SectionOps(
+                edit=lambda: self._edit_economics_row("expenditure")
+            ),
+            "section-eco-savings": _SectionOps(
+                edit=lambda: self._edit_economics_row("savings")
+            ),
+            "section-inh-loyalty": _SectionOps(edit=self._edit_loyalty),
+            "section-inh-population": _SectionOps(edit=self._edit_population),
+            "section-inh-misc": _SectionOps(edit=self._edit_miscellaneous),
+        }
+        for spec in (
+            _CHARACTER_TRAITS,
+            _CHARACTER_REPUTATIONS,
+            _FAMILIAR_TRAITS,
+            _FAMILIAR_REPUTATIONS,
+            _COVENANT_REPUTATIONS,
+        ):
+            ops[spec.section] = _SectionOps(
+                partial(self._add_trait, spec),
+                partial(self._remove_trait, spec),
+                partial(self._edit_trait, spec),
+            )
+        for section in BOOK_SECTIONS:
+            listed = section != "section-lib-summary"  # the summary lists none
+            ops[section] = _SectionOps(
+                lambda: self._book_form(None),
+                self._remove_book if listed else None,
+                self._edit_book if listed else None,
+            )
+        for kind in INHABITANT_KINDS:
+            ops[f"section-inh-{kind}"] = _SectionOps(
+                partial(self._add_inhabitant, kind),
+                partial(self._remove_inhabitant, kind),
+                partial(self._edit_inhabitant, kind),
+                # Only Magi/Companions can go "departed" (Inhabitant.departed).
+                partial(self._restore_inhabitant, kind)
+                if kind in inh.AUTO_KINDS
+                else None,
+            )
+        for kind in POSSESSION_KINDS:
+            ops[f"section-pos-{kind}"] = _SectionOps(
+                partial(self._add_possession, kind),
+                partial(self._remove_possession, kind),
+                partial(self._edit_possession, kind),
+            )
+        return ops
+
+    def _section_op(self, name: str) -> Callable[[], None] | None:
+        """The active section's handler for `name` ("add", "remove", "edit"
+        or "restore"), if it has one."""
+        ops = self._section_ops.get(self._active_section() or "")
+        return None if ops is None else getattr(ops, name)
+
     def action_add(self) -> None:
-        section = self._active_section()
-        if section == SPELL_SECTION:
-            self._spell_form(None)
-        elif section in BOOK_SECTIONS:
-            self._book_form(None)
-        elif section == "tab-abilities":
-            self._add_ability()
-        elif section == "section-known-spells":
-            self._add_spell()
-        elif section == "section-inventory":
-            self._add_item()
-        elif section == "section-personality-traits":
-            self._add_trait(_CHARACTER_TRAITS)
-        elif section == "section-reputations":
-            self._add_trait(_CHARACTER_REPUTATIONS)
-        elif section == "section-fam-personality-traits":
-            self._add_trait(_FAMILIAR_TRAITS)
-        elif section == "section-fam-reputations":
-            self._add_trait(_FAMILIAR_REPUTATIONS)
-        elif section == "section-fam-natural-weapons":
-            self._add_familiar_natural_weapon()
-        elif section == "tab-fam-abilities":
-            self._add_familiar_ability()
-        elif section == "tab-fam-powers":
-            self._add_familiar_bond_power()
-        elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
-            self._add_raw_vis()
-        elif section == "section-lab-specialties":
-            self._add_specialty()
-        elif section == "section-lab-features":
-            self._add_feature()
-        elif section == "section-lab-rooms":
-            self._add_room()
-        elif section == "section-lab-raw-vis":
-            self._add_lab_raw_vis()
-        elif section == "section-lab-items":
-            self._add_inventory_item()
-        elif section == "tab-lab-diary":
-            self._add_diary_entry()
-        elif section == "section-cov-reputations":
-            self._add_trait(_COVENANT_REPUTATIONS)
-        elif section == "section-cov-boons":
-            self._add_boon_hook("Boon")
-        elif section == "section-cov-hooks":
-            self._add_boon_hook("Hook")
-        elif section == "section-eco-income":
-            self._add_income_source()
-        elif (kind := self._inhabitant_kind(section)) is not None:
-            self._add_inhabitant(kind)
-        elif (kind := self._possession_kind(section)) is not None:
-            self._add_possession(kind)
+        if (handler := self._section_op("add")) is not None:
+            handler()
 
     def action_remove(self) -> None:
-        section = self._active_section()
-        if section == SPELL_SECTION:
-            self._remove_saga_spell()
-        elif section in BOOK_SECTIONS:
-            self._remove_book()
-        elif section == "tab-abilities":
-            self._remove_ability()
-        elif section == "section-known-spells":
-            self._remove_spell()
-        elif section == "section-inventory":
-            self._remove_item()
-        elif section == "section-personality-traits":
-            self._remove_trait(_CHARACTER_TRAITS)
-        elif section == "section-reputations":
-            self._remove_trait(_CHARACTER_REPUTATIONS)
-        elif section == "section-fam-personality-traits":
-            self._remove_trait(_FAMILIAR_TRAITS)
-        elif section == "section-fam-reputations":
-            self._remove_trait(_FAMILIAR_REPUTATIONS)
-        elif section == "section-fam-natural-weapons":
-            self._remove_familiar_natural_weapon()
-        elif section == "tab-fam-abilities":
-            self._remove_familiar_ability()
-        elif section == "tab-fam-powers":
-            self._remove_familiar_bond_power()
-        elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
-            self._remove_raw_vis()
-        elif section == "section-lab-specialties":
-            self._remove_specialty()
-        elif section == "section-lab-features":
-            self._remove_feature()
-        elif section == "section-lab-rooms":
-            self._remove_room()
-        elif section == "section-lab-raw-vis":
-            self._remove_lab_raw_vis()
-        elif section == "section-lab-items":
-            self._remove_inventory_item()
-        elif section == "tab-lab-diary":
-            self._remove_diary_entry()
-        elif section == "section-cov-reputations":
-            self._remove_trait(_COVENANT_REPUTATIONS)
-        elif section == "section-cov-boons":
-            self._remove_boon_hook("Boon")
-        elif section == "section-cov-hooks":
-            self._remove_boon_hook("Hook")
-        elif section == "section-eco-income":
-            self._remove_income_source()
-        elif (kind := self._inhabitant_kind(section)) is not None:
-            self._remove_inhabitant(kind)
-        elif (kind := self._possession_kind(section)) is not None:
-            self._remove_possession(kind)
+        if (handler := self._section_op("remove")) is not None:
+            handler()
 
     def action_edit(self) -> None:
         if self.selected_kind == "saga":
             self._edit_saga()
-            return
-        section = self._active_section()
-        if section == SPELL_SECTION:
-            self._edit_saga_spell()
-        elif section in BOOK_SECTIONS:
-            self._edit_book()
-        elif section == "section-char-info":
-            self._edit_character_info()
-        elif section == "section-char-characteristics":
-            self._edit_characteristics()
-        elif section == "section-char-biographical":
-            self._edit_biographical_detail()
-        elif section == "tab-abilities":
-            self._edit_ability()
-        elif section == "section-aging":
-            self._edit_aging()
-        elif section == "section-char-health":
-            # Health has two independent dialogs behind two Edit buttons
-            # (see the Health SheetSection's compose()) -- keyboard 'e'
-            # defaults to Wounds (column 1); Fatigue stays mouse-only via
-            # its own button.
-            self._edit_wounds()
-        elif section == "section-arts":
-            self._edit_arts()
-        elif section == "section-hermetic-background":
-            self._edit_hermetic_background()
-        elif section == "section-personality-traits":
-            self._edit_trait(_CHARACTER_TRAITS)
-        elif section == "section-reputations":
-            self._edit_trait(_CHARACTER_REPUTATIONS)
-        elif section == "section-fam-info":
-            self._edit_familiar_info()
-        elif section == "section-fam-binding":
-            self._edit_familiar_binding()
-        elif section == "section-fam-personality-traits":
-            self._edit_trait(_FAMILIAR_TRAITS)
-        elif section == "section-fam-reputations":
-            self._edit_trait(_FAMILIAR_REPUTATIONS)
-        elif section == "section-fam-characteristics":
-            self._edit_familiar_characteristics()
-        elif section == "section-fam-health":
-            # Same idea as section-char-health: two dialogs behind two Edit
-            # buttons, keyboard 'e' defaults to Wounds.
-            self._edit_familiar_wounds()
-        elif section == "section-fam-natural-weapons":
-            self._edit_familiar_natural_weapon()
-        elif section == "tab-fam-abilities":
-            self._edit_familiar_ability()
-        elif section == "tab-fam-powers":
-            self._edit_familiar_bond_power()
-        elif section in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
-            self._edit_raw_vis()
-        elif section == "section-inventory":
-            self._edit_item()
-        elif section == "section-known-spells":
-            self._edit_spell_mastery()
-        elif section == "section-lab-identity":
-            self._edit_lab_identity()
-        elif section == "section-lab-characteristics":
-            self._edit_lab_characteristics()
-        elif section == "section-lab-specialties":
-            self._edit_specialty()
-        elif section == "section-lab-features":
-            self._edit_feature()
-        elif section == "section-lab-rooms":
-            self._edit_room()
-        elif section == "section-lab-raw-vis":
-            self._edit_lab_raw_vis()
-        elif section == "section-lab-items":
-            self._edit_inventory_item()
-        elif section == "tab-lab-diary":
-            self._edit_diary_entry()
-        elif section == "section-cov-info":
-            self._edit_covenant()
-        elif section == "section-cov-description":
-            self._edit_covenant_description()
-        elif section == "section-cov-reputations":
-            self._edit_trait(_COVENANT_REPUTATIONS)
-        elif section == "section-cov-boons":
-            self._edit_boon_hook("Boon")
-        elif section == "section-cov-hooks":
-            self._edit_boon_hook("Hook")
-        elif section == "section-eco-wealth":
-            self._edit_wealth()
-        elif section == "section-eco-income":
-            self._edit_income_source()
-        elif section in ("section-eco-expenditure", "section-eco-savings"):
-            self._edit_economics_row(section.removeprefix("section-eco-"))
-        elif section == "section-inh-loyalty":
-            self._edit_loyalty()
-        elif section == "section-inh-population":
-            self._edit_population()
-        elif section == "section-inh-misc":
-            self._edit_miscellaneous()
-        elif (kind := self._inhabitant_kind(section)) is not None:
-            self._edit_inhabitant(kind)
-        elif (kind := self._possession_kind(section)) is not None:
-            self._edit_possession(kind)
+        elif (handler := self._section_op("edit")) is not None:
+            handler()
 
     def action_restore(self) -> None:
-        section = self._active_section()
-        if (
-            kind := self._inhabitant_kind(section)
-        ) is not None and kind in inh.AUTO_KINDS:
-            self._restore_inhabitant(kind)
+        if (handler := self._section_op("restore")) is not None:
+            handler()
 
     # -- Spells (the saga's Spells view) --
 
@@ -10813,15 +10652,6 @@ class WorkspaceScreen(Screen[None]):
 
     # -- Covenant: Possessions tab --
 
-    @staticmethod
-    def _possession_kind(section: str | None) -> str | None:
-        """The possession kind a list section id stands for, or None."""
-        if section and section.startswith("section-pos-"):
-            kind = section[len("section-pos-") :]
-            if kind in POSSESSION_KINDS:
-                return kind
-        return None
-
     def _selected_possession(self, kind: str) -> int | None:
         view = self._covenant_sheet_view
         return view.selected_possession(kind) if view is not None else None
@@ -11188,15 +11018,6 @@ class WorkspaceScreen(Screen[None]):
         )
 
     # -- Covenant: Inhabitants tab --
-
-    @staticmethod
-    def _inhabitant_kind(section: str | None) -> str | None:
-        """The inhabitant kind a list section id stands for, or None."""
-        if section and section.startswith("section-inh-"):
-            kind = section[len("section-inh-") :]
-            if kind in INHABITANT_KINDS:
-                return kind
-        return None
 
     def _selected_inhabitant(self, kind: str) -> int | None:
         view = self._covenant_sheet_view
