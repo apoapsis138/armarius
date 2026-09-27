@@ -482,3 +482,18 @@ async def test_save_stores_the_edit(name):
         )
         await pilot.pause()
     assert contract.saved(storage.load_saga(SAGA_ID)) == contract.expected
+
+
+@pytest.mark.parametrize("name", list(CONTRACTS))
+async def test_fits_a_small_terminal(name):
+    """At 80x24 the whole dialog, and its Save and Cancel buttons, are on
+    screen (a long form scrolls between them)."""
+    app = new_app()
+    async with app.run_test(size=(80, 24)) as pilot:
+        _, dialog = await open_dialog(pilot, app, name)
+        await pilot.pause()
+        for button in (save_button(dialog), cancel_button(dialog)):
+            region = button.region
+            assert region.height > 0, button.id
+            assert region.x >= 0 and region.right <= 80, (button.id, region)
+            assert region.y >= 0 and region.bottom <= 24, (button.id, region)
