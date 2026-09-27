@@ -1304,6 +1304,25 @@ async def test_removing_a_familiar_virtue_flaw_uses_the_chosen_row_and_confirms(
     ]
 
 
+async def test_familiar_details_panels_are_shaded_like_every_other_sheet():
+    # B13: the familiar sheet's details panels had no shaded panel style.
+    storage.save_saga(_saga_with_familiar())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_familiar(pilot, app)
+        view = app.screen._familiar_sheet_view
+        for panel_id in (
+            "fam-vf-info",
+            "fam-natural-weapons-info",
+            "fam-ability-info",
+            "fam-bond-powers-info",
+        ):
+            panel = view.query_one(f"#{panel_id}", Static)
+            assert panel.has_class("details-panel"), panel_id
+            assert panel.styles.background.a > 0, panel_id
+
+
 async def test_familiar_personality_traits_use_generic_add_edit_remove():
     storage.save_saga(_saga_with_familiar())
 

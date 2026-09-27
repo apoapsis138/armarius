@@ -1627,6 +1627,7 @@ class FamiliarSheetView(SheetView):
                     "tab-fam-abilities",
                     lambda: fam.ability_info_text(self.familiar, None),
                     id="fam-ability-info",
+                    classes="details-panel",
                 )
             with TabPane("Bond Powers", id="tab-fam-powers"), VerticalScroll():
                 yield self._list(
@@ -1638,6 +1639,7 @@ class FamiliarSheetView(SheetView):
                     "tab-fam-powers",
                     lambda: fam.bond_power_info_text(self.familiar, None),
                     id="fam-bond-powers-info",
+                    classes="details-panel",
                 )
 
     def _identity_tab(self) -> ComposeResult:
@@ -1668,6 +1670,7 @@ class FamiliarSheetView(SheetView):
                 vf_sections,
                 lambda: fam.vf_info_text(self.familiar, None),
                 id="fam-vf-info",
+                classes="details-panel",
             )
             with TwoColumns(id="fam-pt-rep-row"):
                 with SheetSection(
@@ -1727,6 +1730,7 @@ class FamiliarSheetView(SheetView):
                     "section-fam-natural-weapons",
                     lambda: fam.natural_weapon_info_text(self.familiar, None),
                     id="fam-natural-weapons-info",
+                    classes="details-panel",
                 )
 
     def _binding_text(self) -> str:

@@ -58,7 +58,7 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Health                              ▆▆
+    ▼ Health
 
       Light Wounds:  0  Fatigue Level:
       (-1 each)         Fresh
@@ -81,9 +81,9 @@
 
   Languages: shares the Magus partner's
   Language scores automatically.
-  General
+  General                                 ▅▅
   ○ Awareness 2 0/0
-  Select an Ability for its description.
+
 
 
 ===== tab-fam-powers
@@ -102,9 +102,9 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ○ Speak
-  Select a Bond Power for its details.
 
 
+    Select a Bond Power for its details.  ▇▇
 
 
 

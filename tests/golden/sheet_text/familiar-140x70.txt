@@ -32,17 +32,17 @@
 
       ○ Adept Laboratory Student (Minor)                 (none recorded)
 
-  Select a Virtue or Flaw to read its rules.
+
+
+    Select a Virtue or Flaw to read its rules.
+
+
+
+
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Personality Traits                               ▼ Reputations
 
       ○ Brave: +2                                        ○ Wise: +1
-
-
-
-
-
-
 
 
 
@@ -163,9 +163,9 @@
     ▼ Natural Weapons & Attacks
 
       ○ Beak                                    Standard        1    0    0    0    0
-      Select an attack for its details.
 
 
+        Select an attack for its details.
 
 
 
@@ -220,9 +220,9 @@
   Languages: shares the Magus partner's Language scores automatically.
   General
   ○ Awareness 2 0/0
-  Select an Ability for its description.
 
 
+    Select an Ability for its description.
 
 
 
@@ -286,9 +286,9 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ○ Speak
-  Select a Bond Power for its details.
 
 
+    Select a Bond Power for its details.
 
 
 
