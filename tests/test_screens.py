@@ -4599,6 +4599,11 @@ def _title_styles(section) -> list[str]:
     ]
 
 
+def _theme_coloured(section) -> bool:
+    """Whether a Collapsible's rendered title has any theme colour on it."""
+    return any("$text-" in style for style in _title_styles(section))
+
+
 def _bh_labels(view, kind: str) -> str:
     """The attached Boons or Hooks of `kind`, as displayed, joined."""
     return " | ".join(label for _, label in view._bh_entries(kind))
@@ -5028,22 +5033,22 @@ def _saga_with_boons_and_hooks(*ids: str) -> Saga:
 
 
 async def test_boon_and_hook_totals_are_coloured_by_how_they_compare():
-    # (attached entries, expected colour, expected plain titles)
+    # (attached entries, expected theme colour or None for plain, plain titles)
     cases = [
-        ((), "green", ("Boons (0 pts)", "Hooks (0 pts)")),  # equal
+        ((), "$text-success", ("Boons (0 pts)", "Hooks (0 pts)")),  # equal
         (
             ("covbh_boon_minor_wealth", "covbh_hook_major_castle"),
-            "cyan",  # Boons (1) < Hooks (3)
+            None,  # Boons (1) < Hooks (3): plain
             ("Boons (1 pt)", "Hooks (3 pts)"),
         ),
         (
             ("covbh_boon_major_wealth", "covbh_hook_minor_rival"),
-            "red",  # Boons (3) > Hooks (1)
+            "$text-error",  # Boons (3) > Hooks (1)
             ("Boons (3 pts)", "Hooks (1 pt)"),
         ),
         (
             ("covbh_boon_major_wealth", "covbh_hook_major_castle"),
-            "green",  # equal, non-zero
+            "$text-success",  # equal, non-zero
             ("Boons (3 pts)", "Hooks (3 pts)"),
         ),
     ]
@@ -5056,8 +5061,10 @@ async def test_boon_and_hook_totals_are_coloured_by_how_they_compare():
             boons = view.query_one("#section-cov-boons", Collapsible)
             hooks = view.query_one("#section-cov-hooks", Collapsible)
             # Both share the colour, and only the parenthesised total has it.
-            assert boons.title == f"Boons [{colour}]{plain[0][6:]}[/]", attached
-            assert hooks.title == f"Hooks [{colour}]{plain[1][6:]}[/]", attached
+            for section, text in ((boons, plain[0]), (hooks, plain[1])):
+                kind, total = text.split(" ", 1)
+                expected = f"{kind} [{colour}]{total}[/]" if colour else text
+                assert section.title == expected, attached
             assert (_plain_title(boons), _plain_title(hooks)) == plain
 
 
@@ -5070,22 +5077,24 @@ async def test_totals_recolour_when_a_hook_is_added():
         view = app.screen._covenant_sheet_view
         boons = view.query_one("#section-cov-boons", Collapsible)
         hooks = view.query_one("#section-cov-hooks", Collapsible)
-        assert "[red]" in boons.title and "[red]" in hooks.title  # 1 > 0
+        assert "[$text-error]" in boons.title  # 1 > 0
+        assert "[$text-error]" in hooks.title
 
         await _add_boon_hook_via_picker(
             pilot, app, "section-cov-hooks", "covbh_hook_minor_rival"
         )
-        assert "[green]" in boons.title and "[green]" in hooks.title  # 1 == 1
+        assert "[$text-success]" in boons.title  # 1 == 1
+        assert "[$text-success]" in hooks.title
 
         await _add_boon_hook_via_picker(
             pilot, app, "section-cov-hooks", "covbh_hook_minor_favors"
         )
-        # Adding a Hook re-coloured the Boons title too (1 < 2).
-        assert "[cyan]" in boons.title and "[cyan]" in hooks.title
+        # Adding a Hook re-coloured the Boons title too (1 < 2: plain).
+        assert (boons.title, hooks.title) == ("Boons (1 pt)", "Hooks (2 pts)")
         # ...and what is actually painted follows, including the Hooks total
         # whose text ("(2 pts)") changed but which must also recolour when only
         # the colour changes (Textual compares label text, not style).
-        assert "cyan" in _title_styles(boons) and "cyan" in _title_styles(hooks)
+        assert not _theme_coloured(boons) and not _theme_coloured(hooks)
 
 
 async def test_a_colour_only_change_repaints_the_title():
@@ -5098,16 +5107,15 @@ async def test_a_colour_only_change_repaints_the_title():
         await _select_covenant(pilot, app)
         view = app.screen._covenant_sheet_view
         hooks = view.query_one("#section-cov-hooks", Collapsible)
-        assert "green" not in _title_styles(hooks)
-        assert "cyan" in _title_styles(hooks)  # Boons 0 < Hooks 3
+        assert not _theme_coloured(hooks)  # Boons 0 < Hooks 3: plain
 
         for boon in ("covbh_boon_major_wealth", "covbh_boon_minor_aura"):
             await _add_boon_hook_via_picker(pilot, app, "section-cov-boons", boon)
             plain = _plain_title(hooks)
             assert plain == "Hooks (3 pts)"  # text never changed
-        # Boons (4) > Hooks (3): red, though the Hooks text stayed identical.
-        assert "red" in _title_styles(hooks)
-        assert "cyan" not in _title_styles(hooks)
+        # Boons (4) > Hooks (3): error colour, though the Hooks text stayed
+        # identical.
+        assert "$text-error" in _title_styles(hooks)
 
 
 async def test_boon_hook_rows_have_a_selector_and_fill_the_details_panel():
@@ -9318,7 +9326,7 @@ async def test_importing_lab_texts_links_them_to_their_spells(tmp_path):
         await wait_until(pilot, lambda: "Mystery notes" in _book_names(app))
         labels = [label for _, label in app.screen._book_view()._rows()]
         mystery = next(label for label in labels if "Mystery notes" in label)
-        assert mystery.startswith("[red]")  # Unknown spell
+        assert mystery.startswith("[$text-error]")  # Unknown spell
 
     saved = {b.name: b for b in _saved_books().values()}
     assert saved["Pilum notes"].spell_id == "spell_pilum_of_fire"

@@ -182,7 +182,7 @@ def canonical_ability(name: str) -> str | None:
 
 
 def status_problems(book: Book, saga: Saga | None = None) -> list[str]:
-    """Things about the book the user should fix (the row shows in red): an
+    """Things about the book the user should fix (the row shows in the error colour): an
     Ability that isn't in the ability catalog (typically from an import),
     which studying from the book will need; and, given the saga, a Lab Text
     or Casting Tablet whose spell can't be found."""
@@ -365,8 +365,9 @@ def _number(value: int | None) -> str:
 
 
 def row_label(saga: Saga, book: Book, subject_cols: int = SUBJECT_MIN_WIDTH) -> str:
-    """One list row (markup), columns lined up with `table_header`; red when
-    the book has a status problem (see status_problems)."""
+    """One list row (markup), columns lined up with `table_header`; in the
+    theme's error colour when the book has a status problem (see
+    status_problems)."""
     location = fit(location_label(saga, book), _LOCATION_WIDTH).rstrip()
     row = (
         f"{escape(fit(book.name or '(untitled)', _NAME_WIDTH))} "
@@ -376,7 +377,7 @@ def row_label(saga: Saga, book: Book, subject_cols: int = SUBJECT_MIN_WIDTH) -> 
         f"{_number(book.quality):>{_QUALITY_WIDTH}}  "
         f"{escape(location)}"
     )
-    return f"[red]{row}[/]" if status_problems(book, saga) else row
+    return f"[$text-error]{row}[/]" if status_problems(book, saga) else row
 
 
 def _level_text(saga: Saga, book: Book) -> str:
@@ -487,7 +488,7 @@ def detail_text(saga: Saga, book: Book | None) -> str:
         _cell("Owner", owner_label(saga, book)),
     ]
     width = max(w for _, w in left) + 4
-    lines = [f"[red][b]{escape(p)}[/b][/]" for p in status_problems(book, saga)]
+    lines = [f"[$text-error][b]{escape(p)}[/b][/]" for p in status_problems(book, saga)]
     lines.append(_cell("Name", book.name or "(untitled)")[0])
     lines += [f"{lm}{' ' * (width - lw)}{rm}" for (lm, lw), (rm, _) in zip(left, right)]
     lines.append(
@@ -495,7 +496,7 @@ def detail_text(saga: Saga, book: Book | None) -> str:
             0
         ]
     )
-    lines += [f"[red]{escape(w)}[/]" for w in limit_warnings(book)]
+    lines += [f"[$text-error]{escape(w)}[/]" for w in limit_warnings(book)]
     if book.description.strip():
         lines += ["", "[b]Description:[/]", markdown_inline(book.description.strip())]
     return "\n".join(lines)
@@ -674,8 +675,8 @@ def import_preview(
     if unknown_abilities:
         verb = "names" if unknown_abilities == 1 else "name"
         lines.append(
-            f"[red]{unknown_abilities} {verb} an unknown ability[/] (imported, "
-            "shown in red to fix)."
+            f"[$text-error]{unknown_abilities} {verb} an unknown ability[/] (imported, "
+            "highlighted to fix)."
         )
     over = sum(1 for b in result.books if limit_warnings(b))
     if over:

@@ -1170,7 +1170,7 @@ def _book_live(values: dict[str, Any], saga: Saga) -> str:
     spell = spl.find_spell(saga, probe.spell_id)
     if spell is not None and spell.level is not None:
         lines[0] += f"  [dim](Level {spell.level}, from the spell)[/]"
-    lines += [f"[red]{escape(w)}[/]" for w in bk.limit_warnings(probe)]
+    lines += [f"[$text-error]{escape(w)}[/]" for w in bk.limit_warnings(probe)]
     return "\n".join(lines)
 
 
@@ -2031,7 +2031,9 @@ class SpellImportHelperScreen(ModalDialog[str | None]):
         try:
             target.write_text(spl.EXAMPLE_CSV, encoding="utf-8")
         except OSError as problem:
-            status.update(f"[red]Couldn't save the example: {escape(str(problem))}[/]")
+            status.update(
+                f"[$text-error]Couldn't save the example: {escape(str(problem))}[/]"
+            )
             return
         status.update(
             f"Saved [b]{escape(target.name)}[/] in {escape(str(self.folder))}. "

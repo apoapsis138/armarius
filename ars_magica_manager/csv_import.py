@@ -63,7 +63,7 @@ def skipped_preview(skipped: Sequence[str], shown: int = 5) -> list[str]:
     or none."""
     if not skipped:
         return []
-    lines = ["", f"[red]{len(skipped)} row(s) will be skipped:[/]"]
+    lines = ["", f"[$text-error]{len(skipped)} row(s) will be skipped:[/]"]
     lines += [f"  {escape(s)}" for s in skipped[:shown]]
     if len(skipped) > shown:
         lines.append(f"  ...and {len(skipped) - shown} more.")

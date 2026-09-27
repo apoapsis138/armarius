@@ -124,7 +124,7 @@ class Row:
     notes: str
     basis: str = ""
     note: str = ""  # a short tag shown by the name, e.g. "x1.5"
-    #: A warning worked out from the figures, shown in red ahead of the notes
+    #: A warning worked out from the figures, shown in the error colour ahead of the notes
     #: (the Emergency Savings row's deficit / broke status).
     status: str = ""
     #: Names of the `Economics` attributes the user types for this row.
@@ -442,7 +442,6 @@ def wealth_texts(summary: Summary) -> tuple[str, str]:
             ("Wealth", str(summary.wealth)),
         ]
     )
-    surplus_color = "red" if summary.surplus_deficit < 0 else "cyan"
     right = aligned(
         [
             ("Total Income", money(summary.income)),
@@ -451,7 +450,11 @@ def wealth_texts(summary: Summary) -> tuple[str, str]:
             ("Total Expenditure", money(summary.total_expenditure)),
             (
                 "Surplus/Deficit",
-                f"[{surplus_color}]{summary.surplus_deficit:+d}[/]",
+                (
+                    f"[$text-error]{summary.surplus_deficit:+d}[/]"
+                    if summary.surplus_deficit < 0
+                    else f"{summary.surplus_deficit:+d}"
+                ),
             ),
         ]
     )
@@ -477,13 +480,13 @@ def table_header(first_title: str) -> str:
 
 def row_label(row: Row) -> str:
     """One table row (markup), columns lined up with `table_header`. A status
-    warning takes the Notes column, in red (the notes are in the panel)."""
+    warning takes the Notes column, in the error colour (the notes are in the panel)."""
     name = row.name + (f" ({row.note})" if row.note else "")
     notes = (row.status or row.notes).replace("\n", " ")
     width = _STATUS_WIDTH if row.status else _NOTES_WIDTH
     if len(notes) > width:
         notes = notes[: width - 1] + "…"
-    notes = f"[red]{escape(notes)}[/]" if row.status else escape(notes)
+    notes = f"[$text-error]{escape(notes)}[/]" if row.status else escape(notes)
     return (
         f"{escape(name.ljust(_NAME_WIDTH))}{money(row.first):>{_FIRST_WIDTH}}"
         f"{money(row.savings):>{_SAVINGS_WIDTH}}  {notes}"
@@ -503,7 +506,7 @@ def row_detail_text(row: Row | None, first_title: str) -> str:
         else "[b]Entered by hand:[/] press e to change it",
     ]
     if row.status:
-        lines.append(f"[red][b]{escape(row.status)}[/b][/]")
+        lines.append(f"[$text-error][b]{escape(row.status)}[/b][/]")
     if row.notes.strip():
         lines += ["", "[b]Notes:[/]", escape(row.notes.strip())]
     return "\n".join(lines)

@@ -72,7 +72,7 @@ class SagaPickerScreen(Screen[None]):
                 saga = storage.load_saga(saga_id)
             except _UNREADABLE:
                 # Still listed, so it can be deleted (by id).
-                summary = f"{escape(saga_id)}  —  [red]can't be read[/]"
+                summary = f"{escape(saga_id)}  —  [$text-error]can't be read[/]"
             else:
                 summary = (
                     f"{escape(saga.name)}  —  "

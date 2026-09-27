@@ -471,21 +471,22 @@ def test_total_income_and_wealth_texts():
     assert re.search(rf"Surplus/Deficit:\s+{signed}\b", right)
 
 
-def test_surplus_deficit_is_colored_cyan_when_positive_red_when_negative():
+def test_surplus_deficit_is_plain_when_positive_error_colour_when_negative():
     saga, cov = _sized_covenant()  # a fair bit of expenditure, no income yet
     deficit_summary = eco.summarize(saga, cov)
     assert deficit_summary.surplus_deficit < 0
     _, deficit_right = eco.wealth_texts(deficit_summary)
-    assert f"[red]{deficit_summary.surplus_deficit:+d}[/]" in deficit_right
+    assert f"[$text-error]{deficit_summary.surplus_deficit:+d}[/]" in deficit_right
 
     cov.economics.income_sources = [IncomeSource(id="a", name="Mine", type="Legendary")]
     surplus_summary = eco.summarize(saga, cov)
     assert surplus_summary.surplus_deficit > 0
     _, surplus_right = eco.wealth_texts(surplus_summary)
-    assert f"[cyan]{surplus_summary.surplus_deficit:+d}[/]" in surplus_right
+    assert f"{surplus_summary.surplus_deficit:+d}" in surplus_right
+    assert "[$" not in surplus_right  # a surplus is plain
 
 
-def test_surplus_deficit_of_exactly_zero_is_colored_cyan():
+def test_surplus_deficit_of_exactly_zero_is_plain():
     saga, cov = _sized_covenant()
     summary = eco.summarize(saga, cov)
     cov.economics.income_sources = [
@@ -496,7 +497,7 @@ def test_surplus_deficit_of_exactly_zero_is_colored_cyan():
     even_summary = eco.summarize(saga, cov)
     assert even_summary.surplus_deficit == 0
     _, right = eco.wealth_texts(even_summary)
-    assert "[cyan]+0[/]" in right
+    assert "+0" in right and "[$" not in right  # break-even is plain
 
 
 def test_source_text_shows_where_the_income_comes_from_and_renders_emphasis():
@@ -637,7 +638,7 @@ def test_emergency_savings_warns_of_a_deficit_and_of_being_broke():
     saga, cov = _with_deficit(36, wealth=100)
     row = _row(eco.summarize(saga, cov).savings, "emergency_savings")
     assert row.status == "Covenant operating at a deficit"
-    assert "[red]Covenant operating at a deficit[/]" in eco.row_label(row)
+    assert "[$text-error]Covenant operating at a deficit[/]" in eco.row_label(row)
     assert "Covenant operating at a deficit" in strip_markup(
         eco.row_detail_text(row, "Q")
     )

@@ -25,15 +25,15 @@ from ..models import (
 )
 
 
-def _balance_colour(boon_points: float, hook_points: float) -> str:
-    """Colour for the Boons/Hooks point totals, shared by both: cyan while
-    Boons cost less than Hooks provide, red once they cost more, green when
+def _balance_colored(boon_points: float, hook_points: float, text: str) -> str:
+    """Wraps `text` (a Boons/Hooks point total -- both share one colour) in
+    the theme's colour for how the two compare: plain while Boons cost less
+    than Hooks provide, $text-error once they cost more, $text-success when
     they exactly balance."""
     if boon_points < hook_points:
-        return "cyan"
-    if boon_points > hook_points:
-        return "red"
-    return "green"
+        return text
+    colour = "$text-error" if boon_points > hook_points else "$text-success"
+    return f"[{colour}]{text}[/]"
 
 
 def _tier_text(entry: CovenantBoonHookDef) -> str:
@@ -202,7 +202,7 @@ class SelectableList(OptionList):
         marker = "[dodgerblue]●[/]" if position == self._marked else "[dim]○[/]"
         if not self.multi:
             return f"{marker} {label}"
-        check = "[green]✔[/]" if position in self._checked else " "
+        check = "[$text-success]✔[/]" if position in self._checked else " "
         return f"{check} {marker} {label}"
 
     def _render_row(self, position: int | None) -> None:

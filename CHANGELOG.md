@@ -8,6 +8,18 @@ fix or behind-the-scenes improvement bumps PATCH. The version is set in
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 0.4.0 — 2026-09-27
+
+- Every highlight in the app now uses the current theme's own colours
+  instead of fixed red, green and cyan, so it stays legible whichever theme
+  you pick: problems, deficits and unmet minimums in the theme's error
+  colour; balanced Boons/Hooks and met minimums in its success colour. A
+  covenant surplus or break-even, and Boons that cost less than the Hooks
+  provide, are now shown plain.
+- Book problems, CSV rows that will be skipped, "can't be read" sagas and
+  unknown spells are highlighted in the theme's error colour; the check mark
+  on multi-selected books uses its success colour.
+
 ## 0.3.0 — 2026-09-27
 
 - The laboratory sheet's top panel is more compact: Identity is titled with

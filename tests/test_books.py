@@ -184,9 +184,13 @@ def test_detail_text_field_order_and_warning():
     right = ["Language:", "Author:", "Year Published:", "Owner:"]
     assert len({line.index(label) for line, label in zip(plain, right)}) == 1
     assert "32 Build Points (Level 15 + Quality 17)" in text
-    assert "[red]Quality 17 is over the covenant-creation limit of 16.[/]" in text
+    assert (
+        "[$text-error]Quality 17 is over the covenant-creation limit of 16.[/]" in text
+    )
     assert r"Summa \[of] Fire" in text  # user text is escaped
-    assert text.index("Cost:") < text.index("[red]") < text.index("Description:")
+    assert (
+        text.index("Cost:") < text.index("[$text-error]") < text.index("Description:")
+    )
 
 
 def test_row_label_columns_line_up_with_header():
@@ -395,10 +399,10 @@ def test_an_unknown_ability_is_flagged_red_with_a_status():
     ]
     # An Art book never has an ability problem, whatever `ability` holds.
     assert bk.status_problems(_book("Art Summa", art="Vim", ability="Latin")) == []
-    assert not bk.row_label(saga, known).startswith("[red]")
-    assert bk.row_label(saga, unknown).startswith("[red]")
+    assert not bk.row_label(saga, known).startswith("[$text-error]")
+    assert bk.row_label(saga, unknown).startswith("[$text-error]")
     first_line = bk.detail_text(saga, unknown).split("\n")[0]
-    assert first_line.startswith("[red][b]Unknown ability:")
+    assert first_line.startswith("[$text-error][b]Unknown ability:")
 
 
 def test_import_keeps_an_unknown_ability_and_fixes_the_case_of_known_ones():
@@ -505,7 +509,7 @@ def test_a_book_whose_spell_cant_be_found_is_flagged():
         "Unknown spell: 'The Lost Art' isn't in the spell list; edit the book to "
         "choose one."
     ]
-    assert bk.row_label(saga, lost).startswith("[red]")
+    assert bk.row_label(saga, lost).startswith("[$text-error]")
     assert bk.level_of(lost, saga) == 10  # its typed level is kept
     assert bk.status_problems(lost) == []  # without the saga, no lookup
     linked = _book("Lab Text", spell_id="spell_pilum_of_fire")

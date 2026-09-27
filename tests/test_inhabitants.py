@@ -481,21 +481,21 @@ def test_loyalty_right_text_shows_every_situational_modifier():
     assert re.search(r"Magical Influence:\s+3\b", right)
 
 
-def test_population_text_colors_the_needed_pair_green_or_red():
+def test_population_text_colors_the_needed_pair_by_theme():
     saga, cov = _saga()
     cov.population.other_people = 5
     # Enough inhabitant points (1 magus + 1 companion + 5 other = 8+3+5=16) that
     # some servants/teamsters are required.
     population = inh.population_text(saga, cov)
     minimum = inh.minimum_servants(saga, cov)
-    assert f"[red]0 / {minimum}[/]" in population  # none hired yet: red
+    assert f"[$text-error]0 / {minimum}[/]" in population  # none hired yet
     # Hiring them (excluded from the minimum's own formula, so it stays put).
     cov.inhabitants.append(
         Inhabitant(
             id="s", kind="inhabitant", name="Servants", quantity=minimum, role="Servant"
         )
     )
-    assert f"[green]{minimum} / {minimum}[/]" in inh.population_text(saga, cov)
+    assert f"[$text-success]{minimum} / {minimum}[/]" in inh.population_text(saga, cov)
     assert re.search(r"Total Inhabitants:\s+7\b", population)  # 5 + magus + companion
 
 

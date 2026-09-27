@@ -67,7 +67,7 @@ from .widgets import (
     SheetSection,
     StackingColumns,
     TwoColumns,
-    _balance_colour,
+    _balance_colored,
     _boon_hook_names,
     _sign_colored,
     _tab_placeholder,
@@ -1283,7 +1283,7 @@ class CharacterSheetView(SheetView):
         known = self.character.spells_known[index]
         spell = spl.find_spell(self.saga, known.spell_id)
         if spell is None:
-            lines = [f"[red]Unknown spell: {escape(known.spell_id)}[/]"]
+            lines = [f"[$text-error]Unknown spell: {escape(known.spell_id)}[/]"]
         else:
             lines = [spl.detail_text(self.saga, spell)]
         lines += [
@@ -2384,14 +2384,13 @@ class CovenantSheetView(SheetView):
     def _bh_title(self, kind: str) -> str:
         """ "Boons (7 pts)" / "Hooks (7 pts)": Boons show the points they
         cost, Hooks the points they provide. The parenthesised total of BOTH
-        titles takes one colour from comparing the two (see _balance_colour)."""
+        titles takes one colour from comparing the two (see _balance_colored)."""
         by_id = catalog.load_covenant_boon_hook_catalog_by_id()
         boons = covenant_boon_points(self.covenant, by_id)
         hooks = covenant_hook_points(self.covenant, by_id)
         points = boons if kind == "Boon" else hooks
-        colour = _balance_colour(boons, hooks)
         unit = "pt" if points == 1 else "pts"
-        return f"{kind}s [{colour}]({points:g} {unit})[/]"
+        return f"{kind}s {_balance_colored(boons, hooks, f'({points:g} {unit})')}"
 
     def _bh_entries(self, kind: str) -> list[tuple[int, str]]:
         """The attached Boons or Hooks of `kind` as (index into

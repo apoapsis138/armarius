@@ -726,10 +726,11 @@ def population_text(saga: Saga, covenant: Covenant) -> str:
 
 
 def _min_colored(actual: int, minimum: int) -> str:
-    """ "actual / minimum", both numbers coloured as one unit: green when the
-    minimum is met, red otherwise (same "colour the pair together" idea as
-    the covenant Boons/Hooks point totals)."""
-    color = "green" if actual >= minimum else "red"
+    """ "actual / minimum", both numbers coloured as one unit in the theme's
+    colours: $text-success when the minimum is met, $text-error otherwise
+    (same "colour the pair together" idea as the covenant Boons/Hooks point
+    totals)."""
+    color = "$text-success" if actual >= minimum else "$text-error"
     return f"[{color}]{actual} / {minimum}[/]"
 
 

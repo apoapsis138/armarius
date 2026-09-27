@@ -279,4 +279,13 @@ just the standing decisions.
   (`ars_magica_manager/markup.py`) rather than each screen handling it
   separately, so bracketed names and `**bold**`-style emphasis are safe and
   consistent everywhere.
+- **Colour comes only from the active theme.** Text that needs to stand out
+  uses the theme's text variables in markup: `$text-error` for problems,
+  deficits and penalties, `$text-success` for met targets and bonuses
+  (`$text-warning` for caution, `$text-muted`/`[dim]` for secondary text).
+  Each theme computes these to be legible on its own background, so they
+  beat hand-picked `$error-lighten-1`-style shades. Zero or neutral values
+  stay plain. Named (`[red]`) and hex colours appear only in `themes.py`;
+  `tests/test_theme_colours.py` enforces it. Signed numbers keep their
+  leading `+` (`+0`, `+2`).
 
