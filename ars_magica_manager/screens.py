@@ -8,6 +8,7 @@ from collections import Counter
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from dataclasses import field as dataclass_field
+from enum import StrEnum
 from functools import cached_property, partial
 from pathlib import Path
 from typing import Any, ClassVar, NamedTuple, cast
@@ -42,6 +43,7 @@ from textual.widgets import (
 )
 from textual.widgets._collapsible import CollapsibleTitle
 from textual.widgets.option_list import Option
+from textual.widgets.tree import TreeNode
 
 from . import books as bk
 from . import catalog, storage
@@ -9264,7 +9266,28 @@ class CovenantSheetView(Vertical):
         return "\n".join(lines)
 
 
-def _tree_node_with_data(tree: Tree, data: tuple) -> Any:
+class NodeKind(StrEnum):
+    """What a nav-tree node stands for: the first item of its `.data` tuple
+    (the second, where there is one, is the record's or covenant's id).
+    Also `WorkspaceScreen.selected_kind`."""
+
+    SAGA = "saga"
+    COVENANT = "covenant"
+    CHARACTER_GROUP = "character_group"
+    CHARACTER = "character"
+    FAMILIAR = "familiar"
+    LABORATORY_GROUP = "laboratory_group"
+    LABORATORY = "laboratory"
+    SPELLS = "spells"
+    BOOK_GROUP = "book_group"
+
+
+#: Widget ids of the workspace's two panes (also used in its DEFAULT_CSS).
+NAV_TREE_ID = "nav-tree"
+DETAIL_PANE_ID = "detail-pane"
+
+
+def _tree_node_with_data(tree: Tree, data: tuple) -> TreeNode | None:
     """The first node of `tree` whose `.data` is `data`, or None."""
     pending = [tree.root]
     while pending:
@@ -9327,11 +9350,11 @@ class WorkspaceScreen(Screen[None]):
     #: Per sheet kind: the tabs that dispatch on their own id, and the
     #: section a tab with no focused section falls back to (None: the tab
     #: itself -- every Laboratory tab dispatches). See _active_section().
-    _SHEET_DISPATCH: ClassVar[dict[str, tuple[set[str], str | None]]] = {
-        "character": (_CHARACTER_DISPATCH_TABS, "section-char-info"),
-        "laboratory": (set(), None),
-        "covenant": (_COVENANT_DISPATCH_TABS, "section-cov-info"),
-        "familiar": (_FAMILIAR_DISPATCH_TABS, "section-fam-info"),
+    _SHEET_DISPATCH: ClassVar[dict[NodeKind, tuple[set[str], str | None]]] = {
+        NodeKind.CHARACTER: (_CHARACTER_DISPATCH_TABS, "section-char-info"),
+        NodeKind.LABORATORY: (set(), None),
+        NodeKind.COVENANT: (_COVENANT_DISPATCH_TABS, "section-cov-info"),
+        NodeKind.FAMILIAR: (_FAMILIAR_DISPATCH_TABS, "section-fam-info"),
     }
 
     DEFAULT_CSS = """
@@ -9353,7 +9376,7 @@ class WorkspaceScreen(Screen[None]):
     def __init__(self, saga: Saga) -> None:
         super().__init__()
         self.saga = saga
-        self.selected_kind: str = "saga"
+        self.selected_kind: NodeKind = NodeKind.SAGA
         self.selected_covenant: Covenant | None = None
         self.selected_character: Character | None = None
         self.selected_laboratory: Laboratory | None = None
@@ -9366,9 +9389,15 @@ class WorkspaceScreen(Screen[None]):
     def compose(self) -> ComposeResult:
         yield Header()
         with Horizontal(id="workspace-body"):
-            yield Tree(escape(self.saga.name), data=("saga",), id="nav-tree")
-            yield VerticalScroll(id="detail-pane")
+            yield Tree(escape(self.saga.name), data=(NodeKind.SAGA,), id=NAV_TREE_ID)
+            yield VerticalScroll(id=DETAIL_PANE_ID)
         yield BottomBar()
+
+    def _nav_tree(self) -> Tree:
+        return self.query_one(f"#{NAV_TREE_ID}", Tree)
+
+    def _detail_pane(self) -> VerticalScroll:
+        return self.query_one(f"#{DETAIL_PANE_ID}", VerticalScroll)
 
     async def on_mount(self) -> None:
         self._update_saga_clock()
@@ -9384,13 +9413,15 @@ class WorkspaceScreen(Screen[None]):
         )
 
     def _rebuild_tree(self) -> None:
-        tree = self.query_one("#nav-tree", Tree)
-        tree.reset(escape(self.saga.name), data=("saga",))
+        tree = self._nav_tree()
+        tree.reset(escape(self.saga.name), data=(NodeKind.SAGA,))
         tree.root.expand()
 
         for covenant in self.saga.covenants:
             cov_node = tree.root.add(
-                escape(covenant.name), data=("covenant", covenant.id), expand=True
+                escape(covenant.name),
+                data=(NodeKind.COVENANT, covenant.id),
+                expand=True,
             )
 
             characters = [
@@ -9398,7 +9429,7 @@ class WorkspaceScreen(Screen[None]):
             ]
             char_group = cov_node.add(
                 f"Characters ({len(characters)})",
-                data=("character_group", covenant.id),
+                data=(NodeKind.CHARACTER_GROUP, covenant.id),
                 expand=True,
             )
             for character in characters:
@@ -9409,11 +9440,11 @@ class WorkspaceScreen(Screen[None]):
             ]
             lab_group = cov_node.add(
                 f"Laboratories ({len(labs)})",
-                data=("laboratory_group", covenant.id),
+                data=(NodeKind.LABORATORY_GROUP, covenant.id),
                 expand=True,
             )
             for lab in labs:
-                lab_group.add_leaf(escape(lab.name), data=("laboratory", lab.id))
+                lab_group.add_leaf(escape(lab.name), data=(NodeKind.LABORATORY, lab.id))
 
         # Characters and labs with no (or a no-longer-existing) covenant live
         # directly under the saga -- assigning to a covenant is optional, and
@@ -9425,7 +9456,7 @@ class WorkspaceScreen(Screen[None]):
         if loose_characters:
             group = tree.root.add(
                 f"Unassigned Characters ({len(loose_characters)})",
-                data=("character_group", None),
+                data=(NodeKind.CHARACTER_GROUP, None),
                 expand=True,
             )
             for character in loose_characters:
@@ -9436,18 +9467,18 @@ class WorkspaceScreen(Screen[None]):
         if loose_labs:
             group = tree.root.add(
                 f"Unassigned Laboratories ({len(loose_labs)})",
-                data=("laboratory_group", None),
+                data=(NodeKind.LABORATORY_GROUP, None),
                 expand=True,
             )
             for lab in loose_labs:
-                group.add_leaf(escape(lab.name), data=("laboratory", lab.id))
+                group.add_leaf(escape(lab.name), data=(NodeKind.LABORATORY, lab.id))
         # Books with no owner file under the saga.
         loose_books = bk.unassigned_books(self.saga)
         if loose_books:
             tree.root.add_leaf(
-                f"Unassigned Books ({len(loose_books)})", data=("book_group",)
+                f"Unassigned Books ({len(loose_books)})", data=(NodeKind.BOOK_GROUP,)
             )
-        tree.root.add_leaf(self._spells_label(), data=("spells",))
+        tree.root.add_leaf(self._spells_label(), data=(NodeKind.SPELLS,))
 
     def _add_character_node(self, parent, character: Character) -> None:
         """A character's own tree node: a plain leaf, unless it's a magus
@@ -9461,11 +9492,11 @@ class WorkspaceScreen(Screen[None]):
             else None
         )
         if familiar is None:
-            parent.add_leaf(label, data=("character", character.id))
+            parent.add_leaf(label, data=(NodeKind.CHARACTER, character.id))
             return
-        node = parent.add(label, data=("character", character.id), expand=True)
+        node = parent.add(label, data=(NodeKind.CHARACTER, character.id), expand=True)
         node.add_leaf(
-            f"Familiar: {escape(familiar.name)}", data=("familiar", familiar.id)
+            f"Familiar: {escape(familiar.name)}", data=(NodeKind.FAMILIAR, familiar.id)
         )
 
     async def on_tree_node_selected(self, event: Tree.NodeSelected) -> None:
@@ -9473,27 +9504,27 @@ class WorkspaceScreen(Screen[None]):
         if data is None:
             return
 
-        kind = data[0]
+        kind: NodeKind = data[0]
         self.selected_kind = kind
         self._character_sheet_view = None
         self._laboratory_sheet_view = None
         self._covenant_sheet_view = None
         self._familiar_sheet_view = None
 
-        if kind == "saga":
+        if kind == NodeKind.SAGA:
             self.selected_covenant = None
             self.selected_character = None
             self.selected_laboratory = None
             self.selected_familiar = None
             await self._show_saga_detail()
-        elif kind == "covenant":
+        elif kind == NodeKind.COVENANT:
             covenant = next(c for c in self.saga.covenants if c.id == data[1])
             self.selected_covenant = covenant
             self.selected_character = None
             self.selected_laboratory = None
             self.selected_familiar = None
             await self._show_covenant_detail(covenant)
-        elif kind == "character_group":
+        elif kind == NodeKind.CHARACTER_GROUP:
             covenant = self.saga.covenant(data[1])
             self.selected_covenant = covenant
             self.selected_character = None
@@ -9506,13 +9537,13 @@ class WorkspaceScreen(Screen[None]):
                 else "These characters aren't assigned to a covenant. Select one "
                 "from the tree, or press 'c' to add one.",
             )
-        elif kind == "character":
+        elif kind == NodeKind.CHARACTER:
             character = next(c for c in self.saga.characters if c.id == data[1])
             self.selected_character = character
             self.selected_covenant = self.saga.covenant(character.covenant_id)
             self.selected_familiar = None
             await self._show_character_detail(character)
-        elif kind == "familiar":
+        elif kind == NodeKind.FAMILIAR:
             familiar = next(f for f in self.saga.familiars if f.id == data[1])
             self.selected_familiar = familiar
             self.selected_character = self.saga.character(familiar.character_id)
@@ -9522,7 +9553,7 @@ class WorkspaceScreen(Screen[None]):
                 else None
             )
             await self._show_familiar_detail(familiar)
-        elif kind == "laboratory_group":
+        elif kind == NodeKind.LABORATORY_GROUP:
             covenant = self.saga.covenant(data[1])
             self.selected_covenant = covenant
             self.selected_laboratory = None
@@ -9535,15 +9566,15 @@ class WorkspaceScreen(Screen[None]):
                 else "These laboratories aren't assigned to a covenant. Select "
                 "one from the tree, or press 'l' to add one.",
             )
-        elif kind == "laboratory":
+        elif kind == NodeKind.LABORATORY:
             lab = next(lab for lab in self.saga.laboratories if lab.id == data[1])
             self.selected_laboratory = lab
             self.selected_covenant = self.saga.covenant(lab.covenant_id)
             await self._show_laboratory_detail(lab)
-        elif kind == "spells":
+        elif kind == NodeKind.SPELLS:
             self.selected_covenant = None
             await self._set_detail(SpellListView(self.saga))
-        elif kind == "book_group":
+        elif kind == NodeKind.BOOK_GROUP:
             self.selected_covenant = None
             await self._set_detail(
                 BookListView(
@@ -9558,10 +9589,10 @@ class WorkspaceScreen(Screen[None]):
 
     def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
         if action == "create_covenant":
-            return self.selected_kind == "saga"
+            return self.selected_kind == NodeKind.SAGA
         # Characters and labs may be created anywhere: a selected covenant
         # is just the default for the dialog's optional Covenant field.
-        if action == "edit" and self.selected_kind == "saga":
+        if action == "edit" and self.selected_kind == NodeKind.SAGA:
             return True
         if action in ("add", "remove", "edit", "restore"):
             return self._section_op(action) is not None
@@ -9569,13 +9600,13 @@ class WorkspaceScreen(Screen[None]):
             return self._active_section() == "section-eco-income"
         if action == "import_data":
             return (
-                self.selected_kind == "saga"
+                self.selected_kind == NodeKind.SAGA
                 or self._active_section() in _LIBRARY_SECTIONS
             )
         if action in ("add_virtue_flaw", "remove_virtue_flaw"):
-            if self.selected_kind == "laboratory":
+            if self.selected_kind == NodeKind.LABORATORY:
                 return self._active_section() == "tab-lab-vf"
-            if self.selected_kind == "familiar":
+            if self.selected_kind == NodeKind.FAMILIAR:
                 return self._active_section() in (
                     "section-fam-vf-virtues",
                     "section-fam-vf-flaws",
@@ -9592,9 +9623,9 @@ class WorkspaceScreen(Screen[None]):
         dispatches on its own id (see _SHEET_DISPATCH), otherwise the sheet's
         always-visible top section, so 'e' edits the record from any tab.
         The Unassigned Books and Spells nodes have no sheet, just a section."""
-        if self.selected_kind == "book_group":
+        if self.selected_kind == NodeKind.BOOK_GROUP:
             return "section-unassigned-books"
-        if self.selected_kind == "spells":
+        if self.selected_kind == NodeKind.SPELLS:
             return SPELL_SECTION
         view = self._current_sheet_view()
         if view is None:
@@ -9665,7 +9696,7 @@ class WorkspaceScreen(Screen[None]):
         view = self._current_sheet_view()
         if view is None:
             return
-        active_tab_first = self.selected_kind == "laboratory"
+        active_tab_first = self.selected_kind == NodeKind.LABORATORY
         try:
             if initial and not active_tab_first:
                 collapsible = view.query(Collapsible).first()
@@ -9697,7 +9728,7 @@ class WorkspaceScreen(Screen[None]):
         self.refresh_bindings()
 
     async def _set_detail(self, *widgets: Widget) -> None:
-        detail_pane = self.query_one("#detail-pane", VerticalScroll)
+        detail_pane = self._detail_pane()
         # Must be awaited before mounting replacements below, or a same-id
         # widget not yet removed collides with its freshly-mounted
         # replacement and Textual raises DuplicateIds.
@@ -9761,10 +9792,10 @@ class WorkspaceScreen(Screen[None]):
     ):
         """The sheet on show for the selected tree node, if it has one."""
         return {
-            "character": self._character_sheet_view,
-            "laboratory": self._laboratory_sheet_view,
-            "covenant": self._covenant_sheet_view,
-            "familiar": self._familiar_sheet_view,
+            NodeKind.CHARACTER: self._character_sheet_view,
+            NodeKind.LABORATORY: self._laboratory_sheet_view,
+            NodeKind.COVENANT: self._covenant_sheet_view,
+            NodeKind.FAMILIAR: self._familiar_sheet_view,
         }.get(self.selected_kind)
 
     # -- scored-trait lists (Personality Traits, Reputations) --
@@ -9916,7 +9947,7 @@ class WorkspaceScreen(Screen[None]):
                 self._rebuild_tree()
                 covenant = next(c for c in self.saga.covenants if c.id == covenant_id)
                 self.selected_covenant = covenant
-                self.selected_kind = "covenant"
+                self.selected_kind = NodeKind.COVENANT
                 await self._show_covenant_detail(covenant)
 
         self.app.push_screen(CovenantCreateScreen(self.saga), handle_result)
@@ -9931,7 +9962,7 @@ class WorkspaceScreen(Screen[None]):
                     c for c in self.saga.characters if c.id == character_id
                 )
                 self.selected_character = character
-                self.selected_kind = "character"
+                self.selected_kind = NodeKind.CHARACTER
                 await self._show_character_detail(character)
 
         self.app.push_screen(
@@ -9949,7 +9980,7 @@ class WorkspaceScreen(Screen[None]):
                 self._rebuild_tree()
                 lab = next(lab for lab in self.saga.laboratories if lab.id == lab_id)
                 self.selected_laboratory = lab
-                self.selected_kind = "laboratory"
+                self.selected_kind = NodeKind.LABORATORY
                 await self._show_laboratory_detail(lab)
 
         self.app.push_screen(LaboratoryCreateScreen(self.saga, covenant), handle_result)
@@ -9973,7 +10004,7 @@ class WorkspaceScreen(Screen[None]):
                 familiar = next(f for f in self.saga.familiars if f.id == familiar_id)
                 self.selected_familiar = familiar
                 self.selected_character = self.saga.character(familiar.character_id)
-                self.selected_kind = "familiar"
+                self.selected_kind = NodeKind.FAMILIAR
                 await self._show_familiar_detail(familiar)
 
         self.app.push_screen(
@@ -10155,7 +10186,7 @@ class WorkspaceScreen(Screen[None]):
             handler()
 
     def action_edit(self) -> None:
-        if self.selected_kind == "saga":
+        if self.selected_kind == NodeKind.SAGA:
             self._edit_saga()
         elif (handler := self._section_op("edit")) is not None:
             handler()
@@ -10171,7 +10202,7 @@ class WorkspaceScreen(Screen[None]):
 
     def _spell_view(self) -> SpellListView | None:
         try:
-            return self.query_one("#detail-pane").query(SpellListView).first()
+            return self._detail_pane().query(SpellListView).first()
         except NoMatches:
             return None
 
@@ -10179,7 +10210,7 @@ class WorkspaceScreen(Screen[None]):
         view = self._spell_view()
         if view is not None:
             view.refilter()
-        node = _tree_node_with_data(self.query_one("#nav-tree", Tree), ("spells",))
+        node = _tree_node_with_data(self._nav_tree(), (NodeKind.SPELLS,))
         if node is not None:
             node.set_label(self._spells_label())
 
@@ -10251,17 +10282,17 @@ class WorkspaceScreen(Screen[None]):
         """The book list showing in the detail pane, if any (a sheet shows at
         most one)."""
         try:
-            return self.query_one("#detail-pane").query(BookListView).first()
+            return self._detail_pane().query(BookListView).first()
         except NoMatches:
             return None
 
     def _default_book_owner(self) -> str:
         """Owner a new book starts with: wherever it's being added from."""
-        if self.selected_kind == "character" and self.selected_character:
+        if self.selected_kind == NodeKind.CHARACTER and self.selected_character:
             return bk.owner_value("character", self.selected_character.id)
-        if self.selected_kind == "laboratory" and self.selected_laboratory:
+        if self.selected_kind == NodeKind.LABORATORY and self.selected_laboratory:
             return bk.owner_value("laboratory", self.selected_laboratory.id)
-        if self.selected_kind == "covenant" and self.selected_covenant:
+        if self.selected_kind == NodeKind.COVENANT and self.selected_covenant:
             return bk.owner_value("covenant", self.selected_covenant.id)
         return ""
 
@@ -10430,7 +10461,7 @@ class WorkspaceScreen(Screen[None]):
     def action_import_data(self) -> None:
         """'I': on the saga, choose what to import (Books or Spells so far);
         on a covenant's Library tab, import books straight into its library."""
-        if self.selected_kind == "saga":
+        if self.selected_kind == NodeKind.SAGA:
 
             def handle_kind(kind: str | None) -> None:
                 if kind == "books":
@@ -10510,7 +10541,7 @@ class WorkspaceScreen(Screen[None]):
             if accepted:
                 storage.save_saga(saga)
                 self._books_changed()
-                if self.selected_kind == "saga":
+                if self.selected_kind == NodeKind.SAGA:
                     self.call_later(self._show_saga_detail)  # its Books count
             count = len(accepted)
             message = f"Imported {count} book{'s' if count != 1 else ''}"
@@ -10640,15 +10671,17 @@ class WorkspaceScreen(Screen[None]):
         view = self._book_view()
         if view is not None:
             view.rebuild()
-        tree = self.query_one("#nav-tree", Tree)
-        node = _tree_node_with_data(tree, ("book_group",))
+        tree = self._nav_tree()
+        node = _tree_node_with_data(tree, (NodeKind.BOOK_GROUP,))
         count = len(bk.unassigned_books(self.saga))
         if node is not None and count:
             node.set_label(f"Unassigned Books ({count})")
         elif node is not None:
             node.remove()
         elif count:
-            tree.root.add_leaf(f"Unassigned Books ({count})", data=("book_group",))
+            tree.root.add_leaf(
+                f"Unassigned Books ({count})", data=(NodeKind.BOOK_GROUP,)
+            )
 
     # -- Covenant: Possessions tab --
 
@@ -11523,7 +11556,7 @@ class WorkspaceScreen(Screen[None]):
         storage.save_saga(saga)
         self._update_saga_clock()
         self._refresh_covenant_section("section-cov-info")
-        if self.selected_kind == "saga":
+        if self.selected_kind == NodeKind.SAGA:
             await self._show_saga_detail()
 
     def action_advance_season(self) -> None:
@@ -12504,8 +12537,8 @@ class WorkspaceScreen(Screen[None]):
         if target is None:
             return
         existing_ids = {vf.vf_id for vf in target.virtues_flaws}
-        is_lab = self.selected_kind == "laboratory"
-        is_familiar = self.selected_kind == "familiar"
+        is_lab = self.selected_kind == NodeKind.LABORATORY
+        is_familiar = self.selected_kind == NodeKind.FAMILIAR
         picker = LabVirtueFlawPickerScreen if is_lab else VirtueFlawPickerScreen
 
         def handle_result(instance: VirtueFlawInstance | None) -> None:
@@ -12522,8 +12555,8 @@ class WorkspaceScreen(Screen[None]):
         self.app.push_screen(picker(existing_ids), handle_result)
 
     def action_remove_virtue_flaw(self) -> None:
-        is_lab = self.selected_kind == "laboratory"
-        is_familiar = self.selected_kind == "familiar"
+        is_lab = self.selected_kind == NodeKind.LABORATORY
+        is_familiar = self.selected_kind == NodeKind.FAMILIAR
         if (
             not is_lab
             and not is_familiar
@@ -12943,16 +12976,16 @@ class WorkspaceScreen(Screen[None]):
 
     def _virtue_flaw_target(self) -> Character | Laboratory | Familiar | None:
         if (
-            self.selected_kind == "laboratory"
+            self.selected_kind == NodeKind.LABORATORY
             and self._active_section() == "tab-lab-vf"
         ):
             return self.selected_laboratory
-        if self.selected_kind == "character" and self._active_section() in (
+        if self.selected_kind == NodeKind.CHARACTER and self._active_section() in (
             "section-vf-virtues",
             "section-vf-flaws",
         ):
             return self.selected_character
-        if self.selected_kind == "familiar" and self._active_section() in (
+        if self.selected_kind == NodeKind.FAMILIAR and self._active_section() in (
             "section-fam-vf-virtues",
             "section-fam-vf-flaws",
         ):
