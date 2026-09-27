@@ -7,8 +7,6 @@ and the details panel, and reading books from a CSV file.
 
 from __future__ import annotations
 
-import csv
-import io
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
@@ -16,6 +14,7 @@ from typing import Any
 
 from . import catalog, storage
 from . import spells as spl
+from .csv_import import parse_rows, read_text_any, skipped_preview
 from .markup import escape, fit, markdown_inline
 from .models import (
     ART_LOOKUP,
@@ -26,7 +25,6 @@ from .models import (
     Spell,
     round_away_from_zero,
 )
-from .storage import read_text_any
 
 #: Book types whose subject is an Art / an Ability (a Tractatus depends on its
 #: `subject_kind`).
@@ -614,27 +612,10 @@ def parse_books_csv(text: str) -> CsvImport:
     """Read books from CSV text with a header row (column names in any case
     and order; see CSV_COLUMNS). Raises ValueError if there's no `name` or
     `type` column; a bad row is skipped and reported, not fatal."""
-    reader = csv.DictReader(io.StringIO(text))
-    headers = [h.strip().lower() for h in reader.fieldnames or []]
-    missing = [c for c in ("name", "type") if c not in headers]
-    if missing:
-        raise ValueError(f"no {' or '.join(missing)} column in the header row")
-    result = CsvImport(unused_columns=[h for h in headers if h not in CSV_COLUMNS])
-    for line, raw in enumerate(reader, start=2):
-        row = {
-            (key or "").strip().lower(): (value or "")
-            for key, value in raw.items()
-            if not isinstance(value, list)  # extra cells beyond the header
-        }
-        if not any(v.strip() for v in row.values()):
-            continue  # a blank line
-        try:
-            result.books.append(_book_from_row(row))
-        except ValueError as problem:
-            name = row.get("name", "").strip()
-            label = f"Row {line}" + (f" ({name})" if name else "")
-            result.skipped.append(f"{label}: {problem}.")
-    return result
+    books, skipped, unused = parse_rows(
+        text, ("name", "type"), CSV_COLUMNS, _book_from_row, missing_joiner=" or "
+    )
+    return CsvImport(books, skipped, unused)
 
 
 def read_books_csv(path: Path) -> CsvImport:
@@ -699,12 +680,7 @@ def import_preview(
             f"{over} {verb} over covenant-creation limits (flagged on the book, "
             "not blocked)."
         )
-    if result.skipped:
-        shown = result.skipped[:5]
-        lines += ["", f"[red]{len(result.skipped)} row(s) will be skipped:[/]"]
-        lines += [f"  {escape(s)}" for s in shown]
-        if len(result.skipped) > len(shown):
-            lines.append(f"  ...and {len(result.skipped) - len(shown)} more.")
+    lines += skipped_preview(result.skipped)
     return "\n".join(lines)
 
 

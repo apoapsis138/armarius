@@ -69,13 +69,3 @@ def list_sagas() -> list[str]:
     if not SAGAS_DIR.exists():
         return []
     return sorted(path.stem for path in SAGAS_DIR.glob("*.json"))
-
-
-def read_text_any(path: Path) -> str:
-    """A text file's contents: UTF-8 (with or without Excel's byte-order mark),
-    falling back to Windows-1252 for older spreadsheets."""
-    data = Path(path).read_bytes()
-    try:
-        return data.decode("utf-8-sig")
-    except UnicodeDecodeError:
-        return data.decode("cp1252")

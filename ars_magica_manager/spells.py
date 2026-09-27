@@ -8,14 +8,13 @@ Range/Duration/Target notation the rulebook and the Grand Grimoire use.
 
 from __future__ import annotations
 
-import csv
-import io
 import math
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from . import catalog, storage
+from .csv_import import parse_rows, read_text_any, skipped_preview
 from .markup import escape, fit
 from .models import (
     ART_ABBREVIATIONS,
@@ -29,7 +28,6 @@ from .models import (
     Saga,
     Spell,
 )
-from .storage import read_text_any
 
 # ------------------------------------------------------------ where they live
 
@@ -532,27 +530,10 @@ def parse_spells_csv(text: str) -> SpellCsvImport:
     """Read spells from CSV text with a header row (see CSV_COLUMNS). Raises
     ValueError without a name, technique or form column; a bad row is skipped
     and reported, not fatal."""
-    reader = csv.DictReader(io.StringIO(text))
-    headers = [h.strip().lower() for h in reader.fieldnames or []]
-    missing = [c for c in ("name", "technique", "form") if c not in headers]
-    if missing:
-        raise ValueError(f"no {', '.join(missing)} column in the header row")
-    result = SpellCsvImport(unused_columns=[h for h in headers if h not in CSV_COLUMNS])
-    for line, raw in enumerate(reader, start=2):
-        row = {
-            (key or "").strip().lower(): (value or "")
-            for key, value in raw.items()
-            if not isinstance(value, list)
-        }
-        if not any(v.strip() for v in row.values()):
-            continue
-        try:
-            result.spells.append(_spell_from_row(row))
-        except ValueError as problem:
-            name = row.get("name", "").strip()
-            label = f"Row {line}" + (f" ({name})" if name else "")
-            result.skipped.append(f"{label}: {problem}.")
-    return result
+    spells, skipped, unused = parse_rows(
+        text, ("name", "technique", "form"), CSV_COLUMNS, _spell_from_row
+    )
+    return SpellCsvImport(spells, skipped, unused)
 
 
 def read_spells_csv(path: Path) -> SpellCsvImport:
@@ -590,12 +571,7 @@ def spell_import_preview(
     general = sum(1 for s in result.spells if s.level is None)
     if general:
         lines.append(f"[dim]{general} General-level (no level given).[/]")
-    if result.skipped:
-        shown = result.skipped[:5]
-        lines += ["", f"[red]{len(result.skipped)} row(s) will be skipped:[/]"]
-        lines += [f"  {escape(s)}" for s in shown]
-        if len(result.skipped) > len(shown):
-            lines.append(f"  ...and {len(result.skipped) - len(shown)} more.")
+    lines += skipped_preview(result.skipped)
     return "\n".join(lines)
 
 
