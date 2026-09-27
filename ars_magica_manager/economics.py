@@ -146,6 +146,100 @@ class Summary:
     surplus_deficit: int  # Total Income - Total Expenditure
 
 
+#: The expenditure rows worked out from the covenant: (key, name, rule).
+_CALCULATED_ROWS: tuple[tuple[str, str, str], ...] = (
+    (
+        "buildings",
+        "Buildings",
+        "1 pound per 10 pts Inhabitants, +2/+5 per Minor/Major building "
+        "Boon (50% per craft)",
+    ),
+    ("consumables", "Consumables", "2 pounds per 10 pts Inhabitants (20% per craft)"),
+    ("laboratories", "Laboratories", "1 pound per 10 pts Laboratories (20% per craft)"),
+    (
+        "provisions",
+        "Provisions",
+        "5 pounds per 10 pts Inhabitants (50% laborers + 20% per craft)",
+    ),
+    ("wages", "Wages", "2 pounds per 10 pts Inhabitants, times the salary multiplier"),
+    ("weapons", "Weapons", "1 pound per 320 pts Weapons and Armor (50% per craft)"),
+    (
+        "writing",
+        "Writing Materials",
+        "1 pound per Magus and book specialist (50% per craft)",
+    ),
+)
+
+#: The expenditure rows the user types: (key, name, rule, Economics attribute).
+_TYPED_EXPENDITURE_ROWS: tuple[tuple[str, str, str, str], ...] = (
+    ("tithes", "Tithes", "Debts and taxes", "tithes"),
+    ("inflation", "Inflation", "Increases yearly", "inflation"),
+    ("sundry", "Sundry", "At least 1 pound of sundries every year", "sundry"),
+)
+
+
+def _typed_row(
+    eco: Economics,
+    key: str,
+    name: str,
+    rule: str,
+    attribute: str,
+    *,
+    savings: bool = False,
+) -> Row:
+    """A row whose figure the user types: the Cost of an expenditure row, or
+    the Savings of a savings row."""
+    value = getattr(eco, attribute)
+    first, saved = (0, value) if savings else (value, 0)
+    return Row(
+        key,
+        name,
+        rule,
+        first,
+        saved,
+        eco.notes.get(key, ""),
+        "typed",
+        typed=(attribute,),
+    )
+
+
+def _labor_savings(
+    saga: Saga,
+    covenant: Covenant,
+    craftspeople: list[inh.InhabitantEntry],
+    costs: dict[str, float],
+) -> tuple[int, float, int, dict[str, float]]:
+    """(laborers, their savings, craftspeople counted, craft savings per
+    expenditure row), each within its limit of the row's cost."""
+    # Craftspeople: each craft (a field plus the Ability or work they share)
+    # saves at most its limit of that category's cost.
+    per_craft: dict[tuple[str, str], float] = {}
+    craftsmen = 0
+    for index, entry in enumerate(craftspeople):
+        if entry.field_of_work not in CRAFT_SAVINGS:
+            continue
+        craftsmen += entry.quantity
+        craft = (entry.linked_ability or entry.responsibility).strip().lower()
+        key = (entry.field_of_work, craft or f"#{index}")
+        per_craft[key] = per_craft.get(key, 0.0) + (
+            craft_saving_each(entry) * entry.quantity
+        )
+    craft_by_row: dict[str, float] = {}
+    for (field_of_work, _), amount in per_craft.items():
+        row_key, limit = CRAFT_SAVINGS[field_of_work]
+        craft_by_row[row_key] = craft_by_row.get(row_key, 0.0) + min(
+            amount, limit * costs[row_key]
+        )
+
+    laborers = inh.other_covenfolk_count(saga, covenant, "Laborer")
+    laborer_savings = min(float(laborers), LABORER_LIMIT * costs["provisions"])
+    craft_savings: dict[str, float] = {}
+    for row_key, cost in costs.items():
+        room = cost - (laborer_savings if row_key == "provisions" else 0.0)
+        craft_savings[row_key] = min(craft_by_row.get(row_key, 0.0), max(room, 0.0))
+    return laborers, laborer_savings, craftsmen, craft_savings
+
+
 def summarize(saga: Saga, covenant: Covenant) -> Summary:
     eco = covenant.economics
     people = inh.inhabitant_points(saga, covenant)
@@ -175,40 +269,13 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
         "weapons": gear / 320,
         "writing": float(writers),
     }
-
-    # Craftspeople: each craft (a field plus the Ability or work they share)
-    # saves at most its limit of that category's cost.
-    per_craft: dict[tuple[str, str], float] = {}
-    craftsmen = 0
-    for index, entry in enumerate(craftspeople):
-        if entry.field_of_work not in CRAFT_SAVINGS:
-            continue
-        craftsmen += entry.quantity
-        craft = (entry.linked_ability or entry.responsibility).strip().lower()
-        key = (entry.field_of_work, craft or f"#{index}")
-        per_craft[key] = per_craft.get(key, 0.0) + (
-            craft_saving_each(entry) * entry.quantity
-        )
-    craft_by_row: dict[str, float] = {}
-    for (field_of_work, _), amount in per_craft.items():
-        row_key, limit = CRAFT_SAVINGS[field_of_work]
-        craft_by_row[row_key] = craft_by_row.get(row_key, 0.0) + min(
-            amount, limit * costs[row_key]
-        )
-
-    laborers = inh.other_covenfolk_count(saga, covenant, "Laborer")
-    laborer_savings = min(float(laborers), LABORER_LIMIT * costs["provisions"])
-    craft_savings: dict[str, float] = {}
-    for row_key, cost in costs.items():
-        room = cost - (laborer_savings if row_key == "provisions" else 0.0)
-        craft_savings[row_key] = min(craft_by_row.get(row_key, 0.0), max(room, 0.0))
+    laborers, laborer_savings, craftsmen, craft_savings = _labor_savings(
+        saga, covenant, craftspeople, costs
+    )
     row_savings = {
         key: craft_savings[key] + (laborer_savings if key == "provisions" else 0.0)
         for key in costs
     }
-
-    def note(key: str) -> str:
-        return eco.notes.get(key, "")
 
     # Round every row's final Cost/Savings to a whole number here (the ratios
     # above stay precise floats so the craft/laborer-limit math is exact); a
@@ -217,113 +284,38 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
     cost = {k: round_away_from_zero(v) for k, v in costs.items()}
     saved = {k: round_away_from_zero(v) for k, v in row_savings.items()}
 
+    basis = {
+        "buildings": f"{people} pts of inhabitants / 10"
+        + (
+            " + "
+            + ", ".join(
+                f"{entry.name} {modifier.amount:+g}"
+                for entry, modifier in building_boons
+            )
+            if building_boons
+            else ""
+        ),
+        "consumables": f"{people} pts of inhabitants x 2 / 10",
+        "laboratories": f"{labs} pts of laboratories / 10",
+        "provisions": f"{people} pts of inhabitants x 5 / 10",
+        "wages": f"{people} pts of inhabitants x 2 / 10 x {wage_multiplier:g} "
+        f"({covenant.loyalty.money}, from Loyalty)",
+        "weapons": f"{gear} pts of weapons and armor / 320",
+        "writing": f"{magi} magi + {writers - magi} book craftspeople",
+    }
     expenditure = [
         Row(
-            "buildings",
-            "Buildings",
-            "1 pound per 10 pts Inhabitants, +2/+5 per Minor/Major building "
-            "Boon (50% per craft)",
-            cost["buildings"],
-            saved["buildings"],
-            note("buildings"),
-            f"{people} pts of inhabitants / 10"
-            + (
-                " + "
-                + ", ".join(
-                    f"{entry.name} {modifier.amount:+g}"
-                    for entry, modifier in building_boons
-                )
-                if building_boons
-                else ""
-            ),
-        ),
-        Row(
-            "consumables",
-            "Consumables",
-            "2 pounds per 10 pts Inhabitants (20% per craft)",
-            cost["consumables"],
-            saved["consumables"],
-            note("consumables"),
-            f"{people} pts of inhabitants x 2 / 10",
-        ),
-        Row(
-            "laboratories",
-            "Laboratories",
-            "1 pound per 10 pts Laboratories (20% per craft)",
-            cost["laboratories"],
-            saved["laboratories"],
-            note("laboratories"),
-            f"{labs} pts of laboratories / 10",
-        ),
-        Row(
-            "provisions",
-            "Provisions",
-            "5 pounds per 10 pts Inhabitants (50% laborers + 20% per craft)",
-            cost["provisions"],
-            saved["provisions"],
-            note("provisions"),
-            f"{people} pts of inhabitants x 5 / 10",
-        ),
-        Row(
-            "wages",
-            "Wages",
-            "2 pounds per 10 pts Inhabitants, times the salary multiplier",
-            cost["wages"],
-            saved["wages"],
-            note("wages"),
-            f"{people} pts of inhabitants x 2 / 10 x {wage_multiplier:g} "
-            f"({covenant.loyalty.money}, from Loyalty)",
-            note=f"x{wage_multiplier:g}",
-        ),
-        Row(
-            "weapons",
-            "Weapons",
-            "1 pound per 320 pts Weapons and Armor (50% per craft)",
-            cost["weapons"],
-            saved["weapons"],
-            note("weapons"),
-            f"{gear} pts of weapons and armor / 320",
-        ),
-        Row(
-            "writing",
-            "Writing Materials",
-            "1 pound per Magus and book specialist (50% per craft)",
-            cost["writing"],
-            saved["writing"],
-            note("writing"),
-            f"{magi} magi + {writers - magi} book craftspeople",
-        ),
-        Row(
-            "tithes",
-            "Tithes",
-            "Debts and taxes",
-            eco.tithes,
-            0,
-            note("tithes"),
-            "typed",
-            typed=("tithes",),
-        ),
-        Row(
-            "inflation",
-            "Inflation",
-            "Increases yearly",
-            eco.inflation,
-            0,
-            note("inflation"),
-            "typed",
-            typed=("inflation",),
-        ),
-        Row(
-            "sundry",
-            "Sundry",
-            "At least 1 pound of sundries every year",
-            eco.sundry,
-            0,
-            note("sundry"),
-            "typed",
-            typed=("sundry",),
-        ),
-    ]
+            key,
+            name,
+            rule,
+            cost[key],
+            saved[key],
+            eco.notes.get(key, ""),
+            basis[key],
+            note=f"x{wage_multiplier:g}" if key == "wages" else "",
+        )
+        for key, name, rule in _CALCULATED_ROWS
+    ] + [_typed_row(eco, *row) for row in _TYPED_EXPENDITURE_ROWS]
 
     savings = [
         Row(
@@ -332,7 +324,7 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
             "1 pound per person (at most 50% of Provisions)",
             laborers,
             round_away_from_zero(laborer_savings),
-            note("laborers"),
+            eco.notes.get("laborers", ""),
             "Laborer-tagged entries on the Other Covenfolk list",
         ),
         Row(
@@ -342,29 +334,25 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
             "saves at most its limit of the category",
             craftsmen,
             round_away_from_zero(sum(craft_savings.values())),
-            note("craftspeople"),
+            eco.notes.get("craftspeople", ""),
             "Craftspeople with a field of work (Books saves nothing)",
         ),
-        Row(
+        _typed_row(
+            eco,
             "magic",
             "Magic",
             "The rules give items and Ritual castings different rates "
             "(1 or 5 pounds per magnitude) -- work out the total and enter it",
-            0,
-            eco.magic_savings,
-            note("magic"),
-            "typed",
-            typed=("magic_savings",),
+            "magic_savings",
+            savings=True,
         ),
-        Row(
+        _typed_row(
+            eco,
             "emergency_savings",
             "Emergency Savings",
             "Drawn from Wealth to cover a deficit (press e), or entered by hand",
-            0,
-            eco.emergency_savings,
-            note("emergency_savings"),
-            "typed",
-            typed=("emergency_savings",),
+            "emergency_savings",
+            savings=True,
         ),
     ]
 
