@@ -1,0 +1,1208 @@
+"""The workspace's shared tables and its base class: the screen's state, the
+navigation tree, the detail pane, focus and section tracking, the plumbing
+behind a/A/e/r and the actions that aren't about one kind of record."""
+
+from __future__ import annotations
+
+from collections.abc import Callable, Sequence
+from dataclasses import dataclass
+from dataclasses import field as dataclass_field
+from enum import StrEnum
+from functools import cached_property
+from typing import Any, ClassVar, NamedTuple
+
+from textual.app import ComposeResult
+from textual.binding import BindingType
+from textual.containers import Horizontal, VerticalScroll
+from textual.css.query import NoMatches
+from textual.events import DescendantBlur, DescendantFocus
+from textual.screen import Screen
+from textual.widget import Widget
+from textual.widgets import (
+    Collapsible,
+    Header,
+    Static,
+    TabbedContent,
+    TabPane,
+    Tree,
+)
+from textual.widgets.tree import TreeNode
+
+from ... import books as bk
+from ... import catalog, creation, storage
+from ... import economics as eco
+from ... import familiars as fam
+from ... import sheet_text as st
+from ... import spells as spl
+from ...markup import escape
+from ...models import (
+    SEASONS,
+    Ability,
+    Character,
+    Covenant,
+    Familiar,
+    Laboratory,
+    Saga,
+    ScoredTrait,
+    VirtueFlawInstance,
+    next_season,
+)
+from ..fields import (
+    FieldsDialog,
+)
+from ..forms import (
+    _character_create_fields,
+    _covenant_create_fields,
+    _familiar_create_fields,
+    _laboratory_create_fields,
+    _saga_fields,
+)
+from ..pickers import (
+    LabVirtueFlawPickerScreen,
+    RemovalPickerScreen,
+    VirtueFlawPickerScreen,
+)
+from ..prompts import (
+    AdvanceSeasonScreen,
+    ConfirmScreen,
+    _date_fields,
+    _scored_trait_dialog,
+)
+from ..sheets import (
+    _LIBRARY_SECTIONS,
+    SPELL_SECTION,
+    BookListView,
+    CharacterSheetView,
+    CovenantSheetView,
+    FamiliarSheetView,
+    LaboratorySheetView,
+    SheetView,
+    SpellListView,
+)
+from ..widgets import BottomBar
+
+#: Covenant Reputations run from -3 to +3.
+_COVENANT_REPUTATION_RANGE = (-3, 3)
+
+
+class _SectionOps(NamedTuple):
+    """What the a / A / e / r keys do in one sheet section (None: nothing,
+    and the key is disabled there). See WorkspaceScreen._section_ops()."""
+
+    add: Callable[[], None] | None = None
+    remove: Callable[[], None] | None = None
+    edit: Callable[[], None] | None = None
+    restore: Callable[[], None] | None = None
+
+
+@dataclass(frozen=True)
+class _TraitList:
+    """One of the sheets' scored-trait lists -- a record's Personality Traits
+    or Reputations -- for WorkspaceScreen's shared add/edit/remove."""
+
+    owner: str  # the WorkspaceScreen attribute holding the record
+    attr: str  # the record's list: "personality_traits" or "reputations"
+    section: str
+    noun: str  # "Personality Trait" or "Reputation"
+    example: str
+    selected: str  # the WorkspaceScreen method giving the chosen row's index
+    signed: bool = True  # scores shown as "+2" (not "2") in the picker
+    confirm_remove: bool = True
+    prompt_options: dict[str, Any] = dataclass_field(default_factory=dict)
+
+
+_CHARACTER_TRAITS = _TraitList(
+    "selected_character",
+    "personality_traits",
+    "section-personality-traits",
+    "Personality Trait",
+    "e.g. Brave",
+    "_selected_personality_trait",
+)
+
+
+_CHARACTER_REPUTATIONS = _TraitList(
+    "selected_character",
+    "reputations",
+    "section-reputations",
+    "Reputation",
+    "e.g. Skilled Enchanter",
+    "_selected_character_reputation",
+    signed=False,  # unlike every other Reputation list (STORY-1109 B14)
+)
+
+
+_FAMILIAR_TRAITS = _TraitList(
+    "selected_familiar",
+    "personality_traits",
+    "section-fam-personality-traits",
+    "Personality Trait",
+    "e.g. Loyal",
+    "_selected_familiar_personality_trait",
+    confirm_remove=False,  # STORY-1109 B6
+)
+
+
+_FAMILIAR_REPUTATIONS = _TraitList(
+    "selected_familiar",
+    "reputations",
+    "section-fam-reputations",
+    "Reputation",
+    "e.g. Fierce Protector",
+    "_selected_familiar_reputation",
+    signed=False,
+    confirm_remove=False,  # STORY-1109 B6
+)
+
+
+_COVENANT_REPUTATIONS = _TraitList(
+    "selected_covenant",
+    "reputations",
+    "section-cov-reputations",
+    "Reputation",
+    "e.g. Feared by the local nobility",
+    "_selected_reputation",
+    prompt_options={
+        "min_score": _COVENANT_REPUTATION_RANGE[0],
+        "max_score": _COVENANT_REPUTATION_RANGE[1],
+        "include_known": True,
+    },
+)
+
+
+#: Which sheet section each covenant Boon/Hook kind lives in.
+_BOON_HOOK_SECTION = {"Boon": "section-cov-boons", "Hook": "section-cov-hooks"}
+
+
+class NodeKind(StrEnum):
+    """What a nav-tree node stands for: the first item of its `.data` tuple
+    (the second, where there is one, is the record's or covenant's id).
+    Also `WorkspaceScreen.selected_kind`."""
+
+    SAGA = "saga"
+    COVENANT = "covenant"
+    CHARACTER_GROUP = "character_group"
+    CHARACTER = "character"
+    FAMILIAR = "familiar"
+    LABORATORY_GROUP = "laboratory_group"
+    LABORATORY = "laboratory"
+    SPELLS = "spells"
+    BOOK_GROUP = "book_group"
+
+
+#: Widget ids of the workspace's two panes (also used in its DEFAULT_CSS).
+NAV_TREE_ID = "nav-tree"
+
+
+DETAIL_PANE_ID = "detail-pane"
+
+
+def _tree_node_with_data(tree: Tree, data: tuple) -> TreeNode | None:
+    """The first node of `tree` whose `.data` is `data`, or None."""
+    pending = [tree.root]
+    while pending:
+        node = pending.pop()
+        if node.data == data:
+            return node
+        pending.extend(node.children)
+    return None
+
+
+class WorkspaceBase(Screen[None]):
+    """The workspace's state and everything its actions share: the navigation
+    tree and detail pane, which section is active, saving and refreshing
+    (_commit), and the a/A/e/r plumbing. The per-record actions live in the
+    mixins WorkspaceScreen combines."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [
+        ("n", "create_covenant", "New Covenant"),
+        ("c", "create_character", "New Character"),
+        ("l", "create_laboratory", "New Laboratory"),
+        ("f", "create_familiar", "Bind Familiar"),
+        ("a", "add", "Add"),
+        ("A", "remove", "Remove"),
+        ("e", "edit", "Edit"),
+        ("r", "restore", "Restore"),
+        ("i", "improve", "Improve"),
+        ("I", "import_data", "Import"),
+        ("t", "advance_season", "Advance Season"),
+        ("T", "set_date", "Set Date"),
+        ("v", "add_virtue_flaw", "Add Virtue/Flaw"),
+        ("V", "remove_virtue_flaw", "Remove Virtue/Flaw"),
+        ("escape", "app.pop_screen", "Back"),
+        ("q", "quit", "Quit"),
+    ]
+
+    #: Covenant tabs that own their own a/A/e dispatch (keyed by tab id).
+    #: None: every covenant tab's content is in Collapsible sections, so with
+    #: nothing focused in one the dispatch falls back to the always-visible
+    #: info panel. See _active_section().
+    _COVENANT_DISPATCH_TABS: ClassVar[set[str]] = set()
+
+    #: Character tabs that own their own a/A/e dispatch (keyed by tab id),
+    #: same idea as _COVENANT_DISPATCH_TABS -- "tab-abilities" is a flat
+    #: pane with no sub-sections, so it dispatches on its own tab id rather
+    #: than falling back to the top panel. See _active_section().
+    _CHARACTER_DISPATCH_TABS: ClassVar[set[str]] = {"tab-abilities"}
+
+    #: Familiar tabs that own their own a/A/e dispatch (keyed by tab id),
+    #: same idea as _CHARACTER_DISPATCH_TABS -- both are flat panes with no
+    #: sub-sections. See _active_section().
+    _FAMILIAR_DISPATCH_TABS: ClassVar[set[str]] = {
+        "tab-fam-abilities",
+        "tab-fam-powers",
+    }
+
+    #: Per sheet kind: the tabs that dispatch on their own id, and the
+    #: section a tab with no focused section falls back to (None: the tab
+    #: itself -- every Laboratory tab dispatches). See _active_section().
+    _SHEET_DISPATCH: ClassVar[dict[NodeKind, tuple[set[str], str | None]]] = {
+        NodeKind.CHARACTER: (_CHARACTER_DISPATCH_TABS, "section-char-info"),
+        NodeKind.LABORATORY: (set(), None),
+        NodeKind.COVENANT: (_COVENANT_DISPATCH_TABS, "section-cov-info"),
+        NodeKind.FAMILIAR: (_FAMILIAR_DISPATCH_TABS, "section-fam-info"),
+    }
+
+    DEFAULT_CSS = """
+    #workspace-body {
+        height: 1fr;
+    }
+
+    #nav-tree {
+        width: 34;
+        border-right: solid $accent;
+    }
+
+    #detail-pane {
+        width: 1fr;
+        padding: 1 2;
+    }
+    """
+
+    def __init__(self, saga: Saga) -> None:
+        super().__init__()
+        self.saga = saga
+        self.selected_kind: NodeKind = NodeKind.SAGA
+        self.selected_covenant: Covenant | None = None
+        self.selected_character: Character | None = None
+        self.selected_laboratory: Laboratory | None = None
+        self.selected_familiar: Familiar | None = None
+        self._character_sheet_view: CharacterSheetView | None = None
+        self._laboratory_sheet_view: LaboratorySheetView | None = None
+        self._covenant_sheet_view: CovenantSheetView | None = None
+        self._familiar_sheet_view: FamiliarSheetView | None = None
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        with Horizontal(id="workspace-body"):
+            yield Tree(escape(self.saga.name), data=(NodeKind.SAGA,), id=NAV_TREE_ID)
+            yield VerticalScroll(id=DETAIL_PANE_ID)
+        yield BottomBar()
+
+    def _nav_tree(self) -> Tree:
+        return self.query_one(f"#{NAV_TREE_ID}", Tree)
+
+    def _detail_pane(self) -> VerticalScroll:
+        return self.query_one(f"#{DETAIL_PANE_ID}", VerticalScroll)
+
+    async def on_mount(self) -> None:
+        self._update_saga_clock()
+        self._rebuild_tree()
+        await self._show_saga_detail()
+
+    def _update_saga_clock(self) -> None:
+        """Shows the saga's current date in the Header, on every screen of
+        the workspace -- the saga owns the calendar, everything inherits it."""
+        saga = self.saga
+        self.sub_title = (
+            f"{escape(saga.name)} | {saga.current_season} {saga.current_year}"
+        )
+
+    def _rebuild_tree(self) -> None:
+        tree = self._nav_tree()
+        tree.reset(escape(self.saga.name), data=(NodeKind.SAGA,))
+        tree.root.expand()
+
+        for covenant in self.saga.covenants:
+            cov_node = tree.root.add(
+                escape(covenant.name),
+                data=(NodeKind.COVENANT, covenant.id),
+                expand=True,
+            )
+
+            characters = [
+                c for c in self.saga.characters if c.covenant_id == covenant.id
+            ]
+            char_group = cov_node.add(
+                f"Characters ({len(characters)})",
+                data=(NodeKind.CHARACTER_GROUP, covenant.id),
+                expand=True,
+            )
+            for character in characters:
+                self._add_character_node(char_group, character)
+
+            labs = [
+                lab for lab in self.saga.laboratories if lab.covenant_id == covenant.id
+            ]
+            lab_group = cov_node.add(
+                f"Laboratories ({len(labs)})",
+                data=(NodeKind.LABORATORY_GROUP, covenant.id),
+                expand=True,
+            )
+            for lab in labs:
+                lab_group.add_leaf(escape(lab.name), data=(NodeKind.LABORATORY, lab.id))
+
+        # Characters and labs with no (or a no-longer-existing) covenant live
+        # directly under the saga -- assigning to a covenant is optional, and
+        # this is where things land if they're taken out of one.
+        covenant_ids = {c.id for c in self.saga.covenants}
+        loose_characters = [
+            c for c in self.saga.characters if c.covenant_id not in covenant_ids
+        ]
+        if loose_characters:
+            group = tree.root.add(
+                f"Unassigned Characters ({len(loose_characters)})",
+                data=(NodeKind.CHARACTER_GROUP, None),
+                expand=True,
+            )
+            for character in loose_characters:
+                self._add_character_node(group, character)
+        loose_labs = [
+            lab for lab in self.saga.laboratories if lab.covenant_id not in covenant_ids
+        ]
+        if loose_labs:
+            group = tree.root.add(
+                f"Unassigned Laboratories ({len(loose_labs)})",
+                data=(NodeKind.LABORATORY_GROUP, None),
+                expand=True,
+            )
+            for lab in loose_labs:
+                group.add_leaf(escape(lab.name), data=(NodeKind.LABORATORY, lab.id))
+        # Books with no owner file under the saga.
+        loose_books = bk.unassigned_books(self.saga)
+        if loose_books:
+            tree.root.add_leaf(
+                f"Unassigned Books ({len(loose_books)})", data=(NodeKind.BOOK_GROUP,)
+            )
+        tree.root.add_leaf(self._spells_label(), data=(NodeKind.SPELLS,))
+
+    def _add_character_node(self, parent, character: Character) -> None:
+        """A character's own tree node: a plain leaf, unless it's a magus
+        with a bound Familiar, in which case it becomes an expandable node
+        with the Familiar as its one child leaf (nested under its creator,
+        never its own group -- see kanban STORY-206)."""
+        label = f"{escape(character.name)} ({character.type})"
+        familiar = (
+            fam.familiar_of(self.saga, character.id)
+            if character.type == "magus"
+            else None
+        )
+        if familiar is None:
+            parent.add_leaf(label, data=(NodeKind.CHARACTER, character.id))
+            return
+        node = parent.add(label, data=(NodeKind.CHARACTER, character.id), expand=True)
+        node.add_leaf(
+            f"Familiar: {escape(familiar.name)}", data=(NodeKind.FAMILIAR, familiar.id)
+        )
+
+    async def on_tree_node_selected(self, event: Tree.NodeSelected) -> None:
+        data = event.node.data
+        if data is None:
+            return
+
+        kind: NodeKind = data[0]
+        self.selected_kind = kind
+        self._character_sheet_view = None
+        self._laboratory_sheet_view = None
+        self._covenant_sheet_view = None
+        self._familiar_sheet_view = None
+
+        if kind == NodeKind.SAGA:
+            self.selected_covenant = None
+            self.selected_character = None
+            self.selected_laboratory = None
+            self.selected_familiar = None
+            await self._show_saga_detail()
+        elif kind == NodeKind.COVENANT:
+            covenant = next(c for c in self.saga.covenants if c.id == data[1])
+            self.selected_covenant = covenant
+            self.selected_character = None
+            self.selected_laboratory = None
+            self.selected_familiar = None
+            await self._show_covenant_detail(covenant)
+        elif kind == NodeKind.CHARACTER_GROUP:
+            covenant = self.saga.covenant(data[1])
+            self.selected_covenant = covenant
+            self.selected_character = None
+            await self._show_placeholder_detail(
+                f"Characters in {covenant.name}"
+                if covenant
+                else "Unassigned Characters",
+                "Select a character from the tree, or press 'c' to add one."
+                if covenant
+                else "These characters aren't assigned to a covenant. Select one "
+                "from the tree, or press 'c' to add one.",
+            )
+        elif kind == NodeKind.CHARACTER:
+            character = next(c for c in self.saga.characters if c.id == data[1])
+            self.selected_character = character
+            self.selected_covenant = self.saga.covenant(character.covenant_id)
+            self.selected_familiar = None
+            await self._show_character_detail(character)
+        elif kind == NodeKind.FAMILIAR:
+            familiar = next(f for f in self.saga.familiars if f.id == data[1])
+            self.selected_familiar = familiar
+            self.selected_character = self.saga.character(familiar.character_id)
+            self.selected_covenant = (
+                self.saga.covenant(self.selected_character.covenant_id)
+                if self.selected_character is not None
+                else None
+            )
+            await self._show_familiar_detail(familiar)
+        elif kind == NodeKind.LABORATORY_GROUP:
+            covenant = self.saga.covenant(data[1])
+            self.selected_covenant = covenant
+            self.selected_laboratory = None
+            await self._show_placeholder_detail(
+                f"Laboratories in {covenant.name}"
+                if covenant
+                else "Unassigned Laboratories",
+                "Select a laboratory from the tree, or press 'l' to add one."
+                if covenant
+                else "These laboratories aren't assigned to a covenant. Select "
+                "one from the tree, or press 'l' to add one.",
+            )
+        elif kind == NodeKind.LABORATORY:
+            lab = next(lab for lab in self.saga.laboratories if lab.id == data[1])
+            self.selected_laboratory = lab
+            self.selected_covenant = self.saga.covenant(lab.covenant_id)
+            await self._show_laboratory_detail(lab)
+        elif kind == NodeKind.SPELLS:
+            self.selected_covenant = None
+            await self._set_detail(SpellListView(self.saga))
+        elif kind == NodeKind.BOOK_GROUP:
+            self.selected_covenant = None
+            await self._set_detail(
+                BookListView(
+                    self.saga,
+                    lambda: bk.unassigned_books(self.saga),
+                    section_id="section-unassigned-books",
+                    title="Unassigned Books",
+                )
+            )
+
+        self.refresh_bindings()
+
+    def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
+        if action == "create_covenant":
+            return self.selected_kind == NodeKind.SAGA
+        # Characters and labs may be created anywhere: a selected covenant
+        # is just the default for the dialog's optional Covenant field.
+        if action == "edit" and self.selected_kind == NodeKind.SAGA:
+            return True
+        if action in ("add", "remove", "edit", "restore"):
+            return self._section_op(action) is not None
+        if action == "improve":
+            return self._active_section() == "section-eco-income"
+        if action == "import_data":
+            return (
+                self.selected_kind == NodeKind.SAGA
+                or self._active_section() in _LIBRARY_SECTIONS
+            )
+        if action in ("add_virtue_flaw", "remove_virtue_flaw"):
+            if self.selected_kind == NodeKind.LABORATORY:
+                return self._active_section() == "tab-lab-vf"
+            if self.selected_kind == NodeKind.FAMILIAR:
+                return self._active_section() in (
+                    "section-fam-vf-virtues",
+                    "section-fam-vf-flaws",
+                )
+            return self._active_section() in ("section-vf-virtues", "section-vf-flaws")
+        if action == "create_familiar":
+            return bool(fam.unbonded_magi(self.saga))
+        return True
+
+    def _active_section(self) -> str | None:
+        """Which sheet section is "active" for a/A/e (and v/V) dispatch: the
+        nearest Collapsible around whatever has focus -- which also covers a
+        sheet's top panel, outside its tabs. With none, a flat tab that
+        dispatches on its own id (see _SHEET_DISPATCH), otherwise the sheet's
+        always-visible top section, so 'e' edits the record from any tab.
+        The Unassigned Books and Spells nodes have no sheet, just a section."""
+        if self.selected_kind == NodeKind.BOOK_GROUP:
+            return "section-unassigned-books"
+        if self.selected_kind == NodeKind.SPELLS:
+            return SPELL_SECTION
+        view = self._current_sheet_view()
+        if view is None:
+            return None
+        try:
+            tab_id = view.query_one(TabbedContent).active
+        except NoMatches:
+            return None
+        if not tab_id:
+            return None
+
+        focused = self.app.focused
+        if focused is not None:
+            for widget in focused.ancestors_with_self:
+                if isinstance(widget, Collapsible) and widget.id:
+                    return widget.id
+        own_tabs, fallback = self._SHEET_DISPATCH[self.selected_kind]
+        return tab_id if fallback is None or tab_id in own_tabs else fallback
+
+    def on_tabbed_content_tab_activated(
+        self, event: TabbedContent.TabActivated
+    ) -> None:
+        # Keep the Footer's binding hints (and check_action gating) in sync
+        # with whichever tab the user just switched to, and give the new
+        # tab's first section focus so 'e'/'a'/'A' work immediately without
+        # requiring an explicit Tab-key navigation first.
+        view = self._current_sheet_view()
+        initial = False
+        if view is not None:
+            # TabbedContent announces its initial tab once, right after
+            # mounting. That's not a user tab switch, and treating it as one
+            # would clear the focus _show_*_detail() just set.
+            initial = not view.initial_tab_seen
+            view.initial_tab_seen = True
+        self._focus_first_section(initial=initial)
+        self.refresh_bindings()
+
+    def _focus_first_section(self, *, initial: bool = False) -> None:
+        """Give the sheet a focused section, so 'e'/'a'/'A' work straight away.
+
+        When a sheet is first shown (`initial`), focus its first section
+        anywhere -- the always-visible top panel. On a later tab switch, focus
+        that tab's first section, or clear focus for a flat tab: the top
+        panel lives outside the tabs, so a tab switch never blurs it, and
+        leaving it focused would make _active_section() keep reporting it.
+
+        The Laboratory is the exception on first showing: its default tab
+        (Planning) is flat, so it looks at the active tab first and only then
+        falls back to the top panel."""
+        view = self._current_sheet_view()
+        if view is None:
+            return
+        active_tab_first = self.selected_kind == NodeKind.LABORATORY
+        try:
+            if initial and not active_tab_first:
+                collapsible = view.query(Collapsible).first()
+            else:
+                tabbed = view.query_one(TabbedContent)
+                if not tabbed.active:
+                    return
+                pane = view.query_one(f"#{tabbed.active}", TabPane)
+                collapsible = pane.query(Collapsible).first()
+        except NoMatches:
+            if not initial:
+                self.screen.set_focus(None)
+                return
+            if not active_tab_first:
+                return
+            try:
+                collapsible = view.query(Collapsible).first()
+            except NoMatches:
+                return
+        collapsible.query_one("CollapsibleTitle").focus()
+
+    def on_descendant_focus(self, event: DescendantFocus) -> None:
+        # Focus can move between Collapsible sections within the same tab
+        # (no TabActivated message for that) -- keep bindings in sync then
+        # too, or the Footer hint and check_action gating go stale.
+        self.refresh_bindings()
+
+    def on_descendant_blur(self, event: DescendantBlur) -> None:
+        self.refresh_bindings()
+
+    async def _set_detail(self, *widgets: Widget) -> None:
+        detail_pane = self._detail_pane()
+        # Must be awaited before mounting replacements below, or a same-id
+        # widget not yet removed collides with its freshly-mounted
+        # replacement and Textual raises DuplicateIds.
+        await detail_pane.remove_children()
+        await detail_pane.mount(*widgets)
+
+    async def _show_placeholder_detail(self, title: str, hint: str) -> None:
+        await self._set_detail(Static(f"{title}\n\n{hint}"))
+
+    async def _show_saga_detail(self) -> None:
+        saga = self.saga
+        lines = [
+            f"Saga: {escape(saga.name)}",
+            f"Storyguide: {escape(saga.storyguide)}",
+            f"Current date: {saga.current_season} {saga.current_year}",
+        ]
+        if saga.description:
+            lines.append(f"Description: {escape(saga.description)}")
+        lines += [
+            "",
+            f"Covenants: {len(saga.covenants)}",
+            f"Characters: {len(saga.characters)}",
+            f"Laboratories: {len(saga.laboratories)}",
+            f"Books: {len(saga.books)}",
+            f"Spells: {len(saga.spells)}",
+        ]
+        await self._set_detail(Static("\n".join(lines)))
+
+    async def _show_covenant_detail(self, covenant: Covenant) -> None:
+        view = CovenantSheetView(self.saga, covenant)
+        await self._set_detail(view)
+        self._covenant_sheet_view = view
+        self._focus_first_section(initial=True)
+
+    async def _show_laboratory_detail(self, lab: Laboratory) -> None:
+        view = LaboratorySheetView(self.saga, lab)
+        await self._set_detail(view)
+        self._laboratory_sheet_view = view
+        self._focus_first_section(initial=True)
+
+    async def _show_character_detail(self, character: Character) -> None:
+        view = CharacterSheetView(self.saga, character)
+        await self._set_detail(view)
+        self._character_sheet_view = view
+        self._focus_first_section(initial=True)
+
+    async def _show_familiar_detail(self, familiar: Familiar) -> None:
+        view = FamiliarSheetView(self.saga, familiar)
+        await self._set_detail(view)
+        self._familiar_sheet_view = view
+        self._focus_first_section(initial=True)
+
+    def _current_sheet_view(self) -> SheetView | None:
+        """The sheet on show for the selected tree node, if it has one."""
+        return {
+            NodeKind.CHARACTER: self._character_sheet_view,
+            NodeKind.LABORATORY: self._laboratory_sheet_view,
+            NodeKind.COVENANT: self._covenant_sheet_view,
+            NodeKind.FAMILIAR: self._familiar_sheet_view,
+        }.get(self.selected_kind)
+
+    # -- scored-trait lists (Personality Traits, Reputations) --
+
+    def _traits(self, spec: _TraitList) -> list[ScoredTrait] | None:
+        owner = getattr(self, spec.owner)
+        return None if owner is None else getattr(owner, spec.attr)
+
+    def _trait_prompt(
+        self, spec: _TraitList, title: str, existing: ScoredTrait | None = None
+    ) -> FieldsDialog[ScoredTrait]:
+        return _scored_trait_dialog(
+            title, spec.example, existing, **spec.prompt_options
+        )
+
+    def _add_trait(self, spec: _TraitList) -> None:
+        traits = self._traits(spec)
+        if traits is None:
+            return
+
+        def handle_result(trait: ScoredTrait | None) -> None:
+            if trait is not None:
+                traits.append(trait)
+                self._commit(spec.section)
+
+        self.app.push_screen(
+            self._trait_prompt(spec, f"Add a {spec.noun}"), handle_result
+        )
+
+    def _edit_trait(self, spec: _TraitList) -> None:
+        """Edit the chosen entry; with none chosen, ask which."""
+        traits = self._traits(spec)
+        if traits is None:
+            return
+        self._chosen_or_pick(
+            getattr(self, spec.selected)(),
+            [label for _, label in st.trait_rows(traits, signed=spec.signed)],
+            title=f"Edit which {spec.noun}?",
+            empty=f"No {spec.noun}s to edit.",
+            then=lambda index: self._edit_trait_at(spec, traits, index),
+        )
+
+    def _edit_trait_at(
+        self, spec: _TraitList, traits: list[ScoredTrait], index: int
+    ) -> None:
+        def handle_result(trait: ScoredTrait | None) -> None:
+            if trait is not None:
+                traits[index] = trait
+                self._commit(spec.section)
+
+        self.app.push_screen(
+            self._trait_prompt(spec, f"Edit a {spec.noun}", traits[index]),
+            handle_result,
+        )
+
+    def _remove_trait(self, spec: _TraitList) -> None:
+        """Delete the chosen entry (asking first, unless `spec` says not to);
+        with none chosen, ask which one."""
+        traits = self._traits(spec)
+        if traits is None:
+            return
+
+        def remove(index: int) -> None:
+            if spec.confirm_remove:
+                self._confirm_delete(traits, index, traits[index].name, spec.section)
+            else:
+                del traits[index]
+                self._commit(spec.section)
+
+        self._chosen_or_pick(
+            getattr(self, spec.selected)(),
+            [label for _, label in st.trait_rows(traits, signed=spec.signed)],
+            title=f"Remove a {spec.noun}",
+            empty=f"No {spec.noun}s to remove.",
+            then=remove,
+        )
+
+    def _chosen_or_pick(
+        self,
+        selected: int | None,
+        labels: Sequence[str],
+        *,
+        title: str,
+        empty: str,
+        then: Callable[[int], object],
+    ) -> None:
+        """Act on a list entry by index: the chosen row's if there is one
+        (`selected`), else the one picked from `labels` in a picker titled
+        `title` -- or, with no entries at all, just say `empty`."""
+        if selected is not None and selected < len(labels):
+            then(selected)
+            return
+        if not labels:
+            self.notify(empty)
+            return
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                then(index)
+
+        self.app.push_screen(RemovalPickerScreen(title, list(labels)), handle_index)
+
+    def _confirm_delete(
+        self, entries: list[Any], index: int, name: str, section: str
+    ) -> None:
+        """Ask "Delete <name>?" (No by default); on Yes, delete
+        `entries[index]`, save and refresh `section`."""
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
+                del entries[index]
+                self._commit(section)
+
+        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
+
+    def _commit(self, *sections: str, tree: bool = False) -> None:
+        """Save a change: write the saga, rebuild the navigation tree if a
+        name or the structure changed (`tree`), and refresh `sections` of the
+        sheet on show -- the one whose handler made the change."""
+        storage.save_saga(self.saga)
+        if tree:
+            self._rebuild_tree()
+        view = self._current_sheet_view()
+        if view is not None:
+            for section in sections:
+                view.refresh_section(section)
+
+    def _refresh_character_section(self, section_id: str) -> None:
+        if self._character_sheet_view is not None:
+            self._character_sheet_view.refresh_section(section_id)
+
+    def _refresh_covenant_section(self, section_id: str) -> None:
+        if self._covenant_sheet_view is not None:
+            self._covenant_sheet_view.refresh_section(section_id)
+
+    def _refresh_familiar_section(self, section_id: str) -> None:
+        if self._familiar_sheet_view is not None:
+            self._familiar_sheet_view.refresh_section(section_id)
+
+    def _refresh_laboratory_section(self, section_id: str) -> None:
+        if self._laboratory_sheet_view is not None:
+            self._laboratory_sheet_view.refresh_section(section_id)
+
+    # -- creation actions --
+
+    def action_create_covenant(self) -> None:
+        async def handle_result(values: dict[str, Any] | None) -> None:
+            if values is not None:
+                covenant = creation.add_covenant(
+                    self.saga, values["name"], values["notes"]
+                )
+                storage.save_saga(self.saga)
+                self._rebuild_tree()
+                self.selected_covenant = covenant
+                self.selected_kind = NodeKind.COVENANT
+                await self._show_covenant_detail(covenant)
+
+        self.app.push_screen(
+            FieldsDialog(
+                "Create a New Covenant", _covenant_create_fields(), save_label="Create"
+            ),
+            handle_result,
+        )
+
+    def action_create_character(self) -> None:
+        covenant = self.selected_covenant
+
+        async def handle_result(values: dict[str, Any] | None) -> None:
+            if values is not None:
+                character = creation.add_character(
+                    self.saga, values["name"], values["type"], values["covenant_id"]
+                )
+                storage.save_saga(self.saga)
+                self._rebuild_tree()
+                self.selected_character = character
+                self.selected_kind = NodeKind.CHARACTER
+                await self._show_character_detail(character)
+
+        self.app.push_screen(
+            FieldsDialog(
+                "Create a New Character",
+                _character_create_fields(self.saga, covenant.id if covenant else None),
+                save_label="Create",
+            ),
+            handle_result,
+        )
+
+    def action_create_laboratory(self) -> None:
+        covenant = self.selected_covenant
+
+        async def handle_result(values: dict[str, Any] | None) -> None:
+            if values is not None:
+                lab = creation.add_laboratory(
+                    self.saga, values["name"], values["size"], values["covenant_id"]
+                )
+                storage.save_saga(self.saga)
+                self._rebuild_tree()
+                self.selected_laboratory = lab
+                self.selected_kind = NodeKind.LABORATORY
+                await self._show_laboratory_detail(lab)
+
+        self.app.push_screen(
+            FieldsDialog(
+                "Create a New Laboratory",
+                _laboratory_create_fields(self.saga, covenant.id if covenant else None),
+                save_label="Create",
+            ),
+            handle_result,
+        )
+
+    def action_create_familiar(self) -> None:
+        if not fam.unbonded_magi(self.saga):
+            self.notify("Every magus already has a bound Familiar.")
+            return
+        character = self.selected_character
+        default_magus_id = (
+            character.id
+            if character is not None
+            and character.type == "magus"
+            and fam.familiar_of(self.saga, character.id) is None
+            else None
+        )
+
+        async def handle_result(values: dict[str, Any] | None) -> None:
+            magus = (
+                None if values is None else self.saga.character(values["character_id"])
+            )
+            if values is not None and magus is not None:
+                familiar = fam.bind_familiar(self.saga, magus, values["name"])
+                storage.save_saga(self.saga)
+                self._rebuild_tree()
+                self.selected_familiar = familiar
+                self.selected_character = self.saga.character(familiar.character_id)
+                self.selected_kind = NodeKind.FAMILIAR
+                await self._show_familiar_detail(familiar)
+
+        self.app.push_screen(
+            FieldsDialog(
+                "Bind a New Familiar",
+                _familiar_create_fields(self.saga, default_magus_id),
+                save_label="Create",
+            ),
+            handle_result,
+        )
+
+    def _section_op(self, name: str) -> Callable[[], None] | None:
+        """The active section's handler for `name` ("add", "remove", "edit"
+        or "restore"), if it has one."""
+        ops = self._section_ops.get(self._active_section() or "")
+        return None if ops is None else getattr(ops, name)
+
+    def action_add(self) -> None:
+        if (handler := self._section_op("add")) is not None:
+            handler()
+
+    def action_remove(self) -> None:
+        if (handler := self._section_op("remove")) is not None:
+            handler()
+
+    def action_edit(self) -> None:
+        if self.selected_kind == NodeKind.SAGA:
+            self._edit_saga()
+        elif (handler := self._section_op("edit")) is not None:
+            handler()
+
+    def action_restore(self) -> None:
+        if (handler := self._section_op("restore")) is not None:
+            handler()
+
+    # -- navigation tree labels --
+
+    def _spells_label(self) -> str:
+        return f"Spells ({len(spl.all_spells(self.saga))})"
+
+    # -- Saga --
+
+    def _edit_saga(self) -> None:
+        async def handle_result(result: dict[str, Any] | None) -> None:
+            if result is None:
+                return
+            for field, value in result.items():
+                setattr(self.saga, field, value)
+            self._commit(tree=True)
+            self._update_saga_clock()
+            await self._show_saga_detail()
+
+        self.app.push_screen(
+            FieldsDialog("Edit Saga", _saga_fields(self.saga)), handle_result
+        )
+
+    # -- Saga time --
+
+    async def _apply_saga_date(self, season: str, year: int) -> None:
+        """Single path for every change to the saga's calendar: store it, then
+        refresh everything that inherits it (Header, covenant panel, saga
+        summary)."""
+        saga = self.saga
+        saga.current_season, saga.current_year = season, year
+        storage.save_saga(saga)
+        self._update_saga_clock()
+        self._refresh_covenant_section("section-cov-info")
+        if self.selected_kind == NodeKind.SAGA:
+            await self._show_saga_detail()
+
+    def action_advance_season(self) -> None:
+        saga = self.saga
+
+        async def handle_result(confirmed: bool | None) -> None:
+            if not confirmed:
+                return
+            if saga.current_season == SEASONS[-1]:
+                in_deficit = eco.covenants_in_deficit(saga)
+                if in_deficit:
+                    self._offer_to_resolve_deficit(in_deficit, advance)
+                    return
+            await advance()
+
+        async def advance() -> None:
+            new_year = saga.current_season == SEASONS[-1]
+            # A new year (Winter -> Spring): each covenant's surplus goes into
+            # its Wealth before the date moves on.
+            added = eco.close_all_years(saga) if new_year else []
+            await self._apply_saga_date(
+                *next_season(saga.current_season, saga.current_year)
+            )
+            message = f"It is now {saga.current_season} {saga.current_year}."
+            if added:
+                message += " Added to Wealth: " + ", ".join(
+                    f"{name} {amount}" for name, amount in added
+                )
+                message += "."
+                self._refresh_covenant_section("section-eco-wealth")
+            self.notify(escape(message))
+
+        self.app.push_screen(
+            AdvanceSeasonScreen(saga.current_season, saga.current_year),
+            handle_result,
+        )
+
+    def _offer_to_resolve_deficit(
+        self, in_deficit: list[tuple[str, int]], advance: Callable[[], Any]
+    ) -> None:
+        """Before the year rolls over with a covenant in deficit: Yes (the
+        focused, Escape answer) leaves the date alone so the books can be
+        balanced; No advances anyway."""
+        lines = "\n".join(
+            f"  {escape(name)}: {deficit}" for name, deficit in in_deficit
+        )
+
+        async def handle_answer(resolve: bool | None) -> None:
+            if resolve:
+                self.notify(
+                    "The year hasn't advanced. Balance the books, then press t again."
+                )
+                return
+            await advance()
+
+        self.app.push_screen(
+            ConfirmScreen(
+                "The Covenant is currently in a deficit - do you wish to attempt "
+                f"to resolve this?\n\n{lines}",
+                yes_variant="primary",
+                safe_answer=True,
+            ),
+            handle_answer,
+        )
+
+    def action_set_date(self) -> None:
+        saga = self.saga
+
+        async def handle_result(result: dict[str, Any] | None) -> None:
+            if result is None:
+                return
+            season, year = result["season"], result["year"]
+            if (season, year) == (saga.current_season, saga.current_year):
+                return
+            await self._apply_saga_date(season, year)
+            self.notify(f"Date set to {season} {year}.")
+
+        self.app.push_screen(
+            FieldsDialog(
+                "Set the Saga's Date",
+                _date_fields(saga.current_season, saga.current_year),
+                save_label="Set",
+            ),
+            handle_result,
+        )
+
+    @staticmethod
+    def _ability_label(a: Ability) -> str:
+        specialty = f" ({escape(a.specialty)})" if a.specialty else ""
+        return f"{escape(a.name)}{specialty} {a.level} {a.xp}/{a.xp_to_next}"
+
+    # -- shared Character/Laboratory/Familiar Virtue & Flaw actions --
+
+    def action_add_virtue_flaw(self) -> None:
+        target = self._virtue_flaw_target()
+        if target is None:
+            return
+        existing_ids = {vf.vf_id for vf in target.virtues_flaws}
+        is_lab = self.selected_kind == NodeKind.LABORATORY
+        is_familiar = self.selected_kind == NodeKind.FAMILIAR
+        picker = LabVirtueFlawPickerScreen if is_lab else VirtueFlawPickerScreen
+
+        def handle_result(instance: VirtueFlawInstance | None) -> None:
+            if instance is not None:
+                target.virtues_flaws.append(instance)
+                storage.save_saga(self.saga)
+                if is_lab:
+                    self._refresh_laboratory_section("tab-lab-vf")
+                elif is_familiar:
+                    self._refresh_familiar_section("section-fam-vf-virtues")
+                else:
+                    self._refresh_character_section("section-vf-virtues")
+
+        self.app.push_screen(picker(existing_ids), handle_result)
+
+    def action_remove_virtue_flaw(self) -> None:
+        is_lab = self.selected_kind == NodeKind.LABORATORY
+        is_familiar = self.selected_kind == NodeKind.FAMILIAR
+        if (
+            not is_lab
+            and not is_familiar
+            and self._active_section()
+            in (
+                "section-vf-virtues",
+                "section-vf-flaws",
+            )
+        ):
+            self._remove_character_virtue_flaw()
+            return
+
+        target = self._virtue_flaw_target()
+        if target is None:
+            return
+        if not target.virtues_flaws:
+            self.notify("No Virtues/Flaws to remove.")
+            return
+
+        vf_catalog = (
+            catalog.load_lab_virtue_flaw_catalog_by_id()
+            if is_lab
+            else catalog.load_virtue_flaw_catalog_by_id()
+        )
+        labels = [
+            escape(catalog.describe_virtue_flaw(vf, vf_catalog))
+            for vf in target.virtues_flaws
+        ]
+
+        def handle_result(index: int | None) -> None:
+            if index is not None:
+                del target.virtues_flaws[index]
+                storage.save_saga(self.saga)
+                if is_lab:
+                    self._refresh_laboratory_section("tab-lab-vf")
+                elif is_familiar:
+                    self._refresh_familiar_section("section-fam-vf-virtues")
+                else:
+                    self._refresh_character_section("section-vf-virtues")
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove a Virtue or Flaw", labels), handle_result
+        )
+
+    def _selected_character_virtue_flaw(self) -> int | None:
+        view = self._character_sheet_view
+        return view.selected_virtue_flaw() if view is not None else None
+
+    def _remove_character_virtue_flaw(self) -> None:
+        """Delete the chosen character Virtue/Flaw (after confirming); with
+        none chosen, ask which one first."""
+        character = self.selected_character
+        if character is None:
+            return
+        selected = self._selected_character_virtue_flaw()
+        if selected is not None:
+            self._confirm_remove_character_virtue_flaw(selected)
+            return
+        if not character.virtues_flaws:
+            self.notify("No Virtues/Flaws to remove.")
+            return
+
+        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
+        labels = [
+            escape(catalog.describe_virtue_flaw(vf, vf_catalog))
+            for vf in character.virtues_flaws
+        ]
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                self._confirm_remove_character_virtue_flaw(index)
+
+        self.app.push_screen(
+            RemovalPickerScreen("Remove a Virtue or Flaw", labels), handle_index
+        )
+
+    def _confirm_remove_character_virtue_flaw(self, index: int) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
+        self._confirm_delete(
+            character.virtues_flaws,
+            index,
+            catalog.describe_virtue_flaw(character.virtues_flaws[index], vf_catalog),
+            "section-vf-virtues",
+        )
+
+    def _virtue_flaw_target(self) -> Character | Laboratory | Familiar | None:
+        if (
+            self.selected_kind == NodeKind.LABORATORY
+            and self._active_section() == "tab-lab-vf"
+        ):
+            return self.selected_laboratory
+        if self.selected_kind == NodeKind.CHARACTER and self._active_section() in (
+            "section-vf-virtues",
+            "section-vf-flaws",
+        ):
+            return self.selected_character
+        if self.selected_kind == NodeKind.FAMILIAR and self._active_section() in (
+            "section-fam-vf-virtues",
+            "section-fam-vf-flaws",
+        ):
+            return self.selected_familiar
+        return None
+
+    @cached_property
+    def _section_ops(self) -> dict[str, _SectionOps]:
+        """Per section id, its a/A/e/r handlers (see WorkspaceScreen)."""
+        raise NotImplementedError

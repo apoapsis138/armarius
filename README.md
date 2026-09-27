@@ -49,7 +49,8 @@ uv run pyright                                # type-check
   forms), `pickers` (catalog and row pickers), `forms` (the records' form
   builders and the few bespoke forms), `sheets` (the Character, Laboratory,
   Familiar and Covenant sheets and the Book and Spell lists), `workspace`
-  (navigation tree + sheet pane, and every action on the records) and
+  (navigation tree + sheet pane, and every action on the records: a base
+  class plus one mixin of actions per kind of record) and
   `saga_picker` (the start screen).
 - `ars_magica_manager/models.py` — the dataclasses (Saga, Covenant,
   Character, Laboratory, Familiar, Book, Spell, Possession, Inhabitant,
