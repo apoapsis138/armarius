@@ -1171,8 +1171,7 @@ class CharacterSheetView(SheetView):
         return st.trait_rows(self.character.personality_traits)
 
     def _reputation_rows(self) -> list[tuple[int | None, str]]:
-        # Unsigned, unlike every other Reputation list (STORY-1109 B14).
-        return st.trait_rows(self.character.reputations, signed=False)
+        return st.trait_rows(self.character.reputations)
 
     def _wounds_text(self) -> str:
         return st.wounds_text(self.character.wounds, with_soak=True)

@@ -149,19 +149,10 @@ def vf_info_text(instances: Sequence[VirtueFlawInstance], index: int | None) -> 
     return "\n".join(lines)
 
 
-def trait_rows(
-    traits: Sequence[ScoredTrait], *, signed: bool = True
-) -> list[tuple[int | None, str]]:
-    """Personality Traits or Reputations as (index, "Name: score") rows;
-    `signed` shows "+2" rather than "2"."""
+def trait_rows(traits: Sequence[ScoredTrait]) -> list[tuple[int | None, str]]:
+    """Personality Traits or Reputations as (index, "Name: +2") rows."""
     return [
-        (
-            index,
-            f"{escape(t.name)}: {t.score:+d}"
-            if signed
-            else f"{escape(t.name)}: {t.score}",
-        )
-        for index, t in enumerate(traits)
+        (index, f"{escape(t.name)}: {t.score:+d}") for index, t in enumerate(traits)
     ]
 
 

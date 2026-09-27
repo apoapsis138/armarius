@@ -2951,7 +2951,7 @@ async def test_add_and_remove_reputation():
 
         assert isinstance(app.screen, WorkspaceScreen)
         rows = app.screen._character_sheet_view._reputation_rows()
-        assert "Skilled Enchanter: 2" in rows[0][1]
+        assert "Skilled Enchanter: +2" in rows[0][1]
 
         await pilot.press("A")
         await pilot.pause()

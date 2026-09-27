@@ -204,6 +204,10 @@ async def test_trait_list_edit_picks_when_nothing_is_chosen(case):
     async with app.run_test(size=(140, 70)) as pilot:
         await _open(pilot, app, case)
         await _press(pilot, app, "e", RemovalPickerScreen)
+        # Every score is shown signed, Reputations too (B14).
+        assert await wait_until(pilot, lambda: len(app.screen.query("ListItem")) == 2)
+        labels = [str(label.render()) for label in app.screen.query("ListItem Label")]
+        assert labels == ["Alpha: +1", "Beta: +2"]
         await pilot.press("down")
         await _press(pilot, app, "enter", FieldsDialog)
         assert app.screen.query_one("#fld-name", Input).value == "Beta"

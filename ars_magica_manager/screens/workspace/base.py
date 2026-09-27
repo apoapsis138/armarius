@@ -107,7 +107,6 @@ class _TraitList:
     noun: str  # "Personality Trait" or "Reputation"
     example: str
     selected: str  # the WorkspaceScreen method giving the chosen row's index
-    signed: bool = True  # scores shown as "+2" (not "2") in the picker
     prompt_options: dict[str, Any] = dataclass_field(default_factory=dict)
 
 
@@ -128,7 +127,6 @@ _CHARACTER_REPUTATIONS = _TraitList(
     "Reputation",
     "e.g. Skilled Enchanter",
     "_selected_character_reputation",
-    signed=False,  # unlike every other Reputation list (STORY-1109 B14)
 )
 
 
@@ -149,7 +147,6 @@ _FAMILIAR_REPUTATIONS = _TraitList(
     "Reputation",
     "e.g. Fierce Protector",
     "_selected_familiar_reputation",
-    signed=False,
 )
 
 
@@ -715,7 +712,7 @@ class WorkspaceBase(Screen[None]):
             return
         self._chosen_or_pick(
             getattr(self, spec.selected)(),
-            [label for _, label in st.trait_rows(traits, signed=spec.signed)],
+            [label for _, label in st.trait_rows(traits)],
             title=f"Edit which {spec.noun}?",
             empty=f"No {spec.noun}s to edit.",
             then=lambda index: self._edit_trait_at(spec, traits, index),
@@ -746,7 +743,7 @@ class WorkspaceBase(Screen[None]):
 
         self._chosen_or_pick(
             getattr(self, spec.selected)(),
-            [label for _, label in st.trait_rows(traits, signed=spec.signed)],
+            [label for _, label in st.trait_rows(traits)],
             title=f"Remove a {spec.noun}",
             empty=f"No {spec.noun}s to remove.",
             then=remove,
