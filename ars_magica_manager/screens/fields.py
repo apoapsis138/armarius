@@ -85,7 +85,7 @@ class DialogField:
     or blank -> None), "select" (one of `options` as (label,
     value) pairs; blank -> None when `allow_blank`; a stored value that isn't
     among them is offered as "... (not in the list)"), "check" (a boolean),
-    "area" (multi-line text), "picker" (a button showing `display(value)`
+    "area" (multi-line text, trailing whitespace dropped), "picker" (a button showing `display(value)`
     that opens the screen `picker(value)` returns; its result becomes the
     value) or "info" (read-only text, not returned).
     """
@@ -387,7 +387,8 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         if spec.kind == "check":
             return self.query_one(widget_id, Checkbox).value
         if spec.kind == "area":
-            return self.query_one(widget_id, TextArea).text.strip()
+            # Only the end: an indented first line (a Markdown list) stays.
+            return self.query_one(widget_id, TextArea).text.rstrip()
         return self.query_one(widget_id, Input).value.strip()  # text, numbers
 
     def _value(self, spec: DialogField) -> Any:

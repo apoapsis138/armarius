@@ -66,7 +66,9 @@ async def test_values_while_editing_are_lenient():
             "weight": 1.5,
             "kind": "b",
             "ok": True,
-            "notes": "line one\nline two",
+            # Multi-line text loses only trailing whitespace (STORY-1113): an
+            # indented first line, like a Markdown list item, stays.
+            "notes": "  line one\nline two",
         }
         dialog.query_one("#fld-count", Input).value = ""  # not a number (yet)
         dialog.query_one("#fld-weight", Input).value = "1."
