@@ -11,7 +11,7 @@ from dataclasses import field as dataclass_field
 from enum import StrEnum
 from functools import cached_property, partial
 from pathlib import Path
-from typing import Any, ClassVar, NamedTuple
+from typing import Any, ClassVar, NamedTuple, cast
 
 from textual.app import ComposeResult
 from textual.binding import Binding, BindingType
@@ -1059,6 +1059,181 @@ def _boon_hook_fields(detail: str = "", description: str = "") -> list[DialogFie
     ]
 
 
+def _param_dialog(title: str, parameters: list[str]) -> FieldsDialog[dict[str, str]]:
+    """Fill in a catalog entry's {placeholders} ("Affinity with {art}"):
+    dismisses with {parameter: value}, values lower-cased."""
+    return FieldsDialog(
+        title,
+        [
+            DialogField(
+                param, param.title(), "text", "", required=True, placeholder="e.g. Creo"
+            )
+            for param in parameters
+        ],
+        save_label="Confirm",
+        build=lambda values: {param: values[param].lower() for param in parameters},
+    )
+
+
+def _item_dialog(
+    title: str, label: str, existing: str | None = None
+) -> FieldsDialog[str]:
+    """One line of text -- a laboratory Specialty or Feature."""
+    return FieldsDialog(
+        title,
+        [DialogField("item", label, "text", existing or "", required=True)],
+        save_label="Add" if existing is None else "Save",
+        build=lambda values: values["item"],
+    )
+
+
+def _scored_trait_dialog(
+    title: str,
+    name_placeholder: str,
+    existing: ScoredTrait | None = None,
+    *,
+    min_score: int | None = None,
+    max_score: int | None = None,
+    include_known: bool = False,
+) -> FieldsDialog[ScoredTrait]:
+    """A Personality Trait or Reputation: a name and a score, optionally
+    bounded (covenant Reputations are -3..+3) and, for a covenant
+    Reputation, whether the covenant knows of it (see
+    inhabitants.reputation_loyalty_penalty())."""
+    bounded = min_score is not None and max_score is not None
+    score_label = f"Score ({min_score:+d} to {max_score:+d})" if bounded else "Score"
+    fields = [
+        DialogField(
+            "name",
+            "Name",
+            "text",
+            _attr(existing, "name", ""),
+            required=True,
+            placeholder=name_placeholder,
+        ),
+        DialogField("score", score_label, "int", _attr(existing, "score", 0)),
+    ]
+    if include_known:
+        fields.append(
+            DialogField(
+                "known",
+                "Known by the covenant?",
+                "check",
+                _attr(existing, "known", True),
+            )
+        )
+
+    def validate(values: dict[str, Any]) -> str | None:
+        score = values["score"]
+        if (min_score is not None and score < min_score) or (
+            max_score is not None and score > max_score
+        ):
+            return f"Score must be between {score_label[6:-1]}."
+        return None
+
+    return FieldsDialog(
+        title,
+        fields,
+        validate=validate,
+        build=lambda values: ScoredTrait(
+            name=values["name"], score=values["score"], known=values.get("known", True)
+        ),
+    )
+
+
+def _mastery_ability_dialog(
+    title: str, existing: MasteryAbility | None = None
+) -> FieldsDialog[MasteryAbility]:
+    return FieldsDialog(
+        title,
+        [
+            DialogField(
+                "name",
+                "Name",
+                "text",
+                _attr(existing, "name", ""),
+                required=True,
+                placeholder="e.g. Fast Casting",
+            ),
+            DialogField("level", "Level", "int", _attr(existing, "level", 0)),
+            DialogField("xp", "XP", "int", _attr(existing, "xp", 0)),
+        ],
+        build=lambda values: MasteryAbility(**values),
+    )
+
+
+def _raw_vis_dialog(
+    existing: tuple[str, int] | None = None,
+) -> FieldsDialog[tuple[str, int]]:
+    """An Art (stored lower-case) and a number of pawns."""
+    return FieldsDialog(
+        "Add Raw Vis" if existing is None else "Edit Raw Vis",
+        [
+            DialogField(
+                "art",
+                "Art",
+                "select",
+                existing[0] if existing else None,
+                options=[(art, art.lower()) for art in ARTS],
+                required=True,
+                allow_blank=True,
+                placeholder="(choose an Art)",
+            ),
+            DialogField("pawns", "Pawns", "int", existing[1] if existing else 1),
+        ],
+        save_label="Add" if existing is None else "Save",
+        build=lambda values: (values["art"], values["pawns"]),
+    )
+
+
+def _named_description_dialog(
+    title: str, name_placeholder: str, existing: NamedDescription | None = None
+) -> FieldsDialog[NamedDescription]:
+    """A laboratory Room or Inventory item: a name and a description."""
+    return FieldsDialog(
+        title,
+        [
+            DialogField(
+                "name",
+                "Name",
+                "text",
+                _attr(existing, "name", ""),
+                required=True,
+                placeholder=name_placeholder,
+            ),
+            DialogField(
+                "description", "Description", "text", _attr(existing, "description", "")
+            ),
+        ],
+        build=lambda values: NamedDescription(**values),
+    )
+
+
+def _diary_entry_dialog(
+    default_year: int,
+    existing: DiaryEntry | None = None,
+    default_season: str = SEASONS[0],
+) -> FieldsDialog[DiaryEntry]:
+    return FieldsDialog(
+        "Add a Diary Entry" if existing is None else "Edit a Diary Entry",
+        [
+            DialogField("year", "Year", "int", _attr(existing, "year", default_year)),
+            DialogField(
+                "season",
+                "Season",
+                "select",
+                _attr(existing, "season", default_season),
+                options=_pairs(SEASONS),
+            ),
+            DialogField(
+                "name", "Name", "text", _attr(existing, "name", ""), required=True
+            ),
+            DialogField("details", "Details", "text", _attr(existing, "details", "")),
+        ],
+        build=lambda values: DiaryEntry(**values),
+    )
+
+
 def _bond_power_fields(power: BondPower | None) -> list[DialogField]:
     """The add/edit form for one Empowered Bond Power -- all typed-in, no
     Lab Total formula computed (see BondPower's docstring)."""
@@ -1628,75 +1803,6 @@ class ModalDialog[ResultT](ModalScreen[ResultT]):
         return value if isinstance(value, str) else None
 
 
-class ParamPromptScreen(ModalDialog[dict[str, str] | None]):
-    """Prompts for a catalog entry's placeholder parameters.
-
-    Generic over any catalog entry shape that has a `name` (shown as a
-    title) and a list of `parameters` to fill in -- e.g. VirtueFlawDef's
-    "Affinity with {art}" needing "art", or AbilityDef's "Craft: {craft}"
-    needing "craft". Dismisses with a dict of param name -> value, or
-    None if cancelled.
-    """
-
-    DEFAULT_CSS = """
-    ParamPromptScreen {
-        align: center middle;
-    }
-
-    #param-dialog {
-        width: 60;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #param-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #param-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, prompt_title: str, parameters: list[str]) -> None:
-        super().__init__()
-        self.prompt_title = prompt_title
-        self.parameters = parameters
-
-    def compose(self) -> ComposeResult:
-        with Vertical(id="param-dialog"):
-            yield Label(self.prompt_title, id="param-title")
-            for param in self.parameters:
-                yield Label(param.title())
-                yield Input(placeholder="e.g. Creo", id=f"input-param-{param}")
-            yield Static("", id="param-error")
-            with Horizontal(id="param-buttons"):
-                yield Button("Confirm", id="btn-confirm", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-confirm":
-            self._try_confirm()
-
-    def _try_confirm(self) -> None:
-        error = self.query_one("#param-error", Static)
-        params: dict[str, str] = {}
-        for param in self.parameters:
-            value = self.query_one(f"#input-param-{param}", Input).value.strip()
-            if not value:
-                error.update(f"{param.title()} is required.")
-                return
-            params[param] = value.lower()
-        self.dismiss(params)
-
-
 class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
     """Base for a ListView-backed catalog picker with a live-filtering
     search box above it.
@@ -1906,9 +2012,7 @@ class VirtueFlawPickerScreen(
             if params is not None:
                 self.dismiss(VirtueFlawInstance(vf_id=entry.id, params=params))
 
-        self.app.push_screen(
-            ParamPromptScreen(entry.name, entry.parameters), handle_params
-        )
+        self.app.push_screen(_param_dialog(entry.name, entry.parameters), handle_params)
 
 
 class LabVirtueFlawPickerScreen(
@@ -2066,7 +2170,7 @@ class AbilityPickerScreen(SearchablePickerScreen[AbilityDef, Ability | None]):
                     )
 
             self.app.push_screen(
-                ParamPromptScreen(entry.name, entry.parameters), handle_params
+                _param_dialog(entry.name, entry.parameters), handle_params
             )
         else:
             self._prompt_details(entry.name, entry.category)
@@ -2331,273 +2435,6 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
         self.dismiss(result)
 
 
-class ItemAddScreen(ModalDialog[str | None]):
-    """Freeform text entry for one line of text -- today, a laboratory
-    Specialty or Feature.
-
-    Dismisses with the item description, or None if cancelled.
-    """
-
-    DEFAULT_CSS = """
-    ItemAddScreen {
-        align: center middle;
-    }
-
-    #create-dialog {
-        width: 60;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #create-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #create-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, title: str = "Add an Item", existing: str | None = None) -> None:
-        super().__init__()
-        self.title_text = title
-        self.existing = existing
-
-    def compose(self) -> ComposeResult:
-        with Vertical(id="create-dialog"):
-            yield Label(self.title_text, id="create-title")
-            yield Input(
-                value=self.existing or "",
-                placeholder="e.g. Fine wool cloak",
-                id="input-item",
-            )
-            yield Static("", id="create-error")
-            with Horizontal(id="create-buttons"):
-                yield Button(
-                    "Add" if self.existing is None else "Save",
-                    id="btn-create",
-                    variant="success",
-                )
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-create":
-            self._try_create()
-
-    def _try_create(self) -> None:
-        error = self.query_one("#create-error", Static)
-        item = self.query_one("#input-item", Input).value.strip()
-        if not item:
-            error.update("Item description is required.")
-            return
-        self.dismiss(item)
-
-
-class ScoredTraitPromptScreen(ModalDialog[ScoredTrait | None]):
-    """Name + integer score prompt, reused for Personality Traits and
-    Reputations -- both are just a label and a score on the character
-    sheet. Dismisses with a ScoredTrait, or None if cancelled.
-    """
-
-    DEFAULT_CSS = """
-    ScoredTraitPromptScreen {
-        align: center middle;
-    }
-
-    #trait-dialog {
-        width: 60;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #trait-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #trait-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(
-        self,
-        title: str,
-        name_placeholder: str,
-        existing: ScoredTrait | None = None,
-        *,
-        min_score: int | None = None,
-        max_score: int | None = None,
-        include_known: bool = False,
-    ) -> None:
-        super().__init__()
-        self.title_text = title
-        self.name_placeholder = name_placeholder
-        self.existing = existing
-        #: Optional inclusive bounds (covenant Reputations are -3..+3).
-        self.min_score = min_score
-        self.max_score = max_score
-        #: Covenant Reputations only: whether a bad Reputation the covenant
-        #: doesn't know about should count against Loyalty -- see
-        #: inhabitants.reputation_loyalty_penalty(). Character Personality
-        #: Traits/Reputations never show this (always known=True).
-        self.include_known = include_known
-
-    def _score_label(self) -> str:
-        if self.min_score is None or self.max_score is None:
-            return "Score"
-        return f"Score ({self.min_score:+d} to {self.max_score:+d})"
-
-    def compose(self) -> ComposeResult:
-        with Vertical(id="trait-dialog"):
-            yield Label(self.title_text, id="trait-title")
-            yield Label("Name")
-            yield Input(
-                value=self.existing.name if self.existing else "",
-                placeholder=self.name_placeholder,
-                id="input-trait-name",
-            )
-            yield Label(self._score_label())
-            yield Input(
-                value=str(self.existing.score) if self.existing else "0",
-                type="integer",
-                id="input-trait-score",
-            )
-            if self.include_known:
-                yield Checkbox(
-                    "Known by the covenant?",
-                    value=self.existing.known if self.existing else True,
-                    id="input-trait-known",
-                )
-            yield Static("", id="trait-error")
-            with Horizontal(id="trait-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#trait-error", Static)
-        name = self.query_one("#input-trait-name", Input).value.strip()
-        if not name:
-            error.update("Name is required.")
-            return
-        raw_score = self.query_one("#input-trait-score", Input).value.strip()
-        try:
-            score = int(raw_score)
-        except ValueError:
-            error.update("Score must be a whole number.")
-            return
-        if (self.min_score is not None and score < self.min_score) or (
-            self.max_score is not None and score > self.max_score
-        ):
-            error.update(f"Score must be between {self._score_label()[6:-1]}.")
-            return
-        known = (
-            self.query_one("#input-trait-known", Checkbox).value
-            if self.include_known
-            else True
-        )
-        self.dismiss(ScoredTrait(name=name, score=score, known=known))
-
-
-class MasteryAbilityPromptScreen(ModalDialog[MasteryAbility | None]):
-    """Name/Level/XP prompt for one Mastery Ability (Fast Casting,
-    Penetration, ...). Dismisses with the finished MasteryAbility, or None
-    if cancelled."""
-
-    DEFAULT_CSS = """
-    MasteryAbilityPromptScreen {
-        align: center middle;
-    }
-
-    #mastery-ability-dialog {
-        width: 60;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #mastery-ability-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #mastery-ability-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, title: str, existing: MasteryAbility | None = None) -> None:
-        super().__init__()
-        self.title_text = title
-        self.existing = existing
-
-    def compose(self) -> ComposeResult:
-        with Vertical(id="mastery-ability-dialog"):
-            yield Label(self.title_text, id="mastery-ability-title")
-            yield Label("Name")
-            yield Input(
-                value=self.existing.name if self.existing else "",
-                placeholder="e.g. Fast Casting",
-                id="input-mastery-ability-name",
-            )
-            yield Label("Level")
-            yield Input(
-                value=str(self.existing.level) if self.existing else "0",
-                type="integer",
-                id="input-mastery-ability-level",
-            )
-            yield Label("XP")
-            yield Input(
-                value=str(self.existing.xp) if self.existing else "0",
-                type="integer",
-                id="input-mastery-ability-xp",
-            )
-            yield Static("", id="mastery-ability-error")
-            with Horizontal(id="mastery-ability-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#mastery-ability-error", Static)
-        name = self.query_one("#input-mastery-ability-name", Input).value.strip()
-        if not name:
-            error.update("Name is required.")
-            return
-        try:
-            level = int(self.query_one("#input-mastery-ability-level", Input).value)
-            xp = int(self.query_one("#input-mastery-ability-xp", Input).value)
-        except ValueError:
-            error.update("Level and XP must be whole numbers.")
-            return
-        self.dismiss(MasteryAbility(name=name, level=level, xp=xp))
-
-
 class MasteryEditScreen(ModalDialog[KnownSpell | None]):
     """Edits a known spell's Mastery: score, xp, and its Mastery Abilities
     (each with its own name/level/xp -- see MasteryAbility). Abilities are
@@ -2702,7 +2539,7 @@ class MasteryEditScreen(ModalDialog[KnownSpell | None]):
                 self._render_abilities()
 
         self.app.push_screen(
-            MasteryAbilityPromptScreen("Add a Mastery Ability"), handle_result
+            _mastery_ability_dialog("Add a Mastery Ability"), handle_result
         )
 
     def _remove_ability(self) -> None:
@@ -2730,269 +2567,6 @@ class MasteryEditScreen(ModalDialog[KnownSpell | None]):
                 mastery_abilities=self._abilities,
             )
         )
-
-
-class RawVisPromptScreen(ModalDialog[tuple[str, int] | None]):
-    """Prompts for an Art + a number of pawns, to add to a character's Raw
-    Vis. Dismisses with (art, pawns), or None if cancelled. Adding an Art
-    that's already held increases its existing pawn count -- see
-    WorkspaceScreen._add_raw_vis().
-    """
-
-    DEFAULT_CSS = """
-    RawVisPromptScreen {
-        align: center middle;
-    }
-
-    #vis-dialog {
-        width: 60;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #vis-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #vis-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, existing: tuple[str, int] | None = None) -> None:
-        super().__init__()
-        self.existing = existing
-
-    def compose(self) -> ComposeResult:
-        existing = self.existing
-        with Vertical(id="vis-dialog"):
-            yield Label(
-                "Add Raw Vis" if existing is None else "Edit Raw Vis", id="vis-title"
-            )
-            yield Label("Art")
-            yield Select(
-                [(art, art.lower()) for art in ARTS],
-                value=existing[0] if existing else Select.NULL,
-                id="select-vis-art",
-            )
-            yield Label("Pawns")
-            yield Input(
-                value="1" if existing is None else str(existing[1]),
-                type="integer",
-                id="input-vis-pawns",
-            )
-            yield Static("", id="vis-error")
-            with Horizontal(id="vis-buttons"):
-                yield Button(
-                    "Add" if existing is None else "Save",
-                    id="btn-create",
-                    variant="success",
-                )
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-create":
-            self._try_create()
-
-    def _try_create(self) -> None:
-        error = self.query_one("#vis-error", Static)
-        art = self.query_one("#select-vis-art", Select).value
-        if not isinstance(art, str):
-            error.update("Choose an Art.")
-            return
-        raw_pawns = self.query_one("#input-vis-pawns", Input).value.strip()
-        try:
-            pawns = int(raw_pawns)
-        except ValueError:
-            error.update("Pawns must be a whole number.")
-            return
-        self.dismiss((art, pawns))
-
-
-class NamedDescriptionPromptScreen(ModalDialog[NamedDescription | None]):
-    """Name + free-text description prompt, reused for a Laboratory's
-    Rooms and its Inventory items. Dismisses with a NamedDescription, or
-    None if cancelled.
-    """
-
-    DEFAULT_CSS = """
-    NamedDescriptionPromptScreen {
-        align: center middle;
-    }
-
-    #named-desc-dialog {
-        width: 60;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #named-desc-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #named-desc-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(
-        self,
-        title: str,
-        name_placeholder: str,
-        existing: NamedDescription | None = None,
-    ) -> None:
-        super().__init__()
-        self.title_text = title
-        self.name_placeholder = name_placeholder
-        self.existing = existing
-
-    def compose(self) -> ComposeResult:
-        existing = self.existing
-        with Vertical(id="named-desc-dialog"):
-            yield Label(self.title_text, id="named-desc-title")
-            yield Label("Name")
-            yield Input(
-                value=existing.name if existing else "",
-                placeholder=self.name_placeholder,
-                id="input-named-desc-name",
-            )
-            yield Label("Description")
-            yield Input(
-                value=existing.description if existing else "",
-                id="input-named-desc-description",
-            )
-            yield Static("", id="named-desc-error")
-            with Horizontal(id="named-desc-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#named-desc-error", Static)
-        name = self.query_one("#input-named-desc-name", Input).value.strip()
-        if not name:
-            error.update("Name is required.")
-            return
-        description = self.query_one(
-            "#input-named-desc-description", Input
-        ).value.strip()
-        self.dismiss(NamedDescription(name=name, description=description))
-
-
-class DiaryEntryPromptScreen(ModalDialog[DiaryEntry | None]):
-    """Year/Season/Name/Details prompt for a Laboratory diary entry.
-    Dismisses with a DiaryEntry, or None if cancelled.
-    """
-
-    DEFAULT_CSS = """
-    DiaryEntryPromptScreen {
-        align: center middle;
-    }
-
-    #diary-dialog {
-        width: 60;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #diary-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #diary-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(
-        self,
-        default_year: int,
-        existing: DiaryEntry | None = None,
-        default_season: str = SEASONS[0],
-    ) -> None:
-        super().__init__()
-        self.default_year = default_year
-        self.default_season = default_season
-        self.existing = existing
-
-    def compose(self) -> ComposeResult:
-        existing = self.existing
-        with Vertical(id="diary-dialog"):
-            yield Label(
-                "Add a Diary Entry" if existing is None else "Edit a Diary Entry",
-                id="diary-title",
-            )
-            yield Label("Year")
-            yield Input(
-                value=str(existing.year if existing else self.default_year),
-                type="integer",
-                id="input-diary-year",
-            )
-            yield Label("Season")
-            yield Select(
-                _pairs(SEASONS),
-                value=existing.season if existing else self.default_season,
-                allow_blank=False,
-                id="select-diary-season",
-            )
-            yield Label("Name")
-            yield Input(
-                value=existing.name if existing else "",
-                placeholder="e.g. Invented a spell",
-                id="input-diary-name",
-            )
-            yield Label("Details")
-            yield Input(
-                value=existing.details if existing else "", id="input-diary-details"
-            )
-            yield Static("", id="diary-error")
-            with Horizontal(id="diary-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#diary-error", Static)
-        raw_year = self.query_one("#input-diary-year", Input).value.strip()
-        try:
-            year = int(raw_year)
-        except ValueError:
-            error.update("Year must be a whole number.")
-            return
-        name = self.query_one("#input-diary-name", Input).value.strip()
-        if not name:
-            error.update("Name is required.")
-            return
-        season = self.query_one("#select-diary-season", Select).value
-        details = self.query_one("#input-diary-details", Input).value.strip()
-        self.dismiss(DiaryEntry(year=year, season=season, name=name, details=details))
 
 
 class EditFamiliarBindingScreen(ModalDialog[dict[str, object] | None]):
@@ -4117,12 +3691,13 @@ class DialogField:
     display: Callable[[Any], str] | None = None
 
 
-class FieldsDialog(ModalDialog[dict[str, Any] | None]):
+class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
     """A config-driven form: one compact row per DialogField, scrolling if the
     terminal is short (Save/Cancel stay put). Dismisses with {key: value} for
     every non-info field, or None if cancelled. `validate` gets the finished
     dict and returns an error message, or None if it's fine. `save_label`
-    names the button that completes it ("Save", "Create"...).
+    names the button that completes it ("Save", "Create"...). With `build`,
+    it dismisses with `build(values)` instead (e.g. a finished record).
 
     Fields can depend on each other while the form is open: a field's
     `show_if` shows/hides it, and `live` (markup, from the current values)
@@ -4213,6 +3788,7 @@ class FieldsDialog(ModalDialog[dict[str, Any] | None]):
         validate: Callable[[dict[str, Any]], str | None] | None = None,
         live: Callable[[dict[str, Any]], str] | None = None,
         save_label: str = "Save",
+        build: Callable[[dict[str, Any]], ResultT] | None = None,
     ) -> None:
         super().__init__()
         self.title_text = title
@@ -4220,6 +3796,7 @@ class FieldsDialog(ModalDialog[dict[str, Any] | None]):
         self.validate = validate
         self.live = live
         self.save_label = save_label
+        self.build = build
         self._picked: dict[str, Any] = {}  # "picker" fields' current values
 
     def compose(self) -> ComposeResult:
@@ -4456,7 +4033,7 @@ class FieldsDialog(ModalDialog[dict[str, Any] | None]):
         if problem:
             error.update(problem)
             return
-        self.dismiss(result)
+        self.dismiss(self.build(result) if self.build else cast(ResultT, result))
 
 
 class SheetSection(Collapsible):
@@ -7321,8 +6898,8 @@ class WorkspaceScreen(Screen[None]):
 
     def _trait_prompt(
         self, spec: _TraitList, title: str, existing: ScoredTrait | None = None
-    ) -> ScoredTraitPromptScreen:
-        return ScoredTraitPromptScreen(
+    ) -> FieldsDialog[ScoredTrait]:
+        return _scored_trait_dialog(
             title, spec.example, existing, **spec.prompt_options
         )
 
@@ -9430,7 +9007,7 @@ class WorkspaceScreen(Screen[None]):
                 add_raw_vis(character.raw_vis, art, pawns)
                 self._commit("section-raw-vis-hermetic")
 
-        self.app.push_screen(RawVisPromptScreen(), handle_result)
+        self.app.push_screen(_raw_vis_dialog(), handle_result)
 
     def _selected_raw_vis(self) -> int | None:
         view = self._character_sheet_view
@@ -9480,7 +9057,7 @@ class WorkspaceScreen(Screen[None]):
                 self._commit("section-raw-vis-hermetic")
 
         self.app.push_screen(
-            RawVisPromptScreen(existing=(old_art, character.raw_vis[old_art])),
+            _raw_vis_dialog(existing=(old_art, character.raw_vis[old_art])),
             handle_result,
         )
 
@@ -9793,7 +9370,9 @@ class WorkspaceScreen(Screen[None]):
                 lab.specialties.append(item)
                 self._commit("section-lab-specialties")
 
-        self.app.push_screen(ItemAddScreen(), handle_result)
+        self.app.push_screen(
+            _item_dialog("Add a Specialty", "Specialty"), handle_result
+        )
 
     def _remove_specialty(self) -> None:
         lab = self.selected_laboratory
@@ -9825,7 +9404,7 @@ class WorkspaceScreen(Screen[None]):
                 lab.features.append(item)
                 self._commit("section-lab-features")
 
-        self.app.push_screen(ItemAddScreen(), handle_result)
+        self.app.push_screen(_item_dialog("Add a Feature", "Feature"), handle_result)
 
     def _remove_feature(self) -> None:
         lab = self.selected_laboratory
@@ -9856,7 +9435,7 @@ class WorkspaceScreen(Screen[None]):
                 self._commit("section-lab-rooms")
 
         self.app.push_screen(
-            NamedDescriptionPromptScreen("Add a Room", "e.g. Vault"), handle_result
+            _named_description_dialog("Add a Room", "e.g. Vault"), handle_result
         )
 
     def _remove_room(self) -> None:
@@ -9891,7 +9470,7 @@ class WorkspaceScreen(Screen[None]):
                 add_raw_vis(lab.raw_vis, art, pawns)
                 self._commit("section-lab-raw-vis")
 
-        self.app.push_screen(RawVisPromptScreen(), handle_result)
+        self.app.push_screen(_raw_vis_dialog(), handle_result)
 
     def _remove_lab_raw_vis(self) -> None:
         lab = self.selected_laboratory
@@ -9924,7 +9503,7 @@ class WorkspaceScreen(Screen[None]):
                 self._commit("section-lab-items")
 
         self.app.push_screen(
-            NamedDescriptionPromptScreen("Add an Item", "e.g. Silver Mirror"),
+            _named_description_dialog("Add an Item", "e.g. Silver Mirror"),
             handle_result,
         )
 
@@ -9960,7 +9539,7 @@ class WorkspaceScreen(Screen[None]):
                 self._commit("tab-lab-diary")
 
         self.app.push_screen(
-            DiaryEntryPromptScreen(
+            _diary_entry_dialog(
                 self.saga.current_year, default_season=self.saga.current_season
             ),
             handle_result,
@@ -10030,8 +9609,8 @@ class WorkspaceScreen(Screen[None]):
             picker_title="Edit which Specialty?",
             empty_message="No Specialties to edit.",
             labels=[escape(s) for s in lab.specialties],
-            screen_for=lambda i: ItemAddScreen(
-                "Edit a Specialty", existing=lab.specialties[i]
+            screen_for=lambda i: _item_dialog(
+                "Edit a Specialty", "Specialty", existing=lab.specialties[i]
             ),
             apply=lab.specialties.__setitem__,
             section_id="section-lab-specialties",
@@ -10045,8 +9624,8 @@ class WorkspaceScreen(Screen[None]):
             picker_title="Edit which Feature?",
             empty_message="No Features to edit.",
             labels=[escape(f) for f in lab.features],
-            screen_for=lambda i: ItemAddScreen(
-                "Edit a Feature", existing=lab.features[i]
+            screen_for=lambda i: _item_dialog(
+                "Edit a Feature", "Feature", existing=lab.features[i]
             ),
             apply=lab.features.__setitem__,
             section_id="section-lab-features",
@@ -10060,7 +9639,7 @@ class WorkspaceScreen(Screen[None]):
             picker_title="Edit which Room?",
             empty_message="No Rooms to edit.",
             labels=[escape(room.name) for room in lab.rooms],
-            screen_for=lambda i: NamedDescriptionPromptScreen(
+            screen_for=lambda i: _named_description_dialog(
                 "Edit a Room", "e.g. Vault", existing=lab.rooms[i]
             ),
             apply=lab.rooms.__setitem__,
@@ -10075,7 +9654,7 @@ class WorkspaceScreen(Screen[None]):
             picker_title="Edit which Item?",
             empty_message="No Items to edit.",
             labels=[escape(item.name) for item in lab.inventory_items],
-            screen_for=lambda i: NamedDescriptionPromptScreen(
+            screen_for=lambda i: _named_description_dialog(
                 "Edit an Item", "e.g. Silver Mirror", existing=lab.inventory_items[i]
             ),
             apply=lab.inventory_items.__setitem__,
@@ -10096,7 +9675,7 @@ class WorkspaceScreen(Screen[None]):
             picker_title="Edit which Raw Vis entry?",
             empty_message="No Raw Vis to edit.",
             labels=[f"{art.title()}: {lab.raw_vis[art]} pawn(s)" for art in arts],
-            screen_for=lambda i: RawVisPromptScreen(
+            screen_for=lambda i: _raw_vis_dialog(
                 existing=(arts[i], lab.raw_vis[arts[i]])
             ),
             apply=apply,
@@ -10111,7 +9690,7 @@ class WorkspaceScreen(Screen[None]):
             picker_title="Edit which Diary Entry?",
             empty_message="No Diary entries to edit.",
             labels=[f"{e.year} {e.season} -- {e.name}" for e in lab.diary],
-            screen_for=lambda i: DiaryEntryPromptScreen(
+            screen_for=lambda i: _diary_entry_dialog(
                 self.saga.current_year, existing=lab.diary[i]
             ),
             apply=lab.diary.__setitem__,

@@ -321,12 +321,11 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Safety": "-"},
     ),
     "add lab specialty": Contract(
-        prefill={"Name": ""},
-        edits={"Name": "Herbam"},
+        prefill={"Specialty": ""},
+        edits={"Specialty": "Herbam"},
         saved=lambda s: _lab(s).specialties,
         expected=["Ignem", "Herbam"],
-        invalid={"Name": ""},
-        aliases={"Name": "input-item"},
+        invalid={"Specialty": ""},
     ),
     "add lab room": Contract(
         prefill={"Name": ""},

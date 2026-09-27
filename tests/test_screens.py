@@ -59,23 +59,16 @@ from ars_magica_manager.screens import (
     CovenantBoonHookPickerScreen,
     CsvFilePickerScreen,
     DialogField,
-    DiaryEntryPromptScreen,
     DuplicateBookScreen,
     EditArtsScreen,
     EditFamiliarBindingScreen,
     FieldsDialog,
     ImportScreen,
     ImproveIncomeScreen,
-    ItemAddScreen,
     LabVirtueFlawPickerScreen,
-    MasteryAbilityPromptScreen,
     MasteryEditScreen,
-    NamedDescriptionPromptScreen,
-    ParamPromptScreen,
-    RawVisPromptScreen,
     RemovalPickerScreen,
     SagaPickerScreen,
-    ScoredTraitPromptScreen,
     SelectableList,
     SpellChooserScreen,
     SpellImportHelperScreen,
@@ -1258,9 +1251,9 @@ async def test_familiar_personality_traits_use_generic_add_edit_remove():
 
         await pilot.press("a")
         await pilot.pause()
-        assert isinstance(app.screen, ScoredTraitPromptScreen)
-        app.screen.query_one("#input-trait-name", Input).value = "Fearless"
-        app.screen.query_one("#input-trait-score", Input).value = "2"
+        assert isinstance(app.screen, FieldsDialog)
+        app.screen.query_one("#fld-name", Input).value = "Fearless"
+        app.screen.query_one("#fld-score", Input).value = "2"
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
@@ -1330,10 +1323,10 @@ async def test_add_virtue_flaw_with_parameters_to_character():
         await pilot.pause()
 
         await _select_vf_picker_entry(pilot, app, "vf_affinity_with_art")
-        assert isinstance(app.screen, ParamPromptScreen)
+        assert isinstance(app.screen, FieldsDialog)
 
-        app.screen.query_one("#input-param-art", Input).value = "Creo"
-        await pilot.click("#btn-confirm")
+        app.screen.query_one("#fld-art", Input).value = "Creo"
+        await pilot.click("#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
@@ -1360,7 +1353,7 @@ async def test_cancelling_param_screen_returns_to_picker_without_adding():
         await pilot.pause()
         await pilot.press("enter")
         await pilot.pause()
-        assert isinstance(app.screen, ParamPromptScreen)
+        assert isinstance(app.screen, FieldsDialog)
 
         await pilot.press("escape")
         await pilot.pause()
@@ -1693,10 +1686,10 @@ async def test_add_ability_with_parameters_to_character():
 
         await pilot.click("#ability-ab_craft")
         await pilot.pause()
-        assert isinstance(app.screen, ParamPromptScreen)
+        assert isinstance(app.screen, FieldsDialog)
 
-        app.screen.query_one("#input-param-craft", Input).value = "Blacksmith"
-        await pilot.click("#btn-confirm")
+        app.screen.query_one("#fld-craft", Input).value = "Blacksmith"
+        await pilot.click("#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, FieldsDialog)
@@ -2434,11 +2427,9 @@ async def test_edit_spell_mastery_sets_score_xp_and_abilities():
         app.screen.query_one("#input-mastery-xp", Input).value = "10"
         await pilot.click("#btn-add-ability")
         await pilot.pause()
-        assert isinstance(app.screen, MasteryAbilityPromptScreen)
-        app.screen.query_one(
-            "#input-mastery-ability-name", Input
-        ).value = "Fast Casting"
-        app.screen.query_one("#input-mastery-ability-level", Input).value = "1"
+        assert isinstance(app.screen, FieldsDialog)
+        app.screen.query_one("#fld-name", Input).value = "Fast Casting"
+        app.screen.query_one("#fld-level", Input).value = "1"
         await pilot.click("#btn-save")
         await pilot.pause()
         assert isinstance(app.screen, MasteryEditScreen)
@@ -2664,10 +2655,10 @@ async def test_add_and_remove_personality_trait():
 
         await pilot.press("a")
         await pilot.pause()
-        assert isinstance(app.screen, ScoredTraitPromptScreen)
+        assert isinstance(app.screen, FieldsDialog)
 
-        app.screen.query_one("#input-trait-name", Input).value = "Curious"
-        app.screen.query_one("#input-trait-score", Input).value = "3"
+        app.screen.query_one("#fld-name", Input).value = "Curious"
+        app.screen.query_one("#fld-score", Input).value = "3"
         await pilot.click("#btn-save", offset=(8, 1))
         await pilot.pause()
 
@@ -2699,10 +2690,10 @@ async def test_add_and_remove_reputation():
 
         await pilot.press("a")
         await pilot.pause()
-        assert isinstance(app.screen, ScoredTraitPromptScreen)
+        assert isinstance(app.screen, FieldsDialog)
 
-        app.screen.query_one("#input-trait-name", Input).value = "Skilled Enchanter"
-        app.screen.query_one("#input-trait-score", Input).value = "2"
+        app.screen.query_one("#fld-name", Input).value = "Skilled Enchanter"
+        app.screen.query_one("#fld-score", Input).value = "2"
         await pilot.click("#btn-save", offset=(8, 1))
         await pilot.pause()
 
@@ -2734,11 +2725,11 @@ async def test_add_and_remove_raw_vis():
 
         await pilot.press("a")
         await pilot.pause()
-        assert isinstance(app.screen, RawVisPromptScreen)
+        assert isinstance(app.screen, FieldsDialog)
 
-        app.screen.query_one("#select-vis-art", Select).value = "creo"
-        app.screen.query_one("#input-vis-pawns", Input).value = "5"
-        await pilot.click("#btn-create", offset=(8, 1))
+        app.screen.query_one("#fld-art", Select).value = "creo"
+        app.screen.query_one("#fld-pawns", Input).value = "5"
+        await pilot.click("#btn-save", offset=(8, 1))
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
@@ -2748,9 +2739,9 @@ async def test_add_and_remove_raw_vis():
         # Adding the same Art again accumulates rather than overwriting.
         await pilot.press("a")
         await pilot.pause()
-        app.screen.query_one("#select-vis-art", Select).value = "creo"
-        app.screen.query_one("#input-vis-pawns", Input).value = "3"
-        await pilot.click("#btn-create", offset=(8, 1))
+        app.screen.query_one("#fld-art", Select).value = "creo"
+        app.screen.query_one("#fld-pawns", Input).value = "3"
+        await pilot.click("#btn-save", offset=(8, 1))
         await pilot.pause()
         rows = app.screen._character_sheet_view._raw_vis_rows()
         assert "Creo: 8 pawn(s)" in rows[0][1]
@@ -2790,9 +2781,9 @@ async def test_raw_vis_stays_live_across_both_tabs():
         await _open_section(pilot, app, "section-raw-vis-hermetic")
         await pilot.press("a")
         await pilot.pause()
-        app.screen.query_one("#select-vis-art", Select).value = "creo"
-        app.screen.query_one("#input-vis-pawns", Input).value = "5"
-        await pilot.click("#btn-create", offset=(8, 1))
+        app.screen.query_one("#fld-art", Select).value = "creo"
+        app.screen.query_one("#fld-pawns", Input).value = "5"
+        await pilot.click("#btn-save", offset=(8, 1))
         await pilot.pause()
 
         assert any(
@@ -2813,9 +2804,9 @@ async def test_raw_vis_stays_live_across_both_tabs():
         assert isinstance(app.screen, RemovalPickerScreen)  # only one entry
         await pilot.press("enter")
         await pilot.pause()
-        assert isinstance(app.screen, RawVisPromptScreen)
-        app.screen.query_one("#input-vis-pawns", Input).value = "3"
-        await pilot.click("#btn-create", offset=(8, 1))
+        assert isinstance(app.screen, FieldsDialog)
+        app.screen.query_one("#fld-pawns", Input).value = "3"
+        await pilot.click("#btn-save", offset=(8, 1))
         await pilot.pause()
 
         assert any(
@@ -3210,10 +3201,10 @@ async def test_add_and_remove_specialty():
 
         await pilot.press("a")
         await pilot.pause()
-        assert isinstance(app.screen, ItemAddScreen)
+        assert isinstance(app.screen, FieldsDialog)
 
-        app.screen.query_one("#input-item", Input).value = "Ignem"
-        await pilot.click("#btn-create")
+        app.screen.query_one("#fld-item", Input).value = "Ignem"
+        await pilot.click("#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
@@ -3240,10 +3231,10 @@ async def test_add_and_remove_feature():
 
         await pilot.press("a")
         await pilot.pause()
-        assert isinstance(app.screen, ItemAddScreen)
+        assert isinstance(app.screen, FieldsDialog)
 
-        app.screen.query_one("#input-item", Input).value = "Altar"
-        await pilot.click("#btn-create")
+        app.screen.query_one("#fld-item", Input).value = "Altar"
+        await pilot.click("#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
@@ -3270,12 +3261,10 @@ async def test_add_and_remove_room():
 
         await pilot.press("a")
         await pilot.pause()
-        assert isinstance(app.screen, NamedDescriptionPromptScreen)
+        assert isinstance(app.screen, FieldsDialog)
 
-        app.screen.query_one("#input-named-desc-name", Input).value = "Vault"
-        app.screen.query_one(
-            "#input-named-desc-description", Input
-        ).value = "A locked cellar"
+        app.screen.query_one("#fld-name", Input).value = "Vault"
+        app.screen.query_one("#fld-description", Input).value = "A locked cellar"
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
@@ -3304,11 +3293,11 @@ async def test_add_and_remove_lab_raw_vis():
 
         await pilot.press("a")
         await pilot.pause()
-        assert isinstance(app.screen, RawVisPromptScreen)
+        assert isinstance(app.screen, FieldsDialog)
 
-        app.screen.query_one("#select-vis-art", Select).value = "ignem"
-        app.screen.query_one("#input-vis-pawns", Input).value = "4"
-        await pilot.click("#btn-create", offset=(8, 1))
+        app.screen.query_one("#fld-art", Select).value = "ignem"
+        app.screen.query_one("#fld-pawns", Input).value = "4"
+        await pilot.click("#btn-save", offset=(8, 1))
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
@@ -3336,12 +3325,10 @@ async def test_add_and_remove_inventory_item_on_lab():
 
         await pilot.press("a")
         await pilot.pause()
-        assert isinstance(app.screen, NamedDescriptionPromptScreen)
+        assert isinstance(app.screen, FieldsDialog)
 
-        app.screen.query_one("#input-named-desc-name", Input).value = "Silver Mirror"
-        app.screen.query_one(
-            "#input-named-desc-description", Input
-        ).value = "For scrying"
+        app.screen.query_one("#fld-name", Input).value = "Silver Mirror"
+        app.screen.query_one("#fld-description", Input).value = "For scrying"
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
@@ -3370,14 +3357,12 @@ async def test_add_and_remove_diary_entry():
 
         await pilot.press("a")
         await pilot.pause()
-        assert isinstance(app.screen, DiaryEntryPromptScreen)
+        assert isinstance(app.screen, FieldsDialog)
 
-        app.screen.query_one("#input-diary-year", Input).value = "1220"
-        app.screen.query_one("#select-diary-season", Select).value = "Autumn"
-        app.screen.query_one("#input-diary-name", Input).value = "Invented a spell"
-        app.screen.query_one(
-            "#input-diary-details", Input
-        ).value = "A quiet season of study."
+        app.screen.query_one("#fld-year", Input).value = "1220"
+        app.screen.query_one("#fld-season", Select).value = "Autumn"
+        app.screen.query_one("#fld-name", Input).value = "Invented a spell"
+        app.screen.query_one("#fld-details", Input).value = "A quiet season of study."
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
@@ -3418,22 +3403,22 @@ async def test_edit_specialty_and_feature():
         view = app.screen._laboratory_sheet_view
 
         await _pick_first_and_open_editor(
-            pilot, app, "section-lab-specialties", ItemAddScreen
+            pilot, app, "section-lab-specialties", FieldsDialog
         )
-        assert app.screen.query_one("#input-item", Input).value == "Ignem"
-        app.screen.query_one("#input-item", Input).value = "Vim"
-        app.screen.query_one("#btn-create", Button).press()
+        assert app.screen.query_one("#fld-item", Input).value == "Ignem"
+        app.screen.query_one("#fld-item", Input).value = "Vim"
+        app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)
         assert "Vim" in view._specialties_text()
         assert "Ignem" not in view._specialties_text()
 
         await _pick_first_and_open_editor(
-            pilot, app, "section-lab-features", ItemAddScreen
+            pilot, app, "section-lab-features", FieldsDialog
         )
-        assert app.screen.query_one("#input-item", Input).value == "Arcane Library"
-        app.screen.query_one("#input-item", Input).value = "Aegis"
-        app.screen.query_one("#btn-create", Button).press()
+        assert app.screen.query_one("#fld-item", Input).value == "Arcane Library"
+        app.screen.query_one("#fld-item", Input).value = "Aegis"
+        app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
         assert "Aegis" in view._features_text()
 
@@ -3450,11 +3435,9 @@ async def test_edit_room_and_item():
         await _select_laboratory(pilot, app)
         view = app.screen._laboratory_sheet_view
 
-        await _pick_first_and_open_editor(
-            pilot, app, "section-lab-rooms", NamedDescriptionPromptScreen
-        )
-        name = app.screen.query_one("#input-named-desc-name", Input)
-        description = app.screen.query_one("#input-named-desc-description", Input)
+        await _pick_first_and_open_editor(pilot, app, "section-lab-rooms", FieldsDialog)
+        name = app.screen.query_one("#fld-name", Input)
+        description = app.screen.query_one("#fld-description", Input)
         assert (name.value, description.value) == ("Vault", "Locked")
         name.value = "Strongroom"
         description.value = "Iron-bound"
@@ -3462,14 +3445,9 @@ async def test_edit_room_and_item():
         await pilot.pause()
         assert "Strongroom: Iron-bound" in view._rooms_text()
 
-        await _pick_first_and_open_editor(
-            pilot, app, "section-lab-items", NamedDescriptionPromptScreen
-        )
-        assert (
-            app.screen.query_one("#input-named-desc-name", Input).value
-            == "Silver Mirror"
-        )
-        app.screen.query_one("#input-named-desc-description", Input).value = "Cracked"
+        await _pick_first_and_open_editor(pilot, app, "section-lab-items", FieldsDialog)
+        assert app.screen.query_one("#fld-name", Input).value == "Silver Mirror"
+        app.screen.query_one("#fld-description", Input).value = "Cracked"
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
         assert "Silver Mirror: Cracked" in view._items_text()
@@ -3490,21 +3468,21 @@ async def test_edit_lab_raw_vis_changes_pawns_and_merges_on_art_change():
 
         # First picker entry is "aquam" (entries are sorted by Art).
         await _pick_first_and_open_editor(
-            pilot, app, "section-lab-raw-vis", RawVisPromptScreen
+            pilot, app, "section-lab-raw-vis", FieldsDialog
         )
-        assert app.screen.query_one("#select-vis-art", Select).value == "aquam"
-        assert app.screen.query_one("#input-vis-pawns", Input).value == "2"
-        app.screen.query_one("#input-vis-pawns", Input).value = "7"
-        app.screen.query_one("#btn-create", Button).press()
+        assert app.screen.query_one("#fld-art", Select).value == "aquam"
+        assert app.screen.query_one("#fld-pawns", Input).value == "2"
+        app.screen.query_one("#fld-pawns", Input).value = "7"
+        app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)
 
         # Re-point the same entry at an Art that's already held: it merges.
         await _pick_first_and_open_editor(
-            pilot, app, "section-lab-raw-vis", RawVisPromptScreen
+            pilot, app, "section-lab-raw-vis", FieldsDialog
         )
-        app.screen.query_one("#select-vis-art", Select).value = "ignem"
-        app.screen.query_one("#btn-create", Button).press()
+        app.screen.query_one("#fld-art", Select).value = "ignem"
+        app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
     lab = storage.load_saga("test_saga").laboratories[0]
@@ -3518,14 +3496,12 @@ async def test_edit_diary_entry():
     async with app.run_test() as pilot:
         await _select_laboratory(pilot, app)
 
-        await _pick_first_and_open_editor(
-            pilot, app, "tab-lab-diary", DiaryEntryPromptScreen
-        )
-        assert app.screen.query_one("#input-diary-year", Input).value == "1220"
-        assert app.screen.query_one("#select-diary-season", Select).value == "Spring"
-        assert app.screen.query_one("#input-diary-name", Input).value == "Studied"
-        app.screen.query_one("#select-diary-season", Select).value = "Winter"
-        app.screen.query_one("#input-diary-details", Input).value = "Revised."
+        await _pick_first_and_open_editor(pilot, app, "tab-lab-diary", FieldsDialog)
+        assert app.screen.query_one("#fld-year", Input).value == "1220"
+        assert app.screen.query_one("#fld-season", Select).value == "Spring"
+        assert app.screen.query_one("#fld-name", Input).value == "Studied"
+        app.screen.query_one("#fld-season", Select).value = "Winter"
+        app.screen.query_one("#fld-details", Input).value = "Revised."
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
@@ -3557,9 +3533,9 @@ async def test_editing_an_empty_lab_list_or_cancelling_changes_nothing():
 
         # Cancelling the editor does too.
         await _pick_first_and_open_editor(
-            pilot, app, "section-lab-specialties", ItemAddScreen
+            pilot, app, "section-lab-specialties", FieldsDialog
         )
-        app.screen.query_one("#input-item", Input).value = "Changed"
+        app.screen.query_one("#fld-item", Input).value = "Changed"
         await pilot.press("escape")
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)
@@ -3649,9 +3625,7 @@ async def test_lab_edit_dialogs_fit_a_small_terminal():
         await pilot.press("escape")
         await pilot.pause()
 
-        await _pick_first_and_open_editor(
-            pilot, app, "tab-lab-diary", DiaryEntryPromptScreen
-        )
+        await _pick_first_and_open_editor(pilot, app, "tab-lab-diary", FieldsDialog)
         assert_buttons_on_screen("#btn-save", "#btn-cancel")
 
 
@@ -3922,9 +3896,9 @@ async def test_lab_diary_entries_default_to_the_saga_current_season():
         await _open_lab_section(pilot, app, "tab-lab-diary")
         await pilot.press("a")
         await pilot.pause()
-        assert isinstance(app.screen, DiaryEntryPromptScreen)
-        assert app.screen.query_one("#select-diary-season", Select).value == "Autumn"
-        assert app.screen.query_one("#input-diary-year", Input).value == "1220"
+        assert isinstance(app.screen, FieldsDialog)
+        assert app.screen.query_one("#fld-season", Select).value == "Autumn"
+        assert app.screen.query_one("#fld-year", Input).value == "1220"
 
 
 async def test_set_date_rolls_back_an_accidental_advance():
@@ -4387,19 +4361,19 @@ async def test_covenant_reputations_add_edit_remove_within_range():
         await _open_cov_section(pilot, app, "section-cov-reputations")
 
         async def submit(name: str, score: str) -> None:
-            app.screen.query_one("#input-trait-name", Input).value = name
-            app.screen.query_one("#input-trait-score", Input).value = score
+            app.screen.query_one("#fld-name", Input).value = name
+            app.screen.query_one("#fld-score", Input).value = score
             app.screen.query_one("#btn-save", Button).press()
             await pilot.pause()
 
         # Add -- out-of-range scores are refused, the dialog stays open.
         await pilot.press("a")
         await pilot.pause()
-        assert isinstance(app.screen, ScoredTraitPromptScreen)
+        assert isinstance(app.screen, FieldsDialog)
         await submit("Feared by nobles", "4")
-        assert isinstance(app.screen, ScoredTraitPromptScreen)
+        assert isinstance(app.screen, FieldsDialog)
         await submit("Feared by nobles", "-4")
-        assert isinstance(app.screen, ScoredTraitPromptScreen)
+        assert isinstance(app.screen, FieldsDialog)
         await submit("Feared by nobles", "3")
         assert isinstance(app.screen, WorkspaceScreen)
         await pilot.press("a")
@@ -4414,9 +4388,7 @@ async def test_covenant_reputations_add_edit_remove_within_range():
         assert isinstance(app.screen, RemovalPickerScreen)
         await pilot.press("enter")
         await pilot.pause()
-        assert app.screen.query_one("#input-trait-name", Input).value == (
-            "Feared by nobles"
-        )
+        assert app.screen.query_one("#fld-name", Input).value == ("Feared by nobles")
         await submit("Feared by nobles", "1")
         await wait_until(pilot, lambda: "Feared by nobles: +1" in _rep_labels(view))
 
@@ -5258,11 +5230,11 @@ async def test_e_edits_the_selected_reputation_directly():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, ScoredTraitPromptScreen)  # no picker first
-        assert app.screen.query_one("#input-trait-name", Input).value == "Liked"
-        assert app.screen.query_one("#input-trait-score", Input).value == "-1"
-        app.screen.query_one("#input-trait-name", Input).value = "Well liked"
-        app.screen.query_one("#input-trait-score", Input).value = "3"
+        assert isinstance(app.screen, FieldsDialog)  # no picker first
+        assert app.screen.query_one("#fld-name", Input).value == "Liked"
+        assert app.screen.query_one("#fld-score", Input).value == "-1"
+        app.screen.query_one("#fld-name", Input).value = "Well liked"
+        app.screen.query_one("#fld-score", Input).value = "3"
         app.screen.query_one("#btn-save", Button).press()
         await wait_until(pilot, lambda: "Well liked: +3" in _rep_labels(view))
 
@@ -5320,8 +5292,8 @@ async def test_reputation_keys_work_from_the_list_and_fall_back_to_a_picker():
         assert app.screen._active_section() == "section-cov-reputations"
         await pilot.press("a")
         await pilot.pause()
-        assert isinstance(app.screen, ScoredTraitPromptScreen)
-        assert app.screen._score_label() == "Score (-3 to +3)"
+        assert isinstance(app.screen, FieldsDialog)
+        assert [f.label for f in app.screen.fields][1] == "Score (-3 to +3)"
         await pilot.press("escape")
         await pilot.pause()
 

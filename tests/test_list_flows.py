@@ -25,10 +25,14 @@ from ars_magica_manager.screens import (
     ConfirmScreen,
     FieldsDialog,
     RemovalPickerScreen,
-    ScoredTraitPromptScreen,
     SelectableList,
     WorkspaceScreen,
 )
+
+
+def _is_form(screen, title: str) -> bool:
+    """`screen` is the FieldsDialog titled `title`."""
+    return isinstance(screen, FieldsDialog) and screen.title_text == title
 
 
 def _saga() -> Saga:
@@ -180,8 +184,8 @@ async def _press(pilot, app, key: str, screen_type: type) -> None:
 async def _save_trait(pilot, app, name: str | None, score: int) -> None:
     dialog = app.screen
     if name is not None:
-        dialog.query_one("#input-trait-name", Input).value = name
-    dialog.query_one("#input-trait-score", Input).value = str(score)
+        dialog.query_one("#fld-name", Input).value = name
+    dialog.query_one("#fld-score", Input).value = str(score)
     dialog.query_one("#btn-save").press()
     assert await wait_until(pilot, lambda: app.screen is not dialog)
 
@@ -197,7 +201,7 @@ async def test_trait_list_add(case):
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         await _open(pilot, app, case)
-        await _press(pilot, app, "a", ScoredTraitPromptScreen)
+        await _press(pilot, app, "a", FieldsDialog)
         await _save_trait(pilot, app, "Gamma", 3)
         assert await wait_until(pilot, lambda: len(_saved(case)) == 3)
     assert [(t.name, t.score) for t in _saved(case)] == [
@@ -215,8 +219,8 @@ async def test_trait_list_edit_picks_when_nothing_is_chosen(case):
         await _open(pilot, app, case)
         await _press(pilot, app, "e", RemovalPickerScreen)
         await pilot.press("down")
-        await _press(pilot, app, "enter", ScoredTraitPromptScreen)
-        assert app.screen.query_one("#input-trait-name", Input).value == "Beta"
+        await _press(pilot, app, "enter", FieldsDialog)
+        assert app.screen.query_one("#fld-name", Input).value == "Beta"
         await _save_trait(pilot, app, "Beta prime", 3)
         assert await wait_until(pilot, lambda: _saved(case)[1].name == "Beta prime")
     assert [(t.name, t.score) for t in _saved(case)] == [
@@ -232,8 +236,8 @@ async def test_trait_list_edit_uses_the_chosen_row(case):
     async with app.run_test(size=(140, 70)) as pilot:
         _, view = await _open(pilot, app, case)
         await _choose_row(pilot, view, case, 1)
-        await _press(pilot, app, "e", ScoredTraitPromptScreen)  # no picker
-        assert app.screen.query_one("#input-trait-name", Input).value == "Beta"
+        await _press(pilot, app, "e", FieldsDialog)  # no picker
+        assert app.screen.query_one("#fld-name", Input).value == "Beta"
         await _save_trait(pilot, app, None, -1)
         assert await wait_until(pilot, lambda: _saved(case)[1].score == -1)
     assert [(t.name, t.score) for t in _saved(case)] == [("Alpha", 1), ("Beta", -1)]
