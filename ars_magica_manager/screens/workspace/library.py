@@ -414,15 +414,16 @@ class LibraryActions(WorkspaceBase):
         names: set[str],
         noun: str,
         finish: Callable[[list[Any], int], None],
+        key: Callable[[str], str] = str,
     ) -> None:
         """Go through imported items (anything with a `.name`), asking about
-        each whose name is already taken -- by `names` or earlier in `items` --
-        (Duplicate / Duplicate All / Skip / Skip All), then call
-        `finish(accepted, skipped)`. Nothing is added until every question is
-        answered."""
+        each whose name is already taken -- by `names` or earlier in `items`,
+        comparing names by `key` -- (Duplicate / Duplicate All / Skip / Skip
+        All), then call `finish(accepted, skipped)`. Nothing is added until
+        every question is answered."""
         pending = list(items)
         accepted: list[Any] = []
-        taken = set(names)
+        taken = {key(name) for name in names}
         state: dict[str, Any] = {"all": None, "skipped": 0}
 
         def take(item: Any, answer: str) -> None:
@@ -430,13 +431,13 @@ class LibraryActions(WorkspaceBase):
                 state["skipped"] += 1
             else:
                 accepted.append(item)
-                taken.add(item.name)
+                taken.add(key(item.name))
 
         def step() -> None:
             while pending:
                 item = pending[0]
-                if item.name in taken and state["all"] is None:
-                    remaining = len(bk.duplicate_names(pending[1:], taken))
+                if key(item.name) in taken and state["all"] is None:
+                    remaining = len(bk.duplicate_names(pending[1:], taken, key))
 
                     def handle_answer(answer: str | None, item=item) -> None:
                         answer = answer or "skip"
@@ -453,7 +454,7 @@ class LibraryActions(WorkspaceBase):
                     )
                     return
                 pending.pop(0)
-                take(item, state["all"] if item.name in taken else "duplicate")
+                take(item, state["all"] if key(item.name) in taken else "duplicate")
             finish(accepted, state["skipped"])
 
         step()
@@ -498,7 +499,9 @@ class LibraryActions(WorkspaceBase):
 
             def handle_confirmed(confirmed: bool | None) -> None:
                 if confirmed:
-                    self._ask_about_duplicates(result.spells, existing, "spell", finish)
+                    self._ask_about_duplicates(
+                        result.spells, existing, "spell", finish, spl.name_key
+                    )
 
             self.app.push_screen(
                 ConfirmScreen(

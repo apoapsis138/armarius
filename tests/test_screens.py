@@ -8994,6 +8994,36 @@ async def test_importing_spells_twice_asks_about_duplicates(tmp_path):
         assert len(app.screen.saga.spells) == 2  # the second import added none
 
 
+async def test_a_spell_import_asks_about_a_name_in_another_case(tmp_path):
+    # B1: the preview counts "palm of warming flame" as a duplicate of
+    # "Palm of Warming Flame"; the import asks about it too.
+    saga = _sample_saga_with_covenant()
+    saga.spells = []
+    spl.add_own_spell(saga, "Palm of Warming Flame", "Creo", "Ignem")
+    storage.save_saga(saga)
+    csv_path = tmp_path / "spells.csv"
+    csv_path.write_text(
+        "name,technique,form,level\npalm of warming flame,Creo,Ignem,5\n",
+        encoding="utf-8",
+    )
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 50)) as pilot:
+        await _open_workspace(pilot)
+        app.screen._import_spells()
+        await wait_until(pilot, lambda: isinstance(app.screen, SpellImportHelperScreen))
+        await pilot.pause()
+        app.screen.query_one("#btn-spell-import-choose", Button).press()
+        await _pick_csv(pilot, app, str(csv_path))
+        message = str(app.screen.query_one("#confirm-message", Static).render())
+        assert "1 has the same name as another spell" in message
+        await pilot.press("y")
+        await wait_until(pilot, lambda: isinstance(app.screen, DuplicateBookScreen))
+        app.screen.query_one("#btn-skip", Button).press()
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        assert [s.name for s in app.screen.saga.spells] == ["Palm of Warming Flame"]
+
+
 async def test_the_spell_import_helper_fits_a_small_terminal():
     storage.save_saga(_sample_saga_with_covenant())
 

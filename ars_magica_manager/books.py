@@ -7,6 +7,7 @@ and the details panel, and reading books from a CSV file.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
@@ -624,15 +625,18 @@ def read_books_csv(path: Path) -> CsvImport:
     return parse_books_csv(read_text_any(path))
 
 
-def duplicate_names(books: list[Book], existing_names: set[str]) -> list[Book]:
-    """The books whose name is already taken: by a book in the saga, or by
-    one earlier in `books` (a file listing the same title twice)."""
-    seen = set(existing_names)
+def duplicate_names[T: Book | Spell](
+    books: list[T], existing_names: set[str], key: Callable[[str], str] = str
+) -> list[T]:
+    """The books (or spells) whose name is already taken: by one in the saga,
+    or by one earlier in `books` (a file listing the same title twice). Names
+    are compared by `key` (spells use `spells.name_key`: any case)."""
+    seen = {key(name) for name in existing_names}
     repeats = []
     for book in books:
-        if book.name in seen:
+        if key(book.name) in seen:
             repeats.append(book)
-        seen.add(book.name)
+        seen.add(key(book.name))
     return repeats
 
 

@@ -408,6 +408,11 @@ def test_the_spell_import_preview():
     assert "1 row(s) will be skipped" in preview
 
 
+def test_spell_names_match_in_any_case_and_spacing():
+    assert sp.name_key("  Palm of  Warming Flame") == "palm of warming flame"
+    assert sp.name_key("Hermes’ Portal") == sp.name_key("hermes' portal")
+
+
 def test_add_own_spell_uses_a_saga_prefixed_id():
     saga = Saga(id="s", name="S")
     spell = sp.add_own_spell(saga, "Pilum of Fire", "Creo", "Ignem")

@@ -47,7 +47,9 @@ def find_spell(saga: Saga, spell_id: str | None) -> Spell | None:
     return None
 
 
-def _name_key(name: str) -> str:
+def name_key(name: str) -> str:
+    """How spell names are compared: any case, any spacing, typographic
+    apostrophes allowed."""
     return " ".join(name.replace("’", "'").lower().split())
 
 
@@ -55,18 +57,18 @@ def find_spell_by_name(saga: Saga, name: str) -> Spell | None:
     """The spell with this name (any case, typographic apostrophes allowed),
     wherever it lives: the catalog, then the saga's own, then any magus's
     invented spells. How a book whose spell was typed (or imported) links."""
-    key = _name_key(name)
+    key = name_key(name)
     if not key:
         return None
     for spell in catalog.load_spell_catalog():
-        if _name_key(spell.name) == key:
+        if name_key(spell.name) == key:
             return spell
     for spell in saga.spells:
-        if _name_key(spell.name) == key:
+        if name_key(spell.name) == key:
             return spell
     for character in saga.characters:
         for spell in character.invented_spells:
-            if _name_key(spell.name) == key:
+            if name_key(spell.name) == key:
                 return spell
     return None
 
@@ -553,12 +555,12 @@ def spell_import_preview(
             "[dim]Unrecognised columns ignored: "
             f"{escape(', '.join(result.unused_columns))}.[/]"
         )
-    seen = {n.lower() for n in existing_names}
+    seen = {name_key(n) for n in existing_names}
     repeats = 0
     for spell in result.spells:
-        if spell.name.lower() in seen:
+        if name_key(spell.name) in seen:
             repeats += 1
-        seen.add(spell.name.lower())
+        seen.add(name_key(spell.name))
     if repeats:
         verb = "has" if repeats == 1 else "have"
         lines.append(

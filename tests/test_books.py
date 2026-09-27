@@ -548,3 +548,12 @@ def test_form_problem():
     )
     assert bk.form_problem({"level": -1}) == "Level can't be negative."
     assert bk.form_problem({"quality": None, "level": None}) is None
+
+
+def test_duplicate_names_can_compare_by_a_key():
+    books = [
+        Book(id="1", name="a book", type="Other"),
+        Book(id="2", name="A BOOK", type="Other"),
+    ]
+    assert bk.duplicate_names(books, {"A Book"}) == []
+    assert bk.duplicate_names(books, {"A Book"}, str.lower) == books
