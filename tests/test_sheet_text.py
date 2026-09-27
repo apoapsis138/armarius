@@ -21,7 +21,7 @@ from dataclasses import fields, is_dataclass
 from pathlib import Path
 
 import pytest
-from support import NODES, everything_saga, wait_until
+from support import NODES, everything_saga, screen_lines, wait_until
 from textual.widgets import TabbedContent, TabPane, Tree
 
 from ars_magica_manager import storage
@@ -48,10 +48,9 @@ def _pane_text(app, workspace) -> list[str]:
     underline is drawn as plain rule: its half-cell ends move with an
     animation whose end state isn't reliably reached under load."""
     region = workspace._detail_pane().region
-    strips = app.screen._compositor.render_strips()
     return [
-        strip.text[region.x : region.right].rstrip().translate(_UNDERLINE)
-        for strip in strips[region.y : region.bottom]
+        line[region.x : region.right].rstrip().translate(_UNDERLINE)
+        for line in screen_lines(app)[region.y : region.bottom]
     ]
 
 

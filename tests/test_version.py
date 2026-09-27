@@ -5,6 +5,7 @@ import json
 import re
 import tomllib
 
+from support import screen_lines
 from textual.widgets import Static
 
 from ars_magica_manager import ROOT, __version__, storage
@@ -51,5 +52,5 @@ async def test_the_version_is_shown_in_the_header_and_on_the_saga_picker():
         await app.screen.refresh_list()
         await pilot.press("enter")
         await pilot.pause()
-        header = " ".join(s.text for s in app.screen._compositor.render_strips()[:1])
+        header = screen_lines(app)[0]
         assert f"Ars Magica Manager v{__version__} — S | Spring 1220" in header

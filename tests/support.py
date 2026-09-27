@@ -24,6 +24,22 @@ from ars_magica_manager.models import (
 )
 
 
+def screen_lines(app) -> list[str]:
+    """The screen as rendered, one string per terminal row -- what a text
+    dump of the app shows.
+
+    Textual has no public API for this, so it goes through the screen's
+    private compositor; this is the one place that does, so a Textual
+    upgrade that moves it breaks here, clearly, not deep inside a test."""
+    compositor = getattr(app.screen, "_compositor", None)
+    render_strips = getattr(compositor, "render_strips", None)
+    assert render_strips is not None, (
+        "Textual no longer has Screen._compositor.render_strips(): update "
+        "support.screen_lines (and CLAUDE.md's text-dump recipe) to the new API"
+    )
+    return [strip.text for strip in render_strips()]
+
+
 def strip_markup(markup: str) -> str:
     """`markup` with simple tags like [b], [dim] and [/] removed -- enough to
     check the words and column alignment of a panel's text."""
