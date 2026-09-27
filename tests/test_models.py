@@ -400,3 +400,34 @@ def test_boon_hook_params_keeps_other_keys_and_only_non_empty_text():
         BOON_HOOK_DETAIL: "Tower",
     }
     assert boon_hook_params("", " Tall ") == {BOON_HOOK_DESCRIPTION: "Tall"}
+
+
+def test_a_stale_key_or_a_null_section_does_not_make_a_save_unloadable():
+    # B15: these from_dicts passed every key through, so a field removed in a
+    # later version (or a null where a section was expected) raised.
+    saga = Saga(id="s", name="S")
+    saga.covenants = [Covenant(id="c", saga_id="s", name="C")]
+    saga.characters = [Character(id="ch", name="A", type="magus")]
+    saga.laboratories = [Laboratory(id="l", covenant_id="c", name="L")]
+    data = asdict(saga)
+    covenant = data["covenants"][0]
+    covenant["loyalty"] = None
+    covenant["population"] = None
+    covenant["economics"] = {
+        "income_sources": [
+            {"id": "i", "name": "Rents", "type": "Typical", "retired": 1}
+        ]
+    }
+    covenant["possessions"] = [
+        {"id": "p", "kind": "item", "name": "Chest", "retired": 1}
+    ]
+    data["characters"][0]["retired"] = 1
+    data["laboratories"][0]["retired"] = 1
+
+    loaded = Saga.from_dict(data)
+    assert loaded.characters[0].name == "A"
+    assert loaded.laboratories[0].name == "L"
+    loaded_covenant = loaded.covenants[0]
+    assert loaded_covenant.economics.income_sources[0].name == "Rents"
+    assert loaded_covenant.possessions[0].name == "Chest"
+    assert loaded_covenant.loyalty == Covenant(id="x", saga_id="s", name="X").loyalty

@@ -639,7 +639,7 @@ class Laboratory:
         d["virtues_flaws"] = [
             VirtueFlawInstance(**vf) for vf in d.get("virtues_flaws", [])
         ]
-        return cls(**d)
+        return cls(**known_fields(cls, d))
 
 
 @dataclass
@@ -840,7 +840,7 @@ class Character:
             else KnownSpell.from_dict(entry)
             for entry in d.get("spells_known", [])
         ]
-        return cls(**d)
+        return cls(**known_fields(cls, d))
 
 
 def character_age(year_born: int | None, current_year: int) -> int | None:
@@ -1328,7 +1328,10 @@ class Economics:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Economics:
         d = known_fields(cls, data)
-        d["income_sources"] = [IncomeSource(**s) for s in d.get("income_sources", [])]
+        d["income_sources"] = [
+            IncomeSource(**known_fields(IncomeSource, s))
+            for s in d.get("income_sources", [])
+        ]
         return cls(**d)
 
 
@@ -1369,17 +1372,19 @@ class Covenant:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Covenant:
         d = dict(data)
-        d["economics"] = Economics.from_dict(d.get("economics", {}))
+        d["economics"] = Economics.from_dict(d.get("economics") or {})
         d["boons_hooks"] = [VirtueFlawInstance(**bh) for bh in d.get("boons_hooks", [])]
         d["reputations"] = [ScoredTrait(**r) for r in d.get("reputations", [])]
         d["inhabitants"] = [
             Inhabitant(**known_fields(Inhabitant, i)) for i in d.get("inhabitants", [])
         ]
-        d["loyalty"] = Loyalty(**known_fields(Loyalty, d.get("loyalty", {})))
+        d["loyalty"] = Loyalty(**known_fields(Loyalty, d.get("loyalty") or {}))
         d["population"] = Population(
-            **known_fields(Population, d.get("population", {}))
+            **known_fields(Population, d.get("population") or {})
         )
-        d["possessions"] = [Possession(**p) for p in d.get("possessions", [])]
+        d["possessions"] = [
+            Possession(**known_fields(Possession, p)) for p in d.get("possessions", [])
+        ]
         # Older saves kept a bare Art -> pawns `vis_stock`; those are now Raw Vis
         # stores on the Possessions tab.
         stock = d.get("vis_stock") or {}
