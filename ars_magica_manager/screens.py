@@ -1136,10 +1136,21 @@ class BottomBar(Vertical):
         yield Footer()
 
 
-class SagaCreateScreen(ModalScreen[str | None]):
-    """A form for creating a new saga. Dismisses with the new saga's id, or None if cancelled."""
+class ModalDialog[ResultT](ModalScreen[ResultT]):
+    """Base of the app's modal dialogs: Escape (or a dialog's Cancel button
+    calling action_cancel) dismisses with CANCEL_RESULT."""
 
     BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+
+    #: What the dialog dismisses with when cancelled.
+    CANCEL_RESULT: ClassVar[Any] = None
+
+    def action_cancel(self) -> None:
+        self.dismiss(self.CANCEL_RESULT)
+
+
+class SagaCreateScreen(ModalDialog[str | None]):
+    """A form for creating a new saga. Dismisses with the new saga's id, or None if cancelled."""
 
     DEFAULT_CSS = """
     SagaCreateScreen {
@@ -1196,12 +1207,9 @@ class SagaCreateScreen(ModalScreen[str | None]):
                 yield Button("Create", id="btn-create", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-create":
             self._try_create()
 
@@ -1244,15 +1252,13 @@ class SagaCreateScreen(ModalScreen[str | None]):
         self.dismiss(saga.id)
 
 
-class EditSagaScreen(ModalScreen[dict[str, object] | None]):
+class EditSagaScreen(ModalDialog[dict[str, object] | None]):
     """Edits the saga's own Name, Storyguide and Description.
 
     The calendar (current year/season) has its own Set Date screen, and
     isn't touched here. Dismisses with a dict of {"name", "storyguide",
     "description"}, or None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     EditSagaScreen {
@@ -1314,12 +1320,9 @@ class EditSagaScreen(ModalScreen[dict[str, object] | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -1342,13 +1345,11 @@ class EditSagaScreen(ModalScreen[dict[str, object] | None]):
         )
 
 
-class CovenantCreateScreen(ModalScreen[str | None]):
+class CovenantCreateScreen(ModalDialog[str | None]):
     """Creates a covenant within a saga.
 
     Dismisses with the new covenant's id, or None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     CovenantCreateScreen {
@@ -1393,12 +1394,9 @@ class CovenantCreateScreen(ModalScreen[str | None]):
                 yield Button("Create", id="btn-create", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-create":
             self._try_create()
 
@@ -1423,15 +1421,13 @@ class CovenantCreateScreen(ModalScreen[str | None]):
         self.dismiss(covenant_id)
 
 
-class CharacterCreateScreen(ModalScreen[str | None]):
+class CharacterCreateScreen(ModalDialog[str | None]):
     """Creates a bare character: name, type, and covenant.
 
     Abilities, Virtues/Flaws, Arts, and lab assignment are left for later
     edit actions -- see DESIGN.md's Phase 1 forms slices. Dismisses with
     the new character's id, or None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     CharacterCreateScreen {
@@ -1494,12 +1490,9 @@ class CharacterCreateScreen(ModalScreen[str | None]):
                 yield Button("Create", id="btn-create", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-create":
             self._try_create()
 
@@ -1530,7 +1523,7 @@ class CharacterCreateScreen(ModalScreen[str | None]):
         self.dismiss(character.id)
 
 
-class ParamPromptScreen(ModalScreen[dict[str, str] | None]):
+class ParamPromptScreen(ModalDialog[dict[str, str] | None]):
     """Prompts for a catalog entry's placeholder parameters.
 
     Generic over any catalog entry shape that has a `name` (shown as a
@@ -1539,8 +1532,6 @@ class ParamPromptScreen(ModalScreen[dict[str, str] | None]):
     needing "craft". Dismisses with a dict of param name -> value, or
     None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     ParamPromptScreen {
@@ -1583,12 +1574,9 @@ class ParamPromptScreen(ModalScreen[dict[str, str] | None]):
                 yield Button("Confirm", id="btn-confirm", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-confirm":
             self._try_confirm()
 
@@ -1604,7 +1592,7 @@ class ParamPromptScreen(ModalScreen[dict[str, str] | None]):
         self.dismiss(params)
 
 
-class SearchablePickerScreen(ModalScreen[Any]):
+class SearchablePickerScreen(ModalDialog[Any]):
     """Base for a ListView-backed catalog picker with a live-filtering
     search box above it.
 
@@ -1622,8 +1610,6 @@ class SearchablePickerScreen(ModalScreen[Any]):
     keep working) and the `_load_entries`/`_search_text`/`_label_for`/
     `_item_id`/`_on_entry_selected` hooks below.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     PICKER_TITLE: ClassVar[str] = "Pick"
     EMPTY_MESSAGE: ClassVar[str] = "(nothing available)"
@@ -1740,12 +1726,9 @@ class SearchablePickerScreen(ModalScreen[Any]):
 
     # -- selection / dismissal --
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
 
     async def on_list_view_selected(self, event: ListView.Selected) -> None:
         await self._activate(event.item)
@@ -1917,15 +1900,13 @@ class CovenantBoonHookPickerScreen(SearchablePickerScreen):
         self.app.push_screen(BoonHookDetailScreen(self.kind, entry.name), handle_detail)
 
 
-class AbilityDetailsScreen(ModalScreen[Ability | None]):
+class AbilityDetailsScreen(ModalDialog[Ability | None]):
     """Prompts for level/xp/specialty once an Ability's name+category are known.
 
     Used both to add a new Ability (existing=None) and to edit one already
     on the sheet (existing provided, prefilled). Dismisses with the
     finished Ability, or None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     AbilityDetailsScreen {
@@ -1983,12 +1964,9 @@ class AbilityDetailsScreen(ModalScreen[Ability | None]):
                 yield Button("Confirm", id="btn-confirm", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-confirm":
             self._try_confirm()
 
@@ -2122,7 +2100,7 @@ class SpellChooserScreen(SearchablePickerScreen):
         self.dismiss(entry.id)
 
 
-class RemovalPickerScreen(ModalScreen[int | None]):
+class RemovalPickerScreen(ModalDialog[int | None]):
     """Pick one entry from a list of display labels, by index.
 
     Despite the name it's the generic "which one?" picker: used to choose
@@ -2130,8 +2108,6 @@ class RemovalPickerScreen(ModalScreen[int | None]):
     and acts on its own list using the returned index. Dismisses with that
     index, or None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     RemovalPickerScreen {
@@ -2171,12 +2147,9 @@ class RemovalPickerScreen(ModalScreen[int | None]):
             )
         list_view.index = 0
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
 
     def on_list_view_selected(self, event: ListView.Selected) -> None:
         item_id = event.item.id
@@ -2186,7 +2159,7 @@ class RemovalPickerScreen(ModalScreen[int | None]):
         self.dismiss(index)
 
 
-class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
+class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
     """Edits all 15 Hermetic Arts at once -- a fixed grid, not an addable
     list. Two side-by-side columns (Techniques, Forms), mirroring the sheet's
     own two-column Magical Arts display -- sized to fit every row without a
@@ -2194,8 +2167,6 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
     Level / XP pair. Dismisses with a dict of every art's lowercase name ->
     ArtScore, or None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     EditArtsScreen {
@@ -2311,12 +2282,9 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -2337,15 +2305,13 @@ class EditArtsScreen(ModalScreen[dict[str, ArtScore] | None]):
         self.dismiss(result)
 
 
-class LaboratoryCreateScreen(ModalScreen[str | None]):
+class LaboratoryCreateScreen(ModalDialog[str | None]):
     """Creates a bare laboratory within a covenant.
 
     Owner assignment and Features are left for later edit actions, same
     reasoning as Character creation leaving lab assignment for later.
     Dismisses with the new laboratory's id, or None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     LaboratoryCreateScreen {
@@ -2397,12 +2363,9 @@ class LaboratoryCreateScreen(ModalScreen[str | None]):
                 yield Button("Create", id="btn-create", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-create":
             self._try_create()
 
@@ -2436,7 +2399,7 @@ class LaboratoryCreateScreen(ModalScreen[str | None]):
         self.dismiss(laboratory.id)
 
 
-class FamiliarCreateScreen(ModalScreen[str | None]):
+class FamiliarCreateScreen(ModalDialog[str | None]):
     """Binds a new Familiar to a magus (see reference/familiar-rules-and-
     sheet.md). Minimal fields only -- Name and which magus; everything else
     (Cords, binding details, etc.) is filled in via the Familiar sheet's Edit
@@ -2449,8 +2412,6 @@ class FamiliarCreateScreen(ModalScreen[str | None]):
 
     Dismisses with the new familiar's id, or None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     FamiliarCreateScreen {
@@ -2503,12 +2464,9 @@ class FamiliarCreateScreen(ModalScreen[str | None]):
                 yield Button("Create", id="btn-create", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-create":
             self._try_create()
 
@@ -2531,14 +2489,12 @@ class FamiliarCreateScreen(ModalScreen[str | None]):
         self.dismiss(familiar.id)
 
 
-class EditCharacterInfoScreen(ModalScreen[dict[str, object] | None]):
+class EditCharacterInfoScreen(ModalDialog[dict[str, object] | None]):
     """Edits the character sheet's top-panel info: Name, Covenant, Assigned
     Laboratory (magi only), Setting, Confidence, and Size. Type, Age,
     Current Year and Current Season are derived/fixed and aren't editable
     here. Dismisses with a dict of field values, or None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     EditCharacterInfoScreen {
@@ -2646,12 +2602,9 @@ class EditCharacterInfoScreen(ModalScreen[dict[str, object] | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -2693,13 +2646,11 @@ class EditCharacterInfoScreen(ModalScreen[dict[str, object] | None]):
         self.dismiss(result)
 
 
-class EditCharacteristicsScreen(ModalScreen[Characteristics | None]):
+class EditCharacteristicsScreen(ModalDialog[Characteristics | None]):
     """Edits all 8 Characteristics at once: Int/Per/Str/Sta, Pre/Com/Dex/Qik.
 
     Dismisses with the finished Characteristics, or None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     EditCharacteristicsScreen {
@@ -2775,12 +2726,9 @@ class EditCharacteristicsScreen(ModalScreen[Characteristics | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -2797,14 +2745,12 @@ class EditCharacteristicsScreen(ModalScreen[Characteristics | None]):
         self.dismiss(Characteristics(**values))
 
 
-class ItemAddScreen(ModalScreen[str | None]):
+class ItemAddScreen(ModalDialog[str | None]):
     """Freeform text entry for one line of text -- today, a laboratory
     Specialty or Feature.
 
     Dismisses with the item description, or None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     ItemAddScreen {
@@ -2853,12 +2799,9 @@ class ItemAddScreen(ModalScreen[str | None]):
                 )
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-create":
             self._try_create()
 
@@ -2871,13 +2814,11 @@ class ItemAddScreen(ModalScreen[str | None]):
         self.dismiss(item)
 
 
-class ScoredTraitPromptScreen(ModalScreen[ScoredTrait | None]):
+class ScoredTraitPromptScreen(ModalDialog[ScoredTrait | None]):
     """Name + integer score prompt, reused for Personality Traits and
     Reputations -- both are just a label and a score on the character
     sheet. Dismisses with a ScoredTrait, or None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     ScoredTraitPromptScreen {
@@ -2958,12 +2899,9 @@ class ScoredTraitPromptScreen(ModalScreen[ScoredTrait | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -2992,12 +2930,10 @@ class ScoredTraitPromptScreen(ModalScreen[ScoredTrait | None]):
         self.dismiss(ScoredTrait(name=name, score=score, known=known))
 
 
-class MasteryAbilityPromptScreen(ModalScreen[MasteryAbility | None]):
+class MasteryAbilityPromptScreen(ModalDialog[MasteryAbility | None]):
     """Name/Level/XP prompt for one Mastery Ability (Fast Casting,
     Penetration, ...). Dismisses with the finished MasteryAbility, or None
     if cancelled."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     MasteryAbilityPromptScreen {
@@ -3055,12 +2991,9 @@ class MasteryAbilityPromptScreen(ModalScreen[MasteryAbility | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -3079,13 +3012,11 @@ class MasteryAbilityPromptScreen(ModalScreen[MasteryAbility | None]):
         self.dismiss(MasteryAbility(name=name, level=level, xp=xp))
 
 
-class MasteryEditScreen(ModalScreen[KnownSpell | None]):
+class MasteryEditScreen(ModalDialog[KnownSpell | None]):
     """Edits a known spell's Mastery: score, xp, and its Mastery Abilities
     (each with its own name/level/xp -- see MasteryAbility). Abilities are
     added/removed here and only committed to the character on Save.
     Dismisses with the finished KnownSpell, or None if cancelled."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     MasteryEditScreen {
@@ -3168,12 +3099,9 @@ class MasteryEditScreen(ModalScreen[KnownSpell | None]):
                 ListItem(Label(f"{ability.name} {ability.level}/{ability.xp}"))
             )
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
         elif event.button.id == "btn-add-ability":
@@ -3218,14 +3146,12 @@ class MasteryEditScreen(ModalScreen[KnownSpell | None]):
         )
 
 
-class RawVisPromptScreen(ModalScreen[tuple[str, int] | None]):
+class RawVisPromptScreen(ModalDialog[tuple[str, int] | None]):
     """Prompts for an Art + a number of pawns, to add to a character's Raw
     Vis. Dismisses with (art, pawns), or None if cancelled. Adding an Art
     that's already held increases its existing pawn count -- see
     WorkspaceScreen._add_raw_vis().
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     RawVisPromptScreen {
@@ -3283,12 +3209,9 @@ class RawVisPromptScreen(ModalScreen[tuple[str, int] | None]):
                 )
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-create":
             self._try_create()
 
@@ -3307,7 +3230,7 @@ class RawVisPromptScreen(ModalScreen[tuple[str, int] | None]):
         self.dismiss((art, pawns))
 
 
-class EditBiographicalDetailScreen(ModalScreen[dict[str, object] | None]):
+class EditBiographicalDetailScreen(ModalDialog[dict[str, object] | None]):
     """Edits the Description tab's Biographical Detail section: the
     remaining Background fields (Setting/Confidence/Size live in the top
     panel's EditCharacterInfoScreen) plus every Description field,
@@ -3316,8 +3239,6 @@ class EditBiographicalDetailScreen(ModalScreen[dict[str, object] | None]):
     cancelled -- one dialog edits two dataclasses at once, so the caller
     assigns each half back to character.background/character.description.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     EditBiographicalDetailScreen {
@@ -3498,12 +3419,9 @@ class EditBiographicalDetailScreen(ModalScreen[dict[str, object] | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -3568,12 +3486,10 @@ class EditBiographicalDetailScreen(ModalScreen[dict[str, object] | None]):
         )
 
 
-class EditAgingScreen(ModalScreen[Aging | None]):
+class EditAgingScreen(ModalDialog[Aging | None]):
     """Edits Decrepitude and Warping (Score/Points, like an Ability's
     Level/XP -- see Aging's docstring). Dismisses with the finished Aging,
     or None if cancelled."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     EditAgingScreen {
@@ -3653,12 +3569,9 @@ class EditAgingScreen(ModalScreen[Aging | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -3680,13 +3593,11 @@ class EditAgingScreen(ModalScreen[Aging | None]):
         self.dismiss(Aging(**values))
 
 
-class EditWoundsScreen(ModalScreen[Wounds | None]):
+class EditWoundsScreen(ModalDialog[Wounds | None]):
     """Edits Soak, Wound counts per severity, and Incapacitated/Dead. Simple
     counts, not individual wound records -- matches checking boxes on the
     paper sheet, not the calculated Wound Penalty (see Wounds's docstring).
     Dismisses with the finished Wounds, or None if cancelled."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     EditWoundsScreen {
@@ -3778,12 +3689,9 @@ class EditWoundsScreen(ModalScreen[Wounds | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -3809,11 +3717,9 @@ class EditWoundsScreen(ModalScreen[Wounds | None]):
         self.dismiss(Wounds(**values))
 
 
-class EditFatigueScreen(ModalScreen[FatigueLevel | None]):
+class EditFatigueScreen(ModalDialog[FatigueLevel | None]):
     """Picks the character's current Fatigue Level. Dismisses with the
     chosen level, or None if cancelled."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     EditFatigueScreen {
@@ -3867,24 +3773,19 @@ class EditFatigueScreen(ModalScreen[FatigueLevel | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             level = self.query_one("#select-fatigue-level", Select).value
             self.dismiss(level)  # type: ignore[arg-type]
 
 
-class EditHermeticBackgroundScreen(ModalScreen[HermeticBackground | None]):
+class EditHermeticBackgroundScreen(ModalDialog[HermeticBackground | None]):
     """Edits a magus's Hermetic lineage block: House (picked from the
     catalog) plus Domus Magna/Primus/Parens/Covenant of Apprenticeship/
     Wizard's Sigil. Dismisses with the finished HermeticBackground, or None
     if cancelled."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     EditHermeticBackgroundScreen {
@@ -3979,12 +3880,9 @@ class EditHermeticBackgroundScreen(ModalScreen[HermeticBackground | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             house_value = self.query_one("#select-hermetic-house", Select).value
             house = house_value if isinstance(house_value, str) else None
@@ -4003,7 +3901,7 @@ class EditHermeticBackgroundScreen(ModalScreen[HermeticBackground | None]):
             self.dismiss(HermeticBackground(**values))
 
 
-class EditLabIdentityScreen(ModalScreen[dict[str, object] | None]):
+class EditLabIdentityScreen(ModalDialog[dict[str, object] | None]):
     """Edits a Laboratory's Name/Location/Build Points/Aura modifier, and (unlike
     character Identity editing) lets you reassign its Owner from the
     lab's own side. It only returns the chosen `owner_id`;
@@ -4011,8 +3909,6 @@ class EditLabIdentityScreen(ModalScreen[dict[str, object] | None]):
     Dismisses with {"name", "location", "build_points", "aura_modifier",
     "covenant_id", "owner_id"}, or None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     EditLabIdentityScreen {
@@ -4113,12 +4009,9 @@ class EditLabIdentityScreen(ModalScreen[dict[str, object] | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -4162,14 +4055,12 @@ class EditLabIdentityScreen(ModalScreen[dict[str, object] | None]):
         )
 
 
-class EditLabCharacteristicsScreen(ModalScreen[LabCharacteristics | None]):
+class EditLabCharacteristicsScreen(ModalDialog[LabCharacteristics | None]):
     """Edits the manual (base) component of the 8 Laboratory
     Characteristics -- see LabCharacteristics's docstring for why this is
     only the manual component, not the Virtue/Flaw-derived total.
     Dismisses with the finished LabCharacteristics, or None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     EditLabCharacteristicsScreen {
@@ -4239,12 +4130,9 @@ class EditLabCharacteristicsScreen(ModalScreen[LabCharacteristics | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -4266,13 +4154,11 @@ class EditLabCharacteristicsScreen(ModalScreen[LabCharacteristics | None]):
         self.dismiss(LabCharacteristics(**values))
 
 
-class NamedDescriptionPromptScreen(ModalScreen[NamedDescription | None]):
+class NamedDescriptionPromptScreen(ModalDialog[NamedDescription | None]):
     """Name + free-text description prompt, reused for a Laboratory's
     Rooms and its Inventory items. Dismisses with a NamedDescription, or
     None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     NamedDescriptionPromptScreen {
@@ -4330,12 +4216,9 @@ class NamedDescriptionPromptScreen(ModalScreen[NamedDescription | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -4351,12 +4234,10 @@ class NamedDescriptionPromptScreen(ModalScreen[NamedDescription | None]):
         self.dismiss(NamedDescription(name=name, description=description))
 
 
-class DiaryEntryPromptScreen(ModalScreen[DiaryEntry | None]):
+class DiaryEntryPromptScreen(ModalDialog[DiaryEntry | None]):
     """Year/Season/Name/Details prompt for a Laboratory diary entry.
     Dismisses with a DiaryEntry, or None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     DiaryEntryPromptScreen {
@@ -4429,12 +4310,9 @@ class DiaryEntryPromptScreen(ModalScreen[DiaryEntry | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -4455,12 +4333,10 @@ class DiaryEntryPromptScreen(ModalScreen[DiaryEntry | None]):
         self.dismiss(DiaryEntry(year=year, season=season, name=name, details=details))
 
 
-class EditFamiliarInfoScreen(ModalScreen[dict[str, object] | None]):
+class EditFamiliarInfoScreen(ModalDialog[dict[str, object] | None]):
     """Edits a Familiar's Partnership & Core Metadata (everything but its
     Magus Partner, which is set once at creation and never changes).
     Dismisses with a dict of field values, or None if cancelled."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     EditFamiliarInfoScreen {
@@ -4565,12 +4441,9 @@ class EditFamiliarInfoScreen(ModalScreen[dict[str, object] | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -4616,11 +4489,9 @@ class EditFamiliarInfoScreen(ModalScreen[dict[str, object] | None]):
         self.dismiss(result)
 
 
-class EditFamiliarBindingScreen(ModalScreen[dict[str, object] | None]):
+class EditFamiliarBindingScreen(ModalDialog[dict[str, object] | None]):
     """Edits a Familiar's Initial Binding details and the three Cords.
     Dismisses with a dict of field values, or None if cancelled."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     EditFamiliarBindingScreen {
@@ -4737,12 +4608,9 @@ class EditFamiliarBindingScreen(ModalScreen[dict[str, object] | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -4789,14 +4657,12 @@ class EditFamiliarBindingScreen(ModalScreen[dict[str, object] | None]):
         self.dismiss(result)
 
 
-class EditFamiliarCharacteristicsScreen(ModalScreen[dict[str, object] | None]):
+class EditFamiliarCharacteristicsScreen(ModalDialog[dict[str, object] | None]):
     """Edits a Familiar's 8 Characteristics plus its two derived-defense
     figures (Base Soak, Magic Resistance) -- both typed in, no formula
     computed (see Familiar.base_soak/magic_resistance). Dismisses with
     {"characteristics": Characteristics, "base_soak": int,
     "magic_resistance": int}, or None if cancelled."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     EditFamiliarCharacteristicsScreen {
@@ -4884,12 +4750,9 @@ class EditFamiliarCharacteristicsScreen(ModalScreen[dict[str, object] | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -4937,14 +4800,12 @@ class EditFamiliarCharacteristicsScreen(ModalScreen[dict[str, object] | None]):
         )
 
 
-class EditFamiliarWoundsScreen(ModalScreen[Wounds | None]):
+class EditFamiliarWoundsScreen(ModalDialog[Wounds | None]):
     """Edits a Familiar's Wound counts and Incapacitated/Dead -- same idea
     as EditWoundsScreen, but with no Soak field: a Familiar's Soak is the
     Characteristics tab's typed-in Base Soak (Familiar.base_soak), not a
     per-Wounds figure like a Character's. Dismisses with the finished
     Wounds (its `soak` untouched), or None if cancelled."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     EditFamiliarWoundsScreen {
@@ -5030,12 +4891,9 @@ class EditFamiliarWoundsScreen(ModalScreen[Wounds | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -5060,7 +4918,7 @@ class EditFamiliarWoundsScreen(ModalScreen[Wounds | None]):
         self.dismiss(Wounds(**values))
 
 
-class EditCovenantScreen(ModalScreen[dict[str, object] | None]):
+class EditCovenantScreen(ModalDialog[dict[str, object] | None]):
     """Edits the covenant-owned fields of the covenant sheet's top panel.
 
     The saga's name, Storyguide, current season and current year are
@@ -5068,8 +4926,6 @@ class EditCovenantScreen(ModalScreen[dict[str, object] | None]):
     dict of field values (see _INT_FIELDS plus "name", "tribunal",
     "year_founded", "covenant_season"), or None if cancelled.
     """
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     #: (Covenant attribute, label) for the plain whole-number fields.
     _INT_FIELDS: ClassVar[tuple[tuple[str, str], ...]] = (
@@ -5179,12 +5035,9 @@ class EditCovenantScreen(ModalScreen[dict[str, object] | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -5224,11 +5077,11 @@ class EditCovenantScreen(ModalScreen[dict[str, object] | None]):
         self.dismiss(result)
 
 
-class AdvanceSeasonScreen(ModalScreen[bool]):
+class AdvanceSeasonScreen(ModalDialog[bool]):
     """Confirms advancing the saga's calendar by one season. Dismisses with
     True to advance, False (or via Escape) to leave the date alone."""
 
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+    CANCEL_RESULT = False
 
     DEFAULT_CSS = """
     AdvanceSeasonScreen {
@@ -5290,19 +5143,14 @@ class AdvanceSeasonScreen(ModalScreen[bool]):
                 yield Button("Advance", id="btn-advance", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(False)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         self.dismiss(event.button.id == "btn-advance")
 
 
-class SetDateScreen(ModalScreen[tuple[str, int] | None]):
+class SetDateScreen(ModalDialog[tuple[str, int] | None]):
     """Sets the saga's calendar date directly -- for the initial date, or to
     roll back an accidental Advance. Dismisses with (season, year), or None
     if cancelled."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     SetDateScreen {
@@ -5373,12 +5221,9 @@ class SetDateScreen(ModalScreen[tuple[str, int] | None]):
                 yield Button("Set", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._try_save()
 
@@ -5394,7 +5239,7 @@ class SetDateScreen(ModalScreen[tuple[str, int] | None]):
         self.dismiss((str(season), year))
 
 
-class BoonHookDetailScreen(ModalScreen[tuple[str, str] | None]):
+class BoonHookDetailScreen(ModalDialog[tuple[str, str] | None]):
     """Asks for the two optional, user-written fields of a covenant
     Boon/Hook: a one-line Detail (which Edifice, which contested resource --
     shown in the list) and a multi-line Description (what the Hidden
@@ -5402,8 +5247,6 @@ class BoonHookDetailScreen(ModalScreen[tuple[str, str] | None]):
     official rules text). Both blank by default. Used when adding one and
     when editing it later. Dismisses with (detail, description), each
     stripped and possibly empty, or None if cancelled."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     BoonHookDetailScreen {
@@ -5464,15 +5307,12 @@ class BoonHookDetailScreen(ModalScreen[tuple[str, str] | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_input_submitted(self, event: Input.Submitted) -> None:
         self._save()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._save()
 
@@ -5572,12 +5412,10 @@ IMPORT_KINDS: tuple[tuple[str, str, bool], ...] = (
 )
 
 
-class ImportScreen(ModalScreen[str | None]):
+class ImportScreen(ModalDialog[str | None]):
     """Choose what to import into the saga. Kinds that can't be imported yet
     are shown greyed out and can't be chosen. Dismisses with the chosen
     IMPORT_KINDS key, or None if cancelled."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     ImportScreen {
@@ -5628,9 +5466,6 @@ class ImportScreen(ModalScreen[str | None]):
         )
         options.highlighted = next(i for i, k in enumerate(IMPORT_KINDS) if k[2])
         options.focus()
-
-    def action_cancel(self) -> None:
-        self.dismiss(None)
 
     def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
         event.stop()
@@ -5724,11 +5559,9 @@ class DuplicateBookScreen(ModalScreen[str]):
         self.dismiss((event.button.id or "btn-skip")[len("btn-") :].replace("-", "_"))
 
 
-class SpellImportHelperScreen(ModalScreen[str | None]):
+class SpellImportHelperScreen(ModalDialog[str | None]):
     """What a spell CSV looks like, with a way to save an example to start
     from. Dismisses with "choose" to go on to picking the file, or None."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     SpellImportHelperScreen {
@@ -5809,9 +5642,6 @@ class SpellImportHelperScreen(ModalScreen[str | None]):
             4, min(30, self.size.height - 12)
         )
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def _save_example(self) -> None:
         target = self.folder / "spells_example.csv"
         n = 2
@@ -5851,13 +5681,11 @@ class _CsvDirectoryTree(DirectoryTree):
         ]
 
 
-class CsvFilePickerScreen(ModalScreen[Path | None]):
+class CsvFilePickerScreen(ModalDialog[Path | None]):
     """A small file explorer for choosing a .csv file: browse the folders
     below `start` (Enter opens a folder or picks a file), Up goes to the
     parent folder, and the path box takes a typed folder or file. Dismisses
     with the chosen file, or None if cancelled."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     CsvFilePickerScreen {
@@ -5958,9 +5786,6 @@ class CsvFilePickerScreen(ModalScreen[Path | None]):
         event.stop()
         self._choose(event.value)
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         event.stop()
         if event.button.id == "btn-picker-up":
@@ -5977,14 +5802,12 @@ class CsvFilePickerScreen(ModalScreen[Path | None]):
             self.dismiss(None)
 
 
-class ImproveIncomeScreen(ModalScreen[tuple[int, str] | None]):
+class ImproveIncomeScreen(ModalDialog[tuple[int, str] | None]):
     """Manually simulates a year's Income Modification (ArM5's automated/
     yearly advancement isn't built yet -- this is a deliberate stand-in for
     it). Choosing an Effect updates the Multiplier and Projected Income live;
     Commit confirms via ConfirmScreen, then dismisses with (new income, the
     Note to record), or None if cancelled."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     ImproveIncomeScreen {
@@ -6091,12 +5914,9 @@ class ImproveIncomeScreen(ModalScreen[tuple[int, str] | None]):
                 yield Button("Commit", id="btn-commit", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-commit":
             self._try_commit()
 
@@ -6136,11 +5956,9 @@ class ImproveIncomeScreen(ModalScreen[tuple[int, str] | None]):
         )
 
 
-class EditCovenantDescriptionScreen(ModalScreen[str | None]):
+class EditCovenantDescriptionScreen(ModalDialog[str | None]):
     """A multi-line text editor for the covenant's description. Dismisses
     with the new text, or None if cancelled."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     EditCovenantDescriptionScreen {
@@ -6185,12 +6003,9 @@ class EditCovenantDescriptionScreen(ModalScreen[str | None]):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self.dismiss(self.query_one("#cov-desc-text", TextArea).text.rstrip())
 
@@ -6447,7 +6262,7 @@ class DialogField:
     display: Callable[[Any], str] | None = None
 
 
-class FieldsDialog(ModalScreen[dict[str, Any] | None]):
+class FieldsDialog(ModalDialog[dict[str, Any] | None]):
     """A config-driven form: one compact row per DialogField, scrolling if the
     terminal is short (Save/Cancel stay put). Dismisses with {key: value} for
     every non-info field, or None if cancelled. `validate` gets the finished
@@ -6456,8 +6271,6 @@ class FieldsDialog(ModalScreen[dict[str, Any] | None]):
     Fields can depend on each other while the form is open: a field's
     `show_if` shows/hides it, and `live` (markup, from the current values)
     fills a line above the error, both refreshed on every change."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
     FieldsDialog {
@@ -6701,12 +6514,9 @@ class FieldsDialog(ModalScreen[dict[str, Any] | None]):
     def on_checkbox_changed(self, event: Checkbox.Changed) -> None:
         self._react()
 
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":
-            self.dismiss(None)
+            self.action_cancel()
         elif event.button.id == "btn-save":
             self._save()
         else:
