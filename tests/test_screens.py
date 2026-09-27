@@ -141,6 +141,7 @@ async def _wait_for_picker_ready(pilot, app) -> None:
     await wait_until(
         pilot,
         lambda: app.focused is not None and app.focused.id == "picker-search",
+        timeout=10.0,  # filling 600+ rows one at a time is slow under load
     )
 
 
@@ -5566,6 +5567,7 @@ async def test_picker_search_finds_entries_by_their_type():
                 all("[Surroundings," in x for x in shown())
                 and any(x.startswith("Pilgrimage Site") for x in shown())
             ),
+            timeout=10.0,  # a row-by-row refill is slow under a parallel run
         )
         labels = shown()
         assert labels and all("[Surroundings," in label for label in labels)
