@@ -923,3 +923,9 @@ def test_mark_departed_flags_the_record_or_creates_a_departed_one():
     again = next(e for e in inh.entries_for_kind(saga, cov, "magus"))
     inh.mark_departed(cov, "magus", again)
     assert record.departed and len(cov.inhabitants) == 1
+
+
+def test_form_problem_needs_a_quantity_of_at_least_one():
+    assert inh.form_problem({"quantity": 0}) == "Quantity must be at least 1."
+    assert inh.form_problem({"quantity": 3}) is None
+    assert inh.form_problem({}) is None

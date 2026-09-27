@@ -629,3 +629,10 @@ def covenants_in_deficit(saga: Saga) -> list[tuple[str, int]]:
 def close_all_years(saga: Saga) -> list[tuple[str, int]]:
     """Close the year for every covenant (see close_year): (name, added)."""
     return [(c.name, close_year(saga, c)) for c in saga.covenants]
+
+
+def row_problem(row_key: str, values: dict[str, Any]) -> str | None:
+    """What's wrong with an expenditure/savings row form's values, if anything."""
+    if row_key == "sundry" and values.get("sundry", 1) < 1:
+        return "There's a cost of at least 1 pound of sundries every year."
+    return None

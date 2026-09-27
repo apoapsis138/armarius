@@ -413,3 +413,15 @@ def save_entry(
             **values,
         )
     )
+
+
+def form_problem(values: dict[str, Any]) -> str | None:
+    """What's wrong with a possession form's values, if anything."""
+    if values.get("quantity", 1) < 1:
+        return "Quantity must be at least 1."
+    if values.get("pawns", 1) < 1:
+        return "Pawns must be at least 1."
+    gear_type = values.get("gear_type")
+    if gear_type and values.get("gear_quality") not in GEAR_POINTS[gear_type]:
+        return f"{gear_type} only comes {' or '.join(GEAR_POINTS[gear_type]).lower()}."
+    return None

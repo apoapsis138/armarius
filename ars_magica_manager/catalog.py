@@ -12,6 +12,7 @@ from typing import Any
 from . import DATA_DIR
 from .models import (
     BOON_HOOK_DETAIL,
+    COVENANT_BOON_HOOK_CATEGORIES,
     AbilityDef,
     CovenantBoonHookDef,
     HouseDef,
@@ -152,3 +153,18 @@ def describe_boon_hook(
         return f"{instance.vf_id} (not in catalog)"
     detail = instance.params.get(BOON_HOOK_DETAIL, "").strip()
     return f"{definition.name} - {detail}" if detail else definition.name
+
+
+_TIER_ORDER = {"Free": 0, "Minor": 1, "Major": 2}
+
+
+def boon_hook_sort_key(entry: CovenantBoonHookDef) -> tuple[int, int, str]:
+    """Picker order: by type in the book's order (untyped last), then Free,
+    Minor, Major, then name."""
+    categories = COVENANT_BOON_HOOK_CATEGORIES
+    category = (
+        categories.index(entry.category)
+        if entry.category in categories
+        else len(categories)
+    )
+    return (category, _TIER_ORDER.get(entry.tier, 9), entry.name.lower())

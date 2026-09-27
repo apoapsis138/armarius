@@ -438,3 +438,13 @@ def test_covenant_reputations_round_trip_and_default_empty_for_old_saves():
     assert (
         Covenant.from_dict({"id": "c", "saga_id": "s", "name": "C"}).reputations == []
     )
+
+
+def test_boon_hook_sort_key_orders_by_type_then_tier_then_name():
+    entries = sorted(
+        catalog.load_covenant_boon_hook_catalog(), key=catalog.boon_hook_sort_key
+    )
+    keys = [catalog.boon_hook_sort_key(e) for e in entries]
+    assert keys == sorted(keys)
+    tiers = [e.tier for e in entries if e.category == entries[0].category]
+    assert tiers == sorted(tiers, key=["Free", "Minor", "Major"].index)

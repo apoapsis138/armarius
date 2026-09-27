@@ -12,6 +12,7 @@ import io
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
+from typing import Any
 
 from . import catalog, storage
 from . import spells as spl
@@ -737,3 +738,16 @@ def add_imported_books(
         if covenant is not None:
             book.owner_kind, book.owner_id = "covenant", covenant.id
         saga.books.append(book)
+
+
+def form_problem(values: dict[str, Any]) -> str | None:
+    """What's wrong with a book form's values, if anything."""
+    if values.get("type") in SPELL_TYPES and not values.get("spell_id"):
+        return "Choose the spell (use the Spells view to add one of your own)."
+    ability = values.get("ability") or ""
+    if "{" in ability and not values.get("ability_detail"):
+        return f"{ability} needs its Ability detail filled in."
+    for key in ("level", "quality"):
+        if (values.get(key) or 0) < 0:
+            return f"{key.capitalize()} can't be negative."
+    return None

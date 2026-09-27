@@ -6,6 +6,7 @@ from textual.content import Content
 
 from ars_magica_manager import possessions as pos
 from ars_magica_manager.models import (
+    GEAR_POINTS,
     POSSESSION_KINDS,
     Character,
     Covenant,
@@ -323,3 +324,22 @@ def test_save_entry_records_a_labs_sanctum_the_first_time_it_is_edited():
     record = cov.possessions[-1]
     assert (record.kind, record.lab_id, record.upkeep) == ("sanctum", "lab1", 3)
     assert record.id == "sanctum_lab1"
+
+
+@pytest.mark.parametrize(
+    ("values", "problem"),
+    [
+        ({"quantity": 1, "pawns": 1}, None),
+        ({"quantity": 0}, "Quantity must be at least 1."),
+        ({"pawns": 0}, "Pawns must be at least 1."),
+    ],
+)
+def test_form_problem_checks_counts(values, problem):
+    assert pos.form_problem(values) == problem
+
+
+def test_form_problem_rejects_a_quality_the_gear_type_does_not_come_in():
+    gear_type = next(iter(GEAR_POINTS))
+    allowed = next(iter(GEAR_POINTS[gear_type]))
+    assert pos.form_problem({"gear_type": gear_type, "gear_quality": allowed}) is None
+    assert pos.form_problem({"gear_type": gear_type, "gear_quality": "Nonsense"})

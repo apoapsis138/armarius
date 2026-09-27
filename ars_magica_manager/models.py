@@ -1717,3 +1717,20 @@ def replace_raw_vis(pool: dict[str, int], old_art: str, art: str, pawns: int) ->
     re-pointing it at an Art already held merges the pawns into it."""
     del pool[old_art]
     add_raw_vis(pool, art, pawns)
+
+
+def boon_hook_params(
+    detail: str, description: str, base: dict[str, str] | None = None
+) -> dict[str, str]:
+    """The `params` of a covenant Boon/Hook: `base` (any keys we don't own)
+    plus the detail and description, each stored only when non-empty."""
+    params = {
+        k: v
+        for k, v in (base or {}).items()
+        if k not in (BOON_HOOK_DETAIL, BOON_HOOK_DESCRIPTION)
+    }
+    if detail.strip():
+        params[BOON_HOOK_DETAIL] = detail.strip()
+    if description.strip():
+        params[BOON_HOOK_DESCRIPTION] = description.strip()
+    return params

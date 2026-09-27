@@ -814,3 +814,10 @@ def mark_departed(covenant: Covenant, kind: str, entry: InhabitantEntry) -> None
                 departed=True,
             )
         )
+
+
+def form_problem(values: dict[str, Any]) -> str | None:
+    """What's wrong with an inhabitant form's values, if anything."""
+    if values.get("quantity", 1) < 1:
+        return "Quantity must be at least 1."
+    return None

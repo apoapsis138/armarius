@@ -59,12 +59,10 @@ from .models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
     CORD_SCORE_COSTS,
-    COVENANT_BOON_HOOK_CATEGORIES,
     COVENANT_ROLES,
     CRAFT_FIELDS,
     FATIGUE_LEVELS,
     FORMS,
-    GEAR_POINTS,
     GEAR_QUALITIES,
     GEAR_QUALITY_DEFAULT,
     GEAR_TYPES_BY_KIND,
@@ -120,6 +118,7 @@ from .models import (
     add_raw_vis,
     assign_laboratory,
     assign_laboratory_owner,
+    boon_hook_params,
     character_age,
     covenant_boon_points,
     covenant_effective_aura,
@@ -150,38 +149,6 @@ def _balance_colour(boon_points: float, hook_points: float) -> str:
     if boon_points > hook_points:
         return "red"
     return "green"
-
-
-def _boon_hook_params(
-    detail: str, description: str, base: dict[str, str] | None = None
-) -> dict[str, str]:
-    """The `params` of a covenant Boon/Hook: `base` (any keys we don't own)
-    plus the detail and description, each stored only when non-empty."""
-    params = {
-        k: v
-        for k, v in (base or {}).items()
-        if k not in (BOON_HOOK_DETAIL, BOON_HOOK_DESCRIPTION)
-    }
-    if detail.strip():
-        params[BOON_HOOK_DETAIL] = detail.strip()
-    if description.strip():
-        params[BOON_HOOK_DESCRIPTION] = description.strip()
-    return params
-
-
-_TIER_ORDER = {"Free": 0, "Minor": 1, "Major": 2}
-
-
-def _boon_hook_sort_key(entry: CovenantBoonHookDef) -> tuple[int, int, str]:
-    """Picker order: by type in the book's order (untyped last), then Free,
-    Minor, Major, then name."""
-    categories = COVENANT_BOON_HOOK_CATEGORIES
-    category = (
-        categories.index(entry.category)
-        if entry.category in categories
-        else len(categories)
-    )
-    return (category, _TIER_ORDER.get(entry.tier, 9), entry.name.lower())
 
 
 def _tier_text(entry: CovenantBoonHookDef) -> str:
@@ -546,17 +513,6 @@ def _possession_fields(
     return fields
 
 
-def _possession_problem(values: dict[str, Any]) -> str | None:
-    if values.get("quantity", 1) < 1:
-        return "Quantity must be at least 1."
-    if values.get("pawns", 1) < 1:
-        return "Pawns must be at least 1."
-    gear_type = values.get("gear_type")
-    if gear_type and values.get("gear_quality") not in GEAR_POINTS[gear_type]:
-        return f"{gear_type} only comes {' or '.join(GEAR_POINTS[gear_type]).lower()}."
-    return None
-
-
 def _bond_power_fields(power: BondPower | None) -> list[DialogField]:
     """The add/edit form for one Empowered Bond Power -- all typed-in, no
     Lab Total formula computed (see BondPower's docstring)."""
@@ -809,18 +765,6 @@ def _book_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
     book.quality = values.get("quality")
 
 
-def _book_problem(values: dict[str, Any]) -> str | None:
-    if values.get("type") in bk.SPELL_TYPES and not values.get("spell_id"):
-        return "Choose the spell (use the Spells view to add one of your own)."
-    ability = values.get("ability") or ""
-    if "{" in ability and not values.get("ability_detail"):
-        return f"{ability} needs its Ability detail filled in."
-    for key in ("level", "quality"):
-        if (values.get(key) or 0) < 0:
-            return f"{key.capitalize()} can't be negative."
-    return None
-
-
 def _book_live(values: dict[str, Any], saga: Saga) -> str:
     """The form's live line: the Build Point cost (a Lab Text's or Casting
     Tablet's from its spell's level) and any covenant-creation limit the
@@ -983,12 +927,6 @@ def _spell_live(values: dict[str, Any]) -> str:
     if probe.ritual and mag is not None:
         text += f"  ({spl.vis_cost(probe)} pawns, {spl.casting_time(probe)})"
     return text
-
-
-def _inhabitant_problem(values: dict[str, Any]) -> str | None:
-    if values.get("quantity", 1) < 1:
-        return "Quantity must be at least 1."
-    return None
 
 
 def _boon_hook_names(ids: list[str], by_id: dict[str, CovenantBoonHookDef]) -> str:
@@ -1793,7 +1731,7 @@ class CovenantBoonHookPickerScreen(SearchablePickerScreen):
     def _load_entries(self) -> list[CovenantBoonHookDef]:
         return sorted(
             (entry for entry in self._by_id.values() if entry.type == self.kind),
-            key=_boon_hook_sort_key,
+            key=catalog.boon_hook_sort_key,
         )
 
     def _search_text(self, entry: CovenantBoonHookDef) -> str:
@@ -1826,7 +1764,7 @@ class CovenantBoonHookPickerScreen(SearchablePickerScreen):
             detail, description = result
             self.dismiss(
                 VirtueFlawInstance(
-                    vf_id=entry.id, params=_boon_hook_params(detail, description)
+                    vf_id=entry.id, params=boon_hook_params(detail, description)
                 )
             )
 
@@ -10557,7 +10495,7 @@ class WorkspaceScreen(Screen[None]):
             FieldsDialog(
                 title,
                 _book_fields(saga, book, self._default_book_owner()),
-                validate=_book_problem,
+                validate=bk.form_problem,
                 live=lambda values: _book_live(values, saga),
             ),
             handle_result,
@@ -10892,7 +10830,7 @@ class WorkspaceScreen(Screen[None]):
 
         self.app.push_screen(
             FieldsDialog(
-                title, _possession_fields(kind, entry), validate=_possession_problem
+                title, _possession_fields(kind, entry), validate=pos.form_problem
             ),
             handle_result,
         )
@@ -11259,13 +11197,13 @@ class WorkspaceScreen(Screen[None]):
             storage.save_saga(self.saga)
             self._refresh_covenant_section(f"section-eco-{which}")
 
-        def validate(values: dict[str, Any]) -> str | None:
-            if row.key == "sundry" and values.get("sundry", 1) < 1:
-                return "There's a cost of at least 1 pound of sundries every year."
-            return None
-
         self.app.push_screen(
-            FieldsDialog(f"Edit {row.name}", fields, validate=validate), handle_result
+            FieldsDialog(
+                f"Edit {row.name}",
+                fields,
+                validate=lambda values: eco.row_problem(row.key, values),
+            ),
+            handle_result,
         )
 
     # -- Covenant: Inhabitants tab --
@@ -11362,7 +11300,7 @@ class WorkspaceScreen(Screen[None]):
             FieldsDialog(
                 title,
                 _inhabitant_fields(kind, entry, grog),
-                validate=_inhabitant_problem,
+                validate=inh.form_problem,
             ),
             handle_result,
         )
@@ -11868,7 +11806,7 @@ class WorkspaceScreen(Screen[None]):
             if result is None:
                 return
             detail, description = result
-            instance.params = _boon_hook_params(detail, description, instance.params)
+            instance.params = boon_hook_params(detail, description, instance.params)
             storage.save_saga(self.saga)
             self._refresh_covenant_section(_BOON_HOOK_SECTION[kind])
 
@@ -12734,7 +12672,7 @@ class WorkspaceScreen(Screen[None]):
 
         self.app.push_screen(
             FieldsDialog(
-                title, _possession_fields(kind, entry), validate=_possession_problem
+                title, _possession_fields(kind, entry), validate=pos.form_problem
             ),
             handle_result,
         )
@@ -13434,7 +13372,7 @@ class WorkspaceScreen(Screen[None]):
 
         self.app.push_screen(
             FieldsDialog(
-                title, _possession_fields("weapon", entry), validate=_possession_problem
+                title, _possession_fields("weapon", entry), validate=pos.form_problem
             ),
             handle_result,
         )

@@ -1,6 +1,8 @@
 from dataclasses import asdict
 
 from ars_magica_manager.models import (
+    BOON_HOOK_DESCRIPTION,
+    BOON_HOOK_DETAIL,
     Ability,
     Aging,
     Background,
@@ -21,6 +23,7 @@ from ars_magica_manager.models import (
     add_raw_vis,
     assign_laboratory,
     assign_laboratory_owner,
+    boon_hook_params,
     character_age,
     lab_aura_total,
     lab_base_safety,
@@ -384,3 +387,12 @@ def test_add_and_replace_raw_vis_merge_into_an_art_already_held():
     assert pool == {"creo": 9}
     replace_raw_vis(pool, "creo", "ignem", 2)
     assert pool == {"ignem": 2}
+
+
+def test_boon_hook_params_keeps_other_keys_and_only_non_empty_text():
+    base = {"other": "kept", BOON_HOOK_DETAIL: "old"}
+    assert boon_hook_params(" Tower ", "", base) == {
+        "other": "kept",
+        BOON_HOOK_DETAIL: "Tower",
+    }
+    assert boon_hook_params("", " Tall ") == {BOON_HOOK_DESCRIPTION: "Tall"}

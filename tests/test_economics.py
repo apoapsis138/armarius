@@ -729,3 +729,9 @@ def test_covenants_in_deficit_and_closing_every_year():
     # A deficit adds nothing to Wealth; a surplus is added (see close_year).
     assert eco.close_all_years(saga) == [(cov.name, 0), (other.name, other_surplus)]
     assert cov.economics.wealth == 100
+
+
+def test_row_problem_requires_at_least_one_pound_of_sundries():
+    assert eco.row_problem("sundry", {"sundry": 0})
+    assert eco.row_problem("sundry", {"sundry": 1}) is None
+    assert eco.row_problem("tithes", {"tithes": 0}) is None

@@ -538,3 +538,13 @@ def test_add_imported_books_links_spells_and_files_them_under_the_covenant():
     unassigned = Book(id="", name="Stray", type="Other")
     bk.add_imported_books(saga, [unassigned], None)
     assert unassigned.owner_id is None
+
+
+def test_form_problem():
+    assert bk.form_problem({"type": "Lab Text"}).startswith("Choose the spell")
+    assert bk.form_problem({"type": "Lab Text", "spell_id": "x"}) is None
+    assert bk.form_problem({"ability": "Area Lore: {region}"}) == (
+        "Area Lore: {region} needs its Ability detail filled in."
+    )
+    assert bk.form_problem({"level": -1}) == "Level can't be negative."
+    assert bk.form_problem({"quality": None, "level": None}) is None
