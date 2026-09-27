@@ -2559,6 +2559,26 @@ async def test_add_and_remove_spell_known():
     assert saga.characters[0].spells_known == []
 
 
+async def test_the_known_spell_delete_prompt_shows_brackets_once():
+    # B20: the prompt escaped a label that was already escaped, so "[" in a
+    # spell name showed as "\[".
+    saga = _saga_with_character_and_spell()
+    saga.spells[0].name = "Pilum of [Greater] Fire"
+    saga.characters[0].spells_known = [KnownSpell(spell_id="spell1")]
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_character(pilot, app)
+        await _open_section(pilot, app, "section-known-spells")
+        await pilot.press("A")
+        await wait_until(pilot, lambda: isinstance(app.screen, RemovalPickerScreen))
+        await pilot.press("enter")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        message = str(app.screen.query_one("#confirm-message", Static).render())
+        assert message == "Delete Pilum of [Greater] Fire?", message
+
+
 async def test_known_spells_can_be_catalog_spells():
     saga = _saga_with_character_and_spell()
     saga.characters[0].spells_known = [

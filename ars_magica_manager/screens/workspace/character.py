@@ -419,16 +419,14 @@ class CharacterActions(WorkspaceBase):
             handle_result,
         )
 
+    def _known_spell_name(self, known: KnownSpell) -> str:
+        """A known spell's name (plain text; its id if it's missing)."""
+        spell = spl.find_spell(self.saga, known.spell_id)
+        return spell.name if spell else f"{known.spell_id} (unknown spell)"
+
     def _known_spell_labels(self, character: Character) -> list[str]:
-        labels = []
-        for known in character.spells_known:
-            spell = spl.find_spell(self.saga, known.spell_id)
-            labels.append(
-                escape(spell.name)
-                if spell
-                else f"{escape(known.spell_id)} (unknown spell)"
-            )
-        return labels
+        """The known spells' names, as picker labels (markup)."""
+        return [escape(self._known_spell_name(k)) for k in character.spells_known]
 
     def _selected_known_spell(self) -> int | None:
         view = self._character_sheet_view
@@ -484,7 +482,7 @@ class CharacterActions(WorkspaceBase):
         self._confirm_delete(
             character.spells_known,
             index,
-            self._known_spell_labels(character)[index],
+            self._known_spell_name(character.spells_known[index]),
             "section-known-spells",
         )
 
