@@ -185,3 +185,27 @@ def test_bond_power_rows_and_info_text():
     assert "Penetration:[/] 5" in text
     assert "Vis Spent:[/] 2" in text
     assert "A feathered crest" in text
+
+
+def test_unbonded_magi_are_the_magi_without_a_familiar():
+    saga, magus, _familiar = _saga()
+    free = Character(id="mag2", name="Aelia", type="magus")
+    companion = Character(id="comp1", name="Alys", type="companion")
+    saga.characters += [free, companion]
+    assert fam.unbonded_magi(saga) == [free]
+    assert magus not in fam.unbonded_magi(saga)
+
+
+def test_bind_familiar_adds_it_and_grants_the_bond_to_both_partners():
+    saga, _magus, _familiar = _saga()
+    magus = Character(id="mag2", name="Aelia", type="magus")
+    saga.characters.append(magus)
+    familiar = fam.bind_familiar(saga, magus, "Ashwing")
+    assert saga.familiars[-1] is familiar
+    assert familiar.id == "ashwing"  # from the name; "fam1" doesn't clash
+    assert familiar.character_id == "mag2" and familiar.name == "Ashwing"
+    for partner in (familiar, magus):
+        assert [vf.vf_id for vf in partner.virtues_flaws] == ["vf_true_friend"]
+        assert [(t.name, t.score) for t in partner.personality_traits] == [
+            ("Loyal (Partner)", 3)
+        ]

@@ -8,18 +8,43 @@ from __future__ import annotations
 
 from . import possessions as pos
 from . import sheet_text as st
+from . import storage
 from .markup import escape
 from .models import (
     CORD_SCORE_COSTS,
     Character,
     Familiar,
     Saga,
+    ScoredTrait,
+    VirtueFlawInstance,
 )
 
 
 def familiar_of(saga: Saga, character_id: str) -> Familiar | None:
     """The one Familiar bound to `character_id`, if any."""
     return next((f for f in saga.familiars if f.character_id == character_id), None)
+
+
+def unbonded_magi(saga: Saga) -> list[Character]:
+    """Magi with no Familiar bound yet -- one per magus at a time."""
+    bonded = {f.character_id for f in saga.familiars}
+    return [c for c in saga.characters if c.type == "magus" and c.id not in bonded]
+
+
+def bind_familiar(saga: Saga, magus: Character, name: str) -> Familiar:
+    """Bind a new Familiar called `name` to `magus` and add it to the saga.
+    Both gain the True Friend Virtue and a Loyal (Partner) +3 Personality
+    Trait, which the bond grants."""
+    familiar = Familiar(
+        id=storage.generate_unique_id(name, [f.id for f in saga.familiars]),
+        character_id=magus.id,
+        name=name,
+    )
+    for partner in (familiar, magus):
+        partner.virtues_flaws.append(VirtueFlawInstance(vf_id="vf_true_friend"))
+        partner.personality_traits.append(ScoredTrait(name="Loyal (Partner)", score=3))
+    saga.familiars.append(familiar)
+    return familiar
 
 
 def magus_of(saga: Saga, familiar: Familiar) -> Character | None:

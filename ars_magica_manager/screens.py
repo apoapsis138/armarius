@@ -118,6 +118,8 @@ from .models import (
     VirtueFlawDef,
     VirtueFlawInstance,
     Wounds,
+    assign_laboratory,
+    assign_laboratory_owner,
     character_age,
     covenant_boon_points,
     covenant_effective_aura,
@@ -2395,15 +2397,8 @@ class FamiliarCreateScreen(ModalScreen[str | None]):
         self.saga = saga
         self.default_magus_id = default_magus_id
 
-    def _eligible_magi(self) -> list[Character]:
-        """Magi with no Familiar bound yet -- one per magus at a time."""
-        bonded = {f.character_id for f in self.saga.familiars}
-        return [
-            c for c in self.saga.characters if c.type == "magus" and c.id not in bonded
-        ]
-
     def compose(self) -> ComposeResult:
-        magi = self._eligible_magi()
+        magi = fam.unbonded_magi(self.saga)
         with Vertical(id="create-dialog"):
             yield Label("Bind a New Familiar", id="create-title")
             yield Label("Familiar name")
@@ -2446,16 +2441,7 @@ class FamiliarCreateScreen(ModalScreen[str | None]):
             error.update("A Magus Partner is required.")
             return
 
-        familiar = Familiar(
-            id=storage.generate_unique_id(name, [f.id for f in self.saga.familiars]),
-            character_id=magus.id,
-            name=name,
-        )
-        familiar.virtues_flaws.append(VirtueFlawInstance(vf_id="vf_true_friend"))
-        familiar.personality_traits.append(ScoredTrait(name="Loyal (Partner)", score=3))
-        magus.virtues_flaws.append(VirtueFlawInstance(vf_id="vf_true_friend"))
-        magus.personality_traits.append(ScoredTrait(name="Loyal (Partner)", score=3))
-        self.saga.familiars.append(familiar)
+        familiar = fam.bind_familiar(self.saga, magus, name)
         storage.save_saga(self.saga)
         self.dismiss(familiar.id)
 
@@ -3936,7 +3922,7 @@ class EditLabIdentityScreen(ModalScreen[dict[str, object] | None]):
     """Edits a Laboratory's Name/Location/Build Points/Aura modifier, and (unlike
     character Identity editing) lets you reassign its Owner from the
     lab's own side. It only returns the chosen `owner_id`;
-    WorkspaceScreen._assign_laboratory_owner() does the two-way sync.
+    models.assign_laboratory_owner() does the two-way sync.
     Dismisses with {"name", "location", "build_points", "aura_modifier",
     "covenant_id", "owner_id"}, or None if cancelled.
     """
@@ -9694,7 +9680,7 @@ class WorkspaceScreen(Screen[None]):
                 )
             return self._active_section() in ("section-vf-virtues", "section-vf-flaws")
         if action == "create_familiar":
-            return bool(self._eligible_magi_for_familiar())
+            return bool(fam.unbonded_magi(self.saga))
         return True
 
     def _active_section(self) -> str | None:
@@ -10062,44 +10048,6 @@ class WorkspaceScreen(Screen[None]):
         if self._laboratory_sheet_view is not None:
             self._laboratory_sheet_view.refresh_section(section_id)
 
-    def _assign_laboratory(self, character: Character, new_lab_id: str | None) -> None:
-        """Keeps Character.assigned_lab_id and Laboratory.owner_id in sync
-        from both directions: the character's old lab (if any) is freed,
-        and if the newly-assigned lab already had a different owner, that
-        character is unassigned too, so a lab never has an owner who
-        doesn't point back at it or vice versa.
-        """
-        saga = self.saga
-        old_lab = saga.laboratory(character.assigned_lab_id)
-        if old_lab is not None:
-            old_lab.owner_id = None
-
-        character.assigned_lab_id = new_lab_id
-        if new_lab_id is None:
-            return
-
-        new_lab = next(lab for lab in saga.laboratories if lab.id == new_lab_id)
-        previous_owner = saga.character(new_lab.owner_id)
-        if previous_owner is not None:
-            previous_owner.assigned_lab_id = None
-        new_lab.owner_id = character.id
-
-    def _assign_laboratory_owner(
-        self, lab: Laboratory, new_owner_id: str | None
-    ) -> None:
-        """Owner reassignment from the laboratory's side -- the inverse of
-        _assign_laboratory(character, lab_id), reusing the same sync logic
-        rather than duplicating it."""
-        if new_owner_id is None:
-            if lab.owner_id is not None:
-                old_owner = self.saga.character(lab.owner_id)
-                if old_owner is not None:
-                    old_owner.assigned_lab_id = None
-                lab.owner_id = None
-            return
-        new_owner = next(c for c in self.saga.characters if c.id == new_owner_id)
-        self._assign_laboratory(new_owner, lab.id)
-
     # -- creation actions --
 
     def action_create_covenant(self) -> None:
@@ -10146,15 +10094,8 @@ class WorkspaceScreen(Screen[None]):
 
         self.app.push_screen(LaboratoryCreateScreen(self.saga, covenant), handle_result)
 
-    def _eligible_magi_for_familiar(self) -> list[Character]:
-        """Magi with no Familiar bound yet -- one per magus at a time."""
-        bonded = {f.character_id for f in self.saga.familiars}
-        return [
-            c for c in self.saga.characters if c.type == "magus" and c.id not in bonded
-        ]
-
     def action_create_familiar(self) -> None:
-        if not self._eligible_magi_for_familiar():
+        if not fam.unbonded_magi(self.saga):
             self.notify("Every magus already has a bound Familiar.")
             return
         character = self.selected_character
@@ -12181,8 +12122,8 @@ class WorkspaceScreen(Screen[None]):
             character.covenant_id = cast("str | None", result["covenant_id"])
             self.selected_covenant = self.saga.covenant(character.covenant_id)
             if character.type == "magus":
-                self._assign_laboratory(
-                    character, cast("str | None", result["laboratory_id"])
+                assign_laboratory(
+                    self.saga, character, cast("str | None", result["laboratory_id"])
                 )
             character.background.setting = cast(str, result["setting"])
             character.background.confidence_score = cast(
@@ -12986,7 +12927,9 @@ class WorkspaceScreen(Screen[None]):
             lab.aura_modifier = cast(int, result["aura_modifier"])
             lab.covenant_id = cast("str | None", result["covenant_id"])
             self.selected_covenant = self.saga.covenant(lab.covenant_id)
-            self._assign_laboratory_owner(lab, cast("str | None", result["owner_id"]))
+            assign_laboratory_owner(
+                self.saga, lab, cast("str | None", result["owner_id"])
+            )
             storage.save_saga(self.saga)
             self._rebuild_tree()
             self._refresh_laboratory_section("section-lab-identity")

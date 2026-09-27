@@ -18,6 +18,8 @@ from ars_magica_manager.models import (
     ScoredTrait,
     VirtueFlawInstance,
     Wounds,
+    assign_laboratory,
+    assign_laboratory_owner,
     character_age,
     lab_aura_total,
     lab_base_safety,
@@ -321,3 +323,51 @@ def test_covenant_new_fields_default_for_pre_existing_saves():
     assert covenant.living_conditions_mundane == 0
     assert covenant.aura == 0
     assert covenant.covenant_season == "Spring"
+
+
+def _saga_with_two_labs() -> Saga:
+    return Saga(
+        id="s",
+        name="Saga",
+        characters=[
+            Character(id="a", name="A", type="magus", assigned_lab_id="lab1"),
+            Character(id="b", name="B", type="magus"),
+        ],
+        laboratories=[
+            Laboratory(id="lab1", covenant_id="c", name="One", owner_id="a"),
+            Laboratory(id="lab2", covenant_id="c", name="Two"),
+        ],
+    )
+
+
+def _owners(saga: Saga) -> tuple[dict, dict]:
+    return (
+        {c.id: c.assigned_lab_id for c in saga.characters},
+        {lab.id: lab.owner_id for lab in saga.laboratories},
+    )
+
+
+def test_assign_laboratory_moves_a_magus_and_frees_the_old_lab():
+    saga = _saga_with_two_labs()
+    assign_laboratory(saga, saga.characters[0], "lab2")
+    assert _owners(saga) == ({"a": "lab2", "b": None}, {"lab1": None, "lab2": "a"})
+
+
+def test_assign_laboratory_takes_a_lab_from_its_previous_owner():
+    saga = _saga_with_two_labs()
+    assign_laboratory(saga, saga.characters[1], "lab1")
+    assert _owners(saga) == ({"a": None, "b": "lab1"}, {"lab1": "b", "lab2": None})
+
+
+def test_assign_laboratory_none_just_frees_the_lab():
+    saga = _saga_with_two_labs()
+    assign_laboratory(saga, saga.characters[0], None)
+    assert _owners(saga) == ({"a": None, "b": None}, {"lab1": None, "lab2": None})
+
+
+def test_assign_laboratory_owner_works_from_the_labs_side():
+    saga = _saga_with_two_labs()
+    assign_laboratory_owner(saga, saga.laboratories[1], "a")
+    assert _owners(saga) == ({"a": "lab2", "b": None}, {"lab1": None, "lab2": "a"})
+    assign_laboratory_owner(saga, saga.laboratories[1], None)
+    assert _owners(saga) == ({"a": None, "b": None}, {"lab1": None, "lab2": None})

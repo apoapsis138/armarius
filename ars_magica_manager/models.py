@@ -1668,3 +1668,40 @@ class Saga:
                     book.owner_kind = "covenant"
                     book.owner_id = library.get("covenant_id")
         return cls(**known_fields(cls, d))
+
+
+def assign_laboratory(saga: Saga, character: Character, new_lab_id: str | None) -> None:
+    """Give `character` the laboratory `new_lab_id` (or none), keeping
+    Character.assigned_lab_id and Laboratory.owner_id in sync from both
+    directions: the character's old lab (if any) is freed, and if the new lab
+    already had a different owner, that character is unassigned too, so a lab
+    never has an owner who doesn't point back at it or vice versa."""
+    old_lab = saga.laboratory(character.assigned_lab_id)
+    if old_lab is not None:
+        old_lab.owner_id = None
+
+    character.assigned_lab_id = new_lab_id
+    if new_lab_id is None:
+        return
+
+    new_lab = next(lab for lab in saga.laboratories if lab.id == new_lab_id)
+    previous_owner = saga.character(new_lab.owner_id)
+    if previous_owner is not None:
+        previous_owner.assigned_lab_id = None
+    new_lab.owner_id = character.id
+
+
+def assign_laboratory_owner(
+    saga: Saga, lab: Laboratory, new_owner_id: str | None
+) -> None:
+    """Owner reassignment from the laboratory's side -- the inverse of
+    assign_laboratory(), with the same two-way sync."""
+    if new_owner_id is None:
+        if lab.owner_id is not None:
+            old_owner = saga.character(lab.owner_id)
+            if old_owner is not None:
+                old_owner.assigned_lab_id = None
+            lab.owner_id = None
+        return
+    new_owner = next(c for c in saga.characters if c.id == new_owner_id)
+    assign_laboratory(saga, new_owner, lab.id)
