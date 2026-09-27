@@ -53,7 +53,6 @@ from ars_magica_manager.models import (
     VirtueFlawInstance,
 )
 from ars_magica_manager.screens import (
-    AbilityDetailsScreen,
     AbilityPickerScreen,
     AdvanceSeasonScreen,
     BoonHookDetailScreen,
@@ -63,22 +62,13 @@ from ars_magica_manager.screens import (
     DialogField,
     DiaryEntryPromptScreen,
     DuplicateBookScreen,
-    EditAgingScreen,
     EditArtsScreen,
-    EditBiographicalDetailScreen,
-    EditCharacterInfoScreen,
-    EditCharacteristicsScreen,
     EditCovenantDescriptionScreen,
     EditCovenantScreen,
     EditFamiliarBindingScreen,
-    EditFamiliarCharacteristicsScreen,
     EditFamiliarInfoScreen,
-    EditFamiliarWoundsScreen,
-    EditFatigueScreen,
-    EditHermeticBackgroundScreen,
     EditLabCharacteristicsScreen,
     EditLabIdentityScreen,
-    EditWoundsScreen,
     FieldsDialog,
     ImportScreen,
     ImproveIncomeScreen,
@@ -1029,10 +1019,10 @@ async def test_editing_familiar_characteristics_updates_the_panel_and_saves():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditFamiliarCharacteristicsScreen)
-        app.screen.query_one("#input-famchar-stamina", Input).value = "3"
-        app.screen.query_one("#input-famchar-base-soak", Input).value = "5"
-        app.screen.query_one("#input-famchar-magic-resistance", Input).value = "12"
+        assert _is_form(app.screen, "Edit Characteristics")
+        app.screen.query_one("#fld-stamina", Input).value = "3"
+        app.screen.query_one("#fld-base_soak", Input).value = "5"
+        app.screen.query_one("#fld-magic_resistance", Input).value = "12"
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
@@ -1059,9 +1049,9 @@ async def test_editing_familiar_wounds_and_fatigue_updates_the_health_panel():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditFamiliarWoundsScreen)
-        app.screen.query_one("#input-famwounds-light", Input).value = "2"
-        app.screen.query_one("#check-famwounds-incapacitated", Checkbox).value = True
+        assert _is_form(app.screen, "Edit Wounds")
+        app.screen.query_one("#fld-light", Input).value = "2"
+        app.screen.query_one("#fld-incapacitated", Checkbox).value = True
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
@@ -1073,8 +1063,8 @@ async def test_editing_familiar_wounds_and_fatigue_updates_the_health_panel():
 
         await pilot.click("#btn-fam-health-fatigue-edit")
         await pilot.pause()
-        assert isinstance(app.screen, EditFatigueScreen)
-        app.screen.query_one("#select-fatigue-level", Select).value = "weary"
+        assert _is_form(app.screen, "Edit Fatigue Level")
+        app.screen.query_one("#fld-level", Select).value = "weary"
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
@@ -1137,10 +1127,10 @@ async def test_familiar_abilities_use_generic_add_edit_remove():
         assert isinstance(app.screen, AbilityPickerScreen)
         await pilot.click("#ability-ab_athletics")
         await pilot.pause()
-        assert isinstance(app.screen, AbilityDetailsScreen)
-        app.screen.query_one("#input-level", Input).value = "3"
-        app.screen.query_one("#input-specialty", Input).value = "Running"
-        await pilot.click("#btn-confirm")
+        assert isinstance(app.screen, FieldsDialog)
+        app.screen.query_one("#fld-level", Input).value = "3"
+        app.screen.query_one("#fld-specialty", Input).value = "Running"
+        await pilot.click("#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
@@ -1158,9 +1148,9 @@ async def test_familiar_abilities_use_generic_add_edit_remove():
         assert isinstance(app.screen, RemovalPickerScreen)
         await pilot.press("enter")
         await pilot.pause()
-        assert isinstance(app.screen, AbilityDetailsScreen)
-        app.screen.query_one("#input-level", Input).value = "4"
-        await pilot.click("#btn-confirm")
+        assert isinstance(app.screen, FieldsDialog)
+        app.screen.query_one("#fld-level", Input).value = "4"
+        await pilot.click("#btn-save")
         await pilot.pause()
         assert "Athletics (Running) 4 0/0" in _fam_ability_labels(view)
 
@@ -1674,12 +1664,12 @@ async def test_add_ability_without_parameters_to_character():
 
         await pilot.click("#ability-ab_athletics")
         await pilot.pause()
-        assert isinstance(app.screen, AbilityDetailsScreen)
+        assert isinstance(app.screen, FieldsDialog)
 
-        app.screen.query_one("#input-level", Input).value = "3"
-        app.screen.query_one("#input-specialty", Input).value = "Running"
+        app.screen.query_one("#fld-level", Input).value = "3"
+        app.screen.query_one("#fld-specialty", Input).value = "Running"
 
-        await pilot.click("#btn-confirm")
+        await pilot.click("#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
@@ -1715,12 +1705,12 @@ async def test_add_ability_with_parameters_to_character():
         await pilot.click("#btn-confirm")
         await pilot.pause()
 
-        assert isinstance(app.screen, AbilityDetailsScreen)
-        assert app.screen.ability_name == "Craft: Blacksmith"
+        assert isinstance(app.screen, FieldsDialog)
+        assert app.screen.title_text == "Craft: Blacksmith"
 
-        app.screen.query_one("#input-level", Input).value = "2"
+        app.screen.query_one("#fld-level", Input).value = "2"
 
-        await pilot.click("#btn-confirm")
+        await pilot.click("#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
@@ -1746,7 +1736,7 @@ async def test_cancelling_ability_details_returns_to_picker_without_adding():
 
         await pilot.click("#ability-ab_athletics")
         await pilot.pause()
-        assert isinstance(app.screen, AbilityDetailsScreen)
+        assert isinstance(app.screen, FieldsDialog)
 
         await pilot.press("escape")
         await pilot.pause()
@@ -2112,7 +2102,7 @@ async def test_arts_and_spells_tabs_are_absent_for_non_magi():
         # doing nothing.
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditCharacterInfoScreen)
+        assert _is_form(app.screen, "Edit Character Info")
 
 
 async def test_switching_to_laboratory_or_diary_tab_falls_back_to_top_panel():
@@ -2137,7 +2127,7 @@ async def test_switching_to_laboratory_or_diary_tab_falls_back_to_top_panel():
         assert app.screen._active_section() == "section-char-info"
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditCharacterInfoScreen)
+        assert _is_form(app.screen, "Edit Character Info")
         await pilot.press("escape")
         await pilot.pause()
 
@@ -2148,7 +2138,7 @@ async def test_switching_to_laboratory_or_diary_tab_falls_back_to_top_panel():
         assert app.screen._active_section() == "section-char-info"
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditCharacterInfoScreen)
+        assert _is_form(app.screen, "Edit Character Info")
 
 
 async def test_creating_a_second_character_after_viewing_the_first_works():
@@ -2219,13 +2209,13 @@ async def test_edit_character_info_updates_name_covenant_and_laboratory():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditCharacterInfoScreen)
+        assert _is_form(app.screen, "Edit Character Info")
 
-        app.screen.query_one("#input-charinfo-name", Input).value = "Leandro the Elder"
-        app.screen.query_one("#select-charinfo-covenant", Select).value = "cov2"
-        app.screen.query_one("#select-charinfo-laboratory", Select).value = "lab2"
-        app.screen.query_one("#input-charinfo-confidence_score", Input).value = "2"
-        app.screen.query_one("#input-charinfo-confidence_points", Input).value = "5"
+        app.screen.query_one("#fld-name", Input).value = "Leandro the Elder"
+        app.screen.query_one("#fld-covenant_id", Select).value = "cov2"
+        app.screen.query_one("#fld-laboratory_id", Select).value = "lab2"
+        app.screen.query_one("#fld-confidence_score", Input).value = "2"
+        app.screen.query_one("#fld-confidence_points", Input).value = "5"
 
         await pilot.click("#btn-save")
         await pilot.pause()
@@ -2268,14 +2258,14 @@ async def test_edit_character_info_requires_name():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditCharacterInfoScreen)
+        assert _is_form(app.screen, "Edit Character Info")
 
-        app.screen.query_one("#input-charinfo-name", Input).value = ""
+        app.screen.query_one("#fld-name", Input).value = ""
 
         await pilot.click("#btn-save")
         await pilot.pause()
 
-        assert isinstance(app.screen, EditCharacterInfoScreen)
+        assert _is_form(app.screen, "Edit Character Info")
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].name == "Leandro"
@@ -2291,10 +2281,10 @@ async def test_edit_characteristics_updates_values():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditCharacteristicsScreen)
+        assert _is_form(app.screen, "Edit Characteristics")
 
-        app.screen.query_one("#input-char-intelligence", Input).value = "3"
-        app.screen.query_one("#input-char-quickness", Input).value = "-1"
+        app.screen.query_one("#fld-intelligence", Input).value = "3"
+        app.screen.query_one("#fld-quickness", Input).value = "-1"
 
         # An explicit interior offset: this button's default (0, 0) --
         # its exact top-left corner pixel -- doesn't register through the
@@ -2329,14 +2319,14 @@ async def test_edit_ability_updates_existing_entry():
 
         await pilot.press("enter")  # only one ability -- select it
         await pilot.pause()
-        assert isinstance(app.screen, AbilityDetailsScreen)
-        assert app.screen.query_one("#input-level", Input).value == "5"
-        assert app.screen.query_one("#input-xp", Input).value == "75"
+        assert isinstance(app.screen, FieldsDialog)
+        assert app.screen.query_one("#fld-level", Input).value == "5"
+        assert app.screen.query_one("#fld-xp", Input).value == "75"
 
-        app.screen.query_one("#input-level", Input).value = "6"
-        app.screen.query_one("#input-xp", Input).value = "90"
+        app.screen.query_one("#fld-level", Input).value = "6"
+        app.screen.query_one("#fld-xp", Input).value = "90"
 
-        await pilot.click("#btn-confirm")
+        await pilot.click("#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
@@ -2543,13 +2533,13 @@ async def test_edit_biographical_detail_updates_background_and_description():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditBiographicalDetailScreen)
+        assert _is_form(app.screen, "Edit Biographical Detail")
 
-        app.screen.query_one("#input-bio-player", Input).value = "Alex"
-        app.screen.query_one("#input-bio-year_born", Input).value = "1180"
-        app.screen.query_one("#input-bio-height", Input).value = "1.8"
-        app.screen.query_one("#select-bio-handedness", Select).value = "left"
-        app.screen.query_one("#biodetail-biography", TextArea).text = "Born in Aachen."
+        app.screen.query_one("#fld-player", Input).value = "Alex"
+        app.screen.query_one("#fld-year_born", Input).value = "1180"
+        app.screen.query_one("#fld-height", Input).value = "1.8"
+        app.screen.query_one("#fld-handedness", Select).value = "left"
+        app.screen.query_one("#fld-biography", TextArea).text = "Born in Aachen."
 
         # The dialog has many fields, taller than the default 80x24 test
         # terminal -- pilot.click() needs an on-screen target, so trigger
@@ -2587,11 +2577,11 @@ async def test_edit_aging_updates_decrepitude_and_warping():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditAgingScreen)
+        assert _is_form(app.screen, "Edit Aging & Warping")
 
-        app.screen.query_one("#input-aging-decrepitude", Input).value = "2"
-        app.screen.query_one("#input-aging-warping_score", Input).value = "1"
-        app.screen.query_one("#input-aging-warping_points", Input).value = "6"
+        app.screen.query_one("#fld-decrepitude", Input).value = "2"
+        app.screen.query_one("#fld-warping_score", Input).value = "1"
+        app.screen.query_one("#fld-warping_points", Input).value = "6"
 
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
@@ -2619,11 +2609,11 @@ async def test_edit_wounds_updates_counts_and_flags():
         # 'e' on the merged Health section defaults to Wounds (column 1).
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditWoundsScreen)
+        assert _is_form(app.screen, "Edit Wounds")
 
-        app.screen.query_one("#input-wounds-soak", Input).value = "5"
-        app.screen.query_one("#input-wounds-medium", Input).value = "2"
-        app.screen.query_one("#check-wounds-incapacitated", Checkbox).value = True
+        app.screen.query_one("#fld-soak", Input).value = "5"
+        app.screen.query_one("#fld-medium", Input).value = "2"
+        app.screen.query_one("#fld-incapacitated", Checkbox).value = True
 
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
@@ -2655,9 +2645,9 @@ async def test_edit_fatigue_updates_level():
         view = app.screen._character_sheet_view
         view.query_one("#btn-char-health-fatigue-edit", Button).press()
         await pilot.pause()
-        assert isinstance(app.screen, EditFatigueScreen)
+        assert _is_form(app.screen, "Edit Fatigue Level")
 
-        app.screen.query_one("#select-fatigue-level", Select).value = "tired"
+        app.screen.query_one("#fld-level", Select).value = "tired"
         await pilot.click("#btn-save", offset=(8, 1))
         await pilot.pause()
 
@@ -2871,13 +2861,11 @@ async def test_edit_hermetic_background_sets_house_and_fields():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditHermeticBackgroundScreen)
+        assert _is_form(app.screen, "Edit Hermetic Background")
 
-        app.screen.query_one("#select-hermetic-house", Select).value = "house_bonisagus"
-        app.screen.query_one("#input-hermetic-parens", Input).value = "Trianoma"
-        app.screen.query_one(
-            "#input-hermetic-age_of_apprenticeship", Input
-        ).value = "12"
+        app.screen.query_one("#fld-house", Select).value = "house_bonisagus"
+        app.screen.query_one("#fld-parens", Input).value = "Trianoma"
+        app.screen.query_one("#fld-age_of_apprenticeship", Input).value = "12"
 
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
@@ -4111,8 +4099,8 @@ async def test_character_can_be_moved_out_of_a_covenant_and_back():
             await _open_section(pilot, app, "section-char-info")
             await pilot.press("e")
             await pilot.pause()
-            assert isinstance(app.screen, EditCharacterInfoScreen)
-            app.screen.query_one("#select-charinfo-covenant", Select).value = value
+            assert _is_form(app.screen, "Edit Character Info")
+            app.screen.query_one("#fld-covenant_id", Select).value = value
             app.screen.query_one("#btn-save", Button).press()
             await pilot.pause()
 

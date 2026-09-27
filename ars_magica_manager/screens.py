@@ -102,7 +102,6 @@ from .models import (
     Description,
     DiaryEntry,
     Familiar,
-    FatigueLevel,
     HermeticBackground,
     IncomeSource,
     KnownSpell,
@@ -126,6 +125,7 @@ from .models import (
     covenant_boon_points,
     covenant_effective_aura,
     covenant_hook_points,
+    known_fields,
     lab_aura_total,
     lab_base_safety,
     lab_characteristic_total,
@@ -709,6 +709,229 @@ def _familiar_create_fields(saga: Saga, magus_id: str | None) -> list[DialogFiel
             required=True,
             allow_blank=True,
             placeholder="(choose a magus)",
+        ),
+    ]
+
+
+#: The eight Characteristics as (label, attribute), in the book's order.
+_CHARACTERISTIC_FIELDS: list[tuple[str, str]] = [
+    ("Intelligence (Int)", "intelligence"),
+    ("Perception (Per)", "perception"),
+    ("Presence (Pre)", "presence"),
+    ("Communication (Com)", "communication"),
+    ("Strength (Str)", "strength"),
+    ("Stamina (Sta)", "stamina"),
+    ("Dexterity (Dex)", "dexterity"),
+    ("Quickness (Qik)", "quickness"),
+]
+
+
+def _characteristics_fields(characteristics: Characteristics) -> list[DialogField]:
+    return [
+        DialogField(attribute, label, "int", getattr(characteristics, attribute))
+        for label, attribute in _CHARACTERISTIC_FIELDS
+    ]
+
+
+def _characteristics_from(values: dict[str, Any]) -> Characteristics:
+    return Characteristics(
+        **{attribute: values[attribute] for _, attribute in _CHARACTERISTIC_FIELDS}
+    )
+
+
+def _character_info_fields(saga: Saga, character: Character) -> list[DialogField]:
+    """The top panel's Edit form: name, covenant, a magus's laboratory, and
+    the Background figures shown there."""
+    b = character.background
+    fields = [
+        DialogField("name", "Name", "text", character.name, required=True),
+        DialogField(
+            "covenant_id",
+            "Covenant",
+            "select",
+            character.covenant_id,
+            options=_covenant_options(saga),
+            allow_blank=True,
+            placeholder="(unassigned)",
+        ),
+    ]
+    if character.type == "magus":
+        fields.append(
+            DialogField(
+                "laboratory_id",
+                "Assigned Laboratory",
+                "select",
+                character.assigned_lab_id,
+                options=[(escape(lab.name), lab.id) for lab in saga.laboratories],
+                allow_blank=True,
+                placeholder="(unassigned)",
+            )
+        )
+    return fields + [
+        DialogField("setting", "Setting", "text", b.setting),
+        DialogField("confidence_score", "Confidence Score", "int", b.confidence_score),
+        DialogField(
+            "confidence_points", "Confidence Points", "int", b.confidence_points
+        ),
+        DialogField("size", "Size", "int", b.size),
+    ]
+
+
+_HANDEDNESS_OPTIONS: list[tuple[str, str]] = [
+    ("Right", "right"),
+    ("Left", "left"),
+    ("Ambidextrous", "ambidextrous"),
+]
+
+#: Biographical Detail's free-text Background fields, as (label, attribute).
+_BIOGRAPHY_TEXT_FIELDS: list[tuple[str, str]] = [
+    ("Player", "player"),
+    ("Birth Name", "birth_name"),
+]
+_BIOGRAPHY_TEXT_FIELDS_AFTER_YEAR: list[tuple[str, str]] = [
+    ("Race/Nationality", "race_nationality"),
+    ("Place of Origin", "place_of_origin"),
+    ("Religion", "religion"),
+    ("Title/Profession", "title_profession"),
+]
+
+
+def _biographical_fields(
+    background: Background, description: Description
+) -> list[DialogField]:
+    """The Background fields not in the top panel, then every Description
+    field."""
+    d = description
+    return [
+        *(
+            DialogField(attribute, label, "text", getattr(background, attribute))
+            for label, attribute in _BIOGRAPHY_TEXT_FIELDS
+        ),
+        _year_born_field(background.year_born),
+        *(
+            DialogField(attribute, label, "text", getattr(background, attribute))
+            for label, attribute in _BIOGRAPHY_TEXT_FIELDS_AFTER_YEAR
+        ),
+        DialogField("height", "Height", "optfloat", d.height),
+        DialogField("weight", "Weight", "optfloat", d.weight),
+        DialogField("hair", "Hair", "text", d.hair),
+        DialogField("eyes", "Eyes", "text", d.eyes),
+        DialogField(
+            "handedness",
+            "Handedness",
+            "select",
+            d.handedness,
+            options=_HANDEDNESS_OPTIONS,
+        ),
+        DialogField(
+            "physical_description",
+            "Physical Description",
+            "text",
+            d.physical_description,
+        ),
+        DialogField("biography", "Biography", "area", d.biography, hint=_EMPHASIS_HINT),
+    ]
+
+
+def _aging_fields(aging: Aging) -> list[DialogField]:
+    return [
+        DialogField("decrepitude", "Decrepitude", "int", aging.decrepitude),
+        DialogField("effects", "Effects of Aging", "text", aging.effects),
+        DialogField("warping_score", "Warping Score", "int", aging.warping_score),
+        DialogField("warping_points", "Warping Points", "int", aging.warping_points),
+    ]
+
+
+def _wounds_fields(wounds: Wounds, *, soak: bool = True) -> list[DialogField]:
+    """Wound counts and Incapacitated/Dead; a character's Soak too (a
+    Familiar's lives with its Characteristics instead)."""
+    fields = [DialogField("soak", "Soak", "int", wounds.soak)] if soak else []
+    return fields + [
+        DialogField("light", "Light Wounds (-1 each)", "int", wounds.light),
+        DialogField("medium", "Medium Wounds (-3 each)", "int", wounds.medium),
+        DialogField("heavy", "Heavy Wounds (-5 each)", "int", wounds.heavy),
+        DialogField("incapacitated", "Incapacitated", "check", wounds.incapacitated),
+        DialogField("dead", "Dead", "check", wounds.dead),
+    ]
+
+
+def _fatigue_fields(level: str) -> list[DialogField]:
+    return [
+        DialogField(
+            "level",
+            "Level",
+            "select",
+            level,
+            options=[(level.title(), level) for level in FATIGUE_LEVELS],
+        )
+    ]
+
+
+def _hermetic_fields(hermetic: HermeticBackground) -> list[DialogField]:
+    h = hermetic
+    return [
+        DialogField(
+            "house",
+            "House",
+            "select",
+            h.house,
+            options=[(house.name, house.id) for house in catalog.load_house_catalog()],
+            allow_blank=True,
+            placeholder="(none selected)",
+        ),
+        DialogField("domus_magna", "Domus Magna", "text", h.domus_magna),
+        DialogField("primus", "Primus", "text", h.primus),
+        DialogField("parens", "Parens", "text", h.parens),
+        DialogField(
+            "covenant_of_apprenticeship",
+            "Covenant of Apprenticeship",
+            "text",
+            h.covenant_of_apprenticeship,
+        ),
+        DialogField(
+            "age_of_apprenticeship",
+            "Age of Apprenticeship",
+            "optint",
+            h.age_of_apprenticeship,
+        ),
+        DialogField("wizards_sigil", "Wizard's Sigil", "text", h.wizards_sigil),
+    ]
+
+
+def _ability_fields(ability: Ability | None) -> list[DialogField]:
+    """An Ability's score and Specialty (its name is the form's title)."""
+    return [
+        DialogField("level", "Level", "int", _attr(ability, "level", 0)),
+        DialogField("xp", "XP", "int", _attr(ability, "xp", 0)),
+        DialogField(
+            "xp_to_next", "XP to next level", "int", _attr(ability, "xp_to_next", 0)
+        ),
+        DialogField(
+            "specialty",
+            "Specialty",
+            "text",
+            _attr(ability, "specialty", None) or "",
+            placeholder="e.g. Swords",
+        ),
+    ]
+
+
+def _ability_from(name: str, category: str, values: dict[str, Any]) -> Ability:
+    return Ability(
+        name=name,
+        category=category,
+        level=values["level"],
+        xp=values["xp"],
+        xp_to_next=values["xp_to_next"],
+        specialty=values["specialty"] or None,
+    )
+
+
+def _familiar_characteristics_fields(familiar: Familiar) -> list[DialogField]:
+    return _characteristics_fields(familiar.characteristics) + [
+        DialogField("base_soak", "Base Soak", "int", familiar.base_soak),
+        DialogField(
+            "magic_resistance", "Magic Resistance", "int", familiar.magic_resistance
         ),
     ]
 
@@ -1676,99 +1899,6 @@ class CovenantBoonHookPickerScreen(
         self.app.push_screen(BoonHookDetailScreen(self.kind, entry.name), handle_detail)
 
 
-class AbilityDetailsScreen(ModalDialog[Ability | None]):
-    """Prompts for level/xp/specialty once an Ability's name+category are known.
-
-    Used both to add a new Ability (existing=None) and to edit one already
-    on the sheet (existing provided, prefilled). Dismisses with the
-    finished Ability, or None if cancelled.
-    """
-
-    DEFAULT_CSS = """
-    AbilityDetailsScreen {
-        align: center middle;
-    }
-
-    #details-dialog {
-        width: 60;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #details-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #details-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(
-        self, name: str, category: str, existing: Ability | None = None
-    ) -> None:
-        super().__init__()
-        self.ability_name = name
-        self.category = category
-        self.existing = existing
-
-    def compose(self) -> ComposeResult:
-        level = self.existing.level if self.existing else 0
-        xp = self.existing.xp if self.existing else 0
-        xp_to_next = self.existing.xp_to_next if self.existing else 0
-        specialty = self.existing.specialty if self.existing else ""
-
-        with Vertical(id="details-dialog"):
-            yield Label(self.ability_name, id="details-title")
-            yield Label("Level")
-            yield Input(value=str(level), type="integer", id="input-level")
-            yield Label("XP")
-            yield Input(value=str(xp), type="integer", id="input-xp")
-            yield Label("XP to next level")
-            yield Input(value=str(xp_to_next), type="integer", id="input-xp-to-next")
-            yield Label("Specialty (optional)")
-            yield Input(
-                value=specialty or "", placeholder="e.g. Swords", id="input-specialty"
-            )
-            yield Static("", id="details-error")
-            with Horizontal(id="details-buttons"):
-                yield Button("Confirm", id="btn-confirm", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-confirm":
-            self._try_confirm()
-
-    def _try_confirm(self) -> None:
-        error = self.query_one("#details-error", Static)
-        try:
-            level = int(self.query_one("#input-level", Input).value.strip())
-            xp = int(self.query_one("#input-xp", Input).value.strip())
-            xp_to_next = int(self.query_one("#input-xp-to-next", Input).value.strip())
-        except ValueError:
-            error.update("Level, XP and XP to next level must be whole numbers.")
-            return
-
-        specialty = self.query_one("#input-specialty", Input).value.strip() or None
-        self.dismiss(
-            Ability(
-                name=self.ability_name,
-                category=self.category,
-                level=level,
-                xp=xp,
-                xp_to_next=xp_to_next,
-                specialty=specialty,
-            )
-        )
-
-
 class AbilityPickerScreen(SearchablePickerScreen[AbilityDef, Ability | None]):
     """Pick an Ability from the catalog, resolve any parameter, set score/specialty.
 
@@ -1820,11 +1950,14 @@ class AbilityPickerScreen(SearchablePickerScreen[AbilityDef, Ability | None]):
             self._prompt_details(entry.name, entry.category)
 
     def _prompt_details(self, name: str, category: str) -> None:
-        def handle_ability(ability: Ability | None) -> None:
-            if ability is not None:
-                self.dismiss(ability)
+        def handle_ability(result: dict[str, Any] | None) -> None:
+            if result is not None:
+                self.dismiss(_ability_from(name, category, result))
 
-        self.app.push_screen(AbilityDetailsScreen(name, category), handle_ability)
+        self.app.push_screen(
+            FieldsDialog(escape(name), _ability_fields(None), save_label="Confirm"),
+            handle_ability,
+        )
 
 
 class SpellChooserScreen(SearchablePickerScreen[Spell, str | None]):
@@ -2074,260 +2207,6 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
                 return
             result[key] = ArtScore(level=level, xp=xp)
         self.dismiss(result)
-
-
-class EditCharacterInfoScreen(ModalDialog[dict[str, object] | None]):
-    """Edits the character sheet's top-panel info: Name, Covenant, Assigned
-    Laboratory (magi only), Setting, Confidence, and Size. Type, Age,
-    Current Year and Current Season are derived/fixed and aren't editable
-    here. Dismisses with a dict of field values, or None if cancelled.
-    """
-
-    DEFAULT_CSS = """
-    EditCharacterInfoScreen {
-        align: center middle;
-    }
-
-    #charinfo-dialog {
-        width: 64;
-        height: auto;
-        max-height: 100%;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    .charinfo-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .charinfo-row Label {
-        width: 20;
-    }
-
-    .charinfo-row Input, .charinfo-row Select {
-        width: 1fr;
-    }
-
-    #charinfo-error {
-        color: $error;
-        height: auto;
-    }
-
-    #charinfo-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, saga: Saga, character: Character) -> None:
-        super().__init__()
-        self.saga = saga
-        self.character = character
-
-    def compose(self) -> ComposeResult:
-        character = self.character
-        b = character.background
-        with Vertical(id="charinfo-dialog"):
-            yield Label("Edit Character Info")
-            with Horizontal(classes="charinfo-row"):
-                yield Label("Name")
-                yield Input(
-                    value=character.name, id="input-charinfo-name", compact=True
-                )
-            with Horizontal(classes="charinfo-row"):
-                yield Label("Covenant")
-                yield Select(
-                    _covenant_options(self.saga),
-                    value=character.covenant_id or Select.NULL,
-                    allow_blank=True,
-                    prompt="(unassigned)",
-                    id="select-charinfo-covenant",
-                    compact=True,
-                )
-            if character.type == "magus":
-                with Horizontal(classes="charinfo-row"):
-                    yield Label("Assigned Laboratory")
-                    yield Select(
-                        [(escape(lab.name), lab.id) for lab in self.saga.laboratories],
-                        value=character.assigned_lab_id or Select.NULL,
-                        allow_blank=True,
-                        prompt="(unassigned)",
-                        id="select-charinfo-laboratory",
-                        compact=True,
-                    )
-            with Horizontal(classes="charinfo-row"):
-                yield Label("Setting")
-                yield Input(value=b.setting, id="input-charinfo-setting", compact=True)
-            with Horizontal(classes="charinfo-row"):
-                yield Label("Confidence Score")
-                yield Input(
-                    value=str(b.confidence_score),
-                    type="integer",
-                    id="input-charinfo-confidence_score",
-                    compact=True,
-                )
-            with Horizontal(classes="charinfo-row"):
-                yield Label("Confidence Points")
-                yield Input(
-                    value=str(b.confidence_points),
-                    type="integer",
-                    id="input-charinfo-confidence_points",
-                    compact=True,
-                )
-            with Horizontal(classes="charinfo-row"):
-                yield Label("Size")
-                yield Input(
-                    value=str(b.size),
-                    type="integer",
-                    id="input-charinfo-size",
-                    compact=True,
-                )
-            yield Static("", id="charinfo-error")
-            with Horizontal(id="charinfo-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#charinfo-error", Static)
-
-        name = self.query_one("#input-charinfo-name", Input).value.strip()
-        if not name:
-            error.update("Name is required.")
-            return
-
-        covenant_id = self._select_value("#select-charinfo-covenant")
-
-        laboratory_id: str | None = None
-        if self.character.type == "magus":
-            laboratory_id = self._select_value("#select-charinfo-laboratory")
-
-        result: dict[str, object] = {
-            "name": name,
-            "covenant_id": covenant_id,
-            "laboratory_id": laboratory_id,
-            "setting": self.query_one("#input-charinfo-setting", Input).value.strip(),
-        }
-
-        for label, field_name in (
-            ("Confidence Score", "confidence_score"),
-            ("Confidence Points", "confidence_points"),
-            ("Size", "size"),
-        ):
-            raw = self.query_one(f"#input-charinfo-{field_name}", Input).value.strip()
-            try:
-                result[field_name] = int(raw)
-            except ValueError:
-                error.update(f"{label} must be a whole number.")
-                return
-
-        self.dismiss(result)
-
-
-class EditCharacteristicsScreen(ModalDialog[Characteristics | None]):
-    """Edits all 8 Characteristics at once: Int/Per/Str/Sta, Pre/Com/Dex/Qik.
-
-    Dismisses with the finished Characteristics, or None if cancelled.
-    """
-
-    DEFAULT_CSS = """
-    EditCharacteristicsScreen {
-        align: center middle;
-    }
-
-    #char-dialog {
-        width: 50;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    .char-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .char-row Label {
-        width: 5;
-    }
-
-    .char-row Input {
-        width: 1fr;
-        margin-right: 2;
-    }
-
-    #char-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #char-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    _ROW1: ClassVar[list[tuple[str, str]]] = [
-        ("Int", "intelligence"),
-        ("Per", "perception"),
-        ("Str", "strength"),
-        ("Sta", "stamina"),
-    ]
-    _ROW2: ClassVar[list[tuple[str, str]]] = [
-        ("Pre", "presence"),
-        ("Com", "communication"),
-        ("Dex", "dexterity"),
-        ("Qik", "quickness"),
-    ]
-
-    def __init__(self, characteristics: Characteristics) -> None:
-        super().__init__()
-        self.characteristics = characteristics
-
-    def compose(self) -> ComposeResult:
-        with Vertical(id="char-dialog"):
-            yield Label("Edit Characteristics", id="char-title")
-            for row in (self._ROW1, self._ROW2):
-                with Horizontal(classes="char-row"):
-                    for label, field_name in row:
-                        yield Label(label)
-                        yield Input(
-                            value=str(getattr(self.characteristics, field_name)),
-                            type="integer",
-                            id=f"input-char-{field_name}",
-                            compact=True,
-                        )
-            yield Static("", id="char-error")
-            with Horizontal(id="char-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#char-error", Static)
-        values: dict[str, int] = {}
-        for label, field_name in (*self._ROW1, *self._ROW2):
-            raw = self.query_one(f"#input-char-{field_name}", Input).value.strip()
-            try:
-                values[field_name] = int(raw)
-            except ValueError:
-                error.update(f"{label} must be a whole number.")
-                return
-        self.dismiss(Characteristics(**values))
 
 
 class ItemAddScreen(ModalDialog[str | None]):
@@ -2813,676 +2692,6 @@ class RawVisPromptScreen(ModalDialog[tuple[str, int] | None]):
             error.update("Pawns must be a whole number.")
             return
         self.dismiss((art, pawns))
-
-
-class EditBiographicalDetailScreen(ModalDialog[dict[str, object] | None]):
-    """Edits the Description tab's Biographical Detail section: the
-    remaining Background fields (Setting/Confidence/Size live in the top
-    panel's EditCharacterInfoScreen) plus every Description field,
-    including the new free-text Biography. Dismisses with
-    {"background": Background, "description": Description}, or None if
-    cancelled -- one dialog edits two dataclasses at once, so the caller
-    assigns each half back to character.background/character.description.
-    """
-
-    DEFAULT_CSS = """
-    EditBiographicalDetailScreen {
-        align: center middle;
-    }
-
-    #biodetail-dialog {
-        width: 92;
-        height: auto;
-        max-height: 100%;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #biodetail-scroll {
-        height: auto;
-        max-height: 14;
-    }
-
-    #biodetail-columns {
-        height: auto;
-    }
-
-    #biodetail-fields {
-        width: 1fr;
-        height: auto;
-        margin-right: 2;
-    }
-
-    .biodetail-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .biodetail-row Label {
-        width: 22;
-    }
-
-    .biodetail-row Input, .biodetail-row Select {
-        width: 1fr;
-    }
-
-    #biodetail-biography-col {
-        width: 1fr;
-        height: auto;
-    }
-
-    #biodetail-biography {
-        height: 13;
-    }
-
-    #biodetail-error {
-        color: $error;
-        height: auto;
-    }
-
-    #biodetail-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    _BACKGROUND_STR_FIELDS: ClassVar[list[tuple[str, str]]] = [
-        ("Player", "player"),
-        ("Birth Name", "birth_name"),
-        ("Race/Nationality", "race_nationality"),
-        ("Place of Origin", "place_of_origin"),
-        ("Religion", "religion"),
-        ("Title/Profession", "title_profession"),
-    ]
-
-    _HANDEDNESS_OPTIONS: ClassVar[list[tuple[str, str]]] = [
-        ("Right", "right"),
-        ("Left", "left"),
-        ("Ambidextrous", "ambidextrous"),
-    ]
-
-    def __init__(self, background: Background, description: Description) -> None:
-        super().__init__()
-        self.background = background
-        self.description = description
-
-    def compose(self) -> ComposeResult:
-        b, d = self.background, self.description
-        with Vertical(id="biodetail-dialog"):
-            yield Label("Edit Biographical Detail")
-            with (
-                VerticalScroll(id="biodetail-scroll"),
-                Horizontal(id="biodetail-columns"),
-            ):
-                with Vertical(id="biodetail-fields"):
-                    with Horizontal(classes="biodetail-row"):
-                        yield Label("Player")
-                        yield Input(value=b.player, id="input-bio-player", compact=True)
-                    with Horizontal(classes="biodetail-row"):
-                        yield Label("Birth Name")
-                        yield Input(
-                            value=b.birth_name,
-                            id="input-bio-birth_name",
-                            compact=True,
-                        )
-                    with Horizontal(classes="biodetail-row"):
-                        yield Label("Year Born")
-                        yield Input(
-                            value="" if b.year_born is None else str(b.year_born),
-                            type="integer",
-                            id="input-bio-year_born",
-                            compact=True,
-                        )
-                    with Horizontal(classes="biodetail-row"):
-                        yield Label("Race/Nationality")
-                        yield Input(
-                            value=b.race_nationality,
-                            id="input-bio-race_nationality",
-                            compact=True,
-                        )
-                    with Horizontal(classes="biodetail-row"):
-                        yield Label("Place of Origin")
-                        yield Input(
-                            value=b.place_of_origin,
-                            id="input-bio-place_of_origin",
-                            compact=True,
-                        )
-                    with Horizontal(classes="biodetail-row"):
-                        yield Label("Religion")
-                        yield Input(
-                            value=b.religion, id="input-bio-religion", compact=True
-                        )
-                    with Horizontal(classes="biodetail-row"):
-                        yield Label("Title/Profession")
-                        yield Input(
-                            value=b.title_profession,
-                            id="input-bio-title_profession",
-                            compact=True,
-                        )
-                    with Horizontal(classes="biodetail-row"):
-                        yield Label("Height")
-                        yield Input(
-                            value="" if d.height is None else str(d.height),
-                            id="input-bio-height",
-                            compact=True,
-                        )
-                    with Horizontal(classes="biodetail-row"):
-                        yield Label("Weight")
-                        yield Input(
-                            value="" if d.weight is None else str(d.weight),
-                            id="input-bio-weight",
-                            compact=True,
-                        )
-                    with Horizontal(classes="biodetail-row"):
-                        yield Label("Hair")
-                        yield Input(value=d.hair, id="input-bio-hair", compact=True)
-                    with Horizontal(classes="biodetail-row"):
-                        yield Label("Eyes")
-                        yield Input(value=d.eyes, id="input-bio-eyes", compact=True)
-                    with Horizontal(classes="biodetail-row"):
-                        yield Label("Handedness")
-                        yield Select(
-                            self._HANDEDNESS_OPTIONS,
-                            value=d.handedness,
-                            allow_blank=False,
-                            id="select-bio-handedness",
-                            compact=True,
-                        )
-                    with Horizontal(classes="biodetail-row"):
-                        yield Label("Physical Description")
-                        yield Input(
-                            value=d.physical_description,
-                            id="input-bio-physical_description",
-                            compact=True,
-                        )
-                with Vertical(id="biodetail-biography-col"):
-                    yield Label("Biography")
-                    yield TextArea(d.biography, id="biodetail-biography")
-            yield Static("", id="biodetail-error")
-            with Horizontal(id="biodetail-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#biodetail-error", Static)
-
-        background_values: dict[str, object] = {
-            # Not editable in this dialog -- seed through unchanged.
-            "setting": self.background.setting,
-            "confidence_score": self.background.confidence_score,
-            "confidence_points": self.background.confidence_points,
-            "size": self.background.size,
-        }
-        for _label, field_name in self._BACKGROUND_STR_FIELDS:
-            background_values[field_name] = self.query_one(
-                f"#input-bio-{field_name}", Input
-            ).value.strip()
-
-        raw_year_born = self.query_one("#input-bio-year_born", Input).value.strip()
-        if raw_year_born:
-            try:
-                background_values["year_born"] = int(raw_year_born)
-            except ValueError:
-                error.update("Year Born must be a whole number.")
-                return
-        else:
-            background_values["year_born"] = None
-
-        height: float | None = None
-        raw_height = self.query_one("#input-bio-height", Input).value.strip()
-        if raw_height:
-            try:
-                height = float(raw_height)
-            except ValueError:
-                error.update("Height must be a number.")
-                return
-
-        weight: float | None = None
-        raw_weight = self.query_one("#input-bio-weight", Input).value.strip()
-        if raw_weight:
-            try:
-                weight = float(raw_weight)
-            except ValueError:
-                error.update("Weight must be a number.")
-                return
-
-        handedness = self.query_one("#select-bio-handedness", Select).value
-        description = Description(
-            height=height,
-            weight=weight,
-            hair=self.query_one("#input-bio-hair", Input).value.strip(),
-            eyes=self.query_one("#input-bio-eyes", Input).value.strip(),
-            handedness=handedness,  # type: ignore[arg-type]
-            physical_description=self.query_one(
-                "#input-bio-physical_description", Input
-            ).value.strip(),
-            biography=self.query_one("#biodetail-biography", TextArea).text.rstrip(),
-        )
-
-        self.dismiss(
-            {"background": Background(**background_values), "description": description}
-        )
-
-
-class EditAgingScreen(ModalDialog[Aging | None]):
-    """Edits Decrepitude and Warping (Score/Points, like an Ability's
-    Level/XP -- see Aging's docstring). Dismisses with the finished Aging,
-    or None if cancelled."""
-
-    DEFAULT_CSS = """
-    EditAgingScreen {
-        align: center middle;
-    }
-
-    #aging-dialog {
-        width: 60;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    .agingedit-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .agingedit-row Label {
-        width: 18;
-    }
-
-    .agingedit-row Input {
-        width: 1fr;
-    }
-
-    #aging-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #aging-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, aging: Aging) -> None:
-        super().__init__()
-        self.aging = aging
-
-    def compose(self) -> ComposeResult:
-        a = self.aging
-        with Vertical(id="aging-dialog"):
-            yield Label("Edit Aging & Warping", id="aging-title")
-            with Horizontal(classes="agingedit-row"):
-                yield Label("Decrepitude")
-                yield Input(
-                    value=str(a.decrepitude),
-                    type="integer",
-                    id="input-aging-decrepitude",
-                    compact=True,
-                )
-            with Horizontal(classes="agingedit-row"):
-                yield Label("Effects of Aging")
-                yield Input(value=a.effects, id="input-aging-effects", compact=True)
-            with Horizontal(classes="agingedit-row"):
-                yield Label("Warping Score")
-                yield Input(
-                    value=str(a.warping_score),
-                    type="integer",
-                    id="input-aging-warping_score",
-                    compact=True,
-                )
-            with Horizontal(classes="agingedit-row"):
-                yield Label("Warping Points")
-                yield Input(
-                    value=str(a.warping_points),
-                    type="integer",
-                    id="input-aging-warping_points",
-                    compact=True,
-                )
-            yield Static("", id="aging-error")
-            with Horizontal(id="aging-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#aging-error", Static)
-        values: dict[str, object] = {}
-        for label, field_name in (
-            ("Decrepitude", "decrepitude"),
-            ("Warping Score", "warping_score"),
-            ("Warping Points", "warping_points"),
-        ):
-            raw = self.query_one(f"#input-aging-{field_name}", Input).value.strip()
-            try:
-                values[field_name] = int(raw)
-            except ValueError:
-                error.update(f"{label} must be a whole number.")
-                return
-        values["effects"] = self.query_one("#input-aging-effects", Input).value.strip()
-        self.dismiss(Aging(**values))
-
-
-class EditWoundsScreen(ModalDialog[Wounds | None]):
-    """Edits Soak, Wound counts per severity, and Incapacitated/Dead. Simple
-    counts, not individual wound records -- matches checking boxes on the
-    paper sheet, not the calculated Wound Penalty (see Wounds's docstring).
-    Dismisses with the finished Wounds, or None if cancelled."""
-
-    DEFAULT_CSS = """
-    EditWoundsScreen {
-        align: center middle;
-    }
-
-    #wounds-dialog {
-        width: 60;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    .woundsedit-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .woundsedit-row Label {
-        width: 22;
-    }
-
-    .woundsedit-row Input {
-        width: 1fr;
-    }
-
-    #wounds-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #wounds-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, wounds: Wounds) -> None:
-        super().__init__()
-        self.wounds = wounds
-
-    def compose(self) -> ComposeResult:
-        w = self.wounds
-        with Vertical(id="wounds-dialog"):
-            yield Label("Edit Wounds", id="wounds-title")
-            with Horizontal(classes="woundsedit-row"):
-                yield Label("Soak")
-                yield Input(
-                    value=str(w.soak),
-                    type="integer",
-                    id="input-wounds-soak",
-                    compact=True,
-                )
-            with Horizontal(classes="woundsedit-row"):
-                yield Label("Light Wounds (-1 each)")
-                yield Input(
-                    value=str(w.light),
-                    type="integer",
-                    id="input-wounds-light",
-                    compact=True,
-                )
-            with Horizontal(classes="woundsedit-row"):
-                yield Label("Medium Wounds (-3 each)")
-                yield Input(
-                    value=str(w.medium),
-                    type="integer",
-                    id="input-wounds-medium",
-                    compact=True,
-                )
-            with Horizontal(classes="woundsedit-row"):
-                yield Label("Heavy Wounds (-5 each)")
-                yield Input(
-                    value=str(w.heavy),
-                    type="integer",
-                    id="input-wounds-heavy",
-                    compact=True,
-                )
-            yield Checkbox(
-                "Incapacitated",
-                value=w.incapacitated,
-                id="check-wounds-incapacitated",
-                compact=True,
-            )
-            yield Checkbox("Dead", value=w.dead, id="check-wounds-dead", compact=True)
-            yield Static("", id="wounds-error")
-            with Horizontal(id="wounds-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#wounds-error", Static)
-        values: dict[str, object] = {}
-        for label, field_name in (
-            ("Soak", "soak"),
-            ("Light Wounds", "light"),
-            ("Medium Wounds", "medium"),
-            ("Heavy Wounds", "heavy"),
-        ):
-            raw = self.query_one(f"#input-wounds-{field_name}", Input).value.strip()
-            try:
-                values[field_name] = int(raw)
-            except ValueError:
-                error.update(f"{label} must be a whole number.")
-                return
-        values["incapacitated"] = self.query_one(
-            "#check-wounds-incapacitated", Checkbox
-        ).value
-        values["dead"] = self.query_one("#check-wounds-dead", Checkbox).value
-        self.dismiss(Wounds(**values))
-
-
-class EditFatigueScreen(ModalDialog[FatigueLevel | None]):
-    """Picks the character's current Fatigue Level. Dismisses with the
-    chosen level, or None if cancelled."""
-
-    DEFAULT_CSS = """
-    EditFatigueScreen {
-        align: center middle;
-    }
-
-    #fatigue-dialog {
-        width: 50;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    .fatigueedit-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .fatigueedit-row Label {
-        width: 14;
-    }
-
-    .fatigueedit-row Select {
-        width: 1fr;
-    }
-
-    #fatigue-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, current: FatigueLevel) -> None:
-        super().__init__()
-        self.current = current
-
-    def compose(self) -> ComposeResult:
-        with Vertical(id="fatigue-dialog"):
-            yield Label("Edit Fatigue Level", id="fatigue-title")
-            with Horizontal(classes="fatigueedit-row"):
-                yield Label("Level")
-                yield Select(
-                    [(level.title(), level) for level in FATIGUE_LEVELS],
-                    value=self.current,
-                    allow_blank=False,
-                    id="select-fatigue-level",
-                    compact=True,
-                )
-            with Horizontal(id="fatigue-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            level = self.query_one("#select-fatigue-level", Select).value
-            self.dismiss(level)  # type: ignore[arg-type]
-
-
-class EditHermeticBackgroundScreen(ModalDialog[HermeticBackground | None]):
-    """Edits a magus's Hermetic lineage block: House (picked from the
-    catalog) plus Domus Magna/Primus/Parens/Covenant of Apprenticeship/
-    Wizard's Sigil. Dismisses with the finished HermeticBackground, or None
-    if cancelled."""
-
-    DEFAULT_CSS = """
-    EditHermeticBackgroundScreen {
-        align: center middle;
-    }
-
-    #hermetic-dialog {
-        width: 70;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    .hermeticedit-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .hermeticedit-row Label {
-        width: 26;
-    }
-
-    .hermeticedit-row Input, .hermeticedit-row Select {
-        width: 1fr;
-    }
-
-    #hermetic-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    _STR_FIELDS_BEFORE_AGE: ClassVar[list[tuple[str, str]]] = [
-        ("Domus Magna", "domus_magna"),
-        ("Primus", "primus"),
-        ("Parens", "parens"),
-        ("Covenant of Apprenticeship", "covenant_of_apprenticeship"),
-    ]
-    _STR_FIELDS_AFTER_AGE: ClassVar[list[tuple[str, str]]] = [
-        ("Wizard's Sigil", "wizards_sigil"),
-    ]
-
-    def __init__(self, hermetic: HermeticBackground) -> None:
-        super().__init__()
-        self.hermetic = hermetic
-
-    def compose(self) -> ComposeResult:
-        h = self.hermetic
-        houses = catalog.load_house_catalog()
-        with Vertical(id="hermetic-dialog"):
-            yield Label("Edit Hermetic Background", id="hermetic-title")
-            with Horizontal(classes="hermeticedit-row"):
-                yield Label("House")
-                yield Select(
-                    [(house.name, house.id) for house in houses],
-                    value=h.house or Select.NULL,
-                    allow_blank=True,
-                    prompt="(none selected)",
-                    id="select-hermetic-house",
-                    compact=True,
-                )
-            for label, field_name in self._STR_FIELDS_BEFORE_AGE:
-                with Horizontal(classes="hermeticedit-row"):
-                    yield Label(label)
-                    yield Input(
-                        value=getattr(h, field_name),
-                        id=f"input-hermetic-{field_name}",
-                        compact=True,
-                    )
-            with Horizontal(classes="hermeticedit-row"):
-                yield Label("Age of Apprenticeship")
-                yield Input(
-                    value=(
-                        ""
-                        if h.age_of_apprenticeship is None
-                        else str(h.age_of_apprenticeship)
-                    ),
-                    type="integer",
-                    id="input-hermetic-age_of_apprenticeship",
-                    compact=True,
-                )
-            for label, field_name in self._STR_FIELDS_AFTER_AGE:
-                with Horizontal(classes="hermeticedit-row"):
-                    yield Label(label)
-                    yield Input(
-                        value=getattr(h, field_name),
-                        id=f"input-hermetic-{field_name}",
-                        compact=True,
-                    )
-            with Horizontal(id="hermetic-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            house = self._select_value("#select-hermetic-house")
-            values: dict[str, object] = {"house": house}
-            for _label, field_name in (
-                *self._STR_FIELDS_BEFORE_AGE,
-                *self._STR_FIELDS_AFTER_AGE,
-            ):
-                values[field_name] = self.query_one(
-                    f"#input-hermetic-{field_name}", Input
-                ).value.strip()
-            raw_age = self.query_one(
-                "#input-hermetic-age_of_apprenticeship", Input
-            ).value.strip()
-            values["age_of_apprenticeship"] = int(raw_age) if raw_age else None
-            self.dismiss(HermeticBackground(**values))
 
 
 class EditLabIdentityScreen(ModalDialog[dict[str, object] | None]):
@@ -4237,267 +3446,6 @@ class EditFamiliarBindingScreen(ModalDialog[dict[str, object] | None]):
             result[attribute] = self.query_one(f"#select-fam-{attribute}", Select).value
 
         self.dismiss(result)
-
-
-class EditFamiliarCharacteristicsScreen(ModalDialog[dict[str, object] | None]):
-    """Edits a Familiar's 8 Characteristics plus its two derived-defense
-    figures (Base Soak, Magic Resistance) -- both typed in, no formula
-    computed (see Familiar.base_soak/magic_resistance). Dismisses with
-    {"characteristics": Characteristics, "base_soak": int,
-    "magic_resistance": int}, or None if cancelled."""
-
-    DEFAULT_CSS = """
-    EditFamiliarCharacteristicsScreen {
-        align: center middle;
-    }
-
-    #fam-char-dialog {
-        width: 64;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    .famcharedit-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .famcharedit-row Label {
-        width: 22;
-    }
-
-    .famcharedit-row Input {
-        width: 1fr;
-    }
-
-    #fam-char-error {
-        color: $error;
-        height: auto;
-    }
-
-    #fam-char-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    _CHARACTERISTICS: ClassVar[list[tuple[str, str]]] = [
-        ("Intelligence (Int)", "intelligence"),
-        ("Perception (Per)", "perception"),
-        ("Presence (Pre)", "presence"),
-        ("Communication (Com)", "communication"),
-        ("Strength (Str)", "strength"),
-        ("Stamina (Sta)", "stamina"),
-        ("Dexterity (Dex)", "dexterity"),
-        ("Quickness (Qik)", "quickness"),
-    ]
-
-    def __init__(self, familiar: Familiar) -> None:
-        super().__init__()
-        self.familiar = familiar
-
-    def compose(self) -> ComposeResult:
-        c = self.familiar.characteristics
-        with Vertical(id="fam-char-dialog"):
-            yield Label("Edit Characteristics")
-            for label, field_name in self._CHARACTERISTICS:
-                with Horizontal(classes="famcharedit-row"):
-                    yield Label(label)
-                    yield Input(
-                        value=str(getattr(c, field_name)),
-                        type="integer",
-                        id=f"input-famchar-{field_name}",
-                        compact=True,
-                    )
-            with Horizontal(classes="famcharedit-row"):
-                yield Label("Base Soak")
-                yield Input(
-                    value=str(self.familiar.base_soak),
-                    type="integer",
-                    id="input-famchar-base-soak",
-                    compact=True,
-                )
-            with Horizontal(classes="famcharedit-row"):
-                yield Label("Magic Resistance")
-                yield Input(
-                    value=str(self.familiar.magic_resistance),
-                    type="integer",
-                    id="input-famchar-magic-resistance",
-                    compact=True,
-                )
-            yield Static("", id="fam-char-error")
-            with Horizontal(id="fam-char-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#fam-char-error", Static)
-        values: dict[str, int] = {}
-        for label, field_name in self._CHARACTERISTICS:
-            raw = self.query_one(f"#input-famchar-{field_name}", Input).value.strip()
-            try:
-                values[field_name] = int(raw)
-            except ValueError:
-                error.update(f"{label} must be a whole number.")
-                return
-
-        for field_name, key, label in (
-            ("input-famchar-base-soak", "base_soak", "Base Soak"),
-            (
-                "input-famchar-magic-resistance",
-                "magic_resistance",
-                "Magic Resistance",
-            ),
-        ):
-            raw = self.query_one(f"#{field_name}", Input).value.strip()
-            try:
-                values[key] = int(raw)
-            except ValueError:
-                error.update(f"{label} must be a whole number.")
-                return
-
-        self.dismiss(
-            {
-                "characteristics": Characteristics(
-                    intelligence=values["intelligence"],
-                    perception=values["perception"],
-                    presence=values["presence"],
-                    communication=values["communication"],
-                    strength=values["strength"],
-                    stamina=values["stamina"],
-                    dexterity=values["dexterity"],
-                    quickness=values["quickness"],
-                ),
-                "base_soak": values["base_soak"],
-                "magic_resistance": values["magic_resistance"],
-            }
-        )
-
-
-class EditFamiliarWoundsScreen(ModalDialog[Wounds | None]):
-    """Edits a Familiar's Wound counts and Incapacitated/Dead -- same idea
-    as EditWoundsScreen, but with no Soak field: a Familiar's Soak is the
-    Characteristics tab's typed-in Base Soak (Familiar.base_soak), not a
-    per-Wounds figure like a Character's. Dismisses with the finished
-    Wounds (its `soak` untouched), or None if cancelled."""
-
-    DEFAULT_CSS = """
-    EditFamiliarWoundsScreen {
-        align: center middle;
-    }
-
-    #fam-wounds-dialog {
-        width: 60;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    .famwoundsedit-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .famwoundsedit-row Label {
-        width: 22;
-    }
-
-    .famwoundsedit-row Input {
-        width: 1fr;
-    }
-
-    #fam-wounds-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #fam-wounds-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, wounds: Wounds) -> None:
-        super().__init__()
-        self.wounds = wounds
-
-    def compose(self) -> ComposeResult:
-        w = self.wounds
-        with Vertical(id="fam-wounds-dialog"):
-            yield Label("Edit Wounds", id="fam-wounds-title")
-            with Horizontal(classes="famwoundsedit-row"):
-                yield Label("Light Wounds (-1 each)")
-                yield Input(
-                    value=str(w.light),
-                    type="integer",
-                    id="input-famwounds-light",
-                    compact=True,
-                )
-            with Horizontal(classes="famwoundsedit-row"):
-                yield Label("Medium Wounds (-3 each)")
-                yield Input(
-                    value=str(w.medium),
-                    type="integer",
-                    id="input-famwounds-medium",
-                    compact=True,
-                )
-            with Horizontal(classes="famwoundsedit-row"):
-                yield Label("Heavy Wounds (-5 each)")
-                yield Input(
-                    value=str(w.heavy),
-                    type="integer",
-                    id="input-famwounds-heavy",
-                    compact=True,
-                )
-            yield Checkbox(
-                "Incapacitated",
-                value=w.incapacitated,
-                id="check-famwounds-incapacitated",
-                compact=True,
-            )
-            yield Checkbox(
-                "Dead", value=w.dead, id="check-famwounds-dead", compact=True
-            )
-            yield Static("", id="fam-wounds-error")
-            with Horizontal(id="fam-wounds-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#fam-wounds-error", Static)
-        values: dict[str, object] = {"soak": self.wounds.soak}
-        for label, field_name in (
-            ("Light Wounds", "light"),
-            ("Medium Wounds", "medium"),
-            ("Heavy Wounds", "heavy"),
-        ):
-            raw = self.query_one(f"#input-famwounds-{field_name}", Input).value.strip()
-            try:
-                values[field_name] = int(raw)
-            except ValueError:
-                error.update(f"{label} must be a whole number.")
-                return
-        values["incapacitated"] = self.query_one(
-            "#check-famwounds-incapacitated", Checkbox
-        ).value
-        values["dead"] = self.query_one("#check-famwounds-dead", Checkbox).value
-        self.dismiss(Wounds(**values))
 
 
 class EditCovenantScreen(ModalDialog[dict[str, object] | None]):
@@ -5726,7 +4674,8 @@ class DialogField:
     """One row of a FieldsDialog.
 
     `kind`: "text" (a stripped string), "int" (a whole number), "optint" (a
-    whole number or blank -> None), "select" (one of `options` as (label,
+    whole number or blank -> None), "optfloat" (a number, decimals allowed,
+    or blank -> None), "select" (one of `options` as (label,
     value) pairs; blank -> None when `allow_blank`), "check" (a boolean),
     "area" (multi-line text), "picker" (a button showing `display(value)`
     that opens the screen `picker(value)` returns; its result becomes the
@@ -5895,6 +4844,13 @@ class FieldsDialog(ModalDialog[dict[str, Any] | None]):
                     id=widget_id,
                     compact=True,
                 )
+            elif spec.kind == "optfloat":
+                yield Input(
+                    value="" if spec.value is None else str(spec.value),
+                    type="number",
+                    id=widget_id,
+                    compact=True,
+                )
             elif spec.kind == "select":
                 values = [value for _, value in spec.options]
                 if spec.value in values:
@@ -5954,6 +4910,11 @@ class FieldsDialog(ModalDialog[dict[str, Any] | None]):
             elif spec.kind in ("int", "optint"):
                 try:
                     values[spec.key] = int(widget.value.strip())
+                except ValueError:
+                    values[spec.key] = None
+            elif spec.kind == "optfloat":
+                try:
+                    values[spec.key] = float(widget.value.strip())
                 except ValueError:
                     values[spec.key] = None
             elif spec.kind == "select":
@@ -6046,6 +5007,19 @@ class FieldsDialog(ModalDialog[dict[str, Any] | None]):
                         value = int(raw)
                     except ValueError:
                         error.update(f"{spec.label} must be a whole number.")
+                        return
+            elif spec.kind == "optfloat":
+                raw = widget.value.strip()
+                if not raw:
+                    value = None
+                    if spec.required:
+                        error.update(f"{spec.label} is required.")
+                        return
+                else:
+                    try:
+                        value = float(raw)
+                    except ValueError:
+                        error.update(f"{spec.label} must be a number.")
                         return
             elif spec.kind == "select":
                 value = widget.value if isinstance(widget.value, str) else None
@@ -10801,28 +9775,26 @@ class WorkspaceScreen(Screen[None]):
         if character is None:
             return
 
-        def handle_result(result: dict[str, object] | None) -> None:
+        def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
-            character.name = cast(str, result["name"])
-            character.covenant_id = cast("str | None", result["covenant_id"])
+            character.name = result["name"]
+            character.covenant_id = result["covenant_id"]
             self.selected_covenant = self.saga.covenant(character.covenant_id)
             if character.type == "magus":
-                assign_laboratory(
-                    self.saga, character, cast("str | None", result["laboratory_id"])
-                )
-            character.background.setting = cast(str, result["setting"])
-            character.background.confidence_score = cast(
-                int, result["confidence_score"]
-            )
-            character.background.confidence_points = cast(
-                int, result["confidence_points"]
-            )
-            character.background.size = cast(int, result["size"])
+                assign_laboratory(self.saga, character, result["laboratory_id"])
+            background = character.background
+            background.setting = result["setting"]
+            background.confidence_score = result["confidence_score"]
+            background.confidence_points = result["confidence_points"]
+            background.size = result["size"]
             self._commit("section-char-info", tree=True)
 
         self.app.push_screen(
-            EditCharacterInfoScreen(self.saga, character), handle_result
+            FieldsDialog(
+                "Edit Character Info", _character_info_fields(self.saga, character)
+            ),
+            handle_result,
         )
 
     def _edit_characteristics(self) -> None:
@@ -10830,13 +9802,17 @@ class WorkspaceScreen(Screen[None]):
         if character is None:
             return
 
-        def handle_result(characteristics: Characteristics | None) -> None:
-            if characteristics is not None:
-                character.characteristics = characteristics
+        def handle_result(result: dict[str, Any] | None) -> None:
+            if result is not None:
+                character.characteristics = _characteristics_from(result)
                 self._commit("section-char-characteristics")
 
         self.app.push_screen(
-            EditCharacteristicsScreen(character.characteristics), handle_result
+            FieldsDialog(
+                "Edit Characteristics",
+                _characteristics_fields(character.characteristics),
+            ),
+            handle_result,
         )
 
     def _edit_biographical_detail(self) -> None:
@@ -10844,16 +9820,20 @@ class WorkspaceScreen(Screen[None]):
         if character is None:
             return
 
-        def handle_result(result: dict[str, object] | None) -> None:
+        def handle_result(result: dict[str, Any] | None) -> None:
             if result is not None:
-                character.background = cast(Background, result["background"])
-                character.description = cast(Description, result["description"])
+                for attribute in known_fields(Background, result):
+                    setattr(character.background, attribute, result[attribute])
+                character.description = Description(**known_fields(Description, result))
                 self._commit("section-char-biographical")
                 # Age (derived from Year Born) lives in the top panel.
                 self._refresh_character_section("section-char-info")
 
         self.app.push_screen(
-            EditBiographicalDetailScreen(character.background, character.description),
+            FieldsDialog(
+                "Edit Biographical Detail",
+                _biographical_fields(character.background, character.description),
+            ),
             handle_result,
         )
 
@@ -10862,12 +9842,15 @@ class WorkspaceScreen(Screen[None]):
         if character is None:
             return
 
-        def handle_result(aging: Aging | None) -> None:
-            if aging is not None:
-                character.aging = aging
+        def handle_result(result: dict[str, Any] | None) -> None:
+            if result is not None:
+                character.aging = Aging(**result)
                 self._commit("section-aging")
 
-        self.app.push_screen(EditAgingScreen(character.aging), handle_result)
+        self.app.push_screen(
+            FieldsDialog("Edit Aging & Warping", _aging_fields(character.aging)),
+            handle_result,
+        )
 
     # -- Abilities --
 
@@ -10934,13 +9917,15 @@ class WorkspaceScreen(Screen[None]):
             return
         existing = character.abilities[index]
 
-        def handle_result(ability: Ability | None) -> None:
-            if ability is not None:
-                character.abilities[index] = ability
+        def handle_result(result: dict[str, Any] | None) -> None:
+            if result is not None:
+                character.abilities[index] = _ability_from(
+                    existing.name, existing.category, result
+                )
                 self._commit("tab-abilities")
 
         self.app.push_screen(
-            AbilityDetailsScreen(existing.name, existing.category, existing),
+            FieldsDialog(escape(existing.name), _ability_fields(existing)),
             handle_result,
         )
 
@@ -10959,24 +9944,32 @@ class WorkspaceScreen(Screen[None]):
         if character is None:
             return
 
-        def handle_result(wounds: Wounds | None) -> None:
-            if wounds is not None:
-                character.wounds = wounds
+        def handle_result(result: dict[str, Any] | None) -> None:
+            if result is not None:
+                character.wounds = Wounds(**result)
                 self._commit("section-char-health")
 
-        self.app.push_screen(EditWoundsScreen(character.wounds), handle_result)
+        self.app.push_screen(
+            FieldsDialog("Edit Wounds", _wounds_fields(character.wounds)),
+            handle_result,
+        )
 
     def _edit_fatigue(self) -> None:
         character = self.selected_character
         if character is None:
             return
 
-        def handle_result(level: FatigueLevel | None) -> None:
-            if level is not None:
-                character.fatigue_level = level
+        def handle_result(result: dict[str, Any] | None) -> None:
+            if result is not None:
+                character.fatigue_level = result["level"]
                 self._commit("section-char-health")
 
-        self.app.push_screen(EditFatigueScreen(character.fatigue_level), handle_result)
+        self.app.push_screen(
+            FieldsDialog(
+                "Edit Fatigue Level", _fatigue_fields(character.fatigue_level)
+            ),
+            handle_result,
+        )
 
     # -- Arts (magi only) --
 
@@ -11104,13 +10097,16 @@ class WorkspaceScreen(Screen[None]):
         if character is None:
             return
 
-        def handle_result(hermetic: HermeticBackground | None) -> None:
-            if hermetic is not None:
-                character.hermetic = hermetic
+        def handle_result(result: dict[str, Any] | None) -> None:
+            if result is not None:
+                character.hermetic = HermeticBackground(**result)
                 self._commit("section-hermetic-background")
 
         self.app.push_screen(
-            EditHermeticBackgroundScreen(character.hermetic), handle_result
+            FieldsDialog(
+                "Edit Hermetic Background", _hermetic_fields(character.hermetic)
+            ),
+            handle_result,
         )
 
     # -- Spells known (magi only) --
@@ -11836,15 +10832,20 @@ class WorkspaceScreen(Screen[None]):
         if familiar is None:
             return
 
-        def handle_result(result: dict[str, object] | None) -> None:
+        def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
-            familiar.characteristics = result["characteristics"]
+            familiar.characteristics = _characteristics_from(result)
             familiar.base_soak = result["base_soak"]
             familiar.magic_resistance = result["magic_resistance"]
             self._commit("section-fam-characteristics")
 
-        self.app.push_screen(EditFamiliarCharacteristicsScreen(familiar), handle_result)
+        self.app.push_screen(
+            FieldsDialog(
+                "Edit Characteristics", _familiar_characteristics_fields(familiar)
+            ),
+            handle_result,
+        )
 
     # -- Familiar: Combat & Health --
 
@@ -11853,24 +10854,30 @@ class WorkspaceScreen(Screen[None]):
         if familiar is None:
             return
 
-        def handle_result(wounds: Wounds | None) -> None:
-            if wounds is not None:
-                familiar.wounds = wounds
+        def handle_result(result: dict[str, Any] | None) -> None:
+            if result is not None:
+                familiar.wounds = Wounds(soak=familiar.wounds.soak, **result)
                 self._commit("section-fam-health")
 
-        self.app.push_screen(EditFamiliarWoundsScreen(familiar.wounds), handle_result)
+        self.app.push_screen(
+            FieldsDialog("Edit Wounds", _wounds_fields(familiar.wounds, soak=False)),
+            handle_result,
+        )
 
     def _edit_familiar_fatigue(self) -> None:
         familiar = self.selected_familiar
         if familiar is None:
             return
 
-        def handle_result(level: FatigueLevel | None) -> None:
-            if level is not None:
-                familiar.fatigue_level = level
+        def handle_result(result: dict[str, Any] | None) -> None:
+            if result is not None:
+                familiar.fatigue_level = result["level"]
                 self._commit("section-fam-health")
 
-        self.app.push_screen(EditFatigueScreen(familiar.fatigue_level), handle_result)
+        self.app.push_screen(
+            FieldsDialog("Edit Fatigue Level", _fatigue_fields(familiar.fatigue_level)),
+            handle_result,
+        )
 
     def _selected_familiar_natural_weapon(self) -> int | None:
         view = self._familiar_sheet_view
@@ -12001,13 +11008,15 @@ class WorkspaceScreen(Screen[None]):
             return
         existing = familiar.abilities[index]
 
-        def handle_result(ability: Ability | None) -> None:
-            if ability is not None:
-                familiar.abilities[index] = ability
+        def handle_result(result: dict[str, Any] | None) -> None:
+            if result is not None:
+                familiar.abilities[index] = _ability_from(
+                    existing.name, existing.category, result
+                )
                 self._commit("tab-fam-abilities")
 
         self.app.push_screen(
-            AbilityDetailsScreen(existing.name, existing.category, existing),
+            FieldsDialog(escape(existing.name), _ability_fields(existing)),
             handle_result,
         )
 

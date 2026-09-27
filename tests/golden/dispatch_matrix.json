@@ -412,7 +412,7 @@
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
-        "e": "EditCharacterInfoScreen",
+        "e": "FieldsDialog: Edit Character Info",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -425,7 +425,7 @@
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
-        "e": "EditCharacteristicsScreen: Edit Characteristics",
+        "e": "FieldsDialog: Edit Characteristics",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -438,7 +438,7 @@
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
-        "e": "EditHermeticBackgroundScreen: Edit Hermetic Background",
+        "e": "FieldsDialog: Edit Hermetic Background",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -451,7 +451,7 @@
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
-        "e": "EditBiographicalDetailScreen",
+        "e": "FieldsDialog: Edit Biographical Detail",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -490,7 +490,7 @@
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
-        "e": "EditAgingScreen: Edit Aging & Warping",
+        "e": "FieldsDialog: Edit Aging & Warping",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -503,7 +503,7 @@
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
-        "e": "EditWoundsScreen: Edit Wounds",
+        "e": "FieldsDialog: Edit Wounds",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -633,7 +633,7 @@
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
-        "e": "EditCharacterInfoScreen",
+        "e": "FieldsDialog: Edit Character Info",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -646,7 +646,7 @@
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
-        "e": "EditCharacterInfoScreen",
+        "e": "FieldsDialog: Edit Character Info",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -884,7 +884,7 @@
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
-        "e": "EditFamiliarCharacteristicsScreen",
+        "e": "FieldsDialog: Edit Characteristics",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -897,7 +897,7 @@
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
-        "e": "EditFamiliarWoundsScreen: Edit Wounds",
+        "e": "FieldsDialog: Edit Wounds",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",

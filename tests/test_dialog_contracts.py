@@ -187,14 +187,14 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Name": ""},
     ),
     "edit characteristics": Contract(
-        prefill={"Int": "0", "Qik": "0"},
-        edits={"Int": "3", "Qik": "-2"},
+        prefill={"Intelligence": "0", "Quickness": "0"},
+        edits={"Intelligence": "3", "Quickness": "-2"},
         saved=lambda s: (
             _char(s).characteristics.intelligence,
             _char(s).characteristics.quickness,
         ),
         expected=(3, -2),
-        invalid={"Int": "-"},
+        invalid={"Intelligence": "-"},
     ),
     "edit biographical detail": Contract(
         prefill={"Player": "", "Handedness": "right"},
@@ -254,6 +254,7 @@ CONTRACTS: dict[str, Contract] = {
             _char(s).hermetic.age_of_apprenticeship,
         ),
         expected=("Durenmar", 15),
+        invalid={"Age of Apprenticeship": "-"},  # crashed before (B3)
     ),
     "edit ability": Contract(
         prefill={"Level": "4", "XP": "0"},
