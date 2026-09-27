@@ -407,3 +407,19 @@ def test_the_spell_import_preview():
     assert "1 has the same name as another spell" in preview
     assert "1 General-level" in preview
     assert "1 row(s) will be skipped" in preview
+
+
+def test_add_own_spell_uses_a_saga_prefixed_id():
+    saga = Saga(id="s", name="S")
+    spell = sp.add_own_spell(saga, "Pilum of Fire", "Creo", "Ignem")
+    again = sp.add_own_spell(saga, "Pilum of Fire", "Creo", "Ignem")
+    assert (spell.id, again.id) == ("saga_pilum_of_fire", "saga_pilum_of_fire_2")
+    assert saga.spells == [spell, again]
+    assert (spell.technique, spell.form) == ("Creo", "Ignem")
+
+
+def test_add_imported_spells_gives_each_a_unique_own_id():
+    saga = Saga(id="s", name="S")
+    spells = [_spell(id="", name="Glow"), _spell(id="", name="Glow")]
+    sp.add_imported_spells(saga, spells)
+    assert [s.id for s in saga.spells] == ["saga_glow", "saga_glow_2"]

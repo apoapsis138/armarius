@@ -10386,15 +10386,9 @@ class WorkspaceScreen(Screen[None]):
                 return
             target = spell
             if target is None:
-                target = Spell(
-                    id=storage.generate_unique_id(
-                        f"saga {values['name']}", spl.all_spell_ids(saga)
-                    ),
-                    name=values["name"],
-                    technique=values["technique"],
-                    form=values["form"],
+                target = spl.add_own_spell(
+                    saga, values["name"], values["technique"], values["form"]
                 )
-                saga.spells.append(target)
             _spell_from_values(target, values)
             storage.save_saga(saga)
             self._spells_changed()
@@ -10553,14 +10547,7 @@ class WorkspaceScreen(Screen[None]):
                 return
             target = book
             if target is None:
-                target = Book(
-                    id=storage.generate_unique_id(
-                        values["name"], [b.id for b in saga.books]
-                    ),
-                    name=values["name"],
-                    type=values["type"],
-                )
-                saga.books.append(target)
+                target = bk.add_book(saga, values["name"], values["type"])
             _book_from_values(target, values, saga)
             storage.save_saga(saga)
             self._books_changed()
@@ -10692,16 +10679,7 @@ class WorkspaceScreen(Screen[None]):
         saga = self.saga
 
         def finish(accepted: list[Book], skipped: int) -> None:
-            ids = [b.id for b in saga.books]
-            for book in accepted:
-                spell = bk.book_spell(saga, book)
-                if spell is not None:
-                    book.spell_id = spell.id  # link it now it's matched by name
-                book.id = storage.generate_unique_id(book.name, ids)
-                ids.append(book.id)
-                if covenant is not None:
-                    book.owner_kind, book.owner_id = "covenant", covenant.id
-                saga.books.append(book)
+            bk.add_imported_books(saga, accepted, covenant)
             if accepted:
                 storage.save_saga(saga)
                 self._books_changed()
@@ -10792,11 +10770,7 @@ class WorkspaceScreen(Screen[None]):
             existing = {sp.name for sp in spl.all_spells(saga)}
 
             def finish(accepted: list[Spell], skipped: int) -> None:
-                ids = spl.all_spell_ids(saga)
-                for spell in accepted:
-                    spell.id = storage.generate_unique_id(f"saga {spell.name}", ids)
-                    ids.add(spell.id)
-                    saga.spells.append(spell)
+                spl.add_imported_spells(saga, accepted)
                 if accepted:
                     storage.save_saga(saga)
                     self._spells_changed()

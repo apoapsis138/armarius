@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
 
-from . import catalog
+from . import catalog, storage
 from . import spells as spl
 from .markup import escape, fit, markdown_inline
 from .models import (
@@ -705,3 +705,35 @@ def import_preview(
         if len(result.skipped) > len(shown):
             lines.append(f"  ...and {len(result.skipped) - len(shown)} more.")
     return "\n".join(lines)
+
+
+# ------------------------------------------------------------------ adding
+
+
+def add_book(saga: Saga, name: str, book_type: str) -> Book:
+    """A new book, added to `saga.books` with no owner."""
+    book = Book(
+        id=storage.generate_unique_id(name, [b.id for b in saga.books]),
+        name=name,
+        type=book_type,
+    )
+    saga.books.append(book)
+    return book
+
+
+def add_imported_books(
+    saga: Saga, books: list[Book], covenant: Covenant | None
+) -> None:
+    """Add imported books: each gets an id, is linked to its spell now that
+    the spell can be matched by name, and goes to `covenant` if one is given
+    (otherwise it stays unassigned)."""
+    ids = [b.id for b in saga.books]
+    for book in books:
+        spell = book_spell(saga, book)
+        if spell is not None:
+            book.spell_id = spell.id
+        book.id = storage.generate_unique_id(book.name, ids)
+        ids.append(book.id)
+        if covenant is not None:
+            book.owner_kind, book.owner_id = "covenant", covenant.id
+        saga.books.append(book)

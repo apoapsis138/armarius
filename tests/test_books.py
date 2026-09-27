@@ -510,3 +510,31 @@ def test_a_book_whose_spell_cant_be_found_is_flagged():
     assert bk.status_problems(lost) == []  # without the saga, no lookup
     linked = _book("Lab Text", spell_id="spell_pilum_of_fire")
     assert bk.status_problems(linked, saga) == []
+
+
+def test_add_book_gives_it_a_unique_id_and_no_owner():
+    saga = _saga()
+    first = bk.add_book(saga, "Summa of Flame", "Art Summa")
+    second = bk.add_book(saga, "Summa of Flame", "Art Summa")
+    assert (first.id, second.id) == ("summa_of_flame", "summa_of_flame_2")
+    assert saga.books[-2:] == [first, second]
+    assert (second.owner_kind, second.owner_id) == (None, None)
+
+
+def test_add_imported_books_links_spells_and_files_them_under_the_covenant():
+    saga = _saga()
+    spell = Spell(id="own1", name="Lamp of Tobias", technique="Creo", form="Ignem")
+    saga.spells.append(spell)
+    lab_text = Book(id="", name="Notes", type="Lab Text", spell_name="Lamp of Tobias")
+    loose = Book(id="", name="Notes", type="Other")
+    bk.add_imported_books(saga, [lab_text, loose], saga.covenants[0])
+    assert (lab_text.id, loose.id) == ("notes", "notes_2")
+    assert (lab_text.spell_id, loose.spell_id) == ("own1", None)
+    assert all(
+        b.owner_kind == "covenant" and b.owner_id == "cov1" for b in (lab_text, loose)
+    )
+    assert saga.books[-2:] == [lab_text, loose]
+
+    unassigned = Book(id="", name="Stray", type="Other")
+    bk.add_imported_books(saga, [unassigned], None)
+    assert unassigned.owner_id is None

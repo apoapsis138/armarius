@@ -15,7 +15,7 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from . import catalog
+from . import catalog, storage
 from .markup import escape, fit
 from .models import (
     ART_ABBREVIATIONS,
@@ -597,3 +597,33 @@ def spell_import_preview(
         if len(result.skipped) > len(shown):
             lines.append(f"  ...and {len(result.skipped) - len(shown)} more.")
     return "\n".join(lines)
+
+
+# ------------------------------------------------------------------ adding
+
+
+def _own_spell_id(name: str, taken: set[str]) -> str:
+    """The saga's own spells get ids like "saga_pilum_of_fire", so they
+    can't clash with the catalog's "spell_..." ids."""
+    return storage.generate_unique_id(f"saga {name}", taken)
+
+
+def add_own_spell(saga: Saga, name: str, technique: str, form: str) -> Spell:
+    """A new spell of the saga's own, added to `saga.spells`."""
+    spell = Spell(
+        id=_own_spell_id(name, all_spell_ids(saga)),
+        name=name,
+        technique=technique,
+        form=form,
+    )
+    saga.spells.append(spell)
+    return spell
+
+
+def add_imported_spells(saga: Saga, spells: list[Spell]) -> None:
+    """Give imported spells ids of the saga's own and add them."""
+    ids = all_spell_ids(saga)
+    for spell in spells:
+        spell.id = _own_spell_id(spell.name, ids)
+        ids.add(spell.id)
+        saga.spells.append(spell)
