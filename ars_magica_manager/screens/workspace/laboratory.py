@@ -12,6 +12,7 @@ from ...markup import escape
 from ...models import (
     DiaryEntry,
     LabCharacteristics,
+    Laboratory,
     NamedDescription,
     add_raw_vis,
     assign_laboratory_owner,
@@ -36,6 +37,11 @@ from ..prompts import (
 from .base import (
     WorkspaceBase,
 )
+
+
+def _diary_labels(lab: Laboratory) -> list[str]:
+    """How the Diary's edit and remove pickers list its entries (markup)."""
+    return [f"{e.year} {e.season} -- {escape(e.name)}" for e in lab.diary]
 
 
 class LaboratoryActions(WorkspaceBase):
@@ -281,10 +287,7 @@ class LaboratoryActions(WorkspaceBase):
             self.notify("No Diary entries to remove.")
             return
 
-        labels = [
-            f"{entry.year} {entry.season} -- {escape(entry.name)}"
-            for entry in lab.diary
-        ]
+        labels = _diary_labels(lab)
 
         def handle_result(index: int | None) -> None:
             if index is not None:
@@ -417,7 +420,7 @@ class LaboratoryActions(WorkspaceBase):
         self._edit_lab_entry(
             picker_title="Edit which Diary Entry?",
             empty_message="No Diary entries to edit.",
-            labels=[f"{e.year} {e.season} -- {e.name}" for e in lab.diary],
+            labels=_diary_labels(lab),
             screen_for=lambda i: _diary_entry_dialog(
                 self.saga.current_year, existing=lab.diary[i]
             ),

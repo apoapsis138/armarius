@@ -3533,6 +3533,31 @@ async def test_edit_diary_entry():
     ]
 
 
+async def test_the_diary_edit_picker_shows_brackets_in_an_entry_name():
+    # B5: the remove picker escaped entry names; the edit picker didn't.
+    saga = _saga_with_populated_laboratory()
+    saga.laboratories[0].diary[0].name = "Studied [Ignem] notes"
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_laboratory(pilot, app)
+        for key in ("e", "A"):  # edit, remove
+            await _open_lab_section(pilot, app, "tab-lab-diary")
+            await pilot.press(key)
+            assert await wait_until(
+                pilot,
+                lambda: (
+                    isinstance(app.screen, RemovalPickerScreen)
+                    and len(app.screen.query("ListItem Label")) == 1
+                ),
+            )
+            labels = [str(label.render()) for label in app.screen.query(Label)]
+            assert "1220 Spring -- Studied [Ignem] notes" in labels, (key, labels)
+            await pilot.press("escape")
+            await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+
+
 async def test_editing_an_empty_lab_list_or_cancelling_changes_nothing():
     storage.save_saga(_saga_with_populated_laboratory())
     bare = _saga_with_bare_laboratory()
