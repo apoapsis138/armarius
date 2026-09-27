@@ -1635,6 +1635,18 @@ class Saga:
     spells: list[Spell] = field(default_factory=list)
     familiars: list[Familiar] = field(default_factory=list)
 
+    def covenant(self, covenant_id: str | None) -> Covenant | None:
+        """The covenant with this id, if there is one."""
+        return next((c for c in self.covenants if c.id == covenant_id), None)
+
+    def character(self, character_id: str | None) -> Character | None:
+        """The character with this id, if there is one."""
+        return next((c for c in self.characters if c.id == character_id), None)
+
+    def laboratory(self, laboratory_id: str | None) -> Laboratory | None:
+        """The laboratory with this id, if there is one."""
+        return next((lab for lab in self.laboratories if lab.id == laboratory_id), None)
+
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Saga:
         d = dict(data)

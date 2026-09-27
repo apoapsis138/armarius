@@ -28,7 +28,7 @@ def familiar_of(saga: Saga, character_id: str) -> Familiar | None:
 
 def magus_of(saga: Saga, familiar: Familiar) -> Character | None:
     """The magus who bound `familiar`."""
-    return next((c for c in saga.characters if c.id == familiar.character_id), None)
+    return saga.character(familiar.character_id)
 
 
 def cord_cost(score: int) -> int:

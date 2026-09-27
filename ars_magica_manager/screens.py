@@ -2442,11 +2442,7 @@ class FamiliarCreateScreen(ModalScreen[str | None]):
             return
 
         magus_id = self.query_one("#select-magus", Select).value
-        magus = (
-            next((c for c in self.saga.characters if c.id == magus_id), None)
-            if isinstance(magus_id, str)
-            else None
-        )
+        magus = self.saga.character(magus_id) if isinstance(magus_id, str) else None
         if magus is None:
             error.update("A Magus Partner is required.")
             return
@@ -7750,19 +7746,10 @@ class CharacterSheetView(Vertical):
 
     def _info_right_text(self) -> str:
         saga, character = self.saga, self.character
-        covenant = next(
-            (c for c in saga.covenants if c.id == character.covenant_id), None
-        )
+        covenant = saga.covenant(character.covenant_id)
         rows = [("Covenant", escape(covenant.name) if covenant else "(unassigned)")]
         if character.type == "magus":
-            lab = next(
-                (
-                    lab
-                    for lab in saga.laboratories
-                    if lab.id == character.assigned_lab_id
-                ),
-                None,
-            )
+            lab = saga.laboratory(character.assigned_lab_id)
             rows.append(
                 ("Assigned Laboratory", escape(lab.name) if lab else "(unassigned)")
             )
@@ -8295,8 +8282,8 @@ class LaboratorySheetView(Vertical):
 
     def _identity_text(self) -> str:
         saga, lab = self.saga, self.laboratory
-        covenant = next((c for c in saga.covenants if c.id == lab.covenant_id), None)
-        owner = next((c for c in saga.characters if c.id == lab.owner_id), None)
+        covenant = saga.covenant(lab.covenant_id)
+        owner = saga.character(lab.owner_id)
         # Inherited from the covenant, including any Boons that raise it.
         covenant_aura = (
             covenant_effective_aura(
@@ -9717,9 +9704,6 @@ class WorkspaceScreen(Screen[None]):
             f"Familiar: {escape(familiar.name)}", data=("familiar", familiar.id)
         )
 
-    def _covenant_by_id(self, covenant_id: str | None) -> Covenant | None:
-        return next((c for c in self.saga.covenants if c.id == covenant_id), None)
-
     async def on_tree_node_selected(self, event: Tree.NodeSelected) -> None:
         data = event.node.data
         if data is None:
@@ -9746,7 +9730,7 @@ class WorkspaceScreen(Screen[None]):
             self.selected_familiar = None
             await self._show_covenant_detail(covenant)
         elif kind == "character_group":
-            covenant = self._covenant_by_id(data[1])
+            covenant = self.saga.covenant(data[1])
             self.selected_covenant = covenant
             self.selected_character = None
             await self._show_placeholder_detail(
@@ -9761,34 +9745,21 @@ class WorkspaceScreen(Screen[None]):
         elif kind == "character":
             character = next(c for c in self.saga.characters if c.id == data[1])
             self.selected_character = character
-            self.selected_covenant = next(
-                (c for c in self.saga.covenants if c.id == character.covenant_id),
-                None,
-            )
+            self.selected_covenant = self.saga.covenant(character.covenant_id)
             self.selected_familiar = None
             await self._show_character_detail(character)
         elif kind == "familiar":
             familiar = next(f for f in self.saga.familiars if f.id == data[1])
             self.selected_familiar = familiar
-            self.selected_character = next(
-                (c for c in self.saga.characters if c.id == familiar.character_id),
-                None,
-            )
+            self.selected_character = self.saga.character(familiar.character_id)
             self.selected_covenant = (
-                next(
-                    (
-                        c
-                        for c in self.saga.covenants
-                        if c.id == self.selected_character.covenant_id
-                    ),
-                    None,
-                )
+                self.saga.covenant(self.selected_character.covenant_id)
                 if self.selected_character is not None
                 else None
             )
             await self._show_familiar_detail(familiar)
         elif kind == "laboratory_group":
-            covenant = self._covenant_by_id(data[1])
+            covenant = self.saga.covenant(data[1])
             self.selected_covenant = covenant
             self.selected_laboratory = None
             await self._show_placeholder_detail(
@@ -9803,9 +9774,7 @@ class WorkspaceScreen(Screen[None]):
         elif kind == "laboratory":
             lab = next(lab for lab in self.saga.laboratories if lab.id == data[1])
             self.selected_laboratory = lab
-            self.selected_covenant = next(
-                (c for c in self.saga.covenants if c.id == lab.covenant_id), None
-            )
+            self.selected_covenant = self.saga.covenant(lab.covenant_id)
             await self._show_laboratory_detail(lab)
         elif kind == "spells":
             self.selected_covenant = None
@@ -10231,10 +10200,7 @@ class WorkspaceScreen(Screen[None]):
         doesn't point back at it or vice versa.
         """
         saga = self.saga
-        old_lab = next(
-            (lab for lab in saga.laboratories if lab.id == character.assigned_lab_id),
-            None,
-        )
+        old_lab = saga.laboratory(character.assigned_lab_id)
         if old_lab is not None:
             old_lab.owner_id = None
 
@@ -10243,9 +10209,7 @@ class WorkspaceScreen(Screen[None]):
             return
 
         new_lab = next(lab for lab in saga.laboratories if lab.id == new_lab_id)
-        previous_owner = next(
-            (c for c in saga.characters if c.id == new_lab.owner_id), None
-        )
+        previous_owner = saga.character(new_lab.owner_id)
         if previous_owner is not None:
             previous_owner.assigned_lab_id = None
         new_lab.owner_id = character.id
@@ -10258,9 +10222,7 @@ class WorkspaceScreen(Screen[None]):
         rather than duplicating it."""
         if new_owner_id is None:
             if lab.owner_id is not None:
-                old_owner = next(
-                    (c for c in self.saga.characters if c.id == lab.owner_id), None
-                )
+                old_owner = self.saga.character(lab.owner_id)
                 if old_owner is not None:
                     old_owner.assigned_lab_id = None
                 lab.owner_id = None
@@ -10339,10 +10301,7 @@ class WorkspaceScreen(Screen[None]):
                 self._rebuild_tree()
                 familiar = next(f for f in self.saga.familiars if f.id == familiar_id)
                 self.selected_familiar = familiar
-                self.selected_character = next(
-                    (c for c in self.saga.characters if c.id == familiar.character_id),
-                    None,
-                )
+                self.selected_character = self.saga.character(familiar.character_id)
                 self.selected_kind = "familiar"
                 await self._show_familiar_detail(familiar)
 
@@ -12350,7 +12309,7 @@ class WorkspaceScreen(Screen[None]):
                 return
             character.name = cast(str, result["name"])
             character.covenant_id = cast("str | None", result["covenant_id"])
-            self.selected_covenant = self._covenant_by_id(character.covenant_id)
+            self.selected_covenant = self.saga.covenant(character.covenant_id)
             if character.type == "magus":
                 self._assign_laboratory(
                     character, cast("str | None", result["laboratory_id"])
@@ -13156,7 +13115,7 @@ class WorkspaceScreen(Screen[None]):
             lab.build_points = cast(int, result["build_points"])
             lab.aura_modifier = cast(int, result["aura_modifier"])
             lab.covenant_id = cast("str | None", result["covenant_id"])
-            self.selected_covenant = self._covenant_by_id(lab.covenant_id)
+            self.selected_covenant = self.saga.covenant(lab.covenant_id)
             self._assign_laboratory_owner(lab, cast("str | None", result["owner_id"]))
             storage.save_saga(self.saga)
             self._rebuild_tree()

@@ -270,10 +270,6 @@ class InhabitantEntry:
         return self.character is not None
 
 
-def _character_of(saga: Saga, character_id: str | None) -> Character | None:
-    return next((c for c in saga.characters if c.id == character_id), None)
-
-
 def entries_for_kind(
     saga: Saga, covenant: Covenant, kind: str
 ) -> list[InhabitantEntry]:
@@ -300,7 +296,7 @@ def entries_for_kind(
         if kind in AUTO_KINDS and record.character_id is not None:
             continue  # an override of an auto-listed character; shown above
         entries.append(
-            InhabitantEntry(kind, record, _character_of(saga, record.character_id))
+            InhabitantEntry(kind, record, saga.character(record.character_id))
         )
     return entries
 
