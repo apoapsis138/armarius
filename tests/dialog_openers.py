@@ -8,6 +8,7 @@ from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 
 from support import NODES, everything_saga, wait_until
+from textual.screen import ModalScreen
 from textual.widgets import TabbedContent, Tree
 
 from ars_magica_manager import catalog, storage
@@ -198,7 +199,7 @@ _ON_THE_WAY = (
 def _is_dialog(screen, base) -> bool:
     return (
         screen is not base
-        and isinstance(screen, scr.ModalScreen)
+        and isinstance(screen, ModalScreen)
         and not isinstance(screen, _ON_THE_WAY)
     )
 
