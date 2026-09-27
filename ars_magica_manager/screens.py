@@ -10013,6 +10013,19 @@ class WorkspaceScreen(Screen[None]):
 
         self.app.push_screen(RemovalPickerScreen(title, list(labels)), handle_index)
 
+    def _confirm_delete(
+        self, entries: list[Any], index: int, name: str, section: str
+    ) -> None:
+        """Ask "Delete <name>?" (No by default); on Yes, delete
+        `entries[index]`, save and refresh `section`."""
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
+                del entries[index]
+                self._commit(section)
+
+        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
+
     def _commit(self, *sections: str, tree: bool = False) -> None:
         """Save a change: write the saga, rebuild the navigation tree if a
         name or the structure changed (`tree`), and refresh `sections` of the
@@ -11615,14 +11628,12 @@ class WorkspaceScreen(Screen[None]):
         covenant = self.selected_covenant
         if covenant is None:
             return
-        name = covenant.reputations[index].name
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed:
-                del covenant.reputations[index]
-                self._commit("section-cov-reputations")
-
-        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
+        self._confirm_delete(
+            covenant.reputations,
+            index,
+            covenant.reputations[index].name,
+            "section-cov-reputations",
+        )
 
     def _attached_boons_hooks(
         self, covenant: Covenant, kind: str
@@ -11986,14 +11997,9 @@ class WorkspaceScreen(Screen[None]):
         character = self.selected_character
         if character is None:
             return
-        name = character.abilities[index].name
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed:
-                del character.abilities[index]
-                self._commit("tab-abilities")
-
-        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
+        self._confirm_delete(
+            character.abilities, index, character.abilities[index].name, "tab-abilities"
+        )
 
     def _edit_ability(self) -> None:
         """Edit the chosen Ability; with none chosen, ask which one."""
@@ -12095,14 +12101,12 @@ class WorkspaceScreen(Screen[None]):
         character = self.selected_character
         if character is None:
             return
-        name = character.personality_traits[index].name
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed:
-                del character.personality_traits[index]
-                self._commit("section-personality-traits")
-
-        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
+        self._confirm_delete(
+            character.personality_traits,
+            index,
+            character.personality_traits[index].name,
+            "section-personality-traits",
+        )
 
     def _add_reputation(self) -> None:
         character = self.selected_character
@@ -12173,14 +12177,12 @@ class WorkspaceScreen(Screen[None]):
         character = self.selected_character
         if character is None:
             return
-        name = character.reputations[index].name
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed:
-                del character.reputations[index]
-                self._commit("section-reputations")
-
-        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
+        self._confirm_delete(
+            character.reputations,
+            index,
+            character.reputations[index].name,
+            "section-reputations",
+        )
 
     def _edit_wounds(self) -> None:
         character = self.selected_character
@@ -12424,14 +12426,12 @@ class WorkspaceScreen(Screen[None]):
         character = self.selected_character
         if character is None:
             return
-        name = self._known_spell_labels(character)[index]
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed:
-                del character.spells_known[index]
-                self._commit("section-known-spells")
-
-        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
+        self._confirm_delete(
+            character.spells_known,
+            index,
+            self._known_spell_labels(character)[index],
+            "section-known-spells",
+        )
 
     # -- Inventory --
 
@@ -12532,14 +12532,12 @@ class WorkspaceScreen(Screen[None]):
         character = self.selected_character
         if character is None:
             return
-        name = character.inventory[index].name or "this item"
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed:
-                del character.inventory[index]
-                self._commit("section-inventory")
-
-        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
+        self._confirm_delete(
+            character.inventory,
+            index,
+            character.inventory[index].name or "this item",
+            "section-inventory",
+        )
 
     # -- Laboratory: Identity / Characteristics --
 
@@ -13026,14 +13024,12 @@ class WorkspaceScreen(Screen[None]):
         if character is None:
             return
         vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
-        name = catalog.describe_virtue_flaw(character.virtues_flaws[index], vf_catalog)
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed:
-                del character.virtues_flaws[index]
-                self._commit("section-vf-virtues")
-
-        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
+        self._confirm_delete(
+            character.virtues_flaws,
+            index,
+            catalog.describe_virtue_flaw(character.virtues_flaws[index], vf_catalog),
+            "section-vf-virtues",
+        )
 
     # -- Familiar: Info & Binding --
 
@@ -13190,14 +13186,12 @@ class WorkspaceScreen(Screen[None]):
         familiar = self.selected_familiar
         if familiar is None:
             return
-        name = familiar.natural_weapons[index].name or "this attack"
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed:
-                del familiar.natural_weapons[index]
-                self._commit("section-fam-natural-weapons")
-
-        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
+        self._confirm_delete(
+            familiar.natural_weapons,
+            index,
+            familiar.natural_weapons[index].name or "this attack",
+            "section-fam-natural-weapons",
+        )
 
     # -- Familiar: Abilities --
 
@@ -13265,14 +13259,12 @@ class WorkspaceScreen(Screen[None]):
         familiar = self.selected_familiar
         if familiar is None:
             return
-        name = familiar.abilities[index].name
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed:
-                del familiar.abilities[index]
-                self._commit("tab-fam-abilities")
-
-        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
+        self._confirm_delete(
+            familiar.abilities,
+            index,
+            familiar.abilities[index].name,
+            "tab-fam-abilities",
+        )
 
     # -- Familiar: Bond Powers --
 
@@ -13351,14 +13343,12 @@ class WorkspaceScreen(Screen[None]):
         familiar = self.selected_familiar
         if familiar is None:
             return
-        name = familiar.bond_powers[index].name or "this Bond Power"
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed:
-                del familiar.bond_powers[index]
-                self._commit("tab-fam-powers")
-
-        self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
+        self._confirm_delete(
+            familiar.bond_powers,
+            index,
+            familiar.bond_powers[index].name or "this Bond Power",
+            "tab-fam-powers",
+        )
 
     # -- Familiar: Personality Traits & Reputations --
 
