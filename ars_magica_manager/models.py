@@ -7,10 +7,11 @@ behind the Virtue/Flaw modifier system.
 from __future__ import annotations
 
 import math
+import re
 from dataclasses import dataclass, field, fields
 from typing import Any, Literal
 
-from .arts import ART_BY_NAME
+from .arts import ART_BY_NAME, ARTS
 from .totals import validate_modifier_type
 
 CharacterType = Literal["magus", "companion", "grog"]
@@ -169,8 +170,8 @@ class LabVirtueFlawDef:
     manual + virtue_sum + flaw_sum = total (see
     laboratories.lab_characteristic_total).
     Any Specialization grant mentioned in the rules text is left as prose
-    in `description` only -- Lab Specialties are freeform for now, not a
-    structured/auto-applied catalog concept yet.
+    in `description` only: the user enters it as a LabSpecialtyEntry until
+    the catalog carries the grants (STORY-804).
 
     `repeatable` marks the (asterisked in the book) entries a lab can hold
     more than once -- e.g. two Lesser Features -- so the picker shouldn't
@@ -593,12 +594,85 @@ class NamedDescription:
     description: str = ""
 
 
+#: What a laboratory Diary entry can record, for its Activity Type: the lab
+#: activities of reference/lab-sheet-design-doc.md, then the rest of a
+#: season's lab work, and Other. A Diary entry's `activity` is one of these
+#: or "" (not set -- every entry written before Activity Type existed).
+LAB_ACTIVITIES: tuple[str, ...] = (
+    "Invent Spell",
+    "Learn Spell from Teacher",
+    "Extract Vis",
+    "Fix Arcane Connection",
+    "Open Item for Enchantment",
+    "Instill Effect (Invested Device)",
+    "Lesser Enchantment",
+    "Charged Item",
+    "Longevity Ritual",
+    "Bind Familiar",
+    "Empower Familiar Bond",
+    "Train Apprentice",
+    "Translate Lab Text",
+    "Arcane Experimentation",
+    "Original Research",
+    "Study",
+    "Refine Laboratory",
+    "Build/Modify Laboratory",
+    "Other",
+)
+
+
+#: The 8 Activity Specializations a laboratory can have (ArM5 p.115 and
+#: reference/laboratory-features-reference.md); with the 15 Arts they make
+#: every Specialization.
+LAB_ACTIVITY_SPECIALIZATIONS: tuple[str, ...] = (
+    "Experimentation",
+    "Familiar",
+    "Items",
+    "Longevity Rituals",
+    "Spells",
+    "Teaching",
+    "Texts",
+    "Vis Extraction",
+)
+LAB_SPECIALIZATIONS: tuple[str, ...] = (*LAB_ACTIVITY_SPECIALIZATIONS, *ARTS)
+
+
+@dataclass
+class LabSpecialtyEntry:
+    """Points in one Specialization from a source the app doesn't work out
+    itself (a Virtue/Flaw such as Subterranean, a magical effect...), typed
+    in by the user. `specialization` is one of LAB_SPECIALIZATIONS, or ""
+    for old free text that named none (the text is kept in `source`)."""
+
+    specialization: str
+    points: int = 1
+    source: str = ""
+
+
+def _parse_old_specialty(text: str) -> LabSpecialtyEntry:
+    """A pre-STORY-307 free-text Specialty ("Terram +1") as an entry: the
+    Specialization it names, its number (1 when there isn't one), the source
+    "(from old notes)". Text that names no Specialization becomes a 0-point
+    entry keeping the text, for the user to fix."""
+    words = text.split()
+    points = 1
+    if words and re.fullmatch(r"[+-]?\d+", words[-1]):
+        points = int(words.pop())
+    name = " ".join(words).casefold()
+    for specialization in LAB_SPECIALIZATIONS:
+        if specialization.casefold() == name:
+            return LabSpecialtyEntry(specialization, points, "(from old notes)")
+    return LabSpecialtyEntry("", 0, text)
+
+
 @dataclass
 class DiaryEntry:
     year: int
     season: str = "Spring"  # one of SEASONS
     name: str = ""
     details: str = ""
+    #: One of LAB_ACTIVITIES, or "" when not set.
+    activity: str = ""
 
 
 @dataclass
@@ -615,7 +689,14 @@ class Laboratory:
     aura_modifier: int = 0
     characteristics: LabCharacteristics = field(default_factory=LabCharacteristics)
     features: list[str] = field(default_factory=list)
-    specialties: list[str] = field(default_factory=list)
+    #: Specialization points from sources entered by hand (see
+    #: laboratories.lab_specializations for the totals).
+    specialties: list[LabSpecialtyEntry] = field(default_factory=list)
+    #: Specializations the user turned off (or that arrived over a cap);
+    #: they keep their points but don't count.
+    dropped_specializations: list[str] = field(default_factory=list)
+    #: Whether the sanctum's boundary is marked (Code of Hermes).
+    sanctum_marked: bool = False
     rooms: list[NamedDescription] = field(default_factory=list)
     inventory_items: list[NamedDescription] = field(default_factory=list)
     raw_vis: dict[str, int] = field(default_factory=dict)  # Art -> pawns
@@ -638,6 +719,12 @@ class Laboratory:
         d["diary"] = [DiaryEntry(**entry) for entry in d.get("diary", [])]
         d["virtues_flaws"] = [
             VirtueFlawInstance(**vf) for vf in d.get("virtues_flaws", [])
+        ]
+        d["specialties"] = [
+            _parse_old_specialty(s)
+            if isinstance(s, str)  # pre-STORY-307 free text
+            else LabSpecialtyEntry(**s)
+            for s in d.get("specialties", [])
         ]
         return cls(**known_fields(cls, d))
 

@@ -695,8 +695,8 @@
         "V": "(disabled)"
       }
     },
-    "TabPane#tab-lab-vf": {
-      "active": "tab-lab-vf",
+    "SheetSection#section-lab-vf-virtues": {
+      "active": "section-lab-vf-virtues",
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
@@ -708,12 +708,51 @@
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
       }
     },
+    "SheetSection#section-lab-vf-flaws": {
+      "active": "section-lab-vf-flaws",
+      "keys": {
+        "a": "(disabled)",
+        "A": "(disabled)",
+        "e": "(disabled)",
+        "r": "(disabled)",
+        "i": "(disabled)",
+        "I": "(disabled)",
+        "v": "LabVirtueFlawPickerScreen: Add a Laboratory Virtue or Flaw",
+        "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
+      }
+    },
+    "SheetSection#section-lab-sanctum": {
+      "active": "section-lab-sanctum",
+      "keys": {
+        "a": "(disabled)",
+        "A": "(disabled)",
+        "e": "FieldsDialog: Edit Sanctum",
+        "r": "(disabled)",
+        "i": "(disabled)",
+        "I": "(disabled)",
+        "v": "(disabled)",
+        "V": "(disabled)"
+      }
+    },
+    "SheetSection#section-lab-specializations": {
+      "active": "section-lab-specializations",
+      "keys": {
+        "a": "(disabled)",
+        "A": "(disabled)",
+        "e": "(disabled)",
+        "r": "(disabled)",
+        "i": "(disabled)",
+        "I": "(disabled)",
+        "v": "(disabled)",
+        "V": "(disabled)"
+      }
+    },
     "SheetSection#section-lab-specialties": {
       "active": "section-lab-specialties",
       "keys": {
-        "a": "FieldsDialog: Add a Specialty",
-        "A": "RemovalPickerScreen: Remove a Specialty",
-        "e": "RemovalPickerScreen: Edit which Specialty?",
+        "a": "FieldsDialog: Add a Specialization source",
+        "A": "RemovalPickerScreen: Remove a Specialization source",
+        "e": "RemovalPickerScreen: Edit which Specialization source?",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -763,9 +802,9 @@
     "SheetSection#section-lab-items": {
       "active": "section-lab-items",
       "keys": {
-        "a": "FieldsDialog: Add an Item",
-        "A": "RemovalPickerScreen: Remove an Item",
-        "e": "RemovalPickerScreen: Edit which Item?",
+        "a": "FieldsDialog: Add an Equipment & Stores entry",
+        "A": "RemovalPickerScreen: Remove an Equipment & Stores entry",
+        "e": "RemovalPickerScreen: Edit which Equipment & Stores entry?",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",

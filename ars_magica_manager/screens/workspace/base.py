@@ -71,6 +71,7 @@ from ..prompts import (
 )
 from ..sheets import (
     _LIBRARY_SECTIONS,
+    LAB_VF_SECTIONS,
     SPELL_SECTION,
     BookListView,
     CharacterSheetView,
@@ -508,7 +509,7 @@ class WorkspaceBase(Screen[None]):
             )
         if action in ("add_virtue_flaw", "remove_virtue_flaw"):
             if self.selected_kind == NodeKind.LABORATORY:
-                return self._active_section() == "tab-lab-vf"
+                return self._active_section() in LAB_VF_SECTIONS
             if self.selected_kind == NodeKind.FAMILIAR:
                 return self._active_section() in (
                     "section-fam-vf-virtues",
@@ -1084,7 +1085,7 @@ class WorkspaceBase(Screen[None]):
                 target.virtues_flaws.append(instance)
                 storage.save_saga(self.saga)
                 if is_lab:
-                    self._refresh_laboratory_section("tab-lab-vf")
+                    self._refresh_laboratory_section(LAB_VF_SECTIONS[0])
                 elif is_familiar:
                     self._refresh_familiar_section("section-fam-vf-virtues")
                 else:
@@ -1095,8 +1096,7 @@ class WorkspaceBase(Screen[None]):
     def action_remove_virtue_flaw(self) -> None:
         """Delete a Virtue/Flaw of the character, laboratory or familiar on
         show, after confirming: the row chosen in its Virtues or Flaws list,
-        or (with none chosen, or on a laboratory) the one picked from all of
-        them."""
+        or (with none chosen) the one picked from all of them."""
         target = self._virtue_flaw_target()
         if target is None:
             return
@@ -1109,7 +1109,7 @@ class WorkspaceBase(Screen[None]):
             else catalog.load_virtue_flaw_catalog_by_id()
         )
         if isinstance(target, Laboratory):
-            section = "tab-lab-vf"
+            section = LAB_VF_SECTIONS[0]
         elif isinstance(target, Familiar):
             section = "section-fam-vf-virtues"
         else:
@@ -1143,10 +1143,11 @@ class WorkspaceBase(Screen[None]):
     def _selected_virtue_flaw(
         self, target: Character | Laboratory | Familiar
     ) -> int | None:
-        """The row chosen in the target's Virtues or Flaws list, if any (a
-        laboratory's are plain text: never)."""
+        """The row chosen in the target's Virtues or Flaws list, if any."""
         if isinstance(target, Character) and self._character_sheet_view is not None:
             return self._character_sheet_view.selected_virtue_flaw()
+        if isinstance(target, Laboratory) and self._laboratory_sheet_view is not None:
+            return self._laboratory_sheet_view.selected_virtue_flaw()
         if isinstance(target, Familiar) and self._familiar_sheet_view is not None:
             return self._familiar_sheet_view.selected_virtue_flaw()
         return None
@@ -1154,7 +1155,7 @@ class WorkspaceBase(Screen[None]):
     def _virtue_flaw_target(self) -> Character | Laboratory | Familiar | None:
         if (
             self.selected_kind == NodeKind.LABORATORY
-            and self._active_section() == "tab-lab-vf"
+            and self._active_section() in LAB_VF_SECTIONS
         ):
             return self.selected_laboratory
         if self.selected_kind == NodeKind.CHARACTER and self._active_section() in (

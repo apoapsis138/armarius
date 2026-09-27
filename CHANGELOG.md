@@ -8,6 +8,30 @@ fix or behind-the-scenes improvement bumps PATCH. The version is set in
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 0.5.0 — 2026-09-27
+
+- The laboratory's Virtues and Flaws are two lists side by side, with a
+  panel showing the chosen one's category, tier, points, effect on the
+  Characteristics and rules. A warning appears above them when the lab is
+  over capacity or has more than one Focus.
+- Rooms, Raw Vis, Equipment & Stores (formerly Items) and the Diary are
+  selectable lists: edit and delete act on the chosen row, every delete asks
+  first, and Rooms, Equipment & Stores and Diary entries show their text in
+  a details panel. Descriptions and Diary details can run to several lines.
+- Diary entries have an Activity Type (Invent Spell, Extract Vis, Study...).
+- Changing the lab's Virtues and Flaws now updates the Characteristics
+  straight away.
+- A new Specializations list on the Attributes tab adds up each Activity and
+  Art Specialization from every source and shows where the points come
+  from. At most 2 Activity and 4 Art Specializations (no more than 2
+  Techniques) count: Space turns one off or back on, one that would go over
+  a limit arrives turned off, and turned-off ones are dimmed and struck
+  through.
+- Specialization points from other sources (a Virtue such as Subterranean,
+  a Flaw such as Undecorated) are entered by hand under Other Specialization
+  Sources. Old free-text Specialties are converted, e.g. "Terram +1".
+- The Attributes tab records whether the sanctum is marked.
+
 ## 0.4.0 — 2026-09-27
 
 - Every highlight in the app now uses the current theme's own colours

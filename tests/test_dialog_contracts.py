@@ -28,6 +28,7 @@ from ars_magica_manager import storage
 from ars_magica_manager.models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
+    LabSpecialtyEntry,
     Saga,
 )
 
@@ -320,12 +321,18 @@ CONTRACTS: dict[str, Contract] = {
         expected=(2, -1),
         invalid={"Safety": "-"},
     ),
-    "add lab specialty": Contract(
-        prefill={"Specialty": ""},
-        edits={"Specialty": "Herbam"},
-        saved=lambda s: _lab(s).specialties,
-        expected=["Ignem", "Herbam"],
-        invalid={"Specialty": ""},
+    "edit lab sanctum": Contract(
+        prefill={"Sanctum marked": False},
+        edits={"Sanctum marked": True},
+        saved=lambda s: _lab(s).sanctum_marked,
+        expected=True,
+    ),
+    "add lab specialization source": Contract(
+        prefill={"Points": "1", "Source": ""},
+        edits={"Specialization": "Herbam", "Points": "-1", "Source": "Garden"},
+        saved=lambda s: _lab(s).specialties[-1],
+        expected=LabSpecialtyEntry("Herbam", -1, "Garden"),
+        invalid={"Points": "0"},
     ),
     "add lab room": Contract(
         prefill={"Name": ""},
@@ -336,13 +343,19 @@ CONTRACTS: dict[str, Contract] = {
     ),
     "add lab diary entry": Contract(
         prefill={"Year": "1220", "Season": "Spring", "Name": ""},
-        edits={"Year": "1221", "Name": "Moved in", "Details": "Boxes"},
+        edits={
+            "Year": "1221",
+            "Activity Type": "Study",
+            "Name": "Moved in",
+            "Details": "Boxes",
+        },
         saved=lambda s: (
             _lab(s).diary[-1].year,
+            _lab(s).diary[-1].activity,
             _lab(s).diary[-1].name,
             _lab(s).diary[-1].details,
         ),
-        expected=(1221, "Moved in", "Boxes"),
+        expected=(1221, "Study", "Moved in", "Boxes"),
         invalid={"Year": "-"},
     ),
 }

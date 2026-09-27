@@ -120,8 +120,11 @@ OPENERS: dict[str, Opener] = {
     "edit lab characteristics": Opener(
         "laboratory", lambda ws: ws._edit_lab_characteristics()
     ),
-    "add lab specialty": Opener("laboratory", lambda ws: ws._add_specialty()),
-    "add lab room": Opener("laboratory", lambda ws: ws._add_room()),
+    "edit lab sanctum": Opener("laboratory", lambda ws: ws._edit_lab_sanctum()),
+    "add lab specialization source": Opener(
+        "laboratory", lambda ws: ws._add_specialty_entry()
+    ),
+    "add lab room": Opener("laboratory", lambda ws: ws._add_named("section-lab-rooms")),
     "add lab diary entry": Opener("laboratory", lambda ws: ws._add_diary_entry()),
 }
 

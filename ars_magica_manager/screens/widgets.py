@@ -103,8 +103,9 @@ class BottomBar(Vertical):
 
 class SelectableList(OptionList):
     """The standard "selectable list" (see DESIGN.md, UI Conventions): rows
-    that each carry a selector -- a dim `○`, or a blue bold `●` on the chosen
-    row -- with at most one row chosen at a time.
+    that each carry a selector -- a dim `○`, or a bold `●` in the theme's
+    primary colour on the chosen row -- with at most one row chosen at a
+    time.
 
     Rows are `(data index, label)` pairs: the data index is the entry's
     position in whatever list the sheet keeps its data in (it becomes the
@@ -199,7 +200,7 @@ class SelectableList(OptionList):
         index, label = self._rows[position]
         if index is None:  # header row
             return f"[b]{label}[/]"
-        marker = "[dodgerblue]●[/]" if position == self._marked else "[dim]○[/]"
+        marker = "[$text-primary]●[/]" if position == self._marked else "[dim]○[/]"
         if not self.multi:
             return f"{marker} {label}"
         check = "[$text-success]✔[/]" if position in self._checked else " "
@@ -320,6 +321,39 @@ class SelectableList(OptionList):
         self._mark(event.option_index)
         self._clear_group()
         self.post_message(self.Chosen(self, int(event.option.id)))
+
+
+class ToggleList(SelectableList):
+    """A SelectableList whose chosen row Space turns on or off (e.g. the lab's
+    Specializations): it posts `ToggleList.Toggled` and the owner decides
+    what that means and how the row then looks. Replaces the multi-select
+    "Mark" binding, so a ToggleList is never `multi`."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [
+        Binding("space", "toggle_row", "On/Off"),
+    ]
+
+    class Toggled(Message):
+        """Space on the chosen row; `data_index` is its entry's data index."""
+
+        def __init__(self, toggle_list: ToggleList, data_index: int) -> None:
+            super().__init__()
+            self.toggle_list = toggle_list
+            self.data_index = data_index
+
+        @property
+        def control(self) -> ToggleList:
+            return self.toggle_list
+
+    def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
+        if action == "toggle_row":
+            return self.selected_data_index is not None
+        return super().check_action(action, parameters)
+
+    def action_toggle_row(self) -> None:
+        index = self.selected_data_index
+        if index is not None:
+            self.post_message(self.Toggled(self, index))
 
 
 class SheetSection(Collapsible):

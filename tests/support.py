@@ -15,6 +15,7 @@ from ars_magica_manager.models import (
     Inhabitant,
     KnownSpell,
     Laboratory,
+    LabSpecialtyEntry,
     NamedDescription,
     Possession,
     Saga,
@@ -129,7 +130,7 @@ def everything_saga() -> Saga:
     companion = Character(id="comp1", name="Alys", type="companion", covenant_id="cov1")
 
     lab = Laboratory(id="lab1", covenant_id="cov1", name="Tower", owner_id="mag1")
-    lab.specialties = ["Ignem"]
+    lab.specialties = [LabSpecialtyEntry("Ignem", 1, "Hearth spirit")]
     lab.features = ["Big windows"]
     lab.rooms = [NamedDescription("Study")]
     lab.inventory_items = [NamedDescription("Alembic")]

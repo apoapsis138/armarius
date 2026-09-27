@@ -32,6 +32,7 @@ from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.arts import FORMS, TECHNIQUES
 from ars_magica_manager.models import (
     LAB_CHARACTERISTICS,
+    LAB_SPECIALIZATIONS,
     Ability,
     ArtScore,
     Background,
@@ -47,6 +48,7 @@ from ars_magica_manager.models import (
     KnownSpell,
     LabCharacteristics,
     Laboratory,
+    LabSpecialtyEntry,
     MasteryAbility,
     NamedDescription,
     Possession,
@@ -292,7 +294,10 @@ _LAB_SECTION_TAB: dict[str, str] = {
     "section-lab-identity": "tab-lab-planning",  # top panel, not inside any tab
     "section-lab-characteristics": "tab-lab-planning",
     "tab-lab-planning": "tab-lab-planning",
-    "tab-lab-vf": "tab-lab-vf",
+    "section-lab-vf-virtues": "tab-lab-vf",
+    "section-lab-vf-flaws": "tab-lab-vf",
+    "section-lab-sanctum": "tab-lab-attributes",
+    "section-lab-specializations": "tab-lab-attributes",
     "section-lab-specialties": "tab-lab-attributes",
     "section-lab-features": "tab-lab-attributes",
     "section-lab-rooms": "tab-lab-attributes",
@@ -540,6 +545,25 @@ def _lab_identity_text(view) -> str:
     return "\n".join(
         " ".join(line.split()) for part in parts for line in part.splitlines()
     )
+
+
+def _lab_rows(view, list_id: str) -> list[str]:
+    """A lab sheet list's rows as displayed (markup stripped)."""
+    selectable = view.query_one(f"#{list_id}", SelectableList)
+    return [strip_markup(label).replace("\\[", "[") for _, label in selectable._rows]
+
+
+async def _choose_lab_row(pilot, view, list_id: str, data_index: int) -> None:
+    """Choose a lab sheet list's row by data index, as a click would."""
+    assert view.query_one(f"#{list_id}", SelectableList).select_data_index(data_index)
+    await pilot.pause()
+
+
+async def _confirm(pilot, app, answer: str) -> None:
+    """Answer the delete confirmation ("y"/"n") and wait to be back."""
+    assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+    await pilot.press(answer)
+    await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
 
 def _lab_characteristics_text(view) -> str:
@@ -880,7 +904,7 @@ async def test_selecting_laboratory_shows_owner_and_virtues():
         assert "Owner: Leandro" in identity
         assert "Aura: 3" in identity
         assert "Well-Stocked" in view._features_text()
-        assert "Superior Construction" in view._vf_text()
+        assert "Superior Construction" in _lab_rows(view, "lab-vf-virtues-list")[0]
 
 
 def _saga_with_bare_character() -> Saga:
@@ -1450,7 +1474,7 @@ def _saga_with_populated_laboratory() -> Saga:
     sorted order -- aquam, ignem -- is meaningful)."""
     saga = _saga_with_bare_laboratory()
     lab = saga.laboratories[0]
-    lab.specialties = ["Ignem"]
+    lab.specialties = [LabSpecialtyEntry("Ignem", 1, "Hearth spirit")]
     lab.features = ["Arcane Library"]
     lab.rooms = [NamedDescription(name="Vault", description="Locked")]
     lab.inventory_items = [NamedDescription(name="Silver Mirror", description="Old")]
@@ -1637,7 +1661,7 @@ async def test_lab_virtue_flaw_picker_search_filters_by_typed_text():
     async with app.run_test() as pilot:
         await _select_covenant(pilot, app)
         await _select(pilot, app, ("laboratory", "lab1"))
-        await _open_lab_section(pilot, app, "tab-lab-vf")
+        await _open_lab_section(pilot, app, "section-lab-vf-virtues")
 
         await pilot.press("v")
         await pilot.pause()
@@ -1712,7 +1736,7 @@ async def test_add_virtue_flaw_to_laboratory_uses_lab_picker():
     async with app.run_test() as pilot:
         await _select_covenant(pilot, app)
         await _select(pilot, app, ("laboratory", "lab1"))
-        await _open_lab_section(pilot, app, "tab-lab-vf")
+        await _open_lab_section(pilot, app, "section-lab-vf-virtues")
 
         await pilot.press("v")
         await pilot.pause()
@@ -1731,7 +1755,15 @@ async def test_add_virtue_flaw_to_laboratory_uses_lab_picker():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert "Superior Construction" in app.screen._laboratory_sheet_view._vf_text()
+        view = app.screen._laboratory_sheet_view
+        assert _lab_rows(view, "lab-vf-virtues-list") == [
+            "Superior Construction (Free)"
+        ]
+        # The Characteristics above follow straight away (Safety +1).
+        assert re.search(
+            r"Safety:\s+\+0 \[\$text-success\]\+1\[/\] = \[\$text-success\]\+1\[/\]",
+            _lab_characteristics_text(view),
+        )
 
     saga = storage.load_saga("test_saga")
     lab = saga.laboratories[0]
@@ -1990,24 +2022,67 @@ async def test_remove_virtue_flaw_from_laboratory():
     async with app.run_test() as pilot:
         await _select_covenant(pilot, app)
         await _select(pilot, app, ("laboratory", "lab1"))
-        await _open_lab_section(pilot, app, "tab-lab-vf")
-        assert "Superior Construction" in app.screen._laboratory_sheet_view._vf_text()
+        await _open_lab_section(pilot, app, "section-lab-vf-virtues")
+        view = app.screen._laboratory_sheet_view
+        assert "Superior Construction" in _lab_rows(view, "lab-vf-virtues-list")[0]
 
+        # Nothing chosen: pick which one first.
         await pilot.press("V")
         await pilot.pause()
         assert isinstance(app.screen, RemovalPickerScreen)
-
         await pilot.press("enter")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
-        await pilot.press("y")
-        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        await _confirm(pilot, app, "n")  # No keeps it
+        assert "Superior Construction" in _lab_rows(view, "lab-vf-virtues-list")[0]
 
-        assert (
-            "Superior Construction" not in app.screen._laboratory_sheet_view._vf_text()
-        )
+        # The chosen row: straight to the confirmation.
+        await _choose_lab_row(pilot, view, "lab-vf-virtues-list", 0)
+        await pilot.press("V")
+        await _confirm(pilot, app, "y")
+        assert _lab_rows(view, "lab-vf-virtues-list") == []
 
     saga = storage.load_saga("test_saga")
     assert saga.laboratories[0].virtues_flaws == []
+
+
+async def test_lab_vf_tab_warns_and_fills_the_details_panel():
+    saga = _saga_with_bare_laboratory()
+    saga.laboratories[0].virtues_flaws = [
+        VirtueFlawInstance(vf_id="labvf_greater_feature"),
+        VirtueFlawInstance(vf_id="labvf_lesser_focus"),
+    ]
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 50)) as pilot:
+        await _select_laboratory(pilot, app)
+        await _open_lab_section(pilot, app, "section-lab-vf-flaws")
+        view = app.screen._laboratory_sheet_view
+
+        # 3 - 1 = 2 points in a Size 0 lab: over capacity by 2.
+        warnings = view.query_one("#lab-vf-warnings", Static)
+        assert warnings.display
+        assert strip_markup(str(warnings.content)) == (
+            "Over capacity by 2 (Virtues less Flaws may total Size + Refinement = 0)."
+        )
+        # Virtues and Flaws side by side.
+        virtues = view.query_one("#section-lab-vf-virtues").region
+        flaws = view.query_one("#section-lab-vf-flaws").region
+        assert virtues.right <= flaws.x and virtues.y == flaws.y
+
+        await _choose_lab_row(pilot, view, "lab-vf-flaws-list", 1)
+        panel = strip_markup(str(view.query_one("#lab-vf-info", Static).content))
+        assert panel.startswith("Name: Lesser Focus\nCategory: Structure\n")
+        assert "Characteristics: General Quality -1" in panel
+
+        # Deleting the chosen Flaw (after confirming) leaves the lab further
+        # over capacity; removing the Feature clears the warning.
+        await pilot.press("V")
+        await _confirm(pilot, app, "y")
+        assert "Over capacity by 3" in str(warnings.content)
+        await _choose_lab_row(pilot, view, "lab-vf-virtues-list", 0)
+        await pilot.press("V")
+        await _confirm(pilot, app, "y")
+        assert not warnings.display
 
 
 async def test_remove_with_nothing_to_remove_stays_on_same_screen():
@@ -3470,6 +3545,8 @@ async def test_lab_attributes_and_inventory_sections_start_expanded():
         view = app.screen._laboratory_sheet_view
 
         for section_id in (
+            "section-lab-sanctum",
+            "section-lab-specializations",
             "section-lab-specialties",
             "section-lab-features",
             "section-lab-rooms",
@@ -3503,34 +3580,122 @@ async def test_lab_top_panel_sections_are_open_and_cannot_be_collapsed():
             assert not collapsible.collapsed
 
 
-async def test_add_and_remove_specialty():
+async def test_add_and_remove_a_specialization_source():
     storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_laboratory(pilot, app)
+        view = app.screen._laboratory_sheet_view
         await _open_lab_section(pilot, app, "section-lab-specialties")
 
         await pilot.press("a")
         await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
-
-        app.screen.query_one("#fld-item", Input).value = "Ignem"
+        app.screen.query_one("#fld-specialization", Select).value = "Terram"
+        app.screen.query_one("#fld-source", Input).value = "Subterranean"
         await pilot.click("#btn-save")
-        await pilot.pause()
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
-        assert isinstance(app.screen, WorkspaceScreen)
-        assert "Ignem" in app.screen._laboratory_sheet_view._specialties_text()
+        assert _lab_rows(view, "lab-specialties-list") == ["Terram  +1  Subterranean"]
+        assert _lab_rows(view, "lab-specializations-list") == ["Art", "Terram  +1"]
 
+        await _choose_lab_row(pilot, view, "lab-specialties-list", 0)
         await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
+        await _confirm(pilot, app, "n")
+        assert storage.load_saga("test_saga").laboratories[0].specialties
+        await pilot.press("A")
+        await _confirm(pilot, app, "y")
+        assert _lab_rows(view, "lab-specializations-list") == []
 
-    saga = storage.load_saga("test_saga")
-    assert saga.laboratories[0].specialties == []
+    assert storage.load_saga("test_saga").laboratories[0].specialties == []
+
+
+def _saga_with_specializations(*entries: tuple[str, int]) -> Saga:
+    saga = _saga_with_bare_laboratory()
+    saga.laboratories[0].specialties = [
+        LabSpecialtyEntry(name, points, "Notes") for name, points in entries
+    ]
+    return saga
+
+
+async def test_space_turns_a_specialization_off_and_on_within_the_caps():
+    # Two Techniques already count, so a third can't be turned on.
+    saga = _saga_with_specializations(("Creo", 1), ("Rego", 2), ("Muto", 1))
+    saga.laboratories[0].dropped_specializations = ["Muto"]
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_laboratory(pilot, app)
+        view = app.screen._laboratory_sheet_view
+        await _open_lab_section(pilot, app, "section-lab-specializations")
+        grid = view.query_one("#lab-specializations-list", SelectableList)
+        muto = LAB_SPECIALIZATIONS.index("Muto")
+        rego = LAB_SPECIALIZATIONS.index("Rego")
+        grid.focus()
+
+        await _choose_lab_row(pilot, view, "lab-specializations-list", muto)
+        await pilot.press("space")
+        await pilot.pause()
+        assert saga_dropped() == ["Muto"]  # refused: Techniques 2/2
+        info = view.query_one("#lab-specializations-info", Static)
+        assert "Muto +1: turned off" in strip_markup(str(info.render()))
+
+        await _choose_lab_row(pilot, view, "lab-specializations-list", rego)
+        await pilot.press("space")
+        await wait_until(pilot, lambda: saga_dropped() == ["Muto", "Rego"])
+        # The row stays chosen, and its panel follows.
+        assert grid.selected_data_index == rego
+        assert "Rego +2: turned off" in strip_markup(str(info.render()))
+
+        await _choose_lab_row(pilot, view, "lab-specializations-list", muto)
+        await pilot.press("space")
+        await wait_until(pilot, lambda: saga_dropped() == ["Rego"])
+
+
+def saga_dropped() -> list[str]:
+    return storage.load_saga("test_saga").laboratories[0].dropped_specializations
+
+
+async def test_a_source_that_breaks_a_cap_arrives_turned_off():
+    storage.save_saga(_saga_with_specializations(("Spells", 1), ("Items", 1)))
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_laboratory(pilot, app)
+        view = app.screen._laboratory_sheet_view
+        await _open_lab_section(pilot, app, "section-lab-specialties")
+        await pilot.press("a")
+        await pilot.pause()
+        app.screen.query_one("#fld-specialization", Select).value = "Texts"
+        await pilot.click("#btn-save")
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+
+        assert saga_dropped() == ["Texts"]
+        grid = view.query_one("#lab-specializations-list", SelectableList)
+        texts_row = next(label for _, label in grid._rows if label and "Texts" in label)
+        assert texts_row.startswith("[dim strike]")
+
+
+async def test_edit_the_sanctum_marking():
+    storage.save_saga(_saga_with_bare_laboratory())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_laboratory(pilot, app)
+        view = app.screen._laboratory_sheet_view
+        content = view.query_one("#lab-sanctum-content", Static)
+        assert str(content.render()) == "Marked: No"
+        await _open_lab_section(pilot, app, "section-lab-sanctum")
+        await pilot.press("e")
+        await pilot.pause()
+        app.screen.query_one("#fld-marked", Checkbox).value = True
+        await pilot.click("#btn-save")
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        assert str(content.render()) == "Marked: Yes"
+
+    assert storage.load_saga("test_saga").laboratories[0].sanctum_marked
 
 
 async def test_add_and_remove_feature():
@@ -3576,20 +3741,19 @@ async def test_add_and_remove_room():
         assert isinstance(app.screen, FieldsDialog)
 
         app.screen.query_one("#fld-name", Input).value = "Vault"
-        app.screen.query_one("#fld-description", Input).value = "A locked cellar"
+        app.screen.query_one("#fld-description", TextArea).text = "A locked cellar"
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        text = app.screen._laboratory_sheet_view._rooms_text()
-        assert "Vault: A locked cellar" in text
+        view = app.screen._laboratory_sheet_view
+        assert _lab_rows(view, "lab-rooms-list") == ["Vault"]
+        await _choose_lab_row(pilot, view, "lab-rooms-list", 0)
+        panel = strip_markup(str(view.query_one("#lab-rooms-info", Static).content))
+        assert panel == "Vault\n\nA locked cellar"
 
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
+        await pilot.press("A")  # the chosen row: no picker
+        await _confirm(pilot, app, "y")
 
     saga = storage.load_saga("test_saga")
     assert saga.laboratories[0].rooms == []
@@ -3613,15 +3777,14 @@ async def test_add_and_remove_lab_raw_vis():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        text = app.screen._laboratory_sheet_view._raw_vis_text()
-        assert "Ignem: 4 pawn(s)" in text
+        view = app.screen._laboratory_sheet_view
+        assert _lab_rows(view, "lab-raw-vis-list") == ["Ignem: 4 pawn(s)"]
 
-        await pilot.press("A")
+        await pilot.press("A")  # nothing chosen: pick which one
         await pilot.pause()
         assert isinstance(app.screen, RemovalPickerScreen)
         await pilot.press("enter")
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
+        await _confirm(pilot, app, "y")
 
     saga = storage.load_saga("test_saga")
     assert saga.laboratories[0].raw_vis == {}
@@ -3640,20 +3803,21 @@ async def test_add_and_remove_inventory_item_on_lab():
         assert isinstance(app.screen, FieldsDialog)
 
         app.screen.query_one("#fld-name", Input).value = "Silver Mirror"
-        app.screen.query_one("#fld-description", Input).value = "For scrying"
+        app.screen.query_one("#fld-description", TextArea).text = "For scrying"
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        text = app.screen._laboratory_sheet_view._items_text()
-        assert "Silver Mirror: For scrying" in text
+        view = app.screen._laboratory_sheet_view
+        assert _lab_rows(view, "lab-items-list") == ["Silver Mirror"]
+        section = view.query_one("#section-lab-items", Collapsible)
+        assert section.title == "Equipment & Stores"
 
         await pilot.press("A")
         await pilot.pause()
         assert isinstance(app.screen, RemovalPickerScreen)
         await pilot.press("enter")
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
+        await _confirm(pilot, app, "y")
 
     saga = storage.load_saga("test_saga")
     assert saga.laboratories[0].inventory_items == []
@@ -3673,22 +3837,29 @@ async def test_add_and_remove_diary_entry():
 
         app.screen.query_one("#fld-year", Input).value = "1220"
         app.screen.query_one("#fld-season", Select).value = "Autumn"
+        app.screen.query_one("#fld-activity", Select).value = "Invent Spell"
         app.screen.query_one("#fld-name", Input).value = "Invented a spell"
-        app.screen.query_one("#fld-details", Input).value = "A quiet season of study."
+        app.screen.query_one("#fld-details", TextArea).text = "A quiet season."
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        text = app.screen._laboratory_sheet_view._diary_text()
-        assert "1220 Autumn -- Invented a spell" in text
-        assert "A quiet season of study." in text
+        view = app.screen._laboratory_sheet_view
+        assert _lab_rows(view, "lab-diary-list") == [
+            "1220 Autumn  Invent Spell  Invented a spell"
+        ]
+        await _choose_lab_row(pilot, view, "lab-diary-list", 0)
+        panel = strip_markup(str(view.query_one("#lab-diary-info", Static).content))
+        assert panel.splitlines() == [
+            "Invented a spell",
+            "Date: Autumn 1220",
+            "Activity: Invent Spell",
+            "",
+            "A quiet season.",
+        ]
 
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
+        await pilot.press("A")  # the chosen row: no picker
+        await _confirm(pilot, app, "y")
 
     saga = storage.load_saga("test_saga")
     assert saga.laboratories[0].diary == []
@@ -3706,7 +3877,7 @@ async def _pick_first_and_open_editor(pilot, app, section_id: str, editor_type) 
     assert isinstance(app.screen, editor_type)
 
 
-async def test_edit_specialty_and_feature():
+async def test_edit_specialization_source_and_feature():
     storage.save_saga(_saga_with_populated_laboratory())
 
     app = ArsMagicaManagerApp()
@@ -3717,13 +3888,13 @@ async def test_edit_specialty_and_feature():
         await _pick_first_and_open_editor(
             pilot, app, "section-lab-specialties", FieldsDialog
         )
-        assert app.screen.query_one("#fld-item", Input).value == "Ignem"
-        app.screen.query_one("#fld-item", Input).value = "Vim"
+        specialization = app.screen.query_one("#fld-specialization", Select)
+        assert specialization.value == "Ignem"
+        specialization.value = "Vim"
+        app.screen.query_one("#fld-points", Input).value = "2"
         app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
-        assert "Vim" in view._specialties_text()
-        assert "Ignem" not in view._specialties_text()
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        assert _lab_rows(view, "lab-specialties-list") == ["Vim  +2  Hearth spirit"]
 
         await _pick_first_and_open_editor(
             pilot, app, "section-lab-features", FieldsDialog
@@ -3735,7 +3906,7 @@ async def test_edit_specialty_and_feature():
         assert "Aegis" in view._features_text()
 
     lab = storage.load_saga("test_saga").laboratories[0]
-    assert lab.specialties == ["Vim"]
+    assert lab.specialties == [LabSpecialtyEntry("Vim", 2, "Hearth spirit")]
     assert lab.features == ["Aegis"]
 
 
@@ -3749,20 +3920,23 @@ async def test_edit_room_and_item():
 
         await _pick_first_and_open_editor(pilot, app, "section-lab-rooms", FieldsDialog)
         name = app.screen.query_one("#fld-name", Input)
-        description = app.screen.query_one("#fld-description", Input)
-        assert (name.value, description.value) == ("Vault", "Locked")
+        description = app.screen.query_one("#fld-description", TextArea)
+        assert (name.value, description.text) == ("Vault", "Locked")
         name.value = "Strongroom"
-        description.value = "Iron-bound"
+        description.text = "Iron-bound"
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
-        assert "Strongroom: Iron-bound" in view._rooms_text()
+        assert _lab_rows(view, "lab-rooms-list") == ["Strongroom"]
 
-        await _pick_first_and_open_editor(pilot, app, "section-lab-items", FieldsDialog)
+        # A chosen row is edited straight away, no picker.
+        await _open_lab_section(pilot, app, "section-lab-items")
+        await _choose_lab_row(pilot, view, "lab-items-list", 0)
+        await pilot.press("e")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         assert app.screen.query_one("#fld-name", Input).value == "Silver Mirror"
-        app.screen.query_one("#fld-description", Input).value = "Cracked"
+        app.screen.query_one("#fld-description", TextArea).text = "Cracked"
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
-        assert "Silver Mirror: Cracked" in view._items_text()
 
     lab = storage.load_saga("test_saga").laboratories[0]
     assert lab.rooms == [NamedDescription(name="Strongroom", description="Iron-bound")]
@@ -3812,14 +3986,14 @@ async def test_edit_diary_entry():
         assert app.screen.query_one("#fld-year", Input).value == "1220"
         assert app.screen.query_one("#fld-season", Select).value == "Spring"
         assert app.screen.query_one("#fld-name", Input).value == "Studied"
+        assert app.screen.query_one("#fld-activity", Select).is_blank()
         app.screen.query_one("#fld-season", Select).value = "Winter"
-        app.screen.query_one("#fld-details", Input).value = "Revised."
+        app.screen.query_one("#fld-details", TextArea).text = "Revised."
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
-        text = app.screen._laboratory_sheet_view._diary_text()
-        assert "1220 Winter -- Studied" in text
-        assert "Revised." in text
+        view = app.screen._laboratory_sheet_view
+        assert _lab_rows(view, "lab-diary-list") == ["1220 Winter  -  Studied"]
 
     assert storage.load_saga("test_saga").laboratories[0].diary == [
         DiaryEntry(year=1220, season="Winter", name="Studied", details="Revised.")
@@ -3846,7 +4020,7 @@ async def test_the_diary_edit_picker_shows_brackets_in_an_entry_name():
                 ),
             )
             labels = [str(label.render()) for label in app.screen.query(Label)]
-            assert "1220 Spring -- Studied [Ignem] notes" in labels, (key, labels)
+            assert "1220 Spring  -  Studied [Ignem] notes" in labels, (key, labels)
             await pilot.press("escape")
             await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
@@ -3872,12 +4046,14 @@ async def test_editing_an_empty_lab_list_or_cancelling_changes_nothing():
         await _pick_first_and_open_editor(
             pilot, app, "section-lab-specialties", FieldsDialog
         )
-        app.screen.query_one("#fld-item", Input).value = "Changed"
+        app.screen.query_one("#fld-source", Input).value = "Changed"
         await pilot.press("escape")
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)
 
-    assert storage.load_saga("test_saga").laboratories[0].specialties == ["Ignem"]
+    assert storage.load_saga("test_saga").laboratories[0].specialties == [
+        LabSpecialtyEntry("Ignem", 1, "Hearth spirit")
+    ]
 
     # Nothing to edit: a notification, not a dialog.
     storage.save_saga(bare)

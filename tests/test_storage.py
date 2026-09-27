@@ -13,6 +13,7 @@ from ars_magica_manager.models import (
     HermeticBackground,
     LabCharacteristics,
     Laboratory,
+    LabSpecialtyEntry,
     NamedDescription,
     Saga,
     ScoredTrait,
@@ -75,7 +76,9 @@ def _sample_saga() -> Saga:
                 location="Black Forest",
                 build_points=50,
                 characteristics=LabCharacteristics(size=1, safety=-1),
-                specialties=["Ignem"],
+                specialties=[LabSpecialtyEntry("Ignem", 2, "Hearth spirit")],
+                dropped_specializations=["Ignem"],
+                sanctum_marked=True,
                 rooms=[NamedDescription(name="Vault", description="A locked cellar")],
                 inventory_items=[
                     NamedDescription(name="Silver Mirror", description="For scrying")

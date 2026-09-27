@@ -139,22 +139,17 @@ class WorkspaceScreen(
             "section-lab-characteristics": _SectionOps(
                 edit=self._edit_lab_characteristics
             ),
+            "section-lab-sanctum": _SectionOps(edit=self._edit_lab_sanctum),
             "section-lab-specialties": _SectionOps(
-                self._add_specialty, self._remove_specialty, self._edit_specialty
+                self._add_specialty_entry,
+                self._remove_specialty_entry,
+                self._edit_specialty_entry,
             ),
             "section-lab-features": _SectionOps(
                 self._add_feature, self._remove_feature, self._edit_feature
             ),
-            "section-lab-rooms": _SectionOps(
-                self._add_room, self._remove_room, self._edit_room
-            ),
             "section-lab-raw-vis": _SectionOps(
                 self._add_lab_raw_vis, self._remove_lab_raw_vis, self._edit_lab_raw_vis
-            ),
-            "section-lab-items": _SectionOps(
-                self._add_inventory_item,
-                self._remove_inventory_item,
-                self._edit_inventory_item,
             ),
             "tab-lab-diary": _SectionOps(
                 self._add_diary_entry, self._remove_diary_entry, self._edit_diary_entry
@@ -201,6 +196,12 @@ class WorkspaceScreen(
                 partial(self._add_trait, spec),
                 partial(self._remove_trait, spec),
                 partial(self._edit_trait, spec),
+            )
+        for section in ("section-lab-rooms", "section-lab-items"):
+            ops[section] = _SectionOps(
+                partial(self._add_named, section),
+                partial(self._remove_named, section),
+                partial(self._edit_named, section),
             )
         for section in BOOK_SECTIONS:
             listed = section != "section-lib-summary"  # the summary lists none

@@ -17,9 +17,12 @@ from textual.widgets import (
 
 from ..arts import ARTS
 from ..models import (
+    LAB_ACTIVITIES,
+    LAB_SPECIALIZATIONS,
     SEASONS,
     Ability,
     DiaryEntry,
+    LabSpecialtyEntry,
     MasteryAbility,
     NamedDescription,
     ScoredTrait,
@@ -31,6 +34,7 @@ from .fields import (
     FieldsDialog,
     ModalDialog,
     _attr,
+    _description_field,
     _pairs,
 )
 
@@ -114,6 +118,67 @@ def _item_dialog(
         [DialogField("item", label, "text", existing or "", required=True)],
         save_label="Add" if existing is None else "Save",
         build=lambda values: values["item"],
+    )
+
+
+def _lab_specialty_entry_dialog(
+    existing: LabSpecialtyEntry | None = None,
+) -> FieldsDialog[LabSpecialtyEntry]:
+    """Points in a laboratory Specialization from a source the app doesn't
+    work out itself: which Specialization, how many points (a Flaw's may be
+    negative) and where they come from."""
+    return FieldsDialog(
+        "Add a Specialization source"
+        if existing is None
+        else "Edit a Specialization source",
+        [
+            DialogField(
+                "specialization",
+                "Specialization",
+                "select",
+                _attr(existing, "specialization", "") or None,
+                options=_pairs(LAB_SPECIALIZATIONS),
+                required=True,
+                allow_blank=True,
+                placeholder="(choose an Activity or Art)",
+            ),
+            DialogField(
+                "points",
+                "Points",
+                "int",
+                _attr(existing, "points", 1),
+                hint="Negative for a penalty (e.g. Undecorated).",
+            ),
+            DialogField(
+                "source",
+                "Source",
+                "text",
+                _attr(existing, "source", ""),
+                placeholder="e.g. Subterranean",
+            ),
+        ],
+        save_label="Add" if existing is None else "Save",
+        validate=lambda values: "Points can't be 0." if values["points"] == 0 else None,
+        build=lambda values: LabSpecialtyEntry(
+            values["specialization"], values["points"], values["source"]
+        ),
+    )
+
+
+def _sanctum_marked_dialog(marked: bool) -> FieldsDialog[bool]:
+    """Whether the laboratory's sanctum boundary is marked."""
+    return FieldsDialog(
+        "Edit Sanctum",
+        [
+            DialogField(
+                "marked",
+                "Sanctum marked",
+                "check",
+                marked,
+                hint="Its boundary is marked (a circle within a square).",
+            )
+        ],
+        build=lambda values: values["marked"],
     )
 
 
@@ -219,7 +284,8 @@ def _raw_vis_dialog(
 def _named_description_dialog(
     title: str, name_placeholder: str, existing: NamedDescription | None = None
 ) -> FieldsDialog[NamedDescription]:
-    """A laboratory Room or Inventory item: a name and a description."""
+    """A laboratory Room or Equipment & Stores entry: a name and a
+    (multi-line) description."""
     return FieldsDialog(
         title,
         [
@@ -231,9 +297,7 @@ def _named_description_dialog(
                 required=True,
                 placeholder=name_placeholder,
             ),
-            DialogField(
-                "description", "Description", "text", _attr(existing, "description", "")
-            ),
+            _description_field(_attr(existing, "description", "")),
         ],
         build=lambda values: NamedDescription(**values),
     )
@@ -256,11 +320,27 @@ def _diary_entry_dialog(
                 options=_pairs(SEASONS),
             ),
             DialogField(
+                "activity",
+                "Activity Type",
+                "select",
+                _attr(existing, "activity", "") or None,
+                options=_pairs(LAB_ACTIVITIES),
+                allow_blank=True,
+            ),
+            DialogField(
                 "name", "Name", "text", _attr(existing, "name", ""), required=True
             ),
-            DialogField("details", "Details", "text", _attr(existing, "details", "")),
+            DialogField(
+                "details",
+                "Details",
+                "area",
+                _attr(existing, "details", ""),
+                hint=_EMPHASIS_HINT,
+            ),
         ],
-        build=lambda values: DiaryEntry(**values),
+        build=lambda values: DiaryEntry(
+            **{**values, "activity": values["activity"] or ""}
+        ),
     )
 
 

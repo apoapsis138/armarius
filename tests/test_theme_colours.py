@@ -6,50 +6,82 @@ hex colours appear only in themes.py, where the palettes are defined."""
 import re
 from pathlib import Path
 
+from rich.color import ANSI_COLOR_NAMES
+from textual.color import Color, ColorParseError
+
 PACKAGE = Path(__file__).resolve().parent.parent / "ars_magica_manager"
 
-_NAMED = (
-    r"red|green|blue|cyan|magenta|yellow|white|black|orange|purple|pink"
-    r"|gr[ae]y\d*|bright_\w+|dark_\w+|light_\w+"
-)
-#: A named colour inside a markup tag: [red], [bold green], [on blue], [/cyan].
-_MARKUP_COLOUR = re.compile(rf"\[/?(?:[a-z]+ )*(?:on )?(?:{_NAMED})\b[^\]]*\]")
-#: A named colour as a CSS value: `color: red;`, `background: dark_blue`.
-_CSS_COLOUR = re.compile(rf"\b(?:color|background|tint)\s*:\s*(?:{_NAMED})\b")
+#: A markup tag: [red], [bold green], [on blue], [/cyan] -- not an escaped
+#: "\[" and not a nested bracket.
+_TAG = re.compile(r"(?<!\\)\[/?([^\[\]\n]+)\]")
+#: A CSS property value: `color: red;`, `background: dodgerblue`.
+_CSS_VALUE = re.compile(r"\b(?:color|background|tint|border[a-z-]*)\s*:\s*([^;\n]+)")
 #: A hex or rgb() colour anywhere.
 _LITERAL_COLOUR = re.compile(r"#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b|\brgba?\(")
 
 
-def _offences(pattern: re.Pattern[str]) -> list[str]:
-    found = []
+def _is_colour(word: str) -> bool:
+    """A fixed colour: anything Textual or Rich reads as one (red,
+    dodgerblue, bright_red...) -- never a $theme variable, nor
+    `transparent` (no colour at all)."""
+    word = word.strip().lower()
+    if not word or word.startswith("$") or word == "transparent":
+        return False
+    if word in ANSI_COLOR_NAMES:
+        return True
+    try:
+        Color.parse(word)
+    except ColorParseError:
+        return False
+    return True
+
+
+def _names_a_colour(text: str) -> bool:
+    return any(_is_colour(word) for word in re.split(r"[\s,]+", text))
+
+
+def _source_lines():
     for path in sorted(PACKAGE.rglob("*.py")):
         if path.name == "themes.py":
             continue
         for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
-            if pattern.search(line):
-                found.append(f"{path.relative_to(PACKAGE)}:{number}: {line.strip()}")
-    return found
+            yield f"{path.relative_to(PACKAGE)}:{number}: {line.strip()}", line
 
 
 def test_markup_uses_no_named_colours():
-    assert _offences(_MARKUP_COLOUR) == []
+    offences = [
+        where
+        for where, line in _source_lines()
+        if any(_names_a_colour(tag) for tag in _TAG.findall(line))
+    ]
+    assert offences == []
 
 
 def test_css_uses_no_named_colours():
-    assert _offences(_CSS_COLOUR) == []
+    offences = [
+        where
+        for where, line in _source_lines()
+        if any(_names_a_colour(value) for value in _CSS_VALUE.findall(line))
+    ]
+    assert offences == []
 
 
 def test_hex_and_rgb_colours_live_only_in_themes():
-    assert _offences(_LITERAL_COLOUR) == []
+    offences = [
+        where for where, line in _source_lines() if _LITERAL_COLOUR.search(line)
+    ]
+    assert offences == []
 
 
-def test_the_guard_patterns_catch_what_they_should():
-    """The patterns above are only useful if they match the old style."""
-    assert _MARKUP_COLOUR.search("[red]x[/]")
-    assert _MARKUP_COLOUR.search("[bold green]x[/]")
-    assert _MARKUP_COLOUR.search("[/cyan]")
-    assert not _MARKUP_COLOUR.search("[$text-error]x[/]")
-    assert not _MARKUP_COLOUR.search("[b]x[/b] [dim]y[/]")
-    assert _CSS_COLOUR.search("color: red;")
-    assert not _CSS_COLOUR.search("color: $text-muted;")
+def test_the_guard_catches_what_it_should():
+    """The checks above are only useful if they catch the old style."""
+    for tag in ("red", "bold green", "on blue", "dodgerblue", "b bright_red"):
+        assert _names_a_colour(tag), tag
+    for tag in ("$text-error", "b", "dim", "bold $text-success", "{colour}", "Vault"):
+        assert not _names_a_colour(tag), tag
+    assert _TAG.findall("[/cyan]") == ["cyan"]
+    assert _TAG.findall(r"\[Tower] Lab") == []
+    assert _names_a_colour(_CSS_VALUE.findall("color: red;")[0])
+    assert not _names_a_colour(_CSS_VALUE.findall("color: $text-muted;")[0])
+    assert not _names_a_colour(_CSS_VALUE.findall("border: round $accent;")[0])
     assert _LITERAL_COLOUR.search('fill="#8B0000"')

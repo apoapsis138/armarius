@@ -27,6 +27,7 @@ from .. import catalog
 from .. import economics as eco
 from .. import familiars as fam
 from .. import inhabitants as inh
+from .. import laboratories as lab_text
 from .. import possessions as pos
 from .. import sheet_text as st
 from .. import spells as spl
@@ -66,6 +67,7 @@ from .widgets import (
     SelectableList,
     SheetSection,
     StackingColumns,
+    ToggleList,
     TwoColumns,
     _balance_colored,
     _boon_hook_names,
@@ -1330,19 +1332,40 @@ class CharacterSheetView(SheetView):
         return pos.detail_text(pos.PossessionEntry(item.kind, item))
 
 
+#: The lab's Virtues and Flaws sections: either refreshes both lists and
+#: their shared details panel.
+LAB_VF_SECTIONS = ("section-lab-vf-virtues", "section-lab-vf-flaws")
+
+#: What refreshes the lab's Characteristics: their own section, and the
+#: Virtues & Flaws (whose modifiers and points feed every figure there).
+_LAB_CHARACTERISTICS_SECTIONS = ("section-lab-characteristics", *LAB_VF_SECTIONS)
+#: The sections whose changes can move a Specialization's score.
+LAB_SPECIALIZATION_SECTIONS = ("section-lab-specializations", "section-lab-specialties")
+
+
 class LaboratorySheetView(SheetView):
     """The laboratory sheet mounted into WorkspaceScreen's detail pane.
 
     A fixed top panel (not inside any tab, permanently expanded) above a
     5-tab body mirroring the sheet's own pages: Planning (placeholder),
-    Virtues & Flaws, Attributes (Specialties/Features/Rooms), Inventory (Raw
-    Vis/Items), Diary. The panel follows reference/lab-sheet-design-doc.md:
-    Identity, titled with the lab's name, in two columns with the Aura
-    below; then Characteristics in three columns (derived figures, then the
-    8 Characteristics four and four). Both stack their columns when the
-    pane is too narrow (StackingColumns). Its lists are still read-only
-    Statics edited through pickers, not the selectable lists the other
-    sheets use (STORY-303).
+    Virtues & Flaws, Attributes (Sanctum, Specializations and their sources,
+    Features, Rooms), Inventory (Raw Vis/Equipment & Stores/Books), Diary. The panel follows
+    reference/lab-sheet-design-doc.md: Identity, titled with the lab's name,
+    in two columns with the Aura below; then Characteristics in three
+    columns (derived figures, then the 8 Characteristics four and four).
+    Both stack their columns when the pane is too narrow (StackingColumns).
+
+    Virtues & Flaws (two lists side by side, one details panel, and a
+    warning line when the lab is over capacity or has two Focuses), Rooms,
+    Raw Vis, Equipment & Stores and the Diary are selectable lists, with a
+    details panel where there's more to show than the row (STORY-303).
+
+    Specializations (STORY-307) is a grid of each Specialization's total
+    over every source, grouped Activity / Art, where Space turns the chosen
+    one off or on (ToggleList); its panel shows where the points come from
+    and the caps. The hand-entered sources are their own list below it.
+    Features are still a read-only Static edited through pickers until
+    STORY-308 replaces it.
     """
 
     DEFAULT_CSS = """
@@ -1352,6 +1375,14 @@ class LaboratorySheetView(SheetView):
     }
 
     LaboratorySheetView #lab-identity-left {
+        margin-right: 2;
+    }
+
+    LaboratorySheetView #lab-vf-warnings {
+        margin-bottom: 1;
+    }
+
+    LaboratorySheetView #section-lab-vf-virtues {
         margin-right: 2;
     }
 
@@ -1390,14 +1421,18 @@ class LaboratorySheetView(SheetView):
                     "tab-lab-planning", self._planning_text, id="lab-planning-content"
                 )
             with TabPane("Virtues & Flaws", id="tab-lab-vf"):
-                yield self._static("tab-lab-vf", self._vf_text, id="lab-vf-content")
+                yield from self._virtues_flaws_tab()
             with TabPane("Attributes", id="tab-lab-attributes"), VerticalScroll():
-                with SheetSection(title="Specialties", id="section-lab-specialties"):
+                with SheetSection(title="Sanctum", id="section-lab-sanctum"):
                     yield self._static(
-                        "section-lab-specialties",
-                        self._specialties_text,
-                        id="lab-specialties-content",
+                        "section-lab-sanctum",
+                        lambda: (
+                            "Marked: "
+                            + ("Yes" if self.laboratory.sanctum_marked else "No")
+                        ),
+                        id="lab-sanctum-content",
                     )
+                yield from self._specializations_sections()
                 with SheetSection(title="Features", id="section-lab-features"):
                     yield self._static(
                         "section-lab-features",
@@ -1405,19 +1440,35 @@ class LaboratorySheetView(SheetView):
                         id="lab-features-content",
                     )
                 with SheetSection(title="Rooms", id="section-lab-rooms"):
+                    yield self._list(
+                        "section-lab-rooms",
+                        lambda: lab_text.named_rows(self.laboratory.rooms),
+                        id="lab-rooms-list",
+                    )
                     yield self._static(
-                        "section-lab-rooms", self._rooms_text, id="lab-rooms-content"
+                        "section-lab-rooms",
+                        lambda: self._rooms_info_text(None),
+                        id="lab-rooms-info",
+                        classes="details-panel",
                     )
             with TabPane("Inventory", id="tab-lab-inventory"), VerticalScroll():
                 with SheetSection(title="Raw Vis", id="section-lab-raw-vis"):
-                    yield self._static(
+                    yield self._list(
                         "section-lab-raw-vis",
-                        self._raw_vis_text,
-                        id="lab-raw-vis-content",
+                        lambda: lab_text.raw_vis_rows(self.laboratory),
+                        id="lab-raw-vis-list",
                     )
-                with SheetSection(title="Items", id="section-lab-items"):
+                with SheetSection(title="Equipment & Stores", id="section-lab-items"):
+                    yield self._list(
+                        "section-lab-items",
+                        lambda: lab_text.named_rows(self.laboratory.inventory_items),
+                        id="lab-items-list",
+                    )
                     yield self._static(
-                        "section-lab-items", self._items_text, id="lab-items-content"
+                        "section-lab-items",
+                        lambda: self._items_info_text(None),
+                        id="lab-items-info",
+                        classes="details-panel",
                     )
                 yield self._book_list(
                     ("section-lab-identity",),
@@ -1427,10 +1478,163 @@ class LaboratorySheetView(SheetView):
                     section_id="section-lab-books",
                     docked=False,
                 )
-            with TabPane("Diary", id="tab-lab-diary"):
-                yield self._static(
-                    "tab-lab-diary", self._diary_text, id="lab-diary-content"
+            with TabPane("Diary", id="tab-lab-diary"), VerticalScroll():
+                yield self._list(
+                    "tab-lab-diary",
+                    lambda: lab_text.diary_rows(self.laboratory.diary),
+                    id="lab-diary-list",
                 )
+                yield self._static(
+                    "tab-lab-diary",
+                    lambda: lab_text.diary_info_text(self.laboratory.diary, None),
+                    id="lab-diary-info",
+                    classes="details-panel",
+                )
+
+    def _virtues_flaws_tab(self) -> ComposeResult:
+        """Any warning about the Virtues & Flaws as a whole, the Virtue and
+        Flaw lists side by side, and their shared details panel."""
+        with VerticalScroll():
+            warnings = self._static(
+                (*LAB_VF_SECTIONS, "section-lab-characteristics"),
+                lambda: lab_text.vf_warnings(self.laboratory),
+                id="lab-vf-warnings",
+            )
+            warnings.display = bool(lab_text.vf_warnings(self.laboratory))
+            yield warnings
+            self._on_refresh(
+                (*LAB_VF_SECTIONS, "section-lab-characteristics"),
+                self._show_vf_warnings_if_any,
+            )
+            with TwoColumns(id="lab-vf-row"):
+                with SheetSection(title="Virtues", id="section-lab-vf-virtues"):
+                    yield self._list(
+                        LAB_VF_SECTIONS,
+                        lambda: lab_text.vf_rows(self.laboratory, "Virtue"),
+                        id="lab-vf-virtues-list",
+                        group="lab-vf",
+                    )
+                with SheetSection(title="Flaws", id="section-lab-vf-flaws"):
+                    yield self._list(
+                        LAB_VF_SECTIONS,
+                        lambda: lab_text.vf_rows(self.laboratory, "Flaw"),
+                        id="lab-vf-flaws-list",
+                        group="lab-vf",
+                    )
+            yield self._static(
+                LAB_VF_SECTIONS,
+                lambda: lab_text.vf_info_text(self.laboratory, None),
+                id="lab-vf-info",
+                classes="details-panel",
+            )
+
+    def _specializations_sections(self) -> ComposeResult:
+        """The Specializations grid with its details panel, then the list of
+        hand-entered sources."""
+        with SheetSection(title="Specializations", id="section-lab-specializations"):
+            yield ToggleList(
+                lab_text.specialization_rows(self.laboratory),
+                id="lab-specializations-list",
+            )
+            yield Static(
+                lab_text.specialization_info_text(self.laboratory, None),
+                id="lab-specializations-info",
+                classes="details-panel",
+            )
+        self._on_refresh(LAB_SPECIALIZATION_SECTIONS, self._refresh_specializations)
+        with SheetSection(
+            title="Other Specialization Sources", id="section-lab-specialties"
+        ):
+            yield self._list(
+                "section-lab-specialties",
+                lambda: lab_text.specialty_entry_rows(self.laboratory),
+                id="lab-specialties-list",
+            )
+
+    def _refresh_specializations(self) -> None:
+        """Re-fill the grid, keeping the chosen Specialization chosen (its
+        panel re-fills with it) if it's still there."""
+        grid = self.query_one("#lab-specializations-list", ToggleList)
+        chosen = grid.selected_data_index
+        grid.set_rows(lab_text.specialization_rows(self.laboratory))
+        self.query_one("#lab-specializations-info", Static).update(
+            lab_text.specialization_info_text(self.laboratory, None)
+        )
+        if chosen is not None:
+            grid.select_data_index(chosen)
+
+    def _show_vf_warnings_if_any(self) -> None:
+        warnings = self.query_one("#lab-vf-warnings", Static)
+        warnings.display = bool(lab_text.vf_warnings(self.laboratory))
+
+    def _rooms_info_text(self, index: int | None) -> str:
+        return lab_text.named_info_text(self.laboratory.rooms, index, "a Room")
+
+    def _items_info_text(self, index: int | None) -> str:
+        return lab_text.named_info_text(
+            self.laboratory.inventory_items, index, "an entry"
+        )
+
+    def _selected(self, list_id: str) -> int | None:
+        return self.query_one(f"#{list_id}", SelectableList).selected_data_index
+
+    def selected_virtue_flaw(self) -> int | None:
+        """Index into laboratory.virtues_flaws of the row chosen in either the
+        Virtues or the Flaws list, or None if neither has one chosen."""
+        virtue = self._selected("lab-vf-virtues-list")
+        return virtue if virtue is not None else self._selected("lab-vf-flaws-list")
+
+    def selected_specialization(self) -> int | None:
+        """Index into LAB_SPECIALIZATIONS of the grid's chosen row, or None."""
+        return self._selected("lab-specializations-list")
+
+    def selected_specialty_entry(self) -> int | None:
+        """Index into laboratory.specialties of the chosen source, or None."""
+        return self._selected("lab-specialties-list")
+
+    def selected_room(self) -> int | None:
+        """Index into laboratory.rooms of the chosen row, or None."""
+        return self._selected("lab-rooms-list")
+
+    def selected_item(self) -> int | None:
+        """Index into laboratory.inventory_items of the chosen row, or None."""
+        return self._selected("lab-items-list")
+
+    def selected_raw_vis(self) -> int | None:
+        """Index into sorted(laboratory.raw_vis) of the chosen row, or None."""
+        return self._selected("lab-raw-vis-list")
+
+    def selected_diary_entry(self) -> int | None:
+        """Index into laboratory.diary of the chosen row, or None."""
+        return self._selected("lab-diary-list")
+
+    def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
+        """Fill the chosen row's details panel."""
+        panel = {
+            "lab-vf-virtues-list": (
+                "lab-vf-info",
+                lambda i: lab_text.vf_info_text(self.laboratory, i),
+            ),
+            "lab-vf-flaws-list": (
+                "lab-vf-info",
+                lambda i: lab_text.vf_info_text(self.laboratory, i),
+            ),
+            "lab-specializations-list": (
+                "lab-specializations-info",
+                lambda i: lab_text.specialization_info_text(self.laboratory, i),
+            ),
+            "lab-rooms-list": ("lab-rooms-info", self._rooms_info_text),
+            "lab-items-list": ("lab-items-info", self._items_info_text),
+            "lab-diary-list": (
+                "lab-diary-info",
+                lambda i: lab_text.diary_info_text(self.laboratory.diary, i),
+            ),
+        }.get(event.selectable_list.id or "")
+        if panel is None:
+            return
+        event.stop()
+        panel_id, text = panel
+        self.query_one(f"#{panel_id}", Static).update(text(event.data_index))
 
     def _top_panel(self) -> ComposeResult:
         """The always-visible Identity and Characteristics panels above the
@@ -1460,19 +1664,19 @@ class LaboratorySheetView(SheetView):
             ):
                 with StackingColumns(id="lab-characteristics-body"):
                     yield self._static(
-                        "section-lab-characteristics",
+                        _LAB_CHARACTERISTICS_SECTIONS,
                         self._characteristics_derived_text,
                         id="lab-characteristics-derived",
                     )
                     yield self._static(
-                        "section-lab-characteristics",
+                        _LAB_CHARACTERISTICS_SECTIONS,
                         lambda: self._characteristics_column_text(
                             LAB_CHARACTERISTICS[:4]
                         ),
                         id="lab-characteristics-left",
                     )
                     yield self._static(
-                        "section-lab-characteristics",
+                        _LAB_CHARACTERISTICS_SECTIONS,
                         lambda: self._characteristics_column_text(
                             LAB_CHARACTERISTICS[4:]
                         ),
@@ -1482,7 +1686,7 @@ class LaboratorySheetView(SheetView):
                     "Edit (e)", id="btn-lab-characteristics-edit", compact=True
                 )
             self._on_refresh(
-                "section-lab-characteristics",
+                _LAB_CHARACTERISTICS_SECTIONS,
                 lambda: self.query_one(
                     "#lab-characteristics-body", StackingColumns
                 ).restack(),
@@ -1577,75 +1781,10 @@ class LaboratorySheetView(SheetView):
     def _planning_text(self) -> str:
         return "Lab activity planning isn't built yet -- coming in a future update."
 
-    def _vf_text(self) -> str:
-        if not self.laboratory.virtues_flaws:
-            return "(none recorded)"
-
-        lab_catalog = catalog.load_lab_virtue_flaw_catalog_by_id()
-        lines: list[str] = []
-        for vf_type in ("Virtue", "Flaw"):
-            entries = [
-                vf
-                for vf in self.laboratory.virtues_flaws
-                if (definition := lab_catalog.get(vf.vf_id)) is not None
-                and definition.type == vf_type
-            ]
-            if not entries:
-                continue
-            lines.append(f"{vf_type}s:")
-            for vf in entries:
-                definition = lab_catalog.get(vf.vf_id)
-                tier = definition.tier if definition is not None else "?"
-                lines.append(
-                    f"  {escape(catalog.describe_virtue_flaw(vf, lab_catalog))} "
-                    f"({tier})"
-                )
-            lines.append("")
-        return "\n".join(lines).rstrip()
-
-    def _specialties_text(self) -> str:
-        if not self.laboratory.specialties:
-            return "(none recorded)"
-        return "\n".join(f"  - {escape(s)}" for s in self.laboratory.specialties)
-
     def _features_text(self) -> str:
         if not self.laboratory.features:
             return "(none recorded)"
         return "\n".join(f"  - {escape(f)}" for f in self.laboratory.features)
-
-    def _rooms_text(self) -> str:
-        if not self.laboratory.rooms:
-            return "(none recorded)"
-        return "\n".join(
-            f"  {escape(room.name)}: {escape(room.description) or '(no description)'}"
-            for room in self.laboratory.rooms
-        )
-
-    def _raw_vis_text(self) -> str:
-        if not self.laboratory.raw_vis:
-            return "(none recorded)"
-        return "\n".join(
-            f"{art.title()}: {pawns} pawn(s)"
-            for art, pawns in sorted(self.laboratory.raw_vis.items())
-        )
-
-    def _items_text(self) -> str:
-        if not self.laboratory.inventory_items:
-            return "(none recorded)"
-        return "\n".join(
-            f"  {escape(item.name)}: {escape(item.description) or '(no description)'}"
-            for item in self.laboratory.inventory_items
-        )
-
-    def _diary_text(self) -> str:
-        if not self.laboratory.diary:
-            return "(none recorded)"
-        lines = []
-        for entry in self.laboratory.diary:
-            lines.append(f"{entry.year} {entry.season} -- {escape(entry.name)}")
-            if entry.details:
-                lines.append(f"  {escape(entry.details)}")
-        return "\n".join(lines)
 
 
 class FamiliarSheetView(SheetView):
