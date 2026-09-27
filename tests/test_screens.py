@@ -3135,9 +3135,21 @@ async def test_clicking_a_lab_top_panel_section_makes_it_active():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
         await _select_laboratory(pilot, app)
+        # Let the sheet finish laying out and take its initial focus, or the
+        # click can land on stale coordinates (under load, the header's
+        # palette button).
+        view = app.screen._laboratory_sheet_view
+        await wait_until(pilot, lambda: view.initial_tab_seen)
+        await wait_until(
+            pilot, lambda: app.screen._active_section() == "section-lab-identity"
+        )
+        await pilot.pause()
 
         await pilot.click("#lab-characteristics-content")
-        await pilot.pause()
+        await wait_until(
+            pilot,
+            lambda: app.screen._active_section() == "section-lab-characteristics",
+        )
         assert app.screen._active_section() == "section-lab-characteristics"
 
         await pilot.press("e")
@@ -8066,6 +8078,9 @@ async def test_an_unowned_book_files_under_the_saga():
         assert str(_find_node(tree, ("book_group",)).label) == "Unassigned Books (2)"
 
         await _select(pilot, app, ("book_group",))
+        await wait_until(
+            pilot, lambda: _book_names(app) == ["Summa of Flame", "Lost Folio"]
+        )
         assert _book_names(app) == ["Summa of Flame", "Lost Folio"]
         assert app.screen._active_section() == "section-unassigned-books"
         # Give both back to the covenant: the node goes away.
