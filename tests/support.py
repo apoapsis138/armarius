@@ -59,7 +59,7 @@ NODES: dict[str, tuple[str, ...]] = {
 }
 
 
-def _first_vf(vf_type: str) -> str:
+def first_vf(vf_type: str) -> str:
     return next(
         e.id
         for e in catalog.load_virtue_flaw_catalog()
@@ -100,8 +100,8 @@ def everything_saga() -> Saga:
     magus = Character(id="mag1", name="Leandro", type="magus", covenant_id="cov1")
     magus.abilities = [Ability("Latin", level=4)]
     magus.virtues_flaws = [
-        VirtueFlawInstance(_first_vf("Virtue")),
-        VirtueFlawInstance(_first_vf("Flaw")),
+        VirtueFlawInstance(first_vf("Virtue")),
+        VirtueFlawInstance(first_vf("Flaw")),
     ]
     magus.personality_traits = list(trait)
     magus.reputations = list(rep)
@@ -121,7 +121,7 @@ def everything_saga() -> Saga:
     lab.virtues_flaws = [VirtueFlawInstance(lab_vf)]
 
     familiar = Familiar(id="fam1", character_id="mag1", name="Corax")
-    familiar.virtues_flaws = [VirtueFlawInstance(_first_vf("Virtue"))]
+    familiar.virtues_flaws = [VirtueFlawInstance(first_vf("Virtue"))]
     familiar.personality_traits = list(trait)
     familiar.reputations = list(rep)
     familiar.natural_weapons = [Possession(id="nw1", kind="weapon", name="Beak")]
