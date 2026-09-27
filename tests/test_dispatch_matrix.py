@@ -270,15 +270,19 @@ async def _matrix_for(
         app.notify = record  # type: ignore[method-assign]
 
         tree = workspace.query_one("#nav-tree", Tree)
-        stack = [tree.root]
-        node = None
-        while stack:
-            candidate = stack.pop()
-            if candidate.data == NODES[kind]:
-                node = candidate
-                break
-            stack.extend(candidate.children)
-        assert node is not None
+
+        def find_node():
+            stack = [tree.root]
+            while stack:
+                candidate = stack.pop()
+                if candidate.data == NODES[kind]:
+                    return candidate
+                stack.extend(candidate.children)
+            return None
+
+        # The tree is built as the workspace mounts: wait for the node.
+        assert await wait_until(pilot, lambda: find_node() is not None)
+        node = find_node()
         tree.select_node(node)
         await pilot.pause()
 

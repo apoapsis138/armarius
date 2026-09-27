@@ -130,13 +130,19 @@ async def _open(pilot, app, case: ListCase):
     assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
     workspace = app.screen
     tree = workspace.query_one("#nav-tree", Tree)
-    stack = [tree.root]
-    while stack:
-        node = stack.pop()
-        if node.data == case.node:
-            tree.select_node(node)
-            break
-        stack.extend(node.children)
+
+    def find_node():
+        stack = [tree.root]
+        while stack:
+            node = stack.pop()
+            if node.data == case.node:
+                return node
+            stack.extend(node.children)
+        return None
+
+    # The tree is built as the workspace mounts: wait for the node to exist.
+    assert await wait_until(pilot, lambda: find_node() is not None)
+    tree.select_node(find_node())
     attr = _SHEET_VIEW_ATTR[case.node[0]]
     assert await wait_until(pilot, lambda: getattr(workspace, attr) is not None)
     view = getattr(workspace, attr)

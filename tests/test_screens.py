@@ -5553,8 +5553,11 @@ async def test_picker_search_finds_entries_by_their_type():
         picker_list = app.screen.query_one("#covbh-picker-list", ListView)
 
         def shown() -> list[str]:
+            # Mid-refill, a row can be mounted before its Label: skip it.
             return [
-                str(item.query_one(Label).render()) for item in picker_list.children
+                str(labels.first().render())
+                for item in picker_list.children
+                if (labels := item.query(Label))
             ]
 
         await _wait_for_picker_ready(pilot, app)
