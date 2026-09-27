@@ -978,6 +978,26 @@ async def test_bind_familiar_only_defaults_to_the_magus_on_show():
             await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
 
+async def test_overlapping_detail_swaps_leave_one_sheet():
+    # B19: two detail-pane swaps in flight at once (seen after binding a
+    # familiar) interleaved their remove/mount steps.
+    saga = _saga_with_familiar()
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_familiar(pilot, app)
+        workspace = app.screen
+        familiar = workspace.saga.familiars[0]
+        await asyncio.gather(
+            workspace._show_familiar_detail(familiar),
+            workspace._show_saga_detail(),
+        )
+        await pilot.pause()
+        children = list(workspace._detail_pane().children)
+        assert [type(c).__name__ for c in children] == ["Static"], children
+
+
 async def test_create_familiar_is_disabled_once_every_magus_has_one():
     storage.save_saga(_saga_with_familiar())
 

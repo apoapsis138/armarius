@@ -4,6 +4,7 @@ behind a/A/e/r and the actions that aren't about one kind of record."""
 
 from __future__ import annotations
 
+import asyncio
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from dataclasses import field as dataclass_field
@@ -288,6 +289,8 @@ class WorkspaceBase(Screen[None]):
         self._laboratory_sheet_view: LaboratorySheetView | None = None
         self._covenant_sheet_view: CovenantSheetView | None = None
         self._familiar_sheet_view: FamiliarSheetView | None = None
+        #: One detail-pane swap at a time (see _set_detail).
+        self._detail_lock = asyncio.Lock()
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -614,11 +617,14 @@ class WorkspaceBase(Screen[None]):
 
     async def _set_detail(self, *widgets: Widget) -> None:
         detail_pane = self._detail_pane()
-        # Must be awaited before mounting replacements below, or a same-id
-        # widget not yet removed collides with its freshly-mounted
-        # replacement and Textual raises DuplicateIds.
-        await detail_pane.remove_children()
-        await detail_pane.mount(*widgets)
+        # One swap at a time: two in flight at once interleave their removes
+        # and mounts, leaving both sheets mounted or removing one mid-mount.
+        async with self._detail_lock:
+            # Must be awaited before mounting replacements below, or a same-id
+            # widget not yet removed collides with its freshly-mounted
+            # replacement and Textual raises DuplicateIds.
+            await detail_pane.remove_children()
+            await detail_pane.mount(*widgets)
 
     async def _show_placeholder_detail(self, title: str, hint: str) -> None:
         await self._set_detail(Static(f"{title}\n\n{hint}"))
