@@ -5,29 +5,26 @@ sheets, the Book and Spell lists, and the add/edit dialogs and pickers."""
 from __future__ import annotations
 
 from collections import Counter
-from collections.abc import Callable, Iterable, Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from dataclasses import field as dataclass_field
 from enum import StrEnum
 from functools import cached_property, partial
 from pathlib import Path
-from typing import Any, ClassVar, NamedTuple, cast
+from typing import Any, ClassVar, NamedTuple
 
 from textual.app import ComposeResult
 from textual.binding import Binding, BindingType
 from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.content import Content
 from textual.css.query import NoMatches
-from textual.events import Click, DescendantBlur, DescendantFocus, Key
-from textual.message import Message
+from textual.events import DescendantBlur, DescendantFocus, Key
 from textual.screen import ModalScreen, Screen
 from textual.widget import Widget
 from textual.widgets import (
     Button,
-    Checkbox,
     Collapsible,
     DirectoryTree,
-    Footer,
     Header,
     Input,
     Label,
@@ -38,23 +35,22 @@ from textual.widgets import (
     Static,
     TabbedContent,
     TabPane,
-    TextArea,
     Tree,
 )
 from textual.widgets._collapsible import CollapsibleTitle
 from textual.widgets.option_list import Option
 from textual.widgets.tree import TreeNode
 
-from . import books as bk
-from . import catalog, creation, storage
-from . import economics as eco
-from . import familiars as fam
-from . import inhabitants as inh
-from . import possessions as pos
-from . import sheet_text as st
-from . import spells as spl
-from .markup import aligned, escape, markdown_inline
-from .models import (
+from .. import books as bk
+from .. import catalog, creation, storage
+from .. import economics as eco
+from .. import familiars as fam
+from .. import inhabitants as inh
+from .. import possessions as pos
+from .. import sheet_text as st
+from .. import spells as spl
+from ..markup import aligned, escape, markdown_inline
+from ..models import (
     ART_ABBREVIATIONS,
     ART_DESCRIPTIONS,
     ARTS,
@@ -134,37 +130,47 @@ from .models import (
     next_season,
     replace_raw_vis,
 )
+from .fields import (
+    _EMPHASIS_HINT,
+    ModalDialog,
+    _attr,
+    _covenant_options,
+    _description_field,
+    _pairs,
+    _year_born_field,
+)
+from .fields import DialogField as DialogField
+from .fields import FieldsDialog as FieldsDialog
+from .widgets import (
+    BottomBar,
+    PinnedCollapsible,
+    SheetSection,
+    TwoColumns,
+    _balance_colour,
+    _boon_hook_names,
+    _sign_colored,
+    _tab_placeholder,
+    _tier_text,
+)
+from .widgets import SelectableList as SelectableList
+from .widgets import ThemeBar as ThemeBar
 
 _SAGA_ITEM_ID_PREFIX = "saga-"
+
+
 _VIRTUE_FLAW_ITEM_ID_PREFIX = "vf-"
+
+
 _LAB_VIRTUE_FLAW_ITEM_ID_PREFIX = "labvf-"
+
+
 _ABILITY_ITEM_ID_PREFIX = "ability-"
+
+
 _REMOVAL_ITEM_ID_PREFIX = "remove-"
+
+
 _COVENANT_BOON_HOOK_ITEM_ID_PREFIX = "covbhpick-"
-
-
-def _balance_colour(boon_points: float, hook_points: float) -> str:
-    """Colour for the Boons/Hooks point totals, shared by both: cyan while
-    Boons cost less than Hooks provide, red once they cost more, green when
-    they exactly balance."""
-    if boon_points < hook_points:
-        return "cyan"
-    if boon_points > hook_points:
-        return "red"
-    return "green"
-
-
-def _tier_text(entry: CovenantBoonHookDef) -> str:
-    """ "Minor Boon (1 pt)", "Major Hook (3 pts)" or "Free Boon"."""
-    points = abs(entry.cost)
-    if not points:
-        return f"{entry.tier} {entry.type}"
-    return f"{entry.tier} {entry.type} ({points:g} {'pt' if points == 1 else 'pts'})"
-
-
-def _year_born_field(value: int | None) -> DialogField:
-    """Year Born is never required: blank means Unknown."""
-    return DialogField("year_born", "Year Born (blank = Unknown)", "optint", value)
 
 
 def _inhabitant_fields(
@@ -379,31 +385,6 @@ def _craftsperson_fields(
     else:
         fields.append(DialogField("linked_ability", "Linked Ability", "text", current))
     return fields
-
-
-def _pairs(values: Iterable[str]) -> list[tuple[str, str]]:
-    """Select options whose label is the value itself."""
-    return [(value, value) for value in values]
-
-
-def _covenant_options(saga: Saga) -> list[tuple[str, str]]:
-    """Select options for choosing one of the saga's covenants."""
-    return [(escape(c.name), c.id) for c in saga.covenants]
-
-
-#: The hint under every free-text field that is shown with markdown_inline.
-_EMPHASIS_HINT = "Supports **bold** and *italic*."
-
-
-def _description_field(value: str) -> DialogField:
-    """The multi-line Description field most forms end with."""
-    return DialogField("description", "Description", "area", value, hint=_EMPHASIS_HINT)
-
-
-def _attr(record: object | None, attribute: str, default: Any) -> Any:
-    """`record.attribute`, or `default` when there's no record yet (a form
-    opened to add one)."""
-    return getattr(record, attribute) if record is not None else default
 
 
 def _possession_fields(
@@ -783,11 +764,14 @@ _HANDEDNESS_OPTIONS: list[tuple[str, str]] = [
     ("Ambidextrous", "ambidextrous"),
 ]
 
+
 #: Biographical Detail's free-text Background fields, as (label, attribute).
 _BIOGRAPHY_TEXT_FIELDS: list[tuple[str, str]] = [
     ("Player", "player"),
     ("Birth Name", "birth_name"),
 ]
+
+
 _BIOGRAPHY_TEXT_FIELDS_AFTER_YEAR: list[tuple[str, str]] = [
     ("Race/Nationality", "race_nationality"),
     ("Place of Origin", "place_of_origin"),
@@ -1647,12 +1631,6 @@ def _spell_live(values: dict[str, Any]) -> str:
     return text
 
 
-def _boon_hook_names(ids: list[str], by_id: dict[str, CovenantBoonHookDef]) -> str:
-    """Names of catalog entries, each listed once (Road/Urban exist at both
-    tiers), for prerequisite/exclusion notes."""
-    return ", ".join(dict.fromkeys(by_id[i].name for i in ids if i in by_id))
-
-
 #: Covenant Reputations run from -3 to +3.
 _COVENANT_REPUTATION_RANGE = (-3, 3)
 
@@ -1691,6 +1669,8 @@ _CHARACTER_TRAITS = _TraitList(
     "e.g. Brave",
     "_selected_personality_trait",
 )
+
+
 _CHARACTER_REPUTATIONS = _TraitList(
     "selected_character",
     "reputations",
@@ -1700,6 +1680,8 @@ _CHARACTER_REPUTATIONS = _TraitList(
     "_selected_character_reputation",
     signed=False,  # unlike every other Reputation list (STORY-1109 B14)
 )
+
+
 _FAMILIAR_TRAITS = _TraitList(
     "selected_familiar",
     "personality_traits",
@@ -1709,6 +1691,8 @@ _FAMILIAR_TRAITS = _TraitList(
     "_selected_familiar_personality_trait",
     confirm_remove=False,  # STORY-1109 B6
 )
+
+
 _FAMILIAR_REPUTATIONS = _TraitList(
     "selected_familiar",
     "reputations",
@@ -1719,6 +1703,8 @@ _FAMILIAR_REPUTATIONS = _TraitList(
     signed=False,
     confirm_remove=False,  # STORY-1109 B6
 )
+
+
 _COVENANT_REPUTATIONS = _TraitList(
     "selected_covenant",
     "reputations",
@@ -1733,74 +1719,9 @@ _COVENANT_REPUTATIONS = _TraitList(
     },
 )
 
+
 #: Which sheet section each covenant Boon/Hook kind lives in.
 _BOON_HOOK_SECTION = {"Boon": "section-cov-boons", "Hook": "section-cov-hooks"}
-
-
-def _sign_colored(value: float, text: str) -> str:
-    """Wraps `text` in Textual markup coloured by the sign of `value`:
-    zero is cyan, positive green, negative red."""
-    colour = "cyan" if value == 0 else "green" if value > 0 else "red"
-    return f"[{colour}]{text}[/]"
-
-
-class ThemeBar(Static):
-    """A one-line bar above the footer showing the app's active theme name."""
-
-    DEFAULT_CSS = """
-    ThemeBar {
-        height: 1;
-        content-align: left middle;
-        padding: 0 1;
-        color: $text-muted;
-    }
-    """
-
-    def on_mount(self) -> None:
-        self.watch(self.app, "theme", self._show_theme, init=True)
-
-    def _show_theme(self, theme_name: str) -> None:
-        self.update(f"Theme: {theme_name.replace('-', ' ').title()}")
-
-
-class BottomBar(Vertical):
-    """Docks the ThemeBar directly above the Footer.
-
-    Both dock to the same screen edge independently otherwise (Textual's
-    dock arrangement doesn't stack same-edge docked siblings -- they'd
-    overlap on the same row), so this wraps them in one bottom-docked
-    container where Footer's own `dock: bottom` pins it to the container's
-    last row and ThemeBar, undocked, takes the row above it in normal flow.
-    """
-
-    DEFAULT_CSS = """
-    BottomBar {
-        dock: bottom;
-        height: 2;
-    }
-    """
-
-    def compose(self) -> ComposeResult:
-        yield ThemeBar(id="theme-bar")
-        yield Footer()
-
-
-class ModalDialog[ResultT](ModalScreen[ResultT]):
-    """Base of the app's modal dialogs: Escape (or a dialog's Cancel button
-    calling action_cancel) dismisses with CANCEL_RESULT."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
-
-    #: What the dialog dismisses with when cancelled.
-    CANCEL_RESULT: ClassVar[Any] = None
-
-    def action_cancel(self) -> None:
-        self.dismiss(self.CANCEL_RESULT)
-
-    def _select_value(self, selector: str) -> str | None:
-        """The chosen value of the Select at `selector`, or None if blank."""
-        value = self.query_one(selector, Select).value
-        return value if isinstance(value, str) else None
 
 
 class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
@@ -3438,626 +3359,13 @@ class ImproveIncomeScreen(ModalDialog[tuple[int, str] | None]):
         )
 
 
-class SelectableList(OptionList):
-    """The standard "selectable list" (see DESIGN.md, UI Conventions): rows
-    that each carry a selector -- a dim `○`, or a blue bold `●` on the chosen
-    row -- with at most one row chosen at a time.
-
-    Rows are `(data index, label)` pairs: the data index is the entry's
-    position in whatever list the sheet keeps its data in (it becomes the
-    Option id, so a filtered list still maps back to the true entry), and
-    the label is markup -- escape user text with `escape()` first. An empty
-    list shows one disabled "(none recorded)" row.
-
-    A row with a `None` data index is a **header**: a disabled, unselectable
-    separator (bold text, no marker) for sections whose data doesn't split
-    cleanly into two side-by-side lists (e.g. Abilities' several categories,
-    unlike Virtues/Flaws' two). Headers are skipped by keyboard navigation
-    the same way the empty-list placeholder already is.
-
-    Choosing a row (arrow keys or click) moves the marker and posts
-    `SelectableList.Chosen(data_index)`; the owning view reacts (fills a
-    details panel...). Nothing is chosen until the user picks a row, and
-    `set_rows()` clears the choice. Lists given the same `group` (e.g.
-    Virtues and Flaws, which share one details panel) have one choice
-    between them: choosing a row in one unchooses the others.
-
-    With `multi=True`, rows can also be *checked* for acting on several at
-    once: Space (or Ctrl+click) toggles a green check in front of a row,
-    independently of the chosen one, and posts `SelectableList.Checked`.
-    `set_rows()` clears the checks too.
-    """
-
-    BINDINGS: ClassVar[list[BindingType]] = [
-        Binding("space", "toggle_check", "Mark"),
-    ]
-
-    DEFAULT_CSS = """
-    SelectableList,
-    SelectableList:focus {
-        height: auto;
-        max-height: 14;
-        border: none;
-        padding: 0;
-        background: transparent;
-    }
-
-    /* The marker is the selection indicator: a solid highlight bar would
-       swallow it, so the bar is neutralised (normal and focused) and the
-       chosen row is just bold. */
-    SelectableList > .option-list--option-highlighted,
-    SelectableList:focus > .option-list--option-highlighted {
-        background: transparent;
-        color: $foreground;
-        text-style: bold;
-    }
-    """
-
-    class Chosen(Message):
-        """A row was chosen; `data_index` is its entry's data index."""
-
-        def __init__(self, selectable_list: SelectableList, data_index: int) -> None:
-            super().__init__()
-            self.selectable_list = selectable_list
-            self.data_index = data_index
-
-        @property
-        def control(self) -> SelectableList:
-            return self.selectable_list
-
-    class Checked(Message):
-        """The set of checked rows changed (multi lists only)."""
-
-        def __init__(self, selectable_list: SelectableList) -> None:
-            super().__init__()
-            self.selectable_list = selectable_list
-
-        @property
-        def control(self) -> SelectableList:
-            return self.selectable_list
-
-    def __init__(
-        self,
-        rows: Sequence[tuple[int | None, str]] | None = None,
-        *,
-        id: str | None = None,
-        multi: bool = False,
-        group: str | None = None,
-    ) -> None:
-        super().__init__(id=id, compact=True)
-        self.multi = multi
-        self.group = group
-        self._rows: list[tuple[int | None, str]] = []
-        self._marked: int | None = None
-        self._checked: set[int] = set()  # list positions
-        self._add_rows(rows or [])
-
-    def _prompt(self, position: int) -> str:
-        index, label = self._rows[position]
-        if index is None:  # header row
-            return f"[b]{label}[/]"
-        marker = "[dodgerblue]●[/]" if position == self._marked else "[dim]○[/]"
-        if not self.multi:
-            return f"{marker} {label}"
-        check = "[green]✔[/]" if position in self._checked else " "
-        return f"{check} {marker} {label}"
-
-    def _render_row(self, position: int | None) -> None:
-        if position is not None and position < len(self._rows):
-            self.replace_option_prompt_at_index(position, self._prompt(position))
-
-    def _add_rows(self, rows: Sequence[tuple[int | None, str]]) -> None:
-        # Added after construction on purpose: OptionList(*options)
-        # highlights its first row, and nothing should be chosen until the
-        # user picks one.
-        self._rows = list(rows)
-        if not self._rows:
-            self.add_option(Option("[dim](none recorded)[/]", disabled=True))
-            return
-        self.add_options(
-            Option(
-                self._prompt(position),
-                id=(str(index) if index is not None else None),
-                disabled=index is None,
-            )
-            for position, (index, _) in enumerate(self._rows)
-        )
-
-    def set_rows(self, rows: Sequence[tuple[int | None, str]]) -> None:
-        """Replace all rows (synchronous; nothing is chosen or checked
-        afterwards)."""
-        self.clear_options()
-        self._marked = None
-        self._checked = set()
-        self._add_rows(rows)
-
-    def relabel(self, labels: list[str]) -> None:
-        """New labels for the same rows, in order (e.g. re-laid-out columns);
-        the chosen row and any checks stay as they are."""
-        if len(labels) != len(self._rows):
-            return
-        self._rows = [(index, label) for (index, _), label in zip(self._rows, labels)]
-        for position in range(len(self._rows)):
-            self._render_row(position)
-
-    @property
-    def selected_data_index(self) -> int | None:
-        """Data index of the chosen row, or None if none is chosen."""
-        option = self.highlighted_option
-        return int(option.id) if option is not None and option.id else None
-
-    @property
-    def checked_data_indexes(self) -> list[int]:
-        """Data indexes of the checked rows, in list order."""
-        return [self._rows[p][0] for p in sorted(self._checked)]
-
-    def clear_selection(self) -> None:
-        """Unchoose everything. Posts no message."""
-        self._mark(None)
-        self.highlighted = None
-
-    def select_data_index(self, index: int) -> bool:
-        """Choose the row whose data index is `index`, as if the user had
-        (posts Chosen); False, choosing nothing, if no row has it."""
-        for position, (data_index, _) in enumerate(self._rows):
-            if data_index == index:
-                self.highlighted = position
-                return True
-        return False
-
-    def _clear_group(self) -> None:
-        """Unchoose the other lists in this list's group."""
-        if self.group is None:
-            return
-        for other in self.screen.query(SelectableList):
-            if other is not self and other.group == self.group:
-                other.clear_selection()
-
-    def _mark(self, row: int | None) -> None:
-        """Move the selector marker to list position `row` (None: no marker)."""
-        previous = self._marked
-        if previous == row:
-            return
-        self._marked = row
-        self._render_row(previous)
-        self._render_row(row)
-
-    def toggle_check(self, position: int) -> None:
-        """Check or uncheck the row at list position `position`."""
-        if not self.multi or not 0 <= position < len(self._rows):
-            return
-        self._checked ^= {position}
-        self._render_row(position)
-        self.post_message(self.Checked(self))
-
-    def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
-        if action == "toggle_check":
-            return self.multi and bool(self._rows)
-        return True
-
-    def action_toggle_check(self) -> None:
-        if self.highlighted is not None:
-            self.toggle_check(self.highlighted)
-
-    async def _on_click(self, event: Click) -> None:
-        if self.multi and event.ctrl:
-            clicked = event.style.meta.get("option")
-            if clicked is not None:
-                event.stop()
-                self.toggle_check(clicked)
-                return
-        await super()._on_click(event)
-
-    def on_option_list_option_highlighted(
-        self, event: OptionList.OptionHighlighted
-    ) -> None:
-        event.stop()
-        if event.option.id is None:  # the disabled "(none recorded)" row
-            return
-        self._mark(event.option_index)
-        self._clear_group()
-        self.post_message(self.Chosen(self, int(event.option.id)))
-
-
-@dataclass
-class DialogField:
-    """One row of a FieldsDialog.
-
-    `kind`: "text" (a stripped string), "int" (a whole number), "optint" (a
-    whole number or blank -> None), "optfloat" (a number, decimals allowed,
-    or blank -> None), "select" (one of `options` as (label,
-    value) pairs; blank -> None when `allow_blank`), "check" (a boolean),
-    "area" (multi-line text), "picker" (a button showing `display(value)`
-    that opens the screen `picker(value)` returns; its result becomes the
-    value) or "info" (read-only text, not returned).
-    """
-
-    key: str
-    label: str
-    kind: str
-    value: object = None
-    options: list[tuple[str, str]] = dataclass_field(default_factory=list)
-    required: bool = False
-    allow_blank: bool = False
-    placeholder: str = ""
-    hint: str = ""
-    #: Shown only while this returns True for the form's current values
-    #: (`FieldsDialog.current_values`); re-checked as the user edits. A hidden
-    #: field is left out of the result and isn't checked.
-    show_if: Callable[[dict[str, Any]], bool] | None = None
-    #: A "picker" field's chooser (a screen dismissing with the new value, or
-    #: None to keep the old one) and how it shows its value on the button.
-    picker: Callable[[Any], Screen[Any]] | None = None
-    display: Callable[[Any], str] | None = None
-
-
-class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
-    """A config-driven form: one compact row per DialogField, scrolling if the
-    terminal is short (Save/Cancel stay put). Dismisses with {key: value} for
-    every non-info field, or None if cancelled. `validate` gets the finished
-    dict and returns an error message, or None if it's fine. `save_label`
-    names the button that completes it ("Save", "Create"...). With `build`,
-    it dismisses with `build(values)` instead (e.g. a finished record).
-
-    Fields can depend on each other while the form is open: a field's
-    `show_if` shows/hides it, and `live` (markup, from the current values)
-    fills a line above the error, both refreshed on every change."""
-
-    DEFAULT_CSS = """
-    FieldsDialog {
-        align: center middle;
-    }
-
-    #fields-dialog {
-        width: 84;
-        max-width: 100%;
-        height: auto;
-        max-height: 100%;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #fields-scroll {
-        height: auto;
-    }
-
-    .fd-field {
-        width: 100%;
-        height: auto;
-    }
-
-    .fd-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .fd-label {
-        width: 30;
-    }
-
-    .fd-row Input, .fd-row Select, .fd-row .fd-picker {
-        width: 1fr;
-    }
-
-    .fd-row .fd-picker {
-        content-align: left middle;
-        text-align: left;
-    }
-
-    .fd-value {
-        width: 1fr;
-        color: $text-muted;
-    }
-
-    .fd-area-label {
-        margin-top: 1;
-    }
-
-    .fd-area {
-        height: 6;
-    }
-
-    .fd-hint {
-        color: $text-muted;
-        height: auto;
-    }
-
-    #fields-live {
-        height: auto;
-        margin-top: 1;
-    }
-
-    #fields-error {
-        color: $error;
-        height: auto;
-    }
-
-    #fields-buttons {
-        width: 100%;
-        height: auto;
-        margin-top: 1;
-    }
-    """
-
-    def __init__(
-        self,
-        title: str,
-        fields: list[DialogField],
-        *,
-        validate: Callable[[dict[str, Any]], str | None] | None = None,
-        live: Callable[[dict[str, Any]], str] | None = None,
-        save_label: str = "Save",
-        build: Callable[[dict[str, Any]], ResultT] | None = None,
-    ) -> None:
-        super().__init__()
-        self.title_text = title
-        self.fields = fields
-        self.validate = validate
-        self.live = live
-        self.save_label = save_label
-        self.build = build
-        self._picked: dict[str, Any] = {}  # "picker" fields' current values
-
-    def compose(self) -> ComposeResult:
-        with Vertical(id="fields-dialog"):
-            yield Label(self.title_text, id="fields-title")
-            with VerticalScroll(id="fields-scroll"):
-                for spec in self.fields:
-                    with Vertical(classes="fd-field", id=f"fdw-{spec.key}"):
-                        yield from self._widgets(spec)
-            if self.live is not None:
-                yield Static("", id="fields-live")
-            yield Static("", id="fields-error")
-            with Horizontal(id="fields-buttons"):
-                yield Button(self.save_label, id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def _widgets(self, spec: DialogField) -> ComposeResult:
-        widget_id = f"fld-{spec.key}"
-        if spec.kind == "area":
-            yield Label(spec.label, classes="fd-area-label")
-            yield TextArea(str(spec.value or ""), id=widget_id, classes="fd-area")
-            if spec.hint:
-                yield Static(spec.hint, classes="fd-hint")
-            return
-        with Horizontal(classes="fd-row"):
-            yield Label(spec.label, classes="fd-label")
-            if spec.kind == "text":
-                yield Input(
-                    value=str(spec.value or ""),
-                    placeholder=spec.placeholder,
-                    id=widget_id,
-                    compact=True,
-                )
-            elif spec.kind in ("int", "optint"):
-                yield Input(
-                    value="" if spec.value is None else str(spec.value),
-                    type="integer",
-                    id=widget_id,
-                    compact=True,
-                )
-            elif spec.kind == "optfloat":
-                yield Input(
-                    value="" if spec.value is None else str(spec.value),
-                    type="number",
-                    id=widget_id,
-                    compact=True,
-                )
-            elif spec.kind == "select":
-                values = [value for _, value in spec.options]
-                if spec.value in values:
-                    current = spec.value
-                elif spec.allow_blank or not values:
-                    current = Select.NULL
-                else:
-                    current = values[0]
-                yield Select(
-                    spec.options,
-                    value=current,
-                    allow_blank=spec.allow_blank,
-                    prompt=spec.placeholder or "(none)",
-                    id=widget_id,
-                    compact=True,
-                )
-            elif spec.kind == "check":
-                yield Checkbox("", value=bool(spec.value), id=widget_id, compact=True)
-            elif spec.kind == "picker":
-                self._picked[spec.key] = spec.value
-                yield Button(
-                    self._picker_label(spec),
-                    id=widget_id,
-                    compact=True,
-                    classes="fd-picker",
-                )
-            else:  # info
-                yield Static(escape(str(spec.value)), classes="fd-value")
-        if spec.hint:
-            yield Static(spec.hint, classes="fd-hint")
-
-    def on_mount(self) -> None:
-        self._fit()
-        self._react()
-
-    def on_resize(self) -> None:
-        self._fit()
-
-    def _fit(self) -> None:
-        """Cap the scrolling region so the title, error line and buttons always
-        stay on screen, however short the terminal is."""
-        reserved = 11 + (2 if self.live is not None else 0)
-        self.query_one("#fields-scroll").styles.max_height = max(
-            4, self.size.height - reserved
-        )
-
-    def current_values(self) -> dict[str, Any]:
-        """Every non-info field's value as it stands, leniently: a number
-        that doesn't parse (yet) is None; nothing is validated."""
-        values: dict[str, Any] = {}
-        for spec in self.fields:
-            if spec.kind == "info":
-                continue
-            widget = self.query_one(f"#fld-{spec.key}")
-            if spec.kind == "text":
-                values[spec.key] = widget.value.strip()
-            elif spec.kind in ("int", "optint"):
-                try:
-                    values[spec.key] = int(widget.value.strip())
-                except ValueError:
-                    values[spec.key] = None
-            elif spec.kind == "optfloat":
-                try:
-                    values[spec.key] = float(widget.value.strip())
-                except ValueError:
-                    values[spec.key] = None
-            elif spec.kind == "select":
-                values[spec.key] = (
-                    widget.value if isinstance(widget.value, str) else None
-                )
-            elif spec.kind == "check":
-                values[spec.key] = bool(widget.value)
-            elif spec.kind == "picker":
-                values[spec.key] = self._picked.get(spec.key)
-            else:  # area
-                values[spec.key] = widget.text.strip()
-        return values
-
-    def _picker_label(self, spec: DialogField) -> str:
-        value = self._picked.get(spec.key)
-        if value in (None, ""):
-            return escape(spec.placeholder or "(choose...)")
-        return escape(spec.display(value) if spec.display else str(value))
-
-    def _open_picker(self, spec: DialogField) -> None:
-        def handle_choice(choice: Any) -> None:
-            if choice is None:
-                return
-            self._picked[spec.key] = choice
-            self.query_one(f"#fld-{spec.key}", Button).label = self._picker_label(spec)
-            self._react()
-
-        self.app.push_screen(spec.picker(self._picked.get(spec.key)), handle_choice)
-
-    def _shown(self, spec: DialogField, values: dict[str, Any]) -> bool:
-        return spec.show_if is None or bool(spec.show_if(values))
-
-    def _react(self) -> None:
-        """Show/hide fields and refresh the live line for the current values."""
-        if self.live is None and not any(f.show_if for f in self.fields):
-            return
-        values = self.current_values()
-        for spec in self.fields:
-            if spec.show_if is not None:
-                self.query_one(f"#fdw-{spec.key}").display = self._shown(spec, values)
-        if self.live is not None:
-            self.query_one("#fields-live", Static).update(self.live(values))
-
-    def on_select_changed(self, event: Select.Changed) -> None:
-        self._react()
-
-    def on_input_changed(self, event: Input.Changed) -> None:
-        self._react()
-
-    def on_checkbox_changed(self, event: Checkbox.Changed) -> None:
-        self._react()
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._save()
-        else:
-            key = (event.button.id or "").removeprefix("fld-")
-            spec = next(
-                (f for f in self.fields if f.key == key and f.kind == "picker"), None
-            )
-            if spec is not None and spec.picker is not None:
-                event.stop()
-                self._open_picker(spec)
-
-    def _save(self) -> None:
-        error = self.query_one("#fields-error", Static)
-        result: dict[str, Any] = {}
-        current = self.current_values()
-        for spec in self.fields:
-            if spec.kind == "info" or not self._shown(spec, current):
-                continue
-            widget = self.query_one(f"#fld-{spec.key}")
-            if spec.kind == "text":
-                value: Any = widget.value.strip()
-                if spec.required and not value:
-                    error.update(f"{spec.label} is required.")
-                    return
-            elif spec.kind in ("int", "optint"):
-                raw = widget.value.strip()
-                if not raw and spec.kind == "optint":
-                    value = None
-                    if spec.required:
-                        error.update(f"{spec.label} is required.")
-                        return
-                else:
-                    try:
-                        value = int(raw)
-                    except ValueError:
-                        error.update(f"{spec.label} must be a whole number.")
-                        return
-            elif spec.kind == "optfloat":
-                raw = widget.value.strip()
-                if not raw:
-                    value = None
-                    if spec.required:
-                        error.update(f"{spec.label} is required.")
-                        return
-                else:
-                    try:
-                        value = float(raw)
-                    except ValueError:
-                        error.update(f"{spec.label} must be a number.")
-                        return
-            elif spec.kind == "select":
-                value = widget.value if isinstance(widget.value, str) else None
-                if spec.required and value is None:
-                    error.update(f"{spec.label} is required.")
-                    return
-            elif spec.kind == "check":
-                value = bool(widget.value)
-            elif spec.kind == "picker":
-                value = self._picked.get(spec.key)
-                if spec.required and value in (None, ""):
-                    error.update(f"{spec.label} is required.")
-                    return
-            else:  # area
-                value = widget.text.strip()
-            result[spec.key] = value
-        problem = self.validate(result) if self.validate else None
-        if problem:
-            error.update(problem)
-            return
-        self.dismiss(self.build(result) if self.build else cast(ResultT, result))
-
-
-class SheetSection(Collapsible):
-    """A sheet section (on every sheet): a Collapsible that starts
-    expanded. Textual's own default is collapsed, so every sheet section
-    goes through this (project convention: sections are open by default,
-    the user can still collapse them)."""
-
-    def __init__(self, *children: Widget, title: str, **kwargs: Any) -> None:
-        kwargs.setdefault("collapsed", False)
-        super().__init__(*children, title=title, **kwargs)
-
-
-def _tab_placeholder(tab_name: str) -> str:
-    """Text for a not-yet-built flat placeholder tab (e.g. Diary, both on
-    the covenant and character sheets)."""
-    return f"{tab_name} aren't built yet -- coming in a future update."
-
-
 #: The covenant Library tab's sections, where 'I' imports books into the
 #: covenant's library.
 _LIBRARY_SECTIONS: frozenset[str] = frozenset(
     {"section-lib-summary", "section-lib-books"}
 )
+
+
 #: Section ids of every book list (see BookListView); 'a' in any of them adds
 #: a book, and 'e'/'A' act on books everywhere but the read-only Summary.
 BOOK_SECTIONS: frozenset[str] = frozenset(
@@ -4517,24 +3825,6 @@ class SpellListView(Vertical):
         event.stop()
         index = event.data_index
         self._show(self._shown[index] if index < len(self._shown) else None)
-
-
-class TwoColumns(Horizontal):
-    """A full-width row whose children share it equally, each as tall as its
-    content: the side-by-side panels and sections of the sheets. (Gaps
-    between the columns are the left column's own right margin.)"""
-
-    DEFAULT_CSS = """
-    TwoColumns {
-        width: 1fr;
-        height: auto;
-    }
-
-    TwoColumns > * {
-        width: 1fr;
-        height: auto;
-    }
-    """
 
 
 class SheetView(Vertical):
@@ -5303,33 +4593,6 @@ class CharacterSheetView(SheetView):
             return "[dim]Select an item for its details.[/]"
         item = self.character.inventory[index]
         return pos.detail_text(pos.PossessionEntry(item.kind, item))
-
-
-class PinnedCollapsible(Collapsible):
-    """A Collapsible that is permanently expanded and ignores toggling.
-
-    Used for each sheet's always-visible top panel (and the Arts panel). It
-    stays a real Collapsible (with a focusable CollapsibleTitle) so the
-    focus-ancestry dispatch in WorkspaceScreen treats it like every other
-    section, but it can never be collapsed.
-    """
-
-    def __init__(self, *children: Widget, title: str, id: str | None = None) -> None:
-        super().__init__(
-            *children, title=title, collapsed=False, expanded_symbol="", id=id
-        )
-
-    def _on_collapsible_title_toggle(self, event: Message) -> None:
-        # Textual dispatches a message to every class in the MRO's handler
-        # of the same name, so stop() alone isn't enough -- prevent_default()
-        # is what keeps Collapsible's own handler from flipping `collapsed`.
-        event.stop()
-        event.prevent_default()
-
-    def on_click(self, event: Click) -> None:
-        # Clicking anywhere in the section (not just its title) makes it the
-        # active section, so 'e' and the Footer hint work after a click.
-        self.query_one("CollapsibleTitle").focus()
 
 
 class LaboratorySheetView(SheetView):
@@ -6384,6 +5647,8 @@ class NodeKind(StrEnum):
 
 #: Widget ids of the workspace's two panes (also used in its DEFAULT_CSS).
 NAV_TREE_ID = "nav-tree"
+
+
 DETAIL_PANE_ID = "detail-pane"
 
 
