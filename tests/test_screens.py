@@ -2881,14 +2881,14 @@ async def test_edit_fatigue_updates_level():
         # to Wounds, column 1).
         view = app.screen._character_sheet_view
         view.query_one("#btn-char-health-fatigue-edit", Button).press()
+        assert await wait_until(
+            pilot, lambda: _is_form(app.screen, "Edit Fatigue Level")
+        )
         await pilot.pause()
-        assert _is_form(app.screen, "Edit Fatigue Level")
 
         app.screen.query_one("#fld-level", Select).value = "tired"
         await pilot.click("#btn-save", offset=(8, 1))
-        await pilot.pause()
-
-        assert isinstance(app.screen, WorkspaceScreen)
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         assert (
             "Fatigue Level: Tired" in app.screen._character_sheet_view._fatigue_text()
         )
