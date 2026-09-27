@@ -9988,6 +9988,31 @@ class WorkspaceScreen(Screen[None]):
             "familiar": self._familiar_sheet_view,
         }.get(self.selected_kind)
 
+    def _chosen_or_pick(
+        self,
+        selected: int | None,
+        labels: Sequence[str],
+        *,
+        title: str,
+        empty: str,
+        then: Callable[[int], object],
+    ) -> None:
+        """Act on a list entry by index: the chosen row's if there is one
+        (`selected`), else the one picked from `labels` in a picker titled
+        `title` -- or, with no entries at all, just say `empty`."""
+        if selected is not None and selected < len(labels):
+            then(selected)
+            return
+        if not labels:
+            self.notify(empty)
+            return
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                then(index)
+
+        self.app.push_screen(RemovalPickerScreen(title, list(labels)), handle_index)
+
     def _commit(self, *sections: str, tree: bool = False) -> None:
         """Save a change: write the saga, rebuild the navigation tree if a
         name or the structure changed (`tree`), and refresh `sections` of the
@@ -10820,24 +10845,12 @@ class WorkspaceScreen(Screen[None]):
     def _edit_possession(self, kind: str) -> None:
         """Edit the chosen possession; with none chosen, ask which one."""
         entries = self._possession_entries(kind)
-        selected = self._selected_possession(kind)
-        if selected is not None and selected < len(entries):
-            self._possession_form(kind, entries[selected])
-            return
-        if not entries:
-            self.notify(f"No {pos.KIND_TITLES[kind]} to edit.")
-            return
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._possession_form(kind, entries[index])
-
-        self.app.push_screen(
-            RemovalPickerScreen(
-                f"Edit which {pos.KIND_SINGULAR[kind]}?",
-                [escape(e.name) or "(unnamed)" for e in entries],
-            ),
-            handle_index,
+        self._chosen_or_pick(
+            self._selected_possession(kind),
+            [escape(e.name) or "(unnamed)" for e in entries],
+            title=f"Edit which {pos.KIND_SINGULAR[kind]}?",
+            empty=f"No {pos.KIND_TITLES[kind]} to edit.",
+            then=lambda index: self._possession_form(kind, entries[index]),
         )
 
     def _possession_form(self, kind: str, entry: pos.PossessionEntry | None) -> None:
@@ -10867,24 +10880,12 @@ class WorkspaceScreen(Screen[None]):
         """Delete the chosen possession (after confirming); with none chosen,
         ask which one. A laboratory listed as a sanctum can't be deleted here."""
         entries = self._possession_entries(kind)
-        selected = self._selected_possession(kind)
-        if selected is not None and selected < len(entries):
-            self._confirm_remove_possession(kind, entries[selected])
-            return
-        if not entries:
-            self.notify(f"No {pos.KIND_TITLES[kind]} to remove.")
-            return
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._confirm_remove_possession(kind, entries[index])
-
-        self.app.push_screen(
-            RemovalPickerScreen(
-                f"Remove a {pos.KIND_SINGULAR[kind]}",
-                [escape(e.name) or "(unnamed)" for e in entries],
-            ),
-            handle_index,
+        self._chosen_or_pick(
+            self._selected_possession(kind),
+            [escape(e.name) or "(unnamed)" for e in entries],
+            title=f"Remove a {pos.KIND_SINGULAR[kind]}",
+            empty=f"No {pos.KIND_TITLES[kind]} to remove.",
+            then=lambda index: self._confirm_remove_possession(kind, entries[index]),
         )
 
     def _confirm_remove_possession(self, kind: str, entry: pos.PossessionEntry) -> None:
@@ -10957,24 +10958,12 @@ class WorkspaceScreen(Screen[None]):
         if covenant is None:
             return
         sources = covenant.economics.income_sources
-        selected = self._selected_economics("income")
-        if selected is not None and selected < len(sources):
-            self._income_form(sources[selected])
-            return
-        if not sources:
-            self.notify("No sources of income to edit.")
-            return
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._income_form(sources[index])
-
-        self.app.push_screen(
-            RemovalPickerScreen(
-                "Edit which source of income?",
-                [escape(s.name) or "(unnamed)" for s in sources],
-            ),
-            handle_index,
+        self._chosen_or_pick(
+            self._selected_economics("income"),
+            [escape(s.name) or "(unnamed)" for s in sources],
+            title="Edit which source of income?",
+            empty="No sources of income to edit.",
+            then=lambda index: self._income_form(sources[index]),
         )
 
     def _income_form(self, source: IncomeSource | None) -> None:
@@ -11034,24 +11023,12 @@ class WorkspaceScreen(Screen[None]):
         if covenant is None:
             return
         sources = covenant.economics.income_sources
-        selected = self._selected_economics("income")
-        if selected is not None and selected < len(sources):
-            self._confirm_remove_income_source(sources[selected])
-            return
-        if not sources:
-            self.notify("No sources of income to remove.")
-            return
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._confirm_remove_income_source(sources[index])
-
-        self.app.push_screen(
-            RemovalPickerScreen(
-                "Remove a source of income",
-                [escape(s.name) or "(unnamed)" for s in sources],
-            ),
-            handle_index,
+        self._chosen_or_pick(
+            self._selected_economics("income"),
+            [escape(s.name) or "(unnamed)" for s in sources],
+            title="Remove a source of income",
+            empty="No sources of income to remove.",
+            then=lambda index: self._confirm_remove_income_source(sources[index]),
         )
 
     def _confirm_remove_income_source(self, source: IncomeSource) -> None:
@@ -11076,24 +11053,12 @@ class WorkspaceScreen(Screen[None]):
         if covenant is None:
             return
         sources = covenant.economics.income_sources
-        selected = self._selected_economics("income")
-        if selected is not None and selected < len(sources):
-            self._improve_form(sources[selected])
-            return
-        if not sources:
-            self.notify("No sources of income to improve.")
-            return
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._improve_form(sources[index])
-
-        self.app.push_screen(
-            RemovalPickerScreen(
-                "Improve which source of income?",
-                [escape(s.name) or "(unnamed)" for s in sources],
-            ),
-            handle_index,
+        self._chosen_or_pick(
+            self._selected_economics("income"),
+            [escape(s.name) or "(unnamed)" for s in sources],
+            title="Improve which source of income?",
+            empty="No sources of income to improve.",
+            then=lambda index: self._improve_form(sources[index]),
         )
 
     def _improve_form(self, source: IncomeSource) -> None:
@@ -11278,24 +11243,12 @@ class WorkspaceScreen(Screen[None]):
     def _edit_inhabitant(self, kind: str) -> None:
         """Edit the chosen inhabitant; with none chosen, ask which one."""
         entries = self._inhabitant_entries(kind)
-        selected = self._selected_inhabitant(kind)
-        if selected is not None and selected < len(entries):
-            self._inhabitant_form(kind, entries[selected], None)
-            return
-        if not entries:
-            self.notify(f"No {inh.KIND_TITLES[kind]} to edit.")
-            return
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._inhabitant_form(kind, entries[index], None)
-
-        self.app.push_screen(
-            RemovalPickerScreen(
-                f"Edit which {inh.KIND_SINGULAR[kind]}?",
-                [escape(e.name) or "(unnamed)" for e in entries],
-            ),
-            handle_index,
+        self._chosen_or_pick(
+            self._selected_inhabitant(kind),
+            [escape(e.name) or "(unnamed)" for e in entries],
+            title=f"Edit which {inh.KIND_SINGULAR[kind]}?",
+            empty=f"No {inh.KIND_TITLES[kind]} to edit.",
+            then=lambda index: self._inhabitant_form(kind, entries[index], None),
         )
 
     def _inhabitant_form(
@@ -11330,24 +11283,12 @@ class WorkspaceScreen(Screen[None]):
         ask which one. People listed from a character sheet can't be deleted
         here -- that would mean changing the sheet."""
         entries = self._inhabitant_entries(kind)
-        selected = self._selected_inhabitant(kind)
-        if selected is not None and selected < len(entries):
-            self._confirm_remove_inhabitant(kind, entries[selected])
-            return
-        if not entries:
-            self.notify(f"No {inh.KIND_TITLES[kind]} to remove.")
-            return
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._confirm_remove_inhabitant(kind, entries[index])
-
-        self.app.push_screen(
-            RemovalPickerScreen(
-                f"Remove a {inh.KIND_SINGULAR[kind]}",
-                [escape(e.name) or "(unnamed)" for e in entries],
-            ),
-            handle_index,
+        self._chosen_or_pick(
+            self._selected_inhabitant(kind),
+            [escape(e.name) or "(unnamed)" for e in entries],
+            title=f"Remove a {inh.KIND_SINGULAR[kind]}",
+            empty=f"No {inh.KIND_TITLES[kind]} to remove.",
+            then=lambda index: self._confirm_remove_inhabitant(kind, entries[index]),
         )
 
     def _confirm_remove_inhabitant(self, kind: str, entry: inh.InhabitantEntry) -> None:
@@ -11633,22 +11574,12 @@ class WorkspaceScreen(Screen[None]):
         covenant = self.selected_covenant
         if covenant is None:
             return
-        selected = self._selected_reputation()
-        if selected is not None:
-            self._edit_covenant_reputation_at(selected)
-            return
-        if not covenant.reputations:
-            self.notify("No Reputations to edit.")
-            return
-
-        labels = [f"{escape(r.name)}: {r.score:+d}" for r in covenant.reputations]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._edit_covenant_reputation_at(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Edit which Reputation?", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_reputation(),
+            [f"{escape(r.name)}: {r.score:+d}" for r in covenant.reputations],
+            title="Edit which Reputation?",
+            empty="No Reputations to edit.",
+            then=lambda index: self._edit_covenant_reputation_at(index),
         )
 
     def _edit_covenant_reputation_at(self, index: int) -> None:
@@ -11672,22 +11603,12 @@ class WorkspaceScreen(Screen[None]):
         covenant = self.selected_covenant
         if covenant is None:
             return
-        selected = self._selected_reputation()
-        if selected is not None:
-            self._confirm_remove_covenant_reputation(selected)
-            return
-        if not covenant.reputations:
-            self.notify("No Reputations to remove.")
-            return
-
-        labels = [f"{escape(r.name)}: {r.score:+d}" for r in covenant.reputations]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._confirm_remove_covenant_reputation(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Remove a Reputation", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_reputation(),
+            [f"{escape(r.name)}: {r.score:+d}" for r in covenant.reputations],
+            title="Remove a Reputation",
+            empty="No Reputations to remove.",
+            then=lambda index: self._confirm_remove_covenant_reputation(index),
         )
 
     def _confirm_remove_covenant_reputation(self, index: int) -> None:
@@ -12053,22 +11974,12 @@ class WorkspaceScreen(Screen[None]):
         character = self.selected_character
         if character is None:
             return
-        selected = self._selected_ability()
-        if selected is not None:
-            self._confirm_remove_ability(selected)
-            return
-        if not character.abilities:
-            self.notify("No Abilities to remove.")
-            return
-
-        labels = [self._ability_label(a) for a in character.abilities]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._confirm_remove_ability(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Remove an Ability", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_ability(),
+            [self._ability_label(a) for a in character.abilities],
+            title="Remove an Ability",
+            empty="No Abilities to remove.",
+            then=lambda index: self._confirm_remove_ability(index),
         )
 
     def _confirm_remove_ability(self, index: int) -> None:
@@ -12089,22 +12000,12 @@ class WorkspaceScreen(Screen[None]):
         character = self.selected_character
         if character is None:
             return
-        selected = self._selected_ability()
-        if selected is not None:
-            self._edit_ability_at(selected)
-            return
-        if not character.abilities:
-            self.notify("No Abilities to edit.")
-            return
-
-        labels = [self._ability_label(a) for a in character.abilities]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._edit_ability_at(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Edit which Ability?", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_ability(),
+            [self._ability_label(a) for a in character.abilities],
+            title="Edit which Ability?",
+            empty="No Abilities to edit.",
+            then=lambda index: self._edit_ability_at(index),
         )
 
     def _edit_ability_at(self, index: int) -> None:
@@ -12149,24 +12050,12 @@ class WorkspaceScreen(Screen[None]):
         character = self.selected_character
         if character is None:
             return
-        selected = self._selected_personality_trait()
-        if selected is not None:
-            self._edit_personality_trait_at(selected)
-            return
-        if not character.personality_traits:
-            self.notify("No Personality Traits to edit.")
-            return
-
-        labels = [
-            f"{escape(t.name)}: {t.score:+d}" for t in character.personality_traits
-        ]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._edit_personality_trait_at(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Edit which Personality Trait?", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_personality_trait(),
+            [f"{escape(t.name)}: {t.score:+d}" for t in character.personality_traits],
+            title="Edit which Personality Trait?",
+            empty="No Personality Traits to edit.",
+            then=lambda index: self._edit_personality_trait_at(index),
         )
 
     def _edit_personality_trait_at(self, index: int) -> None:
@@ -12194,24 +12083,12 @@ class WorkspaceScreen(Screen[None]):
         character = self.selected_character
         if character is None:
             return
-        selected = self._selected_personality_trait()
-        if selected is not None:
-            self._confirm_remove_personality_trait(selected)
-            return
-        if not character.personality_traits:
-            self.notify("No Personality Traits to remove.")
-            return
-
-        labels = [
-            f"{escape(t.name)}: {t.score:+d}" for t in character.personality_traits
-        ]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._confirm_remove_personality_trait(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Remove a Personality Trait", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_personality_trait(),
+            [f"{escape(t.name)}: {t.score:+d}" for t in character.personality_traits],
+            title="Remove a Personality Trait",
+            empty="No Personality Traits to remove.",
+            then=lambda index: self._confirm_remove_personality_trait(index),
         )
 
     def _confirm_remove_personality_trait(self, index: int) -> None:
@@ -12251,22 +12128,12 @@ class WorkspaceScreen(Screen[None]):
         character = self.selected_character
         if character is None:
             return
-        selected = self._selected_character_reputation()
-        if selected is not None:
-            self._edit_reputation_at(selected)
-            return
-        if not character.reputations:
-            self.notify("No Reputations to edit.")
-            return
-
-        labels = [f"{escape(t.name)}: {t.score}" for t in character.reputations]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._edit_reputation_at(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Edit which Reputation?", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_character_reputation(),
+            [f"{escape(t.name)}: {t.score}" for t in character.reputations],
+            title="Edit which Reputation?",
+            empty="No Reputations to edit.",
+            then=lambda index: self._edit_reputation_at(index),
         )
 
     def _edit_reputation_at(self, index: int) -> None:
@@ -12294,22 +12161,12 @@ class WorkspaceScreen(Screen[None]):
         character = self.selected_character
         if character is None:
             return
-        selected = self._selected_character_reputation()
-        if selected is not None:
-            self._confirm_remove_reputation(selected)
-            return
-        if not character.reputations:
-            self.notify("No Reputations to remove.")
-            return
-
-        labels = [f"{escape(t.name)}: {t.score}" for t in character.reputations]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._confirm_remove_reputation(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Remove a Reputation", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_character_reputation(),
+            [f"{escape(t.name)}: {t.score}" for t in character.reputations],
+            title="Remove a Reputation",
+            empty="No Reputations to remove.",
+            then=lambda index: self._confirm_remove_reputation(index),
         )
 
     def _confirm_remove_reputation(self, index: int) -> None:
@@ -12526,22 +12383,12 @@ class WorkspaceScreen(Screen[None]):
         character = self.selected_character
         if character is None:
             return
-        selected = self._selected_known_spell()
-        if selected is not None:
-            self._edit_spell_mastery_at(selected)
-            return
-        if not character.spells_known:
-            self.notify("No Spells to edit.")
-            return
-
-        labels = self._known_spell_labels(character)
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._edit_spell_mastery_at(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Edit Mastery for which spell?", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_known_spell(),
+            self._known_spell_labels(character),
+            title="Edit Mastery for which spell?",
+            empty="No Spells to edit.",
+            then=lambda index: self._edit_spell_mastery_at(index),
         )
 
     def _edit_spell_mastery_at(self, index: int) -> None:
@@ -12565,22 +12412,12 @@ class WorkspaceScreen(Screen[None]):
         character = self.selected_character
         if character is None:
             return
-        selected = self._selected_known_spell()
-        if selected is not None:
-            self._confirm_remove_spell(selected)
-            return
-        if not character.spells_known:
-            self.notify("No Spells to remove.")
-            return
-
-        labels = self._known_spell_labels(character)
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._confirm_remove_spell(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Remove a Known Spell", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_known_spell(),
+            self._known_spell_labels(character),
+            title="Remove a Known Spell",
+            empty="No Spells to remove.",
+            then=lambda index: self._confirm_remove_spell(index),
         )
 
     def _confirm_remove_spell(self, index: int) -> None:
@@ -12661,25 +12498,17 @@ class WorkspaceScreen(Screen[None]):
         character = self.selected_character
         if character is None:
             return
-        selected = self._selected_inventory_item()
-        if selected is not None:
-            self._inventory_item_form(character.inventory[selected].kind, selected)
-            return
-        if not character.inventory:
-            self.notify("No Items to edit.")
-            return
-
-        labels = [
-            pos.row_label(pos.PossessionEntry(item.kind, item))
-            for item in character.inventory
-        ]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._inventory_item_form(character.inventory[index].kind, index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Edit which item?", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_inventory_item(),
+            [
+                pos.row_label(pos.PossessionEntry(item.kind, item))
+                for item in character.inventory
+            ],
+            title="Edit which item?",
+            empty="No Items to edit.",
+            then=lambda index: self._inventory_item_form(
+                character.inventory[index].kind, index
+            ),
         )
 
     def _remove_item(self) -> None:
@@ -12688,25 +12517,15 @@ class WorkspaceScreen(Screen[None]):
         character = self.selected_character
         if character is None:
             return
-        selected = self._selected_inventory_item()
-        if selected is not None:
-            self._confirm_remove_item(selected)
-            return
-        if not character.inventory:
-            self.notify("No Items to remove.")
-            return
-
-        labels = [
-            pos.row_label(pos.PossessionEntry(item.kind, item))
-            for item in character.inventory
-        ]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._confirm_remove_item(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Remove an Item", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_inventory_item(),
+            [
+                pos.row_label(pos.PossessionEntry(item.kind, item))
+                for item in character.inventory
+            ],
+            title="Remove an Item",
+            empty="No Items to remove.",
+            then=lambda index: self._confirm_remove_item(index),
         )
 
     def _confirm_remove_item(self, index: int) -> None:
@@ -13339,25 +13158,15 @@ class WorkspaceScreen(Screen[None]):
         familiar = self.selected_familiar
         if familiar is None:
             return
-        selected = self._selected_familiar_natural_weapon()
-        if selected is not None:
-            self._familiar_natural_weapon_form(selected)
-            return
-        if not familiar.natural_weapons:
-            self.notify("No Natural Weapons to edit.")
-            return
-
-        labels = [
-            pos.row_label(pos.PossessionEntry("weapon", weapon))
-            for weapon in familiar.natural_weapons
-        ]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._familiar_natural_weapon_form(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Edit which attack?", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_familiar_natural_weapon(),
+            [
+                pos.row_label(pos.PossessionEntry("weapon", weapon))
+                for weapon in familiar.natural_weapons
+            ],
+            title="Edit which attack?",
+            empty="No Natural Weapons to edit.",
+            then=lambda index: self._familiar_natural_weapon_form(index),
         )
 
     def _remove_familiar_natural_weapon(self) -> None:
@@ -13366,25 +13175,15 @@ class WorkspaceScreen(Screen[None]):
         familiar = self.selected_familiar
         if familiar is None:
             return
-        selected = self._selected_familiar_natural_weapon()
-        if selected is not None:
-            self._confirm_remove_familiar_natural_weapon(selected)
-            return
-        if not familiar.natural_weapons:
-            self.notify("No Natural Weapons to remove.")
-            return
-
-        labels = [
-            pos.row_label(pos.PossessionEntry("weapon", weapon))
-            for weapon in familiar.natural_weapons
-        ]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._confirm_remove_familiar_natural_weapon(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Remove which attack?", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_familiar_natural_weapon(),
+            [
+                pos.row_label(pos.PossessionEntry("weapon", weapon))
+                for weapon in familiar.natural_weapons
+            ],
+            title="Remove which attack?",
+            empty="No Natural Weapons to remove.",
+            then=lambda index: self._confirm_remove_familiar_natural_weapon(index),
         )
 
     def _confirm_remove_familiar_natural_weapon(self, index: int) -> None:
@@ -13424,22 +13223,12 @@ class WorkspaceScreen(Screen[None]):
         familiar = self.selected_familiar
         if familiar is None:
             return
-        selected = self._selected_familiar_ability()
-        if selected is not None:
-            self._edit_familiar_ability_at(selected)
-            return
-        if not familiar.abilities:
-            self.notify("No Abilities to edit.")
-            return
-
-        labels = [self._ability_label(a) for a in familiar.abilities]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._edit_familiar_ability_at(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Edit which Ability?", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_familiar_ability(),
+            [self._ability_label(a) for a in familiar.abilities],
+            title="Edit which Ability?",
+            empty="No Abilities to edit.",
+            then=lambda index: self._edit_familiar_ability_at(index),
         )
 
     def _edit_familiar_ability_at(self, index: int) -> None:
@@ -13464,22 +13253,12 @@ class WorkspaceScreen(Screen[None]):
         familiar = self.selected_familiar
         if familiar is None:
             return
-        selected = self._selected_familiar_ability()
-        if selected is not None:
-            self._confirm_remove_familiar_ability(selected)
-            return
-        if not familiar.abilities:
-            self.notify("No Abilities to remove.")
-            return
-
-        labels = [self._ability_label(a) for a in familiar.abilities]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._confirm_remove_familiar_ability(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Remove an Ability", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_familiar_ability(),
+            [self._ability_label(a) for a in familiar.abilities],
+            title="Remove an Ability",
+            empty="No Abilities to remove.",
+            then=lambda index: self._confirm_remove_familiar_ability(index),
         )
 
     def _confirm_remove_familiar_ability(self, index: int) -> None:
@@ -13546,22 +13325,12 @@ class WorkspaceScreen(Screen[None]):
         familiar = self.selected_familiar
         if familiar is None:
             return
-        selected = self._selected_familiar_bond_power()
-        if selected is not None:
-            self._familiar_bond_power_form(selected)
-            return
-        if not familiar.bond_powers:
-            self.notify("No Bond Powers to edit.")
-            return
-
-        labels = [escape(p.name) or "(unnamed)" for p in familiar.bond_powers]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._familiar_bond_power_form(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Edit which Bond Power?", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_familiar_bond_power(),
+            [escape(p.name) or "(unnamed)" for p in familiar.bond_powers],
+            title="Edit which Bond Power?",
+            empty="No Bond Powers to edit.",
+            then=lambda index: self._familiar_bond_power_form(index),
         )
 
     def _remove_familiar_bond_power(self) -> None:
@@ -13570,22 +13339,12 @@ class WorkspaceScreen(Screen[None]):
         familiar = self.selected_familiar
         if familiar is None:
             return
-        selected = self._selected_familiar_bond_power()
-        if selected is not None:
-            self._confirm_remove_familiar_bond_power(selected)
-            return
-        if not familiar.bond_powers:
-            self.notify("No Bond Powers to remove.")
-            return
-
-        labels = [escape(p.name) or "(unnamed)" for p in familiar.bond_powers]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._confirm_remove_familiar_bond_power(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Remove a Bond Power", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_familiar_bond_power(),
+            [escape(p.name) or "(unnamed)" for p in familiar.bond_powers],
+            title="Remove a Bond Power",
+            empty="No Bond Powers to remove.",
+            then=lambda index: self._confirm_remove_familiar_bond_power(index),
         )
 
     def _confirm_remove_familiar_bond_power(self, index: int) -> None:
@@ -13626,24 +13385,12 @@ class WorkspaceScreen(Screen[None]):
         familiar = self.selected_familiar
         if familiar is None:
             return
-        selected = self._selected_familiar_personality_trait()
-        if selected is not None:
-            self._edit_familiar_personality_trait_at(selected)
-            return
-        if not familiar.personality_traits:
-            self.notify("No Personality Traits to edit.")
-            return
-
-        labels = [
-            f"{escape(t.name)}: {t.score:+d}" for t in familiar.personality_traits
-        ]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._edit_familiar_personality_trait_at(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Edit which Personality Trait?", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_familiar_personality_trait(),
+            [f"{escape(t.name)}: {t.score:+d}" for t in familiar.personality_traits],
+            title="Edit which Personality Trait?",
+            empty="No Personality Traits to edit.",
+            then=lambda index: self._edit_familiar_personality_trait_at(index),
         )
 
     def _edit_familiar_personality_trait_at(self, index: int) -> None:
@@ -13717,22 +13464,12 @@ class WorkspaceScreen(Screen[None]):
         familiar = self.selected_familiar
         if familiar is None:
             return
-        selected = self._selected_familiar_reputation()
-        if selected is not None:
-            self._edit_familiar_reputation_at(selected)
-            return
-        if not familiar.reputations:
-            self.notify("No Reputations to edit.")
-            return
-
-        labels = [f"{escape(t.name)}: {t.score}" for t in familiar.reputations]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._edit_familiar_reputation_at(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Edit which Reputation?", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_familiar_reputation(),
+            [f"{escape(t.name)}: {t.score}" for t in familiar.reputations],
+            title="Edit which Reputation?",
+            empty="No Reputations to edit.",
+            then=lambda index: self._edit_familiar_reputation_at(index),
         )
 
     def _edit_familiar_reputation_at(self, index: int) -> None:
