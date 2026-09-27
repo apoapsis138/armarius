@@ -3,6 +3,7 @@ Remove/Edit/Restore, and the CSV file picker."""
 
 from __future__ import annotations
 
+import asyncio
 from collections import Counter
 from pathlib import Path
 from typing import Any, ClassVar
@@ -110,6 +111,11 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
         self.search_placeholder = search_placeholder or self.SEARCH_PLACEHOLDER
         self._entries: list[EntryT] = []
         self._by_item_id: dict[str, EntryT] = {}
+        #: One refill at a time; a refill a newer query has superseded is
+        #: skipped (typing before the first fill finishes used to interleave
+        #: the two fills into one mixed list).
+        self._render_lock = asyncio.Lock()
+        self._render_generation = 0
 
     def compose(self) -> ComposeResult:
         with Vertical(id="picker-dialog"):
@@ -143,6 +149,13 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
     # -- filtering / list rendering --
 
     async def _render_list(self, query: str) -> None:
+        self._render_generation += 1
+        generation = self._render_generation
+        async with self._render_lock:
+            if generation == self._render_generation:
+                await self._fill_list(query)
+
+    async def _fill_list(self, query: str) -> None:
         list_view = self.query_one(f"#{self.LIST_VIEW_ID}", ListView)
         await list_view.clear()
         self._by_item_id = {}
@@ -161,10 +174,12 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
             await list_view.append(ListItem(Label(f"(no matches for {query!r})")))
             return
 
+        items = []
         for entry in matches:
             item_id = self._item_id(entry)
             self._by_item_id[item_id] = entry
-            await list_view.append(ListItem(Label(self._label_for(entry)), id=item_id))
+            items.append(ListItem(Label(self._label_for(entry)), id=item_id))
+        await list_view.extend(items)
         list_view.index = 0
 
     async def on_input_changed(self, event: Input.Changed) -> None:

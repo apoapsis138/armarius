@@ -1,3 +1,4 @@
+import asyncio
 import json
 import re
 from pathlib import Path
@@ -111,13 +112,33 @@ async def _wait_for_screen(pilot, app, screen_type) -> None:
 
 async def _wait_for_picker_ready(pilot, app) -> None:
     """A searchable picker fills its list, then focuses its search box: wait
-    for that before typing, or the first fill and the search's refill
-    interleave (STORY-1109 B18)."""
+    for that before typing, so the keys land in the search box."""
     await wait_until(
         pilot,
         lambda: app.focused is not None and app.focused.id == "picker-search",
         timeout=10.0,  # filling 600+ rows one at a time is slow under load
     )
+
+
+async def test_overlapping_picker_refills_leave_only_the_newest():
+    # B18: two refills in flight at once (the first fill, and a search typed
+    # before it finished) interleaved their rows into one mixed list.
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 50)) as pilot:
+        picker = VirtueFlawPickerScreen()
+        app.push_screen(picker)
+        await _wait_for_picker_ready(pilot, app)
+        await asyncio.gather(picker._render_list(""), picker._render_list("affinity"))
+        await pilot.pause()
+        expected = [
+            picker._item_id(vf)
+            for vf in catalog.load_virtue_flaw_catalog()
+            if "affinity" in picker._search_text(vf).lower()
+        ]
+        list_view = picker.query_one(f"#{picker.LIST_VIEW_ID}", ListView)
+        assert await wait_until(
+            pilot, lambda: [item.id for item in list_view.children] == expected
+        ), [item.id for item in list_view.children][:10]
 
 
 async def _wait_until_active(pilot, app, section_id: str) -> None:
