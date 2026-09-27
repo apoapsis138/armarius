@@ -196,7 +196,7 @@ move onto its catalog entry when its calculation is next touched):
 `inhabitants.py` picks the Gentle/Blatant Gift Loyalty modifier by the ids
 `vf_gentle_gift`/`vf_blatant_gift`; `models.GOVERNANCE_STYLE_IDS` lists the
 governance Boons/Hooks by id; binding a Familiar grants `vf_true_friend` by id
-(`screens.py`); and `totals.describe_modifier` words `covenant_expense`
+(`familiars.bind_familiar`); and `totals.describe_modifier` words `covenant_expense`
 specially.
 
 ## 6. Data Shape (illustrative)

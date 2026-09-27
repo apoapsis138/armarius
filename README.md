@@ -42,10 +42,15 @@ uv run pyright                                # type-check
 ## Layout
 
 - `main.py`, `ars_magica_manager/app.py` — the Textual app entry point.
-- `ars_magica_manager/screens.py` — every screen and widget: the saga
-  picker, the workspace (navigation tree + sheet pane), the Character,
-  Laboratory, Familiar and Covenant sheets, the Book and Spell lists, and
-  the add/edit dialogs and pickers.
+- `ars_magica_manager/screens/` — every screen and widget, one module per
+  layer, each importing only from those before it: `widgets` (bottom bar,
+  selectable list, sections), `fields` (the modal-dialog base and the
+  config-driven `FieldsDialog` form), `prompts` (confirmations and short
+  forms), `pickers` (catalog and row pickers), `forms` (the records' form
+  builders and the few bespoke forms), `sheets` (the Character, Laboratory,
+  Familiar and Covenant sheets and the Book and Spell lists), `workspace`
+  (navigation tree + sheet pane, and every action on the records) and
+  `saga_picker` (the start screen).
 - `ars_magica_manager/models.py` — the dataclasses (Saga, Covenant,
   Character, Laboratory, Familiar, Book, Spell, Possession, Inhabitant,
   Economics, catalog entry types, ...) and their load-time migrations.

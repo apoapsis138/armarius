@@ -2909,7 +2909,7 @@ async def test_bracketed_names_survive_the_nav_tree_and_top_panels():
 
 
 async def test_fields_dialog_info_field_escapes_bracketed_values():
-    """STORY-204: FieldsDialog's read-only "info" row (screens.py's
+    """STORY-204: FieldsDialog's read-only "info" row (screens/fields.py's
     `_widgets`, kind == "info") is a single shared render sink used by
     dozens of DialogField call sites (Inhabitant "from the character
     sheet" fields, Possession Owner/Location, Economics calculated rows,

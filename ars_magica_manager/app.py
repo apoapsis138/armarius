@@ -1,4 +1,4 @@
-"""Textual app entry point. Screen flow lives in screens.py."""
+"""Textual app entry point. Screen flow lives in the screens package."""
 
 from __future__ import annotations
 
