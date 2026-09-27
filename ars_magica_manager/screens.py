@@ -48,10 +48,10 @@ from . import economics as eco
 from . import familiars as fam
 from . import inhabitants as inh
 from . import possessions as pos
+from . import sheet_text as st
 from . import spells as spl
 from .markup import aligned, escape, markdown_inline
 from .models import (
-    ABILITY_CATEGORIES,
     ART_ABBREVIATIONS,
     ART_DESCRIPTIONS,
     ARTS,
@@ -129,7 +129,6 @@ from .models import (
     lab_occupied_size,
     next_season,
 )
-from .totals import describe_modifier
 
 _SAGA_ITEM_ID_PREFIX = "saga-"
 _VIRTUE_FLAW_ITEM_ID_PREFIX = "vf-"
@@ -7794,126 +7793,19 @@ class CharacterSheetView(Vertical):
         return escape(self.character.description.biography) or "(none recorded)"
 
     def _characteristics_text(self) -> str:
-        """Int/Per/Str/Sta then Pre/Com/Dex/Qik, each value signed (a plain
-        "0" rather than "+0") and right-justified so the columns align."""
-        c = self.character.characteristics
-
-        def val(n: int) -> str:
-            s = f"+{n}" if n > 0 else str(n)
-            return f"{s:>2}"
-
-        row1 = "   ".join(
-            f"{label}: {val(value)}"
-            for label, value in (
-                ("Int", c.intelligence),
-                ("Per", c.perception),
-                ("Str", c.strength),
-                ("Sta", c.stamina),
-            )
-        )
-        row2 = "   ".join(
-            f"{label}: {val(value)}"
-            for label, value in (
-                ("Pre", c.presence),
-                ("Com", c.communication),
-                ("Dex", c.dexterity),
-                ("Qik", c.quickness),
-            )
-        )
-        return f"{row1}\n{row2}"
+        return st.characteristics_text(self.character.characteristics)
 
     def _ability_rows(self) -> list[tuple[int | None, str]]:
-        """One selectable list for every Ability, with a header (non-
-        selectable) row before each non-empty category -- unlike Virtues/
-        Flaws, Abilities has too many categories for side-by-side lists."""
-        rows: list[tuple[int | None, str]] = []
-        for category in ABILITY_CATEGORIES:
-            indexed = [
-                (i, a)
-                for i, a in enumerate(self.character.abilities)
-                if a.category == category
-            ]
-            if not indexed:
-                continue
-            rows.append((None, category))
-            for index, ability in indexed:
-                specialty = f" ({ability.specialty})" if ability.specialty else ""
-                rows.append(
-                    (
-                        index,
-                        f"{escape(ability.name)}{escape(specialty)} "
-                        f"{ability.level} {ability.xp}/{ability.xp_to_next}",
-                    )
-                )
-        return rows
-
-    def _ability_definition(self, name: str) -> AbilityDef | None:
-        """The ability catalog entry matching `name`, resolving a templated
-        family ("Area Lore: Rhine" -> "Area Lore: {region}") the same way
-        books.canonical_ability() does; None if it isn't a known ability."""
-        canonical = bk.canonical_ability(name)
-        if canonical is None:
-            return None
-        for entry in catalog.load_ability_catalog():
-            if entry.name == canonical:
-                return entry
-            if "{" in entry.name and canonical.startswith(entry.name.split("{", 1)[0]):
-                return entry
-        return None
+        return st.ability_rows(self.character.abilities)
 
     def _ability_info_text(self, index: int | None) -> str:
-        if index is None:
-            return "[dim]Select an Ability for its description.[/]"
-        ability = self.character.abilities[index]
-        definition = self._ability_definition(ability.name)
-        if definition is None or not definition.description:
-            return "[dim](no catalog description)[/]"
-        return escape(definition.description)
+        return st.ability_info_text(self.character.abilities, index)
 
     def _vf_rows(self, vf_type: str) -> list[tuple[int | None, str]]:
-        """The character's attached Virtues or Flaws (`vf_type`) as (true
-        index into character.virtues_flaws, label) pairs, so a filtered list
-        still maps back to the real entry."""
-        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
-        return [
-            (
-                index,
-                f"{escape(catalog.describe_virtue_flaw(vf, vf_catalog))} "
-                f"({definition.tier})",
-            )
-            for index, vf in enumerate(self.character.virtues_flaws)
-            if (definition := vf_catalog.get(vf.vf_id)) is not None
-            and definition.type == vf_type
-        ]
+        return st.vf_rows(self.character.virtues_flaws, vf_type)
 
     def _vf_info_text(self, index: int | None) -> str:
-        """The details panel for the attached Virtue/Flaw at `index` into
-        character.virtues_flaws: its name, category, tier, effects, and the
-        official rules text."""
-        if index is None:
-            return "[dim]Select a Virtue or Flaw to read its rules.[/]"
-        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
-        instance = self.character.virtues_flaws[index]
-        definition = vf_catalog.get(instance.vf_id)
-        if definition is None:
-            return escape(f"{instance.vf_id} (not in catalog)")
-
-        lines = [
-            f"[b]Name:[/] {escape(catalog.describe_virtue_flaw(instance, vf_catalog))}"
-        ]
-        if definition.category:
-            lines.append(f"[b]Category:[/] {definition.category}")
-        lines.append(f"[b]Tier:[/] {definition.tier}")
-        for modifier in definition.modifiers:
-            effect = describe_modifier(
-                modifier.applies_to,
-                modifier.activity,
-                modifier.amount,
-                modifier.multiplier,
-            )
-            lines.append(f"[b]Effect:[/] {escape(effect)}")
-        lines += ["", "[b]Rules:[/]", escape(definition.description)]
-        return "\n".join(lines)
+        return st.vf_info_text(self.character.virtues_flaws, index)
 
     def _aging_text(self) -> str:
         a = self.character.aging
@@ -7928,32 +7820,17 @@ class CharacterSheetView(Vertical):
         )
 
     def _personality_trait_rows(self) -> list[tuple[int | None, str]]:
-        return [
-            (index, f"{escape(t.name)}: {t.score:+d}")
-            for index, t in enumerate(self.character.personality_traits)
-        ]
+        return st.trait_rows(self.character.personality_traits)
 
     def _reputation_rows(self) -> list[tuple[int | None, str]]:
-        return [
-            (index, f"{escape(t.name)}: {t.score}")
-            for index, t in enumerate(self.character.reputations)
-        ]
+        # Unsigned, unlike every other Reputation list (STORY-1109 B14).
+        return st.trait_rows(self.character.reputations, signed=False)
 
     def _wounds_text(self) -> str:
-        w = self.character.wounds
-        return "\n".join(
-            [
-                f"Soak: {w.soak}",
-                f"Light Wounds:  {w.light} (-1 each)",
-                f"Medium Wounds: {w.medium} (-3 each)",
-                f"Heavy Wounds:  {w.heavy} (-5 each)",
-                f"Incapacitated: {'yes' if w.incapacitated else 'no'}",
-                f"Dead: {'yes' if w.dead else 'no'}",
-            ]
-        )
+        return st.wounds_text(self.character.wounds, with_soak=True)
 
     def _fatigue_text(self) -> str:
-        return f"Fatigue Level: {self.character.fatigue_level.title()}"
+        return st.fatigue_text(self.character.fatigue_level)
 
     def _raw_vis_rows(self) -> list[tuple[int | None, str]]:
         return [
@@ -9373,14 +9250,7 @@ class CovenantSheetView(Vertical):
             lines.append(
                 f"[b]Not with:[/] {_boon_hook_names(definition.excludes, by_id)}"
             )
-        for modifier in definition.modifiers:
-            effect = describe_modifier(
-                modifier.applies_to,
-                modifier.activity,
-                modifier.amount,
-                modifier.multiplier,
-            )
-            lines.append(f"[b]Effect:[/] {escape(effect)}")
+        lines += st.effect_lines(definition.modifiers)
         if definition.repeatable:
             lines.append("[dim]May be taken more than once; the effects stack.[/]")
         # The user's own description leads; the official rules text follows.
