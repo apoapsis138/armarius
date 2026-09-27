@@ -1,27 +1,20 @@
 ===== tab-lab-planning
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Identity
+     Tower
 
-      Name: Tower
-      Location: (not set)
-      Points: 0
-      Owner: Leandro
-      Covenant: Keep
+      Covenant: Keep                                    Location: (not set)
+      Owner:    Leandro                                 Points:   0
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-      Occupied Size: 3       Size:            +0 +0 = +0
-      Free Virtues:  -3      Refinement:      +0 +0 = +0
-      Base Safety:   -3      General Quality: +0 +0 = +0
-                             Upkeep:          +0 +0 = +0
-                             Safety:          +0 +0 = +0
-                             Warping:         +0 +0 = +0
-                             Health:          +0 +0 = +0
-                             Aesthetics:      +0 +2 = +2
+                           Size:            +0 +0 = +0    Safety:     +0 +0 = +0
+      Occupied Size: 3     Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
+      Free Virtues:  -3    General Quality: +0 +0 = +0    Health:     +0 +0 = +0
+      Base Safety:   -3    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
    Planning  Virtues & Flaws  Attributes  Inventory  Diary
@@ -66,30 +59,30 @@
 
 
 
+
+
+
+
+
+
+
 ===== tab-lab-vf
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Identity
+     Tower
 
-      Name: Tower
-      Location: (not set)
-      Points: 0
-      Owner: Leandro
-      Covenant: Keep
+      Covenant: Keep                                    Location: (not set)
+      Owner:    Leandro                                 Points:   0
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-      Occupied Size: 3       Size:            +0 +0 = +0
-      Free Virtues:  -3      Refinement:      +0 +0 = +0
-      Base Safety:   -3      General Quality: +0 +0 = +0
-                             Upkeep:          +0 +0 = +0
-                             Safety:          +0 +0 = +0
-                             Warping:         +0 +0 = +0
-                             Health:          +0 +0 = +0
-                             Aesthetics:      +0 +2 = +2
+                           Size:            +0 +0 = +0    Safety:     +0 +0 = +0
+      Occupied Size: 3     Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
+      Free Virtues:  -3    General Quality: +0 +0 = +0    Health:     +0 +0 = +0
+      Base Safety:   -3    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
    Planning  Virtues & Flaws  Attributes  Inventory  Diary
@@ -134,30 +127,30 @@
 
 
 
+
+
+
+
+
+
+
 ===== tab-lab-attributes
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Identity
+     Tower
 
-      Name: Tower
-      Location: (not set)
-      Points: 0
-      Owner: Leandro
-      Covenant: Keep
+      Covenant: Keep                                    Location: (not set)
+      Owner:    Leandro                                 Points:   0
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-      Occupied Size: 3       Size:            +0 +0 = +0
-      Free Virtues:  -3      Refinement:      +0 +0 = +0
-      Base Safety:   -3      General Quality: +0 +0 = +0
-                             Upkeep:          +0 +0 = +0
-                             Safety:          +0 +0 = +0
-                             Warping:         +0 +0 = +0
-                             Health:          +0 +0 = +0
-                             Aesthetics:      +0 +2 = +2
+                           Size:            +0 +0 = +0    Safety:     +0 +0 = +0
+      Occupied Size: 3     Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
+      Free Virtues:  -3    General Quality: +0 +0 = +0    Health:     +0 +0 = +0
+      Base Safety:   -3    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
    Planning  Virtues & Flaws  Attributes  Inventory  Diary
@@ -202,30 +195,30 @@
 
 
 
+
+
+
+
+
+
+
 ===== tab-lab-inventory
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Identity
+     Tower
 
-      Name: Tower
-      Location: (not set)
-      Points: 0
-      Owner: Leandro
-      Covenant: Keep
+      Covenant: Keep                                    Location: (not set)
+      Owner:    Leandro                                 Points:   0
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-      Occupied Size: 3       Size:            +0 +0 = +0
-      Free Virtues:  -3      Refinement:      +0 +0 = +0
-      Base Safety:   -3      General Quality: +0 +0 = +0
-                             Upkeep:          +0 +0 = +0
-                             Safety:          +0 +0 = +0
-                             Warping:         +0 +0 = +0
-                             Health:          +0 +0 = +0
-                             Aesthetics:      +0 +2 = +2
+                           Size:            +0 +0 = +0    Safety:     +0 +0 = +0
+      Occupied Size: 3     Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
+      Free Virtues:  -3    General Quality: +0 +0 = +0    Health:     +0 +0 = +0
+      Base Safety:   -3    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
    Planning  Virtues & Flaws  Attributes  Inventory  Diary
@@ -270,36 +263,43 @@
 
 
 
+
+
+
+
+
+
+
 ===== tab-lab-diary
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Identity
+     Tower
 
-      Name: Tower
-      Location: (not set)
-      Points: 0
-      Owner: Leandro
-      Covenant: Keep
+      Covenant: Keep                                    Location: (not set)
+      Owner:    Leandro                                 Points:   0
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-      Occupied Size: 3       Size:            +0 +0 = +0
-      Free Virtues:  -3      Refinement:      +0 +0 = +0
-      Base Safety:   -3      General Quality: +0 +0 = +0
-                             Upkeep:          +0 +0 = +0
-                             Safety:          +0 +0 = +0
-                             Warping:         +0 +0 = +0
-                             Health:          +0 +0 = +0
-                             Aesthetics:      +0 +2 = +2
+                           Size:            +0 +0 = +0    Safety:     +0 +0 = +0
+      Occupied Size: 3     Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
+      Free Virtues:  -3    General Quality: +0 +0 = +0    Health:     +0 +0 = +0
+      Base Safety:   -3    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
    Planning  Virtues & Flaws  Attributes  Inventory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   1220 Spring -- Built
+
+
+
+
+
+
+
 
 
 

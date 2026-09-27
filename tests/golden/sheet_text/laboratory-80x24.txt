@@ -1,110 +1,110 @@
 ===== tab-lab-planning
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Identity
+     Tower
 
-      Name: Tower
-      Location: (not set)
-      Points: 0
-      Owner: Leandro
       Covenant: Keep
+      Owner:    Leandro
+      Location: (not set)
+      Points:   0
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-      Occupied Size: 3       Size:
-      Free Virtues:  -3      Refinement:
-      Base Safety:   -3      General Quality
-                             Upkeep:
-                             Safety:
+      Occupied Size: 3
+      Free Virtues:  -3
+      Base Safety:   -3
+
+      Size:            +0 +0 = +0
+      Refinement:      +0 +0 = +0
 
 ===== tab-lab-vf
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Identity
+     Tower
 
-      Name: Tower
-      Location: (not set)
-      Points: 0
-      Owner: Leandro
       Covenant: Keep
+      Owner:    Leandro
+      Location: (not set)
+      Points:   0
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-      Occupied Size: 3       Size:
-      Free Virtues:  -3      Refinement:
-      Base Safety:   -3      General Quality
-                             Upkeep:
-                             Safety:
+      Occupied Size: 3
+      Free Virtues:  -3
+      Base Safety:   -3
+
+      Size:            +0 +0 = +0
+      Refinement:      +0 +0 = +0
 
 ===== tab-lab-attributes
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Identity
+     Tower
 
-      Name: Tower
-      Location: (not set)
-      Points: 0
-      Owner: Leandro
       Covenant: Keep
+      Owner:    Leandro
+      Location: (not set)
+      Points:   0
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-      Occupied Size: 3       Size:
-      Free Virtues:  -3      Refinement:
-      Base Safety:   -3      General Quality
-                             Upkeep:
-                             Safety:
+      Occupied Size: 3
+      Free Virtues:  -3
+      Base Safety:   -3
+
+      Size:            +0 +0 = +0
+      Refinement:      +0 +0 = +0
 
 ===== tab-lab-inventory
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Identity
+     Tower
 
-      Name: Tower
-      Location: (not set)
-      Points: 0
-      Owner: Leandro
       Covenant: Keep
+      Owner:    Leandro
+      Location: (not set)
+      Points:   0
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-      Occupied Size: 3       Size:
-      Free Virtues:  -3      Refinement:
-      Base Safety:   -3      General Quality
-                             Upkeep:
-                             Safety:
+      Occupied Size: 3
+      Free Virtues:  -3
+      Base Safety:   -3
+
+      Size:            +0 +0 = +0
+      Refinement:      +0 +0 = +0
 
 ===== tab-lab-diary
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Identity
+     Tower
 
-      Name: Tower
-      Location: (not set)
-      Points: 0
-      Owner: Leandro
       Covenant: Keep
+      Owner:    Leandro
+      Location: (not set)
+      Points:   0
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-      Occupied Size: 3       Size:
-      Free Virtues:  -3      Refinement:
-      Base Safety:   -3      General Quality
-                             Upkeep:
-                             Safety:
+      Occupied Size: 3
+      Free Virtues:  -3
+      Base Safety:   -3
+
+      Size:            +0 +0 = +0
+      Refinement:      +0 +0 = +0
 

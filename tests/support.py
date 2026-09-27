@@ -41,9 +41,10 @@ def screen_lines(app) -> list[str]:
 
 
 def strip_markup(markup: str) -> str:
-    """`markup` with simple tags like [b], [dim] and [/] removed -- enough to
-    check the words and column alignment of a panel's text."""
-    return re.sub(r"\[/?[a-z]*\]", "", markup)
+    """`markup` with simple tags like [b], [dim], [$text-error] and [/]
+    removed -- enough to check the words and column alignment of a panel's
+    text."""
+    return re.sub(r"\[/?(?:\$[a-z-]+|[a-z]*)\]", "", markup)
 
 
 async def wait_until(pilot, condition, timeout: float = 2.0, interval: float = 0.02):

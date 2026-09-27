@@ -51,9 +51,12 @@ def _boon_hook_names(ids: list[str], by_id: dict[str, CovenantBoonHookDef]) -> s
 
 
 def _sign_colored(value: float, text: str) -> str:
-    """Wraps `text` in Textual markup coloured by the sign of `value`:
-    zero is cyan, positive green, negative red."""
-    colour = "cyan" if value == 0 else "green" if value > 0 else "red"
+    """Wraps `text` in Textual markup coloured by the sign of `value`, in
+    the active theme's text colours: positive $text-success, negative
+    $text-error, zero left plain."""
+    if value == 0:
+        return text
+    colour = "$text-success" if value > 0 else "$text-error"
     return f"[{colour}]{text}[/]"
 
 
@@ -352,6 +355,66 @@ class TwoColumns(Horizontal):
         height: auto;
     }
     """
+
+
+class StackingColumns(Horizontal):
+    """A row of columns side by side that stacks them one above the other
+    (the `-stacked` class) whenever the row is too narrow for all of them at
+    once. Each column is as wide as its content or, with `equal=True`, gets
+    an equal share of the row (like TwoColumns) -- then it stacks as soon as
+    any column's content is wider than its share. Call restack() after
+    changing a column's content; a resize re-checks by itself. (Gaps between
+    the columns are the left column's own right margin.)"""
+
+    DEFAULT_CSS = """
+    StackingColumns {
+        width: 1fr;
+        height: auto;
+    }
+
+    StackingColumns > * {
+        width: auto;
+        height: auto;
+    }
+
+    StackingColumns.-equal > * {
+        width: 1fr;
+    }
+
+    StackingColumns.-stacked {
+        layout: vertical;
+    }
+
+    StackingColumns.-equal.-stacked > * {
+        width: auto;
+    }
+    """
+
+    def __init__(self, *children: Widget, equal: bool = False, **kwargs: Any) -> None:
+        super().__init__(*children, **kwargs)
+        self.equal = equal
+        self.set_class(equal, "-equal")
+
+    def on_resize(self) -> None:
+        self.restack()
+
+    def restack(self) -> None:
+        if not self.size.width:
+            return  # not laid out yet; on_resize will come
+        columns = [child for child in self.children if child.display]
+        if not columns:
+            return
+        widths = [
+            child.get_content_width(self.size, self.app.size)
+            + child.styles.gutter.width
+            for child in columns
+        ]
+        margins = sum(child.styles.margin.width for child in columns)
+        if self.equal:
+            needed = max(widths) * len(columns) + margins
+        else:
+            needed = sum(widths) + margins
+        self.set_class(needed > self.size.width, "-stacked")
 
 
 class PinnedCollapsible(Collapsible):

@@ -8,6 +8,18 @@ fix or behind-the-scenes improvement bumps PATCH. The version is set in
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 0.3.0 — 2026-09-27
+
+- The laboratory sheet's top panel is more compact: Identity is titled with
+  the lab's name, with Covenant/Owner and Location/Points side by side and
+  the Aura below; the Characteristics sit in three columns (the derived
+  figures, then the eight Characteristics four and four) instead of one long
+  table. On a narrow terminal the columns stack one above the other.
+- Characteristic numbers are coloured with the current theme's own colours
+  (bonuses in its success colour, penalties in its error colour, zeros
+  plain), so they stay legible whichever theme you pick.
+- The wizard's sigil is entered in a multi-line box.
+
 ## 0.2.1 — 2026-09-27
 
 - A saved choice that a list no longer offers is kept when you save a form

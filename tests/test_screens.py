@@ -31,6 +31,7 @@ from ars_magica_manager import spells as spl
 from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.arts import FORMS, TECHNIQUES
 from ars_magica_manager.models import (
+    LAB_CHARACTERISTICS,
     Ability,
     ArtScore,
     Background,
@@ -526,6 +527,31 @@ async def _select_laboratory(pilot, app, laboratory_id: str = "lab1") -> None:
     await _select(pilot, app, ("laboratory", laboratory_id))
 
 
+def _lab_identity_text(view) -> str:
+    """The lab's Identity panel as one text -- the title (the lab's name),
+    both columns and the Aura line -- with the label padding collapsed, so
+    "Owner: Leandro" matches however wide the column's labels are."""
+    parts = (
+        str(view.query_one("#section-lab-identity", Collapsible).title),
+        view._identity_left_text(),
+        view._identity_right_text(),
+        view._aura_text(),
+    )
+    return "\n".join(
+        " ".join(line.split()) for part in parts for line in part.splitlines()
+    )
+
+
+def _lab_characteristics_text(view) -> str:
+    """Both columns of the 8 Characteristics, Size first."""
+    return "\n".join(
+        (
+            view._characteristics_column_text(LAB_CHARACTERISTICS[:4]),
+            view._characteristics_column_text(LAB_CHARACTERISTICS[4:]),
+        )
+    )
+
+
 async def _select_familiar(pilot, app, familiar_id: str = "fam1") -> None:
     await _select_covenant(pilot, app)
     await _select(pilot, app, ("familiar", familiar_id))
@@ -850,7 +876,7 @@ async def test_selecting_laboratory_shows_owner_and_virtues():
         await _select(pilot, app, ("laboratory", "lab1"))
 
         view = app.screen._laboratory_sheet_view
-        identity = view._identity_text()
+        identity = _lab_identity_text(view)
         assert "Owner: Leandro" in identity
         assert "Aura: 3" in identity
         assert "Well-Stocked" in view._features_text()
@@ -3156,7 +3182,7 @@ async def test_bracketed_names_survive_the_nav_tree_and_top_panels():
         assert "[Tower] Covenant" in str(cov_title)
 
         await _select_laboratory(pilot, app)
-        identity = app.screen._laboratory_sheet_view._identity_text()
+        identity = _lab_identity_text(app.screen._laboratory_sheet_view)
         assert "[Vault] Lab" in identity
 
 
@@ -3205,8 +3231,8 @@ async def test_edit_lab_identity_updates_fields_and_owner():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        text = app.screen._laboratory_sheet_view._identity_text()
-        assert "Name: Obsidian Crucible" in text
+        text = _lab_identity_text(app.screen._laboratory_sheet_view)
+        assert text.splitlines()[0] == "Obsidian Crucible"  # the title
         assert "Location: Black Forest" in text
         assert "Points: 50" in text
         assert "Owner: Guillame" in text
@@ -3278,18 +3304,21 @@ async def test_edit_lab_characteristics_updates_manual_values():
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        text = app.screen._laboratory_sheet_view._characteristics_table_text()
-        # Positive green, zero cyan, negative red.
+        view = app.screen._laboratory_sheet_view
+        text = _lab_characteristics_text(view)
+        # Positive and negative in the theme's colours, zero plain.
         assert re.search(
-            r"Size:\s+\[green\]\+2\[/\] \[cyan\]\+0\[/\] = \[green\]\+2\[/\]", text
+            r"Size:\s+\[\$text-success\]\+2\[/\] \+0 = \[\$text-success\]\+2\[/\]",
+            text,
         )
         assert re.search(
-            r"Safety:\s+\[red\]-1\[/\] \[cyan\]\+0\[/\] = \[red\]-1\[/\]", text
+            r"Safety:\s+\[\$text-error\]-1\[/\] \+0 = \[\$text-error\]-1\[/\]", text
         )
         # Values line up in columns once the colour markup is stripped: every
-        # row has its '=' in the same place.
-        plain = strip_markup(text)
-        assert len({line.index("=") for line in plain.splitlines()}) == 1
+        # row of a column has its '=' in the same place.
+        for column in (LAB_CHARACTERISTICS[:4], LAB_CHARACTERISTICS[4:]):
+            plain = strip_markup(view._characteristics_column_text(column))
+            assert len({line.index("=") for line in plain.splitlines()}) == 1
 
     saga = storage.load_saga("test_saga")
     characteristics = saga.laboratories[0].characteristics
@@ -3328,14 +3357,45 @@ async def test_lab_top_panel_layout_is_stable_across_tabs():
             assert identity.y == top.y, tab_id
             assert characteristics.y == identity.bottom, tab_id
             assert characteristics.bottom == top.bottom, tab_id
-            # Derived stats left of the table.
+            # Three columns side by side: derived stats (a row lower, beside
+            # Refinement), then the Characteristics four and four.
             derived = view.query_one("#lab-characteristics-derived").region
-            table = view.query_one("#lab-characteristics-content").region
-            assert derived.right <= table.x, tab_id
-            assert derived.y == table.y, tab_id
+            left = view.query_one("#lab-characteristics-left").region
+            right = view.query_one("#lab-characteristics-right").region
+            assert derived.right <= left.x and left.right <= right.x, tab_id
+            assert derived.y == left.y + 1 and left.y == right.y, tab_id
+            # Identity's two columns side by side, the Aura line below both.
+            id_left = view.query_one("#lab-identity-left").region
+            id_right = view.query_one("#lab-identity-right").region
+            aura = view.query_one("#lab-identity-aura").region
+            assert id_left.right <= id_right.x and id_left.y == id_right.y, tab_id
+            assert aura.y >= max(id_left.bottom, id_right.bottom), tab_id
             # Tab bar directly below the top panel, body inside the sheet.
             assert tabbed.region.y == top.bottom, tab_id
             assert tabbed.region.bottom <= view.region.bottom, tab_id
+
+
+async def test_lab_top_panel_columns_stack_on_a_narrow_pane():
+    """At 80x24 the detail pane is too narrow for the columns side by side,
+    so each panel stacks them; widening the terminal puts them back."""
+    storage.save_saga(_saga_with_bare_laboratory())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(80, 24)) as pilot:
+        await _select_laboratory(pilot, app)
+        view = app.screen._laboratory_sheet_view
+        body = view.query_one("#lab-characteristics-body")
+        await wait_until(pilot, lambda: body.has_class("-stacked"))
+
+        derived = view.query_one("#lab-characteristics-derived").region
+        left = view.query_one("#lab-characteristics-left").region
+        right = view.query_one("#lab-characteristics-right").region
+        assert derived.x == left.x == right.x
+        assert derived.bottom < left.y and left.bottom < right.y
+
+        await pilot.resize_terminal(160, 50)
+        await wait_until(pilot, lambda: not body.has_class("-stacked"))
+        assert not view.query_one("#lab-identity-body").has_class("-stacked")
 
 
 async def test_opening_a_lab_focuses_identity_so_edit_hotkey_works():
@@ -3370,7 +3430,7 @@ async def test_clicking_a_lab_top_panel_section_makes_it_active():
         )
         await pilot.pause()
 
-        await pilot.click("#lab-characteristics-content")
+        await pilot.click("#lab-characteristics-left")
         await wait_until(
             pilot,
             lambda: app.screen._active_section() == "section-lab-characteristics",
@@ -3839,7 +3899,7 @@ async def test_lab_identity_shows_aura_breakdown_and_modifier_is_editable():
     async with app.run_test() as pilot:
         await _select_laboratory(pilot, app)
         view = app.screen._laboratory_sheet_view
-        assert "Aura: 3 (covenant) +0 (modifier) = 3" in view._identity_text()
+        assert "Aura: 3 (covenant) +0 (modifier) = 3" in _lab_identity_text(view)
 
         for modifier, expected in (
             ("2", "+2 (modifier) = 5"),
@@ -3852,12 +3912,12 @@ async def test_lab_identity_shows_aura_breakdown_and_modifier_is_editable():
             app.screen.query_one("#fld-aura_modifier", Input).value = modifier
             app.screen.query_one("#btn-save", Button).press()
             await pilot.pause()
-            assert expected in view._identity_text()
+            assert expected in _lab_identity_text(view)
 
     assert storage.load_saga("test_saga").laboratories[0].aura_modifier == -1
 
 
-async def test_lab_characteristics_numbers_are_coloured_by_sign():
+async def test_lab_characteristics_numbers_take_theme_colours_by_sign():
     saga = _saga_with_bare_laboratory()
     saga.laboratories[0].characteristics = LabCharacteristics(
         size=1, refinement=2, safety=-3
@@ -3869,15 +3929,17 @@ async def test_lab_characteristics_numbers_are_coloured_by_sign():
         await _select_laboratory(pilot, app)
         view = app.screen._laboratory_sheet_view
 
-        table = view._characteristics_table_text()
-        assert re.search(r"Size:\s+\[green\]\+1\[/\]", table)  # positive
-        assert re.search(r"Safety:\s+\[red\]-3\[/\]", table)  # negative
-        assert re.search(r"Upkeep:\s+\[cyan\]\+0\[/\]", table)  # zero
+        table = _lab_characteristics_text(view)
+        assert re.search(r"Size:\s+\[\$text-success\]\+1\[/\]", table)  # positive
+        assert re.search(r"Safety:\s+\[\$text-error\]-3\[/\]", table)  # negative
+        assert re.search(
+            r"Upkeep:\s+\+0 \+0 = \+0$", table, re.MULTILINE
+        )  # zero: plain
 
         derived = view._characteristics_derived_text()
-        assert "Occupied Size: [red]-2[/]" in derived
-        assert re.search(r"Free Virtues:\s+\[green\]3\[/\]", derived)
-        assert re.search(r"Base Safety:\s+\[green\]2\[/\]", derived)
+        assert "Occupied Size: [$text-error]-2[/]" in derived
+        assert re.search(r"Free Virtues:\s+\[\$text-success\]3\[/\]", derived)
+        assert re.search(r"Base Safety:\s+\[\$text-success\]2\[/\]", derived)
 
 
 async def test_lab_edit_dialogs_fit_a_small_terminal():
@@ -4056,7 +4118,7 @@ async def test_edit_covenant_saves_fields_and_labs_inherit_the_aura():
 
         # The lab in this covenant inherits the new base aura.
         await _select(pilot, app, ("laboratory", "lab1"))
-        text = app.screen._laboratory_sheet_view._identity_text()
+        text = _lab_identity_text(app.screen._laboratory_sheet_view)
         assert "Aura: 3 (covenant) +0 (modifier) = 3" in text
 
     cov = storage.load_saga("test_saga").covenants[0]
@@ -4323,7 +4385,9 @@ async def test_unassigned_characters_and_labs_are_listed_under_the_saga():
         assert app.screen._character_sheet_view is not None
         await _select(pilot, app, ("laboratory", "lab1"))
         assert app.screen.selected_laboratory.id == "lab1"
-        assert "Covenant: (none)" in app.screen._laboratory_sheet_view._identity_text()
+        assert "Covenant: (none)" in _lab_identity_text(
+            app.screen._laboratory_sheet_view
+        )
 
         # The group nodes themselves are selectable and say what they are.
         await _select(pilot, app, ("character_group", None))
@@ -4415,7 +4479,7 @@ async def test_lab_can_be_moved_between_covenants_and_unassigned():
     async with app.run_test(size=(140, 50)) as pilot:
         await _select_laboratory(pilot, app)
         view = app.screen._laboratory_sheet_view
-        assert "Aura: 3 (covenant)" in view._identity_text()
+        assert "Aura: 3 (covenant)" in _lab_identity_text(view)
 
         async def set_covenant(value) -> None:
             await _open_lab_section(pilot, app, "section-lab-identity")
@@ -4432,14 +4496,14 @@ async def test_lab_can_be_moved_between_covenants_and_unassigned():
             "laboratory_group",
             "cov2",
         )
-        text = view._identity_text()
+        text = _lab_identity_text(view)
         assert "Covenant: Fenghold" in text
         assert "Aura: 0 (covenant)" in text  # inherits the new covenant's aura
 
         await set_covenant(Select.NULL)
         tree = app.screen.query_one("#nav-tree", Tree)
         assert _parent_data(tree, ("laboratory", "lab1")) == ("laboratory_group", None)
-        assert "Covenant: (none)" in view._identity_text()
+        assert "Covenant: (none)" in _lab_identity_text(view)
         assert app.screen.selected_covenant is None
 
     assert storage.load_saga("test_saga").laboratories[0].covenant_id is None
@@ -4461,7 +4525,7 @@ async def test_aura_boons_raise_the_aura_labs_inherit_and_the_covenant_panel_sho
 
         # The covenant's lab inherits the raised value, not just the base.
         await _select(pilot, app, ("laboratory", "lab1"))
-        text = app.screen._laboratory_sheet_view._identity_text()
+        text = _lab_identity_text(app.screen._laboratory_sheet_view)
         assert "Aura: 6 (covenant) +0 (modifier) = 6" in text
 
 
@@ -5881,7 +5945,7 @@ async def test_weak_aura_hook_lowers_the_aura_labs_inherit():
             app.screen._covenant_sheet_view._info_left_text()
         )
         await _select(pilot, app, ("laboratory", "lab1"))
-        text = app.screen._laboratory_sheet_view._identity_text()
+        text = _lab_identity_text(app.screen._laboratory_sheet_view)
         assert "Aura: 3 (covenant) +0 (modifier) = 3" in text
 
 

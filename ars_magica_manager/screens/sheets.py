@@ -65,6 +65,7 @@ from .widgets import (
     PinnedCollapsible,
     SelectableList,
     SheetSection,
+    StackingColumns,
     TwoColumns,
     _balance_colour,
     _boon_hook_names,
@@ -1332,12 +1333,16 @@ class CharacterSheetView(SheetView):
 class LaboratorySheetView(SheetView):
     """The laboratory sheet mounted into WorkspaceScreen's detail pane.
 
-    A fixed top panel (Identity above Characteristics -- not inside any
-    tab, permanently expanded) above a 5-tab body mirroring the
-    sheet's own pages: Planning (placeholder), Virtues & Flaws, Attributes
-    (Specialties/Features/Rooms), Inventory (Raw Vis/Items), Diary. Its
-    lists are still read-only Statics edited through pickers, not the
-    selectable lists the other sheets use (STORY-303).
+    A fixed top panel (not inside any tab, permanently expanded) above a
+    5-tab body mirroring the sheet's own pages: Planning (placeholder),
+    Virtues & Flaws, Attributes (Specialties/Features/Rooms), Inventory (Raw
+    Vis/Items), Diary. The panel follows reference/lab-sheet-design-doc.md:
+    Identity, titled with the lab's name, in two columns with the Aura
+    below; then Characteristics in three columns (derived figures, then the
+    8 Characteristics four and four). Both stack their columns when the
+    pane is too narrow (StackingColumns). Its lists are still read-only
+    Statics edited through pickers, not the selectable lists the other
+    sheets use (STORY-303).
     """
 
     DEFAULT_CSS = """
@@ -1346,20 +1351,30 @@ class LaboratorySheetView(SheetView):
         height: auto;
     }
 
-    LaboratorySheetView #lab-characteristics-body {
-        width: 1fr;
-        height: auto;
+    LaboratorySheetView #lab-identity-left {
+        margin-right: 2;
     }
 
     LaboratorySheetView #lab-characteristics-derived {
-        width: auto;
-        height: auto;
-        margin-right: 6;
+        margin-top: 1;
+        margin-right: 4;
     }
 
-    LaboratorySheetView #lab-characteristics-content {
-        width: auto;
-        height: auto;
+    LaboratorySheetView #lab-characteristics-left {
+        margin-right: 4;
+    }
+
+    /* Stacked (narrow pane): no blank row above the derived figures, a
+       blank row between the blocks instead. Only vertical margins change,
+       so StackingColumns measures the same width either way. */
+    LaboratorySheetView #lab-characteristics-body.-stacked > * {
+        margin-top: 0;
+        margin-bottom: 1;
+    }
+
+    LaboratorySheetView #lab-characteristics-body.-stacked
+        > #lab-characteristics-right {
+        margin-bottom: 0;
     }
     """
 
@@ -1368,31 +1383,7 @@ class LaboratorySheetView(SheetView):
         self.laboratory = laboratory
 
     def compose(self) -> ComposeResult:
-        with Vertical(id="lab-top-panel"):
-            with PinnedCollapsible(title="Identity", id="section-lab-identity"):
-                yield self._static(
-                    "section-lab-identity",
-                    self._identity_text,
-                    id="lab-identity-content",
-                )
-                yield Button("Edit (e)", id="btn-lab-identity-edit", compact=True)
-            with PinnedCollapsible(
-                title="Characteristics", id="section-lab-characteristics"
-            ):
-                with Horizontal(id="lab-characteristics-body"):
-                    yield self._static(
-                        "section-lab-characteristics",
-                        self._characteristics_derived_text,
-                        id="lab-characteristics-derived",
-                    )
-                    yield self._static(
-                        "section-lab-characteristics",
-                        self._characteristics_table_text,
-                        id="lab-characteristics-content",
-                    )
-                yield Button(
-                    "Edit (e)", id="btn-lab-characteristics-edit", compact=True
-                )
+        yield from self._top_panel()
         with TabbedContent(initial="tab-lab-planning"):
             with TabPane("Planning", id="tab-lab-planning"):
                 yield self._static(
@@ -1441,10 +1432,92 @@ class LaboratorySheetView(SheetView):
                     "tab-lab-diary", self._diary_text, id="lab-diary-content"
                 )
 
-    def _identity_text(self) -> str:
-        saga, lab = self.saga, self.laboratory
-        covenant = saga.covenant(lab.covenant_id)
-        owner = saga.character(lab.owner_id)
+    def _top_panel(self) -> ComposeResult:
+        """The always-visible Identity and Characteristics panels above the
+        tabs."""
+        with Vertical(id="lab-top-panel"):
+            with PinnedCollapsible(
+                title=escape(self.laboratory.name), id="section-lab-identity"
+            ):
+                with StackingColumns(id="lab-identity-body", equal=True):
+                    yield self._static(
+                        "section-lab-identity",
+                        self._identity_left_text,
+                        id="lab-identity-left",
+                    )
+                    yield self._static(
+                        "section-lab-identity",
+                        self._identity_right_text,
+                        id="lab-identity-right",
+                    )
+                yield self._static(
+                    "section-lab-identity", self._aura_text, id="lab-identity-aura"
+                )
+                yield Button("Edit (e)", id="btn-lab-identity-edit", compact=True)
+            self._on_refresh("section-lab-identity", self._refresh_identity_layout)
+            with PinnedCollapsible(
+                title="Characteristics", id="section-lab-characteristics"
+            ):
+                with StackingColumns(id="lab-characteristics-body"):
+                    yield self._static(
+                        "section-lab-characteristics",
+                        self._characteristics_derived_text,
+                        id="lab-characteristics-derived",
+                    )
+                    yield self._static(
+                        "section-lab-characteristics",
+                        lambda: self._characteristics_column_text(
+                            LAB_CHARACTERISTICS[:4]
+                        ),
+                        id="lab-characteristics-left",
+                    )
+                    yield self._static(
+                        "section-lab-characteristics",
+                        lambda: self._characteristics_column_text(
+                            LAB_CHARACTERISTICS[4:]
+                        ),
+                        id="lab-characteristics-right",
+                    )
+                yield Button(
+                    "Edit (e)", id="btn-lab-characteristics-edit", compact=True
+                )
+            self._on_refresh(
+                "section-lab-characteristics",
+                lambda: self.query_one(
+                    "#lab-characteristics-body", StackingColumns
+                ).restack(),
+            )
+
+    def _refresh_identity_layout(self) -> None:
+        """After an Identity edit: the title follows a rename, and longer or
+        shorter values can change whether the columns fit side by side."""
+        self.query_one("#section-lab-identity", Collapsible).title = escape(
+            self.laboratory.name
+        )
+        self.query_one("#lab-identity-body", StackingColumns).restack()
+
+    def _identity_left_text(self) -> str:
+        covenant = self.saga.covenant(self.laboratory.covenant_id)
+        owner = self.saga.character(self.laboratory.owner_id)
+        return aligned(
+            [
+                ("Covenant", escape(covenant.name) if covenant else "(none)"),
+                ("Owner", escape(owner.name) if owner else "(unassigned)"),
+            ]
+        )
+
+    def _identity_right_text(self) -> str:
+        lab = self.laboratory
+        return aligned(
+            [
+                ("Location", escape(lab.location) or "(not set)"),
+                ("Points", lab.build_points),
+            ]
+        )
+
+    def _aura_text(self) -> str:
+        lab = self.laboratory
+        covenant = self.saga.covenant(lab.covenant_id)
         # Inherited from the covenant, including any Boons that raise it.
         covenant_aura = (
             covenant_effective_aura(
@@ -1453,16 +1526,9 @@ class LaboratorySheetView(SheetView):
             if covenant
             else 0
         )
-        return "\n".join(
-            [
-                f"Name: {escape(lab.name)}",
-                f"Location: {escape(lab.location) or '(not set)'}",
-                f"Points: {lab.build_points}",
-                f"Owner: {escape(owner.name) if owner else '(unassigned)'}",
-                f"Covenant: {escape(covenant.name) if covenant else '(none)'}",
-                f"Aura: {covenant_aura} (covenant) {lab.aura_modifier:+d} (modifier) "
-                f"= {lab_aura_total(lab, covenant_aura)}",
-            ]
+        return (
+            f"Aura: {covenant_aura} (covenant) {lab.aura_modifier:+d} (modifier) "
+            f"= {lab_aura_total(lab, covenant_aura)}"
         )
 
     def _characteristics_derived_text(self) -> str:
@@ -1479,33 +1545,34 @@ class LaboratorySheetView(SheetView):
             for label, value in rows
         )
 
-    def _characteristics_table_text(self) -> str:
-        """The 8 Characteristics as an aligned table: manual value, the
-        summed Virtue+Flaw modifier, and the total after '='. Every number
-        is coloured by sign (see _sign_colored())."""
+    def _characteristics_column_text(self, characteristics: Sequence[str]) -> str:
+        """One column of Characteristics as an aligned table: manual value,
+        the summed Virtue+Flaw modifier, and the total after '='. Numbers
+        are as wide as the widest of all 8, so both columns line up, and
+        coloured by sign (see _sign_colored())."""
         lab_catalog = catalog.load_lab_virtue_flaw_catalog_by_id()
         lab = self.laboratory
-        rows = []
+        rows: dict[str, tuple[int, int, int]] = {}
         for characteristic in LAB_CHARACTERISTICS:
             manual, virtue_sum, flaw_sum, total = lab_characteristic_total(
                 lab, lab_catalog, characteristic
             )
-            label = characteristic.replace("_", " ").title() + ":"
-            rows.append((label, manual, virtue_sum + flaw_sum, total))
-        label_width = max(len(label) for label, *_ in rows)
-        num_width = max(
-            len(f"{value:+d}")
-            for _, manual, vf, total in rows
-            for value in (manual, vf, total)
-        )
+            rows[characteristic] = (manual, virtue_sum + flaw_sum, total)
+        num_width = max(len(f"{value:+d}") for row in rows.values() for value in row)
+        labels = {c: c.replace("_", " ").title() + ":" for c in characteristics}
+        label_width = max(len(label) for label in labels.values())
 
         def cell(value: int) -> str:
             return _sign_colored(value, f"{value:>+{num_width}d}")
 
-        return "\n".join(
-            f"{label:<{label_width}} {cell(manual)} {cell(vf)} = {cell(total)}"
-            for label, manual, vf, total in rows
-        )
+        lines = []
+        for characteristic in characteristics:
+            manual, vf, total = rows[characteristic]
+            lines.append(
+                f"{labels[characteristic]:<{label_width}} "
+                f"{cell(manual)} {cell(vf)} = {cell(total)}"
+            )
+        return "\n".join(lines)
 
     def _planning_text(self) -> str:
         return "Lab activity planning isn't built yet -- coming in a future update."
