@@ -7227,7 +7227,51 @@ class SpellListView(Vertical):
         self._show(self._shown[index] if index < len(self._shown) else None)
 
 
-class CharacterSheetView(Vertical):
+class SheetView(Vertical):
+    """Base of the four record sheets (Character, Laboratory, Familiar,
+    Covenant) that WorkspaceScreen mounts into its detail pane: a fixed top
+    panel above a TabbedContent. Holds the saga, the flag the workspace uses
+    to tell the TabbedContent's first TabActivated from a real tab switch,
+    and the layout rules every sheet shares."""
+
+    DEFAULT_CSS = """
+    SheetView {
+        height: 1fr;
+    }
+
+    SheetView TabbedContent {
+        height: 1fr;
+    }
+
+    SheetView TabPane {
+        padding: 1 0;
+    }
+
+    SheetView VerticalScroll {
+        height: 1fr;
+        width: 1fr;
+    }
+    """
+
+    def __init__(self, saga: Saga) -> None:
+        super().__init__()
+        self.saga = saga
+        #: Set once TabbedContent's initial TabActivated has been seen -- see
+        #: WorkspaceScreen.on_tabbed_content_tab_activated().
+        self.initial_tab_seen = False
+
+    def refresh_section(self, section_id: str) -> None:
+        """Re-render whatever shows `section_id` after its data changed."""
+        raise NotImplementedError
+
+    @staticmethod
+    def _inherited(value: str) -> str:
+        """Dim a value that's derived or inherited (e.g. from the saga) and
+        isn't edited here."""
+        return f"[dim]{escape(value)}[/]"
+
+
+class CharacterSheetView(SheetView):
     """The character sheet mounted into WorkspaceScreen's detail pane.
 
     A fixed top panel (Info above Characteristics -- not inside any tab,
@@ -7273,10 +7317,6 @@ class CharacterSheetView(Vertical):
     """
 
     DEFAULT_CSS = """
-    CharacterSheetView {
-        height: 1fr;
-    }
-
     CharacterSheetView #char-top-panel {
         width: 1fr;
         height: auto;
@@ -7324,19 +7364,6 @@ class CharacterSheetView(Vertical):
         margin-right: 2;
     }
 
-    CharacterSheetView TabbedContent {
-        height: 1fr;
-    }
-
-    CharacterSheetView TabPane {
-        padding: 1 0;
-    }
-
-    CharacterSheetView VerticalScroll {
-        height: 1fr;
-        width: 1fr;
-    }
-
     /* Every selectable-list details panel: a gap below the list, its own
        shaded background so it reads as a distinct panel (matching the saga
        Spells view and every covenant list). */
@@ -7381,12 +7408,8 @@ class CharacterSheetView(Vertical):
     """
 
     def __init__(self, saga: Saga, character: Character) -> None:
-        super().__init__()
-        self.saga = saga
+        super().__init__(saga)
         self.character = character
-        #: Set once TabbedContent's initial TabActivated has been seen -- see
-        #: WorkspaceScreen.on_tabbed_content_tab_activated().
-        self.initial_tab_seen = False
 
     def compose(self) -> ComposeResult:
         character = self.character
@@ -7812,11 +7835,6 @@ class CharacterSheetView(Vertical):
         self.query_one(f"#{other}", SelectableList).clear_selection()
         self.query_one("#vf-info", Static).update(self._vf_info_text(event.data_index))
 
-    @staticmethod
-    def _inherited(value: str) -> str:
-        """Dim a value that's derived/inherited and isn't edited here."""
-        return f"[dim]{escape(value)}[/]"
-
     def _info_left_text(self) -> str:
         b = self.character.background
         age = character_age(b.year_born, self.saga.current_year)
@@ -8098,7 +8116,7 @@ class PinnedCollapsible(Collapsible):
         self.query_one("CollapsibleTitle").focus()
 
 
-class LaboratorySheetView(Vertical):
+class LaboratorySheetView(SheetView):
     """The laboratory sheet mounted into WorkspaceScreen's detail pane.
 
     A fixed top panel (Identity above Characteristics -- not inside any
@@ -8110,10 +8128,6 @@ class LaboratorySheetView(Vertical):
     """
 
     DEFAULT_CSS = """
-    LaboratorySheetView {
-        height: 1fr;
-    }
-
     LaboratorySheetView #lab-top-panel {
         width: 1fr;
         height: auto;
@@ -8134,28 +8148,11 @@ class LaboratorySheetView(Vertical):
         width: auto;
         height: auto;
     }
-
-    LaboratorySheetView TabbedContent {
-        height: 1fr;
-    }
-
-    LaboratorySheetView TabPane {
-        padding: 1 0;
-    }
-
-    LaboratorySheetView VerticalScroll {
-        height: 1fr;
-        width: 1fr;
-    }
     """
 
     def __init__(self, saga: Saga, laboratory: Laboratory) -> None:
-        super().__init__()
-        self.saga = saga
+        super().__init__(saga)
         self.laboratory = laboratory
-        #: Set once TabbedContent's initial TabActivated has been seen -- see
-        #: WorkspaceScreen.on_tabbed_content_tab_activated().
-        self.initial_tab_seen = False
 
     def compose(self) -> ComposeResult:
         with Vertical(id="lab-top-panel"):
@@ -8386,7 +8383,7 @@ class LaboratorySheetView(Vertical):
         return "\n".join(lines)
 
 
-class FamiliarSheetView(Vertical):
+class FamiliarSheetView(SheetView):
     """The Familiar sheet mounted into WorkspaceScreen's detail pane.
 
     A fixed top panel (Familiar Info -- not inside any tab, permanently
@@ -8401,26 +8398,9 @@ class FamiliarSheetView(Vertical):
     """
 
     DEFAULT_CSS = """
-    FamiliarSheetView {
-        height: 1fr;
-    }
-
     FamiliarSheetView #fam-top-panel {
         width: 1fr;
         height: auto;
-    }
-
-    FamiliarSheetView TabbedContent {
-        height: 1fr;
-    }
-
-    FamiliarSheetView TabPane {
-        padding: 1 0;
-    }
-
-    FamiliarSheetView VerticalScroll {
-        height: 1fr;
-        width: 1fr;
     }
 
     FamiliarSheetView #fam-vf-row, FamiliarSheetView #fam-pt-rep-row,
@@ -8437,12 +8417,8 @@ class FamiliarSheetView(Vertical):
     """
 
     def __init__(self, saga: Saga, familiar: Familiar) -> None:
-        super().__init__()
-        self.saga = saga
+        super().__init__(saga)
         self.familiar = familiar
-        #: Set once TabbedContent's initial TabActivated has been seen -- see
-        #: WorkspaceScreen.on_tabbed_content_tab_activated().
-        self.initial_tab_seen = False
 
     def compose(self) -> ComposeResult:
         with (
@@ -8688,7 +8664,7 @@ class FamiliarSheetView(Vertical):
         )
 
 
-class CovenantSheetView(Vertical):
+class CovenantSheetView(SheetView):
     """The covenant sheet mounted into WorkspaceScreen's detail pane.
 
     A permanent info panel (not inside any tab) above six tabs mirroring
@@ -8701,10 +8677,6 @@ class CovenantSheetView(Vertical):
     """
 
     DEFAULT_CSS = """
-    CovenantSheetView {
-        height: 1fr;
-    }
-
     CovenantSheetView #cov-info-body {
         width: 1fr;
         height: auto;
@@ -8719,19 +8691,6 @@ class CovenantSheetView(Vertical):
     CovenantSheetView #cov-info-right {
         width: 1fr;
         height: auto;
-    }
-
-    CovenantSheetView TabbedContent {
-        height: 1fr;
-    }
-
-    CovenantSheetView TabPane {
-        padding: 1 0;
-    }
-
-    CovenantSheetView VerticalScroll {
-        height: 1fr;
-        width: 1fr;
     }
 
     CovenantSheetView #cov-bh-row {
@@ -8849,12 +8808,8 @@ class CovenantSheetView(Vertical):
     """
 
     def __init__(self, saga: Saga, covenant: Covenant) -> None:
-        super().__init__()
-        self.saga = saga
+        super().__init__(saga)
         self.covenant = covenant
-        #: Set once TabbedContent's initial TabActivated has been seen -- see
-        #: WorkspaceScreen.on_tabbed_content_tab_activated().
-        self.initial_tab_seen = False
 
     def compose(self) -> ComposeResult:
         with PinnedCollapsible(title=escape(self.covenant.name), id="section-cov-info"):
@@ -9241,11 +9196,6 @@ class CovenantSheetView(Vertical):
         self.query_one("#cov-bh-info", Static).update(
             self._bh_info_text(event.data_index)
         )
-
-    @staticmethod
-    def _inherited(value: str) -> str:
-        """Dim a value that comes from the saga and isn't edited here."""
-        return f"[dim]{escape(value)}[/]"
 
     def _aura_text(self) -> str:
         """The base Aura, plus where a Boon-raised total comes from."""
@@ -9874,15 +9824,7 @@ class WorkspaceScreen(Screen[None]):
         self._familiar_sheet_view = view
         self._focus_first_section(initial=True)
 
-    def _current_sheet_view(
-        self,
-    ) -> (
-        CharacterSheetView
-        | LaboratorySheetView
-        | CovenantSheetView
-        | FamiliarSheetView
-        | None
-    ):
+    def _current_sheet_view(self) -> SheetView | None:
         """The sheet on show for the selected tree node, if it has one."""
         return {
             NodeKind.CHARACTER: self._character_sheet_view,
