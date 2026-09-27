@@ -7475,7 +7475,7 @@ class CharacterSheetView(Vertical):
 
     #: Bare Collapsible-section ids, except "tab-abilities" which has no
     #: sub-sections (a single flat pane, keyed by its own tab id) -- see
-    #: WorkspaceScreen._active_character_section(). Sections with more than
+    #: WorkspaceScreen._active_section(). Sections with more than
     #: one Static (Biographical Detail, Hermetic Background, Health) are
     #: special-cased in refresh_section() instead of listed here.
     _SECTION_CONTENT: ClassVar[dict[str, str]] = {
@@ -9415,21 +9415,31 @@ class WorkspaceScreen(Screen[None]):
     #: Covenant tabs that own their own a/A/e dispatch (keyed by tab id).
     #: None: every covenant tab's content is in Collapsible sections, so with
     #: nothing focused in one the dispatch falls back to the always-visible
-    #: info panel. See _active_covenant_section().
+    #: info panel. See _active_section().
     _COVENANT_DISPATCH_TABS: ClassVar[set[str]] = set()
 
     #: Character tabs that own their own a/A/e dispatch (keyed by tab id),
     #: same idea as _COVENANT_DISPATCH_TABS -- "tab-abilities" is a flat
     #: pane with no sub-sections, so it dispatches on its own tab id rather
-    #: than falling back to the top panel. See _active_character_section().
+    #: than falling back to the top panel. See _active_section().
     _CHARACTER_DISPATCH_TABS: ClassVar[set[str]] = {"tab-abilities"}
 
     #: Familiar tabs that own their own a/A/e dispatch (keyed by tab id),
     #: same idea as _CHARACTER_DISPATCH_TABS -- both are flat panes with no
-    #: sub-sections. See _active_familiar_section().
+    #: sub-sections. See _active_section().
     _FAMILIAR_DISPATCH_TABS: ClassVar[set[str]] = {
         "tab-fam-abilities",
         "tab-fam-powers",
+    }
+
+    #: Per sheet kind: the tabs that dispatch on their own id, and the
+    #: section a tab with no focused section falls back to (None: the tab
+    #: itself -- every Laboratory tab dispatches). See _active_section().
+    _SHEET_DISPATCH: ClassVar[dict[str, tuple[set[str], str | None]]] = {
+        "character": (_CHARACTER_DISPATCH_TABS, "section-char-info"),
+        "laboratory": (set(), None),
+        "covenant": (_COVENANT_DISPATCH_TABS, "section-cov-info"),
+        "familiar": (_FAMILIAR_DISPATCH_TABS, "section-fam-info"),
     }
 
     DEFAULT_CSS = """
@@ -9690,31 +9700,21 @@ class WorkspaceScreen(Screen[None]):
         return True
 
     def _active_section(self) -> str | None:
-        """Which sheet section is "active" for a/A/e (and v/V) dispatch --
-        a thin router to whichever sheet is actually showing."""
-        if self.selected_kind == "character":
-            return self._active_character_section()
-        if self.selected_kind == "laboratory":
-            return self._active_laboratory_section()
-        if self.selected_kind == "covenant":
-            return self._active_covenant_section()
-        if self.selected_kind == "familiar":
-            return self._active_familiar_section()
+        """Which sheet section is "active" for a/A/e (and v/V) dispatch: the
+        nearest Collapsible around whatever has focus -- which also covers a
+        sheet's top panel, outside its tabs. With none, a flat tab that
+        dispatches on its own id (see _SHEET_DISPATCH), otherwise the sheet's
+        always-visible top section, so 'e' edits the record from any tab.
+        The Unassigned Books and Spells nodes have no sheet, just a section."""
         if self.selected_kind == "book_group":
             return "section-unassigned-books"
         if self.selected_kind == "spells":
             return SPELL_SECTION
-        return None
-
-    def _active_covenant_section(self) -> str | None:
-        """Same idea as _active_laboratory_section(), except that with
-        nothing focused inside a Collapsible (and no tab owning its own
-        dispatch), fall back to the always-visible info panel so 'e' edits
-        the covenant from any tab."""
-        if self._covenant_sheet_view is None:
+        view = self._current_sheet_view()
+        if view is None:
             return None
         try:
-            tab_id = self._covenant_sheet_view.query_one(TabbedContent).active
+            tab_id = view.query_one(TabbedContent).active
         except NoMatches:
             return None
         if not tab_id:
@@ -9725,81 +9725,8 @@ class WorkspaceScreen(Screen[None]):
             for widget in focused.ancestors_with_self:
                 if isinstance(widget, Collapsible) and widget.id:
                     return widget.id
-        if tab_id in self._COVENANT_DISPATCH_TABS:
-            return tab_id
-        return "section-cov-info"
-
-    def _active_familiar_section(self) -> str | None:
-        """Same idea as _active_character_section(): "tab-fam-abilities" and
-        "tab-fam-powers" are flat panes with no sub-sections, so they
-        dispatch on their own tab id (see _FAMILIAR_DISPATCH_TABS); every
-        other tab falls back to the always-visible info panel."""
-        if self._familiar_sheet_view is None:
-            return None
-        try:
-            tab_id = self._familiar_sheet_view.query_one(TabbedContent).active
-        except NoMatches:
-            return None
-        if not tab_id:
-            return None
-
-        focused = self.app.focused
-        if focused is not None:
-            for widget in focused.ancestors_with_self:
-                if isinstance(widget, Collapsible) and widget.id:
-                    return widget.id
-        if tab_id in self._FAMILIAR_DISPATCH_TABS:
-            return tab_id
-        return "section-fam-info"
-
-    def _active_character_section(self) -> str | None:
-        """Which character-sheet section is "active" for a/A/e dispatch.
-
-        Same mechanism as _active_covenant_section(): resolve the nearest
-        Collapsible ancestor of whatever's currently focused (this also
-        covers the top panel's two PinnedCollapsibles, which live outside
-        the TabbedContent). With nothing focused inside a Collapsible, a tab
-        that owns its own flat dispatch (see _CHARACTER_DISPATCH_TABS, e.g.
-        Spells) reports its own tab id; every other tab falls back to the
-        always-visible top-panel info section, so 'e' edits the character
-        from any tab.
-        """
-        if self._character_sheet_view is None:
-            return None
-        try:
-            tab_id = self._character_sheet_view.query_one(TabbedContent).active
-        except NoMatches:
-            return None
-        if not tab_id:
-            return None
-
-        focused = self.app.focused
-        if focused is not None:
-            for widget in focused.ancestors_with_self:
-                if isinstance(widget, Collapsible) and widget.id:
-                    return widget.id
-        if tab_id in self._CHARACTER_DISPATCH_TABS:
-            return tab_id
-        return "section-char-info"
-
-    def _active_laboratory_section(self) -> str | None:
-        """Same mechanism as _active_character_section(), against the
-        laboratory sheet instead -- see that method's docstring."""
-        if self._laboratory_sheet_view is None:
-            return None
-        try:
-            tab_id = self._laboratory_sheet_view.query_one(TabbedContent).active
-        except NoMatches:
-            return None
-        if not tab_id:
-            return None
-
-        focused = self.app.focused
-        if focused is not None:
-            for widget in focused.ancestors_with_self:
-                if isinstance(widget, Collapsible) and widget.id:
-                    return widget.id
-        return tab_id
+        own_tabs, fallback = self._SHEET_DISPATCH[self.selected_kind]
+        return tab_id if fallback is None or tab_id in own_tabs else fallback
 
     def on_tabbed_content_tab_activated(
         self, event: TabbedContent.TabActivated
@@ -9808,12 +9735,7 @@ class WorkspaceScreen(Screen[None]):
         # with whichever tab the user just switched to, and give the new
         # tab's first section focus so 'e'/'a'/'A' work immediately without
         # requiring an explicit Tab-key navigation first.
-        view = {
-            "character": self._character_sheet_view,
-            "laboratory": self._laboratory_sheet_view,
-            "covenant": self._covenant_sheet_view,
-            "familiar": self._familiar_sheet_view,
-        }.get(self.selected_kind)
+        view = self._current_sheet_view()
         initial = False
         if view is not None:
             # TabbedContent announces its initial tab once, right after
@@ -9857,26 +9779,23 @@ class WorkspaceScreen(Screen[None]):
             self._edit_familiar_fatigue()
 
     def _focus_first_section(self, *, initial: bool = False) -> None:
-        if self.selected_kind == "character":
-            self._focus_first_character_section(initial=initial)
-        elif self.selected_kind == "laboratory":
-            self._focus_first_laboratory_section(initial=initial)
-        elif self.selected_kind == "covenant":
-            self._focus_first_covenant_section(initial=initial)
-        elif self.selected_kind == "familiar":
-            self._focus_first_familiar_section(initial=initial)
+        """Give the sheet a focused section, so 'e'/'a'/'A' work straight away.
 
-    def _focus_first_covenant_section(self, *, initial: bool = False) -> None:
-        """Focus the always-visible info panel when a covenant is first
-        shown, so 'e' works straight away. On a later tab switch focus that
-        tab's first section, or -- for a flat tab -- clear focus (see
-        _focus_first_laboratory_section() for why); dispatch then falls back
-        to the info panel."""
-        if self._covenant_sheet_view is None:
+        When a sheet is first shown (`initial`), focus its first section
+        anywhere -- the always-visible top panel. On a later tab switch, focus
+        that tab's first section, or clear focus for a flat tab: the top
+        panel lives outside the tabs, so a tab switch never blurs it, and
+        leaving it focused would make _active_section() keep reporting it.
+
+        The Laboratory is the exception on first showing: its default tab
+        (Planning) is flat, so it looks at the active tab first and only then
+        falls back to the top panel."""
+        view = self._current_sheet_view()
+        if view is None:
             return
-        view = self._covenant_sheet_view
+        active_tab_first = self.selected_kind == "laboratory"
         try:
-            if initial:
+            if initial and not active_tab_first:
                 collapsible = view.query(Collapsible).first()
             else:
                 tabbed = view.query_one(TabbedContent)
@@ -9885,94 +9804,15 @@ class WorkspaceScreen(Screen[None]):
                 pane = view.query_one(f"#{tabbed.active}", TabPane)
                 collapsible = pane.query(Collapsible).first()
         except NoMatches:
-            # A flat tab (nothing to focus): clear focus so dispatch falls
-            # back to the info panel -- see _active_covenant_section().
             if not initial:
                 self.screen.set_focus(None)
-            return
-        collapsible.query_one("CollapsibleTitle").focus()
-
-    def _focus_first_character_section(self, *, initial: bool = False) -> None:
-        """Same logic as _focus_first_covenant_section() (see that method's
-        docstring): unlike Laboratory, Character's default tab (Description)
-        already has Collapsibles of its own, so an active-pane-first lookup
-        would never reach the top panel on first showing the character --
-        this always checks the whole view first when `initial`, so the
-        always-visible top panel gets focus straight away, matching
-        Covenant. On a later tab switch, scope to that tab's own Collapsibles
-        (or clear focus for a flat tab, e.g. a future placeholder tab), so
-        dispatch falls back to the top panel instead of a stale Collapsible
-        from the previous tab."""
-        if self._character_sheet_view is None:
-            return
-        view = self._character_sheet_view
-        try:
-            if initial:
-                collapsible = view.query(Collapsible).first()
-            else:
-                tabbed = view.query_one(TabbedContent)
-                if not tabbed.active:
-                    return
-                active_pane = view.query_one(f"#{tabbed.active}", TabPane)
-                collapsible = active_pane.query(Collapsible).first()
-        except NoMatches:
-            if not initial:
-                self.screen.set_focus(None)
-            return
-        collapsible.query_one("CollapsibleTitle").focus()
-
-    def _focus_first_laboratory_section(self, *, initial: bool = False) -> None:
-        if self._laboratory_sheet_view is None:
-            return
-        try:
-            tabbed = self._laboratory_sheet_view.query_one(TabbedContent)
-            if not tabbed.active:
                 return
-            active_pane = self._laboratory_sheet_view.query_one(
-                f"#{tabbed.active}", TabPane
-            )
-            collapsible = active_pane.query(Collapsible).first()
-        except NoMatches:
-            # The active tab is flat (Planning/Virtues & Flaws/Diary have
-            # no Collapsible). On first showing the lab (its initial tab,
-            # Planning, is one of these flat tabs) fall back to the top
-            # panel's first Collapsible (Identity), so something is always
-            # focused rather than nothing. On a later tab *switch* to a
-            # flat tab, clear focus instead of falling back -- the top
-            # panel's Collapsibles live outside the TabbedContent, so
-            # switching tabs never blurs them on its own, and leaving a
-            # stale one focused would make _active_laboratory_section()
-            # keep reporting it instead of this flat tab.
-            if not initial:
-                self.screen.set_focus(None)
+            if not active_tab_first:
                 return
             try:
-                collapsible = self._laboratory_sheet_view.query(Collapsible).first()
+                collapsible = view.query(Collapsible).first()
             except NoMatches:
                 return
-        collapsible.query_one("CollapsibleTitle").focus()
-
-    def _focus_first_familiar_section(self, *, initial: bool = False) -> None:
-        """Same logic as _focus_first_character_section() (see that
-        method's docstring): the default tab (Identity & Cords) already has
-        Collapsibles of its own, so this always checks the whole view first
-        when `initial`, and scopes to the active tab otherwise."""
-        if self._familiar_sheet_view is None:
-            return
-        view = self._familiar_sheet_view
-        try:
-            if initial:
-                collapsible = view.query(Collapsible).first()
-            else:
-                tabbed = view.query_one(TabbedContent)
-                if not tabbed.active:
-                    return
-                active_pane = view.query_one(f"#{tabbed.active}", TabPane)
-                collapsible = active_pane.query(Collapsible).first()
-        except NoMatches:
-            if not initial:
-                self.screen.set_focus(None)
-            return
         collapsible.query_one("CollapsibleTitle").focus()
 
     def on_descendant_focus(self, event: DescendantFocus) -> None:
@@ -12159,7 +11999,7 @@ class WorkspaceScreen(Screen[None]):
 
     def _selected_raw_vis(self) -> int | None:
         view = self._character_sheet_view
-        section = self._active_character_section()
+        section = self._active_section()
         if view is None or section not in (
             "section-raw-vis-hermetic",
             "section-raw-vis-inventory",

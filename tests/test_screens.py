@@ -237,7 +237,7 @@ def _known_spell_labels(view) -> str:
 
 #: Which top-level character-sheet tab each Collapsible section lives in.
 #: "tab-abilities" maps to itself -- the one tab with no sub-sections, keyed
-#: by its own tab id (see WorkspaceScreen._active_character_section()). The
+#: by its own tab id (see WorkspaceScreen._active_section()). The
 #: top-panel sections (Info/Characteristics) aren't inside any tab -- see
 #: _open_section()'s handling of them, mirroring _open_lab_section().
 _SECTION_TAB: dict[str, str] = {
@@ -265,7 +265,7 @@ async def _open_section(pilot, app, section_id: str) -> None:
 
     The generic Add/Remove/Edit bindings dispatch by whichever Collapsible
     section currently has focus (its title, since CollapsibleTitle is the
-    focusable part -- see WorkspaceScreen._active_character_section()), so
+    focusable part -- see WorkspaceScreen._active_section()), so
     most character-mutation tests need this before pressing
     'a'/'A'/'e'/'v'/'V'. `section_id` may also be "tab-abilities", the one
     tab with no sub-sections, or one of the top-panel sections (Info/
@@ -2130,13 +2130,13 @@ async def test_switching_to_laboratory_or_diary_tab_falls_back_to_top_panel():
         await _select_character(pilot, app)
         # Focus a real Collapsible section first (Aging, in Description).
         await _open_section(pilot, app, "section-aging")
-        assert app.screen._active_character_section() == "section-aging"
+        assert app.screen._active_section() == "section-aging"
 
         view = app.screen._character_sheet_view
         view.query_one(TabbedContent).active = "tab-lab"
         await pilot.pause()
 
-        assert app.screen._active_character_section() == "section-char-info"
+        assert app.screen._active_section() == "section-char-info"
         await pilot.press("e")
         await pilot.pause()
         assert isinstance(app.screen, EditCharacterInfoScreen)
@@ -2147,7 +2147,7 @@ async def test_switching_to_laboratory_or_diary_tab_falls_back_to_top_panel():
         # (Laboratory) to another flat tab.
         view.query_one(TabbedContent).active = "tab-diary"
         await pilot.pause()
-        assert app.screen._active_character_section() == "section-char-info"
+        assert app.screen._active_section() == "section-char-info"
         await pilot.press("e")
         await pilot.pause()
         assert isinstance(app.screen, EditCharacterInfoScreen)
