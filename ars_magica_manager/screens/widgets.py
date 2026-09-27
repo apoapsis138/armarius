@@ -333,7 +333,7 @@ class SheetSection(Collapsible):
 def _tab_placeholder(tab_name: str) -> str:
     """Text for a not-yet-built flat placeholder tab (e.g. Diary, both on
     the covenant and character sheets)."""
-    return f"{tab_name} aren't built yet -- coming in a future update."
+    return f"The {tab_name} tab isn't built yet -- coming in a future update."
 
 
 class TwoColumns(Horizontal):

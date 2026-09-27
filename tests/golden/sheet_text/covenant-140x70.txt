@@ -354,7 +354,7 @@
    Attributes  Inhabitants  Possessions  Economics  Library  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Diary aren't built yet -- coming in a future update.
+  The Diary tab isn't built yet -- coming in a future update.
 
 
 

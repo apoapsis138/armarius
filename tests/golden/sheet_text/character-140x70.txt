@@ -361,7 +361,7 @@
    Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Laboratory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Laboratory aren't built yet -- coming in a future update.
+  The Laboratory tab isn't built yet -- coming in a future update.
 
 
 
@@ -429,7 +429,7 @@
    Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Laboratory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Diary aren't built yet -- coming in a future update.
+  The Diary tab isn't built yet -- coming in a future update.
 
 
 
