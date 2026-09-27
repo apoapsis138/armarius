@@ -1,3 +1,4 @@
+import json
 from dataclasses import asdict
 
 import pytest
@@ -5,6 +6,7 @@ from support import strip_markup
 from textual.content import Content
 
 from ars_magica_manager import possessions as pos
+from ars_magica_manager import storage
 from ars_magica_manager.models import (
     GEAR_POINTS,
     POSSESSION_KINDS,
@@ -291,7 +293,7 @@ def test_legacy_vis_stock_becomes_raw_vis_stores():
         ("Vim Vis", "Vim", 2),
         ("Mystery Vis", "Mystery", 1),  # an unknown Art is kept as typed
     ]
-    assert cov.vis_stock == {}  # moved, not copied
+    assert "vis_stock" not in asdict(cov)  # moved, not copied or saved again
     # Loading the migrated data again doesn't migrate twice.
     assert len(Covenant.from_dict(asdict(cov)).possessions) == 3
 
@@ -343,3 +345,12 @@ def test_form_problem_rejects_a_quality_the_gear_type_does_not_come_in():
     allowed = next(iter(GEAR_POINTS[gear_type]))
     assert pos.form_problem({"gear_type": gear_type, "gear_quality": allowed}) is None
     assert pos.form_problem({"gear_type": gear_type, "gear_quality": "Nonsense"})
+
+
+def test_a_new_save_has_no_vis_stock():
+    # B17: the field was migrated away but still written (as {}) every save.
+    saga = Saga(id="s", name="S", covenants=[Covenant(id="c", saga_id="s", name="C")])
+    path = storage.save_saga(saga)
+    assert (
+        "vis_stock" not in json.loads(path.read_text(encoding="utf-8"))["covenants"][0]
+    )

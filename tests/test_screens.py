@@ -1,3 +1,4 @@
+import json
 import re
 from pathlib import Path
 
@@ -682,8 +683,16 @@ def _sample_saga_with_covenant() -> Saga:
                 saga_id="test_saga",
                 name="Test Covenant",
                 notes="A nice place",
-                vis_stock={"Ignem": 5},
                 aura=3,
+                possessions=[
+                    Possession(
+                        id="vis_store_ignem",
+                        kind="vis_store",
+                        name="Ignem Vis",
+                        art="Ignem",
+                        pawns=5,
+                    )
+                ],
             )
         ],
         characters=[
@@ -774,7 +783,6 @@ async def test_selecting_covenant_shows_summary_and_tree_children():
             "Test Covenant"
         )
         assert "A nice place" in view._description_text()
-        # The old bare vis_stock became a Raw Vis store on the Possessions tab.
         assert view._pos_rows("vis_store") == [
             (0, "Ignem Vis           Ignem          5")
         ]
@@ -7229,9 +7237,10 @@ async def test_one_selection_across_the_possession_lists():
 
 
 async def test_legacy_vis_stock_shows_up_as_raw_vis_stores():
-    saga = _saga_with_bare_laboratory()
-    saga.covenants[0].vis_stock = {"Ignem": 5, "Vim": 2}
-    storage.save_saga(saga)
+    path = storage.save_saga(_saga_with_bare_laboratory())
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data["covenants"][0]["vis_stock"] = {"Ignem": 5, "Vim": 2}  # an older save
+    path.write_text(json.dumps(data), encoding="utf-8")
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:

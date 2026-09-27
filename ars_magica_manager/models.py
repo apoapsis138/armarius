@@ -1340,7 +1340,6 @@ class Covenant:
     id: str
     saga_id: str
     name: str
-    vis_stock: dict[str, int] = field(default_factory=dict)
     notes: str = ""
     aura: int = 0  # inherited by all of the covenant's laboratories
     tribunal: str = ""
@@ -1386,8 +1385,8 @@ class Covenant:
             Possession(**known_fields(Possession, p)) for p in d.get("possessions", [])
         ]
         # Older saves kept a bare Art -> pawns `vis_stock`; those are now Raw Vis
-        # stores on the Possessions tab.
-        stock = d.get("vis_stock") or {}
+        # stores on the Possessions tab (and the key is no longer saved).
+        stock = d.pop("vis_stock", None) or {}
         if stock:
             for art, pawns in stock.items():
                 art_name = ART_BY_NAME.get(str(art).lower(), str(art))
@@ -1400,7 +1399,6 @@ class Covenant:
                         pawns=int(pawns),
                     )
                 )
-            d["vis_stock"] = {}
         return cls(**known_fields(cls, d))  # drops the retired `library_id`
 
 
