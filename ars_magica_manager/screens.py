@@ -7249,6 +7249,24 @@ class SpellListView(Vertical):
         self._show(self._shown[index] if index < len(self._shown) else None)
 
 
+class TwoColumns(Horizontal):
+    """A full-width row whose children share it equally, each as tall as its
+    content: the side-by-side panels and sections of the sheets. (Gaps
+    between the columns are the left column's own right margin.)"""
+
+    DEFAULT_CSS = """
+    TwoColumns {
+        width: 1fr;
+        height: auto;
+    }
+
+    TwoColumns > * {
+        width: 1fr;
+        height: auto;
+    }
+    """
+
+
 class SheetView(Vertical):
     """Base of the four record sheets (Character, Laboratory, Familiar,
     Covenant) that WorkspaceScreen mounts into its detail pane: a fixed top
@@ -7272,6 +7290,24 @@ class SheetView(Vertical):
     SheetView VerticalScroll {
         height: 1fr;
         width: 1fr;
+    }
+
+    /* A selectable list's details panel: a gap below the list and its own
+       shaded background, so it reads as a distinct panel. */
+    SheetView .details-panel {
+        width: 1fr;
+        height: auto;
+        min-height: 6;
+        margin-top: 1;
+        padding: 1 2;
+        background: $panel;
+    }
+
+    /* The column headings above a table-like list. */
+    SheetView .table-header {
+        width: 1fr;
+        height: auto;
+        color: $text-muted;
     }
     """
 
@@ -7391,76 +7427,12 @@ class CharacterSheetView(SheetView):
         height: auto;
     }
 
-    CharacterSheetView #char-info-body {
-        width: 1fr;
-        height: auto;
-    }
-
-    CharacterSheetView #char-info-left,
-    CharacterSheetView #char-info-right {
-        width: 1fr;
-        height: auto;
-    }
-
-    CharacterSheetView #char-biographical-row,
-    CharacterSheetView #hermetic-background-row,
-    CharacterSheetView #char-health-row,
-    CharacterSheetView #pt-rep-row {
-        width: 1fr;
-        height: auto;
-    }
-
-    CharacterSheetView #char-biographical-left,
-    CharacterSheetView #char-biographical-right,
-    CharacterSheetView #hermetic-background-left,
-    CharacterSheetView #hermetic-background-right,
-    CharacterSheetView #char-health-wounds-col,
-    CharacterSheetView #char-health-fatigue-col {
-        width: 1fr;
-        height: auto;
-    }
-
-    CharacterSheetView #pt-rep-row SheetSection {
-        width: 1fr;
-    }
-
-    CharacterSheetView #vf-row {
-        width: 1fr;
-        height: auto;
-    }
-
     CharacterSheetView #section-vf-virtues {
         margin-right: 2;
     }
 
-    /* Every selectable-list details panel: a gap below the list, its own
-       shaded background so it reads as a distinct panel (matching the saga
-       Spells view and every covenant list). */
-    CharacterSheetView #ability-info,
-    CharacterSheetView #vf-info,
-    CharacterSheetView #inventory-info,
-    CharacterSheetView #hermetic-info {
-        width: 1fr;
-        height: auto;
-        min-height: 6;
-        margin-top: 1;
-        padding: 1 2;
-        background: $panel;
-    }
-
     CharacterSheetView #hermetic-body {
         height: 1fr;
-    }
-
-    CharacterSheetView #arts-row {
-        width: 1fr;
-        height: auto;
-    }
-
-    CharacterSheetView #arts-techniques-col,
-    CharacterSheetView #arts-forms-col {
-        width: 1fr;
-        height: auto;
     }
 
     CharacterSheetView #arts-techniques-col {
@@ -7494,6 +7466,7 @@ class CharacterSheetView(SheetView):
                     "tab-abilities",
                     lambda: self._ability_info_text(None),
                     id="ability-info",
+                    classes="details-panel",
                 )
             with TabPane("Virtues & Flaws", id="tab-vf"):
                 yield from self._virtues_flaws_tab()
@@ -7516,7 +7489,7 @@ class CharacterSheetView(SheetView):
             with PinnedCollapsible(
                 title=escape(character.name), id="section-char-info"
             ):
-                with Horizontal(id="char-info-body"):
+                with TwoColumns(id="char-info-body"):
                     yield self._static(
                         "section-char-info", self._info_left_text, id="char-info-left"
                     )
@@ -7553,7 +7526,7 @@ class CharacterSheetView(SheetView):
                         title="Hermetic Background",
                         id="section-hermetic-background",
                     ),
-                    Horizontal(id="hermetic-background-row"),
+                    TwoColumns(id="hermetic-background-row"),
                 ):
                     yield self._static(
                         "section-hermetic-background",
@@ -7569,7 +7542,7 @@ class CharacterSheetView(SheetView):
                 SheetSection(
                     title="Biographical Detail", id="section-char-biographical"
                 ),
-                Horizontal(id="char-biographical-row"),
+                TwoColumns(id="char-biographical-row"),
             ):
                 yield self._static(
                     "section-char-biographical",
@@ -7581,7 +7554,7 @@ class CharacterSheetView(SheetView):
                     self._biographical_right_text,
                     id="char-biographical-right",
                 )
-            with Horizontal(id="pt-rep-row"):
+            with TwoColumns(id="pt-rep-row"):
                 with SheetSection(
                     title="Personality Traits", id="section-personality-traits"
                 ):
@@ -7602,7 +7575,7 @@ class CharacterSheetView(SheetView):
                 )
             with (
                 SheetSection(title="Health", id="section-char-health"),
-                Horizontal(id="char-health-row"),
+                TwoColumns(id="char-health-row"),
             ):
                 with Vertical(id="char-health-wounds-col"):
                     yield self._static(
@@ -7627,7 +7600,7 @@ class CharacterSheetView(SheetView):
         """The Virtue and Flaw lists side by side, and the details panel."""
         vf_sections = ("section-vf-virtues", "section-vf-flaws")
         with VerticalScroll():
-            with Horizontal(id="vf-row"):
+            with TwoColumns(id="vf-row"):
                 with SheetSection(title="Virtues", id="section-vf-virtues"):
                     yield self._list(
                         vf_sections,
@@ -7643,7 +7616,10 @@ class CharacterSheetView(SheetView):
                         group="vf",
                     )
             yield self._static(
-                vf_sections, lambda: self._vf_info_text(None), id="vf-info"
+                vf_sections,
+                lambda: self._vf_info_text(None),
+                id="vf-info",
+                classes="details-panel",
             )
 
     #: Raw Vis deliberately appears twice (Hermetic Magic and Inventory tabs),
@@ -7659,7 +7635,7 @@ class CharacterSheetView(SheetView):
             with VerticalScroll(id="hermetic-scroll"):
                 with (
                     PinnedCollapsible(title="Magical Arts", id="section-arts"),
-                    Horizontal(id="arts-row"),
+                    TwoColumns(id="arts-row"),
                 ):
                     with Vertical(id="arts-techniques-col"):
                         yield Static("Techniques", classes="arts-col-title")
@@ -7701,6 +7677,7 @@ class CharacterSheetView(SheetView):
             yield Static(
                 "[dim]Select an Art or a Known Spell to see its details.[/]",
                 id="hermetic-info",
+                classes="details-panel",
             )
             self._on_refresh(
                 ("section-arts", "section-known-spells"), self._refresh_hermetic_info
@@ -7725,6 +7702,7 @@ class CharacterSheetView(SheetView):
                     "section-inventory",
                     lambda: self._inventory_info_text(None),
                     id="inventory-info",
+                    classes="details-panel",
                 )
             yield BookListView(
                 self.saga,
@@ -8355,18 +8333,6 @@ class FamiliarSheetView(SheetView):
         width: 1fr;
         height: auto;
     }
-
-    FamiliarSheetView #fam-vf-row, FamiliarSheetView #fam-pt-rep-row,
-    FamiliarSheetView #fam-health-row {
-        width: 1fr;
-        height: auto;
-    }
-
-    FamiliarSheetView #fam-health-wounds-col,
-    FamiliarSheetView #fam-health-fatigue-col {
-        width: 1fr;
-        height: auto;
-    }
     """
 
     def __init__(self, saga: Saga, familiar: Familiar) -> None:
@@ -8434,7 +8400,7 @@ class FamiliarSheetView(SheetView):
                 yield self._static(
                     "section-fam-binding", self._binding_text, id="fam-binding-content"
                 )
-            with Horizontal(id="fam-vf-row"):
+            with TwoColumns(id="fam-vf-row"):
                 with SheetSection(title="Virtues", id="section-fam-vf-virtues"):
                     yield self._list(
                         vf_sections,
@@ -8454,7 +8420,7 @@ class FamiliarSheetView(SheetView):
                 lambda: fam.vf_info_text(self.familiar, None),
                 id="fam-vf-info",
             )
-            with Horizontal(id="fam-pt-rep-row"):
+            with TwoColumns(id="fam-pt-rep-row"):
                 with SheetSection(
                     title="Personality Traits", id="section-fam-personality-traits"
                 ):
@@ -8475,7 +8441,7 @@ class FamiliarSheetView(SheetView):
         with VerticalScroll():
             with (
                 SheetSection(title="Health", id="section-fam-health"),
-                Horizontal(id="fam-health-row"),
+                TwoColumns(id="fam-health-row"),
             ):
                 with Vertical(id="fam-health-wounds-col"):
                     yield self._static(
@@ -8591,133 +8557,36 @@ class CovenantSheetView(SheetView):
     """
 
     DEFAULT_CSS = """
-    CovenantSheetView #cov-info-body {
-        width: 1fr;
-        height: auto;
-    }
-
     CovenantSheetView #cov-info-left {
-        width: 1fr;
-        height: auto;
         margin-right: 4;
-    }
-
-    CovenantSheetView #cov-info-right {
-        width: 1fr;
-        height: auto;
-    }
-
-    CovenantSheetView #cov-bh-row {
-        width: 1fr;
-        height: auto;
     }
 
     CovenantSheetView #section-cov-boons {
         margin-right: 2;
     }
 
-    CovenantSheetView #inh-body {
-        height: 1fr;
+    CovenantSheetView #cov-bh-info {
+        min-height: 8;
     }
 
-    CovenantSheetView #inh-loyalty-body,
-    CovenantSheetView #inh-misc-body {
-        width: 1fr;
-        height: auto;
-    }
-
-    CovenantSheetView #inh-loyalty-left,
-    CovenantSheetView #inh-misc-left {
-        width: 1fr;
-        height: auto;
-        margin-right: 4;
-    }
-
-    CovenantSheetView #inh-loyalty-right,
-    CovenantSheetView #inh-misc-right {
-        width: 1fr;
-        height: auto;
-    }
-
-    CovenantSheetView #inh-panel {
-        width: 1fr;
-        height: auto;
-        min-height: 6;
-        max-height: 14;
-        margin-top: 1;
-        padding: 1 2;
-        background: $panel;
-    }
-
-    CovenantSheetView #pos-body {
-        height: 1fr;
-    }
-
-    CovenantSheetView #pos-panel {
-        width: 1fr;
-        height: auto;
-        min-height: 6;
-        max-height: 14;
-        margin-top: 1;
-        padding: 1 2;
-        background: $panel;
-    }
-
+    CovenantSheetView #inh-body,
+    CovenantSheetView #pos-body,
     CovenantSheetView #eco-body {
         height: 1fr;
     }
 
-    CovenantSheetView #eco-wealth-body {
-        width: 1fr;
-        height: auto;
-    }
-
+    CovenantSheetView #inh-loyalty-left,
+    CovenantSheetView #inh-misc-left,
     CovenantSheetView #eco-wealth-left {
-        width: 1fr;
-        height: auto;
         margin-right: 4;
     }
 
-    CovenantSheetView #eco-wealth-right {
-        width: 1fr;
-        height: auto;
-    }
-
-    CovenantSheetView .eco-header {
-        width: 1fr;
-        height: auto;
-        color: $text-muted;
-    }
-
-    CovenantSheetView .inh-header {
-        width: 1fr;
-        height: auto;
-        color: $text-muted;
-    }
-
-    CovenantSheetView .pos-header {
-        width: 1fr;
-        height: auto;
-        color: $text-muted;
-    }
-
+    /* The details panels docked below a scrolling tab stop growing at 14
+       rows. */
+    CovenantSheetView #inh-panel,
+    CovenantSheetView #pos-panel,
     CovenantSheetView #eco-panel {
-        width: 1fr;
-        height: auto;
-        min-height: 6;
         max-height: 14;
-        margin-top: 1;
-        padding: 1 2;
-        background: $panel;
-    }
-
-    CovenantSheetView #cov-bh-info {
-        width: 1fr;
-        height: auto;
-        min-height: 8;
-        margin-top: 1;
-        padding: 1 2;
-        background: $panel;
     }
     """
 
@@ -8727,7 +8596,7 @@ class CovenantSheetView(SheetView):
 
     def compose(self) -> ComposeResult:
         with PinnedCollapsible(title=escape(self.covenant.name), id="section-cov-info"):
-            with Horizontal(id="cov-info-body"):
+            with TwoColumns(id="cov-info-body"):
                 yield Static(self._info_left_text(), id="cov-info-left")
                 yield Static(self._info_right_text(), id="cov-info-right")
             yield Button("Edit (e)", id="btn-cov-edit", compact=True)
@@ -8739,7 +8608,7 @@ class CovenantSheetView(SheetView):
                     yield SelectableList(
                         self._reputation_rows(), id="cov-reputations-list"
                     )
-                with Horizontal(id="cov-bh-row"):
+                with TwoColumns(id="cov-bh-row"):
                     with SheetSection(
                         title=self._bh_title("Boon"), id="section-cov-boons"
                     ):
@@ -8752,7 +8621,9 @@ class CovenantSheetView(SheetView):
                         yield SelectableList(
                             self._bh_entries("Hook"), id="cov-hooks-list", group="bh"
                         )
-                yield Static(self._bh_info_text(None), id="cov-bh-info")
+                yield Static(
+                    self._bh_info_text(None), id="cov-bh-info", classes="details-panel"
+                )
             with TabPane("Inhabitants", id="tab-cov-inhabitants"):
                 yield from self._inhabitants_tab()
             with TabPane("Possessions", id="tab-cov-possessions"):
@@ -8778,7 +8649,7 @@ class CovenantSheetView(SheetView):
             with VerticalScroll(id="inh-scroll"):
                 with (
                     SheetSection(title="Loyalty", id="section-inh-loyalty"),
-                    Horizontal(id="inh-loyalty-body"),
+                    TwoColumns(id="inh-loyalty-body"),
                 ):
                     yield Static(
                         inh.loyalty_left_text(saga, covenant), id="inh-loyalty-left"
@@ -8792,18 +8663,24 @@ class CovenantSheetView(SheetView):
                     )
                 with SheetSection(title="Miscellaneous", id="section-inh-misc"):
                     left, right = inh.misc_text(covenant)
-                    with Horizontal(id="inh-misc-body"):
+                    with TwoColumns(id="inh-misc-body"):
                         yield Static(left, id="inh-misc-left")
                         yield Static(right, id="inh-misc-right")
                 for kind in INHABITANT_KINDS:
                     with SheetSection(
                         title=self._inh_title(kind), id=f"section-inh-{kind}"
                     ):
-                        yield Static(inh.table_header(kind), classes="inh-header")
+                        yield Static(
+                            inh.table_header(kind), classes="table-header inh-header"
+                        )
                         yield SelectableList(
                             self._inh_rows(kind), id=f"inh-{kind}-list", group="inh"
                         )
-            yield Static(inh.detail_text(None, saga.current_year), id="inh-panel")
+            yield Static(
+                inh.detail_text(None, saga.current_year),
+                id="inh-panel",
+                classes="details-panel",
+            )
 
     def _possessions_tab(self) -> ComposeResult:
         """One collapsible list per kind of possession over the details panel of
@@ -8814,11 +8691,13 @@ class CovenantSheetView(SheetView):
                     with SheetSection(
                         title=pos.KIND_TITLES[kind], id=f"section-pos-{kind}"
                     ):
-                        yield Static(pos.table_header(kind), classes="pos-header")
+                        yield Static(
+                            pos.table_header(kind), classes="table-header pos-header"
+                        )
                         yield SelectableList(
                             self._pos_rows(kind), id=f"pos-{kind}-list", group="pos"
                         )
-            yield Static(pos.detail_text(None), id="pos-panel")
+            yield Static(pos.detail_text(None), id="pos-panel", classes="details-panel")
 
     #: The three lists of the Economics tab (one selection across them).
     _ECO_LISTS: ClassVar[tuple[str, ...]] = ("income", "expenditure", "savings")
@@ -8832,12 +8711,14 @@ class CovenantSheetView(SheetView):
             with VerticalScroll(id="eco-scroll"):
                 with (
                     SheetSection(title="Wealth", id="section-eco-wealth"),
-                    Horizontal(id="eco-wealth-body"),
+                    TwoColumns(id="eco-wealth-body"),
                 ):
                     yield Static(left, id="eco-wealth-left")
                     yield Static(right, id="eco-wealth-right")
                 with SheetSection(title="Sources of Income", id="section-eco-income"):
-                    yield Static(eco.source_table_header(), classes="eco-header")
+                    yield Static(
+                        eco.source_table_header(), classes="table-header eco-header"
+                    )
                     yield SelectableList(
                         self._eco_rows("income", summary),
                         id="eco-income-list",
@@ -8846,20 +8727,26 @@ class CovenantSheetView(SheetView):
                 with SheetSection(
                     title="Yearly Expenditure", id="section-eco-expenditure"
                 ):
-                    yield Static(eco.table_header("Cost"), classes="eco-header")
+                    yield Static(
+                        eco.table_header("Cost"), classes="table-header eco-header"
+                    )
                     yield SelectableList(
                         self._eco_rows("expenditure", summary),
                         id="eco-expenditure-list",
                         group="eco",
                     )
                 with SheetSection(title="Cost Savings", id="section-eco-savings"):
-                    yield Static(eco.table_header("Quantity"), classes="eco-header")
+                    yield Static(
+                        eco.table_header("Quantity"), classes="table-header eco-header"
+                    )
                     yield SelectableList(
                         self._eco_rows("savings", summary),
                         id="eco-savings-list",
                         group="eco",
                     )
-            yield Static(eco.source_detail_text(None), id="eco-panel")
+            yield Static(
+                eco.source_detail_text(None), id="eco-panel", classes="details-panel"
+            )
 
     def _eco_rows(self, which: str, summary: eco.Summary) -> list[tuple[int, str]]:
         if which == "income":
