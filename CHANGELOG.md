@@ -1,0 +1,40 @@
+# Changelog
+
+What changed in each version of Ars Magica Manager, newest first.
+
+Versions are `0.MINOR.PATCH`: a new or changed feature bumps MINOR, a bug
+fix or behind-the-scenes improvement bumps PATCH. The version is set in
+`pyproject.toml`, shown in the app's title bar and on the saga picker, and
+recorded in every saga file that version saves. Each version is tagged in
+git (`v0.2.0`, ...).
+
+## 0.2.0 — 2026-09-27
+
+The first tracked version. Includes everything since 0.1.0:
+
+- **Versions.** The app now has a version number, shown in the title bar and
+  on the saga picker and saved into each saga file, and this changelog.
+- **Code health.** The screen code, one file of about 14,000 lines, is now
+  organised into smaller pieces. Most add/edit dialogs are one standard
+  form: they look and behave alike and fit an 80×24 terminal. Many more
+  tests, and the full test run is much faster in parallel.
+- **Bug fixes.**
+  - A damaged saga file no longer stops the app from starting: it's listed
+    as unreadable and can be deleted.
+  - Names containing square brackets show correctly everywhere.
+  - Every delete now asks first (familiar traits, reputations and Virtues &
+    Flaws, laboratory Virtues & Flaws, Mastery Abilities).
+  - Bind Familiar suggests a magus only when a magus is on show.
+  - Clicking an Art row no longer stops the arrow keys working.
+  - An old save with a field the app no longer uses still loads.
+  - Changing the theme no longer wipes other settings.
+  - Renaming a character or laboratory updates its book list straight away.
+  - Importing spells asks about duplicate names whatever their case.
+  - Reputation scores all show as "+2".
+  - Smaller fixes: the familiar sheet's details panels are shaded like
+    every other sheet's, the Hermetic Magic details panel keeps its hint,
+    placeholder tabs read properly, and a few rare display races are gone.
+
+## 0.1.0
+
+Everything before versioning began.

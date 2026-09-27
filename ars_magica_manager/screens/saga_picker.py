@@ -15,7 +15,7 @@ from textual.widgets import (
     Static,
 )
 
-from .. import creation, storage
+from .. import __version__, creation, storage
 from ..markup import escape
 from .fields import FieldsDialog
 from .forms import _saga_fields
@@ -46,6 +46,7 @@ class SagaPickerScreen(Screen[None]):
             id="picker-hint",
         )
         yield ListView(id="saga-list")
+        yield Static(f"[dim]Ars Magica Manager {__version__}[/]", id="picker-version")
         yield BottomBar()
 
     async def on_mount(self) -> None:

@@ -1435,6 +1435,9 @@ class Saga:
     books: list[Book] = field(default_factory=list)
     spells: list[Spell] = field(default_factory=list)
     familiars: list[Familiar] = field(default_factory=list)
+    #: The app version that last saved this saga (storage.save_saga sets it;
+    #: "" for a save older than versioning), for upgrading old saves later.
+    app_version: str = ""
 
     def covenant(self, covenant_id: str | None) -> Covenant | None:
         """The covenant with this id, if there is one."""

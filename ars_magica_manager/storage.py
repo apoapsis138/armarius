@@ -8,7 +8,7 @@ from collections.abc import Iterable
 from dataclasses import asdict
 from pathlib import Path
 
-from . import DATA_DIR
+from . import DATA_DIR, __version__
 from .models import Saga
 
 SAGAS_DIR = DATA_DIR / "sagas"
@@ -49,6 +49,7 @@ def saga_path(saga_id: str) -> Path:
 
 
 def save_saga(saga: Saga) -> Path:
+    saga.app_version = __version__
     SAGAS_DIR.mkdir(parents=True, exist_ok=True)
     path = saga_path(saga.id)
     path.write_text(json.dumps(asdict(saga), indent=2), encoding="utf-8")

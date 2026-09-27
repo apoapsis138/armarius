@@ -27,6 +27,9 @@ keep, per saga:
 Not built yet: deleting characters, labs and covenants, the covenant Diary,
 the Totals engine (Phase 2) and running seasons (Phase 3) — see DESIGN.md §7.
 
+The current version is in the title bar; [CHANGELOG.md](CHANGELOG.md) lists
+what changed in each one.
+
 ## Getting started
 
 Requires Python 3.14+ and [`uv`](https://docs.astral.sh/uv/).

@@ -7,6 +7,7 @@ from typing import ClassVar
 from textual.app import App
 from textual.binding import BindingType
 
+from . import __version__
 from .screens import SagaPickerScreen
 from .settings import load_settings, update_settings
 from .themes import SCRIPTORUM, SCRIPTORUM_DARK
@@ -18,7 +19,9 @@ DEFAULT_THEME = SCRIPTORUM.name
 class ArsMagicaManagerApp(App[None]):
     """Ars Magica Manager TUI."""
 
-    TITLE = "Ars Magica Manager"
+    # In the title, not the sub-title: the workspace uses that for the saga
+    # and its date (the Header shows "title — sub_title").
+    TITLE = f"Ars Magica Manager v{__version__}"
     BINDINGS: ClassVar[list[BindingType]] = [("q", "quit", "Quit")]
 
     def on_mount(self) -> None:
