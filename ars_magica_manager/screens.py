@@ -6214,8 +6214,10 @@ class SelectableList(OptionList):
 
     Choosing a row (arrow keys or click) moves the marker and posts
     `SelectableList.Chosen(data_index)`; the owning view reacts (fills a
-    details panel, clears a sibling list...). Nothing is chosen until the
-    user picks a row, and `set_rows()` clears the choice.
+    details panel...). Nothing is chosen until the user picks a row, and
+    `set_rows()` clears the choice. Lists given the same `group` (e.g.
+    Virtues and Flaws, which share one details panel) have one choice
+    between them: choosing a row in one unchooses the others.
 
     With `multi=True`, rows can also be *checked* for acting on several at
     once: Space (or Ctrl+click) toggles a green check in front of a row,
@@ -6277,9 +6279,11 @@ class SelectableList(OptionList):
         *,
         id: str | None = None,
         multi: bool = False,
+        group: str | None = None,
     ) -> None:
         super().__init__(id=id, compact=True)
         self.multi = multi
+        self.group = group
         self._rows: list[tuple[int | None, str]] = []
         self._marked: int | None = None
         self._checked: set[int] = set()  # list positions
@@ -6349,6 +6353,23 @@ class SelectableList(OptionList):
         self._mark(None)
         self.highlighted = None
 
+    def select_data_index(self, index: int) -> bool:
+        """Choose the row whose data index is `index`, as if the user had
+        (posts Chosen); False, choosing nothing, if no row has it."""
+        for position, (data_index, _) in enumerate(self._rows):
+            if data_index == index:
+                self.highlighted = position
+                return True
+        return False
+
+    def _clear_group(self) -> None:
+        """Unchoose the other lists in this list's group."""
+        if self.group is None:
+            return
+        for other in self.screen.query(SelectableList):
+            if other is not self and other.group == self.group:
+                other.clear_selection()
+
     def _mark(self, row: int | None) -> None:
         """Move the selector marker to list position `row` (None: no marker)."""
         previous = self._marked
@@ -6391,6 +6412,7 @@ class SelectableList(OptionList):
         if event.option.id is None:  # the disabled "(none recorded)" row
             return
         self._mark(event.option_index)
+        self._clear_group()
         self.post_message(self.Chosen(self, int(event.option.id)))
 
 
@@ -7303,12 +7325,13 @@ class SheetView(Vertical):
         rows: Callable[[], Sequence[tuple[int | None, str]]],
         *,
         id: str,
+        group: str | None = None,
     ) -> SelectableList:
         """A SelectableList of `rows()`, re-filled when `sections` refresh."""
         self._on_refresh(
             sections, lambda: self.query_one(f"#{id}", SelectableList).set_rows(rows())
         )
-        return SelectableList(rows(), id=id)
+        return SelectableList(rows(), id=id, group=group)
 
     @staticmethod
     def _inherited(value: str) -> str:
@@ -7610,10 +7633,14 @@ class CharacterSheetView(SheetView):
                         vf_sections,
                         lambda: self._vf_rows("Virtue"),
                         id="vf-virtues-list",
+                        group="vf",
                     )
                 with SheetSection(title="Flaws", id="section-vf-flaws"):
                     yield self._list(
-                        vf_sections, lambda: self._vf_rows("Flaw"), id="vf-flaws-list"
+                        vf_sections,
+                        lambda: self._vf_rows("Flaw"),
+                        id="vf-flaws-list",
+                        group="vf",
                     )
             yield self._static(
                 vf_sections, lambda: self._vf_info_text(None), id="vf-info"
@@ -7644,6 +7671,7 @@ class CharacterSheetView(SheetView):
                             "section-arts",
                             lambda: self._arts_rows(TECHNIQUES),
                             id="arts-techniques-list",
+                            group="hermetic",
                         )
                     with Vertical(id="arts-forms-col"):
                         yield Static("Forms", classes="arts-col-title")
@@ -7655,6 +7683,7 @@ class CharacterSheetView(SheetView):
                             "section-arts",
                             lambda: self._arts_rows(FORMS),
                             id="arts-forms-list",
+                            group="hermetic",
                         )
                 with SheetSection(title="Raw Vis", id="section-raw-vis-hermetic"):
                     yield self._list(
@@ -7667,6 +7696,7 @@ class CharacterSheetView(SheetView):
                         "section-known-spells",
                         self._known_spell_rows,
                         id="known-spells-list",
+                        group="hermetic",
                     )
             yield Static(
                 "[dim]Select an Art or a Known Spell to see its details.[/]",
@@ -7763,24 +7793,14 @@ class CharacterSheetView(SheetView):
             return
         if list_id in ("arts-techniques-list", "arts-forms-list", "known-spells-list"):
             event.stop()
-            # Only one of the three Hermetic Magic lists has a selection at
-            # a time -- they share one details panel.
-            for other_id in (
-                "arts-techniques-list",
-                "arts-forms-list",
-                "known-spells-list",
-            ):
-                if other_id != list_id:
-                    self.query_one(f"#{other_id}", SelectableList).clear_selection()
+            # One group (one selection across the three), one details panel.
             self._refresh_hermetic_info()
             return
         if list_id not in ("vf-virtues-list", "vf-flaws-list"):
             return
         event.stop()
-        # A Virtue or Flaw row was chosen: unchoose the sibling list (one
-        # selection across both) and fill the details panel.
-        other = "vf-flaws-list" if list_id == "vf-virtues-list" else "vf-virtues-list"
-        self.query_one(f"#{other}", SelectableList).clear_selection()
+        # A Virtue or Flaw row was chosen (the other list is unchosen: same
+        # group): fill the details panel.
         self.query_one("#vf-info", Static).update(self._vf_info_text(event.data_index))
 
     def _info_left_text(self) -> str:
@@ -8420,12 +8440,14 @@ class FamiliarSheetView(SheetView):
                         vf_sections,
                         lambda: fam.vf_rows(self.familiar, "Virtue"),
                         id="fam-vf-virtues-list",
+                        group="fam-vf",
                     )
                 with SheetSection(title="Flaws", id="section-fam-vf-flaws"):
                     yield self._list(
                         vf_sections,
                         lambda: fam.vf_rows(self.familiar, "Flaw"),
                         id="fam-vf-flaws-list",
+                        group="fam-vf",
                     )
             yield self._static(
                 vf_sections,
@@ -8551,12 +8573,6 @@ class FamiliarSheetView(SheetView):
         if list_id not in ("fam-vf-virtues-list", "fam-vf-flaws-list"):
             return
         event.stop()
-        other = (
-            "fam-vf-flaws-list"
-            if list_id == "fam-vf-virtues-list"
-            else "fam-vf-virtues-list"
-        )
-        self.query_one(f"#{other}", SelectableList).clear_selection()
         self.query_one("#fam-vf-info", Static).update(
             fam.vf_info_text(self.familiar, event.data_index)
         )
@@ -8728,13 +8744,13 @@ class CovenantSheetView(SheetView):
                         title=self._bh_title("Boon"), id="section-cov-boons"
                     ):
                         yield SelectableList(
-                            self._bh_entries("Boon"), id="cov-boons-list"
+                            self._bh_entries("Boon"), id="cov-boons-list", group="bh"
                         )
                     with SheetSection(
                         title=self._bh_title("Hook"), id="section-cov-hooks"
                     ):
                         yield SelectableList(
-                            self._bh_entries("Hook"), id="cov-hooks-list"
+                            self._bh_entries("Hook"), id="cov-hooks-list", group="bh"
                         )
                 yield Static(self._bh_info_text(None), id="cov-bh-info")
             with TabPane("Inhabitants", id="tab-cov-inhabitants"):
@@ -8785,7 +8801,7 @@ class CovenantSheetView(SheetView):
                     ):
                         yield Static(inh.table_header(kind), classes="inh-header")
                         yield SelectableList(
-                            self._inh_rows(kind), id=f"inh-{kind}-list"
+                            self._inh_rows(kind), id=f"inh-{kind}-list", group="inh"
                         )
             yield Static(inh.detail_text(None, saga.current_year), id="inh-panel")
 
@@ -8800,7 +8816,7 @@ class CovenantSheetView(SheetView):
                     ):
                         yield Static(pos.table_header(kind), classes="pos-header")
                         yield SelectableList(
-                            self._pos_rows(kind), id=f"pos-{kind}-list"
+                            self._pos_rows(kind), id=f"pos-{kind}-list", group="pos"
                         )
             yield Static(pos.detail_text(None), id="pos-panel")
 
@@ -8823,7 +8839,9 @@ class CovenantSheetView(SheetView):
                 with SheetSection(title="Sources of Income", id="section-eco-income"):
                     yield Static(eco.source_table_header(), classes="eco-header")
                     yield SelectableList(
-                        self._eco_rows("income", summary), id="eco-income-list"
+                        self._eco_rows("income", summary),
+                        id="eco-income-list",
+                        group="eco",
                     )
                 with SheetSection(
                     title="Yearly Expenditure", id="section-eco-expenditure"
@@ -8832,11 +8850,14 @@ class CovenantSheetView(SheetView):
                     yield SelectableList(
                         self._eco_rows("expenditure", summary),
                         id="eco-expenditure-list",
+                        group="eco",
                     )
                 with SheetSection(title="Cost Savings", id="section-eco-savings"):
                     yield Static(eco.table_header("Quantity"), classes="eco-header")
                     yield SelectableList(
-                        self._eco_rows("savings", summary), id="eco-savings-list"
+                        self._eco_rows("savings", summary),
+                        id="eco-savings-list",
+                        group="eco",
                     )
             yield Static(eco.source_detail_text(None), id="eco-panel")
 
@@ -8876,9 +8897,9 @@ class CovenantSheetView(SheetView):
             rows_list = self.query_one(f"#eco-{which}-list", SelectableList)
             chosen = rows_list.selected_data_index
             rows_list.set_rows(self._eco_rows(which, summary))
-            if chosen is not None and chosen < len(rows_list._rows):
+            # Posts Chosen, which refreshes the panel.
+            if chosen is not None and rows_list.select_data_index(chosen):
                 any_chosen = True
-                rows_list.highlighted = chosen  # posts Chosen -> refreshes the panel
         if not any_chosen:
             self.query_one("#eco-panel", Static).update(eco.source_detail_text(None))
 
@@ -9043,11 +9064,6 @@ class CovenantSheetView(SheetView):
         if list_id.startswith("eco-") and list_id.endswith("-list"):
             event.stop()
             which = list_id[len("eco-") : -len("-list")]
-            for other in self._ECO_LISTS:  # one selection across the lists
-                if other != which:
-                    self.query_one(
-                        f"#eco-{other}-list", SelectableList
-                    ).clear_selection()
             self.query_one("#eco-panel", Static).update(
                 self._eco_panel_text(
                     which, event.data_index, eco.summarize(self.saga, self.covenant)
@@ -9057,12 +9073,6 @@ class CovenantSheetView(SheetView):
         if list_id.startswith("inh-") and list_id.endswith("-list"):
             event.stop()
             kind = list_id[len("inh-") : -len("-list")]
-            # One selection across all the inhabitant lists.
-            for other in INHABITANT_KINDS:
-                if other != kind:
-                    self.query_one(
-                        f"#inh-{other}-list", SelectableList
-                    ).clear_selection()
             entries = self._inh_entries(kind)
             chosen = (
                 entries[event.data_index] if event.data_index < len(entries) else None
@@ -9074,11 +9084,6 @@ class CovenantSheetView(SheetView):
         if list_id.startswith("pos-") and list_id.endswith("-list"):
             event.stop()
             kind = list_id[len("pos-") : -len("-list")]
-            for other in POSSESSION_KINDS:  # one selection across the lists
-                if other != kind:
-                    self.query_one(
-                        f"#pos-{other}-list", SelectableList
-                    ).clear_selection()
             entries = self._pos_entries(kind)
             chosen = (
                 entries[event.data_index] if event.data_index < len(entries) else None
@@ -9088,9 +9093,6 @@ class CovenantSheetView(SheetView):
         if list_id not in ("cov-boons-list", "cov-hooks-list"):
             return
         event.stop()
-        # One selection across both lists: unchoose the other one.
-        other = "cov-hooks-list" if list_id == "cov-boons-list" else "cov-boons-list"
-        self.query_one(f"#{other}", SelectableList).clear_selection()
         self.query_one("#cov-bh-info", Static).update(
             self._bh_info_text(event.data_index)
         )
