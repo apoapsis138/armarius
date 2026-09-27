@@ -46,7 +46,7 @@ from textual.widgets.option_list import Option
 from textual.widgets.tree import TreeNode
 
 from . import books as bk
-from . import catalog, storage
+from . import catalog, creation, storage
 from . import economics as eco
 from . import familiars as fam
 from . import inhabitants as inh
@@ -1154,7 +1154,7 @@ class ModalDialog[ResultT](ModalScreen[ResultT]):
         return value if isinstance(value, str) else None
 
 
-class SagaCreateScreen(ModalDialog[str | None]):
+class SagaCreateScreen(ModalDialog[dict[str, Any] | None]):
     """A form for creating a new saga. Dismisses with the new saga's id, or None if cancelled."""
 
     DEFAULT_CSS = """
@@ -1245,16 +1245,15 @@ class SagaCreateScreen(ModalDialog[str | None]):
 
         description = self.query_one("#input-description", Input).value.strip()
 
-        saga = Saga(
-            id=storage.generate_saga_id(name),
-            name=name,
-            storyguide=storyguide,
-            description=description,
-            current_year=year,
-            current_season=season,
+        self.dismiss(
+            {
+                "name": name,
+                "storyguide": storyguide,
+                "year": year,
+                "season": season,
+                "description": description,
+            }
         )
-        storage.save_saga(saga)
-        self.dismiss(saga.id)
 
 
 class EditSagaScreen(ModalDialog[dict[str, object] | None]):
@@ -1350,7 +1349,7 @@ class EditSagaScreen(ModalDialog[dict[str, object] | None]):
         )
 
 
-class CovenantCreateScreen(ModalDialog[str | None]):
+class CovenantCreateScreen(ModalDialog[dict[str, Any] | None]):
     """Creates a covenant within a saga.
 
     Dismisses with the new covenant's id, or None if cancelled.
@@ -1414,19 +1413,10 @@ class CovenantCreateScreen(ModalDialog[str | None]):
             return
 
         notes = self.query_one("#input-notes", Input).value.strip()
-
-        covenant_id = storage.generate_unique_id(
-            name, [c.id for c in self.saga.covenants]
-        )
-        covenant = Covenant(
-            id=covenant_id, saga_id=self.saga.id, name=name, notes=notes
-        )
-        self.saga.covenants.append(covenant)
-        storage.save_saga(self.saga)
-        self.dismiss(covenant_id)
+        self.dismiss({"name": name, "notes": notes})
 
 
-class CharacterCreateScreen(ModalDialog[str | None]):
+class CharacterCreateScreen(ModalDialog[dict[str, Any] | None]):
     """Creates a bare character: name, type, and covenant.
 
     Abilities, Virtues/Flaws, Arts, and lab assignment are left for later
@@ -1515,16 +1505,7 @@ class CharacterCreateScreen(ModalDialog[str | None]):
             return
 
         covenant_id = self._select_value("#select-covenant")
-
-        character = Character(
-            id=storage.generate_unique_id(name, [c.id for c in self.saga.characters]),
-            name=name,
-            type=character_type,
-            covenant_id=covenant_id,
-        )
-        self.saga.characters.append(character)
-        storage.save_saga(self.saga)
-        self.dismiss(character.id)
+        self.dismiss({"name": name, "type": character_type, "covenant_id": covenant_id})
 
 
 class ParamPromptScreen(ModalDialog[dict[str, str] | None]):
@@ -2321,7 +2302,7 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
         self.dismiss(result)
 
 
-class LaboratoryCreateScreen(ModalDialog[str | None]):
+class LaboratoryCreateScreen(ModalDialog[dict[str, Any] | None]):
     """Creates a bare laboratory within a covenant.
 
     Owner assignment and Features are left for later edit actions, same
@@ -2400,21 +2381,10 @@ class LaboratoryCreateScreen(ModalDialog[str | None]):
             return
 
         covenant_id = self._select_value("#select-covenant")
-
-        laboratory = Laboratory(
-            id=storage.generate_unique_id(
-                name, [lab.id for lab in self.saga.laboratories]
-            ),
-            covenant_id=covenant_id,
-            name=name,
-            characteristics=LabCharacteristics(size=size),
-        )
-        self.saga.laboratories.append(laboratory)
-        storage.save_saga(self.saga)
-        self.dismiss(laboratory.id)
+        self.dismiss({"name": name, "size": size, "covenant_id": covenant_id})
 
 
-class FamiliarCreateScreen(ModalDialog[str | None]):
+class FamiliarCreateScreen(ModalDialog[dict[str, Any] | None]):
     """Binds a new Familiar to a magus (see reference/familiar-rules-and-
     sheet.md). Minimal fields only -- Name and which magus; everything else
     (Cords, binding details, etc.) is filled in via the Familiar sheet's Edit
@@ -2499,9 +2469,7 @@ class FamiliarCreateScreen(ModalDialog[str | None]):
             error.update("A Magus Partner is required.")
             return
 
-        familiar = fam.bind_familiar(self.saga, magus, name)
-        storage.save_saga(self.saga)
-        self.dismiss(familiar.id)
+        self.dismiss({"name": name, "character_id": magus.id})
 
 
 class EditCharacterInfoScreen(ModalDialog[dict[str, object] | None]):
@@ -9584,10 +9552,13 @@ class WorkspaceScreen(Screen[None]):
     # -- creation actions --
 
     def action_create_covenant(self) -> None:
-        async def handle_result(covenant_id: str | None) -> None:
-            if covenant_id is not None:
+        async def handle_result(values: dict[str, Any] | None) -> None:
+            if values is not None:
+                covenant = creation.add_covenant(
+                    self.saga, values["name"], values["notes"]
+                )
+                storage.save_saga(self.saga)
                 self._rebuild_tree()
-                covenant = next(c for c in self.saga.covenants if c.id == covenant_id)
                 self.selected_covenant = covenant
                 self.selected_kind = NodeKind.COVENANT
                 await self._show_covenant_detail(covenant)
@@ -9597,12 +9568,13 @@ class WorkspaceScreen(Screen[None]):
     def action_create_character(self) -> None:
         covenant = self.selected_covenant
 
-        async def handle_result(character_id: str | None) -> None:
-            if character_id is not None:
-                self._rebuild_tree()
-                character = next(
-                    c for c in self.saga.characters if c.id == character_id
+        async def handle_result(values: dict[str, Any] | None) -> None:
+            if values is not None:
+                character = creation.add_character(
+                    self.saga, values["name"], values["type"], values["covenant_id"]
                 )
+                storage.save_saga(self.saga)
+                self._rebuild_tree()
                 self.selected_character = character
                 self.selected_kind = NodeKind.CHARACTER
                 await self._show_character_detail(character)
@@ -9617,10 +9589,13 @@ class WorkspaceScreen(Screen[None]):
     def action_create_laboratory(self) -> None:
         covenant = self.selected_covenant
 
-        async def handle_result(lab_id: str | None) -> None:
-            if lab_id is not None:
+        async def handle_result(values: dict[str, Any] | None) -> None:
+            if values is not None:
+                lab = creation.add_laboratory(
+                    self.saga, values["name"], values["size"], values["covenant_id"]
+                )
+                storage.save_saga(self.saga)
                 self._rebuild_tree()
-                lab = next(lab for lab in self.saga.laboratories if lab.id == lab_id)
                 self.selected_laboratory = lab
                 self.selected_kind = NodeKind.LABORATORY
                 await self._show_laboratory_detail(lab)
@@ -9640,10 +9615,14 @@ class WorkspaceScreen(Screen[None]):
             else None
         )
 
-        async def handle_result(familiar_id: str | None) -> None:
-            if familiar_id is not None:
+        async def handle_result(values: dict[str, Any] | None) -> None:
+            magus = (
+                None if values is None else self.saga.character(values["character_id"])
+            )
+            if values is not None and magus is not None:
+                familiar = fam.bind_familiar(self.saga, magus, values["name"])
+                storage.save_saga(self.saga)
                 self._rebuild_tree()
-                familiar = next(f for f in self.saga.familiars if f.id == familiar_id)
                 self.selected_familiar = familiar
                 self.selected_character = self.saga.character(familiar.character_id)
                 self.selected_kind = NodeKind.FAMILIAR
@@ -12683,8 +12662,17 @@ class SagaPickerScreen(Screen[None]):
         list_view.index = 0
 
     def action_create_saga(self) -> None:
-        async def handle_result(saga_id: str | None) -> None:
-            if saga_id is not None:
+        async def handle_result(values: dict[str, Any] | None) -> None:
+            if values is not None:
+                storage.save_saga(
+                    creation.new_saga(
+                        values["name"],
+                        values["storyguide"],
+                        values["description"],
+                        values["year"],
+                        values["season"],
+                    )
+                )
                 await self.refresh_list()
 
         self.app.push_screen(SagaCreateScreen(), handle_result)
