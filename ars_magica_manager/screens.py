@@ -7259,10 +7259,56 @@ class SheetView(Vertical):
         #: Set once TabbedContent's initial TabActivated has been seen -- see
         #: WorkspaceScreen.on_tabbed_content_tab_activated().
         self.initial_tab_seen = False
+        #: Per section id, what refresh_section() re-renders, in compose
+        #: order. Filled while composing by _static()/_list()/_on_refresh(),
+        #: so a widget's render call is written once, where it's built.
+        self._refreshers: dict[str, list[Callable[[], None]]] = {}
 
     def refresh_section(self, section_id: str) -> None:
-        """Re-render whatever shows `section_id` after its data changed."""
-        raise NotImplementedError
+        """Re-render whatever shows `section_id` after its data changed. An
+        id the sheet doesn't show does nothing (a change can be committed
+        while another kind of sheet is on show)."""
+        for refresh in self._refreshers.get(section_id, ()):
+            try:
+                refresh()
+            except NoMatches:
+                # The sheet is being replaced or torn down (a refresh from a
+                # dialog callback can land after that).
+                return
+
+    def _on_refresh(
+        self, sections: str | tuple[str, ...], refresh: Callable[[], None]
+    ) -> None:
+        """Run `refresh` whenever any of `sections` is refreshed."""
+        for section in (sections,) if isinstance(sections, str) else sections:
+            self._refreshers.setdefault(section, []).append(refresh)
+
+    def _static(
+        self,
+        sections: str | tuple[str, ...],
+        text: Callable[[], str],
+        *,
+        id: str,
+        **kwargs: Any,
+    ) -> Static:
+        """A Static showing `text()`, re-rendered when `sections` refresh."""
+        self._on_refresh(
+            sections, lambda: self.query_one(f"#{id}", Static).update(text())
+        )
+        return Static(text(), id=id, **kwargs)
+
+    def _list(
+        self,
+        sections: str | tuple[str, ...],
+        rows: Callable[[], Sequence[tuple[int | None, str]]],
+        *,
+        id: str,
+    ) -> SelectableList:
+        """A SelectableList of `rows()`, re-filled when `sections` refresh."""
+        self._on_refresh(
+            sections, lambda: self.query_one(f"#{id}", SelectableList).set_rows(rows())
+        )
+        return SelectableList(rows(), id=id)
 
     @staticmethod
     def _inherited(value: str) -> str:
@@ -7418,8 +7464,14 @@ class CharacterSheetView(SheetView):
             with TabPane("Description", id="tab-description"):
                 yield from self._description_tab()
             with TabPane("Abilities", id="tab-abilities"), VerticalScroll():
-                yield SelectableList(self._ability_rows(), id="abilities-list")
-                yield Static(self._ability_info_text(None), id="ability-info")
+                yield self._list(
+                    "tab-abilities", self._ability_rows, id="abilities-list"
+                )
+                yield self._static(
+                    "tab-abilities",
+                    lambda: self._ability_info_text(None),
+                    id="ability-info",
+                )
             with TabPane("Virtues & Flaws", id="tab-vf"):
                 yield from self._virtues_flaws_tab()
             if character.type == "magus":
@@ -7442,18 +7494,30 @@ class CharacterSheetView(SheetView):
                 title=escape(character.name), id="section-char-info"
             ):
                 with Horizontal(id="char-info-body"):
-                    yield Static(self._info_left_text(), id="char-info-left")
-                    yield Static(self._info_right_text(), id="char-info-right")
+                    yield self._static(
+                        "section-char-info", self._info_left_text, id="char-info-left"
+                    )
+                    yield self._static(
+                        "section-char-info",
+                        self._info_right_text,
+                        id="char-info-right",
+                    )
                 yield Button("Edit (e)", id="btn-char-info-edit", compact=True)
+            self._on_refresh("section-char-info", self._refresh_title)
             with PinnedCollapsible(
                 title="Characteristics", id="section-char-characteristics"
             ):
-                yield Static(
-                    self._characteristics_text(), id="char-characteristics-content"
+                yield self._static(
+                    "section-char-characteristics",
+                    self._characteristics_text,
+                    id="char-characteristics-content",
                 )
                 yield Button(
                     "Edit (e)", id="btn-char-characteristics-edit", compact=True
                 )
+
+    def _refresh_title(self) -> None:
+        self.query_one("#section-char-info", Collapsible).title = self.character.name
 
     def _description_tab(self) -> ComposeResult:
         """Hermetic Background (magi), Biographical Detail, Personality
@@ -7468,12 +7532,14 @@ class CharacterSheetView(SheetView):
                     ),
                     Horizontal(id="hermetic-background-row"),
                 ):
-                    yield Static(
-                        self._hermetic_background_left_text(),
+                    yield self._static(
+                        "section-hermetic-background",
+                        self._hermetic_background_left_text,
                         id="hermetic-background-left",
                     )
-                    yield Static(
-                        self._hermetic_background_right_text(),
+                    yield self._static(
+                        "section-hermetic-background",
+                        self._hermetic_background_right_text,
                         id="hermetic-background-right",
                     )
             with (
@@ -7482,40 +7548,52 @@ class CharacterSheetView(SheetView):
                 ),
                 Horizontal(id="char-biographical-row"),
             ):
-                yield Static(
-                    self._biographical_left_text(), id="char-biographical-left"
+                yield self._static(
+                    "section-char-biographical",
+                    self._biographical_left_text,
+                    id="char-biographical-left",
                 )
-                yield Static(
-                    self._biographical_right_text(),
+                yield self._static(
+                    "section-char-biographical",
+                    self._biographical_right_text,
                     id="char-biographical-right",
                 )
             with Horizontal(id="pt-rep-row"):
                 with SheetSection(
                     title="Personality Traits", id="section-personality-traits"
                 ):
-                    yield SelectableList(
-                        self._personality_trait_rows(),
+                    yield self._list(
+                        "section-personality-traits",
+                        self._personality_trait_rows,
                         id="personality-traits-list",
                     )
                 with SheetSection(title="Reputations", id="section-reputations"):
-                    yield SelectableList(
-                        self._reputation_rows(), id="character-reputations-list"
+                    yield self._list(
+                        "section-reputations",
+                        self._reputation_rows,
+                        id="character-reputations-list",
                     )
             with SheetSection(title="Aging & Warping", id="section-aging"):
-                yield Static(self._aging_text(), id="aging-content")
+                yield self._static(
+                    "section-aging", self._aging_text, id="aging-content"
+                )
             with (
                 SheetSection(title="Health", id="section-char-health"),
                 Horizontal(id="char-health-row"),
             ):
                 with Vertical(id="char-health-wounds-col"):
-                    yield Static(self._wounds_text(), id="wounds-content")
+                    yield self._static(
+                        "section-char-health", self._wounds_text, id="wounds-content"
+                    )
                     yield Button(
                         "Edit Wounds (e)",
                         id="btn-char-health-wounds-edit",
                         compact=True,
                     )
                 with Vertical(id="char-health-fatigue-col"):
-                    yield Static(self._fatigue_text(), id="fatigue-content")
+                    yield self._static(
+                        "section-char-health", self._fatigue_text, id="fatigue-content"
+                    )
                     yield Button(
                         "Edit Fatigue",
                         id="btn-char-health-fatigue-edit",
@@ -7524,13 +7602,28 @@ class CharacterSheetView(SheetView):
 
     def _virtues_flaws_tab(self) -> ComposeResult:
         """The Virtue and Flaw lists side by side, and the details panel."""
+        vf_sections = ("section-vf-virtues", "section-vf-flaws")
         with VerticalScroll():
             with Horizontal(id="vf-row"):
                 with SheetSection(title="Virtues", id="section-vf-virtues"):
-                    yield SelectableList(self._vf_rows("Virtue"), id="vf-virtues-list")
+                    yield self._list(
+                        vf_sections,
+                        lambda: self._vf_rows("Virtue"),
+                        id="vf-virtues-list",
+                    )
                 with SheetSection(title="Flaws", id="section-vf-flaws"):
-                    yield SelectableList(self._vf_rows("Flaw"), id="vf-flaws-list")
-            yield Static(self._vf_info_text(None), id="vf-info")
+                    yield self._list(
+                        vf_sections, lambda: self._vf_rows("Flaw"), id="vf-flaws-list"
+                    )
+            yield self._static(
+                vf_sections, lambda: self._vf_info_text(None), id="vf-info"
+            )
+
+    #: Raw Vis deliberately appears twice (Hermetic Magic and Inventory tabs),
+    #: both backed by character.raw_vis and both mounted at once
+    #: (TabbedContent keeps inactive panes mounted, just hidden): either
+    #: section id refreshes both lists, so neither goes stale.
+    _RAW_VIS_SECTIONS = ("section-raw-vis-hermetic", "section-raw-vis-inventory")
 
     def _hermetic_tab(self) -> ComposeResult:
         """Magical Arts, Raw Vis and Known Spells (scrolling), and the
@@ -7547,8 +7640,9 @@ class CharacterSheetView(SheetView):
                             self._arts_header_text(),
                             classes="arts-header",
                         )
-                        yield SelectableList(
-                            self._arts_rows(TECHNIQUES),
+                        yield self._list(
+                            "section-arts",
+                            lambda: self._arts_rows(TECHNIQUES),
                             id="arts-techniques-list",
                         )
                     with Vertical(id="arts-forms-col"):
@@ -7557,21 +7651,29 @@ class CharacterSheetView(SheetView):
                             self._arts_header_text(),
                             classes="arts-header",
                         )
-                        yield SelectableList(
-                            self._arts_rows(FORMS),
+                        yield self._list(
+                            "section-arts",
+                            lambda: self._arts_rows(FORMS),
                             id="arts-forms-list",
                         )
                 with SheetSection(title="Raw Vis", id="section-raw-vis-hermetic"):
-                    yield SelectableList(
-                        self._raw_vis_rows(), id="raw-vis-list-hermetic"
+                    yield self._list(
+                        self._RAW_VIS_SECTIONS,
+                        self._raw_vis_rows,
+                        id="raw-vis-list-hermetic",
                     )
                 with SheetSection(title="Known Spells", id="section-known-spells"):
-                    yield SelectableList(
-                        self._known_spell_rows(), id="known-spells-list"
+                    yield self._list(
+                        "section-known-spells",
+                        self._known_spell_rows,
+                        id="known-spells-list",
                     )
             yield Static(
                 "[dim]Select an Art or a Known Spell to see its details.[/]",
                 id="hermetic-info",
+            )
+            self._on_refresh(
+                ("section-arts", "section-known-spells"), self._refresh_hermetic_info
             )
 
     def _inventory_tab(self) -> ComposeResult:
@@ -7580,180 +7682,26 @@ class CharacterSheetView(SheetView):
         with VerticalScroll():
             if character.type == "magus":
                 with SheetSection(title="Raw Vis", id="section-raw-vis-inventory"):
-                    yield SelectableList(
-                        self._raw_vis_rows(), id="raw-vis-list-inventory"
+                    yield self._list(
+                        self._RAW_VIS_SECTIONS,
+                        self._raw_vis_rows,
+                        id="raw-vis-list-inventory",
                     )
             with SheetSection(title="Personal Gear", id="section-inventory"):
-                yield SelectableList(self._inventory_rows(), id="inventory-list")
-                yield Static(self._inventory_info_text(None), id="inventory-info")
+                yield self._list(
+                    "section-inventory", self._inventory_rows, id="inventory-list"
+                )
+                yield self._static(
+                    "section-inventory",
+                    lambda: self._inventory_info_text(None),
+                    id="inventory-info",
+                )
             yield BookListView(
                 self.saga,
                 lambda: bk.books_owned_by(self.saga, "character", character.id),
                 section_id="section-books",
                 docked=False,
             )
-
-    #: Bare Collapsible-section ids, except "tab-abilities" which has no
-    #: sub-sections (a single flat pane, keyed by its own tab id) -- see
-    #: WorkspaceScreen._active_section(). Sections with more than
-    #: one Static (Biographical Detail, Hermetic Background, Health) are
-    #: special-cased in refresh_section() instead of listed here.
-    _SECTION_CONTENT: ClassVar[dict[str, str]] = {
-        "section-aging": "#aging-content",
-    }
-    _SECTION_TEXT: ClassVar[dict[str, str]] = {
-        "section-aging": "_aging_text",
-    }
-
-    def refresh_section(self, section_id: str) -> None:
-        if section_id == "section-char-info":
-            try:
-                self.query_one("#char-info-left", Static).update(self._info_left_text())
-                self.query_one("#char-info-right", Static).update(
-                    self._info_right_text()
-                )
-                self.query_one(
-                    "#section-char-info", Collapsible
-                ).title = self.character.name
-            except NoMatches:
-                pass
-            return
-        if section_id == "section-char-characteristics":
-            try:
-                self.query_one("#char-characteristics-content", Static).update(
-                    self._characteristics_text()
-                )
-            except NoMatches:
-                pass
-            return
-        if section_id == "tab-abilities":
-            try:
-                self.query_one("#abilities-list", SelectableList).set_rows(
-                    self._ability_rows()
-                )
-                self.query_one("#ability-info", Static).update(
-                    self._ability_info_text(None)
-                )
-            except NoMatches:
-                pass
-            return
-        if section_id == "section-known-spells":
-            try:
-                self.query_one("#known-spells-list", SelectableList).set_rows(
-                    self._known_spell_rows()
-                )
-            except NoMatches:
-                pass
-            self._refresh_hermetic_info()
-            return
-        if section_id == "section-arts":
-            try:
-                self.query_one("#arts-techniques-list", SelectableList).set_rows(
-                    self._arts_rows(TECHNIQUES)
-                )
-                self.query_one("#arts-forms-list", SelectableList).set_rows(
-                    self._arts_rows(FORMS)
-                )
-            except NoMatches:
-                pass
-            self._refresh_hermetic_info()
-            return
-        if section_id == "section-inventory":
-            try:
-                self.query_one("#inventory-list", SelectableList).set_rows(
-                    self._inventory_rows()
-                )
-                self.query_one("#inventory-info", Static).update(
-                    self._inventory_info_text(None)
-                )
-            except NoMatches:
-                pass
-            return
-        if section_id == "section-personality-traits":
-            try:
-                self.query_one("#personality-traits-list", SelectableList).set_rows(
-                    self._personality_trait_rows()
-                )
-            except NoMatches:
-                pass
-            return
-        if section_id == "section-reputations":
-            try:
-                self.query_one("#character-reputations-list", SelectableList).set_rows(
-                    self._reputation_rows()
-                )
-            except NoMatches:
-                pass
-            return
-        if section_id in ("section-raw-vis-hermetic", "section-raw-vis-inventory"):
-            # Raw Vis deliberately appears twice (Hermetic Magic and
-            # Inventory tabs), both backed by character.raw_vis and both
-            # mounted at once (TabbedContent keeps inactive panes mounted,
-            # just hidden) -- refresh both lists regardless of which of the
-            # two section ids triggered this, so neither goes stale.
-            try:
-                self.query_one("#raw-vis-list-hermetic", SelectableList).set_rows(
-                    self._raw_vis_rows()
-                )
-            except NoMatches:
-                pass
-            try:
-                self.query_one("#raw-vis-list-inventory", SelectableList).set_rows(
-                    self._raw_vis_rows()
-                )
-            except NoMatches:
-                pass
-            return
-        if section_id in ("section-vf-virtues", "section-vf-flaws"):
-            try:
-                self.query_one("#vf-virtues-list", SelectableList).set_rows(
-                    self._vf_rows("Virtue")
-                )
-                self.query_one("#vf-flaws-list", SelectableList).set_rows(
-                    self._vf_rows("Flaw")
-                )
-                self.query_one("#vf-info", Static).update(self._vf_info_text(None))
-            except NoMatches:
-                pass
-            return
-        if section_id == "section-char-biographical":
-            try:
-                self.query_one("#char-biographical-left", Static).update(
-                    self._biographical_left_text()
-                )
-                self.query_one("#char-biographical-right", Static).update(
-                    self._biographical_right_text()
-                )
-            except NoMatches:
-                pass
-            return
-        if section_id == "section-hermetic-background":
-            try:
-                self.query_one("#hermetic-background-left", Static).update(
-                    self._hermetic_background_left_text()
-                )
-                self.query_one("#hermetic-background-right", Static).update(
-                    self._hermetic_background_right_text()
-                )
-            except NoMatches:
-                pass
-            return
-        if section_id == "section-char-health":
-            try:
-                self.query_one("#wounds-content", Static).update(self._wounds_text())
-                self.query_one("#fatigue-content", Static).update(self._fatigue_text())
-            except NoMatches:
-                pass
-            return
-        selector = self._SECTION_CONTENT.get(section_id)
-        text_method = self._SECTION_TEXT.get(section_id)
-        if selector is None or text_method is None:
-            return
-        try:
-            static = self.query_one(selector, Static)
-        except NoMatches:
-            return
-        static.update(getattr(self, text_method)())
 
     def selected_personality_trait(self) -> int | None:
         """Index into character.personality_traits of the chosen row, or None."""
@@ -8157,18 +8105,24 @@ class LaboratorySheetView(SheetView):
     def compose(self) -> ComposeResult:
         with Vertical(id="lab-top-panel"):
             with PinnedCollapsible(title="Identity", id="section-lab-identity"):
-                yield Static(self._identity_text(), id="lab-identity-content")
+                yield self._static(
+                    "section-lab-identity",
+                    self._identity_text,
+                    id="lab-identity-content",
+                )
                 yield Button("Edit (e)", id="btn-lab-identity-edit", compact=True)
             with PinnedCollapsible(
                 title="Characteristics", id="section-lab-characteristics"
             ):
                 with Horizontal(id="lab-characteristics-body"):
-                    yield Static(
-                        self._characteristics_derived_text(),
+                    yield self._static(
+                        "section-lab-characteristics",
+                        self._characteristics_derived_text,
                         id="lab-characteristics-derived",
                     )
-                    yield Static(
-                        self._characteristics_table_text(),
+                    yield self._static(
+                        "section-lab-characteristics",
+                        self._characteristics_table_text,
                         id="lab-characteristics-content",
                     )
                 yield Button(
@@ -8176,21 +8130,39 @@ class LaboratorySheetView(SheetView):
                 )
         with TabbedContent(initial="tab-lab-planning"):
             with TabPane("Planning", id="tab-lab-planning"):
-                yield Static(self._planning_text(), id="lab-planning-content")
+                yield self._static(
+                    "tab-lab-planning", self._planning_text, id="lab-planning-content"
+                )
             with TabPane("Virtues & Flaws", id="tab-lab-vf"):
-                yield Static(self._vf_text(), id="lab-vf-content")
+                yield self._static("tab-lab-vf", self._vf_text, id="lab-vf-content")
             with TabPane("Attributes", id="tab-lab-attributes"), VerticalScroll():
                 with SheetSection(title="Specialties", id="section-lab-specialties"):
-                    yield Static(self._specialties_text(), id="lab-specialties-content")
+                    yield self._static(
+                        "section-lab-specialties",
+                        self._specialties_text,
+                        id="lab-specialties-content",
+                    )
                 with SheetSection(title="Features", id="section-lab-features"):
-                    yield Static(self._features_text(), id="lab-features-content")
+                    yield self._static(
+                        "section-lab-features",
+                        self._features_text,
+                        id="lab-features-content",
+                    )
                 with SheetSection(title="Rooms", id="section-lab-rooms"):
-                    yield Static(self._rooms_text(), id="lab-rooms-content")
+                    yield self._static(
+                        "section-lab-rooms", self._rooms_text, id="lab-rooms-content"
+                    )
             with TabPane("Inventory", id="tab-lab-inventory"), VerticalScroll():
                 with SheetSection(title="Raw Vis", id="section-lab-raw-vis"):
-                    yield Static(self._raw_vis_text(), id="lab-raw-vis-content")
+                    yield self._static(
+                        "section-lab-raw-vis",
+                        self._raw_vis_text,
+                        id="lab-raw-vis-content",
+                    )
                 with SheetSection(title="Items", id="section-lab-items"):
-                    yield Static(self._items_text(), id="lab-items-content")
+                    yield self._static(
+                        "section-lab-items", self._items_text, id="lab-items-content"
+                    )
                 yield BookListView(
                     self.saga,
                     lambda: bk.books_owned_by(
@@ -8200,48 +8172,9 @@ class LaboratorySheetView(SheetView):
                     docked=False,
                 )
             with TabPane("Diary", id="tab-lab-diary"):
-                yield Static(self._diary_text(), id="lab-diary-content")
-
-    _SECTION_CONTENT: ClassVar[dict[str, str]] = {
-        "section-lab-identity": "#lab-identity-content",
-        "section-lab-characteristics": "#lab-characteristics-content",
-        "tab-lab-planning": "#lab-planning-content",
-        "tab-lab-vf": "#lab-vf-content",
-        "section-lab-specialties": "#lab-specialties-content",
-        "section-lab-features": "#lab-features-content",
-        "section-lab-rooms": "#lab-rooms-content",
-        "section-lab-raw-vis": "#lab-raw-vis-content",
-        "section-lab-items": "#lab-items-content",
-        "tab-lab-diary": "#lab-diary-content",
-    }
-    _SECTION_TEXT: ClassVar[dict[str, str]] = {
-        "section-lab-identity": "_identity_text",
-        "section-lab-characteristics": "_characteristics_table_text",
-        "tab-lab-planning": "_planning_text",
-        "tab-lab-vf": "_vf_text",
-        "section-lab-specialties": "_specialties_text",
-        "section-lab-features": "_features_text",
-        "section-lab-rooms": "_rooms_text",
-        "section-lab-raw-vis": "_raw_vis_text",
-        "section-lab-items": "_items_text",
-        "tab-lab-diary": "_diary_text",
-    }
-
-    def refresh_section(self, section_id: str) -> None:
-        selector = self._SECTION_CONTENT.get(section_id)
-        text_method = self._SECTION_TEXT.get(section_id)
-        if selector is None or text_method is None:
-            return
-        try:
-            static = self.query_one(selector, Static)
-        except NoMatches:
-            return
-        static.update(getattr(self, text_method)())
-        if section_id == "section-lab-characteristics":
-            # Two-column section: the derived stats sit in a sibling Static.
-            self.query_one("#lab-characteristics-derived", Static).update(
-                self._characteristics_derived_text()
-            )
+                yield self._static(
+                    "tab-lab-diary", self._diary_text, id="lab-diary-content"
+                )
 
     def _identity_text(self) -> str:
         saga, lab = self.saga, self.laboratory
@@ -8425,8 +8358,10 @@ class FamiliarSheetView(SheetView):
             Vertical(id="fam-top-panel"),
             PinnedCollapsible(title="Familiar Info", id="section-fam-info"),
         ):
-            yield Static(
-                fam.identity_text(self.saga, self.familiar), id="fam-info-content"
+            yield self._static(
+                "section-fam-info",
+                lambda: fam.identity_text(self.saga, self.familiar),
+                id="fam-info-content",
             )
             yield Button("Edit (e)", id="btn-fam-info-edit", compact=True)
         with TabbedContent(initial="tab-fam-identity"):
@@ -8436,8 +8371,9 @@ class FamiliarSheetView(SheetView):
                 TabPane("Characteristics", id="tab-fam-characteristics"),
                 SheetSection(title="Characteristics", id="section-fam-characteristics"),
             ):
-                yield Static(
-                    fam.characteristics_text(self.familiar),
+                yield self._static(
+                    "section-fam-characteristics",
+                    lambda: fam.characteristics_text(self.familiar),
                     id="fam-characteristics-content",
                 )
             with TabPane("Combat & Health", id="tab-fam-combat"):
@@ -8447,49 +8383,68 @@ class FamiliarSheetView(SheetView):
                     "[dim]Languages: shares the Magus partner's Language "
                     "scores automatically.[/]"
                 )
-                yield SelectableList(
-                    fam.ability_rows(self.familiar), id="fam-abilities-list"
+                yield self._list(
+                    "tab-fam-abilities",
+                    lambda: fam.ability_rows(self.familiar),
+                    id="fam-abilities-list",
                 )
-                yield Static(
-                    fam.ability_info_text(self.familiar, None), id="fam-ability-info"
+                yield self._static(
+                    "tab-fam-abilities",
+                    lambda: fam.ability_info_text(self.familiar, None),
+                    id="fam-ability-info",
                 )
             with TabPane("Bond Powers", id="tab-fam-powers"), VerticalScroll():
-                yield SelectableList(
-                    fam.bond_power_rows(self.familiar), id="fam-bond-powers-list"
+                yield self._list(
+                    "tab-fam-powers",
+                    lambda: fam.bond_power_rows(self.familiar),
+                    id="fam-bond-powers-list",
                 )
-                yield Static(
-                    fam.bond_power_info_text(self.familiar, None),
+                yield self._static(
+                    "tab-fam-powers",
+                    lambda: fam.bond_power_info_text(self.familiar, None),
                     id="fam-bond-powers-info",
                 )
 
     def _identity_tab(self) -> ComposeResult:
         """Binding & Cords, the Virtue and Flaw lists with their details
         panel, and Personality Traits and Reputations."""
+        vf_sections = ("section-fam-vf-virtues", "section-fam-vf-flaws")
         with VerticalScroll():
             with SheetSection(title="Binding & Cords", id="section-fam-binding"):
-                yield Static(self._binding_text(), id="fam-binding-content")
+                yield self._static(
+                    "section-fam-binding", self._binding_text, id="fam-binding-content"
+                )
             with Horizontal(id="fam-vf-row"):
                 with SheetSection(title="Virtues", id="section-fam-vf-virtues"):
-                    yield SelectableList(
-                        fam.vf_rows(self.familiar, "Virtue"),
+                    yield self._list(
+                        vf_sections,
+                        lambda: fam.vf_rows(self.familiar, "Virtue"),
                         id="fam-vf-virtues-list",
                     )
                 with SheetSection(title="Flaws", id="section-fam-vf-flaws"):
-                    yield SelectableList(
-                        fam.vf_rows(self.familiar, "Flaw"), id="fam-vf-flaws-list"
+                    yield self._list(
+                        vf_sections,
+                        lambda: fam.vf_rows(self.familiar, "Flaw"),
+                        id="fam-vf-flaws-list",
                     )
-            yield Static(fam.vf_info_text(self.familiar, None), id="fam-vf-info")
+            yield self._static(
+                vf_sections,
+                lambda: fam.vf_info_text(self.familiar, None),
+                id="fam-vf-info",
+            )
             with Horizontal(id="fam-pt-rep-row"):
                 with SheetSection(
                     title="Personality Traits", id="section-fam-personality-traits"
                 ):
-                    yield SelectableList(
-                        fam.personality_trait_rows(self.familiar),
+                    yield self._list(
+                        "section-fam-personality-traits",
+                        lambda: fam.personality_trait_rows(self.familiar),
                         id="fam-personality-traits-list",
                     )
                 with SheetSection(title="Reputations", id="section-fam-reputations"):
-                    yield SelectableList(
-                        fam.reputation_rows(self.familiar),
+                    yield self._list(
+                        "section-fam-reputations",
+                        lambda: fam.reputation_rows(self.familiar),
                         id="fam-reputations-list",
                     )
 
@@ -8501,8 +8456,10 @@ class FamiliarSheetView(SheetView):
                 Horizontal(id="fam-health-row"),
             ):
                 with Vertical(id="fam-health-wounds-col"):
-                    yield Static(
-                        fam.wounds_text(self.familiar), id="fam-wounds-content"
+                    yield self._static(
+                        "section-fam-health",
+                        lambda: fam.wounds_text(self.familiar),
+                        id="fam-wounds-content",
                     )
                     yield Button(
                         "Edit Wounds (e)",
@@ -8510,8 +8467,10 @@ class FamiliarSheetView(SheetView):
                         compact=True,
                     )
                 with Vertical(id="fam-health-fatigue-col"):
-                    yield Static(
-                        fam.fatigue_text(self.familiar), id="fam-fatigue-content"
+                    yield self._static(
+                        "section-fam-health",
+                        lambda: fam.fatigue_text(self.familiar),
+                        id="fam-fatigue-content",
                     )
                     yield Button(
                         "Edit Fatigue",
@@ -8522,80 +8481,19 @@ class FamiliarSheetView(SheetView):
                 title="Natural Weapons & Attacks",
                 id="section-fam-natural-weapons",
             ):
-                yield SelectableList(
-                    fam.natural_weapon_rows(self.familiar),
+                yield self._list(
+                    "section-fam-natural-weapons",
+                    lambda: fam.natural_weapon_rows(self.familiar),
                     id="fam-natural-weapons-list",
                 )
-                yield Static(
-                    fam.natural_weapon_info_text(self.familiar, None),
+                yield self._static(
+                    "section-fam-natural-weapons",
+                    lambda: fam.natural_weapon_info_text(self.familiar, None),
                     id="fam-natural-weapons-info",
                 )
 
     def _binding_text(self) -> str:
         return f"{fam.binding_text(self.familiar)}\n\n{fam.cords_text(self.familiar)}"
-
-    def refresh_section(self, section_id: str) -> None:
-        try:
-            if section_id == "section-fam-info":
-                self.query_one("#fam-info-content", Static).update(
-                    fam.identity_text(self.saga, self.familiar)
-                )
-            elif section_id == "section-fam-binding":
-                self.query_one("#fam-binding-content", Static).update(
-                    self._binding_text()
-                )
-            elif section_id in ("section-fam-vf-virtues", "section-fam-vf-flaws"):
-                self.query_one("#fam-vf-virtues-list", SelectableList).set_rows(
-                    fam.vf_rows(self.familiar, "Virtue")
-                )
-                self.query_one("#fam-vf-flaws-list", SelectableList).set_rows(
-                    fam.vf_rows(self.familiar, "Flaw")
-                )
-                self.query_one("#fam-vf-info", Static).update(
-                    fam.vf_info_text(self.familiar, None)
-                )
-            elif section_id == "section-fam-personality-traits":
-                self.query_one("#fam-personality-traits-list", SelectableList).set_rows(
-                    fam.personality_trait_rows(self.familiar)
-                )
-            elif section_id == "section-fam-reputations":
-                self.query_one("#fam-reputations-list", SelectableList).set_rows(
-                    fam.reputation_rows(self.familiar)
-                )
-            elif section_id == "section-fam-characteristics":
-                self.query_one("#fam-characteristics-content", Static).update(
-                    fam.characteristics_text(self.familiar)
-                )
-            elif section_id == "section-fam-health":
-                self.query_one("#fam-wounds-content", Static).update(
-                    fam.wounds_text(self.familiar)
-                )
-                self.query_one("#fam-fatigue-content", Static).update(
-                    fam.fatigue_text(self.familiar)
-                )
-            elif section_id == "section-fam-natural-weapons":
-                self.query_one("#fam-natural-weapons-list", SelectableList).set_rows(
-                    fam.natural_weapon_rows(self.familiar)
-                )
-                self.query_one("#fam-natural-weapons-info", Static).update(
-                    fam.natural_weapon_info_text(self.familiar, None)
-                )
-            elif section_id == "tab-fam-abilities":
-                self.query_one("#fam-abilities-list", SelectableList).set_rows(
-                    fam.ability_rows(self.familiar)
-                )
-                self.query_one("#fam-ability-info", Static).update(
-                    fam.ability_info_text(self.familiar, None)
-                )
-            elif section_id == "tab-fam-powers":
-                self.query_one("#fam-bond-powers-list", SelectableList).set_rows(
-                    fam.bond_power_rows(self.familiar)
-                )
-                self.query_one("#fam-bond-powers-info", Static).update(
-                    fam.bond_power_info_text(self.familiar, None)
-                )
-        except NoMatches:
-            pass
 
     def selected_virtue_flaw(self) -> int | None:
         """Index into familiar.virtues_flaws of the row chosen in either the
