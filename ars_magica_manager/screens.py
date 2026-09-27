@@ -175,12 +175,60 @@ def _inhabitant_fields(
     """The add/edit form for one kind of inhabitant. For a person listed from a
     character sheet, name/house/year are shown read-only (edit them on the
     sheet) and only the covenant-side fields are editable."""
-    auto = entry is not None and entry.auto
     character = entry.character if entry is not None else grog
-    houses = [(h.name, h.id) for h in catalog.load_house_catalog()]
-    fields: list[DialogField] = []
+    fields = _inhabitant_identity_fields(kind, entry, grog)
+    if kind in ("companion", "specialist", "craftsperson", "turb", "inhabitant"):
+        fields.append(
+            DialogField(
+                "responsibility",
+                "Responsibility",
+                "text",
+                entry.responsibility if entry else "",
+            )
+        )
+    if kind in ("companion", "specialist"):
+        fields += _covenant_role_fields(entry)
+    if kind == "inhabitant":
+        fields.append(
+            DialogField(
+                "role",
+                "Covenant Role",
+                "select",
+                entry.role if entry else "",
+                options=[(r, r) for r in OTHER_COVENFOLK_ROLES],
+                required=True,
+                allow_blank=True,
+                placeholder="(choose a Covenant Role)",
+            )
+        )
+    if kind == "craftsperson":
+        fields += _craftsperson_fields(entry, character)
+    if kind not in inh.AUTO_KINDS:
+        fields.append(
+            DialogField("quantity", "Quantity", "int", entry.quantity if entry else 1)
+        )
+    fields.append(
+        DialogField(
+            "description",
+            "Description",
+            "area",
+            entry.description if entry else "",
+            hint="Supports **bold** and *italic*.",
+        )
+    )
+    return fields
 
-    if auto and entry is not None:
+
+def _inhabitant_identity_fields(
+    kind: str,
+    entry: inh.InhabitantEntry | None,
+    grog: Character | None,
+) -> list[DialogField]:
+    """Name, Year Born, and House and Gift for a magus: read-only for a
+    person listed from a character sheet, else editable (a new grog's
+    defaults come from its character)."""
+    fields: list[DialogField] = []
+    if entry is not None and entry.auto:
         fields.append(
             DialogField(
                 "_n", "Name", "info", f"{entry.name} (from the character sheet)"
@@ -198,169 +246,153 @@ def _inhabitant_fields(
         )
         if kind == "magus":
             fields.append(DialogField("_g", "Gift", "info", entry.gift))
-    else:
-        name = entry.name if entry is not None else (grog.name if grog else "")
-        year_born = (
-            entry.year_born
-            if entry is not None
-            else (grog.background.year_born if grog else None)
-        )
-        fields.append(DialogField("name", "Name", "text", name, required=True))
-        if kind == "magus":
-            fields.append(
-                DialogField(
-                    "house",
-                    "House",
-                    "select",
-                    entry.house_id if entry else None,
-                    options=houses,
-                    allow_blank=True,
-                    placeholder="Unknown",
-                )
-            )
-        fields.append(_year_born_field(year_born))
-        if kind == "magus":
-            fields.append(
-                DialogField(
-                    "gift",
-                    "Gift",
-                    "select",
-                    entry.record.gift if entry and entry.record else "",
-                    options=[(c, c) for c in GIFT_CHOICES],
-                    allow_blank=True,
-                    placeholder="Unknown (assumed The Gift)",
-                )
-            )
+        return fields
 
-    if kind in ("companion", "specialist", "craftsperson", "turb", "inhabitant"):
+    houses = [(h.name, h.id) for h in catalog.load_house_catalog()]
+    name = entry.name if entry is not None else (grog.name if grog else "")
+    year_born = (
+        entry.year_born
+        if entry is not None
+        else (grog.background.year_born if grog else None)
+    )
+    fields.append(DialogField("name", "Name", "text", name, required=True))
+    if kind == "magus":
         fields.append(
             DialogField(
-                "responsibility",
-                "Responsibility",
-                "text",
-                entry.responsibility if entry else "",
-            )
-        )
-    if kind in ("companion", "specialist"):
-        fields.append(
-            DialogField(
-                "role",
-                "Covenant Role",
+                "house",
+                "House",
                 "select",
-                entry.role if entry else "",
-                options=[(r, r) for r in COVENANT_ROLES],
+                entry.house_id if entry else None,
+                options=houses,
                 allow_blank=True,
+                placeholder="Unknown",
             )
         )
-        # Steward/Chamberlain/Turb Captain/Autocrat earn the covenant a
-        # Loyalty bonus (Presence + a specific Ability). The role has to be
-        # chosen and saved first -- editing again then shows this.
-        if entry is not None and entry.role in inh.ROLE_ABILITY_MAP:
-            ability_label = " + ".join(inh.ROLE_ABILITY_MAP[entry.role])
-            if entry.character is not None:
-                fields.append(
-                    DialogField(
-                        "_rb",
-                        "Loyalty Bonus",
-                        "info",
-                        f"{entry.role_bonus} (Presence {entry.role_presence:+d}, "
-                        f"{ability_label} {entry.role_ability_total}, from the "
-                        "character sheet)",
-                    )
-                )
-            else:
-                fields += [
-                    DialogField(
-                        "presence",
-                        "Presence (for the Loyalty Bonus)",
-                        "int",
-                        entry.record.presence if entry.record else 0,
-                    ),
-                    DialogField(
-                        "skill_value",
-                        f"{ability_label} (for the Loyalty Bonus)",
-                        "int",
-                        entry.record.skill_value if entry.record else 0,
-                    ),
-                ]
-    if kind == "inhabitant":
+    fields.append(_year_born_field(year_born))
+    if kind == "magus":
         fields.append(
             DialogField(
-                "role",
-                "Covenant Role",
+                "gift",
+                "Gift",
                 "select",
-                entry.role if entry else "",
-                options=[(r, r) for r in OTHER_COVENFOLK_ROLES],
-                required=True,
+                entry.record.gift if entry and entry.record else "",
+                options=[(c, c) for c in GIFT_CHOICES],
                 allow_blank=True,
-                placeholder="(choose a Covenant Role)",
+                placeholder="Unknown (assumed The Gift)",
             )
         )
-    if kind == "craftsperson":
-        from_ability = entry.skill_from_ability if entry is not None else None
-        if from_ability is not None and entry is not None:
-            # Tied to a sheet's Ability: the score is that Ability's Level.
-            fields.append(
-                DialogField(
-                    "_s",
-                    "Value of Crafting Skill",
-                    "info",
-                    f"{from_ability} (Level of {entry.linked_ability})",
-                )
+    return fields
+
+
+def _covenant_role_fields(entry: inh.InhabitantEntry | None) -> list[DialogField]:
+    """A companion's or specialist's Covenant Role, and the inputs of the
+    Loyalty bonus that role earns."""
+    fields = [
+        DialogField(
+            "role",
+            "Covenant Role",
+            "select",
+            entry.role if entry else "",
+            options=[(r, r) for r in COVENANT_ROLES],
+            allow_blank=True,
+        )
+    ]
+    # Steward/Chamberlain/Turb Captain/Autocrat earn the covenant a
+    # Loyalty bonus (Presence + a specific Ability). The role has to be
+    # chosen and saved first -- editing again then shows this.
+    if entry is None or entry.role not in inh.ROLE_ABILITY_MAP:
+        return fields
+    ability_label = " + ".join(inh.ROLE_ABILITY_MAP[entry.role])
+    if entry.character is not None:
+        fields.append(
+            DialogField(
+                "_rb",
+                "Loyalty Bonus",
+                "info",
+                f"{entry.role_bonus} (Presence {entry.role_presence:+d}, "
+                f"{ability_label} {entry.role_ability_total}, from the "
+                "character sheet)",
             )
-        else:
-            fields.append(
-                DialogField(
-                    "skill_value",
-                    "Value of Crafting Skill",
-                    "int",
-                    entry.record.skill_value if entry and entry.record else 0,
-                )
-            )
+        )
+    else:
         fields += [
             DialogField(
-                "field_of_work",
-                "Field of Work",
-                "select",
-                entry.field_of_work if entry else "None",
-                options=[(f, f) for f in CRAFT_FIELDS],
+                "presence",
+                "Presence (for the Loyalty Bonus)",
+                "int",
+                entry.record.presence if entry.record else 0,
             ),
-            DialogField("rare", "Rare", "check", entry.rare if entry else False),
+            DialogField(
+                "skill_value",
+                f"{ability_label} (for the Loyalty Bonus)",
+                "int",
+                entry.record.skill_value if entry.record else 0,
+            ),
         ]
-        abilities = inh.ability_names(character)
-        current = entry.linked_ability if entry else ""
-        if character is not None:
-            options = [(a, a) for a in abilities]
-            if current and current not in abilities:
-                options.append((current, current))
-            fields.append(
-                DialogField(
-                    "linked_ability",
-                    "Linked Ability",
-                    "select",
-                    current,
-                    options=options,
-                    allow_blank=True,
-                )
-            )
-        else:
-            fields.append(
-                DialogField("linked_ability", "Linked Ability", "text", current)
-            )
-    if kind not in inh.AUTO_KINDS:
-        fields.append(
-            DialogField("quantity", "Quantity", "int", entry.quantity if entry else 1)
-        )
-    fields.append(
-        DialogField(
-            "description",
-            "Description",
-            "area",
-            entry.description if entry else "",
-            hint="Supports **bold** and *italic*.",
-        )
-    )
     return fields
+
+
+def _craftsperson_fields(
+    entry: inh.InhabitantEntry | None, character: Character | None
+) -> list[DialogField]:
+    """A craftsperson's skill value, Field of Work, Rare and Linked Ability
+    (chosen from their character's Abilities, when they have a sheet)."""
+    fields: list[DialogField] = []
+    from_ability = entry.skill_from_ability if entry is not None else None
+    if from_ability is not None and entry is not None:
+        # Tied to a sheet's Ability: the score is that Ability's Level.
+        fields.append(
+            DialogField(
+                "_s",
+                "Value of Crafting Skill",
+                "info",
+                f"{from_ability} (Level of {entry.linked_ability})",
+            )
+        )
+    else:
+        fields.append(
+            DialogField(
+                "skill_value",
+                "Value of Crafting Skill",
+                "int",
+                entry.record.skill_value if entry and entry.record else 0,
+            )
+        )
+    fields += [
+        DialogField(
+            "field_of_work",
+            "Field of Work",
+            "select",
+            entry.field_of_work if entry else "None",
+            options=[(f, f) for f in CRAFT_FIELDS],
+        ),
+        DialogField("rare", "Rare", "check", entry.rare if entry else False),
+    ]
+    abilities = inh.ability_names(character)
+    current = entry.linked_ability if entry else ""
+    if character is not None:
+        options = [(a, a) for a in abilities]
+        if current and current not in abilities:
+            options.append((current, current))
+        fields.append(
+            DialogField(
+                "linked_ability",
+                "Linked Ability",
+                "select",
+                current,
+                options=options,
+                allow_blank=True,
+            )
+        )
+    else:
+        fields.append(DialogField("linked_ability", "Linked Ability", "text", current))
+    return fields
+
+
+def _attr(record: object | None, attribute: str, default: Any) -> Any:
+    """`record.attribute`, or `default` when there's no record yet (a form
+    opened to add one)."""
+    return getattr(record, attribute) if record is not None else default
 
 
 def _possession_fields(
@@ -369,139 +401,22 @@ def _possession_fields(
     """The add/edit form for one kind of possession. For a laboratory listed as
     a sanctum, name/owner/location/build points are shown read-only (edit them
     on the laboratory) and only the covenant-side fields are editable."""
-    fields: list[DialogField] = []
     auto = entry is not None and entry.auto
-
-    def value(attribute: str, default):
-        return getattr(entry, attribute) if entry is not None else default
-
-    if auto and entry is not None:
-        note = " (from the laboratory)"
-        fields.append(DialogField("_n", "Name", "info", entry.name + note))
-        fields.append(
-            DialogField("_o", "Owner", "info", (entry.owner or "(none)") + note)
-        )
-        fields.append(
-            DialogField("_l", "Location", "info", entry.location or "(not set)")
-        )
-        fields.append(
-            DialogField(
-                "_b",
-                "Build Points",
-                "info",
-                "(not set)" if entry.build_points is None else entry.build_points,
-            )
-        )
-        if kind == "sanctum":
-            fields.append(
-                DialogField("_q", "Quality", "info", str(entry.quality) + note)
-            )
-            fields.append(
-                DialogField("_u", "Upkeep (Points)", "info", str(entry.upkeep) + note)
-            )
-    else:
-        fields.append(
-            DialogField("name", "Name", "text", value("name", ""), required=True)
-        )
-
+    fields = (
+        _sanctum_from_lab_fields(kind, entry)
+        if auto and entry is not None
+        else [
+            DialogField("name", "Name", "text", _attr(entry, "name", ""), required=True)
+        ]
+    )
     if kind == "property":
-        fields += [
-            DialogField("location", "Location", "text", value("location", "")),
-            DialogField("dimensions", "Dimensions", "text", value("dimensions", "")),
-            DialogField("inhabitants", "Inhabitants", "text", value("inhabitants", "")),
-        ]
+        fields += _property_fields(entry)
     elif kind == "sanctum":
-        if not auto:
-            fields += [
-                # Unowned sanctums are "Free": narratively, visitors can use them.
-                DialogField("owner", "Owner", "text", value("owner", "Free")),
-                DialogField("location", "Location", "text", value("location", "")),
-                DialogField("quality", "Quality", "optint", value("quality", None)),
-                DialogField(
-                    "upkeep", "Upkeep (Points)", "optint", value("upkeep", None)
-                ),
-                DialogField(
-                    "build_points",
-                    "Build Points",
-                    "optint",
-                    value("build_points", None),
-                ),
-            ]
-        fields.append(
-            DialogField(
-                "usage",
-                "Usage",
-                "select",
-                value("usage", SANCTUM_USAGE_DEFAULT),
-                options=[(u, u) for u in SANCTUM_USAGES],
-            )
-        )
+        fields += _sanctum_fields(entry, auto)
     elif kind in pos.QUANTITY_KINDS:
-        if kind in GEAR_TYPES_BY_KIND:
-            types = GEAR_TYPES_BY_KIND[kind]
-            fields += [
-                DialogField(
-                    "gear_type",
-                    "Type",
-                    "select",
-                    value("gear_type", types[0]) or types[0],
-                    options=[(t, t) for t in types],
-                ),
-                DialogField(
-                    "gear_quality",
-                    "Quality",
-                    "select",
-                    value("gear_quality", GEAR_QUALITY_DEFAULT),
-                    options=[(q, q) for q in GEAR_QUALITIES],
-                ),
-            ]
-        fields.append(DialogField("quantity", "Quantity", "int", value("quantity", 1)))
-        if kind == "weapon":
-            fields += [
-                DialogField("weapon_init", "Init", "int", value("weapon_init", 0)),
-                DialogField(
-                    "weapon_attack", "Attack", "int", value("weapon_attack", 0)
-                ),
-                DialogField(
-                    "weapon_defense", "Defense", "int", value("weapon_defense", 0)
-                ),
-                DialogField(
-                    "weapon_damage", "Damage", "int", value("weapon_damage", 0)
-                ),
-            ]
+        fields += _quantity_possession_fields(kind, entry)
     elif kind in ("vis_source", "vis_store"):
-        fields.append(
-            DialogField(
-                "art",
-                "Art",
-                "select",
-                value("art", ""),
-                options=[(a, a) for a in ARTS],
-                required=True,
-                allow_blank=True,
-                placeholder="(choose an Art)",
-            )
-        )
-        if kind == "vis_source":
-            fields.append(
-                DialogField(
-                    "season",
-                    "Season harvested",
-                    "select",
-                    value("season", ""),
-                    options=[(x, x) for x in SEASONS],
-                    required=True,
-                    allow_blank=True,
-                    placeholder="(choose a Season)",
-                )
-            )
-        fields += [
-            DialogField("pawns", "Pawns", "int", value("pawns", 1) or 1),
-            DialogField("location", "Location", "text", value("location", "")),
-            DialogField(
-                "physical_form", "Physical Form", "text", value("physical_form", "")
-            ),
-        ]
+        fields += _vis_possession_fields(kind, entry)
 
     if kind != "vis_store":
         fields.append(
@@ -509,10 +424,161 @@ def _possession_fields(
                 "description",
                 "Description",
                 "area",
-                value("description", ""),
+                _attr(entry, "description", ""),
                 hint="Supports **bold** and *italic*.",
             )
         )
+    return fields
+
+
+def _sanctum_from_lab_fields(
+    kind: str, entry: pos.PossessionEntry
+) -> list[DialogField]:
+    """The read-only fields of a possession listed from a laboratory."""
+    note = " (from the laboratory)"
+    fields = [
+        DialogField("_n", "Name", "info", entry.name + note),
+        DialogField("_o", "Owner", "info", (entry.owner or "(none)") + note),
+        DialogField("_l", "Location", "info", entry.location or "(not set)"),
+        DialogField(
+            "_b",
+            "Build Points",
+            "info",
+            "(not set)" if entry.build_points is None else entry.build_points,
+        ),
+    ]
+    if kind == "sanctum":
+        fields.append(DialogField("_q", "Quality", "info", str(entry.quality) + note))
+        fields.append(
+            DialogField("_u", "Upkeep (Points)", "info", str(entry.upkeep) + note)
+        )
+    return fields
+
+
+def _property_fields(entry: pos.PossessionEntry | None) -> list[DialogField]:
+    return [
+        DialogField("location", "Location", "text", _attr(entry, "location", "")),
+        DialogField("dimensions", "Dimensions", "text", _attr(entry, "dimensions", "")),
+        DialogField(
+            "inhabitants", "Inhabitants", "text", _attr(entry, "inhabitants", "")
+        ),
+    ]
+
+
+def _sanctum_fields(entry: pos.PossessionEntry | None, auto: bool) -> list[DialogField]:
+    """A sanctum's covenant-side fields; one listed from a laboratory keeps
+    only Usage editable."""
+    fields: list[DialogField] = []
+    if not auto:
+        fields += [
+            # Unowned sanctums are "Free": narratively, visitors can use them.
+            DialogField("owner", "Owner", "text", _attr(entry, "owner", "Free")),
+            DialogField("location", "Location", "text", _attr(entry, "location", "")),
+            DialogField("quality", "Quality", "optint", _attr(entry, "quality", None)),
+            DialogField(
+                "upkeep", "Upkeep (Points)", "optint", _attr(entry, "upkeep", None)
+            ),
+            DialogField(
+                "build_points",
+                "Build Points",
+                "optint",
+                _attr(entry, "build_points", None),
+            ),
+        ]
+    fields.append(
+        DialogField(
+            "usage",
+            "Usage",
+            "select",
+            _attr(entry, "usage", SANCTUM_USAGE_DEFAULT),
+            options=[(u, u) for u in SANCTUM_USAGES],
+        )
+    )
+    return fields
+
+
+def _quantity_possession_fields(
+    kind: str, entry: pos.PossessionEntry | None
+) -> list[DialogField]:
+    """Type and Quality (gear kinds), Quantity, and a weapon's combat
+    statistics."""
+    fields: list[DialogField] = []
+    if kind in GEAR_TYPES_BY_KIND:
+        types = GEAR_TYPES_BY_KIND[kind]
+        fields += [
+            DialogField(
+                "gear_type",
+                "Type",
+                "select",
+                _attr(entry, "gear_type", types[0]) or types[0],
+                options=[(t, t) for t in types],
+            ),
+            DialogField(
+                "gear_quality",
+                "Quality",
+                "select",
+                _attr(entry, "gear_quality", GEAR_QUALITY_DEFAULT),
+                options=[(q, q) for q in GEAR_QUALITIES],
+            ),
+        ]
+    fields.append(
+        DialogField("quantity", "Quantity", "int", _attr(entry, "quantity", 1))
+    )
+    if kind == "weapon":
+        fields += [
+            DialogField("weapon_init", "Init", "int", _attr(entry, "weapon_init", 0)),
+            DialogField(
+                "weapon_attack", "Attack", "int", _attr(entry, "weapon_attack", 0)
+            ),
+            DialogField(
+                "weapon_defense", "Defense", "int", _attr(entry, "weapon_defense", 0)
+            ),
+            DialogField(
+                "weapon_damage", "Damage", "int", _attr(entry, "weapon_damage", 0)
+            ),
+        ]
+    return fields
+
+
+def _vis_possession_fields(
+    kind: str, entry: pos.PossessionEntry | None
+) -> list[DialogField]:
+    """Art, Season harvested (a source), Pawns, Location and Physical Form."""
+    fields = [
+        DialogField(
+            "art",
+            "Art",
+            "select",
+            _attr(entry, "art", ""),
+            options=[(a, a) for a in ARTS],
+            required=True,
+            allow_blank=True,
+            placeholder="(choose an Art)",
+        )
+    ]
+    if kind == "vis_source":
+        fields.append(
+            DialogField(
+                "season",
+                "Season harvested",
+                "select",
+                _attr(entry, "season", ""),
+                options=[(x, x) for x in SEASONS],
+                required=True,
+                allow_blank=True,
+                placeholder="(choose a Season)",
+            )
+        )
+    fields += [
+        DialogField("pawns", "Pawns", "int", _attr(entry, "pawns", 1) or 1),
+        DialogField("location", "Location", "text", _attr(entry, "location", "")),
+        DialogField(
+            "physical_form",
+            "Physical Form",
+            "text",
+            _attr(entry, "physical_form", ""),
+        ),
+    ]
     return fields
 
 
@@ -7324,6 +7390,30 @@ class CharacterSheetView(Vertical):
 
     def compose(self) -> ComposeResult:
         character = self.character
+        yield from self._top_panel()
+        with TabbedContent(initial="tab-description"):
+            with TabPane("Description", id="tab-description"):
+                yield from self._description_tab()
+            with TabPane("Abilities", id="tab-abilities"), VerticalScroll():
+                yield SelectableList(self._ability_rows(), id="abilities-list")
+                yield Static(self._ability_info_text(None), id="ability-info")
+            with TabPane("Virtues & Flaws", id="tab-vf"):
+                yield from self._virtues_flaws_tab()
+            if character.type == "magus":
+                with TabPane("Hermetic Magic", id="tab-hermetic"):
+                    yield from self._hermetic_tab()
+            with TabPane("Inventory", id="tab-inventory"):
+                yield from self._inventory_tab()
+            if character.type == "magus":
+                with TabPane("Laboratory", id="tab-lab"):
+                    yield Static(_tab_placeholder("Laboratory"))
+            with TabPane("Diary", id="tab-diary"):
+                yield Static(_tab_placeholder("Diary"))
+
+    def _top_panel(self) -> ComposeResult:
+        """The always-visible info and Characteristics panels above the
+        tabs."""
+        character = self.character
         with Vertical(id="char-top-panel"):
             with PinnedCollapsible(
                 title=escape(character.name), id="section-char-info"
@@ -7341,150 +7431,144 @@ class CharacterSheetView(Vertical):
                 yield Button(
                     "Edit (e)", id="btn-char-characteristics-edit", compact=True
                 )
-        with TabbedContent(initial="tab-description"):
-            with TabPane("Description", id="tab-description"), VerticalScroll():
-                if character.type == "magus":
-                    with (
-                        SheetSection(
-                            title="Hermetic Background",
-                            id="section-hermetic-background",
-                        ),
-                        Horizontal(id="hermetic-background-row"),
-                    ):
-                        yield Static(
-                            self._hermetic_background_left_text(),
-                            id="hermetic-background-left",
-                        )
-                        yield Static(
-                            self._hermetic_background_right_text(),
-                            id="hermetic-background-right",
-                        )
+
+    def _description_tab(self) -> ComposeResult:
+        """Hermetic Background (magi), Biographical Detail, Personality
+        Traits and Reputations, Aging & Warping, and Health."""
+        character = self.character
+        with VerticalScroll():
+            if character.type == "magus":
                 with (
                     SheetSection(
-                        title="Biographical Detail", id="section-char-biographical"
+                        title="Hermetic Background",
+                        id="section-hermetic-background",
                     ),
-                    Horizontal(id="char-biographical-row"),
+                    Horizontal(id="hermetic-background-row"),
                 ):
                     yield Static(
-                        self._biographical_left_text(), id="char-biographical-left"
+                        self._hermetic_background_left_text(),
+                        id="hermetic-background-left",
                     )
                     yield Static(
-                        self._biographical_right_text(),
-                        id="char-biographical-right",
-                    )
-                with Horizontal(id="pt-rep-row"):
-                    with SheetSection(
-                        title="Personality Traits", id="section-personality-traits"
-                    ):
-                        yield SelectableList(
-                            self._personality_trait_rows(),
-                            id="personality-traits-list",
-                        )
-                    with SheetSection(title="Reputations", id="section-reputations"):
-                        yield SelectableList(
-                            self._reputation_rows(), id="character-reputations-list"
-                        )
-                with SheetSection(title="Aging & Warping", id="section-aging"):
-                    yield Static(self._aging_text(), id="aging-content")
-                with (
-                    SheetSection(title="Health", id="section-char-health"),
-                    Horizontal(id="char-health-row"),
-                ):
-                    with Vertical(id="char-health-wounds-col"):
-                        yield Static(self._wounds_text(), id="wounds-content")
-                        yield Button(
-                            "Edit Wounds (e)",
-                            id="btn-char-health-wounds-edit",
-                            compact=True,
-                        )
-                    with Vertical(id="char-health-fatigue-col"):
-                        yield Static(self._fatigue_text(), id="fatigue-content")
-                        yield Button(
-                            "Edit Fatigue",
-                            id="btn-char-health-fatigue-edit",
-                            compact=True,
-                        )
-            with TabPane("Abilities", id="tab-abilities"), VerticalScroll():
-                yield SelectableList(self._ability_rows(), id="abilities-list")
-                yield Static(self._ability_info_text(None), id="ability-info")
-            with TabPane("Virtues & Flaws", id="tab-vf"), VerticalScroll():
-                with Horizontal(id="vf-row"):
-                    with SheetSection(title="Virtues", id="section-vf-virtues"):
-                        yield SelectableList(
-                            self._vf_rows("Virtue"), id="vf-virtues-list"
-                        )
-                    with SheetSection(title="Flaws", id="section-vf-flaws"):
-                        yield SelectableList(self._vf_rows("Flaw"), id="vf-flaws-list")
-                yield Static(self._vf_info_text(None), id="vf-info")
-            if character.type == "magus":
-                with (
-                    TabPane("Hermetic Magic", id="tab-hermetic"),
-                    Vertical(id="hermetic-body"),
-                ):
-                    with VerticalScroll(id="hermetic-scroll"):
-                        with (
-                            PinnedCollapsible(title="Magical Arts", id="section-arts"),
-                            Horizontal(id="arts-row"),
-                        ):
-                            with Vertical(id="arts-techniques-col"):
-                                yield Static("Techniques", classes="arts-col-title")
-                                yield Static(
-                                    self._arts_header_text(),
-                                    classes="arts-header",
-                                )
-                                yield SelectableList(
-                                    self._arts_rows(TECHNIQUES),
-                                    id="arts-techniques-list",
-                                )
-                            with Vertical(id="arts-forms-col"):
-                                yield Static("Forms", classes="arts-col-title")
-                                yield Static(
-                                    self._arts_header_text(),
-                                    classes="arts-header",
-                                )
-                                yield SelectableList(
-                                    self._arts_rows(FORMS),
-                                    id="arts-forms-list",
-                                )
-                        with SheetSection(
-                            title="Raw Vis", id="section-raw-vis-hermetic"
-                        ):
-                            yield SelectableList(
-                                self._raw_vis_rows(), id="raw-vis-list-hermetic"
-                            )
-                        with SheetSection(
-                            title="Known Spells", id="section-known-spells"
-                        ):
-                            yield SelectableList(
-                                self._known_spell_rows(), id="known-spells-list"
-                            )
-                    yield Static(
-                        "[dim]Select an Art or a Known Spell to see its details.[/]",
-                        id="hermetic-info",
+                        self._hermetic_background_right_text(),
+                        id="hermetic-background-right",
                     )
             with (
-                TabPane("Inventory", id="tab-inventory"),
-                VerticalScroll(),
+                SheetSection(
+                    title="Biographical Detail", id="section-char-biographical"
+                ),
+                Horizontal(id="char-biographical-row"),
             ):
-                if character.type == "magus":
-                    with SheetSection(title="Raw Vis", id="section-raw-vis-inventory"):
-                        yield SelectableList(
-                            self._raw_vis_rows(), id="raw-vis-list-inventory"
-                        )
-                with SheetSection(title="Personal Gear", id="section-inventory"):
-                    yield SelectableList(self._inventory_rows(), id="inventory-list")
-                    yield Static(self._inventory_info_text(None), id="inventory-info")
-                yield BookListView(
-                    self.saga,
-                    lambda: bk.books_owned_by(self.saga, "character", character.id),
-                    section_id="section-books",
-                    docked=False,
+                yield Static(
+                    self._biographical_left_text(), id="char-biographical-left"
                 )
+                yield Static(
+                    self._biographical_right_text(),
+                    id="char-biographical-right",
+                )
+            with Horizontal(id="pt-rep-row"):
+                with SheetSection(
+                    title="Personality Traits", id="section-personality-traits"
+                ):
+                    yield SelectableList(
+                        self._personality_trait_rows(),
+                        id="personality-traits-list",
+                    )
+                with SheetSection(title="Reputations", id="section-reputations"):
+                    yield SelectableList(
+                        self._reputation_rows(), id="character-reputations-list"
+                    )
+            with SheetSection(title="Aging & Warping", id="section-aging"):
+                yield Static(self._aging_text(), id="aging-content")
+            with (
+                SheetSection(title="Health", id="section-char-health"),
+                Horizontal(id="char-health-row"),
+            ):
+                with Vertical(id="char-health-wounds-col"):
+                    yield Static(self._wounds_text(), id="wounds-content")
+                    yield Button(
+                        "Edit Wounds (e)",
+                        id="btn-char-health-wounds-edit",
+                        compact=True,
+                    )
+                with Vertical(id="char-health-fatigue-col"):
+                    yield Static(self._fatigue_text(), id="fatigue-content")
+                    yield Button(
+                        "Edit Fatigue",
+                        id="btn-char-health-fatigue-edit",
+                        compact=True,
+                    )
+
+    def _virtues_flaws_tab(self) -> ComposeResult:
+        """The Virtue and Flaw lists side by side, and the details panel."""
+        with VerticalScroll():
+            with Horizontal(id="vf-row"):
+                with SheetSection(title="Virtues", id="section-vf-virtues"):
+                    yield SelectableList(self._vf_rows("Virtue"), id="vf-virtues-list")
+                with SheetSection(title="Flaws", id="section-vf-flaws"):
+                    yield SelectableList(self._vf_rows("Flaw"), id="vf-flaws-list")
+            yield Static(self._vf_info_text(None), id="vf-info")
+
+    def _hermetic_tab(self) -> ComposeResult:
+        """Magical Arts, Raw Vis and Known Spells (scrolling), and the
+        details panel docked below them. Magi only."""
+        with Vertical(id="hermetic-body"):
+            with VerticalScroll(id="hermetic-scroll"):
+                with (
+                    PinnedCollapsible(title="Magical Arts", id="section-arts"),
+                    Horizontal(id="arts-row"),
+                ):
+                    with Vertical(id="arts-techniques-col"):
+                        yield Static("Techniques", classes="arts-col-title")
+                        yield Static(
+                            self._arts_header_text(),
+                            classes="arts-header",
+                        )
+                        yield SelectableList(
+                            self._arts_rows(TECHNIQUES),
+                            id="arts-techniques-list",
+                        )
+                    with Vertical(id="arts-forms-col"):
+                        yield Static("Forms", classes="arts-col-title")
+                        yield Static(
+                            self._arts_header_text(),
+                            classes="arts-header",
+                        )
+                        yield SelectableList(
+                            self._arts_rows(FORMS),
+                            id="arts-forms-list",
+                        )
+                with SheetSection(title="Raw Vis", id="section-raw-vis-hermetic"):
+                    yield SelectableList(
+                        self._raw_vis_rows(), id="raw-vis-list-hermetic"
+                    )
+                with SheetSection(title="Known Spells", id="section-known-spells"):
+                    yield SelectableList(
+                        self._known_spell_rows(), id="known-spells-list"
+                    )
+            yield Static(
+                "[dim]Select an Art or a Known Spell to see its details.[/]",
+                id="hermetic-info",
+            )
+
+    def _inventory_tab(self) -> ComposeResult:
+        """Raw Vis (magi), Personal Gear and the character's Books."""
+        character = self.character
+        with VerticalScroll():
             if character.type == "magus":
-                with TabPane("Laboratory", id="tab-lab"):
-                    yield Static(_tab_placeholder("Laboratory"))
-            with TabPane("Diary", id="tab-diary"):
-                yield Static(_tab_placeholder("Diary"))
+                with SheetSection(title="Raw Vis", id="section-raw-vis-inventory"):
+                    yield SelectableList(
+                        self._raw_vis_rows(), id="raw-vis-list-inventory"
+                    )
+            with SheetSection(title="Personal Gear", id="section-inventory"):
+                yield SelectableList(self._inventory_rows(), id="inventory-list")
+                yield Static(self._inventory_info_text(None), id="inventory-info")
+            yield BookListView(
+                self.saga,
+                lambda: bk.books_owned_by(self.saga, "character", character.id),
+                section_id="section-books",
+                docked=False,
+            )
 
     #: Bare Collapsible-section ids, except "tab-abilities" which has no
     #: sub-sections (a single flat pane, keyed by its own tab id) -- see
@@ -8370,35 +8454,8 @@ class FamiliarSheetView(Vertical):
             )
             yield Button("Edit (e)", id="btn-fam-info-edit", compact=True)
         with TabbedContent(initial="tab-fam-identity"):
-            with TabPane("Identity & Cords", id="tab-fam-identity"), VerticalScroll():
-                with SheetSection(title="Binding & Cords", id="section-fam-binding"):
-                    yield Static(self._binding_text(), id="fam-binding-content")
-                with Horizontal(id="fam-vf-row"):
-                    with SheetSection(title="Virtues", id="section-fam-vf-virtues"):
-                        yield SelectableList(
-                            fam.vf_rows(self.familiar, "Virtue"),
-                            id="fam-vf-virtues-list",
-                        )
-                    with SheetSection(title="Flaws", id="section-fam-vf-flaws"):
-                        yield SelectableList(
-                            fam.vf_rows(self.familiar, "Flaw"), id="fam-vf-flaws-list"
-                        )
-                yield Static(fam.vf_info_text(self.familiar, None), id="fam-vf-info")
-                with Horizontal(id="fam-pt-rep-row"):
-                    with SheetSection(
-                        title="Personality Traits", id="section-fam-personality-traits"
-                    ):
-                        yield SelectableList(
-                            fam.personality_trait_rows(self.familiar),
-                            id="fam-personality-traits-list",
-                        )
-                    with SheetSection(
-                        title="Reputations", id="section-fam-reputations"
-                    ):
-                        yield SelectableList(
-                            fam.reputation_rows(self.familiar),
-                            id="fam-reputations-list",
-                        )
+            with TabPane("Identity & Cords", id="tab-fam-identity"):
+                yield from self._identity_tab()
             with (
                 TabPane("Characteristics", id="tab-fam-characteristics"),
                 SheetSection(title="Characteristics", id="section-fam-characteristics"),
@@ -8407,41 +8464,8 @@ class FamiliarSheetView(Vertical):
                     fam.characteristics_text(self.familiar),
                     id="fam-characteristics-content",
                 )
-            with TabPane("Combat & Health", id="tab-fam-combat"), VerticalScroll():
-                with (
-                    SheetSection(title="Health", id="section-fam-health"),
-                    Horizontal(id="fam-health-row"),
-                ):
-                    with Vertical(id="fam-health-wounds-col"):
-                        yield Static(
-                            fam.wounds_text(self.familiar), id="fam-wounds-content"
-                        )
-                        yield Button(
-                            "Edit Wounds (e)",
-                            id="btn-fam-health-wounds-edit",
-                            compact=True,
-                        )
-                    with Vertical(id="fam-health-fatigue-col"):
-                        yield Static(
-                            fam.fatigue_text(self.familiar), id="fam-fatigue-content"
-                        )
-                        yield Button(
-                            "Edit Fatigue",
-                            id="btn-fam-health-fatigue-edit",
-                            compact=True,
-                        )
-                with SheetSection(
-                    title="Natural Weapons & Attacks",
-                    id="section-fam-natural-weapons",
-                ):
-                    yield SelectableList(
-                        fam.natural_weapon_rows(self.familiar),
-                        id="fam-natural-weapons-list",
-                    )
-                    yield Static(
-                        fam.natural_weapon_info_text(self.familiar, None),
-                        id="fam-natural-weapons-info",
-                    )
+            with TabPane("Combat & Health", id="tab-fam-combat"):
+                yield from self._combat_tab()
             with TabPane("Abilities", id="tab-fam-abilities"), VerticalScroll():
                 yield Static(
                     "[dim]Languages: shares the Magus partner's Language "
@@ -8460,6 +8484,75 @@ class FamiliarSheetView(Vertical):
                 yield Static(
                     fam.bond_power_info_text(self.familiar, None),
                     id="fam-bond-powers-info",
+                )
+
+    def _identity_tab(self) -> ComposeResult:
+        """Binding & Cords, the Virtue and Flaw lists with their details
+        panel, and Personality Traits and Reputations."""
+        with VerticalScroll():
+            with SheetSection(title="Binding & Cords", id="section-fam-binding"):
+                yield Static(self._binding_text(), id="fam-binding-content")
+            with Horizontal(id="fam-vf-row"):
+                with SheetSection(title="Virtues", id="section-fam-vf-virtues"):
+                    yield SelectableList(
+                        fam.vf_rows(self.familiar, "Virtue"),
+                        id="fam-vf-virtues-list",
+                    )
+                with SheetSection(title="Flaws", id="section-fam-vf-flaws"):
+                    yield SelectableList(
+                        fam.vf_rows(self.familiar, "Flaw"), id="fam-vf-flaws-list"
+                    )
+            yield Static(fam.vf_info_text(self.familiar, None), id="fam-vf-info")
+            with Horizontal(id="fam-pt-rep-row"):
+                with SheetSection(
+                    title="Personality Traits", id="section-fam-personality-traits"
+                ):
+                    yield SelectableList(
+                        fam.personality_trait_rows(self.familiar),
+                        id="fam-personality-traits-list",
+                    )
+                with SheetSection(title="Reputations", id="section-fam-reputations"):
+                    yield SelectableList(
+                        fam.reputation_rows(self.familiar),
+                        id="fam-reputations-list",
+                    )
+
+    def _combat_tab(self) -> ComposeResult:
+        """Health (Wounds and Fatigue) and Natural Weapons & Attacks."""
+        with VerticalScroll():
+            with (
+                SheetSection(title="Health", id="section-fam-health"),
+                Horizontal(id="fam-health-row"),
+            ):
+                with Vertical(id="fam-health-wounds-col"):
+                    yield Static(
+                        fam.wounds_text(self.familiar), id="fam-wounds-content"
+                    )
+                    yield Button(
+                        "Edit Wounds (e)",
+                        id="btn-fam-health-wounds-edit",
+                        compact=True,
+                    )
+                with Vertical(id="fam-health-fatigue-col"):
+                    yield Static(
+                        fam.fatigue_text(self.familiar), id="fam-fatigue-content"
+                    )
+                    yield Button(
+                        "Edit Fatigue",
+                        id="btn-fam-health-fatigue-edit",
+                        compact=True,
+                    )
+            with SheetSection(
+                title="Natural Weapons & Attacks",
+                id="section-fam-natural-weapons",
+            ):
+                yield SelectableList(
+                    fam.natural_weapon_rows(self.familiar),
+                    id="fam-natural-weapons-list",
+                )
+                yield Static(
+                    fam.natural_weapon_info_text(self.familiar, None),
+                    id="fam-natural-weapons-info",
                 )
 
     def _binding_text(self) -> str:
