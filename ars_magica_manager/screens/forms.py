@@ -1515,7 +1515,7 @@ class MasteryEditScreen(ModalDialog[KnownSpell | None]):
 
     def compose(self) -> ComposeResult:
         with Vertical(id="mastery-dialog"):
-            yield Label(f"Mastery: {self.spell_name}", id="mastery-title")
+            yield Label(f"Mastery: {escape(self.spell_name)}", id="mastery-title")
             yield Label("Score")
             yield Input(
                 value=str(self.mastery_score), type="integer", id="input-mastery-score"
@@ -1545,7 +1545,7 @@ class MasteryEditScreen(ModalDialog[KnownSpell | None]):
             return
         for ability in self._abilities:
             list_view.append(
-                ListItem(Label(f"{ability.name} {ability.level}/{ability.xp}"))
+                ListItem(Label(f"{escape(ability.name)} {ability.level}/{ability.xp}"))
             )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:

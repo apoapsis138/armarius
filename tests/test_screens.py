@@ -46,6 +46,7 @@ from ars_magica_manager.models import (
     KnownSpell,
     LabCharacteristics,
     Laboratory,
+    MasteryAbility,
     NamedDescription,
     Possession,
     Saga,
@@ -2667,6 +2668,35 @@ async def test_edit_spell_mastery_sets_score_xp_and_abilities():
     assert len(known.mastery_abilities) == 1
     assert known.mastery_abilities[0].name == "Fast Casting"
     assert known.mastery_abilities[0].level == 1
+
+
+async def test_the_mastery_dialog_shows_brackets_in_names():
+    # B23: the spell's name (title) and its Mastery Abilities' names (list)
+    # were read as markup.
+    saga = _saga_with_character_and_spell()
+    saga.spells[0].name = "Pilum of [Greater] Fire"
+    saga.characters[0].spells_known = [
+        KnownSpell(
+            spell_id="spell1",
+            mastery_abilities=[MasteryAbility(name="Fast [Casting]", level=1)],
+        )
+    ]
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_character(pilot, app)
+        await _open_section(pilot, app, "section-known-spells")
+        await pilot.press("e")
+        await wait_until(pilot, lambda: isinstance(app.screen, RemovalPickerScreen))
+        await pilot.press("enter")
+        assert await wait_until(
+            pilot, lambda: isinstance(app.screen, MasteryEditScreen)
+        )
+        await pilot.pause()
+        labels = [str(label.render()) for label in app.screen.query(Label)]
+        assert "Mastery: Pilum of [Greater] Fire" in labels, labels
+        assert "Fast [Casting] 1/0" in labels, labels
 
 
 def _inventory_labels(view) -> str:
