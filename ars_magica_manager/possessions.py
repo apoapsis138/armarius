@@ -7,7 +7,9 @@ plus stored entries) and the text for list rows and the details panel.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
+from . import storage
 from .markup import escape, fit, markdown_inline
 from .models import (
     GEAR_POINTS,
@@ -384,3 +386,30 @@ def gear_points(saga: Saga, covenant: Covenant) -> int:
 def total_pawns(saga: Saga, covenant: Covenant, kind: str) -> int:
     """Pawns held in a vis list ("vis_source" per year, "vis_store" on hand)."""
     return sum(e.pawns for e in entries_for_kind(saga, covenant, kind))
+
+
+# ------------------------------------------------------------------ changes
+
+
+def save_entry(
+    covenant: Covenant, kind: str, entry: PossessionEntry | None, values: dict[str, Any]
+) -> None:
+    """Apply an add/edit form's `values`: an update to the entry's record,
+    or a new record -- for a new entry, or for a laboratory's sanctum edited
+    for the first time (linked to that lab)."""
+    if entry is not None and entry.record is not None:
+        for key, value in values.items():
+            setattr(entry.record, key, value)
+        return
+    lab_id = entry.lab.id if entry is not None and entry.lab else None
+    covenant.possessions.append(
+        Possession(
+            id=storage.generate_unique_id(
+                values.get("name") or f"{kind}-{lab_id or 'new'}",
+                [r.id for r in covenant.possessions],
+            ),
+            kind=kind,
+            lab_id=lab_id,
+            **values,
+        )
+    )

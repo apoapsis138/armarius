@@ -104,7 +104,6 @@ from .models import (
     FatigueLevel,
     HermeticBackground,
     IncomeSource,
-    Inhabitant,
     KnownSpell,
     LabCharacteristics,
     Laboratory,
@@ -118,6 +117,7 @@ from .models import (
     VirtueFlawDef,
     VirtueFlawInstance,
     Wounds,
+    add_raw_vis,
     assign_laboratory,
     assign_laboratory_owner,
     character_age,
@@ -130,6 +130,7 @@ from .models import (
     lab_free_virtues,
     lab_occupied_size,
     next_season,
+    replace_raw_vis,
 )
 
 _SAGA_ITEM_ID_PREFIX = "saga-"
@@ -10885,23 +10886,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(values: dict[str, Any] | None) -> None:
             if values is None:
                 return
-            if entry is not None and entry.record is not None:
-                for key, value in values.items():
-                    setattr(entry.record, key, value)
-            else:
-                # A new entry, or a laboratory's sanctum edited for the first time.
-                lab_id = entry.lab.id if entry is not None and entry.lab else None
-                covenant.possessions.append(
-                    Possession(
-                        id=storage.generate_unique_id(
-                            values.get("name") or f"{kind}-{lab_id or 'new'}",
-                            [r.id for r in covenant.possessions],
-                        ),
-                        kind=kind,
-                        lab_id=lab_id,
-                        **values,
-                    )
-                )
+            pos.save_entry(covenant, kind, entry, values)
             storage.save_saga(self.saga)
             self._refresh_covenant_section(f"section-pos-{kind}")
 
@@ -11032,7 +11017,6 @@ class WorkspaceScreen(Screen[None]):
         covenant = self.selected_covenant
         if covenant is None:
             return
-        sources = covenant.economics.income_sources
         title = (
             "Add a Source of Income"
             if source is None
@@ -11071,14 +11055,7 @@ class WorkspaceScreen(Screen[None]):
             if values is None:
                 return
             if source is None:
-                sources.append(
-                    IncomeSource(
-                        id=storage.generate_unique_id(
-                            values["name"], [s.id for s in sources]
-                        ),
-                        **values,
-                    )
-                )
+                eco.add_income_source(covenant, values)
             else:
                 for key, value in values.items():
                     setattr(source, key, value)
@@ -11278,13 +11255,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(values: dict[str, Any] | None) -> None:
             if values is None:
                 return
-            notes = values.pop("notes")
-            for attribute, value in values.items():
-                setattr(economics, attribute, value)
-            if notes:
-                economics.notes[row.key] = notes
-            else:
-                economics.notes.pop(row.key, None)
+            eco.apply_row_edit(economics, row.key, values)
             storage.save_saga(self.saga)
             self._refresh_covenant_section(f"section-eco-{which}")
 
@@ -11383,32 +11354,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(values: dict[str, Any] | None) -> None:
             if values is None:
                 return
-            if entry is None:
-                covenant.inhabitants.append(
-                    Inhabitant(
-                        id=storage.generate_unique_id(
-                            values.get("name") or kind,
-                            [r.id for r in covenant.inhabitants],
-                        ),
-                        kind=kind,
-                        character_id=grog.id if grog is not None else None,
-                        **values,
-                    )
-                )
-            elif entry.record is not None:
-                for key, value in values.items():
-                    setattr(entry.record, key, value)
-            else:  # a character listed from its sheet, edited for the first time
-                covenant.inhabitants.append(
-                    Inhabitant(
-                        id=storage.generate_unique_id(
-                            f"{kind}-{entry.name}", [r.id for r in covenant.inhabitants]
-                        ),
-                        kind=kind,
-                        character_id=entry.character.id if entry.character else None,
-                        **values,
-                    )
-                )
+            inh.save_entry(covenant, kind, entry, values, grog)
             storage.save_saga(self.saga)
             self._refresh_covenant_section(f"section-inh-{kind}")
 
@@ -11455,25 +11401,11 @@ class WorkspaceScreen(Screen[None]):
         if entry.auto and entry.character is not None:
             # Listed from a character sheet (e.g. a magus who died): they stay
             # in the covenant on their sheet, but stop counting as an inhabitant.
-            character_id = entry.character.id
 
             def handle_departed(confirmed: bool | None) -> None:
                 if not confirmed:
                     return
-                if entry.record is not None and entry.record in covenant.inhabitants:
-                    entry.record.departed = True
-                else:
-                    covenant.inhabitants.append(
-                        Inhabitant(
-                            id=storage.generate_unique_id(
-                                f"{kind}-{entry.name}",
-                                [r.id for r in covenant.inhabitants],
-                            ),
-                            kind=kind,
-                            character_id=character_id,
-                            departed=True,
-                        )
-                    )
+                inh.mark_departed(covenant, kind, entry)
                 storage.save_saga(self.saga)
                 self._refresh_covenant_section(f"section-inh-{kind}")
 
@@ -12002,11 +11934,7 @@ class WorkspaceScreen(Screen[None]):
             if not confirmed:
                 return
             if saga.current_season == SEASONS[-1]:
-                in_deficit = [
-                    (c.name, eco.summarize(saga, c).surplus_deficit)
-                    for c in saga.covenants
-                ]
-                in_deficit = [(name, d) for name, d in in_deficit if d < 0]
+                in_deficit = eco.covenants_in_deficit(saga)
                 if in_deficit:
                     self._offer_to_resolve_deficit(in_deficit, advance)
                     return
@@ -12016,11 +11944,7 @@ class WorkspaceScreen(Screen[None]):
             new_year = saga.current_season == SEASONS[-1]
             # A new year (Winter -> Spring): each covenant's surplus goes into
             # its Wealth before the date moves on.
-            added = (
-                [(c.name, eco.close_year(saga, c)) for c in saga.covenants]
-                if new_year
-                else []
-            )
+            added = eco.close_all_years(saga) if new_year else []
             await self._apply_saga_date(
                 *next_season(saga.current_season, saga.current_year)
             )
@@ -12524,7 +12448,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(result: tuple[str, int] | None) -> None:
             if result is not None:
                 art, pawns = result
-                character.raw_vis[art] = character.raw_vis.get(art, 0) + pawns
+                add_raw_vis(character.raw_vis, art, pawns)
                 storage.save_saga(self.saga)
                 self._refresh_character_section("section-raw-vis-hermetic")
 
@@ -12574,10 +12498,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(result: tuple[str, int] | None) -> None:
             if result is not None:
                 art, pawns = result
-                del character.raw_vis[old_art]
-                # Re-pointing an entry at an Art that's already held merges
-                # the pawns into it, same as adding Raw Vis of a held Art does.
-                character.raw_vis[art] = character.raw_vis.get(art, 0) + pawns
+                replace_raw_vis(character.raw_vis, old_art, art, pawns)
                 storage.save_saga(self.saga)
                 self._refresh_character_section("section-raw-vis-hermetic")
 
@@ -13038,7 +12959,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(result: tuple[str, int] | None) -> None:
             if result is not None:
                 art, pawns = result
-                lab.raw_vis[art] = lab.raw_vis.get(art, 0) + pawns
+                add_raw_vis(lab.raw_vis, art, pawns)
                 storage.save_saga(self.saga)
                 self._refresh_laboratory_section("section-lab-raw-vis")
 
@@ -13247,10 +13168,7 @@ class WorkspaceScreen(Screen[None]):
 
         def apply(index: int, result: tuple[str, int]) -> None:
             art, pawns = result
-            del lab.raw_vis[arts[index]]
-            # Re-pointing an entry at an Art that's already held merges the
-            # pawns into it, same as adding Raw Vis of a held Art does.
-            lab.raw_vis[art] = lab.raw_vis.get(art, 0) + pawns
+            replace_raw_vis(lab.raw_vis, arts[index], art, pawns)
 
         self._edit_lab_entry(
             picker_title="Edit which Raw Vis entry?",

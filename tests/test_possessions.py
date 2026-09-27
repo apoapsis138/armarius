@@ -299,3 +299,27 @@ def test_unknown_possession_kind_is_rejected():
     with pytest.raises(ValueError, match="kind"):
         Possession(id="x", kind="spaceship")
     assert len(POSSESSION_KINDS) == 7
+
+
+def test_save_entry_adds_a_new_possession_and_updates_an_existing_one():
+    saga, cov = _saga()
+    pos.save_entry(cov, "item", None, {"name": "Silver Chalice"})
+    chalice = cov.possessions[-1]
+    assert (chalice.id, chalice.kind, chalice.lab_id) == (
+        "silver_chalice",
+        "item",
+        None,
+    )
+    entry = next(e for e in pos.entries_for_kind(saga, cov, "item"))
+    pos.save_entry(cov, "item", entry, {"name": "Gold Chalice"})
+    assert chalice.name == "Gold Chalice" and len(cov.possessions) == 1
+
+
+def test_save_entry_records_a_labs_sanctum_the_first_time_it_is_edited():
+    saga, cov = _saga()
+    sanctum = next(e for e in pos.entries_for_kind(saga, cov, "sanctum"))
+    assert sanctum.record is None and sanctum.lab is not None
+    pos.save_entry(cov, "sanctum", sanctum, {"upkeep": 3})
+    record = cov.possessions[-1]
+    assert (record.kind, record.lab_id, record.upkeep) == ("sanctum", "lab1", 3)
+    assert record.id == "sanctum_lab1"

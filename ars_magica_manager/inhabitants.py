@@ -9,8 +9,9 @@ rows and the details panel.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
-from . import catalog
+from . import catalog, storage
 from .markup import aligned, escape, fit, markdown_inline
 from .models import (
     GOVERNANCE_STYLE_IDS,
@@ -750,3 +751,66 @@ def misc_text(covenant: Covenant) -> tuple[str, str]:
         ]
     )
     return left, right
+
+
+# ------------------------------------------------------------------ changes
+
+
+def _listed_record_id(covenant: Covenant, kind: str, name: str) -> str:
+    """Id for the stored record of someone listed from their character sheet."""
+    return storage.generate_unique_id(
+        f"{kind}-{name}", [r.id for r in covenant.inhabitants]
+    )
+
+
+def save_entry(
+    covenant: Covenant,
+    kind: str,
+    entry: InhabitantEntry | None,
+    values: dict[str, Any],
+    grog: Character | None = None,
+) -> None:
+    """Apply an add/edit form's `values`: a new record (for `grog`, if it's
+    a grog's own), an update to the entry's record, or -- for a character
+    listed from its sheet and edited for the first time -- a new record
+    linked to that character."""
+    if entry is None:
+        covenant.inhabitants.append(
+            Inhabitant(
+                id=storage.generate_unique_id(
+                    values.get("name") or kind,
+                    [r.id for r in covenant.inhabitants],
+                ),
+                kind=kind,
+                character_id=grog.id if grog is not None else None,
+                **values,
+            )
+        )
+    elif entry.record is not None:
+        for key, value in values.items():
+            setattr(entry.record, key, value)
+    else:
+        covenant.inhabitants.append(
+            Inhabitant(
+                id=_listed_record_id(covenant, kind, entry.name),
+                kind=kind,
+                character_id=entry.character.id if entry.character else None,
+                **values,
+            )
+        )
+
+
+def mark_departed(covenant: Covenant, kind: str, entry: InhabitantEntry) -> None:
+    """A character listed from its sheet stops counting as an inhabitant
+    (they stay in the covenant on their sheet)."""
+    if entry.record is not None and entry.record in covenant.inhabitants:
+        entry.record.departed = True
+    else:
+        covenant.inhabitants.append(
+            Inhabitant(
+                id=_listed_record_id(covenant, kind, entry.name),
+                kind=kind,
+                character_id=entry.character.id if entry.character else None,
+                departed=True,
+            )
+        )

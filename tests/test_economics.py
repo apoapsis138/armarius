@@ -695,3 +695,37 @@ def test_the_year_end_adds_the_surplus_to_wealth_and_resets_emergency_savings():
     saga, cov = _with_deficit(20, wealth=50)
     assert eco.close_year(saga, cov) == 0
     assert cov.economics.wealth == 50
+
+
+def test_add_income_source_gives_it_a_unique_id():
+    _, cov = _saga()
+    first = eco.add_income_source(cov, {"name": "Mill", "type": "Typical", "income": 5})
+    second = eco.add_income_source(
+        cov, {"name": "Mill", "type": "Typical", "income": 5}
+    )
+    assert (first.id, second.id) == ("mill", "mill_2")
+    assert cov.economics.income_sources[-2:] == [first, second]
+
+
+def test_apply_row_edit_sets_figures_and_keeps_or_drops_the_note():
+    _, cov = _saga()
+    economics = cov.economics
+    eco.apply_row_edit(economics, "tithes", {"tithes": 7, "notes": "To Durenmar"})
+    assert economics.tithes == 7 and economics.notes["tithes"] == "To Durenmar"
+    eco.apply_row_edit(economics, "tithes", {"tithes": 7, "notes": ""})
+    assert "tithes" not in economics.notes
+
+
+def test_covenants_in_deficit_and_closing_every_year():
+    saga, cov = _with_deficit(36, wealth=100)
+    other = Covenant(id="cov2", saga_id=saga.id, name="Prosperous")
+    other.economics.income_sources = [
+        IncomeSource(id="i", name="Mine", type="Typical", income=500)
+    ]
+    saga.covenants.append(other)
+    other_surplus = eco.summarize(saga, other).surplus_deficit
+    assert other_surplus > 0
+    assert eco.covenants_in_deficit(saga) == [(cov.name, -36)]
+    # A deficit adds nothing to Wealth; a surplus is added (see close_year).
+    assert eco.close_all_years(saga) == [(cov.name, 0), (other.name, other_surplus)]
+    assert cov.economics.wealth == 100

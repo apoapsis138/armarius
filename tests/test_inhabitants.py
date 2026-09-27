@@ -881,3 +881,45 @@ def test_unknown_inhabitant_kind_is_rejected():
     with pytest.raises(ValueError, match="kind"):
         Inhabitant(id="x", kind="dragon")
     assert len(INHABITANT_KINDS) == 8
+
+
+def test_save_entry_adds_updates_and_records_a_listed_character():
+    saga, cov = _saga()
+    inh.save_entry(cov, "specialist", None, {"name": "Scribe", "quantity": 1})
+    scribe = cov.inhabitants[-1]
+    assert (scribe.id, scribe.kind, scribe.name) == ("scribe", "specialist", "Scribe")
+
+    entry = next(e for e in inh.entries_for_kind(saga, cov, "specialist") if e.record)
+    inh.save_entry(cov, "specialist", entry, {"name": "Head Scribe"})
+    assert scribe.name == "Head Scribe" and len(cov.inhabitants) == 1
+
+    # A magus listed from their sheet gets a record the first time it's edited.
+    corvinus = next(
+        e for e in inh.entries_for_kind(saga, cov, "magus") if e.record is None
+    )
+    inh.save_entry(cov, "magus", corvinus, {"presence": 2})
+    record = cov.inhabitants[-1]
+    assert (record.id, record.character_id) == ("magus_corvinus", "mag1")
+
+
+def test_save_entry_links_a_new_grogs_record_to_the_grog():
+    saga, cov = _saga()
+    grog = saga.characters[3]
+    inh.save_entry(cov, "turb", None, {"name": ""}, grog)
+    assert (cov.inhabitants[-1].id, cov.inhabitants[-1].character_id) == (
+        "turb",
+        "grog1",
+    )
+
+
+def test_mark_departed_flags_the_record_or_creates_a_departed_one():
+    saga, cov = _saga()
+    corvinus = next(e for e in inh.entries_for_kind(saga, cov, "magus"))
+    inh.mark_departed(cov, "magus", corvinus)
+    record = cov.inhabitants[-1]
+    assert (record.character_id, record.departed) == ("mag1", True)
+
+    record.departed = False
+    again = next(e for e in inh.entries_for_kind(saga, cov, "magus"))
+    inh.mark_departed(cov, "magus", again)
+    assert record.departed and len(cov.inhabitants) == 1

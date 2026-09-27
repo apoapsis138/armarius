@@ -1705,3 +1705,15 @@ def assign_laboratory_owner(
         return
     new_owner = next(c for c in saga.characters if c.id == new_owner_id)
     assign_laboratory(saga, new_owner, lab.id)
+
+
+def add_raw_vis(pool: dict[str, int], art: str, pawns: int) -> None:
+    """Add `pawns` of `art` to a Raw Vis pool (merging with any already held)."""
+    pool[art] = pool.get(art, 0) + pawns
+
+
+def replace_raw_vis(pool: dict[str, int], old_art: str, art: str, pawns: int) -> None:
+    """Replace the `old_art` entry of a Raw Vis pool with `pawns` of `art`;
+    re-pointing it at an Art already held merges the pawns into it."""
+    del pool[old_art]
+    add_raw_vis(pool, art, pawns)

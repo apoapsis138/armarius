@@ -18,6 +18,7 @@ from ars_magica_manager.models import (
     ScoredTrait,
     VirtueFlawInstance,
     Wounds,
+    add_raw_vis,
     assign_laboratory,
     assign_laboratory_owner,
     character_age,
@@ -28,6 +29,7 @@ from ars_magica_manager.models import (
     lab_net_vf_points,
     lab_occupied_size,
     next_season,
+    replace_raw_vis,
 )
 
 
@@ -371,3 +373,14 @@ def test_assign_laboratory_owner_works_from_the_labs_side():
     assert _owners(saga) == ({"a": "lab2", "b": None}, {"lab1": None, "lab2": "a"})
     assign_laboratory_owner(saga, saga.laboratories[1], None)
     assert _owners(saga) == ({"a": None, "b": None}, {"lab1": None, "lab2": None})
+
+
+def test_add_and_replace_raw_vis_merge_into_an_art_already_held():
+    pool = {"creo": 2}
+    add_raw_vis(pool, "creo", 3)
+    add_raw_vis(pool, "vim", 1)
+    assert pool == {"creo": 5, "vim": 1}
+    replace_raw_vis(pool, "vim", "creo", 4)
+    assert pool == {"creo": 9}
+    replace_raw_vis(pool, "creo", "ignem", 2)
+    assert pool == {"ignem": 2}

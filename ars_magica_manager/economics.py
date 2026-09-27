@@ -11,8 +11,9 @@ totals. Nothing here is stored; only what the user types lives in
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
-from . import catalog
+from . import catalog, storage
 from . import inhabitants as inh
 from . import possessions as pos
 from .markup import aligned, escape, markdown_inline
@@ -21,6 +22,7 @@ from .models import (
     INCOME_TYPE_DEFAULTS,
     SANCTUM_USAGES,
     Covenant,
+    Economics,
     IncomeSource,
     Saga,
     covenant_modifiers,
@@ -590,3 +592,40 @@ def improvement_note(
         f"{current_year} - {name} experienced {effect} changing Income "
         f"from {previous_income} to {new_income}."
     )
+
+
+# ------------------------------------------------------------------ changes
+
+
+def add_income_source(covenant: Covenant, values: dict[str, Any]) -> IncomeSource:
+    sources = covenant.economics.income_sources
+    source = IncomeSource(
+        id=storage.generate_unique_id(values["name"], [s.id for s in sources]),
+        **values,
+    )
+    sources.append(source)
+    return source
+
+
+def apply_row_edit(economics: Economics, row_key: str, values: dict[str, Any]) -> None:
+    """Apply an expenditure/savings row's form: its typed figures, and its
+    note (an empty note removes it)."""
+    values = dict(values)
+    notes = values.pop("notes")
+    for attribute, value in values.items():
+        setattr(economics, attribute, value)
+    if notes:
+        economics.notes[row_key] = notes
+    else:
+        economics.notes.pop(row_key, None)
+
+
+def covenants_in_deficit(saga: Saga) -> list[tuple[str, int]]:
+    """(name, surplus/deficit) for each covenant spending more than it earns."""
+    results = [(c.name, summarize(saga, c).surplus_deficit) for c in saga.covenants]
+    return [(name, d) for name, d in results if d < 0]
+
+
+def close_all_years(saga: Saga) -> list[tuple[str, int]]:
+    """Close the year for every covenant (see close_year): (name, added)."""
+    return [(c.name, close_year(saga, c)) for c in saga.covenants]
