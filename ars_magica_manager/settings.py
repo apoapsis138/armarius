@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
-SETTINGS_PATH = Path(__file__).resolve().parent.parent / "data" / "app_settings.json"
+from . import DATA_DIR
+
+SETTINGS_PATH = DATA_DIR / "app_settings.json"
 
 
 def load_settings() -> dict:

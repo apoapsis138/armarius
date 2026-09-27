@@ -8,9 +8,10 @@ from collections.abc import Iterable
 from dataclasses import asdict
 from pathlib import Path
 
+from . import DATA_DIR
 from .models import Saga
 
-SAGAS_DIR = Path(__file__).resolve().parent.parent / "data" / "sagas"
+SAGAS_DIR = DATA_DIR / "sagas"
 
 _SLUG_RE = re.compile(r"[^a-z0-9]+")
 

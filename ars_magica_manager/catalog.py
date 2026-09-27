@@ -4,9 +4,12 @@ Laboratory Virtues/Flaws and Spells (reference data, not per-saga)."""
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from functools import lru_cache
 from pathlib import Path
+from typing import Any
 
+from . import DATA_DIR
 from .models import (
     BOON_HOOK_DETAIL,
     AbilityDef,
@@ -18,24 +21,17 @@ from .models import (
     VirtueFlawInstance,
 )
 
-CATALOG_PATH = (
-    Path(__file__).resolve().parent.parent / "data" / "virtue_flaw_catalog.json"
-)
-ABILITY_CATALOG_PATH = (
-    Path(__file__).resolve().parent.parent / "data" / "ability_catalog.json"
-)
-HOUSE_CATALOG_PATH = (
-    Path(__file__).resolve().parent.parent / "data" / "house_catalog.json"
-)
-COVENANT_BOON_HOOK_CATALOG_PATH = (
-    Path(__file__).resolve().parent.parent / "data" / "covenant_boon_hook_catalog.json"
-)
-LAB_VF_CATALOG_PATH = (
-    Path(__file__).resolve().parent.parent / "data" / "lab_virtue_flaw_catalog.json"
-)
-SPELL_CATALOG_PATH = (
-    Path(__file__).resolve().parent.parent / "data" / "spell_catalog.json"
-)
+CATALOG_PATH = DATA_DIR / "virtue_flaw_catalog.json"
+ABILITY_CATALOG_PATH = DATA_DIR / "ability_catalog.json"
+HOUSE_CATALOG_PATH = DATA_DIR / "house_catalog.json"
+COVENANT_BOON_HOOK_CATALOG_PATH = DATA_DIR / "covenant_boon_hook_catalog.json"
+LAB_VF_CATALOG_PATH = DATA_DIR / "lab_virtue_flaw_catalog.json"
+SPELL_CATALOG_PATH = DATA_DIR / "spell_catalog.json"
+
+
+def _load_entries[T](path: Path, from_dict: Callable[[dict[str, Any]], T]) -> list[T]:
+    """Every entry of a catalog file that is a JSON list of entries."""
+    return [from_dict(entry) for entry in json.loads(path.read_text(encoding="utf-8"))]
 
 
 @lru_cache(maxsize=4)
@@ -67,8 +63,7 @@ def _fill_placeholders(name: str, params: dict[str, str]) -> str:
 
 
 def load_virtue_flaw_catalog(path: Path = CATALOG_PATH) -> list[VirtueFlawDef]:
-    data = json.loads(path.read_text(encoding="utf-8"))
-    return [VirtueFlawDef.from_dict(entry) for entry in data]
+    return _load_entries(path, VirtueFlawDef.from_dict)
 
 
 def load_virtue_flaw_catalog_by_id(
@@ -93,8 +88,7 @@ def describe_virtue_flaw(
 
 
 def load_ability_catalog(path: Path = ABILITY_CATALOG_PATH) -> list[AbilityDef]:
-    data = json.loads(path.read_text(encoding="utf-8"))
-    return [AbilityDef.from_dict(entry) for entry in data]
+    return _load_entries(path, AbilityDef.from_dict)
 
 
 def load_ability_catalog_by_id(
@@ -116,8 +110,7 @@ def resolve_ability_name(entry: AbilityDef, params: dict[str, str]) -> str:
 
 
 def load_house_catalog(path: Path = HOUSE_CATALOG_PATH) -> list[HouseDef]:
-    data = json.loads(path.read_text(encoding="utf-8"))
-    return [HouseDef.from_dict(entry) for entry in data]
+    return _load_entries(path, HouseDef.from_dict)
 
 
 def load_house_catalog_by_id(path: Path = HOUSE_CATALOG_PATH) -> dict[str, HouseDef]:
@@ -127,8 +120,7 @@ def load_house_catalog_by_id(path: Path = HOUSE_CATALOG_PATH) -> dict[str, House
 def load_lab_virtue_flaw_catalog(
     path: Path = LAB_VF_CATALOG_PATH,
 ) -> list[LabVirtueFlawDef]:
-    data = json.loads(path.read_text(encoding="utf-8"))
-    return [LabVirtueFlawDef.from_dict(entry) for entry in data]
+    return _load_entries(path, LabVirtueFlawDef.from_dict)
 
 
 def load_lab_virtue_flaw_catalog_by_id(
@@ -140,8 +132,7 @@ def load_lab_virtue_flaw_catalog_by_id(
 def load_covenant_boon_hook_catalog(
     path: Path = COVENANT_BOON_HOOK_CATALOG_PATH,
 ) -> list[CovenantBoonHookDef]:
-    data = json.loads(path.read_text(encoding="utf-8"))
-    return [CovenantBoonHookDef.from_dict(entry) for entry in data]
+    return _load_entries(path, CovenantBoonHookDef.from_dict)
 
 
 def load_covenant_boon_hook_catalog_by_id(
