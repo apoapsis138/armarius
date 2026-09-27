@@ -2,6 +2,9 @@
 gives while the form is edited (leniently) and on Save (checked, with the
 first problem shown)."""
 
+import json
+import subprocess
+import sys
 from typing import Any
 
 import pytest
@@ -9,6 +12,7 @@ from support import wait_until
 from textual.app import App
 from textual.widgets import Checkbox, Input, Select, Static, TextArea
 
+from ars_magica_manager import ROOT
 from ars_magica_manager.screens import DialogField, FieldsDialog
 
 
@@ -142,3 +146,29 @@ async def test_required_blank_optional_number_and_select():
         dialog.query_one("#btn-save").press()
         await wait_until(pilot, lambda: app.result != "not dismissed")
     assert app.result == {"age": 1, "weight": 2.0, "kind": "a"}
+
+
+def test_pyright_flags_a_typed_dialog_without_build(tmp_path):
+    # Without `build` the dialog dismisses with its values dict; typing it
+    # as a FieldsDialog[Record] must be a type error, not a silent cast.
+    probe = tmp_path / "probe.py"
+    probe.write_text(
+        "from ars_magica_manager.models import ScoredTrait\n"
+        "from ars_magica_manager.screens import FieldsDialog\n"
+        "good: FieldsDialog[ScoredTrait] = FieldsDialog(\n"
+        "    't', [], build=lambda v: ScoredTrait('a', 1)\n"
+        ")\n"
+        "plain: FieldsDialog = FieldsDialog('t', [])\n"
+        "bad: FieldsDialog[ScoredTrait] = FieldsDialog('t', [])\n",
+        encoding="utf-8",
+    )
+    run = subprocess.run(
+        [sys.executable, "-m", "pyright", "--outputjson", str(probe)],
+        capture_output=True,
+        text=True,
+        cwd=ROOT,
+        check=False,  # exits non-zero on the expected error
+    )
+    report = json.loads(run.stdout)
+    errors = [d for d in report["generalDiagnostics"] if d["severity"] == "error"]
+    assert [e["range"]["start"]["line"] + 1 for e in errors] == [7], errors

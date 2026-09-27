@@ -6,7 +6,7 @@ from __future__ import annotations
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from dataclasses import field as dataclass_field
-from typing import Any, ClassVar, cast
+from typing import Any, ClassVar, cast, overload
 
 from textual.app import ComposeResult
 from textual.binding import BindingType
@@ -227,6 +227,34 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         margin-top: 1;
     }
     """
+
+    # Without `build` the dialog dismisses with its values dict, so it can
+    # only be a FieldsDialog[dict[str, Any]]; with `build`, whatever that
+    # returns. (The overloads let pyright catch a FieldsDialog[Record] that
+    # forgot its `build`.)
+    @overload
+    def __init__(
+        self: FieldsDialog[dict[str, Any]],
+        title: str,
+        fields: list[DialogField],
+        *,
+        validate: Callable[[dict[str, Any]], str | None] | None = None,
+        live: Callable[[dict[str, Any]], str] | None = None,
+        save_label: str = "Save",
+        build: None = None,
+    ) -> None: ...
+
+    @overload
+    def __init__(
+        self,
+        title: str,
+        fields: list[DialogField],
+        *,
+        validate: Callable[[dict[str, Any]], str | None] | None = None,
+        live: Callable[[dict[str, Any]], str] | None = None,
+        save_label: str = "Save",
+        build: Callable[[dict[str, Any]], ResultT],
+    ) -> None: ...
 
     def __init__(
         self,
@@ -449,4 +477,5 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         if problem:
             error.update(problem)
             return
+        # Without `build`, ResultT is the dict itself (see the overloads).
         self.dismiss(self.build(result) if self.build else cast(ResultT, result))
