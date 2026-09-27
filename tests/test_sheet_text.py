@@ -191,19 +191,8 @@ async def test_refresh_shows_changed_data(node, size):
     golden = GOLDEN_DIR / f"{node}-{size[0]}x{size[1]}.txt"
     _, refreshed = await _snapshot(node, size, _sparse_saga(), _fill)
     assert refreshed is not None
-    for stale, current in STALE_AFTER_RENAME:
-        refreshed = refreshed.replace(stale, current)
     expected = golden.read_text(encoding="utf-8")
     assert refreshed == expected, _diff(expected, refreshed)
-
-
-#: B22 (STORY-1109): a book list's Location column is only rebuilt when
-#: books change, so after its owner is renamed it shows the old name until
-#: the sheet is shown again. (stale text, current text) in the book rows.
-STALE_AFTER_RENAME = [
-    ("-  Lab: Someone", "-  Lab: Tower"),
-    ("-  Someone", "-  Leandro"),
-]
 
 
 def _diff(expected: str, actual: str | None) -> str:

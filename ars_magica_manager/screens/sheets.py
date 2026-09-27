@@ -615,6 +615,21 @@ class SheetView(Vertical):
         for section in (sections,) if isinstance(sections, str) else sections:
             self._refreshers.setdefault(section, []).append(refresh)
 
+    def _book_list(
+        self,
+        owner_sections: tuple[str, ...],
+        books: Callable[[], list[Book]],
+        *,
+        section_id: str,
+        **kwargs: Any,
+    ) -> BookListView:
+        """A BookListView, rebuilt when its own section refreshes or any of
+        `owner_sections` does (they show the name of an owner its Location
+        column shows, so a rename there shows up in the list too)."""
+        view = BookListView(self.saga, books, section_id=section_id, **kwargs)
+        self._on_refresh((section_id, *owner_sections), view.rebuild)
+        return view
+
     def _static(
         self,
         sections: str | tuple[str, ...],
@@ -984,8 +999,8 @@ class CharacterSheetView(SheetView):
                     id="inventory-info",
                     classes="details-panel",
                 )
-            yield BookListView(
-                self.saga,
+            yield self._book_list(
+                ("section-char-info",),
                 lambda: bk.books_owned_by(self.saga, "character", character.id),
                 section_id="section-books",
                 docked=False,
@@ -1414,8 +1429,8 @@ class LaboratorySheetView(SheetView):
                     yield self._static(
                         "section-lab-items", self._items_text, id="lab-items-content"
                     )
-                yield BookListView(
-                    self.saga,
+                yield self._book_list(
+                    ("section-lab-identity",),
                     lambda: bk.books_owned_by(
                         self.saga, "laboratory", self.laboratory.id
                     ),
@@ -1888,8 +1903,8 @@ class CovenantSheetView(SheetView):
             with TabPane("Economics", id="tab-cov-economics"):
                 yield from self._economics_tab()
             with TabPane("Library", id="tab-cov-library"):
-                yield BookListView(
-                    self.saga,
+                yield self._book_list(
+                    ("section-cov-info",),
                     lambda: bk.books_in_covenant(self.saga, self.covenant),
                     section_id="section-lib-books",
                     summary=True,
@@ -2100,6 +2115,7 @@ class CovenantSheetView(SheetView):
         )
 
     def refresh_section(self, section_id: str) -> None:
+        super().refresh_section(section_id)  # the Library's book list
         try:
             self._refresh_section(section_id)
             if section_id.startswith(("section-inh-", "section-pos-", "section-cov-")):

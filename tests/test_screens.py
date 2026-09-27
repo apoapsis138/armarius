@@ -8350,6 +8350,25 @@ async def test_an_unowned_book_files_under_the_saga():
     assert _saved_books()["b5"].owner_id == "cov1"
 
 
+async def test_renaming_a_character_updates_their_book_list():
+    # B22: the book list's Location column kept the old owner name until
+    # the sheet was shown again.
+    storage.save_saga(_saga_with_books())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 50)) as pilot:
+        await _select_character(pilot, app)
+        await pilot.press("e")  # the top panel: Edit Character Info
+        await wait_until(pilot, lambda: _is_form(app.screen, "Edit Character Info"))
+        app.screen.query_one("#fld-name", Input).value = "Leandro the Elder"
+        app.screen.query_one("#btn-save", Button).press()
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        await pilot.pause()
+        shown = app.screen._book_view().query_one(SelectableList)._rows
+        rows = " | ".join(label for _, label in shown)
+        assert "Leandro the Elder" in rows, rows
+
+
 async def test_character_books_section_and_delete_confirms():
     storage.save_saga(_saga_with_books())
 
