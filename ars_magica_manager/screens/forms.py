@@ -838,13 +838,21 @@ def _lab_identity_fields(saga: Saga, lab: Laboratory) -> list[DialogField]:
             "Owner",
             "select",
             lab.owner_id,
-            options=[
-                (escape(c.name), c.id) for c in saga.characters if c.type == "magus"
-            ],
+            options=_lab_owner_options(saga, lab.owner_id),
             allow_blank=True,
             placeholder="(unassigned)",
         ),
     ]
+
+
+def _lab_owner_options(saga: Saga, owner_id: str | None) -> list[tuple[str, str]]:
+    """The magi, plus the current owner if they aren't one (any more): they
+    stay the owner unless changed."""
+    options = [(escape(c.name), c.id) for c in saga.characters if c.type == "magus"]
+    owner = saga.character(owner_id)
+    if owner is not None and owner.type != "magus":
+        options.append((f"{escape(owner.name)} ({owner.type})", owner.id))
+    return options
 
 
 def _lab_characteristics_fields(

@@ -8,11 +8,12 @@ import sys
 from typing import Any
 
 import pytest
+from dialog_openers import contract_saga, new_app, open_dialog
 from support import wait_until
 from textual.app import App
 from textual.widgets import Checkbox, Input, Select, Static, TextArea
 
-from ars_magica_manager import ROOT
+from ars_magica_manager import ROOT, storage
 from ars_magica_manager.screens import DialogField, FieldsDialog
 
 
@@ -172,3 +173,57 @@ def test_pyright_flags_a_typed_dialog_without_build(tmp_path):
     report = json.loads(run.stdout)
     errors = [d for d in report["generalDiagnostics"] if d["severity"] == "error"]
     assert [e["range"]["start"]["line"] + 1 for e in errors] == [7], errors
+
+
+async def test_a_stored_choice_not_in_the_list_is_kept():
+    # STORY-1112: it used to open blank, and Save cleared it unasked.
+    fields = [
+        DialogField(
+            "house",
+            "House",
+            "select",
+            "house_gone",
+            options=[("Bonisagus", "house_bonisagus")],
+            allow_blank=True,
+        )
+    ]
+    dialog, app = await _open(fields)
+    async with app.run_test(size=(100, 40)) as pilot:
+        await wait_until(pilot, lambda: dialog.is_mounted)
+        select = dialog.query_one("#fld-house", Select)
+        assert select.value == "house_gone"
+        shown = select.query_one("SelectCurrent #label", Static)
+        assert str(shown.render()) == "house_gone (not in the list)"
+        dialog.query_one("#btn-save").press()
+        await wait_until(pilot, lambda: app.result != "not dismissed")
+    assert app.result == {"house": "house_gone"}
+
+
+@pytest.mark.parametrize(
+    ("dialog_name", "change", "saved"),
+    [
+        (
+            "edit hermetic background",
+            lambda saga: setattr(saga.character("mag1").hermetic, "house", "gone"),
+            lambda saga: saga.character("mag1").hermetic.house,
+        ),
+        (
+            "edit lab identity",
+            lambda saga: setattr(saga.laboratory("lab1"), "owner_id", "comp1"),
+            lambda saga: saga.laboratory("lab1").owner_id,
+        ),
+    ],
+)
+async def test_saving_unchanged_keeps_a_value_the_list_lacks(
+    dialog_name, change, saved
+):
+    # A House no longer in the catalog; a Lab Owner who isn't a magus.
+    saga = contract_saga()
+    change(saga)
+    expected = saved(saga)
+    app = new_app(saga)
+    async with app.run_test(size=(140, 50)) as pilot:
+        base, dialog = await open_dialog(pilot, app, dialog_name)
+        dialog.query_one("#btn-save").press()
+        assert await wait_until(pilot, lambda: app.screen is base)
+    assert saved(storage.load_saga(saga.id)) == expected

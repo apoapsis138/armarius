@@ -83,7 +83,8 @@ class DialogField:
     `kind`: "text" (a stripped string), "int" (a whole number), "optint" (a
     whole number or blank -> None), "optfloat" (a number, decimals allowed,
     or blank -> None), "select" (one of `options` as (label,
-    value) pairs; blank -> None when `allow_blank`), "check" (a boolean),
+    value) pairs; blank -> None when `allow_blank`; a stored value that isn't
+    among them is offered as "... (not in the list)"), "check" (a boolean),
     "area" (multi-line text), "picker" (a button showing `display(value)`
     that opens the screen `picker(value)` returns; its result becomes the
     value) or "info" (read-only text, not returned).
@@ -321,7 +322,15 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
                     compact=True,
                 )
             elif spec.kind == "select":
-                values = [value for _, value in spec.options]
+                options = list(spec.options)
+                values = [value for _, value in options]
+                stored = spec.value
+                if isinstance(stored, str) and stored and stored not in values:
+                    # A stored choice the list no longer offers (a House gone
+                    # from the catalog): show it, so Save keeps it unless it's
+                    # changed.
+                    options.append((f"{escape(stored)} (not in the list)", stored))
+                    values.append(stored)
                 if spec.value in values:
                     current = spec.value
                 elif spec.allow_blank or not values:
@@ -329,7 +338,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
                 else:
                     current = values[0]
                 yield Select(
-                    spec.options,
+                    options,
                     value=current,
                     allow_blank=spec.allow_blank,
                     prompt=spec.placeholder or "(none)",
@@ -371,14 +380,15 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         for text, number and area fields, None for a blank select."""
         if spec.kind == "picker":
             return self._picked.get(spec.key)
-        widget = self.query_one(f"#fld-{spec.key}")
+        widget_id = f"#fld-{spec.key}"
         if spec.kind == "select":
-            return widget.value if isinstance(widget.value, str) else None
+            value = self.query_one(widget_id, Select).value
+            return value if isinstance(value, str) else None
         if spec.kind == "check":
-            return bool(widget.value)
+            return self.query_one(widget_id, Checkbox).value
         if spec.kind == "area":
-            return widget.text.strip()
-        return widget.value.strip()  # text and the number kinds
+            return self.query_one(widget_id, TextArea).text.strip()
+        return self.query_one(widget_id, Input).value.strip()  # text, numbers
 
     def _value(self, spec: DialogField) -> Any:
         """A field's value, parsed; raises _FieldError if it doesn't parse or
@@ -422,7 +432,8 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
             self.query_one(f"#fld-{spec.key}", Button).label = self._picker_label(spec)
             self._react()
 
-        self.app.push_screen(spec.picker(self._picked.get(spec.key)), handle_choice)
+        if spec.picker is not None:
+            self.app.push_screen(spec.picker(self._picked.get(spec.key)), handle_choice)
 
     def _shown(self, spec: DialogField, values: dict[str, Any]) -> bool:
         return spec.show_if is None or bool(spec.show_if(values))
