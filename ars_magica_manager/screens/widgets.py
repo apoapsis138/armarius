@@ -377,5 +377,9 @@ class PinnedCollapsible(Collapsible):
 
     def on_click(self, event: Click) -> None:
         # Clicking anywhere in the section (not just its title) makes it the
-        # active section, so 'e' and the Footer hint work after a click.
-        self.query_one("CollapsibleTitle").focus()
+        # active section, so 'e' and the Footer hint work after a click --
+        # unless the click already focused something inside it (the Arts
+        # lists), which is active enough and should keep the arrow keys.
+        focused = self.screen.focused
+        if focused is None or self not in focused.ancestors_with_self:
+            self.query_one("CollapsibleTitle").focus()

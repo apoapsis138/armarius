@@ -2066,6 +2066,28 @@ async def test_hermetic_magic_arts_and_spells_share_one_details_panel():
         assert forms.selected_data_index is None
 
 
+async def test_clicking_an_art_row_keeps_focus_on_the_list():
+    # B8: a click inside the pinned Magical Arts section focused its title,
+    # taking focus off the list just clicked, so the arrow keys stopped
+    # moving through the Arts.
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_character(pilot, app)
+        view = app.screen._character_sheet_view
+        await _open_section(pilot, app, "section-arts")
+        techniques = view.query_one("#arts-techniques-list", SelectableList)
+
+        await pilot.click(techniques, offset=(2, 1))  # the second row: Intellego
+        await wait_until(pilot, lambda: techniques.highlighted == 1)
+        await pilot.pause()
+        assert app.focused is techniques
+        assert app.screen._active_section() == "section-arts"
+        await pilot.press("down")
+        assert await wait_until(pilot, lambda: techniques.highlighted == 2)
+
+
 async def test_edit_arts_grid_fits_default_terminal_and_accepts_real_typing():
     # A default-sized terminal (80x24) is what run_test uses unless told
     # otherwise, and matches a typical real terminal -- this test drives
