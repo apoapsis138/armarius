@@ -787,7 +787,9 @@ class CharacterSheetView(SheetView):
                 )
 
     def _refresh_title(self) -> None:
-        self.query_one("#section-char-info", Collapsible).title = self.character.name
+        self.query_one("#section-char-info", Collapsible).title = escape(
+            self.character.name
+        )
 
     def _description_tab(self) -> ComposeResult:
         """Hermetic Background (magi), Biographical Detail, Personality

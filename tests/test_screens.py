@@ -2186,6 +2186,26 @@ def _saga_with_two_labs() -> Saga:
     )
 
 
+async def test_a_renamed_characters_title_is_not_read_as_markup():
+    # B4: the title was escaped when composed but not when refreshed, so
+    # "[the]" vanished (and "[/]" could raise).
+    storage.save_saga(_saga_with_two_labs())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_character(pilot, app)
+        await pilot.press("e")
+        await wait_until(pilot, lambda: _is_form(app.screen, "Edit Character Info"))
+        app.screen.query_one("#fld-name", Input).value = "Tim [the] Bold [/]"
+        await pilot.click("#btn-save")
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        await pilot.pause()
+        title = app.screen._character_sheet_view.query_one(
+            "#section-char-info CollapsibleTitle"
+        )
+        assert "Tim [the] Bold [/]" in str(title.render())
+
+
 async def test_edit_character_info_updates_name_covenant_and_laboratory():
     storage.save_saga(_saga_with_two_labs())
 
