@@ -7709,6 +7709,34 @@ async def test_A_deletes_the_highlighted_saga_only_after_confirmation():
         assert app.screen.saga.id == "gamma"
 
 
+async def test_an_unreadable_saga_is_listed_and_can_be_deleted():
+    # B2: one damaged file used to crash the picker on startup.
+    _save_sagas("Alpha", "Gamma")
+    (storage.SAGAS_DIR / "broken.json").write_text("{not json", encoding="utf-8")
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await pilot.pause()
+        labels = _picker_labels(app)
+        assert labels[0].startswith("Alpha") and labels[2].startswith("Gamma")
+        assert labels[1] == "broken  —  can't be read"
+
+        # Opening it says why instead of crashing; the picker stays.
+        list_view = app.screen.query_one("#saga-list", ListView)
+        list_view.index = 1
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, SagaPickerScreen)
+
+        await pilot.press("A")
+        await pilot.pause()
+        assert "Delete the saga broken?" in str(
+            app.screen.query_one("#confirm-message", Static).render()
+        )
+        await pilot.press("y")
+        await wait_until(pilot, lambda: storage.list_sagas() == ["alpha", "gamma"])
+
+
 async def test_the_delete_key_works_and_deleting_the_last_saga_shows_the_placeholder():
     _save_sagas("Only")
 

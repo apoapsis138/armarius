@@ -24,6 +24,8 @@ from .widgets import BottomBar
 from .workspace import WorkspaceScreen
 
 _SAGA_ITEM_ID_PREFIX = "saga-"
+#: What loading a damaged or hand-edited saga file can raise.
+_UNREADABLE = (OSError, ValueError, TypeError, KeyError)
 
 
 class SagaPickerScreen(Screen[None]):
@@ -65,12 +67,17 @@ class SagaPickerScreen(Screen[None]):
 
         items = []
         for saga_id in saga_ids:
-            saga = storage.load_saga(saga_id)
-            summary = (
-                f"{escape(saga.name)}  —  "
-                f"Storyguide: {escape(saga.storyguide) or '(unset)'}"
-                f"  —  {saga.current_season} {saga.current_year}"
-            )
+            try:
+                saga = storage.load_saga(saga_id)
+            except _UNREADABLE:
+                # Still listed, so it can be deleted (by id).
+                summary = f"{escape(saga_id)}  —  [red]can't be read[/]"
+            else:
+                summary = (
+                    f"{escape(saga.name)}  —  "
+                    f"Storyguide: {escape(saga.storyguide) or '(unset)'}"
+                    f"  —  {saga.current_season} {saga.current_year}"
+                )
             items.append(
                 ListItem(Label(summary), id=f"{_SAGA_ITEM_ID_PREFIX}{saga_id}")
             )
@@ -112,7 +119,7 @@ class SagaPickerScreen(Screen[None]):
         saga_id = item.id.removeprefix(_SAGA_ITEM_ID_PREFIX)
         try:
             name = storage.load_saga(saga_id).name
-        except OSError, ValueError, TypeError, KeyError:
+        except _UNREADABLE:
             name = saga_id  # unreadable file: still let it be deleted by id
 
         async def handle_confirmed(confirmed: bool | None) -> None:
@@ -140,5 +147,12 @@ class SagaPickerScreen(Screen[None]):
         if item_id is None or not item_id.startswith(_SAGA_ITEM_ID_PREFIX):
             return
         saga_id = item_id.removeprefix(_SAGA_ITEM_ID_PREFIX)
-        saga = storage.load_saga(saga_id)
+        try:
+            saga = storage.load_saga(saga_id)
+        except _UNREADABLE as problem:
+            self.notify(
+                f"Couldn't open {escape(saga_id)}: {escape(str(problem))}",
+                severity="error",
+            )
+            return
         self.app.push_screen(WorkspaceScreen(saga))
