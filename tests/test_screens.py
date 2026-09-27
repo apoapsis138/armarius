@@ -4334,6 +4334,32 @@ async def test_aura_boons_raise_the_aura_labs_inherit_and_the_covenant_panel_sho
         assert "Aura: 6 (covenant) +0 (modifier) = 6" in text
 
 
+async def test_a_boon_hook_refresh_rebuilds_economics_once(monkeypatch):
+    # B12: refreshing Boons/Hooks rebuilt the Economics tab twice (once for
+    # the info panel's refresh it triggered, once for itself).
+    saga = _saga_with_configured_covenant()  # covenant aura 4
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 50)) as pilot:
+        await _select_covenant(pilot, app)
+        view = app.screen._covenant_sheet_view
+        rebuilds = []
+        original = view._rebuild_economics
+        monkeypatch.setattr(
+            view, "_rebuild_economics", lambda: rebuilds.append(1) or original()
+        )
+        view.covenant.boons_hooks.append(
+            VirtueFlawInstance(vf_id="covbh_boon_minor_aura")
+        )
+        view.refresh_section("section-cov-boons")
+        await pilot.pause()
+        assert len(rebuilds) == 1
+        assert "5 (base 4, +1 Boons)" in str(
+            view.query_one("#cov-info-left", Static).render()
+        )
+
+
 # -- Covenant Attributes tab: Description, Reputations, Boons & Hooks ---------
 
 

@@ -2150,8 +2150,11 @@ class CovenantSheetView(SheetView):
             self._rebuild_economics()
         elif section_id in ("section-cov-boons", "section-cov-hooks"):
             self._rebuild_boons_hooks()
-            # An Aura Boon changes the Aura shown in the info panel.
-            self.refresh_section("section-cov-info")
+            # An Aura Boon changes the Aura shown in the info panel, and so
+            # what the info panel feeds (Loyalty; Economics is rebuilt by
+            # refresh_section for every section-cov-* already).
+            self._refresh_section("section-cov-info")
+            self._refresh_loyalty_text()
 
     def _rebuild_boons_hooks(self) -> None:
         """Re-render both lists, both titles and the details panel. Always
