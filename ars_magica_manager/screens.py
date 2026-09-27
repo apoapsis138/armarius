@@ -9971,6 +9971,35 @@ class WorkspaceScreen(Screen[None]):
         self._familiar_sheet_view = view
         self._focus_first_section(initial=True)
 
+    def _current_sheet_view(
+        self,
+    ) -> (
+        CharacterSheetView
+        | LaboratorySheetView
+        | CovenantSheetView
+        | FamiliarSheetView
+        | None
+    ):
+        """The sheet on show for the selected tree node, if it has one."""
+        return {
+            "character": self._character_sheet_view,
+            "laboratory": self._laboratory_sheet_view,
+            "covenant": self._covenant_sheet_view,
+            "familiar": self._familiar_sheet_view,
+        }.get(self.selected_kind)
+
+    def _commit(self, *sections: str, tree: bool = False) -> None:
+        """Save a change: write the saga, rebuild the navigation tree if a
+        name or the structure changed (`tree`), and refresh `sections` of the
+        sheet on show -- the one whose handler made the change."""
+        storage.save_saga(self.saga)
+        if tree:
+            self._rebuild_tree()
+        view = self._current_sheet_view()
+        if view is not None:
+            for section in sections:
+                view.refresh_section(section)
+
     def _refresh_character_section(self, section_id: str) -> None:
         if self._character_sheet_view is not None:
             self._character_sheet_view.refresh_section(section_id)
@@ -10825,8 +10854,7 @@ class WorkspaceScreen(Screen[None]):
             if values is None:
                 return
             pos.save_entry(covenant, kind, entry, values)
-            storage.save_saga(self.saga)
-            self._refresh_covenant_section(f"section-pos-{kind}")
+            self._commit(f"section-pos-{kind}")
 
         self.app.push_screen(
             FieldsDialog(
@@ -10874,8 +10902,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed and entry.record in covenant.possessions:
                 covenant.possessions.remove(entry.record)
-                storage.save_saga(self.saga)
-                self._refresh_covenant_section(f"section-pos-{kind}")
+                self._commit(f"section-pos-{kind}")
 
         self.app.push_screen(
             ConfirmScreen(f"Delete {escape(entry.name or 'this entry')}?"),
@@ -10907,8 +10934,7 @@ class WorkspaceScreen(Screen[None]):
             if values is None:
                 return
             economics.wealth = values["wealth"]
-            storage.save_saga(self.saga)
-            self._refresh_covenant_section("section-eco-wealth")
+            self._commit("section-eco-wealth")
 
         self.app.push_screen(
             FieldsDialog(
@@ -10997,8 +11023,7 @@ class WorkspaceScreen(Screen[None]):
             else:
                 for key, value in values.items():
                     setattr(source, key, value)
-            storage.save_saga(self.saga)
-            self._refresh_covenant_section("section-eco-income")
+            self._commit("section-eco-income")
 
         self.app.push_screen(FieldsDialog(title, fields), handle_result)
 
@@ -11037,8 +11062,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed and source in covenant.economics.income_sources:
                 covenant.economics.income_sources.remove(source)
-                storage.save_saga(self.saga)
-                self._refresh_covenant_section("section-eco-income")
+                self._commit("section-eco-income")
 
         self.app.push_screen(
             ConfirmScreen(f"Delete {escape(source.name or 'this source of income')}?"),
@@ -11079,8 +11103,7 @@ class WorkspaceScreen(Screen[None]):
             new_income, note = result
             source.income = new_income
             source.note = note
-            storage.save_saga(self.saga)
-            self._refresh_covenant_section("section-eco-income")
+            self._commit("section-eco-income")
 
         self.app.push_screen(
             ImproveIncomeScreen(source, self.saga.current_year), handle_result
@@ -11116,8 +11139,7 @@ class WorkspaceScreen(Screen[None]):
                 self._economics_row_form(which, row, offer_draw=False)
                 return
             eco.draw_from_wealth(covenant, draw)
-            storage.save_saga(self.saga)
-            self._refresh_covenant_section("section-eco-savings")
+            self._commit("section-eco-savings")
             self.notify(f"Drew {draw} from Wealth to cover the deficit.")
 
         self.app.push_screen(
@@ -11194,8 +11216,7 @@ class WorkspaceScreen(Screen[None]):
             if values is None:
                 return
             eco.apply_row_edit(economics, row.key, values)
-            storage.save_saga(self.saga)
-            self._refresh_covenant_section(f"section-eco-{which}")
+            self._commit(f"section-eco-{which}")
 
         self.app.push_screen(
             FieldsDialog(
@@ -11293,8 +11314,7 @@ class WorkspaceScreen(Screen[None]):
             if values is None:
                 return
             inh.save_entry(covenant, kind, entry, values, grog)
-            storage.save_saga(self.saga)
-            self._refresh_covenant_section(f"section-inh-{kind}")
+            self._commit(f"section-inh-{kind}")
 
         self.app.push_screen(
             FieldsDialog(
@@ -11344,8 +11364,7 @@ class WorkspaceScreen(Screen[None]):
                 if not confirmed:
                     return
                 inh.mark_departed(covenant, kind, entry)
-                storage.save_saga(self.saga)
-                self._refresh_covenant_section(f"section-inh-{kind}")
+                self._commit(f"section-inh-{kind}")
 
             self.app.push_screen(
                 ConfirmScreen(
@@ -11360,8 +11379,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed and entry.record in covenant.inhabitants:
                 covenant.inhabitants.remove(entry.record)
-                storage.save_saga(self.saga)
-                self._refresh_covenant_section(f"section-inh-{kind}")
+                self._commit(f"section-inh-{kind}")
 
         self.app.push_screen(ConfirmScreen(f"Delete {name}?"), handle_confirmed)
 
@@ -11379,8 +11397,7 @@ class WorkspaceScreen(Screen[None]):
         def do_restore(entry: inh.InhabitantEntry) -> None:
             if entry.record is not None:
                 entry.record.departed = False
-                storage.save_saga(self.saga)
-                self._refresh_covenant_section(f"section-inh-{kind}")
+                self._commit(f"section-inh-{kind}")
 
         def handle_index(index: int | None) -> None:
             if index is not None:
@@ -11483,8 +11500,7 @@ class WorkspaceScreen(Screen[None]):
                 return
             for key, value in values.items():
                 setattr(loyalty, key, value)
-            storage.save_saga(self.saga)
-            self._refresh_covenant_section("section-inh-loyalty")
+            self._commit("section-inh-loyalty")
 
         self.app.push_screen(FieldsDialog("Edit Loyalty", fields), handle_result)
 
@@ -11538,8 +11554,7 @@ class WorkspaceScreen(Screen[None]):
                 return
             for key, value in values.items():
                 setattr(pop, key, value)
-            storage.save_saga(self.saga)
-            self._refresh_covenant_section("section-inh-population")
+            self._commit("section-inh-population")
 
         self.app.push_screen(FieldsDialog("Edit Inhabitants", fields), handle_result)
 
@@ -11564,8 +11579,7 @@ class WorkspaceScreen(Screen[None]):
                 return
             for key, value in values.items():
                 setattr(pop, key, value)
-            storage.save_saga(self.saga)
-            self._refresh_covenant_section("section-inh-misc")
+            self._commit("section-inh-misc")
 
         self.app.push_screen(FieldsDialog("Edit Miscellaneous", fields), handle_result)
 
@@ -11579,8 +11593,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(text: str | None) -> None:
             if text is not None:
                 covenant.notes = text
-                storage.save_saga(self.saga)
-                self._refresh_covenant_section("section-cov-description")
+                self._commit("section-cov-description")
 
         self.app.push_screen(
             EditCovenantDescriptionScreen(covenant.notes), handle_result
@@ -11607,8 +11620,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(trait: ScoredTrait | None) -> None:
             if trait is not None:
                 covenant.reputations.append(trait)
-                storage.save_saga(self.saga)
-                self._refresh_covenant_section("section-cov-reputations")
+                self._commit("section-cov-reputations")
 
         self.app.push_screen(self._reputation_prompt("Add a Reputation"), handle_result)
 
@@ -11647,8 +11659,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(trait: ScoredTrait | None) -> None:
             if trait is not None:
                 covenant.reputations[index] = trait
-                storage.save_saga(self.saga)
-                self._refresh_covenant_section("section-cov-reputations")
+                self._commit("section-cov-reputations")
 
         self.app.push_screen(
             self._reputation_prompt("Edit a Reputation", covenant.reputations[index]),
@@ -11688,8 +11699,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
                 del covenant.reputations[index]
-                storage.save_saga(self.saga)
-                self._refresh_covenant_section("section-cov-reputations")
+                self._commit("section-cov-reputations")
 
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
@@ -11715,8 +11725,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(instance: VirtueFlawInstance | None) -> None:
             if instance is not None:
                 covenant.boons_hooks.append(instance)
-                storage.save_saga(self.saga)
-                self._refresh_covenant_section(_BOON_HOOK_SECTION[kind])
+                self._commit(_BOON_HOOK_SECTION[kind])
 
         self.app.push_screen(
             CovenantBoonHookPickerScreen(kind, attached_ids), handle_result
@@ -11762,8 +11771,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
                 del covenant.boons_hooks[index]
-                storage.save_saga(self.saga)
-                self._refresh_covenant_section(_BOON_HOOK_SECTION[kind])
+                self._commit(_BOON_HOOK_SECTION[kind])
 
         self.app.push_screen(
             ConfirmScreen(f"Delete {escape(label)}?"), handle_confirmed
@@ -11807,8 +11815,7 @@ class WorkspaceScreen(Screen[None]):
                 return
             detail, description = result
             instance.params = boon_hook_params(detail, description, instance.params)
-            storage.save_saga(self.saga)
-            self._refresh_covenant_section(_BOON_HOOK_SECTION[kind])
+            self._commit(_BOON_HOOK_SECTION[kind])
 
         self.app.push_screen(
             BoonHookDetailScreen(
@@ -11832,9 +11839,7 @@ class WorkspaceScreen(Screen[None]):
                 return
             for field, value in result.items():
                 setattr(covenant, field, value)
-            storage.save_saga(self.saga)
-            self._rebuild_tree()
-            self._refresh_covenant_section("section-cov-info")
+            self._commit("section-cov-info", tree=True)
 
         self.app.push_screen(EditCovenantScreen(covenant), handle_result)
 
@@ -11844,8 +11849,7 @@ class WorkspaceScreen(Screen[None]):
                 return
             for field, value in result.items():
                 setattr(self.saga, field, value)
-            storage.save_saga(self.saga)
-            self._rebuild_tree()
+            self._commit(tree=True)
             self._update_saga_clock()
             await self._show_saga_detail()
 
@@ -11969,9 +11973,7 @@ class WorkspaceScreen(Screen[None]):
                 int, result["confidence_points"]
             )
             character.background.size = cast(int, result["size"])
-            storage.save_saga(self.saga)
-            self._rebuild_tree()
-            self._refresh_character_section("section-char-info")
+            self._commit("section-char-info", tree=True)
 
         self.app.push_screen(
             EditCharacterInfoScreen(self.saga, character), handle_result
@@ -11985,8 +11987,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(characteristics: Characteristics | None) -> None:
             if characteristics is not None:
                 character.characteristics = characteristics
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-char-characteristics")
+                self._commit("section-char-characteristics")
 
         self.app.push_screen(
             EditCharacteristicsScreen(character.characteristics), handle_result
@@ -12001,8 +12002,7 @@ class WorkspaceScreen(Screen[None]):
             if result is not None:
                 character.background = cast(Background, result["background"])
                 character.description = cast(Description, result["description"])
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-char-biographical")
+                self._commit("section-char-biographical")
                 # Age (derived from Year Born) lives in the top panel.
                 self._refresh_character_section("section-char-info")
 
@@ -12019,8 +12019,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(aging: Aging | None) -> None:
             if aging is not None:
                 character.aging = aging
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-aging")
+                self._commit("section-aging")
 
         self.app.push_screen(EditAgingScreen(character.aging), handle_result)
 
@@ -12035,8 +12034,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(ability: Ability | None) -> None:
             if ability is not None:
                 character.abilities.append(ability)
-                storage.save_saga(self.saga)
-                self._refresh_character_section("tab-abilities")
+                self._commit("tab-abilities")
 
         self.app.push_screen(AbilityPickerScreen(exclude_names), handle_result)
 
@@ -12082,8 +12080,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
                 del character.abilities[index]
-                storage.save_saga(self.saga)
-                self._refresh_character_section("tab-abilities")
+                self._commit("tab-abilities")
 
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
@@ -12119,8 +12116,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(ability: Ability | None) -> None:
             if ability is not None:
                 character.abilities[index] = ability
-                storage.save_saga(self.saga)
-                self._refresh_character_section("tab-abilities")
+                self._commit("tab-abilities")
 
         self.app.push_screen(
             AbilityDetailsScreen(existing.name, existing.category, existing),
@@ -12137,8 +12133,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(trait: ScoredTrait | None) -> None:
             if trait is not None:
                 character.personality_traits.append(trait)
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-personality-traits")
+                self._commit("section-personality-traits")
 
         self.app.push_screen(
             ScoredTraitPromptScreen("Add a Personality Trait", "e.g. Brave"),
@@ -12182,8 +12177,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(trait: ScoredTrait | None) -> None:
             if trait is not None:
                 character.personality_traits[index] = trait
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-personality-traits")
+                self._commit("section-personality-traits")
 
         self.app.push_screen(
             ScoredTraitPromptScreen(
@@ -12229,8 +12223,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
                 del character.personality_traits[index]
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-personality-traits")
+                self._commit("section-personality-traits")
 
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
@@ -12242,8 +12235,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(trait: ScoredTrait | None) -> None:
             if trait is not None:
                 character.reputations.append(trait)
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-reputations")
+                self._commit("section-reputations")
 
         self.app.push_screen(
             ScoredTraitPromptScreen("Add a Reputation", "e.g. Skilled Enchanter"),
@@ -12285,8 +12277,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(trait: ScoredTrait | None) -> None:
             if trait is not None:
                 character.reputations[index] = trait
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-reputations")
+                self._commit("section-reputations")
 
         self.app.push_screen(
             ScoredTraitPromptScreen(
@@ -12330,8 +12321,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
                 del character.reputations[index]
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-reputations")
+                self._commit("section-reputations")
 
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
@@ -12343,8 +12333,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(wounds: Wounds | None) -> None:
             if wounds is not None:
                 character.wounds = wounds
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-char-health")
+                self._commit("section-char-health")
 
         self.app.push_screen(EditWoundsScreen(character.wounds), handle_result)
 
@@ -12356,8 +12345,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(level: FatigueLevel | None) -> None:
             if level is not None:
                 character.fatigue_level = level
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-char-health")
+                self._commit("section-char-health")
 
         self.app.push_screen(EditFatigueScreen(character.fatigue_level), handle_result)
 
@@ -12371,8 +12359,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(arts: dict[str, ArtScore] | None) -> None:
             if arts is not None:
                 character.arts = arts
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-arts")
+                self._commit("section-arts")
 
         self.app.push_screen(EditArtsScreen(character.arts), handle_result)
 
@@ -12387,8 +12374,7 @@ class WorkspaceScreen(Screen[None]):
             if result is not None:
                 art, pawns = result
                 add_raw_vis(character.raw_vis, art, pawns)
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-raw-vis-hermetic")
+                self._commit("section-raw-vis-hermetic")
 
         self.app.push_screen(RawVisPromptScreen(), handle_result)
 
@@ -12437,8 +12423,7 @@ class WorkspaceScreen(Screen[None]):
             if result is not None:
                 art, pawns = result
                 replace_raw_vis(character.raw_vis, old_art, art, pawns)
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-raw-vis-hermetic")
+                self._commit("section-raw-vis-hermetic")
 
         self.app.push_screen(
             RawVisPromptScreen(existing=(old_art, character.raw_vis[old_art])),
@@ -12479,8 +12464,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
                 del character.raw_vis[art]
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-raw-vis-hermetic")
+                self._commit("section-raw-vis-hermetic")
 
         self.app.push_screen(
             ConfirmScreen(f"Delete {escape(art.title())}?"), handle_confirmed
@@ -12494,8 +12478,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(hermetic: HermeticBackground | None) -> None:
             if hermetic is not None:
                 character.hermetic = hermetic
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-hermetic-background")
+                self._commit("section-hermetic-background")
 
         self.app.push_screen(
             EditHermeticBackgroundScreen(character.hermetic), handle_result
@@ -12511,8 +12494,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(spell_id: str | None) -> None:
             if spell_id is not None:
                 character.spells_known.append(KnownSpell(spell_id=spell_id))
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-known-spells")
+                self._commit("section-known-spells")
 
         self.app.push_screen(
             SpellChooserScreen(
@@ -12573,8 +12555,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(result: KnownSpell | None) -> None:
             if result is not None:
                 character.spells_known[index] = result
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-known-spells")
+                self._commit("section-known-spells")
 
         self.app.push_screen(MasteryEditScreen(name, known), handle_result)
 
@@ -12611,8 +12592,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
                 del character.spells_known[index]
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-known-spells")
+                self._commit("section-known-spells")
 
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
@@ -12667,8 +12647,7 @@ class WorkspaceScreen(Screen[None]):
                         **values,
                     )
                 )
-            storage.save_saga(self.saga)
-            self._refresh_character_section("section-inventory")
+            self._commit("section-inventory")
 
         self.app.push_screen(
             FieldsDialog(
@@ -12739,8 +12718,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
                 del character.inventory[index]
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-inventory")
+                self._commit("section-inventory")
 
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
@@ -12763,9 +12741,7 @@ class WorkspaceScreen(Screen[None]):
             assign_laboratory_owner(
                 self.saga, lab, cast("str | None", result["owner_id"])
             )
-            storage.save_saga(self.saga)
-            self._rebuild_tree()
-            self._refresh_laboratory_section("section-lab-identity")
+            self._commit("section-lab-identity", tree=True)
 
         self.app.push_screen(EditLabIdentityScreen(self.saga, lab), handle_result)
 
@@ -12777,8 +12753,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(characteristics: LabCharacteristics | None) -> None:
             if characteristics is not None:
                 lab.characteristics = characteristics
-                storage.save_saga(self.saga)
-                self._refresh_laboratory_section("section-lab-characteristics")
+                self._commit("section-lab-characteristics")
 
         self.app.push_screen(
             EditLabCharacteristicsScreen(lab.characteristics), handle_result
@@ -12794,8 +12769,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(item: str | None) -> None:
             if item is not None:
                 lab.specialties.append(item)
-                storage.save_saga(self.saga)
-                self._refresh_laboratory_section("section-lab-specialties")
+                self._commit("section-lab-specialties")
 
         self.app.push_screen(ItemAddScreen(), handle_result)
 
@@ -12810,8 +12784,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(index: int | None) -> None:
             if index is not None:
                 del lab.specialties[index]
-                storage.save_saga(self.saga)
-                self._refresh_laboratory_section("section-lab-specialties")
+                self._commit("section-lab-specialties")
 
         self.app.push_screen(
             RemovalPickerScreen(
@@ -12828,8 +12801,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(item: str | None) -> None:
             if item is not None:
                 lab.features.append(item)
-                storage.save_saga(self.saga)
-                self._refresh_laboratory_section("section-lab-features")
+                self._commit("section-lab-features")
 
         self.app.push_screen(ItemAddScreen(), handle_result)
 
@@ -12844,8 +12816,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(index: int | None) -> None:
             if index is not None:
                 del lab.features[index]
-                storage.save_saga(self.saga)
-                self._refresh_laboratory_section("section-lab-features")
+                self._commit("section-lab-features")
 
         self.app.push_screen(
             RemovalPickerScreen("Remove a Feature", [escape(f) for f in lab.features]),
@@ -12860,8 +12831,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(room: NamedDescription | None) -> None:
             if room is not None:
                 lab.rooms.append(room)
-                storage.save_saga(self.saga)
-                self._refresh_laboratory_section("section-lab-rooms")
+                self._commit("section-lab-rooms")
 
         self.app.push_screen(
             NamedDescriptionPromptScreen("Add a Room", "e.g. Vault"), handle_result
@@ -12880,8 +12850,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(index: int | None) -> None:
             if index is not None:
                 del lab.rooms[index]
-                storage.save_saga(self.saga)
-                self._refresh_laboratory_section("section-lab-rooms")
+                self._commit("section-lab-rooms")
 
         self.app.push_screen(
             RemovalPickerScreen("Remove a Room", labels), handle_result
@@ -12898,8 +12867,7 @@ class WorkspaceScreen(Screen[None]):
             if result is not None:
                 art, pawns = result
                 add_raw_vis(lab.raw_vis, art, pawns)
-                storage.save_saga(self.saga)
-                self._refresh_laboratory_section("section-lab-raw-vis")
+                self._commit("section-lab-raw-vis")
 
         self.app.push_screen(RawVisPromptScreen(), handle_result)
 
@@ -12917,8 +12885,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(index: int | None) -> None:
             if index is not None:
                 del lab.raw_vis[arts[index]]
-                storage.save_saga(self.saga)
-                self._refresh_laboratory_section("section-lab-raw-vis")
+                self._commit("section-lab-raw-vis")
 
         self.app.push_screen(
             RemovalPickerScreen("Remove a Raw Vis entry", labels), handle_result
@@ -12932,8 +12899,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(item: NamedDescription | None) -> None:
             if item is not None:
                 lab.inventory_items.append(item)
-                storage.save_saga(self.saga)
-                self._refresh_laboratory_section("section-lab-items")
+                self._commit("section-lab-items")
 
         self.app.push_screen(
             NamedDescriptionPromptScreen("Add an Item", "e.g. Silver Mirror"),
@@ -12953,8 +12919,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(index: int | None) -> None:
             if index is not None:
                 del lab.inventory_items[index]
-                storage.save_saga(self.saga)
-                self._refresh_laboratory_section("section-lab-items")
+                self._commit("section-lab-items")
 
         self.app.push_screen(
             RemovalPickerScreen("Remove an Item", labels), handle_result
@@ -12970,8 +12935,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(entry: DiaryEntry | None) -> None:
             if entry is not None:
                 lab.diary.append(entry)
-                storage.save_saga(self.saga)
-                self._refresh_laboratory_section("tab-lab-diary")
+                self._commit("tab-lab-diary")
 
         self.app.push_screen(
             DiaryEntryPromptScreen(
@@ -12996,8 +12960,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(index: int | None) -> None:
             if index is not None:
                 del lab.diary[index]
-                storage.save_saga(self.saga)
-                self._refresh_laboratory_section("tab-lab-diary")
+                self._commit("tab-lab-diary")
 
         self.app.push_screen(
             RemovalPickerScreen("Remove a Diary Entry", labels), handle_result
@@ -13031,8 +12994,7 @@ class WorkspaceScreen(Screen[None]):
                 if result is None:
                     return
                 apply(index, result)
-                storage.save_saga(self.saga)
-                self._refresh_laboratory_section(section_id)
+                self._commit(section_id)
 
             self.app.push_screen(screen_for(index), handle_result)
 
@@ -13250,8 +13212,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
                 del character.virtues_flaws[index]
-                storage.save_saga(self.saga)
-                self._refresh_character_section("section-vf-virtues")
+                self._commit("section-vf-virtues")
 
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
@@ -13267,9 +13228,7 @@ class WorkspaceScreen(Screen[None]):
                 return
             for field_name, value in result.items():
                 setattr(familiar, field_name, value)
-            storage.save_saga(self.saga)
-            self._rebuild_tree()
-            self._refresh_familiar_section("section-fam-info")
+            self._commit("section-fam-info", tree=True)
 
         self.app.push_screen(EditFamiliarInfoScreen(familiar), handle_result)
 
@@ -13283,8 +13242,7 @@ class WorkspaceScreen(Screen[None]):
                 return
             for field_name, value in result.items():
                 setattr(familiar, field_name, value)
-            storage.save_saga(self.saga)
-            self._refresh_familiar_section("section-fam-binding")
+            self._commit("section-fam-binding")
 
         self.app.push_screen(EditFamiliarBindingScreen(familiar), handle_result)
 
@@ -13299,8 +13257,7 @@ class WorkspaceScreen(Screen[None]):
             familiar.characteristics = result["characteristics"]
             familiar.base_soak = result["base_soak"]
             familiar.magic_resistance = result["magic_resistance"]
-            storage.save_saga(self.saga)
-            self._refresh_familiar_section("section-fam-characteristics")
+            self._commit("section-fam-characteristics")
 
         self.app.push_screen(EditFamiliarCharacteristicsScreen(familiar), handle_result)
 
@@ -13314,8 +13271,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(wounds: Wounds | None) -> None:
             if wounds is not None:
                 familiar.wounds = wounds
-                storage.save_saga(self.saga)
-                self._refresh_familiar_section("section-fam-health")
+                self._commit("section-fam-health")
 
         self.app.push_screen(EditFamiliarWoundsScreen(familiar.wounds), handle_result)
 
@@ -13327,8 +13283,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(level: FatigueLevel | None) -> None:
             if level is not None:
                 familiar.fatigue_level = level
-                storage.save_saga(self.saga)
-                self._refresh_familiar_section("section-fam-health")
+                self._commit("section-fam-health")
 
         self.app.push_screen(EditFatigueScreen(familiar.fatigue_level), handle_result)
 
@@ -13367,8 +13322,7 @@ class WorkspaceScreen(Screen[None]):
                         **values,
                     )
                 )
-            storage.save_saga(self.saga)
-            self._refresh_familiar_section("section-fam-natural-weapons")
+            self._commit("section-fam-natural-weapons")
 
         self.app.push_screen(
             FieldsDialog(
@@ -13442,8 +13396,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
                 del familiar.natural_weapons[index]
-                storage.save_saga(self.saga)
-                self._refresh_familiar_section("section-fam-natural-weapons")
+                self._commit("section-fam-natural-weapons")
 
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
@@ -13462,8 +13415,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(ability: Ability | None) -> None:
             if ability is not None:
                 familiar.abilities.append(ability)
-                storage.save_saga(self.saga)
-                self._refresh_familiar_section("tab-fam-abilities")
+                self._commit("tab-fam-abilities")
 
         self.app.push_screen(AbilityPickerScreen(exclude_names), handle_result)
 
@@ -13499,8 +13451,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(ability: Ability | None) -> None:
             if ability is not None:
                 familiar.abilities[index] = ability
-                storage.save_saga(self.saga)
-                self._refresh_familiar_section("tab-fam-abilities")
+                self._commit("tab-fam-abilities")
 
         self.app.push_screen(
             AbilityDetailsScreen(existing.name, existing.category, existing),
@@ -13540,8 +13491,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
                 del familiar.abilities[index]
-                storage.save_saga(self.saga)
-                self._refresh_familiar_section("tab-fam-abilities")
+                self._commit("tab-fam-abilities")
 
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
@@ -13582,8 +13532,7 @@ class WorkspaceScreen(Screen[None]):
                         **values,
                     )
                 )
-            storage.save_saga(self.saga)
-            self._refresh_familiar_section("tab-fam-powers")
+            self._commit("tab-fam-powers")
 
         self.app.push_screen(
             FieldsDialog(title, _bond_power_fields(existing)), handle_result
@@ -13648,8 +13597,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
                 del familiar.bond_powers[index]
-                storage.save_saga(self.saga)
-                self._refresh_familiar_section("tab-fam-powers")
+                self._commit("tab-fam-powers")
 
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
@@ -13663,8 +13611,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(trait: ScoredTrait | None) -> None:
             if trait is not None:
                 familiar.personality_traits.append(trait)
-                storage.save_saga(self.saga)
-                self._refresh_familiar_section("section-fam-personality-traits")
+                self._commit("section-fam-personality-traits")
 
         self.app.push_screen(
             ScoredTraitPromptScreen("Add a Personality Trait", "e.g. Loyal"),
@@ -13707,8 +13654,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(trait: ScoredTrait | None) -> None:
             if trait is not None:
                 familiar.personality_traits[index] = trait
-                storage.save_saga(self.saga)
-                self._refresh_familiar_section("section-fam-personality-traits")
+                self._commit("section-fam-personality-traits")
 
         self.app.push_screen(
             ScoredTraitPromptScreen(
@@ -13730,8 +13676,7 @@ class WorkspaceScreen(Screen[None]):
 
         def do_remove(index: int) -> None:
             del familiar.personality_traits[index]
-            storage.save_saga(self.saga)
-            self._refresh_familiar_section("section-fam-personality-traits")
+            self._commit("section-fam-personality-traits")
 
         if selected is not None:
             do_remove(selected)
@@ -13757,8 +13702,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(trait: ScoredTrait | None) -> None:
             if trait is not None:
                 familiar.reputations.append(trait)
-                storage.save_saga(self.saga)
-                self._refresh_familiar_section("section-fam-reputations")
+                self._commit("section-fam-reputations")
 
         self.app.push_screen(
             ScoredTraitPromptScreen("Add a Reputation", "e.g. Fierce Protector"),
@@ -13799,8 +13743,7 @@ class WorkspaceScreen(Screen[None]):
         def handle_result(trait: ScoredTrait | None) -> None:
             if trait is not None:
                 familiar.reputations[index] = trait
-                storage.save_saga(self.saga)
-                self._refresh_familiar_section("section-fam-reputations")
+                self._commit("section-fam-reputations")
 
         self.app.push_screen(
             ScoredTraitPromptScreen(
@@ -13822,8 +13765,7 @@ class WorkspaceScreen(Screen[None]):
 
         def do_remove(index: int) -> None:
             del familiar.reputations[index]
-            storage.save_saga(self.saga)
-            self._refresh_familiar_section("section-fam-reputations")
+            self._commit("section-fam-reputations")
 
         if selected is not None:
             do_remove(selected)
