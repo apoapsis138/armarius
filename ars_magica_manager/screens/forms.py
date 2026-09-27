@@ -783,7 +783,7 @@ def _hermetic_fields(hermetic: HermeticBackground) -> list[DialogField]:
             "optint",
             h.age_of_apprenticeship,
         ),
-        DialogField("wizards_sigil", "Wizard's Sigil", "text", h.wizards_sigil),
+        DialogField("wizards_sigil", "Wizard's Sigil", "area", h.wizards_sigil),
     ]
 
 
