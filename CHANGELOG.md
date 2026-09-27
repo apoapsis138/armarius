@@ -8,6 +8,17 @@ fix or behind-the-scenes improvement bumps PATCH. The version is set in
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 0.2.1 — 2026-09-27
+
+- A saved choice that a list no longer offers is kept when you save a form
+  without touching it, instead of being cleared: a House missing from the
+  House list shows as "… (not in the list)", and a laboratory owner who is no
+  longer a magus shows by name.
+- Multi-line fields (Biography, descriptions) keep an indented first line,
+  such as a Markdown list; only trailing spaces and blank lines are dropped.
+- Behind the scenes: the standard form's code is simpler and better checked,
+  and the tests are sturdier.
+
 ## 0.2.0 — 2026-09-27
 
 The first tracked version. Includes everything since 0.1.0:
