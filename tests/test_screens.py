@@ -8212,7 +8212,7 @@ async def test_an_unowned_book_files_under_the_saga():
             before = len(_book_names(app))
             await _choose_book(pilot, app, 0)
             await pilot.press("e")
-            await pilot.pause()
+            await _wait_for_screen(pilot, app, FieldsDialog)
             assert app.screen.query_one("#fld-owner", Select).value == ""
             _fill(app, owner="covenant:cov1")
             await _save_dialog(pilot, app)
