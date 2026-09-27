@@ -5,7 +5,7 @@ sheets, the Book and Spell lists, and the add/edit dialogs and pickers."""
 from __future__ import annotations
 
 from collections import Counter
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass
 from dataclasses import field as dataclass_field
 from enum import StrEnum
@@ -195,7 +195,7 @@ def _inhabitant_fields(
                 "Covenant Role",
                 "select",
                 entry.role if entry else "",
-                options=[(r, r) for r in OTHER_COVENFOLK_ROLES],
+                options=_pairs(OTHER_COVENFOLK_ROLES),
                 required=True,
                 allow_blank=True,
                 placeholder="(choose a Covenant Role)",
@@ -207,15 +207,7 @@ def _inhabitant_fields(
         fields.append(
             DialogField("quantity", "Quantity", "int", entry.quantity if entry else 1)
         )
-    fields.append(
-        DialogField(
-            "description",
-            "Description",
-            "area",
-            entry.description if entry else "",
-            hint="Supports **bold** and *italic*.",
-        )
-    )
+    fields.append(_description_field(entry.description if entry else ""))
     return fields
 
 
@@ -276,7 +268,7 @@ def _inhabitant_identity_fields(
                 "Gift",
                 "select",
                 entry.record.gift if entry and entry.record else "",
-                options=[(c, c) for c in GIFT_CHOICES],
+                options=_pairs(GIFT_CHOICES),
                 allow_blank=True,
                 placeholder="Unknown (assumed The Gift)",
             )
@@ -293,7 +285,7 @@ def _covenant_role_fields(entry: inh.InhabitantEntry | None) -> list[DialogField
             "Covenant Role",
             "select",
             entry.role if entry else "",
-            options=[(r, r) for r in COVENANT_ROLES],
+            options=_pairs(COVENANT_ROLES),
             allow_blank=True,
         )
     ]
@@ -364,14 +356,14 @@ def _craftsperson_fields(
             "Field of Work",
             "select",
             entry.field_of_work if entry else "None",
-            options=[(f, f) for f in CRAFT_FIELDS],
+            options=_pairs(CRAFT_FIELDS),
         ),
         DialogField("rare", "Rare", "check", entry.rare if entry else False),
     ]
     abilities = inh.ability_names(character)
     current = entry.linked_ability if entry else ""
     if character is not None:
-        options = [(a, a) for a in abilities]
+        options = _pairs(abilities)
         if current and current not in abilities:
             options.append((current, current))
         fields.append(
@@ -387,6 +379,25 @@ def _craftsperson_fields(
     else:
         fields.append(DialogField("linked_ability", "Linked Ability", "text", current))
     return fields
+
+
+def _pairs(values: Iterable[str]) -> list[tuple[str, str]]:
+    """Select options whose label is the value itself."""
+    return [(value, value) for value in values]
+
+
+def _covenant_options(saga: Saga) -> list[tuple[str, str]]:
+    """Select options for choosing one of the saga's covenants."""
+    return [(escape(c.name), c.id) for c in saga.covenants]
+
+
+#: The hint under every free-text field that is shown with markdown_inline.
+_EMPHASIS_HINT = "Supports **bold** and *italic*."
+
+
+def _description_field(value: str) -> DialogField:
+    """The multi-line Description field most forms end with."""
+    return DialogField("description", "Description", "area", value, hint=_EMPHASIS_HINT)
 
 
 def _attr(record: object | None, attribute: str, default: Any) -> Any:
@@ -419,15 +430,7 @@ def _possession_fields(
         fields += _vis_possession_fields(kind, entry)
 
     if kind != "vis_store":
-        fields.append(
-            DialogField(
-                "description",
-                "Description",
-                "area",
-                _attr(entry, "description", ""),
-                hint="Supports **bold** and *italic*.",
-            )
-        )
+        fields.append(_description_field(_attr(entry, "description", "")))
     return fields
 
 
@@ -491,7 +494,7 @@ def _sanctum_fields(entry: pos.PossessionEntry | None, auto: bool) -> list[Dialo
             "Usage",
             "select",
             _attr(entry, "usage", SANCTUM_USAGE_DEFAULT),
-            options=[(u, u) for u in SANCTUM_USAGES],
+            options=_pairs(SANCTUM_USAGES),
         )
     )
     return fields
@@ -511,14 +514,14 @@ def _quantity_possession_fields(
                 "Type",
                 "select",
                 _attr(entry, "gear_type", types[0]) or types[0],
-                options=[(t, t) for t in types],
+                options=_pairs(types),
             ),
             DialogField(
                 "gear_quality",
                 "Quality",
                 "select",
                 _attr(entry, "gear_quality", GEAR_QUALITY_DEFAULT),
-                options=[(q, q) for q in GEAR_QUALITIES],
+                options=_pairs(GEAR_QUALITIES),
             ),
         ]
     fields.append(
@@ -550,7 +553,7 @@ def _vis_possession_fields(
             "Art",
             "select",
             _attr(entry, "art", ""),
-            options=[(a, a) for a in ARTS],
+            options=_pairs(ARTS),
             required=True,
             allow_blank=True,
             placeholder="(choose an Art)",
@@ -563,7 +566,7 @@ def _vis_possession_fields(
                 "Season harvested",
                 "select",
                 _attr(entry, "season", ""),
-                options=[(x, x) for x in SEASONS],
+                options=_pairs(SEASONS),
                 required=True,
                 allow_blank=True,
                 placeholder="(choose a Season)",
@@ -586,18 +589,17 @@ def _bond_power_fields(power: BondPower | None) -> list[DialogField]:
     """The add/edit form for one Empowered Bond Power -- all typed-in, no
     Lab Total formula computed (see BondPower's docstring)."""
 
-    def value(attribute: str, default):
-        return getattr(power, attribute) if power is not None else default
-
     return [
-        DialogField("name", "Power Name", "text", value("name", ""), required=True),
-        DialogField("level", "Level", "int", value("level", 0)),
+        DialogField(
+            "name", "Power Name", "text", _attr(power, "name", ""), required=True
+        ),
+        DialogField("level", "Level", "int", _attr(power, "level", 0)),
         DialogField(
             "technique",
             "Technique",
             "select",
-            value("technique", ""),
-            options=[(t, t) for t in TECHNIQUES],
+            _attr(power, "technique", ""),
+            options=_pairs(TECHNIQUES),
             allow_blank=True,
             placeholder="(none)",
         ),
@@ -605,8 +607,8 @@ def _bond_power_fields(power: BondPower | None) -> list[DialogField]:
             "form",
             "Form",
             "select",
-            value("form", ""),
-            options=[(f, f) for f in FORMS],
+            _attr(power, "form", ""),
+            options=_pairs(FORMS),
             allow_blank=True,
             placeholder="(none)",
         ),
@@ -614,17 +616,19 @@ def _bond_power_fields(power: BondPower | None) -> list[DialogField]:
             "target_controller",
             "Target & Controller",
             "text",
-            value("target_controller", ""),
+            _attr(power, "target_controller", ""),
             placeholder="e.g. Magus (controlled by Familiar)",
         ),
-        DialogField("uses_per_day", "Uses/Day", "int", value("uses_per_day", 0)),
-        DialogField("penetration", "Penetration", "int", value("penetration", 0)),
-        DialogField("vis_spent", "Vis Spent", "int", value("vis_spent", 0)),
+        DialogField("uses_per_day", "Uses/Day", "int", _attr(power, "uses_per_day", 0)),
+        DialogField(
+            "penetration", "Penetration", "int", _attr(power, "penetration", 0)
+        ),
+        DialogField("vis_spent", "Vis Spent", "int", _attr(power, "vis_spent", 0)),
         DialogField(
             "cosmetic_trait",
             "Cosmetic Trait Manifested",
             "text",
-            value("cosmetic_trait", ""),
+            _attr(power, "cosmetic_trait", ""),
         ),
     ]
 
@@ -652,12 +656,11 @@ def _book_fields(
     """The add/edit form for a book. Which of Art/Ability/Spell, Level and
     Quality are shown follows the Type (and a Tractatus's Subject) live."""
 
-    def value(attribute: str, default):
-        return getattr(book, attribute) if book is not None else default
-
     ability_names = [a.name for a in catalog.load_ability_catalog()]
-    ability, ability_detail = _book_ability_choice(value("ability", ""), ability_names)
-    ability_options = [(n, n) for n in ability_names]
+    ability, ability_detail = _book_ability_choice(
+        _attr(book, "ability", ""), ability_names
+    )
+    ability_options = _pairs(ability_names)
     if ability and ability not in ability_names:
         ability_options.insert(0, (ability, ability))
 
@@ -692,7 +695,7 @@ def _book_fields(
         if spell is None:
             # No spell chosen: ask for the spell first -- unless this is a book
             # whose typed spell is unknown, which keeps its own Level.
-            return bool(value("spell_name", ""))
+            return bool(_attr(book, "spell_name", ""))
         return spell.level is None
 
     if book is None:
@@ -702,13 +705,13 @@ def _book_fields(
     else:
         owner = bk.owner_value(book.owner_kind, book.owner_id)
     return [
-        DialogField("name", "Name", "text", value("name", ""), required=True),
+        DialogField("name", "Name", "text", _attr(book, "name", ""), required=True),
         DialogField(
             "type",
             "Type",
             "select",
-            value("type", ""),
-            options=[(t, t) for t in BOOK_TYPES],
+            _attr(book, "type", ""),
+            options=_pairs(BOOK_TYPES),
             required=True,
             allow_blank=True,
             placeholder="(choose a Type)",
@@ -717,8 +720,8 @@ def _book_fields(
             "subject_kind",
             "Subject",
             "select",
-            value("subject_kind", ""),
-            options=[(t, t) for t in TRACTATUS_SUBJECTS],
+            _attr(book, "subject_kind", ""),
+            options=_pairs(TRACTATUS_SUBJECTS),
             required=True,
             allow_blank=True,
             placeholder="(Art or Ability)",
@@ -728,8 +731,8 @@ def _book_fields(
             "art",
             "Art",
             "select",
-            value("art", ""),
-            options=[(a, a) for a in ARTS],
+            _attr(book, "art", ""),
+            options=_pairs(ARTS),
             required=True,
             allow_blank=True,
             placeholder="(choose an Art)",
@@ -760,8 +763,8 @@ def _book_fields(
             "picker",
             spell_id,
             placeholder=(
-                f"Unknown: {value('spell_name', '')} -- choose the spell..."
-                if spell_id is None and value("spell_name", "")
+                f"Unknown: {_attr(book, 'spell_name', '')} -- choose the spell..."
+                if spell_id is None and _attr(book, "spell_name", "")
                 else "(choose the spell...)"
             ),
             picker=lambda _current: SpellChooserScreen(saga),
@@ -772,7 +775,7 @@ def _book_fields(
             "level",
             "Level",
             "optint",
-            value("level", None),
+            _attr(book, "level", None),
             required=True,
             hint="",
             show_if=needs_level,
@@ -781,26 +784,20 @@ def _book_fields(
             "quality",
             "Quality",
             "optint",
-            value("quality", None),
+            _attr(book, "quality", None),
             required=True,
             show_if=lambda v: bk.has_quality(book_type(v)),
         ),
-        DialogField("language", "Language", "text", value("language", "Latin")),
-        DialogField("author", "Author", "text", value("author", "")),
+        DialogField("language", "Language", "text", _attr(book, "language", "Latin")),
+        DialogField("author", "Author", "text", _attr(book, "author", "")),
         DialogField(
             "year_published",
             "Year Published",
             "optint",
-            value("year_published", None),
+            _attr(book, "year_published", None),
         ),
         DialogField("owner", "Owner", "select", owner, options=bk.owner_options(saga)),
-        DialogField(
-            "description",
-            "Description",
-            "area",
-            value("description", ""),
-            hint="Supports **bold** and *italic*.",
-        ),
+        _description_field(_attr(book, "description", "")),
     ]
 
 
@@ -868,7 +865,7 @@ def _rdt_field(
             label,
             "select",
             _OTHER if other else value,
-            options=[(v, v) for v in standard] + [("Other...", _OTHER)],
+            options=_pairs(standard) + [("Other...", _OTHER)],
             required=True,
             allow_blank=True,
             placeholder=f"(choose a {label})",
@@ -885,17 +882,14 @@ def _rdt_field(
 
 
 def _spell_fields(spell: Spell | None) -> list[DialogField]:
-    def value(attribute: str, default):
-        return getattr(spell, attribute) if spell is not None else default
-
     return [
-        DialogField("name", "Name", "text", value("name", ""), required=True),
+        DialogField("name", "Name", "text", _attr(spell, "name", ""), required=True),
         DialogField(
             "technique",
             "Technique",
             "select",
-            value("technique", ""),
-            options=[(t, t) for t in TECHNIQUES],
+            _attr(spell, "technique", ""),
+            options=_pairs(TECHNIQUES),
             required=True,
             allow_blank=True,
             placeholder="(choose a Technique)",
@@ -904,8 +898,8 @@ def _spell_fields(spell: Spell | None) -> list[DialogField]:
             "form",
             "Form",
             "select",
-            value("form", ""),
-            options=[(f, f) for f in FORMS],
+            _attr(spell, "form", ""),
+            options=_pairs(FORMS),
             required=True,
             allow_blank=True,
             placeholder="(choose a Form)",
@@ -914,29 +908,35 @@ def _spell_fields(spell: Spell | None) -> list[DialogField]:
             "level",
             "Level",
             "optint",
-            value("level", None),
+            _attr(spell, "level", None),
             hint="Leave blank for a General spell (cast at any level).",
         ),
         DialogField(
             "requisites",
             "Requisites",
             "text",
-            ", ".join(value("requisites", [])),
+            ", ".join(_attr(spell, "requisites", [])),
             placeholder="e.g. Rego, Corpus",
         ),
-        *_rdt_field("range", "Range", SPELL_RANGES, value("range", "")),
-        *_rdt_field("duration", "Duration", SPELL_DURATIONS, value("duration", "")),
-        *_rdt_field("target", "Target", SPELL_TARGETS, value("target", "")),
-        DialogField("ritual", "Ritual", "check", value("ritual", False)),
-        DialogField("base_level", "Base level", "optint", value("base_level", None)),
+        *_rdt_field("range", "Range", SPELL_RANGES, _attr(spell, "range", "")),
+        *_rdt_field(
+            "duration", "Duration", SPELL_DURATIONS, _attr(spell, "duration", "")
+        ),
+        *_rdt_field("target", "Target", SPELL_TARGETS, _attr(spell, "target", "")),
+        DialogField("ritual", "Ritual", "check", _attr(spell, "ritual", False)),
+        DialogField(
+            "base_level", "Base level", "optint", _attr(spell, "base_level", None)
+        ),
         DialogField(
             "source",
             "Source",
             "text",
-            value("source", ""),
+            _attr(spell, "source", ""),
             placeholder="e.g. a house rule, or a book",
         ),
-        DialogField("description", "Description", "area", value("description", "")),
+        DialogField(
+            "description", "Description", "area", _attr(spell, "description", "")
+        ),
     ]
 
 
@@ -1148,6 +1148,11 @@ class ModalDialog[ResultT](ModalScreen[ResultT]):
     def action_cancel(self) -> None:
         self.dismiss(self.CANCEL_RESULT)
 
+    def _select_value(self, selector: str) -> str | None:
+        """The chosen value of the Select at `selector`, or None if blank."""
+        value = self.query_one(selector, Select).value
+        return value if isinstance(value, str) else None
+
 
 class SagaCreateScreen(ModalDialog[str | None]):
     """A form for creating a new saga. Dismisses with the new saga's id, or None if cancelled."""
@@ -1192,7 +1197,7 @@ class SagaCreateScreen(ModalDialog[str | None]):
             with Horizontal(id="create-year-row"):
                 yield Input(value="1220", type="integer", id="input-year")
                 yield Select(
-                    [(season, season) for season in SEASONS],
+                    _pairs(SEASONS),
                     value=SEASONS[0],
                     allow_blank=False,
                     id="select-season",
@@ -1479,7 +1484,7 @@ class CharacterCreateScreen(ModalDialog[str | None]):
             )
             yield Label("Covenant (optional)")
             yield Select(
-                [(escape(c.name), c.id) for c in self.saga.covenants],
+                _covenant_options(self.saga),
                 value=self.default_covenant_id or Select.NULL,
                 allow_blank=True,
                 prompt="(no covenant)",
@@ -1509,8 +1514,7 @@ class CharacterCreateScreen(ModalDialog[str | None]):
             error.update("Type is required.")
             return
 
-        covenant_value = self.query_one("#select-covenant", Select).value
-        covenant_id = covenant_value if isinstance(covenant_value, str) else None
+        covenant_id = self._select_value("#select-covenant")
 
         character = Character(
             id=storage.generate_unique_id(name, [c.id for c in self.saga.characters]),
@@ -2364,7 +2368,7 @@ class LaboratoryCreateScreen(ModalDialog[str | None]):
             yield Input(value="0", type="integer", id="input-size")
             yield Label("Covenant (optional)")
             yield Select(
-                [(escape(c.name), c.id) for c in self.saga.covenants],
+                _covenant_options(self.saga),
                 value=self.covenant.id if self.covenant else Select.NULL,
                 allow_blank=True,
                 prompt="(no covenant)",
@@ -2395,8 +2399,7 @@ class LaboratoryCreateScreen(ModalDialog[str | None]):
             error.update("Size must be a whole number.")
             return
 
-        covenant_value = self.query_one("#select-covenant", Select).value
-        covenant_id = covenant_value if isinstance(covenant_value, str) else None
+        covenant_id = self._select_value("#select-covenant")
 
         laboratory = Laboratory(
             id=storage.generate_unique_id(
@@ -2564,7 +2567,7 @@ class EditCharacterInfoScreen(ModalDialog[dict[str, object] | None]):
             with Horizontal(classes="charinfo-row"):
                 yield Label("Covenant")
                 yield Select(
-                    [(escape(c.name), c.id) for c in self.saga.covenants],
+                    _covenant_options(self.saga),
                     value=character.covenant_id or Select.NULL,
                     allow_blank=True,
                     prompt="(unassigned)",
@@ -2628,13 +2631,11 @@ class EditCharacterInfoScreen(ModalDialog[dict[str, object] | None]):
             error.update("Name is required.")
             return
 
-        covenant_value = self.query_one("#select-charinfo-covenant", Select).value
-        covenant_id = covenant_value if isinstance(covenant_value, str) else None
+        covenant_id = self._select_value("#select-charinfo-covenant")
 
         laboratory_id: str | None = None
         if self.character.type == "magus":
-            lab_value = self.query_one("#select-charinfo-laboratory", Select).value
-            laboratory_id = lab_value if isinstance(lab_value, str) else None
+            laboratory_id = self._select_value("#select-charinfo-laboratory")
 
         result: dict[str, object] = {
             "name": name,
@@ -3896,8 +3897,7 @@ class EditHermeticBackgroundScreen(ModalDialog[HermeticBackground | None]):
         if event.button.id == "btn-cancel":
             self.action_cancel()
         elif event.button.id == "btn-save":
-            house_value = self.query_one("#select-hermetic-house", Select).value
-            house = house_value if isinstance(house_value, str) else None
+            house = self._select_value("#select-hermetic-house")
             values: dict[str, object] = {"house": house}
             for _label, field_name in (
                 *self._STR_FIELDS_BEFORE_AGE,
@@ -3995,7 +3995,7 @@ class EditLabIdentityScreen(ModalDialog[dict[str, object] | None]):
             with Horizontal(classes="labid-row"):
                 yield Label("Covenant")
                 yield Select(
-                    [(escape(c.name), c.id) for c in self.saga.covenants],
+                    _covenant_options(self.saga),
                     value=lab.covenant_id or Select.NULL,
                     allow_blank=True,
                     prompt="(unassigned)",
@@ -4049,11 +4049,9 @@ class EditLabIdentityScreen(ModalDialog[dict[str, object] | None]):
             error.update("Aura modifier must be a whole number.")
             return
 
-        owner_value = self.query_one("#select-lab-owner", Select).value
-        owner_id = owner_value if isinstance(owner_value, str) else None
+        owner_id = self._select_value("#select-lab-owner")
 
-        covenant_value = self.query_one("#select-lab-covenant", Select).value
-        covenant_id = covenant_value if isinstance(covenant_value, str) else None
+        covenant_id = self._select_value("#select-lab-covenant")
 
         self.dismiss(
             {
@@ -4302,7 +4300,7 @@ class DiaryEntryPromptScreen(ModalDialog[DiaryEntry | None]):
             )
             yield Label("Season")
             yield Select(
-                [(season, season) for season in SEASONS],
+                _pairs(SEASONS),
                 value=existing.season if existing else self.default_season,
                 allow_blank=False,
                 id="select-diary-season",
@@ -4404,7 +4402,7 @@ class EditFamiliarInfoScreen(ModalDialog[dict[str, object] | None]):
             with Horizontal(classes="faminfoedit-row"):
                 yield Label("Season Bound")
                 yield Select(
-                    [(s, s) for s in SEASONS],
+                    _pairs(SEASONS),
                     value=f.season_bound or Select.NULL,
                     allow_blank=True,
                     prompt="(not set)",
@@ -4559,7 +4557,7 @@ class EditFamiliarBindingScreen(ModalDialog[dict[str, object] | None]):
             with Horizontal(classes="fambindingedit-row"):
                 yield Label("Binding Technique")
                 yield Select(
-                    [(t, t) for t in TECHNIQUES],
+                    _pairs(TECHNIQUES),
                     value=f.binding_technique or Select.NULL,
                     allow_blank=True,
                     prompt="(not set)",
@@ -4569,7 +4567,7 @@ class EditFamiliarBindingScreen(ModalDialog[dict[str, object] | None]):
             with Horizontal(classes="fambindingedit-row"):
                 yield Label("Binding Form")
                 yield Select(
-                    [(x, x) for x in FORMS],
+                    _pairs(FORMS),
                     value=f.binding_form or Select.NULL,
                     allow_blank=True,
                     prompt="(not set)",
@@ -5032,7 +5030,7 @@ class EditCovenantScreen(ModalDialog[dict[str, object] | None]):
             with Horizontal(classes="covedit-row"):
                 yield Label("Covenant Season")
                 yield Select(
-                    [(season, season) for season in SEASONS],
+                    _pairs(SEASONS),
                     value=cov.covenant_season,
                     allow_blank=False,
                     id="select-cov-season",
@@ -5214,7 +5212,7 @@ class SetDateScreen(ModalDialog[tuple[str, int] | None]):
             with Horizontal(classes="setdate-row"):
                 yield Label("Season")
                 yield Select(
-                    [(season, season) for season in SEASONS],
+                    _pairs(SEASONS),
                     value=self.season,
                     allow_blank=False,
                     id="select-date-season",
@@ -5897,7 +5895,7 @@ class ImproveIncomeScreen(ModalDialog[tuple[int, str] | None]):
             with Horizontal(classes="improve-row"):
                 yield Label("Annual Improvement Effect", classes="improve-label")
                 yield Select(
-                    [(e, e) for e in INCOME_EFFECTS],
+                    _pairs(INCOME_EFFECTS),
                     value="Status Quo",
                     id="improve-effect",
                     compact=True,
@@ -6010,7 +6008,7 @@ class EditCovenantDescriptionScreen(ModalDialog[str | None]):
         with Vertical(id="cov-desc-dialog"):
             yield Label("Edit Covenant Description")
             yield TextArea(self.text, id="cov-desc-text")
-            yield Static("Supports **bold** and *italic*.", id="cov-desc-hint")
+            yield Static(_EMPHASIS_HINT, id="cov-desc-hint")
             with Horizontal(id="cov-desc-buttons"):
                 yield Button("Save", id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
@@ -6952,13 +6950,13 @@ class SpellListView(Vertical):
                 )
             with Horizontal(classes="spell-filter-row"):
                 yield Select(
-                    [(t, t) for t in TECHNIQUES],
+                    _pairs(TECHNIQUES),
                     prompt=f"Technique: {arts_blank}",
                     id="spell-technique",
                     compact=True,
                 )
                 yield Select(
-                    [(f, f) for f in FORMS],
+                    _pairs(FORMS),
                     prompt=f"Form: {arts_blank}",
                     id="spell-form",
                     compact=True,
@@ -10487,7 +10485,7 @@ class WorkspaceScreen(Screen[None]):
                 "Type",
                 "select",
                 source.type if source else "Typical",
-                options=[(t, t) for t in INCOME_TYPES],
+                options=_pairs(INCOME_TYPES),
                 required=True,
             ),
             DialogField(
@@ -10497,13 +10495,7 @@ class WorkspaceScreen(Screen[None]):
                 source.income if source else None,
                 hint=f"Usual per year: {usual}.",
             ),
-            DialogField(
-                "description",
-                "Description",
-                "area",
-                source.description if source else "",
-                hint="Supports **bold** and *italic*.",
-            ),
+            _description_field(source.description if source else ""),
         ]
 
         def handle_result(values: dict[str, Any] | None) -> None:
@@ -10886,14 +10878,14 @@ class WorkspaceScreen(Screen[None]):
                 "Equipment",
                 "select",
                 loyalty.equipment,
-                options=[(o, o) for o in LOYALTY_EQUIPMENT],
+                options=_pairs(LOYALTY_EQUIPMENT),
             ),
             DialogField(
                 "money",
                 "Money",
                 "select",
                 loyalty.money,
-                options=[(o, o) for o in LOYALTY_MONEY],
+                options=_pairs(LOYALTY_MONEY),
             ),
             DialogField(
                 "pension",
