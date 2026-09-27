@@ -916,6 +916,26 @@ async def test_binding_a_familiar_nests_it_under_its_magus_and_grants_shared_tra
     ]
 
 
+async def test_bind_familiar_only_defaults_to_the_magus_on_show():
+    # B7: after showing a magus, then a laboratory or Spells, the dialog
+    # still preselected that magus.
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_character(pilot, app)
+        for node in (("laboratory", "lab1"), ("spells",), ("covenant", "cov1")):
+            await _select(pilot, app, node)
+            await pilot.press("f")
+            assert await wait_until(
+                pilot, lambda: _is_form(app.screen, "Bind a New Familiar")
+            )
+            value = app.screen.query_one("#fld-character_id", Select).value
+            assert value is Select.NULL, (node, value)
+            await pilot.press("escape")
+            await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+
+
 async def test_create_familiar_is_disabled_once_every_magus_has_one():
     storage.save_saga(_saga_with_familiar())
 

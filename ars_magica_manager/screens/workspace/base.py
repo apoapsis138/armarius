@@ -883,10 +883,13 @@ class WorkspaceBase(Screen[None]):
         if not fam.unbonded_magi(self.saga):
             self.notify("Every magus already has a bound Familiar.")
             return
+        # The magus on show is the default. (selected_character outlives it:
+        # a laboratory or Spells shown afterwards leaves it set.)
         character = self.selected_character
         default_magus_id = (
             character.id
             if character is not None
+            and self.selected_kind == NodeKind.CHARACTER
             and character.type == "magus"
             and fam.familiar_of(self.saga, character.id) is None
             else None
