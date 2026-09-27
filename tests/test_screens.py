@@ -57,10 +57,8 @@ from ars_magica_manager.screens import (
     AbilityPickerScreen,
     AdvanceSeasonScreen,
     BoonHookDetailScreen,
-    CharacterCreateScreen,
     ConfirmScreen,
     CovenantBoonHookPickerScreen,
-    CovenantCreateScreen,
     CsvFilePickerScreen,
     DialogField,
     DiaryEntryPromptScreen,
@@ -80,14 +78,11 @@ from ars_magica_manager.screens import (
     EditHermeticBackgroundScreen,
     EditLabCharacteristicsScreen,
     EditLabIdentityScreen,
-    EditSagaScreen,
     EditWoundsScreen,
-    FamiliarCreateScreen,
     FieldsDialog,
     ImportScreen,
     ImproveIncomeScreen,
     ItemAddScreen,
-    LaboratoryCreateScreen,
     LabVirtueFlawPickerScreen,
     MasteryAbilityPromptScreen,
     MasteryEditScreen,
@@ -95,11 +90,9 @@ from ars_magica_manager.screens import (
     ParamPromptScreen,
     RawVisPromptScreen,
     RemovalPickerScreen,
-    SagaCreateScreen,
     SagaPickerScreen,
     ScoredTraitPromptScreen,
     SelectableList,
-    SetDateScreen,
     SpellChooserScreen,
     SpellImportHelperScreen,
     SpellListView,
@@ -108,6 +101,11 @@ from ars_magica_manager.screens import (
     WorkspaceScreen,
     _CsvDirectoryTree,
 )
+
+
+def _is_form(screen, title: str) -> bool:
+    """`screen` is the FieldsDialog titled `title`."""
+    return isinstance(screen, FieldsDialog) and screen.title_text == title
 
 
 def _find_node(tree, data):
@@ -375,14 +373,14 @@ async def test_create_saga_flow_saves_and_returns_to_picker():
     async with app.run_test() as pilot:
         await pilot.press("n")
         await pilot.pause()
-        assert isinstance(app.screen, SagaCreateScreen)
+        assert _is_form(app.screen, "Create a New Saga")
 
         form = app.screen
-        form.query_one("#input-name", Input).value = "Dammerstein"
-        form.query_one("#input-storyguide", Input).value = "Alex"
-        form.query_one("#input-year", Input).value = "1220"
+        form.query_one("#fld-name", Input).value = "Dammerstein"
+        form.query_one("#fld-storyguide", Input).value = "Alex"
+        form.query_one("#fld-year", Input).value = "1220"
 
-        await pilot.click("#btn-create")
+        await pilot.click("#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, SagaPickerScreen)
@@ -402,11 +400,11 @@ async def test_create_saga_requires_name_and_storyguide():
         await pilot.press("n")
         await pilot.pause()
 
-        await pilot.click("#btn-create")
+        await pilot.click("#btn-save")
         await pilot.pause()
 
         # Validation failed, so we're still on the create screen and nothing saved.
-        assert isinstance(app.screen, SagaCreateScreen)
+        assert _is_form(app.screen, "Create a New Saga")
 
     assert storage.list_sagas() == []
 
@@ -450,12 +448,12 @@ async def test_create_covenant_flow_saves_covenant():
 
         await pilot.press("n")
         await pilot.pause()
-        assert isinstance(app.screen, CovenantCreateScreen)
+        assert _is_form(app.screen, "Create a New Covenant")
 
-        app.screen.query_one("#input-name", Input).value = "Fengheld"
-        app.screen.query_one("#input-notes", Input).value = "A border covenant"
+        app.screen.query_one("#fld-name", Input).value = "Fengheld"
+        app.screen.query_one("#fld-notes", Input).value = "A border covenant"
 
-        await pilot.click("#btn-create")
+        await pilot.click("#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
@@ -483,10 +481,10 @@ async def test_create_covenant_requires_name():
         await pilot.press("n")
         await pilot.pause()
 
-        await pilot.click("#btn-create")
+        await pilot.click("#btn-save")
         await pilot.pause()
 
-        assert isinstance(app.screen, CovenantCreateScreen)
+        assert _is_form(app.screen, "Create a New Covenant")
 
     saga = storage.load_saga("test_saga")
     assert saga.covenants == []
@@ -531,12 +529,12 @@ async def test_create_character_at_saga_level_is_unassigned_and_selectable():
 
         await pilot.press("c")
         await pilot.pause()
-        assert isinstance(app.screen, CharacterCreateScreen)
+        assert _is_form(app.screen, "Create a New Character")
         # No covenant is selected, so the dialog defaults to none.
-        assert app.screen.query_one("#select-covenant", Select).value == Select.NULL
-        app.screen.query_one("#input-name", Input).value = "Wandering Grog"
-        app.screen.query_one("#select-type", Select).value = "grog"
-        await pilot.click("#btn-create")
+        assert app.screen.query_one("#fld-covenant_id", Select).value == Select.NULL
+        app.screen.query_one("#fld-name", Input).value = "Wandering Grog"
+        app.screen.query_one("#fld-type", Select).value = "grog"
+        await pilot.click("#btn-save")
         await pilot.pause()
 
         # Listed under the saga, and selectable from the tree.
@@ -559,11 +557,11 @@ async def test_edit_saga_saves_name_storyguide_and_description():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditSagaScreen)
+        assert _is_form(app.screen, "Edit Saga")
         dialog = app.screen
-        dialog.query_one("#input-saga-name", Input).value = "Dammerstein [Solo]"
-        dialog.query_one("#input-saga-storyguide", Input).value = "Robin"
-        dialog.query_one("#input-saga-description", Input).value = "A one-magus saga."
+        dialog.query_one("#fld-name", Input).value = "Dammerstein [Solo]"
+        dialog.query_one("#fld-storyguide", Input).value = "Robin"
+        dialog.query_one("#fld-description", Input).value = "A one-magus saga."
         dialog.query_one("#btn-save", Button).press()
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)
@@ -593,20 +591,20 @@ async def test_edit_saga_requires_name_and_storyguide():
         await pilot.press("e")
         await pilot.pause()
         dialog = app.screen
-        assert isinstance(dialog, EditSagaScreen)
+        assert _is_form(dialog, "Edit Saga")
 
-        dialog.query_one("#input-saga-name", Input).value = "  "
+        dialog.query_one("#fld-name", Input).value = "  "
         dialog.query_one("#btn-save", Button).press()
         await pilot.pause()
-        assert isinstance(app.screen, EditSagaScreen)  # refused
+        assert _is_form(app.screen, "Edit Saga")  # refused
 
-        dialog.query_one("#input-saga-name", Input).value = "Test Saga"
-        dialog.query_one("#input-saga-storyguide", Input).value = ""
+        dialog.query_one("#fld-name", Input).value = "Test Saga"
+        dialog.query_one("#fld-storyguide", Input).value = ""
         dialog.query_one("#btn-save", Button).press()
         await pilot.pause()
-        assert isinstance(app.screen, EditSagaScreen)  # still refused
+        assert _is_form(app.screen, "Edit Saga")  # still refused
 
-        dialog.query_one("#input-saga-storyguide", Input).value = "Alex"
+        dialog.query_one("#fld-storyguide", Input).value = "Alex"
         dialog.query_one("#btn-save", Button).press()
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)
@@ -621,11 +619,11 @@ async def test_create_character_defaults_to_current_covenant():
 
         await pilot.press("c")
         await pilot.pause()
-        assert isinstance(app.screen, CharacterCreateScreen)
+        assert _is_form(app.screen, "Create a New Character")
 
-        app.screen.query_one("#input-name", Input).value = "Leandro"
+        app.screen.query_one("#fld-name", Input).value = "Leandro"
 
-        await pilot.click("#btn-create")
+        await pilot.click("#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
@@ -651,11 +649,11 @@ async def test_create_character_with_no_covenant():
         await pilot.pause()
 
         form = app.screen
-        form.query_one("#input-name", Input).value = "Wandering Grog"
-        form.query_one("#select-type", Select).value = "grog"
-        form.query_one("#select-covenant", Select).value = Select.NULL
+        form.query_one("#fld-name", Input).value = "Wandering Grog"
+        form.query_one("#fld-type", Select).value = "grog"
+        form.query_one("#fld-covenant_id", Select).value = Select.NULL
 
-        await pilot.click("#btn-create")
+        await pilot.click("#btn-save")
         await pilot.pause()
 
     saga = storage.load_saga("test_saga")
@@ -675,10 +673,10 @@ async def test_create_character_requires_name():
         await pilot.press("c")
         await pilot.pause()
 
-        await pilot.click("#btn-create")
+        await pilot.click("#btn-save")
         await pilot.pause()
 
-        assert isinstance(app.screen, CharacterCreateScreen)
+        assert _is_form(app.screen, "Create a New Character")
 
     saga = storage.load_saga("test_saga")
     assert saga.characters == []
@@ -910,12 +908,12 @@ async def test_binding_a_familiar_nests_it_under_its_magus_and_grants_shared_tra
 
         await pilot.press("f")
         await pilot.pause()
-        assert isinstance(app.screen, FamiliarCreateScreen)
+        assert _is_form(app.screen, "Bind a New Familiar")
         # A magus was already selected: it's preselected as the default.
-        assert app.screen.query_one("#select-magus", Select).value == "char1"
+        assert app.screen.query_one("#fld-character_id", Select).value == "char1"
 
-        app.screen.query_one("#input-name", Input).value = "Ashwing"
-        app.screen.query_one("#btn-create", Button).press()
+        app.screen.query_one("#fld-name", Input).value = "Ashwing"
+        app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)
         assert app.screen.selected_kind == "familiar"
@@ -1600,12 +1598,12 @@ async def test_create_laboratory_flow_saves_laboratory():
 
         await pilot.press("l")
         await pilot.pause()
-        assert isinstance(app.screen, LaboratoryCreateScreen)
+        assert _is_form(app.screen, "Create a New Laboratory")
 
-        app.screen.query_one("#input-name", Input).value = "The Alchemical Tower"
-        app.screen.query_one("#input-size", Input).value = "1"
+        app.screen.query_one("#fld-name", Input).value = "The Alchemical Tower"
+        app.screen.query_one("#fld-size", Input).value = "1"
 
-        await pilot.click("#btn-create")
+        await pilot.click("#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
@@ -1631,10 +1629,10 @@ async def test_create_laboratory_requires_name():
         await pilot.press("l")
         await pilot.pause()
 
-        await pilot.click("#btn-create")
+        await pilot.click("#btn-save")
         await pilot.pause()
 
-        assert isinstance(app.screen, LaboratoryCreateScreen)
+        assert _is_form(app.screen, "Create a New Laboratory")
 
     saga = storage.load_saga("test_saga")
     assert saga.laboratories == []
@@ -1650,13 +1648,13 @@ async def test_create_laboratory_requires_integer_size():
         await pilot.press("l")
         await pilot.pause()
 
-        app.screen.query_one("#input-name", Input).value = "The Tower"
-        app.screen.query_one("#input-size", Input).value = "not a number"
+        app.screen.query_one("#fld-name", Input).value = "The Tower"
+        app.screen.query_one("#fld-size", Input).value = "not a number"
 
-        await pilot.click("#btn-create")
+        await pilot.click("#btn-save")
         await pilot.pause()
 
-        assert isinstance(app.screen, LaboratoryCreateScreen)
+        assert _is_form(app.screen, "Create a New Laboratory")
 
     saga = storage.load_saga("test_saga")
     assert saga.laboratories == []
@@ -2163,8 +2161,8 @@ async def test_creating_a_second_character_after_viewing_the_first_works():
         # Create the first character.
         await pilot.press("c")
         await pilot.pause()
-        app.screen.query_one("#input-name", Input).value = "Leandro"
-        await pilot.click("#btn-create")
+        app.screen.query_one("#fld-name", Input).value = "Leandro"
+        await pilot.click("#btn-save")
         await pilot.pause()
         assert app.screen.selected_character.name == "Leandro"
 
@@ -2175,8 +2173,8 @@ async def test_creating_a_second_character_after_viewing_the_first_works():
 
         await pilot.press("c")
         await pilot.pause()
-        app.screen.query_one("#input-name", Input).value = "Guillame"
-        await pilot.click("#btn-create")
+        app.screen.query_one("#fld-name", Input).value = "Guillame"
+        await pilot.click("#btn-save")
         await pilot.pause()
 
         tree = app.screen.query_one("#nav-tree", Tree)
@@ -3962,11 +3960,11 @@ async def test_set_date_rolls_back_an_accidental_advance():
         # ...then put it back with Set Date.
         await pilot.press("T")
         await pilot.pause()
-        assert isinstance(app.screen, SetDateScreen)
+        assert _is_form(app.screen, "Set the Saga's Date")
         # Pre-filled with the current date.
-        assert app.screen.query_one("#select-date-season", Select).value == "Summer"
-        assert app.screen.query_one("#input-date-year", Input).value == "1220"
-        app.screen.query_one("#select-date-season", Select).value = "Spring"
+        assert app.screen.query_one("#fld-season", Select).value == "Summer"
+        assert app.screen.query_one("#fld-year", Input).value == "1220"
+        app.screen.query_one("#fld-season", Select).value = "Spring"
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)
@@ -3988,9 +3986,9 @@ async def test_set_date_sets_an_arbitrary_date_from_the_saga_level():
         await _open_workspace(pilot)  # saga level
         await pilot.press("T")
         await pilot.pause()
-        assert isinstance(app.screen, SetDateScreen)
-        app.screen.query_one("#select-date-season", Select).value = "Winter"
-        app.screen.query_one("#input-date-year", Input).value = "1195"
+        assert _is_form(app.screen, "Set the Saga's Date")
+        app.screen.query_one("#fld-season", Select).value = "Winter"
+        app.screen.query_one("#fld-year", Input).value = "1195"
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
@@ -4013,10 +4011,10 @@ async def test_set_date_rejects_a_blank_year_and_cancel_changes_nothing():
 
         await pilot.press("T")
         await pilot.pause()
-        app.screen.query_one("#input-date-year", Input).value = ""
+        app.screen.query_one("#fld-year", Input).value = ""
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
-        assert isinstance(app.screen, SetDateScreen)  # refused, still open
+        assert _is_form(app.screen, "Set the Saga's Date")  # refused, still open
         for button_id in ("#btn-save", "#btn-cancel"):
             region = app.screen.query_one(button_id, Button).region
             assert region.height > 0 and region.bottom <= 24, button_id
@@ -4142,10 +4140,10 @@ async def test_lab_can_be_created_unassigned_or_in_a_covenant():
 
         await pilot.press("l")
         await pilot.pause()
-        assert isinstance(app.screen, LaboratoryCreateScreen)
-        assert app.screen.query_one("#select-covenant", Select).value == Select.NULL
-        app.screen.query_one("#input-name", Input).value = "Loose Lab"
-        await pilot.click("#btn-create")
+        assert _is_form(app.screen, "Create a New Laboratory")
+        assert app.screen.query_one("#fld-covenant_id", Select).value == Select.NULL
+        app.screen.query_one("#fld-name", Input).value = "Loose Lab"
+        await pilot.click("#btn-save")
         await pilot.pause()
         assert app.screen.selected_laboratory.name == "Loose Lab"
 
@@ -4153,9 +4151,9 @@ async def test_lab_can_be_created_unassigned_or_in_a_covenant():
         await _select(pilot, app, ("covenant", "cov2"))
         await pilot.press("l")
         await pilot.pause()
-        assert app.screen.query_one("#select-covenant", Select).value == "cov2"
-        app.screen.query_one("#input-name", Input).value = "Fenghold Lab"
-        await pilot.click("#btn-create")
+        assert app.screen.query_one("#fld-covenant_id", Select).value == "cov2"
+        app.screen.query_one("#fld-name", Input).value = "Fenghold Lab"
+        await pilot.click("#btn-save")
         await pilot.pause()
 
         tree = app.screen.query_one("#nav-tree", Tree)
@@ -7793,11 +7791,11 @@ async def test_a_saga_can_still_be_created_after_deleting_all_of_them():
 
         await pilot.press("n")
         await pilot.pause()
-        assert isinstance(app.screen, SagaCreateScreen)
-        app.screen.query_one("#input-name", Input).value = "Old"  # the same name
-        app.screen.query_one("#input-storyguide", Input).value = "Alex"
-        app.screen.query_one("#input-year", Input).value = "1220"
-        await pilot.click("#btn-create")
+        assert _is_form(app.screen, "Create a New Saga")
+        app.screen.query_one("#fld-name", Input).value = "Old"  # the same name
+        app.screen.query_one("#fld-storyguide", Input).value = "Alex"
+        app.screen.query_one("#fld-year", Input).value = "1220"
+        await pilot.click("#btn-save")
         await pilot.pause()
         assert isinstance(app.screen, SagaPickerScreen)
 

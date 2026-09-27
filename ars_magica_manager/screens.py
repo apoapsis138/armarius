@@ -585,6 +585,134 @@ def _vis_possession_fields(
     return fields
 
 
+def _saga_fields(saga: Saga | None) -> list[DialogField]:
+    """The Create Saga form (with the starting date) or, given a saga, its
+    Edit Saga form."""
+    fields = [
+        DialogField(
+            "name",
+            "Name",
+            "text",
+            _attr(saga, "name", ""),
+            required=True,
+            placeholder="e.g. Dammerstein",
+        ),
+        DialogField(
+            "storyguide",
+            "Storyguide",
+            "text",
+            _attr(saga, "storyguide", ""),
+            required=True,
+            placeholder="e.g. Alex",
+        ),
+    ]
+    if saga is None:
+        fields += [
+            DialogField("year", "Start Year", "int", 1220),
+            DialogField(
+                "season", "Start Season", "select", SEASONS[0], options=_pairs(SEASONS)
+            ),
+        ]
+    fields.append(
+        DialogField(
+            "description",
+            "Description",
+            "text",
+            _attr(saga, "description", ""),
+            placeholder="A one-line premise for the saga",
+        )
+    )
+    return fields
+
+
+def _date_fields(season: str, year: int) -> list[DialogField]:
+    """Set the saga's date."""
+    return [
+        DialogField("season", "Season", "select", season, options=_pairs(SEASONS)),
+        DialogField("year", "Year", "int", year),
+    ]
+
+
+def _covenant_create_fields() -> list[DialogField]:
+    return [
+        DialogField(
+            "name", "Name", "text", "", required=True, placeholder="e.g. Fengheld"
+        ),
+        DialogField(
+            "notes",
+            "Notes",
+            "text",
+            "",
+            placeholder="A one-line note about the covenant",
+        ),
+    ]
+
+
+#: The kinds of character, as Select options.
+_CHARACTER_TYPES: list[tuple[str, str]] = [
+    ("Magus", "magus"),
+    ("Companion", "companion"),
+    ("Grog", "grog"),
+]
+
+
+def _covenant_field(saga: Saga, covenant_id: str | None) -> DialogField:
+    """An optional choice of covenant."""
+    return DialogField(
+        "covenant_id",
+        "Covenant",
+        "select",
+        covenant_id,
+        options=_covenant_options(saga),
+        allow_blank=True,
+        placeholder="(no covenant)",
+    )
+
+
+def _character_create_fields(saga: Saga, covenant_id: str | None) -> list[DialogField]:
+    return [
+        DialogField(
+            "name", "Name", "text", "", required=True, placeholder="e.g. Leandro"
+        ),
+        DialogField("type", "Type", "select", "magus", options=_CHARACTER_TYPES),
+        _covenant_field(saga, covenant_id),
+    ]
+
+
+def _laboratory_create_fields(saga: Saga, covenant_id: str | None) -> list[DialogField]:
+    return [
+        DialogField(
+            "name",
+            "Name",
+            "text",
+            "",
+            required=True,
+            placeholder="e.g. The Alchemical Tower",
+        ),
+        DialogField("size", "Size", "int", 0),
+        _covenant_field(saga, covenant_id),
+    ]
+
+
+def _familiar_create_fields(saga: Saga, magus_id: str | None) -> list[DialogField]:
+    """Name the Familiar and choose its magus (one with no Familiar yet)."""
+    return [
+        DialogField(
+            "name", "Name", "text", "", required=True, placeholder="e.g. Ashwing"
+        ),
+        DialogField(
+            "character_id",
+            "Magus Partner",
+            "select",
+            magus_id,
+            options=[(escape(c.name), c.id) for c in fam.unbonded_magi(saga)],
+            required=True,
+            allow_blank=True,
+            placeholder="(choose a magus)",
+        ),
+    ]
+
+
 def _bond_power_fields(power: BondPower | None) -> list[DialogField]:
     """The add/edit form for one Empowered Bond Power -- all typed-in, no
     Lab Total formula computed (see BondPower's docstring)."""
@@ -1152,360 +1280,6 @@ class ModalDialog[ResultT](ModalScreen[ResultT]):
         """The chosen value of the Select at `selector`, or None if blank."""
         value = self.query_one(selector, Select).value
         return value if isinstance(value, str) else None
-
-
-class SagaCreateScreen(ModalDialog[dict[str, Any] | None]):
-    """A form for creating a new saga. Dismisses with the new saga's id, or None if cancelled."""
-
-    DEFAULT_CSS = """
-    SagaCreateScreen {
-        align: center middle;
-    }
-
-    #create-dialog {
-        width: 64;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #create-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #create-year-row {
-        width: 100%;
-        height: auto;
-    }
-
-    #create-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def compose(self) -> ComposeResult:
-        with Vertical(id="create-dialog"):
-            yield Label("Create a New Saga", id="create-title")
-            yield Label("Saga name")
-            yield Input(placeholder="e.g. Dammerstein", id="input-name")
-            yield Label("Storyguide name")
-            yield Input(placeholder="e.g. Alex", id="input-storyguide")
-            with Horizontal(id="create-year-row"):
-                yield Input(value="1220", type="integer", id="input-year")
-                yield Select(
-                    _pairs(SEASONS),
-                    value=SEASONS[0],
-                    allow_blank=False,
-                    id="select-season",
-                )
-            yield Label("Description (optional)")
-            yield Input(
-                placeholder="A one-line premise for the saga",
-                id="input-description",
-            )
-            yield Static("", id="create-error")
-            with Horizontal(id="create-buttons"):
-                yield Button("Create", id="btn-create", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-create":
-            self._try_create()
-
-    def _try_create(self) -> None:
-        error = self.query_one("#create-error", Static)
-
-        name = self.query_one("#input-name", Input).value.strip()
-        if not name:
-            error.update("Saga name is required.")
-            return
-
-        storyguide = self.query_one("#input-storyguide", Input).value.strip()
-        if not storyguide:
-            error.update("Storyguide name is required.")
-            return
-
-        year_raw = self.query_one("#input-year", Input).value.strip()
-        try:
-            year = int(year_raw)
-        except ValueError:
-            error.update("Start year must be a whole number.")
-            return
-
-        season = self.query_one("#select-season", Select).value
-        if not isinstance(season, str):
-            error.update("Start season is required.")
-            return
-
-        description = self.query_one("#input-description", Input).value.strip()
-
-        self.dismiss(
-            {
-                "name": name,
-                "storyguide": storyguide,
-                "year": year,
-                "season": season,
-                "description": description,
-            }
-        )
-
-
-class EditSagaScreen(ModalDialog[dict[str, object] | None]):
-    """Edits the saga's own Name, Storyguide and Description.
-
-    The calendar (current year/season) has its own Set Date screen, and
-    isn't touched here. Dismisses with a dict of {"name", "storyguide",
-    "description"}, or None if cancelled.
-    """
-
-    DEFAULT_CSS = """
-    EditSagaScreen {
-        align: center middle;
-    }
-
-    #saga-edit-dialog {
-        width: 64;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    .sagaedit-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .sagaedit-row Label {
-        width: 16;
-    }
-
-    .sagaedit-row Input {
-        width: 1fr;
-    }
-
-    #saga-edit-error {
-        color: $error;
-        height: auto;
-    }
-
-    #saga-edit-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, saga: Saga) -> None:
-        super().__init__()
-        self.saga = saga
-
-    def compose(self) -> ComposeResult:
-        saga = self.saga
-        with Vertical(id="saga-edit-dialog"):
-            yield Label("Edit Saga")
-            with Horizontal(classes="sagaedit-row"):
-                yield Label("Name")
-                yield Input(value=saga.name, id="input-saga-name", compact=True)
-            with Horizontal(classes="sagaedit-row"):
-                yield Label("Storyguide")
-                yield Input(
-                    value=saga.storyguide, id="input-saga-storyguide", compact=True
-                )
-            yield Label("Description (optional)")
-            yield Input(value=saga.description, id="input-saga-description")
-            yield Static("", id="saga-edit-error")
-            with Horizontal(id="saga-edit-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#saga-edit-error", Static)
-
-        name = self.query_one("#input-saga-name", Input).value.strip()
-        if not name:
-            error.update("Saga name is required.")
-            return
-
-        storyguide = self.query_one("#input-saga-storyguide", Input).value.strip()
-        if not storyguide:
-            error.update("Storyguide name is required.")
-            return
-
-        description = self.query_one("#input-saga-description", Input).value.strip()
-        self.dismiss(
-            {"name": name, "storyguide": storyguide, "description": description}
-        )
-
-
-class CovenantCreateScreen(ModalDialog[dict[str, Any] | None]):
-    """Creates a covenant within a saga.
-
-    Dismisses with the new covenant's id, or None if cancelled.
-    """
-
-    DEFAULT_CSS = """
-    CovenantCreateScreen {
-        align: center middle;
-    }
-
-    #create-dialog {
-        width: 64;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #create-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #create-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, saga: Saga) -> None:
-        super().__init__()
-        self.saga = saga
-
-    def compose(self) -> ComposeResult:
-        with Vertical(id="create-dialog"):
-            yield Label("Create a New Covenant", id="create-title")
-            yield Label("Covenant name")
-            yield Input(placeholder="e.g. Fengheld", id="input-name")
-            yield Label("Notes (optional)")
-            yield Input(
-                placeholder="A one-line note about the covenant", id="input-notes"
-            )
-            yield Static("", id="create-error")
-            with Horizontal(id="create-buttons"):
-                yield Button("Create", id="btn-create", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-create":
-            self._try_create()
-
-    def _try_create(self) -> None:
-        error = self.query_one("#create-error", Static)
-
-        name = self.query_one("#input-name", Input).value.strip()
-        if not name:
-            error.update("Covenant name is required.")
-            return
-
-        notes = self.query_one("#input-notes", Input).value.strip()
-        self.dismiss({"name": name, "notes": notes})
-
-
-class CharacterCreateScreen(ModalDialog[dict[str, Any] | None]):
-    """Creates a bare character: name, type, and covenant.
-
-    Abilities, Virtues/Flaws, Arts, and lab assignment are left for later
-    edit actions -- see DESIGN.md's Phase 1 forms slices. Dismisses with
-    the new character's id, or None if cancelled.
-    """
-
-    DEFAULT_CSS = """
-    CharacterCreateScreen {
-        align: center middle;
-    }
-
-    #create-dialog {
-        width: 64;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #create-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #create-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    _CHARACTER_TYPES: ClassVar[list[tuple[str, str]]] = [
-        ("Magus", "magus"),
-        ("Companion", "companion"),
-        ("Grog", "grog"),
-    ]
-
-    def __init__(self, saga: Saga, default_covenant_id: str | None = None) -> None:
-        super().__init__()
-        self.saga = saga
-        self.default_covenant_id = default_covenant_id
-
-    def compose(self) -> ComposeResult:
-        with Vertical(id="create-dialog"):
-            yield Label("Create a New Character", id="create-title")
-            yield Label("Character name")
-            yield Input(placeholder="e.g. Leandro", id="input-name")
-            yield Label("Type")
-            yield Select(
-                self._CHARACTER_TYPES,
-                value="magus",
-                allow_blank=False,
-                id="select-type",
-            )
-            yield Label("Covenant (optional)")
-            yield Select(
-                _covenant_options(self.saga),
-                value=self.default_covenant_id or Select.NULL,
-                allow_blank=True,
-                prompt="(no covenant)",
-                id="select-covenant",
-            )
-            yield Static("", id="create-error")
-            with Horizontal(id="create-buttons"):
-                yield Button("Create", id="btn-create", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-create":
-            self._try_create()
-
-    def _try_create(self) -> None:
-        error = self.query_one("#create-error", Static)
-
-        name = self.query_one("#input-name", Input).value.strip()
-        if not name:
-            error.update("Character name is required.")
-            return
-
-        character_type = self.query_one("#select-type", Select).value
-        if not isinstance(character_type, str):
-            error.update("Type is required.")
-            return
-
-        covenant_id = self._select_value("#select-covenant")
-        self.dismiss({"name": name, "type": character_type, "covenant_id": covenant_id})
 
 
 class ParamPromptScreen(ModalDialog[dict[str, str] | None]):
@@ -2300,176 +2074,6 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
                 return
             result[key] = ArtScore(level=level, xp=xp)
         self.dismiss(result)
-
-
-class LaboratoryCreateScreen(ModalDialog[dict[str, Any] | None]):
-    """Creates a bare laboratory within a covenant.
-
-    Owner assignment and Features are left for later edit actions, same
-    reasoning as Character creation leaving lab assignment for later.
-    Dismisses with the new laboratory's id, or None if cancelled.
-    """
-
-    DEFAULT_CSS = """
-    LaboratoryCreateScreen {
-        align: center middle;
-    }
-
-    #create-dialog {
-        width: 64;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #create-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #create-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, saga: Saga, covenant: Covenant | None = None) -> None:
-        super().__init__()
-        self.saga = saga
-        self.covenant = covenant
-
-    def compose(self) -> ComposeResult:
-        with Vertical(id="create-dialog"):
-            yield Label("Create a New Laboratory", id="create-title")
-            yield Label("Laboratory name")
-            yield Input(placeholder="e.g. The Alchemical Tower", id="input-name")
-            yield Label("Size")
-            yield Input(value="0", type="integer", id="input-size")
-            yield Label("Covenant (optional)")
-            yield Select(
-                _covenant_options(self.saga),
-                value=self.covenant.id if self.covenant else Select.NULL,
-                allow_blank=True,
-                prompt="(no covenant)",
-                id="select-covenant",
-            )
-            yield Static("", id="create-error")
-            with Horizontal(id="create-buttons"):
-                yield Button("Create", id="btn-create", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-create":
-            self._try_create()
-
-    def _try_create(self) -> None:
-        error = self.query_one("#create-error", Static)
-
-        name = self.query_one("#input-name", Input).value.strip()
-        if not name:
-            error.update("Laboratory name is required.")
-            return
-
-        try:
-            size = int(self.query_one("#input-size", Input).value.strip())
-        except ValueError:
-            error.update("Size must be a whole number.")
-            return
-
-        covenant_id = self._select_value("#select-covenant")
-        self.dismiss({"name": name, "size": size, "covenant_id": covenant_id})
-
-
-class FamiliarCreateScreen(ModalDialog[dict[str, Any] | None]):
-    """Binds a new Familiar to a magus (see reference/familiar-rules-and-
-    sheet.md). Minimal fields only -- Name and which magus; everything else
-    (Cords, binding details, etc.) is filled in via the Familiar sheet's Edit
-    actions afterward, same "create minimal, edit the rest" pattern as every
-    other create screen.
-
-    True Friend (Virtue) and Loyal (Partner) +3 (Personality Trait) are
-    granted automatically to both the familiar and its magus -- not left for
-    the user to type in (see kanban STORY-206).
-
-    Dismisses with the new familiar's id, or None if cancelled.
-    """
-
-    DEFAULT_CSS = """
-    FamiliarCreateScreen {
-        align: center middle;
-    }
-
-    #create-dialog {
-        width: 64;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #create-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #create-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, saga: Saga, default_magus_id: str | None = None) -> None:
-        super().__init__()
-        self.saga = saga
-        self.default_magus_id = default_magus_id
-
-    def compose(self) -> ComposeResult:
-        magi = fam.unbonded_magi(self.saga)
-        with Vertical(id="create-dialog"):
-            yield Label("Bind a New Familiar", id="create-title")
-            yield Label("Familiar name")
-            yield Input(placeholder="e.g. Ashwing", id="input-name")
-            yield Label("Magus Partner")
-            yield Select(
-                [(escape(c.name), c.id) for c in magi],
-                value=self.default_magus_id
-                if self.default_magus_id in {c.id for c in magi}
-                else Select.NULL,
-                allow_blank=True,
-                prompt="(choose a magus)",
-                id="select-magus",
-            )
-            yield Static("", id="create-error")
-            with Horizontal(id="create-buttons"):
-                yield Button("Create", id="btn-create", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-create":
-            self._try_create()
-
-    def _try_create(self) -> None:
-        error = self.query_one("#create-error", Static)
-
-        name = self.query_one("#input-name", Input).value.strip()
-        if not name:
-            error.update("Familiar name is required.")
-            return
-
-        magus_id = self.query_one("#select-magus", Select).value
-        magus = self.saga.character(magus_id) if isinstance(magus_id, str) else None
-        if magus is None:
-            error.update("A Magus Partner is required.")
-            return
-
-        self.dismiss({"name": name, "character_id": magus.id})
 
 
 class EditCharacterInfoScreen(ModalDialog[dict[str, object] | None]):
@@ -5125,98 +4729,6 @@ class AdvanceSeasonScreen(ModalDialog[bool]):
         self.dismiss(event.button.id == "btn-advance")
 
 
-class SetDateScreen(ModalDialog[tuple[str, int] | None]):
-    """Sets the saga's calendar date directly -- for the initial date, or to
-    roll back an accidental Advance. Dismisses with (season, year), or None
-    if cancelled."""
-
-    DEFAULT_CSS = """
-    SetDateScreen {
-        align: center middle;
-    }
-
-    #set-date-dialog {
-        width: 50;
-        height: auto;
-        max-height: 100%;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    .setdate-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .setdate-row Label {
-        width: 10;
-    }
-
-    .setdate-row Input, .setdate-row Select {
-        width: 1fr;
-    }
-
-    #set-date-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #set-date-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, season: str, year: int) -> None:
-        super().__init__()
-        self.season = season
-        self.year = year
-
-    def compose(self) -> ComposeResult:
-        with Vertical(id="set-date-dialog"):
-            yield Label("Set the Saga's Date", id="set-date-title")
-            with Horizontal(classes="setdate-row"):
-                yield Label("Season")
-                yield Select(
-                    _pairs(SEASONS),
-                    value=self.season,
-                    allow_blank=False,
-                    id="select-date-season",
-                    compact=True,
-                )
-            with Horizontal(classes="setdate-row"):
-                yield Label("Year")
-                yield Input(
-                    value=str(self.year),
-                    type="integer",
-                    id="input-date-year",
-                    compact=True,
-                )
-            yield Static("", id="set-date-error")
-            with Horizontal(id="set-date-buttons"):
-                yield Button("Set", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#set-date-error", Static)
-        raw_year = self.query_one("#input-date-year", Input).value.strip()
-        try:
-            year = int(raw_year)
-        except ValueError:
-            error.update("Year must be a whole number.")
-            return
-        season = self.query_one("#select-date-season", Select).value
-        self.dismiss((str(season), year))
-
-
 class BoonHookDetailScreen(ModalDialog[tuple[str, str] | None]):
     """Asks for the two optional, user-written fields of a covenant
     Boon/Hook: a one-line Detail (which Edifice, which contested resource --
@@ -6244,7 +5756,8 @@ class FieldsDialog(ModalDialog[dict[str, Any] | None]):
     """A config-driven form: one compact row per DialogField, scrolling if the
     terminal is short (Save/Cancel stay put). Dismisses with {key: value} for
     every non-info field, or None if cancelled. `validate` gets the finished
-    dict and returns an error message, or None if it's fine.
+    dict and returns an error message, or None if it's fine. `save_label`
+    names the button that completes it ("Save", "Create"...).
 
     Fields can depend on each other while the form is open: a field's
     `show_if` shows/hides it, and `live` (markup, from the current values)
@@ -6334,12 +5847,14 @@ class FieldsDialog(ModalDialog[dict[str, Any] | None]):
         *,
         validate: Callable[[dict[str, Any]], str | None] | None = None,
         live: Callable[[dict[str, Any]], str] | None = None,
+        save_label: str = "Save",
     ) -> None:
         super().__init__()
         self.title_text = title
         self.fields = fields
         self.validate = validate
         self.live = live
+        self.save_label = save_label
         self._picked: dict[str, Any] = {}  # "picker" fields' current values
 
     def compose(self) -> ComposeResult:
@@ -6353,7 +5868,7 @@ class FieldsDialog(ModalDialog[dict[str, Any] | None]):
                 yield Static("", id="fields-live")
             yield Static("", id="fields-error")
             with Horizontal(id="fields-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
+                yield Button(self.save_label, id="btn-save", variant="success")
                 yield Button("Cancel", id="btn-cancel")
 
     def _widgets(self, spec: DialogField) -> ComposeResult:
@@ -9563,7 +9078,12 @@ class WorkspaceScreen(Screen[None]):
                 self.selected_kind = NodeKind.COVENANT
                 await self._show_covenant_detail(covenant)
 
-        self.app.push_screen(CovenantCreateScreen(self.saga), handle_result)
+        self.app.push_screen(
+            FieldsDialog(
+                "Create a New Covenant", _covenant_create_fields(), save_label="Create"
+            ),
+            handle_result,
+        )
 
     def action_create_character(self) -> None:
         covenant = self.selected_covenant
@@ -9580,8 +9100,10 @@ class WorkspaceScreen(Screen[None]):
                 await self._show_character_detail(character)
 
         self.app.push_screen(
-            CharacterCreateScreen(
-                self.saga, default_covenant_id=covenant.id if covenant else None
+            FieldsDialog(
+                "Create a New Character",
+                _character_create_fields(self.saga, covenant.id if covenant else None),
+                save_label="Create",
             ),
             handle_result,
         )
@@ -9600,7 +9122,14 @@ class WorkspaceScreen(Screen[None]):
                 self.selected_kind = NodeKind.LABORATORY
                 await self._show_laboratory_detail(lab)
 
-        self.app.push_screen(LaboratoryCreateScreen(self.saga, covenant), handle_result)
+        self.app.push_screen(
+            FieldsDialog(
+                "Create a New Laboratory",
+                _laboratory_create_fields(self.saga, covenant.id if covenant else None),
+                save_label="Create",
+            ),
+            handle_result,
+        )
 
     def action_create_familiar(self) -> None:
         if not fam.unbonded_magi(self.saga):
@@ -9629,7 +9158,12 @@ class WorkspaceScreen(Screen[None]):
                 await self._show_familiar_detail(familiar)
 
         self.app.push_screen(
-            FamiliarCreateScreen(self.saga, default_magus_id), handle_result
+            FieldsDialog(
+                "Bind a New Familiar",
+                _familiar_create_fields(self.saga, default_magus_id),
+                save_label="Create",
+            ),
+            handle_result,
         )
 
     # -- generic Add/Remove/Edit dispatch, by the active section of any sheet --
@@ -11149,7 +10683,7 @@ class WorkspaceScreen(Screen[None]):
         self.app.push_screen(EditCovenantScreen(covenant), handle_result)
 
     def _edit_saga(self) -> None:
-        async def handle_result(result: dict[str, object] | None) -> None:
+        async def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
             for field, value in result.items():
@@ -11158,7 +10692,9 @@ class WorkspaceScreen(Screen[None]):
             self._update_saga_clock()
             await self._show_saga_detail()
 
-        self.app.push_screen(EditSagaScreen(self.saga), handle_result)
+        self.app.push_screen(
+            FieldsDialog("Edit Saga", _saga_fields(self.saga)), handle_result
+        )
 
     # -- Saga time --
 
@@ -11240,17 +10776,22 @@ class WorkspaceScreen(Screen[None]):
     def action_set_date(self) -> None:
         saga = self.saga
 
-        async def handle_result(result: tuple[str, int] | None) -> None:
+        async def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
-            season, year = result
+            season, year = result["season"], result["year"]
             if (season, year) == (saga.current_season, saga.current_year):
                 return
             await self._apply_saga_date(season, year)
             self.notify(f"Date set to {season} {year}.")
 
         self.app.push_screen(
-            SetDateScreen(saga.current_season, saga.current_year), handle_result
+            FieldsDialog(
+                "Set the Saga's Date",
+                _date_fields(saga.current_season, saga.current_year),
+                save_label="Set",
+            ),
+            handle_result,
         )
 
     # -- Character Info / Characteristics --
@@ -12675,7 +12216,10 @@ class SagaPickerScreen(Screen[None]):
                 )
                 await self.refresh_list()
 
-        self.app.push_screen(SagaCreateScreen(), handle_result)
+        self.app.push_screen(
+            FieldsDialog("Create a New Saga", _saga_fields(None), save_label="Create"),
+            handle_result,
+        )
 
     def action_delete_saga(self) -> None:
         """Delete the highlighted saga's file, after confirming: this is

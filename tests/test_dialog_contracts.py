@@ -74,14 +74,13 @@ def _all_sagas() -> list[Saga]:
 
 CONTRACTS: dict[str, Contract] = {
     "create saga": Contract(
-        prefill={"Saga name": "", "Year": "1220", "Season": "Spring"},
-        edits={"Saga name": "Second Saga", "Storyguide": "Ann"},
+        prefill={"Name": "", "Start Year": "1220", "Start Season": "Spring"},
+        edits={"Name": "Second Saga", "Storyguide": "Ann"},
         saved=lambda _: sorted(
             (s.name, s.storyguide) for s in _all_sagas() if s.name == "Second Saga"
         ),
         expected=[("Second Saga", "Ann")],
-        invalid={"Saga name": ""},
-        aliases={"Year": "input-year", "Season": "select-season"},
+        invalid={"Name": ""},
     ),
     "edit saga": Contract(
         prefill={"Name": "Matrix", "Storyguide": ""},
@@ -98,38 +97,38 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Year": "-"},
     ),
     "create covenant": Contract(
-        prefill={"Covenant name": ""},
-        edits={"Covenant name": "Harbour", "Notes": "By the sea"},
+        prefill={"Name": ""},
+        edits={"Name": "Harbour", "Notes": "By the sea"},
         saved=lambda s: [(c.name, c.notes) for c in s.covenants if c.name == "Harbour"],
         expected=[("Harbour", "By the sea")],
-        invalid={"Covenant name": ""},
+        invalid={"Name": ""},
     ),
     "create character": Contract(
-        prefill={"Character name": "", "Type": "magus", "Covenant": "cov1"},
-        edits={"Character name": "Ulla", "Type": "companion"},
+        prefill={"Name": "", "Type": "magus", "Covenant": "cov1"},
+        edits={"Name": "Ulla", "Type": "companion"},
         saved=lambda s: [
             (c.type, c.covenant_id) for c in s.characters if c.name == "Ulla"
         ],
         expected=[("companion", "cov1")],
-        invalid={"Character name": ""},
+        invalid={"Name": ""},
     ),
     "create laboratory": Contract(
-        prefill={"Laboratory name": "", "Size": "0", "Covenant": "cov1"},
-        edits={"Laboratory name": "Cellar", "Size": "2"},
+        prefill={"Name": "", "Size": "0", "Covenant": "cov1"},
+        edits={"Name": "Cellar", "Size": "2"},
         saved=lambda s: [
             (lab.covenant_id, lab.characteristics.size)
             for lab in s.laboratories
             if lab.name == "Cellar"
         ],
         expected=[("cov1", 2)],
-        invalid={"Laboratory name": "", "Size": "2"},
+        invalid={"Name": "", "Size": "2"},
     ),
     "bind familiar": Contract(
-        prefill={"Familiar name": ""},
-        edits={"Familiar name": "Mouse", "Magus Partner": "mag2"},
+        prefill={"Name": ""},
+        edits={"Name": "Mouse", "Magus Partner": "mag2"},
         saved=lambda s: [f.character_id for f in s.familiars if f.name == "Mouse"],
         expected=["mag2"],
-        invalid={"Familiar name": "", "Magus Partner": "mag2"},
+        invalid={"Name": "", "Magus Partner": "mag2"},
     ),
     "edit covenant": Contract(
         prefill={"Name": "Keep", "Aura": "0", "Covenant Season": "Spring"},

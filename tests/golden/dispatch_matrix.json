@@ -5,7 +5,7 @@
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
-        "e": "EditSagaScreen",
+        "e": "FieldsDialog: Edit Saga",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "ImportScreen: Import Data",
