@@ -108,6 +108,37 @@ class DialogField:
     display: Callable[[Any], str] | None = None
 
 
+class _FieldError(ValueError):
+    """A field's text doesn't parse; the message is shown under the form."""
+
+
+def _parse_int(spec: DialogField, raw: str) -> int | None:
+    if not raw and spec.kind == "optint":
+        return None
+    try:
+        return int(raw)
+    except ValueError:
+        raise _FieldError(f"{spec.label} must be a whole number.") from None
+
+
+def _parse_float(spec: DialogField, raw: str) -> float | None:
+    if not raw:
+        return None
+    try:
+        return float(raw)
+    except ValueError:
+        raise _FieldError(f"{spec.label} must be a number.") from None
+
+
+#: Field kinds whose widget text becomes a number. Every other kind's value is
+#: what FieldsDialog._read gets from its widget.
+_PARSERS: dict[str, Callable[[DialogField, str], Any]] = {
+    "int": _parse_int,
+    "optint": _parse_int,
+    "optfloat": _parse_float,
+}
+
+
 class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
     """A config-driven form: one compact row per DialogField, scrolling if the
     terminal is short (Save/Cancel stay put). Dismisses with {key: value} for
@@ -307,6 +338,31 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
             4, self.size.height - reserved
         )
 
+    def _read(self, spec: DialogField) -> Any:
+        """A (non-info) field's value as its widget holds it: stripped text
+        for text, number and area fields, None for a blank select."""
+        if spec.kind == "picker":
+            return self._picked.get(spec.key)
+        widget = self.query_one(f"#fld-{spec.key}")
+        if spec.kind == "select":
+            return widget.value if isinstance(widget.value, str) else None
+        if spec.kind == "check":
+            return bool(widget.value)
+        if spec.kind == "area":
+            return widget.text.strip()
+        return widget.value.strip()  # text and the number kinds
+
+    def _value(self, spec: DialogField) -> Any:
+        """A field's value, parsed; raises _FieldError if it doesn't parse or
+        is required and empty."""
+        value = self._read(spec)
+        parse = _PARSERS.get(spec.kind)
+        if parse is not None:
+            value = parse(spec, value)
+        if spec.required and value in (None, ""):
+            raise _FieldError(f"{spec.label} is required.")
+        return value
+
     def current_values(self) -> dict[str, Any]:
         """Every non-info field's value as it stands, leniently: a number
         that doesn't parse (yet) is None; nothing is validated."""
@@ -314,29 +370,14 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         for spec in self.fields:
             if spec.kind == "info":
                 continue
-            widget = self.query_one(f"#fld-{spec.key}")
-            if spec.kind == "text":
-                values[spec.key] = widget.value.strip()
-            elif spec.kind in ("int", "optint"):
+            value = self._read(spec)
+            parse = _PARSERS.get(spec.kind)
+            if parse is not None:
                 try:
-                    values[spec.key] = int(widget.value.strip())
-                except ValueError:
-                    values[spec.key] = None
-            elif spec.kind == "optfloat":
-                try:
-                    values[spec.key] = float(widget.value.strip())
-                except ValueError:
-                    values[spec.key] = None
-            elif spec.kind == "select":
-                values[spec.key] = (
-                    widget.value if isinstance(widget.value, str) else None
-                )
-            elif spec.kind == "check":
-                values[spec.key] = bool(widget.value)
-            elif spec.kind == "picker":
-                values[spec.key] = self._picked.get(spec.key)
-            else:  # area
-                values[spec.key] = widget.text.strip()
+                    value = parse(spec, value)
+                except _FieldError:
+                    value = None
+            values[spec.key] = value
         return values
 
     def _picker_label(self, spec: DialogField) -> str:
@@ -399,53 +440,11 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         for spec in self.fields:
             if spec.kind == "info" or not self._shown(spec, current):
                 continue
-            widget = self.query_one(f"#fld-{spec.key}")
-            if spec.kind == "text":
-                value: Any = widget.value.strip()
-                if spec.required and not value:
-                    error.update(f"{spec.label} is required.")
-                    return
-            elif spec.kind in ("int", "optint"):
-                raw = widget.value.strip()
-                if not raw and spec.kind == "optint":
-                    value = None
-                    if spec.required:
-                        error.update(f"{spec.label} is required.")
-                        return
-                else:
-                    try:
-                        value = int(raw)
-                    except ValueError:
-                        error.update(f"{spec.label} must be a whole number.")
-                        return
-            elif spec.kind == "optfloat":
-                raw = widget.value.strip()
-                if not raw:
-                    value = None
-                    if spec.required:
-                        error.update(f"{spec.label} is required.")
-                        return
-                else:
-                    try:
-                        value = float(raw)
-                    except ValueError:
-                        error.update(f"{spec.label} must be a number.")
-                        return
-            elif spec.kind == "select":
-                value = widget.value if isinstance(widget.value, str) else None
-                if spec.required and value is None:
-                    error.update(f"{spec.label} is required.")
-                    return
-            elif spec.kind == "check":
-                value = bool(widget.value)
-            elif spec.kind == "picker":
-                value = self._picked.get(spec.key)
-                if spec.required and value in (None, ""):
-                    error.update(f"{spec.label} is required.")
-                    return
-            else:  # area
-                value = widget.text.strip()
-            result[spec.key] = value
+            try:
+                result[spec.key] = self._value(spec)
+            except _FieldError as problem:
+                error.update(str(problem))
+                return
         problem = self.validate(result) if self.validate else None
         if problem:
             error.update(problem)
