@@ -18,3 +18,8 @@ def load_settings() -> dict:
 def save_settings(settings: dict) -> None:
     SETTINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
     SETTINGS_PATH.write_text(json.dumps(settings, indent=2), encoding="utf-8")
+
+
+def update_settings(**changes: object) -> None:
+    """Save `changes` into the settings file, keeping every other setting."""
+    save_settings(load_settings() | changes)

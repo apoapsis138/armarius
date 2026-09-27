@@ -8,7 +8,7 @@ from textual.app import App
 from textual.binding import BindingType
 
 from .screens import SagaPickerScreen
-from .settings import load_settings, save_settings
+from .settings import load_settings, update_settings
 from .themes import SCRIPTORUM, SCRIPTORUM_DARK
 
 #: Theme applied on first launch, or if a saved theme name is no longer registered.
@@ -31,4 +31,4 @@ class ArsMagicaManagerApp(App[None]):
         self.push_screen(SagaPickerScreen())
 
     def watch_theme(self, theme_name: str) -> None:
-        save_settings({"theme": theme_name})
+        update_settings(theme=theme_name)

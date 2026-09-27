@@ -336,6 +336,19 @@ async def test_switching_theme_updates_theme_bar_and_persists():
     assert settings.load_settings() == {"theme": "scriptorum-dark"}
 
 
+async def test_saving_the_theme_keeps_the_other_settings():
+    # B16: every theme change (including the one on launch) rewrote the
+    # settings file with the theme alone.
+    settings.save_settings({"theme": "scriptorum", "other": 1})
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        app.theme = "scriptorum-dark"
+        await pilot.pause()
+
+    assert settings.load_settings() == {"theme": "scriptorum-dark", "other": 1}
+
+
 async def test_saved_theme_is_restored_on_next_launch():
     settings.save_settings({"theme": "scriptorum-dark"})
 

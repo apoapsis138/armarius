@@ -12,3 +12,12 @@ def test_save_and_load_settings_round_trip(tmp_path, monkeypatch):
     settings.save_settings({"theme": "scriptorum-dark"})
 
     assert settings.load_settings() == {"theme": "scriptorum-dark"}
+
+
+def test_update_settings_keeps_the_other_keys(tmp_path, monkeypatch):
+    monkeypatch.setattr(settings, "SETTINGS_PATH", tmp_path / "app_settings.json")
+    settings.save_settings({"theme": "scriptorum", "other": 1})
+
+    settings.update_settings(theme="scriptorum-dark")
+
+    assert settings.load_settings() == {"theme": "scriptorum-dark", "other": 1}
