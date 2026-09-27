@@ -938,6 +938,73 @@ def _boon_hook_names(ids: list[str], by_id: dict[str, CovenantBoonHookDef]) -> s
 #: Covenant Reputations run from -3 to +3.
 _COVENANT_REPUTATION_RANGE = (-3, 3)
 
+
+@dataclass(frozen=True)
+class _TraitList:
+    """One of the sheets' scored-trait lists -- a record's Personality Traits
+    or Reputations -- for WorkspaceScreen's shared add/edit/remove."""
+
+    owner: str  # the WorkspaceScreen attribute holding the record
+    attr: str  # the record's list: "personality_traits" or "reputations"
+    section: str
+    noun: str  # "Personality Trait" or "Reputation"
+    example: str
+    selected: str  # the WorkspaceScreen method giving the chosen row's index
+    signed: bool = True  # scores shown as "+2" (not "2") in the picker
+    confirm_remove: bool = True
+    prompt_options: dict[str, Any] = dataclass_field(default_factory=dict)
+
+
+_CHARACTER_TRAITS = _TraitList(
+    "selected_character",
+    "personality_traits",
+    "section-personality-traits",
+    "Personality Trait",
+    "e.g. Brave",
+    "_selected_personality_trait",
+)
+_CHARACTER_REPUTATIONS = _TraitList(
+    "selected_character",
+    "reputations",
+    "section-reputations",
+    "Reputation",
+    "e.g. Skilled Enchanter",
+    "_selected_character_reputation",
+    signed=False,  # unlike every other Reputation list (STORY-1109 B14)
+)
+_FAMILIAR_TRAITS = _TraitList(
+    "selected_familiar",
+    "personality_traits",
+    "section-fam-personality-traits",
+    "Personality Trait",
+    "e.g. Loyal",
+    "_selected_familiar_personality_trait",
+    confirm_remove=False,  # STORY-1109 B6
+)
+_FAMILIAR_REPUTATIONS = _TraitList(
+    "selected_familiar",
+    "reputations",
+    "section-fam-reputations",
+    "Reputation",
+    "e.g. Fierce Protector",
+    "_selected_familiar_reputation",
+    signed=False,
+    confirm_remove=False,  # STORY-1109 B6
+)
+_COVENANT_REPUTATIONS = _TraitList(
+    "selected_covenant",
+    "reputations",
+    "section-cov-reputations",
+    "Reputation",
+    "e.g. Feared by the local nobility",
+    "_selected_reputation",
+    prompt_options={
+        "min_score": _COVENANT_REPUTATION_RANGE[0],
+        "max_score": _COVENANT_REPUTATION_RANGE[1],
+        "include_known": True,
+    },
+)
+
 #: Which sheet section each covenant Boon/Hook kind lives in.
 _BOON_HOOK_SECTION = {"Boon": "section-cov-boons", "Hook": "section-cov-hooks"}
 
@@ -9988,6 +10055,81 @@ class WorkspaceScreen(Screen[None]):
             "familiar": self._familiar_sheet_view,
         }.get(self.selected_kind)
 
+    # -- scored-trait lists (Personality Traits, Reputations) --
+
+    def _traits(self, spec: _TraitList) -> list[ScoredTrait] | None:
+        owner = getattr(self, spec.owner)
+        return None if owner is None else getattr(owner, spec.attr)
+
+    def _trait_prompt(
+        self, spec: _TraitList, title: str, existing: ScoredTrait | None = None
+    ) -> ScoredTraitPromptScreen:
+        return ScoredTraitPromptScreen(
+            title, spec.example, existing, **spec.prompt_options
+        )
+
+    def _add_trait(self, spec: _TraitList) -> None:
+        traits = self._traits(spec)
+        if traits is None:
+            return
+
+        def handle_result(trait: ScoredTrait | None) -> None:
+            if trait is not None:
+                traits.append(trait)
+                self._commit(spec.section)
+
+        self.app.push_screen(
+            self._trait_prompt(spec, f"Add a {spec.noun}"), handle_result
+        )
+
+    def _edit_trait(self, spec: _TraitList) -> None:
+        """Edit the chosen entry; with none chosen, ask which."""
+        traits = self._traits(spec)
+        if traits is None:
+            return
+        self._chosen_or_pick(
+            getattr(self, spec.selected)(),
+            [label for _, label in st.trait_rows(traits, signed=spec.signed)],
+            title=f"Edit which {spec.noun}?",
+            empty=f"No {spec.noun}s to edit.",
+            then=lambda index: self._edit_trait_at(spec, traits, index),
+        )
+
+    def _edit_trait_at(
+        self, spec: _TraitList, traits: list[ScoredTrait], index: int
+    ) -> None:
+        def handle_result(trait: ScoredTrait | None) -> None:
+            if trait is not None:
+                traits[index] = trait
+                self._commit(spec.section)
+
+        self.app.push_screen(
+            self._trait_prompt(spec, f"Edit a {spec.noun}", traits[index]),
+            handle_result,
+        )
+
+    def _remove_trait(self, spec: _TraitList) -> None:
+        """Delete the chosen entry (asking first, unless `spec` says not to);
+        with none chosen, ask which one."""
+        traits = self._traits(spec)
+        if traits is None:
+            return
+
+        def remove(index: int) -> None:
+            if spec.confirm_remove:
+                self._confirm_delete(traits, index, traits[index].name, spec.section)
+            else:
+                del traits[index]
+                self._commit(spec.section)
+
+        self._chosen_or_pick(
+            getattr(self, spec.selected)(),
+            [label for _, label in st.trait_rows(traits, signed=spec.signed)],
+            title=f"Remove a {spec.noun}",
+            empty=f"No {spec.noun}s to remove.",
+            then=remove,
+        )
+
     def _chosen_or_pick(
         self,
         selected: int | None,
@@ -10141,13 +10283,13 @@ class WorkspaceScreen(Screen[None]):
         elif section == "section-inventory":
             self._add_item()
         elif section == "section-personality-traits":
-            self._add_personality_trait()
+            self._add_trait(_CHARACTER_TRAITS)
         elif section == "section-reputations":
-            self._add_reputation()
+            self._add_trait(_CHARACTER_REPUTATIONS)
         elif section == "section-fam-personality-traits":
-            self._add_familiar_personality_trait()
+            self._add_trait(_FAMILIAR_TRAITS)
         elif section == "section-fam-reputations":
-            self._add_familiar_reputation()
+            self._add_trait(_FAMILIAR_REPUTATIONS)
         elif section == "section-fam-natural-weapons":
             self._add_familiar_natural_weapon()
         elif section == "tab-fam-abilities":
@@ -10169,7 +10311,7 @@ class WorkspaceScreen(Screen[None]):
         elif section == "tab-lab-diary":
             self._add_diary_entry()
         elif section == "section-cov-reputations":
-            self._add_covenant_reputation()
+            self._add_trait(_COVENANT_REPUTATIONS)
         elif section == "section-cov-boons":
             self._add_boon_hook("Boon")
         elif section == "section-cov-hooks":
@@ -10194,13 +10336,13 @@ class WorkspaceScreen(Screen[None]):
         elif section == "section-inventory":
             self._remove_item()
         elif section == "section-personality-traits":
-            self._remove_personality_trait()
+            self._remove_trait(_CHARACTER_TRAITS)
         elif section == "section-reputations":
-            self._remove_reputation()
+            self._remove_trait(_CHARACTER_REPUTATIONS)
         elif section == "section-fam-personality-traits":
-            self._remove_familiar_personality_trait()
+            self._remove_trait(_FAMILIAR_TRAITS)
         elif section == "section-fam-reputations":
-            self._remove_familiar_reputation()
+            self._remove_trait(_FAMILIAR_REPUTATIONS)
         elif section == "section-fam-natural-weapons":
             self._remove_familiar_natural_weapon()
         elif section == "tab-fam-abilities":
@@ -10222,7 +10364,7 @@ class WorkspaceScreen(Screen[None]):
         elif section == "tab-lab-diary":
             self._remove_diary_entry()
         elif section == "section-cov-reputations":
-            self._remove_covenant_reputation()
+            self._remove_trait(_COVENANT_REPUTATIONS)
         elif section == "section-cov-boons":
             self._remove_boon_hook("Boon")
         elif section == "section-cov-hooks":
@@ -10264,17 +10406,17 @@ class WorkspaceScreen(Screen[None]):
         elif section == "section-hermetic-background":
             self._edit_hermetic_background()
         elif section == "section-personality-traits":
-            self._edit_personality_trait()
+            self._edit_trait(_CHARACTER_TRAITS)
         elif section == "section-reputations":
-            self._edit_reputation()
+            self._edit_trait(_CHARACTER_REPUTATIONS)
         elif section == "section-fam-info":
             self._edit_familiar_info()
         elif section == "section-fam-binding":
             self._edit_familiar_binding()
         elif section == "section-fam-personality-traits":
-            self._edit_familiar_personality_trait()
+            self._edit_trait(_FAMILIAR_TRAITS)
         elif section == "section-fam-reputations":
-            self._edit_familiar_reputation()
+            self._edit_trait(_FAMILIAR_REPUTATIONS)
         elif section == "section-fam-characteristics":
             self._edit_familiar_characteristics()
         elif section == "section-fam-health":
@@ -10314,7 +10456,7 @@ class WorkspaceScreen(Screen[None]):
         elif section == "section-cov-description":
             self._edit_covenant_description()
         elif section == "section-cov-reputations":
-            self._edit_covenant_reputation()
+            self._edit_trait(_COVENANT_REPUTATIONS)
         elif section == "section-cov-boons":
             self._edit_boon_hook("Boon")
         elif section == "section-cov-hooks":
@@ -11553,87 +11695,9 @@ class WorkspaceScreen(Screen[None]):
             EditCovenantDescriptionScreen(covenant.notes), handle_result
         )
 
-    def _reputation_prompt(
-        self, title: str, existing: ScoredTrait | None = None
-    ) -> ScoredTraitPromptScreen:
-        low, high = _COVENANT_REPUTATION_RANGE
-        return ScoredTraitPromptScreen(
-            title,
-            "e.g. Feared by the local nobility",
-            existing,
-            min_score=low,
-            max_score=high,
-            include_known=True,
-        )
-
-    def _add_covenant_reputation(self) -> None:
-        covenant = self.selected_covenant
-        if covenant is None:
-            return
-
-        def handle_result(trait: ScoredTrait | None) -> None:
-            if trait is not None:
-                covenant.reputations.append(trait)
-                self._commit("section-cov-reputations")
-
-        self.app.push_screen(self._reputation_prompt("Add a Reputation"), handle_result)
-
     def _selected_reputation(self) -> int | None:
         view = self._covenant_sheet_view
         return view.selected_reputation() if view is not None else None
-
-    def _edit_covenant_reputation(self) -> None:
-        """Edit the chosen Reputation; with none chosen, ask which one."""
-        covenant = self.selected_covenant
-        if covenant is None:
-            return
-        self._chosen_or_pick(
-            self._selected_reputation(),
-            [f"{escape(r.name)}: {r.score:+d}" for r in covenant.reputations],
-            title="Edit which Reputation?",
-            empty="No Reputations to edit.",
-            then=lambda index: self._edit_covenant_reputation_at(index),
-        )
-
-    def _edit_covenant_reputation_at(self, index: int) -> None:
-        covenant = self.selected_covenant
-        if covenant is None:
-            return
-
-        def handle_result(trait: ScoredTrait | None) -> None:
-            if trait is not None:
-                covenant.reputations[index] = trait
-                self._commit("section-cov-reputations")
-
-        self.app.push_screen(
-            self._reputation_prompt("Edit a Reputation", covenant.reputations[index]),
-            handle_result,
-        )
-
-    def _remove_covenant_reputation(self) -> None:
-        """Delete the chosen Reputation (after confirming); with none
-        chosen, ask which one first."""
-        covenant = self.selected_covenant
-        if covenant is None:
-            return
-        self._chosen_or_pick(
-            self._selected_reputation(),
-            [f"{escape(r.name)}: {r.score:+d}" for r in covenant.reputations],
-            title="Remove a Reputation",
-            empty="No Reputations to remove.",
-            then=lambda index: self._confirm_remove_covenant_reputation(index),
-        )
-
-    def _confirm_remove_covenant_reputation(self, index: int) -> None:
-        covenant = self.selected_covenant
-        if covenant is None:
-            return
-        self._confirm_delete(
-            covenant.reputations,
-            index,
-            covenant.reputations[index].name,
-            "section-cov-reputations",
-        )
 
     def _attached_boons_hooks(
         self, covenant: Covenant, kind: str
@@ -12032,157 +12096,13 @@ class WorkspaceScreen(Screen[None]):
 
     # -- Personality Traits / Reputations / Wounds / Fatigue --
 
-    def _add_personality_trait(self) -> None:
-        character = self.selected_character
-        if character is None:
-            return
-
-        def handle_result(trait: ScoredTrait | None) -> None:
-            if trait is not None:
-                character.personality_traits.append(trait)
-                self._commit("section-personality-traits")
-
-        self.app.push_screen(
-            ScoredTraitPromptScreen("Add a Personality Trait", "e.g. Brave"),
-            handle_result,
-        )
-
     def _selected_personality_trait(self) -> int | None:
         view = self._character_sheet_view
         return view.selected_personality_trait() if view is not None else None
 
-    def _edit_personality_trait(self) -> None:
-        """Edit the chosen Personality Trait; with none chosen, ask which."""
-        character = self.selected_character
-        if character is None:
-            return
-        self._chosen_or_pick(
-            self._selected_personality_trait(),
-            [f"{escape(t.name)}: {t.score:+d}" for t in character.personality_traits],
-            title="Edit which Personality Trait?",
-            empty="No Personality Traits to edit.",
-            then=lambda index: self._edit_personality_trait_at(index),
-        )
-
-    def _edit_personality_trait_at(self, index: int) -> None:
-        character = self.selected_character
-        if character is None:
-            return
-
-        def handle_result(trait: ScoredTrait | None) -> None:
-            if trait is not None:
-                character.personality_traits[index] = trait
-                self._commit("section-personality-traits")
-
-        self.app.push_screen(
-            ScoredTraitPromptScreen(
-                "Edit a Personality Trait",
-                "e.g. Brave",
-                character.personality_traits[index],
-            ),
-            handle_result,
-        )
-
-    def _remove_personality_trait(self) -> None:
-        """Delete the chosen Personality Trait (after confirming); with none
-        chosen, ask which one first."""
-        character = self.selected_character
-        if character is None:
-            return
-        self._chosen_or_pick(
-            self._selected_personality_trait(),
-            [f"{escape(t.name)}: {t.score:+d}" for t in character.personality_traits],
-            title="Remove a Personality Trait",
-            empty="No Personality Traits to remove.",
-            then=lambda index: self._confirm_remove_personality_trait(index),
-        )
-
-    def _confirm_remove_personality_trait(self, index: int) -> None:
-        character = self.selected_character
-        if character is None:
-            return
-        self._confirm_delete(
-            character.personality_traits,
-            index,
-            character.personality_traits[index].name,
-            "section-personality-traits",
-        )
-
-    def _add_reputation(self) -> None:
-        character = self.selected_character
-        if character is None:
-            return
-
-        def handle_result(trait: ScoredTrait | None) -> None:
-            if trait is not None:
-                character.reputations.append(trait)
-                self._commit("section-reputations")
-
-        self.app.push_screen(
-            ScoredTraitPromptScreen("Add a Reputation", "e.g. Skilled Enchanter"),
-            handle_result,
-        )
-
     def _selected_character_reputation(self) -> int | None:
         view = self._character_sheet_view
         return view.selected_reputation() if view is not None else None
-
-    def _edit_reputation(self) -> None:
-        """Edit the chosen Reputation; with none chosen, ask which one."""
-        character = self.selected_character
-        if character is None:
-            return
-        self._chosen_or_pick(
-            self._selected_character_reputation(),
-            [f"{escape(t.name)}: {t.score}" for t in character.reputations],
-            title="Edit which Reputation?",
-            empty="No Reputations to edit.",
-            then=lambda index: self._edit_reputation_at(index),
-        )
-
-    def _edit_reputation_at(self, index: int) -> None:
-        character = self.selected_character
-        if character is None:
-            return
-
-        def handle_result(trait: ScoredTrait | None) -> None:
-            if trait is not None:
-                character.reputations[index] = trait
-                self._commit("section-reputations")
-
-        self.app.push_screen(
-            ScoredTraitPromptScreen(
-                "Edit a Reputation",
-                "e.g. Skilled Enchanter",
-                character.reputations[index],
-            ),
-            handle_result,
-        )
-
-    def _remove_reputation(self) -> None:
-        """Delete the chosen Reputation (after confirming); with none chosen,
-        ask which one first."""
-        character = self.selected_character
-        if character is None:
-            return
-        self._chosen_or_pick(
-            self._selected_character_reputation(),
-            [f"{escape(t.name)}: {t.score}" for t in character.reputations],
-            title="Remove a Reputation",
-            empty="No Reputations to remove.",
-            then=lambda index: self._confirm_remove_reputation(index),
-        )
-
-    def _confirm_remove_reputation(self, index: int) -> None:
-        character = self.selected_character
-        if character is None:
-            return
-        self._confirm_delete(
-            character.reputations,
-            index,
-            character.reputations[index].name,
-            "section-reputations",
-        )
 
     def _edit_wounds(self) -> None:
         character = self.selected_character
@@ -13352,161 +13272,13 @@ class WorkspaceScreen(Screen[None]):
 
     # -- Familiar: Personality Traits & Reputations --
 
-    def _add_familiar_personality_trait(self) -> None:
-        familiar = self.selected_familiar
-        if familiar is None:
-            return
-
-        def handle_result(trait: ScoredTrait | None) -> None:
-            if trait is not None:
-                familiar.personality_traits.append(trait)
-                self._commit("section-fam-personality-traits")
-
-        self.app.push_screen(
-            ScoredTraitPromptScreen("Add a Personality Trait", "e.g. Loyal"),
-            handle_result,
-        )
-
     def _selected_familiar_personality_trait(self) -> int | None:
         view = self._familiar_sheet_view
         return view.selected_personality_trait() if view is not None else None
 
-    def _edit_familiar_personality_trait(self) -> None:
-        familiar = self.selected_familiar
-        if familiar is None:
-            return
-        self._chosen_or_pick(
-            self._selected_familiar_personality_trait(),
-            [f"{escape(t.name)}: {t.score:+d}" for t in familiar.personality_traits],
-            title="Edit which Personality Trait?",
-            empty="No Personality Traits to edit.",
-            then=lambda index: self._edit_familiar_personality_trait_at(index),
-        )
-
-    def _edit_familiar_personality_trait_at(self, index: int) -> None:
-        familiar = self.selected_familiar
-        if familiar is None:
-            return
-
-        def handle_result(trait: ScoredTrait | None) -> None:
-            if trait is not None:
-                familiar.personality_traits[index] = trait
-                self._commit("section-fam-personality-traits")
-
-        self.app.push_screen(
-            ScoredTraitPromptScreen(
-                "Edit a Personality Trait",
-                "e.g. Loyal",
-                familiar.personality_traits[index],
-            ),
-            handle_result,
-        )
-
-    def _remove_familiar_personality_trait(self) -> None:
-        familiar = self.selected_familiar
-        if familiar is None:
-            return
-        selected = self._selected_familiar_personality_trait()
-        if selected is None and not familiar.personality_traits:
-            self.notify("No Personality Traits to remove.")
-            return
-
-        def do_remove(index: int) -> None:
-            del familiar.personality_traits[index]
-            self._commit("section-fam-personality-traits")
-
-        if selected is not None:
-            do_remove(selected)
-            return
-
-        labels = [
-            f"{escape(t.name)}: {t.score:+d}" for t in familiar.personality_traits
-        ]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                do_remove(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Remove a Personality Trait", labels), handle_index
-        )
-
-    def _add_familiar_reputation(self) -> None:
-        familiar = self.selected_familiar
-        if familiar is None:
-            return
-
-        def handle_result(trait: ScoredTrait | None) -> None:
-            if trait is not None:
-                familiar.reputations.append(trait)
-                self._commit("section-fam-reputations")
-
-        self.app.push_screen(
-            ScoredTraitPromptScreen("Add a Reputation", "e.g. Fierce Protector"),
-            handle_result,
-        )
-
     def _selected_familiar_reputation(self) -> int | None:
         view = self._familiar_sheet_view
         return view.selected_reputation() if view is not None else None
-
-    def _edit_familiar_reputation(self) -> None:
-        familiar = self.selected_familiar
-        if familiar is None:
-            return
-        self._chosen_or_pick(
-            self._selected_familiar_reputation(),
-            [f"{escape(t.name)}: {t.score}" for t in familiar.reputations],
-            title="Edit which Reputation?",
-            empty="No Reputations to edit.",
-            then=lambda index: self._edit_familiar_reputation_at(index),
-        )
-
-    def _edit_familiar_reputation_at(self, index: int) -> None:
-        familiar = self.selected_familiar
-        if familiar is None:
-            return
-
-        def handle_result(trait: ScoredTrait | None) -> None:
-            if trait is not None:
-                familiar.reputations[index] = trait
-                self._commit("section-fam-reputations")
-
-        self.app.push_screen(
-            ScoredTraitPromptScreen(
-                "Edit a Reputation",
-                "e.g. Fierce Protector",
-                familiar.reputations[index],
-            ),
-            handle_result,
-        )
-
-    def _remove_familiar_reputation(self) -> None:
-        familiar = self.selected_familiar
-        if familiar is None:
-            return
-        selected = self._selected_familiar_reputation()
-        if selected is None and not familiar.reputations:
-            self.notify("No Reputations to remove.")
-            return
-
-        def do_remove(index: int) -> None:
-            del familiar.reputations[index]
-            self._commit("section-fam-reputations")
-
-        if selected is not None:
-            do_remove(selected)
-            return
-
-        labels = [f"{escape(t.name)}: {t.score}" for t in familiar.reputations]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                do_remove(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Remove a Reputation", labels), handle_index
-        )
 
     def _virtue_flaw_target(self) -> Character | Laboratory | Familiar | None:
         if (
