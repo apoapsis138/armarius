@@ -298,7 +298,14 @@ async def _matrix_for(
         view = getattr(workspace, attr)
         assert await wait_until(pilot, lambda: view.initial_tab_seen)
         await pilot.pause()
-        targets = [w for w in view.query("Collapsible, TabPane") if w.id]
+        # Every section, and every tab without sections. (Switching to a tab
+        # that has sections focuses its first one -- that section's own
+        # entry covers it, and which focus lands last would be a race.)
+        targets = [
+            w
+            for w in view.query("Collapsible, TabPane")
+            if w.id and not (isinstance(w, TabPane) and w.query(Collapsible))
+        ]
         labels = [f"{type(t).__name__}#{t.id}" for t in targets]
         if shard is not None:
             targets = targets[shard::shards]

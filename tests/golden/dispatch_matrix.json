@@ -28,19 +28,6 @@
         "V": "(disabled)"
       }
     },
-    "TabPane#tab-cov-attributes": {
-      "active": "section-cov-info",
-      "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "EditCovenantScreen",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
-      }
-    },
     "SheetSection#section-cov-description": {
       "active": "section-cov-description",
       "keys": {
@@ -86,19 +73,6 @@
         "a": "CovenantBoonHookPickerScreen: Add a Hook",
         "A": "RemovalPickerScreen: Remove a Hook",
         "e": "RemovalPickerScreen: Edit which Hook?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
-      }
-    },
-    "TabPane#tab-cov-inhabitants": {
-      "active": "section-cov-info",
-      "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "EditCovenantScreen",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -249,19 +223,6 @@
         "V": "(disabled)"
       }
     },
-    "TabPane#tab-cov-possessions": {
-      "active": "section-cov-info",
-      "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "EditCovenantScreen",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
-      }
-    },
     "SheetSection#section-pos-property": {
       "active": "section-pos-property",
       "keys": {
@@ -353,19 +314,6 @@
         "V": "(disabled)"
       }
     },
-    "TabPane#tab-cov-economics": {
-      "active": "section-cov-info",
-      "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "EditCovenantScreen",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
-      }
-    },
     "SheetSection#section-eco-wealth": {
       "active": "section-eco-wealth",
       "keys": {
@@ -411,19 +359,6 @@
         "a": "(disabled)",
         "A": "(disabled)",
         "e": "RemovalPickerScreen: Edit which row?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
-      }
-    },
-    "TabPane#tab-cov-library": {
-      "active": "section-cov-info",
-      "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "EditCovenantScreen",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -491,19 +426,6 @@
         "a": "(disabled)",
         "A": "(disabled)",
         "e": "EditCharacteristicsScreen: Edit Characteristics",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
-      }
-    },
-    "TabPane#tab-description": {
-      "active": "section-char-info",
-      "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "EditCharacterInfoScreen",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -602,19 +524,6 @@
         "V": "(disabled)"
       }
     },
-    "TabPane#tab-vf": {
-      "active": "section-char-info",
-      "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "EditCharacterInfoScreen",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
-      }
-    },
     "SheetSection#section-vf-virtues": {
       "active": "section-vf-virtues",
       "keys": {
@@ -639,19 +548,6 @@
         "I": "(disabled)",
         "v": "VirtueFlawPickerScreen: Add a Virtue or Flaw",
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
-      }
-    },
-    "TabPane#tab-hermetic": {
-      "active": "section-char-info",
-      "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "EditCharacterInfoScreen",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
       }
     },
     "PinnedCollapsible#section-arts": {
@@ -686,19 +582,6 @@
         "a": "SpellChooserScreen: Add a spell Leandro knows",
         "A": "RemovalPickerScreen: Remove a Known Spell",
         "e": "RemovalPickerScreen: Edit Mastery for which spell?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
-      }
-    },
-    "TabPane#tab-inventory": {
-      "active": "section-char-info",
-      "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "EditCharacterInfoScreen",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -825,19 +708,6 @@
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
       }
     },
-    "TabPane#tab-lab-attributes": {
-      "active": "tab-lab-attributes",
-      "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "(disabled)",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
-      }
-    },
     "SheetSection#section-lab-specialties": {
       "active": "section-lab-specialties",
       "keys": {
@@ -870,19 +740,6 @@
         "a": "NamedDescriptionPromptScreen: Add a Room",
         "A": "RemovalPickerScreen: Remove a Room",
         "e": "RemovalPickerScreen: Edit which Room?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
-      }
-    },
-    "TabPane#tab-lab-inventory": {
-      "active": "tab-lab-inventory",
-      "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "(disabled)",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -945,19 +802,6 @@
   },
   "familiar": {
     "PinnedCollapsible#section-fam-info": {
-      "active": "section-fam-info",
-      "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "EditFamiliarInfoScreen",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
-      }
-    },
-    "TabPane#tab-fam-identity": {
       "active": "section-fam-info",
       "keys": {
         "a": "(disabled)",
@@ -1035,38 +879,12 @@
         "V": "(disabled)"
       }
     },
-    "TabPane#tab-fam-characteristics": {
-      "active": "section-fam-info",
-      "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "EditFamiliarInfoScreen",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
-      }
-    },
     "SheetSection#section-fam-characteristics": {
       "active": "section-fam-characteristics",
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
         "e": "EditFamiliarCharacteristicsScreen",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
-      }
-    },
-    "TabPane#tab-fam-combat": {
-      "active": "section-fam-info",
-      "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "EditFamiliarInfoScreen",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
