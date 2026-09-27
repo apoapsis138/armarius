@@ -11,7 +11,7 @@ from dataclasses import field as dataclass_field
 from enum import StrEnum
 from functools import cached_property, partial
 from pathlib import Path
-from typing import Any, ClassVar, NamedTuple, cast
+from typing import Any, ClassVar, NamedTuple
 
 from textual.app import ComposeResult
 from textual.binding import Binding, BindingType
@@ -932,6 +932,129 @@ def _familiar_characteristics_fields(familiar: Familiar) -> list[DialogField]:
         DialogField("base_soak", "Base Soak", "int", familiar.base_soak),
         DialogField(
             "magic_resistance", "Magic Resistance", "int", familiar.magic_resistance
+        ),
+    ]
+
+
+def _familiar_info_fields(familiar: Familiar) -> list[DialogField]:
+    f = familiar
+    return [
+        DialogField("name", "Name", "text", f.name, required=True),
+        DialogField("species", "Species / Description", "text", f.species),
+        DialogField(
+            "season_bound",
+            "Season Bound",
+            "select",
+            f.season_bound or None,
+            options=_pairs(SEASONS),
+            allow_blank=True,
+            placeholder="(not set)",
+        ),
+        DialogField("year_bound", "Year Bound", "optint", f.year_bound),
+        DialogField("magic_might", "Magic Might Score", "int", f.magic_might),
+        DialogField("might_pool", "Current Might Pool", "optint", f.might_pool),
+        DialogField("size", "Size", "int", f.size),
+        DialogField("wound_multiplier", "Wound Multiplier", "int", f.wound_multiplier),
+    ]
+
+
+def _lab_identity_fields(saga: Saga, lab: Laboratory) -> list[DialogField]:
+    return [
+        DialogField("name", "Name", "text", lab.name, required=True),
+        DialogField("location", "Location", "text", lab.location),
+        DialogField("build_points", "Points (Build Points)", "int", lab.build_points),
+        DialogField("aura_modifier", "Aura modifier", "int", lab.aura_modifier),
+        DialogField(
+            "covenant_id",
+            "Covenant",
+            "select",
+            lab.covenant_id,
+            options=_covenant_options(saga),
+            allow_blank=True,
+            placeholder="(unassigned)",
+        ),
+        DialogField(
+            "owner_id",
+            "Owner",
+            "select",
+            lab.owner_id,
+            options=[
+                (escape(c.name), c.id) for c in saga.characters if c.type == "magus"
+            ],
+            allow_blank=True,
+            placeholder="(unassigned)",
+        ),
+    ]
+
+
+def _lab_characteristics_fields(
+    characteristics: LabCharacteristics,
+) -> list[DialogField]:
+    return [
+        DialogField(
+            name,
+            name.replace("_", " ").title(),
+            "int",
+            getattr(characteristics, name),
+        )
+        for name in LAB_CHARACTERISTICS
+    ]
+
+
+#: Edit Covenant's whole-number fields after Year Founded, as (attribute,
+#: label).
+_COVENANT_INT_FIELDS: tuple[tuple[str, str], ...] = (
+    ("aegis_of_the_hearth", "Aegis of the Hearth"),
+    ("aegis_penetration", "Aegis' Penetration"),
+    ("living_conditions_magi", "Living Conditions (Magi)"),
+    ("living_conditions_mundane", "Living Conditions (Mundane)"),
+    ("aura", "Aura"),
+)
+
+
+def _covenant_fields(covenant: Covenant) -> list[DialogField]:
+    cov = covenant
+    return [
+        DialogField("name", "Name", "text", cov.name, required=True),
+        DialogField("tribunal", "Tribunal", "text", cov.tribunal),
+        DialogField("year_founded", "Year Founded", "optint", cov.year_founded),
+        *(
+            DialogField(
+                attribute,
+                label,
+                "int",
+                getattr(cov, attribute),
+                hint=(
+                    "The base aura of every laboratory in this covenant."
+                    if attribute == "aura"
+                    else ""
+                ),
+            )
+            for attribute, label in _COVENANT_INT_FIELDS
+        ),
+        DialogField(
+            "covenant_season",
+            "Covenant Season",
+            "select",
+            cov.covenant_season,
+            options=_pairs(SEASONS),
+        ),
+    ]
+
+
+def _boon_hook_fields(detail: str = "", description: str = "") -> list[DialogField]:
+    """A covenant Boon's or Hook's own Detail (shown in the list) and
+    Description (shown ahead of the rules text); both optional."""
+    return [
+        DialogField(
+            "detail",
+            "Detail",
+            "text",
+            detail,
+            placeholder="e.g. the specific building or resource",
+        ),
+        DialogField(
+            "description", "Description", "area", description, hint=_EMPHASIS_HINT
         ),
     ]
 
@@ -1886,17 +2009,16 @@ class CovenantBoonHookPickerScreen(
         return f"{_COVENANT_BOON_HOOK_ITEM_ID_PREFIX}{entry.id}"
 
     def _on_entry_selected(self, entry: CovenantBoonHookDef) -> None:
-        def handle_detail(result: tuple[str, str] | None) -> None:
+        def handle_detail(result: dict[str, Any] | None) -> None:
             if result is None:
                 return  # cancelled: back to the picker
-            detail, description = result
-            self.dismiss(
-                VirtueFlawInstance(
-                    vf_id=entry.id, params=boon_hook_params(detail, description)
-                )
-            )
+            params = boon_hook_params(result["detail"], result["description"])
+            self.dismiss(VirtueFlawInstance(vf_id=entry.id, params=params))
 
-        self.app.push_screen(BoonHookDetailScreen(self.kind, entry.name), handle_detail)
+        self.app.push_screen(
+            FieldsDialog(f"{self.kind}: {escape(entry.name)}", _boon_hook_fields()),
+            handle_detail,
+        )
 
 
 class AbilityPickerScreen(SearchablePickerScreen[AbilityDef, Ability | None]):
@@ -2694,257 +2816,6 @@ class RawVisPromptScreen(ModalDialog[tuple[str, int] | None]):
         self.dismiss((art, pawns))
 
 
-class EditLabIdentityScreen(ModalDialog[dict[str, object] | None]):
-    """Edits a Laboratory's Name/Location/Build Points/Aura modifier, and (unlike
-    character Identity editing) lets you reassign its Owner from the
-    lab's own side. It only returns the chosen `owner_id`;
-    models.assign_laboratory_owner() does the two-way sync.
-    Dismisses with {"name", "location", "build_points", "aura_modifier",
-    "covenant_id", "owner_id"}, or None if cancelled.
-    """
-
-    DEFAULT_CSS = """
-    EditLabIdentityScreen {
-        align: center middle;
-    }
-
-    #lab-identity-dialog {
-        width: 64;
-        height: auto;
-        max-height: 100%;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    .labid-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .labid-row Label {
-        width: 22;
-    }
-
-    .labid-row Input, .labid-row Select {
-        width: 1fr;
-    }
-
-    #lab-identity-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #lab-identity-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, saga: Saga, laboratory: Laboratory) -> None:
-        super().__init__()
-        self.saga = saga
-        self.laboratory = laboratory
-
-    def compose(self) -> ComposeResult:
-        lab = self.laboratory
-        with Vertical(id="lab-identity-dialog"):
-            yield Label("Edit Laboratory Identity", id="lab-identity-title")
-            with Horizontal(classes="labid-row"):
-                yield Label("Name")
-                yield Input(value=lab.name, id="input-lab-name", compact=True)
-            with Horizontal(classes="labid-row"):
-                yield Label("Location")
-                yield Input(value=lab.location, id="input-lab-location", compact=True)
-            with Horizontal(classes="labid-row"):
-                yield Label("Points (Build Points)")
-                yield Input(
-                    value=str(lab.build_points),
-                    type="integer",
-                    id="input-lab-points",
-                    compact=True,
-                )
-            with Horizontal(classes="labid-row"):
-                yield Label("Aura modifier")
-                yield Input(
-                    value=str(lab.aura_modifier),
-                    type="integer",
-                    id="input-lab-aura-modifier",
-                    compact=True,
-                )
-            with Horizontal(classes="labid-row"):
-                yield Label("Covenant")
-                yield Select(
-                    _covenant_options(self.saga),
-                    value=lab.covenant_id or Select.NULL,
-                    allow_blank=True,
-                    prompt="(unassigned)",
-                    id="select-lab-covenant",
-                    compact=True,
-                )
-            with Horizontal(classes="labid-row"):
-                yield Label("Owner")
-                yield Select(
-                    [
-                        (escape(c.name), c.id)
-                        for c in self.saga.characters
-                        if c.type == "magus"
-                    ],
-                    value=lab.owner_id or Select.NULL,
-                    allow_blank=True,
-                    prompt="(unassigned)",
-                    id="select-lab-owner",
-                    compact=True,
-                )
-            yield Static("", id="lab-identity-error")
-            with Horizontal(id="lab-identity-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#lab-identity-error", Static)
-
-        name = self.query_one("#input-lab-name", Input).value.strip()
-        if not name:
-            error.update("Name is required.")
-            return
-
-        raw_points = self.query_one("#input-lab-points", Input).value.strip()
-        try:
-            build_points = int(raw_points)
-        except ValueError:
-            error.update("Points must be a whole number.")
-            return
-
-        raw_aura = self.query_one("#input-lab-aura-modifier", Input).value.strip()
-        try:
-            aura_modifier = int(raw_aura)
-        except ValueError:
-            error.update("Aura modifier must be a whole number.")
-            return
-
-        owner_id = self._select_value("#select-lab-owner")
-
-        covenant_id = self._select_value("#select-lab-covenant")
-
-        self.dismiss(
-            {
-                "name": name,
-                "location": self.query_one("#input-lab-location", Input).value.strip(),
-                "build_points": build_points,
-                "aura_modifier": aura_modifier,
-                "covenant_id": covenant_id,
-                "owner_id": owner_id,
-            }
-        )
-
-
-class EditLabCharacteristicsScreen(ModalDialog[LabCharacteristics | None]):
-    """Edits the manual (base) component of the 8 Laboratory
-    Characteristics -- see LabCharacteristics's docstring for why this is
-    only the manual component, not the Virtue/Flaw-derived total.
-    Dismisses with the finished LabCharacteristics, or None if cancelled.
-    """
-
-    DEFAULT_CSS = """
-    EditLabCharacteristicsScreen {
-        align: center middle;
-    }
-
-    #lab-char-dialog {
-        width: 64;
-        height: auto;
-        max-height: 100%;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #lab-char-fields {
-        height: auto;
-        max-height: 14;
-    }
-
-    .labchar-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .labchar-row Label {
-        width: 18;
-    }
-
-    .labchar-row Input {
-        width: 1fr;
-    }
-
-    #lab-char-buttons {
-        width: 100%;
-        height: auto;
-    }
-
-    #lab-char-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-    """
-
-    def __init__(self, characteristics: LabCharacteristics) -> None:
-        super().__init__()
-        self.characteristics = characteristics
-
-    def compose(self) -> ComposeResult:
-        # Fields scroll (if the terminal is very short); the buttons sit
-        # outside the scroll region so Save/Cancel are always visible.
-        with Vertical(id="lab-char-dialog"):
-            yield Label("Edit Laboratory Characteristics (manual value)")
-            with VerticalScroll(id="lab-char-fields"):
-                for characteristic in LAB_CHARACTERISTICS:
-                    with Horizontal(classes="labchar-row"):
-                        yield Label(characteristic.replace("_", " ").title())
-                        yield Input(
-                            value=str(getattr(self.characteristics, characteristic)),
-                            type="integer",
-                            id=f"input-labchar-{characteristic}",
-                            compact=True,
-                        )
-            yield Static("", id="lab-char-error")
-            with Horizontal(id="lab-char-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#lab-char-error", Static)
-        values: dict[str, int] = {}
-        for characteristic in LAB_CHARACTERISTICS:
-            raw = self.query_one(
-                f"#input-labchar-{characteristic}", Input
-            ).value.strip()
-            try:
-                values[characteristic] = int(raw)
-            except ValueError:
-                error.update(
-                    f"{characteristic.replace('_', ' ').title()} must be "
-                    "a whole number."
-                )
-                return
-        self.dismiss(LabCharacteristics(**values))
-
-
 class NamedDescriptionPromptScreen(ModalDialog[NamedDescription | None]):
     """Name + free-text description prompt, reused for a Laboratory's
     Rooms and its Inventory items. Dismisses with a NamedDescription, or
@@ -3124,162 +2995,6 @@ class DiaryEntryPromptScreen(ModalDialog[DiaryEntry | None]):
         self.dismiss(DiaryEntry(year=year, season=season, name=name, details=details))
 
 
-class EditFamiliarInfoScreen(ModalDialog[dict[str, object] | None]):
-    """Edits a Familiar's Partnership & Core Metadata (everything but its
-    Magus Partner, which is set once at creation and never changes).
-    Dismisses with a dict of field values, or None if cancelled."""
-
-    DEFAULT_CSS = """
-    EditFamiliarInfoScreen {
-        align: center middle;
-    }
-
-    #fam-info-dialog {
-        width: 64;
-        height: auto;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    .faminfoedit-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .faminfoedit-row Label {
-        width: 22;
-    }
-
-    .faminfoedit-row Input, .faminfoedit-row Select {
-        width: 1fr;
-    }
-
-    #fam-info-error {
-        color: $error;
-        height: auto;
-    }
-
-    #fam-info-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, familiar: Familiar) -> None:
-        super().__init__()
-        self.familiar = familiar
-
-    def compose(self) -> ComposeResult:
-        f = self.familiar
-        with Vertical(id="fam-info-dialog"):
-            yield Label("Edit Familiar")
-            with Horizontal(classes="faminfoedit-row"):
-                yield Label("Name")
-                yield Input(value=f.name, id="input-fam-name", compact=True)
-            with Horizontal(classes="faminfoedit-row"):
-                yield Label("Species / Description")
-                yield Input(value=f.species, id="input-fam-species", compact=True)
-            with Horizontal(classes="faminfoedit-row"):
-                yield Label("Season Bound")
-                yield Select(
-                    _pairs(SEASONS),
-                    value=f.season_bound or Select.NULL,
-                    allow_blank=True,
-                    prompt="(not set)",
-                    id="select-fam-season",
-                    compact=True,
-                )
-            with Horizontal(classes="faminfoedit-row"):
-                yield Label("Year Bound")
-                yield Input(
-                    value="" if f.year_bound is None else str(f.year_bound),
-                    type="integer",
-                    id="input-fam-year",
-                    compact=True,
-                )
-            with Horizontal(classes="faminfoedit-row"):
-                yield Label("Magic Might Score")
-                yield Input(
-                    value=str(f.magic_might),
-                    type="integer",
-                    id="input-fam-might",
-                    compact=True,
-                )
-            with Horizontal(classes="faminfoedit-row"):
-                yield Label("Current Might Pool")
-                yield Input(
-                    value="" if f.might_pool is None else str(f.might_pool),
-                    type="integer",
-                    id="input-fam-might-pool",
-                    compact=True,
-                )
-            with Horizontal(classes="faminfoedit-row"):
-                yield Label("Size")
-                yield Input(
-                    value=str(f.size), type="integer", id="input-fam-size", compact=True
-                )
-            with Horizontal(classes="faminfoedit-row"):
-                yield Label("Wound Multiplier")
-                yield Input(
-                    value=str(f.wound_multiplier),
-                    type="integer",
-                    id="input-fam-wound-mult",
-                    compact=True,
-                )
-            yield Static("", id="fam-info-error")
-            with Horizontal(id="fam-info-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#fam-info-error", Static)
-
-        name = self.query_one("#input-fam-name", Input).value.strip()
-        if not name:
-            error.update("Name is required.")
-            return
-
-        season_value = self.query_one("#select-fam-season", Select).value
-        result: dict[str, object] = {
-            "name": name,
-            "species": self.query_one("#input-fam-species", Input).value.strip(),
-            "season_bound": season_value if isinstance(season_value, str) else "",
-        }
-
-        for field_name, label in (
-            ("input-fam-year", "Year Bound"),
-            ("input-fam-might-pool", "Current Might Pool"),
-        ):
-            raw = self.query_one(f"#{field_name}", Input).value.strip()
-            key = "year_bound" if field_name == "input-fam-year" else "might_pool"
-            try:
-                result[key] = int(raw) if raw else None
-            except ValueError:
-                error.update(f"{label} must be a whole number.")
-                return
-
-        for field_name, key, label in (
-            ("input-fam-might", "magic_might", "Magic Might Score"),
-            ("input-fam-size", "size", "Size"),
-            ("input-fam-wound-mult", "wound_multiplier", "Wound Multiplier"),
-        ):
-            raw = self.query_one(f"#{field_name}", Input).value.strip()
-            try:
-                result[key] = int(raw)
-            except ValueError:
-                error.update(f"{label} must be a whole number.")
-                return
-
-        self.dismiss(result)
-
-
 class EditFamiliarBindingScreen(ModalDialog[dict[str, object] | None]):
     """Edits a Familiar's Initial Binding details and the three Cords.
     Dismisses with a dict of field values, or None if cancelled."""
@@ -3448,165 +3163,6 @@ class EditFamiliarBindingScreen(ModalDialog[dict[str, object] | None]):
         self.dismiss(result)
 
 
-class EditCovenantScreen(ModalDialog[dict[str, object] | None]):
-    """Edits the covenant-owned fields of the covenant sheet's top panel.
-
-    The saga's name, Storyguide, current season and current year are
-    inherited from the Saga and aren't editable here. Dismisses with a
-    dict of field values (see _INT_FIELDS plus "name", "tribunal",
-    "year_founded", "covenant_season"), or None if cancelled.
-    """
-
-    #: (Covenant attribute, label) for the plain whole-number fields.
-    _INT_FIELDS: ClassVar[tuple[tuple[str, str], ...]] = (
-        ("aegis_of_the_hearth", "Aegis of the Hearth"),
-        ("aegis_penetration", "Aegis' Penetration"),
-        ("living_conditions_magi", "Living Conditions (Magi)"),
-        ("living_conditions_mundane", "Living Conditions (Mundane)"),
-        ("aura", "Aura"),
-    )
-
-    DEFAULT_CSS = """
-    EditCovenantScreen {
-        align: center middle;
-    }
-
-    #cov-edit-dialog {
-        width: 64;
-        height: auto;
-        max-height: 100%;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    .covedit-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .covedit-row Label {
-        width: 30;
-    }
-
-    .covedit-row Input, .covedit-row Select {
-        width: 1fr;
-    }
-
-    #cov-edit-hint {
-        color: $text-muted;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #cov-edit-error {
-        color: $error;
-        height: auto;
-    }
-
-    #cov-edit-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, covenant: Covenant) -> None:
-        super().__init__()
-        self.covenant = covenant
-
-    @staticmethod
-    def _input_id(field: str) -> str:
-        return f"input-cov-{field.replace('_', '-')}"
-
-    def compose(self) -> ComposeResult:
-        cov = self.covenant
-        with Vertical(id="cov-edit-dialog"):
-            yield Label("Edit Covenant")
-            with Horizontal(classes="covedit-row"):
-                yield Label("Name")
-                yield Input(value=cov.name, id=self._input_id("name"), compact=True)
-            with Horizontal(classes="covedit-row"):
-                yield Label("Tribunal")
-                yield Input(
-                    value=cov.tribunal, id=self._input_id("tribunal"), compact=True
-                )
-            with Horizontal(classes="covedit-row"):
-                yield Label("Year Founded")
-                yield Input(
-                    value="" if cov.year_founded is None else str(cov.year_founded),
-                    type="integer",
-                    id=self._input_id("year_founded"),
-                    compact=True,
-                )
-            for field, label in self._INT_FIELDS:
-                with Horizontal(classes="covedit-row"):
-                    yield Label(label)
-                    yield Input(
-                        value=str(getattr(cov, field)),
-                        type="integer",
-                        id=self._input_id(field),
-                        compact=True,
-                    )
-            with Horizontal(classes="covedit-row"):
-                yield Label("Covenant Season")
-                yield Select(
-                    _pairs(SEASONS),
-                    value=cov.covenant_season,
-                    allow_blank=False,
-                    id="select-cov-season",
-                    compact=True,
-                )
-            yield Static(
-                "Aura is the base aura of every laboratory in this covenant.",
-                id="cov-edit-hint",
-            )
-            yield Static("", id="cov-edit-error")
-            with Horizontal(id="cov-edit-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def _try_save(self) -> None:
-        error = self.query_one("#cov-edit-error", Static)
-
-        name = self.query_one(f"#{self._input_id('name')}", Input).value.strip()
-        if not name:
-            error.update("Name is required.")
-            return
-
-        result: dict[str, object] = {
-            "name": name,
-            "tribunal": self.query_one(
-                f"#{self._input_id('tribunal')}", Input
-            ).value.strip(),
-        }
-
-        raw_year = self.query_one(
-            f"#{self._input_id('year_founded')}", Input
-        ).value.strip()
-        try:
-            result["year_founded"] = int(raw_year) if raw_year else None
-        except ValueError:
-            error.update("Year Founded must be a whole number.")
-            return
-
-        for field, label in self._INT_FIELDS:
-            raw = self.query_one(f"#{self._input_id(field)}", Input).value.strip()
-            try:
-                result[field] = int(raw)
-            except ValueError:
-                error.update(f"{label} must be a whole number.")
-                return
-
-        result["covenant_season"] = self.query_one("#select-cov-season", Select).value
-        self.dismiss(result)
-
-
 class AdvanceSeasonScreen(ModalDialog[bool]):
     """Confirms advancing the saga's calendar by one season. Dismisses with
     True to advance, False (or via Escape) to leave the date alone."""
@@ -3675,92 +3231,6 @@ class AdvanceSeasonScreen(ModalDialog[bool]):
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         self.dismiss(event.button.id == "btn-advance")
-
-
-class BoonHookDetailScreen(ModalDialog[tuple[str, str] | None]):
-    """Asks for the two optional, user-written fields of a covenant
-    Boon/Hook: a one-line Detail (which Edifice, which contested resource --
-    shown in the list) and a multi-line Description (what the Hidden
-    Resources actually contain -- shown in the details panel ahead of the
-    official rules text). Both blank by default. Used when adding one and
-    when editing it later. Dismisses with (detail, description), each
-    stripped and possibly empty, or None if cancelled."""
-
-    DEFAULT_CSS = """
-    BoonHookDetailScreen {
-        align: center middle;
-    }
-
-    #bh-detail-dialog {
-        width: 72;
-        height: auto;
-        max-height: 100%;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #bh-description-text {
-        height: 8;
-    }
-
-    #bh-detail-hint {
-        color: $text-muted;
-        height: auto;
-        margin: 1 0;
-    }
-
-    #bh-detail-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(
-        self, kind: str, name: str, detail: str = "", description: str = ""
-    ) -> None:
-        super().__init__()
-        self.kind = kind
-        self.entry_name = name
-        self.detail = detail
-        self.description = description
-
-    def compose(self) -> ComposeResult:
-        with Vertical(id="bh-detail-dialog"):
-            yield Label(f"{self.kind}: {self.entry_name}", id="bh-detail-title")
-            yield Label("Detail (optional)")
-            yield Input(
-                value=self.detail,
-                placeholder="e.g. the specific building or resource",
-                id="input-bh-detail",
-                compact=True,
-            )
-            yield Label("Description (optional)")
-            yield TextArea(self.description, id="bh-description-text")
-            yield Static(
-                "Description supports **bold** and *italic*.",
-                id="bh-detail-hint",
-            )
-            with Horizontal(id="bh-detail-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_input_submitted(self, event: Input.Submitted) -> None:
-        self._save()
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._save()
-
-    def _save(self) -> None:
-        self.dismiss(
-            (
-                self.query_one("#input-bh-detail", Input).value.strip(),
-                self.query_one("#bh-description-text", TextArea).text.strip(),
-            )
-        )
 
 
 class ConfirmScreen(ModalScreen[bool]):
@@ -4392,60 +3862,6 @@ class ImproveIncomeScreen(ModalDialog[tuple[int, str] | None]):
             ),
             handle_confirmed,
         )
-
-
-class EditCovenantDescriptionScreen(ModalDialog[str | None]):
-    """A multi-line text editor for the covenant's description. Dismisses
-    with the new text, or None if cancelled."""
-
-    DEFAULT_CSS = """
-    EditCovenantDescriptionScreen {
-        align: center middle;
-    }
-
-    #cov-desc-dialog {
-        width: 76;
-        height: auto;
-        max-height: 100%;
-        border: round $accent;
-        padding: 1 2;
-        background: $surface;
-    }
-
-    #cov-desc-text {
-        height: 12;
-    }
-
-    #cov-desc-hint {
-        color: $text-muted;
-        height: auto;
-        margin-bottom: 1;
-    }
-
-    #cov-desc-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, text: str) -> None:
-        super().__init__()
-        self.text = text
-
-    def compose(self) -> ComposeResult:
-        with Vertical(id="cov-desc-dialog"):
-            yield Label("Edit Covenant Description")
-            yield TextArea(self.text, id="cov-desc-text")
-            yield Static(_EMPHASIS_HINT, id="cov-desc-hint")
-            with Horizontal(id="cov-desc-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self.dismiss(self.query_one("#cov-desc-text", TextArea).text.rstrip())
 
 
 class SelectableList(OptionList):
@@ -9503,13 +8919,25 @@ class WorkspaceScreen(Screen[None]):
         if covenant is None:
             return
 
-        def handle_result(text: str | None) -> None:
-            if text is not None:
-                covenant.notes = text
+        def handle_result(result: dict[str, Any] | None) -> None:
+            if result is not None:
+                covenant.notes = result["notes"]
                 self._commit("section-cov-description")
 
         self.app.push_screen(
-            EditCovenantDescriptionScreen(covenant.notes), handle_result
+            FieldsDialog(
+                "Edit Covenant Description",
+                [
+                    DialogField(
+                        "notes",
+                        "Description",
+                        "area",
+                        covenant.notes,
+                        hint=_EMPHASIS_HINT,
+                    )
+                ],
+            ),
+            handle_result,
         )
 
     def _selected_reputation(self) -> int | None:
@@ -9623,19 +9051,21 @@ class WorkspaceScreen(Screen[None]):
         by_id = catalog.load_covenant_boon_hook_catalog_by_id()
         instance = covenant.boons_hooks[index]
 
-        def handle_result(result: tuple[str, str] | None) -> None:
+        def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
-            detail, description = result
-            instance.params = boon_hook_params(detail, description, instance.params)
+            instance.params = boon_hook_params(
+                result["detail"], result["description"], instance.params
+            )
             self._commit(_BOON_HOOK_SECTION[kind])
 
         self.app.push_screen(
-            BoonHookDetailScreen(
-                kind,
-                by_id[instance.vf_id].name,
-                detail=instance.params.get(BOON_HOOK_DETAIL, ""),
-                description=instance.params.get(BOON_HOOK_DESCRIPTION, ""),
+            FieldsDialog(
+                f"{kind}: {escape(by_id[instance.vf_id].name)}",
+                _boon_hook_fields(
+                    instance.params.get(BOON_HOOK_DETAIL, ""),
+                    instance.params.get(BOON_HOOK_DESCRIPTION, ""),
+                ),
             ),
             handle_result,
         )
@@ -9647,14 +9077,16 @@ class WorkspaceScreen(Screen[None]):
         if covenant is None:
             return
 
-        def handle_result(result: dict[str, object] | None) -> None:
+        def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
             for field, value in result.items():
                 setattr(covenant, field, value)
             self._commit("section-cov-info", tree=True)
 
-        self.app.push_screen(EditCovenantScreen(covenant), handle_result)
+        self.app.push_screen(
+            FieldsDialog("Edit Covenant", _covenant_fields(covenant)), handle_result
+        )
 
     def _edit_saga(self) -> None:
         async def handle_result(result: dict[str, Any] | None) -> None:
@@ -10312,34 +9744,41 @@ class WorkspaceScreen(Screen[None]):
         if lab is None:
             return
 
-        def handle_result(result: dict[str, object] | None) -> None:
+        def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
-            lab.name = cast(str, result["name"])
-            lab.location = cast(str, result["location"])
-            lab.build_points = cast(int, result["build_points"])
-            lab.aura_modifier = cast(int, result["aura_modifier"])
-            lab.covenant_id = cast("str | None", result["covenant_id"])
+            lab.name = result["name"]
+            lab.location = result["location"]
+            lab.build_points = result["build_points"]
+            lab.aura_modifier = result["aura_modifier"]
+            lab.covenant_id = result["covenant_id"]
             self.selected_covenant = self.saga.covenant(lab.covenant_id)
-            assign_laboratory_owner(
-                self.saga, lab, cast("str | None", result["owner_id"])
-            )
+            assign_laboratory_owner(self.saga, lab, result["owner_id"])
             self._commit("section-lab-identity", tree=True)
 
-        self.app.push_screen(EditLabIdentityScreen(self.saga, lab), handle_result)
+        self.app.push_screen(
+            FieldsDialog(
+                "Edit Laboratory Identity", _lab_identity_fields(self.saga, lab)
+            ),
+            handle_result,
+        )
 
     def _edit_lab_characteristics(self) -> None:
         lab = self.selected_laboratory
         if lab is None:
             return
 
-        def handle_result(characteristics: LabCharacteristics | None) -> None:
-            if characteristics is not None:
-                lab.characteristics = characteristics
+        def handle_result(result: dict[str, Any] | None) -> None:
+            if result is not None:
+                lab.characteristics = LabCharacteristics(**result)
                 self._commit("section-lab-characteristics")
 
         self.app.push_screen(
-            EditLabCharacteristicsScreen(lab.characteristics), handle_result
+            FieldsDialog(
+                "Edit Laboratory Characteristics (manual value)",
+                _lab_characteristics_fields(lab.characteristics),
+            ),
+            handle_result,
         )
 
     # -- Laboratory: Specialties / Features / Rooms --
@@ -10804,14 +10243,18 @@ class WorkspaceScreen(Screen[None]):
         if familiar is None:
             return
 
-        def handle_result(result: dict[str, object] | None) -> None:
+        def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
+            result["season_bound"] = result["season_bound"] or ""
             for field_name, value in result.items():
                 setattr(familiar, field_name, value)
             self._commit("section-fam-info", tree=True)
 
-        self.app.push_screen(EditFamiliarInfoScreen(familiar), handle_result)
+        self.app.push_screen(
+            FieldsDialog("Edit Familiar", _familiar_info_fields(familiar)),
+            handle_result,
+        )
 
     def _edit_familiar_binding(self) -> None:
         familiar = self.selected_familiar

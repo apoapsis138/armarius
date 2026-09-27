@@ -20,7 +20,7 @@
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
-        "e": "EditCovenantScreen",
+        "e": "FieldsDialog: Edit Covenant",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -33,7 +33,7 @@
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
-        "e": "EditCovenantDescriptionScreen",
+        "e": "FieldsDialog: Edit Covenant Description",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -397,7 +397,7 @@
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
-        "e": "EditCovenantScreen",
+        "e": "FieldsDialog: Edit Covenant",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -661,7 +661,7 @@
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
-        "e": "EditLabIdentityScreen: Edit Laboratory Identity",
+        "e": "FieldsDialog: Edit Laboratory Identity",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -674,7 +674,7 @@
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
-        "e": "EditLabCharacteristicsScreen",
+        "e": "FieldsDialog: Edit Laboratory Characteristics (manual value)",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
@@ -806,7 +806,7 @@
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",
-        "e": "EditFamiliarInfoScreen",
+        "e": "FieldsDialog: Edit Familiar",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",

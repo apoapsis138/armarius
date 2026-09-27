@@ -55,7 +55,6 @@ from ars_magica_manager.models import (
 from ars_magica_manager.screens import (
     AbilityPickerScreen,
     AdvanceSeasonScreen,
-    BoonHookDetailScreen,
     ConfirmScreen,
     CovenantBoonHookPickerScreen,
     CsvFilePickerScreen,
@@ -63,12 +62,7 @@ from ars_magica_manager.screens import (
     DiaryEntryPromptScreen,
     DuplicateBookScreen,
     EditArtsScreen,
-    EditCovenantDescriptionScreen,
-    EditCovenantScreen,
     EditFamiliarBindingScreen,
-    EditFamiliarInfoScreen,
-    EditLabCharacteristicsScreen,
-    EditLabIdentityScreen,
     FieldsDialog,
     ImportScreen,
     ImproveIncomeScreen,
@@ -952,10 +946,10 @@ async def test_editing_familiar_info_updates_the_top_panel_and_tree():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditFamiliarInfoScreen)
-        app.screen.query_one("#input-fam-name", Input).value = "Nightwing"
-        app.screen.query_one("#input-fam-species", Input).value = "Raven"
-        app.screen.query_one("#input-fam-might", Input).value = "8"
+        assert _is_form(app.screen, "Edit Familiar")
+        app.screen.query_one("#fld-name", Input).value = "Nightwing"
+        app.screen.query_one("#fld-species", Input).value = "Raven"
+        app.screen.query_one("#fld-magic_might", Input).value = "8"
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
@@ -2957,12 +2951,12 @@ async def test_edit_lab_identity_updates_fields_and_owner():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditLabIdentityScreen)
+        assert _is_form(app.screen, "Edit Laboratory Identity")
 
-        app.screen.query_one("#input-lab-name", Input).value = "Obsidian Crucible"
-        app.screen.query_one("#input-lab-location", Input).value = "Black Forest"
-        app.screen.query_one("#input-lab-points", Input).value = "50"
-        app.screen.query_one("#select-lab-owner", Select).value = "char2"
+        app.screen.query_one("#fld-name", Input).value = "Obsidian Crucible"
+        app.screen.query_one("#fld-location", Input).value = "Black Forest"
+        app.screen.query_one("#fld-build_points", Input).value = "50"
+        app.screen.query_one("#fld-owner_id", Select).value = "char2"
 
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
@@ -2999,7 +2993,9 @@ async def test_edit_lab_characteristics_buttons_are_visible_on_screen():
             await _open_lab_section(pilot, app, "section-lab-characteristics")
             await pilot.press("e")
             await pilot.pause()
-            assert isinstance(app.screen, EditLabCharacteristicsScreen)
+            assert _is_form(
+                app.screen, "Edit Laboratory Characteristics (manual value)"
+            )
 
             for button_id in ("#btn-save", "#btn-cancel"):
                 region = app.screen.query_one(button_id, Button).region
@@ -3030,10 +3026,10 @@ async def test_edit_lab_characteristics_updates_manual_values():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditLabCharacteristicsScreen)
+        assert _is_form(app.screen, "Edit Laboratory Characteristics (manual value)")
 
-        app.screen.query_one("#input-labchar-size", Input).value = "2"
-        app.screen.query_one("#input-labchar-safety", Input).value = "-1"
+        app.screen.query_one("#fld-size", Input).value = "2"
+        app.screen.query_one("#fld-safety", Input).value = "-1"
 
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
@@ -3112,7 +3108,7 @@ async def test_opening_a_lab_focuses_identity_so_edit_hotkey_works():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditLabIdentityScreen)
+        assert _is_form(app.screen, "Edit Laboratory Identity")
 
 
 async def test_clicking_a_lab_top_panel_section_makes_it_active():
@@ -3140,7 +3136,7 @@ async def test_clicking_a_lab_top_panel_section_makes_it_active():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditLabCharacteristicsScreen)
+        assert _is_form(app.screen, "Edit Laboratory Characteristics (manual value)")
 
 
 async def test_lab_top_panel_edit_buttons_open_edit_dialogs():
@@ -3153,13 +3149,13 @@ async def test_lab_top_panel_edit_buttons_open_edit_dialogs():
 
         view.query_one("#btn-lab-identity-edit", Button).press()
         await pilot.pause()
-        assert isinstance(app.screen, EditLabIdentityScreen)
+        assert _is_form(app.screen, "Edit Laboratory Identity")
         await pilot.press("escape")
         await pilot.pause()
 
         view.query_one("#btn-lab-characteristics-edit", Button).press()
         await pilot.pause()
-        assert isinstance(app.screen, EditLabCharacteristicsScreen)
+        assert _is_form(app.screen, "Edit Laboratory Characteristics (manual value)")
 
 
 async def test_lab_attributes_and_inventory_sections_start_expanded():
@@ -3599,8 +3595,8 @@ async def test_lab_identity_shows_aura_breakdown_and_modifier_is_editable():
             await _open_lab_section(pilot, app, "section-lab-identity")
             await pilot.press("e")
             await pilot.pause()
-            assert isinstance(app.screen, EditLabIdentityScreen)
-            app.screen.query_one("#input-lab-aura-modifier", Input).value = modifier
+            assert _is_form(app.screen, "Edit Laboratory Identity")
+            app.screen.query_one("#fld-aura_modifier", Input).value = modifier
             app.screen.query_one("#btn-save", Button).press()
             await pilot.pause()
             assert expected in view._identity_text()
@@ -3648,7 +3644,7 @@ async def test_lab_edit_dialogs_fit_a_small_terminal():
         await _open_lab_section(pilot, app, "section-lab-identity")
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditLabIdentityScreen)
+        assert _is_form(app.screen, "Edit Laboratory Identity")
         assert_buttons_on_screen("#btn-save", "#btn-cancel")
         await pilot.press("escape")
         await pilot.pause()
@@ -3754,7 +3750,7 @@ async def test_opening_a_covenant_focuses_info_panel_so_edit_hotkey_works():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditCovenantScreen)
+        assert _is_form(app.screen, "Edit Covenant")
         await pilot.press("escape")
         await pilot.pause()
 
@@ -3766,14 +3762,14 @@ async def test_opening_a_covenant_focuses_info_panel_so_edit_hotkey_works():
         assert app.screen._active_section() == "section-cov-info"
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditCovenantScreen)
+        assert _is_form(app.screen, "Edit Covenant")
         await pilot.press("escape")
         await pilot.pause()
 
         # And via the button.
         view.query_one("#btn-cov-edit", Button).press()
         await pilot.pause()
-        assert isinstance(app.screen, EditCovenantScreen)
+        assert _is_form(app.screen, "Edit Covenant")
 
 
 async def test_edit_covenant_saves_fields_and_labs_inherit_the_aura():
@@ -3785,10 +3781,10 @@ async def test_edit_covenant_saves_fields_and_labs_inherit_the_aura():
         await pilot.press("e")
         await pilot.pause()
         dialog = app.screen
-        assert isinstance(dialog, EditCovenantScreen)
+        assert _is_form(dialog, "Edit Covenant")
 
         def set_input(field: str, value: str) -> None:
-            dialog.query_one(f"#input-cov-{field}", Input).value = value
+            dialog.query_one(f"#fld-{field.replace('-', '_')}", Input).value = value
 
         set_input("name", "Dammerstein")
         set_input("tribunal", "Rhine")
@@ -3798,7 +3794,7 @@ async def test_edit_covenant_saves_fields_and_labs_inherit_the_aura():
         set_input("living-conditions-magi", "1")
         set_input("living-conditions-mundane", "-2")
         set_input("aura", "3")
-        dialog.query_one("#select-cov-season", Select).value = "Autumn"
+        dialog.query_one("#fld-covenant_season", Select).value = "Autumn"
         dialog.query_one("#btn-save", Button).press()
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)
@@ -3829,13 +3825,13 @@ async def test_edit_covenant_requires_name_and_allows_blank_year_founded():
         await pilot.pause()
         dialog = app.screen
 
-        dialog.query_one("#input-cov-name", Input).value = "  "
+        dialog.query_one("#fld-name", Input).value = "  "
         dialog.query_one("#btn-save", Button).press()
         await pilot.pause()
-        assert isinstance(app.screen, EditCovenantScreen)  # refused
+        assert _is_form(app.screen, "Edit Covenant")  # refused
 
-        dialog.query_one("#input-cov-name", Input).value = "Kept"
-        dialog.query_one("#input-cov-year-founded", Input).value = ""
+        dialog.query_one("#fld-name", Input).value = "Kept"
+        dialog.query_one("#fld-year_founded", Input).value = ""
         dialog.query_one("#btn-save", Button).press()
         await pilot.pause()
 
@@ -3852,7 +3848,7 @@ async def test_edit_covenant_dialog_fits_a_small_terminal():
         await _select_covenant(pilot, app)
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditCovenantScreen)
+        assert _is_form(app.screen, "Edit Covenant")
         for button_id in ("#btn-save", "#btn-cancel"):
             region = app.screen.query_one(button_id, Button).region
             assert region.height > 0, button_id
@@ -4174,8 +4170,8 @@ async def test_lab_can_be_moved_between_covenants_and_unassigned():
             await _open_lab_section(pilot, app, "section-lab-identity")
             await pilot.press("e")
             await pilot.pause()
-            assert isinstance(app.screen, EditLabIdentityScreen)
-            app.screen.query_one("#select-lab-covenant", Select).value = value
+            assert _is_form(app.screen, "Edit Laboratory Identity")
+            app.screen.query_one("#fld-covenant_id", Select).value = value
             app.screen.query_one("#btn-save", Button).press()
             await pilot.pause()
 
@@ -4309,10 +4305,10 @@ async def _add_boon_hook_via_picker(
     await pilot.pause()
     assert isinstance(app.screen, CovenantBoonHookPickerScreen)
     await _choose_in_list(pilot, app, "covbh-picker-list", _pick_id(catalog_id))
-    assert isinstance(app.screen, BoonHookDetailScreen)
-    app.screen.query_one("#input-bh-detail", Input).value = detail
+    assert isinstance(app.screen, FieldsDialog)
+    app.screen.query_one("#fld-detail", Input).value = detail
     if description:
-        app.screen.query_one("#bh-description-text", TextArea).text = description
+        app.screen.query_one("#fld-description", TextArea).text = description
     app.screen.query_one("#btn-save", Button).press()
     await pilot.pause()
     assert isinstance(app.screen, WorkspaceScreen)
@@ -4360,7 +4356,7 @@ async def test_edit_covenant_description_is_multi_line_and_persists():
         await _open_cov_section(pilot, app, "section-cov-description")
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditCovenantDescriptionScreen)
+        assert _is_form(app.screen, "Edit Covenant Description")
         area = app.screen.query_one(TextArea)
         assert area.text == "A border covenant"  # pre-filled
         area.text = "First line.\nSecond line [with brackets]."
@@ -4464,8 +4460,8 @@ async def test_boon_picker_lists_only_boons_with_notes_and_asks_for_a_blank_deta
         await _choose_in_list(
             pilot, app, "covbh-picker-list", _pick_id("covbh_boon_minor_edifice")
         )
-        assert isinstance(app.screen, BoonHookDetailScreen)
-        assert app.screen.query_one("#input-bh-detail", Input).value == ""
+        assert isinstance(app.screen, FieldsDialog)
+        assert app.screen.query_one("#fld-detail", Input).value == ""
 
         # Cancelling the detail prompt goes back to the picker; nothing added.
         await pilot.press("escape")
@@ -4566,7 +4562,7 @@ async def test_picker_marks_taken_entries_but_still_offers_them():
         await _choose_in_list(
             pilot, app, "covbh-picker-list", _pick_id("covbh_boon_minor_edifice")
         )
-        app.screen.query_one("#input-bh-detail", Input).value = "C"
+        app.screen.query_one("#fld-detail", Input).value = "C"
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
@@ -4597,9 +4593,9 @@ async def test_edit_and_remove_target_the_right_boon_or_hook_when_interleaved():
         await pilot.press("down")
         await pilot.press("enter")
         await pilot.pause()
-        assert isinstance(app.screen, BoonHookDetailScreen)
-        assert app.screen.query_one("#input-bh-detail", Input).value == "B"  # prefilled
-        app.screen.query_one("#input-bh-detail", Input).value = ""  # clear it
+        assert isinstance(app.screen, FieldsDialog)
+        assert app.screen.query_one("#fld-detail", Input).value == "B"  # prefilled
+        app.screen.query_one("#fld-detail", Input).value = ""  # clear it
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
         assert "Wealth" in _bh_labels(view, "Boon")
@@ -4668,7 +4664,7 @@ async def test_covenant_attributes_dialogs_fit_a_small_terminal():
         await _open_cov_section(pilot, app, "section-cov-description")
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditCovenantDescriptionScreen)
+        assert _is_form(app.screen, "Edit Covenant Description")
         buttons_on_screen()
         await pilot.press("escape")
         await pilot.pause()
@@ -4679,7 +4675,7 @@ async def test_covenant_attributes_dialogs_fit_a_small_terminal():
         await _choose_in_list(
             pilot, app, "covbh-picker-list", _pick_id("covbh_boon_minor_wealth")
         )
-        assert isinstance(app.screen, BoonHookDetailScreen)
+        assert isinstance(app.screen, FieldsDialog)
         buttons_on_screen()
 
 
@@ -5034,11 +5030,11 @@ async def test_e_edits_the_selected_boon_directly_without_a_picker():
         await pilot.press("e")
         await pilot.pause()
         # Straight to the edit dialog for that row -- no "which one?" picker.
-        assert isinstance(app.screen, BoonHookDetailScreen)
-        assert app.screen.query_one("#input-bh-detail", Input).value == "B"
-        assert app.screen.query_one("#bh-description-text", TextArea).text == "Old text"
-        app.screen.query_one("#input-bh-detail", Input).value = "B2"
-        app.screen.query_one("#bh-description-text", TextArea).text = "New\ntext"
+        assert isinstance(app.screen, FieldsDialog)
+        assert app.screen.query_one("#fld-detail", Input).value == "B"
+        assert app.screen.query_one("#fld-description", TextArea).text == "Old text"
+        app.screen.query_one("#fld-detail", Input).value = "B2"
+        app.screen.query_one("#fld-description", TextArea).text = "New\ntext"
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
@@ -5167,7 +5163,7 @@ async def test_boon_hook_detail_dialog_with_description_fits_a_small_terminal():
         await _select_bh_row(pilot, app, "Boon", 0)
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, BoonHookDetailScreen)
+        assert isinstance(app.screen, FieldsDialog)
         for button in app.screen.query(Button):
             region = button.region
             assert region.height > 0 and region.bottom <= 24, button.id
@@ -5198,8 +5194,8 @@ async def test_boon_hook_dialogs_hug_their_content_on_a_tall_terminal():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, BoonHookDetailScreen)
-        assert app.screen.query_one("#bh-detail-dialog").region.height < 30
+        assert isinstance(app.screen, FieldsDialog)
+        assert app.screen.query_one("#fields-dialog").region.height < 30
         await pilot.press("escape")
         await pilot.pause()
 
@@ -5475,10 +5471,8 @@ async def test_description_dialogs_mention_the_emphasis_syntax():
         await _select_bh_row(pilot, app, "Boon", 0)
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, BoonHookDetailScreen)
-        assert "**bold**" in str(
-            app.screen.query_one("#bh-detail-hint", Static).render()
-        )
+        assert isinstance(app.screen, FieldsDialog)
+        assert "**bold**" in str(app.screen.query_one(".fd-hint", Static).render())
         # Still fits a small terminal with the extra hint line.
         for button in app.screen.query(Button):
             assert button.region.height > 0 and button.region.bottom <= 24, button.id
@@ -5488,10 +5482,8 @@ async def test_description_dialogs_mention_the_emphasis_syntax():
         await _open_cov_section(pilot, app, "section-cov-description")
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditCovenantDescriptionScreen)
-        assert "*italic*" in str(
-            app.screen.query_one("#cov-desc-hint", Static).render()
-        )
+        assert _is_form(app.screen, "Edit Covenant Description")
+        assert "*italic*" in str(app.screen.query_one(".fd-hint", Static).render())
         for button in app.screen.query(Button):
             assert button.region.height > 0 and button.region.bottom <= 24, button.id
 

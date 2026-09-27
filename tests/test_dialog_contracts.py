@@ -154,7 +154,6 @@ CONTRACTS: dict[str, Contract] = {
         edits={"Description": "An old keep."},
         saved=lambda s: _cov(s).notes,
         expected="An old keep.",
-        aliases={"Description": "cov-desc-text"},
     ),
     "edit boon": Contract(
         prefill={"Detail": ""},
