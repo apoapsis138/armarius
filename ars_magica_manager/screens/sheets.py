@@ -903,6 +903,10 @@ class CharacterSheetView(SheetView):
     #: (TabbedContent keeps inactive panes mounted, just hidden): either
     #: section id refreshes both lists, so neither goes stale.
     _RAW_VIS_SECTIONS = ("section-raw-vis-hermetic", "section-raw-vis-inventory")
+    #: The Hermetic Magic details panel with nothing chosen.
+    _HERMETIC_INFO_PLACEHOLDER = (
+        "[dim]Select an Art or a Known Spell to see its details.[/]"
+    )
 
     def _hermetic_tab(self) -> ComposeResult:
         """Magical Arts, Raw Vis and Known Spells (scrolling), and the
@@ -951,7 +955,7 @@ class CharacterSheetView(SheetView):
                         group="hermetic",
                     )
             yield Static(
-                "[dim]Select an Art or a Known Spell to see its details.[/]",
+                self._HERMETIC_INFO_PLACEHOLDER,
                 id="hermetic-info",
                 classes="details-panel",
             )
@@ -1259,8 +1263,8 @@ class CharacterSheetView(SheetView):
         return rows
 
     def _known_spell_info_text(self, index: int | None) -> str:
-        if index is None:
-            return "[dim]Select a spell to see its details.[/]"
+        if index is None:  # nothing chosen in any of the panel's three lists
+            return self._HERMETIC_INFO_PLACEHOLDER
         known = self.character.spells_known[index]
         spell = spl.find_spell(self.saga, known.spell_id)
         if spell is None:

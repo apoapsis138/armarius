@@ -57,19 +57,6 @@ def _pane_text(app, workspace) -> list[str]:
 
 _UNDERLINE = str.maketrans({"╸": "━", "╺": "━"})
 
-#: Known differences between a freshly composed sheet and one refreshed
-#: section by section, as (refreshed text, composed text). Each is a bug
-#: recorded on STORY-1109; the refresh check applies these to the refreshed
-#: text before comparing.
-#: B21: refreshing Magical Arts or Known Spells swaps the Hermetic Magic
-#: details panel's placeholder for the Known Spells one.
-KNOWN_REFRESH_DIFFERENCES = [
-    (
-        "Select a spell to see its details.",
-        "Select an Art or a Known Spell to see its details.",
-    ),
-]
-
 
 async def _all_tabs(pilot, app, workspace) -> list[str]:
     """Every tab's text, each under a "===== <tab id>" line."""
@@ -137,8 +124,6 @@ async def _snapshot(
         await _settle(pilot)
         refreshed = "\n".join(await _all_tabs(pilot, app, workspace)) + "\n"
         assert view is workspace._current_sheet_view()  # not re-mounted
-        for after_refresh, composed in KNOWN_REFRESH_DIFFERENCES:
-            refreshed = refreshed.replace(after_refresh, composed)
         return shown, refreshed
 
 
