@@ -1573,9 +1573,18 @@ class MasteryEditScreen(ModalDialog[KnownSpell | None]):
             return
         list_view = self.query_one("#mastery-abilities-list", ListView)
         index = list_view.index
-        if index is not None and index < len(self._abilities):
-            del self._abilities[index]
-            self._render_abilities()
+        if index is None or index >= len(self._abilities):
+            return
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
+                del self._abilities[index]
+                self._render_abilities()
+
+        self.app.push_screen(
+            ConfirmScreen(f"Delete {escape(self._abilities[index].name)}?"),
+            handle_confirmed,
+        )
 
     def _try_save(self) -> None:
         error = self.query_one("#mastery-error", Static)

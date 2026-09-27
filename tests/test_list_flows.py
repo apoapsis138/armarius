@@ -1,8 +1,6 @@
 """End-to-end flows for the sheet lists that share one shape in
 WorkspaceScreen: add, edit and remove -- acting on the chosen row when there
-is one, otherwise asking with a picker. These pin today's behaviour
-(including where a delete does or doesn't confirm) ahead of those handlers
-being folded into shared helpers."""
+is one, otherwise asking with a picker. Every delete asks first."""
 
 from dataclasses import dataclass
 from typing import Any
@@ -70,8 +68,6 @@ class ListCase:
     section: str
     list_id: str
     entries: Any  # saved Saga -> the list
-    confirms_chosen_delete: bool  # does removing the chosen row ask first?
-    confirms_picked_delete: bool  # ...and removing one picked from the picker?
 
 
 TRAIT_LISTS: dict[str, ListCase] = {
@@ -80,40 +76,30 @@ TRAIT_LISTS: dict[str, ListCase] = {
         "section-cov-reputations",
         "cov-reputations-list",
         lambda s: s.covenants[0].reputations,
-        True,
-        True,
     ),
     "character-traits": ListCase(
         ("character", "mag1"),
         "section-personality-traits",
         "personality-traits-list",
         lambda s: s.characters[0].personality_traits,
-        True,
-        True,
     ),
     "character-reputations": ListCase(
         ("character", "mag1"),
         "section-reputations",
         "character-reputations-list",
         lambda s: s.characters[0].reputations,
-        True,
-        True,
     ),
     "familiar-traits": ListCase(
         ("familiar", "fam1"),
         "section-fam-personality-traits",
         "fam-personality-traits-list",
         lambda s: s.familiars[0].personality_traits,
-        False,  # never confirms (STORY-1109 B6)
-        False,
     ),
     "familiar-reputations": ListCase(
         ("familiar", "fam1"),
         "section-fam-reputations",
         "fam-reputations-list",
         lambda s: s.familiars[0].reputations,
-        False,  # never confirms (STORY-1109 B6)
-        False,
     ),
 }
 
@@ -251,14 +237,10 @@ async def test_trait_list_remove_picks_when_nothing_is_chosen(case):
         workspace, _ = await _open(pilot, app, case)
         await _press(pilot, app, "A", RemovalPickerScreen)
         await pilot.press("down")
-        await pilot.press("enter")
-        await wait_until(pilot, lambda: not isinstance(app.screen, RemovalPickerScreen))
-        confirmed = isinstance(app.screen, ConfirmScreen)
-        if confirmed:
-            await pilot.press("y")
+        await _press(pilot, app, "enter", ConfirmScreen)
+        await pilot.press("y")
         assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
         assert app.screen is workspace
-    assert confirmed == case.confirms_picked_delete
     assert [t.name for t in _saved(case)] == ["Alpha"]
 
 
@@ -267,17 +249,11 @@ async def test_trait_list_remove_uses_the_chosen_row(case):
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
-        workspace, view = await _open(pilot, app, case)
+        _, view = await _open(pilot, app, case)
         await _choose_row(pilot, view, case, 0)
-        await pilot.press("A")
-        await wait_until(
-            pilot, lambda: app.screen is not workspace or len(_saved(case)) == 1
-        )
-        confirmed = isinstance(app.screen, ConfirmScreen)
-        if confirmed:
-            await pilot.press("y")
+        await _press(pilot, app, "A", ConfirmScreen)  # no picker
+        await pilot.press("y")
         assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
-    assert confirmed == case.confirms_chosen_delete
     assert [t.name for t in _saved(case)] == ["Beta"]
 
 
@@ -302,16 +278,12 @@ ITEM_LISTS: dict[str, ListCase] = {
         "section-inventory",
         "inventory-list",
         lambda s: s.characters[0].inventory,
-        True,
-        True,
     ),
     "familiar-natural-weapons": ListCase(
         ("familiar", "fam1"),
         "section-fam-natural-weapons",
         "fam-natural-weapons-list",
         lambda s: s.familiars[0].natural_weapons,
-        True,
-        True,
     ),
 }
 

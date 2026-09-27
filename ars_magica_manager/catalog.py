@@ -4,7 +4,7 @@ Laboratory Virtues/Flaws and Spells (reference data, not per-saga)."""
 from __future__ import annotations
 
 import json
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -74,7 +74,8 @@ def load_virtue_flaw_catalog_by_id(
 
 
 def describe_virtue_flaw(
-    instance: VirtueFlawInstance, catalog_by_id: dict[str, VirtueFlawDef]
+    instance: VirtueFlawInstance,
+    catalog_by_id: Mapping[str, VirtueFlawDef | LabVirtueFlawDef],
 ) -> str:
     """A human-readable label for a Virtue/Flaw instance, params filled in.
 

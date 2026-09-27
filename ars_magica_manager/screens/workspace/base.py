@@ -107,7 +107,6 @@ class _TraitList:
     example: str
     selected: str  # the WorkspaceScreen method giving the chosen row's index
     signed: bool = True  # scores shown as "+2" (not "2") in the picker
-    confirm_remove: bool = True
     prompt_options: dict[str, Any] = dataclass_field(default_factory=dict)
 
 
@@ -139,7 +138,6 @@ _FAMILIAR_TRAITS = _TraitList(
     "Personality Trait",
     "e.g. Loyal",
     "_selected_familiar_personality_trait",
-    confirm_remove=False,  # STORY-1109 B6
 )
 
 
@@ -151,7 +149,6 @@ _FAMILIAR_REPUTATIONS = _TraitList(
     "e.g. Fierce Protector",
     "_selected_familiar_reputation",
     signed=False,
-    confirm_remove=False,  # STORY-1109 B6
 )
 
 
@@ -732,18 +729,14 @@ class WorkspaceBase(Screen[None]):
         )
 
     def _remove_trait(self, spec: _TraitList) -> None:
-        """Delete the chosen entry (asking first, unless `spec` says not to);
-        with none chosen, ask which one."""
+        """Delete the chosen entry, after confirming; with none chosen, ask
+        which one first."""
         traits = self._traits(spec)
         if traits is None:
             return
 
         def remove(index: int) -> None:
-            if spec.confirm_remove:
-                self._confirm_delete(traits, index, traits[index].name, spec.section)
-            else:
-                del traits[index]
-                self._commit(spec.section)
+            self._confirm_delete(traits, index, traits[index].name, spec.section)
 
         self._chosen_or_pick(
             getattr(self, spec.selected)(),
@@ -1094,95 +1087,63 @@ class WorkspaceBase(Screen[None]):
         self.app.push_screen(picker(existing_ids), handle_result)
 
     def action_remove_virtue_flaw(self) -> None:
-        is_lab = self.selected_kind == NodeKind.LABORATORY
-        is_familiar = self.selected_kind == NodeKind.FAMILIAR
-        if (
-            not is_lab
-            and not is_familiar
-            and self._active_section()
-            in (
-                "section-vf-virtues",
-                "section-vf-flaws",
-            )
-        ):
-            self._remove_character_virtue_flaw()
-            return
-
+        """Delete a Virtue/Flaw of the character, laboratory or familiar on
+        show, after confirming: the row chosen in its Virtues or Flaws list,
+        or (with none chosen, or on a laboratory) the one picked from all of
+        them."""
         target = self._virtue_flaw_target()
         if target is None:
             return
         if not target.virtues_flaws:
             self.notify("No Virtues/Flaws to remove.")
             return
-
         vf_catalog = (
             catalog.load_lab_virtue_flaw_catalog_by_id()
-            if is_lab
+            if isinstance(target, Laboratory)
             else catalog.load_virtue_flaw_catalog_by_id()
         )
+        if isinstance(target, Laboratory):
+            section = "tab-lab-vf"
+        elif isinstance(target, Familiar):
+            section = "section-fam-vf-virtues"
+        else:
+            section = "section-vf-virtues"
+
+        def confirm(index: int) -> None:
+            self._confirm_delete(
+                target.virtues_flaws,
+                index,
+                catalog.describe_virtue_flaw(target.virtues_flaws[index], vf_catalog),
+                section,
+            )
+
+        selected = self._selected_virtue_flaw(target)
+        if selected is not None:
+            confirm(selected)
+            return
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                confirm(index)
+
         labels = [
             escape(catalog.describe_virtue_flaw(vf, vf_catalog))
             for vf in target.virtues_flaws
         ]
-
-        def handle_result(index: int | None) -> None:
-            if index is not None:
-                del target.virtues_flaws[index]
-                storage.save_saga(self.saga)
-                if is_lab:
-                    self._refresh_laboratory_section("tab-lab-vf")
-                elif is_familiar:
-                    self._refresh_familiar_section("section-fam-vf-virtues")
-                else:
-                    self._refresh_character_section("section-vf-virtues")
-
-        self.app.push_screen(
-            RemovalPickerScreen("Remove a Virtue or Flaw", labels), handle_result
-        )
-
-    def _selected_character_virtue_flaw(self) -> int | None:
-        view = self._character_sheet_view
-        return view.selected_virtue_flaw() if view is not None else None
-
-    def _remove_character_virtue_flaw(self) -> None:
-        """Delete the chosen character Virtue/Flaw (after confirming); with
-        none chosen, ask which one first."""
-        character = self.selected_character
-        if character is None:
-            return
-        selected = self._selected_character_virtue_flaw()
-        if selected is not None:
-            self._confirm_remove_character_virtue_flaw(selected)
-            return
-        if not character.virtues_flaws:
-            self.notify("No Virtues/Flaws to remove.")
-            return
-
-        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
-        labels = [
-            escape(catalog.describe_virtue_flaw(vf, vf_catalog))
-            for vf in character.virtues_flaws
-        ]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._confirm_remove_character_virtue_flaw(index)
-
         self.app.push_screen(
             RemovalPickerScreen("Remove a Virtue or Flaw", labels), handle_index
         )
 
-    def _confirm_remove_character_virtue_flaw(self, index: int) -> None:
-        character = self.selected_character
-        if character is None:
-            return
-        vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
-        self._confirm_delete(
-            character.virtues_flaws,
-            index,
-            catalog.describe_virtue_flaw(character.virtues_flaws[index], vf_catalog),
-            "section-vf-virtues",
-        )
+    def _selected_virtue_flaw(
+        self, target: Character | Laboratory | Familiar
+    ) -> int | None:
+        """The row chosen in the target's Virtues or Flaws list, if any (a
+        laboratory's are plain text: never)."""
+        if isinstance(target, Character) and self._character_sheet_view is not None:
+            return self._character_sheet_view.selected_virtue_flaw()
+        if isinstance(target, Familiar) and self._familiar_sheet_view is not None:
+            return self._familiar_sheet_view.selected_virtue_flaw()
+        return None
 
     def _virtue_flaw_target(self) -> Character | Laboratory | Familiar | None:
         if (

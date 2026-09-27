@@ -1233,10 +1233,55 @@ async def test_familiar_virtues_flaws_add_via_v_and_remove_via_shift_v():
         await pilot.pause()
         assert isinstance(app2.screen, RemovalPickerScreen)
         await pilot.press("enter")
-        await pilot.pause()
-        assert isinstance(app2.screen, WorkspaceScreen)
+        await wait_until(pilot, lambda: isinstance(app2.screen, ConfirmScreen))
+        await pilot.press("y")
+        await wait_until(pilot, lambda: isinstance(app2.screen, WorkspaceScreen))
 
     assert storage.load_saga("test_saga").familiars[0].virtues_flaws == []
+
+
+async def test_removing_a_familiar_virtue_flaw_uses_the_chosen_row_and_confirms():
+    # B6: familiar V&F removal ignored the chosen row and never asked.
+    saga = _saga_with_familiar()
+    saga.familiars[0].virtues_flaws = [
+        VirtueFlawInstance(vf_id="vf_true_friend"),
+        VirtueFlawInstance(vf_id="vf_true_friend"),
+        VirtueFlawInstance(vf_id="vf_puissant_ability", params={"ability": "Brawl"}),
+    ]
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_familiar(pilot, app)
+        await _open_familiar_section(pilot, app, "section-fam-vf-virtues")
+        rows = app.screen._familiar_sheet_view.query_one(
+            "#fam-vf-virtues-list", SelectableList
+        )
+        rows.focus()
+        await pilot.pause()
+        position = next(i for i, (index, _) in enumerate(rows._rows) if index == 2)
+        rows.highlighted = position
+        assert await wait_until(pilot, lambda: rows._marked == position)
+
+        await pilot.press("V")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        message = str(app.screen.query_one("#confirm-message", Static).render())
+        assert "Puissant" in message, message
+        await pilot.press("n")
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        assert len(storage.load_saga("test_saga").familiars[0].virtues_flaws) == 3
+
+        await pilot.press("V")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await pilot.press("y")
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+
+    assert [
+        vf.vf_id for vf in storage.load_saga("test_saga").familiars[0].virtues_flaws
+    ] == [
+        "vf_true_friend",
+        "vf_true_friend",
+    ]
 
 
 async def test_familiar_personality_traits_use_generic_add_edit_remove():
@@ -1265,8 +1310,9 @@ async def test_familiar_personality_traits_use_generic_add_edit_remove():
         await pilot.pause()
         assert isinstance(app.screen, RemovalPickerScreen)
         await pilot.press("enter")
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await pilot.press("y")
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
     assert storage.load_saga("test_saga").familiars[0].personality_traits == []
 
@@ -1824,9 +1870,10 @@ async def test_remove_virtue_flaw_from_laboratory():
         assert isinstance(app.screen, RemovalPickerScreen)
 
         await pilot.press("enter")
-        await pilot.pause()
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await pilot.press("y")
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
-        assert isinstance(app.screen, WorkspaceScreen)
         assert (
             "Superior Construction" not in app.screen._laboratory_sheet_view._vf_text()
         )
@@ -2452,6 +2499,19 @@ async def test_edit_spell_mastery_sets_score_xp_and_abilities():
         await pilot.click("#btn-save")
         await pilot.pause()
         assert isinstance(app.screen, MasteryEditScreen)
+
+        # Removing one asks first (B6); No keeps it.
+        mastery = app.screen
+        mastery.query_one("#mastery-abilities-list", ListView).index = 0
+        await pilot.pause()
+        mastery.query_one("#btn-remove-ability", Button).press()
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        assert "Delete Fast Casting?" in str(
+            app.screen.query_one("#confirm-message", Static).render()
+        )
+        await pilot.press("n")
+        await wait_until(pilot, lambda: app.screen is mastery)
+        assert len(mastery._abilities) == 1
 
         await pilot.click("#btn-save")
         await pilot.pause()
