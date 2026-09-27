@@ -3,10 +3,9 @@ import pytest
 
 from ars_magica_manager import catalog
 from ars_magica_manager import spells as sp
+from ars_magica_manager.arts import FORMS, TECHNIQUES
 from ars_magica_manager.models import (
-    FORMS,
     SPELL_SOURCES,
-    TECHNIQUES,
     Character,
     Saga,
     Spell,

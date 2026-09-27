@@ -14,17 +14,14 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from . import catalog, storage
+from .arts import ART_ABBREVIATIONS, ART_LOOKUP, FORMS, TECHNIQUES
 from .csv_import import parse_rows, read_text_any, skipped_preview
 from .markup import escape, fit
 from .models import (
-    ART_ABBREVIATIONS,
-    ART_LOOKUP,
-    FORMS,
     SPELL_DURATIONS,
     SPELL_RANGES,
     SPELL_SOURCES,
     SPELL_TARGETS,
-    TECHNIQUES,
     Saga,
     Spell,
 )

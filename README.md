@@ -54,11 +54,15 @@ uv run pyright                                # type-check
   `saga_picker` (the start screen).
 - `ars_magica_manager/models.py` — the dataclasses (Saga, Covenant,
   Character, Laboratory, Familiar, Book, Spell, Possession, Inhabitant,
-  Economics, catalog entry types, ...) and their load-time migrations.
+  Economics, catalog entry types, ...) and their load-time migrations;
+  `arts.py` — the fifteen Arts.
 - Domain logic, one module per area, with no widgets in them:
   `books.py`, `spells.py` (where a spell id resolves, magnitude, the
   "CrIg 20" shorthand, R/D/T), `economics.py`, `inhabitants.py` (and
-  Loyalty), `possessions.py`, `familiars.py`.
+  Loyalty), `possessions.py`, `familiars.py`, `laboratories.py` and
+  `covenants.py` (rules computed from a lab's or covenant's Virtues/
+  Boons), `creation.py` (new sagas and records), `sheet_text.py` (text
+  shared by the Character and Familiar sheets), `csv_import.py`.
 - `ars_magica_manager/catalog.py` — loads the shared catalogs in `data/`
   (Virtues & Flaws, laboratory Virtues & Flaws, Abilities, Houses, covenant
   Boons & Hooks, spells); `totals.py` — the registry of modifier types the

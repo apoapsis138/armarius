@@ -15,8 +15,8 @@ from textual.widgets import (
     Static,
 )
 
+from ..arts import ARTS
 from ..models import (
-    ARTS,
     SEASONS,
     Ability,
     DiaryEntry,

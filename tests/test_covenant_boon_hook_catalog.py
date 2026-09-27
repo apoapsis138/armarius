@@ -3,6 +3,11 @@ from collections import Counter
 import pytest
 
 from ars_magica_manager import catalog
+from ars_magica_manager.covenants import (
+    covenant_boon_points,
+    covenant_effective_aura,
+    covenant_hook_points,
+)
 from ars_magica_manager.models import (
     COVENANT_BOON_HOOK_CATEGORIES,
     VIRTUE_FLAW_TIER_COST,
@@ -10,9 +15,6 @@ from ars_magica_manager.models import (
     CovenantBoonHookDef,
     ScoredTrait,
     VirtueFlawInstance,
-    covenant_boon_points,
-    covenant_effective_aura,
-    covenant_hook_points,
 )
 
 CASTLE = "covbh_hook_major_castle"

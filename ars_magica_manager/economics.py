@@ -16,6 +16,8 @@ from typing import Any
 from . import catalog, storage
 from . import inhabitants as inh
 from . import possessions as pos
+from .covenants import covenant_modifiers
+from .laboratories import lab_characteristic_total
 from .markup import aligned, escape, markdown_inline
 from .models import (
     INCOME_EFFECT_MULTIPLIERS,
@@ -25,8 +27,6 @@ from .models import (
     Economics,
     IncomeSource,
     Saga,
-    covenant_modifiers,
-    lab_characteristic_total,
     round_away_from_zero,
 )
 

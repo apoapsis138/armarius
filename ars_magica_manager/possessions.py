@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from . import storage
+from .laboratories import lab_characteristic_total
 from .markup import escape, fit, markdown_inline
 from .models import (
     GEAR_POINTS,
@@ -20,7 +21,6 @@ from .models import (
     LabVirtueFlawDef,
     Possession,
     Saga,
-    lab_characteristic_total,
 )
 
 #: Section titles on the tab.

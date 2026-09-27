@@ -30,16 +30,14 @@ from .. import familiars as fam
 from .. import inhabitants as inh
 from .. import possessions as pos
 from .. import spells as spl
+from ..arts import ART_ABBREVIATIONS, ARTS, FORMS, TECHNIQUES
 from ..markup import escape
 from ..models import (
-    ART_ABBREVIATIONS,
-    ARTS,
     BOOK_TYPES,
     CORD_SCORE_COSTS,
     COVENANT_ROLES,
     CRAFT_FIELDS,
     FATIGUE_LEVELS,
-    FORMS,
     GEAR_QUALITIES,
     GEAR_QUALITY_DEFAULT,
     GEAR_TYPES_BY_KIND,
@@ -53,7 +51,6 @@ from ..models import (
     SPELL_DURATIONS,
     SPELL_RANGES,
     SPELL_TARGETS,
-    TECHNIQUES,
     TRACTATUS_SUBJECTS,
     Aging,
     ArtScore,

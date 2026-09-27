@@ -27,9 +27,8 @@ from ars_magica_manager import inhabitants as inh
 from ars_magica_manager import possessions as pos
 from ars_magica_manager import spells as spl
 from ars_magica_manager.app import ArsMagicaManagerApp
+from ars_magica_manager.arts import FORMS, TECHNIQUES
 from ars_magica_manager.models import (
-    FORMS,
-    TECHNIQUES,
     Ability,
     ArtScore,
     Background,

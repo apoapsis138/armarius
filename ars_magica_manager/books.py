@@ -14,10 +14,10 @@ from typing import Any
 
 from . import catalog, storage
 from . import spells as spl
+from .arts import ART_LOOKUP
 from .csv_import import parse_rows, read_text_any, skipped_preview
 from .markup import escape, fit, markdown_inline
 from .models import (
-    ART_LOOKUP,
     BOOK_TYPES,
     Book,
     Covenant,

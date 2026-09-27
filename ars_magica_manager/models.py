@@ -10,6 +10,7 @@ import math
 from dataclasses import dataclass, field, fields
 from typing import Any, Literal
 
+from .arts import ART_BY_NAME
 from .totals import validate_modifier_type
 
 CharacterType = Literal["magus", "companion", "grog"]
@@ -81,62 +82,6 @@ ABILITY_CATEGORIES: tuple[str, ...] = (
     "Arcane",
     "Supernatural",
 )
-
-TECHNIQUES: tuple[str, ...] = ("Creo", "Intellego", "Muto", "Perdo", "Rego")
-FORMS: tuple[str, ...] = (
-    "Animal",
-    "Aquam",
-    "Auram",
-    "Corpus",
-    "Herbam",
-    "Ignem",
-    "Imaginem",
-    "Mentem",
-    "Terram",
-    "Vim",
-)
-ART_ABBREVIATIONS: dict[str, str] = {
-    "Creo": "Cr",
-    "Intellego": "In",
-    "Muto": "Mu",
-    "Perdo": "Pe",
-    "Rego": "Re",
-    "Animal": "An",
-    "Aquam": "Aq",
-    "Auram": "Au",
-    "Corpus": "Co",
-    "Herbam": "He",
-    "Ignem": "Ig",
-    "Imaginem": "Im",
-    "Mentem": "Me",
-    "Terram": "Te",
-    "Vim": "Vi",
-}
-#: All fifteen Arts, Techniques then Forms.
-ARTS: tuple[str, ...] = (*TECHNIQUES, *FORMS)
-#: An Art's proper name from its name in any case ("creo" -> "Creo").
-ART_BY_NAME: dict[str, str] = {art.lower(): art for art in ARTS}
-#: The same, also accepting the two-letter abbreviation ("cr" -> "Creo").
-ART_LOOKUP: dict[str, str] = ART_BY_NAME | {
-    abbr.lower(): art for art, abbr in ART_ABBREVIATIONS.items()
-}
-ART_DESCRIPTIONS: dict[str, str] = {
-    "Creo": "'I Create' - Creo magic makes things that exist independently into better things of their kind, which includes bringing them into existence from nothing. Things that exist independently are called substances, and include people, trees, and rocks, but do not include colors, weights, and sizes. Creo can thus both create and heal things. Pronounced 'CRAY-oh.'",
-    "Intellego": "'I Perceive' - Intellego is the Art of perception. It allows a maga to gather information directly from the forms of things. This information does not deal with the appearances of things, unless Intellego Imaginem magic is used. Rather, it provides information about the actual nature of a thing. Thus, Intellego magic is not deceived by mundane disguises. Pronounced 'in-TEL-le-go.'",
-    "Muto": "'I Transform' - By using Muto magic a magus can grant or remove properties something cannot naturally have. Thus, Muto can give a person wings or turn her skin green, or turn a person into a wolf. The difficulty of the magic depends on the extent of the change, so that turning someone's skin green is easy, but turning someone into a golden statue is difficult. Pronounced 'MOO-toe.'",
-    "Perdo": "'I Destroy' - Perdo makes things worse examples of the kind of thing they are. It is the opposite of Creo. Perdo magic can simply destroy things, removing them completely from existence, or it can destroy aspects of a thing. Thus, Perdo Corpus could remove a person's weight, while leaving the rest of his properties intact, and Perdo Ignem could make a fire unable to burn anything. Pronounced 'PARE-doe.'",
-    "Rego": "'I Control' - The Art of Rego allows a maga to change the state of a thing to some other state that the individual thing can naturally have. Thus, since all things can naturally have any location, Rego magic allows a maga to move things around. Rego can also make a tree blossom out of season, put a person to sleep, shape a piece of stone into a statue, or weave thread into a tunic. Pronounced 'RAY-go.'",
-    "Animal": "'animal' - Animal concerns animals of all kinds, from the fish of the sea to the birds of the air. Animal spells cannot affect people, and Hermetic theorists still debate the reason for this. Form Bonus: Soak against animal attacks (claws, bites, etc.), rolls to resist animal poisons. Pronounced 'ah-nee-MAHL.'",
-    "Aquam": "'water' - Aquam concerns water and all manner of liquids, as well as properties of liquidity. Form Bonus: Rolls to resist drowning and thirst, soak against water jets and the like. Pronounced 'AH-kwahm.'",
-    "Auram": "'air' - Auram is the Art of air, wind, and weather. It also governs gaseous forms in general. Form bonus: Rolls to resist suffocation, including drowning, soak against weather phenomena such as lightning. Pronounced 'OW-rahm.'",
-    "Corpus": "'body' - Corpus is the Art of human bodies. This Art affects dead bodies and the bodies of magical or faerie creatures that look human, as well as those of living humans. Since natural philosophy asserts that these things have no more in common than their appearance, and Corpus does not affect human statues, Hermetic theorists are puzzled by the range of this Form. Form bonus: Soak against human unarmed attacks, rolls to resist disease. It does not apply to aging rolls. Pronounced 'COR-poos.'",
-    "Herbam": "'plant' - This Form concerns plants and trees. This includes plant matter of all types, including that which is no longer alive — like dead wood and linens. Form bonus: Soak against wooden weapons, rolls to resist herbal poisons, rolls to resist starvation. Pronounced 'HARE-bahm.'",
-    "Ignem": "'fire' - This Form concerns fire, heat, and light. Form bonus: Soak against fire and cold. Pronounced 'IG-nem.'",
-    "Imaginem": "'image' - This Form concerns the things in the world that the senses respond to. Natural philosophy calls them species (SPEH-kee-ayss, to be distinguished from species of animals and such). All things constantly give off species for each of the senses. Those for touch and taste do not travel far, while those for sight require light to get any distance from the originating body. Imaginem spells normally affect the process by which species are produced, rather than the species themselves. Thus, the species emanating from an illusion are not themselves magical.Form bonus: Rolls to resist confusion, deafening, or nausea caused by sights, sounds, smells, or tastes. Pronounced 'ih-MAH-gih-nem.'",
-    "Mentem": "'mind' - This Form concerns minds, thoughts, and spirits. Mentem can also affect the 'bodies' of noncorporeal beings, such as ghosts, as these are maintained in the physical world directly by a spirit's will. Form bonus: Rolls to resist mundane persuasion, deception, or temptation. Pronounced 'MEN-tem.'",
-    "Terram": "'earth' - This Form concerns solids, especially earth and stone. Form bonus: Soak against metal or stone weapons, rolls to resist mineral poisons. Pronounced 'TARE-rahm.'",
-    "Vim": "'power' - This Form concerns raw magical power. All the Arts rely on the raw energy and potential of magic, but this Art refines the use of magic itself, allowing magi to assume even greater control of their spells. Vim also affects magical, infernal, divine, and faerie creatures. Form bonus: Rolls to resist Twilight, but not rolls to comprehend it; soak total against damage inflicted by your own spell-casting, but not damage inflicted by your own spells. Pronounced 'WEEM.'",
-}
 
 
 @dataclass
@@ -221,7 +166,8 @@ class LabVirtueFlawDef:
     `characteristic_modifiers` is the parsed numeric effect on one or more
     of LAB_CHARACTERISTICS (e.g. Superior Construction -> {"safety": 3}),
     used to auto-compute the virtue/flaw component of each Characteristic's
-    manual + virtue_sum + flaw_sum = total (see lab_characteristic_total).
+    manual + virtue_sum + flaw_sum = total (see
+    laboratories.lab_characteristic_total).
     Any Specialization grant mentioned in the rules text is left as prose
     in `description` only -- Lab Specialties are freeform for now, not a
     structured/auto-applied catalog concept yet.
@@ -294,7 +240,7 @@ class CovenantBoonHookDef:
     `covenant_aura` +1, Shell Keep is `covenant_expense`/`buildings` +2.
     Everything else stays prose in `description`. `repeatable` marks entries
     that may be taken more than once; each instance's effects count (they
-    stack) -- see covenant_modifiers().
+    stack) -- see covenants.covenant_modifiers().
     """
 
     id: str
@@ -619,8 +565,9 @@ class LabCharacteristics:
     """The 8 Laboratory Characteristics' manual (base) component only.
 
     Each Characteristic's effective total is manual + virtue_sum +
-    flaw_sum (see lab_characteristic_total) -- virtue_sum/flaw_sum are
-    derived from the lab's attached Virtues/Flaws, never stored here.
+    flaw_sum (see laboratories.lab_characteristic_total) -- virtue_sum and
+    flaw_sum are derived from the lab's attached Virtues/Flaws, never stored
+    here.
     """
 
     size: int = 0
@@ -664,7 +611,7 @@ class Laboratory:
     location: str = ""
     build_points: int = 0
     #: Manual adjustment on top of the covenant's aura this lab inherits
-    #: (e.g. from Virtues) -- see lab_aura_total().
+    #: (e.g. from Virtues) -- see laboratories.lab_aura_total().
     aura_modifier: int = 0
     characteristics: LabCharacteristics = field(default_factory=LabCharacteristics)
     features: list[str] = field(default_factory=list)
@@ -693,73 +640,6 @@ class Laboratory:
             VirtueFlawInstance(**vf) for vf in d.get("virtues_flaws", [])
         ]
         return cls(**d)
-
-
-def lab_aura_total(lab: Laboratory, covenant_aura: int) -> int:
-    """The lab's effective aura: the covenant's inherited aura plus the lab's
-    own manual modifier."""
-    return covenant_aura + lab.aura_modifier
-
-
-def lab_net_vf_points(
-    lab: Laboratory, catalog_by_id: dict[str, LabVirtueFlawDef]
-) -> float:
-    """Current Virtue points minus Flaw points attached to the lab."""
-    return sum(
-        catalog_by_id[vf.vf_id].cost
-        for vf in lab.virtues_flaws
-        if vf.vf_id in catalog_by_id
-    )
-
-
-def lab_occupied_size(
-    lab: Laboratory, catalog_by_id: dict[str, LabVirtueFlawDef]
-) -> float:
-    """OCCUPIED SIZE: current Virtue points - Flaw points - Refinement."""
-    return lab_net_vf_points(lab, catalog_by_id) - lab.characteristics.refinement
-
-
-def lab_free_virtues(
-    lab: Laboratory, catalog_by_id: dict[str, LabVirtueFlawDef]
-) -> float:
-    """How many more points of Virtues (minus Flaws) the lab has room for:
-    (Size + Refinement) - current Virtue points minus Flaw points."""
-    limit = lab.characteristics.size + lab.characteristics.refinement
-    return limit - lab_net_vf_points(lab, catalog_by_id)
-
-
-def lab_base_safety(
-    lab: Laboratory, catalog_by_id: dict[str, LabVirtueFlawDef]
-) -> float:
-    """BASE SAFETY OF LAB: Refinement - occupied Size (if positive)."""
-    occupied = lab_occupied_size(lab, catalog_by_id)
-    return lab.characteristics.refinement - max(occupied, 0)
-
-
-def lab_characteristic_total(
-    lab: Laboratory,
-    catalog_by_id: dict[str, LabVirtueFlawDef],
-    characteristic: str,
-) -> tuple[int, int, int, int]:
-    """(manual, virtue_sum, flaw_sum, total) for one of LAB_CHARACTERISTICS.
-
-    manual + virtue_sum + flaw_sum = total, per the user's explicit
-    formula: the manual component is a free player adjustment on top of
-    whatever the lab's attached Virtues/Flaws contribute.
-    """
-    manual = getattr(lab.characteristics, characteristic)
-    virtue_sum = 0
-    flaw_sum = 0
-    for vf in lab.virtues_flaws:
-        entry = catalog_by_id.get(vf.vf_id)
-        if entry is None:
-            continue
-        amount = entry.characteristic_modifiers.get(characteristic, 0)
-        if entry.type == "Virtue":
-            virtue_sum += amount
-        else:
-            flaw_sum += amount
-    return manual, virtue_sum, flaw_sum, manual + virtue_sum + flaw_sum
 
 
 @dataclass
@@ -1527,88 +1407,6 @@ BOON_HOOK_DETAIL = "detail"
 #: attached Boon/Hook (what the Hidden Resources actually contain...), shown
 #: in the details panel ahead of the official rules text.
 BOON_HOOK_DESCRIPTION = "description"
-
-
-def covenant_boon_points(
-    covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
-) -> int:
-    """Total points the covenant's attached Boons cost."""
-    return sum(
-        definition.cost
-        for bh in covenant.boons_hooks
-        if (definition := catalog_by_id.get(bh.vf_id)) is not None
-        and definition.type == "Boon"
-    )
-
-
-def covenant_hook_points(
-    covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
-) -> int:
-    """Total points the covenant's attached Hooks provide (a positive
-    number -- Hooks are stored with negative costs, like Flaws)."""
-    return sum(
-        -definition.cost
-        for bh in covenant.boons_hooks
-        if (definition := catalog_by_id.get(bh.vf_id)) is not None
-        and definition.type == "Hook"
-    )
-
-
-def covenant_effective_aura(
-    covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
-) -> int:
-    """The covenant's Aura score: its base `aura` plus every `covenant_aura`
-    modifier of its Boons/Hooks (each Minor Aura Boon adds 1). This is what
-    its laboratories inherit."""
-    return covenant.aura + round_away_from_zero(
-        covenant_modifier_total(covenant, catalog_by_id, "covenant_aura")
-    )
-
-
-def covenant_modifiers(
-    covenant: Covenant,
-    catalog_by_id: dict[str, CovenantBoonHookDef],
-    applies_to: str,
-    activity: str | None = None,
-) -> list[tuple[CovenantBoonHookDef, Modifier]]:
-    """Every modifier of type `applies_to` on the covenant's Boons/Hooks, with
-    the entry it comes from -- one pair per attached *instance*, so a Boon
-    taken three times appears three times (effects stack). Given an
-    `activity`, modifiers for that activity and general ones (no activity)
-    both count, per Modifier's rules.
-
-    This is the covenant end of the one lookup every total will use (DESIGN.md
-    section 5.1): Virtues & Flaws on characters and
-    laboratories will be collected the same way."""
-    found = []
-    for instance in covenant.boons_hooks:
-        entry = catalog_by_id.get(instance.vf_id)
-        if entry is None:
-            continue
-        for modifier in entry.modifiers:
-            if modifier.applies_to != applies_to:
-                continue
-            if activity is not None and modifier.activity not in (None, activity):
-                continue
-            found.append((entry, modifier))
-    return found
-
-
-def covenant_modifier_total(
-    covenant: Covenant,
-    catalog_by_id: dict[str, CovenantBoonHookDef],
-    applies_to: str,
-    activity: str | None = None,
-) -> float:
-    """The sum of the flat `amount`s of covenant_modifiers(). (No covenant
-    effect uses a multiplier yet; how multipliers stack with amounts is for
-    the Totals Engine to settle.)"""
-    return sum(
-        modifier.amount or 0
-        for _, modifier in covenant_modifiers(
-            covenant, catalog_by_id, applies_to, activity
-        )
-    )
 
 
 def next_season(season: str, year: int) -> tuple[str, int]:

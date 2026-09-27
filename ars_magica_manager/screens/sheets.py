@@ -30,17 +30,26 @@ from .. import inhabitants as inh
 from .. import possessions as pos
 from .. import sheet_text as st
 from .. import spells as spl
+from ..arts import ART_ABBREVIATIONS, ART_DESCRIPTIONS, FORMS, TECHNIQUES
+from ..covenants import (
+    covenant_boon_points,
+    covenant_effective_aura,
+    covenant_hook_points,
+)
+from ..laboratories import (
+    lab_aura_total,
+    lab_base_safety,
+    lab_characteristic_total,
+    lab_free_virtues,
+    lab_occupied_size,
+)
 from ..markup import aligned, escape, markdown_inline
 from ..models import (
-    ART_ABBREVIATIONS,
-    ART_DESCRIPTIONS,
     BOON_HOOK_DESCRIPTION,
-    FORMS,
     INHABITANT_KINDS,
     LAB_CHARACTERISTICS,
     POSSESSION_KINDS,
     SPELL_SOURCES,
-    TECHNIQUES,
     ArtScore,
     Book,
     Character,
@@ -50,14 +59,6 @@ from ..models import (
     Saga,
     Spell,
     character_age,
-    covenant_boon_points,
-    covenant_effective_aura,
-    covenant_hook_points,
-    lab_aura_total,
-    lab_base_safety,
-    lab_characteristic_total,
-    lab_free_virtues,
-    lab_occupied_size,
 )
 from .fields import _pairs
 from .widgets import (

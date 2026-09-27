@@ -1,5 +1,13 @@
 from dataclasses import asdict
 
+from ars_magica_manager.laboratories import (
+    lab_aura_total,
+    lab_base_safety,
+    lab_characteristic_total,
+    lab_free_virtues,
+    lab_net_vf_points,
+    lab_occupied_size,
+)
 from ars_magica_manager.models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
@@ -25,12 +33,6 @@ from ars_magica_manager.models import (
     assign_laboratory_owner,
     boon_hook_params,
     character_age,
-    lab_aura_total,
-    lab_base_safety,
-    lab_characteristic_total,
-    lab_free_virtues,
-    lab_net_vf_points,
-    lab_occupied_size,
     next_season,
     replace_raw_vis,
 )
@@ -294,12 +296,14 @@ def test_next_season_steps_through_the_year_and_rolls_over_after_winter():
 
 def test_covenant_modifiers_count_every_instance_and_filter_by_activity():
     from ars_magica_manager import catalog
-    from ars_magica_manager.models import (
-        Covenant,
-        VirtueFlawInstance,
+    from ars_magica_manager.covenants import (
         covenant_effective_aura,
         covenant_modifier_total,
         covenant_modifiers,
+    )
+    from ars_magica_manager.models import (
+        Covenant,
+        VirtueFlawInstance,
     )
 
     by_id = catalog.load_covenant_boon_hook_catalog_by_id()
