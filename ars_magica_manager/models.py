@@ -8,10 +8,11 @@ from __future__ import annotations
 
 import math
 import re
+import uuid
 from dataclasses import dataclass, field, fields
 from typing import Any, Literal
 
-from .arts import ART_BY_NAME, ARTS
+from .arts import ART_BY_NAME, ARTS, TECHNIQUES
 from .totals import validate_modifier_type
 
 CharacterType = Literal["magus", "companion", "grog"]
@@ -328,10 +329,22 @@ class HouseDef:
 
 @dataclass
 class VirtueFlawInstance:
-    """A catalog Virtue/Flaw as attached to a specific Character or Laboratory."""
+    """A catalog Virtue/Flaw as attached to a specific Character or Laboratory.
+
+    `id` tells apart two instances of the same Virtue (a lab's two Lesser
+    Features), so a LabFeature can point at its own. A laboratory's
+    instances always have one (given at load and when added); a character's
+    are left "". It isn't compared: two instances of the same Virtue with
+    the same params are equal."""
 
     vf_id: str
     params: dict[str, str] = field(default_factory=dict)
+    id: str = field(default="", compare=False)
+
+
+def new_instance_id() -> str:
+    """A fresh id for a VirtueFlawInstance or LabFeature."""
+    return uuid.uuid4().hex[:12]
 
 
 @dataclass
@@ -637,6 +650,113 @@ LAB_ACTIVITY_SPECIALIZATIONS: tuple[str, ...] = (
 LAB_SPECIALIZATIONS: tuple[str, ...] = (*LAB_ACTIVITY_SPECIALIZATIONS, *ARTS)
 
 
+#: The lab Virtues a Feature is built on, and the points each gives it
+#: (reference/laboratory-features-reference.md).
+FEATURE_VIRTUE_POINTS: dict[str, int] = {
+    "labvf_lesser_feature": 1,
+    "labvf_greater_feature": 3,
+}
+#: The Focus Flaws, each with the Feature Virtue it goes with and the extra
+#: points it gives that Feature.
+FOCUS_FLAWS: dict[str, tuple[str, int]] = {
+    "labvf_lesser_focus": ("labvf_lesser_feature", 2),
+    "labvf_greater_focus": ("labvf_greater_feature", 4),
+}
+
+
+@dataclass
+class LabFeatureDef:
+    """A catalog Laboratory Feature (Altar, Cauldron...): what it is and the
+    Specializations its points may go to. "Any Technique" in the source is
+    stored as the five Techniques."""
+
+    id: str
+    name: str
+    description: str
+    specializations: tuple[str, ...]
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> LabFeatureDef:
+        specializations: list[str] = []
+        for name in data["specializations"]:
+            specializations += TECHNIQUES if name == "Any Technique" else [name]
+        unknown = set(specializations) - set(LAB_SPECIALIZATIONS)
+        if unknown:
+            raise ValueError(f"Unknown Specializations {unknown} for {data['id']!r}")
+        return cls(
+            data["id"], data["name"], data["description"], tuple(specializations)
+        )
+
+
+@dataclass
+class LabSpecialtyGrant:
+    """Points a Feature (or its Focus) puts into one Specialization."""
+
+    specialization: str
+    points: int
+
+
+@dataclass
+class LabFeature:
+    """A Feature installed in a laboratory, built on one of its Lesser or
+    Greater Feature Virtues (`virtue_id`, a VirtueFlawInstance.id; None when
+    it has none yet, e.g. converted from old notes). `feature_id` is the
+    catalog Feature, None for a custom one; `name` is the user's own label
+    ("Large Brass Cauldron"). `allocations` spend the Virtue's points; with
+    `focus` (the lab's Focus Flaw is built around it) `focus_allocations`
+    spend the Focus's."""
+
+    id: str
+    name: str
+    feature_id: str | None = None
+    virtue_id: str | None = None
+    allocations: list[LabSpecialtyGrant] = field(default_factory=list)
+    focus: bool = False
+    focus_allocations: list[LabSpecialtyGrant] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> LabFeature:
+        d = dict(data)
+        d["allocations"] = [LabSpecialtyGrant(**g) for g in d.get("allocations", [])]
+        d["focus_allocations"] = [
+            LabSpecialtyGrant(**g) for g in d.get("focus_allocations", [])
+        ]
+        return cls(**known_fields(cls, d))
+
+
+def _feature_from_old_text(
+    text: str, feature_names: dict[str, str] | None = None
+) -> LabFeature:
+    """A pre-STORY-308 free-text Feature as a LabFeature named with the text,
+    of the catalog Feature named in it (by whole word, a plural too: "Big
+    windows" is a Window), else custom. `feature_names` maps catalog names
+    to ids (loaded from the catalog when not given)."""
+    if feature_names is None:
+        from .catalog import load_lab_feature_catalog
+
+        feature_names = {f.name: f.id for f in load_lab_feature_catalog()}
+    feature_id = None
+    for name in sorted(feature_names, key=len, reverse=True):
+        if re.search(rf"\b{re.escape(name)}s?\b", text, re.IGNORECASE):
+            feature_id = feature_names[name]
+            break
+    return LabFeature(id=new_instance_id(), name=text, feature_id=feature_id)
+
+
+def link_unlinked_features(lab: Laboratory) -> None:
+    """Give each Feature without a Virtue the first Lesser/Greater Feature
+    Virtue no other Feature has (old notes carry no link)."""
+    taken = {f.virtue_id for f in lab.features if f.virtue_id}
+    free = [
+        vf.id
+        for vf in lab.virtues_flaws
+        if vf.vf_id in FEATURE_VIRTUE_POINTS and vf.id not in taken
+    ]
+    for feature in lab.features:
+        if feature.virtue_id is None and free:
+            feature.virtue_id = free.pop(0)
+
+
 @dataclass
 class LabSpecialtyEntry:
     """Points in one Specialization from a source the app doesn't work out
@@ -688,7 +808,7 @@ class Laboratory:
     #: (e.g. from Virtues) -- see laboratories.lab_aura_total().
     aura_modifier: int = 0
     characteristics: LabCharacteristics = field(default_factory=LabCharacteristics)
-    features: list[str] = field(default_factory=list)
+    features: list[LabFeature] = field(default_factory=list)
     #: Specialization points from sources entered by hand (see
     #: laboratories.lab_specializations for the totals).
     specialties: list[LabSpecialtyEntry] = field(default_factory=list)
@@ -720,13 +840,25 @@ class Laboratory:
         d["virtues_flaws"] = [
             VirtueFlawInstance(**vf) for vf in d.get("virtues_flaws", [])
         ]
+        for vf in d["virtues_flaws"]:
+            vf.id = vf.id or new_instance_id()
+        old_features = [f for f in d.get("features", []) if isinstance(f, str)]
+        d["features"] = [
+            _feature_from_old_text(f)  # pre-STORY-308 free text
+            if isinstance(f, str)
+            else LabFeature.from_dict(f)
+            for f in d.get("features", [])
+        ]
         d["specialties"] = [
             _parse_old_specialty(s)
             if isinstance(s, str)  # pre-STORY-307 free text
             else LabSpecialtyEntry(**s)
             for s in d.get("specialties", [])
         ]
-        return cls(**known_fields(cls, d))
+        lab = cls(**known_fields(cls, d))
+        if old_features:
+            link_unlinked_features(lab)
+        return lab
 
 
 @dataclass

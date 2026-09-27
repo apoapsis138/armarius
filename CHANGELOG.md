@@ -8,6 +8,28 @@ fix or behind-the-scenes improvement bumps PATCH. The version is set in
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 0.6.0 — 2026-09-27
+
+- Laboratory Features: each Feature (Altar, Cauldron, Window... all 36, or a
+  custom one) is built on one of the lab's Lesser or Greater Feature
+  Virtues and puts its 1 or 3 points into the Specializations it offers.
+  Adding a Feature can add the Feature Virtue it needs (after asking), and
+  deleting a Feature Virtue takes its Feature with it.
+- A Feature can be the lab's Focus when the lab has the matching Focus
+  Flaw, for 2 or 4 more points; deleting the Focus Flaw clears it.
+- Feature and Focus points count in the Specializations list, labelled with
+  the Feature's name. Old free-text Features are converted (e.g. "Large
+  Brass Cauldron" becomes a Cauldron on the lab's first Lesser Feature).
+- The Specializations list shows how many count against each limit in its
+  headings ("Activity (2 of 2)", "Art (3 of 4)"); the other sources are
+  nested inside it as "Specializations: Other". Specializations and Features
+  no longer collapse.
+- Whether the sanctum is marked now shows in the laboratory's Identity
+  ("Sanctum?: Yes") and is set in its Edit form.
+- The laboratory's Attributes and Inventory tabs each have one details panel
+  at the bottom of the tab, as on the covenant's tabs, showing whichever row
+  was last chosen.
+
 ## 0.5.0 — 2026-09-27
 
 - The laboratory's Virtues and Flaws are two lists side by side, with a

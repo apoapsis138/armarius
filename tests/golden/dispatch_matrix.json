@@ -721,20 +721,7 @@
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
       }
     },
-    "SheetSection#section-lab-sanctum": {
-      "active": "section-lab-sanctum",
-      "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "FieldsDialog: Edit Sanctum",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
-      }
-    },
-    "SheetSection#section-lab-specializations": {
+    "PinnedCollapsible#section-lab-specializations": {
       "active": "section-lab-specializations",
       "keys": {
         "a": "(disabled)",
@@ -760,7 +747,7 @@
         "V": "(disabled)"
       }
     },
-    "SheetSection#section-lab-features": {
+    "PinnedCollapsible#section-lab-features": {
       "active": "section-lab-features",
       "keys": {
         "a": "FieldsDialog: Add a Feature",

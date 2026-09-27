@@ -1,0 +1,357 @@
+{
+  "attribution": "Laboratory Features from reference/laboratory-features-reference.md (ArM5 Covenants, Chapter 8). Based on the material for Ars Magica, ©1993-2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+  "features": [
+    {
+      "id": "labfeat_altar",
+      "name": "Altar",
+      "description": "An ornamental place of ritual worship, such as a raised stone dais or consecrated slab.",
+      "specializations": [
+        "Any Technique",
+        "Vim"
+      ]
+    },
+    {
+      "id": "labfeat_animal_pen",
+      "name": "Animal Pen",
+      "description": "An enclosure or indoor dwelling designed for one or more animals or a familiar.",
+      "specializations": [
+        "Familiar",
+        "Animal"
+      ]
+    },
+    {
+      "id": "labfeat_antechamber",
+      "name": "Antechamber",
+      "description": "A separate enclosed compartment or vestibule, allowing spells to be cast in a secure, isolated space.",
+      "specializations": [
+        "Experimentation",
+        "Spells",
+        "Rego"
+      ]
+    },
+    {
+      "id": "labfeat_astronomical_device",
+      "name": "Astronomical Device",
+      "description": "Sophisticated observational instruments, such as an astrolabe or armillary sphere, placed near a window or skylight.",
+      "specializations": [
+        "Intellego",
+        "Vim"
+      ]
+    },
+    {
+      "id": "labfeat_balance",
+      "name": "Balance",
+      "description": "An exact weighing device, such as a set of brass scales or delicate balances.",
+      "specializations": [
+        "Vis Extraction",
+        "Intellego",
+        "Rego"
+      ]
+    },
+    {
+      "id": "labfeat_balcony",
+      "name": "Balcony",
+      "description": "An outdoor platform or parapet allowing direct casting into the open air.",
+      "specializations": [
+        "Spells",
+        "Auram"
+      ]
+    },
+    {
+      "id": "labfeat_cage",
+      "name": "Cage",
+      "description": "A large cage built of sturdy iron or steel bars for imprisoning, holding, or immobilizing subjects.",
+      "specializations": [
+        "Perdo",
+        "Rego",
+        "Corpus",
+        "Animal"
+      ]
+    },
+    {
+      "id": "labfeat_cauldron",
+      "name": "Cauldron",
+      "description": "A heavy copper, bronze, or brass cauldron for heating and mixing massive quantities of compounds.",
+      "specializations": [
+        "Experimentation",
+        "Longevity Rituals",
+        "Vis Extraction",
+        "Muto",
+        "Aquam",
+        "Herbam",
+        "Ignem"
+      ]
+    },
+    {
+      "id": "labfeat_desk",
+      "name": "Desk",
+      "description": "A comfortable, stout writing table designed specifically for reading, research, and scribing.",
+      "specializations": [
+        "Texts",
+        "Intellego"
+      ]
+    },
+    {
+      "id": "labfeat_fireplace",
+      "name": "Fireplace",
+      "description": "A stone hearth or fireplace where fuel is burned for heat, incineration, or thermal processing.",
+      "specializations": [
+        "Perdo",
+        "Ignem",
+        "Imaginem"
+      ]
+    },
+    {
+      "id": "labfeat_forge",
+      "name": "Forge",
+      "description": "A robust furnace operated by bellows, complete with anvil and smithy tools for smelting and metalwork.",
+      "specializations": [
+        "Items",
+        "Ignem",
+        "Terram"
+      ]
+    },
+    {
+      "id": "labfeat_grave",
+      "name": "Grave",
+      "description": "The burial site of one or more corpses, ranging from an earthen pit to an ornate stone sarcophagus.",
+      "specializations": [
+        "Perdo",
+        "Corpus"
+      ]
+    },
+    {
+      "id": "labfeat_lofty_ceiling",
+      "name": "Lofty Ceiling",
+      "description": "A tall, airy overhead space, often featuring vaulted arches or high rafters.",
+      "specializations": [
+        "Auram"
+      ]
+    },
+    {
+      "id": "labfeat_loom",
+      "name": "Loom",
+      "description": "A large wooden apparatus constructed for weaving threads, tapestries, and fabrics.",
+      "specializations": [
+        "Rego",
+        "Herbam"
+      ]
+    },
+    {
+      "id": "labfeat_map",
+      "name": "Map",
+      "description": "An elaborate, highly detailed chart, plan, or relief model depicting surrounding lands, covenant grounds, or structures.",
+      "specializations": [
+        "Intellego",
+        "Terram"
+      ]
+    },
+    {
+      "id": "labfeat_mechanism",
+      "name": "Mechanism",
+      "description": "A complex mechanical construct with interlocking cogs, wheels, and counterweights for automating lab tasks.",
+      "specializations": [
+        "Vis Extraction",
+        "Rego"
+      ]
+    },
+    {
+      "id": "labfeat_mirror",
+      "name": "Mirror",
+      "description": "A grand, ornamental silvered mirror or polished reflective basin.",
+      "specializations": [
+        "Intellego",
+        "Imaginem",
+        "Mentem"
+      ]
+    },
+    {
+      "id": "labfeat_monolith",
+      "name": "Monolith",
+      "description": "A massive slab or pillar of primal rock, frequently inscribed with mystical runes or sigils.",
+      "specializations": [
+        "Terram",
+        "Vim"
+      ]
+    },
+    {
+      "id": "labfeat_orb",
+      "name": "Orb",
+      "description": "A smooth, polished sphere of crystal or precious stone used in scrying and divinatory workings.",
+      "specializations": [
+        "Intellego",
+        "Imaginem",
+        "Mentem",
+        "Vim"
+      ]
+    },
+    {
+      "id": "labfeat_pallet",
+      "name": "Pallet",
+      "description": "An examination table or bed equipped for medical treatment, surgery, or physiological study.",
+      "specializations": [
+        "Longevity Rituals",
+        "Creo",
+        "Corpus"
+      ]
+    },
+    {
+      "id": "labfeat_pit",
+      "name": "Pit",
+      "description": "A deep hole dug directly into the chamber floor to contain or isolate dangerous substances/creatures.",
+      "specializations": [
+        "Perdo",
+        "Terram"
+      ]
+    },
+    {
+      "id": "labfeat_pool",
+      "name": "Pool",
+      "description": "A still body of water, basin, or subterranean well utilized for scrying and fluid manipulation.",
+      "specializations": [
+        "Intellego",
+        "Aquam"
+      ]
+    },
+    {
+      "id": "labfeat_portal",
+      "name": "Portal",
+      "description": "A formal gateway or archway constructed to summon, evoke, or transport entities and energies.",
+      "specializations": [
+        "Creo",
+        "Rego"
+      ]
+    },
+    {
+      "id": "labfeat_rack",
+      "name": "Rack",
+      "description": "A mechanical torture device or restraint frame for binding and straining human or animal bodies.",
+      "specializations": [
+        "Perdo",
+        "Corpus",
+        "Mentem"
+      ]
+    },
+    {
+      "id": "labfeat_running_water",
+      "name": "Running Water",
+      "description": "A continuous stream, channel, conduit, or fountain flowing through or around the lab.",
+      "specializations": [
+        "Items",
+        "Aquam"
+      ]
+    },
+    {
+      "id": "labfeat_statue",
+      "name": "Statue",
+      "description": "A carved stone, metal, or porcelain semblance of a person, mythical creature, or symbolic figure.",
+      "specializations": [
+        "Rego",
+        "Animal",
+        "Corpus",
+        "Terram"
+      ]
+    },
+    {
+      "id": "labfeat_still",
+      "name": "Still",
+      "description": "A complex network of glass or metal tubing connecting delicate retorts and alembics for distillation.",
+      "specializations": [
+        "Vis Extraction",
+        "Muto",
+        "Rego",
+        "Aquam"
+      ]
+    },
+    {
+      "id": "labfeat_summoning_circle",
+      "name": "Summoning Circle",
+      "description": "An elaborate pentagram or warding diagram permanently etched or inlaid upon the floor.",
+      "specializations": [
+        "Experimentation",
+        "Spells",
+        "Creo",
+        "Rego",
+        "Animal",
+        "Vim"
+      ]
+    },
+    {
+      "id": "labfeat_tablet",
+      "name": "Tablet",
+      "description": "A large, framed slab of wax or slate designed for temporary scribing and diagramming with a stylus.",
+      "specializations": [
+        "Texts",
+        "Intellego",
+        "Imaginem"
+      ]
+    },
+    {
+      "id": "labfeat_tank",
+      "name": "Tank",
+      "description": "A heavy, bulky vat or container for storing large volumes of liquid or organic samples.",
+      "specializations": [
+        "Vis Extraction",
+        "Rego",
+        "Aquam"
+      ]
+    },
+    {
+      "id": "labfeat_throne",
+      "name": "Throne",
+      "description": "An opulent, elevated seat intended for a ruler, master, or instructor to sit in state.",
+      "specializations": [
+        "Teaching",
+        "Rego",
+        "Mentem"
+      ]
+    },
+    {
+      "id": "labfeat_tree",
+      "name": "Tree",
+      "description": "A living tree, sapling, or sprawling vine growing inside the laboratory space.",
+      "specializations": [
+        "Creo",
+        "Herbam"
+      ]
+    },
+    {
+      "id": "labfeat_void",
+      "name": "Void",
+      "description": "A shaft, opening, or chasm descending into darkness or leading outdoors.",
+      "specializations": [
+        "Intellego",
+        "Perdo",
+        "Auram"
+      ]
+    },
+    {
+      "id": "labfeat_wall",
+      "name": "Wall",
+      "description": "A broad, smooth blank wall utilized for projecting illusions or summoning visual phantasms.",
+      "specializations": [
+        "Intellego",
+        "Imaginem"
+      ]
+    },
+    {
+      "id": "labfeat_wheel",
+      "name": "Wheel",
+      "description": "A large wheel powered by water, wind, animals, laborers, or magic.",
+      "specializations": [
+        "Items",
+        "Rego"
+      ]
+    },
+    {
+      "id": "labfeat_window",
+      "name": "Window",
+      "description": "An opening or skylight giving direct exposure to the sun, moon, stars, and weather.",
+      "specializations": [
+        "Intellego",
+        "Auram",
+        "Imaginem"
+      ]
+    }
+  ]
+}

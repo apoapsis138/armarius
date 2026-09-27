@@ -14,8 +14,10 @@ from ars_magica_manager.models import (
     IncomeSource,
     Inhabitant,
     KnownSpell,
+    LabFeature,
     Laboratory,
     LabSpecialtyEntry,
+    LabSpecialtyGrant,
     NamedDescription,
     Possession,
     Saga,
@@ -131,12 +133,26 @@ def everything_saga() -> Saga:
 
     lab = Laboratory(id="lab1", covenant_id="cov1", name="Tower", owner_id="mag1")
     lab.specialties = [LabSpecialtyEntry("Ignem", 1, "Hearth spirit")]
-    lab.features = ["Big windows"]
+    # The Greater Feature Virtue carries Big windows, the lab's Focus.
+    lab.features = [
+        LabFeature(
+            "feat1",
+            "Big windows",
+            "labfeat_window",
+            "labvf1",
+            [LabSpecialtyGrant("Intellego", 2), LabSpecialtyGrant("Auram", 1)],
+            focus=True,
+            focus_allocations=[LabSpecialtyGrant("Imaginem", 4)],
+        )
+    ]
     lab.rooms = [NamedDescription("Study")]
     lab.inventory_items = [NamedDescription("Alembic")]
     lab.raw_vis = {"ignem": 2}
     lab.diary = [DiaryEntry(1220, "Spring", "Built")]
-    lab.virtues_flaws = [VirtueFlawInstance(lab_vf)]
+    lab.virtues_flaws = [
+        VirtueFlawInstance(lab_vf, id="labvf1"),
+        VirtueFlawInstance("labvf_greater_focus", id="labvf2"),
+    ]
 
     familiar = Familiar(id="fam1", character_id="mag1", name="Corax")
     familiar.virtues_flaws = [VirtueFlawInstance(first_vf("Virtue"))]

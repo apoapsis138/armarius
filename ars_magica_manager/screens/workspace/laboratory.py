@@ -4,43 +4,45 @@ Stores and Diary."""
 
 from __future__ import annotations
 
-from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
-from textual.screen import ModalScreen
-
+from ... import catalog
 from ... import laboratories as lab_text
 from ...markup import escape
 from ...models import (
+    FEATURE_VIRTUE_POINTS,
     LAB_SPECIALIZATIONS,
     DiaryEntry,
     LabCharacteristics,
+    LabFeature,
+    Laboratory,
     LabSpecialtyEntry,
     NamedDescription,
+    VirtueFlawInstance,
     add_raw_vis,
     assign_laboratory_owner,
+    new_instance_id,
     replace_raw_vis,
 )
 from ..fields import (
     FieldsDialog,
 )
 from ..forms import (
+    NEW_FEATURE_VIRTUE,
     _lab_characteristics_fields,
+    _lab_feature_dialog,
+    _lab_feature_type_dialog,
     _lab_identity_fields,
-)
-from ..pickers import (
-    RemovalPickerScreen,
 )
 from ..prompts import (
     ConfirmScreen,
     _diary_entry_dialog,
-    _item_dialog,
     _lab_specialty_entry_dialog,
     _named_description_dialog,
     _raw_vis_dialog,
-    _sanctum_marked_dialog,
 )
+from ..sheets import LAB_FEATURE_SECTIONS
 from ..widgets import ToggleList
 from .base import (
     WorkspaceBase,
@@ -98,6 +100,7 @@ class LaboratoryActions(WorkspaceBase):
             lab.location = result["location"]
             lab.build_points = result["build_points"]
             lab.aura_modifier = result["aura_modifier"]
+            lab.sanctum_marked = result["sanctum_marked"]
             lab.covenant_id = result["covenant_id"]
             self.selected_covenant = self.saga.covenant(lab.covenant_id)
             assign_laboratory_owner(self.saga, lab, result["owner_id"])
@@ -127,18 +130,6 @@ class LaboratoryActions(WorkspaceBase):
             ),
             handle_result,
         )
-
-    def _edit_lab_sanctum(self) -> None:
-        lab = self.selected_laboratory
-        if lab is None:
-            return
-
-        def handle_result(marked: bool | None) -> None:
-            if marked is not None:
-                lab.sanctum_marked = marked
-                self._commit("section-lab-sanctum")
-
-        self.app.push_screen(_sanctum_marked_dialog(lab.sanctum_marked), handle_result)
 
     # -- Laboratory: Specializations --
 
@@ -242,83 +233,140 @@ class LaboratoryActions(WorkspaceBase):
         lab_text.reconcile_dropped(lab, previously_counted)
         self._commit("section-lab-specialties")
 
-    # -- Laboratory: Features (free text until STORY-308) --
+    # -- Laboratory: Features --
 
     def _add_feature(self) -> None:
         lab = self.selected_laboratory
-        if lab is None:
-            return
+        if lab is not None:
+            self._feature_flow(lab, None)
 
-        def handle_result(item: str | None) -> None:
-            if item is not None:
-                lab.features.append(item)
-                self._commit("section-lab-features")
-
-        self.app.push_screen(_item_dialog("Add a Feature", "Feature"), handle_result)
-
-    def _remove_feature(self) -> None:
+    def _edit_feature(self) -> None:
+        """Edit the chosen Feature (type and Virtue, then name, points and
+        Focus); with none chosen, ask which one."""
         lab = self.selected_laboratory
         if lab is None:
             return
-        if not lab.features:
-            self.notify("No Features to remove.")
-            return
+        self._chosen_or_pick(
+            self._lab_view_selection("selected_feature"),
+            [escape(f.name) for f in lab.features],
+            title="Edit which Feature?",
+            empty="No Features to edit.",
+            then=lambda index: self._feature_flow(lab, lab.features[index]),
+        )
 
-        def handle_result(index: int | None) -> None:
-            if index is not None:
-                del lab.features[index]
-                self._commit("section-lab-features")
+    def _feature_flow(self, lab: Laboratory, feature: LabFeature | None) -> None:
+        """Add (`feature` None) or edit a Feature in two steps: which Feature
+        and the Virtue it's built on -- confirming first if that means adding
+        a new Feature Virtue -- then its name, points and Focus. Nothing
+        changes until the second step is saved."""
+
+        def handle_type(result: tuple[str | None, str] | None) -> None:
+            if result is None:
+                return
+            feature_id, virtue_choice = result
+            if not virtue_choice.startswith(NEW_FEATURE_VIRTUE):
+                self._feature_details(lab, feature, feature_id, virtue_choice)
+                return
+            vf_id = virtue_choice.removeprefix(NEW_FEATURE_VIRTUE)
+            points = FEATURE_VIRTUE_POINTS[vf_id]
+            free = lab_text.lab_free_virtues(
+                lab, catalog.load_lab_virtue_flaw_catalog_by_id()
+            )
+
+            def handle_confirmed(confirmed: bool | None) -> None:
+                if confirmed:
+                    self._feature_details(lab, feature, feature_id, virtue_choice)
+
+            self.app.push_screen(
+                ConfirmScreen(
+                    f"Add a {lab_text.tier_word(vf_id)} Feature Virtue to the "
+                    f"lab ({points} {'point' if points == 1 else 'points'}; "
+                    f"Free Virtues {free:g} → {free - points:g})?"
+                ),
+                handle_confirmed,
+            )
+
+        self.app.push_screen(_lab_feature_type_dialog(lab, feature), handle_type)
+
+    def _feature_details(
+        self,
+        lab: Laboratory,
+        feature: LabFeature | None,
+        feature_id: str | None,
+        virtue_choice: str,
+    ) -> None:
+        """The second step of _feature_flow: the Feature's name, points and
+        Focus, for a `feature_id` Feature (None: Custom) on the Virtue
+        `virtue_choice` (an instance id, or NEW_FEATURE_VIRTUE + a catalog
+        id to add one with it); saving adds or updates the Feature."""
+        new_virtue: VirtueFlawInstance | None = None
+        if virtue_choice.startswith(NEW_FEATURE_VIRTUE):
+            vf_id = virtue_choice.removeprefix(NEW_FEATURE_VIRTUE)
+            new_virtue = VirtueFlawInstance(vf_id, id=new_instance_id())
+            virtue_vf_id = vf_id
+        else:
+            virtue_vf_id = next(
+                vf.vf_id for vf in lab.virtues_flaws if vf.id == virtue_choice
+            )
+
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is None:
+                return
+            counted = lab_text.counted_specializations(lab)
+            if new_virtue is not None:
+                lab.virtues_flaws.append(new_virtue)
+            target = feature or LabFeature(id=new_instance_id(), name="")
+            target.name = values["name"]
+            target.feature_id = feature_id
+            target.virtue_id = new_virtue.id if new_virtue else virtue_choice
+            target.allocations = values["allocations"]
+            target.focus = values["focus"]
+            target.focus_allocations = values["focus_allocations"]
+            if feature is None:
+                lab.features.append(target)
+            lab_text.reconcile_dropped(lab, counted)
+            self._commit(*LAB_FEATURE_SECTIONS)
 
         self.app.push_screen(
-            RemovalPickerScreen("Remove a Feature", [escape(f) for f in lab.features]),
+            _lab_feature_dialog(lab, feature_id, virtue_vf_id, feature),
             handle_result,
         )
 
-    def _edit_lab_entry(
-        self,
-        *,
-        picker_title: str,
-        empty_message: str,
-        labels: list[str],
-        screen_for: Callable[[int], ModalScreen[Any]],
-        apply: Callable[[int, Any], None],
-        section_id: str,
-    ) -> None:
-        """Two-step flow for editing a Feature: pick
-        which entry (same picker as Remove), then edit it in a pre-filled
-        dialog built by `screen_for(index)`; `apply(index, result)` writes
-        the result back before saving and refreshing."""
-        if not labels:
-            self.notify(empty_message)
-            return
-
-        def handle_index(index: int | None) -> None:
-            if index is None:
-                return
-
-            def handle_result(result: Any) -> None:
-                if result is None:
-                    return
-                apply(index, result)
-                self._commit(section_id)
-
-            self.app.push_screen(screen_for(index), handle_result)
-
-        self.app.push_screen(RemovalPickerScreen(picker_title, labels), handle_index)
-
-    def _edit_feature(self) -> None:
+    def _remove_feature(self) -> None:
+        """Delete the chosen Feature (after confirming; its Feature Virtue
+        stays, free for another); with none chosen, ask which one first."""
         lab = self.selected_laboratory
         if lab is None:
             return
-        self._edit_lab_entry(
-            picker_title="Edit which Feature?",
-            empty_message="No Features to edit.",
-            labels=[escape(f) for f in lab.features],
-            screen_for=lambda i: _item_dialog(
-                "Edit a Feature", "Feature", existing=lab.features[i]
-            ),
-            apply=lab.features.__setitem__,
-            section_id="section-lab-features",
+
+        def confirm(index: int) -> None:
+            feature = lab.features[index]
+            virtue = lab_text.feature_virtue(lab, feature)
+            keeps = (
+                f" Its {lab_text.tier_word(virtue.vf_id)} Feature Virtue stays, "
+                "free for another Feature."
+                if virtue
+                else ""
+            )
+
+            def handle_confirmed(confirmed: bool | None) -> None:
+                if confirmed:
+                    counted = lab_text.counted_specializations(lab)
+                    del lab.features[index]
+                    lab_text.reconcile_dropped(lab, counted)
+                    self._commit(*LAB_FEATURE_SECTIONS)
+
+            self.app.push_screen(
+                ConfirmScreen(f"Delete {escape(feature.name)}?{keeps}"),
+                handle_confirmed,
+            )
+
+        self._chosen_or_pick(
+            self._lab_view_selection("selected_feature"),
+            [escape(f.name) for f in lab.features],
+            title="Remove a Feature",
+            empty="No Features to remove.",
+            then=confirm,
         )
 
     # -- Laboratory: the selectable lists --

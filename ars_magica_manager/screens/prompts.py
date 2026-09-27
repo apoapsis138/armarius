@@ -109,18 +109,6 @@ def _param_dialog(title: str, parameters: list[str]) -> FieldsDialog[dict[str, s
     )
 
 
-def _item_dialog(
-    title: str, label: str, existing: str | None = None
-) -> FieldsDialog[str]:
-    """One line of text -- a laboratory Specialty or Feature."""
-    return FieldsDialog(
-        title,
-        [DialogField("item", label, "text", existing or "", required=True)],
-        save_label="Add" if existing is None else "Save",
-        build=lambda values: values["item"],
-    )
-
-
 def _lab_specialty_entry_dialog(
     existing: LabSpecialtyEntry | None = None,
 ) -> FieldsDialog[LabSpecialtyEntry]:
@@ -162,23 +150,6 @@ def _lab_specialty_entry_dialog(
         build=lambda values: LabSpecialtyEntry(
             values["specialization"], values["points"], values["source"]
         ),
-    )
-
-
-def _sanctum_marked_dialog(marked: bool) -> FieldsDialog[bool]:
-    """Whether the laboratory's sanctum boundary is marked."""
-    return FieldsDialog(
-        "Edit Sanctum",
-        [
-            DialogField(
-                "marked",
-                "Sanctum marked",
-                "check",
-                marked,
-                hint="Its boundary is marked (a circle within a square).",
-            )
-        ],
-        build=lambda values: values["marked"],
     )
 
 

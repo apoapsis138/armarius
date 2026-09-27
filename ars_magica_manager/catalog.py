@@ -1,5 +1,6 @@
 """Loads the shared catalogs -- Virtues/Flaws, Abilities, Houses, Boons & Hooks,
-Laboratory Virtues/Flaws and Spells (reference data, not per-saga)."""
+Laboratory Virtues/Flaws, Laboratory Features and Spells (reference data,
+not per-saga)."""
 
 from __future__ import annotations
 
@@ -16,6 +17,7 @@ from .models import (
     AbilityDef,
     CovenantBoonHookDef,
     HouseDef,
+    LabFeatureDef,
     LabVirtueFlawDef,
     Spell,
     VirtueFlawDef,
@@ -28,6 +30,7 @@ HOUSE_CATALOG_PATH = DATA_DIR / "house_catalog.json"
 COVENANT_BOON_HOOK_CATALOG_PATH = DATA_DIR / "covenant_boon_hook_catalog.json"
 LAB_VF_CATALOG_PATH = DATA_DIR / "lab_virtue_flaw_catalog.json"
 SPELL_CATALOG_PATH = DATA_DIR / "spell_catalog.json"
+LAB_FEATURE_CATALOG_PATH = DATA_DIR / "lab_feature_catalog.json"
 
 
 def _load_entries[T](path: Path, from_dict: Callable[[dict[str, Any]], T]) -> list[T]:
@@ -129,6 +132,26 @@ def load_lab_virtue_flaw_catalog_by_id(
     path: Path = LAB_VF_CATALOG_PATH,
 ) -> dict[str, LabVirtueFlawDef]:
     return {entry.id: entry for entry in load_lab_virtue_flaw_catalog(path)}
+
+
+@lru_cache(maxsize=4)
+def _lab_feature_catalog(path: Path) -> tuple[LabFeatureDef, ...]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return tuple(LabFeatureDef.from_dict(entry) for entry in data["features"])
+
+
+def load_lab_feature_catalog(
+    path: Path = LAB_FEATURE_CATALOG_PATH,
+) -> list[LabFeatureDef]:
+    """The 36 Laboratory Features, in the reference's (alphabetical) order.
+    Cached: read for every Feature shown."""
+    return list(_lab_feature_catalog(path))
+
+
+def load_lab_feature_catalog_by_id(
+    path: Path = LAB_FEATURE_CATALOG_PATH,
+) -> dict[str, LabFeatureDef]:
+    return {entry.id: entry for entry in _lab_feature_catalog(path)}
 
 
 def load_covenant_boon_hook_catalog(

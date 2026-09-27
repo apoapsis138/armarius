@@ -105,8 +105,11 @@ class BookListView(Vertical):
     laboratory or character its own books, the saga's Unassigned Books node
     the books with no owner. Docked (Library tab, Unassigned Books), the
     list stretches down to the details panel docked below it (the Library
-    tab adds a read-only Summary above it); inline (a laboratory's or
-    character's Books section) the panel follows the list inside the section.
+    tab adds a read-only Summary above it); inline (a character's Books
+    section) the panel follows the list inside the section. With
+    `panel=False` (the laboratory's Inventory tab) there's no panel of its
+    own: Chosen bubbles up to the sheet, which shows the book in the tab's
+    shared panel, and `group` shares one choice with the tab's other lists.
     """
 
     DEFAULT_CSS = """
@@ -189,8 +192,12 @@ class BookListView(Vertical):
         title: str = "Books",
         summary: bool = False,
         docked: bool = True,
+        panel: bool = True,
+        group: str | None = None,
     ) -> None:
         super().__init__(classes="docked" if docked else "")
+        self.panel = panel
+        self.group = group
         self.saga = saga
         self._books_source = books
         self.section_id = section_id
@@ -234,8 +241,10 @@ class BookListView(Vertical):
             title=self._title(), id=self.section_id, classes="books-section"
         ):
             yield Static(self._header(), classes="books-header")
-            yield SelectableList(self._rows(), id=f"{self.section_id}-list", multi=True)
-            if not self.docked:
+            yield SelectableList(
+                self._rows(), id=f"{self.section_id}-list", multi=True, group=self.group
+            )
+            if not self.docked and self.panel:
                 yield Static(bk.detail_text(self.saga, None), classes="books-panel")
 
     def compose(self) -> ComposeResult:
@@ -281,6 +290,8 @@ class BookListView(Vertical):
         )
 
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
+        if not self.panel:
+            return  # the sheet shows it
         event.stop()
         book = (
             self._books[event.data_index]
@@ -303,14 +314,15 @@ class BookListView(Vertical):
                 self.query_one("#lib-summary-right", Static).update(right)
             rows = self.query_one(SelectableList)
             rows.set_rows(self._rows())
-            panel = self.query_one(".books-panel", Static)
             if chosen is not None and any(b is chosen for b in self._books):
                 # Posts Chosen, which refreshes the panel.
                 rows.highlighted = next(
                     i for i, b in enumerate(self._books) if b is chosen
                 )
-            else:
-                panel.update(bk.detail_text(self.saga, None))
+            elif self.panel:
+                self.query_one(".books-panel", Static).update(
+                    bk.detail_text(self.saga, None)
+                )
         except NoMatches:
             return  # the sheet is being replaced
 
@@ -1339,8 +1351,15 @@ LAB_VF_SECTIONS = ("section-lab-vf-virtues", "section-lab-vf-flaws")
 #: What refreshes the lab's Characteristics: their own section, and the
 #: Virtues & Flaws (whose modifiers and points feed every figure there).
 _LAB_CHARACTERISTICS_SECTIONS = ("section-lab-characteristics", *LAB_VF_SECTIONS)
+#: The Features list follows its own changes and the Virtues & Flaws' (a
+#: Feature Virtue or Focus Flaw deleted).
+LAB_FEATURE_SECTIONS = ("section-lab-features", *LAB_VF_SECTIONS)
 #: The sections whose changes can move a Specialization's score.
-LAB_SPECIALIZATION_SECTIONS = ("section-lab-specializations", "section-lab-specialties")
+LAB_SPECIALIZATION_SECTIONS = (
+    "section-lab-specializations",
+    "section-lab-specialties",
+    *LAB_FEATURE_SECTIONS,
+)
 
 
 class LaboratorySheetView(SheetView):
@@ -1361,11 +1380,16 @@ class LaboratorySheetView(SheetView):
     details panel where there's more to show than the row (STORY-303).
 
     Specializations (STORY-307) is a grid of each Specialization's total
-    over every source, grouped Activity / Art, where Space turns the chosen
-    one off or on (ToggleList); its panel shows where the points come from
-    and the caps. The hand-entered sources are their own list below it.
-    Features are still a read-only Static edited through pickers until
-    STORY-308 replaces it.
+    over every source, grouped Activity / Art with each cap's count in the
+    header, where Space turns the chosen one off or on (ToggleList); the
+    hand-entered sources are a list nested inside it ("Specializations:
+    Other"). Features (STORY-308) lists the lab's Features, each built on
+    one of its Feature Virtues. Neither section collapses.
+
+    The Attributes and Inventory tabs each have one details panel docked
+    below their scrolling lists, as on the covenant's tabs (STORY-309): the
+    chosen row of any of the tab's lists (one choice between them) shows
+    there.
     """
 
     DEFAULT_CSS = """
@@ -1380,6 +1404,17 @@ class LaboratorySheetView(SheetView):
 
     LaboratorySheetView #lab-vf-warnings {
         margin-bottom: 1;
+    }
+
+    LaboratorySheetView #lab-attr-body,
+    LaboratorySheetView #lab-inv-body {
+        height: 1fr;
+    }
+
+    /* The panels docked below a scrolling tab stop growing at 14 rows. */
+    LaboratorySheetView #lab-attr-panel,
+    LaboratorySheetView #lab-inv-panel {
+        max-height: 14;
     }
 
     LaboratorySheetView #section-lab-vf-virtues {
@@ -1422,62 +1457,10 @@ class LaboratorySheetView(SheetView):
                 )
             with TabPane("Virtues & Flaws", id="tab-lab-vf"):
                 yield from self._virtues_flaws_tab()
-            with TabPane("Attributes", id="tab-lab-attributes"), VerticalScroll():
-                with SheetSection(title="Sanctum", id="section-lab-sanctum"):
-                    yield self._static(
-                        "section-lab-sanctum",
-                        lambda: (
-                            "Marked: "
-                            + ("Yes" if self.laboratory.sanctum_marked else "No")
-                        ),
-                        id="lab-sanctum-content",
-                    )
-                yield from self._specializations_sections()
-                with SheetSection(title="Features", id="section-lab-features"):
-                    yield self._static(
-                        "section-lab-features",
-                        self._features_text,
-                        id="lab-features-content",
-                    )
-                with SheetSection(title="Rooms", id="section-lab-rooms"):
-                    yield self._list(
-                        "section-lab-rooms",
-                        lambda: lab_text.named_rows(self.laboratory.rooms),
-                        id="lab-rooms-list",
-                    )
-                    yield self._static(
-                        "section-lab-rooms",
-                        lambda: self._rooms_info_text(None),
-                        id="lab-rooms-info",
-                        classes="details-panel",
-                    )
-            with TabPane("Inventory", id="tab-lab-inventory"), VerticalScroll():
-                with SheetSection(title="Raw Vis", id="section-lab-raw-vis"):
-                    yield self._list(
-                        "section-lab-raw-vis",
-                        lambda: lab_text.raw_vis_rows(self.laboratory),
-                        id="lab-raw-vis-list",
-                    )
-                with SheetSection(title="Equipment & Stores", id="section-lab-items"):
-                    yield self._list(
-                        "section-lab-items",
-                        lambda: lab_text.named_rows(self.laboratory.inventory_items),
-                        id="lab-items-list",
-                    )
-                    yield self._static(
-                        "section-lab-items",
-                        lambda: self._items_info_text(None),
-                        id="lab-items-info",
-                        classes="details-panel",
-                    )
-                yield self._book_list(
-                    ("section-lab-identity",),
-                    lambda: bk.books_owned_by(
-                        self.saga, "laboratory", self.laboratory.id
-                    ),
-                    section_id="section-lab-books",
-                    docked=False,
-                )
+            with TabPane("Attributes", id="tab-lab-attributes"):
+                yield from self._attributes_tab()
+            with TabPane("Inventory", id="tab-lab-inventory"):
+                yield from self._inventory_tab()
             with TabPane("Diary", id="tab-lab-diary"), VerticalScroll():
                 yield self._list(
                     "tab-lab-diary",
@@ -1528,52 +1511,189 @@ class LaboratorySheetView(SheetView):
                 classes="details-panel",
             )
 
-    def _specializations_sections(self) -> ComposeResult:
-        """The Specializations grid with its details panel, then the list of
-        hand-entered sources."""
-        with SheetSection(title="Specializations", id="section-lab-specializations"):
-            yield ToggleList(
-                lab_text.specialization_rows(self.laboratory),
-                id="lab-specializations-list",
-            )
+    def _attributes_tab(self) -> ComposeResult:
+        """Specializations (with the hand-entered sources nested in it),
+        Features and Rooms over the details panel of the chosen row, docked
+        below the scrolling part."""
+        with Vertical(id="lab-attr-body"):
+            with VerticalScroll(id="lab-attr-scroll"):
+                with PinnedCollapsible(
+                    title="Specializations", id="section-lab-specializations"
+                ):
+                    yield ToggleList(
+                        lab_text.specialization_rows(self.laboratory),
+                        id="lab-specializations-list",
+                        group="lab-attr",
+                    )
+                    self._on_refresh(
+                        LAB_SPECIALIZATION_SECTIONS, self._refresh_specializations
+                    )
+                    with SheetSection(
+                        title="Specializations: Other", id="section-lab-specialties"
+                    ):
+                        yield self._list(
+                            "section-lab-specialties",
+                            lambda: lab_text.specialty_entry_rows(self.laboratory),
+                            id="lab-specialties-list",
+                            group="lab-attr",
+                        )
+                with PinnedCollapsible(title="Features", id="section-lab-features"):
+                    yield self._list(
+                        LAB_FEATURE_SECTIONS,
+                        lambda: lab_text.feature_rows(self.laboratory),
+                        id="lab-features-list",
+                        group="lab-attr",
+                    )
+                with SheetSection(title="Rooms", id="section-lab-rooms"):
+                    yield self._list(
+                        "section-lab-rooms",
+                        lambda: lab_text.named_rows(self.laboratory.rooms),
+                        id="lab-rooms-list",
+                        group="lab-attr",
+                    )
             yield Static(
-                lab_text.specialization_info_text(self.laboratory, None),
-                id="lab-specializations-info",
+                lab_text.ATTRIBUTES_PANEL_HINT,
+                id="lab-attr-panel",
                 classes="details-panel",
             )
-        self._on_refresh(LAB_SPECIALIZATION_SECTIONS, self._refresh_specializations)
-        with SheetSection(
-            title="Other Specialization Sources", id="section-lab-specialties"
-        ):
-            yield self._list(
-                "section-lab-specialties",
-                lambda: lab_text.specialty_entry_rows(self.laboratory),
-                id="lab-specialties-list",
+        self._on_refresh(
+            ("section-lab-rooms", *LAB_SPECIALIZATION_SECTIONS),
+            lambda: self._refresh_panel("lab-attr-panel"),
+        )
+
+    def _inventory_tab(self) -> ComposeResult:
+        """Raw Vis, Equipment & Stores and the lab's Books over the details
+        panel of the chosen row, docked below the scrolling part."""
+        with Vertical(id="lab-inv-body"):
+            with VerticalScroll(id="lab-inv-scroll"):
+                with SheetSection(title="Raw Vis", id="section-lab-raw-vis"):
+                    yield self._list(
+                        "section-lab-raw-vis",
+                        lambda: lab_text.raw_vis_rows(self.laboratory),
+                        id="lab-raw-vis-list",
+                        group="lab-inv",
+                    )
+                with SheetSection(title="Equipment & Stores", id="section-lab-items"):
+                    yield self._list(
+                        "section-lab-items",
+                        lambda: lab_text.named_rows(self.laboratory.inventory_items),
+                        id="lab-items-list",
+                        group="lab-inv",
+                    )
+                yield self._book_list(
+                    ("section-lab-identity",),
+                    lambda: bk.books_owned_by(
+                        self.saga, "laboratory", self.laboratory.id
+                    ),
+                    section_id="section-lab-books",
+                    docked=False,
+                    panel=False,
+                    group="lab-inv",
+                )
+            yield Static(
+                lab_text.INVENTORY_PANEL_HINT,
+                id="lab-inv-panel",
+                classes="details-panel",
             )
+        self._on_refresh(
+            (
+                "section-lab-raw-vis",
+                "section-lab-items",
+                "section-lab-books",
+                "section-lab-identity",
+            ),
+            lambda: self._refresh_panel("lab-inv-panel"),
+        )
 
     def _refresh_specializations(self) -> None:
-        """Re-fill the grid, keeping the chosen Specialization chosen (its
-        panel re-fills with it) if it's still there."""
+        """Re-fill the grid, keeping the chosen Specialization chosen (the
+        panel follows it) if it's still there."""
         grid = self.query_one("#lab-specializations-list", ToggleList)
         chosen = grid.selected_data_index
         grid.set_rows(lab_text.specialization_rows(self.laboratory))
-        self.query_one("#lab-specializations-info", Static).update(
-            lab_text.specialization_info_text(self.laboratory, None)
-        )
         if chosen is not None:
             grid.select_data_index(chosen)
+
+    def _panels(self) -> dict[str, tuple[str, Callable[[int | None], str]]]:
+        """Per list, the details panel its chosen row shows in and that
+        row's text (None: nothing chosen)."""
+        lab = self.laboratory
+        return {
+            "lab-vf-virtues-list": (
+                "lab-vf-info",
+                lambda i: lab_text.vf_info_text(lab, i),
+            ),
+            "lab-vf-flaws-list": (
+                "lab-vf-info",
+                lambda i: lab_text.vf_info_text(lab, i),
+            ),
+            "lab-specializations-list": (
+                "lab-attr-panel",
+                lambda i: lab_text.specialization_info_text(lab, i),
+            ),
+            "lab-specialties-list": (
+                "lab-attr-panel",
+                lambda i: lab_text.specialty_entry_info_text(lab, i),
+            ),
+            "lab-features-list": (
+                "lab-attr-panel",
+                lambda i: (
+                    lab_text.feature_info_text(lab, i)
+                    if i is not None
+                    else lab_text.ATTRIBUTES_PANEL_HINT
+                ),
+            ),
+            "lab-rooms-list": (
+                "lab-attr-panel",
+                lambda i: (
+                    lab_text.named_info_text(lab.rooms, i, "a Room")
+                    if i is not None
+                    else lab_text.ATTRIBUTES_PANEL_HINT
+                ),
+            ),
+            "lab-raw-vis-list": (
+                "lab-inv-panel",
+                lambda i: lab_text.raw_vis_info_text(lab, i),
+            ),
+            "lab-items-list": (
+                "lab-inv-panel",
+                lambda i: (
+                    lab_text.named_info_text(lab.inventory_items, i, "an entry")
+                    if i is not None
+                    else lab_text.INVENTORY_PANEL_HINT
+                ),
+            ),
+            "section-lab-books-list": ("lab-inv-panel", self._book_panel_text),
+            "lab-diary-list": (
+                "lab-diary-info",
+                lambda i: lab_text.diary_info_text(lab.diary, i),
+            ),
+        }
+
+    def _book_panel_text(self, index: int | None) -> str:
+        if index is None:
+            return lab_text.INVENTORY_PANEL_HINT
+        books = self.query_one(BookListView).books
+        return bk.detail_text(self.saga, books[index] if index < len(books) else None)
+
+    def _refresh_panel(self, panel_id: str) -> None:
+        """After a refresh: the shared panel shows whichever of its lists
+        still has a row chosen (re-filled lists lose theirs), else the
+        hint."""
+        panels = self._panels()
+        for list_id, (target, text) in panels.items():
+            if target != panel_id:
+                continue
+            index = self._selected(list_id)
+            if index is not None:
+                self.query_one(f"#{panel_id}", Static).update(text(index))
+                return
+        text = next(text for target, text in panels.values() if target == panel_id)
+        self.query_one(f"#{panel_id}", Static).update(text(None))
 
     def _show_vf_warnings_if_any(self) -> None:
         warnings = self.query_one("#lab-vf-warnings", Static)
         warnings.display = bool(lab_text.vf_warnings(self.laboratory))
-
-    def _rooms_info_text(self, index: int | None) -> str:
-        return lab_text.named_info_text(self.laboratory.rooms, index, "a Room")
-
-    def _items_info_text(self, index: int | None) -> str:
-        return lab_text.named_info_text(
-            self.laboratory.inventory_items, index, "an entry"
-        )
 
     def _selected(self, list_id: str) -> int | None:
         return self.query_one(f"#{list_id}", SelectableList).selected_data_index
@@ -1591,6 +1711,10 @@ class LaboratorySheetView(SheetView):
     def selected_specialty_entry(self) -> int | None:
         """Index into laboratory.specialties of the chosen source, or None."""
         return self._selected("lab-specialties-list")
+
+    def selected_feature(self) -> int | None:
+        """Index into laboratory.features of the chosen row, or None."""
+        return self._selected("lab-features-list")
 
     def selected_room(self) -> int | None:
         """Index into laboratory.rooms of the chosen row, or None."""
@@ -1610,26 +1734,7 @@ class LaboratorySheetView(SheetView):
 
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
         """Fill the chosen row's details panel."""
-        panel = {
-            "lab-vf-virtues-list": (
-                "lab-vf-info",
-                lambda i: lab_text.vf_info_text(self.laboratory, i),
-            ),
-            "lab-vf-flaws-list": (
-                "lab-vf-info",
-                lambda i: lab_text.vf_info_text(self.laboratory, i),
-            ),
-            "lab-specializations-list": (
-                "lab-specializations-info",
-                lambda i: lab_text.specialization_info_text(self.laboratory, i),
-            ),
-            "lab-rooms-list": ("lab-rooms-info", self._rooms_info_text),
-            "lab-items-list": ("lab-items-info", self._items_info_text),
-            "lab-diary-list": (
-                "lab-diary-info",
-                lambda i: lab_text.diary_info_text(self.laboratory.diary, i),
-            ),
-        }.get(event.selectable_list.id or "")
+        panel = self._panels().get(event.selectable_list.id or "")
         if panel is None:
             return
         event.stop()
@@ -1716,6 +1821,7 @@ class LaboratorySheetView(SheetView):
             [
                 ("Location", escape(lab.location) or "(not set)"),
                 ("Points", lab.build_points),
+                ("Sanctum?", "Yes" if lab.sanctum_marked else "No"),
             ]
         )
 
@@ -1780,11 +1886,6 @@ class LaboratorySheetView(SheetView):
 
     def _planning_text(self) -> str:
         return "Lab activity planning isn't built yet -- coming in a future update."
-
-    def _features_text(self) -> str:
-        if not self.laboratory.features:
-            return "(none recorded)"
-        return "\n".join(f"  - {escape(f)}" for f in self.laboratory.features)
 
 
 class FamiliarSheetView(SheetView):

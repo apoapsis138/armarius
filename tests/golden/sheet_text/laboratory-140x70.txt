@@ -5,23 +5,23 @@
 
       Covenant: Keep                                    Location: (not set)
       Owner:    Leandro                                 Points:   0
+                                                        Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-                           Size:            +0 +0 = +0    Safety:     +0 +0 = +0
-      Occupied Size: 3     Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
-      Free Virtues:  -3    General Quality: +0 +0 = +0    Health:     +0 +0 = +0
-      Base Safety:   -3    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
+                          Size:            +0 +0 = +0    Safety:     +0 +0 = +0
+      Occupied Size: 0    Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
+      Free Virtues:  0    General Quality: +0 -2 = -2    Health:     +0 +0 = +0
+      Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
    Planning  Virtues & Flaws  Attributes  Inventory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Lab activity planning isn't built yet -- coming in a future update.
-
 
 
 
@@ -73,31 +73,31 @@
 
       Covenant: Keep                                    Location: (not set)
       Owner:    Leandro                                 Points:   0
+                                                        Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-                           Size:            +0 +0 = +0    Safety:     +0 +0 = +0
-      Occupied Size: 3     Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
-      Free Virtues:  -3    General Quality: +0 +0 = +0    Health:     +0 +0 = +0
-      Base Safety:   -3    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
+                          Size:            +0 +0 = +0    Safety:     +0 +0 = +0
+      Occupied Size: 0    Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
+      Free Virtues:  0    General Quality: +0 -2 = -2    Health:     +0 +0 = +0
+      Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
    Planning  Virtues & Flaws  Attributes  Inventory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Over capacity by 3 (Virtues less Flaws may total Size + Refinement = 0).
-
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Virtues                                           ▼ Flaws
 
-      ○ Greater Feature (Major)                           (none recorded)
+      ○ Greater Feature (Major)                           ○ Greater Focus (Major)
 
 
 
     Select a Virtue or Flaw to read its rules.
+
 
 
 
@@ -141,48 +141,41 @@
 
       Covenant: Keep                                    Location: (not set)
       Owner:    Leandro                                 Points:   0
+                                                        Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-                           Size:            +0 +0 = +0    Safety:     +0 +0 = +0
-      Occupied Size: 3     Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
-      Free Virtues:  -3    General Quality: +0 +0 = +0    Health:     +0 +0 = +0
-      Base Safety:   -3    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
+                          Size:            +0 +0 = +0    Safety:     +0 +0 = +0
+      Occupied Size: 0    Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
+      Free Virtues:  0    General Quality: +0 -2 = -2    Health:     +0 +0 = +0
+      Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
    Planning  Virtues & Flaws  Attributes  Inventory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Sanctum
+     Specializations
 
-      Marked: No
+      Activity (0 of 2)
+      Art (4 of 4)
+      ○ Intellego  +2
+      ○ Auram      +1
+      ○ Ignem      +1
+      ○ Imaginem   +4
+      ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+        ▼ Specializations: Other
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Specializations
-
-      Art
-      ○ Ignem  +1
-
-
-        Select a Specialization to see where its points come from; Space turns it off or on.
-
-        Counting: Activity 0/2, Art 1/4 (Techniques 0/2)
-
+          ○ Ignem  +1  Hearth spirit
 
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Other Specialization Sources
+     Features
 
-      ○ Ignem  +1  Hearth spirit
-
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Features
-
-        - Big windows
+      ○ Big windows  (Window, Greater, Focus)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Rooms
@@ -190,13 +183,20 @@
       ○ Study
 
 
-        Select a Room to see its description.
 
 
 
 
 
 
+
+
+
+
+
+
+    Select a Specialization, Feature or Room to see its details. Space turns a Specialization off or
+    on.
 
 
 
@@ -209,16 +209,17 @@
 
       Covenant: Keep                                    Location: (not set)
       Owner:    Leandro                                 Points:   0
+                                                        Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-                           Size:            +0 +0 = +0    Safety:     +0 +0 = +0
-      Occupied Size: 3     Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
-      Free Virtues:  -3    General Quality: +0 +0 = +0    Health:     +0 +0 = +0
-      Base Safety:   -3    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
+                          Size:            +0 +0 = +0    Safety:     +0 +0 = +0
+      Occupied Size: 0    Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
+      Free Virtues:  0    General Quality: +0 -2 = -2    Health:     +0 +0 = +0
+      Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
    Planning  Virtues & Flaws  Attributes  Inventory  Diary
@@ -234,19 +235,11 @@
 
       ○ Alembic
 
-
-        Select an entry to see its description.
-
-
-
-
-
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Books (1) - 0 Build Points
 
           Name                 Type           Subject                 Level Quality  Location
         ○ Notes                Other          -                           -       -  Lab: Tower
-       Select a book to see its details.
 
 
 
@@ -264,6 +257,13 @@
 
 
 
+
+
+
+
+
+
+    Select Raw Vis, an Equipment & Stores entry or a book to see its details.
 
 
 
@@ -277,16 +277,17 @@
 
       Covenant: Keep                                    Location: (not set)
       Owner:    Leandro                                 Points:   0
+                                                        Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-                           Size:            +0 +0 = +0    Safety:     +0 +0 = +0
-      Occupied Size: 3     Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
-      Free Virtues:  -3    General Quality: +0 +0 = +0    Health:     +0 +0 = +0
-      Base Safety:   -3    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
+                          Size:            +0 +0 = +0    Safety:     +0 +0 = +0
+      Occupied Size: 0    Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
+      Free Virtues:  0    General Quality: +0 -2 = -2    Health:     +0 +0 = +0
+      Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
    Planning  Virtues & Flaws  Attributes  Inventory  Diary
@@ -296,7 +297,6 @@
 
 
     Select a Diary entry to see its details.
-
 
 
 

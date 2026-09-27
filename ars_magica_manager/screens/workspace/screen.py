@@ -139,7 +139,6 @@ class WorkspaceScreen(
             "section-lab-characteristics": _SectionOps(
                 edit=self._edit_lab_characteristics
             ),
-            "section-lab-sanctum": _SectionOps(edit=self._edit_lab_sanctum),
             "section-lab-specialties": _SectionOps(
                 self._add_specialty_entry,
                 self._remove_specialty_entry,

@@ -29,6 +29,7 @@ from ars_magica_manager.models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
     LabSpecialtyEntry,
+    LabSpecialtyGrant,
     Saga,
 )
 
@@ -306,9 +307,19 @@ CONTRACTS: dict[str, Contract] = {
     ),
     "edit lab identity": Contract(
         prefill={"Name": "Tower", "Covenant": "cov1", "Owner": "mag1"},
-        edits={"Location": "Tower top", "Points": "5", "Aura modifier": "1"},
-        saved=lambda s: (_lab(s).location, _lab(s).build_points, _lab(s).aura_modifier),
-        expected=("Tower top", 5, 1),
+        edits={
+            "Location": "Tower top",
+            "Points": "5",
+            "Aura modifier": "1",
+            "Sanctum marked": True,
+        },
+        saved=lambda s: (
+            _lab(s).location,
+            _lab(s).build_points,
+            _lab(s).aura_modifier,
+            _lab(s).sanctum_marked,
+        ),
+        expected=("Tower top", 5, 1, True),
         invalid={"Name": ""},
     ),
     "edit lab characteristics": Contract(
@@ -321,18 +332,37 @@ CONTRACTS: dict[str, Contract] = {
         expected=(2, -1),
         invalid={"Safety": "-"},
     ),
-    "edit lab sanctum": Contract(
-        prefill={"Sanctum marked": False},
-        edits={"Sanctum marked": True},
-        saved=lambda s: _lab(s).sanctum_marked,
-        expected=True,
-    ),
     "add lab specialization source": Contract(
         prefill={"Points": "1", "Source": ""},
         edits={"Specialization": "Herbam", "Points": "-1", "Source": "Garden"},
         saved=lambda s: _lab(s).specialties[-1],
         expected=LabSpecialtyEntry("Herbam", -1, "Garden"),
         invalid={"Points": "0"},
+    ),
+    "edit lab feature": Contract(
+        prefill={
+            "Name": "Big windows",
+            "Point 1": "Intellego",
+            "Point 2": "Intellego",
+            "Point 3": "Auram",
+            "Focus": True,
+            "Focus point 1": "Imaginem",
+            "Focus point 4": "Imaginem",
+        },
+        edits={"Name": "Skylight", "Point 3": "Imaginem", "Focus": False},
+        saved=lambda s: (
+            _lab(s).features[0].name,
+            _lab(s).features[0].allocations,
+            _lab(s).features[0].focus,
+            _lab(s).features[0].focus_allocations,
+        ),
+        expected=(
+            "Skylight",
+            [LabSpecialtyGrant("Intellego", 2), LabSpecialtyGrant("Imaginem", 1)],
+            False,
+            [],
+        ),
+        invalid={"Name": ""},
     ),
     "add lab room": Contract(
         prefill={"Name": ""},

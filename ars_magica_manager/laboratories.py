@@ -1,12 +1,14 @@
 """Laboratory rules computed from a Laboratory and the lab Virtue/Flaw
 catalog: aura, occupied Size, room for Virtues, Base Safety and each
-Characteristic's total, the Specialization scores and their caps -- and the
-markup text of the lab sheet's lists and details panels (Virtues & Flaws,
-Specializations, Rooms, Equipment & Stores, Raw Vis, Diary). Like the other
+Characteristic's total, the Features' points and Focus, the Specialization
+scores and their caps -- and the markup text of the lab sheet's lists and
+details panels (Virtues & Flaws, Specializations, Features, Rooms,
+Equipment & Stores, Raw Vis, Diary). Like the other
 domain modules it returns markup text, never widgets."""
 
 from __future__ import annotations
 
+from collections import Counter
 from collections.abc import Collection, Iterable, Sequence
 from dataclasses import dataclass
 
@@ -14,17 +16,22 @@ from . import catalog
 from .arts import ARTS, TECHNIQUES
 from .markup import escape, markdown_inline
 from .models import (
+    FEATURE_VIRTUE_POINTS,
+    FOCUS_FLAWS,
     LAB_ACTIVITY_SPECIALIZATIONS,
     LAB_SPECIALIZATIONS,
     DiaryEntry,
+    LabFeature,
     Laboratory,
     LabSpecialtyEntry,
+    LabSpecialtyGrant,
     LabVirtueFlawDef,
     NamedDescription,
+    VirtueFlawInstance,
 )
 
 #: The two Focus Flaws; a lab may only have one Focus at a time.
-FOCUS_FLAW_IDS = frozenset({"labvf_lesser_focus", "labvf_greater_focus"})
+FOCUS_FLAW_IDS = frozenset(FOCUS_FLAWS)
 
 
 def lab_aura_total(lab: Laboratory, covenant_aura: int) -> int:
@@ -94,6 +101,205 @@ def lab_characteristic_total(
     return manual, virtue_sum, flaw_sum, manual + virtue_sum + flaw_sum
 
 
+# -- Features --
+
+
+def feature_virtue(lab: Laboratory, feature: LabFeature) -> VirtueFlawInstance | None:
+    """The Lesser/Greater Feature Virtue the Feature is built on, or None."""
+    return next(
+        (
+            vf
+            for vf in lab.virtues_flaws
+            if vf.id == feature.virtue_id and vf.vf_id in FEATURE_VIRTUE_POINTS
+        ),
+        None,
+    )
+
+
+def feature_budget(lab: Laboratory, feature: LabFeature) -> int | None:
+    """The points the Feature's Virtue gives it (1 or 3), None without one."""
+    virtue = feature_virtue(lab, feature)
+    return FEATURE_VIRTUE_POINTS[virtue.vf_id] if virtue else None
+
+
+def focus_points(virtue_vf_id: str) -> int:
+    """The extra points a Focus gives a Feature on this Virtue (2 or 4)."""
+    return next(
+        points for virtue, points in FOCUS_FLAWS.values() if virtue == virtue_vf_id
+    )
+
+
+def focus_budget(lab: Laboratory, feature: LabFeature) -> int | None:
+    """The Focus's extra points for a Feature that is the lab's Focus."""
+    virtue = feature_virtue(lab, feature)
+    return focus_points(virtue.vf_id) if feature.focus and virtue else None
+
+
+def tier_word(virtue_vf_id: str) -> str:
+    """ "Lesser" or "Greater"."""
+    return "Greater" if virtue_vf_id == "labvf_greater_feature" else "Lesser"
+
+
+def feature_options(feature_id: str | None) -> tuple[str, ...]:
+    """The Specializations a Feature's points may go to: the catalog
+    Feature's, or every Activity and Art for a custom one."""
+    definition = catalog.load_lab_feature_catalog_by_id().get(feature_id or "")
+    return definition.specializations if definition else LAB_SPECIALIZATIONS
+
+
+def feature_type_name(feature: LabFeature) -> str:
+    definition = catalog.load_lab_feature_catalog_by_id().get(feature.feature_id or "")
+    return definition.name if definition else "Custom"
+
+
+def free_feature_virtues(
+    lab: Laboratory, feature: LabFeature | None = None
+) -> list[VirtueFlawInstance]:
+    """The lab's Lesser/Greater Feature Virtues no Feature is built on (the
+    one `feature` itself is on counts as free)."""
+    taken = {f.virtue_id for f in lab.features if f is not feature and f.virtue_id}
+    return [
+        vf
+        for vf in lab.virtues_flaws
+        if vf.vf_id in FEATURE_VIRTUE_POINTS and vf.id not in taken
+    ]
+
+
+def can_focus(lab: Laboratory, feature: LabFeature | None, virtue_vf_id: str) -> bool:
+    """Whether a Feature on a `virtue_vf_id` Virtue may be the lab's Focus:
+    the lab has the matching Focus Flaw (Lesser Focus for a Lesser Feature)
+    and no other Feature is the Focus already."""
+    has_flaw = any(
+        FOCUS_FLAWS.get(vf.vf_id, ("", 0))[0] == virtue_vf_id
+        for vf in lab.virtues_flaws
+    )
+    return has_flaw and not any(f.focus for f in lab.features if f is not feature)
+
+
+def grants_from_points(points: Iterable[str]) -> list[LabSpecialtyGrant]:
+    """One Specialization per point (["Ignem", "Ignem", "Aquam"]) as grants
+    (Ignem 2, Aquam 1), in first-seen order."""
+    return [LabSpecialtyGrant(name, n) for name, n in Counter(points).items()]
+
+
+def points_from_grants(grants: Iterable[LabSpecialtyGrant]) -> list[str]:
+    """The inverse of grants_from_points()."""
+    return [g.specialization for g in grants for _ in range(g.points)]
+
+
+def _grants_text(grants: Sequence[LabSpecialtyGrant]) -> str:
+    return ", ".join(f"{g.specialization} {g.points:+d}" for g in grants)
+
+
+def feature_problems(lab: Laboratory, feature: LabFeature) -> list[str]:
+    """What still needs doing on a Feature: a Virtue to build it on, points
+    to allocate."""
+    budget = feature_budget(lab, feature)
+    if budget is None:
+        return ["needs a Feature Virtue"]
+    problems = []
+    unallocated = budget - sum(g.points for g in feature.allocations)
+    if unallocated > 0:
+        problems.append(f"{unallocated} {_plural(unallocated, 'point')} to allocate")
+    focus = focus_budget(lab, feature)
+    if focus is not None:
+        unallocated = focus - sum(g.points for g in feature.focus_allocations)
+        if unallocated > 0:
+            problems.append(
+                f"{unallocated} Focus {_plural(unallocated, 'point')} to allocate"
+            )
+    return problems
+
+
+def _plural(count: int, word: str) -> str:
+    return word if count == 1 else f"{word}s"
+
+
+def prune_features(lab: Laboratory) -> None:
+    """After a Virtue or Flaw is removed: a Feature whose Virtue went goes
+    too, and a Focus with no matching Focus Flaw left is cleared with its
+    points. (A Feature that never had a Virtue stays, flagged.)"""
+    ids = {vf.id for vf in lab.virtues_flaws}
+    lab.features[:] = [
+        f for f in lab.features if f.virtue_id is None or f.virtue_id in ids
+    ]
+    for feature in lab.features:
+        virtue = feature_virtue(lab, feature)
+        if feature.focus and (
+            virtue is None or not can_focus(lab, feature, virtue.vf_id)
+        ):
+            feature.focus = False
+            feature.focus_allocations = []
+
+
+def feature_on(lab: Laboratory, virtue: VirtueFlawInstance) -> LabFeature | None:
+    """The Feature built on a lab Virtue, if any."""
+    return next((f for f in lab.features if f.virtue_id == virtue.id), None)
+
+
+def focus_feature(lab: Laboratory) -> LabFeature | None:
+    return next((f for f in lab.features if f.focus), None)
+
+
+def feature_rows(lab: Laboratory) -> list[tuple[int | None, str]]:
+    """Features as (index, "Large Brass Cauldron  (Cauldron, Lesser, Focus)")
+    rows, with the first thing still to do in the theme's error colour."""
+    rows: list[tuple[int | None, str]] = []
+    for index, feature in enumerate(lab.features):
+        virtue = feature_virtue(lab, feature)
+        details = [feature_type_name(feature)]
+        if virtue is not None:
+            details.append(tier_word(virtue.vf_id))
+        if feature.focus:
+            details.append("Focus")
+        label = f"{escape(feature.name)}  [dim]({', '.join(details)})[/]"
+        problems = feature_problems(lab, feature)
+        if problems:
+            label += f"  [$text-error]{problems[0]}[/]"
+        rows.append((index, label))
+    return rows
+
+
+def feature_info_text(lab: Laboratory, index: int | None) -> str:
+    """The details panel for a Feature: its type and Virtue, what its points
+    may go to and where they went, its Focus, what's still to do, and the
+    catalog description."""
+    if index is None:
+        return "[dim]Select a Feature to see its Specializations.[/]"
+    feature = lab.features[index]
+    virtue = feature_virtue(lab, feature)
+    definition = catalog.load_lab_feature_catalog_by_id().get(feature.feature_id or "")
+    lines = [
+        f"[b]{escape(feature.name)}[/]",
+        f"[b]Type:[/] {feature_type_name(feature)}",
+    ]
+    if virtue is not None:
+        budget = FEATURE_VIRTUE_POINTS[virtue.vf_id]
+        lines.append(
+            f"[b]Virtue:[/] {tier_word(virtue.vf_id)} Feature "
+            f"({budget} {_plural(budget, 'point')})"
+        )
+    offers = (
+        ", ".join(definition.specializations) if definition else "any Activity or Art"
+    )
+    lines.append(f"[b]Offers:[/] {offers}")
+    lines.append(f"[b]Points:[/] {_grants_text(feature.allocations) or '(none yet)'}")
+    if feature.focus and virtue is not None:
+        tier = tier_word(virtue.vf_id)
+        penalty = 2 if tier == "Greater" else 1
+        lines.append(
+            f"[b]Focus:[/] {_grants_text(feature.focus_allocations) or '(none yet)'} "
+            f"({tier} Focus: -{penalty} General Quality on activities it doesn't aid)"
+        )
+    lines += [
+        f"[$text-error]{p[0].upper()}{p[1:]}.[/]"
+        for p in feature_problems(lab, feature)
+    ]
+    if definition is not None:
+        lines += ["", escape(definition.description)]
+    return "\n".join(lines)
+
+
 # -- Specializations --
 
 #: How many Specializations count at once (ArM5 p.115): Activities, Arts,
@@ -124,14 +330,27 @@ def _source_label(entry: LabSpecialtyEntry) -> str:
 
 
 def specialization_scores(lab: Laboratory) -> list[SpecializationScore]:
-    """Every Specialization the lab has points in (from any source, even if
-    they sum to 0 or less), in LAB_SPECIALIZATIONS order."""
+    """Every Specialization the lab has points in (from its Features, their
+    Focus and the hand-entered sources, even if they sum to 0 or less), in
+    LAB_SPECIALIZATIONS order."""
+    found: list[tuple[str, str, int]] = []  # (Specialization, source, points)
+    for feature in lab.features:
+        found += [
+            (g.specialization, f"{feature.name} (Feature)", g.points)
+            for g in feature.allocations
+        ]
+        found += [
+            (g.specialization, f"{feature.name} (Focus)", g.points)
+            for g in feature.focus_allocations
+        ]
+    found += [
+        (entry.specialization, _source_label(entry), entry.points)
+        for entry in lab.specialties
+    ]
     sources: dict[str, list[tuple[str, int]]] = {}
-    for entry in lab.specialties:
-        if entry.specialization in LAB_SPECIALIZATIONS:
-            sources.setdefault(entry.specialization, []).append(
-                (_source_label(entry), entry.points)
-            )
+    for name, label, points in found:
+        if name in LAB_SPECIALIZATIONS:
+            sources.setdefault(name, []).append((label, points))
     return [
         SpecializationScore(
             name,
@@ -210,36 +429,39 @@ def reconcile_dropped(lab: Laboratory, previously_counted: Collection[str]) -> N
     ]
 
 
-def caps_text(lab: Laboratory) -> str:
-    """ "Activity 2/2, Art 3/4 (Techniques 1/2)": how many Specializations
-    count against each cap, a count over its cap in the theme's error
-    colour."""
-    counted = counted_specializations(lab)
-    parts = []
-    for label, group, cap in _CAPS:
-        count = len(counted & set(group))
-        text = f"{label}{'s' if group is TECHNIQUES else ''} {count}/{cap}"
-        parts.append(f"[$text-error]{text}[/]" if count > cap else text)
-    activity, art, techniques = parts
-    return f"{activity}, {art} ({techniques})"
+#: The lab sheet's Attributes and Inventory tabs' shared details panel,
+#: with nothing chosen.
+ATTRIBUTES_PANEL_HINT = (
+    "[dim]Select a Specialization, Feature or Room to see its details. Space "
+    "turns a Specialization off or on.[/]"
+)
+INVENTORY_PANEL_HINT = (
+    "[dim]Select Raw Vis, an Equipment & Stores entry or a book to see its details.[/]"
+)
+
+
+def _cap_count(lab: Laboratory, group: Sequence[str], cap: int) -> str:
+    """ "(3 of 4)": how many of `group` count against their cap, in the
+    theme's error colour when over it."""
+    count = len(counted_specializations(lab) & set(group))
+    text = f"({count} of {cap})"
+    return f"[$text-error]{text}[/]" if count > cap else text
 
 
 def specialization_rows(lab: Laboratory) -> list[tuple[int | None, str]]:
-    """The Specializations grid: an "Activity" and an "Art" header, each
-    over its rows "Ignem  +3" (data index: position in LAB_SPECIALIZATIONS).
-    One that's turned off is dimmed and struck through; one scoring 0 or
-    less is dimmed."""
+    """The Specializations grid: an "Activity (1 of 2)" and an "Art (3 of
+    4)" header (how many count against the cap), each over its rows "Ignem
+    +3" (data index: position in LAB_SPECIALIZATIONS). One that's turned off
+    is dimmed and struck through; one scoring 0 or less is dimmed."""
     scores = specialization_scores(lab)
     width = max((len(s.name) for s in scores), default=0)
     rows: list[tuple[int | None, str]] = []
-    for header, group in (
-        ("Activity", LAB_ACTIVITY_SPECIALIZATIONS),
-        ("Art", ARTS),
+    for header, group, cap in (
+        ("Activity", LAB_ACTIVITY_SPECIALIZATIONS, MAX_ACTIVITY_SPECIALIZATIONS),
+        ("Art", ARTS, MAX_ART_SPECIALIZATIONS),
     ):
         in_group = [s for s in scores if s.name in group]
-        if not in_group:
-            continue
-        rows.append((None, header))
+        rows.append((None, f"{header} {_cap_count(lab, group, cap)}"))
         for score in in_group:
             label = f"{score.name:<{width}}  {score.points:+d}"
             if score.dropped and score.points > 0:
@@ -253,17 +475,14 @@ def specialization_rows(lab: Laboratory) -> list[tuple[int | None, str]]:
 def specialization_info_text(lab: Laboratory, index: int | None) -> str:
     """The details panel for the Specialization at `index` (into
     LAB_SPECIALIZATIONS): its score and whether it counts, where each point
-    comes from, and the caps."""
-    caps = f"[b]Counting:[/] {caps_text(lab)}"
+    comes from, and for a Technique how many Techniques count (at most 2 of
+    the 4 Arts)."""
     if index is None:
-        return (
-            "[dim]Select a Specialization to see where its points come from; "
-            "Space turns it off or on.[/]\n\n" + caps
-        )
+        return ATTRIBUTES_PANEL_HINT
     name = LAB_SPECIALIZATIONS[index]
     score = next((s for s in specialization_scores(lab) if s.name == name), None)
     if score is None:
-        return caps
+        return ATTRIBUTES_PANEL_HINT
     if score.points <= 0:
         status = "doesn't count (0 or less)"
     elif score.dropped:
@@ -272,7 +491,10 @@ def specialization_info_text(lab: Laboratory, index: int | None) -> str:
         status = "counts (Space turns it off)"
     lines = [f"[b]{name} {score.points:+d}[/]: {status}", "", "[b]Sources:[/]"]
     lines += [f"  {points:+d}  {escape(label)}" for label, points in score.sources]
-    return "\n".join([*lines, "", caps])
+    if name in TECHNIQUES:
+        techniques = _cap_count(lab, TECHNIQUES, MAX_TECHNIQUE_SPECIALIZATIONS)
+        lines += ["", f"[b]Techniques counting:[/] {techniques}"]
+    return "\n".join(lines)
 
 
 def specialty_entry_rows(lab: Laboratory) -> list[tuple[int | None, str]]:
@@ -288,6 +510,23 @@ def specialty_entry_rows(lab: Laboratory) -> list[tuple[int | None, str]]:
             head = "[$text-error]needs a Specialization[/]"
         rows.append((index, f"{head}  {escape(_source_label(entry))}"))
     return rows
+
+
+def specialty_entry_info_text(lab: Laboratory, index: int | None) -> str:
+    """The details panel for a hand-entered Specialization source."""
+    if index is None:
+        return ATTRIBUTES_PANEL_HINT
+    entry = lab.specialties[index]
+    if not entry.specialization:
+        return (
+            f"[b]{escape(_source_label(entry))}[/]\n\n[$text-error]Names no "
+            "Activity or Art: edit it (e) to choose its Specialization.[/]"
+        )
+    return (
+        f"[b]{entry.specialization} {entry.points:+d}[/]\n"
+        f"[b]Source:[/] {escape(_source_label(entry))}\n\n"
+        f"[dim]Counts towards {entry.specialization} in Specializations.[/]"
+    )
 
 
 # -- the sheet's lists and details panels --
@@ -342,6 +581,14 @@ def vf_info_text(lab: Laboratory, index: int | None) -> str:
             for c, amount in definition.characteristic_modifiers.items()
         )
         lines.append(f"[b]Characteristics:[/] {effects}")
+    if instance.vf_id in FEATURE_VIRTUE_POINTS:
+        feature = feature_on(lab, instance)
+        lines.append(
+            f"[b]Feature:[/] {escape(feature.name) if feature else '(none: free)'}"
+        )
+    elif instance.vf_id in FOCUS_FLAWS:
+        feature = focus_feature(lab)
+        lines.append(f"[b]Focus of:[/] {escape(feature.name) if feature else '(none)'}")
     lines += ["", "[b]Rules:[/]", escape(definition.description)]
     return "\n".join(lines)
 
@@ -394,6 +641,15 @@ def raw_vis_rows(lab: Laboratory) -> list[tuple[int | None, str]]:
         (index, f"{art.title()}: {lab.raw_vis[art]} pawn(s)")
         for index, art in enumerate(sorted(lab.raw_vis))
     ]
+
+
+def raw_vis_info_text(lab: Laboratory, index: int | None) -> str:
+    """The details panel for a Raw Vis row: its Art and pawns."""
+    if index is None:
+        return INVENTORY_PANEL_HINT
+    art = sorted(lab.raw_vis)[index]
+    pawns = lab.raw_vis[art]
+    return f"[b]{art.title()} vis[/]\n{pawns} {_plural(pawns, 'pawn')}"
 
 
 def diary_rows(diary: Sequence[DiaryEntry]) -> list[tuple[int | None, str]]:

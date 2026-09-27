@@ -7,18 +7,18 @@
       Owner:    Leandro
       Location: (not set)
       Points:   0
+      Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-      Occupied Size: 3
-      Free Virtues:  -3
-      Base Safety:   -3
+      Occupied Size: 0
+      Free Virtues:  0
+      Base Safety:   0
 
       Size:            +0 +0 = +0
-      Refinement:      +0 +0 = +0
 
 ===== tab-lab-vf
 
@@ -29,18 +29,18 @@
       Owner:    Leandro
       Location: (not set)
       Points:   0
+      Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-      Occupied Size: 3
-      Free Virtues:  -3
-      Base Safety:   -3
+      Occupied Size: 0
+      Free Virtues:  0
+      Base Safety:   0
 
       Size:            +0 +0 = +0
-      Refinement:      +0 +0 = +0
 
 ===== tab-lab-attributes
 
@@ -51,18 +51,18 @@
       Owner:    Leandro
       Location: (not set)
       Points:   0
+      Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-      Occupied Size: 3
-      Free Virtues:  -3
-      Base Safety:   -3
+      Occupied Size: 0
+      Free Virtues:  0
+      Base Safety:   0
 
       Size:            +0 +0 = +0
-      Refinement:      +0 +0 = +0
 
 ===== tab-lab-inventory
 
@@ -73,18 +73,18 @@
       Owner:    Leandro
       Location: (not set)
       Points:   0
+      Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-      Occupied Size: 3
-      Free Virtues:  -3
-      Base Safety:   -3
+      Occupied Size: 0
+      Free Virtues:  0
+      Base Safety:   0
 
       Size:            +0 +0 = +0
-      Refinement:      +0 +0 = +0
 
 ===== tab-lab-diary
 
@@ -95,16 +95,16 @@
       Owner:    Leandro
       Location: (not set)
       Points:   0
+      Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
 
-      Occupied Size: 3
-      Free Virtues:  -3
-      Base Safety:   -3
+      Occupied Size: 0
+      Free Virtues:  0
+      Base Safety:   0
 
       Size:            +0 +0 = +0
-      Refinement:      +0 +0 = +0
 

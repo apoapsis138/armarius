@@ -47,8 +47,10 @@ from ars_magica_manager.models import (
     Inhabitant,
     KnownSpell,
     LabCharacteristics,
+    LabFeature,
     Laboratory,
     LabSpecialtyEntry,
+    LabSpecialtyGrant,
     MasteryAbility,
     NamedDescription,
     Possession,
@@ -296,7 +298,6 @@ _LAB_SECTION_TAB: dict[str, str] = {
     "tab-lab-planning": "tab-lab-planning",
     "section-lab-vf-virtues": "tab-lab-vf",
     "section-lab-vf-flaws": "tab-lab-vf",
-    "section-lab-sanctum": "tab-lab-attributes",
     "section-lab-specializations": "tab-lab-attributes",
     "section-lab-specialties": "tab-lab-attributes",
     "section-lab-features": "tab-lab-attributes",
@@ -803,7 +804,7 @@ def _sample_saga_with_covenant() -> Saga:
                 name="Leandro's Sanctum",
                 owner_id="char1",
                 characteristics=LabCharacteristics(size=1),
-                features=["Well-Stocked"],
+                features=[LabFeature("feat1", "Well-Stocked")],
                 virtues_flaws=[VirtueFlawInstance(vf_id="labvf_superior_construction")],
             )
         ],
@@ -903,7 +904,9 @@ async def test_selecting_laboratory_shows_owner_and_virtues():
         identity = _lab_identity_text(view)
         assert "Owner: Leandro" in identity
         assert "Aura: 3" in identity
-        assert "Well-Stocked" in view._features_text()
+        assert _lab_rows(view, "lab-features-list") == [
+            "Well-Stocked  (Custom)  needs a Feature Virtue"
+        ]
         assert "Superior Construction" in _lab_rows(view, "lab-vf-virtues-list")[0]
 
 
@@ -1475,7 +1478,12 @@ def _saga_with_populated_laboratory() -> Saga:
     saga = _saga_with_bare_laboratory()
     lab = saga.laboratories[0]
     lab.specialties = [LabSpecialtyEntry("Ignem", 1, "Hearth spirit")]
-    lab.features = ["Arcane Library"]
+    lab.virtues_flaws = [VirtueFlawInstance("labvf_lesser_feature", id="vf1")]
+    lab.features = [
+        LabFeature(
+            "feat1", "Arcane Library", None, "vf1", [LabSpecialtyGrant("Texts", 1)]
+        )
+    ]
     lab.rooms = [NamedDescription(name="Vault", description="Locked")]
     lab.inventory_items = [NamedDescription(name="Silver Mirror", description="Old")]
     lab.raw_vis = {"ignem": 4, "aquam": 2}
@@ -3545,7 +3553,6 @@ async def test_lab_attributes_and_inventory_sections_start_expanded():
         view = app.screen._laboratory_sheet_view
 
         for section_id in (
-            "section-lab-sanctum",
             "section-lab-specializations",
             "section-lab-specialties",
             "section-lab-features",
@@ -3598,7 +3605,11 @@ async def test_add_and_remove_a_specialization_source():
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
         assert _lab_rows(view, "lab-specialties-list") == ["Terram  +1  Subterranean"]
-        assert _lab_rows(view, "lab-specializations-list") == ["Art", "Terram  +1"]
+        assert _lab_rows(view, "lab-specializations-list") == [
+            "Activity (0 of 2)",
+            "Art (1 of 4)",
+            "Terram  +1",
+        ]
 
         await _choose_lab_row(pilot, view, "lab-specialties-list", 0)
         await pilot.press("A")
@@ -3606,7 +3617,10 @@ async def test_add_and_remove_a_specialization_source():
         assert storage.load_saga("test_saga").laboratories[0].specialties
         await pilot.press("A")
         await _confirm(pilot, app, "y")
-        assert _lab_rows(view, "lab-specializations-list") == []
+        assert _lab_rows(view, "lab-specializations-list") == [
+            "Activity (0 of 2)",
+            "Art (0 of 4)",
+        ]
 
     assert storage.load_saga("test_saga").laboratories[0].specialties == []
 
@@ -3639,7 +3653,7 @@ async def test_space_turns_a_specialization_off_and_on_within_the_caps():
         await pilot.press("space")
         await pilot.pause()
         assert saga_dropped() == ["Muto"]  # refused: Techniques 2/2
-        info = view.query_one("#lab-specializations-info", Static)
+        info = view.query_one("#lab-attr-panel", Static)
         assert "Muto +1: turned off" in strip_markup(str(info.render()))
 
         await _choose_lab_row(pilot, view, "lab-specializations-list", rego)
@@ -3678,54 +3692,242 @@ async def test_a_source_that_breaks_a_cap_arrives_turned_off():
         assert texts_row.startswith("[dim strike]")
 
 
-async def test_edit_the_sanctum_marking():
+async def test_identity_shows_whether_the_sanctum_is_marked():
+    storage.save_saga(_saga_with_bare_laboratory())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 50)) as pilot:
+        await _select_laboratory(pilot, app)
+        view = app.screen._laboratory_sheet_view
+        assert "Sanctum?: No" in _lab_identity_text(view)
+        assert not view.query("#section-lab-sanctum")
+        await _open_lab_section(pilot, app, "section-lab-identity")
+        await pilot.press("e")
+        await _wait_for_field(pilot, app, "fld-sanctum_marked")
+        await _save_form(pilot, app, sanctum_marked=True)
+        assert await wait_until(
+            pilot, lambda: "Sanctum?: Yes" in _lab_identity_text(view)
+        )
+
+    assert storage.load_saga("test_saga").laboratories[0].sanctum_marked
+
+
+async def _wait_for_field(pilot, app, field_id: str) -> None:
+    """Wait until the screen on show has the widget `#field_id` (a form
+    opened by another form's save mounts a moment later)."""
+    assert await wait_until(pilot, lambda: bool(app.screen.query(f"#{field_id}")))
+    await pilot.pause()
+
+
+async def _save_form(pilot, app, **values) -> None:
+    """Fill the open form's fields by id (fld-<key>) and press its save
+    button, then wait for the next screen."""
+    await _wait_for_field(pilot, app, "btn-save")
+    for key in values:
+        await _wait_for_field(pilot, app, f"fld-{key}")
+    dialog = app.screen
+    for key, value in values.items():
+        dialog.query_one(f"#fld-{key}").value = value
+    await pilot.pause()
+    dialog.query_one("#btn-save", Button).press()
+    await wait_until(pilot, lambda: app.screen is not dialog)
+
+
+async def test_add_a_feature_with_a_new_feature_virtue_then_remove_it():
     storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_laboratory(pilot, app)
         view = app.screen._laboratory_sheet_view
-        content = view.query_one("#lab-sanctum-content", Static)
-        assert str(content.render()) == "Marked: No"
-        await _open_lab_section(pilot, app, "section-lab-sanctum")
-        await pilot.press("e")
-        await pilot.pause()
-        app.screen.query_one("#fld-marked", Checkbox).value = True
-        await pilot.click("#btn-save")
-        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
-        assert str(content.render()) == "Marked: Yes"
+        await _open_lab_section(pilot, app, "section-lab-features")
 
-    assert storage.load_saga("test_saga").laboratories[0].sanctum_marked
+        await pilot.press("a")
+        await _wait_for_field(pilot, app, "fld-virtue")
+        # No free Feature Virtue: the choice is to add one.
+        assert app.screen.query_one("#fld-virtue", Select).value == (
+            "new:labvf_lesser_feature"
+        )
+        await _save_form(pilot, app, feature_type="labfeat_altar")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        assert "Free Virtues 0 → -1" in str(
+            app.screen.query_one("#confirm-message", Static).render()
+        )
+        await pilot.press("y")
+        await _wait_for_field(pilot, app, "fld-point0")
+        assert not app.screen.query("#fld-focus")  # no Focus Flaw
+        await _save_form(pilot, app, point0="Vim")
+
+        assert await wait_until(
+            pilot,
+            lambda: _lab_rows(view, "lab-features-list") == ["Altar  (Altar, Lesser)"],
+        )
+        assert _lab_rows(view, "lab-specializations-list") == [
+            "Activity (0 of 2)",
+            "Art (1 of 4)",
+            "Vim  +1",
+        ]
+        assert _lab_rows(view, "lab-vf-virtues-list") == ["Lesser Feature (Minor)"]
+
+        await _choose_lab_row(pilot, view, "lab-features-list", 0)
+        await pilot.press("A")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        assert "Lesser Feature Virtue stays" in str(
+            app.screen.query_one("#confirm-message", Static).render()
+        )
+        await _confirm(pilot, app, "y")
+        assert _lab_rows(view, "lab-specializations-list") == [
+            "Activity (0 of 2)",
+            "Art (0 of 4)",
+        ]
+
+    lab = storage.load_saga("test_saga").laboratories[0]
+    assert lab.features == []
+    assert [vf.vf_id for vf in lab.virtues_flaws] == ["labvf_lesser_feature"]
 
 
-async def test_add_and_remove_feature():
+async def test_cancelling_the_second_step_adds_no_feature_virtue():
     storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_laboratory(pilot, app)
         await _open_lab_section(pilot, app, "section-lab-features")
-
         await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, FieldsDialog)
+        await wait_until(pilot, lambda: _is_form(app.screen, "Add a Feature"))
+        await _save_form(pilot, app, feature_type="custom")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await pilot.press("y")
+        await _wait_for_field(pilot, app, "fld-point0")
+        await pilot.press("escape")
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
-        app.screen.query_one("#fld-item", Input).value = "Altar"
-        await pilot.click("#btn-save")
-        await pilot.pause()
+    lab = storage.load_saga("test_saga").laboratories[0]
+    assert (lab.features, lab.virtues_flaws) == ([], [])
 
-        assert isinstance(app.screen, WorkspaceScreen)
-        assert "Altar" in app.screen._laboratory_sheet_view._features_text()
 
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
+def _saga_with_focus() -> Saga:
+    """A Greater Feature (a Cauldron, the lab's Focus) and a Lesser one."""
+    saga = _saga_with_bare_laboratory()
+    lab = saga.laboratories[0]
+    lab.virtues_flaws = [
+        VirtueFlawInstance("labvf_greater_feature", id="g"),
+        VirtueFlawInstance("labvf_greater_focus", id="f"),
+        VirtueFlawInstance("labvf_lesser_feature", id="l"),
+    ]
+    lab.features = [
+        LabFeature(
+            "c",
+            "Cauldron",
+            "labfeat_cauldron",
+            "g",
+            [LabSpecialtyGrant("Ignem", 3)],
+            focus=True,
+            focus_allocations=[LabSpecialtyGrant("Aquam", 4)],
+        )
+    ]
+    return saga
 
-    saga = storage.load_saga("test_saga")
-    assert saga.laboratories[0].features == []
+
+async def test_edit_a_feature_moves_it_to_another_virtue_and_type():
+    storage.save_saga(_saga_with_focus())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_laboratory(pilot, app)
+        view = app.screen._laboratory_sheet_view
+        await _open_lab_section(pilot, app, "section-lab-features")
+        await _choose_lab_row(pilot, view, "lab-features-list", 0)
+        await pilot.press("e")
+        await _wait_for_field(pilot, app, "fld-virtue")
+        virtue = app.screen.query_one("#fld-virtue", Select)
+        assert virtue.value == "g"
+        # Onto the Lesser Feature, as a Forge: the Greater Focus can't follow.
+        await _save_form(pilot, app, feature_type="labfeat_forge", virtue="l")
+        await _wait_for_field(pilot, app, "fld-point0")
+        assert not app.screen.query("#fld-focus")
+        # Ignem is offered by a Forge too, so the first point is kept.
+        assert await wait_until(
+            pilot, lambda: app.screen.query_one("#fld-point0", Select).value == "Ignem"
+        )
+        await _save_form(pilot, app, name="Forge")
+        assert await wait_until(
+            pilot,
+            lambda: _lab_rows(view, "lab-features-list") == ["Forge  (Forge, Lesser)"],
+        )
+
+    feature = storage.load_saga("test_saga").laboratories[0].features[0]
+    assert (feature.feature_id, feature.virtue_id, feature.focus) == (
+        "labfeat_forge",
+        "l",
+        False,
+    )
+    assert feature.allocations == [LabSpecialtyGrant("Ignem", 1)]
+    assert feature.focus_allocations == []
+
+
+async def test_deleting_a_feature_virtue_or_focus_flaw_takes_its_feature_or_focus():
+    storage.save_saga(_saga_with_focus())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_laboratory(pilot, app)
+        view = app.screen._laboratory_sheet_view
+        await _open_lab_section(pilot, app, "section-lab-vf-flaws")
+
+        # The Focus Flaw: the Cauldron stays, without its Focus points.
+        await _choose_lab_row(pilot, view, "lab-vf-flaws-list", 1)
+        await pilot.press("V")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        assert "Cauldron stops being the Focus" in str(
+            app.screen.query_one("#confirm-message", Static).render()
+        )
+        await _confirm(pilot, app, "y")
+        lab = storage.load_saga("test_saga").laboratories[0]
+        assert lab.features[0].focus is False
+        assert lab.features[0].focus_allocations == []
+        assert "Aquam" not in " ".join(_lab_rows(view, "lab-specializations-list"))
+
+        # The Greater Feature: the Cauldron goes with it.
+        await _choose_lab_row(pilot, view, "lab-vf-virtues-list", 0)
+        await pilot.press("V")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        assert "Its Feature, Cauldron, goes too" in str(
+            app.screen.query_one("#confirm-message", Static).render()
+        )
+        await _confirm(pilot, app, "y")
+        assert _lab_rows(view, "lab-features-list") == []
+
+    lab = storage.load_saga("test_saga").laboratories[0]
+    assert [vf.id for vf in lab.virtues_flaws] == ["l"]
+    assert lab.features == []
+
+
+async def test_a_new_feature_virtue_is_given_to_a_feature_waiting_for_one():
+    saga = _saga_with_bare_laboratory()
+    saga.laboratories[0].features = [LabFeature("x", "Old cauldron")]
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test() as pilot:
+        await _select_laboratory(pilot, app)
+        view = app.screen._laboratory_sheet_view
+        await _open_lab_section(pilot, app, "section-lab-vf-virtues")
+        await pilot.press("v")
+        await wait_until(
+            pilot, lambda: isinstance(app.screen, LabVirtueFlawPickerScreen)
+        )
+        app.screen.dismiss(VirtueFlawInstance("labvf_greater_feature"))
+        assert await wait_until(
+            pilot,
+            lambda: (
+                _lab_rows(view, "lab-features-list")
+                == ["Old cauldron  (Custom, Greater)  3 points to allocate"]
+            ),
+        )
+
+    lab = storage.load_saga("test_saga").laboratories[0]
+    assert lab.features[0].virtue_id == lab.virtues_flaws[0].id != ""
 
 
 async def test_add_and_remove_room():
@@ -3749,7 +3951,7 @@ async def test_add_and_remove_room():
         view = app.screen._laboratory_sheet_view
         assert _lab_rows(view, "lab-rooms-list") == ["Vault"]
         await _choose_lab_row(pilot, view, "lab-rooms-list", 0)
-        panel = strip_markup(str(view.query_one("#lab-rooms-info", Static).content))
+        panel = strip_markup(str(view.query_one("#lab-attr-panel", Static).content))
         assert panel == "Vault\n\nA locked cellar"
 
         await pilot.press("A")  # the chosen row: no picker
@@ -3896,18 +4098,78 @@ async def test_edit_specialization_source_and_feature():
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         assert _lab_rows(view, "lab-specialties-list") == ["Vim  +2  Hearth spirit"]
 
+        # With no Feature chosen, 'e' asks which one.
         await _pick_first_and_open_editor(
             pilot, app, "section-lab-features", FieldsDialog
         )
-        assert app.screen.query_one("#fld-item", Input).value == "Arcane Library"
-        app.screen.query_one("#fld-item", Input).value = "Aegis"
-        app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
-        assert "Aegis" in view._features_text()
+        await _save_form(pilot, app)
+        await _wait_for_field(pilot, app, "fld-name")
+        name = app.screen.query_one("#fld-name", Input)
+        assert name.value == "Arcane Library"
+        await _save_form(pilot, app, name="Aegis")
+        assert await wait_until(
+            pilot,
+            lambda: _lab_rows(view, "lab-features-list") == ["Aegis  (Custom, Lesser)"],
+        )
 
     lab = storage.load_saga("test_saga").laboratories[0]
     assert lab.specialties == [LabSpecialtyEntry("Vim", 2, "Hearth spirit")]
-    assert lab.features == ["Aegis"]
+    assert [f.name for f in lab.features] == ["Aegis"]
+    assert lab.features[0].allocations == [LabSpecialtyGrant("Texts", 1)]
+
+
+async def test_attributes_and_inventory_share_one_panel_docked_below_the_lists():
+    saga = _saga_with_populated_laboratory()
+    saga.books.append(
+        Book(
+            id="b1",
+            name="Notes",
+            type="Other",
+            owner_kind="laboratory",
+            owner_id="lab1",
+        )
+    )
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _select_laboratory(pilot, app)
+        view = app.screen._laboratory_sheet_view
+        await _open_lab_section(pilot, app, "section-lab-rooms")
+        panel = view.query_one("#lab-attr-panel", Static)
+        # Outside the scrolling lists, below them.
+        scroll = view.query_one("#lab-attr-scroll")
+        assert panel.parent is not scroll and panel not in scroll.query(Static)
+        assert panel.region.y >= scroll.region.bottom
+
+        def shown(widget) -> str:
+            return strip_markup(str(widget.render()))
+
+        assert "Select a Specialization, Feature or Room" in shown(panel)
+        await _choose_lab_row(pilot, view, "lab-rooms-list", 0)
+        assert shown(panel).startswith("Vault")
+        # One choice across the tab's lists.
+        await _choose_lab_row(pilot, view, "lab-features-list", 0)
+        assert shown(panel).startswith("Arcane Library")
+        assert view.selected_room() is None
+        await _choose_lab_row(pilot, view, "lab-specialties-list", 0)
+        assert shown(panel).startswith("Ignem +1")
+        assert view.selected_feature() is None
+        # A change elsewhere keeps the chosen row's panel.
+        app.screen._commit("section-lab-rooms")
+        await pilot.pause()
+        assert shown(panel).startswith("Ignem +1")
+
+        await _open_lab_section(pilot, app, "section-lab-items")
+        panel = view.query_one("#lab-inv-panel", Static)
+        assert not view.query(".books-panel")
+        await _choose_lab_row(pilot, view, "section-lab-books-list", 0)
+        assert await wait_until(pilot, lambda: "Type:" in shown(panel))
+        assert "Notes" in shown(panel)
+        await _choose_lab_row(pilot, view, "lab-items-list", 0)
+        assert shown(panel).startswith("Silver Mirror")
+        await _choose_lab_row(pilot, view, "lab-raw-vis-list", 0)
+        assert shown(panel) == "Aquam vis\n2 pawns"
 
 
 async def test_edit_room_and_item():
@@ -8409,6 +8671,14 @@ def _books_panel(app) -> str:
 
 
 async def _choose_book(pilot, app, row: int) -> None:
+    # A book view just swapped in knows its books before its list mounts.
+    assert await wait_until(
+        pilot,
+        lambda: (
+            app.screen._book_view() is not None
+            and bool(app.screen._book_view().query(SelectableList))
+        ),
+    )
     rows = app.screen._book_view().query_one(SelectableList)
     rows.focus()
     await pilot.pause()

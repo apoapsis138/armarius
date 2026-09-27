@@ -33,10 +33,12 @@ from ... import books as bk
 from ... import catalog, creation, storage
 from ... import economics as eco
 from ... import familiars as fam
+from ... import laboratories as lab_rules
 from ... import sheet_text as st
 from ... import spells as spl
 from ...markup import escape
 from ...models import (
+    FOCUS_FLAWS,
     SEASONS,
     Ability,
     Character,
@@ -46,6 +48,8 @@ from ...models import (
     Saga,
     ScoredTrait,
     VirtueFlawInstance,
+    link_unlinked_features,
+    new_instance_id,
     next_season,
 )
 from ..fields import (
@@ -71,6 +75,7 @@ from ..prompts import (
 )
 from ..sheets import (
     _LIBRARY_SECTIONS,
+    LAB_FEATURE_SECTIONS,
     LAB_VF_SECTIONS,
     SPELL_SECTION,
     BookListView,
@@ -1083,9 +1088,14 @@ class WorkspaceBase(Screen[None]):
         def handle_result(instance: VirtueFlawInstance | None) -> None:
             if instance is not None:
                 target.virtues_flaws.append(instance)
+                if isinstance(target, Laboratory):
+                    # A Feature waiting for a Virtue gets a new Feature Virtue.
+                    instance.id = new_instance_id()
+                    link_unlinked_features(target)
                 storage.save_saga(self.saga)
                 if is_lab:
-                    self._refresh_laboratory_section(LAB_VF_SECTIONS[0])
+                    for section in LAB_FEATURE_SECTIONS:
+                        self._refresh_laboratory_section(section)
                 elif is_familiar:
                     self._refresh_familiar_section("section-fam-vf-virtues")
                 else:
@@ -1116,12 +1126,11 @@ class WorkspaceBase(Screen[None]):
             section = "section-vf-virtues"
 
         def confirm(index: int) -> None:
-            self._confirm_delete(
-                target.virtues_flaws,
-                index,
-                catalog.describe_virtue_flaw(target.virtues_flaws[index], vf_catalog),
-                section,
-            )
+            name = catalog.describe_virtue_flaw(target.virtues_flaws[index], vf_catalog)
+            if isinstance(target, Laboratory):
+                self._confirm_delete_lab_virtue_flaw(target, index, name)
+                return
+            self._confirm_delete(target.virtues_flaws, index, name, section)
 
         selected = self._selected_virtue_flaw(target)
         if selected is not None:
@@ -1139,6 +1148,34 @@ class WorkspaceBase(Screen[None]):
         self.app.push_screen(
             RemovalPickerScreen("Remove a Virtue or Flaw", labels), handle_index
         )
+
+    def _confirm_delete_lab_virtue_flaw(
+        self, lab: Laboratory, index: int, name: str
+    ) -> None:
+        """Delete a lab Virtue/Flaw after confirming, saying what goes with
+        it: the Feature built on a Feature Virtue, or the Focus (and its
+        points) of a Focus Flaw."""
+        instance = lab.virtues_flaws[index]
+        feature = lab_rules.feature_on(lab, instance)
+        focus = lab_rules.focus_feature(lab)
+        message = f"Delete {escape(name)}?"
+        if feature is not None:
+            message += f" Its Feature, {escape(feature.name)}, goes too."
+        elif instance.vf_id in FOCUS_FLAWS and focus is not None:
+            message += (
+                f" {escape(focus.name)} stops being the Focus and loses its "
+                "Focus points."
+            )
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
+                counted = lab_rules.counted_specializations(lab)
+                del lab.virtues_flaws[index]
+                lab_rules.prune_features(lab)
+                lab_rules.reconcile_dropped(lab, counted)
+                self._commit(*LAB_FEATURE_SECTIONS)
+
+        self.app.push_screen(ConfirmScreen(message), handle_confirmed)
 
     def _selected_virtue_flaw(
         self, target: Character | Laboratory | Familiar
