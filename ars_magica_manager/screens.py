@@ -1592,7 +1592,7 @@ class ParamPromptScreen(ModalDialog[dict[str, str] | None]):
         self.dismiss(params)
 
 
-class SearchablePickerScreen(ModalDialog[Any]):
+class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
     """Base for a ListView-backed catalog picker with a live-filtering
     search box above it.
 
@@ -1604,11 +1604,12 @@ class SearchablePickerScreen(ModalDialog[Any]):
     (live rebuild, keeping the search box focused and typable while
     letting Down/Enter reach the list) only has to be gotten right once.
 
-    Subclasses override: `PICKER_TITLE`, `EMPTY_MESSAGE`,
-    `SEARCH_PLACEHOLDER`, `LIST_VIEW_ID` (kept distinct per picker, not
-    shared, so existing tests that query e.g. "#vf-picker-list" by id
-    keep working) and the `_load_entries`/`_search_text`/`_label_for`/
-    `_item_id`/`_on_entry_selected` hooks below.
+    Subclasses set `PICKER_TITLE`, `EMPTY_MESSAGE` and `SEARCH_PLACEHOLDER`
+    (the defaults for the matching constructor arguments), `LIST_VIEW_ID`
+    (kept distinct per picker, not shared, so existing tests that query e.g.
+    "#vf-picker-list" by id keep working) and the `_load_entries`/
+    `_search_text`/`_label_for`/`_item_id`/`_on_entry_selected` hooks below.
+    Generic over the catalog entry type and the dialog's result.
     """
 
     PICKER_TITLE: ClassVar[str] = "Pick"
@@ -1635,15 +1636,24 @@ class SearchablePickerScreen(ModalDialog[Any]):
     }
     """
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        title: str = "",
+        *,
+        empty_message: str = "",
+        search_placeholder: str = "",
+    ) -> None:
         super().__init__()
-        self._entries: list[Any] = []
-        self._by_item_id: dict[str, Any] = {}
+        self.picker_title = title or self.PICKER_TITLE
+        self.empty_message = empty_message or self.EMPTY_MESSAGE
+        self.search_placeholder = search_placeholder or self.SEARCH_PLACEHOLDER
+        self._entries: list[EntryT] = []
+        self._by_item_id: dict[str, EntryT] = {}
 
     def compose(self) -> ComposeResult:
         with Vertical(id="picker-dialog"):
-            yield Label(self.PICKER_TITLE, id="picker-title")
-            yield Input(placeholder=self.SEARCH_PLACEHOLDER, id="picker-search")
+            yield Label(self.picker_title, id="picker-title")
+            yield Input(placeholder=self.search_placeholder, id="picker-search")
             yield ListView(id=self.LIST_VIEW_ID)
             yield Button("Cancel", id="btn-cancel")
 
@@ -1654,19 +1664,19 @@ class SearchablePickerScreen(ModalDialog[Any]):
 
     # -- subclass hooks --
 
-    def _load_entries(self) -> list[Any]:
+    def _load_entries(self) -> list[EntryT]:
         raise NotImplementedError
 
-    def _search_text(self, entry: Any) -> str:
+    def _search_text(self, entry: EntryT) -> str:
         raise NotImplementedError
 
-    def _label_for(self, entry: Any) -> str:
+    def _label_for(self, entry: EntryT) -> str:
         raise NotImplementedError
 
-    def _item_id(self, entry: Any) -> str:
+    def _item_id(self, entry: EntryT) -> str:
         raise NotImplementedError
 
-    def _on_entry_selected(self, entry: Any) -> None:
+    def _on_entry_selected(self, entry: EntryT) -> None:
         raise NotImplementedError
 
     # -- filtering / list rendering --
@@ -1677,7 +1687,7 @@ class SearchablePickerScreen(ModalDialog[Any]):
         self._by_item_id = {}
 
         if not self._entries:
-            await list_view.append(ListItem(Label(self.EMPTY_MESSAGE)))
+            await list_view.append(ListItem(Label(self.empty_message)))
             return
 
         needle = query.strip().lower()
@@ -1742,7 +1752,9 @@ class SearchablePickerScreen(ModalDialog[Any]):
         self._on_entry_selected(entry)
 
 
-class VirtueFlawPickerScreen(SearchablePickerScreen):
+class VirtueFlawPickerScreen(
+    SearchablePickerScreen[VirtueFlawDef, VirtueFlawInstance | None]
+):
     """Pick a character Virtue/Flaw from the catalog, prompting for
     parameters if needed. Dismisses with the new instance, or None if
     cancelled.
@@ -1794,7 +1806,9 @@ class VirtueFlawPickerScreen(SearchablePickerScreen):
         )
 
 
-class LabVirtueFlawPickerScreen(SearchablePickerScreen):
+class LabVirtueFlawPickerScreen(
+    SearchablePickerScreen[LabVirtueFlawDef, VirtueFlawInstance | None]
+):
     """Pick a Laboratory Virtue/Flaw from the lab catalog (ArM5 Chapter 8
     -- Structure/Outfittings/Supernatural). Dismisses with the new
     instance, or None if cancelled.
@@ -1834,7 +1848,9 @@ class LabVirtueFlawPickerScreen(SearchablePickerScreen):
         self.dismiss(VirtueFlawInstance(vf_id=entry.id))
 
 
-class CovenantBoonHookPickerScreen(SearchablePickerScreen):
+class CovenantBoonHookPickerScreen(
+    SearchablePickerScreen[CovenantBoonHookDef, VirtueFlawInstance | None]
+):
     """Pick a covenant Boon or Hook (ArM5 Chapter 6) from the catalog, then
     optionally name what it applies to (which Edifice, which contested
     resource...). Dismisses with the new VirtueFlawInstance, or None if
@@ -1849,13 +1865,14 @@ class CovenantBoonHookPickerScreen(SearchablePickerScreen):
     LIST_VIEW_ID: ClassVar[str] = "covbh-picker-list"
 
     def __init__(self, kind: str, attached_ids: list[str] | None = None) -> None:
-        super().__init__()
+        super().__init__(
+            f"Add a {kind}",
+            empty_message=f"(no more {kind}s available)",
+            search_placeholder=f"Search {kind}s...",
+        )
         self.kind = kind
         self._taken = Counter(attached_ids or [])
         self._by_id = catalog.load_covenant_boon_hook_catalog_by_id()
-        self.PICKER_TITLE = f"Add a {kind}"
-        self.EMPTY_MESSAGE = f"(no more {kind}s available)"
-        self.SEARCH_PLACEHOLDER = f"Search {kind}s..."
 
     def _load_entries(self) -> list[CovenantBoonHookDef]:
         return sorted(
@@ -1993,7 +2010,7 @@ class AbilityDetailsScreen(ModalDialog[Ability | None]):
         )
 
 
-class AbilityPickerScreen(SearchablePickerScreen):
+class AbilityPickerScreen(SearchablePickerScreen[AbilityDef, Ability | None]):
     """Pick an Ability from the catalog, resolve any parameter, set score/specialty.
 
     Non-templated entries already held are excluded (no point in a second
@@ -2051,7 +2068,7 @@ class AbilityPickerScreen(SearchablePickerScreen):
         self.app.push_screen(AbilityDetailsScreen(name, category), handle_ability)
 
 
-class SpellChooserScreen(SearchablePickerScreen):
+class SpellChooserScreen(SearchablePickerScreen[Spell, str | None]):
     """Pick a spell -- for a Lab Text or Casting Tablet, or a spell a magus
     knows: every spell there is (the catalog, the saga's own, any magus's
     invented spells) less any in `exclude`, searchable by name or shorthand.
@@ -2065,15 +2082,10 @@ class SpellChooserScreen(SearchablePickerScreen):
     def __init__(
         self, saga: Saga, *, exclude: set[str] | None = None, title: str = ""
     ) -> None:
-        super().__init__()
+        super().__init__(title)
         self.saga = saga
         self.exclude = exclude or set()
-        self.title_text = title or self.PICKER_TITLE
         self._origin: dict[str, str] = {}
-
-    def on_mount(self) -> Any:
-        self.query_one("#picker-title", Label).update(self.title_text)
-        return super().on_mount()
 
     def _load_entries(self) -> list[Spell]:
         entries = []
