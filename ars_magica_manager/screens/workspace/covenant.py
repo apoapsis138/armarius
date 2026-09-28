@@ -9,6 +9,7 @@ from ... import catalog
 from ... import economics as eco
 from ... import inhabitants as inh
 from ... import possessions as pos
+from ...covenants import boon_hook_is_unknown
 from ...markup import escape
 from ...models import (
     BOON_HOOK_DESCRIPTION,
@@ -877,21 +878,27 @@ class CovenantActions(WorkspaceBase):
             return
         by_id = catalog.load_covenant_boon_hook_catalog_by_id()
         instance = covenant.boons_hooks[index]
+        definition = by_id[instance.vf_id]
 
         def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
             instance.params = boon_hook_params(
-                result["detail"], result["description"], instance.params
+                result["detail"],
+                result["description"],
+                instance.params,
+                unknown=result.get("unknown", False),
             )
             self._commit(_BOON_HOOK_SECTION[kind])
 
         self.app.push_screen(
             FieldsDialog(
-                f"{kind}: {escape(by_id[instance.vf_id].name)}",
+                f"{kind}: {escape(definition.name)}",
                 _boon_hook_fields(
                     instance.params.get(BOON_HOOK_DETAIL, ""),
                     instance.params.get(BOON_HOOK_DESCRIPTION, ""),
+                    can_be_unknown=definition.unknown,
+                    unknown=boon_hook_is_unknown(instance, definition),
                 ),
             ),
             handle_result,

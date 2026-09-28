@@ -1,4 +1,4 @@
-"""The start screen: pick, create or delete a saga."""
+"""The start screen: pick, create or delete a saga, or read About."""
 
 from __future__ import annotations
 
@@ -6,18 +6,21 @@ from typing import Any, ClassVar
 
 from textual.app import ComposeResult
 from textual.binding import Binding, BindingType
+from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.screen import Screen
 from textual.widgets import (
+    Button,
     Header,
     Label,
     ListItem,
     ListView,
+    Markdown,
     Static,
 )
 
-from .. import __version__, creation, storage
+from .. import ROOT, __version__, creation, storage
 from ..markup import escape
-from .fields import FieldsDialog
+from .fields import FieldsDialog, ModalDialog
 from .forms import _saga_fields
 from .prompts import ConfirmScreen
 from .widgets import BottomBar
@@ -26,6 +29,68 @@ from .workspace import WorkspaceScreen
 _SAGA_ITEM_ID_PREFIX = "saga-"
 #: What loading a damaged or hand-edited saga file can raise.
 _UNREADABLE = (OSError, ValueError, TypeError, KeyError)
+#: The licences, credits and trademark notices the About dialog shows.
+NOTICE_PATH = ROOT / "NOTICE.md"
+
+
+class AboutScreen(ModalDialog[None]):
+    """About this App: the version, and NOTICE.md (the program's licence,
+    the Ars Magica Open License attribution, sources and trademarks).
+    Escape or Close dismisses it."""
+
+    DEFAULT_CSS = """
+    AboutScreen {
+        align: center middle;
+    }
+
+    #about-dialog {
+        width: 84;
+        max-width: 100%;
+        height: 90%;
+        border: round $accent;
+        padding: 0 1;
+        background: $surface;
+    }
+
+    #about-title {
+        text-style: bold;
+        margin: 1 1 0 1;
+    }
+
+    #about-scroll {
+        width: 100%;
+        height: 1fr;
+    }
+
+    #about-buttons {
+        width: 100%;
+        height: auto;
+        align-horizontal: right;
+    }
+    """
+
+    def compose(self) -> ComposeResult:
+        try:
+            notice = NOTICE_PATH.read_text(encoding="utf-8")
+        except OSError:
+            notice = "NOTICE.md is missing: see the repository for licences."
+        with Vertical(id="about-dialog"):
+            yield Label(f"Ars Magica Manager v{__version__}", id="about-title")
+            with VerticalScroll(id="about-scroll"):
+                yield Markdown(notice, id="about-notice", open_links=False)
+            with Horizontal(id="about-buttons"):
+                yield Button("Close", id="btn-close", variant="primary")
+
+    def on_mount(self) -> None:
+        self.query_one("#about-scroll", VerticalScroll).focus()
+
+    def on_markdown_link_clicked(self, event: Markdown.LinkClicked) -> None:
+        # Only web links: the relative ones (LICENSE) are files in the repo.
+        if event.href.startswith(("http://", "https://")):
+            self.app.open_url(event.href)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        self.action_cancel()
 
 
 class SagaPickerScreen(Screen[None]):
@@ -36,6 +101,8 @@ class SagaPickerScreen(Screen[None]):
         ("A", "delete_saga", "Delete Saga"),
         Binding("delete", "delete_saga", "Delete Saga", show=False),
         ("q", "quit", "Quit"),
+        # Shown at the footer's right end (BottomBar right_actions).
+        ("question_mark", "about", "About this App"),
     ]
 
     def compose(self) -> ComposeResult:
@@ -47,7 +114,7 @@ class SagaPickerScreen(Screen[None]):
         )
         yield ListView(id="saga-list")
         yield Static(f"[dim]Ars Magica Manager {__version__}[/]", id="picker-version")
-        yield BottomBar()
+        yield BottomBar(right_actions=["about"])
 
     async def on_mount(self) -> None:
         await self.refresh_list()
@@ -86,6 +153,9 @@ class SagaPickerScreen(Screen[None]):
         # append()/extend() don't set an initial highlight the way construction-time
         # children do, so keyboard/enter selection wouldn't work without this.
         list_view.index = 0
+
+    def action_about(self) -> None:
+        self.app.push_screen(AboutScreen())
 
     def action_create_saga(self) -> None:
         async def handle_result(values: dict[str, Any] | None) -> None:

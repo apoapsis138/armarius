@@ -31,6 +31,7 @@ from ars_magica_manager import spells as spl
 from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.arts import FORMS, TECHNIQUES
 from ars_magica_manager.models import (
+    BOON_HOOK_UNKNOWN,
     LAB_CHARACTERISTICS,
     LAB_SPECIALIZATIONS,
     Ability,
@@ -5645,6 +5646,26 @@ async def test_details_panel_shows_requires_one_of():
         await _select_covenant(pilot, app)
         text = strip_markup(app.screen._covenant_sheet_view._bh_info_text(0))
         assert "Requires one of: Cavalry, Crossbowmen, Criminals" in text
+
+
+async def test_an_unknown_hook_says_so_in_its_row_and_panel():
+    saga = _saga_with_boons_and_hooks(
+        "covbh_hook_minor_rival", "covbh_hook_minor_haunted"
+    )
+    saga.covenants[0].boons_hooks[0].params = {BOON_HOOK_UNKNOWN: "yes"}
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 50)) as pilot:
+        await _select_covenant(pilot, app)
+        view = app.screen._covenant_sheet_view
+        rows = [strip_markup(label) for _, label in view._bh_entries("Hook")]
+        assert rows == ["Rival (Unknown, 3 pts)", "Haunted"]
+        assert "Hooks (4 pts)" in strip_markup(view._bh_title("Hook"))
+        marked = strip_markup(view._bh_info_text(0))
+        assert "Unknown: Yes (counts 3 points, as a Major Hook)" in marked
+        plain = strip_markup(view._bh_info_text(1))
+        assert "May be Unknown (mark it in its Edit form)." in plain
 
 
 async def test_details_panel_shows_the_detail_and_escapes_markup():

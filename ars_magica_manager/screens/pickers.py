@@ -372,6 +372,8 @@ class CovenantBoonHookPickerScreen(
             label += f"  (requires one of: {self._names(entry.requires_any)})"
         if entry.excludes:
             label += f"  (not with: {self._names(entry.excludes)})"
+        if entry.unknown:
+            label += "  (may be Unknown)"
         if self._taken[entry.id]:
             label += f"  (taken x{self._taken[entry.id]})"
         return label
@@ -383,11 +385,18 @@ class CovenantBoonHookPickerScreen(
         def handle_detail(result: dict[str, Any] | None) -> None:
             if result is None:
                 return  # cancelled: back to the picker
-            params = boon_hook_params(result["detail"], result["description"])
+            params = boon_hook_params(
+                result["detail"],
+                result["description"],
+                unknown=result.get("unknown", False),
+            )
             self.dismiss(VirtueFlawInstance(vf_id=entry.id, params=params))
 
         self.app.push_screen(
-            FieldsDialog(f"{self.kind}: {escape(entry.name)}", _boon_hook_fields()),
+            FieldsDialog(
+                f"{self.kind}: {escape(entry.name)}",
+                _boon_hook_fields(can_be_unknown=entry.unknown),
+            ),
             handle_detail,
         )
 

@@ -33,6 +33,8 @@ from .. import sheet_text as st
 from .. import spells as spl
 from ..arts import ART_ABBREVIATIONS, ART_DESCRIPTIONS, FORMS, TECHNIQUES
 from ..covenants import (
+    UNKNOWN_HOOK_POINTS,
+    boon_hook_is_unknown,
     covenant_boon_points,
     covenant_effective_aura,
     covenant_hook_points,
@@ -2637,7 +2639,15 @@ class CovenantSheetView(SheetView):
         covenant.boons_hooks, display label) pairs, in attach order."""
         by_id = catalog.load_covenant_boon_hook_catalog_by_id()
         return [
-            (index, escape(catalog.describe_boon_hook(bh, by_id)))
+            (
+                index,
+                escape(catalog.describe_boon_hook(bh, by_id))
+                + (
+                    f" [dim](Unknown, {UNKNOWN_HOOK_POINTS} pts)[/]"
+                    if boon_hook_is_unknown(bh, by_id[bh.vf_id])
+                    else ""
+                ),
+            )
             for index, bh in enumerate(self.covenant.boons_hooks)
             if bh.vf_id in by_id and by_id[bh.vf_id].type == kind
         ]
@@ -2659,6 +2669,13 @@ class CovenantSheetView(SheetView):
         if definition.category:
             lines.append(f"[b]Type:[/] {definition.category}")
         lines.append(f"[b]Tier:[/] {_tier_text(definition)}")
+        if boon_hook_is_unknown(instance, definition):
+            lines.append(
+                f"[b]Unknown:[/] Yes (counts {UNKNOWN_HOOK_POINTS} points, "
+                "as a Major Hook)"
+            )
+        elif definition.unknown:
+            lines.append("[dim]May be Unknown (mark it in its Edit form).[/]")
         if definition.requires:
             lines.append(
                 f"[b]Requires:[/] {_boon_hook_names(definition.requires, by_id)}"

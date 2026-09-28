@@ -1,7 +1,7 @@
 {
   "source": "https://www.redcap.org/page/The_Grand_Grimoire",
   "retrieved": "2026-09-23",
-  "attribution": "Spells from The Grand Grimoire on Project: Redcap (redcap.org), collecting the Hermetic spells of Ars Magica Definitive Edition and its supplements. Ars Magica is published by Atlas Games.",
+  "attribution": "Spells from The Grand Grimoire on Project: Redcap (redcap.org), collecting the Hermetic spells of Ars Magica Definitive Edition and its supplements; each spell's source names its book. Condensed and restructured as data for Ars Magica Manager. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
   "spells": [
     {
       "id": "spell_soothe_pains_of_the_beast",

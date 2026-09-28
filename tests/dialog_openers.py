@@ -82,6 +82,8 @@ OPENERS: dict[str, Opener] = {
         "covenant", lambda ws: ws._edit_covenant_description()
     ),
     "edit boon": Opener("covenant", lambda ws: ws._edit_boon_hook_at("Boon", 0)),
+    # The fixture's Hook (Contested Resource) may be Unknown.
+    "edit hook": Opener("covenant", lambda ws: ws._edit_boon_hook_at("Hook", 1)),
     "improve income": Opener(
         "covenant",
         lambda ws: ws._improve_form(ws.selected_covenant.economics.income_sources[0]),

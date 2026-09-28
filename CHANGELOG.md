@@ -8,6 +8,20 @@ fix or behind-the-scenes improvement bumps PATCH. The version is set in
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 0.8.0 — 2026-09-27
+
+- Unknown Hooks: a Minor Hook the book says "may be Unknown" (35 of them)
+  can be marked Unknown in its add or Edit form. It then counts 3 points in
+  the Hooks total, as a Major Hook, and says so in its row ("Favors
+  (Unknown, 3 pts)") and details panel. The picker notes which Hooks may be
+  Unknown.
+- Ars Magica Manager is now licensed under the GNU GPL v3 (LICENSE). The
+  Ars Magica rules text in its catalogs is credited to Atlas Games under
+  CC BY-SA 4.0: every catalog carries the attribution line, and NOTICE.md
+  lists the sources, changes made and trademark notices.
+- The saga picker has an About dialog (`?`) showing the version and the
+  licences and credits.
+
 ## 0.7.0 — 2026-09-27
 
 - The covenant Boons & Hooks catalog has been checked against Covenants

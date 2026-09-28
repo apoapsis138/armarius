@@ -34,8 +34,11 @@ LAB_FEATURE_CATALOG_PATH = DATA_DIR / "lab_feature_catalog.json"
 
 
 def _load_entries[T](path: Path, from_dict: Callable[[dict[str, Any]], T]) -> list[T]:
-    """Every entry of a catalog file that is a JSON list of entries."""
-    return [from_dict(entry) for entry in json.loads(path.read_text(encoding="utf-8"))]
+    """Every entry of a catalog file: {"attribution": ..., "entries": [...]},
+    or a bare JSON list of entries (as tests write them)."""
+    data = json.loads(path.read_text(encoding="utf-8"))
+    entries = data["entries"] if isinstance(data, dict) else data
+    return [from_dict(entry) for entry in entries]
 
 
 @lru_cache(maxsize=4)

@@ -5,11 +5,34 @@ Boons/Hooks carry."""
 from __future__ import annotations
 
 from .models import (
+    BOON_HOOK_UNKNOWN,
     Covenant,
     CovenantBoonHookDef,
     Modifier,
+    VirtueFlawInstance,
     round_away_from_zero,
 )
+
+#: What an Unknown Minor Hook counts for balancing: as a Major Hook.
+UNKNOWN_HOOK_POINTS = 3
+
+
+def boon_hook_is_unknown(
+    instance: VirtueFlawInstance, definition: CovenantBoonHookDef
+) -> bool:
+    """Whether an attached Hook is marked Unknown -- honoured only for a
+    catalog entry that may be Unknown, so a stale mark counts for nothing."""
+    return definition.unknown and instance.params.get(BOON_HOOK_UNKNOWN) == "yes"
+
+
+def boon_hook_points(
+    instance: VirtueFlawInstance, definition: CovenantBoonHookDef
+) -> float:
+    """The points one attached Boon costs or Hook provides (positive either
+    way): its catalog cost, or UNKNOWN_HOOK_POINTS for an Unknown Hook."""
+    if boon_hook_is_unknown(instance, definition):
+        return UNKNOWN_HOOK_POINTS
+    return abs(definition.cost)
 
 
 def covenant_boon_points(
@@ -17,7 +40,7 @@ def covenant_boon_points(
 ) -> int:
     """Total points the covenant's attached Boons cost."""
     return sum(
-        definition.cost
+        boon_hook_points(bh, definition)
         for bh in covenant.boons_hooks
         if (definition := catalog_by_id.get(bh.vf_id)) is not None
         and definition.type == "Boon"
@@ -28,9 +51,10 @@ def covenant_hook_points(
     covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
 ) -> int:
     """Total points the covenant's attached Hooks provide (a positive
-    number -- Hooks are stored with negative costs, like Flaws)."""
+    number -- Hooks are stored with negative costs, like Flaws); an Unknown
+    Minor Hook provides 3."""
     return sum(
-        -definition.cost
+        boon_hook_points(bh, definition)
         for bh in covenant.boons_hooks
         if (definition := catalog_by_id.get(bh.vf_id)) is not None
         and definition.type == "Hook"

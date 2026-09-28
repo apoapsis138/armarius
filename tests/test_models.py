@@ -11,6 +11,7 @@ from ars_magica_manager.laboratories import (
 from ars_magica_manager.models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
+    BOON_HOOK_UNKNOWN,
     Ability,
     Aging,
     Background,
@@ -400,6 +401,12 @@ def test_boon_hook_params_keeps_other_keys_and_only_non_empty_text():
         BOON_HOOK_DETAIL: "Tower",
     }
     assert boon_hook_params("", " Tall ") == {BOON_HOOK_DESCRIPTION: "Tall"}
+
+
+def test_boon_hook_params_sets_and_clears_the_unknown_mark():
+    marked = boon_hook_params("", "", {"other": "kept"}, unknown=True)
+    assert marked == {"other": "kept", BOON_HOOK_UNKNOWN: "yes"}
+    assert boon_hook_params("", "", marked) == {"other": "kept"}
 
 
 def test_a_stale_key_or_a_null_section_does_not_make_a_save_unloadable():

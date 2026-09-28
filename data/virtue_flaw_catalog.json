@@ -1,4 +1,6 @@
-[
+{
+  "attribution": "Virtues and Flaws from Ars Magica Fifth Edition (core rules), Chapter 4, via Project: Redcap (redcap.org). Condensed and restructured as data for Ars Magica Manager. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+  "entries": [
   {
     "id": "vf_academic_concentration_subject",
     "name": "Academic Concentration {subject}",
@@ -5728,3 +5730,4 @@
     "description": "You are prone to anger over the smallest issues, and your rage when you are thwarted in something major is terrible to behold. Based on the material for Ars Magica, ©1993-2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\"). Ars Magica Open License Logo ©2024 Trident, Inc. The Ars Magica Open License Logo, Ars Magica, and Mythic Europe are trademarks of Trident, Inc., and are used with permission. Order of Hermes, Tremere, Doissetep, and Grimgroth are trademarks of Paradox Interactive AB and are used with permission."
   }
 ]
+}

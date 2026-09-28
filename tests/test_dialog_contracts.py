@@ -28,6 +28,7 @@ from ars_magica_manager import storage
 from ars_magica_manager.models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
+    BOON_HOOK_UNKNOWN,
     LabSpecialtyEntry,
     LabSpecialtyGrant,
     Saga,
@@ -165,6 +166,15 @@ CONTRACTS: dict[str, Contract] = {
             _cov(s).boons_hooks[0].params.get(BOON_HOOK_DESCRIPTION),
         ),
         expected=("North tower", "Tall"),
+    ),
+    "edit hook": Contract(
+        prefill={"Unknown": False, "Detail": ""},
+        edits={"Unknown": True, "Detail": "The mill"},
+        saved=lambda s: (
+            _cov(s).boons_hooks[1].params.get(BOON_HOOK_DETAIL),
+            _cov(s).boons_hooks[1].params.get(BOON_HOOK_UNKNOWN),
+        ),
+        expected=("The mill", "yes"),
     ),
     "edit personality trait": Contract(
         prefill={"Name": "Brave", "Score": "2"},

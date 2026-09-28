@@ -1,4 +1,6 @@
-[
+{
+  "attribution": "Abilities from Ars Magica Fifth Edition (core rules), Chapter 5, via Project: Redcap (redcap.org). Condensed and restructured as data for Ars Magica Manager. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+  "entries": [
   { "id": "ab_animal_handling", "name": "Animal Handling", "category": "General", "description": "Care and use of animals, including raising, tending, grooming, and healing them. Specialties: falconry, specific animals." },
   { "id": "ab_area_lore", "name": "Area Lore: {region}", "category": "General", "parameters": ["region"], "description": "Knowledge of one particular region, covenant, or even a village, including where things are in the immediate area, local history and legends, and the centers of power in the region. The smaller the region, the more detailed your knowledge. Specialties: geography, history, legends, politics, personalities." },
   { "id": "ab_athletics", "name": "Athletics", "category": "General", "description": "General physical prowess: moving smoothly, confidently, and with grace, and most large-muscle coordination. Specialties: acrobatics, contortions, grace, jumping, running." },
@@ -82,3 +84,4 @@
   { "id": "ab_whistle_up_the_wind", "name": "Whistle Up The Wind", "category": "Supernatural", "description": "Creates wind by whistling; described in the Hermetic Magic chapter." },
   { "id": "ab_wilderness_sense", "name": "Wilderness Sense", "category": "Supernatural", "description": "A mystical attunement to the ways of the wilderness: a Perception + Wilderness Sense roll against an Ease Factor of 9 reveals the direction of north, the upcoming weather, or the presence of natural hazards or resources -- one roll reveals only one piece of information. Specialties: direction, weather, hazards, resources." }
 ]
+}

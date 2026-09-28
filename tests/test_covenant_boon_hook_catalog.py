@@ -4,11 +4,14 @@ import pytest
 
 from ars_magica_manager import catalog
 from ars_magica_manager.covenants import (
+    UNKNOWN_HOOK_POINTS,
+    boon_hook_is_unknown,
     covenant_boon_points,
     covenant_effective_aura,
     covenant_hook_points,
 )
 from ars_magica_manager.models import (
+    BOON_HOOK_UNKNOWN,
     COVENANT_BOON_HOOK_CATEGORIES,
     VIRTUE_FLAW_TIER_COST,
     Covenant,
@@ -484,6 +487,22 @@ def test_boon_and_hook_points_are_totalled_separately_and_both_positive():
     ]
     assert covenant_boon_points(covenant, by_id) == 5
     assert covenant_hook_points(covenant, by_id) == 4
+
+
+def test_an_unknown_minor_hook_counts_as_major():
+    by_id = catalog.load_covenant_boon_hook_catalog_by_id()
+    unknown = {BOON_HOOK_UNKNOWN: "yes"}
+    rival = VirtueFlawInstance(vf_id="covbh_hook_minor_rival", params=unknown)
+    # Not in the book's "may be Unknown" list: a stale mark counts nothing.
+    road = VirtueFlawInstance(vf_id="covbh_hook_minor_road", params=unknown)
+    assert by_id["covbh_hook_minor_rival"].unknown
+    assert not by_id["covbh_hook_minor_road"].unknown
+    assert boon_hook_is_unknown(rival, by_id[rival.vf_id])
+    assert not boon_hook_is_unknown(road, by_id[road.vf_id])
+
+    covenant = Covenant(id="c", saga_id="s", name="C")
+    covenant.boons_hooks = [rival, road]
+    assert covenant_hook_points(covenant, by_id) == UNKNOWN_HOOK_POINTS + 1
 
 
 def test_describe_boon_hook_appends_the_optional_detail():

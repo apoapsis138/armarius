@@ -3,7 +3,7 @@ sections and layout rows, and small display helpers."""
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from typing import Any, ClassVar
 
 from textual.app import ComposeResult
@@ -18,6 +18,7 @@ from textual.widgets import (
     OptionList,
     Static,
 )
+from textual.widgets._footer import FooterKey
 from textual.widgets.option_list import Option
 
 from ..models import (
@@ -96,9 +97,49 @@ class BottomBar(Vertical):
     }
     """
 
+    def __init__(self, right_actions: Iterable[str] = ()) -> None:
+        super().__init__()
+        self._right_actions = frozenset(right_actions)
+
     def compose(self) -> ComposeResult:
         yield ThemeBar(id="theme-bar")
-        yield Footer()
+        yield SplitFooter(self._right_actions)
+
+
+class SplitFooter(Footer):
+    """A Footer whose keys for `right_actions` sit at its right end, just
+    left of the command palette's ^p, instead of in the row of keys on the
+    left (e.g. the saga picker's "? About this App")."""
+
+    DEFAULT_CSS = """
+    SplitFooter .footer-spacer {
+        width: 1fr;
+        height: 1;
+    }
+    SplitFooter FooterKey.-right {
+        border-left: vkey $foreground 20%;
+    }
+    """
+
+    def __init__(self, right_actions: frozenset[str] = frozenset()) -> None:
+        super().__init__()
+        self._right_actions = right_actions
+
+    def compose(self) -> ComposeResult:
+        right: list[FooterKey] = []
+        for widget in super().compose():
+            if (
+                isinstance(widget, FooterKey)
+                and widget.action in self._right_actions
+                and not widget.has_class("-grouped")
+            ):
+                right.append(widget.add_class("-right"))
+            else:
+                yield widget
+        if right:
+            # Takes up the free width, pushing the keys after it right.
+            yield Static(classes="footer-spacer")
+            yield from right
 
 
 class SelectableList(OptionList):

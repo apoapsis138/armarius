@@ -76,10 +76,31 @@ def _ability_from(name: str, category: str, values: dict[str, Any]) -> Ability:
     )
 
 
-def _boon_hook_fields(detail: str = "", description: str = "") -> list[DialogField]:
+def _boon_hook_fields(
+    detail: str = "",
+    description: str = "",
+    *,
+    can_be_unknown: bool = False,
+    unknown: bool = False,
+) -> list[DialogField]:
     """A covenant Boon's or Hook's own Detail (shown in the list) and
-    Description (shown ahead of the rules text); both optional."""
-    return [
+    Description (shown ahead of the rules text); both optional. A Minor
+    Hook that may be Unknown also gets an Unknown checkbox."""
+    unknown_fields = (
+        [
+            DialogField(
+                "unknown",
+                "Unknown",
+                "check",
+                unknown,
+                hint="Only the player who storyguides it knows it; "
+                "counts 3 points, as a Major Hook.",
+            )
+        ]
+        if can_be_unknown
+        else []
+    )
+    return unknown_fields + [
         DialogField(
             "detail",
             "Detail",

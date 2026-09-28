@@ -1,4 +1,6 @@
-[
+{
+  "attribution": "Laboratory Virtues and Flaws from Ars Magica Fifth Edition: Covenants, Chapter 8, via Project: Redcap (redcap.org). Condensed and restructured as data for Ars Magica Manager. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+  "entries": [
   {
     "id": "labvf_greater_feature",
     "name": "Greater Feature",
@@ -672,3 +674,4 @@
     "description": "One of the lab's major parts or aspects is but an illusion -- take one Major Virtue immediately (no time cost) to balance this Flaw, but its effects are illusory and negated completely. Grants +2 to an Imaginem Specialization."
   }
 ]
+}
