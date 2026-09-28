@@ -28,10 +28,11 @@ from ars_magica_manager import storage
 from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Saga
 from ars_magica_manager.screens import WorkspaceScreen
+from ars_magica_manager.screens.widgets import DETAILS_PANEL_HEIGHT, DetailsPanel
 
 GOLDEN_DIR = Path(__file__).parent / "golden" / "sheet_text"
 
-SIZES = [(140, 70), (80, 24)]
+SIZES = [(140, 70), (120, 45)]
 
 #: The nodes that show a sheet view (the others show a list or a summary).
 SHEETS = {"covenant", "character", "laboratory", "familiar"}
@@ -74,6 +75,38 @@ async def _all_tabs(pilot, app, workspace) -> list[str]:
     return lines
 
 
+async def _open_node(pilot, app, node: str) -> WorkspaceScreen:
+    """From the saga picker, open `node` in the workspace and let it
+    settle."""
+    await pilot.press("enter")  # picker -> workspace
+    assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+    workspace = app.screen
+    tree = workspace.query_one(Tree)
+
+    def find_node():
+        stack = [tree.root]
+        while stack:
+            candidate = stack.pop()
+            if candidate.data == NODES[node]:
+                return candidate
+            stack.extend(candidate.children)
+        return None
+
+    assert await wait_until(pilot, lambda: find_node() is not None)
+    tree.select_node(find_node())
+    assert await wait_until(pilot, lambda: workspace.selected_kind == node)
+    # selected_kind changes before the sheet is mounted and recorded.
+    if node in SHEETS:
+        assert await wait_until(
+            pilot, lambda: workspace._current_sheet_view() is not None
+        )
+    view = workspace._current_sheet_view()
+    if view is not None:
+        assert await wait_until(pilot, lambda: view.initial_tab_seen)
+    await _settle(pilot)
+    return workspace
+
+
 async def _snapshot(
     node: str,
     size: tuple[int, int],
@@ -86,32 +119,8 @@ async def _snapshot(
     storage.save_saga(saga if saga is not None else everything_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=size) as pilot:
-        await pilot.press("enter")  # picker -> workspace
-        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
-        workspace = app.screen
-        tree = workspace.query_one(Tree)
-
-        def find_node():
-            stack = [tree.root]
-            while stack:
-                candidate = stack.pop()
-                if candidate.data == NODES[node]:
-                    return candidate
-                stack.extend(candidate.children)
-            return None
-
-        assert await wait_until(pilot, lambda: find_node() is not None)
-        tree.select_node(find_node())
-        assert await wait_until(pilot, lambda: workspace.selected_kind == node)
-        # selected_kind changes before the sheet is mounted and recorded.
-        if node in SHEETS:
-            assert await wait_until(
-                pilot, lambda: workspace._current_sheet_view() is not None
-            )
+        workspace = await _open_node(pilot, app, node)
         view = workspace._current_sheet_view()
-        if view is not None:
-            assert await wait_until(pilot, lambda: view.initial_tab_seen)
-        await _settle(pilot)
         shown = "\n".join(await _all_tabs(pilot, app, workspace)) + "\n"
         if view is None:
             return shown, None
@@ -138,6 +147,32 @@ async def test_sheet_text(node, size):
     assert shown == golden.read_text(encoding="utf-8")
     if refreshed is not None:
         assert refreshed == shown
+
+
+@pytest.mark.parametrize("node", list(NODES))
+async def test_every_details_panel_is_one_fixed_panel_docked_at_the_bottom(node):
+    # STORY-114: one details panel per tab (or list), always
+    # DETAILS_PANEL_HEIGHT rows, at the bottom of its tab below the part
+    # that scrolls.
+    storage.save_saga(everything_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace = await _open_node(pilot, app, node)
+        pane = workspace._detail_pane()
+        tabbed = next(iter(pane.query(TabbedContent)), None)
+        tabs = list(tabbed.query(TabPane)) if tabbed is not None else [None]
+        for tab in tabs:
+            if tab is not None:
+                tabbed.active = tab.id
+                await wait_until(pilot, lambda tab=tab: tabbed.active == tab.id)
+                await _settle(pilot)
+            where = tab.id if tab is not None else node
+            panels = list((tab or pane).query(DetailsPanel))
+            assert len(panels) <= 1, where
+            for panel in panels:
+                assert panel.region.height == DETAILS_PANEL_HEIGHT, where
+                assert panel.region.bottom == panel.parent.region.bottom, where
+                assert panel is panel.parent.children[-1], where
 
 
 _RECORD_LISTS = ("covenants", "characters", "laboratories", "familiars")

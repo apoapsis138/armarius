@@ -10,9 +10,9 @@
         Name                           Arts            Level  Range/Duration/Target  Ritual Source
       ○ Soothe Pains of the Beast      CrAn               20  Touch/Mom/Ind          Ritual ArM5
       ○ True Rest of the Injured Brute CrAn               20  Touch/Moon/Ind                ArM5
-      ○ Summoning the Creeping Death   CrAn               25  Touch/Diam/Ind                HoHS      ▂▂
+      ○ Summoning the Creeping Death   CrAn               25  Touch/Diam/Ind                HoHS
       ○ Weaver's Trap of Webs          CrAn               35  Voice/Sun/Group               ArM5
-      ○ The Wizard's Mount             CrAn               35  Touch/Sun/Ind                 ArM5
+      ○ The Wizard's Mount             CrAn               35  Touch/Sun/Ind                 ArM5      ▇▇
       ○ Venomous Velites               Cr(Re)An           45  Sight/Sun/Group               HoHTL
       ○ Curse of the Ravenous Swarm    Cr(Re)An           50  Touch/Moon/Group       Ritual ArM5
       ○ Image of the Beast             InAn                5  (details missing)             ArM5
@@ -43,18 +43,18 @@
       ○ Viper's Gaze                   ReAn               15  Eye/Conc/Ind                  ArM5
       ○ Fury of the Charging Bull      ReAn               20  Voice/Mom/Ind                 HoHS
       ○ Plague of Frogs                ReAn               20  Touch/Mom/Group               A&A
+      ○ The Verminous Infestation      Re(Pe)An(Co)       20  Eye/Mom/Ind                   A&A
+      ○ The Gentle Beast               ReAn               25  Eye/Conc/Ind                  ArM5
+      ○ Mastering the Unruly Beast     ReAn               25  Touch/Conc/Ind                ArM5
+      ○ Commanding the Harnessed Beast ReAn               30  Touch/Sun/Ind                 ArM5
+      ○ The Unfaithful Favor           ReAn               45  (details missing)             HoHTL
+      ○ Footsteps of Slippery Oil      CrAq                5  Touch/Diam/Ind                ArM5
+      ○ Dagger of Ice                  CrAq               10  Voice/Mom/Ind                 HoHS
+      ○ Creeping Oil                   CrAq               15  Voice/Sun/Ind                 ArM5
 
 
 
     Select a spell to see its details.
-
-
-
-
-
-
-
-
 
 
 

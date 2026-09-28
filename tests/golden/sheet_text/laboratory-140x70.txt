@@ -3,9 +3,9 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Tower
 
-      Covenant: Keep                                    Location: (not set)
-      Owner:    Leandro                                 Points:   0
-                                                        Sanctum?: No
+      Covenant: Keep                                     Location: (not set)
+      Owner:    Leandro                                  Points:   0
+                                                         Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
@@ -71,9 +71,9 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Tower
 
-      Covenant: Keep                                    Location: (not set)
-      Owner:    Leandro                                 Points:   0
-                                                        Sanctum?: No
+      Covenant: Keep                                     Location: (not set)
+      Owner:    Leandro                                  Points:   0
+                                                         Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
@@ -90,13 +90,12 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Virtues                                           ▼ Flaws
+    ▼ Virtues (3 pts)                                   ▼ Flaws (3 pts)
 
       ○ Greater Feature (Major)                           ○ Greater Focus (Major)
 
 
 
-    Select a Virtue or Flaw to read its rules.
 
 
 
@@ -122,6 +121,7 @@
 
 
 
+    Select a Virtue or Flaw to see its details.
 
 
 
@@ -139,9 +139,9 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Tower
 
-      Covenant: Keep                                    Location: (not set)
-      Owner:    Leandro                                 Points:   0
-                                                        Sanctum?: No
+      Covenant: Keep                                     Location: (not set)
+      Owner:    Leandro                                  Points:   0
+                                                         Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
@@ -167,26 +167,20 @@
       ○ Ignem      +1
       ○ Imaginem   +4
       ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-        ▼ Specializations: Other
+        ▼ Specializations: Other (1)
 
           ○ Ignem  +1  Hearth spirit
 
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Features
+     Features (1 of 1)
 
       ○ Big windows  (Window, Greater, Focus)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Rooms
+    ▼ Rooms (1)
 
       ○ Study
-
-
-
-
-
-
 
 
 
@@ -202,14 +196,20 @@
 
 
 
+
+
+
+
+
+
 ===== tab-lab-inventory
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Tower
 
-      Covenant: Keep                                    Location: (not set)
-      Owner:    Leandro                                 Points:   0
-                                                        Sanctum?: No
+      Covenant: Keep                                     Location: (not set)
+      Owner:    Leandro                                  Points:   0
+                                                         Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
@@ -231,21 +231,15 @@
       ○ Ignem: 2 pawn(s)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Equipment & Stores
+    ▼ Equipment & Stores (1)
 
       ○ Alembic
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Books (1) - 0 Build Points
+    ▼ Books (1)
 
           Name                 Type           Subject                 Level Quality  Location
         ○ Notes                Other          -                           -       -  Lab: Tower
-
-
-
-
-
-
 
 
 
@@ -270,14 +264,20 @@
 
 
 
+
+
+
+
+
+
 ===== tab-lab-diary
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Tower
 
-      Covenant: Keep                                    Location: (not set)
-      Owner:    Leandro                                 Points:   0
-                                                        Sanctum?: No
+      Covenant: Keep                                     Location: (not set)
+      Owner:    Leandro                                  Points:   0
+                                                         Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1
           Edit (e)
 
@@ -296,36 +296,36 @@
   ○ 1220 Spring  -  Built
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     Select a Diary entry to see its details.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

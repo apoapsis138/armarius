@@ -266,6 +266,19 @@ def test_specialty_entry_and_raw_vis_panels():
 # -- Features (STORY-308) --
 
 
+def test_vf_points_count_each_side_on_its_own():
+    lab = _lab("labvf_greater_feature", "labvf_gallery", "labvf_cramped", "labvf_empty")
+    assert lab_text.vf_points(lab, "Virtue") == 4  # Major 3 + Minor 1
+    assert lab_text.vf_points(lab, "Flaw") == 1  # Minor 1 + Free 0
+
+
+def test_features_title_counts_features_against_feature_virtues():
+    lab = _lab("labvf_lesser_feature", "labvf_greater_feature")
+    assert lab_text.features_title(lab) == "Features (0 of 2)"
+    lab.features = [LabFeature("f", "Cauldron")]
+    assert lab_text.features_title(lab) == "Features (1 of 2)"
+
+
 def test_feature_catalog_has_all_36_and_expands_any_technique():
     features = catalog.load_lab_feature_catalog()
     assert len(features) == 36

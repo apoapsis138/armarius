@@ -266,8 +266,22 @@ just the standing decisions.
 - **Selectable lists with a details panel** are the standard way to show,
   edit and remove a sheet's list items (rows carry a chosen/unchosen marker,
   `a`/`e`/`A` add/edit/delete the chosen row, delete always confirms). Applied
-  across the Covenant and Character sheets; the Laboratory sheet's lists
-  still use an older picker style (STORY-303).
+  on every sheet. Each tab has **one** details panel (`DetailsPanel`), docked
+  at the bottom below the part that scrolls, always 12 rows (longer text
+  scrolls inside it); its hint reads "Select a … to see its details."
+- **Section titles** carry the list's figure: `(n of m)` where there's a
+  limit (Specializations, Features); `(X pts)` on the two sides of a
+  balance -- a character's Virtues/Flaws in `$text-success` when they match
+  and `$text-error` when they don't, Boons/Hooks the same except plain
+  while the Boons cost less than the Hooks provide; plain `(X pts)` on a
+  lab's or familiar's Virtues/Flaws (no balance rule: the lab's capacity
+  has its own warning); a plain `(n)` count on other lists; nothing on
+  Abilities, Raw Vis or calculated sections. Book titles don't show Build
+  Points.
+- Side-by-side lists sit 2 columns apart and side-by-side blocks of text 4
+  apart, set once in `TwoColumns`/`StackingColumns`; column headings above a
+  list are a `TableHeader`. Sheets target a 140x60 terminal (checked at
+  120x45); 80x24 is not a target for sheets.
 - Every collapsible sheet section starts **expanded**; a sheet's
   always-visible summary sits above its tabs and stays visible across tabs.
 - Add/edit dialogs are a config-driven `FieldsDialog` (one row per field,

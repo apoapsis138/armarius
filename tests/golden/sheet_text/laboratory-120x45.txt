@@ -1,0 +1,215 @@
+===== tab-lab-planning
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Tower
+
+      Covenant: Keep                           Location: (not set)
+      Owner:    Leandro                        Points:   0
+                                               Sanctum?: No
+      Aura: 1 (covenant) +0 (modifier) = 1
+          Edit (e)
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+
+                          Size:            +0 +0 = +0    Safety:     +0 +0 = +0
+      Occupied Size: 0    Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
+      Free Virtues:  0    General Quality: +0 -2 = -2    Health:     +0 +0 = +0
+      Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
+          Edit (e)
+
+   Planning  Virtues & Flaws  Attributes  Inventory  Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Lab activity planning isn't built yet -- coming in a future update.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-lab-vf
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Tower
+
+      Covenant: Keep                           Location: (not set)
+      Owner:    Leandro                        Points:   0
+                                               Sanctum?: No
+      Aura: 1 (covenant) +0 (modifier) = 1
+          Edit (e)
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+
+                          Size:            +0 +0 = +0    Safety:     +0 +0 = +0
+      Occupied Size: 0    Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
+      Free Virtues:  0    General Quality: +0 -2 = -2    Health:     +0 +0 = +0
+      Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
+          Edit (e)
+
+   Planning  Virtues & Flaws  Attributes  Inventory  Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Virtues (3 pts)                         ▼ Flaws (3 pts)
+
+      ○ Greater Feature (Major)                 ○ Greater Focus (Major)
+
+
+
+    Select a Virtue or Flaw to see its details.
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-lab-attributes
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Tower
+
+      Covenant: Keep                           Location: (not set)
+      Owner:    Leandro                        Points:   0
+                                               Sanctum?: No
+      Aura: 1 (covenant) +0 (modifier) = 1
+          Edit (e)
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+
+                          Size:            +0 +0 = +0    Safety:     +0 +0 = +0
+      Occupied Size: 0    Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
+      Free Virtues:  0    General Quality: +0 -2 = -2    Health:     +0 +0 = +0
+      Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
+          Edit (e)
+
+   Planning  Virtues & Flaws  Attributes  Inventory  Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Specializations
+
+      Activity (0 of 2)
+      Art (4 of 4)
+
+
+    Select a Specialization, Feature or Room to see its details. Space turns a
+    Specialization off or on.
+
+
+
+
+
+
+
+
+
+
+
+===== tab-lab-inventory
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Tower
+
+      Covenant: Keep                           Location: (not set)
+      Owner:    Leandro                        Points:   0
+                                               Sanctum?: No
+      Aura: 1 (covenant) +0 (modifier) = 1
+          Edit (e)
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+
+                          Size:            +0 +0 = +0    Safety:     +0 +0 = +0
+      Occupied Size: 0    Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
+      Free Virtues:  0    General Quality: +0 -2 = -2    Health:     +0 +0 = +0
+      Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
+          Edit (e)
+
+   Planning  Virtues & Flaws  Attributes  Inventory  Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Raw Vis                                                                     ▄▄
+
+      ○ Ignem: 2 pawn(s)
+
+
+
+    Select Raw Vis, an Equipment & Stores entry or a book to see its details.
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-lab-diary
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Tower
+
+      Covenant: Keep                           Location: (not set)
+      Owner:    Leandro                        Points:   0
+                                               Sanctum?: No
+      Aura: 1 (covenant) +0 (modifier) = 1
+          Edit (e)
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+
+                          Size:            +0 +0 = +0    Safety:     +0 +0 = +0
+      Occupied Size: 0    Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
+      Free Virtues:  0    General Quality: +0 -2 = -2    Health:     +0 +0 = +0
+      Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
+          Edit (e)
+
+   Planning  Virtues & Flaws  Attributes  Inventory  Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ○ 1220 Spring  -  Built
+
+
+
+
+
+
+    Select a Diary entry to see its details.
+
+
+
+
+
+
+
+
+
+
+
+

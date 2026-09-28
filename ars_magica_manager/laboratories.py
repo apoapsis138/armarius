@@ -51,6 +51,18 @@ def lab_net_vf_points(
     )
 
 
+def vf_points(lab: Laboratory, vf_type: str) -> float:
+    """The points the lab's Virtues or Flaws (`vf_type`) come to, each side
+    counted on its own (Minor 1, Major 3, Free 0)."""
+    lab_catalog = catalog.load_lab_virtue_flaw_catalog_by_id()
+    return sum(
+        abs(definition.cost)
+        for vf in lab.virtues_flaws
+        if (definition := lab_catalog.get(vf.vf_id)) is not None
+        and definition.type == vf_type
+    )
+
+
 def lab_occupied_size(
     lab: Laboratory, catalog_by_id: dict[str, LabVirtueFlawDef]
 ) -> float:
@@ -120,6 +132,13 @@ def feature_budget(lab: Laboratory, feature: LabFeature) -> int | None:
     """The points the Feature's Virtue gives it (1 or 3), None without one."""
     virtue = feature_virtue(lab, feature)
     return FEATURE_VIRTUE_POINTS[virtue.vf_id] if virtue else None
+
+
+def features_title(lab: Laboratory) -> str:
+    """ "Features (1 of 2)": the lab's Features against its Lesser and
+    Greater Feature Virtues, one Feature each."""
+    virtues = sum(1 for vf in lab.virtues_flaws if vf.vf_id in FEATURE_VIRTUE_POINTS)
+    return f"Features ({len(lab.features)} of {virtues})"
 
 
 def focus_points(virtue_vf_id: str) -> int:
@@ -265,7 +284,7 @@ def feature_info_text(lab: Laboratory, index: int | None) -> str:
     may go to and where they went, its Focus, what's still to do, and the
     catalog description."""
     if index is None:
-        return "[dim]Select a Feature to see its Specializations.[/]"
+        return "[dim]Select a Feature to see its details.[/]"
     feature = lab.features[index]
     virtue = feature_virtue(lab, feature)
     definition = catalog.load_lab_feature_catalog_by_id().get(feature.feature_id or "")
@@ -564,7 +583,7 @@ def vf_info_text(lab: Laboratory, index: int | None) -> str:
     """The details panel for the lab Virtue/Flaw at `index`: name, category,
     tier and points, its effect on the Characteristics, and the rules."""
     if index is None:
-        return "[dim]Select a Virtue or Flaw to read its rules.[/]"
+        return "[dim]Select a Virtue or Flaw to see its details.[/]"
     lab_catalog = catalog.load_lab_virtue_flaw_catalog_by_id()
     instance = lab.virtues_flaws[index]
     definition = lab_catalog.get(instance.vf_id)
@@ -624,7 +643,7 @@ def named_info_text(
     """The details panel for a Room or Equipment & Stores entry: its name and
     the user's description (with **bold**/*italic*)."""
     if index is None:
-        return f"[dim]Select {noun} to see its description.[/]"
+        return f"[dim]Select {noun} to see its details.[/]"
     entry = entries[index]
     description = (
         markdown_inline(entry.description)

@@ -1,0 +1,258 @@
+===== tab-cov-attributes
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Keep
+
+      Saga:                     Matrix         Tribunal:                    (not
+      Storyguide:               (not set)      set)
+      Year Founded:             (not set)      Current Season:              Spring
+      Aegis of the Hearth:      0              Current Year:                1220
+      Living Conditions (Magi): 0              Aegis' Penetration:          0
+      Aura:                     1 (base 0,     Living Conditions (Mundane): 0
+      +1 Boons)                                Covenant Season:             Spring
+          Edit (e)
+
+   Attributes  Inhabitants  Possessions  Economics  Library  Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Description
+
+      (no description)
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Reputations (1)
+
+      ○ Fair dealing: +2                                                          ▇▇
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+
+
+    Select a Boon or Hook to see its details.
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-cov-inhabitants
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Keep
+
+      Saga:                     Matrix         Tribunal:                    (not
+      Storyguide:               (not set)      set)
+      Year Founded:             (not set)      Current Season:              Spring
+      Aegis of the Hearth:      0              Current Year:                1220
+      Living Conditions (Magi): 0              Aegis' Penetration:          0
+      Aura:                     1 (base 0,     Living Conditions (Mundane): 0
+      +1 Boons)                                Covenant Season:             Spring
+          Edit (e)
+
+   Attributes  Inhabitants  Possessions  Economics  Library  Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Loyalty                                                                     ▃▃
+
+      Type of Governance:       (not set)     Situational Modifiers for:
+      Base Loyalty Points:      -30           Living Conditions:  +0  (+0)
+      Total modifiers:          0             Equipment:          Standard  (+0)
+      Current Loyalty Points:   -30           Money:              Standard salary
+      Prevailing Loyalty Score: -3            (+0)
+                                              Specialists:        0
+                                              Familiarity:        0
+                                              Reputation:         0
+
+
+    Select an inhabitant to see its details.
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-cov-possessions
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Keep
+
+      Saga:                     Matrix         Tribunal:                    (not
+      Storyguide:               (not set)      set)
+      Year Founded:             (not set)      Current Season:              Spring
+      Aegis of the Hearth:      0              Current Year:                1220
+      Living Conditions (Magi): 0              Aegis' Penetration:          0
+      Aura:                     1 (base 0,     Living Conditions (Mundane): 0
+      +1 Boons)                                Covenant Season:             Spring
+          Edit (e)
+
+   Attributes  Inhabitants  Possessions  Economics  Library  Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Properties and Land (1)
+                                                                                  ▂▂
+        Name                Location          Dimensions    Inhabitants
+      ○ A property
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Sanctums (1)
+
+        Name                Owner           Quality  Upkeep
+      ○ Tower               Leandro              -2       0
+
+
+    Select a possession to see its details.
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-cov-economics
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Keep
+
+      Saga:                     Matrix         Tribunal:                    (not
+      Storyguide:               (not set)      set)
+      Year Founded:             (not set)      Current Season:              Spring
+      Aegis of the Hearth:      0              Current Year:                1220
+      Living Conditions (Magi): 0              Aegis' Penetration:          0
+      Aura:                     1 (base 0,     Living Conditions (Mundane): 0
+      +1 Boons)                                Covenant Season:             Spring
+          Edit (e)
+
+   Attributes  Inhabitants  Possessions  Economics  Library  Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Wealth
+                                                                                  ▁▁
+      Points of Inhabitants:       16         Total Income:
+      Points of Laboratories:      10         100
+      Points of Weapons and Armor: 0          Expenditure (Before Cost Savings):
+      Wealth:                      0          21
+                                              Cost Savings:                      0
+                                              Total Expenditure:
+                                              21
+                                              Surplus/Deficit:
+
+
+    Select a source of income or a row to see its details.
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-cov-library
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Keep
+
+      Saga:                     Matrix         Tribunal:                    (not
+      Storyguide:               (not set)      set)
+      Year Founded:             (not set)      Current Season:              Spring
+      Aegis of the Hearth:      0              Current Year:                1220
+      Living Conditions (Magi): 0              Aegis' Penetration:          0
+      Aura:                     1 (base 0,     Living Conditions (Mundane): 0
+      +1 Boons)                                Covenant Season:             Spring
+          Edit (e)
+
+   Attributes  Inhabitants  Possessions  Economics  Library  Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Summary
+
+      Summae:      1                           Lab Texts:       0
+        • Ability: 0                           Casting Tablets: 0
+        • Art:     1                           Other:           2
+
+      Tractatus:   0                           Total Books:     3
+        • Ability: 0                           Total Cost:      0 Build Points
+        • Art:     0
+
+
+
+    Select a book to see its details.
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-cov-diary
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Keep
+
+      Saga:                     Matrix         Tribunal:                    (not
+      Storyguide:               (not set)      set)
+      Year Founded:             (not set)      Current Season:              Spring
+      Aegis of the Hearth:      0              Current Year:                1220
+      Living Conditions (Magi): 0              Aegis' Penetration:          0
+      Aura:                     1 (base 0,     Living Conditions (Mundane): 0
+      +1 Boons)                                Covenant Season:             Spring
+          Edit (e)
+
+   Attributes  Inhabitants  Possessions  Economics  Library  Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  The Diary tab isn't built yet -- coming in a future update.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

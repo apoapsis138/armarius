@@ -170,7 +170,7 @@ def natural_weapon_rows(familiar: Familiar) -> list[tuple[int, str]]:
 
 def natural_weapon_info_text(familiar: Familiar, index: int | None) -> str:
     if index is None:
-        return "[dim]Select an attack for its details.[/]"
+        return "[dim]Select an attack to see its details.[/]"
     weapon = familiar.natural_weapons[index]
     return pos.detail_text(pos.PossessionEntry("weapon", weapon))
 
@@ -192,7 +192,7 @@ def bond_power_rows(familiar: Familiar) -> list[tuple[int, str]]:
 
 def bond_power_info_text(familiar: Familiar, index: int | None) -> str:
     if index is None:
-        return "[dim]Select a Bond Power for its details.[/]"
+        return "[dim]Select a Bond Power to see its details.[/]"
     power = familiar.bond_powers[index]
     tech_form = " / ".join(t for t in (power.technique, power.form) if t) or "(none)"
     lines = [

@@ -65,17 +65,21 @@ from ..models import (
 )
 from .fields import _pairs
 from .widgets import (
+    DetailsPanel,
     PinnedCollapsible,
     SelectableList,
     SheetSection,
     StackingColumns,
+    TableHeader,
     ToggleList,
     TwoColumns,
-    _balance_colored,
     _boon_hook_names,
     _sign_colored,
     _tab_placeholder,
     _tier_text,
+    counted,
+    match_colour,
+    points_title,
 )
 
 #: The covenant Library tab's sections, where 'I' imports books into the
@@ -106,10 +110,9 @@ class BookListView(Vertical):
     the saga: the covenant Library tab passes "every book in the covenant", a
     laboratory or character its own books, the saga's Unassigned Books node
     the books with no owner. Docked (Library tab, Unassigned Books), the
-    list stretches down to the details panel docked below it (the Library
-    tab adds a read-only Summary above it); inline (a character's Books
-    section) the panel follows the list inside the section. With
-    `panel=False` (the laboratory's Inventory tab) there's no panel of its
+    list stretches down to its details panel docked below it (the Library
+    tab adds a read-only Summary above it). Inline (a character's or
+    laboratory's Inventory tab) it's just a section with no panel of its
     own: Chosen bubbles up to the sheet, which shows the book in the tab's
     shared panel, and `group` shares one choice with the tab's other lists.
     """
@@ -125,22 +128,6 @@ class BookListView(Vertical):
 
     BookListView .books-body {
         height: 1fr;
-    }
-
-    BookListView #lib-summary-body {
-        width: 1fr;
-        height: auto;
-    }
-
-    BookListView #lib-summary-left {
-        width: 1fr;
-        height: auto;
-        margin-right: 4;
-    }
-
-    BookListView #lib-summary-right {
-        width: 1fr;
-        height: auto;
     }
 
     /* Docked, the book list fills the space down to the details panel. */
@@ -162,27 +149,6 @@ class BookListView(Vertical):
         max-height: 100%;
     }
 
-    BookListView .books-header {
-        width: 1fr;
-        height: auto;
-        color: $text-muted;
-    }
-
-    BookListView .books-panel {
-        width: 1fr;
-        height: auto;
-        padding: 0 1;
-    }
-
-    /* With the book section's own bottom padding, two rows between the list
-       and the panel. */
-    BookListView.docked .books-panel {
-        min-height: 6;
-        max-height: 14;
-        margin-top: 1;
-        padding: 1 2;
-        background: $panel;
-    }
     """
 
     def __init__(
@@ -194,11 +160,9 @@ class BookListView(Vertical):
         title: str = "Books",
         summary: bool = False,
         docked: bool = True,
-        panel: bool = True,
         group: str | None = None,
     ) -> None:
         super().__init__(classes="docked" if docked else "")
-        self.panel = panel
         self.group = group
         self.saga = saga
         self._books_source = books
@@ -211,8 +175,7 @@ class BookListView(Vertical):
         self._subject_cols = bk.SUBJECT_MIN_WIDTH
 
     def _title(self, checked: int = 0) -> str:
-        total = sum(bk.cost(b, self.saga) for b in self._books)
-        title = f"{self.title_text} ({len(self._books)}) - {total} Build Points"
+        title = counted(self.title_text, len(self._books))
         return title + (f" - {checked} marked" if checked else "")
 
     def _rows(self) -> list[tuple[int, str]]:
@@ -242,12 +205,10 @@ class BookListView(Vertical):
         with SheetSection(
             title=self._title(), id=self.section_id, classes="books-section"
         ):
-            yield Static(self._header(), classes="books-header")
+            yield TableHeader(self._header(), classes="books-header")
             yield SelectableList(
                 self._rows(), id=f"{self.section_id}-list", multi=True, group=self.group
             )
-            if not self.docked and self.panel:
-                yield Static(bk.detail_text(self.saga, None), classes="books-panel")
 
     def compose(self) -> ComposeResult:
         if not self.docked:
@@ -258,12 +219,12 @@ class BookListView(Vertical):
                 left, right = bk.summary_texts(self._books, self.saga)
                 with (
                     SheetSection(title="Summary", id="section-lib-summary"),
-                    Horizontal(id="lib-summary-body"),
+                    TwoColumns(id="lib-summary-body", text=True),
                 ):
                     yield Static(left, id="lib-summary-left")
                     yield Static(right, id="lib-summary-right")
             yield from self._book_list()
-        yield Static(bk.detail_text(self.saga, None), classes="books-panel")
+        yield DetailsPanel(bk.detail_text(self.saga, None), text_classes="books-panel")
 
     @property
     def books(self) -> list[Book]:
@@ -292,7 +253,7 @@ class BookListView(Vertical):
         )
 
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
-        if not self.panel:
+        if not self.docked:
             return  # the sheet shows it
         event.stop()
         book = (
@@ -321,7 +282,7 @@ class BookListView(Vertical):
                 rows.highlighted = next(
                     i for i, b in enumerate(self._books) if b is chosen
                 )
-            elif self.panel:
+            elif self.docked:
                 self.query_one(".books-panel", Static).update(
                     bk.detail_text(self.saga, None)
                 )
@@ -394,25 +355,12 @@ class SpellListView(Vertical):
         height: 1fr;
     }
 
-    SpellListView .spells-header {
-        width: 1fr;
-        height: auto;
-        color: $text-muted;
-    }
-
     SpellListView SelectableList,
     SpellListView SelectableList:focus {
         height: 1fr;
         max-height: 100%;
     }
 
-    SpellListView #spell-panel {
-        height: 1fr;
-        min-height: 4;
-        margin-top: 1;
-        padding: 1 2;
-        background: $panel;
-    }
     """
 
     def __init__(self, saga: Saga) -> None:
@@ -472,10 +420,9 @@ class SpellListView(Vertical):
                     compact=True,
                 )
         with SheetSection(title=self._title(), id=SPELL_SECTION):
-            yield Static(spl.table_header(), classes="spells-header")
+            yield TableHeader(spl.table_header())
             yield SelectableList(self._rows(), id="spell-list")
-        with VerticalScroll(id="spell-panel"):
-            yield Static(spl.detail_text(self.saga, None), id="spell-panel-text")
+        yield DetailsPanel(spl.detail_text(self.saga, None), id="spell-panel-text")
 
     def _title(self) -> str:
         return f"Spells ({len(self._shown)} of {len(self._all)})"
@@ -542,7 +489,6 @@ class SpellListView(Vertical):
         self.query_one("#spell-panel-text", Static).update(
             spl.detail_text(self.saga, spell)
         )
-        self.query_one("#spell-panel", VerticalScroll).scroll_home(animate=False)
 
     def on_input_changed(self, event: Input.Changed) -> None:
         event.stop()
@@ -583,22 +529,10 @@ class SheetView(Vertical):
         width: 1fr;
     }
 
-    /* A selectable list's details panel: a gap below the list and its own
-       shaded background, so it reads as a distinct panel. */
-    SheetView .details-panel {
-        width: 1fr;
-        height: auto;
-        min-height: 6;
-        margin-top: 1;
-        padding: 1 2;
-        background: $panel;
-    }
-
-    /* The column headings above a table-like list. */
-    SheetView .table-header {
-        width: 1fr;
-        height: auto;
-        color: $text-muted;
+    /* A tab with a details panel: its scrolling part fills the space down
+       to the panel (DetailsPanel), which is docked at the bottom. */
+    SheetView .panel-body {
+        height: 1fr;
     }
     """
 
@@ -660,6 +594,42 @@ class SheetView(Vertical):
             sections, lambda: self.query_one(f"#{id}", Static).update(text())
         )
         return Static(text(), id=id, **kwargs)
+
+    @staticmethod
+    def _set_section_title(section: Collapsible, title: str) -> None:
+        """Set a section's title, forcing the label to repaint. Textual's
+        Content compares equal on plain text alone, so a colour-only change
+        (Hooks (7 pts) turning red) would otherwise leave the old colour
+        showing."""
+        section.title = title
+        title_widget = section.query_one(CollapsibleTitle)
+        # The label reactive skips "unchanged" values too, so store the new
+        # Content directly (set_reactive bypasses that check), then repaint.
+        title_widget.set_reactive(type(title_widget).label, Content.from_text(title))
+        title_widget._update_label()
+
+    def _titled(
+        self, sections: str | tuple[str, ...], id: str, title: Callable[[], str]
+    ) -> str:
+        """`title()`, for the section `id` to start with; it's set again
+        whenever `sections` refresh (a count or total in it can change)."""
+        self._on_refresh(
+            sections,
+            lambda: self._set_section_title(
+                self.query_one(f"#{id}", Collapsible), title()
+            ),
+        )
+        return title()
+
+    def _panel(
+        self, sections: str | tuple[str, ...], text: Callable[[], str], *, id: str
+    ) -> DetailsPanel:
+        """A DetailsPanel showing `text()`, re-rendered when `sections`
+        refresh; `id` is its text's."""
+        self._on_refresh(
+            sections, lambda: self.query_one(f"#{id}", Static).update(text())
+        )
+        return DetailsPanel(text(), id=id)
 
     def _list(
         self,
@@ -733,24 +703,8 @@ class CharacterSheetView(SheetView):
         height: auto;
     }
 
-    CharacterSheetView #section-vf-virtues {
-        margin-right: 2;
-    }
-
-    CharacterSheetView #hermetic-body {
-        height: 1fr;
-    }
-
-    CharacterSheetView #arts-techniques-col {
-        margin-right: 2;
-    }
-
     CharacterSheetView .arts-col-title {
         text-style: bold;
-    }
-
-    CharacterSheetView .arts-header {
-        color: $text-muted;
     }
     """
 
@@ -764,15 +718,18 @@ class CharacterSheetView(SheetView):
         with TabbedContent(initial="tab-description"):
             with TabPane("Description", id="tab-description"):
                 yield from self._description_tab()
-            with TabPane("Abilities", id="tab-abilities"), VerticalScroll():
-                yield self._list(
-                    "tab-abilities", self._ability_rows, id="abilities-list"
-                )
-                yield self._static(
+            with (
+                TabPane("Abilities", id="tab-abilities"),
+                Vertical(classes="panel-body"),
+            ):
+                with VerticalScroll():
+                    yield self._list(
+                        "tab-abilities", self._ability_rows, id="abilities-list"
+                    )
+                yield self._panel(
                     "tab-abilities",
                     lambda: self._ability_info_text(None),
                     id="ability-info",
-                    classes="details-panel",
                 )
             with TabPane("Virtues & Flaws", id="tab-vf"):
                 yield from self._virtues_flaws_tab()
@@ -795,7 +752,7 @@ class CharacterSheetView(SheetView):
             with PinnedCollapsible(
                 title=escape(character.name), id="section-char-info"
             ):
-                with TwoColumns(id="char-info-body"):
+                with TwoColumns(id="char-info-body", text=True):
                     yield self._static(
                         "section-char-info", self._info_left_text, id="char-info-left"
                     )
@@ -834,7 +791,7 @@ class CharacterSheetView(SheetView):
                         title="Hermetic Background",
                         id="section-hermetic-background",
                     ),
-                    TwoColumns(id="hermetic-background-row"),
+                    TwoColumns(id="hermetic-background-row", text=True),
                 ):
                     yield self._static(
                         "section-hermetic-background",
@@ -850,7 +807,7 @@ class CharacterSheetView(SheetView):
                 SheetSection(
                     title="Biographical Detail", id="section-char-biographical"
                 ),
-                TwoColumns(id="char-biographical-row"),
+                TwoColumns(id="char-biographical-row", text=True),
             ):
                 yield self._static(
                     "section-char-biographical",
@@ -864,14 +821,29 @@ class CharacterSheetView(SheetView):
                 )
             with TwoColumns(id="pt-rep-row"):
                 with SheetSection(
-                    title="Personality Traits", id="section-personality-traits"
+                    title=self._titled(
+                        "section-personality-traits",
+                        "section-personality-traits",
+                        lambda: counted(
+                            "Personality Traits",
+                            len(self.character.personality_traits),
+                        ),
+                    ),
+                    id="section-personality-traits",
                 ):
                     yield self._list(
                         "section-personality-traits",
                         self._personality_trait_rows,
                         id="personality-traits-list",
                     )
-                with SheetSection(title="Reputations", id="section-reputations"):
+                with SheetSection(
+                    title=self._titled(
+                        "section-reputations",
+                        "section-reputations",
+                        lambda: counted("Reputations", len(self.character.reputations)),
+                    ),
+                    id="section-reputations",
+                ):
                     yield self._list(
                         "section-reputations",
                         self._reputation_rows,
@@ -883,7 +855,7 @@ class CharacterSheetView(SheetView):
                 )
             with (
                 SheetSection(title="Health", id="section-char-health"),
-                TwoColumns(id="char-health-row"),
+                TwoColumns(id="char-health-row", text=True),
             ):
                 with Vertical(id="char-health-wounds-col"):
                     yield self._static(
@@ -907,27 +879,36 @@ class CharacterSheetView(SheetView):
     def _virtues_flaws_tab(self) -> ComposeResult:
         """The Virtue and Flaw lists side by side, and the details panel."""
         vf_sections = ("section-vf-virtues", "section-vf-flaws")
-        with VerticalScroll():
-            with TwoColumns(id="vf-row"):
-                with SheetSection(title="Virtues", id="section-vf-virtues"):
+        with Vertical(classes="panel-body"):
+            with VerticalScroll(), TwoColumns(id="vf-row"):
+                with SheetSection(
+                    title=self._titled(
+                        vf_sections,
+                        "section-vf-virtues",
+                        lambda: self._vf_title("Virtue"),
+                    ),
+                    id="section-vf-virtues",
+                ):
                     yield self._list(
                         vf_sections,
                         lambda: self._vf_rows("Virtue"),
                         id="vf-virtues-list",
                         group="vf",
                     )
-                with SheetSection(title="Flaws", id="section-vf-flaws"):
+                with SheetSection(
+                    title=self._titled(
+                        vf_sections, "section-vf-flaws", lambda: self._vf_title("Flaw")
+                    ),
+                    id="section-vf-flaws",
+                ):
                     yield self._list(
                         vf_sections,
                         lambda: self._vf_rows("Flaw"),
                         id="vf-flaws-list",
                         group="vf",
                     )
-            yield self._static(
-                vf_sections,
-                lambda: self._vf_info_text(None),
-                id="vf-info",
-                classes="details-panel",
+            yield self._panel(
+                vf_sections, lambda: self._vf_info_text(None), id="vf-info"
             )
 
     #: Raw Vis deliberately appears twice (Hermetic Magic and Inventory tabs),
@@ -943,7 +924,7 @@ class CharacterSheetView(SheetView):
     def _hermetic_tab(self) -> ComposeResult:
         """Magical Arts, Raw Vis and Known Spells (scrolling), and the
         details panel docked below them. Magi only."""
-        with Vertical(id="hermetic-body"):
+        with Vertical(id="hermetic-body", classes="panel-body"):
             with VerticalScroll(id="hermetic-scroll"):
                 with (
                     PinnedCollapsible(title="Magical Arts", id="section-arts"),
@@ -951,10 +932,7 @@ class CharacterSheetView(SheetView):
                 ):
                     with Vertical(id="arts-techniques-col"):
                         yield Static("Techniques", classes="arts-col-title")
-                        yield Static(
-                            self._arts_header_text(),
-                            classes="arts-header",
-                        )
+                        yield TableHeader(self._arts_header_text())
                         yield self._list(
                             "section-arts",
                             lambda: self._arts_rows(TECHNIQUES),
@@ -963,10 +941,7 @@ class CharacterSheetView(SheetView):
                         )
                     with Vertical(id="arts-forms-col"):
                         yield Static("Forms", classes="arts-col-title")
-                        yield Static(
-                            self._arts_header_text(),
-                            classes="arts-header",
-                        )
+                        yield TableHeader(self._arts_header_text())
                         yield self._list(
                             "section-arts",
                             lambda: self._arts_rows(FORMS),
@@ -979,49 +954,66 @@ class CharacterSheetView(SheetView):
                         self._raw_vis_rows,
                         id="raw-vis-list-hermetic",
                     )
-                with SheetSection(title="Known Spells", id="section-known-spells"):
+                with SheetSection(
+                    title=self._titled(
+                        "section-known-spells",
+                        "section-known-spells",
+                        lambda: counted(
+                            "Known Spells", len(self.character.spells_known)
+                        ),
+                    ),
+                    id="section-known-spells",
+                ):
                     yield self._list(
                         "section-known-spells",
                         self._known_spell_rows,
                         id="known-spells-list",
                         group="hermetic",
                     )
-            yield Static(
-                self._HERMETIC_INFO_PLACEHOLDER,
-                id="hermetic-info",
-                classes="details-panel",
-            )
+            yield DetailsPanel(self._HERMETIC_INFO_PLACEHOLDER, id="hermetic-info")
             self._on_refresh(
                 ("section-arts", "section-known-spells"), self._refresh_hermetic_info
             )
 
     def _inventory_tab(self) -> ComposeResult:
-        """Raw Vis (magi), Personal Gear and the character's Books."""
+        """Raw Vis (magi), Personal Gear and the character's Books over the
+        details panel of the chosen item or book."""
         character = self.character
-        with VerticalScroll():
-            if character.type == "magus":
-                with SheetSection(title="Raw Vis", id="section-raw-vis-inventory"):
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                if character.type == "magus":
+                    with SheetSection(title="Raw Vis", id="section-raw-vis-inventory"):
+                        yield self._list(
+                            self._RAW_VIS_SECTIONS,
+                            self._raw_vis_rows,
+                            id="raw-vis-list-inventory",
+                        )
+                with SheetSection(
+                    title=self._titled(
+                        "section-inventory",
+                        "section-inventory",
+                        lambda: counted("Personal Gear", len(self.character.inventory)),
+                    ),
+                    id="section-inventory",
+                ):
                     yield self._list(
-                        self._RAW_VIS_SECTIONS,
-                        self._raw_vis_rows,
-                        id="raw-vis-list-inventory",
+                        "section-inventory",
+                        self._inventory_rows,
+                        id="inventory-list",
+                        group="char-inv",
                     )
-            with SheetSection(title="Personal Gear", id="section-inventory"):
-                yield self._list(
-                    "section-inventory", self._inventory_rows, id="inventory-list"
+                yield self._book_list(
+                    ("section-char-info",),
+                    lambda: bk.books_owned_by(self.saga, "character", character.id),
+                    section_id="section-books",
+                    docked=False,
+                    group="char-inv",
                 )
-                yield self._static(
-                    "section-inventory",
-                    lambda: self._inventory_info_text(None),
-                    id="inventory-info",
-                    classes="details-panel",
-                )
-            yield self._book_list(
-                ("section-char-info",),
-                lambda: bk.books_owned_by(self.saga, "character", character.id),
-                section_id="section-books",
-                docked=False,
-            )
+            yield DetailsPanel(self._inventory_info_text(None), id="inventory-info")
+        self._on_refresh(
+            ("section-inventory", "section-books", "section-char-info"),
+            self._refresh_inventory_info,
+        )
 
     def selected_personality_trait(self) -> int | None:
         """Index into character.personality_traits of the chosen row, or None."""
@@ -1075,11 +1067,10 @@ class CharacterSheetView(SheetView):
                 self._ability_info_text(event.data_index)
             )
             return
-        if list_id == "inventory-list":
+        if list_id in ("inventory-list", "section-books-list"):
             event.stop()
-            self.query_one("#inventory-info", Static).update(
-                self._inventory_info_text(event.data_index)
-            )
+            # One group (one selection across the two), one details panel.
+            self._refresh_inventory_info()
             return
         if list_id in ("arts-techniques-list", "arts-forms-list", "known-spells-list"):
             event.stop()
@@ -1168,6 +1159,18 @@ class CharacterSheetView(SheetView):
 
     def _vf_rows(self, vf_type: str) -> list[tuple[int | None, str]]:
         return st.vf_rows(self.character.virtues_flaws, vf_type)
+
+    def _vf_title(self, vf_type: str) -> str:
+        """ "Virtues (3 pts)" / "Flaws (3 pts)": the points each side comes
+        to, both coloured by whether they balance."""
+        vfs = self.character.virtues_flaws
+        virtues = st.vf_points(vfs, "Virtue")
+        flaws = st.vf_points(vfs, "Flaw")
+        return points_title(
+            f"{vf_type}s",
+            virtues if vf_type == "Virtue" else flaws,
+            match_colour(virtues, flaws),
+        )
 
     def _vf_info_text(self, index: int | None) -> str:
         return st.vf_info_text(self.character.virtues_flaws, index)
@@ -1341,9 +1344,24 @@ class CharacterSheetView(SheetView):
 
     def _inventory_info_text(self, index: int | None) -> str:
         if index is None:
-            return "[dim]Select an item for its details.[/]"
+            return "[dim]Select an item or a book to see its details.[/]"
         item = self.character.inventory[index]
         return pos.detail_text(pos.PossessionEntry(item.kind, item))
+
+    def _refresh_inventory_info(self) -> None:
+        """The Inventory tab's details panel: the chosen item or book (one
+        selection across the two lists), else the hint."""
+        info = self.query_one("#inventory-info", Static)
+        index = self.query_one("#inventory-list", SelectableList).selected_data_index
+        if index is not None and index < len(self.character.inventory):
+            info.update(self._inventory_info_text(index))
+            return
+        book = self.query_one(BookListView).selected_book()
+        info.update(
+            bk.detail_text(self.saga, book)
+            if book is not None
+            else self._inventory_info_text(None)
+        )
 
 
 #: The lab's Virtues and Flaws sections: either refreshes both lists and
@@ -1400,49 +1418,27 @@ class LaboratorySheetView(SheetView):
         height: auto;
     }
 
-    LaboratorySheetView #lab-identity-left {
-        margin-right: 2;
-    }
-
     LaboratorySheetView #lab-vf-warnings {
         margin-bottom: 1;
     }
 
-    LaboratorySheetView #lab-attr-body,
-    LaboratorySheetView #lab-inv-body {
-        height: 1fr;
-    }
-
-    /* The panels docked below a scrolling tab stop growing at 14 rows. */
-    LaboratorySheetView #lab-attr-panel,
-    LaboratorySheetView #lab-inv-panel {
-        max-height: 14;
-    }
-
-    LaboratorySheetView #section-lab-vf-virtues {
-        margin-right: 2;
-    }
-
+    /* A blank row above the derived figures. The blank rows here are
+       padding: any margin rule (even margin-top alone) replaces the whole
+       margin, and with it the gap StackingColumns gives each column. */
     LaboratorySheetView #lab-characteristics-derived {
-        margin-top: 1;
-        margin-right: 4;
-    }
-
-    LaboratorySheetView #lab-characteristics-left {
-        margin-right: 4;
+        padding: 1 0 0 0;
     }
 
     /* Stacked (narrow pane): no blank row above the derived figures, a
-       blank row between the blocks instead. Only vertical margins change,
+       blank row between the blocks instead. Only vertical padding changes,
        so StackingColumns measures the same width either way. */
     LaboratorySheetView #lab-characteristics-body.-stacked > * {
-        margin-top: 0;
-        margin-bottom: 1;
+        padding: 0 0 1 0;
     }
 
     LaboratorySheetView #lab-characteristics-body.-stacked
         > #lab-characteristics-right {
-        margin-bottom: 0;
+        padding: 0;
     }
     """
 
@@ -1463,61 +1459,82 @@ class LaboratorySheetView(SheetView):
                 yield from self._attributes_tab()
             with TabPane("Inventory", id="tab-lab-inventory"):
                 yield from self._inventory_tab()
-            with TabPane("Diary", id="tab-lab-diary"), VerticalScroll():
-                yield self._list(
-                    "tab-lab-diary",
-                    lambda: lab_text.diary_rows(self.laboratory.diary),
-                    id="lab-diary-list",
-                )
-                yield self._static(
+            with (
+                TabPane("Diary", id="tab-lab-diary"),
+                Vertical(classes="panel-body"),
+            ):
+                with VerticalScroll():
+                    yield self._list(
+                        "tab-lab-diary",
+                        lambda: lab_text.diary_rows(self.laboratory.diary),
+                        id="lab-diary-list",
+                    )
+                yield self._panel(
                     "tab-lab-diary",
                     lambda: lab_text.diary_info_text(self.laboratory.diary, None),
                     id="lab-diary-info",
-                    classes="details-panel",
                 )
 
     def _virtues_flaws_tab(self) -> ComposeResult:
         """Any warning about the Virtues & Flaws as a whole, the Virtue and
         Flaw lists side by side, and their shared details panel."""
-        with VerticalScroll():
-            warnings = self._static(
-                (*LAB_VF_SECTIONS, "section-lab-characteristics"),
-                lambda: lab_text.vf_warnings(self.laboratory),
-                id="lab-vf-warnings",
-            )
-            warnings.display = bool(lab_text.vf_warnings(self.laboratory))
-            yield warnings
-            self._on_refresh(
-                (*LAB_VF_SECTIONS, "section-lab-characteristics"),
-                self._show_vf_warnings_if_any,
-            )
-            with TwoColumns(id="lab-vf-row"):
-                with SheetSection(title="Virtues", id="section-lab-vf-virtues"):
-                    yield self._list(
-                        LAB_VF_SECTIONS,
-                        lambda: lab_text.vf_rows(self.laboratory, "Virtue"),
-                        id="lab-vf-virtues-list",
-                        group="lab-vf",
-                    )
-                with SheetSection(title="Flaws", id="section-lab-vf-flaws"):
-                    yield self._list(
-                        LAB_VF_SECTIONS,
-                        lambda: lab_text.vf_rows(self.laboratory, "Flaw"),
-                        id="lab-vf-flaws-list",
-                        group="lab-vf",
-                    )
-            yield self._static(
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                warnings = self._static(
+                    (*LAB_VF_SECTIONS, "section-lab-characteristics"),
+                    lambda: lab_text.vf_warnings(self.laboratory),
+                    id="lab-vf-warnings",
+                )
+                warnings.display = bool(lab_text.vf_warnings(self.laboratory))
+                yield warnings
+                self._on_refresh(
+                    (*LAB_VF_SECTIONS, "section-lab-characteristics"),
+                    self._show_vf_warnings_if_any,
+                )
+                with TwoColumns(id="lab-vf-row"):
+                    with SheetSection(
+                        title=self._titled(
+                            LAB_VF_SECTIONS,
+                            "section-lab-vf-virtues",
+                            lambda: points_title(
+                                "Virtues", lab_text.vf_points(self.laboratory, "Virtue")
+                            ),
+                        ),
+                        id="section-lab-vf-virtues",
+                    ):
+                        yield self._list(
+                            LAB_VF_SECTIONS,
+                            lambda: lab_text.vf_rows(self.laboratory, "Virtue"),
+                            id="lab-vf-virtues-list",
+                            group="lab-vf",
+                        )
+                    with SheetSection(
+                        title=self._titled(
+                            LAB_VF_SECTIONS,
+                            "section-lab-vf-flaws",
+                            lambda: points_title(
+                                "Flaws", lab_text.vf_points(self.laboratory, "Flaw")
+                            ),
+                        ),
+                        id="section-lab-vf-flaws",
+                    ):
+                        yield self._list(
+                            LAB_VF_SECTIONS,
+                            lambda: lab_text.vf_rows(self.laboratory, "Flaw"),
+                            id="lab-vf-flaws-list",
+                            group="lab-vf",
+                        )
+            yield self._panel(
                 LAB_VF_SECTIONS,
                 lambda: lab_text.vf_info_text(self.laboratory, None),
                 id="lab-vf-info",
-                classes="details-panel",
             )
 
     def _attributes_tab(self) -> ComposeResult:
         """Specializations (with the hand-entered sources nested in it),
         Features and Rooms over the details panel of the chosen row, docked
         below the scrolling part."""
-        with Vertical(id="lab-attr-body"):
+        with Vertical(id="lab-attr-body", classes="panel-body"):
             with VerticalScroll(id="lab-attr-scroll"):
                 with PinnedCollapsible(
                     title="Specializations", id="section-lab-specializations"
@@ -1531,7 +1548,15 @@ class LaboratorySheetView(SheetView):
                         LAB_SPECIALIZATION_SECTIONS, self._refresh_specializations
                     )
                     with SheetSection(
-                        title="Specializations: Other", id="section-lab-specialties"
+                        title=self._titled(
+                            "section-lab-specialties",
+                            "section-lab-specialties",
+                            lambda: counted(
+                                "Specializations: Other",
+                                len(self.laboratory.specialties),
+                            ),
+                        ),
+                        id="section-lab-specialties",
                     ):
                         yield self._list(
                             "section-lab-specialties",
@@ -1539,25 +1564,35 @@ class LaboratorySheetView(SheetView):
                             id="lab-specialties-list",
                             group="lab-attr",
                         )
-                with PinnedCollapsible(title="Features", id="section-lab-features"):
+                with PinnedCollapsible(
+                    title=self._titled(
+                        LAB_FEATURE_SECTIONS,
+                        "section-lab-features",
+                        lambda: lab_text.features_title(self.laboratory),
+                    ),
+                    id="section-lab-features",
+                ):
                     yield self._list(
                         LAB_FEATURE_SECTIONS,
                         lambda: lab_text.feature_rows(self.laboratory),
                         id="lab-features-list",
                         group="lab-attr",
                     )
-                with SheetSection(title="Rooms", id="section-lab-rooms"):
+                with SheetSection(
+                    title=self._titled(
+                        "section-lab-rooms",
+                        "section-lab-rooms",
+                        lambda: counted("Rooms", len(self.laboratory.rooms)),
+                    ),
+                    id="section-lab-rooms",
+                ):
                     yield self._list(
                         "section-lab-rooms",
                         lambda: lab_text.named_rows(self.laboratory.rooms),
                         id="lab-rooms-list",
                         group="lab-attr",
                     )
-            yield Static(
-                lab_text.ATTRIBUTES_PANEL_HINT,
-                id="lab-attr-panel",
-                classes="details-panel",
-            )
+            yield DetailsPanel(lab_text.ATTRIBUTES_PANEL_HINT, id="lab-attr-panel")
         self._on_refresh(
             ("section-lab-rooms", *LAB_SPECIALIZATION_SECTIONS),
             lambda: self._refresh_panel("lab-attr-panel"),
@@ -1566,7 +1601,7 @@ class LaboratorySheetView(SheetView):
     def _inventory_tab(self) -> ComposeResult:
         """Raw Vis, Equipment & Stores and the lab's Books over the details
         panel of the chosen row, docked below the scrolling part."""
-        with Vertical(id="lab-inv-body"):
+        with Vertical(id="lab-inv-body", classes="panel-body"):
             with VerticalScroll(id="lab-inv-scroll"):
                 with SheetSection(title="Raw Vis", id="section-lab-raw-vis"):
                     yield self._list(
@@ -1575,7 +1610,16 @@ class LaboratorySheetView(SheetView):
                         id="lab-raw-vis-list",
                         group="lab-inv",
                     )
-                with SheetSection(title="Equipment & Stores", id="section-lab-items"):
+                with SheetSection(
+                    title=self._titled(
+                        "section-lab-items",
+                        "section-lab-items",
+                        lambda: counted(
+                            "Equipment & Stores", len(self.laboratory.inventory_items)
+                        ),
+                    ),
+                    id="section-lab-items",
+                ):
                     yield self._list(
                         "section-lab-items",
                         lambda: lab_text.named_rows(self.laboratory.inventory_items),
@@ -1589,14 +1633,9 @@ class LaboratorySheetView(SheetView):
                     ),
                     section_id="section-lab-books",
                     docked=False,
-                    panel=False,
                     group="lab-inv",
                 )
-            yield Static(
-                lab_text.INVENTORY_PANEL_HINT,
-                id="lab-inv-panel",
-                classes="details-panel",
-            )
+            yield DetailsPanel(lab_text.INVENTORY_PANEL_HINT, id="lab-inv-panel")
         self._on_refresh(
             (
                 "section-lab-raw-vis",
@@ -1940,125 +1979,178 @@ class FamiliarSheetView(SheetView):
                 )
             with TabPane("Combat & Health", id="tab-fam-combat"):
                 yield from self._combat_tab()
-            with TabPane("Abilities", id="tab-fam-abilities"), VerticalScroll():
-                yield Static(
-                    "[dim]Languages: shares the Magus partner's Language "
-                    "scores automatically.[/]"
-                )
-                yield self._list(
-                    "tab-fam-abilities",
-                    lambda: fam.ability_rows(self.familiar),
-                    id="fam-abilities-list",
-                )
-                yield self._static(
+            with (
+                TabPane("Abilities", id="tab-fam-abilities"),
+                Vertical(classes="panel-body"),
+            ):
+                with VerticalScroll():
+                    yield Static(
+                        "[dim]Languages: shares the Magus partner's Language "
+                        "scores automatically.[/]"
+                    )
+                    yield self._list(
+                        "tab-fam-abilities",
+                        lambda: fam.ability_rows(self.familiar),
+                        id="fam-abilities-list",
+                    )
+                yield self._panel(
                     "tab-fam-abilities",
                     lambda: fam.ability_info_text(self.familiar, None),
                     id="fam-ability-info",
-                    classes="details-panel",
                 )
-            with TabPane("Bond Powers", id="tab-fam-powers"), VerticalScroll():
-                yield self._list(
-                    "tab-fam-powers",
-                    lambda: fam.bond_power_rows(self.familiar),
-                    id="fam-bond-powers-list",
-                )
-                yield self._static(
+            with (
+                TabPane("Bond Powers", id="tab-fam-powers"),
+                Vertical(classes="panel-body"),
+            ):
+                with VerticalScroll():
+                    yield self._list(
+                        "tab-fam-powers",
+                        lambda: fam.bond_power_rows(self.familiar),
+                        id="fam-bond-powers-list",
+                    )
+                yield self._panel(
                     "tab-fam-powers",
                     lambda: fam.bond_power_info_text(self.familiar, None),
                     id="fam-bond-powers-info",
-                    classes="details-panel",
                 )
 
     def _identity_tab(self) -> ComposeResult:
         """Binding & Cords, the Virtue and Flaw lists with their details
         panel, and Personality Traits and Reputations."""
         vf_sections = ("section-fam-vf-virtues", "section-fam-vf-flaws")
-        with VerticalScroll():
-            with SheetSection(title="Binding & Cords", id="section-fam-binding"):
-                yield self._static(
-                    "section-fam-binding", self._binding_text, id="fam-binding-content"
-                )
-            with TwoColumns(id="fam-vf-row"):
-                with SheetSection(title="Virtues", id="section-fam-vf-virtues"):
-                    yield self._list(
-                        vf_sections,
-                        lambda: fam.vf_rows(self.familiar, "Virtue"),
-                        id="fam-vf-virtues-list",
-                        group="fam-vf",
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                with SheetSection(title="Binding & Cords", id="section-fam-binding"):
+                    yield self._static(
+                        "section-fam-binding",
+                        self._binding_text,
+                        id="fam-binding-content",
                     )
-                with SheetSection(title="Flaws", id="section-fam-vf-flaws"):
-                    yield self._list(
-                        vf_sections,
-                        lambda: fam.vf_rows(self.familiar, "Flaw"),
-                        id="fam-vf-flaws-list",
-                        group="fam-vf",
-                    )
-            yield self._static(
+                with TwoColumns(id="fam-vf-row"):
+                    with SheetSection(
+                        title=self._titled(
+                            vf_sections,
+                            "section-fam-vf-virtues",
+                            lambda: points_title(
+                                "Virtues",
+                                st.vf_points(self.familiar.virtues_flaws, "Virtue"),
+                            ),
+                        ),
+                        id="section-fam-vf-virtues",
+                    ):
+                        yield self._list(
+                            vf_sections,
+                            lambda: fam.vf_rows(self.familiar, "Virtue"),
+                            id="fam-vf-virtues-list",
+                            group="fam-vf",
+                        )
+                    with SheetSection(
+                        title=self._titled(
+                            vf_sections,
+                            "section-fam-vf-flaws",
+                            lambda: points_title(
+                                "Flaws",
+                                st.vf_points(self.familiar.virtues_flaws, "Flaw"),
+                            ),
+                        ),
+                        id="section-fam-vf-flaws",
+                    ):
+                        yield self._list(
+                            vf_sections,
+                            lambda: fam.vf_rows(self.familiar, "Flaw"),
+                            id="fam-vf-flaws-list",
+                            group="fam-vf",
+                        )
+                with TwoColumns(id="fam-pt-rep-row"):
+                    with SheetSection(
+                        title=self._titled(
+                            "section-fam-personality-traits",
+                            "section-fam-personality-traits",
+                            lambda: counted(
+                                "Personality Traits",
+                                len(self.familiar.personality_traits),
+                            ),
+                        ),
+                        id="section-fam-personality-traits",
+                    ):
+                        yield self._list(
+                            "section-fam-personality-traits",
+                            lambda: fam.personality_trait_rows(self.familiar),
+                            id="fam-personality-traits-list",
+                        )
+                    with SheetSection(
+                        title=self._titled(
+                            "section-fam-reputations",
+                            "section-fam-reputations",
+                            lambda: counted(
+                                "Reputations", len(self.familiar.reputations)
+                            ),
+                        ),
+                        id="section-fam-reputations",
+                    ):
+                        yield self._list(
+                            "section-fam-reputations",
+                            lambda: fam.reputation_rows(self.familiar),
+                            id="fam-reputations-list",
+                        )
+            yield self._panel(
                 vf_sections,
                 lambda: fam.vf_info_text(self.familiar, None),
                 id="fam-vf-info",
-                classes="details-panel",
             )
-            with TwoColumns(id="fam-pt-rep-row"):
-                with SheetSection(
-                    title="Personality Traits", id="section-fam-personality-traits"
-                ):
-                    yield self._list(
-                        "section-fam-personality-traits",
-                        lambda: fam.personality_trait_rows(self.familiar),
-                        id="fam-personality-traits-list",
-                    )
-                with SheetSection(title="Reputations", id="section-fam-reputations"):
-                    yield self._list(
-                        "section-fam-reputations",
-                        lambda: fam.reputation_rows(self.familiar),
-                        id="fam-reputations-list",
-                    )
 
     def _combat_tab(self) -> ComposeResult:
-        """Health (Wounds and Fatigue) and Natural Weapons & Attacks."""
-        with VerticalScroll():
-            with (
-                SheetSection(title="Health", id="section-fam-health"),
-                TwoColumns(id="fam-health-row"),
-            ):
-                with Vertical(id="fam-health-wounds-col"):
-                    yield self._static(
-                        "section-fam-health",
-                        lambda: fam.wounds_text(self.familiar),
-                        id="fam-wounds-content",
+        """Health (Wounds and Fatigue) and Natural Weapons & Attacks, over
+        the details panel of the chosen weapon."""
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                with (
+                    SheetSection(title="Health", id="section-fam-health"),
+                    TwoColumns(id="fam-health-row", text=True),
+                ):
+                    with Vertical(id="fam-health-wounds-col"):
+                        yield self._static(
+                            "section-fam-health",
+                            lambda: fam.wounds_text(self.familiar),
+                            id="fam-wounds-content",
+                        )
+                        yield Button(
+                            "Edit Wounds (e)",
+                            id="btn-fam-health-wounds-edit",
+                            compact=True,
+                        )
+                    with Vertical(id="fam-health-fatigue-col"):
+                        yield self._static(
+                            "section-fam-health",
+                            lambda: fam.fatigue_text(self.familiar),
+                            id="fam-fatigue-content",
+                        )
+                        yield Button(
+                            "Edit Fatigue",
+                            id="btn-fam-health-fatigue-edit",
+                            compact=True,
+                        )
+                with SheetSection(
+                    title=self._titled(
+                        "section-fam-natural-weapons",
+                        "section-fam-natural-weapons",
+                        lambda: counted(
+                            "Natural Weapons & Attacks",
+                            len(self.familiar.natural_weapons),
+                        ),
+                    ),
+                    id="section-fam-natural-weapons",
+                ):
+                    yield self._list(
+                        "section-fam-natural-weapons",
+                        lambda: fam.natural_weapon_rows(self.familiar),
+                        id="fam-natural-weapons-list",
                     )
-                    yield Button(
-                        "Edit Wounds (e)",
-                        id="btn-fam-health-wounds-edit",
-                        compact=True,
-                    )
-                with Vertical(id="fam-health-fatigue-col"):
-                    yield self._static(
-                        "section-fam-health",
-                        lambda: fam.fatigue_text(self.familiar),
-                        id="fam-fatigue-content",
-                    )
-                    yield Button(
-                        "Edit Fatigue",
-                        id="btn-fam-health-fatigue-edit",
-                        compact=True,
-                    )
-            with SheetSection(
-                title="Natural Weapons & Attacks",
-                id="section-fam-natural-weapons",
-            ):
-                yield self._list(
-                    "section-fam-natural-weapons",
-                    lambda: fam.natural_weapon_rows(self.familiar),
-                    id="fam-natural-weapons-list",
-                )
-                yield self._static(
-                    "section-fam-natural-weapons",
-                    lambda: fam.natural_weapon_info_text(self.familiar, None),
-                    id="fam-natural-weapons-info",
-                    classes="details-panel",
-                )
+            yield self._panel(
+                "section-fam-natural-weapons",
+                lambda: fam.natural_weapon_info_text(self.familiar, None),
+                id="fam-natural-weapons-info",
+            )
 
     def _binding_text(self) -> str:
         return f"{fam.binding_text(self.familiar)}\n\n{fam.cords_text(self.familiar)}"
@@ -2136,74 +2228,59 @@ class CovenantSheetView(SheetView):
     the rest belong to the covenant and are edited with 'e'.
     """
 
-    DEFAULT_CSS = """
-    CovenantSheetView #cov-info-left {
-        margin-right: 4;
-    }
-
-    CovenantSheetView #section-cov-boons {
-        margin-right: 2;
-    }
-
-    CovenantSheetView #cov-bh-info {
-        min-height: 8;
-    }
-
-    CovenantSheetView #inh-body,
-    CovenantSheetView #pos-body,
-    CovenantSheetView #eco-body {
-        height: 1fr;
-    }
-
-    CovenantSheetView #inh-loyalty-left,
-    CovenantSheetView #inh-misc-left,
-    CovenantSheetView #eco-wealth-left {
-        margin-right: 4;
-    }
-
-    /* The details panels docked below a scrolling tab stop growing at 14
-       rows. */
-    CovenantSheetView #inh-panel,
-    CovenantSheetView #pos-panel,
-    CovenantSheetView #eco-panel {
-        max-height: 14;
-    }
-    """
-
     def __init__(self, saga: Saga, covenant: Covenant) -> None:
         super().__init__(saga)
         self.covenant = covenant
 
     def compose(self) -> ComposeResult:
         with PinnedCollapsible(title=escape(self.covenant.name), id="section-cov-info"):
-            with TwoColumns(id="cov-info-body"):
+            with TwoColumns(id="cov-info-body", text=True):
                 yield Static(self._info_left_text(), id="cov-info-left")
                 yield Static(self._info_right_text(), id="cov-info-right")
             yield Button("Edit (e)", id="btn-cov-edit", compact=True)
         with TabbedContent(initial="tab-cov-attributes"):
-            with TabPane("Attributes", id="tab-cov-attributes"), VerticalScroll():
-                with SheetSection(title="Description", id="section-cov-description"):
-                    yield Static(self._description_text(), id="cov-description-content")
-                with SheetSection(title="Reputations", id="section-cov-reputations"):
-                    yield SelectableList(
-                        self._reputation_rows(), id="cov-reputations-list"
-                    )
-                with TwoColumns(id="cov-bh-row"):
+            with (
+                TabPane("Attributes", id="tab-cov-attributes"),
+                Vertical(classes="panel-body"),
+            ):
+                with VerticalScroll():
                     with SheetSection(
-                        title=self._bh_title("Boon"), id="section-cov-boons"
+                        title="Description", id="section-cov-description"
                     ):
-                        yield SelectableList(
-                            self._bh_entries("Boon"), id="cov-boons-list", group="bh"
+                        yield Static(
+                            self._description_text(), id="cov-description-content"
                         )
                     with SheetSection(
-                        title=self._bh_title("Hook"), id="section-cov-hooks"
+                        title=self._titled(
+                            "section-cov-reputations",
+                            "section-cov-reputations",
+                            lambda: counted(
+                                "Reputations", len(self.covenant.reputations)
+                            ),
+                        ),
+                        id="section-cov-reputations",
                     ):
                         yield SelectableList(
-                            self._bh_entries("Hook"), id="cov-hooks-list", group="bh"
+                            self._reputation_rows(), id="cov-reputations-list"
                         )
-                yield Static(
-                    self._bh_info_text(None), id="cov-bh-info", classes="details-panel"
-                )
+                    with TwoColumns(id="cov-bh-row"):
+                        with SheetSection(
+                            title=self._bh_title("Boon"), id="section-cov-boons"
+                        ):
+                            yield SelectableList(
+                                self._bh_entries("Boon"),
+                                id="cov-boons-list",
+                                group="bh",
+                            )
+                        with SheetSection(
+                            title=self._bh_title("Hook"), id="section-cov-hooks"
+                        ):
+                            yield SelectableList(
+                                self._bh_entries("Hook"),
+                                id="cov-hooks-list",
+                                group="bh",
+                            )
+                yield DetailsPanel(self._bh_info_text(None), id="cov-bh-info")
             with TabPane("Inhabitants", id="tab-cov-inhabitants"):
                 yield from self._inhabitants_tab()
             with TabPane("Possessions", id="tab-cov-possessions"):
@@ -2225,11 +2302,11 @@ class CovenantSheetView(SheetView):
         collapsible list per kind of inhabitant, and (docked below the
         scrolling part) the details panel of the chosen inhabitant."""
         covenant, saga = self.covenant, self.saga
-        with Vertical(id="inh-body"):
+        with Vertical(id="inh-body", classes="panel-body"):
             with VerticalScroll(id="inh-scroll"):
                 with (
                     SheetSection(title="Loyalty", id="section-inh-loyalty"),
-                    TwoColumns(id="inh-loyalty-body"),
+                    TwoColumns(id="inh-loyalty-body", text=True),
                 ):
                     yield Static(
                         inh.loyalty_left_text(saga, covenant), id="inh-loyalty-left"
@@ -2243,41 +2320,33 @@ class CovenantSheetView(SheetView):
                     )
                 with SheetSection(title="Miscellaneous", id="section-inh-misc"):
                     left, right = inh.misc_text(covenant)
-                    with TwoColumns(id="inh-misc-body"):
+                    with TwoColumns(id="inh-misc-body", text=True):
                         yield Static(left, id="inh-misc-left")
                         yield Static(right, id="inh-misc-right")
                 for kind in INHABITANT_KINDS:
                     with SheetSection(
                         title=self._inh_title(kind), id=f"section-inh-{kind}"
                     ):
-                        yield Static(
-                            inh.table_header(kind), classes="table-header inh-header"
-                        )
+                        yield TableHeader(inh.table_header(kind))
                         yield SelectableList(
                             self._inh_rows(kind), id=f"inh-{kind}-list", group="inh"
                         )
-            yield Static(
-                inh.detail_text(None, saga.current_year),
-                id="inh-panel",
-                classes="details-panel",
-            )
+            yield DetailsPanel(inh.detail_text(None, saga.current_year), id="inh-panel")
 
     def _possessions_tab(self) -> ComposeResult:
         """One collapsible list per kind of possession over the details panel of
         the chosen one (docked below the scrolling part)."""
-        with Vertical(id="pos-body"):
+        with Vertical(id="pos-body", classes="panel-body"):
             with VerticalScroll(id="pos-scroll"):
                 for kind in POSSESSION_KINDS:
                     with SheetSection(
-                        title=pos.KIND_TITLES[kind], id=f"section-pos-{kind}"
+                        title=self._pos_title(kind), id=f"section-pos-{kind}"
                     ):
-                        yield Static(
-                            pos.table_header(kind), classes="table-header pos-header"
-                        )
+                        yield TableHeader(pos.table_header(kind))
                         yield SelectableList(
                             self._pos_rows(kind), id=f"pos-{kind}-list", group="pos"
                         )
-            yield Static(pos.detail_text(None), id="pos-panel", classes="details-panel")
+            yield DetailsPanel(pos.detail_text(None), id="pos-panel")
 
     #: The three lists of the Economics tab (one selection across them).
     _ECO_LISTS: ClassVar[tuple[str, ...]] = ("income", "expenditure", "savings")
@@ -2287,18 +2356,16 @@ class CovenantSheetView(SheetView):
         the details panel of the chosen row (docked below the scrolling part)."""
         summary = eco.summarize(self.saga, self.covenant)
         left, right = eco.wealth_texts(summary)
-        with Vertical(id="eco-body"):
+        with Vertical(id="eco-body", classes="panel-body"):
             with VerticalScroll(id="eco-scroll"):
                 with (
                     SheetSection(title="Wealth", id="section-eco-wealth"),
-                    TwoColumns(id="eco-wealth-body"),
+                    TwoColumns(id="eco-wealth-body", text=True),
                 ):
                     yield Static(left, id="eco-wealth-left")
                     yield Static(right, id="eco-wealth-right")
-                with SheetSection(title="Sources of Income", id="section-eco-income"):
-                    yield Static(
-                        eco.source_table_header(), classes="table-header eco-header"
-                    )
+                with SheetSection(title=self._income_title(), id="section-eco-income"):
+                    yield TableHeader(eco.source_table_header(), classes="eco-header")
                     yield SelectableList(
                         self._eco_rows("income", summary),
                         id="eco-income-list",
@@ -2307,26 +2374,25 @@ class CovenantSheetView(SheetView):
                 with SheetSection(
                     title="Yearly Expenditure", id="section-eco-expenditure"
                 ):
-                    yield Static(
-                        eco.table_header("Cost"), classes="table-header eco-header"
-                    )
+                    yield TableHeader(eco.table_header("Cost"), classes="eco-header")
                     yield SelectableList(
                         self._eco_rows("expenditure", summary),
                         id="eco-expenditure-list",
                         group="eco",
                     )
                 with SheetSection(title="Cost Savings", id="section-eco-savings"):
-                    yield Static(
-                        eco.table_header("Quantity"), classes="table-header eco-header"
+                    yield TableHeader(
+                        eco.table_header("Quantity"), classes="eco-header"
                     )
                     yield SelectableList(
                         self._eco_rows("savings", summary),
                         id="eco-savings-list",
                         group="eco",
                     )
-            yield Static(
-                eco.source_detail_text(None), id="eco-panel", classes="details-panel"
-            )
+            yield DetailsPanel(eco.source_detail_text(None), id="eco-panel")
+
+    def _income_title(self) -> str:
+        return counted("Sources of Income", len(self.covenant.economics.income_sources))
 
     def _eco_rows(self, which: str, summary: eco.Summary) -> list[tuple[int, str]]:
         if which == "income":
@@ -2359,6 +2425,9 @@ class CovenantSheetView(SheetView):
         left, right = eco.wealth_texts(summary)
         self.query_one("#eco-wealth-left", Static).update(left)
         self.query_one("#eco-wealth-right", Static).update(right)
+        self._set_section_title(
+            self.query_one("#section-eco-income", Collapsible), self._income_title()
+        )
         any_chosen = False
         for which in self._ECO_LISTS:
             rows_list = self.query_one(f"#eco-{which}-list", SelectableList)
@@ -2382,9 +2451,16 @@ class CovenantSheetView(SheetView):
         """Index into the `kind` list's entries of the chosen row, or None."""
         return self.query_one(f"#pos-{kind}-list", SelectableList).selected_data_index
 
+    def _pos_title(self, kind: str) -> str:
+        return counted(pos.KIND_TITLES[kind], len(self._pos_entries(kind)))
+
     def _rebuild_possessions(self) -> None:
-        """Re-render every list and reset the panel."""
+        """Re-render every list and its title, and reset the panel."""
         for kind in POSSESSION_KINDS:
+            self._set_section_title(
+                self.query_one(f"#section-pos-{kind}", Collapsible),
+                self._pos_title(kind),
+            )
             self.query_one(f"#pos-{kind}-list", SelectableList).set_rows(
                 self._pos_rows(kind)
             )
@@ -2515,19 +2591,6 @@ class CovenantSheetView(SheetView):
             "#cov-reputations-list", SelectableList
         ).selected_data_index
 
-    @staticmethod
-    def _set_section_title(section: Collapsible, title: str) -> None:
-        """Set a section's title, forcing the label to repaint. Textual's
-        Content compares equal on plain text alone, so a colour-only change
-        (Hooks (7 pts) turning red) would otherwise leave the old colour
-        showing."""
-        section.title = title
-        title_widget = section.query_one(CollapsibleTitle)
-        # The label reactive skips "unchanged" values too, so store the new
-        # Content directly (set_reactive bypasses that check), then repaint.
-        title_widget.set_reactive(type(title_widget).label, Content.from_text(title))
-        title_widget._update_label()
-
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
         """A Boon or Hook row was chosen: fill the details panel. (Reputations
         have no panel -- a name and a score have nothing more to show.)"""
@@ -2625,14 +2688,17 @@ class CovenantSheetView(SheetView):
 
     def _bh_title(self, kind: str) -> str:
         """ "Boons (7 pts)" / "Hooks (7 pts)": Boons show the points they
-        cost, Hooks the points they provide. The parenthesised total of BOTH
-        titles takes one colour from comparing the two (see _balance_colored)."""
+        cost, Hooks the points they provide. Both totals share one colour:
+        plain while the Boons cost less than the Hooks provide (points still
+        to spend), $text-success when they match, $text-error when the Boons
+        cost more."""
         by_id = catalog.load_covenant_boon_hook_catalog_by_id()
         boons = covenant_boon_points(self.covenant, by_id)
         hooks = covenant_hook_points(self.covenant, by_id)
-        points = boons if kind == "Boon" else hooks
-        unit = "pt" if points == 1 else "pts"
-        return f"{kind}s {_balance_colored(boons, hooks, f'({points:g} {unit})')}"
+        colour = None if boons < hooks else match_colour(boons, hooks)
+        if kind == "Boon":
+            return points_title("Boons", boons, colour)
+        return points_title("Hooks", hooks, colour)
 
     def _bh_entries(self, kind: str) -> list[tuple[int, str]]:
         """The attached Boons or Hooks of `kind` as (index into
@@ -2658,7 +2724,7 @@ class CovenantSheetView(SheetView):
         description (if any), then the official rules text and the book it
         comes from."""
         if index is None:
-            return "[dim]Select a Boon or Hook to read its rules.[/]"
+            return "[dim]Select a Boon or Hook to see its details.[/]"
         by_id = catalog.load_covenant_boon_hook_catalog_by_id()
         instance = self.covenant.boons_hooks[index]
         definition = by_id.get(instance.vf_id)

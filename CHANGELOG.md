@@ -8,6 +8,24 @@ fix or behind-the-scenes improvement bumps PATCH. The version is set in
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 0.9.0 — 2026-09-28
+
+- Every details panel now works the same way on every sheet and list: one
+  per tab, at the bottom of the tab below the part that scrolls, always 12
+  rows tall. Longer text scrolls inside the panel, and it starts at the top
+  whenever you choose another row. The character's Inventory tab shares one
+  panel between Personal Gear and Books, like the laboratory's.
+- Section titles show the list's figure: "(1 of 2)" where there's a limit
+  (Features against the lab's Feature Virtues, as Specializations already
+  did), the points on each side of a balance, and a plain count elsewhere
+  ("Rooms (2)"). A character's Virtues and Flaws show their points in green
+  when they balance and red when they don't; a laboratory's and a
+  familiar's show their points uncoloured. Book lists no longer show Build
+  Points in their titles.
+- Side-by-side lists are the same distance apart on every sheet, and so are
+  side-by-side blocks of text.
+- Every details panel's prompt now reads "Select a ... to see its details."
+
 ## 0.8.0 — 2026-09-27
 
 - Unknown Hooks: a Minor Hook the book says "may be Unknown" (35 of them)

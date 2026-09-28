@@ -1,0 +1,43 @@
+===== (no tabs)
+
+   Search spell names and descriptions...                     Source: any       ▼
+
+   Technique: (any)  ▼  Form: (any)       ▼  Ritual: any       ▼  Level from    to
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Spells (460 of 460)
+
+        Name                           Arts            Level  Range/Duration/Target
+      Ritual Source
+      ○ Soothe Pains of the Beast      CrAn               20  Touch/Mom/Ind
+      Ritual ArM5
+      ○ True Rest of the Injured Brute CrAn               20  Touch/Moon/Ind
+      ArM5
+      ○ Summoning the Creeping Death   CrAn               25  Touch/Diam/Ind
+      HoHS
+      ○ Weaver's Trap of Webs          CrAn               35  Voice/Sun/Group
+      ArM5
+      ○ The Wizard's Mount             CrAn               35  Touch/Sun/Ind
+      ArM5
+      ○ Venomous Velites               Cr(Re)An           45  Sight/Sun/Group
+      HoHTL
+      ○ Curse of the Ravenous Swarm    Cr(Re)An           50  Touch/Moon/Group
+      Ritual ArM5
+      ○ Image of the Beast             InAn                5  (details missing)
+      ArM5
+      ○ Shiver of the Lycanthrope      InAn               10  Per/Conc/Touch
+
+
+
+    Select a spell to see its details.
+
+
+
+
+
+
+
+
+
+
+

@@ -86,6 +86,11 @@ from ars_magica_manager.screens import (
     WorkspaceScreen,
     _CsvDirectoryTree,
 )
+from ars_magica_manager.screens.widgets import (
+    LIST_COLUMN_GAP,
+    TEXT_COLUMN_GAP,
+    DetailsPanel,
+)
 
 
 def _is_form(screen, title: str) -> bool:
@@ -1423,6 +1428,7 @@ async def test_removing_a_familiar_virtue_flaw_uses_the_chosen_row_and_confirms(
 
 async def test_familiar_details_panels_are_shaded_like_every_other_sheet():
     # B13: the familiar sheet's details panels had no shaded panel style.
+    # (STORY-114: each is a DetailsPanel docked at the bottom of its tab.)
     storage.save_saga(_saga_with_familiar())
 
     app = ArsMagicaManagerApp()
@@ -1435,8 +1441,8 @@ async def test_familiar_details_panels_are_shaded_like_every_other_sheet():
             "fam-ability-info",
             "fam-bond-powers-info",
         ):
-            panel = view.query_one(f"#{panel_id}", Static)
-            assert panel.has_class("details-panel"), panel_id
+            panel = view.query_one(f"#{panel_id}", Static).parent
+            assert isinstance(panel, DetailsPanel), panel_id
             assert panel.styles.background.a > 0, panel_id
 
 
@@ -2638,6 +2644,55 @@ def _saga_with_character_and_spell() -> Saga:
     return saga
 
 
+async def test_virtue_and_flaw_titles_show_the_points_and_whether_they_balance():
+    # STORY-114: each side's points, both in the success colour when they
+    # match and the error colour when they don't; Free Virtues count 0.
+    saga = _saga_with_bare_character()
+    character = saga.characters[0]
+    character.virtues_flaws = [
+        VirtueFlawInstance("vf_adept_laboratory_student"),  # Minor Virtue, 1
+        VirtueFlawInstance("vf_abandoned_apprentice"),  # Major Flaw, 3
+    ]
+    storage.save_saga(saga)
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _select_character(pilot, app)
+        view = app.screen._character_sheet_view
+        virtues = view.query_one("#section-vf-virtues", Collapsible)
+        flaws = view.query_one("#section-vf-flaws", Collapsible)
+        assert virtues.title == "Virtues [$text-error](1 pt)[/]"
+        assert flaws.title == "Flaws [$text-error](3 pts)[/]"
+
+        # The app's own copy of the character (loaded from the save).
+        view.character.virtues_flaws.append(VirtueFlawInstance("vf_alim"))
+        view.character.virtues_flaws.append(VirtueFlawInstance("vf_almogaten"))
+        app.screen._commit("section-vf-virtues")
+        await pilot.pause()
+        assert virtues.title == "Virtues [$text-success](3 pts)[/]"
+        assert flaws.title == "Flaws [$text-success](3 pts)[/]"
+
+
+async def test_side_by_side_lists_and_text_blocks_have_one_gap_each():
+    # STORY-114: lists sit LIST_COLUMN_GAP apart and blocks of text
+    # TEXT_COLUMN_GAP apart, on every sheet; the last column has none.
+    storage.save_saga(_saga_with_bare_character())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _select_character(pilot, app)
+        view = app.screen._character_sheet_view
+        for row_id, gap in (
+            ("pt-rep-row", LIST_COLUMN_GAP),
+            ("vf-row", LIST_COLUMN_GAP),
+            ("char-info-body", TEXT_COLUMN_GAP),
+            ("char-biographical-row", TEXT_COLUMN_GAP),
+        ):
+            first, last = view.query_one(f"#{row_id}").children
+            assert first.styles.margin.right == gap, row_id
+            assert last.styles.margin.right == 0, row_id
+
+
 async def test_add_and_remove_spell_known():
     storage.save_saga(_saga_with_character_and_spell())
 
@@ -3443,9 +3498,10 @@ async def test_lab_top_panel_layout_is_stable_across_tabs():
             assert characteristics.bottom == top.bottom, tab_id
             # Three columns side by side: derived stats (a row lower, beside
             # Refinement), then the Characteristics four and four.
-            derived = view.query_one("#lab-characteristics-derived").region
-            left = view.query_one("#lab-characteristics-left").region
-            right = view.query_one("#lab-characteristics-right").region
+            # (Content regions: the blank rows are padding -- STORY-114.)
+            derived = view.query_one("#lab-characteristics-derived").content_region
+            left = view.query_one("#lab-characteristics-left").content_region
+            right = view.query_one("#lab-characteristics-right").content_region
             assert derived.right <= left.x and left.right <= right.x, tab_id
             assert derived.y == left.y + 1 and left.y == right.y, tab_id
             # Identity's two columns side by side, the Aura line below both.
@@ -3469,11 +3525,20 @@ async def test_lab_top_panel_columns_stack_on_a_narrow_pane():
         await _select_laboratory(pilot, app)
         view = app.screen._laboratory_sheet_view
         body = view.query_one("#lab-characteristics-body")
-        await wait_until(pilot, lambda: body.has_class("-stacked"))
+        columns = [
+            view.query_one(f"#lab-characteristics-{name}")
+            for name in ("derived", "left", "right")
+        ]
+        # The class lands a beat before the re-layout: wait for the layout.
+        assert await wait_until(
+            pilot,
+            lambda: (
+                body.has_class("-stacked")
+                and len({column.region.x for column in columns}) == 1
+            ),
+        )
 
-        derived = view.query_one("#lab-characteristics-derived").region
-        left = view.query_one("#lab-characteristics-left").region
-        right = view.query_one("#lab-characteristics-right").region
+        derived, left, right = (column.content_region for column in columns)
         assert derived.x == left.x == right.x
         assert derived.bottom < left.y and left.bottom < right.y
 
@@ -4014,7 +4079,7 @@ async def test_add_and_remove_inventory_item_on_lab():
         view = app.screen._laboratory_sheet_view
         assert _lab_rows(view, "lab-items-list") == ["Silver Mirror"]
         section = view.query_one("#section-lab-items", Collapsible)
-        assert section.title == "Equipment & Stores"
+        assert section.title == "Equipment & Stores (1)"
 
         await pilot.press("A")
         await pilot.pause()
@@ -7415,13 +7480,13 @@ async def test_possessions_tab_has_its_seven_sections_and_lists_the_labs_as_sanc
             for kind in pos.KIND_TITLES
         ]
         assert [_plain_title(x) for x in sections] == [
-            "Properties and Land",
-            "Sanctums",
-            "Weapons",
-            "Armor",
-            "Vis Sources",
-            "Raw Vis Stores",
-            "Items",
+            "Properties and Land (0)",
+            "Sanctums (1)",
+            "Weapons (0)",
+            "Armor (0)",
+            "Vis Sources (0)",
+            "Raw Vis Stores (0)",
+            "Items (0)",
         ]
         assert all(not section.collapsed for section in sections)
         # The laboratory is a sanctum without anyone adding it, Quality/Upkeep
@@ -7998,7 +8063,7 @@ async def test_economics_tab_shows_calculated_wealth_and_all_its_sections():
         ]
         assert [_plain_title(x) for x in sections] == [
             "Wealth",
-            "Sources of Income",
+            "Sources of Income (1)",
             "Yearly Expenditure",
             "Cost Savings",
         ]
@@ -8739,7 +8804,7 @@ async def test_library_tab_lists_every_book_in_the_covenant():
         assert labels[1].endswith("Lab: Leandro's S…")  # cut to fit the column
         assert labels[2].endswith("Leandro")
         section = view.query_one("#section-lib-books", Collapsible)
-        assert section.title == "Books (3) - 44 Build Points"  # 32 + 4 + 8
+        assert section.title == "Books (3)"
 
         assert "Select a book" in _books_panel(app)
         await _choose_book(pilot, app, 0)
@@ -8776,7 +8841,7 @@ async def test_adding_a_book_for_a_laboratory_shows_it_in_the_lab_inventory():
         await pilot.pause()
         assert _book_names(app) == ["Summa [Aquam]"]
         section = lab_view.query_one("#section-lab-books", Collapsible)
-        assert section.title == "Books (1) - 22 Build Points"
+        assert section.title == "Books (1)"
 
     saved = next(b for b in _saved_books().values() if b.name == "Summa [Aquam]")
     assert (saved.type, saved.art, saved.level, saved.quality) == (
@@ -8959,11 +9024,15 @@ async def test_character_books_section_and_delete_confirms():
         view.query_one(TabbedContent).active = "tab-inventory"
         await pilot.pause()
         section = view.query_one("#section-books", Collapsible)
-        assert section.title == "Books (1) - 8 Build Points"
+        assert section.title == "Books (1)"
         assert _book_names(app) == ["Pocket Tract"]
         await _choose_book(pilot, app, 0)
         assert app.screen._active_section() == "section-books"
-        assert "Owner: Character: Leandro" in _books_panel(app)
+        # The Inventory tab's one panel shows the book.
+        panel = view.query_one("#inventory-info", Static)
+        assert await wait_until(
+            pilot, lambda: "Owner: Character: Leandro" in str(panel.render())
+        )
         await pilot.press("A")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
@@ -9320,7 +9389,7 @@ async def test_library_summary_is_read_only_and_the_list_reaches_the_panel():
         # The list runs down to the details panel, two rows above it (the
         # section's bottom padding and the panel's margin).
         section = view.query_one("#section-lib-books", Collapsible)
-        panel = app.screen._book_view().query_one(".books-panel", Static)
+        panel = app.screen._book_view().query_one(DetailsPanel)
         assert panel.region.y - section.region.bottom == 1
         assert view.query_one("#section-lib-books-list").region.height > 10
 

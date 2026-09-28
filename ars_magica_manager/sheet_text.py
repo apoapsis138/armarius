@@ -92,7 +92,7 @@ def ability_definition(name: str) -> AbilityDef | None:
 
 def ability_info_text(abilities: Sequence[Ability], index: int | None) -> str:
     if index is None:
-        return "[dim]Select an Ability for its description.[/]"
+        return "[dim]Select an Ability to see its details.[/]"
     definition = ability_definition(abilities[index].name)
     if definition is None or not definition.description:
         return "[dim](no catalog description)[/]"
@@ -118,6 +118,18 @@ def vf_rows(
     ]
 
 
+def vf_points(instances: Sequence[VirtueFlawInstance], vf_type: str) -> float:
+    """The points the attached Virtues or Flaws (`vf_type`) come to: Minor 1,
+    Major 3, Free 0 each (entries not in the catalog count nothing)."""
+    vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
+    return sum(
+        abs(definition.cost)
+        for vf in instances
+        if (definition := vf_catalog.get(vf.vf_id)) is not None
+        and definition.type == vf_type
+    )
+
+
 def effect_lines(modifiers: Sequence[Modifier]) -> list[str]:
     """One "Effect:" details-panel line per catalog modifier."""
     return [
@@ -131,7 +143,7 @@ def vf_info_text(instances: Sequence[VirtueFlawInstance], index: int | None) -> 
     """The details panel for the attached Virtue/Flaw at `index`: its name,
     category, tier, effects, and the official rules text."""
     if index is None:
-        return "[dim]Select a Virtue or Flaw to read its rules.[/]"
+        return "[dim]Select a Virtue or Flaw to see its details.[/]"
     vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
     instance = instances[index]
     definition = vf_catalog.get(instance.vf_id)

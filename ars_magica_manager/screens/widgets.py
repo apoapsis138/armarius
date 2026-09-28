@@ -1,5 +1,5 @@
 """Widgets shared by the screens: the bottom bar, the selectable list, sheet
-sections and layout rows, and small display helpers."""
+sections and layout rows, the details panel, and small display helpers."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from typing import Any, ClassVar
 
 from textual.app import ComposeResult
 from textual.binding import Binding, BindingType
-from textual.containers import Horizontal, Vertical
+from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.events import Click
 from textual.message import Message
 from textual.widget import Widget
@@ -26,15 +26,23 @@ from ..models import (
 )
 
 
-def _balance_colored(boon_points: float, hook_points: float, text: str) -> str:
-    """Wraps `text` (a Boons/Hooks point total -- both share one colour) in
-    the theme's colour for how the two compare: plain while Boons cost less
-    than Hooks provide, $text-error once they cost more, $text-success when
-    they exactly balance."""
-    if boon_points < hook_points:
-        return text
-    colour = "$text-error" if boon_points > hook_points else "$text-success"
-    return f"[{colour}]{text}[/]"
+def counted(label: str, count: int) -> str:
+    """A list section's title with how many entries it has: "Rooms (3)"."""
+    return f"{label} ({count})"
+
+
+def points_title(label: str, points: float, colour: str | None = None) -> str:
+    """A title with the points its list comes to: "Boons (3 pts)", the
+    points in the theme `colour` if given (see match_colour)."""
+    unit = "pt" if points == 1 else "pts"
+    text = f"({points:g} {unit})"
+    return f"{label} [{colour}]{text}[/]" if colour else f"{label} {text}"
+
+
+def match_colour(points: float, other: float) -> str:
+    """The colour for the two sides of a balance (Virtues against Flaws):
+    $text-success when they match, $text-error when they don't."""
+    return "$text-success" if points == other else "$text-error"
 
 
 def _tier_text(entry: CovenantBoonHookDef) -> str:
@@ -414,22 +422,42 @@ def _tab_placeholder(tab_name: str) -> str:
     return f"The {tab_name} tab isn't built yet -- coming in a future update."
 
 
+#: The gap, in columns, between side-by-side lists (sections).
+LIST_COLUMN_GAP = 2
+#: The gap between side-by-side blocks of text (info panels, totals).
+TEXT_COLUMN_GAP = 4
+
+
 class TwoColumns(Horizontal):
     """A full-width row whose children share it equally, each as tall as its
-    content: the side-by-side panels and sections of the sheets. (Gaps
-    between the columns are the left column's own right margin.)"""
+    content: the side-by-side panels and sections of the sheets. Columns
+    are LIST_COLUMN_GAP apart, or TEXT_COLUMN_GAP with `text=True` (blocks
+    of text rather than lists) -- set here only, so every sheet matches."""
 
-    DEFAULT_CSS = """
-    TwoColumns {
+    DEFAULT_CSS = f"""
+    TwoColumns {{
         width: 1fr;
         height: auto;
-    }
+    }}
 
-    TwoColumns > * {
+    TwoColumns > * {{
         width: 1fr;
         height: auto;
-    }
+        margin-right: {LIST_COLUMN_GAP};
+    }}
+
+    TwoColumns.-text > * {{
+        margin-right: {TEXT_COLUMN_GAP};
+    }}
+
+    TwoColumns > *:last-child {{
+        margin-right: 0;
+    }}
     """
+
+    def __init__(self, *children: Widget, text: bool = False, **kwargs: Any) -> None:
+        super().__init__(*children, **kwargs)
+        self.set_class(text, "-text")
 
 
 class StackingColumns(Horizontal):
@@ -438,31 +466,37 @@ class StackingColumns(Horizontal):
     once. Each column is as wide as its content or, with `equal=True`, gets
     an equal share of the row (like TwoColumns) -- then it stacks as soon as
     any column's content is wider than its share. Call restack() after
-    changing a column's content; a resize re-checks by itself. (Gaps between
-    the columns are the left column's own right margin.)"""
+    changing a column's content; a resize re-checks by itself. Its columns
+    are blocks of text, TEXT_COLUMN_GAP apart (the gap is each column's
+    right margin, so it counts when measuring)."""
 
-    DEFAULT_CSS = """
-    StackingColumns {
+    DEFAULT_CSS = f"""
+    StackingColumns {{
         width: 1fr;
         height: auto;
-    }
+    }}
 
-    StackingColumns > * {
+    StackingColumns > * {{
         width: auto;
         height: auto;
-    }
+        margin-right: {TEXT_COLUMN_GAP};
+    }}
 
-    StackingColumns.-equal > * {
+    StackingColumns > *:last-child {{
+        margin-right: 0;
+    }}
+
+    StackingColumns.-equal > * {{
         width: 1fr;
-    }
+    }}
 
-    StackingColumns.-stacked {
+    StackingColumns.-stacked {{
         layout: vertical;
-    }
+    }}
 
-    StackingColumns.-equal.-stacked > * {
+    StackingColumns.-equal.-stacked > * {{
         width: auto;
-    }
+    }}
     """
 
     def __init__(self, *children: Widget, equal: bool = False, **kwargs: Any) -> None:
@@ -521,3 +555,63 @@ class PinnedCollapsible(Collapsible):
         focused = self.screen.focused
         if focused is None or self not in focused.ancestors_with_self:
             self.query_one("CollapsibleTitle").focus()
+
+
+#: Every details panel's height in rows, padding included (user, STORY-114).
+DETAILS_PANEL_HEIGHT = 12
+
+
+class PanelText(Static):
+    """The text of a DetailsPanel. Updating it scrolls the panel back to the
+    top, so a newly chosen row never opens part-way down."""
+
+    def update(self, content: Any = "", *, layout: bool = True) -> None:
+        super().update(content, layout=layout)
+        if isinstance(self.parent, DetailsPanel):
+            self.parent.scroll_home(animate=False)
+
+
+class DetailsPanel(VerticalScroll):
+    """A selectable list's details panel: one per tab, docked below the
+    tab's scrolling part, always DETAILS_PANEL_HEIGHT rows on a shaded
+    background; longer text scrolls inside it (mouse wheel). It holds one
+    PanelText, which carries the id (or class) the sheet updates it by --
+    query it as a Static. Not focusable, so it adds no stop to the focus chain."""
+
+    can_focus = False
+
+    DEFAULT_CSS = f"""
+    DetailsPanel.details-panel {{
+        width: 1fr;
+        height: {DETAILS_PANEL_HEIGHT};
+        margin-top: 1;
+        padding: 1 2;
+        background: $panel;
+    }}
+
+    DetailsPanel > PanelText {{
+        width: 1fr;
+        height: auto;
+    }}
+    """
+
+    def __init__(
+        self, text: str, *, id: str | None = None, text_classes: str = ""
+    ) -> None:
+        """`id` and `text_classes` go on the text (the panel is its parent)."""
+        super().__init__(
+            PanelText(text, id=id, classes=text_classes), classes="details-panel"
+        )
+
+
+class TableHeader(Static):
+    """The column headings above a table-like list (books, spells, Arts,
+    inhabitants...), in muted text."""
+
+    DEFAULT_CSS = """
+    TableHeader {
+        width: 1fr;
+        height: auto;
+        color: $text-muted;
+    }
+    """

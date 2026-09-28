@@ -151,7 +151,7 @@ def test_ability_info_text_shows_catalog_description():
     _, _magus, familiar = _saga()
     familiar.abilities = [Ability(name="Athletics", category="General")]
     assert fam.ability_info_text(familiar, None) == (
-        "[dim]Select an Ability for its description.[/]"
+        "[dim]Select an Ability to see its details.[/]"
     )
     assert "General physical prowess" in fam.ability_info_text(familiar, 0)
 
@@ -174,7 +174,7 @@ def test_bond_power_rows_and_info_text():
     ]
     assert fam.bond_power_rows(familiar) == [(0, "Speak with Beasts")]
     assert fam.bond_power_info_text(familiar, None) == (
-        "[dim]Select a Bond Power for its details.[/]"
+        "[dim]Select a Bond Power to see its details.[/]"
     )
     text = fam.bond_power_info_text(familiar, 0)
     assert "Speak with Beasts" in text

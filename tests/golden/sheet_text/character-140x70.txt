@@ -3,12 +3,12 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Leandro
 
-      Setting:        (not set)                        Covenant:            Keep
-      Age:            (unknown -- set Year Born)       Assigned Laboratory: Tower
-      Current Year:   1220                             Type:                magus
-      Current Season: Spring                           Confidence Score:    0
-                                                       Confidence Points:   0
-                                                       Size:                0
+      Setting:        (not set)                          Covenant:            Keep
+      Age:            (unknown -- set Year Born)         Assigned Laboratory: Tower
+      Current Year:   1220                               Type:                magus
+      Current Season: Spring                             Confidence Score:    0
+                                                         Confidence Points:   0
+                                                         Size:                0
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -24,7 +24,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Hermetic Background
 
-      House: (not set)                                Wizard's Sigil: (not set)
+      House: (not set)                                  Wizard's Sigil: (not set)
       Domus Magna: (not set)
       Primus: (not set)
       Parens: (not set)
@@ -34,7 +34,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Biographical Detail
 
-      Player: (not set)                               (none recorded)
+      Player: (not set)                                 (none recorded)
       Birth Name: (not set)
       Year Born: (not set)
       Race/Nationality: (not set)
@@ -48,10 +48,10 @@
       Handedness: right
       Physical Description: (not set)
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Personality Traits                              ▼ Reputations
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Personality Traits (1)                           ▼ Reputations (1)
 
-      ○ Brave: +2                                       ○ Wise: +1
+      ○ Brave: +2                                        ○ Wise: +1
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Aging & Warping
@@ -71,12 +71,12 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Leandro
 
-      Setting:        (not set)                        Covenant:            Keep
-      Age:            (unknown -- set Year Born)       Assigned Laboratory: Tower
-      Current Year:   1220                             Type:                magus
-      Current Season: Spring                           Confidence Score:    0
-                                                       Confidence Points:   0
-                                                       Size:                0
+      Setting:        (not set)                          Covenant:            Keep
+      Age:            (unknown -- set Year Born)         Assigned Laboratory: Tower
+      Current Year:   1220                               Type:                magus
+      Current Season: Spring                             Confidence Score:    0
+                                                         Confidence Points:   0
+                                                         Size:                0
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -93,7 +93,6 @@
   ○ Latin 4 0/0
 
 
-    Select an Ability for its description.
 
 
 
@@ -122,6 +121,7 @@
 
 
 
+    Select an Ability to see its details.
 
 
 
@@ -139,12 +139,12 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Leandro
 
-      Setting:        (not set)                        Covenant:            Keep
-      Age:            (unknown -- set Year Born)       Assigned Laboratory: Tower
-      Current Year:   1220                             Type:                magus
-      Current Season: Spring                           Confidence Score:    0
-                                                       Confidence Points:   0
-                                                       Size:                0
+      Setting:        (not set)                          Covenant:            Keep
+      Age:            (unknown -- set Year Born)         Assigned Laboratory: Tower
+      Current Year:   1220                               Type:                magus
+      Current Season: Spring                             Confidence Score:    0
+                                                         Confidence Points:   0
+                                                         Size:                0
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -158,13 +158,12 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Virtues                                           ▼ Flaws
+    ▼ Virtues (1 pt)                                    ▼ Flaws (3 pts)
 
       ○ Adept Laboratory Student (Minor)                  ○ Abandoned Apprentice (Major)
 
 
 
-    Select a Virtue or Flaw to read its rules.
 
 
 
@@ -190,6 +189,7 @@
 
 
 
+    Select a Virtue or Flaw to see its details.
 
 
 
@@ -207,12 +207,12 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Leandro
 
-      Setting:        (not set)                        Covenant:            Keep
-      Age:            (unknown -- set Year Born)       Assigned Laboratory: Tower
-      Current Year:   1220                             Type:                magus
-      Current Season: Spring                           Confidence Score:    0
-                                                       Confidence Points:   0
-                                                       Size:                0
+      Setting:        (not set)                          Covenant:            Keep
+      Age:            (unknown -- set Year Born)         Assigned Laboratory: Tower
+      Current Year:   1220                               Type:                magus
+      Current Season: Spring                             Confidence Score:    0
+                                                         Confidence Points:   0
+                                                         Size:                0
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -247,15 +247,9 @@
       ○ Creo: 3 pawn(s)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Known Spells
+    ▼ Known Spells (1)
 
       ○ Soothe Pains of the Beast      CrAn               20  Touch/Mom/Ind          Ritual ArM5
-
-
-
-
-
-
 
 
 
@@ -270,17 +264,23 @@
 
 
 
+
+
+
+
+
+
 ===== tab-inventory
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Leandro
 
-      Setting:        (not set)                        Covenant:            Keep
-      Age:            (unknown -- set Year Born)       Assigned Laboratory: Tower
-      Current Year:   1220                             Type:                magus
-      Current Season: Spring                           Confidence Score:    0
-                                                       Confidence Points:   0
-                                                       Size:                0
+      Setting:        (not set)                          Covenant:            Keep
+      Age:            (unknown -- set Year Born)         Assigned Laboratory: Tower
+      Current Year:   1220                               Type:                magus
+      Current Season: Spring                             Confidence Score:    0
+                                                         Confidence Points:   0
+                                                         Size:                0
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -299,24 +299,16 @@
       ○ Creo: 3 pawn(s)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Personal Gear
+    ▼ Personal Gear (1)
 
       Other Items
       ○ Staff                   1
 
-
-        Select an item for its details.
-
-
-
-
-
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Books (1) - 0 Build Points
+    ▼ Books (1)
 
           Name                 Type           Subject                 Level Quality  Location
         ○ Diary                Other          -                           -       -  Leandro
-       Select a book to see its details.
 
 
 
@@ -326,6 +318,14 @@
 
 
 
+
+
+
+
+
+
+
+    Select an item or a book to see its details.
 
 
 
@@ -343,12 +343,12 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Leandro
 
-      Setting:        (not set)                        Covenant:            Keep
-      Age:            (unknown -- set Year Born)       Assigned Laboratory: Tower
-      Current Year:   1220                             Type:                magus
-      Current Season: Spring                           Confidence Score:    0
-                                                       Confidence Points:   0
-                                                       Size:                0
+      Setting:        (not set)                          Covenant:            Keep
+      Age:            (unknown -- set Year Born)         Assigned Laboratory: Tower
+      Current Year:   1220                               Type:                magus
+      Current Season: Spring                             Confidence Score:    0
+                                                         Confidence Points:   0
+                                                         Size:                0
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -411,12 +411,12 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Leandro
 
-      Setting:        (not set)                        Covenant:            Keep
-      Age:            (unknown -- set Year Born)       Assigned Laboratory: Tower
-      Current Year:   1220                             Type:                magus
-      Current Season: Spring                           Confidence Score:    0
-                                                       Confidence Points:   0
-                                                       Size:                0
+      Setting:        (not set)                          Covenant:            Keep
+      Age:            (unknown -- set Year Born)         Assigned Laboratory: Tower
+      Current Year:   1220                               Type:                magus
+      Current Season: Spring                             Confidence Score:    0
+                                                         Confidence Points:   0
+                                                         Size:                0
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

@@ -27,22 +27,15 @@
       Roll: Stress Die + Score >= 9.
       Bronze Cord: +0 (0 pts) -- Bonus to Base Soak, Healing rolls, Deprivation rolls, and Aging rolls.
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Virtues                                          ▼ Flaws
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Virtues (1 pt)                                    ▼ Flaws (0 pts)
 
-      ○ Adept Laboratory Student (Minor)                 (none recorded)
+      ○ Adept Laboratory Student (Minor)                  (none recorded)
 
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Personality Traits (1)                            ▼ Reputations (1)
 
-
-    Select a Virtue or Flaw to read its rules.
-
-
-
-
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Personality Traits                               ▼ Reputations
-
-      ○ Brave: +2                                        ○ Wise: +1
+      ○ Brave: +2                                         ○ Wise: +1
 
 
 
@@ -54,6 +47,13 @@
 
 
 
+
+
+
+
+
+
+    Select a Virtue or Flaw to see its details.
 
 
 
@@ -152,20 +152,19 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Health
 
-      Light Wounds:  0 (-1 each)                       Fatigue Level: Fresh
-      Medium Wounds: 0 (-3 each)                         Edit Fatigue
+      Light Wounds:  0 (-1 each)                         Fatigue Level: Fresh
+      Medium Wounds: 0 (-3 each)                           Edit Fatigue
       Heavy Wounds:  0 (-5 each)
       Incapacitated: no
       Dead: no
        Edit Wounds (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Natural Weapons & Attacks
+    ▼ Natural Weapons & Attacks (1)
 
       ○ Beak                                    Standard        1    0    0    0    0
 
 
-        Select an attack for its details.
 
 
 
@@ -190,6 +189,7 @@
 
 
 
+    Select an attack to see its details.
 
 
 
@@ -222,7 +222,6 @@
   ○ Awareness 2 0/0
 
 
-    Select an Ability for its description.
 
 
 
@@ -258,6 +257,7 @@
 
 
 
+    Select an Ability to see its details.
 
 
 
@@ -288,7 +288,6 @@
   ○ Speak
 
 
-    Select a Bond Power for its details.
 
 
 
@@ -326,6 +325,7 @@
 
 
 
+    Select a Bond Power to see its details.
 
 
 
