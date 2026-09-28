@@ -153,6 +153,37 @@ async def test_overlapping_picker_refills_leave_only_the_newest():
         ), [item.id for item in list_view.children][:10]
 
 
+async def test_vf_picker_offers_repeatable_entries_and_refuses_a_same_choice_repeat():
+    # STORY-707: a taken Virtue is hidden unless repeatable; a repeat with
+    # the same parameters is refused (with a notice) and the picker stays.
+    creo = VirtueFlawInstance("vf_affinity_with_art", {"art": "creo"})
+    taken = [creo, VirtueFlawInstance("vf_humble")]
+    app = ArsMagicaManagerApp()
+    results: list[VirtueFlawInstance | None] = []
+    async with app.run_test(size=(140, 50)) as pilot:
+        picker = VirtueFlawPickerScreen(taken)
+        app.push_screen(picker, results.append)
+        await _wait_for_picker_ready(pilot, app)
+        offered = {e.id for e in picker._entries}
+        assert "vf_affinity_with_art" in offered
+        assert "vf_humble" not in offered
+        art = catalog.load_virtue_flaw_catalog_by_id()["vf_affinity_with_art"]
+        picker._add(art, {"art": "creo"})
+        await pilot.pause()
+        assert app.screen is picker and not results
+        picker._add(art, {"art": "rego"})
+        assert await wait_until(pilot, lambda: bool(results))
+        assert results == [VirtueFlawInstance("vf_affinity_with_art", {"art": "rego"})]
+    # Two copies of a max-2 Virtue: no longer offered at all.
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 50)) as pilot:
+        rego = VirtueFlawInstance("vf_affinity_with_art", {"art": "rego"})
+        picker = VirtueFlawPickerScreen([creo, rego])
+        app.push_screen(picker)
+        await _wait_for_picker_ready(pilot, app)
+        assert "vf_affinity_with_art" not in {e.id for e in picker._entries}
+
+
 async def _wait_until_active(pilot, app, section_id: str) -> None:
     """Wait for `section_id` to be what a/A/e dispatch to, and fail clearly
     if it never becomes so."""
@@ -1563,6 +1594,10 @@ async def test_cancelling_param_screen_returns_to_picker_without_adding():
 
         await pilot.press("v")
         await pilot.pause()
+        await _wait_for_picker_ready(pilot, app)
+        picker_list = app.screen.query_one("#vf-picker-list", ListView)
+        app.screen.query_one("#picker-search", Input).value = "affinity with {art}"
+        await wait_until(pilot, lambda: len(picker_list.children) == 1)
         await pilot.press("enter")
         await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
@@ -1576,11 +1611,12 @@ async def test_cancelling_param_screen_returns_to_picker_without_adding():
     assert saga.characters[0].virtues_flaws == []
 
 
-async def test_virtue_flaw_picker_excludes_already_held_entries():
+async def test_virtue_flaw_picker_excludes_held_entries_unless_repeatable():
     saga = _saga_with_bare_character()
-    saga.characters[0].virtues_flaws.append(
-        VirtueFlawInstance(vf_id="vf_affinity_with_art", params={"art": "creo"})
-    )
+    saga.characters[0].virtues_flaws += [
+        VirtueFlawInstance(vf_id="vf_affinity_with_art", params={"art": "creo"}),
+        VirtueFlawInstance(vf_id="vf_adept_laboratory_student"),
+    ]
     storage.save_saga(saga)
 
     app = ArsMagicaManagerApp()
@@ -1590,10 +1626,13 @@ async def test_virtue_flaw_picker_excludes_already_held_entries():
 
         await pilot.press("v")
         await pilot.pause()
+        await _wait_for_picker_ready(pilot, app)
 
         picker_list = app.screen.query_one("#vf-picker-list", ListView)
         item_ids = [item.id for item in picker_list.children]
-        assert "vf-vf_affinity_with_art" not in item_ids
+        assert "vf-vf_adept_laboratory_student" not in item_ids
+        # Affinity with Art may be taken twice, for two different Arts.
+        assert "vf-vf_affinity_with_art" in item_ids
 
 
 async def test_virtue_flaw_picker_search_filters_by_typed_text():
@@ -1609,7 +1648,7 @@ async def test_virtue_flaw_picker_search_filters_by_typed_text():
         assert isinstance(app.screen, VirtueFlawPickerScreen)
 
         picker_list = app.screen.query_one("#vf-picker-list", ListView)
-        assert len(picker_list.children) > 100  # the full 624-entry catalog
+        assert len(picker_list.children) > 100  # the full 1,100-entry catalog
 
         await _wait_for_picker_ready(pilot, app)
 
@@ -7670,13 +7709,16 @@ async def test_weapons_armor_and_items_need_a_name_and_a_quantity_defaulting_to_
             # Weapons and armor carry a Type and Quality (their points); items don't.
             expected = {
                 # Weapons get four extra trailing combat-figure columns
-                # (Init/Attack/Defense/Damage), defaulting to 0; armor/items
-                # don't (see STORY-205).
+                # (Init/Attack/Defense/Damage), defaulting to +0 (see
+                # STORY-205), and Load; armor its Protection and Load
+                # (STORY-709); items neither.
                 "weapon": (
                     "Crossbows           Weapon or shield    Standard"
-                    "        3    0    0    0    0"
+                    "        3   +0   +0   +0   +0    0"
                 ),
-                "armor": "Mail Hauberks       Partial armor       Standard        3",
+                "armor": (
+                    "Mail Hauberks       Partial armor       Standard        3   +0    0"
+                ),
                 "item": "The Weeping Lens        3",
             }[kind]
             assert _pos_labels(app, kind) == [expected]
@@ -7693,10 +7735,11 @@ async def test_weapons_armor_and_items_need_a_name_and_a_quantity_defaulting_to_
             "Quality: Standard",
             "Quantity: 3",
             "Points: 12 (4 each",
-            "Init: 0",
-            "Attack: 0",
-            "Defense: 0",
-            "Damage: 0",
+            "Init: +0",
+            "Attack: +0",
+            "Defense: +0",
+            "Damage: +0",
+            "Load: 0",
         ):
             assert expected in panel, expected
 
@@ -7721,12 +7764,14 @@ async def test_weapon_combat_figures_are_typed_in_and_shown_on_the_row_and_panel
         await _save_dialog(pilot, app)
         await wait_until(pilot, lambda: len(_pos_labels(app, "weapon")) == 1)
 
-        assert _pos_labels(app, "weapon")[0].endswith("    2    5    3    7")
+        assert _pos_labels(app, "weapon")[0].endswith("   +2   +5   +3   +7    0")
 
         await _select_pos_row(pilot, app, "weapon", 0)
         panel = _pos_panel(app)
-        for expected in ("Init: 2", "Attack: 5", "Defense: 3", "Damage: 7"):
+        for expected in ("Init: +2", "Attack: +5", "Defense: +3", "Damage: +7"):
             assert expected in panel, expected
+        # Typed in, not chosen from the book.
+        assert "Weapon:" not in panel
 
         # Armor doesn't get these fields at all.
         await _open_pos_section(pilot, app, "armor")
@@ -7969,7 +8014,9 @@ async def test_possession_forms_fit_a_small_terminal_and_hug_content_on_a_tall_o
         await _open_pos_section(pilot, app, "weapon")
         await pilot.press("a")
         await pilot.pause()
-        assert app.screen.query_one("#fields-dialog").region.height < 30
+        # The weapon form: its fields, Description, the book line and buttons
+        # -- not the whole 70 rows.
+        assert app.screen.query_one("#fields-dialog").region.height < 36
 
 
 # -- Covenant Economics tab ------------------------------------------------------

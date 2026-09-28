@@ -94,6 +94,14 @@ OPENERS: dict[str, Opener] = {
             scr._CHARACTER_TRAITS, ws.selected_character.personality_traits, 0
         ),
     ),
+    "edit covenant weapon": Opener(
+        "covenant",
+        lambda ws: ws._possession_form("weapon", ws._possession_entries("weapon")[0]),
+    ),
+    "edit covenant armor": Opener(
+        "covenant",
+        lambda ws: ws._possession_form("armor", ws._possession_entries("armor")[0]),
+    ),
     # Character
     "edit character info": Opener("character", lambda ws: ws._edit_character_info()),
     "edit characteristics": Opener("character", lambda ws: ws._edit_characteristics()),
@@ -110,6 +118,9 @@ OPENERS: dict[str, Opener] = {
     "edit raw vis": Opener("character", lambda ws: ws._edit_raw_vis_at(0)),
     "virtue parameters": Opener("character", _open_param_prompt),
     "add mastery ability": Opener("character", _open_mastery_ability),
+    "add personal weapon": Opener(
+        "character", lambda ws: ws._inventory_item_form("weapon", None)
+    ),
     # Familiar
     "edit familiar info": Opener("familiar", lambda ws: ws._edit_familiar_info()),
     "edit familiar binding": Opener("familiar", lambda ws: ws._edit_familiar_binding()),
@@ -117,6 +128,9 @@ OPENERS: dict[str, Opener] = {
         "familiar", lambda ws: ws._edit_familiar_characteristics()
     ),
     "edit familiar wounds": Opener("familiar", lambda ws: ws._edit_familiar_wounds()),
+    "edit natural weapon": Opener(
+        "familiar", lambda ws: ws._familiar_natural_weapon_form(0)
+    ),
     # Laboratory
     "edit lab identity": Opener("laboratory", lambda ws: ws._edit_lab_identity()),
     "edit lab characteristics": Opener(

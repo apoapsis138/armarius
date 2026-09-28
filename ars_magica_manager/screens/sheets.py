@@ -1326,8 +1326,9 @@ class CharacterSheetView(SheetView):
     }
 
     def _inventory_rows(self) -> list[tuple[int | None, str]]:
-        """One selectable list for all of Inventory, with a header row before
-        each non-empty kind (Weapons, Armor, Other Items)."""
+        """One selectable list for all of Inventory, with a header row --
+        its title and column titles -- before each non-empty kind (Weapons,
+        Armor, Other Items)."""
         rows: list[tuple[int | None, str]] = []
         for kind in self._INVENTORY_KINDS:
             indexed = [
@@ -1337,7 +1338,7 @@ class CharacterSheetView(SheetView):
             ]
             if not indexed:
                 continue
-            rows.append((None, self._INVENTORY_HEADERS[kind]))
+            rows.append((None, pos.group_header(kind, self._INVENTORY_HEADERS[kind])))
             for index, item in indexed:
                 rows.append((index, pos.row_label(pos.PossessionEntry(kind, item))))
         return rows
@@ -2141,6 +2142,7 @@ class FamiliarSheetView(SheetView):
                     ),
                     id="section-fam-natural-weapons",
                 ):
+                    yield TableHeader(pos.table_header("weapon"))
                     yield self._list(
                         "section-fam-natural-weapons",
                         lambda: fam.natural_weapon_rows(self.familiar),

@@ -38,7 +38,7 @@ from ..forms import (
     _characteristics_from,
     _fatigue_fields,
     _hermetic_fields,
-    _possession_fields,
+    _possession_dialog,
     _wounds_fields,
 )
 from ..pickers import (
@@ -516,7 +516,7 @@ class CharacterActions(WorkspaceBase):
         entry = pos.PossessionEntry(kind, existing) if existing is not None else None
         title = (
             f"Add a {pos.KIND_SINGULAR[kind]}"
-            if index is None
+            if existing is None
             else f"Edit {escape(existing.name or 'this item')}"
         )
 
@@ -539,12 +539,7 @@ class CharacterActions(WorkspaceBase):
                 )
             self._commit("section-inventory")
 
-        self.app.push_screen(
-            FieldsDialog(
-                title, _possession_fields(kind, entry), validate=pos.form_problem
-            ),
-            handle_result,
-        )
+        self.app.push_screen(_possession_dialog(title, kind, entry), handle_result)
 
     def _edit_item(self) -> None:
         """Edit the chosen item; with none chosen, ask which one."""

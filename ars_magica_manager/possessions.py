@@ -6,21 +6,25 @@ plus stored entries) and the text for list rows and the details panel.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any
 
-from . import storage
+from . import catalog, storage
 from .laboratories import lab_characteristic_total
 from .markup import escape, fit, markdown_inline
 from .models import (
     GEAR_POINTS,
     GEAR_QUALITY_DEFAULT,
+    GEAR_TYPES_BY_KIND,
     SANCTUM_USAGE_DEFAULT,
+    ArmorDef,
     Covenant,
     Laboratory,
     LabVirtueFlawDef,
     Possession,
     Saga,
+    WeaponDef,
 )
 
 #: Section titles on the tab.
@@ -47,6 +51,15 @@ KIND_SINGULAR: dict[str, str] = {
 
 #: Kinds whose entries carry a Quantity.
 QUANTITY_KINDS: tuple[str, ...] = ("weapon", "armor", "item")
+
+#: The book's weapon tables a weapon form offers: a familiar's Natural
+#: Weapons its own table; characters' and covenants' weapons the rest
+#: (melee, with the shields, and missile).
+GEAR_WEAPON_TABLES: tuple[str, ...] = ("melee", "missile")
+NATURAL_WEAPON_TABLES: tuple[str, ...] = ("natural",)
+
+#: The armor Type that means a full suit (the other is partial).
+FULL_ARMOR = GEAR_TYPES_BY_KIND["armor"][1]
 
 
 @dataclass
@@ -168,7 +181,7 @@ class PossessionEntry:
         return self._own("weapon_init", 0)
 
     @property
-    def weapon_attack(self) -> int:
+    def weapon_attack(self) -> int | None:
         return self._own("weapon_attack", 0)
 
     @property
@@ -176,8 +189,20 @@ class PossessionEntry:
         return self._own("weapon_defense", 0)
 
     @property
-    def weapon_damage(self) -> int:
+    def weapon_damage(self) -> int | None:
         return self._own("weapon_damage", 0)
+
+    @property
+    def armor_protection(self) -> int:
+        return self._own("armor_protection", 0)
+
+    @property
+    def load(self) -> int:
+        return self._own("load", 0)
+
+    @property
+    def gear_id(self) -> str | None:
+        return self._own("gear_id", None)
 
 
 def entries_for_kind(
@@ -254,11 +279,13 @@ def table_header(kind: str) -> str:
             f"{'Quality':<{_GEAR_QUALITY_WIDTH}}{'Qty':>{_QTY_WIDTH}}"
             f"{'Init':>{_COMBAT_STAT_WIDTH}}{'Atk':>{_COMBAT_STAT_WIDTH}}"
             f"{'Def':>{_COMBAT_STAT_WIDTH}}{'Dmg':>{_COMBAT_STAT_WIDTH}}"
+            f"{'Load':>{_COMBAT_STAT_WIDTH}}"
         )
     if kind == "armor":
         return (
             f"  {name}{'Type':<{_TYPE_WIDTH}}"
             f"{'Quality':<{_GEAR_QUALITY_WIDTH}}{'Qty':>{_QTY_WIDTH}}"
+            f"{'Prot':>{_COMBAT_STAT_WIDTH}}{'Load':>{_COMBAT_STAT_WIDTH}}"
         )
     if kind == "item":
         return f"  {name}{'Qty':>{_QTY_WIDTH}}"
@@ -268,6 +295,14 @@ def table_header(kind: str) -> str:
             f"{'Pawns':>{_PAWNS_WIDTH}}  {'Season':<{_SEASON_WIDTH}}"
         )
     return f"  {name}{'Art':<{_ART_WIDTH}}{'Pawns':>{_PAWNS_WIDTH}}"  # vis_store
+
+
+def group_header(kind: str, title: str) -> str:
+    """A header row naming one kind within a mixed list (a character's
+    Personal Gear), with that kind's column titles: `title` stands in the
+    selector marker and Name columns, the rest line up with `row_label`."""
+    name_columns = 2 + _NAME_WIDTH
+    return f"{title:<{name_columns}}{table_header(kind)[name_columns:]}"
 
 
 def row_label(entry: PossessionEntry) -> str:
@@ -290,10 +325,16 @@ def row_label(entry: PossessionEntry) -> str:
         row = f"{name}{gear_type}{gear_quality}{entry.quantity:>{_QTY_WIDTH}}"
         if kind == "weapon":
             row += (
-                f"{entry.weapon_init:>{_COMBAT_STAT_WIDTH}}"
-                f"{entry.weapon_attack:>{_COMBAT_STAT_WIDTH}}"
-                f"{entry.weapon_defense:>{_COMBAT_STAT_WIDTH}}"
-                f"{entry.weapon_damage:>{_COMBAT_STAT_WIDTH}}"
+                f"{signed(entry.weapon_init):>{_COMBAT_STAT_WIDTH}}"
+                f"{signed(entry.weapon_attack):>{_COMBAT_STAT_WIDTH}}"
+                f"{signed(entry.weapon_defense):>{_COMBAT_STAT_WIDTH}}"
+                f"{signed(entry.weapon_damage):>{_COMBAT_STAT_WIDTH}}"
+                f"{entry.load:>{_COMBAT_STAT_WIDTH}}"
+            )
+        else:
+            row += (
+                f"{signed(entry.armor_protection):>{_COMBAT_STAT_WIDTH}}"
+                f"{entry.load:>{_COMBAT_STAT_WIDTH}}"
             )
     elif kind == "item":
         row = f"{name}{entry.quantity:>{_QTY_WIDTH}}"
@@ -309,6 +350,50 @@ def row_label(entry: PossessionEntry) -> str:
 
 def _line(label: str, value: object) -> str:
     return f"[b]{label}:[/] {escape(str(value))}"
+
+
+def signed(value: int | None) -> str:
+    """A combat figure as the book prints it: +2, +0, -1, or n/a."""
+    return "n/a" if value is None else f"{value:+d}"
+
+
+def weapon_summary(weapon: WeaponDef) -> str:
+    """What the book says of a weapon beyond the figures an entry holds:
+    its Ability, minimum Strength and range ("Bows, Min Str -1, range 15
+    paces")."""
+    parts = [weapon.ability]
+    if weapon.strength is not None:
+        parts.append(f"Min Str {weapon.strength:+d}")
+    if weapon.range is not None:
+        parts.append(f"range {weapon.range} paces")
+    return ", ".join(parts)
+
+
+def armor_summary(armor: ArmorDef) -> str:
+    """The book's figures for an armor Material, partial and full
+    ("partial +6 Load 4, full +9 Load 6")."""
+    partial = f"partial +{armor.partial_protection} Load {armor.partial_load}"
+    full = armor.figures(full=True)
+    if full is None:
+        return f"{partial}, partial only"
+    return f"{partial}, full +{full[0]} Load {full[1]}"
+
+
+def _book_line(entry: PossessionEntry) -> str | None:
+    """The details panel's line naming the book entry a weapon or armor was
+    filled from, or None for one typed in."""
+    gear_id = entry.gear_id
+    if not gear_id:
+        return None
+    if entry.kind == "weapon":
+        weapon = catalog.load_weapon_catalog_by_id().get(gear_id)
+        if weapon is None:
+            return _line("Weapon", f"{gear_id} (not in the catalog)")
+        return _line("Weapon", f"{weapon.name} ({weapon_summary(weapon)})")
+    armor = catalog.load_armor_catalog_by_id().get(gear_id)
+    if armor is None:
+        return _line("Material", f"{gear_id} (not in the catalog)")
+    return _line("Material", armor.name)
 
 
 def detail_text(entry: PossessionEntry | None) -> str:
@@ -336,6 +421,9 @@ def detail_text(entry: PossessionEntry | None) -> str:
         optional("Build Points", entry.build_points)
         lines.append(_line("Usage", entry.usage))
     elif kind in QUANTITY_KINDS:
+        book = _book_line(entry) if kind != "item" else None
+        if book is not None:
+            lines.append(book)
         if kind != "item":
             lines.append(_line("Type", entry.gear_type or "(not set)"))
             lines.append(_line("Quality", entry.gear_quality))
@@ -349,10 +437,21 @@ def detail_text(entry: PossessionEntry | None) -> str:
                 )
             )
         if kind == "weapon":
-            lines.append(_line("Init", entry.weapon_init))
-            lines.append(_line("Attack", entry.weapon_attack))
-            lines.append(_line("Defense", entry.weapon_defense))
-            lines.append(_line("Damage", entry.weapon_damage))
+            # One line, so the fixed-height panel shows them all.
+            lines.append(
+                "   ".join(
+                    (
+                        _line("Init", signed(entry.weapon_init)),
+                        _line("Attack", signed(entry.weapon_attack)),
+                        _line("Defense", signed(entry.weapon_defense)),
+                        _line("Damage", signed(entry.weapon_damage)),
+                        _line("Load", entry.load),
+                    )
+                )
+            )
+        elif kind == "armor":
+            lines.append(_line("Protection", signed(entry.armor_protection)))
+            lines.append(_line("Load", entry.load))
     elif kind == "vis_source":
         lines.append(_line("Art", entry.art))
         lines.append(_line("Pawns", entry.pawns))
@@ -421,7 +520,87 @@ def form_problem(values: dict[str, Any]) -> str | None:
         return "Quantity must be at least 1."
     if values.get("pawns", 1) < 1:
         return "Pawns must be at least 1."
+    if values.get("load", 0) < 0:
+        return "Load can't be negative."
     gear_type = values.get("gear_type")
     if gear_type and values.get("gear_quality") not in GEAR_POINTS[gear_type]:
         return f"{gear_type} only comes {' or '.join(GEAR_POINTS[gear_type]).lower()}."
+    armor = catalog.load_armor_catalog_by_id().get(values.get("gear_id") or "")
+    if armor is not None and gear_type == FULL_ARMOR and armor.figures(True) is None:
+        return f"{armor.name} only comes as partial armor."
     return None
+
+
+def _follows_the_book(name: str, book_names: set[str]) -> bool:
+    """Whether a form's Name may be replaced by the chosen entry's: it's
+    blank, or still the name of a catalog entry (so it was filled in, not
+    typed)."""
+    return not name or name in book_names
+
+
+def weapon_fills(
+    values: dict[str, Any], weapons: Mapping[str, WeaponDef]
+) -> dict[str, Any]:
+    """What choosing the book weapon `values["gear_id"]` (one of `weapons`)
+    suggests for the rest of a weapon form: its Init/Attack/Defense/Damage;
+    for a carried weapon (not a natural one) its Load, the Type that prices
+    it and, when the book gives one, its cost as the Quality; and its name,
+    unless the user has typed their own."""
+    weapon = weapons.get(values.get("gear_id") or "")
+    if weapon is None:
+        return {}
+    filled: dict[str, Any] = {
+        "weapon_init": weapon.init,
+        "weapon_attack": weapon.attack,
+        "weapon_defense": weapon.defense,
+        "weapon_damage": weapon.damage,
+    }
+    if weapon.table != "natural":
+        filled["load"] = weapon.load or 0
+        filled["gear_type"] = GEAR_TYPES_BY_KIND["weapon"][0]
+        if weapon.cost is not None:
+            filled["gear_quality"] = weapon.cost
+    names = {w.name for w in weapons.values()}
+    if _follows_the_book(values.get("name") or "", names):
+        filled["name"] = weapon.name
+    return filled
+
+
+def armor_fills(
+    values: dict[str, Any], armors: Mapping[str, ArmorDef]
+) -> dict[str, Any]:
+    """What choosing the book armor Material `values["gear_id"]` (one of
+    `armors`), as partial or full armor (`values["gear_type"]`), suggests
+    for the rest of an armor form: its Protection and Load (unless it
+    doesn't come that way), its cost as the Quality, and its name unless
+    the user has typed their own."""
+    armor = armors.get(values.get("gear_id") or "")
+    if armor is None:
+        return {}
+    filled: dict[str, Any] = {"gear_quality": armor.cost}
+    figures = armor.figures(values.get("gear_type") == FULL_ARMOR)
+    if figures is not None:
+        filled["armor_protection"], filled["load"] = figures
+    names = {a.name for a in armors.values()}
+    if _follows_the_book(values.get("name") or "", names):
+        filled["name"] = armor.name
+    return filled
+
+
+def book_text(kind: str, gear_id: str | None) -> str:
+    """A weapon or armor form's live line (markup): the chosen book entry's
+    summary and description, or a hint to choose one."""
+    if kind == "weapon":
+        weapon = catalog.load_weapon_catalog_by_id().get(gear_id or "")
+        if weapon is None:
+            return "[dim]Choose a Weapon to fill in the book's figures.[/]"
+        summary, description = weapon_summary(weapon), weapon.description
+        name = weapon.name
+    else:
+        armor = catalog.load_armor_catalog_by_id().get(gear_id or "")
+        if armor is None:
+            return "[dim]Choose a Material to fill in the book's figures.[/]"
+        summary, description = armor_summary(armor), armor.description
+        name = armor.name
+    text = f"[b]{escape(name)}[/] ({escape(summary)})"
+    return f"{text}: {escape(description)}" if description else text

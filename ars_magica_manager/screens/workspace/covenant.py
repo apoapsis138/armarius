@@ -35,7 +35,7 @@ from ..forms import (
     ImproveIncomeScreen,
     _covenant_fields,
     _inhabitant_fields,
-    _possession_fields,
+    _possession_dialog,
 )
 from ..pickers import (
     CovenantBoonHookPickerScreen,
@@ -100,12 +100,7 @@ class CovenantActions(WorkspaceBase):
             pos.save_entry(covenant, kind, entry, values)
             self._commit(f"section-pos-{kind}")
 
-        self.app.push_screen(
-            FieldsDialog(
-                title, _possession_fields(kind, entry), validate=pos.form_problem
-            ),
-            handle_result,
-        )
+        self.app.push_screen(_possession_dialog(title, kind, entry), handle_result)
 
     def _remove_possession(self, kind: str) -> None:
         """Delete the chosen possession (after confirming); with none chosen,

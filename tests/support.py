@@ -80,10 +80,12 @@ NODES: dict[str, tuple[str, ...]] = {
 
 
 def first_vf(vf_type: str) -> str:
+    """The first core-book (DE) Virtue or Flaw without parameters, so the
+    fixtures don't change as supplement entries join the catalog."""
     return next(
         e.id
         for e in catalog.load_virtue_flaw_catalog()
-        if e.type == vf_type and not e.parameters
+        if e.type == vf_type and not e.parameters and e.source == "DE"
     )
 
 

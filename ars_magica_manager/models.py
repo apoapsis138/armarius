@@ -17,6 +17,10 @@ from .totals import validate_modifier_type
 
 CharacterType = Literal["magus", "companion", "grog"]
 VirtueFlawType = Literal["Virtue", "Flaw"]
+#: A character catalog entry's type: Qualities and Inferiorities are the
+#: non-human counterparts of Virtues and Flaws (RoP:Magic magic characters,
+#: HoH:Mystery Cults animals and heartbeasts).
+CharacterVirtueFlawType = Literal["Virtue", "Flaw", "Quality", "Inferiority"]
 VirtueFlawTier = Literal["Free", "Minor", "Major"]
 BoonHookType = Literal["Boon", "Hook"]
 Handedness = Literal["right", "left", "ambidextrous"]
@@ -42,6 +46,24 @@ FATIGUE_LEVELS: tuple[FatigueLevel, ...] = (
 # `tier` -- enforced in VirtueFlawDef.__post_init__ so a typo in the catalog
 # JSON fails loudly at load time instead of silently giving a wrong total.
 VIRTUE_FLAW_TIER_COST: dict[str, int] = {"Free": 0, "Minor": 1, "Major": 3}
+
+#: The side of the ledger each character catalog type falls on: a Quality
+#: is bought like a Virtue and listed with them, an Inferiority with Flaws.
+VIRTUE_FLAW_SIDE: dict[str, VirtueFlawType] = {
+    "Virtue": "Virtue",
+    "Quality": "Virtue",
+    "Flaw": "Flaw",
+    "Inferiority": "Flaw",
+}
+
+#: The kinds of character a Virtue/Flaw can be restricted to
+#: (VirtueFlawDef.audience); an entry with no audience is for anyone.
+VIRTUE_FLAW_AUDIENCES: tuple[str, ...] = (
+    "faerie",
+    "magic being",
+    "corrupted beast",
+    "animal",
+)
 
 
 def round_away_from_zero(value: float) -> int:
@@ -135,20 +157,77 @@ def _validate_vf_tier_cost(id_: str, tier: str, cost: float) -> None:
 
 @dataclass
 class VirtueFlawDef:
-    """A catalog entry (shared reference data, not per-saga)."""
+    """A character Virtue/Flaw catalog entry (shared reference data, not
+    per-saga). The field-by-field reference, with every source book's
+    version, is reference/virtues-and-flaws-reference.md.
+
+    `category` is the first type the book prints (General, Hermetic,
+    Supernatural...); `extra_categories` holds any others ("Supernatural,
+    Tainted" is category Supernatural plus ["Tainted"]). An entry the book
+    lets you take as Major or Minor is two entries, one per tier.
+
+    `repeatable` marks entries whose text lets a character take them more
+    than once; `max_count` is the most copies a character may hold, when
+    the book gives one, and `max_per_parameter` the most copies that may
+    share the same `params` (1: "a different Ability each time"; Great
+    Characteristic allows 2; None: no limit, as when a power Virtue's
+    levels pool into one power). Each copy is its own VirtueFlawInstance.
+
+    `source` names the book(s) the entry comes from ("DE", "DE; RoP:F",
+    "HoH:MC"), for attribution -- the text is CC-BY-SA -- and for choosing
+    the books in play (STORY-711). `summary` is a one-line paraphrase for
+    searching. `audience` restricts the entry to non-human characters
+    (VIRTUE_FLAW_AUDIENCES); empty means anyone may take it.
+    """
 
     id: str
     name: str
-    type: VirtueFlawType
+    type: CharacterVirtueFlawType
     category: str
     tier: VirtueFlawTier
     cost: float
     parameters: list[str] = field(default_factory=list)
     modifiers: list[Modifier] = field(default_factory=list)
     description: str = ""
+    extra_categories: list[str] = field(default_factory=list)
+    repeatable: bool = False
+    max_count: int | None = None
+    max_per_parameter: int | None = 1
+    source: str = ""
+    summary: str = ""
+    audience: list[str] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         _validate_vf_tier_cost(self.id, self.tier, self.cost)
+        if self.type not in VIRTUE_FLAW_SIDE:
+            raise ValueError(f"Unknown type {self.type!r} for {self.id!r}")
+        if (self.side == "Virtue" and self.cost < 0) or (
+            self.side == "Flaw" and self.cost > 0
+        ):
+            raise ValueError(
+                f"{self.id!r}: a {self.type} must have cost "
+                f"{'>= 0' if self.side == 'Virtue' else '<= 0'}, not {self.cost!r}"
+            )
+        if self.max_count is not None and not self.repeatable:
+            raise ValueError(f"{self.id!r}: max_count needs repeatable")
+        if self.max_per_parameter is not None and self.max_per_parameter < 1:
+            raise ValueError(f"{self.id!r}: max_per_parameter must be at least 1")
+        for who in self.audience:
+            if who not in VIRTUE_FLAW_AUDIENCES:
+                raise ValueError(
+                    f"Unknown audience {who!r} for {self.id!r}; "
+                    f"must be one of {VIRTUE_FLAW_AUDIENCES}"
+                )
+
+    @property
+    def side(self) -> VirtueFlawType:
+        """ "Virtue" for a Virtue or Quality, "Flaw" for a Flaw or Inferiority."""
+        return VIRTUE_FLAW_SIDE[self.type]
+
+    @property
+    def category_label(self) -> str:
+        """Every printed type, as the book prints them: "Supernatural, Tainted"."""
+        return ", ".join([self.category, *self.extra_categories])
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> VirtueFlawDef:
@@ -341,6 +420,80 @@ class HouseDef:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> HouseDef:
+        return cls(**data)
+
+
+#: The book's weapon tables a WeaponDef comes from, in its order.
+WEAPON_TABLES: tuple[str, ...] = ("melee", "missile", "natural")
+
+
+@dataclass
+class WeaponDef:
+    """A catalog weapon (weapon_armor_catalog.json): one row of the book's
+    Melee, Missile or Natural Weapons table (`table`, one of WEAPON_TABLES).
+    The figures are the book's modifiers, None where it says n/a.
+    `strength` is the minimum Strength to use it, `range` the range
+    increment in paces (missile weapons) and `cost` one of GEAR_QUALITIES
+    (None: it has none, e.g. a Fist or a natural weapon)."""
+
+    id: str
+    name: str
+    table: str
+    ability: str
+    init: int
+    attack: int | None
+    defense: int
+    damage: int | None
+    strength: int | None = None
+    load: int | None = None
+    cost: str | None = None
+    range: int | None = None
+    description: str = ""
+    source: str = ""
+
+    def __post_init__(self) -> None:
+        if self.table not in WEAPON_TABLES:
+            raise ValueError(f"Unknown weapon table {self.table!r} for {self.id!r}")
+        if self.cost is not None and self.cost not in GEAR_QUALITIES:
+            raise ValueError(f"Unknown cost {self.cost!r} for {self.id!r}")
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> WeaponDef:
+        return cls(**data)
+
+
+@dataclass
+class ArmorDef:
+    """A catalog armor Material (weapon_armor_catalog.json): its Protection
+    (bonus to Soak) and Load as partial and as full armor -- full is None
+    for a material that only comes partial -- and its cost (one of
+    GEAR_QUALITIES)."""
+
+    id: str
+    name: str
+    partial_protection: int
+    partial_load: int
+    full_protection: int | None
+    full_load: int | None
+    cost: str
+    description: str = ""
+    source: str = ""
+
+    def __post_init__(self) -> None:
+        if self.cost not in GEAR_QUALITIES:
+            raise ValueError(f"Unknown cost {self.cost!r} for {self.id!r}")
+
+    def figures(self, full: bool) -> tuple[int, int] | None:
+        """(Protection, Load) as full or partial armor; None if the
+        material doesn't come that way."""
+        if not full:
+            return self.partial_protection, self.partial_load
+        if self.full_protection is None or self.full_load is None:
+            return None
+        return self.full_protection, self.full_load
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> ArmorDef:
         return cls(**data)
 
 
@@ -1373,9 +1526,13 @@ class Possession:
       (quality, upkeep, usage, description) for that laboratory, while a record
       without one is a manually-added sanctum.
     * weapon / armor: name, quantity, gear_type, gear_quality (they give its
-      points, which feed the covenant's finances), description. weapon only:
-      weapon_init/weapon_attack/weapon_defense/weapon_damage (typed-in combat
-      figures, no formula -- see DESIGN.md, STORY-205).
+      points, which feed the covenant's finances), load, description, and
+      gear_id: the weapon_armor_catalog entry its figures were filled from
+      (None: typed in). weapon only: weapon_init/weapon_attack/
+      weapon_defense/weapon_damage (combat figures, typed in or filled from
+      the catalog and then editable, no formula -- see DESIGN.md, STORY-205
+      and STORY-709; a None Attack or Damage is the book's n/a). armor
+      only: armor_protection (its bonus to Soak).
     * item: name, quantity, description.
     * vis_source: name, art, pawns, season (when it is harvested), location,
       physical_form, description.
@@ -1400,10 +1557,13 @@ class Possession:
     usage: str = SANCTUM_USAGE_DEFAULT
     gear_type: str = ""  # weapon / armor: a key of GEAR_POINTS ("" = not set)
     gear_quality: str = GEAR_QUALITY_DEFAULT  # weapon / armor: one of GEAR_QUALITIES
+    gear_id: str | None = None  # weapon / armor: a WeaponDef/ArmorDef id
+    load: int = 0  # weapon / armor
     weapon_init: int = 0  # weapon only
-    weapon_attack: int = 0  # weapon only
+    weapon_attack: int | None = 0  # weapon only; None = n/a
     weapon_defense: int = 0  # weapon only
-    weapon_damage: int = 0  # weapon only
+    weapon_damage: int | None = 0  # weapon only; None = n/a
+    armor_protection: int = 0  # armor only
     art: str = ""
     pawns: int = 0
     season: str = ""  # one of SEASONS

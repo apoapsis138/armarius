@@ -19,7 +19,8 @@ Phase 1 (core tracker) is mostly built. You can create and browse sagas
   close) and a Library tab.
 - **Characters** — the full sheet: identity, Characteristics, Abilities,
   Virtues & Flaws, Arts, Raw Vis, known spells with Mastery, inventory,
-  combat figures and Soak, Confidence, Personality Traits, Reputations,
+  combat figures (filled in from the book's weapon and armor tables) and
+  Soak, Confidence, Personality Traits, Reputations,
   aging, wounds and fatigue, and books.
 - **Laboratories** — Virtues & Flaws (with their effect on the lab's
   Characteristics), Features and a Focus, the Specializations they add up
@@ -77,8 +78,9 @@ uv run pyright                                # type-check
   shared by the Character and Familiar sheets), `csv_import.py`.
 - `ars_magica_manager/catalog.py` — loads the shared catalogs in `data/`
   (Virtues & Flaws, laboratory Virtues & Flaws, laboratory Features,
-  Abilities, Houses, covenant Boons & Hooks, spells); `totals.py` — the
-  registry of modifier types the catalogs' effects are checked against.
+  Abilities, Houses, covenant Boons & Hooks, spells, weapons & armor);
+  `totals.py` — the registry of modifier types the catalogs' effects are
+  checked against.
 - `ars_magica_manager/storage.py` — JSON load/save, one file per saga under
   `data/sagas/` (git-ignored — that's campaign data, not source);
   `settings.py` — app settings (the chosen theme).

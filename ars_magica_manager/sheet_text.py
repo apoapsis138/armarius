@@ -18,6 +18,7 @@ from .models import (
     Characteristics,
     Modifier,
     ScoredTrait,
+    VirtueFlawDef,
     VirtueFlawInstance,
     Wounds,
 )
@@ -104,7 +105,8 @@ def vf_rows(
 ) -> list[tuple[int | None, str]]:
     """The attached Virtues or Flaws (`vf_type`) as (true index into
     `instances`, label) pairs, so a filtered list still maps back to the
-    real entry."""
+    real entry. Qualities list with the Virtues, Inferiorities with the
+    Flaws (VirtueFlawDef.side)."""
     vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
     return [
         (
@@ -114,20 +116,39 @@ def vf_rows(
         )
         for index, vf in enumerate(instances)
         if (definition := vf_catalog.get(vf.vf_id)) is not None
-        and definition.type == vf_type
+        and definition.side == vf_type
     ]
 
 
 def vf_points(instances: Sequence[VirtueFlawInstance], vf_type: str) -> float:
-    """The points the attached Virtues or Flaws (`vf_type`) come to: Minor 1,
-    Major 3, Free 0 each (entries not in the catalog count nothing)."""
+    """The points the attached Virtues or Flaws (`vf_type`, Qualities and
+    Inferiorities included) come to: Minor 1, Major 3, Free 0 each (entries
+    not in the catalog count nothing)."""
     vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
     return sum(
         abs(definition.cost)
         for vf in instances
         if (definition := vf_catalog.get(vf.vf_id)) is not None
-        and definition.type == vf_type
+        and definition.side == vf_type
     )
+
+
+def vf_repeat_text(definition: VirtueFlawDef) -> str:
+    """How often a character may take a repeatable Virtue/Flaw, e.g. "May be
+    taken up to 2 times, for a different Art each time", or "" if once."""
+    if not definition.repeatable:
+        return ""
+    head = (
+        f"May be taken up to {definition.max_count} times"
+        if definition.max_count
+        else "May be taken more than once"
+    )
+    if not definition.parameters or definition.max_per_parameter is None:
+        return head + "."
+    what = " and ".join(p.title() for p in definition.parameters)
+    if definition.max_per_parameter == 1:
+        return f"{head}, for a different {what} each time."
+    return f"{head}, at most {definition.max_per_parameter} times for the same {what}."
 
 
 def effect_lines(modifiers: Sequence[Modifier]) -> list[str]:
@@ -154,10 +175,14 @@ def vf_info_text(instances: Sequence[VirtueFlawInstance], index: int | None) -> 
         f"[b]Name:[/] {escape(catalog.describe_virtue_flaw(instance, vf_catalog))}"
     ]
     if definition.category:
-        lines.append(f"[b]Category:[/] {definition.category}")
+        lines.append(f"[b]Category:[/] {escape(definition.category_label)}")
     lines.append(f"[b]Tier:[/] {definition.tier}")
+    if repeat := vf_repeat_text(definition):
+        lines.append(f"[dim]{repeat}[/]")
     lines += effect_lines(definition.modifiers)
     lines += ["", "[b]Rules:[/]", escape(definition.description)]
+    if definition.source:
+        lines += ["", f"[dim]Source: {escape(definition.source)}[/]"]
     return "\n".join(lines)
 
 

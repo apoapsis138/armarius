@@ -21,7 +21,7 @@ adaptations are also available on their own under CC BY-SA 4.0. They are:
 
 - the catalogs in `data/*_catalog.json` (Virtues & Flaws, laboratory
   Virtues & Flaws and Features, Abilities, Houses, covenant Boons & Hooks,
-  spells);
+  spells, weapons & armor);
 - rules descriptions written into the code, such as the descriptions of
   the fifteen Arts in `ars_magica_manager/arts.py`.
 

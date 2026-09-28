@@ -8,6 +8,38 @@ fix or behind-the-scenes improvement bumps PATCH. The version is set in
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 0.10.0 — 2026-09-28
+
+- The character Virtues & Flaws catalog has been checked entry by entry
+  against the Definitive Edition and the open supplements: missing entries
+  added, wrong ones fixed, bogus ones removed (1,100 entries, up from 625).
+  Each entry names its source book. Where the book offers a Virtue or Flaw
+  as "Major or Minor", both versions are in the list; the non-human
+  Qualities and Inferiorities are there too, marked with who they're for.
+- Virtues and Flaws the book lets a character take more than once (Affinity
+  with Art, Puissant Ability, Great Characteristic...) are offered again
+  after the first, up to the book's limit, and refused past it, or when the
+  same choice (the same Art, the same Ability) is taken too often. The
+  details panel says "May be taken more than once" or "up to N times".
+  Familiars follow the same rule.
+- A Virtue or Flaw whose choice isn't part of its name shows it in brackets:
+  "Deficient Technique (Creo)".
+- Weapons and armor can be chosen from the book's tables (melee weapons and
+  shields, missile weapons, armor, and a familiar's natural weapons).
+  Choosing one fills in its Init, Attack, Defense and Damage (or armor's
+  Protection), its Load, its Quality from the book's cost, and its name if
+  you haven't typed one. Everything stays editable, and the form shows the
+  book's description as you choose.
+- Weapons now record Load, and armor records Protection and Load, shown as
+  list columns. Combat figures show signed as the book prints them (+2,
+  +0), and a figure the book gives as n/a (a Dodge's Attack) can be left
+  blank. A full suit of a material that only comes as partial armor is
+  refused.
+- A weapon's or armor's details name the book entry it came from, with its
+  Ability, minimum Strength and range.
+- A character's Personal Gear shows column titles on its Weapons, Armor and
+  Other Items rows, and a familiar's Natural Weapons list has them too.
+
 ## 0.9.0 — 2026-09-28
 
 - Every details panel now works the same way on every sheet and list: one

@@ -101,7 +101,16 @@ Key relationship notes:
 - Virtues and Flaws are catalog entries (name, category, cost, description)
   referenced by *instances* attached to a Character or a Laboratory, each
   instance carrying any per-case parameters (e.g. "Affinity with
-  [specific Art]").
+  [specific Art]"). The character catalog (STORY-707) holds the Definitive
+  Edition's entries plus those of the open-content supplements, each with
+  its `source` book(s), a one-line `summary`, and an `audience` for the
+  ones only non-human characters take; RoP:Magic / HoH:Mystery Cults
+  Qualities and Inferiorities are entries too, listed with the Virtues and
+  the Flaws respectively. A "Major or Minor" entry is two entries. An entry
+  the book lets a character take more than once is `repeatable`, with an
+  optional `max_count` and a `max_per_parameter` (how many copies may share
+  the same parameters); each copy is its own instance. The field-by-field
+  source is reference/virtues-and-flaws-reference.md.
 
 ## 5. The Virtue/Flaw Modifier System
 
@@ -249,8 +258,10 @@ which entity owns which relationship.
   etc. — not needed until someone actually asks "who owned this lab in
   1215?"
 
-Settled since first written: combat stats are sheet data (Soak and
-per-weapon Init/Attack/Defense/Damage are recorded, combat isn't resolved);
+Settled since first written: combat stats are sheet data (Soak,
+per-weapon Init/Attack/Defense/Damage and Load, and armor Protection and
+Load are recorded, combat isn't resolved; choosing a weapon or armor
+Material from the book's tables fills its figures in, still editable);
 covenants use the Covenants chapter's Boons & Hooks with points plus a
 calculated Economics tab; familiars have the full bond mechanics (cords,
 bond powers).

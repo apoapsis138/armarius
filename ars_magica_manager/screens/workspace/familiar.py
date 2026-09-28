@@ -24,7 +24,7 @@ from ..forms import (
     _familiar_characteristics_fields,
     _familiar_info_fields,
     _fatigue_fields,
-    _possession_fields,
+    _possession_dialog,
     _wounds_fields,
 )
 from ..pickers import (
@@ -144,7 +144,7 @@ class FamiliarActions(WorkspaceBase):
         )
         title = (
             "Add a Natural Weapon"
-            if index is None
+            if existing is None
             else f"Edit {escape(existing.name or 'this attack')}"
         )
 
@@ -168,10 +168,7 @@ class FamiliarActions(WorkspaceBase):
             self._commit("section-fam-natural-weapons")
 
         self.app.push_screen(
-            FieldsDialog(
-                title, _possession_fields("weapon", entry), validate=pos.form_problem
-            ),
-            handle_result,
+            _possession_dialog(title, "weapon", entry, natural=True), handle_result
         )
 
     def _add_familiar_natural_weapon(self) -> None:

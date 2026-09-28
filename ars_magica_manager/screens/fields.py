@@ -11,6 +11,7 @@ from typing import Any, ClassVar, cast, overload
 from textual.app import ComposeResult
 from textual.binding import BindingType
 from textual.containers import Horizontal, Vertical, VerticalScroll
+from textual.css.query import NoMatches
 from textual.screen import ModalScreen, Screen
 from textual.widgets import (
     Button,
@@ -107,6 +108,12 @@ class DialogField:
     #: None to keep the old one) and how it shows its value on the button.
     picker: Callable[[Any], Screen[Any]] | None = None
     display: Callable[[Any], str] | None = None
+    #: Suggested values for other fields when the user changes this one
+    #: (`FieldsDialog.current_values` -> {key: value}; None blanks a
+    #: number field). Never run as the form opens, so a record's own
+    #: figures stay until its source field is changed; the user can still
+    #: edit what it filled.
+    fills: Callable[[dict[str, Any]], dict[str, Any]] | None = None
 
 
 class _FieldError(ValueError):
@@ -150,7 +157,9 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
 
     Fields can depend on each other while the form is open: a field's
     `show_if` shows/hides it, and `live` (markup, from the current values)
-    fills a line above the error, both refreshed on every change."""
+    fills a line above the error, both refreshed on every change; a
+    field's `fills` suggests other fields' values when the user changes
+    it."""
 
     DEFAULT_CSS = """
     FieldsDialog {
@@ -275,6 +284,8 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         self.save_label = save_label
         self.build = build
         self._picked: dict[str, Any] = {}  # "picker" fields' current values
+        # The value each `fills` field last filled from (or opened with).
+        self._filled_from: dict[str, Any] = {}
 
     def compose(self) -> ComposeResult:
         with Vertical(id="fields-dialog"):
@@ -362,18 +373,32 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
 
     def on_mount(self) -> None:
         self._fit()
+        values = self.current_values()
+        self._filled_from = {f.key: values.get(f.key) for f in self.fields if f.fills}
         self._react()
 
     def on_resize(self) -> None:
         self._fit()
 
     def _fit(self) -> None:
-        """Cap the scrolling region so the title, error line and buttons always
-        stay on screen, however short the terminal is."""
-        reserved = 11 + (2 if self.live is not None else 0)
+        """Cap the scrolling region so the title, live and error lines and
+        the buttons always stay on screen, however short the terminal is."""
+        reserved = 11
+        if self.live is not None:
+            # Its margin, and however many rows it wraps to.
+            live = self.query_one("#fields-live")
+            reserved += 1 + max(1, live.outer_size.height)
         self.query_one("#fields-scroll").styles.max_height = max(
             4, self.size.height - reserved
         )
+
+    def _refit(self) -> None:
+        """_fit again once the live line has rewrapped -- unless the form
+        has been closed in the meantime."""
+        try:
+            self._fit()
+        except NoMatches:
+            pass  # closed: its widgets are gone
 
     def _read(self, spec: DialogField) -> Any:
         """A (non-info) field's value as its widget holds it: stripped text
@@ -439,8 +464,40 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
     def _shown(self, spec: DialogField, values: dict[str, Any]) -> bool:
         return spec.show_if is None or bool(spec.show_if(values))
 
+    def _write(self, spec: DialogField, value: Any) -> None:
+        """Put `value` in a field's widget (a select's only if it's one of
+        its options)."""
+        widget_id = f"#fld-{spec.key}"
+        if spec.kind == "select":
+            select = self.query_one(widget_id, Select)
+            if value is None and spec.allow_blank:
+                select.clear()
+            elif any(option == value for _, option in spec.options):
+                select.value = value
+        elif spec.kind == "check":
+            self.query_one(widget_id, Checkbox).value = bool(value)
+        elif spec.kind in ("text", "int", "optint", "optfloat"):
+            self.query_one(widget_id, Input).value = "" if value is None else str(value)
+
+    def _fill(self) -> None:
+        """Run the `fills` of each field the user has changed since it last
+        filled (or since the form opened)."""
+        for spec in self.fields:
+            if spec.fills is None:
+                continue
+            values = self.current_values()
+            if values.get(spec.key) == self._filled_from.get(spec.key):
+                continue
+            self._filled_from[spec.key] = values.get(spec.key)
+            by_key = {f.key: f for f in self.fields}
+            for key, value in spec.fills(values).items():
+                if key in by_key:
+                    self._write(by_key[key], value)
+
     def _react(self) -> None:
         """Show/hide fields and refresh the live line for the current values."""
+        if self._filled_from:
+            self._fill()
         if self.live is None and not any(f.show_if for f in self.fields):
             return
         values = self.current_values()
@@ -449,6 +506,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
                 self.query_one(f"#fdw-{spec.key}").display = self._shown(spec, values)
         if self.live is not None:
             self.query_one("#fields-live", Static).update(self.live(values))
+            self.call_after_refresh(self._refit)
 
     def on_select_changed(self, event: Select.Changed) -> None:
         self._react()

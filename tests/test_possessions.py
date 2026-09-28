@@ -5,8 +5,8 @@ import pytest
 from support import strip_markup
 from textual.content import Content
 
+from ars_magica_manager import catalog, storage
 from ars_magica_manager import possessions as pos
-from ars_magica_manager import storage
 from ars_magica_manager.models import (
     GEAR_POINTS,
     POSSESSION_KINDS,
@@ -172,8 +172,8 @@ def test_row_labels_show_the_fields_the_sheet_lists():
     assert sanctums[1] == "Study               Leandro               3      10"
     assert _labels(saga, cov, "weapon") == [
         # Weapons get four trailing combat-figure columns (Init/Attack/
-        # Defense/Damage), defaulting to 0 -- see STORY-205.
-        "Crossbows                               Standard        6    0    0    0    0"
+        # Defense/Damage), defaulting to +0 -- see STORY-205 -- and Load.
+        "Crossbows                               Standard        6   +0   +0   +0   +0    0"
     ]
     assert _labels(saga, cov, "vis_source") == [
         "Well                Vim            3  Winter"
@@ -345,6 +345,204 @@ def test_form_problem_rejects_a_quality_the_gear_type_does_not_come_in():
     allowed = next(iter(GEAR_POINTS[gear_type]))
     assert pos.form_problem({"gear_type": gear_type, "gear_quality": allowed}) is None
     assert pos.form_problem({"gear_type": gear_type, "gear_quality": "Nonsense"})
+
+
+# ------------------------------------------------ weapons & armor (STORY-709)
+
+
+def test_weapon_and_armor_rows_show_signed_figures_n_a_and_load():
+    saga, cov = _saga()
+    cov.possessions += [
+        Possession(
+            id="d",
+            kind="weapon",
+            name="Dodge",
+            weapon_init=0,
+            weapon_attack=None,
+            weapon_defense=0,
+            weapon_damage=None,
+        ),
+        Possession(
+            id="k",
+            kind="weapon",
+            name="Kick",
+            weapon_init=-1,
+            weapon_defense=-1,
+            weapon_damage=3,
+        ),
+        Possession(
+            id="m",
+            kind="armor",
+            name="Mail",
+            gear_type="Full armor",
+            armor_protection=9,
+            load=6,
+        ),
+    ]
+    assert pos.table_header("weapon").endswith("Init  Atk  Def  Dmg Load")
+    assert _labels(saga, cov, "weapon") == [
+        "Dodge                                   Standard        1   +0  n/a   +0  n/a    0",
+        "Kick                                    Standard        1   -1   +0   -1   +3    0",
+    ]
+    assert pos.table_header("armor").endswith("Qty Prot Load")
+    assert _labels(saga, cov, "armor") == [
+        "Mail                Full armor          Standard        1   +9    6"
+    ]
+
+
+def test_detail_text_names_the_book_entry_and_its_figures():
+    saga, cov = _saga()
+    cov.possessions += [
+        Possession(
+            id="b",
+            kind="weapon",
+            name="Hugo's bow",
+            gear_id="weapon_short_bow",
+            weapon_init=-1,
+            weapon_attack=3,
+            weapon_damage=6,
+            load=2,
+        ),
+        Possession(id="g", kind="weapon", name="Gone", gear_id="weapon_gone"),
+        Possession(
+            id="m",
+            kind="armor",
+            name="Mail",
+            gear_id="armor_chain_mail",
+            armor_protection=6,
+            load=4,
+        ),
+    ]
+    bow, gone = pos.entries_for_kind(saga, cov, "weapon")
+    text = strip_markup(pos.detail_text(bow))
+    for expected in (
+        "Weapon: Short Bow (Bows, Min Str -1, range 15 paces)",
+        "Init: -1",
+        "Attack: +3",
+        "Defense: +0",
+        "Damage: +6",
+        "Load: 2",
+    ):
+        assert expected in text, expected
+    assert "Weapon: weapon_gone (not in the catalog)" in strip_markup(
+        pos.detail_text(gone)
+    )
+    mail = strip_markup(pos.detail_text(pos.entries_for_kind(saga, cov, "armor")[0]))
+    for expected in ("Material: Chain Mail", "Protection: +6", "Load: 4"):
+        assert expected in mail, expected
+    # A typed-in weapon has no book line.
+    plain = Possession(id="p", kind="weapon", name="Spear")
+    assert "Weapon:" not in pos.detail_text(pos.PossessionEntry("weapon", plain))
+
+
+def test_old_saves_load_weapons_and_armor_without_the_new_fields():
+    cov = Covenant.from_dict(
+        {
+            "id": "c",
+            "saga_id": "s",
+            "name": "Old",
+            "possessions": [
+                {"id": "w", "kind": "weapon", "name": "Spears", "weapon_attack": 2},
+                {"id": "a", "kind": "armor", "name": "Mail"},
+            ],
+        }
+    )
+    weapon, armor = cov.possessions
+    assert (weapon.gear_id, weapon.weapon_attack, weapon.load) == (None, 2, 0)
+    assert (armor.armor_protection, armor.load) == (0, 0)
+
+
+def _weapons(*tables: str):
+    return {w.id: w for w in catalog.load_weapon_catalog(tables=tables)}
+
+
+def test_choosing_a_book_weapon_fills_its_figures_cost_load_and_name():
+    weapons = _weapons("melee", "missile")
+    filled = pos.weapon_fills({"gear_id": "weapon_long_sword", "name": ""}, weapons)
+    assert filled == {
+        "weapon_init": 2,
+        "weapon_attack": 4,
+        "weapon_defense": 1,
+        "weapon_damage": 6,
+        "load": 1,
+        "gear_type": "Weapon or shield",
+        "gear_quality": "Expensive",
+        "name": "Long Sword",
+    }
+    # The name follows the choice while it's still a book name...
+    dodge = pos.weapon_fills({"gear_id": "weapon_dodge", "name": "Long Sword"}, weapons)
+    assert dodge["name"] == "Dodge"
+    # ...n/a figures fill as None, and no cost leaves the Quality alone.
+    assert (dodge["weapon_attack"], dodge["weapon_damage"]) == (None, None)
+    assert "gear_quality" not in dodge
+    # A name the user typed stays.
+    axe = pos.weapon_fills({"gear_id": "weapon_axe", "name": "Grandad's"}, weapons)
+    assert "name" not in axe
+    assert pos.weapon_fills({"gear_id": None, "name": ""}, weapons) == {}
+
+
+def test_a_natural_weapon_fills_only_its_figures_and_name():
+    filled = pos.weapon_fills(
+        {"gear_id": "natural_large_claws", "name": ""}, _weapons("natural")
+    )
+    assert filled == {
+        "weapon_init": 0,
+        "weapon_attack": 5,
+        "weapon_defense": 3,
+        "weapon_damage": 4,
+        "name": "Large Claws",
+    }
+
+
+def test_choosing_an_armor_material_fills_partial_or_full_figures():
+    armors = catalog.load_armor_catalog_by_id()
+    values = {"gear_id": "armor_chain_mail", "gear_type": "Partial armor", "name": ""}
+    assert pos.armor_fills(values, armors) == {
+        "gear_quality": "Expensive",
+        "armor_protection": 6,
+        "load": 4,
+        "name": "Chain Mail",
+    }
+    values["gear_type"] = "Full armor"
+    full = pos.armor_fills(values, armors)
+    assert (full["armor_protection"], full["load"]) == (9, 6)
+    # A partial-only material as full armor: no figures to suggest...
+    values["gear_id"] = "armor_quilted_fur"
+    assert "armor_protection" not in pos.armor_fills(values, armors)
+    # ...and the form refuses it.
+    assert (
+        pos.form_problem(
+            {
+                "gear_id": "armor_quilted_fur",
+                "gear_type": "Full armor",
+                "gear_quality": "Inexpensive",
+            }
+        )
+        == "Quilted/Fur only comes as partial armor."
+    )
+    assert (
+        pos.form_problem(
+            {
+                "gear_id": "armor_quilted_fur",
+                "gear_type": "Partial armor",
+                "gear_quality": "Inexpensive",
+            }
+        )
+        is None
+    )
+
+
+def test_form_problem_refuses_a_negative_load():
+    assert pos.form_problem({"load": -1}) == "Load can't be negative."
+
+
+def test_book_text_describes_the_chosen_entry():
+    text = strip_markup(pos.book_text("weapon", "weapon_staff"))
+    assert text.startswith("Staff (Great Weapon, Min Str -1): A common")
+    armor = strip_markup(pos.book_text("armor", "armor_heavy_leather"))
+    assert armor.startswith("Heavy Leather (partial +2 Load 3, partial only): ")
+    assert "Choose a Weapon" in pos.book_text("weapon", None)
+    assert "Choose a Material" in pos.book_text("armor", "armor_gone")
 
 
 def test_a_new_save_has_no_vis_stock():

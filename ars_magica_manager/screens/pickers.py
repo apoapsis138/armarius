@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import asyncio
 from collections import Counter
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, ClassVar
 
@@ -58,7 +59,7 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
     """Base for a ListView-backed catalog picker with a live-filtering
     search box above it.
 
-    The Ability and Virtue/Flaw catalogs are large (78 and 624 entries) --
+    The Ability and Virtue/Flaw catalogs are large (78 and 1,100 entries) --
     a flat unsearchable list doesn't scale, so every catalog picker shares this:
     an Input above the ListView that re-filters it on every keystroke.
     Subclasses supply the entry list and how to search/render/activate
@@ -247,15 +248,19 @@ class VirtueFlawPickerScreen(
     SEARCH_PLACEHOLDER: ClassVar[str] = "Search Virtues & Flaws..."
     LIST_VIEW_ID: ClassVar[str] = "vf-picker-list"
 
-    def __init__(self, exclude_ids: set[str] | None = None) -> None:
+    def __init__(self, taken: Sequence[VirtueFlawInstance] = ()) -> None:
         super().__init__()
-        self._exclude_ids = exclude_ids or set()
+        #: The character's Virtues & Flaws: an entry already taken is only
+        #: offered again if it is repeatable (catalog.virtue_flaw_offerable),
+        #: and a repeat is refused past its limits once its parameters are
+        #: known (catalog.virtue_flaw_repeat_refusal).
+        self._taken = list(taken)
 
     def _load_entries(self) -> list[VirtueFlawDef]:
         return [
             entry
             for entry in catalog.load_virtue_flaw_catalog()
-            if entry.id not in self._exclude_ids
+            if catalog.virtue_flaw_offerable(entry, self._taken)
         ]
 
     def _search_text(self, entry: VirtueFlawDef) -> str:
@@ -270,14 +275,23 @@ class VirtueFlawPickerScreen(
 
     def _on_entry_selected(self, entry: VirtueFlawDef) -> None:
         if not entry.parameters:
-            self.dismiss(VirtueFlawInstance(vf_id=entry.id))
+            self._add(entry, {})
             return
 
         def handle_params(params: dict[str, str] | None) -> None:
             if params is not None:
-                self.dismiss(VirtueFlawInstance(vf_id=entry.id, params=params))
+                self._add(entry, params)
 
         self.app.push_screen(_param_dialog(entry.name, entry.parameters), handle_params)
+
+    def _add(self, entry: VirtueFlawDef, params: dict[str, str]) -> None:
+        """Dismiss with the new instance, unless it's a repeat the book
+        doesn't allow: then say why and stay open to pick again."""
+        refusal = catalog.virtue_flaw_repeat_refusal(entry, self._taken, params)
+        if refusal:
+            self.app.notify(refusal, severity="warning")
+            return
+        self.dismiss(VirtueFlawInstance(vf_id=entry.id, params=params))
 
 
 class LabVirtueFlawPickerScreen(

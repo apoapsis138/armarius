@@ -229,3 +229,79 @@ async def test_saving_unchanged_keeps_a_value_the_list_lacks(
         dialog.query_one("#btn-save").press()
         assert await wait_until(pilot, lambda: app.screen is base)
     assert saved(storage.load_saga(saga.id)) == expected
+
+
+# ---------------------------------------------------------------- fills
+
+
+def _fill_fields(name: str = "", kind: str | None = None) -> list[DialogField]:
+    """A "kind" select that suggests a size, a note and a name."""
+
+    def fills(values: dict[str, Any]) -> dict[str, Any]:
+        if values["kind"] == "big":
+            return {"size": 9, "note": None, "name": "Big one", "shape": "round"}
+        return {"size": 1, "shape": "nonsense"}  # not one of shape's options
+
+    return [
+        DialogField("name", "Name", "text", name),
+        DialogField(
+            "kind",
+            "Kind",
+            "select",
+            kind,
+            options=[("Big", "big"), ("Small", "small")],
+            allow_blank=True,
+            fills=fills,
+        ),
+        DialogField("size", "Size", "int", 5),
+        DialogField("note", "Note", "optint", 3),
+        DialogField(
+            "shape",
+            "Shape",
+            "select",
+            "square",
+            options=[("R", "round"), ("S", "square")],
+        ),
+    ]
+
+
+async def test_fills_waits_for_the_user_to_change_the_field():
+    # Opened on a record that already has a kind: its own figures stay.
+    dialog, app = await _open(_fill_fields(name="Mine", kind="big"))
+    async with app.run_test(size=(100, 40)) as pilot:
+        await wait_until(pilot, lambda: dialog.is_mounted)
+        await pilot.pause()
+        assert dialog.current_values() == {
+            "name": "Mine",
+            "kind": "big",
+            "size": 5,
+            "note": 3,
+            "shape": "square",
+        }
+
+
+async def test_fills_suggests_other_fields_when_the_user_changes_it():
+    dialog, app = await _open(_fill_fields())
+    async with app.run_test(size=(100, 40)) as pilot:
+        await wait_until(pilot, lambda: dialog.is_mounted)
+        dialog.query_one("#fld-kind", Select).value = "big"
+        assert await wait_until(pilot, lambda: dialog.current_values()["size"] == 9)
+        # A None blanks a number; a select takes one of its options.
+        assert dialog.current_values() == {
+            "name": "Big one",
+            "kind": "big",
+            "size": 9,
+            "note": None,
+            "shape": "round",
+        }
+        dialog.query_one("#fld-size", Input).value = "7"  # still editable
+        dialog.query_one("#fld-kind", Select).value = "small"
+        assert await wait_until(pilot, lambda: dialog.current_values()["size"] == 1)
+        # A value a select doesn't offer is left alone.
+        assert dialog.current_values()["shape"] == "round"
+        dialog.query_one("#fld-size", Input).value = "4"
+        await pilot.pause()
+        assert dialog.current_values()["size"] == 4  # no refill without a change
+        dialog.query_one("#btn-save").press()
+        await wait_until(pilot, lambda: app.result != "not dismissed")
+    assert app.result["size"] == 4

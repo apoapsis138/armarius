@@ -1080,10 +1080,8 @@ class WorkspaceBase(Screen[None]):
         target = self._virtue_flaw_target()
         if target is None:
             return
-        existing_ids = {vf.vf_id for vf in target.virtues_flaws}
         is_lab = self.selected_kind == NodeKind.LABORATORY
         is_familiar = self.selected_kind == NodeKind.FAMILIAR
-        picker = LabVirtueFlawPickerScreen if is_lab else VirtueFlawPickerScreen
 
         def handle_result(instance: VirtueFlawInstance | None) -> None:
             if instance is not None:
@@ -1101,7 +1099,13 @@ class WorkspaceBase(Screen[None]):
                 else:
                     self._refresh_character_section("section-vf-virtues")
 
-        self.app.push_screen(picker(existing_ids), handle_result)
+        if is_lab:
+            existing_ids = {vf.vf_id for vf in target.virtues_flaws}
+            self.app.push_screen(LabVirtueFlawPickerScreen(existing_ids), handle_result)
+        else:
+            self.app.push_screen(
+                VirtueFlawPickerScreen(target.virtues_flaws), handle_result
+            )
 
     def action_remove_virtue_flaw(self) -> None:
         """Delete a Virtue/Flaw of the character, laboratory or familiar on

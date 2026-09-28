@@ -24,13 +24,14 @@ from support import wait_until
 from textual.widget import Widget
 from textual.widgets import Button, Checkbox, Input, Label, Select, Static, TextArea
 
-from ars_magica_manager import storage
+from ars_magica_manager import catalog, storage
 from ars_magica_manager.models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
     BOON_HOOK_UNKNOWN,
     LabSpecialtyEntry,
     LabSpecialtyGrant,
+    Possession,
     Saga,
 )
 
@@ -69,6 +70,17 @@ def _lab(saga: Saga):
 
 def _cov(saga: Saga):
     return saga.covenants[0]
+
+
+def _gear(possessions: list[Possession], kind: str) -> tuple:
+    """The last weapon's (or armor's) name, book entry, Quality and
+    figures."""
+    item = [p for p in possessions if p.kind == kind][-1]
+    head = (item.name, item.gear_id, item.gear_quality)
+    if kind == "armor":
+        return (*head, item.gear_type, item.armor_protection, item.load)
+    figures = (item.weapon_init, item.weapon_attack, item.weapon_defense)
+    return (*head, *figures, item.weapon_damage, item.load)
 
 
 def _all_sagas() -> list[Saga]:
@@ -185,6 +197,37 @@ CONTRACTS: dict[str, Contract] = {
         ),
         expected=("Bold", 3),
         invalid={"Name": ""},
+    ),
+    # Choosing a book weapon fills in its figures; a typed name stays.
+    "edit covenant weapon": Contract(
+        prefill={"Name": "A weapon", "Weapon": Select.NULL, "Init": "0", "Load": "0"},
+        edits={"Weapon": "weapon_long_sword"},
+        saved=lambda s: _gear(_cov(s).possessions, "weapon"),
+        expected=("A weapon", "weapon_long_sword", "Expensive", 2, 4, 1, 6, 1),
+        invalid={"Quantity": "0"},
+    ),
+    "edit covenant armor": Contract(
+        prefill={"Name": "A armor", "Material": Select.NULL, "Protection": "0"},
+        edits={"Material": "armor_metal_scale", "Type": "Full armor"},
+        saved=lambda s: _gear(_cov(s).possessions, "armor"),
+        expected=("A armor", "armor_metal_scale", "Standard", "Full armor", 7, 7),
+        # Heavy Leather only comes as partial armor.
+        invalid={"Material": "armor_heavy_leather", "Type": "Full armor"},
+    ),
+    "add personal weapon": Contract(
+        prefill={"Name": "", "Weapon": Select.NULL, "Attack": "0"},
+        edits={"Weapon": "weapon_short_bow"},
+        saved=lambda s: _gear(_char(s).inventory, "weapon"),
+        # A blank name becomes the weapon's.
+        expected=("Short Bow", "weapon_short_bow", "Standard", -1, 3, 0, 6, 2),
+        invalid={"Name": ""},
+    ),
+    "edit natural weapon": Contract(
+        prefill={"Name": "Beak", "Natural Weapon": Select.NULL},
+        edits={"Natural Weapon": "natural_teeth"},
+        saved=lambda s: _gear(_fam(s).natural_weapons, "weapon"),
+        expected=("Beak", "natural_teeth", "Standard", 0, 3, 1, 1, 0),
+        invalid={"Quantity": "0"},
     ),
     "edit character info": Contract(
         prefill={"Name": "Leandro", "Covenant": "cov1", "Assigned Laboratory": "lab1"},
@@ -550,3 +593,24 @@ async def test_fits_a_small_terminal(name):
             assert region.height > 0, button.id
             assert region.x >= 0 and region.right <= 80, (button.id, region)
             assert region.y >= 0 and region.bottom <= 24, (button.id, region)
+
+
+# -- which book tables each weapon form offers (STORY-709) --
+
+
+@pytest.mark.parametrize(
+    ("name", "tables"),
+    [
+        ("edit covenant weapon", ("melee", "missile")),
+        ("add personal weapon", ("melee", "missile")),
+        ("edit natural weapon", ("natural",)),
+    ],
+)
+async def test_weapon_forms_offer_the_books_tables_for_their_sheet(name, tables):
+    app = new_app()
+    async with app.run_test(size=(140, 70)) as pilot:
+        _, dialog = await open_dialog(pilot, app, name)
+        [book] = [f for f in dialog.fields if f.key == "gear_id"]
+    assert [value for _, value in book.options] == [
+        w.id for w in catalog.load_weapon_catalog(tables=tables)
+    ]

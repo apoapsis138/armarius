@@ -1,11 +1,11 @@
 """Loads the shared catalogs -- Virtues/Flaws, Abilities, Houses, Boons & Hooks,
-Laboratory Virtues/Flaws, Laboratory Features and Spells (reference data,
-not per-saga)."""
+Laboratory Virtues/Flaws, Laboratory Features, Spells, and Weapons & Armor
+(reference data, not per-saga)."""
 
 from __future__ import annotations
 
 import json
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -15,6 +15,7 @@ from .models import (
     BOON_HOOK_DETAIL,
     COVENANT_BOON_HOOK_CATEGORIES,
     AbilityDef,
+    ArmorDef,
     CovenantBoonHookDef,
     HouseDef,
     LabFeatureDef,
@@ -22,6 +23,7 @@ from .models import (
     Spell,
     VirtueFlawDef,
     VirtueFlawInstance,
+    WeaponDef,
 )
 
 CATALOG_PATH = DATA_DIR / "virtue_flaw_catalog.json"
@@ -31,6 +33,7 @@ COVENANT_BOON_HOOK_CATALOG_PATH = DATA_DIR / "covenant_boon_hook_catalog.json"
 LAB_VF_CATALOG_PATH = DATA_DIR / "lab_virtue_flaw_catalog.json"
 SPELL_CATALOG_PATH = DATA_DIR / "spell_catalog.json"
 LAB_FEATURE_CATALOG_PATH = DATA_DIR / "lab_feature_catalog.json"
+WEAPON_ARMOR_CATALOG_PATH = DATA_DIR / "weapon_armor_catalog.json"
 
 
 def _load_entries[T](path: Path, from_dict: Callable[[dict[str, Any]], T]) -> list[T]:
@@ -87,12 +90,61 @@ def describe_virtue_flaw(
 
     E.g. an instance of "vf_affinity_with_art" with params {"art": "creo"}
     becomes "Affinity with Creo" (the catalog name's "{art}" placeholder
-    matches the entry's `parameters`).
+    matches the entry's `parameters`). A parameter the name has no
+    placeholder for follows it in brackets: "Deficient Technique (Creo)".
     """
     definition = catalog_by_id.get(instance.vf_id)
     if definition is None:
         return f"{instance.vf_id} (not in catalog)"
-    return _fill_placeholders(definition.name, instance.params)
+    name = _fill_placeholders(definition.name, instance.params)
+    extra = [
+        instance.params[key].title()
+        for key in getattr(definition, "parameters", [])
+        if f"{{{key}}}" not in definition.name and instance.params.get(key)
+    ]
+    return f"{name} ({', '.join(extra)})" if extra else name
+
+
+def virtue_flaw_offerable(
+    definition: VirtueFlawDef, taken: Sequence[VirtueFlawInstance]
+) -> bool:
+    """Whether the picker should offer `definition` to a character already
+    holding `taken`: an entry not yet taken, or a repeatable one below its
+    `max_count`."""
+    copies = sum(1 for vf in taken if vf.vf_id == definition.id)
+    if not copies:
+        return True
+    if not definition.repeatable:
+        return False
+    return definition.max_count is None or copies < definition.max_count
+
+
+def virtue_flaw_repeat_refusal(
+    definition: VirtueFlawDef,
+    taken: Sequence[VirtueFlawInstance],
+    params: dict[str, str],
+) -> str:
+    """Why a character holding `taken` can't add `definition` with `params`
+    ("" if it can): past `max_count` copies, or past `max_per_parameter`
+    copies with the same parameters."""
+    copies = [vf for vf in taken if vf.vf_id == definition.id]
+    if not copies:
+        return ""
+    if not definition.repeatable:
+        return f"{definition.name} may only be taken once."
+    if definition.max_count is not None and len(copies) >= definition.max_count:
+        return f"{definition.name} may be taken at most {definition.max_count} times."
+    limit = definition.max_per_parameter
+    if definition.parameters and limit is not None:
+        same = sum(1 for vf in copies if vf.params == params)
+        if same >= limit:
+            label = describe_virtue_flaw(
+                VirtueFlawInstance(vf_id=definition.id, params=params),
+                {definition.id: definition},
+            )
+            times = "once" if limit == 1 else f"{limit} times"
+            return f"Already taken: {label} (at most {times} for the same choice)."
+    return ""
 
 
 def load_ability_catalog(path: Path = ABILITY_CATALOG_PATH) -> list[AbilityDef]:
@@ -195,3 +247,41 @@ def boon_hook_sort_key(entry: CovenantBoonHookDef) -> tuple[int, int, str]:
         else len(categories)
     )
     return (category, _TIER_ORDER.get(entry.tier, 9), entry.name.lower())
+
+
+@lru_cache(maxsize=4)
+def _weapon_armor_catalog(
+    path: Path,
+) -> tuple[tuple[WeaponDef, ...], tuple[ArmorDef, ...]]:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return (
+        tuple(WeaponDef.from_dict(entry) for entry in data["weapons"]),
+        tuple(ArmorDef.from_dict(entry) for entry in data["armor"]),
+    )
+
+
+def load_weapon_catalog(
+    path: Path = WEAPON_ARMOR_CATALOG_PATH, tables: Sequence[str] | None = None
+) -> list[WeaponDef]:
+    """The book's weapons, in its order: every one, or those of `tables`
+    (WEAPON_TABLES: "melee", "missile", "natural"). Cached: read for every
+    weapon shown."""
+    weapons = _weapon_armor_catalog(path)[0]
+    return [w for w in weapons if tables is None or w.table in tables]
+
+
+def load_weapon_catalog_by_id(
+    path: Path = WEAPON_ARMOR_CATALOG_PATH,
+) -> dict[str, WeaponDef]:
+    return {entry.id: entry for entry in _weapon_armor_catalog(path)[0]}
+
+
+def load_armor_catalog(path: Path = WEAPON_ARMOR_CATALOG_PATH) -> list[ArmorDef]:
+    """The book's armor Materials, in its order (cached)."""
+    return list(_weapon_armor_catalog(path)[1])
+
+
+def load_armor_catalog_by_id(
+    path: Path = WEAPON_ARMOR_CATALOG_PATH,
+) -> dict[str, ArmorDef]:
+    return {entry.id: entry for entry in _weapon_armor_catalog(path)[1]}

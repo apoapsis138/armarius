@@ -162,8 +162,8 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Natural Weapons & Attacks (1)
 
-      ○ Beak                                    Standard        1    0    0    0    0
-
+        Name                Type                Quality       Qty Init  Atk  Def  Dmg Load
+      ○ Beak                                    Standard        1   +0   +0   +0   +0    0
 
 
 

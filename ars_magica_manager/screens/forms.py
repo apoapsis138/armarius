@@ -304,8 +304,27 @@ def _craftsperson_fields(
     return fields
 
 
+def _possession_dialog(
+    title: str, kind: str, entry: pos.PossessionEntry | None, *, natural: bool = False
+) -> FieldsDialog[dict[str, Any]]:
+    """The add/edit form for one kind of possession (a covenant's, a
+    character's Personal Gear, or -- `natural` -- a familiar's Natural
+    Weapons). A weapon or armor form shows the chosen book entry in its live
+    line."""
+    return FieldsDialog(
+        title,
+        _possession_fields(kind, entry, natural=natural),
+        validate=pos.form_problem,
+        live=(
+            (lambda values: pos.book_text(kind, values.get("gear_id")))
+            if kind in GEAR_TYPES_BY_KIND
+            else None
+        ),
+    )
+
+
 def _possession_fields(
-    kind: str, entry: pos.PossessionEntry | None
+    kind: str, entry: pos.PossessionEntry | None, *, natural: bool = False
 ) -> list[DialogField]:
     """The add/edit form for one kind of possession. For a laboratory listed as
     a sanctum, name/owner/location/build points are shown read-only (edit them
@@ -323,7 +342,7 @@ def _possession_fields(
     elif kind == "sanctum":
         fields += _sanctum_fields(entry, auto)
     elif kind in pos.QUANTITY_KINDS:
-        fields += _quantity_possession_fields(kind, entry)
+        fields += _quantity_possession_fields(kind, entry, natural=natural)
     elif kind in ("vis_source", "vis_store"):
         fields += _vis_possession_fields(kind, entry)
 
@@ -398,21 +417,68 @@ def _sanctum_fields(entry: pos.PossessionEntry | None, auto: bool) -> list[Dialo
     return fields
 
 
+def _gear_book_field(
+    kind: str, entry: pos.PossessionEntry | None, natural: bool
+) -> DialogField:
+    """The weapon's or armor Material's book entry: choosing one fills in
+    the book's figures (see possessions.weapon_fills/armor_fills)."""
+    if kind == "weapon":
+        tables = pos.NATURAL_WEAPON_TABLES if natural else pos.GEAR_WEAPON_TABLES
+        weapons = {w.id: w for w in catalog.load_weapon_catalog(tables=tables)}
+        options = [
+            (escape(w.name if natural else f"{w.name} ({w.ability})"), w.id)
+            for w in weapons.values()
+        ]
+        label = "Natural Weapon" if natural else "Weapon"
+
+        def fills(values: dict[str, Any]) -> dict[str, Any]:
+            return pos.weapon_fills(values, weapons)
+
+    else:
+        armors = {a.id: a for a in catalog.load_armor_catalog()}
+        options = [
+            (
+                escape(a.name + (" (partial only)" if a.figures(True) is None else "")),
+                a.id,
+            )
+            for a in armors.values()
+        ]
+        label = "Material"
+
+        def fills(values: dict[str, Any]) -> dict[str, Any]:
+            return pos.armor_fills(values, armors)
+
+    return DialogField(
+        "gear_id",
+        label,
+        "select",
+        _attr(entry, "gear_id", None),
+        options=options,
+        allow_blank=True,
+        placeholder="(custom)",
+        fills=fills,
+    )
+
+
 def _quantity_possession_fields(
-    kind: str, entry: pos.PossessionEntry | None
+    kind: str, entry: pos.PossessionEntry | None, *, natural: bool = False
 ) -> list[DialogField]:
-    """Type and Quality (gear kinds), Quantity, and a weapon's combat
-    statistics."""
+    """The book entry, Type and Quality (gear kinds), Quantity, and a
+    weapon's or armor's combat figures."""
     fields: list[DialogField] = []
     if kind in GEAR_TYPES_BY_KIND:
         types = GEAR_TYPES_BY_KIND[kind]
+        book = _gear_book_field(kind, entry, natural)
         fields += [
+            book,
             DialogField(
                 "gear_type",
                 "Type",
                 "select",
                 _attr(entry, "gear_type", types[0]) or types[0],
                 options=_pairs(types),
+                # Partial or full armor changes the book's figures.
+                fills=book.fills if kind == "armor" else None,
             ),
             DialogField(
                 "gear_quality",
@@ -429,15 +495,32 @@ def _quantity_possession_fields(
         fields += [
             DialogField("weapon_init", "Init", "int", _attr(entry, "weapon_init", 0)),
             DialogField(
-                "weapon_attack", "Attack", "int", _attr(entry, "weapon_attack", 0)
+                "weapon_attack",
+                "Attack (blank = n/a)",
+                "optint",
+                _attr(entry, "weapon_attack", 0),
             ),
             DialogField(
                 "weapon_defense", "Defense", "int", _attr(entry, "weapon_defense", 0)
             ),
             DialogField(
-                "weapon_damage", "Damage", "int", _attr(entry, "weapon_damage", 0)
+                "weapon_damage",
+                "Damage (blank = n/a)",
+                "optint",
+                _attr(entry, "weapon_damage", 0),
             ),
         ]
+    elif kind == "armor":
+        fields.append(
+            DialogField(
+                "armor_protection",
+                "Protection",
+                "int",
+                _attr(entry, "armor_protection", 0),
+            )
+        )
+    if kind in GEAR_TYPES_BY_KIND and not natural:
+        fields.append(DialogField("load", "Load", "int", _attr(entry, "load", 0)))
     return fields
 
 
