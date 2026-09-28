@@ -1,5 +1,5 @@
 {
-  "attribution": "Laboratory Virtues and Flaws from Ars Magica Fifth Edition: Covenants, Chapter 8, via Project: Redcap (redcap.org). Condensed and restructured as data for Ars Magica Manager. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+  "attribution": "Laboratory Virtues and Flaws from Ars Magica Fifth Edition: Covenants, Chapter 9, via Project: Redcap (redcap.org). Condensed and restructured as data for Ars Magica Manager. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
   "entries": [
   {
     "id": "labvf_greater_feature",
@@ -25,6 +25,18 @@
       "aesthetics": 2
     },
     "description": "A swathe of natural scenery -- forest, desert, a river -- is located in the lab, or the lab is built in or around it. Grants 3 points among Specializations in Creo, Animal, Aquam, Auram, Herbam, Ignem, or Terram, depending on the terrain."
+  },
+  {
+    "id": "labvf_auspicious_shape",
+    "name": "Auspicious Shape",
+    "type": "Virtue",
+    "category": "Structure",
+    "tier": "Minor",
+    "cost": 1,
+    "characteristic_modifiers": {
+      "aesthetics": 1
+    },
+    "description": "The lab or its building is formed into a magically beneficial shape, such as a hexagon or pentagram (a circle or square doesn't count). Grants +1 to a Vim Specialization."
   },
   {
     "id": "labvf_extensive_stores",
@@ -65,6 +77,32 @@
     "description": "The lab features a unique structure which aids certain types of lab work (see Laboratory Features). Grants 1 point to an appropriate Specialization."
   },
   {
+    "id": "labvf_spacious",
+    "name": "Spacious",
+    "type": "Virtue",
+    "category": "Structure",
+    "tier": "Minor",
+    "cost": 1,
+    "characteristic_modifiers": {
+      "safety": 2,
+      "aesthetics": 1
+    },
+    "description": "The lab has enough spare room that its outfittings can be spread out a little. A lab built from scratch may start with this Virtue, space permitting, without an extra season of work."
+  },
+  {
+    "id": "labvf_well_insulated",
+    "name": "Well Insulated",
+    "type": "Virtue",
+    "category": "Structure",
+    "tier": "Minor",
+    "cost": 1,
+    "characteristic_modifiers": {
+      "safety": 1,
+      "aesthetics": 1
+    },
+    "description": "The lab is especially well shielded from the outside world -- an extra partition wall, or thick curtains -- so little noise or disturbance escapes, suiting a sensitive location such as a city."
+  },
+  {
     "id": "labvf_dedicated_building",
     "name": "Dedicated Building",
     "type": "Virtue",
@@ -78,6 +116,55 @@
     "description": "The lab (and probably the owner's living quarters) is in its own building, shared with no one else, with fewer distractions. Grants +1 to a Rego Specialization."
   },
   {
+    "id": "labvf_defenses",
+    "name": "Defenses",
+    "type": "Virtue",
+    "category": "Structure",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "aesthetics": 1
+    },
+    "description": "The lab has some kind of sturdy defense, such as a portcullis or battlements."
+  },
+  {
+    "id": "labvf_elevated",
+    "name": "Elevated",
+    "type": "Virtue",
+    "category": "Structure",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "aesthetics": 1
+    },
+    "description": "The lab is at least four floors up, or on the top floor of a tower, with a commanding view of the surroundings. Grants +1 to an Auram Specialization."
+  },
+  {
+    "id": "labvf_grand_entrance",
+    "name": "Grand Entrance",
+    "type": "Virtue",
+    "category": "Structure",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "aesthetics": 2
+    },
+    "description": "An elaborate, sizable entranceway -- a great door or arch, an opulent lobby, a reception room -- leads to the lab, taking up sanctum space rather than the lab chamber. Often a season or more of craftsmen's work; casual observers are likely to be impressed."
+  },
+  {
+    "id": "labvf_idyllic_surroundings",
+    "name": "Idyllic Surroundings",
+    "type": "Virtue",
+    "category": "Structure",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "health": 2,
+      "aesthetics": 1
+    },
+    "description": "The lab stands by itself in a charming, peaceful location, such as a beautiful vale or garden. Grants 1 point on a Specialization in Creo, Animal, Aquam, Herbam, or Terram, depending on the terrain."
+  },
+  {
     "id": "labvf_mobile",
     "name": "Mobile",
     "type": "Virtue",
@@ -85,6 +172,20 @@
     "tier": "Free",
     "cost": 0,
     "description": "The entire lab can be readily moved -- for example, located on a ship or, if very small, a cart. Usually taken alongside the Unstable Flaw. Grants +1 to an Experimentation Specialization."
+  },
+  {
+    "id": "labvf_mountaintop",
+    "name": "Mountaintop",
+    "type": "Virtue",
+    "category": "Structure",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "safety": -1,
+      "upkeep": 1,
+      "aesthetics": 2
+    },
+    "description": "The lab is at the peak of a mountain: a dramatic, remote setting with a spectacular view, prone to strong winds and snows. Grants +2 to an Auram Specialization."
   },
   {
     "id": "labvf_superior_construction",
@@ -100,6 +201,15 @@
     "description": "The lab benefits from distinguished construction techniques -- high quality materials, or built by a master architect or a magus. If constructing the building, its cost is doubled."
   },
   {
+    "id": "labvf_studio",
+    "name": "Studio",
+    "type": "Virtue",
+    "category": "Structure",
+    "tier": "Free",
+    "cost": 0,
+    "description": "An ornate room just outside the lab proper displays the owner's most prized possessions to guests (Verditius magi often show off their crafted items this way). Takes up sanctum space rather than the lab chamber. +1 to +3 Aesthetics, depending on the number and magnificence of items displayed -- add it as a manual adjustment."
+  },
+  {
     "id": "labvf_deformed",
     "name": "Deformed",
     "type": "Flaw",
@@ -111,6 +221,18 @@
       "aesthetics": -1
     },
     "description": "Part of the structure has subsided or is otherwise warped -- for example, a wall has partially collapsed into rubble and has to be propped up. Grants +1 to a Muto or Perdo Specialization."
+  },
+  {
+    "id": "labvf_disguised",
+    "name": "Disguised",
+    "type": "Flaw",
+    "category": "Structure",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "aesthetics": -1
+    },
+    "description": "The lab or its entrance is protected by some mundane concealment, such as a hidden door."
   },
   {
     "id": "labvf_empty",
@@ -155,6 +277,35 @@
     "description": "The lab is underground, lacking natural light and requiring more candles for lighting. Grants +1 to a Terram Specialization."
   },
   {
+    "id": "labvf_exposed",
+    "name": "Exposed",
+    "type": "Flaw",
+    "category": "Structure",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "safety": -1,
+      "upkeep": 1,
+      "health": -2,
+      "aesthetics": -1
+    },
+    "description": "The building is partially exposed to the elements -- unroofed or poorly roofed, or with wind blowing through large cracks. Grants +1 to an Auram Specialization."
+  },
+  {
+    "id": "labvf_uneven_floor",
+    "name": "Uneven Floor",
+    "type": "Flaw",
+    "category": "Structure",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "safety": -1,
+      "health": -1,
+      "aesthetics": -1
+    },
+    "description": "The lab has a wonky or dangerous floor -- in a cave, perhaps, or covered with sand or pebbles. Grants +1 to a Muto or Terram Specialization."
+  },
+  {
     "id": "labvf_unstable",
     "name": "Unstable",
     "type": "Flaw",
@@ -167,6 +318,44 @@
       "safety": -1
     },
     "description": "The lab is prone to movement -- on a ship, earthquake-prone, or with dodgy foundations -- an occasional cause of accidents or breakages. May be taken more than once for greater instability."
+  },
+  {
+    "id": "labvf_vile_surroundings",
+    "name": "Vile Surroundings",
+    "type": "Flaw",
+    "category": "Structure",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "health": -2,
+      "aesthetics": -1
+    },
+    "description": "The lab is in an undesirable or unpleasant place, such as a swamp, next to a filthy hovel, or by a dirty, busy road. Grants 1 point on a Specialization in Perdo, Animal, Aquam, Auram, or Corpus, depending on the terrain."
+  },
+  {
+    "id": "labvf_vulnerable",
+    "name": "Vulnerable",
+    "type": "Flaw",
+    "category": "Structure",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "aesthetics": -1
+    },
+    "description": "The lab lacks even basic defenses and is easily broken or stumbled into -- for example, on the ground floor with no door."
+  },
+  {
+    "id": "labvf_awkward_shape",
+    "name": "Awkward Shape",
+    "type": "Flaw",
+    "category": "Structure",
+    "tier": "Minor",
+    "cost": -1,
+    "characteristic_modifiers": {
+      "safety": -2,
+      "aesthetics": -1
+    },
+    "description": "The lab's chamber is a difficult shape -- long and thin, perhaps, or partitioned in two."
   },
   {
     "id": "labvf_cramped",
@@ -182,6 +371,30 @@
       "aesthetics": -1
     },
     "description": "The lab equipment is packed too close together for comfort due to lack of space, slightly hampering all but one type of lab activity (taken as a Specialization). Can be reconfigured to change that Specialization with a season of work."
+  },
+  {
+    "id": "labvf_diminutive",
+    "name": "Diminutive",
+    "type": "Flaw",
+    "category": "Structure",
+    "tier": "Minor",
+    "cost": -1,
+    "description": "The lab is configured for an especially small magus (Size -1 or less), who uses it normally. Anyone of Size 0 or more has (or causes) considerable difficulty: for them, -1 General Quality, -2 Safety, -1 Health, -1 Aesthetics -- add these as manual adjustments when they apply."
+  },
+  {
+    "id": "labvf_heinous_architecture",
+    "name": "Heinous Architecture",
+    "type": "Flaw",
+    "category": "Structure",
+    "tier": "Minor",
+    "cost": -1,
+    "characteristic_modifiers": {
+      "general_quality": -1,
+      "safety": -2,
+      "warping": 1,
+      "aesthetics": -2
+    },
+    "description": "The construction of the chamber is deliberately inauspicious, perverse, or erroneous."
   },
   {
     "id": "labvf_lesser_focus",
@@ -208,6 +421,19 @@
     "description": "The lab has nowhere to store supplies, so it cannot withstand any shortage of funds -- compulsory Upkeep-reducing Flaws are taken immediately rather than after the usual two seasons. Vis and dangerous materials cannot be stored safely."
   },
   {
+    "id": "labvf_poorly_insulated",
+    "name": "Poorly Insulated",
+    "type": "Flaw",
+    "category": "Structure",
+    "tier": "Minor",
+    "cost": -1,
+    "characteristic_modifiers": {
+      "safety": -1,
+      "aesthetics": -1
+    },
+    "description": "The lab is poorly shielded from the outside world -- thin walls or ceilings -- so it's easy to hear what goes on inside, and its noise is a nuisance to nearby people or floors."
+  },
+  {
     "id": "labvf_greater_focus",
     "name": "Greater Focus",
     "type": "Flaw",
@@ -218,6 +444,22 @@
       "general_quality": -2
     },
     "description": "An existing Greater Feature is the overwhelming focus of the lab, enhancing the Feature but making activities that don't use it harder. Grants 4 points among Specializations provided by the Feature."
+  },
+  {
+    "id": "labvf_outdoors",
+    "name": "Outdoors",
+    "type": "Flaw",
+    "category": "Structure",
+    "tier": "Major",
+    "cost": -3,
+    "characteristic_modifiers": {
+      "general_quality": -1,
+      "upkeep": 2,
+      "safety": -1,
+      "health": -2,
+      "aesthetics": -3
+    },
+    "description": "The lab (not necessarily the magus's living quarters) is not housed in a building at all and is completely exposed to the elements. Should be taken with the Natural Environment Virtue, which then takes no time to gain. Size may be increased to any number."
   },
   {
     "id": "labvf_greater_expansion",
@@ -232,6 +474,46 @@
       "aesthetics": 1
     },
     "description": "The extent of the lab is greatly increased, with at least double the usual amount of equipment, allowing more areas and equipment dedicated to specialized tasks. Grants 2 points on any Specialization(s)."
+  },
+  {
+    "id": "labvf_palatial",
+    "name": "Palatial",
+    "type": "Virtue",
+    "category": "Outfittings",
+    "tier": "Major",
+    "cost": 3,
+    "characteristic_modifiers": {
+      "general_quality": 1,
+      "upkeep": 3,
+      "health": 2,
+      "aesthetics": 4
+    },
+    "description": "The lab is lavishly and magnificently outfitted, with the very best comforts and decoration. Grants +2 to a Teaching Specialization and 1 point on any other Specialization."
+  },
+  {
+    "id": "labvf_excessive_heating",
+    "name": "Excessive Heating",
+    "type": "Virtue",
+    "category": "Outfittings",
+    "tier": "Minor",
+    "cost": 1,
+    "characteristic_modifiers": {
+      "upkeep": 2,
+      "safety": -1
+    },
+    "description": "The lab is kept far warmer than necessary, with the facilities for it -- half a dozen fireplaces, say. Grants +2 to an Ignem Specialization."
+  },
+  {
+    "id": "labvf_excessive_lighting",
+    "name": "Excessive Lighting",
+    "type": "Virtue",
+    "category": "Outfittings",
+    "tier": "Minor",
+    "cost": 1,
+    "characteristic_modifiers": {
+      "upkeep": 2
+    },
+    "description": "The lab is lit far more than necessary -- several hundred candles or lamps, taking up more space than usual. Grants +2 to an Imaginem Specialization."
   },
   {
     "id": "labvf_lesser_expansion",
@@ -262,6 +544,61 @@
     "description": "The lab contains suitable furniture -- a bed, a wardrobe -- so the owner may live and sleep in it. A small benefit to lab work from living in the lab proper, though it's not good for one's health and is considered somewhat obsessive."
   },
   {
+    "id": "labvf_menagerie",
+    "name": "Menagerie",
+    "type": "Virtue",
+    "category": "Outfittings",
+    "tier": "Minor",
+    "cost": 1,
+    "characteristic_modifiers": {
+      "upkeep": 1,
+      "safety": -1,
+      "aesthetics": -1
+    },
+    "description": "The lab contains a collection of live animals. Grants +2 to an Animal Specialization."
+  },
+  {
+    "id": "labvf_opulent",
+    "name": "Opulent",
+    "type": "Virtue",
+    "category": "Outfittings",
+    "tier": "Minor",
+    "cost": 1,
+    "characteristic_modifiers": {
+      "upkeep": 1,
+      "health": 1,
+      "aesthetics": 2
+    },
+    "description": "The lab is comfortable and well furnished. Grants +1 to a Teaching Specialization."
+  },
+  {
+    "id": "labvf_pot_plants",
+    "name": "Pot Plants",
+    "type": "Virtue",
+    "category": "Outfittings",
+    "tier": "Minor",
+    "cost": 1,
+    "characteristic_modifiers": {
+      "upkeep": 1,
+      "aesthetics": 1
+    },
+    "description": "The lab contains dozens of potted plants. Grants +1 to a Herbam Specialization."
+  },
+  {
+    "id": "labvf_slaves",
+    "name": "Slaves",
+    "type": "Virtue",
+    "category": "Outfittings",
+    "tier": "Minor",
+    "cost": 1,
+    "characteristic_modifiers": {
+      "upkeep": 1,
+      "safety": -1,
+      "aesthetics": -1
+    },
+    "description": "Human slaves are employed in the lab, as manual labor or as experimental subjects. Grants +2 to a Corpus or Mentem Specialization."
+  },
+  {
     "id": "labvf_specimens",
     "name": "Specimens",
     "type": "Virtue",
@@ -274,6 +611,46 @@
       "aesthetics": 1
     },
     "description": "The lab has a large collection of related things, stored in visible containers such as jars, or otherwise serving as objects of study or decoration. Grants 1 point on any Form Specialization."
+  },
+  {
+    "id": "labvf_superior_decoration",
+    "name": "Superior Decoration",
+    "type": "Virtue",
+    "category": "Outfittings",
+    "tier": "Minor",
+    "cost": 1,
+    "characteristic_modifiers": {
+      "upkeep": 1,
+      "aesthetics": 2
+    },
+    "description": "The lab is luxuriantly or generously decorated -- many fine tapestries hang on the walls, for example. Grants +1 to an Imaginem Specialization."
+  },
+  {
+    "id": "labvf_superior_heating",
+    "name": "Superior Heating",
+    "type": "Virtue",
+    "category": "Outfittings",
+    "tier": "Minor",
+    "cost": 1,
+    "characteristic_modifiers": {
+      "upkeep": 1,
+      "health": 1,
+      "aesthetics": 1
+    },
+    "description": "The lab has superior facilities for heating -- under-floor heating, or several fireplaces -- and the snug occupant is never chilly. Grants +1 to an Ignem Specialization."
+  },
+  {
+    "id": "labvf_superior_lighting",
+    "name": "Superior Lighting",
+    "type": "Virtue",
+    "category": "Outfittings",
+    "tier": "Minor",
+    "cost": 1,
+    "characteristic_modifiers": {
+      "upkeep": 1,
+      "aesthetics": 1
+    },
+    "description": "The lab is very well lit, so things are easy to find and books easy to read without eye-strain. Grants +1 to a Texts Specialization and +1 to an Imaginem Specialization."
   },
   {
     "id": "labvf_assistant",
@@ -324,6 +701,32 @@
     "description": "Another person -- a close family member or a maid -- is found very frequently (most days, for at least an hour) in the lab. Taken once per such person; doesn't count the owner or full-time assistants. Grants +1 to a Corpus or Mentem Specialization."
   },
   {
+    "id": "labvf_precious_ingredients",
+    "name": "Precious Ingredients",
+    "type": "Virtue",
+    "category": "Outfittings",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "general_quality": 1,
+      "upkeep": 2
+    },
+    "description": "The lab is supplied with more expensive ingredients than a typical covenant can afford. Grants +1 to a Longevity Rituals Specialization."
+  },
+  {
+    "id": "labvf_priceless_ingredients",
+    "name": "Priceless Ingredients",
+    "type": "Virtue",
+    "category": "Outfittings",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "general_quality": 2,
+      "upkeep": 4
+    },
+    "description": "The lab is supplied with things most people can only dream of, such as copious quantities of gold and gems. Grants +2 to a Longevity Rituals Specialization."
+  },
+  {
     "id": "labvf_servant",
     "name": "Servant",
     "type": "Virtue",
@@ -347,6 +750,33 @@
       "aesthetics": 1
     },
     "description": "The lab is impeccably clean; requires a season of work to gain, with a further chance whenever a season is spent improving Refinement. Lost if cleanliness isn't maintained, or after an accident or neglect. Grants +1 to a Creo Specialization."
+  },
+  {
+    "id": "labvf_superior_equipment",
+    "name": "Superior Equipment",
+    "type": "Virtue",
+    "category": "Outfittings",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "general_quality": 1,
+      "upkeep": 2,
+      "safety": 1
+    },
+    "description": "The lab is supplied with higher-quality equipment, such as Venetian glassware. Made at the covenant, it needs a craftsman with Craft 6+, but then doesn't increase Upkeep. Grants +1 to a Vis Extraction Specialization."
+  },
+  {
+    "id": "labvf_superior_tools",
+    "name": "Superior Tools",
+    "type": "Virtue",
+    "category": "Outfittings",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "upkeep": 1,
+      "safety": 1
+    },
+    "description": "The lab's tools were produced by master craftsmen. Made at the covenant, they need a craftsman with Craft 6+, but then don't increase Upkeep. Grants +1 to an Items Specialization."
   },
   {
     "id": "labvf_basic",
@@ -375,6 +805,48 @@
     "description": "The lab is partially damaged, for example from a lab accident. Takes one season to repair and lose this Flaw."
   },
   {
+    "id": "labvf_damp",
+    "name": "Damp",
+    "type": "Flaw",
+    "category": "Outfittings",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "upkeep": 1,
+      "health": -1,
+      "aesthetics": -1
+    },
+    "description": "The lab is waterlogged or moist; parchment and some ingredients spoil quickly. Grants +1 to an Aquam Specialization."
+  },
+  {
+    "id": "labvf_decaying",
+    "name": "Decaying",
+    "type": "Flaw",
+    "category": "Outfittings",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "general_quality": -1,
+      "upkeep": -1,
+      "safety": -1,
+      "aesthetics": -1
+    },
+    "description": "The lab's equipment, furnishings, and materials are neglected, or have been allowed to go bad. Grants +2 to a Perdo Specialization."
+  },
+  {
+    "id": "labvf_dirty",
+    "name": "Dirty",
+    "type": "Flaw",
+    "category": "Outfittings",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "health": -1,
+      "aesthetics": -2
+    },
+    "description": "The lab is not kept to basic standards of cleanliness; its owner often emerges smelly or dirty, and most visitors find it pretty unbearable. Grants +1 to a Perdo Specialization."
+  },
+  {
     "id": "labvf_disorganized",
     "name": "Disorganized",
     "type": "Flaw",
@@ -388,6 +860,19 @@
     "description": "The lab is organized in a rather haphazard or carefree fashion -- some magi prefer it this way. Grants +1 to a Muto or Experimentation Specialization."
   },
   {
+    "id": "labvf_gaudy",
+    "name": "Gaudy",
+    "type": "Flaw",
+    "category": "Outfittings",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "upkeep": 1,
+      "aesthetics": -1
+    },
+    "description": "The lab's decoration is tasteless and excessive. Grants +1 to an Imaginem Specialization."
+  },
+  {
     "id": "labvf_hidden_defect",
     "name": "Hidden Defect",
     "type": "Flaw",
@@ -399,6 +884,58 @@
       "safety": -3
     },
     "description": "A subtle and potentially dangerous error exists in the lab's configuration, usually the owner's fault though possibly the work of a malicious third party. Chance to gain or lose this Flaw whenever a season is spent improving Refinement; when it causes a lab botch, a Perception + Magic Theory roll (Ease Factor 12) may spot and correct it."
+  },
+  {
+    "id": "labvf_inferior_equipment",
+    "name": "Inferior Equipment",
+    "type": "Flaw",
+    "category": "Outfittings",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "general_quality": -1,
+      "upkeep": -1
+    },
+    "description": "The lab is outfitted with shoddy wares. Doesn't take a season to remove if sufficient funds are available to increase Upkeep."
+  },
+  {
+    "id": "labvf_inferior_tools",
+    "name": "Inferior Tools",
+    "type": "Flaw",
+    "category": "Outfittings",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "upkeep": -1,
+      "safety": -1
+    },
+    "description": "The lab's tools are crudely crafted and prone to breakage. Doesn't take a season to remove if sufficient funds are available to increase Upkeep."
+  },
+  {
+    "id": "labvf_infested",
+    "name": "Infested",
+    "type": "Flaw",
+    "category": "Outfittings",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "safety": -1,
+      "aesthetics": -1
+    },
+    "description": "The lab has an animal or plant infestation -- a nest of mice, a vine, fungi. Depending on its nature, it may not take a season to remove. Grants +1 to an Animal or Herbam Specialization."
+  },
+  {
+    "id": "labvf_lousy_ingredients",
+    "name": "Lousy Ingredients",
+    "type": "Flaw",
+    "category": "Outfittings",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "general_quality": -1,
+      "upkeep": -1
+    },
+    "description": "The lab is supplied with dirty, impure, or poor-quality ingredients. Doesn't take a season to remove if sufficient funds are available to increase Upkeep."
   },
   {
     "id": "labvf_missing_ingredients",
@@ -440,6 +977,36 @@
     "description": "The lab is very heavily damaged, for example from a major lab accident. Takes two seasons to repair completely and lose this Flaw (after one season it may be downgraded to the Damaged Flaw)."
   },
   {
+    "id": "labvf_defective_heating",
+    "name": "Defective Heating",
+    "type": "Flaw",
+    "category": "Outfittings",
+    "tier": "Minor",
+    "cost": -1,
+    "characteristic_modifiers": {
+      "general_quality": -1,
+      "upkeep": -1,
+      "health": -1,
+      "aesthetics": -1
+    },
+    "description": "The lab has an inadequate or missing heating mechanism, and is rather too cold for comfort in the winter months."
+  },
+  {
+    "id": "labvf_defective_lighting",
+    "name": "Defective Lighting",
+    "type": "Flaw",
+    "category": "Outfittings",
+    "tier": "Minor",
+    "cost": -1,
+    "characteristic_modifiers": {
+      "general_quality": -1,
+      "upkeep": -1,
+      "safety": -1,
+      "aesthetics": -1
+    },
+    "description": "The lab is poorly lit, dingy and gloomy; it can be harder to read or find things."
+  },
+  {
     "id": "labvf_missing_equipment",
     "name": "Missing Equipment",
     "type": "Flaw",
@@ -479,6 +1046,22 @@
     "description": "A cut-down version of a Hermetic laboratory, with an extremely limited selection of equipment installed, so only one category of lab activity is possible at all -- fixed at construction. Cheaper to maintain and takes only one season to build; some covenants build these in powerful auras for vis extraction."
   },
   {
+    "id": "labvf_hovel",
+    "name": "Hovel",
+    "type": "Flaw",
+    "category": "Outfittings",
+    "tier": "Major",
+    "cost": -3,
+    "characteristic_modifiers": {
+      "general_quality": -1,
+      "upkeep": -2,
+      "safety": -2,
+      "health": -3,
+      "aesthetics": -4
+    },
+    "description": "The lab is very cramped, neglected, and filthy -- little more than a stinking dump that most magi would never set foot in."
+  },
+  {
     "id": "labvf_greater_guardian",
     "name": "Greater Guardian",
     "type": "Virtue",
@@ -492,6 +1075,20 @@
     "description": "A powerful supernatural creature (Might 20 or higher), not the owner's familiar, resides in the lab and acts as its protector, well-disposed to the owner. Grants Safety equal to the creature's Intelligence (not a fixed number) and 3 points on appropriate Art Specialization(s)."
   },
   {
+    "id": "labvf_greater_horde",
+    "name": "Greater Horde",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Major",
+    "cost": 3,
+    "characteristic_modifiers": {
+      "general_quality": 2,
+      "upkeep": 1,
+      "aesthetics": 2
+    },
+    "description": "A large community of resident minor supernatural creatures is at the owner's command, intelligent enough to protect the lab and help with simple lab tasks. Grants Safety equal to the creatures' Intelligence (not a fixed number) and 2 points on Rego or other appropriate Art Specialization(s)."
+  },
+  {
     "id": "labvf_familiar",
     "name": "Familiar",
     "type": "Virtue",
@@ -499,6 +1096,19 @@
     "tier": "Minor",
     "cost": 1,
     "description": "The owner's familiar lives in the lab and may help with lab work; assumes the familiar takes up a non-trivial amount of space (otherwise take as a Free Virtue instead). Grants General Quality equal to the familiar's Intelligence + Magic Theory and Safety per the Golden Cord (restatements of existing bonuses, not fixed numbers)."
+  },
+  {
+    "id": "labvf_gateway",
+    "name": "Gateway",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Minor",
+    "cost": 1,
+    "characteristic_modifiers": {
+      "safety": -1,
+      "aesthetics": 1
+    },
+    "description": "The lab sits at a supernatural gateway -- an entrance to a regio or faerie realm, or a Mercere Portal -- whose access the owner usually controls, perhaps collecting a toll. May be made into a Portal Feature, and combined with the Thoroughfare Flaw. Grants 1 point on Rego or another appropriate Art Specialization."
   },
   {
     "id": "labvf_lesser_guardian",
@@ -511,6 +1121,21 @@
       "safety": 1
     },
     "description": "A supernatural creature (less than Might 20), not the owner's familiar, resides in the lab and acts as its protector, well-disposed to the owner. Grants 1 point on an appropriate Art Specialization."
+  },
+  {
+    "id": "labvf_lesser_horde",
+    "name": "Lesser Horde",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Minor",
+    "cost": 1,
+    "characteristic_modifiers": {
+      "general_quality": 1,
+      "upkeep": 1,
+      "safety": 1,
+      "aesthetics": 1
+    },
+    "description": "A small group of semi-intelligent creatures helps out in the lab. Grants 1 point on Rego or another appropriate Art Specialization."
   },
   {
     "id": "labvf_vis_source",
@@ -527,6 +1152,34 @@
     "description": "A naturally-occurring source of vis is to be found in the lab. Grants 2 points on the appropriate Art Specialization."
   },
   {
+    "id": "labvf_airborne",
+    "name": "Airborne",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "upkeep": 1,
+      "safety": -2,
+      "warping": 2,
+      "health": 1,
+      "aesthetics": 4
+    },
+    "description": "The lab flies upon the winds or clouds and rarely lands -- only very powerful magic can do this. Often combined with the Unstable Flaw. Grants +1 to an Experimentation Specialization and +4 to an Auram Specialization."
+  },
+  {
+    "id": "labvf_boundless",
+    "name": "Boundless",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "warping": 2
+    },
+    "description": "The lab's interior has unlimited space, whatever its structure's mundane limits from outside -- beyond normal Hermetic magic, so of non-Hermetic or faerie origin. Size may be increased to any number."
+  },
+  {
     "id": "labvf_enchantment",
     "name": "Enchantment",
     "type": "Virtue",
@@ -535,6 +1188,60 @@
     "cost": 0,
     "repeatable": true,
     "description": "The lab itself has been enchanted as a magic item. May grant Virtues or Flaws, alter Characteristics, or add to Specializations, per the item's own design -- not modeled automatically."
+  },
+  {
+    "id": "labvf_faerie_ingredients",
+    "name": "Faerie Ingredients",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "general_quality": 1,
+      "upkeep": 1,
+      "warping": 1
+    },
+    "description": "Some of the lab's stores are supplied by faeries, with beneficial if sometimes unpredictable properties -- faerie silver in place of real silver, for example. Grants +1 to an Experimentation Specialization and 1 point on an appropriate Specialization."
+  },
+  {
+    "id": "labvf_flawless_equipment",
+    "name": "Flawless Equipment",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "general_quality": 2,
+      "upkeep": 2
+    },
+    "description": "The lab's outfittings are flawless, perhaps too perfect to be of mortal make. Upkeep is -1 instead of +2 if the equipment is continuously protected, created, or donated by supernatural means (adjust manually). Grants +2 to a Vis Extraction Specialization."
+  },
+  {
+    "id": "labvf_flawless_tools",
+    "name": "Flawless Tools",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "upkeep": 1
+    },
+    "description": "The craftsman who made such perfect tools must have been legendary. Upkeep is -1 instead of +1 if they are continuously protected, created, or donated by supernatural means (adjust manually). Grants +2 to an Items Specialization."
+  },
+  {
+    "id": "labvf_ice_cavern",
+    "name": "Ice Cavern",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "upkeep": 1,
+      "warping": 1,
+      "health": -2,
+      "aesthetics": 2
+    },
+    "description": "The lab is built of ice that never melts, in the far north, high up a mountain, or kept frozen by magic. The -2 Health doesn't apply to an owner immune to the cold. Grants +2 to a Rego or Terram Specialization."
   },
   {
     "id": "labvf_inexhaustible_supplies",
@@ -550,6 +1257,18 @@
     "description": "The lab is blessed with magically replenishing ingredients and consumables which never run out."
   },
   {
+    "id": "labvf_invisible",
+    "name": "Invisible",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "warping": 1
+    },
+    "description": "The lab's interior and outfittings are invisible, so the owner needs some magical means of seeing them. Halve the Aesthetics score after all other modifications (not applied automatically). Grants +2 to an Imaginem Specialization."
+  },
+  {
     "id": "labvf_magic_item",
     "name": "Magic Item",
     "type": "Virtue",
@@ -558,6 +1277,39 @@
     "cost": 0,
     "repeatable": true,
     "description": "A magic item is installed in the lab -- self-made, donated, purchased, or found. If very large, treat as a Minor Virtue instead of Free. May grant Virtues or Flaws, alter Characteristics, or add to Specializations, per the item's own design -- not modeled automatically."
+  },
+  {
+    "id": "labvf_magical_heating",
+    "name": "Magical Heating",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "description": "Heating is provided magically. Works as either Superior Heating or Excessive Heating, without their space and Upkeep cost -- add the chosen one's other effects as manual adjustments."
+  },
+  {
+    "id": "labvf_magical_lighting",
+    "name": "Magical Lighting",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "description": "Lighting is provided magically. Works as either Superior Lighting or Excessive Lighting, without their space and Upkeep cost -- add the chosen one's other effects as manual adjustments."
+  },
+  {
+    "id": "labvf_preserved",
+    "name": "Preserved",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "upkeep": -1,
+      "warping": 1,
+      "health": 2,
+      "aesthetics": 1
+    },
+    "description": "The lab, or part of its contents, is immune from natural decay. Grants +1 to a Creo Specialization."
   },
   {
     "id": "labvf_regio",
@@ -574,6 +1326,48 @@
     "description": "The interior of the lab is in a regio, with another regio level the owner can navigate easily. May be taken more than once if there are further regio levels."
   },
   {
+    "id": "labvf_relocation",
+    "name": "Relocation",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "description": "The lab's location in the physical world can be magically adjusted -- a powerful Rego Terram enchantment, say -- helping travel but making the lab and its occupant hard to find. +1 Warping if the relocation is in constant effect (add it manually). Grants +1 to an Experimentation Specialization."
+  },
+  {
+    "id": "labvf_sentient",
+    "name": "Sentient",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "warping": 1
+    },
+    "description": "The lab seems to have developed an independent mind -- unlikely from Hermetic magic without a breakthrough, but possible after many decades in a high magic or faerie aura. Grants +1 to an Experimentation Specialization and +1 to a Mentem Specialization."
+  },
+  {
+    "id": "labvf_shrouded",
+    "name": "Shrouded",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "warping": 1
+    },
+    "description": "The lab is hidden or protected by a supernatural effect such as The Shrouded Glen. Halve the Aesthetics score after all other modifications (not applied automatically)."
+  },
+  {
+    "id": "labvf_site_of_legend",
+    "name": "Site of Legend",
+    "type": "Virtue",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "description": "Stories are told about this lab, and legends are associated with it. Any adjustments to Characteristics and Specializations as appropriate -- add them as manual adjustments."
+  },
+  {
     "id": "labvf_abyss",
     "name": "Abyss",
     "type": "Flaw",
@@ -584,6 +1378,73 @@
       "safety": -2
     },
     "description": "The lab contains some kind of magical void, such as a bottomless well. Grants +2 to a Perdo Specialization; may be made into a Void Feature."
+  },
+  {
+    "id": "labvf_afire",
+    "name": "Afire",
+    "type": "Flaw",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "upkeep": 1,
+      "safety": -3,
+      "warping": 2,
+      "aesthetics": 2
+    },
+    "description": "The lab, or large parts of it, is engulfed in flames that never die out; working in it needs protection or immunity, and whole categories of lab work (Corpus, Animal, or Aquam research, say) may be impossible. Grants +1 to an Experimentation Specialization and +3 to an Ignem Specialization."
+  },
+  {
+    "id": "labvf_chaotic",
+    "name": "Chaotic",
+    "type": "Flaw",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "safety": -2,
+      "warping": 1
+    },
+    "description": "The lab or its outfittings are in a constant state of flux or motion. Grants +1 to an Experimentation Specialization and +2 to a Muto or Rego Specialization."
+  },
+  {
+    "id": "labvf_cursed",
+    "name": "Cursed",
+    "type": "Flaw",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "description": "The lab suffers from a supernatural curse. Any penalties to Characteristics (often Safety) as appropriate -- add them as manual adjustments."
+  },
+  {
+    "id": "labvf_degenerative",
+    "name": "Degenerative",
+    "type": "Flaw",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "upkeep": 2,
+      "safety": -1,
+      "warping": 1,
+      "health": -2,
+      "aesthetics": -1
+    },
+    "description": "The lab's equipment and ingredients decay and wear unnaturally quickly. Grants +2 to a Perdo Specialization."
+  },
+  {
+    "id": "labvf_gremlins",
+    "name": "Gremlins",
+    "type": "Flaw",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "safety": -3,
+      "warping": 1,
+      "aesthetics": -1
+    },
+    "description": "The lab is home to deliberately disruptive creatures, spirits, or demons. Grants +1 to an Experimentation Specialization and 1 point on an appropriate Art Specialization."
   },
   {
     "id": "labvf_haunted",
@@ -624,6 +1485,46 @@
     "description": "Residency in the lab is shared with some other creatures who consider the place their home, not a lab -- a nuisance to the owner and vice versa. Grants 1 point on an appropriate Art Specialization."
   },
   {
+    "id": "labvf_labyrinth",
+    "name": "Labyrinth",
+    "type": "Flaw",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "safety": -1,
+      "health": -1,
+      "aesthetics": -2
+    },
+    "description": "The lab, or at least its outer parts, is a maze or other structural puzzle -- tiresome to most magi, though some Criamon build their labs this way. Grants +2 to a Mentem or Vim Specialization."
+  },
+  {
+    "id": "labvf_lair",
+    "name": "Lair",
+    "type": "Flaw",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "safety": -1,
+      "warping": 1
+    },
+    "description": "A creature hides or hibernates in the lab, known or unknown. Grants 1 point on an appropriate Art Specialization."
+  },
+  {
+    "id": "labvf_precarious",
+    "name": "Precarious",
+    "type": "Flaw",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "repeatable": true,
+    "characteristic_modifiers": {
+      "safety": -1
+    },
+    "description": "The lab is in a supernaturally dangerous place, such as inside a volcano. May be taken more than once for greater degrees of danger. Grants 1 point on an appropriate Art Specialization."
+  },
+  {
     "id": "labvf_predecessor",
     "name": "Predecessor",
     "type": "Flaw",
@@ -646,6 +1547,48 @@
     "description": "The lab forbids certain activities (one category of lab activity cannot be performed), or otherwise tiresome or expensive rituals/practices are required for lab work. Either -1 General Quality or +2 Upkeep, as appropriate (player's/storyguide's choice)."
   },
   {
+    "id": "labvf_sacrifices",
+    "name": "Sacrifices",
+    "type": "Flaw",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "upkeep": 2,
+      "safety": -1,
+      "warping": 1,
+      "health": -1,
+      "aesthetics": -3
+    },
+    "description": "Animal sacrifices are needed for the lab to function. Grants 2 points on any Technique or Animal Specialization, as appropriate."
+  },
+  {
+    "id": "labvf_thoroughfare",
+    "name": "Thoroughfare",
+    "type": "Flaw",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "safety": -1
+    },
+    "description": "Supernatural creatures, such as gnomes, pass through the lab occasionally and cause a minor nuisance."
+  },
+  {
+    "id": "labvf_underwater",
+    "name": "Underwater",
+    "type": "Flaw",
+    "category": "Supernatural",
+    "tier": "Free",
+    "cost": 0,
+    "characteristic_modifiers": {
+      "safety": 2,
+      "warping": 1,
+      "aesthetics": -2
+    },
+    "description": "The lab is filled with water instead of air, making breathing and moving promptly and precisely difficult; some lab work (texts, Auram, or Ignem, say) may be impossible. Grants +1 to an Experimentation Specialization and +4 to an Aquam Specialization."
+  },
+  {
     "id": "labvf_lesser_illusion",
     "name": "Lesser Illusion",
     "type": "Flaw",
@@ -660,6 +1603,32 @@
     "description": "One of the lab's seeming merits is but an illusion -- take one Minor Virtue immediately (no time cost) to balance this Flaw, but its effects are illusory and negated completely. Grants +1 to an Imaginem Specialization."
   },
   {
+    "id": "labvf_lightless",
+    "name": "Lightless",
+    "type": "Flaw",
+    "category": "Supernatural",
+    "tier": "Minor",
+    "cost": -1,
+    "characteristic_modifiers": {
+      "upkeep": -1,
+      "warping": 1
+    },
+    "description": "The lab is totally dark and its contents can't be seen; the owner needs some other means of spatial perception to work normally. The Aesthetics score cannot exceed -1 (not applied automatically). Grants +1 to a Perdo or Imaginem Specialization."
+  },
+  {
+    "id": "labvf_living",
+    "name": "Living",
+    "type": "Flaw",
+    "category": "Supernatural",
+    "tier": "Minor",
+    "cost": -1,
+    "characteristic_modifiers": {
+      "safety": -2,
+      "warping": 2
+    },
+    "description": "The lab's structure is in some way alive -- inside a faerie tree, or in the belly of a slumbering beast. Grants 3 points on appropriate Art Specialization(s)."
+  },
+  {
     "id": "labvf_greater_illusion",
     "name": "Greater Illusion",
     "type": "Flaw",
@@ -672,6 +1641,20 @@
       "aesthetics": 2
     },
     "description": "One of the lab's major parts or aspects is but an illusion -- take one Major Virtue immediately (no time cost) to balance this Flaw, but its effects are illusory and negated completely. Grants +2 to an Imaginem Specialization."
+  },
+  {
+    "id": "labvf_mental_construct",
+    "name": "Mental Construct",
+    "type": "Flaw",
+    "category": "Supernatural",
+    "tier": "Major",
+    "cost": -3,
+    "characteristic_modifiers": {
+      "upkeep": -5,
+      "warping": 2,
+      "aesthetics": -2
+    },
+    "description": "The whole lab (or a large part of it) exists only in the magus's mind, created by a powerful Creo Mentem Ritual, perhaps. Its Size can't exceed the magus's Intelligence; it improves as usual, but disregard changes to Upkeep, Health, or Aesthetics. Without sophisticated magic it can't be used to bond a familiar, enchant items or Longevity Rituals, teach, or probably extract vis; inventing spells, Lab Texts and studying Arts work normally. Grants +3 to a Mentem Specialization."
   }
 ]
 }

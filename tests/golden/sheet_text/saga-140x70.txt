@@ -3,13 +3,13 @@
   Saga: Matrix
   Storyguide:
   Current date: Spring 1220
+  Books in play: All books
 
   Covenants: 1
   Characters: 2
   Laboratories: 1
   Books: 4
   Spells: 1
-
 
 
 

@@ -150,6 +150,9 @@ OPENERS: dict[str, Opener] = {
     ),
     "add lab room": Opener("laboratory", lambda ws: ws._add_named("section-lab-rooms")),
     "add lab diary entry": Opener("laboratory", lambda ws: ws._add_diary_entry()),
+    "add covenant diary entry": Opener(
+        "covenant", lambda ws: ws._add_covenant_diary_entry()
+    ),
 }
 
 

@@ -393,11 +393,11 @@
       }
     },
     "TabPane#tab-cov-diary": {
-      "active": "section-cov-info",
+      "active": "tab-cov-diary",
       "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "FieldsDialog: Edit Covenant",
+        "a": "FieldsDialog: Add a Diary Entry",
+        "A": "notice: No Diary entries to remove.",
+        "e": "notice: No Diary entries to edit.",
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",

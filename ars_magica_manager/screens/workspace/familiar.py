@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import Any
 
 from ... import possessions as pos
-from ... import storage
+from ... import sourcebooks, storage
 from ...markup import escape
 from ...models import (
     Ability,
@@ -235,7 +235,10 @@ class FamiliarActions(WorkspaceBase):
                 familiar.abilities.append(ability)
                 self._commit("tab-fam-abilities")
 
-        self.app.push_screen(AbilityPickerScreen(exclude_names), handle_result)
+        self.app.push_screen(
+            AbilityPickerScreen(exclude_names, books=sourcebooks.saga_books(self.saga)),
+            handle_result,
+        )
 
     def _edit_familiar_ability(self) -> None:
         """Edit the chosen Ability; with none chosen, ask which one."""

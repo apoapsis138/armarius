@@ -114,9 +114,9 @@ def test_familiars_are_offered_animal_and_magic_being_entries():
 
 
 def test_books_not_in_play_are_refused():
-    # STORY-711 will set the books from the saga; None means every book.
+    # None means every book; the core book is always in play.
     assert refusal(VirtueFlawChooser(), "vf_ablating") == ""
-    core = VirtueFlawChooser(books=frozenset({"DE"}))
+    core = VirtueFlawChooser(books=frozenset())
     assert refusal(core, "vf_common_sense") == ""
     assert refusal(core, "vf_ablating") == "book not in play"  # RoP:I
     # An entry citing several books is in play if any of them is.

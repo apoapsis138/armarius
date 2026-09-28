@@ -24,7 +24,7 @@ from textual.widgets import (
 from textual.widgets.option_list import Option
 
 from .. import books as bk
-from .. import catalog
+from .. import catalog, faith, sourcebooks
 from .. import economics as eco
 from .. import familiars as fam
 from .. import inhabitants as inh
@@ -87,7 +87,7 @@ from .fields import (
     _pairs,
     _year_born_field,
 )
-from .pickers import SpellChooserScreen
+from .pickers import SourcebookPickerScreen, SpellChooserScreen
 from .prompts import ConfirmScreen, _mastery_ability_dialog
 
 
@@ -604,6 +604,19 @@ def _saga_fields(saga: Saga | None) -> list[DialogField]:
             placeholder="A one-line premise for the saga",
         )
     )
+    if saga is not None:
+        fields.append(
+            DialogField(
+                "books_in_play",
+                "Books in play",
+                "picker",
+                saga.books_in_play,
+                placeholder=sourcebooks.summary(None),
+                picker=SourcebookPickerScreen,
+                display=sourcebooks.summary,
+                hint="Catalog pickers hide entries from books not in play.",
+            )
+        )
     return fields
 
 
@@ -761,8 +774,31 @@ def _character_info_fields(saga: Saga, character: Character) -> list[DialogField
         DialogField(
             "confidence_points", "Confidence Points", "int", b.confidence_points
         ),
+        DialogField(
+            "true_faith_score",
+            "True Faith Score",
+            "int",
+            b.true_faith_score,
+            hint="Only with the True Faith Virtue; 2+ is a Mythic Companion.",
+        ),
+        DialogField("faith_points", "Faith Points", "int", b.faith_points),
         DialogField("size", "Size", "int", b.size),
     ]
+
+
+def _character_info_dialog(saga: Saga, character: Character) -> FieldsDialog:
+    """Edit Character Info, warning (not refusing) as the True Faith Score
+    is typed if the character can't have it (faith.faith_warnings)."""
+
+    def live(values: dict[str, Any]) -> str:
+        score = values.get("true_faith_score") or 0
+        kind = values.get("type") or character.type
+        warnings = faith.faith_warnings(character, score, kind)
+        return "\n".join(f"[$text-error]{escape(w)}[/]" for w in warnings)
+
+    return FieldsDialog(
+        "Edit Character Info", _character_info_fields(saga, character), live=live
+    )
 
 
 _HANDEDNESS_OPTIONS: list[tuple[str, str]] = [

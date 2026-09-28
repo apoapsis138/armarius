@@ -53,3 +53,33 @@ def test_unknown_characteristic_is_rejected():
             cost=1,
             characteristic_modifiers={"not_a_real_characteristic": 1},
         )
+
+
+def test_lab_catalog_has_every_entry_in_the_book():
+    """Covenants, Chapter 9 lists 128 laboratory Virtues and Flaws (STORY-706)."""
+    assert len(catalog.load_lab_virtue_flaw_catalog()) == 128
+
+
+def test_book_order_tiers_and_costs_for_added_entries():
+    by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
+    palatial = by_id["labvf_palatial"]
+    assert (palatial.type, palatial.category, palatial.tier, palatial.cost) == (
+        "Virtue",
+        "Outfittings",
+        "Major",
+        3,
+    )
+    assert palatial.characteristic_modifiers == {
+        "general_quality": 1,
+        "upkeep": 3,
+        "health": 2,
+        "aesthetics": 4,
+    }
+    assert by_id["labvf_precarious"].repeatable is True
+    assert by_id["labvf_mental_construct"].characteristic_modifiers == {
+        "upkeep": -5,
+        "warping": 2,
+        "aesthetics": -2,
+    }
+    # Variable or conditional effects are left to manual adjustments.
+    assert by_id["labvf_studio"].characteristic_modifiers == {}

@@ -8,6 +8,34 @@ fix or behind-the-scenes improvement bumps PATCH. The version is set in
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 0.12.0 — 2026-09-28
+
+- Covenants, characters and laboratories can be deleted: select one in the
+  tree and press Ctrl+D. The confirmation says what else happens. Books,
+  and a covenant's characters and laboratories, become unassigned rather
+  than deleted; a laboratory loses its owner; a magus's Familiar goes with
+  them; a magus's invented spells that anyone else still uses move to the
+  saga's own spells.
+- The covenant Diary tab is built: a dated record of what happens to the
+  covenant, in 15 categories (Improvements, Purchases & Sales, Vis,
+  Library, Story Events and more), with optional pounds, vis and Loyalty
+  points. Its Loyalty points add into the Loyalty block's Actions and
+  Events. A Story Event can be Open or Resolved and linked to one of the
+  covenant's Boons or Hooks, counting the stories played against a Hook.
+- Choose which sourcebooks are in play for each saga, from Edit Saga. The
+  core book is always in play and every book is by default. Catalog pickers
+  hide entries from books not in play; F3 shows them anyway.
+- The laboratory Virtue/Flaw catalog now has all 128 entries from
+  Covenants (it had 53).
+- True Faith: the character sheet shows a True Faith Score and Faith
+  Points for a character with the True Faith Virtue (or any points), and
+  the Edit form warns if a Score doesn't fit the rules.
+- New Covenant, New Character, New Laboratory and Bind Familiar are offered
+  only on the saga and next to their own kind of record, so a sheet's key
+  bar shows what belongs there.
+- Corrected two House descriptions (Bonisagus, Tytalus) and the chapter
+  the laboratory Virtues and Flaws are cited from.
+
 ## 0.11.1 — 2026-09-28
 
 - Add and edit dialogs are now checked to fit a 120x45 terminal (the

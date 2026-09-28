@@ -183,6 +183,11 @@ class WorkspaceScreen(
             "section-inh-loyalty": _SectionOps(edit=self._edit_loyalty),
             "section-inh-population": _SectionOps(edit=self._edit_population),
             "section-inh-misc": _SectionOps(edit=self._edit_miscellaneous),
+            "tab-cov-diary": _SectionOps(
+                self._add_covenant_diary_entry,
+                self._remove_covenant_diary_entry,
+                self._edit_covenant_diary_entry,
+            ),
         }
         for spec in (
             _CHARACTER_TRAITS,

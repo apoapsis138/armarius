@@ -230,7 +230,7 @@
    Attributes  Inhabitants  Possessions  Economics  Library  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  The Diary tab isn't built yet -- coming in a future update.
+  (none recorded)
 
 
 
@@ -243,7 +243,7 @@
 
 
 
-
+    Select a Diary entry to see its details.
 
 
 

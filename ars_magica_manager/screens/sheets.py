@@ -23,7 +23,8 @@ from textual.widgets import (
 from textual.widgets._collapsible import CollapsibleTitle
 
 from .. import books as bk
-from .. import catalog
+from .. import catalog, faith
+from .. import covenant_diary as cov_diary
 from .. import economics as eco
 from .. import familiars as fam
 from .. import inhabitants as inh
@@ -1113,8 +1114,13 @@ class CharacterSheetView(SheetView):
             ("Type", character.type),
             ("Confidence Score", str(b.confidence_score)),
             ("Confidence Points", str(b.confidence_points)),
-            ("Size", str(b.size)),
         ]
+        if faith.shows_faith(character):
+            rows += [
+                ("True Faith Score", str(b.true_faith_score)),
+                ("Faith Points", str(b.faith_points)),
+            ]
+        rows.append(("Size", str(b.size)))
         return aligned(rows)
 
     def _biographical_left_text(self) -> str:
@@ -2223,7 +2229,7 @@ class CovenantSheetView(SheetView):
 
     A permanent info panel (not inside any tab) above six tabs mirroring
     the covenant record sheet: Attributes, Inhabitants, Possessions,
-    Economics, Library, Diary (still a placeholder).
+    Economics, Library, Diary.
 
     The panel's saga-level values (Saga, Storyguide, Current Season,
     Current Year) are inherited from the Saga and shown dimmed/read-only;
@@ -2296,8 +2302,21 @@ class CovenantSheetView(SheetView):
                     section_id="section-lib-books",
                     summary=True,
                 )
-            with TabPane("Diary", id="tab-cov-diary"):
-                yield Static(_tab_placeholder("Diary"))
+            with (
+                TabPane("Diary", id="tab-cov-diary"),
+                Vertical(classes="panel-body"),
+            ):
+                with VerticalScroll():
+                    yield self._list(
+                        "tab-cov-diary",
+                        lambda: cov_diary.rows(self.covenant.diary),
+                        id="cov-diary-list",
+                    )
+                yield self._panel(
+                    "tab-cov-diary",
+                    lambda: cov_diary.info_text(self.covenant, None),
+                    id="cov-diary-info",
+                )
 
     def _inhabitants_tab(self) -> ComposeResult:
         """Loyalty, the Inhabitants summary and Miscellaneous blocks, one
@@ -2515,6 +2534,9 @@ class CovenantSheetView(SheetView):
                 # Reputations and Living Conditions (Mundane) all feed the
                 # Loyalty block, which lives on a different section.
                 self._refresh_loyalty_text()
+            if section_id == "tab-cov-diary":
+                # The Diary's Loyalty points feed Actions and Events.
+                self._refresh_loyalty_text()
         except NoMatches:
             # The sheet is being replaced or torn down (a refresh from a
             # dialog callback can land after that) -- nothing left to update.
@@ -2593,10 +2615,20 @@ class CovenantSheetView(SheetView):
             "#cov-reputations-list", SelectableList
         ).selected_data_index
 
+    def selected_diary_entry(self) -> int | None:
+        """Index into covenant.diary of the chosen row, or None."""
+        return self.query_one("#cov-diary-list", SelectableList).selected_data_index
+
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
         """A Boon or Hook row was chosen: fill the details panel. (Reputations
         have no panel -- a name and a score have nothing more to show.)"""
         list_id = event.selectable_list.id or ""
+        if list_id == "cov-diary-list":
+            event.stop()
+            self.query_one("#cov-diary-info", Static).update(
+                cov_diary.info_text(self.covenant, event.data_index)
+            )
+            return
         if list_id.startswith("eco-") and list_id.endswith("-list"):
             event.stop()
             which = list_id[len("eco-") : -len("-list")]

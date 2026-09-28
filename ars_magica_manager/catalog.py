@@ -11,7 +11,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from . import DATA_DIR
+from . import DATA_DIR, sourcebooks
 from .models import (
     BOON_HOOK_DETAIL,
     COVENANT_BOON_HOOK_CATEGORIES,
@@ -186,11 +186,6 @@ def needs_the_gift(definition: VirtueFlawDef) -> bool:
     return "Hermetic" in types and definition.id not in HERMETIC_OR_OTHER_IDS
 
 
-def entry_books(definition: VirtueFlawDef) -> list[str]:
-    """The books an entry cites ("DE; RoP:F" -> ["DE", "RoP:F"])."""
-    return [book for book in definition.source.split("; ") if book]
-
-
 @dataclass(frozen=True)
 class VirtueFlawChooser:
     """Who is choosing from the character Virtue/Flaw catalog, for the
@@ -245,7 +240,7 @@ class VirtueFlawChooser:
             return "not for grogs: Hermetic"
         if not self.gifted and needs_the_gift(definition):
             return "needs The Gift"
-        if self.books is not None and not self.books & set(entry_books(definition)):
+        if not sourcebooks.in_play(definition.source, self.books):
             return "book not in play"
         return ""
 

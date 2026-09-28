@@ -231,13 +231,19 @@ CONTRACTS: dict[str, Contract] = {
     ),
     "edit character info": Contract(
         prefill={"Name": "Leandro", "Covenant": "cov1", "Assigned Laboratory": "lab1"},
-        edits={"Setting": "Rhine", "Size": "1", "Confidence Score": "2"},
+        edits={
+            "Setting": "Rhine",
+            "Size": "1",
+            "Confidence Score": "2",
+            "Faith Points": "3",
+        },
         saved=lambda s: (
             _char(s).background.setting,
             _char(s).background.size,
             _char(s).background.confidence_score,
+            _char(s).background.faith_points,
         ),
-        expected=("Rhine", 1, 2),
+        expected=("Rhine", 1, 2, 3),
         invalid={"Name": ""},
     ),
     "edit characteristics": Contract(
@@ -440,6 +446,25 @@ CONTRACTS: dict[str, Contract] = {
         ),
         expected=(1221, "Study", "Moved in", "Boxes"),
         invalid={"Year": "-"},
+    ),
+    "add covenant diary entry": Contract(
+        prefill={"Year": "1220", "Season": "Spring", "Name": ""},
+        edits={
+            "Year": "1221",
+            "Category": "Purchases & Sales",
+            "Name": "Bought a mill",
+            "Pounds": "-12",
+            "Loyalty points": "3",
+        },
+        saved=lambda s: (
+            _cov(s).diary[-1].year,
+            _cov(s).diary[-1].category,
+            _cov(s).diary[-1].name,
+            _cov(s).diary[-1].pounds,
+            _cov(s).diary[-1].loyalty,
+        ),
+        expected=(1221, "Purchases & Sales", "Bought a mill", -12.0, 3),
+        invalid={"Pounds": "lots"},
     ),
 }
 

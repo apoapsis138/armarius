@@ -32,9 +32,8 @@ Phase 1 (core tracker) is mostly built. You can create and browse sagas
 The app has light and dark Scriptorum themes; the one you pick is
 remembered.
 
-Not built yet: deleting characters, labs and covenants, the covenant Diary,
-enchanted devices, the Totals engine (Phase 2) and running seasons
-(Phase 3) — see DESIGN.md §7.
+Not built yet: enchanted devices, the Rules Engine (Phase 2) and running
+seasons (Phase 3) — see DESIGN.md §7.
 
 The current version is in the title bar; [CHANGELOG.md](CHANGELOG.md) lists
 what changed in each one.

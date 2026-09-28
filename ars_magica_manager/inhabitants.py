@@ -11,7 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from . import catalog, storage
+from . import catalog, covenant_diary, storage
 from .markup import aligned, escape, fit, markdown_inline
 from .models import (
     COMPANION_TYPES,
@@ -501,7 +501,7 @@ def total_modifiers(saga: Saga, covenant: Covenant) -> int:
         + specialists_loyalty(saga, covenant)
         + loyalty.familiarity
         + reputation_loyalty_penalty(covenant)
-        + loyalty.actions_and_events
+        + covenant_diary.actions_and_events(covenant)
         + loyalty.magical_influence
     )
 
@@ -704,11 +704,21 @@ def loyalty_right_text(saga: Saga, covenant: Covenant) -> str:
             ("Specialists", str(specialists_loyalty(saga, covenant))),
             ("Familiarity", str(loyalty.familiarity)),
             ("Reputation", str(reputation_loyalty_penalty(covenant))),
-            ("Actions and events", str(loyalty.actions_and_events)),
+            ("Actions and events", _actions_and_events_text(covenant)),
             ("Magical Influence", str(loyalty.magical_influence)),
         ]
     )
     return f"[b]Situational Modifiers for:[/]\n{body}"
+
+
+def _actions_and_events_text(covenant: Covenant) -> str:
+    """The total, and its two parts once the Diary has Loyalty points."""
+    diary = covenant_diary.diary_loyalty(covenant)
+    total = covenant_diary.actions_and_events(covenant)
+    if not diary:
+        return str(total)
+    manual = covenant.loyalty.actions_and_events
+    return f"{total}  [dim](Diary {diary:+d}, manual {manual:+d})[/]"
 
 
 def population_text(saga: Saga, covenant: Covenant) -> str:

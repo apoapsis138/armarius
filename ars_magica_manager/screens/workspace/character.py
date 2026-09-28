@@ -6,8 +6,8 @@ from __future__ import annotations
 from typing import Any
 
 from ... import possessions as pos
+from ... import sourcebooks, storage
 from ... import spells as spl
-from ... import storage
 from ...markup import escape
 from ...models import (
     Ability,
@@ -33,7 +33,7 @@ from ..forms import (
     MasteryEditScreen,
     _aging_fields,
     _biographical_fields,
-    _character_info_fields,
+    _character_info_dialog,
     _characteristics_fields,
     _characteristics_from,
     _fatigue_fields,
@@ -82,14 +82,13 @@ class CharacterActions(WorkspaceBase):
             background.setting = result["setting"]
             background.confidence_score = result["confidence_score"]
             background.confidence_points = result["confidence_points"]
+            background.true_faith_score = result["true_faith_score"]
+            background.faith_points = result["faith_points"]
             background.size = result["size"]
             self._commit("section-char-info", tree=True)
 
         self.app.push_screen(
-            FieldsDialog(
-                "Edit Character Info", _character_info_fields(self.saga, character)
-            ),
-            handle_result,
+            _character_info_dialog(self.saga, character), handle_result
         )
 
     def _edit_characteristics(self) -> None:
@@ -160,7 +159,10 @@ class CharacterActions(WorkspaceBase):
                 character.abilities.append(ability)
                 self._commit("tab-abilities")
 
-        self.app.push_screen(AbilityPickerScreen(exclude_names), handle_result)
+        self.app.push_screen(
+            AbilityPickerScreen(exclude_names, books=sourcebooks.saga_books(self.saga)),
+            handle_result,
+        )
 
     def _selected_ability(self) -> int | None:
         view = self._character_sheet_view

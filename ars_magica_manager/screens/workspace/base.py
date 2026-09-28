@@ -9,7 +9,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from dataclasses import field as dataclass_field
 from enum import StrEnum
-from functools import cached_property
+from functools import cached_property, partial
 from typing import Any, ClassVar, NamedTuple
 
 from textual.app import ComposeResult
@@ -30,7 +30,7 @@ from textual.widgets import (
 from textual.widgets.tree import TreeNode
 
 from ... import books as bk
-from ... import catalog, creation, storage
+from ... import catalog, creation, deletion, sourcebooks, storage
 from ... import economics as eco
 from ... import familiars as fam
 from ... import laboratories as lab_rules
@@ -191,6 +191,40 @@ class NodeKind(StrEnum):
     BOOK_GROUP = "book_group"
 
 
+#: Where in the tree each record can be created (STORY-110): the saga, and
+#: the covenant, group or record it would sit beside -- so a sheet's footer
+#: offers only what belongs there. A new character or laboratory defaults
+#: to the covenant on show. Binding a Familiar also needs a magus without
+#: one (and, on a character's node, that character to be a magus).
+_CREATE_PLACES: dict[str, frozenset[NodeKind]] = {
+    "create_covenant": frozenset({NodeKind.SAGA}),
+    "create_character": frozenset(
+        {
+            NodeKind.SAGA,
+            NodeKind.COVENANT,
+            NodeKind.CHARACTER_GROUP,
+            NodeKind.CHARACTER,
+        }
+    ),
+    "create_laboratory": frozenset(
+        {
+            NodeKind.SAGA,
+            NodeKind.COVENANT,
+            NodeKind.LABORATORY_GROUP,
+            NodeKind.LABORATORY,
+        }
+    ),
+    "create_familiar": frozenset(
+        {
+            NodeKind.SAGA,
+            NodeKind.COVENANT,
+            NodeKind.CHARACTER_GROUP,
+            NodeKind.CHARACTER,
+        }
+    ),
+}
+
+
 #: Widget ids of the workspace's two panes (also used in its DEFAULT_CSS).
 NAV_TREE_ID = "nav-tree"
 
@@ -220,6 +254,7 @@ class WorkspaceBase(Screen[None]):
         ("c", "create_character", "New Character"),
         ("l", "create_laboratory", "New Laboratory"),
         ("f", "create_familiar", "Bind Familiar"),
+        ("ctrl+d", "delete_record", "Delete"),
         ("a", "add", "Add"),
         ("A", "remove", "Remove"),
         ("e", "edit", "Edit"),
@@ -234,11 +269,11 @@ class WorkspaceBase(Screen[None]):
         ("q", "quit", "Quit"),
     ]
 
-    #: Covenant tabs that own their own a/A/e dispatch (keyed by tab id).
-    #: None: every covenant tab's content is in Collapsible sections, so with
-    #: nothing focused in one the dispatch falls back to the always-visible
-    #: info panel. See _active_section().
-    _COVENANT_DISPATCH_TABS: ClassVar[set[str]] = set()
+    #: Covenant tabs that own their own a/A/e dispatch (keyed by tab id):
+    #: the Diary, a flat pane with no sections. On any other tab, with
+    #: nothing focused in a section, the dispatch falls back to the
+    #: always-visible info panel. See _active_section().
+    _COVENANT_DISPATCH_TABS: ClassVar[set[str]] = {"tab-cov-diary"}
 
     #: Character tabs that own their own a/A/e dispatch (keyed by tab id),
     #: same idea as _COVENANT_DISPATCH_TABS -- "tab-abilities" is a flat
@@ -497,10 +532,11 @@ class WorkspaceBase(Screen[None]):
         self.refresh_bindings()
 
     def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
-        if action == "create_covenant":
-            return self.selected_kind == NodeKind.SAGA
-        # Characters and labs may be created anywhere: a selected covenant
-        # is just the default for the dialog's optional Covenant field.
+        if (
+            action in _CREATE_PLACES
+            and self.selected_kind not in _CREATE_PLACES[action]
+        ):
+            return False
         if action == "edit" and self.selected_kind == NodeKind.SAGA:
             return True
         if action in ("add", "remove", "edit", "restore"):
@@ -522,7 +558,14 @@ class WorkspaceBase(Screen[None]):
                 )
             return self._active_section() in ("section-vf-virtues", "section-vf-flaws")
         if action == "create_familiar":
+            character = self.selected_character
+            if self.selected_kind == NodeKind.CHARACTER and (
+                character is None or character.type != "magus"
+            ):
+                return False
             return bool(fam.unbonded_magi(self.saga))
+        if action == "delete_record":
+            return self._record_to_delete() is not None
         return True
 
     def _active_section(self) -> str | None:
@@ -641,6 +684,7 @@ class WorkspaceBase(Screen[None]):
         ]
         if saga.description:
             lines.append(f"Description: {escape(saga.description)}")
+        lines.append(f"Books in play: {sourcebooks.summary(saga.books_in_play)}")
         lines += [
             "",
             f"Covenants: {len(saga.covenants)}",
@@ -926,6 +970,63 @@ class WorkspaceBase(Screen[None]):
             handle_result,
         )
 
+    # -- deleting a covenant, character or laboratory --
+
+    def _record_to_delete(self) -> Covenant | Character | Laboratory | None:
+        """The record ctrl+d deletes: the covenant, character or laboratory
+        selected in the tree, if that's what's selected."""
+        return {
+            NodeKind.COVENANT: self.selected_covenant,
+            NodeKind.CHARACTER: self.selected_character,
+            NodeKind.LABORATORY: self.selected_laboratory,
+        }.get(self.selected_kind)
+
+    def action_delete_record(self) -> None:
+        """Delete the selected covenant, character or laboratory, after a
+        confirmation that says what happens to what it owns (see deletion)."""
+        record = self._record_to_delete()
+        if record is None:
+            return
+        saga = self.saga
+        if isinstance(record, Covenant):
+            consequences = deletion.covenant_consequences(saga, record)
+            delete: Callable[[], None] = partial(deletion.delete_covenant, saga, record)
+        elif isinstance(record, Character):
+            consequences = deletion.character_consequences(saga, record)
+            delete = partial(deletion.delete_character, saga, record)
+        else:
+            consequences = deletion.laboratory_consequences(saga, record)
+            delete = partial(deletion.delete_laboratory, saga, record)
+        message = f"Delete {escape(record.name)}?"
+        if consequences:
+            message += "\n\n" + "\n".join(map(escape, consequences))
+
+        async def handle_confirmed(confirmed: bool | None) -> None:
+            if not confirmed:
+                return
+            delete()
+            storage.save_saga(saga)
+            self._rebuild_tree()
+            await self._show_saga_root()
+
+        self.app.push_screen(ConfirmScreen(message), handle_confirmed)
+
+    async def _show_saga_root(self) -> None:
+        """Select the saga itself, in the tree and the detail pane."""
+        self.selected_kind = NodeKind.SAGA
+        self.selected_covenant = None
+        self.selected_character = None
+        self.selected_laboratory = None
+        self.selected_familiar = None
+        self._character_sheet_view = None
+        self._laboratory_sheet_view = None
+        self._covenant_sheet_view = None
+        self._familiar_sheet_view = None
+        tree = self._nav_tree()
+        tree.move_cursor(tree.root)
+        await self._show_saga_detail()
+        self.refresh_bindings()
+
     def _section_op(self, name: str) -> Callable[[], None] | None:
         """The active section's handler for `name` ("add", "remove", "edit"
         or "restore"), if it has one."""
@@ -963,6 +1064,7 @@ class WorkspaceBase(Screen[None]):
                 return
             for field, value in result.items():
                 setattr(self.saga, field, value)
+            self.saga.books_in_play = sourcebooks.normalized(self.saga.books_in_play)
             self._commit(tree=True)
             self._update_saga_clock()
             await self._show_saga_detail()
@@ -1099,16 +1201,19 @@ class WorkspaceBase(Screen[None]):
                 else:
                     self._refresh_character_section("section-vf-virtues")
 
+        books = sourcebooks.saga_books(self.saga)
         if isinstance(target, Laboratory):
             existing_ids = {vf.vf_id for vf in target.virtues_flaws}
-            self.app.push_screen(LabVirtueFlawPickerScreen(existing_ids), handle_result)
+            self.app.push_screen(
+                LabVirtueFlawPickerScreen(existing_ids, books=books), handle_result
+            )
             return
         # Opened on the side of the section it was launched from.
         flaws = self._active_section() in ("section-vf-flaws", "section-fam-vf-flaws")
         chooser = (
-            catalog.VirtueFlawChooser.for_familiar(target)
+            catalog.VirtueFlawChooser.for_familiar(target, books)
             if isinstance(target, Familiar)
-            else catalog.VirtueFlawChooser.for_character(target)
+            else catalog.VirtueFlawChooser.for_character(target, books)
         )
         self.app.push_screen(
             VirtueFlawPickerScreen(

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import Any, ClassVar
 
-from ... import catalog
+from ... import catalog, covenant_diary, sourcebooks
 from ... import economics as eco
 from ... import inhabitants as inh
 from ... import possessions as pos
@@ -20,9 +20,11 @@ from ...models import (
     LOYALTY_MONEY,
     Character,
     Covenant,
+    CovenantDiaryEntry,
     IncomeSource,
     VirtueFlawInstance,
     boon_hook_params,
+    new_instance_id,
 )
 from ..fields import (
     _EMPHASIS_HINT,
@@ -44,6 +46,7 @@ from ..pickers import (
 from ..prompts import (
     ConfirmScreen,
     _boon_hook_fields,
+    _covenant_diary_entry_dialog,
 )
 from .base import (
     _BOON_HOOK_SECTION,
@@ -635,7 +638,8 @@ class CovenantActions(WorkspaceBase):
             ),
             DialogField(
                 "actions_and_events",
-                "Actions and events",
+                "Actions and events (manual, on top of the Diary's "
+                f"{covenant_diary.diary_loyalty(covenant):+d})",
                 "int",
                 loyalty.actions_and_events,
             ),
@@ -788,11 +792,15 @@ class CovenantActions(WorkspaceBase):
 
         def handle_result(instance: VirtueFlawInstance | None) -> None:
             if instance is not None:
+                instance.id = instance.id or new_instance_id()
                 covenant.boons_hooks.append(instance)
                 self._commit(_BOON_HOOK_SECTION[kind])
 
         self.app.push_screen(
-            CovenantBoonHookPickerScreen(kind, attached_ids), handle_result
+            CovenantBoonHookPickerScreen(
+                kind, attached_ids, books=sourcebooks.saga_books(self.saga)
+            ),
+            handle_result,
         )
 
     def _selected_boon_hook(self, kind: str) -> int | None:
@@ -919,3 +927,91 @@ class CovenantActions(WorkspaceBase):
 
     def action_improve(self) -> None:
         self._improve_income_source()
+
+    # -- Covenant: Diary (STORY-406) --
+
+    def _cov_diary_selection(self) -> int | None:
+        view = self._covenant_sheet_view
+        return view.selected_diary_entry() if view is not None else None
+
+    def _cov_diary_labels(self, covenant: Covenant) -> tuple[list[int], list[str]]:
+        """The Diary rows in the order listed: their indexes into
+        covenant.diary, and their labels."""
+        rows = covenant_diary.rows(covenant.diary)
+        return [i for i, _ in rows if i is not None], [label for _, label in rows]
+
+    def _add_covenant_diary_entry(self) -> None:
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+
+        def handle_result(entry: CovenantDiaryEntry | None) -> None:
+            if entry is not None:
+                covenant.diary.append(entry)
+                self._commit("tab-cov-diary")
+
+        self.app.push_screen(
+            _covenant_diary_entry_dialog(
+                covenant,
+                self.saga.current_year,
+                default_season=self.saga.current_season,
+            ),
+            handle_result,
+        )
+
+    def _edit_covenant_diary_entry(self) -> None:
+        """Edit the chosen Diary entry; with none chosen, ask which one."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        order, labels = self._cov_diary_labels(covenant)
+
+        def edit(index: int) -> None:
+            def handle_result(entry: CovenantDiaryEntry | None) -> None:
+                if entry is not None:
+                    covenant.diary[index] = entry
+                    self._commit("tab-cov-diary")
+
+            self.app.push_screen(
+                _covenant_diary_entry_dialog(
+                    covenant, self.saga.current_year, existing=covenant.diary[index]
+                ),
+                handle_result,
+            )
+
+        selected = self._cov_diary_selection()
+        if selected is not None:
+            edit(selected)
+            return
+        self._chosen_or_pick(
+            None,
+            labels,
+            title="Edit which Diary Entry?",
+            empty="No Diary entries to edit.",
+            then=lambda position: edit(order[position]),
+        )
+
+    def _remove_covenant_diary_entry(self) -> None:
+        """Delete the chosen Diary entry (after confirming); with none
+        chosen, ask which one first."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        order, labels = self._cov_diary_labels(covenant)
+
+        def remove(index: int) -> None:
+            self._confirm_delete(
+                covenant.diary, index, covenant.diary[index].name, "tab-cov-diary"
+            )
+
+        selected = self._cov_diary_selection()
+        if selected is not None:
+            remove(selected)
+            return
+        self._chosen_or_pick(
+            None,
+            labels,
+            title="Remove a Diary Entry",
+            empty="No Diary entries to remove.",
+            then=lambda position: remove(order[position]),
+        )

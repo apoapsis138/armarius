@@ -1232,7 +1232,11 @@ async def test_bind_familiar_only_defaults_to_the_magus_on_show():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_character(pilot, app)
-        for node in (("laboratory", "lab1"), ("spells",), ("covenant", "cov1")):
+        # A laboratory or Spells doesn't offer 'f' at all (STORY-110).
+        for node in (("laboratory", "lab1"), ("spells",)):
+            await _select(pilot, app, node)
+            assert app.screen.check_action("create_familiar", ()) is False
+        for node in (("covenant", "cov1"), ("saga",)):
             await _select(pilot, app, node)
             await pilot.press("f")
             assert await wait_until(
@@ -1242,6 +1246,31 @@ async def test_bind_familiar_only_defaults_to_the_magus_on_show():
             assert value is Select.NULL, (node, value)
             await pilot.press("escape")
             await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+
+
+async def test_records_are_created_where_they_belong():
+    # STORY-110: n/c/l/f are offered on the saga and beside their own kind.
+    storage.save_saga(_sample_saga_with_covenant())
+    expected = {
+        ("saga",): {"n", "c", "l", "f"},
+        ("covenant", "cov1"): {"c", "l", "f"},
+        ("character", "char1"): {"c", "f"},
+        ("laboratory", "lab1"): {"l"},
+        ("spells",): set(),
+    }
+    keys = {
+        "n": "create_covenant",
+        "c": "create_character",
+        "l": "create_laboratory",
+        "f": "create_familiar",
+    }
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _open_workspace(pilot)
+        for node, offered in expected.items():
+            await _select(pilot, app, node)
+            enabled = {k for k, a in keys.items() if app.screen.check_action(a, ())}
+            assert enabled == offered, node
 
 
 async def test_overlapping_detail_swaps_leave_one_sheet():
@@ -1902,7 +1931,7 @@ async def test_lab_virtue_flaw_picker_search_filters_by_typed_text():
         assert isinstance(app.screen, LabVirtueFlawPickerScreen)
 
         picker_list = app.screen.query_one("#lab-vf-picker-list", ListView)
-        assert len(picker_list.children) > 30  # the full 53-entry lab catalog
+        assert len(picker_list.children) > 30  # the full 128-entry lab catalog
 
         await _wait_for_picker_ready(pilot, app)
 
@@ -4789,19 +4818,12 @@ async def test_opening_a_covenant_focuses_info_panel_so_edit_hotkey_works():
         await pilot.press("escape")
         await pilot.pause()
 
-        # Still available after switching to a tab with nothing to focus (Diary
-        # is still a placeholder).
+        # On the Diary tab 'e' edits a Diary entry (STORY-406); the covenant
+        # is still edited via the button.
         view = app.screen._covenant_sheet_view
         view.query_one(TabbedContent).active = "tab-cov-diary"
-        await pilot.pause()
-        assert app.screen._active_section() == "section-cov-info"
-        await pilot.press("e")
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Covenant")
-        await pilot.press("escape")
-        await pilot.pause()
-
-        # And via the button.
+        await wait_until(pilot, lambda: app.screen._active_section() == "tab-cov-diary")
+        assert app.screen._active_section() == "tab-cov-diary"
         view.query_one("#btn-cov-edit", Button).press()
         await pilot.pause()
         assert _is_form(app.screen, "Edit Covenant")
@@ -5701,9 +5723,9 @@ async def test_switching_back_to_the_attributes_tab_focuses_its_first_section():
         await pilot.pause()
 
         tabbed = view.query_one(TabbedContent)
-        tabbed.active = "tab-cov-diary"  # a flat tab (still a placeholder)
-        await pilot.pause()
-        assert app.screen._active_section() == "section-cov-info"  # fallback
+        tabbed.active = "tab-cov-diary"  # a flat tab: dispatches on its own id
+        await wait_until(pilot, lambda: app.screen._active_section() == "tab-cov-diary")
+        assert app.screen._active_section() == "tab-cov-diary"
 
         tabbed.active = "tab-cov-attributes"
         await wait_until(

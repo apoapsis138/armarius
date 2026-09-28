@@ -15,12 +15,19 @@ from textual.widgets import (
     Static,
 )
 
+from .. import catalog
 from ..arts import ARTS
+from ..markup import escape
 from ..models import (
+    COVENANT_DIARY_CATEGORIES,
     LAB_ACTIVITIES,
     LAB_SPECIALIZATIONS,
     SEASONS,
+    STORY_EVENT,
+    STORY_EVENT_STATUSES,
     Ability,
+    Covenant,
+    CovenantDiaryEntry,
     DiaryEntry,
     LabSpecialtyEntry,
     MasteryAbility,
@@ -333,6 +340,122 @@ def _diary_entry_dialog(
         build=lambda values: DiaryEntry(
             **{**values, "activity": values["activity"] or ""}
         ),
+    )
+
+
+def _covenant_diary_entry_dialog(
+    covenant: Covenant,
+    default_year: int,
+    existing: CovenantDiaryEntry | None = None,
+    default_season: str = SEASONS[0],
+) -> FieldsDialog[CovenantDiaryEntry]:
+    """Add or edit a covenant Diary entry (STORY-406). The amounts are
+    optional; Status, the linked Boon/Hook and Revisit are shown for Story
+    Events only (a hidden field is left out, so it falls back to blank)."""
+    by_id = catalog.load_covenant_boon_hook_catalog_by_id()
+    boons_hooks = [
+        (
+            escape(catalog.describe_boon_hook(bh, by_id))
+            + f" ({by_id[bh.vf_id].type if bh.vf_id in by_id else 'Boon/Hook'})",
+            bh.id,
+        )
+        for bh in covenant.boons_hooks
+        if bh.id
+    ]
+
+    def story(values: dict[str, Any]) -> bool:
+        return values.get("category") == STORY_EVENT
+
+    def build(values: dict[str, Any]) -> CovenantDiaryEntry:
+        values = {**values, "category": values["category"] or ""}
+        values["vis_art"] = values.get("vis_art") or ""
+        if story(values):
+            values["status"] = values.get("status") or STORY_EVENT_STATUSES[0]
+        return CovenantDiaryEntry(**values)
+
+    return FieldsDialog(
+        "Add a Diary Entry" if existing is None else "Edit a Diary Entry",
+        [
+            DialogField("year", "Year", "int", _attr(existing, "year", default_year)),
+            DialogField(
+                "season",
+                "Season",
+                "select",
+                _attr(existing, "season", default_season),
+                options=_pairs(SEASONS),
+            ),
+            DialogField(
+                "category",
+                "Category",
+                "select",
+                _attr(existing, "category", "") or None,
+                options=_pairs(COVENANT_DIARY_CATEGORIES),
+                allow_blank=True,
+            ),
+            DialogField(
+                "name", "Name", "text", _attr(existing, "name", ""), required=True
+            ),
+            DialogField(
+                "status",
+                "Status",
+                "select",
+                _attr(existing, "status", "") or STORY_EVENT_STATUSES[0],
+                options=_pairs(STORY_EVENT_STATUSES),
+                show_if=story,
+            ),
+            DialogField(
+                "boon_hook_id",
+                "Linked Boon/Hook",
+                "select",
+                _attr(existing, "boon_hook_id", None),
+                options=boons_hooks,
+                allow_blank=True,
+                placeholder="(none)",
+                show_if=story,
+            ),
+            DialogField(
+                "revisit_year",
+                "Revisit in year",
+                "optint",
+                _attr(existing, "revisit_year", None),
+                show_if=story,
+            ),
+            DialogField(
+                "pounds",
+                "Pounds (+ received, - spent)",
+                "optfloat",
+                _attr(existing, "pounds", None),
+            ),
+            DialogField(
+                "vis_pawns",
+                "Vis pawns (+ gained, - spent)",
+                "optint",
+                _attr(existing, "vis_pawns", None),
+            ),
+            DialogField(
+                "vis_art",
+                "Vis Art",
+                "select",
+                _attr(existing, "vis_art", "") or None,
+                options=_pairs(ARTS),
+                allow_blank=True,
+            ),
+            DialogField(
+                "loyalty",
+                "Loyalty points",
+                "optint",
+                _attr(existing, "loyalty", None),
+                hint="Added into the Loyalty block's Actions and Events.",
+            ),
+            DialogField(
+                "details",
+                "Details",
+                "area",
+                _attr(existing, "details", ""),
+                hint=_EMPHASIS_HINT,
+            ),
+        ],
+        build=build,
     )
 
 

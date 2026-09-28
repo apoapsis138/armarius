@@ -93,7 +93,7 @@ def known_fields(cls: type, data: dict[str, Any]) -> dict[str, Any]:
 
 SEASONS: tuple[str, ...] = ("Spring", "Summer", "Autumn", "Winter")
 
-#: The 8 "Laboratory Characteristics" (ArM5 Chapter 8) -- unlike human
+#: The 8 "Laboratory Characteristics" (ArM5 Covenants, Chapter 9) -- unlike human
 #: Characteristics these start at 0 and are cheap to change. Each name here
 #: doubles as a LabCharacteristics field name and a
 #: LabVirtueFlawDef.characteristic_modifiers key.
@@ -247,7 +247,7 @@ class VirtueFlawDef:
 
 @dataclass
 class LabVirtueFlawDef:
-    """A catalog entry for a Laboratory Virtue/Flaw (ArM5 Chapter 8) --
+    """A catalog entry for a Laboratory Virtue/Flaw (ArM5 Covenants, Chapter 9) --
     shared reference data, not per-saga. Distinct from VirtueFlawDef:
     labs have their own separate Virtues & Flaws list, not the character
     one (a lab and a magus are different "characters" with different
@@ -276,6 +276,8 @@ class LabVirtueFlawDef:
     repeatable: bool = False
     characteristic_modifiers: dict[str, int] = field(default_factory=dict)
     description: str = ""
+    #: The book(s) it's from (sourcebooks); every entry so far is Covenants'.
+    source: str = "Covenants"
 
     def __post_init__(self) -> None:
         _validate_vf_tier_cost(self.id, self.tier, self.cost)
@@ -404,6 +406,9 @@ class AbilityDef:
     category: str
     parameters: list[str] = field(default_factory=list)
     description: str = ""
+    #: The book(s) it's from (sourcebooks); every entry so far is the core
+    #: book's.
+    source: str = "DE"
 
     def __post_init__(self) -> None:
         if self.category not in ABILITY_CATEGORIES:
@@ -426,6 +431,8 @@ class HouseDef:
     id: str
     name: str
     description: str = ""
+    #: The book it's from (sourcebooks): the core book.
+    source: str = "DE"
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> HouseDef:
@@ -853,6 +860,8 @@ class LabFeatureDef:
     name: str
     description: str
     specializations: tuple[str, ...]
+    #: The book(s) it's from (sourcebooks); every entry so far is Covenants'.
+    source: str = "Covenants"
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> LabFeatureDef:
@@ -863,7 +872,11 @@ class LabFeatureDef:
         if unknown:
             raise ValueError(f"Unknown Specializations {unknown} for {data['id']!r}")
         return cls(
-            data["id"], data["name"], data["description"], tuple(specializations)
+            data["id"],
+            data["name"],
+            data["description"],
+            tuple(specializations),
+            data.get("source", "Covenants"),
         )
 
 
@@ -1067,6 +1080,10 @@ class Background:
     size: int = 0
     confidence_score: int = 0
     confidence_points: int = 0
+    #: True Faith (faith.py): a Score only with the True Faith Virtue;
+    #: anyone may hold Faith Points.
+    true_faith_score: int = 0
+    faith_points: int = 0
     birth_name: str = ""
     year_born: int | None = None
     race_nationality: str = ""
@@ -1648,8 +1665,9 @@ class Loyalty:
     inhabitants.py) from the fields below plus data read from elsewhere on the
     sheet (magi's Gift, Equipment/Money's own point tables, the covenant's
     Living Conditions (Mundane), Specialists' role bonuses, Reputations).
-    Familiarity, Actions and Events, and Magical Influence stay free-form
-    (meant to come from Diary entries once that tab exists)."""
+    Familiarity and Magical Influence stay free-form. Actions and Events
+    also adds the covenant Diary's Loyalty points (covenant_diary.py);
+    `actions_and_events` is the manual adjustment on top."""
 
     governance: str = ""  # Type of Governance; only used if no governance Boon
     equipment: str = LOYALTY_EQUIPMENT_DEFAULT
@@ -1740,6 +1758,53 @@ class Economics:
         return cls(**d)
 
 
+#: A Covenant Diary entry's categories (STORY-406), in the spec's order.
+COVENANT_DIARY_CATEGORIES: tuple[str, ...] = (
+    "Improvements",
+    "Purchases & Sales",
+    "Vis",
+    "Library",
+    "Inhabitants",
+    "Membership",
+    "Council",
+    "Laboratories",
+    "Loyalty Event",
+    "Year-end Accounts",
+    "Defence & Magic",
+    "Politics",
+    "Favours",
+    "Covenant Season",
+    "Story Event",
+)
+#: The category whose entries have a Status, a linked Boon/Hook and a
+#: Revisit year.
+STORY_EVENT = "Story Event"
+#: A Story Event's Status.
+STORY_EVENT_STATUSES: tuple[str, ...] = ("Open", "Resolved")
+
+
+@dataclass
+class CovenantDiaryEntry:
+    """One entry on the covenant's Diary tab (STORY-406): what happened and
+    when, with optional amounts. Only `loyalty` changes the sheet (it adds
+    into the Loyalty block's Actions and Events); pounds and vis are a
+    record. `status`, `boon_hook_id` (a VirtueFlawInstance.id among the
+    covenant's Boons/Hooks) and `revisit_year` are for Story Events."""
+
+    year: int
+    season: str = "Spring"  # one of SEASONS
+    name: str = ""
+    details: str = ""
+    category: str = ""  # one of COVENANT_DIARY_CATEGORIES, or ""
+    pounds: float | None = None  # + received, - spent
+    vis_pawns: int | None = None  # + gained, - spent
+    vis_art: str = ""  # one of ARTS, or ""
+    loyalty: int | None = None
+    status: str = ""  # Story Events: one of STORY_EVENT_STATUSES
+    boon_hook_id: str | None = None
+    revisit_year: int | None = None
+
+
 @dataclass
 class Covenant:
     id: str
@@ -1772,12 +1837,21 @@ class Covenant:
     possessions: list[Possession] = field(default_factory=list)
     #: The Economics tab (see Economics).
     economics: Economics = field(default_factory=Economics)
+    #: The Diary tab (see CovenantDiaryEntry), in the order entered.
+    diary: list[CovenantDiaryEntry] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Covenant:
         d = dict(data)
         d["economics"] = Economics.from_dict(d.get("economics") or {})
         d["boons_hooks"] = [VirtueFlawInstance(**bh) for bh in d.get("boons_hooks", [])]
+        # Diary Story Events link to a Boon/Hook by its instance id.
+        for bh in d["boons_hooks"]:
+            bh.id = bh.id or new_instance_id()
+        d["diary"] = [
+            CovenantDiaryEntry(**known_fields(CovenantDiaryEntry, e))
+            for e in d.get("diary", [])
+        ]
         d["reputations"] = [ScoredTrait(**r) for r in d.get("reputations", [])]
         d["inhabitants"] = [
             Inhabitant(**known_fields(Inhabitant, i)) for i in d.get("inhabitants", [])
@@ -1846,6 +1920,10 @@ class Saga:
     books: list[Book] = field(default_factory=list)
     spells: list[Spell] = field(default_factory=list)
     familiars: list[Familiar] = field(default_factory=list)
+    #: The supplements in play (sourcebooks.SUPPLEMENTS abbreviations); None,
+    #: the default and what older saves load as, means every book. The core
+    #: book is always in play. See sourcebooks.
+    books_in_play: list[str] | None = None
     #: The app version that last saved this saga (storage.save_saga sets it;
     #: "" for a save older than versioning), for upgrading old saves later.
     app_version: str = ""
