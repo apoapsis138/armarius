@@ -8,6 +8,28 @@ fix or behind-the-scenes improvement bumps PATCH. The version is set in
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 0.11.0 — 2026-09-28
+
+- Adding a Virtue or Flaw now opens on the side you added it from: the
+  Virtues section lists Virtues, the Flaws section lists Flaws. F2 switches
+  to the other side or to both.
+- The picker has Type and Tier filters beside the search box, and the
+  search also matches each entry's one-line summary (names that match come
+  first). The chosen entry's summary and source book show under the list.
+- The picker hides what the character can't take: Hermetic Virtues and
+  Flaws without The Gift (a magus counts as having it); for grogs, Major
+  entries, Hermetic ones and The Gift; and entries meant for faeries,
+  magic beings, corrupted beasts or animals. F3 (or "Show ineligible")
+  lists them anyway, each marked with the reason, and they can still be
+  taken if the troupe allows it.
+- New character type: Mythic Companion. Only Mythic Companions are offered
+  the Mythic Companion Virtues (Blood of Heroes, Nephilim, Spirit Votary,
+  Zahid...); otherwise they count as companions, including on the
+  covenant's Inhabitants tab. A companion's Edit form can switch it between
+  Companion and Mythic Companion.
+- A familiar's picker offers the animal and magic-being Qualities and
+  Inferiorities as well as the ordinary Virtues and Flaws.
+
 ## 0.10.0 — 2026-09-28
 
 - The character Virtues & Flaws catalog has been checked entry by entry

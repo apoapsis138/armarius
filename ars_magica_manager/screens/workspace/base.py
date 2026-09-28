@@ -1099,13 +1099,25 @@ class WorkspaceBase(Screen[None]):
                 else:
                     self._refresh_character_section("section-vf-virtues")
 
-        if is_lab:
+        if isinstance(target, Laboratory):
             existing_ids = {vf.vf_id for vf in target.virtues_flaws}
             self.app.push_screen(LabVirtueFlawPickerScreen(existing_ids), handle_result)
-        else:
-            self.app.push_screen(
-                VirtueFlawPickerScreen(target.virtues_flaws), handle_result
-            )
+            return
+        # Opened on the side of the section it was launched from.
+        flaws = self._active_section() in ("section-vf-flaws", "section-fam-vf-flaws")
+        chooser = (
+            catalog.VirtueFlawChooser.for_familiar(target)
+            if isinstance(target, Familiar)
+            else catalog.VirtueFlawChooser.for_character(target)
+        )
+        self.app.push_screen(
+            VirtueFlawPickerScreen(
+                target.virtues_flaws,
+                side="Flaw" if flaws else "Virtue",
+                chooser=chooser,
+            ),
+            handle_result,
+        )
 
     def action_remove_virtue_flaw(self) -> None:
         """Delete a Virtue/Flaw of the character, laboratory or familiar on

@@ -581,6 +581,9 @@
       "category": "Special",
       "tier": "Free",
       "cost": 0,
+      "audience": [
+        "mythic companion"
+      ],
       "source": "HoH:TL",
       "summary": "UnGifted Mythic Companion: take Heroic Virtues/Flaws, each Flaw point buys two Virtue points, plus one free Minor heritage Virtue.",
       "description": "You are descended from a great hero of legend or a powerfully supernatural being. You do not have The Gift, and taking this Virtue means that you are a Mythic Companion. _ You should have some idea of the character's heritage, linking your background to the story of some legendary ancient or medieval hero. You need not be descended from that figure, but you should give some thought as to how it has been reborn or made manifest in your character, and consider what you will be expected to accomplish because of it. This will help describe your personality and your heroic powers, though the specifics may remain a mystery to the character if you wish. You may take Heroic Virtues and Flaws, and each point of Flaws that you take during character creation balances two points of Virtues instead of one. You also receive one free Minor Virtue that describes your supernatural heritage. You must take the Heroic Personality Flaw (described below), and you must normally belong to House Mercere. For most hero characters, this means taking Redcap, and that leaves you with nine more points of Flaws for as many as eighteen points of Virtues. As a member of House Mercere, you are considered a full member of the Order of Hermes and are treated with special respect by your House. Other magi may think less of you, just as they might not think much of Redcaps, but you have much more chance of getting away with voting at Tribunal than a normal unGifted Redcap. Nevertheless, you are normally expected to abstain, out of respect for those with The Gift. _ This sort of character is very rare, and much more powerful than other unGifted Redcaps, similar in potential to Hermetic magi. For game balance, the storyguide may rule that you cannot play both a magus and a character with Blood of Heroes, and veto heroic characters that seem like they would be overpowered or implausible in your saga. Like The Gift, Blood of Heroes is a free Virtue. It is not possible to have both Blood of Heroes and The Gift; magi can gain access to Heroic Virtues and Flaws by taking Mythic Blood. Also like The Gift, Blood of Heroes is not available to grogs; this Virtue makes a character too important to be a grog."
@@ -1254,6 +1257,9 @@
       "category": "Mythic Companion",
       "tier": "Free",
       "cost": 0,
+      "audience": [
+        "mythic companion"
+      ],
       "source": "DE",
       "summary": "No cost; grants the Demonic Might or Demonic Powers Minor Virtue free (player's choice).",
       "description": "This Virtue has no cost, and can only be taken for a Mythic Companion who has been born with demonic parents. The character gets the Demonic Might or Demonic Powers (player's choice) Minor Virtue free."
@@ -1287,6 +1293,9 @@
       "category": "Special",
       "tier": "Free",
       "cost": 0,
+      "audience": [
+        "mythic companion"
+      ],
       "source": "RoP:I",
       "summary": "No-cost Mythic Companion Virtue: free Minor Virtue; 10 Flaw points buy up to 20 Virtue points, half on Infernal Supernatural Virtues.",
       "description": "Everyone has heard the stories of the man who prays and prays to God for aid, but receives no miracle, and finally in desperation turns to the Devil, who appears before his eyes and promises him his heart's desire in exchange for his immortal soul. In Mythic Europe this sort of arrangement is quite well known among students of the occult, and many think that such a deal can be struck anywhere, by anyone, for demons are eager to teach the maleficia to those willing to damn themselves in exchange for power. Such is the might of the Infernal realm, that it can make even a lowly peasant into a mythic figure, the rival of magi and the saints. To become a diabolist, a character must only participate in a short ceremony with a demon: he must declare his belief in Satan, formally renounce God, and seal the relationship with an oath. This aligns the character with the power of the Infernal, and essentially transforms him into a Mythic Companion. Over time, he will gain Infernal blessings from the forces of Hell in exchange for his service, and this demonic aid is usually represented by gaining Virtues and losing Flaws. This process can happen through play, but it is also possible to do it during character creation, by taking twice as many points of Virtues as Flaws, as all Mythic Companions do. Required Virtues: A diabolist must take the following Virtue: Diabolist (Free, Special Virtue) He must also take one of the following Virtues, which he receives at no cost: Arcane Lore (Minor, General) Student of (Infernal) (Minor, General) Wise One (Minor, Social Status) If the character has taken the Major Supernatural Virtue Demon Blood or the Major Story Flaw Diabolic Past, he may substitute another Minor Virtue in place of this one. This leaves him with ten points of Flaws to spend, which balance out as many as 20 more points of Virtues. Half of these Virtues should be spent on Supernatural Virtues that are granted by the Infernal, as this is how the character gains his Mythic Companion status. These are usually the Methods and Powers associated with the maleficia, or Virtues like Infernal Blessing that come from close association with an infernalist tradition."
@@ -1857,6 +1866,9 @@
       "category": "Mythic Companion",
       "tier": "Free",
       "cost": 0,
+      "audience": [
+        "mythic companion"
+      ],
       "source": "DE",
       "summary": "Makes the character a Faerie Doctor Mythic Companion and grants Dowsing free.",
       "description": "This Virtue makes you a Faerie Doctor and a Mythic Companion (page 63). You get the Dowsing Virtue for free."
@@ -3641,6 +3653,9 @@
       ],
       "tier": "Free",
       "cost": 0,
+      "audience": [
+        "mythic companion"
+      ],
       "source": "RoP:D",
       "summary": "Marks a kabbalist Mythic Companion; favored Abilities Ceremony, Gematria, Kabbalah, Merkavah; compatible with all other Social Status Virtues and Flaws.",
       "description": "This is a special Mythic Companion Social Status Virtue and must be taken by all kabbalists. It is compatible with all other Social Status Virtues and Flaws."
@@ -4057,6 +4072,9 @@
       "category": "Special",
       "tier": "Free",
       "cost": 0,
+      "audience": [
+        "mythic companion"
+      ],
       "source": "A&A",
       "summary": "2 Virtue points per Flaw point (up to 10 Flaw points); one free Minor Virtue: Affinity/Puissant Craft or Profession, Free Expression or Inspirational.",
       "description": "Players may play a maestro, selecting the character as a Mythic Companion, similar to the variety of Mythic Companions that exist in other Ars Magica supplements (see, for example, Realms of Power: The Infernal, pages 81 - 82). The character must take the special Virtue: Maestro, which then allows him to have twice as many points of Virtues as he has points of Flaws. This special Virtue also allows the character to select one the following Minor Virtues at no cost: Affinity with Craft or Profession Ability, Free Expression, Inspirational, or Puissant Craft or Profession Ability. The chosen Craft or Profession Ability must be the primary medium of the artist's art. The player may then purchase up to 10 points of Flaws for the character, with each point spent allowing him to purchase two points of Virtues. It is possible, then, for a maestro character to have 21 points of Virtues and 10 points of Flaws. The player must decide which of the four realms holds sway over the character, and the character is considered to be affiliated with that realm. Maestros are allowed to select Hermetic Virtues and Flaws that seem appropriate. Maestros may not have The Gift, and their magical affiliation with a realm does not affect mundanes like The Gift does. Maestros may also choose Heroic Virtues and Flaws (Houses of Hermes: True Lineages pages 103 - 109). A maestro character must have one of the following Hermetic Flaws: Susceptibility to Divine Power, Susceptibility to Faerie Power, or Susceptibility to Infernal Power. Like a magus character, a maestro can learn any Ability during character creation, and is not limited to choices based on her social station alone. Their precocious natures allow maestros to learn skills outside their social networks. Some background explanation might be necessary to explain how the character learned what she did, however, and this should be a colorful exercise in creativity for the maestro's player and troupe."
@@ -4799,6 +4817,9 @@
       "category": "Mythic Companion",
       "tier": "Free",
       "cost": 0,
+      "audience": [
+        "mythic companion"
+      ],
       "source": "DE",
       "summary": "Makes you one of the Nephilim, a Mythic Companion; grants Strong Angelic Heritage free.",
       "description": "You are one of the Nephilim, and a Mythic Companion (page 63). You receive the Strong Angelic Heritage Virtue free."
@@ -5991,6 +6012,9 @@
       "category": "Mythic Companion",
       "tier": "Free",
       "cost": 0,
+      "audience": [
+        "mythic companion"
+      ],
       "source": "DE",
       "summary": "Makes you a Spirit Votary Mythic Companion: free Second Sight, and two points of Virtues per point of Flaw.",
       "description": "Taking this Virtue at character creation makes the character a Spirit Votary, a kind of Mythic Companion (page 63). This Virtue grants the Second Sight Virtue for free, and allows the character to have two points of Virtues for every point of Flaw."
@@ -6365,6 +6389,9 @@
       "category": "Special",
       "tier": "Free",
       "cost": 0,
+      "audience": [
+        "mythic companion"
+      ],
       "source": "RoP:I",
       "summary": "No-cost Mythic Companion Virtue for goetic sorcerers: 2 Virtue points per Flaw point, plus Summoning and a free Minor Virtue.",
       "description": "The first sorcerers were most likely the Sho'elim 'ov -- literally \"spirit borrowers\" or \"spirit consulters.\" They were Jewish summoners and necromancers versed in the occult, who are even mentioned in several chapters of the Bible. The men and woman of this sinister profession dwelt on the perimeters of society, and were often depicted as villains and monsters in Jewish fables, because their ability to contact and speak with the dead was expressly forbidden by the holy laws of the Torah. Their dark arts spread to other cultures, however, and by 1220 a sorcerer is not exclusively a sho'el 'ov. Characters versed in the secrets of sorcery may be found in many different areas of the world, though they are rarely admired or respected, and are usually considered outsiders and pariahs wherever they go. In most cases they live as hermits, looked after by the many ghostly servants they command, and those who can see spirits might witness these shapes gathering around the master in a sort of spectral pack. They often nurse their envy and pride, scorning the people who do not have their gift or their curse, but they are too proud of their Arts to forgo them. Sometimes children are born with a knack for commanding and summoning spirits that they increase through practice or Infernal tutelage, but most summoners learn from a master, and are usually bound to his service until he dies. Many of these summoners have a ghostly warder that acts as their familiar spirit, though its concern for them is not necessarily mutual. It is often the case that the spirit is bound to the summoner against its will, and in many cases this spirit is the summoner's former master. In any case, the summoner may often learn additional secrets about the spirit world from this ghostly mentor. Required Virtues: A Summoner must begin with the following Virtues: Summoner (Free - Special Virtue) Summoning (Major, Goetic Art) In addition, the character receives one of these Minor Virtues at no cost: Arcane Lore (Minor, General) Student of (Infernal) (Minor, General) Wise One (Minor, Social Status) If the character takes the Major Flaw Diabolic Past or the Major Virtue Demon Blood, he may substitute another Minor Virtue in place of this one."
@@ -7105,6 +7132,9 @@
       "category": "Mythic Companion",
       "tier": "Free",
       "cost": 0,
+      "audience": [
+        "mythic companion"
+      ],
       "source": "RoP:D",
       "summary": "Marks an ascetic Sufi Mythic Companion; leaves 10 Flaw and 10 Virtue points; 90 xp minimum in Meditation, Understanding, Second Sight, etc.",
       "description": "As stated above, the zahids are exceptionally ascetic Sufis. They seek, through an ascetic, pious life, to achieve a closer experience of God. Many zahids are shaykhs -- leaders of Sufi tariqas although this is not exclusively the case. Through their pious contemplation, they gain the ability to work miraculous acts, karamas, and those who do associate with tariqas often have the ability to synchronize the efforts of their followers, enabling them to gain deep insights into the nature of the Divine. Required Virtues and Flaws: All zahids must begin with the free Virtue Zahid, a Mythic Companion Virtue. A zahid must also take the following Virtues: True Faith, Major General Meditation, Major Supernatural (Method) Understanding, Major Supernatural (Power) Second Sight, Minor Supernatural This leaves a zahid with ten points of Flaws and ten points of Virtues remaining. Note that in order to balance the character's Virtues and Flaws, the character will have to take, at minimum, five points of Flaws. A zahid must take one Social Status, normally one of the Minor Virtues Wise One or 'Alim, if living in Muslim lands, or the Major Flaw Outsider (Muslim), if living elsewhere. A zahid who is a shaykh should take the Minor Supernatural Virtue Ceremony and the Major Story Flaw Dependent, representing a Sufi tariqa. Minimum Ability Scores: Zahid characters must spend 90 experience points on the following Abilities. While these include one Arcane and two Academic Knowledges, a zahid must take appropriate Virtues in order to gain access to other such Abilities: Concentration 1 Dominion Lore 1 Islamic Law 1 Meditation 3 Second Sight 2 Theology: Islam 2 Understanding 2 The character's remaining experience points may be spent as the player sees fit."

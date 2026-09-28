@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Callable, Mapping, Sequence
+from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -16,7 +17,9 @@ from .models import (
     COVENANT_BOON_HOOK_CATEGORIES,
     AbilityDef,
     ArmorDef,
+    Character,
     CovenantBoonHookDef,
+    Familiar,
     HouseDef,
     LabFeatureDef,
     LabVirtueFlawDef,
@@ -145,6 +148,106 @@ def virtue_flaw_repeat_refusal(
             times = "once" if limit == 1 else f"{limit} times"
             return f"Already taken: {label} (at most {times} for the same choice)."
     return ""
+
+
+#: The Gift, and the infernal False Gift that has all its benefits.
+GIFT_IDS: frozenset[str] = frozenset({"vf_the_gift", "vf_the_false_gift"})
+
+#: Hermetic entries the book also lets an unGifted character take, as a
+#: General or Supernatural one ("Hermetic or General", "Supernatural or
+#: Hermetic"; Inoffensive to (Beings) needs "The Gift, or Magical Air").
+HERMETIC_OR_OTHER_IDS: frozenset[str] = frozenset(
+    {
+        "vf_inoffensive_to_being",
+        "vf_offensive_to_being",
+        "vf_unbearable_to_being",
+        "vf_faerie_metamorphosis",
+    }
+)
+
+#: The audiences a familiar is offered (a magical animal, with Magic Might).
+FAMILIAR_AUDIENCES: frozenset[str] = frozenset({"animal", "magic being"})
+
+#: Each audience as named in an "only for ..." note.
+_AUDIENCE_PLURALS: dict[str, str] = {
+    "faerie": "faeries",
+    "magic being": "magic beings",
+    "corrupted beast": "corrupted beasts",
+    "animal": "animals",
+    "mythic companion": "Mythic Companions",
+}
+
+
+def needs_the_gift(definition: VirtueFlawDef) -> bool:
+    """Whether only a Gifted character may take `definition`: a Hermetic
+    Virtue/Flaw (any of its printed types), unless the book also allows it
+    as a non-Hermetic one (HERMETIC_OR_OTHER_IDS)."""
+    types = (definition.category, *definition.extra_categories)
+    return "Hermetic" in types and definition.id not in HERMETIC_OR_OTHER_IDS
+
+
+def entry_books(definition: VirtueFlawDef) -> list[str]:
+    """The books an entry cites ("DE; RoP:F" -> ["DE", "RoP:F"])."""
+    return [book for book in definition.source.split("; ") if book]
+
+
+@dataclass(frozen=True)
+class VirtueFlawChooser:
+    """Who is choosing from the character Virtue/Flaw catalog, for the
+    picker's structural eligibility rules (STORY-710); prose prerequisites
+    ("requires Demonic Blood") are left to the description.
+
+    `audiences` are the VIRTUE_FLAW_AUDIENCES this chooser belongs to (an
+    entry with an audience is only for those); `books` the sourcebooks in
+    play (STORY-711), or None for every book.
+    """
+
+    grog: bool = False
+    gifted: bool = False
+    audiences: frozenset[str] = frozenset()
+    books: frozenset[str] | None = None
+
+    @classmethod
+    def for_character(
+        cls, character: Character, books: frozenset[str] | None = None
+    ) -> VirtueFlawChooser:
+        """A magus counts as Gifted before The Gift is added (the book
+        makes every magus take it); anyone else once they hold it."""
+        held = {vf.vf_id for vf in character.virtues_flaws}
+        mythic = character.type == "mythic companion"
+        return cls(
+            grog=character.type == "grog",
+            gifted=character.type == "magus" or bool(held & GIFT_IDS),
+            audiences=frozenset({"mythic companion"}) if mythic else frozenset(),
+            books=books,
+        )
+
+    @classmethod
+    def for_familiar(
+        cls, familiar: Familiar, books: frozenset[str] | None = None
+    ) -> VirtueFlawChooser:
+        held = {vf.vf_id for vf in familiar.virtues_flaws}
+        return cls(
+            gifted=bool(held & GIFT_IDS), audiences=FAMILIAR_AUDIENCES, books=books
+        )
+
+    def refusal(self, definition: VirtueFlawDef) -> str:
+        """Why this chooser can't take `definition`, as a short note ("needs
+        The Gift"), or "" if it can."""
+        if definition.audience and not self.audiences & set(definition.audience):
+            names = [_AUDIENCE_PLURALS[who] for who in definition.audience]
+            return "only for " + " or ".join(names)
+        if self.grog and definition.id in GIFT_IDS:
+            return "not for grogs"
+        if self.grog and definition.tier == "Major":
+            return "not for grogs: Major"
+        if self.grog and needs_the_gift(definition):
+            return "not for grogs: Hermetic"
+        if not self.gifted and needs_the_gift(definition):
+            return "needs The Gift"
+        if self.books is not None and not self.books & set(entry_books(definition)):
+            return "book not in play"
+        return ""
 
 
 def load_ability_catalog(path: Path = ABILITY_CATALOG_PATH) -> list[AbilityDef]:

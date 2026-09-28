@@ -14,6 +14,7 @@ from typing import Any
 from . import catalog, storage
 from .markup import aligned, escape, fit, markdown_inline
 from .models import (
+    COMPANION_TYPES,
     GOVERNANCE_STYLE_IDS,
     INHABITANT_KINDS,
     LOYALTY_EQUIPMENT,
@@ -271,6 +272,12 @@ class InhabitantEntry:
         return self.character is not None
 
 
+def character_kind(character: Character) -> str:
+    """The Inhabitants list a character's sheet puts it on: its type, with a
+    Mythic Companion listed among the Companions."""
+    return "companion" if character.type in COMPANION_TYPES else character.type
+
+
 def entries_for_kind(
     saga: Saga, covenant: Covenant, kind: str
 ) -> list[InhabitantEntry]:
@@ -279,7 +286,10 @@ def entries_for_kind(
     entries: list[InhabitantEntry] = []
     if kind in AUTO_KINDS:
         for character in saga.characters:
-            if character.type == kind and character.covenant_id == covenant.id:
+            if (
+                character_kind(character) == kind
+                and character.covenant_id == covenant.id
+            ):
                 record = next(
                     (
                         r
@@ -312,7 +322,7 @@ def departed_entries_for_kind(
         return []
     entries: list[InhabitantEntry] = []
     for character in saga.characters:
-        if character.type != kind or character.covenant_id != covenant.id:
+        if character_kind(character) != kind or character.covenant_id != covenant.id:
             continue
         record = next(
             (

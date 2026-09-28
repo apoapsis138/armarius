@@ -73,6 +73,23 @@ def test_magi_and_companions_are_listed_from_character_sheets():
     assert [e.name for e in inh.entries_for_kind(saga, cov, "companion")] == ["Alys"]
 
 
+def test_a_mythic_companion_is_listed_among_the_companions():
+    saga, cov = _saga()
+    saga.characters.append(
+        Character(
+            id="myth1", name="Brunhild", type="mythic companion", covenant_id="cov1"
+        )
+    )
+    companions = inh.entries_for_kind(saga, cov, "companion")
+    assert [e.name for e in companions] == ["Alys", "Brunhild"]
+    cov.inhabitants.append(
+        Inhabitant(id="d1", kind="companion", character_id="myth1", departed=True)
+    )
+    assert [e.name for e in inh.entries_for_kind(saga, cov, "companion")] == ["Alys"]
+    departed = inh.departed_entries_for_kind(saga, cov, "companion")
+    assert [e.name for e in departed] == ["Brunhild"]
+
+
 def test_manual_npc_magi_follow_the_listed_characters():
     saga, cov = _saga()
     cov.inhabitants.append(

@@ -533,7 +533,7 @@
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
-        "v": "VirtueFlawPickerScreen: Add a Virtue or Flaw",
+        "v": "VirtueFlawPickerScreen: Add a Virtue",
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
       }
     },
@@ -546,7 +546,7 @@
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
-        "v": "VirtueFlawPickerScreen: Add a Virtue or Flaw",
+        "v": "VirtueFlawPickerScreen: Add a Flaw",
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
       }
     },
@@ -862,7 +862,7 @@
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
-        "v": "VirtueFlawPickerScreen: Add a Virtue or Flaw",
+        "v": "VirtueFlawPickerScreen: Add a Virtue",
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
       }
     },
@@ -875,7 +875,7 @@
         "r": "(disabled)",
         "i": "(disabled)",
         "I": "(disabled)",
-        "v": "VirtueFlawPickerScreen: Add a Virtue or Flaw",
+        "v": "VirtueFlawPickerScreen: Add a Flaw",
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
       }
     },

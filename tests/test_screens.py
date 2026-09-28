@@ -184,6 +184,181 @@ async def test_vf_picker_offers_repeatable_entries_and_refuses_a_same_choice_rep
         assert "vf_affinity_with_art" not in {e.id for e in picker._entries}
 
 
+def _vf_listed(picker: VirtueFlawPickerScreen) -> list:
+    """The catalog entries a Virtue/Flaw picker lists, in order."""
+    list_view = picker.query_one("#vf-picker-list", ListView)
+    return [
+        picker._by_item_id[item.id]
+        for item in list_view.children
+        if item.id in picker._by_item_id
+    ]
+
+
+def _vf_item_label(picker: VirtueFlawPickerScreen, vf_id: str) -> str:
+    item = picker.query_one(f"#vf-{vf_id}")
+    return str(item.query_one(Label).render())
+
+
+async def test_vf_picker_opens_on_the_side_of_its_section():
+    # STORY-710: the Flaws section's picker lists Flaws, the Virtues one Virtues.
+    storage.save_saga(_saga_with_bare_character())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _select_character(pilot, app)
+        for section, side, title in (
+            ("section-vf-flaws", "Flaw", "Add a Flaw"),
+            ("section-vf-virtues", "Virtue", "Add a Virtue"),
+        ):
+            await _open_section(pilot, app, section)
+            await pilot.press("v")
+            await _wait_for_screen(pilot, app, VirtueFlawPickerScreen)
+            await _wait_for_picker_ready(pilot, app)
+            picker = app.screen
+            assert str(picker.query_one("#picker-title", Label).render()) == title
+            assert {entry.side for entry in _vf_listed(picker)} == {side}
+            await pilot.press("escape")
+            await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+
+
+async def test_vf_picker_f2_cycles_virtues_flaws_and_both():
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        picker = VirtueFlawPickerScreen(side="Virtue")
+        app.push_screen(picker)
+        await _wait_for_picker_ready(pilot, app)
+        title = picker.query_one("#picker-title", Label)
+
+        def sides() -> set[str]:
+            return {entry.side for entry in _vf_listed(picker)}
+
+        assert sides() == {"Virtue"}
+        for expected, text in (
+            ({"Flaw"}, "Add a Flaw"),
+            ({"Virtue", "Flaw"}, "Add a Virtue or Flaw"),
+            ({"Virtue"}, "Add a Virtue"),
+        ):
+            await pilot.press("f2")
+            assert await wait_until(
+                pilot, lambda expected=expected: sides() == expected, timeout=10
+            )
+            assert str(title.render()) == text
+
+
+async def test_vf_picker_type_and_tier_filters_combine_with_the_search():
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        picker = VirtueFlawPickerScreen()  # both sides
+        app.push_screen(picker)
+        await _wait_for_picker_ready(pilot, app)
+
+        def hermetic_major(entry) -> bool:
+            types = (entry.category, *entry.extra_categories)
+            return "Hermetic" in types and entry.tier == "Major"
+
+        picker.query_one("#vf-picker-type", Select).value = "Hermetic"
+        picker.query_one("#vf-picker-tier", Select).value = "Major"
+        assert await wait_until(
+            pilot,
+            lambda: _vf_listed(picker) and all(map(hermetic_major, _vf_listed(picker))),
+            timeout=10,
+        )
+        both = _vf_listed(picker)
+        assert {entry.side for entry in both} == {"Virtue", "Flaw"}
+        # "Hermetic, Tainted" counts as Hermetic.
+        assert any(entry.id == "vf_hermetic_sorcery" for entry in both)
+
+        picker.query_one("#picker-search", Input).value = "spell"
+        assert await wait_until(
+            pilot, lambda: 0 < len(_vf_listed(picker)) < len(both), timeout=10
+        )
+        for entry in _vf_listed(picker):
+            assert hermetic_major(entry)
+            assert "spell" in picker._search_text(entry).lower()
+
+
+async def test_vf_picker_search_matches_summaries_after_names():
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        picker = VirtueFlawPickerScreen()
+        app.push_screen(picker)
+        await _wait_for_picker_ready(pilot, app)
+        picker.query_one("#picker-search", Input).value = "demon"
+        assert await wait_until(
+            pilot, lambda: 0 < len(_vf_listed(picker)) < 100, timeout=10
+        )
+        listed = _vf_listed(picker)
+        in_name = ["demon" in entry.name.lower() for entry in listed]
+        assert in_name == sorted(in_name, reverse=True)  # names first
+        assert any(in_name) and not all(in_name)
+        # The chosen row's summary shows under the list.
+        details = str(picker.query_one("#vf-picker-details", Static).render())
+        assert listed[0].summary[:30] in details.replace("\n", " ")
+
+
+async def test_vf_picker_hides_ineligible_entries_and_f3_marks_them():
+    companion = Character(id="c", name="Alys", type="companion")
+    chooser = catalog.VirtueFlawChooser.for_character(companion)
+    app = ArsMagicaManagerApp()
+    results: list[VirtueFlawInstance | None] = []
+    async with app.run_test(size=(140, 60)) as pilot:
+        picker = VirtueFlawPickerScreen(side="Virtue", chooser=chooser)
+        app.push_screen(picker, results.append)
+        await _wait_for_picker_ready(pilot, app)
+        status = picker.query_one("#vf-picker-status", Static)
+        hermetic = "vf_adept_laboratory_student"
+        assert hermetic not in {entry.id for entry in _vf_listed(picker)}
+        assert "ineligible hidden (F3 shows them)" in str(status.render())
+
+        await pilot.press("f3")
+        assert await wait_until(
+            pilot,
+            lambda: hermetic in {entry.id for entry in _vf_listed(picker)},
+            timeout=10,
+        )
+        assert "(needs The Gift)" in _vf_item_label(picker, hermetic)
+        assert "(only for faeries)" in _vf_item_label(picker, "vf_faerie_beast")
+        assert "(" not in _vf_item_label(picker, "vf_common_sense")
+        assert "ineligible marked" in str(status.render())
+        # Shown, an ineligible entry can still be taken: the troupe decides.
+        await _select_vf_picker_entry(pilot, app, hermetic)
+        assert await wait_until(pilot, lambda: bool(results))
+        assert results == [VirtueFlawInstance(hermetic)]
+
+
+async def test_familiar_vf_picker_offers_animal_and_magic_being_entries():
+    storage.save_saga(_saga_with_familiar())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_familiar(pilot, app)
+        await _open_familiar_section(pilot, app, "section-fam-vf-virtues")
+        await pilot.press("v")
+        await _wait_for_screen(pilot, app, VirtueFlawPickerScreen)
+        await _wait_for_picker_ready(pilot, app)
+        listed = {entry.id for entry in _vf_listed(app.screen)}
+        assert {"vf_aggressive", "vf_gift_of_speech", "vf_common_sense"} <= listed
+        assert not {"vf_faerie_beast", "vf_nephilim", "vf_adept_laboratory_student"} & (
+            listed
+        )
+
+
+async def test_a_companion_can_become_a_mythic_companion():
+    saga = _saga_with_bare_character()
+    saga.characters[0].type = "companion"
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _select_character(pilot, app)
+        app.screen._edit_character_info()
+        await _wait_for_screen(pilot, app, FieldsDialog)
+        field = app.screen.query_one("#fld-type", Select)
+        assert field.value == "companion"
+        field.value = "mythic companion"
+        await pilot.pause()
+        app.screen.query_one("#btn-save", Button).press()
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+    assert storage.load_saga("test_saga").characters[0].type == "mythic companion"
+
+
 async def _wait_until_active(pilot, app, section_id: str) -> None:
     """Wait for `section_id` to be what a/A/e dispatch to, and fail clearly
     if it never becomes so."""
@@ -1648,15 +1823,20 @@ async def test_virtue_flaw_picker_search_filters_by_typed_text():
         assert isinstance(app.screen, VirtueFlawPickerScreen)
 
         picker_list = app.screen.query_one("#vf-picker-list", ListView)
-        assert len(picker_list.children) > 100  # the full 1,100-entry catalog
-
         await _wait_for_picker_ready(pilot, app)
+        assert len(picker_list.children) > 100  # the catalog's Virtues
 
+        # The name's match first, then the Virtues whose summary mentions it.
         app.screen.query_one("#picker-search", Input).value = "common sense"
-        await wait_until(pilot, lambda: len(picker_list.children) == 1)
+        await wait_until(
+            pilot,
+            lambda: 1 < len(picker_list.children) < 10,
+            timeout=10.0,  # a refill is slow under a parallel run
+        )
 
         item_ids = [item.id for item in picker_list.children]
-        assert item_ids == ["vf-vf_common_sense"]
+        assert item_ids[0] == "vf-vf_common_sense"
+        assert len(item_ids) > 1
 
 
 async def test_virtue_flaw_picker_search_shows_no_matches_message():

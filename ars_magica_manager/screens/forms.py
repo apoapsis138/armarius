@@ -35,6 +35,7 @@ from ..arts import ART_ABBREVIATIONS, ARTS, FORMS, TECHNIQUES
 from ..markup import escape
 from ..models import (
     BOOK_TYPES,
+    COMPANION_TYPES,
     CORD_SCORE_COSTS,
     COVENANT_ROLES,
     CRAFT_FIELDS,
@@ -625,6 +626,7 @@ def _covenant_create_fields() -> list[DialogField]:
 _CHARACTER_TYPES: list[tuple[str, str]] = [
     ("Magus", "magus"),
     ("Companion", "companion"),
+    ("Mythic Companion", "mythic companion"),
     ("Grog", "grog"),
 ]
 
@@ -713,11 +715,24 @@ def _characteristics_from(values: dict[str, Any]) -> Characteristics:
 
 
 def _character_info_fields(saga: Saga, character: Character) -> list[DialogField]:
-    """The top panel's Edit form: name, covenant, a magus's laboratory, and
-    the Background figures shown there."""
+    """The top panel's Edit form: name, a companion's type (Companion or
+    Mythic Companion), covenant, a magus's laboratory, and the Background
+    figures shown there."""
     b = character.background
     fields = [
         DialogField("name", "Name", "text", character.name, required=True),
+    ]
+    if character.type in COMPANION_TYPES:
+        fields.append(
+            DialogField(
+                "type",
+                "Type",
+                "select",
+                character.type,
+                options=[t for t in _CHARACTER_TYPES if t[1] in COMPANION_TYPES],
+            )
+        )
+    fields += [
         DialogField(
             "covenant_id",
             "Covenant",

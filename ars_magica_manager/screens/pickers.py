@@ -10,15 +10,18 @@ from pathlib import Path
 from typing import Any, ClassVar
 
 from textual.app import ComposeResult
+from textual.binding import Binding, BindingType
 from textual.containers import Horizontal, Vertical
 from textual.events import Key
 from textual.widgets import (
     Button,
+    Checkbox,
     DirectoryTree,
     Input,
     Label,
     ListItem,
     ListView,
+    Select,
     Static,
 )
 
@@ -26,6 +29,7 @@ from .. import catalog
 from .. import spells as spl
 from ..markup import escape
 from ..models import (
+    VIRTUE_FLAW_TIER_COST,
     Ability,
     AbilityDef,
     CovenantBoonHookDef,
@@ -72,6 +76,8 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
     (kept distinct per picker, not shared, so existing tests that query e.g.
     "#vf-picker-list" by id keep working) and the `_load_entries`/
     `_search_text`/`_label_for`/`_item_id`/`_on_entry_selected` hooks below.
+    A picker with filters beside the search box also overrides
+    `_compose_filters`/`_compose_below_list`/`_candidates`/`_match`/`_filled`.
     Generic over the catalog entry type and the dialog's result.
     """
 
@@ -122,7 +128,9 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
         with Vertical(id="picker-dialog"):
             yield Label(self.picker_title, id="picker-title")
             yield Input(placeholder=self.search_placeholder, id="picker-search")
+            yield from self._compose_filters()
             yield ListView(id=self.LIST_VIEW_ID)
+            yield from self._compose_below_list()
             yield Button("Cancel", id="btn-cancel")
 
     async def on_mount(self) -> None:
@@ -147,6 +155,27 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
     def _on_entry_selected(self, entry: EntryT) -> None:
         raise NotImplementedError
 
+    # -- optional hooks, for a picker with filters --
+
+    def _compose_filters(self) -> ComposeResult:
+        """Widgets between the search box and the list."""
+        yield from ()
+
+    def _compose_below_list(self) -> ComposeResult:
+        """Widgets between the list and the Cancel button."""
+        yield from ()
+
+    def _candidates(self) -> list[EntryT]:
+        """The entries the filters let through, before the search text."""
+        return self._entries
+
+    def _match(self, entries: list[EntryT], needle: str) -> list[EntryT]:
+        """The `entries` the (lower-cased) search text matches, in order."""
+        return [e for e in entries if needle in self._search_text(e).lower()]
+
+    def _filled(self, shown: list[EntryT]) -> None:
+        """Called with the entries listed after each refill."""
+
     # -- filtering / list rendering --
 
     async def _render_list(self, query: str) -> None:
@@ -162,17 +191,21 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
         self._by_item_id = {}
 
         if not self._entries:
+            self._filled([])
             await list_view.append(ListItem(Label(self.empty_message)))
             return
 
         needle = query.strip().lower()
-        matches = (
-            [e for e in self._entries if needle in self._search_text(e).lower()]
-            if needle
-            else self._entries
-        )
+        candidates = self._candidates()
+        matches = self._match(candidates, needle) if needle else candidates
+        self._filled(matches)
         if not matches:
-            await list_view.append(ListItem(Label(f"(no matches for {query!r})")))
+            message = (
+                f"(no matches for {escape(repr(query))})"
+                if needle
+                else "(nothing matches the filters)"
+            )
+            await list_view.append(ListItem(Label(message)))
             return
 
         items = []
@@ -192,10 +225,9 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
         # the same way arrowing down to it and pressing Enter would.
         if event.input.id != "picker-search":
             return
-        list_view = self.query_one(f"#{self.LIST_VIEW_ID}", ListView)
-        if list_view.index is None:
-            return
-        await self._activate(list_view.children[list_view.index])
+        item = self.query_one(f"#{self.LIST_VIEW_ID}", ListView).highlighted_child
+        if item is not None:
+            await self._activate(item)
 
     def on_key(self, event: Key) -> None:
         # Input has no "down" binding of its own, so it would otherwise
@@ -229,12 +261,49 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
         self._on_entry_selected(entry)
 
 
+#: The picker's "Show" choices: one side of the ledger, or both.
+_VF_SIDES: list[tuple[str, str]] = [
+    ("Virtues", "Virtue"),
+    ("Flaws", "Flaw"),
+    ("Virtues & Flaws", "both"),
+]
+_VF_SIDE_TITLES: dict[str, str] = {
+    "Virtue": "Add a Virtue",
+    "Flaw": "Add a Flaw",
+    "both": "Add a Virtue or Flaw",
+}
+#: The core book's Virtue/Flaw types, listed first in the Type filter.
+_VF_CORE_TYPES: tuple[str, ...] = (
+    "General",
+    "Hermetic",
+    "Supernatural",
+    "Social Status",
+    "Personality",
+    "Story",
+    "Tainted",
+)
+
+
+def _vf_types(entries: Sequence[VirtueFlawDef]) -> list[str]:
+    """Every printed type among `entries`: the core book's in its order,
+    then the supplements' alphabetically."""
+    printed = {t for e in entries for t in (e.category, *e.extra_categories)}
+    core = [t for t in _VF_CORE_TYPES if t in printed]
+    return core + sorted(printed - set(core))
+
+
 class VirtueFlawPickerScreen(
     SearchablePickerScreen[VirtueFlawDef, VirtueFlawInstance | None]
 ):
     """Pick a character Virtue/Flaw from the catalog, prompting for
     parameters if needed. Dismisses with the new instance, or None if
     cancelled.
+
+    Opened on one side (Virtues or Flaws, from the section it was launched
+    from), with a filter bar: that side or both (F2 cycles), a printed type,
+    a tier, and whether to list the entries `chooser` can't take (F3), each
+    marked with why (catalog.VirtueFlawChooser). The search also matches
+    each entry's summary, which shows under the list for the chosen row.
 
     Laboratories have their own, separate Virtue/Flaw catalog and picker
     -- see LabVirtueFlawPickerScreen -- since a lab's Virtues & Flaws
@@ -243,32 +312,219 @@ class VirtueFlawPickerScreen(
     and Free/Minor/Major tiers.
     """
 
-    PICKER_TITLE: ClassVar[str] = "Add a Virtue or Flaw"
     EMPTY_MESSAGE: ClassVar[str] = "(no more Virtues/Flaws available)"
-    SEARCH_PLACEHOLDER: ClassVar[str] = "Search Virtues & Flaws..."
+    SEARCH_PLACEHOLDER: ClassVar[str] = "Search names, types and summaries..."
     LIST_VIEW_ID: ClassVar[str] = "vf-picker-list"
 
-    def __init__(self, taken: Sequence[VirtueFlawInstance] = ()) -> None:
-        super().__init__()
+    BINDINGS: ClassVar[list[BindingType]] = [
+        Binding("f2", "cycle_side", "Virtues/Flaws/Both"),
+        Binding("f3", "toggle_ineligible", "Show ineligible"),
+    ]
+
+    DEFAULT_CSS = """
+    VirtueFlawPickerScreen #picker-dialog {
+        width: 100;
+        max-height: 40;
+    }
+
+    VirtueFlawPickerScreen #picker-search {
+        margin-bottom: 0;
+    }
+
+    VirtueFlawPickerScreen #vf-picker-filters {
+        width: 1fr;
+        height: 1;
+        margin: 1 0 0 0;
+    }
+
+    VirtueFlawPickerScreen #vf-picker-filters Select {
+        margin-right: 2;
+    }
+
+    VirtueFlawPickerScreen #vf-picker-side {
+        width: 19;
+    }
+
+    VirtueFlawPickerScreen #vf-picker-type {
+        width: 28;
+    }
+
+    VirtueFlawPickerScreen #vf-picker-tier {
+        width: 14;
+    }
+
+    VirtueFlawPickerScreen #vf-picker-status {
+        color: $text-muted;
+        margin-bottom: 1;
+    }
+
+    VirtueFlawPickerScreen #vf-picker-details {
+        height: 3;
+        margin-top: 1;
+    }
+    """
+
+    def __init__(
+        self,
+        taken: Sequence[VirtueFlawInstance] = (),
+        *,
+        side: str = "both",
+        chooser: catalog.VirtueFlawChooser | None = None,
+    ) -> None:
+        super().__init__(_VF_SIDE_TITLES[side])
         #: The character's Virtues & Flaws: an entry already taken is only
         #: offered again if it is repeatable (catalog.virtue_flaw_offerable),
         #: and a repeat is refused past its limits once its parameters are
         #: known (catalog.virtue_flaw_repeat_refusal).
         self._taken = list(taken)
+        #: Who is choosing; None: nobody in particular, everything is offered.
+        self._chooser = chooser
+        self._catalog = catalog.load_virtue_flaw_catalog()
+        #: Why the chooser can't take an entry, by id ("" if it can).
+        self._refusals: dict[str, str] = {}
+        # The filters: "Virtue", "Flaw" or "both"; a printed type and a
+        # tier (None: any); and whether ineligible entries are listed.
+        self._side = side
+        self._type: str | None = None
+        self._tier: str | None = None
+        self._show_ineligible = False
+        self._hidden = 0
+
+    # -- the filter bar --
+
+    def _compose_filters(self) -> ComposeResult:
+        with Horizontal(id="vf-picker-filters"):
+            yield Select(
+                _VF_SIDES,
+                value=self._side,
+                allow_blank=False,
+                id="vf-picker-side",
+                compact=True,
+            )
+            yield Select(
+                [(t, t) for t in _vf_types(self._catalog)],
+                prompt="Type: any",
+                id="vf-picker-type",
+                compact=True,
+            )
+            yield Select(
+                [(tier, tier) for tier in VIRTUE_FLAW_TIER_COST],
+                prompt="Tier: any",
+                id="vf-picker-tier",
+                compact=True,
+            )
+            yield Checkbox("Show ineligible", id="vf-picker-ineligible", compact=True)
+        yield Static(id="vf-picker-status")
+
+    def _compose_below_list(self) -> ComposeResult:
+        yield Static(id="vf-picker-details")
+
+    def action_cycle_side(self) -> None:
+        sides = [value for _, value in _VF_SIDES]
+        following = sides[(sides.index(self._side) + 1) % len(sides)]
+        self.query_one("#vf-picker-side", Select).value = following
+
+    def action_toggle_ineligible(self) -> None:
+        self.query_one("#vf-picker-ineligible", Checkbox).toggle()
+
+    async def on_select_changed(self, event: Select.Changed) -> None:
+        event.stop()
+        value = event.value if isinstance(event.value, str) else None
+        before = (self._side, self._type, self._tier)
+        if event.select.id == "vf-picker-side" and value is not None:
+            self._side = value
+            self.query_one("#picker-title", Label).update(_VF_SIDE_TITLES[value])
+        elif event.select.id == "vf-picker-type":
+            self._type = value
+        elif event.select.id == "vf-picker-tier":
+            self._tier = value
+        if (self._side, self._type, self._tier) != before:
+            await self._refilter()
+
+    async def on_checkbox_changed(self, event: Checkbox.Changed) -> None:
+        event.stop()
+        self._show_ineligible = event.value
+        await self._refilter()
+
+    async def _refilter(self) -> None:
+        if self.is_mounted:
+            await self._render_list(self.query_one("#picker-search", Input).value)
+
+    # -- the searchable list --
 
     def _load_entries(self) -> list[VirtueFlawDef]:
-        return [
+        entries = [
             entry
-            for entry in catalog.load_virtue_flaw_catalog()
+            for entry in self._catalog
             if catalog.virtue_flaw_offerable(entry, self._taken)
         ]
+        chooser = self._chooser
+        self._refusals = {
+            entry.id: chooser.refusal(entry) if chooser else "" for entry in entries
+        }
+        return entries
+
+    def _candidates(self) -> list[VirtueFlawDef]:
+        listed = [
+            entry
+            for entry in self._entries
+            if self._side in ("both", entry.side)
+            and (
+                self._type is None
+                or self._type in (entry.category, *entry.extra_categories)
+            )
+            and self._tier in (None, entry.tier)
+        ]
+        eligible = [entry for entry in listed if not self._refusals[entry.id]]
+        self._hidden = len(listed) - len(eligible)
+        return listed if self._show_ineligible else eligible
+
+    def _match(self, entries: list[VirtueFlawDef], needle: str) -> list[VirtueFlawDef]:
+        """Entries whose name matches come first, then the rest (their type
+        or summary matches)."""
+        matches = super()._match(entries, needle)
+        return sorted(matches, key=lambda entry: needle not in entry.name.lower())
+
+    def _filled(self, shown: list[VirtueFlawDef]) -> None:
+        if self._show_ineligible:
+            hidden = f"{self._hidden} ineligible marked (F3 hides them)"
+        else:
+            hidden = f"{self._hidden} ineligible hidden (F3 shows them)"
+        self.query_one("#vf-picker-status", Static).update(
+            f"{len(shown)} listed, {hidden}.  F2: Virtues / Flaws / Both"
+        )
+        self._show_details(shown[0] if shown else None)
+
+    def on_list_view_highlighted(self, event: ListView.Highlighted) -> None:
+        item = event.item
+        self._show_details(
+            self._by_item_id.get(item.id) if item is not None and item.id else None
+        )
+
+    def _show_details(self, entry: VirtueFlawDef | None) -> None:
+        """The chosen entry's summary, source and (if any) why it's
+        ineligible, under the list."""
+        text = ""
+        if entry is not None:
+            facts = [f"Source: {entry.source}"]
+            if refusal := self._refusals.get(entry.id):
+                facts.append(f"Ineligible: {refusal}")
+            text = f"{escape(entry.summary)}\n[dim]{escape('   '.join(facts))}[/]"
+        self.query_one("#vf-picker-details", Static).update(text)
 
     def _search_text(self, entry: VirtueFlawDef) -> str:
-        return f"{entry.name} {entry.type} {entry.category} {entry.tier}"
+        return (
+            f"{entry.name} {entry.type} {entry.category_label} {entry.tier} "
+            f"{entry.summary}"
+        )
 
     def _label_for(self, entry: VirtueFlawDef) -> str:
         needs = f"  (needs: {', '.join(entry.parameters)})" if entry.parameters else ""
-        return f"{entry.name}  [{entry.type}, {entry.tier}, cost {entry.cost}]{needs}"
+        facts = f"{entry.tier} {entry.type}, {entry.category_label}"
+        label = escape(f"{entry.name}  [{facts}]{needs}")
+        if refusal := self._refusals.get(entry.id):
+            label += f"  [dim]({escape(refusal)})[/]"
+        return label
 
     def _item_id(self, entry: VirtueFlawDef) -> str:
         return f"{_VIRTUE_FLAW_ITEM_ID_PREFIX}{entry.id}"

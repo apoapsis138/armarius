@@ -58,7 +58,7 @@ realm lore) are deferred until there's a reason to pull them in.
 ```
 Saga
  └─ Covenant  (n per saga)
-     ├─ Character (n)   [magus | companion | grog]
+     ├─ Character (n)   [magus | companion | mythic companion | grog]
      │    ├─ Virtue/Flaw instances (from catalog)
      │    ├─ Ability scores
      │    ├─ Art scores            (magi only)
@@ -104,13 +104,23 @@ Key relationship notes:
   [specific Art]"). The character catalog (STORY-707) holds the Definitive
   Edition's entries plus those of the open-content supplements, each with
   its `source` book(s), a one-line `summary`, and an `audience` for the
-  ones only non-human characters take; RoP:Magic / HoH:Mystery Cults
-  Qualities and Inferiorities are entries too, listed with the Virtues and
-  the Flaws respectively. A "Major or Minor" entry is two entries. An entry
-  the book lets a character take more than once is `repeatable`, with an
-  optional `max_count` and a `max_per_parameter` (how many copies may share
-  the same parameters); each copy is its own instance. The field-by-field
-  source is reference/virtues-and-flaws-reference.md.
+  ones only non-human characters (or Mythic Companions) take; RoP:Magic /
+  HoH:Mystery Cults Qualities and Inferiorities are entries too, listed
+  with the Virtues and the Flaws respectively. A "Major or Minor" entry is
+  two entries. An entry the book lets a character take more than once is
+  `repeatable`, with an optional `max_count` and a `max_per_parameter` (how
+  many copies may share the same parameters); each copy is its own
+  instance. The field-by-field source is
+  reference/virtues-and-flaws-reference.md.
+- The character picker hides what a character can't take (STORY-710),
+  structural rules only (catalog.VirtueFlawChooser): Hermetic entries
+  without The Gift (a magus counts as Gifted); for grogs, Major and
+  Hermetic entries and The Gift; entries whose `audience` the character
+  isn't (a familiar is an animal and a magic being; a Mythic Companion,
+  a character type that otherwise counts as a companion, gets its Free
+  Mythic Companion Virtues); and, once STORY-711 lands, books not in play.
+  A toggle lists them anyway, each marked with the reason. Prose
+  prerequisites ("requires Demonic Blood") stay in the description.
 
 ## 5. The Virtue/Flaw Modifier System
 

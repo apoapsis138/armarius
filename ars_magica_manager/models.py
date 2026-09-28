@@ -15,7 +15,12 @@ from typing import Any, Literal
 from .arts import ART_BY_NAME, ARTS, TECHNIQUES
 from .totals import validate_modifier_type
 
-CharacterType = Literal["magus", "companion", "grog"]
+#: A Mythic Companion is a companion with a Free Mythic Companion Virtue
+#: (DE ch. 4): it counts as a companion except where Virtues and Flaws are
+#: chosen (see COMPANION_TYPES).
+CharacterType = Literal["magus", "companion", "mythic companion", "grog"]
+#: The character types that count as a companion (Covenant Inhabitants).
+COMPANION_TYPES: tuple[str, ...] = ("companion", "mythic companion")
 VirtueFlawType = Literal["Virtue", "Flaw"]
 #: A character catalog entry's type: Qualities and Inferiorities are the
 #: non-human counterparts of Virtues and Flaws (RoP:Magic magic characters,
@@ -57,12 +62,15 @@ VIRTUE_FLAW_SIDE: dict[str, VirtueFlawType] = {
 }
 
 #: The kinds of character a Virtue/Flaw can be restricted to
-#: (VirtueFlawDef.audience); an entry with no audience is for anyone.
+#: (VirtueFlawDef.audience); an entry with no audience is for anyone. All
+#: but the last are non-human; "mythic companion" marks the Free Virtues
+#: that make a character a Mythic Companion (Devil Child, Nephilim...).
 VIRTUE_FLAW_AUDIENCES: tuple[str, ...] = (
     "faerie",
     "magic being",
     "corrupted beast",
     "animal",
+    "mythic companion",
 )
 
 
@@ -176,8 +184,9 @@ class VirtueFlawDef:
     `source` names the book(s) the entry comes from ("DE", "DE; RoP:F",
     "HoH:MC"), for attribution -- the text is CC-BY-SA -- and for choosing
     the books in play (STORY-711). `summary` is a one-line paraphrase for
-    searching. `audience` restricts the entry to non-human characters
-    (VIRTUE_FLAW_AUDIENCES); empty means anyone may take it.
+    searching. `audience` restricts the entry to non-human characters or
+    Mythic Companions (VIRTUE_FLAW_AUDIENCES); empty means anyone may take
+    it. The picker hides what a character can't take (VirtueFlawChooser).
     """
 
     id: str

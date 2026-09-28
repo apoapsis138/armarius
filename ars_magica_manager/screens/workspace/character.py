@@ -73,6 +73,7 @@ class CharacterActions(WorkspaceBase):
             if result is None:
                 return
             character.name = result["name"]
+            character.type = result.get("type", character.type)
             character.covenant_id = result["covenant_id"]
             self.selected_covenant = self.saga.covenant(character.covenant_id)
             if character.type == "magus":
