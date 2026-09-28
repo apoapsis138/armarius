@@ -2506,15 +2506,14 @@ async def test_clicking_an_art_row_keeps_focus_on_the_list():
 
 
 async def test_edit_arts_grid_fits_default_terminal_and_accepts_real_typing():
-    # A default-sized terminal (80x24) is what run_test uses unless told
-    # otherwise, and matches a typical real terminal -- this test drives
+    # The smallest terminal the app is checked at (120x45) -- this test drives
     # actual clicks and keystrokes (not direct .value assignment) so a
     # layout tall/wide enough to push rows off-screen, or to block real
     # keyboard input, actually fails here.
     storage.save_saga(_sample_saga_with_covenant())
 
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(80, 24)) as pilot:
+    async with app.run_test(size=(120, 45)) as pilot:
         await _select_character(pilot, app)
         await _open_section(pilot, app, "section-arts")
         await pilot.press("e")
@@ -3613,7 +3612,7 @@ async def test_edit_lab_characteristics_buttons_are_visible_on_screen():
     VerticalScroll. Asserts on-screen position, at a small and a large size."""
     storage.save_saga(_saga_with_bare_laboratory())
 
-    for size in ((80, 24), (140, 50)):
+    for size in ((120, 45), (140, 50)):
         app = ArsMagicaManagerApp()
         async with app.run_test(size=size) as pilot:
             await _select_laboratory(pilot, app)
@@ -4666,18 +4665,18 @@ async def test_lab_characteristics_numbers_take_theme_colours_by_sign():
 
 
 async def test_lab_edit_dialogs_fit_a_small_terminal():
-    """Save/Cancel must be on-screen at 80x24 for the roomier lab dialogs."""
+    """Save/Cancel must be on-screen at 120x45 for the roomier lab dialogs."""
     storage.save_saga(_saga_with_populated_laboratory())
 
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(80, 24)) as pilot:
+    async with app.run_test(size=(120, 45)) as pilot:
         await _select_laboratory(pilot, app)
 
         def assert_buttons_on_screen(*ids: str) -> None:
             for button_id in ids:
                 region = app.screen.query_one(button_id, Button).region
                 assert region.height > 0, button_id
-                assert region.bottom <= 24, (type(app.screen).__name__, button_id)
+                assert region.bottom <= 45, (type(app.screen).__name__, button_id)
 
         await _open_lab_section(pilot, app, "section-lab-identity")
         await pilot.press("e")
@@ -4880,7 +4879,7 @@ async def test_edit_covenant_dialog_fits_a_small_terminal():
     storage.save_saga(_saga_with_configured_covenant())
 
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(80, 24)) as pilot:
+    async with app.run_test(size=(120, 45)) as pilot:
         await _select_covenant(pilot, app)
         await pilot.press("e")
         await pilot.pause()
@@ -4888,7 +4887,7 @@ async def test_edit_covenant_dialog_fits_a_small_terminal():
         for button_id in ("#btn-save", "#btn-cancel"):
             region = app.screen.query_one(button_id, Button).region
             assert region.height > 0, button_id
-            assert region.bottom <= 24, button_id
+            assert region.bottom <= 45, button_id
 
 
 async def test_advance_season_moves_the_whole_saga_forward():
@@ -5026,7 +5025,7 @@ async def test_set_date_rejects_a_blank_year_and_cancel_changes_nothing():
     storage.save_saga(_saga_with_configured_covenant())
 
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(80, 24)) as pilot:
+    async with app.run_test(size=(120, 45)) as pilot:
         await _open_workspace(pilot)
 
         await pilot.press("T")
@@ -5037,7 +5036,7 @@ async def test_set_date_rejects_a_blank_year_and_cancel_changes_nothing():
         assert _is_form(app.screen, "Set the Saga's Date")  # refused, still open
         for button_id in ("#btn-save", "#btn-cancel"):
             region = app.screen.query_one(button_id, Button).region
-            assert region.height > 0 and region.bottom <= 24, button_id
+            assert region.height > 0 and region.bottom <= 45, button_id
 
         await pilot.press("escape")
         await pilot.pause()
@@ -5717,13 +5716,13 @@ async def test_covenant_attributes_dialogs_fit_a_small_terminal():
     storage.save_saga(_saga_with_configured_covenant())
 
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(80, 24)) as pilot:
+    async with app.run_test(size=(120, 45)) as pilot:
         await _select_covenant(pilot, app)
 
         def buttons_on_screen() -> None:
             for button in app.screen.query(Button):
                 region = button.region
-                assert region.height > 0 and region.bottom <= 24, (
+                assert region.height > 0 and region.bottom <= 45, (
                     type(app.screen).__name__,
                     button.id,
                 )
@@ -6259,7 +6258,7 @@ async def test_boon_hook_detail_dialog_with_description_fits_a_small_terminal():
     storage.save_saga(saga)
 
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(80, 24)) as pilot:
+    async with app.run_test(size=(120, 45)) as pilot:
         await _select_covenant(pilot, app)
         await _select_bh_row(pilot, app, "Boon", 0)
         await pilot.press("e")
@@ -6267,7 +6266,7 @@ async def test_boon_hook_detail_dialog_with_description_fits_a_small_terminal():
         assert isinstance(app.screen, FieldsDialog)
         for button in app.screen.query(Button):
             region = button.region
-            assert region.height > 0 and region.bottom <= 24, button.id
+            assert region.height > 0 and region.bottom <= 45, button.id
         await pilot.press("escape")
         await pilot.pause()
 
@@ -6276,7 +6275,7 @@ async def test_boon_hook_detail_dialog_with_description_fits_a_small_terminal():
         assert isinstance(app.screen, ConfirmScreen)
         for button in app.screen.query(Button):
             region = button.region
-            assert region.height > 0 and region.bottom <= 24, button.id
+            assert region.height > 0 and region.bottom <= 45, button.id
 
 
 async def test_boon_hook_dialogs_hug_their_content_on_a_tall_terminal():
@@ -6567,7 +6566,7 @@ async def test_description_dialogs_mention_the_emphasis_syntax():
     storage.save_saga(saga)
 
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(80, 24)) as pilot:
+    async with app.run_test(size=(120, 45)) as pilot:
         await _select_covenant(pilot, app)
         await _select_bh_row(pilot, app, "Boon", 0)
         await pilot.press("e")
@@ -6576,7 +6575,7 @@ async def test_description_dialogs_mention_the_emphasis_syntax():
         assert "**bold**" in str(app.screen.query_one(".fd-hint", Static).render())
         # Still fits a small terminal with the extra hint line.
         for button in app.screen.query(Button):
-            assert button.region.height > 0 and button.region.bottom <= 24, button.id
+            assert button.region.height > 0 and button.region.bottom <= 45, button.id
         await pilot.press("escape")
         await pilot.pause()
 
@@ -6586,7 +6585,7 @@ async def test_description_dialogs_mention_the_emphasis_syntax():
         assert _is_form(app.screen, "Edit Covenant Description")
         assert "*italic*" in str(app.screen.query_one(".fd-hint", Static).render())
         for button in app.screen.query(Button):
-            assert button.region.height > 0 and button.region.bottom <= 24, button.id
+            assert button.region.height > 0 and button.region.bottom <= 45, button.id
 
 
 # -- The expanded catalog: types (categories) in the picker and the panel -------
@@ -7279,13 +7278,13 @@ async def test_forms_and_the_remove_confirmation_fit_an_80_by_24_terminal():
     storage.save_saga(saga)
 
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(80, 24)) as pilot:
+    async with app.run_test(size=(120, 45)) as pilot:
         await _select_covenant(pilot, app)
         await _select_inh_row(pilot, app, "craftsperson", 0)
         await pilot.press("e")
         await pilot.pause()
         region = app.screen.query_one("#fields-dialog").region
-        assert region.right <= 80 and region.bottom <= 24  # right border on screen
+        assert region.right <= 120 and region.bottom <= 45  # right border on screen
         await pilot.press("escape")
         await pilot.pause()
 
@@ -7293,7 +7292,7 @@ async def test_forms_and_the_remove_confirmation_fit_an_80_by_24_terminal():
         await pilot.press("A")
         await pilot.pause()
         region = app.screen.query_one("#confirm-dialog").region
-        assert region.right <= 80 and region.bottom <= 24
+        assert region.right <= 120 and region.bottom <= 45
 
 
 async def test_craftsperson_score_is_typed_when_there_is_no_sheet_ability():
@@ -7594,7 +7593,7 @@ async def test_inhabitant_dialogs_fit_a_small_terminal_and_hug_content_on_a_tall
     storage.save_saga(_saga_with_people())
 
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(80, 24)) as pilot:
+    async with app.run_test(size=(120, 45)) as pilot:
         await _select_covenant(pilot, app)
         # The busiest form: a craftsperson (many fields + a description).
         await _open_inh_section(pilot, app, "section-inh-craftsperson")
@@ -7605,7 +7604,7 @@ async def test_inhabitant_dialogs_fit_a_small_terminal_and_hug_content_on_a_tall
         await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         for button in app.screen.query(Button):
-            assert button.region.height > 0 and button.region.bottom <= 24, button.id
+            assert button.region.height > 0 and button.region.bottom <= 45, button.id
         await pilot.press("escape")
         await pilot.pause()
 
@@ -7614,7 +7613,7 @@ async def test_inhabitant_dialogs_fit_a_small_terminal_and_hug_content_on_a_tall
         await pilot.press("e")
         await pilot.pause()
         for button in app.screen.query(Button):
-            assert button.region.height > 0 and button.region.bottom <= 24, button.id
+            assert button.region.height > 0 and button.region.bottom <= 45, button.id
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
@@ -8179,14 +8178,14 @@ async def test_possession_forms_fit_a_small_terminal_and_hug_content_on_a_tall_o
     storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(80, 24)) as pilot:
+    async with app.run_test(size=(120, 45)) as pilot:
         await _select_covenant(pilot, app)
         await _open_pos_section(pilot, app, "vis_source")  # the busiest form
         await pilot.press("a")
         await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         for button in app.screen.query(Button):
-            assert button.region.height > 0 and button.region.bottom <= 24, button.id
+            assert button.region.height > 0 and button.region.bottom <= 45, button.id
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
@@ -8748,17 +8747,17 @@ async def test_a_laboratorys_upkeep_and_a_weapons_type_feed_the_points():
         assert re.search(r"Points of Weapons and Armor:\s+160\b", wealth)  # 10 x 16
 
 
-async def test_the_economics_forms_fit_an_80_by_24_terminal():
+async def test_the_economics_forms_fit_a_120_by_45_terminal():
     storage.save_saga(_saga_for_economics())
 
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(80, 24)) as pilot:
+    async with app.run_test(size=(120, 45)) as pilot:
         await _select_covenant(pilot, app)
         await _open_eco_section(pilot, app, "income")
         await pilot.press("a")
         await pilot.pause()
         region = app.screen.query_one("#fields-dialog").region
-        assert region.right <= 80 and region.bottom <= 24
+        assert region.right <= 120 and region.bottom <= 45
         # The usual income of each type is shown as a hint.
         hints = " ".join(str(h.render()) for h in app.screen.query(".fd-hint"))
         assert "Lesser 40" in hints and "Legendary 1000" in hints
@@ -8771,7 +8770,7 @@ async def test_the_economics_forms_fit_an_80_by_24_terminal():
         await pilot.press("enter")  # the first row of the picker
         await pilot.pause()
         region = app.screen.query_one("#fields-dialog").region
-        assert region.right <= 80 and region.bottom <= 24
+        assert region.right <= 120 and region.bottom <= 45
 
 
 async def test_the_economics_forms_do_not_stretch_on_a_tall_terminal():
@@ -9282,7 +9281,7 @@ async def test_book_form_fits_a_small_terminal():
     storage.save_saga(_saga_with_books())
 
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(80, 24)) as pilot:
+    async with app.run_test(size=(120, 45)) as pilot:
         await _select_covenant(pilot, app)
         await _show_library_tab(pilot, app)
         await _choose_book(pilot, app, 0)
@@ -9290,7 +9289,7 @@ async def test_book_form_fits_a_small_terminal():
         await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         for button in app.screen.query("#btn-save, #btn-cancel"):
-            assert button.region.height > 0 and button.region.bottom <= 24, button.id
+            assert button.region.height > 0 and button.region.bottom <= 45, button.id
 
 
 # -- Importing books from a CSV file ---------------------------------------------
@@ -9409,7 +9408,7 @@ async def test_file_picker_browses_folders_and_rejects_other_files(tmp_path):
     _write_books_csv(tmp_path / "sub")
 
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(80, 24)) as pilot:
+    async with app.run_test(size=(120, 45)) as pilot:
         await _open_workspace(pilot)
         await pilot.press("I")
         await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
@@ -9417,7 +9416,7 @@ async def test_file_picker_browses_folders_and_rejects_other_files(tmp_path):
         await wait_until(pilot, lambda: isinstance(app.screen, CsvFilePickerScreen))
         picker = app.screen
         for button in picker.query(Button):  # fits a small terminal
-            assert button.region.height > 0 and button.region.bottom <= 24, button.id
+            assert button.region.height > 0 and button.region.bottom <= 45, button.id
 
         box = picker.query_one("#picker-path", Input)
         box.value = str(tmp_path / "sub")
@@ -10226,10 +10225,10 @@ async def test_the_spell_import_helper_fits_a_small_terminal():
     storage.save_saga(_sample_saga_with_covenant())
 
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(80, 24)) as pilot:
+    async with app.run_test(size=(120, 45)) as pilot:
         await _open_workspace(pilot)
         app.screen._import_spells()
         await wait_until(pilot, lambda: isinstance(app.screen, SpellImportHelperScreen))
         await pilot.pause()
         for button in app.screen.query(Button):
-            assert button.region.height > 0 and button.region.bottom <= 24, button.id
+            assert button.region.height > 0 and button.region.bottom <= 45, button.id

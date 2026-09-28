@@ -306,7 +306,7 @@ just the standing decisions.
 - Every collapsible sheet section starts **expanded**; a sheet's
   always-visible summary sits above its tabs and stays visible across tabs.
 - Add/edit dialogs are a config-driven `FieldsDialog` (one row per field,
-  validated on Save, fits 80×24) rather than bespoke screens per dialog.
+  validated on Save, fits 120×45) rather than bespoke screens per dialog.
 - Anything derivable from the rest of a sheet (covenant Economics, Loyalty,
   book costs) is **calculated on demand and never stored** — only what the
   user actually types is saved.

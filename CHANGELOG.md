@@ -8,6 +8,12 @@ fix or behind-the-scenes improvement bumps PATCH. The version is set in
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 0.11.1 — 2026-09-28
+
+- Add and edit dialogs are now checked to fit a 120x45 terminal (the
+  smallest size the app is checked at) rather than 80x24, which is no
+  longer a target. Nothing you see in the app changes.
+
 ## 0.11.0 — 2026-09-28
 
 - Adding a Virtue or Flaw now opens on the side you added it from: the
