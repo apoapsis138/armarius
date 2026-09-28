@@ -2645,7 +2645,8 @@ class CovenantSheetView(SheetView):
     def _bh_info_text(self, index: int | None) -> str:
         """The details panel for the attached Boon/Hook at `index` into
         covenant.boons_hooks: its name, type, notes, the user's own
-        description (if any) and then the official rules text."""
+        description (if any), then the official rules text and the book it
+        comes from."""
         if index is None:
             return "[dim]Select a Boon or Hook to read its rules.[/]"
         by_id = catalog.load_covenant_boon_hook_catalog_by_id()
@@ -2662,16 +2663,28 @@ class CovenantSheetView(SheetView):
             lines.append(
                 f"[b]Requires:[/] {_boon_hook_names(definition.requires, by_id)}"
             )
+        if definition.requires_any:
+            lines.append(
+                "[b]Requires one of:[/] "
+                + _boon_hook_names(definition.requires_any, by_id)
+            )
         if definition.excludes:
             lines.append(
                 f"[b]Not with:[/] {_boon_hook_names(definition.excludes, by_id)}"
             )
         lines += st.effect_lines(definition.modifiers)
-        if definition.repeatable:
+        if definition.max_count:
+            lines.append(
+                f"[dim]May be taken up to {definition.max_count} times; "
+                "the effects stack.[/]"
+            )
+        elif definition.repeatable:
             lines.append("[dim]May be taken more than once; the effects stack.[/]")
         # The user's own description leads; the official rules text follows.
         description = instance.params.get(BOON_HOOK_DESCRIPTION, "").strip()
         if description:
             lines += ["", "[b]Description:[/]", markdown_inline(description)]
         lines += ["", "[b]Rules:[/]", escape(definition.description)]
+        if definition.source:
+            lines += ["", f"[dim]Source: {escape(definition.source)}[/]"]
         return "\n".join(lines)

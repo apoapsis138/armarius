@@ -5627,13 +5627,24 @@ async def test_details_panel_shows_prerequisites_exclusions_and_repeatability():
 
         assert "Requires: Castle" in info(0)
         assert "Not with: Road, Urban" in info(1)
-        assert "May be taken more than once; the effects stack." in info(2)
+        assert "May be taken up to 7 times; the effects stack." in info(2)
         assert "Effect: The covenant's Magic aura +1" in info(2)
+        assert info(2).endswith("Source: ArM5; Covenants")
         assert "Requires" not in info(3) and "Not with" not in info(3)
         assert "May be taken" not in info(3) and "Effect:" not in info(3)
         # A building Boon: its Buildings surcharge, and it may be repeated.
         assert "Effect: Yearly expenditure: Buildings +2" in info(4)
         assert "May be taken more than once" in info(4)
+
+
+async def test_details_panel_shows_requires_one_of():
+    storage.save_saga(_saga_with_boons_and_hooks("covbh_boon_major_magical_soldiers"))
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 50)) as pilot:
+        await _select_covenant(pilot, app)
+        text = strip_markup(app.screen._covenant_sheet_view._bh_info_text(0))
+        assert "Requires one of: Cavalry, Crossbowmen, Criminals" in text
 
 
 async def test_details_panel_shows_the_detail_and_escapes_markup():

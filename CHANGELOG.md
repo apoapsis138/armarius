@@ -8,6 +8,22 @@ fix or behind-the-scenes improvement bumps PATCH. The version is set in
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 0.7.0 — 2026-09-27
+
+- The covenant Boons & Hooks catalog has been checked against Covenants
+  and ArM5 and now has 216 entries: Writ of Crenellation, Haunted,
+  Non-magical Regio, the Monster in the Surroundings and the Free Choice
+  keeps and moat (Hall Keep, Courtyard Castle, Gatehouse Keep, Chemise,
+  Barbican and Moat) were added, and a bogus "Historical" Boon removed.
+- Corrected requirements and exclusions (e.g. the castle Boons and Hooks
+  now need a Castle; Vis Grant and Vis Salary exclude each other), which
+  Boons and Hooks can be taken more than once, and the Buildings cost of
+  Bedrock, Vast and Labyrinthine, Natural Fortress, Magical Fortress and
+  Superior Engineering.
+- The details panel and picker show when a Boon or Hook needs one of
+  several others, how many times it can be taken, and which book it comes
+  from.
+
 ## 0.6.0 — 2026-09-27
 
 - Laboratory Features: each Feature (Altar, Cauldron, Window... all 36, or a

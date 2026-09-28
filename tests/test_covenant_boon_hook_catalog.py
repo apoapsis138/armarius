@@ -28,17 +28,76 @@ def test_catalog_loads_and_ids_are_unique():
 
 
 def test_catalog_counts_by_tier_after_merging_the_covenants_book():
-    # 37 entries from the core chapter + 171 from Covenants Chapter Two.
+    # 37 entries from the core chapter + 179 from Covenants Chapter Two
+    # (checked entry by entry in STORY-705 against
+    # reference/covenants-boons-and-hooks-ref.md).
     entries = catalog.load_covenant_boon_hook_catalog()
-    assert len(entries) == 208
+    assert len(entries) == 216
     counts = Counter((entry.type, entry.tier) for entry in entries)
     assert counts == {
-        ("Hook", "Minor"): 85,
-        ("Hook", "Major"): 40,
+        ("Hook", "Minor"): 87,
+        ("Hook", "Major"): 41,
         ("Boon", "Minor"): 46,
         ("Boon", "Major"): 24,
-        ("Boon", "Free"): 13,  # the book's cost-free "Free Choices"
+        ("Boon", "Free"): 18,  # the book's cost-free "Free Choices"
     }
+
+
+def test_the_entries_story_705_found_missing_are_present():
+    by_id = catalog.load_covenant_boon_hook_catalog_by_id()
+    for entry_id in (
+        "covbh_boon_minor_writ_of_crenellation",
+        "covbh_hook_minor_haunted",
+        "covbh_hook_minor_non_magical_regio",
+        "covbh_hook_major_monster_surroundings",
+        "covbh_boon_free_hall_keep",
+        "covbh_boon_free_courtyard_castle",
+        "covbh_boon_free_gatehouse_keep",
+        "covbh_boon_free_chemise",
+        "covbh_boon_free_barbican_and_moat",
+    ):
+        assert entry_id in by_id, entry_id
+    # "Historical" was the Crossbows sidebar's weapon stats, not a Boon.
+    assert "covbh_boon_minor_historical" not in by_id
+    # The Writ is a legal right to fortify: no Buildings cost (user, 2026-09-27).
+    writ = by_id["covbh_boon_minor_writ_of_crenellation"]
+    assert writ.requires == [CASTLE]
+    assert writ.modifiers == []
+
+
+def test_every_entry_names_its_source_book():
+    for entry in catalog.load_covenant_boon_hook_catalog():
+        assert entry.source in ("ArM5; Covenants", "Covenants"), entry.id
+    by_id = catalog.load_covenant_boon_hook_catalog_by_id()
+    assert by_id["covbh_boon_minor_aura"].source == "ArM5; Covenants"
+    assert by_id["covbh_hook_minor_haunted"].source == "Covenants"
+
+
+def test_repeat_limits_and_requires_any():
+    by_id = catalog.load_covenant_boon_hook_catalog_by_id()
+    assert by_id["covbh_boon_minor_aura"].max_count == 7
+    assert by_id["covbh_boon_minor_healthy_feature"].max_count == 3
+    assert by_id["covbh_boon_minor_edifice"].max_count is None  # no limit
+    soldiers = by_id["covbh_boon_major_magical_soldiers"].requires_any
+    assert "covbh_boon_major_heavy_cavalry" in soldiers
+    assert "covbh_boon_free_peasants" in soldiers
+    assert by_id["covbh_hook_minor_non_magical_regio"].requires_any == [
+        "covbh_hook_minor_regio",
+        "covbh_hook_major_regio",
+    ]
+    with pytest.raises(ValueError, match="max_count"):
+        CovenantBoonHookDef(
+            id="covbh_x", name="X", type="Boon", tier="Minor", cost=1, max_count=2
+        )
+
+
+def test_only_minor_hooks_may_be_unknown():
+    by_id = catalog.load_covenant_boon_hook_catalog_by_id()
+    unknown = [e for e in by_id.values() if e.unknown]
+    assert {(e.type, e.tier) for e in unknown} == {("Hook", "Minor")}
+    assert by_id["covbh_hook_minor_rival"].unknown
+    assert by_id["covbh_hook_minor_favors"].unknown  # ArM5's text allows it
+    assert not by_id["covbh_hook_minor_road"].unknown
 
 
 #: The original 37 entries (core rulebook chapter). The merge must update these
@@ -89,8 +148,9 @@ def test_original_entries_were_updated_in_place_not_duplicated():
     assert len(ORIGINAL_IDS) == 37
     for entry_id in ORIGINAL_IDS:
         assert entry_id in by_id, entry_id
-    # No two entries share (type, tier, name): a duplicate would show up here.
-    keys = [(e.type, e.tier, e.name.lower()) for e in by_id.values()]
+    # No two entries share (type, tier, name, category): a duplicate would show
+    # up here. (The two Major Monster Hooks differ by category.)
+    keys = [(e.type, e.tier, e.name.lower(), e.category) for e in by_id.values()]
     assert len(keys) == len(set(keys))
 
 
@@ -119,9 +179,10 @@ def test_existing_entries_received_their_types_from_the_book():
         "covbh_hook_major_beholden": "External Relations",
         "covbh_hook_minor_superiors": "Residents",
         "covbh_hook_minor_protector": "Surroundings",
-        # Listed under Site AND Surroundings; the existing wording is the
-        # Surroundings one, so that's the type it takes (not duplicated).
-        "covbh_hook_major_monster": "Surroundings",
+        # The table lists a Major Monster under Site and under Surroundings;
+        # both are in the catalog (STORY-705).
+        "covbh_hook_major_monster": "Site",
+        "covbh_hook_major_monster_surroundings": "Surroundings",
     }
     for entry_id, category in expected.items():
         assert by_id[entry_id].category == category, entry_id
@@ -129,13 +190,16 @@ def test_existing_entries_received_their_types_from_the_book():
 
 def test_free_choices_are_cost_free_boons_in_fortifications_and_residents():
     free = [e for e in catalog.load_covenant_boon_hook_catalog() if e.tier == "Free"]
-    assert len(free) == 13
+    assert len(free) == 18
     assert {e.type for e in free} == {"Boon"}
     assert {e.cost for e in free} == {0}
     assert {e.category for e in free} == {"Fortifications", "Residents"}
     by_id = {e.id: e for e in free}
     assert "covbh_boon_free_manor_house" in by_id
     assert "covbh_boon_free_theocracy" in by_id  # a Style of Governance
+    # The keep alternatives and barbican/moat come with Curtain Walls.
+    curtain = "covbh_boon_major_curtain_walls_and_mural_towers"
+    assert by_id["covbh_boon_free_hall_keep"].requires == [curtain]
 
 
 def test_new_entries_record_prerequisites_and_flags_from_the_text():
@@ -221,7 +285,7 @@ def test_names_can_repeat_across_type_and_tier():
 def test_requires_and_excludes_point_at_real_entries():
     by_id = catalog.load_covenant_boon_hook_catalog_by_id()
     for entry in by_id.values():
-        for other in (*entry.requires, *entry.excludes):
+        for other in (*entry.requires, *entry.requires_any, *entry.excludes):
             assert other in by_id, f"{entry.id} references unknown {other!r}"
 
 
@@ -233,6 +297,13 @@ def test_castle_dependent_boons_require_the_castle_hook():
         "covbh_boon_minor_shell_keep",
         "covbh_boon_minor_tower_keep",
         "covbh_boon_major_curtain_walls_and_mural_towers",
+        # Only the book's table says so for these.
+        "covbh_boon_minor_artillery",
+        "covbh_boon_minor_bedrock",
+        "covbh_boon_major_superior_engineering",
+        "covbh_hook_minor_crumbling",
+        "covbh_hook_minor_outbuildings",
+        "covbh_hook_minor_wooden",
     ):
         assert by_id[entry_id].requires == [CASTLE], entry_id
 
@@ -281,15 +352,22 @@ def test_only_the_two_minor_aura_entries_change_the_covenant_aura():
 
 
 #: The Boons that add to the size, magnificence or quantity of the covenant's
-#: buildings or fortifications (the user's list, 2026-09-23): +2 Minor, +5 Major
-#: to the Buildings expense.
+#: buildings or fortifications (the user's list, 2026-09-23, extended
+#: 2026-09-27 with Bedrock, Vast and Labyrinthine, Natural Fortress, Magical
+#: Fortress and Superior Engineering): +2 Minor, +5 Major to the Buildings
+#: expense.
 BUILDING_BOONS = {
     "covbh_boon_minor_artillery": 2,
+    "covbh_boon_minor_bedrock": 2,
     "covbh_boon_major_curtain_walls_and_mural_towers": 5,
     "covbh_boon_minor_edifice": 2,
     "covbh_boon_minor_important_building": 2,
+    "covbh_boon_major_magical_fortress": 5,
+    "covbh_boon_major_natural_fortress": 5,
     "covbh_boon_minor_shell_keep": 2,
+    "covbh_boon_major_superior_engineering": 5,
     "covbh_boon_minor_tower_keep": 2,
+    "covbh_boon_minor_vast_and_labyrinthine": 2,
 }
 
 

@@ -242,7 +242,17 @@ class CovenantBoonHookDef:
     `covenant_aura` +1, Shell Keep is `covenant_expense`/`buildings` +2.
     Everything else stays prose in `description`. `repeatable` marks entries
     that may be taken more than once; each instance's effects count (they
-    stack) -- see covenants.covenant_modifiers().
+    stack) -- see covenants.covenant_modifiers(). `max_count` is the most
+    times a repeatable entry may be taken, when the book gives one (Aura:
+    seven). `requires_any` lists entries of which the covenant needs at
+    least one (Magical Soldiers: any other kind of soldier), recorded like
+    `requires`.
+
+    `unknown` marks the Hooks the book says "may be Unknown" (see
+    STORY-413). `source` names the book(s) the entry comes from ("ArM5",
+    "Covenants" or "ArM5; Covenants"), for attribution -- the text is
+    CC-BY-SA. The field-by-field reference, with the rules text, is
+    reference/covenants-boons-and-hooks-ref.md.
     """
 
     id: str
@@ -256,9 +266,15 @@ class CovenantBoonHookDef:
     excludes: list[str] = field(default_factory=list)
     modifiers: list[Modifier] = field(default_factory=list)
     description: str = ""
+    max_count: int | None = None
+    requires_any: list[str] = field(default_factory=list)
+    unknown: bool = False
+    source: str = ""
 
     def __post_init__(self) -> None:
         _validate_vf_tier_cost(self.id, self.tier, self.cost)
+        if self.max_count is not None and not self.repeatable:
+            raise ValueError(f"{self.id!r}: max_count needs repeatable")
         if self.category and self.category not in COVENANT_BOON_HOOK_CATEGORIES:
             raise ValueError(
                 f"Unknown category {self.category!r} for {self.id!r}; "

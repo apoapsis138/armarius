@@ -368,6 +368,8 @@ class CovenantBoonHookPickerScreen(
         label = f"{entry.name}  [{', '.join(facts)}]"
         if entry.requires:
             label += f"  (requires: {self._names(entry.requires)})"
+        if entry.requires_any:
+            label += f"  (requires one of: {self._names(entry.requires_any)})"
         if entry.excludes:
             label += f"  (not with: {self._names(entry.excludes)})"
         if self._taken[entry.id]:
