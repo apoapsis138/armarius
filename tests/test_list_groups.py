@@ -3,7 +3,7 @@ a row in one unchooses the others (Virtues/Flaws, Boons/Hooks, and each of
 the covenant's Inhabitants, Possessions and Economics tabs)."""
 
 import pytest
-from support import NODES, everything_saga, first_vf, wait_until
+from support import NODES, build_all_tabs, everything_saga, first_vf, wait_until
 from textual.widgets import Tree
 
 from ars_magica_manager import storage
@@ -68,7 +68,7 @@ async def test_choosing_in_one_list_unchooses_its_group(node, group):
             pilot, lambda: workspace._current_sheet_view() is not None
         )
         view = workspace._current_sheet_view()
-        assert await wait_until(pilot, lambda: view.initial_tab_seen)
+        await build_all_tabs(pilot, view)
         lists = [view.query_one(f"#{i}", SelectableList) for i in GROUPS[node][group]]
         populated = [rows for rows in lists if any(o.id for o in rows.options)]
         assert len(populated) >= 2  # the fixture fills at least two of them

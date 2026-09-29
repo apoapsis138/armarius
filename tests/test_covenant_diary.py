@@ -1,7 +1,7 @@
 """The covenant Diary tab (STORY-406): entries, their rows and details, the
 Loyalty points they add, and the tab's a/A/e keys."""
 
-from support import strip_markup, wait_until
+from support import build_all_tabs, strip_markup, wait_until
 from textual.widgets import Static, TabbedContent, Tree
 
 from ars_magica_manager import covenant_diary as cd
@@ -127,8 +127,7 @@ async def test_the_diary_tab_adds_edits_and_removes_entries():
         )
         await wait_until(pilot, lambda: ws._covenant_sheet_view is not None)
         view = ws._covenant_sheet_view
-        await wait_until(pilot, lambda: view.initial_tab_seen)
-        await pilot.pause()
+        await build_all_tabs(pilot, view)  # the Loyalty block is checked below
         view.query_one(TabbedContent).active = "tab-cov-diary"
         await wait_until(pilot, lambda: ws._active_section() == "tab-cov-diary")
 

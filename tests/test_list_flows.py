@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from typing import Any
 
 import pytest
-from support import wait_until
-from textual.widgets import Input, Tree
+from support import build_all_tabs, wait_until
+from textual.widgets import Input, TabPane, Tree
 
 from ars_magica_manager import storage
 from ars_magica_manager.app import ArsMagicaManagerApp
@@ -136,12 +136,9 @@ async def _open(pilot, app, case: ListCase):
     attr = _SHEET_VIEW_ATTR[case.node[0]]
     assert await wait_until(pilot, lambda: getattr(workspace, attr) is not None)
     view = getattr(workspace, attr)
-    assert await wait_until(pilot, lambda: view.initial_tab_seen)
-    await pilot.pause()
+    await build_all_tabs(pilot, view)
     section = view.query_one(f"#{case.section}")
-    pane = next(
-        (a for a in section.ancestors if a.__class__.__name__ == "TabPane"), None
-    )
+    pane = next((a for a in section.ancestors if isinstance(a, TabPane)), None)
     if pane is not None:
         view.query_one("TabbedContent").active = pane.id
         await pilot.pause()

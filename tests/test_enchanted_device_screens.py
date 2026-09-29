@@ -5,8 +5,14 @@ list sub-dialogs of the device form and the talisman on the Hermetic Magic
 tab."""
 
 import pytest
-from support import everything_saga, screen_lines, strip_markup, wait_until
-from textual.widgets import Button, Input, Select, Static, TabbedContent, Tree
+from support import (
+    build_all_tabs,
+    everything_saga,
+    screen_lines,
+    strip_markup,
+    wait_until,
+)
+from textual.widgets import Button, Input, Select, Static, TabbedContent, TabPane, Tree
 
 from ars_magica_manager import storage
 from ars_magica_manager.app import ArsMagicaManagerApp
@@ -56,10 +62,9 @@ async def _open(pilot, app, kind: str):
     tree.select_node(find_node())
     assert await wait_until(pilot, lambda: workspace._current_sheet_view() is not None)
     view = workspace._current_sheet_view()
-    assert await wait_until(pilot, lambda: view.initial_tab_seen)
-    await pilot.pause()
+    await build_all_tabs(pilot, view)
     section = view.query_one(f"#{section_id}")
-    pane = next(a for a in section.ancestors if a.__class__.__name__ == "TabPane")
+    pane = next(a for a in section.ancestors if isinstance(a, TabPane))
     view.query_one(TabbedContent).active = pane.id
     await pilot.pause()
     section.query_one("CollapsibleTitle").focus()

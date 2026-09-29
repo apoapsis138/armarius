@@ -516,6 +516,30 @@ class SpellListView(Vertical):
         self._show(self._shown[index] if index < len(self._shown) else None)
 
 
+class LazyTabPane(TabPane):
+    """A sheet tab whose contents are built the first time it's shown
+    (STORY-1120): mounting every tab when a sheet opens cost ~4 ms per
+    widget for tabs nobody had looked at. Built from the current data, so a
+    tab built late is never stale; until then its sections have no
+    refreshers, so refreshing them does nothing."""
+
+    def __init__(
+        self, title: str, build: Callable[[], ComposeResult], *, id: str, lazy: bool
+    ) -> None:
+        super().__init__(title, id=id)
+        self._build = build
+        self.built = not lazy
+
+    def compose(self) -> ComposeResult:
+        if self.built:
+            yield from self._build()
+
+    async def ensure_built(self) -> None:
+        if not self.built:
+            self.built = True
+            await self.recompose()
+
+
 class SheetView(Vertical):
     """Base of the four record sheets (Character, Laboratory, Familiar,
     Covenant) that WorkspaceScreen mounts into its detail pane: a fixed top
@@ -558,6 +582,40 @@ class SheetView(Vertical):
         #: order. Filled while composing by _static()/_list()/_on_refresh(),
         #: so a widget's render call is written once, where it's built.
         self._refreshers: dict[str, list[Callable[[], None]]] = {}
+
+    #: The tab shown first, built as the sheet opens (the others are built on
+    #: first visit -- see LazyTabPane).
+    INITIAL_TAB: ClassVar[str] = ""
+
+    def _tab(
+        self, title: str, id: str, build: Callable[[], ComposeResult]
+    ) -> LazyTabPane:
+        """A tab showing what `build` composes, built when first shown."""
+        return LazyTabPane(title, build, id=id, lazy=id != self.INITIAL_TAB)
+
+    @staticmethod
+    def _scrolling(build: Callable[[], ComposeResult]) -> Callable[[], ComposeResult]:
+        """`build`, wrapped in a VerticalScroll (a flat tab)."""
+
+        def scrolling() -> ComposeResult:
+            with VerticalScroll():
+                yield from build()
+
+        return scrolling
+
+    async def on_tabbed_content_tab_activated(
+        self, event: TabbedContent.TabActivated
+    ) -> None:
+        # Build the tab before the event bubbles on to the workspace, which
+        # focuses the tab's first section.
+        if isinstance(event.pane, LazyTabPane):
+            await event.pane.ensure_built()
+
+    async def build_all_tabs(self) -> None:
+        """Build every tab now (for code and tests that walk all of a
+        sheet's sections)."""
+        for pane in self.query(LazyTabPane):
+            await pane.ensure_built()
 
     def refresh_section(self, section_id: str) -> None:
         """Re-render whatever shows `section_id` after its data changed. An
@@ -762,39 +820,41 @@ class CharacterSheetView(SheetView):
         super().__init__(saga)
         self.character = character
 
+    INITIAL_TAB = "tab-description"
+
     def compose(self) -> ComposeResult:
         character = self.character
         yield from self._top_panel()
-        with TabbedContent(initial="tab-description"):
-            with TabPane("Description", id="tab-description"):
-                yield from self._description_tab()
-            with (
-                TabPane("Abilities", id="tab-abilities"),
-                Vertical(classes="panel-body"),
-            ):
-                with VerticalScroll():
-                    yield self._list(
-                        "tab-abilities", self._ability_rows, id="abilities-list"
-                    )
-                yield self._panel(
-                    "tab-abilities",
-                    lambda: self._ability_info_text(None),
-                    id="ability-info",
+        with TabbedContent(initial=self.INITIAL_TAB):
+            yield self._tab("Description", "tab-description", self._description_tab)
+            yield self._tab("Abilities", "tab-abilities", self._abilities_tab)
+            yield self._tab("Virtues & Flaws", "tab-vf", self._virtues_flaws_tab)
+            if character.type == "magus":
+                yield self._tab("Hermetic Magic", "tab-hermetic", self._hermetic_tab)
+            yield self._tab("Inventory", "tab-inventory", self._inventory_tab)
+            if character.type == "magus":
+                yield self._tab(
+                    "Laboratory", "tab-lab", self._scrolling(self._laboratory_tab)
                 )
-            with TabPane("Virtues & Flaws", id="tab-vf"):
-                yield from self._virtues_flaws_tab()
-            if character.type == "magus":
-                with TabPane("Hermetic Magic", id="tab-hermetic"):
-                    yield from self._hermetic_tab()
-            with TabPane("Inventory", id="tab-inventory"):
-                yield from self._inventory_tab()
-            if character.type == "magus":
-                with TabPane("Laboratory", id="tab-lab"), VerticalScroll():
-                    yield self._static(
-                        "tab-lab", self._laboratory_text, id="char-lab-content"
-                    )
-            with TabPane("Diary", id="tab-diary"):
-                yield Static(_tab_placeholder("Diary"))
+            yield self._tab("Diary", "tab-diary", self._diary_tab)
+
+    def _abilities_tab(self) -> ComposeResult:
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                yield self._list(
+                    "tab-abilities", self._ability_rows, id="abilities-list"
+                )
+            yield self._panel(
+                "tab-abilities",
+                lambda: self._ability_info_text(None),
+                id="ability-info",
+            )
+
+    def _laboratory_tab(self) -> ComposeResult:
+        yield self._static("tab-lab", self._laboratory_text, id="char-lab-content")
+
+    def _diary_tab(self) -> ComposeResult:
+        yield Static(_tab_placeholder("Diary"))
 
     def _top_panel(self) -> ComposeResult:
         """The always-visible info and Characteristics panels above the
@@ -1574,36 +1634,39 @@ class LaboratorySheetView(SheetView):
         super().__init__(saga)
         self.laboratory = laboratory
 
+    INITIAL_TAB = "tab-lab-planning"
+
     def compose(self) -> ComposeResult:
         yield from self._top_panel()
-        with TabbedContent(initial="tab-lab-planning"):
-            with TabPane("Planning", id="tab-lab-planning"), VerticalScroll():
-                yield self._static(
-                    _LAB_TOTAL_SECTIONS,
-                    self._planning_text,
-                    id="lab-planning-content",
-                )
-            with TabPane("Virtues & Flaws", id="tab-lab-vf"):
-                yield from self._virtues_flaws_tab()
-            with TabPane("Attributes", id="tab-lab-attributes"):
-                yield from self._attributes_tab()
-            with TabPane("Inventory", id="tab-lab-inventory"):
-                yield from self._inventory_tab()
-            with (
-                TabPane("Diary", id="tab-lab-diary"),
-                Vertical(classes="panel-body"),
-            ):
-                with VerticalScroll():
-                    yield self._list(
-                        "tab-lab-diary",
-                        lambda: lab_text.diary_rows(self.laboratory.diary),
-                        id="lab-diary-list",
-                    )
-                yield self._panel(
+        with TabbedContent(initial=self.INITIAL_TAB):
+            yield self._tab(
+                "Planning", "tab-lab-planning", self._scrolling(self._planning_tab)
+            )
+            yield self._tab("Virtues & Flaws", "tab-lab-vf", self._virtues_flaws_tab)
+            yield self._tab("Attributes", "tab-lab-attributes", self._attributes_tab)
+            yield self._tab("Inventory", "tab-lab-inventory", self._inventory_tab)
+            yield self._tab("Diary", "tab-lab-diary", self._diary_tab)
+
+    def _planning_tab(self) -> ComposeResult:
+        yield self._static(
+            _LAB_TOTAL_SECTIONS,
+            self._planning_text,
+            id="lab-planning-content",
+        )
+
+    def _diary_tab(self) -> ComposeResult:
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                yield self._list(
                     "tab-lab-diary",
-                    lambda: lab_text.diary_info_text(self.laboratory.diary, None),
-                    id="lab-diary-info",
+                    lambda: lab_text.diary_rows(self.laboratory.diary),
+                    id="lab-diary-list",
                 )
+            yield self._panel(
+                "tab-lab-diary",
+                lambda: lab_text.diary_info_text(self.laboratory.diary, None),
+                id="lab-diary-info",
+            )
 
     def _virtues_flaws_tab(self) -> ComposeResult:
         """Any warning about the Virtues & Flaws as a whole, the Virtue and
@@ -2104,6 +2167,8 @@ class FamiliarSheetView(SheetView):
         super().__init__(saga)
         self.familiar = familiar
 
+    INITIAL_TAB = "tab-fam-identity"
+
     def compose(self) -> ComposeResult:
         with (
             Vertical(id="fam-top-panel"),
@@ -2115,54 +2180,56 @@ class FamiliarSheetView(SheetView):
                 id="fam-info-content",
             )
             yield Button("Edit (e)", id="btn-fam-info-edit", compact=True)
-        with TabbedContent(initial="tab-fam-identity"):
-            with TabPane("Identity & Cords", id="tab-fam-identity"):
-                yield from self._identity_tab()
-            with (
-                TabPane("Characteristics", id="tab-fam-characteristics"),
-                SheetSection(title="Characteristics", id="section-fam-characteristics"),
-            ):
-                yield self._static(
-                    "section-fam-characteristics",
-                    lambda: fam.characteristics_text(self.familiar),
-                    id="fam-characteristics-content",
+        with TabbedContent(initial=self.INITIAL_TAB):
+            yield self._tab("Identity & Cords", "tab-fam-identity", self._identity_tab)
+            yield self._tab(
+                "Characteristics",
+                "tab-fam-characteristics",
+                self._characteristics_tab,
+            )
+            yield self._tab("Combat & Health", "tab-fam-combat", self._combat_tab)
+            yield self._tab("Abilities", "tab-fam-abilities", self._abilities_tab)
+            yield self._tab("Bond Powers", "tab-fam-powers", self._powers_tab)
+
+    def _characteristics_tab(self) -> ComposeResult:
+        with SheetSection(title="Characteristics", id="section-fam-characteristics"):
+            yield self._static(
+                "section-fam-characteristics",
+                lambda: fam.characteristics_text(self.familiar),
+                id="fam-characteristics-content",
+            )
+
+    def _abilities_tab(self) -> ComposeResult:
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                yield Static(
+                    "[dim]Languages: shares the Magus partner's Language "
+                    "scores automatically.[/]"
                 )
-            with TabPane("Combat & Health", id="tab-fam-combat"):
-                yield from self._combat_tab()
-            with (
-                TabPane("Abilities", id="tab-fam-abilities"),
-                Vertical(classes="panel-body"),
-            ):
-                with VerticalScroll():
-                    yield Static(
-                        "[dim]Languages: shares the Magus partner's Language "
-                        "scores automatically.[/]"
-                    )
-                    yield self._list(
-                        "tab-fam-abilities",
-                        lambda: fam.ability_rows(self.familiar),
-                        id="fam-abilities-list",
-                    )
-                yield self._panel(
+                yield self._list(
                     "tab-fam-abilities",
-                    lambda: fam.ability_info_text(self.familiar, None),
-                    id="fam-ability-info",
+                    lambda: fam.ability_rows(self.familiar),
+                    id="fam-abilities-list",
                 )
-            with (
-                TabPane("Bond Powers", id="tab-fam-powers"),
-                Vertical(classes="panel-body"),
-            ):
-                with VerticalScroll():
-                    yield self._list(
-                        "tab-fam-powers",
-                        lambda: fam.bond_power_rows(self.familiar),
-                        id="fam-bond-powers-list",
-                    )
-                yield self._panel(
+            yield self._panel(
+                "tab-fam-abilities",
+                lambda: fam.ability_info_text(self.familiar, None),
+                id="fam-ability-info",
+            )
+
+    def _powers_tab(self) -> ComposeResult:
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                yield self._list(
                     "tab-fam-powers",
-                    lambda: fam.bond_power_info_text(self.familiar, None),
-                    id="fam-bond-powers-info",
+                    lambda: fam.bond_power_rows(self.familiar),
+                    id="fam-bond-powers-list",
                 )
+            yield self._panel(
+                "tab-fam-powers",
+                lambda: fam.bond_power_info_text(self.familiar, None),
+                id="fam-bond-powers-info",
+            )
 
     def _identity_tab(self) -> ComposeResult:
         """Binding & Cords, the Virtue and Flaw lists with their details
@@ -2383,83 +2450,78 @@ class CovenantSheetView(SheetView):
         super().__init__(saga)
         self.covenant = covenant
 
+    INITIAL_TAB = "tab-cov-attributes"
+
     def compose(self) -> ComposeResult:
         with PinnedCollapsible(title=escape(self.covenant.name), id="section-cov-info"):
             with TwoColumns(id="cov-info-body", text=True):
                 yield Static(self._info_left_text(), id="cov-info-left")
                 yield Static(self._info_right_text(), id="cov-info-right")
             yield Button("Edit (e)", id="btn-cov-edit", compact=True)
-        with TabbedContent(initial="tab-cov-attributes"):
-            with (
-                TabPane("Attributes", id="tab-cov-attributes"),
-                Vertical(classes="panel-body"),
-            ):
-                with VerticalScroll():
+        with TabbedContent(initial=self.INITIAL_TAB):
+            yield self._tab("Attributes", "tab-cov-attributes", self._attributes_tab)
+            yield self._tab("Inhabitants", "tab-cov-inhabitants", self._inhabitants_tab)
+            yield self._tab("Possessions", "tab-cov-possessions", self._possessions_tab)
+            yield self._tab("Economics", "tab-cov-economics", self._economics_tab)
+            yield self._tab("Library", "tab-cov-library", self._library_tab)
+            yield self._tab("Diary", "tab-cov-diary", self._diary_tab)
+
+    def _attributes_tab(self) -> ComposeResult:
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                with SheetSection(title="Description", id="section-cov-description"):
+                    yield Static(self._description_text(), id="cov-description-content")
+                with SheetSection(
+                    title=self._titled(
+                        "section-cov-reputations",
+                        "section-cov-reputations",
+                        lambda: counted("Reputations", len(self.covenant.reputations)),
+                    ),
+                    id="section-cov-reputations",
+                ):
+                    yield SelectableList(
+                        self._reputation_rows(), id="cov-reputations-list"
+                    )
+                with TwoColumns(id="cov-bh-row"):
                     with SheetSection(
-                        title="Description", id="section-cov-description"
-                    ):
-                        yield Static(
-                            self._description_text(), id="cov-description-content"
-                        )
-                    with SheetSection(
-                        title=self._titled(
-                            "section-cov-reputations",
-                            "section-cov-reputations",
-                            lambda: counted(
-                                "Reputations", len(self.covenant.reputations)
-                            ),
-                        ),
-                        id="section-cov-reputations",
+                        title=self._bh_title("Boon"), id="section-cov-boons"
                     ):
                         yield SelectableList(
-                            self._reputation_rows(), id="cov-reputations-list"
+                            self._bh_entries("Boon"),
+                            id="cov-boons-list",
+                            group="bh",
                         )
-                    with TwoColumns(id="cov-bh-row"):
-                        with SheetSection(
-                            title=self._bh_title("Boon"), id="section-cov-boons"
-                        ):
-                            yield SelectableList(
-                                self._bh_entries("Boon"),
-                                id="cov-boons-list",
-                                group="bh",
-                            )
-                        with SheetSection(
-                            title=self._bh_title("Hook"), id="section-cov-hooks"
-                        ):
-                            yield SelectableList(
-                                self._bh_entries("Hook"),
-                                id="cov-hooks-list",
-                                group="bh",
-                            )
-                yield DetailsPanel(self._bh_info_text(None), id="cov-bh-info")
-            with TabPane("Inhabitants", id="tab-cov-inhabitants"):
-                yield from self._inhabitants_tab()
-            with TabPane("Possessions", id="tab-cov-possessions"):
-                yield from self._possessions_tab()
-            with TabPane("Economics", id="tab-cov-economics"):
-                yield from self._economics_tab()
-            with TabPane("Library", id="tab-cov-library"):
-                yield self._book_list(
-                    ("section-cov-info",),
-                    lambda: bk.books_in_covenant(self.saga, self.covenant),
-                    section_id="section-lib-books",
-                    summary=True,
-                )
-            with (
-                TabPane("Diary", id="tab-cov-diary"),
-                Vertical(classes="panel-body"),
-            ):
-                with VerticalScroll():
-                    yield self._list(
-                        "tab-cov-diary",
-                        lambda: cov_diary.rows(self.covenant.diary),
-                        id="cov-diary-list",
-                    )
-                yield self._panel(
+                    with SheetSection(
+                        title=self._bh_title("Hook"), id="section-cov-hooks"
+                    ):
+                        yield SelectableList(
+                            self._bh_entries("Hook"),
+                            id="cov-hooks-list",
+                            group="bh",
+                        )
+            yield DetailsPanel(self._bh_info_text(None), id="cov-bh-info")
+
+    def _library_tab(self) -> ComposeResult:
+        yield self._book_list(
+            ("section-cov-info",),
+            lambda: bk.books_in_covenant(self.saga, self.covenant),
+            section_id="section-lib-books",
+            summary=True,
+        )
+
+    def _diary_tab(self) -> ComposeResult:
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                yield self._list(
                     "tab-cov-diary",
-                    lambda: cov_diary.info_text(self.covenant, None),
-                    id="cov-diary-info",
+                    lambda: cov_diary.rows(self.covenant.diary),
+                    id="cov-diary-list",
                 )
+            yield self._panel(
+                "tab-cov-diary",
+                lambda: cov_diary.info_text(self.covenant, None),
+                id="cov-diary-info",
+            )
 
     def _inhabitants_tab(self) -> ComposeResult:
         """Loyalty, the Inhabitants summary and Miscellaneous blocks, one
@@ -2673,26 +2735,29 @@ class CovenantSheetView(SheetView):
 
     def refresh_section(self, section_id: str) -> None:
         super().refresh_section(section_id)  # the Library's book list
-        try:
-            self._refresh_section(section_id)
-            if section_id.startswith(("section-inh-", "section-pos-", "section-cov-")):
-                # These feed the Economics tab's figures.
-                self._rebuild_economics()
-            if section_id in ("section-cov-info", "section-cov-reputations") or (
-                section_id.startswith("section-inh-")
-                and section_id != "section-inh-loyalty"
-            ):
-                # Magi (Gift), Specialists/Companions (role bonus), covenant
-                # Reputations and Living Conditions (Mundane) all feed the
-                # Loyalty block, which lives on a different section.
-                self._refresh_loyalty_text()
-            if section_id == "tab-cov-diary":
-                # The Diary's Loyalty points feed Actions and Events.
-                self._refresh_loyalty_text()
-        except NoMatches:
-            # The sheet is being replaced or torn down (a refresh from a
-            # dialog callback can land after that) -- nothing left to update.
-            return
+        steps: list[Callable[[], None]] = [lambda: self._refresh_section(section_id)]
+        if section_id.startswith(("section-inh-", "section-pos-", "section-cov-")):
+            # These feed the Economics tab's figures.
+            steps.append(self._rebuild_economics)
+        if section_id in ("section-cov-info", "section-cov-reputations") or (
+            section_id.startswith("section-inh-")
+            and section_id != "section-inh-loyalty"
+        ):
+            # Magi (Gift), Specialists/Companions (role bonus), covenant
+            # Reputations and Living Conditions (Mundane) all feed the
+            # Loyalty block, which lives on a different section.
+            steps.append(self._refresh_loyalty_text)
+        if section_id == "tab-cov-diary":
+            # The Diary's Loyalty points feed Actions and Events.
+            steps.append(self._refresh_loyalty_text)
+        for step in steps:
+            try:
+                step()
+            except NoMatches:
+                # A tab not built yet (it will be built from the current
+                # data), or the sheet is being torn down (a refresh from a
+                # dialog callback can land after that).
+                continue
 
     def _refresh_loyalty_text(self) -> None:
         self.query_one("#inh-loyalty-left", Static).update(

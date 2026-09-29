@@ -9,6 +9,22 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 1.2.2 — 2026-09-29
+
+The app is quicker to use.
+
+- Switching tabs, moving between sections and arrowing through lists take
+  about half the time or less: the key hints at the bottom used to be
+  rebuilt several times for every keypress, and now only change when the
+  keys do.
+- Sheets open two to three times faster (a covenant in about a third of
+  the time): a sheet now builds only the tab you see, and builds each other
+  tab the first time you open it.
+- The rulebook catalogs (Virtues and Flaws, Abilities, Houses and so on)
+  are read once when the app starts instead of being checked on disk every
+  time a total is worked out; Lab Totals come out over ten times faster. A
+  rebuilt catalog is picked up the next time the app starts.
+
 ## 1.2.1 — 2026-09-29
 
 Behind the scenes: a way to measure how fast the app is.

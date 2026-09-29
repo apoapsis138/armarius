@@ -11,6 +11,7 @@ from textual.binding import Binding, BindingType
 from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.events import Click
 from textual.message import Message
+from textual.screen import Screen
 from textual.widget import Widget
 from textual.widgets import (
     Collapsible,
@@ -132,6 +133,52 @@ class SplitFooter(Footer):
     def __init__(self, right_actions: frozenset[str] = frozenset()) -> None:
         super().__init__()
         self._right_actions = right_actions
+        #: The keys last composed (see _shown_keys), and whether a rebuild
+        #: is already waiting for the next refresh.
+        self._shown: tuple[Any, ...] | None = None
+        self._rebuild_pending = False
+        #: How many times the keys were rebuilt (the performance guard tests
+        #: count these).
+        self.rebuilds = 0
+
+    def bindings_changed(self, screen: Screen) -> None:
+        """Rebuild the keys when they changed -- once per refresh, however
+        many times the screen asked (Footer rebuilds on every request, and
+        every focus move, tab switch and list row asks)."""
+        self._bindings_ready = True
+        if not screen.app.app_focus:
+            return
+        if self.is_attached and screen is self.screen and not self._rebuild_pending:
+            self._rebuild_pending = True
+            self.call_after_refresh(self._rebuild_if_changed)
+
+    async def _rebuild_if_changed(self) -> None:
+        self._rebuild_pending = False
+        if not self.is_attached:
+            return
+        shown = self._shown_keys()
+        if shown == self._shown:
+            return
+        self._shown = shown
+        self.rebuilds += 1
+        await self.recompose()
+
+    def _shown_keys(self) -> tuple[Any, ...]:
+        """What compose() would show: each shown binding with its state."""
+        return tuple(
+            (
+                key,
+                binding.action,
+                binding.description,
+                binding.group,
+                enabled,
+                tooltip,
+            )
+            for key, (_, binding, enabled, tooltip) in (
+                self.screen.active_bindings.items()
+            )
+            if binding.show
+        )
 
     def compose(self) -> ComposeResult:
         right: list[FooterKey] = []

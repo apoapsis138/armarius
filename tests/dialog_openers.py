@@ -48,7 +48,8 @@ async def _open_param_prompt(ws) -> None:
     asks for it."""
     view = ws._current_sheet_view()
     view.query_one(TabbedContent).active = "tab-vf"
-    await until(lambda: view.query_one(TabbedContent).active == "tab-vf")
+    # The tab is built as it is first shown.
+    await until(lambda: view.query("#section-vf-virtues CollapsibleTitle"))
     view.query_one("#section-vf-virtues CollapsibleTitle").focus()
     await until(lambda: ws._active_section() == "section-vf-virtues")
     ws.action_add_virtue_flaw()
@@ -61,7 +62,8 @@ async def _open_lab_choice_prompt(ws) -> None:
     picker asks for it (STORY-817)."""
     view = ws._current_sheet_view()
     view.query_one(TabbedContent).active = "tab-lab-vf"
-    await until(lambda: view.query_one(TabbedContent).active == "tab-lab-vf")
+    # The tab is built as it is first shown.
+    await until(lambda: view.query("#section-lab-vf-flaws CollapsibleTitle"))
     view.query_one("#section-lab-vf-flaws CollapsibleTitle").focus()
     await until(lambda: ws._active_section() == "section-lab-vf-flaws")
     ws.action_add_virtue_flaw()

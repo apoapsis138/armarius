@@ -77,38 +77,33 @@ def _fill_placeholders(name: str, params: dict[str, str]) -> str:
     return name
 
 
-def _file_key(path: Path) -> tuple[int, int]:
-    """What identifies a version of a catalog file for caching: a file
-    rewritten (as tests do) is read again."""
-    stat = path.stat()
-    return stat.st_mtime_ns, stat.st_size
-
-
 @lru_cache(maxsize=16)
 def _cached_entries(
-    path: Path, from_dict: Callable[[dict[str, Any]], Any], _key: tuple[int, int]
+    path: Path, from_dict: Callable[[dict[str, Any]], Any]
 ) -> tuple[Any, ...]:
     return tuple(_load_entries(path, from_dict))
 
 
 @lru_cache(maxsize=16)
 def _cached_by_id(
-    path: Path, from_dict: Callable[[dict[str, Any]], Any], key: tuple[int, int]
+    path: Path, from_dict: Callable[[dict[str, Any]], Any]
 ) -> dict[str, Any]:
-    return {entry.id: entry for entry in _cached_entries(path, from_dict, key)}
+    return {entry.id: entry for entry in _cached_entries(path, from_dict)}
 
 
 def load_virtue_flaw_catalog(path: Path = CATALOG_PATH) -> list[VirtueFlawDef]:
-    """The character Virtue/Flaw catalog. The catalogs are cached while their
-    file is unchanged: every total and sheet row that looks at Virtues and
-    Flaws reads them (the shared lists and dicts must not be changed)."""
-    return list(_cached_entries(path, VirtueFlawDef.from_dict, _file_key(path)))
+    """The character Virtue/Flaw catalog. The catalogs are read once per run
+    and cached by path: every total and sheet row that looks at Virtues and
+    Flaws reads them (the shared dicts must not be changed). Nothing checks
+    the file again -- a stat per lookup cost ~80 us each on a synced folder
+    (STORY-1122) -- so a rebuilt catalog is seen on the next start."""
+    return list(_cached_entries(path, VirtueFlawDef.from_dict))
 
 
 def load_virtue_flaw_catalog_by_id(
     path: Path = CATALOG_PATH,
 ) -> dict[str, VirtueFlawDef]:
-    return _cached_by_id(path, VirtueFlawDef.from_dict, _file_key(path))
+    return _cached_by_id(path, VirtueFlawDef.from_dict)
 
 
 def describe_virtue_flaw(
@@ -272,13 +267,13 @@ class VirtueFlawChooser:
 
 
 def load_ability_catalog(path: Path = ABILITY_CATALOG_PATH) -> list[AbilityDef]:
-    return _load_entries(path, AbilityDef.from_dict)
+    return list(_cached_entries(path, AbilityDef.from_dict))
 
 
 def load_ability_catalog_by_id(
     path: Path = ABILITY_CATALOG_PATH,
 ) -> dict[str, AbilityDef]:
-    return {entry.id: entry for entry in load_ability_catalog(path)}
+    return _cached_by_id(path, AbilityDef.from_dict)
 
 
 def resolve_ability_name(entry: AbilityDef, params: dict[str, str]) -> str:
@@ -294,23 +289,23 @@ def resolve_ability_name(entry: AbilityDef, params: dict[str, str]) -> str:
 
 
 def load_house_catalog(path: Path = HOUSE_CATALOG_PATH) -> list[HouseDef]:
-    return _load_entries(path, HouseDef.from_dict)
+    return list(_cached_entries(path, HouseDef.from_dict))
 
 
 def load_house_catalog_by_id(path: Path = HOUSE_CATALOG_PATH) -> dict[str, HouseDef]:
-    return {entry.id: entry for entry in load_house_catalog(path)}
+    return _cached_by_id(path, HouseDef.from_dict)
 
 
 def load_lab_virtue_flaw_catalog(
     path: Path = LAB_VF_CATALOG_PATH,
 ) -> list[LabVirtueFlawDef]:
-    return list(_cached_entries(path, LabVirtueFlawDef.from_dict, _file_key(path)))
+    return list(_cached_entries(path, LabVirtueFlawDef.from_dict))
 
 
 def load_lab_virtue_flaw_catalog_by_id(
     path: Path = LAB_VF_CATALOG_PATH,
 ) -> dict[str, LabVirtueFlawDef]:
-    return _cached_by_id(path, LabVirtueFlawDef.from_dict, _file_key(path))
+    return _cached_by_id(path, LabVirtueFlawDef.from_dict)
 
 
 @lru_cache(maxsize=4)
@@ -336,13 +331,13 @@ def load_lab_feature_catalog_by_id(
 def load_covenant_boon_hook_catalog(
     path: Path = COVENANT_BOON_HOOK_CATALOG_PATH,
 ) -> list[CovenantBoonHookDef]:
-    return list(_cached_entries(path, CovenantBoonHookDef.from_dict, _file_key(path)))
+    return list(_cached_entries(path, CovenantBoonHookDef.from_dict))
 
 
 def load_covenant_boon_hook_catalog_by_id(
     path: Path = COVENANT_BOON_HOOK_CATALOG_PATH,
 ) -> dict[str, CovenantBoonHookDef]:
-    return _cached_by_id(path, CovenantBoonHookDef.from_dict, _file_key(path))
+    return _cached_by_id(path, CovenantBoonHookDef.from_dict)
 
 
 def describe_boon_hook(

@@ -72,6 +72,15 @@ async def wait_until(pilot, condition, timeout: float = 2.0, interval: float = 0
     return condition()
 
 
+async def build_all_tabs(pilot, view) -> None:
+    """Build every tab of a sheet view that's just been opened (tabs are
+    built on first visit -- STORY-1120), for a test that reaches into a tab
+    without showing it first."""
+    await wait_until(pilot, lambda: view.initial_tab_seen)
+    await view.build_all_tabs()
+    await pilot.pause()
+
+
 #: Tree node per sheet kind, in the saga built by everything_saga().
 NODES: dict[str, tuple[str, ...]] = {
     "saga": ("saga",),

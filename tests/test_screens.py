@@ -3,7 +3,7 @@ import json
 import re
 from pathlib import Path
 
-from support import strip_markup, wait_until
+from support import build_all_tabs, strip_markup, wait_until
 from textual.app import App
 from textual.widgets import (
     Button,
@@ -393,6 +393,7 @@ async def _select(pilot, app, data) -> None:
     attr = _SHEET_VIEW_ATTR.get(data[0])
     if attr is not None:
         await wait_until(pilot, lambda: getattr(app.screen, attr) is not None)
+        await build_all_tabs(pilot, getattr(app.screen, attr))
 
 
 async def _open_workspace(pilot) -> None:

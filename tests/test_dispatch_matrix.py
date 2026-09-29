@@ -18,7 +18,7 @@ import os
 from pathlib import Path
 
 import pytest
-from support import NODES, everything_saga, wait_until
+from support import NODES, build_all_tabs, everything_saga, wait_until
 from textual.widgets import Collapsible, TabbedContent, TabPane, Tree
 
 from ars_magica_manager import storage
@@ -65,6 +65,13 @@ async def _back_to_workspace(pilot, app, workspace) -> None:
         await pilot.press("escape")
         await pilot.pause()
     assert app.screen is workspace, f"stuck on {type(app.screen).__name__}"
+
+
+def _label(target) -> str:
+    """A target's name in the golden file (a tab built on first visit is
+    still a TabPane there)."""
+    kind = "TabPane" if isinstance(target, TabPane) else type(target).__name__
+    return f"{kind}#{target.id}"
 
 
 async def _focus_target(pilot, app, view, target) -> None:
@@ -161,8 +168,7 @@ async def _matrix_for(
 
         assert await wait_until(pilot, lambda: getattr(workspace, attr) is not None)
         view = getattr(workspace, attr)
-        assert await wait_until(pilot, lambda: view.initial_tab_seen)
-        await pilot.pause()
+        await build_all_tabs(pilot, view)
         # Every section, and every tab without sections. (Switching to a tab
         # that has sections focuses its first one -- that section's own
         # entry covers it, and which focus lands last would be a race.)
@@ -171,13 +177,13 @@ async def _matrix_for(
             for w in view.query("Collapsible, TabPane")
             if w.id and not (isinstance(w, TabPane) and w.query(Collapsible))
         ]
-        labels = [f"{type(t).__name__}#{t.id}" for t in targets]
+        labels = [_label(t) for t in targets]
         if shard is not None:
             targets = targets[shard::shards]
         result: dict[str, dict] = {}
         for target in targets:
             await _focus_target(pilot, app, view, target)
-            result[f"{type(target).__name__}#{target.id}"] = {
+            result[_label(target)] = {
                 "active": workspace._active_section(),
                 "keys": await _record_keys(pilot, app, workspace, notices),
             }
