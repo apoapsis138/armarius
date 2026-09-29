@@ -10,6 +10,7 @@ from textual.widgets import (
 )
 
 from ... import inhabitants as inh
+from ... import seasons
 from ...models import (
     INHABITANT_KINDS,
     POSSESSION_KINDS,
@@ -234,6 +235,12 @@ class WorkspaceScreen(
                 partial(self._restore_inhabitant, kind)
                 if kind in inh.AUTO_KINDS
                 else None,
+            )
+        for kind, _ in seasons.SEASON_KINDS:
+            ops[f"section-cov-seasons-{kind}"] = _SectionOps(
+                partial(self._plan_covenant_season, kind),
+                partial(self._clear_covenant_season, kind),
+                partial(self._plan_covenant_season, kind),
             )
         for section in DEVICE_SECTIONS:
             ops[section] = _SectionOps(

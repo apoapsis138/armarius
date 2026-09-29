@@ -16,11 +16,12 @@ from collections.abc import Sequence
 
 from . import spells as spl
 from .inhabitants import AUTO_KINDS, character_kind
-from .markup import escape
+from .markup import escape, fit
 from .models import (
     SEASONS,
     ArtScore,
     Character,
+    Covenant,
     DiaryEntry,
     Laboratory,
     Saga,
@@ -375,3 +376,66 @@ def advance_summary(saga: Saga) -> str:
                 f"{escape(outcome.problems[0])}[/]"
             )
     return "\n".join(lines)
+
+
+# -- the covenant's Seasons tab (STORY-912) -----------------------------------
+
+#: The covenant Seasons tab's lists: (character kind, title). A Mythic
+#: Companion is listed with the Companions.
+SEASON_KINDS: tuple[tuple[str, str], ...] = (
+    ("magus", "Magi"),
+    ("companion", "Companions"),
+    ("grog", "Grogs"),
+)
+#: Width of the name column in the Seasons lists.
+_NAME_WIDTH = 24
+
+
+def covenant_people(saga: Saga, covenant: Covenant, kind: str) -> list[Character]:
+    """The covenant's characters of `kind` (a SEASON_KINDS key), in the
+    saga's order, leaving out any marked departed."""
+    return [
+        c
+        for c in saga.characters
+        if c.covenant_id == covenant.id
+        and character_kind(c) == kind
+        and not is_departed(saga, c)
+    ]
+
+
+def season_title(saga: Saga, covenant: Covenant, kind: str, title: str) -> str:
+    """A Seasons list's title: "Magi (1 of 2 planned)", or "Grogs (3)"."""
+    people = covenant_people(saga, covenant, kind)
+    if kind == "grog":
+        return f"{title} ({len(people)})"
+    planned = sum(1 for c in people if plan_for(saga, c) is not None)
+    return f"{title} ({planned} of {len(people)} planned)"
+
+
+def season_rows(saga: Saga, covenant: Covenant, kind: str) -> list[tuple[int, str]]:
+    """(index, row) per person: their name and what they have planned for
+    the current season ("Practice: Latin"), or that nothing is."""
+    rows: list[tuple[int, str]] = []
+    for index, character in enumerate(covenant_people(saga, covenant, kind)):
+        name = character.name + (
+            " (Mythic)" if character.type == "mythic companion" else ""
+        )
+        name = escape(fit(name, _NAME_WIDTH).ljust(_NAME_WIDTH))
+        if not rules.is_planned(character):
+            what = "[dim]updated yearly[/]"
+        else:
+            plan = plan_for(saga, character)
+            what = (
+                escape(plan_summary(saga, character, plan))
+                if plan is not None
+                else "[$text-warning]nothing planned[/]"
+            )
+        rows.append((index, f"{name}  {what}"))
+    return rows
+
+
+def season_info_text(saga: Saga, character: Character | None) -> str:
+    """The Seasons tab's details panel for the chosen person."""
+    if character is None:
+        return "[dim]Select someone to see their season.[/]"
+    return f"[b]{escape(character.name)}[/]\n" + plan_text(saga, character)

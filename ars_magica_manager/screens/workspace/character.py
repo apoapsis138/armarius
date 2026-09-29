@@ -8,7 +8,7 @@ from typing import Any
 
 from ... import laboratories as lab_text
 from ... import possessions as pos
-from ... import seasons, sourcebooks, storage
+from ... import sourcebooks, storage
 from ... import spells as spl
 from ...markup import escape
 from ...models import (
@@ -22,7 +22,6 @@ from ...models import (
     HermeticBackground,
     KnownSpell,
     Possession,
-    SeasonPlan,
     Wounds,
     add_raw_vis,
     assign_laboratory,
@@ -44,7 +43,6 @@ from ..forms import (
     _fatigue_fields,
     _hermetic_fields,
     _possession_dialog,
-    _season_plan_dialog,
     _wounds_fields,
 )
 from ..pickers import (
@@ -606,50 +604,14 @@ class CharacterActions(WorkspaceBase):
 
     def _plan_season(self) -> None:
         """Plan the character's current season, or change the plan."""
-        character = self.selected_character
-        if character is None:
-            return
-        if not season_rules.is_planned(character):
-            self.notify(
-                "Grogs aren't planned season by season: they're updated once a "
-                "year (Grogs, Chapter 5)."
-            )
-            return
-
-        def handle_result(plan: SeasonPlan | None) -> None:
-            if plan is not None:
-                seasons.set_plan(self.saga, plan)
-                self._commit("section-char-season")
-
-        self.app.push_screen(
-            _season_plan_dialog(
-                self.saga, character, seasons.plan_for(self.saga, character)
-            ),
-            handle_result,
-        )
+        if self.selected_character is not None:
+            self._plan_season_for(self.selected_character, "section-char-season")
 
     def _clear_season_plan(self) -> None:
         """Drop the character's plan for the current season (after
         confirming)."""
-        character = self.selected_character
-        if character is None:
-            return
-        plan = seasons.plan_for(self.saga, character)
-        if plan is None:
-            self.notify("Nothing is planned for this season.")
-            return
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed and seasons.clear_plan(self.saga, character):
-                self._commit("section-char-season")
-
-        self.app.push_screen(
-            ConfirmScreen(
-                f"Clear {escape(character.name)}'s plan "
-                f"({escape(seasons.plan_summary(self.saga, character, plan))})?"
-            ),
-            handle_confirmed,
-        )
+        if self.selected_character is not None:
+            self._clear_season_plan_for(self.selected_character, "section-char-season")
 
     # -- Character: Diary --
 

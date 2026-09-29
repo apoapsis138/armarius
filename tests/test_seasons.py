@@ -504,3 +504,87 @@ async def test_lab_totals_live_on_the_laboratory_sheet():
             str(lab_view.query_one("#lab-planning-content", Static).content)
         )
         assert planning.splitlines()[0] == "Leandro: Spring 1220"
+
+
+# -- the covenant's Seasons tab (STORY-912) ---------------------------------------
+
+
+def test_seasons_lists_the_covenants_people_by_kind():
+    saga = everything_saga()
+    saga.characters += [
+        Character(id="grog1", name="Hob", type="grog", covenant_id="cov1"),
+        Character(id="myth1", name="Wode", type="mythic companion", covenant_id="cov1"),
+    ]
+    covenant = saga.covenants[0]
+    seasons.set_plan(
+        saga,
+        SeasonPlan(
+            "mag1", 1220, "Spring", rules.PRACTICE, [XpAllocation("ability:Latin")]
+        ),
+    )
+
+    def rows(kind):
+        return [
+            strip_markup(label)
+            for _, label in seasons.season_rows(saga, covenant, kind)
+        ]
+
+    assert [r.split() for r in rows("magus")] == [["Leandro", "Practice:", "Latin"]]
+    assert rows("companion")[0].endswith("nothing planned")
+    assert rows("companion")[1].startswith("Wode (Mythic)")
+    assert rows("grog")[0].endswith("updated yearly")
+    assert (
+        seasons.season_title(saga, covenant, "magus", "Magi") == "Magi (1 of 1 planned)"
+    )
+    assert (
+        seasons.season_title(saga, covenant, "companion", "Companions")
+        == "Companions (0 of 2 planned)"
+    )
+    assert seasons.season_title(saga, covenant, "grog", "Grogs") == "Grogs (1)"
+
+
+async def test_plan_a_season_from_the_covenant_seasons_tab():
+    storage.save_saga(everything_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await pilot.press("enter")
+        await pilot.pause()
+        tree = app.screen.query_one("#nav-tree", Tree)
+        tree.select_node(_find(tree, ("covenant", "cov1")))
+        await wait_until(pilot, lambda: app.screen._covenant_sheet_view is not None)
+        view = app.screen._covenant_sheet_view
+        await wait_until(pilot, lambda: view.initial_tab_seen)
+        view.query_one(TabbedContent).active = "tab-cov-seasons"
+        # Let the tab's own focus (its first section, Magi) land first, or it
+        # can arrive after ours and take 'e' to the wrong list.
+        await wait_until(
+            pilot, lambda: app.screen._active_section() == "section-cov-seasons-magus"
+        )
+        view.query_one("#section-cov-seasons-companion", Collapsible).query_one(
+            "CollapsibleTitle"
+        ).focus()
+        await wait_until(
+            pilot,
+            lambda: app.screen._active_section() == "section-cov-seasons-companion",
+        )
+        workspace = app.screen
+        await pilot.press("e")  # nothing chosen: pick whose season
+        assert await wait_until(pilot, lambda: app.screen is not workspace)
+        assert not isinstance(app.screen, FieldsDialog)
+        await pilot.press("enter")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        dialog = app.screen
+        assert dialog.title_text == "Plan Alys's Season (Spring 1220)"
+        dialog.query_one("#fld-activity", Select).value = rules.OTHER
+        await pilot.pause()
+        from textual.widgets import TextArea
+
+        dialog.query_one("#fld-details", TextArea).text = "Visiting family"
+        dialog.query_one("#btn-save", Button).press()
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        await pilot.pause()
+        rows = view.query_one("#cov-seasons-companion-list")
+        text = " ".join(str(o.prompt) for o in rows.options)
+        assert "Other: Visiting family" in text
+    saga = storage.load_saga("test_saga")
+    assert [p.details for p in saga.season_plans] == ["Visiting family"]

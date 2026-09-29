@@ -4723,6 +4723,7 @@ async def test_lab_edit_dialogs_fit_a_small_terminal():
 _COVENANT_TABS = (
     "tab-cov-attributes",
     "tab-cov-inhabitants",
+    "tab-cov-seasons",
     "tab-cov-possessions",
     "tab-cov-economics",
     "tab-cov-library",
@@ -4748,7 +4749,7 @@ def _saga_with_configured_covenant() -> Saga:
     return saga
 
 
-async def test_covenant_sheet_has_info_panel_and_six_tabs():
+async def test_covenant_sheet_has_info_panel_and_seven_tabs():
     storage.save_saga(_saga_with_configured_covenant())
 
     app = ArsMagicaManagerApp()

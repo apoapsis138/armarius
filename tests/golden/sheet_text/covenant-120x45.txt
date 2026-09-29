@@ -13,7 +13,7 @@
                                                Aura Realm:                  Magic
           Edit (e)
 
-   Attributes  Inhabitants  Possessions  Economics  Library  Diary
+   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -56,7 +56,7 @@
                                                Aura Realm:                  Magic
           Edit (e)
 
-   Attributes  Inhabitants  Possessions  Economics  Library  Diary
+   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -84,6 +84,49 @@
 
 
 
+===== tab-cov-seasons
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Keep
+
+      Saga:                     Matrix         Tribunal:                    (not
+      Storyguide:               (not set)      set)
+      Year Founded:             (not set)      Current Season:              Spring
+      Aegis of the Hearth:      0              Current Year:                1220
+      Living Conditions (Magi): 0              Aegis' Penetration:          0
+      Aura:                     1 (base 0,     Living Conditions (Mundane): 0
+      +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
+          Edit (e)
+
+   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Magi (0 of 1 planned)
+
+      ○ Leandro                   nothing planned
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Companions (0 of 1 planned)                                                 ▂▂
+
+      ○ Alys                      nothing planned
+
+
+
+    Select someone to see their season.
+
+
+
+
+
+
+
+
+
+
+
+
 ===== tab-cov-possessions
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -99,7 +142,7 @@
                                                Aura Realm:                  Magic
           Edit (e)
 
-   Attributes  Inhabitants  Possessions  Economics  Library  Diary
+   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -142,7 +185,7 @@
                                                Aura Realm:                  Magic
           Edit (e)
 
-   Attributes  Inhabitants  Possessions  Economics  Library  Diary
+   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -185,7 +228,7 @@
                                                Aura Realm:                  Magic
           Edit (e)
 
-   Attributes  Inhabitants  Possessions  Economics  Library  Diary
+   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -228,7 +271,7 @@
                                                Aura Realm:                  Magic
           Edit (e)
 
-   Attributes  Inhabitants  Possessions  Economics  Library  Diary
+   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   (none recorded)

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import Any, ClassVar
 
-from ... import catalog, covenant_diary, sourcebooks
+from ... import catalog, covenant_diary, seasons, sourcebooks
 from ... import economics as eco
 from ... import inhabitants as inh
 from ... import possessions as pos
@@ -1014,4 +1014,34 @@ class CovenantActions(WorkspaceBase):
             title="Remove a Diary Entry",
             empty="No Diary entries to remove.",
             then=lambda position: remove(order[position]),
+        )
+
+    # -- Covenant: Seasons (STORY-912) --
+
+    def _season_person_then(self, kind: str, then: Any) -> None:
+        """Act on the person chosen in the Seasons list of `kind`; with none
+        chosen there, ask which one."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        people = seasons.covenant_people(self.saga, covenant, kind)
+        view = self._covenant_sheet_view
+        chosen = view.selected_season_person() if view is not None else None
+        selected = people.index(chosen) if chosen in people else None
+        self._chosen_or_pick(
+            selected,
+            [escape(c.name) for c in people],
+            title="Whose season?",
+            empty="Nobody to plan for here.",
+            then=lambda index: then(people[index]),
+        )
+
+    def _plan_covenant_season(self, kind: str) -> None:
+        self._season_person_then(
+            kind, lambda c: self._plan_season_for(c, "tab-cov-seasons")
+        )
+
+    def _clear_covenant_season(self, kind: str) -> None:
+        self._season_person_then(
+            kind, lambda c: self._clear_season_plan_for(c, "tab-cov-seasons")
         )

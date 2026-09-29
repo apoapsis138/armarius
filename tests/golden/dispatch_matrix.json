@@ -240,6 +240,48 @@
         "V": "(disabled)"
       }
     },
+    "SheetSection#section-cov-seasons-magus": {
+      "active": "section-cov-seasons-magus",
+      "keys": {
+        "a": "RemovalPickerScreen: Whose season?",
+        "A": "RemovalPickerScreen: Whose season?",
+        "e": "RemovalPickerScreen: Whose season?",
+        "r": "(disabled)",
+        "i": "(disabled)",
+        "u": "(disabled)",
+        "I": "(disabled)",
+        "v": "(disabled)",
+        "V": "(disabled)"
+      }
+    },
+    "SheetSection#section-cov-seasons-companion": {
+      "active": "section-cov-seasons-companion",
+      "keys": {
+        "a": "RemovalPickerScreen: Whose season?",
+        "A": "RemovalPickerScreen: Whose season?",
+        "e": "RemovalPickerScreen: Whose season?",
+        "r": "(disabled)",
+        "i": "(disabled)",
+        "u": "(disabled)",
+        "I": "(disabled)",
+        "v": "(disabled)",
+        "V": "(disabled)"
+      }
+    },
+    "SheetSection#section-cov-seasons-grog": {
+      "active": "section-cov-seasons-grog",
+      "keys": {
+        "a": "notice: Nobody to plan for here.",
+        "A": "notice: Nobody to plan for here.",
+        "e": "notice: Nobody to plan for here.",
+        "r": "(disabled)",
+        "i": "(disabled)",
+        "u": "(disabled)",
+        "I": "(disabled)",
+        "v": "(disabled)",
+        "V": "(disabled)"
+      }
+    },
     "SheetSection#section-pos-property": {
       "active": "section-pos-property",
       "keys": {
@@ -722,7 +764,7 @@
       "active": "section-char-season",
       "keys": {
         "a": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
-        "A": "notice: Nothing is planned for this season.",
+        "A": "notice: Nothing is planned for Leandro this season.",
         "e": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
         "r": "(disabled)",
         "i": "(disabled)",

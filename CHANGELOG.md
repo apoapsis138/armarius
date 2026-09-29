@@ -9,6 +9,14 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 1.4.0 — 2026-09-29
+
+- Each covenant has a new Seasons tab, after Inhabitants: its magi,
+  companions and grogs, each with what they have planned for the season
+  (or "nothing planned"), and a count of who has planned in each list.
+  Choose someone to see their plan and what it will give; e plans their
+  season and A clears it.
+
 ## 1.3.0 — 2026-09-29
 
 Seasons can be planned and played out (the start of Phase 3).

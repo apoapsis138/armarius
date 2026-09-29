@@ -2474,9 +2474,10 @@ class FamiliarSheetView(SheetView):
 class CovenantSheetView(SheetView):
     """The covenant sheet mounted into WorkspaceScreen's detail pane.
 
-    A permanent info panel (not inside any tab) above six tabs mirroring
-    the covenant record sheet: Attributes, Inhabitants, Possessions,
-    Economics, Library, Diary.
+    A permanent info panel (not inside any tab) above seven tabs mirroring
+    the covenant record sheet: Attributes, Inhabitants, Seasons (who has
+    planned what this season, STORY-912), Possessions, Economics, Library,
+    Diary.
 
     The panel's saga-level values (Saga, Storyguide, Current Season,
     Current Year) are inherited from the Saga and shown dimmed/read-only;
@@ -2498,6 +2499,7 @@ class CovenantSheetView(SheetView):
         with TabbedContent(initial=self.INITIAL_TAB):
             yield self._tab("Attributes", "tab-cov-attributes", self._attributes_tab)
             yield self._tab("Inhabitants", "tab-cov-inhabitants", self._inhabitants_tab)
+            yield self._tab("Seasons", "tab-cov-seasons", self._seasons_tab)
             yield self._tab("Possessions", "tab-cov-possessions", self._possessions_tab)
             yield self._tab("Economics", "tab-cov-economics", self._economics_tab)
             yield self._tab("Library", "tab-cov-library", self._library_tab)
@@ -2537,6 +2539,51 @@ class CovenantSheetView(SheetView):
                             group="bh",
                         )
             yield DetailsPanel(self._bh_info_text(None), id="cov-bh-info")
+
+    def _seasons_tab(self) -> ComposeResult:
+        """Who is in the covenant and what each has planned for the current
+        season, by kind (STORY-912), over the chosen person's details."""
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                for kind, title in seasons.SEASON_KINDS:
+                    section = f"section-cov-seasons-{kind}"
+                    with SheetSection(
+                        title=self._titled(
+                            "tab-cov-seasons",
+                            section,
+                            lambda kind=kind, title=title: seasons.season_title(
+                                self.saga, self.covenant, kind, title
+                            ),
+                        ),
+                        id=section,
+                    ):
+                        yield self._list(
+                            "tab-cov-seasons",
+                            lambda kind=kind: seasons.season_rows(
+                                self.saga, self.covenant, kind
+                            ),
+                            id=f"cov-seasons-{kind}-list",
+                            group="seasons",
+                        )
+            yield self._panel(
+                "tab-cov-seasons",
+                lambda: seasons.season_info_text(self.saga, None),
+                id="cov-seasons-info",
+            )
+
+    def selected_season_person(self) -> Character | None:
+        """The person chosen in any of the Seasons lists, or None."""
+        for kind, _ in seasons.SEASON_KINDS:
+            try:
+                chosen = self.query_one(
+                    f"#cov-seasons-{kind}-list", SelectableList
+                ).selected_data_index
+            except NoMatches:
+                return None  # the tab isn't built yet
+            if chosen is not None:
+                people = seasons.covenant_people(self.saga, self.covenant, kind)
+                return people[chosen] if chosen < len(people) else None
+        return None
 
     def _library_tab(self) -> ComposeResult:
         yield self._book_list(
@@ -2772,6 +2819,9 @@ class CovenantSheetView(SheetView):
 
     def refresh_section(self, section_id: str) -> None:
         super().refresh_section(section_id)  # the Library's book list
+        if section_id.startswith("section-inh-"):
+            # Marking someone departed takes them off the Seasons lists.
+            super().refresh_section("tab-cov-seasons")
         steps: list[Callable[[], None]] = [lambda: self._refresh_section(section_id)]
         if section_id.startswith(("section-inh-", "section-pos-", "section-cov-")):
             # These feed the Economics tab's figures.
@@ -2877,6 +2927,12 @@ class CovenantSheetView(SheetView):
         """A Boon or Hook row was chosen: fill the details panel. (Reputations
         have no panel -- a name and a score have nothing more to show.)"""
         list_id = event.selectable_list.id or ""
+        if list_id.startswith("cov-seasons-"):
+            event.stop()
+            self.query_one("#cov-seasons-info", Static).update(
+                seasons.season_info_text(self.saga, self.selected_season_person())
+            )
+            return
         if list_id == "cov-diary-list":
             event.stop()
             self.query_one("#cov-diary-info", Static).update(

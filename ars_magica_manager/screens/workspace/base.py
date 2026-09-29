@@ -47,12 +47,14 @@ from ...models import (
     Laboratory,
     Saga,
     ScoredTrait,
+    SeasonPlan,
     VirtueFlawInstance,
     link_unlinked_features,
     new_instance_id,
     next_season,
 )
 from ...rules import options as rule_options
+from ...rules import seasons as season_rules
 from ..fields import (
     FieldsDialog,
 )
@@ -62,6 +64,7 @@ from ..forms import (
     _familiar_create_fields,
     _laboratory_create_fields,
     _saga_fields,
+    _season_plan_dialog,
     saga_rule_options,
 )
 from ..pickers import (
@@ -1144,6 +1147,7 @@ class WorkspaceBase(Screen[None]):
             for section in _SEASON_SECTIONS:
                 self._refresh_character_section(section)
             self._refresh_laboratory_section("tab-lab-planning")
+            self._refresh_covenant_section("tab-cov-seasons")
             message = f"It is now {saga.current_season} {saga.current_year}."
             if applied:
                 message += (
@@ -1193,6 +1197,50 @@ class WorkspaceBase(Screen[None]):
                 safe_answer=True,
             ),
             handle_answer,
+        )
+
+    # -- season plans (shared by the character and covenant sheets) --
+
+    def _plan_season_for(self, character: Character, section: str) -> None:
+        """Plan `character`'s current season, or change the plan, then
+        refresh `section`."""
+        if not season_rules.is_planned(character):
+            self.notify(
+                "Grogs aren't planned season by season: they're updated once a "
+                "year (Grogs, Chapter 5)."
+            )
+            return
+
+        def handle_result(plan: SeasonPlan | None) -> None:
+            if plan is not None:
+                seasons.set_plan(self.saga, plan)
+                self._commit(section)
+
+        self.app.push_screen(
+            _season_plan_dialog(
+                self.saga, character, seasons.plan_for(self.saga, character)
+            ),
+            handle_result,
+        )
+
+    def _clear_season_plan_for(self, character: Character, section: str) -> None:
+        """Drop `character`'s plan for the current season (after
+        confirming), then refresh `section`."""
+        plan = seasons.plan_for(self.saga, character)
+        if plan is None:
+            self.notify(f"Nothing is planned for {character.name} this season.")
+            return
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed and seasons.clear_plan(self.saga, character):
+                self._commit(section)
+
+        self.app.push_screen(
+            ConfirmScreen(
+                f"Clear {escape(character.name)}'s plan "
+                f"({escape(seasons.plan_summary(self.saga, character, plan))})?"
+            ),
+            handle_confirmed,
         )
 
     def action_set_date(self) -> None:
