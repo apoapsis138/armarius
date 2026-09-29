@@ -1,7 +1,7 @@
 """The workspace screen, split by kind of record: base.py (shared state and
 plumbing), one mixin of actions per record kind (library, covenant, character,
-laboratory, familiar) and screen.py, which combines them. Re-exports the names
-used outside the package."""
+laboratory, familiar, enchanted devices) and screen.py, which combines them.
+Re-exports the names used outside the package."""
 
 from .base import _BOON_HOOK_SECTION as _BOON_HOOK_SECTION
 from .base import _CHARACTER_REPUTATIONS as _CHARACTER_REPUTATIONS

@@ -151,14 +151,14 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Raw Vis                                                                     ▄▄
+    ▼ Raw Vis                                                                     ▇▇
 
       ○ Ignem: 2 pawn(s)
 
 
 
-    Select Raw Vis, an Equipment & Stores entry or a book to see its details.
-
+    Select Raw Vis, an Equipment & Stores entry, an enchanted device or a book to
+    see its details.
 
 
 

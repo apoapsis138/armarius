@@ -13,7 +13,7 @@ from functools import cached_property, partial
 from typing import Any, ClassVar, NamedTuple
 
 from textual.app import ComposeResult
-from textual.binding import BindingType
+from textual.binding import Binding, BindingType
 from textual.containers import Horizontal, VerticalScroll
 from textual.css.query import NoMatches
 from textual.events import DescendantBlur, DescendantFocus
@@ -75,6 +75,7 @@ from ..prompts import (
 )
 from ..sheets import (
     _LIBRARY_SECTIONS,
+    DEVICE_SECTIONS,
     LAB_FEATURE_SECTIONS,
     LAB_VF_SECTIONS,
     SPELL_SECTION,
@@ -260,9 +261,12 @@ class WorkspaceBase(Screen[None]):
         ("e", "edit", "Edit"),
         ("r", "restore", "Restore"),
         ("i", "improve", "Improve"),
+        ("i", "instill_effect", "Instill"),
+        ("u", "use_charge", "Charge"),
         ("I", "import_data", "Import"),
         ("t", "advance_season", "Advance Season"),
-        ("T", "set_date", "Set Date"),
+        # Works everywhere, but left out of the footer to keep it short.
+        Binding("T", "set_date", "Set Date", show=False),
         ("v", "add_virtue_flaw", "Add Virtue/Flaw"),
         ("V", "remove_virtue_flaw", "Remove Virtue/Flaw"),
         ("escape", "app.pop_screen", "Back"),
@@ -543,6 +547,11 @@ class WorkspaceBase(Screen[None]):
             return self._section_op(action) is not None
         if action == "improve":
             return self._active_section() == "section-eco-income"
+        if action in ("instill_effect", "use_charge"):
+            return (
+                self._active_section() in DEVICE_SECTIONS
+                and self._device_action_enabled(action)
+            )
         if action == "import_data":
             return (
                 self.selected_kind == NodeKind.SAGA
@@ -1327,6 +1336,11 @@ class WorkspaceBase(Screen[None]):
         ):
             return self.selected_familiar
         return None
+
+    def _device_action_enabled(self, action: str) -> bool:
+        """Whether i / u can act on the chosen device row (see
+        DeviceActions)."""
+        return False
 
     @cached_property
     def _section_ops(self) -> dict[str, _SectionOps]:

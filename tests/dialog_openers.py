@@ -153,7 +153,24 @@ OPENERS: dict[str, Opener] = {
     "add covenant diary entry": Opener(
         "covenant", lambda ws: ws._add_covenant_diary_entry()
     ),
+    # Enchanted devices (STORY-305)
+    "edit enchanted device": Opener(
+        "laboratory", lambda ws: ws._edit_device(_device(ws, "dev-lab"))
+    ),
+    "instill effect": Opener(
+        "laboratory", lambda ws: ws._effect_form(_device(ws, "dev-lab"), None)
+    ),
+    "edit charged item effect": Opener(
+        "covenant",
+        lambda ws: ws._effect_form(
+            _device(ws, "dev-cov"), _device(ws, "dev-cov").effects[0]
+        ),
+    ),
 }
+
+
+def _device(ws, device_id: str):
+    return next(d for d in ws.saga.enchanted_devices if d.id == device_id)
 
 
 async def until(condition, timeout: float = 3.0) -> bool:

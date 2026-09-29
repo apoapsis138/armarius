@@ -36,6 +36,8 @@ from ..models import (
     CovenantBoonHookDef,
     LabVirtueFlawDef,
     Saga,
+    ShapeMaterialBonus,
+    ShapeMaterialDef,
     Spell,
     VirtueFlawDef,
     VirtueFlawInstance,
@@ -860,6 +862,57 @@ class SpellChooserScreen(SearchablePickerScreen[Spell, str | None]):
 
     def _on_entry_selected(self, entry: Spell) -> None:
         self.dismiss(entry.id)
+
+
+class ShapeMaterialPickerScreen(
+    SearchablePickerScreen[
+        tuple[ShapeMaterialDef, int | None], ShapeMaterialBonus | None
+    ]
+):
+    """Pick one bonus from DE's Shape and Material Bonuses Table (STORY-305):
+    a row per (shape or material, bonus), searchable by either. Dismisses
+    with the bonus as a ShapeMaterialBonus (a row with no bonus, e.g. Living
+    Tree, gives its note and +0)."""
+
+    PICKER_TITLE: ClassVar[str] = "Choose a Shape & Material bonus"
+    EMPTY_MESSAGE: ClassVar[str] = "(no bonuses)"
+    SEARCH_PLACEHOLDER: ClassVar[str] = "Search shapes, materials or effects..."
+    LIST_VIEW_ID: ClassVar[str] = "shape-material-list"
+
+    def _load_entries(self) -> list[tuple[ShapeMaterialDef, int | None]]:
+        entries: list[tuple[ShapeMaterialDef, int | None]] = []
+        for row in catalog.load_shape_material_catalog():
+            if not row.bonuses:
+                entries.append((row, None))
+            entries += [(row, index) for index in range(len(row.bonuses))]
+        return entries
+
+    @staticmethod
+    def _bonus(entry: tuple[ShapeMaterialDef, int | None]) -> ShapeMaterialBonus:
+        row, index = entry
+        if index is None:
+            return ShapeMaterialBonus(0, row.note, row.name)
+        bonus, effect = row.bonuses[index]
+        return ShapeMaterialBonus(bonus, effect, row.name)
+
+    def _search_text(self, entry: tuple[ShapeMaterialDef, int | None]) -> str:
+        bonus = self._bonus(entry)
+        return f"{bonus.shape} {bonus.applies_to}"
+
+    def _label_for(self, entry: tuple[ShapeMaterialDef, int | None]) -> str:
+        bonus = self._bonus(entry)
+        figure = f"{bonus.bonus:+d} " if entry[1] is not None else ""
+        return f"{escape(bonus.shape)}  [dim]{figure}{escape(bonus.applies_to)}[/]"
+
+    def _item_id(self, entry: tuple[ShapeMaterialDef, int | None]) -> str:
+        row, index = entry
+        return f"smpick-{row.id}-{'note' if index is None else index}"
+
+    def _source(self, entry: tuple[ShapeMaterialDef, int | None]) -> str:
+        return entry[0].source
+
+    def _on_entry_selected(self, entry: tuple[ShapeMaterialDef, int | None]) -> None:
+        self.dismiss(self._bonus(entry))
 
 
 class RemovalPickerScreen(ModalDialog[int | None]):

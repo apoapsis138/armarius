@@ -26,6 +26,7 @@ from .. import books as bk
 from .. import catalog, faith
 from .. import covenant_diary as cov_diary
 from .. import economics as eco
+from .. import enchanted_devices as ed
 from .. import familiars as fam
 from .. import inhabitants as inh
 from .. import laboratories as lab_text
@@ -88,6 +89,15 @@ from .widgets import (
 _LIBRARY_SECTIONS: frozenset[str] = frozenset(
     {"section-lib-summary", "section-lib-books"}
 )
+
+
+#: The Enchanted Devices section of each sheet (STORY-305), and the kind of
+#: holder whose devices it lists.
+DEVICE_SECTIONS: dict[str, str] = {
+    "section-char-devices": "character",
+    "section-lab-devices": "laboratory",
+    "section-cov-devices": "covenant",
+}
 
 
 #: Section ids of every book list (see BookListView); 'a' in any of them adds
@@ -646,6 +656,44 @@ class SheetView(Vertical):
         )
         return SelectableList(rows(), id=id, group=group)
 
+    def _devices(
+        self, kind: str, holder_id: str, section_id: str, *, group: str
+    ) -> ComposeResult:
+        """The Enchanted Devices section (STORY-305): the devices `kind`
+        `holder_id` holds, each followed by its effects."""
+        with SheetSection(
+            title=self._titled(
+                section_id,
+                section_id,
+                lambda: counted(
+                    "Enchanted Devices", len(ed.held_by(self.saga, kind, holder_id))
+                ),
+            ),
+            id=section_id,
+        ):
+            yield self._list(
+                section_id,
+                lambda: ed.device_rows(self.saga, kind, holder_id),
+                id=f"{section_id}-list",
+                group=group,
+            )
+
+    def selected_device_row(self, section_id: str) -> int | None:
+        """Index into enchanted_devices.device_targets of the row chosen in
+        `section_id`'s Enchanted Devices list, or None."""
+        return self.query_one(f"#{section_id}-list", SelectableList).selected_data_index
+
+    def _device_panel_text(
+        self, kind: str, holder_id: str, index: int | None, hint: str
+    ) -> str:
+        """The details panel for row `index` of a device list (None: `hint`)."""
+        if index is None:
+            return hint
+        targets = ed.device_targets(self.saga, kind, holder_id)
+        if index >= len(targets):
+            return hint
+        return ed.target_info_text(self.saga, targets[index])
+
     @staticmethod
     def _inherited(value: str) -> str:
         """Dim a value that's derived or inherited (e.g. from the saga) and
@@ -927,6 +975,11 @@ class CharacterSheetView(SheetView):
         details panel docked below them. Magi only."""
         with Vertical(id="hermetic-body", classes="panel-body"):
             with VerticalScroll(id="hermetic-scroll"):
+                yield self._static(
+                    ("section-char-devices", "section-arts"),
+                    lambda: ed.talisman_line(self.saga, self.character),
+                    id="hermetic-talisman",
+                )
                 with (
                     PinnedCollapsible(title="Magical Arts", id="section-arts"),
                     TwoColumns(id="arts-row"),
@@ -1003,6 +1056,9 @@ class CharacterSheetView(SheetView):
                         id="inventory-list",
                         group="char-inv",
                     )
+                yield from self._devices(
+                    "character", character.id, "section-char-devices", group="char-inv"
+                )
                 yield self._book_list(
                     ("section-char-info",),
                     lambda: bk.books_owned_by(self.saga, "character", character.id),
@@ -1012,7 +1068,12 @@ class CharacterSheetView(SheetView):
                 )
             yield DetailsPanel(self._inventory_info_text(None), id="inventory-info")
         self._on_refresh(
-            ("section-inventory", "section-books", "section-char-info"),
+            (
+                "section-inventory",
+                "section-char-devices",
+                "section-books",
+                "section-char-info",
+            ),
             self._refresh_inventory_info,
         )
 
@@ -1068,9 +1129,13 @@ class CharacterSheetView(SheetView):
                 self._ability_info_text(event.data_index)
             )
             return
-        if list_id in ("inventory-list", "section-books-list"):
+        if list_id in (
+            "inventory-list",
+            "section-char-devices-list",
+            "section-books-list",
+        ):
             event.stop()
-            # One group (one selection across the two), one details panel.
+            # One group (one selection across the three), one details panel.
             self._refresh_inventory_info()
             return
         if list_id in ("arts-techniques-list", "arts-forms-list", "known-spells-list"):
@@ -1349,19 +1414,33 @@ class CharacterSheetView(SheetView):
                 rows.append((index, pos.row_label(pos.PossessionEntry(kind, item))))
         return rows
 
+    #: The Inventory tab's details panel with nothing chosen.
+    _INVENTORY_HINT = (
+        "[dim]Select an item, an enchanted device or a book to see its details.[/]"
+    )
+
     def _inventory_info_text(self, index: int | None) -> str:
         if index is None:
-            return "[dim]Select an item or a book to see its details.[/]"
+            return self._INVENTORY_HINT
         item = self.character.inventory[index]
         return pos.detail_text(pos.PossessionEntry(item.kind, item))
 
     def _refresh_inventory_info(self) -> None:
-        """The Inventory tab's details panel: the chosen item or book (one
-        selection across the two lists), else the hint."""
+        """The Inventory tab's details panel: the chosen item, enchanted
+        device or book (one selection across the three lists), else the
+        hint."""
         info = self.query_one("#inventory-info", Static)
         index = self.query_one("#inventory-list", SelectableList).selected_data_index
         if index is not None and index < len(self.character.inventory):
             info.update(self._inventory_info_text(index))
+            return
+        device = self.selected_device_row("section-char-devices")
+        if device is not None:
+            info.update(
+                self._device_panel_text(
+                    "character", self.character.id, device, self._INVENTORY_HINT
+                )
+            )
             return
         book = self.query_one(BookListView).selected_book()
         info.update(
@@ -1606,8 +1685,9 @@ class LaboratorySheetView(SheetView):
         )
 
     def _inventory_tab(self) -> ComposeResult:
-        """Raw Vis, Equipment & Stores and the lab's Books over the details
-        panel of the chosen row, docked below the scrolling part."""
+        """Raw Vis, Equipment & Stores, Enchanted Devices and the lab's Books
+        over the details panel of the chosen row, docked below the scrolling
+        part."""
         with Vertical(id="lab-inv-body", classes="panel-body"):
             with VerticalScroll(id="lab-inv-scroll"):
                 with SheetSection(title="Raw Vis", id="section-lab-raw-vis"):
@@ -1633,6 +1713,12 @@ class LaboratorySheetView(SheetView):
                         id="lab-items-list",
                         group="lab-inv",
                     )
+                yield from self._devices(
+                    "laboratory",
+                    self.laboratory.id,
+                    "section-lab-devices",
+                    group="lab-inv",
+                )
                 yield self._book_list(
                     ("section-lab-identity",),
                     lambda: bk.books_owned_by(
@@ -1647,6 +1733,7 @@ class LaboratorySheetView(SheetView):
             (
                 "section-lab-raw-vis",
                 "section-lab-items",
+                "section-lab-devices",
                 "section-lab-books",
                 "section-lab-identity",
             ),
@@ -1709,6 +1796,12 @@ class LaboratorySheetView(SheetView):
                     lab_text.named_info_text(lab.inventory_items, i, "an entry")
                     if i is not None
                     else lab_text.INVENTORY_PANEL_HINT
+                ),
+            ),
+            "section-lab-devices-list": (
+                "lab-inv-panel",
+                lambda i: self._device_panel_text(
+                    "laboratory", lab.id, i, lab_text.INVENTORY_PANEL_HINT
                 ),
             ),
             "section-lab-books-list": ("lab-inv-panel", self._book_panel_text),
@@ -2367,6 +2460,15 @@ class CovenantSheetView(SheetView):
                         yield SelectableList(
                             self._pos_rows(kind), id=f"pos-{kind}-list", group="pos"
                         )
+                yield from self._devices(
+                    "covenant", self.covenant.id, "section-cov-devices", group="pos"
+                )
+                self._on_refresh(
+                    "section-cov-devices",
+                    lambda: self.query_one("#pos-panel", Static).update(
+                        pos.detail_text(None)
+                    ),
+                )
             yield DetailsPanel(pos.detail_text(None), id="pos-panel")
 
     #: The three lists of the Economics tab (one selection across them).
@@ -2647,6 +2749,17 @@ class CovenantSheetView(SheetView):
             )
             self.query_one("#inh-panel", Static).update(
                 inh.detail_text(chosen, self.saga.current_year)
+            )
+            return
+        if list_id == "section-cov-devices-list":
+            event.stop()
+            self.query_one("#pos-panel", Static).update(
+                self._device_panel_text(
+                    "covenant",
+                    self.covenant.id,
+                    event.data_index,
+                    pos.detail_text(None),
+                )
             )
             return
         if list_id.startswith("pos-") and list_id.endswith("-list"):

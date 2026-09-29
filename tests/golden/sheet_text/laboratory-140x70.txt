@@ -236,6 +236,12 @@
       ○ Alembic
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Enchanted Devices (1)
+
+      ○ Wand     Invested  Opened 4/4  1 effect
+      ○   Pilum  CrIg 10  1/day
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Books (1)
 
           Name                 Type           Subject                 Level Quality  Location
@@ -251,13 +257,7 @@
 
 
 
-
-
-
-
-
-
-    Select Raw Vis, an Equipment & Stores entry or a book to see its details.
+    Select Raw Vis, an Equipment & Stores entry, an enchanted device or a book to see its details.
 
 
 

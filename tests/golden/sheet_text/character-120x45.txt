@@ -150,11 +150,11 @@
   ription  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Laboratory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+  Talisman: Ring  Opened 0/0  0 attunements
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Magical Arts
 
       Techniques                             Forms
-                         Level    XP                            Level    XP
 
 
     Select an Art or a Known Spell to see its details.
@@ -194,13 +194,13 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Raw Vis                                                                     ▅▅
+    ▼ Raw Vis                                                                     ▇▇
 
       ○ Creo: 3 pawn(s)
 
 
 
-    Select an item or a book to see its details.
+    Select an item, an enchanted device or a book to see its details.
 
 
 

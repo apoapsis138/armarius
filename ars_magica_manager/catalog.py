@@ -1,6 +1,6 @@
 """Loads the shared catalogs -- Virtues/Flaws, Abilities, Houses, Boons & Hooks,
-Laboratory Virtues/Flaws, Laboratory Features, Spells, and Weapons & Armor
-(reference data, not per-saga)."""
+Laboratory Virtues/Flaws, Laboratory Features, Spells, Weapons & Armor, and
+Shape & Material bonuses (reference data, not per-saga)."""
 
 from __future__ import annotations
 
@@ -23,6 +23,7 @@ from .models import (
     HouseDef,
     LabFeatureDef,
     LabVirtueFlawDef,
+    ShapeMaterialDef,
     Spell,
     VirtueFlawDef,
     VirtueFlawInstance,
@@ -37,6 +38,7 @@ LAB_VF_CATALOG_PATH = DATA_DIR / "lab_virtue_flaw_catalog.json"
 SPELL_CATALOG_PATH = DATA_DIR / "spell_catalog.json"
 LAB_FEATURE_CATALOG_PATH = DATA_DIR / "lab_feature_catalog.json"
 WEAPON_ARMOR_CATALOG_PATH = DATA_DIR / "weapon_armor_catalog.json"
+SHAPE_MATERIAL_CATALOG_PATH = DATA_DIR / "shape_material_catalog.json"
 
 
 def _load_entries[T](path: Path, from_dict: Callable[[dict[str, Any]], T]) -> list[T]:
@@ -383,3 +385,16 @@ def load_armor_catalog_by_id(
     path: Path = WEAPON_ARMOR_CATALOG_PATH,
 ) -> dict[str, ArmorDef]:
     return {entry.id: entry for entry in _weapon_armor_catalog(path)[1]}
+
+
+@lru_cache(maxsize=4)
+def _shape_material_catalog(path: Path) -> tuple[ShapeMaterialDef, ...]:
+    return tuple(_load_entries(path, ShapeMaterialDef.from_dict))
+
+
+def load_shape_material_catalog(
+    path: Path = SHAPE_MATERIAL_CATALOG_PATH,
+) -> list[ShapeMaterialDef]:
+    """DE's Shape and Material Bonuses Table, row for row in its order
+    (built by tools/build_shape_material_catalog.py). Cached."""
+    return list(_shape_material_catalog(path))

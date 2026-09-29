@@ -2,11 +2,41 @@
 
 What changed in each version of Ars Magica Manager, newest first.
 
-Versions are `0.MINOR.PATCH`: a new or changed feature bumps MINOR, a bug
-fix or behind-the-scenes improvement bumps PATCH. The version is set in
+Versions are `MAJOR.MINOR.PATCH`: MAJOR marks a finished phase of the
+plan (1.0.0: Phase 1, the core tracker), a new or changed feature bumps
+MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is set in
 `pyproject.toml`, shown in the app's title bar and on the saga picker, and
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
+
+## 1.0.0 — 2026-09-29
+
+Phase 1, the core tracker, is complete.
+
+- Enchanted devices and talismans: a record for each enchanted item in the
+  saga -- Invested Devices (a magus's Talisman is one), Lesser
+  Enchantments and Charged Items -- shown in a new Enchanted Devices
+  section on its holder's sheet: the laboratory's and character's
+  Inventory tab, or the covenant's Possessions tab. Each device lists its
+  effects under it; a magus's talisman is listed first and named on the
+  Hermetic Magic tab.
+- The app works out the item side of the Definitive Edition's enchantment
+  rules: capacity from Material and Size (or a talisman's from its magus's
+  Arts), each effect's modified level with its breakdown, its vis, pawns
+  used, Effect Expiry, and a Charged Item's charges from its Lab Total.
+  Any figure can be typed over. Warnings flag what doesn't add up (effects
+  using more pawns than were opened, a second talisman, two attunements in
+  one season, too many charges...) without stopping you.
+- Shape & Material bonuses and talisman attunements can be picked from the
+  Definitive Edition's table (all 241 shapes and materials) or typed in.
+- Keys in an Enchanted Devices section: a adds a device, i instils an
+  effect in the chosen device, e edits, A removes, u uses a charge of the
+  chosen Charged Item. i and u only show in the footer where they can act.
+- Deleting a character or laboratory passes the devices it holds to its
+  covenant (or deletes them, with no covenant); deleting a covenant
+  deletes the devices it holds. The confirmation says which.
+- T (Set Date) still works everywhere but is no longer listed in the
+  footer, to keep it on one line.
 
 ## 0.12.0 — 2026-09-28
 

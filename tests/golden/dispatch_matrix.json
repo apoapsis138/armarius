@@ -8,6 +8,7 @@
         "e": "FieldsDialog: Edit Saga",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "ImportScreen: Import Data",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -23,6 +24,7 @@
         "e": "FieldsDialog: Edit Covenant",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -36,6 +38,7 @@
         "e": "FieldsDialog: Edit Covenant Description",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -49,6 +52,7 @@
         "e": "RemovalPickerScreen: Edit which Reputation?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -62,6 +66,7 @@
         "e": "RemovalPickerScreen: Edit which Boon?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -75,6 +80,7 @@
         "e": "RemovalPickerScreen: Edit which Hook?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -88,6 +94,7 @@
         "e": "FieldsDialog: Edit Loyalty",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -101,6 +108,7 @@
         "e": "FieldsDialog: Edit Inhabitants",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -114,6 +122,7 @@
         "e": "FieldsDialog: Edit Miscellaneous",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -127,6 +136,7 @@
         "e": "RemovalPickerScreen: Edit which Magus?",
         "r": "notice: No departed Magi to restore.",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -140,6 +150,7 @@
         "e": "RemovalPickerScreen: Edit which Companion?",
         "r": "notice: No departed Companions to restore.",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -153,6 +164,7 @@
         "e": "RemovalPickerScreen: Edit which Specialist?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -166,6 +178,7 @@
         "e": "RemovalPickerScreen: Edit which Craftsperson?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -179,6 +192,7 @@
         "e": "RemovalPickerScreen: Edit which Turb Member?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -192,6 +206,7 @@
         "e": "RemovalPickerScreen: Edit which Covenfolk Member?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -205,6 +220,7 @@
         "e": "RemovalPickerScreen: Edit which Horse?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -218,6 +234,7 @@
         "e": "RemovalPickerScreen: Edit which Livestock?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -231,6 +248,7 @@
         "e": "RemovalPickerScreen: Edit which Property?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -244,6 +262,7 @@
         "e": "RemovalPickerScreen: Edit which Sanctum?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -257,6 +276,7 @@
         "e": "RemovalPickerScreen: Edit which Weapon?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -270,6 +290,7 @@
         "e": "RemovalPickerScreen: Edit which Armor?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -283,6 +304,7 @@
         "e": "RemovalPickerScreen: Edit which Vis Source?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -296,6 +318,7 @@
         "e": "RemovalPickerScreen: Edit which Raw Vis Store?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -309,6 +332,21 @@
         "e": "RemovalPickerScreen: Edit which Item?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
+        "I": "(disabled)",
+        "v": "(disabled)",
+        "V": "(disabled)"
+      }
+    },
+    "SheetSection#section-cov-devices": {
+      "active": "section-cov-devices",
+      "keys": {
+        "a": "FieldsDialog: Add an Enchanted Device",
+        "A": "RemovalPickerScreen: Remove a device or effect",
+        "e": "RemovalPickerScreen: Edit which device or effect?",
+        "r": "(disabled)",
+        "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -322,6 +360,7 @@
         "e": "FieldsDialog: Edit Wealth",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -335,6 +374,7 @@
         "e": "RemovalPickerScreen: Edit which source of income?",
         "r": "(disabled)",
         "i": "RemovalPickerScreen: Improve which source of income?",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -348,6 +388,7 @@
         "e": "RemovalPickerScreen: Edit which row?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -361,6 +402,7 @@
         "e": "RemovalPickerScreen: Edit which row?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -374,6 +416,7 @@
         "e": "(disabled)",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "CsvFilePickerScreen: Import books into Keep's library",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -387,6 +430,7 @@
         "e": "RemovalPickerScreen: Edit which book?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "CsvFilePickerScreen: Import books into Keep's library",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -400,6 +444,7 @@
         "e": "notice: No Diary entries to edit.",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -415,6 +460,7 @@
         "e": "FieldsDialog: Edit Character Info",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -428,6 +474,7 @@
         "e": "FieldsDialog: Edit Characteristics",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -441,6 +488,7 @@
         "e": "FieldsDialog: Edit Hermetic Background",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -454,6 +502,7 @@
         "e": "FieldsDialog: Edit Biographical Detail",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -467,6 +516,7 @@
         "e": "RemovalPickerScreen: Edit which Personality Trait?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -480,6 +530,7 @@
         "e": "RemovalPickerScreen: Edit which Reputation?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -493,6 +544,7 @@
         "e": "FieldsDialog: Edit Aging & Warping",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -506,6 +558,7 @@
         "e": "FieldsDialog: Edit Wounds",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -519,6 +572,7 @@
         "e": "RemovalPickerScreen: Edit which Ability?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -532,6 +586,7 @@
         "e": "(disabled)",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "VirtueFlawPickerScreen: Add a Virtue",
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
@@ -545,6 +600,7 @@
         "e": "(disabled)",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "VirtueFlawPickerScreen: Add a Flaw",
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
@@ -558,6 +614,7 @@
         "e": "EditArtsScreen: Edit Arts",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -571,6 +628,7 @@
         "e": "RemovalPickerScreen: Edit which Raw Vis entry?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -584,6 +642,7 @@
         "e": "RemovalPickerScreen: Edit Mastery for which spell?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -597,6 +656,7 @@
         "e": "RemovalPickerScreen: Edit which Raw Vis entry?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -610,6 +670,21 @@
         "e": "RemovalPickerScreen: Edit which item?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
+        "I": "(disabled)",
+        "v": "(disabled)",
+        "V": "(disabled)"
+      }
+    },
+    "SheetSection#section-char-devices": {
+      "active": "section-char-devices",
+      "keys": {
+        "a": "FieldsDialog: Add an Enchanted Device",
+        "A": "RemovalPickerScreen: Remove a device or effect",
+        "e": "RemovalPickerScreen: Edit which device or effect?",
+        "r": "(disabled)",
+        "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -623,6 +698,7 @@
         "e": "RemovalPickerScreen: Edit which book?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -636,6 +712,7 @@
         "e": "FieldsDialog: Edit Character Info",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -649,6 +726,7 @@
         "e": "FieldsDialog: Edit Character Info",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -664,6 +742,7 @@
         "e": "FieldsDialog: Edit Laboratory Identity",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -677,6 +756,7 @@
         "e": "FieldsDialog: Edit Laboratory Characteristics (manual value)",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -690,6 +770,7 @@
         "e": "(disabled)",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -703,6 +784,7 @@
         "e": "(disabled)",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "LabVirtueFlawPickerScreen: Add a Laboratory Virtue or Flaw",
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
@@ -716,6 +798,7 @@
         "e": "(disabled)",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "LabVirtueFlawPickerScreen: Add a Laboratory Virtue or Flaw",
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
@@ -729,6 +812,7 @@
         "e": "(disabled)",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -742,6 +826,7 @@
         "e": "RemovalPickerScreen: Edit which Specialization source?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -755,6 +840,7 @@
         "e": "RemovalPickerScreen: Edit which Feature?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -768,6 +854,7 @@
         "e": "RemovalPickerScreen: Edit which Room?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -781,6 +868,7 @@
         "e": "RemovalPickerScreen: Edit which Raw Vis entry?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -794,6 +882,21 @@
         "e": "RemovalPickerScreen: Edit which Equipment & Stores entry?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
+        "I": "(disabled)",
+        "v": "(disabled)",
+        "V": "(disabled)"
+      }
+    },
+    "SheetSection#section-lab-devices": {
+      "active": "section-lab-devices",
+      "keys": {
+        "a": "FieldsDialog: Add an Enchanted Device",
+        "A": "RemovalPickerScreen: Remove a device or effect",
+        "e": "RemovalPickerScreen: Edit which device or effect?",
+        "r": "(disabled)",
+        "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -807,6 +910,7 @@
         "e": "RemovalPickerScreen: Edit which book?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -820,6 +924,7 @@
         "e": "RemovalPickerScreen: Edit which Diary Entry?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -835,6 +940,7 @@
         "e": "FieldsDialog: Edit Familiar",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -848,6 +954,7 @@
         "e": "EditFamiliarBindingScreen",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -861,6 +968,7 @@
         "e": "(disabled)",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "VirtueFlawPickerScreen: Add a Virtue",
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
@@ -874,6 +982,7 @@
         "e": "(disabled)",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "VirtueFlawPickerScreen: Add a Flaw",
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
@@ -887,6 +996,7 @@
         "e": "RemovalPickerScreen: Edit which Personality Trait?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -900,6 +1010,7 @@
         "e": "RemovalPickerScreen: Edit which Reputation?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -913,6 +1024,7 @@
         "e": "FieldsDialog: Edit Characteristics",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -926,6 +1038,7 @@
         "e": "FieldsDialog: Edit Wounds",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -939,6 +1052,7 @@
         "e": "RemovalPickerScreen: Edit which attack?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -952,6 +1066,7 @@
         "e": "RemovalPickerScreen: Edit which Ability?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -965,6 +1080,7 @@
         "e": "RemovalPickerScreen: Edit which Bond Power?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -980,6 +1096,7 @@
         "e": "RemovalPickerScreen: Edit which book?",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -995,6 +1112,7 @@
         "e": "notice: Choose a spell to edit first.",
         "r": "(disabled)",
         "i": "(disabled)",
+        "u": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"

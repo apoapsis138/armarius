@@ -103,7 +103,7 @@
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Properties and Land (1)
-                                                                                  ▂▂
+                                                                                  ▄▄
         Name                Location          Dimensions    Inhabitants
       ○ A property
 

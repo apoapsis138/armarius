@@ -283,6 +283,8 @@ class SelectableList(OptionList):
         self._marked = None
         self._checked = set()
         self._add_rows(rows)
+        if self.is_mounted:
+            self.screen.refresh_bindings()
 
     def relabel(self, labels: list[str]) -> None:
         """New labels for the same rows, in order (e.g. re-laid-out columns);
@@ -370,6 +372,8 @@ class SelectableList(OptionList):
         self._mark(event.option_index)
         self._clear_group()
         self.post_message(self.Chosen(self, int(event.option.id)))
+        # A key can depend on the chosen row (e.g. u on a Charged Item).
+        self.screen.refresh_bindings()
 
 
 class ToggleList(SelectableList):

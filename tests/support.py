@@ -4,15 +4,19 @@ import re
 
 from ars_magica_manager import catalog
 from ars_magica_manager.models import (
+    CHARGED,
     Ability,
     BondPower,
     Book,
     Character,
     Covenant,
+    DeviceComponent,
     DiaryEntry,
+    EnchantedDevice,
     Familiar,
     IncomeSource,
     Inhabitant,
+    InstilledEffect,
     KnownSpell,
     LabFeature,
     Laboratory,
@@ -188,6 +192,42 @@ def everything_saga() -> Saga:
         ),
         Book(id="b-none", name="Loose", type="Other"),
     ]
+    devices = [
+        EnchantedDevice(
+            id="dev-lab",
+            name="Wand",
+            holder_kind="laboratory",
+            holder_id="lab1",
+            components=[DeviceComponent("rowan wand", "wood", "small")],
+            pawns_opened=4,
+            effects=[
+                InstilledEffect(
+                    id="eff1", name="Pilum", technique="Creo", form="Ignem", level=10
+                )
+            ],
+        ),
+        EnchantedDevice(
+            id="dev-char",
+            name="Ring",
+            talisman=True,
+            holder_kind="character",
+            holder_id="mag1",
+            maker_id="mag1",
+        ),
+        EnchantedDevice(
+            id="dev-cov",
+            name="Potions",
+            type=CHARGED,
+            holder_kind="covenant",
+            holder_id="cov1",
+            lab_total=30,
+            effects=[
+                InstilledEffect(
+                    id="eff2", name="Heal", technique="Creo", form="Corpus", level=20
+                )
+            ],
+        ),
+    ]
     return Saga(
         id="test_saga",
         name="Matrix",
@@ -196,6 +236,7 @@ def everything_saga() -> Saga:
         laboratories=[lab],
         familiars=[familiar],
         books=books,
+        enchanted_devices=devices,
         spells=[
             Spell(id="own1", name="Own Spell", technique="Creo", form="Ignem", level=5)
         ],

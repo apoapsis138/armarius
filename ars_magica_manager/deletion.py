@@ -6,6 +6,9 @@ unassigned, a covenant's characters and laboratories become unassigned, a
 laboratory loses its owner. What only makes sense attached to the record goes
 with it: a magus's Familiar, a magus's or companion's covenant-side extras on
 the Inhabitants tab, a laboratory's sanctum extras on the Possessions tab.
+An enchanted device held by a deleted character or laboratory passes to that
+record's covenant, or (with none) is deleted with it, as are those a deleted
+covenant holds; a deleted maker is kept on their devices as a typed name.
 A magus's invented spells that anything else still uses (another character
 knows one, or a Lab Text or Casting Tablet holds one) are kept as the saga's
 own spells.
@@ -17,6 +20,7 @@ from __future__ import annotations
 
 from . import books as bk
 from . import familiars as fam
+from .enchanted_devices import held_by
 from .inhabitants import AUTO_KINDS
 from .models import Character, Covenant, Laboratory, Saga, Spell
 
@@ -34,6 +38,46 @@ def _unassign_books(saga: Saga, kind: str, owner_id: str) -> None:
     for book in bk.books_owned_by(saga, kind, owner_id):
         book.owner_kind = None
         book.owner_id = None
+
+
+def _devices_line(
+    saga: Saga, kind: str, holder_id: str, covenant_id: str | None, who: str
+) -> list[str]:
+    """What happens to the devices `kind` `holder_id` holds, for the
+    confirmation: they pass to the covenant, or are named and deleted."""
+    devices = held_by(saga, kind, holder_id)
+    if not devices:
+        return []
+    n = len(devices)
+    covenant = saga.covenant(covenant_id)
+    what = f"{_count(n, 'enchanted device')} {who}"
+    if covenant is not None:
+        passes = "passes" if n == 1 else "pass"
+        return [f"{what} {passes} to {covenant.name}."]
+    names = ", ".join(d.name for d in devices)
+    return [f"{what} {'is' if n == 1 else 'are'} deleted with it: {names}."]
+
+
+def _rehome_devices(
+    saga: Saga, kind: str, holder_id: str, covenant_id: str | None
+) -> None:
+    """Give the devices `kind` `holder_id` holds to the covenant, or (with
+    none) delete them."""
+    held = held_by(saga, kind, holder_id)
+    if saga.covenant(covenant_id) is None:
+        saga.enchanted_devices = [d for d in saga.enchanted_devices if d not in held]
+        return
+    for device in held:
+        device.holder_kind = "covenant"
+        device.holder_id = covenant_id
+
+
+def _forget_maker(saga: Saga, character: Character) -> None:
+    """Keep a deleted maker on their devices as a typed name."""
+    for device in saga.enchanted_devices:
+        if device.maker_id == character.id:
+            device.maker_id = None
+            device.maker_name = character.name
 
 
 # ------------------------------------------------------------------ character
@@ -73,6 +117,9 @@ def character_consequences(saga: Saga, character: Character) -> list[str]:
     if books:
         n = len(books)
         lines.append(f"{_count(n, 'book')} they own {_becomes(n)} unassigned.")
+    lines += _devices_line(
+        saga, "character", character.id, character.covenant_id, "they hold"
+    )
     kept = spells_still_used(saga, character)
     if kept:
         n = len(kept)
@@ -102,6 +149,8 @@ def delete_character(saga: Saga, character: Character) -> None:
             if record.character_id == character.id:
                 record.character_id = None
     saga.spells.extend(spells_still_used(saga, character))
+    _rehome_devices(saga, "character", character.id, character.covenant_id)
+    _forget_maker(saga, character)
     saga.characters = [c for c in saga.characters if c is not character]
 
 
@@ -117,6 +166,7 @@ def laboratory_consequences(saga: Saga, lab: Laboratory) -> list[str]:
     if books:
         n = len(books)
         lines.append(f"{_count(n, 'book')} kept there {_becomes(n)} unassigned.")
+    lines += _devices_line(saga, "laboratory", lab.id, lab.covenant_id, "kept there")
     return lines
 
 
@@ -125,6 +175,7 @@ def delete_laboratory(saga: Saga, lab: Laboratory) -> None:
         if character.assigned_lab_id == lab.id:
             character.assigned_lab_id = None
     _unassign_books(saga, "laboratory", lab.id)
+    _rehome_devices(saga, "laboratory", lab.id, lab.covenant_id)
     for covenant in saga.covenants:
         covenant.possessions = [p for p in covenant.possessions if p.lab_id != lab.id]
     saga.laboratories = [x for x in saga.laboratories if x is not lab]
@@ -150,6 +201,7 @@ def covenant_consequences(saga: Saga, covenant: Covenant) -> list[str]:
     lines.append(
         "Its Inhabitants, Possessions and Economics entries are deleted with it."
     )
+    lines += _devices_line(saga, "covenant", covenant.id, None, "it holds")
     return lines
 
 
@@ -161,4 +213,5 @@ def delete_covenant(saga: Saga, covenant: Covenant) -> None:
         if lab.covenant_id == covenant.id:
             lab.covenant_id = None
     _unassign_books(saga, "covenant", covenant.id)
+    _rehome_devices(saga, "covenant", covenant.id, None)
     saga.covenants = [c for c in saga.covenants if c is not covenant]

@@ -455,7 +455,8 @@ ATTRIBUTES_PANEL_HINT = (
     "turns a Specialization off or on.[/]"
 )
 INVENTORY_PANEL_HINT = (
-    "[dim]Select Raw Vis, an Equipment & Stores entry or a book to see its details.[/]"
+    "[dim]Select Raw Vis, an Equipment & Stores entry, an enchanted device or a "
+    "book to see its details.[/]"
 )
 
 

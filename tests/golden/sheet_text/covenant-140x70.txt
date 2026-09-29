@@ -178,11 +178,11 @@
     ▼ Vis Sources (1)
 
         Name                Art        Pawns  Season
-      ○ A vis_source                       0
+      ○ A vis_source                       0                                                          ▃▃
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Raw Vis Stores (1)
-                                                                                                      ▃▃
+
         Name                Art        Pawns
       ○ A vis_store                        0
 

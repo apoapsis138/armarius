@@ -225,6 +225,7 @@
    Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Laboratory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+  Talisman: Ring  Opened 0/0  0 attunements
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Magical Arts
 
@@ -250,7 +251,6 @@
     ▼ Known Spells (1)
 
       ○ Soothe Pains of the Beast      CrAn               20  Touch/Mom/Ind          Ritual ArM5
-
 
 
 
@@ -305,6 +305,11 @@
       ○ Staff                   1
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Enchanted Devices (1)
+
+      ○ Ring  Talisman  Opened 0/0  0 effects
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Books (1)
 
           Name                 Type           Subject                 Level Quality  Location
@@ -320,12 +325,7 @@
 
 
 
-
-
-
-
-
-    Select an item or a book to see its details.
+    Select an item, an enchanted device or a book to see its details.
 
 
 

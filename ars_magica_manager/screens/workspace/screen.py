@@ -16,6 +16,7 @@ from ...models import (
 )
 from ..sheets import (
     BOOK_SECTIONS,
+    DEVICE_SECTIONS,
     SPELL_SECTION,
 )
 from .base import (
@@ -28,6 +29,7 @@ from .base import (
 )
 from .character import CharacterActions
 from .covenant import CovenantActions
+from .devices import DeviceActions
 from .familiar import FamiliarActions
 from .laboratory import LaboratoryActions
 from .library import LibraryActions
@@ -39,6 +41,7 @@ class WorkspaceScreen(
     CharacterActions,
     LaboratoryActions,
     FamiliarActions,
+    DeviceActions,
 ):
     """Persistent nav tree (left) + detail pane (right) for one open saga.
 
@@ -223,6 +226,10 @@ class WorkspaceScreen(
                 partial(self._restore_inhabitant, kind)
                 if kind in inh.AUTO_KINDS
                 else None,
+            )
+        for section in DEVICE_SECTIONS:
+            ops[section] = _SectionOps(
+                self._add_device, self._remove_device_row, self._edit_device_row
             )
         for kind in POSSESSION_KINDS:
             ops[f"section-pos-{kind}"] = _SectionOps(

@@ -13,10 +13,10 @@ from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Saga
 
 
-def test_the_version_comes_from_pyproject_and_is_0_minor_patch():
+def test_the_version_comes_from_pyproject_and_is_major_minor_patch():
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     assert __version__ == pyproject["project"]["version"]
-    assert re.fullmatch(r"0\.\d+\.\d+", __version__)
+    assert re.fullmatch(r"\d+\.\d+\.\d+", __version__)
 
 
 def test_the_changelog_has_an_entry_for_this_version():

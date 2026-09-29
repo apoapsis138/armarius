@@ -1,12 +1,14 @@
-"""Small prompts: confirmation, advancing the season, and the short
-FieldsDialog forms the pickers and lists open."""
+"""Small prompts: confirmation, advancing the season, the list sub-dialog a
+form field can open, and the short FieldsDialog forms the pickers and lists
+open."""
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from typing import Any, ClassVar
 
 from textual.app import ComposeResult
-from textual.binding import BindingType
+from textual.binding import Binding, BindingType
 from textual.containers import Horizontal, Vertical
 from textual.screen import ModalScreen
 from textual.widgets import (
@@ -44,6 +46,7 @@ from .fields import (
     _description_field,
     _pairs,
 )
+from .widgets import SelectableList
 
 
 def _date_fields(season: str, year: int) -> list[DialogField]:
@@ -603,3 +606,130 @@ class ConfirmScreen(ModalScreen[bool]):
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         self.dismiss(event.button.id == "btn-yes")
+
+
+class ListFieldScreen[ItemT](ModalDialog[list[ItemT] | None]):
+    """A small list edited inside a form (e.g. a device's components): its
+    rows, with a to add one, e to edit the chosen row and A to remove it,
+    each entry through `dialog` (a FieldsDialog for one entry; None: a new
+    one). Nothing reaches the record until the form it was opened from is
+    saved: Done dismisses with the edited list, Escape/Cancel with None."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [
+        Binding("a", "add", "Add"),
+        Binding("e", "edit", "Edit"),
+        Binding("A", "remove", "Remove"),
+    ]
+
+    DEFAULT_CSS = """
+    ListFieldScreen {
+        align: center middle;
+    }
+
+    #list-field-dialog {
+        width: 84;
+        max-width: 100%;
+        height: auto;
+        max-height: 100%;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    #list-field-hint {
+        color: $text-muted;
+        height: auto;
+        margin: 1 0;
+    }
+
+    #list-field-buttons {
+        width: 100%;
+        height: auto;
+    }
+    """
+
+    def __init__(
+        self,
+        title: str,
+        items: list[ItemT],
+        label: Callable[[ItemT], str],
+        dialog: Callable[[ItemT | None], FieldsDialog[ItemT]],
+        *,
+        hint: str = "",
+    ) -> None:
+        super().__init__()
+        self.title_text = title
+        self.items = list(items)
+        self.label = label
+        self.dialog = dialog
+        self.hint = hint
+
+    def _rows(self) -> list[tuple[int | None, str]]:
+        return [(index, self.label(item)) for index, item in enumerate(self.items)]
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="list-field-dialog"):
+            yield Label(self.title_text, id="list-field-title")
+            yield SelectableList(self._rows(), id="list-field-list")
+            yield Static(
+                "a adds, e edits the chosen row, A removes it."
+                + (f" {self.hint}" if self.hint else ""),
+                id="list-field-hint",
+            )
+            with Horizontal(id="list-field-buttons"):
+                yield Button("Add", id="btn-add")
+                yield Button("Done", id="btn-done", variant="success")
+                yield Button("Cancel", id="btn-cancel")
+
+    def on_mount(self) -> None:
+        self.query_one("#list-field-list", SelectableList).focus()
+
+    def _chosen(self) -> int | None:
+        index = self.query_one("#list-field-list", SelectableList).selected_data_index
+        if index is None and len(self.items) == 1:
+            return 0
+        return index
+
+    def _refill(self, choose: int | None = None) -> None:
+        rows = self.query_one("#list-field-list", SelectableList)
+        rows.set_rows(self._rows())
+        if choose is not None:
+            rows.select_data_index(choose)
+
+    def action_add(self) -> None:
+        def handle_result(item: ItemT | None) -> None:
+            if item is not None:
+                self.items.append(item)
+                self._refill(len(self.items) - 1)
+
+        self.app.push_screen(self.dialog(None), handle_result)
+
+    def action_edit(self) -> None:
+        index = self._chosen()
+        if index is None:
+            self.notify("Choose a row to edit first.")
+            return
+
+        def handle_result(item: ItemT | None) -> None:
+            if item is not None:
+                self.items[index] = item
+                self._refill(index)
+
+        self.app.push_screen(self.dialog(self.items[index]), handle_result)
+
+    def action_remove(self) -> None:
+        index = self._chosen()
+        if index is None:
+            self.notify("Choose a row to remove first.")
+            return
+        del self.items[index]
+        self._refill()
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        event.stop()
+        if event.button.id == "btn-add":
+            self.action_add()
+        elif event.button.id == "btn-done":
+            self.dismiss(list(self.items))
+        elif event.button.id == "btn-cancel":
+            self.action_cancel()

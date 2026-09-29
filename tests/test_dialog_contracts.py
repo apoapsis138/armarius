@@ -466,7 +466,65 @@ CONTRACTS: dict[str, Contract] = {
         expected=(1221, "Purchases & Sales", "Bought a mill", -12.0, 3),
         invalid={"Pounds": "lots"},
     ),
+    "edit enchanted device": Contract(
+        prefill={
+            "Name": "Wand",
+            "Type": "Invested Device",
+            "Holder": "laboratory:lab1",
+            "Pawns opened": "4",
+        },
+        edits={
+            "Name": "Rowan Wand",
+            "Holder": "covenant:cov1",
+            "Maker": "mag1",
+            "Pawns opened": "3",
+        },
+        saved=lambda s: (
+            _device(s, "dev-lab").name,
+            _device(s, "dev-lab").holder_kind,
+            _device(s, "dev-lab").holder_id,
+            _device(s, "dev-lab").maker_id,
+            _device(s, "dev-lab").pawns_opened,
+            [e.id for e in _device(s, "dev-lab").effects],
+        ),
+        expected=("Rowan Wand", "covenant", "cov1", "mag1", 3, ["eff1"]),
+        invalid={"Name": ""},
+    ),
+    "instill effect": Contract(
+        prefill={"Name": "", "Effect level": "0", "Uses per day": "1"},
+        edits={
+            "Name": "Ward",
+            "Technique": "Rego",
+            "Form": "Vim",
+            "Effect level": "20",
+            "Uses per day": "6",
+            "Penetration": "4",
+            "Effect Expiry": "7 years",
+        },
+        saved=lambda s: [
+            (e.name, e.technique, e.form, e.level, e.uses_per_day, e.penetration)
+            + (e.expiry,)
+            for e in _device(s, "dev-lab").effects[1:]
+        ],
+        expected=[("Ward", "Rego", "Vim", 20, "6", 4, "7 years")],
+        invalid={"Name": "Ward", "Penetration": "3"},
+    ),
+    "edit charged item effect": Contract(
+        prefill={"Name": "Heal", "Technique": "Creo", "Effect level": "20"},
+        edits={"Name": "Mend", "Effect level": "15", "Known": False},
+        saved=lambda s: (
+            _device(s, "dev-cov").effects[0].name,
+            _device(s, "dev-cov").effects[0].level,
+            _device(s, "dev-cov").effects[0].known,
+        ),
+        expected=("Mend", 15, False),
+        invalid={"Effect level": "-5"},
+    ),
 }
+
+
+def _device(saga: Saga, device_id: str):
+    return next(d for d in saga.enchanted_devices if d.id == device_id)
 
 
 # -- finding and setting fields by label --

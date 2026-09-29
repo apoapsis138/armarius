@@ -1,0 +1,3622 @@
+{
+  "attribution": "Shape and Material bonuses from the Ars Magica Definitive Edition, Chapter 8 (Laboratory, Shape and Material Bonuses Table), via Project: Redcap (redcap.org); each entry cites its source. Condensed and restructured as data for Ars Magica Manager. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+  "notes": "One entry per row of the book's table, in its order. Each bonus adds to the Lab Total for instilling a matching effect (the total from shapes and materials is capped at Magic Theory) and is the menu of a talisman's attunements. An entry with no bonuses keeps the book's text as its note.",
+  "entries": [
+    {
+      "id": "sm_adze",
+      "name": "Adze",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "beautify wood structures"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_agate",
+      "name": "Agate",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "air"
+        },
+        {
+          "bonus": 5,
+          "effect": "protection from storms"
+        },
+        {
+          "bonus": 7,
+          "effect": "protection from venom"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_alabaster",
+      "name": "Alabaster",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "forgiving"
+        },
+        {
+          "bonus": 4,
+          "effect": "mental acuity"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_alder_wood",
+      "name": "Alder Wood",
+      "bonuses": [
+        {
+          "bonus": 1,
+          "effect": "resist decay"
+        },
+        {
+          "bonus": 2,
+          "effect": "royalty"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_almond_wood",
+      "name": "Almond Wood",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "Creo Herbam"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_aloe",
+      "name": "Aloe",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "friendship"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_amber",
+      "name": "Amber",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "controlling movement"
+        },
+        {
+          "bonus": 3,
+          "effect": "Corpus"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_amethyst",
+      "name": "Amethyst",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "wealth"
+        },
+        {
+          "bonus": 2,
+          "effect": "hearing"
+        },
+        {
+          "bonus": 3,
+          "effect": "versus poison"
+        },
+        {
+          "bonus": 3,
+          "effect": "dreams"
+        },
+        {
+          "bonus": 4,
+          "effect": "temperance"
+        },
+        {
+          "bonus": 7,
+          "effect": "versus drunkenness"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_amulet_bearing_the_sigils_of_angels",
+      "name": "Amulet Bearing the Sigils of Angels",
+      "bonuses": [
+        {
+          "bonus": 7,
+          "effect": "ward against demons"
+        },
+        {
+          "bonus": 7,
+          "effect": "banish demons"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_anchor",
+      "name": "Anchor",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "prevent movement"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_animal_bone",
+      "name": "Animal Bone",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "harm or destroy animals"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_animal_hide",
+      "name": "Animal Hide",
+      "bonuses": [
+        {
+          "bonus": 7,
+          "effect": "turn into appropriate animal"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_apple_wood",
+      "name": "Apple Wood",
+      "bonuses": [
+        {
+          "bonus": 1,
+          "effect": "longevity"
+        },
+        {
+          "bonus": 1,
+          "effect": "Corpus"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_aquamarine",
+      "name": "Aquamarine",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "water"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_armillary_sphere",
+      "name": "Armillary Sphere",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "display the heavens"
+        },
+        {
+          "bonus": 5,
+          "effect": "celestial time"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_armor",
+      "name": "Armor",
+      "bonuses": [
+        {
+          "bonus": 7,
+          "effect": "protect wearer"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_arrow",
+      "name": "Arrow",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "aiming"
+        },
+        {
+          "bonus": 3,
+          "effect": "direction"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_artifacts_from_pompeii_and_herculaneum",
+      "name": "Artifacts from Pompeii and Herculaneum",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "volcanoes"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_ash_burned_debris",
+      "name": "Ash (Burned Debris)",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "burning things"
+        },
+        {
+          "bonus": 2,
+          "effect": "Ignem"
+        },
+        {
+          "bonus": 5,
+          "effect": "affect things that have been burned"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_ash_wood",
+      "name": "Ash Wood",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "harm people"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_aspen_wood",
+      "name": "Aspen Wood",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "cure disease"
+        },
+        {
+          "bonus": 5,
+          "effect": "cure fever"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_astrolabe",
+      "name": "Astrolabe",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "astrology"
+        },
+        {
+          "bonus": 5,
+          "effect": "measure the stars and heavens"
+        },
+        {
+          "bonus": 5,
+          "effect": "navigation"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_auger",
+      "name": "Auger",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "shape wood"
+        },
+        {
+          "bonus": 2,
+          "effect": "puncture wood"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_axe",
+      "name": "Axe",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "destroy wood"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_bag_sack",
+      "name": "Bag/Sack",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "moving things into or out of"
+        },
+        {
+          "bonus": 5,
+          "effect": "trapping things within"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_bandage",
+      "name": "Bandage",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "healing wounds"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_basalt",
+      "name": "Basalt",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "Ignem"
+        },
+        {
+          "bonus": 3,
+          "effect": "Perdo"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_basilisk_eye",
+      "name": "Basilisk Eye",
+      "bonuses": [
+        {
+          "bonus": 8,
+          "effect": "kill at a distance"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_basket",
+      "name": "Basket",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "collect items"
+        },
+        {
+          "bonus": 3,
+          "effect": "create things within"
+        },
+        {
+          "bonus": 4,
+          "effect": "preserve contents"
+        },
+        {
+          "bonus": 5,
+          "effect": "create food within"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_bed",
+      "name": "Bed",
+      "bonuses": [
+        {
+          "bonus": 6,
+          "effect": "affect sleep and dreams"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_beech_wood",
+      "name": "Beech Wood",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "knowledge"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_bell",
+      "name": "Bell",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "warning"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_bellows",
+      "name": "Bellows",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "create wind"
+        },
+        {
+          "bonus": 5,
+          "effect": "strengthen fire"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_belt_or_girdle",
+      "name": "Belt or Girdle",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "affect strength"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_beryl",
+      "name": "Beryl",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "water"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_billhook",
+      "name": "Billhook",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "pruning"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_birch_wood",
+      "name": "Birch Wood",
+      "bonuses": [
+        {
+          "bonus": 1,
+          "effect": "Creo"
+        },
+        {
+          "bonus": 3,
+          "effect": "childbirth"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_blackthorn_wood",
+      "name": "Blackthorn Wood",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "dark fay"
+        },
+        {
+          "bonus": 6,
+          "effect": "guardians"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_bloodstone",
+      "name": "Bloodstone",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "blood and wounds"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_boat",
+      "name": "Boat",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "sailing"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_bookshelf",
+      "name": "Bookshelf",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "hide things within"
+        },
+        {
+          "bonus": 4,
+          "effect": "protect things within"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_boots",
+      "name": "Boots",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "affect walking"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_bow",
+      "name": "Bow",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "destroy things at a distance"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_brass",
+      "name": "Brass",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "music"
+        },
+        {
+          "bonus": 3,
+          "effect": "Ignem"
+        },
+        {
+          "bonus": 4,
+          "effect": "demons, devils, and angels"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_bronze",
+      "name": "Bronze",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "Terram"
+        },
+        {
+          "bonus": 5,
+          "effect": "darkness"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_candle_black",
+      "name": "Candle, Black",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "summon demons"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_candle_made_of_goat_fat",
+      "name": "Candle Made of Goat Fat",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "summon demons"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_cappadocian_salt",
+      "name": "Cappadocian Salt",
+      "bonuses": [
+        {
+          "bonus": 6,
+          "effect": "purifying effects"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_carving_of_behemoth",
+      "name": "Carving of Behemoth",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "great size"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_cask",
+      "name": "Cask",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "induce drunkenness"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_cat_s_eye",
+      "name": "Cat's Eye",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "versus malign Corpus"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_catoblepas_esophagus",
+      "name": "Catoblepas Esophagus",
+      "bonuses": [
+        {
+          "bonus": 7,
+          "effect": "kill or harm humans"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_cedar_wood",
+      "name": "Cedar Wood",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "binding spirits"
+        },
+        {
+          "bonus": 5,
+          "effect": "any effect with Mentem and Herbam requisites"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_chalice",
+      "name": "Chalice",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "detect poison within"
+        },
+        {
+          "bonus": 5,
+          "effect": "transform or create liquid in"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_chalk_blue",
+      "name": "Chalk, Blue",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "wards against demons"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_cherry_wood",
+      "name": "Cherry Wood",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "bloodshed"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_chestnut_wood",
+      "name": "Chestnut Wood",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "justice"
+        },
+        {
+          "bonus": 4,
+          "effect": "honesty"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_chimera_tongue",
+      "name": "Chimera Tongue",
+      "bonuses": [
+        {
+          "bonus": 8,
+          "effect": "create fire"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_cinnabar",
+      "name": "Cinnabar",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "long life"
+        },
+        {
+          "bonus": 4,
+          "effect": "wealth"
+        },
+        {
+          "bonus": 4,
+          "effect": "language"
+        },
+        {
+          "bonus": 5,
+          "effect": "dragons"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_cinnamon",
+      "name": "Cinnamon",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "destroying ghosts"
+        },
+        {
+          "bonus": 4,
+          "effect": "Imaginem"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_cinquefoil",
+      "name": "Cinquefoil",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "making amends"
+        },
+        {
+          "bonus": 3,
+          "effect": "drive away demons"
+        },
+        {
+          "bonus": 4,
+          "effect": "resist poison"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_clam_shell",
+      "name": "Clam Shell",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "protection"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_cleaver",
+      "name": "Cleaver",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "butchery"
+        },
+        {
+          "bonus": 3,
+          "effect": "Perdo Animal"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_clear_glass",
+      "name": "Clear Glass",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "invisibility"
+        },
+        {
+          "bonus": 5,
+          "effect": "seeing through something"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_cloak",
+      "name": "Cloak",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "flight"
+        },
+        {
+          "bonus": 4,
+          "effect": "transform wearer"
+        },
+        {
+          "bonus": 5,
+          "effect": "alter/suppress wearer's image"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_cloth_shears",
+      "name": "Cloth Shears",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "shaping fabrics"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_coin",
+      "name": "Coin",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "induce greed"
+        },
+        {
+          "bonus": 4,
+          "effect": "wealth and mercantile"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_collar",
+      "name": "Collar",
+      "bonuses": [
+        {
+          "bonus": 6,
+          "effect": "control wearer"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_comb",
+      "name": "Comb",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "beauty"
+        },
+        {
+          "bonus": 7,
+          "effect": "affect hair"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_container",
+      "name": "Container",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "create or transform within"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_copper",
+      "name": "Copper",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "passion"
+        },
+        {
+          "bonus": 2,
+          "effect": "sex magic"
+        },
+        {
+          "bonus": 3,
+          "effect": "bloodshed"
+        },
+        {
+          "bonus": 4,
+          "effect": "effects that change its own shape"
+        },
+        {
+          "bonus": 4,
+          "effect": "deftness"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_coral_red",
+      "name": "Coral, Red",
+      "bonuses": [
+        {
+          "bonus": 10,
+          "effect": "versus demons"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_cross",
+      "name": "Cross",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "ward away supernatural"
+        },
+        {
+          "bonus": 5,
+          "effect": "cause damage to Infernal creatures"
+        },
+        {
+          "bonus": 5,
+          "effect": "banish demons"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_crowbar",
+      "name": "Crowbar",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "moving stone"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_crown",
+      "name": "Crown",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "wisdom"
+        },
+        {
+          "bonus": 3,
+          "effect": "control people"
+        },
+        {
+          "bonus": 5,
+          "effect": "gain respect, authority"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_crystal",
+      "name": "Crystal",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "water-related effect"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_cypress_wood",
+      "name": "Cypress Wood",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "spirits"
+        },
+        {
+          "bonus": 3,
+          "effect": "necromancy"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_dagger_knife",
+      "name": "Dagger/ Knife",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "precise destruction"
+        },
+        {
+          "bonus": 3,
+          "effect": "betrayal, assassination"
+        },
+        {
+          "bonus": 3,
+          "effect": "poisoning"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_diamond",
+      "name": "Diamond",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "versus demons"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_dividers",
+      "name": "Dividers",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "measuring"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_dogwood",
+      "name": "Dogwood",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "pixies"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_door",
+      "name": "Door",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "warding"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_doorway",
+      "name": "Doorway",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "magical transportation"
+        },
+        {
+          "bonus": 7,
+          "effect": "affect movement through"
+        },
+        {
+          "bonus": 7,
+          "effect": "magical gates and portals"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_doum_palm_leaf",
+      "name": "Doum Palm Leaf",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "controlling instincts and base emotions"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_down",
+      "name": "Down",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "silence"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_dragon_eye",
+      "name": "Dragon Eye",
+      "bonuses": [
+        {
+          "bonus": 8,
+          "effect": "protection against ghosts"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_dragon_heart",
+      "name": "Dragon Heart",
+      "bonuses": [
+        {
+          "bonus": 7,
+          "effect": "Intellego"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_dragon_teeth",
+      "name": "Dragon Teeth",
+      "bonuses": [
+        {
+          "bonus": 6,
+          "effect": "invisibility"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_drum",
+      "name": "Drum",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "cause fear"
+        },
+        {
+          "bonus": 3,
+          "effect": "create storms and thunder"
+        },
+        {
+          "bonus": 5,
+          "effect": "deafening"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_earring",
+      "name": "Earring",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "affect hearing"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_elder_wood",
+      "name": "Elder Wood",
+      "bonuses": [
+        {
+          "bonus": 1,
+          "effect": "Vim"
+        },
+        {
+          "bonus": 4,
+          "effect": "malicious magic"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_electrum",
+      "name": "Electrum",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "scrying"
+        },
+        {
+          "bonus": 3,
+          "effect": "deception"
+        },
+        {
+          "bonus": 4,
+          "effect": "Muto Terram"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_elm_wood",
+      "name": "Elm Wood",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "death and decay"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_emerald",
+      "name": "Emerald",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "incite love or passion"
+        },
+        {
+          "bonus": 7,
+          "effect": "snakes and dragonkind"
+        },
+        {
+          "bonus": 2,
+          "effect": "calm"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_fan",
+      "name": "Fan",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "banish weather phenomena"
+        },
+        {
+          "bonus": 4,
+          "effect": "create or control winds"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_fig_wood",
+      "name": "Fig Wood",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "sex magic"
+        },
+        {
+          "bonus": 3,
+          "effect": "gambling"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_fir_wood",
+      "name": "Fir Wood",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "darkness"
+        },
+        {
+          "bonus": 1,
+          "effect": "malicious faeries"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_fired_clay",
+      "name": "Fired Clay",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "contain or protect from fire"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_flail",
+      "name": "Flail",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "harvesting grain"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_floor",
+      "name": "Floor",
+      "bonuses": [
+        {
+          "bonus": 7,
+          "effect": "affect movement across"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_frankincense",
+      "name": "Frankincense",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "Perdo Vim"
+        },
+        {
+          "bonus": 3,
+          "effect": "dreams"
+        },
+        {
+          "bonus": 4,
+          "effect": "cleanse a place of Infernal influence"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_garnet",
+      "name": "Garnet",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "navigation"
+        },
+        {
+          "bonus": 2,
+          "effect": "strengthen body and mind"
+        },
+        {
+          "bonus": 2,
+          "effect": "vigor"
+        },
+        {
+          "bonus": 3,
+          "effect": "bonds of commitment"
+        },
+        {
+          "bonus": 4,
+          "effect": "repel insects"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_glove",
+      "name": "Glove",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "affect things by touch"
+        },
+        {
+          "bonus": 4,
+          "effect": "manipulation at a distance"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_gold",
+      "name": "Gold",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "health"
+        },
+        {
+          "bonus": 4,
+          "effect": "induce greed"
+        },
+        {
+          "bonus": 4,
+          "effect": "nobility"
+        },
+        {
+          "bonus": 4,
+          "effect": "peace"
+        },
+        {
+          "bonus": 4,
+          "effect": "affect wealth"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_granite",
+      "name": "Granite",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "wealth"
+        },
+        {
+          "bonus": 3,
+          "effect": "Terram"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_green_turquoise",
+      "name": "Green Turquoise",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "necromancy"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_griffin_feather",
+      "name": "Griffin Feather",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "strength"
+        },
+        {
+          "bonus": 6,
+          "effect": "flying"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_hall",
+      "name": "Hall",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "magical transportation"
+        },
+        {
+          "bonus": 6,
+          "effect": "affect movement through"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_handsaw",
+      "name": "Handsaw",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "delicately shape wood"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_hat",
+      "name": "Hat",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "affect image of self"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_hatchet",
+      "name": "Hatchet",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "destroy wood"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_hawthorn_wood",
+      "name": "Hawthorn Wood",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "wards"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_hazel_wood",
+      "name": "Hazel Wood",
+      "bonuses": [
+        {
+          "bonus": 1,
+          "effect": "good judgement"
+        },
+        {
+          "bonus": 3,
+          "effect": "divination"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_hearth",
+      "name": "Hearth",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "destroy things within"
+        },
+        {
+          "bonus": 7,
+          "effect": "create fire and heat"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_helmet",
+      "name": "Helmet",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "affect wearer's mind/emotions"
+        },
+        {
+          "bonus": 6,
+          "effect": "affect wearer's sight"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_hippogriff_liver",
+      "name": "Hippogriff Liver",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "freedom from restraints"
+        },
+        {
+          "bonus": 6,
+          "effect": "flying"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_holly_wood",
+      "name": "Holly Wood",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "inflict wounds"
+        },
+        {
+          "bonus": 2,
+          "effect": "inflict pain"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_hornbeam_wood",
+      "name": "Hornbeam Wood",
+      "bonuses": [
+        {
+          "bonus": 6,
+          "effect": "strength"
+        },
+        {
+          "bonus": 6,
+          "effect": "Vim against hostile magic"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_horseshoe",
+      "name": "Horseshoe",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "warding"
+        },
+        {
+          "bonus": 6,
+          "effect": "affect horse's movement"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_hourglass",
+      "name": "Hourglass",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "increasing speed"
+        },
+        {
+          "bonus": 7,
+          "effect": "timing and alarms"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_human_bone",
+      "name": "Human Bone",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "destroy the human mind"
+        },
+        {
+          "bonus": 4,
+          "effect": "destroy the human body"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_human_skull",
+      "name": "Human Skull",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "destroy human body"
+        },
+        {
+          "bonus": 5,
+          "effect": "destroy human mind"
+        },
+        {
+          "bonus": 5,
+          "effect": "destroy or control ghosts"
+        },
+        {
+          "bonus": 10,
+          "effect": "destroy or control ghost of particular skull"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_hyacinth",
+      "name": "Hyacinth",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "healing"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_hydra_teeth",
+      "name": "Hydra Teeth",
+      "bonuses": [
+        {
+          "bonus": 6,
+          "effect": "Creo"
+        },
+        {
+          "bonus": 8,
+          "effect": "regeneration"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_ink_of_hermes",
+      "name": "Ink of Hermes",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "Vim"
+        },
+        {
+          "bonus": 5,
+          "effect": "books"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_iron",
+      "name": "Iron",
+      "bonuses": [
+        {
+          "bonus": 7,
+          "effect": "harm or repel faeries"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_iron_shackles",
+      "name": "Iron Shackles",
+      "bonuses": [
+        {
+          "bonus": 8,
+          "effect": "bind faeries"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_ivory",
+      "name": "Ivory",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "healing"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_jade",
+      "name": "Jade",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "Aquam"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_jasper",
+      "name": "Jasper",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "healing"
+        },
+        {
+          "bonus": 2,
+          "effect": "versus demons"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_jet",
+      "name": "Jet",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "protection"
+        },
+        {
+          "bonus": 3,
+          "effect": "darkness"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_jewelry_clothing",
+      "name": "Jewelry/Clothing",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "move self"
+        },
+        {
+          "bonus": 4,
+          "effect": "protect self"
+        },
+        {
+          "bonus": 4,
+          "effect": "transform self"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_lamp",
+      "name": "Lamp",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "create fire"
+        },
+        {
+          "bonus": 7,
+          "effect": "produce light"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_linden_wood",
+      "name": "Linden Wood",
+      "bonuses": [
+        {
+          "bonus": 1,
+          "effect": "good fortune"
+        },
+        {
+          "bonus": 2,
+          "effect": "protection against weapons"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_lead",
+      "name": "Lead",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "summoning or binding ghosts and spirits"
+        },
+        {
+          "bonus": 3,
+          "effect": "hatred"
+        },
+        {
+          "bonus": 4,
+          "effect": "wards"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_lemon_wood",
+      "name": "Lemon Wood",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "hearing"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_leucrota_tongue",
+      "name": "Leucrota Tongue",
+      "bonuses": [
+        {
+          "bonus": 6,
+          "effect": "mimic human voices"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_lilac_wood",
+      "name": "Lilac Wood",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "travel"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_lion_s_blood",
+      "name": "Lion's Blood",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "leadership"
+        },
+        {
+          "bonus": 3,
+          "effect": "courage"
+        },
+        {
+          "bonus": 4,
+          "effect": "protection from wild beasts"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_lion_s_mane",
+      "name": "Lion's Mane",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "strength, courage, pride"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_living_tree",
+      "name": "Living Tree",
+      "bonuses": [],
+      "note": "x3 the bonus of the wood species (oak, ash...), not of generic wood; only when the whole living tree is enchanted",
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_lyre",
+      "name": "Lyre",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "create sounds"
+        },
+        {
+          "bonus": 5,
+          "effect": "affect music"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_magnes_stone_female",
+      "name": "Magnes Stone (Female)",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "invisibility"
+        },
+        {
+          "bonus": 3,
+          "effect": "purification"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_magnes_stone_male",
+      "name": "Magnes Stone (Male)",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "divination"
+        },
+        {
+          "bonus": 7,
+          "effect": "control iron"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_magnet",
+      "name": "Magnet",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "Rego"
+        },
+        {
+          "bonus": 4,
+          "effect": "Rego Corpus"
+        },
+        {
+          "bonus": 4,
+          "effect": "Rego Terram"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_magnetite",
+      "name": "Magnetite",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "Animal"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_mallet",
+      "name": "Mallet",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "precision"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_manacles",
+      "name": "Manacles",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "binding"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_marble",
+      "name": "Marble",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "cold"
+        },
+        {
+          "bonus": 3,
+          "effect": "beauty"
+        },
+        {
+          "bonus": 5,
+          "effect": "wards"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_mask",
+      "name": "Mask",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "affect wearer's sight"
+        },
+        {
+          "bonus": 2,
+          "effect": "affect wearer's breathing"
+        },
+        {
+          "bonus": 3,
+          "effect": "hiding"
+        },
+        {
+          "bonus": 7,
+          "effect": "disguise"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_mason_chisel",
+      "name": "Mason Chisel",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "shape stone"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_mast",
+      "name": "Mast",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "protection from temptation"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_mercury",
+      "name": "Mercury",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "arts and sciences"
+        },
+        {
+          "bonus": 3,
+          "effect": "Aquam"
+        },
+        {
+          "bonus": 3,
+          "effect": "Terram"
+        },
+        {
+          "bonus": 5,
+          "effect": "Muto"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_mirror",
+      "name": "Mirror",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "summon or bind ghosts"
+        },
+        {
+          "bonus": 5,
+          "effect": "see the truth"
+        },
+        {
+          "bonus": 6,
+          "effect": "display images"
+        },
+        {
+          "bonus": 7,
+          "effect": "illusions"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_myrmecoleon_exoskeleton",
+      "name": "Myrmecoleon Exoskeleton",
+      "bonuses": [
+        {
+          "bonus": 6,
+          "effect": "deprivation and starvation"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_myrrh",
+      "name": "Myrrh",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "spirits"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_necklace",
+      "name": "Necklace",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "affect breathing and speaking"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_net",
+      "name": "Net",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "immobilization"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_oak_wood",
+      "name": "Oak Wood",
+      "bonuses": [
+        {
+          "bonus": 7,
+          "effect": "protection from storms"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_oar",
+      "name": "Oar",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "affect currents"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_obsidian",
+      "name": "Obsidian",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "darkness"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_onyx",
+      "name": "Onyx",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "darkness"
+        },
+        {
+          "bonus": 4,
+          "effect": "death"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_opal",
+      "name": "Opal",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "images"
+        },
+        {
+          "bonus": 2,
+          "effect": "imagination"
+        },
+        {
+          "bonus": 2,
+          "effect": "invisibility"
+        },
+        {
+          "bonus": 4,
+          "effect": "travel"
+        },
+        {
+          "bonus": 4,
+          "effect": "memory"
+        },
+        {
+          "bonus": 6,
+          "effect": "eyes"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_orange_tree_wood",
+      "name": "Orange Tree Wood",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "sight"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_palm_wood",
+      "name": "Palm Wood",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "animating wood"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_panpipes",
+      "name": "Panpipes",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "affect emotions"
+        },
+        {
+          "bonus": 5,
+          "effect": "control children"
+        },
+        {
+          "bonus": 5,
+          "effect": "revelry"
+        },
+        {
+          "bonus": 6,
+          "effect": "affect faerie emotion"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_panther_of_virtue_s_hide",
+      "name": "Panther of Virtue's Hide",
+      "bonuses": [
+        {
+          "bonus": 6,
+          "effect": "song and melodious sounds"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_pearl",
+      "name": "Pearl",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "detect or eliminate poisons"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_pelican_of_virtue_s_beak",
+      "name": "Pelican of Virtue's Beak",
+      "bonuses": [
+        {
+          "bonus": 8,
+          "effect": "healing and nurturing"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_pepper",
+      "name": "Pepper",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "Perdo"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_peridot",
+      "name": "Peridot",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "protection against nightmares"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_phoenix_ashes",
+      "name": "Phoenix Ashes",
+      "bonuses": [
+        {
+          "bonus": 11,
+          "effect": "rejuvenation and regeneration"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_phylactery",
+      "name": "Phylactery",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "protect wearer"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_pick",
+      "name": "Pick",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "destroy stone"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_pin_feather",
+      "name": "Pin Feather",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "Auram"
+        },
+        {
+          "bonus": 5,
+          "effect": "flight"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_pine_wood",
+      "name": "Pine Wood",
+      "bonuses": [
+        {
+          "bonus": 1,
+          "effect": "friendly faeries"
+        },
+        {
+          "bonus": 3,
+          "effect": "light"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_pitchfork",
+      "name": "Pitchfork",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "gathering reaped grain"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_plum_wood",
+      "name": "Plum Wood",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "blood"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_pure_honey",
+      "name": "Pure Honey",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "preservation"
+        },
+        {
+          "bonus": 5,
+          "effect": "spiritual travel"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_quartz",
+      "name": "Quartz",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "invisibility"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_quill",
+      "name": "Quill",
+      "bonuses": [
+        {
+          "bonus": 7,
+          "effect": "scribing"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_rat_skull",
+      "name": "Rat Skull",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "cause disease"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_red_gold",
+      "name": "Red Gold",
+      "bonuses": [
+        {
+          "bonus": 1,
+          "effect": "Perdo"
+        },
+        {
+          "bonus": 4,
+          "effect": "war"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_remora_of_virtue_s_fins",
+      "name": "Remora of Virtue's Fins",
+      "bonuses": [
+        {
+          "bonus": 7,
+          "effect": "slow or halt a moving object"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_rhodocrosite",
+      "name": "Rhodocrosite",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "memories"
+        },
+        {
+          "bonus": 3,
+          "effect": "forgetfulness"
+        },
+        {
+          "bonus": 3,
+          "effect": "binding wounds"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_ring",
+      "name": "Ring",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "constant effect"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_rock_crystal",
+      "name": "Rock Crystal",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "healing"
+        },
+        {
+          "bonus": 3,
+          "effect": "ice"
+        },
+        {
+          "bonus": 4,
+          "effect": "clarity"
+        },
+        {
+          "bonus": 5,
+          "effect": "clairvoyance"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_room",
+      "name": "Room",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "create things within"
+        },
+        {
+          "bonus": 6,
+          "effect": "affect everything within at once"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_rope_or_cord",
+      "name": "Rope or Cord",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "strangulation"
+        },
+        {
+          "bonus": 4,
+          "effect": "restraint or binding"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_rowan_wood",
+      "name": "Rowan Wood",
+      "bonuses": [
+        {
+          "bonus": 1,
+          "effect": "Vim"
+        },
+        {
+          "bonus": 4,
+          "effect": "protection against malicious magic"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_ruby",
+      "name": "Ruby",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "courage"
+        },
+        {
+          "bonus": 3,
+          "effect": "battle wounds"
+        },
+        {
+          "bonus": 3,
+          "effect": "affect blood"
+        },
+        {
+          "bonus": 4,
+          "effect": "leadership in war"
+        },
+        {
+          "bonus": 6,
+          "effect": "fire-related effect"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_rug",
+      "name": "Rug",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "affect those upon it"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_saddle",
+      "name": "Saddle",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "affect horse"
+        },
+        {
+          "bonus": 7,
+          "effect": "affect riding"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_saffron",
+      "name": "Saffron",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "physical strength"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_salamander_of_virtue_s_skin",
+      "name": "Salamander of Virtue's Skin",
+      "bonuses": [
+        {
+          "bonus": 8,
+          "effect": "extinguish fire"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_sapphire",
+      "name": "Sapphire",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "knowledge"
+        },
+        {
+          "bonus": 2,
+          "effect": "versus malign Corpus"
+        },
+        {
+          "bonus": 2,
+          "effect": "Perdo Vim against spirits"
+        },
+        {
+          "bonus": 3,
+          "effect": "healing"
+        },
+        {
+          "bonus": 3,
+          "effect": "reducing anger"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_sardonyx",
+      "name": "Sardonyx",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "versus malign Corpus"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_scales",
+      "name": "Scales",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "weighing goods and money"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_scythe",
+      "name": "Scythe",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "reaping"
+        },
+        {
+          "bonus": 3,
+          "effect": "Year-Duration effects"
+        },
+        {
+          "bonus": 4,
+          "effect": "effects expressly causing death"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_sea_shell",
+      "name": "Sea Shell",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "the sea"
+        },
+        {
+          "bonus": 3,
+          "effect": "sea creatures"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_serpentine",
+      "name": "Serpentine",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "vs. infection and animal poison"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_shackles",
+      "name": "Shackles",
+      "bonuses": [
+        {
+          "bonus": 6,
+          "effect": "restraint or magical binding"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_sharp_blade",
+      "name": "Sharp Blade",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "shape leather"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_shearing_shears",
+      "name": "Shearing Shears",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "fleecing"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_shield",
+      "name": "Shield",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "protection"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_ship",
+      "name": "Ship",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "sailing"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_ship_sail",
+      "name": "Ship Sail",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "affect winds"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_siberian_six_legged_antelope_hoof",
+      "name": "Siberian Six-Legged Antelope Hoof",
+      "bonuses": [
+        {
+          "bonus": 6,
+          "effect": "speed and quickness"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_sickle",
+      "name": "Sickle",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "harvesting"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_silver",
+      "name": "Silver",
+      "bonuses": [
+        {
+          "bonus": 1,
+          "effect": "Terram"
+        },
+        {
+          "bonus": 2,
+          "effect": "Intellego"
+        },
+        {
+          "bonus": 3,
+          "effect": "protect spirits"
+        },
+        {
+          "bonus": 5,
+          "effect": "lycanthropes in general"
+        },
+        {
+          "bonus": 10,
+          "effect": "harm lycanthropes"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_small_hammer",
+      "name": "Small Hammer",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "building"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_snake_tongue",
+      "name": "Snake Tongue",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "deception"
+        },
+        {
+          "bonus": 6,
+          "effect": "lying"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_snip",
+      "name": "Snip",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "shape metal"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_spade",
+      "name": "Spade",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "move or destroy earth"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_star_ruby",
+      "name": "Star Ruby",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "conjure/control occult entities"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_sulfur",
+      "name": "Sulfur",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "sowing discord"
+        },
+        {
+          "bonus": 2,
+          "effect": "preserving or decaying"
+        },
+        {
+          "bonus": 3,
+          "effect": "binding tongues"
+        },
+        {
+          "bonus": 4,
+          "effect": "demons"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_sun_scarab",
+      "name": "Sun Scarab",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "detect magic"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_sword",
+      "name": "Sword",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "block single attack"
+        },
+        {
+          "bonus": 4,
+          "effect": "harm human and animal bodies"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_tablet",
+      "name": "Tablet",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "command spirits"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_tin",
+      "name": "Tin",
+      "bonuses": [
+        {
+          "bonus": 1,
+          "effect": "law"
+        },
+        {
+          "bonus": 3,
+          "effect": "weakness"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_tongs",
+      "name": "Tongs",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "controlling metal"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_topaz",
+      "name": "Topaz",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "leadership"
+        },
+        {
+          "bonus": 4,
+          "effect": "strength, courage, pride"
+        },
+        {
+          "bonus": 5,
+          "effect": "controlling wild beast"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_toy",
+      "name": "Toy",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "control children"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_trowel",
+      "name": "Trowel",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "building"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_true_purple",
+      "name": "True Purple",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "control people"
+        },
+        {
+          "bonus": 7,
+          "effect": "rulership and authority"
+        },
+        {
+          "bonus": 10,
+          "effect": "royalty"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_turquoise",
+      "name": "Turquoise",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "necromancy"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_unicorn_horn",
+      "name": "Unicorn Horn",
+      "bonuses": [
+        {
+          "bonus": 8,
+          "effect": "healing"
+        },
+        {
+          "bonus": 10,
+          "effect": "detect poison"
+        },
+        {
+          "bonus": 11,
+          "effect": "fertility"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_vent",
+      "name": "Vent",
+      "bonuses": [
+        {
+          "bonus": 7,
+          "effect": "affect air passing through it"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_violet_amethyst",
+      "name": "Violet Amethyst",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "ascendancy over masses"
+        },
+        {
+          "bonus": 7,
+          "effect": "versus drunkenness"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_walnut_wood",
+      "name": "Walnut Wood",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "mind"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_wand_staff",
+      "name": "Wand/Staff",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "repel things"
+        },
+        {
+          "bonus": 3,
+          "effect": "project bolt or other missile"
+        },
+        {
+          "bonus": 4,
+          "effect": "control things at a distance"
+        },
+        {
+          "bonus": 4,
+          "effect": "destroy things at a distance"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_waterskin",
+      "name": "Waterskin",
+      "bonuses": [
+        {
+          "bonus": 5,
+          "effect": "create liquid within"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_whip",
+      "name": "Whip",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "control human or animal body"
+        },
+        {
+          "bonus": 5,
+          "effect": "induce fear in animals"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_white_poplar_wood",
+      "name": "White Poplar Wood",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "mind"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_willow_wood",
+      "name": "Willow Wood",
+      "bonuses": [
+        {
+          "bonus": 1,
+          "effect": "cure wounds"
+        },
+        {
+          "bonus": 4,
+          "effect": "restore limb"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_wood_dead",
+      "name": "Wood (Dead)",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "affect living wood"
+        },
+        {
+          "bonus": 4,
+          "effect": "affect dead wood"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_wood_from_a_tree_struck_by_lightning",
+      "name": "Wood from a Tree Struck by Lightning",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "Auram"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_wood_from_a_twisted_tree_in_a_field",
+      "name": "Wood from a Twisted Tree in a Field",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "disfigure"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_yellow_sandalwood",
+      "name": "Yellow Sandalwood",
+      "bonuses": [
+        {
+          "bonus": 3,
+          "effect": "binding people"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_yew_wood",
+      "name": "Yew Wood",
+      "bonuses": [
+        {
+          "bonus": 2,
+          "effect": "corpses"
+        },
+        {
+          "bonus": 2,
+          "effect": "visions"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    },
+    {
+      "id": "sm_yoke",
+      "name": "Yoke",
+      "bonuses": [
+        {
+          "bonus": 4,
+          "effect": "control wearer"
+        },
+        {
+          "bonus": 5,
+          "effect": "enhance strength of wearer"
+        }
+      ],
+      "source": "DE",
+      "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
+    }
+  ]
+}

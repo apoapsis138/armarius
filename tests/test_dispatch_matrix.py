@@ -28,16 +28,18 @@ from ars_magica_manager.screens import WorkspaceScreen
 GOLDEN = Path(__file__).parent / "golden" / "dispatch_matrix.json"
 
 #: The keys whose action depends on the active section (see
-#: WorkspaceScreen.check_action). Action name per key, for check_action.
-KEYS: dict[str, str] = {
-    "a": "add",
-    "A": "remove",
-    "e": "edit",
-    "r": "restore",
-    "i": "improve",
-    "I": "import_data",
-    "v": "add_virtue_flaw",
-    "V": "remove_virtue_flaw",
+#: WorkspaceScreen.check_action). The action names bound to each key, for
+#: check_action: a key is enabled where any of them is.
+KEYS: dict[str, tuple[str, ...]] = {
+    "a": ("add",),
+    "A": ("remove",),
+    "e": ("edit",),
+    "r": ("restore",),
+    "i": ("improve", "instill_effect"),
+    "u": ("use_charge",),
+    "I": ("import_data",),
+    "v": ("add_virtue_flaw",),
+    "V": ("remove_virtue_flaw",),
 }
 
 _SHEET_VIEW_ATTR = {
@@ -89,8 +91,8 @@ async def _focus_target(pilot, app, view, target) -> None:
 
 async def _record_keys(pilot, app, workspace, notices: list[str]) -> dict[str, str]:
     outcomes: dict[str, str] = {}
-    for key, action in KEYS.items():
-        if not workspace.check_action(action, ()):
+    for key, actions in KEYS.items():
+        if not any(workspace.check_action(action, ()) for action in actions):
             outcomes[key] = "(disabled)"
             continue
         notices.clear()
