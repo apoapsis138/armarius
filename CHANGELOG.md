@@ -9,6 +9,19 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 1.6.0 — 2026-09-29
+
+Study seasons.
+
+- New activities to plan: Read a book, Be taught, Teach, Be trained and
+  (magi) Study from vis. A summa gives its Quality up to its Level; a
+  tractatus gives its Quality once to each reader; a teacher needs to plan
+  Teach for the same season; vis study rolls its die when the season is
+  played out (or use the roll you made at the table) and spends the vis.
+- Who can read a book: everyone in the covenant can read its library's
+  books; a book a character keeps (or keeps in their laboratory) is theirs
+  alone. A book's details list only those who may read it.
+
 ## 1.5.1 — 2026-09-29
 
 - Behind the scenes: the code now passes its type check with no errors,

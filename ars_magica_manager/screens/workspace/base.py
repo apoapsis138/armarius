@@ -5,6 +5,7 @@ behind a/A/e/r and the actions that aren't about one kind of record."""
 from __future__ import annotations
 
 import asyncio
+import random
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from dataclasses import field as dataclass_field
@@ -1141,7 +1142,7 @@ class WorkspaceBase(Screen[None]):
             new_year = saga.current_season == SEASONS[-1]
             # Every plan's outcome is worked out before any is applied, so a
             # season's results can't change that same season (STORY-903).
-            worked = seasons.resolve(saga)
+            worked = seasons.resolve(saga, random.Random())
             record = seasons.make_record(saga, worked)
             if worked:
                 storage.backup_saga(saga)

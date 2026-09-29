@@ -1314,6 +1314,9 @@ class Character:
     #: What the character did season by season: written when a season is
     #: applied (STORY-903), and editable like a laboratory's Diary.
     diary: list[DiaryEntry] = field(default_factory=list)
+    #: Tractatus already studied (book ids): each gives its xp only once
+    #: (DE Ch. 10, Studying Tractatus; STORY-902).
+    tractatus_read: list[str] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Character:
@@ -2237,6 +2240,15 @@ class SeasonPlan:
     months_lost: int = 0
     #: Free text: what "Other" was, or notes kept with the Diary entry.
     details: str = ""
+    #: Reading: the book studied.
+    book_id: str | None = None
+    #: Being taught / trained: the teacher or master.
+    teacher_id: str | None = None
+    #: Vis study: whose raw vis is used ("character" or "laboratory").
+    vis_from: str = ""
+    #: Vis study: the stress die as rolled at the table (None: the app
+    #: rolls it when the season is applied).
+    die: int | None = None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> SeasonPlan:

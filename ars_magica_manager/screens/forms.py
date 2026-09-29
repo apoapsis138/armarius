@@ -989,6 +989,18 @@ def _season_plan_from(
         source_quality=values.get("source_quality"),
         months_lost=values.get("months_lost") or 0,
         details=values.get("details") or "",
+        book_id=values.get("book_id") if activity == season_rules.READ else None,
+        teacher_id=(
+            values.get("teacher_id")
+            if activity in (season_rules.TAUGHT, season_rules.TRAINED)
+            else None
+        ),
+        vis_from=(
+            values.get("vis_from") or "character"
+            if activity == season_rules.VIS_STUDY
+            else ""
+        ),
+        die=values.get("die") if activity == season_rules.VIS_STUDY else None,
     )
 
 
@@ -1013,7 +1025,13 @@ def _season_plan_dialog(
         allocation = share(n)
         if n == 1:
             shown = activity_is(
-                season_rules.EXPOSURE, season_rules.PRACTICE, season_rules.ADVENTURE
+                season_rules.EXPOSURE,
+                season_rules.PRACTICE,
+                season_rules.ADVENTURE,
+                season_rules.TAUGHT,
+                season_rules.TEACH,
+                season_rules.TRAINED,
+                season_rules.VIS_STUDY,
             )
         elif n == 2:
             shown = activity_is(season_rules.EXPOSURE, season_rules.ADVENTURE)
@@ -1029,9 +1047,12 @@ def _season_plan_dialog(
                 allow_blank=True,
                 show_if=shown,
                 hint=(
-                    "Exposure: 2 xp in one, or 1 each in two. Adventure: at "
-                    "most 5 points of Source Quality to each."
+                    "What the season's experience goes into (Teach: Teaching "
+                    "or the language used)."
                     if n == 1
+                    else "Exposure: 1 xp each in two. Adventure: at most 5 "
+                    "points of Source Quality to each."
+                    if n == 2
                     else ""
                 ),
             )
@@ -1066,13 +1087,71 @@ def _season_plan_dialog(
                 "the storyguide's 5 to 10."
             ),
         ),
+        DialogField(
+            "book_id",
+            "Book",
+            "select",
+            existing.book_id if existing else None,
+            options=[
+                (escape(seasons.book_label(b)), b.id)
+                for b in bk.studyable_books(saga, character)
+            ],
+            allow_blank=True,
+            show_if=activity_is(season_rules.READ),
+            hint="The covenant's library and the character's own books.",
+        ),
+        DialogField(
+            "teacher_id",
+            "Teacher / master",
+            "select",
+            existing.teacher_id if existing else None,
+            options=[
+                (escape(c.name), c.id)
+                for c in saga.characters
+                if c.id != character.id and c.type != "grog"
+            ]
+            + [
+                (escape(c.name), c.id)
+                for c in saga.characters
+                if c.id != character.id and c.type == "grog"
+            ],
+            allow_blank=True,
+            show_if=activity_is(season_rules.TAUGHT, season_rules.TRAINED),
+            hint="A teacher plans Teach for the same season.",
+        ),
         *subject_fields,
+        DialogField(
+            "vis_from",
+            "Vis from",
+            "select",
+            (existing.vis_from if existing else "") or "character",
+            options=[
+                ("Their own raw vis", "character"),
+                ("Their laboratory's raw vis", "laboratory"),
+            ],
+            show_if=activity_is(season_rules.VIS_STUDY),
+        ),
+        DialogField(
+            "die",
+            "Stress die (blank: rolled)",
+            "optint",
+            existing.die if existing else None,
+            show_if=activity_is(season_rules.VIS_STUDY),
+            hint="Leave blank for the app to roll it when the season is applied.",
+        ),
         DialogField(
             "months_lost",
             "Months lost (0-3)",
             "int",
             existing.months_lost if existing else 0,
-            show_if=activity_is(season_rules.EXPOSURE, season_rules.PRACTICE),
+            show_if=activity_is(
+                season_rules.EXPOSURE,
+                season_rules.PRACTICE,
+                season_rules.READ,
+                season_rules.TAUGHT,
+                season_rules.TRAINED,
+                season_rules.VIS_STUDY,
+            ),
             hint="Each full month lost to distractions cuts the total by a third.",
         ),
         DialogField(
@@ -1086,7 +1165,7 @@ def _season_plan_dialog(
 
     def problem(values: dict[str, Any]) -> str | None:
         plan = _season_plan_from(saga, character, values)
-        found = season_rules.problems(character, plan)
+        found = season_rules.problems(character, plan, saga)
         if not found and plan.activity == season_rules.OTHER and not plan.details:
             return "Say in Notes what the season is spent on."
         return found[0] if found else None

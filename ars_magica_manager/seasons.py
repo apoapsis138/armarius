@@ -11,6 +11,7 @@ markup text, never widgets."""
 
 from __future__ import annotations
 
+import random
 import re
 from collections.abc import Sequence
 
@@ -19,7 +20,9 @@ from .inhabitants import AUTO_KINDS, character_kind
 from .markup import escape, fit
 from .models import (
     SEASONS,
+    Ability,
     ArtScore,
+    Book,
     Character,
     Covenant,
     DiaryEntry,
@@ -30,6 +33,7 @@ from .models import (
     SeasonRecordLine,
 )
 from .rules import seasons as rules
+from .rules import study
 from .rules import xp as xp_rules
 
 # -- plans --------------------------------------------------------------------
@@ -173,12 +177,31 @@ def plan_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
         return plan.details.strip().splitlines()[0] if plan.details.strip() else ""
     names = spell_names(saga, character)
     shares = rules.allocations(plan)
+    first = rules.subject_label(shares[0].subject, names) if shares else ""
+    if plan.activity == rules.READ:
+        book = next((b for b in saga.books if b.id == plan.book_id), None)
+        return book_label(book) if book else ""
+    if plan.activity in (rules.TAUGHT, rules.TRAINED):
+        teacher = saga.character(plan.teacher_id)
+        joiner = "from" if plan.activity == rules.TAUGHT else "with"
+        return f"{first} {joiner} {teacher.name}" if teacher and first else first
+    if plan.activity == rules.VIS_STUDY and shares:
+        pawns = study.vis_pawns(rules.score(character, shares[0].subject))
+        return f"{first} ({pawns} pawn(s) of vis)"
     if plan.activity == rules.ADVENTURE:
         subjects = ", ".join(
             f"{rules.subject_label(a.subject, names)} {a.points}" for a in shares
         )
         return f"{subjects} (Source Quality {plan.source_quality})"
     return ", ".join(rules.subject_label(a.subject, names) for a in shares)
+
+
+def book_label(book: Book) -> str:
+    """A book as the planner names it: "De Ignis (Ignem summa, L12 Q15)"."""
+    subject = book.art or book.ability or "?"
+    kind = "tractatus" if book.type == "Tractatus" else "summa"
+    level = f"L{book.level} " if book.level is not None and kind == "summa" else ""
+    return f"{book.name} ({subject} {kind}, {level}Q{book.quality})"
 
 
 def plan_summary(saga: Saga, character: Character, plan: SeasonPlan) -> str:
@@ -221,10 +244,13 @@ def plan_text(
             f"[dim]Nothing planned for {saga.current_season} {saga.current_year}. "
             f"{how}[/]"
         )
-    worked = rules.outcome(character, plan)
+    worked = rules.outcome(character, plan, saga)
     lines = [f"[b]{escape(plan_summary(saga, character, plan))}[/]"]
     names = spell_names(saga, character)
     lines += [f"  {escape(_gain_line(g, names))}" for g in worked.gains]
+    lines += [f"  {escape(n)}" for n in worked.notes]
+    if worked.pending_roll:
+        lines.append("  [dim]The die is rolled when the season is applied.[/]")
     if plan.months_lost and worked.activity and worked.activity.distractable:
         lines.append(f"  {plan.months_lost} month(s) lost to distractions.")
     lines += [f"[$text-error]{escape(p)}[/]" for p in worked.problems]
@@ -263,11 +289,14 @@ def lab_planning_text(saga: Saga, lab: Laboratory) -> str:
 
 def live_text(saga: Saga, character: Character, plan: SeasonPlan) -> str:
     """The plan dialog's preview line(s) for the plan as typed so far."""
-    worked = rules.outcome(character, plan)
+    worked = rules.outcome(character, plan, saga)
     if worked.problems:
         return f"[$text-error]{escape(worked.problems[0])}[/]"
     names = spell_names(saga, character)
     lines = [escape(_gain_line(g, names)) for g in worked.gains]
+    lines += [escape(n) for n in worked.notes]
+    if worked.pending_roll:
+        lines.append("[dim]The die is rolled when the season is applied.[/]")
     note = working_seasons_note(character, plan)
     if note:
         lines.append(f"[$text-warning]{escape(note)}[/]")
@@ -277,16 +306,21 @@ def live_text(saga: Saga, character: Character, plan: SeasonPlan) -> str:
 # -- applying a season ----------------------------------------------------------
 
 
-def resolve(saga: Saga) -> list[rules.Outcome]:
+def resolve(saga: Saga, rng: random.Random | None = None) -> list[rules.Outcome]:
     """Every current-season plan's outcome, all worked out before any is
-    applied."""
-    return rules.outcomes(saga, due_plans(saga))
+    applied. With `rng`, dice are rolled (advancing); without, it is a
+    preview and vis study waits for its roll."""
+    return rules.outcomes(saga, due_plans(saga), rng)
 
 
 def _add_xp(character: Character, subject: str, amount: int) -> None:
     kind, _, name = subject.partition(":")
     if kind == "ability":
-        ability = next(a for a in character.abilities if a.name == name)
+        ability = next((a for a in character.abilities if a.name == name), None)
+        if ability is None:
+            # Taught, trained or read in an Ability they didn't have yet.
+            ability = Ability(name)
+            character.abilities.append(ability)
         ability.xp += amount
     elif kind == "art":
         character.arts.setdefault(name.lower(), ArtScore()).xp += amount
@@ -314,6 +348,7 @@ def diary_entry(saga: Saga, character: Character, worked: rules.Outcome) -> Diar
         total = sum(g.result.xp for g in worked.gains)
         name += f" (+{total} xp)"
     lines = [_gain_line(g, names) for g in worked.gains]
+    lines += worked.notes
     if plan.months_lost and activity and activity.distractable:
         lines.append(f"{plan.months_lost} month(s) lost to distractions.")
     if plan.details.strip() and activity and activity.gives_xp:
@@ -344,6 +379,15 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
         for gain in outcome.gains:
             if gain.result.xp:
                 _add_xp(character, gain.subject, gain.result.xp)
+        if outcome.tractatus and outcome.tractatus not in character.tractatus_read:
+            character.tractatus_read.append(outcome.tractatus)
+        if outcome.vis_spent is not None:
+            pool = rules.vis_pool(saga, character, outcome.plan)
+            _, art, pawns = outcome.vis_spent
+            key = art.lower()
+            pool[key] = max(0, pool.get(key, 0) - pawns)
+            if not pool[key]:
+                del pool[key]
         character.diary.append(diary_entry(saga, character, outcome))
         applied.append(character)
     now = (saga.current_year, SEASONS.index(saga.current_season))

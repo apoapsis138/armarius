@@ -67,9 +67,17 @@ def test_grogs_are_not_planned_season_by_season():
 
 
 def test_magi_and_companions_plan_every_activity_built_so_far():
-    for character in (_magus(), _companion()):
+    study = [rules.READ, rules.TAUGHT, rules.TEACH, rules.TRAINED]
+    for character, extra in ((_magus(), [rules.VIS_STUDY]), (_companion(), [])):
         keys = [a.key for a in rules.activities_for(character)]
-        assert keys == [rules.EXPOSURE, rules.PRACTICE, rules.ADVENTURE, rules.OTHER]
+        assert keys == [
+            rules.EXPOSURE,
+            rules.PRACTICE,
+            *study,
+            *extra,
+            rules.ADVENTURE,
+            rules.OTHER,
+        ]
     mythic = Character(id="y", name="Wode", type="mythic companion")
     assert rules.is_planned(mythic)
 
