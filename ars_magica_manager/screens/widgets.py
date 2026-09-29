@@ -351,7 +351,12 @@ class SelectableList(OptionList):
     @property
     def checked_data_indexes(self) -> list[int]:
         """Data indexes of the checked rows, in list order."""
-        return [self._rows[p][0] for p in sorted(self._checked)]
+        # Only rows with a data index can be checked (the others are disabled).
+        return [
+            index
+            for p in sorted(self._checked)
+            if (index := self._rows[p][0]) is not None
+        ]
 
     def clear_selection(self) -> None:
         """Unchoose everything. Posts no message."""

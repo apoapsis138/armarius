@@ -9,6 +9,11 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 1.5.1 — 2026-09-29
+
+- Behind the scenes: the code now passes its type check with no errors,
+  and that is the standard from here on. Nothing changes in the app.
+
 ## 1.5.0 — 2026-09-29
 
 - After a season with plans is played out (t), a summary shows what each

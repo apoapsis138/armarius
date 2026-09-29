@@ -106,6 +106,12 @@ def test_parse_requisites_accepts_names_and_abbreviations():
     assert sp.parse_requisites("Rego (for the motion)") == ["Rego"]
 
 
+def test_catalog_page_link_without_an_href_value_reads_as_empty():
+    page = build._Flatten()
+    page.feed("<table><tr><td><a href>Pilum of Fire</a></td></tr></table>")
+    assert page.events == [("cell", "Pilum of Fire", [("", "Pilum of Fire")])]
+
+
 # ------------------------------------------------------------ where they live
 
 

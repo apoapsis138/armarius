@@ -16,6 +16,7 @@ from textual.widgets import (
     Label,
     Static,
 )
+from textual.widgets.button import ButtonVariant
 
 from .. import catalog
 from ..arts import ARTS
@@ -618,7 +619,7 @@ class ConfirmScreen(ModalScreen[bool]):
         message: str,
         *,
         yes_label: str = "Yes",
-        yes_variant: str = "error",
+        yes_variant: ButtonVariant = "error",
         safe_answer: bool = False,
     ) -> None:
         """`safe_answer` is the answer a stray key should give: False (No) for
@@ -627,7 +628,7 @@ class ConfirmScreen(ModalScreen[bool]):
         super().__init__()
         self.message = message
         self.yes_label = yes_label
-        self.yes_variant = yes_variant
+        self.yes_variant: ButtonVariant = yes_variant
         self.safe_answer = safe_answer
 
     def compose(self) -> ComposeResult:

@@ -6,7 +6,14 @@ returns the new record; nothing here saves."""
 from __future__ import annotations
 
 from . import storage
-from .models import Character, Covenant, LabCharacteristics, Laboratory, Saga
+from .models import (
+    Character,
+    CharacterType,
+    Covenant,
+    LabCharacteristics,
+    Laboratory,
+    Saga,
+)
 
 
 def new_saga(
@@ -35,7 +42,7 @@ def add_covenant(saga: Saga, name: str, notes: str = "") -> Covenant:
 
 
 def add_character(
-    saga: Saga, name: str, character_type: str, covenant_id: str | None
+    saga: Saga, name: str, character_type: CharacterType, covenant_id: str | None
 ) -> Character:
     character = Character(
         id=storage.generate_unique_id(name, [c.id for c in saga.characters]),

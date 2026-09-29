@@ -21,6 +21,7 @@ from .markup import escape, fit, markdown_inline
 from .models import (
     BOOK_TYPES,
     Book,
+    Character,
     Covenant,
     Saga,
     Spell,
@@ -243,6 +244,37 @@ def covenant_of(saga: Saga, book: Book) -> str | None:
     return owner.covenant_id
 
 
+def can_read(saga: Saga, character: Character, book: Book) -> bool:
+    """Whether `character` may study `book` (STORY-902, Hedda 2026-09-29): a
+    book in the covenant's library (owned by the covenant) is open to
+    everyone of that covenant; a book someone keeps (in their inventory, or
+    in their laboratory) only to them. A book with no owner is in nobody's
+    library."""
+    owner = owner_record(saga, book)
+    if owner is None:
+        return False
+    if book.owner_kind == "covenant":
+        return character.covenant_id == owner.id
+    if book.owner_kind == "laboratory":
+        return owner.owner_id == character.id
+    return owner.id == character.id
+
+
+def readers(saga: Saga, book: Book) -> list[Character]:
+    """The magi and companions who may study `book`."""
+    return [c for c in saga.characters if c.type != "grog" and can_read(saga, c, book)]
+
+
+def studyable_books(saga: Saga, character: Character) -> list[Book]:
+    """The summae and tractatus `character` may study (see can_read)."""
+    return [
+        b
+        for b in saga.books
+        if b.type in ("Art Summa", "Ability Summa", "Tractatus")
+        and can_read(saga, character, b)
+    ]
+
+
 def books_in_covenant(saga: Saga, covenant: Covenant) -> list[Book]:
     """Everything the covenant's Library lists: books it owns, and books owned
     by its laboratories and characters, in the order added."""
@@ -281,7 +313,7 @@ def owner_options(saga: Saga) -> list[tuple[str, str]]:
 
 def owner_label(saga: Saga, book: Book) -> str:
     owner = owner_record(saga, book)
-    if owner is None:
+    if owner is None or book.owner_kind is None:
         return "(none - unassigned)"
     return f"{book.owner_kind.capitalize()}: {owner.name}"
 
@@ -509,13 +541,7 @@ def _study_lines(saga: Saga, book: Book) -> list[str]:
     summa or tractatus."""
     from .rules import study
 
-    covenant_id = covenant_of(saga, book)
-    readers = [
-        c
-        for c in saga.characters
-        if c.covenant_id == covenant_id and covenant_id is not None and c.type != "grog"
-    ]
-    results = [(c, study.reading(c, book)) for c in readers]
+    results = [(c, study.reading(c, book)) for c in readers(saga, book)]
     results = [(c, r) for c, r in results if r is not None]
     if not results:
         return []
