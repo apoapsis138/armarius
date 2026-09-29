@@ -6,7 +6,7 @@
       Covenant: Keep                           Location: (not set)
       Owner:    Leandro                        Points:   0
                                                Sanctum?: No
-      Aura: 1 (covenant) +0 (modifier) = 1
+      Aura: 1 (covenant) +0 (modifier) = 1 Magic
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -21,24 +21,24 @@
    Planning  Virtues & Flaws  Attributes  Inventory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Lab activity planning isn't built yet -- coming in a future update.
+  Lab Totals for Leandro (Technique + Form + the rest):
 
+                 An   Aq   Au   Co   He   Ig   Im   Me   Te   Vi
+  Creo           -1   -1    0   -1   -1    0    3   -1   -1   -1
+  Intellego       1    1    2    1    1    2    5    1    1    1
+  Muto           -1   -1    0   -1   -1    0    3   -1   -1   -1
+  Perdo          -1   -1    0   -1   -1    0    3   -1   -1   -1
+  Rego           -1   -1    0   -1   -1    0    3   -1   -1   -1
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  Every total adds: Intelligence +0, Magic Theory +0, Aura (Magic 1) +1, General
+  Quality -2.
+  Art Specializations, in totals using that Art: Intellego +2, Auram +1, Ignem +1,
+  Imaginem +4.
+                                                                                  ▄▄
+  By activity (on top of the grid):
+  Inventing spells: nothing extra.
+  Enchanting items: nothing extra.
+  Working from a Lab Text: Adept Laboratory Student +6.
 
 
 ===== tab-lab-vf
@@ -49,7 +49,7 @@
       Covenant: Keep                           Location: (not set)
       Owner:    Leandro                        Points:   0
                                                Sanctum?: No
-      Aura: 1 (covenant) +0 (modifier) = 1
+      Aura: 1 (covenant) +0 (modifier) = 1 Magic
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -92,7 +92,7 @@
       Covenant: Keep                           Location: (not set)
       Owner:    Leandro                        Points:   0
                                                Sanctum?: No
-      Aura: 1 (covenant) +0 (modifier) = 1
+      Aura: 1 (covenant) +0 (modifier) = 1 Magic
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -135,7 +135,7 @@
       Covenant: Keep                           Location: (not set)
       Owner:    Leandro                        Points:   0
                                                Sanctum?: No
-      Aura: 1 (covenant) +0 (modifier) = 1
+      Aura: 1 (covenant) +0 (modifier) = 1 Magic
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -178,7 +178,7 @@
       Covenant: Keep                           Location: (not set)
       Owner:    Leandro                        Points:   0
                                                Sanctum?: No
-      Aura: 1 (covenant) +0 (modifier) = 1
+      Aura: 1 (covenant) +0 (modifier) = 1 Magic
           Edit (e)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

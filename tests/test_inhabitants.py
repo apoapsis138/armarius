@@ -8,7 +8,6 @@ from textual.content import Content
 from ars_magica_manager import catalog
 from ars_magica_manager import inhabitants as inh
 from ars_magica_manager.models import (
-    GOVERNANCE_STYLE_IDS,
     INHABITANT_KINDS,
     Ability,
     Background,
@@ -284,9 +283,9 @@ def test_ability_names_come_from_the_character():
 
 def test_governance_styles_are_real_free_residents_boons():
     by_id = catalog.load_covenant_boon_hook_catalog_by_id()
-    assert len(GOVERNANCE_STYLE_IDS) == 7
-    for entry_id in GOVERNANCE_STYLE_IDS:
-        entry = by_id[entry_id]
+    styles = [entry for entry in by_id.values() if entry.governance]
+    assert len(styles) == 7
+    for entry in styles:
         assert (entry.type, entry.tier, entry.category) == ("Boon", "Free", "Residents")
 
 

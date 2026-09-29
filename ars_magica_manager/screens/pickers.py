@@ -49,6 +49,7 @@ from .prompts import (
     _ability_from,
     _ability_problem,
     _boon_hook_fields,
+    _lab_choice_dialog,
     _param_dialog,
 )
 from .widgets import _boon_hook_names
@@ -660,7 +661,15 @@ class LabVirtueFlawPickerScreen(
         return entry.source
 
     def _on_entry_selected(self, entry: LabVirtueFlawDef) -> None:
-        self.dismiss(VirtueFlawInstance(vf_id=entry.id))
+        if not entry.choices:
+            self.dismiss(VirtueFlawInstance(vf_id=entry.id))
+            return
+
+        def handle_choice(params: dict[str, str] | None) -> None:
+            if params is not None:
+                self.dismiss(VirtueFlawInstance(vf_id=entry.id, params=params))
+
+        self.app.push_screen(_lab_choice_dialog(entry), handle_choice)
 
 
 class CovenantBoonHookPickerScreen(

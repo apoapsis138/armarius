@@ -1,0 +1,90 @@
+"""Optional rules: saga settings that change how the Rules Engine works,
+every one off until the troupe turns it on (STORY-819). The options come
+from the rules review's decisions (rules reference section 22); each later
+story adds the options its rules use.
+
+A supplement's own rules have no switch here: they apply when its book is
+in play (Saga.books_in_play, see sourcebooks), decided 2026-09-28.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+from ..models import Saga
+
+SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Sixteen: Sagas, Rules Questions "
+    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Sixteen:"
+    "_Sagas#Rules_Questions)"
+)
+
+
+@dataclass(frozen=True)
+class RuleOption:
+    key: str
+    label: str
+    #: What turning it on does, in a line.
+    effect: str
+    #: The rule it changes, as cited in the rules reference.
+    source: str
+
+
+OPTIONS: tuple[RuleOption, ...] = (
+    RuleOption(
+        key="simple_dice_only",
+        label="Simple dice only",
+        effect=(
+            "Every stress die is replaced by a simple die: no exploding 1s "
+            "and no botches, so skill counts for more."
+        ),
+        source=SOURCE,
+    ),
+    RuleOption(
+        key="dominion_magic_resistance",
+        label="Dominion Magic Resistance",
+        effect=(
+            "Every Christian, Jew and Muslim has Magic Resistance of 5 x the "
+            "local Dominion aura."
+        ),
+        source=SOURCE,
+    ),
+    RuleOption(
+        key="harsher_infernal_vis",
+        label="Harsher Infernal vis",
+        effect=(
+            "Infernal vis in casting uses Realms of Power: The Infernal's vis "
+            "sordida: +3 botch dice per pawn instead of doubling the botch dice."
+        ),
+        source=(
+            "Realms of Power: The Infernal, Chapter One: The Infernal Realm, "
+            "Infernal Vis (https://www.redcap.org/page/Realms_of_Power:_The_Infernal"
+            "_Chapter_One:_The_Infernal_Realm#Infernal_Vis)"
+        ),
+    ),
+)
+
+OPTIONS_BY_KEY: dict[str, RuleOption] = {option.key: option for option in OPTIONS}
+
+
+def is_on(saga: Saga | None, key: str) -> bool:
+    """Whether the saga has turned optional rule `key` on (never, for no
+    saga or a key the app doesn't know)."""
+    if key not in OPTIONS_BY_KEY:
+        raise KeyError(f"Unknown rule option {key!r}")
+    return saga is not None and bool(saga.rule_options.get(key, False))
+
+
+def summary(saga: Saga) -> str:
+    """The options a saga has turned on, for its summary: "none" or their
+    labels."""
+    on = [option.label for option in OPTIONS if is_on(saga, option.key)]
+    return ", ".join(on) if on else "none (the book's standard rules)"
+
+
+def normalized(rule_options: dict[str, bool]) -> dict[str, bool]:
+    """Only the options that are on and still exist: a save keeps just
+    what the troupe turned on, so an option's default stays off."""
+    return {
+        key: True for key, on in rule_options.items() if on and key in OPTIONS_BY_KEY
+    }

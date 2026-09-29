@@ -23,7 +23,7 @@ from textual.widgets import (
 from textual.widgets._collapsible import CollapsibleTitle
 
 from .. import books as bk
-from .. import catalog, faith
+from .. import casting_text, catalog, faith, lab_planning
 from .. import covenant_diary as cov_diary
 from .. import economics as eco
 from .. import enchanted_devices as ed
@@ -65,6 +65,7 @@ from ..models import (
     Spell,
     character_age,
 )
+from ..rules import realms, scores
 from .fields import _pairs
 from .widgets import (
     DetailsPanel,
@@ -788,8 +789,10 @@ class CharacterSheetView(SheetView):
             with TabPane("Inventory", id="tab-inventory"):
                 yield from self._inventory_tab()
             if character.type == "magus":
-                with TabPane("Laboratory", id="tab-lab"):
-                    yield Static(_tab_placeholder("Laboratory"))
+                with TabPane("Laboratory", id="tab-lab"), VerticalScroll():
+                    yield self._static(
+                        "tab-lab", self._laboratory_text, id="char-lab-content"
+                    )
             with TabPane("Diary", id="tab-diary"):
                 yield Static(_tab_placeholder("Diary"))
 
@@ -1002,6 +1005,14 @@ class CharacterSheetView(SheetView):
                             id="arts-forms-list",
                             group="hermetic",
                         )
+                with SheetSection(title="Casting Scores", id="section-casting"):
+                    yield self._static(
+                        ("section-casting", "section-arts", "section-char-info"),
+                        lambda: casting_text.casting_scores_text(
+                            self.saga, self.character
+                        ),
+                        id="casting-scores",
+                    )
                 with SheetSection(title="Raw Vis", id="section-raw-vis-hermetic"):
                     yield self._list(
                         self._RAW_VIS_SECTIONS,
@@ -1182,10 +1193,10 @@ class CharacterSheetView(SheetView):
         ]
         if faith.shows_faith(character):
             rows += [
-                ("True Faith Score", str(b.true_faith_score)),
+                ("True Faith Score", st.faith_score_text(character)),
                 ("Faith Points", str(b.faith_points)),
             ]
-        rows.append(("Size", str(b.size)))
+        rows.append(("Size", st.size_text(character)))
         return aligned(rows)
 
     def _biographical_left_text(self) -> str:
@@ -1223,10 +1234,12 @@ class CharacterSheetView(SheetView):
         return st.characteristics_text(self.character.characteristics)
 
     def _ability_rows(self) -> list[tuple[int | None, str]]:
-        return st.ability_rows(self.character.abilities)
+        return st.ability_rows(self.character.abilities, self.character.virtues_flaws)
 
     def _ability_info_text(self, index: int | None) -> str:
-        return st.ability_info_text(self.character.abilities, index)
+        return st.ability_info_text(
+            self.character.abilities, index, self.character.virtues_flaws
+        )
 
     def _vf_rows(self, vf_type: str) -> list[tuple[int | None, str]]:
         return st.vf_rows(self.character.virtues_flaws, vf_type)
@@ -1264,11 +1277,18 @@ class CharacterSheetView(SheetView):
     def _reputation_rows(self) -> list[tuple[int | None, str]]:
         return st.trait_rows(self.character.reputations)
 
+    def _laboratory_text(self) -> str:
+        """The magus's Lab Totals in the laboratory assigned to them."""
+        lab = self.saga.laboratory(self.character.assigned_lab_id)
+        if lab is None:
+            return "[dim]No laboratory assigned: Lab Totals need one.[/]"
+        return lab_planning.lab_totals_text(self.saga, lab, self.character)
+
     def _wounds_text(self) -> str:
-        return st.wounds_text(self.character.wounds, with_soak=True)
+        return st.character_wounds_text(self.character)
 
     def _fatigue_text(self) -> str:
-        return st.fatigue_text(self.character.fatigue_level)
+        return st.character_fatigue_text(self.character)
 
     def _raw_vis_rows(self) -> list[tuple[int | None, str]]:
         return [
@@ -1313,10 +1333,12 @@ class CharacterSheetView(SheetView):
 
     def _art_row_label(self, art: str) -> str:
         score = self.character.arts.get(art.lower(), ArtScore())
+        bonus, _ = scores.art_bonus(self.character.virtues_flaws, art)
+        shown = st.bonus_score(score.level, bonus)
         name = f"{art} ({ART_ABBREVIATIONS[art]})"
         return (
             f"{name:<{self._ARTS_NAME_WIDTH}}"
-            f"{score.level:>{self._ARTS_NUM_WIDTH}}{score.xp:>{self._ARTS_NUM_WIDTH}}"
+            f"{shown:>{self._ARTS_NUM_WIDTH}}{score.xp:>{self._ARTS_NUM_WIDTH}}"
         )
 
     def _arts_rows(self, arts: Sequence[str]) -> list[tuple[int, str]]:
@@ -1324,10 +1346,11 @@ class CharacterSheetView(SheetView):
 
     def _art_info_text(self, art: str) -> str:
         score = self.character.arts.get(art.lower(), ArtScore())
+        bonus, bonus_from = scores.art_bonus(self.character.virtues_flaws, art)
         return "\n".join(
             [
                 f"[b]Name:[/] {art} ({ART_ABBREVIATIONS[art]})",
-                st.xp_line(score.progress),
+                st.xp_line(score.progress, bonus, bonus_from),
                 "",
                 f"[b]Description:[/] {ART_DESCRIPTIONS[art]}",
             ]
@@ -1375,7 +1398,10 @@ class CharacterSheetView(SheetView):
         if spell is None:
             lines = [f"[$text-error]Unknown spell: {escape(known.spell_id)}[/]"]
         else:
-            lines = [spl.detail_text(self.saga, spell)]
+            lines = [spl.detail_text(self.saga, spell), ""]
+            lines += casting_text.known_spell_casting_lines(
+                self.saga, self.character, known, spell
+            )
         lines += [
             "",
             "[b]Mastery:[/]",
@@ -1423,7 +1449,10 @@ class CharacterSheetView(SheetView):
         if index is None:
             return self._INVENTORY_HINT
         item = self.character.inventory[index]
-        return pos.detail_text(pos.PossessionEntry(item.kind, item))
+        text = pos.detail_text(pos.PossessionEntry(item.kind, item))
+        if item.kind == "weapon":
+            text += "\n\n" + st.combat_text(self.character, item)
+        return text
 
     def _refresh_inventory_info(self) -> None:
         """The Inventory tab's details panel: the chosen item, enchanted
@@ -1465,6 +1494,19 @@ LAB_SPECIALIZATION_SECTIONS = (
     "section-lab-specializations",
     "section-lab-specialties",
     *LAB_FEATURE_SECTIONS,
+)
+
+
+#: The lab sheet sections whose changes move its Lab Totals.
+_LAB_TOTAL_SECTIONS: tuple[str, ...] = (
+    "tab-lab-planning",
+    "section-lab-identity",
+    "section-lab-characteristics",
+    "section-lab-specializations",
+    "section-lab-specialties",
+    "section-lab-features",
+    "section-lab-vf-virtues",
+    "section-lab-vf-flaws",
 )
 
 
@@ -1535,9 +1577,11 @@ class LaboratorySheetView(SheetView):
     def compose(self) -> ComposeResult:
         yield from self._top_panel()
         with TabbedContent(initial="tab-lab-planning"):
-            with TabPane("Planning", id="tab-lab-planning"):
+            with TabPane("Planning", id="tab-lab-planning"), VerticalScroll():
                 yield self._static(
-                    "tab-lab-planning", self._planning_text, id="lab-planning-content"
+                    _LAB_TOTAL_SECTIONS,
+                    self._planning_text,
+                    id="lab-planning-content",
                 )
             with TabPane("Virtues & Flaws", id="tab-lab-vf"):
                 yield from self._virtues_flaws_tab()
@@ -1977,9 +2021,12 @@ class LaboratorySheetView(SheetView):
             if covenant
             else 0
         )
+        realm = covenant.aura_realm if covenant else "Magic"
+        total = lab_aura_total(lab, covenant_aura)
+        note = realms.aura_note(realm, total)
         return (
             f"Aura: {covenant_aura} (covenant) {lab.aura_modifier:+d} (modifier) "
-            f"= {lab_aura_total(lab, covenant_aura)}"
+            f"= {total} {realm}" + (f" ({note})" if note else "")
         )
 
     def _characteristics_derived_text(self) -> str:
@@ -2026,7 +2073,10 @@ class LaboratorySheetView(SheetView):
         return "\n".join(lines)
 
     def _planning_text(self) -> str:
-        return "Lab activity planning isn't built yet -- coming in a future update."
+        lab = self.laboratory
+        return lab_planning.lab_totals_text(
+            self.saga, lab, self.saga.character(lab.owner_id)
+        )
 
 
 class FamiliarSheetView(SheetView):
@@ -2788,6 +2838,16 @@ class CovenantSheetView(SheetView):
             return str(cov.aura)
         return f"{effective} (base {cov.aura}, {effective - cov.aura:+d} Boons)"
 
+    def _aura_realm_text(self) -> str:
+        """The aura's realm, and how it touches Hermetic magic when that
+        isn't simply +aura."""
+        cov = self.covenant
+        effective = covenant_effective_aura(
+            cov, catalog.load_covenant_boon_hook_catalog_by_id()
+        )
+        note = realms.aura_note(cov.aura_realm, effective)
+        return cov.aura_realm + (f" ({note})" if note else "")
+
     def _info_left_text(self) -> str:
         cov, saga = self.covenant, self.saga
         founded = "(not set)" if cov.year_founded is None else str(cov.year_founded)
@@ -2812,6 +2872,7 @@ class CovenantSheetView(SheetView):
                 ("Aegis' Penetration", str(cov.aegis_penetration)),
                 ("Living Conditions (Mundane)", str(cov.living_conditions_mundane)),
                 ("Covenant Season", cov.covenant_season),
+                ("Aura Realm", self._aura_realm_text()),
             ]
         )
 

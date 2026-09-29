@@ -54,9 +54,9 @@
       ○ Brave: +2                                        ○ Wise: +1
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Aging & Warping
+    ▼ Aging & Warping                                                                                 ▃▃
 
-      Decrepitude: 0                                                                                  ▃▃
+      Decrepitude: 0
       Effects of Aging:
       (none recorded)
 
@@ -226,35 +226,35 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Talisman: Ring  Opened 0/0  0 attunements
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Magical Arts
 
-      Techniques                                        Forms
-                         Score    XP                                       Score    XP
-      ○ Creo (Cr)            0     0                    ○ Animal (An)          0     0
-      ○ Intellego (In)       0     0                    ○ Aquam (Aq)           0     0
-      ○ Muto (Mu)            0     0                    ○ Auram (Au)           0     0
-      ○ Perdo (Pe)           0     0                    ○ Corpus (Co)          0     0
-      ○ Rego (Re)            0     0                    ○ Herbam (He)          0     0
-                                                        ○ Ignem (Ig)           0     0
-                                                        ○ Imaginem (Im)        0     0
-                                                        ○ Mentem (Me)          0     0
-                                                        ○ Terram (Te)          0     0
-                                                        ○ Vim (Vi)             0     0
+      Techniques                                       Forms
+                         Score    XP                                      Score    XP
+      ○ Creo (Cr)            0     0                   ○ Animal (An)          0     0
+      ○ Intellego (In)       0     0                   ○ Aquam (Aq)           0     0
+      ○ Muto (Mu)            0     0                   ○ Auram (Au)           0     0
+      ○ Perdo (Pe)           0     0                   ○ Corpus (Co)          0     0
+      ○ Rego (Re)            0     0                   ○ Herbam (He)          0     0
+                                                       ○ Ignem (Ig)           0     0
+                                                       ○ Imaginem (Im)        0     0
+                                                       ○ Mentem (Me)          0     0
+                                                       ○ Terram (Te)          0     0
+                                                       ○ Vim (Vi)             0     0
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Raw Vis
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Casting Scores
+                                                                                                      ▃▃
+                     An   Aq   Au   Co   He   Ig   Im   Me   Te   Vi
+      Creo            1    1    1    1    1    1    1    1    1    1
+      Intellego       1    1    1    1    1    1    1    1    1    1
+      Muto            1    1    1    1    1    1    1    1    1    1
+      Perdo           1    1    1    1    1    1    1    1    1    1
+      Rego            1    1    1    1    1    1    1    1    1    1
 
-      ○ Creo: 3 pawn(s)
-
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Known Spells (1)
-
-      ○ Soothe Pains of the Beast      CrAn               20  Touch/Mom/Ind          Ritual ArM5
-
-
-
-
+      Every score adds: Stamina +0, Aura (Magic 1) +1 (firm words, bold gestures).
+      Formulaic: score + die >= level casts it; up to 10 short costs a Fatigue level.
+      Spontaneous without Fatigue: score / 5; with Fatigue: (score + stress die) / 2.
 
 
     Select an Art or a Known Spell to see its details.
@@ -361,27 +361,27 @@
    Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Laboratory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  The Laboratory tab isn't built yet -- coming in a future update.
+  Lab Totals for Leandro (Technique + Form + the rest):
 
+                 An   Aq   Au   Co   He   Ig   Im   Me   Te   Vi
+  Creo           -1   -1    0   -1   -1    0    3   -1   -1   -1
+  Intellego       1    1    2    1    1    2    5    1    1    1
+  Muto           -1   -1    0   -1   -1    0    3   -1   -1   -1
+  Perdo          -1   -1    0   -1   -1    0    3   -1   -1   -1
+  Rego           -1   -1    0   -1   -1    0    3   -1   -1   -1
 
+  Every total adds: Intelligence +0, Magic Theory +0, Aura (Magic 1) +1, General Quality -2.
+  Art Specializations, in totals using that Art: Intellego +2, Auram +1, Ignem +1, Imaginem +4.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  By activity (on top of the grid):
+  Inventing spells: nothing extra.
+  Enchanting items: nothing extra.
+  Working from a Lab Text: Adept Laboratory Student +6.
+  Binding a familiar: nothing extra.
+  Longevity Ritual: nothing extra (Creo Corpus -1: aging rolls -0).
+  Extracting vis: nothing extra (Creo Vim -1: 1 pawns).
+  Experimenting: + a simple die.
+  Raw vis in one season: up to 0 pawns; shape and material bonuses up to +0 (both from Magic Theory).
 
 
 

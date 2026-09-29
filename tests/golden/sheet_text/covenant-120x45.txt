@@ -10,6 +10,7 @@
       Living Conditions (Magi): 0              Aegis' Penetration:          0
       Aura:                     1 (base 0,     Living Conditions (Mundane): 0
       +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
           Edit (e)
 
    Attributes  Inhabitants  Possessions  Economics  Library  Diary
@@ -21,11 +22,10 @@
       (no description)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Reputations (1)
+    ▼ Reputations (1)                                                             ▂▂
 
-      ○ Fair dealing: +2                                                          ▇▇
+      ○ Fair dealing: +2
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 
 
     Select a Boon or Hook to see its details.
@@ -53,13 +53,14 @@
       Living Conditions (Magi): 0              Aegis' Penetration:          0
       Aura:                     1 (base 0,     Living Conditions (Mundane): 0
       +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
           Edit (e)
 
    Attributes  Inhabitants  Possessions  Economics  Library  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Loyalty                                                                     ▃▃
+    ▼ Loyalty                                                                     ▅▅
 
       Type of Governance:       (not set)     Situational Modifiers for:
       Base Loyalty Points:      -30           Living Conditions:  +0  (+0)
@@ -68,7 +69,6 @@
       Prevailing Loyalty Score: -3            (+0)
                                               Specialists:        0
                                               Familiarity:        0
-                                              Reputation:         0
 
 
     Select an inhabitant to see its details.
@@ -96,6 +96,7 @@
       Living Conditions (Magi): 0              Aegis' Penetration:          0
       Aura:                     1 (base 0,     Living Conditions (Mundane): 0
       +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
           Edit (e)
 
    Attributes  Inhabitants  Possessions  Economics  Library  Diary
@@ -103,7 +104,7 @@
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Properties and Land (1)
-                                                                                  ▄▄
+
         Name                Location          Dimensions    Inhabitants
       ○ A property
 
@@ -111,7 +112,6 @@
     ▼ Sanctums (1)
 
         Name                Owner           Quality  Upkeep
-      ○ Tower               Leandro              -2       0
 
 
     Select a possession to see its details.
@@ -139,6 +139,7 @@
       Living Conditions (Magi): 0              Aegis' Penetration:          0
       Aura:                     1 (base 0,     Living Conditions (Mundane): 0
       +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
           Edit (e)
 
    Attributes  Inhabitants  Possessions  Economics  Library  Diary
@@ -146,7 +147,7 @@
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Wealth
-                                                                                  ▁▁
+                                                                                  ▅▅
       Points of Inhabitants:       16         Total Income:
       Points of Laboratories:      10         100
       Points of Weapons and Armor: 0          Expenditure (Before Cost Savings):
@@ -154,7 +155,6 @@
                                               Cost Savings:                      0
                                               Total Expenditure:
                                               21
-                                              Surplus/Deficit:
 
 
     Select a source of income or a row to see its details.
@@ -182,6 +182,7 @@
       Living Conditions (Magi): 0              Aegis' Penetration:          0
       Aura:                     1 (base 0,     Living Conditions (Mundane): 0
       +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
           Edit (e)
 
    Attributes  Inhabitants  Possessions  Economics  Library  Diary
@@ -197,7 +198,6 @@
       Tractatus:   0                           Total Books:     3
         • Ability: 0                           Total Cost:      0 Build Points
         • Art:     0
-
 
 
     Select a book to see its details.
@@ -225,13 +225,13 @@
       Living Conditions (Magi): 0              Aegis' Penetration:          0
       Aura:                     1 (base 0,     Living Conditions (Mundane): 0
       +1 Boons)                                Covenant Season:             Spring
+                                               Aura Realm:                  Magic
           Edit (e)
 
    Attributes  Inhabitants  Possessions  Economics  Library  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   (none recorded)
-
 
 
 

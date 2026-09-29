@@ -21,30 +21,56 @@ MODIFIER_TYPES: dict[str, str] = {
     "certamen_total": "Certamen total",
     "penetration_total": "Penetration total",
     "soak": "Soak total",
+    "size": "A character's Size",
     "study_total": "Study total, for seasonal learning",
+    "teaching_source_quality": "Source Quality of those this character teaches",
     "aging_roll": "Aging roll",
     "art_xp_gain": "Experience gained toward a specific Art",
     "art_score_effective": "Flat bonus to an Art's effective score, without spending xp",
     "ability_xp_gain": "Experience gained toward a specific Ability",
     "ability_score_effective": "Flat bonus to an Ability's effective score, without spending xp",
     "vis_extraction": "Vis gained from the Extract Vis lab activity",
+    # A Laboratory Characteristic (the modifier's `target` names which one,
+    # from models.LAB_CHARACTERISTICS), changed by lab Virtues and Flaws.
+    "lab_characteristic": "A Laboratory Characteristic",
+    # Points in a laboratory Specialization (`target` names it, or a
+    # "{specialization}" the lab owner chooses from the entry's `choices`).
+    "lab_specialization": "Points in a laboratory Specialization",
+    # Every laboratory Specialization scoring 2 or more (Undecorated's -1).
+    "lab_specialization_high": "Each laboratory Specialization scoring 2 or more",
     # Covenant scores, changed by Boons and Hooks (see DESIGN.md section 5).
     "covenant_aura": "The covenant's Magic aura",
-    "covenant_expense": "A category of the covenant's yearly expenditure, in pounds",
+    # A category of the covenant's yearly expenditure, in pounds.
+    "covenant_expense": "Yearly expenditure",
+    # A magus's Gift modifier to the covenfolk's Base Loyalty, on top of the
+    # ordinary Gift's -30 (Gentle Gift +30, Blatant Gift -75).
+    "gift_loyalty": "The Gift's effect on covenfolk loyalty",
 }
 
 ACTIVITIES_BY_TYPE: dict[str, dict[str, str]] = {
+    "casting_total": {
+        "formulaic": "Formulaic spells",
+        "ritual": "Ritual spells",
+    },
     "lab_total": {
         "invent_spells": "Invent Spells",
         "enchant_items": "Enchant Items",
         "extract_vis": "Extract Vis",
         "longevity_ritual": "Longevity Ritual",
         "original_research": "Original Research",
+        "bind_familiar": "Binding a familiar",
+        "learn_from_lab_text": "Working from a Lab Text",
+        # Adds to (or replaces, for the same Virtue) the activity's own.
+        "experimentation": "Experimenting",
     },
     "study_total": {
         "reading": "Studying from a book",
         "teaching": "Being taught by another character",
         "practice": "Practising unsupervised",
+        "training": "Being trained by a master",
+        "vis_study": "Studying from raw vis",
+        "adventure": "Adventure experience",
+        "exposure": "Exposure experience",
     },
     # Which category of expenditure (the "activity" here is the expense line).
     "covenant_expense": {
@@ -62,8 +88,6 @@ def describe_modifier(
     """A modifier in words, e.g. "Yearly expenditure: Buildings +2" or
     "The covenant's Magic aura +1"."""
     what = MODIFIER_TYPES.get(applies_to, applies_to)
-    if applies_to == "covenant_expense":
-        what = "Yearly expenditure"
     if activity:
         what += f": {ACTIVITIES_BY_TYPE.get(applies_to, {}).get(activity, activity)}"
     effects = []

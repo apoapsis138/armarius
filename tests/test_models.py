@@ -25,6 +25,7 @@ from ars_magica_manager.models import (
     LabCharacteristics,
     Laboratory,
     LabVirtueFlawDef,
+    Modifier,
     Saga,
     ScoredTrait,
     VirtueFlawInstance,
@@ -139,7 +140,10 @@ _LAB_VF_CATALOG = {
         category="Structure",
         tier="Free",
         cost=0,
-        characteristic_modifiers={"safety": 1, "aesthetics": 1},
+        modifiers=[
+            Modifier("lab_characteristic", amount=1, target="safety"),
+            Modifier("lab_characteristic", amount=1, target="aesthetics"),
+        ],
     ),
     "labvf_deformed": LabVirtueFlawDef(
         id="labvf_deformed",
@@ -148,7 +152,10 @@ _LAB_VF_CATALOG = {
         category="Structure",
         tier="Free",
         cost=0,
-        characteristic_modifiers={"safety": -1, "aesthetics": -1},
+        modifiers=[
+            Modifier("lab_characteristic", amount=-1, target="safety"),
+            Modifier("lab_characteristic", amount=-1, target="aesthetics"),
+        ],
     ),
     "labvf_extensive_stores": LabVirtueFlawDef(
         id="labvf_extensive_stores",
@@ -157,7 +164,7 @@ _LAB_VF_CATALOG = {
         category="Structure",
         tier="Minor",
         cost=1,
-        characteristic_modifiers={"safety": 2},
+        modifiers=[Modifier("lab_characteristic", amount=2, target="safety")],
     ),
 }
 

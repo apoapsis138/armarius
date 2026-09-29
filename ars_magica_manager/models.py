@@ -80,7 +80,11 @@ def round_away_from_zero(value: float) -> int:
     3, -2.4 -> -3), per the user's "round up fractions" rule for covenant
     finances. A plain `math.ceil` would be wrong for a negative figure (Base
     Loyalty can be negative): `ceil(-2.4)` is -2, which softens the number
-    instead of rounding it up."""
+    instead of rounding it up.
+
+    Kept for covenant finances over the rules reference's readings (fractional
+    pounds, decision 21; nearest for Base Loyalty): Hedda, 2026-09-29
+    (STORY-815)."""
     return math.ceil(value) if value >= 0 else -math.ceil(-value)
 
 
@@ -94,10 +98,13 @@ def known_fields(cls: type, data: dict[str, Any]) -> dict[str, Any]:
 
 SEASONS: tuple[str, ...] = ("Spring", "Summer", "Autumn", "Winter")
 
+#: The four realms an aura or a power can belong to (DE Chapter Twelve).
+REALMS: tuple[str, ...] = ("Magic", "Divine", "Faerie", "Infernal")
+
 #: The 8 "Laboratory Characteristics" (ArM5 Covenants, Chapter 9) -- unlike human
 #: Characteristics these start at 0 and are cheap to change. Each name here
-#: doubles as a LabCharacteristics field name and a
-#: LabVirtueFlawDef.characteristic_modifiers key.
+#: doubles as a LabCharacteristics field name and a `lab_characteristic`
+#: Modifier's target.
 LAB_CHARACTERISTICS: tuple[str, ...] = (
     "size",
     "refinement",
@@ -206,6 +213,9 @@ class VirtueFlawDef:
     source: str = ""
     summary: str = ""
     audience: list[str] = field(default_factory=list)
+    #: What grants the entry by rule rather than purchase ("familiar_bond":
+    #: binding a familiar gives both partners True Friend).
+    granted_by: list[str] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         _validate_vf_tier_cost(self.id, self.tier, self.cost)
@@ -254,14 +264,18 @@ class LabVirtueFlawDef:
     one (a lab and a magus are different "characters" with different
     catalogs, even though both use Free/Minor/Major tiers).
 
-    `characteristic_modifiers` is the parsed numeric effect on one or more
-    of LAB_CHARACTERISTICS (e.g. Superior Construction -> {"safety": 3}),
-    used to auto-compute the virtue/flaw component of each Characteristic's
-    manual + virtue_sum + flaw_sum = total (see
-    laboratories.lab_characteristic_total).
-    Any Specialization grant mentioned in the rules text is left as prose
-    in `description` only: the user enters it as a LabSpecialtyEntry until
-    the catalog carries the grants (STORY-804).
+    `modifiers` carries its effects in the shared Modifier shape (DESIGN.md
+    section 5.1): an effect on a Characteristic is a `lab_characteristic`
+    modifier whose `target` names one of LAB_CHARACTERISTICS (Superior
+    Construction: Safety +1, Aesthetics +1). They feed the virtue/flaw
+    component of each Characteristic's manual + virtue_sum + flaw_sum =
+    total (laboratories.lab_characteristic_total).
+    A Specialization grant is a `lab_specialization` modifier (STORY-817):
+    its `target` names the Specialization, or is "{specialization}" when the
+    lab's owner picks it from `choices["specialization"]` as the Virtue is
+    added (the pick is the instance's params). Grants the book leaves to
+    distribute ("2 points on any Specialization(s)") stay prose, entered as
+    LabSpecialtyEntry sources.
 
     `repeatable` marks the (asterisked in the book) entries a lab can hold
     more than once -- e.g. two Lesser Features -- so the picker shouldn't
@@ -275,23 +289,69 @@ class LabVirtueFlawDef:
     tier: VirtueFlawTier
     cost: float
     repeatable: bool = False
-    characteristic_modifiers: dict[str, int] = field(default_factory=dict)
+    modifiers: list[Modifier] = field(default_factory=list)
+    #: A parameter the lab's owner chooses -> the values allowed.
+    choices: dict[str, list[str]] = field(default_factory=dict)
     description: str = ""
     #: The book(s) it's from (sourcebooks); every entry so far is Covenants'.
     source: str = "Covenants"
 
     def __post_init__(self) -> None:
         _validate_vf_tier_cost(self.id, self.tier, self.cost)
-        for characteristic in self.characteristic_modifiers:
-            if characteristic not in LAB_CHARACTERISTICS:
+        for options in self.choices.values():
+            unknown = set(options) - set(LAB_SPECIALIZATIONS)
+            if unknown:
+                raise ValueError(f"Unknown Specializations {unknown} for {self.id!r}")
+        for modifier in self.modifiers:
+            if modifier.applies_to == "lab_specialization" and not (
+                modifier.target in LAB_SPECIALIZATIONS
+                or modifier.target == "{specialization}"
+                and "specialization" in self.choices
+            ):
                 raise ValueError(
-                    f"Unknown Lab Characteristic {characteristic!r} for "
+                    f"Unknown Specialization {modifier.target!r} for {self.id!r}"
+                )
+            if (
+                modifier.applies_to == "lab_characteristic"
+                and modifier.target not in LAB_CHARACTERISTICS
+            ):
+                raise ValueError(
+                    f"Unknown Lab Characteristic {modifier.target!r} for "
                     f"{self.id!r}; must be one of {LAB_CHARACTERISTICS}"
                 )
 
+    @property
+    def specialization_grants(self) -> list[tuple[str, float]]:
+        """Its Specialization grants as (Specialization or "{specialization}"
+        for a choice, points), in catalog order."""
+        return [
+            (m.target or "", m.amount or 0)
+            for m in self.modifiers
+            if m.applies_to == "lab_specialization"
+        ]
+
+    @property
+    def characteristic_modifiers(self) -> dict[str, float]:
+        """Its flat effects on the Characteristics, {characteristic: amount}
+        in catalog order (read from `modifiers`)."""
+        amounts: dict[str, float] = {}
+        for modifier in self.modifiers:
+            if modifier.applies_to == "lab_characteristic" and modifier.target:
+                amounts[modifier.target] = amounts.get(modifier.target, 0) + (
+                    modifier.amount or 0
+                )
+        return amounts
+
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> LabVirtueFlawDef:
-        return cls(**data)
+        d = dict(data)
+        # Before STORY-804 the effects were a {characteristic: amount} map.
+        legacy = d.pop("characteristic_modifiers", None) or {}
+        d["modifiers"] = [Modifier(**m) for m in d.get("modifiers", [])] + [
+            Modifier(applies_to="lab_characteristic", target=c, amount=amount)
+            for c, amount in legacy.items()
+        ]
+        return cls(**d)
 
 
 #: The "types" the Covenants book (Chapter Two: Boons & Hooks) sorts every
@@ -362,6 +422,9 @@ class CovenantBoonHookDef:
     requires_any: list[str] = field(default_factory=list)
     unknown: bool = False
     source: str = ""
+    #: A "Style of Governance" Boon (Autocracy, Council...), listed on the
+    #: Inhabitants tab.
+    governance: bool = False
 
     def __post_init__(self) -> None:
         _validate_vf_tier_cost(self.id, self.tier, self.cost)
@@ -1168,8 +1231,9 @@ class Wounds:
     heavy: int = 0
     incapacitated: bool = False
     dead: bool = False
-    #: Typed in, not derived from Stamina/armor/Virtues -- same "tracker, not
-    #: rules engine" treatment as everything else (see DESIGN.md, STORY-205).
+    #: A character's typed adjustment on top of the Soak worked out from
+    #: Stamina, armour and Virtues (rules.derived.soak, STORY-807); a
+    #: familiar's wounds leave it 0 (a familiar has base_soak).
     soak: int = 0
 
     @classmethod
@@ -1682,19 +1746,6 @@ LOYALTY_MONEY: tuple[str, ...] = (
 )
 LOYALTY_MONEY_DEFAULT = "Standard salary"
 
-#: Catalog ids of the covenant Boons that are a "Style of Governance" (Free
-#: Choices under Residents). The Loyalty section's Type of Governance follows
-#: whichever of these the covenant has.
-GOVERNANCE_STYLE_IDS: tuple[str, ...] = (
-    "covbh_boon_free_autocracy",
-    "covbh_boon_free_council",
-    "covbh_boon_free_democracy",
-    "covbh_boon_free_faux_feudalism",
-    "covbh_boon_free_gerontocracy",
-    "covbh_boon_free_militocracy",
-    "covbh_boon_free_theocracy",
-)
-
 
 #: The kinds of covenant possession, in the order the Possessions tab lists them.
 POSSESSION_KINDS: tuple[str, ...] = (
@@ -2046,6 +2097,8 @@ class Covenant:
     name: str
     notes: str = ""
     aura: int = 0  # inherited by all of the covenant's laboratories
+    #: Which realm the aura belongs to (REALMS); older saves load as Magic.
+    aura_realm: str = "Magic"
     tribunal: str = ""
     year_founded: int | None = None
     aegis_of_the_hearth: int = 0
@@ -2160,6 +2213,9 @@ class Saga:
     #: the default and what older saves load as, means every book. The core
     #: book is always in play. See sourcebooks.
     books_in_play: list[str] | None = None
+    #: The optional rules the troupe has turned on (rules.options keys);
+    #: an option not listed is off, its default.
+    rule_options: dict[str, bool] = field(default_factory=dict)
     #: The app version that last saved this saga (storage.save_saga sets it;
     #: "" for a save older than versioning), for upgrading old saves later.
     app_version: str = ""

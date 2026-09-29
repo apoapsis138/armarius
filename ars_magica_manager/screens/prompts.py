@@ -32,6 +32,7 @@ from ..models import (
     CovenantDiaryEntry,
     DiaryEntry,
     LabSpecialtyEntry,
+    LabVirtueFlawDef,
     MasteryAbility,
     NamedDescription,
     ScoredTrait,
@@ -144,6 +145,30 @@ def _param_dialog(title: str, parameters: list[str]) -> FieldsDialog[dict[str, s
         ],
         save_label="Confirm",
         build=lambda values: {param: values[param].lower() for param in parameters},
+    )
+
+
+def _lab_choice_dialog(entry: LabVirtueFlawDef) -> FieldsDialog[dict[str, str]]:
+    """Choose the Specialization a laboratory Virtue or Flaw grants points
+    to, from the ones its catalog entry allows (STORY-817)."""
+    return FieldsDialog(
+        entry.name,
+        [
+            DialogField(
+                param,
+                "Specialization",
+                "select",
+                None,
+                options=_pairs(options),
+                required=True,
+                allow_blank=True,
+                placeholder="(choose one)",
+                hint=f"{entry.name} grants its points to the one you choose.",
+            )
+            for param, options in entry.choices.items()
+        ],
+        save_label="Confirm",
+        build=lambda values: {param: values[param] for param in entry.choices},
     )
 
 

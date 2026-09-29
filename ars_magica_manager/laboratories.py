@@ -29,6 +29,7 @@ from .models import (
     NamedDescription,
     VirtueFlawInstance,
 )
+from .rules import effects
 
 #: The two Focus Flaws; a lab may only have one Focus at a time.
 FOCUS_FLAW_IDS = frozenset(FOCUS_FLAWS)
@@ -99,18 +100,64 @@ def lab_characteristic_total(
     whatever the lab's attached Virtues/Flaws contribute.
     """
     manual = getattr(lab.characteristics, characteristic)
-    virtue_sum = 0
-    flaw_sum = 0
-    for vf in lab.virtues_flaws:
-        entry = catalog_by_id.get(vf.vf_id)
-        if entry is None:
-            continue
-        amount = entry.characteristic_modifiers.get(characteristic, 0)
-        if entry.type == "Virtue":
-            virtue_sum += amount
-        else:
-            flaw_sum += amount
+    found = effects.collect(
+        [laboratory_source(lab, catalog_by_id)],
+        "lab_characteristic",
+        target=characteristic,
+    )
+    virtue_sum = int(effects.amount_total(e for e in found if not e.is_negative_side))
+    flaw_sum = int(effects.amount_total(e for e in found if e.is_negative_side))
     return manual, virtue_sum, flaw_sum, manual + virtue_sum + flaw_sum
+
+
+def migrate_specialty_stand_ins(
+    lab: Laboratory, catalog_by_id: dict[str, LabVirtueFlawDef] | None = None
+) -> None:
+    """Before STORY-817 a Virtue's Specialization grant was typed in as a
+    source named after it (Subterranean: Terram +1). Now the catalog carries
+    the grant, so such an entry is dropped when the Virtue grants exactly
+    that, or, for a choice, becomes the Virtue's choice."""
+    if catalog_by_id is None:
+        catalog_by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
+    kept: list[LabSpecialtyEntry] = []
+    for entry in lab.specialties:
+        if not _absorb_stand_in(lab, entry, catalog_by_id):
+            kept.append(entry)
+    lab.specialties[:] = kept
+
+
+def _absorb_stand_in(
+    lab: Laboratory,
+    entry: LabSpecialtyEntry,
+    catalog_by_id: dict[str, LabVirtueFlawDef],
+) -> bool:
+    source = entry.source.strip().casefold()
+    for vf in lab.virtues_flaws:
+        definition = catalog_by_id.get(vf.vf_id)
+        if definition is None or definition.name.casefold() != source:
+            continue
+        for target, points in definition.specialization_grants:
+            if points != entry.points:
+                continue
+            if target == entry.specialization:
+                return True
+            if (
+                target == "{specialization}"
+                and unchosen_specialization(vf, definition)
+                and entry.specialization in definition.choices["specialization"]
+            ):
+                vf.params = {**vf.params, "specialization": entry.specialization}
+                return True
+    return False
+
+
+def laboratory_source(
+    lab: Laboratory, catalog_by_id: dict[str, LabVirtueFlawDef] | None = None
+) -> effects.EffectSource:
+    """The lab's Virtues and Flaws as a source for the shared effect lookup."""
+    if catalog_by_id is None:
+        catalog_by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
+    return effects.EffectSource("laboratory", lab.virtues_flaws, catalog_by_id)
 
 
 # -- Features --
@@ -362,6 +409,11 @@ def specialization_scores(lab: Laboratory) -> list[SpecializationScore]:
             (g.specialization, f"{feature.name} (Focus)", g.points)
             for g in feature.focus_allocations
         ]
+    source = laboratory_source(lab)
+    found += [
+        (effect.target or "", effect.entry.name, int(effect.modifier.amount or 0))
+        for effect in effects.collect([source], "lab_specialization")
+    ]
     found += [
         (entry.specialization, _source_label(entry), entry.points)
         for entry in lab.specialties
@@ -370,6 +422,12 @@ def specialization_scores(lab: Laboratory) -> list[SpecializationScore]:
     for name, label, points in found:
         if name in LAB_SPECIALIZATIONS:
             sources.setdefault(name, []).append((label, points))
+    # Undecorated and the like: each Specialization scoring 2 or more loses
+    # a point (read once the other sources are summed).
+    for effect in effects.collect([source], "lab_specialization_high"):
+        for name, entries in sources.items():
+            if sum(points for _, points in entries) >= 2:
+                entries.append((effect.entry.name, int(effect.modifier.amount or 0)))
     return [
         SpecializationScore(
             name,
@@ -595,6 +653,9 @@ def vf_info_text(lab: Laboratory, index: int | None) -> str:
         f"[b]Category:[/] {definition.category}",
         f"[b]Tier:[/] {definition.tier} {definition.type} ({_points(definition.cost)})",
     ]
+    grants = specialization_grant_text(instance, definition)
+    if grants:
+        lines.append(f"[b]Specializations:[/] {grants}")
     if definition.characteristic_modifiers:
         effects = ", ".join(
             f"{_characteristic_label(c)} {amount:+d}"
@@ -611,6 +672,39 @@ def vf_info_text(lab: Laboratory, index: int | None) -> str:
         lines.append(f"[b]Focus of:[/] {escape(feature.name) if feature else '(none)'}")
     lines += ["", "[b]Rules:[/]", escape(definition.description)]
     return "\n".join(lines)
+
+
+def unchosen_specialization(
+    instance: VirtueFlawInstance, definition: LabVirtueFlawDef
+) -> bool:
+    """True when the Virtue/Flaw lets the owner choose a Specialization and
+    none has been chosen (a lab from before STORY-817)."""
+    return "specialization" in definition.choices and not instance.params.get(
+        "specialization"
+    )
+
+
+def specialization_grant_text(
+    instance: VirtueFlawInstance, definition: LabVirtueFlawDef
+) -> str:
+    """Its Specialization grants in words: "Experimentation +1, Muto +2"; a
+    choice not yet made reads "(Muto or Rego, not chosen) +2"."""
+    parts = []
+    for target, points in definition.specialization_grants:
+        if target == "{specialization}":
+            chosen = instance.params.get("specialization")
+            options = definition.choices["specialization"]
+            if chosen:
+                target = chosen
+            elif len(options) <= 3:
+                target = f"({' or '.join(options)}, not chosen)"
+            else:
+                target = "(not chosen)"
+        parts.append(f"{target} {points:+g}")
+    for modifier in definition.modifiers:
+        if modifier.applies_to == "lab_specialization_high":
+            parts.append(f"{modifier.amount:+g} to each scoring 2 or more")
+    return ", ".join(parts)
 
 
 def vf_warnings(lab: Laboratory) -> str:
@@ -630,6 +724,13 @@ def vf_warnings(lab: Laboratory) -> str:
     focuses = sum(1 for vf in lab.virtues_flaws if vf.vf_id in FOCUS_FLAW_IDS)
     if focuses > 1:
         lines.append(f"{focuses} Focus Flaws: a laboratory may only have one Focus.")
+    for vf in lab.virtues_flaws:
+        definition = lab_catalog.get(vf.vf_id)
+        if definition is not None and unchosen_specialization(vf, definition):
+            lines.append(
+                f"{definition.name}: its Specialization isn't chosen "
+                "(remove it and add it again to choose)."
+            )
     return "\n".join(f"[$text-error]{line}[/]" for line in lines)
 
 

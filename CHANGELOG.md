@@ -9,6 +9,40 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 1.2.0 — 2026-09-29
+
+The Rules Engine (Phase 2) works out the book's totals from what's on the
+sheets. Every figure shows where it comes from.
+
+- Laboratories: the Planning tab (and the magus's Laboratory tab) shows the
+  owner's Lab Total for every Technique and Form, with what each activity
+  adds: inventing, enchanting, working from a Lab Text, binding a familiar,
+  a Longevity Ritual's aging modifier and the vis a season's extraction
+  gives. Laboratory Virtues and Flaws now grant their Specializations
+  themselves; when the book lets you choose which, you're asked as the
+  Virtue is added.
+- Casting: the Hermetic Magic tab shows Casting Scores for every Technique
+  and Form in your covenant's aura, Magic Resistance per Form, the
+  Penetration bonus and certamen figures. A known spell's details give its
+  Casting Score and the die it needs, with Fatigue and botch dice.
+- Covenants have an Aura Realm; a Divine, Faerie or Infernal aura changes
+  Hermetic casting and lab work as the book says.
+- Characters: Soak (the old typed Soak becomes an adjustment on top),
+  Encumbrance, the Wound and Fatigue penalties, the Damage Table for the
+  character's Size, and a weapon's Initiative, Attack, Defence and Damage.
+  Puissant shows as a bonus on the score (5+2). True Faith shows its Magic
+  Resistance.
+- Spells show their design ("Base 5, +2 Voice, +2 Sun, +2 Group = 35"), and
+  the spell form fills in Level from its base and Range, Duration and
+  Target.
+- Books show what a season's reading gives each magus and companion of the
+  covenant.
+- Optional rules on Edit Saga, all off until you turn them on: simple dice
+  only, Dominion Magic Resistance, harsher Infernal vis.
+- Many Virtues and Flaws now change the totals they affect (Affinity,
+  Puissant, Book Learner, Inventive Genius, Tough, Large, Deficient Arts and
+  more).
+
 ## 1.1.0 — 2026-09-29
 
 The first piece of Phase 2, the Rules Engine.

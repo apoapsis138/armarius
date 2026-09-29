@@ -205,22 +205,29 @@ splits them into formats the Rules Engine would have to reconcile.
 
 **Staged migration.** Rather than converting everything at once, each catalog
 moves to the shared shape when a real calculation needs it:
-- Character Virtues & Flaws: already in this shape (effects not yet filled in).
+- Character Virtues & Flaws: in this shape; effects are filled in by each
+  Rules Engine story as its total needs them (Puissant Art/Ability first,
+  STORY-804), with a closing audit (STORY-818).
 - Covenant Boons & Hooks: **converted** -- `covenant_aura` (the Aura Boon / Weak
-  Aura Hook) and `covenant_expense` / `buildings` (the Buildings surcharge),
-  collected by `models.covenant_modifiers()`.
-- Laboratory Virtues & Flaws: still the older `characteristic_modifiers` map
-  (`{"safety": 1}`); convert when the Rules Engine starts, since that's when lab
-  Characteristics feed Lab Totals (board: STORY-804).
-- Still to settle then: how flat amounts and multipliers combine when both apply.
+  Aura Hook) and `covenant_expense` / `buildings` (the Buildings surcharge).
+- Laboratory Virtues & Flaws: **converted** (STORY-804) -- each effect on a
+  Characteristic is a `lab_characteristic` modifier whose `target` names it.
+  Specialization grants are `lab_specialization` modifiers (STORY-817): a
+  fixed target, or "{specialization}" picked from the entry's `choices` as
+  the Virtue is added; Undecorated is `lab_specialization_high`. Grants the
+  book leaves to distribute stay typed-in Specialization sources.
 
-**Known exceptions in the code today** (predating this decision; each should
-move onto its catalog entry when its calculation is next touched):
-`inhabitants.py` picks the Gentle/Blatant Gift Loyalty modifier by the ids
-`vf_gentle_gift`/`vf_blatant_gift`; `models.GOVERNANCE_STYLE_IDS` lists the
-governance Boons/Hooks by id; binding a Familiar grants `vf_true_friend` by id
-(`familiars.bind_familiar`); and `totals.describe_modifier` words `covenant_expense`
-specially.
+All three are collected by one lookup, `rules.effects.collect()`, over any mix
+of character, laboratory and covenant sources. **Stacking (settled,
+STORY-804):** flat amounts are added to the base first, then multipliers
+multiply that sum (several multiply together), as in the Definitive Edition's
+advancement pipeline; rounding the result is the owning rule's call.
+
+**Former exceptions, moved onto the catalog (STORY-815):** the Gentle and
+Blatant Gift's Loyalty effect is a `gift_loyalty` modifier on those entries;
+the Style of Governance Boons carry `governance: true`; binding a familiar
+grants every entry whose `granted_by` lists `familiar_bond` (True Friend); and
+`covenant_expense` is worded by the registry like any other type.
 
 ## 6. Data Shape (illustrative)
 

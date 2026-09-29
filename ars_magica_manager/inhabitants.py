@@ -15,7 +15,6 @@ from . import catalog, covenant_diary, storage
 from .markup import aligned, escape, fit, markdown_inline
 from .models import (
     COMPANION_TYPES,
-    GOVERNANCE_STYLE_IDS,
     INHABITANT_KINDS,
     LOYALTY_EQUIPMENT,
     LOYALTY_MONEY,
@@ -26,6 +25,7 @@ from .models import (
     character_age,
     round_away_from_zero,
 )
+from .rules import effects, scores
 
 #: Section titles on the tab.
 KIND_TITLES: dict[str, str] = {
@@ -92,6 +92,12 @@ GIFT_LOYALTY_MODIFIERS: dict[str, int] = {
     "The Gift": -30,
     "Blatant Gift": -105,
     "No Gift": 0,
+}
+#: A Gift modifier -> its display text (No Gift is only ever chosen by hand).
+_GIFT_BY_MODIFIER: dict[int, str] = {
+    0: "Gentle Gift",
+    -30: "The Gift",
+    -105: "Blatant Gift",
 }
 #: GIFT_CHOICES (models.py) -> the display text above.
 _GIFT_DISPLAY: dict[str, str] = {
@@ -180,12 +186,17 @@ class InhabitantEntry:
         if self.kind != "magus":
             return ""
         if self.character is not None:
-            vf_ids = {i.vf_id for i in self.character.virtues_flaws}
-            if "vf_gentle_gift" in vf_ids:
-                return "Gentle Gift"
-            if "vf_blatant_gift" in vf_ids:
-                return "Blatant Gift"
-            return "The Gift"
+            # The ordinary Gift, changed by Virtues and Flaws that carry a
+            # gift_loyalty effect (Gentle Gift, Blatant Gift).
+            modifier = GIFT_LOYALTY_MODIFIERS["The Gift"] + int(
+                effects.amount_total(
+                    effects.collect(
+                        [scores.character_source(self.character.virtues_flaws)],
+                        "gift_loyalty",
+                    )
+                )
+            )
+            return _GIFT_BY_MODIFIER.get(modifier, "The Gift")
         return _GIFT_DISPLAY.get(self._own("gift", ""), "")
 
     @property
@@ -375,7 +386,7 @@ def governance_names(covenant: Covenant) -> list[str]:
     return [
         by_id[bh.vf_id].name
         for bh in covenant.boons_hooks
-        if bh.vf_id in GOVERNANCE_STYLE_IDS and bh.vf_id in by_id
+        if bh.vf_id in by_id and by_id[bh.vf_id].governance
     ]
 
 

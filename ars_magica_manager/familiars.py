@@ -6,9 +6,9 @@ Health, Abilities, Bond Powers) are built.
 
 from __future__ import annotations
 
+from . import catalog, storage
 from . import possessions as pos
 from . import sheet_text as st
-from . import storage
 from .markup import escape
 from .models import (
     CORD_SCORE_COSTS,
@@ -40,8 +40,13 @@ def bind_familiar(saga: Saga, magus: Character, name: str) -> Familiar:
         character_id=magus.id,
         name=name,
     )
+    granted = [
+        entry.id
+        for entry in catalog.load_virtue_flaw_catalog()
+        if "familiar_bond" in entry.granted_by
+    ]
     for partner in (familiar, magus):
-        partner.virtues_flaws.append(VirtueFlawInstance(vf_id="vf_true_friend"))
+        partner.virtues_flaws += [VirtueFlawInstance(vf_id=vf_id) for vf_id in granted]
         partner.personality_traits.append(ScoredTrait(name="Loyal (Partner)", score=3))
     saga.familiars.append(familiar)
     return familiar
@@ -176,11 +181,11 @@ def natural_weapon_info_text(familiar: Familiar, index: int | None) -> str:
 
 
 def ability_rows(familiar: Familiar) -> list[tuple[int | None, str]]:
-    return st.ability_rows(familiar.abilities)
+    return st.ability_rows(familiar.abilities, familiar.virtues_flaws)
 
 
 def ability_info_text(familiar: Familiar, index: int | None) -> str:
-    return st.ability_info_text(familiar.abilities, index)
+    return st.ability_info_text(familiar.abilities, index, familiar.virtues_flaws)
 
 
 def bond_power_rows(familiar: Familiar) -> list[tuple[int, str]]:

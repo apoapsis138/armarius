@@ -497,9 +497,46 @@ def detail_text(saga: Saga, book: Book | None) -> str:
         ]
     )
     lines += [f"[$text-error]{escape(w)}[/]" for w in limit_warnings(book)]
+    lines += _study_lines(saga, book)
     if book.description.strip():
         lines += ["", "[b]Description:[/]", markdown_inline(book.description.strip())]
     return "\n".join(lines)
+
+
+def _study_lines(saga: Saga, book: Book) -> list[str]:
+    """What a season reading the book gives each magus and companion of
+    its covenant (rules.study, STORY-803): nothing for a book that isn't a
+    summa or tractatus."""
+    from .rules import study
+
+    covenant_id = covenant_of(saga, book)
+    readers = [
+        c
+        for c in saga.characters
+        if c.covenant_id == covenant_id and covenant_id is not None and c.type != "grog"
+    ]
+    results = [(c, study.reading(c, book)) for c in readers]
+    results = [(c, r) for c, r in results if r is not None]
+    if not results:
+        return []
+    lines = ["", "[b]A season's reading:[/]"]
+    for reader, result in results:
+        text = f"{escape(reader.name)}: {result.xp} xp"
+        extras = [
+            f"{escape(line.label)} {line.amount:+g}"
+            for line in result.lines[1:]
+            if line.amount is not None
+        ] + [
+            f"{escape(line.label)} x{line.multiplier:g}"
+            for line in result.lines
+            if line.multiplier is not None
+        ]
+        if extras:
+            text += f" ({', '.join(extras)})"
+        if result.notes:
+            text += f"; {escape(' '.join(result.notes))}"
+        lines.append(text)
+    return lines
 
 
 # ------------------------------------------------------------ CSV import

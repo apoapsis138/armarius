@@ -25,6 +25,7 @@ from .models import (
     Saga,
     Spell,
 )
+from .rules import spell_levels
 
 # ------------------------------------------------------------ where they live
 
@@ -355,6 +356,33 @@ def row_label(saga: Saga, spell: Spell) -> str:
     )
 
 
+def design_text(spell: Spell) -> str:
+    """The spell's level worked out from its base and Range/Duration/Target
+    (rules.spell_levels), as a stat block's design line: "Base 4, +1 Touch,
+    +3 Moon, +0 Individual = 20". Any magnitudes the listed level carries
+    beyond those are size or requisites. "" without a base or a level."""
+    if spell.base_level is None or spell.level is None:
+        return ""
+    design = spell_levels.spell_level(
+        spell.base_level, spell.range, spell.duration, spell.target, ritual=spell.ritual
+    )
+    if design is None:
+        return "non-standard Range, Duration or Target (the troupe sets the level)"
+    extra = spell_levels.extra_magnitudes(
+        spell.base_level, spell.range, spell.duration, spell.target, spell.level
+    )
+    text = design.design_line(spell.base_level)
+    if extra and extra > 0 and design.level < spell.level:
+        text += f", {extra:+d} size/requisites"
+        worked = spell_levels.add_magnitudes(design.level, extra)
+    else:
+        worked = design.level
+    text += f" = {worked}"
+    if worked != spell.level:
+        text += f" (listed at {spell.level})"
+    return text
+
+
 def detail_text(saga: Saga, spell: Spell | None) -> str:
     """The details panel (markup): everything about the spell, the figures
     worked out from it, then its description."""
@@ -390,6 +418,9 @@ def detail_text(saga: Saga, spell: Spell | None) -> str:
     if spell.requisites:
         parts.append(line("Requisites", ", ".join(spell.requisites)))
     lines.append("   ".join(parts))
+    design = design_text(spell)
+    if design:
+        lines.append(line("Design", design))
     if spell.ritual:
         vis = vis_cost(spell)
         vis_text = "1 pawn per magnitude" if vis is None else f"{vis} pawn(s)"

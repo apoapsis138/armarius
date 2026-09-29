@@ -330,6 +330,13 @@ CONTRACTS: dict[str, Contract] = {
         expected={"creo": 5},
         invalid={"Pawns": "-"},
     ),
+    "lab virtue choice": Contract(
+        prefill={"Specialization": Select.NULL},
+        edits={"Specialization": "Muto"},
+        saved=lambda s: _lab(s).virtues_flaws[-1].params,
+        expected={"specialization": "Muto"},
+        invalid={"Specialization": Select.NULL},
+    ),
     "virtue parameters": Contract(
         prefill={"Subject": ""},
         edits={"Subject": "Latin"},

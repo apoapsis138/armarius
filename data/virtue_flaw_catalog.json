@@ -48,6 +48,13 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "lab_total",
+          "activity": "learn_from_lab_text",
+          "amount": 6
+        }
+      ],
       "source": "DE",
       "summary": "+6 to Lab Totals when working from others' lab texts, including reinventing spells.",
       "description": "You digest the instruction of others quite easily. You get a +6 bonus to Lab Totals when working from the lab texts of others, including when reinventing spells."
@@ -70,6 +77,13 @@
       "category": "General",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "ability_xp_gain",
+          "target": "{ability}",
+          "multiplier": 1.5
+        }
+      ],
       "parameters": [
         "ability"
       ],
@@ -85,6 +99,13 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "art_xp_gain",
+          "target": "{art}",
+          "multiplier": 1.5
+        }
+      ],
       "parameters": [
         "art"
       ],
@@ -231,6 +252,18 @@
       "category": "General",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "study_total",
+          "activity": "teaching",
+          "amount": 5
+        },
+        {
+          "applies_to": "study_total",
+          "activity": "training",
+          "amount": 5
+        }
+      ],
       "source": "DE",
       "summary": "+5 Source Quality when being taught or trained by someone else.",
       "description": "You are particularly good at learning from others. When being taught or trained by someone else, add five to the Source Quality."
@@ -606,6 +639,12 @@
       "category": "Supernatural",
       "tier": "Major",
       "cost": 3,
+      "modifiers": [
+        {
+          "applies_to": "size",
+          "amount": 1
+        }
+      ],
       "source": "DE",
       "summary": "Size +1 (+1 per century), aging roll only every 10 years after 150 at -5; must eat enormously or fall into hibernation.",
       "description": "You have the blood of angels in your veins and descend from the great heroes of the Antediluvian Age, the Nephilim. Unless you take the Mythic Companion Virtue, your heritage is somewhat diluted, although still significant. Your Size is increased to +1, and this increases by +1 for every century you are alive. You may learn Dominion Lore during character creation without needing to take the Arcane Lore Minor Virtue. You age incredibly slowly, and may live for hundreds of years. You need make an aging roll only once every ten years after the age of 150, and receive a -5 to Aging Rolls. You gain no benefit from Longevity Potions or any magic or supernatural power that slows or relieves Aging or Decrepitude. Once you gain your first Decrepitude Point, it becomes increasingly difficult for you to learn new things: subtract your age ÷ 10 from all Advancement Totals, although the Advancement Total for a season cannot drop below 1. Due to your great size, you must eat vast amounts of food (equal to what three normal people would eat in a day), and have the Minor Personality Flaw Greedy (which counts as one of your normal Flaws). If you go without food for even a single day you fall into a deep slumber, a kind of supernatural hibernation. You will starve to death in (2 + your Divine Might) days unless you are fed your own body weight in food. (Note that this Virtue does not itself grant Divine Might; see Strong Angelic Heritage, later.) After awakening, you suffer a number of lost Long Term Fatigue Levels equal to the number of days you went without food. You may not take The Gift or True Faith, Hermetic Virtues or Flaws, Methods or Powers (see Realms of Power: The Divine, Revised Edition, pages 46-56), Virtues such as Giant, Mythic, or Faerie Blood, Flaws such as Age Quickly or Lycanthrope, or Virtues or Flaws that affect your Size. A descendant of the Nephilim without Divine Might could, in theory, learn supernatural powers (other than Divine Methods and Powers) from any realm, but that is very rare. Magi and Grogs may not take this Virtue."
@@ -628,6 +667,13 @@
       "category": "General",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "study_total",
+          "activity": "reading",
+          "amount": 3
+        }
+      ],
       "source": "DE",
       "summary": "Books count as three Quality levels higher when you study from them.",
       "description": "You have a talent for comprehending the writings of others. When studying from books, treat them as if they were three Quality levels higher than they actually are."
@@ -2317,6 +2363,13 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "study_total",
+          "activity": "vis_study",
+          "amount": 3
+        }
+      ],
       "source": "DE",
       "summary": "+3 Source Quality when studying from raw vis.",
       "description": "You are better at figuring things out for yourself than you are at poring over books. Add +3 to the Source Quality when studying from raw vis."
@@ -2364,6 +2417,12 @@
       "category": "Hermetic",
       "tier": "Major",
       "cost": 3,
+      "modifiers": [
+        {
+          "applies_to": "gift_loyalty",
+          "amount": 30
+        }
+      ],
       "source": "DE",
       "summary": "Your Gift causes no social penalties with people or animals.",
       "description": "Unlike other magi, whose Magical nature disturbs normal people and animals, your Gift is subtle and quiet. You do not suffer the usual penalties when interacting with people and animals."
@@ -2397,6 +2456,12 @@
       "category": "General",
       "tier": "Major",
       "cost": 3,
+      "modifiers": [
+        {
+          "applies_to": "size",
+          "amount": 2
+        }
+      ],
       "source": "DE",
       "summary": "Size +2 (wounds in 7-point steps); +1 Strength and Stamina, allowing scores up to +6.",
       "description": "The blood of the ancient race of giants flows in your veins. Though you are not as large as your ancestors, you are up to eight feet tall and can weigh as much as 500 pounds. Your Size is +2, so you take wounds in 7-point increments, rather than the normal 5 (see page 404). You also gain +1 to both Strength and Stamina. This bonus may raise your scores in those Characteristics as high as +6. You cannot take this Virtue and Large (page 89), Small Frame (page 145), or Dwarf (page 126)."
@@ -2455,6 +2520,12 @@
       "category": "General",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "teaching_source_quality",
+          "amount": 5
+        }
+      ],
       "source": "DE",
       "summary": "+3 Quality for books you write and +5 Source Quality for anyone you teach.",
       "description": "You can explain new concepts and skills with great facility. Add three to the Quality of any books that you write, and five to the Source Quality for anyone who studies with you."
@@ -3298,6 +3369,18 @@
       "category": "General",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "study_total",
+          "activity": "practice",
+          "amount": 2
+        },
+        {
+          "applies_to": "study_total",
+          "activity": "adventure",
+          "amount": 3
+        }
+      ],
       "source": "DE",
       "summary": "+2 Source Quality for Practice and +3 Source Quality for Adventure experience.",
       "description": "The character develops new skills extremely quickly on his own. When he is studying through Practice, add two to the Source Quality, and add three to the Source Quality of his Adventure experience."
@@ -3518,6 +3601,38 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "lab_total",
+          "activity": "invent_spells",
+          "amount": 3
+        },
+        {
+          "applies_to": "lab_total",
+          "activity": "enchant_items",
+          "amount": 3
+        },
+        {
+          "applies_to": "lab_total",
+          "activity": "longevity_ritual",
+          "amount": 3
+        },
+        {
+          "applies_to": "lab_total",
+          "activity": "bind_familiar",
+          "amount": 3
+        },
+        {
+          "applies_to": "lab_total",
+          "activity": "original_research",
+          "amount": 3
+        },
+        {
+          "applies_to": "lab_total",
+          "activity": "experimentation",
+          "amount": 6
+        }
+      ],
       "source": "DE",
       "summary": "+3 Lab Total when not using a lab text or being taught; +6 when experimenting.",
       "description": "Invention comes naturally to you. You get +3 to your Lab Total if you are not using a Laboratory Text or being taught. If you experiment, you get +6."
@@ -3769,6 +3884,12 @@
       "category": "General",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "size",
+          "amount": 1
+        }
+      ],
       "source": "DE",
       "summary": "Size +1 (six to seven feet tall); wounds in 6-point steps.",
       "description": "Your Size is +1 instead of 0, so you are between six and seven feet tall. This means that the severity of wounds you take increases in six point intervals rather than five point intervals. (See page 404). You cannot take this Virtue and Giant Blood (page 83), Small Frame (page 145), or Dwarf (page 126)."
@@ -4577,6 +4698,18 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "casting_total",
+          "activity": "formulaic",
+          "amount": 3
+        },
+        {
+          "applies_to": "casting_total",
+          "activity": "ritual",
+          "amount": 3
+        }
+      ],
       "source": "DE",
       "summary": "+3 to Casting Totals of Formulaic and Ritual spells cast with your precise method.",
       "description": "You are excellent at formulaic spells, as you have perfected a consistent and precise method for casting them. You gain a +3 bonus to the Casting Total of any Formulaic or Ritual spell you cast. However, if you vary at all from your precise method (by altering your gestures or voicing), you do not get this bonus."
@@ -5359,6 +5492,13 @@
       "parameters": [
         "ability"
       ],
+      "modifiers": [
+        {
+          "applies_to": "ability_score_effective",
+          "target": "{ability}",
+          "amount": 2
+        }
+      ],
       "repeatable": true,
       "source": "DE",
       "summary": "+2 to one Ability whenever used (not when learning, writing about, or teaching it).",
@@ -5373,6 +5513,13 @@
       "cost": 1,
       "parameters": [
         "art"
+      ],
+      "modifiers": [
+        {
+          "applies_to": "art_score_effective",
+          "target": "{art}",
+          "amount": 3
+        }
       ],
       "repeatable": true,
       "max_count": 2,
@@ -6671,6 +6818,12 @@
       "category": "General",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "soak",
+          "amount": 3
+        }
+      ],
       "source": "DE",
       "summary": "+3 to Soak.",
       "description": "You can take physical punishment better than most people. You get a +3 bonus on your Soak score."
@@ -6765,6 +6918,7 @@
       "category": "General",
       "tier": "Minor",
       "cost": 1,
+      "granted_by": ["familiar_bond"],
       "source": "DE",
       "summary": "The DE's True Love (PC), renamed for a close non-romantic bond; magus and familiar both gain it (familiar bond).",
       "description": "You share an unbreakable bond of mutual trust and loyalty with another -- not romantic, but no less profound. Whenever you are suffering, in danger, or dejected, the thought of your friend gives you strength to persevere, and you may add +3 to appropriate Personality Trait rolls. You are bound to help each other; if any enchantment keeps you apart, the strength of your bond can probably break it. This Virtue is granted automatically to a magus and their bound familiar (see the Familiar rules), and is otherwise the platonic counterpart to True Love -- your bonded partner must hold the same Virtue in return."
@@ -7428,6 +7582,12 @@
       "category": "Hermetic",
       "tier": "Major",
       "cost": -3,
+      "modifiers": [
+        {
+          "applies_to": "gift_loyalty",
+          "amount": -75
+        }
+      ],
       "source": "DE",
       "summary": "Obviously uncanny Gift: -6 to all interaction rolls with normal people and animals; animals are terrified or enraged.",
       "description": "People immediately realize that there is something strange about you, even if they do not know you are a magus. Animals are extremely disturbed, frightened, and possibly enraged by your presence. You suffer a -6 penalty on all interaction rolls with normal people and animals, and should see page 203 for further discussion of this Flaw's effects."
@@ -7911,6 +8071,33 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "lab_total",
+          "activity": "invent_spells",
+          "amount": -3
+        },
+        {
+          "applies_to": "lab_total",
+          "activity": "enchant_items",
+          "amount": -3
+        },
+        {
+          "applies_to": "lab_total",
+          "activity": "longevity_ritual",
+          "amount": -3
+        },
+        {
+          "applies_to": "lab_total",
+          "activity": "bind_familiar",
+          "amount": -3
+        },
+        {
+          "applies_to": "lab_total",
+          "activity": "original_research",
+          "amount": -3
+        }
+      ],
       "source": "DE",
       "summary": "-3 to all Lab Totals unless using a Laboratory Text or being taught; roll twice the dice when experimenting.",
       "description": "You have problems creating new things in the lab. You take a -3 penalty to all Lab Totals unless you are using a Laboratory Text or being taught. If you experiment, roll twice as many dice on the experimentation table."
@@ -8025,6 +8212,23 @@
       "parameters": [
         "form"
       ],
+      "modifiers": [
+        {
+          "applies_to": "lab_total",
+          "target": "{form}",
+          "multiplier": 0.5
+        },
+        {
+          "applies_to": "casting_total",
+          "target": "{form}",
+          "multiplier": 0.5
+        },
+        {
+          "applies_to": "spontaneous_total",
+          "target": "{form}",
+          "multiplier": 0.5
+        }
+      ],
       "source": "DE",
       "summary": "Most totals using one Form (Casting, Lab; not Magic Resistance or Advancement) are halved.",
       "description": "Almost all totals (including Casting Totals and Lab Totals, but excluding Magic Resistance) to which a particular Form is added are halved. Advancement Totals are not halved. Experience points required are based on the actual value of the Technique, before halving."
@@ -8038,6 +8242,23 @@
       "cost": -3,
       "parameters": [
         "technique"
+      ],
+      "modifiers": [
+        {
+          "applies_to": "lab_total",
+          "target": "{technique}",
+          "multiplier": 0.5
+        },
+        {
+          "applies_to": "casting_total",
+          "target": "{technique}",
+          "multiplier": 0.5
+        },
+        {
+          "applies_to": "spontaneous_total",
+          "target": "{technique}",
+          "multiplier": 0.5
+        }
       ],
       "source": "DE",
       "summary": "All totals using one Technique, including Casting and Lab Totals, are halved; Advancement Totals are not.",
@@ -8319,6 +8540,12 @@
       "category": "General",
       "tier": "Major",
       "cost": -3,
+      "modifiers": [
+        {
+          "applies_to": "size",
+          "amount": -2
+        }
+      ],
       "source": "DE",
       "summary": "Size -2 (wounds every 3 points), two-thirds walking speed, -1 Strength and Stamina (minimum -6).",
       "description": "You are the size of a child. Your comfortable walking speed is two-thirds that of a normal person. Your Size is -2, so the severity of wounds you take increases in three point increments rather than five point increments (see page 404). You take a -1 penalty to each of Strength and Stamina, which may reduce each Characteristic as low as -6. You cannot take this Flaw and Giant Blood (page 83), Large (page 89), or Small Frame (page 145)."
@@ -8878,6 +9105,12 @@
       "category": "General",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "soak",
+          "amount": -3
+        }
+      ],
       "source": "DE",
       "summary": "-3 to Soak.",
       "description": "The character is weak of build and easily hurt when undertaking physical activities. He has a -3 penalty to his Soak score."
@@ -10046,6 +10279,16 @@
       "category": "General",
       "tier": "Major",
       "cost": -3,
+      "modifiers": [
+        {
+          "applies_to": "casting_total",
+          "amount": -10
+        },
+        {
+          "applies_to": "spontaneous_total",
+          "amount": -10
+        }
+      ],
       "source": "DE",
       "summary": "Cannot speak; magi get -10 to all spellcasting unless offset by Quiet Magic.",
       "description": "You cannot speak; perhaps your tongue was cut out. You probably use rudimentary hand gestures and grunts to communicate your needs. You can still understand languages perfectly well, and may learn to read and write if you have an appropriate Virtue. Note that magi with this Flaw get a -10 penalty to all spellcasting, although this may be offset by taking the Quiet Magic Virtue (page 105). A magus with this Flaw can be assumed to be able to make sounds, which are sufficient to allow normal use of the Voice Range."
@@ -10109,6 +10352,16 @@
       "category": "General",
       "tier": "Major",
       "cost": -3,
+      "modifiers": [
+        {
+          "applies_to": "casting_total",
+          "amount": -5
+        },
+        {
+          "applies_to": "spontaneous_total",
+          "amount": -5
+        }
+      ],
       "source": "DE",
       "summary": "Activities needing hands impossible; magi -5 to all Casting Scores (offset by Subtle Magic or Still Casting mastery).",
       "description": "You have no hands. Any activity requiring hands is impossible, and magi with this Flaw take a -5 penalty to all Casting Scores. This may be offset by taking the Subtle Magic Virtue (page 110) or the Still Casting Spell Mastery ability."
@@ -10519,6 +10772,13 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "casting_total",
+          "activity": "formulaic",
+          "amount": -5
+        }
+      ],
       "source": "DE",
       "summary": "-5 to rolls to cast Formulaic spells (not Ritual spells).",
       "description": "You are simply not very good at formulaic magic. Subtract 5 from every roll that you make to cast formulaic spells. This does not apply to Ritual spells."
@@ -10563,6 +10823,18 @@
       "category": "General",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "study_total",
+          "activity": "teaching",
+          "amount": -3
+        },
+        {
+          "applies_to": "study_total",
+          "activity": "reading",
+          "amount": -3
+        }
+      ],
       "source": "DE",
       "summary": "-3 to Advancement Totals from teaching and books (minimum 1); other sources unaffected.",
       "description": "You are bad at learning new things. Subtract 3 from all Advancement Totals derived from teaching and books (that is, you have no penalty to adventure experience, exposure, practice, studying from vis, or training), but do not reduce a total below one. If you could learn something without this Flaw, you still learn a bit."
@@ -11168,6 +11440,12 @@
       "category": "General",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "size",
+          "amount": -1
+        }
+      ],
       "source": "DE",
       "summary": "Size -1: wound levels in 4-point rather than 5-point increments.",
       "description": "You are of a lighter-than-average build. Your Size is reduced to -1. This means that the severity of wounds you take increases in four point increments, rather than five point. (See page 404). You cannot take this Flaw and Giant Blood (page 83), Large (page 89), or Dwarf (page 126)."
@@ -11589,6 +11867,13 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "study_total",
+          "activity": "vis_study",
+          "amount": -3
+        }
+      ],
       "source": "DE",
       "summary": "-3 to rolls when studying from raw vis.",
       "description": "You have trouble figuring things out for yourself. Subtract 3 from rolls when you study from raw vis."
@@ -11914,6 +12199,13 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "lab_total",
+          "activity": "enchant_items",
+          "multiplier": 0.5
+        }
+      ],
       "source": "DE",
       "summary": "Lab Total halved when creating or investigating enchanted items (apply any Deficiency first).",
       "description": "Your Gift is ill attuned to creating enchanted devices. Halve your Lab Total whenever you create or investigate an enchanted item. If you have a Deficiency that counts as part of the Lab Total, apply the Deficiency first and then halve the remaining total."
@@ -11969,6 +12261,13 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "lab_total",
+          "activity": "learn_from_lab_text",
+          "amount": -6
+        }
+      ],
       "source": "DE",
       "summary": "-6 to Lab Totals when working from others' Lab Texts, including reinventing spells.",
       "description": "You don't understand laboratory guidance very well. You get a -6 penalty to Lab Totals when working from the Lab Texts of others, including when re-inventing spells."

@@ -1,7 +1,7 @@
 import pytest
 
 from ars_magica_manager import catalog
-from ars_magica_manager.models import LAB_CHARACTERISTICS, LabVirtueFlawDef
+from ars_magica_manager.models import LAB_CHARACTERISTICS, LabVirtueFlawDef, Modifier
 
 
 def test_lab_catalog_loads_and_ids_are_unique():
@@ -51,7 +51,11 @@ def test_unknown_characteristic_is_rejected():
             category="Structure",
             tier="Minor",
             cost=1,
-            characteristic_modifiers={"not_a_real_characteristic": 1},
+            modifiers=[
+                Modifier(
+                    "lab_characteristic", amount=1, target="not_a_real_characteristic"
+                )
+            ],
         )
 
 

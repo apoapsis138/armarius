@@ -8,7 +8,7 @@ from collections.abc import Iterable
 from dataclasses import asdict
 from pathlib import Path
 
-from . import DATA_DIR, __version__
+from . import DATA_DIR, __version__, laboratories
 from .models import Saga
 
 SAGAS_DIR = DATA_DIR / "sagas"
@@ -58,7 +58,11 @@ def save_saga(saga: Saga) -> Path:
 
 def load_saga(saga_id: str) -> Saga:
     data = json.loads(saga_path(saga_id).read_text(encoding="utf-8"))
-    return Saga.from_dict(data)
+    saga = Saga.from_dict(data)
+    for lab in saga.laboratories:
+        # Specialization grants typed in before the catalog carried them.
+        laboratories.migrate_specialty_stand_ins(lab)
+    return saga
 
 
 def delete_saga(saga_id: str) -> None:

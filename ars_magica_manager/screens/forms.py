@@ -62,6 +62,7 @@ from ..models import (
     LESSER,
     MATERIAL_SIZE_CITATION,
     OTHER_COVENFOLK_ROLES,
+    REALMS,
     SANCTUM_USAGE_DEFAULT,
     SANCTUM_USAGES,
     SEASONS,
@@ -95,6 +96,8 @@ from ..models import (
     Wounds,
     new_instance_id,
 )
+from ..rules import options as rule_options
+from ..rules import spell_levels
 from .fields import (
     _EMPHASIS_HINT,
     DialogField,
@@ -640,7 +643,32 @@ def _saga_fields(saga: Saga | None) -> list[DialogField]:
                 hint="Catalog pickers hide entries from books not in play.",
             )
         )
+        fields += [
+            DialogField(
+                RULE_OPTION_PREFIX + option.key,
+                option.label,
+                "check",
+                rule_options.is_on(saga, option.key),
+                hint=f"Optional rule, off by default. {option.effect}",
+            )
+            for option in rule_options.OPTIONS
+        ]
     return fields
+
+
+#: Saga-form keys for the optional rules: the prefix plus the option's key.
+RULE_OPTION_PREFIX = "rule_option__"
+
+
+def saga_rule_options(values: dict[str, Any]) -> dict[str, bool]:
+    """The optional rules chosen on the saga form, taken out of `values` (so
+    what's left are plain Saga fields)."""
+    chosen = {
+        key.removeprefix(RULE_OPTION_PREFIX): bool(values.pop(key))
+        for key in list(values)
+        if key.startswith(RULE_OPTION_PREFIX)
+    }
+    return rule_options.normalized(chosen)
 
 
 def _covenant_create_fields() -> list[DialogField]:
@@ -895,7 +923,19 @@ def _aging_fields(aging: Aging) -> list[DialogField]:
 def _wounds_fields(wounds: Wounds, *, soak: bool = True) -> list[DialogField]:
     """Wound counts and Incapacitated/Dead; a character's Soak too (a
     Familiar's lives with its Characteristics instead)."""
-    fields = [DialogField("soak", "Soak", "int", wounds.soak)] if soak else []
+    fields = (
+        [
+            DialogField(
+                "soak",
+                "Soak adjustment",
+                "int",
+                wounds.soak,
+                hint="Added to the Soak worked out from Stamina, armour and Virtues.",
+            )
+        ]
+        if soak
+        else []
+    )
     return fields + [
         DialogField("light", "Light Wounds (-1 each)", "int", wounds.light),
         DialogField("medium", "Medium Wounds (-3 each)", "int", wounds.medium),
@@ -1256,6 +1296,14 @@ def _covenant_fields(covenant: Covenant) -> list[DialogField]:
             for attribute, label in _COVENANT_INT_FIELDS
         ),
         DialogField(
+            "aura_realm",
+            "Aura Realm",
+            "select",
+            cov.aura_realm,
+            options=_pairs(REALMS),
+            hint="Hermetic magic gains the full aura only in a Magic aura.",
+        ),
+        DialogField(
             "covenant_season",
             "Covenant Season",
             "select",
@@ -1534,7 +1582,11 @@ _OTHER = "__other__"
 
 
 def _rdt_field(
-    key: str, label: str, standard: tuple[str, ...], value: str
+    key: str,
+    label: str,
+    standard: tuple[str, ...],
+    value: str,
+    fills: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
 ) -> list[DialogField]:
     """A Range/Duration/Target select of the standard values plus "Other...",
     which shows a text box for a supplement's own value."""
@@ -1549,6 +1601,7 @@ def _rdt_field(
             required=True,
             allow_blank=True,
             placeholder=f"(choose a {label})",
+            fills=fills,
         ),
         DialogField(
             f"{key}_other",
@@ -1598,14 +1651,28 @@ def _spell_fields(spell: Spell | None) -> list[DialogField]:
             ", ".join(_attr(spell, "requisites", [])),
             placeholder="e.g. Rego, Corpus",
         ),
-        *_rdt_field("range", "Range", SPELL_RANGES, _attr(spell, "range", "")),
         *_rdt_field(
-            "duration", "Duration", SPELL_DURATIONS, _attr(spell, "duration", "")
+            "range", "Range", SPELL_RANGES, _attr(spell, "range", ""), _level_fill
         ),
-        *_rdt_field("target", "Target", SPELL_TARGETS, _attr(spell, "target", "")),
+        *_rdt_field(
+            "duration",
+            "Duration",
+            SPELL_DURATIONS,
+            _attr(spell, "duration", ""),
+            _level_fill,
+        ),
+        *_rdt_field(
+            "target", "Target", SPELL_TARGETS, _attr(spell, "target", ""), _level_fill
+        ),
         DialogField("ritual", "Ritual", "check", _attr(spell, "ritual", False)),
         DialogField(
-            "base_level", "Base level", "optint", _attr(spell, "base_level", None)
+            "base_level",
+            "Base level",
+            "optint",
+            _attr(spell, "base_level", None),
+            hint="The guideline's level; with Range, Duration and Target it "
+            "fills in Level (add any size or requisite magnitudes yourself).",
+            fills=_level_fill,
         ),
         DialogField(
             "source",
@@ -1618,6 +1685,22 @@ def _spell_fields(spell: Spell | None) -> list[DialogField]:
             "description", "Description", "area", _attr(spell, "description", "")
         ),
     ]
+
+
+def _level_fill(values: dict[str, Any]) -> dict[str, Any]:
+    """Level worked out from the base and Range/Duration/Target
+    (rules.spell_levels), once they are all standard and given."""
+    base = values.get("base_level")
+    if base is None:
+        return {}
+    design = spell_levels.spell_level(
+        base,
+        _spell_rdt(values, "range"),
+        _spell_rdt(values, "duration"),
+        _spell_rdt(values, "target"),
+        ritual=bool(values.get("ritual")),
+    )
+    return {} if design is None else {"level": design.level}
 
 
 def _spell_rdt(values: dict[str, Any], key: str) -> str:

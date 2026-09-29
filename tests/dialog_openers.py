@@ -56,6 +56,21 @@ async def _open_param_prompt(ws) -> None:
     picker._on_entry_selected(catalog.load_virtue_flaw_catalog_by_id()[_param_vf()])
 
 
+async def _open_lab_choice_prompt(ws) -> None:
+    """Add a laboratory Flaw whose Specialization the owner chooses: the
+    picker asks for it (STORY-817)."""
+    view = ws._current_sheet_view()
+    view.query_one(TabbedContent).active = "tab-lab-vf"
+    await until(lambda: view.query_one(TabbedContent).active == "tab-lab-vf")
+    view.query_one("#section-lab-vf-flaws CollapsibleTitle").focus()
+    await until(lambda: ws._active_section() == "section-lab-vf-flaws")
+    ws.action_add_virtue_flaw()
+    picker = await wait_for_screen(ws.app, scr.LabVirtueFlawPickerScreen)
+    picker._on_entry_selected(
+        catalog.load_lab_virtue_flaw_catalog_by_id()["labvf_disorganized"]
+    )
+
+
 def _open_mastery_ability(ws) -> None:
     """Edit a known spell's Mastery, then add a Mastery Ability."""
     ws._edit_spell_mastery_at(0)
@@ -133,6 +148,7 @@ OPENERS: dict[str, Opener] = {
     ),
     # Laboratory
     "edit lab identity": Opener("laboratory", lambda ws: ws._edit_lab_identity()),
+    "lab virtue choice": Opener("laboratory", _open_lab_choice_prompt),
     "edit lab characteristics": Opener(
         "laboratory", lambda ws: ws._edit_lab_characteristics()
     ),

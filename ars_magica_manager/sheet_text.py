@@ -15,13 +15,16 @@ from .models import (
     ABILITY_CATEGORIES,
     Ability,
     AbilityDef,
+    Character,
     Characteristics,
     Modifier,
+    Possession,
     ScoredTrait,
     VirtueFlawDef,
     VirtueFlawInstance,
     Wounds,
 )
+from .rules import combat, derived, penetration, scores
 from .rules import xp as xp_rules
 from .totals import describe_modifier
 
@@ -55,24 +58,45 @@ def characteristics_text(c: Characteristics) -> str:
     return f"{row1}\n{row2}"
 
 
-def score_text(progress: xp_rules.Progress) -> str:
+def score_text(progress: xp_rules.Progress, bonus: int = 0) -> str:
     """A score and its total xp against the total the next score needs,
-    e.g. "5 85/105": score 5, 85 xp spent, score 6 at 105."""
-    return f"{progress.score} {progress.total}/{progress.next_total}"
-
-
-def xp_line(progress: xp_rules.Progress) -> str:
-    """The details-panel line for an Art or Ability's score and total xp."""
+    e.g. "5 85/105": score 5, 85 xp spent, score 6 at 105. A fixed bonus
+    (Puissant) follows the score, as the book writes it: "5+2 85/105"."""
     return (
-        f"[b]Score:[/] {progress.score}    [b]XP:[/] {progress.total} "
-        f"(score {progress.score + 1} at {progress.next_total} xp)"
+        f"{bonus_score(progress.score, bonus)} {progress.total}/{progress.next_total}"
     )
 
 
-def ability_rows(abilities: Sequence[Ability]) -> list[tuple[int | None, str]]:
+def bonus_score(score: int, bonus: int) -> str:
+    """A score with any fixed bonus beside it: "5", "5+2", "5-1"."""
+    return f"{score}{bonus:+d}" if bonus else str(score)
+
+
+def xp_line(
+    progress: xp_rules.Progress, bonus: int = 0, bonus_from: Sequence[str] = ()
+) -> str:
+    """The details-panel line for an Art or Ability's score and total xp,
+    with a line for any fixed bonus and where it comes from."""
+    line = (
+        f"[b]Score:[/] {bonus_score(progress.score, bonus)}    "
+        f"[b]XP:[/] {progress.total} "
+        f"(score {progress.score + 1} at {progress.next_total} xp)"
+    )
+    if bonus:
+        line += (
+            f"\n[b]Used at:[/] {progress.score + bonus} "
+            f"({bonus:+d} from {escape(', '.join(bonus_from))})"
+        )
+    return line
+
+
+def ability_rows(
+    abilities: Sequence[Ability], virtues_flaws: Sequence[VirtueFlawInstance] = ()
+) -> list[tuple[int | None, str]]:
     """One selectable list for every Ability, with a header (non-selectable)
     row before each non-empty category -- unlike Virtues/Flaws, Abilities
-    has too many categories for side-by-side lists."""
+    has too many categories for side-by-side lists. `virtues_flaws` are the
+    owner's, for fixed bonuses such as Puissant."""
     rows: list[tuple[int | None, str]] = []
     for category in ABILITY_CATEGORIES:
         indexed = [(i, a) for i, a in enumerate(abilities) if a.category == category]
@@ -81,11 +105,12 @@ def ability_rows(abilities: Sequence[Ability]) -> list[tuple[int | None, str]]:
         rows.append((None, category))
         for index, ability in indexed:
             specialty = f" ({ability.specialty})" if ability.specialty else ""
+            bonus, _ = scores.ability_bonus(virtues_flaws, ability.name)
             rows.append(
                 (
                     index,
                     f"{escape(ability.name)}{escape(specialty)} "
-                    f"{score_text(ability.progress)}",
+                    f"{score_text(ability.progress, bonus)}",
                 )
             )
     return rows
@@ -106,7 +131,11 @@ def ability_definition(name: str) -> AbilityDef | None:
     return None
 
 
-def ability_info_text(abilities: Sequence[Ability], index: int | None) -> str:
+def ability_info_text(
+    abilities: Sequence[Ability],
+    index: int | None,
+    virtues_flaws: Sequence[VirtueFlawInstance] = (),
+) -> str:
     if index is None:
         return "[dim]Select an Ability to see its details.[/]"
     ability = abilities[index]
@@ -115,7 +144,8 @@ def ability_info_text(abilities: Sequence[Ability], index: int | None) -> str:
         description = "[dim](no catalog description)[/]"
     else:
         description = escape(definition.description)
-    return "\n\n".join([xp_line(ability.progress), description])
+    bonus, bonus_from = scores.ability_bonus(virtues_flaws, ability.name)
+    return "\n\n".join([xp_line(ability.progress, bonus, bonus_from), description])
 
 
 def vf_rows(
@@ -221,6 +251,95 @@ def wounds_text(w: Wounds, *, with_soak: bool = False) -> str:
         f"Dead: {'yes' if w.dead else 'no'}",
     ]
     return "\n".join(lines)
+
+
+def combat_text(character: Character, weapon: Possession) -> str:
+    """A weapon's combat totals for the character, before the die."""
+    totals = combat.combat_totals(character, weapon)
+
+    def show(breakdown) -> str:
+        if breakdown is None:
+            return "n/a"
+        return f"{int(breakdown.total):+d}"
+
+    lines = [
+        "[b]Combat totals[/] (add a stress die):",
+        f"Initiative {show(totals.initiative)}   Attack {show(totals.attack)}   "
+        f"Defence {show(totals.defence)}   Damage {show(totals.damage)}",
+        f"Soak {int(derived.soak(character).total):+d}",
+    ]
+    if totals.ability is None:
+        lines.append(
+            "[dim]Typed in by hand, so no Combat Ability is counted: choose it "
+            "from the weapon catalog to add one.[/]"
+        )
+    else:
+        lines.append(f"[dim]Combat Ability: {escape(totals.ability)}.[/]")
+    return "\n".join(lines)
+
+
+def faith_score_text(character: Character) -> str:
+    """The True Faith Score, with the Magic Resistance it gives (x10)."""
+    score = character.background.true_faith_score
+    if score <= 0:
+        return str(score)
+    return f"{score} (Magic Resistance {penetration.faith_magic_resistance(character)})"
+
+
+def size_text(character: Character) -> str:
+    """The character's Size, with its base and Virtues when they differ."""
+    breakdown = derived.size(character)
+    total = int(breakdown.total)
+    if len(breakdown.lines) == 1:
+        return str(total)
+    base = int(breakdown.lines[0].amount or 0)
+    rest = ", ".join(f"{line.label} {line.amount:+g}" for line in breakdown.lines[1:])
+    return f"{total} (base {base}, {rest})"
+
+
+def character_wounds_text(character: Character) -> str:
+    """A character's Health column: Soak and Encumbrance worked out, the
+    Wound Penalty, then the wounds as typed."""
+    soak = derived.soak(character)
+    load = derived.carried_load(character.inventory)
+    burden = derived.burden(load)
+    strength = character.characteristics.strength
+    encumbrance = derived.encumbrance(load, strength)
+    enc_terms = f"Load {load}, Burden {burden}"
+    if strength > 0 and burden:
+        enc_terms += f", Str {strength:+d}"
+    lines = [
+        f"Soak: {int(soak.total)} ({derived.terms(soak)})",
+        f"Encumbrance: {encumbrance} ({enc_terms})",
+        f"Wound Penalty: {derived.wound_penalty(character.wounds):+d}",
+        "",
+        wounds_text(character.wounds),
+    ]
+    return "\n".join(lines)
+
+
+def character_fatigue_text(character: Character) -> str:
+    """A character's Fatigue with its penalty, the combined penalty, and
+    the Damage Table for the character's Size."""
+    level = character.fatigue_level
+    fatigue = derived.fatigue_penalty(level)
+    wounds = derived.wound_penalty(character.wounds)
+    size = int(derived.size(character).total)
+    bands = [
+        f"{name} {low}+" if high is None else f"{name} {low}-{high}"
+        for name, low, high in derived.wound_ranges(size)
+    ]
+    return "\n".join(
+        [
+            f"Fatigue Level: {level.title()} ({fatigue:+d})",
+            f"Total Penalty: {wounds + fatigue:+d} (wounds, fatigue)",
+            "",
+            f"Damage Table (Size {size}):",
+            f"{bands[0]}, {bands[1]},",
+            f"{bands[2]}, {bands[3]},",
+            bands[4],
+        ]
+    )
 
 
 def fatigue_text(fatigue_level: str) -> str:

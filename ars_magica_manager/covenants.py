@@ -10,8 +10,8 @@ from .models import (
     CovenantBoonHookDef,
     Modifier,
     VirtueFlawInstance,
-    round_away_from_zero,
 )
+from .rules import effects, realms
 
 #: What an Unknown Minor Hook counts for balancing: as a Major Hook.
 UNKNOWN_HOOK_POINTS = 3
@@ -37,7 +37,7 @@ def boon_hook_points(
 
 def covenant_boon_points(
     covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
-) -> int:
+) -> float:
     """Total points the covenant's attached Boons cost."""
     return sum(
         boon_hook_points(bh, definition)
@@ -49,7 +49,7 @@ def covenant_boon_points(
 
 def covenant_hook_points(
     covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
-) -> int:
+) -> float:
     """Total points the covenant's attached Hooks provide (a positive
     number -- Hooks are stored with negative costs, like Flaws); an Unknown
     Minor Hook provides 3."""
@@ -64,12 +64,18 @@ def covenant_hook_points(
 def covenant_effective_aura(
     covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
 ) -> int:
-    """The covenant's Aura score: its base `aura` plus every `covenant_aura`
-    modifier of its Boons/Hooks (each Minor Aura Boon adds 1). This is what
-    its laboratories inherit."""
-    return covenant.aura + round_away_from_zero(
-        covenant_modifier_total(covenant, catalog_by_id, "covenant_aura")
-    )
+    """The covenant's Aura score (rules.realms.covenant_aura): its base
+    `aura` plus every `covenant_aura` modifier of its Boons/Hooks. This is
+    what its laboratories inherit."""
+    return int(realms.covenant_aura(covenant, catalog_by_id).total)
+
+
+def covenant_source(
+    covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
+) -> effects.EffectSource:
+    """The covenant's Boons and Hooks as a source for the shared effect
+    lookup (rules.effects)."""
+    return effects.EffectSource("covenant", covenant.boons_hooks, catalog_by_id)
 
 
 def covenant_modifiers(
@@ -82,23 +88,13 @@ def covenant_modifiers(
     the entry it comes from -- one pair per attached *instance*, so a Boon
     taken three times appears three times (effects stack). Given an
     `activity`, modifiers for that activity and general ones (no activity)
-    both count, per Modifier's rules.
-
-    This is the covenant end of the one lookup every total will use (DESIGN.md
-    section 5.1): Virtues & Flaws on characters and
-    laboratories will be collected the same way."""
-    found = []
-    for instance in covenant.boons_hooks:
-        entry = catalog_by_id.get(instance.vf_id)
-        if entry is None:
-            continue
-        for modifier in entry.modifiers:
-            if modifier.applies_to != applies_to:
-                continue
-            if activity is not None and modifier.activity not in (None, activity):
-                continue
-            found.append((entry, modifier))
-    return found
+    both count. The covenant end of the shared lookup (rules.effects)."""
+    return [
+        (effect.entry, effect.modifier)  # type: ignore[misc]
+        for effect in effects.collect(
+            [covenant_source(covenant, catalog_by_id)], applies_to, activity=activity
+        )
+    ]
 
 
 def covenant_modifier_total(
@@ -107,12 +103,9 @@ def covenant_modifier_total(
     applies_to: str,
     activity: str | None = None,
 ) -> float:
-    """The sum of the flat `amount`s of covenant_modifiers(). (No covenant
-    effect uses a multiplier yet; how multipliers stack with amounts is for
-    the Totals Engine to settle.)"""
-    return sum(
-        modifier.amount or 0
-        for _, modifier in covenant_modifiers(
-            covenant, catalog_by_id, applies_to, activity
+    """The sum of the flat `amount`s of covenant_modifiers()."""
+    return effects.amount_total(
+        effects.collect(
+            [covenant_source(covenant, catalog_by_id)], applies_to, activity=activity
         )
     )

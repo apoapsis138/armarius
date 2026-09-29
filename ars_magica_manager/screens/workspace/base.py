@@ -52,6 +52,7 @@ from ...models import (
     new_instance_id,
     next_season,
 )
+from ...rules import options as rule_options
 from ..fields import (
     FieldsDialog,
 )
@@ -61,6 +62,7 @@ from ..forms import (
     _familiar_create_fields,
     _laboratory_create_fields,
     _saga_fields,
+    saga_rule_options,
 )
 from ..pickers import (
     LabVirtueFlawPickerScreen,
@@ -694,6 +696,7 @@ class WorkspaceBase(Screen[None]):
         if saga.description:
             lines.append(f"Description: {escape(saga.description)}")
         lines.append(f"Books in play: {sourcebooks.summary(saga.books_in_play)}")
+        lines.append(f"Optional rules: {rule_options.summary(saga)}")
         lines += [
             "",
             f"Covenants: {len(saga.covenants)}",
@@ -1071,6 +1074,7 @@ class WorkspaceBase(Screen[None]):
         async def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
+            self.saga.rule_options = saga_rule_options(result)
             for field, value in result.items():
                 setattr(self.saga, field, value)
             self.saga.books_in_play = sourcebooks.normalized(self.saga.books_in_play)
