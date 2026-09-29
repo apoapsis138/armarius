@@ -13,6 +13,7 @@ from dataclasses import dataclass, field, fields
 from typing import Any, Literal
 
 from .arts import ART_BY_NAME, ARTS, TECHNIQUES
+from .rules import xp as xp_rules
 from .totals import validate_modifier_type
 
 #: A Mythic Companion is a companion with a Free Mythic Companion Virtue
@@ -551,23 +552,36 @@ class Characteristics:
 
 @dataclass
 class Ability:
+    """An Ability: its total xp is stored and its score derived from it
+    (rules.xp, STORY-806)."""
+
     name: str
     category: str = "General"
-    level: int = 0
     xp: int = 0
-    #: XP needed for the next level, typed by hand -- a placeholder, not a
-    #: computed formula (see DESIGN.md's "tracker, not rules engine" stance).
-    xp_to_next: int = 0
     specialty: str | None = None
+
+    @property
+    def level(self) -> int:
+        """The score the xp buys."""
+        return xp_rules.score_from_xp(self.xp, xp_rules.ABILITY_FACTOR)
+
+    @property
+    def progress(self) -> xp_rules.Progress:
+        return xp_rules.progress(self.xp, xp_rules.ABILITY_FACTOR)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Ability:
         d = dict(data)
         if "score" in d and "level" not in d:
-            # Pre-Phase-1b saves used "score"; migrate on load so existing
-            # characters don't become unreadable over a field rename.
+            # Pre-Phase-1b saves used "score".
             d["level"] = d.pop("score")
-        return cls(**d)
+        d.pop("xp_to_next", None)  # typed by hand before STORY-806
+        if "level" in d:
+            # Before STORY-806 the score was typed beside the xp.
+            d["xp"], _ = xp_rules.migrate_level_xp(
+                d.pop("level"), d.get("xp", 0), xp_rules.ABILITY_FACTOR
+            )
+        return cls(**known_fields(cls, d))
 
 
 @dataclass
@@ -1055,19 +1069,29 @@ class Laboratory:
 
 @dataclass
 class ArtScore:
-    """A magus's score in one Art: the working Level, and total XP spent.
+    """A magus's score in one Art: the total xp spent is stored, the score
+    derived from it (rules.xp, STORY-806)."""
 
-    These are stored independently rather than deriving Level from XP --
-    v1 is a tracker, not a rules engine (see DESIGN.md section 2), so
-    there's no XP-to-Level formula applied here yet.
-    """
-
-    level: int = 0
     xp: int = 0
+
+    @property
+    def level(self) -> int:
+        """The score the xp buys."""
+        return xp_rules.score_from_xp(self.xp, xp_rules.ART_FACTOR)
+
+    @property
+    def progress(self) -> xp_rules.Progress:
+        return xp_rules.progress(self.xp, xp_rules.ART_FACTOR)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> ArtScore:
-        return cls(**data)
+        d = dict(data)
+        if "level" in d:
+            # Before STORY-806 the score was typed beside the xp.
+            d["xp"], _ = xp_rules.migrate_level_xp(
+                d.pop("level"), d.get("xp", 0), xp_rules.ART_FACTOR
+            )
+        return cls(**known_fields(cls, d))
 
 
 @dataclass
@@ -1121,9 +1145,8 @@ class Description:
 
 @dataclass
 class Aging:
-    """Decrepitude and Warping. Warping is tracked as Score/Points, the same
-    shape as an Ability's Level/XP -- but nothing derives one from the other
-    yet; both are plain stored values (see ArtScore's docstring for why)."""
+    """Decrepitude and Warping. Warping is tracked as Score/Points; both are
+    typed for now (deriving the Score is Phase 4, STORY-904)."""
 
     decrepitude: int = 0
     effects: str = ""

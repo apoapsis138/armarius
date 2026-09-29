@@ -1733,14 +1733,16 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
     }
 
     .art-row Label {
-        width: 14;
+        width: 16;
         content-align: right middle;
         padding-right: 1;
     }
 
-    .art-row .art-sep {
-        width: 1;
-        content-align: center middle;
+    .art-row .art-score {
+        width: 10;
+        content-align: left middle;
+        padding-left: 1;
+        color: $text-muted;
     }
 
     .art-row Input {
@@ -1769,22 +1771,22 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
             score = self.arts.get(key, ArtScore())
             yield Label(f"{art_name} ({ART_ABBREVIATIONS[art_name]})")
             yield Input(
-                value=str(score.level),
-                type="integer",
-                id=f"input-art-{key}-level",
-                compact=True,
-            )
-            yield Label("/", classes="art-sep")
-            yield Input(
                 value=str(score.xp),
                 type="integer",
                 id=f"input-art-{key}-xp",
                 compact=True,
             )
+            yield Label(
+                self._score_label(score.xp),
+                id=f"art-score-{key}",
+                classes="art-score",
+            )
 
         with Vertical(id="arts-dialog"):
             yield Label("Edit Arts", id="arts-title")
-            yield Label("Each score is Level / XP", id="arts-subtitle")
+            yield Label(
+                "Enter each Art's total XP; its score follows", id="arts-subtitle"
+            )
             with Horizontal(id="arts-columns"):
                 with Vertical(id="arts-techniques-col"):
                     yield Label("Techniques", classes="column-heading")
@@ -1807,20 +1809,39 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
         elif event.button.id == "btn-save":
             self._try_save()
 
+    @staticmethod
+    def _score_label(xp: int | None) -> str:
+        if xp is None or xp < 0:
+            return "Score ?"
+        return f"Score {ArtScore(xp=xp).level}"
+
+    def on_input_changed(self, event: Input.Changed) -> None:
+        """Keep each Art's score beside its XP as the user types."""
+        input_id = event.input.id or ""
+        if not (input_id.startswith("input-art-") and input_id.endswith("-xp")):
+            return
+        key = input_id.removeprefix("input-art-").removesuffix("-xp")
+        try:
+            xp: int | None = int(event.value.strip())
+        except ValueError:
+            xp = None
+        self.query_one(f"#art-score-{key}", Label).update(self._score_label(xp))
+
     def _try_save(self) -> None:
         error = self.query_one("#arts-error", Static)
         result: dict[str, ArtScore] = {}
         for art_name in ARTS:
             key = art_name.lower()
-            level_raw = self.query_one(f"#input-art-{key}-level", Input).value.strip()
             xp_raw = self.query_one(f"#input-art-{key}-xp", Input).value.strip()
             try:
-                level = int(level_raw)
                 xp = int(xp_raw)
             except ValueError:
-                error.update(f"{art_name} needs whole numbers for Level and XP.")
+                error.update(f"{art_name} needs a whole number of XP.")
                 return
-            result[key] = ArtScore(level=level, xp=xp)
+            if xp < 0:
+                error.update(f"{art_name}'s XP can't be negative.")
+                return
+            result[key] = ArtScore(xp=xp)
         self.dismiss(result)
 
 

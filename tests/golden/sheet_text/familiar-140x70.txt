@@ -219,7 +219,7 @@
 
   Languages: shares the Magus partner's Language scores automatically.
   General
-  ○ Awareness 2 0/0
+  ○ Awareness 2 15/30
 
 
 

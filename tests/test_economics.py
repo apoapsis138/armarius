@@ -22,6 +22,7 @@ from ars_magica_manager.models import (
     Saga,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules.xp import ability_xp
 
 
 def _saga(season: str = "Spring") -> tuple[Saga, Covenant]:
@@ -46,7 +47,7 @@ def _saga(season: str = "Spring") -> tuple[Saga, Covenant]:
                 name="Old Thomae",
                 type="grog",
                 covenant_id="cov1",
-                abilities=[Ability(name="Craft: Smith", level=5)],
+                abilities=[Ability(name="Craft: Smith", xp=ability_xp(5))],
             ),
         ],
         laboratories=[],

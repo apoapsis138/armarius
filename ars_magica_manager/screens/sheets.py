@@ -1308,7 +1308,7 @@ class CharacterSheetView(SheetView):
         (the two-character indent is the list's selector marker)."""
         return (
             f"  {'':<{self._ARTS_NAME_WIDTH}}"
-            f"{'Level':>{self._ARTS_NUM_WIDTH}}{'XP':>{self._ARTS_NUM_WIDTH}}"
+            f"{'Score':>{self._ARTS_NUM_WIDTH}}{'XP':>{self._ARTS_NUM_WIDTH}}"
         )
 
     def _art_row_label(self, art: str) -> str:
@@ -1327,7 +1327,7 @@ class CharacterSheetView(SheetView):
         return "\n".join(
             [
                 f"[b]Name:[/] {art} ({ART_ABBREVIATIONS[art]})",
-                f"[b]Level:[/] {score.level}    [b]XP:[/] {score.xp}",
+                st.xp_line(score.progress),
                 "",
                 f"[b]Description:[/] {ART_DESCRIPTIONS[art]}",
             ]

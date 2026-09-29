@@ -84,6 +84,10 @@ covenants, characters, laboratories, familiars, books and spells, linked by
 id (see §6).
 
 Key relationship notes:
+- An Art's or Ability's score is derived from the total xp spent on it
+  (`rules/xp.py`, the Advancement Table); only the xp is stored. Saves
+  from before this (STORY-806) typed a score beside the xp and are
+  migrated on load.
 - A Character's `covenant_id` is nullable (not every character is attached
   to a covenant at all times).
 - A Laboratory belongs to exactly one Covenant, and has at most one resident

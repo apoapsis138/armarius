@@ -25,17 +25,18 @@ from ars_magica_manager.models import (
     Saga,
     ShapeMaterialBonus,
 )
+from ars_magica_manager.rules.xp import ability_xp, art_xp
 
 
 def _saga(*devices: EnchantedDevice) -> Saga:
     magus = Character(id="mag1", name="Leandro", type="magus", covenant_id="cov1")
     magus.arts = {
-        "creo": ArtScore(level=5),
-        "intellego": ArtScore(level=8),
-        "ignem": ArtScore(level=10),
-        "vim": ArtScore(level=6),
+        "creo": ArtScore(xp=art_xp(5)),
+        "intellego": ArtScore(xp=art_xp(8)),
+        "ignem": ArtScore(xp=art_xp(10)),
+        "vim": ArtScore(xp=art_xp(6)),
     }
-    magus.abilities = [Ability("Magic Theory", level=2)]
+    magus.abilities = [Ability("Magic Theory", xp=ability_xp(2))]
     return Saga(
         id="s",
         name="S",

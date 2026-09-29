@@ -1183,7 +1183,7 @@ class WorkspaceBase(Screen[None]):
     @staticmethod
     def _ability_label(a: Ability) -> str:
         specialty = f" ({escape(a.specialty)})" if a.specialty else ""
-        return f"{escape(a.name)}{specialty} {a.level} {a.xp}/{a.xp_to_next}"
+        return f"{escape(a.name)}{specialty} {st.score_text(a.progress)}"
 
     # -- shared Character/Laboratory/Familiar Virtue & Flaw actions --
 

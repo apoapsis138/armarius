@@ -90,7 +90,7 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   General
-  ○ Latin 4 0/0
+  ○ Latin 4 50/75
 
 
 
@@ -230,7 +230,7 @@
      Magical Arts
 
       Techniques                                        Forms
-                         Level    XP                                       Level    XP
+                         Score    XP                                       Score    XP
       ○ Creo (Cr)            0     0                    ○ Animal (An)          0     0
       ○ Intellego (In)       0     0                    ○ Aquam (Aq)           0     0
       ○ Muto (Mu)            0     0                    ○ Auram (Au)           0     0

@@ -36,14 +36,13 @@ def _sample_saga() -> Saga:
                 covenant_id="cov_1",
                 characteristics=Characteristics(intelligence=3),
                 arts={
-                    "creo": ArtScore(level=10, xp=55),
-                    "ignem": ArtScore(level=5, xp=15),
+                    "creo": ArtScore(xp=55),
+                    "ignem": ArtScore(xp=15),
                 },
                 abilities=[
                     Ability(
                         name="Magic Theory",
                         category="Academic",
-                        level=5,
                         xp=75,
                         specialty="Lab Totals",
                     )

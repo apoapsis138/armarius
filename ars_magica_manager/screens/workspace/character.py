@@ -50,6 +50,7 @@ from ..prompts import (
     ConfirmScreen,
     _ability_fields,
     _ability_from,
+    _ability_problem,
     _raw_vis_dialog,
 )
 from .base import (
@@ -217,7 +218,11 @@ class CharacterActions(WorkspaceBase):
                 self._commit("tab-abilities")
 
         self.app.push_screen(
-            FieldsDialog(escape(existing.name), _ability_fields(existing)),
+            FieldsDialog(
+                escape(existing.name),
+                _ability_fields(existing),
+                validate=_ability_problem,
+            ),
             handle_result,
         )
 

@@ -29,6 +29,7 @@ from ars_magica_manager.models import (
     Spell,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules.xp import ability_xp
 
 
 def screen_lines(app) -> list[str]:
@@ -124,7 +125,7 @@ def everything_saga() -> Saga:
     covenant.economics.income_sources = [IncomeSource(id="inc1", name="Mill")]
 
     magus = Character(id="mag1", name="Leandro", type="magus", covenant_id="cov1")
-    magus.abilities = [Ability("Latin", level=4)]
+    magus.abilities = [Ability("Latin", xp=ability_xp(4))]
     magus.virtues_flaws = [
         VirtueFlawInstance(first_vf("Virtue")),
         VirtueFlawInstance(first_vf("Flaw")),
@@ -165,7 +166,7 @@ def everything_saga() -> Saga:
     familiar.personality_traits = list(trait)
     familiar.reputations = list(rep)
     familiar.natural_weapons = [Possession(id="nw1", kind="weapon", name="Beak")]
-    familiar.abilities = [Ability("Awareness", level=2)]
+    familiar.abilities = [Ability("Awareness", xp=ability_xp(2))]
     familiar.bond_powers = [BondPower(id="bp1", name="Speak")]
 
     books = [

@@ -11,6 +11,7 @@ from ars_magica_manager.models import (
     ScoredTrait,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules.xp import ability_xp
 
 
 def _saga() -> tuple[Saga, Character, Familiar]:
@@ -135,15 +136,17 @@ def test_characteristics_text_shows_signed_scores_and_typed_in_defenses():
 def test_ability_rows_groups_by_category_with_headers():
     _, _magus, familiar = _saga()
     familiar.abilities = [
-        Ability(name="Athletics", category="General", level=3, specialty="Running"),
-        Ability(name="Magic Theory", category="Arcane", level=2),
+        Ability(
+            name="Athletics", category="General", xp=ability_xp(3), specialty="Running"
+        ),
+        Ability(name="Magic Theory", category="Arcane", xp=ability_xp(2)),
     ]
     rows = fam.ability_rows(familiar)
     assert rows == [
         (None, "General"),
-        (0, "Athletics (Running) 3 0/0"),
+        (0, "Athletics (Running) 3 30/50"),
         (None, "Arcane"),
-        (1, "Magic Theory 2 0/0"),
+        (1, "Magic Theory 2 15/30"),
     ]
 
 

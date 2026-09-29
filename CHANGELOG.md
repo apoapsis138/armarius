@@ -9,6 +9,23 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 1.1.0 — 2026-09-29
+
+The first piece of Phase 2, the Rules Engine.
+
+- Art and Ability scores now come from experience: you enter each one's
+  total XP and the score follows, from the Definitive Edition's
+  Advancement Table (an Ability's score 5 costs 75 xp, an Art's 15). The
+  XP is always the running total and never resets when a score is reached.
+- An Ability reads like "Magic Theory 5 75/105" (score 5, 75 xp, score 6
+  at 105), and its details show the score and XP. The Arts grid has a
+  Score column; Edit Arts takes each Art's XP and shows its score beside
+  it as you type.
+- Older saves, which kept a typed score beside the XP, are converted when
+  loaded: XP that already buys the score is kept; a smaller figure is read
+  as XP toward the next score and added on; a pair that fits neither keeps
+  the typed score.
+
 ## 1.0.0 — 2026-09-29
 
 Phase 1, the core tracker, is complete.

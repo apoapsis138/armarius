@@ -37,6 +37,7 @@ from ars_magica_manager.models import (
     next_season,
     replace_raw_vis,
 )
+from ars_magica_manager.rules.xp import ability_xp
 
 
 def test_character_age_computes_from_year_born():
@@ -253,7 +254,7 @@ def test_familiar_survives_a_dict_round_trip():
         characteristics=Characteristics(stamina=3),
         base_soak=5,
         magic_resistance=12,
-        abilities=[Ability(name="Athletics", level=3, specialty="Running")],
+        abilities=[Ability(name="Athletics", xp=ability_xp(3), specialty="Running")],
         bond_powers=[
             BondPower(
                 id="speak_with_beasts",

@@ -57,14 +57,17 @@ def _date_fields(season: str, year: int) -> list[DialogField]:
     ]
 
 
+#: What the Ability XP field is: the score is worked out from it.
+ABILITY_XP_HINT = (
+    "Total XP; the score follows from it. Score 1 = 5, 2 = 15, 3 = 30, "
+    "4 = 50, 5 = 75, 6 = 105, 7 = 140, 8 = 180."
+)
+
+
 def _ability_fields(ability: Ability | None) -> list[DialogField]:
-    """An Ability's score and Specialty (its name is the form's title)."""
+    """An Ability's xp and Specialty (its name is the form's title)."""
     return [
-        DialogField("level", "Level", "int", _attr(ability, "level", 0)),
-        DialogField("xp", "XP", "int", _attr(ability, "xp", 0)),
-        DialogField(
-            "xp_to_next", "XP to next level", "int", _attr(ability, "xp_to_next", 0)
-        ),
+        DialogField("xp", "XP", "int", _attr(ability, "xp", 0), hint=ABILITY_XP_HINT),
         DialogField(
             "specialty",
             "Specialty",
@@ -75,13 +78,17 @@ def _ability_fields(ability: Ability | None) -> list[DialogField]:
     ]
 
 
+def _ability_problem(values: dict[str, Any]) -> str | None:
+    if values["xp"] < 0:
+        return "XP can't be negative."
+    return None
+
+
 def _ability_from(name: str, category: str, values: dict[str, Any]) -> Ability:
     return Ability(
         name=name,
         category=category,
-        level=values["level"],
         xp=values["xp"],
-        xp_to_next=values["xp_to_next"],
         specialty=values["specialty"] or None,
     )
 

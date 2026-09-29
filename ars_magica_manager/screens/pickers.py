@@ -44,7 +44,13 @@ from ..models import (
     boon_hook_params,
 )
 from .fields import FieldsDialog, ModalDialog
-from .prompts import _ability_fields, _ability_from, _boon_hook_fields, _param_dialog
+from .prompts import (
+    _ability_fields,
+    _ability_from,
+    _ability_problem,
+    _boon_hook_fields,
+    _param_dialog,
+)
 from .widgets import _boon_hook_names
 
 _VIRTUE_FLAW_ITEM_ID_PREFIX = "vf-"
@@ -810,7 +816,12 @@ class AbilityPickerScreen(SearchablePickerScreen[AbilityDef, Ability | None]):
                 self.dismiss(_ability_from(name, category, result))
 
         self.app.push_screen(
-            FieldsDialog(escape(name), _ability_fields(None), save_label="Confirm"),
+            FieldsDialog(
+                escape(name),
+                _ability_fields(None),
+                save_label="Confirm",
+                validate=_ability_problem,
+            ),
             handle_ability,
         )
 

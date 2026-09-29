@@ -317,11 +317,11 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Age of Apprenticeship": "-"},  # crashed before (B3)
     ),
     "edit ability": Contract(
-        prefill={"Level": "4", "XP": "0"},
-        edits={"Level": "5", "Specialty": "Grammar"},
+        prefill={"XP": "50"},
+        edits={"XP": "75", "Specialty": "Grammar"},
         saved=lambda s: (_char(s).abilities[0].level, _char(s).abilities[0].specialty),
         expected=(5, "Grammar"),
-        invalid={"Level": "-"},
+        invalid={"XP": "-5"},
     ),
     "edit raw vis": Contract(
         prefill={"Art": "creo", "Pawns": "3"},

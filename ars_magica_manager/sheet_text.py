@@ -22,6 +22,7 @@ from .models import (
     VirtueFlawInstance,
     Wounds,
 )
+from .rules import xp as xp_rules
 from .totals import describe_modifier
 
 
@@ -54,6 +55,20 @@ def characteristics_text(c: Characteristics) -> str:
     return f"{row1}\n{row2}"
 
 
+def score_text(progress: xp_rules.Progress) -> str:
+    """A score and its total xp against the total the next score needs,
+    e.g. "5 85/105": score 5, 85 xp spent, score 6 at 105."""
+    return f"{progress.score} {progress.total}/{progress.next_total}"
+
+
+def xp_line(progress: xp_rules.Progress) -> str:
+    """The details-panel line for an Art or Ability's score and total xp."""
+    return (
+        f"[b]Score:[/] {progress.score}    [b]XP:[/] {progress.total} "
+        f"(score {progress.score + 1} at {progress.next_total} xp)"
+    )
+
+
 def ability_rows(abilities: Sequence[Ability]) -> list[tuple[int | None, str]]:
     """One selectable list for every Ability, with a header (non-selectable)
     row before each non-empty category -- unlike Virtues/Flaws, Abilities
@@ -70,7 +85,7 @@ def ability_rows(abilities: Sequence[Ability]) -> list[tuple[int | None, str]]:
                 (
                     index,
                     f"{escape(ability.name)}{escape(specialty)} "
-                    f"{ability.level} {ability.xp}/{ability.xp_to_next}",
+                    f"{score_text(ability.progress)}",
                 )
             )
     return rows
@@ -94,10 +109,13 @@ def ability_definition(name: str) -> AbilityDef | None:
 def ability_info_text(abilities: Sequence[Ability], index: int | None) -> str:
     if index is None:
         return "[dim]Select an Ability to see its details.[/]"
-    definition = ability_definition(abilities[index].name)
+    ability = abilities[index]
+    definition = ability_definition(ability.name)
     if definition is None or not definition.description:
-        return "[dim](no catalog description)[/]"
-    return escape(definition.description)
+        description = "[dim](no catalog description)[/]"
+    else:
+        description = escape(definition.description)
+    return "\n\n".join([xp_line(ability.progress), description])
 
 
 def vf_rows(

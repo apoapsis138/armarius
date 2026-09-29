@@ -21,6 +21,7 @@ from ars_magica_manager.models import (
     ScoredTrait,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules.xp import ability_xp
 
 
 def _saga() -> tuple[Saga, Covenant]:
@@ -167,7 +168,7 @@ def test_departed_entries_for_kind_lists_only_departed_magi_and_companions():
 def test_a_craftspersons_score_is_manual_unless_tied_to_a_sheets_ability():
     saga, cov = _saga()
     brawl = next(a for a in saga.characters[3].abilities if a.name == "Brawl")
-    brawl.level = 4
+    brawl.xp = ability_xp(4)
     cov.inhabitants += [
         # Manual: a person with no sheet.
         Inhabitant(id="a", kind="craftsperson", name="Visitor", skill_value=6),
@@ -596,7 +597,7 @@ def test_role_bonus_is_presence_plus_the_roles_ability_from_the_sheet():
     saga, cov = _saga()
     grog = next(c for c in saga.characters if c.id == "grog1")
     grog.characteristics = _presence(2)
-    grog.abilities.append(Ability(name="Leadership", level=5))
+    grog.abilities.append(Ability(name="Leadership", xp=ability_xp(5)))
     cov.inhabitants.append(
         Inhabitant(
             id="s",
@@ -616,8 +617,8 @@ def test_autocrat_sums_both_profession_abilities():
     grog = next(c for c in saga.characters if c.id == "grog1")
     grog.characteristics = _presence(1)
     grog.abilities += [
-        Ability(name="Profession: Steward", level=3),
-        Ability(name="Profession: Chamberlain", level=4),
+        Ability(name="Profession: Steward", xp=ability_xp(3)),
+        Ability(name="Profession: Chamberlain", xp=ability_xp(4)),
     ]
     cov.inhabitants.append(
         Inhabitant(
@@ -655,7 +656,7 @@ def test_specialists_loyalty_sums_companions_and_specialists_bonuses():
     saga, cov = _saga()
     comp = next(c for c in saga.characters if c.id == "comp1")
     comp.characteristics = _presence(3)
-    comp.abilities.append(Ability(name="Profession: Steward", level=2))
+    comp.abilities.append(Ability(name="Profession: Steward", xp=ability_xp(2)))
     cov.inhabitants = [
         Inhabitant(id="a", kind="companion", character_id="comp1", role="Steward"),
         Inhabitant(

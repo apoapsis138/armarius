@@ -33,6 +33,7 @@ from ..pickers import (
 from ..prompts import (
     _ability_fields,
     _ability_from,
+    _ability_problem,
 )
 from .base import (
     WorkspaceBase,
@@ -267,7 +268,11 @@ class FamiliarActions(WorkspaceBase):
                 self._commit("tab-fam-abilities")
 
         self.app.push_screen(
-            FieldsDialog(escape(existing.name), _ability_fields(existing)),
+            FieldsDialog(
+                escape(existing.name),
+                _ability_fields(existing),
+                validate=_ability_problem,
+            ),
             handle_result,
         )
 

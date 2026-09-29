@@ -60,6 +60,7 @@ from ars_magica_manager.models import (
     Spell,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules.xp import ability_xp
 from ars_magica_manager.screens import (
     AbilityPickerScreen,
     AdvanceSeasonScreen,
@@ -988,14 +989,13 @@ def _sample_saga_with_covenant() -> Saga:
                 covenant_id="cov1",
                 characteristics=Characteristics(intelligence=3, stamina=1),
                 arts={
-                    "creo": ArtScore(level=10, xp=55),
-                    "ignem": ArtScore(level=5, xp=15),
+                    "creo": ArtScore(xp=55),
+                    "ignem": ArtScore(xp=15),
                 },
                 abilities=[
                     Ability(
                         name="Magic Theory",
                         category="Academic",
-                        level=5,
                         xp=75,
                         specialty="Lab Totals",
                     )
@@ -1094,7 +1094,7 @@ async def test_selecting_character_shows_sheet_fields():
         assert "Leandro's Sanctum" in view._info_right_text()
         assert "Int: +3" in view._characteristics_text()
         labels = _ability_labels(view)
-        assert "Magic Theory (Lab Totals) 5 75/0" in labels
+        assert "Magic Theory (Lab Totals) 5 75/105" in labels
         assert "Academic" in [
             label for index, label in view._ability_rows() if index is None
         ]
@@ -1491,14 +1491,14 @@ async def test_familiar_abilities_use_generic_add_edit_remove():
         await pilot.click("#ability-ab_athletics")
         await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
-        app.screen.query_one("#fld-level", Input).value = "3"
+        app.screen.query_one("#fld-xp", Input).value = "30"
         app.screen.query_one("#fld-specialty", Input).value = "Running"
         await pilot.click("#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
         view = app.screen._familiar_sheet_view
-        assert "Athletics (Running) 3 0/0" in _fam_ability_labels(view)
+        assert "Athletics (Running) 3 30/50" in _fam_ability_labels(view)
 
         [familiar] = storage.load_saga("test_saga").familiars
         assert len(familiar.abilities) == 1
@@ -1512,10 +1512,10 @@ async def test_familiar_abilities_use_generic_add_edit_remove():
         await pilot.press("enter")
         await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
-        app.screen.query_one("#fld-level", Input).value = "4"
+        app.screen.query_one("#fld-xp", Input).value = "50"
         await pilot.click("#btn-save")
         await pilot.pause()
-        assert "Athletics (Running) 4 0/0" in _fam_ability_labels(view)
+        assert "Athletics (Running) 4 50/75" in _fam_ability_labels(view)
 
         await pilot.press("A")
         await pilot.pause()
@@ -2121,14 +2121,14 @@ async def test_add_ability_without_parameters_to_character():
         await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
 
-        app.screen.query_one("#fld-level", Input).value = "3"
+        app.screen.query_one("#fld-xp", Input).value = "30"
         app.screen.query_one("#fld-specialty", Input).value = "Running"
 
         await pilot.click("#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert "Athletics (Running) 3 0/0" in _ability_labels(
+        assert "Athletics (Running) 3 30/50" in _ability_labels(
             app.screen._character_sheet_view
         )
 
@@ -2163,7 +2163,7 @@ async def test_add_ability_with_parameters_to_character():
         assert isinstance(app.screen, FieldsDialog)
         assert app.screen.title_text == "Craft: Blacksmith"
 
-        app.screen.query_one("#fld-level", Input).value = "2"
+        app.screen.query_one("#fld-xp", Input).value = "15"
 
         await pilot.click("#btn-save")
         await pilot.pause()
@@ -2204,8 +2204,10 @@ async def test_cancelling_ability_details_returns_to_picker_without_adding():
 
 async def test_ability_picker_excludes_non_templated_duplicates_but_keeps_templated():
     saga = _saga_with_bare_character()
-    saga.characters[0].abilities.append(Ability(name="Athletics", level=1))
-    saga.characters[0].abilities.append(Ability(name="Craft: Blacksmith", level=1))
+    saga.characters[0].abilities.append(Ability(name="Athletics", xp=ability_xp(1)))
+    saga.characters[0].abilities.append(
+        Ability(name="Craft: Blacksmith", xp=ability_xp(1))
+    )
     storage.save_saga(saga)
 
     app = ArsMagicaManagerApp()
@@ -2399,15 +2401,17 @@ async def test_edit_arts_prefills_existing_scores_and_saves_full_grid():
         await pilot.pause()
         assert isinstance(app.screen, EditArtsScreen)
 
-        assert app.screen.query_one("#input-art-creo-level", Input).value == "10"
         assert app.screen.query_one("#input-art-creo-xp", Input).value == "55"
-        assert app.screen.query_one("#input-art-ignem-level", Input).value == "5"
         assert app.screen.query_one("#input-art-ignem-xp", Input).value == "15"
-        assert app.screen.query_one("#input-art-rego-level", Input).value == "0"
         assert app.screen.query_one("#input-art-rego-xp", Input).value == "0"
+        assert "Score 10" in str(
+            app.screen.query_one("#art-score-creo", Label).render()
+        )
 
-        app.screen.query_one("#input-art-rego-level", Input).value = "3"
         app.screen.query_one("#input-art-rego-xp", Input).value = "6"
+        await pilot.pause()
+        # The score beside the XP follows as it's typed.
+        assert "Score 3" in str(app.screen.query_one("#art-score-rego", Label).render())
 
         await pilot.click("#btn-save")
         await pilot.pause()
@@ -2416,12 +2420,12 @@ async def test_edit_arts_prefills_existing_scores_and_saves_full_grid():
 
     saga = storage.load_saga("test_saga")
     arts = saga.characters[0].arts
-    assert arts["creo"] == ArtScore(level=10, xp=55)
-    assert arts["ignem"] == ArtScore(level=5, xp=15)
-    assert arts["rego"] == ArtScore(level=3, xp=6)
+    assert arts["creo"] == ArtScore(xp=55)
+    assert arts["ignem"] == ArtScore(xp=15)
+    assert arts["rego"] == ArtScore(xp=6)
     # Every one of the 15 Arts is written, not just the ones that were nonzero.
     assert len(arts) == 15
-    assert arts["vim"] == ArtScore(level=0, xp=0)
+    assert arts["vim"] == ArtScore(xp=0)
 
 
 async def test_edit_arts_requires_integers():
@@ -2435,7 +2439,7 @@ async def test_edit_arts_requires_integers():
         await pilot.press("e")
         await pilot.pause()
 
-        app.screen.query_one("#input-art-rego-level", Input).value = "not a number"
+        app.screen.query_one("#input-art-rego-xp", Input).value = "not a number"
 
         await pilot.click("#btn-save")
         await pilot.pause()
@@ -2444,8 +2448,8 @@ async def test_edit_arts_requires_integers():
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].arts == {
-        "creo": ArtScore(level=10, xp=55),
-        "ignem": ArtScore(level=5, xp=15),
+        "creo": ArtScore(xp=55),
+        "ignem": ArtScore(xp=15),
     }
 
 
@@ -2460,7 +2464,7 @@ async def test_edit_arts_cancel_discards_changes():
         await pilot.press("e")
         await pilot.pause()
 
-        app.screen.query_one("#input-art-rego-level", Input).value = "9"
+        app.screen.query_one("#input-art-rego-xp", Input).value = "9"
 
         await pilot.press("escape")
         await pilot.pause()
@@ -2469,8 +2473,8 @@ async def test_edit_arts_cancel_discards_changes():
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].arts == {
-        "creo": ArtScore(level=10, xp=55),
-        "ignem": ArtScore(level=5, xp=15),
+        "creo": ArtScore(xp=55),
+        "ignem": ArtScore(xp=15),
     }
 
 
@@ -2555,9 +2559,9 @@ async def test_edit_arts_grid_fits_default_terminal_and_accepts_real_typing():
         # without scrolling, exercising that the scroll-then-click path
         # itself works, not just whatever's on-screen by default.
         for field_id in (
-            "#input-art-rego-level",
-            "#input-art-herbam-level",
-            "#input-art-vim-level",
+            "#input-art-rego-xp",
+            "#input-art-herbam-xp",
+            "#input-art-vim-xp",
         ):
             field = app.screen.query_one(field_id, Input)
             field.scroll_visible(animate=False)
@@ -2572,9 +2576,9 @@ async def test_edit_arts_grid_fits_default_terminal_and_accepts_real_typing():
             # cursor, then type -- this is exercising real keystrokes, not
             # asserting exact cursor/selection placement from the click.
             await pilot.press("end", "backspace", "backspace", "backspace")
-            await pilot.press("7")
+            await pilot.press("2", "8")
             await pilot.pause()
-            assert field.value == "7"
+            assert field.value == "28"
 
         await pilot.click("#btn-save")
         await pilot.pause()
@@ -2860,24 +2864,22 @@ async def test_edit_ability_updates_existing_entry():
         await pilot.press("enter")  # only one ability -- select it
         await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
-        assert app.screen.query_one("#fld-level", Input).value == "5"
         assert app.screen.query_one("#fld-xp", Input).value == "75"
 
-        app.screen.query_one("#fld-level", Input).value = "6"
-        app.screen.query_one("#fld-xp", Input).value = "90"
+        app.screen.query_one("#fld-xp", Input).value = "105"
 
         await pilot.click("#btn-save")
         await pilot.pause()
 
         assert isinstance(app.screen, WorkspaceScreen)
-        assert "Magic Theory (Lab Totals) 6 90/0" in _ability_labels(
+        assert "Magic Theory (Lab Totals) 6 105/140" in _ability_labels(
             app.screen._character_sheet_view
         )
 
     saga = storage.load_saga("test_saga")
     ability = saga.characters[0].abilities[0]
     assert ability.level == 6
-    assert ability.xp == 90
+    assert ability.xp == 105
     assert ability.category == "Academic"
 
 
@@ -7228,7 +7230,7 @@ async def test_other_covenfolk_named_the_plural_of_its_role_hides_the_role_in_th
 
 async def test_craftsperson_links_one_of_the_grogs_abilities_and_stores_craft_fields():
     saga = _saga_with_people()
-    saga.characters[2].abilities[1].level = 4  # Old Thomae's Brawl
+    saga.characters[2].abilities[1].xp = ability_xp(4)  # Old Thomae's Brawl
     storage.save_saga(saga)
 
     app = ArsMagicaManagerApp()
@@ -7287,7 +7289,7 @@ async def test_craftsperson_links_one_of_the_grogs_abilities_and_stores_craft_fi
 
 async def test_forms_and_the_remove_confirmation_fit_an_80_by_24_terminal():
     saga = _saga_with_people()
-    saga.characters[2].abilities[1].level = 4
+    saga.characters[2].abilities[1].xp = ability_xp(4)
     saga.covenants[0].inhabitants = [
         Inhabitant(
             id="c",
