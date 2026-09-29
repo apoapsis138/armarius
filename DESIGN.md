@@ -197,7 +197,7 @@ Virtues, their laboratory's, the covenant's Boons -- where each attached
 Considered and rejected: per-purpose flags with the rule in code (e.g. a
 "buildings" tag and +2/+5 hard-coded in Economics), more one-off key -> number
 maps, and per-entry code hooks. Each keeps effects out of the catalog data or
-splits them into formats the Totals Engine would have to reconcile.
+splits them into formats the Rules Engine would have to reconcile.
 
 **Staged migration.** Rather than converting everything at once, each catalog
 moves to the shared shape when a real calculation needs it:
@@ -206,7 +206,7 @@ moves to the shared shape when a real calculation needs it:
   Aura Hook) and `covenant_expense` / `buildings` (the Buildings surcharge),
   collected by `models.covenant_modifiers()`.
 - Laboratory Virtues & Flaws: still the older `characteristic_modifiers` map
-  (`{"safety": 1}`); convert when the Totals Engine starts, since that's when lab
+  (`{"safety": 1}`); convert when the Rules Engine starts, since that's when lab
   Characteristics feed Lab Totals (board: STORY-804).
 - Still to settle then: how flat amounts and multipliers combine when both apply.
 
@@ -243,10 +243,17 @@ which entity owns which relationship.
 - Spells as data, linkable from a character's known-spells list or a
   Lab Text book.
 
-**Phase 2 — Totals engine**
-- Implement Lab Total, Casting Total, Spontaneous Total, Study Total
-  formulas that consume Phase-1 modifier data. Display computed totals on
-  sheets.
+**Phase 2 — Rules Engine**
+- A rules engine that applies the ArM5 formulas consistently across the app,
+  so Phases 3-4 can automate seasons, XP and lab work: Lab, Casting,
+  Spontaneous and Study totals, scores from XP, dice, derived character
+  values, aura and realm modifiers, Penetration and Magic Resistance, spell
+  levels, combat, certamen and Mystery initiation totals. Formulas consume
+  Phase-1 modifier data; computed totals are displayed on sheets. Optional
+  rules are saga settings, off by default.
+- Builds from the local rules reference `reference/rules-engine-reference.md`
+  (compiled from the Ars Magica open content, organised by what the engine
+  computes, every rule cited; not committed).
 
 **Phase 3 — Seasonal activity execution**
 - Run a season: Study (from a book, a teacher, or practice), Lab Activities
