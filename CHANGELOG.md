@@ -9,6 +9,20 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 1.2.1 — 2026-09-29
+
+Behind the scenes: a way to measure how fast the app is.
+
+- A timing script (`tools/perf_probe.py`) that works on a copy of a saga
+  and times loading, saving, the reference catalogs, and opening every
+  sheet, switching every tab and redrawing after an edit. It can also try
+  a saga made several times bigger, and profile where the time goes.
+- What it found: saving and loading take under a millisecond (under 40 ms
+  even for a saga 100 times bigger), so the saga file isn't what makes the
+  app feel slow. The time goes on the screen: the key hints at the bottom
+  are rebuilt several times for every keypress, and a sheet builds all of
+  its tabs when it opens. Fixing those is planned next.
+
 ## 1.2.0 — 2026-09-29
 
 The Rules Engine (Phase 2) works out the book's totals from what's on the
