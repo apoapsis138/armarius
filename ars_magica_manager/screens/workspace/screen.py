@@ -115,6 +115,14 @@ class WorkspaceScreen(
             "section-raw-vis-inventory": _SectionOps(
                 self._add_raw_vis, self._remove_raw_vis, self._edit_raw_vis
             ),
+            "section-char-season": _SectionOps(
+                self._plan_season, self._clear_season_plan, self._plan_season
+            ),
+            "tab-diary": _SectionOps(
+                self._add_character_diary_entry,
+                self._remove_character_diary_entry,
+                self._edit_character_diary_entry,
+            ),
             # Familiar sheet
             "section-fam-info": _SectionOps(edit=self._edit_familiar_info),
             "section-fam-binding": _SectionOps(edit=self._edit_familiar_binding),

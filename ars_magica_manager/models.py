@@ -1056,12 +1056,19 @@ def _parse_old_specialty(text: str) -> LabSpecialtyEntry:
 
 @dataclass
 class DiaryEntry:
+    """One entry of a laboratory's or a character's Diary."""
+
     year: int
     season: str = "Spring"  # one of SEASONS
     name: str = ""
     details: str = ""
-    #: One of LAB_ACTIVITIES, or "" when not set.
+    #: A lab Diary: one of LAB_ACTIVITIES. A character's Diary: the season
+    #: activity's label (rules.seasons.ACTIVITIES). "" when not set.
     activity: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> DiaryEntry:
+        return cls(**known_fields(cls, data))
 
 
 @dataclass
@@ -1304,6 +1311,9 @@ class Character:
     reputations: list[ScoredTrait] = field(default_factory=list)
     raw_vis: dict[str, int] = field(default_factory=dict)  # Art -> pawns
     hermetic: HermeticBackground = field(default_factory=HermeticBackground)
+    #: What the character did season by season: written when a season is
+    #: applied (STORY-903), and editable like a laboratory's Diary.
+    diary: list[DiaryEntry] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Character:
@@ -1342,6 +1352,7 @@ class Character:
             else KnownSpell.from_dict(entry)
             for entry in d.get("spells_known", [])
         ]
+        d["diary"] = [DiaryEntry.from_dict(e) for e in d.get("diary", [])]
         return cls(**known_fields(cls, d))
 
 
@@ -2194,6 +2205,47 @@ def next_season(season: str, year: int) -> tuple[str, int]:
 
 
 @dataclass
+class XpAllocation:
+    """Where some of a season's Source Quality goes: `subject` is
+    "ability:<name>", "art:<art>" or "mastery:<spell id>" (see
+    rules.seasons.subject_label), `points` its share (Adventure splits its
+    Source Quality, Exposure may split its 2 points)."""
+
+    subject: str
+    points: int = 0
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> XpAllocation:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class SeasonPlan:
+    """What a character will do in one season (STORY-903): typed by the user,
+    locked in until the season is applied. Its outcome is always worked out
+    (rules.seasons.outcome), never stored."""
+
+    character_id: str
+    year: int
+    season: str  # one of SEASONS
+    activity: str  # a rules.seasons.ACTIVITIES key
+    allocations: list[XpAllocation] = field(default_factory=list)
+    #: Practice / Adventure: the Source Quality when it isn't the rule's
+    #: default (None: the default).
+    source_quality: int | None = None
+    #: Full months of the season lost to distractions (0-3).
+    months_lost: int = 0
+    #: Free text: what "Other" was, or notes kept with the Diary entry.
+    details: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> SeasonPlan:
+        d = dict(data)
+        d["allocations"] = [XpAllocation.from_dict(a) for a in d.get("allocations", [])]
+        return cls(**known_fields(cls, d))
+
+
+@dataclass
 class Saga:
     id: str
     name: str
@@ -2216,6 +2268,9 @@ class Saga:
     #: The optional rules the troupe has turned on (rules.options keys);
     #: an option not listed is off, its default.
     rule_options: dict[str, bool] = field(default_factory=dict)
+    #: Season plans not yet applied (STORY-903); a plan is removed when its
+    #: season is applied.
+    season_plans: list[SeasonPlan] = field(default_factory=list)
     #: The app version that last saved this saga (storage.save_saga sets it;
     #: "" for a save older than versioning), for upgrading old saves later.
     app_version: str = ""
@@ -2245,6 +2300,7 @@ class Saga:
             EnchantedDevice.from_dict(e) for e in d.get("enchanted_devices", [])
         ]
         d["spells"] = [Spell.from_dict(s) for s in d.get("spells", [])]
+        d["season_plans"] = [SeasonPlan.from_dict(p) for p in d.get("season_plans", [])]
         spell_names = {s.id: s.name for s in d["spells"]}
         d["books"] = [Book.from_dict(b, spell_names) for b in d.get("books", [])]
         # Older saves kept a Library record per covenant listing its book ids;

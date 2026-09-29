@@ -30,7 +30,7 @@ from textual.widgets import (
 from textual.widgets.tree import TreeNode
 
 from ... import books as bk
-from ... import catalog, creation, deletion, sourcebooks, storage
+from ... import catalog, creation, deletion, seasons, sourcebooks, storage
 from ... import economics as eco
 from ... import familiars as fam
 from ... import laboratories as lab_rules
@@ -246,6 +246,18 @@ def _tree_node_with_data(tree: Tree, data: tuple) -> TreeNode | None:
     return None
 
 
+#: The character sheet sections advancing the season can change (STORY-903).
+_SEASON_SECTIONS: tuple[str, ...] = (
+    "section-char-info",
+    "tab-abilities",
+    "section-arts",
+    "section-casting",
+    "section-known-spells",
+    "section-char-season",
+    "tab-diary",
+)
+
+
 class WorkspaceBase(Screen[None]):
     """The workspace's state and everything its actions share: the navigation
     tree and detail pane, which section is active, saving and refreshing
@@ -282,10 +294,10 @@ class WorkspaceBase(Screen[None]):
     _COVENANT_DISPATCH_TABS: ClassVar[set[str]] = {"tab-cov-diary"}
 
     #: Character tabs that own their own a/A/e dispatch (keyed by tab id),
-    #: same idea as _COVENANT_DISPATCH_TABS -- "tab-abilities" is a flat
-    #: pane with no sub-sections, so it dispatches on its own tab id rather
-    #: than falling back to the top panel. See _active_section().
-    _CHARACTER_DISPATCH_TABS: ClassVar[set[str]] = {"tab-abilities"}
+    #: same idea as _COVENANT_DISPATCH_TABS -- "tab-abilities" and the Diary
+    #: are flat panes with no sub-sections, so they dispatch on their own tab
+    #: id rather than falling back to the top panel. See _active_section().
+    _CHARACTER_DISPATCH_TABS: ClassVar[set[str]] = {"tab-abilities", "tab-diary"}
 
     #: Familiar tabs that own their own a/A/e dispatch (keyed by tab id),
     #: same idea as _CHARACTER_DISPATCH_TABS -- both are flat panes with no
@@ -1115,13 +1127,29 @@ class WorkspaceBase(Screen[None]):
 
         async def advance() -> None:
             new_year = saga.current_season == SEASONS[-1]
+            # Every plan's outcome is worked out before any is applied, so a
+            # season's results can't change that same season (STORY-903).
+            worked = seasons.resolve(saga)
+            if worked:
+                storage.backup_saga(saga)
+            applied = seasons.apply(saga, worked)
             # A new year (Winter -> Spring): each covenant's surplus goes into
             # its Wealth before the date moves on.
             added = eco.close_all_years(saga) if new_year else []
             await self._apply_saga_date(
                 *next_season(saga.current_season, saga.current_year)
             )
+            # Applied seasons change xp (scores, casting and lab totals) and
+            # the Diary; the new date changes This Season.
+            for section in _SEASON_SECTIONS:
+                self._refresh_character_section(section)
+            self._refresh_laboratory_section("tab-lab-planning")
             message = f"It is now {saga.current_season} {saga.current_year}."
+            if applied:
+                message += (
+                    f" Seasons applied for {', '.join(c.name for c in applied)}"
+                    " (see each one's Diary)."
+                )
             if added:
                 message += " Added to Wealth: " + ", ".join(
                     f"{name} {amount}" for name, amount in added
@@ -1131,7 +1159,11 @@ class WorkspaceBase(Screen[None]):
             self.notify(escape(message))
 
         self.app.push_screen(
-            AdvanceSeasonScreen(saga.current_season, saga.current_year),
+            AdvanceSeasonScreen(
+                saga.current_season,
+                saga.current_year,
+                seasons.advance_summary(saga),
+            ),
             handle_result,
         )
 

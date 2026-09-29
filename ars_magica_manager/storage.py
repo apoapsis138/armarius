@@ -56,6 +56,23 @@ def save_saga(saga: Saga) -> Path:
     return path
 
 
+def backup_path(saga_id: str) -> Path:
+    """Where backup_saga() keeps a saga's last backup (a subfolder, so
+    list_sagas() never lists it)."""
+    return SAGAS_DIR / "backups" / f"{saga_id}.json"
+
+
+def backup_saga(saga: Saga) -> Path:
+    """Save `saga` as it stands to its backup file (replacing the previous
+    backup) -- taken just before a season is applied, so that season can be
+    undone by copying the backup back over the saga's file."""
+    path = backup_path(saga.id)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    saga.app_version = __version__
+    path.write_text(json.dumps(asdict(saga), indent=2), encoding="utf-8")
+    return path
+
+
 def load_saga(saga_id: str) -> Saga:
     data = json.loads(saga_path(saga_id).read_text(encoding="utf-8"))
     saga = Saga.from_dict(data)

@@ -1,12 +1,14 @@
 """The Character sheet: Info, Characteristics, Abilities, traits, Health, Arts,
-Raw Vis, Hermetic Background, Known Spells and Inventory."""
+Raw Vis, Hermetic Background, Known Spells, Inventory, This Season and the
+Diary."""
 
 from __future__ import annotations
 
 from typing import Any
 
+from ... import laboratories as lab_text
 from ... import possessions as pos
-from ... import sourcebooks, storage
+from ... import seasons, sourcebooks, storage
 from ... import spells as spl
 from ...markup import escape
 from ...models import (
@@ -16,15 +18,18 @@ from ...models import (
     Background,
     Character,
     Description,
+    DiaryEntry,
     HermeticBackground,
     KnownSpell,
     Possession,
+    SeasonPlan,
     Wounds,
     add_raw_vis,
     assign_laboratory,
     known_fields,
     replace_raw_vis,
 )
+from ...rules import seasons as season_rules
 from ..fields import (
     FieldsDialog,
 )
@@ -39,6 +44,7 @@ from ..forms import (
     _fatigue_fields,
     _hermetic_fields,
     _possession_dialog,
+    _season_plan_dialog,
     _wounds_fields,
 )
 from ..pickers import (
@@ -51,6 +57,7 @@ from ..prompts import (
     _ability_fields,
     _ability_from,
     _ability_problem,
+    _diary_entry_dialog,
     _raw_vis_dialog,
 )
 from .base import (
@@ -593,4 +600,122 @@ class CharacterActions(WorkspaceBase):
             index,
             character.inventory[index].name or "this item",
             "section-inventory",
+        )
+
+    # -- Character: This Season (the season's plan) --
+
+    def _plan_season(self) -> None:
+        """Plan the character's current season, or change the plan."""
+        character = self.selected_character
+        if character is None:
+            return
+        if not season_rules.is_planned(character):
+            self.notify(
+                "Grogs aren't planned season by season: they're updated once a "
+                "year (Grogs, Chapter 5)."
+            )
+            return
+
+        def handle_result(plan: SeasonPlan | None) -> None:
+            if plan is not None:
+                seasons.set_plan(self.saga, plan)
+                self._commit("section-char-season")
+
+        self.app.push_screen(
+            _season_plan_dialog(
+                self.saga, character, seasons.plan_for(self.saga, character)
+            ),
+            handle_result,
+        )
+
+    def _clear_season_plan(self) -> None:
+        """Drop the character's plan for the current season (after
+        confirming)."""
+        character = self.selected_character
+        if character is None:
+            return
+        plan = seasons.plan_for(self.saga, character)
+        if plan is None:
+            self.notify("Nothing is planned for this season.")
+            return
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed and seasons.clear_plan(self.saga, character):
+                self._commit("section-char-season")
+
+        self.app.push_screen(
+            ConfirmScreen(
+                f"Clear {escape(character.name)}'s plan "
+                f"({escape(seasons.plan_summary(self.saga, character, plan))})?"
+            ),
+            handle_confirmed,
+        )
+
+    # -- Character: Diary --
+
+    def _selected_character_diary_entry(self) -> int | None:
+        view = self._character_sheet_view
+        return view.selected_diary_entry() if view is not None else None
+
+    def _character_diary_dialog(self, existing: DiaryEntry | None) -> Any:
+        return _diary_entry_dialog(
+            self.saga.current_year,
+            existing=existing,
+            default_season=self.saga.current_season,
+            activities=[a.label for a in season_rules.ACTIVITIES.values()],
+        )
+
+    def _add_character_diary_entry(self) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+
+        def handle_result(entry: DiaryEntry | None) -> None:
+            if entry is not None:
+                character.diary.append(entry)
+                self._commit("tab-diary")
+
+        self.app.push_screen(self._character_diary_dialog(None), handle_result)
+
+    def _edit_character_diary_entry(self) -> None:
+        """Edit the chosen Diary entry; with none chosen, ask which one."""
+        character = self.selected_character
+        if character is None:
+            return
+
+        def edit(index: int) -> None:
+            def handle_result(entry: DiaryEntry | None) -> None:
+                if entry is not None:
+                    character.diary[index] = entry
+                    self._commit("tab-diary")
+
+            self.app.push_screen(
+                self._character_diary_dialog(character.diary[index]), handle_result
+            )
+
+        self._chosen_or_pick(
+            self._selected_character_diary_entry(),
+            [label for _, label in lab_text.diary_rows(character.diary)],
+            title="Edit which Diary Entry?",
+            empty="No Diary entries to edit.",
+            then=edit,
+        )
+
+    def _remove_character_diary_entry(self) -> None:
+        """Delete the chosen Diary entry (after confirming); with none
+        chosen, ask which one first."""
+        character = self.selected_character
+        if character is None:
+            return
+        self._chosen_or_pick(
+            self._selected_character_diary_entry(),
+            [label for _, label in lab_text.diary_rows(character.diary)],
+            title="Remove a Diary Entry",
+            empty="No Diary entries to remove.",
+            then=lambda index: self._confirm_delete(
+                character.diary,
+                index,
+                character.diary[index].name or "this entry",
+                "tab-diary",
+            ),
         )

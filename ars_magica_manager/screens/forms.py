@@ -27,7 +27,7 @@ from textual.widgets import (
 from textual.widgets.option_list import Option
 
 from .. import books as bk
-from .. import catalog, faith, sourcebooks, storage
+from .. import catalog, faith, seasons, sourcebooks, storage
 from .. import economics as eco
 from .. import enchanted_devices as ed
 from .. import familiars as fam
@@ -91,12 +91,15 @@ from ..models import (
     Laboratory,
     MasteryAbility,
     Saga,
+    SeasonPlan,
     ShapeMaterialBonus,
     Spell,
     Wounds,
+    XpAllocation,
     new_instance_id,
 )
 from ..rules import options as rule_options
+from ..rules import seasons as season_rules
 from ..rules import spell_levels
 from .fields import (
     _EMPHASIS_HINT,
@@ -955,6 +958,140 @@ def _fatigue_fields(level: str) -> list[DialogField]:
             options=[(level.title(), level) for level in FATIGUE_LEVELS],
         )
     ]
+
+
+def _season_plan_from(
+    saga: Saga, character: Character, values: dict[str, Any]
+) -> SeasonPlan:
+    """The plan the season dialog's values describe (hidden fields are
+    missing from `values`, so everything is read with a default)."""
+    activity = values.get("activity") or ""
+    allocations = [
+        XpAllocation(values[f"subject_{n}"], values.get(f"points_{n}") or 0)
+        for n in range(1, season_rules.MAX_SUBJECTS + 1)
+        if values.get(f"subject_{n}")
+    ]
+    return SeasonPlan(
+        character_id=character.id,
+        year=saga.current_year,
+        season=saga.current_season,
+        activity=activity,
+        allocations=allocations,
+        source_quality=values.get("source_quality"),
+        months_lost=values.get("months_lost") or 0,
+        details=values.get("details") or "",
+    )
+
+
+def _season_plan_dialog(
+    saga: Saga, character: Character, existing: SeasonPlan | None
+) -> FieldsDialog[SeasonPlan]:
+    """Plan `character`'s current season (STORY-903): the activity, what
+    its experience goes into, and notes. The line above Save shows what the
+    season will give, worked out as the form is filled in."""
+    activities = season_rules.activities_for(character)
+    options = seasons.subject_options(saga, character)
+    shares = existing.allocations if existing else []
+
+    def activity_is(*keys: str) -> Callable[[dict[str, Any]], bool]:
+        return lambda values: values.get("activity") in keys
+
+    def share(n: int) -> XpAllocation | None:
+        return shares[n - 1] if len(shares) >= n else None
+
+    subject_fields: list[DialogField] = []
+    for n in range(1, season_rules.MAX_SUBJECTS + 1):
+        allocation = share(n)
+        if n == 1:
+            shown = activity_is(
+                season_rules.EXPOSURE, season_rules.PRACTICE, season_rules.ADVENTURE
+            )
+        elif n == 2:
+            shown = activity_is(season_rules.EXPOSURE, season_rules.ADVENTURE)
+        else:
+            shown = activity_is(season_rules.ADVENTURE)
+        subject_fields.append(
+            DialogField(
+                f"subject_{n}",
+                "Experience in" if n == 1 else f"...and in ({n})",
+                "select",
+                allocation.subject if allocation else None,
+                options=options,
+                allow_blank=True,
+                show_if=shown,
+                hint=(
+                    "Exposure: 2 xp in one, or 1 each in two. Adventure: at "
+                    "most 5 points of Source Quality to each."
+                    if n == 1
+                    else ""
+                ),
+            )
+        )
+        subject_fields.append(
+            DialogField(
+                f"points_{n}",
+                f"Source Quality to ({n})",
+                "optint",
+                allocation.points if allocation and allocation.points else None,
+                show_if=activity_is(season_rules.ADVENTURE),
+            )
+        )
+    fields = [
+        DialogField(
+            "activity",
+            "Activity",
+            "select",
+            existing.activity if existing else None,
+            options=[(a.label, a.key) for a in activities],
+            required=True,
+            hint="The line above Save shows what the season will give.",
+        ),
+        DialogField(
+            "source_quality",
+            "Source Quality",
+            "optint",
+            existing.source_quality if existing else None,
+            show_if=activity_is(season_rules.PRACTICE, season_rules.ADVENTURE),
+            hint=(
+                "Practice: blank for 4 (5 for a spell's Mastery). Adventure: "
+                "the storyguide's 5 to 10."
+            ),
+        ),
+        *subject_fields,
+        DialogField(
+            "months_lost",
+            "Months lost (0-3)",
+            "int",
+            existing.months_lost if existing else 0,
+            show_if=activity_is(season_rules.EXPOSURE, season_rules.PRACTICE),
+            hint="Each full month lost to distractions cuts the total by a third.",
+        ),
+        DialogField(
+            "details",
+            "Notes",
+            "area",
+            existing.details if existing else "",
+            hint=_EMPHASIS_HINT,
+        ),
+    ]
+
+    def problem(values: dict[str, Any]) -> str | None:
+        plan = _season_plan_from(saga, character, values)
+        found = season_rules.problems(character, plan)
+        if not found and plan.activity == season_rules.OTHER and not plan.details:
+            return "Say in Notes what the season is spent on."
+        return found[0] if found else None
+
+    return FieldsDialog(
+        f"Plan {escape(character.name)}'s Season "
+        f"({saga.current_season} {saga.current_year})",
+        fields,
+        validate=problem,
+        live=lambda values: seasons.live_text(
+            saga, character, _season_plan_from(saga, character, values)
+        ),
+        build=lambda values: _season_plan_from(saga, character, values),
+    )
 
 
 def _hermetic_fields(hermetic: HermeticBackground) -> list[DialogField]:

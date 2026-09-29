@@ -718,12 +718,12 @@
         "V": "(disabled)"
       }
     },
-    "TabPane#tab-lab": {
-      "active": "section-char-info",
+    "SheetSection#section-char-season": {
+      "active": "section-char-season",
       "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "FieldsDialog: Edit Character Info",
+        "a": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
+        "A": "notice: Nothing is planned for this season.",
+        "e": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
         "r": "(disabled)",
         "i": "(disabled)",
         "u": "(disabled)",
@@ -733,11 +733,11 @@
       }
     },
     "TabPane#tab-diary": {
-      "active": "section-char-info",
+      "active": "tab-diary",
       "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "FieldsDialog: Edit Character Info",
+        "a": "FieldsDialog: Add a Diary Entry",
+        "A": "notice: No Diary entries to remove.",
+        "e": "notice: No Diary entries to edit.",
         "r": "(disabled)",
         "i": "(disabled)",
         "u": "(disabled)",
@@ -778,6 +778,20 @@
     },
     "TabPane#tab-lab-planning": {
       "active": "tab-lab-planning",
+      "keys": {
+        "a": "(disabled)",
+        "A": "(disabled)",
+        "e": "(disabled)",
+        "r": "(disabled)",
+        "i": "(disabled)",
+        "u": "(disabled)",
+        "I": "(disabled)",
+        "v": "(disabled)",
+        "V": "(disabled)"
+      }
+    },
+    "TabPane#tab-lab-totals": {
+      "active": "tab-lab-totals",
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",

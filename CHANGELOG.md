@@ -9,6 +9,25 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 1.3.0 — 2026-09-29
+
+Seasons can be planned and played out (the start of Phase 3).
+
+- Each character sheet has a new Planning tab, just before the Diary. Plan
+  the season there: Work / Exposure, Practice (including a spell's
+  Mastery), Adventure, or Other for anything else. While you fill it in,
+  the plan shows what the season will give and the rule behind it.
+- Advancing the season (t) warns about magi and companions with nothing
+  planned, works out every plan from where things stood before the season
+  (one character's results can't change another's that season), backs the
+  saga up to data/sagas/backups, then adds the experience and writes each
+  character's Diary.
+- Characters have a Diary, like laboratories: an entry for every season
+  played out, and entries you add yourself.
+- A magus's Lab Totals moved from the character sheet to a new Lab Totals
+  tab on their laboratory's sheet. The laboratory's Planning tab shows
+  what its owner has planned for the season.
+
 ## 1.2.2 — 2026-09-29
 
 The app is quicker to use.

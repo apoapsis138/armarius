@@ -2630,12 +2630,13 @@ async def test_arts_and_spells_tabs_are_absent_for_non_magi():
         assert _is_form(app.screen, "Edit Character Info")
 
 
-async def test_switching_to_laboratory_or_diary_tab_falls_back_to_top_panel():
-    """Laboratory and Diary are flat placeholder tabs (no Collapsible) --
-    switching to either must clear a stale Collapsible focus from whatever
-    tab was active before, so 'e' falls back to editing the top panel
-    instead of silently re-dispatching to the section that's no longer
-    visible (see CLAUDE.md's flat-tab focus-tracking gotcha)."""
+async def test_switching_tabs_moves_a_a_e_with_the_tab():
+    """Switching tabs must clear a stale Collapsible focus from whatever tab
+    was active before (see CLAUDE.md's flat-tab focus-tracking gotcha), so
+    'e' never re-dispatches to a section that's no longer visible. Planning
+    has a section (STORY-925): switching to it focuses This Season. The
+    Diary is a flat tab with its own a/A/e. (The Laboratory tab, the old
+    flat tab this covered, moved to the laboratory sheet as Lab Totals.)"""
     storage.save_saga(_saga_with_bare_character())
 
     app = ArsMagicaManagerApp()
@@ -2646,24 +2647,18 @@ async def test_switching_to_laboratory_or_diary_tab_falls_back_to_top_panel():
         assert app.screen._active_section() == "section-aging"
 
         view = app.screen._character_sheet_view
-        view.query_one(TabbedContent).active = "tab-lab"
+        view.query_one(TabbedContent).active = "tab-planning"
         await pilot.pause()
-
-        assert app.screen._active_section() == "section-char-info"
+        assert app.screen._active_section() == "section-char-season"
         await pilot.press("e")
         await pilot.pause()
-        assert _is_form(app.screen, "Edit Character Info")
+        assert _is_form(app.screen, "Plan Leandro's Season (Spring 1220)")
         await pilot.press("escape")
         await pilot.pause()
 
-        # Same check for Diary, switching from a tab with no Collapsible
-        # (Laboratory) to another flat tab.
         view.query_one(TabbedContent).active = "tab-diary"
         await pilot.pause()
-        assert app.screen._active_section() == "section-char-info"
-        await pilot.press("e")
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Character Info")
+        assert app.screen._active_section() == "tab-diary"
 
 
 async def test_creating_a_second_character_after_viewing_the_first_works():
@@ -3730,6 +3725,7 @@ async def test_lab_top_panel_layout_is_stable_across_tabs():
 
         for tab_id in (
             "tab-lab-planning",
+            "tab-lab-totals",
             "tab-lab-vf",
             "tab-lab-attributes",
             "tab-lab-inventory",
@@ -9785,8 +9781,9 @@ async def test_the_new_year_adds_each_covenants_surplus_to_its_wealth():
         assert isinstance(app.screen, AdvanceSeasonScreen)
         note = str(app.screen.query_one("#advance-year-note", Static).render())
         assert "surplus is added to its Wealth" in note
-        # The dialog hugs its content rather than filling the screen.
-        assert app.screen.query_one("#advance-dialog").region.height < 20
+        # The dialog hugs its content (now including who has nothing
+        # planned, STORY-903) rather than filling the screen.
+        assert app.screen.query_one("#advance-dialog").region.height < 25
         app.screen.query_one("#btn-advance", Button).press()
         await wait_until(pilot, lambda: _saved_economics().wealth == 5 + surplus)
 

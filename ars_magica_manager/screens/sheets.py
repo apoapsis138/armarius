@@ -23,7 +23,7 @@ from textual.widgets import (
 from textual.widgets._collapsible import CollapsibleTitle
 
 from .. import books as bk
-from .. import casting_text, catalog, faith, lab_planning
+from .. import casting_text, catalog, faith, lab_planning, seasons
 from .. import covenant_diary as cov_diary
 from .. import economics as eco
 from .. import enchanted_devices as ed
@@ -78,7 +78,6 @@ from .widgets import (
     TwoColumns,
     _boon_hook_names,
     _sign_colored,
-    _tab_placeholder,
     _tier_text,
     counted,
     match_colour,
@@ -767,8 +766,8 @@ class CharacterSheetView(SheetView):
     permanently expanded, same PinnedCollapsible pattern as
     CovenantSheetView/LaboratorySheetView) above the tabbed body. This is
     STORY-207's finished layout -- tab order: Description, Abilities,
-    Virtues & Flaws, Hermetic Magic (magi only), Inventory, Laboratory
-    (magi only), Diary.
+    Virtues & Flaws, Hermetic Magic (magi only), Inventory, Planning, Diary.
+    (A magus's Lab Totals are on their laboratory's sheet, STORY-925.)
 
     - Description (tab, id "tab-description"): Hermetic Background (magi
       only), Biographical Detail (merged Background + Description + the
@@ -796,13 +795,13 @@ class CharacterSheetView(SheetView):
       of the two duplicated instances -- see Hermetic Magic above),
       Personal Gear (renamed from "Inventory", same character.inventory
       data), Books.
-    - Laboratory (tab, id "tab-lab", magi only) and Diary (tab, id
-      "tab-diary", every character type): flat placeholder panes, no
-      Collapsible, mirroring CovenantSheetView's own Diary placeholder
-      (see the module-level _tab_placeholder() helper both share). Neither
-      is in _CHARACTER_DISPATCH_TABS, so switching to either clears focus
-      and 'e' falls back to editing the top panel -- the flat-tab
-      focus-fallback logic every earlier slice set up for exactly this.
+    - Planning (tab, id "tab-planning", every character type): This Season,
+      the season's plan and what it will give (STORY-903/925); a grog's
+      says grogs are updated yearly.
+    - Diary (tab, id "tab-diary", every character type): a flat pane like
+      the laboratory's Diary -- the entries written as seasons are applied
+      (editable), with the details panel docked below. In
+      _CHARACTER_DISPATCH_TABS, so a/A/e act on it.
     """
 
     DEFAULT_CSS = """
@@ -832,10 +831,9 @@ class CharacterSheetView(SheetView):
             if character.type == "magus":
                 yield self._tab("Hermetic Magic", "tab-hermetic", self._hermetic_tab)
             yield self._tab("Inventory", "tab-inventory", self._inventory_tab)
-            if character.type == "magus":
-                yield self._tab(
-                    "Laboratory", "tab-lab", self._scrolling(self._laboratory_tab)
-                )
+            yield self._tab(
+                "Planning", "tab-planning", self._scrolling(self._planning_tab)
+            )
             yield self._tab("Diary", "tab-diary", self._diary_tab)
 
     def _abilities_tab(self) -> ComposeResult:
@@ -850,11 +848,41 @@ class CharacterSheetView(SheetView):
                 id="ability-info",
             )
 
-    def _laboratory_tab(self) -> ComposeResult:
-        yield self._static("tab-lab", self._laboratory_text, id="char-lab-content")
-
     def _diary_tab(self) -> ComposeResult:
-        yield Static(_tab_placeholder("Diary"))
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                yield self._list(
+                    "tab-diary",
+                    lambda: lab_text.diary_rows(self.character.diary),
+                    id="char-diary-list",
+                )
+            yield self._panel(
+                "tab-diary",
+                lambda: lab_text.diary_info_text(self.character.diary, None),
+                id="char-diary-info",
+            )
+
+    def _planning_tab(self) -> ComposeResult:
+        """This Season: the season's plan and what it will give."""
+        with SheetSection(
+            title=self._titled(
+                "section-char-season",
+                "section-char-season",
+                lambda: (
+                    f"This Season ({self.saga.current_season} {self.saga.current_year})"
+                ),
+            ),
+            id="section-char-season",
+        ):
+            yield self._static(
+                "section-char-season",
+                lambda: seasons.plan_text(self.saga, self.character),
+                id="char-season-content",
+            )
+
+    def selected_diary_entry(self) -> int | None:
+        """Index into character.diary of the chosen row, or None."""
+        return self.query_one("#char-diary-list", SelectableList).selected_data_index
 
     def _top_panel(self) -> ComposeResult:
         """The always-visible info and Characteristics panels above the
@@ -1194,6 +1222,12 @@ class CharacterSheetView(SheetView):
 
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
         list_id = event.selectable_list.id or ""
+        if list_id == "char-diary-list":
+            event.stop()
+            self.query_one("#char-diary-info", Static).update(
+                lab_text.diary_info_text(self.character.diary, event.data_index)
+            )
+            return
         if list_id == "abilities-list":
             event.stop()
             self.query_one("#ability-info", Static).update(
@@ -1336,13 +1370,6 @@ class CharacterSheetView(SheetView):
 
     def _reputation_rows(self) -> list[tuple[int | None, str]]:
         return st.trait_rows(self.character.reputations)
-
-    def _laboratory_text(self) -> str:
-        """The magus's Lab Totals in the laboratory assigned to them."""
-        lab = self.saga.laboratory(self.character.assigned_lab_id)
-        if lab is None:
-            return "[dim]No laboratory assigned: Lab Totals need one.[/]"
-        return lab_planning.lab_totals_text(self.saga, lab, self.character)
 
     def _wounds_text(self) -> str:
         return st.character_wounds_text(self.character)
@@ -1559,7 +1586,7 @@ LAB_SPECIALIZATION_SECTIONS = (
 
 #: The lab sheet sections whose changes move its Lab Totals.
 _LAB_TOTAL_SECTIONS: tuple[str, ...] = (
-    "tab-lab-planning",
+    "tab-lab-totals",
     "section-lab-identity",
     "section-lab-characteristics",
     "section-lab-specializations",
@@ -1642,6 +1669,9 @@ class LaboratorySheetView(SheetView):
             yield self._tab(
                 "Planning", "tab-lab-planning", self._scrolling(self._planning_tab)
             )
+            yield self._tab(
+                "Lab Totals", "tab-lab-totals", self._scrolling(self._totals_tab)
+            )
             yield self._tab("Virtues & Flaws", "tab-lab-vf", self._virtues_flaws_tab)
             yield self._tab("Attributes", "tab-lab-attributes", self._attributes_tab)
             yield self._tab("Inventory", "tab-lab-inventory", self._inventory_tab)
@@ -1649,9 +1679,16 @@ class LaboratorySheetView(SheetView):
 
     def _planning_tab(self) -> ComposeResult:
         yield self._static(
-            _LAB_TOTAL_SECTIONS,
-            self._planning_text,
+            ("tab-lab-planning", "section-lab-identity"),
+            lambda: seasons.lab_planning_text(self.saga, self.laboratory),
             id="lab-planning-content",
+        )
+
+    def _totals_tab(self) -> ComposeResult:
+        yield self._static(
+            _LAB_TOTAL_SECTIONS,
+            self._lab_totals_text,
+            id="lab-totals-content",
         )
 
     def _diary_tab(self) -> ComposeResult:
@@ -2135,7 +2172,7 @@ class LaboratorySheetView(SheetView):
             )
         return "\n".join(lines)
 
-    def _planning_text(self) -> str:
+    def _lab_totals_text(self) -> str:
         lab = self.laboratory
         return lab_planning.lab_totals_text(
             self.saga, lab, self.saga.character(lab.owner_id)

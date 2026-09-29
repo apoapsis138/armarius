@@ -1,6 +1,7 @@
-"""The laboratory Planning tab's text (and the magus's Laboratory tab): the
-owner's Lab Total for every Technique + Form pair, and what goes into them
-(rules.lab, STORY-801). Like the other domain modules it returns markup."""
+"""The laboratory's Lab Totals tab: the owner's Lab Total for every
+Technique + Form pair, and what goes into them (rules.lab, STORY-801; moved
+off the Planning tab and the magus's own sheet by STORY-925). Like the other
+domain modules it returns markup."""
 
 from __future__ import annotations
 

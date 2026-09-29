@@ -18,7 +18,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Laboratory  Diary
+   Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Planning  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -86,7 +86,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Laboratory  Diary
+   Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Planning  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   General
@@ -154,7 +154,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Laboratory  Diary
+   Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Planning  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -222,7 +222,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Laboratory  Diary
+   Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Planning  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Talisman: Ring  Opened 0/0  0 attunements
@@ -290,7 +290,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Laboratory  Diary
+   Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Planning  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -338,7 +338,7 @@
 
 
 
-===== tab-lab
+===== tab-planning
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Leandro
@@ -358,30 +358,30 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Laboratory  Diary
+   Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Planning  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Lab Totals for Leandro (Technique + Form + the rest):
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ This Season (Spring 1220)
 
-                 An   Aq   Au   Co   He   Ig   Im   Me   Te   Vi
-  Creo           -1   -1    0   -1   -1    0    3   -1   -1   -1
-  Intellego       1    1    2    1    1    2    5    1    1    1
-  Muto           -1   -1    0   -1   -1    0    3   -1   -1   -1
-  Perdo          -1   -1    0   -1   -1    0    3   -1   -1   -1
-  Rego           -1   -1    0   -1   -1    0    3   -1   -1   -1
+      Nothing planned for Spring 1220. Press e to plan the season.
 
-  Every total adds: Intelligence +0, Magic Theory +0, Aura (Magic 1) +1, General Quality -2.
-  Art Specializations, in totals using that Art: Intellego +2, Auram +1, Ignem +1, Imaginem +4.
 
-  By activity (on top of the grid):
-  Inventing spells: nothing extra.
-  Enchanting items: nothing extra.
-  Working from a Lab Text: Adept Laboratory Student +6.
-  Binding a familiar: nothing extra.
-  Longevity Ritual: nothing extra (Creo Corpus -1: aging rolls -0).
-  Extracting vis: nothing extra (Creo Vim -1: 1 pawns).
-  Experimenting: + a simple die.
-  Raw vis in one season: up to 0 pawns; shape and material bonuses up to +0 (both from Magic Theory).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -426,10 +426,10 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Laboratory  Diary
+   Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Planning  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  The Diary tab isn't built yet -- coming in a future update.
+  (none recorded)
 
 
 
@@ -461,7 +461,7 @@
 
 
 
-
+    Select a Diary entry to see its details.
 
 
 

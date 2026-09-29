@@ -467,12 +467,6 @@ class SheetSection(Collapsible):
         super().__init__(*children, title=title, **kwargs)
 
 
-def _tab_placeholder(tab_name: str) -> str:
-    """Text for a not-yet-built flat placeholder tab (e.g. Diary, both on
-    the covenant and character sheets)."""
-    return f"The {tab_name} tab isn't built yet -- coming in a future update."
-
-
 #: The gap, in columns, between side-by-side lists (sections).
 LIST_COLUMN_GAP = 2
 #: The gap between side-by-side blocks of text (info panels, totals).

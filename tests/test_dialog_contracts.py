@@ -454,6 +454,37 @@ CONTRACTS: dict[str, Contract] = {
         expected=(1221, "Study", "Moved in", "Boxes"),
         invalid={"Year": "-"},
     ),
+    "plan a season": Contract(
+        prefill={"Activity": "exposure", "Months lost": "0", "Notes": ""},
+        edits={
+            "Activity": "practice",
+            "Experience in": "ability:Latin",
+            "Notes": "Reading aloud",
+        },
+        saved=lambda s: [
+            (p.activity, [a.subject for a in p.allocations], p.details)
+            for p in s.season_plans
+        ],
+        expected=[("practice", ["ability:Latin"], "Reading aloud")],
+        invalid={"Months lost": "-"},
+    ),
+    "add character diary entry": Contract(
+        prefill={"Year": "1220", "Season": "Spring", "Name": ""},
+        edits={
+            "Year": "1221",
+            "Activity Type": "Practice",
+            "Name": "Latin lessons",
+            "Details": "At the abbey",
+        },
+        saved=lambda s: (
+            _char(s).diary[-1].year,
+            _char(s).diary[-1].activity,
+            _char(s).diary[-1].name,
+            _char(s).diary[-1].details,
+        ),
+        expected=(1221, "Practice", "Latin lessons", "At the abbey"),
+        invalid={"Year": "-"},
+    ),
     "add covenant diary entry": Contract(
         prefill={"Year": "1220", "Season": "Spring", "Name": ""},
         edits={

@@ -4,7 +4,7 @@ open."""
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from typing import Any, ClassVar
 
 from textual.app import ComposeResult
@@ -341,7 +341,10 @@ def _diary_entry_dialog(
     default_year: int,
     existing: DiaryEntry | None = None,
     default_season: str = SEASONS[0],
+    activities: Sequence[str] = LAB_ACTIVITIES,
 ) -> FieldsDialog[DiaryEntry]:
+    """Add or edit a Diary entry: a laboratory's (`activities` the lab
+    activities) or a character's (the seasonal activities)."""
     return FieldsDialog(
         "Add a Diary Entry" if existing is None else "Edit a Diary Entry",
         [
@@ -358,7 +361,7 @@ def _diary_entry_dialog(
                 "Activity Type",
                 "select",
                 _attr(existing, "activity", "") or None,
-                options=_pairs(LAB_ACTIVITIES),
+                options=_pairs(activities),
                 allow_blank=True,
             ),
             DialogField(
@@ -506,7 +509,7 @@ class AdvanceSeasonScreen(ModalDialog[bool]):
     }
 
     #advance-dialog {
-        width: 60;
+        width: 72;
         height: auto;
         border: round $accent;
         padding: 1 2;
@@ -519,7 +522,7 @@ class AdvanceSeasonScreen(ModalDialog[bool]):
         margin-top: 1;
     }
 
-    #advance-year-note {
+    #advance-year-note, #advance-plans {
         height: auto;
         margin-top: 1;
     }
@@ -531,10 +534,13 @@ class AdvanceSeasonScreen(ModalDialog[bool]):
     }
     """
 
-    def __init__(self, season: str, year: int) -> None:
+    def __init__(self, season: str, year: int, plans: str = "") -> None:
         super().__init__()
         self.season = season
         self.year = year
+        #: What happens to the season's plans (seasons.advance_summary):
+        #: markup, "" for nothing to say.
+        self.plans = plans
 
     def compose(self) -> ComposeResult:
         new_season, new_year = next_season(self.season, self.year)
@@ -545,6 +551,8 @@ class AdvanceSeasonScreen(ModalDialog[bool]):
                 f"to {new_season} {new_year}?",
                 id="advance-message",
             )
+            if self.plans:
+                yield Static(self.plans, id="advance-plans")
             if new_year != self.year:
                 yield Static(
                     "A new year: each covenant's surplus is added to its Wealth, "
@@ -553,7 +561,12 @@ class AdvanceSeasonScreen(ModalDialog[bool]):
                 )
             yield Static(
                 "Advanced by mistake? Use Set Date (T) to put the date back"
-                + (" (Wealth isn't changed back)." if new_year != self.year else "."),
+                + (" (Wealth isn't changed back)." if new_year != self.year else ".")
+                + (
+                    " The saga is backed up first (data/sagas/backups)."
+                    if self.plans
+                    else ""
+                ),
                 id="advance-note",
             )
             with Horizontal(id="advance-buttons"):

@@ -256,7 +256,7 @@ which entity owns which relationship.
 
 **Phase 2 — Rules Engine**
 - A rules engine that applies the ArM5 formulas consistently across the app,
-  so Phases 3-4 can automate seasons, XP and lab work: Lab, Casting,
+  so Phase 3 can automate seasons, XP and lab work: Lab, Casting,
   Spontaneous and Study totals, scores from XP, dice, derived character
   values, aura and realm modifiers, Penetration and Magic Resistance, spell
   levels, combat, certamen and Mystery initiation totals. Formulas consume
@@ -266,14 +266,24 @@ which entity owns which relationship.
   (compiled from the Ars Magica open content, organised by what the engine
   computes, every rule cited; not committed).
 
-**Phase 3 — Seasonal activity execution**
+**Phase 3 — Seasonal activity execution and long-term events**
 - Run a season: Study (from a book, a teacher, or practice), Lab Activities
   (invent spells, enchant items, extract vis, longevity ritual). Apply
   results (XP, aging, new items/spells) back onto character/lab/covenant
   state. Season log, similar in spirit to Solo's.
-
-**Phase 4 — Long-Term Events**
-- Aging rolls, warping, decrepitude, longevity ritual effects over time.
+- Aging rolls, warping, decrepitude, longevity ritual effects over time
+  (first planned as Phase 4; merged into Phase 3 on 2026-09-29, since the
+  Winter aging roll runs in the same season step).
+- Execution plan: `reference/phase-3-plan.md` (not committed), shaped by
+  `reference/phase-3-goals.md`. Decided: each character's season is a
+  `SeasonPlan` the user locks in (magi on the lab Planning tab, everyone
+  else on the character sheet or the covenant Seasons tab); advancing
+  works out every plan's outcome from the saga as it stood before the
+  season, then applies them all, so a season's results never change that
+  same season; outcomes are written to the character's (and lab's,
+  covenant's) Diary; the saga file is backed up just before applying.
+  Seasons are planned for magi, companions and Mythic Companions; grogs
+  get a yearly update instead.
 
 **Phase 5+ — Polish / open-ended**
 - Character sheet export/printing, multi-saga management UI, possible

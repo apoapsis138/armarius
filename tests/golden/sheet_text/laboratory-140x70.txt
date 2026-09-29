@@ -18,7 +18,75 @@
       Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
-   Planning  Virtues & Flaws  Attributes  Inventory  Diary
+   Planning  Lab Totals  Virtues & Flaws  Attributes  Inventory  Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Leandro: Spring 1220
+
+  Nothing planned for Spring 1220. Plan it on Leandro's Planning tab.
+
+  This tab becomes the laboratory's season planner in a later story; the Lab Totals have their own tab.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-lab-totals
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Tower
+
+      Covenant: Keep                                     Location: (not set)
+      Owner:    Leandro                                  Points:   0
+                                                         Sanctum?: No
+      Aura: 1 (covenant) +0 (modifier) = 1 Magic
+          Edit (e)
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Characteristics
+
+                          Size:            +0 +0 = +0    Safety:     +0 +0 = +0
+      Occupied Size: 0    Refinement:      +0 +0 = +0    Warping:    +0 +0 = +0
+      Free Virtues:  0    General Quality: +0 -2 = -2    Health:     +0 +0 = +0
+      Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
+          Edit (e)
+
+   Planning  Lab Totals  Virtues & Flaws  Attributes  Inventory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Lab Totals for Leandro (Technique + Form + the rest):
@@ -86,7 +154,7 @@
       Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
-   Planning  Virtues & Flaws  Attributes  Inventory  Diary
+   Planning  Lab Totals  Virtues & Flaws  Attributes  Inventory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -154,7 +222,7 @@
       Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
-   Planning  Virtues & Flaws  Attributes  Inventory  Diary
+   Planning  Lab Totals  Virtues & Flaws  Attributes  Inventory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -222,7 +290,7 @@
       Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
-   Planning  Virtues & Flaws  Attributes  Inventory  Diary
+   Planning  Lab Totals  Virtues & Flaws  Attributes  Inventory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -290,7 +358,7 @@
       Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
-   Planning  Virtues & Flaws  Attributes  Inventory  Diary
+   Planning  Lab Totals  Virtues & Flaws  Attributes  Inventory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ○ 1220 Spring  -  Built
