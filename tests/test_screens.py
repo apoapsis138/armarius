@@ -668,8 +668,8 @@ async def test_workspace_tree_has_no_covenants_for_a_fresh_saga():
         await _open_workspace(pilot)
 
         tree = app.screen.query_one("#nav-tree", Tree)
-        # No covenants: just the saga's Spells node.
-        assert [n.data for n in tree.root.children] == [("spells",)]
+        # No covenants: just the saga's Seasons and Spells nodes.
+        assert [n.data for n in tree.root.children] == [("seasons",), ("spells",)]
 
 
 async def test_create_covenant_flow_saves_covenant():
@@ -693,8 +693,12 @@ async def test_create_covenant_flow_saves_covenant():
         assert app.screen.selected_covenant is not None
         assert app.screen.selected_covenant.name == "Fengheld"
         tree = app.screen.query_one("#nav-tree", Tree)
-        # The new covenant, then the Spells node.
-        assert [n.data[0] for n in tree.root.children] == ["covenant", "spells"]
+        # The new covenant, then the Seasons and Spells nodes.
+        assert [n.data[0] for n in tree.root.children] == [
+            "covenant",
+            "seasons",
+            "spells",
+        ]
 
     saga = storage.load_saga("test_saga")
     assert len(saga.covenants) == 1

@@ -26,6 +26,8 @@ from .models import (
     Laboratory,
     Saga,
     SeasonPlan,
+    SeasonRecord,
+    SeasonRecordLine,
 )
 from .rules import seasons as rules
 from .rules import xp as xp_rules
@@ -439,3 +441,73 @@ def season_info_text(saga: Saga, character: Character | None) -> str:
     if character is None:
         return "[dim]Select someone to see their season.[/]"
     return f"[b]{escape(character.name)}[/]\n" + plan_text(saga, character)
+
+
+# -- season records (STORY-911) --------------------------------------------------
+
+
+def make_record(saga: Saga, worked: Sequence[rules.Outcome]) -> SeasonRecord:
+    """The record of the current season: every worked-out plan (made before
+    it is applied), then each magus or companion who had nothing planned."""
+    lines: list[SeasonRecordLine] = []
+    for outcome in worked:
+        character = saga.character(outcome.character_id)
+        if character is None:
+            continue
+        activity = outcome.activity
+        names = spell_names(saga, character)
+        if outcome.ok:
+            result = ", ".join(
+                f"{rules.subject_label(g.subject, names)} +{g.result.xp} xp"
+                for g in outcome.gains
+            )
+        else:
+            result = f"not carried out: {outcome.problems[0]}"
+        lines.append(
+            SeasonRecordLine(
+                character_id=character.id,
+                name=character.name,
+                covenant_id=character.covenant_id,
+                activity=activity.label if activity else outcome.plan.activity,
+                what=plan_subject(saga, character, outcome.plan),
+                result=result,
+            )
+        )
+    lines += [SeasonRecordLine(c.id, c.name, c.covenant_id) for c in unplanned(saga)]
+    return SeasonRecord(saga.current_year, saga.current_season, lines)
+
+
+def record_label(record: SeasonRecord) -> str:
+    """ "Spring 1220 (3 people)": a record's row in the Seasons list."""
+    return f"{record.season} {record.year} ({len(record.lines)} people)"
+
+
+def record_text(saga: Saga, record: SeasonRecord) -> str:
+    """A season's record as markup: grouped by covenant, one line a person
+    with what they did and what it gave."""
+    lines = [f"[b]{record.season} {record.year}[/]"]
+    if not record.lines:
+        return lines[0] + "\n[dim]Nobody's season was planned or applied.[/]"
+    order: list[str | None] = []
+    for line in record.lines:
+        if line.covenant_id not in order:
+            order.append(line.covenant_id)
+    for covenant_id in order:
+        covenant = saga.covenant(covenant_id)
+        heading = covenant.name if covenant else "No covenant"
+        lines += ["", f"[b]{escape(heading)}[/]"]
+        for line in record.lines:
+            if line.covenant_id != covenant_id:
+                continue
+            if not line.activity:
+                did = "[$text-warning]nothing planned[/]"
+            else:
+                did = escape(
+                    f"{line.activity}: {line.what}" if line.what else line.activity
+                )
+                if line.result.startswith("not carried out"):
+                    did += f" -- [$text-error]{escape(line.result)}[/]"
+                elif line.result:
+                    did += f" -- {escape(line.result)}"
+            lines.append(f"  {escape(line.name)}: {did}")
+    return "\n".join(lines)

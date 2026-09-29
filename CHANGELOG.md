@@ -9,6 +9,16 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 1.5.0 — 2026-09-29
+
+- After a season with plans is played out (t), a summary shows what each
+  person did and what it gave, by covenant, and who had nothing planned.
+- A new Seasons entry in the tree lists past seasons, newest first; choose
+  one to read its record again.
+- Edit Saga has "Keep season records" (on by default). Off, the summary
+  still shows after each season, but it isn't saved; the characters'
+  Diaries keep their entries either way.
+
 ## 1.4.0 — 2026-09-29
 
 - Each covenant has a new Seasons tab, after Inhabitants: its magi,

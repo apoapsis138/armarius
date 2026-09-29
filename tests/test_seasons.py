@@ -588,3 +588,128 @@ async def test_plan_a_season_from_the_covenant_seasons_tab():
         assert "Other: Visiting family" in text
     saga = storage.load_saga("test_saga")
     assert [p.details for p in saga.season_plans] == ["Visiting family"]
+
+
+# -- season records (STORY-911) ----------------------------------------------------
+
+
+def test_a_seasons_record_lists_everyone_by_covenant():
+    saga = everything_saga()
+    seasons.set_plan(
+        saga,
+        SeasonPlan(
+            "mag1", 1220, "Spring", rules.PRACTICE, [XpAllocation("ability:Latin")]
+        ),
+    )
+    record = seasons.make_record(saga, seasons.resolve(saga))
+    assert (record.year, record.season) == (1220, "Spring")
+    assert [(r.name, r.activity, r.what, r.result) for r in record.lines] == [
+        ("Leandro", "Practice", "Latin", "Latin +4 xp"),
+        ("Alys", "", "", ""),
+    ]
+    assert seasons.record_label(record) == "Spring 1220 (2 people)"
+    text = strip_markup(seasons.record_text(saga, record)).splitlines()
+    assert text == [
+        "Spring 1220",
+        "",
+        "Keep",
+        "  Leandro: Practice: Latin -- Latin +4 xp",
+        "  Alys: nothing planned",
+    ]
+
+
+def test_a_plan_that_cant_be_carried_out_is_recorded_as_such():
+    saga = everything_saga()
+    seasons.set_plan(
+        saga,
+        SeasonPlan("mag1", 1220, "Spring", rules.PRACTICE, [XpAllocation("art:Creo")]),
+    )
+    record = seasons.make_record(saga, seasons.resolve(saga))
+    assert record.lines[0].result.startswith("not carried out: Arts can't be practised")
+
+
+def test_records_survive_a_save():
+    saga = everything_saga()
+    record = seasons.make_record(saga, seasons.resolve(saga))
+    saga.season_records = [record]
+    saga.keep_season_records = False
+    storage.save_saga(saga)
+    loaded = storage.load_saga(saga.id)
+    assert loaded.season_records == [record]
+    assert loaded.keep_season_records is False
+
+
+async def _advance(pilot, app):
+    await pilot.press("enter")  # saga picker -> workspace
+    await pilot.pause()
+    workspace = app.screen
+    await pilot.press("t")
+    await pilot.pause()
+    app.screen.query_one("#btn-advance", Button).press()
+    assert await wait_until(
+        pilot, lambda: type(app.screen).__name__ == "SeasonSummaryScreen"
+    )
+    return workspace
+
+
+async def test_advancing_shows_the_seasons_results_and_keeps_them():
+    saga = everything_saga()
+    seasons.set_plan(
+        saga,
+        SeasonPlan(
+            "mag1", 1220, "Spring", rules.PRACTICE, [XpAllocation("ability:Latin")]
+        ),
+    )
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        workspace = await _advance(pilot, app)
+        text = strip_markup(str(app.screen.query_one("#summary-text", Static).content))
+        assert "Leandro: Practice: Latin -- Latin +4 xp" in text
+        await pilot.press("enter")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+        tree = workspace.query_one("#nav-tree", Tree)
+        node = _find(tree, ("seasons",))
+        assert str(node.label) == "Seasons (1)"
+        tree.select_node(node)
+        assert await wait_until(
+            pilot, lambda: bool(workspace.query("#season-record-text"))
+        )
+        shown = strip_markup(
+            str(workspace.query_one("#season-record-text", Static).content)
+        )
+        assert shown.splitlines()[0] == "Spring 1220"
+    assert len(storage.load_saga("test_saga").season_records) == 1
+
+
+async def test_with_records_off_the_summary_shows_but_nothing_is_kept():
+    saga = everything_saga()
+    saga.keep_season_records = False
+    seasons.set_plan(
+        saga, SeasonPlan("mag1", 1220, "Spring", rules.OTHER, details="Rest")
+    )
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _advance(pilot, app)
+        note = str(app.screen.query_one("#summary-note", Static).content)
+        assert "Season records are off" in note
+    assert storage.load_saga("test_saga").season_records == []
+
+
+async def test_a_season_with_nothing_planned_is_neither_summarised_nor_kept():
+    storage.save_saga(everything_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await pilot.press("enter")
+        await pilot.pause()
+        workspace = app.screen
+        await pilot.press("t")
+        await pilot.pause()
+        app.screen.query_one("#btn-advance", Button).press()
+        assert await wait_until(
+            pilot, lambda: workspace.saga.current_season == "Summer"
+        )
+        await pilot.pause()
+        assert app.screen is workspace
+    assert storage.load_saga("test_saga").season_records == []

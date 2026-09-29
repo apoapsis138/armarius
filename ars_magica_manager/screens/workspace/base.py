@@ -78,6 +78,7 @@ from ..prompts import (
     _date_fields,
     _scored_trait_dialog,
 )
+from ..season_records import SeasonRecordsView, SeasonSummaryScreen
 from ..sheets import (
     _LIBRARY_SECTIONS,
     DEVICE_SECTIONS,
@@ -194,6 +195,7 @@ class NodeKind(StrEnum):
     LABORATORY_GROUP = "laboratory_group"
     LABORATORY = "laboratory"
     SPELLS = "spells"
+    SEASONS = "seasons"
     BOOK_GROUP = "book_group"
 
 
@@ -443,6 +445,10 @@ class WorkspaceBase(Screen[None]):
             tree.root.add_leaf(
                 f"Unassigned Books ({len(loose_books)})", data=(NodeKind.BOOK_GROUP,)
             )
+        tree.root.add_leaf(
+            f"Seasons ({len(self.saga.season_records)})",
+            data=(NodeKind.SEASONS,),
+        )
         tree.root.add_leaf(self._spells_label(), data=(NodeKind.SPELLS,))
 
     def _add_character_node(self, parent, character: Character) -> None:
@@ -539,6 +545,9 @@ class WorkspaceBase(Screen[None]):
         elif kind == NodeKind.SPELLS:
             self.selected_covenant = None
             await self._set_detail(SpellListView(self.saga))
+        elif kind == NodeKind.SEASONS:
+            self.selected_covenant = None
+            await self._set_detail(SeasonRecordsView(self.saga))
         elif kind == NodeKind.BOOK_GROUP:
             self.selected_covenant = None
             await self._set_detail(
@@ -1133,9 +1142,12 @@ class WorkspaceBase(Screen[None]):
             # Every plan's outcome is worked out before any is applied, so a
             # season's results can't change that same season (STORY-903).
             worked = seasons.resolve(saga)
+            record = seasons.make_record(saga, worked)
             if worked:
                 storage.backup_saga(saga)
             applied = seasons.apply(saga, worked)
+            if saga.keep_season_records and worked:
+                saga.season_records.append(record)
             # A new year (Winter -> Spring): each covenant's surplus goes into
             # its Wealth before the date moves on.
             added = eco.close_all_years(saga) if new_year else []
@@ -1148,6 +1160,10 @@ class WorkspaceBase(Screen[None]):
                 self._refresh_character_section(section)
             self._refresh_laboratory_section("tab-lab-planning")
             self._refresh_covenant_section("tab-cov-seasons")
+            if saga.keep_season_records and worked:
+                self._rebuild_tree()
+            if worked:
+                self.app.push_screen(SeasonSummaryScreen(saga, record))
             message = f"It is now {saga.current_season} {saga.current_year}."
             if applied:
                 message += (

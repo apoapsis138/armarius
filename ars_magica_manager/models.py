@@ -2246,6 +2246,43 @@ class SeasonPlan:
 
 
 @dataclass
+class SeasonRecordLine:
+    """One person's line in a season's record (STORY-911): kept as the text
+    it showed, so it still reads right after the character is renamed or
+    deleted."""
+
+    character_id: str
+    name: str
+    covenant_id: str | None = None
+    #: The activity's label; "" when nothing was planned.
+    activity: str = ""
+    #: What it was on ("Latin", Other's notes...).
+    what: str = ""
+    #: The result ("Latin +4 xp"), or why the plan wasn't carried out.
+    result: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> SeasonRecordLine:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class SeasonRecord:
+    """What happened in one season, saved when it is applied if the saga
+    keeps season records."""
+
+    year: int
+    season: str
+    lines: list[SeasonRecordLine] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> SeasonRecord:
+        d = dict(data)
+        d["lines"] = [SeasonRecordLine.from_dict(line) for line in d.get("lines", [])]
+        return cls(**known_fields(cls, d))
+
+
+@dataclass
 class Saga:
     id: str
     name: str
@@ -2271,6 +2308,10 @@ class Saga:
     #: Season plans not yet applied (STORY-903); a plan is removed when its
     #: season is applied.
     season_plans: list[SeasonPlan] = field(default_factory=list)
+    #: Whether a record of each applied season is kept (STORY-911).
+    keep_season_records: bool = True
+    #: Those records, oldest first.
+    season_records: list[SeasonRecord] = field(default_factory=list)
     #: The app version that last saved this saga (storage.save_saga sets it;
     #: "" for a save older than versioning), for upgrading old saves later.
     app_version: str = ""
@@ -2301,6 +2342,9 @@ class Saga:
         ]
         d["spells"] = [Spell.from_dict(s) for s in d.get("spells", [])]
         d["season_plans"] = [SeasonPlan.from_dict(p) for p in d.get("season_plans", [])]
+        d["season_records"] = [
+            SeasonRecord.from_dict(r) for r in d.get("season_records", [])
+        ]
         spell_names = {s.id: s.name for s in d["spells"]}
         d["books"] = [Book.from_dict(b, spell_names) for b in d.get("books", [])]
         # Older saves kept a Library record per covenant listing its book ids;

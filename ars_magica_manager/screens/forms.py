@@ -636,6 +636,15 @@ def _saga_fields(saga: Saga | None) -> list[DialogField]:
     if saga is not None:
         fields.append(
             DialogField(
+                "keep_season_records",
+                "Keep season records",
+                "check",
+                saga.keep_season_records,
+                hint="A record of each season as it is applied, listed under Seasons in the tree. Off: only the Diaries keep them.",
+            )
+        )
+        fields.append(
+            DialogField(
                 "books_in_play",
                 "Books in play",
                 "picker",
