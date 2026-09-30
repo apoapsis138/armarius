@@ -7,24 +7,28 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from ... import catalog
+from ... import catalog, seasons
 from ... import laboratories as lab_text
 from ...markup import escape
 from ...models import (
     FEATURE_VIRTUE_POINTS,
     LAB_SPECIALIZATIONS,
+    ArcaneConnection,
+    Character,
     DiaryEntry,
     LabCharacteristics,
     LabFeature,
     Laboratory,
     LabSpecialtyEntry,
     NamedDescription,
+    SeasonPlan,
     VirtueFlawInstance,
     add_raw_vis,
     assign_laboratory_owner,
     new_instance_id,
     replace_raw_vis,
 )
+from ...rules import lab_seasons
 from ..fields import (
     FieldsDialog,
 )
@@ -35,8 +39,10 @@ from ..forms import (
     _lab_feature_type_dialog,
     _lab_identity_fields,
 )
+from ..invent_spell import InventSpellScreen
 from ..prompts import (
     ConfirmScreen,
+    _arcane_connection_dialog,
     _diary_entry_dialog,
     _lab_specialty_entry_dialog,
     _named_description_dialog,
@@ -443,6 +449,69 @@ class LaboratoryActions(WorkspaceBase):
             ),
         )
 
+    # -- Laboratory: Arcane Connections --
+
+    def _add_connection(self) -> None:
+        lab = self.selected_laboratory
+        if lab is None:
+            return
+
+        def handle_result(connection: ArcaneConnection | None) -> None:
+            if connection is not None:
+                lab.arcane_connections.append(connection)
+                self._commit("section-lab-connections")
+
+        self.app.push_screen(
+            _arcane_connection_dialog("Add an Arcane Connection"), handle_result
+        )
+
+    def _edit_connection(self) -> None:
+        """Edit the chosen Arcane Connection; with none chosen, ask which."""
+        lab = self.selected_laboratory
+        if lab is None:
+            return
+
+        def edit(index: int) -> None:
+            def handle_result(connection: ArcaneConnection | None) -> None:
+                if connection is not None:
+                    lab.arcane_connections[index] = connection
+                    self._commit("section-lab-connections")
+
+            self.app.push_screen(
+                _arcane_connection_dialog(
+                    "Edit an Arcane Connection", lab.arcane_connections[index]
+                ),
+                handle_result,
+            )
+
+        self._chosen_or_pick(
+            self._lab_view_selection("selected_connection"),
+            [c.to for c in lab.arcane_connections],
+            title="Edit which Arcane Connection?",
+            empty="No Arcane Connections to edit.",
+            then=edit,
+        )
+
+    def _remove_connection(self) -> None:
+        """Delete the chosen Arcane Connection (after confirming); with none
+        chosen, ask which first."""
+        lab = self.selected_laboratory
+        if lab is None:
+            return
+        entries = lab.arcane_connections
+        self._chosen_or_pick(
+            self._lab_view_selection("selected_connection"),
+            [c.to for c in entries],
+            title="Remove an Arcane Connection",
+            empty="No Arcane Connections to remove.",
+            then=lambda index: self._confirm_delete(
+                entries,
+                index,
+                f"the Arcane Connection to {entries[index].to}",
+                "section-lab-connections",
+            ),
+        )
+
     # -- Laboratory: Raw Vis --
 
     def _add_lab_raw_vis(self) -> None:
@@ -513,6 +582,97 @@ class LaboratoryActions(WorkspaceBase):
             title="Remove a Raw Vis entry",
             empty="No Raw Vis to remove.",
             then=confirm,
+        )
+
+    # -- Laboratory: Planning (STORY-901) --
+
+    def _lab_owner_for_planning(self) -> tuple[Laboratory, Character] | None:
+        lab = self.selected_laboratory
+        if lab is None:
+            return None
+        owner = self.saga.character(lab.owner_id)
+        if owner is None or owner.type != "magus":
+            self.notify("Give the laboratory a magus as its owner to plan lab work.")
+            return None
+        return lab, owner
+
+    def _chosen_lab_season(self) -> tuple[str, int]:
+        """The first season of the chosen row (the current season if none)."""
+        lab = self.selected_laboratory
+        index = self._lab_view_selection("selected_lab_season") or 0
+        rows = seasons.lab_queue(self.saga, lab) if lab is not None else []
+        if not rows:
+            return self.saga.current_season, self.saga.current_year
+        row = rows[min(index, len(rows) - 1)]
+        return row.season, row.year
+
+    def _plan_lab_season(self, *, new: bool = False) -> None:
+        """Plan lab work for the chosen season (the current one if none) on
+        the Invent Spell screen; `new` starts from a blank design."""
+        found = self._lab_owner_for_planning()
+        if found is None:
+            return
+        lab, owner = found
+        season, year = self._chosen_lab_season()
+        existing = None if new else seasons.plan_for(self.saga, owner, season, year)
+
+        def handle_result(plan: SeasonPlan | None) -> None:
+            if plan is None:
+                return
+            added = seasons.plan_lab_work(self.saga, plan)
+            self._commit("tab-lab-planning")
+            if added:
+                last = added[-1]
+                self.notify(f"Planned through {last.season} {last.year} to finish it.")
+
+        self.app.push_screen(
+            InventSpellScreen(
+                self.saga,
+                owner,
+                lab,
+                season,
+                year,
+                existing,
+                activity=lab_seasons.INVENT if new else None,
+            ),
+            handle_result,
+        )
+
+    def _new_lab_design(self) -> None:
+        """Plan inventing a new spell from a blank design."""
+        self._plan_lab_season(new=True)
+
+    def _clear_lab_season(self) -> None:
+        """Clear the chosen season's plan (after confirming)."""
+        found = self._lab_owner_for_planning()
+        if found is None:
+            return
+        _, owner = found
+        season, year = self._chosen_lab_season()
+        plan = seasons.plan_for(self.saga, owner, season, year)
+        if plan is None:
+            self.notify(f"Nothing is planned for {season} {year}.")
+            return
+
+        removed = seasons.scheduled_with(self.saga, plan)
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
+                for each in removed:
+                    self.saga.season_plans.remove(each)
+                self._commit("tab-lab-planning")
+
+        span = (
+            f"{season} {year}"
+            if len(removed) == 1
+            else f"{season} {year} - {removed[-1].season} {removed[-1].year}"
+        )
+        self.app.push_screen(
+            ConfirmScreen(
+                f"Clear {escape(owner.name)}'s plan for {span} "
+                f"({escape(seasons.plan_summary(self.saga, owner, plan))})?"
+            ),
+            handle_confirmed,
         )
 
     # -- Laboratory: Diary --

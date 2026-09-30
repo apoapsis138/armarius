@@ -437,6 +437,19 @@ CONTRACTS: dict[str, Contract] = {
         expected=("Vault", "Cold"),
         invalid={"Name": ""},
     ),
+    "add arcane connection": Contract(
+        prefill={"Connection to": "", "Fixed": False, "Lasts": ""},
+        edits={
+            "Connection to": "a lock of hair",
+            "Lasts": "until Summer 1222",
+            "Where from": "the Tribunal",
+        },
+        saved=lambda s: [
+            (c.to, c.fixed, c.lasts, c.source) for c in _lab(s).arcane_connections
+        ],
+        expected=[("a lock of hair", False, "until Summer 1222", "the Tribunal")],
+        invalid={"Connection to": ""},
+    ),
     "add lab diary entry": Contract(
         prefill={"Year": "1220", "Season": "Spring", "Name": ""},
         edits={

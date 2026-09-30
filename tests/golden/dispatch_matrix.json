@@ -821,9 +821,9 @@
     "TabPane#tab-lab-planning": {
       "active": "tab-lab-planning",
       "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "(disabled)",
+        "a": "InventSpellScreen",
+        "A": "notice: Nothing is planned for Spring 1220.",
+        "e": "InventSpellScreen",
         "r": "(disabled)",
         "i": "(disabled)",
         "u": "(disabled)",
@@ -950,6 +950,20 @@
         "a": "FieldsDialog: Add an Equipment & Stores entry",
         "A": "RemovalPickerScreen: Remove an Equipment & Stores entry",
         "e": "RemovalPickerScreen: Edit which Equipment & Stores entry?",
+        "r": "(disabled)",
+        "i": "(disabled)",
+        "u": "(disabled)",
+        "I": "(disabled)",
+        "v": "(disabled)",
+        "V": "(disabled)"
+      }
+    },
+    "SheetSection#section-lab-connections": {
+      "active": "section-lab-connections",
+      "keys": {
+        "a": "FieldsDialog: Add an Arcane Connection",
+        "A": "notice: No Arcane Connections to remove.",
+        "e": "notice: No Arcane Connections to edit.",
         "r": "(disabled)",
         "i": "(disabled)",
         "u": "(disabled)",

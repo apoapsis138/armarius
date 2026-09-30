@@ -870,6 +870,30 @@ class NamedDescription:
     description: str = ""
 
 
+@dataclass
+class ArcaneConnection:
+    """An Arcane Connection kept in a laboratory (STORY-907): what it
+    connects to, and whether it has been fixed (made permanent by a season
+    of lab work and a pawn of Vim) or lasts only a while."""
+
+    id: str
+    #: Whom or what it connects to ("a lock of Banna's hair").
+    to: str
+    fixed: bool = False
+    #: A temporary one: how long it lasts, as typed ("until Summer 1222").
+    lasts: str = ""
+    #: Where it came from.
+    source: str = ""
+    description: str = ""
+    #: When it was fixed, if the app fixed it.
+    fixed_year: int | None = None
+    fixed_season: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> ArcaneConnection:
+        return cls(**known_fields(cls, data))
+
+
 #: What a laboratory Diary entry can record, for its Activity Type: the lab
 #: activities of reference/lab-sheet-design-doc.md, then the rest of a
 #: season's lab work, and Other. A Diary entry's `activity` is one of these
@@ -1098,6 +1122,7 @@ class Laboratory:
     raw_vis: dict[str, int] = field(default_factory=dict)  # Art -> pawns
     diary: list[DiaryEntry] = field(default_factory=list)
     virtues_flaws: list[VirtueFlawInstance] = field(default_factory=list)
+    arcane_connections: list[ArcaneConnection] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Laboratory:
@@ -1111,6 +1136,9 @@ class Laboratory:
         d["rooms"] = [NamedDescription(**r) for r in d.get("rooms", [])]
         d["inventory_items"] = [
             NamedDescription(**i) for i in d.get("inventory_items", [])
+        ]
+        d["arcane_connections"] = [
+            ArcaneConnection.from_dict(c) for c in d.get("arcane_connections", [])
         ]
         d["diary"] = [DiaryEntry(**entry) for entry in d.get("diary", [])]
         d["virtues_flaws"] = [
@@ -1222,6 +1250,11 @@ class Aging:
     effects: str = ""
     warping_score: int = 0
     warping_points: int = 0
+    #: A Longevity Ritual (STORY-907): its modifier to aging rolls (0: none),
+    #: the year it was made and who made it.
+    longevity_modifier: int = 0
+    longevity_year: int | None = None
+    longevity_by: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Aging:
@@ -2223,6 +2256,41 @@ class XpAllocation:
 
 
 @dataclass
+class SpellDesign:
+    """A spell being invented (STORY-901): started from a spell or from
+    nothing, and edited freely. It lives on the plan until the spell is
+    invented; only then is it added to the magus's spells."""
+
+    #: Identifies the design across the seasons it takes (its project).
+    key: str
+    name: str = ""
+    technique: str = ""
+    form: str = ""
+    requisites: list[str] = field(default_factory=list)
+    base_level: int | None = None
+    range: str = "Personal"
+    duration: str = "Momentary"
+    target: str = "Individual"
+    #: Magnitudes of a Range/Duration/Target the app doesn't know (a
+    #: breakthrough, a troupe ruling), by "range"/"duration"/"target".
+    custom_steps: dict[str, int] = field(default_factory=dict)
+    #: Size, complexity and requisite magnitudes on top.
+    extra_magnitudes: int = 0
+    ritual: bool = False
+    description: str = ""
+    base_effect: str = ""
+    #: The spell it was started from, if any.
+    source_spell_id: str | None = None
+    #: The level as printed, for a spell started from one with no base
+    #: level recorded (None: worked out from the base level).
+    printed_level: int | None = None
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> SpellDesign:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
 class SeasonPlan:
     """What a character will do in one season (STORY-903): typed by the user,
     locked in until the season is applied. Its outcome is always worked out
@@ -2249,12 +2317,54 @@ class SeasonPlan:
     #: Vis study: the stress die as rolled at the table (None: the app
     #: rolls it when the season is applied).
     die: int | None = None
+    #: Lab work (STORY-901): the laboratory it is done in. A plan with a
+    #: laboratory is made on the lab's Planning tab.
+    lab_id: str | None = None
+    #: Inventing: the spell invented (a Lab Text's spell when working from one).
+    spell_id: str | None = None
+    #: Inventing: a similar spell the magus knows (adds its magnitude).
+    similar_spell_id: str | None = None
+    #: Lab work: days away from the laboratory (a short adventure, travel...);
+    #: 11-20 lower the Lab Total, more rule lab work out.
+    days_away: int = 0
+    #: Inventing: the spell being designed (the Invent Spell screen).
+    design: SpellDesign | None = None
+    #: Lab work: the magus's Magical Focus applies (the lower Art counts
+    #: twice), their Magic Theory Specialty applies (+1), and any other
+    #: modifier the troupe allows.
+    focus: bool = False
+    theory_specialty: bool = False
+    other_modifier: int = 0
+    #: Longevity Ritual (STORY-907): who it is for (the magus when None), the
+    #: Art of the vis paid with, and extra pawns (+1 Lab Total each). Being
+    #: its subject: the magus making it.
+    subject_id: str | None = None
+    vis_art: str = ""
+    extra_vis: int = 0
+    #: Fixing an Arcane Connection: the laboratory's connection fixed.
+    connection_id: str | None = None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> SeasonPlan:
         d = dict(data)
         d["allocations"] = [XpAllocation.from_dict(a) for a in d.get("allocations", [])]
+        if d.get("design") is not None:
+            d["design"] = SpellDesign.from_dict(d["design"])
         return cls(**known_fields(cls, d))
+
+
+@dataclass
+class LabProject:
+    """Lab work that runs over several seasons (STORY-901): the points a
+    magus has put into inventing a spell so far."""
+
+    character_id: str
+    spell_id: str
+    points: int = 0
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> LabProject:
+        return cls(**known_fields(cls, data))
 
 
 @dataclass
@@ -2324,6 +2434,8 @@ class Saga:
     keep_season_records: bool = True
     #: Those records, oldest first.
     season_records: list[SeasonRecord] = field(default_factory=list)
+    #: Lab work in progress over several seasons (STORY-901).
+    lab_projects: list[LabProject] = field(default_factory=list)
     #: The app version that last saved this saga (storage.save_saga sets it;
     #: "" for a save older than versioning), for upgrading old saves later.
     app_version: str = ""
@@ -2357,6 +2469,7 @@ class Saga:
         d["season_records"] = [
             SeasonRecord.from_dict(r) for r in d.get("season_records", [])
         ]
+        d["lab_projects"] = [LabProject.from_dict(p) for p in d.get("lab_projects", [])]
         spell_names = {s.id: s.name for s in d["spells"]}
         d["books"] = [Book.from_dict(b, spell_names) for b in d.get("books", [])]
         # Older saves kept a Library record per covenant listing its book ids;

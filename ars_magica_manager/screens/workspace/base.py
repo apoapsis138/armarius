@@ -94,7 +94,7 @@ from ..sheets import (
     SheetView,
     SpellListView,
 )
-from ..widgets import BottomBar
+from ..widgets import BottomBar, SelectableList
 
 #: Covenant Reputations run from -3 to +3.
 _COVENANT_REPUTATION_RANGE = (-3, 3)
@@ -661,7 +661,8 @@ class WorkspaceBase(Screen[None]):
         leaving it focused would make _active_section() keep reporting it.
 
         The Laboratory is the exception on first showing: its default tab
-        (Planning) is flat, so it looks at the active tab first and only then
+        (Planning) is flat, so it looks at the active tab first -- a section,
+        else its list (the seasons: 'e' plans lab work) -- and only then
         falls back to the top panel."""
         view = self._current_sheet_view()
         if view is None:
@@ -682,6 +683,15 @@ class WorkspaceBase(Screen[None]):
                 return
             if not active_tab_first:
                 return
+            try:
+                # The laboratory's Planning tab: its seasons list, so e plans
+                # lab work straight away (STORY-901).
+                tabbed = view.query_one(TabbedContent)
+                pane = view.query_one(f"#{tabbed.active}", TabPane)
+                pane.query(SelectableList).first().focus()
+                return
+            except NoMatches:
+                pass
             try:
                 collapsible = view.query(Collapsible).first()
             except NoMatches:

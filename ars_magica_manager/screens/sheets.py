@@ -1666,9 +1666,7 @@ class LaboratorySheetView(SheetView):
     def compose(self) -> ComposeResult:
         yield from self._top_panel()
         with TabbedContent(initial=self.INITIAL_TAB):
-            yield self._tab(
-                "Planning", "tab-lab-planning", self._scrolling(self._planning_tab)
-            )
+            yield self._tab("Planning", "tab-lab-planning", self._planning_tab)
             yield self._tab(
                 "Lab Totals", "tab-lab-totals", self._scrolling(self._totals_tab)
             )
@@ -1678,11 +1676,39 @@ class LaboratorySheetView(SheetView):
             yield self._tab("Diary", "tab-lab-diary", self._diary_tab)
 
     def _planning_tab(self) -> ComposeResult:
-        yield self._static(
-            ("tab-lab-planning", "section-lab-identity"),
-            lambda: seasons.lab_planning_text(self.saga, self.laboratory),
-            id="lab-planning-content",
+        """The owner's coming seasons (STORY-901): lab work is planned here,
+        with the chosen season's plan and Lab Total docked below."""
+        sections = ("tab-lab-planning", "section-lab-identity", *_LAB_TOTAL_SECTIONS)
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                yield self._static(
+                    sections,
+                    self._planning_heading,
+                    id="lab-planning-heading",
+                )
+                yield self._list(
+                    sections,
+                    lambda: seasons.lab_queue_rows(self.saga, self.laboratory),
+                    id="lab-seasons-list",
+                )
+            yield self._panel(
+                sections,
+                lambda: seasons.lab_queue_info(self.saga, self.laboratory, None),
+                id="lab-seasons-info",
+            )
+
+    def _planning_heading(self) -> str:
+        owner = self.saga.character(self.laboratory.owner_id)
+        if owner is None:
+            return "[dim]No owner: give the laboratory one to plan its seasons.[/]"
+        return (
+            f"[b]{escape(owner.name)}'s seasons[/]  [dim]e plan lab work, "
+            "a start a new spell, A clear[/]"
         )
+
+    def selected_lab_season(self) -> int | None:
+        """The chosen row of the Planning tab's seasons (0: the current)."""
+        return self._selected("lab-seasons-list")
 
     def _totals_tab(self) -> ComposeResult:
         yield self._static(
@@ -1857,6 +1883,23 @@ class LaboratorySheetView(SheetView):
                         id="lab-items-list",
                         group="lab-inv",
                     )
+                with SheetSection(
+                    title=self._titled(
+                        "section-lab-connections",
+                        "section-lab-connections",
+                        lambda: counted(
+                            "Arcane Connections",
+                            len(self.laboratory.arcane_connections),
+                        ),
+                    ),
+                    id="section-lab-connections",
+                ):
+                    yield self._list(
+                        "section-lab-connections",
+                        lambda: lab_text.connection_rows(self.laboratory),
+                        id="lab-connections-list",
+                        group="lab-inv",
+                    )
                 yield from self._devices(
                     "laboratory",
                     self.laboratory.id,
@@ -1877,6 +1920,7 @@ class LaboratorySheetView(SheetView):
             (
                 "section-lab-raw-vis",
                 "section-lab-items",
+                "section-lab-connections",
                 "section-lab-devices",
                 "section-lab-books",
                 "section-lab-identity",
@@ -1942,6 +1986,10 @@ class LaboratorySheetView(SheetView):
                     else lab_text.INVENTORY_PANEL_HINT
                 ),
             ),
+            "lab-connections-list": (
+                "lab-inv-panel",
+                lambda i: lab_text.connection_info_text(lab, i),
+            ),
             "section-lab-devices-list": (
                 "lab-inv-panel",
                 lambda i: self._device_panel_text(
@@ -1952,6 +2000,10 @@ class LaboratorySheetView(SheetView):
             "lab-diary-list": (
                 "lab-diary-info",
                 lambda i: lab_text.diary_info_text(lab.diary, i),
+            ),
+            "lab-seasons-list": (
+                "lab-seasons-info",
+                lambda i: seasons.lab_queue_info(self.saga, lab, i),
             ),
         }
 
@@ -2008,6 +2060,11 @@ class LaboratorySheetView(SheetView):
     def selected_item(self) -> int | None:
         """Index into laboratory.inventory_items of the chosen row, or None."""
         return self._selected("lab-items-list")
+
+    def selected_connection(self) -> int | None:
+        """Index into laboratory.arcane_connections of the chosen row, or
+        None."""
+        return self._selected("lab-connections-list")
 
     def selected_raw_vis(self) -> int | None:
         """Index into sorted(laboratory.raw_vis) of the chosen row, or None."""

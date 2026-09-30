@@ -39,7 +39,7 @@ def test_what_makes_a_ritual():
 
 
 def test_a_supplements_own_parameter_has_no_worked_out_level():
-    assert sl.spell_level(5, "Road", "Sun", "Individual") is None
+    assert sl.spell_level(5, "Dream", "Sun", "Individual") is None
 
 
 def test_extra_magnitudes_are_size_or_requisites():
@@ -79,4 +79,24 @@ def test_the_spell_form_fills_the_level():
     }
     assert _level_fill(values) == {"level": 35}
     assert _level_fill({**values, "base_level": None}) == {}
-    assert _level_fill({**values, "range": "__other__", "range_other": "Road"}) == {}
+    assert _level_fill({**values, "range": "__other__", "range_other": "Dream"}) == {}
+
+
+def test_a_virtues_extra_parameter_costs_as_its_standard_one():
+    """Road (Road Magic) costs as Voice; Season (Spell Timing) as Moon and
+    needs a Ritual (reference/spell-parameters.md)."""
+    assert sl.spell_level(5, "Road", "Sun", "Individual").level == 25
+    season = sl.spell_level(5, "Touch", "Season", "Individual")
+    assert season.level == 25 and season.ritual_required
+    assert [e.name for e in sl.extra_parameters("range", {"vf_road_magic"})] == [
+        "Road",
+        "Road Network",
+    ]
+    assert sl.extra_parameters("range", set()) == []
+
+
+def test_a_custom_parameter_takes_typed_magnitudes():
+    design = sl.spell_level(
+        5, "Touch", "Dream", "Individual", custom_steps={"duration": 3}
+    )
+    assert design.level == 25

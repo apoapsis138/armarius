@@ -22,6 +22,7 @@ from .models import (
     SPELL_RANGES,
     SPELL_SOURCES,
     SPELL_TARGETS,
+    Character,
     Saga,
     Spell,
 )
@@ -623,6 +624,21 @@ def add_own_spell(saga: Saga, name: str, technique: str, form: str) -> Spell:
         form=form,
     )
     saga.spells.append(spell)
+    return spell
+
+
+def add_invented_spell(
+    saga: Saga, magus: Character, name: str, technique: str, form: str
+) -> Spell:
+    """A new spell design of `magus`'s own (STORY-901), added to their
+    invented spells: it lives with the magus until invented and shared."""
+    spell = Spell(
+        id=_own_spell_id(name, all_spell_ids(saga)),
+        name=name,
+        technique=technique,
+        form=form,
+    )
+    magus.invented_spells.append(spell)
     return spell
 
 

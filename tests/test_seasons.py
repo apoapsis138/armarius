@@ -476,20 +476,6 @@ async def test_clear_a_plan_after_confirming():
     assert storage.load_saga("test_saga").season_plans == []
 
 
-def test_the_lab_planning_tab_shows_the_owners_season():
-    saga = everything_saga()
-    lab = saga.laboratories[0]
-    text = strip_markup(seasons.lab_planning_text(saga, lab))
-    assert text.splitlines()[0] == "Leandro: Spring 1220"
-    assert "Nothing planned for Spring 1220. Plan it on Leandro's Planning tab." in text
-    seasons.set_plan(
-        saga, SeasonPlan("mag1", 1220, "Spring", rules.OTHER, details="Tribunal")
-    )
-    assert "Other: Tribunal" in strip_markup(seasons.lab_planning_text(saga, lab))
-    lab.owner_id = None
-    assert "No owner" in seasons.lab_planning_text(saga, lab)
-
-
 async def test_lab_totals_live_on_the_laboratory_sheet():
     """STORY-925: the magus's sheet has no Laboratory tab; the laboratory
     sheet has a Lab Totals tab after Planning."""
@@ -509,9 +495,9 @@ async def test_lab_totals_live_on_the_laboratory_sheet():
         totals = str(lab_view.query_one("#lab-totals-content", Static).content)
         assert "Lab Totals for Leandro" in totals
         planning = strip_markup(
-            str(lab_view.query_one("#lab-planning-content", Static).content)
+            str(lab_view.query_one("#lab-planning-heading", Static).content)
         )
-        assert planning.splitlines()[0] == "Leandro: Spring 1220"
+        assert planning.startswith("Leandro's seasons")
 
 
 # -- the covenant's Seasons tab (STORY-912) ---------------------------------------

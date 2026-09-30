@@ -162,6 +162,9 @@ class WorkspaceScreen(
             "section-lab-raw-vis": _SectionOps(
                 self._add_lab_raw_vis, self._remove_lab_raw_vis, self._edit_lab_raw_vis
             ),
+            "tab-lab-planning": _SectionOps(
+                self._new_lab_design, self._clear_lab_season, self._plan_lab_season
+            ),
             "tab-lab-diary": _SectionOps(
                 self._add_diary_entry, self._remove_diary_entry, self._edit_diary_entry
             ),
@@ -213,6 +216,9 @@ class WorkspaceScreen(
                 partial(self._remove_trait, spec),
                 partial(self._edit_trait, spec),
             )
+        ops["section-lab-connections"] = _SectionOps(
+            self._add_connection, self._remove_connection, self._edit_connection
+        )
         for section in ("section-lab-rooms", "section-lab-items"):
             ops[section] = _SectionOps(
                 partial(self._add_named, section),

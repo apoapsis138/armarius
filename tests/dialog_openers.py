@@ -167,6 +167,7 @@ OPENERS: dict[str, Opener] = {
         ),
     ),
     "add lab room": Opener("laboratory", lambda ws: ws._add_named("section-lab-rooms")),
+    "add arcane connection": Opener("laboratory", lambda ws: ws._add_connection()),
     "add lab diary entry": Opener("laboratory", lambda ws: ws._add_diary_entry()),
     # Seasons (STORY-903)
     "plan a season": Opener("character", lambda ws: ws._plan_season()),

@@ -3797,20 +3797,23 @@ async def test_lab_top_panel_columns_stack_on_a_narrow_pane():
         assert not view.query_one("#lab-identity-body").has_class("-stacked")
 
 
-async def test_opening_a_lab_focuses_identity_so_edit_hotkey_works():
+async def test_opening_a_lab_focuses_its_planning_so_edit_hotkey_works():
     """Regression: TabbedContent's own initial TabActivated used to clear the
     focus set on opening a lab, leaving 'e' unavailable until the user
-    tabbed into a section by hand. No manual focusing here, on purpose."""
+    tabbed into a section by hand. No manual focusing here, on purpose.
+    Opening a lab now focuses its Planning tab's seasons (STORY-901), so 'e'
+    plans lab work; the Identity panel is still a click (or tab) away."""
     storage.save_saga(_saga_with_bare_laboratory())
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_laboratory(pilot, app)
-        assert app.screen._active_section() == "section-lab-identity"
-
-        await pilot.press("e")
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Laboratory Identity")
+        view = app.screen._laboratory_sheet_view
+        await wait_until(pilot, lambda: view.initial_tab_seen)
+        await wait_until(
+            pilot, lambda: app.screen._active_section() == "tab-lab-planning"
+        )
+        assert app.screen._active_section() == "tab-lab-planning"
 
 
 async def test_clicking_a_lab_top_panel_section_makes_it_active():
@@ -3825,7 +3828,7 @@ async def test_clicking_a_lab_top_panel_section_makes_it_active():
         view = app.screen._laboratory_sheet_view
         await wait_until(pilot, lambda: view.initial_tab_seen)
         await wait_until(
-            pilot, lambda: app.screen._active_section() == "section-lab-identity"
+            pilot, lambda: app.screen._active_section() == "tab-lab-planning"
         )
         await pilot.pause()
 

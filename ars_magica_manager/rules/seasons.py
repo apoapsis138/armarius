@@ -46,7 +46,7 @@ from dataclasses import dataclass, field
 from .. import books
 from ..arts import ART_BY_NAME, ARTS
 from ..models import Book, Character, Saga, SeasonPlan, XpAllocation
-from . import dice, realms, study, xp
+from . import dice, lab_seasons, realms, study, xp
 from .study import StudyResult, season_of_study
 
 ASSIGNING_SOURCE = (
@@ -143,6 +143,12 @@ class Activity:
     gives_xp: bool = True
     #: Whether time lost to distractions lowers it.
     distractable: bool = False
+    #: Lab work: planned on the laboratory's Planning tab (STORY-901), not
+    #: the character sheet.
+    lab: bool = False
+    #: Planned for the character by someone else's lab work (the subject of
+    #: a Longevity Ritual), not picked from the menu.
+    hidden: bool = False
 
 
 ACTIVITIES: dict[str, Activity] = {
@@ -208,6 +214,60 @@ ACTIVITIES: dict[str, Activity] = {
             distractable=True,
         ),
         Activity(
+            lab_seasons.INVENT,
+            "Invent a spell",
+            "Inventing a spell in the laboratory: the Lab Total must be above "
+            "its level; each season adds Lab Total - level points until they "
+            "reach it.",
+            lab_seasons.SOURCE,
+            who=("magus",),
+            lab=True,
+        ),
+        Activity(
+            lab_seasons.LAB_TEXT,
+            "Invent from a Lab Text",
+            "Working from a Lab Text: one season, if the Lab Total is at least "
+            "the spell's level.",
+            lab_seasons.LAB_TEXT_SOURCE,
+            who=("magus",),
+            lab=True,
+        ),
+        Activity(
+            lab_seasons.EXTRACT,
+            "Extract vis",
+            "Extracting vis from the aura: Creo Vim Lab Total / 10 pawns of "
+            "Vim, rounded up. Only in a Magic aura.",
+            lab_seasons.EXTRACT_SOURCE,
+            who=("magus",),
+            lab=True,
+        ),
+        Activity(
+            lab_seasons.FIX_AC,
+            "Fix an Arcane Connection",
+            "Making an Arcane Connection permanent: a season in the laboratory "
+            "and 1 pawn of Vim vis.",
+            lab_seasons.FIX_SOURCE,
+            who=("magus",),
+            lab=True,
+        ),
+        Activity(
+            lab_seasons.LONGEVITY,
+            "Longevity Ritual",
+            "A Longevity Ritual: Creo Corpus Lab Total / 5 off aging rolls (/ 10 "
+            "for a mundane subject); vis = the subject's age / 5.",
+            lab_seasons.LONGEVITY_SOURCE,
+            who=("magus",),
+            lab=True,
+        ),
+        Activity(
+            lab_seasons.LONGEVITY_SUBJECT,
+            "Subject of a Longevity Ritual",
+            "Spending the season with the magus making your Longevity Ritual.",
+            lab_seasons.LONGEVITY_SOURCE,
+            gives_xp=False,
+            hidden=True,
+        ),
+        Activity(
             ADVENTURE,
             "Adventure",
             "Adventure experience: the storyguide's Source Quality (5-10), "
@@ -231,9 +291,14 @@ def is_planned(character: Character) -> bool:
     return character.type in PLANNED_TYPES
 
 
-def activities_for(character: Character) -> list[Activity]:
-    """The activities `character` may plan, in menu order."""
-    return [a for a in ACTIVITIES.values() if character.type in a.who]
+def activities_for(character: Character, *, lab: bool = False) -> list[Activity]:
+    """The activities `character` may plan, in menu order: lab work (on the
+    laboratory's Planning tab) or everything else (on the character sheet)."""
+    return [
+        a
+        for a in ACTIVITIES.values()
+        if character.type in a.who and a.lab == lab and not a.hidden
+    ]
 
 
 # -- subjects: what a season's experience goes into ---------------------------
@@ -522,6 +587,13 @@ def problems(
         return [f"A {character.type} can't do {activity.label}."]
     if not activity.gives_xp:
         return []
+    if activity.lab:
+        if saga is None:
+            return ["Lab work needs the saga to be worked out."]
+        found_lab, _ = lab_seasons.work(saga, character, plan)
+        if plan.days_away < 0:
+            found_lab.append("Days away can't be negative.")
+        return found_lab
     found: list[str] = []
     chosen = [a for a in plan.allocations if a.subject]
     if not 0 <= plan.months_lost <= 3:
@@ -611,6 +683,8 @@ class Outcome:
     tractatus: str | None = None
     #: Vis study still to roll (a preview made without a die).
     pending_roll: bool = False
+    #: Lab work: what the season in the laboratory does.
+    lab_work: lab_seasons.LabWork | None = None
 
     @property
     def ok(self) -> bool:
@@ -664,6 +738,14 @@ def outcome(
     found = problems(character, plan, saga)
     result = Outcome(character.id, plan, activity, problems=found)
     if found or activity is None or not activity.gives_xp:
+        return result
+    if activity.lab:
+        assert saga is not None
+        _, result.lab_work = lab_seasons.work(saga, character, plan)
+        # Lab work gives Exposure in Magic Theory (DE Ch. 10, Exposure).
+        result.gains.append(
+            _gain(character, ability_subject("Magic Theory"), 2, "exposure", 0)
+        )
         return result
     months = plan.months_lost if activity.distractable else 0
     kind = _STUDY_KIND[plan.activity]

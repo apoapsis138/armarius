@@ -57,6 +57,103 @@ TARGET_STEPS: dict[str, int] = {
     "Boundary": 4,
     "Vision": 4,
 }
+
+
+@dataclass(frozen=True)
+class ExtraParameter:
+    """A Range, Duration or Target beyond the standard ones, which a Virtue
+    or Mystery grants (reference/spell-parameters.md): it costs the same
+    magnitudes as a standard parameter."""
+
+    kind: str  # "range", "duration" or "target"
+    name: str
+    costs_as: str
+    #: The character Virtue/Flaw catalog ids that grant it.
+    granted_by: tuple[str, ...]
+    #: Whether a spell with it must be a Ritual.
+    ritual: bool = False
+    #: Extra magnitudes on top of what it costs as (If (Condition): +4).
+    plus: int = 0
+
+
+EXTRA_PARAMETERS: tuple[ExtraParameter, ...] = (
+    ExtraParameter(
+        "duration", "Performance", "Concentration", ("vf_performance_magic",)
+    ),
+    ExtraParameter("range", "Adelphixis", "Arcane Connection", ("vf_orphic_magic",)),
+    ExtraParameter("duration", "Held", "Concentration", ("vf_spell_timing",)),
+    ExtraParameter("duration", "Midday/Midnight", "Sun", ("vf_spell_timing",)),
+    ExtraParameter("duration", "Season", "Moon", ("vf_spell_timing",), ritual=True),
+    ExtraParameter(
+        "duration", "While (Condition)", "Concentration", ("vf_spell_timing",)
+    ),
+    ExtraParameter("duration", "Not (Condition)", "Sun", ("vf_spell_timing",)),
+    ExtraParameter("duration", "Might", "Year", ("vf_perpetuity",), ritual=True),
+    ExtraParameter("duration", "Aura", "Year", ("vf_perpetuity",), ritual=True),
+    ExtraParameter("duration", "Hidden", "Year", ("vf_perpetuity",), ritual=True),
+    ExtraParameter("duration", "Minutes", "Diameter", ("vf_celestial_magic",)),
+    ExtraParameter("duration", "Hours", "Sun", ("vf_celestial_magic",)),
+    ExtraParameter("duration", "Days", "Moon", ("vf_celestial_magic",)),
+    ExtraParameter("duration", "Signs", "Year", ("vf_celestial_magic",), ritual=True),
+    ExtraParameter("range", "Line", "Sight", ("vf_hermetic_geometry",)),
+    ExtraParameter("target", "Arcane Circle", "Part", ("vf_hermetic_geometry",)),
+    ExtraParameter("duration", "Arcane Ring", "Moon", ("vf_hermetic_geometry",)),
+    ExtraParameter("range", "Road", "Voice", ("vf_road_magic", "vf_mercurian_magic")),
+    ExtraParameter(
+        "range",
+        "Road Network",
+        "Arcane Connection",
+        ("vf_road_magic", "vf_mercurian_magic"),
+        ritual=True,
+    ),
+    ExtraParameter("target", "Road", "Room", ("vf_road_magic", "vf_mercurian_magic")),
+    ExtraParameter(
+        "target",
+        "Road Network",
+        "Boundary",
+        ("vf_road_magic", "vf_mercurian_magic"),
+        ritual=True,
+    ),
+    ExtraParameter("target", "Flavor", "Individual", ("vf_sensory_magic",)),
+    ExtraParameter("target", "Texture", "Part", ("vf_sensory_magic",)),
+    ExtraParameter("target", "Scent", "Group", ("vf_sensory_magic",)),
+    ExtraParameter("target", "Sound", "Structure", ("vf_sensory_magic",)),
+)
+
+_STANDARD: dict[str, dict[str, int]] = {}  # filled below
+
+
+def extra_parameters(kind: str, vf_ids: set[str]) -> list[ExtraParameter]:
+    """The extra `kind` parameters a magus with these Virtue/Flaw ids may
+    use."""
+    return [
+        e
+        for e in EXTRA_PARAMETERS
+        if e.kind == kind and any(v in vf_ids for v in e.granted_by)
+    ]
+
+
+def steps_of(kind: str, name: str) -> int | None:
+    """The magnitudes a Range/Duration/Target costs, standard or extra
+    (None for one the app doesn't know)."""
+    standard = _STANDARD[kind]
+    if name in standard:
+        return standard[name]
+    extra = next(
+        (e for e in EXTRA_PARAMETERS if e.kind == kind and e.name == name), None
+    )
+    if extra is None:
+        return None
+    return standard[extra.costs_as] + extra.plus
+
+
+def needs_ritual(kind: str, name: str) -> bool:
+    """Whether a parameter makes a spell a Ritual."""
+    if (kind, name) in (("duration", "Year"), ("target", "Boundary")):
+        return True
+    return any(e.ritual for e in EXTRA_PARAMETERS if e.kind == kind and e.name == name)
+
+
 RITUAL_MINIMUM = 20
 MAX_NON_RITUAL = 50
 
@@ -97,26 +194,27 @@ def spell_level(
     *,
     extra_magnitudes: int = 0,
     ritual: bool = False,
+    custom_steps: dict[str, int] | None = None,
 ) -> Design | None:
     """The level of a spell with this base and Range/Duration/Target, plus
-    `extra_magnitudes` of size and requisites; None when a parameter isn't
-    a standard one (a supplement's own, whose level the troupe sets)."""
-    try:
-        steps = [
-            (range_, RANGE_STEPS[range_]),
-            (duration, DURATION_STEPS[duration]),
-            (target, TARGET_STEPS[target]),
-        ]
-    except KeyError:
-        return None
+    `extra_magnitudes` of size and requisites. A parameter a Virtue or
+    Mystery grants costs as its standard counterpart; `custom_steps` gives
+    the magnitudes of any other ("range"/"duration"/"target" -> n: a
+    breakthrough or a troupe ruling). None when a parameter is unknown."""
+    custom = custom_steps or {}
+    steps = []
+    for kind, name in (("range", range_), ("duration", duration), ("target", target)):
+        count = custom.get(kind, steps_of(kind, name))
+        if count is None:
+            return None
+        steps.append((name, count))
     if extra_magnitudes:
         steps.append(("size/requisites", extra_magnitudes))
     level = add_magnitudes(base, sum(n for _, n in steps))
     design = Design(level=level, steps=steps)
-    if duration == "Year":
-        design.notes.append("Year Duration needs a Ritual.")
-    if target == "Boundary":
-        design.notes.append("Boundary Target needs a Ritual.")
+    for kind, name in (("range", range_), ("duration", duration), ("target", target)):
+        if needs_ritual(kind, name):
+            design.notes.append(f"{name} {kind.title()} needs a Ritual.")
     if level > MAX_NON_RITUAL:
         design.notes.append(f"Over level {MAX_NON_RITUAL} needs a Ritual.")
     design.ritual_required = bool(design.notes)
@@ -146,3 +244,6 @@ def extra_magnitudes(
             probe = add_magnitudes(probe, -1)
             count -= 1
     return count
+
+
+_STANDARD.update(range=RANGE_STEPS, duration=DURATION_STEPS, target=TARGET_STEPS)

@@ -21,16 +21,16 @@
    Planning  Lab Totals  Virtues & Flaws  Attributes  Inventory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Leandro: Spring 1220
-
-  Nothing planned for Spring 1220. Plan it on Leandro's Planning tab.
-
-  This tab becomes the laboratory's season planner in a later story; the Lab Totals
-  have their own tab.
+  Leandro's seasons  e plan lab work, a start a new spell, A clear
+  ○ Spring 1220                nothing planned
 
 
 
 
+
+    Select an activity to see its plan and Lab Total (e changes it; on a free
+    season, e plans one). Seasons spent otherwise (reading, adventure...) are
+    planned on the character sheet.
 
 
 
@@ -194,14 +194,14 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Raw Vis                                                                     ▇▇
+    ▼ Raw Vis
 
       ○ Ignem: 2 pawn(s)
 
 
 
-    Select Raw Vis, an Equipment & Stores entry, an enchanted device or a book to
-    see its details.
+    Select Raw Vis, an Equipment & Stores entry, an Arcane Connection, an
+    enchanted device or a book to see its details.
 
 
 

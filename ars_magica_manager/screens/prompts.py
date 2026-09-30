@@ -29,6 +29,7 @@ from ..models import (
     STORY_EVENT,
     STORY_EVENT_STATUSES,
     Ability,
+    ArcaneConnection,
     Covenant,
     CovenantDiaryEntry,
     DiaryEntry,
@@ -37,6 +38,7 @@ from ..models import (
     MasteryAbility,
     NamedDescription,
     ScoredTrait,
+    new_instance_id,
     next_season,
 )
 from .fields import (
@@ -335,6 +337,58 @@ def _named_description_dialog(
             _description_field(_attr(existing, "description", "")),
         ],
         build=lambda values: NamedDescription(**values),
+    )
+
+
+def _arcane_connection_dialog(
+    title: str, existing: ArcaneConnection | None = None
+) -> FieldsDialog[ArcaneConnection]:
+    """A laboratory's Arcane Connection: what it connects to, fixed or how
+    long it lasts, where it came from, and notes."""
+
+    def build(values: dict[str, Any]) -> ArcaneConnection:
+        fixed = bool(values["fixed"])
+        return ArcaneConnection(
+            id=existing.id if existing else new_instance_id(),
+            to=values["to"],
+            fixed=fixed,
+            lasts="" if fixed else values.get("lasts", ""),
+            source=values["source"],
+            description=values["description"],
+            fixed_year=existing.fixed_year if existing and fixed else None,
+            fixed_season=existing.fixed_season if existing and fixed else "",
+        )
+
+    return FieldsDialog(
+        title,
+        [
+            DialogField(
+                "to",
+                "Connection to",
+                "text",
+                _attr(existing, "to", ""),
+                required=True,
+                placeholder="e.g. a lock of Banna's hair",
+            ),
+            DialogField("fixed", "Fixed", "check", _attr(existing, "fixed", False)),
+            DialogField(
+                "lasts",
+                "Lasts",
+                "text",
+                _attr(existing, "lasts", ""),
+                placeholder="e.g. until Summer 1222",
+                show_if=lambda v: not v.get("fixed"),
+            ),
+            DialogField(
+                "source",
+                "Where from",
+                "text",
+                _attr(existing, "source", ""),
+                placeholder="e.g. taken at the Tribunal",
+            ),
+            _description_field(_attr(existing, "description", "")),
+        ],
+        build=build,
     )
 
 

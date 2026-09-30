@@ -9,6 +9,33 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 1.7.0 — 2026-09-30
+
+Lab work, planned from the laboratory.
+
+- The laboratory's Planning tab lists the owner's scheduled activities and
+  the seasons each spans, with the chosen one's Lab Total line by line.
+  e plans or changes lab work, a starts a new spell, A clears a plan (and
+  every season it spans).
+- Inventing a spell has its own screen: start from any spell or a blank
+  one and change anything -- name, effect, Arts, requisites, base level,
+  Range, Duration, Target, Ritual. The level is worked out as you edit;
+  Virtues and Mysteries that grant extra Ranges, Durations or Targets add
+  them to the lists, and "Other..." takes any with its magnitudes. Lab
+  options: a similar spell, Magical Focus, Magic Theory Specialty, days
+  away and any other modifier. It shows when the spell will be invented,
+  and scheduling fills every season needed. Reset clears the form.
+- Inventing from a Lab Text, too. A finished spell is known, a Lab Text is
+  written for the lab, and the lab's Diary records it; every lab season
+  gives 2 xp Exposure in Magic Theory.
+- More lab work: extract Vim vis (Magic aura only), fix an Arcane
+  Connection (1 pawn of Vim) and Longevity Rituals, your own or someone
+  else's. The ritual's aging modifier is kept on its subject, whose season
+  is planned with the magus's.
+- Arcane Connections are kept on the laboratory's Inventory tab: what each
+  connects to, and whether it is fixed or how long it lasts.
+- The lab work screen opens with no activity chosen until you pick one.
+
 ## 1.6.0 — 2026-09-29
 
 Study seasons.

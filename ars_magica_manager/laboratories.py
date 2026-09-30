@@ -20,6 +20,7 @@ from .models import (
     FOCUS_FLAWS,
     LAB_ACTIVITY_SPECIALIZATIONS,
     LAB_SPECIALIZATIONS,
+    ArcaneConnection,
     DiaryEntry,
     LabFeature,
     Laboratory,
@@ -513,8 +514,8 @@ ATTRIBUTES_PANEL_HINT = (
     "turns a Specialization off or on.[/]"
 )
 INVENTORY_PANEL_HINT = (
-    "[dim]Select Raw Vis, an Equipment & Stores entry, an enchanted device or a "
-    "book to see its details.[/]"
+    "[dim]Select Raw Vis, an Equipment & Stores entry, an Arcane Connection, an "
+    "enchanted device or a book to see its details.[/]"
 )
 
 
@@ -753,6 +754,47 @@ def named_info_text(
         else "[dim](no description)[/]"
     )
     return f"[b]{escape(entry.name)}[/]\n\n{description}"
+
+
+def connection_state(connection: ArcaneConnection) -> str:
+    """ "fixed", or how long it lasts ("temporary" when not typed)."""
+    if connection.fixed:
+        return "fixed"
+    return f"lasts {connection.lasts}" if connection.lasts else "temporary"
+
+
+def connection_rows(lab: Laboratory) -> list[tuple[int | None, str]]:
+    """The lab's Arcane Connections as (index, "to  state") rows."""
+    width = max((len(c.to) for c in lab.arcane_connections), default=0)
+    return [
+        (
+            index,
+            f"{escape(c.to.ljust(width))}  [dim]{escape(connection_state(c))}[/]",
+        )
+        for index, c in enumerate(lab.arcane_connections)
+    ]
+
+
+def connection_info_text(lab: Laboratory, index: int | None) -> str:
+    """The details panel for an Arcane Connection."""
+    if index is None:
+        return INVENTORY_PANEL_HINT
+    c = lab.arcane_connections[index]
+    lines = [f"[b]Arcane Connection to {escape(c.to)}[/]"]
+    if c.fixed and c.fixed_year is not None:
+        lines.append(f"Fixed in {c.fixed_season} {c.fixed_year} (lasts indefinitely).")
+    elif c.fixed:
+        lines.append("Fixed (lasts indefinitely).")
+    else:
+        lines.append(
+            f"Temporary: {escape(connection_state(c))}. Fixing it takes a season "
+            "of lab work and 1 pawn of Vim (plan it on the Planning tab)."
+        )
+    if c.source:
+        lines.append(f"From: {escape(c.source)}")
+    if c.description:
+        lines += ["", markdown_inline(c.description)]
+    return "\n".join(lines)
 
 
 def raw_vis_rows(lab: Laboratory) -> list[tuple[int | None, str]]:

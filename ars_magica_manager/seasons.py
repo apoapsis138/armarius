@@ -14,6 +14,7 @@ from __future__ import annotations
 import random
 import re
 from collections.abc import Sequence
+from dataclasses import dataclass, field, replace
 
 from . import spells as spl
 from .inhabitants import AUTO_KINDS, character_kind
@@ -26,14 +27,19 @@ from .models import (
     Character,
     Covenant,
     DiaryEntry,
+    KnownSpell,
     Laboratory,
+    LabProject,
     Saga,
     SeasonPlan,
     SeasonRecord,
     SeasonRecordLine,
+    Spell,
+    SpellDesign,
+    next_season,
 )
+from .rules import lab_seasons, study
 from .rules import seasons as rules
-from .rules import study
 from .rules import xp as xp_rules
 
 # -- plans --------------------------------------------------------------------
@@ -178,6 +184,27 @@ def plan_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
     names = spell_names(saga, character)
     shares = rules.allocations(plan)
     first = rules.subject_label(shares[0].subject, names) if shares else ""
+    if activity.lab:
+        if plan.activity == lab_seasons.EXTRACT:
+            return "Vim vis"
+        if plan.activity == lab_seasons.FIX_AC:
+            connection = lab_seasons.connection_of(saga, plan)
+            return connection.to if connection is not None else ""
+        if plan.activity == lab_seasons.LONGEVITY:
+            subject = lab_seasons.subject_of(saga, character, plan)
+            if subject is None:
+                return ""
+            return "own" if subject is character else f"for {subject.name}"
+        if plan.activity == lab_seasons.LAB_TEXT:
+            text = lab_seasons.lab_text_of(saga, plan)
+            spell = spl.find_spell(saga, text.spell_id) if text else None
+        else:
+            spell = (
+                lab_seasons.design_spell(plan.design)
+                if plan.design is not None
+                else lab_seasons.the_spell(saga, plan)
+            )
+        return f"{spell.name} ({spl.shorthand(spell)})" if spell else ""
     if plan.activity == rules.READ:
         book = next((b for b in saga.books if b.id == plan.book_id), None)
         return book_label(book) if book else ""
@@ -249,6 +276,14 @@ def plan_text(
     names = spell_names(saga, character)
     lines += [f"  {escape(_gain_line(g, names))}" for g in worked.gains]
     lines += [f"  {escape(n)}" for n in worked.notes]
+    if worked.lab_work is not None:
+        lines.append(f"  {escape(work_text(worked.lab_work, plan))}")
+    if plan.lab_id:
+        lab = saga.laboratory(plan.lab_id)
+        where = escape(lab.name) if lab else "the laboratory"
+        lines.append(f"  [dim]Lab work, planned on {where}'s Planning tab.[/]")
+    if plan.days_away:
+        lines.append(f"  {plan.days_away} days away from the laboratory.")
     if worked.pending_roll:
         lines.append("  [dim]The die is rolled when the season is applied.[/]")
     if plan.months_lost and worked.activity and worked.activity.distractable:
@@ -264,29 +299,6 @@ def plan_text(
     return "\n".join(lines)
 
 
-def lab_planning_text(saga: Saga, lab: Laboratory) -> str:
-    """The laboratory's Planning tab until it becomes the lab's own season
-    planner (STORY-901): what its owner has planned for the season, planned
-    on the owner's character sheet."""
-    owner = saga.character(lab.owner_id)
-    if owner is None:
-        return "[dim]No owner: give the laboratory one to plan its seasons.[/]"
-    name = escape(owner.name)
-    lines = [
-        f"[b]{name}: {saga.current_season} {saga.current_year}[/]",
-        "",
-        plan_text(saga, owner, how=f"Plan it on {name}'s Planning tab."),
-        "",
-    ]
-    if plan_for(saga, owner) is not None:
-        lines.append(f"[dim]Change it on {name}'s Planning tab.[/]")
-    lines.append(
-        "[dim]This tab becomes the laboratory's season planner in a later "
-        "story; the Lab Totals have their own tab.[/]"
-    )
-    return "\n".join(lines)
-
-
 def live_text(saga: Saga, character: Character, plan: SeasonPlan) -> str:
     """The plan dialog's preview line(s) for the plan as typed so far."""
     worked = rules.outcome(character, plan, saga)
@@ -295,6 +307,8 @@ def live_text(saga: Saga, character: Character, plan: SeasonPlan) -> str:
     names = spell_names(saga, character)
     lines = [escape(_gain_line(g, names)) for g in worked.gains]
     lines += [escape(n) for n in worked.notes]
+    if worked.lab_work is not None:
+        lines.insert(0, escape(work_text(worked.lab_work, plan)))
     if worked.pending_roll:
         lines.append("[dim]The die is rolled when the season is applied.[/]")
     note = working_seasons_note(character, plan)
@@ -349,6 +363,10 @@ def diary_entry(saga: Saga, character: Character, worked: rules.Outcome) -> Diar
         name += f" (+{total} xp)"
     lines = [_gain_line(g, names) for g in worked.gains]
     lines += worked.notes
+    if worked.lab_work is not None:
+        lines.append(work_text(worked.lab_work, plan) + ".")
+    if plan.days_away:
+        lines.append(f"{plan.days_away} days away from the laboratory.")
     if plan.months_lost and activity and activity.distractable:
         lines.append(f"{plan.months_lost} month(s) lost to distractions.")
     if plan.details.strip() and activity and activity.gives_xp:
@@ -379,6 +397,8 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
         for gain in outcome.gains:
             if gain.result.xp:
                 _add_xp(character, gain.subject, gain.result.xp)
+        if outcome.lab_work is not None:
+            apply_lab_work(saga, character, outcome)
         if outcome.tractatus and outcome.tractatus not in character.tractatus_read:
             character.tractatus_read.append(outcome.tractatus)
         if outcome.vis_spent is not None:
@@ -505,6 +525,8 @@ def make_record(saga: Saga, worked: Sequence[rules.Outcome]) -> SeasonRecord:
                 f"{rules.subject_label(g.subject, names)} +{g.result.xp} xp"
                 for g in outcome.gains
             )
+            if outcome.lab_work is not None:
+                result = f"{work_text(outcome.lab_work, outcome.plan)}; {result}"
         else:
             result = f"not carried out: {outcome.problems[0]}"
         lines.append(
@@ -555,3 +577,459 @@ def record_text(saga: Saga, record: SeasonRecord) -> str:
                     did += f" -- {escape(line.result)}"
             lines.append(f"  {escape(line.name)}: {did}")
     return "\n".join(lines)
+
+
+# -- lab work (STORY-901) ----------------------------------------------------------
+
+#: How many seasons the laboratory's Planning tab shows, the current first.
+QUEUE_LENGTH = 4
+
+
+def upcoming(saga: Saga, count: int = QUEUE_LENGTH) -> list[tuple[str, int]]:
+    """The current season and the ones after it."""
+    seasons_: list[tuple[str, int]] = [(saga.current_season, saga.current_year)]
+    while len(seasons_) < count:
+        seasons_.append(next_season(*seasons_[-1]))
+    return seasons_
+
+
+#: How far ahead the Planning tab looks for scheduled lab work.
+QUEUE_HORIZON = 40
+
+
+@dataclass
+class QueueRow:
+    """One row of the laboratory's Planning tab: a scheduled activity and
+    the seasons it spans (or a season with nothing planned). For inventing,
+    the work is where it stands at its last season."""
+
+    season: str
+    year: int
+    plan: SeasonPlan | None
+    end_season: str = ""
+    end_year: int = 0
+    work: lab_seasons.LabWork | None = None
+    problems: list[str] = field(default_factory=list)
+
+    @property
+    def span(self) -> str:
+        first = _season_label(self.season, self.year)
+        if not self.end_season or (self.end_season, self.end_year) == (
+            self.season,
+            self.year,
+        ):
+            return first
+        return f"{first} - {_season_label(self.end_season, self.end_year)}"
+
+
+def lab_queue(saga: Saga, lab: Laboratory) -> list[QueueRow]:
+    """The owner's scheduled activities from this season on, one row each
+    with the seasons it spans; seasons with nothing planned in between,
+    and the first free season after the last. An invention's points carry
+    from season to season, so each row shows where it will stand."""
+    owner = saga.character(lab.owner_id)
+    if owner is None:
+        return [QueueRow(saga.current_season, saga.current_year, None)]
+    seasons_ = upcoming(saga, QUEUE_HORIZON)
+    last = max(
+        (
+            i
+            for i, (season, year) in enumerate(seasons_)
+            if plan_for(saga, owner, season, year) is not None
+        ),
+        default=-1,
+    )
+    rows: list[QueueRow] = []
+    carried: dict[str, int] = {}
+    for season, year in seasons_[: last + 2]:
+        plan = plan_for(saga, owner, season, year)
+        work = None
+        found: list[str] = []
+        if plan is not None and plan.lab_id:
+            found, work = lab_seasons.work(saga, owner, plan)
+            if (
+                work is not None
+                and work.spell is not None
+                and plan.activity == lab_seasons.INVENT
+            ):
+                key = work.spell.id
+                work.points_before = carried.get(key, work.points_before)
+                work.finished = work.points_after >= work.level
+                carried[key] = work.points_after
+        previous = rows[-1] if rows else None
+        if (
+            previous is not None
+            and plan is not None
+            and previous.plan is not None
+            and plan.lab_id
+            and previous.plan.lab_id
+            and plan.activity == previous.plan.activity == lab_seasons.INVENT
+            and project_key(plan) == project_key(previous.plan)
+            and not found
+            and not previous.problems
+        ):
+            previous.end_season, previous.end_year = season, year
+            previous.work = work
+            continue
+        rows.append(QueueRow(season, year, plan, season, year, work, found))
+    return rows
+
+
+def _season_label(season: str, year: int) -> str:
+    return f"{season} {year}"
+
+
+def work_text(work: lab_seasons.LabWork, plan: SeasonPlan) -> str:
+    """How a season's lab work stands (plain text)."""
+    total = int(work.lab_total.total)
+    if plan.activity == lab_seasons.EXTRACT:
+        return f"Lab Total {total}: {work.vis_gained} pawn(s) of Vim vis"
+    if plan.activity == lab_seasons.FIX_AC:
+        return "1 pawn of Vim vis: the Arcane Connection is fixed"
+    if plan.activity == lab_seasons.LONGEVITY:
+        name = work.subject.name if work.subject is not None else "?"
+        paid = ", ".join(f"{n} pawn(s) of {art}" for art, n in work.vis_cost.items())
+        return (
+            f"Lab Total {total}: aging rolls -{work.longevity} for {name}; {paid} vis"
+        )
+    if plan.activity == lab_seasons.LAB_TEXT:
+        return f"Lab Total {total} against level {work.level}: learned this season"
+    text = (
+        f"Lab Total {total}: +{work.points_gained} points, "
+        f"{work.points_after}/{work.level}"
+    )
+    if work.finished:
+        return text + ", invented this season"
+    left = lab_seasons.seasons_left(work)
+    return text + f", {left} more season(s)"
+
+
+def _progress(work: lab_seasons.LabWork, plan: SeasonPlan) -> str:
+    """A queue row's short progress: "8/15 points", "invented"."""
+    if plan.activity == lab_seasons.EXTRACT:
+        return f"+{work.vis_gained} Vim"
+    if plan.activity == lab_seasons.FIX_AC:
+        return "fixed"
+    if plan.activity == lab_seasons.LONGEVITY:
+        return f"aging -{work.longevity}"
+    if work.finished:
+        return "learned" if plan.activity == lab_seasons.LAB_TEXT else "invented"
+    return f"{work.points_after}/{work.level} points"
+
+
+def lab_queue_rows(saga: Saga, lab: Laboratory) -> list[tuple[int, str]]:
+    """The laboratory Planning tab's rows: each coming season and what its
+    owner has planned."""
+    owner = saga.character(lab.owner_id)
+    rows: list[tuple[int, str]] = []
+    for index, row in enumerate(lab_queue(saga, lab)):
+        when = row.span.ljust(27)
+        if owner is None:
+            what = "[dim]no owner[/]"
+        elif row.plan is None:
+            what = "[$text-warning]nothing planned[/]"
+        else:
+            what = escape(plan_summary(saga, owner, row.plan))
+            if not row.plan.lab_id:
+                what += f" [dim](on {escape(owner.name)}'s sheet)[/]"
+            elif row.problems:
+                what += "  [$text-error]can't be done (see below)[/]"
+            elif row.work is not None:
+                what += f"  [dim]{escape(_progress(row.work, row.plan))}[/]"
+        rows.append((index, f"{when}{what}"))
+    return rows
+
+
+def lab_queue_info(saga: Saga, lab: Laboratory, index: int | None) -> str:
+    """The Planning tab's details panel: the chosen season's plan and its
+    Lab Total, line by line."""
+    if index is None:
+        return (
+            "[dim]Select an activity to see its plan and Lab Total (e changes "
+            "it; on a free season, e plans one). Seasons spent otherwise "
+            "(reading, adventure...) are planned on the character sheet.[/]"
+        )
+    rows = lab_queue(saga, lab)
+    if index >= len(rows):
+        return ""
+    row = rows[index]
+    owner = saga.character(lab.owner_id)
+    head = f"[b]{row.span}[/]"
+    if owner is None:
+        return head + "\n[dim]Give the laboratory an owner to plan its seasons.[/]"
+    if row.plan is None:
+        return head + "\n[dim]Nothing planned. Press e to plan lab work.[/]"
+    lines = [head, f"[b]{escape(plan_summary(saga, owner, row.plan))}[/]"]
+    if not row.plan.lab_id:
+        lines.append(
+            f"[dim]Planned on {escape(owner.name)}'s sheet. Planning lab work "
+            "here replaces it.[/]"
+        )
+        return "\n".join(lines)
+    lines += [f"[$text-error]{escape(p)}[/]" for p in row.problems]
+    if row.work is not None:
+        lines.append(escape(work_text(row.work, row.plan)))
+        for line in row.work.lab_total.lines:
+            if line.amount is not None:
+                lines.append(f"  {escape(line.label)} {line.amount:+g}")
+            elif line.multiplier is not None:
+                lines.append(f"  {escape(line.label)} x{line.multiplier:g}")
+    if row.plan.days_away:
+        lines.append(f"{row.plan.days_away} days away from the laboratory.")
+    return "\n".join(lines)
+
+
+def scheduled_with(saga: Saga, plan: SeasonPlan) -> list[SeasonPlan]:
+    """`plan` and, for lab work, the later seasons scheduled to continue it
+    (the same project), in season order."""
+    key = project_key(plan) if plan.lab_id else None
+    start = (plan.year, SEASONS.index(plan.season))
+    found = [plan, *_subject_plans(saga, plan)]
+    if key is not None:
+        found += [
+            p
+            for p in saga.season_plans
+            if p is not plan
+            and p.character_id == plan.character_id
+            and p.lab_id
+            and project_key(p) == key
+            and (p.year, SEASONS.index(p.season)) > start
+        ]
+    return sorted(found, key=lambda p: (p.year, SEASONS.index(p.season)))
+
+
+def plan_lab_work(saga: Saga, plan: SeasonPlan) -> list[SeasonPlan]:
+    """Lock in a lab plan and, for an invention that will take more seasons,
+    the same plan for each season it's projected to need (where nothing else
+    is planned). Returns the plans added after the first."""
+    # Rescheduling replaces the seasons planned to continue it.
+    start = (plan.year, SEASONS.index(plan.season))
+    key = project_key(plan)
+    saga.season_plans = [
+        p
+        for p in saga.season_plans
+        if not (
+            p.character_id == plan.character_id
+            and p.lab_id
+            and key is not None
+            and project_key(p) == key
+            and (p.year, SEASONS.index(p.season)) > start
+        )
+    ]
+    for old in _subject_plans(saga, plan):
+        saga.season_plans.remove(old)
+    set_plan(saga, plan)
+    character = saga.character(plan.character_id)
+    if character is not None and plan.activity == lab_seasons.LONGEVITY:
+        _plan_subject(saga, character, plan)
+    if character is None or plan.activity != lab_seasons.INVENT:
+        return []
+    found, work = lab_seasons.work(saga, character, plan)
+    if found or work is None:
+        return []
+    added: list[SeasonPlan] = []
+    season, year = plan.season, plan.year
+    for _ in range(lab_seasons.seasons_left(work)):
+        season, year = next_season(season, year)
+        if plan_for(saga, character, season, year) is not None:
+            break
+        follow = replace(plan, season=season, year=year, days_away=0)
+        set_plan(saga, follow)
+        added.append(follow)
+    return added
+
+
+def _subject_plans(saga: Saga, plan: SeasonPlan) -> list[SeasonPlan]:
+    """The season planned for the subject of the magus's Longevity Ritual
+    in `plan`'s season."""
+    return [
+        p
+        for p in saga.season_plans
+        if p.activity == lab_seasons.LONGEVITY_SUBJECT
+        and p.subject_id == plan.character_id
+        and (p.season, p.year) == (plan.season, plan.year)
+    ]
+
+
+def _plan_subject(saga: Saga, magus: Character, plan: SeasonPlan) -> None:
+    """Plan the subject's season with the magus (when they're planned season
+    by season and have nothing else planned)."""
+    subject = lab_seasons.subject_of(saga, magus, plan)
+    if subject is None or subject is magus or not rules.is_planned(subject):
+        return
+    if plan_for(saga, subject, plan.season, plan.year) is not None:
+        return
+    set_plan(
+        saga,
+        SeasonPlan(
+            subject.id,
+            plan.year,
+            plan.season,
+            lab_seasons.LONGEVITY_SUBJECT,
+            details=f"The subject of {magus.name}'s Longevity Ritual.",
+            subject_id=magus.id,
+        ),
+    )
+
+
+def _lab_text_book(saga: Saga, magus: Character, lab: Laboratory, spell) -> Book:
+    ids = {b.id for b in saga.books}
+    base = f"labtext_{spell.id}_{magus.id}"
+    book_id, n = base, 2
+    while book_id in ids:
+        book_id, n = f"{base}_{n}", n + 1
+    return Book(
+        id=book_id,
+        name=f"Lab Text: {spell.name}",
+        type="Lab Text",
+        author=magus.name,
+        owner_kind="laboratory",
+        owner_id=lab.id,
+        year_published=saga.current_year,
+        spell_id=spell.id,
+        spell_name=spell.name,
+    )
+
+
+def project_key(plan: SeasonPlan) -> str | None:
+    """What ties a plan's seasons of invention together: its design, or the
+    spell it invents."""
+    if plan.design is not None:
+        return f"design:{plan.design.key}"
+    return plan.spell_id
+
+
+def _same_spell(a: Spell, b: Spell) -> bool:
+    fields_ = ("name", "technique", "form", "level", "range", "duration", "target")
+    return all(getattr(a, f) == getattr(b, f) for f in fields_) and sorted(
+        a.requisites
+    ) == sorted(b.requisites)
+
+
+def _invented_spell(saga: Saga, magus: Character, design: SpellDesign) -> Spell:
+    """The spell a finished design gives: the spell it started from when it
+    wasn't changed, otherwise a new spell of the magus's own."""
+    designed = lab_seasons.design_spell(design)
+    source = spl.find_spell(saga, design.source_spell_id)
+    if source is not None and _same_spell(source, designed):
+        return source
+    spell = spl.add_invented_spell(
+        saga, magus, designed.name, designed.technique, designed.form
+    )
+    for attribute in (
+        "level",
+        "description",
+        "requisites",
+        "range",
+        "duration",
+        "target",
+        "ritual",
+        "base_level",
+    ):
+        setattr(spell, attribute, getattr(designed, attribute))
+    spell.source = "Invented"
+    return spell
+
+
+_LAB_DIARY_ACTIVITY = {
+    lab_seasons.EXTRACT: "Extract Vis",
+    lab_seasons.FIX_AC: "Fix Arcane Connection",
+    lab_seasons.LONGEVITY: "Longevity Ritual",
+}
+
+
+def _apply_one_season_work(
+    saga: Saga,
+    magus: Character,
+    lab: Laboratory,
+    outcome: rules.Outcome,
+    work: lab_seasons.LabWork,
+) -> None:
+    """Extracting vis, fixing an Arcane Connection or a Longevity Ritual:
+    vis paid or gained, the subject's Longevity modifier, the lab's Diary."""
+    plan = outcome.plan
+    pool = lab_seasons.vis_pool(saga, magus, plan)
+    for art, pawns in work.vis_cost.items():
+        key = art.lower()
+        pool[key] = max(0, pool.get(key, 0) - pawns)
+        if not pool[key]:
+            del pool[key]
+    if work.vis_gained:
+        pool["vim"] = pool.get("vim", 0) + work.vis_gained
+    connection = lab_seasons.connection_of(saga, plan)
+    if plan.activity == lab_seasons.FIX_AC and connection is not None:
+        connection.fixed = True
+        connection.lasts = ""
+        connection.fixed_year, connection.fixed_season = plan.year, plan.season
+    if work.subject is not None and work.longevity:
+        work.subject.aging.longevity_modifier = work.longevity
+        work.subject.aging.longevity_year = plan.year
+        work.subject.aging.longevity_by = magus.name
+    activity = rules.ACTIVITIES[plan.activity]
+    subject = plan_subject(saga, magus, plan)
+    lab.diary.append(
+        DiaryEntry(
+            year=plan.year,
+            season=plan.season,
+            name=f"{activity.label}: {subject}" if subject else activity.label,
+            details=f"{magus.name}: {work_text(work, plan)}.",
+            activity=_LAB_DIARY_ACTIVITY.get(plan.activity, activity.label),
+        )
+    )
+
+
+def apply_lab_work(saga: Saga, magus: Character, outcome: rules.Outcome) -> None:
+    """A season of lab work: the invention's points, and when it's done, the
+    spell known, a Lab Text in the laboratory and the lab's Diary entry."""
+    work = outcome.lab_work
+    plan = outcome.plan
+    lab = saga.laboratory(plan.lab_id)
+    if work is None or lab is None:
+        return
+    spell = work.spell
+    if spell is None:
+        _apply_one_season_work(saga, magus, lab, outcome, work)
+        return
+    saga.lab_projects = [
+        p
+        for p in saga.lab_projects
+        if not (p.character_id == magus.id and p.spell_id == spell.id)
+    ]
+    if work.finished:
+        project = spell.id
+        if plan.design is not None:
+            spell = _invented_spell(saga, magus, plan.design)
+        if not any(k.spell_id == spell.id for k in magus.spells_known):
+            magus.spells_known.append(KnownSpell(spell_id=spell.id))
+        if plan.activity == lab_seasons.INVENT:
+            saga.books.append(_lab_text_book(saga, magus, lab, spell))
+        # Plans made to continue it are no longer needed.
+        saga.season_plans = [
+            p
+            for p in saga.season_plans
+            if not (
+                p.character_id == magus.id
+                and project_key(p) == project
+                and p.activity == lab_seasons.INVENT
+                and (p.season, p.year) != (plan.season, plan.year)
+            )
+        ]
+    else:
+        saga.lab_projects.append(LabProject(magus.id, spell.id, work.points_after))
+        season, year = next_season(plan.season, plan.year)
+        if plan_for(saga, magus, season, year) is None:
+            set_plan(saga, replace(plan, season=season, year=year, days_away=0))
+    lab.diary.append(
+        DiaryEntry(
+            year=plan.year,
+            season=plan.season,
+            name=f"{spell.name} ({spl.shorthand(spell)})",
+            details=f"{magus.name}: {work_text(work, plan)}."
+            + (
+                " A Lab Text was written."
+                if work.finished and plan.activity == lab_seasons.INVENT
+                else ""
+            ),
+            activity="Invent Spell",
+        )
+    )
