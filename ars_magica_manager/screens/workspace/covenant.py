@@ -35,6 +35,7 @@ from ..fields import (
 )
 from ..forms import (
     ImproveIncomeScreen,
+    _contested_fields,
     _covenant_fields,
     _inhabitant_fields,
     _possession_dialog,
@@ -225,6 +226,7 @@ class CovenantActions(WorkspaceBase):
                 hint=f"Usual per year: {usual}.",
             ),
             _description_field(source.description if source else ""),
+            *_contested_fields(source),
         ]
 
         def handle_result(values: dict[str, Any] | None) -> None:

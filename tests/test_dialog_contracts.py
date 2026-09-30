@@ -358,6 +358,25 @@ CONTRACTS: dict[str, Contract] = {
         expected={"creo": 5},
         invalid={"Pawns": "-"},
     ),
+    "add research goal": Contract(
+        prefill={"Goal": "", "Breakthrough": "Minor", "Target": "30"},
+        edits={
+            "Goal": "Piercing the Aegis",
+            "Breakthrough": "Major",
+            "Reaching it grants": "Ability",
+            "Ability": "Aegis Lore",
+        },
+        saved=lambda s: (
+            _char(s).breakthroughs[-1].name,
+            _char(s).breakthroughs[-1].kind,
+            _char(s).breakthroughs[-1].target,
+            _char(s).breakthroughs[-1].grant_kind,
+            _char(s).breakthroughs[-1].grant,
+        ),
+        expected=("Piercing the Aegis", "Major", 45, "Ability", "Aegis Lore"),
+        invalid=[{"Goal": ""}, {"Goal": "X", "Target": "0"}],
+        shown={"#research-goals-list": "Piercing the Aegis (Major): 0/45"},
+    ),
     "lab virtue choice": Contract(
         prefill={"Specialization": Select.NULL},
         edits={"Specialization": "Muto"},
@@ -489,6 +508,23 @@ CONTRACTS: dict[str, Contract] = {
         expected=[("a lock of hair", False, "until Summer 1222", "the Tribunal")],
         invalid={"Connection to": ""},
         shown={"#lab-connections-list": "a lock of hair"},
+    ),
+    "grog yearly update": Contract(
+        prefill={"Vocational xp": "7", "Story awards this year": "0"},
+        edits={
+            "Vocational training": "Single Weapon",
+            "Practice (4 xp)": "Brawl",
+            "Exposure (2 xp)": "Awareness",
+            "Story awards this year": "1",
+        },
+        saved=lambda s: (
+            s.character("grog9").grog_year.vocational,
+            s.character("grog9").grog_year.practice,
+            s.character("grog9").grog_year.exposure,
+            s.character("grog9").grog_year.story_awards,
+        ),
+        expected=("Single Weapon", "Brawl", "Awareness", 1),
+        invalid={"Vocational xp": "x"},
     ),
     "add lab diary entry": Contract(
         prefill={"Year": "1220", "Season": "Autumn", "Name": ""},

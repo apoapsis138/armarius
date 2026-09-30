@@ -45,6 +45,7 @@ from ...models import (
     Character,
     Covenant,
     Familiar,
+    GrogYear,
     Laboratory,
     Saga,
     ScoredTrait,
@@ -63,6 +64,7 @@ from ..forms import (
     _character_create_fields,
     _covenant_create_fields,
     _familiar_create_fields,
+    _grog_year_dialog,
     _laboratory_create_fields,
     _saga_fields,
     _season_plan_dialog,
@@ -1149,15 +1151,74 @@ class WorkspaceBase(Screen[None]):
             await advance()
 
         async def advance() -> None:
-            new_year = saga.current_season == SEASONS[-1]
+            # Contested resources whose security lapsed: was each secured
+            # this season (STORY-906)? Asked one by one, then the season
+            # is played out.
+            lapsed = seasons.lapsed_resources(saga)
+            answers: dict[str, bool] = {}
+
+            async def ask(index: int) -> None:
+                if index >= len(lapsed):
+                    await play_out(answers)
+                    return
+                resource_id, label = lapsed[index]
+
+                async def answered(yes: bool | None) -> None:
+                    answers[resource_id] = bool(yes)
+                    await ask(index + 1)
+
+                self.app.push_screen(
+                    ConfirmScreen(
+                        f"Was {escape(label)} secured this season? (A contested "
+                        "resource: yes secures it for five years; no loses its "
+                        "harvest or income.)"
+                    ),
+                    answered,
+                )
+
+            await ask(0)
+
+        async def play_out(answers: dict[str, bool]) -> None:
             # Every plan's outcome is worked out before any is applied, so a
             # season's results can't change that same season (STORY-903).
             worked = seasons.resolve(saga, random.Random())
+            # An experiment seeking a Discovery whose roll the risk can move
+            # onto 10: asked each time (Hedda 2026-09-30).
+            moves = seasons.discovery_moves(saga, worked)
+
+            async def ask_move(index: int) -> None:
+                if index >= len(moves):
+                    await finish(answers, worked)
+                    return
+                outcome, text = moves[index]
+
+                async def answered(yes: bool | None) -> None:
+                    seasons.take_discovery_move(saga, outcome, bool(yes))
+                    await ask_move(index + 1)
+
+                self.app.push_screen(ConfirmScreen(escape(text)), answered)
+
+            await ask_move(0)
+
+        async def finish(answers: dict[str, bool], worked: list[Any]) -> None:
+            new_year = saga.current_season == SEASONS[-1]
             record = seasons.make_record(saga, worked)
             if worked:
                 storage.backup_saga(saga)
             applied = seasons.apply(saga, worked)
-            if saga.keep_season_records and worked:
+            # Winter ends the year: the aging rolls (STORY-904).
+            aged = (
+                seasons.year_end_grogs(saga)
+                + seasons.year_end_business(saga)
+                + seasons.year_end_aging(saga, random.Random())
+                if new_year
+                else []
+            )
+            record.lines += aged
+            harvest = seasons.covenant_season(saga, answers)
+            record.lines += harvest
+            aged += harvest
+            if saga.keep_season_records and (worked or aged):
                 saga.season_records.append(record)
             # A new year (Winter -> Spring): each covenant's surplus goes into
             # its Wealth before the date moves on.
@@ -1173,7 +1234,7 @@ class WorkspaceBase(Screen[None]):
             self._refresh_covenant_section("tab-cov-seasons")
             if saga.keep_season_records and worked:
                 self._rebuild_tree()
-            if worked:
+            if worked or aged:
                 self.app.push_screen(SeasonSummaryScreen(saga, record))
             message = f"It is now {saga.current_season} {saga.current_year}."
             if applied:
@@ -1232,10 +1293,7 @@ class WorkspaceBase(Screen[None]):
         """Plan `character`'s current season, or change the plan, then
         refresh `section`."""
         if not season_rules.is_planned(character):
-            self.notify(
-                "Grogs aren't planned season by season: they're updated once a "
-                "year (Grogs, Chapter 5)."
-            )
+            self._grog_year_for(character, section)
             return
 
         def handle_result(plan: SeasonPlan | None) -> None:
@@ -1248,6 +1306,18 @@ class WorkspaceBase(Screen[None]):
                 self.saga, character, seasons.plan_for(self.saga, character)
             ),
             handle_result,
+        )
+
+    def _grog_year_for(self, character: Character, section: str) -> None:
+        """Set up a grog's yearly update (STORY-924)."""
+
+        def handle_result(year: GrogYear | None) -> None:
+            if year is not None:
+                character.grog_year = year
+                self._commit(section)
+
+        self.app.push_screen(
+            _grog_year_dialog(character, character.grog_year), handle_result
         )
 
     def _clear_season_plan_for(self, character: Character, section: str) -> None:

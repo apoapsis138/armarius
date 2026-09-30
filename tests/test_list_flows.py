@@ -13,6 +13,7 @@ from ars_magica_manager import storage
 from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     BondPower,
+    Breakthrough,
     Character,
     Covenant,
     DiaryEntry,
@@ -61,6 +62,7 @@ def _saga() -> Saga:
         Possession(id="it1", kind="item", name="Staff [old]"),
         Possession(id="it2", kind="item", name="Cloak"),
     ]
+    magus.breakthroughs = [Breakthrough("Aegis [piercing]"), Breakthrough("Wards")]
     familiar = Familiar(id="fam1", character_id="mag1", name="Corax")
     familiar.personality_traits = two()
     familiar.reputations = two()
@@ -327,6 +329,12 @@ ITEM_LISTS: dict[str, ListCase] = {
         "section-inventory",
         "inventory-list",
         lambda s: s.characters[0].inventory,
+    ),
+    "research-goals": ListCase(
+        ("character", "mag1"),
+        "section-research-goals",
+        "research-goals-list",
+        lambda s: s.characters[0].breakthroughs,
     ),
     "familiar-natural-weapons": ListCase(
         ("familiar", "fam1"),

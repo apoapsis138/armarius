@@ -107,6 +107,11 @@ class WorkspaceScreen(
             "section-known-spells": _SectionOps(
                 self._add_spell, self._remove_spell, self._edit_spell_mastery
             ),
+            "section-research-goals": _SectionOps(
+                self._add_research_goal,
+                self._remove_research_goal,
+                self._edit_research_goal,
+            ),
             "section-inventory": _SectionOps(
                 self._add_item, self._remove_item, self._edit_item
             ),

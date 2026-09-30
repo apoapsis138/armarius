@@ -1054,7 +1054,7 @@ class CharacterSheetView(SheetView):
     _RAW_VIS_SECTIONS = ("section-raw-vis-hermetic", "section-raw-vis-inventory")
     #: The Hermetic Magic details panel with nothing chosen.
     _HERMETIC_INFO_PLACEHOLDER = (
-        "[dim]Select an Art or a Known Spell to see its details.[/]"
+        "[dim]Select an Art, a Known Spell or a Research Goal to see its details.[/]"
     )
 
     def _hermetic_tab(self) -> ComposeResult:
@@ -1119,9 +1119,26 @@ class CharacterSheetView(SheetView):
                         id="known-spells-list",
                         group="hermetic",
                     )
+                with SheetSection(
+                    title=self._titled(
+                        "section-research-goals",
+                        "section-research-goals",
+                        lambda: counted(
+                            "Research Goals", len(self.character.breakthroughs)
+                        ),
+                    ),
+                    id="section-research-goals",
+                ):
+                    yield self._list(
+                        "section-research-goals",
+                        self._research_goal_rows,
+                        id="research-goals-list",
+                        group="hermetic",
+                    )
             yield DetailsPanel(self._HERMETIC_INFO_PLACEHOLDER, id="hermetic-info")
             self._on_refresh(
-                ("section-arts", "section-known-spells"), self._refresh_hermetic_info
+                ("section-arts", "section-known-spells", "section-research-goals"),
+                self._refresh_hermetic_info,
             )
 
     def _inventory_tab(self) -> ComposeResult:
@@ -1239,9 +1256,14 @@ class CharacterSheetView(SheetView):
             # One group (one selection across the three), one details panel.
             self._refresh_inventory_info()
             return
-        if list_id in ("arts-techniques-list", "arts-forms-list", "known-spells-list"):
+        if list_id in (
+            "arts-techniques-list",
+            "arts-forms-list",
+            "known-spells-list",
+            "research-goals-list",
+        ):
             event.stop()
-            # One group (one selection across the three), one details panel.
+            # One group (one selection across the four), one details panel.
             self._refresh_hermetic_info()
             return
         if list_id not in ("vf-virtues-list", "vf-flaws-list"):
@@ -1351,9 +1373,22 @@ class CharacterSheetView(SheetView):
 
     def _aging_text(self) -> str:
         a = self.character.aging
+        lines = [f"Decrepitude: {a.decrepitude}"]
+        # The yearly aging roll's figures (STORY-904), once there are any.
+        if a.decrepitude_points:
+            lines[0] += f" ({a.decrepitude_points} points)"
+        if a.apparent_age is not None:
+            lines.append(f"Apparent age: {a.apparent_age}")
+        points = [f"{n.title()} {p}" for n, p in a.aging_points.items() if p]
+        if points:
+            lines.append("Aging Points: " + ", ".join(points))
+        if a.longevity_modifier:
+            lines.append(f"Longevity Ritual: -{a.longevity_modifier} to aging rolls")
+        if a.recovering:
+            lines.append(f"Recovering from an Aging Crisis: {a.recovering}")
         return "\n".join(
             [
-                f"Decrepitude: {a.decrepitude}",
+                *lines,
                 "Effects of Aging:",
                 escape(a.effects) or "(none recorded)",
                 "",
@@ -1457,8 +1492,26 @@ class CharacterSheetView(SheetView):
         if index is not None:
             info.update(self._art_info_text(FORMS[index]))
             return
+        index = self.query_one(
+            "#research-goals-list", SelectableList
+        ).selected_data_index
+        if index is not None and index < len(self.character.breakthroughs):
+            info.update(st.goal_text(self.character.breakthroughs[index]))
+            return
         index = self.query_one("#known-spells-list", SelectableList).selected_data_index
         info.update(self._known_spell_info_text(index))
+
+    def _research_goal_rows(self) -> list[tuple[int | None, str]]:
+        return [
+            (index, st.goal_row(goal))
+            for index, goal in enumerate(self.character.breakthroughs)
+        ]
+
+    def selected_research_goal(self) -> int | None:
+        """Index into character.breakthroughs of the chosen row, or None."""
+        return self.query_one(
+            "#research-goals-list", SelectableList
+        ).selected_data_index
 
     def _known_spell_rows(self) -> list[tuple[int | None, str]]:
         return st.known_spell_rows(self.saga, self.character)

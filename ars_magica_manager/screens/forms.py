@@ -75,6 +75,7 @@ from ..models import (
     Background,
     BondPower,
     Book,
+    Breakthrough,
     Character,
     Characteristics,
     Covenant,
@@ -82,6 +83,7 @@ from ..models import (
     DeviceComponent,
     EnchantedDevice,
     Familiar,
+    GrogYear,
     HermeticBackground,
     IncomeSource,
     InstilledEffect,
@@ -98,9 +100,16 @@ from ..models import (
     XpAllocation,
     new_instance_id,
 )
+from ..rules import (
+    apprentice_seasons,
+    book_seasons,
+    experiment,
+    laboratory_seasons,
+    spell_levels,
+    supplement_seasons,
+)
 from ..rules import options as rule_options
 from ..rules import seasons as season_rules
-from ..rules import spell_levels
 from .fields import (
     _EMPHASIS_HINT,
     DialogField,
@@ -583,6 +592,7 @@ def _vis_possession_fields(
                 placeholder="(choose a Season)",
             )
         )
+        fields += _contested_fields(entry)
     fields += [
         DialogField("pawns", "Pawns", "int", _attr(entry, "pawns", 1) or 1),
         DialogField("location", "Location", "text", _attr(entry, "location", "")),
@@ -594,6 +604,35 @@ def _vis_possession_fields(
         ),
     ]
     return fields
+
+
+def _contested_fields(entry: Any) -> list[DialogField]:
+    """A vis or income source's Contested / Dwindling Resource Hooks
+    (STORY-906)."""
+    return [
+        DialogField(
+            "contested",
+            "Contested Resource",
+            "check",
+            bool(_attr(entry, "contested", False)),
+            hint="Covered by a Contested or Indiscreet Resource Hook: advancing "
+            "asks whether it was secured once its security lapses.",
+        ),
+        DialogField(
+            "secured_until",
+            "Secured through (year)",
+            "optint",
+            _attr(entry, "secured_until", None),
+            show_if=lambda values: bool(values.get("contested")),
+            hint="A story secures it for five years.",
+        ),
+        DialogField(
+            "dwindling",
+            "Dwindling Resource (-10% a year)",
+            "check",
+            bool(_attr(entry, "dwindling", False)),
+        ),
+    ]
 
 
 def _saga_fields(saga: Saga | None) -> list[DialogField]:
@@ -929,6 +968,14 @@ def _aging_fields(aging: Aging) -> list[DialogField]:
         DialogField("effects", "Effects of Aging", "text", aging.effects),
         DialogField("warping_score", "Warping Score", "int", aging.warping_score),
         DialogField("warping_points", "Warping Points", "int", aging.warping_points),
+        DialogField(
+            "gain_warping",
+            "Gain Warping Points now",
+            "int",
+            0,
+            hint="From one event (a powerful effect, a botch...): 2 or more "
+            "take a magus to the edge of Wizard's Twilight, rolled at once.",
+        ),
     ]
 
 
@@ -980,7 +1027,7 @@ def _season_plan_from(
         for n in range(1, season_rules.MAX_SUBJECTS + 1)
         if values.get(f"subject_{n}")
     ]
-    return SeasonPlan(
+    plan = SeasonPlan(
         character_id=character.id,
         year=saga.current_year,
         season=saga.current_season,
@@ -989,10 +1036,69 @@ def _season_plan_from(
         source_quality=values.get("source_quality"),
         months_lost=values.get("months_lost") or 0,
         details=values.get("details") or "",
-        book_id=values.get("book_id") if activity == season_rules.READ else None,
+        book_id=(
+            values.get("book_id")
+            if activity == season_rules.READ
+            else values.get("copy_book_id")
+            if activity in (book_seasons.COPY_BOOK, book_seasons.TRANSLATE_BOOK)
+            else values.get("text_id")
+            if activity == book_seasons.COPY_TEXTS
+            else None
+        ),
+        title=(
+            values.get("title") or ""
+            if activity in (book_seasons.WRITE_SUMMA, book_seasons.WRITE_TRACTATUS)
+            else _supplement_title(activity, values)
+        ),
+        book_level=(
+            values.get("book_level")
+            if activity == book_seasons.WRITE_SUMMA
+            else _supplement_level(activity, values)
+        ),
+        language=(
+            values.get("language") or ""
+            if activity
+            in (
+                book_seasons.WRITE_SUMMA,
+                book_seasons.WRITE_TRACTATUS,
+                book_seasons.TRANSLATE_BOOK,
+            )
+            else ""
+        ),
+        quick=bool(values.get("quick"))
+        if activity == book_seasons.COPY_BOOK
+        else False,
+        subject_id=(
+            values.get("student_id")
+            if activity
+            in (
+                book_seasons.TEACH_ABBREVIATIONS,
+                apprentice_seasons.OPEN_ARTS,
+                apprentice_seasons.TEACH_VIRTUE,
+            )
+            else None
+        ),
+        research=(
+            values.get("research") or "" if activity == experiment.INTEGRATE else ""
+        ),
+        research_kind=values.get("research_kind") or "Minor",
+        effect_id=(
+            values.get("virtue_id")
+            if activity == apprentice_seasons.TEACH_VIRTUE
+            else values.get("mystery_virtue")
+            if activity == "undergo_initiation"
+            else None
+        ),
         teacher_id=(
             values.get("teacher_id")
-            if activity in (season_rules.TAUGHT, season_rules.TRAINED)
+            if activity
+            in (
+                season_rules.TAUGHT,
+                season_rules.TRAINED,
+                laboratory_seasons.ASSIST,
+                "undergo_initiation",
+                "record_lectures",
+            )
             else None
         ),
         vis_from=(
@@ -1000,7 +1106,508 @@ def _season_plan_from(
             if activity == season_rules.VIS_STUDY
             else ""
         ),
-        die=values.get("die") if activity == season_rules.VIS_STUDY else None,
+        die=(
+            values.get("die")
+            if activity
+            in (
+                season_rules.VIS_STUDY,
+                apprentice_seasons.SEARCH,
+                experiment.INTEGRATE,
+                "search_lacuna",
+            )
+            else None
+        ),
+    )
+    for key, value in _supplement_plan_values(activity, values).items():
+        setattr(plan, key, value)
+    return plan
+
+
+#: The supplement activities that give experience (STORY-913, 918-923).
+_SUPPLEMENT_XP: tuple[str, ...] = tuple(
+    a.key for a in supplement_seasons.ACTIVITIES if not a.no_xp
+)
+
+
+_LP_ACTIVITIES = (
+    "working_season",
+    "workshop_production",
+    "make_excellent_item",
+    "tournament",
+    "apothecary",
+    "create_art",
+)
+_CHARACTERISTICS = (
+    "intelligence",
+    "perception",
+    "strength",
+    "stamina",
+    "presence",
+    "communication",
+    "dexterity",
+    "quickness",
+)
+_THEMES = (
+    "Loyalty",
+    "Calmness",
+    "Kindness",
+    "Bravery",
+    "Wisdom",
+    "Strength",
+    "Justice",
+)
+#: Plan field -> (dialog key, activities) for the supplements' extra values.
+_LEVEL_KEYS = {
+    "craft_level": ("workshop_production", "make_excellent_item"),
+    "might": ("tame_animal",),
+    "target_level": ("pilgrimage",),
+    "product_level": ("produce_remedies",),
+    "score_written": ("inspeximus",),
+}
+_BONUS_KEYS = {
+    "workshop_bonus": ("workshop_production", "make_excellent_item", "create_art"),
+    "venture_lp": ("merchant_venture",),
+    "elements": ("pilgrimage",),
+    "script_bonus": ("undergo_initiation",),
+}
+_TITLE_KEYS = {
+    "work_name": (
+        "pilgrimage",
+        "tame_animal",
+        "create_art",
+        "research_formula",
+        "make_excellent_item",
+        "record_lectures",
+    ),
+    "improve": ("improve_workshop",),
+    "exam": ("attend_university",),
+    "theme": ("care_of_souls",),
+    "lore": ("undergo_initiation",),
+}
+
+
+def _pick(activity: str, values: dict[str, Any], keys: dict[str, tuple[str, ...]]):
+    for key, activities in keys.items():
+        if activity in activities:
+            return values.get(key)
+    return None
+
+
+def _supplement_level(activity: str, values: dict[str, Any]) -> int | None:
+    value = _pick(activity, values, _LEVEL_KEYS)
+    if isinstance(value, str):
+        return int(value) if value.isdigit() else None
+    return value
+
+
+def _supplement_title(activity: str, values: dict[str, Any]) -> str:
+    return _pick(activity, values, _TITLE_KEYS) or ""
+
+
+def _supplement_plan_values(activity: str, values: dict[str, Any]) -> dict[str, Any]:
+    """The rest of a supplement season's plan (decision 38)."""
+    found: dict[str, Any] = {
+        "other_modifier": _pick(activity, values, _BONUS_KEYS) or 0,
+        "characteristic": (
+            values.get("characteristic") or "" if activity in _LP_ACTIVITIES else ""
+        ),
+    }
+    if activity == "workshop_production":
+        found["quick"] = bool(values.get("manual"))
+        found["experimenting"] = bool(values.get("exert"))
+    if activity == "produce_remedies":
+        found["extra_vis"] = values.get("doses") or 1
+    if activity == "undergo_initiation":
+        found["device_id"] = values.get("ordeal_flaw")
+        found["research_kind"] = values.get("ordeal_size") or "Minor"
+    if activity == "inspeximus":
+        found["book_id"] = values.get("summa_id")
+    return found
+
+
+def _supplement_fields(
+    saga: Saga,
+    character: Character,
+    existing: SeasonPlan | None,
+    activity_is: Callable[..., Callable[[dict[str, Any]], bool]],
+) -> list[DialogField]:
+    """The season form's fields for the supplement sub-systems."""
+    plan = existing
+    level = plan.book_level if plan else None
+    bonus = plan.other_modifier if plan else 0
+    title = plan.title if plan else ""
+    catalog_vfs = catalog.load_virtue_flaw_catalog()
+    return [
+        DialogField(
+            "characteristic",
+            "Characteristic",
+            "select",
+            (plan.characteristic if plan else "") or None,
+            options=[(c.title(), c) for c in _CHARACTERISTICS],
+            allow_blank=True,
+            placeholder="(the usual one)",
+            show_if=activity_is(*_LP_ACTIVITIES),
+        ),
+        DialogField(
+            "craft_level",
+            "Craft Level",
+            "optint",
+            level,
+            show_if=activity_is(*_LEVEL_KEYS["craft_level"]),
+            hint="Blank: 6 (15 for an excellent item).",
+        ),
+        DialogField(
+            "might",
+            "Animal's Might",
+            "optint",
+            level,
+            show_if=activity_is("tame_animal"),
+        ),
+        DialogField(
+            "target_level",
+            "Target Level",
+            "select",
+            str(level) if level in (18, 30) else "18",
+            options=[("18 (minor pilgrimage)", "18"), ("30 (major pilgrimage)", "30")],
+            show_if=activity_is("pilgrimage"),
+        ),
+        DialogField(
+            "product_level",
+            "Product level",
+            "optint",
+            level,
+            show_if=activity_is("produce_remedies"),
+        ),
+        DialogField(
+            "doses",
+            "Doses",
+            "int",
+            (plan.extra_vis if plan else 0) or 1,
+            show_if=activity_is("produce_remedies"),
+        ),
+        DialogField(
+            "score_written",
+            "Score when written",
+            "optint",
+            level,
+            show_if=activity_is("inspeximus"),
+            hint="Blank: twice the summa's Level.",
+        ),
+        DialogField(
+            "summa_id",
+            "Summa",
+            "select",
+            plan.book_id if plan else None,
+            options=[
+                (escape(b.name), b.id)
+                for b in saga.books
+                if b.type in ("Art Summa", "Ability Summa")
+                and b.author == character.name
+            ],
+            allow_blank=True,
+            show_if=activity_is("inspeximus"),
+        ),
+        DialogField(
+            "workshop_bonus",
+            "Other bonuses",
+            "int",
+            bonus,
+            show_if=activity_is(*_BONUS_KEYS["workshop_bonus"]),
+            hint="Assistants, a craft manual, a specialty...",
+        ),
+        DialogField(
+            "venture_lp",
+            "Labor Points gained",
+            "int",
+            bonus,
+            show_if=activity_is("merchant_venture"),
+        ),
+        DialogField(
+            "elements",
+            "Elements overcome",
+            "int",
+            bonus,
+            show_if=activity_is("pilgrimage"),
+            hint="+3 a season is added for you; add the rest (+3 to +12 each).",
+        ),
+        DialogField(
+            "script_bonus",
+            "Script bonus",
+            "int",
+            bonus,
+            show_if=activity_is("undergo_initiation"),
+        ),
+        DialogField(
+            "work_name",
+            "Name",
+            "text",
+            title,
+            placeholder="the pilgrimage, animal, work, formula or item",
+            show_if=activity_is(*_TITLE_KEYS["work_name"]),
+        ),
+        DialogField(
+            "improve",
+            "Improve",
+            "select",
+            title or None,
+            options=[("Innovation", "innovation"), ("Raw Materials", "raw materials")],
+            allow_blank=True,
+            show_if=activity_is("improve_workshop"),
+        ),
+        DialogField(
+            "exam",
+            "Exam",
+            "select",
+            title or None,
+            options=[(e.title(), e) for e in ("baccalaureus", "magister", "doctor")],
+            allow_blank=True,
+            placeholder="(none)",
+            show_if=activity_is("attend_university"),
+        ),
+        DialogField(
+            "theme",
+            "Sermon theme",
+            "select",
+            title or None,
+            options=[(t, t) for t in _THEMES],
+            allow_blank=True,
+            show_if=activity_is("care_of_souls"),
+        ),
+        DialogField(
+            "lore",
+            "Mystagogue's Lore",
+            "text",
+            title,
+            placeholder="e.g. Mercere Lore",
+            show_if=activity_is("undergo_initiation"),
+        ),
+        DialogField(
+            "mystery_virtue",
+            "Virtue initiated",
+            "select",
+            plan.effect_id if plan else None,
+            options=[(escape(e.name), e.id) for e in catalog_vfs if e.type == "Virtue"],
+            allow_blank=True,
+            show_if=activity_is("undergo_initiation"),
+        ),
+        DialogField(
+            "ordeal_flaw",
+            "Ordeal Flaw (if any)",
+            "select",
+            plan.device_id if plan else None,
+            options=[(escape(e.name), e.id) for e in catalog_vfs if e.type == "Flaw"],
+            allow_blank=True,
+            show_if=activity_is("undergo_initiation"),
+        ),
+        DialogField(
+            "ordeal_size",
+            "Ordeal size",
+            "select",
+            (plan.research_kind if plan else "") or "Minor",
+            options=[(o, o) for o in ("Minor", "Medium", "Major")],
+            show_if=activity_is("undergo_initiation"),
+        ),
+        DialogField(
+            "manual",
+            "Write a craft manual",
+            "check",
+            bool(plan and plan.quick),
+            show_if=activity_is("workshop_production"),
+            hint="Costs 1 Labor Point; needs Artes Liberales 1.",
+        ),
+        DialogField(
+            "exert",
+            "Exert",
+            "check",
+            bool(plan and plan.experimenting),
+            show_if=activity_is("workshop_production"),
+            hint="+ a simple die to the Workshop Total, and an Aging roll.",
+        ),
+    ]
+
+
+def _grog_year_dialog(
+    character: Character, existing: GrogYear | None
+) -> FieldsDialog[GrogYear]:
+    """A grog's yearly update (STORY-924, Grogs Ch. 5): what the training,
+    practice and exposure go into, and the year's story awards."""
+    names = sorted({a.name for a in character.abilities})
+    options = [(escape(n), n) for n in names]
+
+    def ability(key: str, label: str, hint: str = "") -> DialogField:
+        value = getattr(existing, key) if existing else ""
+        pairs = options + (
+            [(escape(value), value)] if value and value not in names else []
+        )
+        return DialogField(
+            key,
+            label,
+            "select",
+            value or None,
+            options=pairs,
+            allow_blank=True,
+            hint=hint,
+        )
+
+    return FieldsDialog(
+        f"{escape(character.name)}'s Yearly Update",
+        [
+            ability(
+                "vocational",
+                "Vocational training",
+                "Usually Single Weapon, from the drill sergeant.",
+            ),
+            DialogField(
+                "vocational_xp",
+                "Vocational xp",
+                "int",
+                existing.vocational_xp if existing else 7,
+                hint="7, or the teacher's Source Quality if known.",
+            ),
+            ability("practice", "Practice (4 xp)"),
+            ability("exposure", "Exposure (2 xp)"),
+            ability("exposure_2", "Exposure (2 xp), second"),
+            DialogField(
+                "story_awards",
+                "Story awards this year",
+                "int",
+                existing.story_awards if existing else 0,
+                hint="Each takes a season: exposure, vocational, practice, exposure.",
+            ),
+        ],
+        build=lambda values: GrogYear(
+            vocational=values.get("vocational") or "",
+            vocational_xp=values.get("vocational_xp") or 0,
+            practice=values.get("practice") or "",
+            exposure=values.get("exposure") or "",
+            exposure_2=values.get("exposure_2") or "",
+            story_awards=values.get("story_awards") or 0,
+        ),
+    )
+
+
+#: What reaching a research goal grants (Breakthrough.grant_kind).
+GRANT_KINDS = [
+    ("An Ability (the points become its xp)", "Ability"),
+    ("A Virtue", "Virtue"),
+    ("A new parameter (the troupe records it)", "Parameter"),
+]
+
+
+def _breakthrough_dialog(existing: Breakthrough | None) -> FieldsDialog[Breakthrough]:
+    """A magus's original research goal (STORY-916; Hedda 2026-09-30): what it
+    is, the kind of Breakthrough sought (Minor, Major, Hermetic; its target
+    follows, and the storyguide may type a secret one), and what reaching it
+    grants."""
+    virtues = sorted(
+        (d for d in catalog.load_virtue_flaw_catalog() if d.type == "Virtue"),
+        key=lambda d: d.name,
+    )
+    grant_kind = existing.grant_kind if existing else ""
+
+    def grant(kind: str) -> str:
+        return existing.grant if existing and grant_kind == kind else ""
+
+    def build(values: dict[str, Any]) -> Breakthrough:
+        kind = values.get("grant_kind") or ""
+        made = replace(existing) if existing else Breakthrough(name="")
+        made.name = values["name"]
+        made.description = values.get("description") or ""
+        made.kind = values["kind"]
+        made.target = values["target"]
+        made.points = values.get("points") or 0
+        made.grant_kind = kind
+        made.grant = values.get(f"grant_{kind.lower()}") or "" if kind else ""
+        made.reached = made.reached and made.points >= made.target
+        return made
+
+    def problem(values: dict[str, Any]) -> str | None:
+        if (values.get("target") or 0) < 1:
+            return "The target is at least 1 point."
+        if (values.get("points") or 0) < 0:
+            return "The points gained can't be negative."
+        return None
+
+    return FieldsDialog(
+        "Add Research Goal" if existing is None else "Edit Research Goal",
+        [
+            DialogField(
+                "name",
+                "Goal",
+                "text",
+                existing.name if existing else "",
+                required=True,
+                placeholder="e.g. Penetrating the Aegis",
+            ),
+            DialogField(
+                "description",
+                "What it is",
+                "area",
+                existing.description if existing else "",
+            ),
+            DialogField(
+                "kind",
+                "Breakthrough",
+                "select",
+                existing.kind if existing else "Minor",
+                options=[
+                    (f"{kind} ({points} points)", kind)
+                    for kind, points in experiment.KINDS.items()
+                ],
+                required=True,
+                fills=lambda values: {
+                    "target": experiment.KINDS.get(values.get("kind") or "", 30)
+                },
+            ),
+            DialogField(
+                "target",
+                "Target",
+                "int",
+                existing.target if existing else experiment.KINDS["Minor"],
+                hint="The storyguide may set a secret target.",
+            ),
+            DialogField(
+                "points",
+                "Points so far",
+                "int",
+                existing.points if existing else 0,
+            ),
+            DialogField(
+                "grant_kind",
+                "Reaching it grants",
+                "select",
+                grant_kind or None,
+                options=GRANT_KINDS,
+                allow_blank=True,
+                placeholder="(the troupe decides)",
+            ),
+            DialogField(
+                "grant_ability",
+                "Ability",
+                "text",
+                grant("Ability"),
+                show_if=lambda values: values.get("grant_kind") == "Ability",
+            ),
+            DialogField(
+                "grant_virtue",
+                "Virtue",
+                "select",
+                grant("Virtue") or None,
+                options=[(escape(d.name), d.id) for d in virtues],
+                allow_blank=True,
+                show_if=lambda values: values.get("grant_kind") == "Virtue",
+            ),
+            DialogField(
+                "grant_parameter",
+                "Parameter",
+                "text",
+                grant("Parameter"),
+                show_if=lambda values: values.get("grant_kind") == "Parameter",
+            ),
+        ],
+        save_label="Add" if existing is None else "Save",
+        build=build,
+        validate=problem,
     )
 
 
@@ -1032,6 +1639,9 @@ def _season_plan_dialog(
                 season_rules.TEACH,
                 season_rules.TRAINED,
                 season_rules.VIS_STUDY,
+                book_seasons.WRITE_SUMMA,
+                book_seasons.WRITE_TRACTATUS,
+                *_SUPPLEMENT_XP,
             )
         elif n == 2:
             shown = activity_is(season_rules.EXPOSURE, season_rules.ADVENTURE)
@@ -1081,10 +1691,12 @@ def _season_plan_dialog(
             "Source Quality",
             "optint",
             existing.source_quality if existing else None,
-            show_if=activity_is(season_rules.PRACTICE, season_rules.ADVENTURE),
+            show_if=activity_is(
+                season_rules.PRACTICE, season_rules.ADVENTURE, *_SUPPLEMENT_XP
+            ),
             hint=(
                 "Practice: blank for 4 (5 for a spell's Mastery). Adventure: "
-                "the storyguide's 5 to 10."
+                "the storyguide's 5 to 10. Others: see the line above Save."
             ),
         ),
         DialogField(
@@ -1116,10 +1728,121 @@ def _season_plan_dialog(
                 if c.id != character.id and c.type == "grog"
             ],
             allow_blank=True,
-            show_if=activity_is(season_rules.TAUGHT, season_rules.TRAINED),
-            hint="A teacher plans Teach for the same season.",
+            show_if=activity_is(
+                season_rules.TAUGHT,
+                season_rules.TRAINED,
+                laboratory_seasons.ASSIST,
+                "undergo_initiation",
+                "record_lectures",
+            ),
+            hint="A teacher plans Teach for the same season; the magus you "
+            "assist plans lab work.",
         ),
         *subject_fields,
+        DialogField(
+            "title",
+            "Title",
+            "text",
+            existing.title if existing else "",
+            placeholder="blank: named for its subject",
+            show_if=activity_is(book_seasons.WRITE_SUMMA, book_seasons.WRITE_TRACTATUS),
+        ),
+        DialogField(
+            "book_level",
+            "Summa Level (blank: the most)",
+            "optint",
+            existing.book_level if existing else None,
+            show_if=activity_is(book_seasons.WRITE_SUMMA),
+            hint="Each Level below the most adds Quality (+1, +3 for an Ability).",
+        ),
+        DialogField(
+            "language",
+            "Language",
+            "text",
+            (existing.language if existing else "") or "Latin",
+            show_if=activity_is(
+                book_seasons.WRITE_SUMMA,
+                book_seasons.WRITE_TRACTATUS,
+                book_seasons.TRANSLATE_BOOK,
+            ),
+            hint="Written in, or translated into.",
+        ),
+        DialogField(
+            "copy_book_id",
+            "Book",
+            "select",
+            existing.book_id if existing else None,
+            options=[
+                (escape(seasons.book_label(b)), b.id)
+                for b in bk.studyable_books(saga, character)
+            ],
+            allow_blank=True,
+            show_if=activity_is(book_seasons.COPY_BOOK, book_seasons.TRANSLATE_BOOK),
+        ),
+        DialogField(
+            "quick",
+            "Quick copy (x3, Quality -1)",
+            "check",
+            existing.quick if existing else False,
+            show_if=activity_is(book_seasons.COPY_BOOK),
+        ),
+        DialogField(
+            "text_id",
+            "Lab Text",
+            "select",
+            existing.book_id if existing else None,
+            options=[
+                (escape(b.name), b.id)
+                for b in saga.books
+                if b.type == "Lab Text"
+                and bk.can_read(saga, character, b)
+                and book_seasons.can_use_lab_text(character, b)
+            ],
+            allow_blank=True,
+            show_if=activity_is(book_seasons.COPY_TEXTS),
+        ),
+        DialogField(
+            "student_id",
+            "Student",
+            "select",
+            existing.subject_id if existing else None,
+            options=[
+                (escape(c.name), c.id)
+                for c in saga.characters
+                if c.id != character.id and c.type != "grog"
+            ],
+            allow_blank=True,
+            show_if=activity_is(
+                book_seasons.TEACH_ABBREVIATIONS,
+                apprentice_seasons.OPEN_ARTS,
+                apprentice_seasons.TEACH_VIRTUE,
+            ),
+        ),
+        DialogField(
+            "research",
+            "Research goal",
+            "text",
+            existing.research if existing else "",
+            show_if=activity_is(experiment.INTEGRATE),
+        ),
+        DialogField(
+            "research_kind",
+            "Breakthrough",
+            "select",
+            (existing.research_kind if existing else "") or "Minor",
+            options=[(k, k) for k in experiment.KINDS],
+            show_if=activity_is(experiment.INTEGRATE),
+        ),
+        *_supplement_fields(saga, character, existing, activity_is),
+        DialogField(
+            "virtue_id",
+            "Hermetic Virtue",
+            "select",
+            existing.effect_id if existing else None,
+            options=apprentice_seasons.teachable_virtues(character),
+            allow_blank=True,
+            show_if=activity_is(apprentice_seasons.TEACH_VIRTUE),
+        ),
         DialogField(
             "vis_from",
             "Vis from",
@@ -1136,7 +1859,12 @@ def _season_plan_dialog(
             "Stress die (blank: rolled)",
             "optint",
             existing.die if existing else None,
-            show_if=activity_is(season_rules.VIS_STUDY),
+            show_if=activity_is(
+                season_rules.VIS_STUDY,
+                apprentice_seasons.SEARCH,
+                experiment.INTEGRATE,
+                "search_lacuna",
+            ),
             hint="Leave blank for the app to roll it when the season is applied.",
         ),
         DialogField(
@@ -1582,6 +2310,13 @@ def _bond_power_fields(power: BondPower | None) -> list[DialogField]:
             "Cosmetic Trait Manifested",
             "text",
             _attr(power, "cosmetic_trait", ""),
+        ),
+        DialogField(
+            "instilling_progress",
+            "Instilling (blank = finished)",
+            "optint",
+            _attr(power, "instilling_progress", None),
+            hint="0 to instil it as lab work (the lab's Planning tab).",
         ),
     ]
 

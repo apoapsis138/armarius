@@ -4,18 +4,19 @@ Diary."""
 
 from __future__ import annotations
 
+import random
 from typing import Any
 
 from ... import laboratories as lab_text
 from ... import possessions as pos
-from ... import sourcebooks, storage
+from ... import seasons, sourcebooks, storage
 from ... import spells as spl
 from ...markup import escape
 from ...models import (
     Ability,
-    Aging,
     ArtScore,
     Background,
+    Breakthrough,
     Character,
     Description,
     DiaryEntry,
@@ -28,6 +29,7 @@ from ...models import (
     known_fields,
     replace_raw_vis,
 )
+from ...rules import aging as aging_rules
 from ...rules import seasons as season_rules
 from ..fields import (
     FieldsDialog,
@@ -37,6 +39,7 @@ from ..forms import (
     MasteryEditScreen,
     _aging_fields,
     _biographical_fields,
+    _breakthrough_dialog,
     _character_info_dialog,
     _characteristics_fields,
     _characteristics_from,
@@ -143,9 +146,24 @@ class CharacterActions(WorkspaceBase):
             return
 
         def handle_result(result: dict[str, Any] | None) -> None:
-            if result is not None:
-                character.aging = Aging(**result)
-                self._commit("section-aging")
+            if result is None:
+                return
+            gained = result.pop("gain_warping", 0) or 0
+            aging = character.aging
+            if result["decrepitude"] != aging.decrepitude:
+                aging.decrepitude_points = aging_rules.points_for_score(
+                    result["decrepitude"]
+                )
+            # Only the fields on the form: the rest (Longevity, Aging Points)
+            # stays as it is.
+            for key, value in result.items():
+                setattr(aging, key, value)
+            if gained > 0:
+                notes = seasons.gain_warping(
+                    self.saga, character, gained, random.Random()
+                )
+                self.notify(" ".join(notes), timeout=12)
+            self._commit("section-aging", "tab-diary")
 
         self.app.push_screen(
             FieldsDialog("Edit Aging & Warping", _aging_fields(character.aging)),
@@ -497,6 +515,73 @@ class CharacterActions(WorkspaceBase):
             index,
             self._known_spell_name(character.spells_known[index]),
             "section-known-spells",
+        )
+
+    # -- Research Goals (STORY-916) --
+
+    def _selected_research_goal(self) -> int | None:
+        view = self._character_sheet_view
+        return view.selected_research_goal() if view is not None else None
+
+    def _research_goal_labels(self, character: Character) -> list[str]:
+        return [escape(b.name) for b in character.breakthroughs]
+
+    def _add_research_goal(self) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+
+        def handle_result(result: Breakthrough | None) -> None:
+            if result is not None:
+                character.breakthroughs.append(result)
+                self._commit("section-research-goals")
+
+        self.app.push_screen(_breakthrough_dialog(None), handle_result)
+
+    def _edit_research_goal(self) -> None:
+        """Edit the chosen research goal; with none chosen, ask which one."""
+        character = self.selected_character
+        if character is None:
+            return
+        self._chosen_or_pick(
+            self._selected_research_goal(),
+            self._research_goal_labels(character),
+            title="Edit which research goal?",
+            empty="No research goals to edit.",
+            then=self._edit_research_goal_at,
+        )
+
+    def _edit_research_goal_at(self, index: int) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+
+        def handle_result(result: Breakthrough | None) -> None:
+            if result is not None:
+                character.breakthroughs[index] = result
+                self._commit("section-research-goals")
+
+        self.app.push_screen(
+            _breakthrough_dialog(character.breakthroughs[index]), handle_result
+        )
+
+    def _remove_research_goal(self) -> None:
+        """Delete the chosen research goal (after confirming); with none
+        chosen, ask which one first."""
+        character = self.selected_character
+        if character is None:
+            return
+        self._chosen_or_pick(
+            self._selected_research_goal(),
+            self._research_goal_labels(character),
+            title="Remove a research goal",
+            empty="No research goals to remove.",
+            then=lambda index: self._confirm_delete(
+                character.breakthroughs,
+                index,
+                character.breakthroughs[index].name,
+                "section-research-goals",
+            ),
         )
 
     # -- Inventory --

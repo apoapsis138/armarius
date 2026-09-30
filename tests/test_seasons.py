@@ -23,7 +23,12 @@ from ars_magica_manager.models import (
     VirtueFlawInstance,
     XpAllocation,
 )
+from ars_magica_manager.rules import apprentice_seasons as aps
+from ars_magica_manager.rules import book_seasons as bs
+from ars_magica_manager.rules import experiment
+from ars_magica_manager.rules import laboratory_seasons as ls
 from ars_magica_manager.rules import seasons as rules
+from ars_magica_manager.rules import supplement_seasons as sup
 from ars_magica_manager.rules.xp import ability_xp
 from ars_magica_manager.screens import ConfirmScreen, FieldsDialog, WorkspaceScreen
 
@@ -68,7 +73,23 @@ def test_grogs_are_not_planned_season_by_season():
 
 def test_magi_and_companions_plan_every_activity_built_so_far():
     study = [rules.READ, rules.TAUGHT, rules.TEACH, rules.TRAINED]
-    for character, extra in ((_magus(), [rules.VIS_STUDY]), (_companion(), [])):
+    writing = [bs.WRITE_SUMMA, bs.WRITE_TRACTATUS, bs.COPY_BOOK, bs.TRANSLATE_BOOK]
+    magus_only = [rules.VIS_STUDY, *writing, bs.REWRITE_TEXTS, bs.COPY_TEXTS]
+    for character, extra in (
+        (
+            _magus(),
+            [
+                *magus_only,
+                bs.TEACH_ABBREVIATIONS,
+                aps.SEARCH,
+                aps.OPEN_ARTS,
+                aps.TEACH_VIRTUE,
+                experiment.INTEGRATE,
+                ls.ASSIST,
+            ],
+        ),
+        (_companion(), [*writing, bs.COPY_TEXTS, ls.ASSIST]),
+    ):
         keys = [a.key for a in rules.activities_for(character)]
         assert keys == [
             rules.EXPOSURE,
@@ -76,6 +97,7 @@ def test_magi_and_companions_plan_every_activity_built_so_far():
             *study,
             *extra,
             rules.ADVENTURE,
+            *[a.key for a in sup.ACTIVITIES if character.type in a.who],
             rules.OTHER,
         ]
     mythic = Character(id="y", name="Wode", type="mythic companion")

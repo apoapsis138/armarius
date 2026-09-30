@@ -32,15 +32,27 @@ from .. import books
 from .. import spells as spl
 from ..models import (
     ArcaneConnection,
+    BondPower,
     Book,
     Character,
+    EnchantedDevice,
+    Familiar,
+    InstilledEffect,
     Laboratory,
     Saga,
     SeasonPlan,
     Spell,
     SpellDesign,
 )
-from . import lab, spell_levels
+from . import (
+    book_seasons,
+    enchant_seasons,
+    experiment,
+    familiar_seasons,
+    lab,
+    laboratory_seasons,
+    spell_levels,
+)
 from .breakdown import Line
 from .casting import _lowest
 
@@ -71,6 +83,12 @@ LONGEVITY_SOURCE = (
     "_Laboratory#Longevity_Rituals)"
 )
 
+TAMING = "hermetic_taming"
+TAMING_SOURCE = (
+    "Realms of Power: Magic, Chapter Five: Magic Animals, Taming Animals "
+    "(https://www.redcap.org/page/Realms_of_Power:_Magic_Chapter_Five:"
+    "_Magic_Animals#Taming_Animals)"
+)
 INVENT = "invent_spell"
 LAB_TEXT = "lab_text_spell"
 EXTRACT = "extract_vis"
@@ -79,7 +97,19 @@ LONGEVITY = "longevity_ritual"
 #: Being the subject of someone's Longevity Ritual (planned for the subject
 #: when the ritual is scheduled; not lab work of their own).
 LONGEVITY_SUBJECT = "longevity_subject"
-LAB_ACTIVITIES: tuple[str, ...] = (INVENT, LAB_TEXT, EXTRACT, FIX_AC, LONGEVITY)
+LAB_ACTIVITIES: tuple[str, ...] = (
+    INVENT,
+    LAB_TEXT,
+    EXTRACT,
+    FIX_AC,
+    LONGEVITY,
+    *enchant_seasons.ACTIVITIES,
+    book_seasons.DECODE_TEXT,
+    TAMING,
+    experiment.STABILIZE,
+    *laboratory_seasons.ACTIVITIES,
+    *familiar_seasons.ACTIVITIES,
+)
 #: Lab work about a spell (the rest take one season and make no spell).
 SPELL_ACTIVITIES: tuple[str, ...] = (INVENT, LAB_TEXT)
 #: The lab_total activity (Specializations, Virtues) of each lab activity.
@@ -116,6 +146,32 @@ class LabWork:
     #: A Longevity Ritual: its subject and aging-roll modifier.
     subject: Character | None = None
     longevity: int = 0
+    #: Enchanting (STORY-905): the device and effect worked on, a charged
+    #: item's charges, and the effects an investigation found.
+    device: EnchantedDevice | None = None
+    effect: InstilledEffect | None = None
+    charges: int = 0
+    revealed: list[str] = field(default_factory=list)
+    #: Familiar work (STORY-908): the familiar, and the bond power instilled.
+    familiar: Familiar | None = None
+    power: BondPower | None = None
+    #: Decoding (STORY-914): (reader id, author, level) readable when done.
+    access: tuple[str, str, int] | None = None
+    #: Work on the laboratory (STORY-915): setting up its second season, the
+    #: Refinement it will have (and had), and the Virtues/Flaws the season's
+    #: roll gains or loses.
+    second_season: bool = False
+    refinement: int = 0
+    old_refinement: int = 0
+    gains_vf: list[str] = field(default_factory=list)
+    loses_vf: list[str] = field(default_factory=list)
+    #: Stabilizing (STORY-916): the Discovery's magnitude.
+    research_magnitude: int = 0
+    #: Experimental effects an invention carries to its spell.
+    carried_effects: list[str] = field(default_factory=list)
+    research_warping: int = 0
+    #: Experimenting: the season's Extraordinary Results.
+    experiment: experiment.Extraordinary | None = None
 
     @property
     def points_after(self) -> int:
@@ -146,6 +202,7 @@ def lab_texts(saga: Saga, magus: Character) -> list[Book]:
         and b.spell_id
         and b.spell_id not in known
         and books.can_read(saga, magus, b)
+        and book_seasons.can_use_lab_text(magus, b)
     ]
 
 
@@ -213,6 +270,43 @@ def work(
         return ["Lab work needs a laboratory."], None
     if lab_.owner_id != magus.id:
         return [f"{magus.name} doesn't work in {lab_.name}."], None
+    vf_ids = {vf.vf_id for vf in magus.virtues_flaws}
+    if plan.experimenting:
+        if plan.activity not in EXPERIMENTAL:
+            return ["This lab work can't be done experimenting."], None
+        if experiment.AVERSE in vf_ids:
+            return [f"{magus.name} is Averse to Risk: no experimenting."], None
+        # Seeking a Discovery limits the risk by Magic Theory; otherwise 0-3.
+        most = (
+            experiment.max_risk(laboratory_seasons.magic_theory(magus))
+            if seeking(plan)
+            else experiment.MAX_RISK
+        )
+        if not 0 <= plan.risk <= most:
+            return [
+                f"The risk modifier is 0 to +{most}"
+                + (" (by Magic Theory, seeking a Discovery)." if seeking(plan) else ".")
+            ], None
+    elif plan.activity in EXPERIMENTAL and experiment.PRONE in vf_ids:
+        return [
+            f"{magus.name} is Prone to Chance: this lab work must be experimental."
+        ], None
+    if plan.activity == experiment.STABILIZE:
+        return _stabilize(saga, magus, plan)
+    if plan.activity == TAMING:
+        return _taming(saga, magus, plan, lab_)
+    if plan.activity in laboratory_seasons.ACTIVITIES:
+        return laboratory_seasons.work(saga, magus, plan, lab_)
+
+    def options(m, p, technique, form, total):
+        return _with_options(m, p, technique, form, total, saga)
+
+    if plan.activity in enchant_seasons.ACTIVITIES:
+        return enchant_seasons.work(saga, magus, plan, lab_, options)
+    if plan.activity in familiar_seasons.ACTIVITIES:
+        return familiar_seasons.work(saga, magus, plan, lab_, options)
+    if plan.activity == book_seasons.DECODE_TEXT:
+        return _decode(saga, magus, plan, lab_)
     if plan.activity not in SPELL_ACTIVITIES:
         return _one_season_work(saga, magus, plan, lab_)
     if plan.activity == LAB_TEXT:
@@ -221,6 +315,11 @@ def work(
             return ["Choose the Lab Text to work from."], None
         if not books.can_read(saga, magus, text):
             return [f"{magus.name} can't get at {text.name}."], None
+        if not book_seasons.can_use_lab_text(magus, text):
+            return [
+                f"{text.name} is {text.author}'s raw text: decode it first (or "
+                "have it rewritten for general use)."
+            ], None
         spell = spl.find_spell(saga, text.spell_id)
         if spell is None:
             return [f"{text.name} doesn't record a spell."], None
@@ -258,11 +357,12 @@ def work(
         lab_,
         activity=_TOTAL_ACTIVITY[plan.activity],
         days_missed=max(0, plan.days_away),
+        experimenting=plan.experimenting,
         similar_spell_level=(
             similar.level if similar is not None and plan.activity == INVENT else None
         ),
     )
-    total = _with_options(magus, plan, technique, form, total)
+    total = _with_options(magus, plan, technique, form, total, saga)
     if lab.distraction_penalty(max(0, plan.days_away)) is None:
         return [
             f"{plan.days_away} days away from the laboratory: no lab work is "
@@ -301,7 +401,7 @@ def vis_pool(saga: Saga, magus: Character, plan: SeasonPlan) -> dict[str, int]:
     return magus.raw_vis
 
 
-def _whose_vis(magus: Character, plan: SeasonPlan) -> str:
+def whose_vis(magus: Character, plan: SeasonPlan) -> str:
     return "the laboratory's" if plan.vis_from == "laboratory" else f"{magus.name}'s"
 
 
@@ -363,7 +463,7 @@ def _one_season_work(
         if pool.get("vim", 0) < 1:
             return [
                 f"Fixing an Arcane Connection takes 1 pawn of Vim vis; "
-                f"{_whose_vis(magus, plan)} raw vis has none."
+                f"{whose_vis(magus, plan)} raw vis has none."
             ], None
         total = lab.LabTotal(total=0, lines=[])
         return [], LabWork(None, total, 0, finished=True, vis_cost={"Vim": 1})
@@ -382,8 +482,9 @@ def _one_season_work(
             lab_,
             activity=_TOTAL_ACTIVITY[EXTRACT],
             days_missed=days,
+            experimenting=plan.experimenting,
         )
-        total = _with_options(magus, plan, "Creo", "Vim", total)
+        total = _with_options(magus, plan, "Creo", "Vim", total, saga)
         pawns = lab.vis_extracted(max(0, int(total.total)))
         return [], LabWork(None, total, 0, finished=True, vis_gained=pawns)
     # A Longevity Ritual.
@@ -421,8 +522,9 @@ def _one_season_work(
         lab_,
         activity=_TOTAL_ACTIVITY[LONGEVITY],
         days_missed=days,
+        experimenting=plan.experimenting,
     )
-    total = _with_options(magus, plan, "Creo", "Corpus", total)
+    total = _with_options(magus, plan, "Creo", "Corpus", total, saga)
     extra: list[Line] = []
     if plan.extra_vis:
         extra.append(Line("Extra vis", amount=plan.extra_vis, source=LONGEVITY_SOURCE))
@@ -463,7 +565,7 @@ def _one_season_work(
     if held < pawns:
         return [
             f"The ritual takes {pawns} pawns of {plan.vis_art} vis; "
-            f"{_whose_vis(magus, plan)} raw vis has {held}."
+            f"{whose_vis(magus, plan)} raw vis has {held}."
         ], None
     result = LabWork(
         None,
@@ -477,6 +579,170 @@ def _one_season_work(
         ),
     )
     return [], result
+
+
+def seeking(plan: SeasonPlan) -> bool:
+    """Whether an experiment seeks a Discovery (it names a research goal)."""
+    return plan.experimenting and bool(plan.research.strip())
+
+
+def _stabilize(
+    saga: Saga, magus: Character, plan: SeasonPlan
+) -> tuple[list[str], LabWork | None]:
+    """Stabilizing a Discovery: the experiment that made it, repeated
+    exactly: its seasons, Lab Total, risk and vis (in the first season)."""
+    found = experiment.find_goal(magus, plan.research)
+    if found is None or not found.pending_magnitude:
+        return ["Choose a research goal with a Discovery to stabilize."], None
+    cost: dict[str, int] = {}
+    if not found.stabilizing_seasons and found.discovery_vis:
+        art = found.discovery_vis_art or "Vim"
+        held = vis_pool(saga, magus, plan).get(art.lower(), 0)
+        if held < found.discovery_vis:
+            return [
+                f"The experiment takes {found.discovery_vis} pawns of {art} vis; "
+                f"{whose_vis(magus, plan)} raw vis has {held}."
+            ], None
+        cost = {art: found.discovery_vis}
+    total = lab.LabTotal(
+        total=found.discovery_lab_total,
+        lines=[
+            Line(
+                "The Discovery's experiment, repeated",
+                amount=found.discovery_lab_total,
+                source=experiment.RESEARCH_SOURCE,
+            )
+        ],
+    )
+    seasons_ = max(1, found.discovery_seasons)
+    work_ = LabWork(
+        None,
+        total,
+        seasons_,
+        points_before=found.stabilizing_seasons,
+        points_gained=1,
+        finished=found.stabilizing_seasons + 1 >= seasons_,
+        vis_cost=cost,
+    )
+    work_.research_magnitude = found.pending_magnitude
+    return [], work_
+
+
+def _taming(
+    saga: Saga, magus: Character, plan: SeasonPlan, lab_: Laboratory
+) -> tuple[list[str], LabWork | None]:
+    """Hermetic taming (Realms of Power: Magic): the creature housed in the
+    lab; Rego + its Form Lab Total (+ Animal Handling + Animal Ken) - its
+    Might each season, until the points reach its Might."""
+    if not plan.title.strip():
+        return ["Name the creature."], None
+    if not plan.form:
+        return ["Choose the creature's Form."], None
+    might = plan.book_level or 0
+    if might <= 0:
+        return ["Type the creature's Might."], None
+    total = lab.lab_total(
+        saga,
+        magus,
+        "Rego",
+        plan.form,
+        lab_,
+        days_missed=max(0, plan.days_away),
+        experimenting=plan.experimenting,
+    )
+    extra = [
+        Line(name, amount=score, source=TAMING_SOURCE)
+        for name in ("Animal Handling", "Animal Ken")
+        if (score := sum(lab.ability_score(magus, name)))
+    ]
+    if extra:
+        total = replace(
+            total,
+            total=total.total + sum(line.amount or 0 for line in extra),
+            lines=[*total.lines, *extra],
+        )
+    total = _with_options(magus, plan, "Rego", plan.form, total, saga)
+    gained = int(total.total) - might
+    if gained <= 0:
+        return [
+            f"Lab Total {int(total.total)} isn't above the creature's Might {might}."
+        ], None
+    record = next(
+        (
+            p
+            for p in magus.progress
+            if p.kind == "taming" and p.name == plan.title.strip() and not p.done
+        ),
+        None,
+    )
+    before = record.points if record is not None else 0
+    return [], LabWork(
+        None,
+        total,
+        might,
+        points_before=before,
+        points_gained=gained,
+        finished=before + gained >= might,
+    )
+
+
+def decode_key(magus: Character, author: str) -> str:
+    return f"decode:{magus.id}:{author}"
+
+
+def _decode(
+    saga: Saga, magus: Character, plan: SeasonPlan, lab_: Laboratory
+) -> tuple[list[str], LabWork | None]:
+    """Decoding another magus's Lab Texts: the Lab Total in the text's
+    Technique + Form each season, until the points reach its level; points
+    start at the highest level of his already decoded."""
+    text = lab_text_of(saga, plan)
+    if text is None or text.type != "Lab Text":
+        return ["Choose the Lab Text to decode."], None
+    if not books.can_read(saga, magus, text):
+        return [f"{magus.name} can't get at {text.name}."], None
+    if book_seasons.can_use_lab_text(magus, text):
+        return [f"{magus.name} can already read {text.name}."], None
+    arts = book_seasons.decode_total_arts(saga, text)
+    if arts is None:
+        return [f"{text.name} doesn't record a spell's Technique and Form."], None
+    level = book_seasons.text_level(text, saga)
+    total = lab.lab_total(
+        saga,
+        magus,
+        arts[0],
+        arts[1],
+        lab_,
+        activity="learn_from_lab_text",
+        days_missed=max(0, plan.days_away),
+        experimenting=plan.experimenting,
+    )
+    total = _with_options(magus, plan, arts[0], arts[1], total, saga)
+    if lab.distraction_penalty(max(0, plan.days_away)) is None:
+        return [
+            f"{plan.days_away} days away from the laboratory: no lab work is "
+            "possible this season (more than 20)."
+        ], None
+    before = max(
+        project_points_key(saga, decode_key(magus, text.author)),
+        magus.lab_text_access.get(text.author, 0),
+    )
+    gained = max(0, int(total.total))
+    if gained <= 0:
+        return ["The Lab Total is 0: no progress is possible."], None
+    return [], LabWork(
+        None,
+        total,
+        level,
+        points_before=before,
+        points_gained=gained,
+        finished=before + gained >= level,
+        access=(magus.id, text.author, level),
+    )
+
+
+def project_points_key(saga: Saga, key: str) -> int:
+    return next((p.points for p in saga.lab_projects if p.spell_id == key), 0)
 
 
 FOCUS_SOURCE = (
@@ -498,7 +764,12 @@ def theory_specialty(magus: Character) -> str:
 
 
 def _with_options(
-    magus: Character, plan: SeasonPlan, technique: str, form: str, total: lab.LabTotal
+    magus: Character,
+    plan: SeasonPlan,
+    technique: str,
+    form: str,
+    total: lab.LabTotal,
+    saga: Saga | None = None,
 ) -> lab.LabTotal:
     """The Lab Total with the plan's options: a Magical Focus counts the
     lower Art twice, a Magic Theory Specialty that applies adds 1, and any
@@ -521,6 +792,29 @@ def _with_options(
         )
     if plan.other_modifier:
         extra.append(Line("Other", amount=plan.other_modifier, source=""))
+    if plan.experimenting and plan.activity in EXPERIMENTAL:
+        die = plan.experiment_die
+        # Seeking a Discovery, the risk goes on the chart roll only.
+        risk = 0 if seeking(plan) else plan.risk
+        extra.append(
+            Line(
+                f"Experimentation (simple die {die if die is not None else '?'}"
+                + (f" + risk {risk})" if risk else ")"),
+                amount=(die or 0) + risk,
+                source=experiment.SOURCE,
+            )
+        )
+    if saga is not None:
+        helpers = laboratory_seasons.assistants(saga, magus, plan)
+        for helper in helpers[: lab.max_assistants(magus)]:
+            extra.append(
+                Line(
+                    f"{helper.name} (assistant)",
+                    amount=helper.characteristics.intelligence
+                    + laboratory_seasons.magic_theory(helper),
+                    source=laboratory_seasons.ASSIST_SOURCE,
+                )
+            )
     if not extra:
         return total
     return replace(
@@ -528,6 +822,29 @@ def _with_options(
         total=total.total + sum(line.amount or 0 for line in extra),
         lines=[*total.lines, *extra],
     )
+
+
+#: Lab work that can be done experimenting (not from a Lab Text).
+EXPERIMENTAL: tuple[str, ...] = (
+    INVENT,
+    LONGEVITY,
+    enchant_seasons.INSTIL,
+    enchant_seasons.LESSER_WORK,
+    enchant_seasons.CHARGED_WORK,
+    enchant_seasons.INVESTIGATE,
+    familiar_seasons.BIND,
+    familiar_seasons.EMPOWER,
+    TAMING,
+)
+#: Lab work that can take several seasons, points carried between them.
+MULTI_SEASON: tuple[str, ...] = (
+    experiment.STABILIZE,
+    TAMING,
+    INVENT,
+    enchant_seasons.INSTIL,
+    familiar_seasons.EMPOWER,
+    book_seasons.DECODE_TEXT,
+)
 
 
 def seasons_left(work_: LabWork) -> int:

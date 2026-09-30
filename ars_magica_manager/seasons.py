@@ -16,30 +16,47 @@ import re
 from collections.abc import Sequence
 from dataclasses import dataclass, field, replace
 
+from . import enchanted_devices as ed
 from . import spells as spl
+from .familiars import familiar_of
 from .inhabitants import AUTO_KINDS, character_kind
 from .markup import escape, fit
 from .models import (
     SEASONS,
     Ability,
+    ArcaneConnection,
     ArtScore,
     Book,
     Character,
     Covenant,
+    CovenantDiaryEntry,
     DiaryEntry,
     KnownSpell,
     Laboratory,
     LabProject,
+    Possession,
+    Progress,
     Saga,
     SeasonPlan,
     SeasonRecord,
     SeasonRecordLine,
     Spell,
     SpellDesign,
+    VirtueFlawInstance,
+    new_instance_id,
     next_season,
 )
+from .rules import aging as aging_rules
+from .rules import apprentice_seasons as aps
+from .rules import book_seasons as bs
+from .rules import enchant_seasons as es
+from .rules import experiment as ex
+from .rules import familiar_seasons as fs
 from .rules import lab_seasons, study
+from .rules import laboratory_seasons as ls
 from .rules import seasons as rules
+from .rules import supplement_work as sw
+from .rules import warping as warping_rules
 from .rules import xp as xp_rules
 
 # -- plans --------------------------------------------------------------------
@@ -174,6 +191,45 @@ def _cite(source: str) -> str:
     return re.sub(r"\s*\(https?://[^)]*\)\s*$", "", source)
 
 
+def _book_plan_subject(saga: Saga, plan: SeasonPlan, names: dict[str, str]) -> str:
+    """What a season of book work is on: the book, or the subject written."""
+    if plan.activity in (bs.WRITE_SUMMA, bs.WRITE_TRACTATUS):
+        shares = rules.allocations(plan)
+        subject = rules.subject_label(shares[0].subject, names) if shares else ""
+        return plan.title.strip() or subject
+    if plan.activity == bs.REWRITE_TEXTS:
+        return "own raw Lab Texts"
+    if plan.activity == bs.TEACH_ABBREVIATIONS:
+        student = saga.character(plan.subject_id)
+        return f"to {student.name}" if student else ""
+    book = next((b for b in saga.books if b.id == plan.book_id), None)
+    if book is None:
+        return ""
+    if plan.activity == bs.TRANSLATE_BOOK and plan.language:
+        return f"{book_label(book)} into {plan.language}"
+    return book_label(book)
+
+
+def book_text(work: bs.BookWork, plan: SeasonPlan) -> str:
+    """How a season of book work stands (plain text)."""
+    if plan.activity == bs.REWRITE_TEXTS:
+        return f"{len(work.rewritten)} Lab Text(s) rewritten for general use"
+    if plan.activity == bs.TEACH_ABBREVIATIONS and work.access:
+        return f"can read the teacher's Lab Texts up to level {work.access[2]}"
+    made = work.made
+    if made is not None and work.needed > 1:
+        text = f"+{work.points_gained} points, {work.points_after}/{work.needed}"
+        if work.finished:
+            return text + f", done: {made.name} (Quality {made.quality})"
+        left = -(-(work.needed - work.points_after) // max(1, work.points_gained))
+        return text + f", {left} more season(s)"
+    if made is not None:
+        copies = f"{work.copies} x " if work.copies > 1 else ""
+        quality = f" (Quality {made.quality})" if made.quality is not None else ""
+        return f"done: {copies}{made.name}{quality}"
+    return ""
+
+
 def plan_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
     """What the plan's season is on, without the activity: "Latin",
     "Latin 5, Creo 3 (Source Quality 8)", or Other's first line of notes
@@ -184,7 +240,42 @@ def plan_subject(saga: Saga, character: Character, plan: SeasonPlan) -> str:
     names = spell_names(saga, character)
     shares = rules.allocations(plan)
     first = rules.subject_label(shares[0].subject, names) if shares else ""
+    if plan.activity in bs.SHEET_ACTIVITIES or plan.activity == bs.DECODE_TEXT:
+        return _book_plan_subject(saga, plan, names)
+    if plan.activity == ls.ASSIST:
+        lead = saga.character(plan.teacher_id)
+        return lead.name if lead else ""
+    if plan.activity in aps.ACTIVITIES:
+        student = saga.character(plan.subject_id)
+        if plan.activity == aps.TEACH_VIRTUE and student is not None:
+            virtue = next(
+                (n for n, i in aps.teachable_virtues(character) if i == plan.effect_id),
+                "",
+            )
+            return f"{virtue} to {student.name}"
+        return student.name if student is not None else ""
     if activity.lab:
+        if plan.activity == lab_seasons.TAMING:
+            return plan.title.strip()
+        if plan.activity in ls.ACTIVITIES:
+            lab = saga.laboratory(plan.lab_id)
+            return lab.name if lab else ""
+        if plan.activity in fs.ACTIVITIES:
+            familiar = familiar_of(saga, character.id)
+            if familiar is None:
+                return ""
+            power = fs.power_of(familiar, plan)
+            if plan.activity == fs.EMPOWER and power is not None:
+                return f"{power.name} for {familiar.name}"
+            return familiar.name
+        if plan.activity in es.ACTIVITIES:
+            device = es.device_of(saga, plan)
+            if device is None:
+                return ""
+            effect = es.effect_of(device, plan)
+            if plan.activity == es.INSTIL and effect is not None:
+                return f"{ed.effect_name(effect)} in {device.name}"
+            return device.name
         if plan.activity == lab_seasons.EXTRACT:
             return "Vim vis"
         if plan.activity == lab_seasons.FIX_AC:
@@ -261,10 +352,13 @@ def plan_text(
     give, worked out from the character as they stand now. `how` says where
     to plan when nothing is planned yet."""
     if not rules.is_planned(character):
-        return (
-            "[dim]Grogs aren't planned season by season: they're updated once "
-            "a year (Grogs, Chapter 5), which comes with a later story.[/]"
-        )
+        return grog_year_text(character)
+    extra = livelihood_text(character)
+    text = _plan_text(saga, character, how)
+    return f"{text}\n\n{extra}" if extra else text
+
+
+def _plan_text(saga: Saga, character: Character, how: str) -> str:
     plan = plan_for(saga, character)
     if plan is None:
         return (
@@ -309,6 +403,8 @@ def live_text(saga: Saga, character: Character, plan: SeasonPlan) -> str:
     lines += [escape(n) for n in worked.notes]
     if worked.lab_work is not None:
         lines.insert(0, escape(work_text(worked.lab_work, plan)))
+    if worked.book_work is not None:
+        lines.insert(0, escape(book_text(worked.book_work, plan)))
     if worked.pending_roll:
         lines.append("[dim]The die is rolled when the season is applied.[/]")
     note = working_seasons_note(character, plan)
@@ -365,6 +461,8 @@ def diary_entry(saga: Saga, character: Character, worked: rules.Outcome) -> Diar
     lines += worked.notes
     if worked.lab_work is not None:
         lines.append(work_text(worked.lab_work, plan) + ".")
+    if worked.book_work is not None:
+        lines.append(book_text(worked.book_work, plan) + ".")
     if plan.days_away:
         lines.append(f"{plan.days_away} days away from the laboratory.")
     if plan.months_lost and activity and activity.distractable:
@@ -399,6 +497,25 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
                 _add_xp(character, gain.subject, gain.result.xp)
         if outcome.lab_work is not None:
             apply_lab_work(saga, character, outcome)
+        if outcome.book_work is not None:
+            apply_book_work(saga, character, outcome.plan, outcome.book_work)
+        if outcome.faith:
+            character.background.faith_points += outcome.faith
+        if outcome.supplement is not None:
+            apply_supplement(saga, character, outcome.plan, outcome.supplement)
+        if outcome.insight:
+            ex.goal(
+                character, outcome.plan.research, outcome.plan.research_kind
+            ).insights += 1
+        work = outcome.apprentice_work
+        student = saga.character(outcome.plan.subject_id)
+        if work is not None and student is not None:
+            if outcome.plan.activity == aps.OPEN_ARTS:
+                aps.open_arts(student, work)
+            elif outcome.plan.activity == aps.TEACH_VIRTUE and work.succeeds:
+                student.virtues_flaws.append(
+                    VirtueFlawInstance(outcome.plan.effect_id or "")
+                )
         if outcome.tractatus and outcome.tractatus not in character.tractatus_read:
             character.tractatus_read.append(outcome.tractatus)
         if outcome.vis_spent is not None:
@@ -415,6 +532,415 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
         p for p in saga.season_plans if (p.year, SEASONS.index(p.season)) > now
     ]
     return applied
+
+
+def _living_conditions(saga: Saga, character: Character) -> int:
+    """The Living Conditions modifier: the covenant's for magi or mundanes,
+    plus half the Health of a magus's laboratory."""
+    covenant = saga.covenant(character.covenant_id)
+    living = 0
+    if covenant is not None:
+        living = (
+            covenant.living_conditions_magi
+            if character.type == "magus"
+            else covenant.living_conditions_mundane
+        )
+    lab = saga.laboratory(character.assigned_lab_id)
+    if lab is not None and character.type == "magus":
+        from . import catalog
+        from .laboratories import lab_characteristic_total
+
+        health = lab_characteristic_total(
+            lab, catalog.load_lab_virtue_flaw_catalog_by_id(), "health"
+        )[3]
+        living += health // 2
+    return living
+
+
+def _home_aura(saga: Saga, character: Character) -> tuple[int, str]:
+    covenant = saga.covenant(character.covenant_id)
+    if covenant is None:
+        return 0, "Magic"
+    from . import catalog
+    from .covenants import covenant_effective_aura
+
+    boons = catalog.load_covenant_boon_hook_catalog_by_id()
+    return covenant_effective_aura(covenant, boons), covenant.aura_realm
+
+
+def _yearly_warping(saga: Saga, character: Character) -> str:
+    """A year's automatic Warping Points (STORY-909): +1 for a Longevity
+    Ritual, and living in a strong aura of another realm (a magus gains none
+    from a Magic aura). Returns what was added ("" for nothing)."""
+    gained: list[str] = []
+    points = 0
+    if character.aging.longevity_modifier:
+        points += 1
+        gained.append("Longevity Ritual 1")
+    aura, realm = _home_aura(saga, character)
+    if not (character.type == "magus" and realm == "Magic"):
+        from_aura = warping_rules.aura_points(aura)
+        if from_aura:
+            points += from_aura
+            gained.append(f"{realm} aura {aura}: {from_aura}")
+    if not points:
+        return ""
+    warping_rules.set_total(character, warping_rules.total_points(character) + points)
+    return f"Warping Points +{points} ({', '.join(gained)}); Warping Score now {character.aging.warping_score}."
+
+
+def gain_warping(
+    saga: Saga, character: Character, points: int, rng: random.Random
+) -> list[str]:
+    """Add Warping Points from one event (STORY-909); 2 or more take a
+    magus to the edge of Wizard's Twilight. Writes a Diary entry and returns
+    its lines."""
+    warping_rules.set_total(character, warping_rules.total_points(character) + points)
+    notes = [
+        f"+{points} Warping Points; Warping Score {character.aging.warping_score}."
+    ]
+    name = f"Warping +{points}"
+    if character.type == "magus" and points >= 2:
+        aura, _ = _home_aura(saga, character)
+        result = warping_rules.twilight(character, points, aura, rng, saga)
+        notes += result.notes
+        if result.entered:
+            name = "Wizard's Twilight"
+            warping_rules.set_total(
+                character, warping_rules.total_points(character) + result.extra_points
+            )
+            if result.seasons:
+                season, year = saga.current_season, saga.current_year
+                for _ in range(result.seasons - 1):
+                    season, year = next_season(season, year)
+                character.aging.twilight_until = f"{season} {year}"
+                notes.append(
+                    f"Lost in Twilight through {season} {year}: no seasons can be "
+                    "planned until then."
+                )
+    character.diary.append(
+        DiaryEntry(
+            year=saga.current_year,
+            season=saga.current_season,
+            name=name,
+            details="\n".join(notes)
+            + f"\nRule: {_cite(warping_rules.TWILIGHT_SOURCE)}",
+            activity="Aging",
+        )
+    )
+    return notes
+
+
+#: The seasons a grog's story awards remove, in order (Grogs Ch. 5).
+_AWARD_ORDER = ("exposure", "vocational", "practice", "exposure_2")
+
+
+def grog_year_gains(character: Character) -> list[tuple[str, int, str]]:
+    """(Ability, xp, kind) a grog's yearly update gives, less the seasons
+    story awards take."""
+    year = character.grog_year
+    if year is None:
+        return []
+    gains = {
+        "vocational": (year.vocational, year.vocational_xp, "vocational"),
+        "practice": (year.practice, 4, "practice"),
+        "exposure": (year.exposure, 2, "exposure"),
+        "exposure_2": (year.exposure_2, 2, "exposure"),
+    }
+    for key in _AWARD_ORDER[: max(0, year.story_awards)]:
+        gains.pop(key, None)
+    return [g for g in gains.values() if g[0]]
+
+
+def grog_year_text(character: Character) -> str:
+    """A grog's Planning tab: the yearly update (Grogs Ch. 5)."""
+    year = character.grog_year
+    head = (
+        "[dim]Grogs aren't planned season by season: they're updated once a "
+        "year, in Winter (Grogs, Chapter 5). Press e to set it up.[/]"
+    )
+    if year is None:
+        return head
+    lines = ["[b]Yearly update (applied in Winter)[/]"]
+    for ability, xp, kind in grog_year_gains(character):
+        lines.append(f"  {escape(ability)} +{xp} xp ({kind})")
+    if year.story_awards:
+        lines.append(
+            f"  {year.story_awards} story award(s) this year take "
+            f"{min(year.story_awards, 4)} season(s) of it."
+        )
+    if len(lines) == 1:
+        lines.append("  [dim]nothing chosen yet[/]")
+    return "\n".join(lines)
+
+
+def year_end_grogs(saga: Saga) -> list[SeasonRecordLine]:
+    """The grogs' yearly update (STORY-924), in Winter: their training,
+    practice and exposure xp; the year's story awards are then cleared."""
+    lines: list[SeasonRecordLine] = []
+    for character in saga.characters:
+        if rules.is_planned(character) or character.grog_year is None:
+            continue
+        gains = grog_year_gains(character)
+        for ability, xp, _ in gains:
+            _add_xp(character, rules.ability_subject(ability), xp)
+        summary = ", ".join(f"{a} +{xp}" for a, xp, _ in gains) or "no xp"
+        character.diary.append(
+            DiaryEntry(
+                year=saga.current_year,
+                season=saga.current_season,
+                name=f"Yearly update: {summary}",
+                details="Grogs, Chapter 5, Updating Grogs"
+                + (
+                    f"; {character.grog_year.story_awards} story award(s) took "
+                    "seasons of it."
+                    if character.grog_year.story_awards
+                    else "."
+                ),
+                activity="Aging",
+            )
+        )
+        character.grog_year.story_awards = 0
+        lines.append(
+            SeasonRecordLine(
+                character.id,
+                character.name,
+                character.covenant_id,
+                "Yearly update",
+                "",
+                summary,
+            )
+        )
+    return lines
+
+
+def age_character(
+    saga: Saga, character: Character, age: int, rng: random.Random
+) -> SeasonRecordLine:
+    """One character's aging roll (STORY-904): apparent age, Aging Points and
+    Characteristics, Decrepitude, a Crisis; written in the Diary."""
+    familiar = familiar_of(saga, character.id)
+    bronze = familiar.bronze_cord if familiar is not None else 0
+    result = aging_rules.roll(
+        character, age, _living_conditions(saga, character), bronze, rng, saga
+    )
+    aging = character.aging
+    if result.apparent:
+        aging.apparent_age = (
+            aging.apparent_age if aging.apparent_age is not None else age - 1
+        ) + 1
+    elif aging.apparent_age is None:
+        aging.apparent_age = age - 1
+    notes = list(result.notes)
+    for name, points in result.points.items():
+        aging.aging_points[name] = aging.aging_points.get(name, 0) + points
+        aging.decrepitude_points += points
+        score = getattr(character.characteristics, name)
+        if aging.aging_points[name] > abs(score):
+            setattr(character.characteristics, name, score - 1)
+            aging.aging_points[name] = 0
+            notes.append(f"{name.title()} falls to {score - 1:+d}.")
+    if result.points:
+        gained = ", ".join(f"{n.title()} {p}" for n, p in result.points.items())
+        notes.append(f"Aging Points: {gained}.")
+    aging.decrepitude = aging_rules.decrepitude_score(aging.decrepitude_points)
+    if result.crisis:
+        text, ends = aging_rules.crisis(character, age, aging.decrepitude, rng, saga)
+        notes.append(text)
+        if ends:
+            aging.longevity_modifier = 0
+        season, year = next_season(saga.current_season, saga.current_year)
+        aging.recovering = f"{season} {year}"
+    summary = (
+        "no apparent aging"
+        if not result.apparent
+        else "apparent age +1"
+        + (f", {sum(result.points.values())} Aging Point(s)" if result.points else "")
+        + (", an Aging Crisis" if result.crisis else "")
+    )
+    character.diary.append(
+        DiaryEntry(
+            year=saga.current_year,
+            season=saga.current_season,
+            name=f"Aging: {summary}",
+            details="\n".join(notes) + f"\nRule: {_cite(aging_rules.SOURCE)}",
+            activity="Aging",
+        )
+    )
+    return SeasonRecordLine(
+        character.id,
+        character.name,
+        character.covenant_id,
+        "Aging",
+        "",
+        summary,
+    )
+
+
+def year_end_aging(saga: Saga, rng: random.Random) -> list[SeasonRecordLine]:
+    """The Winter aging rolls (STORY-904), made when Winter is applied:
+    apparent age, Aging Points and Characteristics, Decrepitude, Crises,
+    each written in the character's Diary. Returns a record line for each
+    character who rolled."""
+    lines: list[SeasonRecordLine] = []
+    for character in saga.characters:
+        warped = _yearly_warping(saga, character)
+        if warped:
+            character.diary.append(
+                DiaryEntry(
+                    year=saga.current_year,
+                    season=saga.current_season,
+                    name="Warping",
+                    details=f"{warped}\nRule: {_cite(warping_rules.SOURCE)}",
+                    activity="Aging",
+                )
+            )
+        born = character.background.year_born
+        age = None if born is None else saga.current_year - born
+        if age is None or not aging_rules.rolls_this_year(character, age):
+            continue
+        lines.append(age_character(saga, character, age, rng))
+    return lines
+
+
+# -- the covenant's seasons (STORY-906) ---------------------------------------
+
+
+def _vis_sources(covenant: Covenant) -> list:
+    return [p for p in covenant.possessions if p.kind == "vis_source"]
+
+
+def lapsed_resources(saga: Saga) -> list[tuple[str, str]]:
+    """The contested resources to ask about before advancing: (id, label)
+    for vis sources harvested this season and, in Winter, income sources,
+    whose security has lapsed."""
+    year = saga.current_year
+    found: list[tuple[str, str]] = []
+    for covenant in saga.covenants:
+        for source in _vis_sources(covenant):
+            if (
+                source.contested
+                and source.season == saga.current_season
+                and (source.secured_until or 0) < year
+            ):
+                found.append(
+                    (source.id, f"{covenant.name}'s {source.name or 'vis source'}")
+                )
+        if saga.current_season == SEASONS[-1]:
+            for income in covenant.economics.income_sources:
+                if income.contested and (income.secured_until or 0) < year:
+                    found.append(
+                        (
+                            income.id,
+                            f"{covenant.name}'s {income.name or 'income source'}",
+                        )
+                    )
+    return found
+
+
+def _add_vis(covenant: Covenant, art: str, pawns: int, name: str) -> None:
+    store = next(
+        (
+            p
+            for p in covenant.possessions
+            if p.kind == "vis_store" and p.art.lower() == art.lower()
+        ),
+        None,
+    )
+    if store is None:
+        covenant.possessions.append(
+            Possession(
+                id=f"vis_{new_instance_id()}",
+                kind="vis_store",
+                name=f"{art} vis",
+                art=art,
+                pawns=pawns,
+            )
+        )
+    else:
+        store.pawns += pawns
+
+
+def available(resource, year: int) -> bool:
+    """Whether a vis or income source gives anything this year: not contested,
+    or secured through it (Hedda 2026-09-30: an unaddressed contested
+    resource isn't available until it is addressed)."""
+    return not resource.contested or (resource.secured_until or 0) >= year
+
+
+def covenant_season(saga: Saga, secured: dict[str, bool]) -> list[SeasonRecordLine]:
+    """What the season does for each covenant (STORY-906): its vis sources
+    harvested into its vis stores, and in Winter, Dwindling Resources shrink
+    by a tenth. A contested resource gives nothing until it is addressed:
+    `secured` answers "Was it secured this season?" for each lapsed one
+    (yes: secured for five years), and a year that ends with it unaddressed
+    is written in the covenant Diary. Returns record lines."""
+    season, year = saga.current_season, saga.current_year
+    lines: list[SeasonRecordLine] = []
+    for covenant in saga.covenants:
+        resources = [*_vis_sources(covenant), *covenant.economics.income_sources]
+        for resource in resources:
+            if secured.get(resource.id):
+                resource.secured_until = year + 4
+        harvested: list[str] = []
+        for source in _vis_sources(covenant):
+            if source.season != season or not source.art or source.pawns <= 0:
+                continue
+            if not available(source, year):
+                covenant.diary.append(
+                    CovenantDiaryEntry(
+                        year,
+                        season,
+                        f"{source.name or 'A vis source'} not harvested",
+                        "A contested resource not yet secured: no harvest.",
+                        category="Covenant Season",
+                    )
+                )
+                continue
+            _add_vis(covenant, source.art, source.pawns, source.name)
+            harvested.append(f"{source.pawns} {source.art}")
+            covenant.diary.append(
+                CovenantDiaryEntry(
+                    year,
+                    season,
+                    f"Vis harvested: {source.name or source.art}",
+                    f"{source.pawns} pawn(s) of {source.art} vis into the vis stores.",
+                    category="Covenant Season",
+                    vis_pawns=source.pawns,
+                    vis_art=source.art,
+                )
+            )
+        if season == SEASONS[-1]:
+            for resource in resources:
+                if not available(resource, year):
+                    covenant.diary.append(
+                        CovenantDiaryEntry(
+                            year,
+                            season,
+                            f"{resource.name or 'A resource'} not received",
+                            "A contested resource still unresolved at the year's "
+                            "end: the covenant receives nothing from it this year.",
+                            category="Covenant Season",
+                        )
+                    )
+            for income in covenant.economics.income_sources:
+                if income.dwindling:
+                    income.income = round(income.current_income * 0.9)
+            for source in _vis_sources(covenant):
+                if source.dwindling:
+                    source.pawns = int(source.pawns * 0.9)
+        if harvested:
+            lines.append(
+                SeasonRecordLine(
+                    covenant.id,
+                    covenant.name,
+                    covenant.id,
+                    "Vis harvest",
+                    "",
+                    ", ".join(harvested),
+                )
+            )
+    return lines
 
 
 def advance_summary(saga: Saga) -> str:
@@ -647,12 +1173,8 @@ def lab_queue(saga: Saga, lab: Laboratory) -> list[QueueRow]:
         found: list[str] = []
         if plan is not None and plan.lab_id:
             found, work = lab_seasons.work(saga, owner, plan)
-            if (
-                work is not None
-                and work.spell is not None
-                and plan.activity == lab_seasons.INVENT
-            ):
-                key = work.spell.id
+            if work is not None and plan.activity in lab_seasons.MULTI_SEASON:
+                key = project_key(plan) or ""
                 work.points_before = carried.get(key, work.points_before)
                 work.finished = work.points_after >= work.level
                 carried[key] = work.points_after
@@ -663,7 +1185,8 @@ def lab_queue(saga: Saga, lab: Laboratory) -> list[QueueRow]:
             and previous.plan is not None
             and plan.lab_id
             and previous.plan.lab_id
-            and plan.activity == previous.plan.activity == lab_seasons.INVENT
+            and plan.activity == previous.plan.activity
+            and plan.activity in lab_seasons.MULTI_SEASON
             and project_key(plan) == project_key(previous.plan)
             and not found
             and not previous.problems
@@ -682,6 +1205,83 @@ def _season_label(season: str, year: int) -> str:
 def work_text(work: lab_seasons.LabWork, plan: SeasonPlan) -> str:
     """How a season's lab work stands (plain text)."""
     total = int(work.lab_total.total)
+    paid = ", ".join(f"{n} pawn(s) of {art}" for art, n in work.vis_cost.items() if n)
+    if plan.activity == bs.DECODE_TEXT:
+        text = (
+            f"Lab Total {total}: +{work.points_gained} points, "
+            f"{work.points_after}/{work.level}"
+        )
+        if work.finished:
+            return text + ", decoded this season"
+        return text + f", {lab_seasons.seasons_left(work)} more season(s)"
+    if plan.activity == lab_seasons.TAMING:
+        text = (
+            f"Lab Total {total}: +{work.points_gained} points, "
+            f"{work.points_after}/{work.level}"
+        )
+        if work.finished:
+            return text + ", tamed this season"
+        return text + f", {lab_seasons.seasons_left(work)} more season(s)"
+    if plan.activity == ls.MOVE:
+        if plan.by_spell:
+            return f"moved by spell to {plan.title.strip()}"
+        if work.finished:
+            return (
+                f"reassembled at {plan.title.strip()}; the journey broke two "
+                "years' maintenance"
+            )
+        return " ".join(work.notes).rstrip(".")
+    if plan.activity == ls.BUILD:
+        return (
+            "the laboratory is finished"
+            if work.second_season
+            else "the laboratory works, with the Basic Flaw until next season"
+        )
+    if plan.activity == ls.REFINE:
+        return f"Refinement {work.refinement}"
+    if plan.activity == ls.TAKE_OVER:
+        return f"taken over; Refinement {work.refinement}"
+    if plan.activity == fs.BIND:
+        cords = "/".join(str(c) for c in fs.cords_of(plan))
+        return (
+            f"Lab Total {total} against level {work.level}: bound, cords "
+            f"{cords} (golden/silver/bronze)" + (f"; {paid} vis" if paid else "")
+        )
+    if plan.activity == fs.EMPOWER:
+        text = (
+            f"Lab Total {total}: +{work.points_gained} points, "
+            f"{work.points_after}/{work.level}"
+        )
+        if paid:
+            text += f"; {paid} vis"
+        if work.finished:
+            return text + ", instilled this season"
+        return text + f", {lab_seasons.seasons_left(work)} more season(s)"
+    if plan.activity == es.OPEN:
+        return f"{paid} vis: opened for enchantment"
+    if plan.activity == es.ATTUNE:
+        return "attuned as a talisman"
+    if plan.activity == es.INVESTIGATE:
+        found = len(work.revealed)
+        return (
+            f"Lab Total {total}: {found} power(s) found"
+            if found
+            else f"Lab Total {total} against level {work.level}"
+        )
+    if plan.activity == es.CHARGED_WORK:
+        return f"Lab Total {total} against level {work.level}: {work.charges} charge(s)"
+    if plan.activity == es.LESSER_WORK:
+        return f"Lab Total {total} against level {work.level}: made; {paid} vis"
+    if plan.activity == es.INSTIL:
+        text = (
+            f"Lab Total {total}: +{work.points_gained} points, "
+            f"{work.points_after}/{work.level}"
+        )
+        if paid:
+            text += f"; {paid} vis"
+        if work.finished:
+            return text + ", instilled this season"
+        return text + f", {lab_seasons.seasons_left(work)} more season(s)"
     if plan.activity == lab_seasons.EXTRACT:
         return f"Lab Total {total}: {work.vis_gained} pawn(s) of Vim vis"
     if plan.activity == lab_seasons.FIX_AC:
@@ -712,6 +1312,32 @@ def _progress(work: lab_seasons.LabWork, plan: SeasonPlan) -> str:
         return "fixed"
     if plan.activity == lab_seasons.LONGEVITY:
         return f"aging -{work.longevity}"
+    if plan.activity == bs.DECODE_TEXT and work.finished:
+        return "decoded"
+    if plan.activity == lab_seasons.TAMING and work.finished:
+        return "tamed"
+    if plan.activity == ls.MOVE:
+        return "moved" if plan.by_spell or work.finished else "moving"
+    if plan.activity == ls.BUILD:
+        return "finished" if work.second_season else "set up (Basic)"
+    if plan.activity in (ls.REFINE, ls.TAKE_OVER):
+        return f"Refinement {work.refinement}"
+    if plan.activity == fs.BIND:
+        return "bound"
+    if plan.activity == fs.EMPOWER and work.finished:
+        return "instilled"
+    if plan.activity == es.OPEN:
+        return "opened"
+    if plan.activity == es.ATTUNE:
+        return "attuned"
+    if plan.activity == es.INVESTIGATE:
+        return f"against level {work.level}"
+    if plan.activity == es.CHARGED_WORK:
+        return f"{work.charges} charge(s)"
+    if plan.activity == es.LESSER_WORK:
+        return "made"
+    if plan.activity == es.INSTIL and work.finished:
+        return "instilled"
     if work.finished:
         return "learned" if plan.activity == lab_seasons.LAB_TEXT else "invented"
     return f"{work.points_after}/{work.level} points"
@@ -822,7 +1448,7 @@ def plan_lab_work(saga: Saga, plan: SeasonPlan) -> list[SeasonPlan]:
     character = saga.character(plan.character_id)
     if character is not None and plan.activity == lab_seasons.LONGEVITY:
         _plan_subject(saga, character, plan)
-    if character is None or plan.activity != lab_seasons.INVENT:
+    if character is None or plan.activity not in lab_seasons.MULTI_SEASON:
         return []
     found, work = lab_seasons.work(saga, character, plan)
     if found or work is None:
@@ -888,12 +1514,22 @@ def _lab_text_book(saga: Saga, magus: Character, lab: Laboratory, spell) -> Book
         year_published=saga.current_year,
         spell_id=spell.id,
         spell_name=spell.name,
+        raw=True,
+        author_id=magus.id,
     )
 
 
 def project_key(plan: SeasonPlan) -> str | None:
     """What ties a plan's seasons of invention together: its design, or the
     spell it invents."""
+    if plan.activity == es.INSTIL:
+        return f"effect:{plan.effect_id}" if plan.effect_id else None
+    if plan.activity == fs.EMPOWER:
+        return f"bond:{plan.effect_id}" if plan.effect_id else None
+    if plan.activity == lab_seasons.TAMING:
+        return f"taming:{plan.title.strip()}"
+    if plan.activity == bs.DECODE_TEXT:
+        return f"decode:{plan.book_id}" if plan.book_id else None
     if plan.design is not None:
         return f"design:{plan.design.key}"
     return plan.spell_id
@@ -904,6 +1540,33 @@ def _same_spell(a: Spell, b: Spell) -> bool:
     return all(getattr(a, f) == getattr(b, f) for f in fields_) and sorted(
         a.requisites
     ) == sorted(b.requisites)
+
+
+def _with_effects(
+    saga: Saga, magus: Character, spell: Spell, effects: list[str]
+) -> Spell:
+    """The spell as invented with its experimental effects: the magus's own
+    record (a copy when it was someone else's), which anyone learning it
+    learns, warts and all."""
+    if not any(s is spell for s in magus.invented_spells):
+        own = spl.add_invented_spell(
+            saga, magus, spell.name, spell.technique, spell.form
+        )
+        for attribute in (
+            "level",
+            "description",
+            "requisites",
+            "range",
+            "duration",
+            "target",
+            "ritual",
+            "base_level",
+        ):
+            setattr(own, attribute, getattr(spell, attribute))
+        own.source = "Invented"
+        spell = own
+    spell.experimental_effects += effects
+    return spell
 
 
 def _invented_spell(saga: Saga, magus: Character, design: SpellDesign) -> Spell:
@@ -932,6 +1595,19 @@ def _invented_spell(saga: Saga, magus: Character, design: SpellDesign) -> Spell:
 
 
 _LAB_DIARY_ACTIVITY = {
+    es.OPEN: "Open Item for Enchantment",
+    es.INSTIL: "Instill Effect (Invested Device)",
+    es.LESSER_WORK: "Lesser Enchantment",
+    es.CHARGED_WORK: "Charged Item",
+    es.ATTUNE: "Other",
+    fs.BIND: "Bind Familiar",
+    fs.EMPOWER: "Empower Familiar Bond",
+    ls.BUILD: "Build/Modify Laboratory",
+    ls.REFINE: "Refine Laboratory",
+    ls.TAKE_OVER: "Build/Modify Laboratory",
+    ls.MOVE: "Build/Modify Laboratory",
+    bs.DECODE_TEXT: "Translate Lab Text",
+    es.INVESTIGATE: "Other",
     lab_seasons.EXTRACT: "Extract Vis",
     lab_seasons.FIX_AC: "Fix Arcane Connection",
     lab_seasons.LONGEVITY: "Longevity Ritual",
@@ -961,6 +1637,27 @@ def _apply_one_season_work(
         connection.fixed = True
         connection.lasts = ""
         connection.fixed_year, connection.fixed_season = plan.year, plan.season
+    if plan.activity in es.ACTIVITIES:
+        _apply_enchanting(saga, magus, plan, work)
+    if plan.activity in fs.ACTIVITIES:
+        _apply_familiar(saga, magus, plan, work)
+    if plan.activity in ls.ACTIVITIES:
+        _apply_laboratory(saga, magus, lab, plan, work)
+    if plan.activity == lab_seasons.TAMING:
+        _apply_taming(saga, magus, lab, plan, work)
+    if plan.activity == bs.DECODE_TEXT and work.access is not None:
+        key = lab_seasons.decode_key(magus, work.access[1])
+        saga.lab_projects = [p for p in saga.lab_projects if p.spell_id != key]
+        if work.finished:
+            _, author, level = work.access
+            magus.lab_text_access[author] = max(
+                level, magus.lab_text_access.get(author, 0)
+            )
+        else:
+            saga.lab_projects.append(LabProject(magus.id, key, work.points_after))
+            season, year = next_season(plan.season, plan.year)
+            if plan_for(saga, magus, season, year) is None:
+                set_plan(saga, replace(plan, season=season, year=year, days_away=0))
     if work.subject is not None and work.longevity:
         work.subject.aging.longevity_modifier = work.longevity
         work.subject.aging.longevity_year = plan.year
@@ -978,6 +1675,578 @@ def _apply_one_season_work(
     )
 
 
+def _apply_enchanting(
+    saga: Saga, magus: Character, plan: SeasonPlan, work: lab_seasons.LabWork
+) -> None:
+    """What a season of enchanting does to its device (STORY-905)."""
+    device, effect = work.device, work.effect
+    if device is None:
+        return
+    making = (es.OPEN, es.LESSER_WORK, es.CHARGED_WORK, es.ATTUNE)
+    if plan.activity in making and not device.maker_id and not device.maker_name:
+        device.maker_id = magus.id
+    if plan.activity == es.OPEN:
+        device.pawns_opened += work.vis_cost.get("Vim", 0)
+    elif plan.activity == es.ATTUNE:
+        device.talisman = True
+    elif plan.activity == es.INVESTIGATE:
+        for found in device.effects:
+            if found.id in work.revealed:
+                found.known = True
+    elif plan.activity == es.CHARGED_WORK:
+        device.lab_total = int(work.lab_total.total)
+        device.charges_made = None
+        device.charges_left = None
+    elif effect is not None and plan.activity == es.LESSER_WORK:
+        effect.instilling_progress = None
+    elif effect is not None and plan.activity == es.INSTIL:
+        if work.finished:
+            effect.instilling_progress = None
+            project = project_key(plan)
+            saga.season_plans = [
+                p
+                for p in saga.season_plans
+                if not (
+                    p.character_id == magus.id
+                    and p.activity == es.INSTIL
+                    and project_key(p) == project
+                    and (p.season, p.year) != (plan.season, plan.year)
+                )
+            ]
+        else:
+            effect.instilling_progress = work.points_after
+            season, year = next_season(plan.season, plan.year)
+            if plan_for(saga, magus, season, year) is None:
+                set_plan(saga, replace(plan, season=season, year=year, days_away=0))
+
+
+def _apply_familiar(
+    saga: Saga, magus: Character, plan: SeasonPlan, work: lab_seasons.LabWork
+) -> None:
+    """What a season of familiar work does (STORY-908)."""
+    familiar = work.familiar
+    if familiar is None:
+        return
+    if plan.activity == fs.BIND:
+        familiar.binding_technique = plan.technique
+        familiar.binding_form = plan.form
+        familiar.binding_lab_total = int(work.lab_total.total)
+        familiar.target_binding_level = work.level
+        familiar.vis_spent_binding += sum(work.vis_cost.values())
+        familiar.golden_cord, familiar.silver_cord, familiar.bronze_cord = fs.cords_of(
+            plan
+        )
+        if familiar.year_bound is None:
+            familiar.season_bound, familiar.year_bound = plan.season, plan.year
+        return
+    power = work.power
+    if power is None:
+        return
+    power.vis_spent += sum(work.vis_cost.values())
+    project = project_key(plan)
+    if work.finished:
+        power.instilling_progress = None
+        saga.season_plans = [
+            p
+            for p in saga.season_plans
+            if not (
+                p.character_id == magus.id
+                and p.activity == fs.EMPOWER
+                and project_key(p) == project
+                and (p.season, p.year) != (plan.season, plan.year)
+            )
+        ]
+    else:
+        power.instilling_progress = work.points_after
+        season, year = next_season(plan.season, plan.year)
+        if plan_for(saga, magus, season, year) is None:
+            set_plan(saga, replace(plan, season=season, year=year, days_away=0))
+
+
+def _copy_book(saga: Saga, book: Book) -> Book:
+    ids = {b.id for b in saga.books}
+    book_id, n = book.id, 2
+    while book_id in ids:
+        book_id, n = f"{book.id}_{n}", n + 1
+    return replace(book, id=book_id)
+
+
+def apply_supplement(
+    saga: Saga, character: Character, plan: SeasonPlan, work: sw.SupplementWork
+) -> None:
+    """What a supplement season does besides experience (decision 38):
+    Labor Points, a workshop's scores, progress records (finished ones
+    noted), books written, Virtues gained, formulas, an Aging roll."""
+    character.labor_points += work.labor_points
+    character.workshop_innovation += work.innovation
+    character.workshop_raw_materials += work.raw_materials
+    for kind, name, target, points in work.progress:
+        record = sw.progress_of(character, kind, name)
+        if record is None or record.done:
+            record = Progress(kind, name, target)
+            character.progress.append(record)
+        record.points += points
+        record.target = target or record.target
+        if record.target and record.points >= record.target and not record.done:
+            record.done = True
+            if kind == "formula":
+                character.formulas.append(name)
+            character.diary.append(
+                DiaryEntry(
+                    year=plan.year,
+                    season=plan.season,
+                    name=f"Finished: {name}",
+                    details=f"{record.points}/{record.target}: "
+                    + _FINISHED.get(kind, "done."),
+                    activity=rules.ACTIVITIES[plan.activity].label,
+                )
+            )
+    for book in work.books:
+        saga.books.append(_copy_book(saga, book))
+    for vf_id in work.add_vfs:
+        if vf_id:
+            character.virtues_flaws.append(VirtueFlawInstance(vf_id))
+    if plan.activity == "undergo_initiation":
+        if work.ordeal:
+            character.ordeal, character.initiations_since_ordeal = work.ordeal, 0
+        elif character.ordeal:
+            character.initiations_since_ordeal += 1
+    if work.summa_level is not None:
+        book_id, level = work.summa_level
+        book = next((b for b in saga.books if b.id == book_id), None)
+        if book is not None:
+            book.level = level
+    if plan.activity == "bind_catalog":
+        character.raw_vis["vim"] = character.raw_vis.get("vim", 0) - 1
+        if not character.raw_vis["vim"]:
+            del character.raw_vis["vim"]
+        lab = saga.laboratory(character.assigned_lab_id)
+        if lab is not None:
+            lab.arcane_connections.append(
+                ArcaneConnection(
+                    new_instance_id(),
+                    "the covenant library (its catalog)",
+                    fixed=True,
+                    fixed_year=plan.year,
+                    fixed_season=plan.season,
+                )
+            )
+    if work.aging_roll:
+        born = character.background.year_born
+        if born is not None:
+            age_character(saga, character, saga.current_year - born, random.Random())
+
+
+#: What finishing each kind of progress means.
+_FINISHED = {
+    "item": "the item is made.",
+    "pilgrimage": "the pilgrimage's aim is achieved; the troupe picks its outcome "
+    "(a Virtue, a Flaw lost, a penance met...).",
+    "taming": "the animal is tamed.",
+    "artwork": "the work of art is finished.",
+    "formula": "the formula is known.",
+}
+
+
+def year_end_business(saga: Saga) -> list[SeasonRecordLine]:
+    """A business's yearly costs (City & Guild), in Winter: 36 Labor Points,
+    and 5 for each point of Raw Materials."""
+    lines: list[SeasonRecordLine] = []
+    for character in saga.characters:
+        if not character.labor_points and not character.workshop_raw_materials:
+            continue
+        cost = (
+            sw.BUSINESS_UPKEEP
+            + sw.RAW_MATERIALS_UPKEEP * character.workshop_raw_materials
+        )
+        character.labor_points -= cost
+        character.diary.append(
+            DiaryEntry(
+                year=saga.current_year,
+                season=saga.current_season,
+                name=f"Business upkeep: -{cost} Labor Points",
+                details=f"Labor Points now {character.labor_points} (City & Guild).",
+                activity="Aging",
+            )
+        )
+        lines.append(
+            SeasonRecordLine(
+                character.id,
+                character.name,
+                character.covenant_id,
+                "Business upkeep",
+                "",
+                f"-{cost} Labor Points",
+            )
+        )
+    return lines
+
+
+def livelihood_text(character: Character) -> str:
+    """The Planning tab's lines on Labor Points, a workshop, progress and
+    formulas (empty when there's nothing)."""
+    lines: list[str] = []
+    if (
+        character.labor_points
+        or character.workshop_innovation
+        or (character.workshop_raw_materials)
+    ):
+        lines.append(
+            f"Labor Points {character.labor_points} ({sw.wealth(character)}); "
+            f"workshop Innovation {character.workshop_innovation}, Raw Materials "
+            f"{character.workshop_raw_materials}"
+        )
+    for record in character.progress:
+        if record.done or record.kind == "university":
+            continue
+        lines.append(f"{record.name}: {record.points}/{record.target} ({record.kind})")
+    years = sum(r.points for r in character.progress if r.kind == "university")
+    if years:
+        lines.append(f"University: {years} season(s) studied")
+    if character.formulas:
+        lines.append("Formulas: " + ", ".join(character.formulas))
+    if character.ordeal:
+        lines.append(
+            f"Last Ordeal: {character.ordeal} ({character.initiations_since_ordeal} "
+            "Initiation(s) since)"
+        )
+    return "\n".join(escape(line) for line in lines)
+
+
+def apply_book_work(
+    saga: Saga, character: Character, plan: SeasonPlan, work: bs.BookWork
+) -> None:
+    """A season of book work (STORY-910, 914): points toward a summa, the
+    books made, Lab Texts rewritten, who can read whose Lab Texts."""
+    key = bs.project_key(plan)
+    saga.lab_projects = [p for p in saga.lab_projects if p.spell_id != key]
+    if not work.finished:
+        saga.lab_projects.append(LabProject(character.id, key, work.points_after))
+        season, year = next_season(plan.season, plan.year)
+        if plan_for(saga, character, season, year) is None:
+            set_plan(saga, replace(plan, season=season, year=year))
+        return
+    if work.made is not None:
+        for _ in range(max(1, work.copies)):
+            saga.books.append(_copy_book(saga, work.made))
+    for book in saga.books:
+        if book.id in work.rewritten:
+            book.raw = False
+    if work.access is not None:
+        reader_id, author, level = work.access
+        reader = saga.character(reader_id)
+        if reader is not None:
+            reader.lab_text_access[author] = max(
+                level, reader.lab_text_access.get(author, 0)
+            )
+
+
+def _apply_taming(
+    saga: Saga,
+    magus: Character,
+    lab: Laboratory,
+    plan: SeasonPlan,
+    work: lab_seasons.LabWork,
+) -> None:
+    """A season of Hermetic taming: its points; tamed, a Lab Text of it."""
+    name = plan.title.strip()
+    record = sw.progress_of(magus, "taming", name)
+    if record is None or record.done:
+        record = Progress("taming", name, work.level)
+        magus.progress.append(record)
+    record.points = work.points_after
+    if work.finished:
+        record.done = True
+        saga.books.append(
+            Book(
+                id=f"taming_{magus.id}_{new_instance_id()}",
+                name=f"Lab Text: taming {name}",
+                type="Lab Text",
+                author=magus.name,
+                author_id=magus.id,
+                raw=True,
+                owner_kind="laboratory",
+                owner_id=lab.id,
+                year_published=plan.year,
+                level=work.level,
+                description=f"Taming a creature like {name} (Might {work.level}).",
+            )
+        )
+    else:
+        season, year = next_season(plan.season, plan.year)
+        if plan_for(saga, magus, season, year) is None:
+            set_plan(saga, replace(plan, season=season, year=year, days_away=0))
+
+
+def _apply_laboratory(
+    saga: Saga,
+    magus: Character,
+    lab: Laboratory,
+    plan: SeasonPlan,
+    work: lab_seasons.LabWork,
+) -> None:
+    """What a season of work on the laboratory does (STORY-915)."""
+    if plan.activity == ls.MOVE:
+        for vf_id in work.loses_vf:
+            ls.remove_vf(lab, vf_id)
+        for vf_id in work.gains_vf:
+            ls.add_vf(lab, vf_id)
+        if plan.by_spell or work.finished:
+            lab.location = plan.title.strip()
+            lab.move_seasons = 0
+        else:
+            lab.move_seasons += 1
+            season, year = next_season(plan.season, plan.year)
+            if plan_for(saga, magus, season, year) is None:
+                set_plan(saga, replace(plan, season=season, year=year, days_away=0))
+        return
+    if plan.activity == ls.BUILD:
+        if work.second_season:
+            ls.remove_vf(lab, ls.BASIC)
+        else:
+            ls.add_vf(lab, ls.BASIC)
+            season, year = next_season(plan.season, plan.year)
+            if plan_for(saga, magus, season, year) is None:
+                set_plan(saga, replace(plan, season=season, year=year, days_away=0))
+        return
+    # Refining or taking over: the Refinement it now has, and the roll's
+    # Virtues and Flaws.
+    lab.characteristics.refinement += work.refinement - ls.refinement(lab)
+    for vf_id in work.loses_vf:
+        ls.remove_vf(lab, vf_id)
+    for vf_id in work.gains_vf:
+        ls.add_vf(lab, vf_id)
+
+
+def _apply_experiment(
+    saga: Saga,
+    magus: Character,
+    lab: Laboratory,
+    plan: SeasonPlan,
+    work: lab_seasons.LabWork,
+) -> bool:
+    """What the Extraordinary Results do (STORY-916; Hedda 2026-09-30: applied
+    automatically and noted in the Diary): Discovery xp; a Disaster's Warping,
+    lab Flaws and wounds; a destroyed creation; the effects the creation
+    keeps; research points. True when nothing else of the season applies."""
+    chart = work.experiment
+    assert chart is not None
+    for subject, xp in chart.xp:
+        _add_xp(magus, subject, xp)
+    lines = list(chart.results)
+    everyone = [magus, *ls.assistants(saga, magus, plan)]
+    if chart.zeroes:
+        for person in everyone:
+            gain_warping(saga, person, chart.zeroes, random.Random())
+    if chart.lab_flaw:
+        ls.add_vf(lab, chart.lab_flaw)
+    if chart.zeroes >= 4:
+        for person in everyone:
+            person.wounds.heavy += 2
+        lines.append("Two Heavy Wounds for everyone in the lab.")
+    if chart.zeroes >= 5:
+        for person in everyone:
+            person.wounds.incapacitated = True
+        lines.append("An Incapacitating Wound for everyone in the lab.")
+    creation = plan.activity in _CREATIONS
+    if chart.zeroes >= 2 or (chart.failure and chart.failure_die == 0 and creation):
+        lines.append(_destroy(saga, magus, plan, work, whole=chart.zeroes < 2))
+    elif chart.effects and not chart.wasted:
+        _keep_effects(saga, plan, work, chart.effects)
+    # A goal named on the plan and not yet on the sheet is made, of the
+    # kind the plan chose.
+    goal = (
+        ex.goal(magus, plan.research, plan.research_kind)
+        if plan.research.strip()
+        else None
+    )
+    stop = chart.wasted
+    if plan.activity == ex.STABILIZE and goal is not None:
+        stop = True
+        pool = lab_seasons.vis_pool(saga, magus, plan)
+        for art, pawns in work.vis_cost.items():
+            left = pool.get(art.lower(), 0) - pawns
+            if left > 0:
+                pool[art.lower()] = left
+            else:
+                pool.pop(art.lower(), None)
+        if chart.wasted or chart.no_benefit:
+            goal.stabilizing_seasons = 0
+            lines.append("The Discovery isn't stabilized: try again.")
+        else:
+            goal.stabilizing_seasons += 1
+            if work.finished:
+                goal.points += work.research_magnitude
+                lines.append(
+                    f"Stabilized: +{work.research_magnitude} points toward "
+                    f"{goal.name} ({goal.points}/{goal.target}); a Lab Text of it "
+                    "is written."
+                )
+                goal.pending_magnitude = 0
+                goal.stabilizing_seasons = 0
+                goal.discovery_shift = 0
+                saga.books.append(_discovery_text(saga, magus, lab, goal, work))
+        if work.finished or chart.wasted or chart.no_benefit:
+            warping = work.research_warping
+            if warping:
+                gain_warping(saga, magus, warping, random.Random())
+    elif goal is not None and goal.insights > 0 and work.finished and not chart.wasted:
+        magnitude = max(1, -(-work.level // 5))
+        goal.points += magnitude
+        goal.insights -= 1
+        lines.append(
+            f"The insight's effect is invented: +{magnitude} points toward "
+            f"{goal.name} ({goal.points}/{goal.target})."
+        )
+    elif goal is not None and chart.discovery and not chart.wasted:
+        goal.pending_magnitude = max(1, -(-work.level // 5))
+        goal.discovery_seasons = max(1, lab_seasons.seasons_left(work) + 1)
+        goal.discovery_lab_total = int(work.lab_total.total)
+        goal.discovery_risk = plan.risk
+        goal.discovery_vis = sum(work.vis_cost.values())
+        goal.discovery_vis_art = next(iter(work.vis_cost), "")
+        lines.append(
+            f"A Discovery toward {goal.name}: stabilize it (magnitude "
+            f"{goal.pending_magnitude}) in a later season."
+        )
+    if goal is not None:
+        lines += _goal_reached(magus, goal)
+    lab.diary.append(
+        DiaryEntry(
+            year=plan.year,
+            season=plan.season,
+            name="Arcane Experimentation",
+            details=f"{magus.name}: " + " ".join(lines),
+            activity="Arcane Experimentation",
+        )
+    )
+    return stop
+
+
+#: Lab work whose creation a Complete Failure (a simple die of 0) destroys.
+_CREATIONS = (
+    es.INSTIL,
+    es.LESSER_WORK,
+    es.CHARGED_WORK,
+    fs.BIND,
+    fs.EMPOWER,
+)
+
+
+def _destroy(
+    saga: Saga,
+    magus: Character,
+    plan: SeasonPlan,
+    work: lab_seasons.LabWork,
+    *,
+    whole: bool,
+) -> str:
+    """A creation destroyed: an invention's or instilling's progress lost
+    (Disaster), or with `whole` (a Complete Failure's 0) the item or the
+    familiar itself."""
+    key = project_key(plan)
+    saga.lab_projects = [
+        p
+        for p in saga.lab_projects
+        if not (
+            p.character_id == magus.id
+            and p.spell_id == (work.spell.id if work.spell else key)
+        )
+    ]
+    saga.season_plans = [
+        p
+        for p in saga.season_plans
+        if not (
+            p.character_id == magus.id
+            and key is not None
+            and project_key(p) == key
+            and (p.year, SEASONS.index(p.season))
+            > (plan.year, SEASONS.index(plan.season))
+        )
+    ]
+    device, effect = work.device, work.effect
+    if device is not None and (
+        whole or plan.activity in (es.LESSER_WORK, es.CHARGED_WORK)
+    ):
+        if device in saga.enchanted_devices:
+            saga.enchanted_devices.remove(device)
+        return f"{device.name} is destroyed."
+    if device is not None and effect is not None:
+        if effect in device.effects:
+            device.effects.remove(effect)
+        return f"{ed.effect_name(effect)} is lost from {device.name}."
+    familiar = work.familiar
+    if familiar is not None and whole and plan.activity in (fs.BIND, fs.EMPOWER):
+        if familiar in saga.familiars:
+            saga.familiars.remove(familiar)
+        return f"{familiar.name} is destroyed."
+    if work.power is not None:
+        work.power.instilling_progress = 0
+        return f"{work.power.name}'s progress is lost."
+    if plan.activity == lab_seasons.TAMING:
+        record = sw.progress_of(magus, "taming", plan.title.strip())
+        if record is not None:
+            record.points = 0
+        return "The taming's progress is lost."
+    return "The work so far is lost."
+
+
+def _keep_effects(
+    saga: Saga, plan: SeasonPlan, work: lab_seasons.LabWork, effects: list[str]
+) -> None:
+    """Side effects and modified effects stay with the creation ("warts and
+    all"): an invention carries them to its spell; an item's effect and a
+    bond power keep them in their description."""
+    if work.effect is not None:
+        extra = "; ".join(effects)
+        work.effect.description = (
+            f"{work.effect.description}\nExperimental: {extra}".strip()
+        )
+    elif work.power is not None:
+        extra = "; ".join(effects)
+        work.power.cosmetic_trait = f"{work.power.cosmetic_trait} ({extra})".strip()
+    elif plan.activity == lab_seasons.INVENT:
+        work.carried_effects = list(effects)
+
+
+def _goal_reached(magus: Character, goal) -> list[str]:
+    """A research goal reaching its target grants what it names (Hedda
+    2026-09-30: automatically): an Ability (the points as its xp), or a
+    Virtue."""
+    if goal.reached or goal.points < goal.target:
+        return []
+    goal.reached = True
+    lines = [f"The {goal.kind} Breakthrough {goal.name} is made."]
+    if goal.grant_kind == "Ability" and goal.grant:
+        found = next((a for a in magus.abilities if a.name == goal.grant), None)
+        if found is None:
+            found = Ability(goal.grant, category="Arcane")
+            magus.abilities.append(found)
+        found.xp += goal.points
+        lines.append(f"{goal.grant}: +{goal.points} xp.")
+    elif goal.grant_kind == "Virtue" and goal.grant:
+        magus.virtues_flaws.append(VirtueFlawInstance(goal.grant))
+        lines.append("Its Virtue is added.")
+    else:
+        lines.append("The troupe records what it grants.")
+    return lines
+
+
+def _discovery_text(saga, magus, lab, goal, work) -> Book:
+    return Book(
+        id=f"discovery_{magus.id}_{new_instance_id()}",
+        name=f"Lab Text: Discovery toward {goal.name}",
+        type="Lab Text",
+        author=magus.name,
+        author_id=magus.id,
+        raw=True,
+        owner_kind="laboratory",
+        owner_id=lab.id,
+        year_published=saga.current_year,
+        level=5 * work.research_magnitude,
+    )
+
+
 def apply_lab_work(saga: Saga, magus: Character, outcome: rules.Outcome) -> None:
     """A season of lab work: the invention's points, and when it's done, the
     spell known, a Lab Text in the laboratory and the lab's Diary entry."""
@@ -986,10 +2255,23 @@ def apply_lab_work(saga: Saga, magus: Character, outcome: rules.Outcome) -> None
     lab = saga.laboratory(plan.lab_id)
     if work is None or lab is None:
         return
+    if work.experiment is not None and _apply_experiment(saga, magus, lab, plan, work):
+        return
     spell = work.spell
     if spell is None:
         _apply_one_season_work(saga, magus, lab, outcome, work)
         return
+    carried = (
+        next(
+            (
+                p.effects
+                for p in saga.lab_projects
+                if p.character_id == magus.id and p.spell_id == spell.id
+            ),
+            [],
+        )
+        + work.carried_effects
+    )
     saga.lab_projects = [
         p
         for p in saga.lab_projects
@@ -999,6 +2281,8 @@ def apply_lab_work(saga: Saga, magus: Character, outcome: rules.Outcome) -> None
         project = spell.id
         if plan.design is not None:
             spell = _invented_spell(saga, magus, plan.design)
+        if carried:
+            spell = _with_effects(saga, magus, spell, carried)
         if not any(k.spell_id == spell.id for k in magus.spells_known):
             magus.spells_known.append(KnownSpell(spell_id=spell.id))
         if plan.activity == lab_seasons.INVENT:
@@ -1015,7 +2299,9 @@ def apply_lab_work(saga: Saga, magus: Character, outcome: rules.Outcome) -> None
             )
         ]
     else:
-        saga.lab_projects.append(LabProject(magus.id, spell.id, work.points_after))
+        saga.lab_projects.append(
+            LabProject(magus.id, spell.id, work.points_after, carried)
+        )
         season, year = next_season(plan.season, plan.year)
         if plan_for(saga, magus, season, year) is None:
             set_plan(saga, replace(plan, season=season, year=year, days_away=0))
@@ -1033,3 +2319,59 @@ def apply_lab_work(saga: Saga, magus: Character, outcome: rules.Outcome) -> None
             activity="Invent Spell",
         )
     )
+
+
+# -- asking about a Discovery (STORY-916) -------------------------------------
+
+
+def discovery_moves(
+    saga: Saga, worked: Sequence[rules.Outcome]
+) -> list[tuple[rules.Outcome, str]]:
+    """The experiments seeking a Discovery whose chart roll the risk
+    modifier can move onto 10, with the question to ask."""
+    found: list[tuple[rules.Outcome, str]] = []
+    for outcome in worked:
+        work = outcome.lab_work
+        chart = work.experiment if work is not None else None
+        if chart is None or chart.discovery_shift is None:
+            continue
+        character = saga.character(outcome.character_id)
+        name = character.name if character else "The magus"
+        found.append(
+            (
+                outcome,
+                f"{name}'s experiment toward {outcome.plan.research.strip()} can "
+                f"reach a Discovery by moving its roll {chart.discovery_shift:+d} "
+                "(within the risk modifier). Take it? The same move is then made "
+                "every season of this project and when stabilizing.",
+            )
+        )
+    return found
+
+
+def take_discovery_move(saga: Saga, outcome: rules.Outcome, yes: bool) -> None:
+    """Record the answer: a Discovery, and the move kept on the goal."""
+    work = outcome.lab_work
+    chart = work.experiment if work is not None else None
+    character = saga.character(outcome.character_id)
+    if work is None or chart is None or chart.discovery_shift is None:
+        return
+    if character is None or not yes:
+        chart.discovery_shift = None
+        if chart.no_benefit:
+            plain = chart.fallback
+            if isinstance(plain, lab_seasons.LabWork):
+                plain.experiment = chart
+                outcome.lab_work = plain
+            else:
+                chart.wasted = True
+        chart.fallback = None
+        return
+    goal = ex.goal(character, outcome.plan.research, outcome.plan.research_kind)
+    goal.discovery_shift = chart.discovery_shift
+    art = work.spell.technique if work.spell is not None else "Vim"
+    ex.move_to_discovery(chart, random.Random(), outcome.plan.risk, art, saga)
+    chart.fallback = None
+    outcome.notes = [
+        n for n in outcome.notes if not n.startswith("Extraordinary Results: ")
+    ] + ["Extraordinary Results: " + " ".join(chart.results)]

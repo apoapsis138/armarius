@@ -15,7 +15,7 @@ from ars_magica_manager import catalog, storage
 from ars_magica_manager import economics as eco
 from ars_magica_manager import screens as scr
 from ars_magica_manager.app import ArsMagicaManagerApp
-from ars_magica_manager.models import Character, Saga
+from ars_magica_manager.models import Ability, Character, Saga
 from ars_magica_manager.screens.workspace import _COVENANT_REPUTATIONS
 
 
@@ -28,6 +28,9 @@ def contract_saga() -> Saga:
     saga.characters.append(
         Character(id="mag2", name="Brother Oda", type="magus", covenant_id="cov1")
     )
+    grog = Character(id="grog9", name="Hugo", type="grog", covenant_id="cov1")
+    grog.abilities = [Ability("Single Weapon"), Ability("Brawl"), Ability("Awareness")]
+    saga.characters.append(grog)
     return saga
 
 
@@ -180,6 +183,7 @@ OPENERS: dict[str, Opener] = {
     ),
     "edit ability": Opener("character", lambda ws: ws._edit_ability_at(0)),
     "edit raw vis": Opener("character", lambda ws: ws._edit_raw_vis_at(0)),
+    "add research goal": Opener("character", lambda ws: ws._add_research_goal()),
     "virtue parameters": Opener("character", _open_param_prompt),
     "add mastery ability": Opener("character", _open_mastery_ability),
     "add personal weapon": Opener(
@@ -214,6 +218,10 @@ OPENERS: dict[str, Opener] = {
         ),
     ),
     "add lab room": Opener("laboratory", lambda ws: ws._add_named("section-lab-rooms")),
+    "grog yearly update": Opener(
+        "character",
+        lambda ws: ws._grog_year_for(ws.saga.character("grog9"), "section-char-season"),
+    ),
     "add arcane connection": Opener("laboratory", lambda ws: ws._add_connection()),
     "add lab diary entry": Opener("laboratory", lambda ws: ws._add_diary_entry()),
     # Seasons (STORY-903)

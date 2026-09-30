@@ -21,8 +21,11 @@ from textual.binding import BindingType
 from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.widgets import Button, Checkbox, Input, Label, Select, Static, TextArea
 
+from .. import books, seasons
+from .. import enchanted_devices as ed
 from .. import spells as spl
 from ..arts import FORMS, TECHNIQUES
+from ..familiars import familiar_of
 from ..markup import escape
 from ..models import (
     Character,
@@ -33,7 +36,12 @@ from ..models import (
     SpellDesign,
     next_season,
 )
+from ..rules import book_seasons as bs
+from ..rules import enchant_seasons as es
+from ..rules import experiment as ex
+from ..rules import familiar_seasons as fs
 from ..rules import lab_seasons, spell_levels
+from ..rules import laboratory_seasons as ls
 from ..rules import seasons as season_rules
 from .fields import ModalDialog
 from .pickers import SpellChooserScreen
@@ -150,7 +158,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         width: 18;
     }
 
-    #inv-similar, #inv-lab-text, #inv-subject {
+    #inv-similar, #inv-lab-text, #inv-subject, #inv-decode {
         width: 50;
     }
 
@@ -158,8 +166,28 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         width: 40;
     }
 
-    #inv-vis-art {
+    #inv-creature {
+        width: 24;
+    }
+
+    #inv-move-to {
+        width: 40;
+    }
+
+    #inv-research {
+        width: 30;
+    }
+
+    #inv-research-kind {
         width: 14;
+    }
+
+    #inv-vis-art, #inv-effect-vis {
+        width: 14;
+    }
+
+    #inv-device, #inv-effect, #inv-power {
+        width: 50;
     }
 
     #inv-connection {
@@ -406,6 +434,24 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                         id="inv-lab-text",
                         compact=True,
                     )
+                with Horizontal(classes="inv-row", id="inv-decode-row"):
+                    yield Label("Lab Text")
+                    yield Select(
+                        [
+                            (f"{escape(b.name)} ({escape(b.author)})", b.id)
+                            for b in self._undecoded()
+                        ],
+                        value=(
+                            plan.book_id
+                            if plan
+                            and plan.activity == bs.DECODE_TEXT
+                            and plan.book_id in [b.id for b in self._undecoded()]
+                            else Select.NULL
+                        ),
+                        prompt="(a raw text by another magus)",
+                        id="inv-decode",
+                        compact=True,
+                    )
                 with Vertical(id="inv-work"):
                     with Horizontal(classes="inv-row", id="inv-connection-row"):
                         yield Label("Connection to")
@@ -449,7 +495,124 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                             classes="inv-num",
                             compact=True,
                         )
-                    with Horizontal(classes="inv-row"):
+                    with Horizontal(classes="inv-row", id="inv-device-row"):
+                        yield Label("Device")
+                        yield Select(
+                            self._devices(),
+                            value=self._device_value(plan),
+                            prompt="(choose; they're kept on the Inventory tabs)",
+                            id="inv-device",
+                            compact=True,
+                        )
+                        yield Label(" Shape & material")
+                        yield Input(
+                            str(plan.shape_bonus) if plan else "0",
+                            id="inv-shape",
+                            classes="inv-num",
+                            compact=True,
+                        )
+                    with Horizontal(classes="inv-row", id="inv-effect-row"):
+                        yield Label("Effect")
+                        yield Select(
+                            self._effects(plan.device_id if plan else None),
+                            value=self._effect_value(plan),
+                            prompt="(choose)",
+                            id="inv-effect",
+                            compact=True,
+                        )
+                    with Horizontal(classes="inv-row", id="inv-bind-row"):
+                        yield Label("Technique")
+                        yield Select(
+                            [(t, t) for t in TECHNIQUES],
+                            value=plan.technique
+                            if plan and plan.technique
+                            else Select.NULL,
+                            prompt="(choose)",
+                            id="inv-bind-t",
+                            classes="inv-art",
+                            compact=True,
+                        )
+                        yield Label(" Form")
+                        yield Select(
+                            [(f, f) for f in FORMS],
+                            value=plan.form if plan and plan.form else Select.NULL,
+                            prompt="(choose)",
+                            id="inv-bind-f",
+                            classes="inv-art",
+                            compact=True,
+                        )
+                        for cord in ("golden", "silver", "bronze"):
+                            yield Label(f" {cord.title()} cord")
+                            yield Input(
+                                str(getattr(plan, f"{cord}_cord")) if plan else "0",
+                                id=f"inv-{cord}",
+                                classes="inv-num",
+                                compact=True,
+                            )
+                    with Horizontal(classes="inv-row", id="inv-power-row"):
+                        yield Label("Bond power")
+                        yield Select(
+                            self._powers(),
+                            value=self._power_value(plan),
+                            prompt="(choose; add it on the familiar's sheet)",
+                            id="inv-power",
+                            compact=True,
+                        )
+                    with Horizontal(classes="inv-row", id="inv-taming-row"):
+                        yield Label("Creature")
+                        yield Input(
+                            plan.title if plan else "",
+                            placeholder="its name",
+                            id="inv-creature",
+                            compact=True,
+                        )
+                        yield Label(" Form")
+                        yield Select(
+                            [(f, f) for f in FORMS],
+                            value=plan.form if plan and plan.form else Select.NULL,
+                            prompt="(choose)",
+                            id="inv-creature-form",
+                            classes="inv-art",
+                            compact=True,
+                        )
+                        yield Label(" Might")
+                        yield Input(
+                            ""
+                            if plan is None or plan.book_level is None
+                            else str(plan.book_level),
+                            id="inv-creature-might",
+                            classes="inv-num",
+                            compact=True,
+                        )
+                    with Horizontal(classes="inv-row", id="inv-move-row"):
+                        yield Label("Moving to")
+                        yield Input(
+                            plan.title if plan else "",
+                            placeholder="the new location",
+                            id="inv-move-to",
+                            compact=True,
+                        )
+                        yield Label(" By spell")
+                        yield Checkbox(
+                            "",
+                            value=bool(plan and plan.by_spell),
+                            id="inv-by-spell",
+                            compact=True,
+                        )
+                    with Horizontal(classes="inv-row", id="inv-die-row"):
+                        yield Label("Die")
+                        yield Input(
+                            "" if plan is None or plan.die is None else str(plan.die),
+                            placeholder="rolled",
+                            id="inv-die",
+                            classes="inv-num",
+                            compact=True,
+                        )
+                        yield Label(
+                            " (blank: rolled when the season is played; a typed die "
+                            "is used for one roll)"
+                        )
+                    with Horizontal(classes="inv-row", id="inv-vis-from-row"):
                         yield Label("Vis", id="inv-vis-from-label")
                         yield Select(
                             [
@@ -468,8 +631,46 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                             id="inv-vis-from",
                             compact=True,
                         )
+                        yield Label(" Art", id="inv-effect-vis-label")
+                        yield Select(
+                            self._effect_arts(plan),
+                            value=self._effect_art_value(plan),
+                            prompt="(Art)",
+                            id="inv-effect-vis",
+                            compact=True,
+                        )
                 with Vertical(id="inv-common"):
                     yield Static("── Lab work ────────", classes="inv-title")
+                    with Horizontal(classes="inv-row", id="inv-experiment-row"):
+                        yield Label("Experiment", id="inv-experimenting-label")
+                        yield Checkbox(
+                            "",
+                            value=bool(plan and plan.experimenting),
+                            id="inv-experimenting",
+                            compact=True,
+                        )
+                        yield Label(" Risk +")
+                        yield Input(
+                            str(plan.risk) if plan else "0",
+                            id="inv-risk",
+                            classes="inv-num",
+                            compact=True,
+                        )
+                        yield Label(" Research goal")
+                        yield Input(
+                            plan.research if plan else "",
+                            placeholder="(optional)",
+                            id="inv-research",
+                            compact=True,
+                        )
+                        yield Label(" ")
+                        yield Select(
+                            [(k, k) for k in ex.KINDS],
+                            value=(plan.research_kind if plan else "Minor") or "Minor",
+                            allow_blank=False,
+                            id="inv-research-kind",
+                            compact=True,
+                        )
                     with Horizontal(classes="inv-row"):
                         yield Label("Similar spell known")
                         yield Select(
@@ -597,6 +798,9 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         inventing = activity == lab_seasons.INVENT
         spell_work = activity in lab_seasons.SPELL_ACTIVITIES
         longevity = activity == lab_seasons.LONGEVITY
+        enchanting = activity in es.ACTIVITIES
+        familiar_work = activity in fs.ACTIVITIES
+        binding = activity == fs.BIND
         subject = self._select("#inv-subject")
         return SeasonPlan(
             character_id=self.magus.id,
@@ -608,6 +812,8 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             book_id=(
                 self._select("#inv-lab-text")
                 if activity == lab_seasons.LAB_TEXT
+                else self._select("#inv-decode")
+                if activity == bs.DECODE_TEXT
                 else None
             ),
             similar_spell_id=self._select("#inv-similar") if inventing else None,
@@ -620,7 +826,67 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             subject_id=(
                 subject if longevity and subject and subject != self.magus.id else None
             ),
-            vis_art=(self._select("#inv-vis-art") or "") if longevity else "",
+            vis_art=(
+                (self._select("#inv-vis-art") or "")
+                if longevity
+                else (self._select("#inv-effect-vis") or "")
+                if enchanting or familiar_work
+                else ""
+            ),
+            device_id=self._select("#inv-device") if enchanting else None,
+            effect_id=(
+                self._select("#inv-effect")
+                if activity in es.EFFECT_ACTIVITIES
+                else self._select("#inv-power")
+                if activity == fs.EMPOWER
+                else None
+            ),
+            experimenting=(
+                self._checked("#inv-experimenting")
+                if activity in lab_seasons.EXPERIMENTAL
+                else False
+            ),
+            risk=(
+                (_int(self._value("#inv-risk")) or 0)
+                if activity in (*lab_seasons.EXPERIMENTAL, ex.STABILIZE)
+                else 0
+            ),
+            research=(
+                self._value("#inv-research").strip()
+                if activity in (*lab_seasons.EXPERIMENTAL, ex.STABILIZE)
+                else ""
+            ),
+            research_kind=self._select("#inv-research-kind") or "Minor",
+            title=(
+                self._value("#inv-move-to").strip()
+                if activity == ls.MOVE
+                else self._value("#inv-creature").strip()
+                if activity == lab_seasons.TAMING
+                else ""
+            ),
+            book_level=(
+                _int(self._value("#inv-creature-might"))
+                if activity == lab_seasons.TAMING
+                else None
+            ),
+            by_spell=self._checked("#inv-by-spell") if activity == ls.MOVE else False,
+            technique=(self._select("#inv-bind-t") or "") if binding else "",
+            form=(
+                (self._select("#inv-bind-f") or "")
+                if binding
+                else (self._select("#inv-creature-form") or "")
+                if activity == lab_seasons.TAMING
+                else ""
+            ),
+            golden_cord=(_int(self._value("#inv-golden")) or 0) if binding else 0,
+            silver_cord=(_int(self._value("#inv-silver")) or 0) if binding else 0,
+            bronze_cord=(_int(self._value("#inv-bronze")) or 0) if binding else 0,
+            shape_bonus=(_int(self._value("#inv-shape")) or 0) if enchanting else 0,
+            die=(
+                _int(self._value("#inv-die"))
+                if activity in (es.INVESTIGATE, *ls.ROLLED)
+                else None
+            ),
             extra_vis=(_int(self._value("#inv-extra-vis")) or 0) if longevity else 0,
             connection_id=(
                 self._select("#inv-connection")
@@ -643,6 +909,98 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         if plan is not None and plan.connection_id in ids:
             return plan.connection_id
         return Select.NULL
+
+    def _devices(self) -> list[tuple[str, str]]:
+        """The enchanted devices the magus can work on here."""
+        return [
+            (f"{escape(d.name)} ({d.type})", d.id)
+            for d in es.devices_for(self.saga, self.magus, self.lab)
+        ]
+
+    def _device_value(self, plan: SeasonPlan | None) -> object:
+        ids = [value for _, value in self._devices()]
+        if plan is not None and plan.device_id in ids:
+            return plan.device_id
+        return Select.NULL
+
+    def _effects(self, device_id: str | None) -> list[tuple[str, str]]:
+        device = next(
+            (d for d in self.saga.enchanted_devices if d.id == device_id), None
+        )
+        if device is None:
+            return []
+        return [
+            (
+                f"{escape(ed.effect_name(e))} (level {ed.modified_level(device, e)})",
+                e.id,
+            )
+            for e in device.effects
+        ]
+
+    def _effect_value(self, plan: SeasonPlan | None) -> object:
+        if plan is None:
+            return Select.NULL
+        ids = [value for _, value in self._effects(plan.device_id)]
+        return plan.effect_id if plan.effect_id in ids else Select.NULL
+
+    def _undecoded(self) -> list:
+        """Raw Lab Texts by other magi that the magus can get at but not
+        read yet."""
+        return [
+            b
+            for b in self.saga.books
+            if b.type == "Lab Text"
+            and b.raw
+            and books.can_read(self.saga, self.magus, b)
+            and not bs.can_use_lab_text(self.magus, b)
+        ]
+
+    def _powers(self) -> list[tuple[str, str]]:
+        familiar = familiar_of(self.saga, self.magus.id)
+        if familiar is None:
+            return []
+        return [
+            (f"{escape(p.name) or '(unnamed)'} (level {p.level})", p.id)
+            for p in familiar.bond_powers
+        ]
+
+    def _power_value(self, plan: SeasonPlan | None) -> object:
+        ids = [value for _, value in self._powers()]
+        if plan is not None and plan.effect_id in ids:
+            return plan.effect_id
+        return Select.NULL
+
+    def _effect_arts(self, plan: SeasonPlan | None) -> list[tuple[str, str]]:
+        if plan is not None and plan.activity == fs.BIND:
+            return [(a, a) for a in (plan.technique, plan.form) if a]
+        if plan is not None and plan.activity == fs.EMPOWER:
+            familiar = familiar_of(self.saga, self.magus.id)
+            power = fs.power_of(familiar, plan) if familiar is not None else None
+            if power is None:
+                return []
+            return [(a, a) for a in (power.technique, power.form) if a]
+        device = next(
+            (
+                d
+                for d in self.saga.enchanted_devices
+                if plan is not None and d.id == plan.device_id
+            ),
+            None,
+        )
+        effect = (
+            next((e for e in device.effects if plan and e.id == plan.effect_id), None)
+            if device is not None
+            else None
+        )
+        if effect is None:
+            return []
+        return [(art, art) for art in (effect.technique, effect.form) if art]
+
+    def _effect_art_value(self, plan: SeasonPlan | None) -> object:
+        arts = [value for _, value in self._effect_arts(plan)]
+        if plan is not None and plan.vis_art in arts:
+            return plan.vis_art
+        return arts[0] if arts else Select.NULL
 
     def _subjects(self) -> list[tuple[str, str]]:
         """Who a Longevity Ritual can be for: the magus first, then everyone
@@ -710,14 +1068,43 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         self.query_one("#inv-common").display = chosen
         self.query_one("#inv-design").display = inventing
         self.query_one("#inv-labtext").display = plan.activity == lab_seasons.LAB_TEXT
+        self.query_one("#inv-decode-row").display = plan.activity == bs.DECODE_TEXT
         self.query_one("#inv-work").display = chosen and (
-            plan.activity not in lab_seasons.SPELL_ACTIVITIES
+            plan.activity not in (*lab_seasons.SPELL_ACTIVITIES, bs.DECODE_TEXT)
         )
         self.query_one("#inv-connection-row").display = (
             plan.activity == lab_seasons.FIX_AC
         )
         self.query_one("#inv-subject-row").display = (
             plan.activity == lab_seasons.LONGEVITY
+        )
+        enchanting = plan.activity in es.ACTIVITIES
+        self.query_one("#inv-device-row").display = enchanting
+        self.query_one("#inv-effect-row").display = (
+            plan.activity in es.EFFECT_ACTIVITIES
+        )
+        by_art = plan.activity in (es.INSTIL, es.LESSER_WORK, fs.BIND, fs.EMPOWER)
+        self.query_one("#inv-effect-vis").display = by_art
+        self.query_one("#inv-effect-vis-label").display = by_art
+        self.query_one("#inv-bind-row").display = plan.activity == fs.BIND
+        self.query_one("#inv-move-row").display = plan.activity == ls.MOVE
+        self.query_one("#inv-taming-row").display = plan.activity == lab_seasons.TAMING
+        experimental = plan.activity in lab_seasons.EXPERIMENTAL
+        self.query_one("#inv-experiment-row").display = experimental or (
+            plan.activity == ex.STABILIZE
+        )
+        self.query_one("#inv-experimenting").display = experimental
+        self.query_one("#inv-experimenting-label").display = experimental
+        self.query_one("#inv-power-row").display = plan.activity == fs.EMPOWER
+        self.query_one("#inv-die-row").display = plan.activity in (
+            es.INVESTIGATE,
+            *ls.ROLLED,
+        )
+        self.query_one("#inv-vis-from-row").display = plan.activity not in (
+            es.CHARGED_WORK,
+            es.ATTUNE,
+            es.INVESTIGATE,
+            *ls.ACTIVITIES,
         )
         self.query_one("#inv-vis-from-label", Label).update(
             "Vis goes to" if plan.activity == lab_seasons.EXTRACT else "Vis from"
@@ -740,7 +1127,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         if work is None:
             total.update("[b]Lab Total[/]\n[dim]--[/]")
             when.update("")
-        elif plan.activity == lab_seasons.FIX_AC:
+        elif not work.lab_total.lines:
             total.update("[b]Lab Total[/]\n[dim]None needed[/]")
             when.update(self._when_text(plan, work))
         else:
@@ -790,10 +1177,41 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                     *exposure,
                 ]
             )
+        if plan.activity == ex.STABILIZE:
+            return "\n".join(
+                [
+                    "[b]When[/]",
+                    f"This season, {self.season} {self.year}: stabilizing the "
+                    f"Discovery (magnitude {work.research_magnitude}) toward "
+                    f"{escape(plan.research)}.",
+                    "The Extraordinary Results chart is rolled when it's played.",
+                    *exposure,
+                ]
+            )
+        if plan.activity == bs.DECODE_TEXT:
+            return "\n".join(
+                [
+                    "[b]When[/]",
+                    escape(seasons.work_text(work, plan)) + ".",
+                    *exposure,
+                ]
+            )
         if plan.activity == lab_seasons.LAB_TEXT:
             return (
                 f"[b]When[/]\nLevel {work.level}, Lab Total {lab_total}: learned "
                 f"this season, {self.season} {self.year}."
+            )
+        if (
+            plan.activity in (*es.ACTIVITIES, *ls.ACTIVITIES)
+            or plan.activity == fs.BIND
+        ) and plan.activity != es.INSTIL:
+            return "\n".join(
+                [
+                    "[b]When[/]",
+                    f"This season, {self.season} {self.year}:",
+                    escape(seasons.work_text(work, plan)) + ".",
+                    *exposure,
+                ]
             )
         season, year = self.season, self.year
         for _ in range(lab_seasons.seasons_left(work)):
@@ -805,7 +1223,8 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                 f"Level {work.level}, Lab Total {lab_total}: "
                 f"{work.points_gained} points a season",
                 f"{work.points_before} of {work.level} points so far",
-                f"Invented {season} {year} (projected: {seasons_needed} "
+                f"{'Invented' if plan.activity == lab_seasons.INVENT else 'Instilled'} "
+                f"{season} {year} (projected: {seasons_needed} "
                 f"season{'s' if seasons_needed != 1 else ''})",
                 "",
                 "Every lab season also gives 2 xp",
@@ -818,7 +1237,28 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
     def on_input_changed(self, _event: Input.Changed) -> None:
         self._refresh()
 
-    def on_select_changed(self, _event: Select.Changed) -> None:
+    def on_select_changed(self, event: Select.Changed) -> None:
+        if self._ready and event.select.id in (
+            "inv-device",
+            "inv-effect",
+            "inv-power",
+            "inv-bind-t",
+            "inv-bind-f",
+            "inv-activity",
+        ):
+            # A different device offers its own effects, and an effect its
+            # own Technique and Form to pay vis with.
+            self._ready = False
+            if event.select.id == "inv-device":
+                effects = self._effects(self._select("#inv-device"))
+                self.query_one("#inv-effect", Select).set_options(effects)
+            plan = self.current_plan()
+            arts = self._effect_arts(plan)
+            vis = self.query_one("#inv-effect-vis", Select)
+            vis.set_options(arts)
+            if arts:
+                vis.value = arts[0][1]
+            self._ready = True
         self._refresh()
 
     def on_checkbox_changed(self, _event: Checkbox.Changed) -> None:

@@ -16,6 +16,7 @@ from .models import (
     ABILITY_CATEGORIES,
     Ability,
     AbilityDef,
+    Breakthrough,
     Character,
     Characteristics,
     Modifier,
@@ -363,3 +364,57 @@ def character_fatigue_text(character: Character) -> str:
 
 def fatigue_text(fatigue_level: str) -> str:
     return f"Fatigue Level: {fatigue_level.title()}"
+
+
+def goal_row(goal: Breakthrough) -> str:
+    """A research goal's row (STORY-916): its name, kind, points toward its
+    target, and what waits on it."""
+    extras = []
+    if goal.reached:
+        extras.append("reached")
+    if goal.pending_magnitude:
+        extras.append(f"Discovery to stabilize ({goal.pending_magnitude})")
+    if goal.insights:
+        extras.append(f"{goal.insights} insight(s) to invent")
+    tail = f"  [dim]{'; '.join(extras)}[/]" if extras else ""
+    return (
+        f"{escape(goal.name)} ({goal.kind}): {goal.points}/{goal.target} points" + tail
+    )
+
+
+def goal_text(goal: Breakthrough) -> str:
+    """A research goal's details panel."""
+    grants = {
+        "Ability": f"the Ability {goal.grant} (its points as xp)",
+        "Virtue": f"the Virtue {goal.grant}",
+        "Parameter": f"a new parameter: {goal.grant}",
+    }.get(goal.grant_kind, "whatever the troupe decides")
+    if goal.grant_kind == "Virtue":
+        found = catalog.load_virtue_flaw_catalog_by_id().get(goal.grant)
+        grants = f"the Virtue {found.name if found else goal.grant}"
+    lines = [
+        f"[b]{escape(goal.name)}[/]: a {goal.kind} Breakthrough, "
+        f"{goal.points}/{goal.target} points" + (" (reached)" if goal.reached else ""),
+        f"Reaching it grants {escape(grants)}.",
+    ]
+    if goal.pending_magnitude:
+        lines.append(
+            f"A Discovery (magnitude {goal.pending_magnitude}) waits to be "
+            f"stabilized: {goal.discovery_seasons} season(s) at Lab Total "
+            f"{goal.discovery_lab_total}, risk +{goal.discovery_risk}"
+            + (f", {goal.discovery_vis} pawn(s) of vis" if goal.discovery_vis else "")
+            + (
+                f" ({goal.stabilizing_seasons} done)"
+                if goal.stabilizing_seasons
+                else ""
+            )
+            + "."
+        )
+    if goal.insights:
+        lines.append(
+            f"{goal.insights} insight(s) to invent: each effect invented adds "
+            "its magnitude."
+        )
+    if goal.description.strip():
+        lines += ["", escape(goal.description.strip())]
+    return "\n".join(lines)

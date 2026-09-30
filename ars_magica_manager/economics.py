@@ -361,7 +361,12 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
     # Emergency Savings aren't tied to a category, so they only reduce the
     # total.
     cost_savings = sum(saved.values()) + eco.magic_savings + eco.emergency_savings
-    income = sum(s.current_income for s in eco.income_sources)
+    # A contested source gives nothing until it is secured (STORY-906).
+    income = sum(
+        s.current_income
+        for s in eco.income_sources
+        if not s.contested or (s.secured_until or 0) >= saga.current_year
+    )
     total_expenditure = before - cost_savings
     surplus_deficit = income - total_expenditure
     emergency = next(r for r in savings if r.key == "emergency_savings")

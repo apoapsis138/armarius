@@ -157,7 +157,7 @@
       Techniques                             Forms
 
 
-    Select an Art or a Known Spell to see its details.
+    Select an Art, a Known Spell or a Research Goal to see its details.
 
 
 

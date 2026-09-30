@@ -676,6 +676,9 @@ class Spell:
     base_level: int | None = None
     #: Where it's published: one of SPELL_SOURCES, or free text.
     source: str = "ArM5"
+    #: Side effects and modified effects from the experiment that invented
+    #: it (STORY-916): anyone who learns it learns them too.
+    experimental_effects: list[str] = field(default_factory=list)
     #: A catalog entry listed without its details (the source page lacks them).
     details_missing: bool = False
 
@@ -809,6 +812,12 @@ class Book:
     #: `level` is the book's own. `spell_name` stays as typed (imported books
     #: link by it until a spell is chosen).
     spell_id: str | None = None
+    #: A Lab Text written raw by its author (STORY-914): only he, and whoever
+    #: decoded his texts or learned his abbreviations, can use it until he
+    #: rewrites it for general use. `author_id`: the author, when a
+    #: character of the saga.
+    raw: bool = False
+    author_id: str | None = None
 
     @classmethod
     def from_dict(
@@ -1123,6 +1132,9 @@ class Laboratory:
     diary: list[DiaryEntry] = field(default_factory=list)
     virtues_flaws: list[VirtueFlawInstance] = field(default_factory=list)
     arcane_connections: list[ArcaneConnection] = field(default_factory=list)
+    #: Moving it by mundane means (STORY-915): the seasons done so far (0: not
+    #: moving; pack, then two reassembling).
+    move_seasons: int = 0
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Laboratory:
@@ -1255,10 +1267,26 @@ class Aging:
     longevity_modifier: int = 0
     longevity_year: int | None = None
     longevity_by: str = ""
+    #: Aging (STORY-904): Decrepitude points (the score is worked out from
+    #: them and kept in `decrepitude`), Aging Points per Characteristic, the
+    #: apparent age (None: the actual age), and the season spent recovering
+    #: from an Aging Crisis ("Spring 1221").
+    decrepitude_points: int = 0
+    aging_points: dict[str, int] = field(default_factory=dict)
+    apparent_age: int | None = None
+    recovering: str = ""
+    #: Wizard's Twilight (STORY-909): the last season it takes ("Winter
+    #: 1224"); no activity can be planned until after it.
+    twilight_until: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Aging:
-        return cls(**data)
+        aging = cls(**known_fields(cls, data))
+        if aging.decrepitude and "decrepitude_points" not in data:
+            # A typed Decrepitude score: the points that give it.
+            thresholds = (0, 5, 15, 30, 50, 75)
+            aging.decrepitude_points = thresholds[max(0, min(aging.decrepitude, 5))]
+        return aging
 
 
 @dataclass
@@ -1316,6 +1344,79 @@ class HermeticBackground:
 
 
 @dataclass
+class Progress:
+    """Progress carried from season to season on something a character is
+    working at (STORY-913, 918-923): an excellent item, a pilgrimage, taming
+    an animal, a work of art, a formula, years at university."""
+
+    kind: str
+    name: str
+    target: int = 0
+    points: int = 0
+    done: bool = False
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Progress:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class GrogYear:
+    """A grog's yearly update (STORY-924, Grogs Ch. 5), applied in Winter:
+    the vocational training (7 xp, or the teacher's Source Quality), 4 xp of
+    practice and two 2 xp of exposure, less a season for each story award
+    this year."""
+
+    vocational: str = ""
+    vocational_xp: int = 7
+    practice: str = ""
+    exposure: str = ""
+    exposure_2: str = ""
+    story_awards: int = 0
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> GrogYear:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
+class Breakthrough:
+    """A magus's original research goal (STORY-916): what it is, its kind and
+    target (the storyguide may type a secret one), the points gained, what
+    reaching it grants, a Discovery waiting to be stabilized, and insights
+    waiting to be invented."""
+
+    name: str
+    kind: str = "Minor"  # Minor / Major / Hermetic
+    target: int = 30
+    points: int = 0
+    description: str = ""
+    #: What reaching it grants: "Ability" (the points become its xp),
+    #: "Virtue" (a catalog id in `grant`), "Parameter" or "" (the troupe's).
+    grant_kind: str = ""
+    grant: str = ""
+    #: The Discovery to stabilize: its magnitude, the seasons, Lab Total,
+    #: risk and vis of the experiment that made it, and the move of the chart
+    #: roll (repeated when stabilizing).
+    pending_magnitude: int = 0
+    discovery_seasons: int = 1
+    discovery_lab_total: int = 0
+    discovery_risk: int = 0
+    discovery_vis: int = 0
+    discovery_vis_art: str = ""
+    discovery_shift: int = 0
+    #: Stabilizing: the seasons done of the current attempt.
+    stabilizing_seasons: int = 0
+    #: Insights gained and not yet invented.
+    insights: int = 0
+    reached: bool = False
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Breakthrough:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
 class Character:
     id: str
     name: str
@@ -1350,6 +1451,25 @@ class Character:
     #: Tractatus already studied (book ids): each gives its xp only once
     #: (DE Ch. 10, Studying Tractatus; STORY-902).
     tractatus_read: list[str] = field(default_factory=list)
+    #: Whose raw Lab Texts this magus can read, and up to what level
+    #: (decoded, or taught the author's abbreviations; STORY-914): author
+    #: name -> level.
+    lab_text_access: dict[str, int] = field(default_factory=dict)
+    #: Original research goals (STORY-916).
+    breakthroughs: list[Breakthrough] = field(default_factory=list)
+    #: A grog's yearly update (STORY-924); None until set up.
+    grog_year: GrogYear | None = None
+    #: The supplements' sub-systems (STORY-913, 918-923): Labor Points and a
+    #: workshop's scores (City & Guild), progress records, experimental
+    #: philosophy formulas known, and the last Ordeal (its size, and the
+    #: Initiations since).
+    labor_points: int = 0
+    workshop_innovation: int = 0
+    workshop_raw_materials: int = 0
+    progress: list[Progress] = field(default_factory=list)
+    formulas: list[str] = field(default_factory=list)
+    ordeal: str = ""
+    initiations_since_ordeal: int = 0
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Character:
@@ -1389,6 +1509,12 @@ class Character:
             for entry in d.get("spells_known", [])
         ]
         d["diary"] = [DiaryEntry.from_dict(e) for e in d.get("diary", [])]
+        d["breakthroughs"] = [
+            Breakthrough.from_dict(b) for b in d.get("breakthroughs", [])
+        ]
+        if d.get("grog_year") is not None:
+            d["grog_year"] = GrogYear.from_dict(d["grog_year"])
+        d["progress"] = [Progress.from_dict(p) for p in d.get("progress", [])]
         return cls(**known_fields(cls, d))
 
 
@@ -1424,6 +1550,9 @@ class BondPower:
     penetration: int = 0
     vis_spent: int = 0
     cosmetic_trait: str = ""
+    #: Points instilled so far while it is being instilled as lab work
+    #: (STORY-908); None when finished.
+    instilling_progress: int | None = None
 
 
 @dataclass
@@ -1926,6 +2055,12 @@ class Possession:
     pawns: int = 0
     season: str = ""  # one of SEASONS
     physical_form: str = ""
+    #: vis_source (STORY-906): covered by a Contested (or Indiscreet)
+    #: Resource Hook, secured through this year (one story secures it for
+    #: five); and by a Dwindling Resource Hook (-10% a year).
+    contested: bool = False
+    secured_until: int | None = None
+    dwindling: bool = False
 
     def __post_init__(self) -> None:
         if self.kind not in POSSESSION_KINDS:
@@ -2046,6 +2181,12 @@ class IncomeSource:
     #: economics.improvement_note); plain text, replaced wholesale each time,
     #: not user-editable directly.
     note: str = ""
+    #: STORY-906: covered by a Contested (or Indiscreet) Resource Hook,
+    #: secured through this year (no income until it is); and a Dwindling
+    #: Resource Hook (-10% a year).
+    contested: bool = False
+    secured_until: int | None = None
+    dwindling: bool = False
 
     def __post_init__(self) -> None:
         if self.type not in INCOME_TYPES:
@@ -2343,6 +2484,38 @@ class SeasonPlan:
     extra_vis: int = 0
     #: Fixing an Arcane Connection: the laboratory's connection fixed.
     connection_id: str | None = None
+    #: Enchanting (STORY-905): the enchanted device worked on, the effect
+    #: instilled (or made), and the shape and material bonus that applies.
+    device_id: str | None = None
+    effect_id: str | None = None
+    shape_bonus: int = 0
+    #: Binding a familiar (STORY-908): the Technique and Form used, and the
+    #: cords the Lab Total buys (0-5 each).
+    technique: str = ""
+    form: str = ""
+    golden_cord: int = 0
+    silver_cord: int = 0
+    bronze_cord: int = 0
+    #: Writing, copying and translating books (STORY-910): the title, the
+    #: summa's Level (None: the most the author can), the language written
+    #: or translated into, and a quick copy.
+    title: str = ""
+    book_level: int | None = None
+    language: str = ""
+    quick: bool = False
+    #: Moving a laboratory (STORY-915): by spell (one season, a roll) rather
+    #: than mundane means, and where to.
+    by_spell: bool = False
+    #: Supplement seasons (STORY-919, 920): the Characteristic a total uses.
+    characteristic: str = ""
+    #: Experimentation (STORY-916): whether the season experiments, its
+    #: risk modifier, the simple die added to the Lab Total (None: rolled
+    #: when played), and the research goal it seeks a Discovery for.
+    experimenting: bool = False
+    risk: int = 0
+    experiment_die: int | None = None
+    research: str = ""
+    research_kind: str = "Minor"
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> SeasonPlan:
@@ -2361,6 +2534,8 @@ class LabProject:
     character_id: str
     spell_id: str
     points: int = 0
+    #: Experimental side effects and modified effects so far (STORY-916).
+    effects: list[str] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> LabProject:

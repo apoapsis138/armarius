@@ -704,6 +704,20 @@
         "V": "(disabled)"
       }
     },
+    "SheetSection#section-research-goals": {
+      "active": "section-research-goals",
+      "keys": {
+        "a": "FieldsDialog: Add Research Goal",
+        "A": "notice: No research goals to remove.",
+        "e": "notice: No research goals to edit.",
+        "r": "(disabled)",
+        "i": "(disabled)",
+        "u": "(disabled)",
+        "I": "(disabled)",
+        "v": "(disabled)",
+        "V": "(disabled)"
+      }
+    },
     "SheetSection#section-raw-vis-inventory": {
       "active": "section-raw-vis-inventory",
       "keys": {

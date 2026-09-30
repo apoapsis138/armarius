@@ -9,6 +9,38 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 1.8.0 — 2026-09-30
+
+The rest of the seasonal activities: almost everything a character can do
+with a season now plays out when you advance it.
+
+- **Laboratory work:** opening items, instilling effects, lesser and
+  charged enchantments, attuning talismans, investigating items, binding
+  and empowering familiars, decoding Lab Texts, taming magical beasts,
+  assisting in a lab, and setting up, refining, taking over and moving a
+  laboratory.
+- **Books:** writing summae and tractatus, copying and translating books,
+  and rewriting, copying and teaching the abbreviations of Lab Texts.
+- **Aging and Warping:** yearly aging rolls with Longevity Rituals,
+  Decrepitude and crises; Warping from magic and experiments, with
+  Twilight when a score rises.
+- **Experimentation and original research:** experimenting on any lab work
+  that allows it, with the Extraordinary Results chart played for you
+  (including Cautious Sorcerer and the two-dice Flaws). A Research Goals
+  list on the Hermetic Magic tab tracks Breakthroughs; the season advance
+  asks before moving a roll onto a Discovery, stabilizing repeats the
+  experiment, and a reached goal grants its Ability or Virtue. Side effects
+  stay with what was made, and an invented spell passes them on to anyone
+  who learns it.
+- **Apprentices:** searching for one, opening their Arts, teaching a
+  Hermetic Virtue.
+- **Covenant and grogs:** covenant seasons, contested resources (lost for
+  the year if not settled, noted in the covenant Diary), and each grog's
+  yearly update.
+- **Other activities:** crafts and livelihoods, scholars, physicians and
+  artists, religious seasons, Mysteries and House activities, animals,
+  travel and more study sources.
+
 ## 1.7.2 — 2026-09-30
 
 A leaner test suite, finished. Nothing in the app changes.

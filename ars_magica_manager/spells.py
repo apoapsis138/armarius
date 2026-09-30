@@ -436,6 +436,9 @@ def detail_text(saga: Saga, spell: Spell | None) -> str:
         lines.append(f"[dim]From {escape(book)} (catalog spell, read-only).[/]")
     if spell.description.strip():
         lines += ["", escape(spell.description.strip())]
+    if spell.experimental_effects:
+        lines += ["", "[b]Experimental effects[/] (learned with it):"]
+        lines += [f"  {escape(e)}" for e in spell.experimental_effects]
     return "\n".join(lines)
 
 
