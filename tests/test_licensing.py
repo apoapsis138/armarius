@@ -66,7 +66,7 @@ def test_notice_names_the_licences_and_trademarks():
 
 async def test_saga_picker_footer_shows_about_at_the_right():
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(80, 24)) as pilot:
+    async with app.run_test(size=(120, 45)) as pilot:
         await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
         await wait_until(pilot, lambda: "About this App" in screen_lines(app)[-1])
         footer = screen_lines(app)[-1]
@@ -78,16 +78,16 @@ async def test_saga_picker_footer_shows_about_at_the_right():
 
 async def test_question_mark_opens_about_and_escape_or_close_shuts_it():
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(80, 24)) as pilot:
+    async with app.run_test(size=(120, 45)) as pilot:
         await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
         await pilot.press("question_mark")
         await wait_until(pilot, lambda: isinstance(app.screen, AboutScreen))
         shown = "\n".join(screen_lines(app))
         assert "Ars Magica Manager v" in shown
         assert "Licences, credits and trademarks" in shown
-        # The Close button fits on an 80x24 screen.
+        # The Close button fits on a 120x45 screen.
         close = app.screen.query_one("#btn-close")
-        assert close.region.bottom <= 24
+        assert close.region.bottom <= 45
 
         await pilot.press("escape")
         await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))

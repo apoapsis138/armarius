@@ -3,12 +3,10 @@ ArM5 DE ch. 8 (capacity, modified level, vis, charges), the warnings,
 saving and loading, what deleting a holder or maker does, and the
 Shape & Material catalog."""
 
-import json
-
 import pytest
 from support import strip_markup
 
-from ars_magica_manager import catalog, deletion, storage
+from ars_magica_manager import catalog, deletion
 from ars_magica_manager import enchanted_devices as ed
 from ars_magica_manager.models import (
     CHARGED,
@@ -352,24 +350,6 @@ def test_effect_panel_shows_the_breakdown_vis_and_expiry():
 
 
 # -- saving, loading, deleting --
-
-
-def test_a_save_without_devices_loads_with_none():
-    data = json.loads(json.dumps({"id": "old", "name": "Old"}))
-    assert Saga.from_dict(data).enchanted_devices == []
-
-
-def test_devices_round_trip_through_a_save(tmp_path, monkeypatch):
-    monkeypatch.setattr(storage, "SAGAS_DIR", tmp_path)
-    device = _device(
-        components=_staff(),
-        bonuses=[ShapeMaterialBonus(4, "destroy wood", "Axe")],
-        attunements=[ShapeMaterialBonus(3, "air", "Agate", 1221, "Spring")],
-        effects=[_effect(level=30, linked_trigger=True, linked_to="e0")],
-    )
-    saga = _saga(device)
-    storage.save_saga(saga)
-    assert storage.load_saga("s").enchanted_devices == [device]
 
 
 def test_a_deleted_characters_devices_pass_to_their_covenant():

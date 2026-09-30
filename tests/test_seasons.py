@@ -310,19 +310,6 @@ def test_a_companion_is_reminded_of_their_two_working_seasons():
     assert seasons.working_seasons_note(_companion(), working) is None
 
 
-def test_plans_and_the_character_diary_survive_a_save():
-    magus = _magus()
-    saga = _saga(magus)
-    seasons.set_plan(
-        saga, _plan(magus, rules.ADVENTURE, ("ability:Latin", 5), source_quality=5)
-    )
-    magus.diary = [DiaryEntry(1219, "Winter", "Rest", "Quiet", "Other")]
-    storage.save_saga(saga)
-    loaded = storage.load_saga("s")
-    assert loaded.season_plans == saga.season_plans
-    assert loaded.character("m").diary == magus.diary
-
-
 def test_backup_is_kept_outside_the_saga_list():
     saga = _saga(_magus())
     storage.save_saga(saga)
@@ -599,17 +586,6 @@ def test_a_plan_that_cant_be_carried_out_is_recorded_as_such():
     )
     record = seasons.make_record(saga, seasons.resolve(saga))
     assert record.lines[0].result.startswith("not carried out: Arts can't be practised")
-
-
-def test_records_survive_a_save():
-    saga = everything_saga()
-    record = seasons.make_record(saga, seasons.resolve(saga))
-    saga.season_records = [record]
-    saga.keep_season_records = False
-    storage.save_saga(saga)
-    loaded = storage.load_saga(saga.id)
-    assert loaded.season_records == [record]
-    assert loaded.keep_season_records is False
 
 
 async def _advance(pilot, app):

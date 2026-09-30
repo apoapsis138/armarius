@@ -596,20 +596,6 @@ def test_table_rows_line_up_and_truncate_long_notes():
 # ------------------------------------------------------------ persistence
 
 
-def test_economics_round_trips_through_dicts():
-    economics = Economics(
-        income_sources=[IncomeSource(id="a", name="Mine", type="Greater", income=300)],
-        wealth=5,
-        tithes=1,
-        magic_savings=2,
-        emergency_savings=3,
-        notes={"buildings": "Roof"},
-    )
-    covenant = Covenant(id="c", saga_id="s", name="N", economics=economics)
-    loaded = Covenant.from_dict(asdict(covenant))
-    assert loaded.economics == economics
-
-
 def test_a_stale_specialists_field_from_before_this_session_is_dropped():
     data = asdict(Covenant(id="c", saga_id="s", name="N"))
     data["economics"]["specialists_quantity"] = 2

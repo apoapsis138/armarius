@@ -1,5 +1,4 @@
 import re
-from dataclasses import asdict
 
 import pytest
 from support import strip_markup
@@ -839,20 +838,6 @@ def test_minimum_teamsters_never_goes_negative():
 
 
 # -------------------------------------------------------------------- model
-
-
-def test_covenant_inhabitant_data_round_trips_and_old_saves_default():
-    _, cov = _saga()
-    cov.inhabitants.append(Inhabitant(id="i", kind="horse", name="Grey", quantity=2))
-    cov.loyalty.familiarity = 4
-    cov.population.aging_magi = 1
-    again = Covenant.from_dict(asdict(cov))
-    assert again.inhabitants == cov.inhabitants
-    assert again.loyalty.familiarity == 4 and again.population.aging_magi == 1
-
-    old = Covenant.from_dict({"id": "c", "saga_id": "s", "name": "Old"})
-    assert old.inhabitants == [] and old.loyalty.equipment == "Standard"
-    assert old.loyalty.money == "Standard salary"
 
 
 def test_a_save_from_before_this_session_loads_and_drops_the_stale_fields():

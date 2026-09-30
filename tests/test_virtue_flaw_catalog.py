@@ -30,12 +30,6 @@ def by_id() -> dict[str, VirtueFlawDef]:
     return catalog.load_virtue_flaw_catalog_by_id()
 
 
-def test_catalog_loads_and_ids_are_unique():
-    entries = catalog.load_virtue_flaw_catalog()
-    ids = [e.id for e in entries]
-    assert len(ids) == len(set(ids))
-
-
 def test_catalog_counts_after_adding_the_supplements():
     # 625 DE entries, the 2 the catalog had lost, 33 Major versions of
     # "Major or Minor" DE entries, and 440 open-content supplement entries

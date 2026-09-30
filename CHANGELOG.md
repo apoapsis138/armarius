@@ -9,6 +9,20 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 1.7.2 — 2026-09-30
+
+A leaner test suite, finished. Nothing in the app changes.
+
+- Every form's checks (it fits the screen, starts with the current values,
+  Cancel saves nothing, bad entries are refused, Save stores the change and
+  the sheet shows it) now run in one go per form, and 36 more forms are
+  covered this way.
+- More of the sheet lists are checked the same way, including deleting the
+  chosen entry; the older one-off tests they replace are gone.
+- The data catalogs, and saving and loading a saga, are each checked by a
+  few broad tests instead of many narrow ones.
+- The full test run is about 3 minutes shorter (19 to 16 minutes).
+
 ## 1.7.1 — 2026-09-30
 
 A leaner test suite, first part. Nothing in the app changes.

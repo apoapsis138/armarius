@@ -12,9 +12,15 @@ from textual.widgets import Input, TabPane, Tree
 from ars_magica_manager import storage
 from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
+    BondPower,
     Character,
     Covenant,
+    DiaryEntry,
     Familiar,
+    IncomeSource,
+    Inhabitant,
+    Laboratory,
+    NamedDescription,
     Possession,
     Saga,
     ScoredTrait,
@@ -28,30 +34,50 @@ from ars_magica_manager.screens import (
 )
 
 
-def _is_form(screen, title: str) -> bool:
-    """`screen` is the FieldsDialog titled `title`."""
-    return isinstance(screen, FieldsDialog) and screen.title_text == title
-
-
 def _saga() -> Saga:
     def two() -> list[ScoredTrait]:
         return [ScoredTrait("Alpha", 1), ScoredTrait("Beta", 2)]
 
     covenant = Covenant(id="cov1", saga_id="test_saga", name="Keep")
     covenant.reputations = two()
+    covenant.possessions = [
+        Possession(id="ci1", kind="item", name="Lens [cracked]"),
+        Possession(id="ci2", kind="item", name="Mirror"),
+        Possession(id="pr1", kind="property", name="Mill [old]"),
+        Possession(id="pr2", kind="property", name="Farm"),
+    ]
+    covenant.inhabitants = [
+        Inhabitant(id="tu1", kind="turb", name="Guard [a]"),
+        Inhabitant(id="tu2", kind="turb", name="Guard B"),
+    ]
+    covenant.economics.income_sources = [
+        IncomeSource(id="in1", name="Toll [bridge]"),
+        IncomeSource(id="in2", name="Ferry"),
+    ]
     magus = Character(id="mag1", name="Leandro", type="magus", covenant_id="cov1")
     magus.personality_traits = two()
     magus.reputations = two()
     magus.inventory = [
-        Possession(id="it1", kind="item", name="Staff"),
+        Possession(id="it1", kind="item", name="Staff [old]"),
         Possession(id="it2", kind="item", name="Cloak"),
     ]
     familiar = Familiar(id="fam1", character_id="mag1", name="Corax")
     familiar.personality_traits = two()
     familiar.reputations = two()
     familiar.natural_weapons = [
-        Possession(id="nw1", kind="weapon", name="Beak"),
+        Possession(id="nw1", kind="weapon", name="Beak [sharp]"),
         Possession(id="nw2", kind="weapon", name="Talons"),
+    ]
+    familiar.bond_powers = [
+        BondPower(id="bp1", name="Speak [loud]"),
+        BondPower(id="bp2", name="Sense"),
+    ]
+    lab = Laboratory(id="lab1", covenant_id="cov1", name="Tower", owner_id="mag1")
+    lab.rooms = [NamedDescription("Study [east]"), NamedDescription("Vault")]
+    lab.inventory_items = [NamedDescription("Alembic [glass]"), NamedDescription("Jar")]
+    lab.diary = [
+        DiaryEntry(1220, "Spring", "Built [first]"),
+        DiaryEntry(1220, "Summer", "Moved in"),
     ]
     return Saga(
         id="test_saga",
@@ -59,6 +85,7 @@ def _saga() -> Saga:
         covenants=[covenant],
         characters=[magus],
         familiars=[familiar],
+        laboratories=[lab],
     )
 
 
@@ -113,6 +140,7 @@ _SHEET_VIEW_ATTR = {
     "covenant": "_covenant_sheet_view",
     "character": "_character_sheet_view",
     "familiar": "_familiar_sheet_view",
+    "laboratory": "_laboratory_sheet_view",
 }
 
 
@@ -144,11 +172,16 @@ async def _open(pilot, app, case: ListCase):
     view = getattr(workspace, attr)
     await build_all_tabs(pilot, view)
     section = view.query_one(f"#{case.section}")
-    pane = next((a for a in section.ancestors if isinstance(a, TabPane)), None)
-    if pane is not None:
-        view.query_one("TabbedContent").active = pane.id
+    if isinstance(section, TabPane):
+        view.query_one("TabbedContent").active = section.id
         await pilot.pause()
-    section.query_one("CollapsibleTitle").focus()
+        view.query_one(f"#{case.list_id}").focus()
+    else:
+        pane = next((a for a in section.ancestors if isinstance(a, TabPane)), None)
+        if pane is not None:
+            view.query_one("TabbedContent").active = pane.id
+            await pilot.pause()
+        section.query_one("CollapsibleTitle").focus()
     assert await wait_until(pilot, lambda: workspace._active_section() == case.section)
     return workspace, view
 
@@ -189,10 +222,12 @@ async def test_trait_list_add(case):
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
-        await _open(pilot, app, case)
+        _, view = await _open(pilot, app, case)
         await _press(pilot, app, "a", FieldsDialog)
         await _save_trait(pilot, app, "Gamma", 3)
         assert await wait_until(pilot, lambda: len(_saved(case)) == 3)
+        rows = view.query_one(f"#{case.list_id}", SelectableList)
+        assert await wait_until(pilot, lambda: "Gamma: +3" in str(rows._rows))
     assert [(t.name, t.score) for t in _saved(case)] == [
         ("Alpha", 1),
         ("Beta", 2),
@@ -256,11 +291,18 @@ async def test_trait_list_remove_uses_the_chosen_row(case):
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
-        _, view = await _open(pilot, app, case)
+        workspace, view = await _open(pilot, app, case)
         await _choose_row(pilot, view, case, 0)
         await _press(pilot, app, "A", ConfirmScreen)  # no picker
+        assert _confirm_message(app) == "Delete Alpha?"
+        await pilot.press("n")  # keeps it
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+        assert len(_saved(case)) == 2
+        await _press(pilot, app, "A", ConfirmScreen)
         await pilot.press("y")
         assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
+        # Nothing is chosen any more: A asks which one.
+        await _press(pilot, app, "A", RemovalPickerScreen)
     assert [t.name for t in _saved(case)] == ["Beta"]
 
 
@@ -292,6 +334,54 @@ ITEM_LISTS: dict[str, ListCase] = {
         "fam-natural-weapons-list",
         lambda s: s.familiars[0].natural_weapons,
     ),
+    "familiar-bond-powers": ListCase(
+        ("familiar", "fam1"),
+        "tab-fam-powers",
+        "fam-bond-powers-list",
+        lambda s: s.familiars[0].bond_powers,
+    ),
+    "covenant-items": ListCase(
+        ("covenant", "cov1"),
+        "section-pos-item",
+        "pos-item-list",
+        lambda s: [p for p in s.covenants[0].possessions if p.kind == "item"],
+    ),
+    "covenant-property": ListCase(
+        ("covenant", "cov1"),
+        "section-pos-property",
+        "pos-property-list",
+        lambda s: [p for p in s.covenants[0].possessions if p.kind == "property"],
+    ),
+    "covenant-turb": ListCase(
+        ("covenant", "cov1"),
+        "section-inh-turb",
+        "inh-turb-list",
+        lambda s: s.covenants[0].inhabitants,
+    ),
+    "covenant-income": ListCase(
+        ("covenant", "cov1"),
+        "section-eco-income",
+        "eco-income-list",
+        lambda s: s.covenants[0].economics.income_sources,
+    ),
+    "lab-rooms": ListCase(
+        ("laboratory", "lab1"),
+        "section-lab-rooms",
+        "lab-rooms-list",
+        lambda s: s.laboratories[0].rooms,
+    ),
+    "lab-items": ListCase(
+        ("laboratory", "lab1"),
+        "section-lab-items",
+        "lab-items-list",
+        lambda s: s.laboratories[0].inventory_items,
+    ),
+    "lab-diary": ListCase(
+        ("laboratory", "lab1"),
+        "tab-lab-diary",
+        "lab-diary-list",
+        lambda s: s.laboratories[0].diary,
+    ),
 }
 
 
@@ -314,7 +404,7 @@ async def test_item_list_edit_picks_when_nothing_is_chosen(name):
         await _press(pilot, app, "enter", FieldsDialog)
         await _save_name(pilot, app, "Renamed")
         assert await wait_until(pilot, lambda: _saved(case)[1].name == "Renamed")
-    assert [p.id for p in _saved(case)] == [p.id for p in case.entries(_saga())]
+    assert len(_saved(case)) == 2
 
 
 @pytest.mark.parametrize("name", list(ITEM_LISTS))
@@ -329,3 +419,67 @@ async def test_item_list_edit_uses_the_chosen_row(name):
         await _save_name(pilot, app, "Renamed")
         assert await wait_until(pilot, lambda: _saved(case)[0].name == "Renamed")
     assert _saved(case)[1].name == case.entries(_saga())[1].name
+
+
+def _confirm_message(app) -> str:
+    return str(app.screen.query_one("#confirm-message").render())
+
+
+#: After its chosen row is deleted, the income list keeps the same row
+#: position chosen (now the next source), unlike every other list, which
+#: clears it. Recorded on STORY-1109.
+_KEEPS_A_CHOICE_AFTER_DELETE = pytest.mark.xfail(
+    strict=True, reason="STORY-1109: income keeps a choice after a delete"
+)
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        pytest.param(name, marks=_KEEPS_A_CHOICE_AFTER_DELETE)
+        if name == "covenant-income"
+        else name
+        for name in ITEM_LISTS
+    ],
+)
+async def test_item_list_remove_uses_the_chosen_row_after_asking(name):
+    """A on the chosen row asks "Delete <name>?" (brackets and all): No
+    keeps it, Yes deletes it, and afterwards nothing is chosen, so A asks
+    which one."""
+    case = ITEM_LISTS[name]
+    storage.save_saga(_saga())
+    first, second = (entry.name for entry in case.entries(_saga()))
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+        await _choose_row(pilot, view, case, 0)
+        await _press(pilot, app, "A", ConfirmScreen)  # no picker
+        assert _confirm_message(app) == f"Delete {first}?"
+        await pilot.press("n")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+        assert len(_saved(case)) == 2
+
+        await _press(pilot, app, "A", ConfirmScreen)
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
+        assert [entry.name for entry in _saved(case)] == [second]
+        rows = view.query_one(f"#{case.list_id}", SelectableList)
+        assert await wait_until(pilot, lambda: first not in str(rows._rows))
+
+        await _press(pilot, app, "A", RemovalPickerScreen)
+
+
+@pytest.mark.parametrize("name", list(ITEM_LISTS))
+async def test_item_list_remove_picks_when_nothing_is_chosen(name):
+    case = ITEM_LISTS[name]
+    storage.save_saga(_saga())
+    first, _ = (entry.name for entry in case.entries(_saga()))
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _open(pilot, app, case)
+        await _press(pilot, app, "A", RemovalPickerScreen)
+        await pilot.press("down")
+        await _press(pilot, app, "enter", ConfirmScreen)
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
+    assert [entry.name for entry in _saved(case)] == [first]

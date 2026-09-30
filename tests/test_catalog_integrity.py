@@ -1,0 +1,61 @@
+"""Every data catalog loads cleanly: entries with unique ids, a description
+where the book gives one, and no mis-decoded text. (Each entry's shape --
+tiers, costs, categories, targets -- is checked as it loads; see the Defs'
+__post_init__ in models.py. Which books a catalog cites is checked in
+test_sourcebooks.py.)"""
+
+from dataclasses import fields, is_dataclass
+
+from ars_magica_manager import catalog
+
+
+def _catalogs() -> dict[str, list]:
+    return {
+        "virtues & flaws": catalog.load_virtue_flaw_catalog(),
+        "laboratory virtues & flaws": catalog.load_lab_virtue_flaw_catalog(),
+        "laboratory features": catalog.load_lab_feature_catalog(),
+        "covenant boons & hooks": catalog.load_covenant_boon_hook_catalog(),
+        "abilities": catalog.load_ability_catalog(),
+        "houses": catalog.load_house_catalog(),
+        # One id space: a possession's book entry can be either.
+        "weapons & armor": catalog.load_weapon_catalog() + catalog.load_armor_catalog(),
+        "spells": catalog.load_spell_catalog(),
+        "shapes & materials": catalog.load_shape_material_catalog(),
+    }
+
+
+def _texts(entry) -> list[str]:
+    assert is_dataclass(entry)
+    return [
+        value
+        for field in fields(entry)
+        if isinstance(value := getattr(entry, field.name), str)
+    ]
+
+
+def test_every_catalog_has_entries_with_unique_ids():
+    for name, entries in _catalogs().items():
+        ids = [entry.id for entry in entries]
+        assert ids, name
+        duplicates = {i for i in ids if ids.count(i) > 1}
+        assert not duplicates, (name, duplicates)
+
+
+def test_entries_have_their_descriptions():
+    """The book gives no description of a natural weapon; shapes and
+    materials have bonuses rather than one."""
+    natural = {w.id for w in catalog.load_weapon_catalog(tables=("natural",))}
+    for name, entries in _catalogs().items():
+        if name in ("shapes & materials", "spells"):
+            continue
+        for entry in entries:
+            if entry.id in natural:
+                continue
+            assert entry.description.strip(), (name, entry.id)
+
+
+def test_no_text_was_mis_decoded():
+    for name, entries in _catalogs().items():
+        for entry in entries:
+            for text in _texts(entry):
+                assert "�" not in text, (name, entry.id, text)

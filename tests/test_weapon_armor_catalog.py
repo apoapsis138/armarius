@@ -75,12 +75,6 @@ def test_every_row_of_the_books_tables_is_there_in_its_order():
     assert len(catalog.load_weapon_catalog()) == 45
 
 
-def test_ids_are_unique_across_weapons_and_armor():
-    ids = [w.id for w in catalog.load_weapon_catalog()]
-    ids += [a.id for a in catalog.load_armor_catalog()]
-    assert len(ids) == len(set(ids))
-
-
 # (id, Init, Atk, Dfn, Dam, Str, Load, Cost, Range) as the DE prints them.
 @pytest.mark.parametrize(
     "row",
@@ -149,12 +143,6 @@ def test_natural_weapons_are_brawl_with_no_strength_load_or_cost():
     for weapon in _table("natural"):
         assert weapon.ability == "Brawl"
         assert (weapon.strength, weapon.load, weapon.cost) == (None, None, None)
-
-
-def test_carried_weapons_and_armor_have_book_descriptions():
-    for weapon in _table("melee") + _table("missile"):
-        assert weapon.description, weapon.id
-    assert all(a.description for a in catalog.load_armor_catalog())
 
 
 def test_an_unknown_cost_or_table_is_refused():

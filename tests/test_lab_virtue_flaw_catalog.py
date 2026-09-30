@@ -1,14 +1,7 @@
 import pytest
 
 from ars_magica_manager import catalog
-from ars_magica_manager.models import LAB_CHARACTERISTICS, LabVirtueFlawDef, Modifier
-
-
-def test_lab_catalog_loads_and_ids_are_unique():
-    entries = catalog.load_lab_virtue_flaw_catalog()
-    assert entries
-    ids = [entry.id for entry in entries]
-    assert len(ids) == len(set(ids))
+from ars_magica_manager.models import LabVirtueFlawDef, Modifier
 
 
 def test_lab_catalog_covers_all_three_categories():
@@ -18,13 +11,6 @@ def test_lab_catalog_covers_all_three_categories():
         "Outfittings",
         "Supernatural",
     }
-
-
-def test_lab_catalog_modifier_keys_are_valid_characteristics():
-    entries = catalog.load_lab_virtue_flaw_catalog()
-    for entry in entries:
-        for characteristic in entry.characteristic_modifiers:
-            assert characteristic in LAB_CHARACTERISTICS
 
 
 def test_repeatable_entries_are_flagged():

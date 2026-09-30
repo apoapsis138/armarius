@@ -21,14 +21,6 @@ def _believer(**background) -> Character:
     return character
 
 
-def test_old_saves_load_with_no_faith():
-    character = Character.from_dict({"id": "c", "name": "C", "type": "grog"})
-    assert (
-        character.background.true_faith_score,
-        character.background.faith_points,
-    ) == (0, 0)
-
-
 def test_the_sheet_shows_faith_for_the_virtue_or_any_points():
     assert faith.shows_faith(_believer())
     grog = Character(id="g", name="Hugo", type="grog")

@@ -13,21 +13,12 @@ from ars_magica_manager.covenants import (
 from ars_magica_manager.models import (
     BOON_HOOK_UNKNOWN,
     COVENANT_BOON_HOOK_CATEGORIES,
-    VIRTUE_FLAW_TIER_COST,
     Covenant,
     CovenantBoonHookDef,
-    ScoredTrait,
     VirtueFlawInstance,
 )
 
 CASTLE = "covbh_hook_major_castle"
-
-
-def test_catalog_loads_and_ids_are_unique():
-    entries = catalog.load_covenant_boon_hook_catalog()
-    assert entries
-    ids = [entry.id for entry in entries]
-    assert len(ids) == len(set(ids))
 
 
 def test_catalog_counts_by_tier_after_merging_the_covenants_book():
@@ -258,20 +249,6 @@ def test_weak_aura_hook_subtracts_from_the_covenant_aura():
     assert covenant_effective_aura(covenant, by_id) == 2  # 3 + 1 - 1 - 1
 
 
-def test_every_entry_has_a_description():
-    for entry in catalog.load_covenant_boon_hook_catalog():
-        assert entry.description.strip(), entry.id
-
-
-def test_costs_follow_tier_and_type():
-    # Same 0/1/3 tiers as Virtues & Flaws; Boons spend points (+), Hooks
-    # provide them (-).
-    for entry in catalog.load_covenant_boon_hook_catalog():
-        magnitude = VIRTUE_FLAW_TIER_COST[entry.tier]
-        expected = magnitude if entry.type == "Boon" else -magnitude
-        assert entry.cost == expected, entry.id
-
-
 def test_names_can_repeat_across_type_and_tier():
     entries = catalog.load_covenant_boon_hook_catalog()
     regios = [entry for entry in entries if entry.name == "Regio"]
@@ -455,22 +432,6 @@ def test_effective_aura_adds_every_attached_aura_boon():
     assert covenant_effective_aura(covenant, by_id) == 5
 
 
-def test_covenant_boons_hooks_round_trip_through_from_dict():
-    covenant = Covenant.from_dict(
-        {
-            "id": "cov1",
-            "saga_id": "s",
-            "name": "C",
-            "boons_hooks": [{"vf_id": "covbh_boon_minor_aura", "params": {}}],
-        }
-    )
-    assert covenant.boons_hooks == [VirtueFlawInstance(vf_id="covbh_boon_minor_aura")]
-    # A pre-existing save with no boons_hooks key still loads.
-    assert (
-        Covenant.from_dict({"id": "c", "saga_id": "s", "name": "C"}).boons_hooks == []
-    )
-
-
 def test_boon_and_hook_points_are_totalled_separately_and_both_positive():
     by_id = catalog.load_covenant_boon_hook_catalog_by_id()
     covenant = Covenant(id="c", saga_id="s", name="C")
@@ -522,21 +483,6 @@ def test_describe_boon_hook_appends_the_optional_detail():
     assert catalog.describe_boon_hook(blank, by_id) == "Edifice"
     unknown = VirtueFlawInstance(vf_id="covbh_gone")
     assert "not in catalog" in catalog.describe_boon_hook(unknown, by_id)
-
-
-def test_covenant_reputations_round_trip_and_default_empty_for_old_saves():
-    covenant = Covenant.from_dict(
-        {
-            "id": "c",
-            "saga_id": "s",
-            "name": "C",
-            "reputations": [{"name": "Feared", "score": 2}],
-        }
-    )
-    assert covenant.reputations == [ScoredTrait(name="Feared", score=2)]
-    assert (
-        Covenant.from_dict({"id": "c", "saga_id": "s", "name": "C"}).reputations == []
-    )
 
 
 def test_boon_hook_sort_key_orders_by_type_then_tier_then_name():

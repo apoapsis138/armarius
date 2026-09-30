@@ -624,21 +624,6 @@ async def test_create_saga_flow_saves_and_returns_to_picker():
     assert saga.description == ""
 
 
-async def test_create_saga_requires_name_and_storyguide():
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await pilot.press("n")
-        await pilot.pause()
-
-        await pilot.click("#btn-save")
-        await pilot.pause()
-
-        # Validation failed, so we're still on the create screen and nothing saved.
-        assert _is_form(app.screen, "Create a New Saga")
-
-    assert storage.list_sagas() == []
-
-
 async def test_selecting_a_saga_opens_the_workspace():
     storage.save_saga(
         Saga(id="test_saga", name="Test Saga", storyguide="Alex", current_year=1220)
@@ -841,34 +826,6 @@ async def test_edit_saga_saves_name_storyguide_and_description():
     )
 
 
-async def test_edit_saga_requires_name_and_storyguide():
-    storage.save_saga(Saga(id="test_saga", name="Test Saga", storyguide="Alex"))
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _open_workspace(pilot)
-        await pilot.press("e")
-        await pilot.pause()
-        dialog = app.screen
-        assert _is_form(dialog, "Edit Saga")
-
-        dialog.query_one("#fld-name", Input).value = "  "
-        dialog.query_one("#btn-save", Button).press()
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Saga")  # refused
-
-        dialog.query_one("#fld-name", Input).value = "Test Saga"
-        dialog.query_one("#fld-storyguide", Input).value = ""
-        dialog.query_one("#btn-save", Button).press()
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Saga")  # still refused
-
-        dialog.query_one("#fld-storyguide", Input).value = "Alex"
-        dialog.query_one("#btn-save", Button).press()
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
-
-
 async def test_create_character_defaults_to_current_covenant():
     storage.save_saga(_saga_with_empty_covenant())
 
@@ -895,31 +852,6 @@ async def test_create_character_defaults_to_current_covenant():
     assert character.name == "Leandro"
     assert character.type == "magus"
     assert character.covenant_id == "cov1"
-
-
-async def test_create_character_with_no_covenant():
-    storage.save_saga(_saga_with_empty_covenant())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_covenant(pilot, app)
-
-        await pilot.press("c")
-        await pilot.pause()
-
-        form = app.screen
-        form.query_one("#fld-name", Input).value = "Wandering Grog"
-        form.query_one("#fld-type", Select).value = "grog"
-        form.query_one("#fld-covenant_id", Select).value = Select.NULL
-
-        await pilot.click("#btn-save")
-        await pilot.pause()
-
-    saga = storage.load_saga("test_saga")
-    character = saga.characters[0]
-    assert character.name == "Wandering Grog"
-    assert character.type == "grog"
-    assert character.covenant_id is None
 
 
 def _sample_saga_with_covenant() -> Saga:
@@ -1317,36 +1249,6 @@ async def test_editing_familiar_binding_shows_live_cord_cost_and_saves():
     assert (familiar.golden_cord, familiar.binding_lab_total) == (3, 45)
 
 
-async def test_editing_familiar_characteristics_updates_the_panel_and_saves():
-    storage.save_saga(_saga_with_familiar())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_familiar(pilot, app)
-        await _open_familiar_section(pilot, app, "section-fam-characteristics")
-        assert app.screen._active_section() == "section-fam-characteristics"
-
-        await pilot.press("e")
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Characteristics")
-        app.screen.query_one("#fld-stamina", Input).value = "3"
-        app.screen.query_one("#fld-base_soak", Input).value = "5"
-        app.screen.query_one("#fld-magic_resistance", Input).value = "12"
-        app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
-
-        assert isinstance(app.screen, WorkspaceScreen)
-        view = app.screen._familiar_sheet_view
-        text = str(view.query_one("#fam-characteristics-content", Static).render())
-        assert "Sta: +3" in text
-        assert "Base Soak: 5" in text
-        assert "Magic Resistance: 12" in text
-
-    [familiar] = storage.load_saga("test_saga").familiars
-    assert familiar.characteristics.stamina == 3
-    assert (familiar.base_soak, familiar.magic_resistance) == (5, 12)
-
-
 async def test_editing_familiar_wounds_and_fatigue_updates_the_health_panel():
     storage.save_saga(_saga_with_familiar())
 
@@ -1474,57 +1376,6 @@ async def test_familiar_abilities_use_generic_add_edit_remove():
         assert isinstance(app.screen, WorkspaceScreen)
 
     assert storage.load_saga("test_saga").familiars[0].abilities == []
-
-
-async def test_familiar_bond_powers_use_generic_add_edit_remove():
-    storage.save_saga(_saga_with_familiar())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_familiar(pilot, app)
-        await _open_familiar_section(pilot, app, "tab-fam-powers")
-        assert app.screen.check_action("add", ()) is True
-
-        await pilot.press("a")
-        await _wait_for_screen(pilot, app, FieldsDialog)
-        assert isinstance(app.screen, FieldsDialog)
-        _fill(app, name="Speak with Beasts", level=15, uses_per_day=3)
-        await _save_dialog(pilot, app)
-
-        [familiar] = storage.load_saga("test_saga").familiars
-        assert len(familiar.bond_powers) == 1
-        assert familiar.bond_powers[0].name == "Speak with Beasts"
-        assert familiar.bond_powers[0].level == 15
-        assert familiar.bond_powers[0].uses_per_day == 3
-        assert familiar.bond_powers[0].technique == ""
-
-        view = app.screen._familiar_sheet_view
-        list_widget = view.query_one("#fam-bond-powers-list", SelectableList)
-        assert any("Speak with Beasts" in str(o.prompt) for o in list_widget.options)
-
-        await pilot.press("e")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
-        await _wait_for_screen(pilot, app, FieldsDialog)
-        assert isinstance(app.screen, FieldsDialog)
-        _fill(app, vis_spent=2)
-        await _save_dialog(pilot, app)
-
-        [familiar] = storage.load_saga("test_saga").familiars
-        assert familiar.bond_powers[0].vis_spent == 2
-
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
-        await pilot.pause()
-        assert isinstance(app.screen, ConfirmScreen)
-        await pilot.press("y")
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
-
-    assert storage.load_saga("test_saga").familiars[0].bond_powers == []
 
 
 async def test_familiar_virtues_flaws_add_via_v_and_remove_via_shift_v():
@@ -1767,59 +1618,27 @@ async def test_virtue_flaw_picker_search_filters_by_typed_text():
         picker_list = app.screen.query_one("#vf-picker-list", ListView)
         await _wait_for_picker_ready(pilot, app)
         assert len(picker_list.children) > 100  # the catalog's Virtues
+        search = app.screen.query_one("#picker-search", Input)
+
+        # Nothing matches: a single "(no matches...)" row.
+        search.value = "xyzzy nonexistent"
+        await wait_until(pilot, lambda: len(picker_list.children) == 1)
+        assert picker_list.children[0].id is None
 
         # The name's match first, then the Virtues whose summary mentions it.
-        app.screen.query_one("#picker-search", Input).value = "common sense"
+        search.value = "common sense"
         await wait_until(
             pilot,
             lambda: 1 < len(picker_list.children) < 10,
             timeout=10.0,  # a refill is slow under a parallel run
         )
-
         item_ids = [item.id for item in picker_list.children]
         assert item_ids[0] == "vf-vf_common_sense"
         assert len(item_ids) > 1
 
-
-async def test_virtue_flaw_picker_search_shows_no_matches_message():
-    storage.save_saga(_saga_with_bare_character())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-vf-virtues")
-
-        await pilot.press("v")
-        await pilot.pause()
-
-        await _wait_for_picker_ready(pilot, app)
-
-        app.screen.query_one("#picker-search", Input).value = "xyzzy nonexistent"
-        picker_list = app.screen.query_one("#vf-picker-list", ListView)
-        await wait_until(pilot, lambda: len(picker_list.children) == 1)
-
-        assert len(picker_list.children) == 1
-        assert picker_list.children[0].id is None  # the "(no matches...)" row
-
-
-async def test_virtue_flaw_picker_enter_in_search_activates_top_match():
-    storage.save_saga(_saga_with_bare_character())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-vf-virtues")
-
-        await pilot.press("v")
-        await pilot.pause()
-
-        search = app.screen.query_one("#picker-search", Input)
-        search.value = "common sense"
-        await pilot.pause()
-        await search.action_submit()  # same as pressing Enter in the search box
-        await pilot.pause()
-
-        assert isinstance(app.screen, WorkspaceScreen)
+        # Enter in the search box takes the top match.
+        await search.action_submit()
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         assert "Common Sense" in _character_vf_labels(app.screen._character_sheet_view)
 
     saga = storage.load_saga("test_saga")
@@ -1975,64 +1794,6 @@ async def test_create_laboratory_flow_saves_laboratory():
     assert lab.covenant_id == "cov1"
     assert lab.characteristics.size == 1
     assert lab.owner_id is None
-
-
-async def test_create_laboratory_requires_integer_size():
-    storage.save_saga(_saga_with_bare_character())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_covenant(pilot, app)
-
-        await pilot.press("l")
-        await pilot.pause()
-
-        app.screen.query_one("#fld-name", Input).value = "The Tower"
-        app.screen.query_one("#fld-size", Input).value = "not a number"
-
-        await pilot.click("#btn-save")
-        await pilot.pause()
-
-        assert _is_form(app.screen, "Create a New Laboratory")
-
-    saga = storage.load_saga("test_saga")
-    assert saga.laboratories == []
-
-
-async def test_add_ability_without_parameters_to_character():
-    storage.save_saga(_saga_with_bare_character())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        await _open_section(pilot, app, "tab-abilities")
-
-        await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, AbilityPickerScreen)
-
-        await pilot.click("#ability-ab_athletics")
-        await pilot.pause()
-        assert isinstance(app.screen, FieldsDialog)
-
-        app.screen.query_one("#fld-xp", Input).value = "30"
-        app.screen.query_one("#fld-specialty", Input).value = "Running"
-
-        await pilot.click("#btn-save")
-        await pilot.pause()
-
-        assert isinstance(app.screen, WorkspaceScreen)
-        assert "Athletics (Running) 3 30/50" in _ability_labels(
-            app.screen._character_sheet_view
-        )
-
-    saga = storage.load_saga("test_saga")
-    character = saga.characters[0]
-    assert len(character.abilities) == 1
-    assert character.abilities[0].name == "Athletics"
-    assert character.abilities[0].category == "General"
-    assert character.abilities[0].level == 3
-    assert character.abilities[0].specialty == "Running"
 
 
 async def test_add_ability_with_parameters_to_character():
@@ -2298,56 +2059,6 @@ async def test_edit_arts_prefills_existing_scores_and_saves_full_grid():
     # Every one of the 15 Arts is written, not just the ones that were nonzero.
     assert len(arts) == 15
     assert arts["vim"] == ArtScore(xp=0)
-
-
-async def test_edit_arts_requires_integers():
-    storage.save_saga(_sample_saga_with_covenant())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-arts")
-
-        await pilot.press("e")
-        await pilot.pause()
-
-        app.screen.query_one("#input-art-rego-xp", Input).value = "not a number"
-
-        await pilot.click("#btn-save")
-        await pilot.pause()
-
-        assert isinstance(app.screen, EditArtsScreen)
-
-    saga = storage.load_saga("test_saga")
-    assert saga.characters[0].arts == {
-        "creo": ArtScore(xp=55),
-        "ignem": ArtScore(xp=15),
-    }
-
-
-async def test_edit_arts_cancel_discards_changes():
-    storage.save_saga(_sample_saga_with_covenant())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-arts")
-
-        await pilot.press("e")
-        await pilot.pause()
-
-        app.screen.query_one("#input-art-rego-xp", Input).value = "9"
-
-        await pilot.press("escape")
-        await pilot.pause()
-
-        assert isinstance(app.screen, WorkspaceScreen)
-
-    saga = storage.load_saga("test_saga")
-    assert saga.characters[0].arts == {
-        "creo": ArtScore(xp=55),
-        "ignem": ArtScore(xp=15),
-    }
 
 
 async def test_hermetic_magic_arts_and_spells_share_one_details_panel():
@@ -2658,40 +2369,6 @@ async def test_edit_character_info_updates_name_covenant_and_laboratory():
     lab2 = next(lab for lab in saga.laboratories if lab.id == "lab2")
     assert lab1.owner_id is None
     assert lab2.owner_id == "char1"
-
-
-async def test_edit_characteristics_updates_values():
-    storage.save_saga(_saga_with_bare_character())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-char-characteristics")
-
-        await pilot.press("e")
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Characteristics")
-
-        app.screen.query_one("#fld-intelligence", Input).value = "3"
-        app.screen.query_one("#fld-quickness", Input).value = "-1"
-
-        # An explicit interior offset: this button's default (0, 0) --
-        # its exact top-left corner pixel -- doesn't register through the
-        # full click pipeline here even though get_widget_at() confirms
-        # the button owns that pixel; an interior point is the documented
-        # workaround (see the pilot.click() docstring's own example).
-        await pilot.click("#btn-save", offset=(8, 1))
-        await pilot.pause()
-
-        assert isinstance(app.screen, WorkspaceScreen)
-        text = app.screen._character_sheet_view._characteristics_text()
-        assert "Int: +3" in text
-        assert "Qik: -1" in text
-
-    saga = storage.load_saga("test_saga")
-    c = saga.characters[0].characteristics
-    assert c.intelligence == 3
-    assert c.quickness == -1
 
 
 async def test_edit_ability_updates_existing_entry():
@@ -3033,70 +2710,6 @@ async def test_edit_biographical_detail_updates_background_and_description():
     assert character.description.biography == "Born in Aachen."
 
 
-async def test_edit_aging_updates_decrepitude_and_warping():
-    storage.save_saga(_saga_with_bare_character())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-aging")
-
-        await pilot.press("e")
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Aging & Warping")
-
-        app.screen.query_one("#fld-decrepitude", Input).value = "2"
-        app.screen.query_one("#fld-warping_score", Input).value = "1"
-        app.screen.query_one("#fld-warping_points", Input).value = "6"
-
-        app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
-
-        assert isinstance(app.screen, WorkspaceScreen)
-        text = app.screen._character_sheet_view._aging_text()
-        assert "Decrepitude: 2" in text
-        assert "Warping: 1/6" in text
-
-    saga = storage.load_saga("test_saga")
-    aging = saga.characters[0].aging
-    assert aging.decrepitude == 2
-    assert aging.warping_score == 1
-    assert aging.warping_points == 6
-
-
-async def test_edit_wounds_updates_counts_and_flags():
-    storage.save_saga(_saga_with_bare_character())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-char-health")
-
-        # 'e' on the merged Health section defaults to Wounds (column 1).
-        await pilot.press("e")
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Wounds")
-
-        app.screen.query_one("#fld-soak", Input).value = "5"
-        app.screen.query_one("#fld-medium", Input).value = "2"
-        app.screen.query_one("#fld-incapacitated", Checkbox).value = True
-
-        app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
-
-        assert isinstance(app.screen, WorkspaceScreen)
-        text = app.screen._character_sheet_view._wounds_text()
-        assert "Soak: 5" in text
-        assert "Medium Wounds: 2" in text
-        assert "Incapacitated: yes" in text
-
-    saga = storage.load_saga("test_saga")
-    wounds = saga.characters[0].wounds
-    assert wounds.soak == 5
-    assert wounds.medium == 2
-    assert wounds.incapacitated is True
-
-
 async def test_edit_fatigue_updates_level():
     storage.save_saga(_saga_with_bare_character())
 
@@ -3124,76 +2737,6 @@ async def test_edit_fatigue_updates_level():
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].fatigue_level == "tired"
-
-
-async def test_add_and_remove_personality_trait():
-    storage.save_saga(_saga_with_bare_character())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-personality-traits")
-
-        await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, FieldsDialog)
-
-        app.screen.query_one("#fld-name", Input).value = "Curious"
-        app.screen.query_one("#fld-score", Input).value = "3"
-        await pilot.click("#btn-save", offset=(8, 1))
-        await pilot.pause()
-
-        assert isinstance(app.screen, WorkspaceScreen)
-        rows = app.screen._character_sheet_view._personality_trait_rows()
-        assert "Curious: +3" in rows[0][1]
-
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
-        await pilot.pause()
-        assert isinstance(app.screen, ConfirmScreen)
-        await pilot.press("y")
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
-
-    saga = storage.load_saga("test_saga")
-    assert saga.characters[0].personality_traits == []
-
-
-async def test_add_and_remove_reputation():
-    storage.save_saga(_saga_with_bare_character())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        await _open_section(pilot, app, "section-reputations")
-
-        await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, FieldsDialog)
-
-        app.screen.query_one("#fld-name", Input).value = "Skilled Enchanter"
-        app.screen.query_one("#fld-score", Input).value = "2"
-        await pilot.click("#btn-save", offset=(8, 1))
-        await pilot.pause()
-
-        assert isinstance(app.screen, WorkspaceScreen)
-        rows = app.screen._character_sheet_view._reputation_rows()
-        assert "Skilled Enchanter: +2" in rows[0][1]
-
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
-        await pilot.pause()
-        assert isinstance(app.screen, ConfirmScreen)
-        await pilot.press("y")
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
-
-    saga = storage.load_saga("test_saga")
-    assert saga.characters[0].reputations == []
 
 
 async def test_add_and_remove_raw_vis():
@@ -3784,26 +3327,6 @@ async def test_a_source_that_breaks_a_cap_arrives_turned_off():
         assert texts_row.startswith("[dim strike]")
 
 
-async def test_identity_shows_whether_the_sanctum_is_marked():
-    storage.save_saga(_saga_with_bare_laboratory())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_laboratory(pilot, app)
-        view = app.screen._laboratory_sheet_view
-        assert "Sanctum?: No" in _lab_identity_text(view)
-        assert not view.query("#section-lab-sanctum")
-        await _open_lab_section(pilot, app, "section-lab-identity")
-        await pilot.press("e")
-        await _wait_for_field(pilot, app, "fld-sanctum_marked")
-        await _save_form(pilot, app, sanctum_marked=True)
-        assert await wait_until(
-            pilot, lambda: "Sanctum?: Yes" in _lab_identity_text(view)
-        )
-
-    assert storage.load_saga("test_saga").laboratories[0].sanctum_marked
-
-
 async def _wait_for_field(pilot, app, field_id: str) -> None:
     """Wait until the screen on show has the widget `#field_id` (a form
     opened by another form's save mounts a moment later)."""
@@ -4022,37 +3545,6 @@ async def test_a_new_feature_virtue_is_given_to_a_feature_waiting_for_one():
     assert lab.features[0].virtue_id == lab.virtues_flaws[0].id != ""
 
 
-async def test_add_and_remove_room():
-    storage.save_saga(_saga_with_bare_laboratory())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_laboratory(pilot, app)
-        await _open_lab_section(pilot, app, "section-lab-rooms")
-
-        await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, FieldsDialog)
-
-        app.screen.query_one("#fld-name", Input).value = "Vault"
-        app.screen.query_one("#fld-description", TextArea).text = "A locked cellar"
-        app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
-
-        assert isinstance(app.screen, WorkspaceScreen)
-        view = app.screen._laboratory_sheet_view
-        assert _lab_rows(view, "lab-rooms-list") == ["Vault"]
-        await _choose_lab_row(pilot, view, "lab-rooms-list", 0)
-        panel = strip_markup(str(view.query_one("#lab-attr-panel", Static).content))
-        assert panel == "Vault\n\nA locked cellar"
-
-        await pilot.press("A")  # the chosen row: no picker
-        await _confirm(pilot, app, "y")
-
-    saga = storage.load_saga("test_saga")
-    assert saga.laboratories[0].rooms == []
-
-
 async def test_add_and_remove_lab_raw_vis():
     storage.save_saga(_saga_with_bare_laboratory())
 
@@ -4115,48 +3607,6 @@ async def test_add_and_remove_inventory_item_on_lab():
 
     saga = storage.load_saga("test_saga")
     assert saga.laboratories[0].inventory_items == []
-
-
-async def test_add_and_remove_diary_entry():
-    storage.save_saga(_saga_with_bare_laboratory())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_laboratory(pilot, app)
-        await _open_lab_section(pilot, app, "tab-lab-diary")
-
-        await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, FieldsDialog)
-
-        app.screen.query_one("#fld-year", Input).value = "1220"
-        app.screen.query_one("#fld-season", Select).value = "Autumn"
-        app.screen.query_one("#fld-activity", Select).value = "Invent Spell"
-        app.screen.query_one("#fld-name", Input).value = "Invented a spell"
-        app.screen.query_one("#fld-details", TextArea).text = "A quiet season."
-        app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
-
-        assert isinstance(app.screen, WorkspaceScreen)
-        view = app.screen._laboratory_sheet_view
-        assert _lab_rows(view, "lab-diary-list") == [
-            "1220 Autumn  Invent Spell  Invented a spell"
-        ]
-        await _choose_lab_row(pilot, view, "lab-diary-list", 0)
-        panel = strip_markup(str(view.query_one("#lab-diary-info", Static).content))
-        assert panel.splitlines() == [
-            "Invented a spell",
-            "Date: Autumn 1220",
-            "Activity: Invent Spell",
-            "",
-            "A quiet season.",
-        ]
-
-        await pilot.press("A")  # the chosen row: no picker
-        await _confirm(pilot, app, "y")
-
-    saga = storage.load_saga("test_saga")
-    assert saga.laboratories[0].diary == []
 
 
 async def _pick_first_and_open_editor(pilot, app, section_id: str, editor_type) -> None:
@@ -4264,41 +3714,6 @@ async def test_attributes_and_inventory_share_one_panel_docked_below_the_lists()
         assert shown(panel) == "Aquam vis\n2 pawns"
 
 
-async def test_edit_room_and_item():
-    storage.save_saga(_saga_with_populated_laboratory())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_laboratory(pilot, app)
-        view = app.screen._laboratory_sheet_view
-
-        await _pick_first_and_open_editor(pilot, app, "section-lab-rooms", FieldsDialog)
-        name = app.screen.query_one("#fld-name", Input)
-        description = app.screen.query_one("#fld-description", TextArea)
-        assert (name.value, description.text) == ("Vault", "Locked")
-        name.value = "Strongroom"
-        description.text = "Iron-bound"
-        app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
-        assert _lab_rows(view, "lab-rooms-list") == ["Strongroom"]
-
-        # A chosen row is edited straight away, no picker.
-        await _open_lab_section(pilot, app, "section-lab-items")
-        await _choose_lab_row(pilot, view, "lab-items-list", 0)
-        await pilot.press("e")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
-        assert app.screen.query_one("#fld-name", Input).value == "Silver Mirror"
-        app.screen.query_one("#fld-description", TextArea).text = "Cracked"
-        app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
-
-    lab = storage.load_saga("test_saga").laboratories[0]
-    assert lab.rooms == [NamedDescription(name="Strongroom", description="Iron-bound")]
-    assert lab.inventory_items == [
-        NamedDescription(name="Silver Mirror", description="Cracked")
-    ]
-
-
 async def test_edit_lab_raw_vis_changes_pawns_and_merges_on_art_change():
     storage.save_saga(_saga_with_populated_laboratory())
 
@@ -4327,31 +3742,6 @@ async def test_edit_lab_raw_vis_changes_pawns_and_merges_on_art_change():
 
     lab = storage.load_saga("test_saga").laboratories[0]
     assert lab.raw_vis == {"ignem": 11}
-
-
-async def test_edit_diary_entry():
-    storage.save_saga(_saga_with_populated_laboratory())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_laboratory(pilot, app)
-
-        await _pick_first_and_open_editor(pilot, app, "tab-lab-diary", FieldsDialog)
-        assert app.screen.query_one("#fld-year", Input).value == "1220"
-        assert app.screen.query_one("#fld-season", Select).value == "Spring"
-        assert app.screen.query_one("#fld-name", Input).value == "Studied"
-        assert app.screen.query_one("#fld-activity", Select).is_blank()
-        app.screen.query_one("#fld-season", Select).value = "Winter"
-        app.screen.query_one("#fld-details", TextArea).text = "Revised."
-        app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
-
-        view = app.screen._laboratory_sheet_view
-        assert _lab_rows(view, "lab-diary-list") == ["1220 Winter  -  Studied"]
-
-    assert storage.load_saga("test_saga").laboratories[0].diary == [
-        DiaryEntry(year=1220, season="Winter", name="Studied", details="Revised.")
-    ]
 
 
 async def test_the_diary_edit_picker_shows_brackets_in_an_entry_name():
@@ -4707,22 +4097,6 @@ async def test_advancing_past_winter_rolls_the_year_and_cancel_changes_nothing()
     assert (saga.current_season, saga.current_year) == ("Spring", 1221)
 
 
-async def test_lab_diary_entries_default_to_the_saga_current_season():
-    saga = _saga_with_configured_covenant()
-    saga.current_season = "Autumn"
-    storage.save_saga(saga)
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_laboratory(pilot, app)
-        await _open_lab_section(pilot, app, "tab-lab-diary")
-        await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, FieldsDialog)
-        assert app.screen.query_one("#fld-season", Select).value == "Autumn"
-        assert app.screen.query_one("#fld-year", Input).value == "1220"
-
-
 async def test_set_date_rolls_back_an_accidental_advance():
     storage.save_saga(_saga_with_configured_covenant())
 
@@ -4780,32 +4154,6 @@ async def test_set_date_sets_an_arbitrary_date_from_the_saga_level():
 
     saga = storage.load_saga("test_saga")
     assert (saga.current_season, saga.current_year) == ("Winter", 1195)
-
-
-async def test_set_date_rejects_a_blank_year_and_cancel_changes_nothing():
-    storage.save_saga(_saga_with_configured_covenant())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(120, 45)) as pilot:
-        await _open_workspace(pilot)
-
-        await pilot.press("T")
-        await pilot.pause()
-        app.screen.query_one("#fld-year", Input).value = ""
-        app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
-        assert _is_form(app.screen, "Set the Saga's Date")  # refused, still open
-        for button_id in ("#btn-save", "#btn-cancel"):
-            region = app.screen.query_one(button_id, Button).region
-            assert region.height > 0 and region.bottom <= 45, button_id
-
-        await pilot.press("escape")
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
-        assert "Spring 1220" in app.screen.sub_title
-
-    saga = storage.load_saga("test_saga")
-    assert (saga.current_season, saga.current_year) == ("Spring", 1220)
 
 
 # -- Characters and labs without a covenant live under the saga ---------------
@@ -5159,63 +4507,6 @@ async def test_edit_covenant_description_is_multi_line_and_persists():
         assert view._description_text() == "(no description)"
 
     assert storage.load_saga("test_saga").covenants[0].notes == ""
-
-
-async def test_covenant_reputations_add_edit_remove_within_range():
-    storage.save_saga(_saga_with_configured_covenant())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_covenant(pilot, app)
-        view = app.screen._covenant_sheet_view
-        assert _rep_labels(view) == []
-        await _open_cov_section(pilot, app, "section-cov-reputations")
-
-        async def submit(name: str, score: str) -> None:
-            app.screen.query_one("#fld-name", Input).value = name
-            app.screen.query_one("#fld-score", Input).value = score
-            app.screen.query_one("#btn-save", Button).press()
-            await pilot.pause()
-
-        # Add -- out-of-range scores are refused, the dialog stays open.
-        await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, FieldsDialog)
-        await submit("Feared by nobles", "4")
-        assert isinstance(app.screen, FieldsDialog)
-        await submit("Feared by nobles", "-4")
-        assert isinstance(app.screen, FieldsDialog)
-        await submit("Feared by nobles", "3")
-        assert isinstance(app.screen, WorkspaceScreen)
-        await pilot.press("a")
-        await pilot.pause()
-        await submit("Well liked", "-3")
-        await wait_until(pilot, lambda: len(_rep_labels(view)) == 2)
-        assert _rep_labels(view) == ["Feared by nobles: +3", "Well liked: -3"]
-
-        # Edit the first one (pre-filled), then remove the second.
-        await pilot.press("e")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
-        await pilot.pause()
-        assert app.screen.query_one("#fld-name", Input).value == ("Feared by nobles")
-        await submit("Feared by nobles", "1")
-        await wait_until(pilot, lambda: "Feared by nobles: +1" in _rep_labels(view))
-
-        # Nothing is selected, so 'A' asks which one, then confirms.
-        await pilot.press("A")
-        await pilot.pause()
-        await pilot.press("down")
-        await pilot.press("enter")
-        await pilot.pause()
-        assert isinstance(app.screen, ConfirmScreen)
-        await pilot.press("y")
-        await wait_until(pilot, lambda: len(_rep_labels(view)) == 1)
-        assert _rep_labels(view) == ["Feared by nobles: +1"]
-
-    reputations = storage.load_saga("test_saga").covenants[0].reputations
-    assert [(r.name, r.score) for r in reputations] == [("Feared by nobles", 1)]
 
 
 async def test_boon_picker_lists_only_boons_with_notes_and_asks_for_a_blank_detail():
@@ -5900,63 +5191,6 @@ async def test_reputation_rows_are_selectable_and_independent_of_the_boon_panel(
         assert "Name: Wealth" in _panel_text(app)
 
 
-async def test_e_edits_the_selected_reputation_directly():
-    storage.save_saga(_saga_with_reputations(("Feared", 2), ("Liked", -1)))
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_covenant(pilot, app)
-        view = app.screen._covenant_sheet_view
-        await _select_rep_row(pilot, app, 1)
-
-        await pilot.press("e")
-        await pilot.pause()
-        assert isinstance(app.screen, FieldsDialog)  # no picker first
-        assert app.screen.query_one("#fld-name", Input).value == "Liked"
-        assert app.screen.query_one("#fld-score", Input).value == "-1"
-        app.screen.query_one("#fld-name", Input).value = "Well liked"
-        app.screen.query_one("#fld-score", Input).value = "3"
-        app.screen.query_one("#btn-save", Button).press()
-        await wait_until(pilot, lambda: "Well liked: +3" in _rep_labels(view))
-
-    reputations = storage.load_saga("test_saga").covenants[0].reputations
-    assert [(r.name, r.score) for r in reputations] == [
-        ("Feared", 2),
-        ("Well liked", 3),
-    ]
-
-
-async def test_A_deletes_the_selected_reputation_only_after_confirmation():
-    storage.save_saga(
-        _saga_with_reputations(("Feared", 2), ("Odd [name]", -1), ("Known", 0))
-    )
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_covenant(pilot, app)
-        view = app.screen._covenant_sheet_view
-        await _select_rep_row(pilot, app, 1)
-
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, ConfirmScreen)
-        message = str(app.screen.query_one("#confirm-message", Static).render())
-        assert message == "Delete Odd [name]?"  # brackets survive
-        await pilot.press("n")
-        await pilot.pause()
-        assert len(_rep_labels(view)) == 3
-
-        await pilot.press("A")
-        await pilot.pause()
-        await pilot.press("y")
-        await wait_until(pilot, lambda: len(_rep_labels(view)) == 2)
-        assert _rep_labels(view) == ["Feared: +2", "Known: +0"]
-        assert view.selected_reputation() is None  # selection reset
-
-    names = [r.name for r in storage.load_saga("test_saga").covenants[0].reputations]
-    assert names == ["Feared", "Known"]
-
-
 async def test_reputation_keys_work_from_the_list_and_fall_back_to_a_picker():
     storage.save_saga(_saga_with_reputations(("Feared", 2)))
 
@@ -6381,36 +5615,6 @@ async def test_magi_and_companions_are_listed_from_sheets_and_choosing_fills_the
         assert "Name: Alys" in str(panel.render())
 
 
-async def test_add_an_npc_magus_with_an_unknown_year():
-    storage.save_saga(_saga_with_people())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_covenant(pilot, app)
-        await _open_inh_section(pilot, app, "section-inh-magus")
-        await pilot.press("a")
-        await _wait_for_screen(pilot, app, FieldsDialog)
-        assert isinstance(app.screen, FieldsDialog)  # straight to the form
-        _fill(app, name="Hidden Hermit", house="house_criamon", gift="Blatant")
-        assert app.screen.query_one("#fld-year_born", Input).value == ""  # blank
-        _fill(app, description="Lives in a *sealed* tower.")
-        await _save_dialog(pilot, app)
-        await wait_until(pilot, lambda: len(_inh_labels(app, "magus")) == 2)
-
-        assert _inh_labels(app, "magus")[1] == (
-            "Hidden Hermit       Criamon            Unknown  Blatant Gift"
-        )
-        assert _inh_title(app, "magus") == "Magi (2)"
-
-    [npc] = _records("magus")
-    assert (npc.name, npc.house, npc.year_born, npc.character_id) == (
-        "Hidden Hermit",
-        "house_criamon",
-        None,
-        None,
-    )
-
-
 async def test_editing_a_listed_magus_only_changes_covenant_side_fields():
     storage.save_saga(_saga_with_people())
 
@@ -6819,49 +6023,6 @@ async def test_horses_and_livestock_take_a_blank_year_and_a_quantity():
         assert _inh_title(app, "horse") == "Horses (4)"
 
 
-async def test_e_and_A_act_on_the_selected_inhabitant_and_delete_confirms():
-    saga = _saga_with_people()
-    saga.covenants[0].inhabitants = [
-        Inhabitant(id="a", kind="turb", name="First", year_born=1200),
-        Inhabitant(id="b", kind="turb", name="Second [x]", year_born=1201),
-    ]
-    storage.save_saga(saga)
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_covenant(pilot, app)
-        await _select_inh_row(pilot, app, "turb", 1)
-
-        await pilot.press("e")
-        await _wait_for_screen(pilot, app, FieldsDialog)
-        assert isinstance(app.screen, FieldsDialog)  # no "which one?" picker
-        assert app.screen.query_one("#fld-name", Input).value == "Second [x]"
-        await pilot.press("escape")
-        await pilot.pause()
-
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, ConfirmScreen)
-        message = str(app.screen.query_one("#confirm-message", Static).render())
-        assert message == "Delete Second [x]?"
-        await pilot.press("n")
-        await pilot.pause()
-        assert len(_inh_labels(app, "turb")) == 2
-
-        await pilot.press("A")
-        await pilot.pause()
-        await pilot.press("y")
-        await wait_until(pilot, lambda: len(_inh_labels(app, "turb")) == 1)
-        assert _inh_labels(app, "turb")[0].startswith("First")
-
-        # Nothing chosen any more: 'A' falls back to asking which one.
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-
-    assert [r.name for r in _records("turb")] == ["First"]
-
-
 async def test_deleting_an_assigned_grog_returns_it_to_the_available_list():
     saga = _saga_with_people()
     saga.covenants[0].inhabitants = [
@@ -7115,53 +6276,6 @@ async def test_possessions_tab_has_its_seven_sections_and_lists_the_labs_as_sanc
         assert "Select a possession" in _pos_panel(app)
 
 
-async def test_property_needs_only_a_name_and_supports_edit_and_delete():
-    storage.save_saga(_saga_with_bare_laboratory())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_covenant(pilot, app)
-        await _open_pos_section(pilot, app, "property")
-        await pilot.press("a")
-        await pilot.pause()
-        await _save_dialog(pilot, app)  # nothing filled in
-        assert "Name is required" in str(app.screen.query_one("#fields-error").render())
-        _fill(app, name="Bare Plot")
-        await _save_dialog(pilot, app)  # every other field is optional
-        await wait_until(pilot, lambda: len(_pos_labels(app, "property")) == 1)
-        assert _pos_labels(app, "property") == ["Bare Plot"]
-
-        # Edit it: all the fields, then the row and panel show them.
-        await _select_pos_row(pilot, app, "property", 0)
-        await pilot.press("e")
-        await _wait_for_screen(pilot, app, FieldsDialog)
-        assert isinstance(app.screen, FieldsDialog)
-        _fill(
-            app,
-            location="By the river",
-            dimensions="40 acres",
-            inhabitants="Two tenant families",
-            description="Rich **black** soil.",
-        )
-        await _save_dialog(pilot, app)
-        await wait_until(pilot, lambda: "Location" in _pos_labels(app, "property")[0])
-        assert _pos_labels(app, "property") == [
-            "Bare Plot           By the river      40 acres      Two tenant families"
-        ]
-        await _select_pos_row(pilot, app, "property", 0)
-        panel = _pos_panel(app)
-        assert "Rich black soil." in panel and "Dimensions: 40 acres" in panel
-
-        # Delete confirms.
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, ConfirmScreen)
-        await pilot.press("y")
-        await wait_until(pilot, lambda: not _pos_labels(app, "property"))
-
-    assert _pos_records("property") == []
-
-
 async def test_a_laboratory_sanctum_edits_only_covenant_side_fields_and_cannot_be_deleted():
     storage.save_saga(_saga_with_bare_laboratory())
 
@@ -7353,127 +6467,6 @@ async def test_weapon_combat_figures_are_typed_in_and_shown_on_the_row_and_panel
     ) == (2, 5, 3, 7)
 
 
-async def test_vis_source_requires_name_art_season_and_pawns():
-    storage.save_saga(_saga_with_bare_laboratory())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_covenant(pilot, app)
-        await _open_pos_section(pilot, app, "vis_source")
-        await pilot.press("a")
-        await pilot.pause()
-        error = lambda: str(app.screen.query_one("#fields-error").render())
-
-        await _save_dialog(pilot, app)
-        assert "Name is required" in error()
-        _fill(app, name="Whispering Well")
-        await _save_dialog(pilot, app)
-        assert "Art is required" in error()
-        _fill(app, art="Vim")
-        await _save_dialog(pilot, app)
-        assert "Season harvested is required" in error()
-        _fill(app, season="Winter", pawns=0)
-        await _save_dialog(pilot, app)
-        assert "Pawns must be at least 1" in error()
-        _fill(
-            app,
-            pawns=3,
-            location="Beneath the chapel",
-            physical_form="Water in a stone basin",
-            description="Only flows *after* midwinter.",
-        )
-        await _save_dialog(pilot, app)
-        await wait_until(pilot, lambda: len(_pos_labels(app, "vis_source")) == 1)
-        assert _pos_labels(app, "vis_source") == [
-            "Whispering Well     Vim            3  Winter"
-        ]
-
-        await _select_pos_row(pilot, app, "vis_source", 0)
-        panel = _pos_panel(app)
-        for expected in (
-            "Season: Winter",
-            "Location: Beneath the chapel",
-            "Physical Form: Water in a stone basin",
-            "Only flows after midwinter.",
-        ):
-            assert expected in panel, expected
-
-    [record] = _pos_records("vis_source")
-    assert (record.art, record.season, record.pawns) == ("Vim", "Winter", 3)
-
-
-async def test_raw_vis_stores_take_name_art_pawns_and_optional_location_and_form():
-    storage.save_saga(_saga_with_bare_laboratory())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_covenant(pilot, app)
-        await _open_pos_section(pilot, app, "vis_store")
-        await pilot.press("a")
-        await pilot.pause()
-        assert not app.screen.query("#fld-description")  # not one of its fields
-        assert not app.screen.query("#fld-season")  # a vis SOURCE field
-        await _save_dialog(pilot, app)
-        assert "Name is required" in str(app.screen.query_one("#fields-error").render())
-        _fill(app, name="Vim Vis", art="Vim", pawns=9)  # location/form left blank
-        await _save_dialog(pilot, app)
-        await wait_until(pilot, lambda: len(_pos_labels(app, "vis_store")) == 1)
-        assert _pos_labels(app, "vis_store") == ["Vim Vis             Vim            9"]
-
-        await _select_pos_row(pilot, app, "vis_store", 0)
-        await pilot.press("e")
-        await _wait_for_screen(pilot, app, FieldsDialog)
-        _fill(app, location="The vault", physical_form="Lumps of amber")
-        await _save_dialog(pilot, app)
-        await _select_pos_row(pilot, app, "vis_store", 0)
-        await wait_until(pilot, lambda: "The vault" in _pos_panel(app))
-        panel = _pos_panel(app)
-        assert (
-            "Location: The vault" in panel and "Physical Form: Lumps of amber" in panel
-        )
-
-
-async def test_e_and_A_act_on_the_chosen_possession_with_a_picker_fallback():
-    saga = _saga_with_bare_laboratory()
-    saga.covenants[0].possessions = [
-        Possession(id="a", kind="item", name="First"),
-        Possession(id="b", kind="item", name="Second [x]"),
-    ]
-    storage.save_saga(saga)
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_covenant(pilot, app)
-        await _select_pos_row(pilot, app, "item", 1)
-
-        await pilot.press("e")
-        await _wait_for_screen(pilot, app, FieldsDialog)
-        assert isinstance(app.screen, FieldsDialog)  # no "which one?" picker
-        assert app.screen.query_one("#fld-name", Input).value == "Second [x]"
-        await pilot.press("escape")
-        await pilot.pause()
-
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, ConfirmScreen)
-        message = str(app.screen.query_one("#confirm-message", Static).render())
-        assert message == "Delete Second [x]?"
-        await pilot.press("n")
-        await pilot.pause()
-        assert len(_pos_labels(app, "item")) == 2
-        await pilot.press("A")
-        await pilot.pause()
-        await pilot.press("y")
-        await wait_until(pilot, lambda: len(_pos_labels(app, "item")) == 1)
-
-        # Nothing chosen any more: 'A' falls back to asking which one.
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-
-    assert [r.name for r in _pos_records("item")] == ["First"]
-
-
 async def test_one_selection_across_the_possession_lists():
     saga = _saga_with_bare_laboratory()
     saga.covenants[0].possessions = [
@@ -7646,26 +6639,6 @@ async def test_economics_tab_shows_calculated_wealth_and_all_its_sections():
         assert "Savings" in headers[1] and "Notes" in headers[1]
         assert _eco_labels(app, "income") == ["Salt Mine Typical 100"]
         assert "Select a source" in _eco_panel(app)
-
-
-async def test_wealth_is_typed_with_e():
-    storage.save_saga(_saga_for_economics())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_covenant(pilot, app)
-        await _open_eco_section(pilot, app, "wealth")
-        await pilot.press("e")
-        await _wait_for_screen(pilot, app, FieldsDialog)
-        assert isinstance(app.screen, FieldsDialog)
-        assert app.screen.query_one("#fld-wealth", Input).value == "0"
-        _fill(app, wealth=25)
-        await _save_dialog(pilot, app)
-        await wait_until(
-            pilot, lambda: re.search(r"Wealth:\s+25\b", _eco_wealth(app)) is not None
-        )
-
-    assert _saved_economics().wealth == 25
 
 
 async def _add_income(pilot, app, **values) -> None:
@@ -8572,21 +7545,6 @@ async def test_character_books_section_and_delete_confirms():
     assert "b3" not in _saved_books()
 
 
-async def test_book_form_fits_a_small_terminal():
-    storage.save_saga(_saga_with_books())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(120, 45)) as pilot:
-        await _select_covenant(pilot, app)
-        await _show_library_tab(pilot, app)
-        await _choose_book(pilot, app, 0)
-        await pilot.press("e")
-        await _wait_for_screen(pilot, app, FieldsDialog)
-        assert isinstance(app.screen, FieldsDialog)
-        for button in app.screen.query("#btn-save, #btn-cancel"):
-            assert button.region.height > 0 and button.region.bottom <= 45, button.id
-
-
 # -- Importing books from a CSV file ---------------------------------------------
 
 _BOOKS_CSV = (
@@ -8980,6 +7938,19 @@ async def test_editing_emergency_savings_offers_to_draw_from_wealth():
             "Do you wish to draw from Wealth to cover the deficit?"
         )
         assert "Deficit: 36    Wealth: 100" in message
+        # No opens the ordinary form instead.
+        await pilot.press("n")
+        await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        assert app.screen.query_one("#fld-emergency_savings", Input).value == "0"
+        await pilot.press("escape")
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        assert (_saved_economics().emergency_savings, _saved_economics().wealth) == (
+            0,
+            100,
+        )
+
+        await _edit_emergency_savings(pilot, app)
+        assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
         await wait_until(pilot, lambda: _saved_economics().emergency_savings == 36)
         assert _saved_economics().wealth == 64
@@ -8987,21 +7958,6 @@ async def test_editing_emergency_savings_offers_to_draw_from_wealth():
             "#eco-savings-list", SelectableList
         )
         assert "deficit" not in rows._rows[-1][1]  # covered: the warning goes
-
-
-async def test_declining_the_draw_opens_the_ordinary_form():
-    storage.save_saga(_saga_with_a_deficit(36, wealth=100))
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 60)) as pilot:
-        await _select_covenant(pilot, app)
-        await _edit_emergency_savings(pilot, app)
-        await pilot.press("n")
-        await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
-        assert app.screen.query_one("#fld-emergency_savings", Input).value == "0"
-        await pilot.press("escape")
-        await pilot.pause()
-    assert (_saved_economics().emergency_savings, _saved_economics().wealth) == (0, 100)
 
 
 async def test_a_short_draw_empties_wealth_and_the_covenant_is_broke():
@@ -9104,25 +8060,18 @@ async def test_rolling_the_year_over_in_deficit_offers_to_resolve_it_first():
         assert "Test Covenant: -36" in message
         # Yes is the safe answer here: it has the focus.
         assert app.screen.focused.id == "btn-yes"
+        # Escape keeps the year, like Yes.
+        await pilot.press("escape")
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        assert storage.load_saga("test_saga").current_season == "Winter"
+        await _advance_from_winter(pilot, app)
+        assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
     saga = storage.load_saga("test_saga")
     assert (saga.current_season, saga.current_year) == ("Winter", 1220)
     assert saga.covenants[0].economics.wealth == 100
-
-
-async def test_escape_at_the_deficit_prompt_also_keeps_the_year():
-    storage.save_saga(_winter_saga_with_a_deficit())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 60)) as pilot:
-        await _open_workspace(pilot)
-        await _advance_from_winter(pilot, app)
-        assert isinstance(app.screen, ConfirmScreen)
-        await pilot.press("escape")
-        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
-    assert storage.load_saga("test_saga").current_season == "Winter"
 
 
 async def test_answering_no_advances_the_year_regardless():

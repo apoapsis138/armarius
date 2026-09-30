@@ -140,37 +140,6 @@ def test_find_spell_looks_in_the_catalog_then_the_saga_then_the_magi():
     assert {"spell_pilum_of_fire", "saga_spell", "inv_spell"} <= ids
 
 
-def test_spells_load_from_older_saves_and_invented_spells_round_trip():
-    saga = Saga.from_dict(
-        {
-            "id": "s",
-            "name": "S",
-            "spells": [
-                {
-                    "id": "a",
-                    "name": "A",
-                    "technique": "Creo",
-                    "form": "Ignem",
-                    "level": 5,
-                }
-            ],
-            "characters": [
-                {
-                    "id": "c",
-                    "name": "C",
-                    "type": "magus",
-                    "invented_spells": [
-                        {"id": "b", "name": "B", "technique": "Rego", "form": "Vim"}
-                    ],
-                }
-            ],
-        }
-    )
-    assert saga.spells[0].level == 5 and saga.spells[0].source == "ArM5"
-    invented = saga.characters[0].invented_spells[0]
-    assert (invented.name, invented.level) == ("B", None)
-
-
 # ------------------------------------------------------------------ the catalog
 
 

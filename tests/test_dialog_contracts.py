@@ -19,10 +19,19 @@ from dataclasses import dataclass, field
 from typing import Any
 
 import pytest
-from dialog_openers import contract_saga, new_app, open_dialog
-from support import wait_until
+from dialog_openers import contract_saga, new_app, open_dialog, reopen_dialog
+from support import build_all_tabs, strip_markup, wait_until
 from textual.widget import Widget
-from textual.widgets import Button, Checkbox, Input, Label, Select, Static, TextArea
+from textual.widgets import (
+    Button,
+    Checkbox,
+    Collapsible,
+    Input,
+    Label,
+    Select,
+    Static,
+    TextArea,
+)
 
 from ars_magica_manager import catalog, storage
 from ars_magica_manager.models import (
@@ -34,6 +43,7 @@ from ars_magica_manager.models import (
     Possession,
     Saga,
 )
+from ars_magica_manager.screens import SelectableList
 
 SAGA_ID = contract_saga().id
 
@@ -50,8 +60,13 @@ class Contract:
     edits: dict[str, Any]
     saved: Callable[[Saga], Any]
     expected: Any
-    #: Label -> a value the dialog must refuse (None: nothing to refuse).
-    invalid: dict[str, Any] | None = None
+    #: Label -> a value the dialog must refuse, or several such entries,
+    #: each refused on its own (None: nothing to refuse).
+    invalid: dict[str, Any] | list[dict[str, Any]] | None = None
+    #: Selector -> text the screen shows there once the edit is saved (the
+    #: sheet, panel or tree refreshed): a Collapsible's title, a list's rows
+    #: or a Static's text, markup stripped.
+    shown: dict[str, str] = field(default_factory=dict)
     #: Label -> widget id, for fields drawn without a label.
     aliases: dict[str, str] = field(default_factory=dict)
 
@@ -95,21 +110,21 @@ CONTRACTS: dict[str, Contract] = {
             (s.name, s.storyguide) for s in _all_sagas() if s.name == "Second Saga"
         ),
         expected=[("Second Saga", "Ann")],
-        invalid={"Name": ""},
+        invalid=[{"Name": ""}, {"Name": "Second Saga"}],
     ),
     "edit saga": Contract(
         prefill={"Name": "Matrix", "Storyguide": ""},
         edits={"Name": "Matrix II", "Storyguide": "Ann", "Description": "About"},
         saved=lambda s: (s.name, s.storyguide, s.description),
         expected=("Matrix II", "Ann", "About"),
-        invalid={"Name": ""},
+        invalid=[{"Name": ""}, {"Name": "  "}, {"Storyguide": ""}],
     ),
     "set date": Contract(
-        prefill={"Season": "Spring", "Year": "1220"},
-        edits={"Season": "Autumn", "Year": "1225"},
+        prefill={"Season": "Autumn", "Year": "1220"},
+        edits={"Season": "Winter", "Year": "1225"},
         saved=lambda s: (s.current_season, s.current_year),
-        expected=("Autumn", 1225),
-        invalid={"Year": "-"},
+        expected=("Winter", 1225),
+        invalid=[{"Year": "-"}, {"Year": ""}],
     ),
     "create covenant": Contract(
         prefill={"Name": ""},
@@ -136,7 +151,7 @@ CONTRACTS: dict[str, Contract] = {
             if lab.name == "Cellar"
         ],
         expected=[("cov1", 2)],
-        invalid={"Name": "", "Size": "2"},
+        invalid=[{"Name": "", "Size": "2"}, {"Name": "Cellar", "Size": "big"}],
     ),
     "bind familiar": Contract(
         prefill={"Name": ""},
@@ -162,13 +177,15 @@ CONTRACTS: dict[str, Contract] = {
             _cov(s).covenant_season,
         ),
         expected=("Keep II", "Rhine", 1100, 3, "Summer"),
-        invalid={"Name": ""},
+        invalid=[{"Name": ""}, {"Name": "  "}],
+        shown={"#cov-info-right": "Rhine", "#cov-info-left": "1100"},
     ),
     "edit covenant description": Contract(
         prefill={"Description": ""},
         edits={"Description": "An old keep."},
         saved=lambda s: _cov(s).notes,
         expected="An old keep.",
+        shown={"#cov-description-content": "An old keep."},
     ),
     "edit boon": Contract(
         prefill={"Detail": ""},
@@ -178,6 +195,7 @@ CONTRACTS: dict[str, Contract] = {
             _cov(s).boons_hooks[0].params.get(BOON_HOOK_DESCRIPTION),
         ),
         expected=("North tower", "Tall"),
+        shown={"#cov-boons-list": "North tower"},
     ),
     "edit hook": Contract(
         prefill={"Unknown": False, "Detail": ""},
@@ -197,6 +215,7 @@ CONTRACTS: dict[str, Contract] = {
         ),
         expected=("Bold", 3),
         invalid={"Name": ""},
+        shown={"#personality-traits-list": "Bold: +3"},
     ),
     # Choosing a book weapon fills in its figures; a typed name stays.
     "edit covenant weapon": Contract(
@@ -228,6 +247,7 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: _gear(_fam(s).natural_weapons, "weapon"),
         expected=("Beak", "natural_teeth", "Standard", 0, 3, 1, 1, 0),
         invalid={"Quantity": "0"},
+        shown={"#fam-natural-weapons-list": "Beak"},
     ),
     "edit character info": Contract(
         prefill={"Name": "Leandro", "Covenant": "cov1", "Assigned Laboratory": "lab1"},
@@ -245,6 +265,7 @@ CONTRACTS: dict[str, Contract] = {
         ),
         expected=("Rhine", 1, 2, 3),
         invalid={"Name": ""},
+        shown={"#char-info-left": "Rhine"},
     ),
     "edit characteristics": Contract(
         prefill={"Intelligence": "0", "Quickness": "0"},
@@ -255,6 +276,7 @@ CONTRACTS: dict[str, Contract] = {
         ),
         expected=(3, -2),
         invalid={"Intelligence": "-"},
+        shown={"#char-characteristics-content": "Int: +3"},
     ),
     "edit biographical detail": Contract(
         prefill={"Player": "", "Handedness": "right"},
@@ -271,6 +293,7 @@ CONTRACTS: dict[str, Contract] = {
             _char(s).description.biography,
         ),
         expected=("Sam", 1190, "left", "Born in a storm."),
+        shown={"#char-biographical-left": "Sam"},
     ),
     "edit aging": Contract(
         prefill={"Decrepitude": "0", "Effects of Aging": ""},
@@ -288,6 +311,7 @@ CONTRACTS: dict[str, Contract] = {
         ),
         expected=(1, "Limp", 2, 5),
         invalid={"Decrepitude": "-"},
+        shown={"#aging-content": "Decrepitude: 1"},
     ),
     "edit wounds": Contract(
         prefill={"Soak": "0", "Light Wounds": "0", "Incapacitated": False},
@@ -299,12 +323,14 @@ CONTRACTS: dict[str, Contract] = {
         ),
         expected=(3, 1, True),
         invalid={"Soak": "-"},
+        shown={"#wounds-content": "Incapacitated: yes"},
     ),
     "edit fatigue": Contract(
         prefill={"Level": "fresh"},
         edits={"Level": "weary"},
         saved=lambda s: _char(s).fatigue_level,
         expected="weary",
+        shown={"#fatigue-content": "Weary"},
     ),
     "edit hermetic background": Contract(
         prefill={"Domus Magna": "", "Age of Apprenticeship": ""},
@@ -315,6 +341,7 @@ CONTRACTS: dict[str, Contract] = {
         ),
         expected=("Durenmar", 15),
         invalid={"Age of Apprenticeship": "-"},  # crashed before (B3)
+        shown={"#hermetic-background-left": "Durenmar"},
     ),
     "edit ability": Contract(
         prefill={"XP": "50"},
@@ -322,6 +349,7 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: (_char(s).abilities[0].level, _char(s).abilities[0].specialty),
         expected=(5, "Grammar"),
         invalid={"XP": "-5"},
+        shown={"#abilities-list": "Latin (Grammar) 5"},
     ),
     "edit raw vis": Contract(
         prefill={"Art": "creo", "Pawns": "3"},
@@ -350,19 +378,26 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: (_fam(s).species, _fam(s).year_bound, _fam(s).size),
         expected=("Raven", 1210, -2),
         invalid={"Name": ""},
+        shown={"#fam-info-content": "Raven"},
     ),
     "edit familiar binding": Contract(
         prefill={"Initial Binding Lab Total": "0"},
         edits={"Binding Technique": "Rego", "Initial Binding Lab Total": "30"},
         saved=lambda s: (_fam(s).binding_technique, _fam(s).binding_lab_total),
         expected=("Rego", 30),
+        shown={"#fam-binding-content": "Rego"},
     ),
     "edit familiar characteristics": Contract(
         prefill={"Intelligence": "0", "Base Soak": "0"},
-        edits={"Intelligence": "-5", "Base Soak": "2"},
-        saved=lambda s: (_fam(s).characteristics.intelligence, _fam(s).base_soak),
-        expected=(-5, 2),
+        edits={"Intelligence": "-5", "Base Soak": "2", "Magic Resistance": "4"},
+        saved=lambda s: (
+            _fam(s).characteristics.intelligence,
+            _fam(s).base_soak,
+            _fam(s).magic_resistance,
+        ),
+        expected=(-5, 2, 4),
         invalid={"Intelligence": "-"},
+        shown={"#fam-characteristics-content": "Base Soak: 2"},
     ),
     "edit familiar wounds": Contract(
         prefill={"Light Wounds": "0", "Dead": False},
@@ -387,6 +422,7 @@ CONTRACTS: dict[str, Contract] = {
         ),
         expected=("Tower top", 5, 1, True),
         invalid={"Name": ""},
+        shown={"#lab-identity-right": "Sanctum?: Yes"},
     ),
     "edit lab characteristics": Contract(
         prefill={"Size": "0", "Refinement": "0"},
@@ -397,6 +433,7 @@ CONTRACTS: dict[str, Contract] = {
         ),
         expected=(2, -1),
         invalid={"Safety": "-"},
+        shown={"#lab-characteristics-right": "+2"},
     ),
     "add lab specialization source": Contract(
         prefill={"Points": "1", "Source": ""},
@@ -404,6 +441,7 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: _lab(s).specialties[-1],
         expected=LabSpecialtyEntry("Herbam", -1, "Garden"),
         invalid={"Points": "0"},
+        shown={"#lab-specialties-list": "Garden"},
     ),
     "edit lab feature": Contract(
         prefill={
@@ -436,6 +474,7 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: (_lab(s).rooms[-1].name, _lab(s).rooms[-1].description),
         expected=("Vault", "Cold"),
         invalid={"Name": ""},
+        shown={"#lab-rooms-list": "Vault"},
     ),
     "add arcane connection": Contract(
         prefill={"Connection to": "", "Fixed": False, "Lasts": ""},
@@ -449,9 +488,10 @@ CONTRACTS: dict[str, Contract] = {
         ],
         expected=[("a lock of hair", False, "until Summer 1222", "the Tribunal")],
         invalid={"Connection to": ""},
+        shown={"#lab-connections-list": "a lock of hair"},
     ),
     "add lab diary entry": Contract(
-        prefill={"Year": "1220", "Season": "Spring", "Name": ""},
+        prefill={"Year": "1220", "Season": "Autumn", "Name": ""},
         edits={
             "Year": "1221",
             "Activity Type": "Study",
@@ -466,6 +506,7 @@ CONTRACTS: dict[str, Contract] = {
         ),
         expected=(1221, "Study", "Moved in", "Boxes"),
         invalid={"Year": "-"},
+        shown={"#lab-diary-list": "Moved in"},
     ),
     "plan a season": Contract(
         prefill={"Activity": "exposure", "Months lost": "0", "Notes": ""},
@@ -482,7 +523,7 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Months lost": "-"},
     ),
     "add character diary entry": Contract(
-        prefill={"Year": "1220", "Season": "Spring", "Name": ""},
+        prefill={"Year": "1220", "Season": "Autumn", "Name": ""},
         edits={
             "Year": "1221",
             "Activity Type": "Practice",
@@ -497,9 +538,10 @@ CONTRACTS: dict[str, Contract] = {
         ),
         expected=(1221, "Practice", "Latin lessons", "At the abbey"),
         invalid={"Year": "-"},
+        shown={"#char-diary-list": "Latin lessons"},
     ),
     "add covenant diary entry": Contract(
-        prefill={"Year": "1220", "Season": "Spring", "Name": ""},
+        prefill={"Year": "1220", "Season": "Autumn", "Name": ""},
         edits={
             "Year": "1221",
             "Category": "Purchases & Sales",
@@ -516,6 +558,7 @@ CONTRACTS: dict[str, Contract] = {
         ),
         expected=(1221, "Purchases & Sales", "Bought a mill", -12.0, 3),
         invalid={"Pounds": "lots"},
+        shown={"#cov-diary-list": "Bought a mill"},
     ),
     "edit enchanted device": Contract(
         prefill={
@@ -570,6 +613,434 @@ CONTRACTS: dict[str, Contract] = {
         ),
         expected=("Mend", 15, False),
         invalid={"Effect level": "-5"},
+    ),
+    # -- added by STORY-1123: forms that only had bespoke tests --
+    "edit covenant reputation": Contract(
+        prefill={"Name": "Fair dealing", "Score": "2"},
+        edits={"Score": "3"},
+        saved=lambda s: _cov(s).reputations[0].score,
+        expected=3,
+        invalid=[{"Score": "4"}, {"Score": "-4"}],
+        shown={"#cov-reputations-list": "Fair dealing: +3"},
+    ),
+    "add boon": Contract(
+        prefill={"Detail": "", "Description": ""},
+        edits={"Detail": "North tower", "Description": "Tall"},
+        saved=lambda s: (
+            _cov(s).boons_hooks[-1].vf_id,
+            _cov(s).boons_hooks[-1].params.get(BOON_HOOK_DETAIL),
+            _cov(s).boons_hooks[-1].params.get(BOON_HOOK_DESCRIPTION),
+        ),
+        expected=("covbh_boon_minor_edifice", "North tower", "Tall"),
+        shown={"#cov-boons-list": "Edifice - North tower"},
+    ),
+    "add property": Contract(
+        prefill={"Name": "", "Dimensions": ""},
+        edits={"Name": "Mill", "Dimensions": "40 acres"},
+        saved=lambda s: [
+            (p.name, p.dimensions) for p in _cov(s).possessions if p.name == "Mill"
+        ],
+        expected=[("Mill", "40 acres")],
+        invalid={"Name": ""},
+        shown={"#pos-property-list": "Mill"},
+    ),
+    "add sanctum": Contract(
+        prefill={"Name": "", "Owner": "Free", "Usage": "Standard (2 Seasons)"},
+        edits={"Name": "Study", "Quality": "3", "Build Points": "15"},
+        saved=lambda s: [
+            (p.owner, p.quality, p.build_points, p.usage)
+            for p in _cov(s).possessions
+            if p.name == "Study"
+        ],
+        expected=[("Free", 3, 15, "Standard (2 Seasons)")],
+        invalid={"Name": ""},
+        shown={"#pos-sanctum-list": "Study"},
+    ),
+    "add covenant item": Contract(
+        prefill={"Name": "", "Quantity": "1"},
+        edits={"Name": "Lens", "Quantity": "5"},
+        saved=lambda s: [p.quantity for p in _cov(s).possessions if p.name == "Lens"],
+        expected=[5],
+        invalid=[{"Name": ""}, {"Name": "Lens", "Quantity": "0"}],
+        shown={"#pos-item-list": "Lens"},
+    ),
+    "add vis source": Contract(
+        prefill={"Name": "", "Art": Select.NULL, "Season harvested": Select.NULL},
+        edits={
+            "Name": "Well",
+            "Art": "Vim",
+            "Season harvested": "Winter",
+            "Pawns": "3",
+            "Location": "Chapel",
+        },
+        saved=lambda s: [
+            (p.art, p.season, p.pawns, p.location)
+            for p in _cov(s).possessions
+            if p.name == "Well"
+        ],
+        expected=[("Vim", "Winter", 3, "Chapel")],
+        # Name, Art and Season are required, and at least one pawn.
+        invalid=[
+            {"Name": ""},
+            {"Name": "Well"},
+            {"Name": "Well", "Art": "Vim"},
+            {"Name": "Well", "Art": "Vim", "Season harvested": "Winter", "Pawns": "0"},
+        ],
+        shown={"#pos-vis_source-list": "Well"},
+    ),
+    "add vis store": Contract(
+        prefill={"Name": "", "Art": Select.NULL, "Pawns": "1"},
+        edits={"Name": "Cask", "Art": "Vim", "Pawns": "9"},
+        saved=lambda s: [
+            (p.art, p.pawns) for p in _cov(s).possessions if p.name == "Cask"
+        ],
+        expected=[("Vim", 9)],
+        invalid=[{"Name": ""}, {"Name": "Cask"}],
+        shown={"#pos-vis_store-list": "Cask"},
+    ),
+    "edit wealth": Contract(
+        prefill={"Wealth": "0"},
+        edits={"Wealth": "2525"},
+        saved=lambda s: _cov(s).economics.wealth,
+        expected=2525,
+        invalid={"Wealth": "lots"},
+        shown={"#eco-wealth-left": "2525"},
+    ),
+    "add income source": Contract(
+        prefill={"Name": "", "Type": "Typical", "Current Income": ""},
+        edits={"Name": "Toll bridge", "Type": "Greater"},
+        saved=lambda s: [
+            (i.type, i.income)
+            for i in _cov(s).economics.income_sources
+            if i.name == "Toll bridge"
+        ],
+        # A blank income is the type's usual one.
+        expected=[("Greater", None)],
+        invalid={"Name": ""},
+        shown={"#eco-income-list": "Toll bridge"},
+    ),
+    "edit income source": Contract(
+        prefill={"Name": "Mill", "Type": "Typical", "Current Income": ""},
+        edits={"Current Income": "55"},
+        saved=lambda s: _cov(s).economics.income_sources[0].income,
+        expected=55,
+        invalid={"Current Income": "lots"},
+        shown={"#eco-income-list": "55"},
+    ),
+    "edit expenditure row": Contract(
+        prefill={"Notes": ""},
+        edits={"Notes": "Old roof"},
+        saved=lambda s: _cov(s).economics.notes.get("buildings"),
+        expected="Old roof",
+        shown={"#eco-expenditure-list": "Old roof"},
+    ),
+    "edit tithes": Contract(
+        prefill={"Amount": "0", "Notes": ""},
+        edits={"Amount": "12"},
+        saved=lambda s: _cov(s).economics.tithes,
+        expected=12,
+        invalid={"Amount": "lots"},
+    ),
+    "edit sundry": Contract(
+        prefill={"Amount": "1"},
+        edits={"Amount": "3"},
+        saved=lambda s: _cov(s).economics.sundry,
+        expected=3,
+        invalid={"Amount": "0"},  # at least 1
+    ),
+    "edit magic savings": Contract(
+        prefill={"Savings": "0"},
+        edits={"Savings": "20"},
+        saved=lambda s: _cov(s).economics.magic_savings,
+        expected=20,
+        invalid={"Savings": "lots"},
+    ),
+    "edit loyalty": Contract(
+        prefill={
+            "Type of Governance": "",
+            "Equipment": "Standard",
+            "Money": "Standard salary",
+            "Familiarity": "0",
+        },
+        edits={
+            "Type of Governance": "Council",
+            "Money": "Generous salary",
+            "Familiarity": "2",
+        },
+        saved=lambda s: (
+            _cov(s).loyalty.governance,
+            _cov(s).loyalty.money,
+            _cov(s).loyalty.familiarity,
+        ),
+        expected=("Council", "Generous salary", 2),
+        invalid={"Familiarity": "lots"},
+    ),
+    "edit population": Contract(
+        prefill={"Other People": "0"},
+        edits={"Other People": "7"},
+        saved=lambda s: _cov(s).population.other_people,
+        expected=7,
+        invalid={"Other People": "lots"},
+    ),
+    "edit miscellaneous": Contract(
+        prefill={"Aging for Magi": "0", "Magic Turbula": "0"},
+        edits={"Aging for Magi": "1", "Magic Turbula": "2"},
+        saved=lambda s: (
+            _cov(s).population.aging_magi,
+            _cov(s).population.magic_turbula,
+        ),
+        expected=(1, 2),
+        invalid={"Magic Turbula": "lots"},
+    ),
+    "add magus": Contract(
+        prefill={
+            "Name": "",
+            "House": Select.NULL,
+            "Year Born": "",
+            "Gift": Select.NULL,
+        },
+        edits={"Name": "Tytalus NPC", "House": "house_tytalus", "Gift": "Blatant"},
+        saved=lambda s: [
+            (i.kind, i.house, i.gift, i.year_born)
+            for i in _cov(s).inhabitants
+            if i.name == "Tytalus NPC"
+        ],
+        # A blank Year Born stays unknown.
+        expected=[("magus", "house_tytalus", "Blatant", None)],
+        invalid={"Name": ""},
+        shown={"#inh-magus-list": "Tytalus NPC", "#section-inh-magus": "Magi (3)"},
+    ),
+    "add turb": Contract(
+        prefill={"Name": "", "Year Born": "", "Quantity": "1"},
+        edits={"Name": "Guards", "Quantity": "3"},
+        saved=lambda s: [
+            (i.kind, i.quantity) for i in _cov(s).inhabitants if i.name == "Guards"
+        ],
+        expected=[("turb", 3)],
+        invalid=[{"Name": ""}, {"Name": "Guards", "Quantity": "0"}],
+        shown={"#section-inh-turb": "(4)"},  # the headcount adds the quantity
+    ),
+    "add covenfolk member": Contract(
+        prefill={"Name": "", "Covenant Role": Select.NULL, "Quantity": "1"},
+        edits={"Name": "Old Marta", "Covenant Role": "Dependent", "Year Born": "1180"},
+        saved=lambda s: [
+            (i.role, i.year_born) for i in _cov(s).inhabitants if i.name == "Old Marta"
+        ],
+        expected=[("Dependent", 1180)],
+        invalid=[{"Name": ""}, {"Name": "Old Marta"}],  # the role is required
+        shown={"#inh-inhabitant-list": "Old Marta"},
+    ),
+    "add craftsperson": Contract(
+        prefill={
+            "Name": "",
+            "Value of Crafting Skill": "0",
+            "Field of Work": "None",
+            "Linked Ability": "",
+        },
+        edits={
+            "Name": "Smith",
+            "Value of Crafting Skill": "6",
+            "Field of Work": "Weapons and Armor",
+            "Linked Ability": "Craft: Smith",
+        },
+        saved=lambda s: [
+            (i.skill_value, i.field_of_work, i.linked_ability)
+            for i in _cov(s).inhabitants
+            if i.name == "Smith"
+        ],
+        expected=[(6, "Weapons and Armor", "Craft: Smith")],
+        invalid={"Name": ""},
+        shown={"#inh-craftsperson-list": "Smith"},
+    ),
+    "add horses": Contract(
+        prefill={"Name": "", "Year Born": "", "Quantity": "1"},
+        edits={"Name": "Ponies", "Quantity": "4"},
+        saved=lambda s: [
+            (i.kind, i.quantity, i.year_born)
+            for i in _cov(s).inhabitants
+            if i.name == "Ponies"
+        ],
+        expected=[("horse", 4, None)],
+        invalid={"Quantity": "0"},
+        shown={"#inh-horse-list": "Ponies"},
+    ),
+    "edit book": Contract(
+        prefill={"Name": "Summa", "Type": "Art Summa", "Owner": "covenant:cov1"},
+        edits={
+            "Art": "Ignem",
+            "Level": "10",
+            "Quality": "12",
+            "Owner": "laboratory:lab1",
+        },
+        saved=lambda s: [
+            (b.owner_kind, b.owner_id) for b in s.books if b.id == "b-cov"
+        ],
+        expected=[("laboratory", "lab1")],
+        invalid={"Name": ""},
+    ),
+    "add book": Contract(
+        prefill={"Name": "", "Type": Select.NULL, "Owner": "covenant:cov1"},
+        edits={
+            "Name": "Scrolls",
+            "Type": "Tractatus",
+            "Subject": "Art",
+            "Art": "Ignem",
+            "Quality": "7",
+            "Language": "Greek",
+        },
+        saved=lambda s: [
+            (b.type, b.language, b.owner_kind, b.owner_id)
+            for b in s.books
+            if b.name == "Scrolls"
+        ],
+        expected=[("Tractatus", "Greek", "covenant", "cov1")],
+        invalid=[
+            {"Name": ""},
+            # A templated Ability needs its detail.
+            {
+                "Name": "Lore",
+                "Type": "Ability Summa",
+                "Ability": "Area Lore: {region}",
+            },
+        ],
+        shown={"#section-lib-books-list": "Scrolls"},
+    ),
+    "add spell": Contract(
+        prefill={"Name": "", "Technique": Select.NULL, "Level": ""},
+        edits={
+            "Name": "Lamp of Tobias",
+            "Technique": "Creo",
+            "Form": "Ignem",
+            "Level": "10",
+            "Requisites": "Rego",
+            "Range": "Touch",
+            "Duration": "Sun",
+            "Target": "Individual",
+        },
+        saved=lambda s: [
+            (sp.technique, sp.form, sp.level, sp.requisites)
+            for sp in s.spells
+            if sp.name == "Lamp of Tobias"
+        ],
+        expected=[("Creo", "Ignem", 10, ["Rego"])],
+        invalid=[
+            {"Name": ""},
+            {
+                "Name": "Lamp",
+                "Technique": "Creo",
+                "Form": "Ignem",
+                "Requisites": "Nope",
+            },
+        ],
+        shown={"#spell-list": "Lamp of Tobias"},
+    ),
+    "edit spell": Contract(
+        prefill={"Name": "Own Spell", "Technique": "Creo", "Level": "5"},
+        edits={
+            "Name": "Own Spell II",
+            "Level": "15",
+            "Range": "Touch",
+            "Duration": "Sun",
+            "Target": "Individual",
+        },
+        saved=lambda s: (s.spells[0].name, s.spells[0].level),
+        expected=("Own Spell II", 15),
+        invalid={"Name": ""},
+    ),
+    "add ability": Contract(
+        prefill={"XP": "0", "Specialty": ""},
+        edits={"XP": "30", "Specialty": "Running"},
+        saved=lambda s: [
+            (a.category, a.xp, a.specialty)
+            for a in _char(s).abilities
+            if a.name == "Athletics"
+        ],
+        expected=[("General", 30, "Running")],
+        invalid={"XP": "-5"},
+        shown={"#abilities-list": "Athletics (Running)"},
+    ),
+    "edit arts": Contract(
+        prefill={"Creo": "0", "Vim": "0"},
+        edits={"Creo": "55", "Vim": "6"},
+        saved=lambda s: (_char(s).arts["creo"].xp, _char(s).arts["vim"].xp),
+        expected=(55, 6),
+        invalid={"Creo": "lots"},
+    ),
+    "edit familiar fatigue": Contract(
+        prefill={"Level": "fresh"},
+        edits={"Level": "weary"},
+        saved=lambda s: _fam(s).fatigue_level,
+        expected="weary",
+        shown={"#fam-fatigue-content": "Weary"},
+    ),
+    "add bond power": Contract(
+        prefill={"Power Name": "", "Level": "0"},
+        edits={
+            "Power Name": "Mind link",
+            "Level": "15",
+            "Technique": "Intellego",
+            "Form": "Mentem",
+        },
+        saved=lambda s: [
+            (p.level, p.technique, p.form)
+            for p in _fam(s).bond_powers
+            if p.name == "Mind link"
+        ],
+        expected=[(15, "Intellego", "Mentem")],
+        invalid={"Level": "lots"},
+        shown={"#fam-bond-powers-list": "Mind link"},
+    ),
+    "edit bond power": Contract(
+        prefill={"Power Name": "Speak", "Uses/Day": "0"},
+        edits={"Power Name": "Speech"},
+        saved=lambda s: _fam(s).bond_powers[0].name,
+        expected="Speech",
+        invalid={"Level": "lots"},
+        shown={"#fam-bond-powers-list": "Speech"},
+    ),
+    "add lab raw vis": Contract(
+        prefill={"Art": Select.NULL, "Pawns": "1"},
+        edits={"Art": "vim", "Pawns": "4"},
+        saved=lambda s: _lab(s).raw_vis,
+        expected={"ignem": 2, "vim": 4},
+        invalid=[{"Pawns": "2"}, {"Art": "vim", "Pawns": "-"}],
+        shown={"#lab-raw-vis-list": "Vim: 4"},
+    ),
+    "edit lab raw vis": Contract(
+        prefill={"Art": "ignem", "Pawns": "2"},
+        edits={"Pawns": "5"},
+        saved=lambda s: _lab(s).raw_vis,
+        expected={"ignem": 5},
+        invalid={"Pawns": "-"},
+        shown={"#lab-raw-vis-list": "Ignem: 5"},
+    ),
+    "edit lab diary entry": Contract(
+        prefill={
+            "Year": "1220",
+            "Season": "Spring",
+            "Activity Type": Select.NULL,
+            "Name": "Built",
+        },
+        edits={"Name": "Rebuilt", "Season": "Summer"},
+        saved=lambda s: (_lab(s).diary[0].season, _lab(s).diary[0].name),
+        expected=("Summer", "Rebuilt"),
+        invalid={"Year": "-"},
+        shown={"#lab-diary-list": "Rebuilt"},
+    ),
+    "edit lab specialization source": Contract(
+        prefill={"Specialization": "Ignem", "Points": "1", "Source": "Hearth spirit"},
+        edits={"Points": "2"},
+        saved=lambda s: _lab(s).specialties[0],
+        expected=LabSpecialtyEntry("Ignem", 2, "Hearth spirit"),
+        invalid={"Points": "0"},
+    ),
+    "edit lab room": Contract(
+        prefill={"Name": "Study", "Description": ""},
+        edits={"Name": "Library", "Description": "Dusty"},
+        saved=lambda s: (_lab(s).rooms[0].name, _lab(s).rooms[0].description),
+        expected=("Library", "Dusty"),
+        invalid={"Name": ""},
+        shown={"#lab-rooms-list": "Library"},
     ),
 }
 
@@ -653,80 +1124,93 @@ async def _fill(pilot, dialog, contract: Contract, values: dict[str, Any]) -> No
 # -- the contracts --
 
 
-@pytest.mark.parametrize("name", list(CONTRACTS))
-async def test_prefills_the_current_values(name):
-    contract = CONTRACTS[name]
-    app = new_app()
-    async with app.run_test(size=(140, 70)) as pilot:
-        _, dialog = await open_dialog(pilot, app, name)
-        shown = {
-            label: field_value(field_widget(dialog, label, contract.aliases))
-            for label in contract.prefill
-        }
-        assert shown == contract.prefill
+def _invalid_entries(contract: Contract) -> list[dict[str, Any]]:
+    if contract.invalid is None:
+        return []
+    if isinstance(contract.invalid, dict):
+        return [contract.invalid]
+    return contract.invalid
+
+
+def shown_text(screen, selector: str) -> str:
+    """What `screen` shows at `selector`: a Collapsible's title, a list's
+    rows (one per line) or a Static's text, markup stripped."""
+    widget = screen.query_one(selector)
+    if isinstance(widget, Collapsible):
+        text = widget.title
+    elif isinstance(widget, SelectableList):
+        text = "\n".join(label for _, label in widget._rows)
+    else:
+        text = str(widget.render())
+    return strip_markup(text)
+
+
+async def _close(pilot, app, dialog, button: Button) -> None:
+    button.press()
+    assert await wait_until(pilot, lambda: app.screen is not dialog), (
+        f"still open: {error_text(dialog)!r}"
+    )
+    await pilot.pause()
 
 
 @pytest.mark.parametrize("name", list(CONTRACTS))
-async def test_cancel_saves_nothing(name):
+async def test_form_contract(name):
+    """One app session per form, at 120x45 (the smallest size the user
+    works at):
+
+    - the whole dialog, and its Save and Cancel buttons, are on screen (a
+      long form scrolls between them);
+    - it's pre-filled with the record's current values;
+    - Cancel after editing saves nothing;
+    - each invalid entry is refused with an error, the dialog staying open
+      and nothing saved;
+    - a valid edit, saved, lands in the saved saga and the screen shows it.
+    """
     contract = CONTRACTS[name]
     app = new_app()
     before = _saved_file()
-    async with app.run_test(size=(140, 70)) as pilot:
-        _, dialog = await open_dialog(pilot, app, name)
-        await _fill(pilot, dialog, contract, contract.edits)
-        cancel_button(dialog).press()
-        assert await wait_until(pilot, lambda: app.screen is not dialog)
-        await pilot.pause()
-    assert _saved_file() == before
-    if name == "create saga":
-        assert storage.list_sagas() == [SAGA_ID]
-
-
-@pytest.mark.parametrize(
-    "name", [name for name, c in CONTRACTS.items() if c.invalid is not None]
-)
-async def test_refuses_an_invalid_entry(name):
-    contract = CONTRACTS[name]
-    assert contract.invalid is not None
-    app = new_app()
-    before = _saved_file()
-    async with app.run_test(size=(140, 70)) as pilot:
-        _, dialog = await open_dialog(pilot, app, name)
-        await _fill(pilot, dialog, contract, contract.invalid)
-        save_button(dialog).press()
-        assert await wait_until(pilot, lambda: error_text(dialog) != "")
-        assert app.screen is dialog
-    assert _saved_file() == before
-
-
-@pytest.mark.parametrize("name", list(CONTRACTS))
-async def test_save_stores_the_edit(name):
-    contract = CONTRACTS[name]
-    app = new_app()
-    async with app.run_test(size=(140, 70)) as pilot:
-        _, dialog = await open_dialog(pilot, app, name)
-        await _fill(pilot, dialog, contract, contract.edits)
-        save_button(dialog).press()
-        assert await wait_until(pilot, lambda: app.screen is not dialog), (
-            f"still open: {error_text(dialog)!r}"
-        )
-        await pilot.pause()
-    assert contract.saved(storage.load_saga(SAGA_ID)) == contract.expected
-
-
-@pytest.mark.parametrize("name", list(CONTRACTS))
-async def test_fits_a_small_terminal(name):
-    """At 120x45 the whole dialog, and its Save and Cancel buttons, are on
-    screen (a long form scrolls between them)."""
-    app = new_app()
     async with app.run_test(size=(120, 45)) as pilot:
-        _, dialog = await open_dialog(pilot, app, name)
-        await pilot.pause()
+        base, dialog = await open_dialog(pilot, app, name)
         for button in (save_button(dialog), cancel_button(dialog)):
             region = button.region
             assert region.height > 0, button.id
             assert region.x >= 0 and region.right <= 120, (button.id, region)
             assert region.y >= 0 and region.bottom <= 45, (button.id, region)
+
+        prefilled = {
+            label: field_value(field_widget(dialog, label, contract.aliases))
+            for label in contract.prefill
+        }
+        assert prefilled == contract.prefill
+
+        await _fill(pilot, dialog, contract, contract.edits)
+        await _close(pilot, app, dialog, cancel_button(dialog))
+        assert _saved_file() == before
+
+        for entry in _invalid_entries(contract):
+            dialog = await reopen_dialog(pilot, app, base, name)
+            await _fill(pilot, dialog, contract, entry)
+            save_button(dialog).press()
+            assert await wait_until(pilot, lambda d=dialog: error_text(d) != ""), entry
+            assert app.screen is dialog, entry
+            await _close(pilot, app, dialog, cancel_button(dialog))
+            assert _saved_file() == before, entry
+        if name == "create saga":
+            assert storage.list_sagas() == [SAGA_ID]
+
+        dialog = await reopen_dialog(pilot, app, base, name)
+        view = getattr(base, "_current_sheet_view", lambda: None)()
+        if contract.shown and view is not None:
+            # Build every tab now, so the save has to refresh what's shown.
+            await build_all_tabs(pilot, view)
+        await _fill(pilot, dialog, contract, contract.edits)
+        await _close(pilot, app, dialog, save_button(dialog))
+        # The screen shows the saved values (its sheet was refreshed).
+        for selector, text in contract.shown.items():
+            assert await wait_until(
+                pilot, lambda s=selector, t=text: t in shown_text(base, s)
+            ), (selector, shown_text(base, selector))
+    assert contract.saved(storage.load_saga(SAGA_ID)) == contract.expected
 
 
 # -- which book tables each weapon form offers (STORY-709) --

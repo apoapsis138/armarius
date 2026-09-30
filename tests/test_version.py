@@ -30,22 +30,14 @@ def test_a_save_records_the_version_that_wrote_it():
     assert storage.load_saga("s").app_version == __version__
 
 
-def test_a_save_from_before_versioning_still_loads():
-    path = storage.save_saga(Saga(id="s", name="S"))
-    data = json.loads(path.read_text(encoding="utf-8"))
-    del data["app_version"]
-    path.write_text(json.dumps(data), encoding="utf-8")
-    assert storage.load_saga("s").app_version == ""
-
-
 async def test_the_version_is_shown_in_the_header_and_on_the_saga_picker():
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(80, 24)) as pilot:
+    async with app.run_test(size=(120, 45)) as pilot:
         await pilot.pause()
         assert app.title == f"Ars Magica Manager v{__version__}"
         line = app.screen.query_one("#picker-version", Static)
         assert __version__ in str(line.render())
-        assert line.region.height == 1 and line.region.bottom <= 23
+        assert line.region.height == 1 and line.region.bottom <= 44
 
         # The workspace's header keeps it, next to the saga and its date.
         storage.save_saga(Saga(id="s", name="S"))

@@ -264,20 +264,6 @@ def test_detail_text_omits_empty_optional_fields():
 # -------------------------------------------------------------------- model
 
 
-def test_possession_data_round_trips_and_old_saves_default():
-    _, cov = _saga()
-    cov.possessions.append(
-        Possession(
-            id="v", kind="vis_source", name="Well", art="Vim", pawns=3, season="Winter"
-        )
-    )
-    again = Covenant.from_dict(asdict(cov))
-    assert again.possessions == cov.possessions
-
-    old = Covenant.from_dict({"id": "c", "saga_id": "s", "name": "Old"})
-    assert old.possessions == []
-
-
 def test_legacy_vis_stock_becomes_raw_vis_stores():
     cov = Covenant.from_dict(
         {

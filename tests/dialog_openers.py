@@ -12,14 +12,19 @@ from textual.screen import ModalScreen
 from textual.widgets import TabbedContent, Tree
 
 from ars_magica_manager import catalog, storage
+from ars_magica_manager import economics as eco
 from ars_magica_manager import screens as scr
 from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Character, Saga
+from ars_magica_manager.screens.workspace import _COVENANT_REPUTATIONS
 
 
 def contract_saga() -> Saga:
-    """everything_saga() plus an unbonded magus (so a familiar can be bound)."""
+    """everything_saga() plus an unbonded magus (so a familiar can be bound),
+    in Autumn: not the first season, so a form that defaults to the saga's
+    season is told apart from one that defaults to Spring."""
     saga = everything_saga()
+    saga.current_season = "Autumn"
     saga.characters.append(
         Character(id="mag2", name="Brother Oda", type="magus", covenant_id="cov1")
     )
@@ -82,6 +87,48 @@ def _open_mastery_ability(ws) -> None:
         edit._add_ability()
 
     ws.app.call_later(add)
+
+
+def _pick(open_picker, index: int = 0):
+    """Open a dialog reached through a "which one?" picker, choosing the
+    entry at `index`."""
+
+    async def opener(ws) -> None:
+        # The chosen row is looked for in the section's tab: build it.
+        await ws._current_sheet_view().build_all_tabs()
+        open_picker(ws)
+        picker = await wait_for_screen(ws.app, scr.RemovalPickerScreen)
+        await until(lambda: picker.query("ListItem"))  # mounted
+        picker.dismiss(index)
+
+    return opener
+
+
+def _economics_row(which: str, key: str):
+    """Edit the Yearly Expenditure / Cost Savings row with `key`."""
+
+    def opener(ws) -> None:
+        summary = eco.summarize(ws.saga, ws.selected_covenant)
+        rows = summary.expenditure if which == "expenditure" else summary.savings
+        ws._economics_row_form(which, next(r for r in rows if r.key == key))
+
+    return opener
+
+
+async def _open_ability_details(ws) -> None:
+    """Add an Ability: pick Athletics, which asks for its details."""
+    ws._add_ability()
+    picker = await wait_for_screen(ws.app, scr.AbilityPickerScreen)
+    picker._on_entry_selected(catalog.load_ability_catalog_by_id()["ab_athletics"])
+
+
+async def _open_boon_details(ws) -> None:
+    """Add a Boon: pick Edifice, which asks for its detail."""
+    ws._add_boon_hook("Boon")
+    picker = await wait_for_screen(ws.app, scr.CovenantBoonHookPickerScreen)
+    picker._on_entry_selected(
+        catalog.load_covenant_boon_hook_catalog_by_id()["covbh_boon_minor_edifice"]
+    )
 
 
 OPENERS: dict[str, Opener] = {
@@ -190,6 +237,77 @@ OPENERS: dict[str, Opener] = {
             _device(ws, "dev-cov"), _device(ws, "dev-cov").effects[0]
         ),
     ),
+    # Added for STORY-1123 (forms that had only bespoke tests)
+    "edit covenant reputation": Opener(
+        "covenant",
+        lambda ws: ws._edit_trait_at(
+            _COVENANT_REPUTATIONS, ws.selected_covenant.reputations, 0
+        ),
+    ),
+    "add boon": Opener("covenant", _open_boon_details),
+    "add property": Opener(
+        "covenant", lambda ws: ws._possession_form("property", None)
+    ),
+    "add sanctum": Opener("covenant", lambda ws: ws._possession_form("sanctum", None)),
+    "add covenant item": Opener(
+        "covenant", lambda ws: ws._possession_form("item", None)
+    ),
+    "add vis source": Opener(
+        "covenant", lambda ws: ws._possession_form("vis_source", None)
+    ),
+    "add vis store": Opener(
+        "covenant", lambda ws: ws._possession_form("vis_store", None)
+    ),
+    "edit wealth": Opener("covenant", lambda ws: ws._edit_wealth()),
+    "add income source": Opener("covenant", lambda ws: ws._income_form(None)),
+    "edit income source": Opener(
+        "covenant", _pick(lambda ws: ws._edit_income_source())
+    ),
+    "edit expenditure row": Opener(
+        "covenant", _economics_row("expenditure", "buildings")
+    ),
+    "edit tithes": Opener("covenant", _economics_row("expenditure", "tithes")),
+    "edit sundry": Opener("covenant", _economics_row("expenditure", "sundry")),
+    "edit magic savings": Opener("covenant", _economics_row("savings", "magic")),
+    "edit loyalty": Opener("covenant", lambda ws: ws._edit_loyalty()),
+    "edit population": Opener("covenant", lambda ws: ws._edit_population()),
+    "edit miscellaneous": Opener("covenant", lambda ws: ws._edit_miscellaneous()),
+    "add magus": Opener(
+        "covenant", lambda ws: ws._inhabitant_form("magus", None, None)
+    ),
+    "add turb": Opener("covenant", lambda ws: ws._inhabitant_form("turb", None, None)),
+    "add covenfolk member": Opener(
+        "covenant", lambda ws: ws._inhabitant_form("inhabitant", None, None)
+    ),
+    "add craftsperson": Opener(
+        "covenant", lambda ws: ws._inhabitant_form("craftsperson", None, None)
+    ),
+    "add horses": Opener(
+        "covenant", lambda ws: ws._inhabitant_form("horse", None, None)
+    ),
+    "add book": Opener("covenant", lambda ws: ws._book_form(None)),
+    "edit book": Opener(
+        "covenant",
+        lambda ws: ws._book_form(next(b for b in ws.saga.books if b.id == "b-cov")),
+    ),
+    "add spell": Opener("spells", lambda ws: ws._spell_form(None)),
+    "edit spell": Opener("spells", lambda ws: ws._spell_form(ws.saga.spells[0])),
+    "add ability": Opener("character", _open_ability_details),
+    "edit arts": Opener("character", lambda ws: ws._edit_arts()),
+    "edit familiar fatigue": Opener("familiar", lambda ws: ws._edit_familiar_fatigue()),
+    "add bond power": Opener("familiar", lambda ws: ws._familiar_bond_power_form(None)),
+    "edit bond power": Opener("familiar", lambda ws: ws._familiar_bond_power_form(0)),
+    "add lab raw vis": Opener("laboratory", lambda ws: ws._add_lab_raw_vis()),
+    "edit lab raw vis": Opener("laboratory", _pick(lambda ws: ws._edit_lab_raw_vis())),
+    "edit lab diary entry": Opener(
+        "laboratory", _pick(lambda ws: ws._edit_diary_entry())
+    ),
+    "edit lab specialization source": Opener(
+        "laboratory", _pick(lambda ws: ws._edit_specialty_entry())
+    ),
+    "edit lab room": Opener(
+        "laboratory", _pick(lambda ws: ws._edit_named("section-lab-rooms"))
+    ),
 }
 
 
@@ -249,14 +367,20 @@ async def open_dialog(
             view = base._current_sheet_view()
             assert await wait_until(pilot, lambda: view.initial_tab_seen)
         await pilot.pause()
-    opened = opener.open(base)
+    return base, await reopen_dialog(pilot, app, base, name)
+
+
+async def reopen_dialog(pilot, app, base, name: str) -> object:
+    """Open `name`'s dialog again from `base` (the screen open_dialog
+    returned, back on top), and return it."""
+    opened = OPENERS[name].open(base)
     if inspect.isawaitable(opened):
         await opened
     assert await wait_until(pilot, lambda: _is_dialog(app.screen, base), timeout=3.0), (
         f"{name!r} didn't open (top screen: {type(app.screen).__name__})"
     )
     await pilot.pause()
-    return base, app.screen
+    return app.screen
 
 
 #: Screens a dialog is opened through (not the dialog itself).
@@ -264,6 +388,8 @@ _ON_THE_WAY = (
     scr.VirtueFlawPickerScreen,
     scr.MasteryEditScreen,
     scr.RemovalPickerScreen,
+    scr.AbilityPickerScreen,
+    scr.CovenantBoonHookPickerScreen,
 )
 
 

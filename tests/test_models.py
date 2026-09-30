@@ -12,24 +12,14 @@ from ars_magica_manager.models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
     BOON_HOOK_UNKNOWN,
-    Ability,
-    Aging,
-    Background,
-    BondPower,
     Character,
-    Characteristics,
     Covenant,
-    Description,
-    Familiar,
-    HermeticBackground,
     LabCharacteristics,
     Laboratory,
     LabVirtueFlawDef,
     Modifier,
     Saga,
-    ScoredTrait,
     VirtueFlawInstance,
-    Wounds,
     add_raw_vis,
     assign_laboratory,
     assign_laboratory_owner,
@@ -38,7 +28,6 @@ from ars_magica_manager.models import (
     next_season,
     replace_raw_vis,
 )
-from ars_magica_manager.rules.xp import ability_xp
 
 
 def test_character_age_computes_from_year_born():
@@ -47,24 +36,6 @@ def test_character_age_computes_from_year_born():
 
 def test_character_age_is_none_without_year_born():
     assert character_age(year_born=None, current_year=1220) is None
-
-
-def test_character_from_dict_defaults_new_fields_for_pre_existing_saves():
-    # Simulates a save written before this session's fields existed -- none
-    # of the new keys are present, so everything should fall back to
-    # dataclass defaults rather than raising.
-    character = Character.from_dict(
-        {"id": "char_1", "name": "Leandro", "type": "magus"}
-    )
-    assert character.background == Background()
-    assert character.description == Description()
-    assert character.aging == Aging()
-    assert character.wounds == Wounds()
-    assert character.fatigue_level == "fresh"
-    assert character.personality_traits == []
-    assert character.reputations == []
-    assert character.raw_vis == {}
-    assert character.hermetic == HermeticBackground()
 
 
 def test_character_from_dict_migrates_legacy_inventory_strings():
@@ -217,83 +188,11 @@ def test_lab_occupied_size_and_free_virtues_and_base_safety():
     assert lab_base_safety(lab, _LAB_VF_CATALOG) == -1
 
 
-def test_laboratory_aura_modifier_defaults_to_zero_for_pre_existing_saves():
-    lab = Laboratory.from_dict(
-        {"id": "lab_1", "covenant_id": "cov_1", "name": "Obsidian Crucible"}
-    )
-    assert lab.aura_modifier == 0
-
-
-def test_laboratory_aura_modifier_survives_a_dict_round_trip():
-    lab = Laboratory(id="lab_1", covenant_id="cov_1", name="Lab", aura_modifier=-2)
-    assert Laboratory.from_dict(asdict(lab)).aura_modifier == -2
-
-
 def test_lab_aura_total_adds_the_modifier_to_the_covenant_aura():
     lab = Laboratory(id="lab_1", covenant_id="cov_1", name="Lab", aura_modifier=2)
     assert lab_aura_total(lab, covenant_aura=3) == 5
     lab.aura_modifier = -4
     assert lab_aura_total(lab, covenant_aura=3) == -1
-
-
-def test_familiar_from_dict_defaults_for_pre_existing_saves():
-    familiar = Familiar.from_dict({"id": "fam1", "character_id": "mag1"})
-    assert familiar.name == ""
-    assert familiar.golden_cord == 0
-    assert familiar.virtues_flaws == []
-    assert familiar.personality_traits == []
-    assert familiar.characteristics == Characteristics()
-    assert familiar.base_soak == 0
-    assert familiar.magic_resistance == 0
-    assert familiar.abilities == []
-    assert familiar.bond_powers == []
-
-
-def test_familiar_survives_a_dict_round_trip():
-    familiar = Familiar(
-        id="fam1",
-        character_id="mag1",
-        name="Ashwing",
-        species="Raven",
-        golden_cord=3,
-        virtues_flaws=[VirtueFlawInstance(vf_id="vf_true_friend")],
-        personality_traits=[ScoredTrait(name="Loyal (Partner)", score=3)],
-        characteristics=Characteristics(stamina=3),
-        base_soak=5,
-        magic_resistance=12,
-        abilities=[Ability(name="Athletics", xp=ability_xp(3), specialty="Running")],
-        bond_powers=[
-            BondPower(
-                id="speak_with_beasts",
-                name="Speak with Beasts",
-                level=15,
-                technique="Creo",
-                form="Animal",
-                target_controller="Familiar (controlled by Magus)",
-                uses_per_day=3,
-                penetration=5,
-                vis_spent=2,
-                cosmetic_trait="A feathered crest",
-            )
-        ],
-    )
-    restored = Familiar.from_dict(asdict(familiar))
-    assert restored == familiar
-
-
-def test_saga_from_dict_restores_familiars():
-    saga = Saga(
-        id="s",
-        name="Saga",
-        familiars=[Familiar(id="fam1", character_id="mag1", name="Ashwing")],
-    )
-    restored = Saga.from_dict(asdict(saga))
-    assert restored.familiars == saga.familiars
-
-
-def test_saga_from_dict_defaults_familiars_for_pre_existing_saves():
-    saga = Saga.from_dict({"id": "s", "name": "Saga"})
-    assert saga.familiars == []
 
 
 def test_next_season_steps_through_the_year_and_rolls_over_after_winter():
@@ -329,18 +228,6 @@ def test_covenant_modifiers_count_every_instance_and_filter_by_activity():
     assert [entry.name for entry, _ in pairs] == ["Edifice", "Edifice"]
     assert covenant_modifier_total(cov, by_id, "covenant_expense", "buildings") == 4
     assert covenant_modifier_total(cov, by_id, "lab_total") == 0
-
-
-def test_covenant_new_fields_default_for_pre_existing_saves():
-    covenant = Covenant(id="cov1", saga_id="s", name="Old Save")
-    assert covenant.tribunal == ""
-    assert covenant.year_founded is None
-    assert covenant.aegis_of_the_hearth == 0
-    assert covenant.aegis_penetration == 0
-    assert covenant.living_conditions_magi == 0
-    assert covenant.living_conditions_mundane == 0
-    assert covenant.aura == 0
-    assert covenant.covenant_season == "Spring"
 
 
 def _saga_with_two_labs() -> Saga:

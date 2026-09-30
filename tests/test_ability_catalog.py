@@ -10,12 +10,6 @@ def test_seed_catalog_loads_and_covers_all_categories():
     assert {entry.category for entry in entries} == set(ABILITY_CATEGORIES)
 
 
-def test_seed_catalog_ids_are_unique():
-    entries = catalog.load_ability_catalog()
-    ids = [entry.id for entry in entries]
-    assert len(ids) == len(set(ids))
-
-
 def test_resolve_ability_name_fills_placeholder():
     entry = catalog.load_ability_catalog_by_id()["ab_craft"]
     assert entry.parameters == ["craft"]
