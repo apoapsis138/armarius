@@ -785,11 +785,7 @@ class AbilityPickerScreen(SearchablePickerScreen[AbilityDef, Ability | None]):
         self._exclude_names = exclude_names or set()
 
     def _load_entries(self) -> list[AbilityDef]:
-        return [
-            entry
-            for entry in catalog.load_ability_catalog()
-            if entry.parameters or entry.name not in self._exclude_names
-        ]
+        return catalog.abilities_to_offer(self._exclude_names)
 
     def _search_text(self, entry: AbilityDef) -> str:
         return f"{entry.name} {entry.category}"

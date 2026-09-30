@@ -411,27 +411,6 @@ async def test_plan_a_season_then_advance_applies_it():
         assert "Nothing planned for Summer 1220" in text
 
 
-async def test_planning_and_the_diary_are_separate_tabs():
-    """Planning sits just before the Diary (STORY-925); the Diary tab holds
-    only the Diary, and its keys act on it."""
-    saga = everything_saga()
-    saga.characters[0].diary = [DiaryEntry(1219, "Winter", "Rested", activity="Other")]
-    storage.save_saga(saga)
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 60)) as pilot:
-        await _open_season(pilot, app)
-        view = app.screen._character_sheet_view
-        tabbed = view.query_one(TabbedContent)
-        tabs = [pane.id for pane in tabbed.query("TabPane")]
-        assert tabs[-2:] == ["tab-planning", "tab-diary"]
-        assert not view.query("#tab-diary #section-char-season")
-        tabbed.active = "tab-diary"
-        await wait_until(pilot, lambda: app.screen._active_section() == "tab-diary")
-        await pilot.press("a")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
-        assert app.screen.title_text == "Add a Diary Entry"
-
-
 async def test_a_grogs_planning_tab_says_they_update_yearly():
     saga = everything_saga()
     saga.characters.append(

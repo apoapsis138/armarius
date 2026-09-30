@@ -561,3 +561,18 @@ def test_duplicate_names_can_compare_by_a_key():
     ]
     assert bk.duplicate_names(books, {"A Book"}) == []
     assert bk.duplicate_names(books, {"A Book"}, str.lower) == books
+
+
+def test_imported_lab_texts_link_to_their_spells_and_keep_a_lost_ones_level():
+    saga = _saga()
+    parsed = bk.parse_books_csv(
+        "name,type,level,spell\n"
+        "Pilum notes,Lab Text,,pilum of fire\n"
+        "Mystery notes,Lab Text,15,The Lost Art\n"
+    )
+    assert not parsed.skipped  # a Lab Text's level may be left blank
+    bk.add_imported_books(saga, parsed.books, saga.covenants[0])
+    pilum, mystery = parsed.books
+    assert pilum.spell_id == "spell_pilum_of_fire"  # a typed name, any case
+    assert (mystery.spell_id, mystery.level) == (None, 15)
+    assert bk.row_label(saga, mystery).startswith("[$text-error]")

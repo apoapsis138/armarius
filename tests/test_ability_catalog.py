@@ -32,3 +32,11 @@ def test_resolve_ability_name_without_placeholder_is_unchanged():
 def test_unknown_category_is_rejected():
     with pytest.raises(ValueError, match="category"):
         AbilityDef(id="ab_bogus", name="Bogus", category="Not A Real Category")
+
+
+def test_a_held_ability_is_not_offered_again_unless_templated():
+    offered = {e.id for e in catalog.abilities_to_offer({"Athletics", "Craft: Smith"})}
+    assert "ab_athletics" not in offered
+    assert "ab_craft" in offered  # "Craft: {craft}": another Craft is fine
+    assert "ab_awareness" in offered
+    assert len(catalog.abilities_to_offer(set())) == len(catalog.load_ability_catalog())

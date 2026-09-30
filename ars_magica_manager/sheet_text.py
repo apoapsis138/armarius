@@ -10,6 +10,7 @@ from collections.abc import Sequence
 
 from . import books as bk
 from . import catalog
+from . import spells as spl
 from .markup import escape
 from .models import (
     ABILITY_CATEGORIES,
@@ -19,6 +20,7 @@ from .models import (
     Characteristics,
     Modifier,
     Possession,
+    Saga,
     ScoredTrait,
     VirtueFlawDef,
     VirtueFlawInstance,
@@ -239,6 +241,23 @@ def trait_rows(traits: Sequence[ScoredTrait]) -> list[tuple[int | None, str]]:
     return [
         (index, f"{escape(t.name)}: {t.score:+d}") for index, t in enumerate(traits)
     ]
+
+
+def known_spell_rows(saga: Saga, character: Character) -> list[tuple[int | None, str]]:
+    """A magus's Known Spells as (index, label) rows: the spell's table row
+    (a catalog spell or one of the saga's own) and its Mastery score, or
+    the stored id when the spell can't be found."""
+    rows: list[tuple[int | None, str]] = []
+    for index, known in enumerate(character.spells_known):
+        spell = spl.find_spell(saga, known.spell_id)
+        if spell is None:
+            rows.append((index, f"{escape(known.spell_id)} (unknown spell)"))
+            continue
+        label = spl.row_label(saga, spell)
+        if known.mastery_score:
+            label += f"  [b]Mastery {known.mastery_score}[/]"
+        rows.append((index, label))
+    return rows
 
 
 def wounds_text(w: Wounds, *, with_soak: bool = False) -> str:

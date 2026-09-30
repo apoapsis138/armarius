@@ -103,6 +103,12 @@ TRAIT_LISTS: dict[str, ListCase] = {
     ),
 }
 
+#: The flows that don't depend on which row is chosen run on one character
+#: list and the covenant's (which has its own score range): the lists share
+#: one handler. The chosen-row flows run on every list, since each list has
+#: its own "which row is chosen" method and owner.
+SHARED_FLOW_LISTS = ["character-traits", "covenant-reputations"]
+
 _SHEET_VIEW_ATTR = {
     "covenant": "_covenant_sheet_view",
     "character": "_character_sheet_view",
@@ -178,7 +184,7 @@ def case(request) -> ListCase:
     return TRAIT_LISTS[request.param]
 
 
-@pytest.mark.parametrize("case", list(TRAIT_LISTS), indirect=True)
+@pytest.mark.parametrize("case", SHARED_FLOW_LISTS, indirect=True)
 async def test_trait_list_add(case):
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
@@ -194,7 +200,7 @@ async def test_trait_list_add(case):
     ]
 
 
-@pytest.mark.parametrize("case", list(TRAIT_LISTS), indirect=True)
+@pytest.mark.parametrize("case", SHARED_FLOW_LISTS, indirect=True)
 async def test_trait_list_edit_picks_when_nothing_is_chosen(case):
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
@@ -230,7 +236,7 @@ async def test_trait_list_edit_uses_the_chosen_row(case):
     assert [(t.name, t.score) for t in _saved(case)] == [("Alpha", 1), ("Beta", -1)]
 
 
-@pytest.mark.parametrize("case", list(TRAIT_LISTS), indirect=True)
+@pytest.mark.parametrize("case", SHARED_FLOW_LISTS, indirect=True)
 async def test_trait_list_remove_picks_when_nothing_is_chosen(case):
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
@@ -258,7 +264,7 @@ async def test_trait_list_remove_uses_the_chosen_row(case):
     assert [t.name for t in _saved(case)] == ["Beta"]
 
 
-@pytest.mark.parametrize("case", list(TRAIT_LISTS), indirect=True)
+@pytest.mark.parametrize("case", SHARED_FLOW_LISTS, indirect=True)
 async def test_trait_list_cancelling_changes_nothing(case):
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()

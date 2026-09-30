@@ -2,11 +2,13 @@ import build_spell_catalog as build
 import pytest
 
 from ars_magica_manager import catalog
+from ars_magica_manager import sheet_text as st
 from ars_magica_manager import spells as sp
 from ars_magica_manager.arts import FORMS, TECHNIQUES
 from ars_magica_manager.models import (
     SPELL_SOURCES,
     Character,
+    KnownSpell,
     Saga,
     Spell,
 )
@@ -433,3 +435,19 @@ def test_add_imported_spells_gives_each_a_unique_own_id():
     spells = [_spell(id="", name="Glow"), _spell(id="", name="Glow")]
     sp.add_imported_spells(saga, spells)
     assert [s.id for s in saga.spells] == ["saga_glow", "saga_glow_2"]
+
+
+def test_known_spell_rows_show_catalog_and_own_spells_mastery_and_lost_ids():
+    saga = Saga(id="s", name="S", spells=[_spell(id="own1", name="Own Spell")])
+    magus = Character(id="m", name="M", type="magus")
+    magus.spells_known = [
+        KnownSpell(spell_id="spell_aegis_of_the_hearth"),
+        KnownSpell(spell_id="own1", mastery_score=2),
+        KnownSpell(spell_id="gone"),
+    ]
+    rows = st.known_spell_rows(saga, magus)
+    assert [index for index, _ in rows] == [0, 1, 2]
+    aegis, own, gone = (label for _, label in rows)
+    assert "Aegis of the Hearth" in aegis and "Ritual" in aegis
+    assert "Own Spell" in own and own.endswith("  [b]Mastery 2[/]")
+    assert gone == "gone (unknown spell)"

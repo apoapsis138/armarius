@@ -9,6 +9,17 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 1.7.1 — 2026-09-30
+
+A leaner test suite, first part. Nothing in the app changes.
+
+- Removed UI tests that only repeated what the shared form, list, sheet and
+  key checks already cover, and ran the shared trait-list checks on fewer
+  of the lists that share one handler.
+- A few rules that were only checked through the screens (the Boons & Hooks
+  titles and details panel, which Abilities the picker offers, the Known
+  Spells rows) are now plain functions with fast tests of their own.
+
 ## 1.7.0 — 2026-09-30
 
 Lab work, planned from the laboratory.

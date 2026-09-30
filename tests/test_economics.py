@@ -155,12 +155,20 @@ def test_weapon_and_armor_points_come_from_type_quality_and_quantity():
             gear_type="Heavy catapult or trebuchet",
             gear_quality="Expensive",
         ),  # 32
+        Possession(
+            id="f",
+            kind="weapon",
+            name="Swords",
+            quantity=10,
+            gear_type="Weapon or shield",
+            gear_quality="Expensive",
+        ),  # 160
         Possession(id="d", kind="weapon", name="Old, unsorted"),  # not set: 0
         Possession(id="e", kind="item", name="Lens", quantity=5),  # not gear
     ]
     from ars_magica_manager import possessions as pos
 
-    assert pos.gear_points(saga, cov) == 40 + 128 + 32
+    assert pos.gear_points(saga, cov) == 40 + 128 + 32 + 160
 
 
 # --------------------------------------------------------------- expenditure

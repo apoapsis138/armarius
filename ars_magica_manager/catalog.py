@@ -5,7 +5,7 @@ Shape & Material bonuses (reference data, not per-saga)."""
 from __future__ import annotations
 
 import json
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Collection, Mapping, Sequence
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -274,6 +274,18 @@ def load_ability_catalog_by_id(
     path: Path = ABILITY_CATALOG_PATH,
 ) -> dict[str, AbilityDef]:
     return _cached_by_id(path, AbilityDef.from_dict)
+
+
+def abilities_to_offer(held_names: Collection[str]) -> list[AbilityDef]:
+    """The Abilities a character holding `held_names` can still take: an
+    Ability already held isn't offered again (no point in a second
+    "Athletics"), but a templated one ("Craft: {craft}") always is, since a
+    character can hold several of the same family."""
+    return [
+        entry
+        for entry in load_ability_catalog()
+        if entry.parameters or entry.name not in held_names
+    ]
 
 
 def resolve_ability_name(entry: AbilityDef, params: dict[str, str]) -> str:

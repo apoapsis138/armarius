@@ -4,7 +4,6 @@ effect, e edits, A removes (after confirming), u uses a charge -- plus the
 list sub-dialogs of the device form and the talisman on the Hermetic Magic
 tab."""
 
-import pytest
 from support import (
     build_all_tabs,
     everything_saga,
@@ -93,22 +92,15 @@ def _new_app(saga: Saga | None = None) -> ArsMagicaManagerApp:
     return ArsMagicaManagerApp()
 
 
-@pytest.mark.parametrize("kind", list(SECTIONS))
-async def test_each_sheet_lists_its_holders_devices(kind):
+async def test_the_covenant_lists_its_devices():
+    """The lab's and character's device lists are in the sheet-text golden;
+    the covenant's is below the fold there."""
     app = _new_app()
     async with app.run_test(size=(140, 70)) as pilot:
-        _, view = await _open(pilot, app, kind)
-        rows = view.query_one(f"#{SECTIONS[kind][1]}-list", SelectableList)
+        _, view = await _open(pilot, app, "covenant")
+        rows = view.query_one(f"#{SECTIONS['covenant'][1]}-list", SelectableList)
         labels = [strip_markup(label) for _, label in rows._rows]
-    expected = {
-        "laboratory": [
-            "Wand     Invested  Opened 4/4  1 effect",
-            "  Pilum  CrIg 10  1/day",
-        ],
-        "character": ["Ring  Talisman  Opened 0/0  0 effects"],
-        "covenant": ["Potions  Charged   2/2 charges", "  Heal   CrCo 20"],
-    }[kind]
-    assert labels == expected
+    assert labels == ["Potions  Charged   2/2 charges", "  Heal   CrCo 20"]
 
 
 async def test_a_adds_a_device_held_by_the_sheet_on_show():
@@ -346,17 +338,6 @@ async def test_changing_a_multi_effect_device_to_one_effect_type_is_refused():
         error = str(dialog.query_one("#fields-error", Static).render())
         assert "has exactly one effect" in error
         assert app.screen is dialog
-
-
-async def test_the_talisman_is_named_on_the_hermetic_magic_tab():
-    app = _new_app()
-    async with app.run_test(size=(140, 70)) as pilot:
-        _, view = await _open(pilot, app, "character")
-        view.query_one(TabbedContent).active = "tab-hermetic"
-        await pilot.pause()
-        assert await wait_until(
-            pilot, lambda: any("Talisman: Ring" in line for line in screen_lines(app))
-        )
 
 
 async def _wait_for(pilot, app, screen_type: type, not_=None):

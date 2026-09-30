@@ -35,11 +35,7 @@ from .. import sheet_text as st
 from .. import spells as spl
 from ..arts import ART_ABBREVIATIONS, ART_DESCRIPTIONS, FORMS, TECHNIQUES
 from ..covenants import (
-    UNKNOWN_HOOK_POINTS,
-    boon_hook_is_unknown,
-    covenant_boon_points,
     covenant_effective_aura,
-    covenant_hook_points,
 )
 from ..laboratories import (
     lab_aura_total,
@@ -50,7 +46,6 @@ from ..laboratories import (
 )
 from ..markup import aligned, escape, markdown_inline
 from ..models import (
-    BOON_HOOK_DESCRIPTION,
     INHABITANT_KINDS,
     LAB_CHARACTERISTICS,
     POSSESSION_KINDS,
@@ -76,9 +71,10 @@ from .widgets import (
     TableHeader,
     ToggleList,
     TwoColumns,
-    _boon_hook_names,
     _sign_colored,
-    _tier_text,
+    boon_hook_info_text,
+    boon_hook_rows,
+    boon_hook_title,
     counted,
     match_colour,
     points_title,
@@ -1465,17 +1461,7 @@ class CharacterSheetView(SheetView):
         info.update(self._known_spell_info_text(index))
 
     def _known_spell_rows(self) -> list[tuple[int | None, str]]:
-        rows: list[tuple[int | None, str]] = []
-        for index, known in enumerate(self.character.spells_known):
-            spell = spl.find_spell(self.saga, known.spell_id)
-            if spell is None:
-                rows.append((index, f"{escape(known.spell_id)} (unknown spell)"))
-                continue
-            label = spl.row_label(self.saga, spell)
-            if known.mastery_score:
-                label += f"  [b]Mastery {known.mastery_score}[/]"
-            rows.append((index, label))
-        return rows
+        return st.known_spell_rows(self.saga, self.character)
 
     def _known_spell_info_text(self, index: int | None) -> str:
         if index is None:  # nothing chosen in any of the panel's three lists
@@ -3110,87 +3096,10 @@ class CovenantSheetView(SheetView):
         ]
 
     def _bh_title(self, kind: str) -> str:
-        """ "Boons (7 pts)" / "Hooks (7 pts)": Boons show the points they
-        cost, Hooks the points they provide. Both totals share one colour:
-        plain while the Boons cost less than the Hooks provide (points still
-        to spend), $text-success when they match, $text-error when the Boons
-        cost more."""
-        by_id = catalog.load_covenant_boon_hook_catalog_by_id()
-        boons = covenant_boon_points(self.covenant, by_id)
-        hooks = covenant_hook_points(self.covenant, by_id)
-        colour = None if boons < hooks else match_colour(boons, hooks)
-        if kind == "Boon":
-            return points_title("Boons", boons, colour)
-        return points_title("Hooks", hooks, colour)
+        return boon_hook_title(self.covenant, kind)
 
     def _bh_entries(self, kind: str) -> list[tuple[int, str]]:
-        """The attached Boons or Hooks of `kind` as (index into
-        covenant.boons_hooks, display label) pairs, in attach order."""
-        by_id = catalog.load_covenant_boon_hook_catalog_by_id()
-        return [
-            (
-                index,
-                escape(catalog.describe_boon_hook(bh, by_id))
-                + (
-                    f" [dim](Unknown, {UNKNOWN_HOOK_POINTS} pts)[/]"
-                    if boon_hook_is_unknown(bh, by_id[bh.vf_id])
-                    else ""
-                ),
-            )
-            for index, bh in enumerate(self.covenant.boons_hooks)
-            if bh.vf_id in by_id and by_id[bh.vf_id].type == kind
-        ]
+        return boon_hook_rows(self.covenant, kind)
 
     def _bh_info_text(self, index: int | None) -> str:
-        """The details panel for the attached Boon/Hook at `index` into
-        covenant.boons_hooks: its name, type, notes, the user's own
-        description (if any), then the official rules text and the book it
-        comes from."""
-        if index is None:
-            return "[dim]Select a Boon or Hook to see its details.[/]"
-        by_id = catalog.load_covenant_boon_hook_catalog_by_id()
-        instance = self.covenant.boons_hooks[index]
-        definition = by_id.get(instance.vf_id)
-        if definition is None:
-            return escape(f"{instance.vf_id} (not in catalog)")
-
-        lines = [f"[b]Name:[/] {escape(catalog.describe_boon_hook(instance, by_id))}"]
-        if definition.category:
-            lines.append(f"[b]Type:[/] {definition.category}")
-        lines.append(f"[b]Tier:[/] {_tier_text(definition)}")
-        if boon_hook_is_unknown(instance, definition):
-            lines.append(
-                f"[b]Unknown:[/] Yes (counts {UNKNOWN_HOOK_POINTS} points, "
-                "as a Major Hook)"
-            )
-        elif definition.unknown:
-            lines.append("[dim]May be Unknown (mark it in its Edit form).[/]")
-        if definition.requires:
-            lines.append(
-                f"[b]Requires:[/] {_boon_hook_names(definition.requires, by_id)}"
-            )
-        if definition.requires_any:
-            lines.append(
-                "[b]Requires one of:[/] "
-                + _boon_hook_names(definition.requires_any, by_id)
-            )
-        if definition.excludes:
-            lines.append(
-                f"[b]Not with:[/] {_boon_hook_names(definition.excludes, by_id)}"
-            )
-        lines += st.effect_lines(definition.modifiers)
-        if definition.max_count:
-            lines.append(
-                f"[dim]May be taken up to {definition.max_count} times; "
-                "the effects stack.[/]"
-            )
-        elif definition.repeatable:
-            lines.append("[dim]May be taken more than once; the effects stack.[/]")
-        # The user's own description leads; the official rules text follows.
-        description = instance.params.get(BOON_HOOK_DESCRIPTION, "").strip()
-        if description:
-            lines += ["", "[b]Description:[/]", markdown_inline(description)]
-        lines += ["", "[b]Rules:[/]", escape(definition.description)]
-        if definition.source:
-            lines += ["", f"[dim]Source: {escape(definition.source)}[/]"]
-        return "\n".join(lines)
+        return boon_hook_info_text(self.covenant, index)

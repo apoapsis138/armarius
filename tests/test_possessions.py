@@ -7,6 +7,7 @@ from textual.content import Content
 
 from ars_magica_manager import catalog, storage
 from ars_magica_manager import possessions as pos
+from ars_magica_manager.arts import FORMS, TECHNIQUES
 from ars_magica_manager.models import (
     GEAR_POINTS,
     POSSESSION_KINDS,
@@ -17,6 +18,7 @@ from ars_magica_manager.models import (
     Possession,
     Saga,
 )
+from ars_magica_manager.screens.forms import _possession_fields
 
 
 def _saga() -> tuple[Saga, Covenant]:
@@ -552,3 +554,44 @@ def test_a_new_save_has_no_vis_stock():
     assert (
         "vis_stock" not in json.loads(path.read_text(encoding="utf-8"))["covenants"][0]
     )
+
+
+def test_siege_engines_only_come_expensive_and_points_follow_the_table():
+    ballista = {"gear_type": "Ballista or light catapult"}
+    problem = pos.form_problem(ballista | {"gear_quality": "Standard"})
+    assert problem is not None and "only comes expensive" in problem
+    assert pos.form_problem(ballista | {"gear_quality": "Expensive"}) is None
+    saga, cov = _saga()
+    cov.possessions = [
+        Possession(
+            id="b",
+            kind="weapon",
+            name="Ballista",
+            gear_type="Ballista or light catapult",
+            gear_quality="Expensive",
+        )
+    ]
+    assert pos.gear_points(saga, cov) == 16
+
+
+def test_the_weapon_form_offers_every_weapon_type():
+    [types] = [f for f in _possession_fields("weapon", None) if f.key == "gear_type"]
+    assert [value for _, value in types.options] == [
+        "Weapon or shield",
+        "Ballista or light catapult",
+        "Heavy catapult or trebuchet",
+    ]
+
+
+def test_vis_forms_offer_the_fifteen_arts_and_the_four_seasons():
+    fields = {f.key: f for f in _possession_fields("vis_source", None)}
+    assert [v for _, v in fields["art"].options] == [*TECHNIQUES, *FORMS]
+    assert [v for _, v in fields["season"].options] == [
+        "Spring",
+        "Summer",
+        "Autumn",
+        "Winter",
+    ]
+    # A store has no season harvested, and no description.
+    store = {f.key for f in _possession_fields("vis_store", None)}
+    assert "season" not in store and "description" not in store

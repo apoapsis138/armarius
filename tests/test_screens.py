@@ -1,5 +1,4 @@
 import asyncio
-import json
 import re
 from pathlib import Path
 
@@ -29,9 +28,7 @@ from ars_magica_manager import inhabitants as inh
 from ars_magica_manager import possessions as pos
 from ars_magica_manager import spells as spl
 from ars_magica_manager.app import ArsMagicaManagerApp
-from ars_magica_manager.arts import FORMS, TECHNIQUES
 from ars_magica_manager.models import (
-    BOON_HOOK_UNKNOWN,
     LAB_CHARACTERISTICS,
     LAB_SPECIALIZATIONS,
     Ability,
@@ -708,25 +705,6 @@ async def test_create_covenant_flow_saves_covenant():
     assert covenant.id == "fengheld"
 
 
-async def test_create_covenant_requires_name():
-    storage.save_saga(Saga(id="test_saga", name="Test Saga", storyguide="Alex"))
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _open_workspace(pilot)
-
-        await pilot.press("n")
-        await pilot.pause()
-
-        await pilot.click("#btn-save")
-        await pilot.pause()
-
-        assert _is_form(app.screen, "Create a New Covenant")
-
-    saga = storage.load_saga("test_saga")
-    assert saga.covenants == []
-
-
 def _saga_with_empty_covenant() -> Saga:
     return Saga(
         id="test_saga",
@@ -944,25 +922,6 @@ async def test_create_character_with_no_covenant():
     assert character.covenant_id is None
 
 
-async def test_create_character_requires_name():
-    storage.save_saga(_saga_with_empty_covenant())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_covenant(pilot, app)
-
-        await pilot.press("c")
-        await pilot.pause()
-
-        await pilot.click("#btn-save")
-        await pilot.pause()
-
-        assert _is_form(app.screen, "Create a New Character")
-
-    saga = storage.load_saga("test_saga")
-    assert saga.characters == []
-
-
 def _sample_saga_with_covenant() -> Saga:
     return Saga(
         id="test_saga",
@@ -1107,24 +1066,6 @@ async def test_selecting_character_shows_sheet_fields():
         creo_row = view._art_row_label("Creo")
         assert "Creo (Cr)" in creo_row and "10" in creo_row and "55" in creo_row
         assert "Ball of Abysmal Flame" in _known_spell_labels(view)
-
-
-async def test_selecting_laboratory_shows_owner_and_virtues():
-    storage.save_saga(_sample_saga_with_covenant())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_covenant(pilot, app)
-        await _select(pilot, app, ("laboratory", "lab1"))
-
-        view = app.screen._laboratory_sheet_view
-        identity = _lab_identity_text(view)
-        assert "Owner: Leandro" in identity
-        assert "Aura: 3" in identity
-        assert _lab_rows(view, "lab-features-list") == [
-            "Well-Stocked  (Custom)  needs a Feature Virtue"
-        ]
-        assert "Superior Construction" in _lab_rows(view, "lab-vf-virtues-list")[0]
 
 
 def _saga_with_bare_character() -> Saga:
@@ -1686,39 +1627,6 @@ async def test_familiar_details_panels_are_shaded_like_every_other_sheet():
             assert panel.styles.background.a > 0, panel_id
 
 
-async def test_familiar_personality_traits_use_generic_add_edit_remove():
-    storage.save_saga(_saga_with_familiar())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_familiar(pilot, app)
-        await _open_familiar_section(pilot, app, "section-fam-personality-traits")
-        assert app.screen.check_action("add", ()) is True
-
-        await pilot.press("a")
-        await pilot.pause()
-        assert isinstance(app.screen, FieldsDialog)
-        app.screen.query_one("#fld-name", Input).value = "Fearless"
-        app.screen.query_one("#fld-score", Input).value = "2"
-        app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
-
-        [familiar] = storage.load_saga("test_saga").familiars
-        assert [(t.name, t.score) for t in familiar.personality_traits] == [
-            ("Fearless", 2)
-        ]
-
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
-        await pilot.press("y")
-        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
-
-    assert storage.load_saga("test_saga").familiars[0].personality_traits == []
-
-
 def _saga_with_populated_laboratory() -> Saga:
     """A lab with one entry in every editable list (two Raw Vis Arts, so
     sorted order -- aquam, ignem -- is meaningful)."""
@@ -2069,25 +1977,6 @@ async def test_create_laboratory_flow_saves_laboratory():
     assert lab.owner_id is None
 
 
-async def test_create_laboratory_requires_name():
-    storage.save_saga(_saga_with_bare_character())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_covenant(pilot, app)
-
-        await pilot.press("l")
-        await pilot.pause()
-
-        await pilot.click("#btn-save")
-        await pilot.pause()
-
-        assert _is_form(app.screen, "Create a New Laboratory")
-
-    saga = storage.load_saga("test_saga")
-    assert saga.laboratories == []
-
-
 async def test_create_laboratory_requires_integer_size():
     storage.save_saga(_saga_with_bare_character())
 
@@ -2205,28 +2094,6 @@ async def test_cancelling_ability_details_returns_to_picker_without_adding():
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].abilities == []
-
-
-async def test_ability_picker_excludes_non_templated_duplicates_but_keeps_templated():
-    saga = _saga_with_bare_character()
-    saga.characters[0].abilities.append(Ability(name="Athletics", xp=ability_xp(1)))
-    saga.characters[0].abilities.append(
-        Ability(name="Craft: Blacksmith", xp=ability_xp(1))
-    )
-    storage.save_saga(saga)
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        await _open_section(pilot, app, "tab-abilities")
-
-        await pilot.press("a")
-        await pilot.pause()
-
-        picker_list = app.screen.query_one("#ability-picker-list", ListView)
-        item_ids = [item.id for item in picker_list.children]
-        assert "ability-ab_athletics" not in item_ids
-        assert "ability-ab_craft" in item_ids
 
 
 async def test_remove_ability_from_character():
@@ -2793,28 +2660,6 @@ async def test_edit_character_info_updates_name_covenant_and_laboratory():
     assert lab2.owner_id == "char1"
 
 
-async def test_edit_character_info_requires_name():
-    storage.save_saga(_saga_with_bare_character())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-
-        await pilot.press("e")
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Character Info")
-
-        app.screen.query_one("#fld-name", Input).value = ""
-
-        await pilot.click("#btn-save")
-        await pilot.pause()
-
-        assert _is_form(app.screen, "Edit Character Info")
-
-    saga = storage.load_saga("test_saga")
-    assert saga.characters[0].name == "Leandro"
-
-
 async def test_edit_characteristics_updates_values():
     storage.save_saga(_saga_with_bare_character())
 
@@ -3014,22 +2859,6 @@ async def test_the_known_spell_delete_prompt_shows_brackets_once():
         assert message == "Delete Pilum of [Greater] Fire?", message
 
 
-async def test_known_spells_can_be_catalog_spells():
-    saga = _saga_with_character_and_spell()
-    saga.characters[0].spells_known = [
-        KnownSpell(spell_id="spell_aegis_of_the_hearth"),
-        KnownSpell(spell_id="gone"),
-    ]
-    storage.save_saga(saga)
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)
-        labels = _known_spell_labels(app.screen._character_sheet_view)
-        assert "Aegis of the Hearth" in labels and "Ritual" in labels
-        assert "gone (unknown spell)" in labels
-
-
 async def test_edit_spell_mastery_sets_score_xp_and_abilities():
     saga = _saga_with_character_and_spell()
     saga.characters[0].spells_known = [KnownSpell(spell_id="spell1")]
@@ -3158,20 +2987,6 @@ async def test_add_and_remove_inventory_item():
 
     saga = storage.load_saga("test_saga")
     assert saga.characters[0].inventory == []
-
-
-async def test_add_action_disabled_on_tabs_without_addable_lists():
-    storage.save_saga(_saga_with_bare_character())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_character(pilot, app)  # defaults to the top panel
-
-        await pilot.press("a")
-        await pilot.pause()
-
-        # The top panel has nothing to "add" -- the binding is disabled there.
-        assert isinstance(app.screen, WorkspaceScreen)
 
 
 async def test_edit_biographical_detail_updates_background_and_description():
@@ -3638,29 +3453,6 @@ async def test_edit_lab_identity_updates_fields_and_owner():
     assert old_owner.assigned_lab_id is None
 
 
-async def test_edit_lab_characteristics_buttons_are_visible_on_screen():
-    """Regression: Save/Cancel were scrolled out of view inside the dialog's
-    VerticalScroll. Asserts on-screen position, at a small and a large size."""
-    storage.save_saga(_saga_with_bare_laboratory())
-
-    for size in ((120, 45), (140, 50)):
-        app = ArsMagicaManagerApp()
-        async with app.run_test(size=size) as pilot:
-            await _select_laboratory(pilot, app)
-            await _open_lab_section(pilot, app, "section-lab-characteristics")
-            await pilot.press("e")
-            await pilot.pause()
-            assert _is_form(
-                app.screen, "Edit Laboratory Characteristics (manual value)"
-            )
-
-            for button_id in ("#btn-save", "#btn-cancel"):
-                region = app.screen.query_one(button_id, Button).region
-                assert region.height > 0, (size, button_id)
-                assert region.bottom <= size[1], (size, button_id)
-                assert region.right <= size[0], (size, button_id)
-
-
 async def test_every_character_sheet_section_starts_expanded():
     storage.save_saga(_saga_with_bare_character())
 
@@ -3861,25 +3653,6 @@ async def test_lab_top_panel_edit_buttons_open_edit_dialogs():
         view.query_one("#btn-lab-characteristics-edit", Button).press()
         await pilot.pause()
         assert _is_form(app.screen, "Edit Laboratory Characteristics (manual value)")
-
-
-async def test_lab_attributes_and_inventory_sections_start_expanded():
-    storage.save_saga(_saga_with_bare_laboratory())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
-        await _select_laboratory(pilot, app)
-        view = app.screen._laboratory_sheet_view
-
-        for section_id in (
-            "section-lab-specializations",
-            "section-lab-specialties",
-            "section-lab-features",
-            "section-lab-rooms",
-            "section-lab-raw-vis",
-            "section-lab-items",
-        ):
-            assert not view.query_one(f"#{section_id}", Collapsible).collapsed
 
 
 async def test_lab_top_panel_sections_are_open_and_cannot_be_collapsed():
@@ -4699,32 +4472,6 @@ async def test_lab_characteristics_numbers_take_theme_colours_by_sign():
         assert re.search(r"Base Safety:\s+\[\$text-success\]2\[/\]", derived)
 
 
-async def test_lab_edit_dialogs_fit_a_small_terminal():
-    """Save/Cancel must be on-screen at 120x45 for the roomier lab dialogs."""
-    storage.save_saga(_saga_with_populated_laboratory())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(120, 45)) as pilot:
-        await _select_laboratory(pilot, app)
-
-        def assert_buttons_on_screen(*ids: str) -> None:
-            for button_id in ids:
-                region = app.screen.query_one(button_id, Button).region
-                assert region.height > 0, button_id
-                assert region.bottom <= 45, (type(app.screen).__name__, button_id)
-
-        await _open_lab_section(pilot, app, "section-lab-identity")
-        await pilot.press("e")
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Laboratory Identity")
-        assert_buttons_on_screen("#btn-save", "#btn-cancel")
-        await pilot.press("escape")
-        await pilot.pause()
-
-        await _pick_first_and_open_editor(pilot, app, "tab-lab-diary", FieldsDialog)
-        assert_buttons_on_screen("#btn-save", "#btn-cancel")
-
-
 # -- Covenant sheet + saga time ------------------------------------------------
 
 _COVENANT_TABS = (
@@ -4902,21 +4649,6 @@ async def test_edit_covenant_requires_name_and_allows_blank_year_founded():
     cov = storage.load_saga("test_saga").covenants[0]
     assert cov.name == "Kept"
     assert cov.year_founded is None
-
-
-async def test_edit_covenant_dialog_fits_a_small_terminal():
-    storage.save_saga(_saga_with_configured_covenant())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(120, 45)) as pilot:
-        await _select_covenant(pilot, app)
-        await pilot.press("e")
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Covenant")
-        for button_id in ("#btn-save", "#btn-cancel"):
-            region = app.screen.query_one(button_id, Button).region
-            assert region.height > 0, button_id
-            assert region.bottom <= 45, button_id
 
 
 async def test_advance_season_moves_the_whole_saga_forward():
@@ -5260,26 +4992,6 @@ async def test_lab_can_be_moved_between_covenants_and_unassigned():
     assert storage.load_saga("test_saga").laboratories[0].covenant_id is None
 
 
-async def test_aura_boons_raise_the_aura_labs_inherit_and_the_covenant_panel_shows_it():
-    saga = _saga_with_configured_covenant()  # covenant aura 4
-    saga.covenants[0].boons_hooks = [
-        VirtueFlawInstance(vf_id="covbh_boon_minor_aura"),
-        VirtueFlawInstance(vf_id="covbh_boon_minor_aura"),
-    ]
-    storage.save_saga(saga)
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_covenant(pilot, app)
-        left = app.screen._covenant_sheet_view._info_left_text()
-        assert "6 (base 4, +2 Boons)" in left
-
-        # The covenant's lab inherits the raised value, not just the base.
-        await _select(pilot, app, ("laboratory", "lab1"))
-        text = _lab_identity_text(app.screen._laboratory_sheet_view)
-        assert "Aura: 6 (covenant) +0 (modifier) = 6" in text
-
-
 async def test_a_boon_hook_refresh_rebuilds_economics_once(monkeypatch):
     # B12: refreshing Boons/Hooks rebuilt the Economics tab twice (once for
     # the info panel's refresh it triggered, once for itself).
@@ -5413,30 +5125,6 @@ async def _add_boon_hook_via_picker(
     # a beat after the screen switches back, so wait for the real state change.
     await wait_until(pilot, lambda: len(covenant.boons_hooks) > before)
     await pilot.pause()
-
-
-async def test_covenant_attributes_tab_has_its_four_sections():
-    storage.save_saga(_saga_with_configured_covenant())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_covenant(pilot, app)
-        view = app.screen._covenant_sheet_view
-        ids = [
-            "section-cov-description",
-            "section-cov-reputations",
-            "section-cov-boons",
-            "section-cov-hooks",
-        ]
-        sections = [view.query_one(f"#{i}", Collapsible) for i in ids]
-        assert all(not section.collapsed for section in sections)
-        assert _plain_title(sections[2]) == "Boons (0 pts)"
-        assert _plain_title(sections[3]) == "Hooks (0 pts)"
-
-        # Boons and Hooks sit side by side, like the reference sheet.
-        boons, hooks = sections[2].region, sections[3].region
-        assert boons.right <= hooks.x
-        assert boons.y == hooks.y
 
 
 async def test_edit_covenant_description_is_multi_line_and_persists():
@@ -5741,39 +5429,6 @@ async def test_switching_back_to_the_attributes_tab_focuses_its_first_section():
         assert app.screen._active_section() == "section-cov-description"
 
 
-async def test_covenant_attributes_dialogs_fit_a_small_terminal():
-    storage.save_saga(_saga_with_configured_covenant())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(120, 45)) as pilot:
-        await _select_covenant(pilot, app)
-
-        def buttons_on_screen() -> None:
-            for button in app.screen.query(Button):
-                region = button.region
-                assert region.height > 0 and region.bottom <= 45, (
-                    type(app.screen).__name__,
-                    button.id,
-                )
-
-        await _open_cov_section(pilot, app, "section-cov-description")
-        await pilot.press("e")
-        await pilot.pause()
-        assert _is_form(app.screen, "Edit Covenant Description")
-        buttons_on_screen()
-        await pilot.press("escape")
-        await pilot.pause()
-
-        await _open_cov_section(pilot, app, "section-cov-boons")
-        await pilot.press("a")
-        await pilot.pause()
-        await _choose_in_list(
-            pilot, app, "covbh-picker-list", _pick_id("covbh_boon_minor_wealth")
-        )
-        assert isinstance(app.screen, FieldsDialog)
-        buttons_on_screen()
-
-
 # -- Boons/Hooks: colour-coded totals, selector rows and the details panel -----
 
 
@@ -5781,42 +5436,6 @@ def _saga_with_boons_and_hooks(*ids: str) -> Saga:
     saga = _saga_with_configured_covenant()
     saga.covenants[0].boons_hooks = [VirtueFlawInstance(vf_id=i) for i in ids]
     return saga
-
-
-async def test_boon_and_hook_totals_are_coloured_by_how_they_compare():
-    # (attached entries, expected theme colour or None for plain, plain titles)
-    cases = [
-        ((), "$text-success", ("Boons (0 pts)", "Hooks (0 pts)")),  # equal
-        (
-            ("covbh_boon_minor_wealth", "covbh_hook_major_castle"),
-            None,  # Boons (1) < Hooks (3): plain
-            ("Boons (1 pt)", "Hooks (3 pts)"),
-        ),
-        (
-            ("covbh_boon_major_wealth", "covbh_hook_minor_rival"),
-            "$text-error",  # Boons (3) > Hooks (1)
-            ("Boons (3 pts)", "Hooks (1 pt)"),
-        ),
-        (
-            ("covbh_boon_major_wealth", "covbh_hook_major_castle"),
-            "$text-success",  # equal, non-zero
-            ("Boons (3 pts)", "Hooks (3 pts)"),
-        ),
-    ]
-    for attached, colour, plain in cases:
-        storage.save_saga(_saga_with_boons_and_hooks(*attached))
-        app = ArsMagicaManagerApp()
-        async with app.run_test(size=(140, 50)) as pilot:
-            await _select_covenant(pilot, app)
-            view = app.screen._covenant_sheet_view
-            boons = view.query_one("#section-cov-boons", Collapsible)
-            hooks = view.query_one("#section-cov-hooks", Collapsible)
-            # Both share the colour, and only the parenthesised total has it.
-            for section, text in ((boons, plain[0]), (hooks, plain[1])):
-                kind, total = text.split(" ", 1)
-                expected = f"{kind} [{colour}]{total}[/]" if colour else text
-                assert section.title == expected, attached
-            assert (_plain_title(boons), _plain_title(hooks)) == plain
 
 
 async def test_totals_recolour_when_a_hook_is_added():
@@ -5916,101 +5535,6 @@ async def test_boon_hook_rows_have_a_selector_and_fill_the_details_panel():
         assert "Name: Castle" in text
         assert "Type: Fortifications" in text
         assert "Tier: Major Hook (3 pts)" in text
-
-
-async def test_details_panel_shows_prerequisites_exclusions_and_repeatability():
-    storage.save_saga(
-        _saga_with_boons_and_hooks(
-            "covbh_boon_minor_shell_keep",
-            "covbh_boon_minor_seclusion",
-            "covbh_boon_minor_aura",
-            "covbh_boon_minor_wealth",
-            "covbh_boon_minor_edifice",
-        )
-    )
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_covenant(pilot, app)
-        view = app.screen._covenant_sheet_view
-
-        def info(index: int) -> str:
-            # entry index -> text with the colour/bold markup stripped
-            return strip_markup(view._bh_info_text(index))
-
-        assert "Requires: Castle" in info(0)
-        assert "Not with: Road, Urban" in info(1)
-        assert "May be taken up to 7 times; the effects stack." in info(2)
-        assert "Effect: The covenant's Magic aura +1" in info(2)
-        assert info(2).endswith("Source: ArM5; Covenants")
-        assert "Requires" not in info(3) and "Not with" not in info(3)
-        assert "May be taken" not in info(3) and "Effect:" not in info(3)
-        # A building Boon: its Buildings surcharge, and it may be repeated.
-        assert "Effect: Yearly expenditure: Buildings +2" in info(4)
-        assert "May be taken more than once" in info(4)
-
-
-async def test_details_panel_shows_requires_one_of():
-    storage.save_saga(_saga_with_boons_and_hooks("covbh_boon_major_magical_soldiers"))
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_covenant(pilot, app)
-        text = strip_markup(app.screen._covenant_sheet_view._bh_info_text(0))
-        assert "Requires one of: Cavalry, Crossbowmen, Criminals" in text
-
-
-async def test_an_unknown_hook_says_so_in_its_row_and_panel():
-    saga = _saga_with_boons_and_hooks(
-        "covbh_hook_minor_rival", "covbh_hook_minor_haunted"
-    )
-    saga.covenants[0].boons_hooks[0].params = {BOON_HOOK_UNKNOWN: "yes"}
-    storage.save_saga(saga)
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_covenant(pilot, app)
-        view = app.screen._covenant_sheet_view
-        rows = [strip_markup(label) for _, label in view._bh_entries("Hook")]
-        assert rows == ["Rival (Unknown, 3 pts)", "Haunted"]
-        assert "Hooks (4 pts)" in strip_markup(view._bh_title("Hook"))
-        marked = strip_markup(view._bh_info_text(0))
-        assert "Unknown: Yes (counts 3 points, as a Major Hook)" in marked
-        plain = strip_markup(view._bh_info_text(1))
-        assert "May be Unknown (mark it in its Edit form)." in plain
-
-
-async def test_details_panel_shows_the_detail_and_escapes_markup():
-    saga = _saga_with_configured_covenant()
-    saga.covenants[0].boons_hooks = [
-        VirtueFlawInstance(
-            vf_id="covbh_boon_minor_edifice", params={"detail": "The [Tower] of Iris"}
-        )
-    ]
-    storage.save_saga(saga)
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_covenant(pilot, app)
-        view = app.screen._covenant_sheet_view
-        view.query_one("#cov-boons-list", OptionList).highlighted = 0
-        await pilot.pause()
-        text = str(view.query_one("#cov-bh-info", Static).render())
-        assert "Name: Edifice - The [Tower] of Iris" in text  # brackets survive
-
-
-async def test_empty_boon_and_hook_lists_show_a_disabled_placeholder():
-    storage.save_saga(_saga_with_boons_and_hooks())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_covenant(pilot, app)
-        view = app.screen._covenant_sheet_view
-        for list_id in ("cov-boons-list", "cov-hooks-list"):
-            option_list = view.query_one(f"#{list_id}", OptionList)
-            assert len(option_list.options) == 1
-            assert option_list.options[0].disabled
-            assert "none recorded" in str(option_list.options[0].prompt)
 
 
 async def test_boon_list_works_from_the_keyboard_and_keeps_add_remove_dispatch():
@@ -6537,42 +6061,6 @@ def _styled_words(static) -> set[tuple[str, str]]:
     return {(content.plain[s.start : s.end], str(s.style)) for s in content.spans}
 
 
-async def test_boon_hook_description_renders_bold_and_italic_in_the_panel():
-    saga = _saga_with_configured_covenant()
-    saga.covenants[0].boons_hooks = [
-        VirtueFlawInstance(
-            vf_id="covbh_boon_minor_hidden_resources",
-            params={
-                "description": (
-                    "**Accessible Value:** 250 Build Points\n\n"
-                    "**Location:** sealed *behind* a wall in [The Tower]"
-                )
-            },
-        )
-    ]
-    storage.save_saga(saga)
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_covenant(pilot, app)
-        await _select_bh_row(pilot, app, "Boon", 0)
-        panel = app.screen._covenant_sheet_view.query_one("#cov-bh-info", Static)
-
-        plain = str(panel.render())
-        assert "**" not in plain and "*behind*" not in plain  # markers consumed
-        assert "Accessible Value: 250 Build Points" in plain
-        assert "[The Tower]" in plain  # brackets still literal
-
-        styled = _styled_words(panel)
-        assert ("Accessible Value:", "b") in styled
-        assert ("Location:", "b") in styled
-        assert ("behind", "i") in styled
-        # The official rules text is NOT interpreted as Markdown.
-        assert not any(
-            style == "i" and "Build Points" in text for text, style in styled
-        )
-
-
 async def test_covenant_description_renders_emphasis_too():
     saga = _saga_with_configured_covenant()
     saga.covenants[0].notes = "A **remote** covenant, *rarely* visited. 5 * 3 stays."
@@ -6694,31 +6182,6 @@ async def test_picker_search_finds_entries_by_their_type():
         labels = shown()
         assert labels and all("[Surroundings," in label for label in labels)
         assert any(label.startswith("Pilgrimage Site") for label in labels)
-
-
-async def test_details_panel_shows_the_type_and_omits_it_for_untyped_entries():
-    storage.save_saga(
-        _saga_with_boons_and_hooks(
-            "covbh_boon_free_manor_house",
-            "covbh_hook_major_unknown",
-            "covbh_hook_minor_weak_aura",
-        )
-    )
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_covenant(pilot, app)
-        view = app.screen._covenant_sheet_view
-
-        def plain(index: int) -> str:
-            return strip_markup(view._bh_info_text(index))
-
-        assert "Type: Fortifications" in plain(0)
-        assert "Tier: Free Boon" in plain(0)  # no cost line for a Free Choice
-        assert "pt)" not in plain(0).split("Rules:")[0]
-        assert "Type:" not in plain(1)  # Unknown isn't filed under a type
-        assert "Tier: Major Hook (3 pts)" in plain(1)
-        assert "Type: Site" in plain(2)
 
 
 async def test_weak_aura_hook_lowers_the_aura_labs_inherit():
@@ -7060,18 +6523,6 @@ async def test_restoring_a_departed_magus_makes_them_count_again():
     assert record.description == "Trusted."  # covenant-side extras kept
 
 
-async def test_restore_with_nothing_departed_notifies_and_does_nothing():
-    storage.save_saga(_saga_with_people())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_covenant(pilot, app)
-        await _open_inh_section(pilot, app, "section-inh-companion")
-        await pilot.press("r")
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)  # no picker popped
-
-
 async def test_specialist_from_an_unassigned_grog_prefills_and_marks_it_assigned():
     storage.save_saga(_saga_with_people())
 
@@ -7208,29 +6659,6 @@ async def test_other_covenfolk_requires_a_covenant_role_and_suppresses_it_when_r
         "Dependent",
         1180,
     )
-
-
-async def test_other_covenfolk_named_the_plural_of_its_role_hides_the_role_in_the_row():
-    saga = _saga_with_people()
-    saga.covenants[0].inhabitants = [
-        Inhabitant(
-            id="a", kind="inhabitant", name="Servants", role="Servant", quantity=4
-        )
-    ]
-    storage.save_saga(saga)
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_covenant(pilot, app)
-        # Qty > 1: the role is redundant with the name, and the Year Born
-        # column is "-" (no single birth year for a group).
-        assert _inh_labels(app, "inhabitant") == [
-            "Servants                              4           -"
-        ]
-
-        await _select_inh_row(pilot, app, "inhabitant", 0)
-        panel = str(_cov_view(app).query_one("#inh-panel", Static).render())
-        assert "Covenant Role: Servant" in panel  # still shown in the panel
 
 
 async def test_craftsperson_links_one_of_the_grogs_abilities_and_stores_craft_fields():
@@ -7455,29 +6883,6 @@ async def test_deleting_an_assigned_grog_returns_it_to_the_available_list():
         ]
 
 
-async def test_the_panel_renders_description_emphasis_for_the_chosen_inhabitant():
-    saga = _saga_with_people()
-    saga.covenants[0].inhabitants = [
-        Inhabitant(
-            id="a",
-            kind="craftsperson",
-            name="Gerhard",
-            year_born=1187,
-            description="Master **smith**, works *only* in iron. 5 * 3 stays.",
-        )
-    ]
-    storage.save_saga(saga)
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_covenant(pilot, app)
-        await _select_inh_row(pilot, app, "craftsperson", 0)
-        panel = _cov_view(app).query_one("#inh-panel", Static)
-        assert "Master smith, works only in iron. 5 * 3 stays." in str(panel.render())
-        styled = _styled_words(panel)
-        assert ("smith", "b") in styled and ("only", "i") in styled
-
-
 async def test_loyalty_governance_is_typed_unless_a_governance_boon_provides_it():
     saga = _saga_with_people()
     storage.save_saga(saga)
@@ -7596,28 +7001,6 @@ async def test_population_and_miscellaneous_fields_are_editable_and_total_is_cal
     assert (pop.aging_magi, pop.magic_laborers, pop.magic_turbula) == (1, 2, 5)
 
 
-async def test_add_is_not_offered_on_the_summary_sections_but_edit_is():
-    storage.save_saga(_saga_with_people())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_covenant(pilot, app)
-        for section in (
-            "section-inh-loyalty",
-            "section-inh-population",
-            "section-inh-misc",
-        ):
-            await _open_inh_section(pilot, app, section)
-            await pilot.press("a")
-            await pilot.pause()
-            assert isinstance(app.screen, WorkspaceScreen), section  # nothing to add
-            await pilot.press("e")
-            await _wait_for_screen(pilot, app, FieldsDialog)
-            assert isinstance(app.screen, FieldsDialog), section
-            await pilot.press("escape")
-            await pilot.pause()
-
-
 async def test_inhabitant_dialogs_fit_a_small_terminal_and_hug_content_on_a_tall_one():
     storage.save_saga(_saga_with_people())
 
@@ -7702,18 +7085,6 @@ def _pos_panel(app) -> str:
     return str(app.screen._covenant_sheet_view.query_one("#pos-panel", Static).render())
 
 
-async def _add_possession(pilot, app, kind: str, **values) -> None:
-    """Press 'a' in a section, fill the form and save it."""
-    before = len(_pos_labels(app, kind))
-    await _open_pos_section(pilot, app, kind)
-    await pilot.press("a")
-    await _wait_for_screen(pilot, app, FieldsDialog)
-    assert isinstance(app.screen, FieldsDialog)
-    _fill(app, **values)
-    await _save_dialog(pilot, app)
-    await wait_until(pilot, lambda: len(_pos_labels(app, kind)) > before)
-
-
 async def test_possessions_tab_has_its_seven_sections_and_lists_the_labs_as_sanctums():
     storage.save_saga(_saga_with_bare_laboratory())
 
@@ -7742,20 +7113,6 @@ async def test_possessions_tab_has_its_seven_sections_and_lists_the_labs_as_sanc
             "Test Lab            Leandro               0       0"
         ]
         assert "Select a possession" in _pos_panel(app)
-
-
-async def test_the_panel_is_docked_below_the_lists_and_stays_on_screen():
-    storage.save_saga(_saga_with_bare_laboratory())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_covenant(pilot, app)
-        await _show_possessions_tab(pilot, app)
-        view = app.screen._covenant_sheet_view
-        scroll = view.query_one("#pos-scroll").region
-        panel = view.query_one("#pos-panel").region
-        assert panel.y >= scroll.bottom  # below the scrolling lists
-        assert panel.bottom <= 50  # and fully on screen
 
 
 async def test_property_needs_only_a_name_and_supports_edit_and_delete():
@@ -7996,34 +7353,6 @@ async def test_weapon_combat_figures_are_typed_in_and_shown_on_the_row_and_panel
     ) == (2, 5, 3, 7)
 
 
-async def test_siege_engines_only_come_expensive_and_points_follow_the_table():
-    storage.save_saga(_saga_with_bare_laboratory())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_covenant(pilot, app)
-        await _open_pos_section(pilot, app, "weapon")
-        await pilot.press("a")
-        await pilot.pause()
-        types = app.screen.query_one("#fld-gear_type", Select)
-        assert [v for _, v in types._options if isinstance(v, str)] == [
-            "Weapon or shield",
-            "Ballista or light catapult",
-            "Heavy catapult or trebuchet",
-        ]
-        _fill(app, name="Ballista", gear_type="Ballista or light catapult")
-        await _save_dialog(pilot, app)  # still Standard
-        assert isinstance(app.screen, FieldsDialog)
-        assert "only comes expensive" in str(
-            app.screen.query_one("#fields-error").render()
-        )
-        _fill(app, gear_quality="Expensive")
-        await _save_dialog(pilot, app)
-        await wait_until(pilot, lambda: len(_pos_labels(app, "weapon")) == 1)
-        cov = app.screen.selected_covenant
-        assert pos.gear_points(app.screen.saga, cov) == 16
-
-
 async def test_vis_source_requires_name_art_season_and_pawns():
     storage.save_saga(_saga_with_bare_laboratory())
 
@@ -8071,29 +7400,6 @@ async def test_vis_source_requires_name_art_season_and_pawns():
 
     [record] = _pos_records("vis_source")
     assert (record.art, record.season, record.pawns) == ("Vim", "Winter", 3)
-
-
-async def test_art_and_season_choices_are_the_real_lists():
-    storage.save_saga(_saga_with_bare_laboratory())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_covenant(pilot, app)
-        await _open_pos_section(pilot, app, "vis_source")
-        await pilot.press("a")
-        await pilot.pause()
-        arts = [
-            v
-            for _, v in app.screen.query_one("#fld-art", Select)._options
-            if isinstance(v, str)
-        ]
-        seasons = [
-            v
-            for _, v in app.screen.query_one("#fld-season", Select)._options
-            if isinstance(v, str)
-        ]
-        assert arts == [*TECHNIQUES, *FORMS] and len(arts) == 15
-        assert seasons == ["Spring", "Summer", "Autumn", "Winter"]
 
 
 async def test_raw_vis_stores_take_name_art_pawns_and_optional_location_and_form():
@@ -8185,22 +7491,6 @@ async def test_one_selection_across_the_possession_lists():
         view = app.screen._covenant_sheet_view
         assert view.selected_possession("weapon") is None  # the other list let go
         assert "Name: Mail" in _pos_panel(app)
-
-
-async def test_legacy_vis_stock_shows_up_as_raw_vis_stores():
-    path = storage.save_saga(_saga_with_bare_laboratory())
-    data = json.loads(path.read_text(encoding="utf-8"))
-    data["covenants"][0]["vis_stock"] = {"Ignem": 5, "Vim": 2}  # an older save
-    path.write_text(json.dumps(data), encoding="utf-8")
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_covenant(pilot, app)
-        await _show_possessions_tab(pilot, app)
-        assert _pos_labels(app, "vis_store") == [
-            "Ignem Vis           Ignem          5",
-            "Vim Vis             Vim            2",
-        ]
 
 
 async def test_possession_forms_fit_a_small_terminal_and_hug_content_on_a_tall_one():
@@ -8750,30 +8040,6 @@ async def test_economics_follows_changes_made_on_other_tabs_and_keeps_the_chosen
         view.covenant.loyalty.money = "Generous salary"
         view.refresh_section("section-inh-loyalty")
         assert "Wages (x1.5)" in _eco_labels(app, "expenditure")[4]
-
-
-async def test_a_laboratorys_upkeep_and_a_weapons_type_feed_the_points():
-    saga = _saga_with_bare_laboratory()
-    saga.laboratories[0].characteristics = LabCharacteristics(upkeep=2)
-    saga.covenants[0].possessions = [
-        Possession(
-            id="w",
-            kind="weapon",
-            name="Swords",
-            quantity=10,
-            gear_type="Weapon or shield",
-            gear_quality="Expensive",
-        )
-    ]
-    storage.save_saga(saga)
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _select_covenant(pilot, app)
-        await _show_economics_tab(pilot, app)
-        wealth = _eco_wealth(app)
-        assert re.search(r"Points of Laboratories:\s+30\b", wealth)  # Upkeep +2
-        assert re.search(r"Points of Weapons and Armor:\s+160\b", wealth)  # 10 x 16
 
 
 async def test_the_economics_forms_fit_a_120_by_45_terminal():
@@ -9417,17 +8683,6 @@ async def test_library_import_puts_every_book_in_the_covenant(tmp_path):
 
     imported = [b for b in _saved_books().values() if b.name in ("On Flame", "Notes")]
     assert {(b.owner_kind, b.owner_id) for b in imported} == {("covenant", "cov1")}
-
-
-async def test_import_key_only_where_books_can_be_imported():
-    storage.save_saga(_sample_saga_with_covenant())
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_covenant(pilot, app)
-        assert app.screen.check_action("import_data", ()) is False  # info panel
-        await _show_library_tab(pilot, app)
-        assert app.screen.check_action("import_data", ()) is True
 
 
 async def test_file_picker_browses_folders_and_rejects_other_files(tmp_path):
@@ -10107,33 +9362,6 @@ async def test_the_spell_picker_lists_the_sagas_own_and_invented_spells():
 
     saved = next(b for b in _saved_books().values() if b.name == "Lantern notes")
     assert (saved.spell_id, saved.level) == ("inv_x", 5)
-
-
-async def test_importing_lab_texts_links_them_to_their_spells(tmp_path):
-    storage.save_saga(_sample_saga_with_covenant())
-    csv_path = tmp_path / "texts.csv"
-    csv_path.write_text(
-        "name,type,level,spell\n"
-        "Pilum notes,Lab Text,,pilum of fire\n"
-        "Mystery notes,Lab Text,15,The Lost Art\n",
-        encoding="utf-8",
-    )
-
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 50)) as pilot:
-        await _select_covenant(pilot, app)
-        await _show_library_tab(pilot, app)
-        await pilot.press("I")
-        await _pick_csv(pilot, app, str(csv_path))
-        await pilot.press("y")
-        await wait_until(pilot, lambda: "Mystery notes" in _book_names(app))
-        labels = [label for _, label in app.screen._book_view()._rows()]
-        mystery = next(label for label in labels if "Mystery notes" in label)
-        assert mystery.startswith("[$text-error]")  # Unknown spell
-
-    saved = {b.name: b for b in _saved_books().values()}
-    assert saved["Pilum notes"].spell_id == "spell_pilum_of_fire"
-    assert (saved["Mystery notes"].spell_id, saved["Mystery notes"].level) == (None, 15)
 
 
 # -- Importing spells from a CSV file ---------------------------------------------
