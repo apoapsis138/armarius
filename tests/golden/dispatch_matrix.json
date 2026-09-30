@@ -648,7 +648,7 @@
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
       }
     },
-    "PinnedCollapsible#section-arts": {
+    "SheetSection#section-arts": {
       "active": "section-arts",
       "keys": {
         "a": "(disabled)",
@@ -846,8 +846,36 @@
         "V": "(disabled)"
       }
     },
-    "TabPane#tab-lab-totals": {
-      "active": "tab-lab-totals",
+    "SheetSection#section-lab-totals-grid": {
+      "active": "section-lab-totals-grid",
+      "keys": {
+        "a": "(disabled)",
+        "A": "(disabled)",
+        "e": "(disabled)",
+        "r": "(disabled)",
+        "i": "(disabled)",
+        "u": "(disabled)",
+        "I": "(disabled)",
+        "v": "(disabled)",
+        "V": "(disabled)"
+      }
+    },
+    "SheetSection#section-lab-totals-base": {
+      "active": "section-lab-totals-base",
+      "keys": {
+        "a": "(disabled)",
+        "A": "(disabled)",
+        "e": "(disabled)",
+        "r": "(disabled)",
+        "i": "(disabled)",
+        "u": "(disabled)",
+        "I": "(disabled)",
+        "v": "(disabled)",
+        "V": "(disabled)"
+      }
+    },
+    "SheetSection#section-lab-totals-activity": {
+      "active": "section-lab-totals-activity",
       "keys": {
         "a": "(disabled)",
         "A": "(disabled)",

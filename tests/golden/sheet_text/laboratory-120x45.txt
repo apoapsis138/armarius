@@ -64,24 +64,24 @@
    Planning  Lab Totals  Virtues & Flaws  Attributes  Inventory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Lab Totals for Leandro (Technique + Form + the rest):
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Lab Totals
 
-                 An   Aq   Au   Co   He   Ig   Im   Me   Te   Vi
-  Creo           -1   -1    0   -1   -1    0    3   -1   -1   -1
-  Intellego       1    1    2    1    1    2    5    1    1    1
-  Muto           -1   -1    0   -1   -1    0    3   -1   -1   -1
-  Perdo          -1   -1    0   -1   -1    0    3   -1   -1   -1
-  Rego           -1   -1    0   -1   -1    0    3   -1   -1   -1
+      Leandro working here: Technique + Form + the Base Lab Total below.
 
-  Every total adds: Intelligence +0, Magic Theory +0, Aura (Magic 1) +1, General
-  Quality -2.
-  Art Specializations, in totals using that Art: Intellego +2, Auram +1, Ignem +1,
-  Imaginem +4.
-                                                                                  ▄▄
-  By activity (on top of the grid):
-  Inventing spells: nothing extra.
-  Enchanting items: nothing extra.
-  Working from a Lab Text: Adept Laboratory Student +6.
+                     An   Aq   Au   Co   He   Ig   Im   Me   Te   Vi
+      Creo           -1   -1    0   -1   -1    0    3   -1   -1   -1
+      Intellego       1    1    2    1    1    2    5    1    1    1              ▂▂
+      Muto           -1   -1    0   -1   -1    0    3   -1   -1   -1
+      Perdo          -1   -1    0   -1   -1    0    3   -1   -1   -1
+      Rego           -1   -1    0   -1   -1    0    3   -1   -1   -1
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Base Lab Total
+
+      Int              +0
+      Magic Theory     +0
+      Aura (Magic)     +1
 
 
 ===== tab-lab-vf

@@ -9,6 +9,24 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 1.9.0 — 2026-09-30
+
+Polish across the sheets.
+
+- Magical Arts on the Hermetic Magic tab collapses like the other sections.
+- A score raised or lowered by a Virtue or Flaw shows both numbers in the
+  Abilities and Arts lists: "Magic Theory 5 (7)".
+- A Virtue or Flaw that names a Characteristic, Ability, Art, Technique or
+  Form is chosen from a list instead of typed, leaving out the ones already
+  taken as often as the book allows.
+- The laboratory's Lab Totals tab is easier to read: the grid, the Base Lab
+  Total and what each activity adds are now separate sections, one term per
+  line, with bonuses in green and penalties in red.
+- Botch dice count the Virtues and Flaws that change them for spellcasting
+  and experimenting: Cautious Sorcerer, Careless Sorcerer, Weird Magic,
+  Afflicted Tongue, Deaf and Palsied Hands.
+- A test that failed now and then under load is steady.
+
 ## 1.8.0 — 2026-09-30
 
 The rest of the seasonal activities: almost everything a character can do

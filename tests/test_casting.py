@@ -123,6 +123,21 @@ def test_botch_dice():
     assert casting.botch_dice(vis_pawns=2, golden_cord=5) == 1  # the cord can't
 
 
+def test_virtues_and_flaws_change_casting_botch_dice():
+    # STORY-820: Cautious Sorcerer never takes them below one by itself,
+    # before Mastery (which can reach 0); the words and gestures Flaws count.
+    def vf(*ids):
+        return [VirtueFlawInstance(vf_id=i) for i in ids]
+
+    assert (
+        casting.botch_dice(vis_pawns=4, virtues_flaws=vf("vf_cautious_sorcerer")) == 2
+    )
+    assert casting.botch_dice(virtues_flaws=vf("vf_cautious_sorcerer")) == 1
+    assert casting.botch_dice(mastery=1, virtues_flaws=vf("vf_cautious_sorcerer")) == 0
+    assert casting.botch_dice(virtues_flaws=vf("vf_careless_sorcerer", "vf_deaf")) == 5
+    assert casting.botch_dice(virtues_flaws=vf("vf_palsied_hands")) == 2
+
+
 def test_the_spell_details_say_what_the_die_must_reach():
     magus = _magus()
     saga = Saga(

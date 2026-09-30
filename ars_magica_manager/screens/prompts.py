@@ -19,7 +19,7 @@ from textual.widgets import (
 from textual.widgets.button import ButtonVariant
 
 from .. import catalog
-from ..arts import ARTS
+from ..arts import ARTS, FORMS, TECHNIQUES
 from ..markup import escape
 from ..models import (
     COVENANT_DIARY_CATEGORIES,
@@ -38,6 +38,8 @@ from ..models import (
     MasteryAbility,
     NamedDescription,
     ScoredTrait,
+    VirtueFlawDef,
+    VirtueFlawInstance,
     new_instance_id,
     next_season,
 )
@@ -135,17 +137,87 @@ def _boon_hook_fields(
     ]
 
 
-def _param_dialog(title: str, parameters: list[str]) -> FieldsDialog[dict[str, str]]:
+#: The eight Characteristics, as a Virtue or Flaw's {characteristic}.
+CHARACTERISTIC_NAMES: tuple[str, ...] = (
+    "Intelligence",
+    "Perception",
+    "Strength",
+    "Stamina",
+    "Presence",
+    "Communication",
+    "Dexterity",
+    "Quickness",
+)
+
+
+def param_choices(
+    entry: VirtueFlawDef,
+    taken: Sequence[VirtueFlawInstance] = (),
+    own_abilities: Sequence[str] = (),
+) -> dict[str, list[tuple[str, str]]]:
+    """The valid values of each of `entry`'s parameters that name a
+    Characteristic, an Ability, an Art, a Technique or a Form (STORY-712),
+    as (label, stored value) pairs; other parameters are typed. A value
+    the character already holds this entry for, as often as the book
+    allows, is left out."""
+    names: dict[str, Sequence[str]] = {
+        "characteristic": CHARACTERISTIC_NAMES,
+        "art": ARTS,
+        "technique": TECHNIQUES,
+        "form": FORMS,
+    }
+    found: dict[str, list[tuple[str, str]]] = {}
+    for param in entry.parameters:
+        if param == "ability":
+            listed = {
+                d.name for d in catalog.load_ability_catalog() if not d.parameters
+            }
+            choices: Sequence[str] = sorted(listed | set(own_abilities))
+        elif param in names:
+            choices = names[param]
+        else:
+            continue
+        single = len(entry.parameters) == 1
+        found[param] = [
+            (escape(name), name.lower())
+            for name in choices
+            if not single
+            or not catalog.virtue_flaw_repeat_refusal(
+                entry, taken, {param: name.lower()}
+            )
+        ]
+    return found
+
+
+def _param_dialog(
+    title: str,
+    parameters: list[str],
+    choices: dict[str, list[tuple[str, str]]] | None = None,
+) -> FieldsDialog[dict[str, str]]:
     """Fill in a catalog entry's {placeholders} ("Affinity with {art}"):
-    dismisses with {parameter: value}, values lower-cased."""
+    dismisses with {parameter: value}, values lower-cased. A parameter with
+    `choices` is picked from them (STORY-712); the rest are typed."""
+    choices = choices or {}
+
+    def field(param: str) -> DialogField:
+        if param in choices:
+            return DialogField(
+                param,
+                param.title(),
+                "select",
+                None,
+                options=choices[param],
+                required=True,
+                allow_blank=True,
+                placeholder=f"(choose the {param})",
+            )
+        return DialogField(
+            param, param.title(), "text", "", required=True, placeholder="e.g. Creo"
+        )
+
     return FieldsDialog(
         title,
-        [
-            DialogField(
-                param, param.title(), "text", "", required=True, placeholder="e.g. Creo"
-            )
-            for param in parameters
-        ],
+        [field(param) for param in parameters],
         save_label="Confirm",
         build=lambda values: {param: values[param].lower() for param in parameters},
     )

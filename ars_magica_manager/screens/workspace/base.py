@@ -1410,6 +1410,7 @@ class WorkspaceBase(Screen[None]):
                 target.virtues_flaws,
                 side="Flaw" if flaws else "Virtue",
                 chooser=chooser,
+                own_abilities=[a.name for a in target.abilities],
             ),
             handle_result,
         )

@@ -51,7 +51,7 @@ def _param_vf() -> str:
     )
 
 
-async def _open_param_prompt(ws) -> None:
+async def _open_param_prompt(ws, vf_id: str | None = None) -> None:
     """Add a Virtue with a parameter (from the Virtues section): the picker
     asks for it."""
     view = ws._current_sheet_view()
@@ -62,7 +62,9 @@ async def _open_param_prompt(ws) -> None:
     await until(lambda: ws._active_section() == "section-vf-virtues")
     ws.action_add_virtue_flaw()
     picker = await wait_for_screen(ws.app, scr.VirtueFlawPickerScreen)
-    picker._on_entry_selected(catalog.load_virtue_flaw_catalog_by_id()[_param_vf()])
+    picker._on_entry_selected(
+        catalog.load_virtue_flaw_catalog_by_id()[vf_id or _param_vf()]
+    )
 
 
 async def _open_lab_choice_prompt(ws) -> None:
@@ -185,6 +187,9 @@ OPENERS: dict[str, Opener] = {
     "edit raw vis": Opener("character", lambda ws: ws._edit_raw_vis_at(0)),
     "add research goal": Opener("character", lambda ws: ws._add_research_goal()),
     "virtue parameters": Opener("character", _open_param_prompt),
+    "virtue ability choice": Opener(
+        "character", lambda ws: _open_param_prompt(ws, "vf_puissant_ability")
+    ),
     "add mastery ability": Opener("character", _open_mastery_ability),
     "add personal weapon": Opener(
         "character", lambda ws: ws._inventory_item_form("weapon", None)

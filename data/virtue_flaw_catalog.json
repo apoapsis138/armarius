@@ -806,6 +806,18 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "botch_dice",
+          "activity": "casting",
+          "amount": -3
+        },
+        {
+          "applies_to": "botch_dice",
+          "activity": "laboratory",
+          "amount": -3
+        }
+      ],
       "source": "DE",
       "summary": "Roll three fewer botch dice when casting any spell and in the laboratory (minimum one, before other reductions).",
       "description": "You are very careful with magic, and are less likely to fail spectacularly if you do fail. You roll three fewer botch dice when casting spells (whether ritual, formulaic, or spontaneous), and when working in the laboratory. This Virtue may not reduce the number of botch dice rolled below one. However, its effects are applied before any other effects which reduce botch dice, such as Spell Mastery (see page 225), and they may reduce the number of botch dice to zero."
@@ -7336,6 +7348,13 @@
       "category": "General",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "botch_dice",
+          "activity": "casting_words",
+          "amount": 1
+        }
+      ],
       "source": "DE",
       "summary": "Speech impediment: -2 to voice rolls and to Casting Scores using words; magi roll an extra botch die for spoken casting.",
       "description": "You have a speech impediment, such as a lisp, stutter, or missing teeth. You suffer a -2 penalty to all rolls involving the voice, and all Casting Scores if you cast the spell using words. If you are a magus, you must also roll an extra botch die when casting a spell using words."
@@ -7765,6 +7784,13 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "botch_dice",
+          "activity": "casting",
+          "amount": 2
+        }
+      ],
       "source": "DE",
       "summary": "Roll two extra botch dice when casting spells (still none if you would roll none).",
       "description": "You are slapdash in your use of magical power, and must roll two more botch dice than normal when casting spells. Note that if you would normally roll no botch dice, you still roll none."
@@ -8184,6 +8210,13 @@
       "category": "General",
       "tier": "Major",
       "cost": -3,
+      "modifiers": [
+        {
+          "applies_to": "botch_dice",
+          "activity": "casting_words",
+          "amount": 2
+        }
+      ],
       "source": "DE",
       "summary": "Cannot hear or understand speech; magi roll two extra botch dice when casting with a spoken component.",
       "description": "You cannot hear at all. You may be able to speak, but you cannot understand spoken language, which makes communication difficult. Magi with this Flaw must roll an extra two botch dice when casting spells with a spoken component, as they cannot hear what they are saying."
@@ -10643,6 +10676,13 @@
       "category": "General",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "botch_dice",
+          "activity": "casting_gestures",
+          "amount": 1
+        }
+      ],
       "source": "DE",
       "summary": "-2 to rolls holding or wielding objects, including weapons; gesture-based casters roll an extra botch die.",
       "description": "Your hands shake uncontrollably, which makes casting spells or holding objects difficult. All rolls involving holding or wielding an object are made at -2, including weapon skills. Magi and others who rely on hand gestures to work magic must roll an extra botch die when casting a spell."
@@ -12323,6 +12363,13 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "botch_dice",
+          "activity": "casting",
+          "amount": 1
+        }
+      ],
       "source": "DE",
       "summary": "One extra botch die on stressed spellcasting zeros; its botches are strange rather than dangerous.",
       "description": "Your control over magic is somewhat loose, perhaps due to Twilight effects or idiosyncratic training. Roll one extra botch die when you roll a zero on stressed spell casting rolls, apart from your other botch dice. Botches from this die should be strange or bizarre rather than dangerous, and if the Weird Magic botch occurs along with a regular botch, the results could be truly spectacular."

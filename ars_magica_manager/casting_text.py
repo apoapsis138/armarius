@@ -109,6 +109,7 @@ def known_spell_casting_lines(
         aura_realm=realm,
         aura=aura,
         mastery=known.mastery_score,
+        virtues_flaws=magus.virtues_flaws,
     )
     need = spell.level - total
     if spell.ritual:

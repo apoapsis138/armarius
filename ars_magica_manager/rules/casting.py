@@ -24,7 +24,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from ..arts import FORMS, TECHNIQUES
-from ..models import Character, Saga, Spell
+from ..models import Character, Saga, Spell, VirtueFlawInstance
 from . import effects, options, realms, scores
 from .breakdown import Breakdown, Line
 from .derived import carried_load, encumbrance
@@ -211,10 +211,14 @@ def botch_dice(
     golden_cord: int = 0,
     infernal_vis_pawns: int = 0,
     saga: Saga | None = None,
+    virtues_flaws: Sequence[VirtueFlawInstance] = (),
 ) -> int:
     """How many botch dice a stressed casting roll that shows 0 rolls.
     Infernal vis (counted in `vis_pawns` too) doubles them; with the saga's
-    harsher option, each pawn adds 3 instead (vis sordida)."""
+    harsher option, each pawn adds 3 instead (vis sordida). The caster's
+    Virtues and Flaws (Cautious Sorcerer, Careless Sorcerer, Deaf...) count
+    before the Golden Cord and Mastery reduce them (STORY-820); spells are
+    cast with words and gestures."""
     dice = 1 + vis_pawns + (2 if fast else 0)
     if infernal_vis_pawns:
         if options.is_on(saga, "harsher_infernal_vis"):
@@ -224,6 +228,10 @@ def botch_dice(
     dice += realms.extra_botch_dice(
         realms.HERMETIC, aura_realm, aura, in_regio=in_regio
     )
+    change, _ = scores.botch_dice_change(
+        virtues_flaws, ("casting", "casting_words", "casting_gestures")
+    )
+    dice = scores.with_botch_change(dice, change)
     if golden_cord:
         dice = max(1, dice - golden_cord)  # the cord can't take it to 0
     return max(0, dice - mastery)  # Mastery can

@@ -45,6 +45,8 @@ MODIFIER_TYPES: dict[str, str] = {
     # A magus's Gift modifier to the covenfolk's Base Loyalty, on top of the
     # ordinary Gift's -30 (Gentle Gift +30, Blatant Gift -75).
     "gift_loyalty": "The Gift's effect on covenfolk loyalty",
+    # More or fewer botch dice (STORY-820), for the rolls the app makes.
+    "botch_dice": "Botch dice",
 }
 
 ACTIVITIES_BY_TYPE: dict[str, dict[str, str]] = {
@@ -71,6 +73,12 @@ ACTIVITIES_BY_TYPE: dict[str, dict[str, str]] = {
         "vis_study": "Studying from raw vis",
         "adventure": "Adventure experience",
         "exposure": "Exposure experience",
+    },
+    "botch_dice": {
+        "casting": "Casting any spell",
+        "casting_words": "Casting spells with words",
+        "casting_gestures": "Casting spells with gestures",
+        "laboratory": "Laboratory botches (experimenting)",
     },
     # Which category of expenditure (the "activity" here is the expense line).
     "covenant_expense": {

@@ -28,7 +28,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from ..models import Breakthrough, Character, SeasonPlan
-from . import dice
+from . import dice, scores
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 8: Laboratory, Experimentation "
@@ -116,11 +116,10 @@ class Extraordinary:
 
 
 def botch_dice(character: Character, risk: int, aura: int) -> int:
-    """1 + risk + the aura; Cautious Sorcerer takes 3 off (never below 1)."""
-    count = 1 + risk + max(0, aura)
-    if any(vf.vf_id == CAUTIOUS for vf in character.virtues_flaws):
-        count = max(1, count - 3)
-    return count
+    """1 + risk + the aura, with the Virtues and Flaws that change lab botch
+    dice (Cautious Sorcerer takes 3 off, never below 1; STORY-820)."""
+    change, _ = scores.botch_dice_change(character.virtues_flaws, ("laboratory",))
+    return scores.with_botch_change(1 + risk + max(0, aura), change)
 
 
 def chart(

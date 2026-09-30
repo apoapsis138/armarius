@@ -162,7 +162,14 @@ def test_puissant_art_adds_to_the_score(vf_id, params, bonus):
     assert scores.art_bonus(virtues, "Vim")[0] == 0
 
 
-def test_puissant_ability_shows_as_x_plus_y():
+def test_a_fixed_bonus_or_penalty_shows_base_then_adjusted():
+    # STORY-212: "Magic Theory 5 (7)"; a Flaw's penalty the same way.
+    assert sheet_text.adjusted_score(5, 2) == "5 (7)"
+    assert sheet_text.adjusted_score(5, -1) == "5 (4)"
+    assert sheet_text.adjusted_score(5, 0) == "5"
+
+
+def test_puissant_ability_shows_base_then_adjusted():
     virtues = [
         VirtueFlawInstance(vf_id="vf_puissant_ability", params={"ability": "Brawl"})
     ]
@@ -170,7 +177,7 @@ def test_puissant_ability_shows_as_x_plus_y():
     assert scores.ability_bonus(virtues, "brawl")[0] == 2
     assert sheet_text.ability_rows(abilities, virtues) == [
         (None, "Martial"),
-        (0, "Brawl 4+2 50/75"),
+        (0, "Brawl 4 (6) 50/75"),
     ]
     info = sheet_text.ability_info_text(abilities, 0, virtues)
     assert "Used at:[/] 6 (+2 from Puissant Brawl)" in info
@@ -192,3 +199,24 @@ def test_every_rules_module_cites_its_source():
         loaded = importlib.import_module(f"ars_magica_manager.rules.{module.name}")
         source = getattr(loaded, "SOURCE", "")
         assert "redcap.org" in str(source), f"rules.{module.name} cites no source"
+
+
+def test_a_virtue_s_ability_or_characteristic_is_chosen_from_a_list():
+    # STORY-712: the valid values, leaving out one already taken as often as
+    # the book allows; the picked value reaches the totals.
+    from ars_magica_manager import catalog
+    from ars_magica_manager.screens.prompts import param_choices
+
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    puissant = by_id["vf_puissant_ability"]
+    taken = [VirtueFlawInstance("vf_puissant_ability", params={"ability": "brawl"})]
+    values = [v for _, v in param_choices(puissant, taken, ["Latin"])["ability"]]
+    assert "magic theory" in values and "latin" in values
+    assert "brawl" not in values
+    poor = param_choices(by_id["vf_poor_characteristic"])["characteristic"]
+    assert [v for _, v in poor][:2] == ["intelligence", "perception"]
+    assert len(param_choices(by_id["vf_deficient_form"])["form"]) == 10
+    chosen = [
+        VirtueFlawInstance("vf_puissant_ability", params={"ability": "magic theory"})
+    ]
+    assert scores.ability_bonus(chosen, "Magic Theory")[0] == 2

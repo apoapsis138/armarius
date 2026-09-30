@@ -51,6 +51,7 @@ from .prompts import (
     _boon_hook_fields,
     _lab_choice_dialog,
     _param_dialog,
+    param_choices,
 )
 from .widgets import _boon_hook_names
 
@@ -434,8 +435,12 @@ class VirtueFlawPickerScreen(
         *,
         side: str = "both",
         chooser: catalog.VirtueFlawChooser | None = None,
+        own_abilities: Sequence[str] = (),
     ) -> None:
         super().__init__(_VF_SIDE_TITLES[side])
+        #: The character's own Abilities, offered with the catalog's when a
+        #: Virtue or Flaw names an {ability} (STORY-712).
+        self._own_abilities = list(own_abilities)
         #: The character's Virtues & Flaws: an entry already taken is only
         #: offered again if it is repeatable (catalog.virtue_flaw_offerable),
         #: and a repeat is refused past its limits once its parameters are
@@ -602,7 +607,14 @@ class VirtueFlawPickerScreen(
             if params is not None:
                 self._add(entry, params)
 
-        self.app.push_screen(_param_dialog(entry.name, entry.parameters), handle_params)
+        self.app.push_screen(
+            _param_dialog(
+                entry.name,
+                entry.parameters,
+                param_choices(entry, self._taken, self._own_abilities),
+            ),
+            handle_params,
+        )
 
     def _add(self, entry: VirtueFlawDef, params: dict[str, str]) -> None:
         """Dismiss with the new instance, unless it's a repeat the book

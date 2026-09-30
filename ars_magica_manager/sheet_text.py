@@ -63,11 +63,19 @@ def characteristics_text(c: Characteristics) -> str:
 
 def score_text(progress: xp_rules.Progress, bonus: int = 0) -> str:
     """A score and its total xp against the total the next score needs,
-    e.g. "5 85/105": score 5, 85 xp spent, score 6 at 105. A fixed bonus
-    (Puissant) follows the score, as the book writes it: "5+2 85/105"."""
+    e.g. "5 85/105": score 5, 85 xp spent, score 6 at 105. With a fixed
+    bonus or penalty (Puissant, a Flaw) the adjusted score follows in
+    parentheses: "5 (7) 85/105" (STORY-212)."""
     return (
-        f"{bonus_score(progress.score, bonus)} {progress.total}/{progress.next_total}"
+        f"{adjusted_score(progress.score, bonus)} "
+        f"{progress.total}/{progress.next_total}"
     )
+
+
+def adjusted_score(score: int, bonus: int) -> str:
+    """A list row's score: the base, then the score used when a fixed bonus
+    or penalty applies: "5 (7)" (Hedda 2026-09-29, STORY-212)."""
+    return f"{score} ({score + bonus})" if bonus else str(score)
 
 
 def bonus_score(score: int, bonus: int) -> str:

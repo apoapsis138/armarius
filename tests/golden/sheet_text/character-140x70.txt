@@ -227,20 +227,20 @@
 
   Talisman: Ring  Opened 0/0  0 attunements
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Magical Arts
+    ▼ Magical Arts
 
       Techniques                                       Forms
-                         Score    XP                                      Score    XP
-      ○ Creo (Cr)            0     0                   ○ Animal (An)          0     0
-      ○ Intellego (In)       0     0                   ○ Aquam (Aq)           0     0
-      ○ Muto (Mu)            0     0                   ○ Auram (Au)           0     0
-      ○ Perdo (Pe)           0     0                   ○ Corpus (Co)          0     0
-      ○ Rego (Re)            0     0                   ○ Herbam (He)          0     0
-                                                       ○ Ignem (Ig)           0     0
-                                                       ○ Imaginem (Im)        0     0
-                                                       ○ Mentem (Me)          0     0
-                                                       ○ Terram (Te)          0     0
-                                                       ○ Vim (Vi)             0     0
+                            Score    XP                                      Score    XP
+      ○ Creo (Cr)               0     0                ○ Animal (An)             0     0
+      ○ Intellego (In)          0     0                ○ Aquam (Aq)              0     0
+      ○ Muto (Mu)               0     0                ○ Auram (Au)              0     0
+      ○ Perdo (Pe)              0     0                ○ Corpus (Co)             0     0
+      ○ Rego (Re)               0     0                ○ Herbam (He)             0     0
+                                                       ○ Ignem (Ig)              0     0
+                                                       ○ Imaginem (Im)           0     0
+                                                       ○ Mentem (Me)             0     0
+                                                       ○ Terram (Te)             0     0
+                                                       ○ Vim (Vi)                0     0
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▂▂
     ▼ Casting Scores

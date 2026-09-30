@@ -673,7 +673,7 @@ class StackingColumns(Horizontal):
 class PinnedCollapsible(Collapsible):
     """A Collapsible that is permanently expanded and ignores toggling.
 
-    Used for each sheet's always-visible top panel (and the Arts panel). It
+    Used for each sheet's always-visible top panel. It
     stays a real Collapsible (with a focusable CollapsibleTitle) so the
     focus-ancestry dispatch in WorkspaceScreen treats it like every other
     section, but it can never be collapsed.

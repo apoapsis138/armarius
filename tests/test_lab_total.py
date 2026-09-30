@@ -126,16 +126,27 @@ def test_distractions(days, penalty):
 
 def test_the_planning_text_shows_the_grid():
     saga, magus, laboratory = _saga()
-    text = lab_planning.lab_totals_text(saga, laboratory, magus)
-    assert "Lab Totals for Magus" in text
-    creo = next(line for line in text.splitlines() if line.startswith("Creo"))
-    assert creo.split()[1 + 5] == "27"  # the Ignem column
-    assert "no Lab Totals" in lab_planning.lab_totals_text(
+    text = lab_planning.lab_totals_grid_text(saga, laboratory, magus)
+    assert "Magus working here" in text
+    creo = next(line for line in text.splitlines() if line.startswith("[b]Creo"))
+    assert creo.split()[2 + 5] == "27"  # the Ignem column, after "[b]Creo [/]"
+    base = lab_planning.base_lab_total_text(saga, laboratory, magus)
+    assert base.splitlines()[0].startswith("Int ")
+    activities = lab_planning.activity_totals_text(saga, laboratory, magus)
+    assert "[b]Experimenting[/]" in activities
+    assert "no Lab Totals" in lab_planning.lab_totals_grid_text(
         saga, laboratory, Character(id="g", name="Grog", type="grog")
     )
-    assert "give the laboratory an owner" in lab_planning.lab_totals_text(
+    assert "give the laboratory an owner" in lab_planning.lab_totals_grid_text(
         saga, laboratory, None
     )
+
+
+def test_signed_amounts_are_coloured_by_theme():
+    # STORY-211: + in $text-success, - in $text-error, zero plain; '+' kept.
+    assert lab_planning.signed(3) == "[$text-success]+3[/]"
+    assert lab_planning.signed(-2) == "[$text-error]-2[/]"
+    assert lab_planning.signed(0) == "+0"
 
 
 # -- Activity Lab Totals (STORY-816) --

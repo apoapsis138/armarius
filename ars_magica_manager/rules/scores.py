@@ -45,6 +45,34 @@ def _bonus(
     return int(effects.amount_total(found)), names
 
 
+def botch_dice_change(
+    virtues_flaws: Sequence[VirtueFlawInstance], activities: Sequence[str]
+) -> tuple[int, list[str]]:
+    """The botch dice Virtues and Flaws add or take away for a roll that is
+    any of `activities` (STORY-820), and the Virtues and Flaws they come
+    from."""
+    found = [
+        e
+        for e in effects.collect([character_source(virtues_flaws)], "botch_dice")
+        if e.modifier.activity in (None, *activities)
+    ]
+    names = [
+        catalog.describe_virtue_flaw(
+            e.instance, catalog.load_virtue_flaw_catalog_by_id()
+        )
+        for e in found
+    ]
+    return int(effects.amount_total(found)), names
+
+
+def with_botch_change(count: int, change: int) -> int:
+    """`count` botch dice with a Virtue or Flaw's `change`: never below one
+    by itself (Cautious Sorcerer), and none stay none (Careless Sorcerer)."""
+    if count <= 0 or not change:
+        return count
+    return max(1, count + change)
+
+
 def art_bonus(
     virtues_flaws: Sequence[VirtueFlawInstance], art: str
 ) -> tuple[int, list[str]]:

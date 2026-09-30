@@ -89,47 +89,47 @@
    Planning  Lab Totals  Virtues & Flaws  Attributes  Inventory  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Lab Totals for Leandro (Technique + Form + the rest):
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Lab Totals
 
-                 An   Aq   Au   Co   He   Ig   Im   Me   Te   Vi
-  Creo           -1   -1    0   -1   -1    0    3   -1   -1   -1
-  Intellego       1    1    2    1    1    2    5    1    1    1
-  Muto           -1   -1    0   -1   -1    0    3   -1   -1   -1
-  Perdo          -1   -1    0   -1   -1    0    3   -1   -1   -1
-  Rego           -1   -1    0   -1   -1    0    3   -1   -1   -1
+      Leandro working here: Technique + Form + the Base Lab Total below.
 
-  Every total adds: Intelligence +0, Magic Theory +0, Aura (Magic 1) +1, General Quality -2.
-  Art Specializations, in totals using that Art: Intellego +2, Auram +1, Ignem +1, Imaginem +4.
+                     An   Aq   Au   Co   He   Ig   Im   Me   Te   Vi
+      Creo           -1   -1    0   -1   -1    0    3   -1   -1   -1
+      Intellego       1    1    2    1    1    2    5    1    1    1
+      Muto           -1   -1    0   -1   -1    0    3   -1   -1   -1
+      Perdo          -1   -1    0   -1   -1    0    3   -1   -1   -1
+      Rego           -1   -1    0   -1   -1    0    3   -1   -1   -1
 
-  By activity (on top of the grid):
-  Inventing spells: nothing extra.
-  Enchanting items: nothing extra.
-  Working from a Lab Text: Adept Laboratory Student +6.
-  Binding a familiar: nothing extra.
-  Longevity Ritual: nothing extra (Creo Corpus -1: aging rolls -0).
-  Extracting vis: nothing extra (Creo Vim -1: 1 pawns).
-  Experimenting: + a simple die.
-  Raw vis in one season: up to 0 pawns; shape and material bonuses up to +0 (both from Magic Theory).
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Base Lab Total
 
+      Int              +0
+      Magic Theory     +0
+      Aura (Magic)     +1
+      General Quality  -2
 
+      Art Specializations (in totals using that Art)
+      Intellego  +2
+      Auram      +1
+      Ignem      +1
+      Imaginem   +4
 
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ By Activity
 
+      Inventing spells         nothing extra
+      Enchanting items         nothing extra
+      Working from a Lab Text  Adept Laboratory Student +6
+      Binding a familiar       nothing extra
+      Longevity Ritual         nothing extra
+      Extracting vis           nothing extra
+      Experimenting            + a simple die
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      Longevity result         Creo Corpus -1: aging rolls -0
+      Vis extraction           Creo Vim -1: 1 pawns a season
+      Raw vis a season         up to 0 pawns (Magic Theory)
+      Shape and material       bonuses up to +0 (Magic Theory)
 
 
 

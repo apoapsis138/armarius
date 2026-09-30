@@ -1536,7 +1536,8 @@ async def test_add_virtue_flaw_with_parameters_to_character():
         await _select_vf_picker_entry(pilot, app, "vf_affinity_with_art")
         assert isinstance(app.screen, FieldsDialog)
 
-        app.screen.query_one("#fld-art", Input).value = "Creo"
+        # An {art} is picked from the fifteen Arts (STORY-712).
+        app.screen.query_one("#fld-art", Select).value = "creo"
         await pilot.click("#btn-save")
         await pilot.pause()
 
@@ -2119,6 +2120,30 @@ async def test_clicking_an_art_row_keeps_focus_on_the_list():
         assert app.screen._active_section() == "section-arts"
         await pilot.press("down")
         assert await wait_until(pilot, lambda: techniques.highlighted == 2)
+
+
+async def test_magical_arts_collapses_like_the_other_sections():
+    # STORY-213: Magical Arts starts open and can be collapsed; 'e' still
+    # edits the Arts, and the tab's other sections keep working.
+    storage.save_saga(_sample_saga_with_covenant())
+
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        await _select_character(pilot, app)
+        view = app.screen._character_sheet_view
+        await _open_section(pilot, app, "section-arts")
+        arts = view.query_one("#section-arts", Collapsible)
+        assert not arts.collapsed
+        await pilot.press("enter")
+        assert await wait_until(pilot, lambda: arts.collapsed)
+        assert app.screen._active_section() == "section-arts"
+        await pilot.press("e")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, EditArtsScreen))
+        await pilot.press("escape")
+        await pilot.pause()
+        await _open_section(pilot, app, "section-known-spells")
+        assert app.screen._active_section() == "section-known-spells"
+        assert arts.collapsed
 
 
 async def test_edit_arts_grid_fits_default_terminal_and_accepts_real_typing():
@@ -8031,11 +8056,20 @@ async def test_other_seasons_leave_wealth_alone():
 
 
 async def _advance_from_winter(pilot, app) -> None:
-    """Press t and confirm the Advance Time dialog."""
+    """Press t and confirm the Advance Time dialog; when that asks about a
+    deficit, wait until the question has its focus (STORY-1115: a bare
+    pause left `focused` None under parallel load)."""
     await pilot.press("t")
-    await wait_until(pilot, lambda: isinstance(app.screen, AdvanceSeasonScreen))
-    app.screen.query_one("#btn-advance", Button).press()
-    await pilot.pause()
+    assert await wait_until(pilot, lambda: isinstance(app.screen, AdvanceSeasonScreen))
+    dialog = app.screen
+    dialog.query_one("#btn-advance", Button).press()
+    assert await wait_until(pilot, lambda: app.screen is not dialog)
+    await wait_until(
+        pilot,
+        lambda: (
+            not isinstance(app.screen, ConfirmScreen) or app.screen.focused is not None
+        ),
+    )
 
 
 def _winter_saga_with_a_deficit() -> Saga:

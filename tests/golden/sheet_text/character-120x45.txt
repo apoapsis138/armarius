@@ -152,7 +152,7 @@
 
   Talisman: Ring  Opened 0/0  0 attunements
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-     Magical Arts
+    ▼ Magical Arts
 
       Techniques                             Forms
 

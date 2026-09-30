@@ -777,7 +777,7 @@ class CharacterSheetView(SheetView):
       CovenantSheetView's Boons/Hooks), with one details panel below both,
       separate from either section.
     - Hermetic Magic (tab, id "tab-hermetic", magi only): Magical Arts
-      (a PinnedCollapsible, not a toggleable SheetSection -- two side-by-
+      (a SheetSection like the tab's others, open by default (STORY-213) -- two side-by-
       side selectable columns, Techniques then Forms, each row Name/Level/
       XP; 'e' still opens EditArtsScreen to edit every Art at once), Raw
       Vis (the first of two duplicated instances, both backed by
@@ -1068,7 +1068,7 @@ class CharacterSheetView(SheetView):
                     id="hermetic-talisman",
                 )
                 with (
-                    PinnedCollapsible(title="Magical Arts", id="section-arts"),
+                    SheetSection(title="Magical Arts", id="section-arts"),
                     TwoColumns(id="arts-row"),
                 ):
                     with Vertical(id="arts-techniques-col"):
@@ -1440,23 +1440,25 @@ class CharacterSheetView(SheetView):
 
     _ARTS_NAME_WIDTH: ClassVar[int] = 16
     _ARTS_NUM_WIDTH: ClassVar[int] = 6
+    #: Wide enough for a boosted score, "10 (13)".
+    _ARTS_SCORE_WIDTH: ClassVar[int] = 9
 
     def _arts_header_text(self) -> str:
         """Column titles above an Arts list, aligned with _art_row_label()
         (the two-character indent is the list's selector marker)."""
         return (
             f"  {'':<{self._ARTS_NAME_WIDTH}}"
-            f"{'Score':>{self._ARTS_NUM_WIDTH}}{'XP':>{self._ARTS_NUM_WIDTH}}"
+            f"{'Score':>{self._ARTS_SCORE_WIDTH}}{'XP':>{self._ARTS_NUM_WIDTH}}"
         )
 
     def _art_row_label(self, art: str) -> str:
         score = self.character.arts.get(art.lower(), ArtScore())
         bonus, _ = scores.art_bonus(self.character.virtues_flaws, art)
-        shown = st.bonus_score(score.level, bonus)
+        shown = st.adjusted_score(score.level, bonus)
         name = f"{art} ({ART_ABBREVIATIONS[art]})"
         return (
             f"{name:<{self._ARTS_NAME_WIDTH}}"
-            f"{shown:>{self._ARTS_NUM_WIDTH}}{score.xp:>{self._ARTS_NUM_WIDTH}}"
+            f"{shown:>{self._ARTS_SCORE_WIDTH}}{score.xp:>{self._ARTS_NUM_WIDTH}}"
         )
 
     def _arts_rows(self, arts: Sequence[str]) -> list[tuple[int, str]]:
@@ -1750,11 +1752,35 @@ class LaboratorySheetView(SheetView):
         return self._selected("lab-seasons-list")
 
     def _totals_tab(self) -> ComposeResult:
-        yield self._static(
-            _LAB_TOTAL_SECTIONS,
-            self._lab_totals_text,
-            id="lab-totals-content",
-        )
+        """The Lab Totals grid, the Base Lab Total and what each activity
+        adds, each its own section (STORY-211)."""
+        for title, section, text in (
+            (
+                "Lab Totals",
+                "section-lab-totals-grid",
+                lab_planning.lab_totals_grid_text,
+            ),
+            (
+                "Base Lab Total",
+                "section-lab-totals-base",
+                lab_planning.base_lab_total_text,
+            ),
+            (
+                "By Activity",
+                "section-lab-totals-activity",
+                lab_planning.activity_totals_text,
+            ),
+        ):
+            with SheetSection(title=title, id=section):
+                yield self._static(
+                    _LAB_TOTAL_SECTIONS,
+                    lambda text=text: text(
+                        self.saga,
+                        self.laboratory,
+                        self.saga.character(self.laboratory.owner_id),
+                    ),
+                    id=f"{section}-content",
+                )
 
     def _diary_tab(self) -> ComposeResult:
         with Vertical(classes="panel-body"):
@@ -2267,12 +2293,6 @@ class LaboratorySheetView(SheetView):
                 f"{cell(manual)} {cell(vf)} = {cell(total)}"
             )
         return "\n".join(lines)
-
-    def _lab_totals_text(self) -> str:
-        lab = self.laboratory
-        return lab_planning.lab_totals_text(
-            self.saga, lab, self.saga.character(lab.owner_id)
-        )
 
 
 class FamiliarSheetView(SheetView):

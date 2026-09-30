@@ -391,6 +391,14 @@ CONTRACTS: dict[str, Contract] = {
         expected={"subject": "latin"},  # parameters are stored lower-case
         invalid={"Subject": ""},
     ),
+    "virtue ability choice": Contract(
+        # STORY-712: an {ability} is picked from a list, not typed.
+        prefill={"Ability": Select.NULL},
+        edits={"Ability": "magic theory"},
+        saved=lambda s: _char(s).virtues_flaws[-1].params,
+        expected={"ability": "magic theory"},
+        invalid={"Ability": Select.NULL},
+    ),
     "edit familiar info": Contract(
         prefill={"Name": "Corax", "Species": ""},
         edits={"Species": "Raven", "Year Bound": "1210", "Size": "-2"},

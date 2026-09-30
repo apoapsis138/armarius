@@ -480,8 +480,10 @@ async def test_lab_totals_live_on_the_laboratory_sheet():
         await build_all_tabs(pilot, lab_view)
         tabs = [pane.id for pane in lab_view.query_one(TabbedContent).query("TabPane")]
         assert tabs[:2] == ["tab-lab-planning", "tab-lab-totals"]
-        totals = str(lab_view.query_one("#lab-totals-content", Static).content)
-        assert "Lab Totals for Leandro" in totals
+        totals = str(
+            lab_view.query_one("#section-lab-totals-grid-content", Static).content
+        )
+        assert "Leandro working here" in totals
         planning = strip_markup(
             str(lab_view.query_one("#lab-planning-heading", Static).content)
         )
