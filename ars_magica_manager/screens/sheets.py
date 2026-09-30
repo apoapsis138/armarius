@@ -2855,7 +2855,8 @@ class CovenantSheetView(SheetView):
         """Recalculate everything on the tab. Anything on the sheet can move a
         figure (a new inhabitant, a laboratory's usage, the salary), so this
         also runs after edits made on other tabs. The chosen row stays chosen
-        and its panel is refreshed."""
+        and its panel is refreshed, unless the list gained or lost a row (a
+        delete would otherwise choose the next row in its place)."""
         summary = eco.summarize(self.saga, self.covenant)
         left, right = eco.wealth_texts(summary)
         self.query_one("#eco-wealth-left", Static).update(left)
@@ -2867,7 +2868,10 @@ class CovenantSheetView(SheetView):
         for which in self._ECO_LISTS:
             rows_list = self.query_one(f"#eco-{which}-list", SelectableList)
             chosen = rows_list.selected_data_index
-            rows_list.set_rows(self._eco_rows(which, summary))
+            rows = self._eco_rows(which, summary)
+            if len(rows) != rows_list.row_count:
+                chosen = None
+            rows_list.set_rows(rows)
             # Posts Chosen, which refreshes the panel.
             if chosen is not None and rows_list.select_data_index(chosen):
                 any_chosen = True

@@ -437,6 +437,11 @@ class SelectableList(OptionList):
             self._render_row(position)
 
     @property
+    def row_count(self) -> int:
+        """Number of rows, header rows included."""
+        return len(self._rows)
+
+    @property
     def selected_data_index(self) -> int | None:
         """Data index of the chosen row, or None if none is chosen."""
         option = self.highlighted_option

@@ -433,23 +433,7 @@ def _confirm_message(app) -> str:
     return str(app.screen.query_one("#confirm-message").render())
 
 
-#: After its chosen row is deleted, the income list keeps the same row
-#: position chosen (now the next source), unlike every other list, which
-#: clears it. Recorded on STORY-1109.
-_KEEPS_A_CHOICE_AFTER_DELETE = pytest.mark.xfail(
-    strict=True, reason="STORY-1109: income keeps a choice after a delete"
-)
-
-
-@pytest.mark.parametrize(
-    "name",
-    [
-        pytest.param(name, marks=_KEEPS_A_CHOICE_AFTER_DELETE)
-        if name == "covenant-income"
-        else name
-        for name in ITEM_LISTS
-    ],
-)
+@pytest.mark.parametrize("name", list(ITEM_LISTS))
 async def test_item_list_remove_uses_the_chosen_row_after_asking(name):
     """A on the chosen row asks "Delete <name>?" (brackets and all): No
     keeps it, Yes deletes it, and afterwards nothing is chosen, so A asks

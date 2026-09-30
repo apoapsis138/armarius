@@ -9,6 +9,15 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 1.9.2 — 2026-09-30
+
+A fix to the covenant's Economics tab.
+
+- Deleting the chosen source of income no longer leaves the next source
+  chosen in its place, so pressing Delete again can't remove a second
+  source by mistake. Like every other list, nothing is chosen after a
+  delete; editing something elsewhere on the tab still keeps your choice.
+
 ## 1.9.1 — 2026-09-30
 
 The performance plan is saved with the project. Nothing in the app changes.
