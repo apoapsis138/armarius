@@ -9,6 +9,14 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 1.9.1 — 2026-09-30
+
+The performance plan is saved with the project. Nothing in the app changes.
+
+- PERFORMANCE_PLAN.md records where the app spends its time (the screen,
+  not the save file), why a database isn't needed at this size, and the
+  fixes planned from it.
+
 ## 1.9.0 — 2026-09-30
 
 Polish across the sheets.
