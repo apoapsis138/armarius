@@ -291,6 +291,7 @@ class WorkspaceBase(Screen[None]):
         ("i", "improve", "Improve"),
         ("i", "instill_effect", "Instill"),
         ("u", "use_charge", "Charge"),
+        ("s", "share_spell", "Share Spell"),
         ("I", "import_data", "Import"),
         ("t", "advance_season", "Advance Season"),
         # Works everywhere, but left out of the footer to keep it short.
@@ -592,6 +593,13 @@ class WorkspaceBase(Screen[None]):
             return (
                 self._active_section() in DEVICE_SECTIONS
                 and self._device_action_enabled(action)
+            )
+        if action == "share_spell":
+            character = self.selected_character
+            return (
+                self._active_section() == "section-known-spells"
+                and character is not None
+                and bool(spl.shareable_spells(character))
             )
         if action == "import_data":
             return (

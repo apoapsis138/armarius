@@ -9,11 +9,19 @@ import random
 from collections.abc import Callable, Sequence
 from typing import Any
 
-from ... import creation
+from ... import catalog, creation, sourcebooks
+from ... import covenants as cov_rules
 from ... import inhabitants as inh
 from ... import spells as spl
 from ...markup import escape
-from ...models import Character, Covenant, CreationXp, Laboratory, Spell
+from ...models import (
+    Character,
+    Covenant,
+    CovenantSituationDef,
+    CreationXp,
+    Laboratory,
+    Spell,
+)
 from ...rules import creation_later as later
 from ...rules import creation_magus as magus_rules
 from ...rules import creation_packages as packages
@@ -434,6 +442,56 @@ class CreationActions(WorkspaceBase):
                 self._commit("section-cov-info")
 
         self.app.push_screen(_power_level_dialog(covenant), handle_result)
+
+    def _use_covenant_situation(self, covenant: Covenant) -> None:
+        """Add one of the books' Covenant Situations (STORY-703): a
+        ready-made set of Boons and Hooks, on top of any it already has."""
+        books = sourcebooks.saga_books(self.saga)
+        by_id = catalog.load_covenant_boon_hook_catalog_by_id()
+        situations = [
+            s
+            for s in catalog.load_covenant_situation_catalog()
+            if sourcebooks.in_play(s.source, books)
+        ]
+
+        def label(situation: CovenantSituationDef) -> str:
+            hooks, boons = cov_rules.situation_points(situation, by_id)
+            book = sourcebooks.SOURCEBOOKS.get(situation.source, situation.source)
+            return (
+                f"{escape(situation.name)}  [dim]{hooks:g} Hook, {boons:g} Boon "
+                f"points; {escape(book)}[/]"
+            )
+
+        def handle_index(index: int | None) -> None:
+            if index is None:
+                return
+            situation = situations[index]
+            added = cov_rules.situation_instances(situation)
+            message = (
+                f"Add {escape(situation.name)}'s {len(added)} Boons and Hooks to "
+                f"{escape(covenant.name)}? {escape(situation.description)}"
+            )
+            if covenant.boons_hooks:
+                message += " The ones it already has stay."
+            if situation.notes:
+                message += f"\n\n[dim]{escape(situation.notes)}[/]"
+
+            def handle_confirmed(confirmed: bool | None) -> None:
+                if confirmed:
+                    covenant.boons_hooks.extend(added)
+                    self._commit("section-cov-boons", "section-cov-hooks")
+
+            self.app.push_screen(
+                ConfirmScreen(message, yes_label="Add", yes_variant="primary"),
+                handle_confirmed,
+            )
+
+        self.app.push_screen(
+            RemovalPickerScreen(
+                "Use a Covenant Situation", [label(s) for s in situations]
+            ),
+            handle_index,
+        )
 
     def _buy_specialist(self, covenant: Covenant) -> None:
         """Buy an NPC specialist or teacher with Build Points: a new line on

@@ -19,6 +19,7 @@ from .models import (
     ArmorDef,
     Character,
     CovenantBoonHookDef,
+    CovenantSituationDef,
     Familiar,
     HouseDef,
     LabFeatureDef,
@@ -34,6 +35,7 @@ CATALOG_PATH = DATA_DIR / "virtue_flaw_catalog.json"
 ABILITY_CATALOG_PATH = DATA_DIR / "ability_catalog.json"
 HOUSE_CATALOG_PATH = DATA_DIR / "house_catalog.json"
 COVENANT_BOON_HOOK_CATALOG_PATH = DATA_DIR / "covenant_boon_hook_catalog.json"
+COVENANT_SITUATION_CATALOG_PATH = DATA_DIR / "covenant_situation_catalog.json"
 LAB_VF_CATALOG_PATH = DATA_DIR / "lab_virtue_flaw_catalog.json"
 SPELL_CATALOG_PATH = DATA_DIR / "spell_catalog.json"
 LAB_FEATURE_CATALOG_PATH = DATA_DIR / "lab_feature_catalog.json"
@@ -350,6 +352,13 @@ def load_covenant_boon_hook_catalog_by_id(
     path: Path = COVENANT_BOON_HOOK_CATALOG_PATH,
 ) -> dict[str, CovenantBoonHookDef]:
     return _cached_by_id(path, CovenantBoonHookDef.from_dict)
+
+
+def load_covenant_situation_catalog(
+    path: Path = COVENANT_SITUATION_CATALOG_PATH,
+) -> list[CovenantSituationDef]:
+    """The books' Covenant Situations: ready-made sets of Boons and Hooks."""
+    return list(_cached_entries(path, CovenantSituationDef.from_dict))
 
 
 def describe_boon_hook(

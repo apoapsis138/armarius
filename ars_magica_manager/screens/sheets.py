@@ -36,6 +36,7 @@ from .. import sheet_text as st
 from .. import spells as spl
 from ..arts import ART_ABBREVIATIONS, ART_DESCRIPTIONS, FORMS, TECHNIQUES
 from ..covenants import (
+    boon_hook_problems,
     covenant_effective_aura,
 )
 from ..laboratories import (
@@ -2722,6 +2723,10 @@ class CovenantSheetView(SheetView):
                     yield SelectableList(
                         self._reputation_rows(), id="cov-reputations-list"
                     )
+                # Takes no room unless there is something to warn about.
+                warnings = Static(self._bh_warnings_text(), id="cov-bh-warnings")
+                warnings.display = bool(self._bh_warnings_text())
+                yield warnings
                 with TwoColumns(id="cov-bh-row"):
                     with SheetSection(
                         title=self._bh_title("Boon"), id="section-cov-boons"
@@ -3030,6 +3035,8 @@ class CovenantSheetView(SheetView):
         steps: list[Callable[[], None]] = [
             lambda: self._refresh_section(section_id),
             self._refresh_build,
+            # Poverty's warning depends on the Boons, Hooks and income.
+            self._refresh_bh_warnings,
         ]
         if section_id.startswith(("section-inh-", "section-pos-", "section-cov-")):
             # These feed the Economics tab's figures.
@@ -3099,6 +3106,20 @@ class CovenantSheetView(SheetView):
             # refresh_section for every section-cov-* already).
             self._refresh_section("section-cov-info")
             self._refresh_loyalty_text()
+
+    def _bh_warnings_text(self) -> str:
+        """Boons and Hooks that don't fit together (STORY-703), one line
+        each in the theme's error colour; "" when all is well."""
+        problems = boon_hook_problems(
+            self.covenant, catalog.load_covenant_boon_hook_catalog_by_id()
+        )
+        return "\n".join(f"[$text-error]{escape(p)}[/]" for p in problems)
+
+    def _refresh_bh_warnings(self) -> None:
+        text = self._bh_warnings_text()
+        warnings = self.query_one("#cov-bh-warnings", Static)
+        warnings.update(text)
+        warnings.display = bool(text)
 
     def _rebuild_boons_hooks(self) -> None:
         """Re-render both lists, both titles and the details panel. Always

@@ -28,7 +28,11 @@ from dataclasses import dataclass
 from .. import books as bk
 from .. import catalog, sourcebooks
 from .. import enchanted_devices as ed
-from ..covenants import covenant_boon_points, covenant_hook_points
+from ..covenants import (
+    boon_hook_problems,
+    covenant_boon_points,
+    covenant_hook_points,
+)
 from ..laboratories import (
     LAB_SIZE_BUILD_POINTS,
     lab_base_safety,
@@ -391,15 +395,39 @@ def boon_hook_checks(saga: Saga, record: Record) -> list[Check]:
     boons_catalog = catalog.load_covenant_boon_hook_catalog_by_id()
     boons = covenant_boon_points(covenant, boons_catalog)
     hooks = covenant_hook_points(covenant, boons_catalog)
-    return [
+    found = [
         _c(
             "boons_hooks",
-            "Boons balance Hooks",
-            boons == hooks,
-            f"{boons:g} Boon, {hooks:g} Hook points",
+            "Boons cost no more than the Hooks give",
+            boons <= hooks,
+            f"{boons:g} Boon, {hooks:g} Hook points"
+            + (f", {boons - hooks:g} too many" if boons > hooks else ""),
             BOON_SOURCE,
         )
     ]
+    if boons < hooks:
+        found.append(
+            _c(
+                "boons_hooks",
+                "Hook points spent",
+                False,
+                f"{hooks - boons:g} unspent",
+                BOON_SOURCE,
+                advice=True,
+            )
+        )
+    # What doesn't fit together: Poverty with Wealth, or with its income.
+    for problem in boon_hook_problems(covenant, boons_catalog):
+        found.append(
+            _c(
+                "boons_hooks",
+                "Boons and Hooks fit together",
+                False,
+                problem,
+                BOON_SOURCE,
+            )
+        )
+    return found
 
 
 # -- a starting laboratory (STORY-1313) --

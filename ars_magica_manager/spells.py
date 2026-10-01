@@ -645,6 +645,23 @@ def add_invented_spell(
     return spell
 
 
+def shareable_spells(magus: Character) -> list[Spell]:
+    """The magus's invented spells that can be made available to the saga
+    (STORY-608): those he knows, so not a design still being invented."""
+    known = {k.spell_id for k in magus.spells_known}
+    return [spell for spell in magus.invented_spells if spell.id in known]
+
+
+def share_invented_spell(saga: Saga, magus: Character, spell: Spell) -> None:
+    """Make an invented spell freely available: it moves from the magus's own
+    spells to the saga's, keeping its id (so the magus still knows it and
+    its Lab Texts still point at it) and naming its inventor as its
+    source."""
+    magus.invented_spells = [s for s in magus.invented_spells if s is not spell]
+    spell.source = f"Invented by {magus.name}"
+    saga.spells.append(spell)
+
+
 def add_imported_spells(saga: Saga, spells: list[Spell]) -> None:
     """Give imported spells ids of the saga's own and add them."""
     ids = all_spell_ids(saga)

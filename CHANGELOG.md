@@ -10,6 +10,25 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.2.0 — 2026-10-01
+
+Covenant Situations, Poverty warnings, and sharing an invented spell.
+
+- A covenant's Creation Worksheet can add a Covenant Situation: one of the
+  books' ready-made sets of Boons and Hooks (the core book's six, and
+  Covenants' eighteen when that book is in play), on top of what the
+  covenant already has. Where Covenants' own lists disagree with its
+  catalog, the preset says so before it is added.
+- Boons and Hooks that don't go together are warned about above the Boons
+  and Hooks lists and on the worksheet: the Minor Poverty Hook with Wealth
+  or Secondary Income, and income that Poverty doesn't allow (one Lesser
+  source for Minor Poverty, none for Major). Nothing is blocked.
+- On the worksheet, Boons may cost less than the Hooks give (advice); only
+  costing more breaks the rule.
+- A magus can make an invented spell available to the whole saga: `s`
+  (Share Spell) on Known Spells moves it to the saga's Spells, after
+  asking. The magus still knows it and its Lab Texts still link to it.
+
 ## 2.1.0 — 2026-10-01
 
 Build Points have one home: a Build tab on the covenant sheet.

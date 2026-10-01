@@ -723,6 +723,10 @@ def _boons_hooks_actions(saga: Saga, record: Record) -> list[StepAction]:
     return [
         StepAction("Add a Boon", lambda ws, r: ws._add_boon_hook("Boon")),
         StepAction("Add a Hook", lambda ws, r: ws._add_boon_hook("Hook")),
+        StepAction(
+            "Use a Covenant Situation",
+            lambda ws, r: ws._use_covenant_situation(_covenant(r)),
+        ),
     ]
 
 

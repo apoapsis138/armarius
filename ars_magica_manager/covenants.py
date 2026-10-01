@@ -8,8 +8,11 @@ from .models import (
     BOON_HOOK_UNKNOWN,
     Covenant,
     CovenantBoonHookDef,
+    CovenantSituationDef,
     Modifier,
     VirtueFlawInstance,
+    boon_hook_params,
+    new_instance_id,
 )
 from .rules import effects, realms
 
@@ -109,3 +112,79 @@ def covenant_modifier_total(
             [covenant_source(covenant, catalog_by_id)], applies_to, activity=activity
         )
     )
+
+
+# -- Covenant Situations and what doesn't fit together (STORY-703) --
+
+MINOR_POVERTY = "covbh_hook_minor_poverty"
+MAJOR_POVERTY = "covbh_hook_major_poverty"
+
+
+def situation_instances(situation: CovenantSituationDef) -> list[VirtueFlawInstance]:
+    """The Boons, Hooks and Free Choices a Covenant Situation adds, one
+    instance each time an entry is taken."""
+    return [
+        VirtueFlawInstance(
+            vf_id=entry["vf_id"],
+            params=boon_hook_params(entry.get("detail", ""), ""),
+            id=new_instance_id(),
+        )
+        for entry in situation.entries
+        for _ in range(entry.get("count", 1))
+    ]
+
+
+def situation_points(
+    situation: CovenantSituationDef, catalog_by_id: dict[str, CovenantBoonHookDef]
+) -> tuple[float, float]:
+    """(Hook points, Boon points) a Covenant Situation comes to."""
+    hooks = boons = 0.0
+    for entry in situation.entries:
+        definition = catalog_by_id.get(entry["vf_id"])
+        if definition is None:
+            continue
+        points = abs(definition.cost) * entry.get("count", 1)
+        if definition.type == "Hook":
+            hooks += points
+        else:
+            boons += points
+    return hooks, boons
+
+
+def boon_hook_problems(
+    covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
+) -> list[str]:
+    """What doesn't fit together among the covenant's Boons and Hooks
+    (plain text): two the catalog says exclude each other (the Minor
+    Poverty Hook with Secondary Income or Wealth), and income the Poverty
+    Hook doesn't allow -- Minor: one Lesser source only; Major: none."""
+    held = [bh.vf_id for bh in covenant.boons_hooks if bh.vf_id in catalog_by_id]
+    problems: list[str] = []
+
+    def label(vf_id: str) -> str:
+        definition = catalog_by_id[vf_id]
+        return f"{definition.name} ({definition.tier} {definition.type})"
+
+    seen: set[tuple[str, str]] = set()
+    for vf_id in held:
+        for other in catalog_by_id[vf_id].excludes:
+            pair = (vf_id, other)
+            if other in held and other in catalog_by_id and pair not in seen:
+                seen.add(pair)
+                seen.add((other, vf_id))
+                problems.append(f"{label(vf_id)} can't be taken with {label(other)}.")
+    sources = covenant.economics.income_sources
+    if MAJOR_POVERTY in held and sources:
+        problems.append(
+            f"Poverty (Major Hook): the covenant has no source of income, but "
+            f"{len(sources)} listed."
+        )
+    elif MINOR_POVERTY in held and (
+        len(sources) > 1 or any(s.type != "Lesser" for s in sources)
+    ):
+        listed = ", ".join(f"{s.name or 'unnamed'} ({s.type})" for s in sources)
+        problems.append(
+            "Poverty (Minor Hook): the covenant has one Lesser source of income "
+            f"only, but has {listed}."
+        )
+    return problems

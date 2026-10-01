@@ -121,7 +121,10 @@ def test_texts_above_the_power_levels_cap_and_boons_must_balance():
     assert found["No text or effect above level 25"] == ("warn", "Pilum (30)")
     covenant.boons_hooks = [VirtueFlawInstance("covbh_boon_minor_edifice")]
     found = _found(saga, covenant, "boons_hooks")
-    assert found["Boons balance Hooks"] == ("warn", "1 Boon, 0 Hook points")
+    assert found["Boons cost no more than the Hooks give"] == (
+        "warn",
+        "1 Boon, 0 Hook points, 1 too many",
+    )
 
 
 def test_a_starting_lab_needs_a_builder_and_room_for_its_virtues():

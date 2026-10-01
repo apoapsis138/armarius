@@ -455,6 +455,28 @@ class CovenantBoonHookDef:
 
 
 @dataclass
+class CovenantSituationDef:
+    """A Covenant Situation (STORY-703): one of the books' ready-made sets
+    of Boons and Hooks for a new covenant. `entries` are the Boons, Hooks
+    and Free Choices it adds: each a catalog id (`vf_id`), an optional
+    `detail` ("Hall Keep") and a `count` when it's taken more than once.
+    `notes` says where the book's own list was read differently (an entry
+    it files on the wrong side, or one the catalog lacks)."""
+
+    id: str
+    name: str
+    #: The book it's from (sourcebooks): "DE" or "Covenants".
+    source: str = "DE"
+    description: str = ""
+    entries: list[dict[str, Any]] = field(default_factory=list)
+    notes: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> CovenantSituationDef:
+        return cls(**data)
+
+
+@dataclass
 class AbilityDef:
     """A catalog entry for an Ability name (shared reference data, not per-saga).
 

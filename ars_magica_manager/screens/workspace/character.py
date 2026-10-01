@@ -23,6 +23,7 @@ from ...models import (
     HermeticBackground,
     KnownSpell,
     Possession,
+    Spell,
     Wounds,
     add_raw_vis,
     assign_laboratory,
@@ -515,6 +516,58 @@ class CharacterActions(WorkspaceBase):
             index,
             self._known_spell_name(character.spells_known[index]),
             "section-known-spells",
+        )
+
+    def action_share_spell(self) -> None:
+        """Make one of the magus's invented spells available to the saga
+        (STORY-608): the chosen Known Spell if it is one of his own, else
+        the one picked from them. It moves to the saga's Spells."""
+        character = self.selected_character
+        if character is None:
+            return
+        shareable = spl.shareable_spells(character)
+        if not shareable:
+            self.notify("No invented spells to share.")
+            return
+
+        def confirm(spell: Spell) -> None:
+            def handle_confirmed(confirmed: bool | None) -> None:
+                if confirmed:
+                    spl.share_invented_spell(self.saga, character, spell)
+                    self._commit("section-known-spells", tree=True)
+
+            self.app.push_screen(
+                ConfirmScreen(
+                    f"Make {escape(spell.name)} available to the whole saga? It "
+                    f"moves to the saga's Spells, where anyone can learn it or "
+                    f"write it up; {escape(character.name)} still knows it.",
+                    yes_label="Share",
+                    yes_variant="primary",
+                ),
+                handle_confirmed,
+            )
+
+        chosen = self._selected_known_spell()
+        if chosen is not None and chosen < len(character.spells_known):
+            spell_id = character.spells_known[chosen].spell_id
+            own = next((s for s in shareable if s.id == spell_id), None)
+            if own is not None:
+                confirm(own)
+                return
+        if len(shareable) == 1:
+            confirm(shareable[0])
+            return
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                confirm(shareable[index])
+
+        self.app.push_screen(
+            RemovalPickerScreen(
+                "Share which invented spell?",
+                [f"{escape(s.name)} ({spl.shorthand(s)})" for s in shareable],
+            ),
+            handle_index,
         )
 
     # -- Research Goals (STORY-916) --
