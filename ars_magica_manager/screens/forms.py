@@ -781,7 +781,19 @@ def _laboratory_create_fields(saga: Saga, covenant_id: str | None) -> list[Dialo
         ),
         DialogField("size", "Size", "int", 0),
         _covenant_field(saga, covenant_id),
+        DialogField(
+            "starting",
+            "One of the covenant's starting labs",
+            "check",
+            _covenant_in_creation(saga, covenant_id),
+            hint="Paid for from the covenant's Build Points (one free per magus).",
+        ),
     ]
+
+
+def _covenant_in_creation(saga: Saga, covenant_id: str | None) -> bool:
+    covenant = saga.covenant(covenant_id)
+    return covenant is not None and covenant.in_creation
 
 
 def _familiar_create_fields(saga: Saga, magus_id: str | None) -> list[DialogField]:

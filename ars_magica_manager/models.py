@@ -489,14 +489,28 @@ class AbilityDef:
 @dataclass
 class HouseDef:
     """A catalog entry for one of the 12 Hermetic Houses (shared reference
-    data, not per-saga). No mechanical bonus is modeled yet -- see
-    HermeticBackground's docstring."""
+    data, not per-saga), with the benefit its members get at character
+    creation."""
 
     id: str
     name: str
     description: str = ""
     #: The book it's from (sourcebooks): the core book.
     source: str = "DE"
+    #: What membership gives at character creation, as the book's Hermetic
+    #: Houses Summary words it (STORY-1315).
+    benefit: str = ""
+    #: The free House Virtue: the Virtues a member takes one of (a
+    #: VirtueFlawInstance's vf_id and params each). Empty when the benefit
+    #: isn't a named Virtue (see `free`).
+    virtues: list[dict[str, Any]] = field(default_factory=list)
+    #: The Ability a Mystery Cult House's Virtue starts at a score of 1.
+    ability: str = ""
+    #: A benefit that isn't a named Virtue: "minor_virtue" (Jerbiton: any
+    #: one Minor Virtue) or "ex_miscellanea" (a free Minor Hermetic Virtue,
+    #: a free Major non-Hermetic Virtue and a compulsory Major Hermetic
+    #: Flaw, all on top of the normal allowance).
+    free: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> HouseDef:
@@ -1135,6 +1149,13 @@ class Laboratory:
     #: Moving it by mundane means (STORY-915): the seasons done so far (0: not
     #: moving; pack, then two reassembling).
     move_seasons: int = 0
+    #: One of its covenant's starting laboratories (STORY-1313): its Build
+    #: Points count against the covenant's at creation.
+    starting: bool = False
+    #: Being created by the book (STORY-1301): the creation checks run and
+    #: the Creation Worksheet is offered. New records start In Creation;
+    #: older saves load In Play (False).
+    in_creation: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Laboratory:
@@ -1417,6 +1438,40 @@ class Breakthrough:
 
 
 @dataclass
+class CreationXp:
+    """xp spent at a creation step (STORY-1306 to 1310), already added to
+    the Ability or Art it names: the Creation Worksheet's record of where a
+    character's starting xp came from, checked against each step's budget."""
+
+    #: The worksheet step: "childhood", "later_life", "virtue", "free",
+    #: "apprenticeship" or "gauntlet".
+    step: str
+    #: An Ability's name ("Area Lore: Rhine") or an Art ("Creo").
+    target: str
+    xp: int
+    #: "native" for the childhood Native Language; the Virtue (vf_id) whose
+    #: xp a "virtue" entry spends; the package a "package" entry comes from.
+    note: str = ""
+    #: The xp actually added to the Ability or Art (an Affinity adds half
+    #: again); None: `xp`.
+    applied: int | None = None
+
+
+@dataclass
+class CreationConditions:
+    """A magus's years past Gauntlet at creation (STORY-1310): the seasons
+    that went to lab work, the working conditions the storyguide set (used
+    for lab work and pre-play aging), and the age pre-play aging has been
+    rolled up to (None: not yet)."""
+
+    lab_seasons: int = 0
+    aura: int = 3
+    lab_quality: int = 0
+    living_conditions: int = 1
+    aged_to: int | None = None
+
+
+@dataclass
 class Character:
     id: str
     name: str
@@ -1470,6 +1525,14 @@ class Character:
     formulas: list[str] = field(default_factory=list)
     ordeal: str = ""
     initiations_since_ordeal: int = 0
+    #: Being created by the book (STORY-1301): the creation checks run and
+    #: the Creation Worksheet is offered. New records start In Creation;
+    #: older saves load In Play (False).
+    in_creation: bool = False
+    #: Where the starting xp went, step by step (STORY-1306 to 1310).
+    creation_xp: list[CreationXp] = field(default_factory=list)
+    #: Years past Gauntlet and pre-play aging (STORY-1310).
+    creation_conditions: CreationConditions = field(default_factory=CreationConditions)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Character:
@@ -1515,6 +1578,12 @@ class Character:
         if d.get("grog_year") is not None:
             d["grog_year"] = GrogYear.from_dict(d["grog_year"])
         d["progress"] = [Progress.from_dict(p) for p in d.get("progress", [])]
+        d["creation_conditions"] = CreationConditions(
+            **known_fields(CreationConditions, d.get("creation_conditions") or {})
+        )
+        d["creation_xp"] = [
+            CreationXp(**known_fields(CreationXp, x)) for x in d.get("creation_xp", [])
+        ]
         return cls(**known_fields(cls, d))
 
 
@@ -2117,6 +2186,13 @@ class Inhabitant:
     #: sheet but no longer counts as an inhabitant (died, left...). A departed
     #: record just marks that; it is not listed and not counted.
     departed: bool = False
+    #: A specialist bought with Build Points at covenant creation
+    #: (STORY-1312): the score in the Ability used for the covenant
+    #: (`linked_ability`); a teacher also has Communication and Teaching
+    #: (None: not a teacher). None score: not bought.
+    specialist_score: int | None = None
+    teacher_communication: int | None = None
+    teacher_teaching: int | None = None
 
     def __post_init__(self) -> None:
         if self.kind not in INHABITANT_KINDS:
@@ -2314,6 +2390,16 @@ class Covenant:
     economics: Economics = field(default_factory=Economics)
     #: The Diary tab (see CovenantDiaryEntry), in the order entered.
     diary: list[CovenantDiaryEntry] = field(default_factory=list)
+    #: The Power Level chosen at creation (STORY-1312): one of POWER_LEVELS,
+    #: or "" before one is chosen.
+    power_level: str = ""
+    #: The Build Points the storyguide gives it, within the Power Level's
+    #: range: what its starting resources are bought with (None: not set).
+    build_points_budget: int | None = None
+    #: Being created by the book (STORY-1301): the creation checks run and
+    #: the Creation Worksheet is offered. New records start In Creation;
+    #: older saves load In Play (False).
+    in_creation: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Covenant:

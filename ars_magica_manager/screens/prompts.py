@@ -9,7 +9,7 @@ from typing import Any, ClassVar
 
 from textual.app import ComposeResult
 from textual.binding import Binding, BindingType
-from textual.containers import Horizontal, Vertical
+from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.screen import ModalScreen
 from textual.widgets import (
     Button,
@@ -32,6 +32,7 @@ from ..models import (
     ArcaneConnection,
     Covenant,
     CovenantDiaryEntry,
+    CreationConditions,
     DiaryEntry,
     LabSpecialtyEntry,
     LabVirtueFlawDef,
@@ -42,6 +43,13 @@ from ..models import (
     VirtueFlawInstance,
     new_instance_id,
     next_season,
+)
+from ..rules.creation_covenant import (
+    POWER_BY_NAME,
+    POWER_LEVELS,
+    PowerLevel,
+    band,
+    in_band,
 )
 from .fields import (
     _EMPHASIS_HINT,
@@ -390,6 +398,264 @@ def _raw_vis_dialog(
     )
 
 
+def _family_prefix(name: str) -> str:
+    """ "Area Lore: " for "Area Lore: {region}"; "" for a plain name."""
+    return name.split("{", 1)[0] if "{" in name else ""
+
+
+def _creation_xp_dialog(
+    title: str,
+    targets: Sequence[str],
+    existing: tuple[str, int] | None = None,
+    *,
+    xp_label: str = "xp",
+) -> FieldsDialog[tuple[str, int]]:
+    """xp spent at a creation step (STORY-1306 to 1310): an Ability or Art
+    from `targets` -- a family ("Area Lore: {region}") asks for its detail
+    -- and how much. Builds (the Ability or Art's name, the xp)."""
+    families = [t for t in targets if "{" in t]
+    target, detail = None, ""
+    if existing is not None:
+        name = existing[0]
+        family = next((f for f in families if name.startswith(_family_prefix(f))), None)
+        if name in targets:
+            target = name
+        elif family is not None:
+            target, detail = family, name.removeprefix(_family_prefix(family))
+        else:
+            target = name
+    options = [(t.replace("{", "(").replace("}", ")"), t) for t in targets]
+    if existing is not None and target not in targets:
+        options.append((existing[0], existing[0]))
+
+    def resolved(values: dict[str, Any]) -> str:
+        chosen = values["target"] or ""
+        prefix = _family_prefix(chosen)
+        return prefix + (values.get("detail") or "").strip() if prefix else chosen
+
+    def problem(values: dict[str, Any]) -> str | None:
+        prefix = _family_prefix(values["target"] or "")
+        if prefix and not (values.get("detail") or "").strip():
+            return f"Say which {prefix.rstrip(': ')}."
+        if values["xp"] < 1:
+            return "xp must be at least 1."
+        return None
+
+    return FieldsDialog(
+        title,
+        [
+            DialogField(
+                "target",
+                "Ability or Art",
+                "select",
+                target,
+                options=options,
+                required=True,
+                allow_blank=True,
+                placeholder="(choose one)",
+            ),
+            DialogField(
+                "detail",
+                "Which one",
+                "text",
+                detail,
+                placeholder="e.g. the region, language or craft",
+                show_if=lambda values: bool(_family_prefix(values["target"] or "")),
+            ),
+            DialogField("xp", xp_label, "int", existing[1] if existing else 5),
+        ],
+        validate=problem,
+        save_label="Add" if existing is None else "Save",
+        build=lambda values: (resolved(values), values["xp"]),
+    )
+
+
+def _blanks_dialog(title: str, blanks: Sequence[str]) -> FieldsDialog:
+    """The names a sample childhood or training package leaves blank
+    ("area", "second_area", "language"), one text field each."""
+    return FieldsDialog(
+        title,
+        [
+            DialogField(
+                blank, blank.replace("_", " ").capitalize(), "text", "", required=True
+            )
+            for blank in blanks
+        ],
+        save_label="Use",
+    )
+
+
+def _spell_level_dialog(spell_name: str) -> FieldsDialog[int]:
+    """The level a General-level spell is learned at."""
+    return FieldsDialog(
+        f"Learn {escape(spell_name)} at what level?",
+        [DialogField("level", "Level", "int", 5)],
+        validate=lambda values: (
+            None if values["level"] >= 1 else "Level must be at least 1."
+        ),
+        save_label="Learn",
+        build=lambda values: values["level"],
+    )
+
+
+def _gauntlet_conditions_dialog(
+    conditions: CreationConditions,
+) -> FieldsDialog[dict[str, Any]]:
+    """A magus's years past Gauntlet (STORY-1310): the seasons of lab work,
+    and the working conditions the storyguide set."""
+
+    def problem(values: dict[str, Any]) -> str | None:
+        if values["lab_seasons"] < 0:
+            return "Lab seasons can't be negative."
+        return None
+
+    return FieldsDialog(
+        "Years past Gauntlet",
+        [
+            DialogField(
+                "lab_seasons",
+                "Seasons of lab work",
+                "int",
+                conditions.lab_seasons,
+                hint="Each costs 10 of that year's 30 points (4 a year: all 30).",
+            ),
+            DialogField("aura", "Aura", "int", conditions.aura),
+            DialogField("lab_quality", "Lab quality", "int", conditions.lab_quality),
+            DialogField(
+                "living_conditions",
+                "Living Conditions",
+                "int",
+                conditions.living_conditions,
+                hint="Used for the aging rolls before play.",
+            ),
+        ],
+        validate=problem,
+    )
+
+
+def _power_level_dialog(covenant: Covenant) -> FieldsDialog[dict[str, Any]]:
+    """A new covenant's Power Level and when it was founded (STORY-1312)."""
+
+    def label(power: PowerLevel) -> str:
+        top = f"{power.most}" if power.most is not None else "+"
+        cap = f"level {power.max_level}" if power.max_level is not None else "any level"
+        return f"{power.name} ({power.least}-{top} BP, {cap})"
+
+    return FieldsDialog(
+        "Power Level",
+        [
+            DialogField(
+                "power_level",
+                "Power Level",
+                "select",
+                covenant.power_level or None,
+                options=[(label(p), p.name) for p in POWER_LEVELS],
+                required=True,
+                allow_blank=True,
+                placeholder="(choose one)",
+            ),
+            DialogField(
+                "build_points_budget",
+                "Build Points",
+                "optint",
+                covenant.build_points_budget,
+                hint="Set by the storyguide, within the Power Level's range.",
+            ),
+            DialogField(
+                "year_founded",
+                "Year Founded",
+                "optint",
+                covenant.year_founded,
+                hint="Medium needs 10 years, High 50, Legendary 100.",
+            ),
+        ],
+        validate=_power_level_problem,
+    )
+
+
+def _power_level_problem(values: dict[str, Any]) -> str | None:
+    power = POWER_BY_NAME.get(values.get("power_level") or "")
+    points = values.get("build_points_budget")
+    if power is not None and points is not None and not in_band(power, points):
+        return f"{power.name} gives {band(power)} Build Points."
+    return None
+
+
+def _buy_specialist_dialog() -> FieldsDialog[dict[str, Any]]:
+    """A specialist bought with Build Points for a new covenant
+    (STORY-1312): an NPC defined by the Ability used for the covenant. A
+    teacher costs Communication + Teaching + the highest Ability taught.
+    The values are an Inhabitant's fields."""
+
+    def teacher(values: dict[str, Any]) -> bool:
+        return bool(values.get("teacher"))
+
+    def cost(values: dict[str, Any]) -> int:
+        total = values.get("specialist_score") or 0
+        if teacher(values):
+            total += (values.get("teacher_communication") or 0) + (
+                values.get("teacher_teaching") or 0
+            )
+        return total
+
+    def problem(values: dict[str, Any]) -> str | None:
+        if values["specialist_score"] < 0:
+            return "The score can't be negative."
+        return None
+
+    def build(values: dict[str, Any]) -> dict[str, Any]:
+        is_teacher = values.pop("teacher")
+        if not is_teacher:
+            values["teacher_communication"] = None
+            values["teacher_teaching"] = None
+        return values
+
+    return FieldsDialog(
+        "Buy a Specialist",
+        [
+            DialogField("name", "Name", "text", "", required=True),
+            DialogField("teacher", "A teacher", "check", False),
+            DialogField(
+                "linked_ability",
+                "Ability used for the covenant",
+                "text",
+                "",
+                required=True,
+                hint="A teacher: the highest Ability taught.",
+            ),
+            DialogField("specialist_score", "Its score", "int", 1),
+            DialogField(
+                "teacher_communication", "Communication", "int", 0, show_if=teacher
+            ),
+            DialogField("teacher_teaching", "Teaching", "int", 1, show_if=teacher),
+            DialogField("year_born", "Year Born", "optint", None),
+        ],
+        validate=problem,
+        live=lambda values: f"Cost: {cost(values)} Build Points",
+        save_label="Buy",
+        build=build,
+    )
+
+
+def _native_language_dialog(current: str = "") -> FieldsDialog[str]:
+    """The character's Native Language (a Living Language, 75 xp)."""
+    return FieldsDialog(
+        "Native Language",
+        [
+            DialogField(
+                "language",
+                "Language",
+                "text",
+                current.removeprefix("Living Language: "),
+                required=True,
+                placeholder="e.g. German",
+            )
+        ],
+        save_label="Save",
+        build=lambda values: "Living Language: " + values["language"],
+    )
+
+
 def _named_description_dialog(
     title: str, name_placeholder: str, existing: NamedDescription | None = None
 ) -> FieldsDialog[NamedDescription]:
@@ -702,6 +968,62 @@ class AdvanceSeasonScreen(ModalDialog[bool]):
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         self.dismiss(event.button.id == "btn-advance")
+
+
+class InfoScreen(ModalDialog[None]):
+    """Read-only text (markup) under a title, scrolling if long; Enter or
+    Escape closes it."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [
+        ("escape", "cancel", "Close"),
+        ("enter", "cancel", "Close"),
+    ]
+
+    DEFAULT_CSS = """
+    InfoScreen {
+        align: center middle;
+    }
+
+    #info-dialog {
+        width: 96;
+        max-width: 100%;
+        height: auto;
+        max-height: 100%;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    #info-title {
+        text-style: bold;
+        margin-bottom: 1;
+    }
+
+    #info-scroll {
+        height: auto;
+        max-height: 32;
+    }
+
+    #info-text {
+        height: auto;
+    }
+    """
+
+    def __init__(self, title: str, text: str) -> None:
+        super().__init__()
+        self.info_title = title
+        self.text = text
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="info-dialog"):
+            yield Label(self.info_title, id="info-title")
+            with VerticalScroll(id="info-scroll"):
+                yield Static(self.text, id="info-text")
+            yield Button("Close", id="btn-close")
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "btn-close":
+            self.action_cancel()
 
 
 class ConfirmScreen(ModalScreen[bool]):

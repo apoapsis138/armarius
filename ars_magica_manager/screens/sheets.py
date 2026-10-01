@@ -565,6 +565,17 @@ class SheetView(Vertical):
     SheetView .panel-body {
         height: 1fr;
     }
+
+    /* A top panel's Edit button, with the In Creation / In Play switch
+       beside it (STORY-1301). */
+    SheetView .sheet-buttons {
+        width: auto;
+        height: auto;
+    }
+
+    SheetView .sheet-buttons Button {
+        margin-right: 2;
+    }
     """
 
     def __init__(self, saga: Saga) -> None:
@@ -587,6 +598,37 @@ class SheetView(Vertical):
     ) -> LazyTabPane:
         """A tab showing what `build` composes, built when first shown."""
         return LazyTabPane(title, build, id=id, lazy=id != self.INITIAL_TAB)
+
+    @property
+    def creation_record(self) -> Character | Covenant | Laboratory | None:
+        """The record whose In Creation / In Play mode the top panel shows
+        (STORY-1301); None for a sheet without one."""
+        return None
+
+    def _mode_label(self) -> str:
+        record = self.creation_record
+        return "In Creation" if record is not None and record.in_creation else "In Play"
+
+    def _top_buttons(self, edit_id: str) -> ComposeResult:
+        """The top panel's Edit button and, beside it, the switch between In
+        Creation and In Play: labelled with the current mode, changed only by
+        clicking it or its Enter while it has focus -- no hotkey."""
+        record = self.creation_record
+        with Horizontal(classes="sheet-buttons"):
+            yield Button("Edit (e)", id=edit_id, compact=True)
+            yield Button(self._mode_label(), id="btn-mode", compact=True)
+            # The Creation Worksheet (STORY-1302), while In Creation.
+            worksheet = Button("Creation Worksheet", id="btn-worksheet", compact=True)
+            worksheet.display = record is not None and record.in_creation
+            yield worksheet
+        self._on_refresh("section-creation", self._refresh_mode)
+
+    def _refresh_mode(self) -> None:
+        record = self.creation_record
+        self.query_one("#btn-mode", Button).label = self._mode_label()
+        self.query_one("#btn-worksheet", Button).display = (
+            record is not None and record.in_creation
+        )
 
     @staticmethod
     def _scrolling(build: Callable[[], ComposeResult]) -> Callable[[], ComposeResult]:
@@ -815,6 +857,10 @@ class CharacterSheetView(SheetView):
         super().__init__(saga)
         self.character = character
 
+    @property
+    def creation_record(self) -> Character:
+        return self.character
+
     INITIAL_TAB = "tab-description"
 
     def compose(self) -> ComposeResult:
@@ -897,7 +943,7 @@ class CharacterSheetView(SheetView):
                         self._info_right_text,
                         id="char-info-right",
                     )
-                yield Button("Edit (e)", id="btn-char-info-edit", compact=True)
+                yield from self._top_buttons("btn-char-info-edit")
             self._on_refresh("section-char-info", self._refresh_title)
             with PinnedCollapsible(
                 title="Characteristics", id="section-char-characteristics"
@@ -1702,6 +1748,10 @@ class LaboratorySheetView(SheetView):
         super().__init__(saga)
         self.laboratory = laboratory
 
+    @property
+    def creation_record(self) -> Laboratory:
+        return self.laboratory
+
     INITIAL_TAB = "tab-lab-planning"
 
     def compose(self) -> ComposeResult:
@@ -2169,7 +2219,7 @@ class LaboratorySheetView(SheetView):
                 yield self._static(
                     "section-lab-identity", self._aura_text, id="lab-identity-aura"
                 )
-                yield Button("Edit (e)", id="btn-lab-identity-edit", compact=True)
+                yield from self._top_buttons("btn-lab-identity-edit")
             self._on_refresh("section-lab-identity", self._refresh_identity_layout)
             with PinnedCollapsible(
                 title="Characteristics", id="section-lab-characteristics"
@@ -2604,6 +2654,10 @@ class CovenantSheetView(SheetView):
         super().__init__(saga)
         self.covenant = covenant
 
+    @property
+    def creation_record(self) -> Covenant:
+        return self.covenant
+
     INITIAL_TAB = "tab-cov-attributes"
 
     def compose(self) -> ComposeResult:
@@ -2611,7 +2665,7 @@ class CovenantSheetView(SheetView):
             with TwoColumns(id="cov-info-body", text=True):
                 yield Static(self._info_left_text(), id="cov-info-left")
                 yield Static(self._info_right_text(), id="cov-info-right")
-            yield Button("Edit (e)", id="btn-cov-edit", compact=True)
+            yield from self._top_buttons("btn-cov-edit")
         with TabbedContent(initial=self.INITIAL_TAB):
             yield self._tab("Attributes", "tab-cov-attributes", self._attributes_tab)
             yield self._tab("Inhabitants", "tab-cov-inhabitants", self._inhabitants_tab)

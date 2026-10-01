@@ -3,11 +3,44 @@
 What changed in each version of Ars Magica Manager, newest first.
 
 Versions are `MAJOR.MINOR.PATCH`: MAJOR marks a finished phase of the
-plan (1.0.0: Phase 1, the core tracker), a new or changed feature bumps
+plan (1.0.0: Phase 1, the core tracker; 2.0.0: Phase 4, creation by the
+book), a new or changed feature bumps
 MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is set in
 `pyproject.toml`, shown in the app's title bar and on the saga picker, and
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
+
+## 2.0.0 — 2026-10-01
+
+Phase 4: creating covenants, laboratories and characters by the book.
+
+- Every covenant, laboratory and character is now either In Creation or In
+  Play. New ones start In Creation; everything you already had is In Play.
+  A button beside Edit on each sheet shows the mode and switches it (it
+  asks first), and records still being created are marked in the tree.
+- While a record is In Creation its sheet offers a Creation Worksheet: the
+  book's steps down the left, each marked as passing, breaking a rule, or
+  carrying advice, with the chosen step's budget, checks and buttons on
+  the right. The worksheet edits the real record, and "Move to In Play" on
+  the last step reviews what is still open.
+- Characters: concept (type, House, age), Virtue and Flaw limits by
+  character type, the 7 Characteristic points, Early Childhood (with the
+  sample childhoods), Later Life xp (only Abilities the character may
+  learn, Virtue xp, the Ability cap by age), Grogs training packages, a
+  magus's apprenticeship (240 xp, 120 spell levels, each spell capped by
+  the magus's Lab Total) and years past Gauntlet, pre-play aging rolls,
+  and Personality Traits, Reputations and Confidence.
+- Each House gives its free Virtue: a magus's Virtues balance exactly, with
+  the House's Virtue free, and the worksheet offers to add it.
+- Covenants: pick a Power Level and the Build Points the storyguide gives;
+  the library, vis, enchanted items, starting laboratories and bought
+  specialists are totalled against them, and Boons must balance Hooks.
+- Laboratories: a starting lab's Build Points go to its covenant, its
+  builder needs Magic Theory 3, and its Virtues must fit.
+- Rules the book says a record must follow are warnings; its "should"s are
+  advice. A new saga option, "Enforce creation rules strictly", stops a
+  record with a broken rule moving to In Play.
+- The Grogs book is now in the list of sourcebooks.
 
 ## 1.9.2 — 2026-09-30
 

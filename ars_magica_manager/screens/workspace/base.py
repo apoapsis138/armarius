@@ -55,6 +55,7 @@ from ...models import (
     new_instance_id,
     next_season,
 )
+from ...rules import creation as creation_rules
 from ...rules import options as rule_options
 from ...rules import seasons as season_rules
 from ..fields import (
@@ -100,6 +101,11 @@ from ..widgets import BottomBar, SelectableList
 
 #: Covenant Reputations run from -3 to +3.
 _COVENANT_REPUTATION_RANGE = (-3, 3)
+
+
+def _creating(record: Character | Covenant | Laboratory) -> str:
+    """The navigation tree's mark on a record still In Creation."""
+    return " (creating)" if record.in_creation else ""
 
 
 class _SectionOps(NamedTuple):
@@ -389,7 +395,7 @@ class WorkspaceBase(Screen[None]):
 
         for covenant in self.saga.covenants:
             cov_node = tree.root.add(
-                escape(covenant.name),
+                escape(covenant.name) + _creating(covenant),
                 data=(NodeKind.COVENANT, covenant.id),
                 expand=True,
             )
@@ -414,7 +420,10 @@ class WorkspaceBase(Screen[None]):
                 expand=True,
             )
             for lab in labs:
-                lab_group.add_leaf(escape(lab.name), data=(NodeKind.LABORATORY, lab.id))
+                lab_group.add_leaf(
+                    escape(lab.name) + _creating(lab),
+                    data=(NodeKind.LABORATORY, lab.id),
+                )
 
         # Characters and labs with no (or a no-longer-existing) covenant live
         # directly under the saga -- assigning to a covenant is optional, and
@@ -441,7 +450,10 @@ class WorkspaceBase(Screen[None]):
                 expand=True,
             )
             for lab in loose_labs:
-                group.add_leaf(escape(lab.name), data=(NodeKind.LABORATORY, lab.id))
+                group.add_leaf(
+                    escape(lab.name) + _creating(lab),
+                    data=(NodeKind.LABORATORY, lab.id),
+                )
         # Books with no owner file under the saga.
         loose_books = bk.unassigned_books(self.saga)
         if loose_books:
@@ -459,7 +471,7 @@ class WorkspaceBase(Screen[None]):
         with a bound Familiar, in which case it becomes an expandable node
         with the Familiar as its one child leaf (nested under its creator,
         never its own group -- see kanban STORY-206)."""
-        label = f"{escape(character.name)} ({character.type})"
+        label = f"{escape(character.name)} ({character.type}){_creating(character)}"
         familiar = (
             fam.familiar_of(self.saga, character.id)
             if character.type == "magus"
@@ -886,6 +898,45 @@ class WorkspaceBase(Screen[None]):
 
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
+    def _toggle_creation_mode(self) -> None:
+        """The top panel's In Creation / In Play switch (STORY-1301): asks
+        first either way. With strict creation rules on, a record that
+        breaks a rule it must follow stays In Creation."""
+        view = self._current_sheet_view()
+        record = view.creation_record if view is not None else None
+        if record is None:
+            return
+        name = escape(record.name)
+        if record.in_creation:
+            if not creation_rules.can_move_to_play(self.saga, record):
+                broken = creation_rules.broken_musts(
+                    creation_rules.checks(self.saga, record)
+                )
+                self.notify(
+                    f"{name} stays In Creation: it breaks {len(broken)} "
+                    "creation rule(s) it must follow, and this saga enforces "
+                    "them strictly.",
+                    severity="warning",
+                )
+                return
+            found = creation_rules.checks(self.saga, record)
+            message = (
+                f"Move {name} to In Play? Creation checks: "
+                f"{creation_rules.summary(found)}. They stop once it is In Play."
+            )
+        else:
+            message = (
+                f"Move {name} back to In Creation? The creation checks come "
+                "back until it moves to In Play again."
+            )
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
+                record.in_creation = not record.in_creation
+                self._commit("section-creation", tree=True)
+
+        self.app.push_screen(ConfirmScreen(message), handle_confirmed)
+
     def _commit(self, *sections: str, tree: bool = False) -> None:
         """Save a change: write the saga, rebuild the navigation tree if a
         name or the structure changed (`tree`), and refresh `sections` of the
@@ -897,6 +948,11 @@ class WorkspaceBase(Screen[None]):
         if view is not None:
             for section in sections:
                 view.refresh_section(section)
+        # An open Creation Worksheet shows the record too (STORY-1302).
+        for screen in self.app.screen_stack:
+            changed = getattr(screen, "record_changed", None)
+            if callable(changed):
+                changed()
 
     def _refresh_character_section(self, section_id: str) -> None:
         if self._character_sheet_view is not None:
@@ -964,7 +1020,11 @@ class WorkspaceBase(Screen[None]):
         async def handle_result(values: dict[str, Any] | None) -> None:
             if values is not None:
                 lab = creation.add_laboratory(
-                    self.saga, values["name"], values["size"], values["covenant_id"]
+                    self.saga,
+                    values["name"],
+                    values["size"],
+                    values["covenant_id"],
+                    starting=values.get("starting", False),
                 )
                 storage.save_saga(self.saga)
                 self._rebuild_tree()
@@ -1372,8 +1432,17 @@ class WorkspaceBase(Screen[None]):
         target = self._virtue_flaw_target()
         if target is None:
             return
-        is_lab = self.selected_kind == NodeKind.LABORATORY
-        is_familiar = self.selected_kind == NodeKind.FAMILIAR
+        # Opened on the side of the section it was launched from.
+        flaws = self._active_section() in ("section-vf-flaws", "section-fam-vf-flaws")
+        self._add_virtue_flaw_to(target, "Flaw" if flaws else "Virtue")
+
+    def _add_virtue_flaw_to(
+        self, target: Character | Laboratory | Familiar, side: str = "Virtue"
+    ) -> None:
+        """Pick a Virtue or Flaw (opened on `side`) and add it to `target`
+        (also the Creation Worksheet's Virtues and Flaws step)."""
+        is_lab = isinstance(target, Laboratory)
+        is_familiar = isinstance(target, Familiar)
 
         def handle_result(instance: VirtueFlawInstance | None) -> None:
             if instance is not None:
@@ -1398,8 +1467,6 @@ class WorkspaceBase(Screen[None]):
                 LabVirtueFlawPickerScreen(existing_ids, books=books), handle_result
             )
             return
-        # Opened on the side of the section it was launched from.
-        flaws = self._active_section() in ("section-vf-flaws", "section-fam-vf-flaws")
         chooser = (
             catalog.VirtueFlawChooser.for_familiar(target, books)
             if isinstance(target, Familiar)
@@ -1408,7 +1475,7 @@ class WorkspaceBase(Screen[None]):
         self.app.push_screen(
             VirtueFlawPickerScreen(
                 target.virtues_flaws,
-                side="Flaw" if flaws else "Virtue",
+                side=side,
                 chooser=chooser,
                 own_abilities=[a.name for a in target.abilities],
             ),
@@ -1422,6 +1489,13 @@ class WorkspaceBase(Screen[None]):
         target = self._virtue_flaw_target()
         if target is None:
             return
+        self._remove_virtue_flaw_from(target, self._selected_virtue_flaw(target))
+
+    def _remove_virtue_flaw_from(
+        self, target: Character | Laboratory | Familiar, selected: int | None = None
+    ) -> None:
+        """Delete `target`'s Virtue/Flaw at `selected` after confirming; with
+        None, the one picked from all of them."""
         if not target.virtues_flaws:
             self.notify("No Virtues/Flaws to remove.")
             return
@@ -1444,7 +1518,6 @@ class WorkspaceBase(Screen[None]):
                 return
             self._confirm_delete(target.virtues_flaws, index, name, section)
 
-        selected = self._selected_virtue_flaw(target)
         if selected is not None:
             confirm(selected)
             return

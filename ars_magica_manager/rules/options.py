@@ -62,6 +62,21 @@ OPTIONS: tuple[RuleOption, ...] = (
             "_Chapter_One:_The_Infernal_Realm#Infernal_Vis)"
         ),
     ),
+    RuleOption(
+        key="strict_creation",
+        label="Enforce creation rules strictly",
+        effect=(
+            "A covenant, laboratory or character In Creation can't move to "
+            "In Play while it breaks a creation rule the book says it must "
+            "follow (advice never stops it)."
+        ),
+        source=(
+            "Ars Magica Definitive Edition, Chapter Three: Characters, "
+            "Detailed Character Creation Summary (https://www.redcap.org/page/"
+            "Ars_Magica_Definitive_Edition,_Chapter_Three:_Characters"
+            "#Detailed_Character_Creation_Summary)"
+        ),
+    ),
 )
 
 OPTIONS_BY_KEY: dict[str, RuleOption] = {option.key: option for option in OPTIONS}

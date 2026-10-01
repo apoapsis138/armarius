@@ -1,0 +1,438 @@
+"""Creation checks for the Virtues and Flaws step (STORY-1304): the point
+budget by character type, the book's hard limits (musts) and its guidelines
+(shoulds, shown as advice with how many too many or too few).
+
+Rules: reference/rules-engine-reference.md §5 Point costs and general
+limits; Budgets by character type; Types of Virtue and Flaw.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+from .. import catalog
+from ..models import Character, Saga
+from .creation_base import CHARACTER_CHECKS, Check, Record, check
+from .creation_character import THE_GIFT
+
+SOURCE = (
+    "Ars Magica Definitive Edition, Chapter 4: Virtues and Flaws, Virtues and "
+    "Flaws Rules and Guidelines (https://www.redcap.org/page/Ars_Magica_"
+    "Definitive_Edition,_Chapter_Four:_Virtues_and_Flaws#Virtues_and_Flaws_"
+    "Rules_and_Guidelines)"
+)
+BUDGET_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Detailed "
+    "Character Creation Summary (https://www.redcap.org/page/Ars_Magica_"
+    "Definitive_Edition,_Chapter_Three:_Characters#Detailed_Character_"
+    "Creation_Summary)"
+)
+TAINTED_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter 4: Virtues and Flaws, Types of "
+    "Virtue and Flaw (https://www.redcap.org/page/Ars_Magica_Definitive_"
+    "Edition,_Chapter_Four:_Virtues_and_Flaws#Types_of_Virtue_and_Flaw)"
+)
+
+HOUSE_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Three: Characters, Hermetic Houses "
+    "Summary (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
+    "_Chapter_Three:_Characters#Hermetic_Houses_Summary)"
+)
+
+MAX_FLAW_POINTS = 10
+MAX_MINOR_FLAWS = 5
+GROG_MAX_FLAW_POINTS = 3
+#: A Mythic Companion's bought Virtue points (2 per Flaw point, at most 20)
+#: plus the free Minor Virtue.
+MYTHIC_MAX_VIRTUE_POINTS = 21
+MAX_TAINTED = 5
+MYTHIC_MAX_TAINTED_VIRTUES = 10
+#: Only a companion may be Wealthy or Poor.
+COMPANION_ONLY = ("vf_wealthy", "vf_poor")
+
+
+@dataclass(frozen=True)
+class VirtueFlawTally:
+    """The points and counts the limits look at."""
+
+    virtue_points: int
+    flaw_points: int
+    minor_flaws: int
+    major_virtues: int
+    major_flaws: int
+    social_statuses: list[str]
+    major_hermetic_virtues: int
+    hermetic: int
+    hermetic_flaws: int
+    major_personality_flaws: int
+    personality_flaws: int
+    story_flaws: int
+    tainted_virtue_points: int
+    tainted_flaw_points: int
+    #: Names taken more often than the book allows.
+    repeated: list[str]
+
+
+def tally(character: Character) -> VirtueFlawTally:
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    entries = [
+        (vf, by_id[vf.vf_id]) for vf in character.virtues_flaws if vf.vf_id in by_id
+    ]
+
+    def of(side: str, category: str | None = None, tier: str | None = None):
+        return [
+            e
+            for _, e in entries
+            if e.side == side
+            and (category is None or category in (e.category, *e.extra_categories))
+            and (tier is None or e.tier == tier)
+        ]
+
+    counts: dict[str, int] = {}
+    per_param: dict[tuple[str, tuple[tuple[str, str], ...]], int] = {}
+    for vf, _ in entries:
+        counts[vf.vf_id] = counts.get(vf.vf_id, 0) + 1
+        key = (vf.vf_id, tuple(sorted(vf.params.items())))
+        per_param[key] = per_param.get(key, 0) + 1
+    repeated = []
+    for vf_id, count in counts.items():
+        entry = by_id[vf_id]
+        limit = entry.max_count if entry.repeatable else 1
+        over = limit is not None and count > limit
+        over_param = entry.max_per_parameter is not None and any(
+            n > entry.max_per_parameter for (i, _), n in per_param.items() if i == vf_id
+        )
+        if over or over_param:
+            repeated.append(entry.name)
+    return VirtueFlawTally(
+        virtue_points=round(sum(e.cost for e in of("Virtue"))),
+        flaw_points=round(-sum(e.cost for e in of("Flaw"))),
+        minor_flaws=len(of("Flaw", tier="Minor")),
+        major_virtues=len(of("Virtue", tier="Major")),
+        major_flaws=len(of("Flaw", tier="Major")),
+        social_statuses=[
+            e.name
+            for _, e in entries
+            if "Social Status" in (e.category, *e.extra_categories)
+        ],
+        major_hermetic_virtues=len(of("Virtue", "Hermetic", "Major")),
+        hermetic=len(of("Virtue", "Hermetic")) + len(of("Flaw", "Hermetic")),
+        hermetic_flaws=len(of("Flaw", "Hermetic")),
+        major_personality_flaws=len(of("Flaw", "Personality", "Major")),
+        personality_flaws=len(of("Flaw", "Personality")),
+        story_flaws=len(of("Flaw", "Story")),
+        tainted_virtue_points=round(sum(e.cost for e in of("Virtue", "Tainted"))),
+        tainted_flaw_points=round(-sum(e.cost for e in of("Flaw", "Tainted"))),
+        repeated=sorted(repeated),
+    )
+
+
+@dataclass(frozen=True)
+class HouseBenefit:
+    """What a magus's House gives free at creation (STORY-1315)."""
+
+    #: The points of the free Virtue(s) the magus holds: outside the balance.
+    virtue_points: int = 0
+    #: Ex Miscellanea's compulsory Major Hermetic Flaw: it pays for nothing
+    #: and is outside the Flaw caps.
+    flaw_points: int = 0
+    #: What was counted as free ("Puissant Magic Theory").
+    held: tuple[str, ...] = ()
+    #: What the House gives that the magus hasn't taken yet.
+    missing: tuple[str, ...] = ()
+
+
+def held_option(character: Character, option: dict):
+    """The character's Virtue matching a House's option (its vf_id and
+    params), or None."""
+    wanted = {k: str(v).lower() for k, v in (option.get("params") or {}).items()}
+    return next(
+        (
+            vf
+            for vf in character.virtues_flaws
+            if vf.vf_id == option["vf_id"]
+            and all(str(vf.params.get(k, "")).lower() == v for k, v in wanted.items())
+        ),
+        None,
+    )
+
+
+def house_benefit(character: Character) -> HouseBenefit:
+    """The free House Virtue a magus holds (or still has to take)."""
+    if character.type != "magus":
+        return HouseBenefit()
+    house = catalog.load_house_catalog_by_id().get(character.hermetic.house or "")
+    if house is None:
+        return HouseBenefit()
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    entries = [by_id[vf.vf_id] for vf in character.virtues_flaws if vf.vf_id in by_id]
+    if house.virtues:
+        for option in house.virtues:
+            instance = held_option(character, option)
+            if instance is not None and option["vf_id"] in by_id:
+                entry = by_id[option["vf_id"]]
+                return HouseBenefit(
+                    virtue_points=round(entry.cost),
+                    held=(catalog.describe_virtue_flaw(instance, by_id),),
+                )
+        return HouseBenefit(missing=(house.benefit,))
+    if house.free == "minor_virtue":
+        if any(e.side == "Virtue" and e.tier == "Minor" for e in entries):
+            return HouseBenefit(virtue_points=1, held=("one Minor Virtue",))
+        return HouseBenefit(missing=(house.benefit,))
+    if house.free == "ex_miscellanea":
+
+        def hermetic(entry) -> bool:
+            return "Hermetic" in (entry.category, *entry.extra_categories)
+
+        points, flaw, held, missing = 0, 0, [], []
+        if any(
+            e.side == "Virtue" and e.tier == "Minor" and hermetic(e) for e in entries
+        ):
+            points += 1
+            held.append("a Minor Hermetic Virtue")
+        else:
+            missing.append("a free Minor Hermetic Virtue")
+        if any(
+            e.side == "Virtue" and e.tier == "Major" and not hermetic(e)
+            for e in entries
+        ):
+            points += 3
+            held.append("a Major non-Hermetic Virtue")
+        else:
+            missing.append("a free Major non-Hermetic Virtue")
+        if any(e.side == "Flaw" and e.tier == "Major" and hermetic(e) for e in entries):
+            flaw = 3
+            held.append("the compulsory Major Hermetic Flaw")
+        else:
+            missing.append("the compulsory Major Hermetic Flaw")
+        return HouseBenefit(points, flaw, tuple(held), tuple(missing))
+    return HouseBenefit()
+
+
+def virtue_allowance(character: Character, flaw_points: int) -> tuple[int, int]:
+    """The (fewest, most) Virtue points the character's Flaw points allow:
+    equal for most; a magus adds the free House Virtue held (and Ex
+    Miscellanea's compulsory Flaw pays for nothing); a Mythic Companion
+    gets 2 per Flaw point plus the free Minor Virtue, up to 21 (fewer is
+    allowed, just unspent)."""
+    if character.type == "magus":
+        house = house_benefit(character)
+        points = flaw_points - house.flaw_points + house.virtue_points
+        return points, points
+    if character.type == "mythic companion":
+        return 0, min(2 * flaw_points + 1, MYTHIC_MAX_VIRTUE_POINTS)
+    return flaw_points, flaw_points
+
+
+def max_flaw_points(character: Character) -> int:
+    return GROG_MAX_FLAW_POINTS if character.type == "grog" else MAX_FLAW_POINTS
+
+
+def max_minor_flaws(character: Character) -> int:
+    return GROG_MAX_FLAW_POINTS if character.type == "grog" else MAX_MINOR_FLAWS
+
+
+def _check(
+    label: str, ok: bool, detail: str, source: str = SOURCE, *, advice: bool = False
+) -> Check:
+    status = "pass" if ok else ("advice" if advice else "warn")
+    return Check("virtues_flaws", label, status, detail, source)
+
+
+def _count(count: int, limit: int) -> str:
+    """ "3", or "3, 1 too many"."""
+    return f"{count}" + (f", {count - limit} too many" if count > limit else "")
+
+
+@check("virtues_flaws", CHARACTER_CHECKS)
+def virtue_flaw_checks(saga: Saga, record: Record) -> list[Check]:
+    assert isinstance(record, Character)
+    character = record
+    t = tally(character)
+    grog = character.type == "grog"
+    ids = [vf.vf_id for vf in character.virtues_flaws]
+    fewest, most = virtue_allowance(character, t.flaw_points)
+    found: list[Check] = []
+    if character.type == "mythic companion":
+        found.append(
+            _check(
+                "Virtue points: 2 per Flaw point, plus the free Minor",
+                t.virtue_points <= most,
+                f"{t.virtue_points} of {most}",
+                BUDGET_SOURCE,
+            )
+        )
+        if t.virtue_points < most:
+            found.append(
+                _check(
+                    "Virtue points spent",
+                    False,
+                    f"{most - t.virtue_points} unspent",
+                    BUDGET_SOURCE,
+                    advice=True,
+                )
+            )
+    else:
+        house = house_benefit(character)
+        free = f" (free from the House: {', '.join(house.held)})" if house.held else ""
+        found.append(
+            _check(
+                "Virtue points balance Flaw points",
+                fewest <= t.virtue_points <= most,
+                f"{t.virtue_points} Virtue, {t.flaw_points} Flaw points" + free,
+                BUDGET_SOURCE,
+            )
+        )
+        for what in house.missing:
+            compulsory = what.startswith("the compulsory")
+            found.append(
+                _check(
+                    "Ex Miscellanea's compulsory Flaw is taken"
+                    if compulsory
+                    else "The House's free Virtue is taken",
+                    False,
+                    what,
+                    HOUSE_SOURCE,
+                    advice=not compulsory,
+                )
+            )
+    # Ex Miscellanea's compulsory Flaw is on top of the normal allowance.
+    counted_flaws = t.flaw_points - house_benefit(character).flaw_points
+    limit = max_flaw_points(character)
+    found.append(
+        _check(
+            f"At most {limit} Flaw points",
+            counted_flaws <= limit,
+            _count(counted_flaws, limit),
+        )
+    )
+    limit = max_minor_flaws(character)
+    found.append(
+        _check(
+            f"At most {limit} Minor Flaws",
+            t.minor_flaws <= limit,
+            _count(t.minor_flaws, limit),
+        )
+    )
+    if grog:
+        majors = t.major_virtues + t.major_flaws
+        found.append(
+            _check(
+                "A grog takes no Major Virtues or Flaws",
+                majors == 0,
+                _count(majors, 0),
+                BUDGET_SOURCE,
+            )
+        )
+    statuses = t.social_statuses
+    found.append(
+        _check("A Social Status", bool(statuses), ", ".join(statuses) or "none")
+    )
+    if len(statuses) > 1:
+        # More are allowed only where their descriptions say they fit
+        # together; a grog has exactly one.
+        found.append(
+            _check(
+                "One Social Status, unless they fit together",
+                False,
+                f"{len(statuses)} taken",
+                advice=not grog,
+            )
+        )
+    found.append(
+        _check(
+            "At most 1 Major Hermetic Virtue",
+            t.major_hermetic_virtues <= 1,
+            _count(t.major_hermetic_virtues, 1),
+            BUDGET_SOURCE,
+        )
+    )
+    gifted = THE_GIFT in ids
+    if character.type != "magus" and t.hermetic and not gifted:
+        found.append(
+            _check(
+                "Hermetic Virtues and Flaws need The Gift",
+                False,
+                f"{t.hermetic} taken",
+                TAINTED_SOURCE,
+            )
+        )
+    if grog and gifted:
+        found.append(
+            _check("A grog never has The Gift", False, "The Gift taken", BUDGET_SOURCE)
+        )
+    only = [vf_id for vf_id in ids if vf_id in COMPANION_ONLY]
+    if only and character.type not in ("companion", "mythic companion"):
+        by_id = catalog.load_virtue_flaw_catalog_by_id()
+        found.append(
+            _check(
+                "Wealthy and Poor are for companions",
+                False,
+                ", ".join(by_id[vf_id].name for vf_id in only),
+                BUDGET_SOURCE,
+            )
+        )
+    found.append(
+        _check(
+            "At most 1 Major Personality Flaw",
+            t.major_personality_flaws <= 1,
+            _count(t.major_personality_flaws, 1),
+        )
+    )
+    if t.tainted_virtue_points or t.tainted_flaw_points:
+        limit = (
+            MYTHIC_MAX_TAINTED_VIRTUES
+            if character.type == "mythic companion"
+            else MAX_TAINTED
+        )
+        found.append(
+            _check(
+                f"Tainted Virtues at most {limit} points",
+                t.tainted_virtue_points <= limit,
+                _count(t.tainted_virtue_points, limit),
+                TAINTED_SOURCE,
+            )
+        )
+        found.append(
+            _check(
+                f"Tainted Flaws at most {MAX_TAINTED} points",
+                t.tainted_flaw_points <= MAX_TAINTED,
+                _count(t.tainted_flaw_points, MAX_TAINTED),
+                TAINTED_SOURCE,
+            )
+        )
+    if t.repeated:
+        found.append(
+            _check("Each taken only as often as allowed", False, ", ".join(t.repeated))
+        )
+    # The book's "should"s: advice, never a must.
+    if character.type == "magus":
+        found.append(
+            _check(
+                "A magus should have a Hermetic Flaw",
+                t.hermetic_flaws >= 1,
+                f"{t.hermetic_flaws}" + ("" if t.hermetic_flaws else ", 1 too few"),
+                BUDGET_SOURCE,
+                advice=True,
+            )
+        )
+    limit = 0 if grog else 1
+    found.append(
+        _check(
+            "A grog should have no Story Flaws" if grog else "At most 1 Story Flaw",
+            t.story_flaws <= limit,
+            _count(t.story_flaws, limit),
+            advice=True,
+        )
+    )
+    limit = 1 if grog else 2
+    found.append(
+        _check(
+            f"At most {limit} Personality Flaw{'s' if limit > 1 else ''}",
+            t.personality_flaws <= limit,
+            _count(t.personality_flaws, limit),
+            advice=True,
+        )
+    )
+    return found

@@ -285,6 +285,17 @@ which entity owns which relationship.
   Seasons are planned for magi, companions and Mythic Companions; grogs
   get a yearly update instead.
 
+**Phase 4 — Creation workflows**
+- Create covenants, laboratories and characters by the book. A new record
+  starts In Creation (existing records are In Play); a Creation Worksheet
+  walks through the book's steps with a progress widget and its budgets
+  (Virtues and Flaws, Characteristics, childhood and later-life xp,
+  apprenticeship, years past Gauntlet; a covenant's Build Points), and
+  moving the record to In Play puts the values on its sheet.
+- Rule breaks warn by default; a saga setting enforces them strictly. A
+  book's "should" is advice, never blocking. 2.0.0 ships when this phase
+  is done. Plan: `reference/feat-13-plan.md` (not committed).
+
 **Phase 5+ — Polish / open-ended**
 - Character sheet export/printing, multi-saga management UI, possible
   data-bridge with Ars-Magica-Solo, house-rule/customization hooks
@@ -335,6 +346,15 @@ just the standing decisions.
   always-visible summary sits above its tabs and stays visible across tabs.
 - Add/edit dialogs are a config-driven `FieldsDialog` (one row per field,
   validated on Save, fits 120×45) rather than bespoke screens per dialog.
+- **In Creation / In Play** (Phase 4): the top panel of every covenant,
+  laboratory and character sheet has, beside Edit, a button labelled with
+  the record's mode; it changes only when pressed (no hotkey) and asks
+  first. While In Creation the panel also offers the **Creation
+  Worksheet**, a dialog listing the book's steps (each marked ✔ / ✘ / ! /
+  ○) with the chosen step's budget, checks and buttons; the buttons open
+  the sheet's own dialogs, so the worksheet edits the real record. Checks
+  are pass, warn (a book "must") or advice (a "should"); only the saga's
+  strict-creation option lets a warning stop the move to In Play.
 - Anything derivable from the rest of a sheet (covenant Economics, Loyalty,
   book costs) is **calculated on demand and never stored** — only what the
   user actually types is saved.

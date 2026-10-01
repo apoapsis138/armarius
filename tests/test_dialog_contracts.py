@@ -103,6 +103,111 @@ def _all_sagas() -> list[Saga]:
 
 
 CONTRACTS: dict[str, Contract] = {
+    # Creation Worksheet (STORY-1306)
+    "spend creation xp": Contract(
+        prefill={"Ability or Art": Select.NULL, "xp": "5"},
+        edits={
+            "Ability or Art": "Area Lore: {region}",
+            "Which one": "Rhine",
+            "xp": "15",
+        },
+        saved=lambda s: [(x.step, x.target, x.xp) for x in _char(s).creation_xp],
+        expected=[("childhood", "Area Lore: Rhine", 15)],
+        invalid=[
+            {"Ability or Art": "Brawl", "xp": "0"},
+            {"Ability or Art": "Area Lore: {region}", "xp": "5"},
+        ],
+        shown={"#abilities-list": "Area Lore: Rhine"},
+    ),
+    "childhood blanks": Contract(
+        prefill={"Area": "", "Second area": "", "Language": ""},
+        edits={"Area": "Rhine", "Second area": "Alps", "Language": "French"},
+        saved=lambda s: [(x.target, x.xp) for x in _char(s).creation_xp],
+        expected=[
+            ("Area Lore: Rhine", 5),
+            ("Area Lore: Alps", 5),
+            ("Folk Ken", 15),
+            ("Living Language: French", 5),
+            ("Survival", 15),
+        ],
+        invalid={"Area": ""},
+    ),
+    "general spell level": Contract(
+        prefill={"Level": "5"},
+        edits={"Level": "20"},
+        saved=lambda s: [(x.step, x.target, x.xp) for x in _char(s).creation_xp],
+        expected=[("apprenticeship_spells", "spell_aegis_of_the_hearth", 20)],
+        invalid=[{"Level": "0"}, {"Level": "-"}],
+    ),
+    "gauntlet conditions": Contract(
+        prefill={
+            "Seasons of lab work": "0",
+            "Aura": "3",
+            "Lab quality": "0",
+            "Living Conditions": "1",
+        },
+        edits={"Seasons of lab work": "6", "Aura": "5"},
+        saved=lambda s: (
+            _char(s).creation_conditions.lab_seasons,
+            _char(s).creation_conditions.aura,
+        ),
+        expected=(6, 5),
+        invalid=[{"Seasons of lab work": "-1"}, {"Aura": "x"}],
+    ),
+    "power level": Contract(
+        prefill={"Power Level": Select.NULL},
+        edits={"Power Level": "Medium", "Build Points": "600", "Year Founded": "1200"},
+        saved=lambda s: (
+            s.covenants[0].power_level,
+            s.covenants[0].build_points_budget,
+            s.covenants[0].year_founded,
+        ),
+        expected=("Medium", 600, 1200),
+        invalid=[
+            {"Power Level": Select.NULL},
+            {"Year Founded": "soon"},
+            {"Power Level": "Low", "Build Points": "400"},
+        ],
+    ),
+    "buy specialist": Contract(
+        prefill={"Name": "", "A teacher": False, "Its score": "1"},
+        edits={
+            "Name": "Master Odo",
+            "A teacher": True,
+            "Ability used for the covenant": "Artes Liberales",
+            "Its score": "5",
+            "Communication": "2",
+            "Teaching": "4",
+        },
+        saved=lambda s: [
+            (
+                i.kind,
+                i.name,
+                i.linked_ability,
+                i.specialist_score,
+                i.teacher_communication,
+                i.teacher_teaching,
+            )
+            for i in s.covenants[0].inhabitants
+            if i.name == "Master Odo"
+        ],
+        expected=[("specialist", "Master Odo", "Artes Liberales", 5, 2, 4)],
+        invalid=[
+            {"Name": "", "Ability used for the covenant": "Brawl"},
+            {
+                "Name": "Odo",
+                "Ability used for the covenant": "Brawl",
+                "Its score": "-1",
+            },
+        ],
+    ),
+    "native language": Contract(
+        prefill={"Language": ""},
+        edits={"Language": "German"},
+        saved=lambda s: [(x.target, x.xp, x.note) for x in _char(s).creation_xp],
+        expected=[("Living Language: German", 75, "native")],
+        invalid={"Language": ""},
+    ),
     "create saga": Contract(
         prefill={"Name": "", "Start Year": "1220", "Start Season": "Spring"},
         edits={"Name": "Second Saga", "Storyguide": "Ann"},

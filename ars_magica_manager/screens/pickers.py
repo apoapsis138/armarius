@@ -5,13 +5,13 @@ from __future__ import annotations
 
 import asyncio
 from collections import Counter
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any, ClassVar
 
 from textual.app import ComposeResult
 from textual.binding import Binding, BindingType
-from textual.containers import Horizontal, Vertical
+from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.events import Key
 from textual.widgets import (
     Button,
@@ -854,13 +854,58 @@ class SpellChooserScreen(SearchablePickerScreen[Spell, str | None]):
     SEARCH_PLACEHOLDER: ClassVar[str] = "Search spells by name or Arts (e.g. CrIg)..."
     LIST_VIEW_ID: ClassVar[str] = "spell-chooser-list"
 
+    DEFAULT_CSS = """
+    SpellChooserScreen.-details #picker-dialog {
+        width: 100;
+        max-height: 40;
+    }
+
+    SpellChooserScreen #spell-chooser-details {
+        height: 12;
+        margin-top: 1;
+    }
+    """
+
     def __init__(
-        self, saga: Saga, *, exclude: set[str] | None = None, title: str = ""
+        self,
+        saga: Saga,
+        *,
+        exclude: set[str] | None = None,
+        title: str = "",
+        details: Callable[[Spell], str] | None = None,
     ) -> None:
+        """`details`: show the highlighted spell's details under the list,
+        with this extra line (e.g. a creation Lab Total) after them."""
         super().__init__(title, books=sourcebooks.saga_books(saga))
         self.saga = saga
         self.exclude = exclude or set()
         self._origin: dict[str, str] = {}
+        self._details = details
+        if details is not None:
+            self.add_class("-details")
+
+    def _compose_below_list(self) -> ComposeResult:
+        if self._details is not None:
+            with VerticalScroll(id="spell-chooser-details"):
+                yield Static(id="spell-chooser-details-text")
+
+    def _filled(self, shown: list[Spell]) -> None:
+        super()._filled(shown)
+        self._show_details(shown[0] if shown else None)
+
+    def on_list_view_highlighted(self, event: ListView.Highlighted) -> None:
+        item = event.item
+        self._show_details(
+            self._by_item_id.get(item.id) if item is not None and item.id else None
+        )
+
+    def _show_details(self, spell: Spell | None) -> None:
+        if self._details is None:
+            return
+        text = spl.detail_text(self.saga, spell)
+        if spell is not None:
+            text += "\n" + self._details(spell)
+        self.query_one("#spell-chooser-details-text", Static).update(text)
 
     def _load_entries(self) -> list[Spell]:
         entries = []

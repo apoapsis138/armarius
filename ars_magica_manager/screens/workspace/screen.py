@@ -15,6 +15,7 @@ from ...models import (
     INHABITANT_KINDS,
     POSSESSION_KINDS,
 )
+from ..creation_worksheet import CreationWorksheetScreen
 from ..sheets import (
     BOOK_SECTIONS,
     DEVICE_SECTIONS,
@@ -30,6 +31,7 @@ from .base import (
 )
 from .character import CharacterActions
 from .covenant import CovenantActions
+from .creation import CreationActions
 from .devices import DeviceActions
 from .familiar import FamiliarActions
 from .laboratory import LaboratoryActions
@@ -43,6 +45,7 @@ class WorkspaceScreen(
     LaboratoryActions,
     FamiliarActions,
     DeviceActions,
+    CreationActions,
 ):
     """Persistent nav tree (left) + detail pane (right) for one open saga.
 
@@ -54,7 +57,7 @@ class WorkspaceScreen(
     """
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        """The sheets' Edit buttons."""
+        """The sheets' Edit buttons and In Creation / In Play switch."""
         handler = {
             "btn-lab-identity-edit": self._edit_lab_identity,
             "btn-lab-characteristics-edit": self._edit_lab_characteristics,
@@ -66,10 +69,19 @@ class WorkspaceScreen(
             "btn-fam-info-edit": self._edit_familiar_info,
             "btn-fam-health-wounds-edit": self._edit_familiar_wounds,
             "btn-fam-health-fatigue-edit": self._edit_familiar_fatigue,
+            "btn-mode": self._toggle_creation_mode,
+            "btn-worksheet": self._open_creation_worksheet,
         }.get(event.button.id or "")
         if handler is not None:
             event.stop()
             handler()
+
+    def _open_creation_worksheet(self) -> None:
+        """The Creation Worksheet (STORY-1302) for the record on show."""
+        view = self._current_sheet_view()
+        record = view.creation_record if view is not None else None
+        if record is not None:
+            self.app.push_screen(CreationWorksheetScreen(self, record))
 
     # -- generic Add/Remove/Edit dispatch, by the active section of any sheet --
 

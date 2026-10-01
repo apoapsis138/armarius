@@ -715,15 +715,27 @@ def year_end_grogs(saga: Saga) -> list[SeasonRecordLine]:
 
 
 def age_character(
-    saga: Saga, character: Character, age: int, rng: random.Random
+    saga: Saga,
+    character: Character,
+    age: int,
+    rng: random.Random,
+    *,
+    living: int | None = None,
+    when: tuple[str, int] | None = None,
+    label: str = "Aging",
 ) -> SeasonRecordLine:
     """One character's aging roll (STORY-904): apparent age, Aging Points and
-    Characteristics, Decrepitude, a Crisis; written in the Diary."""
+    Characteristics, Decrepitude, a Crisis; written in the Diary. Pre-play
+    aging (STORY-1310) gives its own Living Conditions, the (season, year)
+    the roll belongs to, and a label for the Diary."""
     familiar = familiar_of(saga, character.id)
     bronze = familiar.bronze_cord if familiar is not None else 0
-    result = aging_rules.roll(
-        character, age, _living_conditions(saga, character), bronze, rng, saga
+    if living is None:
+        living = _living_conditions(saga, character)
+    season, year = (
+        when if when is not None else (saga.current_season, saga.current_year)
     )
+    result = aging_rules.roll(character, age, living, bronze, rng, saga)
     aging = character.aging
     if result.apparent:
         aging.apparent_age = (
@@ -749,8 +761,8 @@ def age_character(
         notes.append(text)
         if ends:
             aging.longevity_modifier = 0
-        season, year = next_season(saga.current_season, saga.current_year)
-        aging.recovering = f"{season} {year}"
+        after, after_year = next_season(season, year)
+        aging.recovering = f"{after} {after_year}"
     summary = (
         "no apparent aging"
         if not result.apparent
@@ -760,9 +772,9 @@ def age_character(
     )
     character.diary.append(
         DiaryEntry(
-            year=saga.current_year,
-            season=saga.current_season,
-            name=f"Aging: {summary}",
+            year=year,
+            season=season,
+            name=f"{label}: {summary}",
             details="\n".join(notes) + f"\nRule: {_cite(aging_rules.SOURCE)}",
             activity="Aging",
         )
@@ -771,7 +783,7 @@ def age_character(
         character.id,
         character.name,
         character.covenant_id,
-        "Aging",
+        label,
         "",
         summary,
     )

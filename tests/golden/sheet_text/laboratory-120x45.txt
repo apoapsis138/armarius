@@ -7,7 +7,7 @@
       Owner:    Leandro                        Points:   0
                                                Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1 Magic
-          Edit (e)
+          Edit (e)          In Play
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
@@ -50,7 +50,7 @@
       Owner:    Leandro                        Points:   0
                                                Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1 Magic
-          Edit (e)
+          Edit (e)          In Play
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
@@ -93,7 +93,7 @@
       Owner:    Leandro                        Points:   0
                                                Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1 Magic
-          Edit (e)
+          Edit (e)          In Play
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
@@ -136,7 +136,7 @@
       Owner:    Leandro                        Points:   0
                                                Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1 Magic
-          Edit (e)
+          Edit (e)          In Play
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
@@ -179,7 +179,7 @@
       Owner:    Leandro                        Points:   0
                                                Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1 Magic
-          Edit (e)
+          Edit (e)          In Play
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics
@@ -222,7 +222,7 @@
       Owner:    Leandro                        Points:   0
                                                Sanctum?: No
       Aura: 1 (covenant) +0 (modifier) = 1 Magic
-          Edit (e)
+          Edit (e)          In Play
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Characteristics

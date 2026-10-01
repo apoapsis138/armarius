@@ -27,6 +27,7 @@ SOURCEBOOKS: dict[str, str] = {
     "C&G": "City & Guild",
     "Covenants": "Covenants",
     "GotF": "Guardians of the Forests: The Rhine Tribunal",
+    "Grogs": "Grogs",
     "HMRE": "Hedge Magic, Revised Edition",
     "HoH:MC": "Houses of Hermes: Mystery Cults",
     "HoH:S": "Houses of Hermes: Societates",

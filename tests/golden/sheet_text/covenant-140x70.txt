@@ -10,7 +10,7 @@
       Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
-          Edit (e)
+          Edit (e)          In Play
 
    Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -78,7 +78,7 @@
       Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
-          Edit (e)
+          Edit (e)          In Play
 
    Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -146,7 +146,7 @@
       Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
-          Edit (e)
+          Edit (e)          In Play
 
    Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -214,7 +214,7 @@
       Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
-          Edit (e)
+          Edit (e)          In Play
 
    Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -282,7 +282,7 @@
       Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
-          Edit (e)
+          Edit (e)          In Play
 
    Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -350,7 +350,7 @@
       Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
-          Edit (e)
+          Edit (e)          In Play
 
    Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -418,7 +418,7 @@
       Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
       Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
                                                          Aura Realm:                  Magic
-          Edit (e)
+          Edit (e)          In Play
 
    Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -11,11 +11,12 @@ from support import NODES, everything_saga, wait_until
 from textual.screen import ModalScreen
 from textual.widgets import TabbedContent, Tree
 
-from ars_magica_manager import catalog, storage
+from ars_magica_manager import catalog, spells, storage
 from ars_magica_manager import economics as eco
 from ars_magica_manager import screens as scr
 from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Ability, Character, Saga
+from ars_magica_manager.rules import creation_xp
 from ars_magica_manager.screens.workspace import _COVENANT_REPUTATIONS
 
 
@@ -320,6 +321,40 @@ OPENERS: dict[str, Opener] = {
     ),
     "edit lab room": Opener(
         "laboratory", _pick(lambda ws: ws._edit_named("section-lab-rooms"))
+    ),
+    # Creation Worksheet (STORY-1306)
+    "spend creation xp": Opener(
+        "character",
+        lambda ws: ws._spend_creation_xp(
+            ws.selected_character, "childhood", creation_xp.childhood_targets()
+        ),
+    ),
+    "native language": Opener(
+        "character", lambda ws: ws._set_native_language(ws.selected_character)
+    ),
+    "general spell level": Opener(
+        "character",
+        lambda ws: ws._learn_spell_at_its_level(
+            ws.selected_character,
+            "apprenticeship_spells",
+            spells.find_spell(ws.saga, "spell_aegis_of_the_hearth"),
+        ),
+    ),
+    "gauntlet conditions": Opener(
+        "character", lambda ws: ws._edit_gauntlet_conditions(ws.selected_character)
+    ),
+    "power level": Opener(
+        "covenant", lambda ws: ws._choose_power_level(ws.selected_covenant)
+    ),
+    "buy specialist": Opener(
+        "covenant", lambda ws: ws._buy_specialist(ws.selected_covenant)
+    ),
+    "childhood blanks": Opener(
+        "character",
+        lambda ws: ws._ask_childhood_blanks(
+            ws.selected_character,
+            next(c for c in creation_xp.CHILDHOODS if c.name == "Traveling"),
+        ),
     ),
 }
 
