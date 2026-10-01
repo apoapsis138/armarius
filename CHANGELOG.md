@@ -10,6 +10,25 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.1.0 — 2026-10-01
+
+Build Points have one home: a Build tab on the covenant sheet.
+
+- The covenant sheet has a Build tab: a row for each kind of resource
+  (summae, tractatus, Lab Texts, Casting Tablets, vis sources and stocks,
+  enchanted items, laboratories, specialists, money) with what was spent
+  when the covenant started (Initial) and what it is worth now (Current),
+  a total, and a list of everything counted. Initial is recorded when the
+  covenant moves to In Play; a covenant already in play shows "-" there.
+- Books no longer show their Build Point cost once the covenant is in
+  play: the cost and the covenant-creation limit warnings appear only
+  while the covenant is In Creation, and the Library summary has no Total
+  Cost.
+- A laboratory's Build Points are worked out (Size x 20, plus 10 for each
+  Minor Virtue and 20 for each Major one) instead of typed.
+- While a covenant is In Creation its top panel shows the Build Points
+  spent against the storyguide's figure.
+
 ## 2.0.0 — 2026-10-01
 
 Phase 4: creating covenants, laboratories and characters by the book.

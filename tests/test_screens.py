@@ -2995,7 +2995,6 @@ async def test_edit_lab_identity_updates_fields_and_owner():
 
         app.screen.query_one("#fld-name", Input).value = "Obsidian Crucible"
         app.screen.query_one("#fld-location", Input).value = "Black Forest"
-        app.screen.query_one("#fld-build_points", Input).value = "50"
         app.screen.query_one("#fld-owner_id", Select).value = "char2"
 
         app.screen.query_one("#btn-save", Button).press()
@@ -3005,14 +3004,12 @@ async def test_edit_lab_identity_updates_fields_and_owner():
         text = _lab_identity_text(app.screen._laboratory_sheet_view)
         assert text.splitlines()[0] == "Obsidian Crucible"  # the title
         assert "Location: Black Forest" in text
-        assert "Points: 50" in text
         assert "Owner: Guillame" in text
 
     saga = storage.load_saga("test_saga")
     lab = saga.laboratories[0]
     assert lab.name == "Obsidian Crucible"
     assert lab.location == "Black Forest"
-    assert lab.build_points == 50
     assert lab.owner_id == "char2"
     # Bidirectional sync: the new owner points back, the old one is freed.
     new_owner = next(c for c in saga.characters if c.id == "char2")
@@ -3897,6 +3894,7 @@ _COVENANT_TABS = (
     "tab-cov-economics",
     "tab-cov-library",
     "tab-cov-diary",
+    "tab-cov-build",
 )
 
 
@@ -7329,8 +7327,8 @@ async def test_library_tab_lists_every_book_in_the_covenant():
         await _choose_book(pilot, app, 0)
         panel = _books_panel(app)
         assert "Name: Summa of Flame" in panel
-        assert "Cost: 32 Build Points (Level 15 + Quality 17)" in panel
-        assert "Quality 17 is over the covenant-creation limit of 16." in panel
+        # In play a book shows no Build Points (they're on the Build tab).
+        assert "Cost:" not in panel and "Build Points" not in panel
         assert "A fine copy." in panel
 
 
@@ -7389,7 +7387,9 @@ async def _pick_spell(pilot, app, name: str) -> None:
 
 
 async def test_book_form_shows_the_fields_the_type_needs():
-    storage.save_saga(_sample_saga_with_covenant())
+    saga = _sample_saga_with_covenant()
+    saga.covenants[0].in_creation = True  # Build Points show while creating
+    storage.save_saga(saga)
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
@@ -7876,8 +7876,8 @@ async def test_library_summary_is_read_only_and_the_list_reaches_the_panel():
         left = str(view.query_one("#lib-summary-left", Static).render())
         right = str(view.query_one("#lib-summary-right", Static).render())
         assert "Summae:" in left and "Tractatus:" in left
-        assert "Total Books:     3" in right
-        assert "Total Cost:      44 Build Points" in right
+        assert "Total Books: 3" in " ".join(right.split())
+        assert "Build Points" not in right
 
         # The list runs down to the details panel, two rows above it (the
         # section's bottom padding and the panel's margin).
@@ -8306,7 +8306,8 @@ async def test_choosing_a_spell_gives_a_lab_text_its_level():
         # A spell with a fixed level: the book's Level isn't asked for.
         assert not app.screen.query_one("#fdw-level").display
         live = str(app.screen.query_one("#fields-live", Static).render())
-        assert "Cost: 4 Build Points" in live and "Level 20, from the spell" in live
+        # In play: the Level the spell gives, no Build Points.
+        assert live == "Level 20, from the spell"
         await _save_dialog(pilot, app)
         await wait_until(pilot, lambda: "Notes on the Pilum" in _book_names(app))
 

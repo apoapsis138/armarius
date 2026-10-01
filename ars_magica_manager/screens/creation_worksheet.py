@@ -26,6 +26,7 @@ from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.widgets import Button, Label, OptionList, Static
 from textual.widgets.option_list import Option
 
+from .. import creation
 from ..markup import escape
 from ..models import Character, Covenant, Laboratory, Saga
 from ..rules import creation as rules
@@ -337,7 +338,7 @@ class CreationWorksheetScreen(ModalDialog[None]):
 
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
-                record.in_creation = False
+                creation.set_in_creation(self.saga, record, False)
                 self.workspace._commit("section-creation", tree=True)
                 self.dismiss(None)
 

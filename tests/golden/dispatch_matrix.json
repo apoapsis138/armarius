@@ -491,6 +491,34 @@
         "v": "(disabled)",
         "V": "(disabled)"
       }
+    },
+    "SheetSection#section-cov-build": {
+      "active": "section-cov-build",
+      "keys": {
+        "a": "(disabled)",
+        "A": "(disabled)",
+        "e": "(disabled)",
+        "r": "(disabled)",
+        "i": "(disabled)",
+        "u": "(disabled)",
+        "I": "(disabled)",
+        "v": "(disabled)",
+        "V": "(disabled)"
+      }
+    },
+    "SheetSection#section-cov-build-items": {
+      "active": "section-cov-build-items",
+      "keys": {
+        "a": "(disabled)",
+        "A": "(disabled)",
+        "e": "(disabled)",
+        "r": "(disabled)",
+        "i": "(disabled)",
+        "u": "(disabled)",
+        "I": "(disabled)",
+        "v": "(disabled)",
+        "V": "(disabled)"
+      }
     }
   },
   "character": {

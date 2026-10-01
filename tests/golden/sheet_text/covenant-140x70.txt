@@ -12,7 +12,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
+   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary  Build
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -80,7 +80,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
+   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary  Build
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -148,7 +148,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
+   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary  Build
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -216,7 +216,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
+   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary  Build
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -284,7 +284,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
+   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary  Build
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -352,7 +352,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
+   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary  Build
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -363,7 +363,7 @@
         • Art:     1                                     Other:           2
 
       Tractatus:   0                                     Total Books:     3
-        • Ability: 0                                     Total Cost:      0 Build Points
+        • Ability: 0
         • Art:     0
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -420,7 +420,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary
+   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary  Build
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   (none recorded)
@@ -462,6 +462,74 @@
 
 
     Select a Diary entry to see its details.
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-cov-build
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Keep
+
+      Saga:                     Matrix                   Tribunal:                    (not set)
+      Storyguide:               (not set)                Current Season:              Spring
+      Year Founded:             (not set)                Current Year:                1220
+      Aegis of the Hearth:      0                        Aegis' Penetration:          0
+      Living Conditions (Magi): 0                        Living Conditions (Mundane): 0
+      Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
+                                                         Aura Realm:                  Magic
+          Edit (e)          In Play
+
+   Attributes  Inhabitants  Seasons  Possessions  Economics  Library  Diary  Build
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Build Points (28)
+
+                            Initial  Current
+      Art Summae                  -        0
+      Ability Summae              -        0
+      Tractatus                   -        0
+      Lab Texts                   -        0
+      Casting Tablets             -        0
+      Vis sources                 -        0
+      Vis stocks                  -        0
+      Enchanted items             -        8
+      Laboratories                -       20
+      Specialists                 -        0
+      Money                       -        0
+      Total                       -       28
+
+      Power Level: (not set)
+      Storyguide's Build Points: (not set)
+      Initial wasn't recorded: this covenant was in play before Build Points were tracked.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ What's Counted
+
+      Enchanted items
+        Potions, Heal (level 20): 8
+      Laboratories
+        Tower: 20
+
+
+
+
+
+
+
+
+
+
+
 
 
 

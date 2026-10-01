@@ -292,3 +292,71 @@ def test_bought_specialists_and_teachers_cost_build_points():
     assert costs["Teacher: Odo, Artes Liberales"] == 11
     assert costs["Specialist: Hilda, Craft: Smith"] == 6
     assert not any("Wat" in label for label in costs)
+
+
+# -- the Build tab (STORY-1314) --
+
+
+def test_the_build_tab_keeps_initial_and_follows_current():
+    from ars_magica_manager import covenant_build, creation
+
+    saga = _saga()
+    covenant = saga.covenants[0]
+    covenant.power_level = "Low"
+    covenant.build_points_budget = 200
+    covenant.possessions = [
+        Possession(id="p1", kind="vis_source", name="Spring", art="Aquam", pawns=4)
+    ]
+    saga.laboratories = [
+        Laboratory(id="l1", covenant_id="cov1", name="L1", starting=True),
+        Laboratory(id="l2", covenant_id="cov1", name="L2", starting=True),
+    ]
+    assert covenant_build.title(saga, covenant) == "Build Points (20 of 200)"
+    assert covenant_build.summary(saga, covenant) == "20/200"
+    table = covenant_build.table_text(saga, covenant)
+    assert "Vis sources                20       20" in table  # the same In Creation
+    assert "Storyguide's Build Points: 200" in table
+
+    creation.set_in_creation(saga, covenant, False)
+    assert covenant.initial_build_points["Vis sources"] == 20
+    covenant.possessions[0].pawns = 6  # found more in play
+    saga.laboratories.append(  # a lab built in play counts in the current value
+        Laboratory(
+            id="l3",
+            covenant_id="cov1",
+            name="L3",
+            characteristics=LabCharacteristics(size=1),
+        )
+    )
+    table = covenant_build.table_text(saga, covenant)
+    assert "Vis sources                20       30" in table
+    assert "Laboratories                0       70" in table  # Size +1, and spare
+    assert "Total                      20      100" in table
+    assert covenant_build.title(saga, covenant) == "Build Points (100)"
+    assert "Spring (6 a year): 30" in covenant_build.items_text(saga, covenant)
+
+    creation.set_in_creation(saga, covenant, True)  # back: Initial is live again
+    assert covenant.initial_build_points is None
+
+
+def test_a_covenant_in_play_before_tracking_has_no_initial():
+    from ars_magica_manager import covenant_build
+
+    saga = _saga()
+    covenant = saga.covenants[0]
+    covenant.in_creation = False
+    table = covenant_build.table_text(saga, covenant)
+    assert "Total                       -        0" in table
+    assert "Initial wasn't recorded" in table
+
+
+def test_a_labs_build_points_are_worked_out():
+    from ars_magica_manager.laboratories import lab_build_points
+
+    lab = Laboratory(
+        id="l1",
+        covenant_id="cov1",
+        name="Tower",
+        characteristics=LabCharacteristics(size=2),
+    )
+    assert lab_build_points(lab) == 40

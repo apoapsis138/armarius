@@ -932,7 +932,7 @@ class WorkspaceBase(Screen[None]):
 
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed:
-                record.in_creation = not record.in_creation
+                creation.set_in_creation(self.saga, record, not record.in_creation)
                 self._commit("section-creation", tree=True)
 
         self.app.push_screen(ConfirmScreen(message), handle_confirmed)

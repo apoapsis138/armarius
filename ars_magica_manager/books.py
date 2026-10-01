@@ -104,6 +104,15 @@ def cost(book: Book, saga: Saga | None = None) -> int:
     return 0
 
 
+def priced(saga: Saga, book: Book) -> bool:
+    """Whether the book's Build Points are worth showing: it belongs to a
+    covenant that is still In Creation."""
+    if book.owner_kind != "covenant":
+        return False
+    covenant = saga.covenant(book.owner_id)
+    return covenant is not None and covenant.in_creation
+
+
 def cost_formula(book: Book, saga: Saga | None = None) -> str:
     """How `cost` was worked out, e.g. "Level 12 + Quality 10"."""
     level = level_of(book, saga) or 0
@@ -486,7 +495,6 @@ def summary_texts(books: list[Book], saga: Saga | None = None) -> tuple[str, str
             ("Other", count("Other")),
             ("", ""),
             ("Total Books", len(books)),
-            ("Total Cost", f"{sum(cost(b, saga) for b in books)} Build Points"),
         ]
     )
     return left, right
@@ -523,12 +531,16 @@ def detail_text(saga: Saga, book: Book | None) -> str:
     lines = [f"[$text-error][b]{escape(p)}[/b][/]" for p in status_problems(book, saga)]
     lines.append(_cell("Name", book.name or "(untitled)")[0])
     lines += [f"{lm}{' ' * (width - lw)}{rm}" for (lm, lw), (rm, _) in zip(left, right)]
-    lines.append(
-        _cell("Cost", f"{cost(book, saga)} Build Points ({cost_formula(book, saga)})")[
-            0
-        ]
-    )
-    lines += [f"[$text-error]{escape(w)}[/]" for w in limit_warnings(book)]
+    if priced(saga, book):
+        # Build Points matter only while its covenant is being created
+        # (STORY-1314); in play they're on the covenant's Build tab.
+        lines.append(
+            _cell(
+                "Cost",
+                f"{cost(book, saga)} Build Points ({cost_formula(book, saga)})",
+            )[0]
+        )
+        lines += [f"[$text-error]{escape(w)}[/]" for w in limit_warnings(book)]
     lines += _study_lines(saga, book)
     if book.description.strip():
         lines += ["", "[b]Description:[/]", markdown_inline(book.description.strip())]

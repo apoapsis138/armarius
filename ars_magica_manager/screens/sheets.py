@@ -24,6 +24,7 @@ from textual.widgets._collapsible import CollapsibleTitle
 
 from .. import books as bk
 from .. import casting_text, catalog, faith, lab_planning, seasons
+from .. import covenant_build as cov_build
 from .. import covenant_diary as cov_diary
 from .. import economics as eco
 from .. import enchanted_devices as ed
@@ -2277,7 +2278,7 @@ class LaboratorySheetView(SheetView):
         return aligned(
             [
                 ("Location", escape(lab.location) or "(not set)"),
-                ("Points", lab.build_points),
+                ("Build Points", lab_text.lab_build_points(lab)),
                 ("Sanctum?", "Yes" if lab.sanctum_marked else "No"),
             ]
         )
@@ -2640,10 +2641,10 @@ class FamiliarSheetView(SheetView):
 class CovenantSheetView(SheetView):
     """The covenant sheet mounted into WorkspaceScreen's detail pane.
 
-    A permanent info panel (not inside any tab) above seven tabs mirroring
+    A permanent info panel (not inside any tab) above eight tabs mirroring
     the covenant record sheet: Attributes, Inhabitants, Seasons (who has
     planned what this season, STORY-912), Possessions, Economics, Library,
-    Diary.
+    Diary, and Build (what its Build Points went on, STORY-1314).
 
     The panel's saga-level values (Saga, Storyguide, Current Season,
     Current Year) are inherited from the Saga and shown dimmed/read-only;
@@ -2674,6 +2675,36 @@ class CovenantSheetView(SheetView):
             yield self._tab("Economics", "tab-cov-economics", self._economics_tab)
             yield self._tab("Library", "tab-cov-library", self._library_tab)
             yield self._tab("Diary", "tab-cov-diary", self._diary_tab)
+            yield self._tab("Build", "tab-cov-build", self._scrolling(self._build_tab))
+
+    def _build_tab(self) -> ComposeResult:
+        """What the covenant's Build Points went on (STORY-1314): the one
+        place Build Points show once the covenant is in play."""
+        with SheetSection(
+            title=cov_build.title(self.saga, self.covenant), id="section-cov-build"
+        ):
+            yield Static(
+                cov_build.table_text(self.saga, self.covenant), id="cov-build-table"
+            )
+        with SheetSection(title="What's Counted", id="section-cov-build-items"):
+            yield Static(
+                cov_build.items_text(self.saga, self.covenant), id="cov-build-items"
+            )
+
+    def _refresh_build(self) -> None:
+        """Anything the covenant owns can change its Build Points."""
+        # The top panel shows the Build Points spent while In Creation.
+        self.query_one("#cov-info-right", Static).update(self._info_right_text())
+        self._set_section_title(
+            self.query_one("#section-cov-build", Collapsible),
+            cov_build.title(self.saga, self.covenant),
+        )
+        self.query_one("#cov-build-table", Static).update(
+            cov_build.table_text(self.saga, self.covenant)
+        )
+        self.query_one("#cov-build-items", Static).update(
+            cov_build.items_text(self.saga, self.covenant)
+        )
 
     def _attributes_tab(self) -> ComposeResult:
         with Vertical(classes="panel-body"):
@@ -2996,7 +3027,10 @@ class CovenantSheetView(SheetView):
         if section_id.startswith("section-inh-"):
             # Marking someone departed takes them off the Seasons lists.
             super().refresh_section("tab-cov-seasons")
-        steps: list[Callable[[], None]] = [lambda: self._refresh_section(section_id)]
+        steps: list[Callable[[], None]] = [
+            lambda: self._refresh_section(section_id),
+            self._refresh_build,
+        ]
         if section_id.startswith(("section-inh-", "section-pos-", "section-cov-")):
             # These feed the Economics tab's figures.
             steps.append(self._rebuild_economics)
@@ -3205,6 +3239,12 @@ class CovenantSheetView(SheetView):
                 ("Living Conditions (Mundane)", str(cov.living_conditions_mundane)),
                 ("Covenant Season", cov.covenant_season),
                 ("Aura Realm", self._aura_realm_text()),
+                # While it's being created: what's spent of its Build Points.
+                *(
+                    [("Build Points", cov_build.summary(saga, cov))]
+                    if cov.in_creation
+                    else []
+                ),
             ]
         )
 

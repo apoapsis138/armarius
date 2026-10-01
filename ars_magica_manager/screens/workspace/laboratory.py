@@ -104,7 +104,6 @@ class LaboratoryActions(WorkspaceBase):
                 return
             lab.name = result["name"]
             lab.location = result["location"]
-            lab.build_points = result["build_points"]
             lab.aura_modifier = result["aura_modifier"]
             lab.sanctum_marked = result["sanctum_marked"]
             lab.covenant_id = result["covenant_id"]

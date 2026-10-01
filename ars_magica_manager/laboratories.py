@@ -81,6 +81,25 @@ def lab_free_virtues(
     return limit - lab_net_vf_points(lab, catalog_by_id)
 
 
+#: A laboratory's Build Points at covenant creation (DE ch. 8, Build Point
+#: Cost for Starting Laboratories): Size x 20, and each Virtue (Free
+#: Virtues and Flaws cost nothing).
+LAB_SIZE_BUILD_POINTS = 20
+LAB_VIRTUE_BUILD_POINTS: dict[str, int] = {"Minor": 10, "Major": 20}
+
+
+def lab_build_points(lab: Laboratory) -> int:
+    """The laboratory's Build Points, worked out (never typed): Size x 20
+    plus 10 for each Minor Virtue and 20 for each Major one."""
+    lab_catalog = catalog.load_lab_virtue_flaw_catalog_by_id()
+    points = LAB_SIZE_BUILD_POINTS * lab.characteristics.size
+    for vf in lab.virtues_flaws:
+        entry = lab_catalog.get(vf.vf_id)
+        if entry is not None and entry.type == "Virtue":
+            points += LAB_VIRTUE_BUILD_POINTS.get(entry.tier, 0)
+    return points
+
+
 def lab_base_safety(
     lab: Laboratory, catalog_by_id: dict[str, LabVirtueFlawDef]
 ) -> float:

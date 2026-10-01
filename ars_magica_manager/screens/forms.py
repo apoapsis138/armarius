@@ -1988,7 +1988,6 @@ def _lab_identity_fields(saga: Saga, lab: Laboratory) -> list[DialogField]:
     return [
         DialogField("name", "Name", "text", lab.name, required=True),
         DialogField("location", "Location", "text", lab.location),
-        DialogField("build_points", "Points (Build Points)", "int", lab.build_points),
         DialogField("aura_modifier", "Aura modifier", "int", lab.aura_modifier),
         DialogField(
             "sanctum_marked",
@@ -2532,19 +2531,35 @@ def _book_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
 
 
 def _book_live(values: dict[str, Any], saga: Saga) -> str:
-    """The form's live line: the Build Point cost (a Lab Text's or Casting
-    Tablet's from its spell's level) and any covenant-creation limit the
-    values go over (a warning, not an error)."""
+    """The form's live line. For a covenant still In Creation: the Build
+    Point cost (a Lab Text's or Casting Tablet's from its spell's level) and
+    any covenant-creation limit the values go over (a warning, not an
+    error). Otherwise Build Points don't matter (STORY-1314): only the
+    Level a spell gives the book."""
+    owner_kind, owner_id = bk.parse_owner_value(values.get("owner"))
+    probe = Book(
+        id="",
+        name="",
+        type=values.get("type") or "Other",
+        owner_kind=owner_kind,
+        owner_id=owner_id,
+    )
+    probe.spell_id = values.get("spell_id") if probe.type in bk.SPELL_TYPES else None
+    spell = spl.find_spell(saga, probe.spell_id)
+    from_spell = (
+        f"Level {spell.level}, from the spell"
+        if spell is not None and spell.level is not None
+        else ""
+    )
+    if not bk.priced(saga, probe):
+        return f"[dim]{from_spell}[/]" if from_spell else ""
     if not values.get("type"):
         return "[dim]Cost: choose a Type.[/]"
-    probe = Book(id="", name="", type=values["type"])
     probe.level = values.get("level") if bk.has_level(probe.type) else None
     probe.quality = values.get("quality") if bk.has_quality(probe.type) else None
-    probe.spell_id = values.get("spell_id") if probe.type in bk.SPELL_TYPES else None
     lines = [f"[b]Cost:[/] {bk.cost(probe, saga)} Build Points"]
-    spell = spl.find_spell(saga, probe.spell_id)
-    if spell is not None and spell.level is not None:
-        lines[0] += f"  [dim](Level {spell.level}, from the spell)[/]"
+    if from_spell:
+        lines[0] += f"  [dim]({from_spell})[/]"
     lines += [f"[$text-error]{escape(w)}[/]" for w in bk.limit_warnings(probe)]
     return "\n".join(lines)
 

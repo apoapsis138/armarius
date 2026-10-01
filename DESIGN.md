@@ -338,6 +338,11 @@ just the standing decisions.
   has its own warning); a plain `(n)` count on other lists; nothing on
   Abilities, Raw Vis or calculated sections. Book titles don't show Build
   Points.
+- **Build Points show in one place: the covenant's Build tab** (a row per
+  kind of resource, Initial as the covenant started and Current as it
+  stands). A book shows its cost only while its covenant is In Creation; a
+  laboratory's Build Points are worked out (Size x 20 plus its Virtues),
+  never typed.
 - Side-by-side lists sit 2 columns apart and side-by-side blocks of text 4
   apart, set once in `TwoColumns`/`StackingColumns`; column headings above a
   list are a `TableHeader`. Sheets target a 140x60 terminal (checked at

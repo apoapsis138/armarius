@@ -1126,7 +1126,6 @@ class Laboratory:
     name: str
     owner_id: str | None = None
     location: str = ""
-    build_points: int = 0
     #: Manual adjustment on top of the covenant's aura this lab inherits
     #: (e.g. from Virtues) -- see laboratories.lab_aura_total().
     aura_modifier: int = 0
@@ -2396,6 +2395,10 @@ class Covenant:
     #: The Build Points the storyguide gives it, within the Power Level's
     #: range: what its starting resources are bought with (None: not set).
     build_points_budget: int | None = None
+    #: What its Build Points were spent on when it moved to In Play, by
+    #: Build-tab row (STORY-1314); None for a covenant still In Creation,
+    #: or one in play since before this was recorded.
+    initial_build_points: dict[str, int] | None = None
     #: Being created by the book (STORY-1301): the creation checks run and
     #: the Creation Worksheet is offered. New records start In Creation;
     #: older saves load In Play (False).

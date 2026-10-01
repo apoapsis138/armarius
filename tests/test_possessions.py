@@ -35,8 +35,10 @@ def _saga() -> tuple[Saga, Covenant]:
                 name="Obsidian Crucible",
                 owner_id="mag1",
                 location="The north tower",
-                build_points=30,
-                characteristics=LabCharacteristics(general_quality=4, upkeep=12),
+                # Size +1: 20 Build Points, worked out (STORY-1314).
+                characteristics=LabCharacteristics(
+                    size=1, general_quality=4, upkeep=12
+                ),
             ),
             Laboratory(id="lab2", covenant_id="cov2", name="Not Ours"),
             Laboratory(id="lab3", covenant_id=None, name="Loose Lab"),
@@ -58,7 +60,7 @@ def test_the_covenants_laboratories_are_listed_as_sanctums():
     assert [e.name for e in entries] == ["Obsidian Crucible"]  # only this covenant's
     entry = entries[0]
     assert entry.auto and entry.owner == "Corvinus"
-    assert entry.location == "The north tower" and entry.build_points == 30
+    assert entry.location == "The north tower" and entry.build_points == 20
 
 
 def test_manual_sanctums_follow_the_laboratories():
@@ -207,7 +209,7 @@ def test_detail_text_shows_everything_for_a_sanctum_and_renders_emphasis():
         "Location: The north tower",
         "Quality: 4",
         "Upkeep: 12 Points",
-        "Build Points: 30",
+        "Build Points: 20",
         "Usage: Standard (2 Seasons)",
         "A laboratory of this covenant: Obsidian Crucible.",
         "Description:",

@@ -165,6 +165,11 @@ def test_detail_text_field_order_and_warning():
         owner_id="cov1",
         description="**Rare**",
     )
+    # In play the Build Point cost and creation limits aren't shown
+    # (STORY-1314): they matter only while the covenant is In Creation.
+    in_play = bk.detail_text(saga, book)
+    assert "Cost:" not in in_play and "covenant-creation limit" not in in_play
+    saga.covenant("cov1").in_creation = True
     text = bk.detail_text(saga, book)
     # Name; then two columns (Type..Quality | Language..Owner); then Cost.
     rows = [
@@ -423,7 +428,7 @@ def test_duplicate_names_counts_the_saga_and_the_file_itself():
     assert bk.duplicate_names(books, {"A Book", "New"}) == books
 
 
-def test_summary_counts_books_by_kind_and_totals_the_cost():
+def test_summary_counts_books_by_kind():
     books = [
         _book("Art Summa", art="Creo", level=10, quality=5),  # 15
         _book("Art Summa", art="Vim", level=2, quality=3),  # 5
@@ -453,7 +458,6 @@ def test_summary_counts_books_by_kind_and_totals_the_cost():
         "Other: 1",
         "",
         "Total Books: 9",
-        "Total Cost: 51 Build Points",
     ]
     # Values line up in one column.
     assert len({line.index("1") for line in right.split("\n")[:3]}) == 1

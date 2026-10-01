@@ -23,7 +23,7 @@ from .models import (
     Saga,
     character_age,
 )
-from .rules import creation_access, creation_magus
+from .rules import creation_access, creation_covenant, creation_magus
 
 
 def new_saga(
@@ -190,3 +190,17 @@ def pre_play_aging(saga: Saga, character: Character, rng: random.Random) -> list
         summaries.append(f"{age}: {line.result}")
         conditions.aged_to = age
     return summaries
+
+
+def set_in_creation(
+    saga: Saga, record: Character | Covenant | Laboratory, in_creation: bool
+) -> None:
+    """Move `record` to In Creation or In Play. A covenant moving to In Play
+    keeps what its Build Points were spent on (the Build tab's Initial
+    column, STORY-1314); moving back to In Creation lets it change again."""
+    record.in_creation = in_creation
+    if isinstance(record, Covenant):
+        if in_creation:
+            record.initial_build_points = None
+        else:
+            creation_covenant.record_initial(saga, record)

@@ -3,9 +3,9 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Tower
 
-      Covenant: Keep                           Location: (not set)
-      Owner:    Leandro                        Points:   0
-                                               Sanctum?: No
+      Covenant: Keep                           Location:     (not set)
+      Owner:    Leandro                        Build Points: 20
+                                               Sanctum?:     No
       Aura: 1 (covenant) +0 (modifier) = 1 Magic
           Edit (e)          In Play
 
@@ -46,9 +46,9 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Tower
 
-      Covenant: Keep                           Location: (not set)
-      Owner:    Leandro                        Points:   0
-                                               Sanctum?: No
+      Covenant: Keep                           Location:     (not set)
+      Owner:    Leandro                        Build Points: 20
+                                               Sanctum?:     No
       Aura: 1 (covenant) +0 (modifier) = 1 Magic
           Edit (e)          In Play
 
@@ -89,9 +89,9 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Tower
 
-      Covenant: Keep                           Location: (not set)
-      Owner:    Leandro                        Points:   0
-                                               Sanctum?: No
+      Covenant: Keep                           Location:     (not set)
+      Owner:    Leandro                        Build Points: 20
+                                               Sanctum?:     No
       Aura: 1 (covenant) +0 (modifier) = 1 Magic
           Edit (e)          In Play
 
@@ -132,9 +132,9 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Tower
 
-      Covenant: Keep                           Location: (not set)
-      Owner:    Leandro                        Points:   0
-                                               Sanctum?: No
+      Covenant: Keep                           Location:     (not set)
+      Owner:    Leandro                        Build Points: 20
+                                               Sanctum?:     No
       Aura: 1 (covenant) +0 (modifier) = 1 Magic
           Edit (e)          In Play
 
@@ -175,9 +175,9 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Tower
 
-      Covenant: Keep                           Location: (not set)
-      Owner:    Leandro                        Points:   0
-                                               Sanctum?: No
+      Covenant: Keep                           Location:     (not set)
+      Owner:    Leandro                        Build Points: 20
+                                               Sanctum?:     No
       Aura: 1 (covenant) +0 (modifier) = 1 Magic
           Edit (e)          In Play
 
@@ -218,9 +218,9 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Tower
 
-      Covenant: Keep                           Location: (not set)
-      Owner:    Leandro                        Points:   0
-                                               Sanctum?: No
+      Covenant: Keep                           Location:     (not set)
+      Owner:    Leandro                        Build Points: 20
+                                               Sanctum?:     No
       Aura: 1 (covenant) +0 (modifier) = 1 Magic
           Edit (e)          In Play
 

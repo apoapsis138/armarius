@@ -87,7 +87,6 @@ def _sample_saga() -> Saga:
                 name="Test Lab",
                 owner_id="char_1",
                 location="Black Forest",
-                build_points=50,
                 characteristics=LabCharacteristics(size=1, safety=-1),
                 specialties=[LabSpecialtyEntry("Ignem", 2, "Hearth spirit")],
                 dropped_specializations=["Ignem"],

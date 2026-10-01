@@ -29,7 +29,12 @@ from .. import books as bk
 from .. import catalog, sourcebooks
 from .. import enchanted_devices as ed
 from ..covenants import covenant_boon_points, covenant_hook_points
-from ..laboratories import lab_base_safety, lab_free_virtues
+from ..laboratories import (
+    LAB_SIZE_BUILD_POINTS,
+    lab_base_safety,
+    lab_build_points,
+    lab_free_virtues,
+)
 from ..models import Covenant, Laboratory, Saga
 from .creation_base import COVENANT_CHECKS, LABORATORY_CHECKS, Check, Record, check
 
@@ -95,8 +100,7 @@ VIS_STOCK_PAWNS = 5  # pawns for 1 BP
 EFFECT_LEVELS = 5  # levels of an enchanted effect for 2 BP
 MONEY_POUNDS = 10  # pounds for 1 BP (Covenants)
 SPARE_LAB = 50
-SIZE_BP = 20
-LAB_VIRTUE_BP = {"Minor": 10, "Major": 20}
+SIZE_BP = LAB_SIZE_BUILD_POINTS
 BUILDER_MAGIC_THEORY = 3
 
 
@@ -106,13 +110,41 @@ class Cost:
 
     label: str
     points: int
+    #: The Build tab's row it belongs to (a CATEGORIES entry).
+    category: str = ""
 
 
-def _covenant_labs(saga: Saga, covenant: Covenant) -> list[Laboratory]:
+#: The covenant Build tab's rows, in order.
+CATEGORIES: tuple[str, ...] = (
+    "Art Summae",
+    "Ability Summae",
+    "Tractatus",
+    "Lab Texts",
+    "Casting Tablets",
+    "Vis sources",
+    "Vis stocks",
+    "Enchanted items",
+    "Laboratories",
+    "Specialists",
+    "Money",
+)
+_BOOK_CATEGORY = {
+    "Art Summa": "Art Summae",
+    "Ability Summa": "Ability Summae",
+    "Tractatus": "Tractatus",
+    "Lab Text": "Lab Texts",
+    "Casting Tablet": "Casting Tablets",
+}
+
+
+def _covenant_labs(
+    saga: Saga, covenant: Covenant, *, every: bool = False
+) -> list[Laboratory]:
+    """The covenant's starting laboratories (`every`: all of them)."""
     return [
         lab
         for lab in saga.laboratories
-        if lab.covenant_id == covenant.id and lab.starting
+        if lab.covenant_id == covenant.id and (every or lab.starting)
     ]
 
 
@@ -123,24 +155,19 @@ def _magi(saga: Saga, covenant: Covenant) -> int:
 
 
 def lab_points(lab: Laboratory) -> int:
-    """A starting laboratory's own Build Points: Size x 20 and its
-    Virtues (Minor 10, Major 20; Free Virtues and Flaws cost nothing)."""
-    lab_catalog = catalog.load_lab_virtue_flaw_catalog_by_id()
-    points = SIZE_BP * lab.characteristics.size
-    for vf in lab.virtues_flaws:
-        entry = lab_catalog.get(vf.vf_id)
-        if entry is not None and entry.type == "Virtue":
-            points += LAB_VIRTUE_BP.get(entry.tier, 0)
-    return points
+    """A laboratory's own Build Points (laboratories.lab_build_points)."""
+    return lab_build_points(lab)
 
 
-def spare_labs(saga: Saga, covenant: Covenant) -> int:
+def spare_labs(saga: Saga, covenant: Covenant, *, every: bool = False) -> int:
     """Starting labs beyond one per magus (negative: magi without one)."""
-    return len(_covenant_labs(saga, covenant)) - _magi(saga, covenant)
+    return len(_covenant_labs(saga, covenant, every=every)) - _magi(saga, covenant)
 
 
-def costs(saga: Saga, covenant: Covenant) -> list[Cost]:
-    """What the covenant's Build Points went on, line by line."""
+def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Cost]:
+    """What the covenant's Build Points went on, line by line. At creation
+    only its starting laboratories count; `every_lab` counts all of them
+    (the covenant's Build Point value in play)."""
     lines: list[Cost] = []
     library = [b for b in bk.books_owned_by(saga, "covenant", covenant.id)]
     for book in library:
@@ -152,13 +179,14 @@ def costs(saga: Saga, covenant: Covenant) -> list[Cost]:
                 if book.name.startswith(book.type)
                 else f"{book.type}: {book.name}"
             )
-            lines.append(Cost(label, points))
+            lines.append(Cost(label, points, _BOOK_CATEGORY.get(book.type, "")))
     for possession in covenant.possessions:
         if possession.kind == "vis_source" and possession.pawns:
             lines.append(
                 Cost(
                     f"Vis source: {possession.name} ({possession.pawns} a year)",
                     VIS_SOURCE_BP * possession.pawns,
+                    "Vis sources",
                 )
             )
         elif possession.kind == "vis_store" and possession.pawns:
@@ -166,6 +194,7 @@ def costs(saga: Saga, covenant: Covenant) -> list[Cost]:
                 Cost(
                     f"Vis stock: {possession.name} ({possession.pawns} pawns)",
                     math.ceil(possession.pawns / VIS_STOCK_PAWNS),
+                    "Vis stocks",
                 )
             )
     for device in ed.held_by(saga, "covenant", covenant.id):
@@ -175,17 +204,27 @@ def costs(saga: Saga, covenant: Covenant) -> list[Cost]:
                 Cost(
                     f"Enchanted: {device.name}, {effect.name} (level {level})",
                     2 * math.ceil(level / EFFECT_LEVELS),
+                    "Enchanted items",
                 )
             )
-    for lab in _covenant_labs(saga, covenant):
+    for lab in _covenant_labs(saga, covenant, every=every_lab):
         points = lab_points(lab)
         if points:
-            lines.append(Cost(f"Laboratory: {lab.name}", points))
-    spare = spare_labs(saga, covenant)
+            lines.append(Cost(f"Laboratory: {lab.name}", points, "Laboratories"))
+    spare = spare_labs(saga, covenant, every=every_lab)
     if spare > 0:
-        lines.append(Cost(f"Spare laboratories ({spare})", SPARE_LAB * spare))
-    elif spare < 0:
-        lines.append(Cost(f"Magi without a laboratory ({-spare})", SPARE_LAB * spare))
+        lines.append(
+            Cost(f"Spare laboratories ({spare})", SPARE_LAB * spare, "Laboratories")
+        )
+    elif spare < 0 and not every_lab:
+        # A refund at creation only: it isn't part of a covenant's value.
+        lines.append(
+            Cost(
+                f"Magi without a laboratory ({-spare})",
+                SPARE_LAB * spare,
+                "Laboratories",
+            )
+        )
     for person in covenant.inhabitants:
         points = specialist_cost(
             person.specialist_score,
@@ -195,11 +234,13 @@ def costs(saga: Saga, covenant: Covenant) -> list[Cost]:
         if points is not None and not person.departed:
             what = "Teacher" if person.teacher_teaching is not None else "Specialist"
             ability = f", {person.linked_ability}" if person.linked_ability else ""
-            lines.append(Cost(f"{what}: {person.name}{ability}", points))
+            lines.append(Cost(f"{what}: {person.name}{ability}", points, "Specialists"))
     books_in_play = sourcebooks.saga_books(saga)
     wealth = covenant.economics.wealth
     if wealth and sourcebooks.in_play("Covenants", books_in_play):
-        lines.append(Cost(f"Money ({wealth} pounds)", math.ceil(wealth / MONEY_POUNDS)))
+        lines.append(
+            Cost(f"Money ({wealth} pounds)", math.ceil(wealth / MONEY_POUNDS), "Money")
+        )
     return lines
 
 
@@ -218,6 +259,21 @@ def specialist_cost(
 
 def spent(saga: Saga, covenant: Covenant) -> int:
     return sum(c.points for c in costs(saga, covenant))
+
+
+def category_totals(found: list[Cost]) -> dict[str, int]:
+    """Build Points by Build-tab row, every row present, in order."""
+    totals = dict.fromkeys(CATEGORIES, 0)
+    for cost in found:
+        if cost.category in totals:
+            totals[cost.category] += cost.points
+    return totals
+
+
+def record_initial(saga: Saga, covenant: Covenant) -> None:
+    """Keep what the covenant's Build Points were spent on as it moves to
+    In Play: the Build tab's Initial column."""
+    covenant.initial_build_points = category_totals(costs(saga, covenant))
 
 
 def over_level(saga: Saga, covenant: Covenant, max_level: int) -> list[str]:

@@ -542,19 +542,17 @@ CONTRACTS: dict[str, Contract] = {
         prefill={"Name": "Tower", "Covenant": "cov1", "Owner": "mag1"},
         edits={
             "Location": "Tower top",
-            "Points": "5",
             "Aura modifier": "1",
             "Sanctum marked": True,
         },
         saved=lambda s: (
             _lab(s).location,
-            _lab(s).build_points,
             _lab(s).aura_modifier,
             _lab(s).sanctum_marked,
         ),
-        expected=("Tower top", 5, 1, True),
+        expected=("Tower top", 1, True),
         invalid={"Name": ""},
-        shown={"#lab-identity-right": "Sanctum?: Yes"},
+        shown={"#lab-identity-right": "Sanctum?:     Yes"},
     ),
     "edit lab characteristics": Contract(
         prefill={"Size": "0", "Refinement": "0"},

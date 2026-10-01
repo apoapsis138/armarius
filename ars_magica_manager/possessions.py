@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from . import catalog, storage
-from .laboratories import lab_characteristic_total
+from .laboratories import lab_build_points, lab_characteristic_total
 from .markup import escape, fit, markdown_inline
 from .models import (
     GEAR_POINTS,
@@ -100,7 +100,7 @@ class PossessionEntry:
     @property
     def build_points(self) -> int | None:
         if self.lab is not None:
-            return self.lab.build_points
+            return lab_build_points(self.lab)
         return self._own("build_points", None)
 
     @property
