@@ -77,6 +77,36 @@ def test_extracting_vis_gives_a_tenth_of_the_creo_vim_lab_total():
     assert entry.details == "Tiberius: Lab Total 14: 2 pawn(s) of Vim vis."
 
 
+def test_lab_work_can_use_the_covenants_vis_stores():
+    saga = _saga()
+    keep, lab = saga.covenants[0], saga.laboratories[0]
+    # Extracted vis goes to the covenant: a new Vim store, kept there.
+    seasons.plan_lab_work(saga, _plan(lab_seasons.EXTRACT, vis_from="covenant"))
+    _run(saga)
+    [store] = keep.possessions
+    assert (store.art, store.pawns, store.location_kind) == ("Vim", 2, "covenant")
+    assert lab.raw_vis == {} and saga.character("m").raw_vis == {"creo": 8, "vim": 1}
+    assert keep.diary[-1].name == "Tiberius added 2 pawns of Vim vis"
+    # And fixing an Arcane Connection takes a pawn of it back.
+    lab.arcane_connections = [ArcaneConnection("ac", "a lock of hair")]
+    saga.current_season = "Summer"
+    plan = SeasonPlan(
+        "m",
+        1220,
+        "Summer",
+        lab_seasons.FIX_AC,
+        lab_id="lab",
+        connection_id="ac",
+        vis_from="covenant",
+    )
+    assert lab_seasons.work(saga, saga.character("m"), plan)[0] == []
+    seasons.plan_lab_work(saga, plan)
+    _run(saga)
+    assert store.pawns == 1 and lab.arcane_connections[0].fixed
+    assert keep.diary[-1].name == "Tiberius used 1 pawn of Vim vis"
+    assert keep.diary[-1].vis_pawns == -1
+
+
 def test_vis_is_extracted_only_in_a_magic_aura():
     saga = _saga()
     saga.covenants[0].aura_realm = "Divine"

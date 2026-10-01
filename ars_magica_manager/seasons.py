@@ -867,6 +867,8 @@ def _add_vis(covenant: Covenant, art: str, pawns: int, name: str) -> None:
                 name=f"{art} vis",
                 art=art,
                 pawns=pawns,
+                location_kind="covenant",
+                location_id=covenant.id,
             )
         )
     else:

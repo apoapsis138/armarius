@@ -31,7 +31,7 @@ from textual.widgets import (
 from textual.widgets.tree import TreeNode
 
 from ... import books as bk
-from ... import catalog, creation, deletion, seasons, sourcebooks, storage
+from ... import catalog, creation, deletion, seasons, sourcebooks, storage, vis
 from ... import economics as eco
 from ... import familiars as fam
 from ... import laboratories as lab_rules
@@ -80,6 +80,7 @@ from ..prompts import (
     AdvanceSeasonScreen,
     ConfirmScreen,
     _date_fields,
+    _move_vis_dialog,
     _scored_trait_dialog,
 )
 from ..season_records import SeasonRecordsView, SeasonSummaryScreen
@@ -272,6 +273,16 @@ _SEASON_SECTIONS: tuple[str, ...] = (
 )
 
 
+_CHARACTER_VIS_SECTIONS = ("section-raw-vis-hermetic", "section-raw-vis-inventory")
+
+#: The sections a move of raw vis changes on its source's sheet (STORY-412).
+_VIS_REFRESH: dict[str, tuple[str, ...]] = {
+    vis.CHARACTER: (*_CHARACTER_VIS_SECTIONS, "tab-diary"),
+    vis.LABORATORY: ("section-lab-raw-vis", "tab-lab-diary"),
+    vis.COVENANT: ("section-pos-vis_store", "tab-cov-diary"),
+}
+
+
 class WorkspaceBase(Screen[None]):
     """The workspace's state and everything its actions share: the navigation
     tree and detail pane, which section is active, saving and refreshing
@@ -292,6 +303,7 @@ class WorkspaceBase(Screen[None]):
         ("i", "instill_effect", "Instill"),
         ("u", "use_charge", "Charge"),
         ("s", "share_spell", "Share Spell"),
+        ("m", "move_vis", "Move Vis"),
         ("I", "import_data", "Import"),
         ("t", "advance_season", "Advance Season"),
         # Works everywhere, but left out of the footer to keep it short.
@@ -601,6 +613,13 @@ class WorkspaceBase(Screen[None]):
                 and character is not None
                 and bool(spl.shareable_spells(character))
             )
+        if action == "move_vis":
+            holder = self._vis_holder()
+            return (
+                holder is not None
+                and bool(vis.held(holder))
+                and bool(vis.destinations(self.saga, holder))
+            )
         if action == "import_data":
             return (
                 self.selected_kind == NodeKind.SAGA
@@ -625,6 +644,77 @@ class WorkspaceBase(Screen[None]):
         if action == "delete_record":
             return self._record_to_delete() is not None
         return True
+
+    def _vis_holder(self) -> vis.Holder | None:
+        """Whose raw vis the active section lists (STORY-412): the
+        character's or the laboratory's pool, or the covenant's Raw Vis
+        Stores. None anywhere else."""
+        section = self._active_section()
+        if section in _CHARACTER_VIS_SECTIONS:
+            return self.selected_character
+        if section == "section-lab-raw-vis":
+            return self.selected_laboratory
+        if section == "section-pos-vis_store":
+            return self.selected_covenant
+        return None
+
+    def action_move_vis(self) -> None:
+        """Move raw vis from the sheet on show to another covenant,
+        laboratory or magus (STORY-412): the chosen row's, else the one
+        picked. Both sides' Diaries record it."""
+        holder = self._vis_holder()
+        section = self._active_section()
+        if holder is None or section is None:
+            return
+        held = vis.held(holder)
+        selected: int | None = None
+        if isinstance(holder, Covenant):
+            if self._covenant_sheet_view is not None:
+                selected = self._covenant_sheet_view.selected_possession("vis_store")
+        elif isinstance(holder, Character):
+            if self._character_sheet_view is not None:
+                selected = self._character_sheet_view.selected_raw_vis(section)
+        elif self._laboratory_sheet_view is not None:
+            selected = self._laboratory_sheet_view.selected_raw_vis()
+        if selected is not None and selected >= len(held):
+            selected = None
+        if selected is None and len(held) == 1:
+            selected = 0  # only one thing to move: no need to ask which
+
+        self._chosen_or_pick(
+            selected,
+            [escape(h.label) for h in held],
+            title="Move which Raw Vis?",
+            empty="No Raw Vis to move.",
+            then=lambda index: self._move_vis_form(holder, held[index]),
+        )
+
+    def _move_vis_form(self, holder: vis.Holder, what: vis.Held) -> None:
+        """Ask how many of `what`'s pawns leave `holder` and who gets them,
+        then move them."""
+        destinations = vis.destinations(self.saga, holder)
+        if not destinations:
+            self.notify("Nowhere else in the saga to move raw vis to.")
+            return
+
+        def handle_result(result: tuple[int, str] | None) -> None:
+            if result is None:
+                return
+            pawns, value = result
+            destination = vis.parse_destination(self.saga, value)
+            if destination is None:
+                return
+            vis.move(self.saga, holder, what, pawns, destination)
+            self._commit(*_VIS_REFRESH[vis.kind_of(holder)])
+            self.refresh_bindings()
+            self.notify(
+                f"Moved {pawns} pawn(s) of {what.art} vis to "
+                f"{escape(destination.name)}."
+            )
+
+        self.app.push_screen(
+            _move_vis_dialog(holder.name, what, destinations), handle_result
+        )
 
     def _active_section(self) -> str | None:
         """Which sheet section is "active" for a/A/e (and v/V) dispatch: the

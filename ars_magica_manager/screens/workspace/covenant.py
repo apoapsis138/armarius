@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import Any, ClassVar
 
-from ... import catalog, covenant_diary, seasons, sourcebooks
+from ... import catalog, covenant_diary, seasons, sourcebooks, vis
 from ... import economics as eco
 from ... import inhabitants as inh
 from ... import possessions as pos
@@ -104,7 +104,17 @@ class CovenantActions(WorkspaceBase):
             pos.save_entry(covenant, kind, entry, values)
             self._commit(f"section-pos-{kind}")
 
-        self.app.push_screen(_possession_dialog(title, kind, entry), handle_result)
+        places: list[tuple[str, str]] = []
+        place = ""
+        if kind == "vis_store":
+            places = vis.location_options(self.saga, covenant)
+            place = vis.location_value(covenant, entry.record if entry else None)
+            if place not in [value for _, value in places]:
+                place = places[0][1]  # whoever kept it has left the covenant
+        self.app.push_screen(
+            _possession_dialog(title, kind, entry, places=places, place=place),
+            handle_result,
+        )
 
     def _remove_possession(self, kind: str) -> None:
         """Delete the chosen possession (after confirming); with none chosen,

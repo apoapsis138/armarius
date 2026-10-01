@@ -2,9 +2,17 @@
 
 from __future__ import annotations
 
+from support import wait_until
+from textual.widgets import Input, Static
+
+from ars_magica_manager import storage
+from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Character, Saga, VirtueFlawInstance
 from ars_magica_manager.rules import creation as rules
 from ars_magica_manager.rules import creation_character as cc
+from ars_magica_manager.rules import creation_characteristics as cch
+from ars_magica_manager.screens import FieldsDialog, WorkspaceScreen
+from ars_magica_manager.screens.forms import _characteristics_dialog
 
 
 def _saga() -> Saga:
@@ -612,3 +620,74 @@ def test_traits_confidence_and_reputations_at_the_end():
         "advice",
         "no Virtue or Flaw gives one",
     )
+
+
+# -- live points on the Characteristics form (STORY-1316) --
+
+
+def test_points_text_follows_the_scores_being_typed():
+    saga = Saga(id="test_saga", name="S")
+    character = Character(id="c1", name="Ana", type="companion", in_creation=True)
+    saga.characters.append(character)
+    blank = dict.fromkeys((key for key, _ in cch.CHARACTERISTICS), 0)
+    assert cch.points_text(saga, character, blank).splitlines() == [
+        "[b]Points:[/] 0 of 7 spent, 7 left",
+        "[b]Cost:[/] Int 0  Per 0  Str 0  Sta 0  Pre 0  Com 0  Dex 0  Qik 0",
+    ]
+    # +3 costs 6, +1 costs 1, -2 gives 3 back; a blank field counts as 0.
+    typed = {
+        **blank,
+        "intelligence": 3,
+        "stamina": 1,
+        "quickness": -2,
+        "presence": None,
+    }
+    assert cch.points_text(saga, character, typed).splitlines() == [
+        "[b]Points:[/] 4 of 7 spent, 3 left",
+        "[b]Cost:[/] Int +6  Per 0  Str 0  Sta +1  Pre 0  Com 0  Dex 0  Qik -3",
+    ]
+    exact = {**blank, "intelligence": 3, "stamina": 1}
+    assert "[$text-success]7 of 7 spent[/]" in cch.points_text(saga, character, exact)
+    over = {**blank, "intelligence": 4}
+    lines = cch.points_text(saga, character, over).splitlines()
+    assert lines[0] == "[b]Points:[/] [$text-error]10 of 7 spent, 3 too many[/]"
+    assert lines[2].startswith("[$text-warning]Intelligence: bought from -3 to +3")
+    # The sheet's own scores are untouched by what is typed.
+    assert character.characteristics.intelligence == 0
+
+
+async def test_the_characteristics_form_shows_points_as_they_are_typed():
+    saga = Saga(id="test_saga", name="S")
+    creating = Character(id="c1", name="Ana", type="companion", in_creation=True)
+    playing = Character(id="c2", name="Bo", type="companion")
+    saga.characters += [creating, playing]
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        await pilot.press("enter")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        workspace = app.screen
+
+        def live() -> str:
+            # "" until the dialog has composed.
+            found = app.screen.query("#fields-live")
+            return str(found.first(Static).render()) if found else ""
+
+        workspace.app.push_screen(_characteristics_dialog(workspace.saga, creating))
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        assert await wait_until(pilot, lambda: "0 of 7 spent, 7 left" in live())
+        app.screen.query_one("#fld-intelligence", Input).value = "3"
+        assert await wait_until(pilot, lambda: "6 of 7 spent, 1 left" in live())
+        app.screen.query_one("#fld-strength", Input).value = "2"
+        assert await wait_until(pilot, lambda: "9 of 7 spent, 2 too many" in live())
+        assert "Str +3" in live()
+        # Fits the screen with the live lines showing.
+        region = app.screen.query_one("#fields-dialog").region
+        assert region.bottom <= 45 and region.right <= 120
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+        # A character In Play has no budget to show.
+        workspace.app.push_screen(_characteristics_dialog(workspace.saga, playing))
+        assert await wait_until(pilot, lambda: bool(app.screen.query("#fld-strength")))
+        assert isinstance(app.screen, FieldsDialog)
+        assert not app.screen.query("#fields-live")

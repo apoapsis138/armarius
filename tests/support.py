@@ -131,6 +131,9 @@ def everything_saga() -> Saga:
         Possession(id=f"pos-{kind}", kind=kind, name=f"A {kind}")
         for kind in ("property", "weapon", "armor", "vis_source", "vis_store", "item")
     ]
+    # A Raw Vis Store is kept somewhere (loading links an unlinked one).
+    covenant.possessions[4].location_kind = "covenant"
+    covenant.possessions[4].location_id = "cov1"
     covenant.economics.income_sources = [IncomeSource(id="inc1", name="Mill")]
 
     magus = Character(id="mag1", name="Leandro", type="magus", covenant_id="cov1")

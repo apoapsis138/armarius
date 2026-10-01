@@ -10,6 +10,30 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.3.0 — 2026-10-01
+
+Moving raw vis, paying from the covenant's vis, and live Characteristic
+points.
+
+- Raw vis can be moved: `m` (Move Vis) on a magus's Raw Vis, a laboratory's
+  Raw Vis or a covenant's Raw Vis Stores asks how many pawns and who gets
+  them: any other covenant, laboratory or magus in the saga. A covenant
+  takes it into its store of that Art (a new one if it has none), and both
+  sides' Diaries record the move.
+- A covenant's Raw Vis Store says where it is kept: the covenant, one of
+  its laboratories or one of its characters. Location text in older saves
+  that names a laboratory or character becomes that link; anything else is
+  kept at the covenant, with the text left in Location as a note on where
+  exactly.
+- Season work can pay from the covenant's vis: "Vis from" on vis study and
+  on every lab activity has a third choice, the covenant's vis stores.
+  Spending takes from the stores of that Art in list order, vis extracted
+  that way goes into the covenant's store, and the covenant's Diary
+  records each change.
+- While a character is In Creation, the Edit Characteristics form shows the
+  points spent and left, and each score's cost, as each number is typed:
+  red when over the budget, green when it is spent exactly.
+
 ## 2.2.0 — 2026-10-01
 
 Covenant Situations, Poverty warnings, and sharing an invented spell.

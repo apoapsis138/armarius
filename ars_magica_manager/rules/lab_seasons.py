@@ -26,9 +26,10 @@ One-season lab work (STORY-907):
 
 from __future__ import annotations
 
+from collections.abc import MutableMapping
 from dataclasses import dataclass, field, replace
 
-from .. import books
+from .. import books, vis
 from .. import spells as spl
 from ..models import (
     ArcaneConnection,
@@ -392,16 +393,26 @@ def work(
     return [], result
 
 
-def vis_pool(saga: Saga, magus: Character, plan: SeasonPlan) -> dict[str, int]:
+def vis_pool(
+    saga: Saga, magus: Character, plan: SeasonPlan
+) -> MutableMapping[str, int]:
     """The raw vis a lab plan pays with (or extracted vis goes to): the
-    laboratory's or the magus's own."""
+    laboratory's, the magus's own, or the vis stores of the laboratory's
+    covenant (the magus's, for a lab with none)."""
+    lab_ = saga.laboratory(plan.lab_id) if plan.lab_id else None
     if plan.vis_from == "laboratory":
-        lab_ = saga.laboratory(plan.lab_id) if plan.lab_id else None
         return lab_.raw_vis if lab_ is not None else {}
+    if plan.vis_from == "covenant":
+        covenant_id = (lab_.covenant_id if lab_ is not None else None) or (
+            magus.covenant_id
+        )
+        return vis.covenant_pool(saga, covenant_id, magus.name)
     return magus.raw_vis
 
 
 def whose_vis(magus: Character, plan: SeasonPlan) -> str:
+    if plan.vis_from == "covenant":
+        return "the covenant's"
     return "the laboratory's" if plan.vis_from == "laboratory" else f"{magus.name}'s"
 
 

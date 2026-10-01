@@ -2113,7 +2113,10 @@ class Possession:
     * item: name, quantity, description.
     * vis_source: name, art, pawns, season (when it is harvested), location,
       physical_form, description.
-    * vis_store (Raw Vis Stores): name, art, pawns, location, physical_form.
+    * vis_store (Raw Vis Stores): name, art, pawns, physical_form, where it
+      is kept -- location_kind/location_id: the covenant, one of its
+      laboratories or one of its characters (STORY-412; none set means the
+      covenant) -- and location, a free-text note on where exactly.
 
     `description` is user-written text that supports inline emphasis.
     """
@@ -2124,6 +2127,10 @@ class Possession:
     lab_id: str | None = None
     description: str = ""
     location: str = ""
+    #: vis_store: who keeps it -- "covenant", "laboratory" or "character"
+    #: and that record's id ("" / None: the covenant that owns it).
+    location_kind: str = ""
+    location_id: str | None = None
     quantity: int = 1
     dimensions: str = ""
     inhabitants: str = ""
@@ -2766,7 +2773,38 @@ class Saga:
                 if book.id in ids and book.owner_kind is None:
                     book.owner_kind = "covenant"
                     book.owner_id = library.get("covenant_id")
-        return cls(**known_fields(cls, d))
+        saga = cls(**known_fields(cls, d))
+        _link_vis_store_locations(saga)
+        return saga
+
+
+def _link_vis_store_locations(saga: Saga) -> None:
+    """Give every covenant Raw Vis Store a real place it is kept
+    (STORY-412; older saves only had free text): the laboratory or character
+    of the covenant that the text names, else the covenant itself, with the
+    text left as the store's note on where exactly."""
+    for covenant in saga.covenants:
+        places: list[tuple[str, str, str]] = [
+            ("laboratory", lab.id, lab.name)
+            for lab in saga.laboratories
+            if lab.covenant_id == covenant.id
+        ] + [
+            ("character", c.id, c.name)
+            for c in saga.characters
+            if c.covenant_id == covenant.id
+        ]
+        for store in covenant.possessions:
+            if store.kind != "vis_store" or store.location_kind:
+                continue
+            text = store.location.strip().lower()
+            match = next(
+                (p for p in places if text and p[2].strip().lower() == text), None
+            )
+            if match is not None:
+                store.location_kind, store.location_id = match[0], match[1]
+                store.location = ""
+            else:
+                store.location_kind, store.location_id = "covenant", covenant.id
 
 
 def assign_laboratory(saga: Saga, character: Character, new_lab_id: str | None) -> None:

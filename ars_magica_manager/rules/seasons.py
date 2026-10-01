@@ -40,10 +40,10 @@ Activities built so far, each an Advancement Total (rules.study):
 from __future__ import annotations
 
 import random
-from collections.abc import Sequence
+from collections.abc import MutableMapping, Sequence
 from dataclasses import dataclass, field, replace
 
-from .. import books
+from .. import books, vis
 from ..arts import ART_BY_NAME, ARTS
 from ..models import SEASONS, Book, Character, Saga, SeasonPlan, XpAllocation
 from . import (
@@ -726,13 +726,26 @@ def students_of(saga: Saga, plan: SeasonPlan) -> int:
     )
 
 
-def vis_pool(saga: Saga, character: Character, plan: SeasonPlan) -> dict[str, int]:
-    """The raw vis a vis study plan draws on: the magus's own, or their
-    laboratory's."""
+def vis_pool(
+    saga: Saga, character: Character, plan: SeasonPlan
+) -> MutableMapping[str, int]:
+    """The raw vis a vis study plan draws on: the magus's own, their
+    laboratory's, or their covenant's vis stores."""
     if plan.vis_from == "laboratory":
         lab = saga.laboratory(character.assigned_lab_id)
         return lab.raw_vis if lab is not None else {}
+    if plan.vis_from == "covenant":
+        return vis.covenant_pool(saga, character.covenant_id, character.name)
     return character.raw_vis
+
+
+def whose_vis(character: Character, plan: SeasonPlan) -> str:
+    """Whose raw vis a plan's `vis_from` names, for a message."""
+    if plan.vis_from == "covenant":
+        return "the covenant's"
+    if plan.vis_from == "laboratory":
+        return "the laboratory's"
+    return f"{character.name}'s"
 
 
 def _study_problems(
@@ -828,14 +841,9 @@ def _study_problems(
             pawns = study.vis_pawns(score(character, subject))
             held = vis_pool(saga, character, plan).get(art.lower(), 0)
             if held < pawns:
-                whose = (
-                    "the laboratory's"
-                    if plan.vis_from == "laboratory"
-                    else f"{character.name}'s"
-                )
                 found.append(
                     f"Studying {art} takes {pawns} pawn(s) of {art} vis; "
-                    f"{whose} raw vis has {held}."
+                    f"{whose_vis(character, plan)} raw vis has {held}."
                 )
         if plan.die is not None and plan.die < 0:
             found.append("A die roll can't be negative.")

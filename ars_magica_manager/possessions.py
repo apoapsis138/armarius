@@ -10,7 +10,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any
 
-from . import catalog, storage
+from . import catalog, storage, vis
 from .laboratories import lab_build_points, lab_characteristic_total
 from .markup import escape, fit, markdown_inline
 from .models import (
@@ -77,6 +77,8 @@ class PossessionEntry:
     lab: Laboratory | None = None
     lab_owner: str = ""
     lab_catalog: dict[str, LabVirtueFlawDef] | None = None
+    #: A Raw Vis Store: where it is kept, by name (vis.location_label).
+    place: str = ""
 
     def _own(self, attribute: str, default):
         return getattr(self.record, attribute) if self.record is not None else default
@@ -237,7 +239,10 @@ def entries_for_kind(
             continue
         if kind == "sanctum" and record.lab_id is not None:
             continue  # extras of a listed laboratory; shown above
-        entries.append(PossessionEntry(kind, record))
+        place = (
+            vis.location_label(saga, covenant, record) if kind == "vis_store" else ""
+        )
+        entries.append(PossessionEntry(kind, record, place=place))
     return entries
 
 
@@ -461,6 +466,7 @@ def detail_text(entry: PossessionEntry | None) -> str:
     else:  # vis_store
         lines.append(_line("Art", entry.art))
         lines.append(_line("Pawns", entry.pawns))
+        optional("Kept at", entry.place)
         optional("Location", entry.location)
         optional("Physical Form", entry.physical_form)
 
@@ -495,7 +501,12 @@ def save_entry(
 ) -> None:
     """Apply an add/edit form's `values`: an update to the entry's record,
     or a new record -- for a new entry, or for a laboratory's sanctum edited
-    for the first time (linked to that lab)."""
+    for the first time (linked to that lab). A Raw Vis Store's "place"
+    (vis.location_options' "kind:id") becomes its location link."""
+    values = dict(values)
+    place = values.pop("place", None)
+    if place:
+        values["location_kind"], _, values["location_id"] = place.partition(":")
     if entry is not None and entry.record is not None:
         for key, value in values.items():
             setattr(entry.record, key, value)

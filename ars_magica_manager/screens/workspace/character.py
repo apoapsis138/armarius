@@ -42,7 +42,7 @@ from ..forms import (
     _biographical_fields,
     _breakthrough_dialog,
     _character_info_dialog,
-    _characteristics_fields,
+    _characteristics_dialog,
     _characteristics_from,
     _fatigue_fields,
     _hermetic_fields,
@@ -112,11 +112,7 @@ class CharacterActions(WorkspaceBase):
                 self._commit("section-char-characteristics")
 
         self.app.push_screen(
-            FieldsDialog(
-                "Edit Characteristics",
-                _characteristics_fields(character.characteristics),
-            ),
-            handle_result,
+            _characteristics_dialog(self.saga, character), handle_result
         )
 
     def _edit_biographical_detail(self) -> None:

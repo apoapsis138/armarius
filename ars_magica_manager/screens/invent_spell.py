@@ -621,6 +621,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                                     f"{escape(self.magus.name)}'s raw vis",
                                     "character",
                                 ),
+                                ("the covenant's vis stores", "covenant"),
                             ],
                             value=(
                                 plan.vis_from

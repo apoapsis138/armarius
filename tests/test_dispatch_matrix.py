@@ -38,6 +38,7 @@ KEYS: dict[str, tuple[str, ...]] = {
     "i": ("improve", "instill_effect"),
     "u": ("use_charge",),
     "s": ("share_spell",),
+    "m": ("move_vis",),
     "I": ("import_data",),
     "v": ("add_virtue_flaw",),
     "V": ("remove_virtue_flaw",),

@@ -18,7 +18,7 @@ from textual.widgets import (
 )
 from textual.widgets.button import ButtonVariant
 
-from .. import catalog
+from .. import catalog, vis
 from ..arts import ARTS, FORMS, TECHNIQUES
 from ..markup import escape
 from ..models import (
@@ -395,6 +395,35 @@ def _raw_vis_dialog(
         ],
         save_label="Add" if existing is None else "Save",
         build=lambda values: (values["art"], values["pawns"]),
+    )
+
+
+def _move_vis_dialog(
+    source: str, what: vis.Held, destinations: Sequence[tuple[str, str]]
+) -> FieldsDialog[tuple[int, str]]:
+    """Move raw vis (STORY-412): how many of `what`'s pawns, and to which of
+    `destinations` (vis.destinations). Builds (pawns, the destination)."""
+    return FieldsDialog(
+        "Move Raw Vis",
+        [
+            DialogField("_from", "From", "info", f"{source}: {what.label}"),
+            DialogField("pawns", "Pawns", "int", what.pawns),
+            DialogField(
+                "destination",
+                "To",
+                "select",
+                None,
+                options=list(destinations),
+                required=True,
+                allow_blank=True,
+                placeholder="(choose who gets it)",
+                hint="A covenant takes it into its Raw Vis Store of that Art. "
+                "Both Diaries record the move.",
+            ),
+        ],
+        save_label="Move",
+        validate=lambda values: vis.move_problem(what, values["pawns"]),
+        build=lambda values: (values["pawns"], values["destination"]),
     )
 
 

@@ -5,7 +5,7 @@ are at the end."""
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import replace
 from pathlib import Path
 from typing import Any, ClassVar
@@ -103,6 +103,7 @@ from ..models import (
 from ..rules import (
     apprentice_seasons,
     book_seasons,
+    creation_characteristics,
     experiment,
     laboratory_seasons,
     spell_levels,
@@ -344,15 +345,22 @@ def _craftsperson_fields(
 
 
 def _possession_dialog(
-    title: str, kind: str, entry: pos.PossessionEntry | None, *, natural: bool = False
+    title: str,
+    kind: str,
+    entry: pos.PossessionEntry | None,
+    *,
+    natural: bool = False,
+    places: Sequence[tuple[str, str]] = (),
+    place: str = "",
 ) -> FieldsDialog[dict[str, Any]]:
     """The add/edit form for one kind of possession (a covenant's, a
     character's Personal Gear, or -- `natural` -- a familiar's Natural
     Weapons). A weapon or armor form shows the chosen book entry in its live
-    line."""
+    line. A Raw Vis Store's asks where it is kept: one of `places`
+    (vis.location_options), `place` to start with."""
     return FieldsDialog(
         title,
-        _possession_fields(kind, entry, natural=natural),
+        _possession_fields(kind, entry, natural=natural, places=places, place=place),
         validate=pos.form_problem,
         live=(
             (lambda values: pos.book_text(kind, values.get("gear_id")))
@@ -363,7 +371,12 @@ def _possession_dialog(
 
 
 def _possession_fields(
-    kind: str, entry: pos.PossessionEntry | None, *, natural: bool = False
+    kind: str,
+    entry: pos.PossessionEntry | None,
+    *,
+    natural: bool = False,
+    places: Sequence[tuple[str, str]] = (),
+    place: str = "",
 ) -> list[DialogField]:
     """The add/edit form for one kind of possession. For a laboratory listed as
     a sanctum, name/owner/location/build points are shown read-only (edit them
@@ -383,7 +396,7 @@ def _possession_fields(
     elif kind in pos.QUANTITY_KINDS:
         fields += _quantity_possession_fields(kind, entry, natural=natural)
     elif kind in ("vis_source", "vis_store"):
-        fields += _vis_possession_fields(kind, entry)
+        fields += _vis_possession_fields(kind, entry, places, place)
 
     if kind != "vis_store":
         fields.append(_description_field(_attr(entry, "description", "")))
@@ -564,9 +577,13 @@ def _quantity_possession_fields(
 
 
 def _vis_possession_fields(
-    kind: str, entry: pos.PossessionEntry | None
+    kind: str,
+    entry: pos.PossessionEntry | None,
+    places: Sequence[tuple[str, str]] = (),
+    place: str = "",
 ) -> list[DialogField]:
-    """Art, Season harvested (a source), Pawns, Location and Physical Form."""
+    """Art, Season harvested (a source), Pawns, Kept at (a store, one of
+    `places`), Location and Physical Form."""
     fields = [
         DialogField(
             "art",
@@ -593,8 +610,21 @@ def _vis_possession_fields(
             )
         )
         fields += _contested_fields(entry)
+    fields.append(DialogField("pawns", "Pawns", "int", _attr(entry, "pawns", 1) or 1))
+    if kind == "vis_store" and places:
+        fields.append(
+            DialogField(
+                "place",
+                "Kept at",
+                "select",
+                place,
+                options=list(places),
+                required=True,
+                hint="The covenant, one of its laboratories, or one of its "
+                "characters. Location says where exactly.",
+            )
+        )
     fields += [
-        DialogField("pawns", "Pawns", "int", _attr(entry, "pawns", 1) or 1),
         DialogField("location", "Location", "text", _attr(entry, "location", "")),
         DialogField(
             "physical_form",
@@ -833,6 +863,26 @@ def _characteristics_fields(characteristics: Characteristics) -> list[DialogFiel
         DialogField(attribute, label, "int", getattr(characteristics, attribute))
         for label, attribute in _CHARACTERISTIC_FIELDS
     ]
+
+
+def _characteristics_dialog(
+    saga: Saga, character: Character
+) -> FieldsDialog[dict[str, Any]]:
+    """Edit Characteristics. While the character is In Creation the form
+    shows the points spent and left as each score is typed (STORY-1316)."""
+    return FieldsDialog(
+        "Edit Characteristics",
+        _characteristics_fields(character.characteristics),
+        live=(
+            (
+                lambda values: creation_characteristics.points_text(
+                    saga, character, values
+                )
+            )
+            if character.in_creation
+            else None
+        ),
+    )
 
 
 def _characteristics_from(values: dict[str, Any]) -> Characteristics:
@@ -1863,6 +1913,7 @@ def _season_plan_dialog(
             options=[
                 ("Their own raw vis", "character"),
                 ("Their laboratory's raw vis", "laboratory"),
+                ("Their covenant's vis stores", "covenant"),
             ],
             show_if=activity_is(season_rules.VIS_STUDY),
         ),

@@ -14,6 +14,7 @@ characters; §5 Great (Characteristic), Improved Characteristics.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 
 from .. import sourcebooks
@@ -51,6 +52,7 @@ CHARACTERISTICS: tuple[tuple[str, str], ...] = (
     ("dexterity", "Dexterity"),
     ("quickness", "Quickness"),
 )
+_ABBREVIATIONS = {"quickness": "Qik"}
 BUDGET = 7
 IMPROVED_POINTS = 3
 BOUGHT_LIMIT = 3
@@ -104,11 +106,19 @@ class CharacteristicLine:
     cost: int
 
 
-def lines(saga: Saga, character: Character) -> list[CharacteristicLine]:
+def lines(
+    saga: Saga, character: Character, scores: Mapping[str, int | None] | None = None
+) -> list[CharacteristicLine]:
+    """Each Characteristic's score and what it cost: the sheet's, or
+    `scores` (a form being filled in; a blank counts as 0)."""
     modifier = child_modifier(age(saga, character))
     result = []
     for key, name in CHARACTERISTICS:
-        score = getattr(character.characteristics, key)
+        score = (
+            getattr(character.characteristics, key)
+            if scores is None
+            else scores.get(key) or 0
+        )
         great = sum(
             1
             for vf in character.virtues_flaws
@@ -138,6 +148,38 @@ def lines(saga: Saga, character: Character) -> list[CharacteristicLine]:
 def budget(character: Character) -> int:
     improved = sum(1 for vf in character.virtues_flaws if vf.vf_id == IMPROVED)
     return BUDGET + IMPROVED_POINTS * improved
+
+
+def points_text(
+    saga: Saga, character: Character, scores: Mapping[str, int | None]
+) -> str:
+    """The points a Characteristics form's `scores` spend, as it is typed
+    (markup, STORY-1316): spent of the budget and what's left, each score's
+    cost, and any score bought past -3..+3."""
+    found = lines(saga, character, scores)
+    spent = sum(line.cost for line in found)
+    points = budget(character)
+    if spent > points:
+        total = f"[$text-error]{spent} of {points} spent, {spent - points} too many[/]"
+    elif spent == points:
+        total = f"[$text-success]{spent} of {points} spent[/]"
+    else:
+        total = f"{spent} of {points} spent, {points - spent} left"
+    # In the form's own order (the order of `scores`).
+    order = list(scores)
+    costs = "  ".join(
+        f"{_ABBREVIATIONS.get(line.key, line.name[:3])} "
+        + (f"{line.cost:+d}" if line.cost else "0")
+        for line in sorted(found, key=lambda line: order.index(line.key))
+    )
+    text = [f"[b]Points:[/] {total}", f"[b]Cost:[/] {costs}"]
+    past = [line.name for line in found if abs(line.bought) > BOUGHT_LIMIT]
+    if past:
+        text.append(
+            f"[$text-warning]{', '.join(past)}: bought from -3 to +3 (Great or "
+            "Poor adds 1 a copy past that).[/]"
+        )
+    return "\n".join(text)
 
 
 def _check(label: str, ok: bool, detail: str, source: str = SOURCE, *, advice=False):

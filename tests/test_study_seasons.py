@@ -14,6 +14,7 @@ from ars_magica_manager.models import (
     Characteristics,
     Covenant,
     Laboratory,
+    Possession,
     Saga,
     SeasonPlan,
     XpAllocation,
@@ -253,6 +254,27 @@ def test_vis_study_needs_the_vis():
     assert "the laboratory's raw vis has 0" in worked.problems[0]
     saga.laboratories[0].raw_vis = {"creo": 1}
     assert _outcome(saga, plan).ok
+
+
+def test_vis_study_can_pay_from_the_covenants_vis_stores():
+    saga = _saga()
+    keep = saga.covenants[0]
+    plan = _plan("tib", rules.VIS_STUDY, "art:Creo", die=5, vis_from="covenant")
+    assert "the covenant's raw vis has 0" in _outcome(saga, plan).problems[0]
+    keep.possessions = [
+        Possession(id="v1", kind="vis_store", name="Cask", art="Creo", pawns=1),
+        Possession(id="v2", kind="vis_store", name="Urn", art="Vim", pawns=2),
+    ]
+    assert _outcome(saga, plan).ok
+    own = dict(saga.characters[0].raw_vis)
+    seasons.set_plan(saga, plan)
+    seasons.apply(saga, seasons.resolve(saga))
+    # The emptied store is gone, his own vis untouched, the Diary notes it.
+    assert [p.name for p in keep.possessions] == ["Urn"]
+    assert saga.characters[0].raw_vis == own
+    entry = keep.diary[-1]
+    assert entry.name == f"{saga.characters[0].name} used 1 pawn of Creo vis"
+    assert (entry.category, entry.vis_pawns, entry.vis_art) == ("Vis", -1, "Creo")
 
 
 def test_vis_study_is_for_magi_only():

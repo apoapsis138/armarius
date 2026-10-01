@@ -463,6 +463,29 @@ CONTRACTS: dict[str, Contract] = {
         expected={"creo": 5},
         invalid={"Pawns": "-"},
     ),
+    "move raw vis": Contract(
+        prefill={"Pawns": "3", "To": Select.NULL},
+        edits={"Pawns": "2", "To": "laboratory:lab1"},
+        saved=lambda s: (
+            _char(s).raw_vis,
+            _lab(s).raw_vis,
+            _char(s).diary[-1].name,
+            _lab(s).diary[-1].name,
+        ),
+        expected=(
+            {"creo": 1},
+            {"ignem": 2, "creo": 2},
+            "Moved 2 pawns of Creo vis to Tower",
+            "Received 2 pawns of Creo vis from Leandro",
+        ),
+        # More than he has; none; nowhere to send it.
+        invalid=[
+            {"Pawns": "4", "To": "laboratory:lab1"},
+            {"Pawns": "0", "To": "laboratory:lab1"},
+            {"Pawns": "2"},
+        ],
+        shown={"#raw-vis-list-hermetic": "Creo: 1 pawn(s)"},
+    ),
     "add research goal": Contract(
         prefill={"Goal": "", "Breakthrough": "Minor", "Target": "30"},
         edits={
@@ -836,12 +859,25 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#pos-vis_source-list": "Well"},
     ),
     "add vis store": Contract(
-        prefill={"Name": "", "Art": Select.NULL, "Pawns": "1"},
-        edits={"Name": "Cask", "Art": "Vim", "Pawns": "9"},
+        prefill={
+            "Name": "",
+            "Art": Select.NULL,
+            "Pawns": "1",
+            "Kept at": "covenant:cov1",
+        },
+        edits={
+            "Name": "Cask",
+            "Art": "Vim",
+            "Pawns": "9",
+            "Kept at": "laboratory:lab1",
+            "Location": "Top shelf",
+        },
         saved=lambda s: [
-            (p.art, p.pawns) for p in _cov(s).possessions if p.name == "Cask"
+            (p.art, p.pawns, p.location_kind, p.location_id, p.location)
+            for p in _cov(s).possessions
+            if p.name == "Cask"
         ],
-        expected=[("Vim", 9)],
+        expected=[("Vim", 9, "laboratory", "lab1", "Top shelf")],
         invalid=[{"Name": ""}, {"Name": "Cask"}],
         shown={"#pos-vis_store-list": "Cask"},
     ),
