@@ -24,6 +24,7 @@ from .models import (
     HouseDef,
     LabFeatureDef,
     LabVirtueFlawDef,
+    Saga,
     ShapeMaterialDef,
     Spell,
     VirtueFlawDef,
@@ -93,19 +94,59 @@ def _cached_by_id(
     return {entry.id: entry for entry in _cached_entries(path, from_dict)}
 
 
+#: The user-made entries of the saga in use (STORY-708), by the kind of
+#: catalog they join: set by use_saga(), read by the three loaders below.
+_SAGA_ENTRIES: dict[str, tuple[Any, ...]] = {"character": (), "lab": (), "covenant": ()}
+#: Each catalog with the saga's entries merged in, by (kind, path): built on
+#: first use and dropped whenever use_saga() changes the entries.
+_MERGED_BY_ID: dict[tuple[str, Path], dict[str, Any]] = {}
+
+
+def use_saga(saga: Saga | None) -> None:
+    """Make `saga`'s user-made entries part of the Virtue/Flaw, laboratory
+    Virtue/Flaw and Boon/Hook catalogs (None: just the shared catalogs).
+    The app has one saga open at a time: the workspace calls this as it
+    opens one, and house_rules does after every change to the entries."""
+    _SAGA_ENTRIES["character"] = tuple(saga.custom_virtues_flaws) if saga else ()
+    _SAGA_ENTRIES["lab"] = tuple(saga.custom_lab_virtues_flaws) if saga else ()
+    _SAGA_ENTRIES["covenant"] = tuple(saga.custom_boons_hooks) if saga else ()
+    _MERGED_BY_ID.clear()
+
+
+def _with_saga_entries(kind: str, entries: tuple[Any, ...]) -> list[Any]:
+    return [*entries, *_SAGA_ENTRIES[kind]]
+
+
+def _by_id_with_saga_entries(
+    kind: str, path: Path, from_dict: Callable[[dict[str, Any]], Any]
+) -> dict[str, Any]:
+    shared = _cached_by_id(path, from_dict)
+    extra = _SAGA_ENTRIES[kind]
+    if not extra:
+        return shared
+    merged = _MERGED_BY_ID.get((kind, path))
+    if merged is None:
+        merged = {**shared, **{entry.id: entry for entry in extra}}
+        _MERGED_BY_ID[(kind, path)] = merged
+    return merged
+
+
 def load_virtue_flaw_catalog(path: Path = CATALOG_PATH) -> list[VirtueFlawDef]:
-    """The character Virtue/Flaw catalog. The catalogs are read once per run
+    """The character Virtue/Flaw catalog, with the user-made entries of the
+    saga in use (use_saga). The catalogs are read once per run
     and cached by path: every total and sheet row that looks at Virtues and
     Flaws reads them (the shared dicts must not be changed). Nothing checks
     the file again -- a stat per lookup cost ~80 us each on a synced folder
     (STORY-1122) -- so a rebuilt catalog is seen on the next start."""
-    return list(_cached_entries(path, VirtueFlawDef.from_dict))
+    return _with_saga_entries(
+        "character", _cached_entries(path, VirtueFlawDef.from_dict)
+    )
 
 
 def load_virtue_flaw_catalog_by_id(
     path: Path = CATALOG_PATH,
 ) -> dict[str, VirtueFlawDef]:
-    return _cached_by_id(path, VirtueFlawDef.from_dict)
+    return _by_id_with_saga_entries("character", path, VirtueFlawDef.from_dict)
 
 
 def describe_virtue_flaw(
@@ -313,13 +354,13 @@ def load_house_catalog_by_id(path: Path = HOUSE_CATALOG_PATH) -> dict[str, House
 def load_lab_virtue_flaw_catalog(
     path: Path = LAB_VF_CATALOG_PATH,
 ) -> list[LabVirtueFlawDef]:
-    return list(_cached_entries(path, LabVirtueFlawDef.from_dict))
+    return _with_saga_entries("lab", _cached_entries(path, LabVirtueFlawDef.from_dict))
 
 
 def load_lab_virtue_flaw_catalog_by_id(
     path: Path = LAB_VF_CATALOG_PATH,
 ) -> dict[str, LabVirtueFlawDef]:
-    return _cached_by_id(path, LabVirtueFlawDef.from_dict)
+    return _by_id_with_saga_entries("lab", path, LabVirtueFlawDef.from_dict)
 
 
 @lru_cache(maxsize=4)
@@ -345,13 +386,15 @@ def load_lab_feature_catalog_by_id(
 def load_covenant_boon_hook_catalog(
     path: Path = COVENANT_BOON_HOOK_CATALOG_PATH,
 ) -> list[CovenantBoonHookDef]:
-    return list(_cached_entries(path, CovenantBoonHookDef.from_dict))
+    return _with_saga_entries(
+        "covenant", _cached_entries(path, CovenantBoonHookDef.from_dict)
+    )
 
 
 def load_covenant_boon_hook_catalog_by_id(
     path: Path = COVENANT_BOON_HOOK_CATALOG_PATH,
 ) -> dict[str, CovenantBoonHookDef]:
-    return _cached_by_id(path, CovenantBoonHookDef.from_dict)
+    return _by_id_with_saga_entries("covenant", path, CovenantBoonHookDef.from_dict)
 
 
 def load_covenant_situation_catalog(

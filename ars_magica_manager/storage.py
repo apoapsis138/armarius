@@ -16,6 +16,11 @@ SAGAS_DIR = DATA_DIR / "sagas"
 _SLUG_RE = re.compile(r"[^a-z0-9]+")
 
 
+#: Where 'x' offers to write an exported covenant, laboratory or character
+#: (STORY-109); the folder is made on the first export.
+EXPORTS_DIR = DATA_DIR / "exports"
+
+
 def slugify(text: str) -> str:
     slug = _SLUG_RE.sub("_", text.strip().lower()).strip("_")
     return slug or "id"

@@ -5,6 +5,7 @@ open."""
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
+from pathlib import Path
 from typing import Any, ClassVar
 
 from textual.app import ComposeResult
@@ -18,32 +19,40 @@ from textual.widgets import (
 )
 from textual.widgets.button import ButtonVariant
 
-from .. import catalog, vis
+from .. import catalog, transfer, vis
+from .. import house_rules as hr
+from .. import lab_texts as lt
 from ..arts import ARTS, FORMS, TECHNIQUES
 from ..markup import escape
 from ..models import (
     COVENANT_DIARY_CATEGORIES,
     LAB_ACTIVITIES,
     LAB_SPECIALIZATIONS,
+    LAB_TEXT_KINDS,
     SEASONS,
     STORY_EVENT,
     STORY_EVENT_STATUSES,
     Ability,
     ArcaneConnection,
+    Book,
+    Character,
     Covenant,
     CovenantDiaryEntry,
     CreationConditions,
     DiaryEntry,
+    Laboratory,
     LabSpecialtyEntry,
     LabVirtueFlawDef,
     MasteryAbility,
     NamedDescription,
+    Saga,
     ScoredTrait,
     VirtueFlawDef,
     VirtueFlawInstance,
     new_instance_id,
     next_season,
 )
+from ..rules import lab_seasons
 from ..rules.creation_covenant import (
     POWER_BY_NAME,
     POWER_LEVELS,
@@ -395,6 +404,353 @@ def _raw_vis_dialog(
         ],
         save_label="Add" if existing is None else "Save",
         build=lambda values: (values["art"], values["pawns"]),
+    )
+
+
+def _export_dialog(
+    record: transfer.Record, folder: Path
+) -> FieldsDialog[tuple[Path, bool]]:
+    """Export a covenant, laboratory or character to a file (STORY-109):
+    where to write it, and for a covenant whether its laboratories and
+    characters go too. Builds (the file, with members?)."""
+    kind = transfer.kind_of(record)
+
+    def path_of(values: dict[str, Any]) -> Path:
+        name = (values.get("file") or "").strip().strip('"')
+        path = Path(name).expanduser()
+        if name and not path.name.lower().endswith(".json"):
+            path = path.with_name(path.name + transfer.SUFFIX)
+        return path
+
+    def problem(values: dict[str, Any]) -> str | None:
+        if not (values.get("file") or "").strip():
+            return "Give the file to write."
+        if path_of(values).is_dir():
+            return "That is a folder: add a file name."
+        return None
+
+    def live(values: dict[str, Any]) -> str:
+        if problem(values):
+            return ""
+        path = path_of(values)
+        if path.exists():
+            return f"[$text-warning]{escape(path.name)} exists: it will be replaced.[/]"
+        return f"[dim]Writes {escape(str(path))}[/]"
+
+    fields = [
+        DialogField(
+            "_what", "Exporting", "info", f"{transfer.KIND_LABELS[kind]}: {record.name}"
+        ),
+        DialogField(
+            "file",
+            "File",
+            "text",
+            str(folder / transfer.default_file_name(record)),
+            hint="What it holds travels with it: a character's familiar, devices, "
+            "books and Diary; a laboratory's books and devices. Import it into "
+            "another saga with I on that saga.",
+        ),
+    ]
+    if kind == transfer.COVENANT:
+        fields.append(
+            DialogField(
+                "with_members",
+                "With its laboratories and characters",
+                "check",
+                False,
+            )
+        )
+    return FieldsDialog(
+        f"Export {escape(record.name)}",
+        fields,
+        save_label="Export",
+        validate=problem,
+        live=live,
+        build=lambda values: (path_of(values), bool(values.get("with_members"))),
+    )
+
+
+def _house_rule_dialog(
+    saga: Saga, existing: tuple[str, hr.Entry] | None
+) -> FieldsDialog[dict[str, Any]]:
+    """Add or edit a user-made catalog entry (STORY-708): what it is for (a
+    character, a laboratory or a covenant -- fixed once made), its name,
+    type, tier (which gives its points), category and description. Text
+    only: the rules engine applies no effects for it. Builds the values
+    house_rules.add / update take (with "kind")."""
+    kind_now, entry = existing if existing is not None else (None, None)
+
+    def kind(values: dict[str, Any]) -> str:
+        return kind_now or values.get("kind") or hr.CHARACTER
+
+    def built(values: dict[str, Any]) -> dict[str, Any]:
+        of = kind(values)
+        covenant = of == hr.COVENANT
+        return {
+            "kind": of,
+            "name": values.get("name") or "",
+            "type": values.get("bh_type" if covenant else "vf_type"),
+            "tier": values.get("tier"),
+            "category": values.get(f"category_{of}"),
+            "repeatable": bool(values.get("repeatable")),
+            "description": values.get("description") or "",
+        }
+
+    def category(of: str) -> DialogField:
+        current = entry.category if entry is not None and kind_now == of else ""
+        return DialogField(
+            f"category_{of}",
+            "Category",
+            "select",
+            current if current in hr.CATEGORIES[of] else hr.CATEGORIES[of][0],
+            options=_pairs(hr.CATEGORIES[of]),
+            show_if=lambda values: kind(values) == of,
+        )
+
+    covenant_entry = kind_now == hr.COVENANT
+    return FieldsDialog(
+        "Add a House Rule" if entry is None else f"Edit {escape(entry.name)}",
+        [
+            DialogField("_kind", "For", "info", hr.KIND_LABELS[kind_now])
+            if kind_now is not None
+            else DialogField(
+                "kind",
+                "For",
+                "select",
+                hr.CHARACTER,
+                options=[(hr.KIND_LABELS[k], k) for k in hr.KINDS],
+            ),
+            DialogField(
+                "name", "Name", "text", entry.name if entry else "", required=True
+            ),
+            DialogField(
+                "vf_type",
+                "Type",
+                "select",
+                entry.type if entry is not None and not covenant_entry else "Virtue",
+                options=_pairs(hr.TYPES[hr.CHARACTER]),
+                show_if=lambda values: kind(values) != hr.COVENANT,
+            ),
+            DialogField(
+                "bh_type",
+                "Type",
+                "select",
+                entry.type if entry is not None and covenant_entry else "Boon",
+                options=_pairs(hr.TYPES[hr.COVENANT]),
+                show_if=lambda values: kind(values) == hr.COVENANT,
+            ),
+            DialogField(
+                "tier",
+                "Tier",
+                "select",
+                entry.tier if entry else "Minor",
+                options=_pairs(hr.TIERS),
+            ),
+            *(category(of) for of in hr.KINDS),
+            DialogField(
+                "repeatable",
+                "Can be taken more than once",
+                "check",
+                bool(entry.repeatable) if entry else False,
+            ),
+            _description_field(entry.description if entry else ""),
+        ],
+        validate=lambda values: hr.form_problem(
+            saga, kind(values), built(values), entry
+        ),
+        live=lambda values: (
+            hr.points_text(built(values)["type"], built(values)["tier"])
+            + ". Text only: no effects are applied."
+        ),
+        build=built,
+    )
+
+
+def _lab_text_access_dialog(
+    saga: Saga, character: Character
+) -> FieldsDialog[tuple[str, int, str]]:
+    """Whose raw Lab Texts a magus reads (STORY-508): an author -- a magus
+    of the saga, or a name typed for one outside it --, the level he reads
+    them to (0 forgets the author) and how he came to. Choosing an author
+    he already reads fills in what is recorded. Builds (the author's key,
+    level, how)."""
+    magi = lt.author_options(saga, character)
+    known = dict(lt.access_rows(saga, character))
+    outside = [key for key in known if saga.character(key) is None]
+
+    def recorded(values: dict[str, Any]) -> dict[str, Any]:
+        access = character.lab_text_access.get(values.get("author") or "")
+        if access is None:
+            return {}
+        return {"level": access.level, "via": access.via or None}
+
+    def author(values: dict[str, Any]) -> str:
+        return values.get("author") or (values.get("name") or "").strip()
+
+    def problem(values: dict[str, Any]) -> str | None:
+        if not author(values):
+            return "Choose the author, or type the name of one outside the saga."
+        if values["level"] < 0:
+            return "Level can't be negative."
+        return None
+
+    return FieldsDialog(
+        f"Lab Texts {escape(character.name)} reads",
+        [
+            DialogField(
+                "_known",
+                "Reads now",
+                "info",
+                "; ".join(known.values()) or "(only his own and general texts)",
+            ),
+            DialogField(
+                "author",
+                "Author",
+                "select",
+                None,
+                options=magi,
+                allow_blank=True,
+                placeholder="(a magus of the saga)",
+                fills=recorded,
+            ),
+            DialogField(
+                "name",
+                "or an author outside it",
+                "text",
+                outside[0] if len(outside) == 1 and not magi else "",
+                show_if=lambda values: not values.get("author"),
+            ),
+            DialogField(
+                "level",
+                "Reads to level",
+                "int",
+                0,
+                hint="0 forgets this author. A text above the level needs more "
+                "decoding.",
+            ),
+            DialogField(
+                "via",
+                "How",
+                "select",
+                None,
+                options=[("Decoded", "decoded"), ("Taught", "taught")],
+                allow_blank=True,
+                placeholder="(not recorded)",
+            ),
+        ],
+        validate=problem,
+        build=lambda values: (author(values), values["level"], values.get("via") or ""),
+    )
+
+
+def _ritual_again_dialog(
+    saga: Saga, magus: Character, lab: Laboratory, text: Book
+) -> FieldsDialog[tuple[str, str]]:
+    """Perform a Longevity Ritual again from its Lab Text (STORY-509): the
+    vis to pay with and whose. Refuses what the rules do (the live line says
+    what it will cost and restore). Builds (the Art, whose vis)."""
+
+    def check(values: dict[str, Any]):
+        return lab_seasons.ritual_again(
+            saga,
+            magus,
+            lab,
+            text,
+            values.get("vis_art") or "",
+            values.get("vis_from") or "laboratory",
+        )
+
+    def live(values: dict[str, Any]) -> str:
+        found, again = check(values)
+        if again is None:
+            return f"[$text-warning]{escape(found[0])}[/]"
+        return (
+            f"{again.pawns} pawn(s) of {values['vis_art']} vis; "
+            f"{escape(again.subject.name)}'s aging rolls -{again.modifier}. "
+            "No season is taken."
+        )
+
+    def problem(values: dict[str, Any]) -> str | None:
+        found, _ = check(values)
+        return found[0] if found else None
+
+    return FieldsDialog(
+        "Perform the Longevity Ritual again",
+        [
+            DialogField("_text", "Lab Text", "info", text.name),
+            DialogField("_by", "Performed by", "info", magus.name),
+            DialogField(
+                "vis_art",
+                "Vis",
+                "select",
+                "Creo",
+                options=[(art, art) for art in lab_seasons.LONGEVITY_VIS_ARTS],
+            ),
+            DialogField(
+                "vis_from",
+                "Vis from",
+                "select",
+                "laboratory",
+                options=[
+                    ("The laboratory's raw vis", "laboratory"),
+                    (f"{magus.name}'s raw vis", "character"),
+                    ("The covenant's vis stores", "covenant"),
+                ],
+            ),
+        ],
+        save_label="Perform",
+        validate=problem,
+        live=live,
+        build=lambda values: (values["vis_art"], values["vis_from"]),
+    )
+
+
+def _lab_text_filter_dialog(current: lt.Filter) -> FieldsDialog[lt.Filter]:
+    """Narrow a laboratory's Lab Texts (STORY-508): by kind, Technique,
+    Form, a range of levels, and to those its owner can read. Everything
+    left blank shows them all. Builds the Filter."""
+
+    def build(values: dict[str, Any]) -> lt.Filter:
+        return lt.Filter(
+            kind=values.get("kind") or "",
+            technique=values.get("technique") or "",
+            form=values.get("form") or "",
+            min_level=values.get("min_level"),
+            max_level=values.get("max_level"),
+            readable=bool(values.get("readable")),
+        )
+
+    def choice(key: str, label: str, value: str, options: Sequence[str]):
+        return DialogField(
+            key,
+            label,
+            "select",
+            value or None,
+            options=[(option, option) for option in options],
+            allow_blank=True,
+            placeholder="(any)",
+        )
+
+    return FieldsDialog(
+        "Filter Lab Texts",
+        [
+            choice("kind", "Kind", current.kind, LAB_TEXT_KINDS),
+            choice("technique", "Technique", current.technique, TECHNIQUES),
+            choice("form", "Form", current.form, FORMS),
+            DialogField("min_level", "Lowest level", "optint", current.min_level),
+            DialogField("max_level", "Highest level", "optint", current.max_level),
+            DialogField(
+                "readable",
+                "Readable only",
+                "check",
+                current.readable,
+                hint="Leaves out raw texts the laboratory's owner hasn't decoded. "
+                "Blank everything to show them all.",
+            ),
+        ],
+        save_label="Filter",
+        validate=lambda values: lt.filter_problem(build(values)),
+        build=build,
     )
 
 

@@ -29,7 +29,9 @@ from .. import covenant_diary as cov_diary
 from .. import economics as eco
 from .. import enchanted_devices as ed
 from .. import familiars as fam
+from .. import house_rules as hr
 from .. import inhabitants as inh
+from .. import lab_texts as lt
 from .. import laboratories as lab_text
 from .. import possessions as pos
 from .. import sheet_text as st
@@ -98,6 +100,9 @@ DEVICE_SECTIONS: dict[str, str] = {
 }
 
 
+#: The laboratory's Lab Texts database (STORY-508): a book list of its own.
+LAB_TEXTS_SECTION = "section-lab-texts"
+
 #: Section ids of every book list (see BookListView); 'a' in any of them adds
 #: a book, and 'e'/'A' act on books everywhere but the read-only Summary.
 BOOK_SECTIONS: frozenset[str] = frozenset(
@@ -107,6 +112,7 @@ BOOK_SECTIONS: frozenset[str] = frozenset(
         "section-lab-books",
         "section-books",
         "section-unassigned-books",
+        LAB_TEXTS_SECTION,
     }
 )
 
@@ -297,6 +303,158 @@ class BookListView(Vertical):
                 )
         except NoMatches:
             return  # the sheet is being replaced
+
+
+#: The House Rules view's list section (a/A/e act on user-made entries).
+HOUSE_RULES_SECTION = "section-house-rules"
+
+
+class HouseRulesView(Vertical):
+    """The saga's House Rules (STORY-708): its user-made Virtues, Flaws,
+    Boons and Hooks in one list, stretching down to the details panel of
+    the chosen one."""
+
+    DEFAULT_CSS = """
+    HouseRulesView {
+        height: 1fr;
+    }
+
+    HouseRulesView .house-rules-body {
+        height: 1fr;
+    }
+    """
+
+    def __init__(self, saga: Saga) -> None:
+        super().__init__()
+        self.saga = saga
+        self._entries = hr.all_entries(saga)
+
+    def _title(self) -> str:
+        return counted("House Rules", len(self._entries))
+
+    def _rows(self) -> list[tuple[int, str]]:
+        return [
+            (i, hr.row_label(kind, entry))
+            for i, (kind, entry) in enumerate(self._entries)
+        ]
+
+    def compose(self) -> ComposeResult:
+        with (
+            Vertical(classes="house-rules-body"),
+            SheetSection(title=self._title(), id=HOUSE_RULES_SECTION),
+        ):
+            yield TableHeader("  " + hr.table_header())
+            yield SelectableList(self._rows(), id="house-rules-list")
+        yield DetailsPanel(hr.detail_text(self.saga, None), id="house-rules-panel")
+
+    def selected_entry(self) -> tuple[str, hr.Entry] | None:
+        index = self.query_one("#house-rules-list", SelectableList).selected_data_index
+        if index is None or index >= len(self._entries):
+            return None
+        return self._entries[index]
+
+    @property
+    def entries(self) -> list[tuple[str, hr.Entry]]:
+        return self._entries
+
+    def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
+        event.stop()
+        chosen = (
+            self._entries[event.data_index]
+            if event.data_index < len(self._entries)
+            else None
+        )
+        self.query_one("#house-rules-panel", Static).update(
+            hr.detail_text(self.saga, chosen)
+        )
+
+    def rebuild(self) -> None:
+        """Re-read the entries after an add, edit or delete."""
+        try:
+            self._entries = hr.all_entries(self.saga)
+            self.query_one(f"#{HOUSE_RULES_SECTION}", Collapsible).title = self._title()
+            self.query_one("#house-rules-list", SelectableList).set_rows(self._rows())
+            self.query_one("#house-rules-panel", Static).update(
+                hr.detail_text(self.saga, None)
+            )
+        except NoMatches:
+            return  # the view is being replaced
+
+
+class LabTextListView(BookListView):
+    """A laboratory's Lab Texts database (STORY-508): the book list with the
+    Lab Texts' own columns (lab_texts.table_header), narrowed by a filter
+    and read for one reader, the laboratory's owner (`reader`, called as
+    the list is built). Always inline: the sheet's shared panel shows the
+    chosen text."""
+
+    def __init__(
+        self,
+        saga: Saga,
+        books: Callable[[], list[Book]],
+        reader: Callable[[], Character | None],
+        *,
+        section_id: str,
+        group: str | None = None,
+    ) -> None:
+        self._all_texts = books
+        self._reader = reader
+        self.filter = lt.Filter()
+        super().__init__(
+            saga,
+            self._shown,
+            section_id=section_id,
+            title="Lab Texts",
+            docked=False,
+            group=group,
+        )
+        self._layout = lt.Columns()
+
+    @property
+    def reader(self) -> Character | None:
+        return self._reader()
+
+    def _shown(self) -> list[Book]:
+        return lt.filtered(self.saga, self._reader(), self._all_texts(), self.filter)
+
+    def _title(self, checked: int = 0) -> str:
+        title = lt.title(len(self._books), len(self._all_texts()), self.filter)
+        return title + (f" - {checked} marked" if checked else "")
+
+    def _rows(self) -> list[tuple[int, str]]:
+        reader = self._reader()
+        return [
+            (i, lt.row_label(self.saga, reader, b, self._layout))
+            for i, b in enumerate(self._books)
+        ]
+
+    def _header(self) -> str:
+        return "  " + lt.table_header(self._layout)
+
+    def on_resize(self) -> None:
+        """Give the Name column whatever room the list has (and the Sigil
+        column only where it fits)."""
+        layout = lt.columns(self.size.width - 4 - 4)
+        if layout == self._layout:
+            return
+        self._layout = layout
+        try:
+            self.query_one(".books-header", Static).update(self._header())
+            self.query_one(SelectableList).relabel([label for _, label in self._rows()])
+        except NoMatches:
+            return
+
+    def set_filter(self, wanted: lt.Filter) -> None:
+        self.filter = wanted
+        self.rebuild()
+
+    def detail_text(self, index: int | None) -> str:
+        book = (
+            self._books[index]
+            if index is not None and index < len(self._books)
+            else None
+        )
+        return lt.detail_text(self.saga, self._reader(), book)
 
 
 #: The Spells view's list section (a/A/e act on the saga's own spells).
@@ -982,11 +1140,17 @@ class CharacterSheetView(SheetView):
                         self._hermetic_background_left_text,
                         id="hermetic-background-left",
                     )
-                    yield self._static(
-                        "section-hermetic-background",
-                        self._hermetic_background_right_text,
-                        id="hermetic-background-right",
-                    )
+                    with Vertical(id="hermetic-background-right-col"):
+                        yield self._static(
+                            "section-hermetic-background",
+                            self._hermetic_background_right_text,
+                            id="hermetic-background-right",
+                        )
+                        yield Button(
+                            "Lab Texts Read",
+                            id="btn-char-lab-text-access",
+                            compact=True,
+                        )
             with (
                 SheetSection(
                     title="Biographical Detail", id="section-char-biographical"
@@ -1482,9 +1646,13 @@ class CharacterSheetView(SheetView):
         )
 
     def _hermetic_background_right_text(self) -> str:
-        """Column 2 of Hermetic Background: just Wizard's Sigil."""
+        """Column 2 of Hermetic Background: Wizard's Sigil, and whose raw
+        Lab Texts the magus reads (STORY-508)."""
         sigil = self.character.hermetic.wizards_sigil
-        return f"Wizard's Sigil: {escape(sigil) or '(not set)'}"
+        return (
+            f"Wizard's Sigil: {escape(sigil) or '(not set)'}\n"
+            f"{lt.access_text(self.saga, self.character)}"
+        )
 
     _ARTS_NAME_WIDTH: ClassVar[int] = 16
     _ARTS_NUM_WIDTH: ClassVar[int] = 6
@@ -1648,6 +1816,10 @@ class CharacterSheetView(SheetView):
             )
             return
         book = self.query_one(BookListView).selected_book()
+        if book is not None and lt.is_lab_text(book):
+            # A Lab Text shows how it stands for this character (STORY-508).
+            info.update(lt.detail_text(self.saga, self.character, book))
+            return
         info.update(
             bk.detail_text(self.saga, book)
             if book is not None
@@ -2023,9 +2195,10 @@ class LaboratorySheetView(SheetView):
                     "section-lab-devices",
                     group="lab-inv",
                 )
+                yield self._lab_text_list()
                 yield self._book_list(
                     ("section-lab-identity",),
-                    lambda: bk.books_owned_by(
+                    lambda: lt.other_books_of(
                         self.saga, "laboratory", self.laboratory.id
                     ),
                     section_id="section-lab-books",
@@ -2039,6 +2212,7 @@ class LaboratorySheetView(SheetView):
                 "section-lab-items",
                 "section-lab-connections",
                 "section-lab-devices",
+                LAB_TEXTS_SECTION,
                 "section-lab-books",
                 "section-lab-identity",
             ),
@@ -2113,6 +2287,7 @@ class LaboratorySheetView(SheetView):
                     "laboratory", lab.id, i, lab_text.INVENTORY_PANEL_HINT
                 ),
             ),
+            f"{LAB_TEXTS_SECTION}-list": ("lab-inv-panel", self._lab_text_panel_text),
             "section-lab-books-list": ("lab-inv-panel", self._book_panel_text),
             "lab-diary-list": (
                 "lab-diary-info",
@@ -2124,11 +2299,36 @@ class LaboratorySheetView(SheetView):
             ),
         }
 
+    def _lab_text_list(self) -> LabTextListView:
+        """The Lab Texts database (STORY-508), read for the lab's owner;
+        rebuilt with the lab's other books (a book's Type can change) and
+        when the owner does."""
+        view = LabTextListView(
+            self.saga,
+            lambda: lt.texts_of(self.saga, "laboratory", self.laboratory.id),
+            lambda: self.saga.character(self.laboratory.owner_id),
+            section_id=LAB_TEXTS_SECTION,
+            group="lab-inv",
+        )
+        self._on_refresh(
+            (LAB_TEXTS_SECTION, "section-lab-books", "section-lab-identity"),
+            view.rebuild,
+        )
+        return view
+
+    def lab_text_view(self) -> LabTextListView:
+        return self.query_one(LabTextListView)
+
+    def _lab_text_panel_text(self, index: int | None) -> str:
+        return self.lab_text_view().detail_text(index)
+
     def _book_panel_text(self, index: int | None) -> str:
         if index is None:
             return lab_text.INVENTORY_PANEL_HINT
-        books = self.query_one(BookListView).books
-        return bk.detail_text(self.saga, books[index] if index < len(books) else None)
+        books = self.query_one("#section-lab-books", Collapsible).parent
+        assert isinstance(books, BookListView)
+        listed = books.books
+        return bk.detail_text(self.saga, listed[index] if index < len(listed) else None)
 
     def _refresh_panel(self, panel_id: str) -> None:
         """After a refresh: the shared panel shows whichever of its lists

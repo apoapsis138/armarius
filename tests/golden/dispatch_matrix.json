@@ -11,6 +11,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "ImportScreen: Import Data",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -29,6 +30,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -45,6 +47,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -61,6 +64,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -77,6 +81,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -93,6 +98,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -109,6 +115,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -125,6 +132,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -141,6 +149,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -157,6 +166,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -173,6 +183,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -189,6 +200,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -205,6 +217,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -221,6 +234,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -237,6 +251,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -253,6 +268,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -269,6 +285,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -285,6 +302,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -301,6 +319,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -317,6 +336,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -333,6 +353,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -349,6 +370,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -365,6 +387,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -381,6 +404,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -397,6 +421,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -413,6 +438,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "FieldsDialog: Move Raw Vis",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -429,6 +455,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -445,6 +472,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -461,6 +489,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -477,6 +506,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -493,6 +523,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -509,6 +540,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -525,6 +557,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "CsvFilePickerScreen: Import books into Keep's library",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -541,6 +574,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "CsvFilePickerScreen: Import books into Keep's library",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -557,6 +591,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -573,6 +608,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -589,6 +625,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -607,6 +644,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -623,6 +661,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -639,6 +678,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -655,6 +695,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -671,6 +712,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -687,6 +729,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -703,6 +746,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -719,6 +763,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -735,6 +780,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -751,6 +797,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "VirtueFlawPickerScreen: Add a Virtue",
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
@@ -767,6 +814,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "VirtueFlawPickerScreen: Add a Flaw",
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
@@ -783,6 +831,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -799,6 +848,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -815,6 +865,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "FieldsDialog: Move Raw Vis",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -831,6 +882,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -847,6 +899,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -863,6 +916,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "FieldsDialog: Move Raw Vis",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -879,6 +933,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -895,6 +950,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -911,6 +967,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -927,6 +984,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -943,6 +1001,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -961,6 +1020,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -977,6 +1037,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -993,6 +1054,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1009,6 +1071,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1025,6 +1088,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1041,6 +1105,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1057,6 +1122,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "LabVirtueFlawPickerScreen: Add a Laboratory Virtue or Flaw",
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
@@ -1073,6 +1139,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "LabVirtueFlawPickerScreen: Add a Laboratory Virtue or Flaw",
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
@@ -1089,6 +1156,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1105,6 +1173,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1121,6 +1190,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1137,6 +1207,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1153,6 +1224,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "FieldsDialog: Move Raw Vis",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1169,6 +1241,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1185,6 +1258,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1201,6 +1275,24 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
+        "I": "(disabled)",
+        "v": "(disabled)",
+        "V": "(disabled)"
+      }
+    },
+    "SheetSection#section-lab-texts": {
+      "active": "section-lab-texts",
+      "keys": {
+        "a": "FieldsDialog: Add a Book",
+        "A": "notice: No books here yet.",
+        "e": "notice: No books here yet.",
+        "r": "(disabled)",
+        "i": "(disabled)",
+        "u": "(disabled)",
+        "s": "(disabled)",
+        "m": "(disabled)",
+        "F": "FieldsDialog: Filter Lab Texts",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1217,6 +1309,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1233,6 +1326,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1251,6 +1345,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1267,6 +1362,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1283,6 +1379,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "VirtueFlawPickerScreen: Add a Virtue",
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
@@ -1299,6 +1396,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "VirtueFlawPickerScreen: Add a Flaw",
         "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
@@ -1315,6 +1413,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1331,6 +1430,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1347,6 +1447,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1363,6 +1464,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1379,6 +1481,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1395,6 +1498,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1411,6 +1515,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1429,6 +1534,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"
@@ -1447,6 +1553,7 @@
         "u": "(disabled)",
         "s": "(disabled)",
         "m": "(disabled)",
+        "F": "(disabled)",
         "I": "(disabled)",
         "v": "(disabled)",
         "V": "(disabled)"

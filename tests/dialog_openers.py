@@ -15,7 +15,7 @@ from ars_magica_manager import catalog, spells, storage, vis
 from ars_magica_manager import economics as eco
 from ars_magica_manager import screens as scr
 from ars_magica_manager.app import ArsMagicaManagerApp
-from ars_magica_manager.models import Ability, Character, Saga
+from ars_magica_manager.models import Ability, Book, Character, Saga
 from ars_magica_manager.rules import creation_xp
 from ars_magica_manager.screens.workspace import _COVENANT_REPUTATIONS
 
@@ -28,6 +28,26 @@ def contract_saga() -> Saga:
     saga.current_season = "Autumn"
     saga.characters.append(
         Character(id="mag2", name="Brother Oda", type="magus", covenant_id="cov1")
+    )
+    # A Longevity Ritual's Lab Text in the lab, for its owner (STORY-509):
+    # he is 10 (2 pawns) and can handle 2 (Magic Theory 1).
+    magus = saga.character("mag1")
+    assert magus is not None
+    magus.background.year_born = saga.current_year - 10
+    magus.abilities.append(Ability("Magic Theory", xp=5))
+    saga.books.append(
+        Book(
+            id="b-ritual",
+            name="Lab Text: Longevity Ritual for Leandro",
+            type="Lab Text",
+            text_kind="Longevity Ritual",
+            technique="Creo",
+            form="Corpus",
+            level=20,
+            ritual_subject="Leandro",
+            owner_kind="laboratory",
+            owner_id="lab1",
+        )
     )
     grog = Character(id="grog9", name="Hugo", type="grog", covenant_id="cov1")
     grog.abilities = [Ability("Single Weapon"), Ability("Brawl"), Ability("Awareness")]
@@ -310,6 +330,10 @@ OPENERS: dict[str, Opener] = {
         "covenant",
         lambda ws: ws._book_form(next(b for b in ws.saga.books if b.id == "b-cov")),
     ),
+    "add lab text": Opener("laboratory", lambda ws: ws._book_form(None)),
+    "perform ritual again": Opener("laboratory", lambda ws: ws.action_perform_ritual()),
+    "lab texts read": Opener("character", lambda ws: ws._edit_lab_text_access()),
+    "add house rule": Opener("saga", lambda ws: ws._house_rule_form(None)),
     "add spell": Opener("spells", lambda ws: ws._spell_form(None)),
     "edit spell": Opener("spells", lambda ws: ws._spell_form(ws.saga.spells[0])),
     "add ability": Opener("character", _open_ability_details),

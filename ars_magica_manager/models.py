@@ -814,6 +814,19 @@ BOOK_TYPES: tuple[str, ...] = (
     "Casting Tablet",
     "Other",
 )
+#: What a Lab Text records (`Book.text_kind`, STORY-508): a spell, an
+#: enchanted device's effect, a Longevity Ritual, or anything else (a tamed
+#: creature, a Discovery, a familiar's bond power).
+TEXT_SPELL = "Spell"
+TEXT_ENCHANTMENT = "Enchantment"
+TEXT_LONGEVITY = "Longevity Ritual"
+TEXT_OTHER = "Other"
+LAB_TEXT_KINDS: tuple[str, ...] = (
+    TEXT_SPELL,
+    TEXT_ENCHANTMENT,
+    TEXT_LONGEVITY,
+    TEXT_OTHER,
+)
 #: What a Tractatus is written on.
 TRACTATUS_SUBJECTS: tuple[str, ...] = ("Art", "Ability")
 #: Who can own a book (`Book.owner_kind`). A book with no owner is unassigned
@@ -854,12 +867,34 @@ class Book:
     #: character of the saga.
     raw: bool = False
     author_id: str | None = None
+    #: A Lab Text's kind (one of LAB_TEXT_KINDS; "" for any other book),
+    #: and what it records of an effect with no spell to take it from
+    #: (STORY-508): its Technique and Form (a spell's text takes both, and
+    #: its level, from the spell), and a snapshot taken when it was written
+    #: -- an enchantment's Range / Duration / Target, kind of device and
+    #: shape and material, or a Longevity Ritual's subject (not `subject`:
+    #: that key marks a pre-Library-tab save, see from_dict).
+    text_kind: str = ""
+    technique: str = ""
+    form: str = ""
+    effect_rdt: str = ""
+    device_type: str = ""
+    shape_material: str = ""
+    ritual_subject: str = ""
+    #: A Longevity Ritual's extra vis: the pawns beyond age / 5 it was first
+    #: made with, which must be spent again each time it is performed.
+    ritual_extra_vis: int = 0
 
     @classmethod
     def from_dict(
         cls, data: dict[str, Any], spell_names: dict[str, str] | None = None
     ) -> Book:
         d = dict(data)
+        if d.get("type") == "Lab Text" and not d.get("text_kind"):
+            # Before STORY-508 a Lab Text had no kind.
+            d["text_kind"] = (
+                TEXT_SPELL if d.get("spell_id") or d.get("spell_name") else TEXT_OTHER
+            )
         if "subject" in d:
             # The pre-Library-tab stub: Summa/Tractatus/Lab Text on one `subject`.
             subject = str(d.pop("subject") or "")
@@ -1447,6 +1482,9 @@ class Breakthrough:
     discovery_vis: int = 0
     discovery_vis_art: str = ""
     discovery_shift: int = 0
+    #: The Technique and Form of that experiment (its Lab Text's).
+    discovery_technique: str = ""
+    discovery_form: str = ""
     #: Stabilizing: the seasons done of the current attempt.
     stabilizing_seasons: int = 0
     #: Insights gained and not yet invented.
@@ -1493,6 +1531,16 @@ class CreationConditions:
 
 
 @dataclass
+class LabTextAccess:
+    """How far a magus can read one author's raw Lab Texts (STORY-914,
+    STORY-508): up to `level`, and how that was gained -- "decoded",
+    "taught" (the author's abbreviations) or "" (not recorded)."""
+
+    level: int = 0
+    via: str = ""
+
+
+@dataclass
 class Character:
     id: str
     name: str
@@ -1528,9 +1576,10 @@ class Character:
     #: (DE Ch. 10, Studying Tractatus; STORY-902).
     tractatus_read: list[str] = field(default_factory=list)
     #: Whose raw Lab Texts this magus can read, and up to what level
-    #: (decoded, or taught the author's abbreviations; STORY-914): author
-    #: name -> level.
-    lab_text_access: dict[str, int] = field(default_factory=dict)
+    #: (decoded, or taught the author's abbreviations; STORY-914), by the
+    #: author's character id -- or name, for an author outside the saga
+    #: (rules.book_seasons.author_key).
+    lab_text_access: dict[str, LabTextAccess] = field(default_factory=dict)
     #: Original research goals (STORY-916).
     breakthroughs: list[Breakthrough] = field(default_factory=list)
     #: A grog's yearly update (STORY-924); None until set up.
@@ -1605,6 +1654,15 @@ class Character:
         d["creation_xp"] = [
             CreationXp(**known_fields(CreationXp, x)) for x in d.get("creation_xp", [])
         ]
+        d["lab_text_access"] = {
+            # Before STORY-508 an author's entry was just the level.
+            author: (
+                LabTextAccess(level=int(entry))
+                if isinstance(entry, int)
+                else LabTextAccess(**known_fields(LabTextAccess, entry))
+            )
+            for author, entry in (d.get("lab_text_access") or {}).items()
+        }
         return cls(**known_fields(cls, d))
 
 
@@ -2729,6 +2787,13 @@ class Saga:
     season_records: list[SeasonRecord] = field(default_factory=list)
     #: Lab work in progress over several seasons (STORY-901).
     lab_projects: list[LabProject] = field(default_factory=list)
+    #: User-made catalog entries (STORY-708): house rules and entries from
+    #: books the shared catalogs don't carry -- character Virtues & Flaws,
+    #: laboratory Virtues & Flaws, covenant Boons & Hooks. Text only: no
+    #: effects the rules engine applies. See house_rules.py.
+    custom_virtues_flaws: list[VirtueFlawDef] = field(default_factory=list)
+    custom_lab_virtues_flaws: list[LabVirtueFlawDef] = field(default_factory=list)
+    custom_boons_hooks: list[CovenantBoonHookDef] = field(default_factory=list)
     #: The app version that last saved this saga (storage.save_saga sets it;
     #: "" for a save older than versioning), for upgrading old saves later.
     app_version: str = ""
@@ -2763,6 +2828,15 @@ class Saga:
             SeasonRecord.from_dict(r) for r in d.get("season_records", [])
         ]
         d["lab_projects"] = [LabProject.from_dict(p) for p in d.get("lab_projects", [])]
+        d["custom_virtues_flaws"] = [
+            VirtueFlawDef.from_dict(e) for e in d.get("custom_virtues_flaws", [])
+        ]
+        d["custom_lab_virtues_flaws"] = [
+            LabVirtueFlawDef.from_dict(e) for e in d.get("custom_lab_virtues_flaws", [])
+        ]
+        d["custom_boons_hooks"] = [
+            CovenantBoonHookDef.from_dict(e) for e in d.get("custom_boons_hooks", [])
+        ]
         spell_names = {s.id: s.name for s in d["spells"]}
         d["books"] = [Book.from_dict(b, spell_names) for b in d.get("books", [])]
         # Older saves kept a Library record per covenant listing its book ids;
@@ -2775,7 +2849,36 @@ class Saga:
                     book.owner_id = library.get("covenant_id")
         saga = cls(**known_fields(cls, d))
         _link_vis_store_locations(saga)
+        _key_lab_text_access_by_author(saga)
         return saga
+
+
+def _key_lab_text_access_by_author(saga: Saga) -> None:
+    """Key who can read whose Lab Texts by the author's character id, not
+    name (STORY-508; older saves used the name, which a rename broke): an
+    entry, or a decoding under way, naming exactly one character of the
+    saga moves to that character's id. Any other name stays as typed."""
+    ids = {c.id for c in saga.characters}
+    by_name: dict[str, list[str]] = {}
+    for character in saga.characters:
+        by_name.setdefault(character.name, []).append(character.id)
+
+    def key(author: str) -> str:
+        found = by_name.get(author, [])
+        return found[0] if author not in ids and len(found) == 1 else author
+
+    for character in saga.characters:
+        moved: dict[str, LabTextAccess] = {}
+        for author, access in character.lab_text_access.items():
+            kept = moved.get(key(author))
+            if kept is None or access.level > kept.level:
+                moved[key(author)] = access
+        character.lab_text_access = moved
+    for project in saga.lab_projects:
+        # A decoding under way: "decode:<reader id>:<author>".
+        prefix, _, author = project.spell_id.rpartition(":")
+        if prefix.startswith("decode:") and author:
+            project.spell_id = f"{prefix}:{key(author)}"
 
 
 def _link_vis_store_locations(saga: Saga) -> None:

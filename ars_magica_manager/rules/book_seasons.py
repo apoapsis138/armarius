@@ -39,7 +39,14 @@ from dataclasses import dataclass, field
 from .. import books
 from .. import spells as spl
 from ..arts import ART_BY_NAME
-from ..models import Book, Character, Saga, SeasonPlan
+from ..models import (
+    TEXT_LONGEVITY,
+    Book,
+    Character,
+    LabTextAccess,
+    Saga,
+    SeasonPlan,
+)
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Writing Books "
@@ -188,7 +195,36 @@ def can_use_lab_text(character: Character, book: Book) -> bool:
         return True
     if book.author_id == character.id:
         return True
-    return character.lab_text_access.get(book.author, -1) >= text_level(book)
+    if book.text_kind == TEXT_LONGEVITY and book.ritual_subject == character.name:
+        return True  # a Longevity Ritual's subject can read its text
+    return access_level(character, author_key(book), -1) >= text_level(book)
+
+
+def author_key(book: Book) -> str:
+    """What a reader's access to a Lab Text's author is filed under: the
+    author's character id, or the typed name of one outside the saga."""
+    return book.author_id or book.author
+
+
+def access_level(character: Character, author: str, default: int = 0) -> int:
+    """The level up to which `character` reads the raw texts of `author`
+    (an author_key)."""
+    access = character.lab_text_access.get(author)
+    return access.level if access is not None else default
+
+
+def grant_access(character: Character, author: str, level: int, via: str) -> None:
+    """`character` can now read `author`'s raw texts up to `level` (never
+    lowering what he had), gained `via` "decoded" or "taught"."""
+    if level > access_level(character, author, -1):
+        character.lab_text_access[author] = LabTextAccess(level, via)
+
+
+def author_name(saga: Saga, book: Book) -> str:
+    """A book's author as shown: the linked character's current name, else
+    the name typed."""
+    author = saga.character(book.author_id)
+    return author.name if author is not None else book.author
 
 
 def text_level(book: Book, saga: Saga | None = None) -> int:
@@ -384,6 +420,14 @@ def _copy_of(
         spell_id=book.spell_id,
         raw=book.raw,
         author_id=book.author_id,
+        text_kind=book.text_kind,
+        technique=book.technique,
+        form=book.form,
+        effect_rdt=book.effect_rdt,
+        device_type=book.device_type,
+        shape_material=book.shape_material,
+        ritual_subject=book.ritual_subject,
+        ritual_extra_vis=book.ritual_extra_vis,
     )
 
 
@@ -419,10 +463,14 @@ def _lab_texts(
         book = _book(saga, plan.book_id)
         if book is None or book.type != "Lab Text":
             return ["Choose the Lab Text to copy."], None
-        if not books.can_read(saga, character, book) or not can_use_lab_text(
-            character, book
-        ):
-            return [f"{character.name} can't read {book.name}."], None
+        if not books.can_read(saga, character, book):
+            return [f"{character.name} can't get at {book.name}."], None
+        if not can_use_lab_text(character, book):
+            return [
+                f"{book.name} is {author_name(saga, book)}'s raw text: "
+                f"{character.name} must decode it first (or have it rewritten "
+                "for general use)."
+            ], None
         scribe = ability_score(character, "Profession: Scribe")
         level = max(1, text_level(book, saga))
         copies = (60 * scribe) // level
@@ -444,7 +492,7 @@ def _lab_texts(
     return [], BookWork(
         points_gained=1,
         needed=1,
-        access=(student.id, character.name, 20 * latin),
+        access=(student.id, character.id, 20 * latin),
     )
 
 
@@ -467,8 +515,11 @@ def exposure_ability(character: Character, plan: SeasonPlan) -> str:
 
 
 def decode_total_arts(saga: Saga, book: Book) -> tuple[str, str] | None:
-    """The Technique and Form of a Lab Text's spell."""
+    """A Lab Text's Technique and Form: its spell's, else the text's own
+    (an enchantment, a Longevity Ritual, a taming or a Discovery)."""
     spell = spl.find_spell(saga, book.spell_id)
-    if spell is None or not spell.technique or not spell.form:
-        return None
-    return spell.technique, spell.form
+    if spell is not None and spell.technique and spell.form:
+        return spell.technique, spell.form
+    if book.technique and book.form:
+        return book.technique, book.form
+    return None

@@ -40,6 +40,7 @@ from ars_magica_manager.models import (
     BOON_HOOK_UNKNOWN,
     LabSpecialtyEntry,
     LabSpecialtyGrant,
+    LabTextAccess,
     Possession,
     Saga,
 )
@@ -1087,6 +1088,105 @@ CONTRACTS: dict[str, Contract] = {
             },
         ],
         shown={"#section-lib-books-list": "Scrolls"},
+    ),
+    # Lab Texts (STORY-508)
+    "add lab text": Contract(
+        prefill={"Name": "", "Type": Select.NULL, "Owner": "laboratory:lab1"},
+        edits={
+            "Name": "Ring of Warmth",
+            "Type": "Lab Text",
+            "Kind": "Enchantment",
+            "Technique": "Creo",
+            "Form": "Ignem",
+            "Level": "10",
+            "Range / Duration / Target": "Touch / Sun / Individual",
+            "Device": "Lesser Enchantment",
+            "Author's sheet": "mag2",
+            "Raw (author's shorthand)": True,
+        },
+        saved=lambda s: [
+            (
+                b.text_kind,
+                b.technique,
+                b.form,
+                b.level,
+                b.effect_rdt,
+                b.device_type,
+                b.author_id,
+                b.author,
+                b.raw,
+                b.spell_id,
+            )
+            for b in s.books
+            if b.name == "Ring of Warmth"
+        ],
+        expected=[
+            (
+                "Enchantment",
+                "Creo",
+                "Ignem",
+                10,
+                "Touch / Sun / Individual",
+                "Lesser Enchantment",
+                "mag2",
+                "Brother Oda",
+                True,
+                None,
+            )
+        ],
+        # A spell's text needs its spell; any other kind needs its level.
+        invalid=[
+            {"Name": "Text", "Type": "Lab Text"},
+            {"Name": "Text", "Type": "Lab Text", "Kind": "Other"},
+        ],
+        shown={"#section-lab-texts-list": "Ring of Warmth"},
+    ),
+    "perform ritual again": Contract(
+        prefill={"Vis": "Creo", "Vis from": "laboratory"},
+        edits={"Vis from": "character"},
+        saved=lambda s: (
+            _char(s).raw_vis,
+            _char(s).aging.longevity_modifier,
+            _lab(s).diary[-1].name,
+        ),
+        # Level 20 / 5; 2 of his 3 pawns of Creo vis.
+        expected=({"creo": 1}, 4, "Longevity Ritual performed again: Leandro"),
+        # The laboratory has no Creo vis; he has no Vim.
+        invalid=[
+            {"Vis from": "laboratory"},
+            {"Vis": "Vim", "Vis from": "character"},
+        ],
+    ),
+    "lab texts read": Contract(
+        prefill={"Author": Select.NULL, "Reads to level": "0"},
+        edits={"Author": "mag2", "Reads to level": "20", "How": "decoded"},
+        saved=lambda s: _char(s).lab_text_access,
+        expected={"mag2": LabTextAccess(20, "decoded")},
+        # No author; not a number.
+        invalid=[
+            {"Reads to level": "5"},
+            {"Author": "mag2", "Reads to level": "-"},
+        ],
+        shown={"#hermetic-background-right": "Brother Oda to 20 (decoded)"},
+    ),
+    # House Rules (STORY-708)
+    "add house rule": Contract(
+        prefill={"For": "character", "Name": "", "Tier": "Minor"},
+        edits={
+            "For": "laboratory",
+            "Name": "Leaky Roof",
+            "Type": "Flaw",
+            "Tier": "Major",
+            "Can be taken more than once": True,
+        },
+        saved=lambda s: [
+            (e.id, e.type, e.tier, e.cost, e.category, e.repeatable, e.source)
+            for e in s.custom_lab_virtues_flaws
+        ],
+        expected=[
+            ("custom_labvf_leaky_roof", "Flaw", "Major", -3, "Structure", True, "")
+        ],
+        invalid={"Name": ""},
     ),
     "add spell": Contract(
         prefill={"Name": "", "Technique": Select.NULL, "Level": ""},

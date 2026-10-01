@@ -173,7 +173,13 @@ def test_stabilizing_adds_the_magnitude_and_warps():
     saga = _saga()
     magus = saga.character("m")
     magus.breakthroughs = [
-        Breakthrough("Ignem", pending_magnitude=4, discovery_lab_total=30)
+        Breakthrough(
+            "Ignem",
+            pending_magnitude=4,
+            discovery_lab_total=30,
+            discovery_technique="Creo",
+            discovery_form="Ignem",
+        )
     ]
     plan = SeasonPlan(
         "m", 1220, "Spring", experiment.STABILIZE, lab_id="lab", research="Ignem"
@@ -184,7 +190,9 @@ def test_stabilizing_adds_the_magnitude_and_warps():
     goal = magus.breakthroughs[0]
     assert (goal.points, goal.pending_magnitude) == (4, 0)
     assert magus.aging.warping_points + 5 * magus.aging.warping_score >= 3
-    assert saga.books[-1].name == "Lab Text: Discovery toward Ignem"
+    text = saga.books[-1]
+    assert text.name == "Lab Text: Discovery toward Ignem"
+    assert (text.text_kind, text.technique, text.form) == ("Other", "Creo", "Ignem")
 
 
 def test_stabilizing_repeats_the_experiment_s_seasons_and_vis():

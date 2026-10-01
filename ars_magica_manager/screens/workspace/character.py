@@ -22,6 +22,7 @@ from ...models import (
     DiaryEntry,
     HermeticBackground,
     KnownSpell,
+    LabTextAccess,
     Possession,
     Spell,
     Wounds,
@@ -60,6 +61,7 @@ from ..prompts import (
     _ability_from,
     _ability_problem,
     _diary_entry_dialog,
+    _lab_text_access_dialog,
     _raw_vis_dialog,
 )
 from .base import (
@@ -424,6 +426,28 @@ class CharacterActions(WorkspaceBase):
                 "Edit Hermetic Background", _hermetic_fields(character.hermetic)
             ),
             handle_result,
+        )
+
+    def _edit_lab_text_access(self) -> None:
+        """Set whose raw Lab Texts the magus reads, and to what level
+        (STORY-508): an author's entry is added, changed, or -- at level 0
+        -- removed."""
+        character = self.selected_character
+        if character is None:
+            return
+
+        def handle_result(result: tuple[str, int, str] | None) -> None:
+            if result is None:
+                return
+            author, level, via = result
+            if level > 0:
+                character.lab_text_access[author] = LabTextAccess(level, via)
+            else:
+                character.lab_text_access.pop(author, None)
+            self._commit("section-hermetic-background", "section-books")
+
+        self.app.push_screen(
+            _lab_text_access_dialog(self.saga, character), handle_result
         )
 
     # -- Spells known (magi only) --

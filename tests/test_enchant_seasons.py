@@ -6,6 +6,7 @@ import random
 
 from support import strip_markup
 
+from ars_magica_manager import enchanted_devices as ed
 from ars_magica_manager import seasons
 from ars_magica_manager.models import (
     CHARGED,
@@ -13,6 +14,7 @@ from ars_magica_manager.models import (
     LESSER,
     Ability,
     ArtScore,
+    Book,
     Character,
     Characteristics,
     Covenant,
@@ -21,6 +23,7 @@ from ars_magica_manager.models import (
     Laboratory,
     Saga,
     SeasonPlan,
+    VirtueFlawInstance,
 )
 from ars_magica_manager.rules import enchant_seasons as es
 from ars_magica_manager.rules import lab_seasons
@@ -164,10 +167,24 @@ def test_instilling_takes_seasons_and_its_vis_in_the_first():
     effect = _device(saga, "staff").effects[0]
     assert effect.instilling_progress == 10
     assert saga.character("m").raw_vis == {"vim": 12, "creo": 3}
+    assert saga.books == []  # no Lab Text until it is instilled
     saga.current_season = "Summer"
     _run(saga)
     assert effect.instilling_progress is None  # finished
     assert saga.character("m").raw_vis == {"vim": 12, "creo": 3}  # no more vis
+    # Instilled: its raw Lab Text is in the laboratory (STORY-508), a
+    # snapshot of the effect and of the device it went into.
+    [text] = saga.books
+    assert (text.type, text.text_kind, text.raw) == ("Lab Text", "Enchantment", True)
+    staff = _device(saga, "staff")
+    assert (text.technique, text.form, text.level) == (
+        effect.technique,
+        effect.form,
+        ed.modified_level(staff, effect),
+    )
+    assert (text.author_id, text.owner_kind) == ("m", "laboratory")
+    assert text.device_type == "Invested Device"
+    assert text.effect_rdt.count(" / ") == 2
 
 
 def test_a_lesser_enchantment_needs_twice_the_level():
@@ -189,6 +206,154 @@ def test_a_charged_item_gets_charges_for_the_excess():
     _run(saga)
     wand = _device(saga, "wand")
     assert wand.lab_total == 25 and wand.maker_id == "m"
+    [text] = saga.books
+    assert (text.text_kind, text.device_type) == ("Enchantment", "Charged Item")
+
+
+# -- working from a Lab Text (STORY-509) --
+
+
+def _text(saga, device_id, effect_id, **fields) -> Book:
+    """A general-use Lab Text of that effect, in the covenant's library."""
+    device = _device(saga, device_id)
+    effect = next(e for e in device.effects if e.id == effect_id)
+    values = {
+        "id": f"text-{effect_id}",
+        "name": f"Lab Text: {effect.name}",
+        "type": "Lab Text",
+        "text_kind": "Enchantment",
+        "technique": effect.technique,
+        "form": effect.form,
+        "level": ed.modified_level(device, effect),
+        "device_type": es.text_device_type(device),
+        "owner_kind": "covenant",
+        "owner_id": saga.covenants[0].id,
+    }
+    values.update(fields)
+    book = Book(**values)
+    saga.books.append(book)
+    return book
+
+
+def test_a_lab_text_instils_an_effect_in_one_season():
+    saga = _saga()
+    _device(saga, "staff").pawns_opened = 6
+    text = _text(saga, "staff", "fire")
+    plan = _plan(
+        es.INSTIL, device_id="staff", effect_id="fire", vis_art="Creo", book_id=text.id
+    )
+    found, work = _work(saga, plan)
+    # Lab Total 25 is at least the level: done this season, vis as usual.
+    assert found == [] and work.finished and work.vis_cost == {"Creo": 2}
+    assert work.points_gained == work.level
+    assert seasons.plan_lab_work(saga, plan) == []  # no later seasons to plan
+    _run(saga)
+    assert _device(saga, "staff").effects[0].instilling_progress is None
+    # No experimenting from a text; and it can't be used below its level.
+    found, _ = _work(saga, _plan(**{**_plan_fields(plan), "experimenting": True}))
+    assert found == ["There's no experimenting while working from a Lab Text."]
+
+
+def _plan_fields(plan) -> dict:
+    return {
+        "activity": plan.activity,
+        "device_id": plan.device_id,
+        "effect_id": plan.effect_id,
+        "vis_art": plan.vis_art,
+        "book_id": plan.book_id,
+    }
+
+
+def test_text_virtues_apply_to_enchanting_from_a_text():
+    saga = _saga()
+    magus = saga.character("m")
+    plan = _plan(es.CHARGED_WORK, device_id="wand", effect_id="bolt")
+
+    def total(**fields) -> int:
+        _, work = _work(saga, _plan(**{**_plan_fields(plan), **fields}))
+        return int(work.lab_total.total)
+
+    text = _text(saga, "wand", "bolt", author="Flavia")
+    assert total() == 25 and total(book_id=text.id) == 25
+    # Inventive Genius: +3 "when not using a Lab Text".
+    magus.virtues_flaws = [VirtueFlawInstance("vf_inventive_genius")]
+    assert total() == 28 and total(book_id=text.id) == 25
+    # Adept Laboratory Student: +6 working from someone else's Lab Text...
+    magus.virtues_flaws = [VirtueFlawInstance("vf_adept_laboratory_student")]
+    assert total() == 25 and total(book_id=text.id) == 31
+    # ...not from his own.
+    text.author_id = "m"
+    assert total(book_id=text.id) == 25
+    text.author_id = None
+    magus.virtues_flaws = [VirtueFlawInstance("vf_weak_scholar")]
+    assert total(book_id=text.id) == 19
+
+
+def test_a_lab_text_says_what_shape_and_material_it_is_exact_to():
+    saga = _saga()
+    text = _text(saga, "wand", "bolt", shape_material="small oak wand")
+    plan = _plan(es.CHARGED_WORK, device_id="wand", effect_id="bolt", book_id=text.id)
+    _, work = _work(saga, plan)
+    assert work.lab_total.notes == [
+        "Lab Text: Bolt reproduces the effect in the same shape and material "
+        "only: small oak wand."
+    ]
+
+
+def test_a_lab_text_makes_a_lesser_enchantment_at_its_level():
+    saga = _saga()
+    _device(saga, "ring").effects[0].level = 15
+    plan = _plan(es.LESSER_WORK, device_id="ring", effect_id="warm", vis_art="Creo")
+    found, _ = _work(saga, plan)
+    assert found[0].startswith("Lab Total 25: a lesser enchantment of level 15")
+    text = _text(saga, "ring", "warm")
+    found, work = _work(
+        saga,
+        _plan(
+            es.LESSER_WORK,
+            device_id="ring",
+            effect_id="warm",
+            vis_art="Creo",
+            book_id=text.id,
+        ),
+    )
+    assert found == [] and work.finished  # 25 >= 15, not twice it
+
+
+def test_a_lab_text_gives_a_charge_per_five_of_the_lab_total():
+    saga = _saga()
+    text = _text(saga, "wand", "bolt")
+    plan = _plan(es.CHARGED_WORK, device_id="wand", effect_id="bolt", book_id=text.id)
+    found, work = _work(saga, plan)
+    assert found == [] and work.charges == 5  # 25 / 5, not (25 - 15) / 5
+
+
+def test_a_lab_text_reproduces_its_effect_exactly():
+    saga = _saga()
+    magus = saga.character("m")
+    staff, ring = _device(saga, "staff"), _device(saga, "ring")
+    fire, warm = staff.effects[0], ring.effects[0]
+    text = _text(saga, "ring", "warm")
+    assert es.effect_texts(saga, magus, ring, warm) == [text]
+    assert es.text_problem(saga, magus, ring, warm, text) is None
+    # Not for another effect, or another kind of device.
+    assert "is level" in es.text_problem(saga, magus, staff, fire, text)
+    fire_text = _text(saga, "staff", "fire", device_type="Lesser Enchantment")
+    assert es.text_problem(saga, magus, staff, fire, fire_text) == (
+        "Lab Text: Fire is for a Lesser Enchantment; Staff is a Invested Device."
+    )
+    # A raw text by someone else has to be decoded first.
+    text.raw, text.author = True, "Flavia"
+    assert "decode it first" in es.text_problem(saga, magus, ring, warm, text)
+    assert es.effect_texts(saga, magus, ring, warm) == []
+    # A talisman's text is no use to anyone but its maker.
+    text.raw, text.device_type = False, "Talisman"
+    ring.talisman = True
+    assert es.text_problem(saga, magus, ring, warm, text) == (
+        "Lab Text: Warmth is of a talisman's effect: no use to anyone else."
+    )
+    text.author_id = "m"
+    assert es.text_problem(saga, magus, ring, warm, text) is None
 
 
 def test_attuning_makes_the_talisman():
@@ -220,3 +385,67 @@ def test_investigating_finds_powers_weakest_first():
     # A typed die is used for one roll: 18 + 3 finds the level 5 power.
     assert [e.known for e in box.effects] == [True, False]
     assert "found Lid" in saga.character("m").diary[-1].details
+
+
+async def test_the_lab_work_screen_offers_an_effects_lab_texts():
+    from support import wait_until
+    from textual.widgets import Select, Tree
+
+    from ars_magica_manager import storage
+    from ars_magica_manager.app import ArsMagicaManagerApp
+    from ars_magica_manager.screens.invent_spell import InventSpellScreen
+
+    saga = _saga()
+    text = _text(saga, "wand", "bolt")
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        await pilot.press("enter")
+        await pilot.pause()
+        ws = app.screen
+        tree = ws.query_one("#nav-tree", Tree)
+
+        def node():
+            pending = [tree.root]
+            while pending:
+                found = pending.pop()
+                if found.data == ("laboratory", "lab"):
+                    return found
+                pending.extend(found.children)
+            return None
+
+        assert await wait_until(pilot, lambda: node() is not None)
+        tree.select_node(node())
+        await wait_until(pilot, lambda: ws._laboratory_sheet_view is not None)
+        view = ws._laboratory_sheet_view
+        await wait_until(pilot, lambda: view.initial_tab_seen)
+        await wait_until(pilot, lambda: ws._active_section() == "tab-lab-planning")
+        await pilot.press("e")
+        assert await wait_until(
+            pilot, lambda: isinstance(app.screen, InventSpellScreen)
+        )
+        screen = app.screen
+        await wait_until(pilot, lambda: bool(screen.query("#inv-activity")))
+        screen.query_one("#inv-activity", Select).value = es.CHARGED_WORK
+        await pilot.pause()
+        row = screen.query_one("#inv-effect-text-row")
+        assert await wait_until(pilot, lambda: row.display)
+        screen.query_one("#inv-device", Select).value = "wand"
+        await pilot.pause()
+        screen.query_one("#inv-effect", Select).value = "bolt"
+        await pilot.pause()
+        choice = screen.query_one("#inv-effect-text", Select)
+        # Choosing the effect offers the Lab Texts it could be made from.
+        assert await wait_until(
+            pilot,
+            lambda: (
+                [value for _, value in choice._options if value == text.id] == [text.id]
+            ),
+        )
+        assert screen.current_plan().book_id is None
+        choice.value = text.id
+        await pilot.pause()
+        plan = screen.current_plan()
+        assert plan.book_id == text.id
+        found, work = lab_seasons.work(saga, saga.character("m"), plan)
+        assert found == [] and work.charges == 5

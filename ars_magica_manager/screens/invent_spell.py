@@ -23,6 +23,7 @@ from textual.widgets import Button, Checkbox, Input, Label, Select, Static, Text
 
 from .. import books, seasons
 from .. import enchanted_devices as ed
+from .. import lab_texts as lt
 from .. import spells as spl
 from ..arts import FORMS, TECHNIQUES
 from ..familiars import familiar_of
@@ -186,7 +187,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         width: 14;
     }
 
-    #inv-device, #inv-effect, #inv-power {
+    #inv-device, #inv-effect, #inv-power, #inv-effect-text {
         width: 50;
     }
 
@@ -426,8 +427,15 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                     yield Label("Lab Text")
                     yield Select(
                         [
-                            (escape(b.name), b.id)
-                            for b in lab_seasons.lab_texts(self.saga, self.magus)
+                            (
+                                escape(
+                                    b.name + lt.cant_read_tag(self.saga, self.magus, b)
+                                ),
+                                b.id,
+                            )
+                            for b in lab_seasons.lab_texts_at_hand(
+                                self.saga, self.magus
+                            )
                         ],
                         value=(plan.book_id if plan and plan.book_id else Select.NULL),
                         prompt="(choose the Lab Text)",
@@ -438,7 +446,11 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                     yield Label("Lab Text")
                     yield Select(
                         [
-                            (f"{escape(b.name)} ({escape(b.author)})", b.id)
+                            (
+                                f"{escape(b.name)} "
+                                f"({escape(bs.author_name(self.saga, b))})",
+                                b.id,
+                            )
                             for b in self._undecoded()
                         ],
                         value=(
@@ -518,6 +530,15 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                             value=self._effect_value(plan),
                             prompt="(choose)",
                             id="inv-effect",
+                            compact=True,
+                        )
+                    with Horizontal(classes="inv-row", id="inv-effect-text-row"):
+                        yield Label("From Lab Text")
+                        yield Select(
+                            self._effect_texts(plan),
+                            value=self._effect_text_value(plan),
+                            prompt="(none: instil it the long way)",
+                            id="inv-effect-text",
                             compact=True,
                         )
                     with Horizontal(classes="inv-row", id="inv-bind-row"):
@@ -815,6 +836,8 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                 if activity == lab_seasons.LAB_TEXT
                 else self._select("#inv-decode")
                 if activity == bs.DECODE_TEXT
+                else self._select("#inv-effect-text")
+                if activity in es.EFFECT_ACTIVITIES
                 else None
             ),
             similar_spell_id=self._select("#inv-similar") if inventing else None,
@@ -937,6 +960,26 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             )
             for e in device.effects
         ]
+
+    def _effect_texts(self, plan: SeasonPlan | None) -> list[tuple[str, str]]:
+        """The Lab Texts the plan's effect could be instilled from
+        (STORY-509): enchantment texts of the same Arts, level and kind of
+        device that the magus can read."""
+        device = es.device_of(self.saga, plan) if plan is not None else None
+        effect = es.effect_of(device, plan) if device and plan else None
+        if device is None or effect is None:
+            return []
+        return [
+            (
+                f"{escape(b.name)} ({escape(bs.author_name(self.saga, b))})",
+                b.id,
+            )
+            for b in es.effect_texts(self.saga, self.magus, device, effect)
+        ]
+
+    def _effect_text_value(self, plan: SeasonPlan | None) -> object:
+        ids = [value for _, value in self._effect_texts(plan)]
+        return plan.book_id if plan and plan.book_id in ids else Select.NULL
 
     def _effect_value(self, plan: SeasonPlan | None) -> object:
         if plan is None:
@@ -1082,6 +1125,9 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         enchanting = plan.activity in es.ACTIVITIES
         self.query_one("#inv-device-row").display = enchanting
         self.query_one("#inv-effect-row").display = (
+            plan.activity in es.EFFECT_ACTIVITIES
+        )
+        self.query_one("#inv-effect-text-row").display = (
             plan.activity in es.EFFECT_ACTIVITIES
         )
         by_art = plan.activity in (es.INSTIL, es.LESSER_WORK, fs.BIND, fs.EMPOWER)
@@ -1254,6 +1300,10 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                 effects = self._effects(self._select("#inv-device"))
                 self.query_one("#inv-effect", Select).set_options(effects)
             plan = self.current_plan()
+            # ...and its own Lab Texts to work from.
+            self.query_one("#inv-effect-text", Select).set_options(
+                self._effect_texts(plan)
+            )
             arts = self._effect_arts(plan)
             vis = self.query_one("#inv-effect-vis", Select)
             vis.set_options(arts)

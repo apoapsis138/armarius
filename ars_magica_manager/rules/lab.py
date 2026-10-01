@@ -53,6 +53,14 @@ ACTIVITY_SPECIALIZATIONS: dict[str, str] = {
     "learn_from_lab_text": "Texts",
 }
 EXPERIMENTATION = "Experimentation"
+#: The activity of working from someone else's Lab Text.
+TEXT_ACTIVITY = "learn_from_lab_text"
+#: Virtues and Flaws whose Lab Total effect the book gives "when not using a
+#: Lab Text" (Inventive Genius: +3; Creative Block: -3 "unless using a Lab
+#: Text"): left out of any work done from a text.
+NOT_FROM_A_TEXT: frozenset[str] = frozenset(
+    {"vf_inventive_genius", "vf_creative_block"}
+)
 ACTIVITY_SOURCE = (
     "Ars Magica Definitive Edition, Chapter 8: Laboratory, Inventing Spells, "
     "Laboratory Texts, Longevity Rituals, Vis Extraction, Shape and Material "
@@ -122,10 +130,17 @@ def lab_total(
     experimenting: bool = False,
     similar_spell_level: int | None = None,
     shape_material: int = 0,
+    from_lab_text: bool = False,
+    others_text: bool = False,
 ) -> LabTotal:
     """The Lab Total for `technique` + `form` in `lab`, for an `activity`
     (a totals.ACTIVITIES_BY_TYPE["lab_total"] key) or none. Experimenting
     adds the Experimentation Specialization (the die is rolled separately);
+    working `from_lab_text` adds the Texts Specialization to the activity's
+    and drops the Virtues and Flaws that only count "when not using a Lab
+    Text" (NOT_FROM_A_TEXT); from `others_text` -- a text someone else
+    wrote -- it also takes the ones for working from others' Lab Texts
+    (Adept Laboratory Student, Weak Scholar);
     inventing or enchanting adds the magnitude of the highest similar spell
     known (`similar_spell_level`); enchanting adds shape and material
     bonuses, capped at Magic Theory."""
@@ -156,6 +171,8 @@ def lab_total(
     applies = {technique, form, ACTIVITY_SPECIALIZATIONS.get(activity or "")}
     if experimenting:
         applies.add(EXPERIMENTATION)
+    if from_lab_text:
+        applies.add(ACTIVITY_SPECIALIZATIONS[TEXT_ACTIVITY])
     for spec in specialization_scores(lab):
         if spec.counts and spec.name in applies:
             lines.append(
@@ -225,6 +242,14 @@ def lab_total(
     if covenant is not None:
         sources.append(effects.EffectSource("covenant", covenant.boons_hooks, boons))
     found = _pair_effects(sources, technique, form, activity, experimenting)
+    if from_lab_text:
+        found = [e for e in found if e.entry.id not in NOT_FROM_A_TEXT]
+    if others_text and activity != TEXT_ACTIVITY:
+        found += [
+            e
+            for e in _pair_effects(sources, technique, form, TEXT_ACTIVITY)
+            if e.modifier.activity == TEXT_ACTIVITY
+        ]
     combined = effects.combine(base, found, rounding=round_down)
     return LabTotal(total=combined.total, lines=lines + combined.lines[1:], notes=notes)
 

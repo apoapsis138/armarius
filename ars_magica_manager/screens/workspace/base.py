@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from dataclasses import field as dataclass_field
 from enum import StrEnum
 from functools import cached_property, partial
+from pathlib import Path
 from typing import Any, ClassVar, NamedTuple
 
 from textual.app import ComposeResult
@@ -31,9 +32,20 @@ from textual.widgets import (
 from textual.widgets.tree import TreeNode
 
 from ... import books as bk
-from ... import catalog, creation, deletion, seasons, sourcebooks, storage, vis
+from ... import (
+    catalog,
+    creation,
+    deletion,
+    seasons,
+    sourcebooks,
+    storage,
+    transfer,
+    vis,
+)
 from ... import economics as eco
 from ... import familiars as fam
+from ... import house_rules as hr
+from ... import lab_texts as lt
 from ... import laboratories as lab_rules
 from ... import sheet_text as st
 from ... import spells as spl
@@ -41,6 +53,7 @@ from ...markup import escape
 from ...models import (
     FOCUS_FLAWS,
     SEASONS,
+    TEXT_LONGEVITY,
     Ability,
     Character,
     Covenant,
@@ -80,6 +93,7 @@ from ..prompts import (
     AdvanceSeasonScreen,
     ConfirmScreen,
     _date_fields,
+    _export_dialog,
     _move_vis_dialog,
     _scored_trait_dialog,
 )
@@ -87,13 +101,16 @@ from ..season_records import SeasonRecordsView, SeasonSummaryScreen
 from ..sheets import (
     _LIBRARY_SECTIONS,
     DEVICE_SECTIONS,
+    HOUSE_RULES_SECTION,
     LAB_FEATURE_SECTIONS,
+    LAB_TEXTS_SECTION,
     LAB_VF_SECTIONS,
     SPELL_SECTION,
     BookListView,
     CharacterSheetView,
     CovenantSheetView,
     FamiliarSheetView,
+    HouseRulesView,
     LaboratorySheetView,
     SheetView,
     SpellListView,
@@ -205,6 +222,7 @@ class NodeKind(StrEnum):
     LABORATORY_GROUP = "laboratory_group"
     LABORATORY = "laboratory"
     SPELLS = "spells"
+    HOUSE_RULES = "house_rules"
     SEASONS = "seasons"
     BOOK_GROUP = "book_group"
 
@@ -302,9 +320,12 @@ class WorkspaceBase(Screen[None]):
         ("i", "improve", "Improve"),
         ("i", "instill_effect", "Instill"),
         ("u", "use_charge", "Charge"),
+        ("u", "perform_ritual", "Perform Ritual"),
         ("s", "share_spell", "Share Spell"),
         ("m", "move_vis", "Move Vis"),
+        ("F", "filter_lab_texts", "Filter"),
         ("I", "import_data", "Import"),
+        ("x", "export_record", "Export"),
         ("t", "advance_season", "Advance Season"),
         # Works everywhere, but left out of the footer to keep it short.
         Binding("T", "set_date", "Set Date", show=False),
@@ -363,6 +384,8 @@ class WorkspaceBase(Screen[None]):
     def __init__(self, saga: Saga) -> None:
         super().__init__()
         self.saga = saga
+        # Its user-made entries join the shared catalogs (STORY-708).
+        catalog.use_saga(saga)
         self.selected_kind: NodeKind = NodeKind.SAGA
         self.selected_covenant: Covenant | None = None
         self.selected_character: Character | None = None
@@ -478,6 +501,7 @@ class WorkspaceBase(Screen[None]):
             data=(NodeKind.SEASONS,),
         )
         tree.root.add_leaf(self._spells_label(), data=(NodeKind.SPELLS,))
+        tree.root.add_leaf(self._house_rules_label(), data=(NodeKind.HOUSE_RULES,))
 
     def _add_character_node(self, parent, character: Character) -> None:
         """A character's own tree node: a plain leaf, unless it's a magus
@@ -573,6 +597,9 @@ class WorkspaceBase(Screen[None]):
         elif kind == NodeKind.SPELLS:
             self.selected_covenant = None
             await self._set_detail(SpellListView(self.saga))
+        elif kind == NodeKind.HOUSE_RULES:
+            self.selected_covenant = None
+            await self._set_detail(HouseRulesView(self.saga))
         elif kind == NodeKind.SEASONS:
             self.selected_covenant = None
             await self._set_detail(SeasonRecordsView(self.saga))
@@ -613,6 +640,18 @@ class WorkspaceBase(Screen[None]):
                 and character is not None
                 and bool(spl.shareable_spells(character))
             )
+        if action == "filter_lab_texts":
+            return self._active_section() == LAB_TEXTS_SECTION
+        if action == "perform_ritual":
+            lab = self.selected_laboratory
+            return (
+                self._active_section() == LAB_TEXTS_SECTION
+                and lab is not None
+                and any(
+                    lt.kind(b) == TEXT_LONGEVITY
+                    for b in lt.texts_of(self.saga, "laboratory", lab.id)
+                )
+            )
         if action == "move_vis":
             holder = self._vis_holder()
             return (
@@ -620,6 +659,8 @@ class WorkspaceBase(Screen[None]):
                 and bool(vis.held(holder))
                 and bool(vis.destinations(self.saga, holder))
             )
+        if action == "export_record":
+            return self._record_to_export() is not None
         if action == "import_data":
             return (
                 self.selected_kind == NodeKind.SAGA
@@ -644,6 +685,40 @@ class WorkspaceBase(Screen[None]):
         if action == "delete_record":
             return self._record_to_delete() is not None
         return True
+
+    def _record_to_export(self) -> transfer.Record | None:
+        """The covenant, laboratory or character whose node is selected
+        (STORY-109): what 'x' exports."""
+        if self.selected_kind == NodeKind.CHARACTER:
+            return self.selected_character
+        if self.selected_kind == NodeKind.LABORATORY:
+            return self.selected_laboratory
+        if self.selected_kind == NodeKind.COVENANT:
+            return self.selected_covenant
+        return None
+
+    def action_export_record(self) -> None:
+        """'x' on a covenant, laboratory or character: write it to a file
+        that another saga can import (STORY-109)."""
+        record = self._record_to_export()
+        if record is None:
+            return
+
+        def handle_result(result: tuple[Path, bool] | None) -> None:
+            if result is None:
+                return
+            path, with_members = result
+            try:
+                transfer.export_to(path, self.saga, record, with_members=with_members)
+            except OSError as problem:
+                self.notify(
+                    f"Couldn't write {escape(path.name)}: {escape(str(problem))}",
+                    severity="error",
+                )
+                return
+            self.notify(f"Exported {escape(record.name)} to {escape(str(path))}.")
+
+        self.app.push_screen(_export_dialog(record, storage.EXPORTS_DIR), handle_result)
 
     def _vis_holder(self) -> vis.Holder | None:
         """Whose raw vis the active section lists (STORY-412): the
@@ -727,6 +802,8 @@ class WorkspaceBase(Screen[None]):
             return "section-unassigned-books"
         if self.selected_kind == NodeKind.SPELLS:
             return SPELL_SECTION
+        if self.selected_kind == NodeKind.HOUSE_RULES:
+            return HOUSE_RULES_SECTION
         view = self._current_sheet_view()
         if view is None:
             return None
@@ -1262,6 +1339,9 @@ class WorkspaceBase(Screen[None]):
 
     def _spells_label(self) -> str:
         return f"Spells ({len(spl.all_spells(self.saga))})"
+
+    def _house_rules_label(self) -> str:
+        return f"House Rules ({len(hr.all_entries(self.saga))})"
 
     # -- Saga --
 

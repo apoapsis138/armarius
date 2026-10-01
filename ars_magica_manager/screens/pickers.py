@@ -1134,14 +1134,19 @@ class SourcebookPickerScreen(ModalDialog[list[str] | None]):
 
 
 class _CsvDirectoryTree(DirectoryTree):
-    """Folders and .csv files only (hidden entries left out)."""
+    """Folders and files of one kind only (.csv unless `suffix` says
+    otherwise; hidden entries left out)."""
+
+    def __init__(self, path: Path, *, suffix: str = ".csv", id: str | None = None):
+        super().__init__(path, id=id)
+        self.suffix = suffix
 
     def filter_paths(self, paths):
         return [
             path
             for path in paths
             if not path.name.startswith(".")
-            and (path.is_dir() or path.suffix.lower() == ".csv")
+            and (path.is_dir() or path.name.lower().endswith(self.suffix))
         ]
 
 
@@ -1196,10 +1201,12 @@ class CsvFilePickerScreen(ModalDialog[Path | None]):
     }
     """
 
-    def __init__(self, title: str, start: Path) -> None:
+    def __init__(self, title: str, start: Path, *, suffix: str = ".csv") -> None:
         super().__init__()
         self.title_text = title
         self.start = start
+        #: The kind of file to choose (".json" for an export, STORY-109).
+        self.suffix = suffix.lower()
 
     def compose(self) -> ComposeResult:
         with Vertical(id="picker-dialog"):
@@ -1207,7 +1214,7 @@ class CsvFilePickerScreen(ModalDialog[Path | None]):
             with Horizontal(id="picker-path-row"):
                 yield Button("Up", id="btn-picker-up", compact=True)
                 yield Input(str(self.start), id="picker-path", compact=True)
-            yield _CsvDirectoryTree(self.start, id="picker-tree")
+            yield _CsvDirectoryTree(self.start, suffix=self.suffix, id="picker-tree")
             yield Static("", id="picker-error")
             with Horizontal(id="picker-buttons"):
                 yield Button("Open", id="btn-picker-open", variant="success")
@@ -1222,15 +1229,15 @@ class CsvFilePickerScreen(ModalDialog[Path | None]):
         self.query_one("#picker-error", Static).update("")
 
     def _choose(self, raw: str) -> None:
-        """Open a typed folder, or pick a typed .csv file."""
+        """Open a typed folder, or pick a typed file of the right kind."""
         path = Path(raw.strip().strip('"')).expanduser()
         error = self.query_one("#picker-error", Static)
         if path.is_dir():
             self._show_folder(path)
-        elif path.is_file() and path.suffix.lower() == ".csv":
+        elif path.is_file() and path.name.lower().endswith(self.suffix):
             self.dismiss(path)
         elif path.is_file():
-            error.update(f"{escape(path.name)} isn't a .csv file.")
+            error.update(f"{escape(path.name)} isn't a {self.suffix} file.")
         else:
             error.update(f"No such file or folder: {escape(str(path))}")
 

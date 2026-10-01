@@ -651,7 +651,11 @@ async def test_workspace_tree_has_no_covenants_for_a_fresh_saga():
 
         tree = app.screen.query_one("#nav-tree", Tree)
         # No covenants: just the saga's Seasons and Spells nodes.
-        assert [n.data for n in tree.root.children] == [("seasons",), ("spells",)]
+        assert [n.data for n in tree.root.children] == [
+            ("seasons",),
+            ("spells",),
+            ("house_rules",),
+        ]
 
 
 async def test_create_covenant_flow_saves_covenant():
@@ -675,11 +679,12 @@ async def test_create_covenant_flow_saves_covenant():
         assert app.screen.selected_covenant is not None
         assert app.screen.selected_covenant.name == "Fengheld"
         tree = app.screen.query_one("#nav-tree", Tree)
-        # The new covenant, then the Seasons and Spells nodes.
+        # The new covenant, then the Seasons, Spells and House Rules nodes.
         assert [n.data[0] for n in tree.root.children] == [
             "covenant",
             "seasons",
             "spells",
+            "house_rules",
         ]
 
     saga = storage.load_saga("test_saga")
@@ -7611,9 +7616,9 @@ async def test_saga_import_offers_books_and_spells_and_files_books_unassigned(tm
         options = app.screen.query_one("#import-list", OptionList)
         kinds = [options.get_option_at_index(i) for i in range(options.option_count)]
         assert [(o.id, o.disabled) for o in kinds] == [
-            ("characters", True),
-            ("covenants", True),
-            ("laboratories", True),
+            ("characters", False),
+            ("covenants", False),
+            ("laboratories", False),
             ("books", False),
             ("spells", False),
         ]

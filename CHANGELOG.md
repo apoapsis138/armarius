@@ -10,6 +10,38 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.4.0 — 2026-10-01
+
+Lab Texts, House Rules, and moving records between sagas.
+
+- A laboratory's Inventory tab has a Lab Texts list of its own, apart from
+  its other Books: each text's kind (Spell, Enchantment, Longevity Ritual
+  or Other), Arts, level, author and Sigil, whether the laboratory's owner
+  can read it, and what a copy costs a scribe. `F` filters it by kind,
+  Art, level and readable only.
+- Instilling an effect in a device and performing a Longevity Ritual each
+  leave a raw Lab Text in the laboratory. Taming and Discovery texts
+  record their Arts, so another magus can decode them.
+- Enchanting can be planned "From Lab Text": one season if the Lab Total is
+  at least the level (a lesser enchantment no longer needs twice it, and a
+  charged item gets a charge per 5 of the whole Lab Total). `u` on the Lab
+  Texts list performs a Longevity Ritual again from its text: no season,
+  only the vis, including any extra vis it was first made with.
+- A magus's Hermetic Background lists whose Lab Texts they can read, with
+  a "Lab Texts Read" button to set it. Renaming an author no longer loses
+  what was decoded. The Invent and Copy pickers show texts that still need
+  decoding instead of hiding them.
+- House Rules: a new node under the saga keeps the saga's own Virtues,
+  Flaws, Boons and Hooks (name, type, tier, category, description). Every
+  picker offers them alongside the catalog's. They are text only: no
+  effects are applied.
+- `x` on a covenant, laboratory or character exports it to a file with
+  what travels with it (a character's familiar, devices, books and Diary;
+  a laboratory's books; optionally a covenant's laboratories and
+  characters). `I` on a saga imports one: Characters, Covenants and
+  Laboratories now work in the Import list. A preview shows what is added
+  and which links are kept or dropped before anything changes.
+
 ## 2.3.0 — 2026-10-01
 
 Moving raw vis, paying from the covenant's vis, and live Characteristic

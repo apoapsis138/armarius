@@ -32,6 +32,7 @@ from dataclasses import dataclass, field, replace
 from .. import books, vis
 from .. import spells as spl
 from ..models import (
+    TEXT_LONGEVITY,
     ArcaneConnection,
     BondPower,
     Book,
@@ -156,7 +157,8 @@ class LabWork:
     #: Familiar work (STORY-908): the familiar, and the bond power instilled.
     familiar: Familiar | None = None
     power: BondPower | None = None
-    #: Decoding (STORY-914): (reader id, author, level) readable when done.
+    #: Decoding (STORY-914): (reader id, the author's key -- see
+    #: book_seasons.author_key --, level) readable when done.
     access: tuple[str, str, int] | None = None
     #: Work on the laboratory (STORY-915): setting up its second season, the
     #: Refinement it will have (and had), and the Virtues/Flaws the season's
@@ -204,6 +206,21 @@ def lab_texts(saga: Saga, magus: Character) -> list[Book]:
         and b.spell_id not in known
         and books.can_read(saga, magus, b)
         and book_seasons.can_use_lab_text(magus, b)
+    ]
+
+
+def lab_texts_at_hand(saga: Saga, magus: Character) -> list[Book]:
+    """Every spell's Lab Text `magus` can get at and doesn't know the spell
+    of -- readable or not (a picker shows them all, tagging the ones to
+    decode first; STORY-508)."""
+    known = {k.spell_id for k in magus.spells_known}
+    return [
+        b
+        for b in saga.books
+        if b.type == "Lab Text"
+        and b.spell_id
+        and b.spell_id not in known
+        and books.can_read(saga, magus, b)
     ]
 
 
@@ -318,8 +335,8 @@ def work(
             return [f"{magus.name} can't get at {text.name}."], None
         if not book_seasons.can_use_lab_text(magus, text):
             return [
-                f"{text.name} is {text.author}'s raw text: decode it first (or "
-                "have it rewritten for general use)."
+                f"{text.name} is {book_seasons.author_name(saga, text)}'s raw "
+                "text: decode it first (or have it rewritten for general use)."
             ], None
         spell = spl.find_spell(saga, text.spell_id)
         if spell is None:
@@ -592,6 +609,82 @@ def _one_season_work(
     return [], result
 
 
+@dataclass(frozen=True)
+class RitualAgain:
+    """A Longevity Ritual performed again from its Lab Text (STORY-509):
+    who it is for, the aging-roll modifier it restores, and the vis."""
+
+    subject: Character
+    modifier: int
+    pawns: int
+
+
+def ritual_subject(saga: Saga, text: Book) -> Character | None:
+    """The character a Longevity Ritual's text was written for."""
+    return next((c for c in saga.characters if c.name == text.ritual_subject), None)
+
+
+def ritual_again(
+    saga: Saga,
+    magus: Character,
+    lab_: Laboratory,
+    text: Book,
+    vis_art: str,
+    vis_from: str,
+) -> tuple[list[str], RitualAgain | None]:
+    """Performing a Longevity Ritual again from its Lab Text: no season,
+    only the vis (the subject's age / 5 pawns, and the extra vis it was
+    first made with, which must be spent every time). It is the same
+    ritual, for the same subject, at the Lab Total it was made with (the
+    text's level)."""
+    if text.type != "Lab Text" or text.text_kind != TEXT_LONGEVITY:
+        return [f"{text.name} isn't the Lab Text of a Longevity Ritual."], None
+    if not books.can_read(saga, magus, text):
+        return [f"{magus.name} can't get at {text.name}."], None
+    if not book_seasons.can_use_lab_text(magus, text):
+        return [
+            f"{text.name} is {book_seasons.author_name(saga, text)}'s raw text: "
+            "decode it first (or have it rewritten for general use)."
+        ], None
+    subject = ritual_subject(saga, text)
+    if subject is None:
+        named = text.ritual_subject or "no one"
+        return [
+            f"{text.name} is for {named}, who isn't a character of this saga: "
+            "a ritual is made for one person."
+        ], None
+    age = age_of(saga, subject)
+    if age is None:
+        return [f"Set {subject.name}'s Year Born: the ritual's vis is by age."], None
+    if vis_art not in LONGEVITY_VIS_ARTS:
+        return ["Choose the vis to pay with: Creo, Corpus or Vim."], None
+    pawns = longevity_vis(age) + max(0, text.ritual_extra_vis)
+    limit = lab.vis_limit(magus)
+    if pawns > limit:
+        return [
+            f"The ritual takes {pawns} pawns of vis; {magus.name} can handle "
+            f"{limit} at once (twice Magic Theory)."
+        ], None
+    plan = SeasonPlan(
+        magus.id,
+        saga.current_year,
+        saga.current_season,
+        LONGEVITY,
+        lab_id=lab_.id,
+        vis_from=vis_from,
+    )
+    held = vis_pool(saga, magus, plan).get(vis_art.lower(), 0)
+    if held < pawns:
+        return [
+            f"The ritual takes {pawns} pawns of {vis_art} vis; "
+            f"{whose_vis(magus, plan)} raw vis has {held}."
+        ], None
+    modifier = lab.longevity_modifier(
+        max(0, book_seasons.text_level(text, saga)), mundane=is_mundane(subject)
+    )
+    return [], RitualAgain(subject, modifier, pawns)
+
+
 def seeking(plan: SeasonPlan) -> bool:
     """Whether an experiment seeks a Discovery (it names a research goal)."""
     return plan.experimenting and bool(plan.research.strip())
@@ -716,7 +809,7 @@ def _decode(
         return [f"{magus.name} can already read {text.name}."], None
     arts = book_seasons.decode_total_arts(saga, text)
     if arts is None:
-        return [f"{text.name} doesn't record a spell's Technique and Form."], None
+        return [f"{text.name} doesn't record its Technique and Form."], None
     level = book_seasons.text_level(text, saga)
     total = lab.lab_total(
         saga,
@@ -734,9 +827,10 @@ def _decode(
             f"{plan.days_away} days away from the laboratory: no lab work is "
             "possible this season (more than 20)."
         ], None
+    author = book_seasons.author_key(text)
     before = max(
-        project_points_key(saga, decode_key(magus, text.author)),
-        magus.lab_text_access.get(text.author, 0),
+        project_points_key(saga, decode_key(magus, author)),
+        book_seasons.access_level(magus, author),
     )
     gained = max(0, int(total.total))
     if gained <= 0:
@@ -748,7 +842,7 @@ def _decode(
         points_before=before,
         points_gained=gained,
         finished=before + gained >= level,
-        access=(magus.id, text.author, level),
+        access=(magus.id, author, level),
     )
 
 

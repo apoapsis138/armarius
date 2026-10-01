@@ -19,6 +19,7 @@ from ..creation_worksheet import CreationWorksheetScreen
 from ..sheets import (
     BOOK_SECTIONS,
     DEVICE_SECTIONS,
+    HOUSE_RULES_SECTION,
     SPELL_SECTION,
 )
 from .base import (
@@ -66,6 +67,7 @@ class WorkspaceScreen(
             "btn-char-characteristics-edit": self._edit_characteristics,
             "btn-char-health-wounds-edit": self._edit_wounds,
             "btn-char-health-fatigue-edit": self._edit_fatigue,
+            "btn-char-lab-text-access": self._edit_lab_text_access,
             "btn-fam-info-edit": self._edit_familiar_info,
             "btn-fam-health-wounds-edit": self._edit_familiar_wounds,
             "btn-fam-health-fatigue-edit": self._edit_familiar_fatigue,
@@ -96,6 +98,11 @@ class WorkspaceScreen(
                 lambda: self._spell_form(None),
                 self._remove_saga_spell,
                 self._edit_saga_spell,
+            ),
+            HOUSE_RULES_SECTION: _SectionOps(
+                lambda: self._house_rule_form(None),
+                self._remove_house_rule,
+                self._edit_house_rule,
             ),
             # Character sheet
             "section-char-info": _SectionOps(edit=self._edit_character_info),

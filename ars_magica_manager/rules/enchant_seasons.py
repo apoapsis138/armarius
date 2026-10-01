@@ -29,11 +29,14 @@ import math
 from dataclasses import replace
 from typing import TYPE_CHECKING
 
+from .. import books
 from .. import enchanted_devices as ed
 from ..models import (
     CHARGED,
     INVESTED,
     LESSER,
+    TEXT_ENCHANTMENT,
+    Book,
     Character,
     EnchantedDevice,
     InstilledEffect,
@@ -41,7 +44,7 @@ from ..models import (
     Saga,
     SeasonPlan,
 )
-from . import lab
+from . import book_seasons, lab
 from .breakdown import Line
 
 if TYPE_CHECKING:
@@ -113,6 +116,68 @@ def effect_of(device: EnchantedDevice, plan: SeasonPlan) -> InstilledEffect | No
     return next((e for e in device.effects if e.id == plan.effect_id), None)
 
 
+def text_device_type(device: EnchantedDevice) -> str:
+    """How a Lab Text names the kind of device an effect went into."""
+    return "Talisman" if device.talisman else device.type
+
+
+def lab_text_of(saga: Saga, plan: SeasonPlan) -> Book | None:
+    """The Lab Text an enchanting plan works from (STORY-509), if any."""
+    if not plan.book_id:
+        return None
+    return next((b for b in saga.books if b.id == plan.book_id), None)
+
+
+def text_problem(
+    saga: Saga,
+    magus: Character,
+    device: EnchantedDevice,
+    effect: InstilledEffect,
+    text: Book,
+) -> str | None:
+    """Why `text` can't be worked from to instil `effect` in `device`, if
+    it can't: a Lab Text reproduces its effect exactly -- the same Arts and
+    level, in the same kind of device (lesser and invested texts aren't
+    interchangeable; a talisman's is no use to anyone else)."""
+    name = ed.effect_name(effect)
+    if text.type != "Lab Text" or text.text_kind != TEXT_ENCHANTMENT:
+        return f"{text.name} isn't the Lab Text of an enchantment."
+    if not books.can_read(saga, magus, text):
+        return f"{magus.name} can't get at {text.name}."
+    if not book_seasons.can_use_lab_text(magus, text):
+        return (
+            f"{text.name} is {book_seasons.author_name(saga, text)}'s raw text: "
+            "decode it first (or have it rewritten for general use)."
+        )
+    if (text.technique, text.form) != (effect.technique, effect.form):
+        return (
+            f"{text.name} is {text.technique} {text.form}; {name} is "
+            f"{effect.technique} {effect.form}."
+        )
+    level = ed.modified_level(device, effect)
+    if (text.level or 0) != level:
+        return f"{text.name} is level {text.level or 0}; {name} is level {level}."
+    kind = text_device_type(device)
+    if text.device_type and text.device_type != kind:
+        return f"{text.name} is for a {text.device_type}; {device.name} is a {kind}."
+    if text.device_type == "Talisman" and text.author_id != magus.id:
+        return f"{text.name} is of a talisman's effect: no use to anyone else."
+    return None
+
+
+def effect_texts(
+    saga: Saga, magus: Character, device: EnchantedDevice, effect: InstilledEffect
+) -> list[Book]:
+    """The Lab Texts `magus` could instil `effect` in `device` from."""
+    return [
+        b
+        for b in saga.books
+        if b.type == "Lab Text"
+        and b.text_kind == TEXT_ENCHANTMENT
+        and text_problem(saga, magus, device, effect, b) is None
+    ]
+
+
 def _effect_total(
     saga: Saga,
     magus: Character,
@@ -120,10 +185,12 @@ def _effect_total(
     lab_: Laboratory,
     device: EnchantedDevice,
     effect: InstilledEffect,
+    text: Book | None = None,
 ) -> lab.LabTotal:
     """The Lab Total for instilling `effect`: its Technique + Form with the
-    Items Specialization, shape and material bonuses, and in an invested
-    device, the talisman and shared-Arts bonuses."""
+    Items Specialization (and Texts, working from a Lab Text), shape and
+    material bonuses, and in an invested device, the talisman and
+    shared-Arts bonuses."""
     total = lab.lab_total(
         saga,
         magus,
@@ -134,6 +201,8 @@ def _effect_total(
         days_missed=max(0, plan.days_away),
         experimenting=plan.experimenting,
         shape_material=max(0, plan.shape_bonus),
+        from_lab_text=text is not None,
+        others_text=text is not None and text.author_id != magus.id,
     )
     extra: list[Line] = []
     if device.type == INVESTED:
@@ -255,10 +324,35 @@ def work(
     level = ed.modified_level(device, effect)
     if level <= 0:
         return [f"Give {ed.effect_name(effect)} its level."], None
-    total = _effect_total(saga, magus, plan, lab_, device, effect)
+    # Working from a Lab Text (STORY-509): one season if the Lab Total is at
+    # least the level; no experimenting.
+    text = lab_text_of(saga, plan)
+    if text is not None:
+        found = text_problem(saga, magus, device, effect, text)
+        if found:
+            return [found], None
+        if plan.experimenting:
+            return ["There's no experimenting while working from a Lab Text."], None
+    total = _effect_total(saga, magus, plan, lab_, device, effect, text)
+    if text is not None and text.shape_material:
+        # The rule: the same shape and material. Both are free text, so the
+        # magus is told what the text is exact to rather than refused.
+        total = replace(
+            total,
+            notes=[
+                *(total.notes or []),
+                f"{text.name} reproduces the effect in the same shape and "
+                f"material only: {text.shape_material}.",
+            ],
+        )
     total = options(magus, plan, effect.technique, effect.form, total)
     lab_total = int(total.total)
     name = ed.effect_name(effect)
+    if text is not None and lab_total < level:
+        return [
+            f"Lab Total {lab_total} is below {name}'s level {level}: the Lab "
+            "Text can't be used yet."
+        ], None
 
     if plan.activity == CHARGED_WORK:
         if lab_total < level:
@@ -273,14 +367,18 @@ def work(
             finished=True,
             device=device,
             effect=effect,
-            charges=max(1, math.ceil((lab_total - level) / 5)),
+            # From a Lab Text: a charge per 5 points of the whole Lab Total.
+            charges=max(
+                1,
+                math.ceil((lab_total if text is not None else lab_total - level) / 5),
+            ),
         )
 
     pawns = ed.vis_cost(device, effect)
     arts = (effect.technique, effect.form)
     art = plan.vis_art if plan.vis_art in arts else ""
     if plan.activity == LESSER_WORK:
-        if lab_total < 2 * level:
+        if text is None and lab_total < 2 * level:
             return [
                 f"Lab Total {lab_total}: a lesser enchantment of level {level} "
                 f"needs {2 * level} (twice the level) to be made in one season."
@@ -316,7 +414,7 @@ def work(
             f"{device.name}'s effects take {ed.pawns_used(device)} pawns; only "
             f"{device.pawns_opened} were opened."
         ], None
-    if lab_total <= level:
+    if text is None and lab_total <= level:
         return [
             f"Lab Total {lab_total} isn't above {name}'s level {level}: it "
             "can't be instilled yet."
@@ -328,7 +426,11 @@ def work(
         if found:
             return [found], None
         cost = {art: pawns}
-    gained = lab.points_per_season(lab_total, level)
+    gained = (
+        max(0, level - before)
+        if text is not None
+        else lab.points_per_season(lab_total, level)
+    )
     return [], LabWork(
         None,
         total,

@@ -9,10 +9,13 @@ from typing import Any
 from textual.css.query import NoMatches
 
 from ... import books as bk
+from ... import house_rules as hr
+from ... import lab_texts as lt
+from ... import seasons, storage, transfer
 from ... import spells as spl
-from ... import storage
 from ...markup import escape
 from ...models import (
+    TEXT_LONGEVITY,
     Book,
     Covenant,
     Spell,
@@ -39,10 +42,16 @@ from ..pickers import (
 )
 from ..prompts import (
     ConfirmScreen,
+    _house_rule_dialog,
+    _lab_text_filter_dialog,
+    _ritual_again_dialog,
 )
 from ..sheets import (
     _LIBRARY_SECTIONS,
+    LAB_TEXTS_SECTION,
     BookListView,
+    HouseRulesView,
+    LabTextListView,
     SpellListView,
 )
 from .base import (
@@ -50,6 +59,14 @@ from .base import (
     WorkspaceBase,
     _tree_node_with_data,
 )
+
+#: The Import dialog's entries that take an exported record, and the kind
+#: of export each takes (STORY-109).
+_RECORD_IMPORTS: dict[str, str] = {
+    "characters": transfer.CHARACTER,
+    "covenants": transfer.COVENANT,
+    "laboratories": transfer.LABORATORY,
+}
 
 
 class LibraryActions(WorkspaceBase):
@@ -132,15 +149,173 @@ class LibraryActions(WorkspaceBase):
             ConfirmScreen(f"Delete {escape(spell.name)}?"), handle_confirmed
         )
 
+    # -- House Rules: the saga's user-made catalog entries (STORY-708) --
+
+    def _house_rules_view(self) -> HouseRulesView | None:
+        try:
+            return self._detail_pane().query(HouseRulesView).first()
+        except NoMatches:
+            return None
+
+    def _house_rules_changed(self) -> None:
+        storage.save_saga(self.saga)
+        view = self._house_rules_view()
+        if view is not None:
+            view.rebuild()
+        node = _tree_node_with_data(self._nav_tree(), (NodeKind.HOUSE_RULES,))
+        if node is not None:
+            node.set_label(self._house_rules_label())
+
+    def _pick_house_rule(
+        self, title: str, then: Callable[[str, hr.Entry], None]
+    ) -> None:
+        """Act on the chosen entry; with none chosen, ask which one."""
+        view = self._house_rules_view()
+        listed = hr.all_entries(self.saga)
+        chosen = view.selected_entry() if view is not None else None
+        if chosen is not None:
+            then(*chosen)
+            return
+        if not listed:
+            self.notify("No House Rules yet: 'a' adds one.")
+            return
+
+        def handle_index(index: int | None) -> None:
+            if index is not None:
+                then(*listed[index])
+
+        self.app.push_screen(
+            RemovalPickerScreen(title, [escape(entry.name) for _, entry in listed]),
+            handle_index,
+        )
+
+    def _house_rule_form(self, existing: tuple[str, hr.Entry] | None) -> None:
+        saga = self.saga
+
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is None:
+                return
+            if existing is None:
+                hr.add(saga, values["kind"], values)
+            else:
+                hr.update(saga, existing[0], existing[1], values)
+            self._house_rules_changed()
+
+        self.app.push_screen(_house_rule_dialog(saga, existing), handle_result)
+
+    def _edit_house_rule(self) -> None:
+        self._pick_house_rule(
+            "Edit which House Rule?",
+            lambda kind, entry: self._house_rule_form((kind, entry)),
+        )
+
+    def _remove_house_rule(self) -> None:
+        """Delete the chosen entry after confirming -- unless a record
+        still holds it."""
+
+        def confirm(kind: str, entry: hr.Entry) -> None:
+            holders = hr.used_by(self.saga, kind, entry)
+            if holders:
+                self.notify(
+                    f"{escape(entry.name)} is held by {escape(', '.join(holders))}: "
+                    "remove it there first.",
+                    severity="warning",
+                )
+                return
+
+            def handle_confirmed(confirmed: bool | None) -> None:
+                if confirmed and entry in hr.entries_of(self.saga, kind):
+                    hr.remove(self.saga, kind, entry)
+                    self._house_rules_changed()
+
+            self.app.push_screen(
+                ConfirmScreen(f"Delete {escape(entry.name)}?"), handle_confirmed
+            )
+
+        self._pick_house_rule("Remove a House Rule", confirm)
+
     # -- Books (Library tab, laboratory/character Books, Unassigned Books) --
 
     def _book_view(self) -> BookListView | None:
-        """The book list showing in the detail pane, if any (a sheet shows at
-        most one)."""
-        try:
-            return self._detail_pane().query(BookListView).first()
-        except NoMatches:
-            return None
+        """The book list showing in the detail pane, if any: the active
+        section's when a sheet shows two (a laboratory's Lab Texts and its
+        other Books), else its Books."""
+        views = list(self._detail_pane().query(BookListView))
+        active = self._active_section()
+        views.sort(
+            key=lambda v: (v.section_id != active, isinstance(v, LabTextListView))
+        )
+        return views[0] if views else None
+
+    def _ritual_texts(self) -> list[Book]:
+        """The Longevity Ritual texts the laboratory on show keeps."""
+        lab = self.selected_laboratory
+        if lab is None:
+            return []
+        return [
+            b
+            for b in lt.texts_of(self.saga, "laboratory", lab.id)
+            if lt.kind(b) == TEXT_LONGEVITY
+        ]
+
+    def action_perform_ritual(self) -> None:
+        """'u' on a laboratory's Lab Texts: perform a Longevity Ritual again
+        from its text -- the chosen one, else the one picked (STORY-509). It
+        takes vis but no season, so it is done at once."""
+        lab = self.selected_laboratory
+        view = self._book_view()
+        texts = self._ritual_texts()
+        if lab is None or not texts:
+            return
+        magus = self.saga.character(lab.owner_id)
+        if magus is None:
+            self.notify("The laboratory has no owner to perform the ritual.")
+            return
+
+        def perform(text: Book) -> None:
+            def handle_result(result: tuple[str, str] | None) -> None:
+                if result is None:
+                    return
+                found = seasons.perform_ritual_again(
+                    self.saga, magus, lab, text, *result
+                )
+                if found:
+                    self.notify(found[0], severity="warning")
+                    return
+                self._commit("section-lab-raw-vis", "tab-lab-diary")
+                self.notify(f"{escape(text.ritual_subject)}'s ritual is renewed.")
+
+            self.app.push_screen(
+                _ritual_again_dialog(self.saga, magus, lab, text), handle_result
+            )
+
+        chosen = view.selected_book() if view is not None else None
+        if chosen is not None and chosen in texts:
+            perform(chosen)
+        elif len(texts) == 1:
+            perform(texts[0])
+        else:
+            self.app.push_screen(
+                RemovalPickerScreen(
+                    "Perform which Longevity Ritual again?",
+                    [escape(b.name) for b in texts],
+                ),
+                lambda index: perform(texts[index]) if index is not None else None,
+            )
+
+    def action_filter_lab_texts(self) -> None:
+        """'F' on a laboratory's Lab Texts: narrow the list by kind, Art,
+        level and whether its owner can read them (STORY-508)."""
+        view = self._book_view()
+        if not isinstance(view, LabTextListView):
+            return
+
+        def handle_result(wanted: lt.Filter | None) -> None:
+            if wanted is not None:
+                view.set_filter(wanted)
+                self._refresh_laboratory_section(LAB_TEXTS_SECTION)
+
+        self.app.push_screen(_lab_text_filter_dialog(view.filter), handle_result)
 
     def _default_book_owner(self) -> str:
         """Owner a new book starts with: wherever it's being added from."""
@@ -266,10 +441,12 @@ class LibraryActions(WorkspaceBase):
             storage.save_saga(saga)
             self._books_changed()
 
+        # The Lab Texts list adds Lab Texts.
+        default_type = "Lab Text" if self._active_section() == LAB_TEXTS_SECTION else ""
         self.app.push_screen(
             FieldsDialog(
                 title,
-                _book_fields(saga, book, self._default_book_owner()),
+                _book_fields(saga, book, self._default_book_owner(), default_type),
                 validate=bk.form_problem,
                 live=lambda values: _book_live(values, saga),
             ),
@@ -324,6 +501,8 @@ class LibraryActions(WorkspaceBase):
                     self._import_books(None)
                 elif kind == "spells":
                     self._import_spells()
+                elif kind in _RECORD_IMPORTS:
+                    self._import_record(_RECORD_IMPORTS[kind])
 
             self.app.push_screen(ImportScreen(), handle_kind)
         elif (
@@ -331,6 +510,59 @@ class LibraryActions(WorkspaceBase):
             and self._active_section() in _LIBRARY_SECTIONS
         ):
             self._import_books(self.selected_covenant)
+
+    def _import_record(self, kind: str) -> None:
+        """Pick an exported character, covenant or laboratory -- a file of
+        the `kind` chosen in the Import dialog (STORY-109) --, preview what
+        importing it adds and which of its links this saga can keep, then
+        add it."""
+        saga = self.saga
+        wanted = transfer.KIND_LABELS[kind].lower()
+
+        def handle_path(path: Path | None) -> None:
+            if path is None:
+                return
+            try:
+                data = transfer.read(path)
+                if data["kind"] != kind:
+                    found = transfer.KIND_LABELS[data["kind"]].lower()
+                    raise ValueError(
+                        f"it holds a {found}, not a {wanted}: choose "
+                        f"{transfer.KIND_LABELS[data['kind']]} in the Import list"
+                    )
+                plan = transfer.plan_import(saga, data)
+            except (OSError, ValueError, KeyError, TypeError) as problem:
+                self.notify(
+                    f"Couldn't import {escape(path.name)}: {escape(str(problem))}",
+                    severity="error",
+                )
+                return
+
+            def handle_confirmed(confirmed: bool | None) -> None:
+                if not confirmed:
+                    return
+                transfer.apply(saga, plan)
+                storage.save_saga(saga)
+                self._rebuild_tree()
+                self.notify(
+                    f"Imported {escape(plan.name)} "
+                    f"({transfer.KIND_LABELS[plan.kind].lower()})."
+                )
+
+            self.app.push_screen(
+                ConfirmScreen(
+                    escape(transfer.preview(plan)),
+                    yes_label="Import",
+                    yes_variant="success",
+                ),
+                handle_confirmed,
+            )
+
+        start = storage.EXPORTS_DIR if storage.EXPORTS_DIR.is_dir() else Path.cwd()
+        self.app.push_screen(
+            CsvFilePickerScreen(f"Import a {wanted}", start, suffix=".json"),
+            handle_path,
+        )
 
     def _import_books(self, covenant: Covenant | None) -> None:
         """Pick a CSV file, preview what it holds, then add its books: all
@@ -527,8 +759,9 @@ class LibraryActions(WorkspaceBase):
         """After any book edit: re-render the book list on show, and keep the
         tree's Unassigned Books node in step (it appears, changes count or goes
         away as books lose and gain owners)."""
-        view = self._book_view()
-        if view is not None:
+        # Every list on show: an edit can move a book between a laboratory's
+        # Lab Texts and its other Books.
+        for view in self._detail_pane().query(BookListView):
             view.rebuild()
         tree = self._nav_tree()
         node = _tree_node_with_data(tree, (NodeKind.BOOK_GROUP,))

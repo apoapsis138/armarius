@@ -19,6 +19,10 @@ data/sagas/*.json
 data/sagas/backups/
 !data/sagas/.gitkeep
 
+# Exported covenants, laboratories and characters ('x' on a sheet) -- user
+# campaign data, like the saves
+data/exports/
+
 # App-wide settings (e.g. selected theme) -- local machine state, not source
 data/app_settings.json
 

@@ -157,4 +157,7 @@ def test_hermetic_taming_until_the_points_reach_its_might():
         _run(saga)
     (record,) = magus.progress
     assert record.done and record.points == 18
-    assert saga.books[-1].name == "Lab Text: taming Grey Wolf"
+    text = saga.books[-1]
+    assert text.name == "Lab Text: taming Grey Wolf"
+    # Its Technique and Form are recorded, so another magus can decode it.
+    assert (text.text_kind, text.technique, text.form) == ("Other", "Rego", "Animal")

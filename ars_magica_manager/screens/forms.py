@@ -32,6 +32,7 @@ from .. import economics as eco
 from .. import enchanted_devices as ed
 from .. import familiars as fam
 from .. import inhabitants as inh
+from .. import lab_texts as lt
 from .. import laboratories as lab_rules
 from .. import possessions as pos
 from .. import spells as spl
@@ -59,6 +60,7 @@ from ..models import (
     INCOME_EFFECTS,
     INVESTED,
     LAB_CHARACTERISTICS,
+    LAB_TEXT_KINDS,
     LESSER,
     MATERIAL_SIZE_CITATION,
     OTHER_COVENFOLK_ROLES,
@@ -69,6 +71,10 @@ from ..models import (
     SPELL_DURATIONS,
     SPELL_RANGES,
     SPELL_TARGETS,
+    TEXT_ENCHANTMENT,
+    TEXT_LONGEVITY,
+    TEXT_OTHER,
+    TEXT_SPELL,
     TRACTATUS_SUBJECTS,
     Aging,
     ArtScore,
@@ -1853,12 +1859,12 @@ def _season_plan_dialog(
             "Lab Text",
             "select",
             existing.book_id if existing else None,
+            # Every text he can get at: one he can't read yet says so, and
+            # the season refuses it with the reason (STORY-508).
             options=[
-                (escape(b.name), b.id)
+                (escape(b.name + lt.cant_read_tag(saga, character, b)), b.id)
                 for b in saga.books
-                if b.type == "Lab Text"
-                and bk.can_read(saga, character, b)
-                and book_seasons.can_use_lab_text(character, b)
+                if b.type == "Lab Text" and bk.can_read(saga, character, b)
             ],
             allow_blank=True,
             show_if=activity_is(book_seasons.COPY_TEXTS),
@@ -2401,10 +2407,14 @@ def _book_ability_choice(ability: str, names: list[str]) -> tuple[str, str]:
 
 
 def _book_fields(
-    saga: Saga, book: Book | None, default_owner: str
+    saga: Saga, book: Book | None, default_owner: str, default_type: str = ""
 ) -> list[DialogField]:
     """The add/edit form for a book. Which of Art/Ability/Spell, Level and
-    Quality are shown follows the Type (and a Tractatus's Subject) live."""
+    Quality are shown follows the Type (and a Tractatus's Subject) live; a
+    Lab Text's follow its Kind too (STORY-508): a spell's text names the
+    spell, any other its own Technique, Form and Level, with an
+    enchantment's effect and device or a Longevity Ritual's subject. A new
+    book starts as `default_type` (the Lab Texts list adds Lab Texts)."""
 
     ability_names = [a.name for a in catalog.load_ability_catalog()]
     ability, ability_detail = _book_ability_choice(
@@ -2437,10 +2447,21 @@ def _book_fields(
             return chosen_id
         return f"{spell.name}  ({spl.shorthand(spell)})"
 
+    def lab_text(values: dict[str, Any]) -> bool:
+        return book_type(values) == "Lab Text"
+
+    def text_kind(values: dict[str, Any]) -> str:
+        return (values.get("text_kind") or TEXT_SPELL) if lab_text(values) else ""
+
+    def of_spell(values: dict[str, Any]) -> bool:
+        return bk.records_spell(book_type(values), text_kind(values))
+
     def needs_level(values: dict[str, Any]) -> bool:
         kind = book_type(values)
         if kind not in bk.SPELL_TYPES:
             return bk.has_level(kind)
+        if not of_spell(values):
+            return True  # an enchantment's, a ritual's: the text's own
         spell = spl.find_spell(saga, values.get("spell_id"))
         if spell is None:
             # No spell chosen: ask for the spell first -- unless this is a book
@@ -2460,11 +2481,19 @@ def _book_fields(
             "type",
             "Type",
             "select",
-            _attr(book, "type", ""),
+            _attr(book, "type", default_type),
             options=_pairs(BOOK_TYPES),
             required=True,
             allow_blank=True,
             placeholder="(choose a Type)",
+        ),
+        DialogField(
+            "text_kind",
+            "Kind",
+            "select",
+            _attr(book, "text_kind", "") or TEXT_SPELL,
+            options=_pairs(LAB_TEXT_KINDS),
+            show_if=lab_text,
         ),
         DialogField(
             "subject_kind",
@@ -2519,7 +2548,27 @@ def _book_fields(
             ),
             picker=lambda _current: SpellChooserScreen(saga),
             display=spell_display,
-            show_if=lambda v: book_type(v) in bk.SPELL_TYPES,
+            show_if=of_spell,
+        ),
+        DialogField(
+            "technique",
+            "Technique",
+            "select",
+            _attr(book, "technique", ""),
+            options=_pairs(TECHNIQUES),
+            allow_blank=True,
+            placeholder="(not recorded)",
+            show_if=lambda v: text_kind(v) in (TEXT_ENCHANTMENT, TEXT_OTHER),
+        ),
+        DialogField(
+            "form",
+            "Form",
+            "select",
+            _attr(book, "form", ""),
+            options=_pairs(FORMS),
+            allow_blank=True,
+            placeholder="(not recorded)",
+            show_if=lambda v: text_kind(v) in (TEXT_ENCHANTMENT, TEXT_OTHER),
         ),
         DialogField(
             "level",
@@ -2538,8 +2587,70 @@ def _book_fields(
             required=True,
             show_if=lambda v: bk.has_quality(book_type(v)),
         ),
+        DialogField(
+            "effect_rdt",
+            "Range / Duration / Target",
+            "text",
+            _attr(book, "effect_rdt", ""),
+            placeholder="Touch / Sun / Individual",
+            show_if=lambda v: text_kind(v) == TEXT_ENCHANTMENT,
+        ),
+        DialogField(
+            "device_type",
+            "Device",
+            "select",
+            _attr(book, "device_type", ""),
+            options=_pairs((*DEVICE_TYPES, "Talisman")),
+            allow_blank=True,
+            placeholder="(not recorded)",
+            show_if=lambda v: text_kind(v) == TEXT_ENCHANTMENT,
+        ),
+        DialogField(
+            "shape_material",
+            "Shape and material",
+            "text",
+            _attr(book, "shape_material", ""),
+            show_if=lambda v: text_kind(v) == TEXT_ENCHANTMENT,
+        ),
+        DialogField(
+            "ritual_subject",
+            "Ritual's subject",
+            "text",
+            _attr(book, "ritual_subject", ""),
+            show_if=lambda v: text_kind(v) == TEXT_LONGEVITY,
+        ),
+        DialogField(
+            "ritual_extra_vis",
+            "Extra vis (each time)",
+            "int",
+            _attr(book, "ritual_extra_vis", 0),
+            hint="Pawns beyond age / 5 the ritual was first made with: spent "
+            "again whenever it is performed.",
+            show_if=lambda v: text_kind(v) == TEXT_LONGEVITY,
+        ),
         DialogField("language", "Language", "text", _attr(book, "language", "Latin")),
         DialogField("author", "Author", "text", _attr(book, "author", "")),
+        DialogField(
+            "author_id",
+            "Author's sheet",
+            "select",
+            _attr(book, "author_id", None),
+            options=[(c.name, c.id) for c in saga.characters if c.type == "magus"],
+            allow_blank=True,
+            placeholder="(not a magus of this saga)",
+            hint="Links the text to its author: the Sigil shown, and whose "
+            "texts a reader has decoded.",
+            show_if=lab_text,
+        ),
+        DialogField(
+            "raw",
+            "Raw (author's shorthand)",
+            "check",
+            bool(_attr(book, "raw", False)),
+            hint="Only the author, and whoever has decoded his texts, can use "
+            "it until he rewrites it.",
+            show_if=lab_text,
+        ),
         DialogField(
             "year_published",
             "Year Published",
@@ -2568,9 +2679,27 @@ def _book_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
     if prefix is not None:
         ability = prefix + values.get("ability_detail", "")
     book.ability = ability
-    book.spell_id = values.get("spell_id") if book.type in bk.SPELL_TYPES else None
-    if book.type not in bk.SPELL_TYPES:
+    lab_text = book.type == "Lab Text"
+    book.text_kind = (values.get("text_kind") or TEXT_SPELL) if lab_text else ""
+    of_spell = bk.needs_spell(book)
+    book.spell_id = values.get("spell_id") if of_spell else None
+    if not of_spell:
         book.spell_name = ""
+    book.technique = values.get("technique") or ""
+    book.form = values.get("form") or ""
+    if book.text_kind == TEXT_LONGEVITY:
+        # A Longevity Ritual is always Creo Corpus.
+        book.technique, book.form = "Creo", "Corpus"
+    book.effect_rdt = values.get("effect_rdt") or ""
+    book.device_type = values.get("device_type") or ""
+    book.shape_material = values.get("shape_material") or ""
+    book.ritual_subject = values.get("ritual_subject") or ""
+    book.ritual_extra_vis = max(0, values.get("ritual_extra_vis") or 0)
+    book.author_id = (values.get("author_id") or None) if lab_text else None
+    book.raw = bool(values.get("raw")) if lab_text else False
+    author = saga.character(book.author_id)
+    if author is not None and not book.author:
+        book.author = author.name
     book.level = values.get("level")
     spell = spl.find_spell(saga, book.spell_id)
     if spell is not None:
@@ -2595,7 +2724,8 @@ def _book_live(values: dict[str, Any], saga: Saga) -> str:
         owner_kind=owner_kind,
         owner_id=owner_id,
     )
-    probe.spell_id = values.get("spell_id") if probe.type in bk.SPELL_TYPES else None
+    probe.text_kind = values.get("text_kind") or ""
+    probe.spell_id = values.get("spell_id") if bk.needs_spell(probe) else None
     spell = spl.find_spell(saga, probe.spell_id)
     from_spell = (
         f"Level {spell.level}, from the spell"
@@ -3280,12 +3410,15 @@ class EditFamiliarBindingScreen(ModalDialog[dict[str, object] | None]):
 #: What the saga's Import Data dialog offers: (key, label, works yet?). The
 #: ones that don't work yet are listed greyed out, as what's planned.
 IMPORT_KINDS: tuple[tuple[str, str, bool], ...] = (
-    ("characters", "Characters", False),
-    ("covenants", "Covenants", False),
-    ("laboratories", "Laboratories", False),
+    # An export made with 'x' on its sheet (STORY-109): one entry per kind.
+    ("characters", "Characters", True),
+    ("covenants", "Covenants", True),
+    ("laboratories", "Laboratories", True),
     ("books", "Books", True),
     ("spells", "Spells", True),
 )
+#: The kind the dialog opens on.
+IMPORT_DEFAULT = "books"
 
 
 class ImportScreen(ModalDialog[str | None]):
@@ -3340,7 +3473,9 @@ class ImportScreen(ModalDialog[str | None]):
             else Option(f"{label}  (not available yet)", id=key, disabled=True)
             for key, label, works in IMPORT_KINDS
         )
-        options.highlighted = next(i for i, k in enumerate(IMPORT_KINDS) if k[2])
+        options.highlighted = next(
+            i for i, k in enumerate(IMPORT_KINDS) if k[0] == IMPORT_DEFAULT
+        )
         options.focus()
 
     def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:

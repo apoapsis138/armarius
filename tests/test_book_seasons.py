@@ -9,6 +9,7 @@ from ars_magica_manager.models import (
     Characteristics,
     Covenant,
     Laboratory,
+    LabTextAccess,
     Saga,
     SeasonPlan,
     Spell,
@@ -160,7 +161,7 @@ def test_decoding_reads_the_authors_texts_up_to_its_level():
     seasons.plan_lab_work(saga, plan)
     _run(saga)
     magus = saga.character("m")
-    assert magus.lab_text_access == {"Flavia": 15}
+    assert magus.lab_text_access == {"o": LabTextAccess(15, "decoded")}
     assert [b.id for b in lab_seasons.lab_texts(saga, magus)] == ["raw"]
 
 
@@ -185,7 +186,8 @@ def test_teaching_abbreviations():
     saga = _saga()
     seasons.set_plan(saga, _plan(bs.TEACH_ABBREVIATIONS, subject_id="o"))
     _run(saga)
-    assert saga.character("o").lab_text_access == {"Tiberius": 100}
+    # Filed under the teacher's id, so renaming him loses nothing.
+    assert saga.character("o").lab_text_access == {"m": LabTextAccess(100, "taught")}
 
 
 def test_an_invented_spells_lab_text_is_raw():

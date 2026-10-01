@@ -10,6 +10,7 @@ from ars_magica_manager.models import (
     Ability,
     ArcaneConnection,
     ArtScore,
+    Book,
     Character,
     Characteristics,
     Covenant,
@@ -18,6 +19,7 @@ from ars_magica_manager.models import (
     SeasonPlan,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules import book_seasons as bs
 from ars_magica_manager.rules import lab_seasons
 from ars_magica_manager.rules.xp import ability_xp, art_xp
 from ars_magica_manager.screens.invent_spell import InventSpellScreen
@@ -174,6 +176,97 @@ def test_a_longevity_ritual_gives_its_subject_an_aging_modifier():
         magus.aging.longevity_by,
     ) == (3, 1220, "Tiberius")
     assert magus.raw_vis == {"creo": 3, "vim": 1}
+    # The ritual's raw Lab Text (STORY-508): Creo Corpus, its Lab Total.
+    text = saga.books[-1]
+    assert text.name == "Lab Text: Longevity Ritual for Tiberius"
+    assert (text.text_kind, text.technique, text.form, text.level) == (
+        "Longevity Ritual",
+        "Creo",
+        "Corpus",
+        13,
+    )
+    assert (text.ritual_subject, text.raw, text.author_id) == ("Tiberius", True, "m")
+
+
+def test_a_longevity_ritual_is_performed_again_from_its_text():
+    saga = _saga()
+    magus, lab = saga.character("m"), saga.laboratories[0]
+    seasons.plan_lab_work(saga, _plan(lab_seasons.LONGEVITY, vis_art="Creo"))
+    _run(saga)
+    text = saga.books[-1]
+    # An aging crisis ends the ritual; the text brings it back for the vis.
+    magus.aging.longevity_modifier = 0
+    saga.current_season = "Summer"
+    found, again = lab_seasons.ritual_again(saga, magus, lab, text, "Creo", "character")
+    assert again is None
+    assert found == ["The ritual takes 5 pawns of Creo vis; Tiberius's raw vis has 3."]
+    lab.raw_vis = {"corpus": 6}
+    found, again = lab_seasons.ritual_again(
+        saga, magus, lab, text, "Corpus", "laboratory"
+    )
+    assert found == []
+    assert (again.subject, again.modifier, again.pawns) == (magus, 3, 5)
+    plans = list(saga.season_plans)
+    assert (
+        seasons.perform_ritual_again(saga, magus, lab, text, "Corpus", "laboratory")
+        == []
+    )
+    assert magus.aging.longevity_modifier == 3
+    assert lab.raw_vis == {"corpus": 1}
+    assert saga.season_plans == plans  # no season is taken
+    entry = lab.diary[-1]
+    assert entry.name == "Longevity Ritual performed again: Tiberius"
+    assert (entry.year, entry.season) == (1220, "Summer")
+    assert "5 pawn(s) of Corpus vis; aging rolls -3" in entry.details
+    assert magus.diary[-1].name == "Longevity Ritual performed again by Tiberius"
+    # A ritual is made for one person: not for someone the saga doesn't have.
+    text.ritual_subject = "Nobody"
+    found, _ = lab_seasons.ritual_again(saga, magus, lab, text, "Corpus", "laboratory")
+    assert "who isn't a character of this saga" in found[0]
+
+
+def test_a_rituals_extra_vis_is_spent_every_time():
+    saga = _saga()
+    magus, lab = saga.character("m"), saga.laboratories[0]
+    seasons.plan_lab_work(
+        saga, _plan(lab_seasons.LONGEVITY, vis_art="Creo", extra_vis=1)
+    )
+    _run(saga)
+    text = saga.books[-1]
+    # Made with 1 extra pawn (Lab Total 14): 5 + 1 pawns again each time.
+    assert (text.level, text.ritual_extra_vis) == (14, 1)
+    lab.raw_vis = {"corpus": 6}
+    found, again = lab_seasons.ritual_again(
+        saga, magus, lab, text, "Corpus", "laboratory"
+    )
+    assert found == [] and again.pawns == 6
+    lab.raw_vis = {"corpus": 5}
+    found, _ = lab_seasons.ritual_again(saga, magus, lab, text, "Corpus", "laboratory")
+    assert found == [
+        "The ritual takes 6 pawns of Corpus vis; the laboratory's raw vis has 5."
+    ]
+
+
+def test_a_rituals_subject_can_read_its_text():
+    saga = _saga()
+    friend = saga.character("f")
+    friend.type = "magus"
+    text = Book(
+        id="t",
+        name="Lab Text: Longevity Ritual for Banna",
+        type="Lab Text",
+        text_kind="Longevity Ritual",
+        technique="Creo",
+        form="Corpus",
+        level=40,
+        ritual_subject="Banna",
+        raw=True,
+        author="Tiberius",
+        author_id="m",
+    )
+    assert bs.can_use_lab_text(friend, text)
+    text.ritual_subject = "Someone else"
+    assert not bs.can_use_lab_text(friend, text)
 
 
 def test_extra_vis_adds_to_the_ritual_and_its_cost():

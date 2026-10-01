@@ -23,6 +23,10 @@ from .inhabitants import AUTO_KINDS, character_kind
 from .markup import escape, fit
 from .models import (
     SEASONS,
+    TEXT_ENCHANTMENT,
+    TEXT_LONGEVITY,
+    TEXT_OTHER,
+    TEXT_SPELL,
     Ability,
     ArcaneConnection,
     ArtScore,
@@ -31,6 +35,8 @@ from .models import (
     Covenant,
     CovenantDiaryEntry,
     DiaryEntry,
+    EnchantedDevice,
+    InstilledEffect,
     KnownSpell,
     Laboratory,
     LabProject,
@@ -1530,6 +1536,75 @@ def _lab_text_book(saga: Saga, magus: Character, lab: Laboratory, spell) -> Book
         spell_name=spell.name,
         raw=True,
         author_id=magus.id,
+        text_kind=TEXT_SPELL,
+    )
+
+
+def _effect_text(
+    saga: Saga,
+    magus: Character,
+    lab: Laboratory,
+    device: EnchantedDevice,
+    effect: InstilledEffect,
+) -> Book:
+    """The raw Lab Text of an effect just instilled (STORY-508): a snapshot
+    of the effect and of the device it went into (the device may be given
+    away or lost; the text is exact to that shape and material)."""
+    kind = es.text_device_type(device)
+    parts = [
+        " ".join(p for p in (c.size, c.material, c.description) if p)
+        for c in device.components
+    ]
+    return Book(
+        id=f"labtext_effect_{magus.id}_{new_instance_id()}",
+        name=f"Lab Text: {effect.name or 'an effect'} ({device.name})",
+        type="Lab Text",
+        author=magus.name,
+        author_id=magus.id,
+        raw=True,
+        owner_kind="laboratory",
+        owner_id=lab.id,
+        year_published=saga.current_year,
+        # The level it was instilled at (with its uses a day and the rest).
+        level=ed.modified_level(device, effect),
+        text_kind=TEXT_ENCHANTMENT,
+        technique=effect.technique,
+        form=effect.form,
+        effect_rdt=" / ".join(
+            part or "?" for part in (effect.range, effect.duration, effect.target)
+        ),
+        device_type=kind,
+        shape_material="; ".join(p for p in parts if p),
+        description=effect.description,
+    )
+
+
+def _longevity_text(
+    saga: Saga,
+    magus: Character,
+    lab: Laboratory,
+    subject: Character,
+    lab_total: int,
+    extra_vis: int = 0,
+) -> Book:
+    """The raw Lab Text of a Longevity Ritual (STORY-508): Creo Corpus, its
+    level the ritual's Lab Total; it lets the ritual be performed again."""
+    return Book(
+        id=f"labtext_longevity_{magus.id}_{new_instance_id()}",
+        name=f"Lab Text: Longevity Ritual for {subject.name}",
+        type="Lab Text",
+        author=magus.name,
+        author_id=magus.id,
+        raw=True,
+        owner_kind="laboratory",
+        owner_id=lab.id,
+        year_published=saga.current_year,
+        level=max(0, lab_total),
+        text_kind=TEXT_LONGEVITY,
+        technique="Creo",
+        form="Corpus",
+        ritual_subject=subject.name,
+        ritual_extra_vis=max(0, extra_vis),
     )
 
 
@@ -1652,7 +1727,7 @@ def _apply_one_season_work(
         connection.lasts = ""
         connection.fixed_year, connection.fixed_season = plan.year, plan.season
     if plan.activity in es.ACTIVITIES:
-        _apply_enchanting(saga, magus, plan, work)
+        _apply_enchanting(saga, magus, lab, plan, work)
     if plan.activity in fs.ACTIVITIES:
         _apply_familiar(saga, magus, plan, work)
     if plan.activity in ls.ACTIVITIES:
@@ -1664,9 +1739,7 @@ def _apply_one_season_work(
         saga.lab_projects = [p for p in saga.lab_projects if p.spell_id != key]
         if work.finished:
             _, author, level = work.access
-            magus.lab_text_access[author] = max(
-                level, magus.lab_text_access.get(author, 0)
-            )
+            bs.grant_access(magus, author, level, "decoded")
         else:
             saga.lab_projects.append(LabProject(magus.id, key, work.points_after))
             season, year = next_season(plan.season, plan.year)
@@ -1676,6 +1749,16 @@ def _apply_one_season_work(
         work.subject.aging.longevity_modifier = work.longevity
         work.subject.aging.longevity_year = plan.year
         work.subject.aging.longevity_by = magus.name
+        saga.books.append(
+            _longevity_text(
+                saga,
+                magus,
+                lab,
+                work.subject,
+                int(work.lab_total.total),
+                plan.extra_vis,
+            )
+        )
     activity = rules.ACTIVITIES[plan.activity]
     subject = plan_subject(saga, magus, plan)
     lab.diary.append(
@@ -1689,13 +1772,80 @@ def _apply_one_season_work(
     )
 
 
+def perform_ritual_again(
+    saga: Saga,
+    magus: Character,
+    lab: Laboratory,
+    text: Book,
+    vis_art: str,
+    vis_from: str,
+) -> list[str]:
+    """Perform a Longevity Ritual again from its Lab Text, now (STORY-509):
+    it takes no season, so nothing is planned -- the vis is paid, the
+    subject's Longevity modifier is set, and the laboratory's and the
+    subject's Diaries record it. Returns the problems (nothing is done
+    with any)."""
+    found, again = lab_seasons.ritual_again(saga, magus, lab, text, vis_art, vis_from)
+    if again is None:
+        return found
+    plan = SeasonPlan(
+        magus.id,
+        saga.current_year,
+        saga.current_season,
+        lab_seasons.LONGEVITY,
+        lab_id=lab.id,
+        vis_from=vis_from,
+    )
+    pool = lab_seasons.vis_pool(saga, magus, plan)
+    key = vis_art.lower()
+    left = pool.get(key, 0) - again.pawns
+    if left > 0:
+        pool[key] = left
+    else:
+        pool.pop(key, None)
+    subject = again.subject
+    subject.aging.longevity_modifier = again.modifier
+    subject.aging.longevity_year = saga.current_year
+    subject.aging.longevity_by = magus.name
+    done = (
+        f"{again.pawns} pawn(s) of {vis_art} vis; aging rolls -{again.modifier}. "
+        "From its Lab Text: no season taken."
+    )
+    lab.diary.append(
+        DiaryEntry(
+            year=saga.current_year,
+            season=saga.current_season,
+            name=f"Longevity Ritual performed again: {subject.name}",
+            details=f"{magus.name}: {done}",
+            activity=_LAB_DIARY_ACTIVITY.get(lab_seasons.LONGEVITY, "Longevity Ritual"),
+        )
+    )
+    subject.diary.append(
+        DiaryEntry(
+            year=saga.current_year,
+            season=saga.current_season,
+            name=f"Longevity Ritual performed again by {magus.name}",
+            details=done,
+        )
+    )
+    return []
+
+
 def _apply_enchanting(
-    saga: Saga, magus: Character, plan: SeasonPlan, work: lab_seasons.LabWork
+    saga: Saga,
+    magus: Character,
+    lab: Laboratory,
+    plan: SeasonPlan,
+    work: lab_seasons.LabWork,
 ) -> None:
-    """What a season of enchanting does to its device (STORY-905)."""
+    """What a season of enchanting does to its device (STORY-905); an
+    effect instilled leaves a raw Lab Text in the laboratory (STORY-508)."""
     device, effect = work.device, work.effect
     if device is None:
         return
+    instilling = (es.LESSER_WORK, es.CHARGED_WORK, es.INSTIL)
+    if effect is not None and plan.activity in instilling and work.finished:
+        saga.books.append(_effect_text(saga, magus, lab, device, effect))
     making = (es.OPEN, es.LESSER_WORK, es.CHARGED_WORK, es.ATTUNE)
     if plan.activity in making and not device.maker_id and not device.maker_name:
         device.maker_id = magus.id
@@ -1950,9 +2100,7 @@ def apply_book_work(
         reader_id, author, level = work.access
         reader = saga.character(reader_id)
         if reader is not None:
-            reader.lab_text_access[author] = max(
-                level, reader.lab_text_access.get(author, 0)
-            )
+            bs.grant_access(reader, author, level, "taught")
 
 
 def _apply_taming(
@@ -1983,6 +2131,9 @@ def _apply_taming(
                 owner_id=lab.id,
                 year_published=plan.year,
                 level=work.level,
+                text_kind=TEXT_OTHER,
+                technique="Rego",
+                form=plan.form,
                 description=f"Taming a creature like {name} (Might {work.level}).",
             )
         )
@@ -2119,6 +2270,9 @@ def _apply_experiment(
         goal.discovery_risk = plan.risk
         goal.discovery_vis = sum(work.vis_cost.values())
         goal.discovery_vis_art = next(iter(work.vis_cost), "")
+        made = work.spell or work.effect
+        goal.discovery_technique = made.technique if made else plan.technique
+        goal.discovery_form = made.form if made else plan.form
         lines.append(
             f"A Discovery toward {goal.name}: stabilize it (magnitude "
             f"{goal.pending_magnitude}) in a later season."
@@ -2258,6 +2412,9 @@ def _discovery_text(saga, magus, lab, goal, work) -> Book:
         owner_id=lab.id,
         year_published=saga.current_year,
         level=5 * work.research_magnitude,
+        text_kind=TEXT_OTHER,
+        technique=goal.discovery_technique,
+        form=goal.discovery_form,
     )
 
 

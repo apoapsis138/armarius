@@ -20,6 +20,7 @@ from .csv_import import parse_rows, read_text_any, skipped_preview
 from .markup import escape, fit, markdown_inline
 from .models import (
     BOOK_TYPES,
+    TEXT_SPELL,
     Book,
     Character,
     Covenant,
@@ -69,6 +70,21 @@ def book_spell(saga: Saga, book: Book) -> Spell | None:
         if found is not None:
             return found
     return spl.find_spell_by_name(saga, book.spell_name)
+
+
+def records_spell(book_type: str, text_kind: str) -> bool:
+    """Whether a book of this Type (and, a Lab Text, kind) is of a spell: a
+    Casting Tablet, or a Lab Text of a spell -- not one of an enchantment, a
+    Longevity Ritual or anything else (STORY-508), which carry their own
+    Technique, Form and level. A Lab Text with no kind yet counts as a
+    spell's."""
+    if book_type == "Lab Text":
+        return text_kind in ("", TEXT_SPELL)
+    return book_type in SPELL_TYPES
+
+
+def needs_spell(book: Book) -> bool:
+    return records_spell(book.type, book.text_kind)
 
 
 def level_of(book: Book, saga: Saga | None = None) -> int | None:
@@ -205,7 +221,7 @@ def status_problems(book: Book, saga: Saga | None = None) -> list[str]:
             f"Unknown ability: {book.ability!r} isn't in the ability list; "
             "edit the book to choose one."
         ]
-    if saga is not None and book.type in SPELL_TYPES and book_spell(saga, book) is None:
+    if saga is not None and needs_spell(book) and book_spell(saga, book) is None:
         named = (
             f"{book.spell_name!r} isn't in the spell list"
             if book.spell_name
@@ -798,7 +814,9 @@ def add_imported_books(
 
 def form_problem(values: dict[str, Any]) -> str | None:
     """What's wrong with a book form's values, if anything."""
-    if values.get("type") in SPELL_TYPES and not values.get("spell_id"):
+    if records_spell(
+        values.get("type") or "", values.get("text_kind") or ""
+    ) and not values.get("spell_id"):
         return "Choose the spell (use the Spells view to add one of your own)."
     ability = values.get("ability") or ""
     if "{" in ability and not values.get("ability_detail"):
