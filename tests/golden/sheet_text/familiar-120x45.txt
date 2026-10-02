@@ -10,7 +10,7 @@
       Size: 0 (Wound Multiplier: 1)
           Edit (e)
 
-   Identity & Cords  Characteristics  Combat & Health  Abilities  Bond Powers
+   1 Identity & Cords  2 Characteristics  3 Combat & Health  4 Abilities  5 Bond Pow
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -53,7 +53,7 @@
       Size: 0 (Wound Multiplier: 1)
           Edit (e)
 
-   Identity & Cords  Characteristics  Combat & Health  Abilities  Bond Powers
+   1 Identity & Cords  2 Characteristics  3 Combat & Health  4 Abilities  5 Bond Pow
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -96,7 +96,7 @@
       Size: 0 (Wound Multiplier: 1)
           Edit (e)
 
-   Identity & Cords  Characteristics  Combat & Health  Abilities  Bond Powers
+  dentity & Cords  2 Characteristics  3 Combat & Health  4 Abilities  5 Bond Powers
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -139,7 +139,7 @@
       Size: 0 (Wound Multiplier: 1)
           Edit (e)
 
-   Identity & Cords  Characteristics  Combat & Health  Abilities  Bond Powers
+  dentity & Cords  2 Characteristics  3 Combat & Health  4 Abilities  5 Bond Powers
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Languages: shares the Magus partner's Language scores automatically.
@@ -182,7 +182,7 @@
       Size: 0 (Wound Multiplier: 1)
           Edit (e)
 
-   Identity & Cords  Characteristics  Combat & Health  Abilities  Bond Powers
+  dentity & Cords  2 Characteristics  3 Combat & Health  4 Abilities  5 Bond Powers
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ○ Speak

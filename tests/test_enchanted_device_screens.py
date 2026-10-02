@@ -7,6 +7,7 @@ tab."""
 from support import (
     build_all_tabs,
     everything_saga,
+    menu,
     screen_lines,
     strip_markup,
     wait_until,
@@ -24,6 +25,7 @@ from ars_magica_manager.screens import (
 )
 from ars_magica_manager.screens.pickers import ShapeMaterialPickerScreen
 from ars_magica_manager.screens.prompts import ListFieldScreen
+from ars_magica_manager.screens.widgets import section_stop
 
 SECTIONS = {
     "laboratory": ("lab1", "section-lab-devices"),
@@ -66,7 +68,7 @@ async def _open(pilot, app, kind: str):
     pane = next(a for a in section.ancestors if isinstance(a, TabPane))
     view.query_one(TabbedContent).active = pane.id
     await pilot.pause()
-    section.query_one("CollapsibleTitle").focus()
+    section_stop(section).focus()
     assert await wait_until(pilot, lambda: workspace._active_section() == section_id)
     return workspace, view
 
@@ -124,12 +126,14 @@ async def test_a_adds_a_device_held_by_the_sheet_on_show():
     )
 
 
-async def test_i_on_an_effect_row_instils_in_its_device():
+async def test_instill_on_an_effect_row_instils_in_its_device():
     app = _new_app()
     async with app.run_test(size=(140, 70)) as pilot:
         _, view = await _open(pilot, app, "laboratory")
         await _choose(pilot, view, "laboratory", 1)  # the Pilum effect row
-        dialog = await _press(pilot, app, "i", FieldsDialog)
+        await menu(pilot, app, "m", "Instill an Effect")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        dialog = app.screen
         assert dialog.title_text == "Instill an Effect in Wand"
         dialog.query_one("#fld-name", Input).value = "Ward"
         dialog.query_one("#fld-level", Input).value = "15"
@@ -141,7 +145,7 @@ async def test_i_on_an_effect_row_instils_in_its_device():
     assert [e.name for e in _device(_saved(), "dev-lab").effects] == ["Pilum", "Ward"]
 
 
-async def test_i_and_u_show_only_on_rows_they_can_act_on():
+async def test_instill_and_charge_show_only_on_rows_they_can_act_on():
     app = _new_app()
     async with app.run_test(size=(140, 70)) as pilot:
         workspace, view = await _open(pilot, app, "covenant")
@@ -152,16 +156,20 @@ async def test_i_and_u_show_only_on_rows_they_can_act_on():
                 bool(workspace.check_action("use_charge", ())),
             )
 
-        assert enabled() == (False, False)  # nothing chosen
-        await _choose(pilot, view, "covenant", 0)  # a Charged Item with its effect
+        # The section took focus on its first row: a Charged Item.
+        await _choose(pilot, view, "covenant", 0)
         assert enabled() == (False, True)
-        assert await wait_until(pilot, lambda: "u Charge" in screen_lines(app)[-1])
+        # More has one thing to do there, so the footer names it.
+        assert await wait_until(
+            pilot, lambda: "m Use a Charge" in screen_lines(app)[-1]
+        )
         footer = screen_lines(app)[-1]
-        assert "i Instill" not in footer and "q Quit" in footer
+        assert "Instill" not in footer and "q Quit" in footer
         assert "Set Date" not in footer
         await _choose(pilot, view, "covenant", 1)  # its effect
         assert enabled() == (False, False)
-        await pilot.press("i")
+        assert not workspace.check_action("more", ())
+        await pilot.press("m")
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)
     app = _new_app()
@@ -169,7 +177,9 @@ async def test_i_and_u_show_only_on_rows_they_can_act_on():
         workspace, view = await _open(pilot, app, "laboratory")
         await _choose(pilot, view, "laboratory", 1)  # an Invested Device's effect
         assert enabled() == (True, False)
-        assert await wait_until(pilot, lambda: "i Instill" in screen_lines(app)[-1])
+        assert await wait_until(
+            pilot, lambda: "m Instill an Effect" in screen_lines(app)[-1]
+        )
         assert "q Quit" in screen_lines(app)[-1]
 
 
@@ -187,7 +197,7 @@ async def test_e_edits_the_chosen_effect_and_a_device_row_edits_the_device():
         assert dialog.title_text == "Edit an Enchanted Device"
 
 
-async def test_A_removes_an_effect_then_a_device_after_confirming():
+async def test_d_deletes_an_effect_then_a_device_after_confirming():
     saga = everything_saga()
     wand = _device(saga, "dev-lab")
     wand.effects.append(
@@ -197,7 +207,7 @@ async def test_A_removes_an_effect_then_a_device_after_confirming():
     async with app.run_test(size=(140, 70)) as pilot:
         _, view = await _open(pilot, app, "laboratory")
         await _choose(pilot, view, "laboratory", 1)
-        confirm = await _press(pilot, app, "A", ConfirmScreen)
+        confirm = await _press(pilot, app, "d", ConfirmScreen)
         assert "Delete Pilum from Wand?" in confirm.message
         await pilot.press("y")
         assert await wait_until(
@@ -207,7 +217,7 @@ async def test_A_removes_an_effect_then_a_device_after_confirming():
         # The effect it triggered forgets the link.
         assert _device(_saved(), "dev-lab").effects[0].linked_to == ""
         await _choose(pilot, view, "laboratory", 0)
-        confirm = await _press(pilot, app, "A", ConfirmScreen)
+        confirm = await _press(pilot, app, "d", ConfirmScreen)
         assert confirm.message == "Delete Wand and its 1 effect?"
         await pilot.press("y")
         assert await wait_until(
@@ -215,7 +225,7 @@ async def test_A_removes_an_effect_then_a_device_after_confirming():
         )
 
 
-async def test_u_uses_a_charge_and_does_nothing_at_zero():
+async def test_use_a_charge_and_nothing_at_zero():
     saga = everything_saga()
     _device(saga, "dev-cov").charges_left = 1
     app = _new_app(saga)
@@ -224,14 +234,14 @@ async def test_u_uses_a_charge_and_does_nothing_at_zero():
         _, view = await _open(pilot, app, "covenant")
         app.notify = lambda message, *a, **k: notices.append(str(message))  # type: ignore[method-assign]
         await _choose(pilot, view, "covenant", 0)
-        await pilot.press("u")
+        await menu(pilot, app, "m", "Use a Charge")
         assert await wait_until(pilot, lambda: notices)
         assert notices[-1] == "Potions: 0 charges left."
         assert _device(_saved(), "dev-cov").charges_left == 0
         rows = view.query_one("#section-cov-devices-list", SelectableList)
         assert "0/2 charges" in strip_markup(rows._rows[0][1])
         await _choose(pilot, view, "covenant", 0)
-        await pilot.press("u")
+        await menu(pilot, app, "m", "Use a Charge")
         assert await wait_until(pilot, lambda: len(notices) == 2)
         assert notices[-1] == "Potions has no charges left."
     assert _device(_saved(), "dev-cov").charges_left == 0
@@ -243,7 +253,7 @@ async def test_i_and_u_only_in_a_devices_section():
         workspace, view = await _open(pilot, app, "laboratory")
         await _choose(pilot, view, "laboratory", 0)
         assert workspace.check_action("instill_effect", ())
-        view.query_one("#section-lab-items CollapsibleTitle").focus()
+        section_stop(view.query_one("#section-lab-items")).focus()
         assert await wait_until(
             pilot, lambda: workspace._active_section() == "section-lab-items"
         )

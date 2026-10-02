@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from support import wait_until
+from support import menu, wait_until
 from test_list_flows import ListCase, _open
 
 from ars_magica_manager import spells as spl
@@ -48,25 +48,25 @@ def test_sharing_moves_the_spell_to_the_saga_and_keeps_every_link():
     assert spl.shareable_spells(magus) == []
 
 
-async def test_s_on_known_spells_shares_the_spell_after_asking():
+async def test_share_spell_on_known_spells_shares_it_after_asking():
     saga, _ = _saga()
     storage.save_saga(saga)
     case = ListCase(
         ("character", "mag1"),
         "section-known-spells",
-        "section-known-spells-list",
+        "known-spells-list",
         lambda s: s.characters[0].spells_known,
     )
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         workspace, _ = await _open(pilot, app, case)
         assert workspace.check_action("share_spell", ())
-        await pilot.press("s")  # one shareable spell: no picker
+        await menu(pilot, app, "m", "Share Spell")  # one shareable spell: no picker
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         await pilot.press("n")
         assert await wait_until(pilot, lambda: app.screen is workspace)
         assert storage.load_saga("test_saga").spells == []
-        await pilot.press("s")
+        await menu(pilot, app, "m", "Share Spell")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         await pilot.press("y")
         assert await wait_until(

@@ -11,13 +11,16 @@ from typing import Any, ClassVar
 from textual.app import ComposeResult
 from textual.binding import Binding, BindingType
 from textual.containers import Horizontal, Vertical, VerticalScroll
+from textual.events import Key
 from textual.screen import ModalScreen
 from textual.widgets import (
     Button,
     Label,
+    OptionList,
     Static,
 )
 from textual.widgets.button import ButtonVariant
+from textual.widgets.option_list import Option
 
 from .. import catalog, transfer, vis
 from .. import house_rules as hr
@@ -1487,17 +1490,88 @@ class ConfirmScreen(ModalScreen[bool]):
         self.dismiss(event.button.id == "btn-yes")
 
 
+class MenuScreen(ModalDialog[str | None]):
+    """A short menu of actions (the workspace's More and New, STORY-1007):
+    each item has its own letter, shown in front of it. Pressing the letter,
+    or Enter on the highlighted item, dismisses with that item's key; Escape
+    with None. `items` are (letter, key, label); labels are markup."""
+
+    DEFAULT_CSS = """
+    MenuScreen {
+        align: center middle;
+    }
+
+    #menu-dialog {
+        width: auto;
+        min-width: 30;
+        max-width: 76;
+        height: auto;
+        border: round $accent;
+        padding: 1 2;
+        background: $surface;
+    }
+
+    #menu-title {
+        text-style: bold;
+        margin-bottom: 1;
+    }
+
+    #menu-list {
+        width: auto;
+        min-width: 24;
+        height: auto;
+        max-height: 16;
+        border: none;
+        padding: 0;
+        background: transparent;
+    }
+    """
+
+    def __init__(self, title: str, items: Sequence[tuple[str, str, str]]) -> None:
+        super().__init__()
+        self.menu_title = title
+        self.items = list(items)
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="menu-dialog"):
+            yield Label(self.menu_title, id="menu-title")
+            yield OptionList(
+                *(
+                    Option(f"[b]{letter}[/]  {label}", id=key)
+                    for letter, key, label in self.items
+                ),
+                id="menu-list",
+                compact=True,
+            )
+
+    def on_mount(self) -> None:
+        self.query_one("#menu-list", OptionList).focus()
+
+    def on_key(self, event: Key) -> None:
+        for letter, key, _ in self.items:
+            if event.character == letter:
+                event.stop()
+                self.dismiss(key)
+                return
+
+    def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
+        event.stop()
+        self.dismiss(event.option.id)
+
+
 class ListFieldScreen[ItemT](ModalDialog[list[ItemT] | None]):
     """A small list edited inside a form (e.g. a device's components): its
-    rows, with a to add one, e to edit the chosen row and A to remove it,
-    each entry through `dialog` (a FieldsDialog for one entry; None: a new
-    one). Nothing reaches the record until the form it was opened from is
-    saved: Done dismisses with the edited list, Escape/Cancel with None."""
+    rows, with a to add one, e to edit the chosen row and d to delete it
+    (after confirming), each entry through `dialog` (a FieldsDialog for one
+    entry; None: a new one). Nothing reaches the record until the form it
+    was opened from is saved: Done dismisses with the edited list,
+    Escape/Cancel with None."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
         Binding("a", "add", "Add"),
         Binding("e", "edit", "Edit"),
-        Binding("A", "remove", "Remove"),
+        Binding("d", "remove", "Delete"),
+        Binding("delete", "remove", "Delete", show=False),
     ]
 
     DEFAULT_CSS = """
@@ -1551,7 +1625,7 @@ class ListFieldScreen[ItemT](ModalDialog[list[ItemT] | None]):
             yield Label(self.title_text, id="list-field-title")
             yield SelectableList(self._rows(), id="list-field-list")
             yield Static(
-                "a adds, e edits the chosen row, A removes it."
+                "a adds, e edits the chosen row, d deletes it."
                 + (f" {self.hint}" if self.hint else ""),
                 id="list-field-hint",
             )
@@ -1599,10 +1673,18 @@ class ListFieldScreen[ItemT](ModalDialog[list[ItemT] | None]):
     def action_remove(self) -> None:
         index = self._chosen()
         if index is None:
-            self.notify("Choose a row to remove first.")
+            self.notify("Choose a row to delete first.")
             return
-        del self.items[index]
-        self._refill()
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
+                del self.items[index]
+                self._refill()
+
+        self.app.push_screen(
+            ConfirmScreen(f"Delete {self.label(self.items[index])}?"),
+            handle_confirmed,
+        )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         event.stop()

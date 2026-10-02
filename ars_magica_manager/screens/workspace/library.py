@@ -166,27 +166,19 @@ class LibraryActions(WorkspaceBase):
         if node is not None:
             node.set_label(self._house_rules_label())
 
-    def _pick_house_rule(
-        self, title: str, then: Callable[[str, hr.Entry], None]
-    ) -> None:
-        """Act on the chosen entry; with none chosen, ask which one."""
+    def _pick_house_rule(self, then: Callable[[str, hr.Entry], None]) -> None:
+        """Act on the chosen entry."""
         view = self._house_rules_view()
         listed = hr.all_entries(self.saga)
         chosen = view.selected_entry() if view is not None else None
         if chosen is not None:
             then(*chosen)
             return
-        if not listed:
-            self.notify("No House Rules yet: 'a' adds one.")
-            return
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                then(*listed[index])
-
-        self.app.push_screen(
-            RemovalPickerScreen(title, [escape(entry.name) for _, entry in listed]),
-            handle_index,
+        self._chosen_or_pick(
+            None,
+            [entry.name for _, entry in listed],
+            empty="No House Rules yet: 'a' adds one.",
+            then=lambda index: then(*listed[index]),
         )
 
     def _house_rule_form(self, existing: tuple[str, hr.Entry] | None) -> None:
@@ -205,7 +197,6 @@ class LibraryActions(WorkspaceBase):
 
     def _edit_house_rule(self) -> None:
         self._pick_house_rule(
-            "Edit which House Rule?",
             lambda kind, entry: self._house_rule_form((kind, entry)),
         )
 
@@ -232,7 +223,7 @@ class LibraryActions(WorkspaceBase):
                 ConfirmScreen(f"Delete {escape(entry.name)}?"), handle_confirmed
             )
 
-        self._pick_house_rule("Remove a House Rule", confirm)
+        self._pick_house_rule(confirm)
 
     # -- Books (Library tab, laboratory/character Books, Unassigned Books) --
 
@@ -259,7 +250,7 @@ class LibraryActions(WorkspaceBase):
         ]
 
     def action_perform_ritual(self) -> None:
-        """'u' on a laboratory's Lab Texts: perform a Longevity Ritual again
+        """More on a laboratory's Lab Texts: perform a Longevity Ritual again
         from its text -- the chosen one, else the one picked (STORY-509). It
         takes vis but no season, so it is done at once."""
         lab = self.selected_laboratory
@@ -304,7 +295,7 @@ class LibraryActions(WorkspaceBase):
             )
 
     def action_filter_lab_texts(self) -> None:
-        """'F' on a laboratory's Lab Texts: narrow the list by kind, Art,
+        """/ on a laboratory's Lab Texts: narrow the list by kind, Art,
         level and whether its owner can read them (STORY-508)."""
         view = self._book_view()
         if not isinstance(view, LabTextListView):
@@ -327,8 +318,8 @@ class LibraryActions(WorkspaceBase):
             return bk.owner_value("covenant", self.selected_covenant.id)
         return ""
 
-    def _pick_book(self, title: str, then: Callable[[Book], None]) -> None:
-        """Act on the chosen book; with none chosen, ask which one."""
+    def _pick_book(self, then: Callable[[Book], None]) -> None:
+        """Act on the chosen book."""
         view = self._book_view()
         if view is None:
             return
@@ -337,19 +328,11 @@ class LibraryActions(WorkspaceBase):
             then(chosen)
             return
         listed = list(view.books)
-        if not listed:
-            self.notify("No books here yet.")
-            return
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                then(listed[index])
-
-        self.app.push_screen(
-            RemovalPickerScreen(
-                title, [escape(b.name) or "(untitled)" for b in listed]
-            ),
-            handle_index,
+        self._chosen_or_pick(
+            None,
+            [b.name for b in listed],
+            empty="No books here yet.",
+            then=lambda index: then(listed[index]),
         )
 
     def _marked_books(self) -> list[Book]:
@@ -362,7 +345,7 @@ class LibraryActions(WorkspaceBase):
         if marked:
             self._change_owner_of(marked)
             return
-        self._pick_book("Edit which book?", self._book_form)
+        self._pick_book(self._book_form)
 
     def _change_owner_of(self, books: list[Book]) -> None:
         """Give several books one new owner (the only edit that makes sense
@@ -489,10 +472,10 @@ class LibraryActions(WorkspaceBase):
                 handle_confirmed,
             )
 
-        self._pick_book("Remove a Book", confirm)
+        self._pick_book(confirm)
 
     def action_import_data(self) -> None:
-        """'I': on the saga, choose what to import (Books or Spells so far);
+        """More's Import: on the saga, choose what to import (Books or Spells so far);
         on a covenant's Library tab, import books straight into its library."""
         if self.selected_kind == NodeKind.SAGA:
 

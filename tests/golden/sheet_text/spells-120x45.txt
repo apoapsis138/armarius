@@ -9,7 +9,7 @@
 
         Name                           Arts            Level  Range/Duration/Target
       Ritual Source
-      ○ Soothe Pains of the Beast      CrAn               20  Touch/Mom/Ind
+      ● Soothe Pains of the Beast      CrAn               20  Touch/Mom/Ind
       Ritual ArM5
       ○ True Rest of the Injured Brute CrAn               20  Touch/Moon/Ind
       ArM5
@@ -29,15 +29,15 @@
 
 
 
-    Select a spell to see its details.
+    Soothe Pains of the Beast  CrAn 20  Ritual
+    Range: Touch   Duration: Momentary   Target: Individual
+    Level: 20 (magnitude 4)
+    Vis: 4 pawn(s)   Casting time: 60 minutes
+    From Ars Magica Definitive Edition (catalog spell, read-only).
 
-
-
-
-
-
-
-
+    This spell looks much like a ritualistic "laying on of hands" seen in many
+    churches. You kneel and press your hands to the wound while reciting a quiet
+    incantation. The spell cures one Light Wound suffered by the animal.
 
 
 

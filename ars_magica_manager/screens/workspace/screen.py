@@ -1,5 +1,5 @@
 """WorkspaceScreen: the base plus one mixin of actions per kind of record, and
-the table that routes a/A/e/r to them by section."""
+the table that routes a / e / d to them by section."""
 
 from __future__ import annotations
 
@@ -20,6 +20,7 @@ from ..sheets import (
     BOOK_SECTIONS,
     DEVICE_SECTIONS,
     HOUSE_RULES_SECTION,
+    LAB_VF_SECTIONS,
     SPELL_SECTION,
 )
 from .base import (
@@ -89,7 +90,7 @@ class WorkspaceScreen(
 
     @cached_property
     def _section_ops(self) -> dict[str, _SectionOps]:
-        """What a/A/e/r do in each sheet section, keyed by the section id
+        """What a / d / e (and More's Restore) do in each sheet section, keyed by the section id
         _active_section() reports. check_action enables a key only where it
         has an entry here, so a binding and its action can't disagree. Built
         once: check_action runs on every Footer refresh."""
@@ -248,6 +249,18 @@ class WorkspaceScreen(
                 partial(self._add_named, section),
                 partial(self._remove_named, section),
                 partial(self._edit_named, section),
+            )
+        # Virtues and Flaws (character, laboratory, familiar): a and d like
+        # any other list. They can't be edited, only added and deleted.
+        for section in (
+            "section-vf-virtues",
+            "section-vf-flaws",
+            "section-fam-vf-virtues",
+            "section-fam-vf-flaws",
+            *LAB_VF_SECTIONS,
+        ):
+            ops[section] = _SectionOps(
+                self.action_add_virtue_flaw, self.action_remove_virtue_flaw
             )
         for section in BOOK_SECTIONS:
             listed = section != "section-lib-summary"  # the summary lists none

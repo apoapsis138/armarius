@@ -17,6 +17,7 @@ from ars_magica_manager import screens as scr
 from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Ability, Book, Character, Saga
 from ars_magica_manager.rules import creation_xp
+from ars_magica_manager.screens.widgets import section_stop
 from ars_magica_manager.screens.workspace import _COVENANT_REPUTATIONS
 
 
@@ -79,7 +80,7 @@ async def _open_param_prompt(ws, vf_id: str | None = None) -> None:
     view.query_one(TabbedContent).active = "tab-vf"
     # The tab is built as it is first shown.
     await until(lambda: view.query("#section-vf-virtues CollapsibleTitle"))
-    view.query_one("#section-vf-virtues CollapsibleTitle").focus()
+    section_stop(view.query_one("#section-vf-virtues")).focus()
     await until(lambda: ws._active_section() == "section-vf-virtues")
     ws.action_add_virtue_flaw()
     picker = await wait_for_screen(ws.app, scr.VirtueFlawPickerScreen)
@@ -95,7 +96,7 @@ async def _open_lab_choice_prompt(ws) -> None:
     view.query_one(TabbedContent).active = "tab-lab-vf"
     # The tab is built as it is first shown.
     await until(lambda: view.query("#section-lab-vf-flaws CollapsibleTitle"))
-    view.query_one("#section-lab-vf-flaws CollapsibleTitle").focus()
+    section_stop(view.query_one("#section-lab-vf-flaws")).focus()
     await until(lambda: ws._active_section() == "section-lab-vf-flaws")
     ws.action_add_virtue_flaw()
     picker = await wait_for_screen(ws.app, scr.LabVirtueFlawPickerScreen)
@@ -115,17 +116,18 @@ def _open_mastery_ability(ws) -> None:
     ws.app.call_later(add)
 
 
-def _pick(open_picker, index: int = 0):
-    """Open a dialog reached through a "which one?" picker, choosing the
-    entry at `index`."""
+def _pick(open_editor, list_id: str, index: int = 0):
+    """Open a dialog that edits a list's chosen row: the one at `index` of
+    the list `list_id`, chosen first."""
 
     async def opener(ws) -> None:
         # The chosen row is looked for in the section's tab: build it.
-        await ws._current_sheet_view().build_all_tabs()
-        open_picker(ws)
-        picker = await wait_for_screen(ws.app, scr.RemovalPickerScreen)
-        await until(lambda: picker.query("ListItem"))  # mounted
-        picker.dismiss(index)
+        view = ws._current_sheet_view()
+        await view.build_all_tabs()
+        rows = view.query_one(f"#{list_id}", scr.SelectableList)
+        rows.select_data_index(index)
+        await until(lambda: rows.selected_data_index == index)
+        open_editor(ws)
 
     return opener
 
@@ -301,7 +303,7 @@ OPENERS: dict[str, Opener] = {
     "edit wealth": Opener("covenant", lambda ws: ws._edit_wealth()),
     "add income source": Opener("covenant", lambda ws: ws._income_form(None)),
     "edit income source": Opener(
-        "covenant", _pick(lambda ws: ws._edit_income_source())
+        "covenant", _pick(lambda ws: ws._edit_income_source(), "eco-income-list")
     ),
     "edit expenditure row": Opener(
         "covenant", _economics_row("expenditure", "buildings")
@@ -342,15 +344,19 @@ OPENERS: dict[str, Opener] = {
     "add bond power": Opener("familiar", lambda ws: ws._familiar_bond_power_form(None)),
     "edit bond power": Opener("familiar", lambda ws: ws._familiar_bond_power_form(0)),
     "add lab raw vis": Opener("laboratory", lambda ws: ws._add_lab_raw_vis()),
-    "edit lab raw vis": Opener("laboratory", _pick(lambda ws: ws._edit_lab_raw_vis())),
+    "edit lab raw vis": Opener(
+        "laboratory", _pick(lambda ws: ws._edit_lab_raw_vis(), "lab-raw-vis-list")
+    ),
     "edit lab diary entry": Opener(
-        "laboratory", _pick(lambda ws: ws._edit_diary_entry())
+        "laboratory", _pick(lambda ws: ws._edit_diary_entry(), "lab-diary-list")
     ),
     "edit lab specialization source": Opener(
-        "laboratory", _pick(lambda ws: ws._edit_specialty_entry())
+        "laboratory",
+        _pick(lambda ws: ws._edit_specialty_entry(), "lab-specialties-list"),
     ),
     "edit lab room": Opener(
-        "laboratory", _pick(lambda ws: ws._edit_named("section-lab-rooms"))
+        "laboratory",
+        _pick(lambda ws: ws._edit_named("section-lab-rooms"), "lab-rooms-list"),
     ),
     # Creation Worksheet (STORY-1306)
     "spend creation xp": Opener(

@@ -615,7 +615,8 @@ def _vis_possession_fields(
                 placeholder="(choose a Season)",
             )
         )
-        fields += _contested_fields(entry)
+        # The Hooks are on the record: a PossessionEntry has no such fields.
+        fields += _contested_fields(entry.record if entry is not None else None)
     fields.append(DialogField("pawns", "Pawns", "int", _attr(entry, "pawns", 1) or 1))
     if kind == "vis_store" and places:
         fields.append(
@@ -3410,7 +3411,7 @@ class EditFamiliarBindingScreen(ModalDialog[dict[str, object] | None]):
 #: What the saga's Import Data dialog offers: (key, label, works yet?). The
 #: ones that don't work yet are listed greyed out, as what's planned.
 IMPORT_KINDS: tuple[tuple[str, str, bool], ...] = (
-    # An export made with 'x' on its sheet (STORY-109): one entry per kind.
+    # An export made from More on its sheet (STORY-109): one entry per kind.
     ("characters", "Characters", True),
     ("covenants", "Covenants", True),
     ("laboratories", "Laboratories", True),

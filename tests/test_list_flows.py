@@ -1,6 +1,7 @@
 """End-to-end flows for the sheet lists that share one shape in
-WorkspaceScreen: add, edit and remove -- acting on the chosen row when there
-is one, otherwise asking with a picker. Every delete asks first."""
+WorkspaceScreen: a adds, e edits and d deletes the chosen row. A list that
+takes focus always has one (the first, until another is chosen), so nothing
+asks "which one?". Every delete asks first."""
 
 from dataclasses import dataclass
 from typing import Any
@@ -29,10 +30,11 @@ from ars_magica_manager.models import (
 from ars_magica_manager.screens import (
     ConfirmScreen,
     FieldsDialog,
-    RemovalPickerScreen,
     SelectableList,
     WorkspaceScreen,
 )
+from ars_magica_manager.screens.widgets import SheetSection, section_stop
+from ars_magica_manager.screens.workspace.base import CHOOSE_FIRST
 
 
 def _saga() -> Saga:
@@ -151,7 +153,8 @@ def _saved(case: ListCase) -> list:
 
 
 async def _open(pilot, app, case: ListCase):
-    """Open the workspace on `case`'s sheet and make its section active."""
+    """Open the workspace on `case`'s sheet and give its section focus,
+    as Tab or a click would: in its list, with the first row chosen."""
     await pilot.press("enter")
     assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
     workspace = app.screen
@@ -183,8 +186,10 @@ async def _open(pilot, app, case: ListCase):
         if pane is not None:
             view.query_one("TabbedContent").active = pane.id
             await pilot.pause()
-        section.query_one("CollapsibleTitle").focus()
+        section_stop(section).focus()
     assert await wait_until(pilot, lambda: workspace._active_section() == case.section)
+    rows = view.query_one(f"#{case.list_id}", SelectableList)
+    assert await wait_until(pilot, lambda: rows.selected_data_index == 0)
     return workspace, view
 
 
@@ -238,18 +243,20 @@ async def test_trait_list_add(case):
 
 
 @pytest.mark.parametrize("case", SHARED_FLOW_LISTS, indirect=True)
-async def test_trait_list_edit_picks_when_nothing_is_chosen(case):
+async def test_trait_list_edit_needs_no_choosing_first(case):
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
-        await _open(pilot, app, case)
-        await _press(pilot, app, "e", RemovalPickerScreen)
+        _, view = await _open(pilot, app, case)
         # Every score is shown signed, Reputations too (B14).
-        assert await wait_until(pilot, lambda: len(app.screen.query("ListItem")) == 2)
-        labels = [str(label.render()) for label in app.screen.query("ListItem Label")]
-        assert labels == ["Alpha: +1", "Beta: +2"]
+        rows = view.query_one(f"#{case.list_id}", SelectableList)
+        assert [label for _, label in rows._rows] == ["Alpha: +1", "Beta: +2"]
+        # The section took focus with its first row chosen: e edits it.
+        await _press(pilot, app, "e", FieldsDialog)
+        assert app.screen.query_one("#fld-name", Input).value == "Alpha"
+        await pilot.press("escape")
         await pilot.press("down")
-        await _press(pilot, app, "enter", FieldsDialog)
+        await _press(pilot, app, "e", FieldsDialog)
         assert app.screen.query_one("#fld-name", Input).value == "Beta"
         await _save_trait(pilot, app, "Beta prime", 3)
         assert await wait_until(pilot, lambda: _saved(case)[1].name == "Beta prime")
@@ -274,18 +281,46 @@ async def test_trait_list_edit_uses_the_chosen_row(case):
 
 
 @pytest.mark.parametrize("case", SHARED_FLOW_LISTS, indirect=True)
-async def test_trait_list_remove_picks_when_nothing_is_chosen(case):
+async def test_trait_list_delete_needs_no_choosing_first(case):
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         workspace, _ = await _open(pilot, app, case)
-        await _press(pilot, app, "A", RemovalPickerScreen)
         await pilot.press("down")
-        await _press(pilot, app, "enter", ConfirmScreen)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete Beta?"
         await pilot.press("y")
         assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
         assert app.screen is workspace
     assert [t.name for t in _saved(case)] == ["Alpha"]
+
+
+@pytest.mark.parametrize("case", SHARED_FLOW_LISTS, indirect=True)
+async def test_a_collapsed_section_has_no_row_to_act_on(case):
+    """c collapses the focused section, leaving focus on its title: with no
+    row chosen e and d say so rather than asking which one."""
+    storage.save_saga(_saga())
+    app = ArsMagicaManagerApp()
+    notices: list[str] = []
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+        section = view.query_one(f"#{case.section}", SheetSection)
+        rows = view.query_one(f"#{case.list_id}", SelectableList)
+        app.notify = lambda message, **_: notices.append(str(message))  # type: ignore[method-assign]
+        await pilot.press("c")
+        assert await wait_until(pilot, lambda: section.collapsed)
+        assert workspace._active_section() == case.section
+        for key in ("e", "d"):
+            await pilot.press(key)
+            await pilot.pause()
+            assert app.screen is workspace
+        assert notices == [CHOOSE_FIRST, CHOOSE_FIRST]
+        # c again opens it, with focus back in the list on a row.
+        await pilot.press("c")
+        assert await wait_until(pilot, lambda: not section.collapsed)
+        assert await wait_until(pilot, lambda: app.focused is rows)
+        assert await wait_until(pilot, lambda: rows.selected_data_index == 0)
+    assert len(_saved(case)) == 2
 
 
 @pytest.mark.parametrize("case", list(TRAIT_LISTS), indirect=True)
@@ -295,16 +330,18 @@ async def test_trait_list_remove_uses_the_chosen_row(case):
     async with app.run_test(size=(140, 70)) as pilot:
         workspace, view = await _open(pilot, app, case)
         await _choose_row(pilot, view, case, 0)
-        await _press(pilot, app, "A", ConfirmScreen)  # no picker
+        await _press(pilot, app, "d", ConfirmScreen)  # no picker
         assert _confirm_message(app) == "Delete Alpha?"
         await pilot.press("n")  # keeps it
         assert await wait_until(pilot, lambda: app.screen is workspace)
         assert len(_saved(case)) == 2
-        await _press(pilot, app, "A", ConfirmScreen)
+        await _press(pilot, app, "d", ConfirmScreen)
         await pilot.press("y")
         assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
-        # Nothing is chosen any more: A asks which one.
-        await _press(pilot, app, "A", RemovalPickerScreen)
+        # The list keeps focus, so the row that moved up is chosen: d again
+        # is about that one.
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete Beta?"
     assert [t.name for t in _saved(case)] == ["Beta"]
 
 
@@ -314,7 +351,7 @@ async def test_trait_list_cancelling_changes_nothing(case):
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         workspace, _ = await _open(pilot, app, case)
-        for key in ("a", "e", "A"):
+        for key in ("a", "e", "d"):
             await pilot.press(key)
             assert await wait_until(pilot, lambda: app.screen is not workspace)
             await pilot.press("escape")
@@ -401,15 +438,14 @@ async def _save_name(pilot, app, name: str) -> None:
 
 
 @pytest.mark.parametrize("name", list(ITEM_LISTS))
-async def test_item_list_edit_picks_when_nothing_is_chosen(name):
+async def test_item_list_edit_needs_no_choosing_first(name):
     case = ITEM_LISTS[name]
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         await _open(pilot, app, case)
-        await _press(pilot, app, "e", RemovalPickerScreen)
         await pilot.press("down")
-        await _press(pilot, app, "enter", FieldsDialog)
+        await _press(pilot, app, "e", FieldsDialog)
         await _save_name(pilot, app, "Renamed")
         assert await wait_until(pilot, lambda: _saved(case)[1].name == "Renamed")
     assert len(_saved(case)) == 2
@@ -435,9 +471,9 @@ def _confirm_message(app) -> str:
 
 @pytest.mark.parametrize("name", list(ITEM_LISTS))
 async def test_item_list_remove_uses_the_chosen_row_after_asking(name):
-    """A on the chosen row asks "Delete <name>?" (brackets and all): No
-    keeps it, Yes deletes it, and afterwards nothing is chosen, so A asks
-    which one."""
+    """d on the chosen row asks "Delete <name>?" (brackets and all): No
+    keeps it, Yes deletes it, and afterwards the row that took its place is
+    chosen."""
     case = ITEM_LISTS[name]
     storage.save_saga(_saga())
     first, second = (entry.name for entry in case.entries(_saga()))
@@ -445,33 +481,33 @@ async def test_item_list_remove_uses_the_chosen_row_after_asking(name):
     async with app.run_test(size=(140, 70)) as pilot:
         workspace, view = await _open(pilot, app, case)
         await _choose_row(pilot, view, case, 0)
-        await _press(pilot, app, "A", ConfirmScreen)  # no picker
+        await _press(pilot, app, "d", ConfirmScreen)  # no picker
         assert _confirm_message(app) == f"Delete {first}?"
         await pilot.press("n")
         assert await wait_until(pilot, lambda: app.screen is workspace)
         assert len(_saved(case)) == 2
 
-        await _press(pilot, app, "A", ConfirmScreen)
+        await _press(pilot, app, "d", ConfirmScreen)
         await pilot.press("y")
         assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
         assert [entry.name for entry in _saved(case)] == [second]
         rows = view.query_one(f"#{case.list_id}", SelectableList)
         assert await wait_until(pilot, lambda: first not in str(rows._rows))
 
-        await _press(pilot, app, "A", RemovalPickerScreen)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == f"Delete {second}?"
 
 
 @pytest.mark.parametrize("name", list(ITEM_LISTS))
-async def test_item_list_remove_picks_when_nothing_is_chosen(name):
+async def test_item_list_delete_needs_no_choosing_first(name):
     case = ITEM_LISTS[name]
     storage.save_saga(_saga())
     first, _ = (entry.name for entry in case.entries(_saga()))
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         await _open(pilot, app, case)
-        await _press(pilot, app, "A", RemovalPickerScreen)
         await pilot.press("down")
-        await _press(pilot, app, "enter", ConfirmScreen)
+        await _press(pilot, app, "d", ConfirmScreen)
         await pilot.press("y")
         assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
     assert [entry.name for entry in _saved(case)] == [first]

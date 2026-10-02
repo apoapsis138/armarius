@@ -1,7 +1,7 @@
 """Golden test of WorkspaceScreen's key dispatch.
 
 For every section (Collapsible) and tab of every kind of sheet, focus it,
-press each section-dispatched key and record what happens: whether the
+press each section-dispatched key (a, e, d, More and Filter) and record what happens: whether the
 binding is enabled, and which dialog opens (with its title) or which
 notice appears. The result is compared with tests/golden/dispatch_matrix.json,
 so a refactor of the dispatch/routing code that changes any of it fails
@@ -24,6 +24,8 @@ from textual.widgets import Collapsible, TabbedContent, TabPane, Tree
 from ars_magica_manager import storage
 from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.screens import WorkspaceScreen
+from ars_magica_manager.screens.prompts import MenuScreen
+from ars_magica_manager.screens.widgets import first_stop, section_stop
 
 GOLDEN = Path(__file__).parent / "golden" / "dispatch_matrix.json"
 
@@ -32,17 +34,10 @@ GOLDEN = Path(__file__).parent / "golden" / "dispatch_matrix.json"
 #: check_action: a key is enabled where any of them is.
 KEYS: dict[str, tuple[str, ...]] = {
     "a": ("add",),
-    "A": ("remove",),
     "e": ("edit",),
-    "r": ("restore",),
-    "i": ("improve", "instill_effect"),
-    "u": ("use_charge", "perform_ritual"),
-    "s": ("share_spell",),
-    "m": ("move_vis",),
-    "F": ("filter_lab_texts",),
-    "I": ("import_data",),
-    "v": ("add_virtue_flaw",),
-    "V": ("remove_virtue_flaw",),
+    "d": ("delete",),
+    "m": ("more",),
+    "slash": ("filter",),
 }
 
 _SHEET_VIEW_ATTR = {
@@ -54,7 +49,10 @@ _SHEET_VIEW_ATTR = {
 
 
 def _title(screen) -> str:
-    """The text of a dialog's first Label/Static whose id mentions "title"."""
+    """The text of a dialog's first Label/Static whose id mentions "title";
+    for the More menu, what it offers."""
+    if isinstance(screen, MenuScreen):
+        return ", ".join(label for _, _, label in screen.items)
     for widget in screen.query("Label, Static"):
         if widget.id and "title" in widget.id:
             return str(widget.render()).strip()
@@ -79,8 +77,8 @@ def _label(target) -> str:
 
 async def _focus_target(pilot, app, view, target) -> None:
     """Make `target` (a Collapsible or TabPane of `view`) the active section
-    the way a user would: show its tab, then focus its title (a Collapsible)
-    or nothing (a tab)."""
+    the way a user would: show its tab, then focus the section (its list,
+    or its title if it has none) or the tab's own list."""
     app.screen.set_focus(None)
     await pilot.pause()
     pane = (
@@ -92,10 +90,14 @@ async def _focus_target(pilot, app, view, target) -> None:
         view.query_one(TabbedContent).active = pane.id
         await pilot.pause()
     if isinstance(target, Collapsible):
-        target.query_one("CollapsibleTitle").focus()
+        section_stop(target).focus()
         await wait_until(pilot, lambda: app.screen._active_section() == target.id)
     else:
-        app.screen.set_focus(None)
+        stop = first_stop(target)
+        if stop is None:
+            app.screen.set_focus(None)
+        else:
+            stop.focus()
         await pilot.pause()
 
 

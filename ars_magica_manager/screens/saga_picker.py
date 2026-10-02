@@ -98,7 +98,7 @@ class SagaPickerScreen(Screen[None]):
 
     BINDINGS: ClassVar[list[BindingType]] = [
         ("n", "create_saga", "New Saga"),
-        ("A", "delete_saga", "Delete Saga"),
+        ("d", "delete_saga", "Delete Saga"),
         Binding("delete", "delete_saga", "Delete Saga", show=False),
         ("q", "quit", "Quit"),
         # Shown at the footer's right end (BottomBar right_actions).
@@ -109,7 +109,7 @@ class SagaPickerScreen(Screen[None]):
         yield Header()
         yield Static(
             "Select a saga to open, press 'n' to create a new one, "
-            "or 'A' to delete the highlighted one.",
+            "or 'd' to delete the highlighted one.",
             id="picker-hint",
         )
         yield ListView(id="saga-list")

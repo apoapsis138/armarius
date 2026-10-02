@@ -18,7 +18,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Planning  Dia
+   1 Description  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Inventory  6 P
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -61,7 +61,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Planning  Dia
+   1 Description  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Inventory  6 P
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   General
@@ -104,7 +104,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-   Description  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Planning  Dia
+   1 Description  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Inventory  6 P
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -147,7 +147,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  scription  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Planning  Diary
+   2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Inventory  6 Planning  7 Diar
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Talisman: Ring  Opened 0/0  0 attunements
@@ -190,7 +190,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  scription  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Planning  Diary
+   Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Inventory  6 Planning  7 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -233,7 +233,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  scription  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Planning  Diary
+   Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Inventory  6 Planning  7 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -276,7 +276,7 @@
       Pre:  0   Com:  0   Dex:  0   Qik:  0
           Edit (e)
 
-  scription  Abilities  Virtues & Flaws  Hermetic Magic  Inventory  Planning  Diary
+   Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Inventory  6 Planning  7 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   (none recorded)

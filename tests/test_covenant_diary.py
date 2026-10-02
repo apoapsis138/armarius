@@ -139,9 +139,8 @@ async def test_the_diary_tab_adds_edits_and_removes_entries():
         await pilot.press("escape")
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
-        await pilot.press("A")  # nothing chosen: asks which, in date order
-        await wait_until(pilot, lambda: not isinstance(app.screen, WorkspaceScreen))
-        await pilot.press("enter")  # the first listed: 1220 Autumn
+        # The list took focus on its first row, in date order: 1220 Autumn.
+        await pilot.press("d")
         await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         await pilot.press("y")
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))

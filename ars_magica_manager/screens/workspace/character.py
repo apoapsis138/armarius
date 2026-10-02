@@ -192,15 +192,13 @@ class CharacterActions(WorkspaceBase):
         return view.selected_ability() if view is not None else None
 
     def _remove_ability(self) -> None:
-        """Delete the chosen Ability (after confirming); with none chosen,
-        ask which one first."""
+        """Delete the chosen Ability (after confirming)."""
         character = self.selected_character
         if character is None:
             return
         self._chosen_or_pick(
             self._selected_ability(),
             [self._ability_label(a) for a in character.abilities],
-            title="Remove an Ability",
             empty="No Abilities to remove.",
             then=lambda index: self._confirm_remove_ability(index),
         )
@@ -214,14 +212,13 @@ class CharacterActions(WorkspaceBase):
         )
 
     def _edit_ability(self) -> None:
-        """Edit the chosen Ability; with none chosen, ask which one."""
+        """Edit the chosen Ability."""
         character = self.selected_character
         if character is None:
             return
         self._chosen_or_pick(
             self._selected_ability(),
             [self._ability_label(a) for a in character.abilities],
-            title="Edit which Ability?",
             empty="No Abilities to edit.",
             then=lambda index: self._edit_ability_at(index),
         )
@@ -330,27 +327,15 @@ class CharacterActions(WorkspaceBase):
         return view.selected_raw_vis(section)
 
     def _edit_raw_vis(self) -> None:
-        """Edit the chosen Raw Vis entry; with none chosen, ask which one."""
+        """Edit the chosen Raw Vis entry."""
         character = self.selected_character
         if character is None:
             return
-        selected = self._selected_raw_vis()
-        if selected is not None:
-            self._edit_raw_vis_at(selected)
-            return
-        if not character.raw_vis:
-            self.notify("No Raw Vis to edit.")
-            return
-
-        arts = sorted(character.raw_vis)
-        labels = [f"{art.title()}: {character.raw_vis[art]} pawn(s)" for art in arts]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._edit_raw_vis_at(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Edit which Raw Vis entry?", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_raw_vis(),
+            sorted(character.raw_vis),
+            empty="No Raw Vis to edit.",
+            then=self._edit_raw_vis_at,
         )
 
     def _edit_raw_vis_at(self, index: int) -> None:
@@ -372,28 +357,15 @@ class CharacterActions(WorkspaceBase):
         )
 
     def _remove_raw_vis(self) -> None:
-        """Delete the chosen Raw Vis entry (after confirming); with none
-        chosen, ask which one first."""
+        """Delete the chosen Raw Vis entry (after confirming)."""
         character = self.selected_character
         if character is None:
             return
-        selected = self._selected_raw_vis()
-        if selected is not None:
-            self._confirm_remove_raw_vis(selected)
-            return
-        if not character.raw_vis:
-            self.notify("No Raw Vis to remove.")
-            return
-
-        arts = sorted(character.raw_vis)
-        labels = [f"{art.title()}: {character.raw_vis[art]} pawn(s)" for art in arts]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._confirm_remove_raw_vis(index)
-
-        self.app.push_screen(
-            RemovalPickerScreen("Remove a Raw Vis entry", labels), handle_index
+        self._chosen_or_pick(
+            self._selected_raw_vis(),
+            sorted(character.raw_vis),
+            empty="No Raw Vis to remove.",
+            then=self._confirm_remove_raw_vis,
         )
 
     def _confirm_remove_raw_vis(self, index: int) -> None:
@@ -485,15 +457,13 @@ class CharacterActions(WorkspaceBase):
         return view.selected_known_spell() if view is not None else None
 
     def _edit_spell_mastery(self) -> None:
-        """Edit the chosen known spell's Mastery; with none chosen, ask
-        which one."""
+        """Edit the chosen known spell's Mastery."""
         character = self.selected_character
         if character is None:
             return
         self._chosen_or_pick(
             self._selected_known_spell(),
             self._known_spell_labels(character),
-            title="Edit Mastery for which spell?",
             empty="No Spells to edit.",
             then=lambda index: self._edit_spell_mastery_at(index),
         )
@@ -514,15 +484,13 @@ class CharacterActions(WorkspaceBase):
         self.app.push_screen(MasteryEditScreen(name, known), handle_result)
 
     def _remove_spell(self) -> None:
-        """Delete the chosen known spell (after confirming); with none
-        chosen, ask which one first."""
+        """Delete the chosen known spell (after confirming)."""
         character = self.selected_character
         if character is None:
             return
         self._chosen_or_pick(
             self._selected_known_spell(),
             self._known_spell_labels(character),
-            title="Remove a Known Spell",
             empty="No Spells to remove.",
             then=lambda index: self._confirm_remove_spell(index),
         )
@@ -612,14 +580,13 @@ class CharacterActions(WorkspaceBase):
         self.app.push_screen(_breakthrough_dialog(None), handle_result)
 
     def _edit_research_goal(self) -> None:
-        """Edit the chosen research goal; with none chosen, ask which one."""
+        """Edit the chosen research goal."""
         character = self.selected_character
         if character is None:
             return
         self._chosen_or_pick(
             self._selected_research_goal(),
             self._research_goal_labels(character),
-            title="Edit which research goal?",
             empty="No research goals to edit.",
             then=self._edit_research_goal_at,
         )
@@ -639,15 +606,13 @@ class CharacterActions(WorkspaceBase):
         )
 
     def _remove_research_goal(self) -> None:
-        """Delete the chosen research goal (after confirming); with none
-        chosen, ask which one first."""
+        """Delete the chosen research goal (after confirming)."""
         character = self.selected_character
         if character is None:
             return
         self._chosen_or_pick(
             self._selected_research_goal(),
             self._research_goal_labels(character),
-            title="Remove a research goal",
             empty="No research goals to remove.",
             then=lambda index: self._confirm_delete(
                 character.breakthroughs,
@@ -713,7 +678,7 @@ class CharacterActions(WorkspaceBase):
         self.app.push_screen(_possession_dialog(title, kind, entry), handle_result)
 
     def _edit_item(self) -> None:
-        """Edit the chosen item; with none chosen, ask which one."""
+        """Edit the chosen item."""
         character = self.selected_character
         if character is None:
             return
@@ -723,7 +688,6 @@ class CharacterActions(WorkspaceBase):
                 pos.row_label(pos.PossessionEntry(item.kind, item))
                 for item in character.inventory
             ],
-            title="Edit which item?",
             empty="No Items to edit.",
             then=lambda index: self._inventory_item_form(
                 character.inventory[index].kind, index
@@ -731,8 +695,7 @@ class CharacterActions(WorkspaceBase):
         )
 
     def _remove_item(self) -> None:
-        """Delete the chosen item (after confirming); with none chosen, ask
-        which one first."""
+        """Delete the chosen item (after confirming)."""
         character = self.selected_character
         if character is None:
             return
@@ -742,7 +705,6 @@ class CharacterActions(WorkspaceBase):
                 pos.row_label(pos.PossessionEntry(item.kind, item))
                 for item in character.inventory
             ],
-            title="Remove an Item",
             empty="No Items to remove.",
             then=lambda index: self._confirm_remove_item(index),
         )
@@ -798,7 +760,7 @@ class CharacterActions(WorkspaceBase):
         self.app.push_screen(self._character_diary_dialog(None), handle_result)
 
     def _edit_character_diary_entry(self) -> None:
-        """Edit the chosen Diary entry; with none chosen, ask which one."""
+        """Edit the chosen Diary entry."""
         character = self.selected_character
         if character is None:
             return
@@ -816,21 +778,18 @@ class CharacterActions(WorkspaceBase):
         self._chosen_or_pick(
             self._selected_character_diary_entry(),
             [label for _, label in lab_text.diary_rows(character.diary)],
-            title="Edit which Diary Entry?",
             empty="No Diary entries to edit.",
             then=edit,
         )
 
     def _remove_character_diary_entry(self) -> None:
-        """Delete the chosen Diary entry (after confirming); with none
-        chosen, ask which one first."""
+        """Delete the chosen Diary entry (after confirming)."""
         character = self.selected_character
         if character is None:
             return
         self._chosen_or_pick(
             self._selected_character_diary_entry(),
             [label for _, label in lab_text.diary_rows(character.diary)],
-            title="Remove a Diary Entry",
             empty="No Diary entries to remove.",
             then=lambda index: self._confirm_delete(
                 character.diary,

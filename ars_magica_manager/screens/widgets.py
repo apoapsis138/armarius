@@ -3,23 +3,34 @@ sections and layout rows, the details panel, and small display helpers."""
 
 from __future__ import annotations
 
+import re
 from collections.abc import Iterable, Sequence
 from typing import Any, ClassVar
 
 from textual.app import ComposeResult
 from textual.binding import Binding, BindingType
-from textual.containers import Horizontal, Vertical, VerticalScroll
-from textual.events import Click
+from textual.containers import (
+    Horizontal,
+    ScrollableContainer,
+    Vertical,
+    VerticalScroll,
+)
+from textual.content import Content
+from textual.events import Click, Focus
 from textual.message import Message
 from textual.screen import Screen
+from textual.scroll_view import ScrollView
 from textual.widget import Widget
 from textual.widgets import (
+    Button,
     Collapsible,
     Footer,
     OptionList,
     Static,
 )
+from textual.widgets._collapsible import CollapsibleTitle
 from textual.widgets._footer import FooterKey
+from textual.widgets._tabbed_content import ContentTabs
 from textual.widgets.option_list import Option
 
 from .. import catalog
@@ -165,12 +176,13 @@ def _sign_colored(value: float, text: str) -> str:
 
 
 class ThemeBar(Static):
-    """A one-line bar above the footer showing the app's active theme name."""
+    """The app's active theme name, at the right end of the row above the
+    footer (see BottomBar)."""
 
     DEFAULT_CSS = """
     ThemeBar {
+        width: auto;
         height: 1;
-        content-align: left middle;
         padding: 0 1;
         color: $text-muted;
     }
@@ -184,13 +196,16 @@ class ThemeBar(Static):
 
 
 class BottomBar(Vertical):
-    """Docks the ThemeBar directly above the Footer.
+    """Docks a status row directly above the Footer: where focus is (set
+    by the screen with set_where(); STORY-1008) and, at its right end, the
+    ThemeBar.
 
     Both dock to the same screen edge independently otherwise (Textual's
     dock arrangement doesn't stack same-edge docked siblings -- they'd
     overlap on the same row), so this wraps them in one bottom-docked
     container where Footer's own `dock: bottom` pins it to the container's
-    last row and ThemeBar, undocked, takes the row above it in normal flow.
+    last row and the status row, undocked, takes the row above it in
+    normal flow.
     """
 
     DEFAULT_CSS = """
@@ -198,15 +213,35 @@ class BottomBar(Vertical):
         dock: bottom;
         height: 2;
     }
+
+    BottomBar #status-row {
+        width: 1fr;
+        height: 1;
+    }
+
+    BottomBar #where-bar {
+        width: 1fr;
+        height: 1;
+        padding: 0 1;
+    }
     """
 
     def __init__(self, right_actions: Iterable[str] = ()) -> None:
         super().__init__()
         self._right_actions = frozenset(right_actions)
+        self._where = ""
 
     def compose(self) -> ComposeResult:
-        yield ThemeBar(id="theme-bar")
+        with Horizontal(id="status-row"):
+            yield Static(id="where-bar")
+            yield ThemeBar(id="theme-bar")
         yield SplitFooter(self._right_actions)
+
+    def set_where(self, where: str) -> None:
+        """Show `where` (markup) as the place focus is."""
+        if where != self._where:
+            self._where = where
+            self.query_one("#where-bar", Static).update(where)
 
 
 class SplitFooter(Footer):
@@ -219,7 +254,7 @@ class SplitFooter(Footer):
         width: 1fr;
         height: 1;
     }
-    SplitFooter FooterKey.-right {
+    SplitFooter FooterKey.-first-right {
         border-left: vkey $foreground 20%;
     }
     """
@@ -286,7 +321,9 @@ class SplitFooter(Footer):
             else:
                 yield widget
         if right:
-            # Takes up the free width, pushing the keys after it right.
+            # Takes up the free width, pushing the keys after it right; one
+            # divider sets the group apart.
+            right[0].add_class("-first-right")
             yield Static(classes="footer-spacer")
             yield from right
 
@@ -359,6 +396,11 @@ class SelectableList(OptionList):
         def control(self) -> SelectableList:
             return self.selectable_list
 
+    class Moved(Message):
+        """The chosen row changed. Unlike Chosen, which the owning view
+        handles and stops, this one is for the screen (its where-am-I
+        row)."""
+
     class Checked(Message):
         """The set of checked rows changed (multi lists only)."""
 
@@ -418,14 +460,34 @@ class SelectableList(OptionList):
         )
 
     def set_rows(self, rows: Sequence[tuple[int | None, str]]) -> None:
-        """Replace all rows (synchronous; nothing is chosen or checked
-        afterwards)."""
+        """Replace all rows (synchronous; nothing is checked afterwards).
+        Nothing is chosen either, unless the list has focus: a focused list
+        always has a row to act on, so the row at the old position (or the
+        nearest one) is chosen again."""
+        position = self.highlighted if self.has_focus else None
         self.clear_options()
         self._marked = None
         self._checked = set()
         self._add_rows(rows)
+        if position is not None:
+            self._choose_near(position)
         if self.is_mounted:
             self.screen.refresh_bindings()
+
+    def _choose_near(self, position: int) -> None:
+        """Choose the row at list position `position`, else the nearest one
+        below or above it that can be chosen (headers can't)."""
+        count = len(self._rows)
+        for candidate in (*range(position, count), *range(count - 1, -1, -1)):
+            if 0 <= candidate < count and self._rows[candidate][0] is not None:
+                self.highlighted = candidate
+                return
+
+    def on_focus(self, event: Focus) -> None:
+        # A focused list always has a row to act on (STORY-1005): the one
+        # chosen before, else the first.
+        if self.highlighted is None:
+            self._choose_near(0)
 
     def relabel(self, labels: list[str]) -> None:
         """New labels for the same rows, in order (e.g. re-laid-out columns);
@@ -446,6 +508,15 @@ class SelectableList(OptionList):
         """Data index of the chosen row, or None if none is chosen."""
         option = self.highlighted_option
         return int(option.id) if option is not None and option.id else None
+
+    @property
+    def chosen_text(self) -> str:
+        """The chosen row's first column as plain text ("" with none)."""
+        position = self.highlighted
+        if position is None or position >= len(self._rows):
+            return ""
+        plain = Content.from_markup(self._rows[position][1]).plain.strip()
+        return re.split(r"\s{2,}", plain, maxsplit=1)[0]
 
     @property
     def checked_data_indexes(self) -> list[int]:
@@ -523,7 +594,8 @@ class SelectableList(OptionList):
         self._mark(event.option_index)
         self._clear_group()
         self.post_message(self.Chosen(self, int(event.option.id)))
-        # A key can depend on the chosen row (e.g. u on a Charged Item).
+        self.post_message(self.Moved())
+        # A key can depend on the chosen row (e.g. More on a Charged Item).
         self.screen.refresh_bindings()
 
 
@@ -560,15 +632,141 @@ class ToggleList(SelectableList):
             self.post_message(self.Toggled(self, index))
 
 
-class SheetSection(Collapsible):
+class SectionTitle(CollapsibleTitle, inherit_bindings=False):
+    """A sheet section's title: a CollapsibleTitle without its Enter key.
+    Collapsing is the workspace's `c` (or a second click), never a side
+    effect of where focus happens to be (STORY-1005)."""
+
+
+def section_of(widget: Widget | None) -> Collapsible | None:
+    """The sheet section `widget` is in (or is), if any."""
+    if widget is None:
+        return None
+    for ancestor in widget.ancestors_with_self:
+        if isinstance(ancestor, Collapsible):
+            return ancestor
+    return None
+
+
+def is_stop(widget: Widget) -> bool:
+    """Whether Tab can stop on `widget` inside a sheet: a list or a field,
+    not a button (the mouse's; its action has a key), a section title (see
+    section_stop) or a container that is only focusable to scroll."""
+    if not widget.focusable or isinstance(
+        widget, (Button, CollapsibleTitle, ContentTabs)
+    ):
+        return False
+    # Lists and trees scroll too (ScrollView is a ScrollableContainer).
+    return isinstance(widget, ScrollView) or not isinstance(widget, ScrollableContainer)
+
+
+def section_stop(section: Collapsible) -> Widget:
+    """Where focus goes when `section` takes it: its first list or field
+    while it's open and has one, else its title."""
+    if not section.collapsed:
+        for widget in section.query("*"):
+            if is_stop(widget) and section_of(widget) is section:
+                return widget
+    return section.query_one(CollapsibleTitle)
+
+
+def first_stop(container: Widget) -> Widget | None:
+    """The first place Tab would stop inside `container`: its first
+    section's stop, or a list or field outside any section (a flat tab)."""
+    for widget in container.query("*"):
+        if isinstance(widget, Collapsible):
+            return section_stop(widget)
+        if is_stop(widget):
+            return widget
+    return None
+
+
+def sheet_focus_chain(chain: Sequence[Widget]) -> list[Widget]:
+    """`chain` (a screen's focus chain) with one stop per sheet section
+    (STORY-1005): a section's lists and fields, or its title when it has
+    none; never a button, the tab strip or a scrolling container."""
+    stops: list[Widget] = []
+    for widget in chain:
+        if isinstance(widget, CollapsibleTitle):
+            section = section_of(widget)
+            if section is None or section_stop(section) is widget:
+                stops.append(widget)
+        elif is_stop(widget):
+            stops.append(widget)
+    return stops
+
+
+class FocusableSection(Collapsible):
+    """What every sheet section shares: a click anywhere in it makes it the
+    focused section, so the keys and the Footer follow the mouse."""
+
+    # The focused section stands out by its rule and title, wherever in it
+    # focus is (a list's chosen row is only bold).
+    DEFAULT_CSS = """
+    FocusableSection:focus-within {
+        border-top: hkey $primary;
+    }
+
+    FocusableSection:focus-within > CollapsibleTitle {
+        color: $text-primary;
+        text-style: bold;
+    }
+
+    FocusableSection > CollapsibleTitle:focus {
+        color: $block-cursor-foreground;
+    }
+    """
+
+    def focus_section(self) -> None:
+        """Give the section focus, at its stop (see section_stop)."""
+        section_stop(self).focus()
+
+    def on_click(self, event: Click) -> None:
+        # Unless the click already focused something inside (a list row),
+        # which is focus enough and should keep the arrow keys.
+        focused = self.screen.focused
+        if focused is None or self not in focused.ancestors_with_self:
+            self.focus_section()
+
+
+class SheetSection(FocusableSection):
     """A sheet section (on every sheet): a Collapsible that starts
     expanded. Textual's own default is collapsed, so every sheet section
     goes through this (project convention: sections are open by default,
-    the user can still collapse them)."""
+    the user can still collapse them).
+
+    A click on the title of a section that isn't the focused one only
+    focuses it; a click on the focused section's title collapses or expands
+    it (STORY-1005). From the keyboard that is the workspace's `c`."""
 
     def __init__(self, *children: Widget, title: str, **kwargs: Any) -> None:
         kwargs.setdefault("collapsed", False)
         super().__init__(*children, title=title, **kwargs)
+        self._title = SectionTitle(
+            label=title,
+            collapsed_symbol="▶",
+            expanded_symbol="▼",
+            collapsed=self.collapsed,
+        )
+
+    def toggle(self) -> None:
+        """Collapse or expand, keeping focus in the section. A collapsed
+        section has no chosen row: e and d never act on one out of sight."""
+        self.collapsed = not self.collapsed
+        if self.collapsed:
+            for rows in self.query(SelectableList):
+                rows.clear_selection()
+        self.focus_section()
+
+    def _on_collapsible_title_toggle(self, event: Message) -> None:
+        # A click on the title. prevent_default() keeps Collapsible's own
+        # handler from flipping `collapsed` (see PinnedCollapsible).
+        event.stop()
+        event.prevent_default()
+        if getattr(self.screen, "section_before_focus", None) is self:
+            self.toggle()
+        else:
+            self.focus_section()
 
 
 #: The gap, in columns, between side-by-side lists (sections).
@@ -675,7 +873,7 @@ class StackingColumns(Horizontal):
         self.set_class(needed > self.size.width, "-stacked")
 
 
-class PinnedCollapsible(Collapsible):
+class PinnedCollapsible(FocusableSection):
     """A Collapsible that is permanently expanded and ignores toggling.
 
     Used for each sheet's always-visible top panel. It
@@ -688,6 +886,9 @@ class PinnedCollapsible(Collapsible):
         super().__init__(
             *children, title=title, collapsed=False, expanded_symbol="", id=id
         )
+        self._title = SectionTitle(
+            label=title, collapsed_symbol="▶", expanded_symbol="", collapsed=False
+        )
 
     def _on_collapsible_title_toggle(self, event: Message) -> None:
         # Textual dispatches a message to every class in the MRO's handler
@@ -695,15 +896,6 @@ class PinnedCollapsible(Collapsible):
         # is what keeps Collapsible's own handler from flipping `collapsed`.
         event.stop()
         event.prevent_default()
-
-    def on_click(self, event: Click) -> None:
-        # Clicking anywhere in the section (not just its title) makes it the
-        # active section, so 'e' and the Footer hint work after a click --
-        # unless the click already focused something inside it (the Arts
-        # lists), which is active enough and should keep the arrow keys.
-        focused = self.screen.focused
-        if focused is None or self not in focused.ancestors_with_self:
-            self.query_one("CollapsibleTitle").focus()
 
 
 #: Every details panel's height in rows, padding included (user, STORY-114).

@@ -1,13 +1,15 @@
 """The workspace's shared tables and its base class: the screen's state, the
 navigation tree, the detail pane, focus and section tracking, the plumbing
-behind a/A/e/r and the actions that aren't about one kind of record."""
+behind a / e / d, More and New, and the actions that aren't about one kind
+of record."""
 
 from __future__ import annotations
 
 import asyncio
 import random
+import re
 from collections.abc import Callable, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from dataclasses import field as dataclass_field
 from enum import StrEnum
 from functools import cached_property, partial
@@ -15,13 +17,15 @@ from pathlib import Path
 from typing import Any, ClassVar, NamedTuple
 
 from textual.app import ComposeResult
-from textual.binding import Binding, BindingType
+from textual.binding import ActiveBinding, Binding, BindingType
 from textual.containers import Horizontal, VerticalScroll
+from textual.content import Content
 from textual.css.query import NoMatches
 from textual.events import DescendantBlur, DescendantFocus
 from textual.screen import Screen
 from textual.widget import Widget
 from textual.widgets import (
+    Button,
     Collapsible,
     Header,
     Static,
@@ -29,6 +33,7 @@ from textual.widgets import (
     TabPane,
     Tree,
 )
+from textual.widgets._collapsible import CollapsibleTitle
 from textual.widgets.tree import TreeNode
 
 from ... import books as bk
@@ -45,6 +50,7 @@ from ... import (
 from ... import economics as eco
 from ... import familiars as fam
 from ... import house_rules as hr
+from ... import inhabitants as inh
 from ... import lab_texts as lt
 from ... import laboratories as lab_rules
 from ... import sheet_text as st
@@ -86,12 +92,12 @@ from ..forms import (
 )
 from ..pickers import (
     LabVirtueFlawPickerScreen,
-    RemovalPickerScreen,
     VirtueFlawPickerScreen,
 )
 from ..prompts import (
     AdvanceSeasonScreen,
     ConfirmScreen,
+    MenuScreen,
     _date_fields,
     _export_dialog,
     _move_vis_dialog,
@@ -115,7 +121,16 @@ from ..sheets import (
     SheetView,
     SpellListView,
 )
-from ..widgets import BottomBar, SelectableList
+from ..widgets import (
+    BottomBar,
+    SelectableList,
+    SheetSection,
+    first_stop,
+    is_stop,
+    section_of,
+    section_stop,
+    sheet_focus_chain,
+)
 
 #: Covenant Reputations run from -3 to +3.
 _COVENANT_REPUTATION_RANGE = (-3, 3)
@@ -127,7 +142,7 @@ def _creating(record: Character | Covenant | Laboratory) -> str:
 
 
 class _SectionOps(NamedTuple):
-    """What the a / A / e / r keys do in one sheet section (None: nothing,
+    """What a, d, e and More's Restore do in one sheet section (None: nothing,
     and the key is disabled there). See WorkspaceScreen._section_ops()."""
 
     add: Callable[[], None] | None = None
@@ -227,6 +242,16 @@ class NodeKind(StrEnum):
     BOOK_GROUP = "book_group"
 
 
+#: Each sheet's own section: the top panel that names the record. With
+#: focus there (or on its tree node), d and More act on the record itself.
+_RECORD_SECTION: dict[NodeKind, str] = {
+    NodeKind.CHARACTER: "section-char-info",
+    NodeKind.COVENANT: "section-cov-info",
+    NodeKind.LABORATORY: "section-lab-identity",
+    NodeKind.FAMILIAR: "section-fam-info",
+}
+
+
 #: Where in the tree each record can be created (STORY-110): the saga, and
 #: the covenant, group or record it would sit beside -- so a sheet's footer
 #: offers only what belongs there. A new character or laboratory defaults
@@ -259,6 +284,80 @@ _CREATE_PLACES: dict[str, frozenset[NodeKind]] = {
         }
     ),
 }
+
+
+class MenuItem(NamedTuple):
+    """One entry of the More or New menu: the letter that picks it, the
+    action WorkspaceBase._available() is asked about, its label, and the
+    method that runs it (by default `action_<action>`)."""
+
+    letter: str
+    action: str
+    label: str
+    handler: str = ""
+
+    def run(self, screen: WorkspaceBase) -> None:
+        getattr(screen, self.handler or f"action_{self.action}")()
+
+
+#: New (n): what can be made, each offered only where it belongs (see
+#: _CREATE_PLACES).
+_NEW_MENU: tuple[MenuItem, ...] = (
+    MenuItem("v", "create_covenant", "New Covenant"),
+    MenuItem("c", "create_character", "New Character"),
+    MenuItem("l", "create_laboratory", "New Laboratory"),
+    MenuItem("f", "create_familiar", "Bind Familiar"),
+)
+
+
+#: More (m): what only a few sections, or the record itself, can do. Each
+#: is offered only where _available() says it applies.
+_MORE_MENU: tuple[MenuItem, ...] = (
+    MenuItem("r", "restore", "Restore"),
+    MenuItem("i", "improve", "Improve Income"),
+    MenuItem("i", "instill_effect", "Instill an Effect"),
+    MenuItem("c", "use_charge", "Use a Charge"),
+    MenuItem("p", "perform_ritual", "Perform Ritual"),
+    MenuItem("s", "share_spell", "Share Spell"),
+    MenuItem("v", "move_vis", "Move Vis"),
+    MenuItem("l", "lab_text_access", "Lab Texts Read", "_edit_lab_text_access"),
+    MenuItem("f", "edit_fatigue", "Edit Fatigue", "_edit_fatigue"),
+    MenuItem("f", "edit_familiar_fatigue", "Edit Fatigue", "_edit_familiar_fatigue"),
+    MenuItem("i", "import_data", "Import"),
+    MenuItem("x", "export_record", "Export"),
+    MenuItem("m", "toggle_mode", "In Creation / In Play"),
+    MenuItem(
+        "w", "creation_worksheet", "Creation Worksheet", "_open_creation_worksheet"
+    ),
+    MenuItem("t", "set_date", "Set Date"),
+)
+
+
+#: The sections More offers something in by their id alone.
+_MORE_SECTIONS: dict[str, str] = {
+    "lab_text_access": "section-hermetic-background",
+    "edit_fatigue": "section-char-health",
+    "edit_familiar_fatigue": "section-fam-health",
+}
+
+
+#: A tab label's leading number, and a title's trailing count or points.
+_TAB_NUMBER = re.compile(r"^\d+ ")
+_COUNT = re.compile(r"\s*\([^)]*\)\s*$")
+
+
+def _plain(markup: str) -> str:
+    """`markup` as plain text."""
+    return Content.from_markup(markup).plain.strip()
+
+
+def _short(name: str, width: int = 24) -> str:
+    """`name`, cut to fit a footer label."""
+    return name if len(name) <= width else name[: width - 1] + "…"
+
+
+#: What e and d say when no row is chosen (a collapsed section).
+CHOOSE_FIRST = "Choose a row first."
 
 
 #: Widget ids of the workspace's two panes (also used in its DEFAULT_CSS).
@@ -304,50 +403,56 @@ _VIS_REFRESH: dict[str, tuple[str, ...]] = {
 class WorkspaceBase(Screen[None]):
     """The workspace's state and everything its actions share: the navigation
     tree and detail pane, which section is active, saving and refreshing
-    (_commit), and the a/A/e/r plumbing. The per-record actions live in the
+    (_commit), and the a / e / d plumbing. The per-record actions live in the
     mixins WorkspaceScreen combines."""
 
+    #: One verb per key, everywhere (STORY-1004's rules; see reference/
+    #: UI_Conventions.md): a / e / d act on whatever has focus -- the
+    #: highlighted row of a list, a section, or the record itself. What only
+    #: a few sections can do is in More (m); what can be made is in New (n).
+    #: The footer shows the first group at its left and GLOBAL_ACTIONS at
+    #: its right.
     BINDINGS: ClassVar[list[BindingType]] = [
-        ("n", "create_covenant", "New Covenant"),
-        ("c", "create_character", "New Character"),
-        ("l", "create_laboratory", "New Laboratory"),
-        ("f", "create_familiar", "Bind Familiar"),
-        ("ctrl+d", "delete_record", "Delete"),
         ("a", "add", "Add"),
-        ("A", "remove", "Remove"),
         ("e", "edit", "Edit"),
-        ("r", "restore", "Restore"),
-        ("i", "improve", "Improve"),
-        ("i", "instill_effect", "Instill"),
-        ("u", "use_charge", "Charge"),
-        ("u", "perform_ritual", "Perform Ritual"),
-        ("s", "share_spell", "Share Spell"),
-        ("m", "move_vis", "Move Vis"),
-        ("F", "filter_lab_texts", "Filter"),
-        ("I", "import_data", "Import"),
-        ("x", "export_record", "Export"),
+        ("d", "delete", "Delete"),
+        Binding("delete", "delete", "Delete", show=False),
+        ("slash", "filter", "Filter"),
+        ("m", "more", "More"),
+        ("n", "new", "New"),
         ("t", "advance_season", "Advance Season"),
-        # Works everywhere, but left out of the footer to keep it short.
-        Binding("T", "set_date", "Set Date", show=False),
-        ("v", "add_virtue_flaw", "Add Virtue/Flaw"),
-        ("V", "remove_virtue_flaw", "Remove Virtue/Flaw"),
-        ("escape", "app.pop_screen", "Back"),
+        ("escape", "step_out", "Back"),
         ("q", "quit", "Quit"),
+        # Moving around: not in the footer (the tabs show their numbers).
+        Binding("c", "toggle_section", "Collapse", show=False),
+        *(
+            Binding(str(number), f"show_tab({number})", f"Tab {number}", show=False)
+            for number in range(1, 10)
+        ),
     ]
 
-    #: Covenant tabs that own their own a/A/e dispatch (keyed by tab id):
+    #: The actions shown at the footer's right end: always there, whatever
+    #: has focus.
+    GLOBAL_ACTIONS: ClassVar[tuple[str, ...]] = (
+        "new",
+        "advance_season",
+        "step_out",
+        "quit",
+    )
+
+    #: Covenant tabs that own their own a / e / d dispatch (keyed by tab id):
     #: the Diary, a flat pane with no sections. On any other tab, with
     #: nothing focused in a section, the dispatch falls back to the
     #: always-visible info panel. See _active_section().
     _COVENANT_DISPATCH_TABS: ClassVar[set[str]] = {"tab-cov-diary"}
 
-    #: Character tabs that own their own a/A/e dispatch (keyed by tab id),
+    #: Character tabs that own their own a / e / d dispatch (keyed by tab id),
     #: same idea as _COVENANT_DISPATCH_TABS -- "tab-abilities" and the Diary
     #: are flat panes with no sub-sections, so they dispatch on their own tab
     #: id rather than falling back to the top panel. See _active_section().
     _CHARACTER_DISPATCH_TABS: ClassVar[set[str]] = {"tab-abilities", "tab-diary"}
 
-    #: Familiar tabs that own their own a/A/e dispatch (keyed by tab id),
+    #: Familiar tabs that own their own a / e / d dispatch (keyed by tab id),
     #: same idea as _CHARACTER_DISPATCH_TABS -- both are flat panes with no
     #: sub-sections. See _active_section().
     _FAMILIAR_DISPATCH_TABS: ClassVar[set[str]] = {
@@ -397,13 +502,17 @@ class WorkspaceBase(Screen[None]):
         self._familiar_sheet_view: FamiliarSheetView | None = None
         #: One detail-pane swap at a time (see _set_detail).
         self._detail_lock = asyncio.Lock()
+        #: While the Footer's keys are worked out (active_bindings), what
+        #: _in_pass() has computed so far: every binding asks where focus
+        #: is, and that answer is the same for all of them.
+        self._pass: dict[str, Any] | None = None
 
     def compose(self) -> ComposeResult:
         yield Header()
         with Horizontal(id="workspace-body"):
             yield Tree(escape(self.saga.name), data=(NodeKind.SAGA,), id=NAV_TREE_ID)
             yield VerticalScroll(id=DETAIL_PANE_ID)
-        yield BottomBar()
+        yield BottomBar(right_actions=self.GLOBAL_ACTIONS)
 
     def _nav_tree(self) -> Tree:
         return self.query_one(f"#{NAV_TREE_ID}", Tree)
@@ -555,10 +664,10 @@ class WorkspaceBase(Screen[None]):
                 f"Characters in {covenant.name}"
                 if covenant
                 else "Unassigned Characters",
-                "Select a character from the tree, or press 'c' to add one."
+                "Select a character from the tree, or press 'n' to add one."
                 if covenant
                 else "These characters aren't assigned to a covenant. Select one "
-                "from the tree, or press 'c' to add one.",
+                "from the tree, or press 'n' to add one.",
             )
         elif kind == NodeKind.CHARACTER:
             character = next(c for c in self.saga.characters if c.id == data[1])
@@ -584,10 +693,10 @@ class WorkspaceBase(Screen[None]):
                 f"Laboratories in {covenant.name}"
                 if covenant
                 else "Unassigned Laboratories",
-                "Select a laboratory from the tree, or press 'l' to add one."
+                "Select a laboratory from the tree, or press 'n' to add one."
                 if covenant
                 else "These laboratories aren't assigned to a covenant. Select "
-                "one from the tree, or press 'l' to add one.",
+                "one from the tree, or press 'n' to add one.",
             )
         elif kind == NodeKind.LABORATORY:
             lab = next(lab for lab in self.saga.laboratories if lab.id == data[1])
@@ -614,9 +723,32 @@ class WorkspaceBase(Screen[None]):
                 )
             )
 
+        if self._current_sheet_view() is None:
+            # Enter on a node moves into what it shows: a list view's list.
+            for rows in self._detail_pane().query(SelectableList):
+                rows.focus()
+                break
         self.refresh_bindings()
 
     def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
+        if action == "delete":
+            return self._deletes_record() or self._section_op("remove") is not None
+        if action == "more":
+            return bool(self._more_items())
+        if action == "new":
+            return bool(self._new_items())
+        if action == "filter":
+            return self._filter_target() is not None
+        if action == "toggle_section":
+            return isinstance(section_of(self.app.focused), SheetSection)
+        if action == "show_tab":
+            number = parameters[0] if parameters else 0
+            return isinstance(number, int) and number <= len(self._tab_ids())
+        return self._available(action)
+
+    def _available(self, action: str) -> bool:
+        """Whether `action` can run where focus is: what enables a/e and
+        decides what More and New offer."""
         if (
             action in _CREATE_PLACES
             and self.selected_kind not in _CREATE_PLACES[action]
@@ -624,8 +756,33 @@ class WorkspaceBase(Screen[None]):
             return False
         if action == "edit" and self.selected_kind == NodeKind.SAGA:
             return True
-        if action in ("add", "remove", "edit", "restore"):
+        if action in ("add", "remove", "edit"):
             return self._section_op(action) is not None
+        if action == "restore":
+            # Offered only while someone has departed (Magi, Companions).
+            covenant = self.selected_covenant
+            section = self._active_section() or ""
+            return (
+                self._section_op(action) is not None
+                and covenant is not None
+                and bool(
+                    inh.departed_entries_for_kind(
+                        self.saga, covenant, section.removeprefix("section-inh-")
+                    )
+                )
+            )
+        if action == "set_date":
+            return self.selected_kind == NodeKind.SAGA
+        if action in _MORE_SECTIONS:
+            return self._active_section() == _MORE_SECTIONS[action]
+        if action in ("toggle_mode", "creation_worksheet"):
+            view = self._current_sheet_view()
+            record = view.creation_record if view is not None else None
+            return (
+                record is not None
+                and self._on_record()
+                and (action == "toggle_mode" or record.in_creation)
+            )
         if action == "improve":
             return self._active_section() == "section-eco-income"
         if action in ("instill_effect", "use_charge"):
@@ -660,21 +817,12 @@ class WorkspaceBase(Screen[None]):
                 and bool(vis.destinations(self.saga, holder))
             )
         if action == "export_record":
-            return self._record_to_export() is not None
+            return self._record_to_export() is not None and self._on_record()
         if action == "import_data":
             return (
                 self.selected_kind == NodeKind.SAGA
                 or self._active_section() in _LIBRARY_SECTIONS
             )
-        if action in ("add_virtue_flaw", "remove_virtue_flaw"):
-            if self.selected_kind == NodeKind.LABORATORY:
-                return self._active_section() in LAB_VF_SECTIONS
-            if self.selected_kind == NodeKind.FAMILIAR:
-                return self._active_section() in (
-                    "section-fam-vf-virtues",
-                    "section-fam-vf-flaws",
-                )
-            return self._active_section() in ("section-vf-virtues", "section-vf-flaws")
         if action == "create_familiar":
             character = self.selected_character
             if self.selected_kind == NodeKind.CHARACTER and (
@@ -686,9 +834,221 @@ class WorkspaceBase(Screen[None]):
             return self._record_to_delete() is not None
         return True
 
+    # -- focus: one stop per section, the tree, Esc and the tab numbers --
+
+    @property
+    def focus_chain(self) -> list[Widget]:
+        """Tab and Shift+Tab stop once per section (STORY-1005)."""
+        return sheet_focus_chain(super().focus_chain)
+
+    def set_focus(
+        self,
+        widget: Widget | None,
+        scroll_visible: bool = True,
+        from_app_focus: bool = False,
+    ) -> None:
+        # Which section had focus before this call -- a mouse press focuses
+        # what it lands on before the click arrives, so a section's title
+        # needs this to tell the click that focuses it from the click that
+        # collapses it (SheetSection).
+        self.section_before_focus = section_of(self.focused)
+        if widget is not None and not self._takes_focus(widget):
+            # A click on a sheet's button, tab strip or scrolling area:
+            # none is a Tab stop, so focus there would strand the keys. A
+            # button's section takes it instead; the rest leave it be.
+            section = section_of(widget) if isinstance(widget, Button) else None
+            if section is None:
+                return
+            widget = section_stop(section)
+        super().set_focus(widget, scroll_visible, from_app_focus)
+
+    def _takes_focus(self, widget: Widget) -> bool:
+        """Whether `widget` can hold focus: anything outside the detail
+        pane, and inside it a Tab stop or a section's title."""
+        if isinstance(widget, CollapsibleTitle) or is_stop(widget):
+            return True
+        try:
+            pane = self._detail_pane()
+        except NoMatches:
+            return True
+        return widget is not pane and pane not in widget.ancestors
+
+    def _tree_focused(self) -> bool:
+        focused = self.app.focused
+        return focused is not None and focused.id == NAV_TREE_ID
+
+    def _on_record(self) -> bool:
+        """Whether focus is on the record itself rather than one of its
+        sections: its tree node, or the top panel that names it. There,
+        d deletes the record and More offers Export and the like."""
+        if self._tree_focused():
+            return True
+        section = self._active_section()
+        return section is not None and section == _RECORD_SECTION.get(
+            self.selected_kind
+        )
+
+    def action_step_out(self) -> None:
+        """Esc: from the sheet back to the tree; from the tree, back to the
+        saga picker."""
+        focused = self.app.focused
+        if focused is not None and self._detail_pane() in focused.ancestors:
+            self._nav_tree().focus()
+        else:
+            self.app.pop_screen()
+
+    def _in_pass(self, key: str, compute: Callable[[], Any]) -> Any:
+        """`compute()`, worked out once per Footer pass (see _pass); outside
+        a pass, every time."""
+        if self._pass is None:
+            return compute()
+        if key not in self._pass:
+            self._pass[key] = compute()
+        return self._pass[key]
+
+    def _tab_ids(self) -> list[str]:
+        """The ids of the tabs of the sheet on show, in order."""
+        view = self._current_sheet_view()
+        return [] if view is None else view.tab_ids
+
+    def action_show_tab(self, number: int) -> None:
+        """1 to 9: open that tab of the sheet on show and move into it."""
+        view = self._current_sheet_view()
+        tab_ids = self._tab_ids()
+        if view is None or not 1 <= number <= len(tab_ids):
+            return
+        tabbed = view.query_one(TabbedContent)
+        if tabbed.active == tab_ids[number - 1]:
+            # Already open: no TabActivated to move focus, so do it here.
+            self._focus_first_section()
+        else:
+            tabbed.active = tab_ids[number - 1]
+
+    def action_toggle_section(self) -> None:
+        """c: collapse or expand the focused section."""
+        section = section_of(self.app.focused)
+        if isinstance(section, SheetSection):
+            section.toggle()
+
+    # -- d, More, New and Filter --
+
+    def _deletes_record(self) -> bool:
+        return self._on_record() and self._record_to_delete() is not None
+
+    def action_delete(self) -> None:
+        if self._deletes_record():
+            self.action_delete_record()
+        elif (handler := self._section_op("remove")) is not None:
+            handler()
+
+    def _more_items(self) -> list[MenuItem]:
+        """What More offers where focus is."""
+        return self._in_pass(
+            "more",
+            lambda: [item for item in _MORE_MENU if self._available(item.action)],
+        )
+
+    def _new_items(self) -> list[MenuItem]:
+        """What New can make from the selected tree node."""
+        return self._in_pass(
+            "new",
+            lambda: [item for item in _NEW_MENU if self._available(item.action)],
+        )
+
+    def _run_menu(self, title: str, items: list[MenuItem]) -> None:
+        """Run the only item directly; with several, ask which."""
+        if not items:
+            return
+        if len(items) == 1:
+            items[0].run(self)
+            return
+        by_action = {item.action: item for item in items}
+
+        def handle_choice(action: str | None) -> None:
+            if action is not None:
+                by_action[action].run(self)
+
+        self.app.push_screen(
+            MenuScreen(
+                title, [(item.letter, item.action, item.label) for item in items]
+            ),
+            handle_choice,
+        )
+
+    def action_more(self) -> None:
+        self._run_menu("More", self._more_items())
+
+    def action_new(self) -> None:
+        self._run_menu("New", self._new_items())
+
+    def _filter_target(self) -> str | None:
+        """What / filters here: the Lab Texts list or the Spells list."""
+        if self._active_section() == LAB_TEXTS_SECTION:
+            return "lab_texts"
+        if self.selected_kind == NodeKind.SPELLS:
+            return "spells"
+        return None
+
+    def action_filter(self) -> None:
+        target = self._filter_target()
+        if target == "lab_texts":
+            self.action_filter_lab_texts()
+        elif target == "spells":
+            try:
+                self.query_one("#spell-search").focus()
+            except NoMatches:
+                pass
+
+    def action_filter_lab_texts(self) -> None:
+        raise NotImplementedError
+
+    def action_toggle_mode(self) -> None:
+        self._toggle_creation_mode()
+
+    def _key_labels(self) -> dict[str, str]:
+        """Footer labels that depend on where focus is: what d deletes, and
+        a menu key that has only one thing to do says what."""
+        labels: dict[str, str] = {}
+        if self.selected_kind == NodeKind.SAGA:
+            labels["edit"] = "Edit Saga"
+        if self._deletes_record():
+            record = self._record_to_delete()
+            if record is not None:
+                labels["delete"] = f"Delete {escape(_short(record.name))}"
+        more = self._more_items()
+        if len(more) == 1:
+            labels["more"] = more[0].label
+        new = self._new_items()
+        if len(new) == 1:
+            labels["new"] = new[0].label
+        return labels
+
+    @property
+    def active_bindings(self) -> dict[str, ActiveBinding]:
+        """The screen's bindings, labelled for where focus is (see
+        _key_labels)."""
+        self._pass = {}
+        try:
+            bindings = super().active_bindings
+            labels = self._key_labels()
+        finally:
+            self._pass = None
+        if not labels:
+            return bindings
+        return {
+            key: active._replace(
+                binding=replace(
+                    active.binding, description=labels[active.binding.action]
+                )
+            )
+            if active.binding.action in labels
+            else active
+            for key, active in bindings.items()
+        }
+
     def _record_to_export(self) -> transfer.Record | None:
         """The covenant, laboratory or character whose node is selected
-        (STORY-109): what 'x' exports."""
+        (STORY-109): what More's Export exports."""
         if self.selected_kind == NodeKind.CHARACTER:
             return self.selected_character
         if self.selected_kind == NodeKind.LABORATORY:
@@ -698,7 +1058,7 @@ class WorkspaceBase(Screen[None]):
         return None
 
     def action_export_record(self) -> None:
-        """'x' on a covenant, laboratory or character: write it to a file
+        """More's Export on a covenant, laboratory or character: write it to a file
         that another saga can import (STORY-109)."""
         record = self._record_to_export()
         if record is None:
@@ -759,7 +1119,6 @@ class WorkspaceBase(Screen[None]):
         self._chosen_or_pick(
             selected,
             [escape(h.label) for h in held],
-            title="Move which Raw Vis?",
             empty="No Raw Vis to move.",
             then=lambda index: self._move_vis_form(holder, held[index]),
         )
@@ -792,7 +1151,10 @@ class WorkspaceBase(Screen[None]):
         )
 
     def _active_section(self) -> str | None:
-        """Which sheet section is "active" for a/A/e (and v/V) dispatch: the
+        return self._in_pass("section", self._find_active_section)
+
+    def _find_active_section(self) -> str | None:
+        """Which sheet section is "active" for a / e / d and More: the
         nearest Collapsible around whatever has focus -- which also covers a
         sheet's top panel, outside its tabs. With none, a flat tab that
         dispatches on its own id (see _SHEET_DISPATCH), otherwise the sheet's
@@ -827,7 +1189,7 @@ class WorkspaceBase(Screen[None]):
     ) -> None:
         # Keep the Footer's binding hints (and check_action gating) in sync
         # with whichever tab the user just switched to, and give the new
-        # tab's first section focus so 'e'/'a'/'A' work immediately without
+        # tab's first section focus so a / e / d work immediately without
         # requiring an explicit Tab-key navigation first.
         view = self._current_sheet_view()
         initial = False
@@ -841,57 +1203,100 @@ class WorkspaceBase(Screen[None]):
         self.refresh_bindings()
 
     def _focus_first_section(self, *, initial: bool = False) -> None:
-        """Give the sheet a focused section, so 'e'/'a'/'A' work straight away.
+        """Give the sheet a focused section, so a / e / d work straight away.
 
         When a sheet is first shown (`initial`), focus its first section
         anywhere -- the always-visible top panel. On a later tab switch, focus
-        that tab's first section, or clear focus for a flat tab: the top
+        the tab's first stop (see widgets.first_stop): its first section, or
+        a flat tab's list. A tab with nothing to focus clears focus: the top
         panel lives outside the tabs, so a tab switch never blurs it, and
         leaving it focused would make _active_section() keep reporting it.
 
         The Laboratory is the exception on first showing: its default tab
-        (Planning) is flat, so it looks at the active tab first -- a section,
-        else its list (the seasons: 'e' plans lab work) -- and only then
-        falls back to the top panel."""
+        (Planning) is flat, so it looks at the active tab first -- its
+        seasons list, so e plans lab work straight away (STORY-901) -- and
+        only then falls back to the top panel."""
         view = self._current_sheet_view()
         if view is None:
             return
-        active_tab_first = self.selected_kind == NodeKind.LABORATORY
-        try:
-            if initial and not active_tab_first:
-                collapsible = view.query(Collapsible).first()
-            else:
+        stop: Widget | None = None
+        if not initial or self.selected_kind == NodeKind.LABORATORY:
+            try:
                 tabbed = view.query_one(TabbedContent)
                 if not tabbed.active:
                     return
-                pane = view.query_one(f"#{tabbed.active}", TabPane)
-                collapsible = pane.query(Collapsible).first()
-        except NoMatches:
-            if not initial:
+                stop = first_stop(view.query_one(f"#{tabbed.active}", TabPane))
+            except NoMatches:
+                stop = None
+            if stop is None and not initial:
                 self.screen.set_focus(None)
                 return
-            if not active_tab_first:
-                return
+        if stop is None:
             try:
-                # The laboratory's Planning tab: its seasons list, so e plans
-                # lab work straight away (STORY-901).
-                tabbed = view.query_one(TabbedContent)
-                pane = view.query_one(f"#{tabbed.active}", TabPane)
-                pane.query(SelectableList).first().focus()
-                return
-            except NoMatches:
-                pass
-            try:
-                collapsible = view.query(Collapsible).first()
+                stop = section_stop(view.query(Collapsible).first())
             except NoMatches:
                 return
-        collapsible.query_one("CollapsibleTitle").focus()
+        stop.focus()
 
     def on_descendant_focus(self, event: DescendantFocus) -> None:
         # Focus can move between Collapsible sections within the same tab
         # (no TabActivated message for that) -- keep bindings in sync then
         # too, or the Footer hint and check_action gating go stale.
         self.refresh_bindings()
+        self._update_where()
+
+    def on_selectable_list_moved(self, event: SelectableList.Moved) -> None:
+        event.stop()
+        self._update_where()
+
+    def _shown_name(self) -> str:
+        """What the selected tree node shows: the record's name, or what
+        the node lists."""
+        covenant = self.selected_covenant
+        record = {
+            NodeKind.SAGA: self.saga,
+            NodeKind.COVENANT: covenant,
+            NodeKind.CHARACTER: self.selected_character,
+            NodeKind.LABORATORY: self.selected_laboratory,
+            NodeKind.FAMILIAR: self.selected_familiar,
+        }.get(self.selected_kind)
+        if record is not None:
+            return record.name
+        where = f" in {covenant.name}" if covenant is not None else ""
+        return {
+            NodeKind.CHARACTER_GROUP: f"Characters{where}",
+            NodeKind.LABORATORY_GROUP: f"Laboratories{where}",
+            NodeKind.SPELLS: "Spells",
+            NodeKind.HOUSE_RULES: "House Rules",
+            NodeKind.SEASONS: "Seasons",
+            NodeKind.BOOK_GROUP: "Unassigned Books",
+        }.get(self.selected_kind, "")
+
+    def _update_where(self) -> None:
+        """Say where focus is in the row above the footer (STORY-1008):
+        the tree node on show, then the tab, section and chosen row."""
+        try:
+            bar = self.query_one(BottomBar)
+        except NoMatches:
+            return
+        parts = [self._shown_name()]
+        focused = self.app.focused
+        if focused is not None and not self._tree_focused():
+            view = self._current_sheet_view()
+            section = section_of(focused)
+            if view is not None:
+                tabbed = view.query_one(TabbedContent)
+                # The top panel belongs to no tab.
+                if tabbed.active and tabbed in focused.ancestors:
+                    label = str(tabbed.get_tab(tabbed.active).label)
+                    parts.append(_TAB_NUMBER.sub("", label))
+                if section is not None and section.id != _RECORD_SECTION.get(
+                    self.selected_kind
+                ):
+                    parts.append(_COUNT.sub("", _plain(section.title)))
+            if isinstance(focused, SelectableList) and focused.chosen_text:
+                parts.append(focused.chosen_text)
+        bar.set_where("  ›  ".join(escape(part) for part in parts if part))
 
     def on_descendant_blur(self, event: DescendantBlur) -> None:
         self.refresh_bindings()
@@ -992,14 +1397,13 @@ class WorkspaceBase(Screen[None]):
         )
 
     def _edit_trait(self, spec: _TraitList) -> None:
-        """Edit the chosen entry; with none chosen, ask which."""
+        """Edit the chosen entry."""
         traits = self._traits(spec)
         if traits is None:
             return
         self._chosen_or_pick(
             getattr(self, spec.selected)(),
             [label for _, label in st.trait_rows(traits)],
-            title=f"Edit which {spec.noun}?",
             empty=f"No {spec.noun}s to edit.",
             then=lambda index: self._edit_trait_at(spec, traits, index),
         )
@@ -1018,8 +1422,7 @@ class WorkspaceBase(Screen[None]):
         )
 
     def _remove_trait(self, spec: _TraitList) -> None:
-        """Delete the chosen entry, after confirming; with none chosen, ask
-        which one first."""
+        """Delete the chosen entry, after confirming."""
         traits = self._traits(spec)
         if traits is None:
             return
@@ -1030,7 +1433,6 @@ class WorkspaceBase(Screen[None]):
         self._chosen_or_pick(
             getattr(self, spec.selected)(),
             [label for _, label in st.trait_rows(traits)],
-            title=f"Remove a {spec.noun}",
             empty=f"No {spec.noun}s to remove.",
             then=remove,
         )
@@ -1040,25 +1442,22 @@ class WorkspaceBase(Screen[None]):
         selected: int | None,
         labels: Sequence[str],
         *,
-        title: str,
         empty: str,
         then: Callable[[int], object],
     ) -> None:
-        """Act on a list entry by index: the chosen row's if there is one
-        (`selected`), else the one picked from `labels` in a picker titled
-        `title` -- or, with no entries at all, just say `empty`."""
+        """Act on a list entry by index: the chosen row's (`selected`). A
+        focused list always has one (STORY-1005); with none (the section is
+        collapsed), act on the only entry there is, else say to choose a
+        row -- or, with no entries at all, just say `empty`. Nothing asks
+        "which one?" any more (the name is from when a picker did)."""
         if selected is not None and selected < len(labels):
             then(selected)
-            return
-        if not labels:
+        elif not labels:
             self.notify(empty)
-            return
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                then(index)
-
-        self.app.push_screen(RemovalPickerScreen(title, list(labels)), handle_index)
+        elif len(labels) == 1:
+            then(0)  # only one: no need to choose it
+        else:
+            self.notify(CHOOSE_FIRST)
 
     def _confirm_delete(
         self, entries: list[Any], index: int, name: str, section: str
@@ -1257,7 +1656,7 @@ class WorkspaceBase(Screen[None]):
     # -- deleting a covenant, character or laboratory --
 
     def _record_to_delete(self) -> Covenant | Character | Laboratory | None:
-        """The record ctrl+d deletes: the covenant, character or laboratory
+        """The record d deletes: the covenant, character or laboratory
         selected in the tree, if that's what's selected."""
         return {
             NodeKind.COVENANT: self.selected_covenant,
@@ -1662,8 +2061,8 @@ class WorkspaceBase(Screen[None]):
 
     def action_remove_virtue_flaw(self) -> None:
         """Delete a Virtue/Flaw of the character, laboratory or familiar on
-        show, after confirming: the row chosen in its Virtues or Flaws list,
-        or (with none chosen) the one picked from all of them."""
+        show, after confirming: the row chosen in its Virtues or Flaws
+        list."""
         target = self._virtue_flaw_target()
         if target is None:
             return
@@ -1672,8 +2071,7 @@ class WorkspaceBase(Screen[None]):
     def _remove_virtue_flaw_from(
         self, target: Character | Laboratory | Familiar, selected: int | None = None
     ) -> None:
-        """Delete `target`'s Virtue/Flaw at `selected` after confirming; with
-        None, the one picked from all of them."""
+        """Delete `target`'s Virtue/Flaw at `selected` after confirming."""
         if not target.virtues_flaws:
             self.notify("No Virtues/Flaws to remove.")
             return
@@ -1696,20 +2094,11 @@ class WorkspaceBase(Screen[None]):
                 return
             self._confirm_delete(target.virtues_flaws, index, name, section)
 
-        if selected is not None:
-            confirm(selected)
-            return
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                confirm(index)
-
-        labels = [
-            escape(catalog.describe_virtue_flaw(vf, vf_catalog))
-            for vf in target.virtues_flaws
-        ]
-        self.app.push_screen(
-            RemovalPickerScreen("Remove a Virtue or Flaw", labels), handle_index
+        self._chosen_or_pick(
+            selected,
+            [vf.vf_id for vf in target.virtues_flaws],
+            empty="No Virtues/Flaws to remove.",
+            then=confirm,
         )
 
     def _confirm_delete_lab_virtue_flaw(
@@ -1771,11 +2160,11 @@ class WorkspaceBase(Screen[None]):
         return None
 
     def _device_action_enabled(self, action: str) -> bool:
-        """Whether i / u can act on the chosen device row (see
+        """Whether More's Instill / Use a Charge can act on the chosen device row (see
         DeviceActions)."""
         return False
 
     @cached_property
     def _section_ops(self) -> dict[str, _SectionOps]:
-        """Per section id, its a/A/e/r handlers (see WorkspaceScreen)."""
+        """Per section id, its a / d / e handlers (see WorkspaceScreen)."""
         raise NotImplementedError

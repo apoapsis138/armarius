@@ -43,12 +43,11 @@ class DeviceActions(WorkspaceBase):
     def _devices_or_pick(
         self,
         *,
-        title: str,
         empty: str,
         then: Callable[[Target], object],
     ) -> None:
-        """Act on the chosen row of the active device list, or on one picked
-        from its rows (saying `empty` when there are none)."""
+        """Act on the chosen row of the active device list (saying `empty`
+        when it has none)."""
         holder = self._device_holder()
         view = self._current_sheet_view()
         if holder is None or view is None:
@@ -60,9 +59,7 @@ class DeviceActions(WorkspaceBase):
         if chosen is not None and chosen < len(targets):
             then(targets[chosen])
             return
-        self._chosen_or_pick(
-            None, labels, title=title, empty=empty, then=lambda i: then(targets[i])
-        )
+        self._chosen_or_pick(None, labels, empty=empty, then=lambda i: then(targets[i]))
 
     def _commit_devices(self) -> None:
         self._commit(*_ALL_DEVICE_SECTIONS)
@@ -86,9 +83,8 @@ class DeviceActions(WorkspaceBase):
         )
 
     def _edit_device_row(self) -> None:
-        """Edit the chosen device or effect; with none chosen, ask which."""
+        """Edit the chosen device or effect."""
         self._devices_or_pick(
-            title="Edit which device or effect?",
             empty="No enchanted devices to edit.",
             then=self._edit_target,
         )
@@ -112,9 +108,8 @@ class DeviceActions(WorkspaceBase):
 
     def _remove_device_row(self) -> None:
         """Delete the chosen device (with its effects) or effect, after
-        confirming; with none chosen, ask which first."""
+        confirming."""
         self._devices_or_pick(
-            title="Remove a device or effect",
             empty="No enchanted devices to remove.",
             then=self._confirm_remove,
         )

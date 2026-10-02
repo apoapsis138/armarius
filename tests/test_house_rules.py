@@ -246,7 +246,7 @@ async def test_house_rules_are_added_edited_and_removed_from_their_node(size):
         await pilot.press("enter")
         panel = workspace.query_one("#house-rules-panel", Static)
         assert await wait_until(pilot, lambda: "Held by: Ana" in str(panel.render()))
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         assert app.screen is workspace
         assert len(storage.load_saga("test_saga").custom_virtues_flaws) == 1
@@ -255,7 +255,7 @@ async def test_house_rules_are_added_edited_and_removed_from_their_node(size):
         await pilot.pause()
         await pilot.press("enter")
         assert await wait_until(pilot, lambda: "Feuding Abbot" in str(panel.render()))
-        await pilot.press("A")
+        await pilot.press("d")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         await pilot.press("y")
         assert await wait_until(

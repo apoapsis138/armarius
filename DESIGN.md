@@ -353,7 +353,7 @@ just the standing decisions.
   validated on Save, fits 120×45) rather than bespoke screens per dialog.
 - **In Creation / In Play** (Phase 4): the top panel of every covenant,
   laboratory and character sheet has, beside Edit, a button labelled with
-  the record's mode; it changes only when pressed (no hotkey) and asks
+  the record's mode; it changes only when pressed (or from More) and asks
   first. While In Creation the panel also offers the **Creation
   Worksheet**, a dialog listing the book's steps (each marked ✔ / ✘ / ! /
   ○) with the chosen step's budget, checks and buttons; the buttons open

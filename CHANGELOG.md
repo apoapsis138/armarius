@@ -10,6 +10,35 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.5.0 — 2026-10-01
+
+The keyboard rework: one key per verb, everywhere.
+
+- `a` adds, `e` edits and `d` deletes whatever has focus: the highlighted
+  row, the section, or the record itself (on its tree node or top panel).
+  Delete always asks first; the `Delete` key works too. Nothing asks
+  "which one?" any more: a focused list always has a row chosen.
+- `m` (More) holds the rare actions for where you are: Move Vis, Share
+  Spell, Perform Ritual, Improve Income, Instill an Effect, Use a Charge,
+  Restore, Export, Import, Set Date, In Creation / In Play and the Creation
+  Worksheet. With one action it runs at once and the footer names it; with
+  several it opens a menu, a letter each.
+- `n` (New) makes a Covenant, Character, Laboratory or Familiar. `/`
+  filters: the Lab Texts filter, or the search box on Spells.
+- `Tab` and `Shift+Tab` stop once per section instead of on every button
+  and title. `1` to `9` open the numbered tabs. `Esc` steps out: sheet,
+  then tree, then the saga picker. `c` collapses or expands the focused
+  section; Enter on a title no longer does.
+- Mouse: a click on a section that isn't focused only focuses it. A click
+  on the focused section's title collapses or expands it. A click on a
+  sheet button leaves focus on its section.
+- The footer shows the focused section's keys on the left and the fixed
+  ones on the right, and the row above it says where you are.
+- After a delete the next row is chosen (a second `d` still asks).
+- Gone: `A`, `v`, `V`, `Ctrl+D`, `r`, `i`, `u`, `s`, `I`, `x`, `T`, `F`,
+  and `c` / `l` / `f` as create keys.
+- Fixed: editing an existing Vis Source crashed.
+
 ## 2.4.0 — 2026-10-01
 
 Lab Texts, House Rules, and moving records between sagas.

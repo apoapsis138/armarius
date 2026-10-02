@@ -18,10 +18,10 @@
       Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
-   Planning  Lab Totals  Virtues & Flaws  Attributes  Inventory  Diary
+   1 Planning  2 Lab Totals  3 Virtues & Flaws  4 Attributes  5 Inventory  6 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Leandro's seasons  e plan lab work, a start a new spell, A clear
+  Leandro's seasons  e plan lab work, a start a new spell, d clear
   ○ Spring 1220                nothing planned
 
 
@@ -61,7 +61,7 @@
       Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
-   Planning  Lab Totals  Virtues & Flaws  Attributes  Inventory  Diary
+   1 Planning  2 Lab Totals  3 Virtues & Flaws  4 Attributes  5 Inventory  6 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -104,7 +104,7 @@
       Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
-   Planning  Lab Totals  Virtues & Flaws  Attributes  Inventory  Diary
+   1 Planning  2 Lab Totals  3 Virtues & Flaws  4 Attributes  5 Inventory  6 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -147,7 +147,7 @@
       Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
-   Planning  Lab Totals  Virtues & Flaws  Attributes  Inventory  Diary
+   1 Planning  2 Lab Totals  3 Virtues & Flaws  4 Attributes  5 Inventory  6 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -190,7 +190,7 @@
       Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
-   Planning  Lab Totals  Virtues & Flaws  Attributes  Inventory  Diary
+   1 Planning  2 Lab Totals  3 Virtues & Flaws  4 Attributes  5 Inventory  6 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -233,7 +233,7 @@
       Base Safety:   0    Upkeep:          +0 +0 = +0    Aesthetics: +0 +2 = +2
           Edit (e)
 
-   Planning  Lab Totals  Virtues & Flaws  Attributes  Inventory  Diary
+   1 Planning  2 Lab Totals  3 Virtues & Flaws  4 Attributes  5 Inventory  6 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ○ 1220 Spring  -  Built

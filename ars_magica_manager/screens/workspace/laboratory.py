@@ -167,8 +167,7 @@ class LaboratoryActions(WorkspaceBase):
         self.app.push_screen(_lab_specialty_entry_dialog(), handle_result)
 
     def _edit_specialty_entry(self) -> None:
-        """Edit the chosen Specialization source; with none chosen, ask which
-        one."""
+        """Edit the chosen Specialization source."""
         lab = self.selected_laboratory
         if lab is None:
             return
@@ -187,14 +186,12 @@ class LaboratoryActions(WorkspaceBase):
         self._chosen_or_pick(
             self._lab_view_selection("selected_specialty_entry"),
             [label for _, label in lab_text.specialty_entry_rows(lab)],
-            title="Edit which Specialization source?",
             empty="No Specialization sources to edit.",
             then=edit,
         )
 
     def _remove_specialty_entry(self) -> None:
-        """Delete the chosen Specialization source (after confirming); with
-        none chosen, ask which one first."""
+        """Delete the chosen Specialization source (after confirming)."""
         lab = self.selected_laboratory
         if lab is None:
             return
@@ -224,7 +221,6 @@ class LaboratoryActions(WorkspaceBase):
         self._chosen_or_pick(
             self._lab_view_selection("selected_specialty_entry"),
             [label for _, label in lab_text.specialty_entry_rows(lab)],
-            title="Remove a Specialization source",
             empty="No Specialization sources to remove.",
             then=confirm,
         )
@@ -247,14 +243,13 @@ class LaboratoryActions(WorkspaceBase):
 
     def _edit_feature(self) -> None:
         """Edit the chosen Feature (type and Virtue, then name, points and
-        Focus); with none chosen, ask which one."""
+        Focus)."""
         lab = self.selected_laboratory
         if lab is None:
             return
         self._chosen_or_pick(
             self._lab_view_selection("selected_feature"),
             [escape(f.name) for f in lab.features],
-            title="Edit which Feature?",
             empty="No Features to edit.",
             then=lambda index: self._feature_flow(lab, lab.features[index]),
         )
@@ -339,7 +334,7 @@ class LaboratoryActions(WorkspaceBase):
 
     def _remove_feature(self) -> None:
         """Delete the chosen Feature (after confirming; its Feature Virtue
-        stays, free for another); with none chosen, ask which one first."""
+        stays, free for another)."""
         lab = self.selected_laboratory
         if lab is None:
             return
@@ -369,7 +364,6 @@ class LaboratoryActions(WorkspaceBase):
         self._chosen_or_pick(
             self._lab_view_selection("selected_feature"),
             [escape(f.name) for f in lab.features],
-            title="Remove a Feature",
             empty="No Features to remove.",
             then=confirm,
         )
@@ -402,7 +396,7 @@ class LaboratoryActions(WorkspaceBase):
         )
 
     def _edit_named(self, section: str) -> None:
-        """Edit the chosen entry; with none chosen, ask which one."""
+        """Edit the chosen entry."""
         lab = self.selected_laboratory
         if lab is None:
             return
@@ -425,14 +419,12 @@ class LaboratoryActions(WorkspaceBase):
         self._chosen_or_pick(
             self._lab_view_selection(spec.selected),
             [label for _, label in lab_text.named_rows(entries)],
-            title=f"Edit which {spec.noun}?",
             empty=f"No {spec.plural} to edit.",
             then=edit,
         )
 
     def _remove_named(self, section: str) -> None:
-        """Delete the chosen entry (after confirming); with none chosen, ask
-        which one first."""
+        """Delete the chosen entry (after confirming)."""
         lab = self.selected_laboratory
         if lab is None:
             return
@@ -441,7 +433,6 @@ class LaboratoryActions(WorkspaceBase):
         self._chosen_or_pick(
             self._lab_view_selection(spec.selected),
             [label for _, label in lab_text.named_rows(entries)],
-            title=f"Remove {spec.article}",
             empty=f"No {spec.plural} to remove.",
             then=lambda index: self._confirm_delete(
                 entries, index, entries[index].name, section
@@ -465,7 +456,7 @@ class LaboratoryActions(WorkspaceBase):
         )
 
     def _edit_connection(self) -> None:
-        """Edit the chosen Arcane Connection; with none chosen, ask which."""
+        """Edit the chosen Arcane Connection."""
         lab = self.selected_laboratory
         if lab is None:
             return
@@ -486,14 +477,12 @@ class LaboratoryActions(WorkspaceBase):
         self._chosen_or_pick(
             self._lab_view_selection("selected_connection"),
             [c.to for c in lab.arcane_connections],
-            title="Edit which Arcane Connection?",
             empty="No Arcane Connections to edit.",
             then=edit,
         )
 
     def _remove_connection(self) -> None:
-        """Delete the chosen Arcane Connection (after confirming); with none
-        chosen, ask which first."""
+        """Delete the chosen Arcane Connection (after confirming)."""
         lab = self.selected_laboratory
         if lab is None:
             return
@@ -501,7 +490,6 @@ class LaboratoryActions(WorkspaceBase):
         self._chosen_or_pick(
             self._lab_view_selection("selected_connection"),
             [c.to for c in entries],
-            title="Remove an Arcane Connection",
             empty="No Arcane Connections to remove.",
             then=lambda index: self._confirm_delete(
                 entries,
@@ -527,7 +515,7 @@ class LaboratoryActions(WorkspaceBase):
         self.app.push_screen(_raw_vis_dialog(), handle_result)
 
     def _edit_lab_raw_vis(self) -> None:
-        """Edit the chosen Raw Vis entry; with none chosen, ask which one."""
+        """Edit the chosen Raw Vis entry."""
         lab = self.selected_laboratory
         if lab is None:
             return
@@ -550,14 +538,12 @@ class LaboratoryActions(WorkspaceBase):
         self._chosen_or_pick(
             self._lab_view_selection("selected_raw_vis"),
             [label for _, label in lab_text.raw_vis_rows(lab)],
-            title="Edit which Raw Vis entry?",
             empty="No Raw Vis to edit.",
             then=edit,
         )
 
     def _remove_lab_raw_vis(self) -> None:
-        """Delete the chosen Raw Vis entry (after confirming); with none
-        chosen, ask which one first."""
+        """Delete the chosen Raw Vis entry (after confirming)."""
         lab = self.selected_laboratory
         if lab is None:
             return
@@ -578,7 +564,6 @@ class LaboratoryActions(WorkspaceBase):
         self._chosen_or_pick(
             self._lab_view_selection("selected_raw_vis"),
             [label for _, label in lab_text.raw_vis_rows(lab)],
-            title="Remove a Raw Vis entry",
             empty="No Raw Vis to remove.",
             then=confirm,
         )
@@ -694,7 +679,7 @@ class LaboratoryActions(WorkspaceBase):
         )
 
     def _edit_diary_entry(self) -> None:
-        """Edit the chosen Diary entry; with none chosen, ask which one."""
+        """Edit the chosen Diary entry."""
         lab = self.selected_laboratory
         if lab is None:
             return
@@ -713,21 +698,18 @@ class LaboratoryActions(WorkspaceBase):
         self._chosen_or_pick(
             self._lab_view_selection("selected_diary_entry"),
             [label for _, label in lab_text.diary_rows(lab.diary)],
-            title="Edit which Diary Entry?",
             empty="No Diary entries to edit.",
             then=edit,
         )
 
     def _remove_diary_entry(self) -> None:
-        """Delete the chosen Diary entry (after confirming); with none
-        chosen, ask which one first."""
+        """Delete the chosen Diary entry (after confirming)."""
         lab = self.selected_laboratory
         if lab is None:
             return
         self._chosen_or_pick(
             self._lab_view_selection("selected_diary_entry"),
             [label for _, label in lab_text.diary_rows(lab.diary)],
-            title="Remove a Diary Entry",
             empty="No Diary entries to remove.",
             then=lambda index: self._confirm_delete(
                 lab.diary, index, lab.diary[index].name, "tab-lab-diary"

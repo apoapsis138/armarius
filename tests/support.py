@@ -72,6 +72,19 @@ async def wait_until(pilot, condition, timeout: float = 2.0, interval: float = 0
     return condition()
 
 
+async def menu(pilot, app, key: str, label: str) -> None:
+    """Press a menu key (`m` More or `n` New) and pick `label` -- or, when
+    it is the only thing the menu has to offer there, it runs at once."""
+    from ars_magica_manager.screens.prompts import MenuScreen
+
+    await pilot.press(key)
+    await pilot.pause()
+    if isinstance(app.screen, MenuScreen):
+        letter = next(letter for letter, _, item in app.screen.items if item == label)
+        await pilot.press(letter)
+        await pilot.pause()
+
+
 async def build_all_tabs(pilot, view) -> None:
     """Build every tab of a sheet view that's just been opened (tabs are
     built on first visit -- STORY-1120), for a test that reaches into a tab

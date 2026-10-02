@@ -84,7 +84,7 @@ from .widgets import (
     points_title,
 )
 
-#: The covenant Library tab's sections, where 'I' imports books into the
+#: The covenant Library tab's sections, where More's Import puts books into the
 #: covenant's library.
 _LIBRARY_SECTIONS: frozenset[str] = frozenset(
     {"section-lib-summary", "section-lib-books"}
@@ -104,7 +104,7 @@ DEVICE_SECTIONS: dict[str, str] = {
 LAB_TEXTS_SECTION = "section-lab-texts"
 
 #: Section ids of every book list (see BookListView); 'a' in any of them adds
-#: a book, and 'e'/'A' act on books everywhere but the read-only Summary.
+#: a book, and e / d act on books everywhere but the read-only Summary.
 BOOK_SECTIONS: frozenset[str] = frozenset(
     {
         "section-lib-summary",
@@ -305,7 +305,7 @@ class BookListView(Vertical):
             return  # the sheet is being replaced
 
 
-#: The House Rules view's list section (a/A/e act on user-made entries).
+#: The House Rules view's list section (a / e / d act on user-made entries).
 HOUSE_RULES_SECTION = "section-house-rules"
 
 
@@ -457,7 +457,7 @@ class LabTextListView(BookListView):
         return lt.detail_text(self.saga, self._reader(), book)
 
 
-#: The Spells view's list section (a/A/e act on the saga's own spells).
+#: The Spells view's list section (a / e / d act on the saga's own spells).
 SPELL_SECTION = "section-spells"
 
 
@@ -748,6 +748,9 @@ class SheetView(Vertical):
         #: order. Filled while composing by _static()/_list()/_on_refresh(),
         #: so a widget's render call is written once, where it's built.
         self._refreshers: dict[str, list[Callable[[], None]]] = {}
+        #: The ids of the tabs _tab() has made, in order (they are numbered
+        #: as they go; the workspace's 1 to 9 keys open them).
+        self.tab_ids: list[str] = []
 
     #: The tab shown first, built as the sheet opens (the others are built on
     #: first visit -- see LazyTabPane).
@@ -756,8 +759,15 @@ class SheetView(Vertical):
     def _tab(
         self, title: str, id: str, build: Callable[[], ComposeResult]
     ) -> LazyTabPane:
-        """A tab showing what `build` composes, built when first shown."""
-        return LazyTabPane(title, build, id=id, lazy=id != self.INITIAL_TAB)
+        """A tab showing what `build` composes, built when first shown. Its
+        title leads with its number: the key that opens it (STORY-1005)."""
+        self.tab_ids.append(id)
+        return LazyTabPane(
+            f"{len(self.tab_ids)} {title}",
+            build,
+            id=id,
+            lazy=id != self.INITIAL_TAB,
+        )
 
     @property
     def creation_record(self) -> Character | Covenant | Laboratory | None:
@@ -772,7 +782,7 @@ class SheetView(Vertical):
     def _top_buttons(self, edit_id: str) -> ComposeResult:
         """The top panel's Edit button and, beside it, the switch between In
         Creation and In Play: labelled with the current mode, changed only by
-        clicking it or its Enter while it has focus -- no hotkey."""
+        clicking it or More's "In Creation / In Play" -- no key of its own."""
         record = self.creation_record
         with Horizontal(classes="sheet-buttons"):
             yield Button("Edit (e)", id=edit_id, compact=True)
@@ -999,7 +1009,7 @@ class CharacterSheetView(SheetView):
     - Diary (tab, id "tab-diary", every character type): a flat pane like
       the laboratory's Diary -- the entries written as seasons are applied
       (editable), with the details panel docked below. In
-      _CHARACTER_DISPATCH_TABS, so a/A/e act on it.
+      _CHARACTER_DISPATCH_TABS, so a / e / d act on it.
     """
 
     DEFAULT_CSS = """
@@ -1968,7 +1978,7 @@ class LaboratorySheetView(SheetView):
             return "[dim]No owner: give the laboratory one to plan its seasons.[/]"
         return (
             f"[b]{escape(owner.name)}'s seasons[/]  [dim]e plan lab work, "
-            "a start a new spell, A clear[/]"
+            "a start a new spell, d clear[/]"
         )
 
     def selected_lab_season(self) -> int | None:

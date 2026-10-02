@@ -31,6 +31,7 @@ from ars_magica_manager.rules import seasons as rules
 from ars_magica_manager.rules import supplement_seasons as sup
 from ars_magica_manager.rules.xp import ability_xp
 from ars_magica_manager.screens import ConfirmScreen, FieldsDialog, WorkspaceScreen
+from ars_magica_manager.screens.widgets import section_stop
 
 
 def _magus() -> Character:
@@ -364,9 +365,7 @@ async def _open_season(pilot, app) -> None:
     await pilot.pause()
     view.query_one(TabbedContent).active = "tab-planning"
     await pilot.pause()
-    view.query_one("#section-char-season", Collapsible).query_one(
-        "CollapsibleTitle"
-    ).focus()
+    section_stop(view.query_one("#section-char-season", Collapsible)).focus()
     await wait_until(
         pilot, lambda: app.screen._active_section() == "section-char-season"
     )
@@ -456,7 +455,7 @@ async def test_clear_a_plan_after_confirming():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
         await _open_season(pilot, app)
-        await pilot.press("A")
+        await pilot.press("d")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         await pilot.press("y")
         assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
@@ -544,18 +543,16 @@ async def test_plan_a_season_from_the_covenant_seasons_tab():
         await wait_until(
             pilot, lambda: app.screen._active_section() == "section-cov-seasons-magus"
         )
-        view.query_one("#section-cov-seasons-companion", Collapsible).query_one(
-            "CollapsibleTitle"
+        section_stop(
+            view.query_one("#section-cov-seasons-companion", Collapsible)
         ).focus()
         await wait_until(
             pilot,
             lambda: app.screen._active_section() == "section-cov-seasons-companion",
         )
         workspace = app.screen
-        await pilot.press("e")  # nothing chosen: pick whose season
+        await pilot.press("e")  # the first Companion is chosen: Alys
         assert await wait_until(pilot, lambda: app.screen is not workspace)
-        assert not isinstance(app.screen, FieldsDialog)
-        await pilot.press("enter")
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         dialog = app.screen
         assert dialog.title_text == "Plan Alys's Season (Spring 1220)"

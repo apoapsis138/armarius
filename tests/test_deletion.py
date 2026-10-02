@@ -1,6 +1,6 @@
 """Deleting covenants, characters and laboratories (STORY-108): what goes with
 them, what's left behind unassigned, and the workspace's confirmed
-ctrl+d key."""
+d key."""
 
 from support import wait_until
 from textual.widgets import Tree
@@ -219,12 +219,12 @@ def _walk(node):
         yield from _walk(child)
 
 
-async def test_ctrl_d_deletes_the_selected_character_after_confirming():
+async def test_d_deletes_the_selected_character_after_confirming():
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
         await _open(pilot, app, ("character", "magus1"))
-        await pilot.press("ctrl+d")
+        await pilot.press("d")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         await pilot.press("y")
         assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
@@ -242,7 +242,7 @@ async def test_answering_no_keeps_the_covenant():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
         await _open(pilot, app, ("covenant", "cov1"))
-        await pilot.press("ctrl+d")
+        await pilot.press("d")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         await pilot.press("n")
         assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
@@ -250,7 +250,7 @@ async def test_answering_no_keeps_the_covenant():
         assert [c.id for c in storage.load_saga("s").covenants] == ["cov1"]
 
 
-async def test_ctrl_d_is_only_offered_for_covenants_characters_and_laboratories():
+async def test_deleting_is_only_offered_for_covenants_characters_and_laboratories():
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:

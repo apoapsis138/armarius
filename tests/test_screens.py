@@ -2,7 +2,7 @@ import asyncio
 import re
 from pathlib import Path
 
-from support import build_all_tabs, strip_markup, wait_until
+from support import build_all_tabs, menu, strip_markup, wait_until
 from textual.app import App
 from textual.widgets import (
     Button,
@@ -88,6 +88,7 @@ from ars_magica_manager.screens.widgets import (
     LIST_COLUMN_GAP,
     TEXT_COLUMN_GAP,
     DetailsPanel,
+    section_stop,
 )
 
 
@@ -208,7 +209,7 @@ async def test_vf_picker_opens_on_the_side_of_its_section():
             ("section-vf-virtues", "Virtue", "Add a Virtue"),
         ):
             await _open_section(pilot, app, section)
-            await pilot.press("v")
+            await pilot.press("a")
             await _wait_for_screen(pilot, app, VirtueFlawPickerScreen)
             await _wait_for_picker_ready(pilot, app)
             picker = app.screen
@@ -329,7 +330,7 @@ async def test_familiar_vf_picker_offers_animal_and_magic_being_entries():
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_familiar(pilot, app)
         await _open_familiar_section(pilot, app, "section-fam-vf-virtues")
-        await pilot.press("v")
+        await pilot.press("a")
         await _wait_for_screen(pilot, app, VirtueFlawPickerScreen)
         await _wait_for_picker_ready(pilot, app)
         listed = {entry.id for entry in _vf_listed(app.screen)}
@@ -358,7 +359,7 @@ async def test_a_companion_can_become_a_mythic_companion():
 
 
 async def _wait_until_active(pilot, app, section_id: str) -> None:
-    """Wait for `section_id` to be what a/A/e dispatch to, and fail clearly
+    """Wait for `section_id` to be what a / e / d dispatch to, and fail clearly
     if it never becomes so."""
     await wait_until(pilot, lambda: app.screen._active_section() == section_id)
     assert app.screen._active_section() == section_id, (
@@ -480,7 +481,7 @@ async def _open_section(pilot, app, section_id: str) -> None:
     section currently has focus (its title, since CollapsibleTitle is the
     focusable part -- see WorkspaceScreen._active_section()), so
     most character-mutation tests need this before pressing
-    'a'/'A'/'e'/'v'/'V'. `section_id` may also be "tab-abilities", the one
+    a / e / d. `section_id` may also be "tab-abilities", the one
     tab with no sub-sections, or one of the top-panel sections (Info/
     Characteristics), which are focused directly regardless of which tab is
     active.
@@ -497,7 +498,7 @@ async def _open_section(pilot, app, section_id: str) -> None:
         await pilot.pause()
     if section_id != _SECTION_TAB[section_id]:
         collapsible = view.query_one(f"#{section_id}", Collapsible)
-        collapsible.query_one("CollapsibleTitle").focus()
+        section_stop(collapsible).focus()
         await pilot.pause()
     await _wait_until_active(pilot, app, section_id)
 
@@ -534,7 +535,7 @@ async def _open_lab_section(pilot, app, section_id: str) -> None:
     await pilot.pause()
     if section_id in ("section-lab-identity", "section-lab-characteristics"):
         collapsible = view.query_one(f"#{section_id}", Collapsible)
-        collapsible.query_one("CollapsibleTitle").focus()
+        section_stop(collapsible).focus()
         await pilot.pause()
         return
     tab_id = _LAB_SECTION_TAB[section_id]
@@ -542,7 +543,7 @@ async def _open_lab_section(pilot, app, section_id: str) -> None:
     await pilot.pause()
     if section_id != tab_id:
         collapsible = view.query_one(f"#{section_id}", Collapsible)
-        collapsible.query_one("CollapsibleTitle").focus()
+        section_stop(collapsible).focus()
         await pilot.pause()
     else:
         # A flat tab: wait for the tab switch to clear focus so dispatch
@@ -665,7 +666,7 @@ async def test_create_covenant_flow_saves_covenant():
     async with app.run_test() as pilot:
         await _open_workspace(pilot)
 
-        await pilot.press("n")
+        await menu(pilot, app, "n", "New Covenant")
         await pilot.pause()
         assert _is_form(app.screen, "Create a New Covenant")
 
@@ -776,7 +777,7 @@ async def test_create_character_at_saga_level_is_unassigned_and_selectable():
         await _open_workspace(pilot)
         assert app.screen.selected_kind == "saga"
 
-        await pilot.press("c")
+        await menu(pilot, app, "n", "New Character")
         await pilot.pause()
         assert _is_form(app.screen, "Create a New Character")
         # No covenant is selected, so the dialog defaults to none.
@@ -838,7 +839,7 @@ async def test_create_character_defaults_to_current_covenant():
     async with app.run_test() as pilot:
         await _select_covenant(pilot, app)
 
-        await pilot.press("c")
+        await menu(pilot, app, "n", "New Character")
         await pilot.pause()
         assert _is_form(app.screen, "Create a New Character")
 
@@ -1049,7 +1050,7 @@ _FAM_SECTION_TAB: dict[str, str] = {
 
 async def _open_familiar_section(pilot, app, section_id: str) -> None:
     """Switch to the tab containing `section_id` and focus that section (so
-    its a/A/e/v/V keys apply). Same idea as the character sheet's own
+    its a / e / d keys apply). Same idea as the character sheet's own
     _open_section()."""
     view = app.screen._familiar_sheet_view
     assert view is not None, "no familiar sheet is currently shown"
@@ -1060,7 +1061,7 @@ async def _open_familiar_section(pilot, app, section_id: str) -> None:
     await pilot.pause()
     if section_id != tab_id:
         collapsible = view.query_one(f"#{section_id}", Collapsible)
-        collapsible.query_one("CollapsibleTitle").focus()
+        section_stop(collapsible).focus()
         await pilot.pause()
     await _wait_until_active(pilot, app, section_id)
 
@@ -1073,7 +1074,7 @@ async def test_binding_a_familiar_nests_it_under_its_magus_and_grants_shared_tra
         await _select_character(pilot, app)
         assert isinstance(app.screen, WorkspaceScreen)
 
-        await pilot.press("f")
+        await menu(pilot, app, "n", "Bind Familiar")
         await pilot.pause()
         assert _is_form(app.screen, "Bind a New Familiar")
         # A magus was already selected: it's preselected as the default.
@@ -1115,13 +1116,13 @@ async def test_bind_familiar_only_defaults_to_the_magus_on_show():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_character(pilot, app)
-        # A laboratory or Spells doesn't offer 'f' at all (STORY-110).
+        # A laboratory or Spells doesn't offer Bind Familiar at all (STORY-110).
         for node in (("laboratory", "lab1"), ("spells",)):
             await _select(pilot, app, node)
             assert app.screen.check_action("create_familiar", ()) is False
         for node in (("covenant", "cov1"), ("saga",)):
             await _select(pilot, app, node)
-            await pilot.press("f")
+            await menu(pilot, app, "n", "Bind Familiar")
             assert await wait_until(
                 pilot, lambda: _is_form(app.screen, "Bind a New Familiar")
             )
@@ -1183,9 +1184,8 @@ async def test_create_familiar_is_disabled_once_every_magus_has_one():
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_character(pilot, app)
         assert app.screen.check_action("create_familiar", ()) is False
-        await pilot.press("f")
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)  # refused, no dialog
+        # New doesn't offer it.
+        assert [item.label for item in app.screen._new_items()] == ["New Character"]
 
 
 async def test_editing_familiar_info_updates_the_top_panel_and_tree():
@@ -1316,10 +1316,7 @@ async def test_familiar_natural_weapons_use_generic_add_edit_remove():
         list_widget = view.query_one("#fam-natural-weapons-list", SelectableList)
         assert any("Bite" in str(o.prompt) for o in list_widget.options)
 
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
@@ -1361,19 +1358,13 @@ async def test_familiar_abilities_use_generic_add_edit_remove():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
-        await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
         app.screen.query_one("#fld-xp", Input).value = "50"
         await pilot.click("#btn-save")
         await pilot.pause()
         assert "Athletics (Running) 4 50/75" in _fam_ability_labels(view)
 
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
@@ -1383,7 +1374,7 @@ async def test_familiar_abilities_use_generic_add_edit_remove():
     assert storage.load_saga("test_saga").familiars[0].abilities == []
 
 
-async def test_familiar_virtues_flaws_add_via_v_and_remove_via_shift_v():
+async def test_familiar_virtues_flaws_add_via_a_and_delete_via_d():
     storage.save_saga(_saga_with_familiar())
 
     app = ArsMagicaManagerApp()
@@ -1392,7 +1383,7 @@ async def test_familiar_virtues_flaws_add_via_v_and_remove_via_shift_v():
         await _open_familiar_section(pilot, app, "section-fam-vf-virtues")
         assert app.screen.check_action("add_virtue_flaw", ()) is True
 
-        await pilot.press("v")
+        await pilot.press("a")
         await pilot.pause()
         assert isinstance(app.screen, VirtueFlawPickerScreen)
         await pilot.press("escape")
@@ -1408,10 +1399,8 @@ async def test_familiar_virtues_flaws_add_via_v_and_remove_via_shift_v():
         await _select_familiar(pilot, app2)
         await _open_familiar_section(pilot, app2, "section-fam-vf-virtues")
         assert app2.screen.check_action("remove_virtue_flaw", ()) is True
-        await pilot.press("V")
+        await pilot.press("d")
         await pilot.pause()
-        assert isinstance(app2.screen, RemovalPickerScreen)
-        await pilot.press("enter")
         await wait_until(pilot, lambda: isinstance(app2.screen, ConfirmScreen))
         await pilot.press("y")
         await wait_until(pilot, lambda: isinstance(app2.screen, WorkspaceScreen))
@@ -1442,7 +1431,7 @@ async def test_removing_a_familiar_virtue_flaw_uses_the_chosen_row_and_confirms(
         rows.highlighted = position
         assert await wait_until(pilot, lambda: rows._marked == position)
 
-        await pilot.press("V")
+        await pilot.press("d")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         message = str(app.screen.query_one("#confirm-message", Static).render())
         assert "Puissant" in message, message
@@ -1450,7 +1439,7 @@ async def test_removing_a_familiar_virtue_flaw_uses_the_chosen_row_and_confirms(
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         assert len(storage.load_saga("test_saga").familiars[0].virtues_flaws) == 3
 
-        await pilot.press("V")
+        await pilot.press("d")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         await pilot.press("y")
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
@@ -1512,7 +1501,7 @@ async def test_add_virtue_flaw_without_parameters_to_character():
         await _select_character(pilot, app)
         await _open_section(pilot, app, "section-vf-virtues")
 
-        await pilot.press("v")
+        await pilot.press("a")
         await pilot.pause()
         assert isinstance(app.screen, VirtueFlawPickerScreen)
 
@@ -1535,7 +1524,7 @@ async def test_add_virtue_flaw_with_parameters_to_character():
         await _select_character(pilot, app)
         await _open_section(pilot, app, "section-vf-virtues")
 
-        await pilot.press("v")
+        await pilot.press("a")
         await pilot.pause()
 
         await _select_vf_picker_entry(pilot, app, "vf_affinity_with_art")
@@ -1566,7 +1555,7 @@ async def test_cancelling_param_screen_returns_to_picker_without_adding():
         await _select_character(pilot, app)
         await _open_section(pilot, app, "section-vf-virtues")
 
-        await pilot.press("v")
+        await pilot.press("a")
         await pilot.pause()
         await _wait_for_picker_ready(pilot, app)
         picker_list = app.screen.query_one("#vf-picker-list", ListView)
@@ -1598,7 +1587,7 @@ async def test_virtue_flaw_picker_excludes_held_entries_unless_repeatable():
         await _select_character(pilot, app)
         await _open_section(pilot, app, "section-vf-virtues")
 
-        await pilot.press("v")
+        await pilot.press("a")
         await pilot.pause()
         await _wait_for_picker_ready(pilot, app)
 
@@ -1617,7 +1606,7 @@ async def test_virtue_flaw_picker_search_filters_by_typed_text():
         await _select_character(pilot, app)
         await _open_section(pilot, app, "section-vf-virtues")
 
-        await pilot.press("v")
+        await pilot.press("a")
         await pilot.pause()
         assert isinstance(app.screen, VirtueFlawPickerScreen)
 
@@ -1664,7 +1653,7 @@ async def test_lab_virtue_flaw_picker_search_filters_by_typed_text():
         await _select(pilot, app, ("laboratory", "lab1"))
         await _open_lab_section(pilot, app, "section-lab-vf-virtues")
 
-        await pilot.press("v")
+        await pilot.press("a")
         await pilot.pause()
         assert isinstance(app.screen, LabVirtueFlawPickerScreen)
 
@@ -1739,7 +1728,7 @@ async def test_add_virtue_flaw_to_laboratory_uses_lab_picker():
         await _select(pilot, app, ("laboratory", "lab1"))
         await _open_lab_section(pilot, app, "section-lab-vf-virtues")
 
-        await pilot.press("v")
+        await pilot.press("a")
         await pilot.pause()
         assert isinstance(app.screen, LabVirtueFlawPickerScreen)
 
@@ -1779,7 +1768,7 @@ async def test_create_laboratory_flow_saves_laboratory():
     async with app.run_test() as pilot:
         await _select_covenant(pilot, app)
 
-        await pilot.press("l")
+        await menu(pilot, app, "n", "New Laboratory")
         await pilot.pause()
         assert _is_form(app.screen, "Create a New Laboratory")
 
@@ -1872,11 +1861,7 @@ async def test_remove_ability_from_character():
         await _open_section(pilot, app, "tab-abilities")
         assert "Magic Theory" in _ability_labels(app.screen._character_sheet_view)
 
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-
-        await pilot.press("enter")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
@@ -1900,11 +1885,7 @@ async def test_remove_virtue_flaw_from_character():
             app.screen._character_sheet_view
         )
 
-        await pilot.press("V")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-
-        await pilot.press("enter")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
@@ -1931,16 +1912,14 @@ async def test_remove_virtue_flaw_from_laboratory():
         assert "Superior Construction" in _lab_rows(view, "lab-vf-virtues-list")[0]
 
         # Nothing chosen: pick which one first.
-        await pilot.press("V")
+        await pilot.press("d")
         await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
         await _confirm(pilot, app, "n")  # No keeps it
         assert "Superior Construction" in _lab_rows(view, "lab-vf-virtues-list")[0]
 
         # The chosen row: straight to the confirmation.
         await _choose_lab_row(pilot, view, "lab-vf-virtues-list", 0)
-        await pilot.press("V")
+        await pilot.press("d")
         await _confirm(pilot, app, "y")
         assert _lab_rows(view, "lab-vf-virtues-list") == []
 
@@ -1980,11 +1959,11 @@ async def test_lab_vf_tab_warns_and_fills_the_details_panel():
 
         # Deleting the chosen Flaw (after confirming) leaves the lab further
         # over capacity; removing the Feature clears the warning.
-        await pilot.press("V")
+        await pilot.press("d")
         await _confirm(pilot, app, "y")
         assert "Over capacity by 3" in str(warnings.content)
         await _choose_lab_row(pilot, view, "lab-vf-virtues-list", 0)
-        await pilot.press("V")
+        await pilot.press("d")
         await _confirm(pilot, app, "y")
         assert not warnings.display
 
@@ -1997,14 +1976,14 @@ async def test_remove_with_nothing_to_remove_stays_on_same_screen():
         await _select_character(pilot, app)
         await _open_section(pilot, app, "tab-abilities")
 
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
 
         # Nothing to remove -- stays on the workspace, no picker opened.
         assert isinstance(app.screen, WorkspaceScreen)
 
 
-async def test_cancelling_removal_picker_keeps_the_item():
+async def test_cancelling_the_delete_confirmation_keeps_the_item():
     storage.save_saga(_sample_saga_with_covenant())
 
     app = ArsMagicaManagerApp()
@@ -2012,9 +1991,9 @@ async def test_cancelling_removal_picker_keeps_the_item():
         await _select_character(pilot, app)
         await _open_section(pilot, app, "section-vf-virtues")
 
-        await pilot.press("V")
+        await pilot.press("d")
         await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
+        assert isinstance(app.screen, ConfirmScreen)
 
         await pilot.press("escape")
         await pilot.pause()
@@ -2139,7 +2118,10 @@ async def test_magical_arts_collapses_like_the_other_sections():
         await _open_section(pilot, app, "section-arts")
         arts = view.query_one("#section-arts", Collapsible)
         assert not arts.collapsed
-        await pilot.press("enter")
+        await pilot.press("enter")  # Enter doesn't collapse a section...
+        await pilot.pause()
+        assert not arts.collapsed
+        await pilot.press("c")  # ...c does
         assert await wait_until(pilot, lambda: arts.collapsed)
         assert app.screen._active_section() == "section-arts"
         await pilot.press("e")
@@ -2247,7 +2229,7 @@ async def test_switching_tabs_moves_a_a_e_with_the_tab():
     was active before (see CLAUDE.md's flat-tab focus-tracking gotcha), so
     'e' never re-dispatches to a section that's no longer visible. Planning
     has a section (STORY-925): switching to it focuses This Season. The
-    Diary is a flat tab with its own a/A/e. (The Laboratory tab, the old
+    Diary is a flat tab with its own a / e / d. (The Laboratory tab, the old
     flat tab this covered, moved to the laboratory sheet as Lab Totals.)"""
     storage.save_saga(_saga_with_bare_character())
 
@@ -2281,7 +2263,7 @@ async def test_creating_a_second_character_after_viewing_the_first_works():
         await _select_covenant(pilot, app)
 
         # Create the first character.
-        await pilot.press("c")
+        await menu(pilot, app, "n", "New Character")
         await pilot.pause()
         app.screen.query_one("#fld-name", Input).value = "Leandro"
         await pilot.click("#btn-save")
@@ -2293,7 +2275,7 @@ async def test_creating_a_second_character_after_viewing_the_first_works():
         await _select(pilot, app, ("character", "leandro"))
         await _select(pilot, app, ("covenant", "cov1"))
 
-        await pilot.press("c")
+        await menu(pilot, app, "n", "New Character")
         await pilot.pause()
         app.screen.query_one("#fld-name", Input).value = "Guillame"
         await pilot.click("#btn-save")
@@ -2411,10 +2393,6 @@ async def test_edit_ability_updates_existing_entry():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-
-        await pilot.press("enter")  # only one ability -- select it
-        await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
         assert app.screen.query_one("#fld-xp", Input).value == "75"
 
@@ -2529,11 +2507,7 @@ async def test_add_and_remove_spell_known():
         await pilot.press("escape")
         await pilot.pause()
 
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-
-        await pilot.press("enter")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
@@ -2558,9 +2532,7 @@ async def test_the_known_spell_delete_prompt_shows_brackets_once():
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
         await _open_section(pilot, app, "section-known-spells")
-        await pilot.press("A")
-        await wait_until(pilot, lambda: isinstance(app.screen, RemovalPickerScreen))
-        await pilot.press("enter")
+        await pilot.press("d")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         message = str(app.screen.query_one("#confirm-message", Static).render())
         assert message == "Delete Pilum of [Greater] Fire?", message
@@ -2577,9 +2549,6 @@ async def test_edit_spell_mastery_sets_score_xp_and_abilities():
         await _open_section(pilot, app, "section-known-spells")
 
         await pilot.press("e")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)  # only one known spell
-        await pilot.press("enter")
         await pilot.pause()
         assert isinstance(app.screen, MasteryEditScreen)
 
@@ -2638,8 +2607,6 @@ async def test_the_mastery_dialog_shows_brackets_in_names():
         await _select_character(pilot, app)
         await _open_section(pilot, app, "section-known-spells")
         await pilot.press("e")
-        await wait_until(pilot, lambda: isinstance(app.screen, RemovalPickerScreen))
-        await pilot.press("enter")
         assert await wait_until(
             pilot, lambda: isinstance(app.screen, MasteryEditScreen)
         )
@@ -2680,11 +2647,7 @@ async def test_add_and_remove_inventory_item():
         assert isinstance(app.screen, WorkspaceScreen)
         assert "Fine wool cloak" in _inventory_labels(app.screen._character_sheet_view)
 
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-
-        await pilot.press("enter")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
@@ -2800,10 +2763,7 @@ async def test_add_and_remove_raw_vis():
         rows = app.screen._character_sheet_view._raw_vis_rows()
         assert "Creo: 8 pawn(s)" in rows[0][1]
 
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
@@ -2855,9 +2815,6 @@ async def test_raw_vis_stays_live_across_both_tabs():
         await _open_section(pilot, app, "section-raw-vis-inventory")
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)  # only one entry
-        await pilot.press("enter")
-        await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
         app.screen.query_one("#fld-pawns", Input).value = "3"
         await pilot.click("#btn-save", offset=(8, 1))
@@ -2872,10 +2829,7 @@ async def test_raw_vis_stays_live_across_both_tabs():
         )
 
         # Remove from the Hermetic Magic tab.
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)  # only one entry
-        await pilot.press("enter")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
@@ -3274,10 +3228,10 @@ async def test_add_and_remove_a_specialization_source():
         ]
 
         await _choose_lab_row(pilot, view, "lab-specialties-list", 0)
-        await pilot.press("A")
+        await pilot.press("d")
         await _confirm(pilot, app, "n")
         assert storage.load_saga("test_saga").laboratories[0].specialties
-        await pilot.press("A")
+        await pilot.press("d")
         await _confirm(pilot, app, "y")
         assert _lab_rows(view, "lab-specializations-list") == [
             "Activity (0 of 2)",
@@ -3412,7 +3366,7 @@ async def test_add_a_feature_with_a_new_feature_virtue_then_remove_it():
         assert _lab_rows(view, "lab-vf-virtues-list") == ["Lesser Feature (Minor)"]
 
         await _choose_lab_row(pilot, view, "lab-features-list", 0)
-        await pilot.press("A")
+        await pilot.press("d")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         assert "Lesser Feature Virtue stays" in str(
             app.screen.query_one("#confirm-message", Static).render()
@@ -3519,7 +3473,7 @@ async def test_deleting_a_feature_virtue_or_focus_flaw_takes_its_feature_or_focu
 
         # The Focus Flaw: the Cauldron stays, without its Focus points.
         await _choose_lab_row(pilot, view, "lab-vf-flaws-list", 1)
-        await pilot.press("V")
+        await pilot.press("d")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         assert "Cauldron stops being the Focus" in str(
             app.screen.query_one("#confirm-message", Static).render()
@@ -3532,7 +3486,7 @@ async def test_deleting_a_feature_virtue_or_focus_flaw_takes_its_feature_or_focu
 
         # The Greater Feature: the Cauldron goes with it.
         await _choose_lab_row(pilot, view, "lab-vf-virtues-list", 0)
-        await pilot.press("V")
+        await pilot.press("d")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         assert "Its Feature, Cauldron, goes too" in str(
             app.screen.query_one("#confirm-message", Static).render()
@@ -3555,7 +3509,7 @@ async def test_a_new_feature_virtue_is_given_to_a_feature_waiting_for_one():
         await _select_laboratory(pilot, app)
         view = app.screen._laboratory_sheet_view
         await _open_lab_section(pilot, app, "section-lab-vf-virtues")
-        await pilot.press("v")
+        await pilot.press("a")
         await wait_until(
             pilot, lambda: isinstance(app.screen, LabVirtueFlawPickerScreen)
         )
@@ -3593,10 +3547,8 @@ async def test_add_and_remove_lab_raw_vis():
         view = app.screen._laboratory_sheet_view
         assert _lab_rows(view, "lab-raw-vis-list") == ["Ignem: 4 pawn(s)"]
 
-        await pilot.press("A")  # nothing chosen: pick which one
+        await pilot.press("d")  # nothing chosen: pick which one
         await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
         await _confirm(pilot, app, "y")
 
     saga = storage.load_saga("test_saga")
@@ -3626,10 +3578,8 @@ async def test_add_and_remove_inventory_item_on_lab():
         section = view.query_one("#section-lab-items", Collapsible)
         assert section.title == "Equipment & Stores (1)"
 
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
         await _confirm(pilot, app, "y")
 
     saga = storage.load_saga("test_saga")
@@ -3641,9 +3591,6 @@ async def _pick_first_and_open_editor(pilot, app, section_id: str, editor_type) 
     and check the pre-filled editor dialog appeared."""
     await _open_lab_section(pilot, app, section_id)
     await pilot.press("e")
-    await pilot.pause()
-    assert isinstance(app.screen, RemovalPickerScreen)
-    await pilot.press("enter")
     await pilot.pause()
     assert isinstance(app.screen, editor_type)
 
@@ -3714,7 +3661,6 @@ async def test_attributes_and_inventory_share_one_panel_docked_below_the_lists()
         def shown(widget) -> str:
             return strip_markup(str(widget.render()))
 
-        assert "Select a Specialization, Feature or Room" in shown(panel)
         await _choose_lab_row(pilot, view, "lab-rooms-list", 0)
         assert shown(panel).startswith("Vault")
         # One choice across the tab's lists.
@@ -3771,7 +3717,7 @@ async def test_edit_lab_raw_vis_changes_pawns_and_merges_on_art_change():
     assert lab.raw_vis == {"ignem": 11}
 
 
-async def test_the_diary_edit_picker_shows_brackets_in_an_entry_name():
+async def test_the_diary_edit_and_delete_show_brackets_in_an_entry_name():
     # B5: the remove picker escaped entry names; the edit picker didn't.
     saga = _saga_with_populated_laboratory()
     saga.laboratories[0].diary[0].name = "Studied [Ignem] notes"
@@ -3780,20 +3726,18 @@ async def test_the_diary_edit_picker_shows_brackets_in_an_entry_name():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_laboratory(pilot, app)
-        for key in ("e", "A"):  # edit, remove
-            await _open_lab_section(pilot, app, "tab-lab-diary")
-            await pilot.press(key)
-            assert await wait_until(
-                pilot,
-                lambda: (
-                    isinstance(app.screen, RemovalPickerScreen)
-                    and len(app.screen.query("ListItem Label")) == 1
-                ),
-            )
-            labels = [str(label.render()) for label in app.screen.query(Label)]
-            assert "1220 Spring  -  Studied [Ignem] notes" in labels, (key, labels)
-            await pilot.press("escape")
-            await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        await _open_lab_section(pilot, app, "tab-lab-diary")
+        await pilot.press("e")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        assert app.screen.query_one("#fld-name", Input).value == "Studied [Ignem] notes"
+        await pilot.press("escape")
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        await pilot.press("d")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        message = str(app.screen.query_one("#confirm-message", Static).render())
+        assert "Studied [Ignem] notes" in message, message
+        await pilot.press("escape")
+        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
 
 async def test_editing_an_empty_lab_list_or_cancelling_changes_nothing():
@@ -3803,15 +3747,6 @@ async def test_editing_an_empty_lab_list_or_cancelling_changes_nothing():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_laboratory(pilot, app)
-
-        # Cancelling the picker leaves the entry alone.
-        await _open_lab_section(pilot, app, "section-lab-specialties")
-        await pilot.press("e")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("escape")
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
 
         # Cancelling the editor does too.
         await _pick_first_and_open_editor(
@@ -4139,8 +4074,9 @@ async def test_set_date_rolls_back_an_accidental_advance():
         await pilot.pause()
         assert "Summer 1220" in app.screen.sub_title
 
-        # ...then put it back with Set Date.
-        await pilot.press("T")
+        # ...then put it back with Set Date: More, on the saga.
+        await _select(pilot, app, ("saga",))
+        await menu(pilot, app, "m", "Set Date")
         await pilot.pause()
         assert _is_form(app.screen, "Set the Saga's Date")
         # Pre-filled with the current date.
@@ -4153,6 +4089,7 @@ async def test_set_date_rolls_back_an_accidental_advance():
 
         # Everything that inherits the calendar follows.
         assert "Spring 1220" in app.screen.sub_title
+        await _select(pilot, app, ("covenant", "cov1"))
         right = app.screen._covenant_sheet_view._info_right_text()
         assert "Spring" in right
 
@@ -4166,7 +4103,7 @@ async def test_set_date_sets_an_arbitrary_date_from_the_saga_level():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
         await _open_workspace(pilot)  # saga level
-        await pilot.press("T")
+        await menu(pilot, app, "m", "Set Date")
         await pilot.pause()
         assert _is_form(app.screen, "Set the Saga's Date")
         app.screen.query_one("#fld-season", Select).value = "Winter"
@@ -4296,7 +4233,7 @@ async def test_lab_can_be_created_unassigned_or_in_a_covenant():
     async with app.run_test() as pilot:
         await _open_workspace(pilot)  # saga level: no covenant selected
 
-        await pilot.press("l")
+        await menu(pilot, app, "n", "New Laboratory")
         await pilot.pause()
         assert _is_form(app.screen, "Create a New Laboratory")
         assert app.screen.query_one("#fld-covenant_id", Select).value == Select.NULL
@@ -4307,7 +4244,7 @@ async def test_lab_can_be_created_unassigned_or_in_a_covenant():
 
         # With a covenant selected, the dialog defaults to it.
         await _select(pilot, app, ("covenant", "cov2"))
-        await pilot.press("l")
+        await menu(pilot, app, "n", "New Laboratory")
         await pilot.pause()
         assert app.screen.query_one("#fld-covenant_id", Select).value == "cov2"
         app.screen.query_one("#fld-name", Input).value = "Fenghold Lab"
@@ -4406,7 +4343,7 @@ async def _open_cov_section(pilot, app, section_id: str) -> None:
     await pilot.pause()
     view.query_one(TabbedContent).active = "tab-cov-attributes"
     await pilot.pause()
-    view.query_one(f"#{section_id}", Collapsible).query_one("CollapsibleTitle").focus()
+    section_stop(view.query_one(f"#{section_id}", Collapsible)).focus()
     await pilot.pause()
     await wait_until(pilot, lambda: app.screen._active_section() == section_id)
 
@@ -4689,11 +4626,8 @@ async def test_edit_and_remove_target_the_right_boon_or_hook_when_interleaved():
 
         # Edit the SECOND Boon's detail (Wealth), which sits at index 3.
         await _open_cov_section(pilot, app, "section-cov-boons")
-        await pilot.press("e")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
         await pilot.press("down")
-        await pilot.press("enter")
+        await pilot.press("e")
         await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
         assert app.screen.query_one("#fld-detail", Input).value == "B"  # prefilled
@@ -4704,13 +4638,11 @@ async def test_edit_and_remove_target_the_right_boon_or_hook_when_interleaved():
         assert "Wealth -" not in _bh_labels(view, "Boon")  # no detail any more
         assert "Edifice - A" in _bh_labels(view, "Boon")  # the other Boon untouched
 
-        # Remove the SECOND Hook (Road), index 2 -- through the picker (nothing
-        # is selected), then the delete confirmation.
+        # Remove the SECOND Hook (Road), index 2: the row below the one the
+        # section takes focus on, then the delete confirmation.
         await _open_cov_section(pilot, app, "section-cov-hooks")
-        await pilot.press("A")
-        await pilot.pause()
         await pilot.press("down")
-        await pilot.press("enter")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
@@ -4889,7 +4821,7 @@ async def test_boon_list_works_from_the_keyboard_and_keeps_add_remove_dispatch()
         assert app.screen.kind == "Boon"
 
 
-async def test_adding_a_boon_rebuilds_the_list_and_resets_the_panel():
+async def test_adding_a_boon_rebuilds_the_list_and_the_panel_follows():
     storage.save_saga(_saga_with_boons_and_hooks("covbh_boon_minor_aura"))
 
     app = ArsMagicaManagerApp()
@@ -4905,13 +4837,16 @@ async def test_adding_a_boon_rebuilds_the_list_and_resets_the_panel():
             pilot, app, "section-cov-boons", "covbh_boon_minor_wealth"
         )
         assert len(boon_list.options) == 2
-        assert all("○" in str(o.prompt) for o in boon_list.options)  # no stale marker
-        assert "Select a Boon or Hook" in str(
-            view.query_one("#cov-bh-info", Static).render()
-        )
+        # One marker, on the row the focused list is on, and the panel
+        # shows that row (nothing stale).
+        assert sum("●" in str(o.prompt) for o in boon_list.options) == 1
+        chosen = view.selected_boon_hook("Boon")
+        assert chosen is not None
+        shown = str(view.query_one("#cov-bh-info", Static).render())
+        assert ("Name: Aura" in shown) == ("●" in str(boon_list.options[0].prompt))
 
 
-# -- Boon/Hook Description, and e / A acting on the selected row ---------------
+# -- Boon/Hook Description, and e / d acting on the selected row ---------------
 
 
 async def _select_bh_row(pilot, app, kind: str, list_index: int) -> None:
@@ -5015,7 +4950,7 @@ async def test_e_edits_the_selected_boon_directly_without_a_picker():
     assert boons[1].params == {"detail": "B2", "description": "New\ntext"}
 
 
-async def test_A_deletes_the_selected_item_only_after_confirmation():
+async def test_d_deletes_the_selected_item_only_after_confirmation():
     saga = _saga_with_configured_covenant()
     saga.covenants[0].boons_hooks = [
         VirtueFlawInstance(vf_id="covbh_boon_minor_edifice", params={"detail": "A"}),
@@ -5033,7 +4968,7 @@ async def test_A_deletes_the_selected_item_only_after_confirmation():
         await _select_bh_row(pilot, app, "Boon", 1)
 
         # Answering No (or Escape) keeps it.
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         message = str(app.screen.query_one("#confirm-message", Static).render())
@@ -5043,14 +4978,14 @@ async def test_A_deletes_the_selected_item_only_after_confirmation():
         assert isinstance(app.screen, WorkspaceScreen)
         assert len(view._bh_entries("Boon")) == 3
 
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         await pilot.press("escape")
         await pilot.pause()
         assert len(view._bh_entries("Boon")) == 3
 
         # Yes deletes exactly the selected one, then the panel resets.
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         await pilot.press("y")
         await pilot.pause()
@@ -5059,7 +4994,8 @@ async def test_A_deletes_the_selected_item_only_after_confirmation():
             "Edifice - A",
             "Wealth",
         ]
-        assert "Select a Boon or Hook" in _panel_text(app)
+        # The list keeps focus: the row that moved up is chosen and shown.
+        assert "Name: Wealth" in _panel_text(app)
         assert _plain_title(view.query_one("#section-cov-boons", Collapsible)) == (
             "Boons (2 pts)"
         )
@@ -5082,7 +5018,7 @@ async def test_delete_confirmation_defaults_to_no_so_a_stray_enter_is_safe():
     async with app.run_test(size=(140, 50)) as pilot:
         await _select_covenant(pilot, app)
         await _select_bh_row(pilot, app, "Boon", 0)
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         assert app.screen.focused is app.screen.query_one("#btn-no", Button)
@@ -5093,7 +5029,7 @@ async def test_delete_confirmation_defaults_to_no_so_a_stray_enter_is_safe():
     assert len(storage.load_saga("test_saga").covenants[0].boons_hooks) == 1
 
 
-async def test_selection_in_the_other_list_or_none_falls_back_to_the_picker():
+async def test_d_acts_on_the_focused_list_not_a_row_chosen_in_the_other():
     saga = _saga_with_configured_covenant()
     saga.covenants[0].boons_hooks = [
         VirtueFlawInstance(vf_id="covbh_boon_minor_wealth"),
@@ -5105,14 +5041,11 @@ async def test_selection_in_the_other_list_or_none_falls_back_to_the_picker():
     async with app.run_test(size=(140, 50)) as pilot:
         await _select_covenant(pilot, app)
 
-        # A Boon is selected, but 'A' in the Hooks section isn't about it:
-        # the picker asks which Hook, then confirms.
+        # A Boon was selected, but d in the Hooks section isn't about it:
+        # the Hooks list takes focus on its own row, and d confirms that one.
         await _select_bh_row(pilot, app, "Boon", 0)
         await _open_cov_section(pilot, app, "section-cov-hooks")
-        await pilot.press("A")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
@@ -5142,7 +5075,7 @@ async def test_boon_hook_detail_dialog_with_description_fits_a_small_terminal():
         await pilot.press("escape")
         await pilot.pause()
 
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         for button in app.screen.query(Button):
@@ -5171,7 +5104,7 @@ async def test_boon_hook_dialogs_hug_their_content_on_a_tall_terminal():
         await pilot.press("escape")
         await pilot.pause()
 
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         assert app.screen.query_one("#confirm-dialog").region.height < 12
@@ -5219,7 +5152,7 @@ async def test_reputation_rows_are_selectable_and_independent_of_the_boon_panel(
         assert "Name: Wealth" in _panel_text(app)
 
 
-async def test_reputation_keys_work_from_the_list_and_fall_back_to_a_picker():
+async def test_reputation_keys_work_from_the_list_without_a_picker():
     storage.save_saga(_saga_with_reputations(("Feared", 2)))
 
     app = ArsMagicaManagerApp()
@@ -5229,7 +5162,7 @@ async def test_reputation_keys_work_from_the_list_and_fall_back_to_a_picker():
         await wait_until(pilot, lambda: view.initial_tab_seen)
         await pilot.pause()
 
-        # List focused, nothing chosen: the section still owns the keys.
+        # List focused: the section still owns the keys.
         view.query_one("#cov-reputations-list", SelectableList).focus()
         await pilot.pause()
         assert app.screen._active_section() == "section-cov-reputations"
@@ -5240,10 +5173,11 @@ async def test_reputation_keys_work_from_the_list_and_fall_back_to_a_picker():
         await pilot.press("escape")
         await pilot.pause()
 
-        # Nothing chosen: 'e' falls back to "which one?".
+        # The focused list has its first row chosen: 'e' edits it, no
+        # "which one?".
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
+        assert isinstance(app.screen, FieldsDialog)
 
 
 # -- SelectableList, the reusable widget ------------------------------------
@@ -5269,25 +5203,28 @@ async def test_selectable_list_uses_data_indexes_and_a_single_marker():
         widget = app.query_one("#the-list", SelectableList)
         prompts = lambda: [str(o.prompt) for o in widget.options]
 
-        assert widget.highlighted is None and widget.selected_data_index is None
-        assert all("○" in p for p in prompts())
+        # The list has focus (the app's only widget), so its first row is
+        # chosen: a focused list always has a row to act on.
+        await pilot.pause()
+        assert app.chosen == [3]
+        assert "●" in prompts()[0] and "●" not in prompts()[1] + prompts()[2]
 
         widget.highlighted = 1
         await pilot.pause()
-        assert app.chosen == [7]  # the data index, not the row position
+        assert app.chosen == [3, 7]  # the data index, not the row position
         assert widget.selected_data_index == 7
         assert "●" in prompts()[1] and "●" not in prompts()[0] + prompts()[2]
 
         widget.highlighted = 2
         await pilot.pause()
-        assert app.chosen == [7, 9]
+        assert app.chosen == [3, 7, 9]
         assert sum("●" in p for p in prompts()) == 1  # one marker at a time
 
         widget.clear_selection()
         await pilot.pause()
         assert widget.selected_data_index is None
         assert not any("●" in p for p in prompts())
-        assert app.chosen == [7, 9]  # clearing posts nothing
+        assert app.chosen == [3, 7, 9]  # clearing posts nothing
 
 
 async def test_selectable_list_set_rows_replaces_everything_and_handles_empty():
@@ -5298,20 +5235,30 @@ async def test_selectable_list_set_rows_replaces_everything_and_handles_empty():
         await pilot.pause()
         assert widget.selected_data_index == 1
 
+        # The list has focus, so the nearest row to the old one is chosen.
         widget.set_rows([(5, "five")])
         await pilot.pause()
         assert len(widget.options) == 1
-        assert widget.selected_data_index is None  # selection cleared
-        assert "○" in str(widget.options[0].prompt)  # no stale marker
+        assert widget.selected_data_index == 5
+        assert "●" in str(widget.options[0].prompt)
+
+        # Without focus, new rows leave nothing chosen.
+        app.set_focus(None)
+        await pilot.pause()
+        widget.set_rows([(6, "six"), (7, "seven")])
+        await pilot.pause()
+        assert widget.selected_data_index is None
+        assert all("○" in str(option.prompt) for option in widget.options)
 
         # Empty: one disabled placeholder that can't be chosen.
+        widget.focus()
         widget.set_rows([])
         await pilot.pause()
         assert len(widget.options) == 1
         assert widget.options[0].disabled
         assert "none recorded" in str(widget.options[0].prompt)
         assert widget.selected_data_index is None
-        assert app.chosen == [1]  # only the one real choice was ever posted
+        assert app.chosen[:3] == [0, 1, 5]
 
 
 # -- Inline emphasis in user-written descriptions ----------------------------
@@ -5504,10 +5451,10 @@ async def _show_inhabitants_tab(pilot, app) -> None:
 
 
 async def _open_inh_section(pilot, app, section_id: str) -> None:
-    """Focus a section of the Inhabitants tab (so its a/A/e keys apply)."""
+    """Focus a section of the Inhabitants tab (so its a / e / d keys apply)."""
     await _show_inhabitants_tab(pilot, app)
     view = app.screen._covenant_sheet_view
-    view.query_one(f"#{section_id}", Collapsible).query_one("CollapsibleTitle").focus()
+    section_stop(view.query_one(f"#{section_id}", Collapsible)).focus()
     await pilot.pause()
     await wait_until(pilot, lambda: app.screen._active_section() == section_id)
 
@@ -5680,7 +5627,7 @@ async def test_removing_a_listed_magus_keeps_them_in_the_covenant_but_stops_coun
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_covenant(pilot, app)
         await _select_inh_row(pilot, app, "magus", 0)
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         message = str(app.screen.query_one("#confirm-message", Static).render())
@@ -5690,7 +5637,7 @@ async def test_removing_a_listed_magus_keeps_them_in_the_covenant_but_stops_coun
         await pilot.pause()
         assert len(_inh_labels(app, "magus")) == 1  # No keeps them
 
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         await pilot.press("y")
         await wait_until(pilot, lambda: not _inh_labels(app, "magus"))
@@ -5713,7 +5660,7 @@ async def test_removing_a_listed_companion_with_no_record_creates_one():
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_covenant(pilot, app)
         await _select_inh_row(pilot, app, "companion", 0)
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         await pilot.press("y")
         await wait_until(pilot, lambda: not _inh_labels(app, "companion"))
@@ -5743,10 +5690,12 @@ async def test_restoring_a_departed_magus_makes_them_count_again():
         await _select_covenant(pilot, app)
         assert _inh_labels(app, "magus") == []  # departed: not listed
         await _open_inh_section(pilot, app, "section-inh-magus")
-        await pilot.press("r")
-        await pilot.pause()
+        workspace = app.screen
+        await menu(pilot, app, "m", "Restore")
+        # The departed aren't rows of the list: it asks which one.
         assert isinstance(app.screen, RemovalPickerScreen)  # only one entry
         await pilot.press("enter")
+        await wait_until(pilot, lambda: app.screen is workspace)
         await wait_until(pilot, lambda: len(_inh_labels(app, "magus")) == 1)
         assert _inh_labels(app, "magus")[0].startswith("Corvinus")
 
@@ -5856,7 +5805,7 @@ async def test_other_covenfolk_requires_a_covenant_role_and_suppresses_it_when_r
         await pilot.press("a")
         await pilot.pause()
         assert isinstance(app.screen, RemovalPickerScreen)  # a GROG_KINDS section
-        await pilot.press("enter")  # "(New person...)"
+        await pilot.press("enter")
         await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
 
@@ -5978,7 +5927,7 @@ async def test_forms_and_the_remove_confirmation_fit_an_80_by_24_terminal():
         await pilot.pause()
 
         await _select_inh_row(pilot, app, "magus", 0)
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         region = app.screen.query_one("#confirm-dialog").region
         assert region.right <= 120 and region.bottom <= 45
@@ -6062,7 +6011,7 @@ async def test_deleting_an_assigned_grog_returns_it_to_the_available_list():
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_covenant(pilot, app)
         await _select_inh_row(pilot, app, "specialist", 0)
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         await pilot.press("y")
         await wait_until(pilot, lambda: not _inh_labels(app, "specialist"))
@@ -6238,12 +6187,10 @@ async def _show_possessions_tab(pilot, app) -> None:
 
 
 async def _open_pos_section(pilot, app, kind: str) -> None:
-    """Focus a Possessions section (so its a/A/e keys apply)."""
+    """Focus a Possessions section (so its a / e / d keys apply)."""
     await _show_possessions_tab(pilot, app)
     view = app.screen._covenant_sheet_view
-    view.query_one(f"#section-pos-{kind}", Collapsible).query_one(
-        "CollapsibleTitle"
-    ).focus()
+    section_stop(view.query_one(f"#section-pos-{kind}", Collapsible)).focus()
     await pilot.pause()
     await wait_until(
         pilot, lambda: app.screen._active_section() == f"section-pos-{kind}"
@@ -6339,7 +6286,7 @@ async def test_a_laboratory_sanctum_edits_only_covenant_side_fields_and_cannot_b
             assert expected in panel, expected
 
         # A laboratory of the covenant can't be deleted from here.
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)  # no confirmation
         assert len(_pos_labels(app, "sanctum")) == 1
@@ -6379,7 +6326,7 @@ async def test_manual_sanctums_have_every_field_and_can_be_deleted():
         await _select_pos_row(pilot, app, "sanctum", 1)
         assert "Build Points: 15" in _pos_panel(app)
 
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
@@ -6569,12 +6516,10 @@ async def _show_economics_tab(pilot, app) -> None:
 
 
 async def _open_eco_section(pilot, app, which: str) -> None:
-    """Focus an Economics section (so its a/A/e keys apply)."""
+    """Focus an Economics section (so its a / e / d keys apply)."""
     await _show_economics_tab(pilot, app)
     view = app.screen._covenant_sheet_view
-    view.query_one(f"#section-eco-{which}", Collapsible).query_one(
-        "CollapsibleTitle"
-    ).focus()
+    section_stop(view.query_one(f"#section-eco-{which}", Collapsible)).focus()
     await pilot.pause()
     await wait_until(
         pilot, lambda: app.screen._active_section() == f"section-eco-{which}"
@@ -6748,7 +6693,7 @@ async def test_choosing_rows_fills_the_panel_with_one_selection_across_the_lists
         assert "Name: Laborers" in panel and "Quantity: 3" in panel
 
 
-async def test_e_and_A_act_on_the_selected_income_source_and_delete_confirms():
+async def test_e_and_d_act_on_the_selected_income_source_and_delete_confirms():
     saga = _saga_for_economics()
     saga.covenants[0].economics.income_sources.append(
         IncomeSource(id="b", name="[Toll] bridge", type="Lesser")
@@ -6773,7 +6718,7 @@ async def test_e_and_A_act_on_the_selected_income_source_and_delete_confirms():
         assert "Current Income: 260 (typed; Greater is usually 250)" in _eco_panel(app)
 
         await _select_eco_row(pilot, app, "income", 1)
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         message = str(app.screen.query_one("#confirm-message", Static).render())
@@ -6782,21 +6727,22 @@ async def test_e_and_A_act_on_the_selected_income_source_and_delete_confirms():
         await pilot.pause()
         assert len(_eco_labels(app, "income")) == 2
 
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         await pilot.press("y")
         await wait_until(pilot, lambda: len(_eco_labels(app, "income")) == 1)
         assert re.search(r"Total Income:\s+100\b", _eco_wealth(app))
 
-        # Nothing chosen any more: 'A' and 'e' fall back to asking which one.
-        await pilot.press("A")
+        # The list keeps focus, so the row left is chosen: d and e are
+        # about that one, without asking which.
+        await pilot.press("d")
         await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
+        assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("escape")
         await pilot.pause()
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
+        assert isinstance(app.screen, FieldsDialog)
 
     assert [s.name for s in _saved_economics().income_sources] == ["Salt Mine"]
 
@@ -6809,7 +6755,7 @@ async def test_improve_updates_multiplier_and_projected_income_live_then_confirm
         await _select_covenant(pilot, app)
         await _select_eco_row(pilot, app, "income", 0)  # Salt Mine, income 100
 
-        await pilot.press("i")
+        await menu(pilot, app, "m", "Improve Income")
         await pilot.pause()
         assert isinstance(app.screen, ImproveIncomeScreen)
         assert app.screen.query_one("#improve-effect", Select).value == "Status Quo"
@@ -6867,7 +6813,7 @@ async def test_improve_with_status_quo_records_the_no_change_note():
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_covenant(pilot, app)
         await _select_eco_row(pilot, app, "income", 0)
-        await pilot.press("i")
+        await menu(pilot, app, "m", "Improve Income")
         await pilot.pause()
         app.screen.query_one("#btn-commit", Button).press()
         await pilot.pause()
@@ -6885,7 +6831,7 @@ async def test_improve_with_status_quo_records_the_no_change_note():
     )
 
 
-async def test_improve_cancel_and_the_which_one_fallback():
+async def test_improve_cancel_and_acting_on_the_focused_row():
     storage.save_saga(_saga_for_economics())
 
     app = ArsMagicaManagerApp()
@@ -6893,10 +6839,7 @@ async def test_improve_cancel_and_the_which_one_fallback():
         await _select_covenant(pilot, app)
         # Nothing chosen: 'i' falls back to asking which one, same as e/A.
         await _open_eco_section(pilot, app, "income")
-        await pilot.press("i")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("enter")  # Salt Mine
+        await menu(pilot, app, "m", "Improve Income")
         await pilot.pause()
         assert isinstance(app.screen, ImproveIncomeScreen)
         await pilot.press("escape")
@@ -6955,17 +6898,15 @@ async def test_expenditure_rows_take_notes_and_the_typed_ones_take_amounts():
     assert economics.notes == {"tithes": "Church"}
 
 
-async def test_without_a_chosen_row_e_asks_which_row_to_edit():
+async def test_e_edits_the_expenditure_row_the_cursor_is_on():
     storage.save_saga(_saga_for_economics())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_covenant(pilot, app)
         await _open_eco_section(pilot, app, "expenditure")
+        await pilot.press("down")  # Consumables (the section starts on row 0)
         await pilot.press("e")
-        await pilot.pause()
-        assert isinstance(app.screen, RemovalPickerScreen)
-        await pilot.press("down", "enter")  # Consumables (the picker starts on row 0)
         await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         assert "Consumables" in str(app.screen.query_one("#fields-title").render())
@@ -7095,7 +7036,7 @@ def _picker_labels(app) -> list[str]:
     ]
 
 
-async def test_A_deletes_the_highlighted_saga_only_after_confirmation():
+async def test_d_deletes_the_highlighted_saga_only_after_confirmation():
     _save_sagas("Alpha", "[Beta] Saga", "Gamma")
 
     app = ArsMagicaManagerApp()
@@ -7106,7 +7047,7 @@ async def test_A_deletes_the_highlighted_saga_only_after_confirmation():
         assert len(_picker_labels(app)) == 3
         assert _picker_labels(app)[1].startswith("[Beta] Saga")  # not read as markup
 
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         message = str(app.screen.query_one("#confirm-message", Static).render())
@@ -7117,18 +7058,18 @@ async def test_A_deletes_the_highlighted_saga_only_after_confirmation():
         await pilot.press("n")
         await pilot.pause()
         assert storage.list_sagas() == ["alpha", "beta_saga", "gamma"]
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         await pilot.press("escape")
         await pilot.pause()
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         await pilot.press("enter")
         await pilot.pause()
         assert isinstance(app.screen, SagaPickerScreen)
         assert storage.list_sagas() == ["alpha", "beta_saga", "gamma"]
 
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         await pilot.press("y")
         await wait_until(pilot, lambda: len(_picker_labels(app)) == 2)
@@ -7162,7 +7103,7 @@ async def test_an_unreadable_saga_is_listed_and_can_be_deleted():
         await pilot.pause()
         assert isinstance(app.screen, SagaPickerScreen)
 
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         assert "Delete the saga broken?" in str(
             app.screen.query_one("#confirm-message", Static).render()
@@ -7187,7 +7128,7 @@ async def test_the_delete_key_works_and_deleting_the_last_saga_shows_the_placeho
         assert len(_picker_labels(app)) == 1
 
         # Nothing left to delete: no dialog, just a notice.
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, SagaPickerScreen)
 
@@ -7197,7 +7138,7 @@ async def test_a_saga_can_still_be_created_after_deleting_all_of_them():
 
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         await pilot.press("y")
         await wait_until(pilot, lambda: storage.list_sagas() == [])
@@ -7273,9 +7214,7 @@ async def _show_library_tab(pilot, app) -> None:
     await pilot.pause()
     view.query_one(TabbedContent).active = "tab-cov-library"
     await pilot.pause()
-    view.query_one("#section-lib-books", Collapsible).query_one(
-        "CollapsibleTitle"
-    ).focus()
+    section_stop(view.query_one("#section-lib-books", Collapsible)).focus()
     await wait_until(pilot, lambda: app.screen._active_section() == "section-lib-books")
 
 
@@ -7328,7 +7267,6 @@ async def test_library_tab_lists_every_book_in_the_covenant():
         section = view.query_one("#section-lib-books", Collapsible)
         assert section.title == "Books (3)"
 
-        assert "Select a book" in _books_panel(app)
         await _choose_book(pilot, app, 0)
         panel = _books_panel(app)
         assert "Name: Summa of Flame" in panel
@@ -7557,18 +7495,18 @@ async def test_character_books_section_and_delete_confirms():
         assert await wait_until(
             pilot, lambda: "Owner: Character: Leandro" in str(panel.render())
         )
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("n")
         await pilot.pause()
         assert _book_names(app) == ["Pocket Tract"]
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         await pilot.press("y")
         await wait_until(pilot, lambda: _book_names(app) == [])
-        # Nothing left: 'A' says so instead of opening an empty picker.
-        await pilot.press("A")
+        # Nothing left: d says so instead of opening an empty picker.
+        await pilot.press("d")
         await pilot.pause()
         assert not isinstance(app.screen, RemovalPickerScreen)
 
@@ -7611,7 +7549,7 @@ async def test_saga_import_offers_books_and_spells_and_files_books_unassigned(tm
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
         await _open_workspace(pilot)
-        await pilot.press("I")
+        await menu(pilot, app, "m", "Import")
         await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
         options = app.screen.query_one("#import-list", OptionList)
         kinds = [options.get_option_at_index(i) for i in range(options.option_count)]
@@ -7652,7 +7590,9 @@ async def test_library_import_puts_every_book_in_the_covenant(tmp_path):
         await _select_covenant(pilot, app)
         await _show_library_tab(pilot, app)
         before = len(_book_names(app))
-        await pilot.press("I")  # straight to the file picker: only books go here
+        await menu(
+            pilot, app, "m", "Import"
+        )  # straight to the file picker: only books go here
         await _pick_csv(pilot, app, csv_path)
         message = str(app.screen.query_one("#confirm-message", Static).render())
         assert "into Test Covenant's library?" in message
@@ -7660,7 +7600,7 @@ async def test_library_import_puts_every_book_in_the_covenant(tmp_path):
         await pilot.pause()
         assert len(_book_names(app)) == before
 
-        await pilot.press("I")
+        await menu(pilot, app, "m", "Import")
         await _pick_csv(pilot, app, csv_path)
         await pilot.press("y")
         await wait_until(pilot, lambda: len(_book_names(app)) == before + 3)
@@ -7682,7 +7622,7 @@ async def test_file_picker_browses_folders_and_rejects_other_files(tmp_path):
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:
         await _open_workspace(pilot)
-        await pilot.press("I")
+        await menu(pilot, app, "m", "Import")
         await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
         await pilot.press("enter")
         await wait_until(pilot, lambda: isinstance(app.screen, CsvFilePickerScreen))
@@ -7731,7 +7671,7 @@ async def _mark_books(pilot, app, rows: list[int]) -> None:
     await pilot.pause()
 
 
-async def test_space_marks_books_and_A_deletes_them_all_after_confirming():
+async def test_space_marks_books_and_d_deletes_them_all_after_confirming():
     storage.save_saga(_saga_with_books())
 
     app = ArsMagicaManagerApp()
@@ -7746,7 +7686,7 @@ async def test_space_marks_books_and_A_deletes_them_all_after_confirming():
         )
         assert section.title.endswith(" - 2 marked")
 
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         message = str(app.screen.query_one("#confirm-message", Static).render())
@@ -7754,7 +7694,7 @@ async def test_space_marks_books_and_A_deletes_them_all_after_confirming():
         await pilot.press("n")
         await pilot.pause()
         assert len(_book_names(app)) == 3
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         await pilot.press("y")
         await wait_until(pilot, lambda: _book_names(app) == ["Pocket Tract"])
@@ -7811,7 +7751,7 @@ async def test_mark_key_is_only_for_book_lists():
 
 
 async def _import_with_answers(pilot, app, csv_path: str, answers: list[str]) -> None:
-    await pilot.press("I")
+    await menu(pilot, app, "m", "Import")
     await _pick_csv(pilot, app, csv_path)
     await pilot.press("y")
     for answer in answers:
@@ -7834,7 +7774,7 @@ async def test_importing_duplicates_asks_about_each(tmp_path):
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
         await _open_workspace(pilot)
-        await pilot.press("I")
+        await menu(pilot, app, "m", "Import")
         await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
         await pilot.press("enter")
         await _pick_csv(pilot, app, csv_path)
@@ -7892,9 +7832,7 @@ async def test_library_summary_is_read_only_and_the_list_reaches_the_panel():
         assert view.query_one("#section-lib-books-list").region.height > 10
 
         # Nothing to edit or remove on the Summary; adding a book still works.
-        view.query_one("#section-lib-summary", Collapsible).query_one(
-            "CollapsibleTitle"
-        ).focus()
+        section_stop(view.query_one("#section-lib-summary", Collapsible)).focus()
         await wait_until(
             pilot, lambda: app.screen._active_section() == "section-lib-summary"
         )
@@ -7904,7 +7842,7 @@ async def test_library_summary_is_read_only_and_the_list_reaches_the_panel():
 
         # The summary follows edits.
         await _choose_book(pilot, app, 0)
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         await pilot.press("y")
         await wait_until(pilot, lambda: len(_book_names(app)) == 2)
@@ -8278,7 +8216,7 @@ async def test_adding_editing_and_deleting_the_sagas_own_spells():
         await _save_dialog(pilot, app)
         await wait_until(pilot, lambda: app.screen.saga.spells[0].level is None)
 
-        await pilot.press("A")
+        await pilot.press("d")
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
@@ -8365,7 +8303,7 @@ async def test_import_data_offers_spells_with_a_helper_and_an_example_file(
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
         await _open_workspace(pilot)
-        await pilot.press("I")
+        await menu(pilot, app, "m", "Import")
         await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
         options = app.screen.query_one("#import-list", OptionList)
         options.highlighted = next(

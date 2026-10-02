@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from dataclasses import asdict
 
-from support import wait_until
+from support import menu, wait_until
 from test_list_flows import ListCase, _open
 
 from ars_magica_manager import possessions as pos
@@ -198,7 +198,7 @@ async def test_m_on_a_vis_store_moves_pawns_to_a_laboratory():
         workspace, _ = await _open(pilot, app, case)
         assert workspace.check_action("move_vis", ())
         assert not workspace.check_action("share_spell", ())
-        await pilot.press("m")  # the chosen (only) store: no picker
+        await menu(pilot, app, "m", "Move Vis")  # the chosen (only) store: no picker
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         dialog = app.screen
         dialog.query_one("#fld-pawns").value = "2"

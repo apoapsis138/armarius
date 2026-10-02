@@ -4,17 +4,10 @@
       "active": null,
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Saga",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
-        "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "ImportScreen: Import Data",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "d": "(disabled)",
+        "m": "MenuScreen: Import, Set Date",
+        "slash": "(disabled)"
       }
     }
   },
@@ -23,612 +16,360 @@
       "active": "section-cov-info",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Covenant",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
-        "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "d": "ConfirmScreen",
+        "m": "MenuScreen: Export, In Creation / In Play",
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-cov-description": {
       "active": "section-cov-description",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Covenant Description",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-cov-reputations": {
       "active": "section-cov-reputations",
       "keys": {
         "a": "FieldsDialog: Add a Reputation",
-        "A": "RemovalPickerScreen: Remove a Reputation",
-        "e": "RemovalPickerScreen: Edit which Reputation?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit a Reputation",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-cov-boons": {
       "active": "section-cov-boons",
       "keys": {
         "a": "CovenantBoonHookPickerScreen: Add a Boon",
-        "A": "RemovalPickerScreen: Remove a Boon",
-        "e": "RemovalPickerScreen: Edit which Boon?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Boon: Aura",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-cov-hooks": {
       "active": "section-cov-hooks",
       "keys": {
         "a": "CovenantBoonHookPickerScreen: Add a Hook",
-        "A": "RemovalPickerScreen: Remove a Hook",
-        "e": "RemovalPickerScreen: Edit which Hook?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Hook: Contested Resource",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-inh-loyalty": {
       "active": "section-inh-loyalty",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Loyalty",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-inh-population": {
       "active": "section-inh-population",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Inhabitants",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-inh-misc": {
       "active": "section-inh-misc",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Miscellaneous",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-inh-magus": {
       "active": "section-inh-magus",
       "keys": {
         "a": "FieldsDialog: Add a Magus",
-        "A": "RemovalPickerScreen: Remove a Magus",
-        "e": "RemovalPickerScreen: Edit which Magus?",
-        "r": "notice: No departed Magi to restore.",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit Leandro",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-inh-companion": {
       "active": "section-inh-companion",
       "keys": {
         "a": "FieldsDialog: Add a Companion",
-        "A": "RemovalPickerScreen: Remove a Companion",
-        "e": "RemovalPickerScreen: Edit which Companion?",
-        "r": "notice: No departed Companions to restore.",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit Alys",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-inh-specialist": {
       "active": "section-inh-specialist",
       "keys": {
         "a": "RemovalPickerScreen: Add a Specialist",
-        "A": "RemovalPickerScreen: Remove a Specialist",
-        "e": "RemovalPickerScreen: Edit which Specialist?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit A specialist",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-inh-craftsperson": {
       "active": "section-inh-craftsperson",
       "keys": {
         "a": "RemovalPickerScreen: Add a Craftsperson",
-        "A": "RemovalPickerScreen: Remove a Craftsperson",
-        "e": "RemovalPickerScreen: Edit which Craftsperson?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit A craftsperson",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-inh-turb": {
       "active": "section-inh-turb",
       "keys": {
         "a": "RemovalPickerScreen: Add a Turb Member",
-        "A": "RemovalPickerScreen: Remove a Turb Member",
-        "e": "RemovalPickerScreen: Edit which Turb Member?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit A turb",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-inh-inhabitant": {
       "active": "section-inh-inhabitant",
       "keys": {
         "a": "RemovalPickerScreen: Add a Covenfolk Member",
-        "A": "RemovalPickerScreen: Remove a Covenfolk Member",
-        "e": "RemovalPickerScreen: Edit which Covenfolk Member?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit A inhabitant",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-inh-horse": {
       "active": "section-inh-horse",
       "keys": {
         "a": "FieldsDialog: Add a Horse",
-        "A": "RemovalPickerScreen: Remove a Horse",
-        "e": "RemovalPickerScreen: Edit which Horse?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit Horses",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-inh-livestock": {
       "active": "section-inh-livestock",
       "keys": {
         "a": "FieldsDialog: Add a Livestock",
-        "A": "RemovalPickerScreen: Remove a Livestock",
-        "e": "RemovalPickerScreen: Edit which Livestock?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit Sheep",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-cov-seasons-magus": {
       "active": "section-cov-seasons-magus",
       "keys": {
-        "a": "RemovalPickerScreen: Whose season?",
-        "A": "RemovalPickerScreen: Whose season?",
-        "e": "RemovalPickerScreen: Whose season?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "a": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
+        "e": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
+        "d": "notice: Nothing is planned for Leandro this season.",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-cov-seasons-companion": {
       "active": "section-cov-seasons-companion",
       "keys": {
-        "a": "RemovalPickerScreen: Whose season?",
-        "A": "RemovalPickerScreen: Whose season?",
-        "e": "RemovalPickerScreen: Whose season?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "a": "FieldsDialog: Plan Alys's Season (Spring 1220)",
+        "e": "FieldsDialog: Plan Alys's Season (Spring 1220)",
+        "d": "notice: Nothing is planned for Alys this season.",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-cov-seasons-grog": {
       "active": "section-cov-seasons-grog",
       "keys": {
         "a": "notice: Nobody to plan for here.",
-        "A": "notice: Nobody to plan for here.",
         "e": "notice: Nobody to plan for here.",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "notice: Nobody to plan for here.",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-pos-property": {
       "active": "section-pos-property",
       "keys": {
         "a": "FieldsDialog: Add a Property",
-        "A": "RemovalPickerScreen: Remove a Property",
-        "e": "RemovalPickerScreen: Edit which Property?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit A property",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-pos-sanctum": {
       "active": "section-pos-sanctum",
       "keys": {
         "a": "FieldsDialog: Add a Sanctum",
-        "A": "RemovalPickerScreen: Remove a Sanctum",
-        "e": "RemovalPickerScreen: Edit which Sanctum?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit Tower",
+        "d": "notice: Tower is a laboratory of this covenant, so it can't be deleted here. Move it to another covenant from the laboratory's Identity instead.",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-pos-weapon": {
       "active": "section-pos-weapon",
       "keys": {
         "a": "FieldsDialog: Add a Weapon",
-        "A": "RemovalPickerScreen: Remove a Weapon",
-        "e": "RemovalPickerScreen: Edit which Weapon?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit A weapon",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-pos-armor": {
       "active": "section-pos-armor",
       "keys": {
         "a": "FieldsDialog: Add a Armor",
-        "A": "RemovalPickerScreen: Remove a Armor",
-        "e": "RemovalPickerScreen: Edit which Armor?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit A armor",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-pos-vis_source": {
       "active": "section-pos-vis_source",
       "keys": {
         "a": "FieldsDialog: Add a Vis Source",
-        "A": "RemovalPickerScreen: Remove a Vis Source",
-        "e": "RemovalPickerScreen: Edit which Vis Source?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit A vis_source",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-pos-vis_store": {
       "active": "section-pos-vis_store",
       "keys": {
         "a": "FieldsDialog: Add a Raw Vis Store",
-        "A": "RemovalPickerScreen: Remove a Raw Vis Store",
-        "e": "RemovalPickerScreen: Edit which Raw Vis Store?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit A vis_store",
+        "d": "ConfirmScreen",
         "m": "FieldsDialog: Move Raw Vis",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-pos-item": {
       "active": "section-pos-item",
       "keys": {
         "a": "FieldsDialog: Add a Item",
-        "A": "RemovalPickerScreen: Remove a Item",
-        "e": "RemovalPickerScreen: Edit which Item?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit A item",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-cov-devices": {
       "active": "section-cov-devices",
       "keys": {
         "a": "FieldsDialog: Add an Enchanted Device",
-        "A": "RemovalPickerScreen: Remove a device or effect",
-        "e": "RemovalPickerScreen: Edit which device or effect?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
-        "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "e": "FieldsDialog: Edit an Enchanted Device",
+        "d": "ConfirmScreen",
+        "m": "notice: Potions: 1 charge left.",
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-eco-wealth": {
       "active": "section-eco-wealth",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Wealth",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-eco-income": {
       "active": "section-eco-income",
       "keys": {
         "a": "FieldsDialog: Add a Source of Income",
-        "A": "RemovalPickerScreen: Remove a source of income",
-        "e": "RemovalPickerScreen: Edit which source of income?",
-        "r": "(disabled)",
-        "i": "RemovalPickerScreen: Improve which source of income?",
-        "u": "(disabled)",
-        "s": "(disabled)",
-        "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "e": "FieldsDialog: Edit Mill",
+        "d": "ConfirmScreen",
+        "m": "ImproveIncomeScreen: Improve Mill",
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-eco-expenditure": {
       "active": "section-eco-expenditure",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "RemovalPickerScreen: Edit which row?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit Buildings",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-eco-savings": {
       "active": "section-eco-savings",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
-        "e": "RemovalPickerScreen: Edit which row?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit Laborers",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-lib-summary": {
       "active": "section-lib-summary",
       "keys": {
         "a": "FieldsDialog: Add a Book",
-        "A": "(disabled)",
         "e": "(disabled)",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
-        "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "CsvFilePickerScreen: Import books into Keep's library",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "d": "(disabled)",
+        "m": "CsvFilePickerScreen: Import books into Keep's library",
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-lib-books": {
       "active": "section-lib-books",
       "keys": {
         "a": "FieldsDialog: Add a Book",
-        "A": "RemovalPickerScreen: Remove a Book",
-        "e": "RemovalPickerScreen: Edit which book?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
-        "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "CsvFilePickerScreen: Import books into Keep's library",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "e": "FieldsDialog: Edit Summa",
+        "d": "ConfirmScreen",
+        "m": "CsvFilePickerScreen: Import books into Keep's library",
+        "slash": "(disabled)"
       }
     },
     "TabPane#tab-cov-diary": {
       "active": "tab-cov-diary",
       "keys": {
         "a": "FieldsDialog: Add a Diary Entry",
-        "A": "notice: No Diary entries to remove.",
         "e": "notice: No Diary entries to edit.",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "notice: No Diary entries to remove.",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-cov-build": {
       "active": "section-cov-build",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "(disabled)",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-cov-build-items": {
       "active": "section-cov-build-items",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "(disabled)",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     }
   },
@@ -637,374 +378,220 @@
       "active": "section-char-info",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Character Info",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
-        "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "d": "ConfirmScreen",
+        "m": "MenuScreen: Export, In Creation / In Play",
+        "slash": "(disabled)"
       }
     },
     "PinnedCollapsible#section-char-characteristics": {
       "active": "section-char-characteristics",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Characteristics",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-hermetic-background": {
       "active": "section-hermetic-background",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Hermetic Background",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
-        "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "d": "(disabled)",
+        "m": "FieldsDialog: Lab Texts Leandro reads",
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-char-biographical": {
       "active": "section-char-biographical",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Biographical Detail",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-personality-traits": {
       "active": "section-personality-traits",
       "keys": {
         "a": "FieldsDialog: Add a Personality Trait",
-        "A": "RemovalPickerScreen: Remove a Personality Trait",
-        "e": "RemovalPickerScreen: Edit which Personality Trait?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit a Personality Trait",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-reputations": {
       "active": "section-reputations",
       "keys": {
         "a": "FieldsDialog: Add a Reputation",
-        "A": "RemovalPickerScreen: Remove a Reputation",
-        "e": "RemovalPickerScreen: Edit which Reputation?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit a Reputation",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-aging": {
       "active": "section-aging",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Aging & Warping",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-char-health": {
       "active": "section-char-health",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Wounds",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
-        "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "d": "(disabled)",
+        "m": "FieldsDialog: Edit Fatigue Level",
+        "slash": "(disabled)"
       }
     },
     "TabPane#tab-abilities": {
       "active": "tab-abilities",
       "keys": {
         "a": "AbilityPickerScreen: Add an Ability",
-        "A": "RemovalPickerScreen: Remove an Ability",
-        "e": "RemovalPickerScreen: Edit which Ability?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Latin",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-vf-virtues": {
       "active": "section-vf-virtues",
       "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
+        "a": "VirtueFlawPickerScreen: Add a Virtue",
         "e": "(disabled)",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "VirtueFlawPickerScreen: Add a Virtue",
-        "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-vf-flaws": {
       "active": "section-vf-flaws",
       "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
+        "a": "VirtueFlawPickerScreen: Add a Flaw",
         "e": "(disabled)",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "VirtueFlawPickerScreen: Add a Flaw",
-        "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-arts": {
       "active": "section-arts",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "EditArtsScreen: Edit Arts",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-casting": {
       "active": "section-casting",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "(disabled)",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-raw-vis-hermetic": {
       "active": "section-raw-vis-hermetic",
       "keys": {
         "a": "FieldsDialog: Add Raw Vis",
-        "A": "RemovalPickerScreen: Remove a Raw Vis entry",
-        "e": "RemovalPickerScreen: Edit which Raw Vis entry?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit Raw Vis",
+        "d": "ConfirmScreen",
         "m": "FieldsDialog: Move Raw Vis",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-known-spells": {
       "active": "section-known-spells",
       "keys": {
         "a": "SpellChooserScreen: Add a spell Leandro knows",
-        "A": "RemovalPickerScreen: Remove a Known Spell",
-        "e": "RemovalPickerScreen: Edit Mastery for which spell?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "MasteryEditScreen: Mastery: Soothe Pains of the Beast",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-research-goals": {
       "active": "section-research-goals",
       "keys": {
         "a": "FieldsDialog: Add Research Goal",
-        "A": "notice: No research goals to remove.",
         "e": "notice: No research goals to edit.",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "notice: No research goals to remove.",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-raw-vis-inventory": {
       "active": "section-raw-vis-inventory",
       "keys": {
         "a": "FieldsDialog: Add Raw Vis",
-        "A": "RemovalPickerScreen: Remove a Raw Vis entry",
-        "e": "RemovalPickerScreen: Edit which Raw Vis entry?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit Raw Vis",
+        "d": "ConfirmScreen",
         "m": "FieldsDialog: Move Raw Vis",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-inventory": {
       "active": "section-inventory",
       "keys": {
         "a": "RemovalPickerScreen: Add which kind of item?",
-        "A": "RemovalPickerScreen: Remove an Item",
-        "e": "RemovalPickerScreen: Edit which item?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit Staff",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-char-devices": {
       "active": "section-char-devices",
       "keys": {
         "a": "FieldsDialog: Add an Enchanted Device",
-        "A": "RemovalPickerScreen: Remove a device or effect",
-        "e": "RemovalPickerScreen: Edit which device or effect?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
-        "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "e": "FieldsDialog: Edit an Enchanted Device",
+        "d": "ConfirmScreen",
+        "m": "FieldsDialog: Instill an Effect in Ring",
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-books": {
       "active": "section-books",
       "keys": {
         "a": "FieldsDialog: Add a Book",
-        "A": "RemovalPickerScreen: Remove a Book",
-        "e": "RemovalPickerScreen: Edit which book?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit Diary",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-char-season": {
       "active": "section-char-season",
       "keys": {
         "a": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
-        "A": "notice: Nothing is planned for Leandro this season.",
         "e": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "notice: Nothing is planned for Leandro this season.",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "TabPane#tab-diary": {
       "active": "tab-diary",
       "keys": {
         "a": "FieldsDialog: Add a Diary Entry",
-        "A": "notice: No Diary entries to remove.",
         "e": "notice: No Diary entries to edit.",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "notice: No Diary entries to remove.",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     }
   },
@@ -1013,323 +600,190 @@
       "active": "section-lab-identity",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Laboratory Identity",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
-        "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "d": "ConfirmScreen",
+        "m": "MenuScreen: Export, In Creation / In Play",
+        "slash": "(disabled)"
       }
     },
     "PinnedCollapsible#section-lab-characteristics": {
       "active": "section-lab-characteristics",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Laboratory Characteristics (manual value)",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "TabPane#tab-lab-planning": {
       "active": "tab-lab-planning",
       "keys": {
         "a": "InventSpellScreen",
-        "A": "notice: Nothing is planned for Spring 1220.",
         "e": "InventSpellScreen",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "notice: Nothing is planned for Spring 1220.",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-lab-totals-grid": {
       "active": "section-lab-totals-grid",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "(disabled)",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-lab-totals-base": {
       "active": "section-lab-totals-base",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "(disabled)",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-lab-totals-activity": {
       "active": "section-lab-totals-activity",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "(disabled)",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-lab-vf-virtues": {
       "active": "section-lab-vf-virtues",
       "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
+        "a": "LabVirtueFlawPickerScreen: Add a Laboratory Virtue or Flaw",
         "e": "(disabled)",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "LabVirtueFlawPickerScreen: Add a Laboratory Virtue or Flaw",
-        "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-lab-vf-flaws": {
       "active": "section-lab-vf-flaws",
       "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
+        "a": "LabVirtueFlawPickerScreen: Add a Laboratory Virtue or Flaw",
         "e": "(disabled)",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "LabVirtueFlawPickerScreen: Add a Laboratory Virtue or Flaw",
-        "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
+        "slash": "(disabled)"
       }
     },
     "PinnedCollapsible#section-lab-specializations": {
       "active": "section-lab-specializations",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "(disabled)",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-lab-specialties": {
       "active": "section-lab-specialties",
       "keys": {
         "a": "FieldsDialog: Add a Specialization source",
-        "A": "RemovalPickerScreen: Remove a Specialization source",
-        "e": "RemovalPickerScreen: Edit which Specialization source?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit a Specialization source",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "PinnedCollapsible#section-lab-features": {
       "active": "section-lab-features",
       "keys": {
         "a": "FieldsDialog: Add a Feature",
-        "A": "RemovalPickerScreen: Remove a Feature",
-        "e": "RemovalPickerScreen: Edit which Feature?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit a Feature",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-lab-rooms": {
       "active": "section-lab-rooms",
       "keys": {
         "a": "FieldsDialog: Add a Room",
-        "A": "RemovalPickerScreen: Remove a Room",
-        "e": "RemovalPickerScreen: Edit which Room?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit a Room",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-lab-raw-vis": {
       "active": "section-lab-raw-vis",
       "keys": {
         "a": "FieldsDialog: Add Raw Vis",
-        "A": "RemovalPickerScreen: Remove a Raw Vis entry",
-        "e": "RemovalPickerScreen: Edit which Raw Vis entry?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit Raw Vis",
+        "d": "ConfirmScreen",
         "m": "FieldsDialog: Move Raw Vis",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-lab-items": {
       "active": "section-lab-items",
       "keys": {
         "a": "FieldsDialog: Add an Equipment & Stores entry",
-        "A": "RemovalPickerScreen: Remove an Equipment & Stores entry",
-        "e": "RemovalPickerScreen: Edit which Equipment & Stores entry?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit an Equipment & Stores entry",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-lab-connections": {
       "active": "section-lab-connections",
       "keys": {
         "a": "FieldsDialog: Add an Arcane Connection",
-        "A": "notice: No Arcane Connections to remove.",
         "e": "notice: No Arcane Connections to edit.",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "notice: No Arcane Connections to remove.",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-lab-devices": {
       "active": "section-lab-devices",
       "keys": {
         "a": "FieldsDialog: Add an Enchanted Device",
-        "A": "RemovalPickerScreen: Remove a device or effect",
-        "e": "RemovalPickerScreen: Edit which device or effect?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
-        "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "e": "FieldsDialog: Edit an Enchanted Device",
+        "d": "ConfirmScreen",
+        "m": "FieldsDialog: Instill an Effect in Wand",
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-lab-texts": {
       "active": "section-lab-texts",
       "keys": {
         "a": "FieldsDialog: Add a Book",
-        "A": "notice: No books here yet.",
         "e": "notice: No books here yet.",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "notice: No books here yet.",
         "m": "(disabled)",
-        "F": "FieldsDialog: Filter Lab Texts",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "FieldsDialog: Filter Lab Texts"
       }
     },
     "SheetSection#section-lab-books": {
       "active": "section-lab-books",
       "keys": {
         "a": "FieldsDialog: Add a Book",
-        "A": "RemovalPickerScreen: Remove a Book",
-        "e": "RemovalPickerScreen: Edit which book?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit Notes",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "TabPane#tab-lab-diary": {
       "active": "tab-lab-diary",
       "keys": {
         "a": "FieldsDialog: Add a Diary Entry",
-        "A": "RemovalPickerScreen: Remove a Diary Entry",
-        "e": "RemovalPickerScreen: Edit which Diary Entry?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit a Diary Entry",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     }
   },
@@ -1338,187 +792,110 @@
       "active": "section-fam-info",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Familiar",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-fam-binding": {
       "active": "section-fam-binding",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "EditFamiliarBindingScreen",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-fam-vf-virtues": {
       "active": "section-fam-vf-virtues",
       "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
+        "a": "VirtueFlawPickerScreen: Add a Virtue",
         "e": "(disabled)",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "VirtueFlawPickerScreen: Add a Virtue",
-        "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-fam-vf-flaws": {
       "active": "section-fam-vf-flaws",
       "keys": {
-        "a": "(disabled)",
-        "A": "(disabled)",
+        "a": "VirtueFlawPickerScreen: Add a Flaw",
         "e": "(disabled)",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "VirtueFlawPickerScreen: Add a Flaw",
-        "V": "RemovalPickerScreen: Remove a Virtue or Flaw"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-fam-personality-traits": {
       "active": "section-fam-personality-traits",
       "keys": {
         "a": "FieldsDialog: Add a Personality Trait",
-        "A": "RemovalPickerScreen: Remove a Personality Trait",
-        "e": "RemovalPickerScreen: Edit which Personality Trait?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit a Personality Trait",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-fam-reputations": {
       "active": "section-fam-reputations",
       "keys": {
         "a": "FieldsDialog: Add a Reputation",
-        "A": "RemovalPickerScreen: Remove a Reputation",
-        "e": "RemovalPickerScreen: Edit which Reputation?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit a Reputation",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-fam-characteristics": {
       "active": "section-fam-characteristics",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Characteristics",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-fam-health": {
       "active": "section-fam-health",
       "keys": {
         "a": "(disabled)",
-        "A": "(disabled)",
         "e": "FieldsDialog: Edit Wounds",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
-        "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "d": "(disabled)",
+        "m": "FieldsDialog: Edit Fatigue Level",
+        "slash": "(disabled)"
       }
     },
     "SheetSection#section-fam-natural-weapons": {
       "active": "section-fam-natural-weapons",
       "keys": {
         "a": "FieldsDialog: Add a Natural Weapon",
-        "A": "RemovalPickerScreen: Remove which attack?",
-        "e": "RemovalPickerScreen: Edit which attack?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit Beak",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "TabPane#tab-fam-abilities": {
       "active": "tab-fam-abilities",
       "keys": {
         "a": "AbilityPickerScreen: Add an Ability",
-        "A": "RemovalPickerScreen: Remove an Ability",
-        "e": "RemovalPickerScreen: Edit which Ability?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Awareness",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     },
     "TabPane#tab-fam-powers": {
       "active": "tab-fam-powers",
       "keys": {
         "a": "FieldsDialog: Add a Bond Power",
-        "A": "RemovalPickerScreen: Remove a Bond Power",
-        "e": "RemovalPickerScreen: Edit which Bond Power?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit Speak",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     }
   },
@@ -1527,17 +904,10 @@
       "active": "section-unassigned-books",
       "keys": {
         "a": "FieldsDialog: Add a Book",
-        "A": "RemovalPickerScreen: Remove a Book",
-        "e": "RemovalPickerScreen: Edit which book?",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "FieldsDialog: Edit Loose",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(disabled)"
       }
     }
   },
@@ -1546,17 +916,10 @@
       "active": "section-spells",
       "keys": {
         "a": "FieldsDialog: Add a Spell",
-        "A": "notice: Choose a spell to delete first.",
-        "e": "notice: Choose a spell to edit first.",
-        "r": "(disabled)",
-        "i": "(disabled)",
-        "u": "(disabled)",
-        "s": "(disabled)",
+        "e": "notice: Soothe Pains of the Beast is a catalog spell, so it's read-only. To make your own version, add a spell with a.",
+        "d": "notice: Soothe Pains of the Beast is a catalog spell, so it's read-only. To make your own version, add a spell with a.",
         "m": "(disabled)",
-        "F": "(disabled)",
-        "I": "(disabled)",
-        "v": "(disabled)",
-        "V": "(disabled)"
+        "slash": "(nothing)"
       }
     }
   }

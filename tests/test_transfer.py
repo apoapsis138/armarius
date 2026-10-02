@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 
 import pytest
+from support import menu
 
 from ars_magica_manager import catalog, storage, transfer
 from ars_magica_manager import house_rules as hr
@@ -389,7 +390,7 @@ async def test_x_exports_a_character_and_the_saga_imports_it():
             pilot, lambda: workspace._character_sheet_view is not None
         )
         assert workspace.check_action("export_record", ())
-        await pilot.press("x")
+        await menu(pilot, app, "m", "Export")
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         assert await wait_until(pilot, lambda: bool(app.screen.query("#fld-file")))
         dialog = app.screen
@@ -407,7 +408,7 @@ async def test_x_exports_a_character_and_the_saga_imports_it():
         # 'I' on the saga imports it back, as a second Leandro.
         tree.select_node(tree.root)
         assert await wait_until(pilot, lambda: workspace.selected_kind.value == "saga")
-        await pilot.press("I")
+        await menu(pilot, app, "m", "Import")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
         options = app.screen.query_one("#import-list", OptionList)
 
@@ -430,7 +431,7 @@ async def test_x_exports_a_character_and_the_saga_imports_it():
         await pilot.press("enter")
         assert await wait_until(pilot, lambda: app.screen is workspace)
         assert len(storage.load_saga("test_saga").characters) == 3
-        await pilot.press("I")
+        await menu(pilot, app, "m", "Import")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
         options = app.screen.query_one("#import-list", OptionList)
         choose("characters")

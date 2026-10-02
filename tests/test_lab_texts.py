@@ -371,7 +371,7 @@ async def test_the_lab_sheet_lists_lab_texts_and_filters_them():
         assert [b.id for b in texts.books] == ["t-own", "t-wolf", "t-ring", "t-long"]
         assert workspace._book_view() is texts
         assert workspace.check_action("filter_lab_texts", ())
-        await pilot.press("F")
+        await pilot.press("slash")
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         assert await wait_until(pilot, lambda: bool(app.screen.query("#fld-kind")))
         app.screen.query_one("#fld-technique", Select).value = "Creo"

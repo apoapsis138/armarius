@@ -176,7 +176,7 @@ class FamiliarActions(WorkspaceBase):
         self._familiar_natural_weapon_form(None)
 
     def _edit_familiar_natural_weapon(self) -> None:
-        """Edit the chosen attack; with none chosen, ask which one."""
+        """Edit the chosen attack."""
         familiar = self.selected_familiar
         if familiar is None:
             return
@@ -186,14 +186,12 @@ class FamiliarActions(WorkspaceBase):
                 pos.row_label(pos.PossessionEntry("weapon", weapon))
                 for weapon in familiar.natural_weapons
             ],
-            title="Edit which attack?",
             empty="No Natural Weapons to edit.",
             then=lambda index: self._familiar_natural_weapon_form(index),
         )
 
     def _remove_familiar_natural_weapon(self) -> None:
-        """Delete the chosen attack (after confirming); with none chosen,
-        ask which one first."""
+        """Delete the chosen attack (after confirming)."""
         familiar = self.selected_familiar
         if familiar is None:
             return
@@ -203,7 +201,6 @@ class FamiliarActions(WorkspaceBase):
                 pos.row_label(pos.PossessionEntry("weapon", weapon))
                 for weapon in familiar.natural_weapons
             ],
-            title="Remove which attack?",
             empty="No Natural Weapons to remove.",
             then=lambda index: self._confirm_remove_familiar_natural_weapon(index),
         )
@@ -242,14 +239,13 @@ class FamiliarActions(WorkspaceBase):
         )
 
     def _edit_familiar_ability(self) -> None:
-        """Edit the chosen Ability; with none chosen, ask which one."""
+        """Edit the chosen Ability."""
         familiar = self.selected_familiar
         if familiar is None:
             return
         self._chosen_or_pick(
             self._selected_familiar_ability(),
             [self._ability_label(a) for a in familiar.abilities],
-            title="Edit which Ability?",
             empty="No Abilities to edit.",
             then=lambda index: self._edit_familiar_ability_at(index),
         )
@@ -277,15 +273,13 @@ class FamiliarActions(WorkspaceBase):
         )
 
     def _remove_familiar_ability(self) -> None:
-        """Delete the chosen Ability (after confirming); with none chosen,
-        ask which one first."""
+        """Delete the chosen Ability (after confirming)."""
         familiar = self.selected_familiar
         if familiar is None:
             return
         self._chosen_or_pick(
             self._selected_familiar_ability(),
             [self._ability_label(a) for a in familiar.abilities],
-            title="Remove an Ability",
             empty="No Abilities to remove.",
             then=lambda index: self._confirm_remove_familiar_ability(index),
         )
@@ -348,28 +342,25 @@ class FamiliarActions(WorkspaceBase):
         self._familiar_bond_power_form(None)
 
     def _edit_familiar_bond_power(self) -> None:
-        """Edit the chosen Bond Power; with none chosen, ask which one."""
+        """Edit the chosen Bond Power."""
         familiar = self.selected_familiar
         if familiar is None:
             return
         self._chosen_or_pick(
             self._selected_familiar_bond_power(),
             [escape(p.name) or "(unnamed)" for p in familiar.bond_powers],
-            title="Edit which Bond Power?",
             empty="No Bond Powers to edit.",
             then=lambda index: self._familiar_bond_power_form(index),
         )
 
     def _remove_familiar_bond_power(self) -> None:
-        """Delete the chosen Bond Power (after confirming); with none
-        chosen, ask which one first."""
+        """Delete the chosen Bond Power (after confirming)."""
         familiar = self.selected_familiar
         if familiar is None:
             return
         self._chosen_or_pick(
             self._selected_familiar_bond_power(),
             [escape(p.name) or "(unnamed)" for p in familiar.bond_powers],
-            title="Remove a Bond Power",
             empty="No Bond Powers to remove.",
             then=lambda index: self._confirm_remove_familiar_bond_power(index),
         )

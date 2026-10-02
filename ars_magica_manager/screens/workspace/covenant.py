@@ -78,12 +78,11 @@ class CovenantActions(WorkspaceBase):
         self._possession_form(kind, None)
 
     def _edit_possession(self, kind: str) -> None:
-        """Edit the chosen possession; with none chosen, ask which one."""
+        """Edit the chosen possession."""
         entries = self._possession_entries(kind)
         self._chosen_or_pick(
             self._selected_possession(kind),
             [escape(e.name) or "(unnamed)" for e in entries],
-            title=f"Edit which {pos.KIND_SINGULAR[kind]}?",
             empty=f"No {pos.KIND_TITLES[kind]} to edit.",
             then=lambda index: self._possession_form(kind, entries[index]),
         )
@@ -117,13 +116,11 @@ class CovenantActions(WorkspaceBase):
         )
 
     def _remove_possession(self, kind: str) -> None:
-        """Delete the chosen possession (after confirming); with none chosen,
-        ask which one. A laboratory listed as a sanctum can't be deleted here."""
+        """Delete the chosen possession (after confirming). A laboratory listed as a sanctum can't be deleted here."""
         entries = self._possession_entries(kind)
         self._chosen_or_pick(
             self._selected_possession(kind),
             [escape(e.name) or "(unnamed)" for e in entries],
-            title=f"Remove a {pos.KIND_SINGULAR[kind]}",
             empty=f"No {pos.KIND_TITLES[kind]} to remove.",
             then=lambda index: self._confirm_remove_possession(kind, entries[index]),
         )
@@ -193,7 +190,7 @@ class CovenantActions(WorkspaceBase):
         self._income_form(None)
 
     def _edit_income_source(self) -> None:
-        """Edit the chosen source of income; with none chosen, ask which one."""
+        """Edit the chosen source of income."""
         covenant = self.selected_covenant
         if covenant is None:
             return
@@ -201,7 +198,6 @@ class CovenantActions(WorkspaceBase):
         self._chosen_or_pick(
             self._selected_economics("income"),
             [escape(s.name) or "(unnamed)" for s in sources],
-            title="Edit which source of income?",
             empty="No sources of income to edit.",
             then=lambda index: self._income_form(sources[index]),
         )
@@ -252,8 +248,7 @@ class CovenantActions(WorkspaceBase):
         self.app.push_screen(FieldsDialog(title, fields), handle_result)
 
     def _remove_income_source(self) -> None:
-        """Delete the chosen source of income (after confirming); with none
-        chosen, ask which one."""
+        """Delete the chosen source of income (after confirming)."""
         covenant = self.selected_covenant
         if covenant is None:
             return
@@ -261,7 +256,6 @@ class CovenantActions(WorkspaceBase):
         self._chosen_or_pick(
             self._selected_economics("income"),
             [escape(s.name) or "(unnamed)" for s in sources],
-            title="Remove a source of income",
             empty="No sources of income to remove.",
             then=lambda index: self._confirm_remove_income_source(sources[index]),
         )
@@ -283,7 +277,7 @@ class CovenantActions(WorkspaceBase):
 
     def _improve_income_source(self) -> None:
         """Improve the chosen source of income (manually simulating a year's
-        Income Modification); with none chosen, ask which one."""
+        Income Modification)."""
         covenant = self.selected_covenant
         if covenant is None:
             return
@@ -291,7 +285,6 @@ class CovenantActions(WorkspaceBase):
         self._chosen_or_pick(
             self._selected_economics("income"),
             [escape(s.name) or "(unnamed)" for s in sources],
-            title="Improve which source of income?",
             empty="No sources of income to improve.",
             then=lambda index: self._improve_form(sources[index]),
         )
@@ -354,25 +347,17 @@ class CovenantActions(WorkspaceBase):
 
     def _edit_economics_row(self, which: str) -> None:
         """Edit the chosen Yearly Expenditure / Cost Savings row (its Notes, and
-        the numbers that are typed rather than calculated); with none chosen,
-        ask which one."""
+        the numbers that are typed rather than calculated)."""
         covenant = self.selected_covenant
         if covenant is None:
             return
         summary = eco.summarize(self.saga, covenant)
         rows = summary.expenditure if which == "expenditure" else summary.savings
-        selected = self._selected_economics(which)
-        if selected is not None and selected < len(rows):
-            self._economics_row_form(which, rows[selected])
-            return
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._economics_row_form(which, rows[index])
-
-        self.app.push_screen(
-            RemovalPickerScreen("Edit which row?", [row.name for row in rows]),
-            handle_index,
+        self._chosen_or_pick(
+            self._selected_economics(which),
+            [row.name for row in rows],
+            empty="Nothing to edit here.",
+            then=lambda index: self._economics_row_form(which, rows[index]),
         )
 
     def _economics_row_form(
@@ -467,12 +452,11 @@ class CovenantActions(WorkspaceBase):
         )
 
     def _edit_inhabitant(self, kind: str) -> None:
-        """Edit the chosen inhabitant; with none chosen, ask which one."""
+        """Edit the chosen inhabitant."""
         entries = self._inhabitant_entries(kind)
         self._chosen_or_pick(
             self._selected_inhabitant(kind),
             [escape(e.name) or "(unnamed)" for e in entries],
-            title=f"Edit which {inh.KIND_SINGULAR[kind]}?",
             empty=f"No {inh.KIND_TITLES[kind]} to edit.",
             then=lambda index: self._inhabitant_form(kind, entries[index], None),
         )
@@ -505,14 +489,12 @@ class CovenantActions(WorkspaceBase):
         )
 
     def _remove_inhabitant(self, kind: str) -> None:
-        """Delete the chosen inhabitant (after confirming); with none chosen,
-        ask which one. People listed from a character sheet can't be deleted
+        """Delete the chosen inhabitant (after confirming). People listed from a character sheet can't be deleted
         here -- that would mean changing the sheet."""
         entries = self._inhabitant_entries(kind)
         self._chosen_or_pick(
             self._selected_inhabitant(kind),
             [escape(e.name) or "(unnamed)" for e in entries],
-            title=f"Remove a {inh.KIND_SINGULAR[kind]}",
             empty=f"No {inh.KIND_TITLES[kind]} to remove.",
             then=lambda index: self._confirm_remove_inhabitant(kind, entries[index]),
         )
@@ -820,8 +802,7 @@ class CovenantActions(WorkspaceBase):
         return view.selected_boon_hook(kind) if view is not None else None
 
     def _remove_boon_hook(self, kind: str) -> None:
-        """Delete the selected Boon/Hook (after confirming). With nothing
-        selected in this section, ask which one first."""
+        """Delete the selected Boon/Hook (after confirming)."""
         covenant = self.selected_covenant
         if covenant is None:
             return
@@ -829,20 +810,12 @@ class CovenantActions(WorkspaceBase):
         if selected is not None:
             self._confirm_remove_boon_hook(kind, selected)
             return
-
         attached = self._attached_boons_hooks(covenant, kind)
-        if not attached:
-            self.notify(f"No {kind}s to remove.")
-            return
-        by_id = catalog.load_covenant_boon_hook_catalog_by_id()
-        labels = [catalog.describe_boon_hook(bh, by_id) for _, bh in attached]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._confirm_remove_boon_hook(kind, attached[index][0])
-
-        self.app.push_screen(
-            RemovalPickerScreen(f"Remove a {kind}", labels), handle_index
+        self._chosen_or_pick(
+            None,
+            [str(index) for index, _ in attached],
+            empty=f"No {kind}s to remove.",
+            then=lambda at: self._confirm_remove_boon_hook(kind, attached[at][0]),
         )
 
     def _confirm_remove_boon_hook(self, kind: str, index: int) -> None:
@@ -862,8 +835,7 @@ class CovenantActions(WorkspaceBase):
         )
 
     def _edit_boon_hook(self, kind: str) -> None:
-        """Edit the selected Boon/Hook's detail and description. With nothing
-        selected in this section, ask which one first."""
+        """Edit the selected Boon/Hook's detail and description."""
         covenant = self.selected_covenant
         if covenant is None:
             return
@@ -871,20 +843,12 @@ class CovenantActions(WorkspaceBase):
         if selected is not None:
             self._edit_boon_hook_at(kind, selected)
             return
-
         attached = self._attached_boons_hooks(covenant, kind)
-        if not attached:
-            self.notify(f"No {kind}s to edit.")
-            return
-        by_id = catalog.load_covenant_boon_hook_catalog_by_id()
-        labels = [catalog.describe_boon_hook(bh, by_id) for _, bh in attached]
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                self._edit_boon_hook_at(kind, attached[index][0])
-
-        self.app.push_screen(
-            RemovalPickerScreen(f"Edit which {kind}?", labels), handle_index
+        self._chosen_or_pick(
+            None,
+            [str(index) for index, _ in attached],
+            empty=f"No {kind}s to edit.",
+            then=lambda at: self._edit_boon_hook_at(kind, attached[at][0]),
         )
 
     def _edit_boon_hook_at(self, kind: str, index: int) -> None:
@@ -972,7 +936,7 @@ class CovenantActions(WorkspaceBase):
         )
 
     def _edit_covenant_diary_entry(self) -> None:
-        """Edit the chosen Diary entry; with none chosen, ask which one."""
+        """Edit the chosen Diary entry."""
         covenant = self.selected_covenant
         if covenant is None:
             return
@@ -998,14 +962,12 @@ class CovenantActions(WorkspaceBase):
         self._chosen_or_pick(
             None,
             labels,
-            title="Edit which Diary Entry?",
             empty="No Diary entries to edit.",
             then=lambda position: edit(order[position]),
         )
 
     def _remove_covenant_diary_entry(self) -> None:
-        """Delete the chosen Diary entry (after confirming); with none
-        chosen, ask which one first."""
+        """Delete the chosen Diary entry (after confirming)."""
         covenant = self.selected_covenant
         if covenant is None:
             return
@@ -1023,7 +985,6 @@ class CovenantActions(WorkspaceBase):
         self._chosen_or_pick(
             None,
             labels,
-            title="Remove a Diary Entry",
             empty="No Diary entries to remove.",
             then=lambda position: remove(order[position]),
         )
@@ -1031,8 +992,7 @@ class CovenantActions(WorkspaceBase):
     # -- Covenant: Seasons (STORY-912) --
 
     def _season_person_then(self, kind: str, then: Any) -> None:
-        """Act on the person chosen in the Seasons list of `kind`; with none
-        chosen there, ask which one."""
+        """Act on the person chosen in the Seasons list of `kind`."""
         covenant = self.selected_covenant
         if covenant is None:
             return
@@ -1043,7 +1003,6 @@ class CovenantActions(WorkspaceBase):
         self._chosen_or_pick(
             selected,
             [escape(c.name) for c in people],
-            title="Whose season?",
             empty="Nobody to plan for here.",
             then=lambda index: then(people[index]),
         )

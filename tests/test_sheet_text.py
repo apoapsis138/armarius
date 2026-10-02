@@ -81,6 +81,10 @@ async def _open_node(pilot, app, node: str) -> WorkspaceScreen:
     await pilot.press("enter")  # picker -> workspace
     assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
     workspace = app.screen
+    # What a sheet shows, not where focus is: opening a sheet or a tab moves
+    # focus into a section or list, which chooses a row, fills the details
+    # panel and can scroll. Keep focus out of the sheet while it is walked.
+    workspace._focus_first_section = lambda *, initial=False: None
     tree = workspace.query_one(Tree)
 
     def find_node():
