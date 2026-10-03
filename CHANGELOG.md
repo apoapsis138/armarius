@@ -10,6 +10,16 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.7.0 — 2026-10-03
+
+The details panel at the bottom of a sheet's tab fits what it shows.
+
+- It is as tall as its text, from 3 rows up to 12; longer text still
+  scrolls inside it. With nothing chosen it shrinks to 3 rows, and the
+  list above it gets the rows it gives back.
+- Three laboratory hints are shorter so they fit on one line: Attributes,
+  Inventory and Planning.
+
 ## 2.6.0 — 2026-10-03
 
 Character templates: start a new character from one of the book's

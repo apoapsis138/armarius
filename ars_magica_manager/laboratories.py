@@ -529,12 +529,11 @@ def reconcile_dropped(lab: Laboratory, previously_counted: Collection[str]) -> N
 #: The lab sheet's Attributes and Inventory tabs' shared details panel,
 #: with nothing chosen.
 ATTRIBUTES_PANEL_HINT = (
-    "[dim]Select a Specialization, Feature or Room to see its details. Space "
-    "turns a Specialization off or on.[/]"
+    "[dim]Select a Specialization, Feature or Room to see its details.[/]"
 )
 INVENTORY_PANEL_HINT = (
-    "[dim]Select Raw Vis, an Equipment & Stores entry, an Arcane Connection, an "
-    "enchanted device or a book to see its details.[/]"
+    "[dim]Select Raw Vis, stores, a connection, a device or a book to see its "
+    "details.[/]"
 )
 
 

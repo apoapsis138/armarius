@@ -898,8 +898,11 @@ class PinnedCollapsible(FocusableSection):
         event.prevent_default()
 
 
-#: Every details panel's height in rows, padding included (user, STORY-114).
-DETAILS_PANEL_HEIGHT = 12
+#: A details panel's height in rows, padding included: it fits its text,
+#: from one line (nothing chosen) up to the old fixed 12 (STORY-114,
+#: STORY-1010), beyond which the text scrolls.
+DETAILS_PANEL_MIN_HEIGHT = 3
+DETAILS_PANEL_MAX_HEIGHT = 12
 
 
 class PanelText(Static):
@@ -914,8 +917,9 @@ class PanelText(Static):
 
 class DetailsPanel(VerticalScroll):
     """A selectable list's details panel: one per tab, docked below the
-    tab's scrolling part, always DETAILS_PANEL_HEIGHT rows on a shaded
-    background; longer text scrolls inside it (mouse wheel). It holds one
+    tab's scrolling part on a shaded background, as tall as its text
+    between DETAILS_PANEL_MIN_HEIGHT and DETAILS_PANEL_MAX_HEIGHT rows;
+    longer text scrolls inside it (mouse wheel). It holds one
     PanelText, which carries the id (or class) the sheet updates it by --
     query it as a Static. Not focusable, so it adds no stop to the focus chain."""
 
@@ -924,7 +928,9 @@ class DetailsPanel(VerticalScroll):
     DEFAULT_CSS = f"""
     DetailsPanel.details-panel {{
         width: 1fr;
-        height: {DETAILS_PANEL_HEIGHT};
+        height: auto;
+        min-height: {DETAILS_PANEL_MIN_HEIGHT};
+        max-height: {DETAILS_PANEL_MAX_HEIGHT};
         margin-top: 1;
         padding: 1 2;
         background: $panel;

@@ -16,28 +16,28 @@
    1 Attributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Description
 
       (no description)
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Reputations (1)                                                             ▂▂
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Reputations (1)
 
       ○ Fair dealing: +2
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Boons (1 pt)                            ▼ Hooks (1 pt)
+
+      ○ Aura                                    ○ Contested Resource
+
+
+
+
 
 
 
     Select a Boon or Hook to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -60,27 +60,27 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Loyalty                                                                     ▅▅
+    ▼ Loyalty
 
       Type of Governance:       (not set)     Situational Modifiers for:
-      Base Loyalty Points:      -30           Living Conditions:  +0  (+0)
+      Base Loyalty Points:      -30           Living Conditions:  +0  (+0)        ▂▂
       Total modifiers:          0             Equipment:          Standard  (+0)
       Current Loyalty Points:   -30           Money:              Standard salary
       Prevailing Loyalty Score: -3            (+0)
                                               Specialists:        0
                                               Familiarity:        0
+                                              Reputation:         0
+                                              Actions and events: 0
+                                              Magical Influence:  0
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Inhabitants
+
+      Number of Teamsters / Needed: 0 / 2
+      Number of Servants / Needed:  0 / 4
 
 
     Select an inhabitant to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -102,28 +102,28 @@
    1 Attributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Magi (0 of 1 planned)
 
       ○ Leandro                   nothing planned
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Companions (0 of 1 planned)                                                 ▂▂
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Companions (0 of 1 planned)
 
       ○ Alys                      nothing planned
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Grogs (0)
+
+      (none recorded)
+
+
+
+
 
 
 
     Select someone to see their season.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -152,21 +152,21 @@
       ○ A property
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Sanctums (1)
+    ▼ Sanctums (1)                                                                ▆▆
 
         Name                Owner           Quality  Upkeep
+      ○ Tower               Leandro              -2       0
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Weapons (1)
+
+        Name                Type                Quality       Qty Init  Atk  Def
+      Dmg Load
+      ○ A weapon                                Standard        1   +0   +0   +0
+      +0    0
 
 
     Select a possession to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -190,26 +190,26 @@
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Wealth
-                                                                                  ▅▅
+
       Points of Inhabitants:       16         Total Income:
       Points of Laboratories:      10         100
       Points of Weapons and Armor: 0          Expenditure (Before Cost Savings):
       Wealth:                      0          21
                                               Cost Savings:                      0
-                                              Total Expenditure:
+                                              Total Expenditure:                  ▄▄
                                               21
+                                              Surplus/Deficit:
+                                              +79
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Sources of Income (1)
+
+                            Type        Income  Note
+      ○ Mill                Typical        100
+
 
 
     Select a source of income or a row to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -242,17 +242,17 @@
         • Ability: 0
         • Art:     0
 
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Books (3)
+
+          Name                 Type           Subject           Level Quality
+      Location
+        ○ Summa                Art Summa      -                     -       -
+      Covenant Library
+
+
 
     Select a book to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -286,16 +286,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select a Diary entry to see its details.
-
-
-
-
-
-
-
-
-
 
 
 

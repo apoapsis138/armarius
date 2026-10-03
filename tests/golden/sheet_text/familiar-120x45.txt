@@ -19,25 +19,25 @@
       Binding Arts Used: (not set)
       Initial Binding Lab Total: 0
       Target Binding Level: 0
-      Cumulative Vis Spent on Binding: 0 pawns                                    ▁▁
+      Cumulative Vis Spent on Binding: 0 pawns
 
       Golden Cord: +0 (0 pts) -- Subtracts score from Magic & Lab Botch Dice (min
       1 botch die remaining).
       Silver Cord: +0 (0 pts) -- Bonus to Personality Trait rolls & Mental
       Resistance. Mind-Freeing Roll: Stress Die + Score >= 9.
       Bronze Cord: +0 (0 pts) -- Bonus to Base Soak, Healing rolls, Deprivation
+      rolls, and Aging rolls.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Virtues (1 pt)                         ▼ Flaws (0 pts)
+
+      ○ Adept Laboratory Student (Minor)       (none recorded)
+                                                                                  ▅▅
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Personality Traits (1)                 ▼ Reputations (1)
 
 
     Select a Virtue or Flaw to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -99,31 +99,31 @@
   dentity & Cords  2 Characteristics  3 Combat & Health  4 Abilities  5 Bond Powers
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Health
 
-      Light Wounds:  0 (-1 each)              Fatigue Level: Fresh
-      Medium Wounds: 0 (-3 each)                Edit Fatigue
+      Light Wounds:  0 (-1 each)               Fatigue Level: Fresh
+      Medium Wounds: 0 (-3 each)                 Edit Fatigue
       Heavy Wounds:  0 (-5 each)
       Incapacitated: no
       Dead: no
        Edit Wounds (e)
-                                                                                  ▄▄
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Natural Weapons & Attacks (1)
+
+        Name                Type                Quality       Qty Init  Atk  Def
+      Dmg Load
+      ○ Beak                                    Standard        1   +0   +0   +0
+      +0    0
+
+
+
+
 
 
 
     Select an attack to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -157,16 +157,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select an Ability to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -200,16 +200,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select a Bond Power to see its details.
-
-
-
-
-
-
-
-
-
 
 
 

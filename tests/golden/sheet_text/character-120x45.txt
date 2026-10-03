@@ -71,16 +71,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select an Ability to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -114,16 +114,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select a Virtue or Flaw to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -153,20 +153,20 @@
   Talisman: Ring  Opened 0/0  0 attunements
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Magical Arts
-
+                                                                                  ▃▃
       Techniques                             Forms
+                            Score    XP                            Score    XP
+      ○ Creo (Cr)               0     0      ○ Animal (An)             0     0
+      ○ Intellego (In)          0     0      ○ Aquam (Aq)              0     0
+      ○ Muto (Mu)               0     0      ○ Auram (Au)              0     0
+      ○ Perdo (Pe)              0     0      ○ Corpus (Co)             0     0
+      ○ Rego (Re)               0     0      ○ Herbam (He)             0     0
+                                             ○ Ignem (Ig)              0     0
+                                             ○ Imaginem (Im)           0     0
+                                             ○ Mentem (Me)             0     0
 
 
     Select an Art, a Known Spell or a Research Goal to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -194,22 +194,22 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Raw Vis                                                                     ▇▇
+    ▼ Raw Vis
 
       ○ Creo: 3 pawn(s)
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Personal Gear (1)
+
+      Other Items             Qty                                                 ▆▆
+      ○ Staff                   1
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Enchanted Devices (1)
 
 
 
     Select an item, an enchanted device or a book to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -286,16 +286,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select a Diary entry to see its details.
-
-
-
-
-
-
-
-
-
 
 
 

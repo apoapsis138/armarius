@@ -54,15 +54,15 @@
 
 
 
+
+
+
+
+
     Name: Loose
     Type: Other           Language: Latin
     Subject: (not set)    Author: (unknown)
     Level: -              Year Published: (unknown)
     Quality: -            Owner: (none - unassigned)
-
-
-
-
-
 
 

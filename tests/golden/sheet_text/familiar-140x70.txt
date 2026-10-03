@@ -53,16 +53,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select a Virtue or Flaw to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -189,16 +189,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select an attack to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -257,16 +257,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select an Ability to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -325,16 +325,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select a Bond Power to see its details.
-
-
-
-
-
-
-
-
-
 
 
 

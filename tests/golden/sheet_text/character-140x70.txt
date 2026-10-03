@@ -121,16 +121,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select an Ability to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -189,16 +189,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select a Virtue or Flaw to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -242,7 +242,7 @@
                                                        ○ Terram (Te)             0     0
                                                        ○ Vim (Vi)                0     0
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▂▂
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Casting Scores
 
                      An   Aq   Au   Co   He   Ig   Im   Me   Te   Vi
@@ -254,19 +254,19 @@
 
       Every score adds: Stamina +0, Aura (Magic 1) +1 (firm words, bold gestures).
       Formulaic: score + die >= level casts it; up to 10 short costs a Fatigue level.
-      Spontaneous without Fatigue: score / 5; with Fatigue: (score + stress die) / 2.
+      Spontaneous without Fatigue: score / 5; with Fatigue: (score + stress die) / 2.                 ▁▁
+      Magic Resistance (Form + Parma 0 x 5 + aura): An 1, Aq 1, Au 1, Co 1, He 1, Ig 1, Im 1, Me 1, Te
+      1, Vi 1
+      Penetration: Casting Total - spell level +0 (Penetration), multiplied by Arcane Connections.
+      Certamen: Initiative +0, Attack Presence +0 + Art, Defence Perception +0 + the other Art,
+      Weakening +0 + advantage, Resistance +0.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Raw Vis
+
 
 
     Select an Art, a Known Spell or a Research Goal to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -325,16 +325,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select an item, an enchanted device or a book to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -461,16 +461,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select a Diary entry to see its details.
-
-
-
-
-
-
-
-
-
 
 
 

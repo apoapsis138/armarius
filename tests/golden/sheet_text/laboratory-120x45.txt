@@ -28,9 +28,6 @@
 
 
 
-    Select an activity to see its plan and Lab Total (e changes it; on a free
-    season, e plans one). Seasons spent otherwise (reading, adventure...) are
-    planned on the character sheet.
 
 
 
@@ -38,6 +35,9 @@
 
 
 
+
+
+    Select an activity to see its plan and Lab Total; e plans a free season.
 
 
 
@@ -114,16 +114,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select a Virtue or Flaw to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -155,18 +155,18 @@
 
       Activity (0 of 2)
       Art (4 of 4)
+      ○ Intellego  +2
+      ○ Auram      +1
+      ○ Ignem      +1                                                             ▁▁
+      ○ Imaginem   +4
+      ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+        ▼ Specializations: Other (1)
+
+          ○ Ignem  +1  Hearth spirit
 
 
-    Select a Specialization, Feature or Room to see its details. Space turns a
-    Specialization off or on.
 
-
-
-
-
-
-
-
+    Select a Specialization, Feature or Room to see its details.
 
 
 
@@ -198,18 +198,18 @@
 
       ○ Ignem: 2 pawn(s)
 
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▃▃
+    ▼ Equipment & Stores (1)
+
+      ○ Alembic
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Arcane Connections (0)
+
+      (none recorded)
 
 
-    Select Raw Vis, an Equipment & Stores entry, an Arcane Connection, an
-    enchanted device or a book to see its details.
-
-
-
-
-
-
-
-
+    Select Raw Vis, stores, a connection, a device or a book to see its details.
 
 
 
@@ -243,16 +243,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select a Diary entry to see its details.
-
-
-
-
-
-
-
-
-
 
 
 

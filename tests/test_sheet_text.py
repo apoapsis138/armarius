@@ -28,11 +28,19 @@ from ars_magica_manager import storage
 from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Saga
 from ars_magica_manager.screens import WorkspaceScreen
-from ars_magica_manager.screens.widgets import DETAILS_PANEL_HEIGHT, DetailsPanel
+from ars_magica_manager.screens.widgets import (
+    DETAILS_PANEL_MAX_HEIGHT,
+    DETAILS_PANEL_MIN_HEIGHT,
+    DetailsPanel,
+)
 
 GOLDEN_DIR = Path(__file__).parent / "golden" / "sheet_text"
 
 SIZES = [(140, 70), (120, 45)]
+
+#: The sizes the details panels are checked at: the user's, and the smallest
+#: supported.
+PANEL_SIZES = [(140, 60), (120, 45)]
 
 #: The nodes that show a sheet view (the others show a list or a summary).
 SHEETS = {"covenant", "character", "laboratory", "familiar"}
@@ -153,14 +161,17 @@ async def test_sheet_text(node, size):
         assert refreshed == shown
 
 
-@pytest.mark.parametrize("node", list(NODES))
-async def test_every_details_panel_is_one_fixed_panel_docked_at_the_bottom(node):
-    # STORY-114: one details panel per tab (or list), always
-    # DETAILS_PANEL_HEIGHT rows, at the bottom of its tab below the part
-    # that scrolls.
+@pytest.mark.parametrize(
+    ("node", "size"), [(node, size) for node in NODES for size in PANEL_SIZES]
+)
+async def test_every_details_panel_is_one_panel_docked_at_the_bottom(node, size):
+    # STORY-114: one details panel per tab (or list), at the bottom of its
+    # tab below the part that scrolls. STORY-1010: it fits its text, so
+    # with nothing chosen (focus is kept out of the sheet) it is the
+    # minimum, one line of hint plus its padding.
     storage.save_saga(everything_saga())
     app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
+    async with app.run_test(size=size) as pilot:
         workspace = await _open_node(pilot, app, node)
         pane = workspace._detail_pane()
         tabbed = next(iter(pane.query(TabbedContent)), None)
@@ -173,8 +184,16 @@ async def test_every_details_panel_is_one_fixed_panel_docked_at_the_bottom(node)
             where = tab.id if tab is not None else node
             panels = list((tab or pane).query(DetailsPanel))
             assert len(panels) <= 1, where
+            # A list outside a sheet (books, spells) takes focus and chooses
+            # a row; a sheet's sections don't (see _open_node).
+            chosen = app.focused is not None and pane in app.focused.ancestors
             for panel in panels:
-                assert panel.region.height == DETAILS_PANEL_HEIGHT, where
+                if chosen:
+                    height = panel.region.height
+                    assert DETAILS_PANEL_MIN_HEIGHT <= height, where
+                    assert height <= DETAILS_PANEL_MAX_HEIGHT, where
+                else:
+                    assert panel.region.height == DETAILS_PANEL_MIN_HEIGHT, where
                 assert panel.region.bottom == panel.parent.region.bottom, where
                 assert panel is panel.parent.children[-1], where
 

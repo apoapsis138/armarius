@@ -237,8 +237,8 @@ def test_specialization_info_text_lists_sources_and_status():
         "  +1  Notes",
         "  +1  Notes",
     ]
-    assert "Space turns a Specialization off or on" in (
-        lab_text.specialization_info_text(lab, None)
+    assert (
+        lab_text.specialization_info_text(lab, None) == lab_text.ATTRIBUTES_PANEL_HINT
     )
     # A Technique's panel says how many Techniques count.
     lab = _with(("Creo", 1))

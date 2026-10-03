@@ -53,16 +53,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select a Boon or Hook to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -99,7 +99,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Inhabitants
 
-      Number of Teamsters / Needed: 0 / 2                                                             ▁▁
+      Number of Teamsters / Needed: 0 / 2
       Number of Servants / Needed:  0 / 4
       Number of Laborers:           0
       Other People:                 0
@@ -109,7 +109,7 @@
     ▼ Miscellaneous
 
       Aging for Magi:    0                              Magic Servants:  0
-      Aging for Mundane: 0                              Magic Teamsters: 0
+      Aging for Mundane: 0                              Magic Teamsters: 0                            ▅▅
       Magic Laborers:    0                              Magic Turbula:   0
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -119,18 +119,18 @@
       ○ Leandro             Unknown            Unknown  The Gift
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Companions (1)
+
+        Name                Responsibility    Role           Year Born
+      ○ Alys                                                   Unknown
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Specialists (1)
+
+        Name                Responsibility    Role           Year Born
 
 
     Select an inhabitant to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -189,16 +189,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select someone to see their season.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -255,18 +255,18 @@
         Name                Art        Pawns
       ○ A vis_store                        0
 
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Items (1)
+
+        Name                  Qty
+      ○ A item                  1
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▆▆
+    ▼ Enchanted Devices (1)
+
 
 
     Select a possession to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -287,22 +287,22 @@
    1 Attributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Wealth
 
-      Points of Inhabitants:       16                   Total Income:                      100
-      Points of Laboratories:      10                   Expenditure (Before Cost Savings): 21
-      Points of Weapons and Armor: 0                    Cost Savings:                      0
-      Wealth:                      0                    Total Expenditure:                 21
-                                                        Surplus/Deficit:                   +79
+      Points of Inhabitants:       16                    Total Income:                      100
+      Points of Laboratories:      10                    Expenditure (Before Cost Savings): 21
+      Points of Weapons and Armor: 0                     Cost Savings:                      0
+      Wealth:                      0                     Total Expenditure:                 21
+                                                         Surplus/Deficit:                   +79
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Sources of Income (1)
 
                             Type        Income  Note
       ○ Mill                Typical        100
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Yearly Expenditure
 
                                 Cost  Savings  Notes
@@ -317,24 +317,24 @@
       ○ Inflation                  0        0
       ○ Sundry                     1        0
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Cost Savings
 
-                            Quantity  Savings  Notes                                                  ▆▆
+                            Quantity  Savings  Notes
       ○ Laborers                   0        0
       ○ Craftspeople               0        0
+      ○ Magic                      0        0
+      ○ Emergency Savings          0        0
+
+
+
+
+
+
+
 
 
     Select a source of income or a row to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -393,16 +393,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select a book to see its details.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -461,16 +461,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
     Select a Diary entry to see its details.
-
-
-
-
-
-
-
-
-
 
 
 

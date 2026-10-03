@@ -1391,9 +1391,8 @@ def lab_queue_info(saga: Saga, lab: Laboratory, index: int | None) -> str:
     Lab Total, line by line."""
     if index is None:
         return (
-            "[dim]Select an activity to see its plan and Lab Total (e changes "
-            "it; on a free season, e plans one). Seasons spent otherwise "
-            "(reading, adventure...) are planned on the character sheet.[/]"
+            "[dim]Select an activity to see its plan and Lab Total; e plans a "
+            "free season.[/]"
         )
     rows = lab_queue(saga, lab)
     if index >= len(rows):
