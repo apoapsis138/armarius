@@ -39,6 +39,7 @@ from textual.widgets.tree import TreeNode
 from ... import books as bk
 from ... import (
     catalog,
+    character_templates,
     creation,
     deletion,
     seasons,
@@ -62,6 +63,7 @@ from ...models import (
     TEXT_LONGEVITY,
     Ability,
     Character,
+    CharacterTemplateDef,
     Covenant,
     Familiar,
     GrogYear,
@@ -81,7 +83,7 @@ from ..fields import (
     FieldsDialog,
 )
 from ..forms import (
-    _character_create_fields,
+    _character_create_dialog,
     _covenant_create_fields,
     _familiar_create_fields,
     _grog_year_dialog,
@@ -89,6 +91,7 @@ from ..forms import (
     _saga_fields,
     _season_plan_dialog,
     saga_rule_options,
+    template_key,
 )
 from ..pickers import (
     LabVirtueFlawPickerScreen,
@@ -98,6 +101,7 @@ from ..prompts import (
     AdvanceSeasonScreen,
     ConfirmScreen,
     MenuScreen,
+    _blanks_dialog,
     _date_fields,
     _export_dialog,
     _move_vis_dialog,
@@ -1568,23 +1572,45 @@ class WorkspaceBase(Screen[None]):
     def action_create_character(self) -> None:
         covenant = self.selected_covenant
 
+        async def create(
+            values: dict[str, Any],
+            template: CharacterTemplateDef | None = None,
+            blanks: dict[str, str] | None = None,
+        ) -> None:
+            character = creation.add_character(
+                self.saga, values["name"], values["type"], values["covenant_id"]
+            )
+            if template is not None:
+                character_templates.apply(self.saga, character, template, blanks)
+            storage.save_saga(self.saga)
+            self._rebuild_tree()
+            self.selected_character = character
+            self.selected_kind = NodeKind.CHARACTER
+            await self._show_character_detail(character)
+
         async def handle_result(values: dict[str, Any] | None) -> None:
-            if values is not None:
-                character = creation.add_character(
-                    self.saga, values["name"], values["type"], values["covenant_id"]
-                )
-                storage.save_saga(self.saga)
-                self._rebuild_tree()
-                self.selected_character = character
-                self.selected_kind = NodeKind.CHARACTER
-                await self._show_character_detail(character)
+            if values is None:
+                return
+            template = character_templates.find(
+                values.get(template_key(values["type"]))
+            )
+            wanted = character_templates.blanks(template) if template else []
+            if template is None or not wanted:
+                await create(values, template)
+                return
+
+            async def handle_blanks(filled: dict[str, Any] | None) -> None:
+                # Cancelling the names cancels the new character.
+                if filled is not None:
+                    await create(values, template, filled)
+
+            self.app.push_screen(
+                _blanks_dialog(f"{escape(template.name)} template", wanted),
+                handle_blanks,
+            )
 
         self.app.push_screen(
-            FieldsDialog(
-                "Create a New Character",
-                _character_create_fields(self.saga, covenant.id if covenant else None),
-                save_label="Create",
-            ),
+            _character_create_dialog(self.saga, covenant.id if covenant else None),
             handle_result,
         )
 

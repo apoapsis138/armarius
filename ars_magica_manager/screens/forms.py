@@ -27,7 +27,7 @@ from textual.widgets import (
 from textual.widgets.option_list import Option
 
 from .. import books as bk
-from .. import catalog, faith, seasons, sourcebooks, storage
+from .. import catalog, character_templates, faith, seasons, sourcebooks, storage
 from .. import economics as eco
 from .. import enchanted_devices as ed
 from .. import familiars as fam
@@ -797,13 +797,61 @@ def _covenant_field(saga: Saga, covenant_id: str | None) -> DialogField:
 
 
 def _character_create_fields(saga: Saga, covenant_id: str | None) -> list[DialogField]:
+    """Name, Type, a Template of that Type (STORY-1317; one field per Type,
+    shown while it is chosen) and covenant."""
     return [
         DialogField(
             "name", "Name", "text", "", required=True, placeholder="e.g. Leandro"
         ),
         DialogField("type", "Type", "select", "magus", options=_CHARACTER_TYPES),
+        *(_template_field(kind) for _, kind in _CHARACTER_TYPES),
         _covenant_field(saga, covenant_id),
     ]
+
+
+def template_key(kind: str) -> str:
+    """The New Character form's key for a Type's Template field."""
+    return "template_" + kind.replace(" ", "_")
+
+
+def _template_field(kind: str) -> DialogField:
+    options = [(escape(t.name), t.id) for t in character_templates.templates_for(kind)]
+    return DialogField(
+        template_key(kind),
+        "Template",
+        "select",
+        None,
+        options=options,
+        allow_blank=True,
+        placeholder="None",
+        show_if=lambda values: values.get("type") == kind,
+    )
+
+
+def _character_create_dialog(
+    saga: Saga, covenant_id: str | None
+) -> FieldsDialog[dict[str, Any]]:
+    """Create a New Character, describing the chosen Template as it is
+    picked (STORY-1317)."""
+
+    def live(values: dict[str, Any]) -> str:
+        kind = values.get("type") or ""
+        template = character_templates.find(values.get(template_key(kind)))
+        if template is not None:
+            return character_templates.summary(template)
+        if not character_templates.templates_for(kind):
+            return "[dim]The book has no templates for this type.[/]"
+        return (
+            "[dim]None: the character starts In Creation, built step by step. "
+            "A template is a ready-to-play character from the book.[/]"
+        )
+
+    return FieldsDialog(
+        "Create a New Character",
+        _character_create_fields(saga, covenant_id),
+        live=live,
+        save_label="Create",
+    )
 
 
 def _laboratory_create_fields(saga: Saga, covenant_id: str | None) -> list[DialogField]:

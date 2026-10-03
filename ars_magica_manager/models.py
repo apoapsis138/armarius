@@ -539,6 +539,57 @@ class HouseDef:
         return cls(**data)
 
 
+@dataclass
+class CharacterTemplateDef:
+    """A ready-to-play character from the book's Character Templates
+    (character_template_catalog.json; STORY-1317), in the book's notation:
+    scores, not xp. "{area}", "{second_area}" and "{language}" in an
+    Ability name are asked for when the template is used."""
+
+    id: str
+    name: str
+    type: CharacterType
+    #: A magus's House (a house_catalog.json id).
+    house: str | None = None
+    characteristics: dict[str, int] = field(default_factory=dict)
+    #: Aging Points per Characteristic (the book's "+1 (1)").
+    aging_points: dict[str, int] = field(default_factory=dict)
+    size: int = 0
+    age: int = 0
+    apparent_age: int = 0
+    #: [score, points past it] for Decrepitude, Warping and Confidence.
+    decrepitude: list[int] = field(default_factory=lambda: [0, 0])
+    warping: list[int] = field(default_factory=lambda: [0, 0])
+    confidence: list[int] = field(default_factory=lambda: [0, 0])
+    #: Each {"vf_id", "params"}, plus the book's detail as "note" for an
+    #: entry with no parameter for it, and "free" for a House's free Virtue.
+    virtues_flaws: list[dict[str, Any]] = field(default_factory=list)
+    #: [name, score] each.
+    personality_traits: list[list[Any]] = field(default_factory=list)
+    reputations: list[list[Any]] = field(default_factory=list)
+    #: Each {"name", "score"}, with "xp" (toward the next score) and
+    #: "specialty" when the book gives them. The score excludes a Puissant
+    #: bonus, which comes from the Virtue.
+    abilities: list[dict[str, Any]] = field(default_factory=list)
+    #: Art -> {"score", "xp"?}, Arts at 0 left out.
+    arts: dict[str, dict[str, int]] = field(default_factory=dict)
+    #: Each {"spell_id"}, or a version of a catalog spell the catalog lacks:
+    #: {"name", "level", "version_of"}.
+    spells: list[dict[str, Any]] = field(default_factory=list)
+    #: Each {"kind": "weapon"|"armor", "gear_id", "full"?} or
+    #: {"kind": "item", "name"}.
+    equipment: list[dict[str, Any]] = field(default_factory=list)
+    #: The book's Customization Notes, condensed.
+    notes: str = ""
+    #: Where this entry differs from the page's text, and why.
+    fixes: list[str] = field(default_factory=list)
+    source: str = "DE"
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> CharacterTemplateDef:
+        return cls(**data)
+
+
 #: The book's weapon tables a WeaponDef comes from, in its order.
 WEAPON_TABLES: tuple[str, ...] = ("melee", "missile", "natural")
 

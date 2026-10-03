@@ -10,6 +10,27 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.6.0 — 2026-10-03
+
+Character templates: start a new character from one of the book's
+ready-to-play characters.
+
+- New Character has a Template choice under Type. It starts at None and
+  offers only that type's templates from the Definitive Edition: six grogs,
+  five companions and a magus for each of the twelve Houses (the book has
+  none for Mythic Companions). The form describes the chosen template as
+  you pick it.
+- A template fills in the whole sheet: Characteristics, age, Virtues and
+  Flaws, Abilities with their specialties, Arts, spells, weapons, armor and
+  gear, Personality Traits, Reputations and the House. The character
+  starts In Play, and its Biography notes the template and the book's
+  advice on customizing it.
+- It asks for the area and native language the template leaves to you;
+  cancelling there creates no character.
+- Two spells the templates know but the spell list lacks (Piercing the
+  Magical Veil, Unravelling the Fabric of Imaginem) are added to the
+  saga's own spells the first time they are needed.
+
 ## 2.5.0 — 2026-10-01
 
 The keyboard rework: one key per verb, everywhere.
