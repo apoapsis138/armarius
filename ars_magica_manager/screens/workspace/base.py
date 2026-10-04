@@ -93,6 +93,7 @@ from ..forms import (
     saga_rule_options,
     template_key,
 )
+from ..help import HelpContext, HelpScreen, shown_keys
 from ..pickers import (
     LabVirtueFlawPickerScreen,
     VirtueFlawPickerScreen,
@@ -245,6 +246,21 @@ class NodeKind(StrEnum):
     SEASONS = "seasons"
     BOOK_GROUP = "book_group"
 
+
+#: Each tree node's help page (help/*.md), by the kind of node selected.
+_HELP_PAGES: dict[NodeKind, str] = {
+    NodeKind.SAGA: "saga",
+    NodeKind.COVENANT: "covenant",
+    NodeKind.CHARACTER_GROUP: "character-group",
+    NodeKind.CHARACTER: "character",
+    NodeKind.FAMILIAR: "familiar",
+    NodeKind.LABORATORY_GROUP: "laboratory-group",
+    NodeKind.LABORATORY: "laboratory",
+    NodeKind.BOOK_GROUP: "unassigned-books",
+    NodeKind.SEASONS: "seasons",
+    NodeKind.SPELLS: "spells",
+    NodeKind.HOUSE_RULES: "house-rules",
+}
 
 #: Each sheet's own section: the top panel that names the record. With
 #: focus there (or on its tree node), d and More act on the record itself.
@@ -425,6 +441,7 @@ class WorkspaceBase(Screen[None]):
         ("m", "more", "More"),
         ("n", "new", "New"),
         ("t", "advance_season", "Advance Season"),
+        ("question_mark", "help", "Help"),
         ("escape", "step_out", "Back"),
         ("q", "quit", "Quit"),
         # Moving around: not in the footer (the tabs show their numbers).
@@ -440,6 +457,7 @@ class WorkspaceBase(Screen[None]):
     GLOBAL_ACTIONS: ClassVar[tuple[str, ...]] = (
         "new",
         "advance_season",
+        "help",
         "step_out",
         "quit",
     )
@@ -1301,6 +1319,37 @@ class WorkspaceBase(Screen[None]):
             if isinstance(focused, SelectableList) and focused.chosen_text:
                 parts.append(focused.chosen_text)
         bar.set_where("  ›  ".join(escape(part) for part in parts if part))
+
+    def action_help(self) -> None:
+        self.app.push_screen(HelpScreen(self.help_context()))
+
+    def help_context(self) -> HelpContext:
+        """What Help opens on (STORY-115): the focused section, its tab and
+        the sheet or view on show, then finding your way around; with the
+        where-am-I row's words and the keys the footer offers here."""
+        ids: list[str] = []
+        focused = self.app.focused
+        view = self._current_sheet_view()
+        if focused is not None and view is not None and not self._tree_focused():
+            section = section_of(focused)
+            if section is not None and section.id:
+                ids.append(section.id)
+            tabbed = view.query_one(TabbedContent)
+            if tabbed.active:
+                ids.append(tabbed.active)
+        page = _HELP_PAGES.get(self.selected_kind)
+        if page is not None:
+            ids.append(page)
+        ids.append("workspace")
+        keys = shown_keys(self, self.GLOBAL_ACTIONS)
+        more = self._more_items()
+        if len(more) > 1:
+            keys.append("m More: " + ", ".join(item.label for item in more))
+        try:
+            where = self.query_one(BottomBar).where
+        except NoMatches:
+            where = ""
+        return HelpContext(ids, where, keys)
 
     def on_descendant_blur(self, event: DescendantBlur) -> None:
         self.refresh_bindings()

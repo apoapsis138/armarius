@@ -367,6 +367,13 @@ just the standing decisions.
   (`ars_magica_manager/markup.py`) rather than each screen handling it
   separately, so bracketed names and `**bold**`-style emphasis are safe and
   consistent everywhere.
+- **Help** (STORY-115): `?` (F1 while typing in a dialog) opens one Help
+  screen on the help for what has focus: the section, its tab, the sheet or
+  view, or a process dialog's own page. The text is Markdown in
+  `ars_magica_manager/help/`, a page per tab with a paragraph per section,
+  saying what it's for and what is typed versus worked out; the "keys
+  here" line is generated from the footer. Every tab and section must have
+  help (`tests/test_help.py`). Rules text stays in the details panel.
 - **Colour comes only from the active theme.** Text that needs to stand out
   uses the theme's text variables in markup: `$text-error` for problems,
   deficits and penalties, `$text-success` for met targets and bonuses

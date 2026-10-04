@@ -488,7 +488,7 @@ async def test_more_reaches_what_only_a_button_did():
             pilot, lambda: workspace._active_section() == "section-char-health"
         )
         # One thing to do: the footer names it and m runs it.
-        assert "m Edit Fatigue" in _footer(app)
+        assert await wait_until(pilot, lambda: "m Edit Fatigue" in _footer(app))
         await pilot.press("m")
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         assert "Fatigue" in app.screen.title_text
@@ -534,6 +534,8 @@ async def test_the_footer_keeps_focused_actions_left_and_global_ones_right():
             "t",
             "Advance",
             "Season",
+            "?",
+            "Help",
             "esc",
             "Back",
             "q",

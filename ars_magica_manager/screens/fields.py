@@ -9,7 +9,7 @@ from dataclasses import field as dataclass_field
 from typing import Any, ClassVar, cast, overload
 
 from textual.app import ComposeResult
-from textual.binding import BindingType
+from textual.binding import Binding, BindingType
 from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.css.query import NoMatches
 from textual.screen import ModalScreen, Screen
@@ -63,13 +63,30 @@ class ModalDialog[ResultT](ModalScreen[ResultT]):
     """Base of the app's modal dialogs: Escape (or a dialog's Cancel button
     calling action_cancel) dismisses with CANCEL_RESULT."""
 
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
+    BINDINGS: ClassVar[list[BindingType]] = [
+        ("escape", "cancel", "Cancel"),
+        # Help (STORY-115); a field being typed in takes the ? first.
+        Binding("question_mark", "app.help", "Help", show=False),
+    ]
 
     #: What the dialog dismisses with when cancelled.
     CANCEL_RESULT: ClassVar[Any] = None
 
+    #: The dialog's own help page (help/*.md), if it has one; without one,
+    #: Help shows the page of the screen it was opened from (STORY-115).
+    help_id: str | None = None
+
     def action_cancel(self) -> None:
         self.dismiss(self.CANCEL_RESULT)
+
+    def help_context(self) -> Any:
+        """What Help opens on here (a screens.help.HelpContext), or None to
+        show the screen below's."""
+        if self.help_id is None:
+            return None
+        from .help import HelpContext  # help.py builds on this module
+
+        return HelpContext([self.help_id])
 
     def _select_value(self, selector: str) -> str | None:
         """The chosen value of the Select at `selector`, or None if blank."""

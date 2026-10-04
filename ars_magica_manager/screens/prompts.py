@@ -1282,6 +1282,8 @@ class AdvanceSeasonScreen(ModalDialog[bool]):
     """Confirms advancing the saga's calendar by one season. Dismisses with
     True to advance, False (or via Escape) to leave the date alone."""
 
+    help_id = "advance-season"
+
     CANCEL_RESULT = False
 
     DEFAULT_CSS = """

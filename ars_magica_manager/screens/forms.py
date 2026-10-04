@@ -1566,7 +1566,7 @@ def _grog_year_dialog(
             hint=hint,
         )
 
-    return FieldsDialog(
+    dialog = FieldsDialog(
         f"{escape(character.name)}'s Yearly Update",
         [
             ability(
@@ -1601,6 +1601,8 @@ def _grog_year_dialog(
             story_awards=values.get("story_awards") or 0,
         ),
     )
+    dialog.help_id = "grog-year"
+    return dialog
 
 
 #: What reaching a research goal grants (Breakthrough.grant_kind).
@@ -2016,7 +2018,7 @@ def _season_plan_dialog(
             return "Say in Notes what the season is spent on."
         return found[0] if found else None
 
-    return FieldsDialog(
+    dialog = FieldsDialog(
         f"Plan {escape(character.name)}'s Season "
         f"({saga.current_season} {saga.current_year})",
         fields,
@@ -2026,6 +2028,8 @@ def _season_plan_dialog(
         ),
         build=lambda values: _season_plan_from(saga, character, values),
     )
+    dialog.help_id = "plan-season"
+    return dialog
 
 
 def _hermetic_fields(hermetic: HermeticBackground) -> list[DialogField]:
@@ -3475,6 +3479,8 @@ class ImportScreen(ModalDialog[str | None]):
     are shown greyed out and can't be chosen. Dismisses with the chosen
     IMPORT_KINDS key, or None if cancelled."""
 
+    help_id = "import-data"
+
     DEFAULT_CSS = """
     ImportScreen {
         align: center middle;
@@ -3622,6 +3628,8 @@ class DuplicateBookScreen(ModalScreen[str]):
 class SpellImportHelperScreen(ModalDialog[str | None]):
     """What a spell CSV looks like, with a way to save an example to start
     from. Dismisses with "choose" to go on to picking the file, or None."""
+
+    help_id = "import-spells"
 
     DEFAULT_CSS = """
     SpellImportHelperScreen {

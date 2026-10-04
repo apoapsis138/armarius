@@ -10,6 +10,15 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.8.0 — 2026-10-04
+
+Help: press ? anywhere (F1 while typing in a dialog) for help on the part of
+the screen you're in: the section, its tab and the sheet, with the keys that
+work there. Every sheet, tab and section has a page saying what it's for and
+what you type versus what the app works out, and the processes (planning and
+advancing a season, inventing a spell, the Creation Worksheet, importing) have
+their own. Topics can be filtered with /. About this App now lives in Help.
+
 ## 2.7.1 — 2026-10-04
 
 A magus's free House Virtue no longer counts toward Virtue points.

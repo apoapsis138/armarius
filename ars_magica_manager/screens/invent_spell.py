@@ -70,6 +70,8 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
     design) or invent one from a Lab Text. Dismisses with the plan, or None
     if cancelled."""
 
+    help_id = "invent-spell"
+
     BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """

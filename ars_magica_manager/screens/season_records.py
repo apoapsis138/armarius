@@ -20,6 +20,8 @@ class SeasonSummaryScreen(ModalDialog[None]):
     """What the season just applied gave everyone, by covenant. Closes with
     Enter or Escape."""
 
+    help_id = "season-summary"
+
     BINDINGS: ClassVar[list[BindingType]] = [
         ("escape", "cancel", "Close"),
         ("enter", "cancel", "Close"),

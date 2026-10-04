@@ -1,16 +1,18 @@
 """The Ars Magica Open License obligations (STORY-1202): every catalog
-carries Atlas's attribution line, and the saga picker's About dialog shows
-the licences and credits."""
+carries Atlas's attribution line, and Help's About this App shows the licences
+and credits."""
 
 import json
 import sys
 
 import pytest
 from support import screen_lines, wait_until
+from textual.widgets import OptionList
 
 from ars_magica_manager import DATA_DIR, ROOT, catalog
 from ars_magica_manager.app import ArsMagicaManagerApp
-from ars_magica_manager.screens.saga_picker import AboutScreen, SagaPickerScreen
+from ars_magica_manager.screens.help import HelpScreen
+from ars_magica_manager.screens.saga_picker import SagaPickerScreen
 
 #: The attribution statement Atlas Games asks for, word for word.
 ATLAS = (
@@ -64,46 +66,50 @@ def test_notice_names_the_licences_and_trademarks():
     )
 
 
-async def test_saga_picker_footer_shows_about_at_the_right():
+async def test_saga_picker_footer_shows_help_at_the_right():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:
         await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
-        await wait_until(pilot, lambda: "About this App" in screen_lines(app)[-1])
+        await wait_until(pilot, lambda: "? Help" in screen_lines(app)[-1])
         footer = screen_lines(app)[-1]
-        assert footer.index("q Quit") < footer.index("? About this App")
-        assert footer.index("? About this App") < footer.index("^p palette")
-        # Right-justified: a gap between Quit and About.
-        assert " " * 10 in footer[footer.index("q Quit") : footer.index("? About")]
+        assert footer.index("q Quit") < footer.index("? Help")
+        assert footer.index("? Help") < footer.index("^p palette")
+        # Right-justified: a gap between Quit and Help.
+        assert " " * 10 in footer[footer.index("q Quit") : footer.index("? Help")]
 
 
-async def test_question_mark_opens_about_and_escape_or_close_shuts_it():
+async def _open_about(pilot, app) -> None:
+    """? on the saga picker, then Help's About this App (STORY-115: About
+    moved into Help)."""
+    await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
+    await pilot.press("question_mark")
+    await wait_until(pilot, lambda: isinstance(app.screen, HelpScreen))
+    topics = app.screen.query_one("#help-topics", OptionList)
+    topics.highlighted = topics.get_option_index("ref:about")
+    await wait_until(pilot, lambda: app.screen.topic_id == "about")
+
+
+async def test_help_holds_about_and_escape_shuts_it():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:
-        await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
-        await pilot.press("question_mark")
-        await wait_until(pilot, lambda: isinstance(app.screen, AboutScreen))
-        shown = "\n".join(screen_lines(app))
-        assert "Ars Magica Manager v" in shown
-        assert "Licences, credits and trademarks" in shown
-        # The Close button fits on a 120x45 screen.
-        close = app.screen.query_one("#btn-close")
-        assert close.region.bottom <= 45
+        await _open_about(pilot, app)
+        await wait_until(
+            pilot,
+            lambda: "Licences, credits and trademarks" in "\n".join(screen_lines(app)),
+        )
+        assert "Ars Magica Manager v" in "\n".join(screen_lines(app))
 
         await pilot.press("escape")
-        await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
-
-        await pilot.press("question_mark")
-        await wait_until(pilot, lambda: isinstance(app.screen, AboutScreen))
-        app.screen.query_one("#btn-close").press()
         await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
 
 
 async def test_about_shows_the_attribution_further_down():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
-        await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
-        await pilot.press("question_mark")
-        await wait_until(pilot, lambda: isinstance(app.screen, AboutScreen))
+        await _open_about(pilot, app)
+        page = app.screen.query_one("#help-scroll")
+        await wait_until(pilot, lambda: page.max_scroll_y > 0)
+        page.scroll_end(animate=False)
         await wait_until(
             pilot, lambda: "licensed by Trident" in "\n".join(screen_lines(app))
         )

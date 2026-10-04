@@ -97,6 +97,8 @@ class CreationWorksheetScreen(ModalDialog[None]):
     it is In Creation. Escape closes it; everything is saved as it's
     edited."""
 
+    help_id = "creation-worksheet"
+
     BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Close")]
 
     DEFAULT_CSS = """

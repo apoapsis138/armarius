@@ -237,6 +237,11 @@ class BottomBar(Vertical):
             yield ThemeBar(id="theme-bar")
         yield SplitFooter(self._right_actions)
 
+    @property
+    def where(self) -> str:
+        """Where focus is, as last set (markup)."""
+        return self._where
+
     def set_where(self, where: str) -> None:
         """Show `where` (markup) as the place focus is."""
         if where != self._where:
