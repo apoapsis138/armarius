@@ -6,7 +6,7 @@ domain modules it returns markup text, never widgets."""
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Collection, Sequence
 
 from . import books as bk
 from . import catalog
@@ -160,18 +160,21 @@ def ability_info_text(
 
 
 def vf_rows(
-    instances: Sequence[VirtueFlawInstance], vf_type: str
+    instances: Sequence[VirtueFlawInstance],
+    vf_type: str,
+    free: Collection[int] = (),
 ) -> list[tuple[int | None, str]]:
     """The attached Virtues or Flaws (`vf_type`) as (true index into
     `instances`, label) pairs, so a filtered list still maps back to the
     real entry. Qualities list with the Virtues, Inferiorities with the
-    Flaws (VirtueFlawDef.side)."""
+    Flaws (VirtueFlawDef.side). Indices in `free` (a magus's House Virtue,
+    STORY-214) are marked Free."""
     vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
     return [
         (
             index,
             f"{escape(catalog.describe_virtue_flaw(vf, vf_catalog))} "
-            f"({definition.tier})",
+            f"({definition.tier}{', Free' if index in free else ''})",
         )
         for index, vf in enumerate(instances)
         if (definition := vf_catalog.get(vf.vf_id)) is not None
@@ -179,15 +182,20 @@ def vf_rows(
     ]
 
 
-def vf_points(instances: Sequence[VirtueFlawInstance], vf_type: str) -> float:
+def vf_points(
+    instances: Sequence[VirtueFlawInstance],
+    vf_type: str,
+    free: Collection[int] = (),
+) -> float:
     """The points the attached Virtues or Flaws (`vf_type`, Qualities and
     Inferiorities included) come to: Minor 1, Major 3, Free 0 each (entries
-    not in the catalog count nothing)."""
+    not in the catalog, and indices in `free`, count nothing)."""
     vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
     return sum(
         abs(definition.cost)
-        for vf in instances
-        if (definition := vf_catalog.get(vf.vf_id)) is not None
+        for index, vf in enumerate(instances)
+        if index not in free
+        and (definition := vf_catalog.get(vf.vf_id)) is not None
         and definition.side == vf_type
     )
 

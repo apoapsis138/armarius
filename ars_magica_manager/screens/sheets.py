@@ -64,6 +64,7 @@ from ..models import (
     Spell,
     character_age,
 )
+from ..rules import creation_virtues as cv
 from ..rules import realms, scores
 from .fields import _pairs
 from .widgets import (
@@ -1576,14 +1577,18 @@ class CharacterSheetView(SheetView):
         )
 
     def _vf_rows(self, vf_type: str) -> list[tuple[int | None, str]]:
-        return st.vf_rows(self.character.virtues_flaws, vf_type)
+        free = cv.house_benefit(self.character).free_indices
+        return st.vf_rows(self.character.virtues_flaws, vf_type, free)
 
     def _vf_title(self, vf_type: str) -> str:
         """ "Virtues (3 pts)" / "Flaws (3 pts)": the points each side comes
-        to, both coloured by whether they balance."""
+        to, both coloured by whether they balance. A magus's free House
+        Virtue (and Ex Miscellanea's compulsory Flaw) counts nothing
+        (STORY-214, cv.HOUSE_SOURCE)."""
         vfs = self.character.virtues_flaws
-        virtues = st.vf_points(vfs, "Virtue")
-        flaws = st.vf_points(vfs, "Flaw")
+        free = cv.house_benefit(self.character).free_indices
+        virtues = st.vf_points(vfs, "Virtue", free)
+        flaws = st.vf_points(vfs, "Flaw", free)
         return points_title(
             f"{vf_type}s",
             virtues if vf_type == "Virtue" else flaws,

@@ -152,6 +152,39 @@ def test_jerbiton_and_ex_miscellanea_house_benefits():
     assert (benefit.virtue_points, benefit.flaw_points) == (4, 0)
 
 
+def test_free_house_virtue_counts_no_sheet_points():
+    """STORY-214: the sheet's Virtue/Flaw points leave out the House's free
+    Virtue (and Ex Miscellanea's compulsory Flaw), and mark them Free."""
+    from ars_magica_manager import sheet_text as st
+    from ars_magica_manager.rules import creation_virtues as cv
+
+    jerbiton = _character(
+        "magus", 1195, "vf_the_gift", "vf_hermetic_magus", "vf_improved_characteristics"
+    )
+    jerbiton.hermetic.house = "house_jerbiton"
+    vfs = jerbiton.virtues_flaws
+    free = cv.house_benefit(jerbiton).free_indices
+    assert free == frozenset({2})
+    assert st.vf_points(vfs, "Virtue") == 1
+    assert st.vf_points(vfs, "Virtue", free) == 0
+    assert [label for i, label in st.vf_rows(vfs, "Virtue", free) if i == 2] == [
+        "Improved Characteristics (Minor, Free)"
+    ]
+
+    ex_misc = _character("magus", 1195, "vf_the_gift", "vf_hermetic_magus")
+    ex_misc.hermetic.house = "house_ex_miscellanea"
+    for vf_id in ("vf_hermetic_prestige", "vf_wealthy", "vf_chthonic_magic"):
+        ex_misc.virtues_flaws.append(VirtueFlawInstance(vf_id))
+    free = cv.house_benefit(ex_misc).free_indices
+    # Hermetic Prestige and Wealthy are free; Chthonic Magic still costs 3.
+    assert free == frozenset({2, 3})
+    assert st.vf_points(ex_misc.virtues_flaws, "Virtue", free) == 3
+
+    # Not a magus: nothing is free.
+    jerbiton.type = "companion"
+    assert cv.house_benefit(jerbiton).free_indices == frozenset()
+
+
 def test_a_mystery_house_virtue_starts_its_ability_at_one():
     from ars_magica_manager.rules import creation_later as later
 

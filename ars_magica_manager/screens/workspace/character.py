@@ -97,7 +97,10 @@ class CharacterActions(WorkspaceBase):
             background.true_faith_score = result["true_faith_score"]
             background.faith_points = result["faith_points"]
             background.size = result["size"]
-            self._commit("section-char-info", tree=True)
+            # Only a magus has a free House Virtue (STORY-214).
+            self._commit(
+                "section-char-info", "section-vf-virtues", "section-vf-flaws", tree=True
+            )
 
         self.app.push_screen(
             _character_info_dialog(self.saga, character), handle_result
@@ -391,7 +394,12 @@ class CharacterActions(WorkspaceBase):
         def handle_result(result: dict[str, Any] | None) -> None:
             if result is not None:
                 character.hermetic = HermeticBackground(**result)
-                self._commit("section-hermetic-background")
+                # The House decides which Virtue is free (STORY-214).
+                self._commit(
+                    "section-hermetic-background",
+                    "section-vf-virtues",
+                    "section-vf-flaws",
+                )
 
         self.app.push_screen(
             FieldsDialog(

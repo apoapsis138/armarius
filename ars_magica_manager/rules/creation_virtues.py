@@ -129,7 +129,8 @@ def tally(character: Character) -> VirtueFlawTally:
 
 @dataclass(frozen=True)
 class HouseBenefit:
-    """What a magus's House gives free at creation (STORY-1315)."""
+    """What a magus's House gives free at creation (STORY-1315). The free
+    House Virtue is outside the Virtue/Flaw balance (HOUSE_SOURCE)."""
 
     #: The points of the free Virtue(s) the magus holds: outside the balance.
     virtue_points: int = 0
@@ -140,6 +141,9 @@ class HouseBenefit:
     held: tuple[str, ...] = ()
     #: What the House gives that the magus hasn't taken yet.
     missing: tuple[str, ...] = ()
+    #: Indices into character.virtues_flaws of the entries counted above
+    #: (STORY-214): the sheet leaves them out of its points, marked Free.
+    free_indices: frozenset[int] = frozenset()
 
 
 def held_option(character: Character, option: dict):
@@ -165,48 +169,71 @@ def house_benefit(character: Character) -> HouseBenefit:
     if house is None:
         return HouseBenefit()
     by_id = catalog.load_virtue_flaw_catalog_by_id()
-    entries = [by_id[vf.vf_id] for vf in character.virtues_flaws if vf.vf_id in by_id]
+    entries = [
+        (index, by_id[vf.vf_id])
+        for index, vf in enumerate(character.virtues_flaws)
+        if vf.vf_id in by_id
+    ]
+
+    def first(match) -> int | None:
+        """The index of the first entry `match` accepts, or None."""
+        return next((index for index, e in entries if match(e)), None)
+
     if house.virtues:
         for option in house.virtues:
             instance = held_option(character, option)
             if instance is not None and option["vf_id"] in by_id:
                 entry = by_id[option["vf_id"]]
+                index = next(
+                    i for i, vf in enumerate(character.virtues_flaws) if vf is instance
+                )
                 return HouseBenefit(
                     virtue_points=round(entry.cost),
                     held=(catalog.describe_virtue_flaw(instance, by_id),),
+                    free_indices=frozenset({index}),
                 )
         return HouseBenefit(missing=(house.benefit,))
     if house.free == "minor_virtue":
-        if any(e.side == "Virtue" and e.tier == "Minor" for e in entries):
-            return HouseBenefit(virtue_points=1, held=("one Minor Virtue",))
+        index = first(lambda e: e.side == "Virtue" and e.tier == "Minor")
+        if index is not None:
+            return HouseBenefit(
+                virtue_points=1,
+                held=("one Minor Virtue",),
+                free_indices=frozenset({index}),
+            )
         return HouseBenefit(missing=(house.benefit,))
     if house.free == "ex_miscellanea":
 
         def hermetic(entry) -> bool:
             return "Hermetic" in (entry.category, *entry.extra_categories)
 
-        points, flaw, held, missing = 0, 0, [], []
-        if any(
-            e.side == "Virtue" and e.tier == "Minor" and hermetic(e) for e in entries
-        ):
+        points, flaw, held, missing, free = 0, 0, [], [], set()
+        index = first(
+            lambda e: e.side == "Virtue" and e.tier == "Minor" and hermetic(e)
+        )
+        if index is not None:
             points += 1
             held.append("a Minor Hermetic Virtue")
+            free.add(index)
         else:
             missing.append("a free Minor Hermetic Virtue")
-        if any(
-            e.side == "Virtue" and e.tier == "Major" and not hermetic(e)
-            for e in entries
-        ):
+        index = first(
+            lambda e: e.side == "Virtue" and e.tier == "Major" and not hermetic(e)
+        )
+        if index is not None:
             points += 3
             held.append("a Major non-Hermetic Virtue")
+            free.add(index)
         else:
             missing.append("a free Major non-Hermetic Virtue")
-        if any(e.side == "Flaw" and e.tier == "Major" and hermetic(e) for e in entries):
+        index = first(lambda e: e.side == "Flaw" and e.tier == "Major" and hermetic(e))
+        if index is not None:
             flaw = 3
             held.append("the compulsory Major Hermetic Flaw")
+            free.add(index)
         else:
             missing.append("the compulsory Major Hermetic Flaw")
-        return HouseBenefit(points, flaw, tuple(held), tuple(missing))
+        return HouseBenefit(points, flaw, tuple(held), tuple(missing), frozenset(free))
     return HouseBenefit()
 
 

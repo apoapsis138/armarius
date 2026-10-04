@@ -10,6 +10,21 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.7.1 — 2026-10-04
+
+A magus's free House Virtue no longer counts toward Virtue points.
+
+- On the character sheet, the Virtue the House gives free (Hermetic
+  Houses Summary, Definitive Edition Chapter Three) is left out of the
+  Virtues points and marked Free in its row, so a balanced magus no
+  longer shows one point too many in the error colour. For Ex
+  Miscellanea, its two free Virtues and its compulsory Hermetic Flaw are
+  left out of the points.
+- The sheet and the Creation Worksheet now agree on which Virtue is the
+  free one.
+- The Virtues & Flaws lists update straight away after the House or the
+  character type is changed.
+
 ## 2.7.0 — 2026-10-03
 
 The details panel at the bottom of a sheet's tab fits what it shows.
