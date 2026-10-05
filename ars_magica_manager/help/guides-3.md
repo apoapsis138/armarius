@@ -128,7 +128,7 @@ The buttons open the sheet's own dialogs and change the real record, so everythi
 ### Build a covenant
 <!-- help: guide-creation-covenant -->
 
-1. **Power Level.** Choose Power Level asks for the Power Level, the storyguide's Build Points (within that level's range) and the Year Founded. The step also lists what every covenant has free, and the highest level of text or enchanted effect the Power Level allows. Edit covenant opens the covenant's own details.
+1. **Power Level.** Choose Power Level asks for the Power Level, the storyguide's Build Points (within that level's range), how many magi go without a laboratory (each refunds 50 Build Points) and the Year Founded. The step also lists what every covenant has free, and the highest level of text or enchanted effect the Power Level allows. Edit covenant opens the covenant's own details.
 2. **Build Points.** The step shows the Build Points spent against the budget, line by line. They are priced from what the covenant owns: books in its Library, vis sources and stocks on its Possessions tab, enchanted devices, starting laboratories and specialists. Add those on the covenant sheet as usual; Buy a specialist is here.
 3. **Boons and Hooks.** Add a Boon, Add a Hook, or Use a Covenant Situation to take one of the books' ready-made sets. The step shows the Boon and Hook points, which should balance.
 4. **Review.** Lists every step that still has a check open.

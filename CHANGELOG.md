@@ -10,6 +10,16 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.11.3 — 2026-10-05
+
+- Fixes a covenant's starting laboratories taking 50 Build Points off for
+  every magus whose laboratory wasn't entered (Dammerstein's Build tab
+  showed -200 for Laboratories). Every magus has a free standard
+  laboratory whether or not it is entered; only the magi you say go
+  without one refund 50, set on the Power Level step as **Magi without a
+  laboratory**. To recount a covenant already in play, move it back to
+  In Creation and then to In Play again.
+
 ## 2.11.2 — 2026-10-05
 
 Behind the scenes: the rules for each kind of seasonal activity are now

@@ -98,7 +98,35 @@ def test_build_points_price_the_library_vis_items_and_labs():
     assert found["Build Points spent"] == ("advice", "65 unspent")
     saga.laboratories = saga.laboratories[:1]  # one lab for two magi
     costs = {c.label: c.points for c in cov.costs(saga, covenant)}
+    assert "Magi without a laboratory (1)" not in costs  # B's lab isn't entered
+
+
+def test_only_magi_said_to_go_without_a_lab_refund():
+    """A magus whose lab isn't entered still has the free one; only the
+    covenant's magi_without_lab refund 50 each, at creation (STORY-1318)."""
+    saga = _saga()
+    covenant = saga.covenants[0]
+    saga.characters += [
+        Character(id=f"m{i}", name=f"M{i}", type="magus", covenant_id="cov1")
+        for i in range(3, 5)
+    ]  # four magi, no labs entered: nothing either way
+    assert [c for c in cov.costs(saga, covenant) if c.category == "Laboratories"] == []
+    covenant.magi_without_lab = 1
+    costs = {c.label: c.points for c in cov.costs(saga, covenant)}
     assert costs["Magi without a laboratory (1)"] == -50
+    # Three magi have a free lab: a fourth starting lab is a spare.
+    saga.laboratories = [
+        Laboratory(id=f"l{i}", covenant_id="cov1", name=f"L{i}", starting=True)
+        for i in range(4)
+    ]
+    costs = {c.label: c.points for c in cov.costs(saga, covenant)}
+    assert costs["Spare laboratories (1)"] == 50
+    assert costs["Magi without a laboratory (1)"] == -50
+    covenant.magi_without_lab = 9  # no more than the covenant's magi
+    assert cov.without_lab(saga, covenant) == 4
+    # In play the refund isn't part of the covenant's value.
+    labels = [c.label for c in cov.costs(saga, covenant, every_lab=True)]
+    assert not any(label.startswith("Magi without") for label in labels)
 
 
 def test_lab_texts_and_tablets_cost_one_line_per_pool():
@@ -221,6 +249,7 @@ async def test_the_covenant_worksheet_prices_build_points():
     saga.id = "test_saga"
     saga.covenants[0].power_level = "Low"
     saga.covenants[0].build_points_budget = 300
+    saga.covenants[0].magi_without_lab = 2
     saga.covenants[0].possessions = [
         Possession(id="p1", kind="vis_source", name="Spring", art="Aquam", pawns=4)
     ]

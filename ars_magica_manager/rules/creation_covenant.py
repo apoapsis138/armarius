@@ -10,7 +10,8 @@ sources and stocks, enchanted items, starting laboratories, and (with
 Covenants in play) money. Its Boons and Hooks must balance.
 
 A starting laboratory: each magus's first standard lab is free, a spare
-lab costs 50 (a magus without one refunds 50), plus Size x 20 and each lab
+lab costs 50 (a magus the covenant says goes without one refunds 50;
+STORY-1318), plus Size x 20 and each lab
 Virtue (Minor 10, Major 20). Its builder needs Magic Theory 3; Safety is
 Refinement less the occupied Size; its Virtues less Flaws fit in Size +
 Refinement.
@@ -163,9 +164,17 @@ def lab_points(lab: Laboratory) -> int:
     return lab_build_points(lab)
 
 
+def without_lab(saga: Saga, covenant: Covenant) -> int:
+    """Magi going without a laboratory (Covenant.magi_without_lab, at
+    most the covenant's magi)."""
+    return max(0, min(covenant.magi_without_lab, _magi(saga, covenant)))
+
+
 def spare_labs(saga: Saga, covenant: Covenant, *, every: bool = False) -> int:
-    """Starting labs beyond one per magus (negative: magi without one)."""
-    return len(_covenant_labs(saga, covenant, every=every)) - _magi(saga, covenant)
+    """Starting labs beyond one free lab for each magus who has one (never
+    negative: a magus whose lab isn't entered still has the free one)."""
+    with_lab = _magi(saga, covenant) - without_lab(saga, covenant)
+    return max(0, len(_covenant_labs(saga, covenant, every=every)) - with_lab)
 
 
 def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Cost]:
@@ -227,16 +236,17 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
         if points:
             lines.append(Cost(f"Laboratory: {lab.name}", points, "Laboratories"))
     spare = spare_labs(saga, covenant, every=every_lab)
-    if spare > 0:
+    if spare:
         lines.append(
             Cost(f"Spare laboratories ({spare})", SPARE_LAB * spare, "Laboratories")
         )
-    elif spare < 0 and not every_lab:
+    none = without_lab(saga, covenant)
+    if none and not every_lab:
         # A refund at creation only: it isn't part of a covenant's value.
         lines.append(
             Cost(
-                f"Magi without a laboratory ({-spare})",
-                SPARE_LAB * spare,
+                f"Magi without a laboratory ({none})",
+                -SPARE_LAB * none,
                 "Laboratories",
             )
         )

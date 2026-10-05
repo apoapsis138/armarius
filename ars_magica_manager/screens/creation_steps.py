@@ -675,6 +675,7 @@ def _power_budget(saga: Saga, record: Record) -> str:
                 budget if budget is not None else "(not set)",
             ),
             ("Highest text or effect level", cap),
+            ("Magi without a laboratory", covenant.magi_without_lab),
         ]
     baseline = (
         "Free for every covenant: aura 3, one Typical source of income, a "

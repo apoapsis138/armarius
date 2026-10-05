@@ -157,17 +157,24 @@ CONTRACTS: dict[str, Contract] = {
     ),
     "power level": Contract(
         prefill={"Power Level": Select.NULL},
-        edits={"Power Level": "Medium", "Build Points": "600", "Year Founded": "1200"},
+        edits={
+            "Power Level": "Medium",
+            "Build Points": "600",
+            "Magi without a laboratory": "1",
+            "Year Founded": "1200",
+        },
         saved=lambda s: (
             s.covenants[0].power_level,
             s.covenants[0].build_points_budget,
+            s.covenants[0].magi_without_lab,
             s.covenants[0].year_founded,
         ),
-        expected=("Medium", 600, 1200),
+        expected=("Medium", 600, 1, 1200),
         invalid=[
             {"Power Level": Select.NULL},
             {"Year Founded": "soon"},
             {"Power Level": "Low", "Build Points": "400"},
+            {"Magi without a laboratory": "-1"},
         ],
     ),
     "buy specialist": Contract(

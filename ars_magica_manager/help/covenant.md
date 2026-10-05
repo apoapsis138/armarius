@@ -498,7 +498,13 @@ columns are the same, and the title shows the total against the
 storyguide's Build Points. Moving to In Play keeps the Initial figures,
 while Current goes on following what the covenant owns, counting every
 laboratory rather than only its starting ones. A covenant that was already
-in play before Build Points were tracked shows no Initial figures.
+in play before Build Points were tracked shows no Initial figures. To
+recount the Initial figures, move the covenant back to In Creation and then
+to In Play again.
+
+Each magus has one standard laboratory free, whether or not it is entered;
+starting laboratories beyond those cost 50 each. Only the magi the Power
+Level step says go without a laboratory refund 50 each.
 
 ### What's Counted
 <!-- help: section-cov-build-items -->

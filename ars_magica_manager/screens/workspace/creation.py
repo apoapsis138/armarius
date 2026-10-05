@@ -438,6 +438,7 @@ class CreationActions(WorkspaceBase):
             if values is not None:
                 covenant.power_level = values["power_level"]
                 covenant.build_points_budget = values["build_points_budget"]
+                covenant.magi_without_lab = values["magi_without_lab"]
                 covenant.year_founded = values["year_founded"]
                 self._commit("section-cov-info")
 

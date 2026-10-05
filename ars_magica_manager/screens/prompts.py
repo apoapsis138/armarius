@@ -950,6 +950,14 @@ def _power_level_dialog(covenant: Covenant) -> FieldsDialog[dict[str, Any]]:
                 hint="Set by the storyguide, within the Power Level's range.",
             ),
             DialogField(
+                "magi_without_lab",
+                "Magi without a laboratory",
+                "int",
+                covenant.magi_without_lab,
+                hint="Each refunds 50 Build Points. Every other magus has a "
+                "free standard lab, entered or not.",
+            ),
+            DialogField(
                 "year_founded",
                 "Year Founded",
                 "optint",
@@ -966,6 +974,8 @@ def _power_level_problem(values: dict[str, Any]) -> str | None:
     points = values.get("build_points_budget")
     if power is not None and points is not None and not in_band(power, points):
         return f"{power.name} gives {band(power)} Build Points."
+    if (values.get("magi_without_lab") or 0) < 0:
+        return "Magi without a laboratory can't be negative."
     return None
 
 

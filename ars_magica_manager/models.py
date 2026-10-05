@@ -2552,6 +2552,10 @@ class Covenant:
     #: The Build Points the storyguide gives it, within the Power Level's
     #: range: what its starting resources are bought with (None: not set).
     build_points_budget: int | None = None
+    #: Magi who go without a laboratory at creation, each refunding 50
+    #: Build Points (STORY-1318). Only this refunds: a magus whose lab
+    #: isn't entered still has the free one.
+    magi_without_lab: int = 0
     #: What its Build Points were spent on when it moved to In Play, by
     #: Build-tab row (STORY-1314); None for a covenant still In Creation,
     #: or one in play since before this was recorded.
