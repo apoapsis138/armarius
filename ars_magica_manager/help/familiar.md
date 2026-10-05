@@ -13,6 +13,8 @@ panel at the bottom shows the chosen row, including the rules text of a
 Virtue or Flaw. Most of a familiar's figures are typed in as the rules give
 them, rather than worked out by the app.
 
+**See also:** [How to bind and keep a familiar](help:guide-familiars)
+
 ### Familiar Info
 <!-- help: section-fam-info -->
 
@@ -34,7 +36,7 @@ Virtues and Flaws come to.
 
 **See also:** [Abilities tab](help:tab-fam-abilities),
 [Bond Powers tab](help:tab-fam-powers),
-[Character sheet](help:character)
+[Character sheet](help:character), [How to bind and keep a familiar](help:guide-familiars)
 
 ### Binding & Cords
 <!-- help: section-fam-binding -->
@@ -144,4 +146,4 @@ controller, uses per day, Penetration, vis spent and any cosmetic trait.
 
 **The app works out:** nothing; a Bond Power's figures are typed in.
 
-**See also:** [Binding & Cords](help:section-fam-binding)
+**See also:** [Binding & Cords](help:section-fam-binding), [How to bind and keep a familiar](help:guide-familiars)

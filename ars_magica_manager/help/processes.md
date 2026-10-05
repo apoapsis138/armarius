@@ -48,7 +48,7 @@ As you fill the form in, the line above Save shows what the season will give: fo
 
 If the plan breaks a rule (a book the character can't read, a teacher whose score is too low), the line shows the problem and Save refuses the plan until it is fixed. For a companion, it also reminds you when the plan leaves too few seasons that year for their two working seasons; this is a reminder, not a block.
 
-**See also:** [Advance Season](help:advance-season), [Grog's Yearly Update](help:grog-year), [Laboratory Planning tab](help:tab-lab-planning)
+**See also:** [Advance Season](help:advance-season), [Grog's Yearly Update](help:grog-year), [Laboratory Planning tab](help:tab-lab-planning), [How to plan and run a season](help:guide-seasons), [How the app handles advancement](help:guide-advancement)
 
 # Grog's Yearly Update
 <!-- help: grog-year -->
@@ -68,7 +68,7 @@ Open it from the grog's **Planning** tab (`e`), or from the Grogs list on a cove
 
 In Winter the xp is added, a "Yearly update" entry is written in the grog's Diary and in the season's record, and the story awards go back to 0 for the next year.
 
-**See also:** [Advance Season](help:advance-season), [Plan Season](help:plan-season)
+**See also:** [Advance Season](help:advance-season), [Plan Season](help:plan-season), [How to plan and run a season](help:guide-seasons), [How the app handles advancement](help:guide-advancement)
 
 # Advance Season
 <!-- help: advance-season -->
@@ -133,7 +133,7 @@ Every season, each covenant's vis sources for that season are harvested into its
 
 The date moves on, a message names the new date and whose seasons were applied, and, when anything happened, the [Season Summary](help:season-summary) shows the results. With Keep season records on, the season is also kept under [Seasons](help:seasons) in the tree.
 
-**See also:** [Plan Season](help:plan-season), [Season Summary](help:season-summary), [Seasons](help:seasons), [The saga](help:saga)
+**See also:** [Plan Season](help:plan-season), [Season Summary](help:season-summary), [Seasons](help:seasons), [The saga](help:saga), [How to plan and run a season](help:guide-seasons)
 
 # Season Summary
 <!-- help: season-summary -->
@@ -146,7 +146,7 @@ Shown after a season has been advanced, when anything happened: what the season 
 
 The note at the bottom says whether the season is kept under Seasons in the tree. If season records are off (Edit Saga), each character's Diary still has their entry.
 
-**See also:** [Advance Season](help:advance-season), [Seasons](help:seasons)
+**See also:** [Advance Season](help:advance-season), [Seasons](help:seasons), [How to plan and run a season](help:guide-seasons)
 
 # Creation Worksheet
 <!-- help: creation-worksheet -->
@@ -179,7 +179,7 @@ Each step is marked by how its checks stand:
 
 - **✔** every check passes;
 - **✘** a rule the book says must be followed is broken (a warning);
-- **!** advice: something the book says should be done isn't, such as too many or too few of something;
+- **☞** advice: something the book says should be done isn't, such as too many or too few of something;
 - **○** the step has no checks.
 
 Below the list the app counts how many steps pass and sums up the checks ("2 warnings, 1 advice", or "all checks pass").
@@ -193,7 +193,7 @@ The last step has **Move to In Play**. It lists every check that doesn't pass an
 
 Checks never stop an edit. If the saga has **Enforce creation rules strictly** turned on (Edit Saga), a record that breaks a rule it must follow stays In Creation until that is fixed. Advice never stops it.
 
-**See also:** [Characters group](help:character-group), [The saga](help:saga)
+**See also:** [Characters group](help:character-group), [The saga](help:saga), [How to create a character, covenant or laboratory](help:guide-creation)
 
 # Import Data
 <!-- help: import-data -->
@@ -234,7 +234,7 @@ What goes with it:
 
 Season plans, season records and lab projects under way stay behind.
 
-**See also:** [Import Spells](help:import-spells), [Unassigned Books](help:unassigned-books), [The saga](help:saga)
+**See also:** [Import Spells](help:import-spells), [Unassigned Books](help:unassigned-books), [The saga](help:saga), [How to import and export](help:guide-import-export)
 
 # Import Spells
 <!-- help: import-spells -->
@@ -262,4 +262,4 @@ Open it from More's Import on the saga node, then Spells.
 - **Save example CSV** writes `spells_example.csv` (numbered if it exists) to the folder the app was started from, with two example spells. Edit it, then choose it to import.
 - **Cancel** closes the helper.
 
-**See also:** [Spells](help:spells), [Import Data](help:import-data)
+**See also:** [Spells](help:spells), [Import Data](help:import-data), [How to import and export](help:guide-import-export)

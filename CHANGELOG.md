@@ -10,6 +10,18 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.10.0 — 2026-10-05
+
+How-to guides in Help: eight step-by-step walk-throughs, listed under
+HOW-TO GUIDES when you press ?: planning and running a season, managing
+the covenant, how advancement works, lab planning, getting started,
+creating characters, covenants and laboratories, familiars, and
+importing and exporting. The help pages they cover link to them.
+
+Two out-of-date hints are fixed: the Advance Time dialog now says Set
+Date is in More on the saga, and the Export dialog says to import with
+More's Import.
+
 ## 2.9.0 — 2026-10-05
 
 Easier to read, with a clearer order of importance on every screen.

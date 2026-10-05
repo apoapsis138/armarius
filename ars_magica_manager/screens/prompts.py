@@ -451,7 +451,7 @@ def _export_dialog(
             str(folder / transfer.default_file_name(record)),
             hint="What it holds travels with it: a character's familiar, devices, "
             "books and Diary; a laboratory's books and devices. Import it into "
-            "another saga with I on that saga.",
+            "another saga with More's Import on that saga.",
         ),
     ]
     if kind == transfer.COVENANT:
@@ -1341,7 +1341,7 @@ class AdvanceSeasonScreen(ModalDialog[bool]):
                     id="advance-year-note",
                 )
             yield Static(
-                "Advanced by mistake? Use Set Date (T) to put the date back"
+                "Advanced by mistake? Set Date (More on the saga) puts the date back"
                 + (" (Wealth isn't changed back)." if new_year != self.year else ".")
                 + (
                     " The saga is backed up first (data/sagas/backups)."

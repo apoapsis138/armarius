@@ -20,7 +20,7 @@ covenant step by step. The same switch and worksheet are the buttons beside
 **Edit (e)** in the top panel. Export is in More there too.
 
 **See also:** [Saga](help:saga), [Keys](help:keys),
-[Advancing a season](help:advance-season).
+[Advancing a season](help:advance-season), [How to manage the covenant](help:guide-covenant).
 
 ### The covenant panel
 <!-- help: section-cov-info -->
@@ -53,7 +53,7 @@ Hooks follow Ars Magica Definitive Edition, Chapter 6: Covenants.
 
 **See also:** [Inhabitants tab](help:tab-cov-inhabitants) (Loyalty),
 [Economics tab](help:tab-cov-economics),
-[Diary tab](help:tab-cov-diary).
+[Diary tab](help:tab-cov-diary), [How to manage the covenant](help:guide-covenant).
 
 ### Description
 <!-- help: section-cov-description -->
@@ -111,7 +111,7 @@ Reputations and the Diary. The Loyalty rules come from the Covenants
 supplement.
 
 **See also:** [Seasons tab](help:tab-cov-seasons),
-[Economics tab](help:tab-cov-economics), [Diary tab](help:tab-cov-diary).
+[Economics tab](help:tab-cov-economics), [Diary tab](help:tab-cov-diary), [How to manage the covenant](help:guide-covenant).
 
 ### Loyalty
 <!-- help: section-inh-loyalty -->
@@ -237,7 +237,7 @@ again at 0. A deficit is never taken from Wealth by itself.
 
 **See also:** [Planning a season](help:plan-season),
 [A grog's year](help:grog-year), [Advancing a season](help:advance-season),
-[Economics tab](help:tab-cov-economics).
+[Economics tab](help:tab-cov-economics), [How to plan and run a season](help:guide-seasons).
 
 ### Magi
 <!-- help: section-cov-seasons-magus -->
@@ -274,7 +274,7 @@ catalogue; and, from all of these, the points of laboratories and of
 weapons and armour that drive costs on the Economics tab.
 
 **See also:** [Economics tab](help:tab-cov-economics),
-[Build tab](help:tab-cov-build), [Diary tab](help:tab-cov-diary).
+[Build tab](help:tab-cov-build), [Diary tab](help:tab-cov-diary), [How to manage the covenant](help:guide-covenant).
 
 ### Properties and Land
 <!-- help: section-pos-property -->
@@ -362,7 +362,7 @@ from the Covenants supplement.
 
 **See also:** [Inhabitants tab](help:tab-cov-inhabitants),
 [Possessions tab](help:tab-cov-possessions),
-[Seasons tab](help:tab-cov-seasons) (the end of the year).
+[Seasons tab](help:tab-cov-seasons) (the end of the year), [How to manage the covenant](help:guide-covenant).
 
 ### Wealth
 <!-- help: section-eco-wealth -->
@@ -422,7 +422,7 @@ each book's Build Point cost, shown in its details panel.
 
 **See also:** [Books](help:section-books),
 [a laboratory's Inventory tab](help:tab-lab-inventory),
-[Build tab](help:tab-cov-build).
+[Build tab](help:tab-cov-build), [How to manage the covenant](help:guide-covenant).
 
 ### Summary
 <!-- help: section-lib-summary -->
@@ -462,7 +462,7 @@ linked to a Hook, how many stories have been told against it.
 
 **See also:** [Inhabitants tab](help:tab-cov-inhabitants) (Loyalty),
 [Possessions tab](help:tab-cov-possessions) (vis),
-[Advancing a season](help:advance-season).
+[Advancing a season](help:advance-season), [How to manage the covenant](help:guide-covenant).
 
 ## Build tab
 <!-- help: tab-cov-build -->
@@ -482,7 +482,7 @@ money.
 
 **See also:** [Library tab](help:tab-cov-library),
 [Possessions tab](help:tab-cov-possessions),
-[Inhabitants tab](help:tab-cov-inhabitants).
+[Inhabitants tab](help:tab-cov-inhabitants), [How to create a character, covenant or laboratory](help:guide-creation).
 
 ### Build Points
 <!-- help: section-cov-build -->

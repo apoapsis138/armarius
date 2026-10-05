@@ -19,7 +19,7 @@ Each row shows the saga's name, its storyguide and its current date. A saga file
 
 The app's version is shown under the list. The About page in Help has the version, the licences and the credits.
 
-**See also:** [The workspace](help:workspace), [The saga](help:saga)
+**See also:** [The workspace](help:workspace), [The saga](help:saga), [Getting started](help:guide-getting-started)
 
 # The workspace
 <!-- help: workspace -->
@@ -77,7 +77,7 @@ Lists that hold records (books, spells, House Rules, a sheet's lists) have a det
 
 At the right end of the same row the app names the theme in use. Change it from the command palette (Ctrl+P); the app remembers your choice for next time.
 
-**See also:** [The saga](help:saga), [Characters group](help:character-group), [Laboratories group](help:laboratory-group), [Seasons](help:seasons), [Spells](help:spells), [House Rules](help:house-rules)
+**See also:** [The saga](help:saga), [Characters group](help:character-group), [Laboratories group](help:laboratory-group), [Seasons](help:seasons), [Spells](help:spells), [House Rules](help:house-rules), [Getting started](help:guide-getting-started)
 
 # The saga
 <!-- help: saga -->
@@ -104,7 +104,7 @@ The top node of the tree. It shows the saga's own details and what it holds.
 
 New (`n`) on the saga offers New Covenant, New Character, New Laboratory and, while a magus has no familiar, Bind Familiar.
 
-**See also:** [The workspace](help:workspace), [Advance Season](help:advance-season), [Import Data](help:import-data), [Creation Worksheet](help:creation-worksheet)
+**See also:** [The workspace](help:workspace), [Advance Season](help:advance-season), [Import Data](help:import-data), [Creation Worksheet](help:creation-worksheet), [Getting started](help:guide-getting-started)
 
 # Characters group
 <!-- help: character-group -->
@@ -125,7 +125,7 @@ The Create a New Character form asks for a Name, a Type (magus, companion, Mythi
 
 The line above Create describes the template you chose.
 
-**See also:** [Laboratories group](help:laboratory-group), [Creation Worksheet](help:creation-worksheet), [The workspace](help:workspace)
+**See also:** [Laboratories group](help:laboratory-group), [Creation Worksheet](help:creation-worksheet), [The workspace](help:workspace), [How to create a character, covenant or laboratory](help:guide-creation)
 
 # Laboratories group
 <!-- help: laboratory-group -->
@@ -136,7 +136,7 @@ The Laboratories node under a covenant, or Unassigned Laboratories under the sag
 
 **The app works out:** the count in the node's label. A new laboratory starts In Creation.
 
-**See also:** [Characters group](help:character-group), [Creation Worksheet](help:creation-worksheet)
+**See also:** [Characters group](help:character-group), [Creation Worksheet](help:creation-worksheet), [How to create a character, covenant or laboratory](help:guide-creation)
 
 # Unassigned Books
 <!-- help: unassigned-books -->
@@ -154,7 +154,7 @@ Mark books with Space (or Ctrl+click) to act on them together. With books marked
 
 Books imported from a CSV file on the saga (More, Import, Books) land here.
 
-**See also:** [Import Data](help:import-data), [The workspace](help:workspace)
+**See also:** [Import Data](help:import-data), [The workspace](help:workspace), [How to import and export](help:guide-import-export)
 
 # Seasons
 <!-- help: seasons -->
@@ -167,7 +167,7 @@ The saga's record of past seasons: what everyone did each season and what it gav
 
 When season records are off, the view says so and no new seasons are added; each character's Diary still has their own entry.
 
-**See also:** [Advance Season](help:advance-season), [Season Summary](help:season-summary)
+**See also:** [Advance Season](help:advance-season), [Season Summary](help:season-summary), [How to plan and run a season](help:guide-seasons)
 
 # Spells
 <!-- help: spells -->
@@ -194,7 +194,7 @@ Every spell the saga knows: the catalog's spells from the sourcebooks, and the s
 
 Spells can be added in bulk from a CSV file: on the saga node, More, Import, then Spells. They become the saga's own spells. See [Import Spells](help:import-spells).
 
-**See also:** [Import Spells](help:import-spells), [House Rules](help:house-rules)
+**See also:** [Import Spells](help:import-spells), [House Rules](help:house-rules), [How to import and export](help:guide-import-export)
 
 # House Rules
 <!-- help: house-rules -->
@@ -212,4 +212,4 @@ House rules are text only: the rules engine applies no effects for them. Two ent
 
 When a character, laboratory or covenant is exported, the house rules it uses go with it.
 
-**See also:** [Spells](help:spells), [Import Data](help:import-data)
+**See also:** [Spells](help:spells), [Import Data](help:import-data), [How to import and export](help:guide-import-export)

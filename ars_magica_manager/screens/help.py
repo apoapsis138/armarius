@@ -27,7 +27,10 @@ _REFERENCE = ("keys",)
 
 #: Option ids say which group a topic was listed in, so one topic can be
 #: listed twice (THIS SCREEN and ALL PAGES).
-_HERE, _REF, _ALL, _FOUND = "here:", "ref:", "all:", "found:"
+_HERE, _GUIDE, _REF, _ALL, _FOUND = "here:", "guide:", "ref:", "all:", "found:"
+
+#: How-to guides are the pages whose id starts with this (STORY-117).
+GUIDE_PREFIX = "guide-"
 
 
 @dataclass
@@ -188,6 +191,12 @@ class HelpScreen(ModalDialog[None]):
                     Option(escape(self.book.topics[t].title), id=_HERE + t)
                     for t in here
                 ]
+            guides = [p for p in self.book.pages.values() if _is_guide(p.id)]
+            if guides:
+                options.append(_heading("HOW-TO GUIDES"))
+                options += [
+                    Option(escape(page.title), id=_GUIDE + page.id) for page in guides
+                ]
             options.append(_heading("REFERENCE"))
             options.append(Option("About this App", id=_REF + ABOUT))
             options += [
@@ -197,7 +206,7 @@ class HelpScreen(ModalDialog[None]):
             ]
             options.append(_heading("ALL PAGES"))
             for page in self.book.pages.values():
-                if page.id in _REFERENCE:
+                if page.id in _REFERENCE or _is_guide(page.id):
                     continue
                 indent = "  " if self.book.topics[page.id].level == 2 else ""
                 options.append(Option(indent + escape(page.title), id=_ALL + page.id))
@@ -298,7 +307,7 @@ class HelpScreen(ModalDialog[None]):
         if href.startswith("help:"):
             event.prevent_default()
             topic_id = href.removeprefix("help:")
-            option = _ALL + topic_id
+            option = (_GUIDE if _is_guide(topic_id) else _ALL) + topic_id
             topics = self.query_one("#help-topics", OptionList)
             try:
                 topics.highlighted = topics.get_option_index(option)
@@ -306,6 +315,10 @@ class HelpScreen(ModalDialog[None]):
                 self.show_topic(topic_id)
         elif href.startswith(("http://", "https://")):
             self.app.open_url(href)
+
+
+def _is_guide(topic_id: str) -> bool:
+    return topic_id.startswith(GUIDE_PREFIX)
 
 
 def _heading(text: str) -> Option:

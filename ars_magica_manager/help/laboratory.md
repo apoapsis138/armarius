@@ -19,6 +19,8 @@ whether it is one of its covenant's starting laboratories, paid for from the
 covenant's Build Points. `d` on the top panel deletes the laboratory, after
 asking.
 
+**See also:** [How lab planning works](help:guide-lab-planning), [How to create a character, covenant or laboratory](help:guide-creation)
+
 ### Identity
 <!-- help: section-lab-identity -->
 
@@ -64,7 +66,7 @@ planned.
 
 **See also:** [Invent Spell screen](help:invent-spell),
 [Lab Totals tab](help:tab-lab-totals),
-[Advancing a season](help:advance-season)
+[Advancing a season](help:advance-season), [How to plan and run a season](help:guide-seasons), [How lab planning works](help:guide-lab-planning)
 
 ## Lab Totals tab
 <!-- help: tab-lab-totals -->
@@ -82,7 +84,7 @@ owner who isn't a magus, the tab says so instead.
 
 **See also:** [Planning tab](help:tab-lab-planning),
 [Attributes tab](help:tab-lab-attributes),
-[Invent Spell screen](help:invent-spell)
+[Invent Spell screen](help:invent-spell), [How lab planning works](help:guide-lab-planning)
 
 ### Lab Totals
 <!-- help: section-lab-totals-grid -->
@@ -129,7 +131,7 @@ hasn't been chosen.
 
 **See also:** [Characteristics](help:section-lab-characteristics),
 [Features](help:section-lab-features),
-[Lab Totals tab](help:tab-lab-totals)
+[Lab Totals tab](help:tab-lab-totals), [How lab planning works](help:guide-lab-planning)
 
 ### Virtues
 <!-- help: section-lab-vf-virtues -->
@@ -160,7 +162,7 @@ how many count against the limits on Activity and Art Specializations
 (Ars Magica Fifth Edition: Covenants, Chapter 9).
 
 **See also:** [Virtues & Flaws tab](help:tab-lab-vf),
-[Lab Totals tab](help:tab-lab-totals)
+[Lab Totals tab](help:tab-lab-totals), [How lab planning works](help:guide-lab-planning)
 
 ### Specializations
 <!-- help: section-lab-specializations -->
@@ -300,7 +302,7 @@ Ars Magica Definitive Edition, Chapter 8: Laboratory.
 
 **See also:** [Planning tab](help:tab-lab-planning),
 [Lab Totals tab](help:tab-lab-totals),
-[Advancing a season](help:advance-season)
+[Advancing a season](help:advance-season), [How lab planning works](help:guide-lab-planning)
 
 ### Lab work
 <!-- help: invent-spell-activity -->

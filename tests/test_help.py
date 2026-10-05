@@ -237,3 +237,38 @@ async def test_help_on_the_saga_picker():
         assert await wait_until(pilot, lambda: isinstance(app.screen, HelpScreen))
         assert await wait_until(pilot, lambda: app.screen.topic_id == "saga-picker")
         assert "ref:about" in _listed(app)
+
+
+# -- STORY-117: the how-to guides ---------------------------------------------
+
+#: The guides Hedda asked for first, then the rest, in the order Help lists them.
+GUIDES = [
+    "guide-seasons",
+    "guide-covenant",
+    "guide-advancement",
+    "guide-lab-planning",
+    "guide-getting-started",
+    "guide-creation",
+    "guide-familiars",
+    "guide-import-export",
+]
+
+
+def test_the_guides_are_there_in_order():
+    assert [p for p in BOOK.pages if p.startswith("guide-")] == GUIDES
+
+
+async def test_help_lists_the_guides_on_their_own():
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
+        await pilot.press("question_mark")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, HelpScreen))
+        listed = _listed(app)
+        assert [i for i in listed if i.startswith("guide:")] == [
+            f"guide:{g}" for g in GUIDES
+        ]
+        assert not [i for i in listed if i.startswith("all:guide-")]
+        topics = app.screen.query_one("#help-topics", OptionList)
+        topics.highlighted = topics.get_option_index("guide:guide-seasons")
+        assert await wait_until(pilot, lambda: app.screen.topic_id == "guide-seasons")

@@ -16,6 +16,8 @@ between the two after asking first. While the character is In Creation, More
 also offers the Creation Worksheet, which walks through the creation steps,
 and the button beside the mode opens it too.
 
+**See also:** [How the app handles advancement](help:guide-advancement), [How to plan and run a season](help:guide-seasons), [How to create a character, covenant or laboratory](help:guide-creation)
+
 ### Character info
 <!-- help: section-char-info -->
 
@@ -54,7 +56,7 @@ Aging & Warping.
 
 **See also:** [Abilities tab](help:tab-abilities),
 [Virtues & Flaws tab](help:tab-vf), [Diary tab](help:tab-diary),
-[Advancing a season](help:advance-season)
+[Advancing a season](help:advance-season), [How the app handles advancement](help:guide-advancement)
 
 ### Hermetic Background
 <!-- help: section-hermetic-background -->
@@ -129,7 +131,7 @@ gives a fixed bonus or penalty, such as Puissant, the score used follows in
 brackets.
 
 **See also:** [Virtues & Flaws tab](help:tab-vf),
-[Planning tab](help:tab-planning)
+[Planning tab](help:tab-planning), [How the app handles advancement](help:guide-advancement)
 
 ## Virtues & Flaws tab
 <!-- help: tab-vf -->
@@ -177,7 +179,7 @@ every Technique and Form, Magic Resistance, Penetration and the Certamen
 totals.
 
 **See also:** [Lab Totals tab](help:tab-lab-totals),
-[Inventory tab](help:tab-inventory), [Planning tab](help:tab-planning)
+[Inventory tab](help:tab-inventory), [Planning tab](help:tab-planning), [How the app handles advancement](help:guide-advancement)
 
 ### Magical Arts
 <!-- help: section-arts -->
@@ -288,7 +290,7 @@ update instead, applied in Winter.
 
 **See also:** [Planning a season](help:plan-season),
 [Advancing a season](help:advance-season),
-[A grog's year](help:grog-year), [Diary tab](help:tab-diary)
+[A grog's year](help:grog-year), [Diary tab](help:tab-diary), [How to plan and run a season](help:guide-seasons)
 
 ### This Season
 <!-- help: section-char-season -->

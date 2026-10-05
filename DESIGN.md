@@ -355,7 +355,7 @@ just the standing decisions.
   laboratory and character sheet has, beside Edit, a button labelled with
   the record's mode; it changes only when pressed (or from More) and asks
   first. While In Creation the panel also offers the **Creation
-  Worksheet**, a dialog listing the book's steps (each marked ✔ / ✘ / ! /
+  Worksheet**, a dialog listing the book's steps (each marked ✔ / ✘ / ☞ /
   ○) with the chosen step's budget, checks and buttons; the buttons open
   the sheet's own dialogs, so the worksheet edits the real record. Checks
   are pass, warn (a book "must") or advice (a "should"); only the saga's
