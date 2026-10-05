@@ -11,7 +11,8 @@ from . import __version__
 from .screens import SagaPickerScreen
 from .screens.help import HelpScreen, help_context
 from .settings import load_settings, update_settings
-from .themes import SCRIPTORUM, SCRIPTORUM_DARK
+from .styles import APP_CSS
+from .themes import SCRIPTORUM, SCRIPTORUM_DARK, app_variable_defaults
 
 #: Theme applied on first launch, or if a saved theme name is no longer registered.
 DEFAULT_THEME = SCRIPTORUM.name
@@ -31,6 +32,13 @@ class ArsMagicaManagerApp(App[None]):
         # being typed in still gets it.
         Binding("f1", "help", "Help", show=False, priority=True),
     ]
+
+    CSS = APP_CSS
+
+    def get_theme_variable_defaults(self) -> dict[str, str]:
+        """The app's own CSS variables (themes.py) for a theme that doesn't
+        set them."""
+        return app_variable_defaults(self.current_theme)
 
     def action_help(self) -> None:
         """Open Help on whatever has focus (never on top of Help)."""

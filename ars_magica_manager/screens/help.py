@@ -83,14 +83,10 @@ class HelpScreen(ModalDialog[None]):
     #help-dialog {
         width: 100%;
         height: 100%;
-        border: round $accent;
-        background: $surface;
     }
 
     #help-title {
-        text-style: bold;
         padding: 0 1;
-        width: 100%;
     }
 
     #help-body {
@@ -144,8 +140,8 @@ class HelpScreen(ModalDialog[None]):
 
     def compose(self) -> ComposeResult:
         where = f"  ›  {self.context.where}" if self.context.where else ""
-        with Vertical(id="help-dialog"):
-            yield Label(f"Help{where}", id="help-title")
+        with Vertical(id="help-dialog", classes="dialog-box"):
+            yield Label(f"Help{where}", id="help-title", classes="dialog-title")
             with Horizontal(id="help-body"):
                 with Vertical(id="help-side"):
                     yield Input(placeholder="/ Filter topics", id="help-filter")

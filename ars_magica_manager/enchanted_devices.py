@@ -17,7 +17,7 @@ from collections import Counter
 from collections.abc import Sequence
 
 from .arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
-from .markup import escape, fit, markdown_inline
+from .markup import PROBLEM_GLYPH, escape, fit, markdown_inline, problem
 from .models import (
     CHARGED,
     EFFECT_EXPIRIES,
@@ -506,7 +506,7 @@ def device_rows(saga: Saga, kind: str, holder_id: str) -> list[tuple[int, str]]:
                 f"{device_status(saga, device)}"
             )
             if warnings(saga, device):
-                label += "  [$text-error]![/]"
+                label += f"  [$text-error]{PROBLEM_GLYPH}[/]"
         else:
             label = "  " + escape(fit(effect_name(effect), width - 2))
             if effect.known:
@@ -600,7 +600,7 @@ def device_info_text(saga: Saga, device: EnchantedDevice) -> str:
     lines.append(f"[b]Effects:[/] {len(device.effects)}")
     problems = warnings(saga, device)
     if problems:
-        lines += ["", *(f"[$text-error]{line}[/]" for line in problems)]
+        lines += ["", *(problem(line) for line in problems)]
     if device.description:
         lines += ["", markdown_inline(device.description)]
     return "\n".join(lines)

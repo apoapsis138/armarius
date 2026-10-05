@@ -34,5 +34,5 @@ def test_parse_rows_needs_its_required_columns():
 def test_skipped_preview_shows_five_then_a_count():
     assert skipped_preview([]) == []
     lines = skipped_preview([f"Row {i}: bad." for i in range(2, 9)])
-    assert lines[1] == "[$text-error]7 row(s) will be skipped:[/]"
+    assert lines[1] == "[$text-error]✘ 7 row(s) will be skipped:[/]"
     assert len(lines) == 2 + 5 + 1 and lines[-1] == "  ...and 2 more."

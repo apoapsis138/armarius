@@ -684,7 +684,7 @@ def test_points_text_follows_the_scores_being_typed():
     over = {**blank, "intelligence": 4}
     lines = cch.points_text(saga, character, over).splitlines()
     assert lines[0] == "[b]Points:[/] [$text-error]10 of 7 spent, 3 too many[/]"
-    assert lines[2].startswith("[$text-warning]Intelligence: bought from -3 to +3")
+    assert lines[2].startswith("[$text-warning]☞ Intelligence: bought from -3 to +3")
     # The sheet's own scores are untouched by what is typed.
     assert character.characteristics.intelligence == 0
 

@@ -37,9 +37,7 @@ class SeasonSummaryScreen(ModalDialog[None]):
         max-width: 100%;
         height: auto;
         max-height: 100%;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
     }
 
     #summary-scroll {
@@ -70,8 +68,10 @@ class SeasonSummaryScreen(ModalDialog[None]):
         self.record = record
 
     def compose(self) -> ComposeResult:
-        with Vertical(id="summary-dialog"):
-            yield Label("The Season's Results", id="summary-title")
+        with Vertical(id="summary-dialog", classes="dialog-box"):
+            yield Label(
+                "The Season's Results", id="summary-title", classes="dialog-title"
+            )
             with VerticalScroll(id="summary-scroll"):
                 yield Static(
                     seasons.record_text(self.saga, self.record), id="summary-text"

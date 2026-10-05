@@ -36,9 +36,9 @@
 
 
 
-
-    Select a Boon or Hook to see its details.
-
+  ▌
+  ▌  Select a Boon or Hook to see its details.
+  ▌
 
 
 ===== tab-cov-inhabitants
@@ -79,9 +79,9 @@
       Number of Teamsters / Needed: 0 / 2
       Number of Servants / Needed:  0 / 4
 
-
-    Select an inhabitant to see its details.
-
+  ▌
+  ▌  Select an inhabitant to see its details.
+  ▌
 
 
 ===== tab-cov-seasons
@@ -105,12 +105,12 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Magi (0 of 1 planned)
 
-      ○ Leandro                   nothing planned
+      ○ Leandro                   ☞ nothing planned
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Companions (0 of 1 planned)
 
-      ○ Alys                      nothing planned
+      ○ Alys                      ☞ nothing planned
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Grogs (0)
@@ -122,9 +122,9 @@
 
 
 
-
-    Select someone to see their season.
-
+  ▌
+  ▌  Select someone to see their season.
+  ▌
 
 
 ===== tab-cov-possessions
@@ -165,9 +165,9 @@
       ○ A weapon                                Standard        1   +0   +0   +0
       +0    0
 
-
-    Select a possession to see its details.
-
+  ▌
+  ▌  Select a possession to see its details.
+  ▌
 
 
 ===== tab-cov-economics
@@ -208,9 +208,9 @@
       ○ Mill                Typical        100
 
 
-
-    Select a source of income or a row to see its details.
-
+  ▌
+  ▌  Select a source of income or a row to see its details.
+  ▌
 
 
 ===== tab-cov-library
@@ -251,9 +251,9 @@
       Covenant Library
 
 
-
-    Select a book to see its details.
-
+  ▌
+  ▌  Select a book to see its details.
+  ▌
 
 
 ===== tab-cov-diary
@@ -294,9 +294,9 @@
 
 
 
-
-    Select a Diary entry to see its details.
-
+  ▌
+  ▌  Select a Diary entry to see its details.
+  ▌
 
 
 ===== tab-cov-build

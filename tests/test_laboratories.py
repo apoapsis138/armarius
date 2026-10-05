@@ -54,14 +54,16 @@ def test_vf_warnings_flag_over_capacity_and_a_second_focus():
     # Greater Feature costs 3; Size + Refinement is 0 -> over by 3.
     over = lab_text.vf_warnings(_lab("labvf_greater_feature"))
     assert over == (
-        "[$text-error]Over capacity by 3 "
+        "[$text-error]✘ Over capacity by 3 "
         "(Virtues less Flaws may total Size + Refinement = 0).[/]"
     )
     # ...but not once Size makes room for it.
     assert lab_text.vf_warnings(_lab("labvf_greater_feature", size=3)) == ""
     # Two Focus Flaws (net -4 points: well inside capacity).
     two = lab_text.vf_warnings(_lab("labvf_lesser_focus", "labvf_greater_focus"))
-    assert two == "[$text-error]2 Focus Flaws: a laboratory may only have one Focus.[/]"
+    assert (
+        two == "[$text-error]✘ 2 Focus Flaws: a laboratory may only have one Focus.[/]"
+    )
 
 
 def test_named_info_text_renders_emphasis_and_escapes_the_name():
@@ -136,7 +138,7 @@ def test_old_free_text_specialties_migrate_to_entries():
     assert lab.sanctum_marked is False
     # ...and the text that named nothing asks to be fixed.
     assert strip_markup(lab_text.specialty_entry_rows(lab)[3][1]) == (
-        "needs a Specialization  Big windows"
+        "☞ needs a Specialization  Big windows"
     )
 
 
@@ -323,10 +325,10 @@ def test_old_free_text_features_match_the_catalog_and_take_free_virtues():
     ]
     rows = [strip_markup(label) for _, label in lab_text.feature_rows(lab)]
     assert rows == [
-        "Large Brass Cauldron  (Cauldron, Lesser)  1 point to allocate",
-        "Big windows  (Window, Greater)  3 points to allocate",
-        "Summoning circle of salt  (Summoning Circle)  needs a Feature Virtue",
-        "Hanging gardens  (Custom)  needs a Feature Virtue",
+        "Large Brass Cauldron  (Cauldron, Lesser)  ☞ 1 point to allocate",
+        "Big windows  (Window, Greater)  ☞ 3 points to allocate",
+        "Summoning circle of salt  (Summoning Circle)  ☞ needs a Feature Virtue",
+        "Hanging gardens  (Custom)  ☞ needs a Feature Virtue",
     ]
 
 

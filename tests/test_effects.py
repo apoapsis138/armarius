@@ -3,6 +3,7 @@ laboratories and covenants, how flat amounts and multipliers stack, the lab
 catalog on the shared Modifier shape, and Puissant as a character effect."""
 
 import pytest
+from support import strip_markup
 
 from ars_magica_manager import catalog, sheet_text
 from ars_magica_manager.laboratories import lab_characteristic_total
@@ -175,8 +176,11 @@ def test_puissant_ability_shows_base_then_adjusted():
     ]
     abilities = [Ability(name="Brawl", category="Martial", xp=50)]
     assert scores.ability_bonus(virtues, "brawl")[0] == 2
-    assert sheet_text.ability_rows(abilities, virtues) == [
-        (None, "Martial"),
+    rows = sheet_text.ability_rows(abilities, virtues)
+    assert [
+        (index, " ".join(strip_markup(label).split())) for index, label in rows
+    ] == [
+        (None, "Martial Score XP"),
         (0, "Brawl 4 (6) 50/75"),
     ]
     info = sheet_text.ability_info_text(abilities, 0, virtues)

@@ -107,24 +107,58 @@ def ability_rows(
     """One selectable list for every Ability, with a header (non-selectable)
     row before each non-empty category -- unlike Virtues/Flaws, Abilities
     has too many categories for side-by-side lists. `virtues_flaws` are the
-    owner's, for fixed bonuses such as Puissant."""
+    owner's, for fixed bonuses such as Puissant.
+
+    Scores and xp line up in columns, named once on the first header row,
+    with the xp quieter than the score; an adjusted score sits in its own
+    slot after the base, so the base scores still line up (STORY-1014)."""
+    names = [a.name + (f" ({a.specialty})" if a.specialty else "") for a in abilities]
+    width = max([len(name) for name in names] + [_ABILITY_NAME_MIN]) + 2
     rows: list[tuple[int | None, str]] = []
     for category in ABILITY_CATEGORIES:
         indexed = [(i, a) for i, a in enumerate(abilities) if a.category == category]
         if not indexed:
             continue
-        rows.append((None, category))
+        columns = (
+            f"[$label]{'Score':>{_SCORE_WIDTH}}{' ' * _ADJUSTED_WIDTH}"
+            f"{'XP':>{_XP_WIDTH}}[/]"
+            if not rows
+            else ""
+        )
+        # a header has no row marker, so it's padded past one
+        rows.append((None, _pad(category, width + _ROW_MARKER) + columns))
         for index, ability in indexed:
-            specialty = f" ({ability.specialty})" if ability.specialty else ""
             bonus, _ = scores.ability_bonus(virtues_flaws, ability.name)
+            progress = ability.progress
+            adjusted = f" ({progress.score + bonus})" if bonus else ""
+            xp = f"{progress.total}/{progress.next_total}"
             rows.append(
                 (
                     index,
-                    f"{escape(ability.name)}{escape(specialty)} "
-                    f"{score_text(ability.progress, bonus)}",
+                    f"{_pad(names[index], width)}"
+                    f"{progress.score:>{_SCORE_WIDTH}}"
+                    f"{adjusted:<{_ADJUSTED_WIDTH}}"
+                    f"[$label]{xp:>{_XP_WIDTH}}[/]",
                 )
             )
     return rows
+
+
+#: The Abilities list's columns (ability_rows): the name column is at least
+#: this wide, then the score (right-aligned under "Score"), room for an
+#: adjusted score " (12)", and the xp "105/120".
+_ABILITY_NAME_MIN = 20
+#: A selectable row's marker and its space ("○ ", SelectableList).
+_ROW_MARKER = 2
+_SCORE_WIDTH = 5
+_ADJUSTED_WIDTH = 5
+_XP_WIDTH = 8
+
+
+def _pad(text: str, width: int) -> str:
+    """`text` escaped for markup and padded with spaces to `width` columns
+    (padding counts the text as shown, not its escapes)."""
+    return escape(text) + " " * max(width - len(text), 0)
 
 
 def ability_definition(name: str) -> AbilityDef | None:

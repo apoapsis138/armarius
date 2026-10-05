@@ -27,7 +27,7 @@ from .. import lab_texts as lt
 from .. import spells as spl
 from ..arts import FORMS, TECHNIQUES
 from ..familiars import familiar_of
-from ..markup import escape
+from ..markup import escape, todo
 from ..models import (
     Character,
     Laboratory,
@@ -84,9 +84,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         max-width: 100%;
         height: auto;
         max-height: 100%;
-        border: round $accent;
         padding: 0 1;
-        background: $surface;
     }
 
     #inv-scroll {
@@ -290,7 +288,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             for k in self.magus.spells_known
             if (spell := spl.find_spell(self.saga, k.spell_id)) is not None
         ]
-        with Vertical(id="inv-dialog"):
+        with Vertical(id="inv-dialog", classes="dialog-box"):
             yield Static(self._header(self.initial_activity or ""), id="inv-header")
             with VerticalScroll(id="inv-scroll"):
                 with Horizontal(classes="inv-row"):
@@ -1094,11 +1092,11 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             custom_steps=design.custom_steps,
         )
         if worked is None:
-            return (
-                "[$text-warning]An Other parameter needs its magnitudes typed "
-                "(+n) to work out the level.[/]"
+            return todo(
+                "An Other parameter needs its magnitudes typed "
+                "(+n) to work out the level."
             )
-        notes = "".join(f"  [$text-warning]{escape(n)}[/]" for n in worked.notes)
+        notes = "".join(f"  {todo(escape(n))}" for n in worked.notes)
         return (
             f"[b]Level {worked.level}[/]  {escape(worked.design_line(design.base_level))}"
             + notes

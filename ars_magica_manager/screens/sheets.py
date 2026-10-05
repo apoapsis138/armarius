@@ -48,7 +48,7 @@ from ..laboratories import (
     lab_free_virtues,
     lab_occupied_size,
 )
-from ..markup import aligned, escape, markdown_inline
+from ..markup import aligned, escape, inherited, markdown_inline, problem
 from ..models import (
     INHABITANT_KINDS,
     LAB_CHARACTERISTICS,
@@ -963,9 +963,9 @@ class SheetView(Vertical):
 
     @staticmethod
     def _inherited(value: str) -> str:
-        """Dim a value that's derived or inherited (e.g. from the saga) and
+        """A value that's derived or inherited (e.g. from the saga) and
         isn't edited here."""
-        return f"[dim]{escape(value)}[/]"
+        return inherited(escape(value))
 
 
 class CharacterSheetView(SheetView):
@@ -1755,7 +1755,7 @@ class CharacterSheetView(SheetView):
         known = self.character.spells_known[index]
         spell = spl.find_spell(self.saga, known.spell_id)
         if spell is None:
-            lines = [f"[$text-error]Unknown spell: {escape(known.spell_id)}[/]"]
+            lines = [problem(f"Unknown spell: {escape(known.spell_id)}")]
         else:
             lines = [spl.detail_text(self.saga, spell), ""]
             lines += casting_text.known_spell_casting_lines(
@@ -3328,7 +3328,7 @@ class CovenantSheetView(SheetView):
         problems = boon_hook_problems(
             self.covenant, catalog.load_covenant_boon_hook_catalog_by_id()
         )
-        return "\n".join(f"[$text-error]{escape(p)}[/]" for p in problems)
+        return "\n".join(problem(escape(p)) for p in problems)
 
     def _refresh_bh_warnings(self) -> None:
         text = self._bh_warnings_text()

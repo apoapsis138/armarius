@@ -455,7 +455,8 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: (_char(s).abilities[0].level, _char(s).abilities[0].specialty),
         expected=(5, "Grammar"),
         invalid={"XP": "-5"},
-        shown={"#abilities-list": "Latin (Grammar) 5"},
+        # the score and xp are in columns (STORY-1014)
+        shown={"#abilities-list": "Latin (Grammar)           5       75/105"},
     ),
     "edit raw vis": Contract(
         prefill={"Art": "creo", "Pawns": "3"},

@@ -89,8 +89,8 @@
    1 Description  2 Abilities  3 Virtues & Flaws  4 Hermetic Magic  5 Inventory  6 Planning  7 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  General
-  ○ Latin 4 50/75
+  General                 Score           XP
+  ○ Latin                     4        50/75
 
 
 
@@ -129,9 +129,9 @@
 
 
 
-
-    Select an Ability to see its details.
-
+  ▌
+  ▌  Select an Ability to see its details.
+  ▌
 
 
 ===== tab-vf
@@ -197,9 +197,9 @@
 
 
 
-
-    Select a Virtue or Flaw to see its details.
-
+  ▌
+  ▌  Select a Virtue or Flaw to see its details.
+  ▌
 
 
 ===== tab-hermetic
@@ -265,9 +265,9 @@
     ▼ Raw Vis
 
 
-
-    Select an Art, a Known Spell or a Research Goal to see its details.
-
+  ▌
+  ▌  Select an Art, a Known Spell or a Research Goal to see its details.
+  ▌
 
 
 ===== tab-inventory
@@ -333,9 +333,9 @@
 
 
 
-
-    Select an item, an enchanted device or a book to see its details.
-
+  ▌
+  ▌  Select an item, an enchanted device or a book to see its details.
+  ▌
 
 
 ===== tab-planning
@@ -469,8 +469,8 @@
 
 
 
-
-    Select a Diary entry to see its details.
-
+  ▌
+  ▌  Select a Diary entry to see its details.
+  ▌
 
 

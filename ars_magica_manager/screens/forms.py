@@ -37,7 +37,7 @@ from .. import laboratories as lab_rules
 from .. import possessions as pos
 from .. import spells as spl
 from ..arts import ART_ABBREVIATIONS, ARTS, FORMS, TECHNIQUES
-from ..markup import escape
+from ..markup import escape, problem
 from ..models import (
     BOOK_TYPES,
     CHARGED,
@@ -1013,7 +1013,7 @@ def _character_info_dialog(saga: Saga, character: Character) -> FieldsDialog:
         score = values.get("true_faith_score") or 0
         kind = values.get("type") or character.type
         warnings = faith.faith_warnings(character, score, kind)
-        return "\n".join(f"[$text-error]{escape(w)}[/]" for w in warnings)
+        return "\n".join(problem(escape(w)) for w in warnings)
 
     return FieldsDialog(
         "Edit Character Info", _character_info_fields(saga, character), live=live
@@ -2794,7 +2794,7 @@ def _book_live(values: dict[str, Any], saga: Saga) -> str:
     lines = [f"[b]Cost:[/] {bk.cost(probe, saga)} Build Points"]
     if from_spell:
         lines[0] += f"  [dim]({from_spell})[/]"
-    lines += [f"[$text-error]{escape(w)}[/]" for w in bk.limit_warnings(probe)]
+    lines += [problem(escape(w)) for w in bk.limit_warnings(probe)]
     return "\n".join(lines)
 
 
@@ -3000,9 +3000,7 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
         width: auto;
         height: auto;
         max-height: 100%;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
     }
 
     #arts-subtitle {
@@ -3049,8 +3047,9 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
         color: $text-muted;
     }
 
+    /* 3 digits plus the field's padding (STORY-1011) */
     .art-row Input {
-        width: 5;
+        width: 7;
     }
 
     #arts-buttons {
@@ -3086,8 +3085,8 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
                 classes="art-score",
             )
 
-        with Vertical(id="arts-dialog"):
-            yield Label("Edit Arts", id="arts-title")
+        with Vertical(id="arts-dialog", classes="dialog-box"):
+            yield Label("Edit Arts", id="arts-title", classes="dialog-title")
             yield Label(
                 "Enter each Art's total XP; its score follows", id="arts-subtitle"
             )
@@ -3164,9 +3163,7 @@ class MasteryEditScreen(ModalDialog[KnownSpell | None]):
         width: 70;
         height: auto;
         max-height: 30;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
     }
 
     #mastery-abilities-list {
@@ -3202,8 +3199,12 @@ class MasteryEditScreen(ModalDialog[KnownSpell | None]):
         self._abilities: list[MasteryAbility] = list(existing.mastery_abilities)
 
     def compose(self) -> ComposeResult:
-        with Vertical(id="mastery-dialog"):
-            yield Label(f"Mastery: {escape(self.spell_name)}", id="mastery-title")
+        with Vertical(id="mastery-dialog", classes="dialog-box"):
+            yield Label(
+                f"Mastery: {escape(self.spell_name)}",
+                id="mastery-title",
+                classes="dialog-title",
+            )
             yield Label("Score")
             yield Input(
                 value=str(self.mastery_score), type="integer", id="input-mastery-score"
@@ -3304,9 +3305,7 @@ class EditFamiliarBindingScreen(ModalDialog[dict[str, object] | None]):
     #fam-binding-dialog {
         width: 70;
         height: auto;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
     }
 
     .fambindingedit-row {
@@ -3345,7 +3344,7 @@ class EditFamiliarBindingScreen(ModalDialog[dict[str, object] | None]):
 
     def compose(self) -> ComposeResult:
         f = self.familiar
-        with Vertical(id="fam-binding-dialog"):
+        with Vertical(id="fam-binding-dialog", classes="dialog-box"):
             yield Label("Edit Binding & Cords")
             with Horizontal(classes="fambindingedit-row"):
                 yield Label("Binding Technique")
@@ -3490,9 +3489,7 @@ class ImportScreen(ModalDialog[str | None]):
         width: 50;
         max-width: 100%;
         height: auto;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
     }
 
     #import-hint {
@@ -3513,8 +3510,8 @@ class ImportScreen(ModalDialog[str | None]):
     """
 
     def compose(self) -> ComposeResult:
-        with Vertical(id="import-dialog"):
-            yield Label("Import Data", id="import-title")
+        with Vertical(id="import-dialog", classes="dialog-box"):
+            yield Label("Import Data", id="import-title", classes="dialog-title")
             yield Static("What would you like to import?", id="import-hint")
             yield OptionList(id="import-list", compact=True)
             with Horizontal(id="import-buttons"):
@@ -3564,9 +3561,7 @@ class DuplicateBookScreen(ModalScreen[str]):
         width: 72;
         max-width: 100%;
         height: auto;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
     }
 
     #duplicate-message {
@@ -3604,7 +3599,7 @@ class DuplicateBookScreen(ModalScreen[str]):
             if self.remaining
             else ""
         )
-        with Vertical(id="duplicate-dialog"):
+        with Vertical(id="duplicate-dialog", classes="dialog-box"):
             yield Static(
                 f"A {self.noun} named [b]{escape(self.book_name)}[/] is already "
                 f"in the saga. Add this one as well?{more}",
@@ -3641,9 +3636,7 @@ class SpellImportHelperScreen(ModalDialog[str | None]):
         max-width: 100%;
         height: auto;
         max-height: 100%;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
     }
 
     #spell-import-body {
@@ -3677,8 +3670,10 @@ class SpellImportHelperScreen(ModalDialog[str | None]):
             for name, meaning in spl.CSV_COLUMN_HELP
         )
         example = escape(spl.EXAMPLE_CSV.splitlines()[1])
-        with Vertical(id="spell-import-dialog"):
-            yield Label("Import Spells", id="spell-import-title")
+        with Vertical(id="spell-import-dialog", classes="dialog-box"):
+            yield Label(
+                "Import Spells", id="spell-import-title", classes="dialog-title"
+            )
             with VerticalScroll(id="spell-import-body"):
                 yield Static(
                     "Spells are imported from a CSV file with a header row into the "
@@ -3719,10 +3714,8 @@ class SpellImportHelperScreen(ModalDialog[str | None]):
         status = self.query_one("#spell-import-status", Static)
         try:
             target.write_text(spl.EXAMPLE_CSV, encoding="utf-8")
-        except OSError as problem:
-            status.update(
-                f"[$text-error]Couldn't save the example: {escape(str(problem))}[/]"
-            )
+        except OSError as error:
+            status.update(problem(f"Couldn't save the example: {escape(str(error))}"))
             return
         status.update(
             f"Saved [b]{escape(target.name)}[/] in {escape(str(self.folder))}. "
@@ -3754,9 +3747,7 @@ class ImproveIncomeScreen(ModalDialog[tuple[int, str] | None]):
     #improve-dialog {
         width: 70;
         height: auto;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
     }
 
     .improve-row {
@@ -3807,9 +3798,11 @@ class ImproveIncomeScreen(ModalDialog[tuple[int, str] | None]):
 
     def compose(self) -> ComposeResult:
         source = self.source
-        with Vertical(id="improve-dialog"):
+        with Vertical(id="improve-dialog", classes="dialog-box"):
             yield Label(
-                f"Improve {source.name or 'this source of income'}", id="improve-title"
+                f"Improve {source.name or 'this source of income'}",
+                id="improve-title",
+                classes="dialog-title",
             )
             with Horizontal(classes="improve-row"):
                 yield Label("Name", classes="improve-label")
@@ -4104,7 +4097,7 @@ def _device_live(saga: Saga, device: EnchantedDevice, values: dict[str, Any]) ->
             text += f"; its effects use {ed.pawns_used(draft)}"
     problems = ed.warnings(saga, draft)
     if problems:
-        text += "\n" + "\n".join(f"[$text-error]{line}[/]" for line in problems)
+        text += "\n" + "\n".join(problem(line) for line in problems)
     return text
 
 
@@ -4385,7 +4378,7 @@ def _effect_live(
     text += f"; vis {ed.vis_cost(trial, draft)}; the device's effects would use {used}"
     room = device.pawns_opened if device.type == INVESTED else None
     if room is not None and used > room:
-        text += f"\n[$text-error]More than the {room} pawns opened.[/]"
+        text += "\n" + problem(f"More than the {room} pawns opened.")
     return text
 
 

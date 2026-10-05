@@ -17,7 +17,7 @@ from . import catalog, storage
 from . import spells as spl
 from .arts import ART_LOOKUP
 from .csv_import import parse_rows, read_text_any, skipped_preview
-from .markup import escape, fit, markdown_inline
+from .markup import PROBLEM_GLYPH, escape, fit, markdown_inline, problem
 from .models import (
     BOOK_TYPES,
     TEXT_SPELL,
@@ -434,7 +434,9 @@ def row_label(saga: Saga, book: Book, subject_cols: int = SUBJECT_MIN_WIDTH) -> 
         f"{_number(book.quality):>{_QUALITY_WIDTH}}  "
         f"{escape(location)}"
     )
-    return f"[$text-error]{row}[/]" if status_problems(book, saga) else row
+    if status_problems(book, saga):
+        return f"[$text-error]{row} {PROBLEM_GLYPH}[/]"
+    return row
 
 
 def _level_text(saga: Saga, book: Book) -> str:
@@ -544,7 +546,7 @@ def detail_text(saga: Saga, book: Book | None) -> str:
         _cell("Owner", owner_label(saga, book)),
     ]
     width = max(w for _, w in left) + 4
-    lines = [f"[$text-error][b]{escape(p)}[/b][/]" for p in status_problems(book, saga)]
+    lines = [problem(f"[b]{escape(p)}[/b]") for p in status_problems(book, saga)]
     lines.append(_cell("Name", book.name or "(untitled)")[0])
     lines += [f"{lm}{' ' * (width - lw)}{rm}" for (lm, lw), (rm, _) in zip(left, right)]
     if priced(saga, book):
@@ -556,7 +558,7 @@ def detail_text(saga: Saga, book: Book | None) -> str:
                 f"{cost(book, saga)} Build Points ({cost_formula(book, saga)})",
             )[0]
         )
-        lines += [f"[$text-error]{escape(w)}[/]" for w in limit_warnings(book)]
+        lines += [problem(escape(w)) for w in limit_warnings(book)]
     lines += _study_lines(saga, book)
     if book.description.strip():
         lines += ["", "[b]Description:[/]", markdown_inline(book.description.strip())]
@@ -766,7 +768,7 @@ def import_preview(
     if unknown_abilities:
         verb = "names" if unknown_abilities == 1 else "name"
         lines.append(
-            f"[$text-error]{unknown_abilities} {verb} an unknown ability[/] (imported, "
+            problem(f"{unknown_abilities} {verb} an unknown ability") + " (imported, "
             "highlighted to fix)."
         )
     over = sum(1 for b in result.books if limit_warnings(b))

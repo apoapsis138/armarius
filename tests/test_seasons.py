@@ -595,7 +595,7 @@ def test_a_seasons_record_lists_everyone_by_covenant():
         "",
         "Keep",
         "  Leandro: Practice: Latin -- Latin +4 xp",
-        "  Alys: nothing planned",
+        "  Alys: ☞ nothing planned",
     ]
 
 

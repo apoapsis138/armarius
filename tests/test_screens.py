@@ -430,17 +430,25 @@ def _character_vf_labels(view) -> str:
 
 def _ability_labels(view) -> str:
     """All of a CharacterSheetView's Ability row labels (headers excluded),
-    joined -- Abilities is one selectable list, not one text blob."""
+    joined -- Abilities is one selectable list, not one text blob. Each is
+    plain text with its column padding collapsed: "Brawl 4 (6) 50/75"."""
     return " | ".join(
-        label for index, label in view._ability_rows() if index is not None
+        _plain(label) for index, label in view._ability_rows() if index is not None
     )
 
 
 def _fam_ability_labels(view) -> str:
     """Same idea as _ability_labels(), for a FamiliarSheetView."""
     return " | ".join(
-        label for index, label in fam.ability_rows(view.familiar) if index is not None
+        _plain(label)
+        for index, label in fam.ability_rows(view.familiar)
+        if index is not None
     )
+
+
+def _plain(label: str) -> str:
+    """A list row as plain text with runs of spaces collapsed."""
+    return " ".join(strip_markup(label).split())
 
 
 def _known_spell_labels(view) -> str:
@@ -731,7 +739,9 @@ def _lab_identity_text(view) -> str:
         view._aura_text(),
     )
     return "\n".join(
-        " ".join(line.split()) for part in parts for line in part.splitlines()
+        " ".join(line.split())
+        for part in parts
+        for line in strip_markup(part).splitlines()
     )
 
 
@@ -997,8 +1007,10 @@ async def test_selecting_character_shows_sheet_fields():
         assert "Int: +3" in view._characteristics_text()
         labels = _ability_labels(view)
         assert "Magic Theory (Lab Totals) 5 75/105" in labels
-        assert "Academic" in [
-            label for index, label in view._ability_rows() if index is None
+        assert "Academic" in [  # the first header also names the columns
+            _plain(label).removesuffix(" Score XP")
+            for index, label in view._ability_rows()
+            if index is None
         ]
         assert "Affinity with Creo" in _character_vf_labels(view)
         creo_row = view._art_row_label("Creo")
@@ -1795,7 +1807,9 @@ async def test_add_ability_with_parameters_to_character():
     storage.save_saga(_saga_with_bare_character())
 
     app = ArsMagicaManagerApp()
-    async with app.run_test() as pilot:
+    # 120x45, the smallest size the app targets: at 80x24 the picker's
+    # buttons cover the Craft row.
+    async with app.run_test(size=(120, 45)) as pilot:
         await _select_character(pilot, app)
         await _open_section(pilot, app, "tab-abilities")
 
@@ -1945,7 +1959,7 @@ async def test_lab_vf_tab_warns_and_fills_the_details_panel():
         warnings = view.query_one("#lab-vf-warnings", Static)
         assert warnings.display
         assert strip_markup(str(warnings.content)) == (
-            "Over capacity by 2 (Virtues less Flaws may total Size + Refinement = 0)."
+            "✘ Over capacity by 2 (Virtues less Flaws may total Size + Refinement = 0)."
         )
         # Virtues and Flaws side by side.
         virtues = view.query_one("#section-lab-vf-virtues").region
@@ -2359,7 +2373,7 @@ async def test_edit_character_info_updates_name_covenant_and_laboratory():
         assert view.query_one("#section-char-info", Collapsible).title == (
             "Leandro the Elder"
         )
-        info_lines = view._info_right_text().splitlines()
+        info_lines = strip_markup(view._info_right_text()).splitlines()
         assert any(
             line.startswith("Confidence Score:") and line.endswith("2")
             for line in info_lines
@@ -2692,7 +2706,7 @@ async def test_edit_biographical_detail_updates_background_and_description():
         assert view._biographical_right_text() == "Born in Aachen."
         # Age (derived from Year Born) lives in the top panel, refreshed
         # alongside Biographical Detail since they share Year Born.
-        assert re.search(r"Age:\s+40\b", view._info_left_text())  # 1220 - 1180
+        assert re.search(r"Age:\s+40\b", strip_markup(view._info_left_text()))
 
     saga = storage.load_saga("test_saga")
     character = saga.characters[0]
@@ -3518,7 +3532,7 @@ async def test_a_new_feature_virtue_is_given_to_a_feature_waiting_for_one():
             pilot,
             lambda: (
                 _lab_rows(view, "lab-features-list")
-                == ["Old cauldron  (Custom, Greater)  3 points to allocate"]
+                == ["Old cauldron  (Custom, Greater)  ☞ 3 points to allocate"]
             ),
         )
 
@@ -6172,7 +6186,8 @@ async def test_inhabitant_dialogs_fit_a_small_terminal_and_hug_content_on_a_tall
         await pilot.press("a")
         await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
-        assert app.screen.query_one("#fields-dialog").region.height < 30
+        # well short of the 70 rows (its title is ruled: STORY-1012)
+        assert app.screen.query_one("#fields-dialog").region.height < 34
 
 
 # -- Covenant Possessions tab ---------------------------------------------------
@@ -7019,7 +7034,8 @@ async def test_the_economics_forms_do_not_stretch_on_a_tall_terminal():
         await _open_eco_section(pilot, app, "income")
         await pilot.press("a")
         await pilot.pause()
-        assert app.screen.query_one("#fields-dialog").region.height < 30
+        # well short of the 70 rows (its title is ruled: STORY-1012)
+        assert app.screen.query_one("#fields-dialog").region.height < 34
 
 
 def _save_sagas(*names: str) -> None:
@@ -7094,7 +7110,7 @@ async def test_an_unreadable_saga_is_listed_and_can_be_deleted():
         await pilot.pause()
         labels = _picker_labels(app)
         assert labels[0].startswith("Alpha") and labels[2].startswith("Gamma")
-        assert labels[1] == "broken  —  can't be read"
+        assert labels[1] == "broken  —  ✘ can't be read"
 
         # Opening it says why instead of crashing; the picker stays.
         list_view = app.screen.query_one("#saga-list", ListView)

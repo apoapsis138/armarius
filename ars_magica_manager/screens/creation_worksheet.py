@@ -27,7 +27,7 @@ from textual.widgets import Button, Label, OptionList, Static
 from textual.widgets.option_list import Option
 
 from .. import creation
-from ..markup import escape
+from ..markup import PROBLEM_GLYPH, TODO_GLYPH, escape
 from ..models import Character, Covenant, Laboratory, Saga
 from ..rules import creation as rules
 from .fields import ModalDialog
@@ -40,8 +40,8 @@ Record = Character | Covenant | Laboratory
 
 MARKS: dict[str, str] = {
     "pass": "[$text-success]✔[/]",
-    "warn": "[$text-error]✘[/]",
-    "advice": "[$text-warning]![/]",
+    "warn": f"[$text-error]{PROBLEM_GLYPH}[/]",
+    "advice": f"[$text-warning]{TODO_GLYPH}[/]",
     "none": "[dim]○[/]",
 }
 
@@ -111,15 +111,11 @@ class CreationWorksheetScreen(ModalDialog[None]):
         max-width: 100%;
         height: 40;
         max-height: 100%;
-        border: round $accent;
         padding: 0 1;
-        background: $surface;
     }
 
     #ws-title {
-        width: 100%;
-        height: 1;
-        text-style: bold;
+        height: auto;
     }
 
     #ws-body {
@@ -193,8 +189,8 @@ class CreationWorksheetScreen(ModalDialog[None]):
     # -- composing --
 
     def compose(self) -> ComposeResult:
-        with Vertical(id="ws-dialog"):
-            yield Label("", id="ws-title")
+        with Vertical(id="ws-dialog", classes="dialog-box"):
+            yield Label("", id="ws-title", classes="dialog-title")
             with Horizontal(id="ws-body"):
                 with Vertical(id="ws-steps-column"):
                     yield OptionList(*self._step_options(), id="ws-steps", compact=True)

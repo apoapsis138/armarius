@@ -190,7 +190,8 @@ def test_detail_text_field_order_and_warning():
     assert len({line.index(label) for line, label in zip(plain, right)}) == 1
     assert "32 Build Points (Level 15 + Quality 17)" in text
     assert (
-        "[$text-error]Quality 17 is over the covenant-creation limit of 16.[/]" in text
+        "[$text-error]✘ Quality 17 is over the covenant-creation limit of 16.[/]"
+        in text
     )
     assert r"Summa \[of] Fire" in text  # user text is escaped
     assert (
@@ -407,7 +408,7 @@ def test_an_unknown_ability_is_flagged_red_with_a_status():
     assert not bk.row_label(saga, known).startswith("[$text-error]")
     assert bk.row_label(saga, unknown).startswith("[$text-error]")
     first_line = bk.detail_text(saga, unknown).split("\n")[0]
-    assert first_line.startswith("[$text-error][b]Unknown ability:")
+    assert first_line.startswith("[$text-error]✘ [b]Unknown ability:")
 
 
 def test_import_keeps_an_unknown_ability_and_fixes_the_case_of_known_ones():

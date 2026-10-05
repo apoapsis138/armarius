@@ -18,6 +18,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 
 from .. import sourcebooks
+from ..markup import todo
 from ..models import Character, Saga
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 from .creation_character import age
@@ -176,8 +177,10 @@ def points_text(
     past = [line.name for line in found if abs(line.bought) > BOUGHT_LIMIT]
     if past:
         text.append(
-            f"[$text-warning]{', '.join(past)}: bought from -3 to +3 (Great or "
-            "Poor adds 1 a copy past that).[/]"
+            todo(
+                f"{', '.join(past)}: bought from -3 to +3 (Great or "
+                "Poor adds 1 a copy past that)."
+            )
         )
     return "\n".join(text)
 

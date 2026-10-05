@@ -110,7 +110,7 @@ async def test_steps_follow_the_character_type(concept_checks):
             "Finishing Touches",
         ]
         # Each step's mark: broken must, none, advice, none...
-        assert [s.split(" ", 1)[0] for s in steps][:3] == ["✘", "○", "!"]
+        assert [s.split(" ", 1)[0] for s in steps][:3] == ["✘", "○", "☞"]
         assert "0 of 2 steps pass" in _text(screen, "#ws-progress")
         assert "1 warning, 1 advice" in _text(screen, "#ws-progress")
         region = screen.query_one("#ws-dialog").region

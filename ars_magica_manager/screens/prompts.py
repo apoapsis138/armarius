@@ -26,7 +26,7 @@ from .. import catalog, transfer, vis
 from .. import house_rules as hr
 from .. import lab_texts as lt
 from ..arts import ARTS, FORMS, TECHNIQUES
-from ..markup import escape
+from ..markup import escape, todo
 from ..models import (
     COVENANT_DIARY_CATEGORIES,
     LAB_ACTIVITIES,
@@ -437,7 +437,7 @@ def _export_dialog(
             return ""
         path = path_of(values)
         if path.exists():
-            return f"[$text-warning]{escape(path.name)} exists: it will be replaced.[/]"
+            return todo(f"{escape(path.name)} exists: it will be replaced.")
         return f"[dim]Writes {escape(str(path))}[/]"
 
     fields = [
@@ -666,7 +666,7 @@ def _ritual_again_dialog(
     def live(values: dict[str, Any]) -> str:
         found, again = check(values)
         if again is None:
-            return f"[$text-warning]{escape(found[0])}[/]"
+            return todo(escape(found[0]))
         return (
             f"{again.pawns} pawn(s) of {values['vis_art']} vis; "
             f"{escape(again.subject.name)}'s aging rolls -{again.modifier}. "
@@ -1294,9 +1294,7 @@ class AdvanceSeasonScreen(ModalDialog[bool]):
     #advance-dialog {
         width: 72;
         height: auto;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
     }
 
     #advance-note {
@@ -1327,8 +1325,8 @@ class AdvanceSeasonScreen(ModalDialog[bool]):
 
     def compose(self) -> ComposeResult:
         new_season, new_year = next_season(self.season, self.year)
-        with Vertical(id="advance-dialog"):
-            yield Label("Advance Time", id="advance-title")
+        with Vertical(id="advance-dialog", classes="dialog-box"):
+            yield Label("Advance Time", id="advance-title", classes="dialog-title")
             yield Static(
                 f"Advance the saga from {self.season} {self.year} "
                 f"to {new_season} {new_year}?",
@@ -1379,14 +1377,7 @@ class InfoScreen(ModalDialog[None]):
         max-width: 100%;
         height: auto;
         max-height: 100%;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
-    }
-
-    #info-title {
-        text-style: bold;
-        margin-bottom: 1;
     }
 
     #info-scroll {
@@ -1405,8 +1396,8 @@ class InfoScreen(ModalDialog[None]):
         self.text = text
 
     def compose(self) -> ComposeResult:
-        with Vertical(id="info-dialog"):
-            yield Label(self.info_title, id="info-title")
+        with Vertical(id="info-dialog", classes="dialog-box"):
+            yield Label(self.info_title, id="info-title", classes="dialog-title")
             with VerticalScroll(id="info-scroll"):
                 yield Static(self.text, id="info-text")
             yield Button("Close", id="btn-close")
@@ -1436,9 +1427,7 @@ class ConfirmScreen(ModalScreen[bool]):
     #confirm-dialog {
         width: 60;
         height: auto;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
     }
 
     #confirm-message {
@@ -1470,7 +1459,7 @@ class ConfirmScreen(ModalScreen[bool]):
         self.safe_answer = safe_answer
 
     def compose(self) -> ComposeResult:
-        with Vertical(id="confirm-dialog"):
+        with Vertical(id="confirm-dialog", classes="dialog-box"):
             yield Static(self.message, id="confirm-message")
             with Horizontal(id="confirm-buttons"):
                 yield Button(self.yes_label, id="btn-yes", variant=self.yes_variant)
@@ -1508,14 +1497,7 @@ class MenuScreen(ModalDialog[str | None]):
         min-width: 30;
         max-width: 76;
         height: auto;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
-    }
-
-    #menu-title {
-        text-style: bold;
-        margin-bottom: 1;
     }
 
     #menu-list {
@@ -1535,8 +1517,8 @@ class MenuScreen(ModalDialog[str | None]):
         self.items = list(items)
 
     def compose(self) -> ComposeResult:
-        with Vertical(id="menu-dialog"):
-            yield Label(self.menu_title, id="menu-title")
+        with Vertical(id="menu-dialog", classes="dialog-box"):
+            yield Label(self.menu_title, id="menu-title", classes="dialog-title")
             yield OptionList(
                 *(
                     Option(f"[b]{letter}[/]  {label}", id=key)
@@ -1586,9 +1568,7 @@ class ListFieldScreen[ItemT](ModalDialog[list[ItemT] | None]):
         max-width: 100%;
         height: auto;
         max-height: 100%;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
     }
 
     #list-field-hint {
@@ -1623,8 +1603,8 @@ class ListFieldScreen[ItemT](ModalDialog[list[ItemT] | None]):
         return [(index, self.label(item)) for index, item in enumerate(self.items)]
 
     def compose(self) -> ComposeResult:
-        with Vertical(id="list-field-dialog"):
-            yield Label(self.title_text, id="list-field-title")
+        with Vertical(id="list-field-dialog", classes="dialog-box"):
+            yield Label(self.title_text, id="list-field-title", classes="dialog-title")
             yield SelectableList(self._rows(), id="list-field-list")
             yield Static(
                 "a adds, e edits the chosen row, d deletes it."

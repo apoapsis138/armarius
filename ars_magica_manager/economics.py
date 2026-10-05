@@ -18,7 +18,7 @@ from . import inhabitants as inh
 from . import possessions as pos
 from .covenants import covenant_modifiers
 from .laboratories import lab_characteristic_total
-from .markup import aligned, escape, markdown_inline
+from .markup import aligned, escape, markdown_inline, problem
 from .models import (
     INCOME_EFFECT_MULTIPLIERS,
     INCOME_TYPE_DEFAULTS,
@@ -511,7 +511,7 @@ def row_detail_text(row: Row | None, first_title: str) -> str:
         else "[b]Entered by hand:[/] press e to change it",
     ]
     if row.status:
-        lines.append(f"[$text-error][b]{escape(row.status)}[/b][/]")
+        lines.append(problem(f"[b]{escape(row.status)}[/b]"))
     if row.notes.strip():
         lines += ["", "[b]Notes:[/]", escape(row.notes.strip())]
     return "\n".join(lines)

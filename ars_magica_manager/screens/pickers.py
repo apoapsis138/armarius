@@ -115,9 +115,7 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
         width: 76;
         height: auto;
         max-height: 28;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
     }
 
     #picker-search {
@@ -155,8 +153,8 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
         self._render_generation = 0
 
     def compose(self) -> ComposeResult:
-        with Vertical(id="picker-dialog"):
-            yield Label(self.picker_title, id="picker-title")
+        with Vertical(id="picker-dialog", classes="dialog-box"):
+            yield Label(self.picker_title, id="picker-title", classes="dialog-title")
             yield Input(placeholder=self.search_placeholder, id="picker-search")
             yield from self._compose_filters()
             yield ListView(id=self.LIST_VIEW_ID)
@@ -1006,9 +1004,7 @@ class RemovalPickerScreen(ModalDialog[int | None]):
         width: 76;
         height: auto;
         max-height: 24;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
     }
     """
 
@@ -1018,8 +1014,8 @@ class RemovalPickerScreen(ModalDialog[int | None]):
         self.labels = labels
 
     def compose(self) -> ComposeResult:
-        with Vertical(id="picker-dialog"):
-            yield Label(self.prompt_title, id="picker-title")
+        with Vertical(id="picker-dialog", classes="dialog-box"):
+            yield Label(self.prompt_title, id="picker-title", classes="dialog-title")
             yield ListView(id="removal-picker-list")
             yield Button("Cancel", id="btn-cancel")
 
@@ -1066,9 +1062,7 @@ class SourcebookPickerScreen(ModalDialog[list[str] | None]):
         width: 76;
         height: auto;
         max-height: 40;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
     }
 
     #books-list {
@@ -1094,8 +1088,8 @@ class SourcebookPickerScreen(ModalDialog[list[str] | None]):
         )
 
     def compose(self) -> ComposeResult:
-        with Vertical(id="books-dialog"):
-            yield Label("Books in play", id="books-title")
+        with Vertical(id="books-dialog", classes="dialog-box"):
+            yield Label("Books in play", id="books-title", classes="dialog-title")
             yield SelectionList[str](
                 *(
                     (
@@ -1166,9 +1160,7 @@ class CsvFilePickerScreen(ModalDialog[Path | None]):
         max-width: 100%;
         height: 80%;
         max-height: 100%;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
     }
 
     #picker-path-row {
@@ -1209,8 +1201,8 @@ class CsvFilePickerScreen(ModalDialog[Path | None]):
         self.suffix = suffix.lower()
 
     def compose(self) -> ComposeResult:
-        with Vertical(id="picker-dialog"):
-            yield Label(self.title_text, id="picker-title")
+        with Vertical(id="picker-dialog", classes="dialog-box"):
+            yield Label(self.title_text, id="picker-title", classes="dialog-title")
             with Horizontal(id="picker-path-row"):
                 yield Button("Up", id="btn-picker-up", compact=True)
                 yield Input(str(self.start), id="picker-path", compact=True)

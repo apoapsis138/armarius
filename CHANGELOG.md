@@ -10,6 +10,25 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.9.0 — 2026-10-05
+
+Easier to read, with a clearer order of importance on every screen.
+
+- Text fields have a background of their own, a shade deeper than the
+  page, so it's clear where to type; the field you're typing in lights
+  up. Number fields are short, so long forms no longer read as one block.
+- Names and dialog titles are headings, every section title is bold, and
+  the tab you're on stands out. Labels are quieter than their values,
+  values that come from the saga are in italics, and each details panel
+  has an accent edge.
+- Warnings have their own colour instead of the accent's gold, placeholder
+  text in fields is readable, and every text colour now meets the
+  standard readability contrast in both Scriptorum themes. A focused
+  character name no longer disappears into its highlight.
+- Abilities line up in Score and XP columns.
+- Problems start with ✘ and things still to do with ☞ (the pointing hand
+  scribes drew in margins), so they stand out by shape as well as colour.
+
 ## 2.8.0 — 2026-10-04
 
 Help: press ? anywhere (F1 while typing in a dialog) for help on the part of

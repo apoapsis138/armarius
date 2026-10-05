@@ -17,7 +17,7 @@ from textual.widgets import (
 )
 
 from .. import __version__, creation, storage
-from ..markup import escape
+from ..markup import escape, problem
 from .fields import FieldsDialog
 from .forms import _saga_fields
 from .help import HelpContext, HelpScreen, shown_keys
@@ -76,7 +76,7 @@ class SagaPickerScreen(Screen[None]):
                 saga = storage.load_saga(saga_id)
             except _UNREADABLE:
                 # Still listed, so it can be deleted (by id).
-                summary = f"{escape(saga_id)}  —  [$text-error]can't be read[/]"
+                summary = f"{escape(saga_id)}  —  {problem("can't be read")}"
             else:
                 summary = (
                     f"{escape(saga.name)}  —  "

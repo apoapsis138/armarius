@@ -22,7 +22,7 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Leandro's seasons  e plan lab work, a start a new spell, d clear
-  ○ Spring 1220                nothing planned
+  ○ Spring 1220                ☞ nothing planned
 
 
 
@@ -36,9 +36,9 @@
 
 
 
-
-    Select an activity to see its plan and Lab Total; e plans a free season.
-
+  ▌
+  ▌  Select an activity to see its plan and Lab Total; e plans a free season.
+  ▌
 
 
 ===== tab-lab-totals
@@ -122,9 +122,9 @@
 
 
 
-
-    Select a Virtue or Flaw to see its details.
-
+  ▌
+  ▌  Select a Virtue or Flaw to see its details.
+  ▌
 
 
 ===== tab-lab-attributes
@@ -165,9 +165,9 @@
           ○ Ignem  +1  Hearth spirit
 
 
-
-    Select a Specialization, Feature or Room to see its details.
-
+  ▌
+  ▌  Select a Specialization, Feature or Room to see its details.
+  ▌
 
 
 ===== tab-lab-inventory
@@ -208,9 +208,9 @@
 
       (none recorded)
 
-
-    Select Raw Vis, stores, a connection, a device or a book to see its details.
-
+  ▌
+  ▌  Select Raw Vis, stores, a connection, a device or a book to see its details.
+  ▌
 
 
 ===== tab-lab-diary
@@ -251,8 +251,8 @@
 
 
 
-
-    Select a Diary entry to see its details.
-
+  ▌
+  ▌  Select a Diary entry to see its details.
+  ▌
 
 

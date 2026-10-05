@@ -14,7 +14,7 @@ from dataclasses import dataclass
 
 from . import catalog
 from .arts import ARTS, TECHNIQUES
-from .markup import escape, markdown_inline
+from .markup import escape, markdown_inline, problem, todo
 from .models import (
     FEATURE_VIRTUE_POINTS,
     FOCUS_FLAWS,
@@ -341,7 +341,7 @@ def feature_rows(lab: Laboratory) -> list[tuple[int | None, str]]:
         label = f"{escape(feature.name)}  [dim]({', '.join(details)})[/]"
         problems = feature_problems(lab, feature)
         if problems:
-            label += f"  [$text-error]{problems[0]}[/]"
+            label += f"  {todo(problems[0])}"
         rows.append((index, label))
     return rows
 
@@ -377,10 +377,7 @@ def feature_info_text(lab: Laboratory, index: int | None) -> str:
             f"[b]Focus:[/] {_grants_text(feature.focus_allocations) or '(none yet)'} "
             f"({tier} Focus: -{penalty} General Quality on activities it doesn't aid)"
         )
-    lines += [
-        f"[$text-error]{p[0].upper()}{p[1:]}.[/]"
-        for p in feature_problems(lab, feature)
-    ]
+    lines += [todo(f"{p[0].upper()}{p[1:]}.") for p in feature_problems(lab, feature)]
     if definition is not None:
         lines += ["", escape(definition.description)]
     return "\n".join(lines)
@@ -604,7 +601,7 @@ def specialty_entry_rows(lab: Laboratory) -> list[tuple[int | None, str]]:
         if entry.specialization:
             head = f"{entry.specialization:<{width}}  {entry.points:+d}"
         else:
-            head = "[$text-error]needs a Specialization[/]"
+            head = todo("needs a Specialization")
         rows.append((index, f"{head}  {escape(_source_label(entry))}"))
     return rows
 
@@ -615,9 +612,8 @@ def specialty_entry_info_text(lab: Laboratory, index: int | None) -> str:
         return ATTRIBUTES_PANEL_HINT
     entry = lab.specialties[index]
     if not entry.specialization:
-        return (
-            f"[b]{escape(_source_label(entry))}[/]\n\n[$text-error]Names no "
-            "Activity or Art: edit it (e) to choose its Specialization.[/]"
+        return f"[b]{escape(_source_label(entry))}[/]\n\n" + todo(
+            "Names no Activity or Art: edit it (e) to choose its Specialization."
         )
     return (
         f"[b]{entry.specialization} {entry.points:+d}[/]\n"
@@ -750,7 +746,7 @@ def vf_warnings(lab: Laboratory) -> str:
                 f"{definition.name}: its Specialization isn't chosen "
                 "(remove it and add it again to choose)."
             )
-    return "\n".join(f"[$text-error]{line}[/]" for line in lines)
+    return "\n".join(problem(line) for line in lines)
 
 
 def named_rows(entries: Sequence[NamedDescription]) -> list[tuple[int | None, str]]:

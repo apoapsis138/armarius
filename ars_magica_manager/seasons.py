@@ -20,7 +20,7 @@ from . import enchanted_devices as ed
 from . import spells as spl
 from .familiars import familiar_of
 from .inhabitants import AUTO_KINDS, character_kind
-from .markup import escape, fit
+from .markup import escape, fit, problem, todo
 from .models import (
     SEASONS,
     TEXT_ENCHANTMENT,
@@ -388,10 +388,10 @@ def _plan_text(saga: Saga, character: Character, how: str) -> str:
         lines.append("  [dim]The die is rolled when the season is applied.[/]")
     if plan.months_lost and worked.activity and worked.activity.distractable:
         lines.append(f"  {plan.months_lost} month(s) lost to distractions.")
-    lines += [f"[$text-error]{escape(p)}[/]" for p in worked.problems]
+    lines += [problem(escape(p)) for p in worked.problems]
     note = working_seasons_note(character, plan)
     if note:
-        lines.append(f"[$text-warning]{escape(note)}[/]")
+        lines.append(todo(escape(note)))
     if plan.details.strip() and worked.activity and worked.activity.gives_xp:
         lines.append(f"[dim]Notes:[/] {escape(plan.details.strip())}")
     if worked.activity is not None:
@@ -403,7 +403,7 @@ def live_text(saga: Saga, character: Character, plan: SeasonPlan) -> str:
     """The plan dialog's preview line(s) for the plan as typed so far."""
     worked = rules.outcome(character, plan, saga)
     if worked.problems:
-        return f"[$text-error]{escape(worked.problems[0])}[/]"
+        return problem(escape(worked.problems[0]))
     names = spell_names(saga, character)
     lines = [escape(_gain_line(g, names)) for g in worked.gains]
     lines += [escape(n) for n in worked.notes]
@@ -415,7 +415,7 @@ def live_text(saga: Saga, character: Character, plan: SeasonPlan) -> str:
         lines.append("[dim]The die is rolled when the season is applied.[/]")
     note = working_seasons_note(character, plan)
     if note:
-        lines.append(f"[$text-warning]{escape(note)}[/]")
+        lines.append(todo(escape(note)))
     return "\n".join(lines) or "[dim]Logged in the Diary with your notes.[/]"
 
 
@@ -976,16 +976,17 @@ def advance_summary(saga: Saga) -> str:
     if missing:
         who = ", ".join(f"{escape(c.name)} ({c.type})" for c in missing)
         lines.append(
-            f"[$text-warning]Nothing planned for: {who}. They gain nothing "
-            "this season.[/]"
+            todo(f"Nothing planned for: {who}. They gain nothing this season.")
         )
     for outcome in worked:
         if not outcome.ok:
             character = saga.character(outcome.character_id)
             name = character.name if character else outcome.character_id
             lines.append(
-                f"[$text-error]{escape(name)}'s plan can't be carried out: "
-                f"{escape(outcome.problems[0])}[/]"
+                problem(
+                    f"{escape(name)}'s plan can't be carried out: "
+                    f"{escape(outcome.problems[0])}"
+                )
             )
     return "\n".join(lines)
 
@@ -1040,7 +1041,7 @@ def season_rows(saga: Saga, covenant: Covenant, kind: str) -> list[tuple[int, st
             what = (
                 escape(plan_summary(saga, character, plan))
                 if plan is not None
-                else "[$text-warning]nothing planned[/]"
+                else todo("nothing planned")
             )
         rows.append((index, f"{name}  {what}"))
     return rows
@@ -1112,13 +1113,13 @@ def record_text(saga: Saga, record: SeasonRecord) -> str:
             if line.covenant_id != covenant_id:
                 continue
             if not line.activity:
-                did = "[$text-warning]nothing planned[/]"
+                did = todo("nothing planned")
             else:
                 did = escape(
                     f"{line.activity}: {line.what}" if line.what else line.activity
                 )
                 if line.result.startswith("not carried out"):
-                    did += f" -- [$text-error]{escape(line.result)}[/]"
+                    did += f" -- {problem(escape(line.result))}"
                 elif line.result:
                     did += f" -- {escape(line.result)}"
             lines.append(f"  {escape(line.name)}: {did}")
@@ -1373,13 +1374,13 @@ def lab_queue_rows(saga: Saga, lab: Laboratory) -> list[tuple[int, str]]:
         if owner is None:
             what = "[dim]no owner[/]"
         elif row.plan is None:
-            what = "[$text-warning]nothing planned[/]"
+            what = todo("nothing planned")
         else:
             what = escape(plan_summary(saga, owner, row.plan))
             if not row.plan.lab_id:
                 what += f" [dim](on {escape(owner.name)}'s sheet)[/]"
             elif row.problems:
-                what += "  [$text-error]can't be done (see below)[/]"
+                what += f"  {problem("can't be done (see below)")}"
             elif row.work is not None:
                 what += f"  [dim]{escape(_progress(row.work, row.plan))}[/]"
         rows.append((index, f"{when}{what}"))
@@ -1411,7 +1412,7 @@ def lab_queue_info(saga: Saga, lab: Laboratory, index: int | None) -> str:
             "here replaces it.[/]"
         )
         return "\n".join(lines)
-    lines += [f"[$text-error]{escape(p)}[/]" for p in row.problems]
+    lines += [problem(escape(p)) for p in row.problems]
     if row.work is not None:
         lines.append(escape(work_text(row.work, row.plan)))
         for line in row.work.lab_total.lines:

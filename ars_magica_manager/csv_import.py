@@ -8,7 +8,7 @@ import io
 from collections.abc import Callable, Sequence
 from pathlib import Path
 
-from .markup import escape
+from .markup import escape, problem
 
 
 def read_text_any(path: Path) -> str:
@@ -63,7 +63,7 @@ def skipped_preview(skipped: Sequence[str], shown: int = 5) -> list[str]:
     or none."""
     if not skipped:
         return []
-    lines = ["", f"[$text-error]{len(skipped)} row(s) will be skipped:[/]"]
+    lines = ["", problem(f"{len(skipped)} row(s) will be skipped:")]
     lines += [f"  {escape(s)}" for s in skipped[:shown]]
     if len(skipped) > shown:
         lines.append(f"  ...and {len(skipped) - shown} more.")

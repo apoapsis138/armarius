@@ -1,4 +1,5 @@
 import pytest
+from support import strip_markup
 
 from ars_magica_manager import familiars as fam
 from ars_magica_manager.models import (
@@ -142,8 +143,10 @@ def test_ability_rows_groups_by_category_with_headers():
         Ability(name="Magic Theory", category="Arcane", xp=ability_xp(2)),
     ]
     rows = fam.ability_rows(familiar)
-    assert rows == [
-        (None, "General"),
+    assert [
+        (index, " ".join(strip_markup(label).split())) for index, label in rows
+    ] == [
+        (None, "General Score XP"),
         (0, "Athletics (Running) 3 30/50"),
         (None, "Arcane"),
         (1, "Magic Theory 2 15/30"),

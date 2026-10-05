@@ -492,7 +492,7 @@ def test_surplus_deficit_is_plain_when_positive_error_colour_when_negative():
     assert surplus_summary.surplus_deficit > 0
     _, surplus_right = eco.wealth_texts(surplus_summary)
     assert f"{surplus_summary.surplus_deficit:+d}" in surplus_right
-    assert "[$" not in surplus_right  # a surplus is plain
+    assert "[$text-" not in surplus_right  # a surplus is plain
 
 
 def test_surplus_deficit_of_exactly_zero_is_plain():
@@ -506,7 +506,7 @@ def test_surplus_deficit_of_exactly_zero_is_plain():
     even_summary = eco.summarize(saga, cov)
     assert even_summary.surplus_deficit == 0
     _, right = eco.wealth_texts(even_summary)
-    assert "+0" in right and "[$" not in right  # break-even is plain
+    assert "+0" in right and "[$text-" not in right  # break-even is plain
 
 
 def test_source_text_shows_where_the_income_comes_from_and_renders_emphasis():

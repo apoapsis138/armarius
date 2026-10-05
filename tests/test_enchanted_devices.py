@@ -321,7 +321,7 @@ def test_rows_list_talismans_first_and_effects_indented():
     ]
     staff.pawns_opened = 3
     assert strip_markup(ed.device_rows(saga, "character", "mag1")[1][1]).endswith(
-        "Opening 3/4  2 effects  !"
+        "Opening 3/4  2 effects  ✘"
     )
     assert ed.device_targets(saga, "character", "mag1")[3] == (staff, hidden)
 

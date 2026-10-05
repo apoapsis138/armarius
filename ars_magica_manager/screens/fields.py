@@ -69,6 +69,21 @@ class ModalDialog[ResultT](ModalScreen[ResultT]):
         Binding("question_mark", "app.help", "Help", show=False),
     ]
 
+    # Every dialog's box (its outer container has class "dialog-box") and
+    # title ("dialog-title"); each dialog sets its own size and padding
+    # (STORY-1011, 1012). Their theme colours are in styles.py.
+    DEFAULT_CSS = """
+    ModalDialog .dialog-box {
+        border: round $accent;
+        background: $surface;
+    }
+
+    ModalDialog .dialog-title {
+        width: 100%;
+        text-style: bold;
+    }
+    """
+
     #: What the dialog dismisses with when cancelled.
     CANCEL_RESULT: ClassVar[Any] = None
 
@@ -188,9 +203,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         max-width: 100%;
         height: auto;
         max-height: 100%;
-        border: round $accent;
         padding: 1 2;
-        background: $surface;
     }
 
     #fields-scroll {
@@ -220,6 +233,12 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         text-align: left;
     }
 
+    /* A number needs a few columns, not the row: a short well breaks up a
+       long form's run of fields (STORY-1011). */
+    .fd-row Input.fd-number {
+        width: 10;
+    }
+
     .fd-value {
         width: 1fr;
         color: $text-muted;
@@ -236,6 +255,11 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
     .fd-hint {
         color: $text-muted;
         height: auto;
+    }
+
+    /* A field's hint sits under the field, past its label (.fd-label). */
+    .fd-row-hint {
+        padding-left: 30;
     }
 
     #fields-live {
@@ -305,8 +329,8 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         self._filled_from: dict[str, Any] = {}
 
     def compose(self) -> ComposeResult:
-        with Vertical(id="fields-dialog"):
-            yield Label(self.title_text, id="fields-title")
+        with Vertical(id="fields-dialog", classes="dialog-box"):
+            yield Label(self.title_text, id="fields-title", classes="dialog-title")
             with VerticalScroll(id="fields-scroll"):
                 for spec in self.fields:
                     with Vertical(classes="fd-field", id=f"fdw-{spec.key}"):
@@ -340,6 +364,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
                     value="" if spec.value is None else str(spec.value),
                     type="integer",
                     id=widget_id,
+                    classes="fd-number",
                     compact=True,
                 )
             elif spec.kind == "optfloat":
@@ -347,6 +372,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
                     value="" if spec.value is None else str(spec.value),
                     type="number",
                     id=widget_id,
+                    classes="fd-number",
                     compact=True,
                 )
             elif spec.kind == "select":
@@ -386,7 +412,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
             else:  # info
                 yield Static(escape(str(spec.value)), classes="fd-value")
         if spec.hint:
-            yield Static(spec.hint, classes="fd-hint")
+            yield Static(spec.hint, classes="fd-hint fd-row-hint")
 
     def on_mount(self) -> None:
         self._fit()

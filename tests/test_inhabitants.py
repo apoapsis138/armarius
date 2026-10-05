@@ -300,7 +300,7 @@ def test_governance_follows_the_boon_else_the_typed_value():
     assert inh.governance_names(cov) == ["Autocracy"]
     left = inh.loyalty_left_text(saga, cov)
     assert "Autocracy" in left and "Guild of Mercers" not in left  # the Boon wins
-    assert "[dim]Autocracy[/]" in left  # shown as inherited
+    assert "[i $label]Autocracy[/]" in left  # shown as inherited
 
 
 # --------------------------------------------------------------------- text
@@ -512,7 +512,9 @@ def test_population_text_colors_the_needed_pair_by_theme():
         )
     )
     assert f"[$text-success]{minimum} / {minimum}[/]" in inh.population_text(saga, cov)
-    assert re.search(r"Total Inhabitants:\s+7\b", population)  # 5 + magus + companion
+    assert re.search(
+        r"Total Inhabitants:\s+7\b", strip_markup(population)
+    )  # 5 + magus + companion
 
 
 # ----------------------------------------------------------------- gift

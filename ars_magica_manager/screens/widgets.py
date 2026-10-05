@@ -939,6 +939,8 @@ class DetailsPanel(VerticalScroll):
         margin-top: 1;
         padding: 1 2;
         background: $panel;
+        /* an accent edge ties it to the list it explains (STORY-1012) */
+        border-left: outer $accent;
     }}
 
     DetailsPanel > PanelText {{

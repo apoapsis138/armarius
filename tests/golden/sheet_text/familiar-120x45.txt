@@ -36,9 +36,9 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Personality Traits (1)                 ▼ Reputations (1)
 
-
-    Select a Virtue or Flaw to see its details.
-
+  ▌
+  ▌  Select a Virtue or Flaw to see its details.
+  ▌
 
 
 ===== tab-fam-characteristics
@@ -122,9 +122,9 @@
 
 
 
-
-    Select an attack to see its details.
-
+  ▌
+  ▌  Select an attack to see its details.
+  ▌
 
 
 ===== tab-fam-abilities
@@ -143,8 +143,8 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Languages: shares the Magus partner's Language scores automatically.
-  General
-  ○ Awareness 2 15/30
+  General                 Score           XP
+  ○ Awareness                 2        15/30
 
 
 
@@ -165,9 +165,9 @@
 
 
 
-
-    Select an Ability to see its details.
-
+  ▌
+  ▌  Select an Ability to see its details.
+  ▌
 
 
 ===== tab-fam-powers
@@ -208,8 +208,8 @@
 
 
 
-
-    Select a Bond Power to see its details.
-
+  ▌
+  ▌  Select a Bond Power to see its details.
+  ▌
 
 

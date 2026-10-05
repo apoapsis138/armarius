@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from . import catalog, covenant_diary, storage
-from .markup import aligned, escape, fit, markdown_inline
+from .markup import aligned, escape, fit, inherited, markdown_inline
 from .models import (
     COMPANION_TYPES,
     INHABITANT_KINDS,
@@ -672,7 +672,7 @@ def loyalty_left_text(saga: Saga, covenant: Covenant) -> str:
     typed)."""
     styles = governance_names(covenant)
     if styles:
-        governance = f"[dim]{escape(', '.join(styles))}[/]"
+        governance = inherited(escape(", ".join(styles)))
     else:
         governance = escape(covenant.loyalty.governance) or "(not set)"
     base = base_loyalty(saga, covenant)
