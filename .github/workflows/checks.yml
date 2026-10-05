@@ -1,13 +1,11 @@
 # The checks run before every story is handed over (CLAUDE.md), on a clean
-# machine, for every push to main and every pull request (STORY-1127).
-# Windows, like the machine the app is used on; GitHub counts its minutes
-# double against a private repo's free allowance.
+# machine. Run by hand only (Actions tab -> Checks -> Run workflow): Hedda
+# parked automatic runs on push on 2026-10-05, since every story already runs
+# them locally and a Windows run bills ~40 of the free private-repo minutes.
+# See "Automated GitHub checks (CI)" in the kanban Ideas column.
 name: Checks
 
 on:
-  push:
-    branches: [main]
-  pull_request:
   workflow_dispatch:
 
 concurrency:

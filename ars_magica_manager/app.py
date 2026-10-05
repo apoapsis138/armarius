@@ -48,14 +48,14 @@ class ArsMagicaManagerApp(App[None]):
         self.push_screen(HelpScreen(help_context(self.screen_stack)))
 
     #: Lines to show once on start: what moving the user data from the repo's
-    #: data/ folder did (main.py, paths.move_legacy_data).
+    #: data/ folder did, or why the data folder couldn't be used (main.py).
     startup_notes: tuple[str, ...] = ()
 
     def on_mount(self) -> None:
         if self.startup_notes:
             self.notify(
                 escape("\n".join(self.startup_notes)),
-                title="Your data moved to " + escape(str(paths.data_dir())),
+                title="Your data folder: " + escape(str(paths.data_dir())),
                 timeout=30,
             )
         self.register_theme(SCRIPTORUM)

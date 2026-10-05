@@ -53,9 +53,10 @@ uv run pyright                                # type-check
 ### Where your data is kept
 
 Your sagas, their backups, exports and the app's settings are kept in
-**Ars Magica Manager** in your Documents folder (on Windows, the real
-Documents folder, which may be in OneDrive). Saves from before version
-2.11.0, kept in the repo's `data/` folder, are moved there the first time
+**Ars Magica Manager** at the top of your OneDrive folder, wherever OneDrive
+is on that computer (without OneDrive: in your app data folder, e.g.
+`~/Library/Application Support/Ars Magica Manager` on a Mac). Saves kept in
+the repo's `data/` folder by older versions are moved there the first time
 the app starts.
 
 To keep them somewhere else, either set the `ARS_MAGICA_MANAGER_DATA`
@@ -63,6 +64,13 @@ environment variable to a folder, or create `location.json` in the app's
 config folder (`%LOCALAPPDATA%\Ars Magica Manager` on Windows) holding
 `{"data_dir": "D:/Somewhere/Ars Magica"}`. Move the existing files there
 yourself first: the app only moves them out of the repo.
+
+If the folder can't be created or written to, the app keeps using the
+repo's `data/` folder (or, with no saves there, its app data folder) and
+says so when it starts. On Windows the usual cause is **Controlled folder
+access** (Windows Security, Ransomware protection), which stops Python
+from writing in protected folders such as Documents: choose a folder
+outside them as above, or allow `python.exe` there.
 
 ## Layout
 

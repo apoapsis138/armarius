@@ -749,6 +749,12 @@ class SheetView(Vertical):
         #: order. Filled while composing by _static()/_list()/_on_refresh(),
         #: so a widget's render call is written once, where it's built.
         self._refreshers: dict[str, list[Callable[[], None]]] = {}
+        #: Refreshers for every section id a test accepts (a family of
+        #: sections, or all of them), run after the section's own; filled by
+        #: _on_refresh_matching().
+        self._matching_refreshers: list[
+            tuple[Callable[[str], bool], Callable[[], None]]
+        ] = []
         #: The ids of the tabs _tab() has made, in order (they are numbered
         #: as they go; the workspace's 1 to 9 keys open them).
         self.tab_ids: list[str] = []
@@ -826,16 +832,26 @@ class SheetView(Vertical):
             await pane.ensure_built()
 
     def refresh_section(self, section_id: str) -> None:
-        """Re-render whatever shows `section_id` after its data changed. An
-        id the sheet doesn't show does nothing (a change can be committed
-        while another kind of sheet is on show)."""
-        for refresh in self._refreshers.get(section_id, ()):
+        """Re-render whatever shows `section_id` after its data changed: its
+        own refreshers, then the matching ones (each once). An id the sheet
+        doesn't show does nothing (a change can be committed while another
+        kind of sheet is on show)."""
+        refreshers = [
+            *self._refreshers.get(section_id, ()),
+            *(
+                refresh
+                for match, refresh in self._matching_refreshers
+                if match(section_id)
+            ),
+        ]
+        for refresh in dict.fromkeys(refreshers):
             try:
                 refresh()
             except NoMatches:
-                # The sheet is being replaced or torn down (a refresh from a
+                # A tab not built yet (it is built from the current data), or
+                # the sheet is being replaced or torn down (a refresh from a
                 # dialog callback can land after that).
-                return
+                continue
 
     def _on_refresh(
         self, sections: str | tuple[str, ...], refresh: Callable[[], None]
@@ -843,6 +859,13 @@ class SheetView(Vertical):
         """Run `refresh` whenever any of `sections` is refreshed."""
         for section in (sections,) if isinstance(sections, str) else sections:
             self._refreshers.setdefault(section, []).append(refresh)
+
+    def _on_refresh_matching(
+        self, match: Callable[[str], bool], refresh: Callable[[], None]
+    ) -> None:
+        """Run `refresh` whenever a section id `match` accepts is refreshed
+        (for what depends on a whole family of sections, or on any change)."""
+        self._matching_refreshers.append((match, refresh))
 
     def _book_list(
         self,
@@ -2870,6 +2893,65 @@ class CovenantSheetView(SheetView):
     def __init__(self, saga: Saga, covenant: Covenant) -> None:
         super().__init__(saga)
         self.covenant = covenant
+        self._register_refreshers()
+
+    def _register_refreshers(self) -> None:
+        """What each of the sheet's sections feeds besides its own widgets
+        (those register themselves as they're built). A refresher whose tab
+        isn't built yet is skipped: the tab is built from the current data."""
+        on = self._on_refresh
+        on("section-cov-info", self._refresh_info)
+        on("section-cov-description", self._refresh_description)
+        on("section-cov-reputations", self._refresh_reputations)
+        on("section-inh-loyalty", self._refresh_loyalty_text)
+        on(("section-inh-population", "section-inh-misc"), self._refresh_population)
+        # An Aura Boon changes the Aura in the info panel, and so Loyalty.
+        on(
+            ("section-cov-boons", "section-cov-hooks"),
+            self._rebuild_boons_hooks,
+        )
+        on(("section-cov-boons", "section-cov-hooks"), self._refresh_info)
+        on(("section-cov-boons", "section-cov-hooks"), self._refresh_loyalty_text)
+
+        def family(*prefixes: str) -> Callable[[str], bool]:
+            return lambda section_id: section_id.startswith(prefixes)
+
+        inhabitants = family("section-inh-")
+        summaries = (
+            "section-inh-loyalty",
+            "section-inh-population",
+            "section-inh-misc",
+        )
+        match = self._on_refresh_matching
+        # Any other Inhabitants section is one of the lists.
+        match(
+            lambda s: inhabitants(s) and s not in summaries, self._rebuild_inhabitants
+        )
+        match(family("section-pos-"), self._rebuild_possessions)
+        match(family("section-eco-"), self._rebuild_economics)
+        # Marking someone departed takes them off the Seasons lists.
+        match(inhabitants, lambda: SheetView.refresh_section(self, "tab-cov-seasons"))
+        # Every change can change what the Build Points went on, and
+        # Poverty's warning depends on the Boons, Hooks and income.
+        match(lambda _: True, self._refresh_build)
+        match(lambda _: True, self._refresh_bh_warnings)
+        # Inhabitants, Possessions and the covenant's own sections feed the
+        # Economics tab's figures.
+        match(
+            family("section-inh-", "section-pos-", "section-cov-"),
+            self._rebuild_economics,
+        )
+        # Magi (Gift), Specialists/Companions (role bonus), covenant
+        # Reputations and Living Conditions (Mundane) feed the Loyalty block,
+        # which lives on a different section; so do the Diary's Loyalty
+        # points (Actions and Events).
+        match(
+            lambda s: (
+                s in ("section-cov-info", "section-cov-reputations", "tab-cov-diary")
+                or (inhabitants(s) and s != "section-inh-loyalty")
+            ),
+            self._refresh_loyalty_text,
+        )
 
     @property
     def creation_record(self) -> Covenant:
@@ -3242,40 +3324,6 @@ class CovenantSheetView(SheetView):
             inh.detail_text(None, self.saga.current_year)
         )
 
-    def refresh_section(self, section_id: str) -> None:
-        super().refresh_section(section_id)  # the Library's book list
-        if section_id.startswith("section-inh-"):
-            # Marking someone departed takes them off the Seasons lists.
-            super().refresh_section("tab-cov-seasons")
-        steps: list[Callable[[], None]] = [
-            lambda: self._refresh_section(section_id),
-            self._refresh_build,
-            # Poverty's warning depends on the Boons, Hooks and income.
-            self._refresh_bh_warnings,
-        ]
-        if section_id.startswith(("section-inh-", "section-pos-", "section-cov-")):
-            # These feed the Economics tab's figures.
-            steps.append(self._rebuild_economics)
-        if section_id in ("section-cov-info", "section-cov-reputations") or (
-            section_id.startswith("section-inh-")
-            and section_id != "section-inh-loyalty"
-        ):
-            # Magi (Gift), Specialists/Companions (role bonus), covenant
-            # Reputations and Living Conditions (Mundane) all feed the
-            # Loyalty block, which lives on a different section.
-            steps.append(self._refresh_loyalty_text)
-        if section_id == "tab-cov-diary":
-            # The Diary's Loyalty points feed Actions and Events.
-            steps.append(self._refresh_loyalty_text)
-        for step in steps:
-            try:
-                step()
-            except NoMatches:
-                # A tab not built yet (it will be built from the current
-                # data), or the sheet is being torn down (a refresh from a
-                # dialog callback can land after that).
-                continue
-
     def _refresh_loyalty_text(self) -> None:
         self.query_one("#inh-loyalty-left", Static).update(
             inh.loyalty_left_text(self.saga, self.covenant)
@@ -3284,43 +3332,30 @@ class CovenantSheetView(SheetView):
             inh.loyalty_right_text(self.saga, self.covenant)
         )
 
-    def _refresh_section(self, section_id: str) -> None:
-        if section_id == "section-cov-info":
-            self.query_one("#section-cov-info", Collapsible).title = escape(
-                self.covenant.name
-            )
-            self.query_one("#cov-info-left", Static).update(self._info_left_text())
-            self.query_one("#cov-info-right", Static).update(self._info_right_text())
-        elif section_id == "section-cov-description":
-            self.query_one("#cov-description-content", Static).update(
-                self._description_text()
-            )
-        elif section_id == "section-cov-reputations":
-            self.query_one("#cov-reputations-list", SelectableList).set_rows(
-                self._reputation_rows()
-            )
-        elif section_id == "section-inh-loyalty":
-            self._refresh_loyalty_text()
-        elif section_id in ("section-inh-population", "section-inh-misc"):
-            self.query_one("#inh-population-content", Static).update(
-                inh.population_text(self.saga, self.covenant)
-            )
-            left, right = inh.misc_text(self.covenant)
-            self.query_one("#inh-misc-left", Static).update(left)
-            self.query_one("#inh-misc-right", Static).update(right)
-        elif section_id.startswith("section-inh-"):
-            self._rebuild_inhabitants()
-        elif section_id.startswith("section-pos-"):
-            self._rebuild_possessions()
-        elif section_id.startswith("section-eco-"):
-            self._rebuild_economics()
-        elif section_id in ("section-cov-boons", "section-cov-hooks"):
-            self._rebuild_boons_hooks()
-            # An Aura Boon changes the Aura shown in the info panel, and so
-            # what the info panel feeds (Loyalty; Economics is rebuilt by
-            # refresh_section for every section-cov-* already).
-            self._refresh_section("section-cov-info")
-            self._refresh_loyalty_text()
+    def _refresh_info(self) -> None:
+        self.query_one("#section-cov-info", Collapsible).title = escape(
+            self.covenant.name
+        )
+        self.query_one("#cov-info-left", Static).update(self._info_left_text())
+        self.query_one("#cov-info-right", Static).update(self._info_right_text())
+
+    def _refresh_description(self) -> None:
+        self.query_one("#cov-description-content", Static).update(
+            self._description_text()
+        )
+
+    def _refresh_reputations(self) -> None:
+        self.query_one("#cov-reputations-list", SelectableList).set_rows(
+            self._reputation_rows()
+        )
+
+    def _refresh_population(self) -> None:
+        self.query_one("#inh-population-content", Static).update(
+            inh.population_text(self.saga, self.covenant)
+        )
+        left, right = inh.misc_text(self.covenant)
+        self.query_one("#inh-misc-left", Static).update(left)
+        self.query_one("#inh-misc-right", Static).update(right)
 
     def _bh_warnings_text(self) -> str:
         """Boons and Hooks that don't fit together (STORY-703), one line

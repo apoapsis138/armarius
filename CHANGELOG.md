@@ -10,6 +10,16 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.11.1 — 2026-10-05
+
+- Fixes 2.11.0 failing to start when Windows' Controlled folder access
+  (ransomware protection) blocks writing to Documents. Your data now lives
+  in **Ars Magica Manager** at the top of your OneDrive folder (or the app
+  data folder without OneDrive). If the app can't write there, it keeps
+  using wherever your saves already are and says why, instead of stopping.
+- Behind the scenes: the covenant sheet now updates its tabs the same way
+  the other sheets do, and the automatic GitHub checks run only on request.
+
 ## 2.11.0 — 2026-10-05
 
 Your data now has a home of its own: sagas, their backups, exports and the

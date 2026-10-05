@@ -9,17 +9,39 @@ from ars_magica_manager import paths
 
 @pytest.fixture
 def no_choice(tmp_path, monkeypatch):
-    """No environment variable and no location file: the default."""
+    """No environment variable and no location file: the default, with
+    OneDrive at tmp_path/OneDrive (as on Windows)."""
     monkeypatch.delenv(paths.ENV_VAR, raising=False)
+    for var in paths.ONEDRIVE_VARS:
+        monkeypatch.delenv(var, raising=False)
+    (tmp_path / "OneDrive").mkdir()
+    monkeypatch.setenv("OneDrive", str(tmp_path / "OneDrive"))
     monkeypatch.setattr(paths, "LOCATION_FILE", tmp_path / "config" / "location.json")
     monkeypatch.setattr(
-        paths.platformdirs, "user_documents_dir", lambda: str(tmp_path / "Docs")
+        paths.platformdirs, "user_data_dir", lambda *a, **k: str(tmp_path / "AppData")
     )
     return tmp_path
 
 
-def test_the_data_folder_defaults_to_documents(no_choice):
-    assert paths.data_dir() == no_choice / "Docs" / "Ars Magica Manager"
+def test_the_data_folder_defaults_to_the_top_of_onedrive(no_choice):
+    assert paths.data_dir() == no_choice / "OneDrive" / "Ars Magica Manager"
+
+
+def test_onedrive_is_found_wherever_it_is(no_choice, monkeypatch):
+    # the maintainer's second computer has OneDrive at D:\OneDrive.
+    (no_choice / "D" / "OneDrive").mkdir(parents=True)
+    monkeypatch.delenv("OneDrive")
+    monkeypatch.setenv("OneDriveConsumer", str(no_choice / "D" / "OneDrive"))
+    assert paths.data_dir() == no_choice / "D" / "OneDrive" / "Ars Magica Manager"
+
+
+def test_without_onedrive_the_data_folder_is_the_app_data_folder(
+    no_choice, monkeypatch
+):
+    monkeypatch.delenv("OneDrive")
+    assert paths.data_dir() == no_choice / "AppData"
+    monkeypatch.setenv("OneDrive", str(no_choice / "missing"))  # not a folder
+    assert paths.data_dir() == no_choice / "AppData"
 
 
 def test_a_location_file_chooses_another_folder(no_choice):
@@ -100,5 +122,58 @@ async def test_the_app_says_what_moved_on_start():
     async with app.run_test():
         shown = [(n.title, n.message) for n in app._notifications]
     assert len(shown) == 1
-    assert shown[0][0].startswith("Your data moved to ")
+    assert shown[0][0].startswith("Your data folder: ")
     assert shown[0][1] == "Moved sagas/a.json"
+
+
+@pytest.fixture
+def blocked(no_choice, monkeypatch):
+    """The OneDrive folder can't be written to (as Controlled folder access
+    does to Documents); every other folder can (STORY-1132)."""
+    real = paths.writable
+    monkeypatch.setattr(
+        paths,
+        "writable",
+        lambda folder: "OneDrive" not in folder.parts and real(folder),
+    )
+    yield no_choice
+    monkeypatch.setattr(paths, "_fallback", None)
+
+
+def test_an_unwritable_data_folder_falls_back_to_the_saves_in_the_repo(blocked):
+    old = _legacy(blocked)
+    problem = paths.settle_data_dir(old)
+    assert paths.data_dir() == old
+    assert problem is not None and "Controlled folder access" in problem
+    assert str(old) in problem
+    assert paths.move_legacy_data(old) == []  # nothing moves
+    assert (old / "sagas" / "a.json").exists()
+
+
+def test_with_no_saves_in_the_repo_it_falls_back_to_app_data(blocked):
+    problem = paths.settle_data_dir(blocked / "empty_repo_data")
+    assert paths.data_dir() == blocked / "AppData"
+    assert problem is not None
+
+
+def test_a_writable_data_folder_needs_no_fallback(no_choice):
+    assert paths.settle_data_dir(no_choice / "repo") is None
+    assert paths.data_dir() == paths.default_data_dir()
+    assert paths.default_data_dir().is_dir()
+    assert list(paths.default_data_dir().iterdir()) == []  # the probe is gone
+
+
+def test_a_file_that_cannot_move_is_left_in_place(tmp_path, monkeypatch):
+    old, new = _legacy(tmp_path), tmp_path / "new"
+    real_move = paths.shutil.move
+
+    def move(source, target):
+        if source.name == "a.json":
+            raise PermissionError("in use")
+        return real_move(source, target)
+
+    monkeypatch.setattr(paths.shutil, "move", move)
+    notes = paths.move_legacy_data(old, new)
+    assert "Couldn't move sagas/a.json: in use" in notes
+    assert "Moved app_settings.json" in notes
+    assert (old / "sagas" / "a.json").exists()

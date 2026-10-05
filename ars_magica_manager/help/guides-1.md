@@ -63,7 +63,7 @@ People marked departed on the Inhabitants tab are left out of this tab and aren'
 2. Read its summary: how many planned seasons will be applied, who has nothing planned (they gain nothing this season), and any plan that can't be carried out, with the reason. To fix anything, choose Cancel, change the plan and press `t` again.
 3. Choose **Advance**.
 4. The app may then ask questions, one at a time: whether each contested vis or income source whose security has lapsed was secured this season, and, for an experiment seeking a Discovery, whether to use the risk to move the roll. In Winter it first asks about any covenant in deficit (see below).
-5. Before anything is applied, the saga is backed up to `sagas/backups` in your data folder (Ars Magica Manager in your Documents folder).
+5. Before anything is applied, the saga is backed up to `sagas/backups` in your data folder (Ars Magica Manager in your OneDrive folder).
 
 See [Advance Season](help:advance-season) for how the plans are applied.
 
@@ -90,7 +90,7 @@ Advancing Winter also closes the year:
 <!-- help: guide-seasons-undo -->
 
 - **The date only:** choose the saga (the top node of the tree), press `m` for More and choose **Set Date**. Set the season and year and press Set. This moves the date without undoing anything the season did, and Wealth added at a year end isn't taken back. See [More on the saga](help:saga-more).
-- **The whole season:** the backup in `sagas/backups` (in Ars Magica Manager in your Documents folder) holds the saga as it was just before the last season was applied. Quit the app, copy the backup over the saga's file of the same name in `sagas`, then reopen the saga. The four backups before it are kept too, as `<name>.1.json` (the season before) to `<name>.4.json`: to go further back, copy one of those over the saga's file and rename it to the saga's name. No backup is taken when nothing was planned.
+- **The whole season:** the backup in `sagas/backups` (in Ars Magica Manager in your OneDrive folder) holds the saga as it was just before the last season was applied. Quit the app, copy the backup over the saga's file of the same name in `sagas`, then reopen the saga. The four backups before it are kept too, as `<name>.1.json` (the season before) to `<name>.4.json`: to go further back, copy one of those over the saga's file and rename it to the saga's name. No backup is taken when nothing was planned.
 
 ### What the app does for you
 <!-- help: guide-seasons-auto -->

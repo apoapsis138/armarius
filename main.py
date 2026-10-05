@@ -1,12 +1,18 @@
 from ars_magica_manager import paths
-from ars_magica_manager.app import ArsMagicaManagerApp
 
 
 def main() -> None:
+    # The data folder is settled before the app (and so storage and
+    # settings, which read it on import) is loaded: if it can't be used,
+    # another is, and the app says why (STORY-1132).
+    problem = paths.settle_data_dir()
+    from ars_magica_manager.app import ArsMagicaManagerApp
+
     app = ArsMagicaManagerApp()
     # Saves made before STORY-1127 move from the repo's data/ folder to the
     # user's data folder, once.
-    app.startup_notes = tuple(paths.move_legacy_data())
+    notes = [problem] if problem else paths.move_legacy_data()
+    app.startup_notes = tuple(notes)
     app.run()
 
 

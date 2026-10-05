@@ -4335,15 +4335,21 @@ async def test_a_boon_hook_refresh_rebuilds_economics_once(monkeypatch):
     saga = _saga_with_configured_covenant()  # covenant aura 4
     storage.save_saga(saga)
 
+    # Counted on the class: the sheet registers its refreshers as it's made.
+    from ars_magica_manager.screens.sheets import CovenantSheetView
+
+    rebuilds = []
+    original = CovenantSheetView._rebuild_economics
+    monkeypatch.setattr(
+        CovenantSheetView,
+        "_rebuild_economics",
+        lambda self: rebuilds.append(1) or original(self),
+    )
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
         await _select_covenant(pilot, app)
         view = app.screen._covenant_sheet_view
-        rebuilds = []
-        original = view._rebuild_economics
-        monkeypatch.setattr(
-            view, "_rebuild_economics", lambda: rebuilds.append(1) or original()
-        )
+        rebuilds.clear()
         view.covenant.boons_hooks.append(
             VirtueFlawInstance(vf_id="covbh_boon_minor_aura")
         )
