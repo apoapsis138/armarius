@@ -21,17 +21,32 @@ def _book(book_type: str, **kwargs) -> Book:
         (_book("Art Summa", art="Creo", level=12, quality=10), 22),
         (_book("Ability Summa", ability="Latin", level=5, quality=9), 24),
         (_book("Tractatus", subject_kind="Art", art="Ignem", quality=8), 8),
-        (_book("Lab Text", spell_name="Pilum of Fire", level=20), 4),
-        # Fractions round up: 12 levels is 2.4 -> 3 (Lab Text), 4.8 -> 5 (Tablet).
-        (_book("Lab Text", spell_name="x", level=12), 3),
-        (_book("Casting Tablet", spell_name="x", level=12), 5),
-        (_book("Casting Tablet", spell_name="x", level=25), 10),
+        # Lab Texts and Casting Tablets cost nothing on their own: they are
+        # bought as a pool (test_lab_texts_and_tablets_are_bought_as_a_pool).
+        (_book("Lab Text", spell_name="Pilum of Fire", level=20), 0),
+        (_book("Casting Tablet", spell_name="x", level=25), 0),
         (_book("Other"), 0),
         (_book("Art Summa", art="Creo"), 0),  # blank level/quality count as 0
     ],
 )
 def test_cost(book, expected):
     assert bk.cost(book) == expected
+
+
+def test_lab_texts_and_tablets_are_bought_as_a_pool():
+    """DE p. 180: 1 Build Point per 5 levels of Lab Texts, 2 per 5 of Casting
+    Tablets, summed over the library first; whole points are spent, so the
+    last 5 levels round up and the rest is unspent (STORY-1126)."""
+    texts = [_book("Lab Text", spell_name="x", level=12)]
+    assert bk.pool(texts, "Lab Text") == bk.Pool("Lab Text", 12, 3, 3)
+    texts.append(_book("Lab Text", spell_name="y", level=3))  # uses the 3 left
+    assert bk.pool(texts, "Lab Text") == bk.Pool("Lab Text", 15, 3, 0)
+    tablets = [*texts, _book("Casting Tablet", spell_name="z", level=12)]
+    assert bk.pool(tablets, "Casting Tablet") == bk.Pool("Casting Tablet", 12, 6, 3)
+    assert bk.pool([], "Lab Text") == bk.Pool("Lab Text", 0, 0, 0)
+    assert bk.pool_text(bk.Pool("Lab Text", 12, 3, 3)) == (
+        "12 levels, 3 Build Points (3 levels unspent)"
+    )
 
 
 def test_art_summa_limits():
@@ -322,8 +337,8 @@ def test_parse_books_csv_reads_every_type():
     assert (theorica.type, theorica.ability) == ("Ability Summa", "Magic Theory")
     assert (letter.subject_kind, letter.art) == ("Art", "Ignem")  # abbreviation
     assert (notes.subject_kind, notes.ability) == ("Ability", "Penetration")  # inferred
-    assert (pilum.spell_name, pilum.level, bk.cost(pilum)) == ("Pilum of Fire", 20, 4)
-    assert (porter.language, bk.cost(porter)) == ("Latin", 4)  # blank -> Latin
+    assert (pilum.spell_name, pilum.level) == ("Pilum of Fire", 20)
+    assert porter.language == "Latin"  # blank -> Latin
     assert (chronicle.type, chronicle.language) == ("Other", "Old French")
     # No owner or id yet: the import decides.
     assert all(b.owner_kind is None and b.id == "" for b in result.books)
@@ -494,11 +509,13 @@ def test_a_linked_books_level_and_cost_come_from_its_spell():
         "Casting Tablet", spell_name="Stench of the Twenty Corpses", level=15
     )
     assert bk.level_of(tablet, saga) == 10
-    assert bk.cost(tablet, saga) == 4  # 2 per 5 levels
-    assert bk.cost(tablet) == 6  # without the saga, only the stored level
+    assert bk.pool([tablet], "Casting Tablet", saga).points == 4  # 2 per 5
+    # Without the saga, only the stored level.
+    assert bk.pool([tablet], "Casting Tablet").points == 6
     # A General spell (the Aegis) keeps the book's own level.
     aegis = _book("Lab Text", spell_id="spell_aegis_of_the_hearth", level=30)
-    assert bk.level_of(aegis, saga) == 30 and bk.cost(aegis, saga) == 6
+    assert bk.level_of(aegis, saga) == 30
+    assert bk.pool([aegis], "Lab Text", saga).points == 6
     text = bk.detail_text(saga, aegis)
     assert "Aegis of the Hearth (ReVi Gen)" in text
     assert "30 (General spell)" in text

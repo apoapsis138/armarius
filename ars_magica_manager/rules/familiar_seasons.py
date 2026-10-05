@@ -14,12 +14,12 @@ on his sheet (its Might and Size) before the season.
 
 from __future__ import annotations
 
-import math
 from typing import TYPE_CHECKING
 
 from ..familiars import cord_cost, familiar_of
 from ..models import BondPower, Character, Familiar, Laboratory, Saga, SeasonPlan
 from . import lab
+from .rounding import round_up
 
 if TYPE_CHECKING:
     from .lab_seasons import LabWork
@@ -112,7 +112,7 @@ def work(
             return [
                 f"The cords cost {cord_points} points; the Lab Total is {lab_total}."
             ], None
-        pawns = max(0, math.ceil(lab_total / 5) - familiar.vis_spent_binding)
+        pawns = max(0, round_up(lab_total / 5) - familiar.vis_spent_binding)
         art = plan.vis_art if plan.vis_art in (plan.technique, plan.form) else ""
         if pawns and not art:
             return [
@@ -168,7 +168,7 @@ def work(
         ], None
     cost: dict[str, int] = {}
     if power.instilling_progress == 0:
-        pawns = math.ceil(power.level / 10)
+        pawns = round_up(power.level / 10)
         art = plan.vis_art if plan.vis_art in (power.technique, power.form) else ""
         if not art:
             return [

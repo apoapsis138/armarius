@@ -806,8 +806,8 @@ def test_minimum_servants_and_teamsters_follow_the_formulas():
     saga, cov = _saga()
     cov.inhabitants.append(Inhabitant(id="t", kind="turb", name="Turb", quantity=17))
     # Points excluding servants/laborers/teamsters: 1 magus(5) + 1 companion(3)
-    # + 17 turb(1 each) = 25 -> 2 servants per 10 -> 5.
-    assert inh.minimum_servants(saga, cov) == 5
+    # + 17 turb(1 each) = 25 -> 2 servants per 10 or part of 10 -> 6.
+    assert inh.minimum_servants(saga, cov) == 6
     # Points excluding laborers/teamsters: same 25 (no servants/laborers
     # hired yet) -> 1 teamster per 10 -> 3 (rounded up from 2.5).
     assert inh.minimum_teamsters(saga, cov) == 3
@@ -822,8 +822,8 @@ def test_laborers_reduce_the_minimum_teamsters_but_not_servants():
         ),
     ]
     # The servants formula excludes laborers entirely, so hiring some doesn't
-    # change it: still 25 points -> 5.
-    assert inh.minimum_servants(saga, cov) == 5
+    # change it: still 25 points -> 6.
+    assert inh.minimum_servants(saga, cov) == 6
     # The teamsters formula also excludes laborers' own points, then
     # subtracts 2 per laborer on top: 25 - 2*5 = 15 -> 2 (rounded up from 1.5).
     assert inh.minimum_teamsters(saga, cov) == 2

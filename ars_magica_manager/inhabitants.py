@@ -23,9 +23,27 @@ from .models import (
     Inhabitant,
     Saga,
     character_age,
-    round_away_from_zero,
 )
 from .rules import effects, scores
+from .rules.rounding import round_away_from_zero
+
+_COVENANTS = "https://www.redcap.org/page/Covenants_Chapter_{}"
+INHABITANTS_SOURCE = (
+    "Covenants, Chapter Five: Wealth & Poverty, Points of Inhabitants ("
+    + _COVENANTS.format("Five:_Wealth_%26_Poverty#Points_of_Inhabitants")
+    + ")"
+)
+LOYALTY_SOURCE = (
+    "Covenants, Chapter Three: Governance, Calculating Prevailing Loyalty ("
+    + _COVENANTS.format("Three:_Governance#Calculating_Prevailing_Loyalty")
+    + ")"
+)
+#: Minimum servants: SERVANTS_PER_TEN for every 10 inhabitant points or part
+#: of 10 (2 x ceil(points / 10): 25 points -> 6; Hedda, 2026-10-05); minimum
+#: teamsters: one per 10, less TEAMSTER_POINTS_PER_LABORER per laborer
+#: (INHABITANTS_SOURCE). Fractions round up (covenant finances, STORY-815).
+SERVANTS_PER_TEN = 2
+TEAMSTER_POINTS_PER_LABORER = 2
 
 #: Section titles on the tab.
 KIND_TITLES: dict[str, str] = {
@@ -430,19 +448,21 @@ def other_covenfolk_count(saga: Saga, covenant: Covenant, role: str) -> int:
 
 
 def minimum_servants(saga: Saga, covenant: Covenant) -> int:
-    """2 Servants for every 10 points of inhabitants, excluding Servants,
-    Laborers and Teamsters themselves."""
+    """2 Servants for every 10 points of inhabitants or part of 10,
+    excluding Servants, Laborers and Teamsters themselves."""
     points = inhabitant_points(
         saga, covenant, exclude_roles=("Servant", "Laborer", "Teamster")
     )
-    return round_away_from_zero(points * 2 / 10)
+    return SERVANTS_PER_TEN * round_away_from_zero(points / 10)
 
 
 def minimum_teamsters(saga: Saga, covenant: Covenant) -> int:
     """1 Teamster for every 10 points of inhabitants (excluding Laborers and
     Teamsters), after subtracting twice the number of Laborers."""
     points = inhabitant_points(saga, covenant, exclude_roles=("Laborer", "Teamster"))
-    points -= 2 * other_covenfolk_count(saga, covenant, "Laborer")
+    points -= TEAMSTER_POINTS_PER_LABORER * other_covenfolk_count(
+        saga, covenant, "Laborer"
+    )
     return round_away_from_zero(max(points, 0) / 10)
 
 
@@ -452,7 +472,8 @@ def minimum_teamsters(saga: Saga, covenant: Covenant) -> int:
 def base_loyalty(saga: Saga, covenant: Covenant) -> int:
     """Base Loyalty: the average, across the covenant's magi, of each one's
     Gift modifier. 0 with no magi. An unset manual Gift is assumed to be the
-    ordinary Gift (the default expectation for a magus)."""
+    ordinary Gift (the default expectation for a magus). LOYALTY_SOURCE; the
+    average rounds away from zero (covenant finances, STORY-815)."""
     magi = entries_for_kind(saga, covenant, "magus")
     if not magi:
         return 0

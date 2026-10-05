@@ -19,12 +19,12 @@ Hedda 2026-09-30: "model all of them").
 
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass, field
 
 from .. import catalog
 from ..models import Book, Character, Progress, Saga, SeasonPlan
 from . import dice
+from .rounding import round_down, round_up
 
 SOURCE = (
     "City & Guild, Chapter Two: Labor and Livelihood "
@@ -51,6 +51,43 @@ EXERTION = (
     (9, "invention: a simple die of Labor Points toward Innovation"),
     (11, "increased Reputation: a simple die of xp in the Craft Reputation"),
 )
+_ACADEME = "https://www.redcap.org/page/Art_%26_Academe_Open_Content#{}"
+MANUAL_SOURCE = (
+    "City & Guild, Chapter Four: Crafts, Craftsman Manuals "
+    "(https://www.redcap.org/page/City_and_Guild_Chapter_Four:_Crafts"
+    "#Craftsman_Manuals)"
+)
+#: A craft manual's score: the author's Craft / MANUAL_DIVISOR, rounded up.
+MANUAL_DIVISOR = 3
+REMEDIES_SOURCE = "Art & Academe, Chapter Five: Experimental Philosophy (" + (
+    _ACADEME.format("Chapter_Five:_Experimental_Philosophy") + ")"
+)
+#: Theriacs and reagents cost level x doses / REMEDY_LEVELS_PER_POINT
+#: apothecary Labor Points, rounded up.
+REMEDY_LEVELS_PER_POINT = 5
+ARTWORK_SOURCE = "Art & Academe, Chapter Eight: Artists, Time Spent Creating (" + (
+    _ACADEME.format("Time_Spent_Creating") + ")"
+)
+#: Seasons to make a work of art: Aesthetic Quality / ARTWORK_QUALITY_PER_SEASON,
+#: rounded up (at least one).
+ARTWORK_QUALITY_PER_SEASON = 10
+#: Free Expression's bonus to create a work of art (Ars Magica Definitive
+#: Edition, Chapter Four: Virtues and Flaws); Inspirational's here is
+#: (source to confirm).
+ARTWORK_VIRTUE_BONUS = 3
+FORMULA_SOURCE = (
+    "Art & Academe, Chapter Five: Experimental Philosophy, Researching "
+    "Formulae (" + _ACADEME.format("Researching_Formulae") + ")"
+)
+#: Experience that makes one formula, and a season of research's default.
+FORMULA_XP = 5
+LECTURES_SOURCE = (
+    "Art & Academe, Chapter Seven: Universities, Lecture Commentaries ("
+    + (_ACADEME.format("Lecture_Commentaries") + ")")
+)
+#: A recorded lecture's Quality: the teacher's Communication + the scribe's
+#: Profession: Scribe / LECTURES_SCRIBE_DIVISOR (no rounding stated: down).
+LECTURES_SCRIBE_DIVISOR = 2
 #: Initiation Target Levels: (Virtue tier, the Mystagogue has it).
 INITIATION_TARGET = {
     ("Minor", True): 15,
@@ -265,7 +302,7 @@ def work(saga: Saga, character: Character, plan: SeasonPlan, rng) -> SupplementW
             if ability(character, "Artes Liberales") < 1:
                 result.notes.append("No craft manual: it needs Artes Liberales 1.")
             else:
-                score = math.ceil(ability(character, craft) / 3)
+                score = round_up(ability(character, craft) / MANUAL_DIVISOR)
                 result.labor_points -= 1
                 result.books.append(
                     Book(
@@ -308,7 +345,7 @@ def work(saga: Saga, character: Character, plan: SeasonPlan, rng) -> SupplementW
     elif key == "produce_remedies":
         level = plan.book_level or 0
         doses = max(1, plan.extra_vis)
-        cost = math.ceil(level * doses / 5)
+        cost = round_up(level * doses / REMEDY_LEVELS_PER_POINT)
         result.labor_points = -cost
         result.notes.append(
             f"{doses} dose(s) of a level {level} product: {cost} apothecary Labor "
@@ -328,14 +365,16 @@ def work(saga: Saga, character: Character, plan: SeasonPlan, rng) -> SupplementW
         ids = {vf.vf_id for vf in character.virtues_flaws}
         aq = base + ability(character, craft) + plan.other_modifier
         if ids & {"vf_inspirational", "vf_free_expression"}:
-            aq += 3
-        seasons = max(1, math.ceil(aq / 10))
+            aq += ARTWORK_VIRTUE_BONUS
+        seasons = max(1, round_up(aq / ARTWORK_QUALITY_PER_SEASON))
         result.progress.append(("artwork", name, seasons, 1))
         result.notes.append(f"Aesthetic Quality {aq}; {seasons} season(s) to make it.")
     elif key == "research_formula":
-        xp = plan.source_quality if plan.source_quality is not None else 5
-        result.progress.append(("formula", name, 5, xp))
-        result.notes.append(f"{xp} xp toward the formula {name} (5 make it).")
+        xp = plan.source_quality if plan.source_quality is not None else FORMULA_XP
+        result.progress.append(("formula", name, FORMULA_XP, xp))
+        result.notes.append(
+            f"{xp} xp toward the formula {name} ({FORMULA_XP} make it)."
+        )
     elif key == "attend_university":
         result.progress.append(("university", "University", 0, 1))
         exam = name.lower()
@@ -436,8 +475,8 @@ def work(saga: Saga, character: Character, plan: SeasonPlan, rng) -> SupplementW
     elif key == "record_lectures":
         teacher = saga.character(plan.teacher_id)
         assert teacher is not None
-        quality = teacher.characteristics.communication + math.ceil(
-            ability(character, "Profession: Scribe") / 2
+        quality = teacher.characteristics.communication + round_down(
+            ability(character, "Profession: Scribe") / LECTURES_SCRIBE_DIVISOR
         )
         subject = next((a.subject for a in plan.allocations if a.subject), "")
         kind, _, what = subject.partition(":")
@@ -466,7 +505,9 @@ def work(saga: Saga, character: Character, plan: SeasonPlan, rng) -> SupplementW
             else ability(character, book.ability)
         )
         then = plan.book_level if plan.book_level is not None else (book.level or 0) * 2
-        new = min((book.level or 0) + max(0, now - then) // 3, now // 2)
+        new = min(
+            (book.level or 0) + round_down(max(0, now - then) / 3), round_down(now / 2)
+        )
         result.summa_level = (book.id, new)
         result.notes.append(f"{book.name} annotated: Level {book.level} -> {new}.")
     elif key == "bind_catalog":

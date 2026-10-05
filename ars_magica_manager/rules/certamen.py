@@ -20,6 +20,7 @@ from dataclasses import dataclass
 from ..models import Character
 from .derived import fatigue_penalty
 from .lab import ability_score, art_score
+from .rounding import round_up
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter Seven: Hermetic Magic, Certamen "
@@ -70,7 +71,7 @@ def fatigue_lost(weakening_total: int, resistance_total: int) -> int:
     """Fatigue levels a hit costs: ceil((Weakening - Resistance) / 5) when
     positive (1-5 -> 1, 6-10 -> 2...)."""
     excess = weakening_total - resistance_total
-    return 0 if excess <= 0 else -(-excess // 5)
+    return 0 if excess <= 0 else round_up(excess / 5)
 
 
 def max_vis(magus: Character, art: str) -> int:

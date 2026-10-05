@@ -68,6 +68,40 @@ def test_an_unresolved_income_source_gives_nothing_and_is_noted_at_year_end():
     assert economics.summarize(saga, covenant).income == 90
 
 
+def test_a_dwindling_resource_loses_a_tenth_of_its_original_value_a_year():
+    """Covenants: -10% of its original value a year, gone after ten years --
+    not 10% of what is left (STORY-1126)."""
+    saga = _saga(dwindling=True)
+    saga.current_season = "Winter"
+    covenant = saga.covenants[0]
+    covenant.economics.income_sources = [
+        IncomeSource("mill", "Mill", income=15, dwindling=True)
+    ]
+    mill = covenant.economics.income_sources[0]
+    well = covenant.possessions[0]
+    incomes, pawns = [], []
+    for _ in range(11):
+        seasons.covenant_season(saga, {})
+        incomes.append(mill.income)
+        pawns.append(well.pawns)
+    # 1.5 pounds a year, fractions rounded up (covenant finances); 0.4 pawns
+    # a year, rounded down.
+    assert incomes == [14, 12, 11, 9, 8, 6, 5, 3, 2, 0, 0]
+    assert pawns == [3, 3, 2, 2, 2, 1, 1, 0, 0, 0, 0]
+    assert (mill.dwindling_from, mill.dwindled_years) == (15, 10)
+
+
+def test_a_resource_no_longer_dwindling_forgets_its_original_value():
+    saga = _saga(dwindling=True)
+    saga.current_season = "Winter"
+    well = saga.covenants[0].possessions[0]
+    seasons.covenant_season(saga, {})
+    assert (well.pawns, well.dwindling_from) == (3, 4)
+    well.dwindling = False
+    seasons.covenant_season(saga, {})
+    assert (well.pawns, well.dwindling_from, well.dwindled_years) == (3, None, 0)
+
+
 async def test_advancing_asks_whether_a_lapsed_resource_was_secured():
     from support import everything_saga, wait_until
     from textual.widgets import Button

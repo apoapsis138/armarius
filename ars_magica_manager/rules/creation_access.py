@@ -11,12 +11,12 @@ learn them; Later life experience; Creation Ability cap by age.
 
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass
 
 from .. import catalog
 from ..models import AbilityDef, Character
 from .creation_character import THE_GIFT
+from .rounding import round_up
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter Five: Abilities, Ability Types "
@@ -336,7 +336,7 @@ def effective_xp(character: Character, target: str, xp: int) -> int:
     """The xp that `xp` spent on `target` gives: half again with an
     Affinity, rounded up (the Affinity with Art Virtue says so; the same
     is used for an Ability)."""
-    return math.ceil(xp * xp_multiplier(character, target))
+    return round_up(xp * xp_multiplier(character, target))
 
 
 def ability_cap(age: int | None) -> int:

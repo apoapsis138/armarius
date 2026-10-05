@@ -55,7 +55,7 @@ def strip_markup(markup: str) -> str:
     return re.sub(r"\[/?(?:[a-z]+ )*(?:\$[a-z-]+|[a-z]*)\]", "", markup)
 
 
-async def wait_until(pilot, condition, timeout: float = 2.0, interval: float = 0.02):
+async def wait_until(pilot, condition, timeout: float = 5.0, interval: float = 0.02):
     """Poll `condition()` until it's truthy or `timeout` seconds pass, and
     return its last value.
 
@@ -63,7 +63,9 @@ async def wait_until(pilot, condition, timeout: float = 2.0, interval: float = 0
     for a heavy sheet view to finish mounting, or a dialog's result callback
     to land, under load; a fixed extra delay only makes that less likely.
     Polling for the actual condition is fast when things are quick and still
-    correct when they aren't.
+    correct when they aren't. The timeout only matters when the condition
+    never holds, so it is generous: under a coverage run with -n 16 a tab
+    switch has taken over 2 s to move focus (STORY-1126).
     """
     elapsed = 0.0
     while not condition() and elapsed < timeout:

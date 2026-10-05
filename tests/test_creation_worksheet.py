@@ -230,7 +230,12 @@ async def test_concept_adds_a_magus_virtues_and_opens_the_sheets_dialogs():
         labels = [str(b.label) for b in screen.query("#ws-actions Button")]
         assert "Add The Gift and Hermetic Magus" not in labels
         await _press_button(pilot, screen, "Edit House")
-        assert await wait_until(pilot, lambda: app.screen is not screen)
+        # The dialog is the current screen before it has composed: wait for
+        # its title, not just for the screen to change (STORY-1126).
+        assert await wait_until(
+            pilot,
+            lambda: app.screen is not screen and app.screen.query("#fields-title"),
+        )
         assert "Hermetic Background" in str(
             app.screen.query_one("#fields-title").render()
         )

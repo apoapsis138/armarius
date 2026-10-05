@@ -665,7 +665,7 @@ def _contested_fields(entry: Any) -> list[DialogField]:
         ),
         DialogField(
             "dwindling",
-            "Dwindling Resource (-10% a year)",
+            "Dwindling Resource (gone in 10 years)",
             "check",
             bool(_attr(entry, "dwindling", False)),
         ),
@@ -1736,7 +1736,11 @@ def _season_plan_dialog(
     """Plan `character`'s current season (STORY-903): the activity, what
     its experience goes into, and notes. The line above Save shows what the
     season will give, worked out as the form is filled in."""
-    activities = season_rules.activities_for(character)
+    activities = season_rules.activities_for(
+        character,
+        books=sourcebooks.saga_books(saga),
+        keep=existing.activity if existing else "",
+    )
     options = seasons.subject_options(saga, character)
     shares = existing.allocations if existing else []
 
@@ -2763,7 +2767,7 @@ def _book_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
     book.quality = values.get("quality")
 
 
-def _book_live(values: dict[str, Any], saga: Saga) -> str:
+def _book_live(values: dict[str, Any], saga: Saga, editing: Book | None = None) -> str:
     """The form's live line. For a covenant still In Creation: the Build
     Point cost (a Lab Text's or Casting Tablet's from its spell's level) and
     any covenant-creation limit the values go over (a warning, not an
@@ -2791,7 +2795,22 @@ def _book_live(values: dict[str, Any], saga: Saga) -> str:
         return "[dim]Cost: choose a Type.[/]"
     probe.level = values.get("level") if bk.has_level(probe.type) else None
     probe.quality = values.get("quality") if bk.has_quality(probe.type) else None
-    lines = [f"[b]Cost:[/] {bk.cost(probe, saga)} Build Points"]
+    if bk.pooled(probe.type):
+        # Bought as a pool: what the covenant's pool comes to with this one
+        # (in place of `editing`, the book being edited).
+        others = [
+            b
+            for b in bk.books_owned_by(saga, "covenant", probe.owner_id or "")
+            if b is not editing
+        ]
+        level = bk.level_of(probe, saga) or 0
+        pool = bk.pool([*others, probe], probe.type, saga)
+        lines = [
+            f"[b]Cost:[/] part of the {probe.type} pool, which with these "
+            f"{level} levels comes to {bk.pool_text(pool)}"
+        ]
+    else:
+        lines = [f"[b]Cost:[/] {bk.cost(probe, saga)} Build Points"]
     if from_spell:
         lines[0] += f"  [dim]({from_spell})[/]"
     lines += [problem(escape(w)) for w in bk.limit_warnings(probe)]

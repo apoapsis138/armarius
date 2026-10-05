@@ -173,3 +173,17 @@ def test_an_inspeximus_raises_the_summas_level():
     ]
     _run(saga, _plan("inspeximus", subject="art:Ignem", book_id="s1", book_level=10))
     assert saga.books[0].level == 7  # 5 + (16 - 10) / 3, capped at 8
+
+
+def test_recorded_lectures_add_half_the_scribes_score_rounded_down():
+    """Quality = the teacher's Communication + the scribe's Profession:
+    Scribe / 2; Art & Academe states no rounding, so down (STORY-1126)."""
+    saga = _saga()
+    teacher = Character(id="t", name="Magister", type="companion")
+    teacher.characteristics = Characteristics(communication=3)
+    saga.characters.append(teacher)
+    scribe = saga.character("c")
+    scribe.abilities.append(Ability("Profession: Scribe", xp=ability_xp(3)))
+    plan = _plan("record_lectures", "ability:Latin", teacher_id="t")
+    result = sw.work(saga, scribe, plan, random.Random(1))
+    assert [b.quality for b in result.books] == [3 + 1]

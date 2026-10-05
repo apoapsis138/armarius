@@ -16,11 +16,11 @@
 
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass, field
 
 from ..models import Character
 from . import dice
+from .rounding import round_up
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Aging "
@@ -107,11 +107,11 @@ def roll(
     """The year's aging roll for `character` aged `age`."""
     die = dice.stress_die(rng, 0, saga=saga).value
     longevity = character.aging.longevity_modifier
-    total = die + math.ceil(age / 10) - living - longevity - bronze_cord
+    total = die + round_up(age / 10) - living - longevity - bronze_cord
     if age < START_AGE and longevity and total >= 10:
         total = 9
     result = AgingResult(character.id, total, die)
-    parts = [f"die {die}", f"+ age {math.ceil(age / 10)}"]
+    parts = [f"die {die}", f"+ age {round_up(age / 10)}"]
     if living:
         parts.append(f"- Living Conditions {living:+d}")
     if longevity:
@@ -147,7 +147,7 @@ def crisis(
     Survival rolls are reported, not decided (the storyguide, medicine and
     magic can change them)."""
     die = dice.simple_die(rng)
-    total = die + math.ceil(age / 10) + decrepitude
+    total = die + round_up(age / 10) + decrepitude
     ritual = character.aging.longevity_modifier > 0
     what, against = TERMINAL, None
     for top, label, difficulty in CRISIS:

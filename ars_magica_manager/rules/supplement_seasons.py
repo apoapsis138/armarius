@@ -37,6 +37,20 @@ DE_TAMING = (
 )
 
 
+#: Each source's book, as sourcebooks.SOURCEBOOKS abbreviates it.
+_BOOKS: dict[str, str] = {
+    SOURCE: "DE",
+    DE_TAMING: "DE",
+    COVENANTS: "Covenants",
+    CHURCH: "TC",
+    CITY_GUILD: "C&G",
+    ACADEME: "A&A",
+    MYSTERIES: "TMRE",
+    SOCIETATES: "HoH:S",
+    LORDS: "LoM",
+}
+
+
 @dataclass(frozen=True)
 class SimpleActivity:
     """One supplement activity: its Source Quality (None: typed, as `hint`
@@ -54,6 +68,12 @@ class SimpleActivity:
     no_xp: bool = False
     #: Faith Points gained.
     faith: int = 0
+
+    @property
+    def book(self) -> str:
+        """The sourcebook (sourcebooks.SOURCEBOOKS abbreviation) the activity
+        comes from: offered only while the saga has it in play."""
+        return _BOOKS[self.source]
 
 
 _C = ("companion", "mythic companion")

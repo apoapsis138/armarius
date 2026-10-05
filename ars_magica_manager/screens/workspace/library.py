@@ -431,7 +431,7 @@ class LibraryActions(WorkspaceBase):
                 title,
                 _book_fields(saga, book, self._default_book_owner(), default_type),
                 validate=bk.form_problem,
-                live=lambda values: _book_live(values, saga),
+                live=lambda values: _book_live(values, saga, book),
             ),
             handle_result,
         )

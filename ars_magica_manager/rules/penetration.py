@@ -24,6 +24,7 @@ from ..models import Character, Saga
 from . import options, realms
 from .breakdown import Breakdown, Line
 from .lab import ability_score, art_score
+from .rounding import round_down
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter Seven: Hermetic Magic, Penetration, "
@@ -157,4 +158,4 @@ def faith_magic_resistance(
 def aegis_penalty(aegis_level: int) -> int:
     """What the Aegis of the Hearth takes from the Casting Total of a
     foreign spell cast inside it: half its level, rounded down."""
-    return -(aegis_level // 2)
+    return -round_down(aegis_level / 2)

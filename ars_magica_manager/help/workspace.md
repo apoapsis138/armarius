@@ -92,7 +92,7 @@ The top node of the tree. It shows the saga's own details and what it holds.
 <!-- help: saga-summary -->
 
 - **Current date**: the season and year the saga is in. It is also shown in the header on every screen of the workspace.
-- **Books in play**: the sourcebooks the troupe uses. Catalog pickers hide entries from books not in play, and a supplement's own rules apply when its book is in play.
+- **Books in play**: the sourcebooks the troupe uses. Catalog pickers hide entries from books not in play, the season plan offers a supplement's activities only while its book is in play (a plan already made keeps its activity), and a supplement's own rules apply when its book is in play.
 - **Optional rules**: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis and Enforce creation rules strictly. Each one's effect is described beside it in Edit Saga. These come from Ars Magica Definitive Edition, Chapter 16: Sagas, Rules Questions.
 - **Keep season records**: when on, each season applied is kept under Seasons in the tree. When off, only the characters' Diaries keep them.
 

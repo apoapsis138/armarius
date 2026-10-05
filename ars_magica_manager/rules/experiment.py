@@ -29,6 +29,7 @@ from dataclasses import dataclass, field
 
 from ..models import Breakthrough, Character, SeasonPlan
 from . import dice, scores
+from .rounding import round_up
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 8: Laboratory, Experimentation "
@@ -71,7 +72,7 @@ MODIFIED = (
 
 def max_risk(magic_theory: int) -> int:
     """At most +1 (Magic Theory 1-5), +2 (6-10), +3 (11+)."""
-    return max(0, min(MAX_RISK, -(-magic_theory // 5)))
+    return max(0, min(MAX_RISK, round_up(magic_theory / 5)))
 
 
 #: Virtues and Flaws that change experimentation.

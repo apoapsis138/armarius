@@ -73,6 +73,32 @@ def test_grogs_are_not_planned_season_by_season():
     assert "Grogs aren't planned" in rules.problems(grog, plan)[0]
 
 
+def test_supplement_activities_are_offered_only_with_their_book_in_play():
+    """A supplement's season activities are in the menu only while the saga
+    has that book in play; a plan's own activity stays, so editing it still
+    shows it (STORY-1126)."""
+    magus = _magus()
+    every = {a.key for a in rules.activities_for(magus)}
+    core = {a.key for a in rules.activities_for(magus, books={"DE"})}
+    assert sup.ACTIVITIES and core < every
+    for activity in sup.ACTIVITIES:
+        if magus.type in activity.who:
+            assert (activity.key in core) == (activity.book == "DE"), activity.key
+    with_covenants = {
+        a.key for a in rules.activities_for(magus, books={"DE", "Covenants"})
+    }
+    assert "inspeximus" in with_covenants - core
+    kept = {a.key for a in rules.activities_for(magus, books={"DE"}, keep="inspeximus")}
+    assert kept == core | {"inspeximus"}
+
+
+def test_every_supplement_activity_names_a_known_book():
+    from ars_magica_manager import sourcebooks
+
+    for activity in sup.ACTIVITIES:
+        assert activity.book in sourcebooks.SOURCEBOOKS, activity.key
+
+
 def test_magi_and_companions_plan_every_activity_built_so_far():
     study = [rules.READ, rules.TAUGHT, rules.TEACH, rules.TRAINED]
     writing = [bs.WRITE_SUMMA, bs.WRITE_TRACTATUS, bs.COPY_BOOK, bs.TRANSLATE_BOOK]

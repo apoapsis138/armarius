@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import random
 import re
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field, replace
 
 from . import enchanted_devices as ed
@@ -36,6 +36,7 @@ from .models import (
     CovenantDiaryEntry,
     DiaryEntry,
     EnchantedDevice,
+    IncomeSource,
     InstilledEffect,
     KnownSpell,
     Laboratory,
@@ -64,6 +65,7 @@ from .rules import seasons as rules
 from .rules import supplement_work as sw
 from .rules import warping as warping_rules
 from .rules import xp as xp_rules
+from .rules.rounding import round_away_from_zero, round_down, round_up
 
 # -- plans --------------------------------------------------------------------
 
@@ -227,7 +229,7 @@ def book_text(work: bs.BookWork, plan: SeasonPlan) -> str:
         text = f"+{work.points_gained} points, {work.points_after}/{work.needed}"
         if work.finished:
             return text + f", done: {made.name} (Quality {made.quality})"
-        left = -(-(work.needed - work.points_after) // max(1, work.points_gained))
+        left = round_up((work.needed - work.points_after) / max(1, work.points_gained))
         return text + f", {left} more season(s)"
     if made is not None:
         copies = f"{work.copies} x " if work.copies > 1 else ""
@@ -540,9 +542,20 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
     return applied
 
 
+#: A laboratory's Health / LAB_HEALTH_DIVISOR, rounded down, adds to its
+#: magus's Living Conditions.
+LAB_HEALTH_DIVISOR = 2
+LAB_HEALTH_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter 8: Laboratory, Health "
+    "(https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:"
+    "_Laboratory#Health)"
+)
+
+
 def _living_conditions(saga: Saga, character: Character) -> int:
     """The Living Conditions modifier: the covenant's for magi or mundanes,
-    plus half the Health of a magus's laboratory."""
+    plus half the Health of a magus's laboratory, rounded down (negative
+    Health too: -3 gives -2), per LAB_HEALTH_SOURCE."""
     covenant = saga.covenant(character.covenant_id)
     living = 0
     if covenant is not None:
@@ -559,7 +572,7 @@ def _living_conditions(saga: Saga, character: Character) -> int:
         health = lab_characteristic_total(
             lab, catalog.load_lab_virtue_flaw_catalog_by_id(), "health"
         )[3]
-        living += health // 2
+        living += round_down(health / LAB_HEALTH_DIVISOR)
     return living
 
 
@@ -824,6 +837,39 @@ def year_end_aging(saga: Saga, rng: random.Random) -> list[SeasonRecordLine]:
 # -- the covenant's seasons (STORY-906) ---------------------------------------
 
 
+DWINDLING_SOURCE = (
+    "Covenants, Chapter Two: Boons & Hooks, Minor Resources Hooks, Dwindling "
+    "Resource (https://www.redcap.org/page/Covenants_Chapter_Two:_Boons_%26_Hooks"
+    "#Minor_Resources_Hooks)"
+)
+#: A Dwindling Resource loses 1 / DWINDLING_YEARS of its original value each
+#: year, so it is gone after DWINDLING_YEARS years (DWINDLING_SOURCE).
+DWINDLING_YEARS = 10
+
+
+def dwindle(
+    resource: IncomeSource | Possession,
+    value: int,
+    rounding: Callable[[float], int],
+) -> int:
+    """`resource`'s value (now `value`) after a year's end. A Dwindling
+    Resource loses a tenth of its original value: the value when it began
+    to dwindle, taken as its value at its first year end (so a save from
+    before STORY-1126 starts from its value then). Income rounds away from
+    zero (covenant finances), vis pawns down. A resource no longer dwindling
+    forgets its original value, so ticking it again starts afresh."""
+    if not resource.dwindling:
+        resource.dwindling_from = None
+        resource.dwindled_years = 0
+        return value
+    if resource.dwindling_from is None:
+        resource.dwindling_from = value
+        resource.dwindled_years = 0
+    resource.dwindled_years = min(DWINDLING_YEARS, resource.dwindled_years + 1)
+    left = DWINDLING_YEARS - resource.dwindled_years
+    return rounding(resource.dwindling_from * left / DWINDLING_YEARS)
+
+
 def _vis_sources(covenant: Covenant) -> list:
     return [p for p in covenant.possessions if p.kind == "vis_source"]
 
@@ -944,11 +990,11 @@ def covenant_season(saga: Saga, secured: dict[str, bool]) -> list[SeasonRecordLi
                         )
                     )
             for income in covenant.economics.income_sources:
+                value = dwindle(income, income.current_income, round_away_from_zero)
                 if income.dwindling:
-                    income.income = round(income.current_income * 0.9)
+                    income.income = value
             for source in _vis_sources(covenant):
-                if source.dwindling:
-                    source.pawns = int(source.pawns * 0.9)
+                source.pawns = dwindle(source, source.pawns, round_down)
         if harvested:
             lines.append(
                 SeasonRecordLine(
@@ -2256,7 +2302,7 @@ def _apply_experiment(
             if warping:
                 gain_warping(saga, magus, warping, random.Random())
     elif goal is not None and goal.insights > 0 and work.finished and not chart.wasted:
-        magnitude = max(1, -(-work.level // 5))
+        magnitude = spl.level_magnitude(work.level)
         goal.points += magnitude
         goal.insights -= 1
         lines.append(
@@ -2264,7 +2310,7 @@ def _apply_experiment(
             f"{goal.name} ({goal.points}/{goal.target})."
         )
     elif goal is not None and chart.discovery and not chart.wasted:
-        goal.pending_magnitude = max(1, -(-work.level // 5))
+        goal.pending_magnitude = spl.level_magnitude(work.level)
         goal.discovery_seasons = max(1, lab_seasons.seasons_left(work) + 1)
         goal.discovery_lab_total = int(work.lab_total.total)
         goal.discovery_risk = plan.risk

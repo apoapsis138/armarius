@@ -256,20 +256,30 @@ async def test_vf_picker_type_and_tier_filters_combine_with_the_search():
 
         picker.query_one("#vf-picker-type", Select).value = "Hermetic"
         picker.query_one("#vf-picker-tier", Select).value = "Major"
+        # Wait for the list to be exactly what the filters let through: a
+        # refill still in progress can list a partial or stale set
+        # (STORY-1126).
         assert await wait_until(
             pilot,
-            lambda: _vf_listed(picker) and all(map(hermetic_major, _vf_listed(picker))),
+            lambda: (
+                (picker._type, picker._tier) == ("Hermetic", "Major")
+                and _vf_listed(picker) == picker._candidates()
+            ),
             timeout=10,
         )
         both = _vf_listed(picker)
+        assert both and all(map(hermetic_major, both))
         assert {entry.side for entry in both} == {"Virtue", "Flaw"}
         # "Hermetic, Tainted" counts as Hermetic.
         assert any(entry.id == "vf_hermetic_sorcery" for entry in both)
 
         picker.query_one("#picker-search", Input).value = "spell"
         assert await wait_until(
-            pilot, lambda: 0 < len(_vf_listed(picker)) < len(both), timeout=10
+            pilot,
+            lambda: _vf_listed(picker) == picker._match(picker._candidates(), "spell"),
+            timeout=10,
         )
+        assert 0 < len(_vf_listed(picker)) < len(both)
         for entry in _vf_listed(picker):
             assert hermetic_major(entry)
             assert "spell" in picker._search_text(entry).lower()
@@ -7382,7 +7392,9 @@ async def test_book_form_shows_the_fields_the_type_needs():
         assert shown() == {"spell_id", "level"}
         _fill(app, level="12")
         await pilot.pause()
-        assert "Cost: 5 Build Points" in live()
+        # Bought as a pool (STORY-1126): this one's 12 levels take 3 lots
+        # of 5, at 2 Build Points each.
+        assert "comes to 12 levels, 6 Build Points (3 levels unspent)" in live()
         await _save_dialog(pilot, app)
         await wait_until(pilot, lambda: "Tablet" in _book_names(app))
 

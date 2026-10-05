@@ -57,6 +57,7 @@ from . import (
 )
 from .breakdown import Line
 from .casting import _lowest
+from .rounding import round_down, round_up
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 8: Laboratory, Inventing Spells "
@@ -126,6 +127,11 @@ LONGEVITY_VIS_ARTS: tuple[str, ...] = ("Creo", "Corpus", "Vim")
 #: A Longevity Ritual for someone else needs at least this Lab Total.
 LONGEVITY_FOR_OTHERS = 30
 DIFFICULT_LONGEVITY = "vf_difficult_longevity_ritual"
+DIFFICULT_LONGEVITY_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws, Difficult "
+    "Longevity Ritual (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
+    "_Chapter_Four:_Virtues_and_Flaws#Difficult_Longevity_Ritual)"
+)
 
 
 @dataclass
@@ -465,7 +471,7 @@ def age_of(saga: Saga, character: Character) -> int | None:
 
 def longevity_vis(age: int) -> int:
     """Pawns a Longevity Ritual takes: the subject's age / 5, rounded up."""
-    return max(0, -(-age // 5))
+    return max(0, round_up(age / 5))
 
 
 def _one_season_work(
@@ -563,7 +569,8 @@ def _one_season_work(
             lines=[*total.lines, *extra],
         )
     if any(vf.vf_id == DIFFICULT_LONGEVITY for vf in subject.virtues_flaws):
-        halved = int(total.total) // 2
+        # Halves the Lab Total; no rounding stated, so down (rounding.py).
+        halved = round_down(int(total.total) / 2)
         total = replace(
             total,
             total=halved,
@@ -572,7 +579,7 @@ def _one_season_work(
                 Line(
                     f"Difficult Longevity Ritual ({subject.name}): halved",
                     multiplier=0.5,
-                    source=LONGEVITY_SOURCE,
+                    source=DIFFICULT_LONGEVITY_SOURCE,
                 ),
             ],
         )
@@ -957,4 +964,4 @@ def seasons_left(work_: LabWork) -> int:
     if work_.finished or not work_.points_gained:
         return 0
     remaining = work_.level - work_.points_after
-    return -(-remaining // work_.points_gained)
+    return round_up(remaining / work_.points_gained)

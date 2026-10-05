@@ -25,7 +25,6 @@ Inventory tab (its components, effects and levels are entered there).
 
 from __future__ import annotations
 
-import math
 from dataclasses import replace
 from typing import TYPE_CHECKING
 
@@ -46,6 +45,7 @@ from ..models import (
 )
 from . import book_seasons, lab
 from .breakdown import Line
+from .rounding import round_up
 
 if TYPE_CHECKING:
     from .lab_seasons import LabWork
@@ -370,7 +370,7 @@ def work(
             # From a Lab Text: a charge per 5 points of the whole Lab Total.
             charges=max(
                 1,
-                math.ceil((lab_total if text is not None else lab_total - level) / 5),
+                round_up((lab_total if text is not None else lab_total - level) / 5),
             ),
         )
 

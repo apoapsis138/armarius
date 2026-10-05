@@ -14,7 +14,6 @@ Rules: reference/rules-engine-reference.md §3 Training packages (Grogs).
 
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass
 
 from .. import sourcebooks
@@ -22,6 +21,7 @@ from ..models import Character, Saga
 from . import creation_access as access
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 from .creation_xp import entries
+from .rounding import round_up
 
 SOURCE = (
     "Grogs, Chapter 5, Training Packages (https://www.redcap.org/page/Grogs_"
@@ -451,7 +451,7 @@ def age_multiplier(character: Character) -> float:
 def years_used(character: Character) -> int:
     """The Later Life years the packages take (rounded up)."""
     total = sum(t.years for t in taken(character))
-    return math.ceil(total * age_multiplier(character))
+    return round_up(total * age_multiplier(character))
 
 
 def package_xp(package: Package, years: int) -> list[tuple[str, int]]:

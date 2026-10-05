@@ -40,10 +40,10 @@ Activities built so far, each an Advancement Total (rules.study):
 from __future__ import annotations
 
 import random
-from collections.abc import MutableMapping, Sequence
+from collections.abc import Collection, MutableMapping, Sequence
 from dataclasses import dataclass, field, replace
 
-from .. import books, vis
+from .. import books, sourcebooks, vis
 from ..arts import ART_BY_NAME, ARTS
 from ..models import SEASONS, Book, Character, Saga, SeasonPlan, XpAllocation
 from . import (
@@ -63,6 +63,7 @@ from . import (
     supplement_work,
     xp,
 )
+from .rounding import round_down
 from .study import StudyResult, season_of_study
 
 ASSIGNING_SOURCE = (
@@ -165,6 +166,9 @@ class Activity:
     #: Planned for the character by someone else's lab work (the subject of
     #: a Longevity Ritual), not picked from the menu.
     hidden: bool = False
+    #: The sourcebook it comes from ("" for the core book): offered only
+    #: while the saga has that book in play (STORY-1126).
+    book: str = ""
 
 
 ACTIVITIES: dict[str, Activity] = {
@@ -551,6 +555,7 @@ ACTIVITIES.update(
             a.source,
             who=a.who,
             gives_xp=not a.no_xp,
+            book=a.book,
         )
         for a in supplement_seasons.ACTIVITIES
     }
@@ -563,13 +568,25 @@ def is_planned(character: Character) -> bool:
     return character.type in PLANNED_TYPES
 
 
-def activities_for(character: Character, *, lab: bool = False) -> list[Activity]:
+def activities_for(
+    character: Character,
+    *,
+    lab: bool = False,
+    books: Collection[str] | None = None,
+    keep: str = "",
+) -> list[Activity]:
     """The activities `character` may plan, in menu order: lab work (on the
-    laboratory's Planning tab) or everything else (on the character sheet)."""
+    laboratory's Planning tab) or everything else (on the character sheet).
+    With `books` (sourcebooks.saga_books), a supplement's activities only
+    while it is in play -- except `keep`, a plan's activity already chosen,
+    so editing that plan still shows it."""
     return [
         a
         for a in ACTIVITIES.values()
-        if character.type in a.who and a.lab == lab and not a.hidden
+        if character.type in a.who
+        and a.lab == lab
+        and not a.hidden
+        and (a.key == keep or sourcebooks.in_play(a.book, books))
     ]
 
 
@@ -1152,7 +1169,7 @@ def outcome(
     if not result.problems and derived.wound_penalty(character.wounds) <= -3:
         # Study at -3 to -5 is halved (DE Ch. 11, Activities While Injured).
         for gain in result.gains:
-            gain.result.xp //= 2
+            gain.result.xp = round_down(gain.result.xp / 2)
         if result.gains:
             result.notes.append("Wounded (-3 to -5): the season's xp is halved.")
     return result

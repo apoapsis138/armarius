@@ -33,7 +33,6 @@ Lab Texts (STORY-914):
 
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass, field
 
 from .. import books
@@ -47,6 +46,7 @@ from ..models import (
     Saga,
     SeasonPlan,
 )
+from .rounding import round_down, round_up
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Writing Books "
@@ -270,7 +270,7 @@ def _write(
     base = com + 6
     kind = ("Art " if is_art else "Ability ") + "Summa"
     if plan.activity == WRITE_TRACTATUS:
-        limit = math.ceil(score / 5) if is_art else math.ceil(score / 2)
+        limit = round_up(score / 5) if is_art else round_up(score / 2)
         written = sum(
             1
             for b in saga.books
@@ -285,7 +285,7 @@ def _write(
             ], None
         made = _new_book(saga, character, plan, "Tractatus", subject, None, base)
         return [], BookWork(points_gained=1, needed=1, made=made)
-    most = score // 2
+    most = round_down(score / 2)
     level = plan.book_level if plan.book_level is not None else most
     if not 1 <= level <= most:
         return [f"The summa's Level is 1 to {most} (half the score)."], None
@@ -473,7 +473,7 @@ def _lab_texts(
             ], None
         scribe = ability_score(character, "Profession: Scribe")
         level = max(1, text_level(book, saga))
-        copies = (60 * scribe) // level
+        copies = round_down(60 * scribe / level)
         if copies <= 0:
             return [
                 f"Profession: Scribe x 60 = {60 * scribe} levels a season: not "

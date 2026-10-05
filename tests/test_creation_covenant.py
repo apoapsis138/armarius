@@ -101,6 +101,30 @@ def test_build_points_price_the_library_vis_items_and_labs():
     assert costs["Magi without a laboratory (1)"] == -50
 
 
+def test_lab_texts_and_tablets_cost_one_line_per_pool():
+    """The Build tab charges each pool once, for its summed levels, and says
+    what is unspent; the texts have no line of their own (STORY-1126)."""
+    saga = _saga()
+    covenant = saga.covenants[0]
+    for i, (kind, level) in enumerate(
+        [("Lab Text", 12), ("Lab Text", 20), ("Casting Tablet", 10)]
+    ):
+        saga.books.append(
+            Book(
+                id=f"t{i}",
+                name=f"Text {i}",
+                type=kind,
+                level=level,
+                owner_kind="covenant",
+                owner_id="cov1",
+            )
+        )
+    costs = {c.label: c.points for c in cov.costs(saga, covenant)}
+    assert costs["Lab Texts: 32 levels (3 levels unspent)"] == 7
+    assert costs["Casting Tablets: 10 levels"] == 4
+    assert not any(label.startswith("Lab Text: ") for label in costs)
+
+
 def test_texts_above_the_power_levels_cap_and_boons_must_balance():
     saga = _saga()
     covenant = saga.covenants[0]

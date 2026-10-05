@@ -6,7 +6,6 @@ behind the Virtue/Flaw modifier system.
 
 from __future__ import annotations
 
-import math
 import re
 import uuid
 from dataclasses import dataclass, field, fields
@@ -73,19 +72,6 @@ VIRTUE_FLAW_AUDIENCES: tuple[str, ...] = (
     "animal",
     "mythic companion",
 )
-
-
-def round_away_from_zero(value: float) -> int:
-    """Round a fraction to a whole number by increasing its magnitude (2.4 ->
-    3, -2.4 -> -3), per the user's "round up fractions" rule for covenant
-    finances. A plain `math.ceil` would be wrong for a negative figure (Base
-    Loyalty can be negative): `ceil(-2.4)` is -2, which softens the number
-    instead of rounding it up.
-
-    Kept for covenant finances over the rules reference's readings (fractional
-    pounds, decision 21; nearest for Base Loyalty): Hedda, 2026-09-29
-    (STORY-815)."""
-    return math.ceil(value) if value >= 0 else -math.ceil(-value)
 
 
 def known_fields(cls: type, data: dict[str, Any]) -> dict[str, Any]:
@@ -2288,10 +2274,14 @@ class Possession:
     physical_form: str = ""
     #: vis_source (STORY-906): covered by a Contested (or Indiscreet)
     #: Resource Hook, secured through this year (one story secures it for
-    #: five); and by a Dwindling Resource Hook (-10% a year).
+    #: five); and by a Dwindling Resource Hook (-10% of its first value a year).
     contested: bool = False
     secured_until: int | None = None
     dwindling: bool = False
+    #: A Dwindling Resource's value when it began to dwindle, and the years
+    #: it has dwindled since (seasons.dwindle); None until its first year end.
+    dwindling_from: int | None = None
+    dwindled_years: int = 0
 
     def __post_init__(self) -> None:
         if self.kind not in POSSESSION_KINDS:
@@ -2421,10 +2411,14 @@ class IncomeSource:
     note: str = ""
     #: STORY-906: covered by a Contested (or Indiscreet) Resource Hook,
     #: secured through this year (no income until it is); and a Dwindling
-    #: Resource Hook (-10% a year).
+    #: Resource Hook (-10% of its first value a year).
     contested: bool = False
     secured_until: int | None = None
     dwindling: bool = False
+    #: A Dwindling Resource's value when it began to dwindle, and the years
+    #: it has dwindled since (seasons.dwindle); None until its first year end.
+    dwindling_from: int | None = None
+    dwindled_years: int = 0
 
     def __post_init__(self) -> None:
         if self.type not in INCOME_TYPES:

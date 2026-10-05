@@ -26,8 +26,8 @@ from .models import (
     Covenant,
     Saga,
     Spell,
-    round_away_from_zero,
 )
+from .rules.rounding import round_up
 
 #: Book types whose subject is an Art / an Ability (a Tractatus depends on its
 #: `subject_kind`).
@@ -101,10 +101,55 @@ def level_of(book: Book, saga: Saga | None = None) -> int | None:
 # ------------------------------------------------------------------- rules
 
 
+POOL_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Six: Covenants, Lab Texts and "
+    "Casting Tablets (p. 180)"
+)
+#: Lab Texts and Casting Tablets are bought as a pool of levels for the
+#: library, not text by text (POOL_SOURCE): POOL_POINTS Build Points buy
+#: POOL_LEVELS levels. The pool's levels are summed first; whole Build
+#: Points are spent, so the last purchase rounds up and its unused levels
+#: are the pool's unspent remainder (Hedda, 2026-10-05, STORY-1126).
+POOL_LEVELS = 5
+POOL_POINTS: dict[str, int] = {"Lab Text": 1, "Casting Tablet": 2}
+
+
+@dataclass(frozen=True)
+class Pool:
+    """A covenant's Lab Text or Casting Tablet pool."""
+
+    book_type: str
+    levels: int
+    points: int
+    #: Levels bought but not yet used by a text.
+    unspent: int
+
+
+def pooled(book_type: str) -> bool:
+    """Whether books of this type are bought as a pool (see pool())."""
+    return book_type in POOL_POINTS
+
+
+def pool(books: list[Book], book_type: str, saga: Saga | None = None) -> Pool:
+    """The `book_type` pool of `books` (a covenant's library): the levels
+    summed, the Build Points they take, and the levels left over."""
+    levels = sum(level_of(b, saga) or 0 for b in books if b.type == book_type)
+    lots = round_up(levels / POOL_LEVELS)
+    return Pool(
+        book_type, levels, lots * POOL_POINTS[book_type], lots * POOL_LEVELS - levels
+    )
+
+
+def pool_text(pool_: Pool) -> str:
+    """ "12 levels, 3 Build Points (3 levels unspent)"."""
+    text = f"{pool_.levels} levels, {pool_.points} Build Points"
+    return text + (f" ({pool_.unspent} levels unspent)" if pool_.unspent else "")
+
+
 def cost(book: Book, saga: Saga | None = None) -> int:
     """Build Points the book costs at covenant creation. A blank level or
-    quality counts as 0; Other books cost nothing. Given the saga, a Lab
-    Text or Casting Tablet uses its spell's level (see level_of)."""
+    quality counts as 0; Other books cost nothing, and neither does a Lab
+    Text or Casting Tablet on its own: those are bought as a pool (pool())."""
     level = level_of(book, saga) or 0
     quality = book.quality or 0
     if book.type == "Art Summa":
@@ -113,10 +158,6 @@ def cost(book: Book, saga: Saga | None = None) -> int:
         return quality + 3 * level
     if book.type == "Tractatus":
         return quality
-    if book.type == "Lab Text":
-        return round_away_from_zero(level / 5)
-    if book.type == "Casting Tablet":
-        return round_away_from_zero(2 * level / 5)
     return 0
 
 
@@ -139,10 +180,11 @@ def cost_formula(book: Book, saga: Saga | None = None) -> str:
         return f"Quality {quality} + 3 x Level {level}"
     if book.type == "Tractatus":
         return f"Quality {quality}"
-    if book.type == "Lab Text":
-        return f"1 per 5 levels of a level {level} spell, rounded up"
-    if book.type == "Casting Tablet":
-        return f"2 per 5 levels of a level {level} spell, rounded up"
+    if pooled(book.type):
+        return (
+            f"{level} levels of the {book.type} pool: "
+            f"{POOL_POINTS[book.type]} per {POOL_LEVELS} levels of the pool"
+        )
     return "Other books cost nothing"
 
 
@@ -552,12 +594,15 @@ def detail_text(saga: Saga, book: Book | None) -> str:
     if priced(saga, book):
         # Build Points matter only while its covenant is being created
         # (STORY-1314); in play they're on the covenant's Build tab.
-        lines.append(
-            _cell(
-                "Cost",
-                f"{cost(book, saga)} Build Points ({cost_formula(book, saga)})",
-            )[0]
-        )
+        if pooled(book.type):
+            library = books_owned_by(saga, "covenant", book.owner_id or "")
+            text = (
+                f"{level_of(book, saga) or 0} levels of the {book.type} pool "
+                f"({pool_text(pool(library, book.type, saga))})"
+            )
+        else:
+            text = f"{cost(book, saga)} Build Points ({cost_formula(book, saga)})"
+        lines.append(_cell("Cost", text)[0])
         lines += [problem(escape(w)) for w in limit_warnings(book)]
     lines += _study_lines(saga, book)
     if book.description.strip():

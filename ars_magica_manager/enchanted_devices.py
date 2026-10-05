@@ -12,7 +12,6 @@ on the character, laboratory and covenant sheets.
 
 from __future__ import annotations
 
-import math
 from collections import Counter
 from collections.abc import Sequence
 
@@ -35,6 +34,7 @@ from .models import (
     Saga,
     ShapeMaterialBonus,
 )
+from .rules.rounding import round_down, round_up
 
 #: Level additions for the effect modifications (DE ch. 8, Effect
 #: Modifications), as (InstilledEffect flag, label, levels).
@@ -258,7 +258,7 @@ def level_breakdown(
         if uses:
             parts.append((f"{uses_text(effect.uses_per_day)}", uses))
     if effect.penetration > 0:
-        parts.append((f"Pen {effect.penetration}", effect.penetration // 2))
+        parts.append((f"Pen {effect.penetration}", round_down(effect.penetration / 2)))
     parts += [
         (label, levels)
         for flag, label, levels in MODIFICATIONS
@@ -283,7 +283,7 @@ def computed_vis(device: EnchantedDevice, effect: InstilledEffect) -> int:
     Instilling the Effect); none for a Charged Item."""
     if device.type == CHARGED:
         return 0
-    return math.ceil(modified_level(device, effect) / 10)
+    return round_up(modified_level(device, effect) / 10)
 
 
 def vis_cost(device: EnchantedDevice, effect: InstilledEffect) -> int:
@@ -343,7 +343,7 @@ def max_charges(device: EnchantedDevice) -> int | None:
     level = modified_level(device, device.effects[0])
     if device.lab_total < level:
         return 0
-    return max(1, math.ceil((device.lab_total - level) / 5))
+    return max(1, round_up((device.lab_total - level) / 5))
 
 
 def charges_made(device: EnchantedDevice) -> int | None:

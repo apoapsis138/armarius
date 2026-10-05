@@ -317,7 +317,8 @@ and the pawns it gives. When that season is advanced, the pawns are added to
 the covenant's Raw Vis Stores and the Diary records the harvest. A source
 can be marked as a Contested Resource (advancing then asks whether it was
 secured once its security lapses, and an unsecured one gives nothing) or as
-a Dwindling Resource, which shrinks by a tenth at the end of each year.
+a Dwindling Resource, which loses a tenth of the pawns it gave when it
+began dwindling at the end of each year, so it is gone after ten years.
 
 ### Raw Vis Stores
 <!-- help: section-pos-vis_store -->
@@ -380,8 +381,9 @@ from it unless you choose to (see Cost Savings).
 Each enterprise the covenant lives on, with its Type (Lesser, Typical,
 Greater or Legendary). Leave Current Income blank to use the Type's usual
 income. A source can be marked as a Contested Resource, which gives nothing
-until it is secured, or a Dwindling Resource, which loses a tenth of its
-income at the end of each year. More's **Improve Income** applies one
+until it is secured, or a Dwindling Resource, which loses a tenth of the
+income it gave when it began dwindling at the end of each year (gone after
+ten years). More's **Improve Income** applies one
 year's Income Modification to the chosen source: pick an effect, see the
 projected income, and confirm to set the new income and record a note.
 
@@ -418,7 +420,10 @@ laboratories and its characters.
 **You type:** each book and its details.
 
 **The app works out:** the counts in the Summary, each book's Location, and
-each book's Build Point cost, shown in its details panel.
+each book's Build Point cost, shown in its details panel. Lab Texts and
+Casting Tablets are bought as a pool (1 and 2 Build Points per 5 levels of
+the library's total), so their details show the pool, with any levels
+bought but not yet used.
 
 **See also:** [Books](help:section-books),
 [a laboratory's Inventory tab](help:tab-lab-inventory),

@@ -105,8 +105,8 @@ def tally(character: Character) -> VirtueFlawTally:
         if over or over_param:
             repeated.append(entry.name)
     return VirtueFlawTally(
-        virtue_points=round(sum(e.cost for e in of("Virtue"))),
-        flaw_points=round(-sum(e.cost for e in of("Flaw"))),
+        virtue_points=int(sum(e.cost for e in of("Virtue"))),
+        flaw_points=int(-sum(e.cost for e in of("Flaw"))),
         minor_flaws=len(of("Flaw", tier="Minor")),
         major_virtues=len(of("Virtue", tier="Major")),
         major_flaws=len(of("Flaw", tier="Major")),
@@ -121,8 +121,8 @@ def tally(character: Character) -> VirtueFlawTally:
         major_personality_flaws=len(of("Flaw", "Personality", "Major")),
         personality_flaws=len(of("Flaw", "Personality")),
         story_flaws=len(of("Flaw", "Story")),
-        tainted_virtue_points=round(sum(e.cost for e in of("Virtue", "Tainted"))),
-        tainted_flaw_points=round(-sum(e.cost for e in of("Flaw", "Tainted"))),
+        tainted_virtue_points=int(sum(e.cost for e in of("Virtue", "Tainted"))),
+        tainted_flaw_points=int(-sum(e.cost for e in of("Flaw", "Tainted"))),
         repeated=sorted(repeated),
     )
 
@@ -188,7 +188,7 @@ def house_benefit(character: Character) -> HouseBenefit:
                     i for i, vf in enumerate(character.virtues_flaws) if vf is instance
                 )
                 return HouseBenefit(
-                    virtue_points=round(entry.cost),
+                    virtue_points=int(entry.cost),
                     held=(catalog.describe_virtue_flaw(instance, by_id),),
                     free_indices=frozenset({index}),
                 )

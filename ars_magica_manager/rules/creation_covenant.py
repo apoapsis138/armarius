@@ -22,7 +22,6 @@ laboratory.
 
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass
 
 from .. import books as bk
@@ -41,6 +40,7 @@ from ..laboratories import (
 )
 from ..models import Covenant, Laboratory, Saga
 from .creation_base import COVENANT_CHECKS, LABORATORY_CHECKS, Check, Record, check
+from .rounding import round_up
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter Six: Covenants, Accessible Power "
@@ -184,6 +184,17 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
                 else f"{book.type}: {book.name}"
             )
             lines.append(Cost(label, points, _BOOK_CATEGORY.get(book.type, "")))
+    for book_type in bk.POOL_POINTS:
+        pool = bk.pool(library, book_type, saga)
+        if pool.levels:
+            lines.append(
+                Cost(
+                    f"{_BOOK_CATEGORY[book_type]}: {pool.levels} levels"
+                    + (f" ({pool.unspent} levels unspent)" if pool.unspent else ""),
+                    pool.points,
+                    _BOOK_CATEGORY[book_type],
+                )
+            )
     for possession in covenant.possessions:
         if possession.kind == "vis_source" and possession.pawns:
             lines.append(
@@ -197,7 +208,7 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
             lines.append(
                 Cost(
                     f"Vis stock: {possession.name} ({possession.pawns} pawns)",
-                    math.ceil(possession.pawns / VIS_STOCK_PAWNS),
+                    round_up(possession.pawns / VIS_STOCK_PAWNS),
                     "Vis stocks",
                 )
             )
@@ -207,7 +218,7 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
             lines.append(
                 Cost(
                     f"Enchanted: {device.name}, {effect.name} (level {level})",
-                    2 * math.ceil(level / EFFECT_LEVELS),
+                    2 * round_up(level / EFFECT_LEVELS),
                     "Enchanted items",
                 )
             )
@@ -243,7 +254,7 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
     wealth = covenant.economics.wealth
     if wealth and sourcebooks.in_play("Covenants", books_in_play):
         lines.append(
-            Cost(f"Money ({wealth} pounds)", math.ceil(wealth / MONEY_POUNDS), "Money")
+            Cost(f"Money ({wealth} pounds)", round_up(wealth / MONEY_POUNDS), "Money")
         )
     return lines
 

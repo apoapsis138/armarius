@@ -8,7 +8,6 @@ Range/Duration/Target notation the rulebook and the Grand Grimoire use.
 
 from __future__ import annotations
 
-import math
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -27,6 +26,7 @@ from .models import (
     Spell,
 )
 from .rules import spell_levels
+from .rules.rounding import round_up
 
 # ------------------------------------------------------------ where they live
 
@@ -101,7 +101,12 @@ def magnitude(spell: Spell) -> int | None:
     spell, whose magnitude depends on the level it's cast at."""
     if spell.level is None:
         return None
-    return max(1, math.ceil(spell.level / 5))
+    return level_magnitude(spell.level)
+
+
+def level_magnitude(level: int) -> int:
+    """A level's magnitude: level / 5, rounded up, at least 1."""
+    return max(1, round_up(level / 5))
 
 
 def shorthand(spell: Spell) -> str:

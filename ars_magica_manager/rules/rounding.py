@@ -35,3 +35,16 @@ def round_nearest(value: float) -> int:
     """To the nearest whole number, halves away from zero (-37.5 -> -38),
     for a rule that says so (Covenants' Base Loyalty example, deferred)."""
     return math.floor(value + 0.5) if value >= 0 else -math.floor(-value + 0.5)
+
+
+def round_away_from_zero(value: float) -> int:
+    """Round a fraction to a whole number by increasing its magnitude (2.4 ->
+    3, -2.4 -> -3), per the user's "round up fractions" rule for covenant
+    finances. A plain `math.ceil` would be wrong for a negative figure (Base
+    Loyalty can be negative): `ceil(-2.4)` is -2, which softens the number
+    instead of rounding it up.
+
+    Kept for covenant finances over the rules reference's readings (fractional
+    pounds, decision 21; nearest for Base Loyalty): Hedda, 2026-09-29
+    (STORY-815)."""
+    return math.ceil(value) if value >= 0 else -math.ceil(-value)

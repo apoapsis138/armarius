@@ -28,7 +28,7 @@ from ..laboratories import (
 from ..models import Character, Familiar, Laboratory, Saga
 from . import effects, realms, scores
 from .breakdown import Breakdown, Line
-from .rounding import round_down
+from .rounding import round_down, round_up
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 8: Laboratory, Basic Laboratory "
@@ -213,7 +213,7 @@ def lab_total(
         lines.append(
             Line(
                 f"Similar spell (level {similar_spell_level})",
-                amount=-(-similar_spell_level // 5),
+                amount=round_up(similar_spell_level / 5),
                 source=ACTIVITY_SOURCE,
             )
         )
@@ -301,7 +301,7 @@ def seasons_to_invent(lab_total: int, level: int) -> int | None:
     points = points_per_season(lab_total, level)
     if points <= 0:
         return None
-    return -(-level // points)
+    return round_up(level / points)
 
 
 def lab_text_usable(lab_total: int, level: int) -> bool:
@@ -313,13 +313,13 @@ def lab_text_usable(lab_total: int, level: int) -> bool:
 def longevity_modifier(lab_total: int, *, mundane: bool = False) -> int:
     """A Longevity Ritual's aging-roll modifier: the Creo Corpus Lab Total
     / 5 (/ 10 for a mundane subject), rounded up."""
-    return -(-lab_total // (10 if mundane else 5))
+    return round_up(lab_total / (10 if mundane else 5))
 
 
 def vis_extracted(lab_total: int) -> int:
     """Pawns of Vim vis from a season of extraction: Creo Vim Lab Total /
     10, rounded up."""
-    return max(1, -(-lab_total // 10))
+    return max(1, round_up(lab_total / 10))
 
 
 def vis_limit(magus: Character) -> int:

@@ -1,7 +1,7 @@
 """Logic behind a covenant's Economics tab -- no UI in here.
 
 Works out the covenant's finances from the rest of the sheet, following the
-ArM5 "Covenant Finances" rules (reference/Covenant Finances.md): the points of
+ArM5 "Covenant Finances" rules (SOURCE; reference/Economics.md): the points of
 inhabitants, laboratories and weapons and armor, each category of yearly
 expenditure, the cost savings from laborers, craftspeople and the like, and the
 totals. Nothing here is stored; only what the user types lives in
@@ -27,10 +27,16 @@ from .models import (
     Economics,
     IncomeSource,
     Saga,
-    round_away_from_zero,
 )
+from .rules.rounding import round_away_from_zero, round_down
 
 # --------------------------------------------------------------- the rules
+
+SOURCE = (
+    "Covenants, Chapter Five: Wealth & Poverty "
+    "(https://www.redcap.org/page/Covenants_Chapter_Five:_Wealth_%26_Poverty); "
+    "fractions round away from zero (covenant finances, STORY-815)"
+)
 
 #: Points of one laboratory by its Upkeep score, from -5 to +5.
 _LAB_POINTS = {
@@ -104,7 +110,7 @@ def craft_saving_each(entry: inh.InhabitantEntry) -> int:
     """What one craftsperson saves a year: a rare one their skill, a common one
     one plus half of it, rounded down."""
     skill = entry.skill_value
-    return skill if entry.rare else 1 + skill // 2
+    return skill if entry.rare else 1 + round_down(skill / 2)
 
 
 # ------------------------------------------------------------------ figures
@@ -432,7 +438,7 @@ def close_year(saga: Saga, covenant: Covenant) -> int:
 
 def money(value: float) -> str:
     """A pounds or points figure as a whole number (see
-    models.round_away_from_zero) -- safe to call on an already-rounded int
+    rounding.round_away_from_zero) -- safe to call on an already-rounded int
     too."""
     return str(round_away_from_zero(value))
 

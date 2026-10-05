@@ -123,7 +123,7 @@ When Winter is advanced, the year ends:
 - a character running a business pays its yearly upkeep in Labor Points (City & Guild);
 - yearly Warping Points are added, for a Longevity Ritual and for living in a strong aura of another realm;
 - every character aged 35 or more, or with a Longevity Ritual, makes an aging roll (Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Aging), written in their Diary;
-- Dwindling Resources shrink by a tenth, and a contested resource still not secured gives nothing that year;
+- Dwindling Resources lose a tenth of their value when they began dwindling (gone after ten years), and a contested resource still not secured gives nothing that year;
 - each covenant's surplus is added to its Wealth.
 
 Every season, each covenant's vis sources for that season are harvested into its vis stores and written in its Diary.

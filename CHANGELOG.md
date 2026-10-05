@@ -10,6 +10,23 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.10.2 — 2026-10-05
+
+Rules corrections.
+
+- Lab Texts and Casting Tablets are bought as a pool, as the book says:
+  the levels of all a covenant's Lab Texts are added up and cost 1 Build
+  Point per 5 levels (Casting Tablets 2), and the Build tab and a text's
+  details show the levels bought but not yet used.
+- The season plan offers a supplement's activities only while that book is
+  in play (a plan already made keeps its activity).
+- The minimum number of servants follows the book: 2 for every 10 points
+  of inhabitants or part of 10.
+- A Dwindling Resource loses a tenth of its original value each year and is
+  gone after ten years.
+- Where a rule doesn't say how to round, the app rounds down (recorded
+  lectures now do).
+
 ## 2.10.1 — 2026-10-05
 
 Safer saving. A saga, the settings and an export are now written in full

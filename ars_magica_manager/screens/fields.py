@@ -421,7 +421,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         self._react()
 
     def on_resize(self) -> None:
-        self._fit()
+        self._refit()
 
     def _fit(self) -> None:
         """Cap the scrolling region so the title, live and error lines and

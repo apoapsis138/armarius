@@ -69,7 +69,7 @@ def max_students(teacher: Character) -> int:
 
 def vis_pawns(art_score: int) -> int:
     """Pawns a season of vis study consumes: ceil(Art / 5), at least 1."""
-    return max(1, -(-art_score // 5))
+    return max(1, round_up(art_score / 5))
 
 
 def after_distraction(total: int, months_lost: int) -> int:
