@@ -1,37 +1,56 @@
+import dataclasses
+import json
+
 import pytest
 from support import everything_saga
 
-from ars_magica_manager import seasons, storage
+from ars_magica_manager import models, seasons, storage
 from ars_magica_manager.models import (
     Ability,
     Aging,
+    ArcaneConnection,
     ArtScore,
     Background,
     BondPower,
     Book,
+    Breakthrough,
     Character,
     Characteristics,
     Covenant,
+    CovenantBoonHookDef,
     CovenantDiaryEntry,
+    CreationXp,
     Description,
     DeviceComponent,
     DiaryEntry,
     EnchantedDevice,
     Familiar,
+    GrogYear,
     HermeticBackground,
     InstilledEffect,
     LabCharacteristics,
     Laboratory,
+    LabProject,
     LabSpecialtyEntry,
+    LabTextAccess,
+    LabVirtueFlawDef,
+    MasteryAbility,
+    Modifier,
     NamedDescription,
     Possession,
+    Progress,
     Saga,
     ScoredTrait,
     SeasonPlan,
+    SeasonRecord,
+    SeasonRecordLine,
     ShapeMaterialBonus,
     Spell,
+    SpellDesign,
+    VirtueFlawDef,
     VirtueFlawInstance,
     Wounds,
+    XpAllocation,
 )
 from ars_magica_manager.rules import seasons as season_rules
 from ars_magica_manager.rules.xp import ability_xp
@@ -312,3 +331,118 @@ def test_a_save_from_before_a_field_existed_loads_with_its_default(model, minima
     """A record saved before later fields existed loads with each missing
     field at its default (the real migrations are tested with the model)."""
     assert model.from_dict(dict(minimal)) == model(**minimal)
+
+
+# -- stale keys from older saves (STORY-1125) ---------------------------------
+
+
+def _saga_with_every_record() -> Saga:
+    """everything_saga() plus one of each saved record it lacks, so every
+    dataclass a saga file holds appears at least once."""
+    saga = everything_saga()
+    magus = next(c for c in saga.characters if c.type == "magus")
+    magus.arts["Creo"] = ArtScore(xp=6)
+    magus.spells_known[0].mastery_abilities.append(MasteryAbility("Fast Casting"))
+    magus.breakthroughs.append(Breakthrough("Holistic"))
+    magus.progress.append(Progress("vis", "Study"))
+    magus.creation_xp.append(CreationXp("later_life", "ability:Latin", 5))
+    magus.lab_text_access["x"] = LabTextAccess(15, "decoded")
+    magus.grog_year = GrogYear()
+    saga.laboratories[0].arcane_connections.append(ArcaneConnection("ac", "a tree"))
+    saga.covenants[0].diary.append(CovenantDiaryEntry(1220))
+    device = saga.enchanted_devices[0]
+    device.bonuses.append(ShapeMaterialBonus(3, "fire", "Oak"))
+    saga.season_plans.append(
+        SeasonPlan(
+            magus.id,
+            1220,
+            "Spring",
+            season_rules.EXPOSURE,
+            [XpAllocation("ability:Latin")],
+            design=SpellDesign("key"),
+        )
+    )
+    saga.season_records.append(
+        SeasonRecord(1220, "Spring", lines=[SeasonRecordLine(magus.id, "M")])
+    )
+    saga.lab_projects.append(LabProject(magus.id, saga.spells[0].id))
+    bonus = Modifier("study_total", amount=1)
+    saga.custom_virtues_flaws.append(
+        VirtueFlawDef("vf", "VF", "Virtue", "General", "Minor", 1, modifiers=[bonus])
+    )
+    saga.custom_lab_virtues_flaws.append(
+        LabVirtueFlawDef("lvf", "LVF", "Virtue", "Structure", "Minor", 1)
+    )
+    saga.custom_boons_hooks.append(CovenantBoonHookDef("bh", "BH", "Boon", "Minor", 1))
+    return saga
+
+
+def _stale(value: object, target: type | None) -> object:
+    """`asdict(value)`, with an unknown key added to each dict that holds a
+    `target` record (to every record when `target` is None)."""
+    if dataclasses.is_dataclass(value) and not isinstance(value, type):
+        data = {
+            f.name: _stale(getattr(value, f.name), target)
+            for f in dataclasses.fields(value)
+        }
+        if target is None or type(value) is target:
+            data["retired_field"] = "from an older version"
+        return data
+    if isinstance(value, (list, tuple)):
+        return [_stale(item, target) for item in value]
+    if isinstance(value, dict):
+        return {key: _stale(item, target) for key, item in value.items()}
+    return value
+
+
+def _record_types(value: object) -> set[type]:
+    if dataclasses.is_dataclass(value) and not isinstance(value, type):
+        found = {type(value)}
+        for f in dataclasses.fields(value):
+            found |= _record_types(getattr(value, f.name))
+        return found
+    if isinstance(value, (list, tuple)):
+        return set().union(*(_record_types(item) for item in value))
+    if isinstance(value, dict):
+        return set().union(*(_record_types(item) for item in value.values()))
+    return set()
+
+
+_SAVED_TYPES = sorted(
+    _record_types(_saga_with_every_record()), key=lambda t: t.__name__
+)
+
+
+def test_the_stale_key_fixture_holds_every_saved_record():
+    """Every dataclass that can sit in a saga file is in the fixture, so the
+    stale-key test below covers it (a new saved record must be added)."""
+    not_saved = {
+        "AbilityDef", "ArmorDef", "CharacterTemplateDef", "CovenantSituationDef",
+        "HouseDef", "LabFeatureDef", "ShapeMaterialDef", "WeaponDef",
+    }  # fmt: skip
+    every = {
+        cls.__name__
+        for cls in vars(models).values()
+        if isinstance(cls, type)
+        and dataclasses.is_dataclass(cls)
+        and cls.__module__ == models.__name__
+    }
+    assert every - not_saved == {t.__name__ for t in _SAVED_TYPES}
+
+
+@pytest.mark.parametrize("record", _SAVED_TYPES, ids=lambda t: t.__name__)
+def test_a_save_with_a_stale_key_still_loads(record):
+    """A key the app no longer knows (a field since removed or renamed) in
+    any saved record is dropped on load instead of stopping the saga
+    opening."""
+    saga = _saga_with_every_record()
+    stale = _stale(saga, record)
+    assert "retired_field" in json.dumps(stale)
+    assert Saga.from_dict(stale) == Saga.from_dict(dataclasses.asdict(saga))
+
+
+def test_a_save_with_stale_keys_everywhere_still_loads():
+    saga = _saga_with_every_record()
+    assert Saga.from_dict(_stale(saga, None)) == Saga.from_dict(
+        dataclasses.asdict(saga)
+    )

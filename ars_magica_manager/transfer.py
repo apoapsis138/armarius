@@ -33,6 +33,7 @@ from typing import Any
 
 from . import __version__, catalog, storage
 from . import spells as spl
+from .files import write_atomic
 from .models import (
     Book,
     Character,
@@ -172,9 +173,8 @@ def export_to(
     path: Path, saga: Saga, record: Record, *, with_members: bool = False
 ) -> Path:
     """Write `record`'s export to `path` (its folder is made if needed)."""
-    path.parent.mkdir(parents=True, exist_ok=True)
     data = export_data(saga, record, with_members=with_members)
-    path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    write_atomic(path, json.dumps(data, indent=2))
     return path
 
 

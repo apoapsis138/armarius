@@ -90,7 +90,7 @@ Advancing Winter also closes the year:
 <!-- help: guide-seasons-undo -->
 
 - **The date only:** choose the saga (the top node of the tree), press `m` for More and choose **Set Date**. Set the season and year and press Set. This moves the date without undoing anything the season did, and Wealth added at a year end isn't taken back. See [More on the saga](help:saga-more).
-- **The whole season:** the backup in `data/sagas/backups` holds the saga as it was just before the last season was applied. Quit the app, copy the backup over the saga's file of the same name in `data/sagas`, then reopen the saga. Each advance replaces the backup, so only the most recent season can be undone this way, and no backup is taken when nothing was planned.
+- **The whole season:** the backup in `data/sagas/backups` holds the saga as it was just before the last season was applied. Quit the app, copy the backup over the saga's file of the same name in `data/sagas`, then reopen the saga. The four backups before it are kept too, as `<name>.1.json` (the season before) to `<name>.4.json`: to go further back, copy one of those over the saga's file and rename it to the saga's name. No backup is taken when nothing was planned.
 
 ### What the app does for you
 <!-- help: guide-seasons-auto -->

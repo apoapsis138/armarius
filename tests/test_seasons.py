@@ -3,6 +3,7 @@
 This Season / Diary tab and Advance Season in the workspace."""
 
 import copy
+import json
 from dataclasses import asdict
 
 from support import build_all_tabs, everything_saga, strip_markup, wait_until
@@ -339,6 +340,28 @@ def test_backup_is_kept_outside_the_saga_list():
     path = storage.backup_saga(saga)
     assert path.exists() and path.parent.name == "backups"
     assert storage.list_sagas() == ["s"]
+
+
+def test_backups_rotate_keeping_the_last_five():
+    """Each backup is kept as the newest and the older ones move back a
+    place, up to BACKUPS_KEPT; nothing else is written (STORY-1125)."""
+    saga = _saga(_magus())
+    for year in range(1220, 1227):
+        saga.current_year = year
+        storage.backup_saga(saga)
+
+    folder = storage.backup_path("s").parent
+    assert sorted(p.name for p in folder.iterdir()) == [
+        "s.1.json", "s.2.json", "s.3.json", "s.4.json", "s.json",
+    ]  # fmt: skip
+    years = [
+        Saga.from_dict(
+            json.loads(storage.backup_path("s", age).read_text("utf-8"))
+        ).current_year
+        for age in range(storage.BACKUPS_KEPT)
+    ]
+    assert years == [1226, 1225, 1224, 1223, 1222]
+    assert storage.list_sagas() == []
 
 
 # -- the character sheet and Advance Season ---------------------------------------

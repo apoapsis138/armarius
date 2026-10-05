@@ -133,7 +133,7 @@ When an imported book or spell has the name of one already in the saga, the app 
 
 Each saga is saved as one file, `data/sagas/` followed by the saga's id and `.json`, in the app's folder. The app saves every change as you make it.
 
-- Before a season with plans is applied, the app copies the saga to `data/sagas/backups`, replacing the previous backup. To undo that season, copy the backup over the saga's file with the app closed.
+- Before a season with plans is applied, the app copies the saga to `data/sagas/backups`, keeping the last five (the newest has the saga's own file name; older ones end `.1.json` to `.4.json`). To undo that season, copy the backup over the saga's file with the app closed.
 - That is the only backup the app keeps, so for anything older, copy the saga's file yourself from time to time.
 - To keep a single character, laboratory or covenant safe before a big change, export it as above.
 

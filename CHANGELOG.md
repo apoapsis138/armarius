@@ -10,6 +10,16 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.10.1 — 2026-10-05
+
+Safer saving. A saga, the settings and an export are now written in full
+before they replace the old file, so a crash or a full disk mid-save can no
+longer leave a half-written saga. The app now keeps the last five backups
+of a saga (taken before each season with plans is applied) instead of only
+one. A damaged settings file no longer stops the app starting, and a saga
+saved by an older version with a since-removed field in any record now
+opens instead of failing.
+
 ## 2.10.0 — 2026-10-05
 
 How-to guides in Help: eight step-by-step walk-throughs, listed under

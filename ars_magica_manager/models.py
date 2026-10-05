@@ -252,8 +252,10 @@ class VirtueFlawDef:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> VirtueFlawDef:
         d = dict(data)
-        d["modifiers"] = [Modifier(**m) for m in d.get("modifiers", [])]
-        return cls(**d)
+        d["modifiers"] = [
+            Modifier(**known_fields(Modifier, m)) for m in d.get("modifiers", [])
+        ]
+        return cls(**known_fields(cls, d))
 
 
 @dataclass
@@ -347,11 +349,13 @@ class LabVirtueFlawDef:
         d = dict(data)
         # Before STORY-804 the effects were a {characteristic: amount} map.
         legacy = d.pop("characteristic_modifiers", None) or {}
-        d["modifiers"] = [Modifier(**m) for m in d.get("modifiers", [])] + [
+        d["modifiers"] = [
+            Modifier(**known_fields(Modifier, m)) for m in d.get("modifiers", [])
+        ] + [
             Modifier(applies_to="lab_characteristic", target=c, amount=amount)
             for c, amount in legacy.items()
         ]
-        return cls(**d)
+        return cls(**known_fields(cls, d))
 
 
 #: The "types" the Covenants book (Chapter Two: Boons & Hooks) sorts every
@@ -450,8 +454,10 @@ class CovenantBoonHookDef:
         d = dict(data)
         # Each Modifier checks its applies_to/activity against the registry
         # in totals.py, so a typo in the catalog fails at load time.
-        d["modifiers"] = [Modifier(**m) for m in d.get("modifiers", [])]
-        return cls(**d)
+        d["modifiers"] = [
+            Modifier(**known_fields(Modifier, m)) for m in d.get("modifiers", [])
+        ]
+        return cls(**known_fields(cls, d))
 
 
 @dataclass
@@ -473,7 +479,7 @@ class CovenantSituationDef:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> CovenantSituationDef:
-        return cls(**data)
+        return cls(**known_fields(cls, data))
 
 
 @dataclass
@@ -505,7 +511,7 @@ class AbilityDef:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> AbilityDef:
-        return cls(**data)
+        return cls(**known_fields(cls, data))
 
 
 @dataclass
@@ -536,7 +542,7 @@ class HouseDef:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> HouseDef:
-        return cls(**data)
+        return cls(**known_fields(cls, data))
 
 
 @dataclass
@@ -587,7 +593,7 @@ class CharacterTemplateDef:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> CharacterTemplateDef:
-        return cls(**data)
+        return cls(**known_fields(cls, data))
 
 
 #: The book's weapon tables a WeaponDef comes from, in its order.
@@ -626,7 +632,7 @@ class WeaponDef:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> WeaponDef:
-        return cls(**data)
+        return cls(**known_fields(cls, data))
 
 
 @dataclass
@@ -661,7 +667,7 @@ class ArmorDef:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> ArmorDef:
-        return cls(**data)
+        return cls(**known_fields(cls, data))
 
 
 @dataclass
@@ -697,7 +703,7 @@ class Characteristics:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Characteristics:
-        return cls(**data)
+        return cls(**known_fields(cls, data))
 
 
 @dataclass
@@ -989,7 +995,7 @@ class LabCharacteristics:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> LabCharacteristics:
-        return cls(**data)
+        return cls(**known_fields(cls, data))
 
 
 @dataclass
@@ -1141,9 +1147,13 @@ class LabFeature:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> LabFeature:
         d = dict(data)
-        d["allocations"] = [LabSpecialtyGrant(**g) for g in d.get("allocations", [])]
+        d["allocations"] = [
+            LabSpecialtyGrant(**known_fields(LabSpecialtyGrant, g))
+            for g in d.get("allocations", [])
+        ]
         d["focus_allocations"] = [
-            LabSpecialtyGrant(**g) for g in d.get("focus_allocations", [])
+            LabSpecialtyGrant(**known_fields(LabSpecialtyGrant, g))
+            for g in d.get("focus_allocations", [])
         ]
         return cls(**known_fields(cls, d))
 
@@ -1273,16 +1283,21 @@ class Laboratory:
             d["characteristics"] = LabCharacteristics(size=legacy_size or 0)
         else:
             d["characteristics"] = LabCharacteristics.from_dict(d["characteristics"])
-        d["rooms"] = [NamedDescription(**r) for r in d.get("rooms", [])]
+        d["rooms"] = [
+            NamedDescription(**known_fields(NamedDescription, r))
+            for r in d.get("rooms", [])
+        ]
         d["inventory_items"] = [
-            NamedDescription(**i) for i in d.get("inventory_items", [])
+            NamedDescription(**known_fields(NamedDescription, i))
+            for i in d.get("inventory_items", [])
         ]
         d["arcane_connections"] = [
             ArcaneConnection.from_dict(c) for c in d.get("arcane_connections", [])
         ]
-        d["diary"] = [DiaryEntry(**entry) for entry in d.get("diary", [])]
+        d["diary"] = [DiaryEntry.from_dict(entry) for entry in d.get("diary", [])]
         d["virtues_flaws"] = [
-            VirtueFlawInstance(**vf) for vf in d.get("virtues_flaws", [])
+            VirtueFlawInstance(**known_fields(VirtueFlawInstance, vf))
+            for vf in d.get("virtues_flaws", [])
         ]
         for vf in d["virtues_flaws"]:
             vf.id = vf.id or new_instance_id()
@@ -1296,7 +1311,7 @@ class Laboratory:
         d["specialties"] = [
             _parse_old_specialty(s)
             if isinstance(s, str)  # pre-STORY-307 free text
-            else LabSpecialtyEntry(**s)
+            else LabSpecialtyEntry(**known_fields(LabSpecialtyEntry, s))
             for s in d.get("specialties", [])
         ]
         lab = cls(**known_fields(cls, d))
@@ -1360,7 +1375,7 @@ class Background:
             # Pre-STORY-208 saves used a single "confidence"; migrate on load
             # so existing characters don't become unreadable over the split.
             d["confidence_score"] = d.pop("confidence")
-        return cls(**d)
+        return cls(**known_fields(cls, d))
 
 
 @dataclass
@@ -1378,7 +1393,7 @@ class Description:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Description:
-        return cls(**data)
+        return cls(**known_fields(cls, data))
 
 
 @dataclass
@@ -1434,7 +1449,7 @@ class Wounds:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Wounds:
-        return cls(**data)
+        return cls(**known_fields(cls, data))
 
 
 @dataclass
@@ -1468,7 +1483,7 @@ class HermeticBackground:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> HermeticBackground:
-        return cls(**data)
+        return cls(**known_fields(cls, data))
 
 
 @dataclass
@@ -1664,16 +1679,21 @@ class Character:
         }
         d["abilities"] = [Ability.from_dict(a) for a in d.get("abilities", [])]
         d["virtues_flaws"] = [
-            VirtueFlawInstance(**vf) for vf in d.get("virtues_flaws", [])
+            VirtueFlawInstance(**known_fields(VirtueFlawInstance, vf))
+            for vf in d.get("virtues_flaws", [])
         ]
         d["background"] = Background.from_dict(d.get("background") or {})
         d["description"] = Description.from_dict(d.get("description") or {})
         d["aging"] = Aging.from_dict(d.get("aging") or {})
         d["wounds"] = Wounds.from_dict(d.get("wounds") or {})
         d["personality_traits"] = [
-            ScoredTrait(**t) for t in d.get("personality_traits", [])
+            ScoredTrait(**known_fields(ScoredTrait, t))
+            for t in d.get("personality_traits", [])
         ]
-        d["reputations"] = [ScoredTrait(**t) for t in d.get("reputations", [])]
+        d["reputations"] = [
+            ScoredTrait(**known_fields(ScoredTrait, t))
+            for t in d.get("reputations", [])
+        ]
         d["hermetic"] = HermeticBackground.from_dict(d.get("hermetic") or {})
         d["invented_spells"] = [
             Spell.from_dict(sp) for sp in d.get("invented_spells", [])
@@ -1820,12 +1840,17 @@ class Familiar:
     def from_dict(cls, data: dict[str, Any]) -> Familiar:
         d = dict(data)
         d["virtues_flaws"] = [
-            VirtueFlawInstance(**vf) for vf in d.get("virtues_flaws", [])
+            VirtueFlawInstance(**known_fields(VirtueFlawInstance, vf))
+            for vf in d.get("virtues_flaws", [])
         ]
         d["personality_traits"] = [
-            ScoredTrait(**t) for t in d.get("personality_traits", [])
+            ScoredTrait(**known_fields(ScoredTrait, t))
+            for t in d.get("personality_traits", [])
         ]
-        d["reputations"] = [ScoredTrait(**t) for t in d.get("reputations", [])]
+        d["reputations"] = [
+            ScoredTrait(**known_fields(ScoredTrait, t))
+            for t in d.get("reputations", [])
+        ]
         d["characteristics"] = Characteristics.from_dict(d.get("characteristics") or {})
         d["wounds"] = Wounds.from_dict(d.get("wounds") or {})
         d["natural_weapons"] = [
@@ -1926,7 +1951,7 @@ class ShapeMaterialDef:
     def from_dict(cls, data: dict[str, Any]) -> ShapeMaterialDef:
         d = dict(data)
         d["bonuses"] = tuple((b["bonus"], b["effect"]) for b in d.get("bonuses", []))
-        return cls(**d)
+        return cls(**known_fields(cls, d))
 
 
 @dataclass
@@ -2441,7 +2466,7 @@ class Economics:
             IncomeSource(**known_fields(IncomeSource, s))
             for s in d.get("income_sources", [])
         ]
-        return cls(**d)
+        return cls(**known_fields(cls, d))
 
 
 #: A Covenant Diary entry's categories (STORY-406), in the spec's order.
@@ -2546,7 +2571,10 @@ class Covenant:
     def from_dict(cls, data: dict[str, Any]) -> Covenant:
         d = dict(data)
         d["economics"] = Economics.from_dict(d.get("economics") or {})
-        d["boons_hooks"] = [VirtueFlawInstance(**bh) for bh in d.get("boons_hooks", [])]
+        d["boons_hooks"] = [
+            VirtueFlawInstance(**known_fields(VirtueFlawInstance, bh))
+            for bh in d.get("boons_hooks", [])
+        ]
         # Diary Story Events link to a Boon/Hook by its instance id.
         for bh in d["boons_hooks"]:
             bh.id = bh.id or new_instance_id()
@@ -2554,7 +2582,10 @@ class Covenant:
             CovenantDiaryEntry(**known_fields(CovenantDiaryEntry, e))
             for e in d.get("diary", [])
         ]
-        d["reputations"] = [ScoredTrait(**r) for r in d.get("reputations", [])]
+        d["reputations"] = [
+            ScoredTrait(**known_fields(ScoredTrait, r))
+            for r in d.get("reputations", [])
+        ]
         d["inhabitants"] = [
             Inhabitant(**known_fields(Inhabitant, i)) for i in d.get("inhabitants", [])
         ]

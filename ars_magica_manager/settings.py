@@ -5,19 +5,24 @@ from __future__ import annotations
 import json
 
 from . import DATA_DIR
+from .files import write_atomic
 
 SETTINGS_PATH = DATA_DIR / "app_settings.json"
 
 
 def load_settings() -> dict:
-    if not SETTINGS_PATH.exists():
+    """The saved settings; {} when there are none, or when the file can't be
+    read as a JSON object (settings are only conveniences, so a damaged file
+    must never stop the app starting)."""
+    try:
+        data = json.loads(SETTINGS_PATH.read_text(encoding="utf-8"))
+    except OSError, ValueError:
         return {}
-    return json.loads(SETTINGS_PATH.read_text(encoding="utf-8"))
+    return data if isinstance(data, dict) else {}
 
 
 def save_settings(settings: dict) -> None:
-    SETTINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    SETTINGS_PATH.write_text(json.dumps(settings, indent=2), encoding="utf-8")
+    write_atomic(SETTINGS_PATH, json.dumps(settings, indent=2))
 
 
 def update_settings(**changes: object) -> None:

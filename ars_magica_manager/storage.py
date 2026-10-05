@@ -9,6 +9,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from . import DATA_DIR, __version__, laboratories
+from .files import write_atomic
 from .models import Saga
 
 SAGAS_DIR = DATA_DIR / "sagas"
@@ -55,26 +56,37 @@ def saga_path(saga_id: str) -> Path:
 
 def save_saga(saga: Saga) -> Path:
     saga.app_version = __version__
-    SAGAS_DIR.mkdir(parents=True, exist_ok=True)
     path = saga_path(saga.id)
-    path.write_text(json.dumps(asdict(saga), indent=2), encoding="utf-8")
+    write_atomic(path, json.dumps(asdict(saga), indent=2))
     return path
 
 
-def backup_path(saga_id: str) -> Path:
-    """Where backup_saga() keeps a saga's last backup (a subfolder, so
-    list_sagas() never lists it)."""
-    return SAGAS_DIR / "backups" / f"{saga_id}.json"
+#: How many backups backup_saga() keeps of each saga: the newest, plus older
+#: ones numbered 1 (the one before) upwards.
+BACKUPS_KEPT = 5
+
+
+def backup_path(saga_id: str, age: int = 0) -> Path:
+    """Where backup_saga() keeps a saga's backups (a subfolder, so
+    list_sagas() never lists them): `<id>.json` for the newest (age 0), and
+    `<id>.1.json` ... for older ones."""
+    name = f"{saga_id}.json" if age == 0 else f"{saga_id}.{age}.json"
+    return SAGAS_DIR / "backups" / name
 
 
 def backup_saga(saga: Saga) -> Path:
-    """Save `saga` as it stands to its backup file (replacing the previous
-    backup) -- taken just before a season is applied, so that season can be
-    undone by copying the backup back over the saga's file."""
+    """Save `saga` as it stands as its newest backup -- taken just before a
+    season is applied, so that season can be undone by copying the backup
+    back over the saga's file. The previous backups move one place older and
+    the oldest beyond BACKUPS_KEPT is dropped."""
+    backup_path(saga.id, BACKUPS_KEPT - 1).unlink(missing_ok=True)
+    for age in range(BACKUPS_KEPT - 2, -1, -1):
+        older = backup_path(saga.id, age)
+        if older.exists():
+            older.replace(backup_path(saga.id, age + 1))
     path = backup_path(saga.id)
-    path.parent.mkdir(parents=True, exist_ok=True)
     saga.app_version = __version__
-    path.write_text(json.dumps(asdict(saga), indent=2), encoding="utf-8")
+    write_atomic(path, json.dumps(asdict(saga), indent=2))
     return path
 
 
