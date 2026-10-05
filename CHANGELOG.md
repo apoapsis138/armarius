@@ -10,6 +10,17 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.11.0 — 2026-10-05
+
+Your data now has a home of its own: sagas, their backups, exports and the
+app's settings are kept in **Ars Magica Manager** in your Documents folder
+(found wherever Windows keeps it, OneDrive included), where they are easy to
+find and back up. The first time this version starts it moves your existing
+saves there from the app's own folder, never overwriting anything, and says
+what it moved. Another folder can be chosen (see the README). The project
+also gained its package details and automatic checks on GitHub for every
+change pushed.
+
 ## 2.10.2 — 2026-10-05
 
 Rules corrections.

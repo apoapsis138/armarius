@@ -219,7 +219,7 @@ def main() -> None:
     parser.add_argument("--no-ui", action="store_true")
     args = parser.parse_args()
 
-    real_dir = DATA_DIR / "sagas"
+    real_dir = storage.SAGAS_DIR
     saga_id = args.saga_id or storage.list_sagas()[0]
     data = json.loads((real_dir / f"{saga_id}.json").read_text(encoding="utf-8"))
 

@@ -50,6 +50,20 @@ uv run ruff check . && uv run ruff format .   # lint and format
 uv run pyright                                # type-check
 ```
 
+### Where your data is kept
+
+Your sagas, their backups, exports and the app's settings are kept in
+**Ars Magica Manager** in your Documents folder (on Windows, the real
+Documents folder, which may be in OneDrive). Saves from before version
+2.11.0, kept in the repo's `data/` folder, are moved there the first time
+the app starts.
+
+To keep them somewhere else, either set the `ARS_MAGICA_MANAGER_DATA`
+environment variable to a folder, or create `location.json` in the app's
+config folder (`%LOCALAPPDATA%\Ars Magica Manager` on Windows) holding
+`{"data_dir": "D:/Somewhere/Ars Magica"}`. Move the existing files there
+yourself first: the app only moves them out of the repo.
+
 ## Layout
 
 - `main.py`, `ars_magica_manager/app.py` — the Textual app entry point.
@@ -80,8 +94,8 @@ uv run pyright                                # type-check
   Abilities, Houses, covenant Boons & Hooks, spells, weapons & armor);
   `totals.py` — the registry of modifier types the catalogs' effects are
   checked against.
-- `ars_magica_manager/storage.py` — JSON load/save, one file per saga under
-  `data/sagas/` (git-ignored — that's campaign data, not source);
+- `ars_magica_manager/storage.py` — JSON load/save, one file per saga in
+  the user's data folder (`paths.py`, see above), never in the repo;
   `settings.py` — app settings (the chosen theme).
 - `ars_magica_manager/markup.py` — escaping and `**bold**`/`*italic*` for
   user-written text; `themes.py` — the Scriptorum light/dark themes.

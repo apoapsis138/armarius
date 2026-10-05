@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import json
 
-from . import DATA_DIR
+from . import paths
 from .files import write_atomic
 
-SETTINGS_PATH = DATA_DIR / "app_settings.json"
+SETTINGS_PATH = paths.data_dir() / paths.SETTINGS
 
 
 def load_settings() -> dict:

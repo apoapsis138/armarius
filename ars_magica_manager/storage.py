@@ -1,4 +1,5 @@
-"""JSON persistence for sagas. One file per saga, under data/sagas/."""
+"""JSON persistence for sagas. One file per saga, in the sagas folder of the
+user's data folder (paths.data_dir())."""
 
 from __future__ import annotations
 
@@ -8,18 +9,18 @@ from collections.abc import Iterable
 from dataclasses import asdict
 from pathlib import Path
 
-from . import DATA_DIR, __version__, laboratories
+from . import __version__, laboratories, paths
 from .files import write_atomic
 from .models import Saga
 
-SAGAS_DIR = DATA_DIR / "sagas"
+SAGAS_DIR = paths.data_dir() / paths.SAGAS
 
 _SLUG_RE = re.compile(r"[^a-z0-9]+")
 
 
 #: Where Export offers to write an exported covenant, laboratory or character
 #: (STORY-109); the folder is made on the first export.
-EXPORTS_DIR = DATA_DIR / "exports"
+EXPORTS_DIR = paths.data_dir() / paths.EXPORTS
 
 
 def slugify(text: str) -> str:

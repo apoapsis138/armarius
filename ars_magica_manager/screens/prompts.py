@@ -1344,7 +1344,7 @@ class AdvanceSeasonScreen(ModalDialog[bool]):
                 "Advanced by mistake? Set Date (More on the saga) puts the date back"
                 + (" (Wealth isn't changed back)." if new_year != self.year else ".")
                 + (
-                    " The saga is backed up first (data/sagas/backups)."
+                    " The saga is backed up first (sagas/backups in your data folder)."
                     if self.plans
                     else ""
                 ),

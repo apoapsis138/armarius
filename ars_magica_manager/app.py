@@ -7,7 +7,8 @@ from typing import ClassVar
 from textual.app import App
 from textual.binding import Binding, BindingType
 
-from . import __version__
+from . import __version__, paths
+from .markup import escape
 from .screens import SagaPickerScreen
 from .screens.help import HelpScreen, help_context
 from .settings import load_settings, update_settings
@@ -46,7 +47,17 @@ class ArsMagicaManagerApp(App[None]):
             return
         self.push_screen(HelpScreen(help_context(self.screen_stack)))
 
+    #: Lines to show once on start: what moving the user data from the repo's
+    #: data/ folder did (main.py, paths.move_legacy_data).
+    startup_notes: tuple[str, ...] = ()
+
     def on_mount(self) -> None:
+        if self.startup_notes:
+            self.notify(
+                escape("\n".join(self.startup_notes)),
+                title="Your data moved to " + escape(str(paths.data_dir())),
+                timeout=30,
+            )
         self.register_theme(SCRIPTORUM)
         self.register_theme(SCRIPTORUM_DARK)
         saved_theme = load_settings().get("theme")

@@ -1,14 +1,30 @@
 [project]
 name = "ars-magica-manager"
-version = "2.10.2"
+version = "2.11.0"
 description = "A GM-facing management tool for Ars Magica 5th Edition covenants, characters, laboratories, and libraries."
 readme = "README.md"
 license = "GPL-3.0-only"
 license-files = ["LICENSE", "NOTICE.md"]
 requires-python = ">=3.14"
+authors = [{ name = "apoapsis" }]
+keywords = ["ars magica", "rpg", "tabletop", "campaign manager", "textual", "tui"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Games/Entertainment :: Role-Playing",
+]
 dependencies = [
+    "platformdirs>=4.11.9",
     "textual>=8.2.8",
 ]
+
+[project.urls]
+Repository = "https://github.com/apoapsis138/Ars-Magica-Manager"
+Changelog = "https://github.com/apoapsis138/Ars-Magica-Manager/blob/main/CHANGELOG.md"
 
 [dependency-groups]
 dev = [
