@@ -10,6 +10,13 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.11.2 — 2026-10-05
+
+Behind the scenes: the rules for each kind of seasonal activity are now
+grouped into one place per family, the order in which a season's end is
+played out is tested on its own, and more of the season rules are covered
+by tests. Nothing changes in what the app shows or does.
+
 ## 2.11.1 — 2026-10-05
 
 - Fixes 2.11.0 failing to start when Windows' Controlled folder access

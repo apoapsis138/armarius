@@ -3,6 +3,8 @@ progress records, Initiation, universities, wounds."""
 
 import random
 
+import pytest
+
 from ars_magica_manager import seasons
 from ars_magica_manager.models import (
     Ability,
@@ -11,12 +13,13 @@ from ars_magica_manager.models import (
     Character,
     Characteristics,
     Saga,
+    ScoredTrait,
     SeasonPlan,
     VirtueFlawInstance,
     Wounds,
     XpAllocation,
 )
-from ars_magica_manager.rules import seasons as rules
+from ars_magica_manager.rules import activities as rules
 from ars_magica_manager.rules import supplement_work as sw
 from ars_magica_manager.rules.xp import ability_xp, art_xp
 
@@ -187,3 +190,251 @@ def test_recorded_lectures_add_half_the_scribes_score_rounded_down():
     plan = _plan("record_lectures", "ability:Latin", teacher_id="t")
     result = sw.work(saga, scribe, plan, random.Random(1))
     assert [b.quality for b in result.books] == [3 + 1]
+
+
+# -- every branch of problems() and work() (STORY-1129: cover before moving) ----
+
+
+def _with(**changes) -> Saga:
+    saga = _saga()
+    wulf = saga.character("c")
+    assert wulf is not None
+    for key, value in changes.items():
+        setattr(wulf, key, value)
+    return saga
+
+
+@pytest.mark.parametrize(
+    ("changes", "plan", "problem"),
+    [
+        ({}, _plan("apothecary", None), "Choose the Ability the season works with."),
+        ({}, _plan("workshop_production", None), "Choose the Craft."),
+        (
+            {},
+            _plan("improve_workshop", title="x"),
+            "Choose Innovation or Raw Materials to improve.",
+        ),
+        (
+            {},
+            _plan("improve_workshop", title="Innovation"),
+            "Raising Innovation to 1 costs 100 Labor Points; Wulf has 0.",
+        ),
+        (
+            {"workshop_innovation": 3},
+            _plan("improve_workshop", title="Innovation"),
+            "Innovation is already at its most (3).",
+        ),
+        ({}, _plan("undergo_initiation"), "Choose the Mystery Virtue initiated."),
+        (
+            {},
+            _plan("undergo_initiation", effect_id="vf_puissant_ability"),
+            "Choose the Mystagogue (the Initiate for self-initiation).",
+        ),
+        (
+            {},
+            _plan(
+                "undergo_initiation", effect_id="vf_puissant_ability", teacher_id="c"
+            ),
+            "Name the Mystagogue's (Mystery Cult) Lore.",
+        ),
+        (
+            {},
+            _plan("create_art"),
+            "Name it (the pilgrimage, the animal, the work, the formula).",
+        ),
+        ({}, _plan("tame_animal", title="Wolf"), "Type the animal's Might."),
+        (
+            {},
+            _plan("record_lectures"),
+            "Choose the teacher whose lectures are recorded.",
+        ),
+        ({}, _plan("inspeximus"), "Choose the summa to annotate."),
+        (
+            {},
+            _plan("bind_catalog"),
+            "Binding the catalog takes 1 pawn of Vim; Wulf has none.",
+        ),
+    ],
+)
+def test_what_stops_a_supplement_season(changes, plan, problem):
+    saga = _with(**changes)
+    assert sw.problems(saga, saga.character("c"), plan) == [problem]
+
+
+def _work(saga, plan, rng=None):
+    wulf = saga.character("c")
+    assert sw.problems(saga, wulf, plan) == []
+    return sw.work(saga, wulf, plan, rng)
+
+
+def test_an_inspeximus_annotates_only_the_authors_own_summa():
+    saga = _saga()
+    saga.books.append(
+        Book(
+            id="b",
+            name="Of Smiths",
+            type="Ability Summa",
+            ability="Craft: Smith",
+            level=2,
+            quality=8,
+            author="Someone",
+        )
+    )
+    plan = _plan("inspeximus", book_id="b")
+    assert sw.problems(saga, saga.character("c"), plan) == [
+        "An inspeximus annotates the author's own summa."
+    ]
+    saga.books[0].author = "Wulf"
+    # Craft 6 now against 4 then (Level 2 x 2): +2 / 3 -> 0.
+    assert _work(saga, plan).summa_level == ("b", 2)
+    # Written at score 0: +6 / 3 = 2 -> 4, capped at half of 6: 3.
+    then = _plan("inspeximus", book_id="b", book_level=0)
+    assert _work(saga, then).summa_level == ("b", 3)
+
+
+def test_labor_point_seasons_use_their_characteristic():
+    saga = _saga()
+    assert _work(saga, _plan("tournament", "ability:Animal Handling")).notes == [
+        "Labor Points: (Dexterity + Animal Handling) x 3 (average) = 18."
+    ]
+    scribe = _work(saga, _plan("working_season", "ability:Profession: Scribe"))
+    assert scribe.labor_points == 3  # Communication 1 + Scribe 0, x 3
+
+
+def test_workshop_exertion_is_rolled_when_played():
+    saga = _saga()
+    pending = _work(saga, _plan("workshop_production", experimenting=True))
+    assert (
+        pending.notes[0] == "Exertion: its dice are rolled when the season is played."
+    )
+    assert not pending.aging_roll
+    rolled = _work(
+        saga, _plan("workshop_production", experimenting=True), random.Random(7)
+    )
+    assert rolled.aging_roll
+    assert rolled.notes == [
+        "Exertion: + simple die 5; the exertion roll 2: no special result. An Aging "
+        "roll this season.",
+        "Workshop Total 13 against Craft Level 6: Superior goods. Labor Points 24.",
+    ]
+
+
+def test_a_craft_manual_needs_artes_liberales():
+    saga = _saga()
+    wulf = saga.character("c")
+    assert wulf is not None
+    wulf.abilities = [a for a in wulf.abilities if a.name != "Artes Liberales"]
+    work = _work(saga, _plan("workshop_production", quick=True))
+    assert work.notes[-1] == "No craft manual: it needs Artes Liberales 1."
+    assert (work.books, work.labor_points) == ([], 24)
+
+
+def test_excellent_items_ventures_remedies_and_medicine():
+    saga = _saga()
+    item = _work(saga, _plan("make_excellent_item", title="Sword"))
+    assert item.progress == [("item", "Sword", 15, 0)]
+    assert _work(saga, _plan("merchant_venture", other_modifier=12)).labor_points == 12
+    remedies = _work(saga, _plan("produce_remedies", book_level=12, extra_vis=3))
+    assert remedies.labor_points == -8  # 12 x 3 / 5 = 7.2, rounded up
+    assert "Can care for 0 patients" in _work(saga, _plan("medical_season")).notes[0]
+
+
+def test_improving_raw_materials():
+    work = _work(
+        _with(labor_points=500), _plan("improve_workshop", title="Raw Materials")
+    )
+    assert (work.labor_points, work.raw_materials) == (-50, 1)
+
+
+def test_a_work_of_art_takes_a_season_per_ten_aesthetic_quality():
+    saga = _saga()
+    assert _work(saga, _plan("create_art", title="Gate")).progress == [
+        ("artwork", "Gate", 1, 1)
+    ]
+    ode = _work(saga, _plan("create_art", "ability:Craft: Poetry", title="Ode"))
+    assert ode.notes == ["Aesthetic Quality 1; 1 season(s) to make it."]  # Com 1
+    inspired = _with(virtues_flaws=[VirtueFlawInstance("vf_free_expression")])
+    assert _work(inspired, _plan("create_art", title="Gate")).progress == [
+        ("artwork", "Gate", 2, 1)  # Dex 2 + Smith 6 + 3 = 11
+    ]
+
+
+def test_a_formula_researched_with_the_storyguides_quality():
+    work = _work(_saga(), _plan("research_formula", title="Theriac", source_quality=3))
+    assert work.progress == [("formula", "Theriac", 5, 3)]
+
+
+def test_university_exams():
+    saga = _with(reputations=[ScoredTrait("Academic", 2)])
+    assert _work(saga, _plan("attend_university")).notes == []
+    pending = _work(saga, _plan("attend_university", title="Baccalaureus"))
+    assert pending.notes == [
+        "The baccalaureus exam is rolled when the season is played."
+    ]
+    doctor = _work(
+        saga,
+        _plan("attend_university", "ability:Theology", title="Doctor"),
+        random.Random(4),
+    )
+    assert doctor.notes == [
+        "The doctor exam: 6 against 12: failed (another year first)."
+    ]
+
+
+def test_pilgrimage_care_of_souls_and_taming():
+    saga = _saga()
+    rome = _work(
+        saga, _plan("pilgrimage", title="Rome", book_level=30, other_modifier=2)
+    )
+    assert rome.progress == [("pilgrimage", "Rome", 30, 5)]
+    # A Target Level other than 18 or 30 is taken as 18.
+    other = _work(saga, _plan("pilgrimage", title="Rome", book_level=12))
+    assert other.progress == [("pilgrimage", "Rome", 18, 3)]
+    souls = _work(saga, _plan("care_of_souls"))
+    assert "fitting the sermons' theme" in souls.notes[0]
+    wolf = _work(saga, _plan("tame_animal", title="Wolf", book_level=3))
+    assert wolf.progress == [("taming", "Wolf", 3, 1)]  # Int 0 + Handling 4 - 3
+    gifted = _with(virtues_flaws=[VirtueFlawInstance("vf_the_gift")])
+    tamed = _work(gifted, _plan("tame_animal", title="Wolf", book_level=3))
+    assert tamed.progress == [("taming", "Wolf", 3, 0)]
+
+
+def test_searching_for_lacunae():
+    saga = _saga()
+    assert _work(saga, _plan("search_lacuna")).notes == [
+        "The search is rolled when the season is played."
+    ]
+    assert _work(saga, _plan("search_lacuna", die=6)).notes == [
+        "Int + Area Lore + die = 6 against 9: none found."
+    ]
+
+
+def test_initiation_against_the_target_less_a_past_ordeal():
+    saga = _saga()
+    wulf = saga.character("c")
+    assert wulf is not None
+    wulf.characteristics.presence = 3
+    wulf.abilities.append(Ability("Mithraic Lore", xp=ability_xp(5)))
+    plan = _plan(
+        "undergo_initiation",
+        effect_id="vf_puissant_ability",
+        teacher_id="c",
+        title="Mithraic Lore",
+        other_modifier=12,
+        device_id="vf_deficient_technique",
+        research_kind="Medium",
+    )
+    done = _work(saga, plan)
+    assert (done.add_vfs, done.ordeal) == (
+        ["vf_puissant_ability", "vf_deficient_technique"],
+        "Medium",
+    )
+    plan.other_modifier = 0
+    assert _work(saga, plan).notes[-1].endswith("against 18: not initiated.")
+    wulf.ordeal, wulf.initiations_since_ordeal = "Major", 1
+    assert _work(saga, plan).notes[-1].endswith("against 12: not initiated.")
+
+
+def test_binding_a_catalog():
+    saga = _with(raw_vis={"vim": 2})
+    assert "Arcane Connection" in _work(saga, _plan("bind_catalog")).notes[0]

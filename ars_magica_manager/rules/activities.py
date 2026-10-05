@@ -40,7 +40,7 @@ Activities built so far, each an Advancement Total (rules.study):
 from __future__ import annotations
 
 import random
-from collections.abc import Collection, MutableMapping, Sequence
+from collections.abc import Callable, Collection, MutableMapping, Sequence
 from dataclasses import dataclass, field, replace
 
 from .. import books, sourcebooks, vis
@@ -902,97 +902,8 @@ def problems(
         if saga is not None and plan.activity in supplement_seasons.BY_KEY:
             return supplement_work.problems(saga, character, plan)
         return []
-    if activity.lab:
-        if saga is None:
-            return ["Lab work needs the saga to be worked out."]
-        found_lab, _ = lab_seasons.work(saga, character, plan)
-        if plan.days_away < 0:
-            found_lab.append("Days away can't be negative.")
-        return found_lab
-    if plan.activity in book_seasons.SHEET_ACTIVITIES:
-        if saga is None:
-            return ["This activity needs the saga to be worked out."]
-        found_books, _ = book_seasons.work(saga, character, plan)
-        return found_books
-    if plan.activity == laboratory_seasons.ASSIST:
-        if saga is None:
-            return ["This activity needs the saga to be worked out."]
-        return laboratory_seasons.assist_problems(saga, character, plan)
-    if plan.activity == experiment.INTEGRATE:
-        return [] if plan.research.strip() else ["Name the research goal."]
-    simple = supplement_seasons.BY_KEY.get(plan.activity)
-    if simple is not None:
-        assert saga is not None
-        found_work = supplement_work.problems(saga, character, plan)
-        if found_work:
-            return found_work
-        if not [a for a in plan.allocations if a.subject]:
-            return ["Choose what the experience goes into."]
-        if simple.quality is None and plan.source_quality is None:
-            return [f"Type the Source Quality: {simple.hint}."]
-        if plan.source_quality is not None and plan.source_quality < 0:
-            return ["The Source Quality can't be negative."]
-        return []
-    if plan.activity in apprentice_seasons.ACTIVITIES:
-        if saga is None:
-            return ["This activity needs the saga to be worked out."]
-        found_apprentice, _ = apprentice_seasons.work(saga, character, plan)
-        return found_apprentice
-    found: list[str] = []
-    chosen = [a for a in plan.allocations if a.subject]
-    if not 0 <= plan.months_lost <= 3:
-        found.append("Months lost must be 0 to 3.")
-    if plan.activity in STUDY_ACTIVITIES:
-        if saga is None:
-            return ["This activity needs the saga to be worked out."]
-        found += _study_problems(saga, character, plan, chosen)
-        if plan.activity != READ:
-            for allocation in chosen[:1]:
-                if not has_subject(character, allocation.subject):
-                    kind, name = _split(allocation.subject)
-                    if kind != "ability" or plan.activity == TEACH:
-                        found.append(f"{character.name} doesn't have {name}.")
-        return found
-    if not chosen:
-        found.append("Choose what the experience goes into.")
-    for allocation in chosen:
-        if not has_subject(character, allocation.subject):
-            found.append(
-                f"{character.name} doesn't have {_split(allocation.subject)[1]}."
-            )
-    if len({a.subject for a in chosen}) < len(chosen):
-        found.append("The same subject is named twice.")
-    if plan.activity == EXPOSURE and len(chosen) > 2:
-        found.append("Exposure goes into one subject, or is split between two.")
-    if plan.activity == PRACTICE:
-        if len(chosen) > 1:
-            found.append("Practice improves one subject.")
-        if any(_split(a.subject)[0] == "art" for a in chosen):
-            found.append(
-                "Arts can't be practised: study them from vis or books "
-                "(DE Ch. 10, Practice)."
-            )
-        quality = source_quality(plan)
-        if quality is not None and quality < 1:
-            found.append("Source Quality must be at least 1.")
-    if plan.activity == ADVENTURE:
-        quality = plan.source_quality
-        if quality is None or not ADVENTURE_MIN <= quality <= ADVENTURE_MAX:
-            found.append(
-                f"An Adventure's Source Quality is {ADVENTURE_MIN} to "
-                f"{ADVENTURE_MAX} (the storyguide's choice)."
-            )
-        elif sum(a.points for a in chosen) != quality:
-            found.append(
-                f"Split all {quality} points of Source Quality: "
-                f"{sum(a.points for a in chosen)} are split."
-            )
-        if any(not 1 <= a.points <= ADVENTURE_PER_SUBJECT for a in chosen):
-            found.append(
-                f"Each subject gets 1 to {ADVENTURE_PER_SUBJECT} points of an "
-                "Adventure's Source Quality."
-            )
-    return found
+    # Each family of activities checks its own plans (HANDLERS, STORY-1129).
+    return HANDLERS[plan.activity].problems(saga, character, plan)
 
 
 @dataclass
@@ -1213,120 +1124,307 @@ def _outcome(
     result: Outcome,
     activity: Activity,
 ) -> Outcome:
-    """The season's gains (outcome() without the wound rule)."""
-    if activity.lab:
-        assert saga is not None
-        _, result.lab_work = lab_seasons.work(saga, character, plan)
-        if plan.activity == enchant_seasons.INVESTIGATE and result.lab_work is not None:
-            if plan.die is None and rng is None:
-                result.pending_roll = True
-            else:
-                result.notes += enchant_seasons.investigate(
-                    result.lab_work, plan, rng or random.Random(), saga
-                )
-        if result.lab_work is not None and (
-            plan.experimenting or plan.activity == experiment.STABILIZE
-        ):
-            _experiment(result, character, saga, rng)
-        rolled = plan.activity in laboratory_seasons.ROLLED and (
-            plan.activity != laboratory_seasons.MOVE or plan.by_spell
-        )
-        if rolled and result.lab_work is not None:
-            result.notes += result.lab_work.notes
-            if plan.die is None and rng is None:
-                result.pending_roll = True
-            else:
-                result.notes += laboratory_seasons.roll(
-                    result.lab_work, character, plan, rng or random.Random(), saga
-                )
-        # Lab work gives Exposure in Magic Theory (DE Ch. 10, Exposure).
-        result.gains.append(
-            _gain(character, ability_subject("Magic Theory"), 2, "exposure", 0)
-        )
-        return result
-    if plan.activity in book_seasons.SHEET_ACTIVITIES:
-        assert saga is not None
-        _, result.book_work = book_seasons.work(saga, character, plan)
-        # Writing and copying give Exposure (DE Ch. 10, Exposure).
-        result.gains.append(
-            _gain(
-                character,
-                ability_subject(book_seasons.exposure_ability(character, plan)),
-                2,
-                "exposure",
-                0,
-            )
-        )
-        return result
-    if plan.activity in apprentice_seasons.ACTIVITIES:
-        assert saga is not None
-        _, work = apprentice_seasons.work(saga, character, plan)
-        result.apprentice_work = work
-        if work is not None:
-            result.notes += work.notes
-            if plan.activity == apprentice_seasons.TEACH_VIRTUE:
-                result.notes.append(
-                    f"Source Quality {work.quality} against {work.target}: "
-                    + ("taught." if work.succeeds else "not learned.")
-                )
-        if plan.activity == apprentice_seasons.SEARCH:
-            if plan.die is None and rng is None:
-                result.pending_roll = True
-            else:
-                die = (
-                    plan.die
-                    if plan.die is not None
-                    else dice.stress_die(rng or random.Random(), 1, saga=saga).value
-                )
-                total = character.characteristics.perception + die
-                result.notes.append(
-                    f"Perception + die {die} = {total} against "
-                    f"{apprentice_seasons.SEARCH_EASE}: "
-                    + (
-                        "a Gifted child is found (add them as a character)."
-                        if total >= apprentice_seasons.SEARCH_EASE
-                        else "no apprentice found this season."
-                    )
-                )
-        else:
-            # Teaching gives Exposure in Teaching (DE Ch. 10, Exposure).
-            result.gains.append(
-                _gain(character, ability_subject("Teaching"), 2, "exposure", 0)
-            )
-        return result
-    if plan.activity == experiment.INTEGRATE:
-        if plan.die is None and rng is None:
+    """The season's gains (outcome() without the wound rule), from the
+    activity's family (HANDLERS)."""
+    HANDLERS[plan.activity].outcome(saga, character, plan, rng, result)
+    return result
+
+
+# -- the activity families (STORY-1129) ----------------------------------------
+#
+# Each family of activities says what stops a plan and what the season gives,
+# in one Handler; HANDLERS maps every activity that gives experience to its
+# family. problems() and outcome() above do the checks every activity shares
+# (who may plan it, Twilight, wounds) and hand the rest to the family.
+
+#: What a family that works from the saga says when there is none.
+NEEDS_SAGA = "This activity needs the saga to be worked out."
+
+ProblemsFn = Callable[[Saga | None, Character, SeasonPlan], list[str]]
+OutcomeFn = Callable[
+    [Saga | None, Character, SeasonPlan, random.Random | None, Outcome], None
+]
+
+
+@dataclass(frozen=True)
+class Handler:
+    """How one family of activities is checked and worked out."""
+
+    problems: ProblemsFn
+    outcome: OutcomeFn
+
+
+def _with_saga(
+    problems_: Callable[[Saga, Character, SeasonPlan], list[str]],
+    outcome_: Callable[
+        [Saga, Character, SeasonPlan, random.Random | None, Outcome], None
+    ],
+    *,
+    no_saga: str = NEEDS_SAGA,
+) -> Handler:
+    """A Handler for a family that works from the saga: without one, its
+    plans can't be checked (`no_saga`); its outcome is only asked for once
+    they have been."""
+
+    def checked(saga: Saga | None, character: Character, plan: SeasonPlan):
+        return [no_saga] if saga is None else problems_(saga, character, plan)
+
+    def worked(
+        saga: Saga | None,
+        character: Character,
+        plan: SeasonPlan,
+        rng: random.Random | None,
+        result: Outcome,
+    ) -> None:
+        assert saga is not None, "outcome() is worked out after problems()"
+        outcome_(saga, character, plan, rng, result)
+
+    return Handler(checked, worked)
+
+
+def _pending(plan: SeasonPlan, rng: random.Random | None) -> bool:
+    """A roll left for when the season is played: no die typed on the plan
+    and nothing to roll it with (a preview)."""
+    return plan.die is None and rng is None
+
+
+def _exposure(character: Character, ability: str) -> XpGain:
+    """Exposure in `ability` (DE Ch. 10, Exposure)."""
+    return _gain(character, ability_subject(ability), EXPOSURE_QUALITY, "exposure", 0)
+
+
+# Lab work (STORY-901 and on): its own rules module, and Exposure in Magic
+# Theory.
+
+
+def _lab_problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
+    found, _ = lab_seasons.work(saga, character, plan)
+    if plan.days_away < 0:
+        found.append("Days away can't be negative.")
+    return found
+
+
+def _lab_outcome(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: Outcome,
+) -> None:
+    _, result.lab_work = lab_seasons.work(saga, character, plan)
+    if plan.activity == enchant_seasons.INVESTIGATE and result.lab_work is not None:
+        if _pending(plan, rng):
             result.pending_roll = True
         else:
-            theory = laboratory_seasons.magic_theory(character)
-            result.insight, note = experiment.insight_roll(
-                character, plan, rng or random.Random(), theory, saga
+            result.notes += enchant_seasons.investigate(
+                result.lab_work, plan, rng or random.Random(), saga
             )
-            result.notes.append(note)
-        return result
-    simple = supplement_seasons.BY_KEY.get(plan.activity)
-    if simple is not None:
-        quality = (
-            plan.source_quality if plan.source_quality is not None else simple.quality
+    if result.lab_work is not None and (
+        plan.experimenting or plan.activity == experiment.STABILIZE
+    ):
+        _experiment(result, character, saga, rng)
+    rolled = plan.activity in laboratory_seasons.ROLLED and (
+        plan.activity != laboratory_seasons.MOVE or plan.by_spell
+    )
+    if rolled and result.lab_work is not None:
+        result.notes += result.lab_work.notes
+        if _pending(plan, rng):
+            result.pending_roll = True
+        else:
+            result.notes += laboratory_seasons.roll(
+                result.lab_work, character, plan, rng or random.Random(), saga
+            )
+    result.gains.append(_exposure(character, "Magic Theory"))
+
+
+# Writing and copying books (STORY-905 and on): Exposure in the writing's
+# Ability.
+
+
+def _book_problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
+    found, _ = book_seasons.work(saga, character, plan)
+    return found
+
+
+def _book_outcome(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: Outcome,
+) -> None:
+    _, result.book_work = book_seasons.work(saga, character, plan)
+    result.gains.append(
+        _exposure(character, book_seasons.exposure_ability(character, plan))
+    )
+
+
+# Apprentices (STORY-914): teaching gives Exposure in Teaching; searching for
+# a Gifted child is a roll.
+
+
+def _apprentice_problems(
+    saga: Saga, character: Character, plan: SeasonPlan
+) -> list[str]:
+    found, _ = apprentice_seasons.work(saga, character, plan)
+    return found
+
+
+def _apprentice_outcome(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: Outcome,
+) -> None:
+    _, work = apprentice_seasons.work(saga, character, plan)
+    result.apprentice_work = work
+    if work is not None:
+        result.notes += work.notes
+        if plan.activity == apprentice_seasons.TEACH_VIRTUE:
+            result.notes.append(
+                f"Source Quality {work.quality} against {work.target}: "
+                + ("taught." if work.succeeds else "not learned.")
+            )
+    if plan.activity != apprentice_seasons.SEARCH:
+        result.gains.append(_exposure(character, "Teaching"))
+        return
+    if _pending(plan, rng):
+        result.pending_roll = True
+        return
+    die = (
+        plan.die
+        if plan.die is not None
+        else dice.stress_die(rng or random.Random(), 1, saga=saga).value
+    )
+    total = character.characteristics.perception + die
+    result.notes.append(
+        f"Perception + die {die} = {total} against "
+        f"{apprentice_seasons.SEARCH_EASE}: "
+        + (
+            "a Gifted child is found (add them as a character)."
+            if total >= apprentice_seasons.SEARCH_EASE
+            else "no apprentice found this season."
         )
-        subject = allocations(plan)[0].subject
-        kind = "exposure" if quality == EXPOSURE_QUALITY else "practice"
-        result.gains.append(_gain(character, subject, quality or 0, kind, 0))
-        result.faith = simple.faith
-        assert saga is not None
-        result.supplement = supplement_work.work(saga, character, plan, rng)
-        result.notes += result.supplement.notes
-        return result
-    if plan.activity == laboratory_seasons.ASSIST:
-        # Lab work gives Exposure in Magic Theory (DE Ch. 10, Exposure).
-        result.gains.append(
-            _gain(character, ability_subject("Magic Theory"), 2, "exposure", 0)
-        )
-        return result
-    months = plan.months_lost if activity.distractable else 0
+    )
+
+
+# Integrating an insight into original research (STORY-916): a roll.
+
+
+def _integrate_problems(
+    saga: Saga | None, character: Character, plan: SeasonPlan
+) -> list[str]:
+    return [] if plan.research.strip() else ["Name the research goal."]
+
+
+def _integrate_outcome(
+    saga: Saga | None,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: Outcome,
+) -> None:
+    if _pending(plan, rng):
+        result.pending_roll = True
+        return
+    theory = laboratory_seasons.magic_theory(character)
+    result.insight, note = experiment.insight_roll(
+        character, plan, rng or random.Random(), theory, saga
+    )
+    result.notes.append(note)
+
+
+# The supplements' study-like activities (STORY-913, 918-923): their Source
+# Quality, and what they do besides (supplement_work).
+
+
+def _supplement_problems(
+    saga: Saga, character: Character, plan: SeasonPlan
+) -> list[str]:
+    simple = supplement_seasons.BY_KEY[plan.activity]
+    found_work = supplement_work.problems(saga, character, plan)
+    if found_work:
+        return found_work
+    if not [a for a in plan.allocations if a.subject]:
+        return ["Choose what the experience goes into."]
+    if simple.quality is None and plan.source_quality is None:
+        return [f"Type the Source Quality: {simple.hint}."]
+    if plan.source_quality is not None and plan.source_quality < 0:
+        return ["The Source Quality can't be negative."]
+    return []
+
+
+def _supplement_outcome(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: Outcome,
+) -> None:
+    simple = supplement_seasons.BY_KEY[plan.activity]
+    quality = plan.source_quality if plan.source_quality is not None else simple.quality
+    subject = allocations(plan)[0].subject
+    kind = "exposure" if quality == EXPOSURE_QUALITY else "practice"
+    result.gains.append(_gain(character, subject, quality or 0, kind, 0))
+    result.faith = simple.faith
+    result.supplement = supplement_work.work(saga, character, plan, rng)
+    result.notes += result.supplement.notes
+
+
+# Assisting in another's laboratory (STORY-915): Exposure in Magic Theory.
+
+
+def _assist_problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
+    return laboratory_seasons.assist_problems(saga, character, plan)
+
+
+def _assist_outcome(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: Outcome,
+) -> None:
+    result.gains.append(_exposure(character, "Magic Theory"))
+
+
+# Study from books, teachers, training and vis (STORY-903, DE Ch. 10).
+
+
+def _months_problem(plan: SeasonPlan) -> list[str]:
+    return [] if 0 <= plan.months_lost <= 3 else ["Months lost must be 0 to 3."]
+
+
+def _study_family_problems(
+    saga: Saga, character: Character, plan: SeasonPlan
+) -> list[str]:
+    chosen = [a for a in plan.allocations if a.subject]
+    found = _months_problem(plan) + _study_problems(saga, character, plan, chosen)
+    if plan.activity != READ:
+        for allocation in chosen[:1]:
+            if not has_subject(character, allocation.subject):
+                kind, name = _split(allocation.subject)
+                if kind != "ability" or plan.activity == TEACH:
+                    found.append(f"{character.name} doesn't have {name}.")
+    return found
+
+
+def _months(plan: SeasonPlan) -> int:
+    """Months lost to distractions, for an activity they lower."""
+    return plan.months_lost if ACTIVITIES[plan.activity].distractable else 0
+
+
+def _study_outcome(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: Outcome,
+) -> None:
+    months = _months(plan)
     kind = _STUDY_KIND[plan.activity]
     if plan.activity == READ:
-        assert saga is not None
         book = next(b for b in saga.books if b.id == plan.book_id)
         subject = book_subject(book)
         assert subject is not None and book.quality is not None
@@ -1336,9 +1434,8 @@ def _outcome(
         )
         if book.type == "Tractatus":
             result.tractatus = book.id
-        return result
+        return
     if plan.activity in (TAUGHT, TRAINED):
-        assert saga is not None
         teacher = saga.character(plan.teacher_id)
         assert teacher is not None
         subject = allocations(plan)[0].subject
@@ -1356,56 +1453,165 @@ def _outcome(
                 gain_limit=score(teacher, subject),
             )
         )
-        return result
+        return
     if plan.activity == VIS_STUDY:
-        assert saga is not None
-        subject = allocations(plan)[0].subject
-        art = _split(subject)[1]
-        pawns = study.vis_pawns(score(character, subject))
-        aura, realm = _home_aura(saga, character)
-        aura_mod = realms.aura_modifier(realms.HERMETIC, realm, aura)
-        botch_dice = pawns + realms.extra_botch_dice(realms.HERMETIC, realm, aura)
-        result.vis_spent = (plan.vis_from or "character", art, pawns)
-        result.notes.append(
-            f"Source Quality: stress die + aura {aura_mod:+d} ({aura} {realm}); "
-            f"{pawns} pawn(s) of {art} vis; {botch_dice} botch dice."
-        )
-        if plan.die is None and rng is None:
-            result.pending_roll = True
-            return result
-        if plan.die is not None and plan.die > 0:
-            die_value, botches = plan.die, 0
-            result.notes.append(f"Die {plan.die} (as rolled at the table).")
+        _vis_study_outcome(saga, character, plan, rng, result, kind, months)
+        return
+    _plain_outcome(saga, character, plan, rng, result)
+
+
+def _vis_study_outcome(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: Outcome,
+    kind: str,
+    months: int,
+) -> None:
+    subject = allocations(plan)[0].subject
+    art = _split(subject)[1]
+    pawns = study.vis_pawns(score(character, subject))
+    aura, realm = _home_aura(saga, character)
+    aura_mod = realms.aura_modifier(realms.HERMETIC, realm, aura)
+    botch_dice = pawns + realms.extra_botch_dice(realms.HERMETIC, realm, aura)
+    result.vis_spent = (plan.vis_from or "character", art, pawns)
+    result.notes.append(
+        f"Source Quality: stress die + aura {aura_mod:+d} ({aura} {realm}); "
+        f"{pawns} pawn(s) of {art} vis; {botch_dice} botch dice."
+    )
+    if _pending(plan, rng):
+        result.pending_roll = True
+        return
+    if plan.die is not None and plan.die > 0:
+        die_value, botches = plan.die, 0
+        result.notes.append(f"Die {plan.die} (as rolled at the table).")
+    else:
+        roll_rng = rng or random.Random()
+        if plan.die == 0:
+            faces = [roll_rng.randrange(10) for _ in range(botch_dice)]
+            die_value, botches = 0, faces.count(0)
         else:
-            roll_rng = rng or random.Random()
-            if plan.die == 0:
-                faces = [roll_rng.randrange(10) for _ in range(botch_dice)]
-                die_value, botches = 0, faces.count(0)
-            else:
-                die = dice.stress_die(roll_rng, botch_dice, saga=saga)
-                die_value, botches = die.value, die.botches
-            result.notes.append(f"Die rolled: {die_value}.")
-        if botches:
-            result.notes.append(
-                f"Botch: {botches} zero(s) on the botch dice"
-                + (
-                    "; a double botch may bring on Wizard's Twilight (DE Ch. 10, Vis)."
-                    if botches >= 2
-                    else "."
-                )
+            die = dice.stress_die(roll_rng, botch_dice, saga=saga)
+            die_value, botches = die.value, die.botches
+        result.notes.append(f"Die rolled: {die_value}.")
+    if botches:
+        result.notes.append(
+            f"Botch: {botches} zero(s) on the botch dice"
+            + (
+                "; a double botch may bring on Wizard's Twilight (DE Ch. 10, Vis)."
+                if botches >= 2
+                else "."
             )
-        quality = max(0, die_value + aura_mod)
-        result.gains.append(_gain(character, subject, quality, kind, months))
-        return result
+        )
+    quality = max(0, die_value + aura_mod)
+    result.gains.append(_gain(character, subject, quality, kind, months))
+
+
+# Exposure, Practice and Adventure (DE Ch. 10): experience in the subjects
+# chosen, from the plan's own figures.
+
+
+def _plain_problems(
+    saga: Saga | None, character: Character, plan: SeasonPlan
+) -> list[str]:
+    found = _months_problem(plan)
+    chosen = [a for a in plan.allocations if a.subject]
+    if not chosen:
+        found.append("Choose what the experience goes into.")
+    for allocation in chosen:
+        if not has_subject(character, allocation.subject):
+            found.append(
+                f"{character.name} doesn't have {_split(allocation.subject)[1]}."
+            )
+    if len({a.subject for a in chosen}) < len(chosen):
+        found.append("The same subject is named twice.")
+    if plan.activity == EXPOSURE and len(chosen) > 2:
+        found.append("Exposure goes into one subject, or is split between two.")
+    if plan.activity == PRACTICE:
+        if len(chosen) > 1:
+            found.append("Practice improves one subject.")
+        if any(_split(a.subject)[0] == "art" for a in chosen):
+            found.append(
+                "Arts can't be practised: study them from vis or books "
+                "(DE Ch. 10, Practice)."
+            )
+        quality = source_quality(plan)
+        if quality is not None and quality < 1:
+            found.append("Source Quality must be at least 1.")
+    if plan.activity == ADVENTURE:
+        quality = plan.source_quality
+        if quality is None or not ADVENTURE_MIN <= quality <= ADVENTURE_MAX:
+            found.append(
+                f"An Adventure's Source Quality is {ADVENTURE_MIN} to "
+                f"{ADVENTURE_MAX} (the storyguide's choice)."
+            )
+        elif sum(a.points for a in chosen) != quality:
+            found.append(
+                f"Split all {quality} points of Source Quality: "
+                f"{sum(a.points for a in chosen)} are split."
+            )
+        if any(not 1 <= a.points <= ADVENTURE_PER_SUBJECT for a in chosen):
+            found.append(
+                f"Each subject gets 1 to {ADVENTURE_PER_SUBJECT} points of an "
+                "Adventure's Source Quality."
+            )
+    return found
+
+
+def _plain_outcome(
+    saga: Saga | None,
+    character: Character,
+    plan: SeasonPlan,
+    rng: random.Random | None,
+    result: Outcome,
+) -> None:
+    months = _months(plan)
+    kind = _STUDY_KIND[plan.activity]
     for allocation in allocations(plan):
         result.gains.append(
             _gain(character, allocation.subject, allocation.points, kind, months)
         )
-    return result
+
+
+def _handlers() -> dict[str, Handler]:
+    """Every activity that gives experience, mapped to its family."""
+    lab = _with_saga(
+        _lab_problems, _lab_outcome, no_saga="Lab work needs the saga to be worked out."
+    )
+    families: list[tuple[Handler, Sequence[str]]] = [
+        (lab, [key for key, a in ACTIVITIES.items() if a.lab]),
+        (_with_saga(_book_problems, _book_outcome), book_seasons.SHEET_ACTIVITIES),
+        (
+            _with_saga(_apprentice_problems, _apprentice_outcome),
+            tuple(apprentice_seasons.ACTIVITIES),
+        ),
+        (Handler(_integrate_problems, _integrate_outcome), (experiment.INTEGRATE,)),
+        (
+            _with_saga(_supplement_problems, _supplement_outcome),
+            tuple(supplement_seasons.BY_KEY),
+        ),
+        (
+            _with_saga(_assist_problems, _assist_outcome),
+            (laboratory_seasons.ASSIST,),
+        ),
+        (_with_saga(_study_family_problems, _study_outcome), STUDY_ACTIVITIES),
+        (Handler(_plain_problems, _plain_outcome), (EXPOSURE, PRACTICE, ADVENTURE)),
+    ]
+    handlers: dict[str, Handler] = {}
+    for handler, keys in families:
+        for key in keys:
+            assert key not in handlers, f"{key} is in two families"
+            handlers[key] = handler
+    return handlers
+
+
+#: The family each activity that gives experience belongs to.
+HANDLERS: dict[str, Handler] = _handlers()
 
 
 def _home_aura(saga: Saga, character: Character) -> tuple[int, str]:
-    from ..casting_text import home_aura
+    from ..covenants import home_aura
 
     return home_aura(saga, character)
 

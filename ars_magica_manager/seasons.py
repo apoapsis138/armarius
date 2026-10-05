@@ -1,7 +1,7 @@
 """Season plans and advancing the season (STORY-903): keeping each
 character's plan, the text the sheets show for it, and applying a season.
 
-Advancing works out every plan's outcome first (rules.seasons.outcomes), from
+Advancing works out every plan's outcome first (rules.activities.outcomes), from
 the saga as it stood before the season, and only then applies them, so one
 character's results can't change another's (or their own) that same season:
 raising Magic Theory by Exposure doesn't raise this season's Lab Total. Each
@@ -16,8 +16,10 @@ import re
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field, replace
 
+from . import economics as eco
 from . import enchanted_devices as ed
 from . import spells as spl
+from .covenants import home_aura
 from .familiars import familiar_of
 from .inhabitants import AUTO_KINDS, character_kind
 from .markup import escape, fit, problem, todo
@@ -53,6 +55,7 @@ from .models import (
     new_instance_id,
     next_season,
 )
+from .rules import activities as rules
 from .rules import aging as aging_rules
 from .rules import apprentice_seasons as aps
 from .rules import book_seasons as bs
@@ -61,7 +64,6 @@ from .rules import experiment as ex
 from .rules import familiar_seasons as fs
 from .rules import lab_seasons, study
 from .rules import laboratory_seasons as ls
-from .rules import seasons as rules
 from .rules import supplement_work as sw
 from .rules import warping as warping_rules
 from .rules import xp as xp_rules
@@ -576,17 +578,6 @@ def _living_conditions(saga: Saga, character: Character) -> int:
     return living
 
 
-def _home_aura(saga: Saga, character: Character) -> tuple[int, str]:
-    covenant = saga.covenant(character.covenant_id)
-    if covenant is None:
-        return 0, "Magic"
-    from . import catalog
-    from .covenants import covenant_effective_aura
-
-    boons = catalog.load_covenant_boon_hook_catalog_by_id()
-    return covenant_effective_aura(covenant, boons), covenant.aura_realm
-
-
 def _yearly_warping(saga: Saga, character: Character) -> str:
     """A year's automatic Warping Points (STORY-909): +1 for a Longevity
     Ritual, and living in a strong aura of another realm (a magus gains none
@@ -596,7 +587,7 @@ def _yearly_warping(saga: Saga, character: Character) -> str:
     if character.aging.longevity_modifier:
         points += 1
         gained.append("Longevity Ritual 1")
-    aura, realm = _home_aura(saga, character)
+    aura, realm = home_aura(saga, character)
     if not (character.type == "magus" and realm == "Magic"):
         from_aura = warping_rules.aura_points(aura)
         if from_aura:
@@ -620,7 +611,7 @@ def gain_warping(
     ]
     name = f"Warping +{points}"
     if character.type == "magus" and points >= 2:
-        aura, _ = _home_aura(saga, character)
+        aura, _ = home_aura(saga, character)
         result = warping_rules.twilight(character, points, aura, rng, saga)
         notes += result.notes
         if result.entered:
@@ -1101,6 +1092,58 @@ def season_info_text(saga: Saga, character: Character | None) -> str:
 
 
 # -- season records (STORY-911) --------------------------------------------------
+
+
+@dataclass
+class Advanced:
+    """What playing out a season did (finish_season)."""
+
+    #: The season's record (kept in the saga if it keeps them).
+    record: SeasonRecord
+    #: Whose planned seasons were applied.
+    applied: list[Character]
+    #: The year end's and the covenants' lines (aging, grogs, business,
+    #: harvests, resources).
+    year_end: list[SeasonRecordLine]
+    #: At a new year, each covenant's surplus added to its Wealth: (name,
+    #: amount).
+    added: list[tuple[str, int]]
+
+
+def finish_season(
+    saga: Saga,
+    worked: Sequence[rules.Outcome],
+    secured: dict[str, bool],
+    rng: random.Random,
+    backup: Callable[[Saga], object] | None = None,
+) -> Advanced:
+    """Play out the season, once its questions are answered (`secured`: was
+    each lapsed contested resource secured; the Discovery moves already
+    taken), in the rules' order (STORY-1129, from the workspace's Advance
+    Time): `backup` the saga if anything is planned; apply each plan; in
+    Winter, the year's end -- grogs, business, then aging; the covenants'
+    season (harvests, resources); the season record; at a new year, each
+    covenant's surplus into its Wealth; then the date moves on (the caller
+    saves it)."""
+    new_year = saga.current_season == SEASONS[-1]
+    record = make_record(saga, worked)
+    if worked and backup is not None:
+        backup(saga)
+    applied = apply(saga, worked)
+    year_end = (
+        year_end_grogs(saga) + year_end_business(saga) + year_end_aging(saga, rng)
+        if new_year
+        else []
+    )
+    year_end += covenant_season(saga, secured)
+    record.lines += year_end
+    if saga.keep_season_records and (worked or year_end):
+        saga.season_records.append(record)
+    added = eco.close_all_years(saga) if new_year else []
+    saga.current_season, saga.current_year = next_season(
+        saga.current_season, saga.current_year
+    )
+    return Advanced(record, applied, year_end, added)
 
 
 def make_record(saga: Saga, worked: Sequence[rules.Outcome]) -> SeasonRecord:

@@ -19,7 +19,7 @@ from ars_magica_manager.models import (
     SeasonPlan,
     XpAllocation,
 )
-from ars_magica_manager.rules import seasons as rules
+from ars_magica_manager.rules import activities as rules
 from ars_magica_manager.rules.xp import ability_xp, art_xp
 
 

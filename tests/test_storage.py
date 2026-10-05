@@ -52,7 +52,7 @@ from ars_magica_manager.models import (
     Wounds,
     XpAllocation,
 )
-from ars_magica_manager.rules import seasons as season_rules
+from ars_magica_manager.rules import activities as season_rules
 from ars_magica_manager.rules.xp import ability_xp
 
 

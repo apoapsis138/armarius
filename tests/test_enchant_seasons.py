@@ -25,9 +25,9 @@ from ars_magica_manager.models import (
     SeasonPlan,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules import activities as rules
 from ars_magica_manager.rules import enchant_seasons as es
 from ars_magica_manager.rules import lab_seasons
-from ars_magica_manager.rules import seasons as rules
 from ars_magica_manager.rules.xp import ability_xp, art_xp
 
 

@@ -11,7 +11,7 @@ from ars_magica_manager.models import (
     Saga,
     SeasonPlan,
 )
-from ars_magica_manager.rules import seasons as rules
+from ars_magica_manager.rules import activities as rules
 from ars_magica_manager.rules import warping
 
 

@@ -6,23 +6,13 @@ firm words and bold gestures (the book's defaults)."""
 
 from __future__ import annotations
 
-from . import catalog
 from . import spells as spl
 from .arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
-from .covenants import covenant_effective_aura
+from .covenants import home_aura
 from .markup import escape
 from .models import Character, KnownSpell, Saga, Spell
-from .rules import casting, certamen, penetration, realms
+from .rules import casting, certamen, penetration
 from .rules import lab as lab_rules
-
-
-def home_aura(saga: Saga, magus: Character) -> tuple[int, str]:
-    """The aura (score, realm) of the magus's covenant: 0 Magic without one."""
-    covenant = saga.covenant(magus.covenant_id)
-    if covenant is None:
-        return 0, realms.HERMETIC
-    boons = catalog.load_covenant_boon_hook_catalog_by_id()
-    return covenant_effective_aura(covenant, boons), covenant.aura_realm
 
 
 def casting_scores_text(saga: Saga, magus: Character) -> str:

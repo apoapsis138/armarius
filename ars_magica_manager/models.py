@@ -1214,7 +1214,7 @@ class DiaryEntry:
     name: str = ""
     details: str = ""
     #: A lab Diary: one of LAB_ACTIVITIES. A character's Diary: the season
-    #: activity's label (rules.seasons.ACTIVITIES). "" when not set.
+    #: activity's label (rules.activities.ACTIVITIES). "" when not set.
     activity: str = ""
 
     @classmethod
@@ -2637,7 +2637,7 @@ def next_season(season: str, year: int) -> tuple[str, int]:
 class XpAllocation:
     """Where some of a season's Source Quality goes: `subject` is
     "ability:<name>", "art:<art>" or "mastery:<spell id>" (see
-    rules.seasons.subject_label), `points` its share (Adventure splits its
+    rules.activities.subject_label), `points` its share (Adventure splits its
     Source Quality, Exposure may split its 2 points)."""
 
     subject: str
@@ -2687,12 +2687,12 @@ class SpellDesign:
 class SeasonPlan:
     """What a character will do in one season (STORY-903): typed by the user,
     locked in until the season is applied. Its outcome is always worked out
-    (rules.seasons.outcome), never stored."""
+    (rules.activities.outcome), never stored."""
 
     character_id: str
     year: int
     season: str  # one of SEASONS
-    activity: str  # a rules.seasons.ACTIVITIES key
+    activity: str  # a rules.activities.ACTIVITIES key
     allocations: list[XpAllocation] = field(default_factory=list)
     #: Practice / Adventure: the Source Quality when it isn't the rule's
     #: default (None: the default).

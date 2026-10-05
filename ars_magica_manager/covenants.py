@@ -6,10 +6,12 @@ from __future__ import annotations
 
 from .models import (
     BOON_HOOK_UNKNOWN,
+    Character,
     Covenant,
     CovenantBoonHookDef,
     CovenantSituationDef,
     Modifier,
+    Saga,
     VirtueFlawInstance,
     boon_hook_params,
     new_instance_id,
@@ -71,6 +73,20 @@ def covenant_effective_aura(
     `aura` plus every `covenant_aura` modifier of its Boons/Hooks. This is
     what its laboratories inherit."""
     return int(realms.covenant_aura(covenant, catalog_by_id).total)
+
+
+def home_aura(saga: Saga, character: Character) -> tuple[int, str]:
+    """The aura (score, realm) a character lives in: their covenant's
+    effective Aura (its Boons and Hooks included); 0 Magic without one. The
+    one place this is worked out (STORY-1129: casting totals, vis study,
+    aging and warping all use it)."""
+    from . import catalog
+
+    covenant = saga.covenant(character.covenant_id)
+    if covenant is None:
+        return 0, realms.HERMETIC
+    boons = catalog.load_covenant_boon_hook_catalog_by_id()
+    return covenant_effective_aura(covenant, boons), covenant.aura_realm
 
 
 def covenant_source(

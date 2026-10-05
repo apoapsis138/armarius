@@ -37,13 +37,13 @@ from ..models import (
     SpellDesign,
     next_season,
 )
+from ..rules import activities as season_rules
 from ..rules import book_seasons as bs
 from ..rules import enchant_seasons as es
 from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
 from ..rules import lab_seasons, spell_levels
 from ..rules import laboratory_seasons as ls
-from ..rules import seasons as season_rules
 from .fields import ModalDialog
 from .pickers import SpellChooserScreen
 

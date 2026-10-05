@@ -2,7 +2,7 @@
 
 from ars_magica_manager import seasons
 from ars_magica_manager.models import Character, Saga, SeasonPlan, XpAllocation
-from ars_magica_manager.rules import seasons as rules
+from ars_magica_manager.rules import activities as rules
 from ars_magica_manager.rules import supplement_seasons as sup
 
 

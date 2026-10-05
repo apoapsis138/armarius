@@ -1,5 +1,7 @@
 """Work on the laboratory itself, and assisting in one (STORY-915)."""
 
+import random
+
 from ars_magica_manager import seasons
 from ars_magica_manager.models import (
     Ability,
@@ -161,3 +163,124 @@ def test_hermetic_taming_until_the_points_reach_its_might():
     assert text.name == "Lab Text: taming Grey Wolf"
     # Its Technique and Form are recorded, so another magus can decode it.
     assert (text.text_kind, text.technique, text.form) == ("Other", "Rego", "Animal")
+
+
+# -- work() and roll() branch by branch (STORY-1129) -----------------------------
+
+
+class _Dice(random.Random):
+    """A random source throwing `faces` (d10 faces, 0-9) in order."""
+
+    def __init__(self, *faces: int) -> None:
+        super().__init__(0)
+        self.faces = list(faces)
+
+    def randrange(self, *args, **kwargs):
+        return self.faces.pop(0) if self.faces else 5
+
+
+def _work(saga, plan):
+    return ls.work(saga, saga.character("m"), plan, saga.laboratories[0])
+
+
+def test_setting_up_needs_magic_theory_3():
+    saga = _saga()
+    saga.character("m").abilities = [Ability("Magic Theory", xp=ability_xp(2))]
+    assert _work(saga, _plan(ls.BUILD)) == (
+        ["Setting up a laboratory needs Magic Theory 3 (2)."],
+        None,
+    )
+
+
+def test_moving_needs_somewhere_to_go():
+    assert _work(_saga(), _plan(ls.MOVE)) == (
+        ["Say where the laboratory is moving to."],
+        None,
+    )
+    _, work = _work(_saga(), _plan(ls.MOVE, title="The valley"))
+    magus = _saga().character("m")
+    # A mundane move has no roll.
+    assert ls.roll(work, magus, _plan(ls.MOVE, title="The valley"), None, None) == []
+
+
+def test_the_organization_roll_with_the_dice():
+    saga = _saga()
+    magus = saga.character("m")
+    plan = _plan(ls.REFINE)
+    _, work = _work(saga, plan)
+    # Int 2 + Magic Theory 5 + a stress die of 9.
+    notes = ls.roll(work, magus, plan, _Dice(9), saga)
+    assert notes[0].startswith("Intelligence + Magic Theory 7 + die 9 = 16")
+    high = _plan(ls.REFINE, die=20)
+    _, work = _work(saga, high)
+    assert ls.roll(work, magus, high, None, saga) == [
+        "Intelligence + Magic Theory 7 + die 20 = 27: Highly Organized; any Hidden "
+        "Defect is found."
+    ]
+    assert work.gains_vf == [ls.HIGHLY_ORGANIZED]
+    assert work.loses_vf == [ls.HIDDEN_DEFECT]
+
+
+def test_taking_over_checks_the_predecessors_arrangements():
+    saga = _saga()
+    magus = saga.character("m")
+    plan = _plan(ls.TAKE_OVER, die=5)
+    _, work = _work(saga, plan)
+    assert work.old_refinement == 1
+    # Perception 1 + Magic Theory 5 + 2 = 8 against 3 x 1: fine (a stress
+    # die's 1 would roll again, doubled).
+    assert ls.roll(work, magus, plan, _Dice(2), saga) == [
+        "Intelligence + Magic Theory 7 + die 5 = 12: Highly Organized."
+    ]
+    saga.laboratories[0].characteristics.refinement = 3
+    _, work = _work(saga, plan)
+    notes = ls.roll(work, magus, plan, _Dice(2), saga)
+    assert notes[-1] == (
+        "Perception + Magic Theory 6 + 2 < 9: the Predecessor's arrangements remain."
+    )
+    _, work = _work(saga, plan)
+    botched = ls.roll(work, magus, plan, _Dice(0, 0), saga)
+    assert botched[-1] == (
+        "The storyguide's roll botched: Predecessor and a Hidden Defect."
+    )
+    # Highly Organized from the first roll (12), then the botch's two.
+    assert work.gains_vf == [ls.HIGHLY_ORGANIZED, ls.PREDECESSOR, ls.HIDDEN_DEFECT]
+
+
+def test_moving_by_spell_with_the_dice():
+    saga = _saga()
+    magus = saga.character("m")
+    plan = _plan(ls.MOVE, title="The valley", by_spell=True)
+    _, work = _work(saga, plan)
+    # Perception 1 + Finesse 0 + 9, against 9 + 3 x Refinement 1 = 12.
+    assert ls.roll(work, magus, plan, _Dice(9), saga)[0].endswith(
+        "= 10 against 12: it arrives Disorganized (and loses Highly Organized)."
+    )
+    _, work = _work(saga, plan)
+    moved = ls.roll(
+        work, magus, _plan(ls.MOVE, title="v", by_spell=True, die=11), None, saga
+    )
+    assert moved == ["Perception + Finesse 1 + 11 = 12 against 12: moved."]
+    _, work = _work(saga, plan)
+    assert ls.roll(work, magus, plan, _Dice(0, 0), saga) == [
+        "Botch: the laboratory gains a Hidden Defect."
+    ]
+    assert work.gains_vf == [ls.HIDDEN_DEFECT]
+
+
+def test_who_can_assist():
+    saga = _saga()
+    helper = saga.character("h")
+    assert ls.assist_problems(saga, helper, _plan(ls.ASSIST)) == [
+        "Choose the magus to assist."
+    ]
+    plan = SeasonPlan("h", 1220, "Spring", ls.ASSIST, teacher_id="m")
+    helper.virtues_flaws = []
+    assert ls.assist_problems(saga, helper, plan) == [
+        "Marcus needs The Gift to help in a laboratory."
+    ]
+    helper.virtues_flaws = [VirtueFlawInstance("vf_the_gift")]
+    helper.abilities = []
+    assert ls.assist_problems(saga, helper, plan) == [
+        "Marcus needs Magic Theory to help in a laboratory."
+    ]

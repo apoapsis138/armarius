@@ -31,8 +31,8 @@ from ...models import (
     known_fields,
     replace_raw_vis,
 )
+from ...rules import activities as season_rules
 from ...rules import aging as aging_rules
-from ...rules import seasons as season_rules
 from ..fields import (
     FieldsDialog,
 )

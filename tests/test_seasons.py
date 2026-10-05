@@ -1,9 +1,10 @@
 """Season plans and advancing the season (STORY-903): the activities' rules
-(rules.seasons), applying a season (seasons), and the character sheet's
+(rules.activities), applying a season (seasons), and the character sheet's
 This Season / Diary tab and Advance Season in the workspace."""
 
 import copy
 import json
+import random
 from dataclasses import asdict
 
 from support import build_all_tabs, everything_saga, strip_markup, wait_until
@@ -24,11 +25,11 @@ from ars_magica_manager.models import (
     VirtueFlawInstance,
     XpAllocation,
 )
+from ars_magica_manager.rules import activities as rules
 from ars_magica_manager.rules import apprentice_seasons as aps
 from ars_magica_manager.rules import book_seasons as bs
 from ars_magica_manager.rules import experiment
 from ars_magica_manager.rules import laboratory_seasons as ls
-from ars_magica_manager.rules import seasons as rules
 from ars_magica_manager.rules import supplement_seasons as sup
 from ars_magica_manager.rules.xp import ability_xp
 from ars_magica_manager.screens import ConfirmScreen, FieldsDialog, WorkspaceScreen
@@ -732,3 +733,64 @@ async def test_a_season_with_nothing_planned_is_neither_summarised_nor_kept():
         await pilot.pause()
         assert app.screen is workspace
     assert storage.load_saga("test_saga").season_records == []
+
+
+def test_finishing_a_winter_season_runs_the_year_end_in_order():
+    """seasons.finish_season (STORY-1129): back up before applying, apply the
+    plans, then the year's end, the covenant's season and its Wealth, the
+    record, then the new date -- without the workspace screen."""
+    from ars_magica_manager.models import Covenant, IncomeSource
+
+    magus = _magus()
+    magus.covenant_id = "cov"
+    magus.background.year_born = 1180
+    saga = _saga(magus)
+    saga.covenants = [Covenant(id="cov", saga_id="s", name="Keep")]
+    saga.covenants[0].economics.income_sources = [IncomeSource("i", "Mill", income=40)]
+    saga.keep_season_records = True
+    saga.current_season = "Winter"
+    plan = _plan(magus, rules.PRACTICE, "ability:Latin")
+    plan.season = "Winter"
+    seasons.set_plan(saga, plan)
+    worked = seasons.resolve(saga, random.Random(1))
+
+    backed_up: list[int] = []
+
+    def backup(saga_) -> None:
+        # Taken before anything is applied: Latin hasn't moved yet.
+        backed_up.append(saga_.character("m").abilities[0].xp)
+
+    done = seasons.finish_season(saga, worked, {}, random.Random(1), backup=backup)
+
+    assert backed_up == [ability_xp(4)]
+    assert [c.name for c in done.applied] == ["Tiberius"]
+    assert magus.abilities[0].xp > ability_xp(4)
+    assert [line.activity for line in done.year_end] == ["Aging"]
+    assert saga.season_records == [done.record]
+    assert done.record.lines[-len(done.year_end) :] == done.year_end
+    assert [name for name, _ in done.added] == ["Keep"]
+    assert (saga.current_season, saga.current_year) == ("Spring", 1221)
+
+
+def test_finishing_a_season_with_nothing_planned_takes_no_backup():
+    saga = _saga(_magus())
+    calls: list[object] = []
+    done = seasons.finish_season(saga, [], {}, random.Random(1), backup=calls.append)
+    assert calls == [] and done.applied == [] and done.added == []
+    assert (saga.current_season, saga.current_year) == ("Summer", 1220)
+    assert saga.season_records == []
+
+
+def test_every_activity_that_gives_experience_has_one_family():
+    """rules.HANDLERS (STORY-1129): each activity's checks and outcome come
+    from exactly one family; one with none would fail only when planned."""
+    gives_xp = {key for key, a in rules.ACTIVITIES.items() if a.gives_xp}
+    assert gives_xp <= set(rules.HANDLERS)
+
+
+def test_a_family_that_works_from_the_saga_says_so_without_one():
+    magus = _magus()
+    plan = _plan(magus, rules.READ)
+    assert rules.problems(magus, plan) == [rules.NEEDS_SAGA]
+    lab = _plan(magus, ls.ASSIST)  # assisting: not lab work itself
+    assert rules.problems(magus, lab) == [rules.NEEDS_SAGA]

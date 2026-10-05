@@ -106,6 +106,7 @@ from ..models import (
     XpAllocation,
     new_instance_id,
 )
+from ..rules import activities as season_rules
 from ..rules import (
     apprentice_seasons,
     book_seasons,
@@ -116,7 +117,6 @@ from ..rules import (
     supplement_seasons,
 )
 from ..rules import options as rule_options
-from ..rules import seasons as season_rules
 from .fields import (
     _EMPHASIS_HINT,
     DialogField,

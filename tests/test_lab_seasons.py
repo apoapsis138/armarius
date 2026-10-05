@@ -22,8 +22,8 @@ from ars_magica_manager.models import (
     SpellDesign,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules import activities as rules
 from ars_magica_manager.rules import lab_seasons
-from ars_magica_manager.rules import seasons as rules
 from ars_magica_manager.rules.xp import ability_xp, art_xp
 from ars_magica_manager.screens.invent_spell import OTHER, InventSpellScreen
 

@@ -74,11 +74,10 @@ from ...models import (
     VirtueFlawInstance,
     link_unlinked_features,
     new_instance_id,
-    next_season,
 )
+from ...rules import activities as season_rules
 from ...rules import creation as creation_rules
 from ...rules import options as rule_options
-from ...rules import seasons as season_rules
 from ..fields import (
     FieldsDialog,
 )
@@ -1913,31 +1912,18 @@ class WorkspaceBase(Screen[None]):
             await ask_move(0)
 
         async def finish(answers: dict[str, bool], worked: list[Any]) -> None:
-            new_year = saga.current_season == SEASONS[-1]
-            record = seasons.make_record(saga, worked)
-            if worked:
-                storage.backup_saga(saga)
-            applied = seasons.apply(saga, worked)
-            # Winter ends the year: the aging rolls (STORY-904).
-            aged = (
-                seasons.year_end_grogs(saga)
-                + seasons.year_end_business(saga)
-                + seasons.year_end_aging(saga, random.Random())
-                if new_year
-                else []
+            # The season played out in the rules' order, the date moved on
+            # (seasons.finish_season); here, only saving and showing it.
+            done = seasons.finish_season(
+                saga, worked, answers, random.Random(), backup=storage.backup_saga
             )
-            record.lines += aged
-            harvest = seasons.covenant_season(saga, answers)
-            record.lines += harvest
-            aged += harvest
-            if saga.keep_season_records and (worked or aged):
-                saga.season_records.append(record)
-            # A new year (Winter -> Spring): each covenant's surplus goes into
-            # its Wealth before the date moves on.
-            added = eco.close_all_years(saga) if new_year else []
-            await self._apply_saga_date(
-                *next_season(saga.current_season, saga.current_year)
+            record, applied, aged, added = (
+                done.record,
+                done.applied,
+                done.year_end,
+                done.added,
             )
+            await self._apply_saga_date(saga.current_season, saga.current_year)
             # Applied seasons change xp (scores, casting and lab totals) and
             # the Diary; the new date changes This Season.
             for section in _SEASON_SECTIONS:

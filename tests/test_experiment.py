@@ -2,6 +2,8 @@
 
 import random
 
+import pytest
+
 from ars_magica_manager import seasons
 from ars_magica_manager.models import (
     Ability,
@@ -16,8 +18,8 @@ from ars_magica_manager.models import (
     Spell,
     VirtueFlawInstance,
 )
+from ars_magica_manager.rules import activities as rules
 from ars_magica_manager.rules import experiment, lab_seasons
-from ars_magica_manager.rules import seasons as rules
 from ars_magica_manager.rules.xp import ability_xp, art_xp
 
 
@@ -285,3 +287,112 @@ def test_an_invented_spell_keeps_its_side_effect():
     (known,) = magus.spells_known
     spell = next(s for s in magus.invented_spells if s.id == known.spell_id)
     assert spell.experimental_effects == [f"Side effect: {experiment.SIDE_EFFECTS[3]}"]
+
+
+# -- the Extraordinary Results chart, roll by roll (STORY-1129) ------------------
+
+
+def _chart(roll: int, *faces: int, risk: int = 0) -> experiment.Extraordinary:
+    """The chart's result for `roll` (already die + risk), its later dice
+    showing `faces` (simple-die faces: 0 reads as 10)."""
+    result = experiment.Extraordinary()
+    experiment._apply(result, roll, _Dice(*faces), risk, "Ignem", None, 0)
+    return result
+
+
+def test_low_rolls_have_no_extraordinary_effect():
+    assert _chart(4).results == ["4: no extraordinary effects."]
+
+
+def test_a_five_or_six_is_a_side_effect():
+    result = _chart(5, 1)
+    assert result.effects == ["Side effect: sigil greatly exaggerated"]
+
+
+def test_a_seven_is_no_benefit_and_a_nine_is_the_storyguides():
+    assert _chart(7).no_benefit
+    assert _chart(9).results == ["9: a special result or story event (storyguide)."]
+
+
+def test_a_discovery_gives_experience_by_its_roll():
+    def xp(face: int, risk: int = 0):
+        return _chart(10, face, risk=risk).xp
+
+    assert xp(4) == [("ability:Magic Theory", 15)]
+    assert xp(6) == [("ability:Magic Theory", 15)]
+    assert xp(8) == [("art:Ignem", 3)]
+    assert xp(9) == [("art:Ignem", 3)]
+    assert xp(9, risk=1) == [("ability:Magic Theory", 15)]  # two more rolls
+    assert "15 xp in an Ability related to it" in _chart(10, 6).results[0]
+    assert "raise Ignem to its next score" in _chart(10, 9).results[0]
+    assert "two more Discovery rolls" in _chart(10, 0).results[0]  # 0 reads 10
+
+
+def test_an_eleven_modifies_the_effect():
+    assert _chart(11, 2).effects == [
+        "Modified effect: reduced range, duration, target or potency"
+    ]
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="B25: the modified-effect table rolls a new die for each row it "
+    "checks, not one die for the table (experiment._apply, roll 11)",
+)
+def test_an_eleven_rolls_one_die_for_the_modified_effect():
+    # One die of 10 (face 0) + risk 2 = 12: past every row, so the last.
+    assert _chart(11, 0, 1, 1, 1, risk=2).effects == [
+        "Modified effect: effect changed completely (same Technique and Form, "
+        "similar level)"
+    ]
+
+
+def test_twelve_or_more_rolls_twice_more():
+    # Each further roll is a stress die (no botch dice) + the risk.
+    result = _chart(12, 3, 4)
+    assert result.results == [
+        "12: roll twice more.",
+        "3: no extraordinary effects.",
+        "4: no extraordinary effects.",
+    ]
+
+
+def test_three_zeroes_damage_the_lab():
+    # A stress die of 0, then three botch dice of 0 among the four.
+    result = experiment.Extraordinary()
+    experiment._roll_once(
+        result, _Dice(0, 0, 0, 0, 5), 0, 4, "Ignem", None, False, None
+    )
+    assert (result.zeroes, result.lab_flaw) == (3, "labvf_damaged")
+    assert "the lab is Damaged" in result.results[0]
+
+
+def test_a_move_onto_ten_made_before_is_made_again():
+    # Seeking with the project's move so far (+1): a 9 becomes the Discovery.
+    result = experiment.Extraordinary()
+    experiment._roll_once(result, _Dice(9, 3), 0, 1, "Ignem", None, True, 1)
+    assert result.results[0] == "The roll 9 moved by +1, as before."
+    assert result.discovery
+
+
+def test_goals_are_found_by_name_and_made_when_new():
+    magus = _saga().character("m")
+    assert experiment.find_goal(magus, "Ignem Mastery") is None
+    made = experiment.goal(magus, " Ignem Mastery ", "Major")
+    assert (made.name, made.target) == ("Ignem Mastery", 45)
+    assert experiment.find_goal(magus, "ignem mastery") is made
+    assert experiment.goal(magus, "IGNEM MASTERY") is made
+
+
+def test_an_insight_roll():
+    saga = _saga()
+    magus = saga.character("m")
+
+    def roll(die):
+        return experiment.insight_roll(magus, _plan(die=die), None, 6)
+
+    assert roll(0) == (False, "Botch: a false insight (it seems real until tried).")
+    assert roll(10) == (True, "18 against 18: an insight.")  # Int 2 + MT 6 + 10
+    assert roll(9) == (False, "17 against 18: nothing this season.")
+    rolled, text = experiment.insight_roll(magus, _plan(), _Dice(9), 6)
+    assert (rolled, text) == (False, "17 against 18: nothing this season.")
