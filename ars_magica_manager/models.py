@@ -1341,6 +1341,10 @@ class Background:
     "Description" box -- see Description below for that)."""
 
     player: str = ""
+    #: The saga Player who plays this character (players.py, STORY-1404):
+    #: when they sign in to a hosted saga, they may change it. None: no one
+    #: but the storyguide.
+    player_id: str | None = None
     setting: str = ""
     size: int = 0
     confidence_score: int = 0
@@ -2848,6 +2852,9 @@ class Player:
     name: str
     role: str = "player"
     passcode_hash: str = ""
+    #: Whether this player may also change the covenants (STORY-1404); a
+    #: storyguide always may.
+    covenant_rights: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Player:

@@ -419,7 +419,7 @@ class PlayersView(Vertical):
         ):
             yield TableHeader("  " + pl.table_header())
             yield SelectableList(self._rows(), id="players-list")
-        yield DetailsPanel(pl.detail_text(None), id="players-panel")
+        yield DetailsPanel(pl.detail_text(self.saga, None), id="players-panel")
 
     def selected_player(self) -> Player | None:
         index = self.query_one("#players-list", SelectableList).selected_data_index
@@ -431,14 +431,18 @@ class PlayersView(Vertical):
         event.stop()
         players = self.saga.players
         chosen = players[event.data_index] if event.data_index < len(players) else None
-        self.query_one("#players-panel", Static).update(pl.detail_text(chosen))
+        self.query_one("#players-panel", Static).update(
+            pl.detail_text(self.saga, chosen)
+        )
 
     def rebuild(self) -> None:
         """Re-read the players after an add, edit or delete."""
         try:
             self.query_one(f"#{PLAYERS_SECTION}", Collapsible).title = self._title()
             self.query_one("#players-list", SelectableList).set_rows(self._rows())
-            self.query_one("#players-panel", Static).update(pl.detail_text(None))
+            self.query_one("#players-panel", Static).update(
+                pl.detail_text(self.saga, None)
+            )
         except NoMatches:
             return  # the view is being replaced
 

@@ -78,6 +78,9 @@ class WorkspaceScreen(
         }.get(event.button.id or "")
         if handler is not None:
             event.stop()
+            if not self._may_change_here():
+                self.notify("Only the storyguide can change this.", severity="warning")
+                return
             handler()
 
     def _open_creation_worksheet(self) -> None:

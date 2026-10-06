@@ -98,6 +98,7 @@ from ..models import (
     LabFeature,
     Laboratory,
     MasteryAbility,
+    Player,
     Saga,
     SeasonPlan,
     ShapeMaterialBonus,
@@ -1042,8 +1043,43 @@ _BIOGRAPHY_TEXT_FIELDS_AFTER_YEAR: list[tuple[str, str]] = [
 ]
 
 
+def _played_by_field(
+    background: Background, players: Sequence[Player], may_assign: bool
+) -> list[DialogField]:
+    """Who plays the character, from the saga's players (STORY-1404): only
+    when the saga has players, and only the storyguide may change it."""
+    if not players:
+        return []
+    if not may_assign:
+        playing = next((p for p in players if p.id == background.player_id), None)
+        return [
+            DialogField(
+                "_played_by",
+                "Played by",
+                "info",
+                playing.name if playing else "(no one)",
+            )
+        ]
+    return [
+        DialogField(
+            "player_id",
+            "Played by",
+            "select",
+            background.player_id,
+            options=[(escape(p.name), p.id) for p in players],
+            allow_blank=True,
+            placeholder="(no one)",
+            hint="The player who may change this character when they sign in.",
+        )
+    ]
+
+
 def _biographical_fields(
-    background: Background, description: Description
+    background: Background,
+    description: Description,
+    players: Sequence[Player] = (),
+    *,
+    may_assign: bool = True,
 ) -> list[DialogField]:
     """The Background fields not in the top panel, then every Description
     field."""
@@ -1053,6 +1089,7 @@ def _biographical_fields(
             DialogField(attribute, label, "text", getattr(background, attribute))
             for label, attribute in _BIOGRAPHY_TEXT_FIELDS
         ),
+        *_played_by_field(background, players, may_assign),
         _year_born_field(background.year_born),
         *(
             DialogField(attribute, label, "text", getattr(background, attribute))

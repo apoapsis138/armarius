@@ -505,6 +505,14 @@ def _player_dialog(saga: Saga, existing: Player | None) -> FieldsDialog[dict[str
                 options=[(pl.ROLE_LABELS[r], r) for r in pl.ROLES],
             ),
             DialogField(
+                "covenant_rights",
+                "May change covenants",
+                "check",
+                existing.covenant_rights if existing else False,
+                show_if=lambda values: values.get("role") == pl.PLAYER,
+                hint="A storyguide always may.",
+            ),
+            DialogField(
                 "passcode",
                 "Passcode" if existing is None else "New passcode",
                 "secret",

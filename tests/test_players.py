@@ -5,13 +5,13 @@ from __future__ import annotations
 from dataclasses import asdict
 
 import pytest
-from support import wait_until
-from textual.widgets import Button, Input, ListView, Static, Tree
+from support import everything_saga, wait_until
+from textual.widgets import Button, Input, ListView, Select, Static, Tree
 
 from ars_magica_manager import players as pl
 from ars_magica_manager import storage
 from ars_magica_manager.app import ArsMagicaManagerApp
-from ars_magica_manager.models import Saga
+from ars_magica_manager.models import Book, Character, Player, Saga
 from ars_magica_manager.screens import SagaPickerScreen, WorkspaceScreen
 from ars_magica_manager.screens.fields import FieldsDialog
 from ars_magica_manager.screens.workspace.base import NodeKind
@@ -170,3 +170,154 @@ async def test_a_saga_with_no_players_cant_be_opened_from_a_browser(in_a_browser
         await pilot.pause()
         assert isinstance(app.screen, SagaPickerScreen)
         assert app.player is None
+
+
+# -- who may change what (STORY-1404) --
+
+
+def _troupe() -> tuple[Saga, Player, Player]:
+    """everything_saga() with Ana playing Leandro (mag1, who owns lab1 and
+    the familiar fam1) and Hedda as a storyguide."""
+    saga = everything_saga()
+    ana = pl.add(saga, {"name": "Ana", "role": pl.PLAYER, "passcode": "rosemary"})
+    hedda = pl.add(saga, {"name": "Hedda", "role": pl.STORYGUIDE, "passcode": "sage"})
+    saga.character("mag1").background.player_id = ana.id
+    return saga, ana, hedda
+
+
+def test_a_player_may_change_their_characters_and_what_belongs_to_them():
+    saga, ana, hedda = _troupe()
+    leandro, alys = saga.character("mag1"), saga.character("comp1")
+    lab, familiar, covenant = (
+        saga.laboratory("lab1"),
+        saga.familiars[0],
+        saga.covenants[0],
+    )
+    assert pl.characters_of(saga, ana) == [leandro]
+    assert pl.may_change(saga, ana, leandro)
+    assert pl.may_change(saga, ana, lab)
+    assert pl.may_change(saga, ana, familiar)
+    assert not pl.may_change(saga, ana, alys)
+    assert not pl.may_change(saga, ana, covenant)
+    assert not pl.may_change(saga, ana, None)  # the saga itself
+    ana.covenant_rights = True
+    assert pl.may_change(saga, ana, covenant)
+    for anyone_in_charge in (hedda, None):  # a storyguide, or the own window
+        assert pl.may_change(saga, anyone_in_charge, alys)
+        assert pl.may_change(saga, anyone_in_charge, None)
+
+
+def test_removing_a_player_frees_their_characters():
+    saga, ana, _ = _troupe()
+    pl.remove(saga, ana)
+    assert saga.character("mag1").background.player_id is None
+
+
+def test_the_save_guard_takes_back_what_a_player_may_not_change():
+    saga, ana, hedda = _troupe()
+    before = asdict(saga)
+    saga.character("mag1").name = "Leandro the Wise"  # hers
+    saga.character("comp1").name = "Alys the Bold"  # not hers
+    saga.current_year += 1  # the saga's
+    saga.characters.append(Character(id="new1", name="Hugo", type="grog"))
+    saga.books.append(Book(id="bk-new", name="Her notes", type="Tractatus"))
+    after = asdict(saga)
+
+    kept, refused = pl.guard_changes(ana, before, after)
+    names = {c["id"]: c["name"] for c in kept["characters"]}
+    assert names == {"mag1": "Leandro the Wise", "comp1": "Alys"}
+    assert kept["current_year"] == before["current_year"]
+    assert "bk-new" in {b["id"] for b in kept["books"]}  # books are shared
+    assert sorted(refused) == ["characters[comp1]", "characters[new1]", "current_year"]
+
+    # Deleting someone else's character is taken back too.
+    after = dict(before)
+    after["characters"] = [c for c in before["characters"] if c["id"] != "comp1"]
+    kept, refused = pl.guard_changes(ana, before, after)
+    assert "comp1" in {c["id"] for c in kept["characters"]}
+    assert refused == ["characters[comp1]"]
+
+    assert pl.guard_changes(hedda, before, after) == (after, [])
+    assert pl.guard_changes(None, before, after) == (after, [])
+
+
+async def _workspace_as(app, pilot, saga: Saga, player: Player | None):
+    storage.save_saga(saga)
+    app.player = player
+    await app.push_screen(WorkspaceScreen(storage.load_saga(saga.id)))
+    assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+    return app.screen
+
+
+async def _show(pilot, workspace, data: tuple) -> None:
+    tree = workspace.query_one("#nav-tree", Tree)
+
+    def node():
+        stack = [tree.root]
+        while stack:
+            candidate = stack.pop()
+            if candidate.data == data:
+                return candidate
+            stack.extend(candidate.children)
+        return None
+
+    assert await wait_until(pilot, lambda: node() is not None)
+    tree.select_node(node())
+    assert await wait_until(pilot, lambda: workspace.selected_kind == data[0])
+    await pilot.pause()
+
+
+_CHANGES = ("add", "edit", "delete", "new", "advance_season")
+
+
+async def test_a_signed_in_player_changes_only_their_own(in_a_browser):
+    saga, ana, _ = _troupe()
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        ws = await _workspace_as(app, pilot, saga, ana)
+
+        await _show(pilot, ws, ("character", "comp1"))  # Alys: not hers
+        ws.query_one("#section-char-info").focus_section()
+        await pilot.pause()
+        assert [ws.check_action(a, ()) for a in _CHANGES] == [False] * 5
+        assert ws._available("export_record")  # reading is fine
+
+        await _show(pilot, ws, ("character", "mag1"))  # Leandro: hers
+        ws.query_one("#section-char-info").focus_section()
+        await pilot.pause()
+        assert ws.check_action("edit", ()) is not False
+        assert ws.check_action("new", ()) is False
+        assert ws.check_action("advance_season", ()) is False
+        assert not ws._available("move_vis")
+
+        await _show(pilot, ws, ("saga",))
+        assert ws.check_action("edit", ()) is False
+        assert not ws._available("import_data")
+
+        # A save that slipped past the screens still can't change Alys.
+        ws.saga.character("comp1").name = "Alys the Bold"
+        ws.saga.character("mag1").name = "Leandro the Wise"
+        storage.save_saga(ws.saga)
+        on_disk = storage.load_saga(saga.id)
+        assert on_disk.character("comp1").name == "Alys"
+        assert on_disk.character("mag1").name == "Leandro the Wise"
+
+    assert storage.guard is None  # signed out with the saga closed
+
+
+async def test_only_the_storyguide_says_who_plays_a_character(in_a_browser):
+    saga, ana, hedda = _troupe()
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        ws = await _workspace_as(app, pilot, saga, hedda)
+        await _show(pilot, ws, ("character", "comp1"))
+        ws._edit_biographical_detail()
+        assert await wait_until(pilot, lambda: bool(app.screen.query("#fld-player_id")))
+        dialog = app.screen
+        played_by = dialog.query_one("#fld-player_id", Select)
+        played_by.value = ana.id
+        dialog.query_one("#btn-save", Button).press()
+        assert await wait_until(pilot, lambda: app.screen is ws)
+        assert (
+            storage.load_saga(saga.id).character("comp1").background.player_id == ana.id
+        )

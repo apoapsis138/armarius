@@ -39,6 +39,17 @@ magus; the Hermetic Techniques are verbs (*verbum*); an *exemplar* was the
 copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject.
 
+## 2.16.0 — 2026-10-06
+
+- Players signed in to a hosted saga now change only what is theirs: the
+  characters they play, with those characters' familiars, laboratories
+  and books. Choose who plays a character with **Played by** in its
+  Biographical Detail, and tick **May change covenants** on a player to
+  let them change the covenants too. Making new records, the season and
+  date, importing, moving vis and sharing spells stay with the storyguide.
+  Elsewhere a player can look and Export, and in a browser an export
+  downloads to their own computer.
+
 ## 2.15.0 — 2026-10-06
 
 - When the saga is hosted and several people have it open, saving no

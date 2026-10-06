@@ -137,7 +137,12 @@ class CharacterActions(WorkspaceBase):
         self.app.push_screen(
             FieldsDialog(
                 "Edit Biographical Detail",
-                _biographical_fields(character.background, character.description),
+                _biographical_fields(
+                    character.background,
+                    character.description,
+                    self.saga.players,
+                    may_assign=self._is_storyguide(),
+                ),
             ),
             handle_result,
         )

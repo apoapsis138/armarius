@@ -223,14 +223,20 @@ Who can sign in to this saga when you host it, so that players open it in a web 
 
 Only the storyguide sees this node: your own window, or someone signed in with the Storyguide role.
 
-**You type:** with `a` and `e`: the player's Name (what they type to sign in; no two players may share one), their Role (Player or Storyguide) and a Passcode. When editing, leave New passcode blank to keep the one they have. `d` deletes a player after a confirmation; they can no longer sign in.
+**You type:** with `a` and `e`: the player's Name (what they type to sign in; no two players may share one), their Role (Player or Storyguide), for a player whether they May change covenants, and a Passcode. When editing, leave New passcode blank to keep the one they have. `d` deletes a player after a confirmation; they can no longer sign in.
 
-**The app works out:** nothing to show. Passcodes are stored only scrambled (a salted hash), so the app can check one but no one can read it back from the saga file: if a player forgets theirs, give them a new one.
+**The app works out:** in the details panel, the characters each plays and what they may change. Passcodes are stored only scrambled (a salted hash), so the app can check one but no one can read it back from the saga file: if a player forgets theirs, give them a new one.
 
 ### What a signed-in player can do
 <!-- help: players-access -->
 
-For now everyone signed in can change what you can. Limiting players to their own characters, and keeping the season, the covenant and the saga's settings to the storyguide, comes in a later version.
+Choose who plays a character with **Played by** in the character's Biographical Detail (only the storyguide can). A signed-in player can then:
+
+- change the characters they play, with those characters' familiars, laboratories and books, and their season plans;
+- change the covenants too, if you ticked May change covenants for them;
+- look at everything else, and Export a character, laboratory or covenant (the file downloads in their browser).
+
+Only the storyguide (your own window, or someone signed in as Storyguide) can make new records (New), advance or set the season, import, move vis, share spells, or change the saga itself, its house rules and its players. Keys a player can't use there don't appear, and if a change slips through anyway, the app doesn't save it and says so.
 
 **See also:** [Signing in](help:sign-in), [The saga](help:saga)
 

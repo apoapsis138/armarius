@@ -7,7 +7,7 @@ import json
 import os
 import re
 import time
-from collections.abc import Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from contextlib import contextmanager
 from dataclasses import asdict
 from pathlib import Path
@@ -65,6 +65,14 @@ def saga_path(saga_id: str) -> Path:
 #: saga as plain data then -- what save_saga merges its changes against.
 _last_seen: dict[str, tuple[str, dict[str, Any], dict[str, Any]]] = {}
 
+#: Takes back, before a save, the changes whoever is signed in to this copy
+#: may not make (players.guard_changes, set while a player is signed in,
+#: STORY-1404): (this copy's saga as last seen, as now) -> (as it may be
+#: saved, what was taken back).
+guard: (
+    Callable[[dict[str, Any], dict[str, Any]], tuple[dict[str, Any], list[str]]] | None
+) = None
+
 #: Where save_saga last kept this copy's value over another copy's newer
 #: one ("characters[mag1].name", ...), for the saga last saved.
 last_conflicts: list[str] = []
@@ -87,6 +95,8 @@ def save_saga(saga: Saga) -> Path:
             on_disk = _read_text(path)
             # The file as this copy left it needn't be read again.
             theirs = file_data if on_disk == text else _normalized(on_disk)
+        if guard is not None and base is not None:
+            ours, _ = guard(base, ours)
         if base is None or theirs is None:
             data, conflicts = ours, []
         else:

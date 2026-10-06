@@ -6,6 +6,8 @@ of record."""
 from __future__ import annotations
 
 import asyncio
+import io
+import json
 import random
 import re
 from collections.abc import Callable, Sequence
@@ -266,6 +268,39 @@ _HELP_PAGES: dict[NodeKind, str] = {
     NodeKind.HOUSE_RULES: "house-rules",
     NodeKind.PLAYERS: "players",
 }
+
+#: What only the storyguide may do, whatever a player owns (STORY-1404):
+#: making records, the saga's calendar, reading files on the host's disk,
+#: and moving vis or spells between characters.
+_STORYGUIDE_ACTIONS = frozenset(
+    {
+        "new",
+        "create_covenant",
+        "create_character",
+        "create_laboratory",
+        "create_familiar",
+        "advance_season",
+        "set_date",
+        "import_data",
+        "move_vis",
+        "share_spell",
+    }
+)
+
+#: What anyone signed in may do anywhere: move around, read, and export
+#: (which only reads the saga).
+_LOOKING_ACTIONS = frozenset(
+    {
+        "filter",
+        "toggle_section",
+        "show_tab",
+        "help",
+        "step_out",
+        "quit",
+        "more",
+        "export_record",
+    }
+)
 
 #: Each sheet's own section: the top panel that names the record. With
 #: focus there (or on its tree node), d and More act on the record itself.
@@ -550,11 +585,28 @@ class WorkspaceBase(Screen[None]):
     async def on_mount(self) -> None:
         self._update_saga_clock()
         self._rebuild_tree()
+        if not self._is_storyguide():
+            storage.guard = self._guard_save
         await self._show_saga_detail()
 
     def on_unmount(self) -> None:
         # Back to the saga list: whoever signed in to this saga is signed out.
         self.app.player = None  # type: ignore[attr-defined]
+        storage.guard = None
+
+    def _guard_save(
+        self, before: dict[str, Any], after: dict[str, Any]
+    ) -> tuple[dict[str, Any], list[str]]:
+        """The last check before a signed-in player's save (STORY-1404):
+        what they may not change isn't saved, and they're told."""
+        kept, refused = pl.guard_changes(self._signed_in(), before, after)
+        if refused:
+            self.notify(
+                "Not saved: only the storyguide can change "
+                + escape(", ".join(refused)),
+                severity="warning",
+            )
+        return kept, refused
 
     def _update_saga_clock(self) -> None:
         """Shows the saga's current date in the Header, on every screen of
@@ -769,6 +821,8 @@ class WorkspaceBase(Screen[None]):
         self.refresh_bindings()
 
     def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
+        if not self._player_may(action):
+            return False
         if action == "delete":
             return self._deletes_record() or self._section_op("remove") is not None
         if action == "more":
@@ -787,6 +841,8 @@ class WorkspaceBase(Screen[None]):
     def _available(self, action: str) -> bool:
         """Whether `action` can run where focus is: what enables a/e and
         decides what More and New offer."""
+        if not self._player_may(action):
+            return False
         if (
             action in _CREATE_PLACES
             and self.selected_kind not in _CREATE_PLACES[action]
@@ -1106,6 +1162,21 @@ class WorkspaceBase(Screen[None]):
             if result is None:
                 return
             path, with_members = result
+            if self.app.is_web:
+                # A browser copy (STORY-1404): the file goes to the player's
+                # computer as a download, not to a folder on the host.
+                data = transfer.export_data(
+                    self.saga, record, with_members=with_members
+                )
+                self.app.deliver_binary(
+                    io.BytesIO(json.dumps(data, indent=2).encode("utf-8")),
+                    save_filename=path.name,
+                    mime_type="application/json",
+                )
+                self.notify(
+                    f"Exported {escape(record.name)}: your browser downloads it."
+                )
+                return
             try:
                 transfer.export_to(path, self.saga, record, with_members=with_members)
             except OSError as problem:
@@ -1845,6 +1916,26 @@ class WorkspaceBase(Screen[None]):
         """The player signed in to this browser copy; None in the
         storyguide's own window, which never signs in."""
         return getattr(self.app, "player", None)
+
+    def _player_may(self, action: str) -> bool:
+        """Whether whoever is signed in may run `action` here (STORY-1404):
+        the storyguide anything; a player moves around and reads anywhere,
+        and changes only what they may change (players.may_change)."""
+        if self._is_storyguide():
+            return True
+        if action in _STORYGUIDE_ACTIONS:
+            return False
+        return action in _LOOKING_ACTIONS or self._may_change_here()
+
+    def _may_change_here(self) -> bool:
+        """Whether whoever is signed in may change the record on show."""
+        record = {
+            NodeKind.CHARACTER: self.selected_character,
+            NodeKind.FAMILIAR: self.selected_familiar,
+            NodeKind.LABORATORY: self.selected_laboratory,
+            NodeKind.COVENANT: self.selected_covenant,
+        }.get(self.selected_kind)
+        return pl.may_change(self.saga, self._signed_in(), record)
 
     def _is_storyguide(self) -> bool:
         """Whether whoever is using this copy runs the saga: the

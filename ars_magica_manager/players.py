@@ -18,7 +18,7 @@ from typing import Any
 
 from . import storage
 from .markup import escape, fit
-from .models import Player, Saga
+from .models import Character, Covenant, Familiar, Laboratory, Player, Saga
 
 PLAYER = "player"
 STORYGUIDE = "storyguide"
@@ -84,6 +84,7 @@ def add(saga: Saga, values: dict[str, Any]) -> Player:
         name=name,
         role=values.get("role") or PLAYER,
         passcode_hash=hash_passcode(values["passcode"]),
+        covenant_rights=bool(values.get("covenant_rights")),
     )
     saga.players.append(player)
     return player
@@ -93,12 +94,52 @@ def update(player: Player, values: dict[str, Any]) -> None:
     """Change `player` from a form's values; a blank passcode keeps theirs."""
     player.name = values["name"].strip()
     player.role = values.get("role") or player.role
+    player.covenant_rights = bool(values.get("covenant_rights"))
     if values.get("passcode"):
         player.passcode_hash = hash_passcode(values["passcode"])
 
 
 def remove(saga: Saga, player: Player) -> None:
+    """Delete `player`; the characters they played are no one's."""
     saga.players.remove(player)
+    for character in characters_of(saga, player):
+        character.background.player_id = None
+
+
+# -- who may change what (STORY-1404) --
+
+
+def player_by_id(saga: Saga, player_id: str | None) -> Player | None:
+    return next((p for p in saga.players if p.id == player_id), None)
+
+
+def characters_of(saga: Saga, player: Player) -> list[Character]:
+    """The characters `player` plays."""
+    return [c for c in saga.characters if c.background.player_id == player.id]
+
+
+def may_change(
+    saga: Saga,
+    player: Player | None,
+    record: Character | Familiar | Laboratory | Covenant | None,
+) -> bool:
+    """Whether `player` may change `record` (None: something of the whole
+    saga). A storyguide may change anything; a player their own characters,
+    those characters' familiars and laboratories, and the covenants if the
+    storyguide gave them covenant rights. `player` None is the storyguide's
+    own window."""
+    if player is None or player.role == STORYGUIDE:
+        return True
+    mine = {c.id for c in characters_of(saga, player)}
+    if isinstance(record, Character):
+        return record.id in mine
+    if isinstance(record, Familiar):
+        return record.character_id in mine
+    if isinstance(record, Laboratory):
+        return record.owner_id in mine
+    if isinstance(record, Covenant):
+        return player.covenant_rights
+    return False
 
 
 def table_header() -> str:
@@ -114,15 +155,15 @@ def row_label(player: Player) -> str:
     )
 
 
-def detail_text(player: Player | None) -> str:
+def detail_text(saga: Saga, player: Player | None) -> str:
     """The details panel (markup) for a chosen player."""
     if player is None:
         return (
             "[dim]Who can sign in to this saga when you host it for a browser: "
             "each signs in with their name and the passcode you give them. "
-            "Your own window never asks. For now everyone signed in can change "
-            "what you can; limiting players to their own characters comes "
-            "later.[/]"
+            "Your own window never asks. A player changes only the characters "
+            "they play (choose who plays a character in its Biographical "
+            "Detail); everything else they can only look at.[/]"
         )
     role = ROLE_LABELS.get(player.role, player.role)
     return "\n".join(
@@ -132,3 +173,79 @@ def detail_text(player: Player | None) -> str:
             "[b]Passcode:[/] set (edit the player to give them a new one)",
         ]
     )
+
+
+#: Parts of a saga anyone signed in may change: the libraries and spells
+#: their characters use, their season plans and lab work, enchanted items.
+#: Each still sits on a sheet only its owner can change.
+_SHARED_PARTS = frozenset(
+    {
+        "books",
+        "spells",
+        "season_plans",
+        "lab_projects",
+        "enchanted_devices",
+        "app_version",
+    }
+)
+
+
+def guard_changes(
+    player: Player | None, before: dict[str, Any], after: dict[str, Any]
+) -> tuple[dict[str, Any], list[str]]:
+    """`after` (a saga as plain data) with the changes `player` may not make
+    since `before` taken back, and what was taken back ("characters[mag1]",
+    "current_year"...). The last guard in front of saving (STORY-1404): the
+    screens already offer a player only what they may change."""
+    if player is None or player.role == STORYGUIDE:
+        return after, []
+    mine = {
+        c["id"]
+        for c in before.get("characters", [])
+        if (c.get("background") or {}).get("player_id") == player.id
+    }
+    owner_of = {
+        "characters": lambda r: r.get("id") in mine,
+        "laboratories": lambda r: r.get("owner_id") in mine,
+        "familiars": lambda r: r.get("character_id") in mine,
+        "covenants": lambda r: player.covenant_rights,
+    }
+    kept = dict(after)
+    refused: list[str] = []
+    for key in [*before, *(k for k in after if k not in before)]:
+        old, new = before.get(key), after.get(key)
+        if old == new or key in _SHARED_PARTS:
+            continue
+        may = owner_of.get(key)
+        if may is None:
+            kept[key] = old
+            refused.append(key)
+        else:
+            kept[key] = _guard_records(key, old or [], new or [], may, refused)
+    return kept, refused
+
+
+def _guard_records(
+    key: str, old: list, new: list, may: Any, refused: list[str]
+) -> list:
+    """`new` records with each change to one `may` refuses undone."""
+    old_by_id = {r["id"]: r for r in old}
+    kept = []
+    for record in new:
+        before = old_by_id.get(record["id"])
+        if before is None:
+            if may(record):
+                kept.append(record)
+            else:
+                refused.append(f"{key}[{record['id']}]")
+        elif record == before or may(before):
+            kept.append(record)
+        else:
+            kept.append(before)
+            refused.append(f"{key}[{record['id']}]")
+    new_ids = {r["id"] for r in new}
+    for record in old:
+        if record["id"] not in new_ids and not may(record):
+            kept.append(record)
+            refused.append(f"{key}[{record['id']}]")
+    return kept
