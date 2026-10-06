@@ -1,4 +1,4 @@
-"""Optional rules and rounding (STORY-819)."""
+"""Optional rules and rounding."""
 
 import pytest
 

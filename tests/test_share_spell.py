@@ -1,4 +1,4 @@
-"""Making a magus's invented spell available to the saga (STORY-608)."""
+"""Making a magus's invented spell available to the saga."""
 
 from __future__ import annotations
 

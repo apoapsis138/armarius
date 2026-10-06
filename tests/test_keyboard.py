@@ -1,7 +1,7 @@
-"""How the workspace is driven from the keyboard and the mouse (STORY-1005
-to 1008): one Tab stop per section, a click that focuses before it
-collapses, the tab numbers, Esc stepping out, a / e / d everywhere, the More
-and New menus, / to filter, and what the footer and the row above it say."""
+"""How the workspace is driven from the keyboard and the mouse: one Tab stop per
+section, a click that focuses before it collapses, the tab numbers, Esc stepping out, a
+/ e / d everywhere, the More and New menus, / to filter, and what the footer and the row
+above it say."""
 
 from support import NODES, everything_saga, menu, screen_lines, wait_until
 from textual.widgets import Button, Collapsible, Input, TabbedContent, Tree
@@ -78,7 +78,7 @@ def _where(app) -> str:
     return screen_lines(app)[-2]
 
 
-# -- STORY-1005: the focus model ------------------------------------------
+# -- The focus model ------------------------------------------
 
 
 async def test_tab_stops_once_per_section_and_never_on_a_button():
@@ -286,7 +286,7 @@ async def test_enter_on_a_list_node_moves_into_its_list():
         assert await wait_until(pilot, lambda: spells.selected_data_index is not None)
 
 
-# -- STORY-1006: a / e / d everywhere --------------------------------------
+# -- A / e / d everywhere --------------------------------------
 
 
 async def test_virtues_and_flaws_use_a_and_d_like_any_other_list():
@@ -380,7 +380,7 @@ async def test_d_deletes_the_highlighted_saga_on_the_saga_picker():
         assert await wait_until(pilot, lambda: storage.list_sagas() == [])
 
 
-# -- STORY-1007: More, New and / -------------------------------------------
+# -- More, New and / -------------------------------------------
 
 
 async def test_new_offers_what_can_be_made_here_and_a_letter_picks_it():
@@ -516,7 +516,7 @@ async def test_slash_moves_to_the_spell_search():
         assert "Filter" not in _footer(app)
 
 
-# -- STORY-1008: the footer and the row above it ---------------------------
+# -- The footer and the row above it ---------------------------
 
 
 async def test_the_footer_keeps_focused_actions_left_and_global_ones_right():

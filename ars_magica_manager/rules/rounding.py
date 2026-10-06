@@ -44,7 +44,6 @@ def round_away_from_zero(value: float) -> int:
     Loyalty can be negative): `ceil(-2.4)` is -2, which softens the number
     instead of rounding it up.
 
-    Kept for covenant finances over the rules reference's readings (fractional
-    pounds, decision 21; nearest for Base Loyalty): Hedda, 2026-09-29
-    (STORY-815)."""
+    Covenant finances use it in place of the rules reference's readings
+    (fractional pounds, decision 21; nearest for Base Loyalty)."""
     return math.ceil(value) if value >= 0 else -math.ceil(-value)

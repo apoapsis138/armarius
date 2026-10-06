@@ -1,5 +1,5 @@
 """Scores from experience points: an Art's or Ability's score is derived from
-the total xp spent on it, never stored (STORY-806).
+the total xp spent on it, never stored.
 
 - Art: reaching score n costs n(n+1)/2 xp in total; the step from n-1 to n
   costs n.

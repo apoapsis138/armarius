@@ -1,4 +1,4 @@
-"""The Ars Magica Open License obligations (STORY-1202): every catalog
+"""The Ars Magica Open License obligations: every catalog
 carries Atlas's attribution line, and Help's About this App shows the licences
 and credits."""
 
@@ -79,7 +79,7 @@ async def test_saga_picker_footer_shows_help_at_the_right():
 
 
 async def _open_about(pilot, app) -> None:
-    """? on the saga picker, then Help's About this App (STORY-115: About
+    """? on the saga picker, then Help's About this App (About
     moved into Help)."""
     await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
     await pilot.press("question_mark")

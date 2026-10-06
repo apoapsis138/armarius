@@ -1,4 +1,4 @@
-"""Enchanted Devices on the sheets (STORY-305): the section on the lab,
+"""Enchanted Devices on the sheets: the section on the lab,
 character and covenant sheets, and its keys -- a adds a device, i instils an
 effect, e edits, A removes (after confirming), u uses a charge -- plus the
 list sub-dialogs of the device form and the talisman on the Hermetic Magic

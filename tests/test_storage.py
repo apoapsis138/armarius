@@ -334,7 +334,7 @@ def test_a_save_from_before_a_field_existed_loads_with_its_default(model, minima
     assert model.from_dict(dict(minimal)) == model(**minimal)
 
 
-# -- stale keys from older saves (STORY-1125) ---------------------------------
+# -- stale keys from older saves ---------------------------------
 
 
 def _saga_with_every_record() -> Saga:

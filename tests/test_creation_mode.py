@@ -1,4 +1,4 @@
-"""In Creation / In Play (STORY-1301): the mode, the creation checks'
+"""In Creation / In Play: the mode, the creation checks'
 machinery, and the top-panel switch."""
 
 from __future__ import annotations
@@ -46,7 +46,7 @@ def test_new_records_start_in_creation_and_old_saves_load_in_play():
     character = creation.add_character(saga, "Ann", "companion", covenant.id)
     lab = creation.add_laboratory(saga, "Tower", 0, covenant.id)
     assert covenant.in_creation and character.in_creation and lab.in_creation
-    # A save from before STORY-1301 has no mode: it loads In Play.
+    # An older save has no mode: it loads In Play.
     data = json.loads(storage.save_saga(saga).read_text(encoding="utf-8"))
     for key in ("covenants", "characters", "laboratories"):
         for record in data[key]:

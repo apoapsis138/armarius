@@ -273,10 +273,10 @@ _HELP_PAGES: dict[NodeKind, str] = {
 }
 
 #: How often, in seconds, a hosted saga's copies look for each other's saves
-#: and say who has which record open (STORY-1406).
+#: and say who has which record open.
 _SHARED_TICK = 2.0
 
-#: What only the storyguide may do, whatever a player owns (STORY-1404):
+#: What only the storyguide may do, whatever a player owns:
 #: making records, the saga's calendar, reading files on the host's disk,
 #: and moving vis or spells between characters.
 _STORYGUIDE_ACTIONS = frozenset(
@@ -319,7 +319,7 @@ _RECORD_SECTION: dict[NodeKind, str] = {
 }
 
 
-#: Where in the tree each record can be created (STORY-110): the saga, and
+#: Where in the tree each record can be created: the saga, and
 #: the covenant, group or record it would sit beside -- so a sheet's footer
 #: offers only what belongs there. A new character or laboratory defaults
 #: to the covenant on show. Binding a Familiar also needs a magus without
@@ -445,7 +445,7 @@ def _tree_node_with_data(tree: Tree, data: tuple) -> TreeNode | None:
     return None
 
 
-#: The character sheet sections advancing the season can change (STORY-903).
+#: The character sheet sections advancing the season can change.
 _SEASON_SECTIONS: tuple[str, ...] = (
     "section-char-info",
     "tab-abilities",
@@ -459,7 +459,7 @@ _SEASON_SECTIONS: tuple[str, ...] = (
 
 _CHARACTER_VIS_SECTIONS = ("section-raw-vis-hermetic", "section-raw-vis-inventory")
 
-#: The sections a move of raw vis changes on its source's sheet (STORY-412).
+#: The sections a move of raw vis changes on its source's sheet.
 _VIS_REFRESH: dict[str, tuple[str, ...]] = {
     vis.CHARACTER: (*_CHARACTER_VIS_SECTIONS, "tab-diary"),
     vis.LABORATORY: ("section-lab-raw-vis", "tab-lab-diary"),
@@ -473,7 +473,7 @@ class WorkspaceBase(Screen[None]):
     (_commit), and the a / e / d plumbing. The per-record actions live in the
     mixins WorkspaceScreen combines."""
 
-    #: One verb per key, everywhere (STORY-1004's rules; see reference/
+    #: One verb per key, everywhere (see reference/
     #: UI_Conventions.md): a / e / d act on whatever has focus -- the
     #: highlighted row of a list, a section, or the record itself. What only
     #: a few sections can do is in More (m); what can be made is in New (n).
@@ -558,7 +558,7 @@ class WorkspaceBase(Screen[None]):
     def __init__(self, saga: Saga) -> None:
         super().__init__()
         self.saga = saga
-        # Its user-made entries join the shared catalogs (STORY-708).
+        # Its user-made entries join the shared catalogs.
         catalog.use_saga(saga)
         self.selected_kind: NodeKind = NodeKind.SAGA
         self.selected_covenant: Covenant | None = None
@@ -597,7 +597,7 @@ class WorkspaceBase(Screen[None]):
         player = self._signed_in()
         storage.saved_by = player.name if player is not None else ""
         if self.saga.players:
-            # Others may have the saga open (a hosted saga, STORY-1406).
+            # Others may have the saga open (a hosted saga).
             self._session = uuid.uuid4().hex
             self.set_interval(_SHARED_TICK, self._shared_tick)
         await self._show_saga_detail()
@@ -610,7 +610,7 @@ class WorkspaceBase(Screen[None]):
         if self._session is not None:
             presence.leave(self._session)
 
-    # -- other copies of a hosted saga (STORY-1406) --
+    # -- other copies of a hosted saga --
 
     #: This copy's presence id while the saga has players (presence.py).
     _session: str | None = None
@@ -704,7 +704,7 @@ class WorkspaceBase(Screen[None]):
     def _guard_save(
         self, before: dict[str, Any], after: dict[str, Any]
     ) -> tuple[dict[str, Any], list[str]]:
-        """The last check before a signed-in player's save (STORY-1404):
+        """The last check before a signed-in player's save:
         what they may not change isn't saved, and they're told."""
         kept, refused = pl.guard_changes(self._signed_in(), before, after)
         if refused:
@@ -810,7 +810,7 @@ class WorkspaceBase(Screen[None]):
         """A character's own tree node: a plain leaf, unless it's a magus
         with a bound Familiar, in which case it becomes an expandable node
         with the Familiar as its one child leaf (nested under its creator,
-        never its own group -- see kanban STORY-206)."""
+        never its own group)."""
         label = f"{escape(character.name)} ({character.type}){_creating(character)}"
         familiar = (
             fam.familiar_of(self.saga, character.id)
@@ -1018,7 +1018,7 @@ class WorkspaceBase(Screen[None]):
                 and bool(vis.destinations(self.saga, holder))
             )
         if action == "export_record":
-            # Over SSH there is nowhere to send the file (STORY-1408).
+            # Over SSH there is nowhere to send the file.
             return (
                 hosting.transport() != "ssh"
                 and self._record_to_export() is not None
@@ -1044,7 +1044,7 @@ class WorkspaceBase(Screen[None]):
 
     @property
     def focus_chain(self) -> list[Widget]:
-        """Tab and Shift+Tab stop once per section (STORY-1005)."""
+        """Tab and Shift+Tab stop once per section."""
         return sheet_focus_chain(super().focus_chain)
 
     def set_focus(
@@ -1253,8 +1253,8 @@ class WorkspaceBase(Screen[None]):
         }
 
     def _record_to_export(self) -> transfer.Record | None:
-        """The covenant, laboratory or character whose node is selected
-        (STORY-109): what More's Export exports."""
+        """The covenant, laboratory or character whose node is selected: what More's
+        Export exports."""
         if self.selected_kind == NodeKind.CHARACTER:
             return self.selected_character
         if self.selected_kind == NodeKind.LABORATORY:
@@ -1265,7 +1265,7 @@ class WorkspaceBase(Screen[None]):
 
     def action_export_record(self) -> None:
         """More's Export on a covenant, laboratory or character: write it to a file
-        that another saga can import (STORY-109)."""
+        that another saga can import."""
         record = self._record_to_export()
         if record is None:
             return
@@ -1275,7 +1275,7 @@ class WorkspaceBase(Screen[None]):
                 return
             path, with_members = result
             if self.app.is_web:
-                # A browser copy (STORY-1404): the file goes to the player's
+                # A browser copy: the file goes to the player's
                 # computer as a download, not to a folder on the host.
                 data = transfer.export_data(
                     self.saga, record, with_members=with_members
@@ -1302,7 +1302,7 @@ class WorkspaceBase(Screen[None]):
         self.app.push_screen(_export_dialog(record, storage.EXPORTS_DIR), handle_result)
 
     def _vis_holder(self) -> vis.Holder | None:
-        """Whose raw vis the active section lists (STORY-412): the
+        """Whose raw vis the active section lists: the
         character's or the laboratory's pool, or the covenant's Raw Vis
         Stores. None anywhere else."""
         section = self._active_section()
@@ -1316,7 +1316,7 @@ class WorkspaceBase(Screen[None]):
 
     def action_move_vis(self) -> None:
         """Move raw vis from the sheet on show to another covenant,
-        laboratory or magus (STORY-412): the chosen row's, else the one
+        laboratory or magus: the chosen row's, else the one
         picked. Both sides' Diaries record it."""
         holder = self._vis_holder()
         section = self._active_section()
@@ -1437,7 +1437,7 @@ class WorkspaceBase(Screen[None]):
 
         The Laboratory is the exception on first showing: its default tab
         (Planning) is flat, so it looks at the active tab first -- its
-        seasons list, so e plans lab work straight away (STORY-901) -- and
+        seasons list, so e plans lab work straight away -- and
         only then falls back to the top panel."""
         view = self._current_sheet_view()
         if view is None:
@@ -1497,7 +1497,7 @@ class WorkspaceBase(Screen[None]):
         }.get(self.selected_kind, "")
 
     def _update_where(self) -> None:
-        """Say where focus is in the row above the footer (STORY-1008):
+        """Say where focus is in the row above the footer:
         the tree node on show, then the tab, section and chosen row."""
         try:
             bar = self.query_one(BottomBar)
@@ -1526,7 +1526,7 @@ class WorkspaceBase(Screen[None]):
         self.app.push_screen(HelpScreen(self.help_context()))
 
     def help_context(self) -> HelpContext:
-        """What Help opens on (STORY-115): the focused section, its tab and
+        """What Help opens on: the focused section, its tab and
         the sheet or view on show, then finding your way around; with the
         where-am-I row's words and the keys the footer offers here."""
         ids: list[str] = []
@@ -1701,7 +1701,7 @@ class WorkspaceBase(Screen[None]):
         then: Callable[[int], object],
     ) -> None:
         """Act on a list entry by index: the chosen row's (`selected`). A
-        focused list always has one (STORY-1005); with none (the section is
+        focused list always has one; with none (the section is
         collapsed), act on the only entry there is, else say to choose a
         row -- or, with no entries at all, just say `empty`. Nothing asks
         "which one?" any more (the name is from when a picker did)."""
@@ -1728,7 +1728,7 @@ class WorkspaceBase(Screen[None]):
         self.app.push_screen(ConfirmScreen(f"Delete {escape(name)}?"), handle_confirmed)
 
     def _toggle_creation_mode(self) -> None:
-        """The top panel's In Creation / In Play switch (STORY-1301): asks
+        """The top panel's In Creation / In Play switch: asks
         first either way. With strict creation rules on, a record that
         breaks a rule it must follow stays In Creation."""
         view = self._current_sheet_view()
@@ -1777,7 +1777,7 @@ class WorkspaceBase(Screen[None]):
         if view is not None:
             for section in sections:
                 view.refresh_section(section)
-        # An open Creation Worksheet shows the record too (STORY-1302).
+        # An open Creation Worksheet shows the record too.
         for screen in self.app.screen_stack:
             changed = getattr(screen, "record_changed", None)
             if callable(changed):
@@ -2022,7 +2022,7 @@ class WorkspaceBase(Screen[None]):
     def _players_label(self) -> str:
         return f"Players ({len(self.saga.players)})"
 
-    # -- who is using this copy (STORY-1403) --
+    # -- who is using this copy --
 
     def _signed_in(self) -> Player | None:
         """The player signed in to this browser copy; None in the
@@ -2030,7 +2030,7 @@ class WorkspaceBase(Screen[None]):
         return getattr(self.app, "player", None)
 
     def _player_may(self, action: str) -> bool:
-        """Whether whoever is signed in may run `action` here (STORY-1404):
+        """Whether whoever is signed in may run `action` here:
         the storyguide anything; a player moves around and reads anywhere,
         and changes only what they may change (players.may_change)."""
         if self._is_storyguide():
@@ -2105,7 +2105,7 @@ class WorkspaceBase(Screen[None]):
 
         async def advance() -> None:
             # Contested resources whose security lapsed: was each secured
-            # this season (STORY-906)? Asked one by one, then the season
+            # this season? Asked one by one, then the season
             # is played out.
             lapsed = seasons.lapsed_resources(saga)
             answers: dict[str, bool] = {}
@@ -2133,10 +2133,10 @@ class WorkspaceBase(Screen[None]):
 
         async def play_out(answers: dict[str, bool]) -> None:
             # Every plan's outcome is worked out before any is applied, so a
-            # season's results can't change that same season (STORY-903).
+            # season's results can't change that same season.
             worked = seasons.resolve(saga, random.Random())
             # An experiment seeking a Discovery whose roll the risk can move
-            # onto 10: asked each time (Hedda 2026-09-30).
+            # onto 10: the player is asked each time.
             moves = seasons.discovery_moves(saga, worked)
 
             async def ask_move(index: int) -> None:
@@ -2249,7 +2249,7 @@ class WorkspaceBase(Screen[None]):
         )
 
     def _grog_year_for(self, character: Character, section: str) -> None:
-        """Set up a grog's yearly update (STORY-924)."""
+        """Set up a grog's yearly update."""
 
         def handle_result(year: GrogYear | None) -> None:
             if year is not None:

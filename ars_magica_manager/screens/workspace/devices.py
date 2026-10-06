@@ -1,4 +1,4 @@
-"""WorkspaceScreen's actions for enchanted devices (STORY-305), on every
+"""WorkspaceScreen's actions for enchanted devices, on every
 sheet's Enchanted Devices section: a adds a device, e edits the chosen
 device or effect and A removes it (after confirming), falling back to a
 picker when none is chosen; i instils an effect in the chosen device and u

@@ -1,4 +1,4 @@
-"""The covenant sheet's Build tab (STORY-1314): what the covenant's Build
+"""The covenant sheet's Build tab: what the covenant's Build
 Points went on, row by row, as it started (Initial) and as it stands now
 (Current). Build Points are spent at covenant creation and don't matter in
 play, so this tab is the one place they show; it keeps a covenant's value

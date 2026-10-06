@@ -1,4 +1,4 @@
-"""Work on the laboratory itself (STORY-915), from its Planning tab, and
+"""Work on the laboratory itself, from its Planning tab, and
 assisting in someone else's (planned on the assistant's sheet).
 
 - Setting up a laboratory: two seasons, Magic Theory 3; after the first it

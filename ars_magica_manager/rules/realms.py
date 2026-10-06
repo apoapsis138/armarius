@@ -1,4 +1,4 @@
-"""Auras and realm interaction (STORY-808): the modifier an aura gives a
+"""Auras and realm interaction: the modifier an aura gives a
 supernatural act, by the realm of the power used and the realm of the aura,
 and the extra botch dice for acting in another realm's aura.
 

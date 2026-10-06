@@ -1,4 +1,4 @@
-"""True Faith (STORY-210; DE Chapter Twelve: Realms, "True Faith").
+"""True Faith (DE Chapter Twelve: Realms, "True Faith").
 
 Like Confidence, True Faith has a Score and Points. The True Faith Major
 Virtue gives a Score of 1 and one Faith Point, and only a character with the
@@ -6,7 +6,7 @@ Virtue may have a Score. Anyone may hold Faith Points (sacraments,
 pilgrimage, other holy endeavours); spent ones don't come back, but each
 dawn a character regains Faith Points up to their Score. A Score of 2 or
 more makes the character a Mythic Companion (RoP:D). The Score's Magic
-Resistance (Score x 10) is a Rules Engine concern (FEAT-08)."""
+Resistance (Score x 10) is worked out by the rules (rules.penetration)."""
 
 from __future__ import annotations
 

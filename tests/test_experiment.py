@@ -1,4 +1,4 @@
-"""Arcane experimentation and original research (STORY-916)."""
+"""Arcane experimentation and original research."""
 
 import random
 
@@ -287,7 +287,7 @@ def test_an_invented_spell_keeps_its_side_effect():
     assert spell.experimental_effects == [f"Side effect: {experiment.SIDE_EFFECTS[3]}"]
 
 
-# -- the Extraordinary Results chart, roll by roll (STORY-1129) ------------------
+# -- the Extraordinary Results chart, roll by roll ------------------
 
 
 def _chart(roll: int, *faces: int, risk: int = 0) -> experiment.Extraordinary:
@@ -333,7 +333,7 @@ def test_an_eleven_modifies_the_effect():
 
 
 def test_an_eleven_rolls_one_die_for_the_modified_effect():
-    """B25 (STORY-927): one simple die + risk for the whole table, not a
+    """One simple die + risk for the whole table, not a
     new die for each row checked."""
     # One die of 10 (face 0) + risk 2 = 12: past every row, so the last.
     assert _chart(11, 0, 1, 1, 1, risk=2).effects == [

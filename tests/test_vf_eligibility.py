@@ -1,5 +1,5 @@
 """Who may take which character Virtue/Flaw: the structural eligibility
-rules the picker hides entries by (STORY-710)."""
+rules the picker hides entries by."""
 
 import pytest
 

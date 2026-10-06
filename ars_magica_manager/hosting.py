@@ -1,4 +1,4 @@
-"""Hosting the app for players (FEAT-14): the pieces tools/serve.py runs.
+"""Hosting the app for players: the pieces tools/serve.py runs.
 
 Each player gets their own copy of the app, a separate process running
 Textual's web driver, which talks to this process in packets: terminal
@@ -6,8 +6,8 @@ output and input as data, resizes and the like as meta. textual-serve's
 AppService drives such a copy; here it is adapted for Windows and shared
 by the two ways in:
 
-- a browser (textual-serve's web page, STORY-1402);
-- an SSH client (STORY-1408): an SSH server in this process, no accounts
+- a browser (textual-serve's web page);
+- an SSH client: an SSH server in this process, no accounts
   on the host; each session is one app copy, its terminal bytes passed
   straight through.
 
@@ -43,7 +43,7 @@ class HostedAppService(AppService):
     """One hosted copy of the app.
 
     Ends the copy when its connection goes: textual-serve asks the copy to
-    quit and waits forever, but on Windows (seen in the STORY-1402 spike)
+    quit and waits forever, but on Windows
     the copy never quits, so each closed tab left a copy running. Here it
     gets a moment to quit, then it is ended."""
 

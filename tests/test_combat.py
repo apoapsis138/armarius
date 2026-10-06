@@ -1,4 +1,4 @@
-"""Combat totals (STORY-811)."""
+"""Combat totals."""
 
 from ars_magica_manager import sheet_text
 from ars_magica_manager.models import (

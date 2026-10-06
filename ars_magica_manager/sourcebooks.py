@@ -1,5 +1,5 @@
 """The Ars Magica sourcebooks the catalogs cite, and which ones a saga has in
-play (STORY-711).
+play.
 
 Every catalog entry names its book(s) in `source` ("DE", "RoP:F; TC&TC").
 A saga keeps the supplements in play in `Saga.books_in_play` -- None means

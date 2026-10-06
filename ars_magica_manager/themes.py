@@ -5,7 +5,7 @@ Registered on the app in app.py; switch between them (and the Textual
 built-ins) via the command palette (ctrl+p).
 
 Besides Textual's base colours, the app's CSS uses its own variables, named
-for what a colour is *for* (STORY-1011): each Scriptorum theme sets them,
+for what a colour is *for*: each Scriptorum theme sets them,
 and `app_variable_defaults` derives them for any other theme.
 """
 
@@ -17,18 +17,18 @@ from textual.theme import Theme
 SCRIPTORUM_VARIABLES = {
     # A text field is a well a shade deeper than the parchment, as if pressed
     # into the page, lifting toward the page colour while it's typed in.
-    # (Hedda 2026-10-05: not near-white, which broke the parchment feel.)
+    # Not near-white, which breaks the parchment feel.
     "field-background": "#E3D2B1",
     "field-background-focus": "#F6ECD8",
-    # STORY-1012: headings (an entity's name, dialog titles, the active
+    # Headings (an entity's name, dialog titles, the active
     # tab), labels that recede so values stand out (6:1 on the surface,
     # 4.9:1 on a panel), and the faint rule over each section. Headings
-    # share cinnabar with errors (Hedda 2026-10-05 kept it over lapis); a
-    # problem also leads with a glyph (STORY-1015).
+    # share cinnabar with errors, not lapis; a
+    # problem also leads with a glyph.
     "heading": "#8B0000",
     "label": "#5F4F44",
     "rule": "#C9B48A",
-    # STORY-1013: placeholder text in a field (4.6:1 on a well; Textual's
+    # Placeholder text in a field (4.6:1 on a well; Textual's
     # $text-disabled was 2.6:1).
     "placeholder": "#685849",
     # Textual's own variables. Warnings in burnt umber, apart from the gold

@@ -1,5 +1,5 @@
 """The start screen: pick, create or delete a saga, or open Help (which
-holds About). In a browser copy of a hosted app (STORY-1403) it only opens
+holds About). In a browser copy of a hosted app it only opens
 sagas, each after signing in."""
 
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""Spell levels from their design (STORY-810)."""
+"""Spell levels from their design."""
 
 import pytest
 

@@ -1,4 +1,4 @@
-"""Players and signing in (STORY-1403)."""
+"""Players and signing in."""
 
 from __future__ import annotations
 
@@ -172,7 +172,7 @@ async def test_a_saga_with_no_players_cant_be_opened_from_a_browser(in_a_browser
         assert app.player is None
 
 
-# -- who may change what (STORY-1404) --
+# -- who may change what --
 
 
 def _troupe() -> tuple[Saga, Player, Player]:

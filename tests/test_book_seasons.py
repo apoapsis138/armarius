@@ -1,4 +1,4 @@
-"""Seasons spent on books (STORY-910) and Lab Texts (STORY-914)."""
+"""Seasons spent on books and Lab Texts."""
 
 from ars_magica_manager import seasons
 from ars_magica_manager.models import (

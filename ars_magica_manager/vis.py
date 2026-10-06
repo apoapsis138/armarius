@@ -1,4 +1,4 @@
-"""Raw vis across the saga (STORY-412): who holds what, moving it between
+"""Raw vis across the saga: who holds what, moving it between
 them, and where a covenant's vis store is kept.
 
 A character and a laboratory each hold one pool of raw vis, pawns by Art
@@ -152,7 +152,7 @@ def _stores(covenant: Covenant, art: str) -> list[Possession]:
 class StorePool(MutableMapping[str, int]):
     """A covenant's Raw Vis Stores seen as a pool, pawns by Art (lower-case
     keys) -- what a character's or laboratory's `raw_vis` is -- so season
-    work can pay from them (STORY-926). Lowering an Art takes pawns from its
+    work can pay from them. Lowering an Art takes pawns from its
     stores in order, removing the emptied; raising it adds to the first (a
     new one if there is none). Every change is entered in the covenant's
     Diary as `who`'s."""

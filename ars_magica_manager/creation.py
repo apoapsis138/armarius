@@ -2,7 +2,7 @@
 character or laboratory added to one. (A Familiar is bound with
 familiars.bind_familiar.) Each takes the values a create form collects and
 returns the new record; nothing here saves. Covenants, characters and
-laboratories start In Creation (STORY-1301)."""
+laboratories start In Creation."""
 
 from __future__ import annotations
 
@@ -75,7 +75,7 @@ def add_laboratory(
     starting: bool = False,
 ) -> Laboratory:
     """`starting`: one of the covenant's starting laboratories, paid for
-    from its Build Points (STORY-1313)."""
+    from its Build Points."""
     laboratory = Laboratory(
         id=storage.generate_unique_id(name, [lab.id for lab in saga.laboratories]),
         covenant_id=covenant_id,
@@ -88,7 +88,7 @@ def add_laboratory(
     return laboratory
 
 
-# -- Creation xp (STORY-1306 to 1310) --
+# -- Creation xp --
 
 
 def _add_xp(character: Character, target: str, xp: int) -> None:
@@ -163,7 +163,7 @@ def pre_play_aging(saga: Saga, character: Character, rng: random.Random) -> list
     """Roll the aging a character older than 35 makes before play: one roll
     for each year from 35 (or from where it stopped) up to its age, each
     written in its Diary. A magus uses the years-past-Gauntlet Living
-    Conditions (STORY-1310); anyone else, their covenant's. Returns each
+    Conditions; anyone else, their covenant's. Returns each
     roll's summary."""
     years = character_age(character.background.year_born, saga.current_year)
     conditions = character.creation_conditions
@@ -197,7 +197,7 @@ def set_in_creation(
 ) -> None:
     """Move `record` to In Creation or In Play. A covenant moving to In Play
     keeps what its Build Points were spent on (the Build tab's Initial
-    column, STORY-1314); moving back to In Creation lets it change again."""
+    column); moving back to In Creation lets it change again."""
     record.in_creation = in_creation
     if isinstance(record, Covenant):
         if in_creation:

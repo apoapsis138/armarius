@@ -1,4 +1,4 @@
-"""Warping and Wizard's Twilight (STORY-909)."""
+"""Warping and Wizard's Twilight."""
 
 import random
 

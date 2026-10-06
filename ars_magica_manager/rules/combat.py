@@ -1,4 +1,4 @@
-"""Combat totals (STORY-811), before the stress die:
+"""Combat totals, before the stress die:
 
     Initiative = Quickness + weapon Init - Encumbrance
     Attack     = Dexterity + Combat Ability + weapon Atk

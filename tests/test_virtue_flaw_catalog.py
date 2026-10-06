@@ -1,4 +1,4 @@
-"""The character Virtue/Flaw catalog after STORY-707's review against
+"""The character Virtue/Flaw catalog, reviewed against
 reference/virtues-and-flaws-reference.md, and the repeat rules it drives."""
 
 import re
@@ -15,7 +15,7 @@ from ars_magica_manager.models import (
 )
 
 #: The sources an entry may name (the DE and the open-content books read for
-#: STORY-707, plus the books the index says also print it).
+#: the review, plus the books the index says also print it).
 KNOWN_BOOKS = {
     # The DE and the open-content books
     *("DE", "HoH:TL", "HoH:MC", "TMRE", "App", "RoP:M", "RoP:F", "RoP:D"),

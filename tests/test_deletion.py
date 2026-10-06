@@ -1,4 +1,4 @@
-"""Deleting covenants, characters and laboratories (STORY-108): what goes with
+"""Deleting covenants, characters and laboratories: what goes with
 them, what's left behind unassigned, and the workspace's confirmed
 d key."""
 

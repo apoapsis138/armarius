@@ -1,4 +1,4 @@
-"""Covenant Situations and the Poverty Hook (STORY-703)."""
+"""Covenant Situations and the Poverty Hook."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Enchanting as lab work (STORY-905): opening, instilling, lesser and
+"""Enchanting as lab work: opening, instilling, lesser and
 charged enchantments, attuning a talisman and investigating an item, each on
 a device recorded on an Inventory tab."""
 
@@ -172,7 +172,7 @@ def test_instilling_takes_seasons_and_its_vis_in_the_first():
     _run(saga)
     assert effect.instilling_progress is None  # finished
     assert saga.character("m").raw_vis == {"vim": 12, "creo": 3}  # no more vis
-    # Instilled: its raw Lab Text is in the laboratory (STORY-508), a
+    # Instilled: its raw Lab Text is in the laboratory, a
     # snapshot of the effect and of the device it went into.
     [text] = saga.books
     assert (text.type, text.text_kind, text.raw) == ("Lab Text", "Enchantment", True)
@@ -210,7 +210,7 @@ def test_a_charged_item_gets_charges_for_the_excess():
     assert (text.text_kind, text.device_type) == ("Enchantment", "Charged Item")
 
 
-# -- working from a Lab Text (STORY-509) --
+# -- working from a Lab Text --
 
 
 def _text(saga, device_id, effect_id, **fields) -> Book:

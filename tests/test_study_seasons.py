@@ -1,4 +1,4 @@
-"""Study seasons (STORY-902): reading, being taught or trained, teaching and
+"""Study seasons: reading, being taught or trained, teaching and
 vis study as planned seasons, and who may read which book."""
 
 import random

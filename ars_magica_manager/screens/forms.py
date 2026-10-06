@@ -645,8 +645,7 @@ def _vis_possession_fields(
 
 
 def _contested_fields(entry: Any) -> list[DialogField]:
-    """A vis or income source's Contested / Dwindling Resource Hooks
-    (STORY-906)."""
+    """A vis or income source's Contested / Dwindling Resource Hooks."""
     return [
         DialogField(
             "contested",
@@ -798,7 +797,7 @@ def _covenant_field(saga: Saga, covenant_id: str | None) -> DialogField:
 
 
 def _character_create_fields(saga: Saga, covenant_id: str | None) -> list[DialogField]:
-    """Name, Type, a Template of that Type (STORY-1317; one field per Type,
+    """Name, Type, a Template of that Type (one field per Type,
     shown while it is chosen) and covenant."""
     return [
         DialogField(
@@ -833,7 +832,7 @@ def _character_create_dialog(
     saga: Saga, covenant_id: str | None
 ) -> FieldsDialog[dict[str, Any]]:
     """Create a New Character, describing the chosen Template as it is
-    picked (STORY-1317)."""
+    picked."""
 
     def live(values: dict[str, Any]) -> str:
         kind = values.get("type") or ""
@@ -925,7 +924,7 @@ def _characteristics_dialog(
     saga: Saga, character: Character
 ) -> FieldsDialog[dict[str, Any]]:
     """Edit Characteristics. While the character is In Creation the form
-    shows the points spent and left as each score is typed (STORY-1316)."""
+    shows the points spent and left as each score is typed."""
     return FieldsDialog(
         "Edit Characteristics",
         _characteristics_fields(character.characteristics),
@@ -1046,7 +1045,7 @@ _BIOGRAPHY_TEXT_FIELDS_AFTER_YEAR: list[tuple[str, str]] = [
 def _played_by_field(
     background: Background, players: Sequence[Player], may_assign: bool
 ) -> list[DialogField]:
-    """Who plays the character, from the saga's players (STORY-1404): only
+    """Who plays the character, from the saga's players: only
     when the saga has players, and only the storyguide may change it."""
     if not players:
         return []
@@ -1277,7 +1276,7 @@ def _season_plan_from(
     return plan
 
 
-#: The supplement activities that give experience (STORY-913, 918-923).
+#: The supplement activities that give experience.
 _SUPPLEMENT_XP: tuple[str, ...] = tuple(
     a.key for a in supplement_seasons.ACTIVITIES if not a.no_xp
 )
@@ -1583,7 +1582,7 @@ def _supplement_fields(
 def _grog_year_dialog(
     character: Character, existing: GrogYear | None
 ) -> FieldsDialog[GrogYear]:
-    """A grog's yearly update (STORY-924, Grogs Ch. 5): what the training,
+    """A grog's yearly update (Grogs Ch. 5): what the training,
     practice and exposure go into, and the year's story awards."""
     names = sorted({a.name for a in character.abilities})
     options = [(escape(n), n) for n in names]
@@ -1651,7 +1650,7 @@ GRANT_KINDS = [
 
 
 def _breakthrough_dialog(existing: Breakthrough | None) -> FieldsDialog[Breakthrough]:
-    """A magus's original research goal (STORY-916; Hedda 2026-09-30): what it
+    """A magus's original research goal: what it
     is, the kind of Breakthrough sought (Minor, Major, Hermetic; its target
     follows, and the storyguide may type a secret one), and what reaching it
     grants."""
@@ -1770,7 +1769,7 @@ def _breakthrough_dialog(existing: Breakthrough | None) -> FieldsDialog[Breakthr
 def _season_plan_dialog(
     saga: Saga, character: Character, existing: SeasonPlan | None
 ) -> FieldsDialog[SeasonPlan]:
-    """Plan `character`'s current season (STORY-903): the activity, what
+    """Plan `character`'s current season: the activity, what
     its experience goes into, and notes. The line above Save shows what the
     season will give, worked out as the form is filled in."""
     activities = season_rules.activities_for(
@@ -1952,7 +1951,7 @@ def _season_plan_dialog(
             "select",
             existing.book_id if existing else None,
             # Every text he can get at: one he can't read yet says so, and
-            # the season refuses it with the reason (STORY-508).
+            # the season refuses it with the reason.
             options=[
                 (escape(b.name + lt.cant_read_tag(saga, character, b)), b.id)
                 for b in saga.books
@@ -2505,7 +2504,7 @@ def _book_fields(
 ) -> list[DialogField]:
     """The add/edit form for a book. Which of Art/Ability/Spell, Level and
     Quality are shown follows the Type (and a Tractatus's Subject) live; a
-    Lab Text's follow its Kind too (STORY-508): a spell's text names the
+    Lab Text's follow its Kind too: a spell's text names the
     spell, any other its own Technique, Form and Level, with an
     enchantment's effect and device or a Longevity Ritual's subject. A new
     book starts as `default_type` (the Lab Texts list adds Lab Texts)."""
@@ -2808,7 +2807,7 @@ def _book_live(values: dict[str, Any], saga: Saga, editing: Book | None = None) 
     """The form's live line. For a covenant still In Creation: the Build
     Point cost (a Lab Text's or Casting Tablet's from its spell's level) and
     any covenant-creation limit the values go over (a warning, not an
-    error). Otherwise Build Points don't matter (STORY-1314): only the
+    error). Otherwise Build Points don't matter: only the
     Level a spell gives the book."""
     owner_kind, owner_id = bk.parse_owner_value(values.get("owner"))
     probe = Book(
@@ -3103,7 +3102,7 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
         color: $text-muted;
     }
 
-    /* 3 digits plus the field's padding (STORY-1011) */
+    /* 3 digits plus the field's padding */
     .art-row Input {
         width: 7;
     }
@@ -3518,7 +3517,7 @@ class EditFamiliarBindingScreen(ModalDialog[dict[str, object] | None]):
 #: What the saga's Import Data dialog offers: (key, label, works yet?). The
 #: ones that don't work yet are listed greyed out, as what's planned.
 IMPORT_KINDS: tuple[tuple[str, str, bool], ...] = (
-    # An export made from More on its sheet (STORY-109): one entry per kind.
+    # An export made from More on its sheet: one entry per kind.
     ("characters", "Characters", True),
     ("covenants", "Covenants", True),
     ("laboratories", "Laboratories", True),
@@ -3942,7 +3941,7 @@ class ImproveIncomeScreen(ModalDialog[tuple[int, str] | None]):
         )
 
 
-# -- Enchanted Devices & Talismans (STORY-305) --
+# -- Enchanted Devices & Talismans --
 
 #: The Maker select's value for a maker who isn't one of the saga's
 #: characters (their name is typed).

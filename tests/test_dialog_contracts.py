@@ -105,7 +105,7 @@ def _all_sagas() -> list[Saga]:
 
 
 CONTRACTS: dict[str, Contract] = {
-    # Creation Worksheet (STORY-1306)
+    # Creation Worksheet
     "spend creation xp": Contract(
         prefill={"Ability or Art": Select.NULL, "xp": "5"},
         edits={
@@ -454,7 +454,7 @@ CONTRACTS: dict[str, Contract] = {
             _char(s).hermetic.age_of_apprenticeship,
         ),
         expected=("Durenmar", 15),
-        invalid={"Age of Apprenticeship": "-"},  # crashed before (B3)
+        invalid={"Age of Apprenticeship": "-"},  # crashed before
         shown={"#hermetic-background-left": "Durenmar"},
     ),
     "edit ability": Contract(
@@ -463,7 +463,7 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: (_char(s).abilities[0].level, _char(s).abilities[0].specialty),
         expected=(5, "Grammar"),
         invalid={"XP": "-5"},
-        # the score and xp are in columns (STORY-1014)
+        # the score and xp are in columns
         shown={"#abilities-list": "Latin (Grammar)           5       75/105"},
     ),
     "edit raw vis": Contract(
@@ -530,7 +530,7 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Subject": ""},
     ),
     "virtue ability choice": Contract(
-        # STORY-712: an {ability} is picked from a list, not typed.
+        # An {ability} is picked from a list, not typed.
         prefill={"Ability": Select.NULL},
         edits={"Ability": "magic theory"},
         saved=lambda s: _char(s).virtues_flaws[-1].params,
@@ -794,7 +794,7 @@ CONTRACTS: dict[str, Contract] = {
         expected=("Mend", 15, False),
         invalid={"Effect level": "-5"},
     ),
-    # -- added by STORY-1123: forms that only had bespoke tests --
+    # -- forms that only had bespoke tests --
     "edit covenant reputation": Contract(
         prefill={"Name": "Fair dealing", "Score": "2"},
         edits={"Score": "3"},
@@ -1098,7 +1098,7 @@ CONTRACTS: dict[str, Contract] = {
         ],
         shown={"#section-lib-books-list": "Scrolls"},
     ),
-    # Lab Texts (STORY-508)
+    # Lab Texts
     "add lab text": Contract(
         prefill={"Name": "", "Type": Select.NULL, "Owner": "laboratory:lab1"},
         edits={
@@ -1178,7 +1178,7 @@ CONTRACTS: dict[str, Contract] = {
         ],
         shown={"#hermetic-background-right": "Brother Oda to 20 (decoded)"},
     ),
-    # House Rules (STORY-708)
+    # House Rules
     "add house rule": Contract(
         prefill={"For": "character", "Name": "", "Tier": "Minor"},
         edits={
@@ -1197,7 +1197,7 @@ CONTRACTS: dict[str, Contract] = {
         ],
         invalid={"Name": ""},
     ),
-    # Players who sign in from a browser (STORY-1403)
+    # Players who sign in from a browser
     "add player": Contract(
         prefill={"Name": "", "Role": "player", "Passcode": ""},
         edits={"Name": "Ana", "Role": "storyguide", "Passcode": "rosemary"},
@@ -1523,7 +1523,7 @@ async def test_form_contract(name):
     assert contract.saved(storage.load_saga(SAGA_ID)) == contract.expected
 
 
-# -- which book tables each weapon form offers (STORY-709) --
+# -- which book tables each weapon form offers --
 
 
 @pytest.mark.parametrize(

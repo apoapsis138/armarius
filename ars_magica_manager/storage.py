@@ -24,8 +24,8 @@ SAGAS_DIR = paths.data_dir() / paths.SAGAS
 _SLUG_RE = re.compile(r"[^a-z0-9]+")
 
 
-#: Where Export offers to write an exported covenant, laboratory or character
-#: (STORY-109); the folder is made on the first export.
+#: Where Export offers to write an exported covenant, laboratory or character;
+#: the folder is made on the first export.
 EXPORTS_DIR = paths.data_dir() / paths.EXPORTS
 
 
@@ -67,8 +67,8 @@ def saga_path(saga_id: str) -> Path:
 _last_seen: dict[str, tuple[str, dict[str, Any], dict[str, Any]]] = {}
 
 #: Takes back, before a save, the changes whoever is signed in to this copy
-#: may not make (players.guard_changes, set while a player is signed in,
-#: STORY-1404): (this copy's saga as last seen, as now) -> (as it may be
+#: may not make (players.guard_changes, set while a player is signed
+#: in): (this copy's saga as last seen, as now) -> (as it may be
 #: saved, what was taken back).
 guard: (
     Callable[[dict[str, Any], dict[str, Any]], tuple[dict[str, Any], list[str]]] | None
@@ -84,11 +84,10 @@ last_conflicts: list[str] = []
 
 
 def save_saga(saga: Saga) -> Path:
-    """Save `saga`. Other copies of the app may share the file (a hosted saga,
-    STORY-1405): under a lock, the file is re-read and only what this copy
-    changed since it last loaded or saved the saga is written into it, so
-    another copy's changes stay. Where both changed the same value, this
-    save's wins (listed in last_conflicts)."""
+    """Save `saga`. Other copies of the app may share the file (a hosted saga): under a
+    lock, the file is re-read and only what this copy changed since it last loaded or
+    saved the saga is written into it, so another copy's changes stay. Where both
+    changed the same value, this save's wins (listed in last_conflicts)."""
     saga.app_version = __version__
     saga.saved_by = saved_by
     path = saga_path(saga.id)
@@ -116,7 +115,7 @@ def save_saga(saga: Saga) -> Path:
 
 def reload_into(saga: Saga) -> list[tuple[str, str]] | None:
     """Bring `saga`, as this copy holds it, up to date with its file after
-    another copy saved it (STORY-1406), keeping its objects -- the sheets on
+    another copy saved it, keeping its objects -- the sheets on
     show hold them -- and updating them in place. Returns the records that
     changed, as (list, id) pairs such as ("characters", "mag1"), with
     ("saga", "") for the saga's own fields; None when the file is as this

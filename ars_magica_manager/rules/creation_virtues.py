@@ -1,4 +1,4 @@
-"""Creation checks for the Virtues and Flaws step (STORY-1304): the point
+"""Creation checks for the Virtues and Flaws step: the point
 budget by character type, the book's hard limits (musts) and its guidelines
 (shoulds, shown as advice with how many too many or too few).
 
@@ -129,7 +129,7 @@ def tally(character: Character) -> VirtueFlawTally:
 
 @dataclass(frozen=True)
 class HouseBenefit:
-    """What a magus's House gives free at creation (STORY-1315). The free
+    """What a magus's House gives free at creation. The free
     House Virtue is outside the Virtue/Flaw balance (HOUSE_SOURCE)."""
 
     #: The points of the free Virtue(s) the magus holds: outside the balance.
@@ -141,8 +141,8 @@ class HouseBenefit:
     held: tuple[str, ...] = ()
     #: What the House gives that the magus hasn't taken yet.
     missing: tuple[str, ...] = ()
-    #: Indices into character.virtues_flaws of the entries counted above
-    #: (STORY-214): the sheet leaves them out of its points, marked Free.
+    #: Indices into character.virtues_flaws of the entries counted above:
+    #: the sheet leaves them out of its points, marked Free.
     free_indices: frozenset[int] = frozenset()
 
 

@@ -132,7 +132,7 @@ async def _wait_for_picker_ready(pilot, app) -> None:
 
 
 async def test_overlapping_picker_refills_leave_only_the_newest():
-    # B18: two refills in flight at once (the first fill, and a search typed
+    # Two refills in flight at once (the first fill, and a search typed
     # before it finished) interleaved their rows into one mixed list.
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
@@ -153,7 +153,7 @@ async def test_overlapping_picker_refills_leave_only_the_newest():
 
 
 async def test_vf_picker_offers_repeatable_entries_and_refuses_a_same_choice_repeat():
-    # STORY-707: a taken Virtue is hidden unless repeatable; a repeat with
+    # A taken Virtue is hidden unless repeatable; a repeat with
     # the same parameters is refused (with a notice) and the picker stays.
     creo = VirtueFlawInstance("vf_affinity_with_art", {"art": "creo"})
     taken = [creo, VirtueFlawInstance("vf_humble")]
@@ -199,7 +199,7 @@ def _vf_item_label(picker: VirtueFlawPickerScreen, vf_id: str) -> str:
 
 
 async def test_vf_picker_opens_on_the_side_of_its_section():
-    # STORY-710: the Flaws section's picker lists Flaws, the Virtues one Virtues.
+    # The Flaws section's picker lists Flaws, the Virtues one Virtues.
     storage.save_saga(_saga_with_bare_character())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
@@ -257,8 +257,7 @@ async def test_vf_picker_type_and_tier_filters_combine_with_the_search():
         picker.query_one("#vf-picker-type", Select).value = "Hermetic"
         picker.query_one("#vf-picker-tier", Select).value = "Major"
         # Wait for the list to be exactly what the filters let through: a
-        # refill still in progress can list a partial or stale set
-        # (STORY-1126).
+        # refill still in progress can list a partial or stale set.
         assert await wait_until(
             pilot,
             lambda: (
@@ -597,7 +596,7 @@ async def test_switching_theme_updates_theme_bar_and_persists():
 
 
 async def test_saving_the_theme_keeps_the_other_settings():
-    # B16: every theme change (including the one on launch) rewrote the
+    # Every theme change (including the one on launch) rewrote the
     # settings file with the theme alone.
     settings.save_settings({"theme": "scriptorum", "other": 1})
 
@@ -1134,14 +1133,14 @@ async def test_binding_a_familiar_nests_it_under_its_magus_and_grants_shared_tra
 
 
 async def test_bind_familiar_only_defaults_to_the_magus_on_show():
-    # B7: after showing a magus, then a laboratory or Spells, the dialog
+    # After showing a magus, then a laboratory or Spells, the dialog
     # still preselected that magus.
     storage.save_saga(_sample_saga_with_covenant())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_character(pilot, app)
-        # A laboratory or Spells doesn't offer Bind Familiar at all (STORY-110).
+        # A laboratory or Spells doesn't offer Bind Familiar at all.
         for node in (("laboratory", "lab1"), ("spells",)):
             await _select(pilot, app, node)
             assert app.screen.check_action("create_familiar", ()) is False
@@ -1158,7 +1157,7 @@ async def test_bind_familiar_only_defaults_to_the_magus_on_show():
 
 
 async def test_records_are_created_where_they_belong():
-    # STORY-110: n/c/l/f are offered on the saga and beside their own kind.
+    # N/c/l/f are offered on the saga and beside their own kind.
     storage.save_saga(_sample_saga_with_covenant())
     expected = {
         ("saga",): {"n", "c", "l", "f"},
@@ -1183,7 +1182,7 @@ async def test_records_are_created_where_they_belong():
 
 
 async def test_overlapping_detail_swaps_leave_one_sheet():
-    # B19: two detail-pane swaps in flight at once (seen after binding a
+    # Two detail-pane swaps in flight at once (seen after binding a
     # familiar) interleaved their remove/mount steps.
     saga = _saga_with_familiar()
     storage.save_saga(saga)
@@ -1434,7 +1433,7 @@ async def test_familiar_virtues_flaws_add_via_a_and_delete_via_d():
 
 
 async def test_removing_a_familiar_virtue_flaw_uses_the_chosen_row_and_confirms():
-    # B6: familiar V&F removal ignored the chosen row and never asked.
+    # Familiar V&F removal ignored the chosen row and never asked.
     saga = _saga_with_familiar()
     saga.familiars[0].virtues_flaws = [
         VirtueFlawInstance(vf_id="vf_true_friend"),
@@ -1478,8 +1477,8 @@ async def test_removing_a_familiar_virtue_flaw_uses_the_chosen_row_and_confirms(
 
 
 async def test_familiar_details_panels_are_shaded_like_every_other_sheet():
-    # B13: the familiar sheet's details panels had no shaded panel style.
-    # (STORY-114: each is a DetailsPanel docked at the bottom of its tab.)
+    # The familiar sheet's details panels had no shaded panel style.
+    # (each is a DetailsPanel docked at the bottom of its tab.)
     storage.save_saga(_saga_with_familiar())
 
     app = ArsMagicaManagerApp()
@@ -1555,7 +1554,7 @@ async def test_add_virtue_flaw_with_parameters_to_character():
         await _select_vf_picker_entry(pilot, app, "vf_affinity_with_art")
         assert isinstance(app.screen, FieldsDialog)
 
-        # An {art} is picked from the fifteen Arts (STORY-712).
+        # An {art} is picked from the fifteen Arts.
         app.screen.query_one("#fld-art", Select).value = "creo"
         await pilot.click("#btn-save")
         await pilot.pause()
@@ -2112,7 +2111,7 @@ async def test_hermetic_magic_arts_and_spells_share_one_details_panel():
 
 
 async def test_clicking_an_art_row_keeps_focus_on_the_list():
-    # B8: a click inside the pinned Magical Arts section focused its title,
+    # A click inside the pinned Magical Arts section focused its title,
     # taking focus off the list just clicked, so the arrow keys stopped
     # moving through the Arts.
     storage.save_saga(_sample_saga_with_covenant())
@@ -2134,7 +2133,7 @@ async def test_clicking_an_art_row_keeps_focus_on_the_list():
 
 
 async def test_magical_arts_collapses_like_the_other_sections():
-    # STORY-213: Magical Arts starts open and can be collapsed; 'e' still
+    # Magical Arts starts open and can be collapsed; 'e' still
     # edits the Arts, and the tab's other sections keep working.
     storage.save_saga(_sample_saga_with_covenant())
 
@@ -2255,7 +2254,7 @@ async def test_switching_tabs_moves_a_a_e_with_the_tab():
     """Switching tabs must clear a stale Collapsible focus from whatever tab
     was active before (see CLAUDE.md's flat-tab focus-tracking gotcha), so
     'e' never re-dispatches to a section that's no longer visible. Planning
-    has a section (STORY-925): switching to it focuses This Season. The
+    has a section: switching to it focuses This Season. The
     Diary is a flat tab with its own a / e / d. (The Laboratory tab, the old
     flat tab this covered, moved to the laboratory sheet as Lab Totals.)"""
     storage.save_saga(_saga_with_bare_character())
@@ -2342,7 +2341,7 @@ def _saga_with_two_labs() -> Saga:
 
 
 async def test_a_renamed_characters_title_is_not_read_as_markup():
-    # B4: the title was escaped when composed but not when refreshed, so
+    # The title was escaped when composed but not when refreshed, so
     # "[the]" vanished (and "[/]" could raise).
     storage.save_saga(_saga_with_two_labs())
 
@@ -2451,7 +2450,7 @@ def _saga_with_character_and_spell() -> Saga:
 
 
 async def test_virtue_and_flaw_titles_show_the_points_and_whether_they_balance():
-    # STORY-114: each side's points, both in the success colour when they
+    # Each side's points, both in the success colour when they
     # match and the error colour when they don't; Free Virtues count 0.
     saga = _saga_with_bare_character()
     character = saga.characters[0]
@@ -2480,7 +2479,7 @@ async def test_virtue_and_flaw_titles_show_the_points_and_whether_they_balance()
 
 
 async def test_side_by_side_lists_and_text_blocks_have_one_gap_each():
-    # STORY-114: lists sit LIST_COLUMN_GAP apart and blocks of text
+    # Lists sit LIST_COLUMN_GAP apart and blocks of text
     # TEXT_COLUMN_GAP apart, on every sheet; the last column has none.
     storage.save_saga(_saga_with_bare_character())
 
@@ -2548,7 +2547,7 @@ async def test_add_and_remove_spell_known():
 
 
 async def test_the_known_spell_delete_prompt_shows_brackets_once():
-    # B20: the prompt escaped a label that was already escaped, so "[" in a
+    # The prompt escaped a label that was already escaped, so "[" in a
     # spell name showed as "\[".
     saga = _saga_with_character_and_spell()
     saga.spells[0].name = "Pilum of [Greater] Fire"
@@ -2590,7 +2589,7 @@ async def test_edit_spell_mastery_sets_score_xp_and_abilities():
         await pilot.pause()
         assert isinstance(app.screen, MasteryEditScreen)
 
-        # Removing one asks first (B6); No keeps it.
+        # Removing one asks first; No keeps it.
         mastery = app.screen
         mastery.query_one("#mastery-abilities-list", ListView).index = 0
         await pilot.pause()
@@ -2617,7 +2616,7 @@ async def test_edit_spell_mastery_sets_score_xp_and_abilities():
 
 
 async def test_the_mastery_dialog_shows_brackets_in_names():
-    # B23: the spell's name (title) and its Mastery Abilities' names (list)
+    # The spell's name (title) and its Mastery Abilities' names (list)
     # were read as markup.
     saga = _saga_with_character_and_spell()
     saga.spells[0].name = "Pilum of [Greater] Fire"
@@ -2805,7 +2804,7 @@ async def test_raw_vis_stays_live_across_both_tabs():
     """Raw Vis deliberately appears twice (Hermetic Magic and Inventory),
     both backed by character.raw_vis -- adding/editing/removing from one
     tab's list must also update the other tab's list, even though it's not
-    the active tab when the mutation happens (see STORY-207's draft2 note:
+    the active tab when the mutation happens (it is
     "the first section in the app that deliberately appears twice")."""
     storage.save_saga(_saga_with_bare_character())
 
@@ -2905,7 +2904,7 @@ async def test_edit_hermetic_background_sets_house_and_fields():
 
 
 async def test_bracketed_names_survive_the_nav_tree_and_top_panels():
-    """STORY-204: a name with [brackets] must not vanish -- Textual/Rich
+    """A name with [brackets] must not vanish -- Textual/Rich
     markup would otherwise swallow "[Tower]" as an (invalid) tag. Covers the
     nav tree (saga/covenant/character/lab labels) and the Collapsible
     section titles that mirror a character's/covenant's own name."""
@@ -2944,7 +2943,7 @@ async def test_bracketed_names_survive_the_nav_tree_and_top_panels():
 
 
 async def test_fields_dialog_info_field_escapes_bracketed_values():
-    """STORY-204: FieldsDialog's read-only "info" row (screens/fields.py's
+    """FieldsDialog's read-only "info" row (screens/fields.py's
     `_widgets`, kind == "info") is a single shared render sink used by
     dozens of DialogField call sites (Inhabitant "from the character
     sheet" fields, Possession Owner/Location, Economics calculated rows,
@@ -3091,7 +3090,7 @@ async def test_lab_top_panel_layout_is_stable_across_tabs():
             assert characteristics.bottom == top.bottom, tab_id
             # Three columns side by side: derived stats (a row lower, beside
             # Refinement), then the Characteristics four and four.
-            # (Content regions: the blank rows are padding -- STORY-114.)
+            # (Content regions: the blank rows are padding.)
             derived = view.query_one("#lab-characteristics-derived").content_region
             left = view.query_one("#lab-characteristics-left").content_region
             right = view.query_one("#lab-characteristics-right").content_region
@@ -3144,7 +3143,7 @@ async def test_opening_a_lab_focuses_its_planning_so_edit_hotkey_works():
     """Regression: TabbedContent's own initial TabActivated used to clear the
     focus set on opening a lab, leaving 'e' unavailable until the user
     tabbed into a section by hand. No manual focusing here, on purpose.
-    Opening a lab now focuses its Planning tab's seasons (STORY-901), so 'e'
+    Opening a lab now focuses its Planning tab's seasons, so 'e'
     plans lab work; the Identity panel is still a click (or tab) away."""
     storage.save_saga(_saga_with_bare_laboratory())
 
@@ -3745,7 +3744,7 @@ async def test_edit_lab_raw_vis_changes_pawns_and_merges_on_art_change():
 
 
 async def test_the_diary_edit_and_delete_show_brackets_in_an_entry_name():
-    # B5: the remove picker escaped entry names; the edit picker didn't.
+    # The remove picker escaped entry names; the edit picker didn't.
     saga = _saga_with_populated_laboratory()
     saga.laboratories[0].diary[0].name = "Studied [Ignem] notes"
     storage.save_saga(saga)
@@ -3952,7 +3951,7 @@ async def test_opening_a_covenant_focuses_info_panel_so_edit_hotkey_works():
         await pilot.press("escape")
         await pilot.pause()
 
-        # On the Diary tab 'e' edits a Diary entry (STORY-406); the covenant
+        # On the Diary tab 'e' edits a Diary entry; the covenant
         # is still edited via the button.
         view = app.screen._covenant_sheet_view
         view.query_one(TabbedContent).active = "tab-cov-diary"
@@ -4333,7 +4332,7 @@ async def test_lab_can_be_moved_between_covenants_and_unassigned():
 
 
 async def test_a_boon_hook_refresh_rebuilds_economics_once(monkeypatch):
-    # B12: refreshing Boons/Hooks rebuilt the Economics tab twice (once for
+    # Refreshing Boons/Hooks rebuilt the Economics tab twice (once for
     # the info panel's refresh it triggered, once for itself).
     saga = _saga_with_configured_covenant()  # covenant aura 4
     storage.save_saga(saga)
@@ -6205,7 +6204,7 @@ async def test_inhabitant_dialogs_fit_a_small_terminal_and_hug_content_on_a_tall
         await pilot.press("a")
         await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
-        # well short of the 70 rows (its title is ruled: STORY-1012)
+        # well short of the 70 rows (its title is ruled)
         assert app.screen.query_one("#fields-dialog").region.height < 34
 
 
@@ -6397,9 +6396,9 @@ async def test_weapons_armor_and_items_need_a_name_and_a_quantity_defaulting_to_
             # Weapons and armor carry a Type and Quality (their points); items don't.
             expected = {
                 # Weapons get four extra trailing combat-figure columns
-                # (Init/Attack/Defense/Damage), defaulting to +0 (see
-                # STORY-205), and Load; armor its Protection and Load
-                # (STORY-709); items neither.
+                # (Init/Attack/Defense/Damage), defaulting to +0,
+                # and Load; armor its Protection and Load;
+                # items neither.
                 "weapon": (
                     "Crossbows           Weapon or shield    Standard"
                     "        3   +0   +0   +0   +0    0"
@@ -7053,7 +7052,7 @@ async def test_the_economics_forms_do_not_stretch_on_a_tall_terminal():
         await _open_eco_section(pilot, app, "income")
         await pilot.press("a")
         await pilot.pause()
-        # well short of the 70 rows (its title is ruled: STORY-1012)
+        # well short of the 70 rows (its title is ruled)
         assert app.screen.query_one("#fields-dialog").region.height < 34
 
 
@@ -7120,7 +7119,7 @@ async def test_d_deletes_the_highlighted_saga_only_after_confirmation():
 
 
 async def test_an_unreadable_saga_is_listed_and_can_be_deleted():
-    # B2: one damaged file used to crash the picker on startup.
+    # One damaged file used to crash the picker on startup.
     _save_sagas("Alpha", "Gamma")
     (storage.SAGAS_DIR / "broken.json").write_text("{not json", encoding="utf-8")
 
@@ -7401,7 +7400,7 @@ async def test_book_form_shows_the_fields_the_type_needs():
         assert shown() == {"spell_id", "level"}
         _fill(app, level="12")
         await pilot.pause()
-        # Bought as a pool (STORY-1126): this one's 12 levels take 3 lots
+        # Bought as a pool: this one's 12 levels take 3 lots
         # of 5, at 2 Build Points each.
         assert "comes to 12 levels, 6 Build Points (3 levels unspent)" in live()
         await _save_dialog(pilot, app)
@@ -7495,7 +7494,7 @@ async def test_an_unowned_book_files_under_the_saga():
 
 
 async def test_renaming_a_character_updates_their_book_list():
-    # B22: the book list's Location column kept the old owner name until
+    # The book list's Location column kept the old owner name until
     # the sheet was shown again.
     storage.save_saga(_saga_with_books())
 
@@ -8006,7 +8005,7 @@ async def test_the_new_year_adds_each_covenants_surplus_to_its_wealth():
         note = str(app.screen.query_one("#advance-year-note", Static).render())
         assert "surplus is added to its Wealth" in note
         # The dialog hugs its content (now including who has nothing
-        # planned, STORY-903) rather than filling the screen.
+        # planned) rather than filling the screen.
         assert app.screen.query_one("#advance-dialog").region.height < 25
         app.screen.query_one("#btn-advance", Button).press()
         await wait_until(pilot, lambda: _saved_economics().wealth == 5 + surplus)
@@ -8037,7 +8036,7 @@ async def test_other_seasons_leave_wealth_alone():
 
 async def _advance_from_winter(pilot, app) -> None:
     """Press t and confirm the Advance Time dialog; when that asks about a
-    deficit, wait until the question has its focus (STORY-1115: a bare
+    deficit, wait until the question has its focus (a bare
     pause left `focused` None under parallel load)."""
     await pilot.press("t")
     assert await wait_until(pilot, lambda: isinstance(app.screen, AdvanceSeasonScreen))
@@ -8414,7 +8413,7 @@ async def test_importing_spells_twice_asks_about_duplicates(tmp_path):
 
 
 async def test_a_spell_import_asks_about_a_name_in_another_case(tmp_path):
-    # B1: the preview counts "palm of warming flame" as a duplicate of
+    # The preview counts "palm of warming flame" as a duplicate of
     # "Palm of Warming Flame"; the import asks about it too.
     saga = _sample_saga_with_covenant()
     saga.spells = []

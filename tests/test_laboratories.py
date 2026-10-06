@@ -109,7 +109,7 @@ def test_diary_info_text_shows_date_activity_and_details():
     ]
 
 
-# -- Specializations (STORY-307) --
+# -- Specializations --
 
 
 def _with(*entries: tuple[str, int], dropped: tuple[str, ...] = ()) -> Laboratory:
@@ -265,7 +265,7 @@ def test_specialty_entry_and_raw_vis_panels():
     assert lab_text.raw_vis_info_text(lab, 1) == "[b]Vim vis[/]\n1 pawn"
 
 
-# -- Features (STORY-308) --
+# -- Features --
 
 
 def test_vf_points_count_each_side_on_its_own():

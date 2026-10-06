@@ -1,4 +1,4 @@
-"""Casting Scores and Casting Totals (STORY-802)."""
+"""Casting Scores and Casting Totals."""
 
 import pytest
 
@@ -124,7 +124,7 @@ def test_botch_dice():
 
 
 def test_virtues_and_flaws_change_casting_botch_dice():
-    # STORY-820: Cautious Sorcerer never takes them below one by itself,
+    # Cautious Sorcerer never takes them below one by itself,
     # before Mastery (which can reach 0); the words and gestures Flaws count.
     def vf(*ids):
         return [VirtueFlawInstance(vf_id=i) for i in ids]

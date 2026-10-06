@@ -97,7 +97,7 @@ def _cached_by_id(
     return {entry.id: entry for entry in _cached_entries(path, from_dict)}
 
 
-#: The user-made entries of the saga in use (STORY-708), by the kind of
+#: The user-made entries of the saga in use, by the kind of
 #: catalog they join: set by use_saga(), read by the three loaders below.
 _SAGA_ENTRIES: dict[str, tuple[Any, ...]] = {"character": (), "lab": (), "covenant": ()}
 #: Each catalog with the saga's entries merged in, by (kind, path): built on
@@ -135,12 +135,11 @@ def _by_id_with_saga_entries(
 
 
 def load_virtue_flaw_catalog(path: Path = CATALOG_PATH) -> list[VirtueFlawDef]:
-    """The character Virtue/Flaw catalog, with the user-made entries of the
-    saga in use (use_saga). The catalogs are read once per run
-    and cached by path: every total and sheet row that looks at Virtues and
-    Flaws reads them (the shared dicts must not be changed). Nothing checks
-    the file again -- a stat per lookup cost ~80 us each on a synced folder
-    (STORY-1122) -- so a rebuilt catalog is seen on the next start."""
+    """The character Virtue/Flaw catalog, with the user-made entries of the saga in use
+    (use_saga). The catalogs are read once per run and cached by path: every total and
+    sheet row that looks at Virtues and Flaws reads them (the shared dicts must not be
+    changed). Nothing checks the file again -- a stat per lookup cost ~80 us each on a
+    synced folder -- so a rebuilt catalog is seen on the next start."""
     return _with_saga_entries(
         "character", _cached_entries(path, VirtueFlawDef.from_dict)
     )
@@ -256,12 +255,12 @@ def needs_the_gift(definition: VirtueFlawDef) -> bool:
 @dataclass(frozen=True)
 class VirtueFlawChooser:
     """Who is choosing from the character Virtue/Flaw catalog, for the
-    picker's structural eligibility rules (STORY-710); prose prerequisites
+    picker's structural eligibility rules; prose prerequisites
     ("requires Demonic Blood") are left to the description.
 
     `audiences` are the VIRTUE_FLAW_AUDIENCES this chooser belongs to (an
     entry with an audience is only for those); `books` the sourcebooks in
-    play (STORY-711), or None for every book.
+    play, or None for every book.
     """
 
     grog: bool = False

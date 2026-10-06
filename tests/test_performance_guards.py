@@ -1,4 +1,4 @@
-"""Performance guards (STORY-1118's rules, CLAUDE.md "Performance rules").
+"""Performance guards (CLAUDE.md "Performance rules").
 
 Counts, not timings: timings flake under a parallel run. Each guard is a
 budget on work that made the app sluggish before.
@@ -17,7 +17,7 @@ from ars_magica_manager.screens.sheets import LazyTabPane
 from ars_magica_manager.screens.widgets import SelectableList, SplitFooter
 
 #: Footer rebuilds allowed per action (a tab switch, a focus move, an arrow
-#: key). Before STORY-1119 a tab switch rebuilt it 4-6 times.
+#: key). A tab switch once rebuilt it 4-6 times.
 FOOTER_REBUILDS_PER_ACTION = 1
 
 
@@ -88,7 +88,7 @@ async def test_footer_is_rebuilt_at_most_once_per_action(node):
 
 
 #: Widgets mounted when each sheet opens (everything_saga). Before
-#: STORY-1120 every tab was built up front: character 149, covenant 195,
+#: Tabs were once all built up front: character 149, covenant 195,
 #: familiar 83, laboratory 101. Raise a budget only deliberately.
 SHEET_OPEN_WIDGET_BUDGET = {
     "character": 90,

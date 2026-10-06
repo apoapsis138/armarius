@@ -27,7 +27,7 @@ def test_update_settings_keeps_the_other_keys(tmp_path, monkeypatch):
 
 @pytest.mark.parametrize("text", ["{not json", "[1, 2]", "", "\x00\xff"])
 def test_an_unreadable_settings_file_counts_as_no_settings(tmp_path, monkeypatch, text):
-    """A damaged settings file must not stop the app starting (STORY-1125)."""
+    """A damaged settings file must not stop the app starting."""
     path = tmp_path / "app_settings.json"
     monkeypatch.setattr(settings, "SETTINGS_PATH", path)
     path.write_text(text, encoding="utf-8")

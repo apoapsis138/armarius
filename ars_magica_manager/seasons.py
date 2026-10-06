@@ -1,4 +1,4 @@
-"""Season plans and advancing the season (STORY-903): keeping each
+"""Season plans and advancing the season: keeping each
 character's plan, the text the sheets show for it, and applying a season.
 
 Advancing works out every plan's outcome first (rules.activities.outcomes), from
@@ -579,7 +579,7 @@ def _living_conditions(saga: Saga, character: Character) -> int:
 
 
 def _yearly_warping(saga: Saga, character: Character) -> str:
-    """A year's automatic Warping Points (STORY-909): +1 for a Longevity
+    """A year's automatic Warping Points: +1 for a Longevity
     Ritual, and living in a strong aura of another realm (a magus gains none
     from a Magic aura). Returns what was added ("" for nothing)."""
     gained: list[str] = []
@@ -602,7 +602,7 @@ def _yearly_warping(saga: Saga, character: Character) -> str:
 def gain_warping(
     saga: Saga, character: Character, points: int, rng: random.Random
 ) -> list[str]:
-    """Add Warping Points from one event (STORY-909); 2 or more take a
+    """Add Warping Points from one event; 2 or more take a
     magus to the edge of Wizard's Twilight. Writes a Diary entry and returns
     its lines."""
     warping_rules.set_total(character, warping_rules.total_points(character) + points)
@@ -685,7 +685,7 @@ def grog_year_text(character: Character) -> str:
 
 
 def year_end_grogs(saga: Saga) -> list[SeasonRecordLine]:
-    """The grogs' yearly update (STORY-924), in Winter: their training,
+    """The grogs' yearly update, in Winter: their training,
     practice and exposure xp; the year's story awards are then cleared."""
     lines: list[SeasonRecordLine] = []
     for character in saga.characters:
@@ -734,9 +734,9 @@ def age_character(
     when: tuple[str, int] | None = None,
     label: str = "Aging",
 ) -> SeasonRecordLine:
-    """One character's aging roll (STORY-904): apparent age, Aging Points and
+    """One character's aging roll: apparent age, Aging Points and
     Characteristics, Decrepitude, a Crisis; written in the Diary. Pre-play
-    aging (STORY-1310) gives its own Living Conditions, the (season, year)
+    aging gives its own Living Conditions, the (season, year)
     the roll belongs to, and a label for the Diary."""
     familiar = familiar_of(saga, character.id)
     bronze = familiar.bronze_cord if familiar is not None else 0
@@ -800,7 +800,7 @@ def age_character(
 
 
 def year_end_aging(saga: Saga, rng: random.Random) -> list[SeasonRecordLine]:
-    """The Winter aging rolls (STORY-904), made when Winter is applied:
+    """The Winter aging rolls, made when Winter is applied:
     apparent age, Aging Points and Characteristics, Decrepitude, Crises,
     each written in the character's Diary. Returns a record line for each
     character who rolled."""
@@ -825,7 +825,7 @@ def year_end_aging(saga: Saga, rng: random.Random) -> list[SeasonRecordLine]:
     return lines
 
 
-# -- the covenant's seasons (STORY-906) ---------------------------------------
+# -- the covenant's seasons ---------------------------------------
 
 
 DWINDLING_SOURCE = (
@@ -845,8 +845,8 @@ def dwindle(
 ) -> int:
     """`resource`'s value (now `value`) after a year's end. A Dwindling
     Resource loses a tenth of its original value: the value when it began
-    to dwindle, taken as its value at its first year end (so a save from
-    before STORY-1126 starts from its value then). Income rounds away from
+    to dwindle, taken as its value at its first year end (so an older
+    save starts from its value then). Income rounds away from
     zero (covenant finances), vis pawns down. A resource no longer dwindling
     forgets its original value, so ticking it again starts afresh."""
     if not resource.dwindling:
@@ -920,13 +920,13 @@ def _add_vis(covenant: Covenant, art: str, pawns: int, name: str) -> None:
 
 def available(resource, year: int) -> bool:
     """Whether a vis or income source gives anything this year: not contested,
-    or secured through it (Hedda 2026-09-30: an unaddressed contested
-    resource isn't available until it is addressed)."""
+    or secured through it: an unaddressed contested resource isn't
+    available until it is addressed."""
     return not resource.contested or (resource.secured_until or 0) >= year
 
 
 def covenant_season(saga: Saga, secured: dict[str, bool]) -> list[SeasonRecordLine]:
-    """What the season does for each covenant (STORY-906): its vis sources
+    """What the season does for each covenant: its vis sources
     harvested into its vis stores, and in Winter, Dwindling Resources shrink
     by a tenth. A contested resource gives nothing until it is addressed:
     `secured` answers "Was it secured this season?" for each lapsed one
@@ -1028,7 +1028,7 @@ def advance_summary(saga: Saga) -> str:
     return "\n".join(lines)
 
 
-# -- the covenant's Seasons tab (STORY-912) -----------------------------------
+# -- the covenant's Seasons tab -----------------------------------
 
 #: The covenant Seasons tab's lists: (character kind, title). A Mythic
 #: Companion is listed with the Companions.
@@ -1091,7 +1091,7 @@ def season_info_text(saga: Saga, character: Character | None) -> str:
     return f"[b]{escape(character.name)}[/]\n" + plan_text(saga, character)
 
 
-# -- season records (STORY-911) --------------------------------------------------
+# -- season records --------------------------------------------------
 
 
 @dataclass
@@ -1119,7 +1119,7 @@ def finish_season(
 ) -> Advanced:
     """Play out the season, once its questions are answered (`secured`: was
     each lapsed contested resource secured; the Discovery moves already
-    taken), in the rules' order (STORY-1129, from the workspace's Advance
+    taken), in the rules' order (from the workspace's Advance
     Time): `backup` the saga if anything is planned; apply each plan; in
     Winter, the year's end -- grogs, business, then aging; the covenants'
     season (harvests, resources); the season record; at a new year, each
@@ -1215,7 +1215,7 @@ def record_text(saga: Saga, record: SeasonRecord) -> str:
     return "\n".join(lines)
 
 
-# -- lab work (STORY-901) ----------------------------------------------------------
+# -- lab work ----------------------------------------------------------
 
 #: How many seasons the laboratory's Planning tab shows, the current first.
 QUEUE_LENGTH = 4
@@ -1636,7 +1636,7 @@ def _effect_text(
     device: EnchantedDevice,
     effect: InstilledEffect,
 ) -> Book:
-    """The raw Lab Text of an effect just instilled (STORY-508): a snapshot
+    """The raw Lab Text of an effect just instilled: a snapshot
     of the effect and of the device it went into (the device may be given
     away or lost; the text is exact to that shape and material)."""
     kind = es.text_device_type(device)
@@ -1676,7 +1676,7 @@ def _longevity_text(
     lab_total: int,
     extra_vis: int = 0,
 ) -> Book:
-    """The raw Lab Text of a Longevity Ritual (STORY-508): Creo Corpus, its
+    """The raw Lab Text of a Longevity Ritual: Creo Corpus, its
     level the ritual's Lab Total; it lets the ritual be performed again."""
     return Book(
         id=f"labtext_longevity_{magus.id}_{new_instance_id()}",
@@ -1869,7 +1869,7 @@ def perform_ritual_again(
     vis_art: str,
     vis_from: str,
 ) -> list[str]:
-    """Perform a Longevity Ritual again from its Lab Text, now (STORY-509):
+    """Perform a Longevity Ritual again from its Lab Text, now:
     it takes no season, so nothing is planned -- the vis is paid, the
     subject's Longevity modifier is set, and the laboratory's and the
     subject's Diaries record it. Returns the problems (nothing is done
@@ -1927,8 +1927,8 @@ def _apply_enchanting(
     plan: SeasonPlan,
     work: lab_seasons.LabWork,
 ) -> None:
-    """What a season of enchanting does to its device (STORY-905); an
-    effect instilled leaves a raw Lab Text in the laboratory (STORY-508)."""
+    """What a season of enchanting does to its device; an
+    effect instilled leaves a raw Lab Text in the laboratory."""
     device, effect = work.device, work.effect
     if device is None:
         return
@@ -1976,7 +1976,7 @@ def _apply_enchanting(
 def _apply_familiar(
     saga: Saga, magus: Character, plan: SeasonPlan, work: lab_seasons.LabWork
 ) -> None:
-    """What a season of familiar work does (STORY-908)."""
+    """What a season of familiar work does."""
     familiar = work.familiar
     if familiar is None:
         return
@@ -2169,7 +2169,7 @@ def livelihood_text(character: Character) -> str:
 def apply_book_work(
     saga: Saga, character: Character, plan: SeasonPlan, work: bs.BookWork
 ) -> None:
-    """A season of book work (STORY-910, 914): points toward a summa, the
+    """A season of book work: points toward a summa, the
     books made, Lab Texts rewritten, who can read whose Lab Texts."""
     key = bs.project_key(plan)
     saga.lab_projects = [p for p in saga.lab_projects if p.spell_id != key]
@@ -2239,7 +2239,7 @@ def _apply_laboratory(
     plan: SeasonPlan,
     work: lab_seasons.LabWork,
 ) -> None:
-    """What a season of work on the laboratory does (STORY-915)."""
+    """What a season of work on the laboratory does."""
     if plan.activity == ls.MOVE:
         for vf_id in work.loses_vf:
             ls.remove_vf(lab, vf_id)
@@ -2279,7 +2279,7 @@ def _apply_experiment(
     plan: SeasonPlan,
     work: lab_seasons.LabWork,
 ) -> bool:
-    """What the Extraordinary Results do (STORY-916; Hedda 2026-09-30: applied
+    """What the Extraordinary Results do (applied
     automatically and noted in the Diary): Discovery xp; a Disaster's Warping,
     lab Flaws and wounds; a destroyed creation; the effects the creation
     keeps; research points. True when nothing else of the season applies."""
@@ -2467,8 +2467,8 @@ def _keep_effects(
 
 
 def _goal_reached(magus: Character, goal) -> list[str]:
-    """A research goal reaching its target grants what it names (Hedda
-    2026-09-30: automatically): an Ability (the points as its xp), or a
+    """A research goal reaching its target grants what it names
+    automatically: an Ability (the points as its xp), or a
     Virtue."""
     if goal.reached or goal.points < goal.target:
         return []
@@ -2581,7 +2581,7 @@ def apply_lab_work(saga: Saga, magus: Character, outcome: rules.Outcome) -> None
     )
 
 
-# -- asking about a Discovery (STORY-916) -------------------------------------
+# -- asking about a Discovery -------------------------------------
 
 
 def discovery_moves(

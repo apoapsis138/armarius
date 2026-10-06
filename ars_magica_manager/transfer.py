@@ -1,5 +1,5 @@
 """Exporting one covenant, laboratory or character to a file, and importing
-it into another saga (STORY-109).
+it into another saga.
 
 An export is the app's own JSON: a small saga holding just the record and
 what travels with it, so reading one runs the same load-time migrations a
@@ -10,7 +10,7 @@ save does and older exports keep working.
 - A laboratory takes its books and the devices kept in it.
 - A covenant takes its books and devices; optionally its laboratories and
   characters too, each with their own things.
-- The saga's own spells and user-made catalog entries (STORY-708) that
+- The saga's own spells and user-made catalog entries that
   those records use come along.
 
 Links to records that aren't in the file (a character's covenant, a

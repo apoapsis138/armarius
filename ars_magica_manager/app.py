@@ -28,7 +28,7 @@ class ArsMagicaManagerApp(App[None]):
     TITLE = f"Ars Magica Manager v{__version__}"
     BINDINGS: ClassVar[list[BindingType]] = [
         ("q", "quit", "Quit"),
-        # Help (STORY-115): F1 anywhere, even in a dialog and while typing
+        # Help: F1 anywhere, even in a dialog and while typing
         # (a modal screen's keys don't reach the app's unless they're
         # priority). ? is bound by the screens and ModalDialog, so a field
         # being typed in still gets it.
@@ -52,14 +52,14 @@ class ArsMagicaManagerApp(App[None]):
     #: data/ folder did, or why the data folder couldn't be used (main.py).
     startup_notes: tuple[str, ...] = ()
 
-    #: Who signed in to the saga open in this browser copy (STORY-1403);
+    #: Who signed in to the saga open in this browser copy;
     #: None in the storyguide's own window, which never signs in, and
     #: whenever no saga is open.
     player: Player | None = None
 
     def on_mount(self) -> None:
         # Notes about the host's data folder are the storyguide's business:
-        # a player's browser copy (STORY-1403) doesn't show them.
+        # a player's browser copy doesn't show them.
         if self.startup_notes and not self.is_web:
             self.notify(
                 escape("\n".join(self.startup_notes)),

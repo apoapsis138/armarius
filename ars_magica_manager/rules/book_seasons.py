@@ -1,4 +1,4 @@
-"""Seasons spent on books (STORY-910) and Lab Texts (STORY-914).
+"""Seasons spent on books and Lab Texts.
 
 Books, planned on the character sheet:
 
@@ -18,7 +18,7 @@ Books, planned on the character sheet:
   summa at Communication + the source language points a season until its
   Level; the translation 2 Quality lower (1 for an Art).
 
-Lab Texts (STORY-914):
+Lab Texts:
 
 - A magus's own Lab Texts are written raw: only he (and whoever has
   decoded them, or been taught his abbreviations) can use them.

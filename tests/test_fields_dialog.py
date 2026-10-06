@@ -66,7 +66,7 @@ async def test_values_while_editing_are_lenient():
             "weight": 1.5,
             "kind": "b",
             "ok": True,
-            # Multi-line text loses only trailing whitespace (STORY-1113): an
+            # Multi-line text loses only trailing whitespace: an
             # indented first line, like a Markdown list item, stays.
             "notes": "  line one\nline two",
         }
@@ -178,7 +178,7 @@ def test_pyright_flags_a_typed_dialog_without_build(tmp_path):
 
 
 async def test_a_stored_choice_not_in_the_list_is_kept():
-    # STORY-1112: it used to open blank, and Save cleared it unasked.
+    # It used to open blank, and Save cleared it unasked.
     fields = [
         DialogField(
             "house",

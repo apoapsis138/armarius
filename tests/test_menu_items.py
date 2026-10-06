@@ -1,4 +1,4 @@
-"""Every More and New menu entry runs a method that exists (STORY-1125):
+"""Every More and New menu entry runs a method that exists:
 MenuItem.run looks its handler up by name, so a renamed method would only
 fail when someone picked the entry."""
 

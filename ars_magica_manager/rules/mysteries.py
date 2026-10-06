@@ -1,4 +1,4 @@
-"""Mystery initiation (STORY-813).
+"""Mystery initiation.
 
     Initiation Total = Mystagogue's Presence + (Mystery Cult) Lore
                        + Script bonus (the sum of its components)

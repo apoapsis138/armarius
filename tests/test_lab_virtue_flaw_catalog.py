@@ -46,7 +46,7 @@ def test_unknown_characteristic_is_rejected():
 
 
 def test_lab_catalog_has_every_entry_in_the_book():
-    """Covenants, Chapter 9 lists 128 laboratory Virtues and Flaws (STORY-706)."""
+    """Covenants, Chapter 9 lists 128 laboratory Virtues and Flaws."""
     assert len(catalog.load_lab_virtue_flaw_catalog()) == 128
 
 

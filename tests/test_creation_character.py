@@ -1,4 +1,4 @@
-"""Character creation checks, step by step (STORY-1303 to 1311)."""
+"""Character creation checks, step by step."""
 
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ def _by_label(found):
     return {c.label: (c.status, c.detail) for c in found}
 
 
-# -- Concept (STORY-1303) --
+# -- Concept --
 
 
 def test_a_magus_needs_the_gift_hermetic_magus_and_a_house():
@@ -79,7 +79,7 @@ def test_older_characters_get_advice_and_pre_play_aging():
     assert "Older than 35: aging rolls before play" not in young
 
 
-# -- Virtues and Flaws (STORY-1304) --
+# -- Virtues and Flaws --
 
 
 def _vf(character, step="virtues_flaws"):
@@ -102,7 +102,7 @@ def test_a_companions_virtues_balance_its_flaws():
 
 
 def test_a_magus_house_virtue_is_free():
-    # STORY-1315: Bonisagus gives Puissant Magic Theory or Puissant Intrigue.
+    # Bonisagus gives Puissant Magic Theory or Puissant Intrigue.
     magus = _character("magus", 1195, "vf_the_gift", "vf_hermetic_magus")
     magus.hermetic.house = "house_bonisagus"
     label = "Virtue points balance Flaw points"
@@ -153,7 +153,7 @@ def test_jerbiton_and_ex_miscellanea_house_benefits():
 
 
 def test_free_house_virtue_counts_no_sheet_points():
-    """STORY-214: the sheet's Virtue/Flaw points leave out the House's free
+    """The sheet's Virtue/Flaw points leave out the House's free
     Virtue (and Ex Miscellanea's compulsory Flaw), and mark them Free."""
     from ars_magica_manager import sheet_text as st
     from ars_magica_manager.rules import creation_virtues as cv
@@ -259,7 +259,7 @@ def test_a_mythic_companion_gets_two_virtue_points_per_flaw_point():
     assert found["Virtue points: 2 per Flaw point, plus the free Minor"][0] == "warn"
 
 
-# -- Characteristics (STORY-1305) --
+# -- Characteristics --
 
 
 def _scores(character, **scores):
@@ -325,7 +325,7 @@ def test_a_childs_scores_carry_the_age_modifier():
     assert found["Characteristic points spent"] == ("advice", "1 unspent")
 
 
-# -- Early Childhood (STORY-1306) --
+# -- Early Childhood --
 
 
 def test_spending_creation_xp_adds_it_to_the_ability_and_taking_it_back_removes_it():
@@ -396,7 +396,7 @@ def test_a_sample_childhood_fills_its_blanks():
     assert names == ["Athletic", "Exploring", "Mischievous", "Social", "Traveling"]
 
 
-# -- Later Life (STORY-1307) --
+# -- Later Life --
 
 
 def test_later_life_is_15_xp_a_year_from_5_wealthy_20_poor_10():
@@ -462,7 +462,7 @@ def test_free_supernatural_scores_and_the_ability_cap():
     assert found["No Ability above 5 at creation"] == ("warn", "Brawl")
 
 
-# -- Grogs training packages (STORY-1308) --
+# -- Grogs training packages --
 
 
 def test_training_packages_take_later_life_years():
@@ -511,7 +511,7 @@ def test_an_affinity_adds_half_again_and_15_years_is_the_most():
     assert found["At most 15 years in Brawler"] == ("warn", "18 years")
 
 
-# -- Apprenticeship (STORY-1309) --
+# -- Apprenticeship --
 
 
 def _magus_with(**arts):
@@ -577,7 +577,7 @@ def test_an_affinity_with_an_art_adds_half_again_rounded_up():
     assert magus.arts["perdo"].xp == 0
 
 
-# -- Years past Gauntlet and pre-play aging (STORY-1310) --
+# -- Years past Gauntlet and pre-play aging --
 
 
 def test_years_past_gauntlet_give_30_points_less_lab_seasons():
@@ -626,7 +626,7 @@ def test_pre_play_aging_rolls_each_year_from_35_once():
     assert creation.pre_play_aging(saga, companion, random.Random(1)) == []
 
 
-# -- Finishing Touches (STORY-1311) --
+# -- Finishing Touches --
 
 
 def test_traits_confidence_and_reputations_at_the_end():
@@ -655,7 +655,7 @@ def test_traits_confidence_and_reputations_at_the_end():
     )
 
 
-# -- live points on the Characteristics form (STORY-1316) --
+# -- live points on the Characteristics form --
 
 
 def test_points_text_follows_the_scores_being_typed():

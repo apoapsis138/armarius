@@ -35,7 +35,7 @@ from .rules.rounding import round_away_from_zero, round_down
 SOURCE = (
     "Covenants, Chapter Five: Wealth & Poverty "
     "(https://www.redcap.org/page/Covenants_Chapter_Five:_Wealth_%26_Poverty); "
-    "fractions round away from zero (covenant finances, STORY-815)"
+    "fractions round away from zero (covenant finances)"
 )
 
 #: Points of one laboratory by its Upkeep score, from -5 to +5.
@@ -367,7 +367,7 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
     # Emergency Savings aren't tied to a category, so they only reduce the
     # total.
     cost_savings = sum(saved.values()) + eco.magic_savings + eco.emergency_savings
-    # A contested source gives nothing until it is secured (STORY-906).
+    # A contested source gives nothing until it is secured.
     income = sum(
         s.current_income
         for s in eco.income_sources

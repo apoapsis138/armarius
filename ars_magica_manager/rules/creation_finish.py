@@ -1,4 +1,4 @@
-"""Creation checks for Finishing Touches (STORY-1311): Personality Traits
+"""Creation checks for Finishing Touches: Personality Traits
 (-3..+3; a grog needs Loyal, a warrior Brave), Reputations only from
 Virtues and Flaws, and Confidence (score 1 and 3 points for magi and
 companions, none for grogs). The step's "Move to In Play" then shows the

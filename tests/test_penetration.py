@@ -1,4 +1,4 @@
-"""Penetration and Magic Resistance (STORY-809)."""
+"""Penetration and Magic Resistance."""
 
 from ars_magica_manager import sheet_text
 from ars_magica_manager.models import (

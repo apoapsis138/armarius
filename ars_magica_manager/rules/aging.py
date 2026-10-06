@@ -1,4 +1,4 @@
-"""Aging and Decrepitude (STORY-904): the yearly roll made in Winter.
+"""Aging and Decrepitude: the yearly roll made in Winter.
 
 - Rolled every Winter from the first after 35, or at any age under a
   Longevity Ritual (then, before 35, 10+ counts as 9).

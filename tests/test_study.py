@@ -1,4 +1,4 @@
-"""Study totals (STORY-803)."""
+"""Study totals."""
 
 import pytest
 

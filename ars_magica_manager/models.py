@@ -177,7 +177,7 @@ class VirtueFlawDef:
 
     `source` names the book(s) the entry comes from ("DE", "DE; RoP:F",
     "HoH:MC"), for attribution -- the text is CC-BY-SA -- and for choosing
-    the books in play (STORY-711). `summary` is a one-line paraphrase for
+    the books in play. `summary` is a one-line paraphrase for
     searching. `audience` restricts the entry to non-human characters or
     Mythic Companions (VIRTUE_FLAW_AUDIENCES); empty means anyone may take
     it. The picker hides what a character can't take (VirtueFlawChooser).
@@ -258,7 +258,7 @@ class LabVirtueFlawDef:
     Construction: Safety +1, Aesthetics +1). They feed the virtue/flaw
     component of each Characteristic's manual + virtue_sum + flaw_sum =
     total (laboratories.lab_characteristic_total).
-    A Specialization grant is a `lab_specialization` modifier (STORY-817):
+    A Specialization grant is a `lab_specialization` modifier:
     its `target` names the Specialization, or is "{specialization}" when the
     lab's owner picks it from `choices["specialization"]` as the Virtue is
     added (the pick is the instance's params). Grants the book leaves to
@@ -333,7 +333,7 @@ class LabVirtueFlawDef:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> LabVirtueFlawDef:
         d = dict(data)
-        # Before STORY-804 the effects were a {characteristic: amount} map.
+        # Older saves held the effects as a {characteristic: amount} map.
         legacy = d.pop("characteristic_modifiers", None) or {}
         d["modifiers"] = [
             Modifier(**known_fields(Modifier, m)) for m in d.get("modifiers", [])
@@ -448,7 +448,7 @@ class CovenantBoonHookDef:
 
 @dataclass
 class CovenantSituationDef:
-    """A Covenant Situation (STORY-703): one of the books' ready-made sets
+    """A Covenant Situation: one of the books' ready-made sets
     of Boons and Hooks for a new covenant. `entries` are the Boons, Hooks
     and Free Choices it adds: each a catalog id (`vf_id`), an optional
     `detail` ("Hall Keep") and a `count` when it's taken more than once.
@@ -512,7 +512,7 @@ class HouseDef:
     #: The book it's from (sourcebooks): the core book.
     source: str = "DE"
     #: What membership gives at character creation, as the book's Hermetic
-    #: Houses Summary words it (STORY-1315).
+    #: Houses Summary words it.
     benefit: str = ""
     #: The free House Virtue: the Virtues a member takes one of (a
     #: VirtueFlawInstance's vf_id and params each). Empty when the benefit
@@ -534,7 +534,7 @@ class HouseDef:
 @dataclass
 class CharacterTemplateDef:
     """A ready-to-play character from the book's Character Templates
-    (character_template_catalog.json; STORY-1317), in the book's notation:
+    (character_template_catalog.json), in the book's notation:
     scores, not xp. "{area}", "{second_area}" and "{language}" in an
     Ability name are asked for when the template is used."""
 
@@ -695,7 +695,7 @@ class Characteristics:
 @dataclass
 class Ability:
     """An Ability: its total xp is stored and its score derived from it
-    (rules.xp, STORY-806)."""
+    (rules.xp)."""
 
     name: str
     category: str = "General"
@@ -717,9 +717,9 @@ class Ability:
         if "score" in d and "level" not in d:
             # Pre-Phase-1b saves used "score".
             d["level"] = d.pop("score")
-        d.pop("xp_to_next", None)  # typed by hand before STORY-806
+        d.pop("xp_to_next", None)  # typed by hand in older saves
         if "level" in d:
-            # Before STORY-806 the score was typed beside the xp.
+            # Older saves typed the score beside the xp.
             d["xp"], _ = xp_rules.migrate_level_xp(
                 d.pop("level"), d.get("xp", 0), xp_rules.ABILITY_FACTOR
             )
@@ -756,7 +756,7 @@ class Spell:
     #: Where it's published: one of SPELL_SOURCES, or free text.
     source: str = "ArM5"
     #: Side effects and modified effects from the experiment that invented
-    #: it (STORY-916): anyone who learns it learns them too.
+    #: it: anyone who learns it learns them too.
     experimental_effects: list[str] = field(default_factory=list)
     #: A catalog entry listed without its details (the source page lacks them).
     details_missing: bool = False
@@ -857,7 +857,7 @@ BOOK_TYPES: tuple[str, ...] = (
     "Casting Tablet",
     "Other",
 )
-#: What a Lab Text records (`Book.text_kind`, STORY-508): a spell, an
+#: What a Lab Text records (`Book.text_kind`): a spell, an
 #: enchanted device's effect, a Longevity Ritual, or anything else (a tamed
 #: creature, a Discovery, a familiar's bond power).
 TEXT_SPELL = "Spell"
@@ -904,15 +904,15 @@ class Book:
     #: `level` is the book's own. `spell_name` stays as typed (imported books
     #: link by it until a spell is chosen).
     spell_id: str | None = None
-    #: A Lab Text written raw by its author (STORY-914): only he, and whoever
+    #: A Lab Text written raw by its author: only he, and whoever
     #: decoded his texts or learned his abbreviations, can use it until he
     #: rewrites it for general use. `author_id`: the author, when a
     #: character of the saga.
     raw: bool = False
     author_id: str | None = None
     #: A Lab Text's kind (one of LAB_TEXT_KINDS; "" for any other book),
-    #: and what it records of an effect with no spell to take it from
-    #: (STORY-508): its Technique and Form (a spell's text takes both, and
+    #: and what it records of an effect with no spell to take it from:
+    #: its Technique and Form (a spell's text takes both, and
     #: its level, from the spell), and a snapshot taken when it was written
     #: -- an enchantment's Range / Duration / Target, kind of device and
     #: shape and material, or a Longevity Ritual's subject (not `subject`:
@@ -934,7 +934,7 @@ class Book:
     ) -> Book:
         d = dict(data)
         if d.get("type") == "Lab Text" and not d.get("text_kind"):
-            # Before STORY-508 a Lab Text had no kind.
+            # In older saves a Lab Text has no kind.
             d["text_kind"] = (
                 TEXT_SPELL if d.get("spell_id") or d.get("spell_name") else TEXT_OTHER
             )
@@ -995,7 +995,7 @@ class NamedDescription:
 
 @dataclass
 class ArcaneConnection:
-    """An Arcane Connection kept in a laboratory (STORY-907): what it
+    """An Arcane Connection kept in a laboratory: what it
     connects to, and whether it has been fixed (made permanent by a season
     of lab work and a pawn of Vim) or lasts only a while."""
 
@@ -1147,7 +1147,7 @@ class LabFeature:
 def _feature_from_old_text(
     text: str, feature_names: dict[str, str] | None = None, *, id: str = ""
 ) -> LabFeature:
-    """A pre-STORY-308 free-text Feature as a LabFeature named with the text,
+    """An older save's free-text Feature as a LabFeature named with the text,
     of the catalog Feature named in it (by whole word, a plural too: "Big
     windows" is a Window), else custom. `feature_names` maps catalog names
     to ids (loaded from the catalog when not given)."""
@@ -1190,7 +1190,7 @@ class LabSpecialtyEntry:
 
 
 def _parse_old_specialty(text: str) -> LabSpecialtyEntry:
-    """A pre-STORY-307 free-text Specialty ("Terram +1") as an entry: the
+    """An older save's free-text Specialty ("Terram +1") as an entry: the
     Specialization it names, its number (1 when there isn't one), the source
     "(from old notes)". Text that names no Specialization becomes a 0-point
     entry keeping the text, for the user to fix."""
@@ -1249,13 +1249,13 @@ class Laboratory:
     diary: list[DiaryEntry] = field(default_factory=list)
     virtues_flaws: list[VirtueFlawInstance] = field(default_factory=list)
     arcane_connections: list[ArcaneConnection] = field(default_factory=list)
-    #: Moving it by mundane means (STORY-915): the seasons done so far (0: not
+    #: Moving it by mundane means: the seasons done so far (0: not
     #: moving; pack, then two reassembling).
     move_seasons: int = 0
-    #: One of its covenant's starting laboratories (STORY-1313): its Build
+    #: One of its covenant's starting laboratories: its Build
     #: Points count against the covenant's at creation.
     starting: bool = False
-    #: Being created by the book (STORY-1301): the creation checks run and
+    #: Being created by the book: the creation checks run and
     #: the Creation Worksheet is offered. New records start In Creation;
     #: older saves load In Play (False).
     in_creation: bool = False
@@ -1286,19 +1286,19 @@ class Laboratory:
             for vf in d.get("virtues_flaws", [])
         ]
         # Ids given at load are the same every time (not new_instance_id):
-        # a hosted saga's saves compare the file as loaded (STORY-1405).
+        # a hosted saga's saves compare the file as loaded.
         for i, vf in enumerate(d["virtues_flaws"]):
             vf.id = vf.id or f"{d.get('id', '')}-vf{i}"
         old_features = [f for f in d.get("features", []) if isinstance(f, str)]
         d["features"] = [
             _feature_from_old_text(f, id=f"{d.get('id', '')}-feature{i}")
-            if isinstance(f, str)  # pre-STORY-308 free text
+            if isinstance(f, str)  # older saves' free text
             else LabFeature.from_dict(f)
             for i, f in enumerate(d.get("features", []))
         ]
         d["specialties"] = [
             _parse_old_specialty(s)
-            if isinstance(s, str)  # pre-STORY-307 free text
+            if isinstance(s, str)  # older saves' free text
             else LabSpecialtyEntry(**known_fields(LabSpecialtyEntry, s))
             for s in d.get("specialties", [])
         ]
@@ -1311,7 +1311,7 @@ class Laboratory:
 @dataclass
 class ArtScore:
     """A magus's score in one Art: the total xp spent is stored, the score
-    derived from it (rules.xp, STORY-806)."""
+    derived from it (rules.xp)."""
 
     xp: int = 0
 
@@ -1328,7 +1328,7 @@ class ArtScore:
     def from_dict(cls, data: dict[str, Any]) -> ArtScore:
         d = dict(data)
         if "level" in d:
-            # Before STORY-806 the score was typed beside the xp.
+            # Older saves typed the score beside the xp.
             d["xp"], _ = xp_rules.migrate_level_xp(
                 d.pop("level"), d.get("xp", 0), xp_rules.ART_FACTOR
             )
@@ -1341,7 +1341,7 @@ class Background:
     "Description" box -- see Description below for that)."""
 
     player: str = ""
-    #: The saga Player who plays this character (players.py, STORY-1404):
+    #: The saga Player who plays this character (players.py):
     #: when they sign in to a hosted saga, they may change it. None: no one
     #: but the storyguide.
     player_id: str | None = None
@@ -1364,7 +1364,7 @@ class Background:
     def from_dict(cls, data: dict[str, Any]) -> Background:
         d = dict(data)
         if "confidence" in d and "confidence_score" not in d:
-            # Pre-STORY-208 saves used a single "confidence"; migrate on load
+            # Older saves used a single "confidence"; migrate on load
             # so existing characters don't become unreadable over the split.
             d["confidence_score"] = d.pop("confidence")
         return cls(**known_fields(cls, d))
@@ -1379,7 +1379,7 @@ class Description:
     handedness: Handedness = "right"
     physical_description: str = ""
     #: Free-text biography, distinct from physical_description (the paper
-    #: sheet's short free-text box) -- added for STORY-207's Biographical
+    #: sheet's short free-text box), shown in the Biographical
     #: Detail section.
     biography: str = ""
 
@@ -1391,18 +1391,18 @@ class Description:
 @dataclass
 class Aging:
     """Decrepitude and Warping. Warping is tracked as Score/Points; both are
-    typed for now (deriving the Score is Phase 4, STORY-904)."""
+    typed for now (deriving the Score is Phase 4)."""
 
     decrepitude: int = 0
     effects: str = ""
     warping_score: int = 0
     warping_points: int = 0
-    #: A Longevity Ritual (STORY-907): its modifier to aging rolls (0: none),
+    #: A Longevity Ritual: its modifier to aging rolls (0: none),
     #: the year it was made and who made it.
     longevity_modifier: int = 0
     longevity_year: int | None = None
     longevity_by: str = ""
-    #: Aging (STORY-904): Decrepitude points (the score is worked out from
+    #: Aging: Decrepitude points (the score is worked out from
     #: them and kept in `decrepitude`), Aging Points per Characteristic, the
     #: apparent age (None: the actual age), and the season spent recovering
     #: from an Aging Crisis ("Spring 1221").
@@ -1410,7 +1410,7 @@ class Aging:
     aging_points: dict[str, int] = field(default_factory=dict)
     apparent_age: int | None = None
     recovering: str = ""
-    #: Wizard's Twilight (STORY-909): the last season it takes ("Winter
+    #: Wizard's Twilight: the last season it takes ("Winter
     #: 1224"); no activity can be planned until after it.
     twilight_until: str = ""
 
@@ -1435,7 +1435,7 @@ class Wounds:
     incapacitated: bool = False
     dead: bool = False
     #: A character's typed adjustment on top of the Soak worked out from
-    #: Stamina, armour and Virtues (rules.derived.soak, STORY-807); a
+    #: Stamina, armour and Virtues (rules.derived.soak); a
     #: familiar's wounds leave it 0 (a familiar has base_soak).
     soak: int = 0
 
@@ -1481,7 +1481,7 @@ class HermeticBackground:
 @dataclass
 class Progress:
     """Progress carried from season to season on something a character is
-    working at (STORY-913, 918-923): an excellent item, a pilgrimage, taming
+    working at: an excellent item, a pilgrimage, taming
     an animal, a work of art, a formula, years at university."""
 
     kind: str
@@ -1497,7 +1497,7 @@ class Progress:
 
 @dataclass
 class GrogYear:
-    """A grog's yearly update (STORY-924, Grogs Ch. 5), applied in Winter:
+    """A grog's yearly update (Grogs Ch. 5), applied in Winter:
     the vocational training (7 xp, or the teacher's Source Quality), 4 xp of
     practice and two 2 xp of exposure, less a season for each story award
     this year."""
@@ -1516,7 +1516,7 @@ class GrogYear:
 
 @dataclass
 class Breakthrough:
-    """A magus's original research goal (STORY-916): what it is, its kind and
+    """A magus's original research goal: what it is, its kind and
     target (the storyguide may type a secret one), the points gained, what
     reaching it grants, a Discovery waiting to be stabilized, and insights
     waiting to be invented."""
@@ -1556,7 +1556,7 @@ class Breakthrough:
 
 @dataclass
 class CreationXp:
-    """xp spent at a creation step (STORY-1306 to 1310), already added to
+    """xp spent at a creation step, already added to
     the Ability or Art it names: the Creation Worksheet's record of where a
     character's starting xp came from, checked against each step's budget."""
 
@@ -1576,7 +1576,7 @@ class CreationXp:
 
 @dataclass
 class CreationConditions:
-    """A magus's years past Gauntlet at creation (STORY-1310): the seasons
+    """A magus's years past Gauntlet at creation: the seasons
     that went to lab work, the working conditions the storyguide set (used
     for lab work and pre-play aging), and the age pre-play aging has been
     rolled up to (None: not yet)."""
@@ -1590,9 +1590,9 @@ class CreationConditions:
 
 @dataclass
 class LabTextAccess:
-    """How far a magus can read one author's raw Lab Texts (STORY-914,
-    STORY-508): up to `level`, and how that was gained -- "decoded",
-    "taught" (the author's abbreviations) or "" (not recorded)."""
+    """How far a magus can read one author's raw Lab Texts: up to `level`, and how that
+    was gained -- "decoded", "taught" (the author's abbreviations) or "" (not
+    recorded)."""
 
     level: int = 0
     via: str = ""
@@ -1628,21 +1628,21 @@ class Character:
     raw_vis: dict[str, int] = field(default_factory=dict)  # Art -> pawns
     hermetic: HermeticBackground = field(default_factory=HermeticBackground)
     #: What the character did season by season: written when a season is
-    #: applied (STORY-903), and editable like a laboratory's Diary.
+    #: applied, and editable like a laboratory's Diary.
     diary: list[DiaryEntry] = field(default_factory=list)
     #: Tractatus already studied (book ids): each gives its xp only once
-    #: (DE Ch. 10, Studying Tractatus; STORY-902).
+    #: (DE Ch. 10, Studying Tractatus).
     tractatus_read: list[str] = field(default_factory=list)
     #: Whose raw Lab Texts this magus can read, and up to what level
-    #: (decoded, or taught the author's abbreviations; STORY-914), by the
+    #: (decoded, or taught the author's abbreviations), by the
     #: author's character id -- or name, for an author outside the saga
     #: (rules.book_seasons.author_key).
     lab_text_access: dict[str, LabTextAccess] = field(default_factory=dict)
-    #: Original research goals (STORY-916).
+    #: Original research goals.
     breakthroughs: list[Breakthrough] = field(default_factory=list)
-    #: A grog's yearly update (STORY-924); None until set up.
+    #: A grog's yearly update; None until set up.
     grog_year: GrogYear | None = None
-    #: The supplements' sub-systems (STORY-913, 918-923): Labor Points and a
+    #: The supplements' sub-systems: Labor Points and a
     #: workshop's scores (City & Guild), progress records, experimental
     #: philosophy formulas known, and the last Ordeal (its size, and the
     #: Initiations since).
@@ -1653,13 +1653,13 @@ class Character:
     formulas: list[str] = field(default_factory=list)
     ordeal: str = ""
     initiations_since_ordeal: int = 0
-    #: Being created by the book (STORY-1301): the creation checks run and
+    #: Being created by the book: the creation checks run and
     #: the Creation Worksheet is offered. New records start In Creation;
     #: older saves load In Play (False).
     in_creation: bool = False
-    #: Where the starting xp went, step by step (STORY-1306 to 1310).
+    #: Where the starting xp went, step by step.
     creation_xp: list[CreationXp] = field(default_factory=list)
-    #: Years past Gauntlet and pre-play aging (STORY-1310).
+    #: Years past Gauntlet and pre-play aging.
     creation_conditions: CreationConditions = field(default_factory=CreationConditions)
 
     @classmethod
@@ -1691,14 +1691,14 @@ class Character:
             Spell.from_dict(sp) for sp in d.get("invented_spells", [])
         ]
         d["inventory"] = [
-            # Pre-STORY-203 saves held plain description strings.
+            # Older saves held plain description strings.
             Possession(id=f"{data['id']}-inv-{i}", kind="item", name=item)
             if isinstance(item, str)
             else Possession(**known_fields(Possession, item))
             for i, item in enumerate(d.get("inventory", []))
         ]
         d["spells_known"] = [
-            # Pre-STORY-203 saves held bare spell ids.
+            # Older saves held bare spell ids.
             KnownSpell(spell_id=entry)
             if isinstance(entry, str)
             else KnownSpell.from_dict(entry)
@@ -1718,7 +1718,7 @@ class Character:
             CreationXp(**known_fields(CreationXp, x)) for x in d.get("creation_xp", [])
         ]
         d["lab_text_access"] = {
-            # Before STORY-508 an author's entry was just the level.
+            # In older saves an author's entry was just the level.
             author: (
                 LabTextAccess(level=int(entry))
                 if isinstance(entry, int)
@@ -1748,7 +1748,7 @@ CORD_SCORE_COSTS: dict[int, int] = {0: 0, 1: 5, 2: 15, 3: 30, 4: 50, 5: 75}
 class BondPower:
     """One Empowered Bond Power (invested effect) on a Familiar -- typed in,
     no Lab Total formula computed (see DESIGN.md's "tracker, not rules
-    engine" stance and STORY-206 Slice 5)."""
+    engine" stance)."""
 
     id: str
     name: str = ""
@@ -1761,8 +1761,8 @@ class BondPower:
     penetration: int = 0
     vis_spent: int = 0
     cosmetic_trait: str = ""
-    #: Points instilled so far while it is being instilled as lab work
-    #: (STORY-908); None when finished.
+    #: Points instilled so far while it is being instilled as lab work;
+    #: None when finished.
     instilling_progress: int | None = None
 
 
@@ -1770,12 +1770,12 @@ class BondPower:
 class Familiar:
     """A magus's bound familiar (ArM5 Familiars). One per magus at a time,
     nested under its magus in the nav tree, but its own top-level entity
-    (own sheet) rather than a field on Character -- see kanban STORY-206.
+    (own sheet) rather than a field on Character.
 
     `character_id` is the magus who bound it: required, set once at
     creation, and never reassigned to a different magus.
 
-    Built in slices (STORY-206), all now landed onto this one dataclass, the
+    Built in slices, all now landed onto this one dataclass, the
     same way Character grew over many stories.
 
     `virtues_flaws`/`personality_traits` reuse Character's own shapes
@@ -1812,13 +1812,13 @@ class Familiar:
     bronze_cord: int = 0  # 0-5
     characteristics: Characteristics = field(default_factory=Characteristics)
     #: Both typed in, no formula computed -- same "tracker, not rules engine"
-    #: treatment as Wounds.soak (see DESIGN.md, STORY-205/206 Slice 2).
+    #: treatment as Wounds.soak (see DESIGN.md).
     base_soak: int = 0
     magic_resistance: int = 0
     wounds: Wounds = field(default_factory=Wounds)
     fatigue_level: FatigueLevel = "fresh"
     #: Bite/Claws/Dodge etc. -- a free list of weapon-kind Possessions (same
-    #: shape as Character.inventory's weapons, see STORY-205), not a fixed
+    #: shape as Character.inventory's weapons), not a fixed
     #: 3-row table.
     natural_weapons: list[Possession] = field(default_factory=list)
     #: Same shape/catalog as Character.abilities -- Languages are just
@@ -1856,7 +1856,7 @@ class Familiar:
         return cls(**known_fields(cls, d))
 
 
-# -- Enchanted Devices & Talismans (STORY-305; DE ch. 8, Enchantments) --
+# -- Enchanted Devices & Talismans (DE ch. 8, Enchantments) --
 
 #: The three kinds of enchanted item. A Talisman is an Invested Device with
 #: `EnchantedDevice.talisman` set (DE ch. 8, Talisman Attunement).
@@ -1984,7 +1984,7 @@ class InstilledEffect:
     range: str = ""
     duration: str = ""
     target: str = ""
-    #: The spell-equivalent level (the spell level calculator is STORY-810).
+    #: The spell-equivalent level.
     level: int = 0
     description: str = ""
     #: A key of EFFECT_FREQUENCIES (not used on a Charged Item).
@@ -2229,19 +2229,18 @@ class Possession:
       (quality, upkeep, usage, description) for that laboratory, while a record
       without one is a manually-added sanctum.
     * weapon / armor: name, quantity, gear_type, gear_quality (they give its
-      points, which feed the covenant's finances), load, description, and
-      gear_id: the weapon_armor_catalog entry its figures were filled from
-      (None: typed in). weapon only: weapon_init/weapon_attack/
-      weapon_defense/weapon_damage (combat figures, typed in or filled from
-      the catalog and then editable, no formula -- see DESIGN.md, STORY-205
-      and STORY-709; a None Attack or Damage is the book's n/a). armor
-      only: armor_protection (its bonus to Soak).
+      points, which feed the covenant's finances), load, description, and gear_id: the
+      weapon_armor_catalog entry its figures were filled from (None: typed in). weapon
+      only: weapon_init/weapon_attack/ weapon_defense/weapon_damage (combat figures,
+      typed in or filled from the catalog and then editable, no formula -- see
+      DESIGN.md; a None Attack or Damage is the book's n/a). armor only:
+      armor_protection (its bonus to Soak).
     * item: name, quantity, description.
     * vis_source: name, art, pawns, season (when it is harvested), location,
       physical_form, description.
     * vis_store (Raw Vis Stores): name, art, pawns, physical_form, where it
       is kept -- location_kind/location_id: the covenant, one of its
-      laboratories or one of its characters (STORY-412; none set means the
+      laboratories or one of its characters (none set means the
       covenant) -- and location, a free-text note on where exactly.
 
     `description` is user-written text that supports inline emphasis.
@@ -2278,7 +2277,7 @@ class Possession:
     pawns: int = 0
     season: str = ""  # one of SEASONS
     physical_form: str = ""
-    #: vis_source (STORY-906): covered by a Contested (or Indiscreet)
+    #: vis_source: covered by a Contested (or Indiscreet)
     #: Resource Hook, secured through this year (one story secures it for
     #: five); and by a Dwindling Resource Hook (-10% of its first value a year).
     contested: bool = False
@@ -2344,8 +2343,8 @@ class Inhabitant:
     #: sheet but no longer counts as an inhabitant (died, left...). A departed
     #: record just marks that; it is not listed and not counted.
     departed: bool = False
-    #: A specialist bought with Build Points at covenant creation
-    #: (STORY-1312): the score in the Ability used for the covenant
+    #: A specialist bought with Build Points at covenant creation:
+    #: the score in the Ability used for the covenant
     #: (`linked_ability`); a teacher also has Communication and Teaching
     #: (None: not a teacher). None score: not bought.
     specialist_score: int | None = None
@@ -2415,7 +2414,7 @@ class IncomeSource:
     #: economics.improvement_note); plain text, replaced wholesale each time,
     #: not user-editable directly.
     note: str = ""
-    #: STORY-906: covered by a Contested (or Indiscreet) Resource Hook,
+    #: Covered by a Contested (or Indiscreet) Resource Hook,
     #: secured through this year (no income until it is); and a Dwindling
     #: Resource Hook (-10% of its first value a year).
     contested: bool = False
@@ -2469,7 +2468,7 @@ class Economics:
         return cls(**known_fields(cls, d))
 
 
-#: A Covenant Diary entry's categories (STORY-406), in the spec's order.
+#: A Covenant Diary entry's categories, in the spec's order.
 COVENANT_DIARY_CATEGORIES: tuple[str, ...] = (
     "Improvements",
     "Purchases & Sales",
@@ -2496,7 +2495,7 @@ STORY_EVENT_STATUSES: tuple[str, ...] = ("Open", "Resolved")
 
 @dataclass
 class CovenantDiaryEntry:
-    """One entry on the covenant's Diary tab (STORY-406): what happened and
+    """One entry on the covenant's Diary tab: what happened and
     when, with optional amounts. Only `loyalty` changes the sheet (it adds
     into the Loyalty block's Actions and Events); pounds and vis are a
     record. `status`, `boon_hook_id` (a VirtueFlawInstance.id among the
@@ -2552,21 +2551,21 @@ class Covenant:
     economics: Economics = field(default_factory=Economics)
     #: The Diary tab (see CovenantDiaryEntry), in the order entered.
     diary: list[CovenantDiaryEntry] = field(default_factory=list)
-    #: The Power Level chosen at creation (STORY-1312): one of POWER_LEVELS,
+    #: The Power Level chosen at creation: one of POWER_LEVELS,
     #: or "" before one is chosen.
     power_level: str = ""
     #: The Build Points the storyguide gives it, within the Power Level's
     #: range: what its starting resources are bought with (None: not set).
     build_points_budget: int | None = None
     #: Magi who go without a laboratory at creation, each refunding 50
-    #: Build Points (STORY-1318). Only this refunds: a magus whose lab
+    #: Build Points. Only this refunds: a magus whose lab
     #: isn't entered still has the free one.
     magi_without_lab: int = 0
     #: What its Build Points were spent on when it moved to In Play, by
-    #: Build-tab row (STORY-1314); None for a covenant still In Creation,
+    #: Build-tab row; None for a covenant still In Creation,
     #: or one in play since before this was recorded.
     initial_build_points: dict[str, int] | None = None
-    #: Being created by the book (STORY-1301): the creation checks run and
+    #: Being created by the book: the creation checks run and
     #: the Creation Worksheet is offered. New records start In Creation;
     #: older saves load In Play (False).
     in_creation: bool = False
@@ -2580,7 +2579,7 @@ class Covenant:
             for bh in d.get("boons_hooks", [])
         ]
         # Diary Story Events link to a Boon/Hook by its instance id.
-        # The same ids every load, like a laboratory's Virtues (STORY-1405).
+        # The same ids every load, like a laboratory's Virtues.
         for i, bh in enumerate(d["boons_hooks"]):
             bh.id = bh.id or f"{d.get('id', '')}-bh{i}"
         d["diary"] = [
@@ -2661,7 +2660,7 @@ class XpAllocation:
 
 @dataclass
 class SpellDesign:
-    """A spell being invented (STORY-901): started from a spell or from
+    """A spell being invented: started from a spell or from
     nothing, and edited freely. It lives on the plan until the spell is
     invented; only then is it added to the magus's spells."""
 
@@ -2696,7 +2695,7 @@ class SpellDesign:
 
 @dataclass
 class SeasonPlan:
-    """What a character will do in one season (STORY-903): typed by the user,
+    """What a character will do in one season: typed by the user,
     locked in until the season is applied. Its outcome is always worked out
     (rules.activities.outcome), never stored."""
 
@@ -2721,7 +2720,7 @@ class SeasonPlan:
     #: Vis study: the stress die as rolled at the table (None: the app
     #: rolls it when the season is applied).
     die: int | None = None
-    #: Lab work (STORY-901): the laboratory it is done in. A plan with a
+    #: Lab work: the laboratory it is done in. A plan with a
     #: laboratory is made on the lab's Planning tab.
     lab_id: str | None = None
     #: Inventing: the spell invented (a Lab Text's spell when working from one).
@@ -2739,7 +2738,7 @@ class SeasonPlan:
     focus: bool = False
     theory_specialty: bool = False
     other_modifier: int = 0
-    #: Longevity Ritual (STORY-907): who it is for (the magus when None), the
+    #: Longevity Ritual: who it is for (the magus when None), the
     #: Art of the vis paid with, and extra pawns (+1 Lab Total each). Being
     #: its subject: the magus making it.
     subject_id: str | None = None
@@ -2747,31 +2746,31 @@ class SeasonPlan:
     extra_vis: int = 0
     #: Fixing an Arcane Connection: the laboratory's connection fixed.
     connection_id: str | None = None
-    #: Enchanting (STORY-905): the enchanted device worked on, the effect
+    #: Enchanting: the enchanted device worked on, the effect
     #: instilled (or made), and the shape and material bonus that applies.
     device_id: str | None = None
     effect_id: str | None = None
     shape_bonus: int = 0
-    #: Binding a familiar (STORY-908): the Technique and Form used, and the
+    #: Binding a familiar: the Technique and Form used, and the
     #: cords the Lab Total buys (0-5 each).
     technique: str = ""
     form: str = ""
     golden_cord: int = 0
     silver_cord: int = 0
     bronze_cord: int = 0
-    #: Writing, copying and translating books (STORY-910): the title, the
+    #: Writing, copying and translating books: the title, the
     #: summa's Level (None: the most the author can), the language written
     #: or translated into, and a quick copy.
     title: str = ""
     book_level: int | None = None
     language: str = ""
     quick: bool = False
-    #: Moving a laboratory (STORY-915): by spell (one season, a roll) rather
+    #: Moving a laboratory: by spell (one season, a roll) rather
     #: than mundane means, and where to.
     by_spell: bool = False
-    #: Supplement seasons (STORY-919, 920): the Characteristic a total uses.
+    #: Supplement seasons: the Characteristic a total uses.
     characteristic: str = ""
-    #: Experimentation (STORY-916): whether the season experiments, its
+    #: Experimentation: whether the season experiments, its
     #: risk modifier, the simple die added to the Lab Total (None: rolled
     #: when played), and the research goal it seeks a Discovery for.
     experimenting: bool = False
@@ -2791,13 +2790,13 @@ class SeasonPlan:
 
 @dataclass
 class LabProject:
-    """Lab work that runs over several seasons (STORY-901): the points a
+    """Lab work that runs over several seasons: the points a
     magus has put into inventing a spell so far."""
 
     character_id: str
     spell_id: str
     points: int = 0
-    #: Experimental side effects and modified effects so far (STORY-916).
+    #: Experimental side effects and modified effects so far.
     effects: list[str] = field(default_factory=list)
 
     @classmethod
@@ -2807,7 +2806,7 @@ class LabProject:
 
 @dataclass
 class SeasonRecordLine:
-    """One person's line in a season's record (STORY-911): kept as the text
+    """One person's line in a season's record: kept as the text
     it showed, so it still reads right after the character is renamed or
     deleted."""
 
@@ -2844,7 +2843,7 @@ class SeasonRecord:
 
 @dataclass
 class Player:
-    """Someone who can sign in to the saga from a browser (STORY-1403): a
+    """Someone who can sign in to the saga from a browser: a
     name, a role (players.PLAYER or players.STORYGUIDE) and the passcode,
     kept only as a salted hash (players.hash_passcode)."""
 
@@ -2852,7 +2851,7 @@ class Player:
     name: str
     role: str = "player"
     passcode_hash: str = ""
-    #: Whether this player may also change the covenants (STORY-1404); a
+    #: Whether this player may also change the covenants; a
     #: storyguide always may.
     covenant_rights: bool = False
 
@@ -2884,31 +2883,31 @@ class Saga:
     #: The optional rules the troupe has turned on (rules.options keys);
     #: an option not listed is off, its default.
     rule_options: dict[str, bool] = field(default_factory=dict)
-    #: Season plans not yet applied (STORY-903); a plan is removed when its
+    #: Season plans not yet applied; a plan is removed when its
     #: season is applied.
     season_plans: list[SeasonPlan] = field(default_factory=list)
-    #: Whether a record of each applied season is kept (STORY-911).
+    #: Whether a record of each applied season is kept.
     keep_season_records: bool = True
     #: Those records, oldest first.
     season_records: list[SeasonRecord] = field(default_factory=list)
-    #: Lab work in progress over several seasons (STORY-901).
+    #: Lab work in progress over several seasons.
     lab_projects: list[LabProject] = field(default_factory=list)
-    #: User-made catalog entries (STORY-708): house rules and entries from
+    #: User-made catalog entries: house rules and entries from
     #: books the shared catalogs don't carry -- character Virtues & Flaws,
     #: laboratory Virtues & Flaws, covenant Boons & Hooks. Text only: no
     #: effects the rules engine applies. See house_rules.py.
     custom_virtues_flaws: list[VirtueFlawDef] = field(default_factory=list)
     custom_lab_virtues_flaws: list[LabVirtueFlawDef] = field(default_factory=list)
     custom_boons_hooks: list[CovenantBoonHookDef] = field(default_factory=list)
-    #: Who can sign in to the saga from a browser when it is hosted
-    #: (STORY-1403); the storyguide's own window needs no sign-in.
+    #: Who can sign in to the saga from a browser when it is hosted;
+    #: the storyguide's own window needs no sign-in.
     players: list[Player] = field(default_factory=list)
     #: The app version that last saved this saga (storage.save_saga sets it;
     #: "" for a save older than versioning), for upgrading old saves later.
     app_version: str = ""
     #: Who last saved the saga (storage.save_saga sets it, from
     #: storage.saved_by): a signed-in player's name, else "" for the
-    #: storyguide. Shown when another copy picks up the change (STORY-1406).
+    #: storyguide. Shown when another copy picks up the change.
     saved_by: str = ""
 
     def covenant(self, covenant_id: str | None) -> Covenant | None:
@@ -2969,7 +2968,7 @@ class Saga:
 
 def _key_lab_text_access_by_author(saga: Saga) -> None:
     """Key who can read whose Lab Texts by the author's character id, not
-    name (STORY-508; older saves used the name, which a rename broke): an
+    name (older saves used the name, which a rename broke): an
     entry, or a decoding under way, naming exactly one character of the
     saga moves to that character's id. Any other name stays as typed."""
     ids = {c.id for c in saga.characters}
@@ -2997,7 +2996,7 @@ def _key_lab_text_access_by_author(saga: Saga) -> None:
 
 def _link_vis_store_locations(saga: Saga) -> None:
     """Give every covenant Raw Vis Store a real place it is kept
-    (STORY-412; older saves only had free text): the laboratory or character
+    (older saves only had free text): the laboratory or character
     of the covenant that the text names, else the covenant itself, with the
     text left as the store's note on where exactly."""
     for covenant in saga.covenants:

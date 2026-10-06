@@ -75,7 +75,7 @@ def book_spell(saga: Saga, book: Book) -> Spell | None:
 def records_spell(book_type: str, text_kind: str) -> bool:
     """Whether a book of this Type (and, a Lab Text, kind) is of a spell: a
     Casting Tablet, or a Lab Text of a spell -- not one of an enchantment, a
-    Longevity Ritual or anything else (STORY-508), which carry their own
+    Longevity Ritual or anything else, which carry their own
     Technique, Form and level. A Lab Text with no kind yet counts as a
     spell's."""
     if book_type == "Lab Text":
@@ -109,7 +109,7 @@ POOL_SOURCE = (
 #: library, not text by text (POOL_SOURCE): POOL_POINTS Build Points buy
 #: POOL_LEVELS levels. The pool's levels are summed first; whole Build
 #: Points are spent, so the last purchase rounds up and its unused levels
-#: are the pool's unspent remainder (Hedda, 2026-10-05, STORY-1126).
+#: are the pool's unspent remainder.
 POOL_LEVELS = 5
 POOL_POINTS: dict[str, int] = {"Lab Text": 1, "Casting Tablet": 2}
 
@@ -312,7 +312,7 @@ def covenant_of(saga: Saga, book: Book) -> str | None:
 
 
 def can_read(saga: Saga, character: Character, book: Book) -> bool:
-    """Whether `character` may study `book` (STORY-902, Hedda 2026-09-29): a
+    """Whether `character` may study `book`: a
     book in the covenant's library (owned by the covenant) is open to
     everyone of that covenant; a book someone keeps (in their inventory, or
     in their laboratory) only to them. A book with no owner is in nobody's
@@ -592,8 +592,8 @@ def detail_text(saga: Saga, book: Book | None) -> str:
     lines.append(_cell("Name", book.name or "(untitled)")[0])
     lines += [f"{lm}{' ' * (width - lw)}{rm}" for (lm, lw), (rm, _) in zip(left, right)]
     if priced(saga, book):
-        # Build Points matter only while its covenant is being created
-        # (STORY-1314); in play they're on the covenant's Build tab.
+        # Build Points matter only while its covenant is being created;
+        # in play they're on the covenant's Build tab.
         if pooled(book.type):
             library = books_owned_by(saga, "covenant", book.owner_id or "")
             text = (
@@ -612,7 +612,7 @@ def detail_text(saga: Saga, book: Book | None) -> str:
 
 def _study_lines(saga: Saga, book: Book) -> list[str]:
     """What a season reading the book gives each magus and companion of
-    its covenant (rules.study, STORY-803): nothing for a book that isn't a
+    its covenant (rules.study): nothing for a book that isn't a
     summa or tractatus."""
     from .rules import study
 

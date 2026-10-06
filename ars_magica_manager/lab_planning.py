@@ -1,7 +1,6 @@
 """The laboratory's Lab Totals tab: the owner's Lab Total for every
-Technique + Form pair, and what goes into them (rules.lab, STORY-801; moved
-off the Planning tab and the magus's own sheet by STORY-925). Three
-sections (STORY-211): the grid, the Base Lab Total every total shares, and
+Technique + Form pair, and what goes into them (rules.lab). Three
+sections: the grid, the Base Lab Total every total shares, and
 what each activity adds. Like the other domain modules it returns markup."""
 
 from __future__ import annotations
@@ -21,7 +20,7 @@ _SHARED_FROM = 2  # after the Technique and Form lines
 #: The grid's columns.
 _ROW_LABEL_WIDTH = 12
 _CELL_WIDTH = 5
-#: Characteristics as the Base Lab Total lists them (Hedda 2026-09-29:
+#: Characteristics as the Base Lab Total lists them (
 #: "Int +5, Magic Theory +7, Aura (Magic) +5").
 _SHORT = {
     "Intelligence": "Int",

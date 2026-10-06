@@ -23,7 +23,7 @@ CASTLE = "covbh_hook_major_castle"
 
 def test_catalog_counts_by_tier_after_merging_the_covenants_book():
     # 37 entries from the core chapter + 179 from Covenants Chapter Two
-    # (checked entry by entry in STORY-705 against
+    # (checked entry by entry against
     # reference/covenants-boons-and-hooks-ref.md).
     entries = catalog.load_covenant_boon_hook_catalog()
     assert len(entries) == 216
@@ -174,7 +174,7 @@ def test_existing_entries_received_their_types_from_the_book():
         "covbh_hook_minor_superiors": "Residents",
         "covbh_hook_minor_protector": "Surroundings",
         # The table lists a Major Monster under Site and under Surroundings;
-        # both are in the catalog (STORY-705).
+        # both are in the catalog.
         "covbh_hook_major_monster": "Site",
         "covbh_hook_major_monster_surroundings": "Surroundings",
     }

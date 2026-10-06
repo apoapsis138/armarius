@@ -1,4 +1,4 @@
-"""Saving when several copies of the app share a saga file (STORY-1405)."""
+"""Saving when several copies of the app share a saga file."""
 
 from __future__ import annotations
 

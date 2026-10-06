@@ -1,4 +1,4 @@
-"""Dice (STORY-805): simple and stress dice, botch dice, and rolls against
+"""Dice: simple and stress dice, botch dice, and rolls against
 an Ease Factor. Every function takes the random number generator, so a
 caller (or a test) decides the source of chance.
 

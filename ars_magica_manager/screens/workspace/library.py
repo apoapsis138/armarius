@@ -65,7 +65,7 @@ from .base import (
 )
 
 #: The Import dialog's entries that take an exported record, and the kind
-#: of export each takes (STORY-109).
+#: of export each takes.
 _RECORD_IMPORTS: dict[str, str] = {
     "characters": transfer.CHARACTER,
     "covenants": transfer.COVENANT,
@@ -153,7 +153,7 @@ class LibraryActions(WorkspaceBase):
             ConfirmScreen(f"Delete {escape(spell.name)}?"), handle_confirmed
         )
 
-    # -- House Rules: the saga's user-made catalog entries (STORY-708) --
+    # -- House Rules: the saga's user-made catalog entries --
 
     def _house_rules_view(self) -> HouseRulesView | None:
         try:
@@ -229,7 +229,7 @@ class LibraryActions(WorkspaceBase):
 
         self._pick_house_rule(confirm)
 
-    # -- Players: who can sign in from a browser (STORY-1403) --
+    # -- Players: who can sign in from a browser --
 
     def _players_view(self) -> PlayersView | None:
         try:
@@ -324,7 +324,7 @@ class LibraryActions(WorkspaceBase):
 
     def action_perform_ritual(self) -> None:
         """More on a laboratory's Lab Texts: perform a Longevity Ritual again
-        from its text -- the chosen one, else the one picked (STORY-509). It
+        from its text -- the chosen one, else the one picked. It
         takes vis but no season, so it is done at once."""
         lab = self.selected_laboratory
         view = self._book_view()
@@ -369,7 +369,7 @@ class LibraryActions(WorkspaceBase):
 
     def action_filter_lab_texts(self) -> None:
         """/ on a laboratory's Lab Texts: narrow the list by kind, Art,
-        level and whether its owner can read them (STORY-508)."""
+        level and whether its owner can read them."""
         view = self._book_view()
         if not isinstance(view, LabTextListView):
             return
@@ -569,7 +569,7 @@ class LibraryActions(WorkspaceBase):
 
     def _import_record(self, kind: str) -> None:
         """Pick an exported character, covenant or laboratory -- a file of
-        the `kind` chosen in the Import dialog (STORY-109) --, preview what
+        the `kind` chosen in the Import dialog --, preview what
         importing it adds and which of its links this saga can keep, then
         add it."""
         saga = self.saga

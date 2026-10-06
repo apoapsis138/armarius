@@ -1,4 +1,4 @@
-"""The Creation Worksheet's step panels (STORY-1303 to 1313): each step's
+"""The Creation Worksheet's step panels: each step's
 budget text and buttons, registered in creation_worksheet.PANELS. The
 buttons open the sheet's own dialogs through the workspace, so a step edits
 the record the same way the sheet does."""
@@ -34,7 +34,7 @@ def _character(record: Record) -> Character:
     return record
 
 
-# -- Concept: type, House and age (STORY-1303) --
+# -- Concept: type, House and age --
 
 
 def _concept_budget(saga: Saga, record: Record) -> str:
@@ -164,7 +164,7 @@ def _concept_actions(saga: Saga, record: Record) -> list[StepAction]:
 PANELS[("character", "concept")] = StepPanel(_concept_budget, _concept_actions)
 
 
-# -- Virtues and Flaws (STORY-1304) --
+# -- Virtues and Flaws --
 
 
 def _virtues_budget(saga: Saga, record: Record) -> str:
@@ -211,7 +211,7 @@ def _virtues_actions(saga: Saga, record: Record) -> list[StepAction]:
 PANELS[("character", "virtues_flaws")] = StepPanel(_virtues_budget, _virtues_actions)
 
 
-# -- Characteristics (STORY-1305) --
+# -- Characteristics --
 
 
 def _characteristics_budget(saga: Saga, record: Record) -> str:
@@ -270,7 +270,7 @@ PANELS[("character", "characteristics")] = StepPanel(
 )
 
 
-# -- the xp steps (STORY-1306 to 1310) --
+# -- the xp steps --
 
 
 def xp_lines(character: Character, step: str) -> str:
@@ -281,7 +281,7 @@ def xp_lines(character: Character, step: str) -> str:
     return "\n".join(f"  {escape(x.target)}: {x.xp} xp" for x in found)
 
 
-# -- Early Childhood (STORY-1306) --
+# -- Early Childhood --
 
 
 def _childhood_budget(saga: Saga, record: Record) -> str:
@@ -354,7 +354,7 @@ def _change_and_take_back(
     ]
 
 
-# -- Later Life (STORY-1307) --
+# -- Later Life --
 
 
 def _later_life_budget(saga: Saga, record: Record) -> str:
@@ -500,7 +500,7 @@ def _spell_actions(character: Character, step: str) -> list[StepAction]:
     return actions
 
 
-# -- Apprenticeship (STORY-1309) --
+# -- Apprenticeship --
 
 
 def _apprenticeship_budget(saga: Saga, record: Record) -> str:
@@ -536,7 +536,7 @@ PANELS[("character", "apprenticeship")] = StepPanel(
 )
 
 
-# -- Years past Gauntlet and pre-play aging (STORY-1310) --
+# -- Years past Gauntlet and pre-play aging --
 
 
 def _aging_actions(saga: Saga, character: Character) -> list[StepAction]:
@@ -602,7 +602,7 @@ def _gauntlet_actions(saga: Saga, record: Record) -> list[StepAction]:
 PANELS[("character", "gauntlet")] = StepPanel(_gauntlet_budget, _gauntlet_actions)
 
 
-# -- Finishing Touches and the review (STORY-1311) --
+# -- Finishing Touches and the review --
 
 
 def review_lines(saga: Saga, record: Record) -> list[str]:
@@ -648,7 +648,7 @@ def _finish_actions(saga: Saga, record: Record) -> list[StepAction]:
 PANELS[("character", "finish")] = StepPanel(_finish_budget, _finish_actions)
 
 
-# -- New Covenant (STORY-1312) --
+# -- New Covenant --
 
 
 def _covenant(record: Record) -> Covenant:
@@ -752,7 +752,7 @@ PANELS[("covenant", "boons_hooks")] = StepPanel(
 PANELS[("covenant", "finish")] = StepPanel(_review_budget)
 
 
-# -- New Laboratory (STORY-1313) --
+# -- New Laboratory --
 
 
 def _laboratory(record: Record) -> Laboratory:

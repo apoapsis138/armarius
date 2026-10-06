@@ -1,9 +1,9 @@
-"""Host the app for players (FEAT-14).
+"""Host the app for players.
 
     uv run python tools/serve.py [--host ADDRESS] [--port N] [--ssh-port N]
 
 Serves the app for browsers with textual-serve, and, with --ssh-port, for
-SSH clients too (STORY-1408). Each browser tab or SSH session gets its own
+SSH clients too. Each browser tab or SSH session gets its own
 copy of the app (a separate process), all using this computer's data
 folder. It listens on localhost unless another address is given -- the
 storyguide's Tailscale or ZeroTier address, never a public one. Who each

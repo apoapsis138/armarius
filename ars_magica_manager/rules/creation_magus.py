@@ -1,4 +1,4 @@
-"""Creation checks for a magus's Apprenticeship step (STORY-1309): 240 xp
+"""Creation checks for a magus's Apprenticeship step: 240 xp
 between Arts and non-Supernatural Abilities (Supernatural ones only with
 their Virtue) and 120 levels of spells, each spell no higher than a Lab
 Total with an aura of 3 (Technique + Form + Int + Magic Theory + 3, every
@@ -241,7 +241,7 @@ def apprenticeship_checks(saga: Saga, record: Record) -> list[Check]:
     return found
 
 
-# -- Years past Gauntlet and pre-play aging (STORY-1310) --
+# -- Years past Gauntlet and pre-play aging --
 
 GAUNTLET_SOURCE = (
     "Ars Magica Definitive Edition, Chapter Three: Characters, Magus Only -- "

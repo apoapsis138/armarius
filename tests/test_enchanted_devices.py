@@ -1,4 +1,4 @@
-"""Enchanted Devices & Talismans (STORY-305): the item-side arithmetic of
+"""Enchanted Devices & Talismans: the item-side arithmetic of
 ArM5 DE ch. 8 (capacity, modified level, vis, charges), the warnings,
 saving and loading, what deleting a holder or maker does, and the
 Shape & Material catalog."""

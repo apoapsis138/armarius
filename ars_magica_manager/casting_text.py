@@ -1,4 +1,4 @@
-"""The Hermetic Magic tab's casting text (STORY-802): the magus's Casting
+"""The Hermetic Magic tab's casting text: the magus's Casting
 Score for every Technique + Form pair, and a known spell's Casting Score
 and what the die must reach. Like the other domain modules it returns
 markup. Casting is worked out in the aura of the magus's covenant, with

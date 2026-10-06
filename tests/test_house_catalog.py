@@ -12,7 +12,7 @@ def test_house_catalog_by_id_contains_bonisagus():
 
 
 def test_every_house_names_its_creation_benefit_from_the_virtue_catalog():
-    # STORY-1315: a named Virtue (one or a choice), or a free kind of Virtue.
+    # A named Virtue (one or a choice), or a free kind of Virtue.
     virtues = catalog.load_virtue_flaw_catalog_by_id()
     abilities = {a.name for a in catalog.load_ability_catalog()}
     for house in catalog.load_house_catalog():

@@ -248,7 +248,7 @@ async def test_trait_list_edit_needs_no_choosing_first(case):
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         _, view = await _open(pilot, app, case)
-        # Every score is shown signed, Reputations too (B14).
+        # Every score is shown signed, Reputations too.
         rows = view.query_one(f"#{case.list_id}", SelectableList)
         assert [label for _, label in rows._rows] == ["Alpha: +1", "Beta: +2"]
         # The section took focus with its first row chosen: e edits it.

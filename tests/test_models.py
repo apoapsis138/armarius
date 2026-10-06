@@ -39,7 +39,7 @@ def test_character_age_is_none_without_year_born():
 
 
 def test_character_from_dict_migrates_legacy_inventory_strings():
-    # Pre-STORY-203 saves held Inventory as plain description strings.
+    # Older saves held Inventory as plain description strings.
     character = Character.from_dict(
         {
             "id": "char_1",
@@ -56,7 +56,7 @@ def test_character_from_dict_migrates_legacy_inventory_strings():
 
 
 def test_character_from_dict_migrates_legacy_spells_known_ids():
-    # Pre-STORY-203 saves held spells_known as bare spell ids.
+    # Older saves held spells_known as bare spell ids.
     character = Character.from_dict(
         {
             "id": "char_1",
@@ -73,7 +73,7 @@ def test_character_from_dict_migrates_legacy_spells_known_ids():
 
 
 def test_character_from_dict_migrates_legacy_confidence():
-    # Pre-STORY-208 saves held a single "confidence" instead of the
+    # Older saves held a single "confidence" instead of the
     # Score/Points pair.
     character = Character.from_dict(
         {
@@ -305,7 +305,7 @@ def test_boon_hook_params_sets_and_clears_the_unknown_mark():
 
 
 def test_a_stale_key_or_a_null_section_does_not_make_a_save_unloadable():
-    # B15: these from_dicts passed every key through, so a field removed in a
+    # These from_dicts passed every key through, so a field removed in a
     # later version (or a null where a section was expected) raised.
     saga = Saga(id="s", name="S")
     saga.covenants = [Covenant(id="c", saga_id="s", name="C")]

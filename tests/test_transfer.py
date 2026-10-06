@@ -1,5 +1,5 @@
 """Exporting a covenant, laboratory or character and importing it into
-another saga (STORY-109)."""
+another saga."""
 
 from __future__ import annotations
 

@@ -1,5 +1,5 @@
 """Deleting the saga's top-level records -- a covenant, character or
-laboratory -- and what happens to what they own or are linked to (STORY-108).
+laboratory -- and what happens to what they own or are linked to.
 
 Nothing that can stand on its own is deleted with its owner: books become
 unassigned, a covenant's characters and laboratories become unassigned, a

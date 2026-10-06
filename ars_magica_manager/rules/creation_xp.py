@@ -1,4 +1,4 @@
-"""Creation xp, step by step (STORY-1306 to 1308): what each step's xp may
+"""Creation xp, step by step: what each step's xp may
 buy and how much there is, and the checks on what the character spent
 (Character.creation_xp, which the worksheet also adds to the Abilities).
 

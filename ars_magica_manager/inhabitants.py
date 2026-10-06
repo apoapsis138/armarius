@@ -39,9 +39,9 @@ LOYALTY_SOURCE = (
     + ")"
 )
 #: Minimum servants: SERVANTS_PER_TEN for every 10 inhabitant points or part
-#: of 10 (2 x ceil(points / 10): 25 points -> 6; Hedda, 2026-10-05); minimum
+#: of 10 (2 x ceil(points / 10): 25 points -> 6); minimum
 #: teamsters: one per 10, less TEAMSTER_POINTS_PER_LABORER per laborer
-#: (INHABITANTS_SOURCE). Fractions round up (covenant finances, STORY-815).
+#: (INHABITANTS_SOURCE). Fractions round up (covenant finances).
 SERVANTS_PER_TEN = 2
 TEAMSTER_POINTS_PER_LABORER = 2
 
@@ -473,7 +473,7 @@ def base_loyalty(saga: Saga, covenant: Covenant) -> int:
     """Base Loyalty: the average, across the covenant's magi, of each one's
     Gift modifier. 0 with no magi. An unset manual Gift is assumed to be the
     ordinary Gift (the default expectation for a magus). LOYALTY_SOURCE; the
-    average rounds away from zero (covenant finances, STORY-815)."""
+    average rounds away from zero (covenant finances)."""
     magi = entries_for_kind(saga, covenant, "magus")
     if not magi:
         return 0

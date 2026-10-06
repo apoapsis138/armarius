@@ -1,4 +1,4 @@
-"""Which Abilities a character may buy at creation (STORY-1307, 1309):
+"""Which Abilities a character may buy at creation:
 General ones always; Academic, Arcane and Martial ones only with a Virtue
 that opens them (or, for a magus, from apprenticeship on); a Supernatural
 one only with the Virtue that grants it (a Gifted non-magus may take one

@@ -180,7 +180,7 @@ def test_an_inspeximus_raises_the_summas_level():
 
 def test_recorded_lectures_add_half_the_scribes_score_rounded_down():
     """Quality = the teacher's Communication + the scribe's Profession:
-    Scribe / 2; Art & Academe states no rounding, so down (STORY-1126)."""
+    Scribe / 2; Art & Academe states no rounding, so down."""
     saga = _saga()
     teacher = Character(id="t", name="Magister", type="companion")
     teacher.characteristics = Characteristics(communication=3)
@@ -192,7 +192,7 @@ def test_recorded_lectures_add_half_the_scribes_score_rounded_down():
     assert [b.quality for b in result.books] == [3 + 1]
 
 
-# -- every branch of problems() and work() (STORY-1129: cover before moving) ----
+# -- every branch of problems() and work() (cover before moving) ----
 
 
 def _with(**changes) -> Saga:

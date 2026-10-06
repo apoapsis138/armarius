@@ -1,4 +1,4 @@
-"""Where the user's data is kept, and moving it out of the repo (STORY-1127)."""
+"""Where the user's data is kept, and moving it out of the repo."""
 
 import json
 
@@ -28,7 +28,7 @@ def test_the_data_folder_defaults_to_the_top_of_onedrive(no_choice):
 
 
 def test_onedrive_is_found_wherever_it_is(no_choice, monkeypatch):
-    # the maintainer's second computer has OneDrive at D:\OneDrive.
+    # OneDrive can be at D:\OneDrive, for one.
     (no_choice / "D" / "OneDrive").mkdir(parents=True)
     monkeypatch.delenv("OneDrive")
     monkeypatch.setenv("OneDriveConsumer", str(no_choice / "D" / "OneDrive"))
@@ -129,7 +129,7 @@ async def test_the_app_says_what_moved_on_start():
 @pytest.fixture
 def blocked(no_choice, monkeypatch):
     """The OneDrive folder can't be written to (as Controlled folder access
-    does to Documents); every other folder can (STORY-1132)."""
+    does to Documents); every other folder can."""
     real = paths.writable
     monkeypatch.setattr(
         paths,

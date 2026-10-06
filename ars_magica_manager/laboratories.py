@@ -133,7 +133,7 @@ def lab_characteristic_total(
 def migrate_specialty_stand_ins(
     lab: Laboratory, catalog_by_id: dict[str, LabVirtueFlawDef] | None = None
 ) -> None:
-    """Before STORY-817 a Virtue's Specialization grant was typed in as a
+    """Older saves typed a Virtue's Specialization grant in as a
     source named after it (Subterranean: Terram +1). Now the catalog carries
     the grant, so such an entry is dropped when the Virtue grants exactly
     that, or, for a choice, becomes the Virtue's choice."""
@@ -693,7 +693,7 @@ def unchosen_specialization(
     instance: VirtueFlawInstance, definition: LabVirtueFlawDef
 ) -> bool:
     """True when the Virtue/Flaw lets the owner choose a Specialization and
-    none has been chosen (a lab from before STORY-817)."""
+    none has been chosen (a lab from an older save)."""
     return "specialization" in definition.choices and not instance.params.get(
         "specialization"
     )

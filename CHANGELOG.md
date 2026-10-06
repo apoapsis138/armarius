@@ -41,6 +41,13 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.18.1 — 2026-10-06
+
+- Tidier code notes: the program's comments now state each rule plainly,
+  without internal ticket numbers, and the rules note on covenant
+  finances no longer shows one either. The README now describes what
+  the app does today: the rules, seasons, creation and hosting a saga.
+
 ## 2.18.0 — 2026-10-06 — Sodales
 
 - Players can also reach a hosted saga over SSH: start hosting with

@@ -1,5 +1,5 @@
-"""Enchanting as lab work (STORY-905): the seasons that make the laboratory's
-enchanted devices (STORY-305). Each works on a device already recorded on an
+"""Enchanting as lab work: the seasons that make the laboratory's
+enchanted devices. Each works on a device already recorded on an
 Inventory tab (its components, effects and levels are entered there).
 
 - Opening an invested device: a season and its capacity in pawns of Vim vis
@@ -122,7 +122,7 @@ def text_device_type(device: EnchantedDevice) -> str:
 
 
 def lab_text_of(saga: Saga, plan: SeasonPlan) -> Book | None:
-    """The Lab Text an enchanting plan works from (STORY-509), if any."""
+    """The Lab Text an enchanting plan works from, if any."""
     if not plan.book_id:
         return None
     return next((b for b in saga.books if b.id == plan.book_id), None)
@@ -324,7 +324,7 @@ def work(
     level = ed.modified_level(device, effect)
     if level <= 0:
         return [f"Give {ed.effect_name(effect)} its level."], None
-    # Working from a Lab Text (STORY-509): one season if the Lab Total is at
+    # Working from a Lab Text: one season if the Lab Total is at
     # least the level; no experimenting.
     text = lab_text_of(saga, plan)
     if text is not None:

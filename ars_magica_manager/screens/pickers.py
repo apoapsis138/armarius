@@ -93,7 +93,7 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
 
     Given the saga's `books` in play (sourcebooks.saga_books; None: every
     book), entries whose books are all out of play are hidden, with F3 to
-    list them too, marked (STORY-711); a subclass says where an entry is
+    list them too, marked; a subclass says where an entry is
     from with `_source`.
     """
 
@@ -437,7 +437,7 @@ class VirtueFlawPickerScreen(
     ) -> None:
         super().__init__(_VF_SIDE_TITLES[side])
         #: The character's own Abilities, offered with the catalog's when a
-        #: Virtue or Flaw names an {ability} (STORY-712).
+        #: Virtue or Flaw names an {ability}.
         self._own_abilities = list(own_abilities)
         #: The character's Virtues & Flaws: an entry already taken is only
         #: offered again if it is repeatable (catalog.virtue_flaw_offerable),
@@ -940,7 +940,7 @@ class ShapeMaterialPickerScreen(
         tuple[ShapeMaterialDef, int | None], ShapeMaterialBonus | None
     ]
 ):
-    """Pick one bonus from DE's Shape and Material Bonuses Table (STORY-305):
+    """Pick one bonus from DE's Shape and Material Bonuses Table:
     a row per (shape or material, bonus), searchable by either. Dismisses
     with the bonus as a ShapeMaterialBonus (a row with no bonus, e.g. Living
     Tree, gives its note and +0)."""
@@ -1044,7 +1044,7 @@ class RemovalPickerScreen(ModalDialog[int | None]):
 
 
 class SourcebookPickerScreen(ModalDialog[list[str] | None]):
-    """Tick the supplements a saga has in play (STORY-711); the core book is
+    """Tick the supplements a saga has in play; the core book is
     always in play. Dismisses with the ticked abbreviations (every one of
     them: every book), or None if cancelled."""
 
@@ -1197,7 +1197,7 @@ class CsvFilePickerScreen(ModalDialog[Path | None]):
         super().__init__()
         self.title_text = title
         self.start = start
-        #: The kind of file to choose (".json" for an export, STORY-109).
+        #: The kind of file to choose (".json" for an export).
         self.suffix = suffix.lower()
 
     def compose(self) -> ComposeResult:

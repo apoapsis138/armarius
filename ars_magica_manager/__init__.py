@@ -13,5 +13,5 @@ __version__: str = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="u
 ]["version"]
 
 #: The repo's data/ folder: the shared catalogs. The user's own data (sagas,
-#: backups, exports, settings) is in paths.data_dir() (STORY-1127).
+#: backups, exports, settings) is in paths.data_dir().
 DATA_DIR = ROOT / "data"

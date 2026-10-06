@@ -1,5 +1,4 @@
-"""Moving raw vis between holders, and where a vis store is kept
-(STORY-412)."""
+"""Moving raw vis between holders, and where a vis store is kept."""
 
 from __future__ import annotations
 

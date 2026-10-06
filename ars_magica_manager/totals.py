@@ -45,7 +45,7 @@ MODIFIER_TYPES: dict[str, str] = {
     # A magus's Gift modifier to the covenfolk's Base Loyalty, on top of the
     # ordinary Gift's -30 (Gentle Gift +30, Blatant Gift -75).
     "gift_loyalty": "The Gift's effect on covenfolk loyalty",
-    # More or fewer botch dice (STORY-820), for the rolls the app makes.
+    # More or fewer botch dice, for the rolls the app makes.
     "botch_dice": "Botch dice",
 }
 

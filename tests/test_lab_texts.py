@@ -1,4 +1,4 @@
-"""The Lab Texts database (STORY-508): kinds, a reader's status, the filter,
+"""The Lab Texts database: kinds, a reader's status, the filter,
 the migrations, and the laboratory's Lab Texts list."""
 
 from __future__ import annotations
@@ -326,7 +326,7 @@ def test_old_saves_get_kinds_and_access_keyed_by_author():
     for book in data["books"]:
         book.pop("text_kind")
     reader = next(c for c in data["characters"] if c["id"] == "mag1")
-    # Before STORY-508: the author's name, and just the level.
+    # An older save: the author's name, and just the level.
     reader["lab_text_access"] = {"Flavia": 15, "Old Jacobus": 30}
     data["lab_projects"] = [
         {"character_id": "mag1", "spell_id": "decode:mag1:Flavia", "points": 6},

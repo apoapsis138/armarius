@@ -1,4 +1,4 @@
-"""Aging and Decrepitude (STORY-904): the Winter aging roll."""
+"""Aging and Decrepitude: the Winter aging roll."""
 
 import random
 

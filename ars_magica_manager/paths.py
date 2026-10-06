@@ -1,25 +1,25 @@
-"""Where the app keeps the user's data (STORY-1127): the saga files, their
+"""Where the app keeps the user's data: the saga files, their
 backups, exports and the app settings. The shared catalogs stay in the
 repo's data/ folder (DATA_DIR).
 
 By default the user data lives in "Ars Magica Manager" at the top of the
 user's OneDrive, wherever OneDrive is on this computer (the %OneDrive%
 environment variable), where it is backed up and easy to find; with no
-OneDrive (a Mac, Linux), in the user's app data folder (Hedda, 2026-10-05:
-not Documents, which Controlled folder access protects). Another folder can
+OneDrive (a Mac, Linux), in the user's app data folder (not
+Documents, which Controlled folder access protects). Another folder can
 be chosen, in order of precedence:
 
 1. the ARS_MAGICA_MANAGER_DATA environment variable;
 2. a `data_dir` in LOCATION_FILE, a small JSON file in the user's config
    folder (it can't live in the data folder it points to).
 
-Before STORY-1127 the user data lived in the repo's data/ folder;
+Older versions kept the user data in the repo's data/ folder;
 move_legacy_data() moves it across once, the first time the app starts.
 
 If the folder can't be made or written to -- on Windows, Defender's
 Controlled folder access blocks python.exe from writing in protected folders
 such as Documents -- settle_data_dir() falls back to where the data already
-is (STORY-1132).
+is.
 """
 
 from __future__ import annotations

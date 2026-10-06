@@ -1,4 +1,4 @@
-"""Time what the app does, against a copy of a real saga (STORY-1118).
+"""Time what the app does, against a copy of a real saga.
 
     uv run python tools/perf_probe.py [saga_id] [--scale N] [--profile OUT]
 

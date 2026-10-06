@@ -1,4 +1,4 @@
-"""SheetView's refresh registry (STORY-1128): a section's own refreshers,
+"""SheetView's refresh registry: a section's own refreshers,
 then those for a family of sections, each once, and a refresher whose tab
 isn't built doesn't stop the rest."""
 

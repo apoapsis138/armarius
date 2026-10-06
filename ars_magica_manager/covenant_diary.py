@@ -1,4 +1,4 @@
-"""The covenant's Diary tab (STORY-406): its rows, details panel and the
+"""The covenant's Diary tab: its rows, details panel and the
 Loyalty points its entries add into the Loyalty block's Actions and Events.
 Pounds and vis on an entry are a record only (Phase 4 covenant finances)."""
 

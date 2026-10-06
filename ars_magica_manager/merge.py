@@ -1,5 +1,5 @@
 """Merging a saga's changes into the file other copies of the app also save
-to (STORY-1405).
+to.
 
 When the storyguide hosts the app, each browser tab runs its own copy, each
 with the saga in memory. Saving the whole saga from one copy would wipe

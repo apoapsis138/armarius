@@ -9,31 +9,54 @@ This is a companion to, but does not depend on,
 [Ars-Magica-Solo](../Ars-Magica-Solo), which handles solo-play session
 mechanics.
 
-## Status
+## What it does
 
-Phase 1 (core tracker) is mostly built. You can create and browse sagas
-(with a saga calendar and an edit screen) and keep, per saga:
+Phases 1 to 4 of DESIGN.md's roadmap are built; work now is ongoing
+improvements. Per saga, the app keeps:
 
-- **Covenants** — info panel, Boons & Hooks, Reputations, Inhabitants and
-  Loyalty, Possessions, Economics (income, expenditure, savings, the yearly
-  close) and a Library tab.
-- **Characters** — the full sheet: identity, Characteristics, Abilities,
-  Virtues & Flaws, Arts, Raw Vis, known spells with Mastery, inventory,
-  combat figures (filled in from the book's weapon and armor tables) and
-  Soak, Confidence, Personality Traits, Reputations,
-  aging, wounds and fatigue, and books.
-- **Laboratories** — Virtues & Flaws (with their effect on the lab's
-  Characteristics), Features and a Focus, the Specializations they add up
-  to, Rooms, Raw Vis, Equipment & Stores, books and a Diary.
-- **Familiars** — bond mechanics, cords and bond powers.
-- **Books** (owned by a covenant, lab or character, with CSV import) and
-  **spells** (the published catalog, the saga's own spells and CSV import).
+- **Covenants** — Boons & Hooks, Covenant Situations, Reputations,
+  Inhabitants and Loyalty, Possessions, Economics (income, expenditure,
+  savings, the yearly close), a Library, the seasons of its vis sources
+  and income (Contested and Dwindling Resources included), a Diary, and
+  where its Build Points went.
+- **Characters** — the full sheet: Characteristics, Abilities, Virtues &
+  Flaws, Arts, Raw Vis, spells with Mastery, inventory and combat figures,
+  Soak, Confidence and True Faith, Personality Traits, Reputations, aging,
+  Warping, wounds and fatigue, books and a Diary.
+- **Laboratories** — Virtues & Flaws, Features and a Focus, the
+  Specializations they add up to, Rooms, Raw Vis, Equipment & Stores, Lab
+  Texts, enchanted devices, the owner's Lab Totals, and a Diary.
+- **Familiars** — bond, cords and bond powers.
+- **Books** and **spells** — the published spell catalog, the saga's own
+  spells, CSV import, and which sourcebooks are in play.
 
-The app has light and dark Scriptorum themes; the one you pick is
-remembered.
+The rules are worked out for you: Lab, Casting, Spontaneous and Study
+totals, scores from xp, dice, derived values, auras, Penetration and Magic
+Resistance, spell levels, combat, certamen and Mystery initiations, with
+optional rules as saga settings.
 
-Not built yet: enchanted devices, the Rules Engine (Phase 2) and running
-seasons (Phase 3) — see DESIGN.md §7.
+**Seasons.** Each character's season is planned (study, teaching, lab
+work, inventing spells, enchanting, Longevity Rituals, familiars, writing
+and copying books, experimentation and original research, and the
+supplements' activities), then the season is advanced: every plan's
+result is worked out and applied, with Winter's aging rolls and Warping,
+the grogs' yearly update and the covenant's seasons. The saga is backed up
+first, and each season's results go into a record and the Diaries.
+
+**Creation.** New covenants, laboratories and characters can be built by
+the book: a Creation Worksheet walks through the steps and their budgets,
+starting from a Character Template if you like, then moves the record
+into play.
+
+**Sharing a saga.** The storyguide can host a saga so players use it from
+their own computers, in a browser or over SSH (`tools/serve.py`). Players
+sign in, change only what is theirs, and see each other's changes as they
+happen. Help (F1, or `?`) explains whatever has focus and has how-to guides,
+including one on hosting.
+
+Also: user-made catalog entries (house rules), export and import of
+covenants, laboratories and characters, and light and dark Scriptorum
+themes.
 
 The current version is in the title bar; [CHANGELOG.md](CHANGELOG.md) lists
 what changed in each one.
@@ -48,6 +71,7 @@ uv run python main.py                         # launches the Textual TUI
 uv run pytest -q -n 16 --dist worksteal       # run tests in parallel (~1.5 min)
 uv run ruff check . && uv run ruff format .   # lint and format
 uv run pyright                                # type-check
+uv run python tools/serve.py --ssh-port 2222  # host the app for players
 ```
 
 ### Where your data is kept

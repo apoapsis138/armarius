@@ -1,4 +1,4 @@
-"""Dice (STORY-805), checked against the Definitive Edition's examples."""
+"""Dice, checked against the Definitive Edition's examples."""
 
 import random
 

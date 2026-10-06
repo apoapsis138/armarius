@@ -65,13 +65,13 @@ class ModalDialog[ResultT](ModalScreen[ResultT]):
 
     BINDINGS: ClassVar[list[BindingType]] = [
         ("escape", "cancel", "Cancel"),
-        # Help (STORY-115); a field being typed in takes the ? first.
+        # Help; a field being typed in takes the ? first.
         Binding("question_mark", "app.help", "Help", show=False),
     ]
 
     # Every dialog's box (its outer container has class "dialog-box") and
-    # title ("dialog-title"); each dialog sets its own size and padding
-    # (STORY-1011, 1012). Their theme colours are in styles.py.
+    # title ("dialog-title"); each dialog sets its own size and padding.
+    # Their theme colours are in styles.py.
     DEFAULT_CSS = """
     ModalDialog .dialog-box {
         border: round $accent;
@@ -88,7 +88,7 @@ class ModalDialog[ResultT](ModalScreen[ResultT]):
     CANCEL_RESULT: ClassVar[Any] = None
 
     #: The dialog's own help page (help/*.md), if it has one; without one,
-    #: Help shows the page of the screen it was opened from (STORY-115).
+    #: Help shows the page of the screen it was opened from.
     help_id: str | None = None
 
     def action_cancel(self) -> None:
@@ -235,7 +235,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
     }
 
     /* A number needs a few columns, not the row: a short well breaks up a
-       long form's run of fields (STORY-1011). */
+       long form's run of fields. */
     .fd-row Input.fd-number {
         width: 10;
     }
@@ -333,7 +333,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         with Vertical(id="fields-dialog", classes="dialog-box"):
             yield Label(self.title_text, id="fields-title", classes="dialog-title")
             # The scroll itself never takes focus, so the first field has it
-            # as the form opens and typing goes there (STORY-1408: found
+            # as the form opens and typing goes there (found
             # signing in over SSH, where the first letters went nowhere).
             with VerticalScroll(id="fields-scroll", can_focus=False):
                 for spec in self.fields:

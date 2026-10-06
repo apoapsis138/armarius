@@ -1,4 +1,4 @@
-"""Help (STORY-115): the help files are well formed, every tab and section
+"""Help: the help files are well formed, every tab and section
 of every sheet has help, and ? / F1 open Help on what has focus."""
 
 import re
@@ -103,7 +103,7 @@ def test_search_finds_titles_before_text():
 
 
 async def test_every_tab_and_section_has_help():
-    """The coverage rule Hedda agreed: a tab or section without help fails
+    """The coverage rule: a tab or section without help fails
     here, and so does help for one that no longer exists."""
     storage.save_saga(everything_saga())
     app = ArsMagicaManagerApp()
@@ -241,9 +241,9 @@ async def test_help_on_the_saga_picker():
         assert "ref:about" in _listed(app)
 
 
-# -- STORY-117: the how-to guides ---------------------------------------------
+# -- The how-to guides ---------------------------------------------
 
-#: The guides Hedda asked for first, then the rest, in the order Help lists them.
+#: The first guides written, then the rest, in the order Help lists them.
 GUIDES = [
     "guide-seasons",
     "guide-covenant",
@@ -277,7 +277,7 @@ async def test_help_lists_the_guides_on_their_own():
         assert await wait_until(pilot, lambda: app.screen.topic_id == "guide-seasons")
 
 
-# -- STORY-1203: What's New and the release names -----------------------------
+# -- What's New and the release names -----------------------------
 
 #: A named release's heading: "## 2.10.0 — 2026-10-05 — Summa".
 NAMED_HEADING = re.compile(

@@ -165,8 +165,8 @@ async def test_sheet_text(node, size):
     ("node", "size"), [(node, size) for node in NODES for size in PANEL_SIZES]
 )
 async def test_every_details_panel_is_one_panel_docked_at_the_bottom(node, size):
-    # STORY-114: one details panel per tab (or list), at the bottom of its
-    # tab below the part that scrolls. STORY-1010: it fits its text, so
+    # One details panel per tab (or list), at the bottom of its
+    # tab below the part that scrolls. It fits its text, so
     # with nothing chosen (focus is kept out of the sheet) it is the
     # minimum, one line of hint plus its padding.
     storage.save_saga(everything_saga())

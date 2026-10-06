@@ -1,4 +1,4 @@
-"""Warping and Wizard's Twilight (STORY-909).
+"""Warping and Wizard's Twilight.
 
 - The Warping Score advances like an Ability on Warping Points: n takes
   5 x n(n + 1) / 2 points in all.

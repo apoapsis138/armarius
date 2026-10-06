@@ -638,7 +638,7 @@ def add_own_spell(saga: Saga, name: str, technique: str, form: str) -> Spell:
 def add_invented_spell(
     saga: Saga, magus: Character, name: str, technique: str, form: str
 ) -> Spell:
-    """A new spell design of `magus`'s own (STORY-901), added to their
+    """A new spell design of `magus`'s own, added to their
     invented spells: it lives with the magus until invented and shared."""
     spell = Spell(
         id=_own_spell_id(name, all_spell_ids(saga)),
@@ -651,8 +651,8 @@ def add_invented_spell(
 
 
 def shareable_spells(magus: Character) -> list[Spell]:
-    """The magus's invented spells that can be made available to the saga
-    (STORY-608): those he knows, so not a design still being invented."""
+    """The magus's invented spells that can be made available to the saga: those he
+    knows, so not a design still being invented."""
     known = {k.spell_id for k in magus.spells_known}
     return [spell for spell in magus.invented_spells if spell.id in known]
 

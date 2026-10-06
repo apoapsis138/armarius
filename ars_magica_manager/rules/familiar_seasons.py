@@ -1,4 +1,4 @@
-"""Familiars as lab work (STORY-908): binding (or strengthening) the bond and
+"""Familiars as lab work: binding (or strengthening) the bond and
 empowering it with bond powers. The familiar is the magus's own, recorded
 on his sheet (its Might and Size) before the season.
 

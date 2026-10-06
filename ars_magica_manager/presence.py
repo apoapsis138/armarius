@@ -1,5 +1,4 @@
-"""Who has which record open, across the copies of a hosted app
-(STORY-1406).
+"""Who has which record open, across the copies of a hosted app.
 
 Every copy runs on the storyguide's computer, so each one keeps a small
 file in the sagas folder (".presence/<session>.json") saying who is using

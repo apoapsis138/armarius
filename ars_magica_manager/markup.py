@@ -21,8 +21,7 @@ def fit(text: str, width: int) -> str:
 
 def aligned(rows: Sequence[tuple[str, object]]) -> str:
     """`label: value` lines with the values lined up in one column. The
-    labels are in the theme's $label colour, so the values stand out
-    (STORY-1012)."""
+    labels are in the theme's $label colour, so the values stand out."""
     width = max(len(label) for label, _ in rows)
     return "\n".join(
         f"[$label]{label + ':':<{width + 1}}[/] {value}" for label, value in rows
@@ -30,33 +29,31 @@ def aligned(rows: Sequence[tuple[str, object]]) -> str:
 
 
 def inherited(text: str) -> str:
-    """Markup for a value that's derived or inherited (from the saga, a
-    Boon...) and isn't edited where it's shown: italic, in the $label
-    colour, so it reads apart from both labels and edited values
-    (STORY-1012). `text` must already be escaped."""
+    """Markup for a value that's derived or inherited (from the saga, a Boon...) and
+    isn't edited where it's shown: italic, in the $label colour, so it reads apart from
+    both labels and edited values. `text` must already be escaped."""
     return f"[i $label]{text}[/]"
 
 
-#: Marks a problem: something is wrong (STORY-1015).
+#: Marks a problem: something is wrong.
 PROBLEM_GLYPH = "✘"
 #: Marks a to-do: something still to do or worth noticing -- the manicule,
-#: the pointing hand scribes drew in a margin (STORY-1015).
+#: the pointing hand scribes drew in a margin.
 TODO_GLYPH = "☞"
 
 
 def problem(text: str) -> str:
-    """Markup for a message saying something is wrong: led by ✘, in the
-    theme's error colour, so it stands out by shape as well as colour
-    (STORY-1015). `text` must already be escaped. A number coloured by
-    whether it's in range (a deficit, "5 of 4") stays a plain coloured
-    value instead."""
+    """Markup for a message saying something is wrong: led by ✘, in the theme's error
+    colour, so it stands out by shape as well as colour. `text` must already be escaped.
+    A number coloured by whether it's in range (a deficit, "5 of 4") stays a plain
+    coloured value instead."""
     return f"[$text-error]{PROBLEM_GLYPH} {text}[/]"
 
 
 def todo(text: str) -> str:
     """Markup for a message about something still to do or worth noticing
     (a point to allocate, nothing planned, a file to be replaced): led by
-    ☞, in the theme's warning colour (STORY-1015). `text` must already be
+    ☞, in the theme's warning colour. `text` must already be
     escaped."""
     return f"[$text-warning]{TODO_GLYPH} {text}[/]"
 

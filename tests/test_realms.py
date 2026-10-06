@@ -1,4 +1,4 @@
-"""Auras and realm interaction (STORY-808), checked against the book's
+"""Auras and realm interaction, checked against the book's
 worked examples."""
 
 import pytest

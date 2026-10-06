@@ -35,7 +35,7 @@ def _saga() -> tuple[Saga, Covenant]:
                 name="Obsidian Crucible",
                 owner_id="mag1",
                 location="The north tower",
-                # Size +1: 20 Build Points, worked out (STORY-1314).
+                # Size +1: 20 Build Points, worked out.
                 characteristics=LabCharacteristics(
                     size=1, general_quality=4, upkeep=12
                 ),
@@ -176,7 +176,7 @@ def test_row_labels_show_the_fields_the_sheet_lists():
     assert sanctums[1] == "Study               Leandro               3      10"
     assert _labels(saga, cov, "weapon") == [
         # Weapons get four trailing combat-figure columns (Init/Attack/
-        # Defense/Damage), defaulting to +0 -- see STORY-205 -- and Load.
+        # Defense/Damage), defaulting to +0 -- and Load.
         "Crossbows                               Standard        6   +0   +0   +0   +0    0"
     ]
     assert _labels(saga, cov, "vis_source") == [
@@ -337,7 +337,7 @@ def test_form_problem_rejects_a_quality_the_gear_type_does_not_come_in():
     assert pos.form_problem({"gear_type": gear_type, "gear_quality": "Nonsense"})
 
 
-# ------------------------------------------------ weapons & armor (STORY-709)
+# ------------------------------------------------ weapons & armor
 
 
 def test_weapon_and_armor_rows_show_signed_figures_n_a_and_load():
@@ -536,7 +536,7 @@ def test_book_text_describes_the_chosen_entry():
 
 
 def test_a_new_save_has_no_vis_stock():
-    # B17: the field was migrated away but still written (as {}) every save.
+    # The field was migrated away but still written (as {}) every save.
     saga = Saga(id="s", name="S", covenants=[Covenant(id="c", saga_id="s", name="C")])
     path = storage.save_saga(saga)
     assert (

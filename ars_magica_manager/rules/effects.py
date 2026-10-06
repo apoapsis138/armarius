@@ -6,7 +6,7 @@ Each attached *instance* counts, so a repeatable entry taken twice applies
 twice. An entry's effect is data on the catalog entry (`modifiers`); nothing
 here looks an entry up by name or id to decide what it does.
 
-How flat amounts and multipliers stack (settled in STORY-804): every flat
+How flat amounts and multipliers stack: every flat
 amount is added to the base first, then each multiplier multiplies that sum,
 several multipliers multiplying together. This follows the Definitive
 Edition's advancement pipeline, where the xp gained is the Advancement Total

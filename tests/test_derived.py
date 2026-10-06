@@ -1,4 +1,4 @@
-"""Derived character values (STORY-807)."""
+"""Derived character values."""
 
 import pytest
 

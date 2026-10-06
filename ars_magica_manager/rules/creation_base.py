@@ -1,4 +1,4 @@
-"""Creation checks, the machinery (STORY-1301): what the book asks of a covenant,
+"""Creation checks, the machinery: what the book asks of a covenant,
 laboratory or character being created, as lines marked pass, warn (a book
 "must") or advice (a book "should": what the record has too many or too
 few of), each citing its source.
@@ -8,9 +8,8 @@ with the saga's "Enforce creation rules strictly" option on, a broken must
 stops the record moving to In Play (see can_move_to_play). Advice never
 blocks.
 
-Each creation step's story adds its checks to the step's list below
-(STORY-1303 to 1313); the Creation Worksheet (STORY-1302) shows a step's
-checks beside its budget.
+Each creation step adds its checks to the step's list below; the Creation
+Worksheet shows a step's checks beside its budget.
 """
 
 from __future__ import annotations
@@ -87,7 +86,7 @@ LABORATORY_STEPS: tuple[Step, ...] = (
 
 CheckFn = Callable[[Saga, Record], list[Check]]
 
-#: Each step's checks, in the order shown; a step's story registers them.
+#: Each step's checks, in the order shown; each step registers its own.
 CHARACTER_CHECKS: dict[str, list[CheckFn]] = {s.key: [] for s in CHARACTER_STEPS}
 COVENANT_CHECKS: dict[str, list[CheckFn]] = {s.key: [] for s in COVENANT_STEPS}
 LABORATORY_CHECKS: dict[str, list[CheckFn]] = {s.key: [] for s in LABORATORY_STEPS}

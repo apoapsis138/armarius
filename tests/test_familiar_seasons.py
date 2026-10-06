@@ -1,4 +1,4 @@
-"""Familiars as lab work (STORY-908): binding (or strengthening) the bond and
+"""Familiars as lab work: binding (or strengthening) the bond and
 empowering it with bond powers."""
 
 from support import strip_markup

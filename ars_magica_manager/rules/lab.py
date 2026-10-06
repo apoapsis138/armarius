@@ -1,4 +1,4 @@
-"""The Lab Total (STORY-801).
+"""The Lab Total.
 
     Lab Total = Technique + Form + Intelligence + Magic Theory + aura modifier
                 + the lab's General Quality + its Specializations that apply
@@ -9,7 +9,8 @@ A Specialization in an Art adds to every Lab Total using that Art; an
 activity Specialization only to that activity (Spells to inventing spells,
 Items to enchanting...). The aura modifier is Hermetic magic's (a Magic
 power) in the lab's aura, from the realm interaction table. Per-activity
-modifiers (similar spells, shape and material bonuses...) are STORY-816.
+modifiers (similar spells, shape and material bonuses...) are added by
+each activity.
 """
 
 from __future__ import annotations

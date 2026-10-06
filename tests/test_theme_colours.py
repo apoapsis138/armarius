@@ -1,4 +1,4 @@
-"""STORY-1003: every colour the app shows comes from the active theme, so
+"""Every colour the app shows comes from the active theme, so
 switching themes never leaves text unreadable. Markup and CSS use the
 theme's variables ($text-error, $text-success, $text-muted, ...); named and
 hex colours appear only in themes.py, where the palettes are defined."""

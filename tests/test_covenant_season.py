@@ -1,4 +1,4 @@
-"""The covenant's seasons (STORY-906): vis harvests, Contested and Dwindling
+"""The covenant's seasons: vis harvests, Contested and Dwindling
 Resources."""
 
 from ars_magica_manager import economics, seasons
@@ -70,7 +70,7 @@ def test_an_unresolved_income_source_gives_nothing_and_is_noted_at_year_end():
 
 def test_a_dwindling_resource_loses_a_tenth_of_its_original_value_a_year():
     """Covenants: -10% of its original value a year, gone after ten years --
-    not 10% of what is left (STORY-1126)."""
+    not 10% of what is left."""
     saga = _saga(dwindling=True)
     saga.current_season = "Winter"
     covenant = saga.covenants[0]

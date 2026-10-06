@@ -84,7 +84,7 @@ class WorkspaceScreen(
             handler()
 
     def _open_creation_worksheet(self) -> None:
-        """The Creation Worksheet (STORY-1302) for the record on show."""
+        """The Creation Worksheet for the record on show."""
         view = self._current_sheet_view()
         record = view.creation_record if view is not None else None
         if record is not None:

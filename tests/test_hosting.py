@@ -1,4 +1,4 @@
-"""Hosting the app for SSH clients (STORY-1408): a real SSH client gets a
+"""Hosting the app for SSH clients: a real SSH client gets a
 real copy of the app, with the saga list and sign-in a browser gets."""
 
 from __future__ import annotations

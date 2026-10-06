@@ -1,4 +1,4 @@
-"""The Lab Total (STORY-801)."""
+"""The Lab Total."""
 
 import pytest
 
@@ -143,13 +143,13 @@ def test_the_planning_text_shows_the_grid():
 
 
 def test_signed_amounts_are_coloured_by_theme():
-    # STORY-211: + in $text-success, - in $text-error, zero plain; '+' kept.
+    # + in $text-success, - in $text-error, zero plain; '+' kept.
     assert lab_planning.signed(3) == "[$text-success]+3[/]"
     assert lab_planning.signed(-2) == "[$text-error]-2[/]"
     assert lab_planning.signed(0) == "+0"
 
 
-# -- Activity Lab Totals (STORY-816) --
+# -- Activity Lab Totals --
 
 
 def _setup(*vf_ids: str):

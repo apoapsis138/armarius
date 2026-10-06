@@ -1,7 +1,7 @@
-"""WorkspaceScreen's actions for the Creation Worksheet's xp steps
-(STORY-1306 to 1310): spending a step's xp on an Ability or Art, changing
-or taking it back, the Native Language and the sample childhoods. The
-worksheet's buttons call these; each saves and refreshes the sheet below."""
+"""WorkspaceScreen's actions for the Creation Worksheet's xp steps: spending a step's xp
+on an Ability or Art, changing or taking it back, the Native Language and the sample
+childhoods. The worksheet's buttons call these; each saves and refreshes the sheet
+below."""
 
 from __future__ import annotations
 
@@ -135,7 +135,7 @@ class CreationActions(WorkspaceBase):
 
         self._pick_creation_xp(character, step, "Take back which?", refund, note=note)
 
-    # -- Early Childhood (STORY-1306) --
+    # -- Early Childhood --
 
     def _set_native_language(self, character: Character) -> None:
         """Choose the Native Language: its 75 childhood xp."""
@@ -211,7 +211,7 @@ class CreationActions(WorkspaceBase):
 
         self._ask_blanks(f"{childhood.name} childhood", childhood.xp, apply)
 
-    # -- Grogs training packages (STORY-1308) --
+    # -- Grogs training packages --
 
     def _take_training_package(self, character: Character) -> None:
         """Pick a Grogs training package and its length, fill its blanks,
@@ -271,7 +271,7 @@ class CreationActions(WorkspaceBase):
             handle_index,
         )
 
-    # -- Later Life (STORY-1307) --
+    # -- Later Life --
 
     def _record_free_scores(self, character: Character) -> None:
         """The free first 5 xp in each Supernatural Ability a Virtue grants."""
@@ -282,7 +282,7 @@ class CreationActions(WorkspaceBase):
             )
         self._commit(*XP_SECTIONS)
 
-    # -- spells learned at creation (STORY-1309, 1310) --
+    # -- spells learned at creation --
 
     def _learn_creation_spell(self, character: Character, step: str) -> None:
         """Pick a spell to learn at `step` ("apprenticeship_spells" or
@@ -385,7 +385,7 @@ class CreationActions(WorkspaceBase):
             handle_index,
         )
 
-    # -- Years past Gauntlet and pre-play aging (STORY-1310) --
+    # -- Years past Gauntlet and pre-play aging --
 
     def _edit_gauntlet_conditions(self, character: Character) -> None:
         conditions = character.creation_conditions
@@ -423,7 +423,7 @@ class CreationActions(WorkspaceBase):
             handle_confirmed,
         )
 
-    # -- Finishing Touches (STORY-1311) --
+    # -- Finishing Touches --
 
     def _add_character_trait(self) -> None:
         self._add_trait(_CHARACTER_TRAITS)
@@ -431,7 +431,7 @@ class CreationActions(WorkspaceBase):
     def _add_character_reputation(self) -> None:
         self._add_trait(_CHARACTER_REPUTATIONS)
 
-    # -- New Covenant (STORY-1312) --
+    # -- New Covenant --
 
     def _choose_power_level(self, covenant: Covenant) -> None:
         def handle_result(values: dict[str, Any] | None) -> None:
@@ -445,7 +445,7 @@ class CreationActions(WorkspaceBase):
         self.app.push_screen(_power_level_dialog(covenant), handle_result)
 
     def _use_covenant_situation(self, covenant: Covenant) -> None:
-        """Add one of the books' Covenant Situations (STORY-703): a
+        """Add one of the books' Covenant Situations: a
         ready-made set of Boons and Hooks, on top of any it already has."""
         books = sourcebooks.saga_books(self.saga)
         by_id = catalog.load_covenant_boon_hook_catalog_by_id()
@@ -506,7 +506,7 @@ class CreationActions(WorkspaceBase):
 
         self.app.push_screen(_buy_specialist_dialog(), handle_result)
 
-    # -- New Laboratory (STORY-1313) --
+    # -- New Laboratory --
 
     def _toggle_starting_lab(self, lab: Laboratory) -> None:
         """Whether the lab is one of its covenant's starting labs (paid for

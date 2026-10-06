@@ -1,4 +1,4 @@
-"""Structured laboratory Specialization grants (STORY-817)."""
+"""Structured laboratory Specialization grants."""
 
 from ars_magica_manager import catalog
 from ars_magica_manager.laboratories import (

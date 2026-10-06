@@ -1,4 +1,4 @@
-"""Grogs training packages (STORY-1308): a quick build for Later Life when
+"""Grogs training packages: a quick build for Later Life when
 the Grogs book is in play. A package gives fixed xp for 3 or 5 years of
 the character's life; the years left over are bought at the usual xp a
 year. Wealthy characters take 3/4 of the package years in age, Poor ones

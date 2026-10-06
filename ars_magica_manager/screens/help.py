@@ -1,4 +1,4 @@
-"""The Help screen (STORY-115): a topic list beside the chosen page, opened
+"""The Help screen: a topic list beside the chosen page, opened
 with ? (or F1) on the help for whatever has focus."""
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ from .fields import ModalDialog
 ABOUT = "about"
 NOTICE_PATH = ROOT / "NOTICE.md"
 
-#: What's New: CHANGELOG.md, every version with its release name (STORY-1203).
+#: What's New: CHANGELOG.md, every version with its release name.
 WHATS_NEW = "whats-new"
 CHANGELOG_PATH = ROOT / "CHANGELOG.md"
 
@@ -34,7 +34,7 @@ _REFERENCE = ("keys",)
 #: listed twice (THIS SCREEN and ALL PAGES).
 _HERE, _GUIDE, _REF, _ALL, _FOUND = "here:", "guide:", "ref:", "all:", "found:"
 
-#: How-to guides are the pages whose id starts with this (STORY-117).
+#: How-to guides are the pages whose id starts with this.
 GUIDE_PREFIX = "guide-"
 
 

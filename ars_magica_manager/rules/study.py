@@ -1,4 +1,4 @@
-"""Study totals (STORY-803): Source Quality by source, the Advancement
+"""Study totals: Source Quality by source, the Advancement
 Total and the xp a season gives.
 
     Advancement Total = Source Quality + Virtue bonuses - Flaw penalties

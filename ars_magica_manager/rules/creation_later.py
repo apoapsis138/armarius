@@ -1,4 +1,4 @@
-"""Creation checks for the Later Life step (STORY-1307): 15 xp a year from
+"""Creation checks for the Later Life step: 15 xp a year from
 age 5 to the character's age (a magus: to the start of apprenticeship),
 20 if Wealthy, 10 if Poor; spent only on Abilities the character may
 learn at this step. Virtue-granted xp and free Ability scores are
@@ -61,7 +61,7 @@ def later_life_years(saga: Saga, character: Character) -> int:
 
 def bought_years(saga: Saga, character: Character) -> int:
     """The Later Life years bought at the xp a year: those the training
-    packages (STORY-1308) don't take."""
+    packages don't take."""
     return max(0, later_life_years(saga, character) - packages.years_used(character))
 
 

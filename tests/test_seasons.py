@@ -1,4 +1,4 @@
-"""Season plans and advancing the season (STORY-903): the activities' rules
+"""Season plans and advancing the season: the activities' rules
 (rules.activities), applying a season (seasons), and the character sheet's
 This Season / Diary tab and Advance Season in the workspace."""
 
@@ -77,7 +77,7 @@ def test_grogs_are_not_planned_season_by_season():
 def test_supplement_activities_are_offered_only_with_their_book_in_play():
     """A supplement's season activities are in the menu only while the saga
     has that book in play; a plan's own activity stays, so editing it still
-    shows it (STORY-1126)."""
+    shows it."""
     magus = _magus()
     every = {a.key for a in rules.activities_for(magus)}
     core = {a.key for a in rules.activities_for(magus, books={"DE"})}
@@ -371,7 +371,7 @@ def test_backup_is_kept_outside_the_saga_list():
 
 def test_backups_rotate_keeping_the_last_five():
     """Each backup is kept as the newest and the older ones move back a
-    place, up to BACKUPS_KEPT; nothing else is written (STORY-1125)."""
+    place, up to BACKUPS_KEPT; nothing else is written."""
     saga = _saga(_magus())
     for year in range(1220, 1227):
         saga.current_year = year
@@ -514,7 +514,7 @@ async def test_clear_a_plan_after_confirming():
 
 
 async def test_lab_totals_live_on_the_laboratory_sheet():
-    """STORY-925: the magus's sheet has no Laboratory tab; the laboratory
+    """The magus's sheet has no Laboratory tab; the laboratory
     sheet has a Lab Totals tab after Planning."""
     storage.save_saga(everything_saga())
     app = ArsMagicaManagerApp()
@@ -539,7 +539,7 @@ async def test_lab_totals_live_on_the_laboratory_sheet():
         assert planning.startswith("Leandro's seasons")
 
 
-# -- the covenant's Seasons tab (STORY-912) ---------------------------------------
+# -- the covenant's Seasons tab ---------------------------------------
 
 
 def test_seasons_lists_the_covenants_people_by_kind():
@@ -621,7 +621,7 @@ async def test_plan_a_season_from_the_covenant_seasons_tab():
     assert [p.details for p in saga.season_plans] == ["Visiting family"]
 
 
-# -- season records (STORY-911) ----------------------------------------------------
+# -- season records ----------------------------------------------------
 
 
 def test_a_seasons_record_lists_everyone_by_covenant():
@@ -736,7 +736,7 @@ async def test_a_season_with_nothing_planned_is_neither_summarised_nor_kept():
 
 
 def test_finishing_a_winter_season_runs_the_year_end_in_order():
-    """seasons.finish_season (STORY-1129): back up before applying, apply the
+    """seasons.finish_season: back up before applying, apply the
     plans, then the year's end, the covenant's season and its Wealth, the
     record, then the new date -- without the workspace screen."""
     from ars_magica_manager.models import Covenant, IncomeSource
@@ -782,7 +782,7 @@ def test_finishing_a_season_with_nothing_planned_takes_no_backup():
 
 
 def test_every_activity_that_gives_experience_has_one_family():
-    """rules.HANDLERS (STORY-1129): each activity's checks and outcome come
+    """rules.HANDLERS: each activity's checks and outcome come
     from exactly one family; one with none would fail only when planned."""
     gives_xp = {key for key, a in rules.ACTIVITIES.items() if a.gives_xp}
     assert gives_xp <= set(rules.HANDLERS)

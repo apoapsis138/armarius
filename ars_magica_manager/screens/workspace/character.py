@@ -97,7 +97,7 @@ class CharacterActions(WorkspaceBase):
             background.true_faith_score = result["true_faith_score"]
             background.faith_points = result["faith_points"]
             background.size = result["size"]
-            # Only a magus has a free House Virtue (STORY-214).
+            # Only a magus has a free House Virtue.
             self._commit(
                 "section-char-info", "section-vf-virtues", "section-vf-flaws", tree=True
             )
@@ -399,7 +399,7 @@ class CharacterActions(WorkspaceBase):
         def handle_result(result: dict[str, Any] | None) -> None:
             if result is not None:
                 character.hermetic = HermeticBackground(**result)
-                # The House decides which Virtue is free (STORY-214).
+                # The House decides which Virtue is free.
                 self._commit(
                     "section-hermetic-background",
                     "section-vf-virtues",
@@ -414,9 +414,8 @@ class CharacterActions(WorkspaceBase):
         )
 
     def _edit_lab_text_access(self) -> None:
-        """Set whose raw Lab Texts the magus reads, and to what level
-        (STORY-508): an author's entry is added, changed, or -- at level 0
-        -- removed."""
+        """Set whose raw Lab Texts the magus reads, and to what level: an author's entry
+        is added, changed, or -- at level 0 -- removed."""
         character = self.selected_character
         if character is None:
             return
@@ -520,9 +519,9 @@ class CharacterActions(WorkspaceBase):
         )
 
     def action_share_spell(self) -> None:
-        """Make one of the magus's invented spells available to the saga
-        (STORY-608): the chosen Known Spell if it is one of his own, else
-        the one picked from them. It moves to the saga's Spells."""
+        """Make one of the magus's invented spells available to the saga: the chosen
+        Known Spell if it is one of his own, else the one picked from them. It moves to
+        the saga's Spells."""
         character = self.selected_character
         if character is None:
             return
@@ -571,7 +570,7 @@ class CharacterActions(WorkspaceBase):
             handle_index,
         )
 
-    # -- Research Goals (STORY-916) --
+    # -- Research Goals --
 
     def _selected_research_goal(self) -> int | None:
         view = self._character_sheet_view

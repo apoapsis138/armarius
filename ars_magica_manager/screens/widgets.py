@@ -197,7 +197,7 @@ class ThemeBar(Static):
 
 class BottomBar(Vertical):
     """Docks a status row directly above the Footer: where focus is (set
-    by the screen with set_where(); STORY-1008) and, at its right end, the
+    by the screen with set_where()) and, at its right end, the
     ThemeBar.
 
     Both dock to the same screen edge independently otherwise (Textual's
@@ -489,7 +489,7 @@ class SelectableList(OptionList):
                 return
 
     def on_focus(self, event: Focus) -> None:
-        # A focused list always has a row to act on (STORY-1005): the one
+        # A focused list always has a row to act on: the one
         # chosen before, else the first.
         if self.highlighted is None:
             self._choose_near(0)
@@ -640,7 +640,7 @@ class ToggleList(SelectableList):
 class SectionTitle(CollapsibleTitle, inherit_bindings=False):
     """A sheet section's title: a CollapsibleTitle without its Enter key.
     Collapsing is the workspace's `c` (or a second click), never a side
-    effect of where focus happens to be (STORY-1005)."""
+    effect of where focus happens to be."""
 
 
 def section_of(widget: Widget | None) -> Collapsible | None:
@@ -687,9 +687,9 @@ def first_stop(container: Widget) -> Widget | None:
 
 
 def sheet_focus_chain(chain: Sequence[Widget]) -> list[Widget]:
-    """`chain` (a screen's focus chain) with one stop per sheet section
-    (STORY-1005): a section's lists and fields, or its title when it has
-    none; never a button, the tab strip or a scrolling container."""
+    """`chain` (a screen's focus chain) with one stop per sheet section: a section's
+    lists and fields, or its title when it has none; never a button, the tab strip or a
+    scrolling container."""
     stops: list[Widget] = []
     for widget in chain:
         if isinstance(widget, CollapsibleTitle):
@@ -742,7 +742,7 @@ class SheetSection(FocusableSection):
 
     A click on the title of a section that isn't the focused one only
     focuses it; a click on the focused section's title collapses or expands
-    it (STORY-1005). From the keyboard that is the workspace's `c`."""
+    it. From the keyboard that is the workspace's `c`."""
 
     def __init__(self, *children: Widget, title: str, **kwargs: Any) -> None:
         kwargs.setdefault("collapsed", False)
@@ -904,8 +904,7 @@ class PinnedCollapsible(FocusableSection):
 
 
 #: A details panel's height in rows, padding included: it fits its text,
-#: from one line (nothing chosen) up to the old fixed 12 (STORY-114,
-#: STORY-1010), beyond which the text scrolls.
+#: from one line (nothing chosen) up to 12, beyond which the text scrolls.
 DETAILS_PANEL_MIN_HEIGHT = 3
 DETAILS_PANEL_MAX_HEIGHT = 12
 
@@ -939,7 +938,7 @@ class DetailsPanel(VerticalScroll):
         margin-top: 1;
         padding: 1 2;
         background: $panel;
-        /* an accent edge ties it to the list it explains (STORY-1012) */
+        /* an accent edge ties it to the list it explains */
         border-left: outer $accent;
     }}
 

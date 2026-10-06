@@ -1,4 +1,4 @@
-"""Penetration and Magic Resistance (STORY-809).
+"""Penetration and Magic Resistance.
 
     Penetration Total = Casting Total + Penetration Bonus - spell level
     Penetration Bonus = (Penetration + Penetration Mastery) x multiplier

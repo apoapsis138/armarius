@@ -1,5 +1,5 @@
 """Optional rules: saga settings that change how the Rules Engine works,
-every one off until the troupe turns it on (STORY-819). The options come
+every one off until the troupe turns it on. The options come
 from the rules review's decisions (rules reference section 22); each later
 story adds the options its rules use.
 

@@ -1,4 +1,4 @@
-"""Apprentices (STORY-917), planned on the magus's sheet.
+"""Apprentices, planned on the magus's sheet.
 
 - Searching for an apprentice: a season, stress die + Perception against 9
   to find a Gifted child (then added to the saga as a character).

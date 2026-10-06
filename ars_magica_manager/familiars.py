@@ -1,7 +1,7 @@
 """Logic behind a Familiar's sheet -- no UI in here.
 
-All five slices of STORY-206 (Identity & Cords, Characteristics, Combat &
-Health, Abilities, Bond Powers) are built.
+The sheet's sections: Identity & Cords, Characteristics, Combat &
+Health, Abilities, Bond Powers.
 """
 
 from __future__ import annotations

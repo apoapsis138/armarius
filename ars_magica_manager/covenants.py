@@ -78,7 +78,7 @@ def covenant_effective_aura(
 def home_aura(saga: Saga, character: Character) -> tuple[int, str]:
     """The aura (score, realm) a character lives in: their covenant's
     effective Aura (its Boons and Hooks included); 0 Magic without one. The
-    one place this is worked out (STORY-1129: casting totals, vis study,
+    one place this is worked out (casting totals, vis study,
     aging and warping all use it)."""
     from . import catalog
 
@@ -130,7 +130,7 @@ def covenant_modifier_total(
     )
 
 
-# -- Covenant Situations and what doesn't fit together (STORY-703) --
+# -- Covenant Situations and what doesn't fit together --
 
 MINOR_POVERTY = "covbh_hook_minor_poverty"
 MAJOR_POVERTY = "covbh_hook_major_poverty"

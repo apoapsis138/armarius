@@ -65,7 +65,7 @@ async def wait_until(pilot, condition, timeout: float = 5.0, interval: float = 0
     Polling for the actual condition is fast when things are quick and still
     correct when they aren't. The timeout only matters when the condition
     never holds, so it is generous: under a coverage run with -n 16 a tab
-    switch has taken over 2 s to move focus (STORY-1126).
+    switch has taken over 2 s to move focus.
     """
     elapsed = 0.0
     while not condition() and elapsed < timeout:
@@ -89,7 +89,7 @@ async def menu(pilot, app, key: str, label: str) -> None:
 
 async def build_all_tabs(pilot, view) -> None:
     """Build every tab of a sheet view that's just been opened (tabs are
-    built on first visit -- STORY-1120), for a test that reaches into a tab
+    built on first visit), for a test that reaches into a tab
     without showing it first."""
     await wait_until(pilot, lambda: view.initial_tab_seen)
     await view.build_all_tabs()

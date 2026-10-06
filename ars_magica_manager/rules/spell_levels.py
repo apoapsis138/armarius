@@ -1,4 +1,4 @@
-"""Spell levels from their design (STORY-810): a guideline's base level
+"""Spell levels from their design: a guideline's base level
 plus a magnitude per Range, Duration and Target step, plus any size and
 requisite magnitudes.
 

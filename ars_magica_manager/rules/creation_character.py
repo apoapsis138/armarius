@@ -1,4 +1,4 @@
-"""Character creation checks, step by step (STORY-1303 to 1311). Each
+"""Character creation checks, step by step. Each
 function is registered for its worksheet step in rules.creation.
 
 Rules from reference/rules-engine-reference.md: §2 Creation order; §5

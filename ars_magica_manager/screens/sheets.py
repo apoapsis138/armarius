@@ -94,7 +94,7 @@ _LIBRARY_SECTIONS: frozenset[str] = frozenset(
 )
 
 
-#: The Enchanted Devices section of each sheet (STORY-305), and the kind of
+#: The Enchanted Devices section of each sheet, and the kind of
 #: holder whose devices it lists.
 DEVICE_SECTIONS: dict[str, str] = {
     "section-char-devices": "character",
@@ -103,7 +103,7 @@ DEVICE_SECTIONS: dict[str, str] = {
 }
 
 
-#: The laboratory's Lab Texts database (STORY-508): a book list of its own.
+#: The laboratory's Lab Texts database: a book list of its own.
 LAB_TEXTS_SECTION = "section-lab-texts"
 
 #: Section ids of every book list (see BookListView); 'a' in any of them adds
@@ -313,7 +313,7 @@ HOUSE_RULES_SECTION = "section-house-rules"
 
 
 class HouseRulesView(Vertical):
-    """The saga's House Rules (STORY-708): its user-made Virtues, Flaws,
+    """The saga's House Rules: its user-made Virtues, Flaws,
     Boons and Hooks in one list, stretching down to the details panel of
     the chosen one."""
 
@@ -389,7 +389,7 @@ PLAYERS_SECTION = "section-players"
 
 
 class PlayersView(Vertical):
-    """Who can sign in to the saga from a browser (STORY-1403), in one list
+    """Who can sign in to the saga from a browser, in one list
     stretching down to the details panel of the chosen player."""
 
     DEFAULT_CSS = """
@@ -448,7 +448,7 @@ class PlayersView(Vertical):
 
 
 class LabTextListView(BookListView):
-    """A laboratory's Lab Texts database (STORY-508): the book list with the
+    """A laboratory's Lab Texts database: the book list with the
     Lab Texts' own columns (lab_texts.table_header), narrowed by a filter
     and read for one reader, the laboratory's owner (`reader`, called as
     the list is built). Always inline: the sheet's shared panel shows the
@@ -738,11 +738,10 @@ class SpellListView(Vertical):
 
 
 class LazyTabPane(TabPane):
-    """A sheet tab whose contents are built the first time it's shown
-    (STORY-1120): mounting every tab when a sheet opens cost ~4 ms per
-    widget for tabs nobody had looked at. Built from the current data, so a
-    tab built late is never stale; until then its sections have no
-    refreshers, so refreshing them does nothing."""
+    """A sheet tab whose contents are built the first time it's shown: mounting every
+    tab when a sheet opens cost ~4 ms per widget for tabs nobody had looked at. Built
+    from the current data, so a tab built late is never stale; until then its sections
+    have no refreshers, so refreshing them does nothing."""
 
     def __init__(
         self, title: str, build: Callable[[], ComposeResult], *, id: str, lazy: bool
@@ -793,7 +792,7 @@ class SheetView(Vertical):
     }
 
     /* A top panel's Edit button, with the In Creation / In Play switch
-       beside it (STORY-1301). */
+       beside it. */
     SheetView .sheet-buttons {
         width: auto;
         height: auto;
@@ -832,7 +831,7 @@ class SheetView(Vertical):
         self, title: str, id: str, build: Callable[[], ComposeResult]
     ) -> LazyTabPane:
         """A tab showing what `build` composes, built when first shown. Its
-        title leads with its number: the key that opens it (STORY-1005)."""
+        title leads with its number: the key that opens it."""
         self.tab_ids.append(id)
         return LazyTabPane(
             f"{len(self.tab_ids)} {title}",
@@ -843,8 +842,8 @@ class SheetView(Vertical):
 
     @property
     def creation_record(self) -> Character | Covenant | Laboratory | None:
-        """The record whose In Creation / In Play mode the top panel shows
-        (STORY-1301); None for a sheet without one."""
+        """The record whose In Creation / In Play mode the top panel shows; None for a
+        sheet without one."""
         return None
 
     def _mode_label(self) -> str:
@@ -859,7 +858,7 @@ class SheetView(Vertical):
         with Horizontal(classes="sheet-buttons"):
             yield Button("Edit (e)", id=edit_id, compact=True)
             yield Button(self._mode_label(), id="btn-mode", compact=True)
-            # The Creation Worksheet (STORY-1302), while In Creation.
+            # The Creation Worksheet, while In Creation.
             worksheet = Button("Creation Worksheet", id="btn-worksheet", compact=True)
             worksheet.display = record is not None and record.in_creation
             yield worksheet
@@ -1014,7 +1013,7 @@ class SheetView(Vertical):
     def _devices(
         self, kind: str, holder_id: str, section_id: str, *, group: str
     ) -> ComposeResult:
-        """The Enchanted Devices section (STORY-305): the devices `kind`
+        """The Enchanted Devices section: the devices `kind`
         `holder_id` holds, each followed by its effects."""
         with SheetSection(
             title=self._titled(
@@ -1061,10 +1060,10 @@ class CharacterSheetView(SheetView):
 
     A fixed top panel (Info above Characteristics -- not inside any tab,
     permanently expanded, same PinnedCollapsible pattern as
-    CovenantSheetView/LaboratorySheetView) above the tabbed body. This is
-    STORY-207's finished layout -- tab order: Description, Abilities,
+    CovenantSheetView/LaboratorySheetView) above the tabbed body. Tab
+    order: Description, Abilities,
     Virtues & Flaws, Hermetic Magic (magi only), Inventory, Planning, Diary.
-    (A magus's Lab Totals are on their laboratory's sheet, STORY-925.)
+    (A magus's Lab Totals are on their laboratory's sheet.)
 
     - Description (tab, id "tab-description"): Hermetic Background (magi
       only), Biographical Detail (merged Background + Description + the
@@ -1078,7 +1077,7 @@ class CharacterSheetView(SheetView):
       CovenantSheetView's Boons/Hooks), with one details panel below both,
       separate from either section.
     - Hermetic Magic (tab, id "tab-hermetic", magi only): Magical Arts
-      (a SheetSection like the tab's others, open by default (STORY-213) -- two side-by-
+      (a SheetSection like the tab's others, open by default -- two side-by-
       side selectable columns, Techniques then Forms, each row Name/Level/
       XP; 'e' still opens EditArtsScreen to edit every Art at once), Raw
       Vis (the first of two duplicated instances, both backed by
@@ -1093,7 +1092,7 @@ class CharacterSheetView(SheetView):
       Personal Gear (renamed from "Inventory", same character.inventory
       data), Books.
     - Planning (tab, id "tab-planning", every character type): This Season,
-      the season's plan and what it will give (STORY-903/925); a grog's
+      the season's plan and what it will give; a grog's
       says grogs are updated yearly.
     - Diary (tab, id "tab-diary", every character type): a flat pane like
       the laboratory's Diary -- the entries written as seasons are applied
@@ -1629,7 +1628,7 @@ class CharacterSheetView(SheetView):
         plus every Description field but the free-text Biography box."""
         b, d = self.character.background, self.character.description
         played_by = []
-        if self.saga.players:  # a hosted saga's sign-in (STORY-1404)
+        if self.saga.players:  # a hosted saga's sign-in
             player = pl.player_by_id(self.saga, b.player_id)
             played_by = [f"Played by: {escape(player.name) if player else '(no one)'}"]
         return "\n".join(
@@ -1677,7 +1676,7 @@ class CharacterSheetView(SheetView):
         """ "Virtues (3 pts)" / "Flaws (3 pts)": the points each side comes
         to, both coloured by whether they balance. A magus's free House
         Virtue (and Ex Miscellanea's compulsory Flaw) counts nothing
-        (STORY-214, cv.HOUSE_SOURCE)."""
+        (cv.HOUSE_SOURCE)."""
         vfs = self.character.virtues_flaws
         free = cv.house_benefit(self.character).free_indices
         virtues = st.vf_points(vfs, "Virtue", free)
@@ -1694,7 +1693,7 @@ class CharacterSheetView(SheetView):
     def _aging_text(self) -> str:
         a = self.character.aging
         lines = [f"Decrepitude: {a.decrepitude}"]
-        # The yearly aging roll's figures (STORY-904), once there are any.
+        # The yearly aging roll's figures, once there are any.
         if a.decrepitude_points:
             lines[0] += f" ({a.decrepitude_points} points)"
         if a.apparent_age is not None:
@@ -1755,7 +1754,7 @@ class CharacterSheetView(SheetView):
 
     def _hermetic_background_right_text(self) -> str:
         """Column 2 of Hermetic Background: Wizard's Sigil, and whose raw
-        Lab Texts the magus reads (STORY-508)."""
+        Lab Texts the magus reads."""
         sigil = self.character.hermetic.wizards_sigil
         return (
             f"Wizard's Sigil: {escape(sigil) or '(not set)'}\n"
@@ -1925,7 +1924,7 @@ class CharacterSheetView(SheetView):
             return
         book = self.query_one(BookListView).selected_book()
         if book is not None and lt.is_lab_text(book):
-            # A Lab Text shows how it stands for this character (STORY-508).
+            # A Lab Text shows how it stands for this character.
             info.update(lt.detail_text(self.saga, self.character, book))
             return
         info.update(
@@ -1981,17 +1980,17 @@ class LaboratorySheetView(SheetView):
     Virtues & Flaws (two lists side by side, one details panel, and a
     warning line when the lab is over capacity or has two Focuses), Rooms,
     Raw Vis, Equipment & Stores and the Diary are selectable lists, with a
-    details panel where there's more to show than the row (STORY-303).
+    details panel where there's more to show than the row.
 
-    Specializations (STORY-307) is a grid of each Specialization's total
+    Specializations is a grid of each Specialization's total
     over every source, grouped Activity / Art with each cap's count in the
     header, where Space turns the chosen one off or on (ToggleList); the
     hand-entered sources are a list nested inside it ("Specializations:
-    Other"). Features (STORY-308) lists the lab's Features, each built on
+    Other"). Features lists the lab's Features, each built on
     one of its Feature Virtues. Neither section collapses.
 
     The Attributes and Inventory tabs each have one details panel docked
-    below their scrolling lists, as on the covenant's tabs (STORY-309): the
+    below their scrolling lists, as on the covenant's tabs: the
     chosen row of any of the tab's lists (one choice between them) shows
     there.
     """
@@ -2049,7 +2048,7 @@ class LaboratorySheetView(SheetView):
             yield self._tab("Diary", "tab-lab-diary", self._diary_tab)
 
     def _planning_tab(self) -> ComposeResult:
-        """The owner's coming seasons (STORY-901): lab work is planned here,
+        """The owner's coming seasons: lab work is planned here,
         with the chosen season's plan and Lab Total docked below."""
         sections = ("tab-lab-planning", "section-lab-identity", *_LAB_TOTAL_SECTIONS)
         with Vertical(classes="panel-body"):
@@ -2085,7 +2084,7 @@ class LaboratorySheetView(SheetView):
 
     def _totals_tab(self) -> ComposeResult:
         """The Lab Totals grid, the Base Lab Total and what each activity
-        adds, each its own section (STORY-211)."""
+        adds, each its own section."""
         for title, section, text in (
             (
                 "Lab Totals",
@@ -2408,7 +2407,7 @@ class LaboratorySheetView(SheetView):
         }
 
     def _lab_text_list(self) -> LabTextListView:
-        """The Lab Texts database (STORY-508), read for the lab's owner;
+        """The Lab Texts database, read for the lab's owner;
         rebuilt with the lab's other books (a book's Type can change) and
         when the owner does."""
         view = LabTextListView(
@@ -2666,7 +2665,7 @@ class FamiliarSheetView(SheetView):
     Base Soak/Magic Resistance figures) and Combat & Health (Wounds/Fatigue,
     reusing Character's own dialogs; Natural Weapons & Attacks, a free
     selectable list of weapon-kind Possessions -- same shape as Character's
-    weapon rows, see STORY-205), Abilities and Bond Powers.
+    weapon rows), Abilities and Bond Powers.
     """
 
     DEFAULT_CSS = """
@@ -2952,8 +2951,8 @@ class CovenantSheetView(SheetView):
 
     A permanent info panel (not inside any tab) above eight tabs mirroring
     the covenant record sheet: Attributes, Inhabitants, Seasons (who has
-    planned what this season, STORY-912), Possessions, Economics, Library,
-    Diary, and Build (what its Build Points went on, STORY-1314).
+    planned what this season), Possessions, Economics, Library,
+    Diary, and Build (what its Build Points went on).
 
     The panel's saga-level values (Saga, Storyguide, Current Season,
     Current Year) are inherited from the Saga and shown dimmed/read-only;
@@ -3046,7 +3045,7 @@ class CovenantSheetView(SheetView):
             yield self._tab("Build", "tab-cov-build", self._scrolling(self._build_tab))
 
     def _build_tab(self) -> ComposeResult:
-        """What the covenant's Build Points went on (STORY-1314): the one
+        """What the covenant's Build Points went on: the one
         place Build Points show once the covenant is in play."""
         with SheetSection(
             title=cov_build.title(self.saga, self.covenant), id="section-cov-build"
@@ -3115,7 +3114,7 @@ class CovenantSheetView(SheetView):
 
     def _seasons_tab(self) -> ComposeResult:
         """Who is in the covenant and what each has planned for the current
-        season, by kind (STORY-912), over the chosen person's details."""
+        season, by kind, over the chosen person's details."""
         with Vertical(classes="panel-body"):
             with VerticalScroll():
                 for kind, title in seasons.SEASON_KINDS:
@@ -3428,7 +3427,7 @@ class CovenantSheetView(SheetView):
         self.query_one("#inh-misc-right", Static).update(right)
 
     def _bh_warnings_text(self) -> str:
-        """Boons and Hooks that don't fit together (STORY-703), one line
+        """Boons and Hooks that don't fit together, one line
         each in the theme's error colour; "" when all is well."""
         problems = boon_hook_problems(
             self.covenant, catalog.load_covenant_boon_hook_catalog_by_id()

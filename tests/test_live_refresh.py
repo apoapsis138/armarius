@@ -1,4 +1,4 @@
-"""Seeing what other copies of a hosted saga do (STORY-1406)."""
+"""Seeing what other copies of a hosted saga do."""
 
 from __future__ import annotations
 

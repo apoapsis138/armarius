@@ -1,4 +1,4 @@
-"""The Lab Texts database (STORY-508): a laboratory's Lab Texts as a table
+"""The Lab Texts database: a laboratory's Lab Texts as a table
 that can be filtered, with what each one records and how it stands for one
 reader (the laboratory's owner).
 
@@ -6,7 +6,7 @@ A Lab Text is a Book of type "Lab Text" with a kind (models.LAB_TEXT_KINDS).
 A spell's text takes its Technique, Form and level from the spell; any other
 kind carries its own, with a snapshot of the effect taken when it was
 written. Whether a reader can use a raw text is the reader's
-(Character.lab_text_access, STORY-914); this module only shows it:
+(Character.lab_text_access); this module only shows it:
 
 - General use: rewritten by its author, or never raw.
 - Own raw text: the reader wrote it.

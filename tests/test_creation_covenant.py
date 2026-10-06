@@ -1,4 +1,4 @@
-"""Covenant and laboratory creation (STORY-1312, 1313)."""
+"""Covenant and laboratory creation."""
 
 from __future__ import annotations
 
@@ -103,7 +103,7 @@ def test_build_points_price_the_library_vis_items_and_labs():
 
 def test_only_magi_said_to_go_without_a_lab_refund():
     """A magus whose lab isn't entered still has the free one; only the
-    covenant's magi_without_lab refund 50 each, at creation (STORY-1318)."""
+    covenant's magi_without_lab refund 50 each, at creation."""
     saga = _saga()
     covenant = saga.covenants[0]
     saga.characters += [
@@ -131,7 +131,7 @@ def test_only_magi_said_to_go_without_a_lab_refund():
 
 def test_lab_texts_and_tablets_cost_one_line_per_pool():
     """The Build tab charges each pool once, for its summed levels, and says
-    what is unspent; the texts have no line of their own (STORY-1126)."""
+    what is unspent; the texts have no line of their own."""
     saga = _saga()
     covenant = saga.covenants[0]
     for i, (kind, level) in enumerate(
@@ -350,7 +350,7 @@ def test_bought_specialists_and_teachers_cost_build_points():
     assert not any("Wat" in label for label in costs)
 
 
-# -- the Build tab (STORY-1314) --
+# -- the Build tab --
 
 
 def test_the_build_tab_keeps_initial_and_follows_current():

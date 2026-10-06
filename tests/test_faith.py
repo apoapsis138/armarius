@@ -1,4 +1,4 @@
-"""True Faith Score and Faith Points (STORY-210)."""
+"""True Faith Score and Faith Points."""
 
 from support import wait_until
 from textual.widgets import Input, Static

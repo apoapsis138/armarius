@@ -1,4 +1,4 @@
-"""Logic behind enchanted devices and talismans (STORY-305) -- no UI in here.
+"""Logic behind enchanted devices and talismans -- no UI in here.
 
 The item-side arithmetic of ArM5 Definitive Edition ch. 8 (Enchantments
 through Investigating Enchantments): capacity from Material and Size, a

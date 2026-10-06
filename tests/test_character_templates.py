@@ -1,4 +1,4 @@
-"""Character Templates on New Character (STORY-1317): the catalog of the
+"""Character Templates on New Character: the catalog of the
 book's ready-to-play characters, filling a sheet from one, and the New
 Character form's Template choice."""
 

@@ -1,4 +1,4 @@
-"""Apprentices (STORY-917): searching, Opening the Arts, teaching Hermetic
+"""Apprentices: searching, Opening the Arts, teaching Hermetic
 Virtues."""
 
 from ars_magica_manager import seasons

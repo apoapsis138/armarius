@@ -1,4 +1,4 @@
-"""Work on the laboratory itself, and assisting in one (STORY-915)."""
+"""Work on the laboratory itself, and assisting in one."""
 
 import random
 
@@ -165,7 +165,7 @@ def test_hermetic_taming_until_the_points_reach_its_might():
     assert (text.text_kind, text.technique, text.form) == ("Other", "Rego", "Animal")
 
 
-# -- work() and roll() branch by branch (STORY-1129) -----------------------------
+# -- work() and roll() branch by branch -----------------------------
 
 
 class _Dice(random.Random):

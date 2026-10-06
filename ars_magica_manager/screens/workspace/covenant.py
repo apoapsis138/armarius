@@ -904,7 +904,7 @@ class CovenantActions(WorkspaceBase):
     def action_improve(self) -> None:
         self._improve_income_source()
 
-    # -- Covenant: Diary (STORY-406) --
+    # -- Covenant: Diary --
 
     def _cov_diary_selection(self) -> int | None:
         view = self._covenant_sheet_view
@@ -989,7 +989,7 @@ class CovenantActions(WorkspaceBase):
             then=lambda position: remove(order[position]),
         )
 
-    # -- Covenant: Seasons (STORY-912) --
+    # -- Covenant: Seasons --
 
     def _season_person_then(self, kind: str, then: Any) -> None:
         """Act on the person chosen in the Seasons list of `kind`."""

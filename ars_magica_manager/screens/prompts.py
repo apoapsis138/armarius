@@ -178,7 +178,7 @@ def param_choices(
     own_abilities: Sequence[str] = (),
 ) -> dict[str, list[tuple[str, str]]]:
     """The valid values of each of `entry`'s parameters that name a
-    Characteristic, an Ability, an Art, a Technique or a Form (STORY-712),
+    Characteristic, an Ability, an Art, a Technique or a Form,
     as (label, stored value) pairs; other parameters are typed. A value
     the character already holds this entry for, as often as the book
     allows, is left out."""
@@ -218,7 +218,7 @@ def _param_dialog(
 ) -> FieldsDialog[dict[str, str]]:
     """Fill in a catalog entry's {placeholders} ("Affinity with {art}"):
     dismisses with {parameter: value}, values lower-cased. A parameter with
-    `choices` is picked from them (STORY-712); the rest are typed."""
+    `choices` is picked from them; the rest are typed."""
     choices = choices or {}
 
     def field(param: str) -> DialogField:
@@ -247,7 +247,7 @@ def _param_dialog(
 
 def _lab_choice_dialog(entry: LabVirtueFlawDef) -> FieldsDialog[dict[str, str]]:
     """Choose the Specialization a laboratory Virtue or Flaw grants points
-    to, from the ones its catalog entry allows (STORY-817)."""
+    to, from the ones its catalog entry allows."""
     return FieldsDialog(
         entry.name,
         [
@@ -415,7 +415,7 @@ def _raw_vis_dialog(
 def _export_dialog(
     record: transfer.Record, folder: Path
 ) -> FieldsDialog[tuple[Path, bool]]:
-    """Export a covenant, laboratory or character to a file (STORY-109):
+    """Export a covenant, laboratory or character to a file:
     where to write it, and for a covenant whether its laboratories and
     characters go too. Builds (the file, with members?)."""
     kind = transfer.kind_of(record)
@@ -476,10 +476,9 @@ def _export_dialog(
 
 
 def _player_dialog(saga: Saga, existing: Player | None) -> FieldsDialog[dict[str, Any]]:
-    """Add or edit someone who can sign in to the saga from a browser
-    (STORY-1403): their name, role and passcode. Editing leaves the passcode
-    blank, which keeps the old one. Builds the values players.add / update
-    take."""
+    """Add or edit someone who can sign in to the saga from a browser: their name, role
+    and passcode. Editing leaves the passcode blank, which keeps the old one. Builds the
+    values players.add / update take."""
 
     def problem(values: dict[str, Any]) -> str | None:
         if existing is None and not values.get("passcode"):
@@ -529,7 +528,7 @@ def _player_dialog(saga: Saga, existing: Player | None) -> FieldsDialog[dict[str
 
 
 def _sign_in_dialog(saga: Saga) -> FieldsDialog[Player]:
-    """Who is there (STORY-1403): a browser copy of a hosted app asks for a
+    """Who is there: a browser copy of a hosted app asks for a
     player's name and passcode before it opens `saga`. Dismisses with the
     player, or None if cancelled."""
 
@@ -560,7 +559,7 @@ def _sign_in_dialog(saga: Saga) -> FieldsDialog[Player]:
 def _house_rule_dialog(
     saga: Saga, existing: tuple[str, hr.Entry] | None
 ) -> FieldsDialog[dict[str, Any]]:
-    """Add or edit a user-made catalog entry (STORY-708): what it is for (a
+    """Add or edit a user-made catalog entry: what it is for (a
     character, a laboratory or a covenant -- fixed once made), its name,
     type, tier (which gives its points), category and description. Text
     only: the rules engine applies no effects for it. Builds the values
@@ -656,7 +655,7 @@ def _house_rule_dialog(
 def _lab_text_access_dialog(
     saga: Saga, character: Character
 ) -> FieldsDialog[tuple[str, int, str]]:
-    """Whose raw Lab Texts a magus reads (STORY-508): an author -- a magus
+    """Whose raw Lab Texts a magus reads: an author -- a magus
     of the saga, or a name typed for one outside it --, the level he reads
     them to (0 forgets the author) and how he came to. Choosing an author
     he already reads fills in what is recorded. Builds (the author's key,
@@ -733,7 +732,7 @@ def _lab_text_access_dialog(
 def _ritual_again_dialog(
     saga: Saga, magus: Character, lab: Laboratory, text: Book
 ) -> FieldsDialog[tuple[str, str]]:
-    """Perform a Longevity Ritual again from its Lab Text (STORY-509): the
+    """Perform a Longevity Ritual again from its Lab Text: the
     vis to pay with and whose. Refuses what the rules do (the live line says
     what it will cost and restore). Builds (the Art, whose vis)."""
 
@@ -793,7 +792,7 @@ def _ritual_again_dialog(
 
 
 def _lab_text_filter_dialog(current: lt.Filter) -> FieldsDialog[lt.Filter]:
-    """Narrow a laboratory's Lab Texts (STORY-508): by kind, Technique,
+    """Narrow a laboratory's Lab Texts: by kind, Technique,
     Form, a range of levels, and to those its owner can read. Everything
     left blank shows them all. Builds the Filter."""
 
@@ -844,7 +843,7 @@ def _lab_text_filter_dialog(current: lt.Filter) -> FieldsDialog[lt.Filter]:
 def _move_vis_dialog(
     source: str, what: vis.Held, destinations: Sequence[tuple[str, str]]
 ) -> FieldsDialog[tuple[int, str]]:
-    """Move raw vis (STORY-412): how many of `what`'s pawns, and to which of
+    """Move raw vis: how many of `what`'s pawns, and to which of
     `destinations` (vis.destinations). Builds (pawns, the destination)."""
     return FieldsDialog(
         "Move Raw Vis",
@@ -882,7 +881,7 @@ def _creation_xp_dialog(
     *,
     xp_label: str = "xp",
 ) -> FieldsDialog[tuple[str, int]]:
-    """xp spent at a creation step (STORY-1306 to 1310): an Ability or Art
+    """xp spent at a creation step: an Ability or Art
     from `targets` -- a family ("Area Lore: {region}") asks for its detail
     -- and how much. Builds (the Ability or Art's name, the xp)."""
     families = [t for t in targets if "{" in t]
@@ -973,7 +972,7 @@ def _spell_level_dialog(spell_name: str) -> FieldsDialog[int]:
 def _gauntlet_conditions_dialog(
     conditions: CreationConditions,
 ) -> FieldsDialog[dict[str, Any]]:
-    """A magus's years past Gauntlet (STORY-1310): the seasons of lab work,
+    """A magus's years past Gauntlet: the seasons of lab work,
     and the working conditions the storyguide set."""
 
     def problem(values: dict[str, Any]) -> str | None:
@@ -1006,7 +1005,7 @@ def _gauntlet_conditions_dialog(
 
 
 def _power_level_dialog(covenant: Covenant) -> FieldsDialog[dict[str, Any]]:
-    """A new covenant's Power Level and when it was founded (STORY-1312)."""
+    """A new covenant's Power Level and when it was founded."""
 
     def label(power: PowerLevel) -> str:
         top = f"{power.most}" if power.most is not None else "+"
@@ -1064,10 +1063,9 @@ def _power_level_problem(values: dict[str, Any]) -> str | None:
 
 
 def _buy_specialist_dialog() -> FieldsDialog[dict[str, Any]]:
-    """A specialist bought with Build Points for a new covenant
-    (STORY-1312): an NPC defined by the Ability used for the covenant. A
-    teacher costs Communication + Teaching + the highest Ability taught.
-    The values are an Inhabitant's fields."""
+    """A specialist bought with Build Points for a new covenant: an NPC defined by the
+    Ability used for the covenant. A teacher costs Communication + Teaching + the
+    highest Ability taught. The values are an Inhabitant's fields."""
 
     def teacher(values: dict[str, Any]) -> bool:
         return bool(values.get("teacher"))
@@ -1262,7 +1260,7 @@ def _covenant_diary_entry_dialog(
     existing: CovenantDiaryEntry | None = None,
     default_season: str = SEASONS[0],
 ) -> FieldsDialog[CovenantDiaryEntry]:
-    """Add or edit a covenant Diary entry (STORY-406). The amounts are
+    """Add or edit a covenant Diary entry. The amounts are
     optional; Status, the linked Boon/Hook and Revisit are shown for Story
     Events only (a hidden field is left out, so it falls back to blank)."""
     by_id = catalog.load_covenant_boon_hook_catalog_by_id()
@@ -1576,7 +1574,7 @@ class ConfirmScreen(ModalScreen[bool]):
 
 
 class MenuScreen(ModalDialog[str | None]):
-    """A short menu of actions (the workspace's More and New, STORY-1007):
+    """A short menu of actions (the workspace's More and New):
     each item has its own letter, shown in front of it. Pressing the letter,
     or Enter on the highlighted item, dismisses with that item's key; Escape
     with None. `items` are (letter, key, label); labels are markup."""

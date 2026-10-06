@@ -65,7 +65,7 @@ def score_text(progress: xp_rules.Progress, bonus: int = 0) -> str:
     """A score and its total xp against the total the next score needs,
     e.g. "5 85/105": score 5, 85 xp spent, score 6 at 105. With a fixed
     bonus or penalty (Puissant, a Flaw) the adjusted score follows in
-    parentheses: "5 (7) 85/105" (STORY-212)."""
+    parentheses: "5 (7) 85/105"."""
     return (
         f"{adjusted_score(progress.score, bonus)} "
         f"{progress.total}/{progress.next_total}"
@@ -74,7 +74,7 @@ def score_text(progress: xp_rules.Progress, bonus: int = 0) -> str:
 
 def adjusted_score(score: int, bonus: int) -> str:
     """A list row's score: the base, then the score used when a fixed bonus
-    or penalty applies: "5 (7)" (Hedda 2026-09-29, STORY-212)."""
+    or penalty applies: "5 (7)"."""
     return f"{score} ({score + bonus})" if bonus else str(score)
 
 
@@ -111,7 +111,7 @@ def ability_rows(
 
     Scores and xp line up in columns, named once on the first header row,
     with the xp quieter than the score; an adjusted score sits in its own
-    slot after the base, so the base scores still line up (STORY-1014)."""
+    slot after the base, so the base scores still line up."""
     names = [a.name + (f" ({a.specialty})" if a.specialty else "") for a in abilities]
     width = max([len(name) for name in names] + [_ABILITY_NAME_MIN]) + 2
     rows: list[tuple[int | None, str]] = []
@@ -198,11 +198,10 @@ def vf_rows(
     vf_type: str,
     free: Collection[int] = (),
 ) -> list[tuple[int | None, str]]:
-    """The attached Virtues or Flaws (`vf_type`) as (true index into
-    `instances`, label) pairs, so a filtered list still maps back to the
-    real entry. Qualities list with the Virtues, Inferiorities with the
-    Flaws (VirtueFlawDef.side). Indices in `free` (a magus's House Virtue,
-    STORY-214) are marked Free."""
+    """The attached Virtues or Flaws (`vf_type`) as (true index into `instances`, label)
+    pairs, so a filtered list still maps back to the real entry. Qualities list with the
+    Virtues, Inferiorities with the Flaws (VirtueFlawDef.side). Indices in `free` (a
+    magus's House Virtue) are marked Free."""
     vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
     return [
         (
@@ -417,7 +416,7 @@ def fatigue_text(fatigue_level: str) -> str:
 
 
 def goal_row(goal: Breakthrough) -> str:
-    """A research goal's row (STORY-916): its name, kind, points toward its
+    """A research goal's row: its name, kind, points toward its
     target, and what waits on it."""
     extras = []
     if goal.reached:

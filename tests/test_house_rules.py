@@ -1,4 +1,4 @@
-"""User-made catalog entries kept with the saga (STORY-708)."""
+"""User-made catalog entries kept with the saga."""
 
 from __future__ import annotations
 
@@ -159,7 +159,7 @@ def test_entries_are_saved_with_the_saga():
         ("covenant", "Feuding Abbot"),
     ]
     assert loaded.custom_virtues_flaws[0].repeatable
-    # A saga saved before STORY-708 has none.
+    # An older saga has none.
     old = asdict(saga)
     for key in (
         "custom_virtues_flaws",

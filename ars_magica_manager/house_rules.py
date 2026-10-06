@@ -1,4 +1,4 @@
-"""User-made catalog entries kept with a saga (STORY-708): house rules, and
+"""User-made catalog entries kept with a saga: house rules, and
 entries from books the shared catalogs don't carry.
 
 Three kinds, each of the shape its shared catalog uses: character Virtues

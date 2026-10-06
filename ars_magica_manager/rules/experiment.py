@@ -1,4 +1,4 @@
-"""Arcane experimentation and original research (STORY-916).
+"""Arcane experimentation and original research.
 
 Experimentation, with any lab work that allows it (inventing a spell,
 enchanting, a familiar, a Longevity Ritual, investigating an item):
@@ -109,7 +109,7 @@ class Extraordinary:
     #: The lab Flaw a Disaster gives ("labvf_damaged"/"labvf_wrecked").
     lab_flaw: str = ""
     #: Side effects and modified effects the creation keeps ("warts and
-    #: all", Hedda 2026-09-30).
+    #: all").
     effects: list[str] = field(default_factory=list)
     #: A second roll's results (Exciting Experimentation, Creative Block),
     #: for the storyguide to choose.
@@ -121,7 +121,7 @@ class Extraordinary:
 
 def botch_dice(character: Character, risk: int, aura: int) -> int:
     """1 + risk + the aura, with the Virtues and Flaws that change lab botch
-    dice (Cautious Sorcerer takes 3 off, never below 1; STORY-820)."""
+    dice (Cautious Sorcerer takes 3 off, never below 1)."""
     change, _ = scores.botch_dice_change(character.virtues_flaws, ("laboratory",))
     return scores.with_botch_change(1 + risk + max(0, aura), change)
 
@@ -260,7 +260,7 @@ def _apply(result: Extraordinary, roll: int, rng, risk, art, saga, depth) -> Non
             )
         result.results.append(f"{roll}: a Discovery: {what}.")
     elif roll == 11:
-        # One die for the whole table (B25: it was rolled again for each row).
+        # One die for the whole table (it was rolled again for each row).
         modified_roll = dice.simple_die(rng) + risk
         modified = next(
             (text for top, text in MODIFIED if modified_roll <= top),

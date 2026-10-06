@@ -1,4 +1,4 @@
-"""The saga's players and signing in (STORY-1403).
+"""The saga's players and signing in.
 
 When the storyguide hosts the app (tools/serve.py), each browser copy asks
 who is there before opening a saga: a name from the saga's player list and
@@ -106,7 +106,7 @@ def remove(saga: Saga, player: Player) -> None:
         character.background.player_id = None
 
 
-# -- who may change what (STORY-1404) --
+# -- who may change what --
 
 
 def player_by_id(saga: Saga, player_id: str | None) -> Player | None:
@@ -195,7 +195,7 @@ def guard_changes(
 ) -> tuple[dict[str, Any], list[str]]:
     """`after` (a saga as plain data) with the changes `player` may not make
     since `before` taken back, and what was taken back ("characters[mag1]",
-    "current_year"...). The last guard in front of saving (STORY-1404): the
+    "current_year"...). The last guard in front of saving: the
     screens already offer a player only what they may change."""
     if player is None or player.role == STORYGUIDE:
         return after, []

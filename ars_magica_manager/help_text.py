@@ -1,4 +1,4 @@
-"""The help text (STORY-115): Markdown files in the help/ folder, read into
+"""The help text: Markdown files in the help/ folder, read into
 topics the Help screen shows.
 
 Each file holds pages. A level-1 or level-2 heading starts a page; a level-3

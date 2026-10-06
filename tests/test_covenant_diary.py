@@ -1,4 +1,4 @@
-"""The covenant Diary tab (STORY-406): entries, their rows and details, the
+"""The covenant Diary tab: entries, their rows and details, the
 Loyalty points they add, and the tab's a/A/e keys."""
 
 from support import build_all_tabs, strip_markup, wait_until

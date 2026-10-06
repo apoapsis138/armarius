@@ -1,4 +1,4 @@
-"""Seasonal activities (STORY-903): which activities a character may plan for
+"""Seasonal activities: which activities a character may plan for
 a season, and what a planned season gives.
 
 A plan is what the user typed (models.SeasonPlan); its outcome is always
@@ -10,7 +10,7 @@ season's figures.
 Who plans a season (DE Ch. 10, Assigning Seasons): a magus has four free
 seasons a year; a companion (Mythic or not) works two seasons a year,
 earning Exposure in their job, and has two free ones. Grogs aren't planned
-season by season: they're updated once a year (Grogs, Ch. 5; STORY-924).
+season by season: they're updated once a year (Grogs, Ch. 5).
 
 Activities built so far, each an Advancement Total (rules.study):
 
@@ -21,7 +21,7 @@ Activities built so far, each an Advancement Total (rules.study):
   a spell's Mastery. Arts can't be practised.
 - Adventure: Source Quality 5-10, split among the Abilities and Arts used,
   at most 5 to each.
-- Read a book (STORY-902): a summa's Quality up to its Level, a tractatus's
+- Read a book: a summa's Quality up to its Level, a tractatus's
   Quality once per reader. Only books in the covenant's library, or the
   reader's own (their inventory, their laboratory), can be read.
 - Be taught: the teacher's Communication + Teaching + 3 (+6 for one
@@ -160,14 +160,14 @@ class Activity:
     gives_xp: bool = True
     #: Whether time lost to distractions lowers it.
     distractable: bool = False
-    #: Lab work: planned on the laboratory's Planning tab (STORY-901), not
+    #: Lab work: planned on the laboratory's Planning tab, not
     #: the character sheet.
     lab: bool = False
     #: Planned for the character by someone else's lab work (the subject of
     #: a Longevity Ritual), not picked from the menu.
     hidden: bool = False
     #: The sourcebook it comes from ("" for the core book): offered only
-    #: while the saga has that book in play (STORY-1126).
+    #: while the saga has that book in play.
     book: str = ""
 
 
@@ -544,7 +544,7 @@ ACTIVITIES: dict[str, Activity] = {
 }
 
 
-# The supplement activities (STORY-913, 918-923), before Other in the menu.
+# The supplement activities, before Other in the menu.
 _OTHER_ACTIVITY = ACTIVITIES.pop(OTHER)
 ACTIVITIES.update(
     {
@@ -768,7 +768,7 @@ def whose_vis(character: Character, plan: SeasonPlan) -> str:
 def _study_problems(
     saga: Saga, character: Character, plan: SeasonPlan, chosen: list[XpAllocation]
 ) -> list[str]:
-    """The problems of the study activities (STORY-902)."""
+    """The problems of the study activities."""
     found: list[str] = []
     if plan.activity == READ:
         book = next((b for b in saga.books if b.id == plan.book_id), None)
@@ -902,7 +902,7 @@ def problems(
         if saga is not None and plan.activity in supplement_seasons.BY_KEY:
             return supplement_work.problems(saga, character, plan)
         return []
-    # Each family of activities checks its own plans (HANDLERS, STORY-1129).
+    # Each family of activities checks its own plans (HANDLERS).
     return HANDLERS[plan.activity].problems(saga, character, plan)
 
 
@@ -940,11 +940,11 @@ class Outcome:
     pending_roll: bool = False
     #: Lab work: what the season in the laboratory does.
     lab_work: lab_seasons.LabWork | None = None
-    #: Book work (STORY-910, 914): what the season does to books.
+    #: Book work: what the season does to books.
     book_work: book_seasons.BookWork | None = None
-    #: Apprentice work (STORY-917).
+    #: Apprentice work.
     apprentice_work: apprentice_seasons.ApprenticeWork | None = None
-    #: Seeking an insight (STORY-916): whether one was gained.
+    #: Seeking an insight: whether one was gained.
     insight: bool = False
     #: Faith Points gained (Good Works).
     faith: int = 0
@@ -993,7 +993,7 @@ _STUDY_KIND: dict[str, str] = {
 def _experiment(
     result: Outcome, character: Character, saga: Saga, rng: random.Random | None
 ) -> None:
-    """Experimenting (STORY-916): the simple die joins the Lab Total, then
+    """Experimenting: the simple die joins the Lab Total, then
     the Extraordinary Results chart; stabilizing rolls the chart too."""
     plan = result.plan
     stabilizing = plan.activity == experiment.STABILIZE
@@ -1130,7 +1130,7 @@ def _outcome(
     return result
 
 
-# -- the activity families (STORY-1129) ----------------------------------------
+# -- the activity families ----------------------------------------
 #
 # Each family of activities says what stops a plan and what the season gives,
 # in one Handler; HANDLERS maps every activity that gives experience to its
@@ -1193,7 +1193,7 @@ def _exposure(character: Character, ability: str) -> XpGain:
     return _gain(character, ability_subject(ability), EXPOSURE_QUALITY, "exposure", 0)
 
 
-# Lab work (STORY-901 and on): its own rules module, and Exposure in Magic
+# Lab work: its own rules module, and Exposure in Magic
 # Theory.
 
 
@@ -1237,7 +1237,7 @@ def _lab_outcome(
     result.gains.append(_exposure(character, "Magic Theory"))
 
 
-# Writing and copying books (STORY-905 and on): Exposure in the writing's
+# Writing and copying books: Exposure in the writing's
 # Ability.
 
 
@@ -1259,7 +1259,7 @@ def _book_outcome(
     )
 
 
-# Apprentices (STORY-914): teaching gives Exposure in Teaching; searching for
+# Apprentices: teaching gives Exposure in Teaching; searching for
 # a Gifted child is a roll.
 
 
@@ -1309,7 +1309,7 @@ def _apprentice_outcome(
     )
 
 
-# Integrating an insight into original research (STORY-916): a roll.
+# Integrating an insight into original research: a roll.
 
 
 def _integrate_problems(
@@ -1335,7 +1335,7 @@ def _integrate_outcome(
     result.notes.append(note)
 
 
-# The supplements' study-like activities (STORY-913, 918-923): their Source
+# The supplements' study-like activities: their Source
 # Quality, and what they do besides (supplement_work).
 
 
@@ -1372,7 +1372,7 @@ def _supplement_outcome(
     result.notes += result.supplement.notes
 
 
-# Assisting in another's laboratory (STORY-915): Exposure in Magic Theory.
+# Assisting in another's laboratory: Exposure in Magic Theory.
 
 
 def _assist_problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
@@ -1389,7 +1389,7 @@ def _assist_outcome(
     result.gains.append(_exposure(character, "Magic Theory"))
 
 
-# Study from books, teachers, training and vis (STORY-903, DE Ch. 10).
+# Study from books, teachers, training and vis (DE Ch. 10).
 
 
 def _months_problem(plan: SeasonPlan) -> list[str]:

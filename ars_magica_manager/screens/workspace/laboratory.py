@@ -568,7 +568,7 @@ class LaboratoryActions(WorkspaceBase):
             then=confirm,
         )
 
-    # -- Laboratory: Planning (STORY-901) --
+    # -- Laboratory: Planning --
 
     def _lab_owner_for_planning(self) -> tuple[Laboratory, Character] | None:
         lab = self.selected_laboratory

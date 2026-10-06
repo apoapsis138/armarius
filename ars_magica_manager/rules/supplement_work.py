@@ -1,5 +1,4 @@
-"""What the supplement activities do beyond experience (STORY-913, 918-923,
-Hedda 2026-09-30: "model all of them").
+"""What the supplement activities do beyond experience: all of them are modelled.
 
 - Labor Points (City & Guild): a working season gives (Characteristic +
   Craft or Profession) x the Wealth Multiplier (Poor 2, average 3, Wealthy

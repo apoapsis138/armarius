@@ -1,15 +1,15 @@
-"""The Invent Spell screen (STORY-901, laid out with Hedda 2026-09-29): a
+"""The Invent Spell screen: a
 season of lab work planned on the laboratory's Planning tab. Start from a
 spell (or a blank design), change anything -- name, effect, Arts,
 requisites, base level, Range, Duration, Target -- and see the level, the
 Lab Total and when the spell will be invented, all worked out as you type.
 
-The other lab work of a season is planned here too (STORY-907):
+The other lab work of a season is planned here too:
 extracting vis, fixing an Arcane Connection and Longevity Rituals, each
 with its own few fields in place of the spell design.
 
 A full screen rather than a FieldsDialog: it has too many fields for one
-field per row at 120 x 45 (agreed with Hedda)."""
+field per row at 120 x 45."""
 
 from __future__ import annotations
 
@@ -962,9 +962,8 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         ]
 
     def _effect_texts(self, plan: SeasonPlan | None) -> list[tuple[str, str]]:
-        """The Lab Texts the plan's effect could be instilled from
-        (STORY-509): enchantment texts of the same Arts, level and kind of
-        device that the magus can read."""
+        """The Lab Texts the plan's effect could be instilled from: enchantment texts of
+        the same Arts, level and kind of device that the magus can read."""
         device = es.device_of(self.saga, plan) if plan is not None else None
         effect = es.effect_of(device, plan) if device and plan else None
         if device is None or effect is None:

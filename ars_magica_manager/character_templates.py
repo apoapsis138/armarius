@@ -1,4 +1,4 @@
-"""Character Templates (STORY-1317): the book's ready-to-play characters,
+"""Character Templates: the book's ready-to-play characters,
 offered on New Character by type. Using one fills the new sheet --
 Characteristics, age, Virtues and Flaws, Abilities, Arts, spells, gear,
 Personality Traits, Reputations and House -- and the character starts In

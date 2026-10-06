@@ -1,4 +1,4 @@
-"""Derived character values (STORY-807): Size, the Damage Table's wound
+"""Derived character values: Size, the Damage Table's wound
 ranges, Wound and Fatigue penalties, Encumbrance and Soak.
 
 - Size: the typed base (0 for an adult human) plus Virtues and Flaws such as

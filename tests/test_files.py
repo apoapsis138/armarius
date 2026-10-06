@@ -15,7 +15,7 @@ def test_write_atomic_replaces_the_file_and_leaves_no_temp_file(tmp_path):
 
 def test_a_failed_write_keeps_the_old_file(tmp_path, monkeypatch):
     """A crash before the rename (here, the rename itself failing) leaves the
-    previous file whole and cleans up the temp file (STORY-1125)."""
+    previous file whole and cleans up the temp file."""
     path = tmp_path / "saga.json"
     files.write_atomic(path, "old")
 

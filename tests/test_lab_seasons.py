@@ -1,4 +1,4 @@
-"""Lab work as seasons (STORY-901): inventing spells from scratch or from a
+"""Lab work as seasons: inventing spells from scratch or from a
 Lab Text on the laboratory's Planning tab, points over several seasons, and
 what finishing gives."""
 
@@ -332,7 +332,7 @@ async def test_e_on_the_lab_planning_tab_invents_a_spell_started_from_one():
         await pilot.press("enter")
         await pilot.pause()
         ws, screen = await _open_invent(pilot, app)
-        # Hedda 2026-09-30: a free season opens with no lab work chosen.
+        # A free season opens with no lab work chosen.
         assert screen.query_one("#inv-activity", Select).value == Select.NULL
         assert (
             _text(screen, "#inv-header") == "Lab work -- Tiberius in Tower, Spring 1220"

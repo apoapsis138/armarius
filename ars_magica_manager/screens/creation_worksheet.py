@@ -1,4 +1,4 @@
-"""The Creation Worksheet (STORY-1302): a step-by-step screen that walks a
+"""The Creation Worksheet: a step-by-step screen that walks a
 covenant, laboratory or character In Creation through the book's order.
 
 The left column is the progress list, one row per step marked with how its
@@ -9,7 +9,7 @@ buttons open the sheet's own dialogs through the workspace, and every
 step's checks are worked out again when a dialog closes. The last step's
 "Move to In Play" shows every check first.
 
-Each step's story (STORY-1303 to 1313) registers a StepPanel for its step:
+Each step registers a StepPanel for its step:
 the budget text and the buttons. A step with no panel shows its checks.
 """
 
@@ -75,7 +75,7 @@ class StepPanel:
     actions: Callable[[Saga, Record], list[StepAction]] = lambda saga, record: []
 
 
-#: (record kind, step key) -> the step's panel; each step's story adds its
+#: (record kind, step key) -> the step's panel; each step adds its
 #: own. Record kind: "character", "covenant" or "laboratory".
 PANELS: dict[tuple[str, str], StepPanel] = {}
 

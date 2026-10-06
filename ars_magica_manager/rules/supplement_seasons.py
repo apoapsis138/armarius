@@ -1,4 +1,4 @@
-"""Seasonal activities from the supplements (STORY-913, 918-923), planned on
+"""Seasonal activities from the supplements, planned on
 the character sheet.
 
 Each gives experience like a study season: a Source Quality in the Ability
@@ -80,7 +80,7 @@ _C = ("companion", "mythic companion")
 _M = ("magus",)
 
 ACTIVITIES: tuple[SimpleActivity, ...] = (
-    # STORY-913: more study sources.
+    # More study sources.
     SimpleActivity(
         "study_significato",
         "Study a significato",
@@ -143,7 +143,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         COVENANTS,
         "913",
     ),
-    # STORY-918: Mysteries and House activities.
+    # Mysteries and House activities.
     SimpleActivity(
         "undergo_initiation",
         "Undergo an Initiation",
@@ -186,7 +186,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         SOCIETATES,
         "918",
     ),
-    # STORY-919: crafts and livelihood.
+    # Crafts and livelihood.
     SimpleActivity(
         "working_season",
         "Working season (earn a living)",
@@ -262,7 +262,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "919",
         who=_C,
     ),
-    # STORY-920: scholars, physicians and artists.
+    # Scholars, physicians and artists.
     SimpleActivity(
         "attend_university",
         "Attend university",
@@ -333,7 +333,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "half the work's Aesthetic Quality",
         _C,
     ),
-    # STORY-921: religious seasons.
+    # Religious seasons.
     SimpleActivity(
         "worship",
         "Worship",
@@ -389,7 +389,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         "921",
         who=_C,
     ),
-    # STORY-922: animals.
+    # Animals.
     SimpleActivity(
         "tame_animal",
         "Tame and train an animal",
@@ -399,7 +399,7 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
         DE_TAMING,
         "922",
     ),
-    # STORY-923: travel and other.
+    # Travel and other.
     SimpleActivity(
         "travel",
         "Travel",

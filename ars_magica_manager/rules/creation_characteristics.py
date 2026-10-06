@@ -1,4 +1,4 @@
-"""Creation checks for the Characteristics step (STORY-1305): 7 points on
+"""Creation checks for the Characteristics step: 7 points on
 the cost table (+1 = 1, +2 = 3, +3 = 6; negatives refund the same), range
 -3..+3, Improved Characteristics adding 3 points a copy, Great and Poor
 (Characteristic) taking a score past +3 or -3, and a child's age modifier.
@@ -155,7 +155,7 @@ def points_text(
     saga: Saga, character: Character, scores: Mapping[str, int | None]
 ) -> str:
     """The points a Characteristics form's `scores` spend, as it is typed
-    (markup, STORY-1316): spent of the budget and what's left, each score's
+    (markup): spent of the budget and what's left, each score's
     cost, and any score bought past -3..+3."""
     found = lines(saga, character, scores)
     spent = sum(line.cost for line in found)

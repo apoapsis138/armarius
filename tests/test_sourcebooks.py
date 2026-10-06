@@ -1,4 +1,4 @@
-"""The sourcebooks in play for each saga (STORY-711): the shared book list,
+"""The sourcebooks in play for each saga: the shared book list,
 which entries are in play, the saga setting, and the pickers hiding the
 rest."""
 

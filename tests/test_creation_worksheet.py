@@ -1,4 +1,4 @@
-"""The Creation Worksheet (STORY-1302): opened from the sheet while In
+"""The Creation Worksheet: opened from the sheet while In
 Creation, one row per step with its mark, free movement between steps, a
 step's buttons, and Move to In Play."""
 
@@ -231,7 +231,7 @@ async def test_concept_adds_a_magus_virtues_and_opens_the_sheets_dialogs():
         assert "Add The Gift and Hermetic Magus" not in labels
         await _press_button(pilot, screen, "Edit House")
         # The dialog is the current screen before it has composed: wait for
-        # its title, not just for the screen to change (STORY-1126).
+        # its title, not just for the screen to change.
         assert await wait_until(
             pilot,
             lambda: app.screen is not screen and app.screen.query("#fields-title"),

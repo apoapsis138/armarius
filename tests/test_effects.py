@@ -1,4 +1,4 @@
-"""The shared effect lookup (STORY-804): one collector over characters,
+"""The shared effect lookup: one collector over characters,
 laboratories and covenants, how flat amounts and multipliers stack, the lab
 catalog on the shared Modifier shape, and Puissant as a character effect."""
 
@@ -164,7 +164,7 @@ def test_puissant_art_adds_to_the_score(vf_id, params, bonus):
 
 
 def test_a_fixed_bonus_or_penalty_shows_base_then_adjusted():
-    # STORY-212: "Magic Theory 5 (7)"; a Flaw's penalty the same way.
+    # "Magic Theory 5 (7)"; a Flaw's penalty the same way.
     assert sheet_text.adjusted_score(5, 2) == "5 (7)"
     assert sheet_text.adjusted_score(5, -1) == "5 (4)"
     assert sheet_text.adjusted_score(5, 0) == "5"
@@ -206,7 +206,7 @@ def test_every_rules_module_cites_its_source():
 
 
 def test_a_virtue_s_ability_or_characteristic_is_chosen_from_a_list():
-    # STORY-712: the valid values, leaving out one already taken as often as
+    # The valid values, leaving out one already taken as often as
     # the book allows; the picked value reaches the totals.
     from ars_magica_manager import catalog
     from ars_magica_manager.screens.prompts import param_choices

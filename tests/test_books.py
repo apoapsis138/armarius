@@ -36,7 +36,7 @@ def test_cost(book, expected):
 def test_lab_texts_and_tablets_are_bought_as_a_pool():
     """DE p. 180: 1 Build Point per 5 levels of Lab Texts, 2 per 5 of Casting
     Tablets, summed over the library first; whole points are spent, so the
-    last 5 levels round up and the rest is unspent (STORY-1126)."""
+    last 5 levels round up and the rest is unspent."""
     texts = [_book("Lab Text", spell_name="x", level=12)]
     assert bk.pool(texts, "Lab Text") == bk.Pool("Lab Text", 12, 3, 3)
     texts.append(_book("Lab Text", spell_name="y", level=3))  # uses the 3 left
@@ -180,8 +180,8 @@ def test_detail_text_field_order_and_warning():
         owner_id="cov1",
         description="**Rare**",
     )
-    # In play the Build Point cost and creation limits aren't shown
-    # (STORY-1314): they matter only while the covenant is In Creation.
+    # In play the Build Point cost and creation limits aren't shown:
+    # they matter only while the covenant is In Creation.
     in_play = bk.detail_text(saga, book)
     assert "Cost:" not in in_play and "covenant-creation limit" not in in_play
     saga.covenant("cov1").in_creation = True

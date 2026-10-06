@@ -1,4 +1,4 @@
-"""The supplement activities (STORY-913, 918-923)."""
+"""The supplement activities."""
 
 from ars_magica_manager import seasons
 from ars_magica_manager.models import Character, Saga, SeasonPlan, XpAllocation

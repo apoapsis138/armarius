@@ -1,4 +1,4 @@
-"""Mystery initiation totals (STORY-813)."""
+"""Mystery initiation totals."""
 
 import pytest
 

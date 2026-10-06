@@ -1,4 +1,4 @@
-"""Writing the app's files safely (STORY-1125)."""
+"""Writing the app's files safely."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Certamen totals (STORY-812), before the stress die:
+"""Certamen totals, before the stress die:
 
     Initiative = Quickness + Finesse
     Attack     = Presence + one Art (the Technique or the Form)

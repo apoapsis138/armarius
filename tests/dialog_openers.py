@@ -30,7 +30,7 @@ def contract_saga() -> Saga:
     saga.characters.append(
         Character(id="mag2", name="Brother Oda", type="magus", covenant_id="cov1")
     )
-    # A Longevity Ritual's Lab Text in the lab, for its owner (STORY-509):
+    # A Longevity Ritual's Lab Text in the lab, for its owner:
     # he is 10 (2 pawns) and can handle 2 (Magic Theory 1).
     magus = saga.character("mag1")
     assert magus is not None
@@ -91,7 +91,7 @@ async def _open_param_prompt(ws, vf_id: str | None = None) -> None:
 
 async def _open_lab_choice_prompt(ws) -> None:
     """Add a laboratory Flaw whose Specialization the owner chooses: the
-    picker asks for it (STORY-817)."""
+    picker asks for it."""
     view = ws._current_sheet_view()
     view.query_one(TabbedContent).active = "tab-lab-vf"
     # The tab is built as it is first shown.
@@ -258,7 +258,7 @@ OPENERS: dict[str, Opener] = {
     ),
     "add arcane connection": Opener("laboratory", lambda ws: ws._add_connection()),
     "add lab diary entry": Opener("laboratory", lambda ws: ws._add_diary_entry()),
-    # Seasons (STORY-903)
+    # Seasons
     "plan a season": Opener("character", lambda ws: ws._plan_season()),
     "add character diary entry": Opener(
         "character", lambda ws: ws._add_character_diary_entry()
@@ -266,7 +266,7 @@ OPENERS: dict[str, Opener] = {
     "add covenant diary entry": Opener(
         "covenant", lambda ws: ws._add_covenant_diary_entry()
     ),
-    # Enchanted devices (STORY-305)
+    # Enchanted devices
     "edit enchanted device": Opener(
         "laboratory", lambda ws: ws._edit_device(_device(ws, "dev-lab"))
     ),
@@ -279,7 +279,7 @@ OPENERS: dict[str, Opener] = {
             _device(ws, "dev-cov"), _device(ws, "dev-cov").effects[0]
         ),
     ),
-    # Added for STORY-1123 (forms that had only bespoke tests)
+    # Forms that had only bespoke tests
     "edit covenant reputation": Opener(
         "covenant",
         lambda ws: ws._edit_trait_at(
@@ -359,7 +359,7 @@ OPENERS: dict[str, Opener] = {
         "laboratory",
         _pick(lambda ws: ws._edit_named("section-lab-rooms"), "lab-rooms-list"),
     ),
-    # Creation Worksheet (STORY-1306)
+    # Creation Worksheet
     "spend creation xp": Opener(
         "character",
         lambda ws: ws._spend_creation_xp(

@@ -1,4 +1,4 @@
-"""Creation checks (STORY-1301): the public face of rules.creation_base
+"""Creation checks: the public face of rules.creation_base
 (Check, the step lists and registries, checks(), can_move_to_play()),
 with every step's checks registered. Import this, not the step modules.
 """

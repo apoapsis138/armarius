@@ -1,4 +1,4 @@
-"""Scores derived from xp (STORY-806): the Advancement Table and the
+"""Scores derived from xp: the Advancement Table and the
 migration of saves that typed a score beside the xp."""
 
 import pytest

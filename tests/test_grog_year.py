@@ -1,4 +1,4 @@
-"""The grogs' yearly update (STORY-924)."""
+"""The grogs' yearly update."""
 
 from ars_magica_manager import seasons
 from ars_magica_manager.models import Ability, Character, GrogYear, Saga

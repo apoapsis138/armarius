@@ -1,4 +1,4 @@
-"""Covenant and laboratory creation checks (STORY-1312, 1313).
+"""Covenant and laboratory creation checks.
 
 A new covenant picks a Power Level (Low 0-300 Build Points, Medium
 300-1250, High 1250-2500, Legendary 2500+), which also caps the level of
@@ -9,12 +9,10 @@ covenant owns beyond that is priced in Build Points: its library, vis
 sources and stocks, enchanted items, starting laboratories, and (with
 Covenants in play) money. Its Boons and Hooks must balance.
 
-A starting laboratory: each magus's first standard lab is free, a spare
-lab costs 50 (a magus the covenant says goes without one refunds 50;
-STORY-1318), plus Size x 20 and each lab
-Virtue (Minor 10, Major 20). Its builder needs Magic Theory 3; Safety is
-Refinement less the occupied Size; its Virtues less Flaws fit in Size +
-Refinement.
+A starting laboratory: each magus's first standard lab is free, a spare lab costs 50 (a
+magus the covenant says goes without one refunds 50), plus Size x 20 and each lab Virtue
+(Minor 10, Major 20). Its builder needs Magic Theory 3; Safety is Refinement less the
+occupied Size; its Virtues less Flaws fit in Size + Refinement.
 
 Rules: reference/rules-engine-reference.md §14 Covenant creation
 baseline; Power level; Build Point costs; Boons and Hooks. §9 Setting up a
@@ -451,7 +449,7 @@ def boon_hook_checks(saga: Saga, record: Record) -> list[Check]:
     return found
 
 
-# -- a starting laboratory (STORY-1313) --
+# -- a starting laboratory --
 
 
 @check("setup", LABORATORY_CHECKS)

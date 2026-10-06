@@ -1,4 +1,4 @@
-"""One-season lab work (STORY-907): extracting vis, fixing an Arcane
+"""One-season lab work: extracting vis, fixing an Arcane
 Connection and Longevity Rituals, planned on the laboratory's Planning tab."""
 
 from support import strip_markup, wait_until
@@ -176,7 +176,7 @@ def test_a_longevity_ritual_gives_its_subject_an_aging_modifier():
         magus.aging.longevity_by,
     ) == (3, 1220, "Tiberius")
     assert magus.raw_vis == {"creo": 3, "vim": 1}
-    # The ritual's raw Lab Text (STORY-508): Creo Corpus, its Lab Total.
+    # The ritual's raw Lab Text: Creo Corpus, its Lab Total.
     text = saga.books[-1]
     assert text.name == "Lab Text: Longevity Ritual for Tiberius"
     assert (text.text_kind, text.technique, text.form, text.level) == (

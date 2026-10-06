@@ -1,4 +1,4 @@
-"""STORY-1011: text fields are wells with a background of their own, so a
+"""Text fields are wells with a background of their own, so a
 form shows where to type; the field being typed in lifts. The app's own
 theme variables resolve under every theme, Textual's built-ins included."""
 
@@ -73,7 +73,7 @@ async def test_number_fields_are_short_wells():
         assert name.region.width > 10
 
 
-# -- STORY-1012: a ladder of emphasis -------------------------------------
+# -- A ladder of emphasis -------------------------------------
 
 
 def test_aligned_labels_recede_and_values_stay_plain():
@@ -106,7 +106,7 @@ async def test_dialog_titles_are_ruled_headings():
         assert title.styles.border_bottom[0] == "solid"
 
 
-# -- STORY-1013: contrast ---------------------------------------------------
+# -- Contrast ---------------------------------------------------
 
 #: Text tokens and the backgrounds they're shown on.
 _TEXT = (
@@ -214,7 +214,7 @@ async def test_a_focused_entity_name_stays_readable(theme):
         assert _contrast(colour.hex, styles.background.hex) >= 4.5
 
 
-# -- STORY-1014: scores in columns ------------------------------------------
+# -- Scores in columns ------------------------------------------
 
 
 def test_ability_scores_and_xp_line_up_in_columns():
@@ -255,7 +255,7 @@ def test_ability_scores_and_xp_line_up_in_columns():
     assert all("Score" not in line for line in headers[1:])
 
 
-# -- STORY-1015: glyphs for problems and to-dos -----------------------------
+# -- Glyphs for problems and to-dos -----------------------------
 
 
 def test_problems_and_todos_lead_with_their_glyph_and_colour():

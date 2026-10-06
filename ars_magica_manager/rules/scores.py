@@ -49,7 +49,7 @@ def botch_dice_change(
     virtues_flaws: Sequence[VirtueFlawInstance], activities: Sequence[str]
 ) -> tuple[int, list[str]]:
     """The botch dice Virtues and Flaws add or take away for a roll that is
-    any of `activities` (STORY-820), and the Virtues and Flaws they come
+    any of `activities`, and the Virtues and Flaws they come
     from."""
     found = [
         e

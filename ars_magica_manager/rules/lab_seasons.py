@@ -1,4 +1,4 @@
-"""Lab work as a season (STORY-901): inventing a spell, from scratch or from
+"""Lab work as a season: inventing a spell, from scratch or from
 a Lab Text, in the magus's laboratory.
 
 - The Lab Total is the spell's Technique + Form total (each Art at the
@@ -12,7 +12,7 @@ a Lab Text, in the magus's laboratory.
 - From a Lab Text: one season, if the Lab Total is at least the level.
 - Every lab season gives Exposure (2 xp) in Magic Theory.
 
-One-season lab work (STORY-907):
+One-season lab work:
 
 - Extracting vis: Creo Vim Lab Total / 10 pawns of Vim (rounded up), only
   in a Magic aura.
@@ -137,7 +137,7 @@ DIFFICULT_LONGEVITY_SOURCE = (
 @dataclass
 class LabWork:
     """What a season of lab work does: the Lab Total and, for inventing, the
-    points before and after. One-season work without a spell (STORY-907)
+    points before and after. One-season work without a spell
     has `spell` None, level 0 and is finished; its results are below."""
 
     spell: Spell | None
@@ -154,19 +154,19 @@ class LabWork:
     #: A Longevity Ritual: its subject and aging-roll modifier.
     subject: Character | None = None
     longevity: int = 0
-    #: Enchanting (STORY-905): the device and effect worked on, a charged
+    #: Enchanting: the device and effect worked on, a charged
     #: item's charges, and the effects an investigation found.
     device: EnchantedDevice | None = None
     effect: InstilledEffect | None = None
     charges: int = 0
     revealed: list[str] = field(default_factory=list)
-    #: Familiar work (STORY-908): the familiar, and the bond power instilled.
+    #: Familiar work: the familiar, and the bond power instilled.
     familiar: Familiar | None = None
     power: BondPower | None = None
-    #: Decoding (STORY-914): (reader id, the author's key -- see
+    #: Decoding: (reader id, the author's key -- see
     #: book_seasons.author_key --, level) readable when done.
     access: tuple[str, str, int] | None = None
-    #: Work on the laboratory (STORY-915): setting up its second season, the
+    #: Work on the laboratory: setting up its second season, the
     #: Refinement it will have (and had), and the Virtues/Flaws the season's
     #: roll gains or loses.
     second_season: bool = False
@@ -174,7 +174,7 @@ class LabWork:
     old_refinement: int = 0
     gains_vf: list[str] = field(default_factory=list)
     loses_vf: list[str] = field(default_factory=list)
-    #: Stabilizing (STORY-916): the Discovery's magnitude.
+    #: Stabilizing: the Discovery's magnitude.
     research_magnitude: int = 0
     #: Experimental effects an invention carries to its spell.
     carried_effects: list[str] = field(default_factory=list)
@@ -218,7 +218,7 @@ def lab_texts(saga: Saga, magus: Character) -> list[Book]:
 def lab_texts_at_hand(saga: Saga, magus: Character) -> list[Book]:
     """Every spell's Lab Text `magus` can get at and doesn't know the spell
     of -- readable or not (a picker shows them all, tagging the ones to
-    decode first; STORY-508)."""
+    decode first)."""
     known = {k.spell_id for k in magus.spells_known}
     return [
         b
@@ -618,7 +618,7 @@ def _one_season_work(
 
 @dataclass(frozen=True)
 class RitualAgain:
-    """A Longevity Ritual performed again from its Lab Text (STORY-509):
+    """A Longevity Ritual performed again from its Lab Text:
     who it is for, the aging-roll modifier it restores, and the vis."""
 
     subject: Character

@@ -1,4 +1,4 @@
-"""Season records (STORY-911): the summary shown after advancing the season,
+"""Season records: the summary shown after advancing the season,
 and the saga's Seasons view listing past seasons."""
 
 from __future__ import annotations

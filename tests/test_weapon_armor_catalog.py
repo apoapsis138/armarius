@@ -1,4 +1,4 @@
-"""The Weapons & Armor catalog (STORY-709): the Definitive Edition's
+"""The Weapons & Armor catalog: the Definitive Edition's
 Armor, Melee and Missile tables (Chapter 11) and Natural Weapons table
 (Chapter 13), row for row."""
 
