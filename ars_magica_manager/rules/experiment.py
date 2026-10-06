@@ -62,6 +62,9 @@ SIDE_EFFECTS = {
     9: "major side benefit",
     10: "fatal flaw",
 }
+#: The Modified Effect sub-table (an Extraordinary Result of 11): one simple
+#: die + the risk modifier, read against each row's top; past the last, the
+#: effect is changed completely (SOURCE, Extraordinary Results Chart).
 MODIFIED = (
     (3, "reduced range, duration, target or potency"),
     (6, "increased range, duration, target or potency"),
@@ -257,8 +260,10 @@ def _apply(result: Extraordinary, roll: int, rng, risk, art, saga, depth) -> Non
             )
         result.results.append(f"{roll}: a Discovery: {what}.")
     elif roll == 11:
+        # One die for the whole table (B25: it was rolled again for each row).
+        modified_roll = dice.simple_die(rng) + risk
         modified = next(
-            (text for top, text in MODIFIED if dice.simple_die(rng) + risk <= top),
+            (text for top, text in MODIFIED if modified_roll <= top),
             "effect changed completely (same Technique and Form, similar level)",
         )
         result.results.append(f"{roll}: a modified effect ({modified}).")

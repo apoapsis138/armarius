@@ -10,6 +10,13 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.12.1 — 2026-10-06
+
+- Fixes an experiment's Extraordinary Result of 11 (a modified effect):
+  one die is now rolled for the whole Modified Effect table, as the book
+  says, instead of a new die for each row checked, which skewed the odds
+  of each kind of change.
+
 ## 2.12.0 — 2026-10-06
 
 - First step towards players and the storyguide sharing a saga: the app
