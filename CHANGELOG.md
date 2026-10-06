@@ -10,6 +10,16 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## 2.12.0 — 2026-10-06
+
+- First step towards players and the storyguide sharing a saga: the app
+  can now be opened in a web browser from another computer, with
+  `uv run python tools/serve.py --host <address>`. Each browser tab gets
+  its own copy of the app. This is an early test: there is no sign-in
+  yet, so only use it on a private network (your home network,
+  Tailscale or ZeroTier), and two people editing at once can still
+  overwrite each other's changes.
+
 ## 2.11.3 — 2026-10-05
 
 - Fixes a covenant's starting laboratories taking 50 Build Points off for
