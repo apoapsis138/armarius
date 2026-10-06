@@ -243,7 +243,7 @@ Only the storyguide (your own window, or someone signed in as Storyguide) can ma
 # Signing in
 <!-- help: sign-in -->
 
-When the storyguide hosts the app, opening a saga in a browser first asks who you are: type your Name and the Passcode the storyguide gave you, then Sign in. Name is not case-sensitive; the passcode is.
+When the storyguide hosts the app, opening a saga in a browser (or over SSH) first asks who you are: type your Name and the Passcode the storyguide gave you, then Sign in. Name is not case-sensitive; the passcode is.
 
 If the saga has no players yet, it can't be opened from a browser: the storyguide adds players on the saga's [Players](help:players) node. Your name is shown in the header beside the saga's date while you're signed in. Going back to the saga list (Escape) signs you out.
 

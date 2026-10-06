@@ -332,7 +332,10 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
     def compose(self) -> ComposeResult:
         with Vertical(id="fields-dialog", classes="dialog-box"):
             yield Label(self.title_text, id="fields-title", classes="dialog-title")
-            with VerticalScroll(id="fields-scroll"):
+            # The scroll itself never takes focus, so the first field has it
+            # as the form opens and typing goes there (STORY-1408: found
+            # signing in over SSH, where the first letters went nowhere).
+            with VerticalScroll(id="fields-scroll", can_focus=False):
                 for spec in self.fields:
                     with Vertical(classes="fd-field", id=f"fdw-{spec.key}"):
                         yield from self._widgets(spec)

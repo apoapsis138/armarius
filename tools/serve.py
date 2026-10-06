@@ -1,12 +1,13 @@
-"""Host the app for players' browsers (STORY-1402 spike).
+"""Host the app for players (FEAT-14).
 
-    uv run python tools/serve.py [--host ADDRESS] [--port N]
+    uv run python tools/serve.py [--host ADDRESS] [--port N] [--ssh-port N]
 
-Serves the app with textual-serve: each browser tab that opens the page gets
-its own copy of the app (a separate process), all using this computer's data
+Serves the app for browsers with textual-serve, and, with --ssh-port, for
+SSH clients too (STORY-1408). Each browser tab or SSH session gets its own
+copy of the app (a separate process), all using this computer's data
 folder. It listens on localhost unless another address is given -- the
-storyguide's Tailscale or ZeroTier address, never a public one. There is no
-sign-in yet (STORY-1403), so anyone who can reach the address has the app.
+storyguide's Tailscale or ZeroTier address, never a public one. Who each
+player is comes from the app's own sign-in (its Players node).
 """
 
 from __future__ import annotations
@@ -17,71 +18,58 @@ import socket
 import sys
 from pathlib import Path
 
+from aiohttp import web
 from textual_serve import server as serve_module
-from textual_serve.app_service import AppService
 from textual_serve.server import Server
 
-MAIN = Path(__file__).resolve().parent.parent / "main.py"
+REPO = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO))  # run as a script: the package is beside tools/
+from ars_magica_manager import hosting
 
+MAIN = REPO / "main.py"
 
-class _AppService(AppService):
-    """Ends the app copy when its browser tab goes. textual-serve asks the
-    copy to quit and waits for it forever, but on Windows (seen in the
-    STORY-1402 spike) the copy never quits, so each closed tab left a copy
-    running. Here it gets a moment to quit, then it is ended."""
-
-    async def stop(self) -> None:
-        if self._task is None:
-            return
-        await self._download_manager.cancel_app_downloads(
-            app_service_id=self.app_service_id
-        )
-        await self.send_meta({"type": "quit"})
-        try:
-            await asyncio.wait_for(asyncio.shield(self._task), timeout=2)
-        except TimeoutError:
-            process = self._process
-            if process is not None and process.returncode is None:
-                if sys.platform == "win32":
-                    # The command runs through a shell: end the whole tree.
-                    killer = await asyncio.create_subprocess_exec(
-                        "taskkill",
-                        "/PID",
-                        str(process.pid),
-                        "/T",
-                        "/F",
-                        stdout=asyncio.subprocess.DEVNULL,
-                        stderr=asyncio.subprocess.DEVNULL,
-                    )
-                    await killer.wait()
-                else:
-                    process.kill()
-            await self._task
-        self._task = None
-
-
-# textual-serve builds each copy's service by this name.
-setattr(serve_module, "AppService", _AppService)  # noqa: B010 (pyright: not exported)
+# textual-serve builds each browser copy's service by this name.
+setattr(serve_module, "AppService", hosting.HostedAppService)  # noqa: B010 (pyright: not exported)
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Host the app for players' browsers.")
+    parser = argparse.ArgumentParser(description="Host the app for players.")
     parser.add_argument(
         "--host", default="localhost", help="address to listen on (localhost)"
     )
-    parser.add_argument("--port", type=int, default=8000, help="port (8000)")
+    parser.add_argument("--port", type=int, default=8000, help="browser port (8000)")
+    parser.add_argument(
+        "--ssh-port",
+        type=int,
+        default=None,
+        help="also take SSH clients on this port (off unless given; try 2222)",
+    )
     args = parser.parse_args()
     command = f'"{sys.executable}" "{MAIN}"'
+    server = Server(command, host=args.host, port=args.port, title="Ars Magica Manager")
+    server.initialize_logging()
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     try:
-        Server(
-            command, host=args.host, port=args.port, title="Ars Magica Manager"
-        ).serve()
+        if args.ssh_port is not None:
+            loop.run_until_complete(
+                hosting.start_ssh_server(command, args.host, args.ssh_port)
+            )
+            print(f"SSH: ssh -p {args.ssh_port} player@{args.host}")
+        web.run_app(
+            server._make_app(),
+            host=args.host,
+            port=args.port,
+            loop=loop,
+            handle_signals=False,
+            print=lambda *args: None,
+        )
     except OSError as error:
         sys.exit(
-            f"Can't listen on {args.host}:{args.port} ({error.strerror or error}).\n"
+            f"Can't listen on {args.host} ({error.strerror or error}).\n"
             f"This computer's addresses: {', '.join(_addresses()) or 'none found'}.\n"
             "Use one of those (your Tailscale or ZeroTier one to reach players), "
-            "or another --port if that one is in use."
+            "or another --port / --ssh-port if that one is in use."
         )
 
 

@@ -190,6 +190,13 @@ accept ipsrc ADDRESS/32 and ipprotocol tcp and sport 8000;
 drop;
 ```
 
+### Over SSH instead of a browser
+<!-- help: guide-hosting-ssh -->
+
+A player who prefers a terminal can connect with SSH instead. Add `--ssh-port 2222` when you start hosting (`uv run python tools/serve.py --host ADDRESS --ssh-port 2222`); the browser page keeps working alongside. The SSH server is the app's own: no Windows accounts are involved, and any user name is accepted, because who the player is comes from the same sign-in as in a browser. The first time, the app makes a host key (`ssh_host_key` in your data folder); players' SSH clients ask once whether to trust it.
+
+Players connect with `ssh -p 2222 player@ADDRESS` from Windows Terminal (Windows 10 and 11 include `ssh`), macOS Terminal or any Linux terminal, and get the same saga list and sign-in. Their terminal should be at least 120 columns by 45 rows and support true colour and Unicode: Windows Terminal, iTerm2, macOS Terminal and the usual Linux terminals do; the old Windows console does not. Over SSH, Export isn't offered, since the file could only land on your computer.
+
 ### What players see
 <!-- help: guide-hosting-players -->
 

@@ -18,6 +18,7 @@ are not named; each named version's heading carries its name.
 
 | Name | Versions | What it brought |
 | --- | --- | --- |
+| Sodales | 2.12.0 to 2.18.0 | The troupe shares a saga: hosted for players' browsers and SSH, with sign-in and safe saves |
 | Foundations | 2.11.0 | Your data in its own folder, packaging, automatic checks |
 | Summa | 2.10.0 | How-to guides in Help |
 | Scriptorum II | 2.9.0 | The readability pass |
@@ -37,7 +38,22 @@ many books; the *computus* was the reckoning of dates; a Book of Hours
 follows the labours of the seasons; the Gauntlet makes an apprentice a
 magus; the Hermetic Techniques are verbs (*verbum*); an *exemplar* was the
 copy scribes worked from; a *glossa* is a note in the margin; a *summa*
-teaches a whole subject.
+teaches a whole subject; *sodales* are fellow magi of the Order, as
+the troupe's players are to the storyguide.
+
+## 2.18.0 — 2026-10-06 — Sodales
+
+- Players can also reach a hosted saga over SSH: start hosting with
+  `--ssh-port 2222` and they connect with `ssh -p 2222 player@ADDRESS`
+  from Windows Terminal, macOS or Linux, to the same saga list and
+  sign-in as in a browser. No accounts on your computer are involved.
+  Export isn't offered over SSH, since the file could only land on the
+  host. Help's hosting guide says how.
+- Every form now opens with its first field ready to type into. Before,
+  the first letters typed went nowhere until you pressed Tab or clicked
+  a field.
+- Sodales (2.12.0 to 2.18.0) is the troupe release: the storyguide hosts
+  the saga and players sign in from their own computers.
 
 ## 2.17.1 — 2026-10-06
 

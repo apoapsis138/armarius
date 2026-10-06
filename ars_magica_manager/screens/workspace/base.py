@@ -45,6 +45,7 @@ from ... import (
     character_templates,
     creation,
     deletion,
+    hosting,
     presence,
     seasons,
     sourcebooks,
@@ -1017,7 +1018,12 @@ class WorkspaceBase(Screen[None]):
                 and bool(vis.destinations(self.saga, holder))
             )
         if action == "export_record":
-            return self._record_to_export() is not None and self._on_record()
+            # Over SSH there is nowhere to send the file (STORY-1408).
+            return (
+                hosting.transport() != "ssh"
+                and self._record_to_export() is not None
+                and self._on_record()
+            )
         if action == "import_data":
             return (
                 self.selected_kind == NodeKind.SAGA
