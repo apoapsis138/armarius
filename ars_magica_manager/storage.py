@@ -9,7 +9,8 @@ import re
 import time
 from collections.abc import Callable, Iterable, Iterator
 from contextlib import contextmanager
-from dataclasses import asdict
+from dataclasses import asdict, is_dataclass
+from dataclasses import fields as dataclass_fields
 from pathlib import Path
 from typing import Any
 
@@ -73,6 +74,10 @@ guard: (
     Callable[[dict[str, Any], dict[str, Any]], tuple[dict[str, Any], list[str]]] | None
 ) = None
 
+#: Who is saving from this copy (a signed-in player's name; "" for the
+#: storyguide's own window), recorded in the saga as Saga.saved_by.
+saved_by: str = ""
+
 #: Where save_saga last kept this copy's value over another copy's newer
 #: one ("characters[mag1].name", ...), for the saga last saved.
 last_conflicts: list[str] = []
@@ -85,6 +90,7 @@ def save_saga(saga: Saga) -> Path:
     another copy's changes stay. Where both changed the same value, this
     save's wins (listed in last_conflicts)."""
     saga.app_version = __version__
+    saga.saved_by = saved_by
     path = saga_path(saga.id)
     ours = asdict(saga)
     with _saga_lock(saga.id):
@@ -106,6 +112,68 @@ def save_saga(saga: Saga) -> Path:
     _last_seen[str(path)] = (text, data, ours)
     last_conflicts[:] = conflicts
     return path
+
+
+def reload_into(saga: Saga) -> list[tuple[str, str]] | None:
+    """Bring `saga`, as this copy holds it, up to date with its file after
+    another copy saved it (STORY-1406), keeping its objects -- the sheets on
+    show hold them -- and updating them in place. Returns the records that
+    changed, as (list, id) pairs such as ("characters", "mag1"), with
+    ("saga", "") for the saga's own fields; None when the file is as this
+    copy last saw it (or can't be read)."""
+    path = saga_path(saga.id)
+    seen = _last_seen.get(str(path))
+    text = _read_text(path)
+    if text is None or (seen is not None and seen[0] == text):
+        return None
+    try:
+        fresh = _from_data(json.loads(text))
+    except ValueError, TypeError, KeyError:
+        return None
+    changed = _update_in_place(saga, fresh)
+    data = asdict(saga)
+    _last_seen[str(path)] = (text, data, data)
+    return changed
+
+
+def _update_in_place(saga: Saga, fresh: Saga) -> list[tuple[str, str]]:
+    """Make `saga` hold `fresh`'s data: each list of records keeps the
+    objects of the records still there (their fields updated), drops the
+    ones gone and adds the new ones, in `fresh`'s order."""
+    changed: list[tuple[str, str]] = []
+    for f in dataclass_fields(Saga):
+        old, new = getattr(saga, f.name), getattr(fresh, f.name)
+        if old == new:
+            continue
+        if _is_records(old) and _is_records(new):
+            by_id = {r.id: r for r in old}
+            kept = []
+            for record in new:
+                existing = by_id.get(record.id)
+                if existing is None:
+                    kept.append(record)
+                    changed.append((f.name, record.id))
+                    continue
+                if existing != record:
+                    for rf in dataclass_fields(record):
+                        setattr(existing, rf.name, getattr(record, rf.name))
+                    changed.append((f.name, record.id))
+                kept.append(existing)
+            new_ids = {r.id for r in new}
+            changed += [(f.name, r.id) for r in old if r.id not in new_ids]
+            old[:] = kept
+        else:
+            setattr(saga, f.name, new)
+            if f.name not in ("app_version", "saved_by"):
+                changed.append(("saga", ""))
+    return changed
+
+
+def _is_records(value: object) -> bool:
+    return isinstance(value, list) and all(
+        is_dataclass(item) and isinstance(getattr(item, "id", None), str)
+        for item in value
+    )
 
 
 def _read_text(path: Path) -> str | None:

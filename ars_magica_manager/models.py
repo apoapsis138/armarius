@@ -2906,6 +2906,10 @@ class Saga:
     #: The app version that last saved this saga (storage.save_saga sets it;
     #: "" for a save older than versioning), for upgrading old saves later.
     app_version: str = ""
+    #: Who last saved the saga (storage.save_saga sets it, from
+    #: storage.saved_by): a signed-in player's name, else "" for the
+    #: storyguide. Shown when another copy picks up the change (STORY-1406).
+    saved_by: str = ""
 
     def covenant(self, covenant_id: str | None) -> Covenant | None:
         """The covenant with this id, if there is one."""

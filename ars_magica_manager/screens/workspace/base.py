@@ -10,6 +10,7 @@ import io
 import json
 import random
 import re
+import uuid
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, replace
 from dataclasses import field as dataclass_field
@@ -44,6 +45,7 @@ from ... import (
     character_templates,
     creation,
     deletion,
+    presence,
     seasons,
     sourcebooks,
     storage,
@@ -268,6 +270,10 @@ _HELP_PAGES: dict[NodeKind, str] = {
     NodeKind.HOUSE_RULES: "house-rules",
     NodeKind.PLAYERS: "players",
 }
+
+#: How often, in seconds, a hosted saga's copies look for each other's saves
+#: and say who has which record open (STORY-1406).
+_SHARED_TICK = 2.0
 
 #: What only the storyguide may do, whatever a player owns (STORY-1404):
 #: making records, the saga's calendar, reading files on the host's disk,
@@ -587,12 +593,112 @@ class WorkspaceBase(Screen[None]):
         self._rebuild_tree()
         if not self._is_storyguide():
             storage.guard = self._guard_save
+        player = self._signed_in()
+        storage.saved_by = player.name if player is not None else ""
+        if self.saga.players:
+            # Others may have the saga open (a hosted saga, STORY-1406).
+            self._session = uuid.uuid4().hex
+            self.set_interval(_SHARED_TICK, self._shared_tick)
         await self._show_saga_detail()
 
     def on_unmount(self) -> None:
         # Back to the saga list: whoever signed in to this saga is signed out.
         self.app.player = None  # type: ignore[attr-defined]
         storage.guard = None
+        storage.saved_by = ""
+        if self._session is not None:
+            presence.leave(self._session)
+
+    # -- other copies of a hosted saga (STORY-1406) --
+
+    #: This copy's presence id while the saga has players (presence.py).
+    _session: str | None = None
+    #: Who this copy last said is also on the open record, so each is
+    #: announced once.
+    _also_here: tuple[str | None, frozenset[str]] = (None, frozenset())
+
+    def _who(self) -> str:
+        player = self._signed_in()
+        return player.name if player is not None else ""
+
+    def _open_record_key(self) -> str | None:
+        """The record on show, as "characters:mag1", for presence."""
+        records = {
+            NodeKind.CHARACTER: ("characters", self.selected_character),
+            NodeKind.FAMILIAR: ("familiars", self.selected_familiar),
+            NodeKind.LABORATORY: ("laboratories", self.selected_laboratory),
+            NodeKind.COVENANT: ("covenants", self.selected_covenant),
+        }
+        kind, record = records.get(self.selected_kind, ("", None))
+        return f"{kind}:{record.id}" if record is not None else None
+
+    async def _shared_tick(self) -> None:
+        """Every few seconds: pick up another copy's save, and say who else
+        has the open record."""
+        changed = storage.reload_into(self.saga)
+        if changed:
+            await self._show_reloaded(changed)
+        if self._session is None:
+            return
+        record = self._open_record_key()
+        presence.note(self._session, self.saga.id, self._who(), record)
+        others = frozenset(presence.others_on(self._session, self.saga.id, record))
+        last_record, announced = self._also_here
+        new = others - announced if record == last_record else others
+        self._also_here = (record, others)
+        if new and record is not None:
+            name = self._shown_name()
+            self.notify(
+                f"{escape(', '.join(sorted(new)))} "
+                f"{'is' if len(new) == 1 else 'are'} also on {escape(name)}.",
+                timeout=6,
+            )
+
+    async def _show_reloaded(self, changed: list[tuple[str, str]]) -> None:
+        """Show what another copy saved: the tree, the header, and the sheet
+        on show refreshed in place (its tab and chosen rows stay), or the
+        saga if its record is gone."""
+        who = self.saga.saved_by or "The storyguide"
+        record = self._open_record_key()
+        open_changed = record is not None and tuple(record.split(":", 1)) in changed
+        gone = record is not None and not self._open_record_exists()
+        self._update_saga_clock()
+        tree = self._nav_tree()
+        current = tree.cursor_node.data if tree.cursor_node is not None else None
+        self._rebuild_tree()
+        if gone:
+            tree.select_node(tree.root)
+            self.notify(f"{escape(who)} deleted what you had open.", severity="warning")
+            return
+        node = _tree_node_with_data(tree, current) if current is not None else None
+        if node is not None:
+            tree.move_cursor(node)
+        view = self._current_sheet_view()
+        if view is not None:
+            for section in list(view._refreshers):
+                view.refresh_section(section)
+        elif node is not None:
+            tree.select_node(node)  # a list node: show it afresh
+        for screen in self.app.screen_stack:
+            record_changed = getattr(screen, "record_changed", None)
+            if callable(record_changed):
+                record_changed()
+        if open_changed:
+            self.notify(
+                f"{escape(who)} changed {escape(self._shown_name())}; reloaded."
+            )
+        else:
+            self.notify(f"Updated by {escape(who)}.", timeout=3)
+
+    def _open_record_exists(self) -> bool:
+        records = {
+            NodeKind.CHARACTER: (self.saga.characters, self.selected_character),
+            NodeKind.FAMILIAR: (self.saga.familiars, self.selected_familiar),
+            NodeKind.LABORATORY: (self.saga.laboratories, self.selected_laboratory),
+            NodeKind.COVENANT: (self.saga.covenants, self.selected_covenant),
+        }
+        listed, record = records.get(self.selected_kind, ([], None))
+        return record is None or any(r is record for r in listed)
 
     def _guard_save(
         self, before: dict[str, Any], after: dict[str, Any]

@@ -39,6 +39,14 @@ magus; the Hermetic Techniques are verbs (*verbum*); an *exemplar* was the
 copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject.
 
+## 2.17.0 — 2026-10-06
+
+- When several people have a hosted saga open, each one sees the others'
+  changes within a couple of seconds: the sheet on show updates where it
+  is, with a note such as "Ana changed Corvinus; reloaded". If two people
+  open the same character, both are told. A saga with no players works
+  exactly as before.
+
 ## 2.16.0 — 2026-10-06
 
 - Players signed in to a hosted saga now change only what is theirs: the

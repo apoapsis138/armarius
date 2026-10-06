@@ -247,4 +247,6 @@ When the storyguide hosts the app, opening a saga in a browser first asks who yo
 
 If the saga has no players yet, it can't be opened from a browser: the storyguide adds players on the saga's [Players](help:players) node. Your name is shown in the header beside the saga's date while you're signed in. Going back to the saga list (Escape) signs you out.
 
+While several people have the saga open, each one's saves keep everyone else's changes, and within a few seconds the others' screens show them: the sheet on show updates where it is (with a note such as "Ana changed Corvinus; reloaded"), and if two people open the same character, both are told ("Ana is also on Corvinus"). If the record you have open is deleted elsewhere, the saga is shown instead.
+
 **See also:** [Players](help:players), [Saga picker](help:saga-picker)
