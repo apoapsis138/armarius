@@ -22,7 +22,12 @@ Ruleset reference: [Ars Magica – Definitive Edition (Core Rules)](https://gith
   edit it — and grow toward actively *running* seasonal activities (Study,
   Lab Activities) on top of that data.
 - Support multiple independent sagas/covenants in one tool.
-- Stay a single-user, GM-facing tool (no auth, no sharing/sync).
+- A GM-facing tool that the storyguide can also host for the troupe
+  (FEAT-14, decided 2026-10-06): the storyguide's copy serves the saga to
+  players' browsers (textual-serve, tools/serve.py) over a private network
+  the storyguide picks; players sign in with a name and passcode kept in
+  the saga. One computer, one set of saga files: no sync between copies.
+  Plan: reference/feat-14-plan.md.
 
 **Non-Goals (for now)**
 - Combat resolution (initiative, attack/damage rolls, wound tracking as a
@@ -32,7 +37,8 @@ Ruleset reference: [Ars Magica – Definitive Edition (Core Rules)](https://gith
   generation, supernatural interactions) beyond a character or lab simply
   recording an aura rating or a realm-related Virtue/Flaw.
 - Story/Saga narrative tooling (that's Solo's domain).
-- Multi-user/troupe sharing.
+- Sharing by syncing saga files between computers, or a separate server
+  (see FEAT-14: the storyguide hosts instead).
 
 **Scoping principle:** if it's a field on a Character, Covenant, or
 Laboratory sheet, it's in scope, even if we don't yet compute anything from

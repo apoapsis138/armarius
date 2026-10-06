@@ -922,5 +922,17 @@
         "slash": "(nothing)"
       }
     }
+  },
+  "players": {
+    "(node)": {
+      "active": "section-players",
+      "keys": {
+        "a": "FieldsDialog: Add a Player",
+        "e": "notice: No players yet: 'a' adds one.",
+        "d": "notice: No players yet: 'a' adds one.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    }
   }
 }

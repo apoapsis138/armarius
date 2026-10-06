@@ -54,6 +54,7 @@ from ... import house_rules as hr
 from ... import inhabitants as inh
 from ... import lab_texts as lt
 from ... import laboratories as lab_rules
+from ... import players as pl
 from ... import sheet_text as st
 from ... import spells as spl
 from ...markup import escape
@@ -68,6 +69,7 @@ from ...models import (
     Familiar,
     GrogYear,
     Laboratory,
+    Player,
     Saga,
     ScoredTrait,
     SeasonPlan,
@@ -115,6 +117,7 @@ from ..sheets import (
     LAB_FEATURE_SECTIONS,
     LAB_TEXTS_SECTION,
     LAB_VF_SECTIONS,
+    PLAYERS_SECTION,
     SPELL_SECTION,
     BookListView,
     CharacterSheetView,
@@ -122,6 +125,7 @@ from ..sheets import (
     FamiliarSheetView,
     HouseRulesView,
     LaboratorySheetView,
+    PlayersView,
     SheetView,
     SpellListView,
 )
@@ -242,6 +246,7 @@ class NodeKind(StrEnum):
     LABORATORY = "laboratory"
     SPELLS = "spells"
     HOUSE_RULES = "house_rules"
+    PLAYERS = "players"
     SEASONS = "seasons"
     BOOK_GROUP = "book_group"
 
@@ -259,6 +264,7 @@ _HELP_PAGES: dict[NodeKind, str] = {
     NodeKind.SEASONS: "seasons",
     NodeKind.SPELLS: "spells",
     NodeKind.HOUSE_RULES: "house-rules",
+    NodeKind.PLAYERS: "players",
 }
 
 #: Each sheet's own section: the top panel that names the record. With
@@ -546,12 +552,18 @@ class WorkspaceBase(Screen[None]):
         self._rebuild_tree()
         await self._show_saga_detail()
 
+    def on_unmount(self) -> None:
+        # Back to the saga list: whoever signed in to this saga is signed out.
+        self.app.player = None  # type: ignore[attr-defined]
+
     def _update_saga_clock(self) -> None:
         """Shows the saga's current date in the Header, on every screen of
         the workspace -- the saga owns the calendar, everything inherits it."""
         saga = self.saga
+        player = self._signed_in()
+        who = f" | {escape(player.name)}" if player is not None else ""
         self.sub_title = (
-            f"{escape(saga.name)} | {saga.current_season} {saga.current_year}"
+            f"{escape(saga.name)} | {saga.current_season} {saga.current_year}{who}"
         )
 
     def _rebuild_tree(self) -> None:
@@ -632,6 +644,8 @@ class WorkspaceBase(Screen[None]):
         )
         tree.root.add_leaf(self._spells_label(), data=(NodeKind.SPELLS,))
         tree.root.add_leaf(self._house_rules_label(), data=(NodeKind.HOUSE_RULES,))
+        if self._is_storyguide():
+            tree.root.add_leaf(self._players_label(), data=(NodeKind.PLAYERS,))
 
     def _add_character_node(self, parent, character: Character) -> None:
         """A character's own tree node: a plain leaf, unless it's a magus
@@ -730,6 +744,9 @@ class WorkspaceBase(Screen[None]):
         elif kind == NodeKind.HOUSE_RULES:
             self.selected_covenant = None
             await self._set_detail(HouseRulesView(self.saga))
+        elif kind == NodeKind.PLAYERS:
+            self.selected_covenant = None
+            await self._set_detail(PlayersView(self.saga))
         elif kind == NodeKind.SEASONS:
             self.selected_covenant = None
             await self._set_detail(SeasonRecordsView(self.saga))
@@ -1187,6 +1204,8 @@ class WorkspaceBase(Screen[None]):
             return SPELL_SECTION
         if self.selected_kind == NodeKind.HOUSE_RULES:
             return HOUSE_RULES_SECTION
+        if self.selected_kind == NodeKind.PLAYERS:
+            return PLAYERS_SECTION
         view = self._current_sheet_view()
         if view is None:
             return None
@@ -1289,6 +1308,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.LABORATORY_GROUP: f"Laboratories{where}",
             NodeKind.SPELLS: "Spells",
             NodeKind.HOUSE_RULES: "House Rules",
+            NodeKind.PLAYERS: "Players",
             NodeKind.SEASONS: "Seasons",
             NodeKind.BOOK_GROUP: "Unassigned Books",
         }.get(self.selected_kind, "")
@@ -1815,6 +1835,25 @@ class WorkspaceBase(Screen[None]):
 
     def _house_rules_label(self) -> str:
         return f"House Rules ({len(hr.all_entries(self.saga))})"
+
+    def _players_label(self) -> str:
+        return f"Players ({len(self.saga.players)})"
+
+    # -- who is using this copy (STORY-1403) --
+
+    def _signed_in(self) -> Player | None:
+        """The player signed in to this browser copy; None in the
+        storyguide's own window, which never signs in."""
+        return getattr(self.app, "player", None)
+
+    def _is_storyguide(self) -> bool:
+        """Whether whoever is using this copy runs the saga: the
+        storyguide's own window, or a browser copy signed in as a
+        storyguide."""
+        if not self.app.is_web:
+            return True
+        player = self._signed_in()
+        return player is not None and player.role == pl.STORYGUIDE
 
     # -- Saga --
 

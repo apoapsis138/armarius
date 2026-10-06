@@ -21,6 +21,7 @@ from ..sheets import (
     DEVICE_SECTIONS,
     HOUSE_RULES_SECTION,
     LAB_VF_SECTIONS,
+    PLAYERS_SECTION,
     SPELL_SECTION,
 )
 from .base import (
@@ -104,6 +105,11 @@ class WorkspaceScreen(
                 lambda: self._house_rule_form(None),
                 self._remove_house_rule,
                 self._edit_house_rule,
+            ),
+            PLAYERS_SECTION: _SectionOps(
+                lambda: self._player_form(None),
+                self._remove_player,
+                self._edit_player,
             ),
             # Character sheet
             "section-char-info": _SectionOps(edit=self._edit_character_info),

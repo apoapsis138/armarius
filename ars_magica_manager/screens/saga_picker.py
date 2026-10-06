@@ -1,5 +1,6 @@
 """The start screen: pick, create or delete a saga, or open Help (which
-holds About)."""
+holds About). In a browser copy of a hosted app (STORY-1403) it only opens
+sagas, each after signing in."""
 
 from __future__ import annotations
 
@@ -18,10 +19,11 @@ from textual.widgets import (
 
 from .. import __version__, creation, storage
 from ..markup import escape, problem
+from ..models import Player
 from .fields import FieldsDialog
 from .forms import _saga_fields
 from .help import HelpContext, HelpScreen, shown_keys
-from .prompts import ConfirmScreen
+from .prompts import ConfirmScreen, _sign_in_dialog
 from .widgets import BottomBar
 from .workspace import WorkspaceScreen
 
@@ -45,7 +47,9 @@ class SagaPickerScreen(Screen[None]):
     def compose(self) -> ComposeResult:
         yield Header()
         yield Static(
-            "Select a saga to open, press 'n' to create a new one, "
+            "Select a saga to open and sign in."
+            if self.app.is_web
+            else "Select a saga to open, press 'n' to create a new one, "
             "or 'd' to delete the highlighted one.",
             id="picker-hint",
         )
@@ -55,6 +59,11 @@ class SagaPickerScreen(Screen[None]):
 
     async def on_mount(self) -> None:
         await self.refresh_list()
+
+    def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
+        # Players in a browser open sagas; only the storyguide's own window
+        # makes or deletes them.
+        return not (action in ("create_saga", "delete_saga") and self.app.is_web)
 
     async def refresh_list(self) -> None:
         list_view = self.query_one("#saga-list", ListView)
@@ -167,4 +176,24 @@ class SagaPickerScreen(Screen[None]):
                 severity="error",
             )
             return
-        self.app.push_screen(WorkspaceScreen(saga))
+        if not self.app.is_web:
+            self.app.push_screen(WorkspaceScreen(saga))
+            return
+        if not saga.players:
+            self.notify(
+                f"No one can sign in to {escape(saga.name)} yet: the storyguide "
+                "adds players on its Players node.",
+                severity="warning",
+            )
+            return
+
+        def signed_in(player: Player | None) -> None:
+            if player is not None:
+                self._set_player(player)
+                self.app.push_screen(WorkspaceScreen(saga))
+
+        self.app.push_screen(_sign_in_dialog(saga), signed_in)
+
+    def _set_player(self, player: Player | None) -> None:
+        """Record who is signed in on the app (ArsMagicaManagerApp.player)."""
+        self.app.player = player  # type: ignore[attr-defined]

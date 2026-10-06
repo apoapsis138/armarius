@@ -39,6 +39,15 @@ magus; the Hermetic Techniques are verbs (*verbum*); an *exemplar* was the
 copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject.
 
+## 2.14.0 — 2026-10-06
+
+- Players who open a hosted saga in a browser now sign in first, with
+  their name and a passcode. You add them on the saga's new **Players**
+  node (only the storyguide sees it), each as a Player or a Storyguide.
+  Passcodes are kept only scrambled. In a browser the saga list no longer
+  offers New or Delete Saga, and the header shows who is signed in.
+  For now everyone signed in can still change everything.
+
 ## 2.13.0 — 2026-10-06
 
 - Help has a What's New page, under REFERENCE after About this App: every

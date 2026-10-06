@@ -17,6 +17,8 @@ Each row shows the saga's name, its storyguide and its current date. A saga file
 - `d` (or Delete) deletes the highlighted saga after a confirmation. This deletes the saga's file and everything in it (covenants, characters, laboratories, library) for good, so the confirmation says so and No is the safe answer.
 - `q` quits the app.
 
+In a browser opened on a hosted saga, the list only opens sagas: New and Delete are left to the storyguide's own window, and opening a saga first asks who you are. See [Signing in](help:sign-in).
+
 The app's version is shown under the list. The About page in Help has the version, the licences and the credits.
 
 **See also:** [The workspace](help:workspace), [The saga](help:saga), [Getting started](help:guide-getting-started)
@@ -77,7 +79,7 @@ Lists that hold records (books, spells, House Rules, a sheet's lists) have a det
 
 At the right end of the same row the app names the theme in use. Change it from the command palette (Ctrl+P); the app remembers your choice for next time.
 
-**See also:** [The saga](help:saga), [Characters group](help:character-group), [Laboratories group](help:laboratory-group), [Seasons](help:seasons), [Spells](help:spells), [House Rules](help:house-rules), [Getting started](help:guide-getting-started)
+**See also:** [The saga](help:saga), [Characters group](help:character-group), [Laboratories group](help:laboratory-group), [Seasons](help:seasons), [Spells](help:spells), [House Rules](help:house-rules), [Players](help:players), [Getting started](help:guide-getting-started)
 
 # The saga
 <!-- help: saga -->
@@ -213,3 +215,30 @@ House rules are text only: the rules engine applies no effects for them. Two ent
 When a character, laboratory or covenant is exported, the house rules it uses go with it.
 
 **See also:** [Spells](help:spells), [Import Data](help:import-data), [How to import and export](help:guide-import-export)
+
+# Players
+<!-- help: players -->
+
+Who can sign in to this saga when you host it, so that players open it in a web browser from their own computers. Each player signs in with their name and the passcode you give them. Your own window, the app run on your computer, never asks.
+
+Only the storyguide sees this node: your own window, or someone signed in with the Storyguide role.
+
+**You type:** with `a` and `e`: the player's Name (what they type to sign in; no two players may share one), their Role (Player or Storyguide) and a Passcode. When editing, leave New passcode blank to keep the one they have. `d` deletes a player after a confirmation; they can no longer sign in.
+
+**The app works out:** nothing to show. Passcodes are stored only scrambled (a salted hash), so the app can check one but no one can read it back from the saga file: if a player forgets theirs, give them a new one.
+
+### What a signed-in player can do
+<!-- help: players-access -->
+
+For now everyone signed in can change what you can. Limiting players to their own characters, and keeping the season, the covenant and the saga's settings to the storyguide, comes in a later version.
+
+**See also:** [Signing in](help:sign-in), [The saga](help:saga)
+
+# Signing in
+<!-- help: sign-in -->
+
+When the storyguide hosts the app, opening a saga in a browser first asks who you are: type your Name and the Passcode the storyguide gave you, then Sign in. Name is not case-sensitive; the passcode is.
+
+If the saga has no players yet, it can't be opened from a browser: the storyguide adds players on the saga's [Players](help:players) node. Your name is shown in the header beside the saga's date while you're signed in. Going back to the saga list (Escape) signs you out.
+
+**See also:** [Players](help:players), [Saga picker](help:saga-picker)

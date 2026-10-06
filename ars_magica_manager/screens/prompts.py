@@ -25,6 +25,7 @@ from textual.widgets.option_list import Option
 from .. import catalog, transfer, vis
 from .. import house_rules as hr
 from .. import lab_texts as lt
+from .. import players as pl
 from ..arts import ARTS, FORMS, TECHNIQUES
 from ..markup import escape, todo
 from ..models import (
@@ -48,6 +49,7 @@ from ..models import (
     LabVirtueFlawDef,
     MasteryAbility,
     NamedDescription,
+    Player,
     Saga,
     ScoredTrait,
     VirtueFlawDef,
@@ -471,6 +473,80 @@ def _export_dialog(
         live=live,
         build=lambda values: (path_of(values), bool(values.get("with_members"))),
     )
+
+
+def _player_dialog(saga: Saga, existing: Player | None) -> FieldsDialog[dict[str, Any]]:
+    """Add or edit someone who can sign in to the saga from a browser
+    (STORY-1403): their name, role and passcode. Editing leaves the passcode
+    blank, which keeps the old one. Builds the values players.add / update
+    take."""
+
+    def problem(values: dict[str, Any]) -> str | None:
+        if existing is None and not values.get("passcode"):
+            return "Passcode is required."
+        return pl.name_problem(saga, values.get("name") or "", existing)
+
+    dialog = FieldsDialog(
+        "Add a Player" if existing is None else f"Edit {escape(existing.name)}",
+        [
+            DialogField(
+                "name",
+                "Name",
+                "text",
+                existing.name if existing else "",
+                required=True,
+                hint="What they type to sign in.",
+            ),
+            DialogField(
+                "role",
+                "Role",
+                "select",
+                existing.role if existing else pl.PLAYER,
+                options=[(pl.ROLE_LABELS[r], r) for r in pl.ROLES],
+            ),
+            DialogField(
+                "passcode",
+                "Passcode" if existing is None else "New passcode",
+                "secret",
+                "",
+                hint="Give it to them yourself; it is stored only scrambled."
+                if existing is None
+                else "Blank keeps the one they have.",
+            ),
+        ],
+        validate=problem,
+    )
+    dialog.help_id = "players"
+    return dialog
+
+
+def _sign_in_dialog(saga: Saga) -> FieldsDialog[Player]:
+    """Who is there (STORY-1403): a browser copy of a hosted app asks for a
+    player's name and passcode before it opens `saga`. Dismisses with the
+    player, or None if cancelled."""
+
+    def problem(values: dict[str, Any]) -> str | None:
+        if pl.sign_in(saga, values.get("name") or "", values.get("passcode") or ""):
+            return None
+        return "That name and passcode don't match a player of this saga."
+
+    def signed_in(values: dict[str, Any]) -> Player:
+        player = pl.sign_in(saga, values["name"], values["passcode"])
+        assert player is not None  # `problem` let the form through
+        return player
+
+    dialog = FieldsDialog(
+        f"Sign in to {escape(saga.name)}",
+        [
+            DialogField("name", "Name", "text", "", required=True),
+            DialogField("passcode", "Passcode", "secret", "", required=True),
+        ],
+        validate=problem,
+        save_label="Sign in",
+        build=signed_in,
+    )
+    dialog.help_id = "sign-in"
+    return dialog
 
 
 def _house_rule_dialog(

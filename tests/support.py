@@ -99,6 +99,7 @@ async def build_all_tabs(pilot, view) -> None:
 #: Tree node per sheet kind, in the saga built by everything_saga().
 NODES: dict[str, tuple[str, ...]] = {
     "saga": ("saga",),
+    "players": ("players",),
     "covenant": ("covenant", "cov1"),
     "character": ("character", "mag1"),
     "laboratory": ("laboratory", "lab1"),

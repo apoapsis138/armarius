@@ -9,6 +9,7 @@ from textual.binding import Binding, BindingType
 
 from . import __version__, paths
 from .markup import escape
+from .models import Player
 from .screens import SagaPickerScreen
 from .screens.help import HelpScreen, help_context
 from .settings import load_settings, update_settings
@@ -51,8 +52,15 @@ class ArsMagicaManagerApp(App[None]):
     #: data/ folder did, or why the data folder couldn't be used (main.py).
     startup_notes: tuple[str, ...] = ()
 
+    #: Who signed in to the saga open in this browser copy (STORY-1403);
+    #: None in the storyguide's own window, which never signs in, and
+    #: whenever no saga is open.
+    player: Player | None = None
+
     def on_mount(self) -> None:
-        if self.startup_notes:
+        # Notes about the host's data folder are the storyguide's business:
+        # a player's browser copy (STORY-1403) doesn't show them.
+        if self.startup_notes and not self.is_web:
             self.notify(
                 escape("\n".join(self.startup_notes)),
                 title="Your data folder: " + escape(str(paths.data_dir())),

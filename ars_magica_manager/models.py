@@ -2836,6 +2836,22 @@ class SeasonRecord:
 
 
 @dataclass
+class Player:
+    """Someone who can sign in to the saga from a browser (STORY-1403): a
+    name, a role (players.PLAYER or players.STORYGUIDE) and the passcode,
+    kept only as a salted hash (players.hash_passcode)."""
+
+    id: str
+    name: str
+    role: str = "player"
+    passcode_hash: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Player:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
 class Saga:
     id: str
     name: str
@@ -2874,6 +2890,9 @@ class Saga:
     custom_virtues_flaws: list[VirtueFlawDef] = field(default_factory=list)
     custom_lab_virtues_flaws: list[LabVirtueFlawDef] = field(default_factory=list)
     custom_boons_hooks: list[CovenantBoonHookDef] = field(default_factory=list)
+    #: Who can sign in to the saga from a browser when it is hosted
+    #: (STORY-1403); the storyguide's own window needs no sign-in.
+    players: list[Player] = field(default_factory=list)
     #: The app version that last saved this saga (storage.save_saga sets it;
     #: "" for a save older than versioning), for upgrading old saves later.
     app_version: str = ""
@@ -2917,6 +2936,7 @@ class Saga:
         d["custom_boons_hooks"] = [
             CovenantBoonHookDef.from_dict(e) for e in d.get("custom_boons_hooks", [])
         ]
+        d["players"] = [Player.from_dict(p) for p in d.get("players", [])]
         spell_names = {s.id: s.name for s in d["spells"]}
         d["books"] = [Book.from_dict(b, spell_names) for b in d.get("books", [])]
         # Older saves kept a Library record per covenant listing its book ids;

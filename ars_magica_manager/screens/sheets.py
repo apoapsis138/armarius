@@ -33,6 +33,7 @@ from .. import house_rules as hr
 from .. import inhabitants as inh
 from .. import lab_texts as lt
 from .. import laboratories as lab_text
+from .. import players as pl
 from .. import possessions as pos
 from .. import sheet_text as st
 from .. import spells as spl
@@ -60,6 +61,7 @@ from ..models import (
     Covenant,
     Familiar,
     Laboratory,
+    Player,
     Saga,
     Spell,
     character_age,
@@ -378,6 +380,65 @@ class HouseRulesView(Vertical):
             self.query_one("#house-rules-panel", Static).update(
                 hr.detail_text(self.saga, None)
             )
+        except NoMatches:
+            return  # the view is being replaced
+
+
+#: The Players view's list section (a / e / d act on the saga's players).
+PLAYERS_SECTION = "section-players"
+
+
+class PlayersView(Vertical):
+    """Who can sign in to the saga from a browser (STORY-1403), in one list
+    stretching down to the details panel of the chosen player."""
+
+    DEFAULT_CSS = """
+    PlayersView {
+        height: 1fr;
+    }
+
+    PlayersView .players-body {
+        height: 1fr;
+    }
+    """
+
+    def __init__(self, saga: Saga) -> None:
+        super().__init__()
+        self.saga = saga
+
+    def _title(self) -> str:
+        return counted("Players", len(self.saga.players))
+
+    def _rows(self) -> list[tuple[int, str]]:
+        return [(i, pl.row_label(p)) for i, p in enumerate(self.saga.players)]
+
+    def compose(self) -> ComposeResult:
+        with (
+            Vertical(classes="players-body"),
+            SheetSection(title=self._title(), id=PLAYERS_SECTION),
+        ):
+            yield TableHeader("  " + pl.table_header())
+            yield SelectableList(self._rows(), id="players-list")
+        yield DetailsPanel(pl.detail_text(None), id="players-panel")
+
+    def selected_player(self) -> Player | None:
+        index = self.query_one("#players-list", SelectableList).selected_data_index
+        if index is None or index >= len(self.saga.players):
+            return None
+        return self.saga.players[index]
+
+    def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
+        event.stop()
+        players = self.saga.players
+        chosen = players[event.data_index] if event.data_index < len(players) else None
+        self.query_one("#players-panel", Static).update(pl.detail_text(chosen))
+
+    def rebuild(self) -> None:
+        """Re-read the players after an add, edit or delete."""
+        try:
+            self.query_one(f"#{PLAYERS_SECTION}", Collapsible).title = self._title()
+            self.query_one("#players-list", SelectableList).set_rows(self._rows())
+            self.query_one("#players-panel", Static).update(pl.detail_text(None))
         except NoMatches:
             return  # the view is being replaced
 

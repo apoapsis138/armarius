@@ -336,6 +336,7 @@ OPENERS: dict[str, Opener] = {
     "perform ritual again": Opener("laboratory", lambda ws: ws.action_perform_ritual()),
     "lab texts read": Opener("character", lambda ws: ws._edit_lab_text_access()),
     "add house rule": Opener("saga", lambda ws: ws._house_rule_form(None)),
+    "add player": Opener("players", lambda ws: ws._player_form(None)),
     "add spell": Opener("spells", lambda ws: ws._spell_form(None)),
     "edit spell": Opener("spells", lambda ws: ws._spell_form(ws.saga.spells[0])),
     "add ability": Opener("character", _open_ability_details),
@@ -444,7 +445,7 @@ async def open_dialog(
         assert await wait_until(pilot, lambda: find_node() is not None)
         tree.select_node(find_node())
         assert await wait_until(pilot, lambda: base.selected_kind == opener.node)
-        if opener.node not in ("saga", "spells", "book_group"):
+        if opener.node not in ("saga", "spells", "book_group", "players"):
             assert await wait_until(
                 pilot, lambda: base._current_sheet_view() is not None
             )

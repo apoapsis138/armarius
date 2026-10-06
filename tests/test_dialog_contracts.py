@@ -34,6 +34,7 @@ from textual.widgets import (
 )
 
 from ars_magica_manager import catalog, storage
+from ars_magica_manager import players as pl
 from ars_magica_manager.models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
@@ -1195,6 +1196,24 @@ CONTRACTS: dict[str, Contract] = {
             ("custom_labvf_leaky_roof", "Flaw", "Major", -3, "Structure", True, "")
         ],
         invalid={"Name": ""},
+    ),
+    # Players who sign in from a browser (STORY-1403)
+    "add player": Contract(
+        prefill={"Name": "", "Role": "player", "Passcode": ""},
+        edits={"Name": "Ana", "Role": "storyguide", "Passcode": "rosemary"},
+        saved=lambda s: [
+            (
+                p.id,
+                p.name,
+                p.role,
+                pl.passcode_matches(p, "rosemary"),
+                p.passcode_hash != "rosemary",
+            )
+            for p in s.players
+        ],
+        expected=[("ana", "Ana", "storyguide", True, True)],
+        invalid=[{"Name": ""}, {"Name": "Ana", "Passcode": ""}],
+        shown={"#section-players": "Players (1)"},
     ),
     "add spell": Contract(
         prefill={"Name": "", "Technique": Select.NULL, "Level": ""},

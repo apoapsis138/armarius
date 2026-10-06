@@ -674,6 +674,7 @@ async def test_workspace_tree_has_no_covenants_for_a_fresh_saga():
             ("seasons",),
             ("spells",),
             ("house_rules",),
+            ("players",),
         ]
 
 
@@ -698,12 +699,14 @@ async def test_create_covenant_flow_saves_covenant():
         assert app.screen.selected_covenant is not None
         assert app.screen.selected_covenant.name == "Fengheld"
         tree = app.screen.query_one("#nav-tree", Tree)
-        # The new covenant, then the Seasons, Spells and House Rules nodes.
+        # The new covenant, then the Seasons, Spells, House Rules and
+        # Players nodes.
         assert [n.data[0] for n in tree.root.children] == [
             "covenant",
             "seasons",
             "spells",
             "house_rules",
+            "players",
         ]
 
     saga = storage.load_saga("test_saga")

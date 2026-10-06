@@ -113,7 +113,8 @@ class ModalDialog[ResultT](ModalScreen[ResultT]):
 class DialogField:
     """One row of a FieldsDialog.
 
-    `kind`: "text" (a stripped string), "int" (a whole number), "optint" (a
+    `kind`: "text" (a stripped string), "secret" (text shown as dots: a
+    passcode), "int" (a whole number), "optint" (a
     whole number or blank -> None), "optfloat" (a number, decimals allowed,
     or blank -> None), "select" (one of `options` as (label,
     value) pairs; blank -> None when `allow_blank`; a stored value that isn't
@@ -352,10 +353,11 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
             return
         with Horizontal(classes="fd-row"):
             yield Label(spec.label, classes="fd-label")
-            if spec.kind == "text":
+            if spec.kind in ("text", "secret"):
                 yield Input(
                     value=str(spec.value or ""),
                     placeholder=spec.placeholder,
+                    password=spec.kind == "secret",
                     id=widget_id,
                     compact=True,
                 )
@@ -519,7 +521,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
                 select.value = value
         elif spec.kind == "check":
             self.query_one(widget_id, Checkbox).value = bool(value)
-        elif spec.kind in ("text", "int", "optint", "optfloat"):
+        elif spec.kind in ("text", "secret", "int", "optint", "optfloat"):
             self.query_one(widget_id, Input).value = "" if value is None else str(value)
 
     def _fill(self) -> None:

@@ -37,6 +37,7 @@ from ars_magica_manager.models import (
     MasteryAbility,
     Modifier,
     NamedDescription,
+    Player,
     Possession,
     Progress,
     Saga,
@@ -374,6 +375,7 @@ def _saga_with_every_record() -> Saga:
         LabVirtueFlawDef("lvf", "LVF", "Virtue", "Structure", "Minor", 1)
     )
     saga.custom_boons_hooks.append(CovenantBoonHookDef("bh", "BH", "Boon", "Minor", 1))
+    saga.players.append(Player("ana", "Ana", "player", "scrypt$00$00"))
     return saga
 
 

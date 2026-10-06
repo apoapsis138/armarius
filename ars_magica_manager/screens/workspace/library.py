@@ -11,6 +11,7 @@ from textual.css.query import NoMatches
 from ... import books as bk
 from ... import house_rules as hr
 from ... import lab_texts as lt
+from ... import players as pl
 from ... import seasons, storage, transfer
 from ... import spells as spl
 from ...markup import escape
@@ -18,6 +19,7 @@ from ...models import (
     TEXT_LONGEVITY,
     Book,
     Covenant,
+    Player,
     Spell,
 )
 from ..fields import (
@@ -44,6 +46,7 @@ from ..prompts import (
     ConfirmScreen,
     _house_rule_dialog,
     _lab_text_filter_dialog,
+    _player_dialog,
     _ritual_again_dialog,
 )
 from ..sheets import (
@@ -52,6 +55,7 @@ from ..sheets import (
     BookListView,
     HouseRulesView,
     LabTextListView,
+    PlayersView,
     SpellListView,
 )
 from .base import (
@@ -224,6 +228,75 @@ class LibraryActions(WorkspaceBase):
             )
 
         self._pick_house_rule(confirm)
+
+    # -- Players: who can sign in from a browser (STORY-1403) --
+
+    def _players_view(self) -> PlayersView | None:
+        try:
+            return self._detail_pane().query(PlayersView).first()
+        except NoMatches:
+            return None
+
+    def _players_changed(self) -> None:
+        storage.save_saga(self.saga)
+        view = self._players_view()
+        if view is not None:
+            view.rebuild()
+        node = _tree_node_with_data(self._nav_tree(), (NodeKind.PLAYERS,))
+        if node is not None:
+            node.set_label(self._players_label())
+
+    def _pick_player(self, then: Callable[[Player], None]) -> None:
+        """Act on the chosen player."""
+        view = self._players_view()
+        chosen = view.selected_player() if view is not None else None
+        if chosen is not None:
+            then(chosen)
+            return
+        players = list(self.saga.players)
+        self._chosen_or_pick(
+            None,
+            [p.name for p in players],
+            empty="No players yet: 'a' adds one.",
+            then=lambda index: then(players[index]),
+        )
+
+    def _player_form(self, existing: Player | None) -> None:
+        saga = self.saga
+
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is None:
+                return
+            if existing is None:
+                pl.add(saga, values)
+            else:
+                pl.update(existing, values)
+            self._players_changed()
+
+        self.app.push_screen(_player_dialog(saga, existing), handle_result)
+
+    def _edit_player(self) -> None:
+        self._pick_player(self._player_form)
+
+    def _remove_player(self) -> None:
+        """Delete the chosen player after confirming: they can no longer
+        sign in (a browser copy they already have open stays open)."""
+
+        def confirm(player: Player) -> None:
+            def handle_confirmed(confirmed: bool | None) -> None:
+                if confirmed and player in self.saga.players:
+                    pl.remove(self.saga, player)
+                    self._players_changed()
+
+            self.app.push_screen(
+                ConfirmScreen(
+                    f"Delete the player {escape(player.name)}?\n\n"
+                    "They will no longer be able to sign in."
+                ),
+                handle_confirmed,
+            )
+
+        self._pick_player(confirm)
 
     # -- Books (Library tab, laboratory/character Books, Unassigned Books) --
 
