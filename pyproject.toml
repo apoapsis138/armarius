@@ -1,6 +1,6 @@
 [project]
 name = "ars-magica-manager"
-version = "2.12.1"
+version = "2.13.0"
 description = "A GM-facing management tool for Ars Magica 5th Edition covenants, characters, laboratories, and libraries."
 readme = "README.md"
 license = "GPL-3.0-only"

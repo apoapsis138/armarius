@@ -1,12 +1,14 @@
 """Help (STORY-115): the help files are well formed, every tab and section
 of every sheet has help, and ? / F1 open Help on what has focus."""
 
-import pytest
-from support import NODES, build_all_tabs, everything_saga, wait_until
-from textual.widgets import OptionList, TabbedContent, TextArea, Tree
+import re
 
+import pytest
+from support import NODES, build_all_tabs, everything_saga, screen_lines, wait_until
+from textual.widgets import Markdown, OptionList, TabbedContent, TextArea, Tree
+
+from ars_magica_manager import ROOT, __version__, storage
 from ars_magica_manager import help_text as ht
-from ars_magica_manager import storage
 from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.screens import WorkspaceScreen
 from ars_magica_manager.screens.creation_worksheet import CreationWorksheetScreen
@@ -14,7 +16,7 @@ from ars_magica_manager.screens.forms import (
     ImportScreen,
     SpellImportHelperScreen,
 )
-from ars_magica_manager.screens.help import HelpScreen
+from ars_magica_manager.screens.help import HelpScreen, page_chunks, whats_new_text
 from ars_magica_manager.screens.invent_spell import InventSpellScreen
 from ars_magica_manager.screens.prompts import AdvanceSeasonScreen
 from ars_magica_manager.screens.saga_picker import SagaPickerScreen
@@ -272,3 +274,73 @@ async def test_help_lists_the_guides_on_their_own():
         topics = app.screen.query_one("#help-topics", OptionList)
         topics.highlighted = topics.get_option_index("guide:guide-seasons")
         assert await wait_until(pilot, lambda: app.screen.topic_id == "guide-seasons")
+
+
+# -- STORY-1203: What's New and the release names -----------------------------
+
+#: A named release's heading: "## 2.10.0 — 2026-10-05 — Summa".
+NAMED_HEADING = re.compile(
+    r"^## (\d+\.\d+\.\d+) — \d{4}-\d{2}-\d{2} — (.+)$", re.MULTILINE
+)
+
+
+def test_whats_new_is_the_changelog_under_its_own_title():
+    text = whats_new_text()
+    assert text.startswith("# What's New\n")
+    assert "# Changelog" not in text
+    assert f"## {__version__} " in text
+    assert "## Release names" in text
+
+
+def test_every_release_name_is_in_the_table_and_on_a_heading():
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    table = changelog.split("## Release names", 1)[1].split("\n## ", 1)[0]
+    named = {name for _, name in NAMED_HEADING.findall(changelog)}
+    in_table = set(re.findall(r"^\| ([^|]+?) \| \d", table, re.MULTILINE))
+    assert "Summa" in named
+    assert named == in_table
+
+
+async def test_whats_new_is_listed_after_about_and_shows_the_changelog():
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
+        await pilot.press("question_mark")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, HelpScreen))
+        listed = _listed(app)
+        assert listed.index("ref:whats-new") == listed.index("ref:about") + 1
+        topics = app.screen.query_one("#help-topics", OptionList)
+        topics.highlighted = topics.get_option_index("ref:whats-new")
+        assert await wait_until(pilot, lambda: app.screen.topic_id == "whats-new")
+        assert await wait_until(
+            pilot, lambda: "Release names" in "\n".join(screen_lines(app))
+        )
+
+
+async def test_whats_new_fills_in_and_another_topic_can_replace_it_midway():
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
+        await pilot.press("question_mark")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, HelpScreen))
+        topics = app.screen.query_one("#help-topics", OptionList)
+        page = app.screen.query_one("#help-page", Markdown)
+        topics.highlighted = topics.get_option_index("ref:whats-new")
+        assert await wait_until(pilot, lambda: page.source.startswith("# What's New"))
+        topics.highlighted = topics.get_option_index("ref:keys")  # still filling
+        assert await wait_until(pilot, lambda: page.source.startswith("# Keys"))
+        await pilot.pause()
+        assert "What's New" not in page.source
+
+        topics.highlighted = topics.get_option_index("ref:whats-new")
+        assert await wait_until(
+            pilot, lambda: page.source == whats_new_text(), timeout=10.0
+        )
+
+
+def test_a_long_page_is_cut_at_headings_into_pieces_that_join_up():
+    text = whats_new_text()
+    pieces = page_chunks(text)
+    assert len(pieces) > 1 and "".join(pieces) == text
+    assert all(piece.startswith("## ") for piece in pieces[1:])
+    assert page_chunks("# Short\n\n## A\n\ntext\n") == ["# Short\n\n## A\n\ntext\n"]

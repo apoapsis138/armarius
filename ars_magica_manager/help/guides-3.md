@@ -64,7 +64,7 @@ Giving a laboratory to a magus who already had one frees their old laboratory, a
 ### Help
 <!-- help: guide-getting-started-help -->
 
-Press `?` anywhere for help on the part of the screen that has focus; in a dialog where you are typing, press F1. The Help screen lists THIS SCREEN first, then the HOW-TO GUIDES, the REFERENCE pages and ALL PAGES. The arrow keys choose a topic, `/` filters the topics, Tab moves between the list and the page, and Esc closes Help.
+Press `?` anywhere for help on the part of the screen that has focus; in a dialog where you are typing, press F1. The Help screen lists THIS SCREEN first, then the HOW-TO GUIDES, the REFERENCE pages (About this App, What's New with every version's changes, and Keys) and ALL PAGES. The arrow keys choose a topic, `/` filters the topics, Tab moves between the list and the page, and Esc closes Help.
 
 ### Where to go next
 <!-- help: guide-getting-started-next -->

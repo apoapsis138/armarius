@@ -3,6 +3,7 @@ with ? (or F1) on the help for whatever has focus."""
 
 from __future__ import annotations
 
+import asyncio
 from dataclasses import dataclass, field
 from typing import ClassVar
 
@@ -22,7 +23,11 @@ from .fields import ModalDialog
 ABOUT = "about"
 NOTICE_PATH = ROOT / "NOTICE.md"
 
-#: The pages under REFERENCE, after the generated About.
+#: What's New: CHANGELOG.md, every version with its release name (STORY-1203).
+WHATS_NEW = "whats-new"
+CHANGELOG_PATH = ROOT / "CHANGELOG.md"
+
+#: The pages under REFERENCE, after the generated About and What's New.
 _REFERENCE = ("keys",)
 
 #: Option ids say which group a topic was listed in, so one topic can be
@@ -140,6 +145,8 @@ class HelpScreen(ModalDialog[None]):
         self._page_shown: str | None = None
         #: The topic on show.
         self.topic_id: str | None = None
+        #: One page loads at a time; a page another has replaced stops.
+        self._loading = asyncio.Lock()
 
     def compose(self) -> ComposeResult:
         where = f"  ›  {self.context.where}" if self.context.where else ""
@@ -199,6 +206,7 @@ class HelpScreen(ModalDialog[None]):
                 ]
             options.append(_heading("REFERENCE"))
             options.append(Option("About this App", id=_REF + ABOUT))
+            options.append(Option("What's New", id=_REF + WHATS_NEW))
             options += [
                 Option(escape(self.book.topics[t].title), id=_REF + t)
                 for t in _REFERENCE
@@ -253,6 +261,8 @@ class HelpScreen(ModalDialog[None]):
             except OSError:
                 notice = "NOTICE.md is missing: see the repository for licences."
             return ABOUT, f"# Ars Magica Manager v{__version__}\n\n{notice}"
+        if topic_id == WHATS_NEW:
+            return WHATS_NEW, whats_new_text()
         page = self.book.page_for(topic_id)
         if page is None:
             return None
@@ -275,13 +285,27 @@ class HelpScreen(ModalDialog[None]):
         if page_id != self._page_shown:
             self._page_shown = page_id
             markdown = self.query_one("#help-page", Markdown)
-            self.run_worker(self._load(markdown, text, topic_id), exclusive=True)
+            self.run_worker(self._load(markdown, page_id, text, topic_id))
         else:
             self._scroll_to(topic_id)
 
-    async def _load(self, markdown: Markdown, text: str, topic_id: str) -> None:
-        await markdown.update(text)
-        self._scroll_to(topic_id)
+    async def _load(
+        self, markdown: Markdown, page_id: str, text: str, topic_id: str
+    ) -> None:
+        """Show `text`. A long page (What's New) shows its start at once and
+        the rest a few sections at a time, so Help answers keys while it
+        fills in. Not cancelled midway (that can leave the Markdown waiting
+        for ever): a page that another has replaced stops between pieces."""
+        async with self._loading:
+            first, *rest = page_chunks(text)
+            for n, chunk in enumerate([first, *rest]):
+                if self._page_shown != page_id:
+                    return
+                if n == 0:
+                    await markdown.update(chunk)
+                    self._scroll_to(topic_id)
+                else:
+                    await markdown.append(chunk)
 
     def _scroll_to(self, topic_id: str, tries: int = 25) -> None:
         """Scroll the page to `topic_id`'s heading (its top for a page).
@@ -315,6 +339,30 @@ class HelpScreen(ModalDialog[None]):
                 self.show_topic(topic_id)
         elif href.startswith(("http://", "https://")):
             self.app.open_url(href)
+
+
+def whats_new_text() -> str:
+    """The What's New page: CHANGELOG.md under a title of its own."""
+    try:
+        changelog = CHANGELOG_PATH.read_text(encoding="utf-8")
+    except OSError:
+        return "# What's New\n\nCHANGELOG.md is missing: see the repository."
+    _, _, body = changelog.partition("\n")  # its own "# Changelog" title
+    return f"# What's New\n{body}"
+
+
+def page_chunks(text: str, lines: int = 60) -> list[str]:
+    """`text` cut before "## " headings into pieces of at least `lines`
+    lines (one piece for a short page); joined, they are `text`."""
+    chunks: list[str] = []
+    current: list[str] = []
+    for line in text.splitlines(keepends=True):
+        if line.startswith("## ") and len(current) >= lines:
+            chunks.append("".join(current))
+            current = []
+        current.append(line)
+    chunks.append("".join(current))
+    return chunks
 
 
 def _is_guide(topic_id: str) -> bool:

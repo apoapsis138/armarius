@@ -10,6 +10,46 @@ MINOR, a bug fix or behind-the-scenes improvement bumps PATCH. The version is se
 recorded in every saga file that version saves. Each version is tagged in
 git (`v0.2.0`, ...).
 
+## Release names
+
+The big releases have names, after the books and crafts of a medieval
+scriptorium and a Hermetic covenant. Bug fixes and small polish releases
+are not named; each named version's heading carries its name.
+
+| Name | Versions | What it brought |
+| --- | --- | --- |
+| Foundations | 2.11.0 | Your data in its own folder, packaging, automatic checks |
+| Summa | 2.10.0 | How-to guides in Help |
+| Scriptorum II | 2.9.0 | The readability pass |
+| Glossa | 2.8.0 | Help for whatever has focus |
+| Exemplar | 2.6.0 | Character templates |
+| Verbum | 2.5.0 | The keyboard rework: one key per verb |
+| Gauntlet | 2.0.0 to 2.4.0 | Phase 4: creating covenants, laboratories and characters by the book |
+| Book of Hours | 1.3.0 to 1.8.0 | Seasons planned and played out, study and lab work |
+| Computus | 1.1.0 to 1.2.0 | Phase 2: the Rules Engine |
+| Codex | 1.0.0 | Phase 1: the core tracker |
+| Florilegium | 0.6.0 to 0.10.0 | The reference catalogs, checked against the books |
+| Scriptorum | 0.4.0 | Highlights in the theme's own colours |
+| Incipit | 0.2.0 | The first tracked version |
+
+An *incipit* opens a manuscript; a *florilegium* gathers extracts from
+many books; the *computus* was the reckoning of dates; a Book of Hours
+follows the labours of the seasons; the Gauntlet makes an apprentice a
+magus; the Hermetic Techniques are verbs (*verbum*); an *exemplar* was the
+copy scribes worked from; a *glossa* is a note in the margin; a *summa*
+teaches a whole subject.
+
+## 2.13.0 — 2026-10-06
+
+- Help has a What's New page, under REFERENCE after About this App: every
+  version's changes, newest first. It shows its start at once and fills
+  in the rest as you read.
+- The big releases now have names, after the books and crafts of a
+  medieval scriptorium and a Hermetic covenant (Incipit, Florilegium,
+  Codex, Computus, Book of Hours, Gauntlet and more): each named
+  version's heading carries its name, and a Release names table near the
+  top of What's New says what each one brought.
+
 ## 2.12.1 — 2026-10-06
 
 - Fixes an experiment's Extraordinary Result of 11 (a modified effect):
@@ -54,7 +94,7 @@ by tests. Nothing changes in what the app shows or does.
 - Behind the scenes: the covenant sheet now updates its tabs the same way
   the other sheets do, and the automatic GitHub checks run only on request.
 
-## 2.11.0 — 2026-10-05
+## 2.11.0 — 2026-10-05 — Foundations
 
 Your data now has a home of its own: sagas, their backups, exports and the
 app's settings are kept in **Ars Magica Manager** in your Documents folder
@@ -92,7 +132,7 @@ one. A damaged settings file no longer stops the app starting, and a saga
 saved by an older version with a since-removed field in any record now
 opens instead of failing.
 
-## 2.10.0 — 2026-10-05
+## 2.10.0 — 2026-10-05 — Summa
 
 How-to guides in Help: eight step-by-step walk-throughs, listed under
 HOW-TO GUIDES when you press ?: planning and running a season, managing
@@ -104,7 +144,7 @@ Two out-of-date hints are fixed: the Advance Time dialog now says Set
 Date is in More on the saga, and the Export dialog says to import with
 More's Import.
 
-## 2.9.0 — 2026-10-05
+## 2.9.0 — 2026-10-05 — Scriptorum II
 
 Easier to read, with a clearer order of importance on every screen.
 
@@ -123,7 +163,7 @@ Easier to read, with a clearer order of importance on every screen.
 - Problems start with ✘ and things still to do with ☞ (the pointing hand
   scribes drew in margins), so they stand out by shape as well as colour.
 
-## 2.8.0 — 2026-10-04
+## 2.8.0 — 2026-10-04 — Glossa
 
 Help: press ? anywhere (F1 while typing in a dialog) for help on the part of
 the screen you're in: the section, its tab and the sheet, with the keys that
@@ -157,7 +197,7 @@ The details panel at the bottom of a sheet's tab fits what it shows.
 - Three laboratory hints are shorter so they fit on one line: Attributes,
   Inventory and Planning.
 
-## 2.6.0 — 2026-10-03
+## 2.6.0 — 2026-10-03 — Exemplar
 
 Character templates: start a new character from one of the book's
 ready-to-play characters.
@@ -178,7 +218,7 @@ ready-to-play characters.
   Magical Veil, Unravelling the Fabric of Imaginem) are added to the
   saga's own spells the first time they are needed.
 
-## 2.5.0 — 2026-10-01
+## 2.5.0 — 2026-10-01 — Verbum
 
 The keyboard rework: one key per verb, everywhere.
 
@@ -207,7 +247,7 @@ The keyboard rework: one key per verb, everywhere.
   and `c` / `l` / `f` as create keys.
 - Fixed: editing an existing Vis Source crashed.
 
-## 2.4.0 — 2026-10-01
+## 2.4.0 — 2026-10-01 — Gauntlet
 
 Lab Texts, House Rules, and moving records between sagas.
 
@@ -239,7 +279,7 @@ Lab Texts, House Rules, and moving records between sagas.
   Laboratories now work in the Import list. A preview shows what is added
   and which links are kept or dropped before anything changes.
 
-## 2.3.0 — 2026-10-01
+## 2.3.0 — 2026-10-01 — Gauntlet
 
 Moving raw vis, paying from the covenant's vis, and live Characteristic
 points.
@@ -263,7 +303,7 @@ points.
   points spent and left, and each score's cost, as each number is typed:
   red when over the budget, green when it is spent exactly.
 
-## 2.2.0 — 2026-10-01
+## 2.2.0 — 2026-10-01 — Gauntlet
 
 Covenant Situations, Poverty warnings, and sharing an invented spell.
 
@@ -282,7 +322,7 @@ Covenant Situations, Poverty warnings, and sharing an invented spell.
   (Share Spell) on Known Spells moves it to the saga's Spells, after
   asking. The magus still knows it and its Lab Texts still link to it.
 
-## 2.1.0 — 2026-10-01
+## 2.1.0 — 2026-10-01 — Gauntlet
 
 Build Points have one home: a Build tab on the covenant sheet.
 
@@ -301,7 +341,7 @@ Build Points have one home: a Build tab on the covenant sheet.
 - While a covenant is In Creation its top panel shows the Build Points
   spent against the storyguide's figure.
 
-## 2.0.0 — 2026-10-01
+## 2.0.0 — 2026-10-01 — Gauntlet
 
 Phase 4: creating covenants, laboratories and characters by the book.
 
@@ -368,7 +408,7 @@ Polish across the sheets.
   Afflicted Tongue, Deaf and Palsied Hands.
 - A test that failed now and then under load is steady.
 
-## 1.8.0 — 2026-09-30
+## 1.8.0 — 2026-09-30 — Book of Hours
 
 The rest of the seasonal activities: almost everything a character can do
 with a season now plays out when you advance it.
@@ -425,7 +465,7 @@ A leaner test suite, first part. Nothing in the app changes.
   titles and details panel, which Abilities the picker offers, the Known
   Spells rows) are now plain functions with fast tests of their own.
 
-## 1.7.0 — 2026-09-30
+## 1.7.0 — 2026-09-30 — Book of Hours
 
 Lab work, planned from the laboratory.
 
@@ -452,7 +492,7 @@ Lab work, planned from the laboratory.
   connects to, and whether it is fixed or how long it lasts.
 - The lab work screen opens with no activity chosen until you pick one.
 
-## 1.6.0 — 2026-09-29
+## 1.6.0 — 2026-09-29 — Book of Hours
 
 Study seasons.
 
@@ -470,7 +510,7 @@ Study seasons.
 - Behind the scenes: the code now passes its type check with no errors,
   and that is the standard from here on. Nothing changes in the app.
 
-## 1.5.0 — 2026-09-29
+## 1.5.0 — 2026-09-29 — Book of Hours
 
 - After a season with plans is played out (t), a summary shows what each
   person did and what it gave, by covenant, and who had nothing planned.
@@ -480,7 +520,7 @@ Study seasons.
   still shows after each season, but it isn't saved; the characters'
   Diaries keep their entries either way.
 
-## 1.4.0 — 2026-09-29
+## 1.4.0 — 2026-09-29 — Book of Hours
 
 - Each covenant has a new Seasons tab, after Inhabitants: its magi,
   companions and grogs, each with what they have planned for the season
@@ -488,7 +528,7 @@ Study seasons.
   Choose someone to see their plan and what it will give; e plans their
   season and A clears it.
 
-## 1.3.0 — 2026-09-29
+## 1.3.0 — 2026-09-29 — Book of Hours
 
 Seasons can be planned and played out (the start of Phase 3).
 
@@ -537,7 +577,7 @@ Behind the scenes: a way to measure how fast the app is.
   are rebuilt several times for every keypress, and a sheet builds all of
   its tabs when it opens. Fixing those is planned next.
 
-## 1.2.0 — 2026-09-29
+## 1.2.0 — 2026-09-29 — Computus
 
 The Rules Engine (Phase 2) works out the book's totals from what's on the
 sheets. Every figure shows where it comes from.
@@ -571,7 +611,7 @@ sheets. Every figure shows where it comes from.
   Puissant, Book Learner, Inventive Genius, Tough, Large, Deficient Arts and
   more).
 
-## 1.1.0 — 2026-09-29
+## 1.1.0 — 2026-09-29 — Computus
 
 The first piece of Phase 2, the Rules Engine.
 
@@ -588,7 +628,7 @@ The first piece of Phase 2, the Rules Engine.
   as XP toward the next score and added on; a pair that fits neither keeps
   the typed score.
 
-## 1.0.0 — 2026-09-29
+## 1.0.0 — 2026-09-29 — Codex
 
 Phase 1, the core tracker, is complete.
 
@@ -673,7 +713,7 @@ Phase 1, the core tracker, is complete.
 - A familiar's picker offers the animal and magic-being Qualities and
   Inferiorities as well as the ordinary Virtues and Flaws.
 
-## 0.10.0 — 2026-09-28
+## 0.10.0 — 2026-09-28 — Florilegium
 
 - The character Virtues & Flaws catalog has been checked entry by entry
   against the Definitive Edition and the open supplements: missing entries
@@ -705,7 +745,7 @@ Phase 1, the core tracker, is complete.
 - A character's Personal Gear shows column titles on its Weapons, Armor and
   Other Items rows, and a familiar's Natural Weapons list has them too.
 
-## 0.9.0 — 2026-09-28
+## 0.9.0 — 2026-09-28 — Florilegium
 
 - Every details panel now works the same way on every sheet and list: one
   per tab, at the bottom of the tab below the part that scrolls, always 12
@@ -723,7 +763,7 @@ Phase 1, the core tracker, is complete.
   side-by-side blocks of text.
 - Every details panel's prompt now reads "Select a ... to see its details."
 
-## 0.8.0 — 2026-09-27
+## 0.8.0 — 2026-09-27 — Florilegium
 
 - Unknown Hooks: a Minor Hook the book says "may be Unknown" (35 of them)
   can be marked Unknown in its add or Edit form. It then counts 3 points in
@@ -737,7 +777,7 @@ Phase 1, the core tracker, is complete.
 - The saga picker has an About dialog (`?`) showing the version and the
   licences and credits.
 
-## 0.7.0 — 2026-09-27
+## 0.7.0 — 2026-09-27 — Florilegium
 
 - The covenant Boons & Hooks catalog has been checked against Covenants
   and ArM5 and now has 216 entries: Writ of Crenellation, Haunted,
@@ -753,7 +793,7 @@ Phase 1, the core tracker, is complete.
   several others, how many times it can be taken, and which book it comes
   from.
 
-## 0.6.0 — 2026-09-27
+## 0.6.0 — 2026-09-27 — Florilegium
 
 - Laboratory Features: each Feature (Altar, Cauldron, Window... all 36, or a
   custom one) is built on one of the lab's Lesser or Greater Feature
@@ -799,7 +839,7 @@ Phase 1, the core tracker, is complete.
   Sources. Old free-text Specialties are converted, e.g. "Terram +1".
 - The Attributes tab records whether the sanctum is marked.
 
-## 0.4.0 — 2026-09-27
+## 0.4.0 — 2026-09-27 — Scriptorum
 
 - Every highlight in the app now uses the current theme's own colours
   instead of fixed red, green and cyan, so it stays legible whichever theme
@@ -834,7 +874,7 @@ Phase 1, the core tracker, is complete.
 - Behind the scenes: the standard form's code is simpler and better checked,
   and the tests are sturdier.
 
-## 0.2.0 — 2026-09-27
+## 0.2.0 — 2026-09-27 — Incipit
 
 The first tracked version. Includes everything since 0.1.0:
 
