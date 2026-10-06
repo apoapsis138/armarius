@@ -10,6 +10,8 @@ def isolated_sagas_dir(tmp_path, monkeypatch):
     monkeypatch.setattr(storage, "SAGAS_DIR", tmp_path)
     # Exports ('x' on a sheet, STORY-109) go to a temp folder too.
     monkeypatch.setattr(storage, "EXPORTS_DIR", tmp_path / "exports")
+    # What this "copy" of the app last saw of each saga (STORY-1405).
+    monkeypatch.setattr(storage, "_last_seen", {})
 
 
 @pytest.fixture(autouse=True)

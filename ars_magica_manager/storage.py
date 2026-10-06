@@ -4,13 +4,18 @@ user's data folder (paths.data_dir())."""
 from __future__ import annotations
 
 import json
+import os
 import re
-from collections.abc import Iterable
+import time
+from collections.abc import Iterable, Iterator
+from contextlib import contextmanager
 from dataclasses import asdict
 from pathlib import Path
+from typing import Any
 
 from . import __version__, laboratories, paths
 from .files import write_atomic
+from .merge import merge
 from .models import Saga
 
 SAGAS_DIR = paths.data_dir() / paths.SAGAS
@@ -55,11 +60,92 @@ def saga_path(saga_id: str) -> Path:
     return SAGAS_DIR / f"{saga_id}.json"
 
 
+#: What this copy of the app last saw of each saga, by its file: the file's
+#: text and data as this copy last read or wrote it, and this copy's own
+#: saga as plain data then -- what save_saga merges its changes against.
+_last_seen: dict[str, tuple[str, dict[str, Any], dict[str, Any]]] = {}
+
+#: Where save_saga last kept this copy's value over another copy's newer
+#: one ("characters[mag1].name", ...), for the saga last saved.
+last_conflicts: list[str] = []
+
+
 def save_saga(saga: Saga) -> Path:
+    """Save `saga`. Other copies of the app may share the file (a hosted saga,
+    STORY-1405): under a lock, the file is re-read and only what this copy
+    changed since it last loaded or saved the saga is written into it, so
+    another copy's changes stay. Where both changed the same value, this
+    save's wins (listed in last_conflicts)."""
     saga.app_version = __version__
     path = saga_path(saga.id)
-    write_atomic(path, json.dumps(asdict(saga), indent=2))
+    ours = asdict(saga)
+    with _saga_lock(saga.id):
+        seen = _last_seen.get(str(path))
+        theirs = base = None
+        if seen is not None:
+            text, file_data, base = seen
+            on_disk = _read_text(path)
+            # The file as this copy left it needn't be read again.
+            theirs = file_data if on_disk == text else _normalized(on_disk)
+        if base is None or theirs is None:
+            data, conflicts = ours, []
+        else:
+            data, conflicts = merge(base, ours, theirs)
+        text = json.dumps(data, indent=2)
+        write_atomic(path, text)
+    _last_seen[str(path)] = (text, data, ours)
+    last_conflicts[:] = conflicts
     return path
+
+
+def _read_text(path: Path) -> str | None:
+    try:
+        return path.read_text(encoding="utf-8")
+    except OSError:
+        return None
+
+
+def _normalized(text: str | None) -> dict[str, Any] | None:
+    """A saga file's data as load_saga would read it (older shapes upgraded,
+    stale keys dropped), or None if there's no readable file."""
+    if text is None:
+        return None
+    try:
+        return asdict(_from_data(json.loads(text)))
+    except ValueError, TypeError, KeyError:
+        return None
+
+
+#: How long save_saga waits for another copy's save to finish, and after
+#: how long a lock is taken to be left over from a copy that died mid-save.
+_LOCK_WAIT = 10.0
+_LOCK_STALE = 30.0
+
+
+@contextmanager
+def _saga_lock(saga_id: str) -> Iterator[None]:
+    """Hold the saga's lock file (".<id>.lock" beside it) while saving, so two
+    copies never merge into the file at once."""
+    lock = SAGAS_DIR / f".{saga_id}.lock"
+    lock.parent.mkdir(parents=True, exist_ok=True)
+    deadline = time.monotonic() + _LOCK_WAIT
+    while True:
+        try:
+            os.close(os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY))
+            break
+        except FileExistsError:
+            try:
+                stale = time.time() - lock.stat().st_mtime > _LOCK_STALE
+            except OSError:
+                continue  # just released: try again
+            if stale or time.monotonic() > deadline:
+                lock.unlink(missing_ok=True)
+                continue
+            time.sleep(0.02)
+    try:
+        yield
+    finally:
+        lock.unlink(missing_ok=True)
 
 
 #: How many backups backup_saga() keeps of each saga: the newest, plus older
@@ -92,7 +178,15 @@ def backup_saga(saga: Saga) -> Path:
 
 
 def load_saga(saga_id: str) -> Saga:
-    data = json.loads(saga_path(saga_id).read_text(encoding="utf-8"))
+    path = saga_path(saga_id)
+    text = path.read_text(encoding="utf-8")
+    saga = _from_data(json.loads(text))
+    data = asdict(saga)
+    _last_seen[str(path)] = (text, data, data)
+    return saga
+
+
+def _from_data(data: dict[str, Any]) -> Saga:
     saga = Saga.from_dict(data)
     for lab in saga.laboratories:
         # Specialization grants typed in before the catalog carried them.
@@ -103,6 +197,7 @@ def load_saga(saga_id: str) -> Saga:
 def delete_saga(saga_id: str) -> None:
     """Permanently delete a saga's file (no-op if it is already gone)."""
     saga_path(saga_id).unlink(missing_ok=True)
+    _last_seen.pop(str(saga_path(saga_id)), None)
 
 
 def list_sagas() -> list[str]:

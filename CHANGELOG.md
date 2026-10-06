@@ -39,6 +39,13 @@ magus; the Hermetic Techniques are verbs (*verbum*); an *exemplar* was the
 copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject.
 
+## 2.15.0 — 2026-10-06
+
+- When the saga is hosted and several people have it open, saving no
+  longer wipes out what the others saved meanwhile: each save keeps
+  everyone else's changes and writes only its own, down to the single
+  field. If two people change the same thing, the later save wins.
+
 ## 2.14.0 — 2026-10-06
 
 - Players who open a hosted saga in a browser now sign in first, with

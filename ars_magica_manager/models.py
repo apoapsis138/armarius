@@ -1145,7 +1145,7 @@ class LabFeature:
 
 
 def _feature_from_old_text(
-    text: str, feature_names: dict[str, str] | None = None
+    text: str, feature_names: dict[str, str] | None = None, *, id: str = ""
 ) -> LabFeature:
     """A pre-STORY-308 free-text Feature as a LabFeature named with the text,
     of the catalog Feature named in it (by whole word, a plural too: "Big
@@ -1160,7 +1160,7 @@ def _feature_from_old_text(
         if re.search(rf"\b{re.escape(name)}s?\b", text, re.IGNORECASE):
             feature_id = feature_names[name]
             break
-    return LabFeature(id=new_instance_id(), name=text, feature_id=feature_id)
+    return LabFeature(id=id or new_instance_id(), name=text, feature_id=feature_id)
 
 
 def link_unlinked_features(lab: Laboratory) -> None:
@@ -1285,14 +1285,16 @@ class Laboratory:
             VirtueFlawInstance(**known_fields(VirtueFlawInstance, vf))
             for vf in d.get("virtues_flaws", [])
         ]
-        for vf in d["virtues_flaws"]:
-            vf.id = vf.id or new_instance_id()
+        # Ids given at load are the same every time (not new_instance_id):
+        # a hosted saga's saves compare the file as loaded (STORY-1405).
+        for i, vf in enumerate(d["virtues_flaws"]):
+            vf.id = vf.id or f"{d.get('id', '')}-vf{i}"
         old_features = [f for f in d.get("features", []) if isinstance(f, str)]
         d["features"] = [
-            _feature_from_old_text(f)  # pre-STORY-308 free text
-            if isinstance(f, str)
+            _feature_from_old_text(f, id=f"{d.get('id', '')}-feature{i}")
+            if isinstance(f, str)  # pre-STORY-308 free text
             else LabFeature.from_dict(f)
-            for f in d.get("features", [])
+            for i, f in enumerate(d.get("features", []))
         ]
         d["specialties"] = [
             _parse_old_specialty(s)
@@ -2574,8 +2576,9 @@ class Covenant:
             for bh in d.get("boons_hooks", [])
         ]
         # Diary Story Events link to a Boon/Hook by its instance id.
-        for bh in d["boons_hooks"]:
-            bh.id = bh.id or new_instance_id()
+        # The same ids every load, like a laboratory's Virtues (STORY-1405).
+        for i, bh in enumerate(d["boons_hooks"]):
+            bh.id = bh.id or f"{d.get('id', '')}-bh{i}"
         d["diary"] = [
             CovenantDiaryEntry(**known_fields(CovenantDiaryEntry, e))
             for e in d.get("diary", [])
