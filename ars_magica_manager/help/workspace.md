@@ -238,7 +238,7 @@ Choose who plays a character with **Played by** in the character's Biographical 
 
 Only the storyguide (your own window, or someone signed in as Storyguide) can make new records (New), advance or set the season, import, move vis, share spells, or change the saga itself, its house rules and its players. Keys a player can't use there don't appear, and if a change slips through anyway, the app doesn't save it and says so.
 
-**See also:** [Signing in](help:sign-in), [The saga](help:saga)
+**See also:** [Signing in](help:sign-in), [How to host a saga](help:guide-hosting), [The saga](help:saga)
 
 # Signing in
 <!-- help: sign-in -->
@@ -249,4 +249,4 @@ If the saga has no players yet, it can't be opened from a browser: the storyguid
 
 While several people have the saga open, each one's saves keep everyone else's changes, and within a few seconds the others' screens show them: the sheet on show updates where it is (with a note such as "Ana changed Corvinus; reloaded"), and if two people open the same character, both are told ("Ana is also on Corvinus"). If the record you have open is deleted elsewhere, the saga is shown instead.
 
-**See also:** [Players](help:players), [Saga picker](help:saga-picker)
+**See also:** [Players](help:players), [How to host a saga](help:guide-hosting), [Saga picker](help:saga-picker)

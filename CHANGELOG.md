@@ -39,6 +39,13 @@ magus; the Hermetic Techniques are verbs (*verbum*); an *exemplar* was the
 copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject.
 
+## 2.17.1 — 2026-10-06
+
+- Help gains "How to host a saga for your troupe": what to set up, how
+  to start and stop hosting, Tailscale and ZeroTier recipes, and what
+  players see. A character's Biographical Detail now shows who it is
+  Played by when the saga has players.
+
 ## 2.17.0 — 2026-10-06
 
 - When several people have a hosted saga open, each one sees the others'

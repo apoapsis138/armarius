@@ -1628,9 +1628,14 @@ class CharacterSheetView(SheetView):
         Background fields (Setting/Confidence/Size live in the top panel)
         plus every Description field but the free-text Biography box."""
         b, d = self.character.background, self.character.description
+        played_by = []
+        if self.saga.players:  # a hosted saga's sign-in (STORY-1404)
+            player = pl.player_by_id(self.saga, b.player_id)
+            played_by = [f"Played by: {escape(player.name) if player else '(no one)'}"]
         return "\n".join(
             [
                 f"Player: {escape(b.player) or '(not set)'}",
+                *played_by,
                 f"Birth Name: {escape(b.birth_name) or '(not set)'}",
                 f"Year Born: {b.year_born if b.year_born is not None else '(not set)'}",
                 f"Race/Nationality: {escape(b.race_nationality) or '(not set)'}",
