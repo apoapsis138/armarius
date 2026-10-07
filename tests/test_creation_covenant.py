@@ -274,6 +274,7 @@ async def test_the_covenant_worksheet_lists_what_build_points_went_on():
     from ars_magica_manager import storage
     from ars_magica_manager.app import ArsMagicaManagerApp
     from ars_magica_manager.screens.fields import FieldsDialog
+    from ars_magica_manager.screens.prompts import MenuScreen
     from ars_magica_manager.screens.workspace.base import NodeKind
 
     saga = _saga()
@@ -312,15 +313,16 @@ async def test_the_covenant_worksheet_lists_what_build_points_went_on():
             ),
         )
         rows = _rows(screen)
-        assert "Tractatus: Herbal 0 not priced: set its level or Quality" in " ".join(
-            rows
-        )
+        assert "Tractatus: Herbal 0 set its level or Quality" in " ".join(rows)
         assert any("Vis source: Spring (4 a year) 20" in r for r in rows)
         assert any("Magi without a laboratory (2) -100" in r for r in rows)
         await _choose(pilot, screen, "Herbal")
         assert "Name: Herbal" in str(screen.query_one("#ws-details", Static).render())
-        # a adds a book to the covenant's library.
+        # a asks what to buy; b is a book for the covenant's library.
         await pilot.press("a")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, MenuScreen))
+        await pilot.pause()
+        await pilot.press("b")
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         await pilot.pause()
         assert "Add a Book" in str(app.screen.query_one("#fields-title").render())
@@ -536,4 +538,204 @@ async def test_the_laboratory_worksheet_lists_its_virtues_and_flaws():
         await _choose(pilot, screen, "Superior Construction")
         assert "Superior Construction" in str(
             screen.query_one("#ws-details", Static).render()
+        )
+
+
+# -- the covenant's baseline: season, aura, starting income --
+
+
+def test_a_new_covenant_starts_at_the_baseline_aura_in_its_season_and_realm():
+    from ars_magica_manager import creation
+
+    saga = Saga(id="s", name="S")
+    covenant = creation.add_covenant(
+        saga, "Fengheld", season="Summer", aura_realm="Faerie"
+    )
+    assert (covenant.aura, covenant.aura_realm, covenant.covenant_season) == (
+        3,
+        "Faerie",
+        "Summer",
+    )
+
+
+def test_starting_income_follows_poverty_wealth_and_the_magi_rule():
+    from ars_magica_manager.models import IncomeSource
+
+    saga = _saga()
+    covenant = saga.covenants[0]
+
+    def labels():
+        return [c.label for c in cov.income_choices(saga, covenant)]
+
+    assert labels() == [
+        "One Typical source (100 pounds)",
+        "Two Lesser sources (40 pounds each)",
+    ]
+    # Two magi: with the optional rule, 4 under six.
+    saga.rule_options["income_per_magus"] = True
+    assert labels() == [
+        "One Typical source (40 pounds)",
+        "Two Lesser sources (16 pounds each)",
+    ]
+    saga.rule_options = {}
+    covenant.boons_hooks = [VirtueFlawInstance("covbh_boon_minor_wealth")]
+    assert labels() == ["One Greater source (250 pounds)"]
+    covenant.boons_hooks = [VirtueFlawInstance("covbh_hook_minor_poverty")]
+    assert labels() == ["One Lesser source (40 pounds)"]
+    covenant.boons_hooks = []
+    check = cov.income_check(saga, covenant)
+    assert (check.status, check.detail) == ("advice", "none")
+    covenant.economics.income_sources = [
+        IncomeSource(id="i1", type="Lesser"),
+        IncomeSource(id="i2", type="Lesser"),
+    ]
+    assert cov.income_check(saga, covenant).status == "pass"
+
+
+def test_a_resource_hook_names_its_source_and_marks_it():
+    from ars_magica_manager import covenants as cov_rules
+    from ars_magica_manager.models import IncomeSource
+
+    saga = _saga()
+    covenant = saga.covenants[0]
+    covenant.possessions = [
+        Possession(id="p1", kind="vis_source", name="Spring", art="Aquam", pawns=4)
+    ]
+    covenant.economics.income_sources = [IncomeSource(id="i1", name="Mill")]
+    hook = VirtueFlawInstance("covbh_hook_minor_contested_resource", id="h1")
+    covenant.boons_hooks = [hook]
+    assert cov_rules.resource_sources(covenant) == [
+        ("Vis source: Spring", "p1"),
+        ("Income: Mill (Typical)", "i1"),
+    ]
+    found = _found(saga, covenant, "boons_hooks")
+    assert found["Resource Hooks name the source they're about"][0] == "advice"
+    cov_rules.link_resource(covenant, hook, "p1")
+    assert covenant.possessions[0].contested
+    assert "Resource Hooks name the source they're about" not in _found(
+        saga, covenant, "boons_hooks"
+    )
+    cov_rules.link_resource(covenant, hook, "i1")
+    assert not covenant.possessions[0].contested
+    assert covenant.economics.income_sources[0].contested
+
+
+def test_an_aura_realm_other_than_magic_is_checked():
+    saga = _saga()
+    covenant = saga.covenants[0]
+    covenant.aura_realm = "Faerie"
+    label = "A Faerie aura comes with the Faerie Aura Hook"
+    assert _found(saga, covenant, "boons_hooks")[label][0] == "warn"
+    covenant.boons_hooks = [VirtueFlawInstance("covbh_hook_minor_faerie_aura")]
+    assert _found(saga, covenant, "boons_hooks")[label][0] == "pass"
+    covenant.aura_realm = "Magic"
+    assert _found(saga, covenant, "boons_hooks")[label][0] == "warn"
+    covenant.boons_hooks = []
+    covenant.aura_realm = "Divine"
+    found = _found(saga, covenant, "boons_hooks")
+    assert found["A Magic aura (the creation rules assume one)"][0] == "advice"
+
+
+def test_someone_bought_with_build_points_joins_the_category_of_their_ability():
+    from ars_magica_manager import inhabitants as inh
+
+    assert inh.bought_kind("Craft: Smith", "General") == "craftsperson"
+    assert inh.bought_kind("Single Weapon", "Martial") == "turb"
+    assert inh.bought_kind("Profession: Scribe", "General") == "specialist"
+    assert inh.bought_kind("Artes Liberales", "Academic", teacher=True) == "specialist"
+
+
+async def test_the_baseline_step_starts_the_income_by_the_rules():
+    from support import wait_until
+
+    from ars_magica_manager import storage
+    from ars_magica_manager.app import ArsMagicaManagerApp
+    from ars_magica_manager.screens.pickers import RemovalPickerScreen
+    from ars_magica_manager.screens.workspace.base import NodeKind
+
+    saga = _saga()
+    saga.id = "test_saga"
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        screen = await _open(
+            pilot, app, (NodeKind.COVENANT, "cov1"), "_covenant_sheet_view"
+        )
+        assert screen.step == "power"
+
+        def button():
+            return next(
+                (
+                    b
+                    for b in screen.query("#ws-actions Button")
+                    if str(b.label) == "Set starting income"
+                ),
+                None,
+            )
+
+        assert await wait_until(pilot, lambda: button() is not None)
+        button().press()
+        assert await wait_until(
+            pilot, lambda: isinstance(app.screen, RemovalPickerScreen)
+        )
+        app.screen.dismiss(1)  # two Lesser sources
+        assert await wait_until(
+            pilot,
+            lambda: (
+                [
+                    s.type
+                    for s in storage.load_saga("test_saga")
+                    .covenants[0]
+                    .economics.income_sources
+                ]
+                == ["Lesser", "Lesser"]
+            ),
+        )
+        assert await wait_until(
+            pilot, lambda: any("Source of income 2" in r for r in _rows(screen))
+        )
+
+
+async def test_e_on_a_resource_hook_names_its_source():
+    from support import wait_until
+    from textual.widgets import OptionList, Select
+
+    from ars_magica_manager import storage
+    from ars_magica_manager.app import ArsMagicaManagerApp
+    from ars_magica_manager.screens.fields import FieldsDialog
+    from ars_magica_manager.screens.workspace.base import NodeKind
+
+    saga = _saga()
+    saga.id = "test_saga"
+    saga.covenants[0].possessions = [
+        Possession(id="p1", kind="vis_source", name="Spring", art="Aquam", pawns=4)
+    ]
+    saga.covenants[0].boons_hooks = [
+        VirtueFlawInstance("covbh_hook_minor_contested_resource", id="h1")
+    ]
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        screen = await _open(
+            pilot, app, (NodeKind.COVENANT, "cov1"), "_covenant_sheet_view"
+        )
+        screen.query_one("#ws-steps", OptionList).highlighted = 2
+        assert await wait_until(pilot, lambda: screen.step == "boons_hooks")
+        assert await wait_until(
+            pilot, lambda: any("needs its source" in r for r in _rows(screen))
+        )
+        await _choose(pilot, screen, "Contested Resource")
+        await pilot.press("e")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        await pilot.pause()
+        app.screen.query_one("#fld-resource", Select).value = "p1"
+        app.screen.query_one("#btn-save").press()
+        assert await wait_until(
+            pilot,
+            lambda: (
+                storage.load_saga("test_saga").covenants[0].possessions[0].contested
+            ),
+        )
+        assert await wait_until(
+            pilot, lambda: not any("needs its source" in r for r in _rows(screen))
         )

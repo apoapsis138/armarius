@@ -63,6 +63,20 @@ OPTIONS: tuple[RuleOption, ...] = (
         ),
     ),
     RuleOption(
+        key="income_per_magus",
+        label="Starting income by number of magi",
+        effect=(
+            "A new covenant's starting income assumes six magi: a Typical "
+            "source gains or loses 15 pounds a year for each magus over or "
+            "under six, a Lesser source 6."
+        ),
+        source=(
+            "Ars Magica Definitive Edition, Chapter Six: Covenants, Covenant "
+            "Finances, Baseline (https://www.redcap.org/page/Ars_Magica_"
+            "Definitive_Edition,_Chapter_Six:_Covenants#Baseline_2)"
+        ),
+    ),
+    RuleOption(
         key="strict_creation",
         label="Enforce creation rules strictly",
         effect=(

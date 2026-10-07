@@ -6,6 +6,7 @@ from __future__ import annotations
 from typing import Any, ClassVar
 
 from ... import catalog, covenant_diary, seasons, sourcebooks, vis
+from ... import covenants as cov_rules
 from ... import economics as eco
 from ... import inhabitants as inh
 from ... import possessions as pos
@@ -14,6 +15,7 @@ from ...markup import escape
 from ...models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
+    BOON_HOOK_RESOURCE,
     INCOME_TYPE_DEFAULTS,
     INCOME_TYPES,
     LOYALTY_EQUIPMENT,
@@ -789,6 +791,12 @@ class CovenantActions(WorkspaceBase):
                 instance.id = instance.id or new_instance_id()
                 covenant.boons_hooks.append(instance)
                 self._commit(_BOON_HOOK_SECTION[kind])
+                if instance.vf_id in cov_rules.RESOURCE_HOOKS:
+                    self.notify(
+                        "Link this Hook to the vis or income source it is about "
+                        "(e on it, under Boons & Hooks), once that source exists.",
+                        timeout=10,
+                    )
 
         self.app.push_screen(
             CovenantBoonHookPickerScreen(
@@ -868,7 +876,11 @@ class CovenantActions(WorkspaceBase):
                 instance.params,
                 unknown=result.get("unknown", False),
             )
-            self._commit(_BOON_HOOK_SECTION[kind])
+            if "resource" in result:
+                cov_rules.link_resource(covenant, instance, result["resource"] or "")
+            self._commit(
+                _BOON_HOOK_SECTION[kind], "section-eco-income", "section-pos-vis_source"
+            )
 
         self.app.push_screen(
             FieldsDialog(
@@ -878,6 +890,12 @@ class CovenantActions(WorkspaceBase):
                     instance.params.get(BOON_HOOK_DESCRIPTION, ""),
                     can_be_unknown=definition.unknown,
                     unknown=boon_hook_is_unknown(instance, definition),
+                    sources=(
+                        cov_rules.resource_sources(covenant)
+                        if instance.vf_id in cov_rules.RESOURCE_HOOKS
+                        else None
+                    ),
+                    source=instance.params.get(BOON_HOOK_RESOURCE, ""),
                 ),
             ),
             handle_result,

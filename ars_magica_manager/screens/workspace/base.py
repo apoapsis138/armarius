@@ -1844,7 +1844,11 @@ class WorkspaceBase(Screen[None]):
         async def handle_result(values: dict[str, Any] | None) -> None:
             if values is not None:
                 covenant = creation.add_covenant(
-                    self.saga, values["name"], values["notes"]
+                    self.saga,
+                    values["name"],
+                    values["notes"],
+                    season=values["season"] or "Spring",
+                    aura_realm=values["aura_realm"] or "Magic",
                 )
                 storage.save_saga(self.saga)
                 self._rebuild_tree()

@@ -874,3 +874,18 @@ def form_problem(values: dict[str, Any]) -> str | None:
     if values.get("quantity", 1) < 1:
         return "Quantity must be at least 1."
     return None
+
+
+def bought_kind(ability: str, category: str, *, teacher: bool = False) -> str:
+    """Which covenfolk category a person bought with Build Points belongs
+    to, from the Ability they serve the covenant with: the Build Points
+    rules call them all specialists, but the covenant's finances count a
+    Craft as a craftsperson and a Martial Ability as the turb (full-time
+    soldiers); a teacher, or anyone else, is a specialist."""
+    if teacher:
+        return "specialist"
+    if ability.startswith("Craft"):
+        return "craftsperson"
+    if category == "Martial":
+        return "turb"
+    return "specialist"

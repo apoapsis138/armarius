@@ -190,7 +190,12 @@ CONTRACTS: dict[str, Contract] = {
         ],
     ),
     "buy specialist": Contract(
-        prefill={"Name": "", "A teacher": False, "Its score": "1"},
+        prefill={
+            "Name": "",
+            "A teacher": False,
+            "Ability used for the covenant": None,
+            "Its score": "1",
+        },
         edits={
             "Name": "Master Odo",
             "A teacher": True,
@@ -252,10 +257,19 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"Year": "-"}, {"Year": ""}],
     ),
     "create covenant": Contract(
-        prefill={"Name": ""},
-        edits={"Name": "Harbour", "Notes": "By the sea"},
-        saved=lambda s: [(c.name, c.notes) for c in s.covenants if c.name == "Harbour"],
-        expected=[("Harbour", "By the sea")],
+        prefill={"Name": "", "Season": "Spring", "Aura realm": "Magic"},
+        edits={
+            "Name": "Harbour",
+            "Notes": "By the sea",
+            "Season": "Winter",
+            "Aura realm": "Faerie",
+        },
+        saved=lambda s: [
+            (c.name, c.notes, c.covenant_season, c.aura_realm, c.aura)
+            for c in s.covenants
+            if c.name == "Harbour"
+        ],
+        expected=[("Harbour", "By the sea", "Winter", "Faerie", 3)],
         invalid={"Name": ""},
     ),
     "create character": Contract(
@@ -1381,6 +1395,13 @@ def _device(saga: Saga, device_id: str):
 _INPUTS = (Input, Select, TextArea, Checkbox)
 
 
+def _is_input(widget: Widget) -> bool:
+    """A field's widget: an input, or a "picker" field's button."""
+    return isinstance(widget, _INPUTS) or (
+        isinstance(widget, Button) and widget.has_class("fd-picker")
+    )
+
+
 def _text(widget: Widget) -> str:
     return str(widget.render()).strip().rstrip(":").strip()
 
@@ -1392,9 +1413,7 @@ def field_widget(dialog, label: str, aliases: dict[str, str]) -> Widget:
         if isinstance(widget, Checkbox) and str(widget.label).startswith(label):
             return widget
         if type(widget) in (Label, Static) and _text(widget).startswith(label):
-            following = next(
-                (w for w in widgets[position + 1 :] if isinstance(w, _INPUTS)), None
-            )
+            following = next((w for w in widgets[position + 1 :] if _is_input(w)), None)
             if following is not None:
                 return following
     if label in aliases:
@@ -1403,6 +1422,8 @@ def field_widget(dialog, label: str, aliases: dict[str, str]) -> Widget:
 
 
 def field_value(widget: Widget) -> Any:
+    if isinstance(widget, Button):  # a picker field: what it holds
+        return widget.screen._picked.get((widget.id or "").removeprefix("fld-"))
     if isinstance(widget, (Input, Select)):
         return widget.value
     if isinstance(widget, TextArea):
@@ -1412,6 +1433,11 @@ def field_value(widget: Widget) -> Any:
 
 
 def set_field(widget: Widget, value: Any) -> None:
+    if isinstance(widget, Button):  # a picker field: as if it were chosen
+        dialog = widget.screen
+        dialog._picked[(widget.id or "").removeprefix("fld-")] = value
+        dialog._react()
+        return
     if isinstance(widget, (Input, Select)):
         widget.value = value
     elif isinstance(widget, TextArea):

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from support import wait_until
-from textual.widgets import Button, ListView, OptionList, Static, Tree
+from textual.widgets import Button, ListView, Static, Tree
 
 from ars_magica_manager import catalog, covenants, sourcebooks, storage
 from ars_magica_manager.app import ArsMagicaManagerApp
@@ -139,33 +139,11 @@ async def test_the_worksheet_adds_a_covenant_situation_and_the_sheet_warns():
         )
         await pilot.pause()  # let the worksheet mount and choose its first step
         screen = app.screen
-        screen.query_one("#ws-steps", OptionList).highlighted = 2
-        assert await wait_until(pilot, lambda: screen.step == "boons_hooks")
+        # A Situation is a starting point, on the Baseline step.
+        assert screen.step == "power"
 
-        def button():
-            return next(
-                (
-                    b
-                    for b in screen.query("#ws-actions Button")
-                    if str(b.label) == "Use a Covenant Situation"
-                ),
-                None,
-            )
-
-        assert await wait_until(pilot, lambda: button() is not None)
-        button().press()
-        assert await wait_until(
-            pilot, lambda: isinstance(app.screen, RemovalPickerScreen)
-        )
-        # Only the core book's six are offered with no supplements in play.
-        assert len(app.screen.labels) == 6
         # Winter Ruins, the last of them: it has Poverty (Minor).
-        options = app.screen.query_one("#removal-picker-list", ListView)
-        assert await wait_until(pilot, lambda: len(options.children) == 6)
-        options.index = 5
-        await pilot.pause()
-        await pilot.press("enter")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await _choose_situation(pilot, app, screen, 5)
         await pilot.press("y")
         assert await wait_until(
             pilot,
@@ -179,3 +157,69 @@ async def test_the_worksheet_adds_a_covenant_situation_and_the_sheet_warns():
                 in str(view.query_one("#cov-bh-warnings", Static).render())
             ),
         )
+        # A second Situation warns, then replaces the first one's entries.
+        assert await wait_until(pilot, lambda: app.screen is screen)
+        await _choose_situation(pilot, app, screen, 0)
+        message = str(app.screen.query_one("#confirm-message", Static).render())
+        assert "Winter Ruins is already applied" in message
+        assert "Boons and Hooks you added yourself stay" in message
+        await pilot.press("y")
+        first = catalog.load_covenant_situation_catalog()[0]
+        assert await wait_until(
+            pilot,
+            lambda: (
+                covenants.situation_in_use(storage.load_saga("test_saga").covenants[0])
+                == (first.id, len(covenants.situation_instances(first)))
+            ),
+        )
+
+
+async def _choose_situation(pilot, app, screen, index: int) -> None:
+    """Press the worksheet's Use a Covenant Situation, choose the
+    `index`th of the six core ones, and wait for the confirmation."""
+
+    def button():
+        return next(
+            (
+                b
+                for b in screen.query("#ws-actions Button")
+                if str(b.label) == "Use a Covenant Situation"
+            ),
+            None,
+        )
+
+    assert await wait_until(pilot, lambda: button() is not None)
+    button().press()
+    assert await wait_until(pilot, lambda: isinstance(app.screen, RemovalPickerScreen))
+    # Only the core book's six are offered with no supplements in play.
+    assert len(app.screen.labels) == 6
+    options = app.screen.query_one("#removal-picker-list", ListView)
+    assert await wait_until(pilot, lambda: len(options.children) == 6)
+    options.index = index
+    await pilot.pause()
+    await pilot.press("enter")
+    assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+
+
+def test_a_second_situation_replaces_the_first_but_not_the_users_own():
+    from ars_magica_manager import catalog
+    from ars_magica_manager import covenants as cov_rules
+    from ars_magica_manager.models import Covenant, VirtueFlawInstance
+
+    first, second = catalog.load_covenant_situation_catalog()[:2]
+    covenant = Covenant(id="c", saga_id="s", name="Keep")
+    own = VirtueFlawInstance("covbh_hook_minor_monster", id="own")
+    covenant.boons_hooks = [own]
+    assert cov_rules.situation_in_use(covenant) is None
+    cov_rules.use_situation(covenant, cov_rules.situation_instances(first))
+    assert cov_rules.situation_in_use(covenant) == (
+        first.id,
+        len(cov_rules.situation_instances(first)),
+    )
+    cov_rules.use_situation(covenant, cov_rules.situation_instances(second))
+    assert cov_rules.situation_in_use(covenant) == (
+        second.id,
+        len(cov_rules.situation_instances(second)),
+    )
+    assert covenant.boons_hooks[0] is own
+    assert len(covenant.boons_hooks) == 1 + len(cov_rules.situation_instances(second))

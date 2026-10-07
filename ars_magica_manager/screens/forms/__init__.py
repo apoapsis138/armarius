@@ -18,6 +18,7 @@ from .character import _fatigue_fields as _fatigue_fields
 from .character import _hermetic_fields as _hermetic_fields
 from .character import _wounds_fields as _wounds_fields
 from .covenant import ImproveIncomeScreen as ImproveIncomeScreen
+from .covenant import _buy_specialist_dialog as _buy_specialist_dialog
 from .covenant import _contested_fields as _contested_fields
 from .covenant import _covenant_fields as _covenant_fields
 from .covenant import _inhabitant_fields as _inhabitant_fields

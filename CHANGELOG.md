@@ -41,6 +41,34 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.25.0 — 2026-10-07
+
+- New Covenant also asks for the covenant's Season and Aura realm (Magic
+  unless you say otherwise), and a new covenant starts at the creation
+  baseline's aura of 3.
+- The covenant's Creation Worksheet has new steps: Baseline, Resources,
+  Boons & Hooks and Review.
+- Baseline: Power Level and Build Points, the season and aura, a Covenant
+  Situation, and the starting income. Set starting income makes one
+  Typical source (100 pounds a year) or two Lesser (40 each), or what a
+  Poverty Hook or Wealth Boon allows. A new optional rule, Starting income
+  by number of magi, adds or takes 15 pounds (6 for a Lesser source) for
+  each magus over or under six.
+- Choosing a second Covenant Situation warns first, then replaces the
+  Boons and Hooks the first one brought; ones you added yourself stay.
+- Resources: a tally of Build Points by category, then everything they
+  bought, with a to buy a book, vis source, vis stock, enchanted item or
+  specialist, and e and d on any row.
+- Buy a Specialist picks the Ability from the Ability picker, and the
+  Ability decides where they belong: a Craft makes a craftsperson, a
+  Martial Ability a member of the turb, anyone else a specialist.
+- A Contested, Indiscreet or Dwindling Resource Hook names the vis or
+  income source it is about, which marks that source; until then it says
+  it needs its source.
+- New creation checks: a Faerie aura needs the Faerie Aura Hook, other
+  realms are outside the creation rules, and the starting income should
+  be one of the book's choices.
+
 ## 2.24.0 — 2026-10-07
 
 - The covenant's Creation Worksheet shows what was added. Build Points

@@ -9,20 +9,15 @@ from collections.abc import Callable, Sequence
 from functools import partial
 from typing import TYPE_CHECKING
 
-from .. import books as bk
 from .. import catalog, creation, sourcebooks
-from .. import laboratories as lab_rules
 from .. import sheet_text as st
 from .. import spells as spl
 from ..arts import ART_DESCRIPTIONS, ARTS
-from ..covenants import boon_hook_points, covenant_boon_points, covenant_hook_points
 from ..markup import aligned, escape
 from ..models import (
     ArtScore,
     Character,
-    Covenant,
     CreationXp,
-    Laboratory,
     Saga,
     VirtueFlawInstance,
 )
@@ -30,7 +25,6 @@ from ..rules import creation as rules
 from ..rules import creation_access as access
 from ..rules import creation_character as cc
 from ..rules import creation_characteristics as cch
-from ..rules import creation_covenant as cov
 from ..rules import creation_later as later
 from ..rules import creation_magus as magus
 from ..rules import creation_packages as packages
@@ -47,7 +41,6 @@ from .creation_worksheet import (
     StepRow,
 )
 from .pickers import RemovalPickerScreen
-from .widgets import boon_hook_info_text
 
 if TYPE_CHECKING:
     from .workspace.screen import WorkspaceScreen
@@ -854,300 +847,3 @@ def _finish_actions(saga: Saga, record: Record) -> list[StepAction]:
 
 
 PANELS[("character", "finish")] = StepPanel(_finish_budget, _finish_actions)
-
-
-# -- New Covenant --
-
-
-def _covenant(record: Record) -> Covenant:
-    assert isinstance(record, Covenant)
-    return record
-
-
-def _power_budget(saga: Saga, record: Record) -> str:
-    covenant = _covenant(record)
-    power = cov.POWER_BY_NAME.get(covenant.power_level)
-    founded = covenant.year_founded
-    rows: list[tuple[str, object]] = [
-        ("Power Level", covenant.power_level or "(not chosen)"),
-        ("Year Founded", founded if founded is not None else "(not set)"),
-    ]
-    if power is not None:
-        top = f"{power.most}" if power.most is not None else "no top"
-        cap = power.max_level if power.max_level is not None else "none"
-        budget = covenant.build_points_budget
-        rows += [
-            ("Range", f"{power.least} to {top} Build Points"),
-            (
-                "Build Points (storyguide)",
-                budget if budget is not None else "(not set)",
-            ),
-            ("Highest text or effect level", cap),
-            ("Magi without a laboratory", covenant.magi_without_lab),
-        ]
-    baseline = (
-        "Free for every covenant: aura 3, one Typical source of income, a "
-        "standard laboratory per magus, about a grog and two covenfolk per "
-        "magus."
-    )
-    return f"{aligned(rows)}\n{baseline}"
-
-
-def _power_actions(saga: Saga, record: Record) -> list[StepAction]:
-    covenant = _covenant(record)
-    return [
-        StepAction(
-            "Choose Power Level", lambda ws, r: ws._choose_power_level(covenant)
-        ),
-        StepAction("Edit covenant", lambda ws, r: ws._edit_covenant()),
-    ]
-
-
-#: The Build Points list's columns.
-_BP_NAME = 56
-BP_HEADER = f"  {'What':<{_BP_NAME}}{'Points':>7}"
-
-
-def _bp_label(text: str, points: object, note: str = "") -> str:
-    tail = f"  [dim]{escape(note)}[/]" if note else ""
-    return f"{pad(text, _BP_NAME)}{points!s:>7}{tail}"
-
-
-def _build_points_budget(saga: Saga, record: Record) -> str:
-    covenant = _covenant(record)
-    spent = cov.spent(saga, covenant)
-    budget = covenant.build_points_budget
-    if budget is None:
-        head = f"Build Points spent: {spent} (no budget set yet: Power Level step)"
-    else:
-        head = f"Build Points: {budget}, [b]{spent} spent, {budget - spent} left[/]"
-    return (
-        f"{head}\nPriced from the covenant's Library, Possessions (vis), "
-        "Enchanted Devices, starting laboratories and bought specialists. A "
-        "grog or companion with a character sheet costs nothing."
-    )
-
-
-def _build_points_rows(saga: Saga, record: Record) -> list[StepRow]:
-    """The covenant's books, each with its points (e edits, d deletes;
-    one not priced yet says so), then everything else its Build Points
-    went on."""
-    covenant = _covenant(record)
-    library = bk.books_owned_by(saga, "covenant", covenant.id)
-    rows: list[StepRow] = []
-    if library:
-        rows.append(StepRow("Library", heading=True))
-    for book in library:
-        points = bk.cost(book, saga)
-        if points:
-            note = ""
-        elif bk.pooled(book.type):
-            note = "pooled: see below"
-        else:
-            note = "not priced: set its level or Quality"
-        name = book.name or "(untitled)"
-        label = name if name.startswith(book.type) else f"{book.type}: {name}"
-        rows.append(
-            StepRow(
-                _bp_label(
-                    label, points if points or not bk.pooled(book.type) else "—", note
-                ),
-                bk.detail_text(saga, book),
-                edit=lambda ws, b=book: ws._book_form(b),
-                delete=lambda ws, b=book: ws._delete_book(b),
-            )
-        )
-    others = [c for c in cov.costs(saga, covenant) if not c.book_id]
-    if others:
-        rows.append(StepRow("Everything else", heading=True))
-        rows += [
-            StepRow(
-                _bp_label(c.label, c.points),
-                f"[b]{escape(c.label)}[/]\n{c.points} Build Points"
-                + (f" ({escape(c.category)})" if c.category else "")
-                + "\n\n[dim]Change it on the covenant's sheet "
-                "(Possessions, Devices, Laboratories or Inhabitants).[/]",
-            )
-            for c in others
-        ]
-    return rows
-
-
-def _build_points_actions(saga: Saga, record: Record) -> list[StepAction]:
-    covenant = _covenant(record)
-    return [StepAction("Buy a specialist", lambda ws, r: ws._buy_specialist(covenant))]
-
-
-def _boons_hooks_budget(saga: Saga, record: Record) -> str:
-    covenant = _covenant(record)
-    boons_catalog = catalog.load_covenant_boon_hook_catalog_by_id()
-    boons = covenant_boon_points(covenant, boons_catalog)
-    hooks = covenant_hook_points(covenant, boons_catalog)
-    return aligned([("Boon points", f"{boons:g}"), ("Hook points", f"{hooks:g}")])
-
-
-#: The Boons and Hooks list's columns.
-_BH_NAME = 56
-BH_HEADER = f"  {'Boon or Hook':<{_BH_NAME}}{'Points':>7}"
-
-
-def _boons_hooks_rows(saga: Saga, record: Record) -> list[StepRow]:
-    """The covenant's Boons, then its Hooks, each with its points and
-    rules; e edits one, d removes it."""
-    covenant = _covenant(record)
-    by_id = catalog.load_covenant_boon_hook_catalog_by_id()
-    rows: list[StepRow] = []
-    for kind, heading in (("Boon", "Boons"), ("Hook", "Hooks")):
-        found = [
-            (index, bh, by_id[bh.vf_id])
-            for index, bh in enumerate(covenant.boons_hooks)
-            if bh.vf_id in by_id and by_id[bh.vf_id].type == kind
-        ]
-        if not found:
-            continue
-        rows.append(StepRow(heading, heading=True))
-        for index, bh, definition in found:
-            points = boon_hook_points(bh, definition)
-            rows.append(
-                StepRow(
-                    _bh_label(catalog.describe_boon_hook(bh, by_id), points),
-                    boon_hook_info_text(covenant, index),
-                    edit=lambda ws, k=kind, i=index: ws._edit_boon_hook_at(k, i),
-                    delete=lambda ws, k=kind, i=index: ws._confirm_remove_boon_hook(
-                        k, i
-                    ),
-                )
-            )
-    return rows
-
-
-def _bh_label(name: str, points: float) -> str:
-    return f"{pad(name, _BH_NAME)}{points:>7g}"
-
-
-def _boons_hooks_actions(saga: Saga, record: Record) -> list[StepAction]:
-    return [
-        StepAction("Add a Hook", lambda ws, r: ws._add_boon_hook("Hook")),
-        StepAction(
-            "Use a Covenant Situation",
-            lambda ws, r: ws._use_covenant_situation(_covenant(r)),
-        ),
-    ]
-
-
-def _review_budget(saga: Saga, record: Record) -> str:
-    return "\n".join(["Review:", *review_lines(saga, record)])
-
-
-PANELS[("covenant", "power")] = StepPanel(_power_budget, _power_actions)
-PANELS[("covenant", "build_points")] = StepPanel(
-    _build_points_budget,
-    _build_points_actions,
-    StepList(
-        BP_HEADER,
-        _build_points_rows,
-        add=lambda ws, r: ws._book_form(None),
-        add_label="Add a book",
-        edit_label="Edit the book",
-        delete_label="Delete the book",
-        hint="Choose a row to see what it is and what it costs.",
-    ),
-)
-PANELS[("covenant", "boons_hooks")] = StepPanel(
-    _boons_hooks_budget,
-    _boons_hooks_actions,
-    StepList(
-        BH_HEADER,
-        _boons_hooks_rows,
-        add=lambda ws, r: ws._add_boon_hook("Boon"),
-        add_label="Add a Boon",
-        delete_label="Remove",
-        hint="Choose a Boon or Hook to read its rules.",
-    ),
-)
-PANELS[("covenant", "finish")] = StepPanel(_review_budget)
-
-
-# -- New Laboratory --
-
-
-def _laboratory(record: Record) -> Laboratory:
-    assert isinstance(record, Laboratory)
-    return record
-
-
-def _setup_budget(saga: Saga, record: Record) -> str:
-    lab = _laboratory(record)
-    owner = saga.character(lab.owner_id)
-    c = lab.characteristics
-    rows: list[tuple[str, object]] = [
-        ("Owner (builder)", escape(owner.name) if owner else "(none)"),
-        ("Size", f"{c.size:+d}"),
-        ("Refinement", f"{c.refinement:+d}"),
-        ("Starting laboratory", "yes" if lab.starting else "no"),
-    ]
-    if lab.starting:
-        rows.append(("Build Points", cov.lab_points(lab)))
-    return aligned(rows)
-
-
-def _setup_actions(saga: Saga, record: Record) -> list[StepAction]:
-    lab = _laboratory(record)
-    return [
-        StepAction("Edit identity (owner)", lambda ws, r: ws._edit_lab_identity()),
-        StepAction(
-            "Edit Characteristics", lambda ws, r: ws._edit_lab_characteristics()
-        ),
-        StepAction("Starting lab: yes/no", lambda ws, r: ws._toggle_starting_lab(lab)),
-    ]
-
-
-def _lab_virtue_rows(saga: Saga, record: Record) -> list[StepRow]:
-    """The laboratory's Virtues, then its Flaws, each with its rules; d
-    removes one."""
-    lab = _laboratory(record)
-    by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
-    rows: list[StepRow] = []
-    for side, heading in (("Virtue", "Virtues"), ("Flaw", "Flaws")):
-        taken = [
-            (index, vf, definition)
-            for index, vf in enumerate(lab.virtues_flaws)
-            if (definition := by_id.get(vf.vf_id)) is not None
-            and definition.type == side
-        ]
-        if not taken:
-            continue
-        rows.append(StepRow(heading, heading=True))
-        for index, vf, definition in taken:
-            rows.append(
-                StepRow(
-                    f"{pad(catalog.describe_virtue_flaw(vf, by_id), _VF_NAME)}"
-                    f"{definition.tier:<{_VF_TIER}}{escape(definition.category)}",
-                    lab_rules.vf_info_text(lab, index),
-                    delete=partial(_remove_virtue_flaw_of, lab, vf),
-                )
-            )
-    return rows
-
-
-def _remove_virtue_flaw_of(
-    lab: Laboratory, vf: VirtueFlawInstance, workspace: WorkspaceScreen
-) -> None:
-    if vf in lab.virtues_flaws:
-        workspace._remove_virtue_flaw_from(lab, lab.virtues_flaws.index(vf))
-
-
-PANELS[("laboratory", "setup")] = StepPanel(
-    _setup_budget,
-    _setup_actions,
-    StepList(
-        VF_HEADER,
-        _lab_virtue_rows,
-        add=lambda ws, r: ws._add_virtue_flaw_to(_laboratory(r)),
-        add_label="Add a Virtue or Flaw",
-        edit_label=None,
-        delete_label="Remove",
-        hint="Choose a Virtue or Flaw to read its rules.",
-    ),
-)
-PANELS[("laboratory", "finish")] = StepPanel(_review_budget)

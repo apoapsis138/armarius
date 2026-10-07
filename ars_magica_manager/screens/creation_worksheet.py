@@ -489,4 +489,4 @@ class CreationWorksheetScreen(ModalDialog[None]):
 
 
 # The step panels register themselves on import.
-from . import creation_steps  # noqa: F401
+from . import creation_covenant_steps, creation_steps  # noqa: F401

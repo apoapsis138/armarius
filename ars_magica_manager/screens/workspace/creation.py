@@ -26,11 +26,11 @@ from ...rules import creation_later as later
 from ...rules import creation_magus as magus_rules
 from ...rules import creation_packages as packages
 from ...rules import creation_xp as cx
+from ..forms import _buy_specialist_dialog
 from ..pickers import RemovalPickerScreen, SpellChooserScreen
 from ..prompts import (
     ConfirmScreen,
     _blanks_dialog,
-    _buy_specialist_dialog,
     _creation_xp_dialog,
     _gauntlet_conditions_dialog,
     _native_language_dialog,
@@ -380,15 +380,13 @@ class CreationActions(WorkspaceBase):
         self.app.push_screen(_power_level_dialog(covenant), handle_result)
 
     def _use_covenant_situation(self, covenant: Covenant) -> None:
-        """Add one of the books' Covenant Situations: a
-        ready-made set of Boons and Hooks, on top of any it already has."""
+        """Add one of the books' Covenant Situations: a ready-made set of
+        Boons and Hooks, on top of any the user added. One applied before is
+        replaced, after a warning."""
         books = sourcebooks.saga_books(self.saga)
         by_id = catalog.load_covenant_boon_hook_catalog_by_id()
-        situations = [
-            s
-            for s in catalog.load_covenant_situation_catalog()
-            if sourcebooks.in_play(s.source, books)
-        ]
+        all_situations = catalog.load_covenant_situation_catalog()
+        situations = [s for s in all_situations if sourcebooks.in_play(s.source, books)]
 
         def label(situation: CovenantSituationDef) -> str:
             hooks, boons = cov_rules.situation_points(situation, by_id)
@@ -403,22 +401,42 @@ class CreationActions(WorkspaceBase):
                 return
             situation = situations[index]
             added = cov_rules.situation_instances(situation)
-            message = (
-                f"Add {escape(situation.name)}'s {len(added)} Boons and Hooks to "
-                f"{escape(covenant.name)}? {escape(situation.description)}"
-            )
-            if covenant.boons_hooks:
-                message += " The ones it already has stay."
+            earlier = cov_rules.situation_in_use(covenant)
+            if earlier is not None:
+                old_id, count = earlier
+                old = next((s for s in all_situations if s.id == old_id), None)
+                old_name = escape(old.name) if old is not None else "A Situation"
+                message = (
+                    f"{old_name} is already applied. Using "
+                    f"{escape(situation.name)} removes the {count} Boons and Hooks "
+                    f"it brought and adds {len(added)}. "
+                    f"{escape(situation.description)} Boons and Hooks you added "
+                    "yourself stay."
+                )
+                yes_label, variant = "Replace", "error"
+            else:
+                message = (
+                    f"Add {escape(situation.name)}'s {len(added)} Boons and Hooks "
+                    f"to {escape(covenant.name)}? {escape(situation.description)}"
+                )
+                if covenant.boons_hooks:
+                    message += " The ones it already has stay."
+                yes_label, variant = "Add", "primary"
             if situation.notes:
                 message += f"\n\n[dim]{escape(situation.notes)}[/]"
 
             def handle_confirmed(confirmed: bool | None) -> None:
                 if confirmed:
-                    covenant.boons_hooks.extend(added)
-                    self._commit("section-cov-boons", "section-cov-hooks")
+                    cov_rules.use_situation(covenant, added)
+                    self._commit(
+                        "section-cov-boons",
+                        "section-cov-hooks",
+                        "section-eco-income",
+                        "section-pos-vis_source",
+                    )
 
             self.app.push_screen(
-                ConfirmScreen(message, yes_label="Add", yes_variant="primary"),
+                ConfirmScreen(message, yes_label=yes_label, yes_variant=variant),
                 handle_confirmed,
             )
 
@@ -430,16 +448,20 @@ class CreationActions(WorkspaceBase):
         )
 
     def _buy_specialist(self, covenant: Covenant) -> None:
-        """Buy an NPC specialist or teacher with Build Points: a new line on
-        the Inhabitants tab. (A grog or companion built as a character
-        costs nothing; assign them there as usual.)"""
+        """Buy someone with Build Points: a new line on the Inhabitants tab,
+        in the category their Ability gives them (a craftsperson, the turb or
+        a specialist). A grog or companion built as a character costs
+        nothing; assign them there as usual."""
 
-        def handle_result(values: dict[str, Any] | None) -> None:
-            if values is not None:
-                inh.save_entry(covenant, "specialist", None, values)
-                self._commit("section-inh-specialist")
+        def handle_result(result: tuple[str, dict[str, Any]] | None) -> None:
+            if result is not None:
+                kind, values = result
+                inh.save_entry(covenant, kind, None, values)
+                self._commit(f"section-inh-{kind}")
 
-        self.app.push_screen(_buy_specialist_dialog(), handle_result)
+        self.app.push_screen(
+            _buy_specialist_dialog(sourcebooks.saga_books(self.saga)), handle_result
+        )
 
     # -- New Laboratory --
 

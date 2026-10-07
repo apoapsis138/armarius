@@ -651,7 +651,7 @@ async def test_a_new_record_opens_its_worksheet():
             pilot, lambda: isinstance(app.screen, CreationWorksheetScreen)
         )
         assert app.screen.record.name == "Durenmar"
-        assert "Power Level" in _steps(app.screen)[0]
+        assert "Baseline" in _steps(app.screen)[0]
 
 
 async def test_gauntlet_step_rolls_pre_play_aging_after_asking():

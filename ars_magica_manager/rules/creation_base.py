@@ -74,9 +74,9 @@ CHARACTER_STEPS: tuple[Step, ...] = (
     Step("finish", "Finishing Touches"),
 )
 COVENANT_STEPS: tuple[Step, ...] = (
-    Step("power", "Power Level"),
-    Step("build_points", "Build Points"),
-    Step("boons_hooks", "Boons and Hooks"),
+    Step("power", "Baseline"),
+    Step("build_points", "Resources"),
+    Step("boons_hooks", "Boons & Hooks"),
     Step("finish", "Review"),
 )
 LABORATORY_STEPS: tuple[Step, ...] = (

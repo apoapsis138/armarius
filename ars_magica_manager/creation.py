@@ -41,13 +41,29 @@ def new_saga(
     )
 
 
-def add_covenant(saga: Saga, name: str, notes: str = "") -> Covenant:
+#: A new covenant's aura: the creation baseline's level 3.
+BASELINE_AURA = 3
+
+
+def add_covenant(
+    saga: Saga,
+    name: str,
+    notes: str = "",
+    *,
+    season: str = "Spring",
+    aura_realm: str = "Magic",
+) -> Covenant:
+    """A new covenant In Creation, at the baseline aura of 3 in
+    `aura_realm`, in its `season` (Spring, Summer, Autumn or Winter)."""
     covenant = Covenant(
         id=storage.generate_unique_id(name, [c.id for c in saga.covenants]),
         saga_id=saga.id,
         name=name,
         notes=notes,
         in_creation=True,
+        covenant_season=season,
+        aura=BASELINE_AURA,
+        aura_realm=aura_realm,
     )
     saga.covenants.append(covenant)
     return covenant

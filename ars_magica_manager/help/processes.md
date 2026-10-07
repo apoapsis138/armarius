@@ -172,7 +172,7 @@ Open the worksheet from the top panel's **Creation Worksheet** button, or from M
 The left column lists the steps:
 
 - a character: Concept, Virtues and Flaws, Characteristics, Early Childhood, Later Life, Apprenticeship and Years past Gauntlet (magi only), and Finishing Touches;
-- a covenant: Power Level, Build Points, Boons and Hooks, and Review;
+- a covenant: Baseline, Resources, Boons & Hooks, and Review;
 - a laboratory: Setting Up, and Review.
 
 Each step is marked by how its checks stand:

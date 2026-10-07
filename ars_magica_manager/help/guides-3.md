@@ -18,7 +18,7 @@ The saga is saved as soon as it is made, and every change after that is saved as
 1. The workspace opens with the navigation tree on the left. Its top node is [the saga](help:saga); with it chosen, the pane on the right shows the current date, the books in play and the optional rules.
 2. With the saga node chosen, press `e` (the footer calls it Edit Saga).
 3. **Books in play** opens a picker of the sourcebooks. Choose the ones your troupe uses: catalog pickers then hide Virtues, spells and other entries from books not in play, and a supplement's own rules apply only while its book is in play.
-4. Below it are the optional rules, each off until you tick it: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis and Enforce creation rules strictly. The line under each says what it does.
+4. Below it are the optional rules, each off until you tick it: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi and Enforce creation rules strictly. The line under each says what it does.
 5. **Keep season records** keeps a record of each season under Seasons in the tree. Leave it on unless you only want the characters' Diaries to keep them.
 6. Save. The saga's summary now lists your books and the optional rules turned on.
 
@@ -28,9 +28,9 @@ You can come back to Edit Saga at any time.
 <!-- help: guide-getting-started-covenant -->
 
 1. With the saga node chosen, press `n` (New). A menu offers New Covenant, New Character and New Laboratory; press `v` for New Covenant.
-2. Type a Name and, if you like, a one-line note under Notes, then choose Create.
+2. Type a Name and, if you like, a one-line note under Notes. Choose its Season (Spring unless you say otherwise; Spring or Winter, Summer or Autumn set what each inhabitant counts for) and its Aura realm (Magic; the creation rules assume a Magic aura, and a Faerie aura is a Hook). Then choose Create. The covenant starts at the creation baseline's aura of 3.
 3. The covenant appears in the tree, marked "(creating)", with two groups under it: **Characters** and **Laboratories**. Its [covenant sheet](help:covenant) opens on the right.
-4. The covenant starts In Creation. To build it by the book (Power Level, Build Points, Boons and Hooks), see [How to create a character, covenant or laboratory](help:guide-creation). To fill it in by hand instead, press Enter to move into the sheet and use `e` on its top panel and `a` in its sections.
+4. The covenant starts In Creation. Its Creation Worksheet opens. To build it by the book (Baseline, Resources, Boons & Hooks), see [How to create a character, covenant or laboratory](help:guide-creation). To fill it in by hand instead, press Enter to move into the sheet and use `e` on its top panel and `a` in its sections.
 
 ### Add characters and laboratories
 <!-- help: guide-getting-started-people -->
@@ -130,10 +130,10 @@ The keys and buttons open the sheet's own dialogs and change the real record, so
 ### Build a covenant
 <!-- help: guide-creation-covenant -->
 
-1. **Power Level.** Choose Power Level asks for the Power Level, the storyguide's Build Points (within that level's range), how many magi go without a laboratory (each refunds 50 Build Points) and the Year Founded. The step also lists what every covenant has free, and the highest level of text or enchanted effect the Power Level allows. Edit covenant opens the covenant's own details.
-2. **Build Points.** The step shows the Build Points spent and left, and lists what they went on: each book in the Library with its points (one with no level or Quality yet shows 0, marked not priced; Lab Texts and Casting Tablets are priced as a pool, listed below them), then vis sources and stocks, enchanted devices, starting laboratories and specialists. `a` adds a book to the covenant's Library, and `e` or `d` on a book edits or deletes it; change the rest on the covenant sheet. Buy a specialist is here.
-3. **Boons and Hooks.** The step lists the covenant's Boons and Hooks with their points, and the chosen one's rules below. `a` adds a Boon, the Add a Hook button adds a Hook, and Use a Covenant Situation takes one of the books' ready-made sets; `e` edits the chosen one and `d` removes it. The step shows the Boon and Hook points, which should balance.
-4. **Review.** Lists every step that still has a check open.
+1. **Baseline.** Choose Power Level asks for the Power Level, the storyguide's Build Points (within that level's range), how many magi go without a laboratory (each refunds 50 Build Points) and the Year Founded. The step shows the season and aura, what every covenant has free, and the highest level of text or enchanted effect the Power Level allows; Edit covenant (season, aura) changes those. Set starting income makes its sources of income by the rules: one Typical source (100 pounds a year) or two Lesser (40 each), or what a Poverty Hook or Wealth Boon allows; with the optional rule Starting income by number of magi, 15 pounds (6 for a Lesser source) more or less for each magus over or under six. The step lists the sources of income: `a` adds one, `e` edits and `d` deletes. Use a Covenant Situation takes one of the books' ready-made sets of Boons and Hooks, and the step shows which. Choosing another Situation warns first, then removes the Boons and Hooks the earlier one brought and adds the new ones; the ones you added yourself stay.
+2. **Resources.** The step shows the Build Points spent and left and a tally by category (Art Summae, Lab Texts, Vis sources, Specialists...), then lists everything they bought under its category; a book with no level or Quality yet is listed under Not priced yet. `a` asks what to buy: a book, a vis source, a vis stock, an enchanted item, or a specialist. `e` and `d` edit or delete the chosen row; a laboratory is set up on its own worksheet. A specialist's Ability comes from the Ability picker, and the Ability says where they belong on the Inhabitants tab: a Craft makes a craftsperson (common or rare, and what it saves money on), a Martial Ability a member of the turb, a teacher or anyone else a specialist. The Build Points rules call them all specialists; the covenant's finances count them apart.
+3. **Boons & Hooks.** The step lists the covenant's Boons and Hooks with their points, and the chosen one's rules below. `a` adds a Boon and the Add a Hook button adds a Hook; `e` edits the chosen one and `d` removes it. A Contested, Indiscreet or Dwindling Resource Hook is about one of the covenant's vis or income sources: `e` on it chooses which (that source is then marked Contested or Dwindling), and until then it says it needs its source. That can wait until the source exists. The step shows the Boon and Hook points, which should balance, and checks that an aura realm other than Magic comes with its Hook.
+4. **Review.** Lists every step that still has a check open, and the Build Points tally.
 
 The covenant's [Build tab](help:tab-cov-build) (`8`) shows the same Build Points.
 

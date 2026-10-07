@@ -152,10 +152,33 @@ def _boon_hook_fields(
     *,
     can_be_unknown: bool = False,
     unknown: bool = False,
+    sources: Sequence[tuple[str, str]] | None = None,
+    source: str = "",
 ) -> list[DialogField]:
     """A covenant Boon's or Hook's own Detail (shown in the list) and
     Description (shown ahead of the rules text); both optional. A Minor
-    Hook that may be Unknown also gets an Unknown checkbox."""
+    Hook that may be Unknown also gets an Unknown checkbox, and a Resource
+    Hook (`sources` given: (label, id) pairs) the vis or income source it is
+    about, `source` now."""
+    source_fields = (
+        [
+            DialogField(
+                "resource",
+                "About which source",
+                "select",
+                source or None,
+                options=list(sources),
+                allow_blank=True,
+                placeholder="(not yet)",
+                hint="Marks that source Contested or Dwindling. It can wait "
+                "until the source exists."
+                if sources
+                else "Add the vis or income source first, then choose it here.",
+            )
+        ]
+        if sources is not None
+        else []
+    )
     unknown_fields = (
         [
             DialogField(
@@ -170,18 +193,22 @@ def _boon_hook_fields(
         if can_be_unknown
         else []
     )
-    return unknown_fields + [
-        DialogField(
-            "detail",
-            "Detail",
-            "text",
-            detail,
-            placeholder="e.g. the specific building or resource",
-        ),
-        DialogField(
-            "description", "Description", "area", description, hint=_EMPHASIS_HINT
-        ),
-    ]
+    return (
+        unknown_fields
+        + source_fields
+        + [
+            DialogField(
+                "detail",
+                "Detail",
+                "text",
+                detail,
+                placeholder="e.g. the specific building or resource",
+            ),
+            DialogField(
+                "description", "Description", "area", description, hint=_EMPHASIS_HINT
+            ),
+        ]
+    )
 
 
 #: The eight Characteristics, as a Virtue or Flaw's {characteristic}.
@@ -1168,61 +1195,6 @@ def _power_level_problem(values: dict[str, Any]) -> str | None:
     if (values.get("magi_without_lab") or 0) < 0:
         return "Magi without a laboratory can't be negative."
     return None
-
-
-def _buy_specialist_dialog() -> FieldsDialog[dict[str, Any]]:
-    """A specialist bought with Build Points for a new covenant: an NPC defined by the
-    Ability used for the covenant. A teacher costs Communication + Teaching + the
-    highest Ability taught. The values are an Inhabitant's fields."""
-
-    def teacher(values: dict[str, Any]) -> bool:
-        return bool(values.get("teacher"))
-
-    def cost(values: dict[str, Any]) -> int:
-        total = values.get("specialist_score") or 0
-        if teacher(values):
-            total += (values.get("teacher_communication") or 0) + (
-                values.get("teacher_teaching") or 0
-            )
-        return total
-
-    def problem(values: dict[str, Any]) -> str | None:
-        if values["specialist_score"] < 0:
-            return "The score can't be negative."
-        return None
-
-    def build(values: dict[str, Any]) -> dict[str, Any]:
-        is_teacher = values.pop("teacher")
-        if not is_teacher:
-            values["teacher_communication"] = None
-            values["teacher_teaching"] = None
-        return values
-
-    return FieldsDialog(
-        "Buy a Specialist",
-        [
-            DialogField("name", "Name", "text", "", required=True),
-            DialogField("teacher", "A teacher", "check", False),
-            DialogField(
-                "linked_ability",
-                "Ability used for the covenant",
-                "text",
-                "",
-                required=True,
-                hint="A teacher: the highest Ability taught.",
-            ),
-            DialogField("specialist_score", "Its score", "int", 1),
-            DialogField(
-                "teacher_communication", "Communication", "int", 0, show_if=teacher
-            ),
-            DialogField("teacher_teaching", "Teaching", "int", 1, show_if=teacher),
-            DialogField("year_born", "Year Born", "optint", None),
-        ],
-        validate=problem,
-        live=lambda values: f"Cost: {cost(values)} Build Points",
-        save_label="Buy",
-        build=build,
-    )
 
 
 def _native_language_dialog(current: str = "") -> FieldsDialog[str]:

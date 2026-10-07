@@ -8,7 +8,7 @@ from typing import Any
 from ... import character_templates, sourcebooks
 from ... import familiars as fam
 from ...markup import escape
-from ...models import SEASONS, Saga
+from ...models import REALMS, SEASONS, Saga
 from ...rules import options as rule_options
 from ..fields import DialogField, FieldsDialog, _attr, _covenant_options, _pairs
 from ..pickers import SourcebookPickerScreen
@@ -112,6 +112,23 @@ def _covenant_create_fields() -> list[DialogField]:
             "text",
             "",
             placeholder="A one-line note about the covenant",
+        ),
+        DialogField(
+            "season",
+            "Season",
+            "select",
+            "Spring",
+            options=_pairs(SEASONS),
+            hint="Its stage of life. Spring or Winter, Summer or Autumn set "
+            "each inhabitant's points and Living Conditions.",
+        ),
+        DialogField(
+            "aura_realm",
+            "Aura realm",
+            "select",
+            "Magic",
+            options=_pairs(REALMS),
+            hint="The creation rules assume Magic (aura 3); a Faerie aura is a Hook.",
         ),
     ]
 

@@ -5,6 +5,9 @@ Boons/Hooks carry."""
 from __future__ import annotations
 
 from .models import (
+    BOON_HOOK_DETAIL,
+    BOON_HOOK_RESOURCE,
+    BOON_HOOK_SITUATION,
     BOON_HOOK_UNKNOWN,
     Character,
     Covenant,
@@ -138,16 +141,41 @@ MAJOR_POVERTY = "covbh_hook_major_poverty"
 
 def situation_instances(situation: CovenantSituationDef) -> list[VirtueFlawInstance]:
     """The Boons, Hooks and Free Choices a Covenant Situation adds, one
-    instance each time an entry is taken."""
+    instance each time an entry is taken, each marked with the Situation."""
     return [
         VirtueFlawInstance(
             vf_id=entry["vf_id"],
-            params=boon_hook_params(entry.get("detail", ""), ""),
+            params=boon_hook_params(
+                entry.get("detail", ""),
+                "",
+                {BOON_HOOK_SITUATION: situation.id},
+            ),
             id=new_instance_id(),
         )
         for entry in situation.entries
         for _ in range(entry.get("count", 1))
     ]
+
+
+def situation_in_use(covenant: Covenant) -> tuple[str, int] | None:
+    """The Covenant Situation the covenant's Boons and Hooks came from (its
+    id) and how many of them are still there, or None."""
+    found = [
+        bh.params[BOON_HOOK_SITUATION]
+        for bh in covenant.boons_hooks
+        if bh.params.get(BOON_HOOK_SITUATION)
+    ]
+    return (found[0], len(found)) if found else None
+
+
+def use_situation(covenant: Covenant, added: list[VirtueFlawInstance]) -> None:
+    """Apply a Situation's Boons and Hooks (situation_instances), first
+    removing those an earlier Situation brought (a Resource Hook's source
+    loses its mark). Ones the user added stay."""
+    for bh in [b for b in covenant.boons_hooks if b.params.get(BOON_HOOK_SITUATION)]:
+        link_resource(covenant, bh, "")
+        covenant.boons_hooks.remove(bh)
+    covenant.boons_hooks.extend(added)
 
 
 def situation_points(
@@ -204,3 +232,93 @@ def boon_hook_problems(
             f"only, but has {listed}."
         )
     return problems
+
+
+# -- Resource Hooks: which source they are about --
+
+#: The Hooks that are about one of the covenant's vis or income sources,
+#: and the source's flag each sets: Contested and Indiscreet Resources
+#: (the source gives nothing until it is secured) and Dwindling Resource.
+RESOURCE_HOOKS: dict[str, str] = {
+    "covbh_hook_minor_contested_resource": "contested",
+    "covbh_hook_minor_indiscreet_resource": "contested",
+    "covbh_hook_major_indiscreet_resource": "contested",
+    "covbh_hook_minor_dwindling_resource": "dwindling",
+}
+
+
+def resource_sources(covenant: Covenant) -> list[tuple[str, str]]:
+    """The sources a Resource Hook can be about, as (label, id): the
+    covenant's vis sources, then its sources of income."""
+    vis = [
+        (f"Vis source: {p.name or 'unnamed'}", p.id)
+        for p in covenant.possessions
+        if p.kind == "vis_source"
+    ]
+    income = [
+        (f"Income: {s.name or 'unnamed'} ({s.type})", s.id)
+        for s in covenant.economics.income_sources
+    ]
+    return vis + income
+
+
+def _source_by_id(covenant: Covenant, source_id: str):
+    for possession in covenant.possessions:
+        if possession.kind == "vis_source" and possession.id == source_id:
+            return possession
+    for source in covenant.economics.income_sources:
+        if source.id == source_id:
+            return source
+    return None
+
+
+def linked_source(covenant: Covenant, instance: VirtueFlawInstance):
+    """The vis or income source a Resource Hook is about, or None."""
+    source_id = instance.params.get(BOON_HOOK_RESOURCE, "")
+    return _source_by_id(covenant, source_id) if source_id else None
+
+
+def link_resource(
+    covenant: Covenant, instance: VirtueFlawInstance, source_id: str
+) -> None:
+    """Tie a Resource Hook to the source it is about ("" unties it),
+    setting that source's Contested or Dwindling and clearing it on a
+    source no other Hook still names."""
+    flag = RESOURCE_HOOKS.get(instance.vf_id)
+    if flag is None:
+        return
+    old = linked_source(covenant, instance)
+    if source_id:
+        instance.params[BOON_HOOK_RESOURCE] = source_id
+    else:
+        instance.params.pop(BOON_HOOK_RESOURCE, None)
+    new = linked_source(covenant, instance)
+    if new is not None:
+        setattr(new, flag, True)
+    if old is not None and old is not new:
+        still = any(
+            other is not instance
+            and RESOURCE_HOOKS.get(other.vf_id) == flag
+            and linked_source(covenant, other) is old
+            for other in covenant.boons_hooks
+        )
+        if not still:
+            setattr(old, flag, False)
+
+
+def unlinked_resource_hooks(
+    covenant: Covenant, catalog_by_id: dict[str, CovenantBoonHookDef]
+) -> list[str]:
+    """The Resource Hooks not yet tied to a source, by name (and detail)."""
+    return [
+        catalog_by_id[bh.vf_id].name
+        + (
+            f" - {bh.params[BOON_HOOK_DETAIL]}"
+            if bh.params.get(BOON_HOOK_DETAIL)
+            else ""
+        )
+        for bh in covenant.boons_hooks
+        if bh.vf_id in RESOURCE_HOOKS
+        and bh.vf_id in catalog_by_id
+        and linked_source(covenant, bh) is None
+    ]

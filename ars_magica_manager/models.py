@@ -2624,6 +2624,16 @@ BOON_HOOK_DESCRIPTION = "description"
 #: marked `unknown` -- see covenants.boon_hook_is_unknown().
 BOON_HOOK_UNKNOWN = "unknown"
 
+#: The `params` key holding the id of the vis or income source a Contested,
+#: Indiscreet or Dwindling Resource Hook is about (see
+#: covenants.RESOURCE_HOOKS).
+BOON_HOOK_RESOURCE = "resource"
+
+#: The `params` key holding the id of the Covenant Situation a Boon/Hook
+#: came with (covenants.situation_instances), so choosing another
+#: Situation can replace it.
+BOON_HOOK_SITUATION = "situation"
+
 
 def next_season(season: str, year: int) -> tuple[str, int]:
     """The season after (season, year). The ArM5 year begins in Spring, so

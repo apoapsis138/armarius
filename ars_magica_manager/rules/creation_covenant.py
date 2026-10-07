@@ -21,15 +21,19 @@ laboratory.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Any
 
 from .. import books as bk
 from .. import catalog, sourcebooks
 from .. import enchanted_devices as ed
 from ..covenants import (
+    MAJOR_POVERTY,
+    MINOR_POVERTY,
     boon_hook_problems,
     covenant_boon_points,
     covenant_hook_points,
+    unlinked_resource_hooks,
 )
 from ..laboratories import (
     LAB_SIZE_BUILD_POINTS,
@@ -37,7 +41,8 @@ from ..laboratories import (
     lab_build_points,
     lab_free_virtues,
 )
-from ..models import Covenant, Laboratory, Saga
+from ..models import INCOME_TYPE_DEFAULTS, Covenant, Laboratory, Saga
+from . import options as rule_options
 from .creation_base import COVENANT_CHECKS, LABORATORY_CHECKS, Check, Record, check
 from .rounding import round_up
 
@@ -115,8 +120,10 @@ class Cost:
     points: int
     #: The Build tab's row it belongs to (a CATEGORIES entry).
     category: str = ""
-    #: The book this line prices, if it prices one book.
-    book_id: str = ""
+    #: The record this line prices (a Book, vis Possession, EnchantedDevice,
+    #: Laboratory or Inhabitant), or None for a pool, the spare labs or
+    #: money.
+    item: Any = field(default=None, compare=False, repr=False)
 
 
 #: The covenant Build tab's rows, in order.
@@ -192,9 +199,7 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
                 if book.name.startswith(book.type)
                 else f"{book.type}: {book.name}"
             )
-            lines.append(
-                Cost(label, points, _BOOK_CATEGORY.get(book.type, ""), book.id)
-            )
+            lines.append(Cost(label, points, _BOOK_CATEGORY.get(book.type, ""), book))
     for book_type in bk.POOL_POINTS:
         pool = bk.pool(library, book_type, saga)
         if pool.levels:
@@ -213,6 +218,7 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
                     f"Vis source: {possession.name} ({possession.pawns} a year)",
                     VIS_SOURCE_BP * possession.pawns,
                     "Vis sources",
+                    possession,
                 )
             )
         elif possession.kind == "vis_store" and possession.pawns:
@@ -221,6 +227,7 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
                     f"Vis stock: {possession.name} ({possession.pawns} pawns)",
                     round_up(possession.pawns / VIS_STOCK_PAWNS),
                     "Vis stocks",
+                    possession,
                 )
             )
     for device in ed.held_by(saga, "covenant", covenant.id):
@@ -231,12 +238,13 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
                     f"Enchanted: {device.name}, {effect.name} (level {level})",
                     2 * round_up(level / EFFECT_LEVELS),
                     "Enchanted items",
+                    device,
                 )
             )
     for lab in _covenant_labs(saga, covenant, every=every_lab):
         points = lab_points(lab)
         if points:
-            lines.append(Cost(f"Laboratory: {lab.name}", points, "Laboratories"))
+            lines.append(Cost(f"Laboratory: {lab.name}", points, "Laboratories", lab))
     spare = spare_labs(saga, covenant, every=every_lab)
     if spare:
         lines.append(
@@ -261,7 +269,9 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
         if points is not None and not person.departed:
             what = "Teacher" if person.teacher_teaching is not None else "Specialist"
             ability = f", {person.linked_ability}" if person.linked_ability else ""
-            lines.append(Cost(f"{what}: {person.name}{ability}", points, "Specialists"))
+            lines.append(
+                Cost(f"{what}: {person.name}{ability}", points, "Specialists", person)
+            )
     books_in_play = sourcebooks.saga_books(saga)
     wealth = covenant.economics.wealth
     if wealth and sourcebooks.in_play("Covenants", books_in_play):
@@ -324,6 +334,76 @@ def _c(step: str, label: str, ok: bool, detail: str, source=SOURCE, *, advice=Fa
     return Check(step, label, status, detail, source)
 
 
+INCOME_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Six: Covenants, Covenant "
+    "Finances, Baseline (https://www.redcap.org/page/Ars_Magica_Definitive_"
+    "Edition,_Chapter_Six:_Covenants#Baseline_2)"
+)
+AURA_SOURCE = "Covenants, Chapter Two: Boons and Hooks, Faerie Aura"
+MINOR_WEALTH = "covbh_boon_minor_wealth"
+MAJOR_WEALTH = "covbh_boon_major_wealth"
+FAERIE_AURA = "covbh_hook_minor_faerie_aura"
+#: The starting income assumes six magi; with the optional rule a source
+#: gains or loses this much a year per magus over or under six.
+INCOME_MAGI = 6
+INCOME_PER_MAGUS: dict[str, int] = {"Typical": 15, "Lesser": 6}
+
+
+@dataclass(frozen=True)
+class IncomeChoice:
+    """A way to start the covenant's income: its label and each source's
+    (type, pounds a year)."""
+
+    label: str
+    sources: tuple[tuple[str, int], ...]
+
+
+def _income_amount(saga: Saga, covenant: Covenant, kind: str) -> int:
+    amount = INCOME_TYPE_DEFAULTS[kind]
+    if kind in INCOME_PER_MAGUS and rule_options.is_on(saga, "income_per_magus"):
+        amount += INCOME_PER_MAGUS[kind] * (_magi(saga, covenant) - INCOME_MAGI)
+    return max(amount, 0)
+
+
+def income_choices(saga: Saga, covenant: Covenant) -> list[IncomeChoice]:
+    """How the covenant may start its income: one Typical source, or two
+    Lesser for the sake of diversity; a Wealth Boon upgrades the Typical
+    source (Greater, Legendary), a Poverty Hook allows one Lesser source
+    (Minor) or none (Major)."""
+    held = {bh.vf_id for bh in covenant.boons_hooks}
+    if MAJOR_POVERTY in held:
+        return [IncomeChoice("No source of income (Poverty, Major Hook)", ())]
+    lesser = ("Lesser", _income_amount(saga, covenant, "Lesser"))
+    if MINOR_POVERTY in held:
+        return [IncomeChoice(f"One Lesser source ({lesser[1]} pounds)", (lesser,))]
+    if MAJOR_WEALTH in held or MINOR_WEALTH in held:
+        kind = "Legendary" if MAJOR_WEALTH in held else "Greater"
+        amount = _income_amount(saga, covenant, kind)
+        return [IncomeChoice(f"One {kind} source ({amount} pounds)", ((kind, amount),))]
+    typical = ("Typical", _income_amount(saga, covenant, "Typical"))
+    return [
+        IncomeChoice(f"One Typical source ({typical[1]} pounds)", (typical,)),
+        IncomeChoice(f"Two Lesser sources ({lesser[1]} pounds each)", (lesser, lesser)),
+    ]
+
+
+def income_check(saga: Saga, covenant: Covenant) -> Check:
+    """Whether the covenant's sources of income are one of its starting
+    choices (by type)."""
+    choices = income_choices(saga, covenant)
+    have = sorted(s.type for s in covenant.economics.income_sources)
+    ok = any(sorted(kind for kind, _ in c.sources) == have for c in choices)
+    listed = ", ".join(have) if have else "none"
+    return _c(
+        "power",
+        "Starting income: " + " or ".join(c.label for c in choices),
+        ok,
+        listed,
+        INCOME_SOURCE,
+        advice=True,
+    )
+
+
 @check("power", COVENANT_CHECKS)
 def power_checks(saga: Saga, record: Record) -> list[Check]:
     assert isinstance(record, Covenant)
@@ -337,6 +417,7 @@ def power_checks(saga: Saga, record: Record) -> list[Check]:
             covenant.power_level or "none",
         )
     ]
+    found.append(income_check(saga, covenant))
     if power is None:
         return found
     if power.min_age:
@@ -435,6 +516,46 @@ def boon_hook_checks(saga: Saga, record: Record) -> list[Check]:
                 "Hook points spent",
                 False,
                 f"{hooks - boons:g} unspent",
+                BOON_SOURCE,
+                advice=True,
+            )
+        )
+    held = {bh.vf_id for bh in covenant.boons_hooks}
+    realm = covenant.aura_realm or "Magic"
+    if realm == "Faerie" or FAERIE_AURA in held:
+        found.append(
+            _c(
+                "boons_hooks",
+                "A Faerie aura comes with the Faerie Aura Hook",
+                realm == "Faerie" and FAERIE_AURA in held,
+                f"aura realm {realm}, "
+                + (
+                    "Faerie Aura taken"
+                    if FAERIE_AURA in held
+                    else "no Faerie Aura Hook"
+                ),
+                AURA_SOURCE,
+            )
+        )
+    elif realm != "Magic":
+        found.append(
+            _c(
+                "boons_hooks",
+                "A Magic aura (the creation rules assume one)",
+                False,
+                f"aura realm {realm}",
+                SOURCE,
+                advice=True,
+            )
+        )
+    unlinked = unlinked_resource_hooks(covenant, boons_catalog)
+    if unlinked:
+        found.append(
+            _c(
+                "boons_hooks",
+                "Resource Hooks name the source they're about",
+                False,
+                ", ".join(unlinked) + " (e on its row, once the source exists)",
                 BOON_SOURCE,
                 advice=True,
             )
