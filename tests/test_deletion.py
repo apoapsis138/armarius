@@ -1,4 +1,4 @@
-"""Deleting covenants, characters and laboratories: what goes with
+"""Deleting covenants, characters, laboratories and Familiars: what goes with
 them, what's left behind unassigned, and the workspace's confirmed
 d key."""
 
@@ -6,6 +6,7 @@ from support import wait_until
 from textual.widgets import Tree
 
 from ars_magica_manager import deletion, storage
+from ars_magica_manager import familiars as fam
 from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     Book,
@@ -17,6 +18,8 @@ from ars_magica_manager.models import (
     Laboratory,
     Possession,
     Saga,
+    ScoredTrait,
+    SeasonPlan,
     Spell,
 )
 from ars_magica_manager.screens import ConfirmScreen, WorkspaceScreen
@@ -153,6 +156,64 @@ def test_character_consequences_say_what_happens():
     ]
 
 
+# ------------------------------------------------------------------- familiar
+
+
+def _bonded() -> Saga:
+    """The sample saga with Aelric's Familiar bound the app's way (True
+    Friend and Loyal (Partner) on both), and two planned seasons of
+    familiar work beside a Reading."""
+    saga = _saga()
+    saga.familiars = []
+    magus = saga.characters[0]
+    fam.bind_familiar(saga, magus, "Ashwing")
+    saga.season_plans = [
+        SeasonPlan("magus1", 1221, "Spring", "bind_familiar", lab_id="lab1"),
+        SeasonPlan("magus1", 1221, "Summer", "empower_bond", lab_id="lab1"),
+        SeasonPlan("magus1", 1221, "Autumn", "reading"),
+        SeasonPlan("comp1", 1221, "Spring", "bind_familiar"),
+    ]
+    return saga
+
+
+def test_deleting_a_familiar_breaks_the_bond_on_the_magus():
+    saga = _bonded()
+    magus = saga.characters[0]
+    magus.personality_traits.insert(0, ScoredTrait(name="Brave", score=1))
+    deletion.delete_familiar(saga, saga.familiars[0])
+
+    assert saga.familiars == []
+    assert [vf.vf_id for vf in magus.virtues_flaws] == []
+    assert [t.name for t in magus.personality_traits] == ["Brave"]
+    assert saga.character("magus1") is magus
+
+
+def test_deleting_a_familiar_drops_only_its_magus_familiar_plans():
+    saga = _bonded()
+    deletion.delete_familiar(saga, saga.familiars[0])
+
+    assert [(p.character_id, p.activity) for p in saga.season_plans] == [
+        ("magus1", "reading"),
+        ("comp1", "bind_familiar"),
+    ]
+
+
+def test_familiar_consequences_say_what_happens():
+    saga = _bonded()
+    assert deletion.familiar_consequences(saga, saga.familiars[0]) == [
+        "The bond with Aelric is broken.",
+        "Aelric loses True Friend and the Loyal (Partner) Trait.",
+        "2 planned seasons of binding or empowering it are deleted.",
+    ]
+
+
+def test_familiar_consequences_without_the_bond_extras():
+    saga = _saga()
+    assert deletion.familiar_consequences(saga, saga.familiars[0]) == [
+        "The bond with Aelric is broken."
+    ]
+
+
 # ----------------------------------------------------------------- laboratory
 
 
@@ -250,14 +311,42 @@ async def test_answering_no_keeps_the_covenant():
         assert [c.id for c in storage.load_saga("s").covenants] == ["cov1"]
 
 
-async def test_deleting_is_only_offered_for_covenants_characters_and_laboratories():
+async def test_d_deletes_the_selected_familiar_and_shows_its_magus():
+    storage.save_saga(_bonded())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _open(pilot, app, ("familiar", "ashwing"))
+        await pilot.press("d")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        await wait_until(pilot, lambda: app.screen.selected_kind == "character")
+
+        saved = storage.load_saga("s")
+        assert saved.familiars == []
+        assert [c.id for c in saved.characters] == ["magus1", "comp1", "grog1"]
+        assert app.screen.selected_character.id == "magus1"
+        tree = app.screen.query_one("#nav-tree", Tree)
+        assert await wait_until(
+            pilot,
+            lambda: (
+                tree.cursor_node is not None
+                and tree.cursor_node.data == ("character", "magus1")
+            ),
+        )
+        assert not any(n.data[0] == "familiar" for n in _walk(tree.root) if n.data)
+
+
+async def test_deleting_is_offered_for_records_but_not_the_saga():
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
         await _open(pilot, app, ("familiar", "fam1"))
-        assert app.screen.check_action("delete_record", ()) is False
+        assert app.screen.check_action("delete_record", ()) is True
         await _select(app, pilot, ("laboratory", "lab1"))
         assert app.screen.check_action("delete_record", ()) is True
+        await _select(app, pilot, ("saga",))
+        assert not app.screen.check_action("delete_record", ())
 
 
 async def _select(app, pilot, data) -> None:

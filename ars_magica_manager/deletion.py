@@ -1,5 +1,5 @@
-"""Deleting the saga's top-level records -- a covenant, character or
-laboratory -- and what happens to what they own or are linked to.
+"""Deleting the saga's top-level records -- a covenant, character,
+laboratory or Familiar -- and what happens to what they own or are linked to.
 
 Nothing that can stand on its own is deleted with its owner: books become
 unassigned, a covenant's characters and laboratories become unassigned, a
@@ -11,7 +11,9 @@ record's covenant, or (with none) is deleted with it, as are those a deleted
 covenant holds; a deleted maker is kept on their devices as a typed name.
 A magus's invented spells that anything else still uses (another character
 knows one, or a Lab Text or Casting Tablet holds one) are kept as the saga's
-own spells.
+own spells. A Familiar deleted on its own takes the bond with it: its
+magus loses the True Friend Virtue and Loyal (Partner) Trait the bond gave
+them, and their planned seasons of binding or empowering it.
 
 Each `*_consequences` function says what deleting would do, for the
 confirmation prompt; each `delete_*` does it. Nothing here saves."""
@@ -19,10 +21,21 @@ confirmation prompt; each `delete_*` does it. Nothing here saves."""
 from __future__ import annotations
 
 from . import books as bk
+from . import catalog
 from . import familiars as fam
 from .enchanted_devices import held_by
 from .inhabitants import AUTO_KINDS
-from .models import Character, Covenant, Laboratory, Saga, Spell
+from .models import (
+    Character,
+    Covenant,
+    Familiar,
+    Laboratory,
+    Saga,
+    SeasonPlan,
+    Spell,
+    VirtueFlawInstance,
+)
+from .rules import familiar_seasons as fs
 
 
 def _count(count: int, noun: str, plural: str | None = None) -> str:
@@ -152,6 +165,77 @@ def delete_character(saga: Saga, character: Character) -> None:
     _rehome_devices(saga, "character", character.id, character.covenant_id)
     _forget_maker(saga, character)
     saga.characters = [c for c in saga.characters if c is not character]
+
+
+# ------------------------------------------------------------------- familiar
+
+LOYAL_PARTNER = "Loyal (Partner)"
+
+
+def _bond_virtues(magus: Character) -> list[VirtueFlawInstance]:
+    """The magus's Virtues the familiar bond grants (True Friend), one of
+    each: what binding added."""
+    granted = _bond_virtue_names()
+    found: dict[str, VirtueFlawInstance] = {}
+    for vf in magus.virtues_flaws:
+        if vf.vf_id in granted:
+            found.setdefault(vf.vf_id, vf)
+    return list(found.values())
+
+
+def _bond_virtue_names() -> dict[str, str]:
+    return {
+        entry.id: entry.name
+        for entry in catalog.load_virtue_flaw_catalog()
+        if "familiar_bond" in entry.granted_by
+    }
+
+
+def _familiar_plans(saga: Saga, magus: Character) -> list[SeasonPlan]:
+    """The magus's planned seasons of binding or empowering their familiar."""
+    return [
+        p
+        for p in saga.season_plans
+        if p.character_id == magus.id and p.activity in fs.ACTIVITIES
+    ]
+
+
+def familiar_consequences(saga: Saga, familiar: Familiar) -> list[str]:
+    magus = fam.magus_of(saga, familiar)
+    if magus is None:
+        return []
+    names = _bond_virtue_names()
+    lost = [names[vf.vf_id] for vf in _bond_virtues(magus)]
+    if any(t.name == LOYAL_PARTNER for t in magus.personality_traits):
+        lost.append(f"the {LOYAL_PARTNER} Trait")
+    lines = [f"The bond with {magus.name} is broken."]
+    if lost:
+        lines.append(f"{magus.name} loses {' and '.join(lost)}.")
+    plans = _familiar_plans(saga, magus)
+    if plans:
+        n = len(plans)
+        lines.append(
+            f"{_count(n, 'planned season')} of binding or empowering it "
+            f"{'is' if n == 1 else 'are'} deleted."
+        )
+    return lines
+
+
+def delete_familiar(saga: Saga, familiar: Familiar) -> None:
+    magus = fam.magus_of(saga, familiar)
+    if magus is not None:
+        bond = _bond_virtues(magus)
+        magus.virtues_flaws = [
+            vf for vf in magus.virtues_flaws if not any(vf is b for b in bond)
+        ]
+        loyal = next(
+            (t for t in magus.personality_traits if t.name == LOYAL_PARTNER), None
+        )
+        if loyal is not None:
+            magus.personality_traits.remove(loyal)
+        plans = _familiar_plans(saga, magus)
+        saga.season_plans = [p for p in saga.season_plans if p not in plans]
+    saga.familiars = [f for f in saga.familiars if f is not familiar]
 
 
 # ----------------------------------------------------------------- laboratory

@@ -7,6 +7,12 @@ magus has one familiar at a time, bound with Bind Familiar in New (`n`).
 Binding gives both the magus and the familiar the True Friend Virtue and a
 Loyal (Partner) +3 Personality Trait.
 
+To remove a familiar, press `d` on its tree node or its Familiar Info panel.
+After a confirmation it is deleted and the bond broken: the magus loses the
+True Friend Virtue and Loyal (Partner) Trait the bond gave them, and any
+planned seasons of binding or empowering it. The magus's sheet is shown
+afterwards.
+
 The Familiar Info panel stays on screen above the tabs whichever tab is
 open, and the tabs open with `1` to `5`. On a tab with a list, the details
 panel at the bottom shows the chosen row, including the rules text of a

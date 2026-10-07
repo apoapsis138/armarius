@@ -41,6 +41,14 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.21.0 — 2026-10-07
+
+- A familiar can be removed on its own: press `d` on it in the tree or
+  on its Familiar Info panel. The confirmation says what goes with it:
+  the bond is broken, the magus loses the True Friend Virtue and Loyal
+  (Partner) Trait the bond gave them, and any planned seasons of binding
+  or empowering it are deleted. The magus's sheet is shown afterwards.
+
 ## 2.20.0 — 2026-10-07
 
 - The Boons and Hooks, Laboratory Virtues and Flaws, and Abilities

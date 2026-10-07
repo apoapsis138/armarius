@@ -69,7 +69,7 @@ The app works out the point cost of each cord, whether a binding or empowerment 
 
 Most of the familiar's own figures are typed in: its Soak, Magic Resistance and Might, its wounds and penalties, and each bond power's figures. The Golden and Silver Cords are shown with what they do, but their bonuses are yours to apply in play, and the True Friend Virtue is recorded but has no effect the app applies.
 
-Deleting the magus also deletes their familiar, and exporting the magus takes the familiar with them.
+Deleting the magus also deletes their familiar, and exporting the magus takes the familiar with them. To remove only the familiar, press `d` on it in the tree: the bond is broken, and the magus loses True Friend, Loyal (Partner) and any planned familiar seasons.
 
 **See also:** [Familiar sheet](help:familiar), [Binding & Cords](help:section-fam-binding), [Bond Powers tab](help:tab-fam-powers), [Planning tab](help:tab-lab-planning), [Invent Spell screen](help:invent-spell), [Advancing a season](help:advance-season)
 

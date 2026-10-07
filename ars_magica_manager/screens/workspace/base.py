@@ -435,6 +435,32 @@ NAV_TREE_ID = "nav-tree"
 DETAIL_PANE_ID = "detail-pane"
 
 
+def _deletion_of(
+    saga: Saga, record: Covenant | Character | Laboratory | Familiar
+) -> tuple[list[str], Callable[[], None]]:
+    """What deleting `record` would do, for the confirmation, and the
+    function that does it."""
+    if isinstance(record, Covenant):
+        return (
+            deletion.covenant_consequences(saga, record),
+            partial(deletion.delete_covenant, saga, record),
+        )
+    if isinstance(record, Character):
+        return (
+            deletion.character_consequences(saga, record),
+            partial(deletion.delete_character, saga, record),
+        )
+    if isinstance(record, Familiar):
+        return (
+            deletion.familiar_consequences(saga, record),
+            partial(deletion.delete_familiar, saga, record),
+        )
+    return (
+        deletion.laboratory_consequences(saga, record),
+        partial(deletion.delete_laboratory, saga, record),
+    )
+
+
 def _tree_node_with_data(tree: Tree, data: tuple) -> TreeNode | None:
     """The first node of `tree` whose `.data` is `data`, or None."""
     pending = [tree.root]
@@ -1931,36 +1957,33 @@ class WorkspaceBase(Screen[None]):
             handle_result,
         )
 
-    # -- deleting a covenant, character or laboratory --
+    # -- deleting a covenant, character, laboratory or Familiar --
 
-    def _record_to_delete(self) -> Covenant | Character | Laboratory | None:
-        """The record d deletes: the covenant, character or laboratory
-        selected in the tree, if that's what's selected."""
+    def _record_to_delete(
+        self,
+    ) -> Covenant | Character | Laboratory | Familiar | None:
+        """The record d deletes: the covenant, character, laboratory or
+        Familiar selected in the tree, if that's what's selected."""
         return {
             NodeKind.COVENANT: self.selected_covenant,
             NodeKind.CHARACTER: self.selected_character,
             NodeKind.LABORATORY: self.selected_laboratory,
+            NodeKind.FAMILIAR: self.selected_familiar,
         }.get(self.selected_kind)
 
     def action_delete_record(self) -> None:
-        """Delete the selected covenant, character or laboratory, after a
-        confirmation that says what happens to what it owns (see deletion)."""
+        """Delete the selected record, after a confirmation that says what
+        happens to what it owns (see deletion). A Familiar's magus is shown
+        afterwards; otherwise the saga."""
         record = self._record_to_delete()
         if record is None:
             return
         saga = self.saga
-        if isinstance(record, Covenant):
-            consequences = deletion.covenant_consequences(saga, record)
-            delete: Callable[[], None] = partial(deletion.delete_covenant, saga, record)
-        elif isinstance(record, Character):
-            consequences = deletion.character_consequences(saga, record)
-            delete = partial(deletion.delete_character, saga, record)
-        else:
-            consequences = deletion.laboratory_consequences(saga, record)
-            delete = partial(deletion.delete_laboratory, saga, record)
+        consequences, delete = _deletion_of(saga, record)
         message = f"Delete {escape(record.name)}?"
         if consequences:
             message += "\n\n" + "\n".join(map(escape, consequences))
+        magus = fam.magus_of(saga, record) if isinstance(record, Familiar) else None
 
         async def handle_confirmed(confirmed: bool | None) -> None:
             if not confirmed:
@@ -1968,9 +1991,29 @@ class WorkspaceBase(Screen[None]):
             delete()
             storage.save_saga(saga)
             self._rebuild_tree()
-            await self._show_saga_root()
+            if magus is not None:
+                await self._show_character(magus)
+            else:
+                await self._show_saga_root()
 
         self.app.push_screen(ConfirmScreen(message), handle_confirmed)
+
+    async def _show_character(self, character: Character) -> None:
+        """Select `character`, in the tree and the detail pane."""
+        self.selected_kind = NodeKind.CHARACTER
+        self.selected_character = character
+        self.selected_covenant = self.saga.covenant(character.covenant_id)
+        self.selected_laboratory = None
+        self.selected_familiar = None
+        self._character_sheet_view = None
+        self._familiar_sheet_view = None
+        tree = self._nav_tree()
+        node = _tree_node_with_data(tree, (NodeKind.CHARACTER, character.id))
+        if node is not None:
+            # A rebuilt tree has no lines until it next renders.
+            self.call_after_refresh(tree.move_cursor, node)
+        await self._show_character_detail(character)
+        self.refresh_bindings()
 
     async def _show_saga_root(self) -> None:
         """Select the saga itself, in the tree and the detail pane."""
