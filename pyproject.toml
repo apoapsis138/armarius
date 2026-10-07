@@ -1,6 +1,6 @@
 [project]
 name = "ars-magica-manager"
-version = "2.19.2"
+version = "2.19.3"
 description = "A GM-facing management tool for Ars Magica 5th Edition covenants, characters, laboratories, and libraries."
 readme = "README.md"
 license = "GPL-3.0-only"
@@ -43,6 +43,9 @@ dev = [
 
 [tool.ruff.lint]
 ignore = ["UP045", "ISC004"]
+# Too many statements in one function (default limit 50). The functions
+# already over it carry a noqa until they are broken up.
+extend-select = ["PLR0915"]
 
 [tool.pyright]
 include = ["ars_magica_manager", "tools", "main.py"]

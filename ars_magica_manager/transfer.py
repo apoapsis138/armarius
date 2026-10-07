@@ -255,7 +255,7 @@ def _same_spell(a: Spell, b: Spell) -> bool:
     )
 
 
-def plan_import(target: Saga, data: dict[str, Any]) -> ImportPlan:
+def plan_import(target: Saga, data: dict[str, Any]) -> ImportPlan:  # noqa: PLR0915
     """Work out an import of `data` (from read()) into `target`, changing
     nothing yet: apply() does it."""
     source = Saga.from_dict(data["saga"])  # runs the load-time migrations

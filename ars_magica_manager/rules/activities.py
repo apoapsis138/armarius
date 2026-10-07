@@ -765,7 +765,7 @@ def whose_vis(character: Character, plan: SeasonPlan) -> str:
     return f"{character.name}'s"
 
 
-def _study_problems(
+def _study_problems(  # noqa: PLR0915
     saga: Saga, character: Character, plan: SeasonPlan, chosen: list[XpAllocation]
 ) -> list[str]:
     """The problems of the study activities."""

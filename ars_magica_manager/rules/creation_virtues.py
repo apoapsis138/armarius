@@ -273,7 +273,7 @@ def _count(count: int, limit: int) -> str:
 
 
 @check("virtues_flaws", CHARACTER_CHECKS)
-def virtue_flaw_checks(saga: Saga, record: Record) -> list[Check]:
+def virtue_flaw_checks(saga: Saga, record: Record) -> list[Check]:  # noqa: PLR0915
     assert isinstance(record, Character)
     character = record
     t = tally(character)

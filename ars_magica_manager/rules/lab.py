@@ -117,7 +117,7 @@ def _art_line(magus: Character, art: str) -> Line:
     return Line(label, amount=score + bonus, source=SOURCE)
 
 
-def lab_total(
+def lab_total(  # noqa: PLR0915
     saga: Saga,
     magus: Character,
     technique: str,

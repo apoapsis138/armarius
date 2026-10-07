@@ -181,7 +181,7 @@ def _node(tree: Tree, data: tuple):
 
 
 @pytest.mark.parametrize("size", [(140, 60), (120, 45)])
-async def test_house_rules_are_added_edited_and_removed_from_their_node(size):
+async def test_house_rules_are_added_edited_and_removed_from_their_node(size):  # noqa: PLR0915
     saga = _saga()
     hr.add(saga, hr.CHARACTER, _values("Storm-Touched", "Virtue"))
     saga.characters[0].virtues_flaws.append(

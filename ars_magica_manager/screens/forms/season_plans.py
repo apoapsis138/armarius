@@ -20,7 +20,7 @@ from ...rules import (
     laboratory_seasons,
     supplement_seasons,
 )
-from ..fields import _EMPHASIS_HINT, DialogField, FieldsDialog
+from ..fields import _EMPHASIS_HINT, DialogField, FieldsDialog, _attr
 
 
 def _season_plan_from(
@@ -630,31 +630,105 @@ def _breakthrough_dialog(existing: Breakthrough | None) -> FieldsDialog[Breakthr
     )
 
 
-def _season_plan_dialog(
+ShowIf = Callable[[dict[str, Any]], bool]
+
+
+def _activity_is(*keys: str) -> ShowIf:
+    """A field's show_if: shown while the Activity is one of `keys`."""
+    return lambda values: values.get("activity") in keys
+
+
+def _book_options(saga: Saga, character: Character) -> list[tuple[str, str]]:
+    return [
+        (escape(seasons.book_label(b)), b.id)
+        for b in bk.studyable_books(saga, character)
+    ]
+
+
+def _study_fields(
     saga: Saga, character: Character, existing: SeasonPlan | None
-) -> FieldsDialog[SeasonPlan]:
-    """Plan `character`'s current season: the activity, what
-    its experience goes into, and notes. The line above Save shows what the
-    season will give, worked out as the form is filled in."""
+) -> list[DialogField]:
+    """The Activity, and the Source Quality, book or teacher it studies from."""
     activities = season_rules.activities_for(
         character,
         books=sourcebooks.saga_books(saga),
-        keep=existing.activity if existing else "",
+        keep=_attr(existing, "activity", ""),
     )
+    return [
+        DialogField(
+            "activity",
+            "Activity",
+            "select",
+            _attr(existing, "activity", None),
+            options=[(a.label, a.key) for a in activities],
+            required=True,
+            hint="The line above Save shows what the season will give.",
+        ),
+        DialogField(
+            "source_quality",
+            "Source Quality",
+            "optint",
+            _attr(existing, "source_quality", None),
+            show_if=_activity_is(
+                season_rules.PRACTICE, season_rules.ADVENTURE, *_SUPPLEMENT_XP
+            ),
+            hint=(
+                "Practice: blank for 4 (5 for a spell's Mastery). Adventure: "
+                "the storyguide's 5 to 10. Others: see the line above Save."
+            ),
+        ),
+        DialogField(
+            "book_id",
+            "Book",
+            "select",
+            _attr(existing, "book_id", None),
+            options=_book_options(saga, character),
+            allow_blank=True,
+            show_if=_activity_is(season_rules.READ),
+            hint="The covenant's library and the character's own books.",
+        ),
+        DialogField(
+            "teacher_id",
+            "Teacher / master",
+            "select",
+            _attr(existing, "teacher_id", None),
+            options=[
+                (escape(c.name), c.id)
+                for c in saga.characters
+                if c.id != character.id and c.type != "grog"
+            ]
+            + [
+                (escape(c.name), c.id)
+                for c in saga.characters
+                if c.id != character.id and c.type == "grog"
+            ],
+            allow_blank=True,
+            show_if=_activity_is(
+                season_rules.TAUGHT,
+                season_rules.TRAINED,
+                laboratory_seasons.ASSIST,
+                "undergo_initiation",
+                "record_lectures",
+            ),
+            hint="A teacher plans Teach for the same season; the magus you "
+            "assist plans lab work.",
+        ),
+    ]
+
+
+def _subject_fields(
+    saga: Saga, character: Character, existing: SeasonPlan | None
+) -> list[DialogField]:
+    """Where the season's experience goes: one subject for most activities,
+    two for Exposure and Adventure, more for Adventure, each with its share of
+    an Adventure's Source Quality."""
     options = seasons.subject_options(saga, character)
     shares = existing.allocations if existing else []
-
-    def activity_is(*keys: str) -> Callable[[dict[str, Any]], bool]:
-        return lambda values: values.get("activity") in keys
-
-    def share(n: int) -> XpAllocation | None:
-        return shares[n - 1] if len(shares) >= n else None
-
-    subject_fields: list[DialogField] = []
+    fields: list[DialogField] = []
     for n in range(1, season_rules.MAX_SUBJECTS + 1):
-        allocation = share(n)
+        allocation = shares[n - 1] if len(shares) >= n else None
         if n == 1:
-            shown = activity_is(
+            shown = _activity_is(
                 season_rules.EXPOSURE,
                 season_rules.PRACTICE,
                 season_rules.ADVENTURE,
@@ -667,10 +741,10 @@ def _season_plan_dialog(
                 *_SUPPLEMENT_XP,
             )
         elif n == 2:
-            shown = activity_is(season_rules.EXPOSURE, season_rules.ADVENTURE)
+            shown = _activity_is(season_rules.EXPOSURE, season_rules.ADVENTURE)
         else:
-            shown = activity_is(season_rules.ADVENTURE)
-        subject_fields.append(
+            shown = _activity_is(season_rules.ADVENTURE)
+        fields.append(
             DialogField(
                 f"subject_{n}",
                 "Experience in" if n == 1 else f"...and in ({n})",
@@ -690,100 +764,47 @@ def _season_plan_dialog(
                 ),
             )
         )
-        subject_fields.append(
+        fields.append(
             DialogField(
                 f"points_{n}",
                 f"Source Quality to ({n})",
                 "optint",
                 allocation.points if allocation and allocation.points else None,
-                show_if=activity_is(season_rules.ADVENTURE),
+                show_if=_activity_is(season_rules.ADVENTURE),
             )
         )
-    fields = [
-        DialogField(
-            "activity",
-            "Activity",
-            "select",
-            existing.activity if existing else None,
-            options=[(a.label, a.key) for a in activities],
-            required=True,
-            hint="The line above Save shows what the season will give.",
-        ),
-        DialogField(
-            "source_quality",
-            "Source Quality",
-            "optint",
-            existing.source_quality if existing else None,
-            show_if=activity_is(
-                season_rules.PRACTICE, season_rules.ADVENTURE, *_SUPPLEMENT_XP
-            ),
-            hint=(
-                "Practice: blank for 4 (5 for a spell's Mastery). Adventure: "
-                "the storyguide's 5 to 10. Others: see the line above Save."
-            ),
-        ),
-        DialogField(
-            "book_id",
-            "Book",
-            "select",
-            existing.book_id if existing else None,
-            options=[
-                (escape(seasons.book_label(b)), b.id)
-                for b in bk.studyable_books(saga, character)
-            ],
-            allow_blank=True,
-            show_if=activity_is(season_rules.READ),
-            hint="The covenant's library and the character's own books.",
-        ),
-        DialogField(
-            "teacher_id",
-            "Teacher / master",
-            "select",
-            existing.teacher_id if existing else None,
-            options=[
-                (escape(c.name), c.id)
-                for c in saga.characters
-                if c.id != character.id and c.type != "grog"
-            ]
-            + [
-                (escape(c.name), c.id)
-                for c in saga.characters
-                if c.id != character.id and c.type == "grog"
-            ],
-            allow_blank=True,
-            show_if=activity_is(
-                season_rules.TAUGHT,
-                season_rules.TRAINED,
-                laboratory_seasons.ASSIST,
-                "undergo_initiation",
-                "record_lectures",
-            ),
-            hint="A teacher plans Teach for the same season; the magus you "
-            "assist plans lab work.",
-        ),
-        *subject_fields,
+    return fields
+
+
+def _book_work_fields(
+    saga: Saga, character: Character, existing: SeasonPlan | None
+) -> list[DialogField]:
+    """Writing, copying and translating books, and copying Lab Texts."""
+    return [
         DialogField(
             "title",
             "Title",
             "text",
-            existing.title if existing else "",
+            _attr(existing, "title", ""),
             placeholder="blank: named for its subject",
-            show_if=activity_is(book_seasons.WRITE_SUMMA, book_seasons.WRITE_TRACTATUS),
+            show_if=_activity_is(
+                book_seasons.WRITE_SUMMA, book_seasons.WRITE_TRACTATUS
+            ),
         ),
         DialogField(
             "book_level",
             "Summa Level (blank: the most)",
             "optint",
-            existing.book_level if existing else None,
-            show_if=activity_is(book_seasons.WRITE_SUMMA),
+            _attr(existing, "book_level", None),
+            show_if=_activity_is(book_seasons.WRITE_SUMMA),
             hint="Each Level below the most adds Quality (+1, +3 for an Ability).",
         ),
         DialogField(
             "language",
             "Language",
             "text",
-            (existing.language if existing else "") or "Latin",
-            show_if=activity_is(
+            _attr(existing, "language", "") or "Latin",
+            show_if=_activity_is(
                 book_seasons.WRITE_SUMMA,
                 book_seasons.WRITE_TRACTATUS,
                 book_seasons.TRANSLATE_BOOK,
@@ -794,26 +815,23 @@ def _season_plan_dialog(
             "copy_book_id",
             "Book",
             "select",
-            existing.book_id if existing else None,
-            options=[
-                (escape(seasons.book_label(b)), b.id)
-                for b in bk.studyable_books(saga, character)
-            ],
+            _attr(existing, "book_id", None),
+            options=_book_options(saga, character),
             allow_blank=True,
-            show_if=activity_is(book_seasons.COPY_BOOK, book_seasons.TRANSLATE_BOOK),
+            show_if=_activity_is(book_seasons.COPY_BOOK, book_seasons.TRANSLATE_BOOK),
         ),
         DialogField(
             "quick",
             "Quick copy (x3, Quality -1)",
             "check",
-            existing.quick if existing else False,
-            show_if=activity_is(book_seasons.COPY_BOOK),
+            _attr(existing, "quick", False),
+            show_if=_activity_is(book_seasons.COPY_BOOK),
         ),
         DialogField(
             "text_id",
             "Lab Text",
             "select",
-            existing.book_id if existing else None,
+            _attr(existing, "book_id", None),
             # Every text he can get at: one he can't read yet says so, and
             # the season refuses it with the reason.
             options=[
@@ -822,20 +840,28 @@ def _season_plan_dialog(
                 if b.type == "Lab Text" and bk.can_read(saga, character, b)
             ],
             allow_blank=True,
-            show_if=activity_is(book_seasons.COPY_TEXTS),
+            show_if=_activity_is(book_seasons.COPY_TEXTS),
         ),
+    ]
+
+
+def _student_and_research_fields(
+    saga: Saga, character: Character, existing: SeasonPlan | None
+) -> list[DialogField]:
+    """The student taught, and the goal of a research season."""
+    return [
         DialogField(
             "student_id",
             "Student",
             "select",
-            existing.subject_id if existing else None,
+            _attr(existing, "subject_id", None),
             options=[
                 (escape(c.name), c.id)
                 for c in saga.characters
                 if c.id != character.id and c.type != "grog"
             ],
             allow_blank=True,
-            show_if=activity_is(
+            show_if=_activity_is(
                 book_seasons.TEACH_ABBREVIATIONS,
                 apprentice_seasons.OPEN_ARTS,
                 apprentice_seasons.TEACH_VIRTUE,
@@ -845,45 +871,52 @@ def _season_plan_dialog(
             "research",
             "Research goal",
             "text",
-            existing.research if existing else "",
-            show_if=activity_is(experiment.INTEGRATE),
+            _attr(existing, "research", ""),
+            show_if=_activity_is(experiment.INTEGRATE),
         ),
         DialogField(
             "research_kind",
             "Breakthrough",
             "select",
-            (existing.research_kind if existing else "") or "Minor",
+            _attr(existing, "research_kind", "") or "Minor",
             options=[(k, k) for k in experiment.KINDS],
-            show_if=activity_is(experiment.INTEGRATE),
+            show_if=_activity_is(experiment.INTEGRATE),
         ),
-        *_supplement_fields(saga, character, existing, activity_is),
+    ]
+
+
+def _closing_fields(
+    character: Character, existing: SeasonPlan | None
+) -> list[DialogField]:
+    """The Virtue taught, where vis comes from, the die, months lost and notes."""
+    return [
         DialogField(
             "virtue_id",
             "Hermetic Virtue",
             "select",
-            existing.effect_id if existing else None,
+            _attr(existing, "effect_id", None),
             options=apprentice_seasons.teachable_virtues(character),
             allow_blank=True,
-            show_if=activity_is(apprentice_seasons.TEACH_VIRTUE),
+            show_if=_activity_is(apprentice_seasons.TEACH_VIRTUE),
         ),
         DialogField(
             "vis_from",
             "Vis from",
             "select",
-            (existing.vis_from if existing else "") or "character",
+            _attr(existing, "vis_from", "") or "character",
             options=[
                 ("Their own raw vis", "character"),
                 ("Their laboratory's raw vis", "laboratory"),
                 ("Their covenant's vis stores", "covenant"),
             ],
-            show_if=activity_is(season_rules.VIS_STUDY),
+            show_if=_activity_is(season_rules.VIS_STUDY),
         ),
         DialogField(
             "die",
             "Stress die (blank: rolled)",
             "optint",
-            existing.die if existing else None,
-            show_if=activity_is(
+            _attr(existing, "die", None),
+            show_if=_activity_is(
                 season_rules.VIS_STUDY,
                 apprentice_seasons.SEARCH,
                 experiment.INTEGRATE,
@@ -895,8 +928,8 @@ def _season_plan_dialog(
             "months_lost",
             "Months lost (0-3)",
             "int",
-            existing.months_lost if existing else 0,
-            show_if=activity_is(
+            _attr(existing, "months_lost", 0),
+            show_if=_activity_is(
                 season_rules.EXPOSURE,
                 season_rules.PRACTICE,
                 season_rules.READ,
@@ -910,9 +943,26 @@ def _season_plan_dialog(
             "details",
             "Notes",
             "area",
-            existing.details if existing else "",
+            _attr(existing, "details", ""),
             hint=_EMPHASIS_HINT,
         ),
+    ]
+
+
+def _season_plan_dialog(
+    saga: Saga, character: Character, existing: SeasonPlan | None
+) -> FieldsDialog[SeasonPlan]:
+    """Plan `character`'s current season: the activity, what
+    its experience goes into, and notes. The line above Save shows what the
+    season will give, worked out as the form is filled in. Each field shows
+    only for the activities that use it."""
+    fields = [
+        *_study_fields(saga, character, existing),
+        *_subject_fields(saga, character, existing),
+        *_book_work_fields(saga, character, existing),
+        *_student_and_research_fields(saga, character, existing),
+        *_supplement_fields(saga, character, existing, _activity_is),
+        *_closing_fields(character, existing),
     ]
 
     def problem(values: dict[str, Any]) -> str | None:

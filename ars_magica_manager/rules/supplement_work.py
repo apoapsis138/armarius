@@ -241,7 +241,7 @@ def problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
     return []
 
 
-def work(saga: Saga, character: Character, plan: SeasonPlan, rng) -> SupplementWork:
+def work(saga: Saga, character: Character, plan: SeasonPlan, rng) -> SupplementWork:  # noqa: PLR0915
     """What the season does (rolls made with `rng`)."""
     key = plan.activity
     result = SupplementWork()

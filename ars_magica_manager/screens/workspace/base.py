@@ -826,7 +826,7 @@ class WorkspaceBase(Screen[None]):
             f"Familiar: {escape(familiar.name)}", data=(NodeKind.FAMILIAR, familiar.id)
         )
 
-    async def on_tree_node_selected(self, event: Tree.NodeSelected) -> None:
+    async def on_tree_node_selected(self, event: Tree.NodeSelected) -> None:  # noqa: PLR0915
         data = event.node.data
         if data is None:
             return
@@ -2091,7 +2091,7 @@ class WorkspaceBase(Screen[None]):
         if self.selected_kind == NodeKind.SAGA:
             await self._show_saga_detail()
 
-    def action_advance_season(self) -> None:
+    def action_advance_season(self) -> None:  # noqa: PLR0915
         saga = self.saga
 
         async def handle_result(confirmed: bool | None) -> None:

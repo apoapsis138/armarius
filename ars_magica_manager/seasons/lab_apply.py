@@ -516,7 +516,7 @@ def _apply_laboratory(
         ls.add_vf(lab, vf_id)
 
 
-def _apply_experiment(
+def _apply_experiment(  # noqa: PLR0915
     saga: Saga,
     magus: Character,
     lab: Laboratory,

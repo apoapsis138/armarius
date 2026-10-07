@@ -285,7 +285,7 @@ def requisite_arts(magus: Character, spell: Spell) -> tuple[str, str]:
     return technique, form
 
 
-def work(
+def work(  # noqa: PLR0915
     saga: Saga, magus: Character, plan: SeasonPlan
 ) -> tuple[list[str], LabWork | None]:
     """The problems with a lab plan, or what it does."""

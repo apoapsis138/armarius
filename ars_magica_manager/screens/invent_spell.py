@@ -14,6 +14,7 @@ field per row at 120 x 45."""
 from __future__ import annotations
 
 import uuid
+from collections.abc import Sequence
 from typing import ClassVar
 
 from textual.app import ComposeResult
@@ -63,6 +64,25 @@ def _int(text: str) -> int | None:
         return int(text.strip())
     except ValueError:
         return None
+
+
+def _number(value: str, widget_id: str, *, placeholder: str = "") -> Input:
+    """A short box for a number."""
+    return Input(
+        value, placeholder=placeholder, id=widget_id, classes="inv-num", compact=True
+    )
+
+
+def _art_select(arts: Sequence[str], value: str | None, widget_id: str) -> Select[str]:
+    """A Technique or Form choice, with nothing chosen while `value` is empty."""
+    return Select(
+        [(art, art) for art in arts],
+        value=value or Select.NULL,
+        prompt="(choose)",
+        id=widget_id,
+        classes="inv-art",
+        compact=True,
+    )
 
 
 class InventSpellScreen(ModalDialog[SeasonPlan | None]):
@@ -282,12 +302,6 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
 
     def compose(self) -> ComposeResult:
         plan = self.initial
-        design = self._design
-        known = [
-            (escape(spell.name), spell.id)
-            for k in self.magus.spells_known
-            if (spell := spl.find_spell(self.saga, k.spell_id)) is not None
-        ]
         with Vertical(id="inv-dialog", classes="dialog-box"):
             yield Static(self._header(self.initial_activity or ""), id="inv-header")
             with VerticalScroll(id="inv-scroll"):
@@ -304,457 +318,369 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                         compact=True,
                     )
                 with Vertical(id="inv-design"):
-                    with Horizontal(classes="inv-row"):
-                        yield Label("Start from")
-                        yield Button(self._start_label(), id="inv-start", compact=True)
-                        yield Button("New spell", id="inv-new", compact=True)
-                    with Horizontal(classes="inv-row"):
-                        yield Label("Name      ")
-                        yield Input(
-                            design.name if design else "", id="inv-name", compact=True
-                        )
-                    yield Label("Effect")
-                    yield TextArea(
-                        design.description if design else "", id="inv-description"
-                    )
-                    yield Static("── Effect ─────────", classes="inv-title")
-                    with Horizontal(classes="inv-row"):
-                        yield Label("Technique")
-                        yield Select(
-                            [(t, t) for t in TECHNIQUES],
-                            value=(
-                                design.technique
-                                if design and design.technique
-                                else Select.NULL
-                            ),
-                            prompt="(choose)",
-                            id="inv-technique",
-                            classes="inv-art",
-                            compact=True,
-                        )
-                        yield Label(" Form")
-                        yield Select(
-                            [(f, f) for f in FORMS],
-                            value=(
-                                design.form if design and design.form else Select.NULL
-                            ),
-                            prompt="(choose)",
-                            id="inv-form",
-                            classes="inv-art",
-                            compact=True,
-                        )
-                        yield Label(" Requisites")
-                        yield Input(
-                            ", ".join(design.requisites) if design else "",
-                            placeholder="e.g. Rego",
-                            id="inv-requisites",
-                            compact=True,
-                        )
-                        yield Label(" Base level")
-                        yield Input(
-                            ""
-                            if not design or design.base_level is None
-                            else str(design.base_level),
-                            id="inv-base",
-                            classes="inv-num",
-                            compact=True,
-                        )
-                        yield Label(" Ritual")
-                        yield Checkbox(
-                            "",
-                            value=bool(design and design.ritual),
-                            id="inv-ritual",
-                            compact=True,
-                        )
-                    with Horizontal(classes="inv-row"):
-                        for kind in _KINDS:
-                            yield Label(("" if kind == "range" else " ") + kind.title())
-                            current = getattr(design, kind) if design else ""
-                            values = [v for _, v in self.parameter_options[kind]]
-                            choice = (
-                                current
-                                if current in values
-                                else OTHER
-                                if current
-                                else values[0]
-                            )
-                            yield Select(
-                                self.parameter_options[kind],
-                                value=choice,
-                                allow_blank=False,
-                                id=f"inv-{kind}",
-                                classes="inv-rdt",
-                                compact=True,
-                            )
-                    with Horizontal(classes="inv-row", id="inv-other-row"):
-                        for kind in _KINDS:
-                            current = getattr(design, kind) if design else ""
-                            steps = design.custom_steps.get(kind) if design else None
-                            yield Label(
-                                ("" if kind == "range" else " ") + f"Other {kind}"
-                            )
-                            yield Input(
-                                current if current not in _STANDARD[kind] else "",
-                                placeholder="name",
-                                id=f"inv-{kind}-name",
-                                classes="inv-other",
-                                compact=True,
-                            )
-                            yield Input(
-                                "" if steps is None else str(steps),
-                                placeholder="+n",
-                                id=f"inv-{kind}-steps",
-                                classes="inv-num",
-                                compact=True,
-                            )
-                    with Horizontal(classes="inv-row"):
-                        yield Label("Size / extra magnitudes")
-                        yield Input(
-                            str(design.extra_magnitudes) if design else "0",
-                            id="inv-extra",
-                            classes="inv-num",
-                            compact=True,
-                        )
-                        yield Label(" Base effect")
-                        yield Input(
-                            design.base_effect if design else "",
-                            placeholder="the guideline used",
-                            id="inv-base-effect",
-                            compact=True,
-                        )
-                    yield Static("", id="inv-level")
-                with Horizontal(classes="inv-row", id="inv-labtext"):
-                    yield Label("Lab Text")
-                    yield Select(
-                        [
-                            (
-                                escape(
-                                    b.name + lt.cant_read_tag(self.saga, self.magus, b)
-                                ),
-                                b.id,
-                            )
-                            for b in lab_seasons.lab_texts_at_hand(
-                                self.saga, self.magus
-                            )
-                        ],
-                        value=(plan.book_id if plan and plan.book_id else Select.NULL),
-                        prompt="(choose the Lab Text)",
-                        id="inv-lab-text",
-                        compact=True,
-                    )
-                with Horizontal(classes="inv-row", id="inv-decode-row"):
-                    yield Label("Lab Text")
-                    yield Select(
-                        [
-                            (
-                                f"{escape(b.name)} "
-                                f"({escape(bs.author_name(self.saga, b))})",
-                                b.id,
-                            )
-                            for b in self._undecoded()
-                        ],
-                        value=(
-                            plan.book_id
-                            if plan
-                            and plan.activity == bs.DECODE_TEXT
-                            and plan.book_id in [b.id for b in self._undecoded()]
-                            else Select.NULL
-                        ),
-                        prompt="(a raw text by another magus)",
-                        id="inv-decode",
-                        compact=True,
-                    )
+                    yield from self._compose_design(self._design)
+                yield from self._compose_lab_texts(plan)
                 with Vertical(id="inv-work"):
-                    with Horizontal(classes="inv-row", id="inv-connection-row"):
-                        yield Label("Connection to")
-                        yield Select(
-                            self._connections(),
-                            value=self._connection_value(plan),
-                            prompt="(choose; add them on the Inventory tab)",
-                            id="inv-connection",
-                            compact=True,
-                        )
-                    with Horizontal(classes="inv-row", id="inv-subject-row"):
-                        yield Label("For")
-                        yield Select(
-                            self._subjects(),
-                            value=(
-                                plan.subject_id
-                                if plan and plan.subject_id
-                                else self.magus.id
-                            ),
-                            allow_blank=False,
-                            id="inv-subject",
-                            compact=True,
-                        )
-                        yield Label(" Vis")
-                        yield Select(
-                            [(art, art) for art in lab_seasons.LONGEVITY_VIS_ARTS],
-                            value=(
-                                plan.vis_art
-                                if plan
-                                and plan.vis_art in lab_seasons.LONGEVITY_VIS_ARTS
-                                else "Creo"
-                            ),
-                            allow_blank=False,
-                            id="inv-vis-art",
-                            compact=True,
-                        )
-                        yield Label(" Extra pawns")
-                        yield Input(
-                            str(plan.extra_vis) if plan else "0",
-                            id="inv-extra-vis",
-                            classes="inv-num",
-                            compact=True,
-                        )
-                    with Horizontal(classes="inv-row", id="inv-device-row"):
-                        yield Label("Device")
-                        yield Select(
-                            self._devices(),
-                            value=self._device_value(plan),
-                            prompt="(choose; they're kept on the Inventory tabs)",
-                            id="inv-device",
-                            compact=True,
-                        )
-                        yield Label(" Shape & material")
-                        yield Input(
-                            str(plan.shape_bonus) if plan else "0",
-                            id="inv-shape",
-                            classes="inv-num",
-                            compact=True,
-                        )
-                    with Horizontal(classes="inv-row", id="inv-effect-row"):
-                        yield Label("Effect")
-                        yield Select(
-                            self._effects(plan.device_id if plan else None),
-                            value=self._effect_value(plan),
-                            prompt="(choose)",
-                            id="inv-effect",
-                            compact=True,
-                        )
-                    with Horizontal(classes="inv-row", id="inv-effect-text-row"):
-                        yield Label("From Lab Text")
-                        yield Select(
-                            self._effect_texts(plan),
-                            value=self._effect_text_value(plan),
-                            prompt="(none: instil it the long way)",
-                            id="inv-effect-text",
-                            compact=True,
-                        )
-                    with Horizontal(classes="inv-row", id="inv-bind-row"):
-                        yield Label("Technique")
-                        yield Select(
-                            [(t, t) for t in TECHNIQUES],
-                            value=plan.technique
-                            if plan and plan.technique
-                            else Select.NULL,
-                            prompt="(choose)",
-                            id="inv-bind-t",
-                            classes="inv-art",
-                            compact=True,
-                        )
-                        yield Label(" Form")
-                        yield Select(
-                            [(f, f) for f in FORMS],
-                            value=plan.form if plan and plan.form else Select.NULL,
-                            prompt="(choose)",
-                            id="inv-bind-f",
-                            classes="inv-art",
-                            compact=True,
-                        )
-                        for cord in ("golden", "silver", "bronze"):
-                            yield Label(f" {cord.title()} cord")
-                            yield Input(
-                                str(getattr(plan, f"{cord}_cord")) if plan else "0",
-                                id=f"inv-{cord}",
-                                classes="inv-num",
-                                compact=True,
-                            )
-                    with Horizontal(classes="inv-row", id="inv-power-row"):
-                        yield Label("Bond power")
-                        yield Select(
-                            self._powers(),
-                            value=self._power_value(plan),
-                            prompt="(choose; add it on the familiar's sheet)",
-                            id="inv-power",
-                            compact=True,
-                        )
-                    with Horizontal(classes="inv-row", id="inv-taming-row"):
-                        yield Label("Creature")
-                        yield Input(
-                            plan.title if plan else "",
-                            placeholder="its name",
-                            id="inv-creature",
-                            compact=True,
-                        )
-                        yield Label(" Form")
-                        yield Select(
-                            [(f, f) for f in FORMS],
-                            value=plan.form if plan and plan.form else Select.NULL,
-                            prompt="(choose)",
-                            id="inv-creature-form",
-                            classes="inv-art",
-                            compact=True,
-                        )
-                        yield Label(" Might")
-                        yield Input(
-                            ""
-                            if plan is None or plan.book_level is None
-                            else str(plan.book_level),
-                            id="inv-creature-might",
-                            classes="inv-num",
-                            compact=True,
-                        )
-                    with Horizontal(classes="inv-row", id="inv-move-row"):
-                        yield Label("Moving to")
-                        yield Input(
-                            plan.title if plan else "",
-                            placeholder="the new location",
-                            id="inv-move-to",
-                            compact=True,
-                        )
-                        yield Label(" By spell")
-                        yield Checkbox(
-                            "",
-                            value=bool(plan and plan.by_spell),
-                            id="inv-by-spell",
-                            compact=True,
-                        )
-                    with Horizontal(classes="inv-row", id="inv-die-row"):
-                        yield Label("Die")
-                        yield Input(
-                            "" if plan is None or plan.die is None else str(plan.die),
-                            placeholder="rolled",
-                            id="inv-die",
-                            classes="inv-num",
-                            compact=True,
-                        )
-                        yield Label(
-                            " (blank: rolled when the season is played; a typed die "
-                            "is used for one roll)"
-                        )
-                    with Horizontal(classes="inv-row", id="inv-vis-from-row"):
-                        yield Label("Vis", id="inv-vis-from-label")
-                        yield Select(
-                            [
-                                ("the laboratory's raw vis", "laboratory"),
-                                (
-                                    f"{escape(self.magus.name)}'s raw vis",
-                                    "character",
-                                ),
-                                ("the covenant's vis stores", "covenant"),
-                            ],
-                            value=(
-                                plan.vis_from
-                                if plan and plan.vis_from
-                                else "laboratory"
-                            ),
-                            allow_blank=False,
-                            id="inv-vis-from",
-                            compact=True,
-                        )
-                        yield Label(" Art", id="inv-effect-vis-label")
-                        yield Select(
-                            self._effect_arts(plan),
-                            value=self._effect_art_value(plan),
-                            prompt="(Art)",
-                            id="inv-effect-vis",
-                            compact=True,
-                        )
+                    yield from self._compose_targets(plan)
+                    yield from self._compose_other_work(plan)
                 with Vertical(id="inv-common"):
-                    yield Static("── Lab work ────────", classes="inv-title")
-                    with Horizontal(classes="inv-row", id="inv-experiment-row"):
-                        yield Label("Experiment", id="inv-experimenting-label")
-                        yield Checkbox(
-                            "",
-                            value=bool(plan and plan.experimenting),
-                            id="inv-experimenting",
-                            compact=True,
-                        )
-                        yield Label(" Risk +")
-                        yield Input(
-                            str(plan.risk) if plan else "0",
-                            id="inv-risk",
-                            classes="inv-num",
-                            compact=True,
-                        )
-                        yield Label(" Research goal")
-                        yield Input(
-                            plan.research if plan else "",
-                            placeholder="(optional)",
-                            id="inv-research",
-                            compact=True,
-                        )
-                        yield Label(" ")
-                        yield Select(
-                            [(k, k) for k in ex.KINDS],
-                            value=(plan.research_kind if plan else "Minor") or "Minor",
-                            allow_blank=False,
-                            id="inv-research-kind",
-                            compact=True,
-                        )
-                    with Horizontal(classes="inv-row"):
-                        yield Label("Similar spell known")
-                        yield Select(
-                            known,
-                            value=(
-                                plan.similar_spell_id
-                                if plan
-                                and plan.similar_spell_id in [v for _, v in known]
-                                else Select.NULL
-                            ),
-                            prompt="(none)",
-                            id="inv-similar",
-                            compact=True,
-                        )
-                        if lab_seasons.has_focus(self.magus):
-                            yield Label(" Magical Focus")
-                            yield Checkbox(
-                                "",
-                                value=bool(plan and plan.focus),
-                                id="inv-focus",
-                                compact=True,
-                            )
-                        if lab_seasons.theory_specialty(self.magus):
-                            yield Label(
-                                f" Magic Theory ({escape(lab_seasons.theory_specialty(self.magus))})"
-                            )
-                            yield Checkbox(
-                                "",
-                                value=bool(plan and plan.theory_specialty),
-                                id="inv-specialty",
-                                compact=True,
-                            )
-                    with Horizontal(classes="inv-row"):
-                        yield Label("Days away")
-                        yield Input(
-                            str(plan.days_away) if plan else "0",
-                            id="inv-days",
-                            classes="inv-num",
-                            compact=True,
-                        )
-                        yield Label(
-                            " (10 cost nothing, 11-20 lower the Lab Total, more rule it out)   Other"
-                        )
-                        yield Input(
-                            str(plan.other_modifier) if plan else "0",
-                            id="inv-other",
-                            classes="inv-num",
-                            compact=True,
-                        )
-                    with Horizontal(classes="inv-row"):
-                        yield Label("Notes")
-                        yield Input(
-                            plan.details if plan else "", id="inv-notes", compact=True
-                        )
-                    with Horizontal(id="inv-results"):
-                        yield Static("", id="inv-total")
-                        yield Static("", id="inv-when")
+                    yield from self._compose_common(plan)
             yield Static("", id="inv-error")
             with Horizontal(id="inv-buttons"):
                 yield Button("Schedule", id="btn-save", variant="primary", compact=True)
                 yield Button("Cancel", id="btn-cancel", compact=True)
                 yield Button("Reset", id="btn-reset", compact=True)
+
+    def _compose_design(self, design: SpellDesign | None) -> ComposeResult:
+        """The spell's design: where it starts from, its name and effect, its
+        Arts, Range / Duration / Target, and its level."""
+        with Horizontal(classes="inv-row"):
+            yield Label("Start from")
+            yield Button(self._start_label(), id="inv-start", compact=True)
+            yield Button("New spell", id="inv-new", compact=True)
+        with Horizontal(classes="inv-row"):
+            yield Label("Name      ")
+            yield Input(design.name if design else "", id="inv-name", compact=True)
+        yield Label("Effect")
+        yield TextArea(design.description if design else "", id="inv-description")
+        yield Static("── Effect ─────────", classes="inv-title")
+        with Horizontal(classes="inv-row"):
+            yield Label("Technique")
+            yield _art_select(
+                TECHNIQUES, design.technique if design else None, "inv-technique"
+            )
+            yield Label(" Form")
+            yield _art_select(FORMS, design.form if design else None, "inv-form")
+            yield Label(" Requisites")
+            yield Input(
+                ", ".join(design.requisites) if design else "",
+                placeholder="e.g. Rego",
+                id="inv-requisites",
+                compact=True,
+            )
+            yield Label(" Base level")
+            yield _number(
+                ""
+                if not design or design.base_level is None
+                else str(design.base_level),
+                "inv-base",
+            )
+            yield Label(" Ritual")
+            yield Checkbox(
+                "",
+                value=bool(design and design.ritual),
+                id="inv-ritual",
+                compact=True,
+            )
+        with Horizontal(classes="inv-row"):
+            for kind in _KINDS:
+                yield Label(("" if kind == "range" else " ") + kind.title())
+                current = getattr(design, kind) if design else ""
+                values = [v for _, v in self.parameter_options[kind]]
+                choice = (
+                    current if current in values else OTHER if current else values[0]
+                )
+                yield Select(
+                    self.parameter_options[kind],
+                    value=choice,
+                    allow_blank=False,
+                    id=f"inv-{kind}",
+                    classes="inv-rdt",
+                    compact=True,
+                )
+        with Horizontal(classes="inv-row", id="inv-other-row"):
+            for kind in _KINDS:
+                current = getattr(design, kind) if design else ""
+                steps = design.custom_steps.get(kind) if design else None
+                yield Label(("" if kind == "range" else " ") + f"Other {kind}")
+                yield Input(
+                    current if current not in _STANDARD[kind] else "",
+                    placeholder="name",
+                    id=f"inv-{kind}-name",
+                    classes="inv-other",
+                    compact=True,
+                )
+                yield _number(
+                    "" if steps is None else str(steps),
+                    f"inv-{kind}-steps",
+                    placeholder="+n",
+                )
+        with Horizontal(classes="inv-row"):
+            yield Label("Size / extra magnitudes")
+            yield _number(str(design.extra_magnitudes) if design else "0", "inv-extra")
+            yield Label(" Base effect")
+            yield Input(
+                design.base_effect if design else "",
+                placeholder="the guideline used",
+                id="inv-base-effect",
+                compact=True,
+            )
+        yield Static("", id="inv-level")
+
+    def _compose_lab_texts(self, plan: SeasonPlan | None) -> ComposeResult:
+        """The Lab Text to invent from, and the raw text to decode."""
+        with Horizontal(classes="inv-row", id="inv-labtext"):
+            yield Label("Lab Text")
+            yield Select(
+                [
+                    (escape(b.name + lt.cant_read_tag(self.saga, self.magus, b)), b.id)
+                    for b in lab_seasons.lab_texts_at_hand(self.saga, self.magus)
+                ],
+                value=(plan.book_id if plan and plan.book_id else Select.NULL),
+                prompt="(choose the Lab Text)",
+                id="inv-lab-text",
+                compact=True,
+            )
+        with Horizontal(classes="inv-row", id="inv-decode-row"):
+            yield Label("Lab Text")
+            yield Select(
+                [
+                    (f"{escape(b.name)} ({escape(bs.author_name(self.saga, b))})", b.id)
+                    for b in self._undecoded()
+                ],
+                value=(
+                    plan.book_id
+                    if plan
+                    and plan.activity == bs.DECODE_TEXT
+                    and plan.book_id in [b.id for b in self._undecoded()]
+                    else Select.NULL
+                ),
+                prompt="(a raw text by another magus)",
+                id="inv-decode",
+                compact=True,
+            )
+
+    def _compose_targets(self, plan: SeasonPlan | None) -> ComposeResult:
+        """What lab work other than inventing acts on: an Arcane Connection,
+        the person a Longevity Ritual is for, a device and its effects."""
+        with Horizontal(classes="inv-row", id="inv-connection-row"):
+            yield Label("Connection to")
+            yield Select(
+                self._connections(),
+                value=self._connection_value(plan),
+                prompt="(choose; add them on the Inventory tab)",
+                id="inv-connection",
+                compact=True,
+            )
+        with Horizontal(classes="inv-row", id="inv-subject-row"):
+            yield Label("For")
+            yield Select(
+                self._subjects(),
+                value=(plan.subject_id if plan and plan.subject_id else self.magus.id),
+                allow_blank=False,
+                id="inv-subject",
+                compact=True,
+            )
+            yield Label(" Vis")
+            yield Select(
+                [(art, art) for art in lab_seasons.LONGEVITY_VIS_ARTS],
+                value=(
+                    plan.vis_art
+                    if plan and plan.vis_art in lab_seasons.LONGEVITY_VIS_ARTS
+                    else "Creo"
+                ),
+                allow_blank=False,
+                id="inv-vis-art",
+                compact=True,
+            )
+            yield Label(" Extra pawns")
+            yield _number(str(plan.extra_vis) if plan else "0", "inv-extra-vis")
+        with Horizontal(classes="inv-row", id="inv-device-row"):
+            yield Label("Device")
+            yield Select(
+                self._devices(),
+                value=self._device_value(plan),
+                prompt="(choose; they're kept on the Inventory tabs)",
+                id="inv-device",
+                compact=True,
+            )
+            yield Label(" Shape & material")
+            yield _number(str(plan.shape_bonus) if plan else "0", "inv-shape")
+        with Horizontal(classes="inv-row", id="inv-effect-row"):
+            yield Label("Effect")
+            yield Select(
+                self._effects(plan.device_id if plan else None),
+                value=self._effect_value(plan),
+                prompt="(choose)",
+                id="inv-effect",
+                compact=True,
+            )
+        with Horizontal(classes="inv-row", id="inv-effect-text-row"):
+            yield Label("From Lab Text")
+            yield Select(
+                self._effect_texts(plan),
+                value=self._effect_text_value(plan),
+                prompt="(none: instil it the long way)",
+                id="inv-effect-text",
+                compact=True,
+            )
+
+    def _compose_other_work(self, plan: SeasonPlan | None) -> ComposeResult:
+        """The rest of the lab work: binding a familiar and its powers, taming
+        a creature, moving the lab, a die, and where vis comes from."""
+        with Horizontal(classes="inv-row", id="inv-bind-row"):
+            yield Label("Technique")
+            yield _art_select(
+                TECHNIQUES, plan.technique if plan else None, "inv-bind-t"
+            )
+            yield Label(" Form")
+            yield _art_select(FORMS, plan.form if plan else None, "inv-bind-f")
+            for cord in ("golden", "silver", "bronze"):
+                yield Label(f" {cord.title()} cord")
+                yield _number(
+                    str(getattr(plan, f"{cord}_cord")) if plan else "0", f"inv-{cord}"
+                )
+        with Horizontal(classes="inv-row", id="inv-power-row"):
+            yield Label("Bond power")
+            yield Select(
+                self._powers(),
+                value=self._power_value(plan),
+                prompt="(choose; add it on the familiar's sheet)",
+                id="inv-power",
+                compact=True,
+            )
+        with Horizontal(classes="inv-row", id="inv-taming-row"):
+            yield Label("Creature")
+            yield Input(
+                plan.title if plan else "",
+                placeholder="its name",
+                id="inv-creature",
+                compact=True,
+            )
+            yield Label(" Form")
+            yield _art_select(FORMS, plan.form if plan else None, "inv-creature-form")
+            yield Label(" Might")
+            yield _number(
+                "" if plan is None or plan.book_level is None else str(plan.book_level),
+                "inv-creature-might",
+            )
+        with Horizontal(classes="inv-row", id="inv-move-row"):
+            yield Label("Moving to")
+            yield Input(
+                plan.title if plan else "",
+                placeholder="the new location",
+                id="inv-move-to",
+                compact=True,
+            )
+            yield Label(" By spell")
+            yield Checkbox(
+                "",
+                value=bool(plan and plan.by_spell),
+                id="inv-by-spell",
+                compact=True,
+            )
+        with Horizontal(classes="inv-row", id="inv-die-row"):
+            yield Label("Die")
+            yield _number(
+                "" if plan is None or plan.die is None else str(plan.die),
+                "inv-die",
+                placeholder="rolled",
+            )
+            yield Label(
+                " (blank: rolled when the season is played; a typed die "
+                "is used for one roll)"
+            )
+        with Horizontal(classes="inv-row", id="inv-vis-from-row"):
+            yield Label("Vis", id="inv-vis-from-label")
+            yield Select(
+                [
+                    ("the laboratory's raw vis", "laboratory"),
+                    (f"{escape(self.magus.name)}'s raw vis", "character"),
+                    ("the covenant's vis stores", "covenant"),
+                ],
+                value=(plan.vis_from if plan and plan.vis_from else "laboratory"),
+                allow_blank=False,
+                id="inv-vis-from",
+                compact=True,
+            )
+            yield Label(" Art", id="inv-effect-vis-label")
+            yield Select(
+                self._effect_arts(plan),
+                value=self._effect_art_value(plan),
+                prompt="(Art)",
+                id="inv-effect-vis",
+                compact=True,
+            )
+
+    def _compose_common(self, plan: SeasonPlan | None) -> ComposeResult:
+        """What every kind of lab work shares: experimenting, a similar spell,
+        Focus and specialty, days away, other modifiers, notes and the
+        results."""
+        known = [
+            (escape(spell.name), spell.id)
+            for k in self.magus.spells_known
+            if (spell := spl.find_spell(self.saga, k.spell_id)) is not None
+        ]
+        yield Static("── Lab work ────────", classes="inv-title")
+        with Horizontal(classes="inv-row", id="inv-experiment-row"):
+            yield Label("Experiment", id="inv-experimenting-label")
+            yield Checkbox(
+                "",
+                value=bool(plan and plan.experimenting),
+                id="inv-experimenting",
+                compact=True,
+            )
+            yield Label(" Risk +")
+            yield _number(str(plan.risk) if plan else "0", "inv-risk")
+            yield Label(" Research goal")
+            yield Input(
+                plan.research if plan else "",
+                placeholder="(optional)",
+                id="inv-research",
+                compact=True,
+            )
+            yield Label(" ")
+            yield Select(
+                [(k, k) for k in ex.KINDS],
+                value=(plan.research_kind if plan else "Minor") or "Minor",
+                allow_blank=False,
+                id="inv-research-kind",
+                compact=True,
+            )
+        with Horizontal(classes="inv-row"):
+            yield Label("Similar spell known")
+            yield Select(
+                known,
+                value=(
+                    plan.similar_spell_id
+                    if plan and plan.similar_spell_id in [v for _, v in known]
+                    else Select.NULL
+                ),
+                prompt="(none)",
+                id="inv-similar",
+                compact=True,
+            )
+            if lab_seasons.has_focus(self.magus):
+                yield Label(" Magical Focus")
+                yield Checkbox(
+                    "",
+                    value=bool(plan and plan.focus),
+                    id="inv-focus",
+                    compact=True,
+                )
+            if lab_seasons.theory_specialty(self.magus):
+                yield Label(
+                    f" Magic Theory ({escape(lab_seasons.theory_specialty(self.magus))})"
+                )
+                yield Checkbox(
+                    "",
+                    value=bool(plan and plan.theory_specialty),
+                    id="inv-specialty",
+                    compact=True,
+                )
+        with Horizontal(classes="inv-row"):
+            yield Label("Days away")
+            yield _number(str(plan.days_away) if plan else "0", "inv-days")
+            yield Label(
+                " (10 cost nothing, 11-20 lower the Lab Total, more rule it out)   Other"
+            )
+            yield _number(str(plan.other_modifier) if plan else "0", "inv-other")
+        with Horizontal(classes="inv-row"):
+            yield Label("Notes")
+            yield Input(plan.details if plan else "", id="inv-notes", compact=True)
+        with Horizontal(id="inv-results"):
+            yield Static("", id="inv-total")
+            yield Static("", id="inv-when")
 
     def on_mount(self) -> None:
         self._ready = True
@@ -1101,7 +1027,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             + notes
         )
 
-    def _refresh(self) -> None:
+    def _refresh(self) -> None:  # noqa: PLR0915
         if not self._ready:
             return
         plan = self.current_plan()

@@ -41,6 +41,13 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.19.3 — 2026-10-07
+
+- Behind the scenes: the Plan Season form and the Invent Spell screen are
+  now built from short named parts instead of two very long functions,
+  and a code check now stops new over-long functions from creeping in.
+  Nothing you see changes.
+
 ## 2.19.2 — 2026-10-07
 
 - Behind the scenes: the app's screen tests, which were all in one very

@@ -234,7 +234,7 @@ def _effect_total(
     )
 
 
-def work(
+def work(  # noqa: PLR0915
     saga: Saga,
     magus: Character,
     plan: SeasonPlan,

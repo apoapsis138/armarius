@@ -358,7 +358,7 @@ def _node(tree, data):
     return None
 
 
-async def test_x_exports_a_character_and_the_saga_imports_it():
+async def test_x_exports_a_character_and_the_saga_imports_it():  # noqa: PLR0915
     from support import wait_until
     from textual.widgets import Input, OptionList, Static, Tree
 
