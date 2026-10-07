@@ -131,8 +131,8 @@ The keys and buttons open the sheet's own dialogs and change the real record, so
 <!-- help: guide-creation-covenant -->
 
 1. **Power Level.** Choose Power Level asks for the Power Level, the storyguide's Build Points (within that level's range), how many magi go without a laboratory (each refunds 50 Build Points) and the Year Founded. The step also lists what every covenant has free, and the highest level of text or enchanted effect the Power Level allows. Edit covenant opens the covenant's own details.
-2. **Build Points.** The step shows the Build Points spent against the budget, line by line. They are priced from what the covenant owns: books in its Library, vis sources and stocks on its Possessions tab, enchanted devices, starting laboratories and specialists. Add those on the covenant sheet as usual; Buy a specialist is here.
-3. **Boons and Hooks.** Add a Boon, Add a Hook, or Use a Covenant Situation to take one of the books' ready-made sets. The step shows the Boon and Hook points, which should balance.
+2. **Build Points.** The step shows the Build Points spent and left, and lists what they went on: each book in the Library with its points (one with no level or Quality yet shows 0, marked not priced; Lab Texts and Casting Tablets are priced as a pool, listed below them), then vis sources and stocks, enchanted devices, starting laboratories and specialists. `a` adds a book to the covenant's Library, and `e` or `d` on a book edits or deletes it; change the rest on the covenant sheet. Buy a specialist is here.
+3. **Boons and Hooks.** The step lists the covenant's Boons and Hooks with their points, and the chosen one's rules below. `a` adds a Boon, the Add a Hook button adds a Hook, and Use a Covenant Situation takes one of the books' ready-made sets; `e` edits the chosen one and `d` removes it. The step shows the Boon and Hook points, which should balance.
 4. **Review.** Lists every step that still has a check open.
 
 The covenant's [Build tab](help:tab-cov-build) (`8`) shows the same Build Points.
@@ -140,7 +140,7 @@ The covenant's [Build tab](help:tab-cov-build) (`8`) shows the same Build Points
 ### Set up a laboratory
 <!-- help: guide-creation-lab -->
 
-1. **Setting Up.** Edit identity (owner) chooses the magus who builds it; Edit Characteristics sets its Size and Refinement; Add a Virtue adds a laboratory Virtue or Flaw; Starting lab: yes/no says whether the covenant's Build Points pay for it. The step shows the owner, Size, Refinement and, for a starting lab, its Build Points.
+1. **Setting Up.** Edit identity (owner) chooses the magus who builds it; Edit Characteristics sets its Size and Refinement; the step lists the laboratory's Virtues and Flaws with the chosen one's rules below, `a` adds one and `d` removes it; Starting lab: yes/no says whether the covenant's Build Points pay for it. The step shows the owner, Size, Refinement and, for a starting lab, its Build Points.
 2. **Review.** Lists any check still open, such as an owner without Magic Theory 3, or Virtues that don't fit in Size plus Refinement.
 
 See the [Laboratory sheet](help:laboratory).

@@ -237,12 +237,43 @@ async def _open(pilot, app, node_data, attr):
     return app.screen
 
 
-async def test_the_covenant_worksheet_prices_build_points():
+def _rows(screen) -> list[str]:
+    """The worksheet step list's rows as plain text."""
+    from support import strip_markup
+
+    from ars_magica_manager.screens import SelectableList
+
+    listing = screen.query_one("#ws-list", SelectableList)
+    return [
+        " ".join(strip_markup(str(listing.get_option_at_index(i).prompt)).split())
+        for i in range(listing.option_count)
+    ]
+
+
+async def _choose(pilot, screen, text: str) -> None:
+    from support import strip_markup, wait_until
+
+    from ars_magica_manager.screens import SelectableList
+
+    assert await wait_until(pilot, lambda: any(text in r for r in _rows(screen)))
+    listing = screen.query_one("#ws-list", SelectableList)
+    listing.focus()
+    index = next(
+        i
+        for i, row in enumerate(screen._rows)
+        if not row.heading and text in strip_markup(row.label)
+    )
+    assert listing.select_data_index(index)
+    await pilot.pause()
+
+
+async def test_the_covenant_worksheet_lists_what_build_points_went_on():
     from support import wait_until
     from textual.widgets import OptionList, Static
 
     from ars_magica_manager import storage
     from ars_magica_manager.app import ArsMagicaManagerApp
+    from ars_magica_manager.screens.fields import FieldsDialog
     from ars_magica_manager.screens.workspace.base import NodeKind
 
     saga = _saga()
@@ -253,6 +284,16 @@ async def test_the_covenant_worksheet_prices_build_points():
     saga.covenants[0].possessions = [
         Possession(id="p1", kind="vis_source", name="Spring", art="Aquam", pawns=4)
     ]
+    # A book with no level or Quality yet costs nothing, but still shows.
+    saga.books.append(
+        Book(
+            id="b1",
+            name="Herbal",
+            type="Tractatus",
+            owner_kind="covenant",
+            owner_id="cov1",
+        )
+    )
     storage.save_saga(saga)
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:
@@ -266,13 +307,61 @@ async def test_the_covenant_worksheet_prices_build_points():
         assert await wait_until(
             pilot,
             lambda: (
-                "Build Points spent: -80 of 300"
+                "Build Points: 300, -80 spent, 380 left"
                 in str(screen.query_one("#ws-budget", Static).render())
             ),
         )
-        text = str(screen.query_one("#ws-budget", Static).render())
-        assert "Vis source: Spring (4 a year): 20" in text
-        assert "Magi without a laboratory (2): -100" in text
+        rows = _rows(screen)
+        assert "Tractatus: Herbal 0 not priced: set its level or Quality" in " ".join(
+            rows
+        )
+        assert any("Vis source: Spring (4 a year) 20" in r for r in rows)
+        assert any("Magi without a laboratory (2) -100" in r for r in rows)
+        await _choose(pilot, screen, "Herbal")
+        assert "Name: Herbal" in str(screen.query_one("#ws-details", Static).render())
+        # a adds a book to the covenant's library.
+        await pilot.press("a")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        await pilot.pause()
+        assert "Add a Book" in str(app.screen.query_one("#fields-title").render())
+
+
+async def test_the_covenant_worksheet_lists_boons_and_hooks():
+    from support import wait_until
+    from textual.widgets import OptionList, Static
+
+    from ars_magica_manager import storage
+    from ars_magica_manager.app import ArsMagicaManagerApp
+    from ars_magica_manager.screens import ConfirmScreen
+    from ars_magica_manager.screens.workspace.base import NodeKind
+
+    saga = _saga()
+    saga.id = "test_saga"
+    saga.covenants[0].boons_hooks = [
+        VirtueFlawInstance("covbh_hook_minor_monster", id="h1")
+    ]
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        screen = await _open(
+            pilot, app, (NodeKind.COVENANT, "cov1"), "_covenant_sheet_view"
+        )
+        screen.query_one("#ws-steps", OptionList).highlighted = 2
+        assert await wait_until(pilot, lambda: screen.step == "boons_hooks")
+        assert await wait_until(pilot, lambda: "Hooks" in _rows(screen))
+        assert any(
+            r.startswith("○ Monster") and r.endswith(" 1") for r in _rows(screen)
+        )
+        await _choose(pilot, screen, "Monster")
+        details = str(screen.query_one("#ws-details", Static).render())
+        assert "Rules:" in details
+        await pilot.press("d")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await pilot.press("y")
+        assert await wait_until(
+            pilot,
+            lambda: storage.load_saga("test_saga").covenants[0].boons_hooks == [],
+        )
 
 
 async def test_the_laboratory_worksheet_toggles_starting():
@@ -416,3 +505,35 @@ def test_a_labs_build_points_are_worked_out():
         characteristics=LabCharacteristics(size=2),
     )
     assert lab_build_points(lab) == 40
+
+
+async def test_the_laboratory_worksheet_lists_its_virtues_and_flaws():
+    from support import wait_until
+    from textual.widgets import Static
+
+    from ars_magica_manager import storage
+    from ars_magica_manager.app import ArsMagicaManagerApp
+    from ars_magica_manager.screens.workspace.base import NodeKind
+
+    saga = _saga()
+    saga.id = "test_saga"
+    saga.laboratories.append(
+        Laboratory(
+            id="l1",
+            covenant_id="cov1",
+            name="Tower",
+            in_creation=True,
+            virtues_flaws=[VirtueFlawInstance("labvf_superior_construction")],
+        )
+    )
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        screen = await _open(
+            pilot, app, (NodeKind.LABORATORY, "l1"), "_laboratory_sheet_view"
+        )
+        assert await wait_until(pilot, lambda: "Virtues" in _rows(screen))
+        await _choose(pilot, screen, "Superior Construction")
+        assert "Superior Construction" in str(
+            screen.query_one("#ws-details", Static).render()
+        )

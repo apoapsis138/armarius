@@ -41,6 +41,18 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.24.0 — 2026-10-07
+
+- The covenant's Creation Worksheet shows what was added. Build Points
+  lists every book in the Library with its points (one with no level or
+  Quality yet shows 0, marked not priced), then vis, enchanted items,
+  laboratories and specialists, with what is spent and left; a adds a
+  book, e and d edit or delete one.
+- Boons and Hooks lists each one with its points and rules: a adds a
+  Boon, e edits the chosen one and d removes it.
+- A laboratory's Setting Up step lists its Virtues and Flaws with their
+  rules: a adds one, d removes one.
+
 ## 2.23.0 — 2026-10-07
 
 - The Creation Worksheet opens by itself when you make a new covenant,

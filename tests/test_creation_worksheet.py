@@ -151,9 +151,8 @@ async def test_a_steps_button_runs_its_action_and_the_checks_rerun(monkeypatch):
     async with app.run_test(size=(120, 45)) as pilot:
         screen = await _open_worksheet(pilot, app)
         assert _text(screen, "#ws-budget") == "Name: Leandro"
-        screen.query_one("#ws-action-0", Button).press()
-        await pilot.pause()
-        assert calls == ["Leandro"]
+        await _press_button(pilot, screen, "Rename")
+        assert await wait_until(pilot, lambda: calls == ["Leandro"])
         assert storage.load_saga("test_saga").characters[0].name == "Renamed"
         await screen._refresh()
         assert _text(screen, "#ws-budget") == "Name: Renamed"

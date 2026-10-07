@@ -115,6 +115,8 @@ class Cost:
     points: int
     #: The Build tab's row it belongs to (a CATEGORIES entry).
     category: str = ""
+    #: The book this line prices, if it prices one book.
+    book_id: str = ""
 
 
 #: The covenant Build tab's rows, in order.
@@ -190,7 +192,9 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
                 if book.name.startswith(book.type)
                 else f"{book.type}: {book.name}"
             )
-            lines.append(Cost(label, points, _BOOK_CATEGORY.get(book.type, "")))
+            lines.append(
+                Cost(label, points, _BOOK_CATEGORY.get(book.type, ""), book.id)
+            )
     for book_type in bk.POOL_POINTS:
         pool = bk.pool(library, book_type, saga)
         if pool.levels:

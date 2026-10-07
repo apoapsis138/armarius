@@ -533,19 +533,21 @@ class LibraryActions(WorkspaceBase):
             )
             return
 
-        def confirm(book: Book) -> None:
-            def handle_confirmed(confirmed: bool | None) -> None:
-                if confirmed and book in self.saga.books:
-                    self.saga.books.remove(book)
-                    storage.save_saga(self.saga)
-                    self._books_changed()
+        self._pick_book(self._delete_book)
 
-            self.app.push_screen(
-                ConfirmScreen(f"Delete {escape(book.name or 'this book')}?"),
-                handle_confirmed,
-            )
+    def _delete_book(self, book: Book) -> None:
+        """Delete `book` after confirming."""
 
-        self._pick_book(confirm)
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed and book in self.saga.books:
+                self.saga.books.remove(book)
+                storage.save_saga(self.saga)
+                self._books_changed()
+
+        self.app.push_screen(
+            ConfirmScreen(f"Delete {escape(book.name or 'this book')}?"),
+            handle_confirmed,
+        )
 
     def action_import_data(self) -> None:
         """More's Import: on the saga, choose what to import (Books or Spells so far);
