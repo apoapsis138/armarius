@@ -282,7 +282,7 @@ def test_tithes_inflation_and_sundry_are_typed_and_included():
 
 
 def test_sundry_defaults_to_one():
-    # The minimum is enforced by the edit dialog (screens/forms.py), not here.
+    # The minimum is enforced by the edit dialog (screens/forms/), not here.
     assert Economics().sundry == 1
 
 

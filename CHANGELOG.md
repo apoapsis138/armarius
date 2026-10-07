@@ -41,6 +41,13 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.18.3 — 2026-10-07
+
+- Behind the scenes: the app's forms, which were all in one very long
+  file, are now organised into one file per area (characters, covenants,
+  laboratories, books, spells, seasons, enchanted devices and so on).
+  Nothing you see changes.
+
 ## 2.18.2 — 2026-10-06
 
 - Great (Characteristic) now raises the Characteristic it names by 1, and
