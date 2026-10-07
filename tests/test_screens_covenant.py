@@ -21,7 +21,14 @@ from screen_helpers import (
     _select_laboratory,
     _wait_for_picker_ready,
 )
-from support import menu, picker_labels, picker_rows, strip_markup, wait_until
+from support import (
+    close_worksheet,
+    menu,
+    picker_labels,
+    picker_rows,
+    strip_markup,
+    wait_until,
+)
 from textual.widgets import (
     Button,
     Collapsible,
@@ -446,6 +453,7 @@ async def test_lab_can_be_created_unassigned_or_in_a_covenant():
         app.screen.query_one("#fld-name", Input).value = "Loose Lab"
         await pilot.click("#btn-save")
         await pilot.pause()
+        await close_worksheet(pilot, app)
         assert app.screen.selected_laboratory.name == "Loose Lab"
 
         # With a covenant selected, the dialog defaults to it.
@@ -456,6 +464,7 @@ async def test_lab_can_be_created_unassigned_or_in_a_covenant():
         app.screen.query_one("#fld-name", Input).value = "Fenghold Lab"
         await pilot.click("#btn-save")
         await pilot.pause()
+        await close_worksheet(pilot, app)
 
         tree = app.screen.query_one("#nav-tree", Tree)
         assert _parent_data(tree, ("laboratory", "loose_lab")) == (

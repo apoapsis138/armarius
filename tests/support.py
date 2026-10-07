@@ -106,6 +106,19 @@ async def menu(pilot, app, key: str, label: str) -> None:
         await pilot.pause()
 
 
+async def close_worksheet(pilot, app) -> None:
+    """A new covenant, laboratory or character opens its Creation
+    Worksheet: wait for it, then close it to get back to the workspace."""
+    from ars_magica_manager.screens import WorkspaceScreen
+    from ars_magica_manager.screens.creation_worksheet import CreationWorksheetScreen
+
+    assert await wait_until(
+        pilot, lambda: isinstance(app.screen, CreationWorksheetScreen)
+    )
+    await pilot.press("escape")
+    assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+
+
 async def build_all_tabs(pilot, view) -> None:
     """Build every tab of a sheet view that's just been opened (tabs are
     built on first visit), for a test that reaches into a tab

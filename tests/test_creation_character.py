@@ -462,6 +462,46 @@ def test_free_supernatural_scores_and_the_ability_cap():
     assert found["No Ability above 5 at creation"] == ("warn", "Brawl")
 
 
+def test_the_sheet_says_how_much_xp_came_from_the_worksheet():
+    from ars_magica_manager import creation
+    from ars_magica_manager.models import CreationXp
+
+    magus = _character("magus", 1195)
+    magus.virtues_flaws = [VirtueFlawInstance("vf_affinity_with_art", {"art": "creo"})]
+    creation.spend_creation_xp(magus, CreationXp("apprenticeship", "Creo", 10))
+    creation.spend_creation_xp(magus, CreationXp("later_life", "Brawl", 5))
+    assert creation.worksheet_note(magus, ["Creo", "Brawl", "Ignem"]) == (
+        "From the Creation Worksheet: Creo 15 xp (10 spent x1.5), Brawl 5 xp "
+        "(5 spent). Take worksheet xp back on the worksheet, not here."
+    )
+    assert creation.spend_preview(magus, "Creo", 4, magus.creation_xp[0]) == (6, 6)
+    magus.in_creation = False
+    assert creation.worksheet_note(magus, ["Creo"]) == ""
+
+
+def test_an_affinity_raises_its_abilitys_cap_and_mentored_by_demons_lifts_it():
+    from ars_magica_manager import creation
+    from ars_magica_manager.models import CreationXp
+
+    companion = _character("companion", 1195)
+    companion.virtues_flaws = [
+        VirtueFlawInstance("vf_affinity_with_ability", {"ability": "brawl"})
+    ]
+    label = "No Ability above 5 at creation (2 more with an Affinity)"
+    # 94 spent gives 141 xp: Brawl 7, the cap with its Affinity.
+    creation.spend_creation_xp(companion, CreationXp("later_life", "Brawl", 94))
+    creation.spend_creation_xp(companion, CreationXp("later_life", "Awareness", 105))
+    assert _vf(companion, "later_life")[label] == ("warn", "Awareness")
+    creation.spend_creation_xp(companion, CreationXp("later_life", "Brawl", 30))
+    assert _vf(companion, "later_life")[label] == (
+        "warn",
+        "Awareness, Brawl (cap 7)",
+    )
+    companion.virtues_flaws.append(VirtueFlawInstance("vf_mentored_by_demons"))
+    found = _vf(companion, "later_life")
+    assert found["No Ability cap at creation (Mentored by Demons)"][0] == "pass"
+
+
 # -- Grogs training packages --
 
 

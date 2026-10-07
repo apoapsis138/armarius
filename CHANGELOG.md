@@ -41,6 +41,28 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.23.0 — 2026-10-07
+
+- The Creation Worksheet opens by itself when you make a new covenant,
+  laboratory or character, and fills the screen.
+- Each step lists what was spent or taken there, with the chosen row's
+  details below: a adds, e changes the chosen row and d takes it back,
+  like every list on the sheets. The Change one, Take back one, Remove
+  one, Drop a package, Spell details and Forget a spell buttons are gone.
+- xp rows show the pool xp spent and the xp it gained (half again with an
+  Affinity), the score and the Specialty. Taking xp back gives back the
+  pool xp and takes off exactly what it gained.
+- Spending xp shows, as you type, what it gains, the score that buys and
+  the pool xp the next score needs, with what the Ability or Art covers;
+  it warns past the creation cap, and an Ability's Specialty can be set
+  there too.
+- The Virtues and Flaws step shows the full rules of the chosen one, and
+  the Virtue picker shows each entry's book text, not just a summary.
+- An Affinity with an Ability raises its creation cap by 2, and Mentored
+  by Demons lifts the cap.
+- While a character is In Creation, Edit Ability and Edit Arts say how
+  much xp came from the worksheet, to be taken back there.
+
 ## 2.22.1 — 2026-10-07
 
 - The live score while editing XP now shows the total the next score

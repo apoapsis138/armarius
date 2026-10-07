@@ -22,7 +22,7 @@ from screen_helpers import (
     _wait_for_picker_ready,
     _wait_for_screen,
 )
-from support import menu, strip_markup, wait_until
+from support import close_worksheet, menu, strip_markup, wait_until
 from textual.widgets import (
     Button,
     Collapsible,
@@ -326,6 +326,7 @@ async def test_creating_a_second_character_after_viewing_the_first_works():
         app.screen.query_one("#fld-name", Input).value = "Leandro"
         await pilot.click("#btn-save")
         await pilot.pause()
+        await close_worksheet(pilot, app)
         assert app.screen.selected_character.name == "Leandro"
 
         # View it explicitly, then go back to the covenant before adding a
@@ -338,6 +339,7 @@ async def test_creating_a_second_character_after_viewing_the_first_works():
         app.screen.query_one("#fld-name", Input).value = "Guillame"
         await pilot.click("#btn-save")
         await pilot.pause()
+        await close_worksheet(pilot, app)
 
         tree = app.screen.query_one("#nav-tree", Tree)
         char_group = _find_node(tree, ("character_group", "cov1"))

@@ -86,6 +86,7 @@ from ...rules import activities as season_rules
 from ...rules import creation as creation_rules
 from ...rules import creation_characteristics as cch
 from ...rules import options as rule_options
+from ..creation_worksheet import CreationWorksheetScreen
 from ..fields import (
     FieldsDialog,
 )
@@ -1651,6 +1652,17 @@ class WorkspaceBase(Screen[None]):
             NodeKind.FAMILIAR: self._familiar_sheet_view,
         }.get(self.selected_kind)
 
+    def _open_creation_worksheet(
+        self, record: Covenant | Character | Laboratory | None = None
+    ) -> None:
+        """The Creation Worksheet for `record`, or for the record on show
+        while it is In Creation."""
+        if record is None:
+            view = self._current_sheet_view()
+            record = view.creation_record if view is not None else None
+        if record is not None:
+            self.app.push_screen(CreationWorksheetScreen(self, record))  # type: ignore[arg-type]
+
     # -- scored-trait lists (Personality Traits, Reputations) --
 
     def _traits(self, spec: _TraitList) -> list[ScoredTrait] | None:
@@ -1839,6 +1851,7 @@ class WorkspaceBase(Screen[None]):
                 self.selected_covenant = covenant
                 self.selected_kind = NodeKind.COVENANT
                 await self._show_covenant_detail(covenant)
+                self._open_creation_worksheet(covenant)
 
         self.app.push_screen(
             FieldsDialog(
@@ -1865,6 +1878,7 @@ class WorkspaceBase(Screen[None]):
             self.selected_character = character
             self.selected_kind = NodeKind.CHARACTER
             await self._show_character_detail(character)
+            self._open_creation_worksheet(character)
 
         async def handle_result(values: dict[str, Any] | None) -> None:
             if values is None:
@@ -1909,6 +1923,7 @@ class WorkspaceBase(Screen[None]):
                 self.selected_laboratory = lab
                 self.selected_kind = NodeKind.LABORATORY
                 await self._show_laboratory_detail(lab)
+                self._open_creation_worksheet(lab)
 
         self.app.push_screen(
             FieldsDialog(

@@ -118,12 +118,14 @@ See [New Character](help:character-group-new).
 ### Open the worksheet
 <!-- help: guide-creation-open -->
 
+A new covenant, laboratory or character opens its worksheet by itself. To open it again later:
+
 1. Choose the record in the tree and press Enter to focus its top panel.
 2. Choose the **Creation Worksheet** button, or press `m` More and choose Creation Worksheet.
-3. The [Creation Worksheet](help:creation-worksheet) opens over the sheet. The left column lists the steps; the right shows the chosen step's budget, its checks and its buttons.
-4. Up and Down choose a step, Tab moves to the step's buttons, and Esc closes the worksheet.
+3. The [Creation Worksheet](help:creation-worksheet) opens, filling the screen. The left column lists the steps; the right shows the chosen step's budget, its list (a adds, e changes, d takes back), its checks and its buttons.
+4. Up and Down choose a step, Tab moves to the step's list and then its buttons, and Esc closes the worksheet.
 
-The buttons open the sheet's own dialogs and change the real record, so everything is saved as you go. When a dialog closes, the worksheet works out the budget and checks again.
+The keys and buttons open the sheet's own dialogs and change the real record, so everything is saved as you go. When a dialog closes, the worksheet works out the budget and checks again.
 
 ### Build a covenant
 <!-- help: guide-creation-covenant -->
@@ -149,15 +151,15 @@ See the [Laboratory sheet](help:laboratory).
 The steps follow the book's order. Each one's buttons are named for what they do.
 
 1. **Concept.** Edit type and Edit Year Born. A magus also has Edit House, a button to add The Gift and Hermetic Magus if they are missing, and Add the House Virtue. A Mythic Companion chooses their status Virtue.
-2. **Virtues and Flaws.** The Virtue points spent against those allowed, and the Flaw points and Minor Flaws against their limits. Add a Virtue, Add a Flaw, or Remove one.
+2. **Virtues and Flaws.** The Virtue points spent against those allowed, and the Flaw points and Minor Flaws against their limits. The list shows what is taken, with the chosen one's rules below: a adds a Virtue (F2 in the picker for Flaws), the Add a Flaw button opens the picker on Flaws, and d removes the chosen one.
 3. **Characteristics.** Each Characteristic's score and what it cost, and the points spent of the budget. Edit Characteristics; with the Grogs book in play, a grog can also Fill from a Grogs array.
-4. **Early Childhood.** Set the Native Language, then Spend xp on the childhood Abilities, or Use a sample childhood.
-5. **Later Life.** The years and xp a year, and what is spent; Spend xp, plus a button for any Virtue that gives its own xp, Take a training package where one is offered, and the Ability cap at this age.
-6. **Apprenticeship** (magi only). The xp for Arts and Abilities and the spell levels; Spend xp, Learn a spell, Spell details and Forget a spell. Each spell is capped at its Lab Total.
-7. **Years past Gauntlet** (magi only). Years and conditions sets the years and working conditions; Spend points on xp and learn spells from the points those years give. An older character can Roll pre-play aging here.
+4. **Early Childhood.** Set the Native Language, then a spends xp on the childhood Abilities, or Use a sample childhood.
+5. **Later Life.** The years and xp a year, and what is spent and left; a spends xp, plus a button for any Virtue that gives its own xp, Take a training package where one is offered, and the Ability cap at this age.
+6. **Apprenticeship** (magi only). The xp for Arts and Abilities and the spell levels; a spends xp and Learn a spell adds a spell. The spells list under the xp, each capped at its Lab Total; choose one to see its details, or d to forget it.
+7. **Years past Gauntlet** (magi only). Years and conditions sets the years and working conditions; a spends points on xp and Learn a spell learns spells from the points those years give. An older character can Roll pre-play aging here.
 8. **Finishing Touches.** Add a Personality Trait, Add a Reputation and Edit Confidence, followed by a review of every step.
 
-Once xp is spent at a step, Change one and Take back one let you correct it.
+Once xp is spent at a step, it is a row of the step's list, showing the pool xp spent and the xp gained (more with an Affinity): e changes it and d takes it back.
 
 ### Marks, warnings and advice
 <!-- help: guide-creation-marks -->

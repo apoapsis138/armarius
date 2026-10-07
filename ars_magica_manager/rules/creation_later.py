@@ -217,11 +217,24 @@ def later_life_checks(saga: Saga, record: Record) -> list[Check]:
                 advice=True,
             )
         )
-    cap = access.ability_cap(age(saga, character))
-    over = sorted(a.name for a in character.abilities if a.level > cap)
+    years = age(saga, character)
+    cap = access.ability_cap(years)
+    over = []
+    for ability in sorted(character.abilities, key=lambda a: a.name):
+        own_cap = access.ability_cap_for(character, years, ability.name)
+        if own_cap is not None and ability.level > own_cap:
+            over.append(
+                ability.name if own_cap == cap else f"{ability.name} (cap {own_cap})"
+            )
+    if access.ability_cap_for(character, years, "") is None:
+        label = "No Ability cap at creation (Mentored by Demons)"
+    elif any(vf.vf_id == "vf_affinity_with_ability" for vf in character.virtues_flaws):
+        label = f"No Ability above {cap} at creation (2 more with an Affinity)"
+    else:
+        label = f"No Ability above {cap} at creation"
     found.append(
         _check(
-            f"No Ability above {cap} at creation",
+            label,
             not over,
             ", ".join(over) or "none above",
             access.CAP_SOURCE,

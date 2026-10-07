@@ -6,13 +6,13 @@ from __future__ import annotations
 
 import pytest
 from support import strip_markup, wait_until
-from textual.widgets import Button, OptionList, Static, Tree
+from textual.widgets import Button, OptionList, Select, Static, Tree
 
 from ars_magica_manager import storage
 from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Character, Covenant, Laboratory, Saga
 from ars_magica_manager.rules import creation as rules
-from ars_magica_manager.screens import ConfirmScreen, WorkspaceScreen
+from ars_magica_manager.screens import ConfirmScreen, SelectableList, WorkspaceScreen
 from ars_magica_manager.screens import creation_worksheet as ws
 from ars_magica_manager.screens.creation_worksheet import CreationWorksheetScreen
 
@@ -320,7 +320,10 @@ async def test_childhood_step_sets_the_native_language_and_a_sample_childhood():
         assert await wait_until(pilot, lambda: app.screen is screen)
         await _press_button(pilot, screen, "Use a sample childhood")
         picker = await _wait_for(pilot, app, RemovalPickerScreen)
-        await pilot.press("down", "down", "down", "down", "enter")  # Traveling
+        # Chosen by its label: keys can outrun the list filling up under load.
+        picker.dismiss(
+            next(i for i, label in enumerate(picker.labels) if "Traveling" in label)
+        )
         dialog = await _wait_for(pilot, app, FieldsDialog)
         for key, value in (
             ("area", "Rhine"),
@@ -396,6 +399,29 @@ async def test_later_life_step_offers_virtue_xp_and_free_scores():
         assert await wait_until(pilot, lambda: app.screen is screen)
 
 
+def _rows(screen) -> list[str]:
+    """The step list's rows as plain text (headings included)."""
+    listing = screen.query_one("#ws-list", SelectableList)
+    return [
+        strip_markup(str(listing.get_option_at_index(i).prompt)).strip()
+        for i in range(listing.option_count)
+    ]
+
+
+async def _choose_row(pilot, screen, text: str) -> None:
+    """Focus the step's list and choose the first row containing `text`."""
+    assert await wait_until(pilot, lambda: any(text in r for r in _rows(screen))), text
+    listing = screen.query_one("#ws-list", SelectableList)
+    listing.focus()
+    index = next(
+        i
+        for i, row in enumerate(screen._rows)
+        if not row.heading and text in strip_markup(row.label)
+    )
+    assert listing.select_data_index(index)
+    await pilot.pause()
+
+
 async def test_later_life_takes_and_drops_a_training_package():
     from ars_magica_manager.screens.pickers import RemovalPickerScreen
 
@@ -423,11 +449,13 @@ async def test_later_life_takes_and_drops_a_training_package():
             ("Ride", 15),
         }
         await screen._refresh()
-        assert "Package: Animal Trainer (5 years)" in _text(screen, "#ws-budget")
+        assert "Training package: Animal Trainer (5 years)" in _rows(screen)
         assert "15 years at 15 xp = 225 xp" in _text(screen, "#ws-budget")
-        await _press_button(pilot, screen, "Drop a package")
-        await _wait_for(pilot, app, RemovalPickerScreen)
-        await pilot.press("enter")
+        # d on any of the package's rows drops the whole package.
+        await _choose_row(pilot, screen, "Ride")
+        await pilot.press("d")
+        await _wait_for(pilot, app, ConfirmScreen)
+        await pilot.press("y")
         assert await wait_until(
             pilot,
             lambda: storage.load_saga("test_saga").characters[0].creation_xp == [],
@@ -436,11 +464,7 @@ async def test_later_life_takes_and_drops_a_training_package():
 
 async def test_apprenticeship_step_learns_a_spell_with_its_lab_total():
     from ars_magica_manager import spells as spl
-    from ars_magica_manager.screens.pickers import (
-        RemovalPickerScreen,
-        SpellChooserScreen,
-    )
-    from ars_magica_manager.screens.prompts import InfoScreen
+    from ars_magica_manager.screens.pickers import SpellChooserScreen
 
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
@@ -467,17 +491,168 @@ async def test_apprenticeship_step_learns_a_spell_with_its_lab_total():
             ),
         )
         await screen._refresh()
-        text = _text(screen, "#ws-budget")
-        assert "Wizard's Sidestep (ReIm 10), level 10, Lab Total 3" in text
+        row = next(r for r in _rows(screen) if "Wizard's Sidestep" in r)
+        assert "ReIm 10" in row and "level  10" in row and "Lab Total 3" in row
         assert "Wizard's Sidestep at most the Lab Total: level 10, Lab Total 3" in (
             _text(screen, "#ws-checks")
         )
-        await _press_button(pilot, screen, "Spell details")
-        await _wait_for(pilot, app, RemovalPickerScreen)
+        # The chosen spell's details show below the list; d forgets it.
+        await _choose_row(pilot, screen, "Wizard's Sidestep")
+        details = _text(screen, "#ws-details")
+        assert "Learned at level: 10" in details and "Range: Personal" in details
+        await pilot.press("d")
+        await _wait_for(pilot, app, ConfirmScreen)
+        await pilot.press("y")
+        assert await wait_until(
+            pilot,
+            lambda: storage.load_saga("test_saga").characters[0].spells_known == [],
+        )
+
+
+async def test_xp_list_spends_changes_and_takes_back_in_pool_xp():
+    """With an Affinity, 10 pool xp gains 15; changing it to 4 gains 6, and
+    taking it back leaves the Art at 0: never by lowering the total."""
+    from textual.widgets import Input
+
+    from ars_magica_manager.models import VirtueFlawInstance
+    from ars_magica_manager.screens.fields import FieldsDialog
+
+    saga = _saga()
+    saga.characters[0].virtues_flaws = [
+        VirtueFlawInstance("vf_affinity_with_art", {"art": "creo"})
+    ]
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        screen = await _open_worksheet(pilot, app)
+        screen.query_one("#ws-steps", OptionList).highlighted = 5
+        assert await wait_until(pilot, lambda: screen.step == "apprenticeship")
+        await pilot.press("a")
+        dialog = await _wait_for(pilot, app, FieldsDialog)
+        dialog.query_one("#fld-target", Select).value = "Creo"
+        dialog.query_one("#fld-xp", Input).value = "10"
+        assert await wait_until(
+            pilot,
+            lambda: (
+                "Creo: gains 15 xp (Affinity x1.5)"
+                in strip_markup(str(dialog.query_one("#fields-live", Static).render()))
+            ),
+        )
+        live = strip_markup(str(dialog.query_one("#fields-live", Static).render()))
+        assert "Score 5 · Score 6 at 21 xp (4 more pool xp)" in live
+        dialog.query_one("#btn-save", Button).press()
+
+        def creo() -> int:
+            arts = storage.load_saga("test_saga").characters[0].arts
+            return arts["creo"].xp if "creo" in arts else 0
+
+        assert await wait_until(pilot, lambda: creo() == 15)
+        assert await wait_until(pilot, lambda: app.screen is screen)
+        await screen._refresh()
+        row = next(r for r in _rows(screen) if r.startswith("○ Creo"))
+        assert row.split()[2:5] == ["10", "15", "5"]
+        await _choose_row(pilot, screen, "Creo")
+        assert "Affinity: pool xp spent on it gains half again" in _text(
+            screen, "#ws-details"
+        )
+        await pilot.press("e")
+        dialog = await _wait_for(pilot, app, FieldsDialog)
+        assert dialog.query_one("#fld-xp", Input).value == "10"
+        dialog.query_one("#fld-xp", Input).value = "4"
+        dialog.query_one("#btn-save", Button).press()
+        assert await wait_until(pilot, lambda: creo() == 6)
+        assert await wait_until(pilot, lambda: app.screen is screen)
+        await pilot.press("d")
+        confirm = await _wait_for(pilot, app, ConfirmScreen)
+        message = str(confirm.query_one("#confirm-message", Static).render())
+        assert "Take back the 4 xp spent on Creo? (6 xp comes off it)" in message
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: creo() == 0)
+
+
+async def test_spending_on_an_ability_sets_its_specialty():
+    from textual.widgets import Input
+
+    from ars_magica_manager.screens.fields import FieldsDialog
+
+    storage.save_saga(_saga("companion"))
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        screen = await _open_worksheet(pilot, app)
+        screen.query_one("#ws-steps", OptionList).highlighted = 3
+        assert await wait_until(pilot, lambda: screen.step == "childhood")
+        await pilot.press("a")
+        dialog = await _wait_for(pilot, app, FieldsDialog)
+        dialog.query_one("#fld-target", Select).value = "Brawl"
+        dialog.query_one("#fld-xp", Input).value = "15"
+        assert await wait_until(
+            pilot, lambda: dialog.query_one("#fld-specialty", Input).display
+        )
+        dialog.query_one("#fld-specialty", Input).value = "dodging"
+        dialog.query_one("#btn-save", Button).press()
+
+        def brawl():
+            character = storage.load_saga("test_saga").characters[0]
+            return next((a for a in character.abilities if a.name == "Brawl"), None)
+
+        assert await wait_until(pilot, lambda: brawl() is not None)
+        ability = brawl()
+        assert ability is not None
+        assert (ability.xp, ability.specialty) == (15, "dodging")
+
+
+async def test_virtues_and_flaws_list_shows_the_rules_and_d_removes_one():
+    from ars_magica_manager.models import VirtueFlawInstance
+
+    saga = _saga("companion")
+    saga.characters[0].virtues_flaws = [
+        VirtueFlawInstance("vf_warrior"),
+        VirtueFlawInstance("vf_blind"),
+    ]
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        screen = await _open_worksheet(pilot, app)
+        await pilot.press("down")
+        assert await wait_until(pilot, lambda: screen.step == "virtues_flaws")
+        rows = _rows(screen)
+        assert rows[0] == "Virtues" and "Flaws" in rows
+        await _choose_row(pilot, screen, "Warrior")
+        details = _text(screen, "#ws-details")
+        assert "Rules:" in details and "Martial Abilities" in details
+        await pilot.press("d")
+        await _wait_for(pilot, app, ConfirmScreen)
+        await pilot.press("y")
+        assert await wait_until(
+            pilot,
+            lambda: (
+                [
+                    vf.vf_id
+                    for vf in storage.load_saga("test_saga").characters[0].virtues_flaws
+                ]
+                == ["vf_blind"]
+            ),
+        )
+
+
+async def test_a_new_record_opens_its_worksheet():
+    from textual.widgets import Input
+
+    storage.save_saga(_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
         await pilot.press("enter")
-        info = await _wait_for(pilot, app, InfoScreen)
-        text = str(info.query_one("#info-text", Static).render())
-        assert "Learned at level: 10" in text and "Range: Personal" in text
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        workspace = app.screen
+        workspace.action_create_covenant()
+        assert await wait_until(pilot, lambda: bool(app.screen.query("#fld-name")))
+        app.screen.query_one("#fld-name", Input).value = "Durenmar"
+        app.screen.query_one("#btn-save", Button).press()
+        assert await wait_until(
+            pilot, lambda: isinstance(app.screen, CreationWorksheetScreen)
+        )
+        assert app.screen.record.name == "Durenmar"
+        assert "Power Level" in _steps(app.screen)[0]
 
 
 async def test_gauntlet_step_rolls_pre_play_aging_after_asking():

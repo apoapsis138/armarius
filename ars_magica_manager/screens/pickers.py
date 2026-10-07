@@ -454,7 +454,7 @@ class VirtueFlawPickerScreen(
     EMPTY_MESSAGE: ClassVar[str] = "(no more Virtues/Flaws available)"
     SEARCH_PLACEHOLDER: ClassVar[str] = "Search names, types and summaries..."
     LIST_VIEW_ID: ClassVar[str] = "vf-picker-list"
-    DETAILS_HEIGHT: ClassVar[int] = 3
+    DETAILS_HEIGHT: ClassVar[int] = 12
 
     BINDINGS: ClassVar[list[BindingType]] = [
         Binding("f2", "cycle_side", "Virtues/Flaws/Both"),
@@ -660,11 +660,13 @@ class VirtueFlawPickerScreen(
         )
 
     def _details(self, entry: VirtueFlawDef) -> str:
-        """The entry's summary, source and (if any) why it's ineligible."""
+        """The entry's book text (its summary if it has none), source and
+        (if any) why it's ineligible."""
         facts = [f"Source: {entry.source}"]
         if refusal := self._refusals.get(entry.id):
             facts.append(f"Ineligible: {refusal}")
-        return f"{escape(entry.summary)}\n[dim]{escape('   '.join(facts))}[/]"
+        text = entry.description or entry.summary
+        return f"[dim]{escape('   '.join(facts))}[/]\n{escape(text)}"
 
     def _search_text(self, entry: VirtueFlawDef) -> str:
         return (

@@ -151,9 +151,9 @@ The note at the bottom says whether the season is kept under Seasons in the tree
 # Creation Worksheet
 <!-- help: creation-worksheet -->
 
-Walks a covenant, laboratory or character that is In Creation through the book's steps, showing each step's budget and checks beside buttons that make the step's edits.
+Walks a covenant, laboratory or character that is In Creation through the book's steps, showing each step's budget, what was spent or taken there, and its checks. It fills the screen, and opens by itself when you make a new covenant, laboratory or character.
 
-**You type:** nothing in the worksheet itself. Its buttons open the same dialogs as the sheet, and they edit the real record; everything is saved as you go.
+**You type:** nothing in the worksheet itself. Its keys and buttons open the same dialogs as the sheet, and they edit the real record; everything is saved as you go.
 
 **The app works out:** each step's budget and what is spent, and the creation checks, worked out again whenever a dialog closes.
 
@@ -184,7 +184,11 @@ Each step is marked by how its checks stand:
 
 Below the list the app counts how many steps pass and sums up the checks ("2 warnings, 1 advice", or "all checks pass").
 
-Up and Down choose a step; Tab moves to the step's buttons; Escape closes the worksheet. On the right, the step shows its budget and what is spent, its checks (each with what the record has), and its buttons, for example Add a Virtue, Edit Characteristics or Buy a specialist. The checks follow Ars Magica Definitive Edition, Chapter 3: Characters, Detailed Character Creation Summary, for characters, and Ars Magica Definitive Edition, Chapter 6: Covenants, for covenants.
+Up and Down choose a step; Tab moves to the step's list, then its buttons; Escape closes the worksheet. On the right, the step shows its budget and what is left, its list, its checks (each with what the record has), and buttons for its other edits, for example Edit Characteristics, Learn a spell or Buy a specialist. The chosen row's details show at the bottom: a Virtue's or Flaw's rules, or an Ability's or Art's score, any Affinity, its creation cap, every worksheet spend on it and what it covers.
+
+The step's list works like every list on the sheets: **a** adds (Add a Virtue on Virtues and Flaws, where F2 in the picker turns to Flaws; Spend xp on the xp steps), **e** changes the chosen row and **d** takes it back after asking. On an xp step each row shows the pool xp spent and the xp it gained, which is half again with an Affinity, rounded up on the whole spend. The Spend xp dialog shows, as you type, what the pool xp gains, the score that buys and the pool xp the next score needs, and warns past the creation cap; an Ability's Specialty can be given there too. Taking xp back always gives back the pool xp spent and takes off exactly what it gained. On the Later Life step, d on a training package's row drops the whole package.
+
+The Ability cap at creation goes by age (5 under 30); an Affinity with the Ability raises it by 2 for that Ability, and Mentored by Demons lifts it. Puissant never counts, since it adds only when the Ability is used. While a character is In Creation, the sheet's Edit Ability and Edit Arts say how much xp came from the worksheet: take that back on the worksheet, not by lowering the total. The checks follow Ars Magica Definitive Edition, Chapter 3: Characters, Detailed Character Creation Summary, for characters, and Ars Magica Definitive Edition, Chapter 6: Covenants, for covenants.
 
 ### Moving to In Play
 <!-- help: creation-worksheet-play -->

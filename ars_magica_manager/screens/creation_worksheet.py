@@ -1,27 +1,30 @@
 """The Creation Worksheet: a step-by-step screen that walks a
 covenant, laboratory or character In Creation through the book's order.
 
-The left column is the progress list, one row per step marked with how its
-checks stand; the right shows the chosen step: its budget and what's spent,
-its creation checks, and buttons for the step's edits. The user moves
-freely between steps. The worksheet edits the real record (no draft): its
-buttons open the sheet's own dialogs through the workspace, and every
-step's checks are worked out again when a dialog closes. The last step's
-"Move to In Play" shows every check first.
+It fills the screen. The left column is the progress list, one row per step
+marked with how its checks stand; the right shows the chosen step: its
+budget and what's spent, the step's list (what was spent or taken there),
+its creation checks and buttons for the step's other edits, with the
+chosen row's details docked below. a adds to the step's list, e edits the
+chosen row and d takes it back, as on every list of the sheets. The user
+moves freely between steps. The worksheet edits the real record (no
+draft): its keys and buttons open the sheet's own dialogs through the
+workspace, and every step's checks are worked out again when a dialog
+closes. The last step's "Move to In Play" shows every check first.
 
-Each step registers a StepPanel for its step:
-the budget text and the buttons. A step with no panel shows its checks.
+Each step registers a StepPanel for its step: the budget text, its list
+and its buttons. A step with no panel shows its checks.
 """
 
 from __future__ import annotations
 
 import asyncio
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, ClassVar
 
 from textual.app import ComposeResult
-from textual.binding import BindingType
+from textual.binding import Binding, BindingType
 from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.widgets import Button, Label, OptionList, Static
 from textual.widgets.option_list import Option
@@ -32,6 +35,7 @@ from ..models import Character, Covenant, Laboratory, Saga
 from ..rules import creation as rules
 from .fields import ModalDialog
 from .prompts import ConfirmScreen
+from .widgets import DetailsPanel, SelectableList, TableHeader
 
 if TYPE_CHECKING:
     from .workspace.screen import WorkspaceScreen
@@ -66,6 +70,36 @@ class StepAction:
 
 
 @dataclass
+class StepRow:
+    """A row of a step's list: its label (markup, in the list's columns),
+    the details shown while it is chosen, and what e and d do to it (None:
+    that key does nothing on this row). A heading row has no actions and
+    can't be chosen."""
+
+    label: str
+    details: str = ""
+    edit: Callable[[WorkspaceScreen], None] | None = None
+    delete: Callable[[WorkspaceScreen], None] | None = None
+    heading: bool = False
+
+
+@dataclass
+class StepList:
+    """A step's list: its column headings, rows, and what a adds."""
+
+    header: str
+    rows: Callable[[Saga, Record], list[StepRow]]
+    add: Callable[[WorkspaceScreen, Record], None] | None = None
+    #: What a, e and d do here, for the key line ("Spend xp").
+    add_label: str = "Add"
+    #: None: no row can be edited (e is left off the key line).
+    edit_label: str | None = "Edit"
+    delete_label: str = "Delete"
+    #: The details panel before a row is chosen.
+    hint: str = "Choose a row to see its details."
+
+
+@dataclass
 class StepPanel:
     """What a step shows above its checks."""
 
@@ -73,6 +107,8 @@ class StepPanel:
     budget: Callable[[Saga, Record], str] = lambda saga, record: ""
     #: The step's buttons for this record.
     actions: Callable[[Saga, Record], list[StepAction]] = lambda saga, record: []
+    #: The step's list (None: it has none).
+    list: StepList | None = field(default=None)
 
 
 #: (record kind, step key) -> the step's panel; each step adds its
@@ -94,12 +130,17 @@ def panel_for(record: Record, step: str) -> StepPanel:
 
 class CreationWorksheetScreen(ModalDialog[None]):
     """The worksheet for `record`, opened from its sheet's top panel while
-    it is In Creation. Escape closes it; everything is saved as it's
-    edited."""
+    it is In Creation (and on its own when the record is made). Escape
+    closes it; everything is saved as it's edited."""
 
     help_id = "creation-worksheet"
 
-    BINDINGS: ClassVar[list[BindingType]] = [("escape", "cancel", "Close")]
+    BINDINGS: ClassVar[list[BindingType]] = [
+        ("escape", "cancel", "Close"),
+        Binding("a", "add", "Add", show=False),
+        Binding("e", "edit", "Edit", show=False),
+        Binding("d", "delete", "Delete", show=False),
+    ]
 
     DEFAULT_CSS = """
     CreationWorksheetScreen {
@@ -107,10 +148,8 @@ class CreationWorksheetScreen(ModalDialog[None]):
     }
 
     #ws-dialog {
-        width: 118;
-        max-width: 100%;
-        height: 40;
-        max-height: 100%;
+        width: 100%;
+        height: 100%;
         padding: 0 1;
     }
 
@@ -123,7 +162,7 @@ class CreationWorksheetScreen(ModalDialog[None]):
     }
 
     #ws-steps-column {
-        width: 30;
+        width: 28;
         height: 1fr;
         margin-right: 2;
     }
@@ -137,6 +176,11 @@ class CreationWorksheetScreen(ModalDialog[None]):
         height: auto;
         margin-top: 1;
         color: $text-muted;
+    }
+
+    #ws-step-column {
+        width: 1fr;
+        height: 1fr;
     }
 
     #ws-step {
@@ -154,8 +198,16 @@ class CreationWorksheetScreen(ModalDialog[None]):
         margin-top: 1;
     }
 
+    #ws-list-header {
+        margin-top: 1;
+    }
+
+    #ws-list, #ws-list:focus {
+        max-height: 100;
+    }
+
     /* One button a row: a step can have several, and a row of them
-       would run off the dialog. */
+       would run off the screen. */
     #ws-actions {
         width: 100%;
         height: auto;
@@ -184,6 +236,8 @@ class CreationWorksheetScreen(ModalDialog[None]):
         self.steps = steps
         keys = [s.key for s in steps]
         self.step = step if step in keys else keys[0]
+        #: The rows of the step's list on show, by data index.
+        self._rows: list[StepRow] = []
         self._busy = asyncio.Lock()
 
     # -- composing --
@@ -195,16 +249,16 @@ class CreationWorksheetScreen(ModalDialog[None]):
                 with Vertical(id="ws-steps-column"):
                     yield OptionList(*self._step_options(), id="ws-steps", compact=True)
                     yield Static("", id="ws-progress")
-                with VerticalScroll(id="ws-step"):
+                with Vertical(id="ws-step-column"):
                     yield Label("", id="ws-step-title")
-                    yield Static("", id="ws-budget")
-                    yield Static("", id="ws-checks")
-                    yield Vertical(id="ws-actions")
-            yield Label(
-                "Up/Down: step · Tab: the step's buttons · Escape: close "
-                "(everything is saved as you go)",
-                id="ws-hint",
-            )
+                    with VerticalScroll(id="ws-step", can_focus=False):
+                        yield Static("", id="ws-budget")
+                        yield TableHeader("", id="ws-list-header")
+                        yield SelectableList(id="ws-list")
+                        yield Static("", id="ws-checks")
+                        yield Vertical(id="ws-actions")
+                    yield DetailsPanel("", id="ws-details")
+            yield Label("", id="ws-hint")
 
     async def on_mount(self) -> None:
         steps = self.query_one("#ws-steps", OptionList)
@@ -222,9 +276,9 @@ class CreationWorksheetScreen(ModalDialog[None]):
     # -- refreshing --
 
     def on_screen_resume(self) -> None:
-        # A dialog opened from a step's button has closed: the record may
-        # have changed. Its result is handled around now, so look once the
-        # screen has settled.
+        # A dialog opened from a step's key or button has closed: the record
+        # may have changed. Its result is handled around now, so look once
+        # the screen has settled.
         self.call_after_refresh(self._refresh)
 
     def record_changed(self) -> None:
@@ -259,19 +313,20 @@ class CreationWorksheetScreen(ModalDialog[None]):
         self.query_one("#ws-progress", Static).update(
             f"{done} of {len(checked)} steps pass\n{rules.summary(found)}"
         )
-        await self._show_step_now()
+        await self._show_step_now(keep_row=True)
 
     async def _show_step(self) -> None:
         async with self._busy:
-            await self._show_step_now()
+            await self._show_step_now(keep_row=False)
 
-    async def _show_step_now(self) -> None:
+    async def _show_step_now(self, *, keep_row: bool) -> None:
         step = next(s for s in self.steps if s.key == self.step)
         panel = panel_for(self.record, step.key)
         self.query_one("#ws-step-title", Label).update(step.title)
         self.query_one("#ws-budget", Static).update(
             panel.budget(self.saga, self.record)
         )
+        self._show_list(panel.list, keep_row=keep_row)
         found = rules.checks(self.saga, self.record, step.key)
         self.query_one("#ws-checks", Static).update(check_lines(found))
         actions = self.query_one("#ws-actions", Vertical)
@@ -285,6 +340,64 @@ class CreationWorksheetScreen(ModalDialog[None]):
                 Button("Move to In Play", id="ws-play", variant="primary", compact=True)
             )
         await actions.mount_all(buttons)
+        self._show_hint()
+
+    def _show_list(self, step_list: StepList | None, *, keep_row: bool) -> None:
+        """The step's list and its details panel (both hidden without one);
+        `keep_row`: choose the row at the same place again (after an edit)."""
+        header = self.query_one("#ws-list-header", TableHeader)
+        listing = self.query_one("#ws-list", SelectableList)
+        details = self.query_one(DetailsPanel)
+        for widget in (header, listing, details):
+            widget.display = step_list is not None
+        if step_list is None:
+            self._rows = []
+            return
+        position = listing.highlighted if keep_row else None
+        self._rows = step_list.rows(self.saga, self.record)
+        header.update(step_list.header)
+        listing.set_rows(
+            [
+                (None if row.heading else index, row.label)
+                for index, row in enumerate(self._rows)
+            ]
+        )
+        if position is not None and listing.row_count:
+            listing.choose_near(min(position, listing.row_count - 1))
+        self._show_details()
+
+    def _chosen_row(self) -> StepRow | None:
+        index = self.query_one("#ws-list", SelectableList).selected_data_index
+        if index is None or index >= len(self._rows):
+            return None
+        return self._rows[index]
+
+    def _show_details(self) -> None:
+        step_list = panel_for(self.record, self.step).list
+        row = self._chosen_row()
+        if row is not None:
+            text = row.details
+        else:
+            text = f"[dim]{step_list.hint if step_list else ''}[/]"
+        self.query_one("#ws-details", Static).update(text)
+
+    def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
+        event.stop()
+        self._show_details()
+        self._show_hint()
+
+    def _show_hint(self) -> None:
+        """The key line: what a, e and d do on this step."""
+        step_list = panel_for(self.record, self.step).list
+        keys = []
+        if step_list is not None:
+            if step_list.add is not None:
+                keys.append(f"a: {step_list.add_label}")
+            if step_list.edit_label is not None:
+                keys.append(f"e: {step_list.edit_label}")
+            keys.append(f"d: {step_list.delete_label}")
+        keys += ["Tab: next part", "Escape: close (saved as you go)"]
+        self.query_one("#ws-hint", Label).update(" · ".join(keys))
 
     async def on_option_list_option_highlighted(
         self, event: OptionList.OptionHighlighted
@@ -293,6 +406,35 @@ class CreationWorksheetScreen(ModalDialog[None]):
         if event.option_list.id == "ws-steps" and key and key != self.step:
             self.step = key
             await self._show_step()
+
+    # -- a / e / d on the step's list --
+
+    def action_add(self) -> None:
+        step_list = panel_for(self.record, self.step).list
+        if step_list is None or step_list.add is None:
+            return
+        step_list.add(self.workspace, self.record)
+
+    def action_edit(self) -> None:
+        self._act_on_row("edit")
+
+    def action_delete(self) -> None:
+        self._act_on_row("delete")
+
+    def _act_on_row(self, verb: str) -> None:
+        if panel_for(self.record, self.step).list is None:
+            return
+        row = self._chosen_row()
+        if row is None:
+            self.notify("Choose a row first.")
+            return
+        act = row.edit if verb == "edit" else row.delete
+        if act is None:
+            self.notify(
+                f"That row can't be {'changed' if verb == 'edit' else 'taken back'} here."
+            )
+            return
+        act(self.workspace)
 
     # -- buttons --
 

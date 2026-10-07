@@ -506,6 +506,11 @@ class SelectableList(OptionList):
         if self.is_mounted:
             self.screen.refresh_bindings()
 
+    def choose_near(self, position: int) -> None:
+        """Choose the row at list position `position`, or the nearest one
+        that can be chosen (posts Chosen)."""
+        self._choose_near(position)
+
     def _choose_near(self, position: int) -> None:
         """Choose the row at list position `position`, else the nearest one
         below or above it that can be chosen (headers can't)."""

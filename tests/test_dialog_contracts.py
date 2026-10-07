@@ -110,19 +110,27 @@ def _all_sagas() -> list[Saga]:
 CONTRACTS: dict[str, Contract] = {
     # Creation Worksheet
     "spend creation xp": Contract(
-        prefill={"Ability or Art": Select.NULL, "xp": "5"},
+        prefill={"Ability or Art": Select.NULL, "Pool xp": "5"},
         edits={
             "Ability or Art": "Area Lore: {region}",
             "Which one": "Rhine",
-            "xp": "15",
+            "Pool xp": "15",
+            "Specialty": "rivers",
         },
-        saved=lambda s: [(x.step, x.target, x.xp) for x in _char(s).creation_xp],
-        expected=[("childhood", "Area Lore: Rhine", 15)],
+        saved=lambda s: (
+            [(x.step, x.target, x.xp) for x in _char(s).creation_xp],
+            [a.specialty for a in _char(s).abilities if a.name == "Area Lore: Rhine"],
+        ),
+        expected=([("childhood", "Area Lore: Rhine", 15)], ["rivers"]),
         invalid=[
-            {"Ability or Art": "Brawl", "xp": "0"},
-            {"Ability or Art": "Area Lore: {region}", "xp": "5"},
+            {"Ability or Art": "Brawl", "Pool xp": "0"},
+            {"Ability or Art": "Area Lore: {region}", "Pool xp": "5"},
         ],
-        shown={"#abilities-list": "Area Lore: Rhine"},
+        shown={"#abilities-list": "Area Lore: Rhine (rivers)"},
+        live={
+            "#fields-live": "Area Lore: Rhine: gains 15 xp\n"
+            "Score 2 · Score 3 at 30 xp (15 more pool xp)"
+        },
     ),
     "childhood blanks": Contract(
         prefill={"Area": "", "Second area": "", "Language": ""},

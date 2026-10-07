@@ -7,6 +7,7 @@ laboratories start In Creation."""
 from __future__ import annotations
 
 import random
+from collections.abc import Sequence
 
 from . import seasons, storage
 from .arts import ARTS
@@ -137,6 +138,72 @@ def refund_creation_xp(character: Character, entry: CreationXp) -> None:
     """Drop `entry` from the worksheet and take its xp back."""
     character.creation_xp.remove(entry)
     _add_xp(character, entry.target, -_applied(entry))
+
+
+def target_xp(character: Character, target: str) -> int:
+    """The total xp the Art or Ability `target` has on the sheet (0: none)."""
+    if target in ARTS:
+        score = character.arts.get(target.lower())
+        return score.xp if score is not None else 0
+    ability = next((a for a in character.abilities if a.name == target), None)
+    return ability.xp if ability is not None else 0
+
+
+def gained_xp(entry: CreationXp) -> int:
+    """The xp `entry` added to its Art or Ability (half again with an
+    Affinity)."""
+    return _applied(entry)
+
+
+def spend_preview(
+    character: Character, target: str, xp: int, replacing: CreationXp | None = None
+) -> tuple[int, int]:
+    """What spending `xp` on `target` would do: the xp it adds (half again
+    with an Affinity, rounded up on the whole spend) and the target's total
+    xp afterwards. `replacing`: the entry being changed, whose xp comes off
+    first."""
+    gained = creation_access.effective_xp(character, target, max(xp, 0))
+    total = target_xp(character, target)
+    if replacing is not None and replacing.target == target:
+        total -= _applied(replacing)
+    return gained, max(total, 0) + gained
+
+
+def worksheet_xp(character: Character, target: str) -> tuple[int, int]:
+    """While `character` is In Creation, the pool xp its Creation Worksheet
+    spent on the Art or Ability `target` and the xp that gained (0, 0: none,
+    or In Play)."""
+    if not character.in_creation:
+        return 0, 0
+    found = [x for x in character.creation_xp if x.target == target]
+    return sum(x.xp for x in found), sum(_applied(x) for x in found)
+
+
+def worksheet_note(character: Character, targets: Sequence[str]) -> str:
+    """For a sheet dialog that edits total xp: how much of each of
+    `targets` came from the Creation Worksheet, and where to take it back
+    ("" when none did)."""
+    parts = []
+    for target in targets:
+        spent, gained = worksheet_xp(character, target)
+        if gained:
+            how = f"{spent} spent x1.5" if gained != spent else f"{spent} spent"
+            parts.append(f"{target} {gained} xp ({how})")
+    if not parts:
+        return ""
+    return (
+        "From the Creation Worksheet: "
+        + ", ".join(parts)
+        + ". Take worksheet xp back on the worksheet, not here."
+    )
+
+
+def set_specialty(character: Character, ability_name: str, specialty: str) -> None:
+    """Give the Ability `ability_name` its specialty (if it has none or a
+    new one is given; an Art has none)."""
+    ability = next((a for a in character.abilities if a.name == ability_name), None)
+    if ability is not None and specialty:
+        ability.specialty = specialty
 
 
 def learn_creation_spell(

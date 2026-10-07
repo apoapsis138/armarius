@@ -7,10 +7,11 @@ from __future__ import annotations
 import random
 from typing import Any
 
+from ... import creation, seasons, sourcebooks, storage
 from ... import laboratories as lab_text
 from ... import possessions as pos
-from ... import seasons, sourcebooks, storage
 from ... import spells as spl
+from ...arts import ARTS
 from ...markup import escape
 from ...models import (
     Ability,
@@ -248,7 +249,12 @@ class CharacterActions(WorkspaceBase):
                 self._commit("tab-abilities")
 
         self.app.push_screen(
-            _ability_dialog(existing.name, existing, character.virtues_flaws),
+            _ability_dialog(
+                existing.name,
+                existing,
+                character.virtues_flaws,
+                note=creation.worksheet_note(character, [existing.name]),
+            ),
             handle_result,
         )
 
@@ -307,7 +313,12 @@ class CharacterActions(WorkspaceBase):
                 self._commit("section-arts")
 
         self.app.push_screen(
-            EditArtsScreen(character.arts, character.virtues_flaws), handle_result
+            EditArtsScreen(
+                character.arts,
+                character.virtues_flaws,
+                note=creation.worksheet_note(character, ARTS),
+            ),
+            handle_result,
         )
 
     # -- Raw Vis / Hermetic Background (magi only) --

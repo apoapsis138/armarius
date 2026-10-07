@@ -14,7 +14,7 @@ from screen_helpers import (
     _select_character,
     _select_covenant,
 )
-from support import menu
+from support import close_worksheet, menu
 from textual.widgets import Button, Collapsible, Input, ListView, Select, Static, Tree
 
 from ars_magica_manager import settings, storage
@@ -148,6 +148,7 @@ async def test_create_covenant_flow_saves_covenant():
 
         await pilot.click("#btn-save")
         await pilot.pause()
+        await close_worksheet(pilot, app)
 
         assert isinstance(app.screen, WorkspaceScreen)
         assert app.screen.selected_covenant is not None
@@ -188,6 +189,7 @@ async def test_create_character_at_saga_level_is_unassigned_and_selectable():
         app.screen.query_one("#fld-type", Select).value = "grog"
         await pilot.click("#btn-save")
         await pilot.pause()
+        await close_worksheet(pilot, app)
 
         # Listed under the saga, and selectable from the tree.
         tree = app.screen.query_one("#nav-tree", Tree)
@@ -249,6 +251,7 @@ async def test_create_character_defaults_to_current_covenant():
 
         await pilot.click("#btn-save")
         await pilot.pause()
+        await close_worksheet(pilot, app)
 
         assert isinstance(app.screen, WorkspaceScreen)
         assert app.screen.selected_character is not None

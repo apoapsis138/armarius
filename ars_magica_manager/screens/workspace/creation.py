@@ -29,7 +29,6 @@ from ...rules import creation_xp as cx
 from ..pickers import RemovalPickerScreen, SpellChooserScreen
 from ..prompts import (
     ConfirmScreen,
-    InfoScreen,
     _blanks_dialog,
     _buy_specialist_dialog,
     _creation_xp_dialog,
@@ -46,10 +45,6 @@ XP_SECTIONS = ("tab-abilities", "section-arts")
 SPELL_SECTIONS = ("section-known-spells",)
 
 
-def _label(entry: CreationXp) -> str:
-    return f"{escape(entry.target)}: {entry.xp} xp"
-
-
 class CreationActions(WorkspaceBase):
     def _spend_creation_xp(
         self,
@@ -59,81 +54,67 @@ class CreationActions(WorkspaceBase):
         note: str = "",
         title: str = "Spend xp",
     ) -> None:
-        def handle_result(result: tuple[str, int] | None) -> None:
+        """Spend some of `step`'s pool xp on an Ability or Art (and give an
+        Ability its Specialty)."""
+
+        def handle_result(result: tuple[str, int, str] | None) -> None:
             if result is not None:
-                target, xp = result
+                target, xp, specialty = result
                 creation.spend_creation_xp(
                     character, CreationXp(step, target, xp, note)
                 )
+                creation.set_specialty(character, target, specialty)
                 self._commit(*XP_SECTIONS)
 
-        self.app.push_screen(_creation_xp_dialog(title, targets), handle_result)
-
-    def _pick_creation_xp(
-        self,
-        character: Character,
-        step: str,
-        title: str,
-        then: Any,
-        *,
-        note: str | None = None,
-    ) -> None:
-        """Ask which of `step`'s entries (`note`'s only, if given), then
-        call `then(entry)`."""
-        found = [
-            x for x in cx.entries(character, step) if note is None or x.note == note
-        ]
-        if not found:
-            self.notify("Nothing spent at this step yet.")
-            return
-
-        def handle_index(index: int | None) -> None:
-            if index is not None:
-                then(found[index])
-
         self.app.push_screen(
-            RemovalPickerScreen(title, [_label(x) for x in found]), handle_index
+            _creation_xp_dialog(title, targets, saga=self.saga, character=character),
+            handle_result,
         )
 
-    def _change_creation_xp(
-        self,
-        character: Character,
-        step: str,
-        targets: Sequence[str],
-        *,
-        note: str | None = None,
+    def _change_creation_entry(
+        self, character: Character, entry: CreationXp, targets: Sequence[str]
     ) -> None:
-        def edit(entry: CreationXp) -> None:
-            def handle_result(result: tuple[str, int] | None) -> None:
-                if result is not None:
-                    creation.change_creation_xp(character, entry, *result)
-                    self._commit(*XP_SECTIONS)
+        """Change what `entry` spent its pool xp on, or how much (the xp it
+        gained comes off first, so an Affinity's half again is undone
+        exactly)."""
 
-            self.app.push_screen(
-                _creation_xp_dialog("Change xp", targets, (entry.target, entry.xp)),
-                handle_result,
-            )
+        def handle_result(result: tuple[str, int, str] | None) -> None:
+            if result is not None:
+                target, xp, specialty = result
+                creation.change_creation_xp(character, entry, target, xp)
+                creation.set_specialty(character, target, specialty)
+                self._commit(*XP_SECTIONS)
 
-        self._pick_creation_xp(character, step, "Change which?", edit, note=note)
+        self.app.push_screen(
+            _creation_xp_dialog(
+                "Change xp",
+                targets,
+                (entry.target, entry.xp),
+                saga=self.saga,
+                character=character,
+                replacing=entry,
+            ),
+            handle_result,
+        )
 
-    def _refund_creation_xp(
-        self, character: Character, step: str, *, note: str | None = None
-    ) -> None:
-        def refund(entry: CreationXp) -> None:
-            def handle_confirmed(confirmed: bool | None) -> None:
-                if confirmed:
-                    creation.refund_creation_xp(character, entry)
-                    self._commit(*XP_SECTIONS)
+    def _refund_creation_entry(self, character: Character, entry: CreationXp) -> None:
+        """Take `entry`'s pool xp back, after asking: the xp it gained comes
+        off its Ability or Art."""
 
-            self.app.push_screen(
-                ConfirmScreen(
-                    f"Take back {entry.xp} xp from {escape(entry.target)}?",
-                    yes_label="Take back",
-                ),
-                handle_confirmed,
-            )
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
+                creation.refund_creation_xp(character, entry)
+                self._commit(*XP_SECTIONS)
 
-        self._pick_creation_xp(character, step, "Take back which?", refund, note=note)
+        gained = creation.gained_xp(entry)
+        also = f" ({gained} xp comes off it)" if gained != entry.xp else ""
+        self.app.push_screen(
+            ConfirmScreen(
+                f"Take back the {entry.xp} xp spent on {escape(entry.target)}?{also}",
+                yes_label="Take back",
+            ),
+            handle_confirmed,
+        )
 
     # -- Early Childhood --
 
@@ -249,14 +230,15 @@ class CreationActions(WorkspaceBase):
             handle_index,
         )
 
-    def _drop_training_package(self, character: Character) -> None:
-        """Take back every xp of one package taken."""
-        found = packages.taken(character)
+    def _drop_training_package(self, character: Character, note: str) -> None:
+        """Take back every xp of the package taken as `note`, after asking."""
+        taken = next((t for t in packages.taken(character) if t.note == note), None)
+        if taken is None:
+            return
 
-        def handle_index(index: int | None) -> None:
-            if index is None:
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if not confirmed:
                 return
-            note = found[index].note
             for entry in [
                 x for x in cx.entries(character, "package") if x.note == note
             ]:
@@ -264,11 +246,12 @@ class CreationActions(WorkspaceBase):
             self._commit(*XP_SECTIONS)
 
         self.app.push_screen(
-            RemovalPickerScreen(
-                "Drop which package?",
-                [f"{escape(t.name)} ({t.years} years)" for t in found],
+            ConfirmScreen(
+                f"Drop the {escape(taken.name)} package ({taken.years} years) "
+                "and take back all its xp?",
+                yes_label="Drop",
             ),
-            handle_index,
+            handle_confirmed,
         )
 
     # -- Later Life --
@@ -322,67 +305,19 @@ class CreationActions(WorkspaceBase):
             return
         self.app.push_screen(_spell_level_dialog(spell.name), learn)
 
-    def _show_creation_spell(self, character: Character, step: str) -> None:
-        """A learned spell's full details (its Arts, Range, Duration,
-        Target, description) and the magus's Lab Total for it."""
-        found = cx.entries(character, step)
+    def _forget_creation_spell(self, character: Character, entry: CreationXp) -> None:
+        """Forget a spell learned at creation, after asking."""
+        spell = spl.find_spell(self.saga, entry.target)
+        name = escape(spell.name if spell else entry.target)
 
-        def spell_of(entry: CreationXp) -> Spell | None:
-            return spl.find_spell(self.saga, entry.target)
-
-        def handle_index(index: int | None) -> None:
-            if index is None:
-                return
-            spell = spell_of(found[index])
-            if spell is None:
-                return
-            cap = magus_rules.spell_cap(self.saga, character, spell)
-            text = (
-                spl.detail_text(self.saga, spell)
-                + f"\n\n[b]Learned at level:[/] {found[index].xp}"
-                + f"\n[b]{escape(character.name)}'s Lab Total for it (aura 3):[/] {cap}"
-            )
-            self.app.push_screen(InfoScreen(escape(spell.name), text))
-
-        labels = [
-            escape(spell.name) if (spell := spell_of(x)) else escape(x.target)
-            for x in found
-        ]
-        self.app.push_screen(
-            RemovalPickerScreen("Show which spell?", labels), handle_index
-        )
-
-    def _forget_creation_spell(self, character: Character, step: str) -> None:
-        found = cx.entries(character, step)
-        if not found:
-            self.notify("No spells learned at this step yet.")
-            return
-
-        def name(entry: CreationXp) -> str:
-            spell = spl.find_spell(self.saga, entry.target)
-            return escape(spell.name if spell else entry.target)
-
-        def handle_index(index: int | None) -> None:
-            if index is None:
-                return
-            entry = found[index]
-
-            def handle_confirmed(confirmed: bool | None) -> None:
-                if confirmed:
-                    creation.forget_creation_spell(character, entry)
-                    self._commit(*SPELL_SECTIONS)
-
-            self.app.push_screen(
-                ConfirmScreen(f"Forget {name(entry)}?", yes_label="Forget"),
-                handle_confirmed,
-            )
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
+                creation.forget_creation_spell(character, entry)
+                self._commit(*SPELL_SECTIONS)
 
         self.app.push_screen(
-            RemovalPickerScreen(
-                "Forget which spell?",
-                [f"{name(x)} (level {x.xp})" for x in found],
-            ),
-            handle_index,
+            ConfirmScreen(f"Forget {name}?", yes_label="Forget"),
+            handle_confirmed,
         )
 
     # -- Years past Gauntlet and pre-play aging --

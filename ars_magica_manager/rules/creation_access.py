@@ -371,3 +371,21 @@ def ability_cap(age: int | None) -> int:
     if age <= 45:
         return 8
     return 9
+
+
+#: How far Affinity with Ability lets its Ability go over the age cap.
+AFFINITY_CAP_BONUS = 2
+#: Lifts the age cap on every Ability.
+NO_CAP_VIRTUE = "vf_mentored_by_demons"
+
+
+def ability_cap_for(character: Character, age: int | None, ability: str) -> int | None:
+    """The highest score `ability` may have at creation: the age cap, two
+    more with an Affinity with it, None (no cap) when Mentored by Demons.
+    Puissant adds when the Ability is used, so it never counts."""
+    if any(vf.vf_id == NO_CAP_VIRTUE for vf in character.virtues_flaws):
+        return None
+    cap = ability_cap(age)
+    if affinity_multiplier(character.virtues_flaws, ability) > 1:
+        cap += AFFINITY_CAP_BONUS
+    return cap

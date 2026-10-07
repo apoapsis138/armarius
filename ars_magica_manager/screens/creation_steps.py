@@ -5,13 +5,25 @@ the record the same way the sheet does."""
 
 from __future__ import annotations
 
+from collections.abc import Callable, Sequence
+from functools import partial
 from typing import TYPE_CHECKING
 
-from .. import catalog, sourcebooks
+from .. import catalog, creation, sourcebooks
+from .. import sheet_text as st
 from .. import spells as spl
+from ..arts import ART_DESCRIPTIONS, ARTS
 from ..covenants import covenant_boon_points, covenant_hook_points
 from ..markup import aligned, escape
-from ..models import Character, Covenant, Laboratory, Saga, VirtueFlawInstance
+from ..models import (
+    ArtScore,
+    Character,
+    Covenant,
+    CreationXp,
+    Laboratory,
+    Saga,
+    VirtueFlawInstance,
+)
 from ..rules import creation as rules
 from ..rules import creation_access as access
 from ..rules import creation_character as cc
@@ -22,7 +34,16 @@ from ..rules import creation_magus as magus
 from ..rules import creation_packages as packages
 from ..rules import creation_virtues as cv
 from ..rules import creation_xp as cx
-from .creation_worksheet import PANELS, Record, StepAction, StepPanel
+from ..rules import scores
+from ..rules import xp as xp_rules
+from .creation_worksheet import (
+    PANELS,
+    Record,
+    StepAction,
+    StepList,
+    StepPanel,
+    StepRow,
+)
 from .pickers import RemovalPickerScreen
 
 if TYPE_CHECKING:
@@ -172,8 +193,6 @@ def _virtues_budget(saga: Saga, record: Record) -> str:
     t = cv.tally(character)
     fewest, most = cv.virtue_allowance(character, t.flaw_points)
     allowed = f"{most}" if fewest == most else f"{fewest}-{most}"
-    by_id = catalog.load_virtue_flaw_catalog_by_id()
-    taken = [catalog.describe_virtue_flaw(vf, by_id) for vf in character.virtues_flaws]
     rows: list[tuple[str, object]] = [
         ("Virtue points", f"{t.virtue_points} (allowed {allowed})"),
         (
@@ -181,7 +200,6 @@ def _virtues_budget(saga: Saga, record: Record) -> str:
             f"{t.flaw_points} of {cv.max_flaw_points(character)}, "
             f"{t.minor_flaws} of {cv.max_minor_flaws(character)} Minor Flaws",
         ),
-        ("Taken", escape(", ".join(taken)) if taken else "(none)"),
     ]
     house = cv.house_benefit(character)
     if house.held:
@@ -191,24 +209,69 @@ def _virtues_budget(saga: Saga, record: Record) -> str:
     return aligned(rows)
 
 
+#: The Virtues and Flaws list's columns.
+_VF_NAME = 44
+_VF_TIER = 8
+VF_HEADER = f"  {'Virtue or Flaw':<{_VF_NAME}}{'Tier':<{_VF_TIER}}Type"
+
+
+def _virtue_rows(saga: Saga, record: Record) -> list[StepRow]:
+    """The character's Virtues, then its Flaws, each with its book text."""
+    character = _character(record)
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    rows: list[StepRow] = []
+    for side, heading in (("Virtue", "Virtues"), ("Flaw", "Flaws")):
+        taken = [
+            (index, vf, definition)
+            for index, vf in enumerate(character.virtues_flaws)
+            if (definition := by_id.get(vf.vf_id)) is not None
+            and definition.side == side
+        ]
+        if not taken:
+            continue
+        rows.append(StepRow(heading, heading=True))
+        for index, vf, definition in taken:
+            name = catalog.describe_virtue_flaw(vf, by_id)
+            rows.append(
+                StepRow(
+                    f"{pad(name, _VF_NAME)}{definition.tier:<{_VF_TIER}}"
+                    f"{escape(definition.category_label)}",
+                    st.vf_info_text(character.virtues_flaws, index),
+                    delete=partial(_remove_virtue_flaw, character, vf),
+                )
+            )
+    return rows
+
+
+def _remove_virtue_flaw(
+    character: Character, vf: VirtueFlawInstance, workspace: WorkspaceScreen
+) -> None:
+    if vf in character.virtues_flaws:
+        workspace._remove_virtue_flaw_from(character, character.virtues_flaws.index(vf))
+
+
 def _virtues_actions(saga: Saga, record: Record) -> list[StepAction]:
     character = _character(record)
-    actions = [
-        StepAction("Add a Virtue", lambda ws, r: ws._add_virtue_flaw_to(character)),
+    return [
         StepAction(
             "Add a Flaw", lambda ws, r: ws._add_virtue_flaw_to(character, "Flaw")
         ),
     ]
-    if character.virtues_flaws:
-        actions.append(
-            StepAction(
-                "Remove one", lambda ws, r: ws._remove_virtue_flaw_from(character)
-            )
-        )
-    return actions
 
 
-PANELS[("character", "virtues_flaws")] = StepPanel(_virtues_budget, _virtues_actions)
+PANELS[("character", "virtues_flaws")] = StepPanel(
+    _virtues_budget,
+    _virtues_actions,
+    StepList(
+        VF_HEADER,
+        _virtue_rows,
+        add=lambda ws, r: ws._add_virtue_flaw_to(_character(r)),
+        add_label="Add a Virtue (F2 in the picker: Flaws)",
+        edit_label=None,
+        delete_label="Remove",
+        hint="Choose a Virtue or Flaw to read its rules.",
+    ),
+)
 
 
 # -- Characteristics --
@@ -273,12 +336,150 @@ PANELS[("character", "characteristics")] = StepPanel(
 # -- the xp steps --
 
 
-def xp_lines(character: Character, step: str) -> str:
-    """What a step's xp went on, one line each."""
-    found = cx.entries(character, step)
-    if not found:
-        return "  (nothing spent yet)"
-    return "\n".join(f"  {escape(x.target)}: {x.xp} xp" for x in found)
+def pad(text: str, width: int) -> str:
+    """`text` escaped for markup and padded to `width` columns (cut with an
+    ellipsis if it's longer), counting the text as shown."""
+    if len(text) >= width:
+        text = text[: width - 2] + "…"
+    return escape(text) + " " * (width - len(text))
+
+
+#: Each kind of creation entry, as the details say where xp came from.
+ENTRY_STEPS: dict[str, str] = {
+    "childhood": "Early Childhood",
+    "later_life": "Later Life",
+    "package": "Training package",
+    "virtue": "Virtue xp",
+    "free": "Free Virtue score",
+    "apprenticeship": "Apprenticeship",
+    "gauntlet": "Years past Gauntlet",
+}
+
+#: The xp list's columns.
+_XP_NAME = 30
+XP_HEADER = (
+    f"  {'Ability or Art':<{_XP_NAME}}{'Spent':>6}{'Gained':>8}{'Score':>7}   Specialty"
+)
+
+
+def _target_score(character: Character, target: str) -> tuple[xp_rules.Progress, str]:
+    """`target`'s score and xp on the sheet, and its Specialty."""
+    if target in ARTS:
+        score = character.arts.get(target.lower(), ArtScore())
+        return score.progress, ""
+    ability = next((a for a in character.abilities if a.name == target), None)
+    if ability is None:
+        return xp_rules.progress(0, xp_rules.ABILITY_FACTOR), ""
+    return ability.progress, ability.specialty or ""
+
+
+def xp_label(character: Character, entry: CreationXp, suffix: str = "") -> str:
+    """An xp row: what it went on, the pool xp spent and the xp it gained
+    (more with an Affinity), the score now and the Specialty."""
+    progress, specialty = _target_score(character, entry.target)
+    gained = creation.gained_xp(entry)
+    gained_text = f"{gained:>8}"
+    if gained != entry.xp:
+        gained_text = f"[$text-success]{gained_text}[/]"
+    return (
+        f"{pad(entry.target + suffix, _XP_NAME)}{entry.xp:>6}{gained_text}"
+        f"{progress.score:>7}   {escape(specialty)}"
+    )
+
+
+def xp_details(saga: Saga, character: Character, target: str) -> str:
+    """The details of an Art or Ability xp was spent on: its score and xp,
+    any Affinity and the creation cap, every worksheet spend on it, and
+    what it is."""
+    progress, _ = _target_score(character, target)
+    is_art = target in ARTS
+    if is_art:
+        bonus, bonus_from = 0, []
+        description = ART_DESCRIPTIONS.get(target, "")
+        kind = "Art"
+    else:
+        bonus, bonus_from = scores.ability_bonus(character.virtues_flaws, target)
+        definition = st.ability_definition(target)
+        description = definition.description if definition else ""
+        kind = f"{definition.category} Ability" if definition else "Ability"
+    lines = [f"[b]{escape(target)}[/]  [dim]{escape(kind)}[/]"]
+    lines.append(st.xp_line(progress, bonus, bonus_from))
+    if access.xp_multiplier(character, target) > 1:
+        lines.append("[b]Affinity:[/] pool xp spent on it gains half again, rounded up")
+    if not is_art:
+        cap = access.ability_cap_for(character, cc.age(saga, character), target)
+        if cap is None:
+            lines.append("[b]Creation cap:[/] none (Mentored by Demons)")
+        else:
+            over = " [$text-error](over it)[/]" if progress.score > cap else ""
+            lines.append(f"[b]Creation cap:[/] {cap}{over}")
+    spends = [
+        f"{ENTRY_STEPS.get(x.step, x.step)} {x.xp}"
+        + (
+            f" (gained {creation.gained_xp(x)})"
+            if creation.gained_xp(x) != x.xp
+            else ""
+        )
+        for x in character.creation_xp
+        if x.target == target and x.step in ENTRY_STEPS
+    ]
+    if spends:
+        lines.append(f"[b]Spent on it:[/] {escape(', '.join(spends))}")
+    if description:
+        lines += ["", escape(description)]
+    return "\n".join(lines)
+
+
+def xp_row(
+    saga: Saga,
+    character: Character,
+    entry: CreationXp,
+    targets: Sequence[str] | None,
+) -> StepRow:
+    """A row for an xp spend: e changes it (with `targets` to choose from;
+    None: it can't be changed, only taken back), d takes it back."""
+    return StepRow(
+        xp_label(character, entry),
+        xp_details(saga, character, entry.target),
+        edit=(
+            None
+            if targets is None
+            else lambda ws: ws._change_creation_entry(character, entry, targets)
+        ),
+        delete=lambda ws: ws._refund_creation_entry(character, entry),
+    )
+
+
+def xp_rows(
+    saga: Saga, character: Character, step: str, targets: Sequence[str]
+) -> list[StepRow]:
+    return [xp_row(saga, character, x, targets) for x in cx.entries(character, step)]
+
+
+def xp_list(
+    step: str,
+    targets: Callable[[Saga, Character], Sequence[str]],
+    rows: Callable[[Saga, Record], list[StepRow]] | None = None,
+    add_label: str = "Spend xp",
+) -> StepList:
+    """An xp step's list: a spends the step's pool xp, e changes the chosen
+    spend, d takes it back."""
+    return StepList(
+        XP_HEADER,
+        rows
+        or (
+            lambda saga, record: xp_rows(
+                saga, _character(record), step, targets(saga, _character(record))
+            )
+        ),
+        add=lambda ws, record: ws._spend_creation_xp(
+            _character(record), step, targets(ws.saga, _character(record))
+        ),
+        add_label=add_label,
+        edit_label="Change its xp",
+        delete_label="Take it back",
+        hint="Choose a row to see what the xp bought.",
+    )
 
 
 # -- Early Childhood --
@@ -291,7 +492,7 @@ def _childhood_budget(saga: Saga, record: Record) -> str:
         None,
     )
     others = cx.spent(character, "childhood") - (native.xp if native else 0)
-    head = aligned(
+    return aligned(
         [
             (
                 "Native Language",
@@ -300,58 +501,39 @@ def _childhood_budget(saga: Saga, record: Record) -> str:
             ("Other childhood xp", f"{others} of {cx.CHILDHOOD_XP}"),
         ]
     )
-    return f"{head}\n{xp_lines(character, 'childhood')}"
+
+
+def _childhood_rows(saga: Saga, record: Record) -> list[StepRow]:
+    """The childhood's spends; the Native Language's row changes the
+    language."""
+    character = _character(record)
+    targets = cx.childhood_targets()
+    rows = []
+    for entry in cx.entries(character, "childhood"):
+        row = xp_row(saga, character, entry, targets)
+        if entry.note == cx.NATIVE:
+            row.label = xp_label(character, entry, " (native)")
+            row.edit = lambda ws: ws._set_native_language(character)
+        rows.append(row)
+    return rows
 
 
 def _childhood_actions(saga: Saga, record: Record) -> list[StepAction]:
     character = _character(record)
-    targets = cx.childhood_targets()
-    actions = [
+    return [
         StepAction("Native Language", lambda ws, r: ws._set_native_language(character)),
-        StepAction(
-            "Spend xp",
-            lambda ws, r: ws._spend_creation_xp(character, "childhood", targets),
-        ),
         StepAction(
             "Use a sample childhood",
             lambda ws, r: ws._apply_sample_childhood(character),
         ),
     ]
-    if any(x.note != cx.NATIVE for x in cx.entries(character, "childhood")):
-        actions += [
-            StepAction(
-                "Change one",
-                lambda ws, r: ws._change_creation_xp(
-                    character, "childhood", targets, note=""
-                ),
-            ),
-            StepAction(
-                "Take back one",
-                lambda ws, r: ws._refund_creation_xp(character, "childhood", note=""),
-            ),
-        ]
-    return actions
 
 
-PANELS[("character", "childhood")] = StepPanel(_childhood_budget, _childhood_actions)
-
-
-def _change_and_take_back(
-    character: Character, step: str, targets: list[str], what: str = "one"
-) -> list[StepAction]:
-    """The Change / Take back buttons, once a step has xp spent."""
-    if not cx.entries(character, step):
-        return []
-    return [
-        StepAction(
-            f"Change {what}",
-            lambda ws, r: ws._change_creation_xp(character, step, targets),
-        ),
-        StepAction(
-            f"Take back {what}",
-            lambda ws, r: ws._refund_creation_xp(character, step),
-        ),
-    ]
+PANELS[("character", "childhood")] = StepPanel(
+    _childhood_budget,
+    _childhood_actions,
+    xp_list("childhood", lambda saga, c: cx.childhood_targets(), rows=_childhood_rows),
+)
 
 
 # -- Later Life --
@@ -362,46 +544,60 @@ def _later_life_budget(saga: Saga, record: Record) -> str:
     years = later.bought_years(saga, character)
     ends = later.later_life_ends(saga, character)
     until = "apprenticeship" if character.type == "magus" else "now"
+    budget = later.later_life_budget(saga, character)
+    spent = cx.spent(character, "later_life")
     lines = [
         f"Later Life: age 5 to {ends if ends is not None else '?'} ({until}), "
-        f"{years} years at {later.xp_a_year(character)} xp = "
-        f"{later.later_life_budget(saga, character)} xp, "
-        f"{cx.spent(character, 'later_life')} spent",
-        xp_lines(character, "later_life"),
+        f"{years} years at {later.xp_a_year(character)} xp = {budget} xp, "
+        f"[b]{spent} spent, {budget - spent} left[/]"
     ]
-    for taken in packages.taken(character):
-        lines.append(f"Package: {escape(taken.name)} ({taken.years} years)")
-        lines += [
-            f"  {escape(x.target)}: {x.xp} xp"
-            for x in cx.entries(character, "package")
-            if x.note == taken.note
-        ]
     by_id = catalog.load_virtue_flaw_catalog_by_id()
     for vf_id, rule in access.virtue_xp(character).items():
-        own = [x for x in cx.entries(character, "virtue") if x.note == vf_id]
-        lines.append(
-            f"{escape(by_id[vf_id].name)}: {rule.xp} xp, {sum(x.xp for x in own)} spent"
-        )
-        lines += [f"  {escape(x.target)}: {x.xp} xp" for x in own]
-    free = cx.entries(character, "free")
-    if free or later.free_score_abilities(character):
-        lines.append("Free Virtue scores:")
-        lines.append(xp_lines(character, "free"))
+        own = sum(x.xp for x in cx.entries(character, "virtue") if x.note == vf_id)
+        lines.append(f"{escape(by_id[vf_id].name)}: {rule.xp} xp, {own} spent")
     cap = access.ability_cap(cc.age(saga, character))
-    lines.append(f"Ability cap at this age: {cap}")
+    lines.append(f"Ability cap at this age: {cap} (2 more with an Affinity)")
     return "\n".join(lines)
+
+
+def _later_life_rows(saga: Saga, record: Record) -> list[StepRow]:
+    """Later Life's own spends, then each training package, each Virtue's
+    own xp and the free Virtue scores, under headings."""
+    character = _character(record)
+    rows = xp_rows(saga, character, "later_life", later.later_life_targets(character))
+    for taken in packages.taken(character):
+        rows.append(
+            StepRow(
+                f"Training package: {escape(taken.name)} ({taken.years} years)",
+                heading=True,
+            )
+        )
+        for entry in cx.entries(character, "package"):
+            if entry.note == taken.note:
+                row = xp_row(saga, character, entry, None)
+                row.delete = partial(_drop_package, character, taken.note)
+                rows.append(row)
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    for vf_id in access.virtue_xp(character):
+        own = [x for x in cx.entries(character, "virtue") if x.note == vf_id]
+        if own:
+            rows.append(StepRow(f"{escape(by_id[vf_id].name)} xp", heading=True))
+            targets = later.virtue_targets(character, vf_id)
+            rows += [xp_row(saga, character, x, targets) for x in own]
+    free = cx.entries(character, "free")
+    if free:
+        rows.append(StepRow("Free Virtue scores", heading=True))
+        rows += [xp_row(saga, character, x, None) for x in free]
+    return rows
+
+
+def _drop_package(character: Character, note: str, workspace: WorkspaceScreen) -> None:
+    workspace._drop_training_package(character, note)
 
 
 def _later_life_actions(saga: Saga, record: Record) -> list[StepAction]:
     character = _character(record)
-    targets = later.later_life_targets(character)
-    actions = [
-        StepAction(
-            "Spend xp",
-            lambda ws, r: ws._spend_creation_xp(character, "later_life", targets),
-        ),
-        *_change_and_take_back(character, "later_life", targets),
-    ]
+    actions = []
     by_id = catalog.load_virtue_flaw_catalog_by_id()
     for vf_id in access.virtue_xp(character):
         name = by_id[vf_id].name
@@ -417,15 +613,6 @@ def _later_life_actions(saga: Saga, record: Record) -> list[StepAction]:
                 ),
             )
         )
-    if cx.entries(character, "virtue"):
-        every = sorted(
-            {
-                t
-                for v in access.virtue_xp(character)
-                for t in later.virtue_targets(character, v)
-            }
-        )
-        actions += _change_and_take_back(character, "virtue", every, "Virtue xp")
     if later.free_scores_missing(character):
         actions.append(
             StepAction(
@@ -440,64 +627,70 @@ def _later_life_actions(saga: Saga, record: Record) -> list[StepAction]:
                 lambda ws, r: ws._take_training_package(character),
             )
         )
-    if packages.taken(character):
-        actions.append(
-            StepAction(
-                "Drop a package", lambda ws, r: ws._drop_training_package(character)
-            )
-        )
     return actions
 
 
-PANELS[("character", "later_life")] = StepPanel(_later_life_budget, _later_life_actions)
+PANELS[("character", "later_life")] = StepPanel(
+    _later_life_budget,
+    _later_life_actions,
+    xp_list(
+        "later_life",
+        lambda saga, c: later.later_life_targets(c),
+        rows=_later_life_rows,
+    ),
+)
 
 
-def spell_lines(saga: Saga, character: Character, step: str) -> str:
-    """The spells learned at a step, each with its creation cap."""
+#: The spells' columns, under the xp rows.
+_SPELL_NAME = 38
+
+
+def spell_rows(
+    saga: Saga, character: Character, step: str, title: str
+) -> list[StepRow]:
+    """A heading, then the spells learned at `step`: each with its level
+    and the magus's Lab Total for it; d forgets one."""
     found = cx.entries(character, step)
-    if not found:
-        return "  (no spells yet)"
-    lines = []
+    rows = [StepRow(title, heading=True)]
     for entry in found:
         spell = spl.find_spell(saga, entry.target)
+        forget = partial(_forget_spell, character, entry)
         if spell is None:
-            lines.append(f"  {escape(entry.target)} (missing), level {entry.xp}")
+            rows.append(
+                StepRow(
+                    f"{pad(entry.target, _SPELL_NAME)} (missing)  level {entry.xp}",
+                    delete=forget,
+                )
+            )
             continue
         cap = magus.spell_cap(saga, character, spell)
-        rdt = ", ".join(
-            f"{label} {escape(value)}"
-            for label, value in (
-                ("R:", spell.range),
-                ("D:", spell.duration),
-                ("T:", spell.target),
+        over = " [$text-error](over its Lab Total)[/]" if entry.xp > cap else ""
+        rows.append(
+            StepRow(
+                f"{pad(spell.name, _SPELL_NAME)}{spl.shorthand(spell):<9}"
+                f"level {entry.xp:>3}  Lab Total {cap}{over}",
+                spl.detail_text(saga, spell)
+                + f"\n\n[b]Learned at level:[/] {entry.xp}"
+                + f"\n[b]{escape(character.name)}'s Lab Total for it (aura 3):[/] {cap}",
+                delete=forget,
             )
-            if value
         )
-        lines.append(
-            f"  {escape(spell.name)} ({spl.shorthand(spell)}), level {entry.xp}, "
-            f"Lab Total {cap}" + (f"\n      {rdt}" if rdt else "")
-        )
-    return "\n".join(lines)
+    if not found:
+        rows.append(StepRow("[dim](no spells yet: Learn a spell)[/]", heading=True))
+    return rows
 
 
-def _spell_actions(character: Character, step: str) -> list[StepAction]:
-    actions = [
-        StepAction(
-            "Learn a spell", lambda ws, r: ws._learn_creation_spell(character, step)
-        )
-    ]
-    if cx.entries(character, step):
-        actions += [
-            StepAction(
-                "Spell details",
-                lambda ws, r: ws._show_creation_spell(character, step),
-            ),
-            StepAction(
-                "Forget a spell",
-                lambda ws, r: ws._forget_creation_spell(character, step),
-            ),
-        ]
-    return actions
+def _forget_spell(
+    character: Character, entry: CreationXp, workspace: WorkspaceScreen
+) -> None:
+    workspace._forget_creation_spell(character, entry)
+
+
+def _learn_spell(step: str) -> StepAction:
+    return StepAction(
+        "Learn a spell",
+        lambda ws, r: ws._learn_creation_spell(_character(r), step),
+    )
 
 
 # -- Apprenticeship --
@@ -505,34 +698,36 @@ def _spell_actions(character: Character, step: str) -> list[StepAction]:
 
 def _apprenticeship_budget(saga: Saga, record: Record) -> str:
     character = _character(record)
+    budget = magus.xp_budget(character)
+    spent = cx.spent(character, "apprenticeship")
+    levels = magus.level_budget(character)
+    learned = cx.spent(character, magus.SPELLS_STEP)
     return "\n".join(
         [
-            f"Apprenticeship: {magus.xp_budget(character)} xp for Arts and "
-            f"Abilities, {cx.spent(character, 'apprenticeship')} spent",
-            xp_lines(character, "apprenticeship"),
-            f"Spells: {magus.level_budget(character)} levels, "
-            f"{cx.spent(character, magus.SPELLS_STEP)} learned (each at most "
-            "its Lab Total with aura 3)",
-            spell_lines(saga, character, magus.SPELLS_STEP),
+            f"Apprenticeship: {budget} xp for Arts and Abilities, "
+            f"[b]{spent} spent, {budget - spent} left[/]",
+            f"Spells: {levels} levels, {learned} learned (each at most its Lab "
+            "Total with aura 3)",
         ]
     )
 
 
-def _apprenticeship_actions(saga: Saga, record: Record) -> list[StepAction]:
+def _apprenticeship_rows(saga: Saga, record: Record) -> list[StepRow]:
     character = _character(record)
-    targets = magus.targets(character)
     return [
-        StepAction(
-            "Spend xp",
-            lambda ws, r: ws._spend_creation_xp(character, "apprenticeship", targets),
-        ),
-        *_change_and_take_back(character, "apprenticeship", targets),
-        *_spell_actions(character, magus.SPELLS_STEP),
+        *xp_rows(saga, character, "apprenticeship", magus.targets(character)),
+        *spell_rows(saga, character, magus.SPELLS_STEP, "Spells"),
     ]
 
 
 PANELS[("character", "apprenticeship")] = StepPanel(
-    _apprenticeship_budget, _apprenticeship_actions
+    _apprenticeship_budget,
+    lambda saga, record: [_learn_spell(magus.SPELLS_STEP)],
+    xp_list(
+        "apprenticeship",
+        lambda saga, c: magus.targets(c),
+        rows=_apprenticeship_rows,
+    ),
 )
 
 
@@ -561,16 +756,15 @@ def _gauntlet_budget(saga: Saga, record: Record) -> str:
     character = _character(record)
     conditions = character.creation_conditions
     years = magus.years_past_gauntlet(saga, character)
+    points = magus.gauntlet_points(saga, character)
+    spent = magus.gauntlet_spent(character)
     lines = [
         f"Gauntlet at {magus.gauntlet_age(character)}: {years} years past it, "
         f"{magus.POINTS_A_YEAR} points a year",
         f"Lab seasons: {conditions.lab_seasons} (cost "
         f"{magus.lab_season_cost(conditions.lab_seasons)} points)",
-        f"Points: {magus.gauntlet_points(saga, character)}, "
-        f"{magus.gauntlet_spent(character)} spent (1 xp or 1 spell level each)",
-        xp_lines(character, "gauntlet"),
-        "Spells:",
-        spell_lines(saga, character, magus.GAUNTLET_SPELLS),
+        f"Points: {points}, [b]{spent} spent, {points - spent} left[/] (1 xp or 1 "
+        "spell level each)",
         f"Working conditions: aura {conditions.aura:+d}, lab quality "
         f"{conditions.lab_quality:+d}, Living Conditions "
         f"{conditions.living_conditions:+d}",
@@ -581,25 +775,36 @@ def _gauntlet_budget(saga: Saga, record: Record) -> str:
     return "\n".join(lines)
 
 
+def _gauntlet_rows(saga: Saga, record: Record) -> list[StepRow]:
+    character = _character(record)
+    return [
+        *xp_rows(saga, character, "gauntlet", magus.gauntlet_targets(character)),
+        *spell_rows(saga, character, magus.GAUNTLET_SPELLS, "Spells"),
+    ]
+
+
 def _gauntlet_actions(saga: Saga, record: Record) -> list[StepAction]:
     character = _character(record)
-    targets = magus.gauntlet_targets(character)
     return [
         StepAction(
             "Years and conditions",
             lambda ws, r: ws._edit_gauntlet_conditions(character),
         ),
-        StepAction(
-            "Spend points on xp",
-            lambda ws, r: ws._spend_creation_xp(character, "gauntlet", targets),
-        ),
-        *_change_and_take_back(character, "gauntlet", targets),
-        *_spell_actions(character, magus.GAUNTLET_SPELLS),
+        _learn_spell(magus.GAUNTLET_SPELLS),
         *_aging_actions(saga, character),
     ]
 
 
-PANELS[("character", "gauntlet")] = StepPanel(_gauntlet_budget, _gauntlet_actions)
+PANELS[("character", "gauntlet")] = StepPanel(
+    _gauntlet_budget,
+    _gauntlet_actions,
+    xp_list(
+        "gauntlet",
+        lambda saga, c: magus.gauntlet_targets(c),
+        rows=_gauntlet_rows,
+        add_label="Spend points on xp",
+    ),
+)
 
 
 # -- Finishing Touches and the review --

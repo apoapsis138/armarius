@@ -37,6 +37,7 @@ from ars_magica_manager.screens import (
     VirtueFlawPickerScreen,
     WorkspaceScreen,
 )
+from ars_magica_manager.screens.creation_worksheet import CreationWorksheetScreen
 
 
 async def test_add_virtue_flaw_without_parameters_to_character():
@@ -307,9 +308,13 @@ async def test_create_laboratory_flow_saves_laboratory():
         app.screen.query_one("#fld-size", Input).value = "1"
 
         await pilot.click("#btn-save")
-        await pilot.pause()
-
-        assert isinstance(app.screen, WorkspaceScreen)
+        # A new laboratory opens its Creation Worksheet; closing it shows
+        # the new lab's sheet.
+        assert await wait_until(
+            pilot, lambda: isinstance(app.screen, CreationWorksheetScreen)
+        )
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         assert app.screen.selected_laboratory is not None
         assert app.screen.selected_laboratory.name == "The Alchemical Tower"
 

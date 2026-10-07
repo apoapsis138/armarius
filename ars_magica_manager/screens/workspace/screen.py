@@ -15,7 +15,6 @@ from ...models import (
     INHABITANT_KINDS,
     POSSESSION_KINDS,
 )
-from ..creation_worksheet import CreationWorksheetScreen
 from ..sheets import (
     BOOK_SECTIONS,
     DEVICE_SECTIONS,
@@ -82,13 +81,6 @@ class WorkspaceScreen(
                 self.notify("Only the storyguide can change this.", severity="warning")
                 return
             handler()
-
-    def _open_creation_worksheet(self) -> None:
-        """The Creation Worksheet for the record on show."""
-        view = self._current_sheet_view()
-        record = view.creation_record if view is not None else None
-        if record is not None:
-            self.app.push_screen(CreationWorksheetScreen(self, record))
 
     # -- generic Add/Remove/Edit dispatch, by the active section of any sheet --
 

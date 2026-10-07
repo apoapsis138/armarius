@@ -462,6 +462,11 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
         margin-bottom: 1;
     }
 
+    #arts-note {
+        width: 80;
+        margin-bottom: 1;
+    }
+
     #arts-columns {
         width: auto;
         height: auto;
@@ -534,9 +539,14 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
         self,
         arts: dict[str, ArtScore],
         virtues_flaws: Sequence[VirtueFlawInstance] = (),
+        *,
+        note: str = "",
     ) -> None:
+        """`note`: a line under the subtitle (e.g. how much xp the Creation
+        Worksheet gave the Arts)."""
         super().__init__()
         self.arts = arts
+        self.note = note
         # the owner's Puissant, for each Art's live score
         self._bonus = {
             art.lower(): scores.art_bonus(virtues_flaws, art)[0] for art in ARTS
@@ -572,6 +582,8 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
             yield Label(
                 "Enter each Art's total XP; its score follows", id="arts-subtitle"
             )
+            if self.note:
+                yield Static(f"[$text-warning]{escape(self.note)}[/]", id="arts-note")
             with Horizontal(id="arts-columns"):
                 with Vertical(id="arts-techniques-col"):
                     yield from head("Techniques")

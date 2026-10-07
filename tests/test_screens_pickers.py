@@ -243,9 +243,9 @@ async def test_vf_picker_search_matches_summaries_after_names():
         in_name = ["demon" in entry.name.lower() for entry in listed]
         assert in_name == sorted(in_name, reverse=True)  # names first
         assert any(in_name) and not all(in_name)
-        # The chosen row's summary shows under the list.
+        # The chosen row's book text shows under the list.
         details = str(picker.query_one("#picker-details-text", Static).render())
-        assert listed[0].summary[:30] in details.replace("\n", " ")
+        assert listed[0].description[:30] in details.replace("\n", " ")
 
 
 async def test_vf_picker_hides_ineligible_entries_and_f3_marks_them():

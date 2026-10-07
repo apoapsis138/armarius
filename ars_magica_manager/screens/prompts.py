@@ -22,12 +22,12 @@ from textual.widgets import (
 from textual.widgets.button import ButtonVariant
 from textual.widgets.option_list import Option
 
-from .. import catalog, transfer, vis
+from .. import catalog, creation, transfer, vis
 from .. import house_rules as hr
 from .. import lab_texts as lt
 from .. import players as pl
 from .. import sheet_text as st
-from ..arts import ARTS, FORMS, TECHNIQUES
+from ..arts import ART_DESCRIPTIONS, ARTS, FORMS, TECHNIQUES
 from ..markup import escape, todo
 from ..models import (
     COVENANT_DIARY_CATEGORIES,
@@ -44,6 +44,7 @@ from ..models import (
     Covenant,
     CovenantDiaryEntry,
     CreationConditions,
+    CreationXp,
     DiaryEntry,
     Laboratory,
     LabSpecialtyEntry,
@@ -58,8 +59,9 @@ from ..models import (
     new_instance_id,
     next_season,
 )
-from ..rules import lab_seasons, scores
+from ..rules import creation_access, lab_seasons, scores
 from ..rules import xp as xp_rules
+from ..rules.creation_character import age as creation_age
 from ..rules.creation_covenant import (
     POWER_BY_NAME,
     POWER_LEVELS,
@@ -107,14 +109,18 @@ def _ability_dialog(
     virtues_flaws: Sequence[VirtueFlawInstance] = (),
     *,
     save_label: str = "Save",
+    note: str = "",
 ) -> FieldsDialog[dict[str, Any]]:
     """Add or edit an Ability: its xp, with the score it buys shown live
-    (with the owner's Puissant, from `virtues_flaws`), and its Specialty."""
+    (with the owner's Puissant, from `virtues_flaws`), and its Specialty.
+    `note` follows the live line (e.g. how much xp the Creation Worksheet
+    gave it)."""
     bonus, _ = scores.ability_bonus(virtues_flaws, name)
 
     def live(values: dict[str, Any]) -> str:
         score = st.live_score(values["xp"], xp_rules.ABILITY_FACTOR, bonus)
-        return f"{escape(name)}: {score}"
+        line = f"{escape(name)}: {score}"
+        return f"{line}\n[$text-warning]{escape(note)}[/]" if note else line
 
     return FieldsDialog(
         escape(name),
@@ -893,16 +899,71 @@ def _family_prefix(name: str) -> str:
     return name.split("{", 1)[0] if "{" in name else ""
 
 
+#: How much of an Ability's or Art's description the spend dialog shows.
+_SPEND_DESCRIPTION_CHARS = 240
+
+
+def _spend_live(
+    saga: Saga,
+    character: Character,
+    name: str,
+    xp: int | None,
+    replacing: CreationXp | None,
+) -> str:
+    """The spend dialog's live lines for `xp` pool xp on `name`: what it
+    gains (half again with an Affinity), the score that buys and the pool
+    xp the next score needs, a cap warning, and what the Ability or Art
+    is."""
+    if not name:
+        return "[dim]Choose an Ability or Art.[/]"
+    lines = []
+    if xp is not None and xp >= 0:
+        gained, total = creation.spend_preview(character, name, xp, replacing)
+        multiplier = creation_access.xp_multiplier(character, name)
+        affinity = " (Affinity x1.5)" if multiplier > 1 else ""
+        lines.append(f"{escape(name)}: gains {gained} xp{affinity}")
+        is_art = name in ARTS
+        factor = xp_rules.ART_FACTOR if is_art else xp_rules.ABILITY_FACTOR
+        progress = xp_rules.progress(total, factor)
+        more = creation_access.xp_giving(progress.next_total - total, multiplier)
+        lines.append(f"{st.live_score(total, factor)} ({more} more pool xp)")
+        cap = (
+            None
+            if is_art
+            else creation_access.ability_cap_for(
+                character, creation_age(saga, character), name
+            )
+        )
+        if cap is not None and progress.score > cap:
+            lines.append(f"[$text-error]Over the creation cap of {cap}[/]")
+    if name in ARTS:
+        description = ART_DESCRIPTIONS.get(name, "")
+    else:
+        definition = st.ability_definition(name)
+        description = definition.description if definition else ""
+    if description:
+        if len(description) > _SPEND_DESCRIPTION_CHARS:
+            description = description[: _SPEND_DESCRIPTION_CHARS - 1].rstrip() + "…"
+        lines.append(f"[dim]{escape(description)}[/]")
+    return "\n".join(lines)
+
+
 def _creation_xp_dialog(
     title: str,
     targets: Sequence[str],
     existing: tuple[str, int] | None = None,
     *,
-    xp_label: str = "xp",
-) -> FieldsDialog[tuple[str, int]]:
+    xp_label: str = "Pool xp",
+    saga: Saga | None = None,
+    character: Character | None = None,
+    replacing: CreationXp | None = None,
+) -> FieldsDialog[tuple[str, int, str]]:
     """xp spent at a creation step: an Ability or Art
     from `targets` -- a family ("Area Lore: {region}") asks for its detail
-    -- and how much. Builds (the Ability or Art's name, the xp)."""
+    -- and how much pool xp, and an Ability's Specialty. Given the
+    `character` (and `saga`), a live line shows what the xp gains and the
+    score it buys; `replacing` is the entry being changed. Builds (the
+    Ability or Art's name, the xp, the Specialty or "")."""
     families = [t for t in targets if "{" in t]
     target, detail = None, ""
     if existing is not None:
@@ -931,6 +992,17 @@ def _creation_xp_dialog(
             return "xp must be at least 1."
         return None
 
+    def live(values: dict[str, Any]) -> str:
+        assert saga is not None and character is not None
+        return _spend_live(saga, character, resolved(values), values["xp"], replacing)
+
+    ability = (
+        next((a for a in character.abilities if a.name == existing[0]), None)
+        if character is not None and existing is not None
+        else None
+    )
+    specialty = (ability.specialty or "") if ability is not None else ""
+
     return FieldsDialog(
         title,
         [
@@ -953,10 +1025,27 @@ def _creation_xp_dialog(
                 show_if=lambda values: bool(_family_prefix(values["target"] or "")),
             ),
             DialogField("xp", xp_label, "int", existing[1] if existing else 5),
+            DialogField(
+                "specialty",
+                "Specialty",
+                "text",
+                specialty,
+                placeholder="(optional) e.g. Swords",
+                show_if=lambda values: (
+                    character is not None
+                    and bool(values["target"])
+                    and values["target"] not in ARTS
+                ),
+            ),
         ],
         validate=problem,
-        save_label="Add" if existing is None else "Save",
-        build=lambda values: (resolved(values), values["xp"]),
+        live=live if character is not None and saga is not None else None,
+        save_label="Spend" if existing is None else "Save",
+        build=lambda values: (
+            resolved(values),
+            values["xp"],
+            (values.get("specialty") or "").strip(),
+        ),
     )
 
 
