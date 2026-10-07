@@ -25,6 +25,9 @@ from ...models import (
 from ..fields import DialogField, _attr, _description_field, _pairs
 from ..pickers import SpellChooserScreen
 
+#: The Codex select's value for binding the book into a new codex.
+NEW_CODEX = "__new__"
+
 
 def _ability_template_prefix(name: str) -> str | None:
     """ "Area Lore: " for a templated catalog name like "Area Lore: {region}"."""
@@ -105,6 +108,23 @@ def _book_fields(
             # whose typed spell is unknown, which keeps its own Level.
             return bool(_attr(book, "spell_name", ""))
         return spell.level is None
+
+    codex = bk.codex_of(saga, book) if book is not None else None
+
+    def codex_fills(values: dict[str, Any]) -> dict[str, Any]:
+        """Joining a codex: the book goes where the codex is kept."""
+        chosen = next((c for c in saga.codices if c.id == values.get("codex")), None)
+        if chosen is None:
+            return {}
+        mates = [b for b in saga.books if b.codex_id == chosen.id]
+        fills: dict[str, Any] = {"palimpsest": chosen.palimpsest}
+        if mates:
+            fills["owner"] = (
+                ""
+                if bk.is_unassigned(saga, mates[0])
+                else bk.owner_value(mates[0].owner_kind, mates[0].owner_id)
+            )
+        return fills
 
     if book is None:
         owner = default_owner
@@ -294,9 +314,62 @@ def _book_fields(
             "optint",
             _attr(book, "year_published", None),
         ),
-        DialogField("owner", "Owner", "select", owner, options=bk.owner_options(saga)),
+        DialogField(
+            "owner",
+            "Owner",
+            "select",
+            owner,
+            options=bk.owner_options(saga),
+            hint="The books bound in its codex move with it.",
+        ),
+        DialogField(
+            "codex",
+            "Codex",
+            "select",
+            book.codex_id if book is not None and codex is not None else None,
+            options=[(c.name, c.id) for c in saga.codices]
+            + [("(a new codex)", NEW_CODEX)],
+            allow_blank=True,
+            placeholder="(bound on its own)",
+            hint="Bound with other books: each is studied on its own, one "
+            "reader a season for the whole codex.",
+            fills=codex_fills,
+        ),
+        DialogField(
+            "codex_name",
+            "New codex's name",
+            "text",
+            _attr(book, "name", ""),
+            show_if=lambda v: v.get("codex") == NEW_CODEX,
+        ),
+        DialogField(
+            "palimpsest",
+            "Palimpsest",
+            "check",
+            bool(codex is not None and codex.palimpsest),
+            hint="Written over a scraped text: each text in the codex is read "
+            "at -3 Quality.",
+            show_if=lambda v: bool(v.get("codex")),
+        ),
         _description_field(_attr(book, "description", "")),
     ]
+
+
+def _bind_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
+    """The form's Codex and Owner: bind the book (into a new codex, an
+    existing one, or on its own), then give it -- and so its whole codex --
+    the chosen owner."""
+    chosen = values.get("codex") or None
+    if chosen == NEW_CODEX:
+        codex = bk.new_codex(saga, values.get("codex_name") or book.name)
+    else:
+        codex = next((c for c in saga.codices if c.id == chosen), None)
+    book.codex_id = codex.id if codex is not None else None
+    if codex is not None:
+        codex.palimpsest = bool(values.get("palimpsest"))
+    kind, owner_id = bk.parse_owner_value(values.get("owner"))
+    bk.set_owner(saga, book, kind, owner_id)
+    bk.prune_codices(saga)
 
 
 def _book_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
@@ -308,7 +381,7 @@ def _book_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
     book.author = values.get("author", "")
     book.year_published = values.get("year_published")
     book.description = values.get("description", "")
-    book.owner_kind, book.owner_id = bk.parse_owner_value(values.get("owner"))
+    _bind_from_values(book, values, saga)
     book.subject_kind = values.get("subject_kind") or ""
     book.art = values.get("art") or ""
     ability = values.get("ability") or ""

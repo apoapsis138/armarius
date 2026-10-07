@@ -16,6 +16,7 @@ from ars_magica_manager.models import (
     Breakthrough,
     Character,
     Characteristics,
+    Codex,
     Covenant,
     CovenantBoonHookDef,
     CovenantDiaryEntry,
@@ -376,6 +377,8 @@ def _saga_with_every_record() -> Saga:
     )
     saga.custom_boons_hooks.append(CovenantBoonHookDef("bh", "BH", "Boon", "Minor", 1))
     saga.players.append(Player("ana", "Ana", "player", "scrypt$00$00"))
+    saga.codices.append(Codex("codex", "Bound together", palimpsest=True))
+    saga.books[0].codex_id = "codex"
     return saga
 
 

@@ -41,6 +41,20 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.28.0 — 2026-10-07
+
+- Books can be bound together in a codex: one tome holding several
+  books, such as a tractatus and two summae on related subjects. Choose
+  it in a book's new Codex field (or start a new one). A codex's books
+  are listed together in the Library, and the details panel names the
+  codex. Each book is still studied on its own, but only one reader can
+  use the codex in a season, and moving one of its books moves them all.
+- A palimpsest is a codex written over a scraped text: each text in it is
+  read, and priced, at -3 Quality.
+- Two characters can no longer both read the same book in one season.
+- A book import's new codex column binds the rows that share a codex
+  name; exporting a covenant or character takes its codices along.
+
 ## 2.27.0 — 2026-10-07
 
 - The covenant worksheet's Review step says how many grogs and other

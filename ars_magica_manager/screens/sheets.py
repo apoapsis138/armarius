@@ -187,7 +187,8 @@ class BookListView(Vertical):
         self.title_text = title
         self.summary = summary
         self.docked = docked
-        self._books: list[Book] = books()
+        #: Grouped: the books of one codex are listed together.
+        self._books: list[Book] = bk.grouped(saga, books())
         #: Width of the Subject column, fitted to the list (see on_resize).
         self._subject_cols = bk.SUBJECT_MIN_WIDTH
 
@@ -286,7 +287,7 @@ class BookListView(Vertical):
         it's still listed, with its panel refreshed."""
         try:
             chosen = self.selected_book()
-            self._books = self._books_source()
+            self._books = bk.grouped(self.saga, self._books_source())
             self.query_one(f"#{self.section_id}", Collapsible).title = self._title()
             if self.summary:
                 left, right = bk.summary_texts(self._books, self.saga)

@@ -37,6 +37,7 @@ from .files import write_atomic
 from .models import (
     Book,
     Character,
+    Codex,
     Covenant,
     EnchantedDevice,
     Familiar,
@@ -139,6 +140,7 @@ def export_data(
         familiars=familiars,
         enchanted_devices=devices,
         books=books,
+        codices=[c for c in saga.codices if any(b.codex_id == c.id for b in books)],
         spells=spells,
         custom_virtues_flaws=[e for e in saga.custom_virtues_flaws if e.id in held],
         custom_lab_virtues_flaws=[
@@ -211,6 +213,7 @@ class ImportPlan:
     familiars: list[Familiar] = field(default_factory=list)
     devices: list[EnchantedDevice] = field(default_factory=list)
     books: list[Book] = field(default_factory=list)
+    codices: list[Codex] = field(default_factory=list)
     spells: list[Spell] = field(default_factory=list)
     custom: dict[str, list[Any]] = field(default_factory=dict)
     #: Links kept: "Covenant Keep (matched by name)".
@@ -393,6 +396,8 @@ def plan_import(target: Saga, data: dict[str, Any]) -> ImportPlan:  # noqa: PLR0
     device_ids = _Ids(d.id for d in target.enchanted_devices)
     device_map = {d.id: device_ids.new(d.id, d.name) for d in source.enchanted_devices}
     familiar_ids = _Ids(f.id for f in target.familiars)
+    codex_ids = _Ids(c.id for c in target.codices)
+    codex_map = {c.id: codex_ids.new(c.id, c.name) for c in source.codices}
 
     # -- now rewrite every link ------------------------------------------
     for covenant in source.covenants:
@@ -535,7 +540,11 @@ def plan_import(target: Saga, data: dict[str, Any]) -> ImportPlan:  # noqa: PLR0
                 book.author = link_name(CHARACTER, book.author_id)
             book.author_id = author
         book.spell_id = new_spell_id(book.spell_id)
+        book.codex_id = codex_map.get(book.codex_id or "")
         plan.books.append(book)
+    for codex in source.codices:
+        codex.id = codex_map[codex.id]
+        plan.codices.append(codex)
     return plan
 
 
@@ -576,6 +585,7 @@ def apply(target: Saga, plan: ImportPlan) -> None:
     target.familiars += plan.familiars
     target.enchanted_devices += plan.devices
     target.books += plan.books
+    target.codices += plan.codices
     target.spells += plan.spells
     target.custom_virtues_flaws += plan.custom.get("custom_virtues_flaws", [])
     target.custom_lab_virtues_flaws += plan.custom.get("custom_lab_virtues_flaws", [])

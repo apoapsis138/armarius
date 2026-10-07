@@ -765,6 +765,29 @@ def whose_vis(character: Character, plan: SeasonPlan) -> str:
     return f"{character.name}'s"
 
 
+def _codex_reader_problems(
+    saga: Saga, character: Character, plan: SeasonPlan, book: Book
+) -> list[str]:
+    """One reader a season per codex: another character reading this book,
+    or another bound in the same codex, this season (Covenants, Varieties of
+    Manuscript)."""
+    for other in plans_this_season(saga, plan):
+        if other.character_id == character.id or other.activity != READ:
+            continue
+        theirs = next((b for b in saga.books if b.id == other.book_id), None)
+        if theirs is None or not books.same_codex(saga, book, theirs):
+            continue
+        reader = saga.character(other.character_id)
+        who = reader.name if reader is not None else "Someone else"
+        if theirs.id == book.id:
+            return [f"{who} is reading {book.name} this season: one reader at a time."]
+        return [
+            f"{who} is reading {theirs.name} this season, bound in the same codex "
+            f"as {book.name}: one reader a season for the whole codex."
+        ]
+    return []
+
+
 def _study_problems(  # noqa: PLR0915
     saga: Saga, character: Character, plan: SeasonPlan, chosen: list[XpAllocation]
 ) -> list[str]:
@@ -798,6 +821,7 @@ def _study_problems(  # noqa: PLR0915
                 f"{book.name} (Level {book.level}) has nothing more to teach "
                 f"{character.name}."
             )
+        found += _codex_reader_problems(saga, character, plan, book)
         return found
     if not chosen:
         return ["Choose what the experience goes into."]
@@ -1427,10 +1451,11 @@ def _study_outcome(
     if plan.activity == READ:
         book = next(b for b in saga.books if b.id == plan.book_id)
         subject = book_subject(book)
-        assert subject is not None and book.quality is not None
+        quality = books.effective_quality(saga, book)
+        assert subject is not None and quality is not None
         limit = book.level if book.type != "Tractatus" else None
         result.gains.append(
-            _gain(character, subject, book.quality, kind, months, gain_limit=limit)
+            _gain(character, subject, quality, kind, months, gain_limit=limit)
         )
         if book.type == "Tractatus":
             result.tractatus = book.id

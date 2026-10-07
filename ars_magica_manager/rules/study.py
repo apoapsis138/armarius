@@ -155,9 +155,13 @@ def _current_xp(student: Character, subject: str, is_art: bool) -> int:
     return ability.xp if ability else 0
 
 
-def reading(student: Character, book: Book) -> StudyResult | None:
+def reading(
+    student: Character, book: Book, quality: int | None = None
+) -> StudyResult | None:
     """A season reading a summa or tractatus (None for other books, or one
-    without a Quality). A summa can't take the reader past its Level."""
+    without a Quality). A summa can't take the reader past its Level.
+    `quality`, when given, is what the book is read at instead of its own
+    (a palimpsest's text, see books.effective_quality)."""
     if book.quality is None or book.type not in (
         "Art Summa",
         "Ability Summa",
@@ -174,7 +178,7 @@ def reading(student: Character, book: Book) -> StudyResult | None:
     return season_of_study(
         student,
         subject,
-        book.quality,
+        book.quality if quality is None else quality,
         activity="reading",
         is_art=is_art,
         gain_limit=limit,

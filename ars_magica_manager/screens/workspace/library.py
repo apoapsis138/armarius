@@ -442,7 +442,7 @@ class LibraryActions(WorkspaceBase):
                     return
                 kind, owner_id = bk.parse_owner_value(owner)
                 for book in books:
-                    book.owner_kind, book.owner_id = kind, owner_id
+                    bk.set_owner(saga, book, kind, owner_id)
                 storage.save_saga(saga)
                 self._books_changed()
 
@@ -521,6 +521,7 @@ class LibraryActions(WorkspaceBase):
                 for book in marked:
                     if book in self.saga.books:
                         self.saga.books.remove(book)
+                bk.prune_codices(self.saga)
                 storage.save_saga(self.saga)
                 self._books_changed()
 
@@ -541,6 +542,7 @@ class LibraryActions(WorkspaceBase):
         def handle_confirmed(confirmed: bool | None) -> None:
             if confirmed and book in self.saga.books:
                 self.saga.books.remove(book)
+                bk.prune_codices(self.saga)
                 storage.save_saga(self.saga)
                 self._books_changed()
 

@@ -23,6 +23,7 @@ from .models import (
     TEXT_SPELL,
     Book,
     Character,
+    Codex,
     Covenant,
     Saga,
     Spell,
@@ -151,7 +152,7 @@ def cost(book: Book, saga: Saga | None = None) -> int:
     quality counts as 0; Other books cost nothing, and neither does a Lab
     Text or Casting Tablet on its own: those are bought as a pool (pool())."""
     level = level_of(book, saga) or 0
-    quality = book.quality or 0
+    quality = effective_quality(saga, book) or 0
     if book.type == "Art Summa":
         return level + quality
     if book.type == "Ability Summa":
@@ -173,7 +174,7 @@ def priced(saga: Saga, book: Book) -> bool:
 def cost_formula(book: Book, saga: Saga | None = None) -> str:
     """How `cost` was worked out, e.g. "Level 12 + Quality 10"."""
     level = level_of(book, saga) or 0
-    quality = book.quality or 0
+    quality = effective_quality(saga, book) or 0
     if book.type == "Art Summa":
         return f"Level {level} + Quality {quality}"
     if book.type == "Ability Summa":
@@ -398,6 +399,101 @@ def location_label(saga: Saga, book: Book) -> str:
     return owner.name
 
 
+# ------------------------------------------------------------------ codices
+
+#: The Quality lost by each text of a palimpsest (Covenants, Secondary
+#: Functions).
+PALIMPSEST_PENALTY = 3
+
+
+def codex_of(saga: Saga, book: Book) -> Codex | None:
+    """The codex the book is bound in with others, or None (bound alone)."""
+    if not book.codex_id:
+        return None
+    return next((c for c in saga.codices if c.id == book.codex_id), None)
+
+
+def codex_books(saga: Saga, book: Book) -> list[Book]:
+    """Every book bound in the same codex as `book`, itself included, in the
+    order added; just [book] when it is bound alone."""
+    if codex_of(saga, book) is None:
+        return [book]
+    return [b for b in saga.books if b.codex_id == book.codex_id]
+
+
+def same_codex(saga: Saga, a: Book, b: Book) -> bool:
+    """Whether two books are one physical codex (or the same book)."""
+    return (
+        a is b
+        or a.id == b.id
+        or (codex_of(saga, a) is not None and a.codex_id == b.codex_id)
+    )
+
+
+def new_codex(saga: Saga, name: str) -> Codex:
+    """A new codex, added to the saga."""
+    codex = Codex(
+        id=storage.generate_unique_id(name or "codex", [c.id for c in saga.codices]),
+        name=name,
+    )
+    saga.codices.append(codex)
+    return codex
+
+
+def set_owner(
+    saga: Saga, book: Book, owner_kind: str | None, owner_id: str | None
+) -> None:
+    """Give `book` a new owner. A codex's books are kept together, so the
+    others bound with it move too."""
+    for mate in codex_books(saga, book):
+        mate.owner_kind, mate.owner_id = owner_kind, owner_id
+
+
+def prune_codices(saga: Saga) -> None:
+    """Drop the codices no book is bound in any more."""
+    used = {b.codex_id for b in saga.books if b.codex_id}
+    saga.codices = [c for c in saga.codices if c.id in used]
+    for book in saga.books:
+        if book.codex_id and book.codex_id not in used:
+            book.codex_id = None
+
+
+def effective_quality(saga: Saga | None, book: Book) -> int | None:
+    """The Quality a reader studies the book at: its own, less 3 in a
+    palimpsest."""
+    if book.quality is None or saga is None:
+        return book.quality
+    codex = codex_of(saga, book)
+    if codex is not None and codex.palimpsest:
+        return max(0, book.quality - PALIMPSEST_PENALTY)
+    return book.quality
+
+
+def grouped(saga: Saga, books: list[Book]) -> list[Book]:
+    """`books` in the order given, except that the books of one codex are
+    listed together, where its first one comes."""
+    placed: set[str] = set()
+    result: list[Book] = []
+    for book in books:
+        if book.codex_id and codex_of(saga, book) is not None:
+            if book.codex_id in placed:
+                continue
+            placed.add(book.codex_id)
+            result += [b for b in books if b.codex_id == book.codex_id]
+        else:
+            result.append(book)
+    return result
+
+
+def codex_label(saga: Saga, book: Book) -> str:
+    """ "Codex: name (palimpsest)" for the details panel, or "" when the
+    book is bound alone."""
+    codex = codex_of(saga, book)
+    if codex is None:
+        return ""
+    return codex.name + (" (palimpsest)" if codex.palimpsest else "")
+
+
 # -------------------------------------------------------------------- text
 
 
@@ -469,16 +565,47 @@ def row_label(saga: Saga, book: Book, subject_cols: int = SUBJECT_MIN_WIDTH) -> 
     status_problems)."""
     location = fit(location_label(saga, book), _LOCATION_WIDTH).rstrip()
     row = (
-        f"{escape(fit(book.name or '(untitled)', _NAME_WIDTH))} "
+        f"{escape(fit(_codex_mark(saga, book) + (book.name or '(untitled)'), _NAME_WIDTH))} "
         f"{escape(fit(book.type, _TYPE_WIDTH))} "
         f"{escape(fit(subject(book, saga) or '-', subject_cols))} "
         f"{_number(level_of(book, saga)):>{_LEVEL_WIDTH}}"
-        f"{_number(book.quality):>{_QUALITY_WIDTH}}  "
+        f"{_number(effective_quality(saga, book)):>{_QUALITY_WIDTH}}  "
         f"{escape(location)}"
     )
     if status_problems(book, saga):
         return f"[$text-error]{row} {PROBLEM_GLYPH}[/]"
     return row
+
+
+#: What a row's name starts with when the book is bound in a codex with
+#: others (grouped() lists them together).
+CODEX_MARK = "│ "
+
+
+def _codex_mark(saga: Saga, book: Book) -> str:
+    return CODEX_MARK if codex_of(saga, book) is not None else ""
+
+
+def _quality_text(saga: Saga, book: Book) -> str:
+    """The details panel's Quality: a palimpsest's text shows what it is
+    read at."""
+    reduced = effective_quality(saga, book)
+    if reduced == book.quality:
+        return _number(book.quality)
+    return f"{_number(reduced)} (written {_number(book.quality)}; palimpsest -3)"
+
+
+def _codex_lines(saga: Saga, book: Book) -> list[str]:
+    """The details panel's codex: its name, how many books it binds (listed
+    together above), and that it has one reader a season."""
+    codex = codex_of(saga, book)
+    if codex is None:
+        return []
+    count = len(codex_books(saga, book))
+    return [
+        f"[b]Codex:[/] {escape(codex_label(saga, book))} [dim]({count} books, "
+        "one reader a season)[/]"
+    ]
 
 
 def _level_text(saga: Saga, book: Book) -> str:
@@ -548,6 +675,11 @@ def summary_texts(books: list[Book], saga: Saga | None = None) -> tuple[str, str
             ("  • Art", art_tracts),
         ]
     )
+    codices = (
+        {b.codex_id for b in books if codex_of(saga, b) is not None}
+        if saga is not None
+        else set()
+    )
     right = rows(
         [
             ("Lab Texts", count("Lab Text")),
@@ -555,6 +687,7 @@ def summary_texts(books: list[Book], saga: Saga | None = None) -> tuple[str, str
             ("Other", count("Other")),
             ("", ""),
             ("Total Books", len(books)),
+            *([("Codices", len(codices))] if codices else []),
         ]
     )
     return left, right
@@ -579,7 +712,7 @@ def detail_text(saga: Saga, book: Book | None) -> str:
         _cell("Type", book.type),
         _cell(subject_title(book), subject_text or not_set),
         _cell("Level", _level_text(saga, book)),
-        _cell("Quality", _number(book.quality)),
+        _cell("Quality", _quality_text(saga, book)),
     ]
     right = [
         _cell("Language", book.language or not_set),
@@ -590,6 +723,7 @@ def detail_text(saga: Saga, book: Book | None) -> str:
     width = max(w for _, w in left) + 4
     lines = [problem(f"[b]{escape(p)}[/b]") for p in status_problems(book, saga)]
     lines.append(_cell("Name", book.name or "(untitled)")[0])
+    lines += _codex_lines(saga, book)
     lines += [f"{lm}{' ' * (width - lw)}{rm}" for (lm, lw), (rm, _) in zip(left, right)]
     if priced(saga, book):
         # Build Points matter only while its covenant is being created;
@@ -616,7 +750,10 @@ def _study_lines(saga: Saga, book: Book) -> list[str]:
     summa or tractatus."""
     from .rules import study
 
-    results = [(c, study.reading(c, book)) for c in readers(saga, book)]
+    results = [
+        (c, study.reading(c, book, effective_quality(saga, book)))
+        for c in readers(saga, book)
+    ]
     results = [(c, r) for c, r in results if r is not None]
     if not results:
         return []
@@ -669,6 +806,7 @@ CSV_COLUMNS: tuple[str, ...] = (
     "quality",
     "tractatus_type",
     "spell",
+    "codex",
 )
 CSV_UNUSED_COLUMNS: tuple[str, ...] = ("owner", "cost")
 
@@ -745,6 +883,9 @@ def _book_from_row(row: dict[str, str]) -> Book:
             raise ValueError("no Quality")
     if (book.level or 0) < 0 or (book.quality or 0) < 0:
         raise ValueError("a negative Level or Quality")
+    # Until add_imported_books binds it: the name of the codex the rows that
+    # share it are bound in.
+    book.codex_id = row.get("codex", "").strip() or None
     return book
 
 
@@ -802,6 +943,12 @@ def import_preview(
         lines.append(
             f"[dim]Unrecognised columns ignored: {escape(', '.join(unknown))}.[/]"
         )
+    bound = {b.codex_id for b in result.books if b.codex_id}
+    if bound:
+        lines.append(
+            f"{len(bound)} codex{'es' if len(bound) != 1 else ''}: the books "
+            "sharing a codex name are bound together."
+        )
     repeats = len(duplicate_names(result.books, existing_names))
     if repeats:
         verb = "has" if repeats == 1 else "have"
@@ -846,9 +993,16 @@ def add_imported_books(
 ) -> None:
     """Add imported books: each gets an id, is linked to its spell now that
     the spell can be matched by name, and goes to `covenant` if one is given
-    (otherwise it stays unassigned)."""
+    (otherwise it stays unassigned). Books whose `codex` column named the
+    same codex are bound in one new codex of that name."""
     ids = [b.id for b in saga.books]
+    codices: dict[str, Codex] = {}
     for book in books:
+        if book.codex_id:
+            name = book.codex_id
+            if name not in codices:
+                codices[name] = new_codex(saga, name)
+            book.codex_id = codices[name].id
         spell = book_spell(saga, book)
         if spell is not None:
             book.spell_id = spell.id

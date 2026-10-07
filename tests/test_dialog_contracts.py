@@ -1124,6 +1124,26 @@ CONTRACTS: dict[str, Contract] = {
         ],
         shown={"#section-lib-books-list": "Scrolls"},
     ),
+    "add book into a codex": Contract(
+        prefill={"Name": "", "Codex": Select.NULL, "Owner": "covenant:cov1"},
+        edits={
+            "Name": "Scrolls",
+            "Type": "Tractatus",
+            "Subject": "Art",
+            "Art": "Ignem",
+            "Quality": "7",
+            "Codex": "__new__",
+            "New codex's name": "Bound Fire",
+            "Palimpsest": True,
+        },
+        saved=lambda s: [
+            (c.name, c.palimpsest, [b.name for b in s.books if b.codex_id == c.id])
+            for c in s.codices
+        ],
+        expected=[("Bound Fire", True, ["Scrolls"])],
+        invalid={"Name": ""},
+        shown={"#section-lib-books-list": "│ Scrolls"},
+    ),
     # Lab Texts
     "add lab text": Contract(
         prefill={"Name": "", "Type": Select.NULL, "Owner": "laboratory:lab1"},

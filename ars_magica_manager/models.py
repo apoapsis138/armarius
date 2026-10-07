@@ -918,6 +918,9 @@ class Book:
     #: A Longevity Ritual's extra vis: the pawns beyond age / 5 it was first
     #: made with, which must be spent again each time it is performed.
     ritual_extra_vis: int = 0
+    #: The codex the book is bound in with other books (a Codex id); None:
+    #: bound on its own.
+    codex_id: str | None = None
 
     @classmethod
     def from_dict(
@@ -949,6 +952,26 @@ class Book:
             if d.get("notes"):
                 d.setdefault("description", d["notes"])
         return cls(**known_fields(cls, d))
+
+
+@dataclass
+class Codex:
+    """One physical tome binding several books together (Covenants,
+    Varieties of Manuscript). Each book in it is still studied on its own,
+    but only one reader can use the codex in a season, and its books are
+    always kept together: they share one owner. The books point to it by
+    `Book.codex_id`; a book with none is a codex of its own.
+
+    A palimpsest is a codex whose first text was scraped away and written
+    over: both texts can be read, each at -3 Quality."""
+
+    id: str
+    name: str
+    palimpsest: bool = False
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Codex:
+        return cls(**known_fields(cls, data))
 
 
 @dataclass
@@ -2880,6 +2903,8 @@ class Saga:
     characters: list[Character] = field(default_factory=list)
     laboratories: list[Laboratory] = field(default_factory=list)
     books: list[Book] = field(default_factory=list)
+    #: The codices binding several books together (see Codex).
+    codices: list[Codex] = field(default_factory=list)
     spells: list[Spell] = field(default_factory=list)
     familiars: list[Familiar] = field(default_factory=list)
     #: Every enchanted item in the saga, each shown on its holder's sheet.
@@ -2960,6 +2985,7 @@ class Saga:
         d["players"] = [Player.from_dict(p) for p in d.get("players", [])]
         spell_names = {s.id: s.name for s in d["spells"]}
         d["books"] = [Book.from_dict(b, spell_names) for b in d.get("books", [])]
+        d["codices"] = [Codex.from_dict(c) for c in d.get("codices", [])]
         # Older saves kept a Library record per covenant listing its book ids;
         # ownership now lives on the book itself.
         for library in d.pop("libraries", None) or []:

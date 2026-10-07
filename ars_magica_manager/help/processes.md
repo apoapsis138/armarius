@@ -212,7 +212,7 @@ Brings records into the saga from files. Open it from More's **Import** on the s
 <!-- help: import-data-kinds -->
 
 - **Characters**, **Covenants** and **Laboratories**: a file exported from another saga with More's Export. The file must hold the kind you chose. The file picker starts in the exports folder.
-- **Books**: a CSV file with a header row. Columns, in any order and any case: name, type, language, author, year_published, description, art, ability, level, quality, tractatus_type and spell; name and type are needed. Books imported here go to Unassigned Books. From a covenant's **Library** tab, More's Import puts them straight into that covenant's library instead. An owner or cost column is ignored: the cost is always worked out.
+- **Books**: a CSV file with a header row. Columns, in any order and any case: name, type, language, author, year_published, description, art, ability, level, quality, tractatus_type, spell and codex; name and type are needed. Rows with the same codex are bound together in one new codex of that name. Books imported here go to Unassigned Books. From a covenant's **Library** tab, More's Import puts them straight into that covenant's library instead. An owner or cost column is ignored: the cost is always worked out.
 - **Spells**: a CSV file, through the [Import Spells](help:import-spells) helper.
 
 A row that can't be read is skipped, and the preview says why. When a book or spell has the name of one already in the saga, the app asks: Duplicate, Duplicate All, Skip or Skip All. Nothing is added until every question is answered.

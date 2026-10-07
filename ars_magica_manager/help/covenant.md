@@ -449,6 +449,14 @@ Ctrl+click) marks several books: with books marked, `d` deletes them all and
 `e` changes only their owner. More's **Import** reads books from a CSV file
 into this covenant's library, showing a preview before anything is added.
 
+A **codex** is one tome binding several books together, such as a summa and
+a tractatus on related subjects. Choose it in a book's **Codex** field (or a
+new one); the books of a codex are listed together, each name starting with
+a bar. Each book in it is still studied on its own, but only one reader can
+use the codex in a season, and its books are always kept together: changing
+one book's owner moves the whole codex. A **palimpsest** is a codex written
+over a scraped text: each text in it is read, and priced, at -3 Quality.
+
 ## Diary tab
 <!-- help: tab-cov-diary -->
 
