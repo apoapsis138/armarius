@@ -41,6 +41,13 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.19.1 — 2026-10-07
+
+- Behind the scenes: the code that plans and advances the seasons, which
+  was all in one very long file, is now organised into one file per part
+  (plans, what a season does to a character, the covenant, lab work and
+  advancing). Nothing you see changes.
+
 ## 2.19.0 — 2026-10-07
 
 - The spell catalog is rebuilt from the Definitive Edition's spell chapter
