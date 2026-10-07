@@ -2,7 +2,14 @@ import asyncio
 import re
 from pathlib import Path
 
-from support import build_all_tabs, menu, strip_markup, wait_until
+from support import (
+    build_all_tabs,
+    menu,
+    picker_labels,
+    picker_rows,
+    strip_markup,
+    wait_until,
+)
 from textual.app import App
 from textual.widgets import (
     Button,
@@ -127,7 +134,7 @@ async def _wait_for_picker_ready(pilot, app) -> None:
     await wait_until(
         pilot,
         lambda: app.focused is not None and app.focused.id == "picker-search",
-        timeout=10.0,  # filling 600+ rows one at a time is slow under load
+        timeout=10.0,  # building a picker is slow under a parallel run
     )
 
 
@@ -146,10 +153,24 @@ async def test_overlapping_picker_refills_leave_only_the_newest():
             for vf in catalog.load_virtue_flaw_catalog()
             if "affinity" in picker._search_text(vf).lower()
         ]
-        list_view = picker.query_one(f"#{picker.LIST_VIEW_ID}", ListView)
-        assert await wait_until(
-            pilot, lambda: [item.id for item in list_view.children] == expected
-        ), [item.id for item in list_view.children][:10]
+        assert await wait_until(pilot, lambda: picker.shown_ids() == expected), (
+            picker.shown_ids()[:10]
+        )
+
+
+async def test_spell_picker_details_follow_the_highlight():
+    # Every spell picker shows the highlighted spell's details, so the choice
+    # is an informed one.
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        picker = SpellChooserScreen(Saga(id="s", name="S"))
+        app.push_screen(picker)
+        await _wait_for_picker_ready(pilot, app)
+        details = picker.query_one("#spell-chooser-details-text", Static)
+        first, second = (picker._by_item_id[i] for i in picker.shown_ids()[:2])
+        assert first.name in str(details.render())
+        await pilot.press("down", "down")  # into the list, then the next row
+        assert await wait_until(pilot, lambda: second.name in str(details.render()))
 
 
 async def test_vf_picker_offers_repeatable_entries_and_refuses_a_same_choice_repeat():
@@ -185,17 +206,11 @@ async def test_vf_picker_offers_repeatable_entries_and_refuses_a_same_choice_rep
 
 def _vf_listed(picker: VirtueFlawPickerScreen) -> list:
     """The catalog entries a Virtue/Flaw picker lists, in order."""
-    list_view = picker.query_one("#vf-picker-list", ListView)
-    return [
-        picker._by_item_id[item.id]
-        for item in list_view.children
-        if item.id in picker._by_item_id
-    ]
+    return [picker._by_item_id[item_id] for item_id in picker.shown_ids()]
 
 
 def _vf_item_label(picker: VirtueFlawPickerScreen, vf_id: str) -> str:
-    item = picker.query_one(f"#vf-{vf_id}")
-    return str(item.query_one(Label).render())
+    return picker_labels(picker)[f"vf-{vf_id}"]
 
 
 async def test_vf_picker_opens_on_the_side_of_its_section():
@@ -413,18 +428,15 @@ async def _select_vf_picker_entry(pilot, app, vf_id: str) -> None:
 
     The catalog now has 600+ entries, so most are well outside the picker
     dialog's visible/scrolled area -- pixel-coordinate pilot.click() raises
-    OutOfBounds for anything not currently on screen. Setting ListView.index
-    and pressing enter selects it the same way a real click/enter would,
+    OutOfBounds for anything not currently on screen. Highlighting it and
+    pressing enter selects it the same way a real click/enter would,
     without needing the item to be visible.
     """
-    list_view = app.screen.query_one("#vf-picker-list", ListView)
     target_id = f"vf-{vf_id}"
-    for i, item in enumerate(list_view.children):
-        if item.id == target_id:
-            list_view.index = i
-            break
-    else:
+    if target_id not in app.screen.shown_ids():
         raise AssertionError(f"{target_id!r} not found in Virtue/Flaw picker list")
+    app.screen.highlight(target_id)
+    app.screen.query_one("#vf-picker-list").focus()
     await pilot.pause()
     await pilot.press("enter")
     await pilot.pause()
@@ -1362,7 +1374,8 @@ async def test_familiar_abilities_use_generic_add_edit_remove():
         await pilot.press("a")
         await pilot.pause()
         assert isinstance(app.screen, AbilityPickerScreen)
-        await pilot.click("#ability-ab_athletics")
+        await _wait_for_picker_ready(pilot, app)
+        await _choose_in_list(pilot, app, "ability-picker-list", "ability-ab_athletics")
         await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
         app.screen.query_one("#fld-xp", Input).value = "30"
@@ -1582,9 +1595,9 @@ async def test_cancelling_param_screen_returns_to_picker_without_adding():
         await pilot.press("a")
         await pilot.pause()
         await _wait_for_picker_ready(pilot, app)
-        picker_list = app.screen.query_one("#vf-picker-list", ListView)
+        picker = app.screen
         app.screen.query_one("#picker-search", Input).value = "affinity with {art}"
-        await wait_until(pilot, lambda: len(picker_list.children) == 1)
+        await wait_until(pilot, lambda: len(picker_rows(picker)) == 1)
         await pilot.press("enter")
         await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
@@ -1615,8 +1628,7 @@ async def test_virtue_flaw_picker_excludes_held_entries_unless_repeatable():
         await pilot.pause()
         await _wait_for_picker_ready(pilot, app)
 
-        picker_list = app.screen.query_one("#vf-picker-list", ListView)
-        item_ids = [item.id for item in picker_list.children]
+        item_ids = app.screen.shown_ids()
         assert "vf-vf_adept_laboratory_student" not in item_ids
         # Affinity with Art may be taken twice, for two different Arts.
         assert "vf-vf_affinity_with_art" in item_ids
@@ -1634,24 +1646,20 @@ async def test_virtue_flaw_picker_search_filters_by_typed_text():
         await pilot.pause()
         assert isinstance(app.screen, VirtueFlawPickerScreen)
 
-        picker_list = app.screen.query_one("#vf-picker-list", ListView)
+        picker = app.screen
         await _wait_for_picker_ready(pilot, app)
-        assert len(picker_list.children) > 100  # the catalog's Virtues
+        assert len(picker_rows(picker)) > 100  # the catalog's Virtues
         search = app.screen.query_one("#picker-search", Input)
 
         # Nothing matches: a single "(no matches...)" row.
         search.value = "xyzzy nonexistent"
-        await wait_until(pilot, lambda: len(picker_list.children) == 1)
-        assert picker_list.children[0].id is None
+        await wait_until(pilot, lambda: len(picker_rows(picker)) == 1)
+        assert picker_rows(picker)[0][0] is None
 
         # The name's match first, then the Virtues whose summary mentions it.
         search.value = "common sense"
-        await wait_until(
-            pilot,
-            lambda: 1 < len(picker_list.children) < 10,
-            timeout=10.0,  # a refill is slow under a parallel run
-        )
-        item_ids = [item.id for item in picker_list.children]
+        await wait_until(pilot, lambda: 1 < len(picker_rows(picker)) < 10)
+        item_ids = picker.shown_ids()
         assert item_ids[0] == "vf-vf_common_sense"
         assert len(item_ids) > 1
 
@@ -1681,15 +1689,14 @@ async def test_lab_virtue_flaw_picker_search_filters_by_typed_text():
         await pilot.pause()
         assert isinstance(app.screen, LabVirtueFlawPickerScreen)
 
-        picker_list = app.screen.query_one("#lab-vf-picker-list", ListView)
-        assert len(picker_list.children) > 30  # the full 128-entry lab catalog
-
+        picker = app.screen
         await _wait_for_picker_ready(pilot, app)
+        assert len(picker.shown_ids()) > 30  # the full 128-entry lab catalog
 
         app.screen.query_one("#picker-search", Input).value = "superior construction"
-        await wait_until(pilot, lambda: len(picker_list.children) == 1)
+        await wait_until(pilot, lambda: len(picker_rows(picker)) == 1)
 
-        item_ids = [item.id for item in picker_list.children]
+        item_ids = picker.shown_ids()
         assert item_ids == ["labvf-labvf_superior_construction"]
 
 
@@ -1705,15 +1712,14 @@ async def test_ability_picker_search_filters_by_typed_text():
         await pilot.pause()
         assert isinstance(app.screen, AbilityPickerScreen)
 
-        picker_list = app.screen.query_one("#ability-picker-list", ListView)
-        assert len(picker_list.children) > 30  # the full 78-entry catalog
-
+        picker = app.screen
         await _wait_for_picker_ready(pilot, app)
+        assert len(picker.shown_ids()) > 30  # the full 78-entry catalog
 
         app.screen.query_one("#picker-search", Input).value = "athletics"
-        await wait_until(pilot, lambda: len(picker_list.children) == 1)
+        await wait_until(pilot, lambda: len(picker_rows(picker)) == 1)
 
-        item_ids = [item.id for item in picker_list.children]
+        item_ids = picker.shown_ids()
         assert item_ids == ["ability-ab_athletics"]
 
 
@@ -1735,8 +1741,7 @@ async def test_picker_down_key_moves_focus_from_search_to_list():
         await pilot.press("down")
         await pilot.pause()
 
-        picker_list = app.screen.query_one("#ability-picker-list", ListView)
-        assert app.focused is picker_list
+        assert app.focused is app.screen.query_one("#ability-picker-list")
 
 
 async def test_add_virtue_flaw_to_laboratory_uses_lab_picker():
@@ -1756,17 +1761,10 @@ async def test_add_virtue_flaw_to_laboratory_uses_lab_picker():
         await pilot.pause()
         assert isinstance(app.screen, LabVirtueFlawPickerScreen)
 
-        picker_list = app.screen.query_one("#lab-vf-picker-list", ListView)
-        target_id = "labvf-labvf_superior_construction"
-        for i, item in enumerate(picker_list.children):
-            if item.id == target_id:
-                picker_list.index = i
-                break
-        else:
-            raise AssertionError(f"{target_id!r} not found in the lab V&F picker")
-        await pilot.pause()
-        await pilot.press("enter")
-        await pilot.pause()
+        await _wait_for_picker_ready(pilot, app)
+        await _choose_in_list(
+            pilot, app, "lab-vf-picker-list", "labvf-labvf_superior_construction"
+        )
 
         assert isinstance(app.screen, WorkspaceScreen)
         view = app.screen._laboratory_sheet_view
@@ -1828,7 +1826,8 @@ async def test_add_ability_with_parameters_to_character():
         await pilot.press("a")
         await pilot.pause()
 
-        await pilot.click("#ability-ab_craft")
+        await _wait_for_picker_ready(pilot, app)
+        await _choose_in_list(pilot, app, "ability-picker-list", "ability-ab_craft")
         await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
 
@@ -1865,7 +1864,8 @@ async def test_cancelling_ability_details_returns_to_picker_without_adding():
         await pilot.press("a")
         await pilot.pause()
 
-        await pilot.click("#ability-ab_athletics")
+        await _wait_for_picker_ready(pilot, app)
+        await _choose_in_list(pilot, app, "ability-picker-list", "ability-ab_athletics")
         await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
 
@@ -4383,13 +4383,12 @@ async def _open_cov_section(pilot, app, section_id: str) -> None:
 async def _choose_in_list(pilot, app, list_id: str, item_id: str) -> None:
     """Highlight and activate one entry of a picker list by item id (it may
     be off-screen, so no pixel clicking)."""
-    list_view = app.screen.query_one(f"#{list_id}", ListView)
-    for index, item in enumerate(list_view.children):
-        if item.id == item_id:
-            list_view.index = index
-            break
-    else:
+    picker = app.screen
+    assert picker.LIST_VIEW_ID == list_id
+    if item_id not in picker.shown_ids():
         raise AssertionError(f"{item_id!r} not found in {list_id!r}")
+    picker.highlight(item_id)
+    picker.query_one(f"#{list_id}").focus()
     await pilot.pause()
     await pilot.press("enter")
     await pilot.pause()
@@ -4518,11 +4517,11 @@ async def test_boon_picker_lists_only_boons_with_notes_and_asks_for_a_blank_deta
         picker = app.screen
         assert isinstance(picker, CovenantBoonHookPickerScreen)
 
-        items = list(picker.query_one("#covbh-picker-list", ListView).children)
-        assert len(items) == _catalog_count("Boon")  # every Boon, no Hooks
-        assert all("covbh_boon_" in (item.id or "") for item in items)
+        await _wait_for_picker_ready(pilot, app)
+        labels = picker_labels(picker)
+        assert len(picker_rows(picker)) == _catalog_count("Boon")  # no Hooks
+        assert all("covbh_boon_" in item_id for item_id in labels)
 
-        labels = {item.id: str(item.query_one(Label).render()) for item in items}
         shell = labels[_pick_id("covbh_boon_minor_shell_keep")]
         assert "requires: Castle" in shell
         assert "not with: Road, Urban" in labels[_pick_id("covbh_boon_minor_seclusion")]
@@ -4620,10 +4619,8 @@ async def test_picker_marks_taken_entries_but_still_offers_them():
         await _open_cov_section(pilot, app, "section-cov-boons")
         await pilot.press("a")
         await pilot.pause()
-        items = {
-            item.id: str(item.query_one(Label).render())
-            for item in app.screen.query_one("#covbh-picker-list", ListView).children
-        }
+        await _wait_for_picker_ready(pilot, app)
+        items = picker_labels(app.screen)
         assert len(items) == _catalog_count("Boon")  # nothing is hidden
         assert "(taken x2)" in items[_pick_id("covbh_boon_minor_edifice")]
         assert "(taken x1)" in items[_pick_id("covbh_boon_minor_wealth")]
@@ -5358,8 +5355,8 @@ async def test_picker_lists_boons_in_the_books_type_order_with_the_type_shown():
         await _open_cov_section(pilot, app, "section-cov-boons")
         await pilot.press("a")
         await pilot.pause()
-        items = list(app.screen.query_one("#covbh-picker-list", ListView).children)
-        labels = [str(item.query_one(Label).render()) for item in items]
+        await _wait_for_picker_ready(pilot, app)
+        labels = list(picker_labels(app.screen).values())
 
         # The type is part of each label...
         # (the original entry keeps its name, "Edifice"; the book says "Edifices")
@@ -5398,27 +5395,20 @@ async def test_picker_search_finds_entries_by_their_type():
         await wait_until(
             pilot, lambda: isinstance(app.screen, CovenantBoonHookPickerScreen)
         )
-        picker_list = app.screen.query_one("#covbh-picker-list", ListView)
+        picker = app.screen
 
         def shown() -> list[str]:
-            # Mid-refill, a row can be mounted before its Label: skip it.
-            return [
-                str(labels.first().render())
-                for item in picker_list.children
-                if (labels := item.query(Label))
-            ]
+            return list(picker_labels(picker).values())
 
         await _wait_for_picker_ready(pilot, app)
 
         app.screen.query_one("#picker-search", Input).value = "surroundings"
-        # The list refills row by row: wait for the finished result.
         await wait_until(
             pilot,
             lambda: (
                 all("[Surroundings," in x for x in shown())
                 and any(x.startswith("Pilgrimage Site") for x in shown())
             ),
-            timeout=10.0,  # a row-by-row refill is slow under a parallel run
         )
         labels = shown()
         assert labels and all("[Surroundings," in label for label in labels)
@@ -8167,7 +8157,8 @@ async def test_the_spells_node_lists_the_catalog_with_search_and_filters():
         section = view.query_one("#section-spells", Collapsible)
         assert section.title == f"Spells ({total} of {total})"
 
-        view.query_one("#spell-search", Input).value = "pilum"
+        # Every word, in the name or the description.
+        view.query_one("#spell-search", Input).value = "pilum palms"
         await pilot.pause()
         assert _shown_names(view) == ["Pilum of Fire"]
         assert section.title == f"Spells (1 of {total})"

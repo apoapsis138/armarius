@@ -21,10 +21,12 @@ from textual.widgets import (
     Label,
     ListItem,
     ListView,
+    OptionList,
     Select,
     SelectionList,
     Static,
 )
+from textual.widgets.option_list import Option
 
 from .. import catalog, sourcebooks
 from .. import spells as spl
@@ -71,14 +73,16 @@ _COVENANT_BOON_HOOK_ITEM_ID_PREFIX = "covbhpick-"
 
 
 class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
-    """Base for a ListView-backed catalog picker with a live-filtering
-    search box above it.
+    """Base for a catalog picker: a list with a live-filtering search box
+    above it.
 
-    The Ability and Virtue/Flaw catalogs are large (78 and 1,100 entries) --
-    a flat unsearchable list doesn't scale, so every catalog picker shares this:
-    an Input above the ListView that re-filters it on every keystroke.
+    The catalogs are large (1,100 Virtues/Flaws, 1,300 spells) -- a flat
+    unsearchable list doesn't scale, so every catalog picker shares this:
+    an Input above the list that re-filters it on every keystroke. The list
+    is an OptionList, which draws only the rows on screen: a ListView
+    mounts a widget per row, and took seconds to list every spell.
     Subclasses supply the entry list and how to search/render/activate
-    each one; this owns the Input<->ListView wiring, so that trickier bit
+    each one; this owns the Input<->list wiring, so that trickier bit
     (live rebuild, keeping the search box focused and typable while
     letting Down/Enter reach the list) only has to be gotten right once.
 
@@ -86,8 +90,9 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
     (the defaults for the matching constructor arguments), `LIST_VIEW_ID`
     (kept distinct per picker, not shared, so existing tests that query e.g.
     "#vf-picker-list" by id keep working) and the `_load_entries`/
-    `_search_text`/`_label_for`/`_item_id`/`_on_entry_selected` hooks below.
-    A picker with filters beside the search box also overrides
+    `_search_text`/`_label_for`/`_item_id`/`_on_entry_selected` hooks below
+    (an entry's item id is its option's id), and `_highlighted` to follow
+    the row the highlight is on. A picker with filters beside the search box also overrides
     `_compose_filters`/`_compose_below_list`/`_candidates`/`_match`/`_filled`.
     Generic over the catalog entry type and the dialog's result.
 
@@ -120,6 +125,10 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
 
     #picker-search {
         margin-bottom: 1;
+    }
+
+    SearchablePickerScreen #picker-dialog > OptionList {
+        height: 1fr;
     }
 
     #picker-books {
@@ -157,7 +166,7 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
             yield Label(self.picker_title, id="picker-title", classes="dialog-title")
             yield Input(placeholder=self.search_placeholder, id="picker-search")
             yield from self._compose_filters()
-            yield ListView(id=self.LIST_VIEW_ID)
+            yield OptionList(id=self.LIST_VIEW_ID, compact=True)
             yield from self._compose_below_list()
             if self._books is not None:
                 yield Static(id="picker-books")
@@ -184,6 +193,9 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
 
     def _on_entry_selected(self, entry: EntryT) -> None:
         raise NotImplementedError
+
+    def _highlighted(self, entry: EntryT | None) -> None:
+        """The highlight moved to `entry` (None: a message row, or none)."""
 
     def _source(self, entry: EntryT) -> str:
         """The book(s) `entry` is from ("": none, always in play)."""
@@ -244,14 +256,34 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
             if generation == self._render_generation:
                 await self._fill_list(query)
 
+    def _option_list(self) -> OptionList:
+        return self.query_one(f"#{self.LIST_VIEW_ID}", OptionList)
+
+    def shown_ids(self) -> list[str]:
+        """The listed entries' item ids, in order (message rows left out)."""
+        option_list = self._option_list()
+        return [
+            option.id
+            for option in (
+                option_list.get_option_at_index(index)
+                for index in range(option_list.option_count)
+            )
+            if option.id is not None
+        ]
+
+    def highlight(self, item_id: str) -> None:
+        """Move the highlight to the entry with this item id."""
+        option_list = self._option_list()
+        option_list.highlighted = option_list.get_option_index(item_id)
+
     async def _fill_list(self, query: str) -> None:
-        list_view = self.query_one(f"#{self.LIST_VIEW_ID}", ListView)
-        await list_view.clear()
+        option_list = self._option_list()
+        option_list.clear_options()
         self._by_item_id = {}
 
         if not self._entries:
             self._filled([])
-            await list_view.append(ListItem(Label(self.empty_message)))
+            option_list.add_option(Option(self.empty_message, disabled=True))
             return
 
         needle = query.strip().lower()
@@ -265,19 +297,19 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
                 if needle
                 else "(nothing matches the filters)"
             )
-            await list_view.append(ListItem(Label(message)))
+            option_list.add_option(Option(message, disabled=True))
             return
 
-        items = []
+        options = []
         for entry in matches:
             item_id = self._item_id(entry)
             self._by_item_id[item_id] = entry
             label = self._label_for(entry)
             if not self._in_play(entry):
                 label += "  [dim](book not in play)[/]"
-            items.append(ListItem(Label(label), id=item_id))
-        await list_view.extend(items)
-        list_view.index = 0
+            options.append(Option(label, id=item_id))
+        option_list.add_options(options)
+        option_list.highlighted = 0
 
     async def on_input_changed(self, event: Input.Changed) -> None:
         if event.input.id == "picker-search":
@@ -288,9 +320,9 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
         # the same way arrowing down to it and pressing Enter would.
         if event.input.id != "picker-search":
             return
-        item = self.query_one(f"#{self.LIST_VIEW_ID}", ListView).highlighted_child
-        if item is not None:
-            await self._activate(item)
+        option = self._option_list().highlighted_option
+        if option is not None:
+            await self._activate(option.id)
 
     def on_key(self, event: Key) -> None:
         # Input has no "down" binding of its own, so it would otherwise
@@ -301,9 +333,9 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
         search = self.query_one("#picker-search", Input)
         if self.focused is not search:
             return
-        list_view = self.query_one(f"#{self.LIST_VIEW_ID}", ListView)
-        if list_view.children:
-            list_view.focus()
+        option_list = self._option_list()
+        if option_list.option_count:
+            option_list.focus()
             event.stop()
 
     # -- selection / dismissal --
@@ -312,13 +344,26 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
         if event.button.id == "btn-cancel":
             self.action_cancel()
 
-    async def on_list_view_selected(self, event: ListView.Selected) -> None:
-        await self._activate(event.item)
+    # A filter's Select has an OptionList of its own: only the picker's
+    # list counts.
 
-    async def _activate(self, item: ListItem) -> None:
-        if item.id is None:
+    async def on_option_list_option_selected(
+        self, event: OptionList.OptionSelected
+    ) -> None:
+        if event.option_list.id == self.LIST_VIEW_ID:
+            await self._activate(event.option_id)
+
+    def on_option_list_option_highlighted(
+        self, event: OptionList.OptionHighlighted
+    ) -> None:
+        if event.option_list.id == self.LIST_VIEW_ID:
+            option_id = event.option_id
+            self._highlighted(self._by_item_id.get(option_id) if option_id else None)
+
+    async def _activate(self, item_id: str | None) -> None:
+        if item_id is None:
             return
-        entry = self._by_item_id.get(item.id)
+        entry = self._by_item_id.get(item_id)
         if entry is None:
             return
         self._on_entry_selected(entry)
@@ -596,11 +641,8 @@ class VirtueFlawPickerScreen(
         )
         self._show_details(shown[0] if shown else None)
 
-    def on_list_view_highlighted(self, event: ListView.Highlighted) -> None:
-        item = event.item
-        self._show_details(
-            self._by_item_id.get(item.id) if item is not None and item.id else None
-        )
+    def _highlighted(self, entry: VirtueFlawDef | None) -> None:
+        self._show_details(entry)
 
     def _show_details(self, entry: VirtueFlawDef | None) -> None:
         """The chosen entry's summary, source and (if any) why it's
@@ -878,7 +920,10 @@ class SpellChooserScreen(SearchablePickerScreen[Spell, str | None]):
     """Pick a spell -- for a Lab Text or Casting Tablet, or a spell a magus
     knows: every spell there is (the catalog, the saga's own, any magus's
     invented spells) less any in `exclude`, searchable by name or shorthand.
-    Dismisses with the spell id."""
+    Dismisses with the spell id.
+
+    The highlighted spell's details show under the list, so the choice is
+    an informed one."""
 
     PICKER_TITLE: ClassVar[str] = "Choose the spell"
     EMPTY_MESSAGE: ClassVar[str] = "(no spells)"
@@ -886,7 +931,7 @@ class SpellChooserScreen(SearchablePickerScreen[Spell, str | None]):
     LIST_VIEW_ID: ClassVar[str] = "spell-chooser-list"
 
     DEFAULT_CSS = """
-    SpellChooserScreen.-details #picker-dialog {
+    SpellChooserScreen #picker-dialog {
         width: 100;
         max-height: 40;
     }
@@ -905,36 +950,28 @@ class SpellChooserScreen(SearchablePickerScreen[Spell, str | None]):
         title: str = "",
         details: Callable[[Spell], str] | None = None,
     ) -> None:
-        """`details`: show the highlighted spell's details under the list,
-        with this extra line (e.g. a creation Lab Total) after them."""
+        """`details`: an extra line (e.g. a creation Lab Total) after the
+        highlighted spell's details."""
         super().__init__(title, books=sourcebooks.saga_books(saga))
         self.saga = saga
         self.exclude = exclude or set()
         self._origin: dict[str, str] = {}
         self._details = details
-        if details is not None:
-            self.add_class("-details")
 
     def _compose_below_list(self) -> ComposeResult:
-        if self._details is not None:
-            with VerticalScroll(id="spell-chooser-details"):
-                yield Static(id="spell-chooser-details-text")
+        with VerticalScroll(id="spell-chooser-details"):
+            yield Static(id="spell-chooser-details-text")
 
     def _filled(self, shown: list[Spell]) -> None:
         super()._filled(shown)
         self._show_details(shown[0] if shown else None)
 
-    def on_list_view_highlighted(self, event: ListView.Highlighted) -> None:
-        item = event.item
-        self._show_details(
-            self._by_item_id.get(item.id) if item is not None and item.id else None
-        )
+    def _highlighted(self, entry: Spell | None) -> None:
+        self._show_details(entry)
 
     def _show_details(self, spell: Spell | None) -> None:
-        if self._details is None:
-            return
         text = spl.detail_text(self.saga, spell)
-        if spell is not None:
+        if spell is not None and self._details is not None:
             text += "\n" + self._details(spell)
         self.query_one("#spell-chooser-details-text", Static).update(text)
 

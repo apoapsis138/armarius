@@ -2,6 +2,9 @@
 
 import re
 
+from textual.content import Content
+from textual.widgets import OptionList
+
 from ars_magica_manager import catalog
 from ars_magica_manager.models import (
     CHARGED,
@@ -30,6 +33,22 @@ from ars_magica_manager.models import (
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules.xp import ability_xp
+
+
+def picker_rows(picker) -> list[tuple[str | None, str]]:
+    """A searchable picker's rows, in order: each one's item id (None for a
+    message row) and its label as shown."""
+    option_list = picker.query_one(f"#{picker.LIST_VIEW_ID}", OptionList)
+    rows = []
+    for index in range(option_list.option_count):
+        option = option_list.get_option_at_index(index)
+        rows.append((option.id, Content.from_markup(str(option.prompt)).plain))
+    return rows
+
+
+def picker_labels(picker) -> dict[str, str]:
+    """A searchable picker's entry labels as shown, by item id."""
+    return {item_id: label for item_id, label in picker_rows(picker) if item_id}
 
 
 def screen_lines(app) -> list[str]:

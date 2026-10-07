@@ -5,39 +5,39 @@
     Technique: (any) ▼   Form: (any)      ▼   Ritual: any      ▼  Level  from    to
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Spells (460 of 460)
+    ▼ Spells (1314 of 1314)
 
         Name                           Arts            Level  Range/Duration/Target
       Ritual Source
-      ● Soothe Pains of the Beast      CrAn               20  Touch/Mom/Ind
-      Ritual ArM5
+      ● Boundless Wealth of the Oceans CrAn               20  Touch/Mom/Group
+      Ritual TME
+      ○ Piercing Lance of Bone         CrAn               20  Touch/Diam/Ind
+      L&L
+      ○ Repair Cracks and Tears        CrAn               20  Touch/Mom/Ind
+      Ritual Covenants
+      ○ Shearing the Unseen Sheep      CrAn               20  Touch/Sun/Ind
+      MoH
+      ○ Soothe Pains of the Beast      CrAn               20  Touch/Mom/Ind
+      Ritual DE
       ○ True Rest of the Injured Brute CrAn               20  Touch/Moon/Ind
-      ArM5
-      ○ Summoning the Creeping Death   CrAn               25  Touch/Diam/Ind
-      HoHS
-      ○ Weaver's Trap of Webs          CrAn               35  Voice/Sun/Group
-      ArM5
-      ○ The Wizard's Mount             CrAn               35  Touch/Sun/Ind
-      ArM5
-      ○ Venomous Velites               Cr(Re)An           45  Sight/Sun/Group
-      HoHTL
-      ○ Curse of the Ravenous Swarm    Cr(Re)An           50  Touch/Moon/Group
-      Ritual ArM5
-      ○ Image of the Beast             InAn                5  (details missing)
-      ArM5
-      ○ Shiver of the Lycanthrope      InAn               10  Per/Conc/Touch
+      DE
+      ○ Worm of the Soil               CrAn               20  Touch/Sun/Ind
+      MoH
+      ○ Flight Perfected               CrAn               25  Touch/Sun/Ind
+      MoH
+      ○ Summoning the Creeping Death   Cr(Re)An           25  Touch/Diam/Ind
 
 
   ▌
-  ▌  Soothe Pains of the Beast  CrAn 20  Ritual
-  ▌  Range: Touch   Duration: Momentary   Target: Individual
-  ▌  Level: 20 (magnitude 4)
+  ▌  Boundless Wealth of the Oceans  CrAn 20  Ritual
+  ▌  Range: Touch   Duration: Momentary   Target: Group
+  ▌  Level: 20 (magnitude 4)   Base: 5
+  ▌  Design: Base 5, +1 Touch, +0 Momentary, +2 Group = 20
   ▌  Vis: 4 pawn(s)   Casting time: 60 minutes
-  ▌  From Ars Magica Definitive Edition (catalog spell, read-only).
+  ▌  From Transforming Mythic Europe, p. 117 (catalog spell, read-only).
   ▌
-  ▌  This spell looks much like a ritualistic "laying on of hands" seen in many
-  ▌  churches. You kneel and press your hands to the wound while reciting a
-  ▌  quiet incantation. The spell cures one Light Wound suffered by the animal.
-  ▌
+  ▌  Creates 3,000 pounds of pearls, equivalent to over one million pearls about▆▆
+  ▌  half an inch in diameter. These are remarkably large pearls, each one about
+  ▌  a quarter of an ounce in weight. Good quality sea pearls usually sell for
   ▌
 

@@ -54,7 +54,6 @@ from ..models import (
     INHABITANT_KINDS,
     LAB_CHARACTERISTICS,
     POSSESSION_KINDS,
-    SPELL_SOURCES,
     ArtScore,
     Book,
     Character,
@@ -612,7 +611,7 @@ class SpellListView(Vertical):
                     compact=True,
                 )
                 yield Select(
-                    [(f"{key} - {name}", key) for key, name in SPELL_SOURCES.items()]
+                    [(f"{key} - {name}", key) for key, name in spl.catalog_sources()]
                     + [("The saga's own", spl.OWN_SOURCE)],
                     prompt="Source: any",
                     id="spell-source",

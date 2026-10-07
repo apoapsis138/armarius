@@ -1,12 +1,11 @@
 import build_spell_catalog as build
 import pytest
 
-from ars_magica_manager import catalog
+from ars_magica_manager import catalog, sourcebooks
 from ars_magica_manager import sheet_text as st
 from ars_magica_manager import spells as sp
 from ars_magica_manager.arts import FORMS, TECHNIQUES
 from ars_magica_manager.models import (
-    SPELL_SOURCES,
     Character,
     KnownSpell,
     Saga,
@@ -108,12 +107,6 @@ def test_parse_requisites_accepts_names_and_abbreviations():
     assert sp.parse_requisites("Rego (for the motion)") == ["Rego"]
 
 
-def test_catalog_page_link_without_an_href_value_reads_as_empty():
-    page = build._Flatten()
-    page.feed("<table><tr><td><a href>Pilum of Fire</a></td></tr></table>")
-    assert page.events == [("cell", "Pilum of Fire", [("", "Pilum of Fire")])]
-
-
 # ------------------------------------------------------------ where they live
 
 
@@ -149,11 +142,12 @@ def test_the_catalog_loads_with_valid_arts_and_unique_ids():
     assert len({s.id for s in spells}) == len(spells)
     for spell in spells:
         assert spell.technique in TECHNIQUES, spell.name
-        assert spell.form in FORMS, spell.name
+        # Aethera (Dies Irae) isn't one of the app's Arts yet.
+        assert spell.form in (*FORMS, "Aethera"), spell.name
         assert all(r in TECHNIQUES or r in FORMS for r in spell.requisites)
-        assert spell.source in SPELL_SOURCES, spell.name
-        if not spell.details_missing:
-            assert spell.range and spell.duration and spell.target, spell.name
+        assert sourcebooks.books_of(spell.source) <= set(sourcebooks.SOURCEBOOKS)
+        assert spell.page, spell.name
+        assert spell.range and spell.duration and spell.target, spell.name
 
 
 def test_the_catalog_has_the_well_known_spells_right():
@@ -169,90 +163,116 @@ def test_the_catalog_has_the_well_known_spells_right():
     healing = by_id["spell_the_chirurgeon_s_healing_touch"]
     assert (healing.level, healing.ritual) == (20, True)
     assert by_id["spell_eyes_of_the_cat"].requisites == ["Animal"]
-    assert {s.source for s in by_id.values()} >= {"ArM5", "HoHTL", "TMRE"}
+    assert {s.source for s in by_id.values()} >= {"DE", "HoH:TL", "TMRE", "MoH"}
+    # The DE wins over the Grimoire's ArM5 printing (STORY-609).
+    assert by_id["spell_agony_of_the_beast"].level == 15
 
 
 # --------------------------------------------------------------- the builder
 
-_PAGE = """
-<table>
-<tr><th>Form \\ Technique</th><th>Creo</th><th>Intellego</th><th>Muto</th>
-<th>Perdo</th><th>Rego</th></tr>
-<tr><th>Ignem</th>
-<td><a href="#Pilum_of_Fire">Pilum of Fire 20</a><br>
-<a href="#Ball_of_Flame">Ball of FlameBall of Flame 35</a></td>
-<td><a href="#Exactly_to_Warm">Excatly To Warm 5</a></td>
-<td></td><td><a href="#Lost_Spell">The Lost Spell 15</a></td>
-<td><a href="#Ward_Against_Heat">Ward Against Heat Gen</a></td></tr>
-</table>
-<div class="mw-heading mw-heading2"><h2 id="Ignem_Spells">Ignem Spells</h2></div>
-<div class="mw-heading mw-heading3"><h3 id="Creo_Ignem">Creo Ignem Spells</h3></div>
-<div class="mw-heading mw-heading4"><h4 id="Pilum_of_Fire">Pilum of Fire</h4></div>
-<p>R: Voice, D: Mom, T: Ind</p>
-<p>A jet of fire flies from your palms.</p>
-<p>(Base 10, +2 Voice)</p>
-<p>A variant Potent Spell is given in TMRE.</p>
-<p>Level 25</p>
-<div class="mw-heading mw-heading4"><h4 id="Level_55">Level 55</h4></div>
-<div class="mw-heading mw-heading4"><h4 id="x1">Ball of Flame (CrIg 35)</h4></div>
-<p>R: Voice, D: Mom, T: Ind, Ritual; Req: Rego</p>
-<p>A great ball of flame.</p>
-<p>Source: HoHS.</p>
-<div class="mw-heading mw-heading4"><h4 id="Unlisted">The Unlisted Flame</h4></div>
-<p>R: Touch, D: Sun, T: Ind</p>
-<p>Not in the index.</p>
-<p>(Base 3, +1 Touch, +2 Sun)</p>
-<div class="mw-heading mw-heading3"><h3 id="Intellego_Ignem">Intellego Ignem</h3></div>
-<div class="mw-heading mw-heading4"><h4 id="x2">Exactly To Warm</h4></div>
-<p>R: Per, D: Conc, T: Ind</p>
-<p>Senses warmth.</p>
-<div class="mw-heading mw-heading3"><h3 id="Rego_Ignem">Rego Ignem Spells</h3></div>
-<div class="mw-heading mw-heading4"><h4 id="Ward_Against_Heat">Ward Against Heat</h4></div>
-<p>R: Touch, D: Sun, T: Ind</p>
-<p>(As ward guideline)</p>
-<p>Protects from fire.</p>
-"""
+
+def _lines(*rows) -> list[build.Line]:
+    """Grimoire lines: (text, bold) in one column of page 7."""
+    return [
+        build.Line(page=7, column=0, y=n * 12, text=t, bold=b, x1=200, right=290)
+        for n, (t, b) in enumerate(rows)
+    ] + [
+        build.Line(page=249, column=0, y=0, text="Spell Index"),
+        build.Line(page=249, column=0, y=12, text="Pilum of Fire ........ 7"),
+    ]
 
 
-def test_the_builder_matches_the_index_to_the_page_and_ignores_variant_levels():
-    spells, report = build.parse_page(_PAGE)
-    by_name = {s["name"]: s for s in spells}
-    assert set(by_name) == {
-        "Pilum of Fire",
-        "Ball of Flame",
-        "The Unlisted Flame",
-        "Exactly To Warm",
-        "Ward Against Heat",
-        "The Lost Spell",
-    }
-    pilum = by_name["Pilum of Fire"]
-    assert (pilum["level"], pilum["base_level"], pilum["source"]) == (20, 10, "ArM5")
-    assert "variant Potent Spell" in pilum["description"]
-    ball = by_name["Ball of Flame"]  # a doubled index name and a "(CrIg 35)" tag
-    assert (ball["level"], ball["ritual"], ball["requisites"], ball["source"]) == (
-        35,
+_GRIMOIRE = _lines(
+    ("Creo Ignem Spells", False),
+    ("PILUM OF FIRE", True),
+    ("CrIg 20", False),
+    ("R: Voice, D: Mom, T: Ind", False),
+    ("A jet of fire flies from your palms.", False),
+    ("(Base 10, +2 Voice)", False),
+    ("Source: Ars Magica Fifth Edition, 140", False),
+    ("BALL OF FLAME", True),
+    ("CrIg(Re) 35", False),
+    ("R: Voice D: Mom, T: Ind, Ritual", False),  # the missing comma
+    ("A great ball of flame.", False),
+    ("Note: The source had Touch.", False),
+    ("Source: Houses of Hermes – Societates, 68", False),
+    ("WARD AGAINST HEAT", True),
+    ("ReIg Gen", False),
+    ("R: Touch, D: Sun, T: Ind", False),
+    ("Protects from fire.", False),
+    ("Source: atlas-games.com/arsmagica/arm5errata", False),
+)
+
+
+def test_the_builder_reads_grimoire_entries():
+    report = build.Report()
+    spells = {s["name"]: s for s in build.parse_grimoire(_GRIMOIRE, report)}
+    pilum = spells["Pilum of Fire"]  # the index's spelling of the name
+    assert (pilum["level"], pilum["base_level"], pilum["range"]) == (20, 10, "Voice")
+    assert (pilum["source"], pilum["page"]) == ("DE", "140")
+    assert "(Base 10, +2 Voice)" in pilum["description"]
+    ball = spells["Ball Of Flame"]
+    assert (ball["ritual"], ball["requisites"], ball["source"]) == (
         True,
         ["Rego"],
-        "HoHS",
+        "HoH:S",
     )
-    # Matched to the index despite its typo; the heading's spelling wins.
-    assert (
-        by_name["Exactly To Warm"]["technique"],
-        by_name["Exactly To Warm"]["level"],
-    ) == (
-        "Intellego",
-        5,
-    )
-    assert by_name["Ward Against Heat"]["level"] is None  # General
-    # Not in the index: level from its Base line (3 -> 4 -> 5 -> 10).
-    assert by_name["The Unlisted Flame"]["level"] == 10
-    assert report["not_in_index"] == ["The Unlisted Flame"]
-    # In the index with no section: kept, details missing, Arts from the grid.
-    lost = by_name["The Lost Spell"]
-    assert (lost["technique"], lost["form"], lost["level"]) == ("Perdo", "Ignem", 15)
-    assert lost["details_missing"] is True
-    assert report["details_missing"] == ["The Lost Spell"]
-    assert len({s["id"] for s in spells}) == len(spells)
+    assert ball["description"].endswith("Note: The source had Touch.")
+    ward = spells["Ward Against Heat"]
+    assert ward["level"] is None
+    assert (ward["source"], ward["page"]) == (build.GRIMOIRE, "7")
+    assert len(report.notes) == len(report.no_book) == 1
+
+
+def _de(name, **stats) -> dict:
+    return {
+        "name": name,
+        "technique": "Creo",
+        "form": "Ignem",
+        "level": 20,
+        "requisites": [],
+        "range": "Voice",
+        "duration": "Momentary",
+        "target": "Individual",
+        "ritual": False,
+        "page": "340",
+    } | stats
+
+
+def test_the_builder_keeps_the_de_and_lists_conflicts():
+    report = build.Report()
+    grimoire = build.parse_grimoire(_GRIMOIRE, report)
+    de = [
+        _de("Pilum of Fire"),
+        _de("Ball of Flame", level=30, ritual=True, requisites=["Rego"]),
+    ]
+    spells = build.merge(de, grimoire, report)
+    names = [(s["name"], s["source"]) for s in spells]
+    # Pilum is identical: only the DE's. Ball differs: the DE's, and listed.
+    assert names == [
+        ("Pilum of Fire", "DE"),
+        ("Ball of Flame", "DE"),
+        ("Ward Against Heat", build.GRIMOIRE),
+    ]
+    assert len(report.conflicts) == 1 and "Ball Of Flame" in report.conflicts[0]
+    # A core spell the DE doesn't print keeps citing ArM5.
+    spells = build.merge([], grimoire, build.Report())
+    assert spells[0]["source"] == "ArM5"
+
+
+def test_the_builder_names_de_spells_from_the_grimoire():
+    report = build.Report()
+    grimoire = build.parse_grimoire(_GRIMOIRE, report)
+    de = [_de("", ocr_name="PiLum oF FiRe"), _de("", ocr_name="SpaRK OF THE Dark")]
+    build.confirm_de_names(de, grimoire, report)
+    assert [d["name"] for d in de] == ["Pilum of Fire", "Spark of the Dark"]
+    assert len(report.unconfirmed_names) == 1
+
+
+def test_the_builder_reads_rdt_lines_with_slips():
+    assert build.parse_rdt("R: Eye; D: Sun, T: Ind")["duration"] == "Sun"
+    assert build.parse_rdt("R Touch, D Ring, T Circ")["target"] == "Circle"
+    assert build.parse_rdt("Creates a flame.") is None
 
 
 # ------------------------------------------------------------ the list view
@@ -270,10 +290,12 @@ def test_filters_narrow_the_list_and_combine():
     everything = sp.all_spells(saga)
     assert everything[-1] is own
     names = lambda **f: [s.name for s in sp.filter_spells(saga, everything, **f)]
-    assert names(text="pilum") == ["Pilum of Fire"]
-    assert names(text="FIRE pilum") == ["Pilum of Fire"]  # every word, any case
+    assert names(text="pilum")[0] == "Pilum of Fire"
+    # Every word, any case; a description that names the spell matches too.
+    assert "Pilum of Fire" in names(text="FIRE pilum")
+    assert "Ball of Abysmal Flame" not in names(text="FIRE pilum")
     assert names(source=sp.OWN_SOURCE) == ["Candle of Truth"]
-    assert "Candle of Truth" not in names(source="ArM5")
+    assert "Candle of Truth" not in names(source="DE")
     rituals = sp.filter_spells(saga, everything, ritual=True)
     assert rituals and all(s.ritual for s in rituals)
     # A Form also matches a requisite: Eyes of the Cat is MuCo(An).
@@ -290,7 +312,7 @@ def test_rows_line_up_with_the_header_and_mark_the_saga_own():
     pilum = catalog.load_spell_catalog_by_id()["spell_pilum_of_fire"]
     row = sp.row_label(saga, pilum)
     assert header.index("Arts") - 2 == row.index("CrIg")
-    assert header.index("Source") - 2 == row.index("ArM5")
+    assert header.index("Source") - 2 == row.index("DE")
     assert "Voice/Mom/Ind" in row
     assert sp.row_label(saga, own).rstrip().endswith("Saga")
     aegis = catalog.load_spell_catalog_by_id()["spell_aegis_of_the_hearth"]

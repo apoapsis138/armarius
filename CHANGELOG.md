@@ -41,6 +41,22 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.19.0 — 2026-10-07
+
+- The spell catalog is rebuilt from the Definitive Edition's spell chapter
+  and the Grand Grimoire of Hermetic Spells: 1,313 spells from the
+  Definitive Edition and every supplement the Grimoire covers, each with
+  its full description, book and page. Where the two disagree, the
+  Definitive Edition's version is kept. Spells from a book not in play
+  stay hidden in the pickers until F3 shows them. Known spells whose old
+  catalog entry is gone show as "Unknown spell".
+- The catalog pickers (spells, Virtues and Flaws, Abilities, Boons and
+  Hooks, laboratory Virtues and Flaws, Shape and Material bonuses) open
+  and search far faster: with every book in play the spell picker opens
+  in about a quarter of a second instead of four and a half.
+- Every spell picker now shows the highlighted spell's details under the
+  list, description included, so you can compare spells before choosing.
+
 ## 2.18.3 — 2026-10-07
 
 - Behind the scenes: the app's forms, which were all in one very long

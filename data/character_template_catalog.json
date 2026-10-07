@@ -791,7 +791,7 @@
    "arts": {"creo": {"score": 4}, "intellego": {"score": 6}, "muto": {"score": 4}, "perdo": {"score": 4}, "rego": {"score": 4}, "imaginem": {"score": 2}, "mentem": {"score": 1}, "vim": {"score": 10}},
    "spells": [
     {"spell_id": "spell_phantasm_of_the_talking_head"},
-    {"spell_id": "spell_aura_of_ennobled_presence"},
+    {"spell_id": "spell_aura_of_the_ennobled_presence"},
     {"spell_id": "spell_piercing_the_faerie_veil"},
     {"name": "Piercing the Magical Veil", "level": 20, "version_of": "spell_piercing_the_faerie_veil"},
     {"name": "Unravelling the Fabric of Imaginem", "level": 20, "version_of": "spell_unravelling_the_fabric_of_form"},
@@ -931,7 +931,7 @@
     {"spell_id": "spell_pilum_of_fire"},
     {"spell_id": "spell_arc_of_fiery_ribbons"},
     {"spell_id": "spell_ball_of_abysmal_flame"},
-    {"spell_id": "spell_circle_of_encompassing_flames"}
+    {"spell_id": "spell_circle_of_encompassing_flame"}
    ],
    "equipment": [
     {"kind": "weapon", "gear_id": "weapon_dodge"},
@@ -1061,7 +1061,7 @@
     {"spell_id": "spell_phantasm_of_the_human_form"},
     {"spell_id": "spell_discern_own_illusions"},
     {"spell_id": "spell_taste_of_the_spices_and_herbs"},
-    {"spell_id": "spell_aura_of_ennobled_presence"},
+    {"spell_id": "spell_aura_of_the_ennobled_presence"},
     {"spell_id": "spell_notes_of_a_delightful_sound"},
     {"spell_id": "spell_disguise_of_the_transformed_image"},
     {"spell_id": "spell_illusion_of_cool_flames"},

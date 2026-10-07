@@ -458,7 +458,7 @@ class CovenantSituationDef:
     id: str
     name: str
     #: The book it's from (sourcebooks): "DE" or "Covenants".
-    source: str = "DE"
+    source: str = "ArM5"
     description: str = ""
     entries: list[dict[str, Any]] = field(default_factory=list)
     notes: str = ""
@@ -486,7 +486,7 @@ class AbilityDef:
     description: str = ""
     #: The book(s) it's from (sourcebooks); every entry so far is the core
     #: book's.
-    source: str = "DE"
+    source: str = "ArM5"
 
     def __post_init__(self) -> None:
         if self.category not in ABILITY_CATEGORIES:
@@ -510,7 +510,7 @@ class HouseDef:
     name: str
     description: str = ""
     #: The book it's from (sourcebooks): the core book.
-    source: str = "DE"
+    source: str = "ArM5"
     #: What membership gives at character creation, as the book's Hermetic
     #: Houses Summary words it.
     benefit: str = ""
@@ -575,7 +575,7 @@ class CharacterTemplateDef:
     notes: str = ""
     #: Where this entry differs from the page's text, and why.
     fixes: list[str] = field(default_factory=list)
-    source: str = "DE"
+    source: str = "ArM5"
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> CharacterTemplateDef:
@@ -753,8 +753,11 @@ class Spell:
     ritual: bool = False
     #: The guideline level before Range/Duration/Target (None if not given).
     base_level: int | None = None
-    #: Where it's published: one of SPELL_SOURCES, or free text.
+    #: Where it's published: a sourcebooks.SOURCEBOOKS abbreviation, or free
+    #: text for the saga's own spells.
     source: str = "ArM5"
+    #: The page of `source` it's printed on ("" if not known).
+    page: str = ""
     #: Side effects and modified effects from the experiment that invented
     #: it: anyone who learns it learns them too.
     experimental_effects: list[str] = field(default_factory=list)
@@ -836,18 +839,6 @@ SPELL_TARGETS: tuple[str, ...] = (
     "Hearing",
     "Vision",
 )
-#: Where spells are published: the Definitive Edition core rules, then the
-#: supplements the Grand Grimoire collects.
-SPELL_SOURCES: dict[str, str] = {
-    "ArM5": "Ars Magica Definitive Edition",
-    "HoHTL": "Houses of Hermes: True Lineages",
-    "HoHMC": "Houses of Hermes: Mystery Cults",
-    "HoHS": "Houses of Hermes: Societates",
-    "TMRE": "The Mysteries Revised Edition",
-    "A&A": "Art & Academe",
-}
-
-
 #: The kinds of book a library holds (reference/Libraries.md).
 BOOK_TYPES: tuple[str, ...] = (
     "Art Summa",

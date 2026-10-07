@@ -518,7 +518,7 @@
       "active": "section-known-spells",
       "keys": {
         "a": "SpellChooserScreen: Add a spell Leandro knows",
-        "e": "MasteryEditScreen: Mastery: Soothe Pains of the Beast",
+        "e": "MasteryEditScreen: Mastery: Boundless Wealth of the Oceans",
         "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"
@@ -916,8 +916,8 @@
       "active": "section-spells",
       "keys": {
         "a": "FieldsDialog: Add a Spell",
-        "e": "notice: Soothe Pains of the Beast is a catalog spell, so it's read-only. To make your own version, add a spell with a.",
-        "d": "notice: Soothe Pains of the Beast is a catalog spell, so it's read-only. To make your own version, add a spell with a.",
+        "e": "notice: Boundless Wealth of the Oceans is a catalog spell, so it's read-only. To make your own version, add a spell with a.",
+        "d": "notice: Boundless Wealth of the Oceans is a catalog spell, so it's read-only. To make your own version, add a spell with a.",
         "m": "(disabled)",
         "slash": "(nothing)"
       }

@@ -211,7 +211,8 @@ another magus, and both sides' Diaries record it.
 <!-- help: section-known-spells -->
 
 The spells the magus knows, chosen with `a` from the spell catalog and the
-saga's own spells. `e` edits the spell's Mastery, its score and XP and the
+saga's own spells. The picker shows the highlighted spell's details under the
+list, description included, so you can compare spells before choosing. `e` edits the spell's Mastery, its score and XP and the
 Mastery Abilities. The details panel shows the spell and what the magus
 casts it at. Share Spell in More (`m`) makes a spell the magus invented
 available to the whole saga.

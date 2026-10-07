@@ -2,8 +2,8 @@
 which entries are in play, the saga setting, and the pickers hiding the
 rest."""
 
-from support import wait_until
-from textual.widgets import Button, ListView, SelectionList
+from support import picker_rows, wait_until
+from textual.widgets import Button, SelectionList
 
 from ars_magica_manager import catalog, sourcebooks, storage
 from ars_magica_manager.app import ArsMagicaManagerApp
@@ -93,10 +93,7 @@ async def test_edit_saga_sets_the_books_in_play():
 
 
 def _listed(picker) -> list[str]:
-    return [
-        item.id or ""
-        for item in picker.query_one(f"#{picker.LIST_VIEW_ID}", ListView).children
-    ]
+    return [item_id or "" for item_id, _ in picker_rows(picker)]
 
 
 async def test_a_picker_hides_entries_from_books_not_in_play_until_f3():

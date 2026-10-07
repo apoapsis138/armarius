@@ -131,10 +131,12 @@ outside them as above, or allow `python.exe` there.
   `settings.py` — app settings (the chosen theme).
 - `ars_magica_manager/markup.py` — escaping and `**bold**`/`*italic*` for
   user-written text; `themes.py` — the Scriptorum light/dark themes.
-- `data/spell_catalog.json` — the published Hermetic spells, built from
-  Project: Redcap's [Grand Grimoire](https://www.redcap.org/page/The_Grand_Grimoire)
-  by `tools/build_spell_catalog.py` (rerun it to refresh; it prints a report
-  of anything that needs a look).
+- `data/spell_catalog.json` — the published Hermetic spells, built by
+  `tools/build_spell_catalog.py` from the Definitive Edition's spell chapter
+  and Atlas Games' Grand Grimoire of Hermetic Spells (two PDFs kept in the
+  local `reference/` folder; rerun with `uv run --group catalog`, which
+  needs tesseract for the chapter's headings). It writes a review list of
+  anything that needs a look.
 - `data/*_catalog.json` — the other catalogs (a starting point, not
   exhaustive — cross-check and expand against the rulebook as you need more).
   Each is `{"attribution": ..., "entries": [...]}` (spells and Features

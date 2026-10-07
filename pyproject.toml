@@ -1,6 +1,6 @@
 [project]
 name = "ars-magica-manager"
-version = "2.18.3"
+version = "2.19.0"
 description = "A GM-facing management tool for Ars Magica 5th Edition covenants, characters, laboratories, and libraries."
 readme = "README.md"
 license = "GPL-3.0-only"
@@ -29,6 +29,10 @@ Repository = "https://github.com/apoapsis138/Ars-Magica-Manager"
 Changelog = "https://github.com/apoapsis138/Ars-Magica-Manager/blob/main/CHANGELOG.md"
 
 [dependency-groups]
+catalog = [
+    "pymupdf>=1.28.2",
+    "pytesseract>=0.3.13",
+]
 dev = [
     "ruff>=0.16.8",
     "pytest>=8.0.0",

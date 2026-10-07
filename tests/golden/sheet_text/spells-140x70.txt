@@ -5,64 +5,64 @@
     Technique: (any) ▼   Form: (any)      ▼   Ritual: any      ▼  Level  from    to
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Spells (460 of 460)
+    ▼ Spells (1314 of 1314)
 
         Name                           Arts            Level  Range/Duration/Target  Ritual Source
-      ● Soothe Pains of the Beast      CrAn               20  Touch/Mom/Ind          Ritual ArM5
-      ○ True Rest of the Injured Brute CrAn               20  Touch/Moon/Ind                ArM5
-      ○ Summoning the Creeping Death   CrAn               25  Touch/Diam/Ind                HoHS
-      ○ Weaver's Trap of Webs          CrAn               35  Voice/Sun/Group               ArM5
-      ○ The Wizard's Mount             CrAn               35  Touch/Sun/Ind                 ArM5      ▇▇
-      ○ Venomous Velites               Cr(Re)An           45  Sight/Sun/Group               HoHTL
-      ○ Curse of the Ravenous Swarm    Cr(Re)An           50  Touch/Moon/Group       Ritual ArM5
-      ○ Image of the Beast             InAn                5  (details missing)             ArM5
-      ○ Shiver of the Lycanthrope      InAn               10  Per/Conc/Touch                ArM5
+      ● Boundless Wealth of the Oceans CrAn               20  Touch/Mom/Group        Ritual TME
+      ○ Piercing Lance of Bone         CrAn               20  Touch/Diam/Ind                L&L       ▄▄
+      ○ Repair Cracks and Tears        CrAn               20  Touch/Mom/Ind          Ritual Covenants
+      ○ Shearing the Unseen Sheep      CrAn               20  Touch/Sun/Ind                 MoH
+      ○ Soothe Pains of the Beast      CrAn               20  Touch/Mom/Ind          Ritual DE
+      ○ True Rest of the Injured Brute CrAn               20  Touch/Moon/Ind                DE
+      ○ Worm of the Soil               CrAn               20  Touch/Sun/Ind                 MoH
+      ○ Flight Perfected               CrAn               25  Touch/Sun/Ind                 MoH
+      ○ Summoning the Creeping Death   Cr(Re)An           25  Touch/Diam/Ind                HoH:S
+      ○ Flight Divorced                CrAn               30  Touch/Sun/Part                MoH
+      ○ Recruiting A Tiny Phalanx      Cr(Re)An           30  Touch/Sun/Group               MoH
+      ○ Strength Extinguished          CrAn               30  Touch/Sun/Part                MoH
+      ○ Sturdy Mantle of the Traveler  CrAn               30  Touch/Sun/Ind                 MoH
+      ○ A Pile of Rotting Beef         CrAn               35  Touch/Sun/Group               TME
+      ○ Harmonic Metamorphosis of the… Cr(Mu)An           35  Touch/Mom/Ind          Ritual MoH
+      ○ Strength Renewed               CrAn               35  Touch/Sun/Part                MoH
+      ○ The Balm of St Francis         CrAn               35  Touch/Mom/Ind          Ritual DI
+      ○ The Wizard's Mount             CrAn               35  Touch/Sun/Ind                 DE
+      ○ Weaver's Trap of Webs          CrAn               35  Voice/Sun/Group               DE
+      ○ Champion's Strength            CrAn               40  Touch/Mom/Ind          Ritual Cal
+      ○ Mend the Broken Figure         CrAn               40  Touch/Mom/Ind          Ritual Cal
+      ○ A Herd By Morning              CrAn               45  Touch/Sun/Group               TME
+      ○ Venomous Velites               Cr(Re)An           45  Sight/Sun/Group               HoH:TL
+      ○ Curse of the Ravenous Swarm    Cr(Re)An           50  Touch/Moon/Group       Ritual DE
+      ○ Twinning the Tome              Cr(In)An(Te)       50  Touch/Mom/Group        Ritual HoH:TL
+      ○ Conjuring the Magical Wolf     CrAn(Me/Vi)        60  Touch/Mom/Ind          Ritual HP
+      ○ Fashion the Ancient Worm       CrAn(Co/Ig/Me/V…   80  Touch/Mom/Ind          Ritual HP
+      ○ The Breath of Life Returned    CrAn               80  Touch/Mom/Ind          Ritual HP
+      ○ Image of the Beast             InAn                5  Arc/Mom/Ind                   DE
+      ○ Sense the Sleeping Hound       InAn                5  Voice/Mom/Ind                 App
+      ○ Shiver of the Lycanthrope      InAn               10  Per/Conc/Touch                DE
+      ○ A Simple Test for the Complet… InAn(He)           15  Touch/Mom/Ind                 Covenants
       ○ Numbering the Flock            InAn               20  Per/Mom/Sight                 TMRE
-      ○ Opening the Tome of the Anima… InAn               25  Touch/Conc/Ind                ArM5
-      ○ Hunter's Sense                 InAn               30  Per/Sun/Hearing               ArM5
-      ○ To See As Others See           In(Re)An           40  Arc/Sun/Ind                   HoHTL
-      ○ Beast of Outlandish Size       MuAn               15  Touch/Sun/Ind                 ArM5
-      ○ Doublet of Impenetrable Silk   MuAn               15  Touch/Sun/Ind                 ArM5
-      ○ Growth of the Creeping Things  MuAn               15  Touch/Sun/Ind                 ArM5
-      ○ The Voice of the Bjornaer Mag… MuAn               15  Per/Sun/Ind                   HoHMC
-      ○ Beast of Minuscule Proportions MuAn               20  Voice/Sun/Ind                 ArM5
-      ○ Form of the (temperament) Hea… MuAn               20  Per/Sun/Ind                   HoHMC
-      ○ The Beast Remade               MuAn(Co)           25  Touch/Sun/Ind                 ArM5
-      ○ Transformation of the Ravenou… MuAn               25  Voice/Sun/Ind                 ArM5
-      ○ Steed of Vengeance             MuAn               35  Touch/Sun/Ind                 ArM5
-      ○ Decay Fur and Hide             PeAn               10  Voice/Mom/Ind                 ArM5
-      ○ Agony of the Beast             PeAn               10  Voice/Conc/Ind                ArM5
-      ○ Blunt the Viper's Fangs        PeAn               20  Voice/Mom/Ind                 ArM5
-      ○ The Falcon's Hood              PeAn               25  Touch/Mom/Ind                 ArM5
-      ○ Cripple the Howling Wolf       PeAn               25  Voice/Mom/Ind                 ArM5
-      ○ Ward Against the Beasts of Le… ReAn              Gen  Touch/Ring/Circle             ArM5
-      ○ Disguise of the Putrid Aroma   ReAn                5  Voice/Conc/Ind                ArM5
-      ○ Circle of Beast Warding        ReAn                5  Touch/Ring/Circle             ArM5
-      ○ Soothe the Ferocious Bear      ReAn                5  Voice/Mom/Ind                 ArM5
-      ○ Panic of the Elephant's Mouse  ReAn               15  Eye/Conc/Ind                  ArM5
-      ○ Viper's Gaze                   ReAn               15  Eye/Conc/Ind                  ArM5
-      ○ Fury of the Charging Bull      ReAn               20  Voice/Mom/Ind                 HoHS
-      ○ Plague of Frogs                ReAn               20  Touch/Mom/Group               A&A
-      ○ The Verminous Infestation      Re(Pe)An(Co)       20  Eye/Mom/Ind                   A&A
-      ○ The Gentle Beast               ReAn               25  Eye/Conc/Ind                  ArM5
-      ○ Mastering the Unruly Beast     ReAn               25  Touch/Conc/Ind                ArM5
-      ○ Commanding the Harnessed Beast ReAn               30  Touch/Sun/Ind                 ArM5
-      ○ The Unfaithful Favor           ReAn               45  (details missing)             HoHTL
-      ○ Footsteps of Slippery Oil      CrAq                5  Touch/Diam/Ind                ArM5
-      ○ Dagger of Ice                  CrAq               10  Voice/Mom/Ind                 HoHS
-      ○ Creeping Oil                   CrAq               15  Voice/Sun/Ind                 ArM5
+      ○ Tongue of the Fishes           InAn               20  Eye/Conc/Ind                  Hooks
+      ○ Books that Scream in Pain      InAn(He)           25  Touch/Mom/Room                Covenants
+      ○ Determine the Location of the… In(Cr)An(Im)       25  Arc/Conc/Ind                  Covenants
+      ○ Opening the Tome of the Anima… InAn               25  Touch/Conc/Ind                DE
+      ○ Hunter's Sense                 InAn               30  Per/Sun/Hearing               DE
+      ○ The Eyes of Every Beast        InAn               40  Touch/Conc/Bound*      Ritual TME
+      ○ To See as Others See           In(Re)An           40  Arc/Sun/Ind                   HoH:TL
+      ○ The Appropriate Attire         MuAn                4  Touch/Sun/Ind                 App
+      ○ The Chameleon Cat              MuAn                5  Touch/Diam/Ind                App
+      ○ Beast of Outlandish Size       MuAn               15  Touch/Sun/Ind                 DE
 
 
   ▌
-  ▌  Soothe Pains of the Beast  CrAn 20  Ritual
-  ▌  Range: Touch   Duration: Momentary   Target: Individual
-  ▌  Level: 20 (magnitude 4)
+  ▌  Boundless Wealth of the Oceans  CrAn 20  Ritual
+  ▌  Range: Touch   Duration: Momentary   Target: Group
+  ▌  Level: 20 (magnitude 4)   Base: 5
+  ▌  Design: Base 5, +1 Touch, +0 Momentary, +2 Group = 20
   ▌  Vis: 4 pawn(s)   Casting time: 60 minutes
-  ▌  From Ars Magica Definitive Edition (catalog spell, read-only).
+  ▌  From Transforming Mythic Europe, p. 117 (catalog spell, read-only).
   ▌
-  ▌  This spell looks much like a ritualistic "laying on of hands" seen in many churches. You kneel ▆▆
-  ▌  and press your hands to the wound while reciting a quiet incantation. The spell cures one Light
-  ▌  Wound suffered by the animal.
-  ▌
+  ▌  Creates 3,000 pounds of pearls, equivalent to over one million pearls about half an inch in    ▂▂
+  ▌  diameter. These are remarkably large pearls, each one about a quarter of an ounce in weight.
+  ▌  Good quality sea pearls usually sell for about three Mythic Pounds per ounce (Covenants, page
   ▌
 

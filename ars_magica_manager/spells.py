@@ -12,14 +12,13 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from . import catalog, storage
+from . import catalog, sourcebooks, storage
 from .arts import ART_ABBREVIATIONS, ART_LOOKUP, FORMS, TECHNIQUES
 from .csv_import import parse_rows, read_text_any, skipped_preview
 from .markup import escape, fit
 from .models import (
     SPELL_DURATIONS,
     SPELL_RANGES,
-    SPELL_SOURCES,
     SPELL_TARGETS,
     Character,
     Saga,
@@ -264,6 +263,22 @@ _SHORT_NAMES = {
 OWN_SOURCE = "__own__"
 
 
+def source_text(spell: Spell) -> str:
+    """Where a spell is printed: "Magi of Hermes, p. 56"."""
+    books = sorted(sourcebooks.books_of(spell.source))
+    title = "; ".join(sourcebooks.SOURCEBOOKS.get(b, b) for b in books) or spell.source
+    return f"{title}, p. {spell.page}" if spell.page else title
+
+
+def catalog_sources() -> list[tuple[str, str]]:
+    """(abbreviation, title) of every book catalog spells come from, in
+    sourcebooks order, for the Source filter."""
+    cited = {
+        b for s in catalog.load_spell_catalog() for b in sourcebooks.books_of(s.source)
+    }
+    return [(k, v) for k, v in sourcebooks.SOURCEBOOKS.items() if k in cited]
+
+
 def all_spells(saga: Saga) -> list[Spell]:
     """What the Spells view lists: the catalog, then the saga's own spells."""
     return catalog.load_spell_catalog() + list(saga.spells)
@@ -289,7 +304,7 @@ def filter_spells(
     """The spells that pass every filter given. `text` matches the name or the
     description, every word of it (in any order, any case). `form` also
     matches a requisite Form, `technique` a requisite Technique. A General
-    spell passes any level range. `source` is a SPELL_SOURCES key, or
+    spell passes any level range. `source` is a sourcebooks key, or
     OWN_SOURCE for the saga's own."""
     words = text.lower().split()
     shown = []
@@ -309,7 +324,9 @@ def filter_spells(
         if (
             source
             and source != OWN_SOURCE
-            and (is_own(saga, spell) or spell.source != source)
+            and (
+                is_own(saga, spell) or source not in sourcebooks.books_of(spell.source)
+            )
         ):
             continue
         if spell.level is not None:
@@ -437,8 +454,9 @@ def detail_text(saga: Saga, spell: Spell | None) -> str:
         origin = f"The saga's own spell{f' ({spell.source})' if spell.source else ''}"
         lines.append(f"[dim]{escape(origin)} -- press e to edit it.[/]")
     else:
-        book = SPELL_SOURCES.get(spell.source, spell.source)
-        lines.append(f"[dim]From {escape(book)} (catalog spell, read-only).[/]")
+        lines.append(
+            f"[dim]From {escape(source_text(spell))} (catalog spell, read-only).[/]"
+        )
     if spell.description.strip():
         lines += ["", escape(spell.description.strip())]
     if spell.experimental_effects:
