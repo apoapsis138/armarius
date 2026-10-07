@@ -41,6 +41,12 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.19.2 — 2026-10-07
+
+- Behind the scenes: the app's screen tests, which were all in one very
+  long file, are now in one file per area, with the helpers they share
+  in a file of their own. Nothing you see changes.
+
 ## 2.19.1 — 2026-10-07
 
 - Behind the scenes: the code that plans and advances the seasons, which

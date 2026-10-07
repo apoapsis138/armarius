@@ -2,13 +2,13 @@
 adds (or takes) a point, only from +3/+4 (-3/-4), and removing it gives
 the point back."""
 
-from support import wait_until
-from test_screens import (
+from screen_helpers import (
     _open_section,
     _saga_with_bare_character,
     _select_character,
     _select_vf_picker_entry,
 )
+from support import wait_until
 from textual.widgets import Select, Static
 
 from ars_magica_manager import storage
