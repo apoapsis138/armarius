@@ -419,7 +419,8 @@ def test_an_unknown_ability_is_flagged_red_with_a_status():
         "choose one."
     ]
     # An Art book never has an ability problem, whatever `ability` holds.
-    assert bk.status_problems(_book("Art Summa", art="Vim", ability="Latin")) == []
+    art_book = _book("Art Summa", art="Vim", ability="Latin", level=5, quality=9)
+    assert bk.status_problems(art_book) == []
     assert not bk.row_label(saga, known).startswith("[$text-error]")
     assert bk.row_label(saga, unknown).startswith("[$text-error]")
     first_line = bk.detail_text(saga, unknown).split("\n")[0]
@@ -598,3 +599,24 @@ def test_imported_lab_texts_link_to_their_spells_and_keep_a_lost_ones_level():
     assert pilum.spell_id == "spell_pilum_of_fire"  # a typed name, any case
     assert (mystery.spell_id, mystery.level) == (None, 15)
     assert bk.row_label(saga, mystery).startswith("[$text-error]")
+
+
+def test_a_var_level_or_quality_is_imported_to_be_set():
+    result = bk.parse_books_csv(
+        "name,type,ability,level,quality\n"
+        "Dioptra,Ability Summa,Artes Liberales,4,var\n"
+        "Works,Ability Summa,Medicine,Variable,10\n"
+        "Blank,Ability Summa,Medicine,,10\n"
+    )
+    assert [(b.name, b.level, b.quality) for b in result.books] == [
+        ("Dioptra", 4, None),
+        ("Works", None, 10),
+    ]
+    assert result.skipped == ["Row 4 (Blank): no Level."]
+    dioptra, works = result.books
+    assert bk.numbers_to_set(dioptra) == ["Quality"]
+    assert bk.status_problems(works) == [
+        "Level to be set: edit the book to give it once it comes into play."
+    ]
+    preview = bk.import_preview(result, "f.csv", "as unassigned books", set())
+    assert "2 have a Level or Quality to be set" in preview

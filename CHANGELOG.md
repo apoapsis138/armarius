@@ -41,6 +41,18 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.29.0 — 2026-10-07
+
+- A book can come in with its Level or Quality still to be set: "var"
+  (or "variable") in a book import's level or quality column. The book is
+  highlighted until you edit it to give its numbers, can't be studied
+  until then, and its cost reads "to be set". A blank cell is still
+  refused.
+- A summa or tractatus missing its Level or Quality is highlighted the
+  same way.
+- Fixed: a highlighted book's warning mark no longer wraps onto the next
+  line of the book list.
+
 ## 2.28.0 — 2026-10-07
 
 - Books can be bound together in a codex: one tome holding several

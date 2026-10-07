@@ -323,8 +323,8 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Books (1)
 
-          Name                 Type           Subject                 Level Quality  Location
-        ○ Notes                Other          -                           -       -  Lab: Tower
+          Name                 Type           Subject               Level Quality  Location
+        ○ Notes                Other          -                         -       -  Lab: Tower
 
 
 

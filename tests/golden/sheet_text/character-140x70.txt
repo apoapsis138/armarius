@@ -312,8 +312,8 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Books (1)
 
-          Name                 Type           Subject                 Level Quality  Location
-        ○ Diary                Other          -                           -       -  Leandro
+          Name                 Type           Subject               Level Quality  Location
+        ○ Diary                Other          -                         -       -  Leandro
 
 
 

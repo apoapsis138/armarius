@@ -57,6 +57,18 @@ def has_quality(book_type: str) -> bool:
     return book_type in SUMMA_TYPES or book_type == "Tractatus"
 
 
+def numbers_to_set(book: Book) -> list[str]:
+    """The figures a summa or tractatus still lacks ("Level", "Quality"):
+    a book whose value is variable until it comes into play (imported with
+    "var"). It can't be studied until they are set."""
+    missing = []
+    if book.type in SUMMA_TYPES and book.level is None:
+        missing.append("Level")
+    if has_quality(book.type) and book.quality is None:
+        missing.append("Quality")
+    return missing
+
+
 # ------------------------------------------------------- the linked spell
 
 
@@ -254,7 +266,8 @@ def status_problems(book: Book, saga: Saga | None = None) -> list[str]:
     """Things about the book the user should fix (the row shows in the error colour): an
     Ability that isn't in the ability catalog (typically from an import),
     which studying from the book will need; and, given the saga, a Lab Text
-    or Casting Tablet whose spell can't be found."""
+    or Casting Tablet whose spell can't be found; and a summa or tractatus
+    whose Level or Quality is still to be set (numbers_to_set)."""
     if (
         is_ability_book(book.type, book.subject_kind)
         and book.ability
@@ -263,6 +276,12 @@ def status_problems(book: Book, saga: Saga | None = None) -> list[str]:
         return [
             f"Unknown ability: {book.ability!r} isn't in the ability list; "
             "edit the book to choose one."
+        ]
+    missing = numbers_to_set(book)
+    if missing:
+        return [
+            f"{' and '.join(missing)} to be set: edit the book to give "
+            f"{'them' if len(missing) > 1 else 'it'} once it comes into play."
         ]
     if saga is not None and needs_spell(book) and book_spell(saga, book) is None:
         named = (
@@ -530,10 +549,11 @@ _LOCATION_WIDTH = 17
 SUBJECT_MIN_WIDTH = 17
 SUBJECT_MAX_WIDTH = 40
 #: Everything in a row but the Subject column: the columns, their spacing,
-#: and room for a scrollbar.
+#: room for a flagged row's problem mark, and room for a scrollbar.
 _ROW_WIDTH_WITHOUT_SUBJECT = (
     (_NAME_WIDTH + 1 + _TYPE_WIDTH + 1 + 1 + _LEVEL_WIDTH + _QUALITY_WIDTH + 2)
     + _LOCATION_WIDTH
+    + len(f" {PROBLEM_GLYPH}")
     + 2
 )
 
@@ -728,7 +748,9 @@ def detail_text(saga: Saga, book: Book | None) -> str:
     if priced(saga, book):
         # Build Points matter only while its covenant is being created;
         # in play they're on the covenant's Build tab.
-        if pooled(book.type):
+        if numbers_to_set(book):
+            text = "to be set, with its numbers"
+        elif pooled(book.type):
             library = books_owned_by(saga, "covenant", book.owner_id or "")
             text = (
                 f"{level_of(book, saga) or 0} levels of the {book.type} pool "
@@ -822,6 +844,15 @@ class CsvImport:
     unused_columns: list[str] = field(default_factory=list)
 
 
+#: What a CSV's Level or Quality cell says for "to be set later": the value
+#: varies until the book comes into play (see numbers_to_set).
+VARIABLE_WORDS: tuple[str, ...] = ("var", "variable", "varies")
+
+
+def _is_variable(raw: str) -> bool:
+    return raw.strip().lower() in VARIABLE_WORDS
+
+
 def _whole_number(raw: str, label: str) -> int | None:
     raw = raw.strip()
     if not raw:
@@ -872,14 +903,17 @@ def _book_from_row(row: dict[str, str]) -> Book:
         book.spell_name = row.get("spell", "").strip()
         if not book.spell_name:
             raise ValueError("no spell")
+    level_raw, quality_raw = row.get("level", ""), row.get("quality", "")
     if has_level(book_type):
-        book.level = _whole_number(row.get("level", ""), "Level")
+        variable = _is_variable(level_raw) and book_type not in SPELL_TYPES
+        book.level = None if variable else _whole_number(level_raw, "Level")
         # A Lab Text or Casting Tablet can take its Level from its spell.
-        if book.level is None and book_type not in SPELL_TYPES:
+        if book.level is None and book_type not in SPELL_TYPES and not variable:
             raise ValueError("no Level")
     if has_quality(book_type):
-        book.quality = _whole_number(row.get("quality", ""), "Quality")
-        if book.quality is None:
+        variable = _is_variable(quality_raw)
+        book.quality = None if variable else _whole_number(quality_raw, "Quality")
+        if book.quality is None and not variable:
             raise ValueError("no Quality")
     if (book.level or 0) < 0 or (book.quality or 0) < 0:
         raise ValueError("a negative Level or Quality")
@@ -956,7 +990,16 @@ def import_preview(
             f"{repeats} {verb} the same name as another book; you'll be asked "
             "whether to add or skip each."
         )
-    unknown_abilities = sum(1 for b in result.books if status_problems(b))
+    to_set = sum(1 for b in result.books if numbers_to_set(b))
+    if to_set:
+        verb = "has" if to_set == 1 else "have"
+        lines.append(
+            f'{to_set} {verb} a Level or Quality to be set ("var"): imported, '
+            "highlighted until you give them their numbers."
+        )
+    unknown_abilities = sum(
+        1 for b in result.books if status_problems(b) and not numbers_to_set(b)
+    )
     if unknown_abilities:
         verb = "names" if unknown_abilities == 1 else "name"
         lines.append(

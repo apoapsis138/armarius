@@ -248,7 +248,7 @@
           Name                 Type           Subject           Level Quality
       Location
         ○ Summa                Art Summa      -                     -       -
-      Covenant Library
+      Covenant Library ✘
 
 
   ▌

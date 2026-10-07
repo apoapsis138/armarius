@@ -369,10 +369,10 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Books (3)
 
-          Name                 Type           Subject                 Level Quality  Location
-        ○ Summa                Art Summa      -                           -       -  Covenant Library
-        ○ Notes                Other          -                           -       -  Lab: Tower
-        ○ Diary                Other          -                           -       -  Leandro
+          Name                 Type           Subject               Level Quality  Location
+        ○ Summa                Art Summa      -                         -       -  Covenant Library ✘
+        ○ Notes                Other          -                         -       -  Lab: Tower
+        ○ Diary                Other          -                         -       -  Leandro
 
 
 

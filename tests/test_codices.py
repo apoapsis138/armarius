@@ -176,3 +176,14 @@ def test_an_exported_covenant_takes_its_codices():
         "animals",
         "hunt",
     ]
+
+
+def test_a_book_still_to_be_set_cannot_be_studied():
+    saga = _saga()
+    saga.books[1].level = None
+    plan = _read(saga, "ana", "animals")
+    assert activities.problems(saga.characters[0], plan, saga) == [
+        "De arte venandi: Animal Handling's Level is still to be set: edit the "
+        "book first."
+    ]
+    assert "A season's reading" not in bk.detail_text(saga, saga.books[1])

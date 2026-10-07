@@ -803,6 +803,12 @@ def _study_problems(  # noqa: PLR0915
                 "covenant's library or their own keeping."
             ]
         subject = book_subject(book)
+        missing = books.numbers_to_set(book)
+        if subject is not None and missing:
+            return [
+                f"{book.name}'s {' and '.join(missing)} {'are' if len(missing) > 1 else 'is'} "
+                "still to be set: edit the book first."
+            ]
         if subject is None or book.quality is None:
             return [f"{book.name} isn't a summa or tractatus with a Quality."]
         if _split(subject)[0] == "art" and character.type != "magus":

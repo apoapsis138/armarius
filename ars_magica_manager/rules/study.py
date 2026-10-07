@@ -168,6 +168,8 @@ def reading(
         "Tractatus",
     ):
         return None
+    if book.type.endswith("Summa") and book.level is None:
+        return None  # its Level is still to be set
     is_art = book.type == "Art Summa" or (
         book.type == "Tractatus" and book.subject_kind == "Art"
     )

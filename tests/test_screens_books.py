@@ -697,7 +697,7 @@ async def test_the_subject_column_widens_with_the_terminal():
     saga.books[2].ability = "Area Lore: The Rhine Tribunal and its Environs"
     storage.save_saga(saga)
 
-    for width, expected in ((110, 17), (140, 23), (200, 40)):
+    for width, expected in ((110, 17), (140, 21), (200, 40)):
         app = ArsMagicaManagerApp()
         async with app.run_test(size=(width, 60)) as pilot:
             await _select_covenant(pilot, app)
