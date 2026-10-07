@@ -193,7 +193,7 @@ The Ability cap at creation goes by age (5 under 30); an Affinity with the Abili
 ### Moving to In Play
 <!-- help: creation-worksheet-play -->
 
-The last step has **Move to In Play**. It lists every check that doesn't pass and asks before moving the record.
+The last step has **Move to In Play**. It lists every check that doesn't pass and asks before moving the record. A covenant with Build Points left over is told how many: moving it to In Play turns them into Mythic Pounds in its Wealth, 10 pounds for each Build Point (the rate money is bought at).
 
 Checks never stop an edit. If the saga has **Enforce creation rules strictly** turned on (Edit Saga), a record that breaks a rule it must follow stays In Creation until that is fixed. Advice never stops it.
 

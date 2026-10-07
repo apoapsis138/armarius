@@ -466,6 +466,9 @@ def test_the_build_tab_keeps_initial_and_follows_current():
 
     creation.set_in_creation(saga, covenant, False)
     assert covenant.initial_build_points["Vis sources"] == 20
+    # The 180 Build Points left became 1800 pounds of Wealth (money).
+    assert covenant.economics.wealth == 1800
+    assert covenant.initial_build_points["Money"] == 180
     covenant.possessions[0].pawns = 6  # found more in play
     saga.laboratories.append(  # a lab built in play counts in the current value
         Laboratory(
@@ -478,8 +481,8 @@ def test_the_build_tab_keeps_initial_and_follows_current():
     table = covenant_build.table_text(saga, covenant)
     assert "Vis sources                20       30" in table
     assert "Laboratories                0       70" in table  # Size +1, and spare
-    assert "Total                      20      100" in table
-    assert covenant_build.title(saga, covenant) == "Build Points (100)"
+    assert "Total                     200      280" in table
+    assert covenant_build.title(saga, covenant) == "Build Points (280)"
     assert "Spring (6 a year): 30" in covenant_build.items_text(saga, covenant)
 
     creation.set_in_creation(saga, covenant, True)  # back: Initial is live again
@@ -582,6 +585,13 @@ def test_starting_income_follows_poverty_wealth_and_the_magi_rule():
     assert labels() == ["One Greater source (250 pounds)"]
     covenant.boons_hooks = [VirtueFlawInstance("covbh_hook_minor_poverty")]
     assert labels() == ["One Lesser source (40 pounds)"]
+    covenant.boons_hooks = [
+        VirtueFlawInstance("covbh_boon_minor_wealth"),
+        VirtueFlawInstance("covbh_boon_minor_secondary_income"),
+    ]
+    assert labels() == ["One Greater source (250 pounds), plus 1 Typical (100 pounds)"]
+    choice = cov.income_choices(saga, covenant)[0]
+    assert [kind for kind, _ in choice.sources] == ["Greater", "Typical"]
     covenant.boons_hooks = []
     check = cov.income_check(saga, covenant)
     assert (check.status, check.detail) == ("advice", "none")
@@ -739,3 +749,123 @@ async def test_e_on_a_resource_hook_names_its_source():
         assert await wait_until(
             pilot, lambda: not any("needs its source" in r for r in _rows(screen))
         )
+
+
+async def test_the_baseline_step_starts_from_a_base_covenant():
+    from support import wait_until
+    from textual.widgets import OptionList, Static
+
+    from ars_magica_manager import storage
+    from ars_magica_manager.app import ArsMagicaManagerApp
+    from ars_magica_manager.screens import ConfirmScreen
+    from ars_magica_manager.screens.pickers import RemovalPickerScreen
+    from ars_magica_manager.screens.workspace.base import NodeKind
+
+    saga = _saga()
+    saga.id = "test_saga"
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        screen = await _open(
+            pilot, app, (NodeKind.COVENANT, "cov1"), "_covenant_sheet_view"
+        )
+
+        def button():
+            return next(
+                (
+                    b
+                    for b in screen.query("#ws-actions Button")
+                    if str(b.label) == "Use a base covenant"
+                ),
+                None,
+            )
+
+        assert await wait_until(pilot, lambda: button() is not None)
+        button().press()
+        assert await wait_until(
+            pilot, lambda: isinstance(app.screen, RemovalPickerScreen)
+        )
+        app.screen.dismiss(0)  # Weak
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await pilot.press("y")
+        assert await wait_until(
+            pilot,
+            lambda: storage.load_saga("test_saga").covenants[0].base_covenant == "weak",
+        )
+        covenant = storage.load_saga("test_saga").covenants[0]
+        assert (covenant.power_level, covenant.build_points_budget) == ("Low", 200)
+        screen.query_one("#ws-steps", OptionList).highlighted = 1
+        assert await wait_until(pilot, lambda: screen.step == "build_points")
+        assert await wait_until(
+            pilot,
+            lambda: (
+                "Lab Texts: 0 of 200 levels chosen"
+                in str(screen.query_one("#ws-budget", Static).render())
+            ),
+        )
+        assert any("Art Summa (Art to choose)" in r for r in _rows(screen))
+
+
+def test_build_points_left_become_pounds_in_its_wealth_on_moving_to_play():
+    from ars_magica_manager import creation
+
+    saga = _saga()
+    covenant = saga.covenants[0]
+    covenant.power_level, covenant.build_points_budget = "Low", 300
+    covenant.possessions = [
+        Possession(id="p1", kind="vis_source", name="Spring", art="Aquam", pawns=4)
+    ]
+    assert cov.remaining(saga, covenant) == 280
+    assert cov.leftover_note(saga, covenant) == (
+        "It has 280 Build Points left. Moving it to In Play turns them into "
+        "2800 Mythic Pounds, added to its Wealth (one Build Point buys 10 pounds)."
+    )
+    creation.set_in_creation(saga, covenant, False)
+    assert covenant.economics.wealth == 2800
+    # Back In Creation, that money is what the Build Points bought: nothing
+    # is left to convert again.
+    creation.set_in_creation(saga, covenant, True)
+    assert cov.remaining(saga, covenant) == 0
+    creation.set_in_creation(saga, covenant, False)
+    assert covenant.economics.wealth == 2800
+
+
+def test_left_over_build_points_are_converted_once_without_covenants():
+    """Without the Covenants book money isn't bought with Build Points, but
+    the points already turned into money stay spent: moving back and forth
+    converts nothing more."""
+    from ars_magica_manager import creation
+
+    saga = _saga()
+    saga.books_in_play = []
+    covenant = saga.covenants[0]
+    covenant.power_level, covenant.build_points_budget = "Low", 300
+    creation.set_in_creation(saga, covenant, False)
+    assert (covenant.economics.wealth, covenant.converted_pounds) == (3000, 3000)
+    creation.set_in_creation(saga, covenant, True)
+    assert cov.remaining(saga, covenant) == 0
+    creation.set_in_creation(saga, covenant, False)
+    assert covenant.economics.wealth == 3000
+
+
+def test_review_advises_on_servants_and_teamsters():
+    from ars_magica_manager import inhabitants as inh
+    from ars_magica_manager.models import Inhabitant
+
+    saga = _saga()
+    covenant = saga.covenants[0]
+    servants = inh.minimum_servants(saga, covenant)
+    teamsters = inh.minimum_teamsters(saga, covenant)
+    assert servants > 0 and teamsters > 0
+    found = _found(saga, covenant, "finish")
+    assert found["Enough servants for its inhabitants"][0] == "advice"
+    assert found["Enough teamsters for its inhabitants"][1].startswith(
+        f"0 of {teamsters}, {teamsters} too few"
+    )
+    covenant.inhabitants = [
+        Inhabitant(id="s", kind="inhabitant", role="Servant", quantity=servants),
+        Inhabitant(id="t", kind="inhabitant", role="Teamster", quantity=teamsters + 2),
+    ]
+    found = _found(saga, covenant, "finish")
+    assert found["Enough servants for its inhabitants"][0] == "pass"
+    assert found["Enough teamsters for its inhabitants"][0] == "pass"

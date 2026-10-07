@@ -26,7 +26,9 @@ from typing import Any
 
 from .. import books as bk
 from .. import catalog, sourcebooks
+from .. import covenant_templates as templates
 from .. import enchanted_devices as ed
+from .. import inhabitants as inh
 from ..covenants import (
     MAJOR_POVERTY,
     MINOR_POVERTY,
@@ -278,6 +280,17 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
         lines.append(
             Cost(f"Money ({wealth} pounds)", round_up(wealth / MONEY_POUNDS), "Money")
         )
+    elif covenant.converted_pounds:
+        # Without Covenants money isn't bought, but Build Points already
+        # turned into money stay spent.
+        pounds = covenant.converted_pounds
+        lines.append(
+            Cost(
+                f"Money from Build Points left over ({pounds} pounds)",
+                round_up(pounds / MONEY_POUNDS),
+                "Money",
+            )
+        )
     return lines
 
 
@@ -296,6 +309,36 @@ def specialist_cost(
 
 def spent(saga: Saga, covenant: Covenant) -> int:
     return sum(c.points for c in costs(saga, covenant))
+
+
+def remaining(saga: Saga, covenant: Covenant) -> int:
+    """Build Points the covenant has not spent (0 with no budget set)."""
+    budget = covenant.build_points_budget
+    if budget is None:
+        return 0
+    return max(budget - spent(saga, covenant), 0)
+
+
+def leftover_note(saga: Saga, covenant: Covenant) -> str:
+    """What moving to In Play does with unspent Build Points, for the
+    confirmation ("" with none left)."""
+    left = remaining(saga, covenant)
+    if not left:
+        return ""
+    return (
+        f"It has {left} Build Points left. Moving it to In Play turns them into "
+        f"{left * MONEY_POUNDS} Mythic Pounds, added to its Wealth (one Build "
+        f"Point buys {MONEY_POUNDS} pounds)."
+    )
+
+
+def convert_remaining(saga: Saga, covenant: Covenant) -> int:
+    """Turn unspent Build Points into pounds in the covenant's Wealth, as it
+    moves to In Play; the pounds added."""
+    pounds = remaining(saga, covenant) * MONEY_POUNDS
+    covenant.economics.wealth += pounds
+    covenant.converted_pounds += pounds
+    return pounds
 
 
 def category_totals(found: list[Cost]) -> dict[str, int]:
@@ -342,6 +385,7 @@ INCOME_SOURCE = (
 AURA_SOURCE = "Covenants, Chapter Two: Boons and Hooks, Faerie Aura"
 MINOR_WEALTH = "covbh_boon_minor_wealth"
 MAJOR_WEALTH = "covbh_boon_major_wealth"
+SECONDARY_INCOME = "covbh_boon_minor_secondary_income"
 FAERIE_AURA = "covbh_hook_minor_faerie_aura"
 #: The starting income assumes six magi; with the optional rule a source
 #: gains or loses this much a year per magus over or under six.
@@ -368,22 +412,35 @@ def _income_amount(saga: Saga, covenant: Covenant, kind: str) -> int:
 def income_choices(saga: Saga, covenant: Covenant) -> list[IncomeChoice]:
     """How the covenant may start its income: one Typical source, or two
     Lesser for the sake of diversity; a Wealth Boon upgrades the Typical
-    source (Greater, Legendary), a Poverty Hook allows one Lesser source
-    (Minor) or none (Major)."""
+    source (Greater, Legendary), each Secondary Income Boon adds another
+    Typical source, and a Poverty Hook allows one Lesser source (Minor) or
+    none (Major)."""
     held = {bh.vf_id for bh in covenant.boons_hooks}
     if MAJOR_POVERTY in held:
         return [IncomeChoice("No source of income (Poverty, Major Hook)", ())]
     lesser = ("Lesser", _income_amount(saga, covenant, "Lesser"))
     if MINOR_POVERTY in held:
         return [IncomeChoice(f"One Lesser source ({lesser[1]} pounds)", (lesser,))]
+    typical = ("Typical", _income_amount(saga, covenant, "Typical"))
+    extra = sum(bh.vf_id == SECONDARY_INCOME for bh in covenant.boons_hooks)
+    also = (typical,) * extra
+    plus = f", plus {extra} Typical ({typical[1]} pounds)" if extra else ""
     if MAJOR_WEALTH in held or MINOR_WEALTH in held:
         kind = "Legendary" if MAJOR_WEALTH in held else "Greater"
         amount = _income_amount(saga, covenant, kind)
-        return [IncomeChoice(f"One {kind} source ({amount} pounds)", ((kind, amount),))]
-    typical = ("Typical", _income_amount(saga, covenant, "Typical"))
+        return [
+            IncomeChoice(
+                f"One {kind} source ({amount} pounds){plus}", ((kind, amount), *also)
+            )
+        ]
     return [
-        IncomeChoice(f"One Typical source ({typical[1]} pounds)", (typical,)),
-        IncomeChoice(f"Two Lesser sources ({lesser[1]} pounds each)", (lesser, lesser)),
+        IncomeChoice(
+            f"One Typical source ({typical[1]} pounds){plus}", (typical, *also)
+        ),
+        IncomeChoice(
+            f"Two Lesser sources ({lesser[1]} pounds each){plus}",
+            (lesser, lesser, *also),
+        ),
     ]
 
 
@@ -479,6 +536,7 @@ def build_point_checks(saga: Saga, record: Record) -> list[Check]:
                     advice=True,
                 )
             )
+    found += _template_checks(saga, covenant)
     if power.max_level is not None:
         over = over_level(saga, covenant, power.max_level)
         found.append(
@@ -487,6 +545,41 @@ def build_point_checks(saga: Saga, record: Record) -> list[Check]:
                 f"No text or effect above level {power.max_level}",
                 not over,
                 ", ".join(over) or "none above",
+            )
+        )
+    return found
+
+
+def _template_checks(saga: Saga, covenant: Covenant) -> list[Check]:
+    """A base covenant's placeholders still to fill in, and the Lab Text
+    and enchanted item levels it gives still to choose (advice)."""
+    found = []
+    books, vis = templates.placeholders(saga, covenant)
+    if books or vis:
+        parts = []
+        if books:
+            parts.append(f"{len(books)} book(s) need a subject")
+        if vis:
+            parts.append(f"{len(vis)} vis source(s) or stock(s) need an Art")
+        found.append(
+            _c(
+                "build_points",
+                "The base covenant's placeholders are filled in",
+                False,
+                ", ".join(parts),
+                templates.SOURCE,
+                advice=True,
+            )
+        )
+    for allowance in templates.allowances(saga, covenant):
+        found.append(
+            _c(
+                "build_points",
+                f"The base covenant's {allowance.what} chosen",
+                allowance.chosen >= allowance.levels,
+                f"{allowance.chosen} of {allowance.levels} levels",
+                templates.SOURCE,
+                advice=True,
             )
         )
     return found
@@ -569,6 +662,40 @@ def boon_hook_checks(saga: Saga, record: Record) -> list[Check]:
                 False,
                 problem,
                 BOON_SOURCE,
+            )
+        )
+    return found
+
+
+STAFF_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Six: Covenants, Covenfolk "
+    "Categories (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
+    "_Chapter_Six:_Covenants#Covenfolk_Categories)"
+)
+
+
+@check("finish", COVENANT_CHECKS)
+def staff_checks(saga: Saga, record: Record) -> list[Check]:
+    """The servants and teamsters the covenant needs for its inhabitants
+    (advice: they cost no Build Points, but fewer than the minimum hurts
+    how the covenant runs)."""
+    assert isinstance(record, Covenant)
+    covenant = record
+    found = []
+    for role, needed in (
+        ("Servant", inh.minimum_servants(saga, covenant)),
+        ("Teamster", inh.minimum_teamsters(saga, covenant)),
+    ):
+        have = inh.other_covenfolk_count(saga, covenant, role)
+        short = f", {needed - have} too few" if have < needed else ""
+        found.append(
+            _c(
+                "finish",
+                f"Enough {role.lower()}s for its inhabitants",
+                have >= needed,
+                f"{have} of {needed}{short} (Other Covenfolk on the Inhabitants tab)",
+                STAFF_SOURCE,
+                advice=True,
             )
         )
     return found

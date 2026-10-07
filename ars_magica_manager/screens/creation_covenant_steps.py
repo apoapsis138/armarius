@@ -15,6 +15,7 @@ from typing import TYPE_CHECKING, Any
 
 from .. import books as bk
 from .. import catalog
+from .. import covenant_templates as templates
 from .. import covenants as cov_rules
 from .. import inhabitants as inh
 from .. import laboratories as lab_rules
@@ -89,6 +90,12 @@ def _power_budget(saga: Saga, record: Record) -> str:
         ),
         ("Season", covenant.covenant_season),
         ("Situation", _situation_name(covenant)),
+        (
+            "Base covenant",
+            base.name
+            if (base := templates.BASE_BY_KEY.get(covenant.base_covenant))
+            else "(none)",
+        ),
         ("Aura", f"{escape(covenant.aura_realm)} {aura}"),
     ]
     if power is not None:
@@ -210,6 +217,67 @@ def _set_starting_income(workspace: WorkspaceScreen, record: Record) -> None:
     )
 
 
+def _use_base_covenant(workspace: WorkspaceScreen, record: Record) -> None:
+    """Start from one of the book's base covenants: its Power Level, Build
+    Points and placeholders for its books and vis, after asking (and
+    warning when another is in use)."""
+    covenant = _covenant(record)
+    bases = templates.BASE_COVENANTS
+
+    def chosen(index: int | None) -> None:
+        if index is None:
+            return
+        base = bases[index]
+        earlier = templates.BASE_BY_KEY.get(covenant.base_covenant)
+        books, vis = templates.placeholders(workspace.saga, covenant)
+        message = (
+            f"Start {escape(covenant.name)} from the {base.name}: Power Level "
+            f"{base.power_level}, {base.build_points} Build Points, and "
+            f"{escape(templates.summary(base))}. Books and vis come as "
+            "placeholders whose subject or Art you choose; Lab Text and "
+            "enchanted item levels are an allowance to spend."
+        )
+        if earlier is not None and earlier is not base:
+            message = (
+                f"{earlier.name} is in use. {message} The "
+                f"{len(books) + len(vis)} placeholder(s) it left unfilled are "
+                "removed; what you filled in stays."
+            )
+        if base.notes:
+            message += "\n\n[dim]" + escape(" ".join(base.notes)) + "[/]"
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
+                templates.apply(workspace.saga, covenant, base)
+                workspace._books_changed()
+                workspace._commit(
+                    "section-cov-info",
+                    "section-pos-vis_source",
+                    "section-pos-vis_store",
+                )
+
+        workspace.app.push_screen(
+            ConfirmScreen(
+                message,
+                yes_label="Use it",
+                yes_variant="error" if earlier is not None else "primary",
+            ),
+            handle_confirmed,
+        )
+
+    workspace.app.push_screen(
+        RemovalPickerScreen(
+            "Use a base covenant",
+            [
+                f"{escape(b.name)}  [dim]{b.build_points} Build Points, "
+                f"{b.power_level}[/]"
+                for b in bases
+            ],
+        ),
+        chosen,
+    )
+
+
 def _power_actions(saga: Saga, record: Record) -> list[StepAction]:
     covenant = _covenant(record)
     return [
@@ -222,6 +290,7 @@ def _power_actions(saga: Saga, record: Record) -> list[StepAction]:
             "Use a Covenant Situation",
             lambda ws, r: ws._use_covenant_situation(_covenant(r)),
         ),
+        StepAction("Use a base covenant", _use_base_covenant),
     ]
 
 
@@ -262,7 +331,21 @@ def _build_points_budget(saga: Saga, record: Record) -> str:
         head = f"Build Points spent: {spent} (set the budget on the Baseline step)"
     else:
         head = f"Build Points: {budget}, [b]{spent} spent, {budget - spent} left[/]"
-    return f"{head}\n\n{_tally(saga, covenant)}"
+    lines = [head]
+    base = templates.BASE_BY_KEY.get(covenant.base_covenant)
+    if base is not None:
+        lines.append(f"From the {base.name}:")
+        lines += [
+            f"  {a.what}: {a.chosen} of {a.levels} levels chosen"
+            for a in templates.allowances(saga, covenant)
+        ]
+        books, vis = templates.placeholders(saga, covenant)
+        if books or vis:
+            lines.append(
+                f"  Placeholders to fill in: {len(books)} book(s), {len(vis)} vis "
+                "(e on the row)"
+            )
+    return "\n".join(lines) + f"\n\n{_tally(saga, covenant)}"
 
 
 def _possession_entry(

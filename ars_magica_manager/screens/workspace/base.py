@@ -85,6 +85,7 @@ from ...models import (
 from ...rules import activities as season_rules
 from ...rules import creation as creation_rules
 from ...rules import creation_characteristics as cch
+from ...rules import creation_covenant as cov_creation
 from ...rules import options as rule_options
 from ..creation_worksheet import CreationWorksheetScreen
 from ..fields import (
@@ -1792,6 +1793,10 @@ class WorkspaceBase(Screen[None]):
                 f"Move {name} to In Play? Creation checks: "
                 f"{creation_rules.summary(found)}. They stop once it is In Play."
             )
+            if isinstance(record, Covenant):
+                note = cov_creation.leftover_note(self.saga, record)
+                if note:
+                    message += f"\n\n{escape(note)}"
         else:
             message = (
                 f"Move {name} back to In Creation? The creation checks come "

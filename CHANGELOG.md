@@ -41,6 +41,23 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.26.0 — 2026-10-07
+
+- Use a base covenant, on the covenant worksheet's Baseline step, starts
+  from one of the book's Weak (200 Build Points), Medium (800) or Powerful
+  (2000) covenants: it sets the Power Level and Build Points and adds the
+  books and vis as placeholders whose subject or Art you choose. Its Lab
+  Text and enchanted item levels are an allowance Resources counts
+  against what you add. Choosing another replaces the placeholders the
+  first one left unfilled.
+- Moving a covenant to In Play with Build Points left says so, and turns
+  them into Mythic Pounds in its Wealth (10 for each Build Point). They
+  are only ever converted once.
+- Review advises when a covenant has fewer servants or teamsters than its
+  inhabitants need.
+- Starting income counts each Secondary Income Boon as another Typical
+  source.
+
 ## 2.25.0 — 2026-10-07
 
 - New Covenant also asks for the covenant's Season and Aura realm (Magic

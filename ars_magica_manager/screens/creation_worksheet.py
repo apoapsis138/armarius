@@ -33,6 +33,7 @@ from .. import creation
 from ..markup import PROBLEM_GLYPH, TODO_GLYPH, escape
 from ..models import Character, Covenant, Laboratory, Saga
 from ..rules import creation as rules
+from ..rules import creation_covenant as cov_rules
 from .fields import ModalDialog
 from .prompts import ConfirmScreen
 from .widgets import DetailsPanel, SelectableList, TableHeader
@@ -473,6 +474,10 @@ class CreationWorksheetScreen(ModalDialog[None]):
         if len(open_checks) > 12:
             review += f"\n...and {len(open_checks) - 12} more"
         message = f"Move {escape(record.name)} to In Play? Creation checks: {rules.summary(found)}."
+        if isinstance(record, Covenant):
+            note = cov_rules.leftover_note(self.saga, record)
+            if note:
+                message += f"\n\n{escape(note)}"
         if review:
             message += f"\n\n{review}"
 

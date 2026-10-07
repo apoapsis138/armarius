@@ -279,8 +279,11 @@ def set_in_creation(
     saga: Saga, record: Character | Covenant | Laboratory, in_creation: bool
 ) -> None:
     """Move `record` to In Creation or In Play. A covenant moving to In Play
-    keeps what its Build Points were spent on (the Build tab's Initial
-    column); moving back to In Creation lets it change again."""
+    turns its unspent Build Points into pounds in its Wealth, then keeps
+    what its Build Points were spent on (the Build tab's Initial column);
+    moving back to In Creation lets it change again."""
+    if isinstance(record, Covenant) and record.in_creation and not in_creation:
+        creation_covenant.convert_remaining(saga, record)
     record.in_creation = in_creation
     if isinstance(record, Covenant):
         if in_creation:

@@ -2524,6 +2524,13 @@ class Covenant:
     #: The covenant's life stage (ArM5 Chapter 6, "Covenant Seasons") -- one
     #: of SEASONS. Not the calendar season, which lives on the Saga.
     covenant_season: str = "Spring"
+    #: The book's base covenant it was started from (covenant_templates
+    #: BASE_BY_KEY: "weak", "medium", "powerful"), or "".
+    base_covenant: str = ""
+    #: Pounds its unspent Build Points became on moving to In Play
+    #: (creation_covenant.convert_remaining), so they stay spent if it moves
+    #: back to In Creation.
+    converted_pounds: int = 0
     #: Boons and Hooks attached to this covenant, resolved against the
     #: covenant Boon/Hook catalog (vf_id holds the catalog id).
     #: An optional free-text descriptor lives in `params["detail"]` (which
