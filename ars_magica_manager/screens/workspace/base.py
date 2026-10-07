@@ -84,6 +84,7 @@ from ...models import (
 )
 from ...rules import activities as season_rules
 from ...rules import creation as creation_rules
+from ...rules import creation_characteristics as cch
 from ...rules import options as rule_options
 from ..fields import (
     FieldsDialog,
@@ -2327,6 +2328,8 @@ class WorkspaceBase(Screen[None]):
         def handle_result(instance: VirtueFlawInstance | None) -> None:
             if instance is not None:
                 target.virtues_flaws.append(instance)
+                if isinstance(target, Character):
+                    cch.apply_virtue(self.saga, target, instance)
                 if isinstance(target, Laboratory):
                     # A Feature waiting for a Virtue gets a new Feature Virtue.
                     instance.id = new_instance_id()
@@ -2339,6 +2342,7 @@ class WorkspaceBase(Screen[None]):
                     self._refresh_familiar_section("section-fam-vf-virtues")
                 else:
                     self._refresh_character_section("section-vf-virtues")
+                    self._refresh_character_section("section-char-characteristics")
 
         books = sourcebooks.saga_books(self.saga)
         if isinstance(target, Laboratory):
@@ -2358,6 +2362,11 @@ class WorkspaceBase(Screen[None]):
                 side=side,
                 chooser=chooser,
                 own_abilities=[a.name for a in target.abilities],
+                refusal=(
+                    partial(cch.virtue_refusal, self.saga, target)
+                    if isinstance(target, Character)
+                    else None
+                ),
             ),
             handle_result,
         )
@@ -2395,6 +2404,12 @@ class WorkspaceBase(Screen[None]):
             if isinstance(target, Laboratory):
                 self._confirm_delete_lab_virtue_flaw(target, index, name)
                 return
+            if isinstance(target, Character):
+                instance = target.virtues_flaws[index]
+                change = cch.removal_change(self.saga, target, instance)
+                if change is not None:
+                    self._confirm_delete_stepped(target, index, name, change)
+                    return
             self._confirm_delete(target.virtues_flaws, index, name, section)
 
         self._chosen_or_pick(
@@ -2403,6 +2418,29 @@ class WorkspaceBase(Screen[None]):
             empty="No Virtues/Flaws to remove.",
             then=confirm,
         )
+
+    def _confirm_delete_stepped(
+        self,
+        character: Character,
+        index: int,
+        name: str,
+        change: tuple[str, int, int],
+    ) -> None:
+        """Delete a Great or Poor (Characteristic) after confirming,
+        moving its Characteristic back the point it added."""
+        characteristic, before, after = change
+        message = (
+            f"Delete {escape(name)}? {characteristic} goes from {before:+d} "
+            f"to {after:+d}."
+        )
+
+        def handle_confirmed(confirmed: bool | None) -> None:
+            if confirmed:
+                cch.unapply_virtue(self.saga, character, character.virtues_flaws[index])
+                del character.virtues_flaws[index]
+                self._commit("section-vf-virtues", "section-char-characteristics")
+
+        self.app.push_screen(ConfirmScreen(message), handle_confirmed)
 
     def _confirm_delete_lab_virtue_flaw(
         self, lab: Laboratory, index: int, name: str

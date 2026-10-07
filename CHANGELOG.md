@@ -41,6 +41,14 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.18.2 — 2026-10-06
+
+- Great (Characteristic) now raises the Characteristic it names by 1, and
+  can only be taken when that Characteristic is at +3 (or +4, for the
+  second copy, which takes it to +5). The Virtue picker offers only the
+  Characteristics that qualify. Removing it takes the point off again.
+  Poor (Characteristic) works the same way from -3.
+
 ## 2.18.1 — 2026-10-06
 
 - Tidier code notes: the program's comments now state each rule plainly,

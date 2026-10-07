@@ -4,9 +4,12 @@ the cost table (+1 = 1, +2 = 3, +3 = 6; negatives refund the same), range
 (Characteristic) taking a score past +3 or -3, and a child's age modifier.
 
 A sheet's Characteristic is the score in play, so what was bought is the
-score less its Great/Poor copies and the child modifier. Virtues come
-before Characteristics, so Great (Characteristic) is never refused: this
-step warns until the Characteristic is at +3 with its Great copies on top.
+score less its Great/Poor copies and the child modifier. Taking Great
+(Characteristic) raises the score a point and is refused unless it is at
++3 or +4 (the second copy takes +4 to +5); Poor lowers it from -3 or -4
+the same way. Removing one undoes its point while the score is past +3 or
+-3. This step still warns when a score doesn't match its copies (a save
+from before Great changed the score).
 
 Rules: reference/rules-engine-reference.md §2 Characteristics; Child
 characters; §5 Great (Characteristic), Improved Characteristics.
@@ -19,7 +22,7 @@ from dataclasses import dataclass
 
 from .. import sourcebooks
 from ..markup import todo
-from ..models import Character, Saga
+from ..models import Character, Saga, VirtueFlawInstance
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 from .creation_character import age
 
@@ -62,6 +65,8 @@ VIRTUE_LIMIT = 5
 GREAT = "vf_great_characteristic"
 POOR = "vf_poor_characteristic"
 IMPROVED = "vf_improved_characteristics"
+#: The point a copy of Great or Poor (Characteristic) moves its score.
+STEPS = {GREAT: 1, POOR: -1}
 
 #: The Grogs book's pre-bought arrays, each spending the standard 7 points.
 GROG_ARRAYS: tuple[tuple[int, ...], ...] = (
@@ -144,6 +149,79 @@ def lines(
             CharacteristicLine(key, name, score, virtue, bought, cost(bought))
         )
     return result
+
+
+def _stepped(
+    saga: Saga, character: Character, instance: VirtueFlawInstance
+) -> tuple[str, str, int, int] | None:
+    """(key, name, step, score less the child modifier) of the
+    Characteristic a Great or Poor copy moves, or None for anything else."""
+    step = STEPS.get(instance.vf_id)
+    key = instance.params.get("characteristic", "")
+    name = dict(CHARACTERISTICS).get(key)
+    if step is None or name is None:
+        return None
+    base = getattr(character.characteristics, key) - child_modifier(
+        age(saga, character)
+    )
+    return key, name, step, base
+
+
+def virtue_refusal(
+    saga: Saga, character: Character, instance: VirtueFlawInstance
+) -> str:
+    """Why `character` can't take this Great or Poor copy ("" if it can):
+    Great needs the Characteristic at +3 or +4, Poor at -3 or -4."""
+    found = _stepped(saga, character, instance)
+    if found is None:
+        return ""
+    _, name, step, base = found
+    if step > 0 and base < BOUGHT_LIMIT:
+        return f"Great {name} needs {name} at +3 first (it is {base:+d})."
+    if step > 0 and base >= VIRTUE_LIMIT:
+        return f"{name} is already {base:+d}, the most Great allows."
+    if step < 0 and base > -BOUGHT_LIMIT:
+        return f"Poor {name} needs {name} at -3 first (it is {base:+d})."
+    if step < 0 and base <= -VIRTUE_LIMIT:
+        return f"{name} is already {base:+d}, the most Poor allows."
+    return ""
+
+
+def apply_virtue(
+    saga: Saga, character: Character, instance: VirtueFlawInstance
+) -> None:
+    """Move the Characteristic a newly taken Great or Poor copy names."""
+    found = _stepped(saga, character, instance)
+    if found is not None:
+        key, _, step, _ = found
+        score = getattr(character.characteristics, key)
+        setattr(character.characteristics, key, score + step)
+
+
+def removal_change(
+    saga: Saga, character: Character, instance: VirtueFlawInstance
+) -> tuple[str, int, int] | None:
+    """(name, before, after) of the Characteristic removing this Great or
+    Poor copy moves back, or None when it moves nothing: a score not past
+    +3 or -3 never had the copy's point added."""
+    found = _stepped(saga, character, instance)
+    if found is None:
+        return None
+    key, name, step, base = found
+    if (step > 0 and base <= BOUGHT_LIMIT) or (step < 0 and base >= -BOUGHT_LIMIT):
+        return None
+    score = getattr(character.characteristics, key)
+    return name, score, score - step
+
+
+def unapply_virtue(
+    saga: Saga, character: Character, instance: VirtueFlawInstance
+) -> None:
+    """Take back the point of a Great or Poor copy being removed."""
+    found = _stepped(saga, character, instance)
+    change = removal_change(saga, character, instance)
+    if found is not None and change is not None:
+        setattr(character.characteristics, found[0], change[2])
 
 
 def budget(character: Character) -> int:

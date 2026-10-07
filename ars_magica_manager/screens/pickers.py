@@ -434,6 +434,7 @@ class VirtueFlawPickerScreen(
         side: str = "both",
         chooser: catalog.VirtueFlawChooser | None = None,
         own_abilities: Sequence[str] = (),
+        refusal: Callable[[VirtueFlawInstance], str] | None = None,
     ) -> None:
         super().__init__(_VF_SIDE_TITLES[side])
         #: The character's own Abilities, offered with the catalog's when a
@@ -446,6 +447,10 @@ class VirtueFlawPickerScreen(
         self._taken = list(taken)
         #: Who is choosing; None: nobody in particular, everything is offered.
         self._chooser = chooser
+        #: Why the chooser can't take an entry with given parameters, from
+        #: their own scores ("Great Intelligence needs Intelligence at
+        #: +3"); "" if they can. Choices it refuses are not offered.
+        self._instance_refusal = refusal
         self._catalog = catalog.load_virtue_flaw_catalog()
         #: Why the chooser can't take an entry, by id ("" if it can).
         self._refusals: dict[str, str] = {}
@@ -527,9 +532,38 @@ class VirtueFlawPickerScreen(
         ]
         chooser = self._chooser
         self._refusals = {
-            entry.id: chooser.refusal(entry) if chooser else "" for entry in entries
+            entry.id: (chooser.refusal(entry) if chooser else "")
+            or self._no_choice_left(entry)
+            for entry in entries
         }
         return entries
+
+    def _choices(self, entry: VirtueFlawDef) -> dict[str, list[tuple[str, str]]]:
+        """The parameter choices offered for `entry`: a lone parameter's
+        values the chooser's own refusal turns down are left out."""
+        found = param_choices(entry, self._taken, self._own_abilities)
+        refusal = self._instance_refusal
+        if refusal is not None and len(entry.parameters) == 1:
+            param = entry.parameters[0]
+            if param in found:
+                found[param] = [
+                    (label, value)
+                    for label, value in found[param]
+                    if not refusal(VirtueFlawInstance(entry.id, {param: value}))
+                ]
+        return found
+
+    def _no_choice_left(self, entry: VirtueFlawDef) -> str:
+        """Why `entry` is ineligible when the chooser's own refusal turns
+        down every value of its lone parameter ("" otherwise)."""
+        if self._instance_refusal is None or len(entry.parameters) != 1:
+            return ""
+        param = entry.parameters[0]
+        if param != "characteristic":
+            return ""
+        if self._choices(entry).get(param):
+            return ""
+        return "no Characteristic qualifies"
 
     def _candidates(self) -> list[VirtueFlawDef]:
         listed = [
@@ -606,22 +640,21 @@ class VirtueFlawPickerScreen(
                 self._add(entry, params)
 
         self.app.push_screen(
-            _param_dialog(
-                entry.name,
-                entry.parameters,
-                param_choices(entry, self._taken, self._own_abilities),
-            ),
+            _param_dialog(entry.name, entry.parameters, self._choices(entry)),
             handle_params,
         )
 
     def _add(self, entry: VirtueFlawDef, params: dict[str, str]) -> None:
         """Dismiss with the new instance, unless it's a repeat the book
         doesn't allow: then say why and stay open to pick again."""
+        instance = VirtueFlawInstance(vf_id=entry.id, params=params)
         refusal = catalog.virtue_flaw_repeat_refusal(entry, self._taken, params)
+        if not refusal and self._instance_refusal is not None:
+            refusal = self._instance_refusal(instance)
         if refusal:
             self.app.notify(refusal, severity="warning")
             return
-        self.dismiss(VirtueFlawInstance(vf_id=entry.id, params=params))
+        self.dismiss(instance)
 
 
 class LabVirtueFlawPickerScreen(
