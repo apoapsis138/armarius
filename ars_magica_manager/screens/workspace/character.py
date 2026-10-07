@@ -57,9 +57,8 @@ from ..pickers import (
 )
 from ..prompts import (
     ConfirmScreen,
-    _ability_fields,
+    _ability_dialog,
     _ability_from,
-    _ability_problem,
     _diary_entry_dialog,
     _lab_text_access_dialog,
     _raw_vis_dialog,
@@ -191,7 +190,11 @@ class CharacterActions(WorkspaceBase):
                 self._commit("tab-abilities")
 
         self.app.push_screen(
-            AbilityPickerScreen(exclude_names, books=sourcebooks.saga_books(self.saga)),
+            AbilityPickerScreen(
+                exclude_names,
+                books=sourcebooks.saga_books(self.saga),
+                virtues_flaws=character.virtues_flaws,
+            ),
             handle_result,
         )
 
@@ -245,11 +248,7 @@ class CharacterActions(WorkspaceBase):
                 self._commit("tab-abilities")
 
         self.app.push_screen(
-            FieldsDialog(
-                escape(existing.name),
-                _ability_fields(existing),
-                validate=_ability_problem,
-            ),
+            _ability_dialog(existing.name, existing, character.virtues_flaws),
             handle_result,
         )
 
@@ -307,7 +306,9 @@ class CharacterActions(WorkspaceBase):
                 character.arts = arts
                 self._commit("section-arts")
 
-        self.app.push_screen(EditArtsScreen(character.arts), handle_result)
+        self.app.push_screen(
+            EditArtsScreen(character.arts, character.virtues_flaws), handle_result
+        )
 
     # -- Raw Vis / Hermetic Background (magi only) --
 

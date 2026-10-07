@@ -137,8 +137,10 @@ Ability from the catalog.
 
 **The app works out:** the score from the XP, and the XP the next score
 needs (Ars Magica Definitive Edition, Chapter 3: Characters, Advancement
-Table). The familiar shares its magus's Language scores automatically, so
-there is no need to add them.
+Table). While the XP is typed, the form shows the score it buys and the XP
+still needed for the next; with an Affinity, also how much xp gained
+before the Affinity's half again reaches it. The familiar shares its
+magus's Language scores automatically, so there is no need to add them.
 
 **See also:** [Abilities tab](help:tab-abilities)
 

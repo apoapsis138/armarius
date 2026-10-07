@@ -11,10 +11,11 @@ learn them; Later life experience; Creation Ability cap by age.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 
 from .. import catalog
-from ..models import AbilityDef, Character
+from ..models import AbilityDef, Character, VirtueFlawInstance
 from .creation_character import THE_GIFT
 from .rounding import round_up
 
@@ -320,8 +321,16 @@ def virtue_xp(character: Character) -> dict[str, VirtueXp]:
 
 def xp_multiplier(character: Character, target: str) -> float:
     """1.5 with an Affinity with this Art or Ability, else 1."""
+    return affinity_multiplier(character.virtues_flaws, target)
+
+
+def affinity_multiplier(
+    virtues_flaws: Sequence[VirtueFlawInstance], target: str
+) -> float:
+    """1.5 if `virtues_flaws` hold an Affinity with this Art or Ability,
+    else 1 (for a Familiar as much as a Character)."""
     wanted = target.lower()
-    for vf in character.virtues_flaws:
+    for vf in virtues_flaws:
         if vf.vf_id == "vf_affinity_with_art" and vf.params.get("art") == wanted:
             return 1.5
         if (
@@ -337,6 +346,18 @@ def effective_xp(character: Character, target: str, xp: int) -> int:
     Affinity, rounded up (the Affinity with Art Virtue says so; the same
     is used for an Ability)."""
     return round_up(xp * xp_multiplier(character, target))
+
+
+def xp_giving(gain: int, multiplier: float) -> int:
+    """The least xp that gives at least `gain` once `multiplier` (an
+    Affinity's 1.5, rounded up) is applied: 13 needs 9, but 14 also
+    needs only 9 (9 x 1.5 = 13.5, rounded up to 14)."""
+    if gain <= 0:
+        return 0
+    xp = max(0, int((gain - 1) // multiplier))
+    while round_up(xp * multiplier) < gain:
+        xp += 1
+    return xp
 
 
 def ability_cap(age: int | None) -> int:

@@ -49,9 +49,8 @@ from ..models import (
 )
 from .fields import FieldsDialog, ModalDialog
 from .prompts import (
-    _ability_fields,
+    _ability_dialog,
     _ability_from,
-    _ability_problem,
     _boon_hook_fields,
     _lab_choice_dialog,
     _param_dialog,
@@ -886,9 +885,12 @@ class AbilityPickerScreen(SearchablePickerScreen[AbilityDef, Ability | None]):
         exclude_names: set[str] | None = None,
         *,
         books: frozenset[str] | None = None,
+        virtues_flaws: Sequence[VirtueFlawInstance] = (),
     ) -> None:
         super().__init__(books=books)
         self._exclude_names = exclude_names or set()
+        # the owner's, for Puissant and Affinity in the xp's live score
+        self._virtues_flaws = virtues_flaws
 
     def _load_entries(self) -> list[AbilityDef]:
         return catalog.abilities_to_offer(self._exclude_names)
@@ -930,12 +932,7 @@ class AbilityPickerScreen(SearchablePickerScreen[AbilityDef, Ability | None]):
                 self.dismiss(_ability_from(name, category, result))
 
         self.app.push_screen(
-            FieldsDialog(
-                escape(name),
-                _ability_fields(None),
-                save_label="Confirm",
-                validate=_ability_problem,
-            ),
+            _ability_dialog(name, None, self._virtues_flaws, save_label="Confirm"),
             handle_ability,
         )
 

@@ -129,7 +129,9 @@ description under the list.
 needs, shown as score and then XP over the next total (Ars Magica Definitive
 Edition, Chapter 3: Characters, Advancement Table). When a Virtue or Flaw
 gives a fixed bonus or penalty, such as Puissant, the score used follows in
-brackets.
+brackets. While the XP is typed, the form shows the score it buys and the XP
+still needed for the next; with an Affinity, also how much xp gained
+before the Affinity's half again reaches it.
 
 **See also:** [Virtues & Flaws tab](help:tab-vf),
 [Planning tab](help:tab-planning), [How the app handles advancement](help:guide-advancement)
@@ -187,9 +189,11 @@ totals.
 
 The five Techniques and ten Forms, each with its score and XP. `e` edits
 every Art at once: you type the XP and the app works out the score (Ars
-Magica Definitive Edition, Chapter 3: Characters, Advancement Table). A
+Magica Definitive Edition, Chapter 3: Characters, Advancement Table),
+shown beside it with the XP still needed for the next as you type. A
 fixed bonus from a Virtue, such as Puissant, shows the score used in
-brackets.
+brackets, and an Affinity adds a line with how much xp gained before
+its half again reaches the next score.
 
 ### Casting Scores
 <!-- help: section-casting -->

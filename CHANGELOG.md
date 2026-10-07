@@ -41,6 +41,17 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.22.0 — 2026-10-07
+
+- Editing an Ability's or Art's XP shows, as you type, the score it buys
+  and the xp still needed for the next, e.g. "Score 3 (5) · 13 xp to
+  next". This replaces the table of scores under the Ability's XP, and
+  works when adding an Ability, for a familiar's Abilities and beside
+  every Art in Edit Arts. A fixed bonus such as Puissant shows the score
+  used in brackets; with an Affinity it also says how much xp gained
+  before the Affinity's half again reaches the next score ("9 with
+  Affinity").
+
 ## 2.21.0 — 2026-10-07
 
 - A familiar can be removed on its own: press `d` on it in the tree or

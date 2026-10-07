@@ -71,6 +71,9 @@ class Contract:
     shown: dict[str, str] = field(default_factory=dict)
     #: Label -> widget id, for fields drawn without a label.
     aliases: dict[str, str] = field(default_factory=dict)
+    #: Selector -> text the dialog itself shows once `edits` are typed,
+    #: before saving (a live line worked out from them).
+    live: dict[str, str] = field(default_factory=dict)
 
 
 def _char(saga: Saga):
@@ -463,6 +466,7 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: (_char(s).abilities[0].level, _char(s).abilities[0].specialty),
         expected=(5, "Grammar"),
         invalid={"XP": "-5"},
+        live={"#fields-live": "Score 5 · 30 xp to next"},
         # the score and xp are in columns
         shown={"#abilities-list": "Latin (Grammar)           5       75/105"},
     ),
@@ -1267,6 +1271,7 @@ CONTRACTS: dict[str, Contract] = {
         ],
         expected=[("General", 30, "Running")],
         invalid={"XP": "-5"},
+        live={"#fields-live": "Score 3 · 20 xp to next"},
         shown={"#abilities-list": "Athletics (Running)"},
     ),
     "edit arts": Contract(
@@ -1275,6 +1280,10 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: (_char(s).arts["creo"].xp, _char(s).arts["vim"].xp),
         expected=(55, 6),
         invalid={"Creo": "lots"},
+        live={
+            "#art-score-creo": "Score 10 · 11 xp to next",
+            "#art-score-vim": "Score 3 · 4 xp to next",
+        },
     ),
     "edit familiar fatigue": Contract(
         prefill={"Level": "fresh"},
@@ -1514,6 +1523,10 @@ async def test_form_contract(name):
             # Build every tab now, so the save has to refresh what's shown.
             await build_all_tabs(pilot, view)
         await _fill(pilot, dialog, contract, contract.edits)
+        for selector, text in contract.live.items():
+            assert await wait_until(
+                pilot, lambda s=selector, t=text, d=dialog: t in shown_text(d, s)
+            ), (selector, shown_text(dialog, selector))
         await _close(pilot, app, dialog, save_button(dialog))
         # The screen shows the saved values (its sheet was refreshed).
         for selector, text in contract.shown.items():

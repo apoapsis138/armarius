@@ -83,8 +83,8 @@ When Winter is advanced, the app also does the following, each written in the ch
 
 For experience gained outside the planned seasons, or to correct a figure:
 
-1. **An Ability**: on the Abilities tab, highlight it and press `e`. Type the total **XP** (not the xp gained) and the **Specialty**; the score follows. `a` adds a new Ability from the catalog.
-2. **The Arts**: on the Hermetic Magic tab, press `e` in Magical Arts. Edit Arts shows all fifteen Arts; type each one's total XP, and its score is shown beside it as you type.
+1. **An Ability**: on the Abilities tab, highlight it and press `e`. Type the total **XP** (not the xp gained) and the **Specialty**; the score and the xp still needed for the next show as you type. `a` adds a new Ability from the catalog.
+2. **The Arts**: on the Hermetic Magic tab, press `e` in Magical Arts. Edit Arts shows all fifteen Arts; type each one's total XP, and its score and the xp still needed for the next are shown beside it as you type.
 3. **Mastery**: in [Known Spells](help:section-known-spells), highlight the spell and press `e`.
 4. **Aging and Warping**: on the Description tab, press `e` in Aging & Warping to change Decrepitude, the Effects of Aging, the Warping Score and Warping Points.
 

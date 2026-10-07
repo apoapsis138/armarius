@@ -13,6 +13,7 @@ from textual.widgets import Button, Input, Label, Select, Static
 
 from ... import catalog, faith
 from ... import familiars as fam
+from ... import sheet_text as st
 from ...arts import ART_ABBREVIATIONS, ARTS, FORMS, TECHNIQUES
 from ...markup import escape, problem
 from ...models import (
@@ -31,9 +32,11 @@ from ...models import (
     HermeticBackground,
     Player,
     Saga,
+    VirtueFlawInstance,
     Wounds,
 )
-from ...rules import creation_characteristics
+from ...rules import creation_access, creation_characteristics, scores
+from ...rules import xp as xp_rules
 from ..fields import (
     _EMPHASIS_HINT,
     DialogField,
@@ -436,8 +439,9 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
     """Edits all 15 Hermetic Arts at once -- a fixed grid, not an addable
     list. Two side-by-side columns (Techniques, Forms), mirroring the sheet's
     own two-column Magical Arts display -- sized to fit every row without a
-    scrollbar (Forms, the taller column, is only 10 rows). Each Art shows a
-    Level / XP pair. Dismisses with a dict of every art's lowercase name ->
+    scrollbar (Forms, the taller column, is only 10 rows). Each Art's total
+    XP is typed, with its score and the xp to the next beside it, updated
+    as it changes. Dismisses with a dict of every art's lowercase name ->
     ArtScore, or None if cancelled.
     """
 
@@ -490,9 +494,11 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
         padding-right: 1;
     }
 
+    /* "Score 20 (23) · 210 xp to next"; an Affinity adds a second line */
     .art-row .art-score {
-        width: 10;
-        content-align: left middle;
+        width: 31;
+        height: auto;
+        content-align: left top;
         padding-left: 1;
         color: $text-muted;
     }
@@ -514,9 +520,21 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
     }
     """
 
-    def __init__(self, arts: dict[str, ArtScore]) -> None:
+    def __init__(
+        self,
+        arts: dict[str, ArtScore],
+        virtues_flaws: Sequence[VirtueFlawInstance] = (),
+    ) -> None:
         super().__init__()
         self.arts = arts
+        # the owner's Puissant and Affinity, for each Art's live score
+        self._bonus = {
+            art.lower(): scores.art_bonus(virtues_flaws, art)[0] for art in ARTS
+        }
+        self._multiplier = {
+            art.lower(): creation_access.affinity_multiplier(virtues_flaws, art)
+            for art in ARTS
+        }
 
     def compose(self) -> ComposeResult:
         def row(art_name: str):
@@ -530,7 +548,7 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
                 compact=True,
             )
             yield Label(
-                self._score_label(score.xp),
+                self._score_label(key, score.xp),
                 id=f"art-score-{key}",
                 classes="art-score",
             )
@@ -562,14 +580,15 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
         elif event.button.id == "btn-save":
             self._try_save()
 
-    @staticmethod
-    def _score_label(xp: int | None) -> str:
-        if xp is None or xp < 0:
-            return "Score ?"
-        return f"Score {ArtScore(xp=xp).level}"
+    def _score_label(self, key: str, xp: int | None) -> str:
+        score, affinity = st.live_score(
+            xp, xp_rules.ART_FACTOR, self._bonus[key], self._multiplier[key]
+        )
+        return f"{score}\n{affinity}" if affinity else score
 
     def on_input_changed(self, event: Input.Changed) -> None:
-        """Keep each Art's score beside its XP as the user types."""
+        """Keep each Art's score and xp to next beside its XP as the user
+        types."""
         input_id = event.input.id or ""
         if not (input_id.startswith("input-art-") and input_id.endswith("-xp")):
             return
@@ -578,7 +597,7 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
             xp: int | None = int(event.value.strip())
         except ValueError:
             xp = None
-        self.query_one(f"#art-score-{key}", Label).update(self._score_label(xp))
+        self.query_one(f"#art-score-{key}", Label).update(self._score_label(key, xp))
 
     def _try_save(self) -> None:
         error = self.query_one("#arts-error", Static)

@@ -27,7 +27,7 @@ from .models import (
     VirtueFlawInstance,
     Wounds,
 )
-from .rules import combat, derived, penetration, scores
+from .rules import combat, creation_access, derived, penetration, scores
 from .rules import xp as xp_rules
 from .totals import describe_modifier
 
@@ -99,6 +99,36 @@ def xp_line(
             f"({bonus:+d} from {escape(', '.join(bonus_from))})"
         )
     return line
+
+
+def progress_line(progress: xp_rules.Progress, bonus: int = 0) -> str:
+    """A score and the xp still needed for the next, shown while its total
+    xp is typed: "Score 3 · 12 xp to next", "Score 3 (5) · ..." with a
+    fixed bonus."""
+    return (
+        f"Score {adjusted_score(progress.score, bonus)} · {progress.to_next} xp to next"
+    )
+
+
+def affinity_to_next(progress: xp_rules.Progress, multiplier: float) -> str:
+    """With an Affinity (`multiplier` 1.5), the xp gained before it that
+    reaches the next score: "8 with Affinity"; "" without one."""
+    if multiplier == 1:
+        return ""
+    return f"{creation_access.xp_giving(progress.to_next, multiplier)} with Affinity"
+
+
+def live_score(
+    xp: int | None, factor: int, bonus: int = 0, multiplier: float = 1.0
+) -> tuple[str, str]:
+    """What a typed total xp buys, for a form to show as it changes: the
+    progress_line and the affinity_to_next ("" without an Affinity).
+    `factor` is xp_rules' ABILITY_FACTOR or ART_FACTOR; an xp that isn't
+    a whole number of 0 or more (yet) shows "Score ?"."""
+    if xp is None or xp < 0:
+        return "Score ?", ""
+    progress = xp_rules.progress(xp, factor)
+    return progress_line(progress, bonus), affinity_to_next(progress, multiplier)
 
 
 def ability_rows(

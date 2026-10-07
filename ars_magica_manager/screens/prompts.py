@@ -26,6 +26,7 @@ from .. import catalog, transfer, vis
 from .. import house_rules as hr
 from .. import lab_texts as lt
 from .. import players as pl
+from .. import sheet_text as st
 from ..arts import ARTS, FORMS, TECHNIQUES
 from ..markup import escape, todo
 from ..models import (
@@ -57,7 +58,8 @@ from ..models import (
     new_instance_id,
     next_season,
 )
-from ..rules import lab_seasons
+from ..rules import creation_access, lab_seasons, scores
+from ..rules import xp as xp_rules
 from ..rules.creation_covenant import (
     POWER_BY_NAME,
     POWER_LEVELS,
@@ -85,17 +87,10 @@ def _date_fields(season: str, year: int) -> list[DialogField]:
     ]
 
 
-#: What the Ability XP field is: the score is worked out from it.
-ABILITY_XP_HINT = (
-    "Total XP; the score follows from it. Score 1 = 5, 2 = 15, 3 = 30, "
-    "4 = 50, 5 = 75, 6 = 105, 7 = 140, 8 = 180."
-)
-
-
 def _ability_fields(ability: Ability | None) -> list[DialogField]:
-    """An Ability's xp and Specialty (its name is the form's title)."""
+    """An Ability's total xp and Specialty (its name is the form's title)."""
     return [
-        DialogField("xp", "XP", "int", _attr(ability, "xp", 0), hint=ABILITY_XP_HINT),
+        DialogField("xp", "XP", "int", _attr(ability, "xp", 0)),
         DialogField(
             "specialty",
             "Specialty",
@@ -104,6 +99,34 @@ def _ability_fields(ability: Ability | None) -> list[DialogField]:
             placeholder="e.g. Swords",
         ),
     ]
+
+
+def _ability_dialog(
+    name: str,
+    ability: Ability | None,
+    virtues_flaws: Sequence[VirtueFlawInstance] = (),
+    *,
+    save_label: str = "Save",
+) -> FieldsDialog[dict[str, Any]]:
+    """Add or edit an Ability: its xp, with the score it buys shown live
+    (with the owner's Puissant and Affinity, from `virtues_flaws`), and its
+    Specialty."""
+    bonus, _ = scores.ability_bonus(virtues_flaws, name)
+    multiplier = creation_access.affinity_multiplier(virtues_flaws, name)
+
+    def live(values: dict[str, Any]) -> str:
+        score, affinity = st.live_score(
+            values["xp"], xp_rules.ABILITY_FACTOR, bonus, multiplier
+        )
+        return f"{score} ({affinity})" if affinity else score
+
+    return FieldsDialog(
+        escape(name),
+        _ability_fields(ability),
+        validate=_ability_problem,
+        live=live,
+        save_label=save_label,
+    )
 
 
 def _ability_problem(values: dict[str, Any]) -> str | None:

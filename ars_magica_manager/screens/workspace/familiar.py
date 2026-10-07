@@ -31,9 +31,8 @@ from ..pickers import (
     AbilityPickerScreen,
 )
 from ..prompts import (
-    _ability_fields,
+    _ability_dialog,
     _ability_from,
-    _ability_problem,
 )
 from .base import (
     WorkspaceBase,
@@ -234,7 +233,11 @@ class FamiliarActions(WorkspaceBase):
                 self._commit("tab-fam-abilities")
 
         self.app.push_screen(
-            AbilityPickerScreen(exclude_names, books=sourcebooks.saga_books(self.saga)),
+            AbilityPickerScreen(
+                exclude_names,
+                books=sourcebooks.saga_books(self.saga),
+                virtues_flaws=familiar.virtues_flaws,
+            ),
             handle_result,
         )
 
@@ -264,11 +267,7 @@ class FamiliarActions(WorkspaceBase):
                 self._commit("tab-fam-abilities")
 
         self.app.push_screen(
-            FieldsDialog(
-                escape(existing.name),
-                _ability_fields(existing),
-                validate=_ability_problem,
-            ),
+            _ability_dialog(existing.name, existing, familiar.virtues_flaws),
             handle_result,
         )
 
