@@ -869,3 +869,12 @@ def test_review_advises_on_servants_and_teamsters():
     found = _found(saga, covenant, "finish")
     assert found["Enough servants for its inhabitants"][0] == "pass"
     assert found["Enough teamsters for its inhabitants"][0] == "pass"
+
+
+def test_review_says_what_covenfolk_the_baseline_gives():
+    saga = _saga()  # two magi
+    assert cov.baseline_covenfolk_note(saga, saga.covenants[0]) == (
+        "The baseline gives about 2 grog(s) and 4 other covenfolk (servants, "
+        "craftsmen) for its 2 magi, free of Build Points: add them on the "
+        "Inhabitants tab once the covenant is In Play."
+    )

@@ -168,6 +168,24 @@ def _magi(saga: Saga, covenant: Covenant) -> int:
     )
 
 
+def baseline_covenfolk_note(saga: Saga, covenant: Covenant) -> str:
+    """The covenfolk the creation baseline gives for free (about one grog
+    and two other covenfolk per magus), to add once the covenant is In
+    Play."""
+    magi = _magi(saga, covenant)
+    if not magi:
+        return (
+            "The baseline gives about one grog and two other covenfolk per "
+            "magus, free of Build Points."
+        )
+    return (
+        f"The baseline gives about {magi} grog(s) and {2 * magi} other "
+        "covenfolk (servants, craftsmen) for its "
+        f"{magi} magi, free of Build Points: add them on the Inhabitants tab "
+        "once the covenant is In Play."
+    )
+
+
 def lab_points(lab: Laboratory) -> int:
     """A laboratory's own Build Points (laboratories.lab_build_points)."""
     return lab_build_points(lab)

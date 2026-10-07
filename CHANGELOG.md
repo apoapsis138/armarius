@@ -41,6 +41,13 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.27.0 — 2026-10-07
+
+- The covenant worksheet's Review step says how many grogs and other
+  covenfolk the creation baseline gives for free (about one grog and two
+  others per magus), to add on the Inhabitants tab once the covenant is
+  In Play.
+
 ## 2.26.0 — 2026-10-07
 
 - Use a base covenant, on the covenant worksheet's Baseline step, starts

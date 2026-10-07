@@ -590,6 +590,7 @@ def _review_budget(saga: Saga, record: Record) -> str:
     lines = ["Review:", *review_lines(saga, record)]
     if isinstance(record, Covenant):
         lines += ["", "Build Points:", _tally(saga, record)]
+        lines += ["", f"[dim]{escape(cov.baseline_covenfolk_note(saga, record))}[/]"]
     return "\n".join(lines)
 
 
