@@ -78,14 +78,16 @@ async def test_edit_arts_prefills_existing_scores_and_saves_full_grid():
         assert app.screen.query_one("#input-art-creo-xp", Input).value == "55"
         assert app.screen.query_one("#input-art-ignem-xp", Input).value == "15"
         assert app.screen.query_one("#input-art-rego-xp", Input).value == "0"
-        assert "Score 10" in str(
+        assert "10       66 xp" in str(
             app.screen.query_one("#art-score-creo", Label).render()
         )
 
         app.screen.query_one("#input-art-rego-xp", Input).value = "6"
         await pilot.pause()
         # The score beside the XP follows as it's typed.
-        assert "Score 3" in str(app.screen.query_one("#art-score-rego", Label).render())
+        assert "3        10 xp" in str(
+            app.screen.query_one("#art-score-rego", Label).render()
+        )
 
         await pilot.click("#btn-save")
         await pilot.pause()

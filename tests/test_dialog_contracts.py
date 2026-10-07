@@ -466,7 +466,7 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: (_char(s).abilities[0].level, _char(s).abilities[0].specialty),
         expected=(5, "Grammar"),
         invalid={"XP": "-5"},
-        live={"#fields-live": "Score 5 · 30 xp to next"},
+        live={"#fields-live": "Latin: Score 5 · Score 6 at 105 xp"},
         # the score and xp are in columns
         shown={"#abilities-list": "Latin (Grammar)           5       75/105"},
     ),
@@ -1271,7 +1271,7 @@ CONTRACTS: dict[str, Contract] = {
         ],
         expected=[("General", 30, "Running")],
         invalid={"XP": "-5"},
-        live={"#fields-live": "Score 3 · 20 xp to next"},
+        live={"#fields-live": "Athletics: Score 3 · Score 4 at 50 xp"},
         shown={"#abilities-list": "Athletics (Running)"},
     ),
     "edit arts": Contract(
@@ -1281,8 +1281,8 @@ CONTRACTS: dict[str, Contract] = {
         expected=(55, 6),
         invalid={"Creo": "lots"},
         live={
-            "#art-score-creo": "Score 10 · 11 xp to next",
-            "#art-score-vim": "Score 3 · 4 xp to next",
+            "#art-score-creo": "10       66 xp",
+            "#art-score-vim": "3        10 xp",
         },
     ),
     "edit familiar fatigue": Contract(

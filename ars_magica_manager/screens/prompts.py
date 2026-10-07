@@ -58,7 +58,7 @@ from ..models import (
     new_instance_id,
     next_season,
 )
-from ..rules import creation_access, lab_seasons, scores
+from ..rules import lab_seasons, scores
 from ..rules import xp as xp_rules
 from ..rules.creation_covenant import (
     POWER_BY_NAME,
@@ -109,16 +109,12 @@ def _ability_dialog(
     save_label: str = "Save",
 ) -> FieldsDialog[dict[str, Any]]:
     """Add or edit an Ability: its xp, with the score it buys shown live
-    (with the owner's Puissant and Affinity, from `virtues_flaws`), and its
-    Specialty."""
+    (with the owner's Puissant, from `virtues_flaws`), and its Specialty."""
     bonus, _ = scores.ability_bonus(virtues_flaws, name)
-    multiplier = creation_access.affinity_multiplier(virtues_flaws, name)
 
     def live(values: dict[str, Any]) -> str:
-        score, affinity = st.live_score(
-            values["xp"], xp_rules.ABILITY_FACTOR, bonus, multiplier
-        )
-        return f"{score} ({affinity})" if affinity else score
+        score = st.live_score(values["xp"], xp_rules.ABILITY_FACTOR, bonus)
+        return f"{escape(name)}: {score}"
 
     return FieldsDialog(
         escape(name),

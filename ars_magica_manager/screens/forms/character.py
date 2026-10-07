@@ -35,7 +35,7 @@ from ...models import (
     VirtueFlawInstance,
     Wounds,
 )
-from ...rules import creation_access, creation_characteristics, scores
+from ...rules import creation_characteristics, scores
 from ...rules import xp as xp_rules
 from ..fields import (
     _EMPHASIS_HINT,
@@ -440,8 +440,8 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
     list. Two side-by-side columns (Techniques, Forms), mirroring the sheet's
     own two-column Magical Arts display -- sized to fit every row without a
     scrollbar (Forms, the taller column, is only 10 rows). Each Art's total
-    XP is typed, with its score and the xp to the next beside it, updated
-    as it changes. Dismisses with a dict of every art's lowercase name ->
+    XP is typed, with its score and the total xp the next score needs
+    beside it in columns, updated as it changes. Dismisses with a dict of every art's lowercase name ->
     ArtScore, or None if cancelled.
     """
 
@@ -480,6 +480,10 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
 
     .column-heading {
         text-style: bold;
+    }
+
+    /* a column's heading names the Arts' column, then the others */
+    .art-head-row {
         margin-bottom: 1;
     }
 
@@ -494,12 +498,18 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
         padding-right: 1;
     }
 
-    /* "Score 20 (23) · 210 xp to next"; an Affinity adds a second line */
+    /* "20 (23)  231 xp": the score, then the next score's total */
     .art-row .art-score {
-        width: 31;
-        height: auto;
-        content-align: left top;
+        width: 18;
+        content-align: left middle;
         padding-left: 1;
+        color: $text-muted;
+    }
+
+    .art-row .art-head-xp {
+        width: 7;
+        content-align: left middle;
+        padding-right: 0;
         color: $text-muted;
     }
 
@@ -527,13 +537,9 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
     ) -> None:
         super().__init__()
         self.arts = arts
-        # the owner's Puissant and Affinity, for each Art's live score
+        # the owner's Puissant, for each Art's live score
         self._bonus = {
             art.lower(): scores.art_bonus(virtues_flaws, art)[0] for art in ARTS
-        }
-        self._multiplier = {
-            art.lower(): creation_access.affinity_multiplier(virtues_flaws, art)
-            for art in ARTS
         }
 
     def compose(self) -> ComposeResult:
@@ -553,6 +559,14 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
                 classes="art-score",
             )
 
+        def head(title: str):
+            with Horizontal(classes="art-row art-head-row"):
+                yield Label(title, classes="column-heading")
+                yield Label("XP", classes="art-head-xp")
+                yield Label(
+                    f"{'Score':<{self._SCORE_WIDTH}}Next at", classes="art-score"
+                )
+
         with Vertical(id="arts-dialog", classes="dialog-box"):
             yield Label("Edit Arts", id="arts-title", classes="dialog-title")
             yield Label(
@@ -560,12 +574,12 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
             )
             with Horizontal(id="arts-columns"):
                 with Vertical(id="arts-techniques-col"):
-                    yield Label("Techniques", classes="column-heading")
+                    yield from head("Techniques")
                     for technique in TECHNIQUES:
                         with Horizontal(classes="art-row"):
                             yield from row(technique)
                 with Vertical(id="arts-forms-col"):
-                    yield Label("Forms", classes="column-heading")
+                    yield from head("Forms")
                     for form in FORMS:
                         with Horizontal(classes="art-row"):
                             yield from row(form)
@@ -580,14 +594,20 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
         elif event.button.id == "btn-save":
             self._try_save()
 
+    #: The Score column's width, before Next at.
+    _SCORE_WIDTH = 9
+
     def _score_label(self, key: str, xp: int | None) -> str:
-        score, affinity = st.live_score(
-            xp, xp_rules.ART_FACTOR, self._bonus[key], self._multiplier[key]
-        )
-        return f"{score}\n{affinity}" if affinity else score
+        """The Art's score and the total xp the next score needs, "10 (13)
+        66 xp" with Puissant, or "?" while the XP isn't a number."""
+        if xp is None or xp < 0:
+            return "?"
+        progress = xp_rules.progress(xp, xp_rules.ART_FACTOR)
+        score = st.adjusted_score(progress.score, self._bonus[key])
+        return f"{score:<{self._SCORE_WIDTH}}{progress.next_total} xp"
 
     def on_input_changed(self, event: Input.Changed) -> None:
-        """Keep each Art's score and xp to next beside its XP as the user
+        """Keep each Art's score and next total beside its XP as the user
         types."""
         input_id = event.input.id or ""
         if not (input_id.startswith("input-art-") and input_id.endswith("-xp")):

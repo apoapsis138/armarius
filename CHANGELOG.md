@@ -41,6 +41,14 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.22.1 — 2026-10-07
+
+- The live score while editing XP now shows the total the next score
+  needs, like the XP field beside it, rather than the xp still to gain:
+  "Latin: Score 2 · Score 3 at 30 xp", with the Ability's name first.
+  Edit Arts shows it in Score and Next at columns. The Affinity note
+  is gone from these forms, which hold totals.
+
 ## 2.22.0 — 2026-10-07
 
 - Editing an Ability's or Art's XP shows, as you type, the score it buys
