@@ -2,6 +2,7 @@
 
 import asyncio
 
+import pytest
 from screen_helpers import (
     _open_familiar_section,
     _open_section,
@@ -20,7 +21,10 @@ from ars_magica_manager import catalog, storage
 from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Character, Saga, VirtueFlawInstance
 from ars_magica_manager.screens import (
+    AbilityPickerScreen,
+    CovenantBoonHookPickerScreen,
     FieldsDialog,
+    LabVirtueFlawPickerScreen,
     SpellChooserScreen,
     VirtueFlawPickerScreen,
     WorkspaceScreen,
@@ -55,11 +59,48 @@ async def test_spell_picker_details_follow_the_highlight():
         picker = SpellChooserScreen(Saga(id="s", name="S"))
         app.push_screen(picker)
         await _wait_for_picker_ready(pilot, app)
-        details = picker.query_one("#spell-chooser-details-text", Static)
+        details = picker.query_one("#picker-details-text", Static)
         first, second = (picker._by_item_id[i] for i in picker.shown_ids()[:2])
         assert first.name in str(details.render())
         await pilot.press("down", "down")  # into the list, then the next row
         assert await wait_until(pilot, lambda: second.name in str(details.render()))
+
+
+@pytest.mark.parametrize(
+    "make_picker, describe",
+    [
+        (
+            lambda: CovenantBoonHookPickerScreen("Boon"),
+            lambda e: e.description,
+        ),
+        (LabVirtueFlawPickerScreen, lambda e: e.description),
+        (AbilityPickerScreen, lambda e: e.description),
+    ],
+    ids=["boons-hooks", "lab-virtues-flaws", "abilities"],
+)
+async def test_catalog_picker_details_follow_the_highlight(make_picker, describe):
+    # The Boon/Hook, lab Virtue/Flaw and Ability pickers show the
+    # highlighted entry's rules text and book under the list, as the spell
+    # picker does; a search with no match empties the panel.
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        picker = make_picker()
+        app.push_screen(picker)
+        await _wait_for_picker_ready(pilot, app)
+        details = picker.query_one("#picker-details-text", Static)
+
+        def shown() -> str:
+            return " ".join(str(details.render()).split())
+
+        first, second = (picker._by_item_id[i] for i in picker.shown_ids()[:2])
+        assert " ".join(describe(first).split())[:40] in shown()
+        assert "Source: " in shown()
+        await pilot.press("down", "down")
+        assert await wait_until(
+            pilot, lambda: " ".join(describe(second).split())[:40] in shown()
+        )
+        picker.query_one("#picker-search", Input).value = "zzzz no such entry"
+        assert await wait_until(pilot, lambda: shown() == "")
 
 
 async def test_vf_picker_offers_repeatable_entries_and_refuses_a_same_choice_repeat():
@@ -203,7 +244,7 @@ async def test_vf_picker_search_matches_summaries_after_names():
         assert in_name == sorted(in_name, reverse=True)  # names first
         assert any(in_name) and not all(in_name)
         # The chosen row's summary shows under the list.
-        details = str(picker.query_one("#vf-picker-details", Static).render())
+        details = str(picker.query_one("#picker-details-text", Static).render())
         assert listed[0].summary[:30] in details.replace("\n", " ")
 
 

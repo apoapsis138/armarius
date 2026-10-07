@@ -451,7 +451,7 @@ async def test_apprenticeship_step_learns_a_spell_with_its_lab_total():
         assert "Apprenticeship: 240 xp" in _text(screen, "#ws-budget")
         await _press_button(pilot, screen, "Learn a spell")
         picker = await _wait_for(pilot, app, SpellChooserScreen)
-        details = str(picker.query_one("#spell-chooser-details-text", Static).render())
+        details = str(picker.query_one("#picker-details-text", Static).render())
         assert "Lab Total for it (aura 3)" in details
         picker._on_entry_selected(
             spl.find_spell(screen.saga, "spell_wizard_s_sidestep")

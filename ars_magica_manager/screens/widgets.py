@@ -33,7 +33,7 @@ from textual.widgets._footer import FooterKey
 from textual.widgets._tabbed_content import ContentTabs
 from textual.widgets.option_list import Option
 
-from .. import catalog
+from .. import catalog, sourcebooks
 from .. import sheet_text as st
 from ..covenants import (
     UNKNOWN_HOOK_POINTS,
@@ -139,6 +139,23 @@ def boon_hook_info_text(covenant: Covenant, index: int | None) -> str:
         )
     elif definition.unknown:
         lines.append("[dim]May be Unknown (mark it in its Edit form).[/]")
+    lines += _boon_hook_rule_lines(definition, by_id)
+    # The user's own description leads; the official rules text follows.
+    description = instance.params.get(BOON_HOOK_DESCRIPTION, "").strip()
+    if description:
+        lines += ["", "[b]Description:[/]", markdown_inline(description)]
+    lines += ["", "[b]Rules:[/]", escape(definition.description)]
+    if definition.source:
+        lines += ["", f"[dim]Source: {escape(definition.source)}[/]"]
+    return "\n".join(lines)
+
+
+def _boon_hook_rule_lines(
+    definition: CovenantBoonHookDef, by_id: dict[str, CovenantBoonHookDef]
+) -> list[str]:
+    """A Boon's or Hook's prerequisites, exclusions, effects and how often
+    it may be taken, one details-panel line each."""
+    lines = []
     if definition.requires:
         lines.append(f"[b]Requires:[/] {_boon_hook_names(definition.requires, by_id)}")
     if definition.requires_any:
@@ -155,13 +172,23 @@ def boon_hook_info_text(covenant: Covenant, index: int | None) -> str:
         )
     elif definition.repeatable:
         lines.append("[dim]May be taken more than once; the effects stack.[/]")
-    # The user's own description leads; the official rules text follows.
-    description = instance.params.get(BOON_HOOK_DESCRIPTION, "").strip()
-    if description:
-        lines += ["", "[b]Description:[/]", markdown_inline(description)]
-    lines += ["", "[b]Rules:[/]", escape(definition.description)]
-    if definition.source:
-        lines += ["", f"[dim]Source: {escape(definition.source)}[/]"]
+    return lines
+
+
+def boon_hook_entry_text(
+    definition: CovenantBoonHookDef, by_id: dict[str, CovenantBoonHookDef]
+) -> str:
+    """A catalog Boon or Hook as the picker shows it under the list: its
+    type, tier, rules and book."""
+    lines = []
+    if definition.category:
+        lines.append(f"[b]Type:[/] {definition.category}")
+    lines.append(f"[b]Tier:[/] {_tier_text(definition)}")
+    if definition.unknown:
+        lines.append("[dim]May be Unknown.[/]")
+    lines += _boon_hook_rule_lines(definition, by_id)
+    lines += ["", escape(definition.description)]
+    lines += ["", f"[dim]Source: {escape(sourcebooks.titles(definition.source))}[/]"]
     return "\n".join(lines)
 
 

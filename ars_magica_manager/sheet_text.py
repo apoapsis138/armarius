@@ -9,7 +9,7 @@ from __future__ import annotations
 from collections.abc import Collection, Sequence
 
 from . import books as bk
-from . import catalog
+from . import catalog, sourcebooks
 from . import spells as spl
 from .markup import escape
 from .models import (
@@ -191,6 +191,17 @@ def ability_info_text(
         description = escape(definition.description)
     bonus, bonus_from = scores.ability_bonus(virtues_flaws, ability.name)
     return "\n\n".join([xp_line(ability.progress, bonus, bonus_from), description])
+
+
+def ability_entry_text(definition: AbilityDef) -> str:
+    """A catalog Ability as the picker shows it under the list: its
+    category, what it needs naming, what it covers and its book."""
+    lines = [f"[b]Category:[/] {escape(definition.category)}"]
+    if definition.parameters:
+        lines.append(f"[b]Needs:[/] {escape(', '.join(definition.parameters))}")
+    lines += ["", escape(definition.description) or "[dim](no description)[/]"]
+    lines += ["", f"[dim]Source: {escape(sourcebooks.titles(definition.source))}[/]"]
+    return "\n".join(lines)
 
 
 def vf_rows(

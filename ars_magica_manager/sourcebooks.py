@@ -83,6 +83,15 @@ def books_of(source: str) -> set[str]:
     }
 
 
+def titles(source: str) -> str:
+    """The books a `source` cites, by title ("ArM5; Covenants" -> "Ars
+    Magica Definitive Edition; Covenants"); `source` itself if it cites
+    none."""
+    cited = books_of(source)
+    known = [title for book, title in SOURCEBOOKS.items() if book in cited]
+    return "; ".join(known + sorted(cited - SOURCEBOOKS.keys())) or source
+
+
 def in_play(source: str, books: Collection[str] | None) -> bool:
     """Whether an entry citing `source` is in play with `books` (None: every
     book). In play if it cites no book, or any book in play."""

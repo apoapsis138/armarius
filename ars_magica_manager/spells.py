@@ -265,8 +265,7 @@ OWN_SOURCE = "__own__"
 
 def source_text(spell: Spell) -> str:
     """Where a spell is printed: "Magi of Hermes, p. 56"."""
-    books = sorted(sourcebooks.books_of(spell.source))
-    title = "; ".join(sourcebooks.SOURCEBOOKS.get(b, b) for b in books) or spell.source
+    title = sourcebooks.titles(spell.source)
     return f"{title}, p. {spell.page}" if spell.page else title
 
 

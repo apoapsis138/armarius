@@ -122,7 +122,8 @@ Edit Fatigue in More (`m`), sets the Fatigue Level.
 Every Ability the character has, in one list grouped by category.
 
 **You type:** each Ability's total XP and its Specialty. `a` picks a new
-Ability from the catalog.
+Ability from the catalog; the picker shows the highlighted Ability's
+description under the list.
 
 **The app works out:** the score from the XP, and the XP the next score
 needs, shown as score and then XP over the next total (Ars Magica Definitive

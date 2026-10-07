@@ -74,7 +74,8 @@ Reputations and unknown ones cost nothing.
 <!-- help: section-cov-boons -->
 
 The covenant's Boons, chosen from the catalogue with `a` and edited with `e`
-to give their detail and description. The title shows the points they cost.
+to give their detail and description. The picker shows the highlighted
+Boon's rules, requirements and book under the list. The title shows the points they cost.
 That total and the Hooks' total share one colour: plain while there are
 points still to spend, the success colour when they match, and the error
 colour when the Boons cost more than the Hooks provide. Some Boons change

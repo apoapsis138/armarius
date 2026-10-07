@@ -41,6 +41,15 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.20.0 — 2026-10-07
+
+- The Boons and Hooks, Laboratory Virtues and Flaws, and Abilities
+  pickers now show the highlighted entry's details under the list, as
+  the spell picker does: its rules text, tier and points, what it
+  requires or rules out, its effects and the book it comes from.
+- Pickers name an entry's books in full ("Ars Magica Definitive
+  Edition; Covenants"), core book first.
+
 ## 2.19.3 — 2026-10-07
 
 - Behind the scenes: the Plan Season form and the Invent Spell screen are

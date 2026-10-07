@@ -29,6 +29,8 @@ from textual.widgets import (
 from textual.widgets.option_list import Option
 
 from .. import catalog, sourcebooks
+from .. import laboratories as labs
+from .. import sheet_text as st
 from .. import spells as spl
 from ..markup import escape
 from ..models import (
@@ -55,7 +57,7 @@ from .prompts import (
     _param_dialog,
     param_choices,
 )
-from .widgets import _boon_hook_names
+from .widgets import _boon_hook_names, boon_hook_entry_text
 
 _VIRTUE_FLAW_ITEM_ID_PREFIX = "vf-"
 
@@ -91,9 +93,11 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
     (kept distinct per picker, not shared, so existing tests that query e.g.
     "#vf-picker-list" by id keep working) and the `_load_entries`/
     `_search_text`/`_label_for`/`_item_id`/`_on_entry_selected` hooks below
-    (an entry's item id is its option's id), and `_highlighted` to follow
-    the row the highlight is on. A picker with filters beside the search box also overrides
-    `_compose_filters`/`_compose_below_list`/`_candidates`/`_match`/`_filled`.
+    (an entry's item id is its option's id). A picker that shows the
+    highlighted entry's details under the list sets `DETAILS_HEIGHT` (its
+    rows) and `_details`. A picker with filters beside the search box also
+    overrides `_compose_filters`/`_compose_below_list`/`_candidates`/
+    `_match`/`_filled`.
     Generic over the catalog entry type and the dialog's result.
 
     Given the saga's `books` in play (sourcebooks.saga_books; None: every
@@ -110,6 +114,8 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
     EMPTY_MESSAGE: ClassVar[str] = "(nothing available)"
     SEARCH_PLACEHOLDER: ClassVar[str] = "Search..."
     LIST_VIEW_ID: ClassVar[str] = "picker-list"
+    #: The details panel's height in rows; 0: no panel.
+    DETAILS_HEIGHT: ClassVar[int] = 0
 
     DEFAULT_CSS = """
     SearchablePickerScreen {
@@ -134,6 +140,15 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
     #picker-books {
         color: $text-muted;
     }
+
+    SearchablePickerScreen.-with-details #picker-dialog {
+        width: 100;
+        max-height: 40;
+    }
+
+    #picker-details {
+        margin-top: 1;
+    }
     """
 
     def __init__(
@@ -145,6 +160,8 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
         books: frozenset[str] | None = None,
     ) -> None:
         super().__init__()
+        if self.DETAILS_HEIGHT:
+            self.add_class("-with-details")
         self.picker_title = title or self.PICKER_TITLE
         #: The books in play (None: every book), whether entries from other
         #: books are listed too (F3), and how many the last refill hid.
@@ -168,6 +185,10 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
             yield from self._compose_filters()
             yield OptionList(id=self.LIST_VIEW_ID, compact=True)
             yield from self._compose_below_list()
+            if self.DETAILS_HEIGHT:
+                with VerticalScroll(id="picker-details") as details:
+                    details.styles.height = self.DETAILS_HEIGHT
+                    yield Static(id="picker-details-text")
             if self._books is not None:
                 yield Static(id="picker-books")
             yield Button("Cancel", id="btn-cancel")
@@ -194,8 +215,10 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
     def _on_entry_selected(self, entry: EntryT) -> None:
         raise NotImplementedError
 
-    def _highlighted(self, entry: EntryT | None) -> None:
-        """The highlight moved to `entry` (None: a message row, or none)."""
+    def _details(self, entry: EntryT) -> str:
+        """The highlighted entry's details, under the list (with
+        DETAILS_HEIGHT set)."""
+        return ""
 
     def _source(self, entry: EntryT) -> str:
         """The book(s) `entry` is from ("": none, always in play)."""
@@ -247,6 +270,13 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
     def _filled(self, shown: list[EntryT]) -> None:
         """Called with the entries listed after each refill."""
 
+    def _show_details(self, entry: EntryT | None) -> None:
+        """Show `entry`'s details under the list (None: a message row, or
+        nothing listed)."""
+        if self.DETAILS_HEIGHT:
+            text = self._details(entry) if entry is not None else ""
+            self.query_one("#picker-details-text", Static).update(text)
+
     # -- filtering / list rendering --
 
     async def _render_list(self, query: str) -> None:
@@ -283,6 +313,7 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
 
         if not self._entries:
             self._filled([])
+            self._show_details(None)
             option_list.add_option(Option(self.empty_message, disabled=True))
             return
 
@@ -291,6 +322,7 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
         self._update_books_note()
         matches = self._match(candidates, needle) if needle else candidates
         self._filled(matches)
+        self._show_details(matches[0] if matches else None)
         if not matches:
             message = (
                 f"(no matches for {escape(repr(query))})"
@@ -358,7 +390,7 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
     ) -> None:
         if event.option_list.id == self.LIST_VIEW_ID:
             option_id = event.option_id
-            self._highlighted(self._by_item_id.get(option_id) if option_id else None)
+            self._show_details(self._by_item_id.get(option_id) if option_id else None)
 
     async def _activate(self, item_id: str | None) -> None:
         if item_id is None:
@@ -423,6 +455,7 @@ class VirtueFlawPickerScreen(
     EMPTY_MESSAGE: ClassVar[str] = "(no more Virtues/Flaws available)"
     SEARCH_PLACEHOLDER: ClassVar[str] = "Search names, types and summaries..."
     LIST_VIEW_ID: ClassVar[str] = "vf-picker-list"
+    DETAILS_HEIGHT: ClassVar[int] = 3
 
     BINDINGS: ClassVar[list[BindingType]] = [
         Binding("f2", "cycle_side", "Virtues/Flaws/Both"),
@@ -430,11 +463,6 @@ class VirtueFlawPickerScreen(
     ]
 
     DEFAULT_CSS = """
-    VirtueFlawPickerScreen #picker-dialog {
-        width: 100;
-        max-height: 40;
-    }
-
     VirtueFlawPickerScreen #picker-search {
         margin-bottom: 0;
     }
@@ -464,11 +492,6 @@ class VirtueFlawPickerScreen(
     VirtueFlawPickerScreen #vf-picker-status {
         color: $text-muted;
         margin-bottom: 1;
-    }
-
-    VirtueFlawPickerScreen #vf-picker-details {
-        height: 3;
-        margin-top: 1;
     }
     """
 
@@ -532,9 +555,6 @@ class VirtueFlawPickerScreen(
             )
             yield Checkbox("Show ineligible", id="vf-picker-ineligible", compact=True)
         yield Static(id="vf-picker-status")
-
-    def _compose_below_list(self) -> ComposeResult:
-        yield Static(id="vf-picker-details")
 
     def action_cycle_side(self) -> None:
         sides = [value for _, value in _VF_SIDES]
@@ -639,21 +659,13 @@ class VirtueFlawPickerScreen(
         self.query_one("#vf-picker-status", Static).update(
             f"{len(shown)} listed, {hidden}.  F2: Virtues / Flaws / Both"
         )
-        self._show_details(shown[0] if shown else None)
 
-    def _highlighted(self, entry: VirtueFlawDef | None) -> None:
-        self._show_details(entry)
-
-    def _show_details(self, entry: VirtueFlawDef | None) -> None:
-        """The chosen entry's summary, source and (if any) why it's
-        ineligible, under the list."""
-        text = ""
-        if entry is not None:
-            facts = [f"Source: {entry.source}"]
-            if refusal := self._refusals.get(entry.id):
-                facts.append(f"Ineligible: {refusal}")
-            text = f"{escape(entry.summary)}\n[dim]{escape('   '.join(facts))}[/]"
-        self.query_one("#vf-picker-details", Static).update(text)
+    def _details(self, entry: VirtueFlawDef) -> str:
+        """The entry's summary, source and (if any) why it's ineligible."""
+        facts = [f"Source: {entry.source}"]
+        if refusal := self._refusals.get(entry.id):
+            facts.append(f"Ineligible: {refusal}")
+        return f"{escape(entry.summary)}\n[dim]{escape('   '.join(facts))}[/]"
 
     def _search_text(self, entry: VirtueFlawDef) -> str:
         return (
@@ -716,6 +728,7 @@ class LabVirtueFlawPickerScreen(
     EMPTY_MESSAGE: ClassVar[str] = "(no more Virtues/Flaws available)"
     SEARCH_PLACEHOLDER: ClassVar[str] = "Search Laboratory Virtues & Flaws..."
     LIST_VIEW_ID: ClassVar[str] = "lab-vf-picker-list"
+    DETAILS_HEIGHT: ClassVar[int] = 10
 
     def __init__(
         self,
@@ -745,6 +758,9 @@ class LabVirtueFlawPickerScreen(
     def _source(self, entry: LabVirtueFlawDef) -> str:
         return entry.source
 
+    def _details(self, entry: LabVirtueFlawDef) -> str:
+        return labs.vf_entry_text(entry)
+
     def _on_entry_selected(self, entry: LabVirtueFlawDef) -> None:
         if not entry.choices:
             self.dismiss(VirtueFlawInstance(vf_id=entry.id))
@@ -772,6 +788,7 @@ class CovenantBoonHookPickerScreen(
     """
 
     LIST_VIEW_ID: ClassVar[str] = "covbh-picker-list"
+    DETAILS_HEIGHT: ClassVar[int] = 10
 
     def __init__(
         self,
@@ -826,6 +843,9 @@ class CovenantBoonHookPickerScreen(
     def _source(self, entry: CovenantBoonHookDef) -> str:
         return entry.source
 
+    def _details(self, entry: CovenantBoonHookDef) -> str:
+        return boon_hook_entry_text(entry, self._by_id)
+
     def _on_entry_selected(self, entry: CovenantBoonHookDef) -> None:
         def handle_detail(result: dict[str, Any] | None) -> None:
             if result is None:
@@ -859,6 +879,7 @@ class AbilityPickerScreen(SearchablePickerScreen[AbilityDef, Ability | None]):
     EMPTY_MESSAGE: ClassVar[str] = "(no more Abilities available)"
     SEARCH_PLACEHOLDER: ClassVar[str] = "Search Abilities..."
     LIST_VIEW_ID: ClassVar[str] = "ability-picker-list"
+    DETAILS_HEIGHT: ClassVar[int] = 10
 
     def __init__(
         self,
@@ -884,6 +905,9 @@ class AbilityPickerScreen(SearchablePickerScreen[AbilityDef, Ability | None]):
 
     def _source(self, entry: AbilityDef) -> str:
         return entry.source
+
+    def _details(self, entry: AbilityDef) -> str:
+        return st.ability_entry_text(entry)
 
     def _on_entry_selected(self, entry: AbilityDef) -> None:
         if entry.parameters:
@@ -929,18 +953,7 @@ class SpellChooserScreen(SearchablePickerScreen[Spell, str | None]):
     EMPTY_MESSAGE: ClassVar[str] = "(no spells)"
     SEARCH_PLACEHOLDER: ClassVar[str] = "Search spells by name or Arts (e.g. CrIg)..."
     LIST_VIEW_ID: ClassVar[str] = "spell-chooser-list"
-
-    DEFAULT_CSS = """
-    SpellChooserScreen #picker-dialog {
-        width: 100;
-        max-height: 40;
-    }
-
-    SpellChooserScreen #spell-chooser-details {
-        height: 12;
-        margin-top: 1;
-    }
-    """
+    DETAILS_HEIGHT: ClassVar[int] = 12
 
     def __init__(
         self,
@@ -956,24 +969,13 @@ class SpellChooserScreen(SearchablePickerScreen[Spell, str | None]):
         self.saga = saga
         self.exclude = exclude or set()
         self._origin: dict[str, str] = {}
-        self._details = details
+        self._extra_details = details
 
-    def _compose_below_list(self) -> ComposeResult:
-        with VerticalScroll(id="spell-chooser-details"):
-            yield Static(id="spell-chooser-details-text")
-
-    def _filled(self, shown: list[Spell]) -> None:
-        super()._filled(shown)
-        self._show_details(shown[0] if shown else None)
-
-    def _highlighted(self, entry: Spell | None) -> None:
-        self._show_details(entry)
-
-    def _show_details(self, spell: Spell | None) -> None:
-        text = spl.detail_text(self.saga, spell)
-        if spell is not None and self._details is not None:
-            text += "\n" + self._details(spell)
-        self.query_one("#spell-chooser-details-text", Static).update(text)
+    def _details(self, entry: Spell) -> str:
+        text = spl.detail_text(self.saga, entry)
+        if self._extra_details is not None:
+            text += "\n" + self._extra_details(entry)
+        return text
 
     def _load_entries(self) -> list[Spell]:
         entries = []

@@ -12,7 +12,7 @@ from collections import Counter
 from collections.abc import Collection, Iterable, Sequence
 from dataclasses import dataclass
 
-from . import catalog
+from . import catalog, sourcebooks
 from .arts import ARTS, TECHNIQUES
 from .markup import escape, markdown_inline, problem, todo
 from .models import (
@@ -668,15 +668,7 @@ def vf_info_text(lab: Laboratory, index: int | None) -> str:
         f"[b]Category:[/] {definition.category}",
         f"[b]Tier:[/] {definition.tier} {definition.type} ({_points(definition.cost)})",
     ]
-    grants = specialization_grant_text(instance, definition)
-    if grants:
-        lines.append(f"[b]Specializations:[/] {grants}")
-    if definition.characteristic_modifiers:
-        effects = ", ".join(
-            f"{_characteristic_label(c)} {amount:+d}"
-            for c, amount in definition.characteristic_modifiers.items()
-        )
-        lines.append(f"[b]Characteristics:[/] {effects}")
+    lines += _vf_effect_lines(instance, definition)
     if instance.vf_id in FEATURE_VIRTUE_POINTS:
         feature = feature_on(lab, instance)
         lines.append(
@@ -687,6 +679,44 @@ def vf_info_text(lab: Laboratory, index: int | None) -> str:
         lines.append(f"[b]Focus of:[/] {escape(feature.name) if feature else '(none)'}")
     lines += ["", "[b]Rules:[/]", escape(definition.description)]
     return "\n".join(lines)
+
+
+def vf_entry_text(definition: LabVirtueFlawDef) -> str:
+    """A catalog Laboratory Virtue/Flaw as the picker shows it under the
+    list: category, tier and points, its effects, the rules and its book."""
+    lines = [
+        f"[b]Category:[/] {definition.category}",
+        f"[b]Tier:[/] {definition.tier} {definition.type} ({_points(definition.cost)})",
+    ]
+    if definition.repeatable:
+        lines.append("[dim]A laboratory may have it more than once.[/]")
+    lines += _vf_effect_lines(
+        VirtueFlawInstance(vf_id=definition.id), definition, unchosen="you choose"
+    )
+    lines += ["", escape(definition.description)]
+    lines += ["", f"[dim]Source: {escape(sourcebooks.titles(definition.source))}[/]"]
+    return "\n".join(lines)
+
+
+def _vf_effect_lines(
+    instance: VirtueFlawInstance,
+    definition: LabVirtueFlawDef,
+    *,
+    unchosen: str = "not chosen",
+) -> list[str]:
+    """A lab Virtue/Flaw's Specialization grants and effects on the
+    Characteristics, one details-panel line each."""
+    lines = []
+    grants = specialization_grant_text(instance, definition, unchosen=unchosen)
+    if grants:
+        lines.append(f"[b]Specializations:[/] {grants}")
+    if definition.characteristic_modifiers:
+        effects = ", ".join(
+            f"{_characteristic_label(c)} {amount:+d}"
+            for c, amount in definition.characteristic_modifiers.items()
+        )
+        lines.append(f"[b]Characteristics:[/] {effects}")
+    return lines
 
 
 def unchosen_specialization(
@@ -700,10 +730,14 @@ def unchosen_specialization(
 
 
 def specialization_grant_text(
-    instance: VirtueFlawInstance, definition: LabVirtueFlawDef
+    instance: VirtueFlawInstance,
+    definition: LabVirtueFlawDef,
+    *,
+    unchosen: str = "not chosen",
 ) -> str:
     """Its Specialization grants in words: "Experimentation +1, Muto +2"; a
-    choice not yet made reads "(Muto or Rego, not chosen) +2"."""
+    choice not yet made reads "(Muto or Rego, not chosen) +2", with
+    `unchosen` in place of "not chosen"."""
     parts = []
     for target, points in definition.specialization_grants:
         if target == "{specialization}":
@@ -712,9 +746,9 @@ def specialization_grant_text(
             if chosen:
                 target = chosen
             elif len(options) <= 3:
-                target = f"({' or '.join(options)}, not chosen)"
+                target = f"({' or '.join(options)}, {unchosen})"
             else:
-                target = "(not chosen)"
+                target = f"({unchosen})"
         parts.append(f"{target} {points:+g}")
     for modifier in definition.modifiers:
         if modifier.applies_to == "lab_specialization_high":

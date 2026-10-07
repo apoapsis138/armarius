@@ -137,7 +137,8 @@ hasn't been chosen.
 <!-- help: section-lab-vf-virtues -->
 
 The laboratory's Virtues, with the points they come to in the title. Adding
-one picks it from the catalog; a Virtue that grants a Specialization of the
+one picks it from the catalog, which shows the highlighted entry's
+rules, effects and book under the list; a Virtue that grants a Specialization of the
 owner's choice asks for it then. Virtues can't be edited, only deleted and
 added again. A Feature Virtue is usually added along with its Feature on the
 Attributes tab.
