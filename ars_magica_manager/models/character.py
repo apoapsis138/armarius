@@ -337,6 +337,10 @@ class Character:
     #: Tractatus already studied (book ids): each gives its xp only once
     #: (DE Ch. 10, Studying Tractatus).
     tractatus_read: list[str] = field(default_factory=list)
+    #: Summae studied for at least a season (book ids), recorded as seasons
+    #: are applied: a commentary is read only after its summa (Covenants,
+    #: Other Opus Types).
+    summae_read: list[str] = field(default_factory=list)
     #: Whose raw Lab Texts this magus can read, and up to what level
     #: (decoded, or taught the author's abbreviations), by the
     #: author's character id -- or name, for an author outside the saga

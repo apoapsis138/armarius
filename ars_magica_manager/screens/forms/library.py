@@ -5,9 +5,9 @@ from __future__ import annotations
 
 from typing import Any
 
+from ... import book_kinds, catalog
 from ... import book_value as bv
 from ... import books as bk
-from ... import catalog
 from ... import spells as spl
 from ...arts import ARTS, FORMS, TECHNIQUES
 from ...markup import escape, problem
@@ -246,6 +246,60 @@ def _book_level_fields(book: Book | None, shows: _BookShows) -> list[DialogField
     ]
 
 
+def _book_kind_fields(
+    saga: Saga, book: Book | None, shows: _BookShows
+) -> list[DialogField]:
+    """What kind of work and copy it is (book_kinds): a tractatus can be a
+    commentary on a summa; any book can be an exemplar, flap-bound..."""
+    summae = [
+        (b.name or "(untitled)", b.id)
+        for b in saga.books
+        if b.type in bk.SUMMA_TYPES and b is not book
+    ]
+
+    def commentary(values: dict[str, Any]) -> bool:
+        return (
+            shows.book_type(values) == "Tractatus"
+            and values.get("opus") == book_kinds.COMMENTARY
+        )
+
+    return [
+        DialogField(
+            "opus",
+            "Opus",
+            "select",
+            _attr(book, "opus", "") or None,
+            options=[(k.name, k.name) for k in book_kinds.OPUS_TYPES.values()],
+            allow_blank=True,
+            placeholder="(an ordinary tractatus)",
+            hint=book_kinds.OPUS_TYPES[book_kinds.COMMENTARY].summary,
+            show_if=lambda v: shows.book_type(v) == "Tractatus",
+        ),
+        DialogField(
+            "commentary_on",
+            "Commentary on",
+            "select",
+            _attr(book, "commentary_on", None),
+            options=summae,
+            allow_blank=True,
+            placeholder="(its summa isn't in the saga)",
+            show_if=commentary,
+        ),
+        DialogField(
+            "physical_form",
+            "Physical form",
+            "select",
+            _attr(book, "physical_form", "") or None,
+            options=[
+                (f"{k.name} ({k.quality:+d} Quality)" if k.quality else k.name, k.name)
+                for k in book_kinds.PHYSICAL_FORMS.values()
+            ],
+            allow_blank=True,
+            placeholder="(an ordinary bound book)",
+        ),
+    ]
+
+
 def _lab_text_fields(book: Book | None, shows: _BookShows) -> list[DialogField]:
     """An enchantment's effect and device, or a Longevity Ritual's subject."""
     return [
@@ -345,6 +399,8 @@ def _book_ownership_fields(
         fills: dict[str, Any] = {
             "palimpsest": chosen.palimpsest,
             "encyclopedia": chosen.encyclopedia,
+            "collection": chosen.collection or None,
+            "florilegium_bonus": str(chosen.florilegium_bonus),
         }
         if mates:
             fills["owner"] = (
@@ -407,6 +463,32 @@ def _book_ownership_fields(
             "tractatus on the subject.",
             show_if=lambda v: bool(v.get("codex")),
         ),
+        DialogField(
+            "collection",
+            "Collection",
+            "select",
+            (codex.collection or None) if codex is not None else None,
+            options=[(k.name, k.name) for k in book_kinds.COLLECTIONS.values()],
+            allow_blank=True,
+            placeholder="(neither)",
+            hint=f"{book_kinds.FLORILEGIUM}: "
+            f"{book_kinds.COLLECTIONS[book_kinds.FLORILEGIUM].summary} "
+            f"{book_kinds.FOLIO}: {book_kinds.COLLECTIONS[book_kinds.FOLIO].summary}",
+            show_if=lambda v: bool(v.get("codex")),
+        ),
+        DialogField(
+            "florilegium_bonus",
+            "Florilegium bonus",
+            "select",
+            str(codex.florilegium_bonus if codex is not None else 1),
+            options=[
+                ("+1", "1"),
+                ("+2 (edited by an authority, from a peerless collection)", "2"),
+            ],
+            show_if=lambda v: (
+                bool(v.get("codex")) and v.get("collection") == book_kinds.FLORILEGIUM
+            ),
+        ),
     ]
 
 
@@ -424,6 +506,7 @@ def _book_fields(
         *_book_identity_fields(book, default_type, shows),
         *_book_subject_fields(saga, book, shows),
         *_book_level_fields(book, shows),
+        *_book_kind_fields(saga, book, shows),
         *_lab_text_fields(book, shows),
         *_book_authorship_fields(saga, book, shows),
         *_book_ownership_fields(saga, book, default_owner),
@@ -444,6 +527,8 @@ def _bind_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
     if codex is not None:
         codex.palimpsest = bool(values.get("palimpsest"))
         codex.encyclopedia = bool(values.get("encyclopedia"))
+        codex.collection = values.get("collection") or ""
+        codex.florilegium_bonus = int(values.get("florilegium_bonus") or 1)
     kind, owner_id = bk.parse_owner_value(values.get("owner"))
     bk.set_owner(saga, book, kind, owner_id)
     bk.prune_codices(saga)
@@ -495,6 +580,10 @@ def _book_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
         if spell.level is not None:
             book.level = spell.level
     book.quality = values.get("quality")
+    book.opus = (values.get("opus") or "") if book.type == "Tractatus" else ""
+    commentary = book.opus == book_kinds.COMMENTARY
+    book.commentary_on = (values.get("commentary_on") or None) if commentary else None
+    book.physical_form = values.get("physical_form") or ""
 
 
 def _book_live(values: dict[str, Any], saga: Saga, editing: Book | None = None) -> str:

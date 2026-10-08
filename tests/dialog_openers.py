@@ -369,6 +369,7 @@ OPENERS: dict[str, Opener] = {
         lambda ws: ws._book_form(next(b for b in ws.saga.books if b.id == "b-cov")),
     ),
     "add book into a codex": Opener("covenant", lambda ws: ws._book_form(None)),
+    "add commentary": Opener("covenant", lambda ws: ws._book_form(None)),
     "research bonuses": Opener("covenant", _open_research_bonuses),
     "add lab text": Opener("laboratory", lambda ws: ws._book_form(None)),
     "perform ritual again": Opener("laboratory", lambda ws: ws.action_perform_ritual()),

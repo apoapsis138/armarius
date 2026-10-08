@@ -13,9 +13,10 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from . import catalog, storage
+from . import book_kinds, catalog, storage
 from . import spells as spl
 from .arts import ART_LOOKUP
+from .book_kinds import Adjustment
 from .csv_import import parse_rows, read_text_any, skipped_preview
 from .markup import PROBLEM_GLYPH, escape, fit, markdown_inline, problem
 from .models import (
@@ -164,7 +165,7 @@ def cost(book: Book, saga: Saga | None = None) -> int:
     quality counts as 0; Other books cost nothing, and neither does a Lab
     Text or Casting Tablet on its own: those are bought as a pool (pool())."""
     level = level_of(book, saga) or 0
-    quality = effective_quality(saga, book) or 0
+    quality = priced_quality(saga, book) or 0
     if book.type == "Art Summa":
         return level + quality
     if book.type == "Ability Summa":
@@ -186,7 +187,7 @@ def priced(saga: Saga, book: Book) -> bool:
 def cost_formula(book: Book, saga: Saga | None = None) -> str:
     """How `cost` was worked out, e.g. "Level 12 + Quality 10"."""
     level = level_of(book, saga) or 0
-    quality = effective_quality(saga, book) or 0
+    quality = priced_quality(saga, book) or 0
     if book.type == "Art Summa":
         return f"Level {level} + Quality {quality}"
     if book.type == "Ability Summa":
@@ -477,15 +478,45 @@ def prune_codices(saga: Saga) -> None:
             book.codex_id = None
 
 
+def quality_adjustments(saga: Saga | None, book: Book) -> list[Adjustment]:
+    """What changes the Quality the book is studied at, beyond its own: its
+    opus type, its physical form, and the codex it is bound in (a
+    palimpsest's -3, a florilegium's bonus). See book_kinds."""
+    found: list[Adjustment] = []
+    opus = book_kinds.OPUS_TYPES.get(book.opus)
+    if opus is not None and opus.quality:
+        found.append(Adjustment(opus.name.lower(), opus.quality, opus.priced))
+    form = book_kinds.PHYSICAL_FORMS.get(book.physical_form)
+    if form is not None and form.quality:
+        found.append(Adjustment(form.name.lower(), form.quality, form.priced))
+    codex = codex_of(saga, book) if saga is not None else None
+    if codex is not None:
+        if codex.palimpsest:
+            found.append(Adjustment("palimpsest", -PALIMPSEST_PENALTY))
+        if codex.collection == book_kinds.FLORILEGIUM and book.type == "Tractatus":
+            found.append(
+                Adjustment("florilegium", codex.florilegium_bonus, priced=False)
+            )
+    return found
+
+
 def effective_quality(saga: Saga | None, book: Book) -> int | None:
-    """The Quality a reader studies the book at: its own, less 3 in a
-    palimpsest."""
-    if book.quality is None or saga is None:
-        return book.quality
-    codex = codex_of(saga, book)
-    if codex is not None and codex.palimpsest:
-        return max(0, book.quality - PALIMPSEST_PENALTY)
-    return book.quality
+    """The Quality a reader studies the book at: its own, with its
+    quality_adjustments (never below 0)."""
+    if book.quality is None:
+        return None
+    total = book.quality + sum(a.amount for a in quality_adjustments(saga, book))
+    return max(0, total)
+
+
+def priced_quality(saga: Saga | None, book: Book) -> int | None:
+    """The Quality its Build Point cost counts: its own, with the
+    adjustments that count toward cost (not a commentary's or a
+    florilegium's bonus)."""
+    if book.quality is None:
+        return None
+    adjustments = quality_adjustments(saga, book)
+    return max(0, book.quality + sum(a.amount for a in adjustments if a.priced))
 
 
 def grouped(saga: Saga, books: list[Book]) -> list[Book]:
@@ -510,7 +541,26 @@ def codex_label(saga: Saga, book: Book) -> str:
     codex = codex_of(saga, book)
     if codex is None:
         return ""
-    return codex.name + (" (palimpsest)" if codex.palimpsest else "")
+    kinds = []
+    if codex.collection == book_kinds.FLORILEGIUM:
+        kinds.append(f"florilegium, +{codex.florilegium_bonus}")
+    elif codex.collection:
+        kinds.append(codex.collection.lower())
+    if codex.palimpsest:
+        kinds.append("palimpsest")
+    return codex.name + (f" ({'; '.join(kinds)})" if kinds else "")
+
+
+def kind_text(saga: Saga, book: Book) -> str:
+    """The book's opus type and physical form for the details panel
+    ("Commentary on Physics · Exemplar"), or ""."""
+    parts = []
+    if book.opus:
+        summa = next((b for b in saga.books if b.id == book.commentary_on), None)
+        parts.append(f"{book.opus} on {summa.name}" if summa else book.opus)
+    if book.physical_form:
+        parts.append(book.physical_form)
+    return " · ".join(parts)
 
 
 # -------------------------------------------------------------------- text
@@ -607,12 +657,16 @@ def _codex_mark(saga: Saga, book: Book) -> str:
 
 
 def _quality_text(saga: Saga, book: Book) -> str:
-    """The details panel's Quality: a palimpsest's text shows what it is
-    read at."""
-    reduced = effective_quality(saga, book)
-    if reduced == book.quality:
+    """The details panel's Quality: what it is read at, and how, when
+    anything changes it ("10 (written 9; commentary +1)")."""
+    adjustments = quality_adjustments(saga, book)
+    if book.quality is None or not adjustments:
         return _number(book.quality)
-    return f"{_number(reduced)} (written {_number(book.quality)}; palimpsest -3)"
+    parts = ", ".join(f"{a.label} {a.amount:+d}" for a in adjustments)
+    return (
+        f"{_number(effective_quality(saga, book))} "
+        f"(written {_number(book.quality)}; {parts})"
+    )
 
 
 def _codex_lines(saga: Saga, book: Book) -> list[str]:
@@ -750,6 +804,9 @@ def detail_text(saga: Saga, book: Book | None) -> str:
     lines = [problem(f"[b]{escape(p)}[/b]") for p in status_problems(book, saga)]
     lines.append(_cell("Name", book.name or "(untitled)")[0])
     lines += _codex_lines(saga, book)
+    kind = kind_text(saga, book)
+    if kind:
+        lines.append(f"[b]Kind:[/] {escape(kind)}")
     lines += [f"{lm}{' ' * (width - lw)}{rm}" for (lm, lw), (rm, _) in zip(left, right)]
     if priced(saga, book):
         # Build Points matter only while its covenant is being created;
@@ -865,6 +922,8 @@ CSV_COLUMNS: tuple[str, ...] = (
     "spell",
     "codex",
     "encyclopedia",
+    "opus",
+    "physical_form",
 )
 CSV_UNUSED_COLUMNS: tuple[str, ...] = ("owner", "cost")
 
@@ -958,7 +1017,24 @@ def _book_from_row(row: dict[str, str]) -> Book:
     # Until add_imported_books binds it: the name of the codex the rows that
     # share it are bound in.
     book.codex_id = row.get("codex", "").strip() or None
+    _kinds_from_row(row, book)
     return book
+
+
+def _kinds_from_row(row: dict[str, str], book: Book) -> None:
+    """A CSV row's opus type and physical form (book_kinds), onto `book`;
+    ValueError for one that isn't known."""
+    opus = row.get("opus", "").strip().capitalize()
+    if opus:
+        if opus not in book_kinds.OPUS_TYPES or book.type != "Tractatus":
+            raise ValueError(f"opus {opus!r} isn't a kind of tractatus")
+        book.opus = opus
+    form = row.get("physical_form", "").strip()
+    if form:
+        known = {k.lower(): k for k in book_kinds.PHYSICAL_FORMS}
+        if form.lower() not in known:
+            raise ValueError(f"unknown physical form {form!r}")
+        book.physical_form = known[form.lower()]
 
 
 def parse_books_csv(text: str) -> CsvImport:

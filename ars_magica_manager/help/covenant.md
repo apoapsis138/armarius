@@ -475,7 +475,23 @@ use the codex in a season, and its books are always kept together: changing
 one book's owner moves the whole codex. A **palimpsest** is a codex written
 over a scraped text: each text in it is read, and priced, at -3 Quality.
 A codex marked **Encyclopedia** is a series of tractatus that also aids
-research (see Summary).
+research (see Summary). A codex can also be a **Collection**: a
+**Florilegium** binds tractatus on one topic, each read on its own at +1
+Quality (+2 when edited by an authority from a peerless collection); a
+**Folio** binds a society's best Lab Texts and tractatus, and reading one
+of its books also gives 1 xp in Order of Hermes Lore.
+
+A tractatus's **Opus** can be **Commentary**: a book about a summa,
+chosen in **Commentary on**. It is read only after a season studying that
+summa (the plan notes it when no such season is on record: the app records
+summae studied from now on) and is read at +1 Quality, which its Build
+Point cost leaves out (Covenants, Other Opus Types). Any book's **Physical
+form** says how the copy was made: an **Exemplar** (-3 Quality), a
+**Flap-bound** book (-1), **Juvenilia** (-3), and others that change
+nothing by a set amount, such as an edition de luxe or a damaged book,
+whose Quality you enter as it is. The details panel's Quality shows what a
+book is read at and why ("10 (written 9; commentary +1)"), and its **Kind**
+line names the opus and form.
 
 A summa or tractatus shows its **Value**: Excellent, Sound, Vain or
 Discarded, from its Quality against its Level (Covenants, Categories of

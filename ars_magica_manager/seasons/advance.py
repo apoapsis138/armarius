@@ -86,6 +86,8 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
                 )
         if outcome.tractatus and outcome.tractatus not in character.tractatus_read:
             character.tractatus_read.append(outcome.tractatus)
+        if outcome.summa and outcome.summa not in character.summae_read:
+            character.summae_read.append(outcome.summa)
         if outcome.vis_spent is not None:
             pool = rules.vis_pool(saga, character, outcome.plan)
             _, art, pawns = outcome.vis_spent

@@ -41,6 +41,22 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.35.0 — 2026-10-08
+
+- A tractatus can be a commentary on a summa (the book form's Opus and
+  Commentary on): read at +1 Quality, which its Build Point cost leaves
+  out, and only after a season studying its summa -- the season plan notes
+  it when no such season is on record. Summae studied are now recorded.
+- A codex can be a florilegium (tractatus on one topic, each at +1
+  Quality, or +2 when edited by an authority) or a folio (reading one of
+  its books also gives 1 xp in Order of Hermes Lore).
+- A book's physical form: an exemplar (-3 Quality), a flap-bound book
+  (-1), juvenilia (-3), or one that changes nothing by a set amount, such
+  as an edition de luxe or a damaged book.
+- A book's details show what its Quality is read at and why, and a Kind
+  line names its opus and form. A book import reads opus and
+  physical_form columns.
+
 ## 2.34.3 — 2026-10-08
 
 - Fixed: on a shorter screen (120x45) a covenant's Library tab had room

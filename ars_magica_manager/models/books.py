@@ -123,6 +123,14 @@ class Book:
     #: The codex the book is bound in with other books (a Codex id); None:
     #: bound on its own.
     codex_id: str | None = None
+    #: Its opus type beyond summa and tractatus (book_kinds.OPUS_TYPES:
+    #: "Commentary"), or "".
+    opus: str = ""
+    #: A commentary's summa (a book id), when it is in the saga.
+    commentary_on: str | None = None
+    #: How the copy is made (book_kinds.PHYSICAL_FORMS: "Exemplar",
+    #: "Flap-bound"...), or "" for an ordinary bound book.
+    physical_form: str = ""
 
     @classmethod
     def from_dict(
@@ -174,6 +182,12 @@ class Codex:
     #: also aids research like a library of its own (+1 per tractatus on
     #: the subject; Art & Academe, Encyclopedias).
     encyclopedia: bool = False
+    #: A collection (book_kinds.COLLECTIONS): "Florilegium" (tractatus on
+    #: one topic, each +florilegium_bonus Quality) or "Folio" (Lab Texts and
+    #: tractatus that also teach Order of Hermes Lore); "" for neither.
+    collection: str = ""
+    #: A florilegium's Quality bonus: +1, or +2 edited by an authority.
+    florilegium_bonus: int = 1
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Codex:

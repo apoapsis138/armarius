@@ -1198,6 +1198,27 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Name": ""},
         shown={"#section-lib-books-list": "│ Scrolls"},
     ),
+    "add commentary": Contract(
+        prefill={"Name": "", "Physical form": Select.NULL},
+        edits={
+            "Name": "Glosses",
+            "Type": "Tractatus",
+            "Subject": "Art",
+            "Art": "Ignem",
+            "Quality": "7",
+            "Opus": "Commentary",
+            "Commentary on": "b-cov",
+            "Physical form": "Exemplar",
+        },
+        saved=lambda s: [
+            (b.opus, b.commentary_on, b.physical_form)
+            for b in s.books
+            if b.name == "Glosses"
+        ],
+        expected=[("Commentary", "b-cov", "Exemplar")],
+        invalid={"Name": ""},
+        shown={"#section-lib-books-list": "Glosses"},
+    ),
     "research bonuses": Contract(
         prefill={"Ignem": "0"},
         edits={"Ignem": "3"},

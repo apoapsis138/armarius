@@ -445,6 +445,9 @@ def _plan_characters(job: _Import) -> None:
         character.tractatus_read = [
             job.book_map[b] for b in character.tractatus_read if b in job.book_map
         ]
+        character.summae_read = [
+            job.book_map[b] for b in character.summae_read if b in job.book_map
+        ]
         access = {}
         for author, level in character.lab_text_access.items():
             known_author = (
@@ -565,6 +568,7 @@ def _plan_books(job: _Import) -> None:
             book.author_id = author
         book.spell_id = job.new_spell_id(book.spell_id)
         book.codex_id = job.codex_map.get(book.codex_id or "")
+        book.commentary_on = job.book_map.get(book.commentary_on or "")
         job.plan.books.append(book)
     for codex in job.source.codices:
         codex.id = job.codex_map[codex.id]

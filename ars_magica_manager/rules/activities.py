@@ -43,7 +43,7 @@ import random
 from collections.abc import Callable, Collection, MutableMapping, Sequence
 from dataclasses import dataclass, field, replace
 
-from .. import books, sourcebooks, vis
+from .. import book_kinds, books, sourcebooks, vis
 from ..arts import ART_BY_NAME, ARTS
 from ..models import SEASONS, Book, Character, Saga, SeasonPlan, XpAllocation
 from . import (
@@ -966,6 +966,9 @@ class Outcome:
     vis_spent: tuple[str, str, int] | None = None
     #: Reading a tractatus: its id, to mark it read.
     tractatus: str | None = None
+    #: Reading a summa: its id, to record it was studied (a commentary on
+    #: it can then be read).
+    summa: str | None = None
     #: Vis study still to roll (a preview made without a die).
     pending_roll: bool = False
     #: Lab work: what the season in the laboratory does.
@@ -1445,6 +1448,27 @@ def _months(plan: SeasonPlan) -> int:
     return plan.months_lost if ACTIVITIES[plan.activity].distractable else 0
 
 
+def _book_kind_notes(saga: Saga, character: Character, book: Book) -> list[str]:
+    """What the book's kind says about reading it: a commentary is read only
+    after a season on its summa (a note, not a refusal: seasons before the
+    app recorded them aren't known)."""
+    if book.opus != book_kinds.COMMENTARY:
+        return []
+    summa = next((b for b in saga.books if b.id == book.commentary_on), None)
+    if summa is None:
+        return [
+            f"{book.name} is a commentary: it is read only after a season "
+            "studying its summa (Covenants, Other Opus Types)."
+        ]
+    if summa.id in character.summae_read:
+        return []
+    return [
+        f"{book.name} is a commentary on {summa.name}, which {character.name} "
+        "has no season studying on record: a commentary is read only after "
+        "one (Covenants, Other Opus Types)."
+    ]
+
+
 def _study_outcome(
     saga: Saga,
     character: Character,
@@ -1465,6 +1489,20 @@ def _study_outcome(
         )
         if book.type == "Tractatus":
             result.tractatus = book.id
+        else:
+            result.summa = book.id
+        result.notes += _book_kind_notes(saga, character, book)
+        codex = books.codex_of(saga, book)
+        if codex is not None and codex.collection == book_kinds.FOLIO:
+            result.gains.append(
+                _gain(
+                    character,
+                    ability_subject(book_kinds.FOLIO_LORE),
+                    book_kinds.FOLIO_LORE_XP,
+                    "exposure",
+                    0,
+                )
+            )
         return
     if plan.activity in (TAUGHT, TRAINED):
         teacher = saga.character(plan.teacher_id)
