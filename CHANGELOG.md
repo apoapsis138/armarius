@@ -41,6 +41,19 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.32.0 — 2026-10-08
+
+- A Hidden Resources Boon's 250 Build Points can be tracked in play. A
+  Diary Story Event linked to one has a Build Points unlocked field; once
+  the event is Resolved its points count against that Boon, and the form
+  refuses more than the Boon has left. A Boon can be unlocked over
+  several stories.
+- The Boon's row shows how much is unlocked ("120/250 BP"), and its
+  details list the Story Events that unlocked it. The Build tab shows the
+  covenant's Hidden Resources pool, what's unlocked and what's still
+  hidden, apart from its totals. Only the points are recorded: what was
+  found (vis, books, items) is added on its own tab as usual.
+
 ## 2.31.0 — 2026-10-08
 
 - A summa's or tractatus's details show its value -- Excellent, Sound,

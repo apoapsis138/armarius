@@ -76,6 +76,15 @@ class Contract:
     live: dict[str, str] = field(default_factory=dict)
 
 
+#: A Resolved Story Event linked to the covenant's Hidden Resources Boon.
+_HIDDEN_STORY = {
+    "Category": "Story Event",
+    "Name": "Past the guardian",
+    "Status": "Resolved",
+    "Linked Boon/Hook": "bh-hr",
+}
+
+
 def _char(saga: Saga):
     return next(c for c in saga.characters if c.id == "mag1")
 
@@ -765,6 +774,24 @@ CONTRACTS: dict[str, Contract] = {
         expected=(1221, "Purchases & Sales", "Bought a mill", -12.0, 3),
         invalid={"Pounds": "lots"},
         shown={"#cov-diary-list": "Bought a mill"},
+    ),
+    "add hidden resources story event": Contract(
+        prefill={"Year": "1220", "Season": "Autumn", "Name": ""},
+        edits={**_HIDDEN_STORY, "Build Points unlocked": "120"},
+        saved=lambda s: (
+            _cov(s).diary[-1].category,
+            _cov(s).diary[-1].boon_hook_id,
+            _cov(s).diary[-1].build_points,
+        ),
+        expected=("Story Event", "bh-hr", 120),
+        invalid=[
+            {**_HIDDEN_STORY, "Build Points unlocked": "251"},
+            {**_HIDDEN_STORY, "Build Points unlocked": "0"},
+        ],
+        shown={
+            "#cov-boons-list": "Hidden Resources (120/250 BP)",
+            "#cov-diary-list": "Past the guardian  \\[Resolved]  120 Build Points",
+        },
     ),
     "edit enchanted device": Contract(
         prefill={

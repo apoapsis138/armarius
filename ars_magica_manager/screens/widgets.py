@@ -34,6 +34,7 @@ from textual.widgets._tabbed_content import ContentTabs
 from textual.widgets.option_list import Option
 
 from .. import catalog, sourcebooks
+from .. import covenant_diary as cov_diary
 from .. import sheet_text as st
 from ..covenants import (
     UNKNOWN_HOOK_POINTS,
@@ -109,6 +110,11 @@ def boon_hook_rows(covenant: Covenant, kind: str) -> list[tuple[int, str]]:
                 f" [dim](Unknown, {UNKNOWN_HOOK_POINTS} pts)[/]"
                 if boon_hook_is_unknown(bh, by_id[bh.vf_id])
                 else ""
+            )
+            + (
+                f" [dim]({cov_diary.pool_short(covenant, bh.id)})[/]"
+                if bh.vf_id == cov_diary.HIDDEN_RESOURCES and bh.id
+                else ""
             ),
         )
         for index, bh in enumerate(covenant.boons_hooks)
@@ -140,6 +146,8 @@ def boon_hook_info_text(covenant: Covenant, index: int | None) -> str:
     elif definition.unknown:
         lines.append("[dim]May be Unknown (mark it in its Edit form).[/]")
     lines += _boon_hook_rule_lines(definition, by_id)
+    if instance.vf_id == cov_diary.HIDDEN_RESOURCES and instance.id:
+        lines += cov_diary.pool_lines(covenant, instance.id)
     # The user's own description leads; the official rules text follows.
     description = instance.params.get(BOON_HOOK_DESCRIPTION, "").strip()
     if description:

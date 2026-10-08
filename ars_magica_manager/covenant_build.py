@@ -13,6 +13,7 @@ on record (for an exported covenant, say).
 
 from __future__ import annotations
 
+from . import covenant_diary
 from .markup import escape, fit
 from .models import Covenant, Saga
 from .rules import creation_covenant as cov
@@ -80,6 +81,8 @@ def table_text(saga: Saga, covenant: Covenant) -> str:
             "[dim]Initial wasn't recorded: this covenant was in play before "
             "Build Points were tracked.[/]"
         )
+    if hidden := covenant_diary.hidden_resources_text(covenant):
+        lines += ["", hidden]
     return "\n".join(lines)
 
 

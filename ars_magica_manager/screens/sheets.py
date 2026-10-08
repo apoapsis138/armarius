@@ -2989,6 +2989,8 @@ class CovenantSheetView(SheetView):
         )
         on(("section-cov-boons", "section-cov-hooks"), self._refresh_info)
         on(("section-cov-boons", "section-cov-hooks"), self._refresh_loyalty_text)
+        # A Story Event can unlock a Hidden Resources Boon's Build Points.
+        on("tab-cov-diary", self._rebuild_boons_hooks)
 
         def family(*prefixes: str) -> Callable[[str], bool]:
             return lambda section_id: section_id.startswith(prefixes)

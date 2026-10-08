@@ -82,7 +82,11 @@ colour when the Boons cost more than the Hooks provide. Some Boons change
 figures elsewhere: an Aura Boon raises the Aura in the top panel, a Style of
 Governance Boon fills in the Type of Governance on the Loyalty block, and a
 Boon that enlarges the buildings adds to the Buildings cost on the
-Economics tab.
+Economics tab. A Hidden Resources Boon holds 250 Build Points the magi can't
+use yet: its row shows how many are unlocked ("120/250 BP"), and
+its details panel lists the Story Events that unlocked them (see the
+[Diary tab](help:tab-cov-diary)). Its description is the place to note
+what the resources are, decided ahead or later.
 
 ### Hooks
 <!-- help: section-cov-hooks -->
@@ -492,10 +496,17 @@ and, optionally, a link to one of the covenant's Boons or Hooks. The app
 adds entries of its own too: vis harvests, vis moved in or out, and
 contested resources that went unsecured.
 
+A Story Event linked to a Hidden Resources Boon also has **Build Points
+unlocked**: the points of that Boon's 250 that the story opened up. They
+count once the event is Resolved, and the form refuses more than the Boon
+has left. Only the points are recorded: add what was found (vis, books,
+items) on its own tab as usual.
+
 **You type:** each entry, with `a`, `e` and `d` on the list.
 
-**The app works out:** the order of the entries, and for a Story Event
-linked to a Hook, how many stories have been told against it.
+**The app works out:** the order of the entries, for a Story Event
+linked to a Hook, how many stories have been told against it, and for one
+linked to Hidden Resources, how many of the Boon's points are unlocked.
 
 **See also:** [Inhabitants tab](help:tab-cov-inhabitants) (Loyalty),
 [Possessions tab](help:tab-cov-possessions) (vis),
@@ -515,7 +526,9 @@ Points are set on the Creation Worksheet.
 
 **The app works out:** the Build Points of everything the covenant owns,
 from its library, vis, enchanted items, laboratories, specialists and
-money.
+money. Below them, for a covenant with Hidden Resources, the pool those
+Boons hold, how much of it Story Events have unlocked and how much is
+still hidden, kept out of the totals.
 
 **See also:** [Library tab](help:tab-cov-library),
 [Possessions tab](help:tab-cov-possessions),

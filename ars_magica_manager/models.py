@@ -2523,7 +2523,9 @@ class CovenantDiaryEntry:
     when, with optional amounts. Only `loyalty` changes the sheet (it adds
     into the Loyalty block's Actions and Events); pounds and vis are a
     record. `status`, `boon_hook_id` (a VirtueFlawInstance.id among the
-    covenant's Boons/Hooks) and `revisit_year` are for Story Events."""
+    covenant's Boons/Hooks) and `revisit_year` are for Story Events;
+    `build_points` for a Story Event linked to a Hidden Resources Boon: the
+    points of that Boon's pool it unlocked."""
 
     year: int
     season: str = "Spring"  # one of SEASONS
@@ -2537,6 +2539,7 @@ class CovenantDiaryEntry:
     status: str = ""  # Story Events: one of STORY_EVENT_STATUSES
     boon_hook_id: str | None = None
     revisit_year: int | None = None
+    build_points: int | None = None
 
 
 @dataclass

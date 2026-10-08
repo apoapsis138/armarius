@@ -21,7 +21,7 @@ from textual.widgets import (
 from textual.widgets.button import ButtonVariant
 from textual.widgets.option_list import Option
 
-from .. import catalog, creation, transfer, vis
+from .. import catalog, covenant_diary, creation, transfer, vis
 from .. import house_rules as hr
 from .. import lab_texts as lt
 from .. import players as pl
@@ -1356,6 +1356,17 @@ def _covenant_diary_entry_dialog(
     def story(values: dict[str, Any]) -> bool:
         return values.get("category") == STORY_EVENT
 
+    def hidden(values: dict[str, Any]) -> bool:
+        return story(values) and covenant_diary.is_hidden_resources(
+            covenant, values.get("boon_hook_id")
+        )
+
+    # The entry being edited, left out of its Boon's points so far.
+    skip = next((i for i, e in enumerate(covenant.diary) if e is existing), None)
+
+    def problem(values: dict[str, Any]) -> str | None:
+        return covenant_diary.points_problem(covenant, values, skip)
+
     def build(values: dict[str, Any]) -> CovenantDiaryEntry:
         values = {**values, "category": values["category"] or ""}
         values["vis_art"] = values.get("vis_art") or ""
@@ -1411,6 +1422,14 @@ def _covenant_diary_entry_dialog(
                 show_if=story,
             ),
             DialogField(
+                "build_points",
+                "Build Points unlocked",
+                "optint",
+                _attr(existing, "build_points", None),
+                hint="Of the Hidden Resources Boon's 250; counted once Resolved.",
+                show_if=hidden,
+            ),
+            DialogField(
                 "pounds",
                 "Pounds (+ received, - spent)",
                 "optfloat",
@@ -1445,6 +1464,7 @@ def _covenant_diary_entry_dialog(
                 hint=_EMPHASIS_HINT,
             ),
         ],
+        validate=problem,
         build=build,
     )
 

@@ -15,7 +15,13 @@ from ars_magica_manager import catalog, spells, storage, vis
 from ars_magica_manager import economics as eco
 from ars_magica_manager import screens as scr
 from ars_magica_manager.app import ArsMagicaManagerApp
-from ars_magica_manager.models import Ability, Book, Character, Saga
+from ars_magica_manager.models import (
+    Ability,
+    Book,
+    Character,
+    Saga,
+    VirtueFlawInstance,
+)
 from ars_magica_manager.rules import creation_xp
 from ars_magica_manager.screens.widgets import section_stop
 from ars_magica_manager.screens.workspace import _COVENANT_REPUTATIONS
@@ -54,6 +60,17 @@ def contract_saga() -> Saga:
     grog.abilities = [Ability("Single Weapon"), Ability("Brawl"), Ability("Awareness")]
     saga.characters.append(grog)
     return saga
+
+
+def _add_story_event_with_hidden_resources(ws) -> None:
+    """The covenant's Diary form, once the covenant holds a Hidden
+    Resources Boon (id "bh-hr") for a Story Event to unlock."""
+    covenant = ws.selected_covenant
+    if not any(bh.id == "bh-hr" for bh in covenant.boons_hooks):
+        covenant.boons_hooks.append(
+            VirtueFlawInstance("covbh_boon_minor_hidden_resources", id="bh-hr")
+        )
+    ws._add_covenant_diary_entry()
 
 
 @dataclass(frozen=True)
@@ -272,6 +289,9 @@ OPENERS: dict[str, Opener] = {
     ),
     "add covenant diary entry": Opener(
         "covenant", lambda ws: ws._add_covenant_diary_entry()
+    ),
+    "add hidden resources story event": Opener(
+        "covenant", lambda ws: _add_story_event_with_hidden_resources(ws)
     ),
     # Enchanted devices
     "edit enchanted device": Opener(

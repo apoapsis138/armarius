@@ -153,3 +153,91 @@ async def test_the_diary_tab_adds_edits_and_removes_entries():
         ]
         loyalty = str(ws.query_one("#inh-loyalty-right", Static).render())
         assert "Diary" not in loyalty  # the -3 went with the removed entry
+
+
+def _hidden_covenant() -> Covenant:
+    """Two Hidden Resources Boons; three Story Events against the first,
+    one still Open."""
+
+    def story(year: int, name: str, points: int, status: str = "Resolved"):
+        return CovenantDiaryEntry(
+            year,
+            "Summer",
+            name,
+            category="Story Event",
+            status=status,
+            boon_hook_id="hr1",
+            build_points=points,
+        )
+
+    return Covenant(
+        id="cov1",
+        saga_id="s",
+        name="Dammerstein",
+        boons_hooks=[
+            VirtueFlawInstance(cd.HIDDEN_RESOURCES, id="hr1"),
+            VirtueFlawInstance(cd.HIDDEN_RESOURCES, id="hr2"),
+        ],
+        diary=[
+            story(1222, "The guardian's hoard", 100),
+            story(1221, "The lost wing", 50),
+            story(1223, "Behind the door", 80, status="Open"),
+        ],
+    )
+
+
+def test_only_resolved_story_events_unlock_a_hidden_resources_pool():
+    covenant = _hidden_covenant()
+    assert cd.unlocks(covenant, "hr1") == [1, 0]  # date order, Open left out
+    assert cd.unlocked(covenant, "hr1") == 150
+    assert cd.unlocked(covenant, "hr1", skip=0) == 50
+    assert cd.unlocked(covenant, "hr2") == 0
+    assert cd.pool_note(covenant, "hr1") == "150 of 250 unlocked"
+    covenant.diary[2].status = "Resolved"
+    assert cd.unlocked(covenant, "hr1") == 230
+
+
+def test_a_story_event_cannot_take_its_boon_past_250():
+    covenant = _hidden_covenant()
+    values = {"status": "Resolved", "boon_hook_id": "hr1"}
+    assert cd.points_problem(covenant, {**values, "build_points": 100}, None) is None
+    assert cd.points_problem(covenant, {**values, "build_points": 101}, None) == (
+        "Only 100 of this Boon's 250 Build Points are left."
+    )
+    # Editing an entry leaves its own points out of what's used.
+    assert cd.points_problem(covenant, {**values, "build_points": 200}, 0) is None
+    assert cd.points_problem(covenant, {**values, "build_points": 0}, None)
+    # An Open event counts later, when it's Resolved.
+    assert (
+        cd.points_problem(
+            covenant, {**values, "status": "Open", "build_points": 250}, None
+        )
+        is None
+    )
+
+
+def test_hidden_resources_show_on_the_story_event_and_the_build_tab():
+    covenant = _hidden_covenant()
+    text = strip_markup(cd.info_text(covenant, 2))
+    assert "Build Points unlocked: 80" in text
+    assert (
+        "Hidden Resources: 150 of 250 unlocked; these count once the event "
+        "is Resolved" in text
+    )
+    block = strip_markup(cd.hidden_resources_text(covenant))
+    assert "(no detail): 150 of 250 unlocked" in block
+    assert "(no detail): 0 of 250 unlocked" in block
+    assert "Pool 500, unlocked 150, still hidden 350" in block
+    assert cd.hidden_resources_text(_covenant()) == ""
+
+
+def test_old_diary_entries_load_without_build_points():
+    covenant = Covenant.from_dict(
+        {
+            "id": "c",
+            "saga_id": "s",
+            "name": "C",
+            "diary": [{"year": 1220, "name": "Founded"}],
+        }
+    )
+    assert covenant.diary[0].build_points is None
