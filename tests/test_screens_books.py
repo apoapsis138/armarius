@@ -662,7 +662,8 @@ async def test_library_summary_is_read_only_and_the_list_reaches_the_panel():
         left = str(view.query_one("#lib-summary-left", Static).render())
         right = str(view.query_one("#lib-summary-right", Static).render())
         assert "Summae:" in left and "Tractatus:" in left
-        assert "Total Books: 3" in " ".join(right.split())
+        assert "Total Books: 3" in " ".join(left.split())
+        assert "Lab Texts:" in right
         assert "Build Points" not in right
 
         # The list runs down to the details panel, two rows above it (the
@@ -687,8 +688,8 @@ async def test_library_summary_is_read_only_and_the_list_reaches_the_panel():
         await pilot.pause()
         await pilot.press("y")
         await wait_until(pilot, lambda: len(_book_names(app)) == 2)
-        right = str(view.query_one("#lib-summary-right", Static).render())
-        assert "Total Books:     2" in right
+        left = str(view.query_one("#lib-summary-left", Static).render())
+        assert "Total Books: 2" in left
 
 
 async def test_the_subject_column_widens_with_the_terminal():
@@ -697,7 +698,7 @@ async def test_the_subject_column_widens_with_the_terminal():
     saga.books[2].ability = "Area Lore: The Rhine Tribunal and its Environs"
     storage.save_saga(saga)
 
-    for width, expected in ((110, 17), (140, 21), (200, 40)):
+    for width, expected in ((110, 12), (140, 21), (200, 40)):
         app = ArsMagicaManagerApp()
         async with app.run_test(size=(width, 60)) as pilot:
             await _select_covenant(pilot, app)

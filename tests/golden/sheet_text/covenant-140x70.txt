@@ -358,13 +358,10 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Summary
 
-      Summae:      1                                     Lab Texts:       0
-        • Ability: 0                                     Casting Tablets: 0
-        • Art:     1                                     Other:           2
-
-      Tractatus:   0                                     Total Books:     3
-        • Ability: 0
-        • Art:     0
+      Summae:      1 (Ability 0, Art 1)                  Lab Texts:       0
+      Tractatus:   0 (Ability 0, Art 0)                  Casting Tablets: 0
+      Other:       2
+      Total Books: 3
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Books (3)
@@ -373,6 +370,9 @@
         ○ Summa                Art Summa      -                         -       -  Covenant Library ✘
         ○ Notes                Other          -                         -       -  Lab: Tower
         ○ Diary                Other          -                         -       -  Leandro
+
+
+
 
 
 

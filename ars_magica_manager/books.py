@@ -546,7 +546,7 @@ _QUALITY_WIDTH = 8
 _LOCATION_WIDTH = 17
 #: The Subject column (Art, Ability or spell) takes whatever room the list
 #: has, between these two widths (see subject_width).
-SUBJECT_MIN_WIDTH = 17
+SUBJECT_MIN_WIDTH = 12
 SUBJECT_MAX_WIDTH = 40
 #: Everything in a row but the Subject column: the columns, their spacing,
 #: room for a flagged row's problem mark, and room for a scrollbar.
@@ -653,10 +653,10 @@ def _cell(label: str, value: object) -> tuple[str, int]:
 def summary_texts(
     books: list[Book], saga: Saga | None = None, *, research: str = ""
 ) -> tuple[str, str]:
-    """The Library tab's Summary (markup, read-only): Summae and Tractatus by
-    Ability/Art down the left; Lab Texts, Casting Tablets, Other and the
-    totals down the right, then `research` (a covenant library's research
-    bonuses, book_value.research_count) when given."""
+    """The Library tab's Summary (markup, read-only): Summae and Tractatus
+    (each split into Ability and Art), Other and the total down the left;
+    Lab Texts, Casting Tablets, any codices and `research` (a covenant
+    library's research bonuses, book_value.research_count) down the right."""
 
     def count(book_type: str, subject_kind: str | None = None) -> int:
         return sum(
@@ -687,15 +687,20 @@ def summary_texts(
             lines.append(f"{text}{value}")
         return "\n".join(lines)
 
+    # Kept to four rows a column, so the book list below keeps its room.
     left = rows(
         [
-            ("Summae", ability_summae + art_summae),
-            ("  • Ability", ability_summae),
-            ("  • Art", art_summae),
-            ("", ""),
-            ("Tractatus", count("Tractatus")),
-            ("  • Ability", ability_tracts),
-            ("  • Art", art_tracts),
+            (
+                "Summae",
+                f"{ability_summae + art_summae} "
+                f"(Ability {ability_summae}, Art {art_summae})",
+            ),
+            (
+                "Tractatus",
+                f"{count('Tractatus')} (Ability {ability_tracts}, Art {art_tracts})",
+            ),
+            ("Other", count("Other")),
+            ("Total Books", len(books)),
         ]
     )
     codices = (
@@ -707,9 +712,6 @@ def summary_texts(
         [
             ("Lab Texts", count("Lab Text")),
             ("Casting Tablets", count("Casting Tablet")),
-            ("Other", count("Other")),
-            ("", ""),
-            ("Total Books", len(books)),
             *([("Codices", len(codices))] if codices else []),
             *([("Research", escape(research))] if research else []),
         ]

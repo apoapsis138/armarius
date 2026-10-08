@@ -460,21 +460,15 @@ def test_summary_counts_books_by_kind():
     left, right = bk.summary_texts(books)
     plain = [line.replace("[b]", "").replace("[/]", "") for line in left.split("\n")]
     assert [" ".join(line.split()) for line in plain] == [
-        "Summae: 3",
-        "• Ability: 1",
-        "• Art: 2",
-        "",
-        "Tractatus: 3",
-        "• Ability: 2",
-        "• Art: 1",
+        "Summae: 3 (Ability 1, Art 2)",
+        "Tractatus: 3 (Ability 2, Art 1)",
+        "Other: 1",
+        "Total Books: 9",
     ]
     plain = [line.replace("[b]", "").replace("[/]", "") for line in right.split("\n")]
     assert [" ".join(line.split()) for line in plain] == [
         "Lab Texts: 1",
         "Casting Tablets: 1",
-        "Other: 1",
-        "",
-        "Total Books: 9",
     ]
     # Values line up in one column.
     assert len({line.index("1") for line in right.split("\n")[:3]}) == 1
@@ -521,7 +515,7 @@ def test_a_linked_books_level_and_cost_come_from_its_spell():
     assert "Aegis of the Hearth (ReVi Gen)" in text
     assert "30 (General spell)" in text
     assert "10 (the spell's)" in bk.detail_text(saga, tablet)
-    row = bk.row_label(saga, tablet)
+    row = bk.row_label(saga, tablet, 17)
     assert "Stench of the Tw" in row and "   10 " in row  # the column is 17 wide
 
 

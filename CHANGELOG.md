@@ -41,6 +41,14 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.34.3 — 2026-10-08
+
+- Fixed: on a shorter screen (120x45) a covenant's Library tab had room
+  for one book row, or none once a book was chosen. Book rows no longer
+  wrap onto a second line (a long one is cut short), the Library Summary
+  takes four rows instead of seven, and the details panel gives up rows,
+  its text scrolling, so the book list always keeps five.
+
 ## 2.34.2 — 2026-10-08
 
 - Behind the scenes: the data model is split into one module per kind of

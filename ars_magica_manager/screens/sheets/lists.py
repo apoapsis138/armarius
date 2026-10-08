@@ -32,6 +32,8 @@ from ...models import (
 )
 from ..fields import _pairs
 from ..widgets import (
+    DETAILS_PANEL_MAX_HEIGHT,
+    DETAILS_PANEL_MIN_HEIGHT,
     DetailsPanel,
     SelectableList,
     SheetSection,
@@ -71,6 +73,13 @@ BOOK_SECTIONS: frozenset[str] = frozenset(
         LAB_TEXTS_SECTION,
     }
 )
+
+
+#: Rows a docked book list keeps however short the screen (see
+#: _fit_panel); and what its section takes besides the rows: its title,
+#: padding and column header.
+BOOK_LIST_MIN_ROWS = 5
+_BOOK_SECTION_CHROME = 5
 
 
 class BookListView(Vertical):
@@ -118,6 +127,13 @@ class BookListView(Vertical):
     BookListView.docked SelectableList:focus {
         height: 1fr;
         max-height: 100%;
+    }
+
+    /* A row narrower than its columns is cut short, not wrapped onto a
+       second line: one book, one row. */
+    BookListView SelectableList, BookListView .books-header {
+        text-wrap: nowrap;
+        text-overflow: ellipsis;
     }
 
     """
@@ -169,7 +185,9 @@ class BookListView(Vertical):
         return "  " + bk.table_header(self._subject_cols)
 
     def on_resize(self) -> None:
-        """Give the Subject column whatever room the list has."""
+        """Give the Subject column whatever room the list has, and keep
+        rows for the list on a short screen."""
+        self._fit_panel()
         # The section's padding, then the check mark and selector (4 chars).
         cols = bk.subject_width(self.size.width - 4 - 4)
         if cols == self._subject_cols:
@@ -180,6 +198,27 @@ class BookListView(Vertical):
             self.query_one(SelectableList).relabel([label for _, label in self._rows()])
         except NoMatches:
             return
+
+    def _fit_panel(self) -> None:
+        """On a short screen the details panel gives up rows (its text
+        scrolls) so the list keeps BOOK_LIST_MIN_ROWS of them: the panel
+        grows to fit its text, up to DETAILS_PANEL_MAX_HEIGHT, and below it
+        a big Summary left the list none."""
+        if not self.docked:
+            return
+        try:
+            panel = self.query_one(DetailsPanel)
+            summary = (
+                self.query_one("#section-lib-summary").outer_size.height
+                if self.summary
+                else 0
+            )
+        except NoMatches:
+            return
+        spare = self.size.height - summary - _BOOK_SECTION_CHROME - BOOK_LIST_MIN_ROWS
+        # The panel's top margin is outside its height.
+        cap = max(DETAILS_PANEL_MIN_HEIGHT, min(DETAILS_PANEL_MAX_HEIGHT, spare - 1))
+        panel.styles.max_height = cap
 
     def _book_list(self) -> ComposeResult:
         with SheetSection(
