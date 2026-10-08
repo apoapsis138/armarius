@@ -62,14 +62,17 @@ def contract_saga() -> Saga:
     return saga
 
 
-def _add_story_event_with_hidden_resources(ws) -> None:
+def _add_story_event_with_pools(ws) -> None:
     """The covenant's Diary form, once the covenant holds a Hidden
-    Resources Boon (id "bh-hr") for a Story Event to unlock."""
+    Resources Boon ("bh-hr") and an Illusory Resources Hook ("bh-ir")
+    for a Story Event to count against."""
     covenant = ws.selected_covenant
-    if not any(bh.id == "bh-hr" for bh in covenant.boons_hooks):
-        covenant.boons_hooks.append(
-            VirtueFlawInstance("covbh_boon_minor_hidden_resources", id="bh-hr")
-        )
+    for vf_id, bh_id in (
+        ("covbh_boon_minor_hidden_resources", "bh-hr"),
+        ("covbh_hook_minor_illusory_resources", "bh-ir"),
+    ):
+        if not any(bh.id == bh_id for bh in covenant.boons_hooks):
+            covenant.boons_hooks.append(VirtueFlawInstance(vf_id, id=bh_id))
     ws._add_covenant_diary_entry()
 
 
@@ -291,7 +294,10 @@ OPENERS: dict[str, Opener] = {
         "covenant", lambda ws: ws._add_covenant_diary_entry()
     ),
     "add hidden resources story event": Opener(
-        "covenant", lambda ws: _add_story_event_with_hidden_resources(ws)
+        "covenant", lambda ws: _add_story_event_with_pools(ws)
+    ),
+    "add illusory resources story event": Opener(
+        "covenant", lambda ws: _add_story_event_with_pools(ws)
     ),
     # Enchanted devices
     "edit enchanted device": Opener(

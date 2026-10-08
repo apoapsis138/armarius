@@ -41,6 +41,16 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.33.0 — 2026-10-08
+
+- An Illusory Resources Hook's 250 Build Points can be tracked in play,
+  the same way as Hidden Resources: a Diary Story Event linked to one has
+  a Build Points found illusory field, counted once the event is
+  Resolved and never past the Hook's 250. The Hook's row shows how much
+  has been found out ("60/250 BP"), its details list the Story Events
+  that revealed it, and the Build tab shows the pool, what's found
+  illusory and what's still believed real, apart from its totals.
+
 ## 2.32.0 — 2026-10-08
 
 - A Hidden Resources Boon's 250 Build Points can be tracked in play. A

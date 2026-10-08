@@ -81,7 +81,7 @@ def table_text(saga: Saga, covenant: Covenant) -> str:
             "[dim]Initial wasn't recorded: this covenant was in play before "
             "Build Points were tracked.[/]"
         )
-    if hidden := covenant_diary.hidden_resources_text(covenant):
+    if hidden := covenant_diary.pools_text(covenant):
         lines += ["", hidden]
     return "\n".join(lines)
 

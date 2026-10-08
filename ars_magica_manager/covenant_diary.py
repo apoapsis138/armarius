@@ -5,6 +5,7 @@ Pounds and vis on an entry are a record only (Phase 4 covenant finances)."""
 from __future__ import annotations
 
 from collections.abc import Sequence
+from dataclasses import dataclass
 
 from . import catalog
 from .arts import ART_ABBREVIATIONS
@@ -21,25 +22,57 @@ from .models import (
 #: Roughly how many stories overcome a Hook (Covenants, ch. 2).
 STORIES_TO_OVERCOME: dict[str, int] = {"Minor": 6, "Major": 20}
 
-#: The Boon whose Build Points come to light in play, and how many each
-#: one holds (ArM5 ch. 6, Minor Resources Boons).
+
+@dataclass(frozen=True)
+class Pool:
+    """A Boon or Hook holding Build Points that come to light in play,
+    through the Story Events linked to it."""
+
+    name: str
+    kind: str  # "Boon" or "Hook"
+    #: What a Story Event's points do to the pool: "unlocked" / "found
+    #: illusory".
+    verb: str
+    #: What's left of the pool: "still hidden" / "still believed real".
+    rest: str
+
+
+#: The pools' size: each Boon or Hook holds 250 Build Points.
+POOL_POINTS = 250
+
+#: The Boons and Hooks with a pool, by catalog id: Hidden Resources (ArM5
+#: ch. 6, Minor Resources Boons: resources not yet available) and
+#: Illusory Resources (Covenants ch. 2, Minor Resources Hooks:
+#: improvements that don't really exist).
 HIDDEN_RESOURCES = "covbh_boon_minor_hidden_resources"
-HIDDEN_RESOURCES_POOL = 250
+ILLUSORY_RESOURCES = "covbh_hook_minor_illusory_resources"
+POOLS: dict[str, Pool] = {
+    HIDDEN_RESOURCES: Pool("Hidden Resources", "Boon", "unlocked", "still hidden"),
+    ILLUSORY_RESOURCES: Pool(
+        "Illusory Resources", "Hook", "found illusory", "still believed real"
+    ),
+}
 
 
-def is_hidden_resources(covenant: Covenant, boon_hook_id: str | None) -> bool:
-    """Whether `boon_hook_id` is one of the covenant's Hidden Resources."""
-    return any(
-        bh.id == boon_hook_id and bh.vf_id == HIDDEN_RESOURCES
-        for bh in covenant.boons_hooks
-        if boon_hook_id
+def pool_of(covenant: Covenant, boon_hook_id: object) -> Pool | None:
+    """The pool of the covenant's Boon/Hook `boon_hook_id`, or None if it
+    has none (or isn't attached)."""
+    if not boon_hook_id:
+        return None
+    return next(
+        (
+            POOLS[bh.vf_id]
+            for bh in covenant.boons_hooks
+            if bh.id == boon_hook_id and bh.vf_id in POOLS
+        ),
+        None,
     )
 
 
 def unlocks(covenant: Covenant, boon_hook_id: str) -> list[int]:
     """Indexes into the Diary, in date order, of the Story Events that
-    unlocked points of this Hidden Resources Boon: linked to it, with
-    points, and Resolved."""
+    count against this Boon's or Hook's pool: linked to it, with points,
+    and Resolved."""
     return [
         i
         for i in date_order(covenant.diary)
@@ -51,8 +84,8 @@ def unlocks(covenant: Covenant, boon_hook_id: str) -> list[int]:
 
 
 def unlocked(covenant: Covenant, boon_hook_id: str, *, skip: int | None = None) -> int:
-    """The Build Points of this Hidden Resources Boon unlocked so far
-    (leaving out the Diary entry at `skip`, the one being edited)."""
+    """The Build Points of this pool come to light so far (leaving out the
+    Diary entry at `skip`, the one being edited)."""
     return sum(
         covenant.diary[i].build_points or 0
         for i in unlocks(covenant, boon_hook_id)
@@ -61,19 +94,21 @@ def unlocked(covenant: Covenant, boon_hook_id: str, *, skip: int | None = None) 
 
 
 def pool_note(covenant: Covenant, boon_hook_id: str) -> str:
-    """ "120 of 250 unlocked" for a Hidden Resources Boon."""
-    return f"{unlocked(covenant, boon_hook_id)} of {HIDDEN_RESOURCES_POOL} unlocked"
+    """ "120 of 250 unlocked" (or "found illusory")."""
+    pool = pool_of(covenant, boon_hook_id)
+    verb = pool.verb if pool else "used"
+    return f"{unlocked(covenant, boon_hook_id)} of {POOL_POINTS} {verb}"
 
 
 def pool_short(covenant: Covenant, boon_hook_id: str) -> str:
-    """ "120/250 BP": the pool note for a Boon's row, kept short so the
-    row fits its column."""
-    return f"{unlocked(covenant, boon_hook_id)}/{HIDDEN_RESOURCES_POOL} BP"
+    """ "120/250 BP": the pool note for a Boon's or Hook's row, kept short
+    so the row fits its column."""
+    return f"{unlocked(covenant, boon_hook_id)}/{POOL_POINTS} BP"
 
 
 def pool_lines(covenant: Covenant, boon_hook_id: str) -> list[str]:
-    """A Hidden Resources Boon's details-panel lines (markup): what's
-    unlocked of its pool, and the Story Events that unlocked it."""
+    """A pool's details-panel lines (markup): how much of it has come to
+    light, and the Story Events that brought it."""
     lines = [f"[b]Build Points:[/] {pool_note(covenant, boon_hook_id)}"]
     for i in unlocks(covenant, boon_hook_id):
         entry = covenant.diary[i]
@@ -86,42 +121,49 @@ def pool_lines(covenant: Covenant, boon_hook_id: str) -> list[str]:
 def points_problem(
     covenant: Covenant, values: dict[str, object], skip: int | None
 ) -> str | None:
-    """Why a Diary form's Build Points can't be saved, or None: they're
-    for points unlocked, so above 0, and a Resolved Story Event can't take
-    its Boon past its pool."""
+    """Why a Diary form's Build Points can't be saved, or None: above 0,
+    and a Resolved Story Event can't take its Boon or Hook past its
+    pool."""
     points = values.get("build_points")
     if not isinstance(points, int):
         return None
     if points <= 0:
         return "Build Points must be more than 0."
     boon_hook_id = values.get("boon_hook_id")
-    if values.get("status") != STORY_EVENT_STATUSES[1] or not isinstance(
-        boon_hook_id, str
+    pool = pool_of(covenant, boon_hook_id)
+    if (
+        values.get("status") != STORY_EVENT_STATUSES[1]
+        or pool is None
+        or not isinstance(boon_hook_id, str)
     ):
         return None
-    left = HIDDEN_RESOURCES_POOL - unlocked(covenant, boon_hook_id, skip=skip)
+    left = POOL_POINTS - unlocked(covenant, boon_hook_id, skip=skip)
     if points > left:
-        return (
-            f"Only {left} of this Boon's {HIDDEN_RESOURCES_POOL} Build Points are left."
-        )
+        return f"Only {left} of this {pool.kind}'s {POOL_POINTS} Build Points are left."
     return None
 
 
-def hidden_resources_text(covenant: Covenant) -> str:
-    """The Build tab's Hidden Resources block (markup), kept apart from
-    the Initial / Current totals; "" for a covenant without the Boon."""
-    held = [bh for bh in covenant.boons_hooks if bh.vf_id == HIDDEN_RESOURCES]
-    if not held:
-        return ""
-    pool = HIDDEN_RESOURCES_POOL * len(held)
-    found = sum(unlocked(covenant, bh.id) for bh in held if bh.id)
-    lines = ["[b]Hidden Resources[/] [dim](not in the totals above)[/]"]
-    for bh in held:
-        # The heading already says Hidden Resources: each line is its detail.
-        name = bh.params.get(BOON_HOOK_DETAIL, "").strip() or "(no detail)"
-        lines.append(f"  {escape(name)}: {pool_note(covenant, bh.id) if bh.id else ''}")
-    lines.append(f"  Pool {pool}, unlocked {found}, still hidden {pool - found}")
-    return "\n".join(lines)
+def pools_text(covenant: Covenant) -> str:
+    """The Build tab's Hidden and Illusory Resources blocks (markup),
+    kept apart from the Initial / Current totals; "" for a covenant with
+    neither."""
+    blocks = []
+    for vf_id, pool in POOLS.items():
+        held = [bh for bh in covenant.boons_hooks if bh.vf_id == vf_id and bh.id]
+        if not held:
+            continue
+        total = POOL_POINTS * len(held)
+        found = sum(unlocked(covenant, bh.id) for bh in held)
+        lines = [f"[b]{pool.name}[/] [dim](not in the totals above)[/]"]
+        for bh in held:
+            # The heading already names the pool: each line is its detail.
+            name = bh.params.get(BOON_HOOK_DETAIL, "").strip() or "(no detail)"
+            lines.append(f"  {escape(name)}: {pool_note(covenant, bh.id)}")
+        lines.append(
+            f"  Pool {total}, {pool.verb} {found}, {pool.rest} {total - found}"
+        )
+        blocks.append("\n".join(lines))
+    return "\n\n".join(blocks)
 
 
 def diary_loyalty(covenant: Covenant) -> int:
@@ -259,12 +301,14 @@ def info_text(covenant: Covenant, index: int | None) -> str:
         if note := linked_story_note(covenant, index):
             lines.append(f"[dim]{escape(note)}[/]")
         if entry.build_points is not None:
-            lines.append(f"[b]Build Points unlocked:[/] {entry.build_points}")
-            if entry.boon_hook_id and is_hidden_resources(covenant, entry.boon_hook_id):
+            pool = pool_of(covenant, entry.boon_hook_id)
+            verb = pool.verb if pool else "unlocked"
+            lines.append(f"[b]Build Points {verb}:[/] {entry.build_points}")
+            if pool is not None and entry.boon_hook_id:
                 note = pool_note(covenant, entry.boon_hook_id)
                 if entry.status != STORY_EVENT_STATUSES[1]:
                     note += "; these count once the event is Resolved"
-                lines.append(f"[dim]Hidden Resources: {note}[/]")
+                lines.append(f"[dim]{pool.name}: {note}[/]")
     details = (
         markdown_inline(entry.details) if entry.details else "[dim](no details)[/]"
     )

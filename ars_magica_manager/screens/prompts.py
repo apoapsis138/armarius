@@ -1356,19 +1356,33 @@ def _covenant_diary_entry_dialog(
     def story(values: dict[str, Any]) -> bool:
         return values.get("category") == STORY_EVENT
 
-    def hidden(values: dict[str, Any]) -> bool:
-        return story(values) and covenant_diary.is_hidden_resources(
-            covenant, values.get("boon_hook_id")
-        )
+    def pool(values: dict[str, Any]) -> covenant_diary.Pool | None:
+        if not story(values):
+            return None
+        return covenant_diary.pool_of(covenant, values.get("boon_hook_id"))
 
-    # The entry being edited, left out of its Boon's points so far.
+    def hidden(values: dict[str, Any]) -> bool:
+        return pool(values) == covenant_diary.POOLS[covenant_diary.HIDDEN_RESOURCES]
+
+    def illusory(values: dict[str, Any]) -> bool:
+        return pool(values) == covenant_diary.POOLS[covenant_diary.ILLUSORY_RESOURCES]
+
+    def points(values: dict[str, Any]) -> dict[str, Any]:
+        """One Build Points value, whichever pool's field it was typed in."""
+        values = dict(values)
+        illusory_points = values.pop("illusory_points", None)
+        if illusory_points is not None:
+            values["build_points"] = illusory_points
+        return values
+
+    # The entry being edited, left out of its pool's points so far.
     skip = next((i for i, e in enumerate(covenant.diary) if e is existing), None)
 
     def problem(values: dict[str, Any]) -> str | None:
-        return covenant_diary.points_problem(covenant, values, skip)
+        return covenant_diary.points_problem(covenant, points(values), skip)
 
     def build(values: dict[str, Any]) -> CovenantDiaryEntry:
-        values = {**values, "category": values["category"] or ""}
+        values = {**points(values), "category": values["category"] or ""}
         values["vis_art"] = values.get("vis_art") or ""
         if story(values):
             values["status"] = values.get("status") or STORY_EVENT_STATUSES[0]
@@ -1428,6 +1442,14 @@ def _covenant_diary_entry_dialog(
                 _attr(existing, "build_points", None),
                 hint="Of the Hidden Resources Boon's 250; counted once Resolved.",
                 show_if=hidden,
+            ),
+            DialogField(
+                "illusory_points",
+                "Build Points found illusory",
+                "optint",
+                _attr(existing, "build_points", None),
+                hint="Of the Illusory Resources Hook's 250; counted once Resolved.",
+                show_if=illusory,
             ),
             DialogField(
                 "pounds",

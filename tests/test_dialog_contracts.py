@@ -84,6 +84,9 @@ _HIDDEN_STORY = {
     "Linked Boon/Hook": "bh-hr",
 }
 
+#: The same, linked to its Illusory Resources Hook.
+_ILLUSORY_STORY = {**_HIDDEN_STORY, "Linked Boon/Hook": "bh-ir"}
+
 
 def _char(saga: Saga):
     return next(c for c in saga.characters if c.id == "mag1")
@@ -792,6 +795,20 @@ CONTRACTS: dict[str, Contract] = {
             "#cov-boons-list": "Hidden Resources (120/250 BP)",
             "#cov-diary-list": "Past the guardian  \\[Resolved]  120 Build Points",
         },
+    ),
+    "add illusory resources story event": Contract(
+        prefill={"Year": "1220", "Season": "Autumn", "Name": ""},
+        edits={**_ILLUSORY_STORY, "Build Points found illusory": "60"},
+        saved=lambda s: (
+            _cov(s).diary[-1].boon_hook_id,
+            _cov(s).diary[-1].build_points,
+        ),
+        expected=("bh-ir", 60),
+        invalid=[
+            {**_ILLUSORY_STORY, "Build Points found illusory": "251"},
+            {**_ILLUSORY_STORY, "Build Points found illusory": "-5"},
+        ],
+        shown={"#cov-hooks-list": "Illusory Resources (60/250 BP)"},
     ),
     "edit enchanted device": Contract(
         prefill={

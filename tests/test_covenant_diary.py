@@ -224,11 +224,11 @@ def test_hidden_resources_show_on_the_story_event_and_the_build_tab():
         "Hidden Resources: 150 of 250 unlocked; these count once the event "
         "is Resolved" in text
     )
-    block = strip_markup(cd.hidden_resources_text(covenant))
+    block = strip_markup(cd.pools_text(covenant))
     assert "(no detail): 150 of 250 unlocked" in block
     assert "(no detail): 0 of 250 unlocked" in block
     assert "Pool 500, unlocked 150, still hidden 350" in block
-    assert cd.hidden_resources_text(_covenant()) == ""
+    assert cd.pools_text(_covenant()) == ""
 
 
 def test_old_diary_entries_load_without_build_points():
@@ -241,3 +241,32 @@ def test_old_diary_entries_load_without_build_points():
         }
     )
     assert covenant.diary[0].build_points is None
+
+
+def test_illusory_resources_share_the_ledger_with_their_own_words():
+    covenant = _hidden_covenant()
+    covenant.boons_hooks.append(VirtueFlawInstance(cd.ILLUSORY_RESOURCES, id="ir1"))
+    covenant.diary.append(
+        CovenantDiaryEntry(
+            1224,
+            "Autumn",
+            "The library was a glamour",
+            category="Story Event",
+            status="Resolved",
+            boon_hook_id="ir1",
+            build_points=60,
+        )
+    )
+    assert cd.pool_note(covenant, "ir1") == "60 of 250 found illusory"
+    text = strip_markup(cd.info_text(covenant, 3))
+    assert "Build Points found illusory: 60" in text
+    assert "Illusory Resources: 60 of 250 found illusory" in text
+    values = {"status": "Resolved", "boon_hook_id": "ir1", "build_points": 191}
+    assert cd.points_problem(covenant, values, None) == (
+        "Only 190 of this Hook's 250 Build Points are left."
+    )
+    block = strip_markup(cd.pools_text(covenant))
+    assert "Pool 500, unlocked 150, still hidden 350" in block
+    assert "Pool 250, found illusory 60, still believed real 190" in block
+    # A Story Event linked to an ordinary Hook has no pool.
+    assert cd.pool_of(_covenant(), "bh1") is None

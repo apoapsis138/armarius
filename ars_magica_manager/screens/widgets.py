@@ -113,7 +113,7 @@ def boon_hook_rows(covenant: Covenant, kind: str) -> list[tuple[int, str]]:
             )
             + (
                 f" [dim]({cov_diary.pool_short(covenant, bh.id)})[/]"
-                if bh.vf_id == cov_diary.HIDDEN_RESOURCES and bh.id
+                if bh.vf_id in cov_diary.POOLS and bh.id
                 else ""
             ),
         )
@@ -146,7 +146,7 @@ def boon_hook_info_text(covenant: Covenant, index: int | None) -> str:
     elif definition.unknown:
         lines.append("[dim]May be Unknown (mark it in its Edit form).[/]")
     lines += _boon_hook_rule_lines(definition, by_id)
-    if instance.vf_id == cov_diary.HIDDEN_RESOURCES and instance.id:
+    if instance.vf_id in cov_diary.POOLS and instance.id:
         lines += cov_diary.pool_lines(covenant, instance.id)
     # The user's own description leads; the official rules text follows.
     description = instance.params.get(BOON_HOOK_DESCRIPTION, "").strip()

@@ -96,7 +96,10 @@ The covenant's Hooks, chosen from the catalogue with `a` and edited with
 Boons' total. A Hook the catalogue allows to be unknown can be marked so,
 and then counts a fixed number of points shown on its row. A Story Event in
 the Diary can be linked to a Hook, and its details then say how many
-stories have been told against that Hook so far.
+stories have been told against that Hook so far. An Illusory Resources Hook
+stands for 250 Build Points of improvements that don't really exist: its
+row shows how many have been found out ("60/250 BP"), and its details list
+the Story Events that revealed them.
 
 ## Inhabitants tab
 <!-- help: tab-cov-inhabitants -->
@@ -502,11 +505,16 @@ count once the event is Resolved, and the form refuses more than the Boon
 has left. Only the points are recorded: add what was found (vis, books,
 items) on its own tab as usual.
 
+A Story Event linked to an Illusory Resources Hook has **Build Points found
+illusory** instead: the points of that Hook's 250 the story showed don't
+really exist. They count the same way; take what vanished off its own tab.
+
 **You type:** each entry, with `a`, `e` and `d` on the list.
 
 **The app works out:** the order of the entries, for a Story Event
 linked to a Hook, how many stories have been told against it, and for one
-linked to Hidden Resources, how many of the Boon's points are unlocked.
+linked to Hidden Resources or Illusory Resources, how many of its points
+have come to light.
 
 **See also:** [Inhabitants tab](help:tab-cov-inhabitants) (Loyalty),
 [Possessions tab](help:tab-cov-possessions) (vis),
@@ -528,7 +536,8 @@ Points are set on the Creation Worksheet.
 from its library, vis, enchanted items, laboratories, specialists and
 money. Below them, for a covenant with Hidden Resources, the pool those
 Boons hold, how much of it Story Events have unlocked and how much is
-still hidden, kept out of the totals.
+still hidden; and the same for Illusory Resources (found illusory, still
+believed real). Both are kept out of the totals.
 
 **See also:** [Library tab](help:tab-cov-library),
 [Possessions tab](help:tab-cov-possessions),
