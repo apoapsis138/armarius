@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 from ..arts import ART_BY_NAME
@@ -131,6 +131,10 @@ class Book:
     #: How the copy is made (book_kinds.PHYSICAL_FORMS: "Exemplar",
     #: "Flap-bound"...), or "" for an ordinary bound book.
     physical_form: str = ""
+    #: Its craftsmanship, under the extended book Quality rule
+    #: (book_kinds.CRAFT keys: "scribe", "binder", "illuminator",
+    #: "resonance", "story_resonance", "clarified", "glossed").
+    craft: list[str] = field(default_factory=list)
 
     @classmethod
     def from_dict(

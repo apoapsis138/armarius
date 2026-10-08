@@ -127,3 +127,29 @@ def test_a_csv_reads_opus_and_physical_form():
     [gloss] = result.books
     assert (gloss.opus, gloss.physical_form) == (kinds.COMMENTARY, "Exemplar")
     assert [s.split(":")[0] for s in result.skipped] == ["Row 3 (Bad)", "Row 4 (Odd)"]
+
+
+def test_extended_quality_counts_craftsmanship_only_when_on():
+    saga = _saga()
+    physics = saga.books[0]
+    physics.craft = ["scribe", "binder", "illuminator", "story_resonance"]
+    assert bk.effective_quality(saga, physics) == 12  # the rule is off
+    saga.rule_options = {"extended_book_quality": True}
+    assert bk.effective_quality(saga, physics) == 17  # +1 +1 +1 +2
+    assert bk.cost(physics, saga) == 17 + 3 * 6  # craftsmanship is paid for
+    assert "skilled scribe +1" in bk.detail_text(saga, physics)
+
+
+def test_extended_quality_warns_of_what_cant_go_together():
+    saga = _saga()
+    saga.rule_options = {"extended_book_quality": True}
+    t1 = saga.books[2]  # in the florilegium
+    t1.craft = ["glossed", "resonance", "clarified"]
+    t1.physical_form = "Juvenilia"
+    warnings = bk.craft_warnings(saga, t1)
+    assert any("gloss expresses resonance" in w for w in warnings)
+    assert any("florilegium expresses resonance" in w for w in warnings)
+    assert any("Juvenilia copies have no resonances" in w for w in warnings)
+    tract = Book(id="x", name="X", type="Tractatus", subject_kind="Art", art="Vim",
+                 quality=16, craft=["scribe", "binder"])  # fmt: skip
+    assert any("over the 17" in w for w in bk.craft_warnings(saga, tract))

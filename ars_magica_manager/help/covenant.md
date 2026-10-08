@@ -493,6 +493,18 @@ whose Quality you enter as it is. The details panel's Quality shows what a
 book is read at and why ("10 (written 9; commentary +1)"), and its **Kind**
 line names the opus and form.
 
+With the optional rule **Extended book Quality** (Edit Saga), a book's
+Quality is built from parts (Covenants, Extended Suggestions on the Quality
+of Books): the author gives Communication + 3 instead of + 6 (a season of
+writing makes the book that way), and the book form gains its
+craftsmanship -- a skilled scribe, binder and illuminator (+1 each, for a
+Profession score of 6 or more), resonant materials (+1 bought, +2 from a
+story), clarified (+1) and glossed (+1). Each counts toward its Build Point
+cost. The details panel warns of what can't go together (a gloss with
+resonance, a florilegium with resonance or clarification, resonance on
+juvenilia...) and of an Art book over what it effectively reaches (35 -
+Level for a summa, 17 for a tractatus).
+
 A summa or tractatus shows its **Value**: Excellent, Sound, Vain or
 Discarded, from its Quality against its Level (Covenants, Categories of
 Value: a summa's Quality + Level, an Ability summa's Level counting three

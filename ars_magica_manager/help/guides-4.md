@@ -113,6 +113,8 @@ The preview lists what will be added, the links kept and the links dropped. [Imp
 4. Choose the file. This picker starts in the folder the app was started from.
 5. Read the preview, which lists the books found and any rows skipped with the reason, and choose **Import**.
 
+The app comes with one such file: `data/book_packages/ArM5_books_by_ability.csv`, the books of the ArM5 Books by Ability index (Lachie Hayes, 2009). It holds 286 books in 46 codices, with their specialty, date and source in each description; four have a Level or Quality still to be set ("var"), highlighted until you give them their numbers.
+
 ### Importing spells from a CSV file
 <!-- help: guide-import-export-spells -->
 

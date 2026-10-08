@@ -188,6 +188,14 @@ def _open_research_bonuses(ws) -> None:
     ws.action_research_bonuses()
 
 
+def _open_book_craft(ws) -> None:
+    """Edit the covenant's summa under the extended book Quality rule."""
+    ws.saga.rule_options = {"extended_book_quality": True}
+    book = next(b for b in ws.saga.books if b.id == "b-cov")
+    book.art, book.level, book.quality = "Ignem", 10, 12
+    ws._book_form(book)
+
+
 OPENERS: dict[str, Opener] = {
     # Saga level
     "create saga": Opener(None, lambda p: p.action_create_saga()),
@@ -370,6 +378,7 @@ OPENERS: dict[str, Opener] = {
     ),
     "add book into a codex": Opener("covenant", lambda ws: ws._book_form(None)),
     "add commentary": Opener("covenant", lambda ws: ws._book_form(None)),
+    "book craftsmanship": Opener("covenant", _open_book_craft),
     "research bonuses": Opener("covenant", _open_research_bonuses),
     "add lab text": Opener("laboratory", lambda ws: ws._book_form(None)),
     "perform ritual again": Opener("laboratory", lambda ws: ws.action_perform_ritual()),

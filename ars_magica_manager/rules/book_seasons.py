@@ -35,7 +35,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from .. import books
+from .. import book_kinds, books
 from .. import spells as spl
 from ..arts import ART_BY_NAME
 from ..models import (
@@ -46,6 +46,7 @@ from ..models import (
     Saga,
     SeasonPlan,
 )
+from . import options
 from .rounding import round_down, round_up
 
 SOURCE = (
@@ -267,7 +268,13 @@ def _write(
     language = plan.language or "Latin"
     if language_score(character, language) < 5:
         return [f"Writing in {language} needs it at 5."], None
-    base = com + 6
+    # Covenants' extended rules: the author gives Communication + 3, the
+    # scribe, binder and illuminator the rest (the book form records them).
+    base = com + (
+        book_kinds.EXTENDED_AUTHOR_BASE
+        if options.is_on(saga, options.EXTENDED_BOOK_QUALITY)
+        else 6
+    )
     kind = ("Art " if is_art else "Ability ") + "Summa"
     if plan.activity == WRITE_TRACTATUS:
         limit = round_up(score / 5) if is_art else round_up(score / 2)

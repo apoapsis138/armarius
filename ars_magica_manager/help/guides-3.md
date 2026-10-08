@@ -18,7 +18,7 @@ The saga is saved as soon as it is made, and every change after that is saved as
 1. The workspace opens with the navigation tree on the left. Its top node is [the saga](help:saga); with it chosen, the pane on the right shows the current date, the books in play and the optional rules.
 2. With the saga node chosen, press `e` (the footer calls it Edit Saga).
 3. **Books in play** opens a picker of the sourcebooks. Choose the ones your troupe uses: catalog pickers then hide Virtues, spells and other entries from books not in play, and a supplement's own rules apply only while its book is in play.
-4. Below it are the optional rules, each off until you tick it: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi and Enforce creation rules strictly. The line under each says what it does.
+4. Below it are the optional rules, each off until you tick it: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi, Enforce creation rules strictly and Extended book Quality. The line under each says what it does.
 5. **Keep season records** keeps a record of each season under Seasons in the tree. Leave it on unless you only want the characters' Diaries to keep them.
 6. Save. The saga's summary now lists your books and the optional rules turned on.
 

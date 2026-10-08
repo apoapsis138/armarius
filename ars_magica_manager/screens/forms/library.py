@@ -297,7 +297,82 @@ def _book_kind_fields(
             allow_blank=True,
             placeholder="(an ordinary bound book)",
         ),
+        *_craft_fields(saga, book, shows),
     ]
+
+
+#: The book form's craftsmanship checkboxes (book_kinds.CRAFT keys), by
+#: field key; resonant materials are a choice of their own.
+_CRAFT_CHECKS: dict[str, str] = {
+    "craft_scribe": "scribe",
+    "craft_binder": "binder",
+    "craft_illuminator": "illuminator",
+    "craft_clarified": "clarified",
+    "craft_glossed": "glossed",
+}
+
+
+def _craft_fields(
+    saga: Saga, book: Book | None, shows: _BookShows
+) -> list[DialogField]:
+    """Under the extended book Quality rule: who made the book, and how
+    (book_kinds.CRAFT), each adding to its Quality."""
+    if not bk.extended_quality(saga):
+        return []
+    craft = list(_attr(book, "craft", []) or [])
+
+    def has_quality(values: dict[str, Any]) -> bool:
+        return bk.has_quality(shows.book_type(values))
+
+    fields = [
+        DialogField(
+            key,
+            book_kinds.CRAFT[part].name + f" (+{book_kinds.CRAFT[part].quality})",
+            "check",
+            part in craft,
+            hint="A professional with a Profession score of 6 or more."
+            if key == "craft_scribe"
+            else "",
+            show_if=has_quality,
+        )
+        for key, part in _CRAFT_CHECKS.items()
+        if part not in ("clarified", "glossed")
+    ]
+    resonance = next((p for p in book_kinds.RESONANCE if p in craft), None)
+    fields.append(
+        DialogField(
+            "craft_resonance",
+            "Resonant materials",
+            "select",
+            resonance,
+            options=[
+                (f"{book_kinds.CRAFT[p].name} +{book_kinds.CRAFT[p].quality}", p)
+                for p in book_kinds.RESONANCE
+            ],
+            allow_blank=True,
+            placeholder="(none)",
+            show_if=has_quality,
+        )
+    )
+    fields += [
+        DialogField(
+            key,
+            book_kinds.CRAFT[part].name + f" (+{book_kinds.CRAFT[part].quality})",
+            "check",
+            part in craft,
+            hint=(
+                "Enchanted to express its resonances: needs resonant materials "
+                "and an author with the Art at 15."
+                if part == "clarified"
+                else "Annotated by a reader at least half as skilled as its Level, "
+                "with better Communication than the author; not with resonance."
+            ),
+            show_if=has_quality,
+        )
+        for key, part in _CRAFT_CHECKS.items()
+        if part in ("clarified", "glossed")
+    ]
+    return fields
 
 
 def _lab_text_fields(book: Book | None, shows: _BookShows) -> list[DialogField]:
@@ -580,10 +655,21 @@ def _book_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
         if spell.level is not None:
             book.level = spell.level
     book.quality = values.get("quality")
+    _kinds_from_values(book, values, saga)
+
+
+def _kinds_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
+    """The form's opus type, physical form and (under the extended book
+    Quality rule) craftsmanship, onto `book`."""
     book.opus = (values.get("opus") or "") if book.type == "Tractatus" else ""
     commentary = book.opus == book_kinds.COMMENTARY
     book.commentary_on = (values.get("commentary_on") or None) if commentary else None
     book.physical_form = values.get("physical_form") or ""
+    if bk.extended_quality(saga):
+        craft = [part for key, part in _CRAFT_CHECKS.items() if values.get(key)]
+        if values.get("craft_resonance"):
+            craft.append(values["craft_resonance"])
+        book.craft = craft if bk.has_quality(book.type) else []
 
 
 def _book_live(values: dict[str, Any], saga: Saga, editing: Book | None = None) -> str:

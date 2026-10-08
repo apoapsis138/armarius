@@ -153,9 +153,11 @@ The [Library tab](help:tab-cov-library) (`6`) lists every book at the covenant, 
 
 1. On [Books](help:section-lib-books), press `a` to add a book; it belongs to the covenant. `e` edits the chosen book.
 2. To bring in many at once, press `m` and choose **Import** to read books from a CSV file into this covenant's library. A preview shows what will be added first. See [Import Data](help:import-data).
-3. To give several books a new owner, mark them with Space and press `e`.
+3. To give several books a new owner, mark them with Space and press `e`. A book bound in a codex moves with its whole codex.
+4. To bind books together, choose a **Codex** in each one's form (or a new one); the codex can be a palimpsest, an encyclopedia, a florilegium or a folio. A tractatus can be a commentary on a summa, and any book can have a physical form, such as an exemplar.
+5. To say how well the library serves research, press `m` and choose **Research Bonuses**: a level for each subject it has books on.
 
-The [Summary](help:section-lib-summary) counts the books by type.
+The [Summary](help:section-lib-summary) counts the books by type, the codices, and the subjects the library aids research on. A book's details show its value, a price guide and its subject's research bonuses.
 
 ### Boons and Hooks
 <!-- help: guide-covenant-boons -->

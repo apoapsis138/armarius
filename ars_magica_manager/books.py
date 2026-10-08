@@ -29,6 +29,7 @@ from .models import (
     Saga,
     Spell,
 )
+from .rules import options
 from .rules.rounding import round_up
 
 #: Book types whose subject is an Art / an Ability (a Tractatus depends on its
@@ -478,6 +479,40 @@ def prune_codices(saga: Saga) -> None:
             book.codex_id = None
 
 
+def extended_quality(saga: Saga | None) -> bool:
+    """Whether the saga uses Covenants' extended book Quality rules (its
+    craftsmanship counts, an author gives Communication + 3)."""
+    return options.is_on(saga, options.EXTENDED_BOOK_QUALITY)
+
+
+def craft_warnings(saga: Saga, book: Book) -> list[str]:
+    """Under the extended rules: craftsmanship that can't go together, and
+    a Quality over what an Art book effectively reaches (35 - Level for a
+    summa, 17 for a tractatus). Warnings, not refusals."""
+    if not extended_quality(saga) or book.quality is None:
+        return []
+    codex = codex_of(saga, book)
+    found = book_kinds.craft_problems(
+        book.craft, book.physical_form, codex.collection if codex else ""
+    )
+    quality = effective_quality(saga, book) or 0
+    if book.type == "Art Summa" and book.level is not None:
+        ceiling = book_kinds.ART_SUMMA_CEILING - book.level
+        if quality > ceiling:
+            found.append(
+                f"Quality {quality} is over the {ceiling} (35 - Level) an Art summa "
+                "effectively reaches."
+            )
+    if book.type == "Tractatus" and book.subject_kind == "Art":
+        ceiling = book_kinds.ART_TRACTATUS_CEILING
+        if quality > ceiling:
+            found.append(
+                f"Quality {quality} is over the {ceiling} an Art tractatus "
+                "effectively reaches."
+            )
+    return found
+
+
 def quality_adjustments(saga: Saga | None, book: Book) -> list[Adjustment]:
     """What changes the Quality the book is studied at, beyond its own: its
     opus type, its physical form, and the codex it is bound in (a
@@ -489,6 +524,11 @@ def quality_adjustments(saga: Saga | None, book: Book) -> list[Adjustment]:
     form = book_kinds.PHYSICAL_FORMS.get(book.physical_form)
     if form is not None and form.quality:
         found.append(Adjustment(form.name.lower(), form.quality, form.priced))
+    if extended_quality(saga):
+        for key in book.craft:
+            part = book_kinds.CRAFT.get(key)
+            if part is not None:
+                found.append(Adjustment(part.name.lower(), part.quality, part.priced))
     codex = codex_of(saga, book) if saga is not None else None
     if codex is not None:
         if codex.palimpsest:
@@ -823,6 +863,7 @@ def detail_text(saga: Saga, book: Book | None) -> str:
             text = f"{cost(book, saga)} Build Points ({cost_formula(book, saga)})"
         lines.append(_cell("Cost", text)[0])
         lines += [problem(escape(w)) for w in limit_warnings(book)]
+    lines += [problem(escape(w)) for w in craft_warnings(saga, book)]
     lines += _value_lines(book)
     lines += _research_lines(saga, book)
     lines += _study_lines(saga, book)

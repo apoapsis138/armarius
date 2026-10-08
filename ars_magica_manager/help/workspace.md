@@ -95,7 +95,7 @@ The top node of the tree. It shows the saga's own details and what it holds.
 
 - **Current date**: the season and year the saga is in. It is also shown in the header on every screen of the workspace.
 - **Books in play**: the sourcebooks the troupe uses. Catalog pickers hide entries from books not in play, the season plan offers a supplement's activities only while its book is in play (a plan already made keeps its activity), and a supplement's own rules apply when its book is in play.
-- **Optional rules**: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi and Enforce creation rules strictly. Each one's effect is described beside it in Edit Saga. These come from Ars Magica Definitive Edition, Chapter 16: Sagas, Rules Questions.
+- **Optional rules**: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi, Enforce creation rules strictly and Extended book Quality. Each one's effect is described beside it in Edit Saga. These come from Ars Magica Definitive Edition, Chapter 16: Sagas, Rules Questions, except Extended book Quality, from Covenants' Library chapter.
 - **Keep season records**: when on, each season applied is kept under Seasons in the tree. When off, only the characters' Diaries keep them.
 
 ### More on the saga
@@ -152,7 +152,7 @@ The books in the saga that nobody owns: not a covenant's library, a laboratory o
 ### Acting on several books
 <!-- help: unassigned-books-marked -->
 
-Mark books with Space (or Ctrl+click) to act on them together. With books marked, `e` gives them all one new owner and `d` deletes them all, each after a confirmation. With none marked, e and d act on the highlighted book.
+Mark books with Space (or Ctrl+click) to act on them together. With books marked, `e` gives them all one new owner and `d` deletes them all, each after a confirmation. With none marked, e and d act on the highlighted book. A book bound in a codex takes its whole codex to the new owner.
 
 Books imported from a CSV file on the saga (More, Import, Books) land here.
 

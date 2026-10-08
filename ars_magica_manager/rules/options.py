@@ -20,6 +20,10 @@ SOURCE = (
 )
 
 
+#: Covenants' extended rules for the Quality of books (book_kinds.CRAFT).
+EXTENDED_BOOK_QUALITY = "extended_book_quality"
+
+
 @dataclass(frozen=True)
 class RuleOption:
     key: str
@@ -89,6 +93,21 @@ OPTIONS: tuple[RuleOption, ...] = (
             "Detailed Character Creation Summary (https://www.redcap.org/page/"
             "Ars_Magica_Definitive_Edition,_Chapter_Three:_Characters"
             "#Detailed_Character_Creation_Summary)"
+        ),
+    ),
+    RuleOption(
+        key=EXTENDED_BOOK_QUALITY,
+        label="Extended book Quality",
+        effect=(
+            "A book's Quality is built from parts: the author gives "
+            "Communication + 3 instead of + 6, and a skilled scribe, binder "
+            "and illuminator, resonant materials, clarification and glossing "
+            "each add to it."
+        ),
+        source=(
+            "Covenants, Chapter Seven: Library, Extended Suggestions on the "
+            "Quality of Books (https://www.redcap.org/page/Covenants_Chapter"
+            "_Seven:_Library)"
         ),
     ),
 )

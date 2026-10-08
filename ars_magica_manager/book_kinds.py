@@ -133,6 +133,52 @@ FOLIO_LORE = "Organization Lore: Order of Hermes"
 FOLIO_LORE_XP = 1
 
 
+#: Craftsmanship under Covenants' extended Quality rules (the
+#: extended_book_quality rule option): each adds to the Quality, and to the
+#: Build Point cost. A professional is skilled with a Profession score of 6.
+CRAFT: dict[str, Kind] = {
+    "scribe": Kind("Skilled scribe", quality=1),
+    "binder": Kind("Skilled binder", quality=1),
+    "illuminator": Kind("Skilled illuminator", quality=1),
+    "resonance": Kind("Resonant materials (bought)", quality=1),
+    "story_resonance": Kind("Resonant materials (from a story)", quality=2),
+    "clarified": Kind("Clarified", quality=1),
+    "glossed": Kind("Glossed", quality=1),
+}
+RESONANCE = ("resonance", "story_resonance")
+#: The extended rules' author base: Communication + 3 (the core rules' + 6).
+EXTENDED_AUTHOR_BASE = 3
+#: The effective most an Art summa's Quality reaches (35 - Level) and an Art
+#: tractatus's (17) under the extended rules.
+ART_SUMMA_CEILING = 35
+ART_TRACTATUS_CEILING = 17
+
+
+def craft_problems(book_craft: list[str], form: str, collection: str) -> list[str]:
+    """What the extended rules say can't go together in a book's
+    craftsmanship (warnings, not refusals)."""
+    found: list[str] = []
+    resonant = any(key in book_craft for key in RESONANCE)
+    if "resonance" in book_craft and "story_resonance" in book_craft:
+        found.append("Resonant materials count once: bought (+1) or from a story (+2).")
+    if "clarified" in book_craft and not resonant:
+        found.append("Clarification works through resonant materials: it needs them.")
+    if "glossed" in book_craft and (resonant or "clarified" in book_craft):
+        found.append(
+            "A gloss expresses resonance: it can't be combined with resonant "
+            "materials or clarification."
+        )
+    if collection == FLORILEGIUM and (resonant or "clarified" in book_craft):
+        found.append(
+            "A florilegium expresses resonance: no resonant materials or clarification."
+        )
+    if form in ("Juvenilia", "Unbound", "Ex libris") and resonant:
+        found.append(f"{form} copies have no resonances.")
+    if form in ("Juvenilia", "Unbound") and "binder" in book_craft:
+        found.append(f"{form} copies aren't bound: no binder's bonus.")
+    return found
+
+
 @dataclass(frozen=True)
 class Adjustment:
     """One change to the Quality a book is studied at."""

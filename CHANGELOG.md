@@ -41,6 +41,19 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.36.0 — 2026-10-08
+
+- A new optional rule, Extended book Quality (Edit Saga), uses Covenants'
+  extended rules: a book's Quality is built from parts. An author gives
+  Communication + 3 instead of + 6, and the book form records a skilled
+  scribe, binder and illuminator (+1 each), resonant materials (+1 bought,
+  +2 from a story), clarification (+1) and a gloss (+1), all counted in
+  its Build Point cost. A book's details warn of what can't go together
+  and of an Art book over what it effectively reaches.
+- The guides cover reading codices, commentaries, florilegia, folios and
+  books still to be set, the library's research bonuses, and the bundled
+  ArM5 book package.
+
 ## 2.35.0 — 2026-10-08
 
 - A tractatus can be a commentary on a summa (the book form's Opus and

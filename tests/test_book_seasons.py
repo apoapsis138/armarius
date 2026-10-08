@@ -202,3 +202,11 @@ def test_an_invented_spells_lab_text_is_raw():
     text = saga.books[-1]
     assert (text.raw, text.author_id) == (True, "m")
     assert magus.spells_known[0].spell_id == "bolt"
+
+
+def test_under_the_extended_rules_an_author_gives_communication_plus_3():
+    saga = _saga()
+    saga.rule_options = {"extended_book_quality": True}
+    plan = _plan(bs.WRITE_SUMMA, allocations=[XpAllocation("art:Creo")])
+    _, work = _work(saga, plan)
+    assert (work.made.level, work.made.quality) == (5, 5)  # 2 + 3

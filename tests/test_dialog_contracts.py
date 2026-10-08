@@ -1219,6 +1219,17 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Name": ""},
         shown={"#section-lib-books-list": "Glosses"},
     ),
+    "book craftsmanship": Contract(
+        prefill={"Skilled scribe (+1)": False, "Resonant materials": Select.NULL},
+        edits={
+            "Skilled scribe (+1)": True,
+            "Skilled illuminator (+1)": True,
+            "Resonant materials": "story_resonance",
+        },
+        saved=lambda s: [b.craft for b in s.books if b.id == "b-cov"],
+        expected=[["scribe", "illuminator", "story_resonance"]],
+        invalid={"Name": ""},
+    ),
     "research bonuses": Contract(
         prefill={"Ignem": "0"},
         edits={"Ignem": "3"},
