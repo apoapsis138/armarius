@@ -439,6 +439,17 @@ It is worked out from the list below and cannot be edited, but `a` here
 adds a book and More's **Import** reads books from a CSV file, as on the
 Books list.
 
+**Research** counts the subjects the library aids research on, when a
+magus looks up a fact (Covenants, Use: Research: an Intelligence + Ability
+roll with the library's bonus); a book's details panel gives its subject's
+bonuses. More's **Research Bonuses** sets the library's bonus for
+each subject it has a book on, from None to +5 (a few books, a respectable
+collection, a broad and deep one, specialized, peerless); under each, what
+the library holds on it is a guide. An **encyclopedia** aids research like a
+library of its own: +1 for each of its tractatus on the subject (Art &
+Academe, Encyclopedias), worked out and shown beside the library's bonus;
+a magus uses whichever is better.
+
 ### Books
 <!-- help: section-lib-books -->
 
@@ -456,6 +467,18 @@ a bar. Each book in it is still studied on its own, but only one reader can
 use the codex in a season, and its books are always kept together: changing
 one book's owner moves the whole codex. A **palimpsest** is a codex written
 over a scraped text: each text in it is read, and priced, at -3 Quality.
+A codex marked **Encyclopedia** is a series of tractatus that also aids
+research (see Summary).
+
+A summa or tractatus shows its **Value**: Excellent, Sound, Vain or
+Discarded, from its Quality against its Level (Covenants, Categories of
+Value: a summa's Quality + Level, an Ability summa's Level counting three
+times; about 32 and up is Excellent, 26 to 31 Sound, 19 to 25 Vain; a
+tractatus about 13 and up, 9 to 12, 4 to 8). After it, a guide to its price:
+in vis for a book on an Art, an Arcane Ability or a supernatural power (a
+sound summa about its Level in pawns, a vain one half that, a sound
+tractatus 2 or 3 pawns, an excellent book only given as a gift), and about
+a pound from a stationer for any other book.
 
 ## Diary tab
 <!-- help: tab-cov-diary -->

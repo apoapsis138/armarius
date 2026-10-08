@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from ... import book_value as bv
 from ... import books as bk
 from ... import catalog
 from ... import spells as spl
@@ -20,6 +21,7 @@ from ...models import (
     TEXT_SPELL,
     TRACTATUS_SUBJECTS,
     Book,
+    Covenant,
     Saga,
 )
 from ..fields import DialogField, _attr, _description_field, _pairs
@@ -117,7 +119,10 @@ def _book_fields(
         if chosen is None:
             return {}
         mates = [b for b in saga.books if b.codex_id == chosen.id]
-        fills: dict[str, Any] = {"palimpsest": chosen.palimpsest}
+        fills: dict[str, Any] = {
+            "palimpsest": chosen.palimpsest,
+            "encyclopedia": chosen.encyclopedia,
+        }
         if mates:
             fills["owner"] = (
                 ""
@@ -351,6 +356,15 @@ def _book_fields(
             "at -3 Quality.",
             show_if=lambda v: bool(v.get("codex")),
         ),
+        DialogField(
+            "encyclopedia",
+            "Encyclopedia",
+            "check",
+            bool(codex is not None and codex.encyclopedia),
+            hint="A series of tractatus that also aids research: +1 per "
+            "tractatus on the subject.",
+            show_if=lambda v: bool(v.get("codex")),
+        ),
         _description_field(_attr(book, "description", "")),
     ]
 
@@ -367,6 +381,7 @@ def _bind_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
     book.codex_id = codex.id if codex is not None else None
     if codex is not None:
         codex.palimpsest = bool(values.get("palimpsest"))
+        codex.encyclopedia = bool(values.get("encyclopedia"))
     kind, owner_id = bk.parse_owner_value(values.get("owner"))
     bk.set_owner(saga, book, kind, owner_id)
     bk.prune_codices(saga)
@@ -468,3 +483,37 @@ def _book_live(values: dict[str, Any], saga: Saga, editing: Book | None = None) 
         lines[0] += f"  [dim]({from_spell})[/]"
     lines += [problem(escape(w)) for w in bk.limit_warnings(probe)]
     return "\n".join(lines)
+
+
+def _research_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
+    """The covenant library's research bonus per subject: a drop-down for
+    each Art or Ability it has a book on, with what it holds as a guide."""
+    options = [(label, str(level)) for level, label in bv.RESEARCH_LEVELS]
+    fields: list[DialogField] = []
+    for i, (subject, books) in enumerate(bv.library_subjects(saga, covenant).items()):
+        fields.append(
+            DialogField(
+                f"research_{i}",
+                subject,
+                "select",
+                str(covenant.library_research.get(subject, 0)),
+                options=options,
+                hint=bv.guide_text(saga, covenant, subject, books),
+            )
+        )
+    return fields
+
+
+def _research_from_values(
+    saga: Saga, covenant: Covenant, values: dict[str, Any]
+) -> None:
+    """Write the research form's levels onto the covenant (None dropped).
+    Its fields are numbered in library_subjects' order."""
+    levels = dict(covenant.library_research)
+    for i, subject in enumerate(bv.library_subjects(saga, covenant)):
+        level = int(values.get(f"research_{i}") or 0)
+        if level:
+            levels[subject] = level
+        else:
+            levels.pop(subject, None)
+    covenant.library_research = levels

@@ -22,8 +22,8 @@ from textual.widgets import (
 )
 from textual.widgets._collapsible import CollapsibleTitle
 
+from .. import book_value, casting_text, catalog, faith, lab_planning, seasons
 from .. import books as bk
-from .. import casting_text, catalog, faith, lab_planning, seasons
 from .. import covenant_build as cov_build
 from .. import covenant_diary as cov_diary
 from .. import economics as eco
@@ -178,9 +178,13 @@ class BookListView(Vertical):
         summary: bool = False,
         docked: bool = True,
         group: str | None = None,
+        research: Callable[[], str] | None = None,
     ) -> None:
+        """`research`: the Summary's Research count (plain text, "" for
+        none), for a covenant's library."""
         super().__init__(classes="docked" if docked else "")
         self.group = group
+        self._research = research
         self.saga = saga
         self._books_source = books
         self.section_id = section_id
@@ -191,6 +195,10 @@ class BookListView(Vertical):
         self._books: list[Book] = bk.grouped(saga, books())
         #: Width of the Subject column, fitted to the list (see on_resize).
         self._subject_cols = bk.SUBJECT_MIN_WIDTH
+
+    def _summary(self) -> tuple[str, str]:
+        research = self._research() if self._research else ""
+        return bk.summary_texts(self._books, self.saga, research=research)
 
     def _title(self, checked: int = 0) -> str:
         title = counted(self.title_text, len(self._books))
@@ -234,7 +242,7 @@ class BookListView(Vertical):
             return
         with Vertical(classes="books-body"):
             if self.summary:
-                left, right = bk.summary_texts(self._books, self.saga)
+                left, right = self._summary()
                 with (
                     SheetSection(title="Summary", id="section-lib-summary"),
                     TwoColumns(id="lib-summary-body", text=True),
@@ -290,7 +298,7 @@ class BookListView(Vertical):
             self._books = bk.grouped(self.saga, self._books_source())
             self.query_one(f"#{self.section_id}", Collapsible).title = self._title()
             if self.summary:
-                left, right = bk.summary_texts(self._books, self.saga)
+                left, right = self._summary()
                 self.query_one("#lib-summary-left", Static).update(left)
                 self.query_one("#lib-summary-right", Static).update(right)
             rows = self.query_one(SelectableList)
@@ -3163,6 +3171,7 @@ class CovenantSheetView(SheetView):
             lambda: bk.books_in_covenant(self.saga, self.covenant),
             section_id="section-lib-books",
             summary=True,
+            research=lambda: book_value.research_count(self.saga, self.covenant),
         )
 
     def _diary_tab(self) -> ComposeResult:

@@ -974,6 +974,10 @@ class Codex:
     id: str
     name: str
     palimpsest: bool = False
+    #: An encyclopedia: a series of tractatus, each studied on its own, that
+    #: also aids research like a library of its own (+1 per tractatus on
+    #: the subject; Art & Academe, Encyclopedias).
+    encyclopedia: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Codex:
@@ -2596,6 +2600,10 @@ class Covenant:
     #: the Creation Worksheet is offered. New records start In Creation;
     #: older saves load In Play (False).
     in_creation: bool = False
+    #: The library's research bonus per subject (an Art or Ability name ->
+    #: 1-5, book_value.RESEARCH_LEVELS), as the troupe judges its
+    #: collection; a subject not listed has none.
+    library_research: dict[str, int] = field(default_factory=dict)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Covenant:

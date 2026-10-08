@@ -1144,6 +1144,13 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Name": ""},
         shown={"#section-lib-books-list": "│ Scrolls"},
     ),
+    "research bonuses": Contract(
+        prefill={"Ignem": "0"},
+        edits={"Ignem": "3"},
+        saved=lambda s: s.covenants[0].library_research,
+        expected={"Ignem": 3},
+        shown={"#lib-summary-right": "1 subject"},
+    ),
     # Lab Texts
     "add lab text": Contract(
         prefill={"Name": "", "Type": Select.NULL, "Owner": "laboratory:lab1"},

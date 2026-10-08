@@ -39,6 +39,7 @@ from textual.widgets import (
 from textual.widgets._collapsible import CollapsibleTitle
 from textual.widgets.tree import TreeNode
 
+from ... import book_value as bv
 from ... import books as bk
 from ... import (
     catalog,
@@ -394,6 +395,7 @@ _MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("f", "edit_fatigue", "Edit Fatigue", "_edit_fatigue"),
     MenuItem("f", "edit_familiar_fatigue", "Edit Fatigue", "_edit_familiar_fatigue"),
     MenuItem("i", "import_data", "Import"),
+    MenuItem("b", "research_bonuses", "Research Bonuses"),
     MenuItem("x", "export_record", "Export"),
     MenuItem("m", "toggle_mode", "In Creation / In Play"),
     MenuItem(
@@ -1052,6 +1054,13 @@ class WorkspaceBase(Screen[None]):
                 hosting.transport() != "ssh"
                 and self._record_to_export() is not None
                 and self._on_record()
+            )
+        if action == "research_bonuses":
+            return (
+                self.selected_kind == NodeKind.COVENANT
+                and self._active_section() in _LIBRARY_SECTIONS
+                and self.selected_covenant is not None
+                and bool(bv.library_subjects(self.saga, self.selected_covenant))
             )
         if action == "import_data":
             return (

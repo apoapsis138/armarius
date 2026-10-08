@@ -41,6 +41,21 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.31.0 — 2026-10-08
+
+- A summa's or tractatus's details show its value -- Excellent, Sound,
+  Vain or Discarded, from its Quality against its Level -- with a guide to
+  its price: in vis for a book on an Art, an Arcane Ability or a
+  supernatural power, about a pound for a mundane book.
+- Research Bonuses (More, on a covenant's Library tab) sets how well the
+  library serves research on each subject it has a book on, from None to
+  +5 (a few books, a respectable collection, a broad and deep one,
+  specialized, peerless), with what the library holds on each as a guide.
+- A codex can be marked as an encyclopedia (or by a book import's new
+  encyclopedia column): it aids research on its own, +1 for each of its
+  tractatus on the subject. A book's details give its subject's research
+  bonuses, and the Library Summary counts the subjects aided.
+
 ## 2.30.1 — 2026-10-08
 
 - Fixed: the delete confirmation and the duplicate-book question during an

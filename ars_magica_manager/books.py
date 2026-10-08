@@ -650,10 +650,13 @@ def _cell(label: str, value: object) -> tuple[str, int]:
     return f"[b]{label}:[/] {escape(text)}", len(label) + 2 + len(text)
 
 
-def summary_texts(books: list[Book], saga: Saga | None = None) -> tuple[str, str]:
+def summary_texts(
+    books: list[Book], saga: Saga | None = None, *, research: str = ""
+) -> tuple[str, str]:
     """The Library tab's Summary (markup, read-only): Summae and Tractatus by
     Ability/Art down the left; Lab Texts, Casting Tablets, Other and the
-    totals down the right."""
+    totals down the right, then `research` (a covenant library's research
+    bonuses, book_value.research_count) when given."""
 
     def count(book_type: str, subject_kind: str | None = None) -> int:
         return sum(
@@ -708,6 +711,7 @@ def summary_texts(books: list[Book], saga: Saga | None = None) -> tuple[str, str
             ("", ""),
             ("Total Books", len(books)),
             *([("Codices", len(codices))] if codices else []),
+            *([("Research", escape(research))] if research else []),
         ]
     )
     return left, right
@@ -760,10 +764,39 @@ def detail_text(saga: Saga, book: Book | None) -> str:
             text = f"{cost(book, saga)} Build Points ({cost_formula(book, saga)})"
         lines.append(_cell("Cost", text)[0])
         lines += [problem(escape(w)) for w in limit_warnings(book)]
+    lines += _value_lines(book)
+    lines += _research_lines(saga, book)
     lines += _study_lines(saga, book)
     if book.description.strip():
         lines += ["", "[b]Description:[/]", markdown_inline(book.description.strip())]
     return "\n".join(lines)
+
+
+def _value_lines(book: Book) -> list[str]:
+    """The details panel's category of value and price guide (book_value),
+    for a summa or tractatus with its numbers."""
+    from . import book_value
+
+    kind = book_value.category(book)
+    if kind is None:
+        return []
+    return [
+        f"[b]Value:[/] {kind} [dim]· price guide: "
+        f"{escape(book_value.price_text(book))}[/]"
+    ]
+
+
+def _research_lines(saga: Saga, book: Book) -> list[str]:
+    """The details panel's research on the book's subject in the covenant
+    library it is kept in, when it has a bonus or an encyclopedia."""
+    from . import book_value
+
+    covenant = saga.covenant(covenant_of(saga, book))
+    subject = book_value.subject_of(book)
+    if covenant is None or not subject:
+        return []
+    text = book_value.subject_research_text(saga, covenant, subject)
+    return [f"[b]Research ({escape(subject)}):[/] {escape(text)}"] if text else []
 
 
 def _study_lines(saga: Saga, book: Book) -> list[str]:
@@ -829,6 +862,7 @@ CSV_COLUMNS: tuple[str, ...] = (
     "tractatus_type",
     "spell",
     "codex",
+    "encyclopedia",
 )
 CSV_UNUSED_COLUMNS: tuple[str, ...] = ("owner", "cost")
 
@@ -842,6 +876,8 @@ class CsvImport:
     books: list[Book] = field(default_factory=list)
     skipped: list[str] = field(default_factory=list)
     unused_columns: list[str] = field(default_factory=list)
+    #: The codex names an encyclopedia column marked (yes / true / 1).
+    encyclopedias: set[str] = field(default_factory=set)
 
 
 #: What a CSV's Level or Quality cell says for "to be set later": the value
@@ -927,10 +963,19 @@ def parse_books_csv(text: str) -> CsvImport:
     """Read books from CSV text with a header row (column names in any case
     and order; see CSV_COLUMNS). Raises ValueError if there's no `name` or
     `type` column; a bad row is skipped and reported, not fatal."""
+    encyclopedias: set[str] = set()
+
+    def from_row(row: dict[str, str]) -> Book:
+        book = _book_from_row(row)
+        flag = row.get("encyclopedia", "").strip().lower()
+        if book.codex_id and flag in ("yes", "y", "true", "1", "x"):
+            encyclopedias.add(book.codex_id)
+        return book
+
     books, skipped, unused = parse_rows(
-        text, ("name", "type"), CSV_COLUMNS, _book_from_row, missing_joiner=" or "
+        text, ("name", "type"), CSV_COLUMNS, from_row, missing_joiner=" or "
     )
-    return CsvImport(books, skipped, unused)
+    return CsvImport(books, skipped, unused, encyclopedias)
 
 
 def read_books_csv(path: Path) -> CsvImport:
@@ -1032,12 +1077,16 @@ def add_book(saga: Saga, name: str, book_type: str) -> Book:
 
 
 def add_imported_books(
-    saga: Saga, books: list[Book], covenant: Covenant | None
+    saga: Saga,
+    books: list[Book],
+    covenant: Covenant | None,
+    encyclopedias: set[str] | None = None,
 ) -> None:
     """Add imported books: each gets an id, is linked to its spell now that
     the spell can be matched by name, and goes to `covenant` if one is given
     (otherwise it stays unassigned). Books whose `codex` column named the
-    same codex are bound in one new codex of that name."""
+    same codex are bound in one new codex of that name (an encyclopedia when
+    its name is in `encyclopedias`)."""
     ids = [b.id for b in saga.books]
     codices: dict[str, Codex] = {}
     for book in books:
@@ -1045,6 +1094,7 @@ def add_imported_books(
             name = book.codex_id
             if name not in codices:
                 codices[name] = new_codex(saga, name)
+                codices[name].encyclopedia = name in (encyclopedias or set())
             book.codex_id = codices[name].id
         spell = book_spell(saga, book)
         if spell is not None:

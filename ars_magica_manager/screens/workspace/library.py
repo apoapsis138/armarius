@@ -33,6 +33,8 @@ from ..forms import (
     _book_fields,
     _book_from_values,
     _book_live,
+    _research_fields,
+    _research_from_values,
     _spell_fields,
     _spell_from_values,
     _spell_live,
@@ -408,6 +410,28 @@ class LibraryActions(WorkspaceBase):
             then=lambda index: then(listed[index]),
         )
 
+    def action_research_bonuses(self) -> None:
+        """Set the covenant library's research bonus per subject."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        saga = self.saga
+
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is None:
+                return
+            _research_from_values(saga, covenant, values)
+            storage.save_saga(saga)
+            self._books_changed()
+
+        self.app.push_screen(
+            FieldsDialog(
+                f"Research Bonuses: {escape(covenant.name)}'s library",
+                _research_fields(saga, covenant),
+            ),
+            handle_result,
+        )
+
     def _marked_books(self) -> list[Book]:
         view = self._book_view()
         return view.checked_books() if view is not None else []
@@ -656,7 +680,9 @@ class LibraryActions(WorkspaceBase):
 
             def handle_confirmed(confirmed: bool | None) -> None:
                 if confirmed:
-                    self._add_imported_books(result.books, covenant, destination)
+                    self._add_imported_books(
+                        result.books, covenant, destination, result.encyclopedias
+                    )
 
             self.app.push_screen(
                 ConfirmScreen(
@@ -677,7 +703,11 @@ class LibraryActions(WorkspaceBase):
         self.app.push_screen(CsvFilePickerScreen(title, Path.cwd()), handle_path)
 
     def _add_imported_books(
-        self, books: list[Book], covenant: Covenant | None, destination: str
+        self,
+        books: list[Book],
+        covenant: Covenant | None,
+        destination: str,
+        encyclopedias: set[str] | None = None,
     ) -> None:
         """Add confirmed imported books, asking about each one whose name is
         already taken (Duplicate / Duplicate All / Skip / Skip All). Nothing
@@ -685,7 +715,7 @@ class LibraryActions(WorkspaceBase):
         saga = self.saga
 
         def finish(accepted: list[Book], skipped: int) -> None:
-            bk.add_imported_books(saga, accepted, covenant)
+            bk.add_imported_books(saga, accepted, covenant, encyclopedias)
             if accepted:
                 storage.save_saga(saga)
                 self._books_changed()

@@ -159,6 +159,13 @@ async def _open_boon_details(ws) -> None:
     )
 
 
+def _open_research_bonuses(ws) -> None:
+    """The covenant library's research bonuses, with its summa on Ignem."""
+    book = next(b for b in ws.saga.books if b.id == "b-cov")
+    book.art, book.level, book.quality = "Ignem", 10, 12
+    ws.action_research_bonuses()
+
+
 OPENERS: dict[str, Opener] = {
     # Saga level
     "create saga": Opener(None, lambda p: p.action_create_saga()),
@@ -333,6 +340,7 @@ OPENERS: dict[str, Opener] = {
         lambda ws: ws._book_form(next(b for b in ws.saga.books if b.id == "b-cov")),
     ),
     "add book into a codex": Opener("covenant", lambda ws: ws._book_form(None)),
+    "research bonuses": Opener("covenant", _open_research_bonuses),
     "add lab text": Opener("laboratory", lambda ws: ws._book_form(None)),
     "perform ritual again": Opener("laboratory", lambda ws: ws.action_perform_ritual()),
     "lab texts read": Opener("character", lambda ws: ws._edit_lab_text_access()),
