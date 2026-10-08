@@ -18,7 +18,14 @@ from dataclasses import dataclass, field
 
 from .. import catalog
 from ..arts import FORMS, TECHNIQUES
-from ..models import ArtScore, Character, Saga, SeasonPlan, VirtueFlawInstance
+from ..models import (
+    SUPERNATURAL_CATEGORIES,
+    ArtScore,
+    Character,
+    Saga,
+    SeasonPlan,
+    VirtueFlawInstance,
+)
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 8: Laboratory, Opening the Arts "
@@ -105,7 +112,7 @@ def work(
             if (magus.arts.get(art.lower()) or ArtScore()).level < DEFICIENT_AT
         ]
         result = ApprenticeWork(deficiencies=deficient)
-        if any(a.category == "Supernatural" for a in student.abilities):
+        if any(a.category in SUPERNATURAL_CATEGORIES for a in student.abilities):
             result.notes.append(
                 f"{student.name} has Supernatural Abilities: opening the Arts "
                 "also needs an Intellego Vim Lab Total (DE Ch. 8)."

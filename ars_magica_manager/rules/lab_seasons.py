@@ -32,6 +32,7 @@ from dataclasses import dataclass, field, replace
 from .. import books, vis
 from .. import spells as spl
 from ..models import (
+    SUPERNATURAL_CATEGORIES,
     TEXT_LONGEVITY,
     ArcaneConnection,
     BondPower,
@@ -461,7 +462,7 @@ def is_mundane(character: Character) -> bool:
     neither a magus nor someone with a Supernatural Ability."""
     if character.type == "magus":
         return False
-    return not any(a.category == "Supernatural" for a in character.abilities)
+    return not any(a.category in SUPERNATURAL_CATEGORIES for a in character.abilities)
 
 
 def age_of(saga: Saga, character: Character) -> int | None:

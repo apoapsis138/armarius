@@ -1,7 +1,13 @@
 import pytest
 
-from ars_magica_manager import catalog
-from ars_magica_manager.models import ABILITY_CATEGORIES, AbilityDef
+from ars_magica_manager import catalog, sourcebooks
+from ars_magica_manager.models import (
+    ABILITY_CATEGORIES,
+    AbilityDef,
+    Character,
+    VirtueFlawInstance,
+)
+from ars_magica_manager.rules import creation_access
 
 
 def test_seed_catalog_loads_and_covers_all_categories():
@@ -34,3 +40,21 @@ def test_a_held_ability_is_not_offered_again_unless_templated():
     assert "ab_craft" in offered  # "Craft: {craft}": another Craft is fine
     assert "ab_awareness" in offered
     assert len(catalog.abilities_to_offer(set())) == len(catalog.load_ability_catalog())
+
+
+def test_supplement_abilities_follow_the_sourcebooks_in_play():
+    by_id = catalog.load_ability_catalog_by_id()
+    kabbalah, elementalist = by_id["ab_kabbalah"], by_id["ab_elementalist_fire"]
+    assert (kabbalah.category, elementalist.category) == ("Supernatural", "Hedge Art")
+    assert sourcebooks.in_play(kabbalah.source, ["RoP:D"])
+    assert not sourcebooks.in_play(kabbalah.source, ["HMRE"])
+    assert not sourcebooks.in_play(elementalist.source, [])
+    assert sourcebooks.in_play(by_id["ab_athletics"].source, [])
+
+
+def test_a_supernatural_or_hedge_ability_needs_the_virtue_that_grants_it():
+    magus = Character(id="m", name="M", type="magus")
+    assert not creation_access.may_learn(magus, "Kabbalah")
+    assert not creation_access.may_learn(magus, "Elementalist Fire")
+    magus.virtues_flaws.append(VirtueFlawInstance(vf_id="vf_kabbalah"))
+    assert creation_access.may_learn(magus, "Kabbalah")

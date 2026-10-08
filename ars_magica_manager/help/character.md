@@ -123,7 +123,12 @@ Every Ability the character has, in one list grouped by category.
 
 **You type:** each Ability's total XP and its Specialty. `a` picks a new
 Ability from the catalog; the picker shows the highlighted Ability's
-description under the list.
+description under the list. Abilities from supplements (the Divine's Holy
+Powers and Methods, Mythic Herbalism, Mechanica of Heron...) are listed only
+while their book is in play. **Hedge Art** is the category for a hedge
+tradition's Arts, such as the learned elementalists' Elementalist Fire: like
+a Supernatural Ability, one is learned through the Virtue that grants it,
+and it advances on the Ability XP table.
 
 **The app works out:** the score from the XP, and the XP the next score
 needs, shown as score and then XP over the next total (Ars Magica Definitive

@@ -15,7 +15,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from .. import catalog
-from ..models import AbilityDef, Character, VirtueFlawInstance
+from ..models import SUPERNATURAL_CATEGORIES, AbilityDef, Character, VirtueFlawInstance
 from .creation_character import THE_GIFT
 from .rounding import round_up
 
@@ -258,7 +258,7 @@ def granted_supernatural(character: Character) -> set[str]:
     return {
         entry.name
         for entry in catalog.load_ability_catalog()
-        if entry.category == SUPERNATURAL and entry.name in names
+        if entry.category in SUPERNATURAL_CATEGORIES and entry.name in names
     }
 
 
@@ -266,7 +266,7 @@ def may_learn(character: Character, name: str, *, apprenticed: bool = False) -> 
     """Whether the character may buy Ability `name` at creation (a magus
     before or during apprenticeship: `apprenticed`)."""
     category = ability_category(name)
-    if category == SUPERNATURAL:
+    if category in SUPERNATURAL_CATEGORIES:
         return name in granted_supernatural(character)
     if name in {n for vf in _ids(character) for n in OPENS_ABILITY.get(vf, ())}:
         return True
@@ -290,7 +290,7 @@ def learnable_abilities(
     gifted = gifted_non_magus(character)
     names = set()
     for entry in catalog.load_ability_catalog():
-        if entry.category == SUPERNATURAL:
+        if entry.category in SUPERNATURAL_CATEGORIES:
             ok = entry.name in granted or gifted
         else:
             ok = entry.name in named or entry.category in types

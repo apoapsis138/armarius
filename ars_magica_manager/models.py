@@ -107,7 +107,13 @@ ABILITY_CATEGORIES: tuple[str, ...] = (
     "Martial",
     "Arcane",
     "Supernatural",
+    # A hedge tradition's Arts (Hedge Magic): learned like Supernatural
+    # Abilities, advanced on the Ability xp table.
+    "Hedge Art",
 )
+#: The Ability categories that are supernatural powers: a Virtue grants
+#: them, and they mark their holder as more than mundane.
+SUPERNATURAL_CATEGORIES: tuple[str, ...] = ("Supernatural", "Hedge Art")
 
 
 @dataclass

@@ -41,6 +41,16 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.30.0 — 2026-10-07
+
+- The ability catalog gains the supplement abilities the ArM5 books index
+  uses: the Divine's Adjuration, Blessing, Holy Music, Kabbalah and
+  Merkavah, Mechanica of Heron, Mythic Herbalism and Theology: Pagan. Each
+  is offered only while its book is in play.
+- A new Hedge Art category holds a hedge tradition's Arts: Elementalist
+  Air, Earth, Fire and Water, and Medicinal Divining. Like a Supernatural
+  Ability, one is bought at creation through the Virtue that grants it.
+
 ## 2.29.0 — 2026-10-07
 
 - A book can come in with its Level or Quality still to be set: "var"
