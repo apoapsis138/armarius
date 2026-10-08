@@ -9,7 +9,6 @@ from typing import ClassVar
 from textual.app import ComposeResult
 from textual.binding import BindingType
 from textual.containers import Horizontal, Vertical, VerticalScroll
-from textual.screen import ModalScreen
 from textual.widgets import Button, Label, OptionList, Static
 from textual.widgets.option_list import Option
 
@@ -98,14 +97,16 @@ class ImportScreen(ModalDialog[str | None]):
         self.dismiss(None)
 
 
-class DuplicateBookScreen(ModalScreen[str]):
+class DuplicateBookScreen(ModalDialog[str]):
     """Asked during an import for a book whose name is already taken.
     Dismisses with "duplicate", "duplicate_all", "skip" or "skip_all" (the
     "_all" answers apply to every later duplicate of the same import). Skip
     is focused, and Escape skips, so a stray key never adds a copy."""
 
+    #: Escape skips (ModalDialog's cancel).
+    CANCEL_RESULT: ClassVar[str] = "skip"
+
     BINDINGS: ClassVar[list[BindingType]] = [
-        ("escape", "choose('skip')", "Skip"),
         ("d", "choose('duplicate')", "Duplicate"),
         ("D", "choose('duplicate_all')", "Duplicate All"),
         ("s", "choose('skip')", "Skip"),

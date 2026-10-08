@@ -12,7 +12,6 @@ from textual.app import ComposeResult
 from textual.binding import Binding, BindingType
 from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.events import Key
-from textual.screen import ModalScreen
 from textual.widgets import (
     Button,
     Label,
@@ -1579,14 +1578,13 @@ class InfoScreen(ModalDialog[None]):
             self.action_cancel()
 
 
-class ConfirmScreen(ModalScreen[bool]):
+class ConfirmScreen(ModalDialog[bool]):
     """A Yes/No confirmation, e.g. before deleting something. Dismisses with
     True for Yes, False for No / Escape. No is focused by default so a stray
     Enter can't delete; `y` and `n` answer directly. `message` is shown as
     markup, so escape any user text in it."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
-        ("escape", "escape", "Cancel"),
         ("n", "no", "No"),
         ("y", "yes", "Yes"),
     ]
@@ -1640,8 +1638,12 @@ class ConfirmScreen(ModalScreen[bool]):
     def on_mount(self) -> None:
         self.query_one("#btn-yes" if self.safe_answer else "#btn-no", Button).focus()
 
-    def action_escape(self) -> None:
+    def action_cancel(self) -> None:
+        """Escape: the answer a stray key should give."""
         self.dismiss(self.safe_answer)
+
+    def action_escape(self) -> None:
+        self.action_cancel()
 
     def action_yes(self) -> None:
         self.dismiss(True)

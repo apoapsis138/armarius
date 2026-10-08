@@ -41,6 +41,12 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.30.1 — 2026-10-08
+
+- Fixed: the delete confirmation and the duplicate-book question during an
+  import are drawn in a framed box again, like every other dialog, instead
+  of as bare text over the dimmed screen.
+
 ## 2.30.0 — 2026-10-07
 
 - The ability catalog gains the supplement abilities the ArM5 books index
