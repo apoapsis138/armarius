@@ -238,7 +238,7 @@ grants every entry whose `granted_by` lists `familiar_bond` (True Friend); and
 ## 6. Data Shape (illustrative)
 
 The actual field-by-field shape lives in the dataclasses in
-[`ars_magica_manager/models.py`](ars_magica_manager/models.py) — that's the
+[`ars_magica_manager/models/`](ars_magica_manager/models/) — that's the
 source of truth; treat any example here as a sketch of the *relationships*,
 not a spec. Roughly: a `Saga` holds `Covenant`, `Character`, `Laboratory`,
 `Book` and `Spell` records plus the shared catalogs, cross-referenced by id

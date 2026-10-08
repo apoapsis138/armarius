@@ -1,6 +1,6 @@
 """Registry of known modifier types, used to validate the Virtue/Flaw catalog.
 
-A `Modifier.applies_to` (see models.py) must be a key of `MODIFIER_TYPES`.
+A `Modifier.applies_to` (see models/common.py) must be a key of `MODIFIER_TYPES`.
 Some modifier types vary by *which activity* is being performed -- e.g. Lab
 Total differs for Inventing Spells vs. Extracting Vis, and a single Virtue
 can grant a different bonus to each. Those finer-grained activities are

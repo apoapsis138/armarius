@@ -111,9 +111,10 @@ outside them as above, or allow `python.exe` there.
   the records: a base class plus one mixin module of actions per kind of
   record) and
   `saga_picker` (the start screen, and its About dialog on `?`).
-- `ars_magica_manager/models.py` — the dataclasses (Saga, Covenant,
+- `ars_magica_manager/models/` — the dataclasses (Saga, Covenant,
   Character, Laboratory, Familiar, Book, Spell, Possession, Inhabitant,
-  Economics, catalog entry types, ...) and their load-time migrations;
+  Economics, catalog entry types, ...) and their load-time migrations, one
+  module per kind of record, all re-exported from `models`;
   `arts.py` — the fifteen Arts.
 - Domain logic, one module per area, with no widgets in them:
   `books.py`, `spells.py` (where a spell id resolves, magnitude, the

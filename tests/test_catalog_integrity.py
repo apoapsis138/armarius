@@ -1,7 +1,7 @@
 """Every data catalog loads cleanly: entries with unique ids, a description
 where the book gives one, and no mis-decoded text. (Each entry's shape --
 tiers, costs, categories, targets -- is checked as it loads; see the Defs'
-__post_init__ in models.py. Which books a catalog cites is checked in
+__post_init__ in models/definitions.py. Which books a catalog cites is checked in
 test_sourcebooks.py.)"""
 
 from dataclasses import fields, is_dataclass

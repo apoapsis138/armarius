@@ -117,7 +117,7 @@ _GIFT_BY_MODIFIER: dict[int, str] = {
     -30: "The Gift",
     -105: "Blatant Gift",
 }
-#: GIFT_CHOICES (models.py) -> the display text above.
+#: GIFT_CHOICES (models/holdings.py) -> the display text above.
 _GIFT_DISPLAY: dict[str, str] = {
     "Gentle": "Gentle Gift",
     "Normal": "The Gift",

@@ -648,7 +648,7 @@ class CharacterSheetView(SheetView):
     def _biographical_right_text(self) -> str:
         """Column 2 of Biographical Detail: just the free-text Biography
         box (distinct from Physical Description -- see Description's
-        docstring in models.py)."""
+        docstring in models/character.py)."""
         return escape(self.character.description.biography) or "(none recorded)"
 
     def _characteristics_text(self) -> str:

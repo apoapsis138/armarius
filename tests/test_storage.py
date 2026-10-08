@@ -430,7 +430,7 @@ def test_the_stale_key_fixture_holds_every_saved_record():
         for cls in vars(models).values()
         if isinstance(cls, type)
         and dataclasses.is_dataclass(cls)
-        and cls.__module__ == models.__name__
+        and cls.__module__.startswith(f"{models.__name__}.")
     }
     assert every - not_saved == {t.__name__ for t in _SAVED_TYPES}
 

@@ -41,6 +41,15 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.34.2 — 2026-10-08
+
+- Behind the scenes: the data model is split into one module per kind of
+  record (characters, covenants, laboratories, books and so on) instead of
+  one very long file. Nothing about saving or loading a saga changes.
+- Behind the scenes: importing a covenant, laboratory or character, and
+  the book form, are each built from smaller pieces. Both work exactly as
+  before.
+
 ## 2.34.1 — 2026-10-08
 
 - Behind the scenes: three hand-built dialogs (a Familiar's Binding &
