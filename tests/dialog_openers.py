@@ -23,6 +23,8 @@ from ars_magica_manager.models import (
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules import creation_xp
+from ars_magica_manager.screens.forms import _mastery_dialog
+from ars_magica_manager.screens.prompts import ListFieldScreen
 from ars_magica_manager.screens.widgets import section_stop
 from ars_magica_manager.screens.workspace import _COVENANT_REPUTATIONS
 
@@ -126,14 +128,14 @@ async def _open_lab_choice_prompt(ws) -> None:
 
 
 def _open_mastery_ability(ws) -> None:
-    """Edit a known spell's Mastery, then add a Mastery Ability."""
-    ws._edit_spell_mastery_at(0)
-
-    async def add() -> None:
-        edit = await wait_for_screen(ws.app, scr.MasteryEditScreen)
-        edit._add_ability()
-
-    ws.app.call_later(add)
+    """Add a Mastery Ability: the list editor the Mastery form's Mastery
+    Abilities field opens, then its Add."""
+    known = ws.selected_character.spells_known[0]
+    form = _mastery_dialog("Spell", known)
+    spec = next(f for f in form.fields if f.key == "mastery_abilities")
+    editor = spec.picker(spec.value)
+    ws.app.push_screen(editor)
+    ws.app.call_later(editor.action_add)
 
 
 def _pick(open_editor, list_id: str, index: int = 0):
@@ -247,6 +249,7 @@ OPENERS: dict[str, Opener] = {
         "character", lambda ws: _open_param_prompt(ws, "vf_puissant_ability")
     ),
     "add mastery ability": Opener("character", _open_mastery_ability),
+    "edit spell mastery": Opener("character", lambda ws: ws._edit_spell_mastery_at(0)),
     "add personal weapon": Opener(
         "character", lambda ws: ws._inventory_item_form("weapon", None)
     ),
@@ -506,7 +509,7 @@ async def reopen_dialog(pilot, app, base, name: str) -> object:
 #: Screens a dialog is opened through (not the dialog itself).
 _ON_THE_WAY = (
     scr.VirtueFlawPickerScreen,
-    scr.MasteryEditScreen,
+    ListFieldScreen,
     scr.RemovalPickerScreen,
     scr.AbilityPickerScreen,
     scr.CovenantBoonHookPickerScreen,

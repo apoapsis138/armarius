@@ -1892,3 +1892,39 @@ class ListFieldScreen[ItemT](ModalDialog[list[ItemT] | None]):
             self.dismiss(list(self.items))
         elif event.button.id == "btn-cancel":
             self.action_cancel()
+
+
+def _list_display(label: Callable[[Any], str]) -> Callable[[Any], str]:
+    """A list field's button text (plain): its entries, or "(none)"."""
+
+    def display(items: list[Any]) -> str:
+        if not items:
+            return "(none: press to add)"
+        return "; ".join(label(item) for item in items)
+
+    return display
+
+
+def _list_field(
+    key: str,
+    label: str,
+    items: list[Any],
+    title: str,
+    row: Callable[[Any], str],
+    dialog: Callable[[Any], FieldsDialog[Any]],
+    **extra: Any,
+) -> DialogField:
+    """A form field holding a small list: a button showing its entries that
+    opens a ListFieldScreen to add, edit and delete them (`row` labels an
+    entry in plain text; `dialog` edits one)."""
+    return DialogField(
+        key,
+        label,
+        "picker",
+        list(items),
+        picker=lambda current: ListFieldScreen(
+            title, current or [], lambda item: escape(row(item)), dialog
+        ),
+        display=_list_display(row),
+        **extra,
+    )

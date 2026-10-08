@@ -18,7 +18,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
+from typing import Any
 
 from .. import catalog
 from ..models import Book, Character, Progress, Saga, SeasonPlan
@@ -241,277 +243,378 @@ def problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
     return []
 
 
-def work(saga: Saga, character: Character, plan: SeasonPlan, rng) -> SupplementWork:  # noqa: PLR0915
-    """What the season does (rolls made with `rng`)."""
-    key = plan.activity
-    result = SupplementWork()
+def _working_season(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    wm = multiplier(character)
+    craft = _subject_ability(plan)
+    default = {
+        "working_season": "communication"
+        if craft.startswith("Profession")
+        else "dexterity",
+        "tournament": "dexterity",
+        "apothecary": "intelligence",
+    }[plan.activity]
+    lp = (_characteristic(character, plan, default) + ability(character, craft)) * wm
+    result.labor_points = lp
+    result.notes.append(
+        f"Labor Points: ({(plan.characteristic or default).title()} + {craft}) x "
+        f"{wm} ({wealth(character)}) = {lp}."
+    )
+
+
+def _workshop_production(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
     wm = multiplier(character)
     name = plan.title.strip()
     craft = _subject_ability(plan)
-    if key in ("working_season", "tournament", "apothecary"):
-        default = {
-            "working_season": "communication"
-            if craft.startswith("Profession")
-            else "dexterity",
-            "tournament": "dexterity",
-            "apothecary": "intelligence",
-        }[key]
-        lp = (
-            _characteristic(character, plan, default) + ability(character, craft)
-        ) * wm
-        result.labor_points = lp
-        result.notes.append(
-            f"Labor Points: ({(plan.characteristic or default).title()} + {craft}) x "
-            f"{wm} ({wealth(character)}) = {lp}."
+    total = workshop_total(character, plan, craft)
+    level = plan.book_level if plan.book_level is not None else 6
+    if plan.experimenting and rng is None:
+        result.notes.append("Exertion: its dice are rolled when the season is played.")
+    elif plan.experimenting:
+        die = dice.simple_die(rng)
+        roll = dice.stress_die(rng, 1, saga=saga)
+        outcome = (
+            "disaster (the storyguide's ruinous event)"
+            if roll.botched
+            else next((text for top, text in EXERTION if roll.value <= top), None)
+            or "increased understanding: a simple die of xp in the Craft"
         )
-    elif key == "workshop_production":
-        total = workshop_total(character, plan, craft)
-        level = plan.book_level if plan.book_level is not None else 6
-        if plan.experimenting and rng is None:
-            result.notes.append(
-                "Exertion: its dice are rolled when the season is played."
-            )
-        elif plan.experimenting:
-            die = dice.simple_die(rng)
-            roll = dice.stress_die(rng, 1, saga=saga)
-            outcome = (
-                "disaster (the storyguide's ruinous event)"
-                if roll.botched
-                else next((text for top, text in EXERTION if roll.value <= top), None)
-                or "increased understanding: a simple die of xp in the Craft"
-            )
-            if roll.value in (6, 7) and not roll.botched:
-                die = 0
-            total += die
-            result.aging_roll = True
-            result.notes.append(
-                f"Exertion: + simple die {die}; the exertion roll {roll.value}: "
-                f"{outcome}. An Aging roll this season."
-            )
-        quality = quality_for(total, level)
-        lp = (
-            _characteristic(character, plan, "dexterity") + ability(character, craft)
-        ) * wm
-        result.labor_points = lp
+        if roll.value in (6, 7) and not roll.botched:
+            die = 0
+        total += die
+        result.aging_roll = True
         result.notes.append(
-            f"Workshop Total {total} against Craft Level {level}: {quality} goods. "
-            f"Labor Points {lp}."
+            f"Exertion: + simple die {die}; the exertion roll {roll.value}: "
+            f"{outcome}. An Aging roll this season."
         )
-        if plan.quick:
-            if ability(character, "Artes Liberales") < 1:
-                result.notes.append("No craft manual: it needs Artes Liberales 1.")
-            else:
-                score = round_up(ability(character, craft) / MANUAL_DIVISOR)
-                result.labor_points -= 1
-                result.books.append(
-                    Book(
-                        id=f"manual_{character.id}_{plan.year}_{plan.season.lower()}",
-                        name=name or f"{craft} manual",
-                        type="Other",
-                        author=character.name,
-                        owner_kind="character",
-                        owner_id=character.id,
-                        year_published=plan.year,
-                        description=f"A craft manual on {craft}: +{score} to a "
-                        "literate reader's Workshop Total (City & Guild).",
-                    )
-                )
-                result.notes.append(
-                    f"A craft manual written (+{score}), for 1 Labor Point."
-                )
-    elif key == "make_excellent_item":
-        level = plan.book_level if plan.book_level is not None else 15
-        total = workshop_total(character, plan, craft)
-        gained = max(0, total - level)
-        result.progress.append(("item", name or "an excellent item", level, gained))
-        result.notes.append(
-            f"Workshop Total {total} - Craft Level {level} = {gained} toward it."
-        )
-    elif key == "merchant_venture":
-        lp = plan.other_modifier
-        result.labor_points = lp
-        result.notes.append(f"Labor Points from the venture: {lp}.")
-    elif key == "improve_workshop":
-        step = name.lower()
-        if step == "innovation":
-            cost = INNOVATION_COST[character.workshop_innovation + 1]
-            result.innovation = 1
+    quality = quality_for(total, level)
+    lp = (
+        _characteristic(character, plan, "dexterity") + ability(character, craft)
+    ) * wm
+    result.labor_points = lp
+    result.notes.append(
+        f"Workshop Total {total} against Craft Level {level}: {quality} goods. "
+        f"Labor Points {lp}."
+    )
+    if plan.quick:
+        if ability(character, "Artes Liberales") < 1:
+            result.notes.append("No craft manual: it needs Artes Liberales 1.")
         else:
-            cost = RAW_MATERIALS_COST[character.workshop_raw_materials + 1]
-            result.raw_materials = 1
-        result.labor_points = -cost
-        result.notes.append(f"{step.title()} +1, for {cost} Labor Points.")
-    elif key == "produce_remedies":
-        level = plan.book_level or 0
-        doses = max(1, plan.extra_vis)
-        cost = round_up(level * doses / REMEDY_LEVELS_PER_POINT)
-        result.labor_points = -cost
-        result.notes.append(
-            f"{doses} dose(s) of a level {level} product: {cost} apothecary Labor "
-            "Points."
-        )
-    elif key == "medical_season":
-        result.notes.append(
-            f"Can care for {ability(character, 'Chirurgy')} patients (palliative) "
-            f"and treat {ability(character, 'Medicine')} (therapy) alongside, or "
-            "five times as many as the season's whole work."
-        )
-    elif key == "create_art":
-        if craft.startswith(("Profession", "Craft: Poetry")):
-            base = character.characteristics.communication
-        else:
-            base = character.characteristics.dexterity
-        ids = {vf.vf_id for vf in character.virtues_flaws}
-        aq = base + ability(character, craft) + plan.other_modifier
-        if ids & {"vf_inspirational", "vf_free_expression"}:
-            aq += ARTWORK_VIRTUE_BONUS
-        seasons = max(1, round_up(aq / ARTWORK_QUALITY_PER_SEASON))
-        result.progress.append(("artwork", name, seasons, 1))
-        result.notes.append(f"Aesthetic Quality {aq}; {seasons} season(s) to make it.")
-    elif key == "research_formula":
-        xp = plan.source_quality if plan.source_quality is not None else FORMULA_XP
-        result.progress.append(("formula", name, FORMULA_XP, xp))
-        result.notes.append(
-            f"{xp} xp toward the formula {name} ({FORMULA_XP} make it)."
-        )
-    elif key == "attend_university":
-        result.progress.append(("university", "University", 0, 1))
-        exam = name.lower()
-        if exam in EXAMS and rng is None:
-            result.notes.append(f"The {exam} exam is rolled when the season is played.")
-        elif exam in EXAMS:
-            reps = sum(
-                t.score for t in character.reputations if "academic" in t.name.lower()
+            score = round_up(ability(character, craft) / MANUAL_DIVISOR)
+            result.labor_points -= 1
+            result.books.append(
+                Book(
+                    id=f"manual_{character.id}_{plan.year}_{plan.season.lower()}",
+                    name=name or f"{craft} manual",
+                    type="Other",
+                    author=character.name,
+                    owner_kind="character",
+                    owner_id=character.id,
+                    year_published=plan.year,
+                    description=f"A craft manual on {craft}: +{score} to a "
+                    "literate reader's Workshop Total (City & Guild).",
+                )
             )
-            subject = "Artes Liberales" if exam != "doctor" else craft or "Theology"
-            die = dice.stress_die(rng, 1, saga=saga)
-            total = (
-                character.characteristics.communication
-                + ability(character, subject)
-                + reps
-                + die.value
-            )
-            passed = not die.botched and total >= EXAMS[exam]
             result.notes.append(
-                f"The {exam} exam: {total} against {EXAMS[exam]}: "
-                + ("passed." if passed else "failed (another year first).")
+                f"A craft manual written (+{score}), for 1 Labor Point."
             )
-    elif key == "pilgrimage":
-        target = plan.book_level if plan.book_level in (18, 30) else 18
-        gained = PILGRIMAGE_SEASON + max(0, plan.other_modifier)
-        result.progress.append(("pilgrimage", name, target, gained))
-        result.notes.append(
-            f"+{PILGRIMAGE_SEASON} for the season"
-            + (
-                f", +{plan.other_modifier} for elements overcome"
-                if plan.other_modifier
-                else ""
-            )
-            + f" toward Target Level {target}."
+
+
+def _make_excellent_item(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    name = plan.title.strip()
+    craft = _subject_ability(plan)
+    level = plan.book_level if plan.book_level is not None else 15
+    total = workshop_total(character, plan, craft)
+    gained = max(0, total - level)
+    result.progress.append(("item", name or "an excellent item", level, gained))
+    result.notes.append(
+        f"Workshop Total {total} - Craft Level {level} = {gained} toward it."
+    )
+
+
+def _merchant_venture(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    lp = plan.other_modifier
+    result.labor_points = lp
+    result.notes.append(f"Labor Points from the venture: {lp}.")
+
+
+def _improve_workshop(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    name = plan.title.strip()
+    step = name.lower()
+    if step == "innovation":
+        cost = INNOVATION_COST[character.workshop_innovation + 1]
+        result.innovation = 1
+    else:
+        cost = RAW_MATERIALS_COST[character.workshop_raw_materials + 1]
+        result.raw_materials = 1
+    result.labor_points = -cost
+    result.notes.append(f"{step.title()} +1, for {cost} Labor Points.")
+
+
+def _produce_remedies(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    level = plan.book_level or 0
+    doses = max(1, plan.extra_vis)
+    cost = round_up(level * doses / REMEDY_LEVELS_PER_POINT)
+    result.labor_points = -cost
+    result.notes.append(
+        f"{doses} dose(s) of a level {level} product: {cost} apothecary Labor Points."
+    )
+
+
+def _medical_season(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    result.notes.append(
+        f"Can care for {ability(character, 'Chirurgy')} patients (palliative) "
+        f"and treat {ability(character, 'Medicine')} (therapy) alongside, or "
+        "five times as many as the season's whole work."
+    )
+
+
+def _create_art(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    name = plan.title.strip()
+    craft = _subject_ability(plan)
+    if craft.startswith(("Profession", "Craft: Poetry")):
+        base = character.characteristics.communication
+    else:
+        base = character.characteristics.dexterity
+    ids = {vf.vf_id for vf in character.virtues_flaws}
+    aq = base + ability(character, craft) + plan.other_modifier
+    if ids & {"vf_inspirational", "vf_free_expression"}:
+        aq += ARTWORK_VIRTUE_BONUS
+    seasons = max(1, round_up(aq / ARTWORK_QUALITY_PER_SEASON))
+    result.progress.append(("artwork", name, seasons, 1))
+    result.notes.append(f"Aesthetic Quality {aq}; {seasons} season(s) to make it.")
+
+
+def _research_formula(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    name = plan.title.strip()
+    xp = plan.source_quality if plan.source_quality is not None else FORMULA_XP
+    result.progress.append(("formula", name, FORMULA_XP, xp))
+    result.notes.append(f"{xp} xp toward the formula {name} ({FORMULA_XP} make it).")
+
+
+def _attend_university(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    name = plan.title.strip()
+    craft = _subject_ability(plan)
+    result.progress.append(("university", "University", 0, 1))
+    exam = name.lower()
+    if exam in EXAMS and rng is None:
+        result.notes.append(f"The {exam} exam is rolled when the season is played.")
+    elif exam in EXAMS:
+        reps = sum(
+            t.score for t in character.reputations if "academic" in t.name.lower()
         )
-    elif key == "care_of_souls":
-        theme = name or "the sermons' theme"
-        result.notes.append(
-            f"For the following year, willing congregants get +1 to activities "
-            f"fitting {theme}."
-        )
-    elif key == "tame_animal":
-        might = plan.book_level or 0
-        gift = (
-            3
-            if any(vf.vf_id in catalog.GIFT_IDS for vf in character.virtues_flaws)
-            else 0
-        )
-        points = max(
-            0,
-            character.characteristics.intelligence
-            + ability(character, "Animal Handling")
-            + ability(character, "Animal Ken")
-            - might
-            - gift,
-        )
-        result.progress.append(("taming", name, max(1, might), points))
-        result.notes.append(
-            f"Int + Animal Handling + Animal Ken - Might {might}"
-            + (" - the Gift 3" if gift else "")
-            + f" = {points} toward taming {name}."
-        )
-    elif key == "search_lacuna" and plan.die is None and rng is None:
-        result.notes.append("The search is rolled when the season is played.")
-    elif key == "search_lacuna":
-        die = (
-            plan.die
-            if plan.die is not None
-            else dice.stress_die(rng, 1, saga=saga).value
-        )
-        lore = max(
-            (a.level for a in character.abilities if a.name.startswith("Area Lore")),
-            default=0,
-        )
-        total = character.characteristics.intelligence + lore + die
-        result.notes.append(
-            f"Int + Area Lore + die = {total} against 9: "
-            + ("the obvious lacunae are found." if total >= 9 else "none found.")
-        )
-    elif key == "undergo_initiation":
-        mystagogue = saga.character(plan.teacher_id) or character
+        subject = "Artes Liberales" if exam != "doctor" else craft or "Theology"
+        die = dice.stress_die(rng, 1, saga=saga)
         total = (
-            mystagogue.characteristics.presence
-            + ability(mystagogue, name)
-            + plan.other_modifier
+            character.characteristics.communication
+            + ability(character, subject)
+            + reps
+            + die.value
         )
-        target = initiation_target(saga, character, plan)
-        if total >= target:
-            result.add_vfs.append(plan.effect_id or "")
-            if plan.device_id:
-                result.add_vfs.append(plan.device_id)
-                result.ordeal = plan.research_kind or "Minor"
+        passed = not die.botched and total >= EXAMS[exam]
         result.notes.append(
-            f"Initiation Total {total} (Presence + {name} + Script {plan.other_modifier}) "
-            f"against {target}: "
-            + ("initiated." if total >= target else "not initiated.")
+            f"The {exam} exam: {total} against {EXAMS[exam]}: "
+            + ("passed." if passed else "failed (another year first).")
         )
-    elif key == "record_lectures":
-        teacher = saga.character(plan.teacher_id)
-        assert teacher is not None
-        quality = teacher.characteristics.communication + round_down(
-            ability(character, "Profession: Scribe") / LECTURES_SCRIBE_DIVISOR
+
+
+def _pilgrimage(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    name = plan.title.strip()
+    target = plan.book_level if plan.book_level in (18, 30) else 18
+    gained = PILGRIMAGE_SEASON + max(0, plan.other_modifier)
+    result.progress.append(("pilgrimage", name, target, gained))
+    result.notes.append(
+        f"+{PILGRIMAGE_SEASON} for the season"
+        + (
+            f", +{plan.other_modifier} for elements overcome"
+            if plan.other_modifier
+            else ""
         )
-        subject = next((a.subject for a in plan.allocations if a.subject), "")
-        kind, _, what = subject.partition(":")
-        result.books.append(
-            Book(
-                id=f"lectures_{character.id}_{plan.year}_{plan.season.lower()}",
-                name=name or f"Lectures of {teacher.name}",
-                type="Tractatus",
-                author=teacher.name,
-                owner_kind="character",
-                owner_id=character.id,
-                year_published=plan.year,
-                subject_kind="Art" if kind == "art" else "Ability",
-                art=what if kind == "art" else "",
-                ability=what if kind == "ability" else "",
-                quality=quality,
-            )
+        + f" toward Target Level {target}."
+    )
+
+
+def _care_of_souls(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    name = plan.title.strip()
+    theme = name or "the sermons' theme"
+    result.notes.append(
+        f"For the following year, willing congregants get +1 to activities "
+        f"fitting {theme}."
+    )
+
+
+def _tame_animal(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    name = plan.title.strip()
+    might = plan.book_level or 0
+    gift = (
+        3 if any(vf.vf_id in catalog.GIFT_IDS for vf in character.virtues_flaws) else 0
+    )
+    points = max(
+        0,
+        character.characteristics.intelligence
+        + ability(character, "Animal Handling")
+        + ability(character, "Animal Ken")
+        - might
+        - gift,
+    )
+    result.progress.append(("taming", name, max(1, might), points))
+    result.notes.append(
+        f"Int + Animal Handling + Animal Ken - Might {might}"
+        + (" - the Gift 3" if gift else "")
+        + f" = {points} toward taming {name}."
+    )
+
+
+def _search_lacuna(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    if plan.die is None and rng is None:
+        result.notes.append("The search is rolled when the season is played.")
+        return
+    die = plan.die if plan.die is not None else dice.stress_die(rng, 1, saga=saga).value
+    lore = max(
+        (a.level for a in character.abilities if a.name.startswith("Area Lore")),
+        default=0,
+    )
+    total = character.characteristics.intelligence + lore + die
+    result.notes.append(
+        f"Int + Area Lore + die = {total} against 9: "
+        + ("the obvious lacunae are found." if total >= 9 else "none found.")
+    )
+
+
+def _undergo_initiation(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    name = plan.title.strip()
+    mystagogue = saga.character(plan.teacher_id) or character
+    total = (
+        mystagogue.characteristics.presence
+        + ability(mystagogue, name)
+        + plan.other_modifier
+    )
+    target = initiation_target(saga, character, plan)
+    if total >= target:
+        result.add_vfs.append(plan.effect_id or "")
+        if plan.device_id:
+            result.add_vfs.append(plan.device_id)
+            result.ordeal = plan.research_kind or "Minor"
+    result.notes.append(
+        f"Initiation Total {total} (Presence + {name} + Script {plan.other_modifier}) "
+        f"against {target}: " + ("initiated." if total >= target else "not initiated.")
+    )
+
+
+def _record_lectures(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    name = plan.title.strip()
+    teacher = saga.character(plan.teacher_id)
+    assert teacher is not None
+    quality = teacher.characteristics.communication + round_down(
+        ability(character, "Profession: Scribe") / LECTURES_SCRIBE_DIVISOR
+    )
+    subject = next((a.subject for a in plan.allocations if a.subject), "")
+    kind, _, what = subject.partition(":")
+    result.books.append(
+        Book(
+            id=f"lectures_{character.id}_{plan.year}_{plan.season.lower()}",
+            name=name or f"Lectures of {teacher.name}",
+            type="Tractatus",
+            author=teacher.name,
+            owner_kind="character",
+            owner_id=character.id,
+            year_published=plan.year,
+            subject_kind="Art" if kind == "art" else "Ability",
+            art=what if kind == "art" else "",
+            ability=what if kind == "ability" else "",
+            quality=quality,
         )
-        result.notes.append(f"A tractatus of the lectures, Quality {quality}.")
-    elif key == "inspeximus":
-        book = next(b for b in saga.books if b.id == plan.book_id)
-        art = (book.art or "").lower()
-        now = (
-            character.arts[art].level
-            if art in character.arts
-            else ability(character, book.ability)
-        )
-        then = plan.book_level if plan.book_level is not None else (book.level or 0) * 2
-        new = min(
-            (book.level or 0) + round_down(max(0, now - then) / 3), round_down(now / 2)
-        )
-        result.summa_level = (book.id, new)
-        result.notes.append(f"{book.name} annotated: Level {book.level} -> {new}.")
-    elif key == "bind_catalog":
-        result.notes.append(
-            "The library catalog bound: an Arcane Connection to the library and "
-            "each book in it, for 1 pawn of Vim."
-        )
+    )
+    result.notes.append(f"A tractatus of the lectures, Quality {quality}.")
+
+
+def _inspeximus(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    book = next(b for b in saga.books if b.id == plan.book_id)
+    art = (book.art or "").lower()
+    now = (
+        character.arts[art].level
+        if art in character.arts
+        else ability(character, book.ability)
+    )
+    then = plan.book_level if plan.book_level is not None else (book.level or 0) * 2
+    new = min(
+        (book.level or 0) + round_down(max(0, now - then) / 3), round_down(now / 2)
+    )
+    result.summa_level = (book.id, new)
+    result.notes.append(f"{book.name} annotated: Level {book.level} -> {new}.")
+
+
+def _bind_catalog(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    result.notes.append(
+        "The library catalog bound: an Arcane Connection to the library and "
+        "each book in it, for 1 pawn of Vim."
+    )
+
+
+#: What each supplement activity does, by its key (Strategy, as a table).
+_WORK: dict[str, Callable[[Saga, Character, SeasonPlan, Any, SupplementWork], None]] = {
+    "working_season": _working_season,
+    "tournament": _working_season,
+    "apothecary": _working_season,
+    "workshop_production": _workshop_production,
+    "make_excellent_item": _make_excellent_item,
+    "merchant_venture": _merchant_venture,
+    "improve_workshop": _improve_workshop,
+    "produce_remedies": _produce_remedies,
+    "medical_season": _medical_season,
+    "create_art": _create_art,
+    "research_formula": _research_formula,
+    "attend_university": _attend_university,
+    "pilgrimage": _pilgrimage,
+    "care_of_souls": _care_of_souls,
+    "tame_animal": _tame_animal,
+    "search_lacuna": _search_lacuna,
+    "undergo_initiation": _undergo_initiation,
+    "record_lectures": _record_lectures,
+    "inspeximus": _inspeximus,
+    "bind_catalog": _bind_catalog,
+}
+
+
+def work(saga: Saga, character: Character, plan: SeasonPlan, rng) -> SupplementWork:
+    """What the season does (rolls made with `rng`)."""
+    result = SupplementWork()
+    handler = _WORK.get(plan.activity)
+    if handler is not None:
+        handler(saga, character, plan, rng, result)
     return result

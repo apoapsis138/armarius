@@ -186,7 +186,9 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
     every non-info field, or None if cancelled. `validate` gets the finished
     dict and returns an error message, or None if it's fine. `save_label`
     names the button that completes it ("Save", "Create"...). With `build`,
-    it dismisses with `build(values)` instead (e.g. a finished record).
+    it dismisses with `build(values)` instead (e.g. a finished record). With
+    `confirm`, saving first opens the screen it returns for the values (a
+    ConfirmScreen) and the form stays open unless that answers yes.
 
     Fields can depend on each other while the form is open: a field's
     `show_if` shows/hides it, and `live` (markup, from the current values)
@@ -294,6 +296,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         live: Callable[[dict[str, Any]], str] | None = None,
         save_label: str = "Save",
         build: None = None,
+        confirm: Callable[[dict[str, Any]], Screen[bool]] | None = None,
     ) -> None: ...
 
     @overload
@@ -306,6 +309,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         live: Callable[[dict[str, Any]], str] | None = None,
         save_label: str = "Save",
         build: Callable[[dict[str, Any]], ResultT],
+        confirm: Callable[[dict[str, Any]], Screen[bool]] | None = None,
     ) -> None: ...
 
     def __init__(
@@ -317,6 +321,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         live: Callable[[dict[str, Any]], str] | None = None,
         save_label: str = "Save",
         build: Callable[[dict[str, Any]], ResultT] | None = None,
+        confirm: Callable[[dict[str, Any]], Screen[bool]] | None = None,
     ) -> None:
         super().__init__()
         self.title_text = title
@@ -325,6 +330,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         self.live = live
         self.save_label = save_label
         self.build = build
+        self.confirm = confirm
         self._picked: dict[str, Any] = {}  # "picker" fields' current values
         # The value each `fills` field last filled from (or opened with).
         self._filled_from: dict[str, Any] = {}
@@ -596,4 +602,13 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
             error.update(problem)
             return
         # Without `build`, ResultT is the dict itself (see the overloads).
-        self.dismiss(self.build(result) if self.build else cast(ResultT, result))
+        value = self.build(result) if self.build else cast(ResultT, result)
+        if self.confirm is None:
+            self.dismiss(value)
+            return
+
+        def answered(confirmed: bool | None) -> None:
+            if confirmed:
+                self.dismiss(value)
+
+        self.app.push_screen(self.confirm(result), answered)

@@ -41,6 +41,18 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.34.1 — 2026-10-08
+
+- Behind the scenes: three hand-built dialogs (a Familiar's Binding &
+  Cords, Improve Income and Spell Mastery) are now ordinary forms like the
+  rest. Each Cord's choices show their point cost, Improve Income still
+  asks before changing the income, and a spell's Mastery Abilities are
+  added, edited and deleted in a small list, like a device's components.
+- Behind the scenes: choosing a tree node, working out a supplement
+  season (Labor Points, workshops, initiation and the rest), and the
+  enchanting and spell-lab seasons are split into small pieces, and the
+  sheets' code is split into one file per sheet. Nothing else changes.
+
 ## 2.34.0 — 2026-10-08
 
 - On a new covenant's Resources step, a can buy one of the saga's own

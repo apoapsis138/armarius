@@ -6,10 +6,6 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import Any
 
-from textual.app import ComposeResult
-from textual.containers import Horizontal, Vertical
-from textual.widgets import Button, Label, Select, Static
-
 from ... import catalog
 from ... import economics as eco
 from ... import inhabitants as inh
@@ -38,7 +34,6 @@ from ...models import (
 from ..fields import (
     DialogField,
     FieldsDialog,
-    ModalDialog,
     _attr,
     _description_field,
     _pairs,
@@ -632,158 +627,65 @@ def _covenant_fields(covenant: Covenant) -> list[DialogField]:
     ]
 
 
-class ImproveIncomeScreen(ModalDialog[tuple[int, str] | None]):
-    """Manually simulates a year's Income Modification (ArM5's automated/
-    yearly advancement isn't built yet -- this is a deliberate stand-in for
-    it). Choosing an Effect updates the Multiplier and Projected Income live;
-    Commit confirms via ConfirmScreen, then dismisses with (new income, the
-    Note to record), or None if cancelled."""
+def _improve_income_dialog(
+    source: IncomeSource, current_year: int
+) -> FieldsDialog[tuple[int, str]]:
+    """Manually simulates a year's Income Modification (yearly advancement
+    isn't automated): choosing an Effect shows the Multiplier and Projected
+    Income live. Commit asks to confirm, then builds (new income, the Note
+    to record)."""
+    current = source.current_income
 
-    DEFAULT_CSS = """
-    ImproveIncomeScreen {
-        align: center middle;
-    }
-
-    #improve-dialog {
-        width: 70;
-        height: auto;
-        padding: 1 2;
-    }
-
-    .improve-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .improve-label {
-        width: 26;
-    }
-
-    .improve-value {
-        width: 1fr;
-        color: $text-muted;
-    }
-
-    #improve-effect {
-        width: 1fr;
-    }
-
-    #improve-note-label {
-        margin-top: 1;
-        height: 1;
-    }
-
-    #improve-note {
-        color: $text-muted;
-        height: auto;
-    }
-
-    #improve-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #improve-buttons {
-        width: 100%;
-        height: auto;
-        margin-top: 1;
-    }
-    """
-
-    def __init__(self, source: IncomeSource, current_year: int) -> None:
-        super().__init__()
-        self.source = source
-        self.current_year = current_year
-
-    def compose(self) -> ComposeResult:
-        source = self.source
-        with Vertical(id="improve-dialog", classes="dialog-box"):
-            yield Label(
-                f"Improve {source.name or 'this source of income'}",
-                id="improve-title",
-                classes="dialog-title",
-            )
-            with Horizontal(classes="improve-row"):
-                yield Label("Name", classes="improve-label")
-                yield Static(
-                    escape(source.name or "(unnamed)"), classes="improve-value"
-                )
-            with Horizontal(classes="improve-row"):
-                yield Label("Current Income", classes="improve-label")
-                yield Static(str(source.current_income), classes="improve-value")
-            with Horizontal(classes="improve-row"):
-                yield Label("Annual Improvement Effect", classes="improve-label")
-                yield Select(
-                    _pairs(INCOME_EFFECTS),
-                    value="Status Quo",
-                    id="improve-effect",
-                    compact=True,
-                )
-            with Horizontal(classes="improve-row"):
-                yield Label("Income Multiplier", classes="improve-label")
-                yield Static(
-                    eco.income_multiplier_text("Status Quo"),
-                    classes="improve-value",
-                    id="improve-multiplier",
-                )
-            with Horizontal(classes="improve-row"):
-                yield Label("Projected Income", classes="improve-label")
-                yield Static(
-                    str(source.current_income),
-                    classes="improve-value",
-                    id="improve-projected",
-                )
-            yield Label("Note", id="improve-note-label")
-            yield Static(
-                escape(source.note.strip()) if source.note.strip() else "(none)",
-                id="improve-note",
-            )
-            yield Static("", id="improve-error")
-            with Horizontal(id="improve-buttons"):
-                yield Button("Commit", id="btn-commit", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-commit":
-            self._try_commit()
-
-    def on_select_changed(self, event: Select.Changed) -> None:
-        if event.select.id != "improve-effect" or not isinstance(event.value, str):
-            return
-        effect = event.value
-        self.query_one("#improve-multiplier", Static).update(
-            eco.income_multiplier_text(effect)
-        )
-        self.query_one("#improve-projected", Static).update(
-            str(eco.projected_income(self.source.current_income, effect))
+    def live(values: dict[str, Any]) -> str:
+        effect = values.get("effect") or "Status Quo"
+        return (
+            f"Income Multiplier {eco.income_multiplier_text(effect)}. "
+            f"Projected Income {eco.projected_income(current, effect)}"
         )
 
-    def _try_commit(self) -> None:
-        effect = self.query_one("#improve-effect", Select).value
-        if not isinstance(effect, str):
-            self.query_one("#improve-error", Static).update("Choose an Effect.")
-            return
-        current = self.source.current_income
+    def build(values: dict[str, Any]) -> tuple[int, str]:
+        effect = values["effect"]
         projected = eco.projected_income(current, effect)
         note = eco.improvement_note(
-            self.current_year, self.source.name, effect, current, projected
+            current_year, source.name, effect, current, projected
         )
-        name = escape(self.source.name or "this source of income")
+        return projected, note
 
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed:
-                self.dismiss((projected, note))
+    def confirm(values: dict[str, Any]) -> ConfirmScreen:
+        projected = eco.projected_income(current, values["effect"])
+        name = escape(source.name or "this source of income")
+        return ConfirmScreen(
+            f"Update {name}'s income from {current} to {projected}?",
+            yes_label="Update",
+        )
 
-        self.app.push_screen(
-            ConfirmScreen(
-                f"Update {name}'s income from {current} to {projected}?",
-                yes_label="Update",
+    return FieldsDialog(
+        f"Improve {escape(source.name or 'this source of income')}",
+        [
+            DialogField("name", "Name", "info", source.name or "(unnamed)"),
+            DialogField("current", "Current Income", "info", str(current)),
+            DialogField(
+                "effect",
+                "Annual Improvement Effect",
+                "select",
+                "Status Quo",
+                options=_pairs(INCOME_EFFECTS),
+                required=True,
             ),
-            handle_confirmed,
-        )
+            # A Note is a sentence or two: shown under its label, wrapped.
+            DialogField(
+                "note",
+                "Note",
+                "info",
+                "" if source.note.strip() else "(none)",
+                hint=escape(source.note.strip()),
+            ),
+        ],
+        live=live,
+        save_label="Commit",
+        build=build,
+        confirm=confirm,
+    )
 
 
 def _bought_ability(value: Any) -> tuple[str, str]:

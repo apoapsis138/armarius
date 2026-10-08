@@ -104,8 +104,9 @@ outside them as above, or allow `python.exe` there.
   selectable list, sections), `fields` (the modal-dialog base and the
   config-driven `FieldsDialog` form), `prompts` (confirmations and short
   forms), `pickers` (catalog and row pickers), `forms` (the records' form
-  builders and the few bespoke forms), `sheets` (the Character, Laboratory,
-  Familiar and Covenant sheets and the Book and Spell lists), the
+  builders and the few bespoke forms), the `sheets` package (one module
+  each for the Character, Laboratory, Familiar and Covenant sheets, their
+  shared base, and the Book and Spell lists), the
   `workspace` package (navigation tree + sheet pane, and every action on
   the records: a base class plus one mixin module of actions per kind of
   record) and

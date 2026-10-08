@@ -39,7 +39,6 @@ from ..fields import (
 )
 from ..forms import (
     EditArtsScreen,
-    MasteryEditScreen,
     _aging_fields,
     _biographical_fields,
     _breakthrough_dialog,
@@ -48,6 +47,7 @@ from ..forms import (
     _characteristics_from,
     _fatigue_fields,
     _hermetic_fields,
+    _mastery_dialog,
     _possession_dialog,
     _wounds_fields,
 )
@@ -505,7 +505,7 @@ class CharacterActions(WorkspaceBase):
                 character.spells_known[index] = result
                 self._commit("section-known-spells")
 
-        self.app.push_screen(MasteryEditScreen(name, known), handle_result)
+        self.app.push_screen(_mastery_dialog(name, known), handle_result)
 
     def _remove_spell(self) -> None:
         """Delete the chosen known spell (after confirming)."""

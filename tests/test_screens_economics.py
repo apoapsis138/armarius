@@ -35,7 +35,6 @@ from ars_magica_manager.screens import (
     AdvanceSeasonScreen,
     ConfirmScreen,
     FieldsDialog,
-    ImproveIncomeScreen,
     SagaPickerScreen,
     SelectableList,
     WorkspaceScreen,
@@ -312,21 +311,16 @@ async def test_improve_updates_multiplier_and_projected_income_live_then_confirm
 
         await menu(pilot, app, "m", "Improve Income")
         await pilot.pause()
-        assert isinstance(app.screen, ImproveIncomeScreen)
-        assert app.screen.query_one("#improve-effect", Select).value == "Status Quo"
-        multiplier = lambda: str(
-            app.screen.query_one("#improve-multiplier", Static).render()
-        )
-        projected = lambda: str(
-            app.screen.query_one("#improve-projected", Static).render()
-        )
-        assert multiplier() == "x1" and projected() == "100"
+        assert isinstance(app.screen, FieldsDialog)
+        assert app.screen.query_one("#fld-effect", Select).value == "Status Quo"
+        live = lambda: str(app.screen.query_one("#fields-live", Static).render())
+        assert live() == "Income Multiplier x1. Projected Income 100"
 
-        app.screen.query_one("#improve-effect", Select).value = "Boom"
+        app.screen.query_one("#fld-effect", Select).value = "Boom"
         await pilot.pause()
-        assert multiplier() == "x1.5" and projected() == "150"
+        assert live() == "Income Multiplier x1.5. Projected Income 150"
 
-        app.screen.query_one("#btn-commit", Button).press()
+        app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         message = str(app.screen.query_one("#confirm-message", Static).render())
@@ -334,9 +328,9 @@ async def test_improve_updates_multiplier_and_projected_income_live_then_confirm
 
         await pilot.press("n")  # decline: still on the Improve dialog, unchanged
         await pilot.pause()
-        assert isinstance(app.screen, ImproveIncomeScreen)
+        assert isinstance(app.screen, FieldsDialog)
 
-        app.screen.query_one("#btn-commit", Button).press()
+        app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
         await pilot.press("y")
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
@@ -370,7 +364,7 @@ async def test_improve_with_status_quo_records_the_no_change_note():
         await _select_eco_row(pilot, app, "income", 0)
         await menu(pilot, app, "m", "Improve Income")
         await pilot.pause()
-        app.screen.query_one("#btn-commit", Button).press()
+        app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
         assert isinstance(app.screen, ConfirmScreen)
         assert "from 100 to 100" in str(
@@ -396,7 +390,7 @@ async def test_improve_cancel_and_acting_on_the_focused_row():
         await _open_eco_section(pilot, app, "income")
         await menu(pilot, app, "m", "Improve Income")
         await pilot.pause()
-        assert isinstance(app.screen, ImproveIncomeScreen)
+        assert isinstance(app.screen, FieldsDialog)
         await pilot.press("escape")
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)

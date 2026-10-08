@@ -286,7 +286,47 @@ def requisite_arts(magus: Character, spell: Spell) -> tuple[str, str]:
     return technique, form
 
 
-def work(  # noqa: PLR0915
+def _chosen_spell(
+    saga: Saga, magus: Character, plan: SeasonPlan
+) -> tuple[list[str], Spell | None]:
+    """The spell a season of inventing or working from a Lab Text is
+    for, or what stops it being chosen."""
+    if plan.activity == LAB_TEXT:
+        text = lab_text_of(saga, plan)
+        if text is None:
+            return ["Choose the Lab Text to work from."], None
+        if not books.can_read(saga, magus, text):
+            return [f"{magus.name} can't get at {text.name}."], None
+        if not book_seasons.can_use_lab_text(magus, text):
+            return [
+                f"{text.name} is {book_seasons.author_name(saga, text)}'s raw "
+                "text: decode it first (or have it rewritten for general use)."
+            ], None
+        spell = spl.find_spell(saga, text.spell_id)
+        if spell is None:
+            return [f"{text.name} doesn't record a spell."], None
+    elif plan.design is not None:
+        design = plan.design
+        if not design.name.strip():
+            return ["Name the spell."], None
+        if not design.technique or not design.form:
+            return ["Choose the spell's Technique and Form."], None
+        spell = design_spell(design)
+        if spell.level is None:
+            return [
+                "Give the spell a base level (its level is worked out from it "
+                "and the Range, Duration and Target)."
+            ], None
+    else:
+        spell = the_spell(saga, plan)
+        if spell is None:
+            return ["Choose the spell to invent."], None
+        if spell.level is None:
+            return [f"{spell.name} is a General spell: choose its level."], None
+    return [], spell
+
+
+def work(
     saga: Saga, magus: Character, plan: SeasonPlan
 ) -> tuple[list[str], LabWork | None]:
     """The problems with a lab plan, or what it does."""
@@ -334,38 +374,9 @@ def work(  # noqa: PLR0915
         return _decode(saga, magus, plan, lab_)
     if plan.activity not in SPELL_ACTIVITIES:
         return _one_season_work(saga, magus, plan, lab_)
-    if plan.activity == LAB_TEXT:
-        text = lab_text_of(saga, plan)
-        if text is None:
-            return ["Choose the Lab Text to work from."], None
-        if not books.can_read(saga, magus, text):
-            return [f"{magus.name} can't get at {text.name}."], None
-        if not book_seasons.can_use_lab_text(magus, text):
-            return [
-                f"{text.name} is {book_seasons.author_name(saga, text)}'s raw "
-                "text: decode it first (or have it rewritten for general use)."
-            ], None
-        spell = spl.find_spell(saga, text.spell_id)
-        if spell is None:
-            return [f"{text.name} doesn't record a spell."], None
-    elif plan.design is not None:
-        design = plan.design
-        if not design.name.strip():
-            return ["Name the spell."], None
-        if not design.technique or not design.form:
-            return ["Choose the spell's Technique and Form."], None
-        spell = design_spell(design)
-        if spell.level is None:
-            return [
-                "Give the spell a base level (its level is worked out from it "
-                "and the Range, Duration and Target)."
-            ], None
-    else:
-        spell = the_spell(saga, plan)
-        if spell is None:
-            return ["Choose the spell to invent."], None
-        if spell.level is None:
-            return [f"{spell.name} is a General spell: choose its level."], None
+    found, spell = _chosen_spell(saga, magus, plan)
+    if spell is None:
+        return found, None
     if any(k.spell_id == spell.id for k in magus.spells_known):
         return [f"{magus.name} already knows {spell.name}."], None
     similar = spl.find_spell(saga, plan.similar_spell_id)

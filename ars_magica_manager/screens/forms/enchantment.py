@@ -32,7 +32,7 @@ from ...models import (
 )
 from ..fields import DialogField, FieldsDialog, _attr, _description_field, _pairs
 from ..pickers import ShapeMaterialPickerScreen
-from ..prompts import ListFieldScreen
+from ..prompts import _list_field
 
 #: The Maker select's value for a maker who isn't one of the saga's
 #: characters (their name is typed).
@@ -158,17 +158,6 @@ def _bonus_dialog(
             values.get("season") or "" if attunement else "",
         ),
     )
-
-
-def _list_display(label: Callable[[Any], str]) -> Callable[[Any], str]:
-    """A list field's button text (plain): its entries, or "(none)"."""
-
-    def display(items: list[Any]) -> str:
-        if not items:
-            return "(none: press to add)"
-        return "; ".join(label(item) for item in items)
-
-    return display
 
 
 def _holder_options(saga: Saga) -> list[tuple[str, str]]:
@@ -299,27 +288,6 @@ def _enchanted_device_dialog(
     def is_type(*kinds: str) -> Callable[[dict[str, Any]], bool]:
         return lambda values: values.get("type") in kinds
 
-    def list_field(
-        key: str,
-        label: str,
-        items: list[Any],
-        title: str,
-        row: Callable[[Any], str],
-        dialog: Callable[[Any], FieldsDialog[Any]],
-        **extra: Any,
-    ) -> DialogField:
-        return DialogField(
-            key,
-            label,
-            "picker",
-            list(items),
-            picker=lambda current: ListFieldScreen(
-                title, current or [], lambda item: escape(row(item)), dialog
-            ),
-            display=_list_display(row),
-            **extra,
-        )
-
     fields = [
         DialogField(
             "name",
@@ -364,7 +332,7 @@ def _enchanted_device_dialog(
             base.maker_name,
             show_if=lambda values: values.get("maker") == _OTHER_MAKER,
         ),
-        list_field(
+        _list_field(
             "components",
             "Components",
             base.components,
@@ -401,7 +369,7 @@ def _enchanted_device_dialog(
             show_if=is_type(INVESTED),
             hint="Only a talisman can be opened a few pawns at a time.",
         ),
-        list_field(
+        _list_field(
             "bonuses",
             "Shape & Material",
             base.bonuses,
@@ -410,7 +378,7 @@ def _enchanted_device_dialog(
             lambda b: _bonus_dialog(b),
             hint=ed.BONUS_HINT,
         ),
-        list_field(
+        _list_field(
             "attunements",
             "Attunements",
             base.attunements,

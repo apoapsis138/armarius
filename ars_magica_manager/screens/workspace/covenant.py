@@ -36,9 +36,9 @@ from ..fields import (
     _pairs,
 )
 from ..forms import (
-    ImproveIncomeScreen,
     _contested_fields,
     _covenant_fields,
+    _improve_income_dialog,
     _inhabitant_fields,
     _possession_dialog,
 )
@@ -301,7 +301,7 @@ class CovenantActions(WorkspaceBase):
             self._commit("section-eco-income")
 
         self.app.push_screen(
-            ImproveIncomeScreen(source, self.saga.current_year), handle_result
+            _improve_income_dialog(source, self.saga.current_year), handle_result
         )
 
     def _offer_emergency_draw(

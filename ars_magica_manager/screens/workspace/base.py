@@ -11,7 +11,7 @@ import json
 import random
 import re
 import uuid
-from collections.abc import Callable, Sequence
+from collections.abc import Awaitable, Callable, Sequence
 from dataclasses import dataclass, replace
 from dataclasses import field as dataclass_field
 from enum import StrEnum
@@ -856,7 +856,7 @@ class WorkspaceBase(Screen[None]):
             f"Familiar: {escape(familiar.name)}", data=(NodeKind.FAMILIAR, familiar.id)
         )
 
-    async def on_tree_node_selected(self, event: Tree.NodeSelected) -> None:  # noqa: PLR0915
+    async def on_tree_node_selected(self, event: Tree.NodeSelected) -> None:
         data = event.node.data
         if data is None:
             return
@@ -868,88 +868,9 @@ class WorkspaceBase(Screen[None]):
         self._covenant_sheet_view = None
         self._familiar_sheet_view = None
 
-        if kind == NodeKind.SAGA:
-            self.selected_covenant = None
-            self.selected_character = None
-            self.selected_laboratory = None
-            self.selected_familiar = None
-            await self._show_saga_detail()
-        elif kind == NodeKind.COVENANT:
-            covenant = next(c for c in self.saga.covenants if c.id == data[1])
-            self.selected_covenant = covenant
-            self.selected_character = None
-            self.selected_laboratory = None
-            self.selected_familiar = None
-            await self._show_covenant_detail(covenant)
-        elif kind == NodeKind.CHARACTER_GROUP:
-            covenant = self.saga.covenant(data[1])
-            self.selected_covenant = covenant
-            self.selected_character = None
-            await self._show_placeholder_detail(
-                f"Characters in {covenant.name}"
-                if covenant
-                else "Unassigned Characters",
-                "Select a character from the tree, or press 'n' to add one."
-                if covenant
-                else "These characters aren't assigned to a covenant. Select one "
-                "from the tree, or press 'n' to add one.",
-            )
-        elif kind == NodeKind.CHARACTER:
-            character = next(c for c in self.saga.characters if c.id == data[1])
-            self.selected_character = character
-            self.selected_covenant = self.saga.covenant(character.covenant_id)
-            self.selected_familiar = None
-            await self._show_character_detail(character)
-        elif kind == NodeKind.FAMILIAR:
-            familiar = next(f for f in self.saga.familiars if f.id == data[1])
-            self.selected_familiar = familiar
-            self.selected_character = self.saga.character(familiar.character_id)
-            self.selected_covenant = (
-                self.saga.covenant(self.selected_character.covenant_id)
-                if self.selected_character is not None
-                else None
-            )
-            await self._show_familiar_detail(familiar)
-        elif kind == NodeKind.LABORATORY_GROUP:
-            covenant = self.saga.covenant(data[1])
-            self.selected_covenant = covenant
-            self.selected_laboratory = None
-            await self._show_placeholder_detail(
-                f"Laboratories in {covenant.name}"
-                if covenant
-                else "Unassigned Laboratories",
-                "Select a laboratory from the tree, or press 'n' to add one."
-                if covenant
-                else "These laboratories aren't assigned to a covenant. Select "
-                "one from the tree, or press 'n' to add one.",
-            )
-        elif kind == NodeKind.LABORATORY:
-            lab = next(lab for lab in self.saga.laboratories if lab.id == data[1])
-            self.selected_laboratory = lab
-            self.selected_covenant = self.saga.covenant(lab.covenant_id)
-            await self._show_laboratory_detail(lab)
-        elif kind == NodeKind.SPELLS:
-            self.selected_covenant = None
-            await self._set_detail(SpellListView(self.saga))
-        elif kind == NodeKind.HOUSE_RULES:
-            self.selected_covenant = None
-            await self._set_detail(HouseRulesView(self.saga))
-        elif kind == NodeKind.PLAYERS:
-            self.selected_covenant = None
-            await self._set_detail(PlayersView(self.saga))
-        elif kind == NodeKind.SEASONS:
-            self.selected_covenant = None
-            await self._set_detail(SeasonRecordsView(self.saga))
-        elif kind == NodeKind.BOOK_GROUP:
-            self.selected_covenant = None
-            await self._set_detail(
-                BookListView(
-                    self.saga,
-                    lambda: bk.unassigned_books(self.saga),
-                    section_id="section-unassigned-books",
-                    title="Unassigned Books",
-                )
-            )
+        handler = self._NODE_SELECTED.get(kind)
+        if handler is not None:
+            await handler(self, data[1] if len(data) > 1 else None)
 
         if self._current_sheet_view() is None:
             # Enter on a node moves into what it shows: a list view's list.
@@ -957,6 +878,119 @@ class WorkspaceBase(Screen[None]):
                 rows.focus()
                 break
         self.refresh_bindings()
+
+    # What selecting each kind of tree node does: set the selection and
+    # show its detail. `ident` is the node's record or covenant id, if any.
+
+    async def _select_saga(self, ident: str | None) -> None:
+        self.selected_covenant = None
+        self.selected_character = None
+        self.selected_laboratory = None
+        self.selected_familiar = None
+        await self._show_saga_detail()
+
+    async def _select_covenant(self, ident: str | None) -> None:
+        covenant = next(c for c in self.saga.covenants if c.id == ident)
+        self.selected_covenant = covenant
+        self.selected_character = None
+        self.selected_laboratory = None
+        self.selected_familiar = None
+        await self._show_covenant_detail(covenant)
+
+    async def _select_character_group(self, ident: str | None) -> None:
+        covenant = self.saga.covenant(ident)
+        self.selected_covenant = covenant
+        self.selected_character = None
+        await self._show_placeholder_detail(
+            f"Characters in {covenant.name}" if covenant else "Unassigned Characters",
+            "Select a character from the tree, or press 'n' to add one."
+            if covenant
+            else "These characters aren't assigned to a covenant. Select one "
+            "from the tree, or press 'n' to add one.",
+        )
+
+    async def _select_character(self, ident: str | None) -> None:
+        character = next(c for c in self.saga.characters if c.id == ident)
+        self.selected_character = character
+        self.selected_covenant = self.saga.covenant(character.covenant_id)
+        self.selected_familiar = None
+        await self._show_character_detail(character)
+
+    async def _select_familiar(self, ident: str | None) -> None:
+        familiar = next(f for f in self.saga.familiars if f.id == ident)
+        self.selected_familiar = familiar
+        self.selected_character = self.saga.character(familiar.character_id)
+        self.selected_covenant = (
+            self.saga.covenant(self.selected_character.covenant_id)
+            if self.selected_character is not None
+            else None
+        )
+        await self._show_familiar_detail(familiar)
+
+    async def _select_laboratory_group(self, ident: str | None) -> None:
+        covenant = self.saga.covenant(ident)
+        self.selected_covenant = covenant
+        self.selected_laboratory = None
+        await self._show_placeholder_detail(
+            f"Laboratories in {covenant.name}"
+            if covenant
+            else "Unassigned Laboratories",
+            "Select a laboratory from the tree, or press 'n' to add one."
+            if covenant
+            else "These laboratories aren't assigned to a covenant. Select "
+            "one from the tree, or press 'n' to add one.",
+        )
+
+    async def _select_laboratory(self, ident: str | None) -> None:
+        lab = next(lab for lab in self.saga.laboratories if lab.id == ident)
+        self.selected_laboratory = lab
+        self.selected_covenant = self.saga.covenant(lab.covenant_id)
+        await self._show_laboratory_detail(lab)
+
+    async def _select_spells(self, ident: str | None) -> None:
+        self.selected_covenant = None
+        await self._set_detail(SpellListView(self.saga))
+
+    async def _select_house_rules(self, ident: str | None) -> None:
+        self.selected_covenant = None
+        await self._set_detail(HouseRulesView(self.saga))
+
+    async def _select_players(self, ident: str | None) -> None:
+        self.selected_covenant = None
+        await self._set_detail(PlayersView(self.saga))
+
+    async def _select_seasons(self, ident: str | None) -> None:
+        self.selected_covenant = None
+        await self._set_detail(SeasonRecordsView(self.saga))
+
+    async def _select_book_group(self, ident: str | None) -> None:
+        self.selected_covenant = None
+        await self._set_detail(
+            BookListView(
+                self.saga,
+                lambda: bk.unassigned_books(self.saga),
+                section_id="section-unassigned-books",
+                title="Unassigned Books",
+            )
+        )
+
+    #: The handler for each kind of tree node (Strategy, as a table).
+    _NODE_SELECTED: ClassVar[
+        dict[NodeKind, Callable[[WorkspaceBase, str | None], Awaitable[None]]]
+    ] = {
+        NodeKind.SAGA: _select_saga,
+        NodeKind.COVENANT: _select_covenant,
+        NodeKind.CHARACTER_GROUP: _select_character_group,
+        NodeKind.CHARACTER: _select_character,
+        NodeKind.FAMILIAR: _select_familiar,
+        NodeKind.LABORATORY_GROUP: _select_laboratory_group,
+        NodeKind.LABORATORY: _select_laboratory,
+        NodeKind.SPELLS: _select_spells,
+        NodeKind.HOUSE_RULES: _select_house_rules,
+        NodeKind.PLAYERS: _select_players,
+        NodeKind.SEASONS: _select_seasons,
+        NodeKind.BOOK_GROUP: _select_book_group,
+    }
 
     def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
         if not self._player_may(action):

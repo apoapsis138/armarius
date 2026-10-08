@@ -234,7 +234,102 @@ def _effect_total(
     )
 
 
-def work(  # noqa: PLR0915
+def _open_device(
+    saga: Saga,
+    magus: Character,
+    plan: SeasonPlan,
+    lab_: Laboratory,
+    options,
+    device: EnchantedDevice,
+) -> tuple[list[str], LabWork | None]:
+    """Opening a device for enchantment: its Vim vis."""
+    from .lab_seasons import LabWork
+
+    limit = lab.vis_limit(magus)
+    empty = lab.LabTotal(total=0, lines=[])
+    room = ed.capacity(saga, device)
+    if room is None:
+        return [
+            f"{device.name} has no capacity yet: give it a material and size "
+            "(or a capacity) on its Inventory tab."
+        ], None
+    left = room - device.pawns_opened
+    if left <= 0:
+        return [f"{device.name} is already opened."], None
+    pawns = min(left, limit) if device.talisman else left
+    if pawns > limit:
+        return [
+            f"Opening {device.name} takes {pawns} pawns of Vim vis; "
+            f"{magus.name} can handle {limit} in a season (twice Magic Theory)."
+        ], None
+    if pawns <= 0:
+        return [f"{magus.name} can't handle any vis (no Magic Theory)."], None
+    return [], LabWork(
+        None, empty, 0, finished=True, vis_cost={"Vim": pawns}, device=device
+    )
+
+
+def _attune(
+    saga: Saga,
+    magus: Character,
+    plan: SeasonPlan,
+    lab_: Laboratory,
+    options,
+    device: EnchantedDevice,
+) -> tuple[list[str], LabWork | None]:
+    """Attuning an opened device as the magus's talisman."""
+    from .lab_seasons import LabWork
+
+    empty = lab.LabTotal(total=0, lines=[])
+    if not ed.is_opened(saga, device) and not device.pawns_opened:
+        return [f"{device.name} has to be opened first."], None
+    if device.maker_id and device.maker_id != magus.id:
+        return [f"Only the magus who opened {device.name} can attune it."], None
+    if device.talisman:
+        return [f"{device.name} is already a talisman."], None
+    current = ed.talisman_of(saga, magus)
+    if current is not None:
+        return [
+            f"{magus.name} already has a talisman ({current.name}); the old "
+            "one must be destroyed first."
+        ], None
+    return [], LabWork(None, empty, 0, finished=True, device=device)
+
+
+def _investigate(
+    saga: Saga,
+    magus: Character,
+    plan: SeasonPlan,
+    lab_: Laboratory,
+    options,
+    device: EnchantedDevice,
+) -> tuple[list[str], LabWork | None]:
+    """Investigating a device for its hidden powers."""
+    from .lab_seasons import LabWork
+
+    total = lab.lab_total(
+        saga,
+        magus,
+        "Intellego",
+        "Vim",
+        lab_,
+        activity="enchant_items",
+        days_missed=max(0, plan.days_away),
+        experimenting=plan.experimenting,
+    )
+    total = options(magus, plan, "Intellego", "Vim", total)
+    hidden = hidden_powers(device)
+    if not hidden:
+        return [f"Every power of {device.name} is already known."], None
+    return [], LabWork(None, total, hidden[0][0], finished=True, device=device)
+
+
+#: The activities that work on the device as a whole, not one of its
+#: effects (Strategy, as a table).
+_DEVICE_WORK = {OPEN: _open_device, ATTUNE: _attune, INVESTIGATE: _investigate}
+
+
+def work(
     saga: Saga,
     magus: Character,
     plan: SeasonPlan,
@@ -243,7 +338,6 @@ def work(  # noqa: PLR0915
 ) -> tuple[list[str], LabWork | None]:
     """The problems with a season of enchanting, or what it does. `options`
     adds the plan's Focus / Specialty / Other lines to a Lab Total."""
-    from .lab_seasons import LabWork
 
     device = device_of(saga, plan)
     if device is None:
@@ -258,64 +352,24 @@ def work(  # noqa: PLR0915
             f"{plan.days_away} days away from the laboratory: no lab work is "
             "possible this season (more than 20)."
         ], None
+    special = _DEVICE_WORK.get(plan.activity)
+    if special is not None:
+        return special(saga, magus, plan, lab_, options, device)
+    return _effect_work(saga, magus, plan, lab_, options, device)
+
+
+def _effect_work(
+    saga: Saga,
+    magus: Character,
+    plan: SeasonPlan,
+    lab_: Laboratory,
+    options,
+    device: EnchantedDevice,
+) -> tuple[list[str], LabWork | None]:
+    """Instilling, a lesser enchantment or a charged item: one effect."""
+    from .lab_seasons import LabWork
+
     limit = lab.vis_limit(magus)
-    empty = lab.LabTotal(total=0, lines=[])
-
-    if plan.activity == OPEN:
-        room = ed.capacity(saga, device)
-        if room is None:
-            return [
-                f"{device.name} has no capacity yet: give it a material and size "
-                "(or a capacity) on its Inventory tab."
-            ], None
-        left = room - device.pawns_opened
-        if left <= 0:
-            return [f"{device.name} is already opened."], None
-        pawns = min(left, limit) if device.talisman else left
-        if pawns > limit:
-            return [
-                f"Opening {device.name} takes {pawns} pawns of Vim vis; "
-                f"{magus.name} can handle {limit} in a season (twice Magic Theory)."
-            ], None
-        if pawns <= 0:
-            return [f"{magus.name} can't handle any vis (no Magic Theory)."], None
-        return [], LabWork(
-            None, empty, 0, finished=True, vis_cost={"Vim": pawns}, device=device
-        )
-
-    if plan.activity == ATTUNE:
-        if not ed.is_opened(saga, device) and not device.pawns_opened:
-            return [f"{device.name} has to be opened first."], None
-        if device.maker_id and device.maker_id != magus.id:
-            return [f"Only the magus who opened {device.name} can attune it."], None
-        if device.talisman:
-            return [f"{device.name} is already a talisman."], None
-        current = ed.talisman_of(saga, magus)
-        if current is not None:
-            return [
-                f"{magus.name} already has a talisman ({current.name}); the old "
-                "one must be destroyed first."
-            ], None
-        return [], LabWork(None, empty, 0, finished=True, device=device)
-
-    if plan.activity == INVESTIGATE:
-        total = lab.lab_total(
-            saga,
-            magus,
-            "Intellego",
-            "Vim",
-            lab_,
-            activity="enchant_items",
-            days_missed=max(0, plan.days_away),
-            experimenting=plan.experimenting,
-        )
-        total = options(magus, plan, "Intellego", "Vim", total)
-        hidden = hidden_powers(device)
-        if not hidden:
-            return [f"Every power of {device.name} is already known."], None
-        return [], LabWork(None, total, hidden[0][0], finished=True, device=device)
-
-    # Instilling, a lesser enchantment or a charged item: one effect.
     effect = effect_of(device, plan)
     if effect is None:
         return ["Choose the effect (add it to the device on its Inventory tab)."], None

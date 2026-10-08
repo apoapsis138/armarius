@@ -298,7 +298,7 @@
         "a": "FieldsDialog: Add a Source of Income",
         "e": "FieldsDialog: Edit Mill",
         "d": "ConfirmScreen",
-        "m": "ImproveIncomeScreen: Improve Mill",
+        "m": "FieldsDialog: Improve Mill",
         "slash": "(disabled)"
       }
     },
@@ -518,7 +518,7 @@
       "active": "section-known-spells",
       "keys": {
         "a": "SpellChooserScreen: Add a spell Leandro knows",
-        "e": "MasteryEditScreen: Mastery: Boundless Wealth of the Oceans",
+        "e": "FieldsDialog: Mastery: Boundless Wealth of the Oceans",
         "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"
@@ -802,7 +802,7 @@
       "active": "section-fam-binding",
       "keys": {
         "a": "(disabled)",
-        "e": "EditFamiliarBindingScreen",
+        "e": "FieldsDialog: Edit Binding & Cords",
         "d": "(disabled)",
         "m": "(disabled)",
         "slash": "(disabled)"

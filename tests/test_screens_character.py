@@ -22,13 +22,12 @@ from screen_helpers import (
     _wait_for_picker_ready,
     _wait_for_screen,
 )
-from support import close_worksheet, menu, strip_markup, wait_until
+from support import close_worksheet, menu, screen_lines, strip_markup, wait_until
 from textual.widgets import (
     Button,
     Collapsible,
     Input,
     Label,
-    ListView,
     Select,
     Static,
     TabbedContent,
@@ -54,12 +53,12 @@ from ars_magica_manager.screens import (
     DialogField,
     EditArtsScreen,
     FieldsDialog,
-    MasteryEditScreen,
     RemovalPickerScreen,
     SelectableList,
     SpellChooserScreen,
     WorkspaceScreen,
 )
+from ars_magica_manager.screens.prompts import ListFieldScreen
 from ars_magica_manager.screens.widgets import LIST_COLUMN_GAP, TEXT_COLUMN_GAP
 
 
@@ -609,36 +608,56 @@ async def test_edit_spell_mastery_sets_score_xp_and_abilities():
         await _open_section(pilot, app, "section-known-spells")
 
         await pilot.press("e")
+        mastery = await wait_until(
+            pilot, lambda: isinstance(app.screen, FieldsDialog) and app.screen
+        )
         await pilot.pause()
-        assert isinstance(app.screen, MasteryEditScreen)
+        assert str(mastery.query_one("#fields-title", Label).render()).startswith(
+            "Mastery: "
+        )
 
-        app.screen.query_one("#input-mastery-score", Input).value = "2"
-        app.screen.query_one("#input-mastery-xp", Input).value = "10"
-        await pilot.click("#btn-add-ability")
+        mastery.query_one("#fld-mastery_score", Input).value = "2"
+        mastery.query_one("#fld-mastery_xp", Input).value = "10"
+        mastery.query_one("#fld-mastery_abilities", Button).press()
+        editor = await wait_until(
+            pilot, lambda: isinstance(app.screen, ListFieldScreen) and app.screen
+        )
         await pilot.pause()
-        assert isinstance(app.screen, FieldsDialog)
-        app.screen.query_one("#fld-name", Input).value = "Fast Casting"
-        app.screen.query_one("#fld-level", Input).value = "1"
-        await pilot.click("#btn-save")
+        editor.action_add()
+        added = await wait_until(
+            pilot,
+            lambda: (
+                isinstance(app.screen, FieldsDialog)
+                and app.screen is not mastery
+                and app.screen
+            ),
+        )
         await pilot.pause()
-        assert isinstance(app.screen, MasteryEditScreen)
+        added.query_one("#fld-name", Input).value = "Fast Casting"
+        added.query_one("#fld-level", Input).value = "1"
+        added.query_one("#btn-save", Button).press()
+        assert await wait_until(pilot, lambda: app.screen is editor)
 
         # Removing one asks first; No keeps it.
-        mastery = app.screen
-        mastery.query_one("#mastery-abilities-list", ListView).index = 0
         await pilot.pause()
-        mastery.query_one("#btn-remove-ability", Button).press()
+        editor.action_remove()
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
-        assert "Delete Fast Casting?" in str(
+        await pilot.pause()
+        assert "Delete Fast Casting" in str(
             app.screen.query_one("#confirm-message", Static).render()
         )
         await pilot.press("n")
-        await wait_until(pilot, lambda: app.screen is mastery)
-        assert len(mastery._abilities) == 1
+        await wait_until(pilot, lambda: app.screen is editor)
+        assert len(editor.items) == 1
 
-        await pilot.click("#btn-save")
+        editor.query_one("#btn-done", Button).press()
+        assert await wait_until(pilot, lambda: app.screen is mastery)
         await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
+        assert str(mastery.query_one("#fld-mastery_abilities", Button).label) == (
+            "Fast Casting 1/0"
+        )
+        mastery.query_one("#btn-save", Button).press()
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
     saga = storage.load_saga("test_saga")
     known = saga.characters[0].spells_known[0]
@@ -667,13 +686,20 @@ async def test_the_mastery_dialog_shows_brackets_in_names():
         await _select_character(pilot, app)
         await _open_section(pilot, app, "section-known-spells")
         await pilot.press("e")
-        assert await wait_until(
-            pilot, lambda: isinstance(app.screen, MasteryEditScreen)
-        )
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         await pilot.pause()
         labels = [str(label.render()) for label in app.screen.query(Label)]
         assert "Mastery: Pilum of [Greater] Fire" in labels, labels
-        assert "Fast [Casting] 1/0" in labels, labels
+        button = app.screen.query_one("#fld-mastery_abilities", Button)
+        assert str(button.label) == "Fast [Casting] 1/0"
+        button.press()
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ListFieldScreen))
+        await pilot.pause()
+        assert "Mastery Abilities: Pilum of [Greater] Fire" in [
+            str(label.render()) for label in app.screen.query(Label)
+        ]
+        rows = "\n".join(screen_lines(app))
+        assert "Fast [Casting] 1/0" in rows, rows
 
 
 def _inventory_labels(view) -> str:

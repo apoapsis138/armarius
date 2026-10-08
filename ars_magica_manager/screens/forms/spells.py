@@ -6,10 +6,6 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from textual.app import ComposeResult
-from textual.containers import Horizontal, Vertical
-from textual.widgets import Button, Input, Label, ListItem, ListView, Static
-
 from ... import spells as spl
 from ...arts import FORMS, TECHNIQUES
 from ...markup import escape
@@ -18,12 +14,11 @@ from ...models import (
     SPELL_RANGES,
     SPELL_TARGETS,
     KnownSpell,
-    MasteryAbility,
     Spell,
 )
 from ...rules import spell_levels
-from ..fields import DialogField, ModalDialog, _attr, _pairs
-from ..prompts import ConfirmScreen, _mastery_ability_dialog
+from ..fields import DialogField, FieldsDialog, _attr, _pairs
+from ..prompts import _list_field, _mastery_ability_dialog
 
 #: The choice in a Range/Duration/Target select that opens a free-text box.
 _OTHER = "__other__"
@@ -209,146 +204,28 @@ def _spell_live(values: dict[str, Any]) -> str:
     return text
 
 
-class MasteryEditScreen(ModalDialog[KnownSpell | None]):
+def _mastery_dialog(spell_name: str, existing: KnownSpell) -> FieldsDialog[KnownSpell]:
     """Edits a known spell's Mastery: score, xp, and its Mastery Abilities
-    (each with its own name/level/xp -- see MasteryAbility). Abilities are
-    added/removed here and only committed to the character on Save.
-    Dismisses with the finished KnownSpell, or None if cancelled."""
-
-    DEFAULT_CSS = """
-    MasteryEditScreen {
-        align: center middle;
-    }
-
-    #mastery-dialog {
-        width: 70;
-        height: auto;
-        max-height: 30;
-        padding: 1 2;
-    }
-
-    #mastery-abilities-list {
-        height: auto;
-        max-height: 8;
-        border: solid $accent;
-    }
-
-    #mastery-error {
-        color: $error;
-        height: auto;
-        margin-top: 1;
-    }
-
-    #mastery-ability-row-buttons {
-        width: 100%;
-        height: auto;
-    }
-
-    #mastery-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, spell_name: str, existing: KnownSpell) -> None:
-        super().__init__()
-        self.spell_name = spell_name
-        self.spell_id = existing.spell_id
-        self.mastery_score = existing.mastery_score
-        self.mastery_xp = existing.mastery_xp
-        #: A working copy -- only becomes real on Save.
-        self._abilities: list[MasteryAbility] = list(existing.mastery_abilities)
-
-    def compose(self) -> ComposeResult:
-        with Vertical(id="mastery-dialog", classes="dialog-box"):
-            yield Label(
-                f"Mastery: {escape(self.spell_name)}",
-                id="mastery-title",
-                classes="dialog-title",
-            )
-            yield Label("Score")
-            yield Input(
-                value=str(self.mastery_score), type="integer", id="input-mastery-score"
-            )
-            yield Label("XP")
-            yield Input(
-                value=str(self.mastery_xp), type="integer", id="input-mastery-xp"
-            )
-            yield Label("Mastery Abilities")
-            yield ListView(id="mastery-abilities-list")
-            with Horizontal(id="mastery-ability-row-buttons"):
-                yield Button("Add Ability", id="btn-add-ability", compact=True)
-                yield Button("Remove Ability", id="btn-remove-ability", compact=True)
-            yield Static("", id="mastery-error")
-            with Horizontal(id="mastery-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_mount(self) -> None:
-        self._render_abilities()
-
-    def _render_abilities(self) -> None:
-        list_view = self.query_one("#mastery-abilities-list", ListView)
-        list_view.clear()
-        if not self._abilities:
-            list_view.append(ListItem(Label("[dim](none)[/]")))
-            return
-        for ability in self._abilities:
-            list_view.append(
-                ListItem(Label(f"{escape(ability.name)} {ability.level}/{ability.xp}"))
-            )
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-        elif event.button.id == "btn-add-ability":
-            self._add_ability()
-        elif event.button.id == "btn-remove-ability":
-            self._remove_ability()
-
-    def _add_ability(self) -> None:
-        def handle_result(ability: MasteryAbility | None) -> None:
-            if ability is not None:
-                self._abilities.append(ability)
-                self._render_abilities()
-
-        self.app.push_screen(
-            _mastery_ability_dialog("Add a Mastery Ability"), handle_result
-        )
-
-    def _remove_ability(self) -> None:
-        if not self._abilities:
-            return
-        list_view = self.query_one("#mastery-abilities-list", ListView)
-        index = list_view.index
-        if index is None or index >= len(self._abilities):
-            return
-
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed:
-                del self._abilities[index]
-                self._render_abilities()
-
-        self.app.push_screen(
-            ConfirmScreen(f"Delete {escape(self._abilities[index].name)}?"),
-            handle_confirmed,
-        )
-
-    def _try_save(self) -> None:
-        error = self.query_one("#mastery-error", Static)
-        try:
-            score = int(self.query_one("#input-mastery-score", Input).value)
-            xp = int(self.query_one("#input-mastery-xp", Input).value)
-        except ValueError:
-            error.update("Score and XP must be whole numbers.")
-            return
-        self.dismiss(
-            KnownSpell(
-                spell_id=self.spell_id,
-                mastery_score=score,
-                mastery_xp=xp,
-                mastery_abilities=self._abilities,
-            )
-        )
+    (each with its own name/level/xp, see MasteryAbility). Builds the
+    finished KnownSpell."""
+    return FieldsDialog(
+        f"Mastery: {escape(spell_name)}",
+        [
+            DialogField("mastery_score", "Score", "int", existing.mastery_score),
+            DialogField("mastery_xp", "XP", "int", existing.mastery_xp),
+            _list_field(
+                "mastery_abilities",
+                "Mastery Abilities",
+                existing.mastery_abilities,
+                f"Mastery Abilities: {escape(spell_name)}",
+                lambda ability: f"{ability.name} {ability.level}/{ability.xp}",
+                lambda ability: _mastery_ability_dialog(
+                    "Add a Mastery Ability"
+                    if ability is None
+                    else "Edit a Mastery Ability",
+                    ability,
+                ),
+            ),
+        ],
+        build=lambda values: KnownSpell(spell_id=existing.spell_id, **values),
+    )

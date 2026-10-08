@@ -18,9 +18,9 @@ from ..fields import (
     FieldsDialog,
 )
 from ..forms import (
-    EditFamiliarBindingScreen,
     _bond_power_fields,
     _characteristics_from,
+    _familiar_binding_dialog,
     _familiar_characteristics_fields,
     _familiar_info_fields,
     _fatigue_fields,
@@ -76,7 +76,7 @@ class FamiliarActions(WorkspaceBase):
                 setattr(familiar, field_name, value)
             self._commit("section-fam-binding")
 
-        self.app.push_screen(EditFamiliarBindingScreen(familiar), handle_result)
+        self.app.push_screen(_familiar_binding_dialog(familiar), handle_result)
 
     def _edit_familiar_characteristics(self) -> None:
         familiar = self.selected_familiar

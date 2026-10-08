@@ -9,7 +9,7 @@ from typing import Any
 
 from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
-from textual.widgets import Button, Input, Label, Select, Static
+from textual.widgets import Button, Input, Label, Static
 
 from ... import catalog, faith
 from ... import familiars as fam
@@ -649,167 +649,73 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
         self.dismiss(result)
 
 
-class EditFamiliarBindingScreen(ModalDialog[dict[str, object] | None]):
-    """Edits a Familiar's Initial Binding details and the three Cords.
-    Dismisses with a dict of field values, or None if cancelled."""
-
-    DEFAULT_CSS = """
-    EditFamiliarBindingScreen {
-        align: center middle;
-    }
-
-    #fam-binding-dialog {
-        width: 70;
-        height: auto;
-        padding: 1 2;
-    }
-
-    .fambindingedit-row {
-        width: 100%;
-        height: 1;
-    }
-
-    .fambindingedit-row Label {
-        width: 28;
-    }
-
-    .fambindingedit-row Input, .fambindingedit-row Select {
-        width: 1fr;
-    }
-
-    .fambindingedit-cost {
-        width: auto;
-        color: $text-muted;
-        padding-left: 1;
-    }
-
-    #fam-binding-error {
-        color: $error;
-        height: auto;
-    }
-
-    #fam-binding-buttons {
-        width: 100%;
-        height: auto;
-    }
-    """
-
-    def __init__(self, familiar: Familiar) -> None:
-        super().__init__()
-        self.familiar = familiar
-
-    def compose(self) -> ComposeResult:
-        f = self.familiar
-        with Vertical(id="fam-binding-dialog", classes="dialog-box"):
-            yield Label("Edit Binding & Cords")
-            with Horizontal(classes="fambindingedit-row"):
-                yield Label("Binding Technique")
-                yield Select(
-                    _pairs(TECHNIQUES),
-                    value=f.binding_technique or Select.NULL,
-                    allow_blank=True,
-                    prompt="(not set)",
-                    id="select-fam-technique",
-                    compact=True,
-                )
-            with Horizontal(classes="fambindingedit-row"):
-                yield Label("Binding Form")
-                yield Select(
-                    _pairs(FORMS),
-                    value=f.binding_form or Select.NULL,
-                    allow_blank=True,
-                    prompt="(not set)",
-                    id="select-fam-form",
-                    compact=True,
-                )
-            with Horizontal(classes="fambindingedit-row"):
-                yield Label("Initial Binding Lab Total")
-                yield Input(
-                    value=str(f.binding_lab_total),
-                    type="integer",
-                    id="input-fam-lab-total",
-                    compact=True,
-                )
-            with Horizontal(classes="fambindingedit-row"):
-                yield Label("Target Binding Level")
-                yield Input(
-                    value=str(f.target_binding_level),
-                    type="integer",
-                    id="input-fam-target-level",
-                    compact=True,
-                )
-            with Horizontal(classes="fambindingedit-row"):
-                yield Label("Cumulative Vis Spent (pawns)")
-                yield Input(
-                    value=str(f.vis_spent_binding),
-                    type="integer",
-                    id="input-fam-vis-spent",
-                    compact=True,
-                )
-            for attribute, label, _blurb in fam.CORDS:
-                with Horizontal(classes="fambindingedit-row"):
-                    yield Label(label)
-                    yield Select(
-                        [(f"+{score}", score) for score in CORD_SCORE_COSTS],
-                        value=getattr(f, attribute),
-                        allow_blank=False,
-                        id=f"select-fam-{attribute}",
-                        compact=True,
-                    )
-                    yield Static(
-                        f"{fam.cord_cost(getattr(f, attribute))} pts",
-                        id=f"cost-fam-{attribute}",
-                        classes="fambindingedit-cost",
-                    )
-            yield Static("", id="fam-binding-error")
-            with Horizontal(id="fam-binding-buttons"):
-                yield Button("Save", id="btn-save", variant="success")
-                yield Button("Cancel", id="btn-cancel")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-cancel":
-            self.action_cancel()
-        elif event.button.id == "btn-save":
-            self._try_save()
-
-    def on_select_changed(self, event: Select.Changed) -> None:
-        select_id = event.select.id or ""
-        if not select_id.startswith("select-fam-"):
-            return
-        attribute = select_id.removeprefix("select-fam-")
-        if attribute not in {a for a, _, _ in fam.CORDS}:
-            return
-        score = event.value
-        if isinstance(score, int):
-            self.query_one(f"#cost-fam-{attribute}", Static).update(
-                f"{fam.cord_cost(score)} pts"
+def _familiar_binding_fields(familiar: Familiar) -> list[DialogField]:
+    """A Familiar's Initial Binding details and its three Cords (each
+    option shows its point cost)."""
+    cord_options = [
+        (f"+{score} ({fam.cord_cost(score)} pts)", str(score))
+        for score in CORD_SCORE_COSTS
+    ]
+    return [
+        DialogField(
+            "binding_technique",
+            "Binding Technique",
+            "select",
+            familiar.binding_technique or None,
+            options=_pairs(TECHNIQUES),
+            allow_blank=True,
+            placeholder="(not set)",
+        ),
+        DialogField(
+            "binding_form",
+            "Binding Form",
+            "select",
+            familiar.binding_form or None,
+            options=_pairs(FORMS),
+            allow_blank=True,
+            placeholder="(not set)",
+        ),
+        DialogField(
+            "binding_lab_total",
+            "Initial Binding Lab Total",
+            "int",
+            familiar.binding_lab_total,
+        ),
+        DialogField(
+            "target_binding_level",
+            "Target Binding Level",
+            "int",
+            familiar.target_binding_level,
+        ),
+        DialogField(
+            "vis_spent_binding",
+            "Cumulative Vis Spent (pawns)",
+            "int",
+            familiar.vis_spent_binding,
+        ),
+        *(
+            DialogField(
+                attribute,
+                label,
+                "select",
+                str(getattr(familiar, attribute)),
+                options=cord_options,
             )
+            for attribute, label, _blurb in fam.CORDS
+        ),
+    ]
 
-    def _try_save(self) -> None:
-        error = self.query_one("#fam-binding-error", Static)
 
-        technique_value = self.query_one("#select-fam-technique", Select).value
-        form_value = self.query_one("#select-fam-form", Select).value
-        result: dict[str, object] = {
-            "binding_technique": technique_value
-            if isinstance(technique_value, str)
-            else "",
-            "binding_form": form_value if isinstance(form_value, str) else "",
+def _familiar_binding_dialog(familiar: Familiar) -> FieldsDialog[dict[str, object]]:
+    """Edits a Familiar's binding and Cords; builds the fields to set on it."""
+    cords = {attribute for attribute, _label, _blurb in fam.CORDS}
+
+    def build(values: dict[str, Any]) -> dict[str, object]:
+        return {
+            key: int(value) if key in cords else ("" if value is None else value)
+            for key, value in values.items()
         }
 
-        for field_name, key, label in (
-            ("input-fam-lab-total", "binding_lab_total", "Initial Binding Lab Total"),
-            ("input-fam-target-level", "target_binding_level", "Target Binding Level"),
-            ("input-fam-vis-spent", "vis_spent_binding", "Cumulative Vis Spent"),
-        ):
-            raw = self.query_one(f"#{field_name}", Input).value.strip()
-            try:
-                result[key] = int(raw)
-            except ValueError:
-                error.update(f"{label} must be a whole number.")
-                return
-
-        for attribute, _label, _blurb in fam.CORDS:
-            result[attribute] = self.query_one(f"#select-fam-{attribute}", Select).value
-
-        self.dismiss(result)
+    return FieldsDialog(
+        "Edit Binding & Cords", _familiar_binding_fields(familiar), build=build
+    )

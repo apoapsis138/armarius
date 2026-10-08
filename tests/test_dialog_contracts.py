@@ -590,6 +590,16 @@ CONTRACTS: dict[str, Contract] = {
         expected=("Rego", 30),
         shown={"#fam-binding-content": "Rego"},
     ),
+    "edit spell mastery": Contract(
+        prefill={"Score": "0", "XP": "0"},
+        edits={"Score": "2", "XP": "10"},
+        saved=lambda s: (
+            _char(s).spells_known[0].mastery_score,
+            _char(s).spells_known[0].mastery_xp,
+        ),
+        expected=(2, 10),
+        invalid=[{"Score": "-"}, {"XP": "x"}],
+    ),
     "edit familiar characteristics": Contract(
         prefill={"Intelligence": "0", "Base Soak": "0"},
         edits={"Intelligence": "-5", "Base Soak": "2", "Magic Resistance": "4"},

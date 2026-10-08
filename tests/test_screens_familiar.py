@@ -30,7 +30,6 @@ from ars_magica_manager.models import VirtueFlawInstance
 from ars_magica_manager.screens import (
     AbilityPickerScreen,
     ConfirmScreen,
-    EditFamiliarBindingScreen,
     FieldsDialog,
     SelectableList,
     VirtueFlawPickerScreen,
@@ -205,7 +204,7 @@ async def test_editing_familiar_info_updates_the_top_panel_and_tree():
     )
 
 
-async def test_editing_familiar_binding_shows_live_cord_cost_and_saves():
+async def test_editing_familiar_binding_shows_cord_costs_and_saves():
     storage.save_saga(_saga_with_familiar())
 
     app = ArsMagicaManagerApp()
@@ -216,14 +215,13 @@ async def test_editing_familiar_binding_shows_live_cord_cost_and_saves():
 
         await pilot.press("e")
         await pilot.pause()
-        assert isinstance(app.screen, EditFamiliarBindingScreen)
-        app.screen.query_one("#select-fam-golden_cord", Select).value = 3
-        await pilot.pause()
-        assert (
-            str(app.screen.query_one("#cost-fam-golden_cord", Static).render())
-            == "30 pts"
-        )
-        app.screen.query_one("#input-fam-lab-total", Input).value = "45"
+        assert isinstance(app.screen, FieldsDialog)
+        cord = app.screen.query_one("#fld-golden_cord", Select)
+        assert ("+3 (30 pts)", "3") in [
+            (str(prompt), value) for prompt, value in cord._options
+        ]
+        cord.value = "3"
+        app.screen.query_one("#fld-binding_lab_total", Input).value = "45"
         app.screen.query_one("#btn-save", Button).press()
         await pilot.pause()
 
