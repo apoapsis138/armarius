@@ -8,7 +8,7 @@ and the details panel, and reading books from a CSV file.
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -1119,3 +1119,35 @@ def form_problem(values: dict[str, Any]) -> str | None:
         if (values.get(key) or 0) < 0:
             return f"{key.capitalize()} can't be negative."
     return None
+
+
+# ------------------------------------------------- buying a book at creation
+
+
+def creation_refusals(saga: Saga, book: Book, max_level: int | None) -> list[str]:
+    """Why a new covenant can't buy `book` with Build Points (plain text;
+    none: it can): the creation limits on summae and tractatus, and for a
+    Lab Text or Casting Tablet its Power Level's highest level
+    (`max_level`, None: no limit)."""
+    reasons = limit_warnings(book)
+    if book.type in SPELL_TYPES and max_level is not None:
+        level = level_of(book, saga) or 0
+        if level > max_level:
+            reasons.append(
+                f"Level {level} is over the Power Level's limit of {max_level}."
+            )
+    return reasons
+
+
+def copy_to(saga: Saga, book: Book, owner_kind: str, owner_id: str) -> Book:
+    """A copy of `book` for a new owner (the original stays where it is),
+    on its own: not bound into the original's codex."""
+    copy = replace(
+        book,
+        id=storage.generate_unique_id(book.name, [b.id for b in saga.books]),
+        owner_kind=owner_kind,
+        owner_id=owner_id,
+        codex_id=None,
+    )
+    saga.books.append(copy)
+    return copy

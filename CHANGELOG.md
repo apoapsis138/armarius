@@ -41,6 +41,14 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.34.0 — 2026-10-08
+
+- On a new covenant's Resources step, a can buy one of the saga's own
+  books (Unassigned Books, such as an imported book list): the picker
+  lists only those a new covenant may buy, with their Build Points, and
+  F3 shows the rest marked with why. The covenant gets its own copy; the
+  saga's book stays where it is.
+
 ## 2.33.0 — 2026-10-08
 
 - An Illusory Resources Hook's 250 Build Points can be tracked in play,

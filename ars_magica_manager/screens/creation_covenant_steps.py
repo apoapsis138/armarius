@@ -46,7 +46,7 @@ from .creation_worksheet import (
     StepRow,
 )
 from .forms import _enchanted_device_dialog
-from .pickers import RemovalPickerScreen
+from .pickers import RemovalPickerScreen, SagaBookPickerScreen
 from .prompts import ConfirmScreen, MenuScreen
 from .widgets import boon_hook_info_text
 
@@ -487,11 +487,41 @@ def _add_covenant_device(workspace: WorkspaceScreen, covenant: Covenant) -> None
     )
 
 
+SAGA_BOOK = "A book from the saga's books"
+
+
+def _buy_saga_book(workspace: WorkspaceScreen, covenant: Covenant) -> None:
+    """Pick one of the saga's own books a new covenant may buy and copy it
+    into the covenant's Library (the saga's copy stays where it is)."""
+    saga = workspace.saga
+    power = cov.POWER_BY_NAME.get(covenant.power_level)
+
+    def handle_book(book: Book | None) -> None:
+        if book is None:
+            return
+        bk.copy_to(saga, book, "covenant", covenant.id)
+        workspace._books_changed()
+        workspace._commit()
+        workspace.notify(
+            f"{escape(book.name)} copied into {escape(covenant.name)}'s Library."
+        )
+
+    workspace.app.push_screen(
+        SagaBookPickerScreen(
+            saga,
+            bk.unassigned_books(saga),
+            power.max_level if power is not None else None,
+        ),
+        handle_book,
+    )
+
+
 #: What a adds on the Resources step: (letter, label, how).
 _RESOURCE_ADDS: tuple[
     tuple[str, str, Callable[[WorkspaceScreen, Covenant], None]], ...
 ] = (
-    ("b", "A book", lambda ws, c: ws._book_form(None)),
+    ("b", SAGA_BOOK, _buy_saga_book),
+    ("n", "A new book", lambda ws, c: ws._book_form(None)),
     ("v", "A vis source", lambda ws, c: ws._possession_form("vis_source", None)),
     ("s", "A vis stock", lambda ws, c: ws._possession_form("vis_store", None)),
     ("e", "An enchanted item", _add_covenant_device),
@@ -506,7 +536,12 @@ _RESOURCE_ADDS: tuple[
 def _add_resource(workspace: WorkspaceScreen, record: Record) -> None:
     """a on Resources: ask what to buy, then open its form."""
     covenant = _covenant(record)
-    adds = {label: how for _, label, how in _RESOURCE_ADDS}
+    offered = [
+        add
+        for add in _RESOURCE_ADDS
+        if add[1] != SAGA_BOOK or bk.unassigned_books(workspace.saga)
+    ]
+    adds = {label: how for _, label, how in offered}
 
     def handle_choice(choice: str | None) -> None:
         if choice in adds:
@@ -515,7 +550,7 @@ def _add_resource(workspace: WorkspaceScreen, record: Record) -> None:
     workspace.app.push_screen(
         MenuScreen(
             "Buy with Build Points",
-            [(letter, label, label) for letter, label, _ in _RESOURCE_ADDS],
+            [(letter, label, label) for letter, label, _ in offered],
         ),
         handle_choice,
     )

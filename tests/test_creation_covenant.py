@@ -318,11 +318,15 @@ async def test_the_covenant_worksheet_lists_what_build_points_went_on():
         assert any("Magi without a laboratory (2) -100" in r for r in rows)
         await _choose(pilot, screen, "Herbal")
         assert "Name: Herbal" in str(screen.query_one("#ws-details", Static).render())
-        # a asks what to buy; b is a book for the covenant's library.
+        # a asks what to buy; n is a new book for the covenant's library
+        # (with no books of the saga's own, that's the only book offered).
         await pilot.press("a")
         assert await wait_until(pilot, lambda: isinstance(app.screen, MenuScreen))
         await pilot.pause()
-        await pilot.press("b")
+        assert "A book from the saga's books" not in [
+            label for _, _, label in app.screen.items
+        ]
+        await pilot.press("n")
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         await pilot.pause()
         assert "Add a Book" in str(app.screen.query_one("#fields-title").render())
@@ -878,3 +882,90 @@ def test_review_says_what_covenfolk_the_baseline_gives():
         "craftsmen) for its 2 magi, free of Build Points: add them on the "
         "Inhabitants tab once the covenant is In Play."
     )
+
+
+def test_a_saga_book_a_new_covenant_may_buy_is_copied_into_its_library():
+    from ars_magica_manager import books as bk
+
+    saga = _saga()
+    legal = Book(
+        id="b1", name="Of Fire", type="Art Summa", art="Ignem", level=12, quality=10
+    )
+    too_good = Book(
+        id="b2", name="Liber Magnus", type="Art Summa", art="Creo", level=22, quality=12
+    )
+    saga.books += [legal, too_good]
+    assert bk.creation_refusals(saga, legal, 25) == []
+    assert bk.creation_refusals(saga, too_good, 25) == [
+        "Level 22 is over the covenant-creation limit of 20.",
+        "Quality 12 is over the covenant-creation limit of 9.",
+    ]
+    copy = bk.copy_to(saga, legal, "covenant", "cov1")
+    assert copy is not legal and copy.id != legal.id
+    assert bk.is_unassigned(saga, legal)
+    assert bk.books_owned_by(saga, "covenant", "cov1") == [copy]
+    assert cov.spent(saga, saga.covenants[0]) == 22
+
+
+async def test_resources_buys_a_copy_of_one_of_the_sagas_books():
+    from support import wait_until
+    from textual.widgets import OptionList, Static
+
+    from ars_magica_manager import storage
+    from ars_magica_manager.app import ArsMagicaManagerApp
+    from ars_magica_manager.screens.pickers import SagaBookPickerScreen
+    from ars_magica_manager.screens.prompts import MenuScreen
+    from ars_magica_manager.screens.workspace.base import NodeKind
+
+    saga = _saga()
+    saga.id = "test_saga"
+    saga.covenants[0].power_level = "Low"
+    saga.books += [
+        Book(
+            id="b1", name="Of Fire", type="Art Summa", art="Ignem", level=12, quality=10
+        ),
+        Book(
+            id="b2",
+            name="Liber Magnus",
+            type="Art Summa",
+            art="Creo",
+            level=22,
+            quality=12,
+        ),
+    ]
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        screen = await _open(
+            pilot, app, (NodeKind.COVENANT, "cov1"), "_covenant_sheet_view"
+        )
+        screen.query_one("#ws-steps", OptionList).highlighted = 1
+        assert await wait_until(pilot, lambda: screen.step == "build_points")
+        await pilot.press("a")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, MenuScreen))
+        await pilot.pause()
+        await pilot.press("b")
+        assert await wait_until(
+            pilot, lambda: isinstance(app.screen, SagaBookPickerScreen)
+        )
+        picker = app.screen
+        assert await wait_until(
+            pilot,
+            lambda: (
+                "1 listed, 1 over a new covenant's limits hidden"
+                in str(picker.query_one("#book-picker-status", Static).render())
+            ),
+        )
+        picker._on_entry_selected(next(b for b in picker._all if b.id == "b1"))
+        assert await wait_until(
+            pilot,
+            lambda: (
+                [
+                    b.name
+                    for b in storage.load_saga("test_saga").books
+                    if b.owner_id == "cov1"
+                ]
+                == ["Of Fire"]
+            ),
+        )
+        assert len(storage.load_saga("test_saga").books) == 3
