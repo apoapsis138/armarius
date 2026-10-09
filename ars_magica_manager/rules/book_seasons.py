@@ -80,6 +80,7 @@ COPY_BOOK = "copy_book"
 TRANSLATE_BOOK = "translate_book"
 REWRITE_TEXTS = "rewrite_lab_texts"
 COPY_TEXTS = "copy_lab_texts"
+WRITE_TABLET = "write_casting_tablet"
 TEACH_ABBREVIATIONS = "teach_abbreviations"
 DECODE_TEXT = "decode_lab_text"
 #: Planned on the character sheet (decoding is lab work).
@@ -90,6 +91,7 @@ SHEET_ACTIVITIES: tuple[str, ...] = (
     TRANSLATE_BOOK,
     REWRITE_TEXTS,
     COPY_TEXTS,
+    WRITE_TABLET,
     TEACH_ABBREVIATIONS,
 )
 #: Book work that can take several seasons, points carried between them.
@@ -438,6 +440,46 @@ def _copy_of(
     )
 
 
+def _write_tablet(
+    saga: Saga, character: Character, plan: SeasonPlan, latin: int
+) -> tuple[list[str], BookWork | None]:
+    """Writing Casting Tablets of a spell the magus has mastered: from the
+    pool of levels a season of writing Lab Texts gives (Latin x 20), as many
+    copies as it holds (DE Chapter Eight, Casting Tablets)."""
+    known = next(
+        (k for k in character.spells_known if k.spell_id == plan.spell_id), None
+    )
+    spell = spl.find_spell(saga, plan.spell_id)
+    if known is None or spell is None:
+        return ["Choose the spell, one the magus knows."], None
+    if known.mastery_score < 1:
+        return [
+            f"Casting Tablets are written only for a mastered spell: "
+            f"{character.name} has no Mastery in {spell.name}."
+        ], None
+    level = max(1, spell.level or 0)
+    copies = round_down(20 * latin / level)
+    if copies <= 0:
+        return [
+            f"Latin x 20 = {20 * latin} levels a season: not enough for a level "
+            f"{level} tablet."
+        ], None
+    made = Book(
+        id=_book_id(saga, f"Casting Tablet: {spell.name}"),
+        name=f"Casting Tablet: {spell.name}",
+        type="Casting Tablet",
+        language="Latin",
+        author=character.name,
+        author_id=character.id,
+        owner_kind="character",
+        owner_id=character.id,
+        year_published=plan.year,
+        spell_id=spell.id,
+        spell_name=spell.name,
+    )
+    return [], BookWork(points_gained=1, needed=1, made=made, copies=copies)
+
+
 def _lab_texts(
     saga: Saga, character: Character, plan: SeasonPlan
 ) -> tuple[list[str], BookWork | None]:
@@ -466,10 +508,12 @@ def _lab_texts(
                 "next text."
             ], None
         return [], BookWork(points_gained=1, needed=1, rewritten=done)
+    if plan.activity == WRITE_TABLET:
+        return _write_tablet(saga, character, plan, latin)
     if plan.activity == COPY_TEXTS:
         book = _book(saga, plan.book_id)
-        if book is None or book.type != "Lab Text":
-            return ["Choose the Lab Text to copy."], None
+        if book is None or book.type not in ("Lab Text", "Casting Tablet"):
+            return ["Choose the Lab Text or Casting Tablet to copy."], None
         if not books.can_read(saga, character, book):
             return [f"{character.name} can't get at {book.name}."], None
         if not can_use_lab_text(character, book):

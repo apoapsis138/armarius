@@ -77,6 +77,46 @@ def casting_scores_text(saga: Saga, magus: Character) -> str:
     return "\n".join(lines)
 
 
+#: What a reader needs to cast from a Casting Tablet (DE: an apprentice
+#: whose Arts are opened can, with these).
+TABLET_ARTES_LIBERALES, TABLET_LATIN = 1, 4
+
+
+def tablet_casting_line(saga: Saga, magus: Character, spell: Spell) -> str:
+    """One magus casting a Casting Tablet's spell (markup): the Casting
+    Total before the stress die and what each die gives, by DE's table."""
+    from .rules.book_seasons import ability_score, language_score
+
+    name = escape(magus.name)
+    if (
+        ability_score(magus, "Artes Liberales") < TABLET_ARTES_LIBERALES
+        or language_score(magus, "Latin") < TABLET_LATIN
+    ):
+        return (
+            f"{name}: can't read it (needs Artes Liberales "
+            f"{TABLET_ARTES_LIBERALES} and Latin {TABLET_LATIN})"
+        )
+    aura, realm = home_aura(saga, magus)
+    score = int(
+        casting.tablet_casting_score(magus, spell, aura=aura, aura_realm=realm).total
+    )
+    level = spell.level or 0
+    steps = []
+    for floor, fatigue, warping in casting.TABLET_BANDS:
+        need = level + floor - score
+        text = f"{max(need, 0)}+ {fatigue} Fatigue"
+        if warping:
+            text += f" and {warping} Warping"
+        steps.append(text)
+        if need <= 0:
+            break
+    else:
+        points = casting.magnitude(level)
+        steps.append(f"less: not cast, {points} Warping, 5 Fatigue")
+    kind = "long-term" if spell.ritual else "short-term"
+    return f"{name}: {score} + stress die; " + ", ".join(steps) + f" ({kind})"
+
+
 def known_spell_casting_lines(
     saga: Saga, magus: Character, known: KnownSpell, spell: Spell
 ) -> list[str]:

@@ -103,7 +103,13 @@ def test_every_supplement_activity_names_a_known_book():
 def test_magi_and_companions_plan_every_activity_built_so_far():
     study = [rules.READ, rules.TAUGHT, rules.TEACH, rules.TRAINED]
     writing = [bs.WRITE_SUMMA, bs.WRITE_TRACTATUS, bs.COPY_BOOK, bs.TRANSLATE_BOOK]
-    magus_only = [rules.VIS_STUDY, *writing, bs.REWRITE_TEXTS, bs.COPY_TEXTS]
+    magus_only = [
+        rules.VIS_STUDY,
+        *writing,
+        bs.REWRITE_TEXTS,
+        bs.COPY_TEXTS,
+        bs.WRITE_TABLET,
+    ]
     for character, extra in (
         (
             _magus(),

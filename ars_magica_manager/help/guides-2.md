@@ -163,6 +163,7 @@ Since Plan Season plans only the current season, assistants are added one season
 - A magus's own Lab Texts are written raw: only they, and those who have decoded them or been taught to read them, can use them.
 - To use another magus's raw texts, plan **Decode another magus's Lab Texts** as lab work. If the reading was settled at the table, set it on the reader's sheet instead: **Lab Texts Read** in [Hermetic Background](help:section-hermetic-background) (Description tab) sets the author, the level read to and whether the magus decoded them or was taught.
 - On the author's own sheet, Plan Season offers **Rewrite Lab Texts for general use**, **Copy Lab Texts** and **Teach Lab Text abbreviations**.
+- **Casting Tablets** (DE Chapter Eight) let a magus cast a Formulaic or Ritual spell they don't know. A tablet's details show each magus of its covenant casting from it: Stamina + Technique + Form + Aura before the stress die, and what each die gives -- the total minus the level at 0 or more costs 1 Fatigue level, down to -10 two, -20 three, -30 four and a Warping Point; lower, the spell isn't cast, and the caster takes Warping Points equal to its magnitude and loses five levels (a Ritual's Fatigue is long-term). The author fixed the spell's Range, Duration, Target and vis. Reading one needs Artes Liberales 1 and Latin 4. **Write Casting Tablets** makes them of a spell the magus has mastered, and **Copy Lab Texts** copies them too.
 
 ### Experimenting
 <!-- help: guide-lab-planning-experiment -->

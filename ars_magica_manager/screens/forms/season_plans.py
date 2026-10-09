@@ -10,6 +10,7 @@ from typing import Any
 from ... import books as bk
 from ... import catalog, seasons, sourcebooks
 from ... import lab_texts as lt
+from ... import spells as spl
 from ...markup import escape
 from ...models import Breakthrough, Character, GrogYear, Saga, SeasonPlan, XpAllocation
 from ...rules import activities as season_rules
@@ -50,6 +51,11 @@ def _season_plan_from(
             if activity in (book_seasons.COPY_BOOK, book_seasons.TRANSLATE_BOOK)
             else values.get("text_id")
             if activity == book_seasons.COPY_TEXTS
+            else None
+        ),
+        spell_id=(
+            values.get("tablet_spell_id")
+            if activity == book_seasons.WRITE_TABLET
             else None
         ),
         title=(
@@ -837,12 +843,32 @@ def _book_work_fields(
             options=[
                 (escape(b.name + lt.cant_read_tag(saga, character, b)), b.id)
                 for b in saga.books
-                if b.type == "Lab Text" and bk.can_read(saga, character, b)
+                if b.type in ("Lab Text", "Casting Tablet")
+                and bk.can_read(saga, character, b)
             ],
             allow_blank=True,
             show_if=_activity_is(book_seasons.COPY_TEXTS),
         ),
+        DialogField(
+            "tablet_spell_id",
+            "Spell (mastered)",
+            "select",
+            _attr(existing, "spell_id", None),
+            options=_mastered_spells(saga, character),
+            allow_blank=True,
+            show_if=_activity_is(book_seasons.WRITE_TABLET),
+        ),
     ]
+
+
+def _mastered_spells(saga: Saga, character: Character) -> list[tuple[str, str]]:
+    """The spells the character has mastered, for writing Casting Tablets."""
+    found = []
+    for known in character.spells_known:
+        spell = spl.find_spell(saga, known.spell_id)
+        if spell is not None and known.mastery_score >= 1:
+            found.append((escape(f"{spell.name} ({spl.shorthand(spell)})"), spell.id))
+    return found
 
 
 def _student_and_research_fields(

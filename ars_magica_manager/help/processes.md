@@ -21,7 +21,7 @@ A magus's laboratory work (inventing spells, enchanting, extracting vis, a Longe
 The Activity list offers what this character may do. Activities marked "magi" are offered to magi only.
 
 - **Study and experience:** Work / Exposure, Practice, Read a book, Be taught, Teach, Be trained, Study from vis (magi) and Adventure.
-- **Books:** Write a summa, Write a tractatus, Copy a book, Translate a book, Copy Lab Texts, Rewrite Lab Texts for general use (magi) and Teach Lab Text abbreviations (magi).
+- **Books:** Write a summa, Write a tractatus, Copy a book, Translate a book, Copy Lab Texts (or Casting Tablets), Write Casting Tablets (magi: of a spell they have mastered, Latin x 20 levels a season, as many tablets as that holds), Rewrite Lab Texts for general use (magi) and Teach Lab Text abbreviations (magi).
 - **Apprentices and research (magi):** Search for an apprentice, Open an apprentice's Arts, Teach a Hermetic Virtue and Seek an insight.
 - **Assist in a laboratory:** helping a magus with the lab work they have planned.
 - **Activities from the supplements**, such as Study a significato, Library research or Undergo an Initiation. Library research shows the roll's total before the die: Intelligence + the Ability + the better of the covenant library's research bonus for it and its best encyclopedia's.

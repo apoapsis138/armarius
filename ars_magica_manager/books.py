@@ -865,6 +865,7 @@ def detail_text(saga: Saga, book: Book | None) -> str:
         lines += [problem(escape(w)) for w in limit_warnings(book)]
     lines += [problem(escape(w)) for w in craft_warnings(saga, book)]
     lines += _value_lines(book)
+    lines += _tablet_lines(saga, book)
     lines += _research_lines(saga, book)
     lines += _study_lines(saga, book)
     if book.description.strip():
@@ -883,6 +884,24 @@ def _value_lines(book: Book) -> list[str]:
     return [
         f"[b]Value:[/] {kind} [dim]· price guide: "
         f"{escape(book_value.price_text(book))}[/]"
+    ]
+
+
+def _tablet_lines(saga: Saga, book: Book) -> list[str]:
+    """A Casting Tablet: how each magus who can get at it casts from it
+    (casting_text.tablet_casting_line)."""
+    if book.type != "Casting Tablet":
+        return []
+    spell = book_spell(saga, book)
+    if spell is None or spell.level is None:
+        return []
+    from . import casting_text
+
+    magi = [c for c in readers(saga, book) if c.type == "magus"]
+    if not magi:
+        return []
+    return ["", "[b]Casting from it:[/]"] + [
+        casting_text.tablet_casting_line(saga, magus, spell) for magus in magi
     ]
 
 

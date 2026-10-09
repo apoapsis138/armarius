@@ -41,6 +41,17 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.38.0 — 2026-10-09
+
+- A Casting Tablet's details show each magus of its covenant casting
+  from it: Stamina + Technique + Form + Aura before the stress die, and
+  what each die gives by the Definitive Edition's table, from one Fatigue
+  level down to not casting it, with Warping Points and a Twilight check.
+  Reading a tablet needs Artes Liberales 1 and Latin 4.
+- Write Casting Tablets, a magus's season: tablets of a spell they have
+  mastered, as many as Latin x 20 levels holds. Copy Lab Texts copies
+  Casting Tablets too.
+
 ## 2.37.0 — 2026-10-09
 
 - Library research shows its roll: Intelligence + the Ability + the

@@ -50,6 +50,7 @@ from . import (
     aging,
     apprentice_seasons,
     book_seasons,
+    casting,
     derived,
     dice,
     enchant_seasons,
@@ -474,8 +475,17 @@ ACTIVITIES: dict[str, Activity] = {
         Activity(
             book_seasons.COPY_TEXTS,
             "Copy Lab Texts",
-            "Copying a readable Lab Text: Profession: Scribe x 60 levels a season.",
+            "Copying a readable Lab Text or a Casting Tablet: Profession: "
+            "Scribe x 60 levels a season.",
             book_seasons.LAB_TEXT_SOURCE,
+        ),
+        Activity(
+            book_seasons.WRITE_TABLET,
+            "Write Casting Tablets",
+            "Tablets of a spell you have mastered, from a season's pool of "
+            "Latin x 20 levels: as many as it holds.",
+            casting.TABLET_SOURCE,
+            who=("magus",),
         ),
         Activity(
             book_seasons.TEACH_ABBREVIATIONS,

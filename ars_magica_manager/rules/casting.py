@@ -192,6 +192,69 @@ def ritual_outcome(total: int, level: int) -> Outcome:
     return Outcome(False, 5, long_term=True)
 
 
+TABLET_SOURCE = (
+    "Ars Magica Definitive Edition, Chapter Eight: Laboratory, Casting "
+    "Tablets (https://www.redcap.org/page/Ars_Magica_Definitive_Edition,"
+    "_Chapter_Eight:_Laboratory)"
+)
+
+
+def tablet_casting_score(
+    magus: Character,
+    spell: Spell,
+    *,
+    aura: int = 0,
+    aura_realm: str = realms.HERMETIC,
+) -> Breakdown:
+    """Casting from a Casting Tablet: Stamina + Technique + Form + Aura
+    (with Virtues, Flaws and requisites), no Mastery, vis or words and
+    gestures -- the author fixed the rest. The same for a Ritual."""
+    return casting_score(
+        magus,
+        spell.technique,
+        spell.form,
+        aura=aura,
+        aura_realm=aura_realm,
+        requisites=spell.requisites,
+    )
+
+
+@dataclass(frozen=True)
+class TabletOutcome:
+    cast: bool
+    fatigue: int
+    warping: int = 0
+    #: Two or more Warping Points: a check for Twilight.
+    twilight: bool = False
+    #: A Ritual's Fatigue is long-term; a Formulaic spell's short-term.
+    long_term: bool = False
+
+
+#: Casting Total - spell level: (at least, Fatigue levels, Warping Points);
+#: anything lower fails.
+TABLET_BANDS: tuple[tuple[int, int, int], ...] = (
+    (0, 1, 0),
+    (-10, 2, 0),
+    (-20, 3, 0),
+    (-30, 4, 1),
+)
+
+
+def magnitude(level: int) -> int:
+    """A spell's magnitude: its level / 5, rounded up (at least 1)."""
+    return max(1, -(-level // 5))
+
+
+def tablet_outcome(total: int, level: int, *, ritual: bool = False) -> TabletOutcome:
+    """What casting from a tablet does (the table replaces the usual one)."""
+    margin = total - level
+    for floor, fatigue, warping in TABLET_BANDS:
+        if margin >= floor:
+            return TabletOutcome(True, fatigue, warping, long_term=ritual)
+    points = magnitude(level)
+    return TabletOutcome(False, 5, points, twilight=points >= 2, long_term=ritual)
+
+
 def spontaneous_fatiguing(score: int, die: int) -> int:
     return round_down((score + die) / 2)
 
