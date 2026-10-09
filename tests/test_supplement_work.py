@@ -12,6 +12,7 @@ from ars_magica_manager.models import (
     Book,
     Character,
     Characteristics,
+    Ordeal,
     Saga,
     ScoredTrait,
     SeasonPlan,
@@ -138,17 +139,114 @@ def test_an_initiation_gives_the_virtue_and_counts_the_ordeal():
         teacher_id="c",
         title="Mercere Lore",
         effect_id="vf_adept_laboratory_student",
-        device_id="vf_poor",
+        device_id="vf_ambitious",
         research_kind="Minor",
         other_modifier=12,
     )
     # Presence 2 + Lore 5 + Script 12 = 19 against 18 (Minor, self-initiated).
     wulf = _run(saga, plan)
     ids = [vf.vf_id for vf in wulf.virtues_flaws]
-    assert ids == ["vf_adept_laboratory_student", "vf_poor"]
-    assert (wulf.ordeal, wulf.initiations_since_ordeal) == ("Minor", 0)
+    assert ids == ["vf_adept_laboratory_student", "vf_ambitious"]
+    assert wulf.ordeals == [Ordeal("Minor", 0)]
     # Now he has the Virtue (15), and the Ordeal takes 3 off the next.
     assert sw.initiation_target(saga, wulf, plan) == 12
+
+
+def test_a_mystagogue_has_the_virtue_only_with_what_it_names():
+    saga = _saga()
+    wulf = saga.character("c")
+    assert wulf is not None
+    mystagogue = Character(id="m", name="Mira", type="magus")
+    mystagogue.virtues_flaws = [
+        VirtueFlawInstance("vf_puissant_ability", {"ability": "Latin"})
+    ]
+    saga.characters.append(mystagogue)
+    plan = _plan(
+        "undergo_initiation",
+        subject="",
+        teacher_id="m",
+        effect_id="vf_puissant_ability",
+        effect_params={"ability": "Penetration"},
+    )
+    assert sw.initiation_target(saga, wulf, plan) == 18
+    plan.effect_params = {"ability": "Latin"}
+    assert sw.initiation_target(saga, wulf, plan) == 15
+
+
+def test_the_initiate_needs_the_lore_unless_it_is_their_house_s():
+    saga = _saga()
+    wulf = saga.character("c")
+    assert wulf is not None
+    mira = Character(id="m", name="Mira", type="magus")
+    mira.abilities = [Ability("House Bjornaer Lore", xp=ability_xp(8))]
+    saga.characters.append(mira)
+    plan = _plan(
+        "undergo_initiation",
+        subject="",
+        teacher_id="m",
+        title="House Bjornaer Lore",
+        effect_id="vf_puissant_ability",
+    )
+    assert sw.problems(saga, wulf, plan) == [
+        "Wulf needs House Bjornaer Lore 1 to be Initiated."
+    ]
+    wulf.hermetic.house = "house_bjornaer"
+    assert sw.problems(saga, wulf, plan) == []
+
+
+def test_no_mystagogue_is_a_self_initiation():
+    saga = _saga()
+    plan = _plan(
+        "undergo_initiation",
+        subject="",
+        title="Mercere Lore",
+        effect_id="vf_affinity_with_art",
+        effect_params={"art": "ignem"},
+        other_modifier=11,
+    )
+    # Wulf's own Presence 2 + Mercere Lore 5 + 11 = 18 against 18.
+    assert sw.problems(saga, saga.character("c"), plan) == []
+    wulf = _run(saga, plan)
+    assert wulf.virtues_flaws[-1] == VirtueFlawInstance(
+        "vf_affinity_with_art", {"art": "ignem"}
+    )
+
+
+def test_the_past_ordeal_that_lowers_the_target_most_counts():
+    saga = _saga()
+    wulf = saga.character("c")
+    assert wulf is not None
+    plan = _plan("undergo_initiation", subject="", effect_id="vf_puissant_ability")
+    # A Major Ordeal two Initiations ago (-6), then a Minor one (-3).
+    wulf.ordeals = [Ordeal("Major", 1), Ordeal("Minor", 0)]
+    assert sw.initiation_target(saga, wulf, plan) == 18 - 6
+    wulf.ordeals = [Ordeal("Major", 2), Ordeal("Minor", 1)]
+    assert sw.initiation_target(saga, wulf, plan) == 18 - 3
+
+
+def test_each_initiation_counts_down_every_past_ordeal():
+    saga = _saga()
+    wulf = saga.character("c")
+    assert wulf is not None
+    wulf.ordeals = [Ordeal("Major", 2), Ordeal("Medium", 0)]
+    plan = _plan(
+        "undergo_initiation",
+        subject="",
+        title="Mercere Lore",
+        effect_id="vf_adept_laboratory_student",
+        device_id="vf_ambitious",
+        other_modifier=12,
+    )
+    # The Major Ordeal's third Initiation is spent; the new Minor one joins.
+    wulf = _run(saga, plan)
+    assert wulf.ordeals == [Ordeal("Medium", 1), Ordeal("Minor", 0)]
+
+
+def test_an_older_save_s_last_ordeal_loads_as_one():
+    data = {"id": "c", "name": "Wulf", "type": "companion"}
+    data |= {"ordeal": "Major", "initiations_since_ordeal": 1}
+    assert Character.from_dict(data).ordeals == [Ordeal("Major", 1)]
+    assert Character.from_dict({**data, "ordeal": ""}).ordeals == []
 
 
 def test_wounds_limit_what_a_season_can_be():
@@ -227,15 +325,55 @@ def _with(**changes) -> Saga:
         ({}, _plan("undergo_initiation"), "Choose the Mystery Virtue initiated."),
         (
             {},
+            _plan("undergo_initiation", effect_id="vf_ambitious"),
+            "Ambitious is not a Virtue: choose the Virtue initiated.",
+        ),
+        (
+            {},
             _plan("undergo_initiation", effect_id="vf_puissant_ability"),
-            "Choose the Mystagogue (the Initiate for self-initiation).",
+            "Name the Mystagogue's (Mystery Cult) Lore.",
         ),
         (
             {},
             _plan(
-                "undergo_initiation", effect_id="vf_puissant_ability", teacher_id="c"
+                "undergo_initiation",
+                effect_id="vf_puissant_ability",
+                title="Mithraic Lore",
             ),
-            "Name the Mystagogue's (Mystery Cult) Lore.",
+            "Wulf doesn't know Mithraic Lore.",
+        ),
+        (
+            {},
+            _plan(
+                "undergo_initiation",
+                effect_id="vf_puissant_ability",
+                title="Mercere Lore",
+                device_id="vf_adept_laboratory_student",
+            ),
+            "Adept Laboratory Student is not a Flaw: choose the Ordeal Flaw.",
+        ),
+        (
+            {},
+            _plan(
+                "undergo_initiation",
+                effect_id="vf_puissant_ability",
+                title="Mercere Lore",
+                device_id="vf_ambitious",
+                research_kind="Medium",
+            ),
+            "A Minor Flaw is a Minor Ordeal.",
+        ),
+        (
+            {},
+            _plan(
+                "undergo_initiation",
+                effect_id="vf_puissant_ability",
+                title="Mercere Lore",
+                device_id="vf_poor",
+                research_kind="Minor",
+            ),
+            "A Major Flaw is a Major Ordeal, or Medium when it raises a related "
+            "Minor Flaw.",
         ),
         (
             {},
@@ -418,20 +556,26 @@ def test_initiation_against_the_target_less_a_past_ordeal():
     plan = _plan(
         "undergo_initiation",
         effect_id="vf_puissant_ability",
+        effect_params={"ability": "Penetration"},
         teacher_id="c",
         title="Mithraic Lore",
         other_modifier=12,
         device_id="vf_deficient_technique",
+        ordeal_params={"technique": "Creo"},
         research_kind="Medium",
     )
     done = _work(saga, plan)
     assert (done.add_vfs, done.ordeal) == (
-        ["vf_puissant_ability", "vf_deficient_technique"],
+        [
+            VirtueFlawInstance("vf_puissant_ability", {"ability": "Penetration"}),
+            VirtueFlawInstance("vf_deficient_technique", {"technique": "Creo"}),
+        ],
         "Medium",
     )
+    assert not sw.problems(saga, wulf, plan)
     plan.other_modifier = 0
     assert _work(saga, plan).notes[-1].endswith("against 18: not initiated.")
-    wulf.ordeal, wulf.initiations_since_ordeal = "Major", 1
+    wulf.ordeals = [Ordeal("Major", 1)]
     assert _work(saga, plan).notes[-1].endswith("against 12: not initiated.")
 
 

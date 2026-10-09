@@ -38,6 +38,7 @@ from ars_magica_manager.models import (
     MasteryAbility,
     Modifier,
     NamedDescription,
+    Ordeal,
     Player,
     Possession,
     Progress,
@@ -348,6 +349,7 @@ def _saga_with_every_record() -> Saga:
     magus.spells_known[0].mastery_abilities.append(MasteryAbility("Fast Casting"))
     magus.breakthroughs.append(Breakthrough("Holistic"))
     magus.progress.append(Progress("vis", "Study"))
+    magus.ordeals.append(Ordeal("Minor"))
     magus.creation_xp.append(CreationXp("later_life", "ability:Latin", 5))
     magus.lab_text_access["x"] = LabTextAccess(15, "decoded")
     magus.grog_year = GrogYear()

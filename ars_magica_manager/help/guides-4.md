@@ -73,6 +73,56 @@ Deleting the magus also deletes their familiar, and exporting the magus takes th
 
 **See also:** [Familiar sheet](help:familiar), [Binding & Cords](help:section-fam-binding), [Bond Powers tab](help:tab-fam-powers), [Planning tab](help:tab-lab-planning), [Invent Spell screen](help:invent-spell), [Advancing a season](help:advance-season)
 
+# How to initiate a character into a Mystery
+<!-- help: guide-initiation -->
+
+This guide follows a Mystery Initiation from the Script to the new Virtue on the Initiate's sheet. Use it when a character joins a Mystery cult, takes the next step in their House's Mysteries, or initiates themselves into a Virtue. The rules are in Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Mystery Initiation; The Mysteries Revised Edition and Houses of Hermes: Mystery Cults give the full treatment, and the Definitive Edition wins where they differ.
+
+### Before the season
+<!-- help: guide-initiation-before -->
+
+An Initiation needs three things, settled at the table first:
+
+- **A Mystagogue** who knows the cult's Lore (House Bjornaer Lore, Mithraic Lore and so on). A character can be their own Mystagogue: a self-initiation uses the Initiate's own scores.
+- **The Lore.** The Initiate needs the same Lore at 1 or more, unless it is the Lore of their own House. Add it on the [Abilities tab](help:tab-abilities) (`2`) once they have learnt it, for example with a season of Be taught.
+- **A Script**, written like a Lab Text. Its bonus is the sum of its components, as the storyguide agrees them: +3 for a special place at a special time, +3 for each Quest, +1 for serving the cult (once), +1 for a sacrifice of wealth, +3 to +6 for a sacrifice of something of great value, and the Ordeal's +3 (a Minor Flaw, or losing a Minor Virtue), +6 (raising a Minor Flaw to Major) or +9 (a Major Flaw, or losing a Major Virtue). Quests and other sacrifices are played out in their own seasons or stories.
+
+### Planning the Initiation
+<!-- help: guide-initiation-plan -->
+
+The Initiation is the Initiate's season, planned like any other.
+
+1. Open the Initiate's sheet and their Planning tab (`6` for a magus, `5` for anyone else), and press `e` in [This Season](help:section-char-season). A covenant's [Seasons tab](help:tab-cov-seasons) opens the same form.
+2. In **Activity**, choose **Undergo an Initiation**.
+3. In **Teacher / master**, choose the Mystagogue. Leave it blank for a self-initiation.
+4. Type the **Script bonus** and the **Mystagogue's Lore**, spelt as it is on the Mystagogue's Abilities tab.
+5. Choose **Virtue initiated**. It opens the Virtues & Flaws picker on Virtues: search, filter by type or tier, and press Enter. A Virtue that names something, such as Affinity with an Art or Puissant with an Ability, asks for it.
+6. If the Script has an Ordeal that gains a Flaw, choose **Ordeal Flaw** the same way. **Ordeal size** follows the Flaw's tier; set it to Medium when the Flaw raises a related Minor Flaw to Major. Delete on a chosen field clears it.
+7. Watch the line above Save. It shows the Initiation Total (the Mystagogue's Presence + Lore + Script bonus) against the Target Level, and whether the Initiation will succeed. Save refuses a plan that is missing something or breaks a rule, and says why.
+
+There is no die: the Initiation succeeds when the total reaches the Target Level. The Target is 15 for a Minor Virtue and 21 for a Major one, or 18 and 30 when the Mystagogue doesn't have the Virtue (always so for a self-initiation into a Virtue the character lacks).
+
+### When the season is advanced
+<!-- help: guide-initiation-advance -->
+
+Press `t` to [advance the season](help:advance-season). For a successful Initiation, the app adds the Virtue (with what it names) and the Ordeal Flaw to the Initiate's [Virtues & Flaws tab](help:tab-vf), and a Great Characteristic Virtue also raises the score. A failed Initiation adds nothing, and Ordeal Flaws are not gained: the Mystagogue sees that a Script will fail before any sacrifice is made. Either way, the Diary records the Initiation Total against the Target.
+
+### Past Ordeals make later Initiations easier
+<!-- help: guide-initiation-ordeals -->
+
+An Ordeal lowers the Target Level of the Initiate's next three Initiations, never below 9: by 3, 3 and 1 after a Minor Ordeal, 6, 4 and 2 after a Medium one, and 9, 6 and 3 after a Major one. It doesn't help the Initiation it was suffered in. When the Initiate has suffered several, only the one that lowers the Target most counts: a Major Ordeal followed by a Minor one still takes 6 off the next Initiation. The app keeps every Ordeal and counts each one down, and the Initiate's [This Season](help:section-char-season) section lists the past Ordeals still counting and what they take off the next Target. Flaws taken at character creation don't count as Ordeals.
+
+### What the app works out, and what it doesn't
+<!-- help: guide-initiation-limits -->
+
+**The app works out:** the Initiation Total and Target Level, whether the Mystagogue has the Virtue, the largest reduction among past Ordeals, the checks on the Lore and the Ordeal size, and the Virtue and Flaw added on success.
+
+**You type:** the Script bonus, as the storyguide agrees it. Varying a Script or experimenting with a new one is rolled at the table; type the Script bonus that results. Ordeals that take away a Virtue, or raise a Minor Flaw to Major, are applied by hand on the Virtues & Flaws tab. Months lost to distraction during the Initiation are not counted.
+
+A Mystagogue who spends a whole season on the Script (teaching a Supernatural Ability, say) plans **Act as Mystagogue**, and a season spent on a Quest is **Serve a Mystagogue / Quest season**; both need The Mysteries Revised Edition in play.
+
+**See also:** [Plan Season](help:plan-season), [Virtues & Flaws tab](help:tab-vf), [Advancing a season](help:advance-season), [How the app handles advancement](help:guide-advancement)
+
 # How to import and export
 <!-- help: guide-import-export -->
 

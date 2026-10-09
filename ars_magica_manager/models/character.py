@@ -183,6 +183,20 @@ class HermeticBackground:
 
 
 @dataclass
+class Ordeal:
+    """An Ordeal suffered in a Mystery Initiation: its size ("Minor",
+    "Medium" or "Major") and the Initiations undergone since, which it makes
+    easier until the third."""
+
+    size: str
+    initiations_since: int = 0
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Ordeal:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
 class Progress:
     """Progress carried from season to season on something a character is
     working at: an excellent item, a pilgrimage, taming
@@ -352,15 +366,14 @@ class Character:
     grog_year: GrogYear | None = None
     #: The supplements' sub-systems: Labor Points and a
     #: workshop's scores (City & Guild), progress records, experimental
-    #: philosophy formulas known, and the last Ordeal (its size, and the
-    #: Initiations since).
+    #: philosophy formulas known, and the Ordeals still lowering the Target
+    #: of a later Initiation.
     labor_points: int = 0
     workshop_innovation: int = 0
     workshop_raw_materials: int = 0
     progress: list[Progress] = field(default_factory=list)
     formulas: list[str] = field(default_factory=list)
-    ordeal: str = ""
-    initiations_since_ordeal: int = 0
+    ordeals: list[Ordeal] = field(default_factory=list)
     #: Being created by the book: the creation checks run and
     #: the Creation Worksheet is offered. New records start In Creation;
     #: older saves load In Play (False).
@@ -419,6 +432,12 @@ class Character:
         if d.get("grog_year") is not None:
             d["grog_year"] = GrogYear.from_dict(d["grog_year"])
         d["progress"] = [Progress.from_dict(p) for p in d.get("progress", [])]
+        d["ordeals"] = [Ordeal.from_dict(o) for o in d.get("ordeals", [])]
+        # Older saves kept only the last Ordeal.
+        if d.get("ordeal"):
+            d["ordeals"].append(
+                Ordeal(d["ordeal"], d.get("initiations_since_ordeal", 0))
+            )
         d["creation_conditions"] = CreationConditions(
             **known_fields(CreationConditions, d.get("creation_conditions") or {})
         )

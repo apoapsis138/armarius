@@ -601,7 +601,8 @@ class SpellListView(Vertical):
         super().__init__()
         self.saga = saga
         self._all: list[Spell] = spl.all_spells(saga)
-        self._shown: list[Spell] = list(self._all)
+        #: Before any filter is set: the spells in play.
+        self._shown: list[Spell] = spl.filter_spells(saga, self._all)
 
     def compose(self) -> ComposeResult:
         arts_blank = "(any)"
@@ -614,7 +615,10 @@ class SpellListView(Vertical):
                 )
                 yield Select(
                     [(f"{key} - {name}", key) for key, name in spl.catalog_sources()]
-                    + [("The saga's own", spl.OWN_SOURCE)],
+                    + [
+                        ("The saga's own", spl.OWN_SOURCE),
+                        ("Not in play", spl.OUT_OF_PLAY_SOURCE),
+                    ],
                     prompt="Source: any",
                     id="spell-source",
                     compact=True,

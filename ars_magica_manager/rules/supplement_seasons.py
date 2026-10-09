@@ -30,6 +30,14 @@ SOCIETATES = "Houses of Hermes: Societates " + _CH.format(
     "Houses_of_Hermes:_Societates"
 )
 LORDS = "Lords of Men " + _CH.format("Lords_of_Men")
+DE_INITIATION = (
+    "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Mystery "
+    "Initiation "
+    + _CH.format(
+        "Ars_Magica_Definitive_Edition,_Chapter_Ten:_Long-Term_Events"
+        "#Mystery_Initiation"
+    )
+)
 DE_TAMING = (
     "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Taming "
     "Animals "
@@ -41,6 +49,7 @@ DE_TAMING = (
 _BOOKS: dict[str, str] = {
     SOURCE: "DE",
     DE_TAMING: "DE",
+    DE_INITIATION: "DE",
     COVENANTS: "Covenants",
     CHURCH: "TC",
     CITY_GUILD: "C&G",
@@ -153,9 +162,9 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
     SimpleActivity(
         "undergo_initiation",
         "Undergo an Initiation",
-        "The Initiate's whole season: a Mystery Virtue (and the Ordeal), "
-        "added by hand.",
-        MYSTERIES,
+        "The Initiate's whole season: the Mystery Virtue, and any Ordeal "
+        "Flaw, are added when the Initiation succeeds.",
+        DE_INITIATION,
         "918",
         no_xp=True,
     ),

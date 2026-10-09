@@ -161,6 +161,11 @@ class SeasonPlan:
     experiment_die: int | None = None
     research: str = ""
     research_kind: str = "Minor"
+    #: Undergoing an Initiation: what the Virtue initiated (effect_id) and
+    #: the Ordeal Flaw (device_id) name, as the picker asked for it
+    #: ({"art": "Ignem"}); the Ordeal's size is research_kind.
+    effect_params: dict[str, str] = field(default_factory=dict)
+    ordeal_params: dict[str, str] = field(default_factory=dict)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> SeasonPlan:

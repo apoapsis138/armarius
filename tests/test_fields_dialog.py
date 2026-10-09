@@ -305,3 +305,17 @@ async def test_fills_suggests_other_fields_when_the_user_changes_it():
         dialog.query_one("#btn-save").press()
         await wait_until(pilot, lambda: app.result != "not dismissed")
     assert app.result["size"] == 4
+
+
+async def test_delete_clears_a_picker_field_that_may_be_blank():
+    fields = [
+        DialogField("must", "Must", "picker", "kept", display=str),
+        DialogField("may", "May", "picker", "gone", allow_blank=True, display=str),
+    ]
+    dialog, app = await _open(fields)
+    async with app.run_test(size=(100, 40)) as pilot:
+        await wait_until(pilot, lambda: dialog.is_mounted)
+        for key in ("must", "may"):
+            dialog.query_one(f"#fld-{key}").focus()
+            await pilot.press("delete")
+        assert dialog.current_values() == {"must": "kept", "may": None}

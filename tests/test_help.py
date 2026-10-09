@@ -253,6 +253,7 @@ GUIDES = [
     "guide-getting-started",
     "guide-creation",
     "guide-familiars",
+    "guide-initiation",
     "guide-import-export",
     "guide-hosting",
 ]

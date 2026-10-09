@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from dataclasses import field as dataclass_field
 from typing import Any, ClassVar, cast, overload
 
+from textual import events
 from textual.app import ComposeResult
 from textual.binding import Binding, BindingType
 from textual.containers import Horizontal, Vertical, VerticalScroll
@@ -121,7 +122,8 @@ class DialogField:
     among them is offered as "... (not in the list)"), "check" (a boolean),
     "area" (multi-line text, trailing whitespace dropped), "picker" (a button showing `display(value)`
     that opens the screen `picker(value)` returns; its result becomes the
-    value) or "info" (read-only text, not returned).
+    value; Delete clears it when `allow_blank`) or "info" (read-only text,
+    not returned).
     """
 
     key: str
@@ -569,6 +571,23 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         self._react()
 
     def on_checkbox_changed(self, event: Checkbox.Changed) -> None:
+        self._react()
+
+    def on_key(self, event: events.Key) -> None:
+        """Delete or Backspace on a "picker" field that may be blank clears
+        it."""
+        if event.key not in ("delete", "backspace"):
+            return
+        focused = self.focused
+        if not isinstance(focused, Button) or not focused.has_class("fd-picker"):
+            return
+        key = (focused.id or "").removeprefix("fld-")
+        spec = next((f for f in self.fields if f.key == key), None)
+        if spec is None or not spec.allow_blank:
+            return
+        event.stop()
+        self._picked[key] = None
+        focused.label = self._picker_label(spec)
         self._react()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:

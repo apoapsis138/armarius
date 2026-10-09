@@ -306,6 +306,53 @@ def test_filters_narrow_the_list_and_combine():
     assert "Pilum of Fire" in both and "Ball of Abysmal Flame" not in both
 
 
+def test_only_spells_in_play_are_listed_unless_asked_for():
+    saga, own = _saga_with_own_spell()
+    saga.books_in_play = []  # the core book only
+    everything = sp.all_spells(saga)
+    by_id = catalog.load_spell_catalog_by_id()
+    pilum, other = (
+        by_id["spell_pilum_of_fire"],
+        next(s for s in everything if "DE" not in sourcebooks.books_of(s.source)),
+    )
+    assert sourcebooks.books_of(pilum.source) == {"DE"}
+    listed = sp.filter_spells(saga, everything)
+    assert pilum in listed and own in listed and other not in listed
+    assert sp.out_of_play(saga, other) == "book not in play"
+    # "Not in play" lists the rest; a book's own Source lists it anyway.
+    out = sp.filter_spells(saga, everything, source=sp.OUT_OF_PLAY_SOURCE)
+    assert other in out and pilum not in out and own not in out
+    book = next(iter(sourcebooks.books_of(other.source)))
+    assert other in sp.filter_spells(saga, everything, source=book)
+    assert "(not in play)" in sp.row_label(saga, other)
+    assert "Not in play" in sp.detail_text(saga, other)
+    assert "(not in play)" not in sp.row_label(saga, pilum)
+    # Hidden on Saga Content counts as out of play too.
+    saga.books_in_play = None
+    saga.hidden_entries = {"spells": [pilum.id]}
+    catalog.use_saga(saga)
+    try:
+        assert sp.out_of_play(saga, pilum) == "hidden in this saga"
+        assert pilum not in sp.filter_spells(saga, everything)
+    finally:
+        catalog.use_saga(None)
+
+
+def test_a_known_spell_from_a_book_out_of_play_stays_marked():
+    saga, _ = _saga_with_own_spell()
+    saga.books_in_play = []
+    other = next(
+        s
+        for s in catalog.load_spell_catalog()
+        if "DE" not in sourcebooks.books_of(s.source)
+    )
+    magus = Character(id="m", name="M", type="magus")
+    magus.spells_known.append(KnownSpell(other.id))
+    saga.characters.append(magus)
+    [(_, label)] = st.known_spell_rows(saga, magus)
+    assert other.name[:20] in label and "(not in play)" in label
+
+
 def test_rows_line_up_with_the_header_and_mark_the_saga_own():
     saga, own = _saga_with_own_spell()
     header = sp.table_header()

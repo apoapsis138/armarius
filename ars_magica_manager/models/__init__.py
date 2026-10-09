@@ -31,6 +31,7 @@ from .character import Description as Description
 from .character import GrogYear as GrogYear
 from .character import HermeticBackground as HermeticBackground
 from .character import LabTextAccess as LabTextAccess
+from .character import Ordeal as Ordeal
 from .character import Progress as Progress
 from .character import ScoredTrait as ScoredTrait
 from .character import Wounds as Wounds

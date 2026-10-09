@@ -22,6 +22,7 @@ from ..models import (
     KnownSpell,
     Laboratory,
     LabProject,
+    Ordeal,
     Progress,
     Saga,
     SeasonPlan,
@@ -32,6 +33,7 @@ from ..models import (
 )
 from ..rules import activities as rules
 from ..rules import book_seasons as bs
+from ..rules import creation_characteristics as cch
 from ..rules import enchant_seasons as es
 from ..rules import experiment as ex
 from ..rules import familiar_seasons as fs
@@ -333,14 +335,18 @@ def apply_supplement(
             )
     for book in work.books:
         saga.books.append(_copy_book(saga, book))
-    for vf_id in work.add_vfs:
-        if vf_id:
-            character.virtues_flaws.append(VirtueFlawInstance(vf_id))
+    for instance in work.add_vfs:
+        if instance.vf_id:
+            character.virtues_flaws.append(instance)
+            cch.apply_virtue(saga, character, instance)
     if plan.activity == "undergo_initiation":
+        # This Initiation used up a step of each past Ordeal's reduction;
+        # one past its third Initiation lowers nothing more.
+        for ordeal in character.ordeals:
+            ordeal.initiations_since += 1
+        character.ordeals = [o for o in character.ordeals if o.initiations_since < 3]
         if work.ordeal:
-            character.ordeal, character.initiations_since_ordeal = work.ordeal, 0
-        elif character.ordeal:
-            character.initiations_since_ordeal += 1
+            character.ordeals.append(Ordeal(work.ordeal))
     if work.summa_level is not None:
         book_id, level = work.summa_level
         book = next((b for b in saga.books if b.id == book_id), None)

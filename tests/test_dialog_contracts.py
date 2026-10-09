@@ -44,6 +44,7 @@ from ars_magica_manager.models import (
     LabTextAccess,
     Possession,
     Saga,
+    VirtueFlawInstance,
 )
 from ars_magica_manager.screens import SelectableList
 
@@ -75,6 +76,16 @@ class Contract:
     #: before saving (a live line worked out from them).
     live: dict[str, str] = field(default_factory=dict)
 
+
+#: A self-initiation into Affinity with Ignem, with a Major Ordeal.
+_INITIATION = {
+    "Activity": "undergo_initiation",
+    "Script bonus": "12",
+    "Mystagogue's Lore": "Mercere Lore",
+    "Virtue initiated": VirtueFlawInstance("vf_affinity_with_art", {"art": "ignem"}),
+    "Ordeal Flaw": VirtueFlawInstance("vf_deficient_technique", {"technique": "creo"}),
+    "Ordeal size": "Major",
+}
 
 #: A Resolved Story Event linked to the covenant's Hidden Resources Boon.
 _HIDDEN_STORY = {
@@ -749,6 +760,39 @@ CONTRACTS: dict[str, Contract] = {
         ],
         expected=[("practice", ["ability:Latin"], "Reading aloud")],
         invalid={"Months lost": "-"},
+    ),
+    "plan an initiation": Contract(
+        prefill={"Activity": "exposure", "Months lost": "0", "Notes": ""},
+        edits=_INITIATION,
+        saved=lambda s: [
+            (
+                p.activity,
+                p.title,
+                p.other_modifier,
+                p.effect_id,
+                p.effect_params,
+                p.device_id,
+                p.ordeal_params,
+                p.research_kind,
+            )
+            for p in s.season_plans
+        ],
+        expected=[
+            (
+                "undergo_initiation",
+                "Mercere Lore",
+                12,
+                "vf_affinity_with_art",
+                {"art": "ignem"},
+                "vf_deficient_technique",
+                {"technique": "creo"},
+                "Major",
+            )
+        ],
+        invalid=[
+            {**_INITIATION, "Virtue initiated": None},
+            {**_INITIATION, "Ordeal size": "Minor"},
+        ],
     ),
     "add character diary entry": Contract(
         prefill={"Year": "1220", "Season": "Autumn", "Name": ""},

@@ -223,7 +223,9 @@ saga's own spells. The picker shows the highlighted spell's details under the
 list, description included, so you can compare spells before choosing. `e` edits the spell's Mastery, its score and XP and the
 Mastery Abilities. The details panel shows the spell and what the magus
 casts it at. Share Spell in More (`m`) makes a spell the magus invented
-available to the whole saga.
+available to the whole saga. The picker offers only spells from books in
+play (F3 shows the rest); a spell already known from a book that goes out
+of play stays, marked "(not in play)".
 
 ### Research Goals
 <!-- help: section-research-goals -->
@@ -307,8 +309,11 @@ update instead, applied in Winter.
 The plan for the current season, named in the title, and what it gives.
 `a` or `e` plans the season or changes the plan, and `d` clears the plan
 after asking. Some results, such as a die roll, are only settled when the
-season is applied. For a grog, `e` sets up the yearly update (Grogs,
-Chapter 5).
+season is applied. Below the plan it lists what the character carries
+from season to season: Labor Points, works in progress, formulas and the
+past Ordeals still lowering an Initiation's Target (see
+[How to initiate a character into a Mystery](help:guide-initiation)). For
+a grog, `e` sets up the yearly update (Grogs, Chapter 5).
 
 ## Diary tab
 <!-- help: tab-diary -->

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import replace
+from functools import partial
 from typing import Any
 
 from ... import book_kinds, catalog, seasons, sourcebooks
@@ -12,17 +13,27 @@ from ... import books as bk
 from ... import lab_texts as lt
 from ... import spells as spl
 from ...markup import escape
-from ...models import Breakthrough, Character, GrogYear, Saga, SeasonPlan, XpAllocation
+from ...models import (
+    Breakthrough,
+    Character,
+    GrogYear,
+    Saga,
+    SeasonPlan,
+    VirtueFlawInstance,
+    XpAllocation,
+)
 from ...rules import activities as season_rules
 from ...rules import (
     apprentice_seasons,
     book_seasons,
+    creation_characteristics,
     experiment,
     laboratory_seasons,
     supplement_seasons,
 )
 from ...seasons import plans as season_plans_text
 from ..fields import _EMPHASIS_HINT, DialogField, FieldsDialog, _attr
+from ..pickers import VirtueFlawPickerScreen
 
 
 def _season_plan_from(
@@ -111,7 +122,7 @@ def _season_plan_from(
         effect_id=(
             values.get("virtue_id")
             if activity == apprentice_seasons.TEACH_VIRTUE
-            else values.get("mystery_virtue")
+            else _vf_id(values.get("mystery_virtue"))
             if activity == "undergo_initiation"
             else None
         ),
@@ -254,11 +265,70 @@ def _supplement_plan_values(activity: str, values: dict[str, Any]) -> dict[str, 
     if activity == "produce_remedies":
         found["extra_vis"] = values.get("doses") or 1
     if activity == "undergo_initiation":
-        found["device_id"] = values.get("ordeal_flaw")
+        virtue, flaw = values.get("mystery_virtue"), values.get("ordeal_flaw")
+        found["effect_params"] = dict(virtue.params) if virtue else {}
+        found["device_id"] = flaw.vf_id if flaw else None
+        found["ordeal_params"] = dict(flaw.params) if flaw else {}
         found["research_kind"] = values.get("ordeal_size") or "Minor"
     if activity == "inspeximus":
         found["book_id"] = values.get("summa_id")
     return found
+
+
+def _vf_id(instance: VirtueFlawInstance | None) -> str | None:
+    return instance.vf_id if instance else None
+
+
+def _vf_picker_field(
+    key: str,
+    label: str,
+    saga: Saga,
+    character: Character,
+    side: str,
+    value: VirtueFlawInstance | None,
+    show_if: Callable[[dict[str, Any]], bool],
+    fills: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
+) -> DialogField:
+    """A field choosing a Virtue or Flaw (`side`) for `character` from the
+    catalog picker, which asks for anything it names; Delete clears it."""
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+
+    def display(instance: VirtueFlawInstance) -> str:
+        definition = by_id.get(instance.vf_id)
+        tier = f" ({definition.tier})" if definition else ""
+        return catalog.describe_virtue_flaw(instance, by_id) + tier
+
+    def picker(_current: Any) -> VirtueFlawPickerScreen:
+        books = sourcebooks.saga_books(saga)
+        return VirtueFlawPickerScreen(
+            character.virtues_flaws,
+            side=side,
+            chooser=catalog.VirtueFlawChooser.for_character(character, books),
+            own_abilities=[a.name for a in character.abilities],
+            refusal=partial(creation_characteristics.virtue_refusal, saga, character),
+        )
+
+    return DialogField(
+        key,
+        label,
+        "picker",
+        value,
+        allow_blank=True,
+        placeholder=f"(choose the {side}...)",
+        picker=picker,
+        display=display,
+        show_if=show_if,
+        fills=fills,
+    )
+
+
+def _ordeal_size(values: dict[str, Any]) -> dict[str, Any]:
+    """The Ordeal size a newly chosen Flaw suggests: its tier."""
+    flaw = values.get("ordeal_flaw")
+    definition = (
+        catalog.load_virtue_flaw_catalog_by_id().get(flaw.vf_id) if flaw else None
+    )
+    return {"ordeal_size": definition.tier} if definition else {}
 
 
 def _supplement_fields(
@@ -272,7 +342,6 @@ def _supplement_fields(
     level = plan.book_level if plan else None
     bonus = plan.other_modifier if plan else 0
     title = plan.title if plan else ""
-    catalog_vfs = catalog.load_virtue_flaw_catalog()
     return [
         DialogField(
             "characteristic",
@@ -417,23 +486,28 @@ def _supplement_fields(
             placeholder="e.g. Mercere Lore",
             show_if=activity_is("undergo_initiation"),
         ),
-        DialogField(
+        _vf_picker_field(
             "mystery_virtue",
             "Virtue initiated",
-            "select",
-            plan.effect_id if plan else None,
-            options=[(escape(e.name), e.id) for e in catalog_vfs if e.type == "Virtue"],
-            allow_blank=True,
+            saga,
+            character,
+            "Virtue",
+            VirtueFlawInstance(plan.effect_id, dict(plan.effect_params))
+            if plan and plan.effect_id
+            else None,
             show_if=activity_is("undergo_initiation"),
         ),
-        DialogField(
+        _vf_picker_field(
             "ordeal_flaw",
             "Ordeal Flaw (if any)",
-            "select",
-            plan.device_id if plan else None,
-            options=[(escape(e.name), e.id) for e in catalog_vfs if e.type == "Flaw"],
-            allow_blank=True,
+            saga,
+            character,
+            "Flaw",
+            VirtueFlawInstance(plan.device_id, dict(plan.ordeal_params))
+            if plan and plan.device_id
+            else None,
             show_if=activity_is("undergo_initiation"),
+            fills=_ordeal_size,
         ),
         DialogField(
             "ordeal_size",
@@ -746,7 +820,8 @@ def _study_fields(
                 "record_lectures",
             ),
             hint="A teacher plans Teach for the same season; the magus you "
-            "assist plans lab work.",
+            "assist plans lab work. An Initiation's Mystagogue: none for a "
+            "self-initiation.",
         ),
     ]
     return [f for f in fields if f.key not in hidden]

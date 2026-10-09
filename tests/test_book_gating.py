@@ -85,6 +85,9 @@ def test_supplement_activities_leave_the_menu_with_their_book():
         "integrate_insight",
     ):
         assert key not in offered
+    # The Definitive Edition's own Mystery Initiation stays.
+    assert "undergo_initiation" in offered
+    assert "quest_season" not in offered
     # A plan already using one keeps it.
     kept = activities.activities_for(magus, books=core, keep="translate_book")
     assert "translate_book" in {a.key for a in kept}

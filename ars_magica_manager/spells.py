@@ -261,6 +261,9 @@ _SHORT_NAMES = {
 
 #: The Source filter's value for the saga's own spells.
 OWN_SOURCE = "__own__"
+#: The Source filter's value for the catalog spells the saga leaves out:
+#: from books not in play, or hidden on Saga Content.
+OUT_OF_PLAY_SOURCE = "__out__"
 
 
 def source_text(spell: Spell) -> str:
@@ -288,6 +291,19 @@ def is_own(saga: Saga, spell: Spell) -> bool:
     return any(s is spell for s in saga.spells)
 
 
+def out_of_play(saga: Saga, spell: Spell) -> str:
+    """Why the saga leaves a catalog spell out ("book not in play", "hidden
+    in this saga"), or "" if it's in play. The saga's own spells always
+    are."""
+    if is_own(saga, spell):
+        return ""
+    if not sourcebooks.in_play(spell.source, sourcebooks.saga_books(saga)):
+        return "book not in play"
+    if catalog.hidden(spell):
+        return "hidden in this saga"
+    return ""
+
+
 def filter_spells(
     saga: Saga,
     spells: list[Spell],
@@ -303,8 +319,10 @@ def filter_spells(
     """The spells that pass every filter given. `text` matches the name or the
     description, every word of it (in any order, any case). `form` also
     matches a requisite Form, `technique` a requisite Technique. A General
-    spell passes any level range. `source` is a sourcebooks key, or
-    OWN_SOURCE for the saga's own."""
+    spell passes any level range. `source` is a sourcebooks key (that
+    book's spells, in play or not), OWN_SOURCE for the saga's own, or
+    OUT_OF_PLAY_SOURCE for the spells the saga leaves out; with no source,
+    only the spells in play pass."""
     words = text.lower().split()
     shown = []
     for spell in spells:
@@ -320,9 +338,13 @@ def filter_spells(
             continue
         if source == OWN_SOURCE and not is_own(saga, spell):
             continue
+        if source in (None, OWN_SOURCE) and out_of_play(saga, spell):
+            continue
+        if source == OUT_OF_PLAY_SOURCE and not out_of_play(saga, spell):
+            continue
         if (
             source
-            and source != OWN_SOURCE
+            and source not in (OWN_SOURCE, OUT_OF_PLAY_SOURCE)
             and (
                 is_own(saga, spell) or source not in sourcebooks.books_of(spell.source)
             )
@@ -371,11 +393,12 @@ def row_label(saga: Saga, spell: Spell) -> str:
         else "/".join(_short(v) for v in (spell.range, spell.duration, spell.target))
     )
     source = "Saga" if is_own(saga, spell) else spell.source
-    return (
+    row = (
         f"{escape(fit(spell.name, _NAME_WIDTH))} {escape(fit(arts(spell), _ARTS_WIDTH))}"
         f"{level:>{_LEVEL_WIDTH}}  {escape(fit(rdt, _RDT_WIDTH))} "
         f"{('Ritual' if spell.ritual else ''):<{_RITUAL_WIDTH}}{escape(source)}"
     )
+    return f"{row}  [dim](not in play)[/]" if out_of_play(saga, spell) else row
 
 
 def design_text(spell: Spell) -> str:
@@ -455,6 +478,11 @@ def detail_text(saga: Saga, spell: Spell | None) -> str:
     else:
         lines.append(
             f"[dim]From {escape(source_text(spell))} (catalog spell, read-only).[/]"
+        )
+    if why := out_of_play(saga, spell):
+        lines.append(
+            f"[b]Not in play[/] ({why}): the saga's pickers leave it out; "
+            "a magus who knows it keeps it."
         )
     if spell.description.strip():
         lines += ["", escape(spell.description.strip())]

@@ -23,7 +23,14 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from .. import book_kinds, book_value, catalog
-from ..models import Book, Character, Progress, Saga, SeasonPlan
+from ..models import (
+    Book,
+    Character,
+    Progress,
+    Saga,
+    SeasonPlan,
+    VirtueFlawInstance,
+)
 from . import dice
 from .rounding import round_down, round_up
 
@@ -115,7 +122,7 @@ class SupplementWork:
     #: Progress made: (kind, name, target, points); a record is made if new.
     progress: list[tuple[str, str, int, int]] = field(default_factory=list)
     books: list[Book] = field(default_factory=list)
-    add_vfs: list[str] = field(default_factory=list)
+    add_vfs: list[VirtueFlawInstance] = field(default_factory=list)
     formulas: list[str] = field(default_factory=list)
     innovation: int = 0
     raw_materials: int = 0
@@ -180,15 +187,77 @@ def quality_for(total: int, craft_level: int) -> str:
 
 
 def initiation_target(saga: Saga, character: Character, plan: SeasonPlan) -> int:
-    by_id = {e.id: e for e in catalog.load_virtue_flaw_catalog()}
-    virtue = by_id.get(plan.effect_id or "")
+    virtue = catalog.load_virtue_flaw_catalog_by_id().get(plan.effect_id or "")
     tier = virtue.tier if virtue is not None else "Minor"
     mystagogue = saga.character(plan.teacher_id) or character
-    has_it = any(vf.vf_id == plan.effect_id for vf in mystagogue.virtues_flaws)
+    has_it = _initiated(plan) in mystagogue.virtues_flaws
     target = INITIATION_TARGET[(tier if tier == "Major" else "Minor", has_it)]
-    if character.ordeal and character.initiations_since_ordeal < 3:
-        target -= ORDEAL_REDUCTION[character.ordeal][character.initiations_since_ordeal]
-    return max(9, target)
+    return max(9, target - ordeal_reduction(character))
+
+
+def ordeal_reduction(character: Character) -> int:
+    """How much the character's past Ordeals lower their next Initiation's
+    Target: only the one that lowers it most counts."""
+    return max(
+        (
+            ORDEAL_REDUCTION[o.size][o.initiations_since]
+            for o in character.ordeals
+            if o.size in ORDEAL_REDUCTION and o.initiations_since < 3
+        ),
+        default=0,
+    )
+
+
+def _initiated(plan: SeasonPlan) -> VirtueFlawInstance:
+    """The Virtue an Initiation grants, with what it names."""
+    return VirtueFlawInstance(plan.effect_id or "", dict(plan.effect_params))
+
+
+#: Ordeal Flaw tier -> the Ordeal sizes it can be: a Minor Flaw is a Minor
+#: Ordeal; a Major Flaw is a Major one, or Medium when it raises a related
+#: Minor Flaw.
+ORDEAL_SIZES = {"Minor": ("Minor",), "Major": ("Major", "Medium")}
+
+
+def _house_lore(character: Character, lore: str) -> bool:
+    """Whether `lore` is the Lore of the House `character` belongs to
+    ("House Bjornaer Lore" for house_bjornaer)."""
+    house = (character.hermetic.house or "").removeprefix("house_")
+    return bool(house) and house.replace("_", " ") in lore.lower()
+
+
+def _initiation_problem(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    """What stops an Initiation plan ("" if nothing). No Mystagogue chosen
+    is a self-initiation. The Initiate needs the Lore at 1 unless it is the
+    Lore of their own House; the Mystagogue must know it."""
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    virtue = by_id.get(plan.effect_id or "")
+    if virtue is None:
+        return "Choose the Mystery Virtue initiated."
+    if virtue.side != "Virtue":
+        return f"{virtue.name} is not a Virtue: choose the Virtue initiated."
+    lore = plan.title.strip()
+    if not lore:
+        return "Name the Mystagogue's (Mystery Cult) Lore."
+    mystagogue = saga.character(plan.teacher_id) or character
+    if ability(mystagogue, lore) < 1:
+        return f"{mystagogue.name} doesn't know {lore}."
+    if ability(character, lore) < 1 and not _house_lore(character, lore):
+        return f"{character.name} needs {lore} 1 to be Initiated."
+    flaw = by_id.get(plan.device_id or "")
+    if flaw is None:
+        return ""
+    if flaw.side != "Flaw":
+        return f"{flaw.name} is not a Flaw: choose the Ordeal Flaw."
+    sizes = ORDEAL_SIZES.get(flaw.tier, ())
+    if sizes and (plan.research_kind or "Minor") not in sizes:
+        return (
+            "A Minor Flaw is a Minor Ordeal."
+            if flaw.tier == "Minor"
+            else "A Major Flaw is a Major Ordeal, or Medium when it raises a "
+            "related Minor Flaw."
+        )
+    return ""
 
 
 def _lecture_problems(saga: Saga, teacher: Character, plan: SeasonPlan) -> list[str]:
@@ -243,12 +312,9 @@ def problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
                 f"Labor Points; {character.name} has {character.labor_points}."
             ]
     if key == "undergo_initiation":
-        if not plan.effect_id:
-            return ["Choose the Mystery Virtue initiated."]
-        if saga.character(plan.teacher_id) is None:
-            return ["Choose the Mystagogue (the Initiate for self-initiation)."]
-        if not plan.title.strip():
-            return ["Name the Mystagogue's (Mystery Cult) Lore."]
+        found = _initiation_problem(saga, character, plan)
+        if found:
+            return [found]
     if key in ("pilgrimage", "tame_animal", "create_art", "research_formula") and (
         not plan.title.strip()
     ):
@@ -553,9 +619,11 @@ def _undergo_initiation(
     )
     target = initiation_target(saga, character, plan)
     if total >= target:
-        result.add_vfs.append(plan.effect_id or "")
+        result.add_vfs.append(_initiated(plan))
         if plan.device_id:
-            result.add_vfs.append(plan.device_id)
+            result.add_vfs.append(
+                VirtueFlawInstance(plan.device_id, dict(plan.ordeal_params))
+            )
             result.ordeal = plan.research_kind or "Minor"
     result.notes.append(
         f"Initiation Total {total} (Presence + {name} + Script {plan.other_modifier}) "

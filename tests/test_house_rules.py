@@ -208,11 +208,11 @@ async def test_house_rules_are_added_edited_and_removed_from_their_node(size):  
         assert await wait_until(
             pilot, lambda: bool(workspace.query("#house-rules-list"))
         )
+        workspace.query_one("#section-house-rules", Collapsible).focus_section()
         assert await wait_until(
             pilot, lambda: workspace._active_section() == "section-house-rules"
         )
         rows = workspace.query_one("#house-rules-list", SelectableList)
-        assert workspace._active_section() == "section-house-rules"
         # 'a': a Major Hook for covenants.
         await pilot.press("a")
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))

@@ -279,3 +279,35 @@ async def test_an_entry_is_hidden_from_the_catalogs_tab_and_offered_again():
         await pilot.press("y")
         assert await wait_until(pilot, lambda: section.title == "Hidden Entries (0)")
     assert storage.load_saga("test_saga").hidden_entries == {}
+
+
+async def test_the_spells_tab_lists_only_spells_in_play():
+    storage.save_saga(Saga(id="test_saga", name="Spells", books_in_play=[]))
+    every = len(catalog.load_spell_catalog())
+    core = sum(
+        1
+        for s in catalog.load_spell_catalog()
+        if sourcebooks.in_play(s.source, frozenset())
+    )
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        workspace = await _open_content(pilot, app)
+        view = workspace._saga_content_view
+        await pilot.press("4")
+        section = view.query_one("#section-spells", Collapsible)
+        assert await wait_until(
+            pilot, lambda: section.title == f"Spells ({core} of {every})"
+        )
+        view.query_one("#spell-source").value = "__out__"
+        assert await wait_until(
+            pilot, lambda: section.title == f"Spells ({every - core} of {every})"
+        )
+        rows = view.query_one("#spell-list", SelectableList)
+        assert "(not in play)" in rows._rows[0][1]
+        # Putting every book in play lists them all.
+        view.query_one("#spell-source").clear()
+        sc.set_books_in_play(workspace.saga, sourcebooks.SUPPLEMENTS)
+        workspace._saga_content_changed()
+        assert await wait_until(
+            pilot, lambda: section.title == f"Spells ({every} of {every})"
+        )

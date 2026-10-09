@@ -545,9 +545,13 @@ def livelihood_text(character: Character) -> str:
         lines.append(f"University: {years} season(s) studied")
     if character.formulas:
         lines.append("Formulas: " + ", ".join(character.formulas))
-    if character.ordeal:
+    if character.ordeals:
+        ordeals = ", ".join(
+            f"{o.size} ({o.initiations_since} Initiation(s) since)"
+            for o in character.ordeals
+        )
         lines.append(
-            f"Last Ordeal: {character.ordeal} ({character.initiations_since_ordeal} "
-            "Initiation(s) since)"
+            f"Past Ordeals: {ordeals}; the next Initiation's Target "
+            f"-{sw.ordeal_reduction(character)}"
         )
     return "\n".join(escape(line) for line in lines)

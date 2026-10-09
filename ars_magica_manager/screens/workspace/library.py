@@ -319,6 +319,9 @@ class LibraryActions(WorkspaceBase):
         house_rules = self._house_rules_view()
         if house_rules is not None:
             house_rules.rebuild()
+        spells = self._spell_view()
+        if spells is not None:
+            spells.refilter()
 
     def _edit_books_in_play(self) -> None:
         saga = self.saga

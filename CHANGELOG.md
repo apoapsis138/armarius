@@ -41,6 +41,29 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.41.0 — 2026-10-09
+
+- The Spells tab lists only the spells whose book is in play, plus the
+  saga's own. The Source filter's new "Not in play" choice shows the
+  rest, and choosing a book shows its spells whether it is in play or
+  not. A spell out of play, or hidden in this saga, is marked "(not in
+  play)" there and in a character's Known Spells, and its details say
+  why; a magus who knows it keeps it.
+- Planning an Initiation: Virtue initiated and Ordeal Flaw open the
+  Virtues & Flaws picker, which asks for anything the entry names (an
+  Affinity's Art), and the Virtue is added with it. Picking the Flaw sets
+  the Ordeal size, and a size that doesn't fit the Flaw is refused.
+  Leaving the Mystagogue blank plans a self-initiation, which the form
+  couldn't before. The Mystagogue must know the Lore, and the Initiate
+  needs it at 1 unless it is their own House's.
+- Undergo an Initiation is offered without The Mysteries in play: its
+  rules are in the Definitive Edition.
+- In any form, Delete clears a chosen value that may be left empty.
+- A new how-to guide, How to initiate a character into a Mystery.
+- Fixed: only the latest Ordeal was remembered, so a smaller Ordeal after
+  a bigger one lost the bigger one's help. Every Ordeal now counts down
+  on its own, and an Initiation's Target takes the largest reduction.
+
 ## 2.40.0 — 2026-10-09
 
 - A new Saga Content node in the tree gathers what the saga's pickers

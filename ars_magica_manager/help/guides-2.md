@@ -47,6 +47,7 @@ What each activity gives (Ars Magica Definitive Edition, Chapter 10: Long-Term E
 - **Study from vis** (magi): a stress die plus the aura's modifier, using one pawn of the Art's vis for every 5 points of its score (at least one).
 - **Adventure**: the storyguide's Source Quality of 5 to 10, split among up to three subjects, at most 5 to each.
 - **Lab work** and **Assist in a laboratory** give 2 xp of Exposure in Magic Theory; writing and copying books, and Teach, give Exposure too.
+- **Undergo an Initiation** gives no xp: it is the season a Mystery Virtue is initiated. See [How to initiate a character into a Mystery](help:guide-initiation).
 
 The Advancement Total is the Source Quality plus or minus the Virtues and Flaws above. Each full month lost cuts it by a third, then Affinity multiplies it. A character with a Wound Penalty of -3 to -5 gains half the xp, and one at -6 or worse can do nothing productive.
 

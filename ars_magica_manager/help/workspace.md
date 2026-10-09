@@ -249,7 +249,7 @@ When a character, laboratory or covenant is exported, the house rules it uses go
 ## Spells tab
 <!-- help: tab-content-spells -->
 
-Every spell the saga knows: the catalog's spells from the sourcebooks, and the saga's own. The list stretches down to a details panel that shows the chosen spell in full.
+Every spell the saga knows: the catalog's spells from the books in play, and the saga's own. Spells from books out of play, or hidden on the Catalogs tab, are left out until the Source filter asks for them; they are marked "(not in play)", and a magus who already knows one keeps it, marked the same way on their Known Spells. The list stretches down to a details panel that shows the chosen spell in full.
 
 **You type:** the saga's own spells, with `a` (add) and `e` (edit). Catalog spells are read-only: to make your own version of one, add a spell with `a`. `d` deletes only the saga's own spells.
 
@@ -266,7 +266,7 @@ The list of spells, with the filter bar above it and the details panel below.
 `/` moves to the search box. The filters apply as you change them:
 
 - **Search** looks in spell names and descriptions; every word must match.
-- **Source**: one sourcebook, or "The saga's own".
+- **Source**: one sourcebook (its spells, in play or not), "The saga's own", or "Not in play" for the catalog spells the saga leaves out.
 - **Technique** and **Form**: each also matches a spell that has it as a requisite.
 - **Ritual**: Rituals or Formulaic.
 - **Level** from and to. General spells pass any level range.

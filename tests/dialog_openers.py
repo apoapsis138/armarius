@@ -45,6 +45,8 @@ def contract_saga() -> Saga:
     assert magus is not None
     magus.background.year_born = saga.current_year - 10
     magus.abilities.append(Ability("Magic Theory", xp=5))
+    # Enough Lore to self-initiate into a Mystery.
+    magus.abilities.append(Ability("Mercere Lore", xp=5))
     saga.books.append(
         Book(
             id="b-ritual",
@@ -306,6 +308,7 @@ OPENERS: dict[str, Opener] = {
     "add lab diary entry": Opener("laboratory", lambda ws: ws._add_diary_entry()),
     # Seasons
     "plan a season": Opener("character", lambda ws: ws._plan_season()),
+    "plan an initiation": Opener("character", lambda ws: ws._plan_season()),
     "add character diary entry": Opener(
         "character", lambda ws: ws._add_character_diary_entry()
     ),
