@@ -17,10 +17,14 @@ from ...models import (
 )
 from ..sheets import (
     BOOK_SECTIONS,
+    BOOKS_SECTION,
+    CATALOGS_SECTION,
     DEVICE_SECTIONS,
+    HIDDEN_SECTION,
     HOUSE_RULES_SECTION,
     LAB_VF_SECTIONS,
     PLAYERS_SECTION,
+    SOURCES_SECTION,
     SPELL_SECTION,
 )
 from .base import (
@@ -105,6 +109,16 @@ class WorkspaceScreen(
                 lambda: self._player_form(None),
                 self._remove_player,
                 self._edit_player,
+            ),
+            BOOKS_SECTION: _SectionOps(edit=self._edit_books_in_play),
+            SOURCES_SECTION: _SectionOps(
+                lambda: self._saga_source_form(None),
+                self._remove_saga_source,
+                self._edit_saga_source,
+            ),
+            CATALOGS_SECTION: _SectionOps(edit=self._edit_catalog),
+            HIDDEN_SECTION: _SectionOps(
+                add=self._hide_catalog_entry, remove=self._show_catalog_entry
             ),
             # Character sheet
             "section-char-info": _SectionOps(edit=self._edit_character_info),

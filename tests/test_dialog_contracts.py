@@ -1414,6 +1414,47 @@ CONTRACTS: dict[str, Contract] = {
         expected=("Own Spell II", 15),
         invalid={"Name": ""},
     ),
+    # Saga Content
+    "add saga source": Contract(
+        prefill={"Abbreviation": "", "Title": ""},
+        edits={"Abbreviation": "HR", "Title": "Our house rules"},
+        saved=lambda s: (
+            [(x.abbreviation, x.title) for x in s.sources],
+            s.books_in_play,
+        ),
+        expected=([("HR", "Our house rules")], None),
+        # Blank; a sourcebook's abbreviation, or one of its other spellings;
+        # the ; that separates the books an entry cites.
+        invalid=[
+            {"Abbreviation": ""},
+            {"Abbreviation": "Covenants"},
+            {"Abbreviation": "ArM5"},
+            {"Abbreviation": "A;B"},
+        ],
+        shown={"#section-saga-sources": "Saga Sources (1)"},
+    ),
+    "edit saga source": Contract(
+        prefill={"Abbreviation": "HR", "Title": "House rules"},
+        edits={"Abbreviation": "OHR", "Title": "Our house rules"},
+        saved=lambda s: [(x.abbreviation, x.title) for x in s.sources],
+        expected=[("OHR", "Our house rules")],
+        invalid={"Abbreviation": "DE"},
+        shown={"#content-sources-list": "OHR"},
+    ),
+    "edit catalog": Contract(
+        prefill={"Offered in this saga": True},
+        edits={"Offered in this saga": False},
+        saved=lambda s: s.hidden_catalogs,
+        expected=["spells"],
+        shown={"#content-catalogs-list": "Spells"},
+    ),
+    # Saving picks the catalog; the entry is chosen next (test_saga_content).
+    "hide catalog entry": Contract(
+        prefill={"Catalog": "virtues_flaws"},
+        edits={"Catalog": "abilities"},
+        saved=lambda s: s.hidden_entries,
+        expected={},
+    ),
     "add ability": Contract(
         prefill={"XP": "0", "Specialty": ""},
         edits={"XP": "30", "Specialty": "Running"},

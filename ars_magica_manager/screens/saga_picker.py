@@ -182,7 +182,7 @@ class SagaPickerScreen(Screen[None]):
         if not saga.players:
             self.notify(
                 f"No one can sign in to {escape(saga.name)} yet: the storyguide "
-                "adds players on its Players node.",
+                "adds players on its Saga Content Players tab.",
                 severity="warning",
             )
             return

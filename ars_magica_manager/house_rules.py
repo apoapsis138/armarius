@@ -6,15 +6,17 @@ and Flaws (VirtueFlawDef), laboratory Virtues and Flaws (LabVirtueFlawDef)
 and covenant Boons and Hooks (CovenantBoonHookDef). They are text only for
 now: a name, type, tier (which gives the points: Free 0, Minor 1, Major 3)
 and description, with no effects the rules engine applies. They cite no
-book, so they are always in play, and pickers offer them alongside the
-catalog's once the saga is the one in use (catalog.use_saga).
+book, so they are always in play -- unless they cite one of the saga's own
+sources (Saga.sources), in or out of play like a book -- and pickers offer
+them alongside the catalog's once the saga is the one in use
+(catalog.use_saga).
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-from . import catalog, storage
+from . import catalog, sourcebooks, storage
 from .markup import escape, fit, markdown_inline
 from .models import (
     COVENANT_BOON_HOOK_CATEGORIES,
@@ -131,23 +133,25 @@ def _fields(kind: str, values: dict[str, Any]) -> dict[str, Any]:
         "category": values.get("category") or CATEGORIES[kind][0],
         "repeatable": bool(values.get("repeatable")),
         "description": values.get("description") or "",
+        "source": values.get("source") or "",
     }
 
 
 def add(saga: Saga, kind: str, values: dict[str, Any]) -> Entry:
     """Add a user-made entry of `kind` from a form's values (name, type,
-    tier, category, repeatable, description); it cites no book."""
+    tier, category, repeatable, description, and the saga source it
+    cites, if any)."""
     fields = _fields(kind, values)
     listed = entries_of(saga, kind)
     taken = [e.id for e in listed] + list(_catalog_by_id(kind))
     entry_id = storage.generate_unique_id(f"{_ID_PREFIX[kind]}_{fields['name']}", taken)
     made: Entry
     if kind == CHARACTER:
-        made = VirtueFlawDef(id=entry_id, source="", **fields)
+        made = VirtueFlawDef(id=entry_id, **fields)
     elif kind == LABORATORY:
-        made = LabVirtueFlawDef(id=entry_id, source="", **fields)
+        made = LabVirtueFlawDef(id=entry_id, **fields)
     else:
-        made = CovenantBoonHookDef(id=entry_id, source="", **fields)
+        made = CovenantBoonHookDef(id=entry_id, **fields)
     listed.append(made)
     catalog.use_saga(saga)
     return made
@@ -159,6 +163,11 @@ def update(saga: Saga, kind: str, entry: Entry, values: dict[str, Any]) -> None:
     for key, value in _fields(kind, values).items():
         setattr(entry, key, value)
     catalog.use_saga(saga)
+
+
+def citing(saga: Saga, source: str) -> list[Entry]:
+    """The user-made entries that cite the saga source `source`."""
+    return [entry for _, entry in all_entries(saga) if entry.source == source]
 
 
 def remove(saga: Saga, kind: str, entry: Entry) -> None:
@@ -235,12 +244,7 @@ def row_label(kind: str, entry: Entry) -> str:
 def detail_text(saga: Saga, chosen: tuple[str, Entry] | None) -> str:
     """The details panel (markup) for a chosen entry."""
     if chosen is None:
-        return (
-            "[dim]Entries made for this saga: house rules, or Virtues, Flaws, "
-            "Boons and Hooks from books the catalogs don't carry. They show in "
-            "the pickers with the catalog's; the rules engine applies no "
-            "effects for them.[/]"
-        )
+        return "[dim]Choose an entry to see who holds it; a adds one.[/]"
     kind, entry = chosen
     holders = used_by(saga, kind, entry)
     lines = [
@@ -250,6 +254,11 @@ def detail_text(saga: Saga, chosen: tuple[str, Entry] | None) -> str:
         + ("   May be taken more than once." if entry.repeatable else ""),
         f"[b]Held by:[/] {escape(', '.join(holders)) if holders else '(no one yet)'}",
     ]
+    if entry.source:
+        title = sourcebooks.title_of(entry.source, saga) or entry.source
+        books = sourcebooks.saga_books(saga)
+        state = "" if sourcebooks.in_play(entry.source, books) else " (not in play)"
+        lines.insert(3, f"[b]Source:[/] {escape(title)}{state}")
     if entry.description.strip():
         lines += ["", markdown_inline(entry.description.strip())]
     return "\n".join(lines)

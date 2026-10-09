@@ -6,7 +6,11 @@ A saga keeps the supplements in play in `Saga.books_in_play` -- None means
 every book, the default, so existing sagas don't change. The core book is
 always in play. Pickers hide an entry whose books are all out of play (with
 a toggle to show them); an entry already attached to a record stays shown.
-An entry with no book (a user-made one) is always in play."""
+An entry with no book (a user-made one) is always in play.
+
+A saga can also have sources of its own (Saga.sources: a house-rules list,
+a fan supplement), which its user-made entries cite like a book and which
+are in or out of play like one."""
 
 from __future__ import annotations
 
@@ -109,26 +113,71 @@ def saga_books(saga: Saga | None) -> frozenset[str] | None:
     return frozenset({CORE, *saga.books_in_play})
 
 
-def normalized(books_in_play: Iterable[str] | None) -> list[str] | None:
+def saga_sources(saga: Saga | None) -> tuple[str, ...]:
+    """The abbreviations of the saga's own sources, in order."""
+    return tuple(source.abbreviation for source in saga.sources) if saga else ()
+
+
+def normalized(
+    books_in_play: Iterable[str] | None, sources: Iterable[str] = ()
+) -> list[str] | None:
     """What to store as `Saga.books_in_play`: the chosen supplements in
-    SUPPLEMENTS order, or None when every one is chosen (so a book added to
-    the list later is in play too)."""
+    SUPPLEMENTS order then the chosen saga `sources`, or None when every
+    one is chosen (so a book added to the list later is in play too)."""
     if books_in_play is None:
         return None
+    every = (*SUPPLEMENTS, *sources)
     chosen = set(books_in_play)
-    if chosen >= set(SUPPLEMENTS):
+    if chosen >= set(every):
         return None
-    return [book for book in SUPPLEMENTS if book in chosen]
+    return [book for book in every if book in chosen]
 
 
-def summary(books_in_play: Iterable[str] | None) -> str:
-    """A short description of a saga's books, for its Edit form and detail
-    ("All books", "Core book only", "Core book + 3 supplements")."""
+def summary(books_in_play: Iterable[str] | None, sources: Iterable[str] = ()) -> str:
+    """A short description of a saga's books, for its detail ("All books",
+    "Core book only", "Core book + 3 supplements"), and its own sources
+    in play ("+ 1 saga source")."""
     if books_in_play is None:
         return "All books"
-    count = len(set(books_in_play) & set(SUPPLEMENTS))
-    if count == len(SUPPLEMENTS):
+    chosen = set(books_in_play)
+    count = len(chosen & set(SUPPLEMENTS))
+    own = list(sources)
+    own_count = len(chosen & set(own))
+    if count == len(SUPPLEMENTS) and own_count == len(own):
         return "All books"
-    if count == 0:
-        return "Core book only"
-    return f"Core book + {count} supplement{'s' if count != 1 else ''}"
+    if count == len(SUPPLEMENTS):
+        text = "All books"
+    elif count == 0:
+        text = "Core book only"
+    else:
+        text = f"Core book + {count} supplement{'s' if count != 1 else ''}"
+    if own_count:
+        text += f" + {own_count} saga source{'s' if own_count != 1 else ''}"
+    return text
+
+
+def source_problem(abbreviation: str, taken: Iterable[str]) -> str:
+    """Why `abbreviation` can't name a new saga source ("" if it can): it
+    is blank, has a ";" (which separates books in a citation), or names a
+    book or another source already."""
+    abbreviation = abbreviation.strip()
+    if not abbreviation:
+        return "Give the source an abbreviation."
+    if ";" in abbreviation:
+        return "An abbreviation can't contain ';'."
+    known = {b.lower() for b in (*SOURCEBOOKS, *_ALIASES)}
+    if abbreviation.lower() in known:
+        return f"{abbreviation} is already a book's abbreviation."
+    if abbreviation.lower() in {t.lower() for t in taken}:
+        return f"The saga already has a source called {abbreviation}."
+    return ""
+
+
+def title_of(book: str, saga: Saga | None = None) -> str:
+    """A book's or saga source's title ("" if unknown)."""
+    if book in SOURCEBOOKS:
+        return SOURCEBOOKS[book]
+    for source in saga.sources if saga else ():
+        if source.abbreviation == book:
+            return source.title or source.abbreviation
+    return ""

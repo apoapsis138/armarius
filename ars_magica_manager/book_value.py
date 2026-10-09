@@ -26,6 +26,8 @@ SOURCE = (
     "Covenants, Chapter Seven: Library "
     "(https://www.redcap.org/page/Covenants_Chapter_Seven:_Library)"
 )
+#: The book research values come from.
+SOURCE_BOOK = "Covenants"
 ENCYCLOPEDIA_SOURCE = (
     "Art & Academe, Chapter One, Encyclopedias "
     "(https://www.redcap.org/page/Art_%26_Academe_Open_Content)"

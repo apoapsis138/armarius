@@ -5,13 +5,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from ... import character_templates, sourcebooks
+from ... import character_templates
 from ... import familiars as fam
 from ...markup import escape
 from ...models import REALMS, SEASONS, Saga
 from ...rules import options as rule_options
 from ..fields import DialogField, FieldsDialog, _attr, _covenant_options, _pairs
-from ..pickers import SourcebookPickerScreen
 
 
 def _saga_fields(saga: Saga | None) -> list[DialogField]:
@@ -61,18 +60,6 @@ def _saga_fields(saga: Saga | None) -> list[DialogField]:
                 hint="A record of each season as it is applied, listed under Seasons in the tree. Off: only the Diaries keep them.",
             )
         )
-        fields.append(
-            DialogField(
-                "books_in_play",
-                "Books in play",
-                "picker",
-                saga.books_in_play,
-                placeholder=sourcebooks.summary(None),
-                picker=SourcebookPickerScreen,
-                display=sourcebooks.summary,
-                hint="Catalog pickers hide entries from books not in play.",
-            )
-        )
         fields += [
             DialogField(
                 RULE_OPTION_PREFIX + option.key,
@@ -81,7 +68,7 @@ def _saga_fields(saga: Saga | None) -> list[DialogField]:
                 rule_options.is_on(saga, option.key),
                 hint=f"Optional rule, off by default. {option.effect}",
             )
-            for option in rule_options.OPTIONS
+            for option in rule_options.offered(saga)
         ]
     return fields
 
@@ -90,13 +77,19 @@ def _saga_fields(saga: Saga | None) -> list[DialogField]:
 RULE_OPTION_PREFIX = "rule_option__"
 
 
-def saga_rule_options(values: dict[str, Any]) -> dict[str, bool]:
+def saga_rule_options(
+    values: dict[str, Any], kept: dict[str, bool] | None = None
+) -> dict[str, bool]:
     """The optional rules chosen on the saga form, taken out of `values` (so
-    what's left are plain Saga fields)."""
+    what's left are plain Saga fields). An option the form didn't offer (its
+    book out of play) keeps its value from `kept`, the saga's own."""
     chosen = {
-        key.removeprefix(RULE_OPTION_PREFIX): bool(values.pop(key))
-        for key in list(values)
-        if key.startswith(RULE_OPTION_PREFIX)
+        **(kept or {}),
+        **{
+            key.removeprefix(RULE_OPTION_PREFIX): bool(values.pop(key))
+            for key in list(values)
+            if key.startswith(RULE_OPTION_PREFIX)
+        },
     }
     return rule_options.normalized(chosen)
 

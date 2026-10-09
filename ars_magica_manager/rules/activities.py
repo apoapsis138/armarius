@@ -353,6 +353,7 @@ ACTIVITIES: dict[str, Activity] = {
             lab_seasons.TAMING_SOURCE,
             who=("magus",),
             lab=True,
+            book="RoP:M",
         ),
         Activity(
             experiment.STABILIZE,
@@ -363,6 +364,7 @@ ACTIVITIES: dict[str, Activity] = {
             experiment.RESEARCH_SOURCE,
             who=("magus",),
             lab=True,
+            book="HoH:TL",
         ),
         Activity(
             laboratory_seasons.BUILD,
@@ -391,6 +393,7 @@ ACTIVITIES: dict[str, Activity] = {
             laboratory_seasons.TAKE_OVER_SOURCE,
             who=("magus",),
             lab=True,
+            book="Covenants",
         ),
         Activity(
             laboratory_seasons.MOVE,
@@ -401,6 +404,7 @@ ACTIVITIES: dict[str, Activity] = {
             laboratory_seasons.MOVE_SOURCE,
             who=("magus",),
             lab=True,
+            book="Covenants",
         ),
         Activity(
             familiar_seasons.BIND,
@@ -463,6 +467,7 @@ ACTIVITIES: dict[str, Activity] = {
             "Translating: a tractatus in a season, a summa at Communication + "
             "the source language points a season; 2 Quality lower (1 on an Art).",
             book_seasons.TRANSLATE_SOURCE,
+            book="A&A",
         ),
         Activity(
             book_seasons.REWRITE_TEXTS,
@@ -486,6 +491,7 @@ ACTIVITIES: dict[str, Activity] = {
             "it, from a collection twice that size: each read at +1 Quality "
             "(+2 for an authority's, from a peerless collection).",
             book_kinds.SOURCE,
+            book="Covenants",
         ),
         Activity(
             book_seasons.WRITE_TABLET,
@@ -535,6 +541,7 @@ ACTIVITIES: dict[str, Activity] = {
             "stress die + Intelligence + Magic Theory against 18.",
             experiment.RESEARCH_SOURCE,
             who=("magus",),
+            book="HoH:TL",
         ),
         Activity(
             laboratory_seasons.ASSIST,

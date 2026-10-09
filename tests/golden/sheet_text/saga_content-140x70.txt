@@ -1,0 +1,340 @@
+===== tab-content-books
+
+   1 Books  2 Catalogs  3 House Rules  4 Spells  5 Players
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Books in Play (38 of 38)
+
+        In play  Book       Title
+      ○ always   DE         Ars Magica Definitive Edition
+      ○ yes      A&A        Art & Academe
+      ○ yes      AM         Ancient Magic
+      ○ yes      App        Apprentices
+      ○ yes      AtD        Against the Dark: The Transylvanian Tribunal
+      ○ yes      C&G        City & Guild                                                              ▆▆
+      ○ yes      Cal        Calebais: The Broken Covenant
+      ○ yes      Covenants  Covenants
+      ○ yes      DI         Dies Irae
+      ○ yes      F&F        Faith & Flame: The Provençal Tribunal
+      ○ yes      GGHS       The Grand Grimoire of Hermetic Spells
+      ○ yes      GotF       Guardians of the Forests: The Rhine Tribunal
+      ○ yes      Grogs      Grogs
+      ○ yes      HMRE       Hedge Magic, Revised Edition
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Saga Sources (0)
+
+        Source     Title                                            Entries
+      (none recorded)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a book or source for its details; e picks the books.
+  ▌
+
+
+===== tab-content-catalogs
+
+   1 Books  2 Catalogs  3 House Rules  4 Spells  5 Players
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Catalogs (6)
+
+        Catalog                      Offered   Entries   Hidden
+      ○ Virtues & Flaws              yes          1100        0
+      ○ Laboratory Virtues & Flaws   yes           128        0
+      ○ Boons & Hooks                yes           216        0
+      ○ Abilities                    yes            91        0
+      ○ Spells                       yes          1313        0
+      ○ Shapes & Materials           yes           242        0
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Hidden Entries (0)
+
+        Entry                                            Catalog
+      (none recorded)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a catalog or entry for its details; e offers a catalog.
+  ▌
+
+
+===== tab-content-house-rules
+
+   1 Books  2 Catalogs  3 House Rules  4 Spells  5 Players
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ House Rules (0)
+
+          Name                       For         Type    Tier   Points
+      (none recorded)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose an entry to see who holds it; a adds one.
+  ▌
+
+
+===== tab-content-spells
+
+   1 Books  2 Catalogs  3 House Rules  4 Spells  5 Players
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    Search spell names and descriptions...                                         Source: any      ▼
+
+    Technique: (any) ▼   Form: (any)      ▼   Ritual: any      ▼  Level  from    to
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Spells (1314 of 1314)
+
+        Name                           Arts            Level  Range/Duration/Target  Ritual Source
+      ○ Boundless Wealth of the Oceans CrAn               20  Touch/Mom/Group        Ritual TME
+      ○ Piercing Lance of Bone         CrAn               20  Touch/Diam/Ind                L&L       ▁▁
+      ○ Repair Cracks and Tears        CrAn               20  Touch/Mom/Ind          Ritual Covenants
+      ○ Shearing the Unseen Sheep      CrAn               20  Touch/Sun/Ind                 MoH
+      ○ Soothe Pains of the Beast      CrAn               20  Touch/Mom/Ind          Ritual DE
+      ○ True Rest of the Injured Brute CrAn               20  Touch/Moon/Ind                DE
+      ○ Worm of the Soil               CrAn               20  Touch/Sun/Ind                 MoH
+      ○ Flight Perfected               CrAn               25  Touch/Sun/Ind                 MoH
+      ○ Summoning the Creeping Death   Cr(Re)An           25  Touch/Diam/Ind                HoH:S
+      ○ Flight Divorced                CrAn               30  Touch/Sun/Part                MoH
+      ○ Recruiting A Tiny Phalanx      Cr(Re)An           30  Touch/Sun/Group               MoH
+      ○ Strength Extinguished          CrAn               30  Touch/Sun/Part                MoH
+      ○ Sturdy Mantle of the Traveler  CrAn               30  Touch/Sun/Ind                 MoH
+      ○ A Pile of Rotting Beef         CrAn               35  Touch/Sun/Group               TME
+      ○ Harmonic Metamorphosis of the… Cr(Mu)An           35  Touch/Mom/Ind          Ritual MoH
+      ○ Strength Renewed               CrAn               35  Touch/Sun/Part                MoH
+      ○ The Balm of St Francis         CrAn               35  Touch/Mom/Ind          Ritual DI
+      ○ The Wizard's Mount             CrAn               35  Touch/Sun/Ind                 DE
+      ○ Weaver's Trap of Webs          CrAn               35  Voice/Sun/Group               DE
+      ○ Champion's Strength            CrAn               40  Touch/Mom/Ind          Ritual Cal
+      ○ Mend the Broken Figure         CrAn               40  Touch/Mom/Ind          Ritual Cal
+      ○ A Herd By Morning              CrAn               45  Touch/Sun/Group               TME
+      ○ Venomous Velites               Cr(Re)An           45  Sight/Sun/Group               HoH:TL
+      ○ Curse of the Ravenous Swarm    Cr(Re)An           50  Touch/Moon/Group       Ritual DE
+      ○ Twinning the Tome              Cr(In)An(Te)       50  Touch/Mom/Group        Ritual HoH:TL
+      ○ Conjuring the Magical Wolf     CrAn(Me/Vi)        60  Touch/Mom/Ind          Ritual HP
+      ○ Fashion the Ancient Worm       CrAn(Co/Ig/Me/V…   80  Touch/Mom/Ind          Ritual HP
+      ○ The Breath of Life Returned    CrAn               80  Touch/Mom/Ind          Ritual HP
+      ○ Image of the Beast             InAn                5  Arc/Mom/Ind                   DE
+      ○ Sense the Sleeping Hound       InAn                5  Voice/Mom/Ind                 App
+      ○ Shiver of the Lycanthrope      InAn               10  Per/Conc/Touch                DE
+      ○ A Simple Test for the Complet… InAn(He)           15  Touch/Mom/Ind                 Covenants
+      ○ Numbering the Flock            InAn               20  Per/Mom/Sight                 TMRE
+      ○ Tongue of the Fishes           InAn               20  Eye/Conc/Ind                  Hooks
+      ○ Books that Scream in Pain      InAn(He)           25  Touch/Mom/Room                Covenants
+      ○ Determine the Location of the… In(Cr)An(Im)       25  Arc/Conc/Ind                  Covenants
+      ○ Opening the Tome of the Anima… InAn               25  Touch/Conc/Ind                DE
+      ○ Hunter's Sense                 InAn               30  Per/Sun/Hearing               DE
+      ○ The Eyes of Every Beast        InAn               40  Touch/Conc/Bound*      Ritual TME
+      ○ To See as Others See           In(Re)An           40  Arc/Sun/Ind                   HoH:TL
+      ○ The Appropriate Attire         MuAn                4  Touch/Sun/Ind                 App
+      ○ The Chameleon Cat              MuAn                5  Touch/Diam/Ind                App
+      ○ Beast of Outlandish Size       MuAn               15  Touch/Sun/Ind                 DE
+      ○ Doublet of Impenetrable Silk   MuAn               15  Touch/Sun/Ind                 DE
+      ○ Doublet of Silk, That's Impen… MuAn               15  Touch/Sun/Ind                 MoH
+      ○ Gift of Man's Fortitude        MuAn               15  Per/Sun/Ind                   Cal
+      ○ Growth of the Creeping Things  MuAn               15  Touch/Sun/Ind                 DE
+      ○ Lion of Outlandish Size        MuAn               15  Per/Sun/Ind (+1 Size)         TtA
+
+
+  ▌
+  ▌  Select a spell to see its details.
+  ▌
+
+
+===== tab-content-players
+
+   1 Books  2 Catalogs  3 House Rules  4 Spells  5 Players
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Players (0)
+
+          Name                           Role
+      (none recorded)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a player to see what they play; a adds one.
+  ▌
+
+

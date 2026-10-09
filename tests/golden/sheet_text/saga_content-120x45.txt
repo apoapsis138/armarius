@@ -1,0 +1,215 @@
+===== tab-content-books
+
+   1 Books  2 Catalogs  3 House Rules  4 Spells  5 Players
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Books in Play (38 of 38)
+
+        In play  Book       Title
+      ○ always   DE         Ars Magica Definitive Edition
+      ○ yes      A&A        Art & Academe
+      ○ yes      AM         Ancient Magic
+      ○ yes      App        Apprentices
+      ○ yes      AtD        Against the Dark: The Transylvanian Tribunal
+      ○ yes      C&G        City & Guild                                          ▆▆
+      ○ yes      Cal        Calebais: The Broken Covenant
+      ○ yes      Covenants  Covenants
+      ○ yes      DI         Dies Irae
+      ○ yes      F&F        Faith & Flame: The Provençal Tribunal
+      ○ yes      GGHS       The Grand Grimoire of Hermetic Spells
+      ○ yes      GotF       Guardians of the Forests: The Rhine Tribunal
+      ○ yes      Grogs      Grogs
+      ○ yes      HMRE       Hedge Magic, Revised Edition
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Saga Sources (0)
+
+        Source     Title                                            Entries
+      (none recorded)
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a book or source for its details; e picks the books.
+  ▌
+
+
+===== tab-content-catalogs
+
+   1 Books  2 Catalogs  3 House Rules  4 Spells  5 Players
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Catalogs (6)
+
+        Catalog                      Offered   Entries   Hidden
+      ○ Virtues & Flaws              yes          1100        0
+      ○ Laboratory Virtues & Flaws   yes           128        0
+      ○ Boons & Hooks                yes           216        0
+      ○ Abilities                    yes            91        0
+      ○ Spells                       yes          1313        0
+      ○ Shapes & Materials           yes           242        0
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Hidden Entries (0)
+
+        Entry                                            Catalog
+      (none recorded)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a catalog or entry for its details; e offers a catalog.
+  ▌
+
+
+===== tab-content-house-rules
+
+   1 Books  2 Catalogs  3 House Rules  4 Spells  5 Players
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ House Rules (0)
+
+          Name                       For         Type    Tier   Points
+      (none recorded)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose an entry to see who holds it; a adds one.
+  ▌
+
+
+===== tab-content-spells
+
+   1 Books  2 Catalogs  3 House Rules  4 Spells  5 Players
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    Search spell names and descriptions...                     Source: any      ▼
+
+    Technique: (any) ▼   Form: (any)      ▼   Ritual: any      ▼  Level  from    to
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Spells (1314 of 1314)
+
+        Name                           Arts            Level  Range/Duration/Target
+      Ritual Source
+      ○ Boundless Wealth of the Oceans CrAn               20  Touch/Mom/Group
+      Ritual TME
+      ○ Piercing Lance of Bone         CrAn               20  Touch/Diam/Ind
+      L&L
+      ○ Repair Cracks and Tears        CrAn               20  Touch/Mom/Ind
+      Ritual Covenants
+      ○ Shearing the Unseen Sheep      CrAn               20  Touch/Sun/Ind
+      MoH
+      ○ Soothe Pains of the Beast      CrAn               20  Touch/Mom/Ind
+      Ritual DE
+      ○ True Rest of the Injured Brute CrAn               20  Touch/Moon/Ind
+      DE
+      ○ Worm of the Soil               CrAn               20  Touch/Sun/Ind
+      MoH
+      ○ Flight Perfected               CrAn               25  Touch/Sun/Ind
+      MoH
+      ○ Summoning the Creeping Death   Cr(Re)An           25  Touch/Diam/Ind
+      HoH:S
+      ○ Flight Divorced                CrAn               30  Touch/Sun/Part
+      MoH
+      ○ Recruiting A Tiny Phalanx      Cr(Re)An           30  Touch/Sun/Group
+      MoH
+
+
+  ▌
+  ▌  Select a spell to see its details.
+  ▌
+
+
+===== tab-content-players
+
+   1 Books  2 Catalogs  3 House Rules  4 Spells  5 Players
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Players (0)
+
+          Name                           Role
+      (none recorded)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a player to see what they play; a adds one.
+  ▌
+
+

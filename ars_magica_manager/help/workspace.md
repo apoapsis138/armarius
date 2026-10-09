@@ -41,15 +41,14 @@ The tree's top node is the saga itself. Under it:
 - **Unassigned Characters** and **Unassigned Laboratories**: those with no covenant. These groups only appear when there is something in them.
 - **Unassigned Books**: books with no owner, only shown when there are some.
 - **Seasons**: the record of each season applied.
-- **Spells**: the catalog's spells and the saga's own.
-- **House Rules**: the Virtues, Flaws, Boons and Hooks made for this saga.
+- **Saga Content**: the books in play, the catalogs the saga hides, its House Rules, its own spells and (for the storyguide) its players.
 
 A character's node shows its type, for example "Leandro (magus)". A covenant, laboratory or character still being made is marked "(creating)".
 
 ### Moving around
 <!-- help: workspace-moving -->
 
-- Arrow keys move along the tree. **Enter** shows the chosen node and moves focus into it: into a sheet's first section, or into a list (Spells, Seasons, House Rules, Unassigned Books).
+- Arrow keys move along the tree. **Enter** shows the chosen node and moves focus into it: into a sheet's first section, or into a list (Seasons, Unassigned Books).
 - **Esc** steps out: from a sheet back to the tree, and from the tree back to the saga picker.
 - **Tab** and **Shift+Tab** move from one section of a sheet to the next. Each section is one stop: its list if it has one, otherwise its title. Arrow keys move within a section.
 - **1** to **9** open a sheet's tabs; the tabs show their numbers.
@@ -63,7 +62,7 @@ A character's node shows its type, for example "Leandro (magus)". A covenant, la
 
 - **m** (More) holds the actions only a few places have, such as Import, Export, Set Date, Move Vis or the Creation Worksheet. It offers only what applies where focus is. With one thing to do it runs straight away, and the footer names it; with several it opens a menu with a letter for each.
 - **n** (New) makes a covenant, character, laboratory or familiar bond, offering only what belongs at the selected tree node. A new character or laboratory starts in the covenant on show.
-- **/** filters a list that can be filtered: on Spells it moves to the search box, and on a laboratory's Lab Texts it opens the filter.
+- **/** filters a list that can be filtered: on the Saga Content Spells tab it moves to the search box, and on a laboratory's Lab Texts it opens the filter.
 - **t** advances the saga by one season. See [Advance Season](help:advance-season).
 - **q** quits, and **Ctrl+P** opens Textual's command palette.
 - **?** opens Help on the part of the screen that has focus (F1 does the same while you are typing in a dialog).
@@ -79,14 +78,14 @@ Lists that hold records (books, spells, House Rules, a sheet's lists) have a det
 
 At the right end of the same row the app names the theme in use. Change it from the command palette (Ctrl+P); the app remembers your choice for next time.
 
-**See also:** [The saga](help:saga), [Characters group](help:character-group), [Laboratories group](help:laboratory-group), [Seasons](help:seasons), [Spells](help:spells), [House Rules](help:house-rules), [Players](help:players), [Getting started](help:guide-getting-started)
+**See also:** [The saga](help:saga), [Characters group](help:character-group), [Laboratories group](help:laboratory-group), [Seasons](help:seasons), [Saga Content](help:saga-content), [Getting started](help:guide-getting-started)
 
 # The saga
 <!-- help: saga -->
 
 The top node of the tree. It shows the saga's own details and what it holds.
 
-**You type:** with `e` (Edit Saga): the Name, Storyguide and Description; whether to Keep season records; the Books in play; and the optional rules, each off until you turn it on.
+**You type:** with `e` (Edit Saga): the Name, Storyguide and Description; whether to Keep season records; and the optional rules of the books in play, each off until you turn it on. The books in play are chosen on [Saga Content](help:section-books-in-play).
 
 **The app works out:** the counts of covenants, characters, laboratories, books and spells, and a summary of the books in play and the optional rules turned on ("none (the book's standard rules)" when none is).
 
@@ -94,8 +93,8 @@ The top node of the tree. It shows the saga's own details and what it holds.
 <!-- help: saga-summary -->
 
 - **Current date**: the season and year the saga is in. It is also shown in the header on every screen of the workspace.
-- **Books in play**: the sourcebooks the troupe uses. Catalog pickers hide entries from books not in play, the season plan offers a supplement's activities only while its book is in play (a plan already made keeps its activity), and a supplement's own rules apply when its book is in play.
-- **Optional rules**: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi, Enforce creation rules strictly and Extended book Quality. Each one's effect is described beside it in Edit Saga. These come from Ars Magica Definitive Edition, Chapter 16: Sagas, Rules Questions, except Extended book Quality, from Covenants' Library chapter.
+- **Books in play**: the sourcebooks the troupe uses, and how many of the saga's own sources are in play. They are chosen on [Saga Content](help:section-books-in-play), which says what a book out of play switches off.
+- **Optional rules**: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi, Enforce creation rules strictly and Extended book Quality. Each one's effect is described beside it in Edit Saga; Harsher Infernal vis (Realms of Power: The Infernal) and Extended book Quality (Covenants) are offered only while their book is in play. These come from Ars Magica Definitive Edition, Chapter 16: Sagas, Rules Questions, except Extended book Quality, from Covenants' Library chapter.
 - **Keep season records**: when on, each season applied is kept under Seasons in the tree. When off, only the characters' Diaries keep them.
 
 ### More on the saga
@@ -171,14 +170,95 @@ When season records are off, the view says so and no new seasons are added; each
 
 **See also:** [Advance Season](help:advance-season), [Season Summary](help:season-summary), [How to plan and run a season](help:guide-seasons)
 
-# Spells
-<!-- help: spells -->
+# Saga Content
+<!-- help: saga-content -->
+
+One place for what this saga's pickers offer: the books in play and the saga's own sources, the shared catalogs and single entries it hides, its House Rules, its own spells and, for the storyguide, its players. Choose **Saga Content** in the tree, under Seasons. The tabs open with `1` to `5`.
+
+**You type:** what each tab below describes. The catalog files the app ships with are never changed: hiding something here affects only this saga.
+
+**The app works out:** what every picker in the saga offers. An entry from a book out of play, or one hidden here, is left out of the pickers (`F3` in a picker shows it, marked); an entry already on a character, laboratory or covenant stays there.
+
+**See also:** [The saga](help:saga), [The workspace](help:workspace), [Getting started](help:guide-getting-started)
+
+## Books tab
+<!-- help: tab-content-books -->
+
+The sourcebooks the saga uses, and the saga's own sources.
+
+**You type:** which books are in play, and the saga's own sources.
+
+**The app works out:** what each book in or out of play switches on or off, and how many House Rules cite each source.
+
+### Books in Play
+<!-- help: section-books-in-play -->
+
+Every sourcebook, with whether it is in play. `e` opens the picker of books: tick the ones your troupe uses. The core book is always in play.
+
+While a book is out of play, everything it adds is switched off: the pickers leave out its Virtues, Flaws, spells and other entries; the season plan leaves out its activities (a plan already made keeps its activity); its optional rules are left off Edit Saga and count as off (the choice is kept for when the book comes back); and the library's book form leaves out its kinds of books and their fields (a book already using one keeps it). The Library tab's research bonuses need Covenants.
+
+### Saga Sources
+<!-- help: section-saga-sources -->
+
+Sources of the saga's own, such as a house-rules list or a fan supplement, that its House Rules can cite. `a` adds one: an Abbreviation (short, like a book's, and not one a sourcebook already uses) and a Title. A new source starts in play, and it is put in or out of play with the books above.
+
+`e` edits a source; a new abbreviation is carried to the House Rules that cite it. `d` won't delete a source a House Rule still cites: the message names them.
+
+## Catalogs tab
+<!-- help: tab-content-catalogs -->
+
+The shared catalogs the pickers draw on, and what this saga leaves out of them.
+
+**You type:** whether each catalog is offered, and the single entries to hide.
+
+**The app works out:** each catalog's number of entries and of hidden ones.
+
+### Catalogs
+<!-- help: section-catalogs -->
+
+The Virtues & Flaws, Laboratory Virtues & Flaws, Boons & Hooks, Abilities, Spells, and Shapes & Materials catalogs. `e` offers a whole catalog or not. A catalog not offered leaves its pickers with only the saga's own entries (its House Rules or own spells).
+
+### Hidden Entries
+<!-- help: section-hidden-entries -->
+
+Single entries this saga's pickers leave out, as if their book were out of play. `a` asks which catalog, then which entry to hide; `d` offers the chosen one again, after a confirmation.
+
+## House Rules tab
+<!-- help: tab-content-house-rules -->
+
+The Virtues, Flaws, Boons and Hooks made for this saga: house rules, or entries from books the app's catalogs don't carry. They show in the pickers alongside the catalog's entries.
+
+**You type:** with `a` and `e`: what the entry is For (a Character Virtue or Flaw, a Laboratory Virtue or Flaw, or a Covenant Boon or Hook; this is fixed once the entry is made), its Name, Type, Tier, Category, whether it can be taken more than once, a Description and, once the saga has sources of its own, the Source it comes from.
+
+**The app works out:** the points from the type and tier (Free 0, Minor 1, Major 3; Flaws and Hooks give points rather than cost them), and, in the details panel, who holds the entry. An entry citing one of the saga's sources is offered only while that source is in play; one citing none always is.
+
+### House Rules
+<!-- help: section-house-rules -->
+
+The list of the saga's own entries, with the details panel below it.
+
+### What house rules don't do
+<!-- help: house-rules-limits -->
+
+House rules are text only: the rules engine applies no effects for them. Two entries of the same kind can't share a name, type and tier. `d` won't delete an entry that a character, laboratory or covenant still holds; the message names them, so remove it there first.
+
+When a character, laboratory or covenant is exported, the house rules it uses go with it.
+
+**See also:** [Import Data](help:import-data), [How to import and export](help:guide-import-export)
+
+## Spells tab
+<!-- help: tab-content-spells -->
 
 Every spell the saga knows: the catalog's spells from the sourcebooks, and the saga's own. The list stretches down to a details panel that shows the chosen spell in full.
 
 **You type:** the saga's own spells, with `a` (add) and `e` (edit). Catalog spells are read-only: to make your own version of one, add a spell with `a`. `d` deletes only the saga's own spells.
 
 **The app works out:** each spell's Arts, level, Range, Duration and Target, and, in the details panel, its magnitude, vis cost and casting time. The section title shows how many spells are listed out of how many there are.
+
+### Spells
+<!-- help: section-spells -->
+
+The list of spells, with the filter bar above it and the details panel below.
 
 ### Filtering
 <!-- help: spells-filter -->
@@ -196,36 +276,23 @@ Every spell the saga knows: the catalog's spells from the sourcebooks, and the s
 
 Spells can be added in bulk from a CSV file: on the saga node, More, Import, then Spells. They become the saga's own spells. See [Import Spells](help:import-spells).
 
-**See also:** [Import Spells](help:import-spells), [House Rules](help:house-rules), [How to import and export](help:guide-import-export)
+**See also:** [Import Spells](help:import-spells), [How to import and export](help:guide-import-export)
 
-# House Rules
-<!-- help: house-rules -->
-
-The Virtues, Flaws, Boons and Hooks made for this saga: house rules, or entries from books the app's catalogs don't carry. They show in the pickers alongside the catalog's entries, and they count as always in play whatever books the saga uses.
-
-**You type:** with `a` and `e`: what the entry is For (a Character Virtue or Flaw, a Laboratory Virtue or Flaw, or a Covenant Boon or Hook; this is fixed once the entry is made), its Name, Type, Tier, Category, whether it can be taken more than once, and a Description.
-
-**The app works out:** the points from the type and tier (Free 0, Minor 1, Major 3; Flaws and Hooks give points rather than cost them), and, in the details panel, who holds the entry.
-
-### What house rules don't do
-<!-- help: house-rules-limits -->
-
-House rules are text only: the rules engine applies no effects for them. Two entries of the same kind can't share a name, type and tier. `d` won't delete an entry that a character, laboratory or covenant still holds; the message names them, so remove it there first.
-
-When a character, laboratory or covenant is exported, the house rules it uses go with it.
-
-**See also:** [Spells](help:spells), [Import Data](help:import-data), [How to import and export](help:guide-import-export)
-
-# Players
-<!-- help: players -->
+## Players tab
+<!-- help: tab-content-players -->
 
 Who can sign in to this saga when you host it, so that players open it in a web browser from their own computers. Each player signs in with their name and the passcode you give them. Your own window, the app run on your computer, never asks.
 
-Only the storyguide sees this node: your own window, or someone signed in with the Storyguide role.
+Only the storyguide sees this tab: your own window, or someone signed in with the Storyguide role.
 
 **You type:** with `a` and `e`: the player's Name (what they type to sign in; no two players may share one), their Role (Player or Storyguide), for a player whether they May change covenants, and a Passcode. When editing, leave New passcode blank to keep the one they have. `d` deletes a player after a confirmation; they can no longer sign in.
 
 **The app works out:** in the details panel, the characters each plays and what they may change. Passcodes are stored only scrambled (a salted hash), so the app can check one but no one can read it back from the saga file: if a player forgets theirs, give them a new one.
+
+### Players
+<!-- help: section-players -->
+
+The list of players, with the details panel below it.
 
 ### What a signed-in player can do
 <!-- help: players-access -->
@@ -236,7 +303,7 @@ Choose who plays a character with **Played by** in the character's Biographical 
 - change the covenants too, if you ticked May change covenants for them;
 - look at everything else, and Export a character, laboratory or covenant (the file downloads in their browser).
 
-Only the storyguide (your own window, or someone signed in as Storyguide) can make new records (New), advance or set the season, import, move vis, share spells, or change the saga itself, its house rules and its players. Keys a player can't use there don't appear, and if a change slips through anyway, the app doesn't save it and says so.
+Only the storyguide (your own window, or someone signed in as Storyguide) can make new records (New), advance or set the season, import, move vis, share spells, or change the saga itself, its content and its players. Keys a player can't use there don't appear, and if a change slips through anyway, the app doesn't save it and says so.
 
 **See also:** [Signing in](help:sign-in), [How to host a saga](help:guide-hosting), [The saga](help:saga)
 
@@ -245,8 +312,8 @@ Only the storyguide (your own window, or someone signed in as Storyguide) can ma
 
 When the storyguide hosts the app, opening a saga in a browser (or over SSH) first asks who you are: type your Name and the Passcode the storyguide gave you, then Sign in. Name is not case-sensitive; the passcode is.
 
-If the saga has no players yet, it can't be opened from a browser: the storyguide adds players on the saga's [Players](help:players) node. Your name is shown in the header beside the saga's date while you're signed in. Going back to the saga list (Escape) signs you out.
+If the saga has no players yet, it can't be opened from a browser: the storyguide adds players on the [Players tab](help:tab-content-players) of Saga Content. Your name is shown in the header beside the saga's date while you're signed in. Going back to the saga list (Escape) signs you out.
 
 While several people have the saga open, each one's saves keep everyone else's changes, and within a few seconds the others' screens show them: the sheet on show updates where it is (with a note such as "Ana changed Corvinus; reloaded"), and if two people open the same character, both are told ("Ana is also on Corvinus"). If the record you have open is deleted elsewhere, the saga is shown instead.
 
-**See also:** [Players](help:players), [How to host a saga](help:guide-hosting), [Saga picker](help:saga-picker)
+**See also:** [Players](help:tab-content-players), [How to host a saga](help:guide-hosting), [Saga picker](help:saga-picker)

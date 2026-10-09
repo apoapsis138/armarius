@@ -45,6 +45,7 @@ _SHEET_VIEW_ATTR = {
     "character": "_character_sheet_view",
     "laboratory": "_laboratory_sheet_view",
     "familiar": "_familiar_sheet_view",
+    "saga_content": "_saga_content_view",
 }
 
 

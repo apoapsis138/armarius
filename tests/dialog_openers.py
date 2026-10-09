@@ -20,6 +20,7 @@ from ars_magica_manager.models import (
     Book,
     Character,
     Saga,
+    SagaSource,
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules import creation_xp
@@ -84,6 +85,13 @@ class Opener:
     node: str | None
     #: Opens the dialog, given the workspace (or saga picker) screen.
     open: Callable[[object], object]
+
+
+def _open_saga_source(ws) -> None:
+    """Edit a saga source, made in memory (saved only with the edit)."""
+    if not ws.saga.sources:
+        ws.saga.sources.append(SagaSource("HR", "House rules"))
+    ws._saga_source_form(ws.saga.sources[0])
 
 
 def _param_vf() -> str:
@@ -388,9 +396,13 @@ OPENERS: dict[str, Opener] = {
     "perform ritual again": Opener("laboratory", lambda ws: ws.action_perform_ritual()),
     "lab texts read": Opener("character", lambda ws: ws._edit_lab_text_access()),
     "add house rule": Opener("saga", lambda ws: ws._house_rule_form(None)),
-    "add player": Opener("players", lambda ws: ws._player_form(None)),
-    "add spell": Opener("spells", lambda ws: ws._spell_form(None)),
-    "edit spell": Opener("spells", lambda ws: ws._spell_form(ws.saga.spells[0])),
+    "add player": Opener("saga_content", lambda ws: ws._player_form(None)),
+    "add spell": Opener("saga_content", lambda ws: ws._spell_form(None)),
+    "edit spell": Opener("saga_content", lambda ws: ws._spell_form(ws.saga.spells[0])),
+    "add saga source": Opener("saga_content", lambda ws: ws._saga_source_form(None)),
+    "edit saga source": Opener("saga_content", _open_saga_source),
+    "edit catalog": Opener("saga_content", lambda ws: ws._catalog_form("spells")),
+    "hide catalog entry": Opener("saga_content", lambda ws: ws._hide_catalog_entry()),
     "add ability": Opener("character", _open_ability_details),
     "edit arts": Opener("character", lambda ws: ws._edit_arts()),
     "edit familiar fatigue": Opener("familiar", lambda ws: ws._edit_familiar_fatigue()),
@@ -497,7 +509,7 @@ async def open_dialog(
         assert await wait_until(pilot, lambda: find_node() is not None)
         tree.select_node(find_node())
         assert await wait_until(pilot, lambda: base.selected_kind == opener.node)
-        if opener.node not in ("saga", "spells", "book_group", "players"):
+        if opener.node not in ("saga", "book_group"):
             assert await wait_until(
                 pilot, lambda: base._current_sheet_view() is not None
             )

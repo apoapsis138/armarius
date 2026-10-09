@@ -243,7 +243,7 @@ Season plans, season records and lab projects under way stay behind.
 # Import Spells
 <!-- help: import-spells -->
 
-Explains what a spell CSV file looks like before you choose one, and can save an example to start from. The spells imported become the saga's own spells, which you can edit on [Spells](help:spells).
+Explains what a spell CSV file looks like before you choose one, and can save an example to start from. The spells imported become the saga's own spells, which you can edit on [Spells](help:tab-content-spells).
 
 Open it from More's Import on the saga node, then Spells.
 
@@ -266,4 +266,4 @@ Open it from More's Import on the saga node, then Spells.
 - **Save example CSV** writes `spells_example.csv` (numbered if it exists) to the folder the app was started from, with two example spells. Edit it, then choose it to import.
 - **Cancel** closes the helper.
 
-**See also:** [Spells](help:spells), [Import Data](help:import-data), [How to import and export](help:guide-import-export)
+**See also:** [Spells](help:tab-content-spells), [Import Data](help:import-data), [How to import and export](help:guide-import-export)

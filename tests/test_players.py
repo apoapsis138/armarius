@@ -119,9 +119,7 @@ async def test_the_storyguides_own_window_opens_a_saga_without_signing_in():
         await _open_first_saga(pilot, app)
         assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         assert app.player is None
-        tree = app.screen.query_one(Tree)
-        kinds = [n.data[0] for n in tree.root.children]
-        assert NodeKind.PLAYERS in kinds
+        assert await _has_players_tab(pilot, app.screen)
 
 
 async def test_a_browser_copy_signs_in_before_opening_a_saga(in_a_browser):
@@ -146,8 +144,7 @@ async def test_a_browser_copy_signs_in_before_opening_a_saga(in_a_browser):
         assert app.player is not None and app.player.name == "Ana"
         assert app.screen.sub_title.endswith("| Ana")
         # A player doesn't see who else can sign in.
-        tree = app.screen.query_one(Tree)
-        assert NodeKind.PLAYERS not in [n.data[0] for n in tree.root.children]
+        assert not await _has_players_tab(pilot, app.screen)
 
         # Back to the list signs out.
         app.pop_screen()
@@ -158,8 +155,7 @@ async def test_a_browser_copy_signs_in_before_opening_a_saga(in_a_browser):
         await _open_first_saga(pilot, app)
         await _sign_in(pilot, app, "Hedda", "sage")
         assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
-        tree = app.screen.query_one(Tree)
-        assert NodeKind.PLAYERS in [n.data[0] for n in tree.root.children]
+        assert await _has_players_tab(pilot, app.screen)
 
 
 async def test_a_saga_with_no_players_cant_be_opened_from_a_browser(in_a_browser):
@@ -265,6 +261,14 @@ async def _show(pilot, workspace, data: tuple) -> None:
     tree.select_node(node())
     assert await wait_until(pilot, lambda: workspace.selected_kind == data[0])
     await pilot.pause()
+
+
+async def _has_players_tab(pilot, workspace) -> bool:
+    """Whether the Saga Content view has its Players tab (the storyguide's
+    only)."""
+    await _show(pilot, workspace, (NodeKind.SAGA_CONTENT,))
+    assert await wait_until(pilot, lambda: workspace._saga_content_view is not None)
+    return bool(workspace._saga_content_view.query("#tab-content-players"))
 
 
 _CHANGES = ("add", "edit", "delete", "new", "advance_season")

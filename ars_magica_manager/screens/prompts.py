@@ -25,6 +25,7 @@ from .. import catalog, covenant_diary, creation, transfer, vis
 from .. import house_rules as hr
 from .. import lab_texts as lt
 from .. import players as pl
+from .. import saga_content as sc
 from .. import sheet_text as st
 from ..arts import ART_DESCRIPTIONS, ARTS, FORMS, TECHNIQUES
 from ..markup import escape, todo
@@ -52,6 +53,7 @@ from ..models import (
     NamedDescription,
     Player,
     Saga,
+    SagaSource,
     ScoredTrait,
     VirtueFlawDef,
     VirtueFlawInstance,
@@ -574,7 +576,82 @@ def _player_dialog(saga: Saga, existing: Player | None) -> FieldsDialog[dict[str
         ],
         validate=problem,
     )
-    dialog.help_id = "players"
+    dialog.help_id = "tab-content-players"
+    return dialog
+
+
+def _saga_source_dialog(
+    saga: Saga, existing: SagaSource | None
+) -> FieldsDialog[dict[str, Any]]:
+    """Add or edit a source of the saga's own: the abbreviation its House
+    Rules cite, and its title. Builds the values saga_content.add_source /
+    update_source take."""
+    dialog = FieldsDialog(
+        "Add a Saga Source"
+        if existing is None
+        else f"Edit {escape(existing.title or existing.abbreviation)}",
+        [
+            DialogField(
+                "abbreviation",
+                "Abbreviation",
+                "text",
+                existing.abbreviation if existing else "",
+                required=True,
+                placeholder="e.g. HR",
+                hint="What its entries cite, as books are cited (DE, HoH:TL...).",
+            ),
+            DialogField(
+                "title",
+                "Title",
+                "text",
+                existing.title if existing else "",
+                placeholder="e.g. Our house rules",
+            ),
+        ],
+        validate=lambda values: sc.source_problem(saga, values, existing),
+    )
+    dialog.help_id = "saga-content"
+    return dialog
+
+
+def _catalog_dialog(saga: Saga, key: str) -> FieldsDialog[dict[str, Any]]:
+    """Whether the saga's pickers offer a shared catalog at all."""
+    info = sc.CATALOGS[key]
+    dialog = FieldsDialog(
+        f"Catalog: {escape(info.label)}",
+        [
+            DialogField(
+                "shown",
+                "Offered in this saga",
+                "check",
+                key not in saga.hidden_catalogs,
+                hint="Off: its pickers list only the saga's own entries (F3 in "
+                "a picker shows the others). Entries already on a record stay.",
+            ),
+        ],
+    )
+    dialog.help_id = "saga-content"
+    return dialog
+
+
+def _hide_entry_dialog(key: str | None) -> FieldsDialog[dict[str, Any]]:
+    """Which catalog to hide an entry of (the entry is picked next)."""
+    dialog = FieldsDialog(
+        "Hide a Catalog Entry",
+        [
+            DialogField(
+                "catalog",
+                "Catalog",
+                "select",
+                key or next(iter(sc.CATALOGS)),
+                options=[(c.label, c.key) for c in sc.CATALOGS.values()],
+                hint="The entry is chosen next. The saga's pickers leave it "
+                "out, as if its book were out of play.",
+            ),
+        ],
+        save_label="Next",
+    )
+    dialog.help_id = "saga-content"
     return dialog
 
 
@@ -631,6 +708,7 @@ def _house_rule_dialog(
             "category": values.get(f"category_{of}"),
             "repeatable": bool(values.get("repeatable")),
             "description": values.get("description") or "",
+            "source": values.get("source") or "",
         }
 
     def category(of: str) -> DialogField:
@@ -690,6 +768,7 @@ def _house_rule_dialog(
                 "check",
                 bool(entry.repeatable) if entry else False,
             ),
+            *_house_rule_source_field(saga, entry),
             _description_field(entry.description if entry else ""),
         ],
         validate=lambda values: hr.form_problem(
@@ -701,6 +780,28 @@ def _house_rule_dialog(
         ),
         build=built,
     )
+
+
+def _house_rule_source_field(saga: Saga, entry: hr.Entry | None) -> list[DialogField]:
+    """The saga source a user-made entry cites, when the saga has any
+    (Saga Content's Saga Sources): out of play with it, like a book."""
+    if not saga.sources:
+        return []
+    return [
+        DialogField(
+            "source",
+            "Source",
+            "select",
+            (entry.source if entry is not None else "") or None,
+            options=[
+                (f"{s.title or s.abbreviation} ({s.abbreviation})", s.abbreviation)
+                for s in saga.sources
+            ],
+            allow_blank=True,
+            placeholder="(none: always in play)",
+            hint="Out of play with its source, like an entry from a book.",
+        )
+    ]
 
 
 def _lab_text_access_dialog(

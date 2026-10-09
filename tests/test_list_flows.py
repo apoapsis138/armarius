@@ -25,6 +25,7 @@ from ars_magica_manager.models import (
     NamedDescription,
     Possession,
     Saga,
+    SagaSource,
     ScoredTrait,
 )
 from ars_magica_manager.screens import (
@@ -145,6 +146,7 @@ _SHEET_VIEW_ATTR = {
     "character": "_character_sheet_view",
     "familiar": "_familiar_sheet_view",
     "laboratory": "_laboratory_sheet_view",
+    "saga_content": "_saga_content_view",
 }
 
 
@@ -511,3 +513,71 @@ async def test_item_list_delete_needs_no_choosing_first(name):
         await pilot.press("y")
         assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
     assert [entry.name for entry in _saved(case)] == [first]
+
+
+# -- Saga Content's own lists --
+
+
+def _content_saga() -> Saga:
+    """_saga() with two sources of its own and two hidden Abilities (listed
+    by name: Animal Handling, then Athletics)."""
+    saga = _saga()
+    saga.sources = [SagaSource("HR", "House [rules]"), SagaSource("FS", "Fan")]
+    saga.hidden_entries = {"abilities": ["ab_athletics", "ab_animal_handling"]}
+    return saga
+
+
+CONTENT_LISTS: dict[str, ListCase] = {
+    "saga-sources": ListCase(
+        ("saga_content",),
+        "section-saga-sources",
+        "content-sources-list",
+        lambda s: [x.abbreviation for x in s.sources],
+    ),
+    "hidden-entries": ListCase(
+        ("saga_content",),
+        "section-hidden-entries",
+        "content-hidden-list",
+        lambda s: sorted(s.hidden_entries.get("abilities", [])),
+    ),
+}
+
+#: What d asks about each list's second row, and what is left after Yes.
+_CONTENT_DELETE = {
+    "saga-sources": ("Delete FS?", ["HR"]),
+    "hidden-entries": ("Offer Athletics again?", ["ab_animal_handling"]),
+}
+
+
+async def test_saga_source_edit_uses_the_chosen_row():
+    case = CONTENT_LISTS["saga-sources"]
+    storage.save_saga(_content_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        _, view = await _open(pilot, app, case)
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "e", FieldsDialog)  # no picker
+        dialog = app.screen
+        assert dialog.query_one("#fld-abbreviation", Input).value == "FS"
+        dialog.query_one("#fld-abbreviation", Input).value = "FAN"
+        dialog.query_one("#btn-save").press()
+        assert await wait_until(pilot, lambda: _saved(case) == ["HR", "FAN"])
+
+
+@pytest.mark.parametrize("name", list(CONTENT_LISTS))
+async def test_saga_content_delete_uses_the_chosen_row_after_asking(name):
+    case = CONTENT_LISTS[name]
+    message, left = _CONTENT_DELETE[name]
+    storage.save_saga(_content_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "d", ConfirmScreen)  # no picker
+        assert _confirm_message(app) == message
+        await pilot.press("n")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+        assert len(_saved(case)) == 2
+        await _press(pilot, app, "d", ConfirmScreen)
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: _saved(case) == left)

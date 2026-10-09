@@ -4,13 +4,16 @@ from the rules review's decisions (rules reference section 22); each later
 story adds the options its rules use.
 
 A supplement's own rules have no switch here: they apply when its book is
-in play (Saga.books_in_play, see sourcebooks), decided 2026-09-28.
+in play (Saga.books_in_play, see sourcebooks). An option that comes from a
+supplement names its book: it is offered, and can be on, only while that
+book is in play.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 
+from .. import sourcebooks
 from ..models import Saga
 
 SOURCE = (
@@ -32,6 +35,9 @@ class RuleOption:
     effect: str
     #: The rule it changes, as cited in the rules reference.
     source: str
+    #: The sourcebook it comes from ("" for the core book): offered, and
+    #: on, only while the saga has that book in play.
+    book: str = ""
 
 
 OPTIONS: tuple[RuleOption, ...] = (
@@ -65,6 +71,7 @@ OPTIONS: tuple[RuleOption, ...] = (
             "Infernal Vis (https://www.redcap.org/page/Realms_of_Power:_The_Infernal"
             "_Chapter_One:_The_Infernal_Realm#Infernal_Vis)"
         ),
+        book="RoP:I",
     ),
     RuleOption(
         key="income_per_magus",
@@ -109,18 +116,32 @@ OPTIONS: tuple[RuleOption, ...] = (
             "Quality of Books (https://www.redcap.org/page/Covenants_Chapter"
             "_Seven:_Library)"
         ),
+        book="Covenants",
     ),
 )
 
 OPTIONS_BY_KEY: dict[str, RuleOption] = {option.key: option for option in OPTIONS}
 
 
+def offered(saga: Saga | None) -> list[RuleOption]:
+    """The options `saga` can turn on: those whose book is in play."""
+    books = sourcebooks.saga_books(saga)
+    return [o for o in OPTIONS if sourcebooks.in_play(o.book, books)]
+
+
 def is_on(saga: Saga | None, key: str) -> bool:
-    """Whether the saga has turned optional rule `key` on (never, for no
-    saga or a key the app doesn't know)."""
-    if key not in OPTIONS_BY_KEY:
+    """Whether optional rule `key` applies to the saga: turned on, and its
+    book in play (never, for no saga; a key the app doesn't know is an
+    error). Taking the book out of play keeps the choice for when it
+    comes back."""
+    option = OPTIONS_BY_KEY.get(key)
+    if option is None:
         raise KeyError(f"Unknown rule option {key!r}")
-    return saga is not None and bool(saga.rule_options.get(key, False))
+    return (
+        saga is not None
+        and bool(saga.rule_options.get(key, False))
+        and sourcebooks.in_play(option.book, sourcebooks.saga_books(saga))
+    )
 
 
 def summary(saga: Saga) -> str:

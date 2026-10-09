@@ -1,4 +1,5 @@
-"""Spells (the saga's Spells view) and Books (every book list)."""
+"""Saga Content (books in play, saga sources, hidden catalogs, House Rules,
+the saga's spells, players) and Books (every book list)."""
 
 from __future__ import annotations
 
@@ -12,6 +13,7 @@ from ... import books as bk
 from ... import house_rules as hr
 from ... import lab_texts as lt
 from ... import players as pl
+from ... import saga_content as sc
 from ... import seasons, storage, transfer
 from ... import spells as spl
 from ...markup import escape
@@ -20,6 +22,7 @@ from ...models import (
     Book,
     Covenant,
     Player,
+    SagaSource,
     Spell,
 )
 from ..fields import (
@@ -41,19 +44,28 @@ from ..forms import (
     _spell_problem,
 )
 from ..pickers import (
+    CatalogEntryPickerScreen,
     CsvFilePickerScreen,
     RemovalPickerScreen,
+    SourcebookPickerScreen,
 )
 from ..prompts import (
     ConfirmScreen,
+    _catalog_dialog,
+    _hide_entry_dialog,
     _house_rule_dialog,
     _lab_text_filter_dialog,
     _player_dialog,
     _ritual_again_dialog,
+    _saga_source_dialog,
 )
 from ..sheets import (
     _LIBRARY_SECTIONS,
+    BOOKS_SECTION,
+    CATALOGS_SECTION,
+    HIDDEN_SECTION,
     LAB_TEXTS_SECTION,
+    SOURCES_SECTION,
     BookListView,
     HouseRulesView,
     LabTextListView,
@@ -89,9 +101,6 @@ class LibraryActions(WorkspaceBase):
         view = self._spell_view()
         if view is not None:
             view.refilter()
-        node = _tree_node_with_data(self._nav_tree(), (NodeKind.SPELLS,))
-        if node is not None:
-            node.set_label(self._spells_label())
 
     def _chosen_own_spell(self, verb: str) -> Spell | None:
         """The chosen spell if it's one of the saga's own; otherwise say why
@@ -168,9 +177,7 @@ class LibraryActions(WorkspaceBase):
         view = self._house_rules_view()
         if view is not None:
             view.rebuild()
-        node = _tree_node_with_data(self._nav_tree(), (NodeKind.HOUSE_RULES,))
-        if node is not None:
-            node.set_label(self._house_rules_label())
+        self._refresh_saga_content(BOOKS_SECTION, SOURCES_SECTION)
 
     def _pick_house_rule(self, then: Callable[[str, hr.Entry], None]) -> None:
         """Act on the chosen entry."""
@@ -244,9 +251,6 @@ class LibraryActions(WorkspaceBase):
         view = self._players_view()
         if view is not None:
             view.rebuild()
-        node = _tree_node_with_data(self._nav_tree(), (NodeKind.PLAYERS,))
-        if node is not None:
-            node.set_label(self._players_label())
 
     def _pick_player(self, then: Callable[[Player], None]) -> None:
         """Act on the chosen player."""
@@ -299,6 +303,162 @@ class LibraryActions(WorkspaceBase):
             )
 
         self._pick_player(confirm)
+
+    # -- Saga Content: books in play, saga sources, hidden catalogs --
+
+    def _refresh_saga_content(self, *sections: str) -> None:
+        view = self._saga_content_view
+        if view is not None:
+            for section in sections:
+                view.refresh_section(section)
+
+    def _saga_content_changed(self, *sections: str) -> None:
+        storage.save_saga(self.saga)
+        self._refresh_saga_content(*sections)
+        # Pickers and lists elsewhere follow the books in play.
+        house_rules = self._house_rules_view()
+        if house_rules is not None:
+            house_rules.rebuild()
+
+    def _edit_books_in_play(self) -> None:
+        saga = self.saga
+
+        def handle_result(ticked: list[str] | None) -> None:
+            if ticked is not None:
+                sc.set_books_in_play(saga, ticked)
+                self._saga_content_changed(BOOKS_SECTION, SOURCES_SECTION)
+
+        self.app.push_screen(
+            SourcebookPickerScreen(saga.books_in_play, saga.sources), handle_result
+        )
+
+    def _pick_saga_source(self, then: Callable[[SagaSource], None]) -> None:
+        view = self._saga_content_view
+        chosen = view.selected_source() if view is not None else None
+        if chosen is not None:
+            then(chosen)
+            return
+        sources = list(self.saga.sources)
+        self._chosen_or_pick(
+            None,
+            [s.abbreviation for s in sources],
+            empty="No saga sources yet: 'a' adds one.",
+            then=lambda index: then(sources[index]),
+        )
+
+    def _saga_source_form(self, existing: SagaSource | None) -> None:
+        saga = self.saga
+
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is None:
+                return
+            if existing is None:
+                sc.add_source(saga, values)
+            else:
+                sc.update_source(saga, existing, values)
+            self._saga_content_changed(BOOKS_SECTION, SOURCES_SECTION)
+
+        self.app.push_screen(_saga_source_dialog(saga, existing), handle_result)
+
+    def _edit_saga_source(self) -> None:
+        self._pick_saga_source(self._saga_source_form)
+
+    def _remove_saga_source(self) -> None:
+        """Delete the chosen source after confirming -- unless an entry
+        still cites it."""
+
+        def confirm(source: SagaSource) -> None:
+            citing = hr.citing(self.saga, source.abbreviation)
+            if citing:
+                self.notify(
+                    f"{escape(source.abbreviation)} is cited by "
+                    f"{escape(', '.join(e.name for e in citing))}: change them "
+                    "first.",
+                    severity="warning",
+                )
+                return
+
+            def handle_confirmed(confirmed: bool | None) -> None:
+                if confirmed and source in self.saga.sources:
+                    sc.remove_source(self.saga, source)
+                    self._saga_content_changed(BOOKS_SECTION, SOURCES_SECTION)
+
+            self.app.push_screen(
+                ConfirmScreen(f"Delete {escape(source.abbreviation)}?"),
+                handle_confirmed,
+            )
+
+        self._pick_saga_source(confirm)
+
+    def _edit_catalog(self) -> None:
+        view = self._saga_content_view
+        keys = list(sc.CATALOGS)
+        chosen = view.selected_catalog() if view is not None else None
+        self._chosen_or_pick(
+            keys.index(chosen) if chosen is not None else None,
+            keys,
+            empty="",
+            then=lambda index: self._catalog_form(keys[index]),
+        )
+
+    def _catalog_form(self, key: str) -> None:
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is not None:
+                sc.set_catalog_shown(self.saga, key, bool(values["shown"]))
+                self._saga_content_changed(CATALOGS_SECTION)
+
+        self.app.push_screen(_catalog_dialog(self.saga, key), handle_result)
+
+    def _hide_catalog_entry(self) -> None:
+        """Hide one more shared entry: which catalog, then which entry."""
+        saga = self.saga
+        view = self._saga_content_view
+        chosen = view.selected_hidden() if view is not None else None
+
+        def handle_entry(key: str, entry_id: str | None) -> None:
+            if entry_id is not None:
+                sc.hide_entry(saga, key, entry_id)
+                self._saga_content_changed(CATALOGS_SECTION, HIDDEN_SECTION)
+
+        def handle_catalog(values: dict[str, Any] | None) -> None:
+            if values is None:
+                return
+            key = values["catalog"]
+            self.app.push_screen(
+                CatalogEntryPickerScreen(saga, key),
+                lambda entry_id: handle_entry(key, entry_id),
+            )
+
+        self.app.push_screen(
+            _hide_entry_dialog(chosen[0] if chosen is not None else None),
+            handle_catalog,
+        )
+
+    def _show_catalog_entry(self) -> None:
+        """Offer the chosen hidden entry again, after confirming."""
+        view = self._saga_content_view
+        listed = sc.hidden_entries(self.saga)
+        chosen = view.selected_hidden() if view is not None else None
+
+        def confirm(index: int) -> None:
+            key, entry = listed[index]
+
+            def handle_confirmed(confirmed: bool | None) -> None:
+                if confirmed:
+                    sc.show_entry(self.saga, key, entry.id)
+                    self._saga_content_changed(CATALOGS_SECTION, HIDDEN_SECTION)
+
+            self.app.push_screen(
+                ConfirmScreen(f"Offer {escape(entry.name)} again?"),
+                handle_confirmed,
+            )
+
+        self._chosen_or_pick(
+            listed.index(chosen) if chosen in listed else None,
+            [entry.name for _, entry in listed],
+            empty="No entries are hidden: 'a' hides one.",
+            then=confirm,
+        )
 
     # -- Books (Library tab, laboratory/character Books, Unassigned Books) --
 

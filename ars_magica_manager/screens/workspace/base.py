@@ -56,7 +56,6 @@ from ... import (
 )
 from ... import economics as eco
 from ... import familiars as fam
-from ... import house_rules as hr
 from ... import inhabitants as inh
 from ... import lab_texts as lt
 from ... import laboratories as lab_rules
@@ -122,27 +121,23 @@ from ..season_records import SeasonRecordsView, SeasonSummaryScreen
 from ..sheets import (
     _LIBRARY_SECTIONS,
     DEVICE_SECTIONS,
-    HOUSE_RULES_SECTION,
     LAB_FEATURE_SECTIONS,
     LAB_TEXTS_SECTION,
     LAB_VF_SECTIONS,
-    PLAYERS_SECTION,
     SPELL_SECTION,
+    TAB_SECTIONS,
     BookListView,
     CharacterSheetView,
     CovenantSheetView,
     FamiliarSheetView,
-    HouseRulesView,
     LaboratorySheetView,
-    PlayersView,
+    SagaContentSheetView,
     SheetView,
-    SpellListView,
 )
 from ..widgets import (
     BottomBar,
     SelectableList,
     SheetSection,
-    first_stop,
     is_stop,
     section_of,
     section_stop,
@@ -253,9 +248,7 @@ class NodeKind(StrEnum):
     FAMILIAR = "familiar"
     LABORATORY_GROUP = "laboratory_group"
     LABORATORY = "laboratory"
-    SPELLS = "spells"
-    HOUSE_RULES = "house_rules"
-    PLAYERS = "players"
+    SAGA_CONTENT = "saga_content"
     SEASONS = "seasons"
     BOOK_GROUP = "book_group"
 
@@ -271,9 +264,7 @@ _HELP_PAGES: dict[NodeKind, str] = {
     NodeKind.LABORATORY: "laboratory",
     NodeKind.BOOK_GROUP: "unassigned-books",
     NodeKind.SEASONS: "seasons",
-    NodeKind.SPELLS: "spells",
-    NodeKind.HOUSE_RULES: "house-rules",
-    NodeKind.PLAYERS: "players",
+    NodeKind.SAGA_CONTENT: "saga-content",
 }
 
 #: How often, in seconds, a hosted saga's copies look for each other's saves
@@ -600,6 +591,7 @@ class WorkspaceBase(Screen[None]):
         self._laboratory_sheet_view: LaboratorySheetView | None = None
         self._covenant_sheet_view: CovenantSheetView | None = None
         self._familiar_sheet_view: FamiliarSheetView | None = None
+        self._saga_content_view: SagaContentSheetView | None = None
         #: One detail-pane swap at a time (see _set_detail).
         self._detail_lock = asyncio.Lock()
         #: While the Footer's keys are worked out (active_bindings), what
@@ -832,10 +824,7 @@ class WorkspaceBase(Screen[None]):
             f"Seasons ({len(self.saga.season_records)})",
             data=(NodeKind.SEASONS,),
         )
-        tree.root.add_leaf(self._spells_label(), data=(NodeKind.SPELLS,))
-        tree.root.add_leaf(self._house_rules_label(), data=(NodeKind.HOUSE_RULES,))
-        if self._is_storyguide():
-            tree.root.add_leaf(self._players_label(), data=(NodeKind.PLAYERS,))
+        tree.root.add_leaf("Saga Content", data=(NodeKind.SAGA_CONTENT,))
 
     def _add_character_node(self, parent, character: Character) -> None:
         """A character's own tree node: a plain leaf, unless it's a magus
@@ -867,6 +856,7 @@ class WorkspaceBase(Screen[None]):
         self._laboratory_sheet_view = None
         self._covenant_sheet_view = None
         self._familiar_sheet_view = None
+        self._saga_content_view = None
 
         handler = self._NODE_SELECTED.get(kind)
         if handler is not None:
@@ -947,17 +937,12 @@ class WorkspaceBase(Screen[None]):
         self.selected_covenant = self.saga.covenant(lab.covenant_id)
         await self._show_laboratory_detail(lab)
 
-    async def _select_spells(self, ident: str | None) -> None:
+    async def _select_saga_content(self, ident: str | None) -> None:
         self.selected_covenant = None
-        await self._set_detail(SpellListView(self.saga))
-
-    async def _select_house_rules(self, ident: str | None) -> None:
-        self.selected_covenant = None
-        await self._set_detail(HouseRulesView(self.saga))
-
-    async def _select_players(self, ident: str | None) -> None:
-        self.selected_covenant = None
-        await self._set_detail(PlayersView(self.saga))
+        view = SagaContentSheetView(self.saga, players=self._is_storyguide())
+        await self._set_detail(view)
+        self._saga_content_view = view
+        self._focus_first_section(initial=True)
 
     async def _select_seasons(self, ident: str | None) -> None:
         self.selected_covenant = None
@@ -985,9 +970,7 @@ class WorkspaceBase(Screen[None]):
         NodeKind.FAMILIAR: _select_familiar,
         NodeKind.LABORATORY_GROUP: _select_laboratory_group,
         NodeKind.LABORATORY: _select_laboratory,
-        NodeKind.SPELLS: _select_spells,
-        NodeKind.HOUSE_RULES: _select_house_rules,
-        NodeKind.PLAYERS: _select_players,
+        NodeKind.SAGA_CONTENT: _select_saga_content,
         NodeKind.SEASONS: _select_seasons,
         NodeKind.BOOK_GROUP: _select_book_group,
     }
@@ -1090,8 +1073,10 @@ class WorkspaceBase(Screen[None]):
                 and self._on_record()
             )
         if action == "research_bonuses":
+            # Library research values are Covenants'.
             return (
-                self.selected_kind == NodeKind.COVENANT
+                sourcebooks.in_play(bv.SOURCE_BOOK, sourcebooks.saga_books(self.saga))
+                and self.selected_kind == NodeKind.COVENANT
                 and self._active_section() in _LIBRARY_SECTIONS
                 and self.selected_covenant is not None
                 and bool(bv.library_subjects(self.saga, self.selected_covenant))
@@ -1263,7 +1248,7 @@ class WorkspaceBase(Screen[None]):
         """What / filters here: the Lab Texts list or the Spells list."""
         if self._active_section() == LAB_TEXTS_SECTION:
             return "lab_texts"
-        if self.selected_kind == NodeKind.SPELLS:
+        if self._active_section() == SPELL_SECTION:
             return "spells"
         return None
 
@@ -1452,15 +1437,10 @@ class WorkspaceBase(Screen[None]):
         sheet's top panel, outside its tabs. With none, a flat tab that
         dispatches on its own id (see _SHEET_DISPATCH), otherwise the sheet's
         always-visible top section, so 'e' edits the record from any tab.
-        The Unassigned Books and Spells nodes have no sheet, just a section."""
+        The Unassigned Books node has no sheet, just a section; on Saga
+        Content, a tab acts on its list (TAB_SECTIONS)."""
         if self.selected_kind == NodeKind.BOOK_GROUP:
             return "section-unassigned-books"
-        if self.selected_kind == NodeKind.SPELLS:
-            return SPELL_SECTION
-        if self.selected_kind == NodeKind.HOUSE_RULES:
-            return HOUSE_RULES_SECTION
-        if self.selected_kind == NodeKind.PLAYERS:
-            return PLAYERS_SECTION
         view = self._current_sheet_view()
         if view is None:
             return None
@@ -1476,6 +1456,8 @@ class WorkspaceBase(Screen[None]):
             for widget in focused.ancestors_with_self:
                 if isinstance(widget, Collapsible) and widget.id:
                     return widget.id
+        if self.selected_kind == NodeKind.SAGA_CONTENT:
+            return TAB_SECTIONS.get(tab_id)
         own_tabs, fallback = self._SHEET_DISPATCH[self.selected_kind]
         return tab_id if fallback is None or tab_id in own_tabs else fallback
 
@@ -1520,7 +1502,7 @@ class WorkspaceBase(Screen[None]):
                 tabbed = view.query_one(TabbedContent)
                 if not tabbed.active:
                     return
-                stop = first_stop(view.query_one(f"#{tabbed.active}", TabPane))
+                stop = view.tab_first_stop(view.query_one(f"#{tabbed.active}", TabPane))
             except NoMatches:
                 stop = None
             if stop is None and not initial:
@@ -1561,9 +1543,7 @@ class WorkspaceBase(Screen[None]):
         return {
             NodeKind.CHARACTER_GROUP: f"Characters{where}",
             NodeKind.LABORATORY_GROUP: f"Laboratories{where}",
-            NodeKind.SPELLS: "Spells",
-            NodeKind.HOUSE_RULES: "House Rules",
-            NodeKind.PLAYERS: "Players",
+            NodeKind.SAGA_CONTENT: "Saga Content",
             NodeKind.SEASONS: "Seasons",
             NodeKind.BOOK_GROUP: "Unassigned Books",
         }.get(self.selected_kind, "")
@@ -1651,7 +1631,10 @@ class WorkspaceBase(Screen[None]):
         ]
         if saga.description:
             lines.append(f"Description: {escape(saga.description)}")
-        lines.append(f"Books in play: {sourcebooks.summary(saga.books_in_play)}")
+        lines.append(
+            "Books in play: "
+            + sourcebooks.summary(saga.books_in_play, sourcebooks.saga_sources(saga))
+        )
         lines.append(f"Optional rules: {rule_options.summary(saga)}")
         lines += [
             "",
@@ -1694,6 +1677,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.LABORATORY: self._laboratory_sheet_view,
             NodeKind.COVENANT: self._covenant_sheet_view,
             NodeKind.FAMILIAR: self._familiar_sheet_view,
+            NodeKind.SAGA_CONTENT: self._saga_content_view,
         }.get(self.selected_kind)
 
     def _open_creation_worksheet(
@@ -2074,6 +2058,7 @@ class WorkspaceBase(Screen[None]):
         self.selected_familiar = None
         self._character_sheet_view = None
         self._familiar_sheet_view = None
+        self._saga_content_view = None
         tree = self._nav_tree()
         node = _tree_node_with_data(tree, (NodeKind.CHARACTER, character.id))
         if node is not None:
@@ -2093,6 +2078,7 @@ class WorkspaceBase(Screen[None]):
         self._laboratory_sheet_view = None
         self._covenant_sheet_view = None
         self._familiar_sheet_view = None
+        self._saga_content_view = None
         tree = self._nav_tree()
         tree.move_cursor(tree.root)
         await self._show_saga_detail()
@@ -2121,17 +2107,6 @@ class WorkspaceBase(Screen[None]):
     def action_restore(self) -> None:
         if (handler := self._section_op("restore")) is not None:
             handler()
-
-    # -- navigation tree labels --
-
-    def _spells_label(self) -> str:
-        return f"Spells ({len(spl.all_spells(self.saga))})"
-
-    def _house_rules_label(self) -> str:
-        return f"House Rules ({len(hr.all_entries(self.saga))})"
-
-    def _players_label(self) -> str:
-        return f"Players ({len(self.saga.players)})"
 
     # -- who is using this copy --
 
@@ -2175,10 +2150,11 @@ class WorkspaceBase(Screen[None]):
         async def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
-            self.saga.rule_options = saga_rule_options(result)
+            self.saga.rule_options = saga_rule_options(
+                result, kept=self.saga.rule_options
+            )
             for field, value in result.items():
                 setattr(self.saga, field, value)
-            self.saga.books_in_play = sourcebooks.normalized(self.saga.books_in_play)
             self._commit(tree=True)
             self._update_saga_clock()
             await self._show_saga_detail()

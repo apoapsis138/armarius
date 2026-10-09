@@ -41,6 +41,28 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.40.0 — 2026-10-09
+
+- A new Saga Content node in the tree gathers what the saga's pickers
+  offer, in tabs: Books, Catalogs, House Rules, Spells and (for the
+  storyguide) Players. It replaces the separate Spells, House Rules and
+  Players nodes, and the books in play move there from Edit Saga.
+- Saga sources: the saga can have sources of its own (a house-rules
+  list, a fan supplement) that House Rules entries cite. A source is put
+  in or out of play like a book; renaming one carries over to the entries
+  citing it, and one still cited can't be deleted.
+- Catalogs: a saga can stop offering a whole catalog (Virtues & Flaws,
+  Lab Virtues & Flaws, Boons & Hooks, Abilities, Spells, Shapes &
+  Materials) or single entries in it. Pickers leave them out as if their
+  book were out of play (F3 shows them); the saga's own entries are always
+  offered, and the shared catalog files are never changed.
+- Everything a supplement adds now switches off with its book: the
+  season activities it brings, its optional rules (Harsher Infernal vis,
+  Extended book Quality: hidden and off, the choice kept), the library's
+  book kinds and fields (commentaries, florilegia, epitomes, palimpsests,
+  encyclopedias and more), Gloss it while reading, and Research Bonuses.
+  Anything already using one keeps it.
+
 ## 2.39.0 — 2026-10-09
 
 - Correspondence: a tractatus can be a bound correspondence, read at the

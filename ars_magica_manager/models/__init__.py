@@ -142,6 +142,7 @@ from .laboratory import _parse_old_specialty as _parse_old_specialty
 from .laboratory import link_unlinked_features as link_unlinked_features
 from .saga import Player as Player
 from .saga import Saga as Saga
+from .saga import SagaSource as SagaSource
 from .saga import _key_lab_text_access_by_author as _key_lab_text_access_by_author
 from .saga import _link_vis_store_locations as _link_vis_store_locations
 from .saga import add_raw_vis as add_raw_vis

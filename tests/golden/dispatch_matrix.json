@@ -911,8 +911,58 @@
       }
     }
   },
-  "spells": {
-    "(node)": {
+  "saga_content": {
+    "SheetSection#section-books-in-play": {
+      "active": "section-books-in-play",
+      "keys": {
+        "a": "(disabled)",
+        "e": "SourcebookPickerScreen: Books in play",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-saga-sources": {
+      "active": "section-saga-sources",
+      "keys": {
+        "a": "FieldsDialog: Add a Saga Source",
+        "e": "notice: No saga sources yet: 'a' adds one.",
+        "d": "notice: No saga sources yet: 'a' adds one.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-catalogs": {
+      "active": "section-catalogs",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Catalog: Virtues & Flaws",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-hidden-entries": {
+      "active": "section-hidden-entries",
+      "keys": {
+        "a": "FieldsDialog: Hide a Catalog Entry",
+        "e": "(disabled)",
+        "d": "notice: No entries are hidden: 'a' hides one.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-house-rules": {
+      "active": "section-house-rules",
+      "keys": {
+        "a": "FieldsDialog: Add a House Rule",
+        "e": "notice: No House Rules yet: 'a' adds one.",
+        "d": "notice: No House Rules yet: 'a' adds one.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-spells": {
       "active": "section-spells",
       "keys": {
         "a": "FieldsDialog: Add a Spell",
@@ -921,10 +971,8 @@
         "m": "(disabled)",
         "slash": "(nothing)"
       }
-    }
-  },
-  "players": {
-    "(node)": {
+    },
+    "SheetSection#section-players": {
       "active": "section-players",
       "keys": {
         "a": "FieldsDialog: Add a Player",

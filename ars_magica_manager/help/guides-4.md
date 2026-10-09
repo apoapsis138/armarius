@@ -87,7 +87,7 @@ This guide covers moving records between sagas, bringing books and spells in fro
 4. For a covenant, tick **With its laboratories and characters** to take them too.
 5. Choose **Export**.
 
-What goes with the record, and what stays behind, is listed under [Exporting](help:import-data-export). In short: a character takes their familiar, their enchanted devices, their books and their Diary; a laboratory takes its books and devices; and the saga's own spells and [House Rules](help:house-rules) that these use go too. Season plans and lab work under way stay behind.
+What goes with the record, and what stays behind, is listed under [Exporting](help:import-data-export). In short: a character takes their familiar, their enchanted devices, their books and their Diary; a laboratory takes its books and devices; and the saga's own spells and [House Rules](help:tab-content-house-rules) that these use go too. Season plans and lab work under way stay behind.
 
 ### Importing a record into another saga
 <!-- help: guide-import-export-records -->
@@ -123,7 +123,7 @@ The app comes with one such file: `data/book_packages/ArM5_books_by_ability.csv`
 3. Choose **Choose CSV file...** and pick the file.
 4. Read the preview and choose **Import**.
 
-The spells become the saga's own spells, which you can edit on [Spells](help:spells).
+The spells become the saga's own spells, which you can edit on [Spells](help:tab-content-spells).
 
 ### When a name is already taken
 <!-- help: guide-import-export-duplicates -->
@@ -139,7 +139,7 @@ Each saga is saved as one file, the saga's id followed by `.json`, in the `sagas
 - That is the only backup the app keeps, so for anything older, copy the saga's file yourself from time to time.
 - To keep a single character, laboratory or covenant safe before a big change, export it as above.
 
-**See also:** [Import Data](help:import-data), [Import Spells](help:import-spells), [Unassigned Books](help:unassigned-books), [Library tab](help:tab-cov-library), [House Rules](help:house-rules), [The saga](help:saga), [Advancing a season](help:advance-season)
+**See also:** [Import Data](help:import-data), [Import Spells](help:import-spells), [Unassigned Books](help:unassigned-books), [Library tab](help:tab-cov-library), [House Rules](help:tab-content-house-rules), [The saga](help:saga), [Advancing a season](help:advance-season)
 
 # How to host a saga for your troupe
 <!-- help: guide-hosting -->
@@ -151,7 +151,7 @@ You need a private network that you and the players share. The app doesn't come 
 ### Before the first session
 <!-- help: guide-hosting-setup -->
 
-1. Open the saga and select its [Players](help:players) node. Add each player with `a`: a name, the Role *Player*, and a passcode you give them yourself. Add a *Storyguide* there too if another storyguide will sign in from a browser.
+1. Open the saga and select **Saga Content**, then its [Players tab](help:tab-content-players). Add each player with `a`: a name, the Role *Player*, and a passcode you give them yourself. Add a *Storyguide* there too if another storyguide will sign in from a browser.
 2. For each player's characters, open the character, edit its Biographical Detail and choose who it's **Played by**. Tick **May change covenants** on a player who should keep the covenant's books.
 3. Set up the private network (Tailscale or ZeroTier below) and note your computer's address on it.
 
@@ -204,7 +204,7 @@ Players connect with `ssh -p 2222 player@ADDRESS` from Windows Terminal (Windows
 
 - The app fills the browser window. It is laid out for at least 120 columns by 45 rows: on a 1080p screen, add `?fontsize=12` to the address (`http://ADDRESS:8000/?fontsize=12`) or zoom the browser out.
 - The browser keeps some keys for itself (Ctrl+W, Ctrl+T, F5), so don't use them in the app.
-- A player changes only the characters they play and what belongs to them; everything else they can look at and Export, which downloads in their browser. See [Players](help:players).
+- A player changes only the characters they play and what belongs to them; everything else they can look at and Export, which downloads in their browser. See [Players](help:tab-content-players).
 - Everyone's changes reach the others within a few seconds. See [Signing in](help:sign-in).
 
-**See also:** [Players](help:players), [Signing in](help:sign-in), [Saga picker](help:saga-picker)
+**See also:** [Players](help:tab-content-players), [Signing in](help:sign-in), [Saga picker](help:saga-picker)

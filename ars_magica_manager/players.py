@@ -4,7 +4,7 @@ When the storyguide hosts the app (tools/serve.py), each browser copy asks
 who is there before opening a saga: a name from the saga's player list and
 that player's passcode. The storyguide's own window -- the app run on their
 computer, not in a browser -- never asks. The list lives in the saga, where
-the storyguide keeps it on the Players node.
+the storyguide keeps it on the Saga Content view's Players tab.
 
 Passcodes are never stored: only a salted scrypt hash of each.
 """
@@ -158,13 +158,7 @@ def row_label(player: Player) -> str:
 def detail_text(saga: Saga, player: Player | None) -> str:
     """The details panel (markup) for a chosen player."""
     if player is None:
-        return (
-            "[dim]Who can sign in to this saga when you host it for a browser: "
-            "each signs in with their name and the passcode you give them. "
-            "Your own window never asks. A player changes only the characters "
-            "they play (choose who plays a character in its Biographical "
-            "Detail); everything else they can only look at.[/]"
-        )
+        return "[dim]Choose a player to see what they play; a adds one.[/]"
     role = ROLE_LABELS.get(player.role, player.role)
     return "\n".join(
         [

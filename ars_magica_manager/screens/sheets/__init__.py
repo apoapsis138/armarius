@@ -1,5 +1,6 @@
 """The record sheets mounted in the workspace's detail pane (Character,
-Laboratory, Familiar, Covenant) and the Book and Spell list views: one
+Laboratory, Familiar, Covenant), the Saga Content view and the Book and
+Spell list views: one
 module per sheet, re-exported here so `from ..sheets import X` keeps
 working."""
 
@@ -26,3 +27,9 @@ from .lists import HouseRulesView as HouseRulesView
 from .lists import LabTextListView as LabTextListView
 from .lists import PlayersView as PlayersView
 from .lists import SpellListView as SpellListView
+from .saga_content import BOOKS_SECTION as BOOKS_SECTION
+from .saga_content import CATALOGS_SECTION as CATALOGS_SECTION
+from .saga_content import HIDDEN_SECTION as HIDDEN_SECTION
+from .saga_content import SOURCES_SECTION as SOURCES_SECTION
+from .saga_content import TAB_SECTIONS as TAB_SECTIONS
+from .saga_content import SagaContentSheetView as SagaContentSheetView

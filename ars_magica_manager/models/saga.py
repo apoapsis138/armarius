@@ -42,6 +42,20 @@ class Player:
 
 
 @dataclass
+class SagaSource:
+    """A source of the saga's own, cited by its user-made entries like a
+    book (a house-rules list, a fan supplement): put in or out of play like
+    one. Its abbreviation is what entries cite; see sourcebooks."""
+
+    abbreviation: str
+    title: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> SagaSource:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
 class Saga:
     id: str
     name: str
@@ -59,10 +73,19 @@ class Saga:
     familiars: list[Familiar] = field(default_factory=list)
     #: Every enchanted item in the saga, each shown on its holder's sheet.
     enchanted_devices: list[EnchantedDevice] = field(default_factory=list)
-    #: The supplements in play (sourcebooks.SUPPLEMENTS abbreviations); None,
-    #: the default and what older saves load as, means every book. The core
-    #: book is always in play. See sourcebooks.
+    #: The supplements and saga sources in play (sourcebooks.SUPPLEMENTS
+    #: and `sources` abbreviations); None, the default and what older saves
+    #: load as, means every book. The core book is always in play. See
+    #: sourcebooks.
     books_in_play: list[str] | None = None
+    #: The saga's own sources, which its user-made entries can cite.
+    sources: list[SagaSource] = field(default_factory=list)
+    #: Shared catalogs the saga doesn't offer at all (saga_catalogs keys):
+    #: pickers list only the saga's own entries for them.
+    hidden_catalogs: list[str] = field(default_factory=list)
+    #: Single shared catalog entries the saga doesn't offer, by catalog
+    #: (saga_catalogs keys) -- entry ids.
+    hidden_entries: dict[str, list[str]] = field(default_factory=dict)
     #: The optional rules the troupe has turned on (rules.options keys);
     #: an option not listed is off, its default.
     rule_options: dict[str, bool] = field(default_factory=dict)
@@ -133,6 +156,7 @@ class Saga:
             CovenantBoonHookDef.from_dict(e) for e in d.get("custom_boons_hooks", [])
         ]
         d["players"] = [Player.from_dict(p) for p in d.get("players", [])]
+        d["sources"] = [SagaSource.from_dict(s) for s in d.get("sources", [])]
         spell_names = {s.id: s.name for s in d["spells"]}
         d["books"] = [Book.from_dict(b, spell_names) for b in d.get("books", [])]
         d["codices"] = [Codex.from_dict(c) for c in d.get("codices", [])]

@@ -3,7 +3,6 @@
 from screen_helpers import (
     _book_names,
     _fill,
-    _find_node,
     _open_workspace,
     _pick_csv,
     _pick_spell,
@@ -16,7 +15,15 @@ from screen_helpers import (
     _wait_for_screen,
 )
 from support import menu, wait_until
-from textual.widgets import Button, Collapsible, Input, OptionList, Select, Static, Tree
+from textual.widgets import (
+    Button,
+    Collapsible,
+    Input,
+    OptionList,
+    Select,
+    Static,
+    TabbedContent,
+)
 
 from ars_magica_manager import catalog, storage
 from ars_magica_manager import spells as spl
@@ -36,7 +43,11 @@ from ars_magica_manager.screens import (
 
 async def _open_spells(pilot, app) -> SpellListView:
     await _open_workspace(pilot)
-    await _select(pilot, app, ("spells",))
+    await _select(pilot, app, ("saga_content",))
+    assert await wait_until(pilot, lambda: app.screen._saga_content_view)
+    content = app.screen._saga_content_view
+    assert await wait_until(pilot, lambda: content.initial_tab_seen)
+    content.query_one(TabbedContent).active = "tab-content-spells"
     await wait_until(pilot, lambda: bool(app.screen.query(SpellListView)))
     return app.screen.query_one(SpellListView)
 
@@ -62,8 +73,6 @@ async def test_the_spells_node_lists_the_catalog_with_search_and_filters():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
         await _open_workspace(pilot)
-        tree = app.screen.query_one("#nav-tree", Tree)
-        assert str(_find_node(tree, ("spells",)).label) == f"Spells ({total})"
         view = await _open_spells(pilot, app)
         section = view.query_one("#section-spells", Collapsible)
         assert section.title == f"Spells ({total} of {total})"
@@ -101,7 +110,6 @@ async def test_adding_editing_and_deleting_the_sagas_own_spells():
     saga = _sample_saga_with_covenant()
     saga.spells = []  # start with none of the saga's own
     storage.save_saga(saga)
-    total = len(catalog.load_spell_catalog())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
@@ -139,8 +147,6 @@ async def test_adding_editing_and_deleting_the_sagas_own_spells():
         spell = app.screen.saga.spells[0]
         assert spell.id == "saga_lantern_of_truth"
         assert (spell.range, spell.requisites, spell.ritual) == ("Road", ["Rego"], True)
-        tree = app.screen.query_one("#nav-tree", Tree)
-        assert str(_find_node(tree, ("spells",)).label) == f"Spells ({total + 1})"
         view.query_one("#spell-source", Select).value = "__own__"
         await pilot.pause()
         assert _shown_names(view) == ["Lantern [of] Truth"]
@@ -265,9 +271,6 @@ async def test_import_data_offers_spells_with_a_helper_and_an_example_file(
         assert "Import 2 spells from spells_example.csv" in message
         await pilot.press("y")
         await wait_until(pilot, lambda: len(app.screen.saga.spells) == 3)
-        tree = app.screen.query_one("#nav-tree", Tree)
-        total = len(catalog.load_spell_catalog()) + 3
-        assert str(_find_node(tree, ("spells",)).label) == f"Spells ({total})"
 
     saved = {s.name: s for s in storage.load_saga("test_saga").spells}
     assert saved["Ward of the Quiet Hearth"].id == "saga_ward_of_the_quiet_hearth"

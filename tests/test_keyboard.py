@@ -48,7 +48,7 @@ async def _open(pilot, app, kind: str) -> WorkspaceScreen:
     tree.select_node(node)
     assert await wait_until(pilot, lambda: workspace.selected_kind == kind)
     view = workspace._current_sheet_view()
-    if kind in ("character", "covenant", "laboratory", "familiar"):
+    if kind in ("character", "covenant", "laboratory", "familiar", "saga_content"):
         assert await wait_until(pilot, lambda: workspace._current_sheet_view())
         view = workspace._current_sheet_view()
         assert await wait_until(pilot, lambda: view.initial_tab_seen)
@@ -276,11 +276,14 @@ async def test_escape_steps_out_from_the_sheet_to_the_tree_to_the_saga_picker():
         assert await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
 
 
-async def test_enter_on_a_list_node_moves_into_its_list():
+async def test_a_list_tab_moves_into_its_list():
     storage.save_saga(everything_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
-        workspace = await _open(pilot, app, "spells")
+        workspace = await _open(pilot, app, "saga_content")
+        books = workspace.query_one("#content-books-list", SelectableList)
+        assert await wait_until(pilot, lambda: app.focused is books)
+        await _show_tab(pilot, workspace, "tab-content-spells")
         spells = workspace.query_one("#spell-list", SelectableList)
         assert await wait_until(pilot, lambda: app.focused is spells)
         assert await wait_until(pilot, lambda: spells.selected_data_index is not None)
@@ -503,8 +506,9 @@ async def test_slash_moves_to_the_spell_search():
     storage.save_saga(everything_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
-        workspace = await _open(pilot, app, "spells")
-        assert "/ Filter" in _footer(app)
+        workspace = await _open(pilot, app, "saga_content")
+        await _show_tab(pilot, workspace, "tab-content-spells")
+        assert await wait_until(pilot, lambda: "/ Filter" in _footer(app))
         await pilot.press("slash")
         search = workspace.query_one("#spell-search", Input)
         assert await wait_until(pilot, lambda: app.focused is search)

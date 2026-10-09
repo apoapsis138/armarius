@@ -43,7 +43,7 @@ from ars_magica_manager.models import Saga
 SIZE = (140, 60)
 #: Also wait for animations (the tab underline slide) to finish.
 WAIT_ANIMATIONS = False
-SHEETS = {"covenant", "character", "laboratory", "familiar"}
+SHEETS = {"covenant", "character", "laboratory", "familiar", "saga_content"}
 
 
 def _ms(seconds: float) -> str:

@@ -11,11 +11,17 @@ the study or cost code. Three registries, by what they describe:
 - PHYSICAL_FORMS: how the copy is made (an Exemplar, a Flap-bound book...).
 - COLLECTIONS: what a codex binding several books is (a Florilegium, a
   Folio).
+
+Each kind names the book it comes from, and a form offers only the kinds
+whose book the saga has in play (a book already of that kind keeps it).
 """
 
 from __future__ import annotations
 
+from collections.abc import Collection
 from dataclasses import dataclass
+
+from . import sourcebooks
 
 SOURCE = (
     "Covenants, Chapter Seven: Library "
@@ -41,6 +47,8 @@ class Kind:
     #: It raises its library's research value on its subject one level (a
     #: long correspondence between experts).
     research_level: int = 0
+    #: The sourcebook it comes from.
+    book: str = "Covenants"
 
 
 COMMENTARY = "Commentary"
@@ -74,6 +82,7 @@ OPUS_TYPES: dict[str, Kind] = {
         summary="A teacher's lectures recorded by a scribe (Art & Academe): "
         "Quality = the teacher's Communication + Scribe / 2; not counted "
         "against the tractatus the teacher may write.",
+        book="A&A",
     ),
 }
 
@@ -161,6 +170,7 @@ COLLECTIONS: dict[str, Kind] = {
         FOLIO,
         summary="A society's best Lab Texts and tractatus: reading one also "
         "teaches Order of Hermes Lore.",
+        book="HoH:TL",
     ),
 }
 
@@ -190,6 +200,24 @@ CRAFT: dict[str, Kind] = {
 
 #: A gloss's Quality bonus (once, however often glossed).
 GLOSS = Kind("Glossed", quality=1)
+#: The books the codex flags and an epitome come from.
+PALIMPSEST_BOOK = "Covenants"
+ENCYCLOPEDIA_BOOK = "A&A"
+EPITOME_BOOK = "Covenants"
+
+
+def offered(
+    kinds: dict[str, Kind], books: Collection[str] | None, keep: str = ""
+) -> list[Kind]:
+    """The kinds a form offers with `books` in play (sourcebooks.saga_books),
+    and `keep`, the kind a book already is, whatever its book."""
+    return [
+        k
+        for k in kinds.values()
+        if k.name == keep or sourcebooks.in_play(k.book, books)
+    ]
+
+
 RESONANCE = ("resonance", "story_resonance")
 #: The extended rules' author base: Communication + 3 (the core rules' + 6).
 EXTENDED_AUTHOR_BASE = 3

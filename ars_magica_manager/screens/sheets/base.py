@@ -9,6 +9,7 @@ from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.content import Content
 from textual.css.query import NoMatches
+from textual.widget import Widget
 from textual.widgets import (
     Button,
     Collapsible,
@@ -32,6 +33,7 @@ from ..widgets import (
     SelectableList,
     SheetSection,
     counted,
+    first_stop,
 )
 from .lists import BookListView
 
@@ -101,6 +103,11 @@ class SheetView(Vertical):
         margin-right: 2;
     }
     """
+
+    def tab_first_stop(self, pane: TabPane) -> Widget | None:
+        """Where focus goes when `pane` is switched to: its first stop
+        (widgets.first_stop), unless a sheet says otherwise."""
+        return first_stop(pane)
 
     def __init__(self, saga: Saga) -> None:
         super().__init__()

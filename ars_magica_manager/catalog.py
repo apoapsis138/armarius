@@ -107,13 +107,73 @@ _MERGED_BY_ID: dict[tuple[str, Path], dict[str, Any]] = {}
 
 def use_saga(saga: Saga | None) -> None:
     """Make `saga`'s user-made entries part of the Virtue/Flaw, laboratory
-    Virtue/Flaw and Boon/Hook catalogs (None: just the shared catalogs).
+    Virtue/Flaw and Boon/Hook catalogs (None: just the shared catalogs), and
+    its hidden catalogs and entries (see hidden()) what pickers leave out.
     The app has one saga open at a time: the workspace calls this as it
-    opens one, and house_rules does after every change to the entries."""
+    opens one, and house_rules and the Saga Content view do after every
+    change."""
     _SAGA_ENTRIES["character"] = tuple(saga.custom_virtues_flaws) if saga else ()
     _SAGA_ENTRIES["lab"] = tuple(saga.custom_lab_virtues_flaws) if saga else ()
     _SAGA_ENTRIES["covenant"] = tuple(saga.custom_boons_hooks) if saga else ()
     _MERGED_BY_ID.clear()
+    _HIDDEN.clear()
+    if saga is None:
+        return
+    for key, kind in SAGA_CATALOG_KINDS.items():
+        ids = frozenset(saga.hidden_entries.get(key, ()))
+        whole = key in saga.hidden_catalogs
+        if whole or ids:
+            _HIDDEN[kind] = (whole, ids)
+    _OWN_IDS.clear()
+    _OWN_IDS.update(
+        entry.id
+        for entry in (
+            *saga.custom_virtues_flaws,
+            *saga.custom_lab_virtues_flaws,
+            *saga.custom_boons_hooks,
+            *saga.spells,
+        )
+    )
+
+
+#: The shared catalogs a saga can hide (whole, or entry by entry), by key:
+#: what Saga.hidden_catalogs and Saga.hidden_entries name, and the kind of
+#: entry each holds (how hidden() tells an entry's catalog). Their labels
+#: and loaders are saga_content.CATALOGS.
+SAGA_CATALOG_KINDS: dict[str, type] = {
+    "virtues_flaws": VirtueFlawDef,
+    "lab_virtues_flaws": LabVirtueFlawDef,
+    "boons_hooks": CovenantBoonHookDef,
+    "abilities": AbilityDef,
+    "spells": Spell,
+    "shapes_materials": ShapeMaterialDef,
+}
+
+#: The saga in use's hidden catalogs: entry kind -> (the whole catalog is
+#: hidden, the ids of single hidden entries). Set by use_saga().
+_HIDDEN: dict[type, tuple[bool, frozenset[str]]] = {}
+#: The ids of the saga in use's own entries, which a hidden catalog keeps.
+_OWN_IDS: set[str] = set()
+
+
+def hides_any() -> bool:
+    """Whether the saga in use hides any catalog or entry."""
+    return bool(_HIDDEN)
+
+
+def hidden(entry: Any) -> bool:
+    """Whether the saga in use doesn't offer `entry`: its catalog is hidden
+    (the saga's own entries excepted) or the entry is. A picker treats it
+    like an entry from a book out of play. A (definition, bonus) pair, as
+    the Shape & Material picker lists them, is its definition's."""
+    if isinstance(entry, tuple):
+        entry = entry[0]
+    found = _HIDDEN.get(type(entry))
+    if found is None:
+        return False
+    whole, ids = found
+    entry_id = getattr(entry, "id", "")
+    return entry_id in ids or (whole and entry_id not in _OWN_IDS)
 
 
 def _with_saga_entries(kind: str, entries: tuple[Any, ...]) -> list[Any]:
@@ -308,6 +368,8 @@ class VirtueFlawChooser:
             return "needs The Gift"
         if not sourcebooks.in_play(definition.source, self.books):
             return "book not in play"
+        if hidden(definition):
+            return "hidden in this saga"
         return ""
 
 

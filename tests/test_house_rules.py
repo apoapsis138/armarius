@@ -6,7 +6,7 @@ from dataclasses import asdict
 
 import pytest
 from support import strip_markup, wait_until
-from textual.widgets import Collapsible, Select, Static, Tree
+from textual.widgets import Collapsible, Select, Static, TabbedContent, Tree
 
 from ars_magica_manager import catalog, storage
 from ars_magica_manager import house_rules as hr
@@ -198,13 +198,18 @@ async def test_house_rules_are_added_edited_and_removed_from_their_node(size):  
         assert "custom_vf_storm_touched" in catalog.load_virtue_flaw_catalog_by_id()
         tree = workspace.query_one("#nav-tree", Tree)
         assert await wait_until(
-            pilot, lambda: _node(tree, (NodeKind.HOUSE_RULES,)) is not None
+            pilot, lambda: _node(tree, (NodeKind.SAGA_CONTENT,)) is not None
         )
-        node = _node(tree, (NodeKind.HOUSE_RULES,))
-        assert str(node.label) == "House Rules (1)"
-        tree.select_node(node)
+        tree.select_node(_node(tree, (NodeKind.SAGA_CONTENT,)))
+        assert await wait_until(pilot, lambda: workspace._saga_content_view)
+        view = workspace._saga_content_view
+        assert await wait_until(pilot, lambda: view.initial_tab_seen)
+        view.query_one(TabbedContent).active = "tab-content-house-rules"
         assert await wait_until(
             pilot, lambda: bool(workspace.query("#house-rules-list"))
+        )
+        assert await wait_until(
+            pilot, lambda: workspace._active_section() == "section-house-rules"
         )
         rows = workspace.query_one("#house-rules-list", SelectableList)
         assert workspace._active_section() == "section-house-rules"
@@ -236,7 +241,6 @@ async def test_house_rules_are_added_edited_and_removed_from_their_node(size):  
         assert await wait_until(pilot, lambda: app.screen is workspace)
         section = workspace.query_one("#section-house-rules", Collapsible)
         assert await wait_until(pilot, lambda: section.title == "House Rules (2)")
-        assert str(_node(tree, (NodeKind.HOUSE_RULES,)).label) == "House Rules (2)"
         hook_id = workspace.saga.custom_boons_hooks[0].id
         assert hook_id in catalog.load_covenant_boon_hook_catalog_by_id()
         # An entry someone holds can't be deleted.

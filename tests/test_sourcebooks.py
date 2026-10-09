@@ -3,12 +3,12 @@ which entries are in play, the saga setting, and the pickers hiding the
 rest."""
 
 from support import picker_rows, wait_until
-from textual.widgets import Button, SelectionList
+from textual.widgets import Button, Collapsible, SelectionList, Tree
 
 from ars_magica_manager import catalog, sourcebooks, storage
 from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Saga
-from ars_magica_manager.screens import FieldsDialog, WorkspaceScreen
+from ars_magica_manager.screens import FieldsDialog, SelectableList, WorkspaceScreen
 from ars_magica_manager.screens.pickers import (
     LabVirtueFlawPickerScreen,
     SourcebookPickerScreen,
@@ -64,32 +64,53 @@ def test_summary():
     assert sourcebooks.summary(None) == "All books"
     assert sourcebooks.summary([]) == "Core book only"
     assert sourcebooks.summary(["App"]) == "Core book + 1 supplement"
+    assert (
+        sourcebooks.summary(["App", "HR"], ["HR"])
+        == "Core book + 1 supplement + 1 saga source"
+    )
 
 
-async def test_edit_saga_sets_the_books_in_play():
+async def test_saga_content_sets_the_books_in_play():
     storage.save_saga(Saga(id="s", name="Matrix", storyguide="Ann"))
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:
         await pilot.press("enter")
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        workspace = app.screen
+        # Edit Saga no longer has the books: Saga Content does.
         await pilot.press("e")
         await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
-        button = app.screen.query_one("#fld-books_in_play", Button)
-        assert str(button.label) == "All books"
-        button.press()
+        assert not app.screen.query("#fld-books_in_play")
+        await pilot.press("escape")
+        await wait_until(pilot, lambda: app.screen is workspace)
+
+        tree = workspace.query_one("#nav-tree", Tree)
+        node = next(n for n in tree.root.children if n.data == ("saga_content",))
+        tree.select_node(node)
+        assert await wait_until(pilot, lambda: workspace._saga_content_view)
+        view = workspace._saga_content_view
+        section = view.query_one("#section-books-in-play", Collapsible)
+        assert await wait_until(
+            pilot, lambda: workspace._active_section() == "section-books-in-play"
+        )
+        every = 1 + len(sourcebooks.SUPPLEMENTS)
+        assert section.title == f"Books in Play ({every} of {every})"
+        await pilot.press("e")
         await wait_until(pilot, lambda: isinstance(app.screen, SourcebookPickerScreen))
         await pilot.press("f3")  # none
         books = app.screen.query_one("#books-list", SelectionList)
         books.select("Covenants")
         await pilot.pause()
         app.screen.query_one("#btn-save", Button).press()
-        await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
-        await pilot.pause()
-        assert "Core book + 1 supplement" in str(button.label)
-        app.screen.query_one("#btn-save", Button).press()
-        await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        await wait_until(pilot, lambda: app.screen is workspace)
+        assert await wait_until(
+            pilot, lambda: section.title == f"Books in Play (2 of {every})"
+        )
+        rows = view.query_one("#content-books-list", SelectableList)
+        covenants = next(label for _, label in rows._rows if "Covenants" in label)
+        assert covenants.startswith("yes")
 
-        assert storage.load_saga("s").books_in_play == ["Covenants"]
+    assert storage.load_saga("s").books_in_play == ["Covenants"]
 
 
 def _listed(picker) -> list[str]:

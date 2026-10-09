@@ -31,6 +31,7 @@ from textual.widgets.option_list import Option
 from .. import books as bk
 from .. import catalog, sourcebooks
 from .. import laboratories as labs
+from .. import saga_content as sc
 from .. import sheet_text as st
 from .. import spells as spl
 from ..markup import escape, fit
@@ -42,6 +43,7 @@ from ..models import (
     CovenantBoonHookDef,
     LabVirtueFlawDef,
     Saga,
+    SagaSource,
     ShapeMaterialBonus,
     ShapeMaterialDef,
     Spell,
@@ -104,7 +106,7 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
     Given the saga's `books` in play (sourcebooks.saga_books; None: every
     book), entries whose books are all out of play are hidden, with F3 to
     list them too, marked; a subclass says where an entry is
-    from with `_source`.
+    from with `_source`. So are the entries the saga hides (catalog.hidden).
     """
 
     BINDINGS: ClassVar[list[BindingType]] = [
@@ -167,6 +169,9 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
         #: The books in play (None: every book), whether entries from other
         #: books are listed too (F3), and how many the last refill hid.
         self._books = books
+        #: Whether anything can be left out: books narrowed, or entries the
+        #: saga hides.
+        self._narrowed = books is not None or catalog.hides_any()
         self._show_other_books = False
         self._other_books = 0
         self.empty_message = empty_message or self.EMPTY_MESSAGE
@@ -190,7 +195,7 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
                 with VerticalScroll(id="picker-details") as details:
                     details.styles.height = self.DETAILS_HEIGHT
                     yield Static(id="picker-details-text")
-            if self._books is not None:
+            if self._narrowed:
                 yield Static(id="picker-books")
             yield Button("Cancel", id="btn-cancel")
 
@@ -243,10 +248,18 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
         return self._entries if self._show_other_books else in_play
 
     def _in_play(self, entry: EntryT) -> bool:
-        return sourcebooks.in_play(self._source(entry), self._books)
+        return sourcebooks.in_play(
+            self._source(entry), self._books
+        ) and not catalog.hidden(entry)
+
+    def _out_of_play_note(self, entry: EntryT) -> str:
+        """Why an entry listed with F3 is out of play."""
+        if catalog.hidden(entry):
+            return "hidden in this saga"
+        return "book not in play"
 
     def action_toggle_other_books(self) -> None:
-        if self._books is None:
+        if not self._narrowed:
             return
         self._show_other_books = not self._show_other_books
         self.run_worker(
@@ -256,12 +269,17 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
         )
 
     def _update_books_note(self) -> None:
-        if self._books is None:
+        if not self._narrowed:
             return
+        what = (
+            "from books not in play or hidden in this saga"
+            if catalog.hides_any()
+            else "from books not in play"
+        )
         if self._show_other_books:
-            note = f"{self._other_books} from books not in play marked (F3 hides them)"
+            note = f"{self._other_books} {what} marked (F3 hides them)"
         else:
-            note = f"{self._other_books} from books not in play hidden (F3 shows them)"
+            note = f"{self._other_books} {what} hidden (F3 shows them)"
         self.query_one("#picker-books", Static).update(note)
 
     def _match(self, entries: list[EntryT], needle: str) -> list[EntryT]:
@@ -339,7 +357,7 @@ class SearchablePickerScreen[EntryT, ResultT](ModalDialog[ResultT]):
             self._by_item_id[item_id] = entry
             label = self._label_for(entry)
             if not self._in_play(entry):
-                label += "  [dim](book not in play)[/]"
+                label += f"  [dim]({self._out_of_play_note(entry)})[/]"
             options.append(Option(label, id=item_id))
         option_list.add_options(options)
         option_list.highlighted = 0
@@ -431,6 +449,11 @@ def _vf_types(entries: Sequence[VirtueFlawDef]) -> list[str]:
     printed = {t for e in entries for t in (e.category, *e.extra_categories)}
     core = [t for t in _VF_CORE_TYPES if t in printed]
     return core + sorted(printed - set(core))
+
+
+def _hidden_note(entry: Any) -> str:
+    """Why nobody in particular can take `entry`: the saga hides it."""
+    return "hidden in this saga" if catalog.hidden(entry) else ""
 
 
 class VirtueFlawPickerScreen(
@@ -598,7 +621,7 @@ class VirtueFlawPickerScreen(
         ]
         chooser = self._chooser
         self._refusals = {
-            entry.id: (chooser.refusal(entry) if chooser else "")
+            entry.id: (chooser.refusal(entry) if chooser else _hidden_note(entry))
             or self._no_choice_left(entry)
             for entry in entries
         }
@@ -949,6 +972,46 @@ class AbilityPickerScreen(SearchablePickerScreen[AbilityDef, Ability | None]):
         )
 
 
+class CatalogEntryPickerScreen(SearchablePickerScreen[Any, str | None]):
+    """Pick a shared entry of one catalog (saga_content.CATALOGS) for the
+    saga to hide: every entry not hidden yet, whatever its book, searchable
+    by name or book. Dismisses with the entry's id."""
+
+    PICKER_TITLE: ClassVar[str] = "Hide an Entry"
+    EMPTY_MESSAGE: ClassVar[str] = "(every entry is hidden already)"
+    SEARCH_PLACEHOLDER: ClassVar[str] = "Search by name or book..."
+    LIST_VIEW_ID: ClassVar[str] = "catalog-entry-picker-list"
+
+    def __init__(self, saga: Saga, key: str) -> None:
+        info = sc.CATALOGS[key]
+        super().__init__(f"Hide an Entry: {info.label}")
+        # Lists every entry: what's hidden or out of play is the point here.
+        self._narrowed = False
+        self._saga = saga
+        self._key = key
+
+    def _load_entries(self) -> list[Any]:
+        hidden = set(self._saga.hidden_entries.get(self._key, ()))
+        entries = sc.CATALOGS[self._key].shared()
+        return sorted((e for e in entries if e.id not in hidden), key=lambda e: e.name)
+
+    def _in_play(self, entry: Any) -> bool:
+        return True
+
+    def _search_text(self, entry: Any) -> str:
+        return f"{entry.name} {getattr(entry, 'source', '')}"
+
+    def _label_for(self, entry: Any) -> str:
+        source = getattr(entry, "source", "")
+        return escape(f"{entry.name}  [{source}]" if source else entry.name)
+
+    def _item_id(self, entry: Any) -> str:
+        return f"hide-{entry.id}"
+
+    def _on_entry_selected(self, entry: Any) -> None:
+        self.dismiss(entry.id)
+
+
 class SpellChooserScreen(SearchablePickerScreen[Spell, str | None]):
     """Pick a spell -- for a Lab Text or Casting Tablet, or a spell a magus
     knows: every spell there is (the catalog, the saga's own, any magus's
@@ -1125,9 +1188,9 @@ class RemovalPickerScreen(ModalDialog[int | None]):
 
 
 class SourcebookPickerScreen(ModalDialog[list[str] | None]):
-    """Tick the supplements a saga has in play; the core book is
-    always in play. Dismisses with the ticked abbreviations (every one of
-    them: every book), or None if cancelled."""
+    """Tick the supplements and saga sources a saga has in play; the core
+    book is always in play. Dismisses with the ticked abbreviations (every
+    one of them: every book), or None if cancelled."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
         Binding("f2", "tick_all", "All"),
@@ -1162,23 +1225,31 @@ class SourcebookPickerScreen(ModalDialog[list[str] | None]):
     }
     """
 
-    def __init__(self, books_in_play: list[str] | None) -> None:
+    def __init__(
+        self, books_in_play: list[str] | None, sources: Sequence[SagaSource] = ()
+    ) -> None:
         super().__init__()
-        self._ticked = set(
-            sourcebooks.SUPPLEMENTS if books_in_play is None else books_in_play
-        )
+        #: Every book that can be ticked: abbreviation -> its line.
+        self._books = {
+            **{
+                book: f"{sourcebooks.SOURCEBOOKS[book]} ({book})"
+                for book in sourcebooks.SUPPLEMENTS
+            },
+            **{
+                s.abbreviation: f"{s.title or s.abbreviation} ({s.abbreviation}, "
+                "the saga's own)"
+                for s in sources
+            },
+        }
+        self._ticked = set(self._books if books_in_play is None else books_in_play)
 
     def compose(self) -> ComposeResult:
         with Vertical(id="books-dialog", classes="dialog-box"):
             yield Label("Books in play", id="books-title", classes="dialog-title")
             yield SelectionList[str](
                 *(
-                    (
-                        f"{sourcebooks.SOURCEBOOKS[book]} ({book})",
-                        book,
-                        book in self._ticked,
-                    )
-                    for book in sourcebooks.SUPPLEMENTS
+                    (escape(line), book, book in self._ticked)
+                    for book, line in self._books.items()
                 ),
                 id="books-list",
             )
@@ -1205,7 +1276,7 @@ class SourcebookPickerScreen(ModalDialog[list[str] | None]):
             self.action_cancel()
         elif event.button.id == "btn-save":
             ticked = set(self.query_one("#books-list", SelectionList).selected)
-            self.dismiss([b for b in sourcebooks.SUPPLEMENTS if b in ticked])
+            self.dismiss([b for b in self._books if b in ticked])
 
 
 class _CsvDirectoryTree(DirectoryTree):

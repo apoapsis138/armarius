@@ -7,8 +7,8 @@ from collections.abc import Callable
 from dataclasses import replace
 from typing import Any
 
+from ... import book_kinds, catalog, seasons, sourcebooks
 from ... import books as bk
-from ... import catalog, seasons, sourcebooks
 from ... import lab_texts as lt
 from ... import spells as spl
 from ...markup import escape
@@ -668,12 +668,19 @@ def _study_fields(
     saga: Saga, character: Character, existing: SeasonPlan | None
 ) -> list[DialogField]:
     """The Activity, and the Source Quality, book or teacher it studies from."""
+    books = sourcebooks.saga_books(saga)
     activities = season_rules.activities_for(
-        character,
-        books=sourcebooks.saga_books(saga),
-        keep=_attr(existing, "activity", ""),
+        character, books=books, keep=_attr(existing, "activity", "")
     )
-    return [
+    gloss = _attr(existing, "gloss", False)
+    # Glossing is Covenants': off the form with the book out of play, unless
+    # the plan already glosses.
+    hidden = (
+        set()
+        if gloss or sourcebooks.in_play(book_kinds.GLOSS.book, books)
+        else {"gloss"}
+    )
+    fields = [
         DialogField(
             "activity",
             "Activity",
@@ -710,7 +717,7 @@ def _study_fields(
             "gloss",
             "Gloss it (+1 Quality)",
             "check",
-            bool(_attr(existing, "gloss", False)),
+            bool(gloss),
             hint="A reader at least half as skilled as its Level, with better "
             "Communication than its author, glosses it while reading: +1, once.",
             show_if=_activity_is(season_rules.READ),
@@ -742,6 +749,7 @@ def _study_fields(
             "assist plans lab work.",
         ),
     ]
+    return [f for f in fields if f.key not in hidden]
 
 
 def _subject_fields(

@@ -90,15 +90,15 @@ async def test_binding_a_familiar_nests_it_under_its_magus_and_grants_shared_tra
 
 
 async def test_bind_familiar_only_defaults_to_the_magus_on_show():
-    # After showing a magus, then a laboratory or Spells, the dialog
+    # After showing a magus, then a laboratory or Saga Content, the dialog
     # still preselected that magus.
     storage.save_saga(_sample_saga_with_covenant())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_character(pilot, app)
-        # A laboratory or Spells doesn't offer Bind Familiar at all.
-        for node in (("laboratory", "lab1"), ("spells",)):
+        # A laboratory or Saga Content doesn't offer Bind Familiar at all.
+        for node in (("laboratory", "lab1"), ("saga_content",)):
             await _select(pilot, app, node)
             assert app.screen.check_action("create_familiar", ()) is False
         for node in (("covenant", "cov1"), ("saga",)):
@@ -121,7 +121,7 @@ async def test_records_are_created_where_they_belong():
         ("covenant", "cov1"): {"c", "l", "f"},
         ("character", "char1"): {"c", "f"},
         ("laboratory", "lab1"): {"l"},
-        ("spells",): set(),
+        ("saga_content",): set(),
     }
     keys = {
         "n": "create_covenant",

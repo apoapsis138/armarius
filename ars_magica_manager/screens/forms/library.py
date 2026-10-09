@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ... import book_kinds, catalog
+from ... import book_kinds, catalog, sourcebooks
 from ... import book_value as bv
 from ... import books as bk
 from ... import spells as spl
@@ -265,18 +265,37 @@ def _book_kind_fields(
             and values.get("opus") == book_kinds.COMMENTARY
         )
 
-    return [
+    books = sourcebooks.saga_books(saga)
+    opus = book_kinds.offered(book_kinds.OPUS_TYPES, books, _attr(book, "opus", ""))
+    forms = book_kinds.offered(
+        book_kinds.PHYSICAL_FORMS, books, _attr(book, "physical_form", "")
+    )
+    # What a book out of play adds is left off, unless this book uses it.
+    hidden: set[str] = set()
+    if not opus:
+        hidden |= {"opus", "commentary_on"}
+    if not forms:
+        hidden.add("physical_form")
+    if not (
+        sourcebooks.in_play(book_kinds.EPITOME_BOOK, books)
+        or _attr(book, "device_id", None)
+    ):
+        hidden.add("epitome")
+    if not (
+        sourcebooks.in_play(book_kinds.GLOSS.book, books)
+        or _attr(book, "glossed", False)
+    ):
+        hidden.add("glossed")
+    fields = [
         DialogField(
             "opus",
             "Opus",
             "select",
             _attr(book, "opus", "") or None,
-            options=[(k.name, k.name) for k in book_kinds.OPUS_TYPES.values()],
+            options=[(k.name, k.name) for k in opus],
             allow_blank=True,
             placeholder="(an ordinary tractatus)",
-            hint=" ".join(
-                f"{k.name}: {k.summary}" for k in book_kinds.OPUS_TYPES.values()
-            ),
+            hint=" ".join(f"{k.name}: {k.summary}" for k in opus),
             show_if=lambda v: shows.book_type(v) == "Tractatus",
         ),
         DialogField(
@@ -319,13 +338,14 @@ def _book_kind_fields(
             _attr(book, "physical_form", "") or None,
             options=[
                 (f"{k.name} ({k.quality:+d} Quality)" if k.quality else k.name, k.name)
-                for k in book_kinds.PHYSICAL_FORMS.values()
+                for k in forms
             ],
             allow_blank=True,
             placeholder="(an ordinary bound book)",
         ),
         *_craft_fields(saga, book, shows),
     ]
+    return [f for f in fields if f.key not in hidden]
 
 
 #: The book form's craftsmanship checkboxes (book_kinds.CRAFT keys), by
@@ -512,7 +532,25 @@ def _book_ownership_fields(
         owner = ""
     else:
         owner = bk.owner_value(book.owner_kind, book.owner_id)
-    return [
+    books = sourcebooks.saga_books(saga)
+    collections = book_kinds.offered(
+        book_kinds.COLLECTIONS, books, codex.collection if codex is not None else ""
+    )
+    # What a book out of play adds is left off, unless this codex uses it.
+    hidden: set[str] = set()
+    if not collections:
+        hidden |= {"collection", "florilegium_bonus"}
+    if not (
+        sourcebooks.in_play(book_kinds.PALIMPSEST_BOOK, books)
+        or (codex is not None and codex.palimpsest)
+    ):
+        hidden.add("palimpsest")
+    if not (
+        sourcebooks.in_play(book_kinds.ENCYCLOPEDIA_BOOK, books)
+        or (codex is not None and codex.encyclopedia)
+    ):
+        hidden.add("encyclopedia")
+    fields = [
         DialogField(
             "owner",
             "Owner",
@@ -564,12 +602,10 @@ def _book_ownership_fields(
             "Collection",
             "select",
             (codex.collection or None) if codex is not None else None,
-            options=[(k.name, k.name) for k in book_kinds.COLLECTIONS.values()],
+            options=[(k.name, k.name) for k in collections],
             allow_blank=True,
             placeholder="(neither)",
-            hint=f"{book_kinds.FLORILEGIUM}: "
-            f"{book_kinds.COLLECTIONS[book_kinds.FLORILEGIUM].summary} "
-            f"{book_kinds.FOLIO}: {book_kinds.COLLECTIONS[book_kinds.FOLIO].summary}",
+            hint=" ".join(f"{k.name}: {k.summary}" for k in collections),
             show_if=lambda v: bool(v.get("codex")),
         ),
         DialogField(
@@ -586,6 +622,7 @@ def _book_ownership_fields(
             ),
         ),
     ]
+    return [f for f in fields if f.key not in hidden]
 
 
 def _book_fields(
@@ -621,10 +658,14 @@ def _bind_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
         codex = next((c for c in saga.codices if c.id == chosen), None)
     book.codex_id = codex.id if codex is not None else None
     if codex is not None:
-        codex.palimpsest = bool(values.get("palimpsest"))
-        codex.encyclopedia = bool(values.get("encyclopedia"))
-        codex.collection = values.get("collection") or ""
-        codex.florilegium_bonus = int(values.get("florilegium_bonus") or 1)
+        # A field the form left off (its book out of play) keeps the codex's.
+        if "palimpsest" in values:
+            codex.palimpsest = bool(values["palimpsest"])
+        if "encyclopedia" in values:
+            codex.encyclopedia = bool(values["encyclopedia"])
+        if "collection" in values:
+            codex.collection = values["collection"] or ""
+            codex.florilegium_bonus = int(values.get("florilegium_bonus") or 1)
     kind, owner_id = bk.parse_owner_value(values.get("owner"))
     bk.set_owner(saga, book, kind, owner_id)
     bk.prune_codices(saga)
