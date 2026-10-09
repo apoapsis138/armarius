@@ -22,7 +22,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
-from .. import catalog
+from .. import book_value, catalog
 from ..models import Book, Character, Progress, Saga, SeasonPlan
 from . import dice
 from .rounding import round_down, round_up
@@ -238,6 +238,11 @@ def problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
             return ["Choose the summa to annotate."]
         if book.author != character.name:
             return ["An inspeximus annotates the author's own summa."]
+    if key == "read_commentary":
+        return [
+            "Plan Read a book instead: it now adds a commentary's, a "
+            "florilegium's or a gloss's Quality bonus itself."
+        ]
     if key == "bind_catalog" and character.raw_vis.get("vim", 0) < 1:
         return [f"Binding the catalog takes 1 pawn of Vim; {character.name} has none."]
     return []
@@ -587,6 +592,37 @@ def _bind_catalog(
 
 
 #: What each supplement activity does, by its key (Strategy, as a table).
+def _library_research(
+    saga: Saga, character: Character, plan: SeasonPlan, rng, result: SupplementWork
+) -> None:
+    """The research roll's total before the die: Intelligence + the Ability
+    + the better of the covenant library's bonus for it and its best
+    encyclopedia's (Covenants, Use: Research; Art & Academe,
+    Encyclopedias)."""
+    name = _subject_ability(plan)
+    if not name:
+        return
+    covenant = saga.covenant(character.covenant_id)
+    found = (
+        book_value.encyclopedias(saga, covenant, name) if covenant is not None else []
+    )
+    library = covenant.library_research.get(name, 0) if covenant is not None else 0
+    best = max([library, *(e.bonus for e in found)])
+    source = ""
+    if best:
+        source = (
+            f"the library +{library}"
+            if best == library
+            else f"{found[0].name} +{found[0].bonus}"
+        )
+    total = character.characteristics.intelligence + ability(character, name) + best
+    text = f"Research roll: Intelligence + {name}"
+    text += f" + {source}" if source else " (no library bonus)"
+    result.notes.append(
+        f"{text} = {total} + a die, against the storyguide's Ease Factor."
+    )
+
+
 _WORK: dict[str, Callable[[Saga, Character, SeasonPlan, Any, SupplementWork], None]] = {
     "working_season": _working_season,
     "tournament": _working_season,
@@ -608,6 +644,7 @@ _WORK: dict[str, Callable[[Saga, Character, SeasonPlan, Any, SupplementWork], No
     "record_lectures": _record_lectures,
     "inspeximus": _inspeximus,
     "bind_catalog": _bind_catalog,
+    "library_research": _library_research,
 }
 
 

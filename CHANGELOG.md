@@ -41,6 +41,15 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.37.0 — 2026-10-09
+
+- Library research shows its roll: Intelligence + the Ability + the
+  better of the covenant library's research bonus for it and its best
+  encyclopedia's, against the storyguide's Ease Factor.
+- "Read a commentary, florilegium or glossed book" is no longer offered:
+  Read a book adds those bonuses itself. An older plan using it says to
+  plan Read a book instead.
+
 ## 2.36.0 — 2026-10-08
 
 - A new optional rule, Extended book Quality (Edit Saga), uses Covenants'

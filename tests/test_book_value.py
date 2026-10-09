@@ -138,3 +138,42 @@ def test_a_csv_marks_a_codex_as_an_encyclopedia():
         ("Natural Histories", True),
         ("Bound", False),
     ]
+
+
+def test_library_research_rolls_with_the_better_bonus():
+    from ars_magica_manager.models import Ability, Character, SeasonPlan, XpAllocation
+    from ars_magica_manager.rules import activities
+    from ars_magica_manager.rules.xp import ability_xp
+
+    saga = _library()
+    ana = Character(id="ana", name="Ana", type="companion", covenant_id="cov")
+    ana.characteristics.intelligence = 2
+    ana.abilities = [Ability("Philosophiae", xp=ability_xp(3))]
+    saga.characters.append(ana)
+    plan = SeasonPlan(
+        "ana",
+        1220,
+        "Spring",
+        "library_research",
+        allocations=[XpAllocation("ability:Philosophiae")],
+    )
+    notes = activities.outcome(ana, plan, saga).notes
+    # The encyclopedia's +3 beats the library's +2.
+    assert any(
+        "Intelligence + Philosophiae + Natural Histories +3 = 8" in n for n in notes
+    )
+
+
+def test_read_a_commentary_is_retired():
+    from ars_magica_manager.models import Character, SeasonPlan, XpAllocation
+    from ars_magica_manager.rules import activities
+
+    ana = Character(id="ana", name="Ana", type="companion")
+    assert "read_commentary" not in [a.key for a in activities.activities_for(ana)]
+    plan = SeasonPlan(
+        "ana", 1220, "Spring", "read_commentary",
+        allocations=[XpAllocation("ability:Latin")], source_quality=8,
+    )  # fmt: skip
+    assert activities.problems(ana, plan, Saga(id="s", name="S"))[0].startswith(
+        "Plan Read a book instead"
+    )

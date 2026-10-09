@@ -556,6 +556,7 @@ ACTIVITIES.update(
             who=a.who,
             gives_xp=not a.no_xp,
             book=a.book,
+            hidden=a.retired,
         )
         for a in supplement_seasons.ACTIVITIES
     }

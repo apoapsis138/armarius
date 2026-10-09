@@ -126,7 +126,11 @@ def test_magi_and_companions_plan_every_activity_built_so_far():
             *study,
             *extra,
             rules.ADVENTURE,
-            *[a.key for a in sup.ACTIVITIES if character.type in a.who],
+            *[
+                a.key
+                for a in sup.ACTIVITIES
+                if character.type in a.who and not a.retired
+            ],
             rules.OTHER,
         ]
     mythic = Character(id="y", name="Wode", type="mythic companion")

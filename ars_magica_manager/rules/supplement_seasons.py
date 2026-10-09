@@ -68,6 +68,9 @@ class SimpleActivity:
     no_xp: bool = False
     #: Faith Points gained.
     faith: int = 0
+    #: No longer offered (another activity does it now); kept so an older
+    #: plan still loads and says what to plan instead.
+    retired: bool = False
 
     @property
     def book(self) -> str:
@@ -104,11 +107,13 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
     SimpleActivity(
         "read_commentary",
         "Read a commentary, florilegium or glossed book",
-        "Reading with the opus's Quality bonus added to the book's Quality.",
+        "Retired: Read a book adds a commentary's, florilegium's or gloss's "
+        "bonus itself.",
         COVENANTS,
         "913",
         None,
         "the book's Quality + the opus bonus",
+        retired=True,
     ),
     SimpleActivity(
         "record_lectures",
@@ -138,8 +143,9 @@ ACTIVITIES: tuple[SimpleActivity, ...] = (
     SimpleActivity(
         "library_research",
         "Library research",
-        "A season searching lab notes or records: a roll against the "
-        "storyguide's Ease Factor (Exposure 2 in the Ability used).",
+        "A season searching lab notes or records: Intelligence + the Ability "
+        "+ the library's research bonus against the storyguide's Ease "
+        "Factor (Exposure 2 in the Ability used).",
         COVENANTS,
         "913",
     ),
