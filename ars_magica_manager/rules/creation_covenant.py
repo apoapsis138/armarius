@@ -24,8 +24,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+from .. import book_value, catalog, sourcebooks
 from .. import books as bk
-from .. import catalog, sourcebooks
 from .. import covenant_templates as templates
 from .. import enchanted_devices as ed
 from .. import inhabitants as inh
@@ -135,6 +135,7 @@ CATEGORIES: tuple[str, ...] = (
     "Tractatus",
     "Lab Texts",
     "Casting Tablets",
+    "Pictorial works",
     "Vis sources",
     "Vis stocks",
     "Enchanted items",
@@ -231,6 +232,14 @@ def costs(saga: Saga, covenant: Covenant, *, every_lab: bool = False) -> list[Co
                     _BOOK_CATEGORY[book_type],
                 )
             )
+    for subject in covenant.pictorial_works:
+        lines.append(
+            Cost(
+                f"Pictorial works: {subject}",
+                book_value.PICTORIAL_BP,
+                "Pictorial works",
+            )
+        )
     for possession in covenant.possessions:
         if possession.kind == "vis_source" and possession.pawns:
             lines.append(

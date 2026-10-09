@@ -29,6 +29,8 @@ from ..pickers import SpellChooserScreen
 
 #: The Codex select's value for binding the book into a new codex.
 NEW_CODEX = "__new__"
+#: The Epitome select's value for enchanting the book as a new device.
+NEW_EPITOME = "__new_epitome__"
 
 
 def _ability_template_prefix(name: str) -> str | None:
@@ -272,7 +274,9 @@ def _book_kind_fields(
             options=[(k.name, k.name) for k in book_kinds.OPUS_TYPES.values()],
             allow_blank=True,
             placeholder="(an ordinary tractatus)",
-            hint=book_kinds.OPUS_TYPES[book_kinds.COMMENTARY].summary,
+            hint=" ".join(
+                f"{k.name}: {k.summary}" for k in book_kinds.OPUS_TYPES.values()
+            ),
             show_if=lambda v: shows.book_type(v) == "Tractatus",
         ),
         DialogField(
@@ -284,6 +288,29 @@ def _book_kind_fields(
             allow_blank=True,
             placeholder="(its summa isn't in the saga)",
             show_if=commentary,
+        ),
+        DialogField(
+            "epitome",
+            "Epitome",
+            "select",
+            _attr(book, "device_id", None),
+            options=[(d.name, d.id) for d in saga.enchanted_devices]
+            + [("(enchant it: a new invested device)", NEW_EPITOME)],
+            allow_blank=True,
+            placeholder="(not enchanted)",
+            hint="A book enchanted as an item: material level 2, size x4; the "
+            "Book shape gives +6 changing thoughts or images, +4 numerology, "
+            "+3 divination.",
+        ),
+        DialogField(
+            "glossed",
+            "Glossed (+1)",
+            "check",
+            bool(_attr(book, "glossed", False)),
+            hint="Annotated by a reader at least half as skilled as its Level, "
+            "with better Communication than the author (a Read season can do "
+            "it); +1 once.",
+            show_if=lambda v: bk.has_quality(shows.book_type(v)),
         ),
         DialogField(
             "physical_form",
@@ -308,7 +335,6 @@ _CRAFT_CHECKS: dict[str, str] = {
     "craft_binder": "binder",
     "craft_illuminator": "illuminator",
     "craft_clarified": "clarified",
-    "craft_glossed": "glossed",
 }
 
 
@@ -336,7 +362,7 @@ def _craft_fields(
             show_if=has_quality,
         )
         for key, part in _CRAFT_CHECKS.items()
-        if part not in ("clarified", "glossed")
+        if part != "clarified"
     ]
     resonance = next((p for p in book_kinds.RESONANCE if p in craft), None)
     fields.append(
@@ -360,17 +386,12 @@ def _craft_fields(
             book_kinds.CRAFT[part].name + f" (+{book_kinds.CRAFT[part].quality})",
             "check",
             part in craft,
-            hint=(
-                "Enchanted to express its resonances: needs resonant materials "
-                "and an author with the Art at 15."
-                if part == "clarified"
-                else "Annotated by a reader at least half as skilled as its Level, "
-                "with better Communication than the author; not with resonance."
-            ),
+            hint="Enchanted to express its resonances: needs resonant "
+            "materials and an author with the Art at 15.",
             show_if=has_quality,
         )
         for key, part in _CRAFT_CHECKS.items()
-        if part in ("clarified", "glossed")
+        if part == "clarified"
     ]
     return fields
 
@@ -665,6 +686,12 @@ def _kinds_from_values(book: Book, values: dict[str, Any], saga: Saga) -> None:
     commentary = book.opus == book_kinds.COMMENTARY
     book.commentary_on = (values.get("commentary_on") or None) if commentary else None
     book.physical_form = values.get("physical_form") or ""
+    book.glossed = bool(values.get("glossed")) and bk.has_quality(book.type)
+    epitome = values.get("epitome") or None
+    if epitome == NEW_EPITOME:
+        bk.enchant_as_epitome(saga, book)
+    else:
+        book.device_id = epitome
     if bk.extended_quality(saga):
         craft = [part for key, part in _CRAFT_CHECKS.items() if values.get(key)]
         if values.get("craft_resonance"):
@@ -738,6 +765,14 @@ def _research_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
                 hint=bv.guide_text(saga, covenant, subject, books),
             )
         )
+        fields.append(
+            DialogField(
+                f"pictorial_{i}",
+                "  Pictorial works (+1)",
+                "check",
+                subject in covenant.pictorial_works,
+            )
+        )
     return fields
 
 
@@ -754,3 +789,8 @@ def _research_from_values(
         else:
             levels.pop(subject, None)
     covenant.library_research = levels
+    covenant.pictorial_works = [
+        subject
+        for i, subject in enumerate(bv.library_subjects(saga, covenant))
+        if values.get(f"pictorial_{i}")
+    ]

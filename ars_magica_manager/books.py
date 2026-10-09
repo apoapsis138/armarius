@@ -26,6 +26,8 @@ from .models import (
     Character,
     Codex,
     Covenant,
+    DeviceComponent,
+    EnchantedDevice,
     Saga,
     Spell,
 )
@@ -468,6 +470,39 @@ def set_owner(
     others bound with it move too."""
     for mate in codex_books(saga, book):
         mate.owner_kind, mate.owner_id = owner_kind, owner_id
+        device = epitome_device(saga, mate)
+        if device is not None:
+            device.holder_kind, device.holder_id = owner_kind, owner_id
+
+
+def epitome_device(saga: Saga, book: Book) -> EnchantedDevice | None:
+    """The enchanted device a book is, when it is an epitome."""
+    if not book.device_id:
+        return None
+    return next((d for d in saga.enchanted_devices if d.id == book.device_id), None)
+
+
+def enchant_as_epitome(saga: Saga, book: Book) -> EnchantedDevice:
+    """Make `book` an epitome: a new invested device, the book itself
+    (material level 2, size x4), held where the book is kept."""
+    device = EnchantedDevice(
+        id=storage.generate_unique_id(
+            f"{book.name} epitome", [d.id for d in saga.enchanted_devices]
+        ),
+        name=book.name or "Epitome",
+        description="An epitome: this book, enchanted (Covenants, Secondary "
+        "Functions). Only its own resonant materials help its enchantment.",
+        holder_kind=book.owner_kind,
+        holder_id=book.owner_id,
+        components=[
+            DeviceComponent(
+                "the book", book_kinds.EPITOME_MATERIAL, book_kinds.EPITOME_SIZE
+            )
+        ],
+    )
+    saga.enchanted_devices.append(device)
+    book.device_id = device.id
+    return device
 
 
 def prune_codices(saga: Saga) -> None:
@@ -493,7 +528,10 @@ def craft_warnings(saga: Saga, book: Book) -> list[str]:
         return []
     codex = codex_of(saga, book)
     found = book_kinds.craft_problems(
-        book.craft, book.physical_form, codex.collection if codex else ""
+        book.craft,
+        book.physical_form,
+        codex.collection if codex else "",
+        glossed=book.glossed,
     )
     quality = effective_quality(saga, book) or 0
     if book.type == "Art Summa" and book.level is not None:
@@ -529,6 +567,9 @@ def quality_adjustments(saga: Saga | None, book: Book) -> list[Adjustment]:
             part = book_kinds.CRAFT.get(key)
             if part is not None:
                 found.append(Adjustment(part.name.lower(), part.quality, part.priced))
+    if book.glossed:
+        gloss = book_kinds.GLOSS
+        found.append(Adjustment(gloss.name.lower(), gloss.quality, gloss.priced))
     codex = codex_of(saga, book) if saga is not None else None
     if codex is not None:
         if codex.palimpsest:
@@ -844,6 +885,14 @@ def detail_text(saga: Saga, book: Book | None) -> str:
     lines = [problem(f"[b]{escape(p)}[/b]") for p in status_problems(book, saga)]
     lines.append(_cell("Name", book.name or "(untitled)")[0])
     lines += _codex_lines(saga, book)
+    device = epitome_device(saga, book)
+    if device is not None:
+        from . import enchanted_devices as ed
+
+        lines.append(
+            f"[b]Epitome:[/] {escape(device.name)} [dim]({escape(device.type)}, "
+            f"{escape(ed.capacity_text(saga, device))})[/]"
+        )
     kind = kind_text(saga, book)
     if kind:
         lines.append(f"[b]Kind:[/] {escape(kind)}")

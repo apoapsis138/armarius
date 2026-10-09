@@ -326,6 +326,7 @@
       Tractatus                   -        0
       Lab Texts                   -        0
       Casting Tablets             -        0
+      Pictorial works             -        0
       Vis sources                 -        0
       Vis stocks                  -        0
       Enchanted items             -        8
@@ -333,12 +334,11 @@
       Specialists                 -        0
       Money                       -        0
       Total                       -       28
-
-      Power Level: (not set)                                                      ▂▂
+                                                                                  ▇▇
+      Power Level: (not set)
       Storyguide's Build Points: (not set)
       Initial wasn't recorded: this covenant was in play before Build Points were
       tracked.
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 
 

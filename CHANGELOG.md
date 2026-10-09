@@ -41,6 +41,26 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.39.0 — 2026-10-09
+
+- Correspondence: a tractatus can be a bound correspondence, read at the
+  two writers' Communication added, or an expert correspondence (120 or
+  more letters each), which also raises its library's research on the
+  subject. Plan Season's Correspondence on adds 1 xp in a subject for a
+  season of useful letters.
+- A summa or tractatus can be glossed (+1 Quality, once) -- in the book
+  form, or while reading it with Gloss it, which checks the reader. Edit a
+  florilegium binds the tractatus on one subject into a florilegium (+1
+  Quality each, +2 for an authority's).
+- A congregational book can be read by several magi in one season.
+  Pictorial works on a subject raise the library's research one level (10
+  Build Points, a new Build tab row). Recorded lectures become lecture
+  commentaries, which don't count against a teacher's tractatus and are
+  limited by the teacher's score.
+- A book can be an epitome: enchanted as an item (material level 2, size
+  x4), held where the book is kept. The shape list has the Book shape's
+  bonuses.
+
 ## 2.38.0 — 2026-10-09
 
 - A Casting Tablet's details show each magus of its covenant casting

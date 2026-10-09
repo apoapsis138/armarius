@@ -144,7 +144,8 @@ def test_extended_quality_warns_of_what_cant_go_together():
     saga = _saga()
     saga.rule_options = {"extended_book_quality": True}
     t1 = saga.books[2]  # in the florilegium
-    t1.craft = ["glossed", "resonance", "clarified"]
+    t1.craft = ["resonance", "clarified"]
+    t1.glossed = True
     t1.physical_form = "Juvenilia"
     warnings = bk.craft_warnings(saga, t1)
     assert any("gloss expresses resonance" in w for w in warnings)
@@ -153,3 +154,128 @@ def test_extended_quality_warns_of_what_cant_go_together():
     tract = Book(id="x", name="X", type="Tractatus", subject_kind="Art", art="Vim",
                  quality=16, craft=["scribe", "binder"])  # fmt: skip
     assert any("over the 17" in w for w in bk.craft_warnings(saga, tract))
+
+
+def test_useful_correspondence_adds_one_xp_to_the_season():
+    from ars_magica_manager.models import Ability
+
+    saga = _saga()
+    ana = saga.characters[0]
+    ana.abilities = [Ability("Philosophiae")]
+    plan = _read(saga, "physics")
+    plan.correspondence = "ability:Medicine"
+    outcome = activities.outcome(ana, plan, saga)
+    assert [(g.subject, g.result.xp) for g in outcome.gains] == [
+        ("ability:Philosophiae", 12),
+        ("ability:Medicine", 1),
+    ]
+    assert any("Useful correspondence" in n for n in outcome.notes)
+
+
+def test_a_bound_correspondence_is_a_kind_of_tractatus():
+    result = bk.parse_books_csv(
+        "name,type,ability,quality,opus\n"
+        "Letters,Tractatus,Magic Theory,5,correspondence\n"
+    )
+    assert [b.opus for b in result.books] == [kinds.CORRESPONDENCE]
+    # It is read at the Quality typed (the writers' Communication added).
+    assert bk.effective_quality(None, result.books[0]) == 5
+
+
+def test_glossing_while_reading():
+    from ars_magica_manager.models import Ability, Characteristics
+
+    saga = _saga()
+    ana = saga.characters[0]
+    ana.characteristics = Characteristics(communication=2)
+    author = Character(id="aut", name="Author", type="companion")
+    author.characteristics = Characteristics(communication=1)
+    saga.characters.append(author)
+    physics = saga.books[0]
+    physics.author_id = "aut"
+    plan = _read(saga, "physics")
+    plan.gloss = True
+    # Philosophiae 0: less than half the Level (6).
+    found = activities.problems(ana, plan, saga)
+    assert any("half Physics's Level" in p for p in found)
+    from ars_magica_manager.rules.xp import ability_xp
+
+    ana.abilities = [Ability("Philosophiae", xp=ability_xp(3))]
+    assert activities.problems(ana, plan, saga) == []
+    outcome = activities.outcome(ana, plan, saga)
+    advance.apply(saga, [outcome])
+    assert physics.glossed and bk.effective_quality(saga, physics) == 13
+    # Old saves kept a gloss as craftsmanship.
+    old = Book.from_dict(
+        {"id": "x", "name": "X", "type": "Tractatus", "craft": ["glossed", "scribe"]}
+    )
+    assert (old.glossed, old.craft) == (True, ["scribe"])
+
+
+def test_editing_a_florilegium():
+    from ars_magica_manager.models import Ability
+    from ars_magica_manager.rules import book_seasons as bs
+    from ars_magica_manager.rules.xp import ability_xp
+    from ars_magica_manager.seasons.lab_apply import apply_book_work
+
+    saga = _saga()
+    ana = saga.characters[0]
+    ana.abilities = [Ability("Medicine", xp=ability_xp(6))]
+    for i in range(6):
+        saga.books.append(
+            Book(f"m{i}", f"Med {i}", "Tractatus", subject_kind="Ability",
+                 ability="Medicine", quality=5 + i, owner_kind="covenant",
+                 owner_id="cov")
+        )  # fmt: skip
+    plan = SeasonPlan("ana", 1220, "Spring", bs.EDIT_FLORILEGIUM,
+                      florilegium_subject="ability:Medicine")  # fmt: skip
+    found, work = bs.work(saga, ana, plan)
+    assert found == []
+    # Medicine 6: three tractatus (6 / 2), from six (twice as many); +1.
+    title, bound, bonus = work.florilegium
+    assert (title, bound, bonus) == ("Florilegium of Medicine", ["m5", "m4", "m3"], 1)
+    apply_book_work(saga, ana, plan, work)
+    codex = bk.codex_of(saga, next(b for b in saga.books if b.id == "m5"))
+    assert (codex.collection, codex.florilegium_bonus) == (kinds.FLORILEGIUM, 1)
+    ana.abilities = [Ability("Medicine", xp=ability_xp(5))]
+    found, _ = bs.work(saga, ana, plan)
+    assert found and "needs a score of 6" in found[0]
+
+
+def test_lecture_commentaries_have_their_own_limit():
+    from ars_magica_manager.models import Ability, XpAllocation
+    from ars_magica_manager.rules.xp import ability_xp
+
+    saga = _saga()
+    scribe = saga.characters[0]
+    teacher = Character(id="t", name="Master", type="companion", covenant_id="cov")
+    teacher.abilities = [Ability("Artes Liberales", xp=ability_xp(1))]
+    saga.characters.append(teacher)
+    plan = SeasonPlan(
+        "ana", 1220, "Spring", "record_lectures", teacher_id="t",
+        allocations=[XpAllocation("ability:Artes Liberales")],
+    )  # fmt: skip
+    assert activities.problems(scribe, plan, saga) == []
+    saga.books.append(
+        Book("lec", "Lectures", "Tractatus", subject_kind="Ability",
+             ability="Artes Liberales", quality=5, author_id="t",
+             opus=kinds.LECTURE_COMMENTARY)
+    )  # fmt: skip
+    assert "the most a score of 1 allows" in activities.problems(scribe, plan, saga)[0]
+    plan.allocations = [XpAllocation("art:Creo")]
+    assert "Arts" in activities.problems(scribe, plan, saga)[0]
+
+
+def test_an_epitome_is_the_book_enchanted():
+    from ars_magica_manager import enchanted_devices as ed
+
+    saga = _saga()
+    physics = saga.books[0]
+    device = bk.enchant_as_epitome(saga, physics)
+    assert bk.epitome_device(saga, physics) is device
+    assert ed.capacity(saga, device) == 8  # material 2 x size 4
+    assert (device.holder_kind, device.holder_id) == ("covenant", "cov")
+    assert "Epitome:[/] Physics" in bk.detail_text(saga, physics)
+    # It goes where the book goes.
+    bk.set_owner(saga, physics, "character", "ana")
+    assert (device.holder_kind, device.holder_id) == ("character", "ana")

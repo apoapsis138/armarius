@@ -480,6 +480,14 @@ ACTIVITIES: dict[str, Activity] = {
             book_seasons.LAB_TEXT_SOURCE,
         ),
         Activity(
+            book_seasons.EDIT_FLORILEGIUM,
+            "Edit a florilegium",
+            "Binding tractatus on one subject, as many as you could write on "
+            "it, from a collection twice that size: each read at +1 Quality "
+            "(+2 for an authority's, from a peerless collection).",
+            book_kinds.SOURCE,
+        ),
+        Activity(
             book_seasons.WRITE_TABLET,
             "Write Casting Tablets",
             "Tablets of a spell you have mastered, from a season's pool of "
@@ -776,12 +784,45 @@ def whose_vis(character: Character, plan: SeasonPlan) -> str:
     return f"{character.name}'s"
 
 
+def _gloss_problems(
+    saga: Saga, character: Character, book: Book, subject: str
+) -> list[str]:
+    """Who may gloss a book (Covenants, Other Opus Types): a reader at least
+    half as skilled as its Level, with better Communication than its
+    author; a gloss can't join resonant materials or clarification."""
+    found: list[str] = []
+    if book.level is not None and score(character, subject) * 2 < book.level:
+        found.append(
+            f"A gloss needs a score of at least half {book.name}'s Level "
+            f"({book.level}): {character.name} has {score(character, subject)}."
+        )
+    author = saga.character(book.author_id)
+    com = character.characteristics.communication
+    if author is not None and com <= author.characteristics.communication:
+        found.append(
+            f"A gloss needs better Communication than the author: "
+            f"{character.name} {com:+d}, {author.name} "
+            f"{author.characteristics.communication:+d}."
+        )
+    if books.extended_quality(saga) and (
+        "clarified" in book.craft or any(p in book.craft for p in book_kinds.RESONANCE)
+    ):
+        found.append(
+            "A gloss expresses resonance: it can't join resonant materials or "
+            "clarification."
+        )
+    return found
+
+
 def _codex_reader_problems(
     saga: Saga, character: Character, plan: SeasonPlan, book: Book
 ) -> list[str]:
     """One reader a season per codex: another character reading this book,
     or another bound in the same codex, this season (Covenants, Varieties of
     Manuscript)."""
+    form = book_kinds.PHYSICAL_FORMS.get(book.physical_form)
+    if form is not None and form.many_readers:
+        return []
     for other in plans_this_season(saga, plan):
         if other.character_id == character.id or other.activity != READ:
             continue
@@ -839,6 +880,8 @@ def _study_problems(  # noqa: PLR0915
                 f"{character.name}."
             )
         found += _codex_reader_problems(saga, character, plan, book)
+        if plan.gloss:
+            found += _gloss_problems(saga, character, book, subject)
         return found
     if not chosen:
         return ["Choose what the experience goes into."]
@@ -980,6 +1023,8 @@ class Outcome:
     #: Reading a summa: its id, to record it was studied (a commentary on
     #: it can then be read).
     summa: str | None = None
+    #: Glossing while reading: the book glossed.
+    glossed: str | None = None
     #: Vis study still to roll (a preview made without a die).
     pending_roll: bool = False
     #: Lab work: what the season in the laboratory does.
@@ -1121,6 +1166,12 @@ def outcome(
     if found or activity is None or not activity.gives_xp:
         return result
     result = _outcome(character, plan, saga, rng, result, activity)
+    if plan.correspondence and not result.problems:
+        result.gains.append(_correspondence(character, plan.correspondence))
+        result.notes.append(
+            "Useful correspondence: +1 xp (Covenants, Other Opus Types; at "
+            "least one letter received this season)."
+        )
     if not result.problems and derived.wound_penalty(character.wounds) <= -3:
         # Study at -3 to -5 is halved (DE Ch. 11, Activities While Injured).
         for gain in result.gains:
@@ -1158,6 +1209,20 @@ def _wound_problem(character: Character, plan: SeasonPlan, activity: Activity) -
     if penalty <= -3 and (activity.lab or plan.activity in _CRAFT):
         return f"{character.name}'s wounds ({penalty}) allow no lab or craft work."
     return ""
+
+
+def _correspondence(character: Character, subject: str) -> XpGain:
+    """A season of useful correspondence: book_kinds.CORRESPONDENCE_XP in
+    its subject, with no Virtue changing it."""
+    kind, name = _split(subject)
+    result = study.season_of_study(
+        character,
+        name,
+        book_kinds.CORRESPONDENCE_XP,
+        activity="correspondence",
+        is_art=kind == "art",
+    )
+    return XpGain(subject, result, subject_xp(character, subject))
 
 
 def _outcome(
@@ -1503,6 +1568,17 @@ def _study_outcome(
         else:
             result.summa = book.id
         result.notes += _book_kind_notes(saga, character, book)
+        if plan.gloss:
+            result.glossed = book.id
+            if book.glossed:
+                result.notes.append(
+                    f"{book.name} is already glossed: another gloss adds no Quality."
+                )
+            elif book.author_id is None:
+                result.notes.append(
+                    "Its author isn't a character of the saga: check the "
+                    "glosser's Communication is the better at the table."
+                )
         codex = books.codex_of(saga, book)
         if codex is not None and codex.collection == book_kinds.FOLIO:
             result.gains.append(

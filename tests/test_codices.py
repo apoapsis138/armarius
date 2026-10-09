@@ -187,3 +187,11 @@ def test_a_book_still_to_be_set_cannot_be_studied():
         "book first."
     ]
     assert "A season's reading" not in bk.detail_text(saga, saga.books[1])
+
+
+def test_a_congregational_book_takes_several_readers():
+    saga = _saga()
+    saga.books[2].physical_form = "Congregational"
+    _read(saga, "ana", "alone")
+    bo_plan = _read(saga, "bo", "alone")
+    assert activities.problems(saga.characters[1], bo_plan, saga) == []

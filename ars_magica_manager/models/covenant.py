@@ -126,6 +126,10 @@ class Covenant:
     #: 1-5, book_value.RESEARCH_LEVELS), as the troupe judges its
     #: collection; a subject not listed has none.
     library_research: dict[str, int] = field(default_factory=dict)
+    #: Subjects the library has a group of pictorial works on (Covenants,
+    #: Other Opus Types): each raises research on it one level, for 10
+    #: Build Points at creation.
+    pictorial_works: list[str] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Covenant:

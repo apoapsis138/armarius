@@ -595,6 +595,30 @@
       "citation": "https://www.redcap.org/page/Ars_Magica_Definitive_Edition,_Chapter_Eight:_Laboratory#Shape_and_Material_Bonuses_Table"
     },
     {
+      "id": "sm_book",
+      "name": "Book",
+      "bonuses": [
+        {
+          "bonus": 6,
+          "effect": "changing thoughts"
+        },
+        {
+          "bonus": 6,
+          "effect": "changing images within the book"
+        },
+        {
+          "bonus": 4,
+          "effect": "numerology"
+        },
+        {
+          "bonus": 3,
+          "effect": "divination"
+        }
+      ],
+      "source": "Covenants",
+      "citation": "https://www.redcap.org/page/Covenants_Chapter_Seven:_Library"
+    },
+    {
       "id": "sm_bookshelf",
       "name": "Bookshelf",
       "bonuses": [

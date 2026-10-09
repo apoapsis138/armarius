@@ -108,6 +108,7 @@ def test_magi_and_companions_plan_every_activity_built_so_far():
         *writing,
         bs.REWRITE_TEXTS,
         bs.COPY_TEXTS,
+        bs.EDIT_FLORILEGIUM,
         bs.WRITE_TABLET,
     ]
     for character, extra in (
@@ -123,7 +124,7 @@ def test_magi_and_companions_plan_every_activity_built_so_far():
                 ls.ASSIST,
             ],
         ),
-        (_companion(), [*writing, bs.COPY_TEXTS, ls.ASSIST]),
+        (_companion(), [*writing, bs.COPY_TEXTS, bs.EDIT_FLORILEGIUM, ls.ASSIST]),
     ):
         keys = [a.key for a in rules.activities_for(character)]
         assert keys == [

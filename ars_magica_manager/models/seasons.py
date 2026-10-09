@@ -139,6 +139,15 @@ class SeasonPlan:
     book_level: int | None = None
     language: str = ""
     quick: bool = False
+    #: Useful correspondence this season (Covenants, Other Opus Types): the
+    #: subject it is on (a rules.activities subject, "ability:Magic
+    #: Theory"), worth +1 xp in it; "" for none.
+    correspondence: str = ""
+    #: Reading: the reader glosses the book this season (+1 Quality, once).
+    gloss: bool = False
+    #: Editing a florilegium: the subject ("art:Vim", "ability:Medicine")
+    #: whose tractatus it binds.
+    florilegium_subject: str = ""
     #: Moving a laboratory: by spell (one season, a roll) rather
     #: than mundane means, and where to.
     by_spell: bool = False

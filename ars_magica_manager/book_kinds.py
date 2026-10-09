@@ -35,9 +35,18 @@ class Kind:
     priced: bool = True
     #: One line for the form and the details panel.
     summary: str = ""
+    #: Several readers can study it in the same season (a congregational
+    #: book), an exception to one reader a season.
+    many_readers: bool = False
+    #: It raises its library's research value on its subject one level (a
+    #: long correspondence between experts).
+    research_level: int = 0
 
 
 COMMENTARY = "Commentary"
+CORRESPONDENCE = "Correspondence"
+EXPERT_CORRESPONDENCE = "Expert correspondence"
+LECTURE_COMMENTARY = "Lecture commentary"
 
 #: What kind of work the book is, beyond summa and tractatus.
 OPUS_TYPES: dict[str, Kind] = {
@@ -48,7 +57,30 @@ OPUS_TYPES: dict[str, Kind] = {
         summary="Read like a tractatus, only after a season studying its summa; "
         "+1 Quality, which its Build Point cost ignores.",
     ),
+    CORRESPONDENCE: Kind(
+        CORRESPONDENCE,
+        summary="Letters bound in order, at least 24 from each writer: read "
+        "as a tractatus of Quality = the two writers' Communication added.",
+    ),
+    EXPERT_CORRESPONDENCE: Kind(
+        EXPERT_CORRESPONDENCE,
+        research_level=1,
+        summary="A correspondence of 120 or more letters from each of two "
+        "experts: read like one, and it raises its library's research on "
+        "the subject one level.",
+    ),
+    LECTURE_COMMENTARY: Kind(
+        LECTURE_COMMENTARY,
+        summary="A teacher's lectures recorded by a scribe (Art & Academe): "
+        "Quality = the teacher's Communication + Scribe / 2; not counted "
+        "against the tractatus the teacher may write.",
+    ),
 }
+
+#: Experience a season of useful correspondence adds (one correspondence's
+#: a season, on a theme of the magus's research or reading, with at least
+#: one letter received).
+CORRESPONDENCE_XP = 1
 
 #: How the copy is made. Those that change Quality by a set amount do so
 #: here; for the others (a damaged book, an edition de luxe) enter the
@@ -96,8 +128,13 @@ PHYSICAL_FORMS: dict[str, Kind] = {
         ),
         Kind(
             "Huge codex",
-            summary="Physically immense, needing magic or assistants to read; "
-            "a congregational one lets several magi study at once.",
+            summary="Physically immense, needing magic or assistants to read.",
+        ),
+        Kind(
+            "Congregational",
+            many_readers=True,
+            summary="A huge codex written to be read by several magi of similar "
+            "Intelligence and talent at once: no one-reader limit.",
         ),
         Kind(
             "Unbound",
@@ -127,6 +164,12 @@ COLLECTIONS: dict[str, Kind] = {
     ),
 }
 
+#: An epitome, a book enchanted as an item: its material (level 2) and
+#: size (x4) on the Material and Size tables, and the shape whose bonuses
+#: it has (shape_material_catalog "sm_book"). Only its own resonant
+#: materials help its enchantment, unless it is on a mundane subject.
+EPITOME_MATERIAL, EPITOME_SIZE, EPITOME_SHAPE = "leather", "large", "Book"
+
 #: The Ability a folio also teaches, and the experience a season of reading
 #: one of its books gives in it.
 FOLIO_LORE = "Organization Lore: Order of Hermes"
@@ -143,8 +186,10 @@ CRAFT: dict[str, Kind] = {
     "resonance": Kind("Resonant materials (bought)", quality=1),
     "story_resonance": Kind("Resonant materials (from a story)", quality=2),
     "clarified": Kind("Clarified", quality=1),
-    "glossed": Kind("Glossed", quality=1),
 }
+
+#: A gloss's Quality bonus (once, however often glossed).
+GLOSS = Kind("Glossed", quality=1)
 RESONANCE = ("resonance", "story_resonance")
 #: The extended rules' author base: Communication + 3 (the core rules' + 6).
 EXTENDED_AUTHOR_BASE = 3
@@ -154,7 +199,9 @@ ART_SUMMA_CEILING = 35
 ART_TRACTATUS_CEILING = 17
 
 
-def craft_problems(book_craft: list[str], form: str, collection: str) -> list[str]:
+def craft_problems(
+    book_craft: list[str], form: str, collection: str, glossed: bool = False
+) -> list[str]:
     """What the extended rules say can't go together in a book's
     craftsmanship (warnings, not refusals)."""
     found: list[str] = []
@@ -163,7 +210,7 @@ def craft_problems(book_craft: list[str], form: str, collection: str) -> list[st
         found.append("Resonant materials count once: bought (+1) or from a story (+2).")
     if "clarified" in book_craft and not resonant:
         found.append("Clarification works through resonant materials: it needs them.")
-    if "glossed" in book_craft and (resonant or "clarified" in book_craft):
+    if glossed and (resonant or "clarified" in book_craft):
         found.append(
             "A gloss expresses resonance: it can't be combined with resonant "
             "materials or clarification."

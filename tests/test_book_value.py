@@ -177,3 +177,14 @@ def test_read_a_commentary_is_retired():
     assert activities.problems(ana, plan, Saga(id="s", name="S"))[0].startswith(
         "Plan Read a book instead"
     )
+
+
+def test_pictorial_works_and_expert_correspondence_raise_research():
+    saga = _library()
+    covenant = saga.covenants[0]
+    covenant.pictorial_works = ["Philosophiae"]
+    assert bv.library_level(saga, covenant, "Philosophiae") == 3  # 2 + 1
+    saga.books[4].opus = "Expert correspondence"  # a Philosophiae tractatus
+    assert bv.library_level(saga, covenant, "Philosophiae") == 4
+    covenant.library_research["Philosophiae"] = 5
+    assert bv.library_level(saga, covenant, "Philosophiae") == 5  # at most +5

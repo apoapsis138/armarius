@@ -452,7 +452,9 @@ roll with the library's bonus); a book's details panel gives its subject's
 bonuses. More's **Research Bonuses** sets the library's bonus for
 each subject it has a book on, from None to +5 (a few books, a respectable
 collection, a broad and deep one, specialized, peerless); under each, what
-the library holds on it is a guide. An **encyclopedia** aids research like a
+the library holds on it is a guide. **Pictorial works** on a subject raise
+it one level (10 Build Points at creation, a row of the Build tab), as does
+an expert correspondence on it; the bonus stops at +5. An **encyclopedia** aids research like a
 library of its own: +1 for each of its tractatus on the subject (Art &
 Academe, Encyclopedias), worked out and shown beside the library's bonus;
 a magus uses whichever is better.
@@ -481,7 +483,18 @@ Quality (+2 when edited by an authority from a peerless collection); a
 **Folio** binds a society's best Lab Texts and tractatus, and reading one
 of its books also gives 1 xp in Order of Hermes Lore.
 
-A tractatus's **Opus** can be **Commentary**: a book about a summa,
+A summa or tractatus can be **Glossed** (+1 Quality, once): annotated
+by a reader at least half as skilled as its Level with better
+Communication than its author -- tick it, or plan a Read season with
+**Gloss it**, which checks the reader. A tractatus's **Opus** can be **Correspondence**: letters bound in order
+(at least 24 from each writer), read as a tractatus whose Quality is the
+two writers' Communication added -- type it as the Quality; an **Expert
+correspondence** (120 or more letters from each of two experts) also raises
+its library's research on the subject one level. A **Lecture commentary**
+is a teacher's lectures recorded by a scribe (the Record a teacher's
+lectures season makes one), which doesn't count against the tractatus the
+teacher may write. Or it can be
+**Commentary**: a book about a summa,
 chosen in **Commentary on**. It is read only after a season studying that
 summa (the plan notes it when no such season is on record: the app records
 summae studied from now on) and is read at +1 Quality, which its Build
@@ -489,7 +502,17 @@ Point cost leaves out (Covenants, Other Opus Types). Any book's **Physical
 form** says how the copy was made: an **Exemplar** (-3 Quality), a
 **Flap-bound** book (-1), **Juvenilia** (-3), and others that change
 nothing by a set amount, such as an edition de luxe or a damaged book,
-whose Quality you enter as it is. The details panel's Quality shows what a
+whose Quality you enter as it is. A **Congregational** book is a huge
+codex several magi can study in the same season.
+
+A book can be an **Epitome**: the book itself enchanted as an item
+(Covenants, Secondary Functions). Choose an existing enchanted device, or
+**(enchant it: a new invested device)** to make one: material level 2 and
+size x4 (8 pawns of capacity), held where the book is kept, and moving with
+it. The **Book** shape (in the shape and material list) gives +6 to
+changing thoughts or images within the book, +4 numerology and +3
+divination; only the epitome's own resonant materials help its
+enchantment. Its effects are instilled like any device's. The details panel's Quality shows what a
 book is read at and why ("10 (written 9; commentary +1)"), and its **Kind**
 line names the opus and form.
 
@@ -499,7 +522,7 @@ of Books): the author gives Communication + 3 instead of + 6 (a season of
 writing makes the book that way), and the book form gains its
 craftsmanship -- a skilled scribe, binder and illuminator (+1 each, for a
 Profession score of 6 or more), resonant materials (+1 bought, +2 from a
-story), clarified (+1) and glossed (+1). Each counts toward its Build Point
+story) and clarified (+1). Each counts toward its Build Point
 cost. The details panel warns of what can't go together (a gloss with
 resonance, a florilegium with resonance or clarification, resonance on
 juvenilia...) and of an Art book over what it effectively reaches (35 -

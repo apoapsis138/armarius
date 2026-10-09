@@ -21,6 +21,7 @@ from ...rules import (
     laboratory_seasons,
     supplement_seasons,
 )
+from ...seasons import plans as season_plans_text
 from ..fields import _EMPHASIS_HINT, DialogField, FieldsDialog, _attr
 
 
@@ -60,7 +61,12 @@ def _season_plan_from(
         ),
         title=(
             values.get("title") or ""
-            if activity in (book_seasons.WRITE_SUMMA, book_seasons.WRITE_TRACTATUS)
+            if activity
+            in (
+                book_seasons.WRITE_SUMMA,
+                book_seasons.WRITE_TRACTATUS,
+                book_seasons.EDIT_FLORILEGIUM,
+            )
             else _supplement_title(activity, values)
         ),
         book_level=(
@@ -76,6 +82,13 @@ def _season_plan_from(
                 book_seasons.WRITE_TRACTATUS,
                 book_seasons.TRANSLATE_BOOK,
             )
+            else ""
+        ),
+        correspondence=values.get("correspondence") or "",
+        gloss=bool(values.get("gloss")) if activity == season_rules.READ else False,
+        florilegium_subject=(
+            values.get("florilegium_subject") or ""
+            if activity == book_seasons.EDIT_FLORILEGIUM
             else ""
         ),
         quick=bool(values.get("quick"))
@@ -694,6 +707,15 @@ def _study_fields(
             hint="The covenant's library and the character's own books.",
         ),
         DialogField(
+            "gloss",
+            "Gloss it (+1 Quality)",
+            "check",
+            bool(_attr(existing, "gloss", False)),
+            hint="A reader at least half as skilled as its Level, with better "
+            "Communication than its author, glosses it while reading: +1, once.",
+            show_if=_activity_is(season_rules.READ),
+        ),
+        DialogField(
             "teacher_id",
             "Teacher / master",
             "select",
@@ -794,7 +816,9 @@ def _book_work_fields(
             _attr(existing, "title", ""),
             placeholder="blank: named for its subject",
             show_if=_activity_is(
-                book_seasons.WRITE_SUMMA, book_seasons.WRITE_TRACTATUS
+                book_seasons.WRITE_SUMMA,
+                book_seasons.WRITE_TRACTATUS,
+                book_seasons.EDIT_FLORILEGIUM,
             ),
         ),
         DialogField(
@@ -850,6 +874,17 @@ def _book_work_fields(
             show_if=_activity_is(book_seasons.COPY_TEXTS),
         ),
         DialogField(
+            "florilegium_subject",
+            "Florilegium subject",
+            "select",
+            _attr(existing, "florilegium_subject", "") or None,
+            options=_florilegium_subjects(saga, character),
+            allow_blank=True,
+            hint="The tractatus on it you can get at, not bound in a codex, are "
+            "bound best first.",
+            show_if=_activity_is(book_seasons.EDIT_FLORILEGIUM),
+        ),
+        DialogField(
             "tablet_spell_id",
             "Spell (mastered)",
             "select",
@@ -858,6 +893,25 @@ def _book_work_fields(
             allow_blank=True,
             show_if=_activity_is(book_seasons.WRITE_TABLET),
         ),
+    ]
+
+
+def _florilegium_subjects(saga: Saga, character: Character) -> list[tuple[str, str]]:
+    """The subjects the character can get at unbound tractatus on."""
+    names = season_plans_text.spell_names(saga, character)
+    found: dict[str, int] = {}
+    for book in saga.books:
+        subject = book_seasons.book_subject(book)
+        if (
+            book.type == "Tractatus"
+            and subject
+            and bk.codex_of(saga, book) is None
+            and bk.can_read(saga, character, book)
+        ):
+            found[subject] = found.get(subject, 0) + 1
+    return [
+        (escape(f"{season_rules.subject_label(s, names)} ({n} tractatus)"), s)
+        for s, n in found.items()
     ]
 
 
@@ -908,6 +962,28 @@ def _student_and_research_fields(
             options=[(k, k) for k in experiment.KINDS],
             show_if=_activity_is(experiment.INTEGRATE),
         ),
+    ]
+
+
+def _correspondence_fields(
+    saga: Saga, character: Character, existing: SeasonPlan | None
+) -> list[DialogField]:
+    """Useful correspondence alongside the season (Covenants in play): the
+    subject it is on, +1 xp in it."""
+    if not sourcebooks.in_play("Covenants", sourcebooks.saga_books(saga)):
+        return []
+    return [
+        DialogField(
+            "correspondence",
+            "Correspondence on",
+            "select",
+            _attr(existing, "correspondence", "") or None,
+            options=seasons.subject_options(saga, character),
+            allow_blank=True,
+            placeholder="(none this season)",
+            hint="Useful correspondence on a theme of your research or reading, "
+            "with at least one letter received: +1 xp in it (one a season).",
+        )
     ]
 
 
@@ -988,6 +1064,7 @@ def _season_plan_dialog(
         *_book_work_fields(saga, character, existing),
         *_student_and_research_fields(saga, character, existing),
         *_supplement_fields(saga, character, existing, _activity_is),
+        *_correspondence_fields(saga, character, existing),
         *_closing_fields(character, existing),
     ]
 

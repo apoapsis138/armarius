@@ -22,7 +22,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
-from .. import book_value, catalog
+from .. import book_kinds, book_value, catalog
 from ..models import Book, Character, Progress, Saga, SeasonPlan
 from . import dice
 from .rounding import round_down, round_up
@@ -191,6 +191,31 @@ def initiation_target(saga: Saga, character: Character, plan: SeasonPlan) -> int
     return max(9, target)
 
 
+def _lecture_problems(saga: Saga, teacher: Character, plan: SeasonPlan) -> list[str]:
+    """Lecture commentaries (Art & Academe): on an Academic or Arcane
+    Ability, never a Hermetic Art; a teacher's number of them is at most
+    his score in the Ability."""
+    subject = next((a.subject for a in plan.allocations if a.subject), "")
+    kind, _, name = subject.partition(":")
+    if kind == "art":
+        return ["Teaching the Arts is too interactive to record as lectures."]
+    if not name:
+        return []
+    made = sum(
+        1
+        for b in saga.books
+        if b.opus == book_kinds.LECTURE_COMMENTARY
+        and b.author_id == teacher.id
+        and b.ability == name
+    )
+    if made >= ability(teacher, name):
+        return [
+            f"{teacher.name} has {made} lecture commentaries on {name}: the most "
+            f"a score of {ability(teacher, name)} allows."
+        ]
+    return []
+
+
 def problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
     """What stops a supplement season with a mechanical side."""
     key = plan.activity
@@ -230,8 +255,11 @@ def problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
         return ["Name it (the pilgrimage, the animal, the work, the formula)."]
     if key == "tame_animal" and plan.book_level is None:
         return ["Type the animal's Might."]
-    if key == "record_lectures" and saga.character(plan.teacher_id) is None:
-        return ["Choose the teacher whose lectures are recorded."]
+    if key == "record_lectures":
+        teacher = saga.character(plan.teacher_id)
+        if teacher is None:
+            return ["Choose the teacher whose lectures are recorded."]
+        return _lecture_problems(saga, teacher, plan)
     if key == "inspeximus":
         book = next((b for b in saga.books if b.id == plan.book_id), None)
         if book is None or book.type not in ("Art Summa", "Ability Summa"):
@@ -551,7 +579,9 @@ def _record_lectures(
             id=f"lectures_{character.id}_{plan.year}_{plan.season.lower()}",
             name=name or f"Lectures of {teacher.name}",
             type="Tractatus",
+            opus=book_kinds.LECTURE_COMMENTARY,
             author=teacher.name,
+            author_id=teacher.id,
             owner_kind="character",
             owner_id=character.id,
             year_published=plan.year,
@@ -606,7 +636,9 @@ def _library_research(
     found = (
         book_value.encyclopedias(saga, covenant, name) if covenant is not None else []
     )
-    library = covenant.library_research.get(name, 0) if covenant is not None else 0
+    library = (
+        book_value.library_level(saga, covenant, name) if covenant is not None else 0
+    )
     best = max([library, *(e.bonus for e in found)])
     source = ""
     if best:

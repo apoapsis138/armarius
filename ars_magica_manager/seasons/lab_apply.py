@@ -7,6 +7,8 @@ import random
 from collections.abc import Sequence
 from dataclasses import replace
 
+from .. import book_kinds
+from .. import books as bk
 from .. import enchanted_devices as ed
 from .. import spells as spl
 from ..models import (
@@ -429,6 +431,13 @@ def apply_book_work(
     for book in saga.books:
         if book.id in work.rewritten:
             book.raw = False
+    if work.florilegium is not None:
+        title, bound, bonus = work.florilegium
+        codex = bk.new_codex(saga, title)
+        codex.collection, codex.florilegium_bonus = book_kinds.FLORILEGIUM, bonus
+        for book in saga.books:
+            if book.id in bound:
+                book.codex_id = codex.id
     if work.access is not None:
         reader_id, author, level = work.access
         reader = saga.character(reader_id)

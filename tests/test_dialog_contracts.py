@@ -1230,6 +1230,24 @@ CONTRACTS: dict[str, Contract] = {
         expected=[["scribe", "illuminator", "story_resonance"]],
         invalid={"Name": ""},
     ),
+    "enchant a book": Contract(
+        prefill={"Epitome": Select.NULL},
+        edits={
+            "Art": "Ignem",
+            "Level": "10",
+            "Quality": "12",
+            "Epitome": "__new_epitome__",
+        },
+        saved=lambda s: [
+            (d.name, d.holder_kind, d.holder_id)
+            for b in s.books
+            if b.id == "b-cov"
+            for d in s.enchanted_devices
+            if d.id == b.device_id
+        ],
+        expected=[("Summa", "covenant", "cov1")],
+        invalid={"Name": ""},
+    ),
     "research bonuses": Contract(
         prefill={"Ignem": "0"},
         edits={"Ignem": "3"},

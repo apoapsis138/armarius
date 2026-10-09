@@ -155,6 +155,11 @@ def _book_plan_subject(saga: Saga, plan: SeasonPlan, names: dict[str, str]) -> s
         return plan.title.strip() or subject
     if plan.activity == bs.REWRITE_TEXTS:
         return "own raw Lab Texts"
+    if plan.activity == bs.EDIT_FLORILEGIUM:
+        subject = plan.florilegium_subject
+        return plan.title.strip() or (
+            rules.subject_label(subject, names) if subject else ""
+        )
     if plan.activity == bs.TEACH_ABBREVIATIONS:
         student = saga.character(plan.subject_id)
         return f"to {student.name}" if student else ""
@@ -170,6 +175,9 @@ def book_text(work: bs.BookWork, plan: SeasonPlan) -> str:
     """How a season of book work stands (plain text)."""
     if plan.activity == bs.REWRITE_TEXTS:
         return f"{len(work.rewritten)} Lab Text(s) rewritten for general use"
+    if work.florilegium is not None:
+        title, bound, bonus = work.florilegium
+        return f"done: {title}, {len(bound)} tractatus at +{bonus} Quality"
     if plan.activity == bs.TEACH_ABBREVIATIONS and work.access:
         return f"can read the teacher's Lab Texts up to level {work.access[2]}"
     made = work.made

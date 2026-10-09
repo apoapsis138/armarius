@@ -388,7 +388,8 @@ def test_a_deleted_covenants_devices_go_with_it():
 
 def test_catalog_is_the_books_table_row_for_row():
     rows = catalog.load_shape_material_catalog()
-    assert len(rows) == 241
+    # The book's table, and the Book shape from Covenants (an epitome).
+    assert len(rows) == 242
     assert rows[0].name == "Adze" and rows[-1].name == "Yoke"
     agate = next(r for r in rows if r.name == "Agate")
     assert agate.bonuses == (
@@ -396,5 +397,6 @@ def test_catalog_is_the_books_table_row_for_row():
         (5, "protection from storms"),
         (7, "protection from venom"),
     )
-    assert all(r.source == "DE" and r.citation.startswith("https://") for r in rows)
+    assert all(r.citation.startswith("https://") for r in rows)
+    assert {r.name for r in rows if r.source != "DE"} == {"Book"}
     assert len({r.id for r in rows}) == len(rows)

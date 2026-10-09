@@ -276,6 +276,7 @@ class _Import:
     spell_map: dict[str, str] = field(default_factory=dict)
     book_map: dict[str, str] = field(default_factory=dict)
     codex_map: dict[str, str] = field(default_factory=dict)
+    device_map: dict[str, str] = field(default_factory=dict)
 
     def link(self, record_kind: str, old_id: str | None) -> str | None:
         if not old_id:
@@ -531,11 +532,11 @@ def _plan_familiars(job: _Import) -> None:
 
 def _plan_devices(job: _Import) -> None:
     device_ids = _Ids(d.id for d in job.target.enchanted_devices)
-    device_map = {
+    job.device_map = {
         d.id: device_ids.new(d.id, d.name) for d in job.source.enchanted_devices
     }
     for device in job.source.enchanted_devices:
-        device.id = device_map[device.id]
+        device.id = job.device_map[device.id]
         device.holder_id = (
             job.link(device.holder_kind or "", device.holder_id)
             if (device.holder_kind in job.record_map)
@@ -569,6 +570,7 @@ def _plan_books(job: _Import) -> None:
         book.spell_id = job.new_spell_id(book.spell_id)
         book.codex_id = job.codex_map.get(book.codex_id or "")
         book.commentary_on = job.book_map.get(book.commentary_on or "")
+        book.device_id = job.device_map.get(book.device_id or "")
         job.plan.books.append(book)
     for codex in job.source.codices:
         codex.id = job.codex_map[codex.id]

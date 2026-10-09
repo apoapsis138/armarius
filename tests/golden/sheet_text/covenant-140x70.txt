@@ -500,6 +500,7 @@
       Tractatus                   -        0
       Lab Texts                   -        0
       Casting Tablets             -        0
+      Pictorial works             -        0
       Vis sources                 -        0
       Vis stocks                  -        0
       Enchanted items             -        8
@@ -519,7 +520,6 @@
         Potions, Heal (level 20): 8
       Laboratories
         Tower: 20
-
 
 
 

@@ -17,6 +17,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from . import book_kinds
 from . import books as bk
 from .models import SUPERNATURAL_CATEGORIES, Book, Covenant, Saga
 from .rules.rounding import round_up
@@ -188,11 +189,32 @@ def guide_text(saga: Saga, covenant: Covenant, subject: str, books: list[Book]) 
     return text
 
 
+#: The most a library's research bonus reaches (a peerless collection).
+RESEARCH_MOST = 5
+#: Build Points for a group of pictorial works on one Ability.
+PICTORIAL_BP = 10
+
+
+def library_level(saga: Saga, covenant: Covenant, subject: str) -> int:
+    """The library's research bonus on `subject`: the level the troupe set,
+    one more for its pictorial works and for a long expert correspondence
+    on it, at most +5."""
+    level = covenant.library_research.get(subject, 0)
+    if subject in covenant.pictorial_works:
+        level += 1
+    for book in library_subjects(saga, covenant).get(subject, []):
+        kind = book_kinds.OPUS_TYPES.get(book.opus)
+        if kind is not None and kind.research_level:
+            level += kind.research_level
+            break
+    return min(RESEARCH_MOST, level)
+
+
 def subject_research_text(saga: Saga, covenant: Covenant, subject: str) -> str:
     """Research on `subject` in the covenant's library (plain text), e.g.
     "library +2 · Natural Histories +8"; "" when it has neither a bonus nor
     an encyclopedia."""
-    level = covenant.library_research.get(subject, 0)
+    level = library_level(saga, covenant, subject)
     parts = [f"library +{level}"] if level else []
     parts += [f"{e.name} +{e.bonus}" for e in encyclopedias(saga, covenant, subject)]
     return " · ".join(parts)
@@ -206,7 +228,7 @@ def research_count(saga: Saga, covenant: Covenant) -> str:
     count = sum(
         1
         for subject in library_subjects(saga, covenant)
-        if covenant.library_research.get(subject, 0)
+        if library_level(saga, covenant, subject)
         or encyclopedias(saga, covenant, subject)
     )
     if not count:

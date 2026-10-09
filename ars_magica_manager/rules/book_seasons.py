@@ -81,6 +81,7 @@ TRANSLATE_BOOK = "translate_book"
 REWRITE_TEXTS = "rewrite_lab_texts"
 COPY_TEXTS = "copy_lab_texts"
 WRITE_TABLET = "write_casting_tablet"
+EDIT_FLORILEGIUM = "edit_florilegium"
 TEACH_ABBREVIATIONS = "teach_abbreviations"
 DECODE_TEXT = "decode_lab_text"
 #: Planned on the character sheet (decoding is lab work).
@@ -92,6 +93,7 @@ SHEET_ACTIVITIES: tuple[str, ...] = (
     REWRITE_TEXTS,
     COPY_TEXTS,
     WRITE_TABLET,
+    EDIT_FLORILEGIUM,
     TEACH_ABBREVIATIONS,
 )
 #: Book work that can take several seasons, points carried between them.
@@ -121,6 +123,9 @@ class BookWork:
     #: Who can now read whose Lab Texts, up to what level:
     #: (reader id, author name, level).
     access: tuple[str, str, int] | None = None
+    #: A florilegium edited: (its name, the tractatus bound in it, its
+    #: Quality bonus).
+    florilegium: tuple[str, list[str], int] | None = None
     notes: list[str] = field(default_factory=list)
 
     @property
@@ -251,7 +256,71 @@ def work(
         return _write(saga, character, plan, com)
     if plan.activity in (COPY_BOOK, TRANSLATE_BOOK):
         return _copy(saga, character, plan, com)
+    if plan.activity == EDIT_FLORILEGIUM:
+        return _edit_florilegium(saga, character, plan)
     return _lab_texts(saga, character, plan)
+
+
+#: Editing a florilegium (Covenants, Other Opus Types): the score an editor
+#: needs (Ability, Art) for +1, and an authority's for +2; and how many times
+#: the tractatus bound the collection must hold.
+FLORILEGIUM_EDITOR = (6, 20)
+FLORILEGIUM_AUTHORITY = (10, 35)
+FLORILEGIUM_COLLECTION, PEERLESS_COLLECTION = 2, 5
+
+
+def florilegium_candidates(
+    saga: Saga, character: Character, subject: str
+) -> list[Book]:
+    """The tractatus on `subject` the editor can get at, not yet bound in a
+    codex, best Quality first."""
+    found = [
+        b
+        for b in saga.books
+        if b.type == "Tractatus"
+        and book_subject(b) == subject
+        and b.quality is not None
+        and books.codex_of(saga, b) is None
+        and books.can_read(saga, character, b)
+    ]
+    return sorted(found, key=lambda b: -(b.quality or 0))
+
+
+def _edit_florilegium(
+    saga: Saga, character: Character, plan: SeasonPlan
+) -> tuple[list[str], BookWork | None]:
+    """A season binding tractatus on one subject into a florilegium: as
+    many as the editor could write on it, from a collection twice that size;
+    each read at +1 Quality, +2 when an authority edits from a peerless
+    collection (five times the size)."""
+    subject = plan.florilegium_subject
+    if not subject:
+        return ["Choose the subject whose tractatus it binds."], None
+    is_art, score = subject_score(character, subject)
+    name = subject.partition(":")[2]
+    need, authority = FLORILEGIUM_EDITOR[is_art], FLORILEGIUM_AUTHORITY[is_art]
+    if score < need:
+        return [
+            f"Editing a florilegium on {name} needs a score of {need} "
+            f"({character.name} has {score})."
+        ], None
+    most = round_up(score / 5) if is_art else round_up(score / 2)
+    found = florilegium_candidates(saga, character, subject)
+    peerless = min(most, len(found) // PEERLESS_COLLECTION)
+    if score >= authority and peerless >= 1:
+        bound, bonus = found[:peerless], 2
+    else:
+        bound, bonus = found[: min(most, len(found) // FLORILEGIUM_COLLECTION)], 1
+    if not bound:
+        return [
+            f"A florilegium needs a collection of at least twice the tractatus it "
+            f"binds: {character.name} can get at {len(found)} on {name}, not "
+            "bound in a codex."
+        ], None
+    title = plan.title.strip() or f"Florilegium of {name}"
+    return [], BookWork(
+        points_gained=1, needed=1, florilegium=(title, [b.id for b in bound], bonus)
+    )
 
 
 def _write(
@@ -284,6 +353,7 @@ def _write(
             1
             for b in saga.books
             if b.type == "Tractatus"
+            and b.opus != book_kinds.LECTURE_COMMENTARY
             and b.author == character.name
             and book_subject(b) == subject
         )

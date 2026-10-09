@@ -133,14 +133,27 @@ class Book:
     physical_form: str = ""
     #: Its craftsmanship, under the extended book Quality rule
     #: (book_kinds.CRAFT keys: "scribe", "binder", "illuminator",
-    #: "resonance", "story_resonance", "clarified", "glossed").
+    #: "resonance", "story_resonance", "clarified").
     craft: list[str] = field(default_factory=list)
+    #: Glossed by a skilled reader: +1 Quality, once (Covenants, Other Opus
+    #: Types).
+    glossed: bool = False
+    #: An epitome: the book enchanted as a magical item (Covenants,
+    #: Secondary Functions) -- the EnchantedDevice it is, held where the
+    #: book is kept.
+    device_id: str | None = None
 
     @classmethod
     def from_dict(
         cls, data: dict[str, Any], spell_names: dict[str, str] | None = None
     ) -> Book:
         d = dict(data)
+        craft = list(d.get("craft") or [])
+        if "glossed" in craft:
+            # A gloss was craftsmanship (the extended rule) before it became
+            # a book's own flag.
+            craft.remove("glossed")
+            d["craft"], d["glossed"] = craft, True
         if d.get("type") == "Lab Text" and not d.get("text_kind"):
             # In older saves a Lab Text has no kind.
             d["text_kind"] = (
