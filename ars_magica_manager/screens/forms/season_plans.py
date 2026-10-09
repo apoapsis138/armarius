@@ -31,6 +31,7 @@ from ...rules import (
     laboratory_seasons,
     supplement_seasons,
 )
+from ...rules import supplement_work as sw
 from ...seasons import plans as season_plans_text
 from ..fields import _EMPHASIS_HINT, DialogField, FieldsDialog, _attr
 from ..pickers import VirtueFlawPickerScreen
@@ -155,7 +156,7 @@ def _season_plan_from(
             else None
         ),
     )
-    for key, value in _supplement_plan_values(activity, values).items():
+    for key, value in _supplement_plan_values(character, activity, values).items():
         setattr(plan, key, value)
     return plan
 
@@ -251,7 +252,9 @@ def _supplement_title(activity: str, values: dict[str, Any]) -> str:
     return _pick(activity, values, _TITLE_KEYS) or ""
 
 
-def _supplement_plan_values(activity: str, values: dict[str, Any]) -> dict[str, Any]:
+def _supplement_plan_values(
+    character: Character, activity: str, values: dict[str, Any]
+) -> dict[str, Any]:
     """The rest of a supplement season's plan (decision 38)."""
     found: dict[str, Any] = {
         "other_modifier": _pick(activity, values, _BONUS_KEYS) or 0,
@@ -265,11 +268,25 @@ def _supplement_plan_values(activity: str, values: dict[str, Any]) -> dict[str, 
     if activity == "produce_remedies":
         found["extra_vis"] = values.get("doses") or 1
     if activity == "undergo_initiation":
-        virtue, flaw = values.get("mystery_virtue"), values.get("ordeal_flaw")
+        virtue = values.get("mystery_virtue")
         found["effect_params"] = dict(virtue.params) if virtue else {}
+        kind = values.get("ordeal_kind") or ""
+        found["ordeal_kind"] = kind
+        flaw = (
+            values.get("ordeal_flaw") if kind in (sw.GAIN_FLAW, sw.RAISE_FLAW) else None
+        )
         found["device_id"] = flaw.vf_id if flaw else None
         found["ordeal_params"] = dict(flaw.params) if flaw else {}
-        found["research_kind"] = values.get("ordeal_size") or "Minor"
+        lost = _own_vf(
+            character,
+            values.get("ordeal_lost_virtue")
+            if kind == sw.LOSE_VIRTUE
+            else values.get("ordeal_raised_flaw")
+            if kind == sw.RAISE_FLAW
+            else None,
+        )
+        found["ordeal_lost_id"] = lost.vf_id if lost else None
+        found["ordeal_lost_params"] = dict(lost.params) if lost else {}
     if activity == "inspeximus":
         found["book_id"] = values.get("summa_id")
     return found
@@ -287,7 +304,6 @@ def _vf_picker_field(
     side: str,
     value: VirtueFlawInstance | None,
     show_if: Callable[[dict[str, Any]], bool],
-    fills: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
 ) -> DialogField:
     """A field choosing a Virtue or Flaw (`side`) for `character` from the
     catalog picker, which asks for anything it names; Delete clears it."""
@@ -318,17 +334,48 @@ def _vf_picker_field(
         picker=picker,
         display=display,
         show_if=show_if,
-        fills=fills,
     )
 
 
-def _ordeal_size(values: dict[str, Any]) -> dict[str, Any]:
-    """The Ordeal size a newly chosen Flaw suggests: its tier."""
-    flaw = values.get("ordeal_flaw")
-    definition = (
-        catalog.load_virtue_flaw_catalog_by_id().get(flaw.vf_id) if flaw else None
+def _own_vf(character: Character, index: str | None) -> VirtueFlawInstance | None:
+    """The character's Virtue or Flaw an "own_vf_options" choice names."""
+    if (
+        index is None
+        or not index.isdigit()
+        or int(index) >= len(character.virtues_flaws)
+    ):
+        return None
+    return character.virtues_flaws[int(index)]
+
+
+def _own_vf_options(
+    character: Character, side: str, tiers: tuple[str, ...]
+) -> list[tuple[str, str]]:
+    """The character's own Virtues or Flaws (`side`) of `tiers`, as select
+    options keyed by their place in the list."""
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    return [
+        (escape(f"{catalog.describe_virtue_flaw(vf, by_id)} ({entry.tier})"), str(i))
+        for i, vf in enumerate(character.virtues_flaws)
+        if (entry := by_id.get(vf.vf_id)) is not None
+        and entry.side == side
+        and entry.tier in tiers
+    ]
+
+
+def _own_vf_value(character: Character, vf_id: str | None, params: dict) -> str | None:
+    """The select value of the character's Virtue or Flaw `vf_id`."""
+    wanted = VirtueFlawInstance(vf_id or "", dict(params))
+    return next(
+        (str(i) for i, vf in enumerate(character.virtues_flaws) if vf == wanted), None
     )
-    return {"ordeal_size": definition.tier} if definition else {}
+
+
+def _ordeal_is(
+    activity_is: Callable[..., Callable[[dict[str, Any]], bool]], *kinds: str
+) -> Callable[[dict[str, Any]], bool]:
+    initiation = activity_is("undergo_initiation")
+    return lambda values: initiation(values) and values.get("ordeal_kind") in kinds
 
 
 def _supplement_fields(
@@ -497,25 +544,50 @@ def _supplement_fields(
             else None,
             show_if=activity_is("undergo_initiation"),
         ),
+        DialogField(
+            "ordeal_kind",
+            "Ordeal",
+            "select",
+            (sw.ordeal_kind(plan) if plan else "") or None,
+            options=[(label, kind) for kind, label in sw.ORDEAL_KINDS.items()],
+            allow_blank=True,
+            placeholder="(none)",
+            show_if=activity_is("undergo_initiation"),
+        ),
         _vf_picker_field(
             "ordeal_flaw",
-            "Ordeal Flaw (if any)",
+            "Flaw gained",
             saga,
             character,
             "Flaw",
             VirtueFlawInstance(plan.device_id, dict(plan.ordeal_params))
             if plan and plan.device_id
             else None,
-            show_if=activity_is("undergo_initiation"),
-            fills=_ordeal_size,
+            show_if=_ordeal_is(activity_is, sw.GAIN_FLAW, sw.RAISE_FLAW),
         ),
         DialogField(
-            "ordeal_size",
-            "Ordeal size",
+            "ordeal_lost_virtue",
+            "Virtue lost",
             "select",
-            (plan.research_kind if plan else "") or "Minor",
-            options=[(o, o) for o in ("Minor", "Medium", "Major")],
-            show_if=activity_is("undergo_initiation"),
+            _own_vf_value(character, plan.ordeal_lost_id, plan.ordeal_lost_params)
+            if plan
+            else None,
+            options=_own_vf_options(character, "Virtue", ("Minor", "Major")),
+            allow_blank=True,
+            placeholder="(choose one of their Virtues)",
+            show_if=_ordeal_is(activity_is, sw.LOSE_VIRTUE),
+        ),
+        DialogField(
+            "ordeal_raised_flaw",
+            "Minor Flaw raised",
+            "select",
+            _own_vf_value(character, plan.ordeal_lost_id, plan.ordeal_lost_params)
+            if plan
+            else None,
+            options=_own_vf_options(character, "Flaw", ("Minor",)),
+            allow_blank=True,
+            placeholder="(choose one of their Minor Flaws)",
+            show_if=_ordeal_is(activity_is, sw.RAISE_FLAW),
         ),
         DialogField(
             "manual",

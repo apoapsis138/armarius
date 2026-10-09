@@ -350,7 +350,7 @@ def _with(**changes) -> Saga:
                 title="Mercere Lore",
                 device_id="vf_adept_laboratory_student",
             ),
-            "Adept Laboratory Student is not a Flaw: choose the Ordeal Flaw.",
+            "Adept Laboratory Student is not a Flaw: choose the Flaw the Ordeal gives.",
         ),
         (
             {},
@@ -358,10 +358,9 @@ def _with(**changes) -> Saga:
                 "undergo_initiation",
                 effect_id="vf_puissant_ability",
                 title="Mercere Lore",
-                device_id="vf_ambitious",
-                research_kind="Medium",
+                ordeal_kind="gain",
             ),
-            "A Minor Flaw is a Minor Ordeal.",
+            "Choose the Flaw the Ordeal gives.",
         ),
         (
             {},
@@ -369,11 +368,31 @@ def _with(**changes) -> Saga:
                 "undergo_initiation",
                 effect_id="vf_puissant_ability",
                 title="Mercere Lore",
-                device_id="vf_poor",
-                research_kind="Minor",
+                ordeal_kind="lose",
             ),
-            "A Major Flaw is a Major Ordeal, or Medium when it raises a related "
-            "Minor Flaw.",
+            "Choose the Virtue the Ordeal takes away.",
+        ),
+        (
+            {},
+            _plan(
+                "undergo_initiation",
+                effect_id="vf_puissant_ability",
+                title="Mercere Lore",
+                ordeal_kind="lose",
+                ordeal_lost_id="vf_wealthy",
+            ),
+            "Choose the Virtue the Ordeal takes away.",
+        ),
+        (
+            {},
+            _plan(
+                "undergo_initiation",
+                effect_id="vf_puissant_ability",
+                title="Mercere Lore",
+                ordeal_kind="raise",
+                device_id="vf_deaf",
+            ),
+            "Choose the Minor Flaw the Ordeal raises.",
         ),
         (
             {},
@@ -577,6 +596,112 @@ def test_initiation_against_the_target_less_a_past_ordeal():
     assert _work(saga, plan).notes[-1].endswith("against 18: not initiated.")
     wulf.ordeals = [Ordeal("Major", 1)]
     assert _work(saga, plan).notes[-1].endswith("against 12: not initiated.")
+
+
+def _ordeal_plan(**kw):
+    return _plan(
+        "undergo_initiation",
+        subject="",
+        teacher_id="c",
+        title="Mercere Lore",
+        effect_id="vf_adept_laboratory_student",
+        other_modifier=12,
+        **kw,
+    )
+
+
+def test_an_ordeal_can_take_away_a_virtue():
+    saga = _saga()
+    wulf = saga.character("c")
+    assert wulf is not None
+    wulf.characteristics.presence = 4
+    great = VirtueFlawInstance(
+        "vf_great_characteristic", {"characteristic": "presence"}
+    )
+    wulf.virtues_flaws = [great, VirtueFlawInstance("vf_wealthy")]
+    plan = _ordeal_plan(
+        ordeal_kind="lose",
+        ordeal_lost_id="vf_great_characteristic",
+        ordeal_lost_params={"characteristic": "presence"},
+    )
+    assert sw.ordeal_size(plan) == "Minor"
+    # Presence 4 + Lore 5 + Script 12 = 21 against 18.
+    assert _work(saga, plan).notes[-1].endswith("initiated. Minor Ordeal.")
+    wulf = _run(saga, plan)
+    ids = [vf.vf_id for vf in wulf.virtues_flaws]
+    assert ids == ["vf_wealthy", "vf_adept_laboratory_student"]
+    # Great Presence's point goes with it.
+    assert wulf.characteristics.presence == 3
+    assert wulf.ordeals == [Ordeal("Minor", 0)]
+
+
+def test_losing_a_major_virtue_is_a_major_ordeal():
+    plan = _ordeal_plan(ordeal_kind="lose", ordeal_lost_id="vf_wealthy")
+    assert sw.ordeal_size(plan) == "Major"
+
+
+def test_a_medium_ordeal_raises_a_minor_flaw_to_the_major_one():
+    saga = _saga()
+    wulf = saga.character("c")
+    assert wulf is not None
+    wulf.virtues_flaws = [VirtueFlawInstance("vf_poor_hearing")]
+    plan = _ordeal_plan(
+        ordeal_kind="raise", ordeal_lost_id="vf_poor_hearing", device_id="vf_deaf"
+    )
+    assert sw.ordeal_size(plan) == "Medium"
+    wulf = _run(saga, plan)
+    ids = [vf.vf_id for vf in wulf.virtues_flaws]
+    assert ids == ["vf_adept_laboratory_student", "vf_deaf"]
+    assert wulf.ordeals == [Ordeal("Medium", 0)]
+
+
+def test_a_failed_initiation_costs_nothing():
+    saga = _saga()
+    wulf = saga.character("c")
+    assert wulf is not None
+    wulf.virtues_flaws = [VirtueFlawInstance("vf_wealthy")]
+    plan = _ordeal_plan(ordeal_kind="lose", ordeal_lost_id="vf_wealthy")
+    plan.other_modifier = 0
+    assert _work(saga, plan).notes[-1].endswith("not initiated.")
+    wulf = _run(saga, plan)
+    assert [vf.vf_id for vf in wulf.virtues_flaws] == ["vf_wealthy"]
+    assert wulf.ordeals == []
+
+
+@pytest.mark.parametrize(
+    ("held", "kw", "problem"),
+    [
+        (
+            "vf_ambitious",
+            {"ordeal_kind": "lose", "ordeal_lost_id": "vf_ambitious"},
+            "Ambitious can't be lost to an Ordeal: choose a Minor or Major Virtue.",
+        ),
+        (
+            "vf_poor",
+            {
+                "ordeal_kind": "raise",
+                "ordeal_lost_id": "vf_poor",
+                "device_id": "vf_deaf",
+            },
+            "Poor is not a Minor Flaw: choose the Minor Flaw raised.",
+        ),
+        (
+            "vf_poor_hearing",
+            {
+                "ordeal_kind": "raise",
+                "ordeal_lost_id": "vf_poor_hearing",
+                "device_id": "vf_ambitious",
+            },
+            "Ambitious is not a Major Flaw: choose the Major Flaw it becomes.",
+        ),
+    ],
+)
+def test_what_an_ordeal_can_cost(held, kw, problem):
+    saga = _saga()
+    wulf = saga.character("c")
+    assert wulf is not None
+    wulf.virtues_flaws = [VirtueFlawInstance(held)]
+    assert sw.problems(saga, wulf, _ordeal_plan(**kw)) == [problem]
 
 
 def test_binding_a_catalog():

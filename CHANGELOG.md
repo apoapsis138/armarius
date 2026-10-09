@@ -41,6 +41,17 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.42.0 — 2026-10-09
+
+- Planning an Initiation now says what its Ordeal costs: the Initiate
+  gains a Flaw, loses one of their Minor or Major Virtues, or has one of
+  their Minor Flaws raised to a related Major Flaw. The Ordeal's size
+  follows from that (a raised Flaw is a Medium Ordeal), so the separate
+  Ordeal size choice is gone. A successful Initiation takes the lost
+  Virtue away (with its point, for a Great Characteristic) or replaces
+  the raised Flaw; a failed one changes nothing. Plans made before keep
+  their Ordeal Flaw.
+
 ## 2.41.0 — 2026-10-09
 
 - The Spells tab lists only the spells whose book is in play, plus the

@@ -97,7 +97,7 @@ The Initiation is the Initiate's season, planned like any other.
 3. In **Teacher / master**, choose the Mystagogue. Leave it blank for a self-initiation.
 4. Type the **Script bonus** and the **Mystagogue's Lore**, spelt as it is on the Mystagogue's Abilities tab.
 5. Choose **Virtue initiated**. It opens the Virtues & Flaws picker on Virtues: search, filter by type or tier, and press Enter. A Virtue that names something, such as Affinity with an Art or Puissant with an Ability, asks for it.
-6. If the Script has an Ordeal that gains a Flaw, choose **Ordeal Flaw** the same way. **Ordeal size** follows the Flaw's tier; set it to Medium when the Flaw raises a related Minor Flaw to Major. Delete on a chosen field clears it.
+6. If the Script has an Ordeal, choose what it costs in **Ordeal**: **Gains a Flaw** asks for the **Flaw gained** (the Virtues & Flaws picker again); **Loses a Virtue** asks for the **Virtue lost**, one of the Initiate's own Minor or Major Virtues; **Raises a Minor Flaw to Major** asks for the **Minor Flaw raised**, one of their own, and the related Major Flaw it becomes as the **Flaw gained**. The Ordeal's size follows from what it costs: a Minor Flaw or Virtue makes a Minor Ordeal, a Major one a Major Ordeal, and a raised Flaw a Medium one. Leave Ordeal blank for none. Delete on a chosen field clears it.
 7. Watch the line above Save. It shows the Initiation Total (the Mystagogue's Presence + Lore + Script bonus) against the Target Level, and whether the Initiation will succeed. Save refuses a plan that is missing something or breaks a rule, and says why.
 
 There is no die: the Initiation succeeds when the total reaches the Target Level. The Target is 15 for a Minor Virtue and 21 for a Major one, or 18 and 30 when the Mystagogue doesn't have the Virtue (always so for a self-initiation into a Virtue the character lacks).
@@ -105,7 +105,7 @@ There is no die: the Initiation succeeds when the total reaches the Target Level
 ### When the season is advanced
 <!-- help: guide-initiation-advance -->
 
-Press `t` to [advance the season](help:advance-season). For a successful Initiation, the app adds the Virtue (with what it names) and the Ordeal Flaw to the Initiate's [Virtues & Flaws tab](help:tab-vf), and a Great Characteristic Virtue also raises the score. A failed Initiation adds nothing, and Ordeal Flaws are not gained: the Mystagogue sees that a Script will fail before any sacrifice is made. Either way, the Diary records the Initiation Total against the Target.
+Press `t` to [advance the season](help:advance-season). For a successful Initiation, the app adds the Virtue (with what it names) to the Initiate's [Virtues & Flaws tab](help:tab-vf) and applies the Ordeal: it adds the Flaw gained, takes away the Virtue lost, or replaces the Minor Flaw raised with its Major Flaw. A Great Characteristic Virtue gained raises the score, and one lost lowers it again. A failed Initiation changes nothing, and its Ordeal is not suffered: the Mystagogue sees that a Script will fail before any sacrifice is made. Either way, the Diary records the Initiation Total against the Target.
 
 ### Past Ordeals make later Initiations easier
 <!-- help: guide-initiation-ordeals -->
@@ -115,9 +115,9 @@ An Ordeal lowers the Target Level of the Initiate's next three Initiations, neve
 ### What the app works out, and what it doesn't
 <!-- help: guide-initiation-limits -->
 
-**The app works out:** the Initiation Total and Target Level, whether the Mystagogue has the Virtue, the largest reduction among past Ordeals, the checks on the Lore and the Ordeal size, and the Virtue and Flaw added on success.
+**The app works out:** the Initiation Total and Target Level, whether the Mystagogue has the Virtue, the largest reduction among past Ordeals, the checks on the Lore and the Ordeal, the Ordeal's size, and the Virtues and Flaws added or taken away on success.
 
-**You type:** the Script bonus, as the storyguide agrees it. Varying a Script or experimenting with a new one is rolled at the table; type the Script bonus that results. Ordeals that take away a Virtue, or raise a Minor Flaw to Major, are applied by hand on the Virtues & Flaws tab. Months lost to distraction during the Initiation are not counted.
+**You type:** the Script bonus, as the storyguide agrees it. Varying a Script or experimenting with a new one is rolled at the table; type the Script bonus that results. Which Major Flaw a Minor Flaw is related to is the troupe's call: the app checks only that it is a Major Flaw. Months lost to distraction during the Initiation are not counted.
 
 A Mystagogue who spends a whole season on the Script (teaching a Supernatural Ability, say) plans **Act as Mystagogue**, and a season spent on a Quest is **Serve a Mystagogue / Quest season**; both need The Mysteries Revised Edition in play.
 

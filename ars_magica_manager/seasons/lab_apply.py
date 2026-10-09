@@ -335,6 +335,10 @@ def apply_supplement(
             )
     for book in work.books:
         saga.books.append(_copy_book(saga, book))
+    for instance in work.remove_vfs:
+        if instance in character.virtues_flaws:
+            cch.unapply_virtue(saga, character, instance)
+            character.virtues_flaws.remove(instance)
     for instance in work.add_vfs:
         if instance.vf_id:
             character.virtues_flaws.append(instance)

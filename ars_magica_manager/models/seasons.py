@@ -162,10 +162,16 @@ class SeasonPlan:
     research: str = ""
     research_kind: str = "Minor"
     #: Undergoing an Initiation: what the Virtue initiated (effect_id) and
-    #: the Ordeal Flaw (device_id) name, as the picker asked for it
-    #: ({"art": "Ignem"}); the Ordeal's size is research_kind.
+    #: the Flaw an Ordeal gains (device_id) name, as the picker asked for it
+    #: ({"art": "Ignem"}); the kind of Ordeal ("gain" a Flaw, "lose" a
+    #: Virtue, "raise" a Minor Flaw to Major; "" in an older plan: a Flaw,
+    #: its size in research_kind), and the Virtue it takes away or the
+    #: Minor Flaw it raises.
     effect_params: dict[str, str] = field(default_factory=dict)
     ordeal_params: dict[str, str] = field(default_factory=dict)
+    ordeal_kind: str = ""
+    ordeal_lost_id: str | None = None
+    ordeal_lost_params: dict[str, str] = field(default_factory=dict)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> SeasonPlan:

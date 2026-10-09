@@ -123,6 +123,8 @@ class SupplementWork:
     progress: list[tuple[str, str, int, int]] = field(default_factory=list)
     books: list[Book] = field(default_factory=list)
     add_vfs: list[VirtueFlawInstance] = field(default_factory=list)
+    #: Virtues or Flaws an Ordeal takes away.
+    remove_vfs: list[VirtueFlawInstance] = field(default_factory=list)
     formulas: list[str] = field(default_factory=list)
     innovation: int = 0
     raw_materials: int = 0
@@ -213,10 +215,46 @@ def _initiated(plan: SeasonPlan) -> VirtueFlawInstance:
     return VirtueFlawInstance(plan.effect_id or "", dict(plan.effect_params))
 
 
-#: Ordeal Flaw tier -> the Ordeal sizes it can be: a Minor Flaw is a Minor
-#: Ordeal; a Major Flaw is a Major one, or Medium when it raises a related
-#: Minor Flaw.
-ORDEAL_SIZES = {"Minor": ("Minor",), "Major": ("Major", "Medium")}
+#: The kinds of Ordeal: the Initiate gains a Flaw, loses a Virtue, or has a
+#: Minor Flaw raised to a related Major one.
+GAIN_FLAW, LOSE_VIRTUE, RAISE_FLAW = "gain", "lose", "raise"
+ORDEAL_KINDS = {
+    GAIN_FLAW: "Gains a Flaw",
+    LOSE_VIRTUE: "Loses a Virtue",
+    RAISE_FLAW: "Raises a Minor Flaw to Major",
+}
+
+
+def ordeal_kind(plan: SeasonPlan) -> str:
+    """The plan's kind of Ordeal ("" for none); an older plan's Flaw is
+    gained."""
+    return plan.ordeal_kind or (GAIN_FLAW if plan.device_id else "")
+
+
+def _ordeal_gained(plan: SeasonPlan) -> VirtueFlawInstance | None:
+    if ordeal_kind(plan) not in (GAIN_FLAW, RAISE_FLAW) or not plan.device_id:
+        return None
+    return VirtueFlawInstance(plan.device_id, dict(plan.ordeal_params))
+
+
+def _ordeal_lost(plan: SeasonPlan) -> VirtueFlawInstance | None:
+    if ordeal_kind(plan) not in (LOSE_VIRTUE, RAISE_FLAW) or not plan.ordeal_lost_id:
+        return None
+    return VirtueFlawInstance(plan.ordeal_lost_id, dict(plan.ordeal_lost_params))
+
+
+def ordeal_size(plan: SeasonPlan) -> str:
+    """The Ordeal's size, from what it costs: a Minor Flaw gained or Minor
+    Virtue lost is Minor, a Major one Major, a Flaw raised Medium ("" with
+    no Ordeal)."""
+    kind = ordeal_kind(plan)
+    if kind == RAISE_FLAW:
+        return "Medium"
+    if not plan.ordeal_kind and plan.device_id:
+        return plan.research_kind or "Minor"
+    costs = _ordeal_gained(plan) or _ordeal_lost(plan)
+    entry = catalog.load_virtue_flaw_catalog_by_id().get(costs.vf_id) if costs else None
+    return entry.tier if entry is not None and entry.tier in ORDEAL_REDUCTION else ""
 
 
 def _house_lore(character: Character, lore: str) -> bool:
@@ -244,19 +282,43 @@ def _initiation_problem(saga: Saga, character: Character, plan: SeasonPlan) -> s
         return f"{mystagogue.name} doesn't know {lore}."
     if ability(character, lore) < 1 and not _house_lore(character, lore):
         return f"{character.name} needs {lore} 1 to be Initiated."
-    flaw = by_id.get(plan.device_id or "")
-    if flaw is None:
+    return _ordeal_problem(character, plan)
+
+
+def _ordeal_problem(character: Character, plan: SeasonPlan) -> str:
+    """What is wrong with an Initiation's Ordeal ("" if nothing)."""
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    kind = ordeal_kind(plan)
+    if not kind:
         return ""
-    if flaw.side != "Flaw":
-        return f"{flaw.name} is not a Flaw: choose the Ordeal Flaw."
-    sizes = ORDEAL_SIZES.get(flaw.tier, ())
-    if sizes and (plan.research_kind or "Minor") not in sizes:
+    gained, lost = _ordeal_gained(plan), _ordeal_lost(plan)
+    flaw = by_id.get(gained.vf_id) if gained else None
+    if kind in (GAIN_FLAW, RAISE_FLAW):
+        if flaw is None:
+            return "Choose the Flaw the Ordeal gives."
+        if flaw.side != "Flaw":
+            return f"{flaw.name} is not a Flaw: choose the Flaw the Ordeal gives."
+    if kind == GAIN_FLAW:
+        assert flaw is not None
+        if flaw.tier not in ORDEAL_REDUCTION:
+            return f"{flaw.name} is a {flaw.tier} Flaw: an Ordeal's is Minor or Major."
+        return ""
+    entry = by_id.get(lost.vf_id) if lost else None
+    if lost is None or entry is None or lost not in character.virtues_flaws:
         return (
-            "A Minor Flaw is a Minor Ordeal."
-            if flaw.tier == "Minor"
-            else "A Major Flaw is a Major Ordeal, or Medium when it raises a "
-            "related Minor Flaw."
+            "Choose the Virtue the Ordeal takes away."
+            if kind == LOSE_VIRTUE
+            else "Choose the Minor Flaw the Ordeal raises."
         )
+    if kind == LOSE_VIRTUE:
+        if entry.side != "Virtue" or entry.tier not in ORDEAL_REDUCTION:
+            return f"{entry.name} can't be lost to an Ordeal: choose a Minor or Major Virtue."
+        return ""
+    assert flaw is not None
+    if entry.side != "Flaw" or entry.tier != "Minor":
+        return f"{entry.name} is not a Minor Flaw: choose the Minor Flaw raised."
+    if flaw.tier != "Major":
+        return f"{flaw.name} is not a Major Flaw: choose the Major Flaw it becomes."
     return ""
 
 
@@ -618,16 +680,20 @@ def _undergo_initiation(
         + plan.other_modifier
     )
     target = initiation_target(saga, character, plan)
+    size = ordeal_size(plan)
     if total >= target:
         result.add_vfs.append(_initiated(plan))
-        if plan.device_id:
-            result.add_vfs.append(
-                VirtueFlawInstance(plan.device_id, dict(plan.ordeal_params))
-            )
-            result.ordeal = plan.research_kind or "Minor"
+        if gained := _ordeal_gained(plan):
+            result.add_vfs.append(gained)
+        if lost := _ordeal_lost(plan):
+            result.remove_vfs.append(lost)
+        result.ordeal = size
+    ordeal = f" {size} Ordeal." if size and total >= target else ""
     result.notes.append(
         f"Initiation Total {total} (Presence + {name} + Script {plan.other_modifier}) "
-        f"against {target}: " + ("initiated." if total >= target else "not initiated.")
+        f"against {target}: "
+        + ("initiated." if total >= target else "not initiated.")
+        + ordeal
     )
 
 

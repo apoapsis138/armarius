@@ -83,8 +83,8 @@ _INITIATION = {
     "Script bonus": "12",
     "Mystagogue's Lore": "Mercere Lore",
     "Virtue initiated": VirtueFlawInstance("vf_affinity_with_art", {"art": "ignem"}),
-    "Ordeal Flaw": VirtueFlawInstance("vf_deficient_technique", {"technique": "creo"}),
-    "Ordeal size": "Major",
+    "Ordeal": "gain",
+    "Flaw gained": VirtueFlawInstance("vf_deficient_technique", {"technique": "creo"}),
 }
 
 #: A Resolved Story Event linked to the covenant's Hidden Resources Boon.
@@ -773,7 +773,7 @@ CONTRACTS: dict[str, Contract] = {
                 p.effect_params,
                 p.device_id,
                 p.ordeal_params,
-                p.research_kind,
+                p.ordeal_kind,
             )
             for p in s.season_plans
         ],
@@ -786,12 +786,12 @@ CONTRACTS: dict[str, Contract] = {
                 {"art": "ignem"},
                 "vf_deficient_technique",
                 {"technique": "creo"},
-                "Major",
+                "gain",
             )
         ],
         invalid=[
             {**_INITIATION, "Virtue initiated": None},
-            {**_INITIATION, "Ordeal size": "Minor"},
+            {**_INITIATION, "Ordeal": "raise"},
         ],
     ),
     "add character diary entry": Contract(
