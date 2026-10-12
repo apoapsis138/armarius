@@ -1,6 +1,6 @@
 import pytest
 
-from ars_magica_manager import catalog, settings, storage
+from ars_magica_manager import catalog, paths, settings, storage
 
 
 @pytest.fixture(autouse=True)
@@ -21,6 +21,17 @@ def isolated_settings_path(tmp_path, monkeypatch):
     monkeypatch.setattr(
         settings, "SETTINGS_PATH", tmp_path / "config" / "app_settings.json"
     )
+
+
+@pytest.fixture(autouse=True)
+def isolated_location_file(tmp_path, monkeypatch):
+    """Choosing a save folder writes location.json and moves the saves out
+    of the data folder: both in a temp dir, never the user's own; and no
+    folder chosen by the environment."""
+    monkeypatch.setattr(paths, "LOCATION_FILE", tmp_path / "config" / "location.json")
+    monkeypatch.setattr(paths, "default_data_dir", lambda: tmp_path / "data")
+    monkeypatch.setattr(paths, "_fallback", None)
+    monkeypatch.delenv(paths.ENV_VAR, raising=False)
 
 
 @pytest.fixture(autouse=True)

@@ -23,7 +23,7 @@ from ..models import Character, Laboratory, Saga, Spell
 from . import creation_access as access
 from . import lab
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
-from .creation_character import AGING_AGE, age
+from .creation_character import age, aging_age
 from .creation_later import DEFAULT_APPRENTICESHIP_AGE
 from .creation_xp import entries, is_art, spent
 
@@ -41,7 +41,8 @@ MINIMUMS_SOURCE = (
 
 APPRENTICESHIP_XP = 240
 APPRENTICESHIP_LEVELS = 120
-#: Skilled Parens adds this much to the apprenticeship.
+#: Skilled Parens adds this much to the apprenticeship; Weak Parens takes
+#: as much away.
 SKILLED_PARENS_XP, SKILLED_PARENS_LEVELS = 60, 30
 CREATION_AURA = 3
 LATIN = "Dead Language: Latin"
@@ -55,16 +56,18 @@ ADVISED: tuple[tuple[str, int], ...] = ((LATIN, 4), ("Artes Liberales", 1))
 SPELLS_STEP = "apprenticeship_spells"
 
 
-def _skilled(character: Character) -> bool:
-    return any(vf.vf_id == "vf_skilled_parens" for vf in character.virtues_flaws)
+def _parens(character: Character) -> int:
+    """+1 for a Skilled Parens, -1 for a Weak one, 0 for neither."""
+    ids = [vf.vf_id for vf in character.virtues_flaws]
+    return ("vf_skilled_parens" in ids) - ("vf_weak_parens" in ids)
 
 
 def xp_budget(character: Character) -> int:
-    return APPRENTICESHIP_XP + (SKILLED_PARENS_XP if _skilled(character) else 0)
+    return APPRENTICESHIP_XP + SKILLED_PARENS_XP * _parens(character)
 
 
 def level_budget(character: Character) -> int:
-    return APPRENTICESHIP_LEVELS + (SKILLED_PARENS_LEVELS if _skilled(character) else 0)
+    return APPRENTICESHIP_LEVELS + SKILLED_PARENS_LEVELS * _parens(character)
 
 
 def targets(character: Character) -> list[str]:
@@ -343,18 +346,19 @@ def gauntlet_checks(saga: Saga, record: Record) -> list[Check]:
 
 
 def aging_due(saga: Saga, character: Character) -> int:
-    """The pre-play aging rolls not yet made (one a year from 35)."""
+    """The pre-play aging rolls not yet made (one a year from 35, or the
+    age a Virtue starts aging at)."""
     years = age(saga, character)
-    if years is None or years <= AGING_AGE:
+    if years is None or years <= aging_age(character):
         return 0
     done = character.creation_conditions.aged_to
-    start = AGING_AGE if done is None else done + 1
+    start = aging_age(character) if done is None else done + 1
     return max(0, years - start)
 
 
 def aging_check(saga: Saga, character: Character, step: str) -> list[Check]:
     years = age(saga, character)
-    if years is None or years <= AGING_AGE:
+    if years is None or years <= aging_age(character):
         return []
     due = aging_due(saga, character)
     return [

@@ -14,7 +14,7 @@ from dataclasses import fields as dataclass_fields
 from pathlib import Path
 from typing import Any
 
-from . import __version__, laboratories, paths
+from . import __version__, laboratories, paths, settings
 from .files import write_atomic
 from .merge import merge
 from .models import Saga
@@ -27,6 +27,15 @@ _SLUG_RE = re.compile(r"[^a-z0-9]+")
 #: Where Export offers to write an exported covenant, laboratory or character;
 #: the folder is made on the first export.
 EXPORTS_DIR = paths.data_dir() / paths.EXPORTS
+
+
+def use_data_dir(folder: Path) -> None:
+    """Read and write the sagas, exports and settings in `folder` from now
+    on (a save folder chosen while the app runs)."""
+    global SAGAS_DIR, EXPORTS_DIR
+    SAGAS_DIR = folder / paths.SAGAS
+    EXPORTS_DIR = folder / paths.EXPORTS
+    settings.SETTINGS_PATH = folder / paths.SETTINGS
 
 
 def slugify(text: str) -> str:

@@ -406,7 +406,8 @@ def character_wounds_text(character: Character) -> str:
     lines = [
         f"Soak: {int(soak.total)} ({derived.terms(soak)})",
         f"Encumbrance: {encumbrance} ({enc_terms})",
-        f"Wound Penalty: {derived.wound_penalty(character.wounds):+d}",
+        "Wound Penalty: "
+        f"{derived.wound_penalty(character.wounds, character.virtues_flaws):+d}",
         "",
         wounds_text(character.wounds),
     ]
@@ -417,8 +418,8 @@ def character_fatigue_text(character: Character) -> str:
     """A character's Fatigue with its penalty, the combined penalty, and
     the Damage Table for the character's Size."""
     level = character.fatigue_level
-    fatigue = derived.fatigue_penalty(level)
-    wounds = derived.wound_penalty(character.wounds)
+    fatigue = derived.fatigue_penalty(level, character.virtues_flaws)
+    wounds = derived.wound_penalty(character.wounds, character.virtues_flaws)
     size = int(derived.size(character).total)
     bands = [
         f"{name} {low}+" if high is None else f"{name} {low}-{high}"

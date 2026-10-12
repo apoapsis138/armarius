@@ -15,6 +15,13 @@ from .rules import casting, certamen, penetration
 from .rules import lab as lab_rules
 
 
+def _levels(count: int) -> str:
+    """ "a Fatigue level", "2 Fatigue levels", "no Fatigue"."""
+    if count <= 0:
+        return "no Fatigue"
+    return "a Fatigue level" if count == 1 else f"{count} Fatigue levels"
+
+
 def casting_scores_text(saga: Saga, magus: Character) -> str:
     aura, realm = home_aura(saga, magus)
     header = " " * 12 + "".join(f"{ART_ABBREVIATIONS[f]:>5}" for f in FORMS)
@@ -39,9 +46,12 @@ def casting_scores_text(saga: Saga, magus: Character) -> str:
         *rows,
         "",
         "Every score adds: " + ", ".join(shared) + " (firm words, bold gestures).",
-        "Formulaic: score + die >= level casts it; up to 10 short costs a "
-        "Fatigue level.",
-        "Spontaneous without Fatigue: score / 5; with Fatigue: (score + stress die) / 2.",
+        "Formulaic: score + die >= level casts it; up to 10 short costs "
+        + _levels(casting.fatigue_levels(1, magus.virtues_flaws, "formulaic"))
+        + ".",
+        "Spontaneous: score / 5 without Fatigue; (score + stress die) / 2 for "
+        + _levels(casting.fatigue_levels(1, magus.virtues_flaws, "spontaneous"))
+        + ".",
     ]
     resistances = [
         f"{ART_ABBREVIATIONS[form]} "
@@ -59,9 +69,12 @@ def casting_scores_text(saga: Saga, magus: Character) -> str:
         f"Magic Resistance (Form + Parma {parma} x 5 + aura): " + ", ".join(resistances)
     )
     bonus = int(penetration.penetration_bonus(magus).total)
+    weak = penetration.penetration_halved_by(magus.virtues_flaws)
     lines.append(
         f"Penetration: Casting Total - spell level {bonus:+d} (Penetration), "
-        "multiplied by Arcane Connections."
+        "multiplied by Arcane Connections"
+        + (f", then halved ({escape(', '.join(weak))})" if weak else "")
+        + "."
     )
     duel = certamen.certamen_totals(magus, TECHNIQUES[0], FORMS[0])
     c = magus.characteristics
@@ -146,7 +159,8 @@ def known_spell_casting_lines(
         # Cast while up to 10 short: 1, 2 or 3 levels as the total falls.
         steps = []
         for slack, levels in ((0, 1), (5, 2), (10, 3)):
-            steps.append(f"{max(need - slack, 0)}+ for {levels}")
+            cost = casting.fatigue_levels(levels, magus.virtues_flaws, "ritual")
+            steps.append(f"{max(need - slack, 0)}+ for {cost}")
             if need - slack <= 0:
                 break
         lines.append(
@@ -158,11 +172,12 @@ def known_spell_casting_lines(
     elif need <= 0:
         lines.append("Formulaic: always cast without Fatigue, even on a die of 0.")
     else:
+        short = _levels(casting.fatigue_levels(1, magus.virtues_flaws, "formulaic"))
         lines.append(
             f"Formulaic: a die of {need}+ casts it; {max(need - 10, 1)}+ casts it "
-            "for a Fatigue level."
+            f"for {short}."
             if need > 10
             else f"Formulaic: a die of {need}+ casts it without Fatigue; "
-            "anything less still casts it for a Fatigue level."
+            f"anything less still casts it for {short}."
         )
     return lines

@@ -196,7 +196,7 @@ class _Server(asyncssh.SSHServer):
 
 def host_key_path() -> Path:
     """The host's SSH key, in the data folder; made on the first SSH host."""
-    return paths.data_dir() / "ssh_host_key"
+    return paths.data_dir() / paths.HOST_KEY
 
 
 def host_key() -> asyncssh.SSHKey:

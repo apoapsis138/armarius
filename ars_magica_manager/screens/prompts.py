@@ -224,6 +224,30 @@ CHARACTERISTIC_NAMES: tuple[str, ...] = (
     "Quickness",
 )
 
+#: The four realms, as a Virtue or Flaw's {realm}.
+REALM_NAMES: tuple[str, ...] = ("Divine", "Faerie", "Infernal", "Magic")
+
+#: The kinds of Faerie Blood (the Definitive Edition's and Realms of
+#: Power: Faerie's), as a {blood}.
+BLOOD_NAMES: tuple[str, ...] = (
+    "Bee King",
+    "Bloodcap",
+    "Brownie",
+    "Dwarf",
+    "Ettin",
+    "Faerie God",
+    "Ghul",
+    "Goblin",
+    "Huldra",
+    "Nymph",
+    "Padfoot",
+    "Satyr",
+    "Selkie",
+    "Sidhe",
+    "Spinnen",
+    "Undine",
+)
+
 
 def param_choices(
     entry: VirtueFlawDef,
@@ -231,7 +255,8 @@ def param_choices(
     own_abilities: Sequence[str] = (),
 ) -> dict[str, list[tuple[str, str]]]:
     """The valid values of each of `entry`'s parameters that name a
-    Characteristic, an Ability, an Art, a Technique or a Form,
+    Characteristic, an Ability, an Art, a Technique, a Form, a realm or a
+    kind of Faerie Blood,
     as (label, stored value) pairs; other parameters are typed. A value
     the character already holds this entry for, as often as the book
     allows, is left out."""
@@ -240,6 +265,8 @@ def param_choices(
         "art": ARTS,
         "technique": TECHNIQUES,
         "form": FORMS,
+        "realm": REALM_NAMES,
+        "blood": BLOOD_NAMES,
     }
     found: dict[str, list[tuple[str, str]]] = {}
     for param in entry.parameters:
@@ -264,6 +291,15 @@ def param_choices(
     return found
 
 
+#: Parameters that may be left blank: (label, placeholder).
+OPTIONAL_PARAMS: dict[str, tuple[str, str]] = {
+    "favored": (
+        "Favoured Craft or Profession",
+        "Dwarf or Brownie Blood only, e.g. Craft: Smith",
+    ),
+}
+
+
 def _param_dialog(
     title: str,
     parameters: list[str],
@@ -286,6 +322,9 @@ def _param_dialog(
                 allow_blank=True,
                 placeholder=f"(choose the {param})",
             )
+        if param in OPTIONAL_PARAMS:
+            label, hint = OPTIONAL_PARAMS[param]
+            return DialogField(param, label, "text", "", placeholder=hint)
         return DialogField(
             param, param.title(), "text", "", required=True, placeholder="e.g. Creo"
         )

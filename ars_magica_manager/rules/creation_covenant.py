@@ -150,6 +150,8 @@ _BOOK_CATEGORY = {
     "Lab Text": "Lab Texts",
     "Casting Tablet": "Casting Tablets",
 }
+#: The categories of the book types bought as a pool (bk.pool()).
+POOL_CATEGORIES = {book_type: _BOOK_CATEGORY[book_type] for book_type in bk.POOL_POINTS}
 
 
 def _covenant_labs(

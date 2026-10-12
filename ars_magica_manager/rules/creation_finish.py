@@ -42,6 +42,8 @@ CONFIDENCE_SCORE, CONFIDENCE_POINTS = 1, 3
 CONFIDENCE_VIRTUES: dict[str, tuple[int, int]] = {
     "vf_self_confident": (1, 2),
     "vf_improved_confidence": (1, 2),
+    "vf_heroic_personality": (1, 2),
+    "vf_low_self_esteem": (-CONFIDENCE_SCORE, -CONFIDENCE_POINTS),
 }
 
 

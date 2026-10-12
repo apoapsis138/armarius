@@ -283,6 +283,7 @@ def _characteristics_budget(saga: Saga, record: Record) -> str:
             f"{line.score:+d}  (bought {line.bought:+d}, cost {line.cost:+d}"
             + (f", Great x{line.virtue}" if line.virtue > 0 else "")
             + (f", Poor x{-line.virtue}" if line.virtue < 0 else "")
+            + (f", heritage {line.free:+d}" if line.free else "")
             + ")",
         )
         for line in found
@@ -741,7 +742,7 @@ def _aging_actions(saga: Saga, character: Character) -> list[StepAction]:
                 lambda ws, r: ws._roll_pre_play_aging(character),
             )
         )
-    if (cc.age(saga, character) or 0) > cc.AGING_AGE:
+    if (cc.age(saga, character) or 0) > cc.aging_age(character):
         actions.append(
             StepAction("Edit Aging (Longevity Ritual)", lambda ws, r: ws._edit_aging())
         )

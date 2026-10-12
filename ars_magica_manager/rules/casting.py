@@ -13,6 +13,13 @@
   level; non-fatiguing Casting Score / 5, no die. The source gives no
   rounding, so both round down (the default rule).
 - With requisites, each Art counts at the lowest of it and its requisites.
+- Words and gestures: Mute or No Hands cast as with no words or gestures;
+  Quiet Magic and Subtle Magic take 5 off those penalties (to 0), Deft
+  Form all of them in its Form.
+- Fatigue: Enfeebled doubles the levels a spell costs, Withstand Casting
+  takes one off (never below 1) and Vulnerable Casting adds one; Mythic
+  Blood costs none for a Formulaic spell cast up to 10 short and three
+  fewer for a Ritual.
 - Botch dice: 1, +1 per pawn of vis, +1 per point of a non-Magic aura (x2 in
   a regio), +2 fast casting, -1 per point of Mastery (Golden Cord too, but
   never to 0 that way).
@@ -95,12 +102,14 @@ def casting_score(
             source=realms.SOURCE,
         )
     )
-    if not ritual:
-        if WORDS[words]:
-            lines.append(Line(f"{words} words", amount=WORDS[words], source=SOURCE))
-        if GESTURES[gestures]:
+    for kind, chosen, table, label in (
+        ("casting_words", words, WORDS, "words"),
+        ("casting_gestures", gestures, GESTURES, "gestures"),
+    ):
+        amount, name = _voice(magus, kind, form, 0 if ritual else table[chosen])
+        if amount:
             lines.append(
-                Line(f"{gestures} gestures", amount=GESTURES[gestures], source=SOURCE)
+                Line(name or f"{chosen} {label}", amount=amount, source=SOURCE)
             )
     if mastery:
         lines.append(Line("Spell Mastery", amount=mastery, source=SOURCE))
@@ -138,6 +147,51 @@ def casting_score(
     return Breakdown(
         total=combined.total, lines=lines + combined.lines[1:] + multipliers
     )
+
+
+def _voice(magus: Character, kind: str, form: str, base: int) -> tuple[int, str]:
+    """The words (or gestures) term: the chosen one's, or a Flaw's when
+    worse (Mute casts as with no words), less any Virtue's relief (Quiet
+    Magic), never past 0; and the Flaw it comes from, if any."""
+    found = [
+        e
+        for e in effects.collect([scores.character_source(magus.virtues_flaws)], kind)
+        if e.target is None or e.target.casefold() == form.casefold()
+    ]
+    flaws = [e for e in found if (e.modifier.amount or 0) < 0]
+    amount, name = base, ""
+    worst = min(flaws, key=lambda e: e.modifier.amount or 0, default=None)
+    if worst is not None and (worst.modifier.amount or 0) < amount:
+        amount, name = int(worst.modifier.amount or 0), worst.entry.name
+    relief = sum(int(e.modifier.amount or 0) for e in found if e not in flaws)
+    if amount < 0 and relief:
+        amount = min(0, amount + relief)
+    return amount, name
+
+
+def fatigue_levels(
+    levels: int, virtues_flaws: Sequence[VirtueFlawInstance], activity: str | None
+) -> int:
+    """The Fatigue levels a spell costs the caster, from the `levels` the
+    rules give: Enfeebled doubles them, Withstand and Vulnerable Casting
+    take one off (never below 1) or add one, Mythic Blood takes them off
+    for its kind of casting. A spell that costs none still costs none."""
+    if levels <= 0:
+        return levels
+    found = effects.collect(
+        [scores.character_source(virtues_flaws)], "casting_fatigue", activity=activity
+    )
+    for e in found:
+        if e.modifier.multiplier is not None:
+            levels = round_down(levels * e.modifier.multiplier)
+    general = sum(
+        int(e.modifier.amount or 0) for e in found if e.modifier.activity is None
+    )
+    levels = max(1, levels + general)
+    own = sum(
+        int(e.modifier.amount or 0) for e in found if e.modifier.activity is not None
+    )
+    return max(0, levels + own)
 
 
 def casting_total(score: Breakdown, die: int) -> int:

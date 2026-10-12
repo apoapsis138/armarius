@@ -216,7 +216,7 @@ def age_character(
         aging.aging_points[name] = aging.aging_points.get(name, 0) + points
         aging.decrepitude_points += points
         score = getattr(character.characteristics, name)
-        if aging.aging_points[name] > abs(score):
+        if aging.aging_points[name] > abs(score) and not aging_rules.unaging(character):
             setattr(character.characteristics, name, score - 1)
             aging.aging_points[name] = 0
             notes.append(f"{name.title()} falls to {score - 1:+d}.")

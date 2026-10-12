@@ -1,9 +1,14 @@
 """Aging and Decrepitude: the yearly roll made in Winter.
 
-- Rolled every Winter from the first after 35, or at any age under a
-  Longevity Ritual (then, before 35, 10+ counts as 9).
+- Rolled every Winter from the first after 35 (50 with Strong Faerie Blood),
+  or at any age under a Longevity Ritual (then, before that age, 10+ counts
+  as 9).
 - Aging Total = a stress die (no botch) + age / 10 (rounded up) - Living
-  Conditions - the Longevity Ritual's modifier - the familiar's bronze cord.
+  Conditions - the Longevity Ritual's modifier - the familiar's bronze cord,
+  plus the Virtues and Flaws that change aging rolls (Faerie Blood -1).
+  Virtues and Flaws can also change the Living Conditions (Mild Aging +1),
+  the roll to survive a Crisis, or keep Aging Points off the
+  Characteristics (Unaging).
 - 3+ adds a year of apparent age; 10+ gives Aging Points on the table; 13
   and 22+ give enough to reach the next Decrepitude score, and a Crisis.
 - A Characteristic's Aging Points above the absolute value of its score
@@ -19,8 +24,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from ..models import Character
-from . import dice
+from . import dice, effects
 from .rounding import round_up
+from .scores import character_source
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Aging "
@@ -73,10 +79,35 @@ def points_for_score(score: int) -> int:
     return DECREPITUDE_POINTS[max(0, min(score, 5))]
 
 
+def _effects(character: Character, applies_to: str) -> list[effects.Effect]:
+    return effects.collect([character_source(character.virtues_flaws)], applies_to)
+
+
+def _amount(character: Character, applies_to: str) -> int:
+    return int(effects.amount_total(_effects(character, applies_to)))
+
+
+def start_age(character: Character) -> int:
+    """The age the character's aging rolls start at."""
+    found = [e.modifier.amount or 0 for e in _effects(character, "aging_start")]
+    return int(max([START_AGE, *found]))
+
+
+def unaging(character: Character) -> bool:
+    """Whether Aging Points never lower the character's Characteristics."""
+    return bool(_effects(character, "unaging"))
+
+
+def living_conditions(character: Character, living: int) -> int:
+    """The Living Conditions modifier with the character's Virtues and
+    Flaws (Mild Aging +1, Poor Living Conditions -1)."""
+    return living + _amount(character, "living_conditions")
+
+
 def rolls_this_year(character: Character, age: int | None) -> bool:
     if age is None:
         return False
-    return age >= START_AGE or character.aging.longevity_modifier > 0
+    return age >= start_age(character) or character.aging.longevity_modifier > 0
 
 
 @dataclass
@@ -107,8 +138,17 @@ def roll(
     """The year's aging roll for `character` aged `age`."""
     die = dice.stress_die(rng, 0, saga=saga).value
     longevity = character.aging.longevity_modifier
-    total = die + round_up(age / 10) - living - longevity - bronze_cord
-    if age < START_AGE and longevity and total >= 10:
+    living = living_conditions(character, living)
+    virtues = _effects(character, "aging_roll")
+    total = (
+        die
+        + round_up(age / 10)
+        - living
+        - longevity
+        - bronze_cord
+        + int(effects.amount_total(virtues))
+    )
+    if age < start_age(character) and longevity and total >= 10:
         total = 9
     result = AgingResult(character.id, total, die)
     parts = [f"die {die}", f"+ age {round_up(age / 10)}"]
@@ -118,6 +158,9 @@ def roll(
         parts.append(f"- Longevity Ritual {longevity}")
     if bronze_cord:
         parts.append(f"- bronze cord {bronze_cord}")
+    for effect in virtues:
+        amount = int(effect.modifier.amount or 0)
+        parts.append(f"{'+' if amount >= 0 else '-'} {effect.entry.name} {abs(amount)}")
     result.notes.append(f"Aging Total {total} ({' '.join(parts)}).")
     if total >= 3:
         result.apparent = True
@@ -158,5 +201,9 @@ def crisis(
     if ritual:
         text += " The Longevity Ritual sees the character through, then ends."
     elif against is not None:
-        text += f" Survival: Stamina stress roll against {against}."
+        bonus = _effects(character, "crisis_survival")
+        extra = "".join(
+            f" + {e.entry.name} {int(e.modifier.amount or 0)}" for e in bonus
+        )
+        text += f" Survival: Stamina{extra} stress roll against {against}."
     return text, ritual

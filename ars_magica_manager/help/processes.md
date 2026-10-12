@@ -123,7 +123,7 @@ When Winter is advanced, the year ends:
 - each grog's [yearly update](help:grog-year) is applied;
 - a character running a business pays its yearly upkeep in Labor Points (City & Guild);
 - yearly Warping Points are added, for a Longevity Ritual and for living in a strong aura of another realm;
-- every character aged 35 or more, or with a Longevity Ritual, makes an aging roll (Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Aging), written in their Diary;
+- every character aged 35 or more (50 with Strong Faerie Blood or Dhampir), or with a Longevity Ritual, makes an aging roll (Ars Magica Definitive Edition, Chapter 10: Long-Term Events, Aging), written in their Diary;
 - Dwindling Resources lose a tenth of their value when they began dwindling (gone after ten years), and a contested resource still not secured gives nothing that year;
 - each covenant's surplus is added to its Wealth.
 

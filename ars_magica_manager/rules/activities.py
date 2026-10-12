@@ -1179,7 +1179,10 @@ def outcome(
             "Useful correspondence: +1 xp (Covenants, Other Opus Types; at "
             "least one letter received this season)."
         )
-    if not result.problems and derived.wound_penalty(character.wounds) <= -3:
+    if (
+        not result.problems
+        and derived.wound_penalty(character.wounds, character.virtues_flaws) <= -3
+    ):
         # Study at -3 to -5 is halved (DE Ch. 11, Activities While Injured).
         for gain in result.gains:
             gain.result.xp = round_down(gain.result.xp / 2)
@@ -1205,7 +1208,7 @@ def _wound_problem(character: Character, plan: SeasonPlan, activity: Activity) -
     """What the character's wounds rule out (DE Ch. 11, Activities While
     Injured): -3 to -5 no lab or craft work; -6 or worse, or Incapacitated,
     nothing productive."""
-    penalty = derived.wound_penalty(character.wounds)
+    penalty = derived.wound_penalty(character.wounds, character.virtues_flaws)
     if plan.activity in (OTHER, "convalesce", "travel") or not activity.gives_xp:
         return ""
     if character.wounds.incapacitated or penalty <= -6:

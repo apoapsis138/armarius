@@ -86,4 +86,32 @@ def ability_bonus(
 ) -> tuple[int, list[str]]:
     """The flat bonus to one Ability's score whenever it is used, and the
     Virtues it comes from."""
-    return _bonus(virtues_flaws, "ability_score_effective", ability)
+    bonus, names = _bonus(virtues_flaws, "ability_score_effective", ability)
+    extra = _legacy_bonus(virtues_flaws, ability)
+    return bonus + extra, names + ["Faerie Legacy"] * bool(extra)
+
+
+#: A Faerie Blood's Ability benefit Faerie Legacy makes stronger: the
+#: kind of blood -> (the Ability, how much more).
+LEGACY_ABILITIES: dict[str, tuple[str, int]] = {"goblin": ("Stealth", 1)}
+#: The kinds of blood whose Legacy adds 1 more to one favoured Ability of
+#: the kind they already raise.
+LEGACY_FAVORED: dict[str, str] = {"dwarf": "Craft: ", "brownie": "Profession: "}
+
+
+def _legacy_bonus(virtues_flaws: Sequence[VirtueFlawInstance], ability: str) -> int:
+    legacy = next((vf for vf in virtues_flaws if vf.vf_id == "vf_faerie_legacy"), None)
+    if legacy is None:
+        return 0
+    wanted = ability.casefold()
+    favored = legacy.params.get("favored", "").casefold()
+    for vf in virtues_flaws:
+        if vf.vf_id in ("vf_faerie_blood", "vf_strong_faerie_blood"):
+            blood = vf.params.get("blood", "").casefold()
+            name, more = LEGACY_ABILITIES.get(blood, ("", 0))
+            if name.casefold() == wanted:
+                return more
+            prefix = LEGACY_FAVORED.get(blood, "").casefold()
+            if prefix and wanted.startswith(prefix) and favored == wanted:
+                return 1
+    return 0

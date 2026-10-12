@@ -253,7 +253,7 @@ def pre_play_aging(saga: Saga, character: Character, rng: random.Random) -> list
     if years is None:
         return []
     start = (
-        creation_magus.AGING_AGE
+        creation_magus.aging_age(character)
         if conditions.aged_to is None
         else conditions.aged_to + 1
     )

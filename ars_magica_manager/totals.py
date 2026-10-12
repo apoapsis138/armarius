@@ -18,13 +18,36 @@ MODIFIER_TYPES: dict[str, str] = {
     "lab_total": "Laboratory Total, for lab activities",
     "casting_total": "Formulaic/ritual spellcasting total",
     "spontaneous_total": "Spontaneous magic total",
+    # Casting without voice or gestures: a Flaw's penalty (negative: Mute
+    # casts as with no words) or a Virtue's relief (positive: Quiet Magic
+    # takes 5 off the words penalty), optionally for one {form}.
+    "casting_words": "Words penalty when casting",
+    "casting_gestures": "Gestures penalty when casting",
+    # Fatigue levels a spell costs: a multiplier (Enfeebled), a general
+    # amount that never takes a fatiguing spell below 1 (Withstand Casting,
+    # Vulnerable Casting), or an amount for one kind of casting that can
+    # (Mythic Blood).
+    "casting_fatigue": "Fatigue levels lost casting",
     "certamen_total": "Certamen total",
     "penetration_total": "Penetration total",
+    # Magic Resistance against one Form ({form}): the Form's part and the
+    # Parma Magica part, each multiplied (Limited Magic Resistance x0,
+    # Flawed Parma Magica x0.5).
+    "form_resistance": "The Form's part of Magic Resistance",
+    "parma_resistance": "Parma Magica's part of Magic Resistance",
     "soak": "Soak total",
     "size": "A character's Size",
     "study_total": "Study total, for seasonal learning",
     "teaching_source_quality": "Source Quality of those this character teaches",
     "aging_roll": "Aging roll",
+    # The age aging rolls start at (the largest counts; 35 without one).
+    "aging_start": "Age aging rolls start",
+    # Added to the Living Conditions modifier for aging.
+    "living_conditions": "Living Conditions for aging",
+    # Added to the Stamina roll to survive an Aging Crisis.
+    "crisis_survival": "Rolls to survive an Aging Crisis",
+    # Aging Points never lower a Characteristic (Unaging).
+    "unaging": "Aging Points don't lower Characteristics",
     "art_xp_gain": "Experience gained toward a specific Art",
     "art_score_effective": "Flat bonus to an Art's effective score, without spending xp",
     "ability_xp_gain": "Experience gained toward a specific Ability",
@@ -47,11 +70,18 @@ MODIFIER_TYPES: dict[str, str] = {
     "gift_loyalty": "The Gift's effect on covenfolk loyalty",
     # More or fewer botch dice, for the rolls the app makes.
     "botch_dice": "Botch dice",
+    # A better (+) or worse (-) total Wound or Fatigue penalty, never past 0.
+    "wound_penalty": "Total Wound penalty",
+    "fatigue_penalty": "Fatigue level penalty",
 }
 
 ACTIVITIES_BY_TYPE: dict[str, dict[str, str]] = {
     "casting_total": {
         "formulaic": "Formulaic spells",
+        "ritual": "Ritual spells",
+    },
+    "casting_fatigue": {
+        "formulaic": "A Formulaic spell cast up to 10 short",
         "ritual": "Ritual spells",
     },
     "lab_total": {

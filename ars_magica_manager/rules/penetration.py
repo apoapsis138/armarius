@@ -13,6 +13,9 @@ Total is greater (a target with none is always affected).
     Might:          MR = Might
 
 The optional Dominion rule gives the faithful 5 x the Dominion aura.
+Virtues and Flaws can take the Form's part away against one Form (Limited
+Magic Resistance), halve Parma's part against one (Flawed Parma Magica), or
+halve the Penetration Total (Weak Magic).
 """
 
 from __future__ import annotations
@@ -20,11 +23,12 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass
 
-from ..models import Character, Saga
-from . import options, realms
+from ..models import Character, Saga, VirtueFlawInstance
+from . import effects, options, realms
 from .breakdown import Breakdown, Line
 from .lab import ability_score, art_score
 from .rounding import round_down
+from .scores import character_source
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter Seven: Hermetic Magic, Penetration, "
@@ -100,8 +104,46 @@ def penetration_bonus(
     return Breakdown(total=ability * multiplier, lines=lines)
 
 
-def penetration_total(casting_total: int, bonus: int, level: int) -> int:
-    return casting_total + bonus - level
+def penetration_total(
+    casting_total: int,
+    bonus: int,
+    level: int,
+    virtues_flaws: Sequence[VirtueFlawInstance] = (),
+) -> int:
+    """Casting Total + Penetration bonus - level, then any Virtue's or
+    Flaw's multiplier (Weak Magic halves it), rounded down."""
+    total = casting_total + bonus - level
+    for effect in effects.collect(
+        [character_source(virtues_flaws)], "penetration_total"
+    ):
+        if effect.modifier.multiplier is not None and total > 0:
+            total = round_down(total * effect.modifier.multiplier)
+    return total
+
+
+def penetration_halved_by(virtues_flaws: Sequence[VirtueFlawInstance]) -> list[str]:
+    """The Virtues and Flaws that multiply the Penetration Total."""
+    return [
+        e.entry.name
+        for e in effects.collect([character_source(virtues_flaws)], "penetration_total")
+        if e.modifier.multiplier is not None
+    ]
+
+
+def _resistance_multiplier(
+    magus: Character, applies_to: str, form: str
+) -> tuple[float, list[str]]:
+    found = [
+        e
+        for e in effects.collect(
+            [character_source(magus.virtues_flaws)], applies_to, target=form
+        )
+        if e.target is not None and e.modifier.multiplier is not None
+    ]
+    multiplier = 1.0
+    for e in found:
+        multiplier *= e.modifier.multiplier or 0
+    return multiplier, [e.entry.name for e in found]
 
 
 def penetrates(penetration: int, magic_resistance: int | None) -> bool:
@@ -123,15 +165,28 @@ def magic_resistance(
     Form, 5 x Parma Magica while raised (Parma less 3 while shared), and the
     aura's modifier; never below 0."""
     score, bonus = art_score(magus, form)
-    lines = [Line(form, amount=score + bonus, source=SOURCE)]
+    form_part, limited = _resistance_multiplier(magus, "form_resistance", form)
+    lines = [
+        Line(
+            form + (f" ({', '.join(limited)})" if limited else ""),
+            amount=round_down((score + bonus) * form_part),
+            source=SOURCE,
+        )
+    ]
     if parma_raised:
         parma, parma_bonus = ability_score(magus, "Parma Magica")
         parma += parma_bonus
         if sharing:
             parma = parma - 3 if parma > 3 else 0
         if parma > 0:
+            parma_part, flawed = _resistance_multiplier(magus, "parma_resistance", form)
             lines.append(
-                Line(f"Parma Magica {parma} x 5", amount=5 * parma, source=SOURCE)
+                Line(
+                    f"Parma Magica {parma} x 5"
+                    + (f" ({', '.join(flawed)})" if flawed else ""),
+                    amount=round_down(5 * parma * parma_part),
+                    source=SOURCE,
+                )
             )
     modifier = realms.aura_modifier(realms.HERMETIC, aura_realm, aura)
     if modifier:

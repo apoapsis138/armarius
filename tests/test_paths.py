@@ -6,6 +6,9 @@ import pytest
 
 from ars_magica_manager import paths
 
+#: The real default (conftest points it at a temp folder for every test).
+DEFAULT_DATA_DIR = paths.default_data_dir
+
 
 @pytest.fixture
 def no_choice(tmp_path, monkeypatch):
@@ -17,6 +20,7 @@ def no_choice(tmp_path, monkeypatch):
     (tmp_path / "OneDrive").mkdir()
     monkeypatch.setenv("OneDrive", str(tmp_path / "OneDrive"))
     monkeypatch.setattr(paths, "LOCATION_FILE", tmp_path / "config" / "location.json")
+    monkeypatch.setattr(paths, "default_data_dir", DEFAULT_DATA_DIR)
     monkeypatch.setattr(
         paths.platformdirs, "user_data_dir", lambda *a, **k: str(tmp_path / "AppData")
     )

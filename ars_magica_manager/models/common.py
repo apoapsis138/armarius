@@ -115,7 +115,8 @@ class Modifier:
     `applies_to` names a modifier type from totals.MODIFIER_TYPES (e.g.
     "lab_total", "casting_total", "study_total", "aging_roll", "art_xp_gain").
     `target` optionally narrows the modifier to a specific Art/Ability named
-    by one of the catalog entry's `parameters` (e.g. "{art}").
+    by one of the catalog entry's `parameters` (e.g. "{art}"); a target
+    ending in "*" covers every name it begins ("Craft: *").
 
     `activity` optionally narrows it further to one specific activity within
     that type -- e.g. two modifiers both applying to "lab_total" but one
@@ -134,6 +135,11 @@ class Modifier:
     multiplier: float | None = None
     target: str | None = None
     activity: str | None = None
+    #: Applies only when the instance's parameters have these values
+    #: ({"realm": "divine"}): an entry whose effect depends on a choice
+    #: (Student of (Realm), a Faerie Blood's heritage) carries one modifier
+    #: per choice.
+    when: dict[str, str] | None = None
 
     def __post_init__(self) -> None:
         validate_modifier_type(self.applies_to, self.activity)

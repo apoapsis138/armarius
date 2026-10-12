@@ -7,7 +7,8 @@ ranges, Wound and Fatigue penalties, Encumbrance and Soak.
   Medium 6-10, Heavy 11-15, Incapacitating 16-20, Dead 21+).
 - Wound Penalty: -1 per Light, -3 per Medium, -5 per Heavy wound, summed.
   Fatigue: Fresh 0, Winded 0, Weary -1, Tired -3, Dazed -5. Both apply to
-  every roll (not Soak) and add together.
+  every roll (not Soak) and add together; Enduring Constitution makes each
+  1 better (not past 0), Low Tolerance 1 worse.
 - Encumbrance: Burden is the highest n whose n(n+1)/2 the total Load
   reaches; Encumbrance is Burden less a positive Strength (never below 0).
 - Soak: Stamina + armour Protection (+ Virtues such as Tough), plus the
@@ -19,7 +20,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
-from ..models import Character, Possession, Wounds
+from ..models import Character, Possession, VirtueFlawInstance, Wounds
 from . import effects
 from .breakdown import Breakdown, Line
 from .scores import character_source
@@ -79,16 +80,34 @@ def wound_for(excess: int, size: int) -> str | None:
     return "Dead"  # pragma: no cover - the last band is open-ended
 
 
-def wound_penalty(wounds: Wounds) -> int:
-    return (
+def _adjusted(
+    penalty: int, virtues_flaws: Sequence[VirtueFlawInstance], applies_to: str
+) -> int:
+    """A penalty made better (Enduring Constitution) or worse (Low
+    Tolerance) by the character's Virtues and Flaws; only a penalty there
+    is changes, and a better one stops at 0."""
+    if not penalty:
+        return 0
+    found = effects.collect([character_source(virtues_flaws)], applies_to)
+    return min(0, penalty + int(effects.amount_total(found)))
+
+
+def wound_penalty(
+    wounds: Wounds, virtues_flaws: Sequence[VirtueFlawInstance] = ()
+) -> int:
+    return _adjusted(
         wounds.light * WOUND_PENALTIES["light"]
         + wounds.medium * WOUND_PENALTIES["medium"]
-        + wounds.heavy * WOUND_PENALTIES["heavy"]
+        + wounds.heavy * WOUND_PENALTIES["heavy"],
+        virtues_flaws,
+        "wound_penalty",
     )
 
 
-def fatigue_penalty(level: str) -> int:
-    return FATIGUE_PENALTIES.get(level, 0)
+def fatigue_penalty(
+    level: str, virtues_flaws: Sequence[VirtueFlawInstance] = ()
+) -> int:
+    return _adjusted(FATIGUE_PENALTIES.get(level, 0), virtues_flaws, "fatigue_penalty")
 
 
 def burden(load: int) -> int:

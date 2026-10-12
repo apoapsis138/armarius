@@ -26,6 +26,13 @@ These Virtues and Flaws from the catalog are taken into account wherever the app
 - **Book Learner**, **Apt Student**, **Independent Study** and **Free Study** add to the Advancement Total of the activity they name; **Poor Student** and **Unimaginative Learner** take from it. Being taught or reading never falls below 1.
 - **Good Teacher** raises the Source Quality of the students the character teaches.
 
+Other Virtues and Flaws change figures the app shows everywhere, not only in seasons:
+
+- **Scores**: Student of (Realm) adds 2 to that realm's Lore, Dhampir 1 to Faerie Lore, Keen Sense of Smell 2 to Hunt, and a Dwarf, Brownie or Goblin Faerie Blood 1 to every Craft, every Profession or Stealth (with Faerie Legacy, 2 to Stealth, or 2 to the favoured Craft or Profession named when Faerie Legacy is taken). A Sidhe, Nymph, Padfoot, Ettin or Bloodcap Faerie Blood adds a free point of Presence, Communication, Perception, Stamina or Strength at creation, never past +3 (+4 with Faerie Legacy).
+- **Soak and penalties**: Improved Soak, Tough Hide, Thick Fur, Spiny and Shell add to Soak, Reduced Soak takes from it. Enduring Constitution makes the Wound and fatigue penalties 1 better (never above 0), Low Tolerance 1 worse.
+- **Aging**: see [The end of the year](help:guide-advancement-year-end).
+- **Magic**: Flawed Parma Magica halves Parma's part of Magic Resistance against its Form, Limited Magic Resistance drops the Form's part, and Weak Magic halves Penetration. Mute, No Hands, Limited Speech and Limited Gestures set the words or gestures term of every Casting Score; Quiet Magic, Subtle Magic and Deft Form take that much off a penalty. Enfeebled doubles the Fatigue a spell costs, Withstand Casting takes a level off (never below 1) and Vulnerable Casting adds one, and Mythic Blood takes 1 off a Formulaic spell's and 3 off a Ritual's.
+
 A Virtue or Flaw made under House Rules is text only, so adjust its effect by hand.
 
 ### Planning the season
@@ -73,8 +80,8 @@ The [Season Summary](help:season-summary) then shows what everyone gained.
 When Winter is advanced, the app also does the following, each written in the character's Diary:
 
 - **Warping**: +1 Warping Point a year for a Longevity Ritual, and points for living in a strong aura (6 or more) of another realm. A magus gains none from a Magic aura.
-- **Aging**: everyone aged 35 or more, or under a Longevity Ritual, makes an aging roll. The Age is worked out from Year Born, so a character without one never rolls. The roll subtracts the Living Conditions (the covenant's, plus half the Health of a magus's laboratory), the Longevity Ritual's modifier and a familiar's bronze cord.
-- The result adds apparent age, Aging Points and Decrepitude. When a Characteristic has more Aging Points than its score (ignoring any minus sign), it falls by 1, and the Decrepitude score follows from the points. A Crisis is rolled and the survival roll reported for the storyguide; a Longevity Ritual sees the character through it and then ends, and the next season is spent recovering. All of this shows in [Aging & Warping](help:section-aging) on the Description tab (`1`).
+- **Aging**: everyone aged 35 or more (50 with Strong Faerie Blood or Dhampir), or under a Longevity Ritual, makes an aging roll. The Age is worked out from Year Born, so a character without one never rolls. The roll subtracts the Living Conditions (the covenant's, plus half the Health of a magus's laboratory, plus 1 for Mild Aging, less 1 for Poor Living Conditions or 2 for Leprosy), the Longevity Ritual's modifier and a familiar's bronze cord. Faerie Blood, Magical Blood, Magian Lineage and similar Virtues take 1 off the roll; Strong Faerie Blood and Dhampir take 3.
+- The result adds apparent age, Aging Points and Decrepitude. When a Characteristic has more Aging Points than its score (ignoring any minus sign), it falls by 1 (never with Unaging or Demonic Blood), and the Decrepitude score follows from the points. A Crisis is rolled and the survival roll reported for the storyguide (with Mild Aging's +3); a Longevity Ritual sees the character through it and then ends, and the next season is spent recovering. All of this shows in [Aging & Warping](help:section-aging) on the Description tab (`1`).
 
 **Wizard's Twilight**: gaining 2 or more Warping Points from one event takes a magus to the edge of Twilight, which the app rolls at once. It does this for the Warping of an experiment's disaster, and for points typed in **Gain Warping Points now** on the Aging & Warping form. If the magus enters Twilight, the Diary records how long it lasts and the extra Warping Points; if it lasts a season or more, no season can be planned for them until it ends. The storyguide chooses its effects. A double botch studying vis is only noted in the Diary: add its Warping with Gain Warping Points now.
 

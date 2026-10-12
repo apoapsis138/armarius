@@ -628,6 +628,12 @@
       "category": "Supernatural",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "aging_roll",
+          "amount": -1
+        }
+      ],
       "source": "L&L",
       "summary": "Children of Bee Kings: -1 to Aging totals; give simple commands to touched bees and understand hive thoughts (Penetration 25), but not suicidal orders.",
       "description": "This Minor Supernatural Virtue provides the following advantages: The children of Bee Kings age more slowly than other humans, reducing their Aging total by 1. The children of Bee Kings may give simple instructions to bees they touch, and may understand the thoughts dominating hives of bees. They are unable to give bees instructions that will kill them, except to command warrior bees to attack, since warrior bees are so willing to die. (Penetration 25)"
@@ -1266,6 +1272,18 @@
       "parameters": [
         "form"
       ],
+      "modifiers": [
+        {
+          "applies_to": "casting_words",
+          "amount": 10,
+          "target": "{form}"
+        },
+        {
+          "applies_to": "casting_gestures",
+          "amount": 5,
+          "target": "{form}"
+        }
+      ],
       "source": "DE",
       "summary": "No Casting Total penalty for non-standard or absent voice and gestures with spells of one Form.",
       "description": "You are particularly skilled with one Form. You suffer no penalty to the Casting Total casting spells in that Form when using non-standard voicings/gestures (see page 216), including using no voice or gestures because you are in a non-human form. Voice Range spells still have a Range based on how loudly you are speaking."
@@ -1275,11 +1293,17 @@
       "name": "Demonic Blood",
       "type": "Virtue",
       "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "modifiers": [
+        {
+          "applies_to": "unaging",
+          "amount": 1
+        }
+      ],
       "extra_categories": [
         "Tainted"
       ],
-      "tier": "Major",
-      "cost": 3,
       "source": "DE",
       "summary": "Infernal Might (Corpus) 5 and 30 levels of Infernal Powers; immune to Warping; attended by a ruach demon; ages twice as fast.",
       "description": "The character has a demon as a parent, and was conceived for a specific task by her Infernal mother or father. Because of this, she is an Infernal being and possesses an Infernal Might (Corpus) score of 5. This grants her Magic Resistance. Her body also contains one pawn of Corpus vis, which can only be extracted once she is dead. She is immune to Warping of any kind, need not eat or drink, and cannot produce a child; however, she suffers the natural urges associated with these activities, and may be required to make Personality rolls to overcome her desires. She has up to 30 levels of Infernal Powers that may be invoked by spending Might Points. Design the effects using Hermetic spell guidelines, or the maleficia guidelines (see Realms of Power: The Infernal, Chapter 10: The Maleficia), taking into account the Powers of the demon parent. The Might cost for each Power is equal to its magnitude divided by two, rounded down (but always at least one point). These may be constant effects designed in the usual fashion (Sun duration, two uses per day, and an Environmental Trigger; see page 257); her Might Pool is always reduced by the cost of such a Power, and she cannot turn these Powers off. The Initiative total of each Power is the character's Quickness. She may be unaware of her true heritage, in which case she probably has either the Delusion or Manufactured Ignorance Flaw to explain her remarkable capabilities. She has the close attention of Hell, and thus should offset this Virtue with a Story Flaw to reflect that attention, such as Tragic Life. The character many learn Infernal Lore during character creation without needing to take the Arcane Lore Minor Virtue. She is attended at nearly all times by a minor demon, which tends to remain in spiritual form, watching over her; if necessary, it protects her on behalf of her creator/parent. This demon is a ruach, who can use its Misfortune Power to blight her enemies. If she is unaware of her demonic heritage, she either considers herself exceedingly lucky, or believes the attending demon to be a Magical or Divine spirit. However, this attendant demon means that her demonic parent can always find her, and is kept appraised of what she is up to. A Demonic Blooded character's life span is short -- roughly half that of a pure-blooded human. Her effective age (which applies as if it were her real age when creating a Longevity Ritual and when making rolls on the Aging Table) increases two years for every year that passes, and you must make two aging rolls each year once her effective age reaches 35. There is no way to halt or slow this other than Longevity Rituals, if she can convince someone to make one for her. However, she does not show the effects of aging; any Aging Points acquired do not get applied to her Characteristics, although they do still count as experience points towards Decrepitude. You cannot take the Infernal Blessings Virtue described in Realms of Power: The Infernal; the Demonic Powers Virtue replaces that Virtue for the demon-blooded. You may not take any Virtue that affiliates her with a realm other than the Infernal. Also, you cannot take the Unaging Virtue or the Age Quickly Flaw. She may not have children, and so cannot have Dependents of this sort."
@@ -1329,6 +1353,21 @@
       "category": "Supernatural",
       "tier": "Major",
       "cost": 3,
+      "modifiers": [
+        {
+          "applies_to": "ability_score_effective",
+          "target": "Faerie Lore",
+          "amount": 1
+        },
+        {
+          "applies_to": "aging_roll",
+          "amount": -3
+        },
+        {
+          "applies_to": "aging_start",
+          "amount": 50
+        }
+      ],
       "source": "HoH:TL; AtD",
       "summary": "Half-vampire: aging rolls start at 50 with -3; Second Sight and sight in darkness; +1 Faerie Lore; rises as vampire after death.",
       "description": "One type of vampire, found in the Transylvania Tribunal, returns from the grave to rape women, particularly its wife. Sometimes they father half-vampire children called dhampirs. Vampires find dhampir servants useful, because they can travel during the day and have supernatural abilities. Many dhampirs, raised by their mothers, find vampirism repulsive and strive to slay first their fathers, then any other vampires of which they become aware. If a dhampir dies, they rise again as a vampire, unless certain rituals have been performed on their corpse. However, most dhampirs warn people about their tainted blood so that their bodies can be safely destroyed. Tremere magi recruit dhampirs as guards and servants. Their ability to see invisible beings makes them particularly valuable. The vampires that create dhampirs are a type of dark faerie not, strictly speaking, an infernal spirit. Some vampires choose not to attack people, but instead visit their old homes at night, and perform little services like chopping firewood and repairing tools. Vampires, like other dark faeries, have vulnerabilities that vary widely, but many are affected by crossroads, doorways, church bells, sunlight or herbs. Dhampirs have the following advantages: Dhampirs start making aging rolls at the age of fifty, and get -3 to all rolls to resist the effects of aging, cumulative with any other bonuses. Dhampirs have the Virtue Second Sight (see Ars Magica 5th Edition, page 48), and can see normally in darkness or semi-darkness. Their eyes look mostly normal, but are an unusual and vivid color. Dhampirs may learn Faerie Lore during character generation, and gain a +1 bonus on all Faerie Lore rolls. Dhampirs may have The Gift, but House Tremere forbids the training of dhampirs as Hermetic magi. It did happen once, long ago, and might happen again (Dark Secret Flaw). This is a supernatural ability, and you cannot lose it when being trained as a magus (see Ars Magica 5th Edition, page 107). If your master cannot preserve the ability, you cannot be trained. A character who becomes a vampire is given to the Storyguide. Vampires cannot use Hermetic magic, but have a wide variety of powers. Hedge wizard dhampirs are permitted as servants."
@@ -1655,6 +1694,16 @@
       "category": "General",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "wound_penalty",
+          "amount": 1
+        },
+        {
+          "applies_to": "fatigue_penalty",
+          "amount": 1
+        }
+      ],
       "source": "DE",
       "summary": "-1 to Fatigue-level penalties and to total wound penalty (not below 0); +3 to resist pain.",
       "description": "You can withstand pain and fatigue. Decrease the penalties for reduced Fatigue levels by one point, and reduce your total penalty from wounds by one point (but not below zero). You also get +3 on rolls to resist pain."
@@ -1891,6 +1940,36 @@
       "parameters": [
         "blood"
       ],
+      "modifiers": [
+        {
+          "applies_to": "ability_score_effective",
+          "target": "Craft: *",
+          "amount": 1,
+          "when": {
+            "blood": "dwarf"
+          }
+        },
+        {
+          "applies_to": "ability_score_effective",
+          "target": "Profession: *",
+          "amount": 1,
+          "when": {
+            "blood": "brownie"
+          }
+        },
+        {
+          "applies_to": "ability_score_effective",
+          "target": "Stealth",
+          "amount": 1,
+          "when": {
+            "blood": "goblin"
+          }
+        },
+        {
+          "applies_to": "aging_roll",
+          "amount": -1
+        }
+      ],
       "source": "DE",
       "summary": "-1 aging rolls, faeries at ease, Faerie Lore at creation; plus one blood type's perk, e.g. Dwarf +1 Craft, Sidhe +1 Presence (max +3).",
       "description": "Somewhere in your ancestry there is a faerie, and this relation gives you an intuitive grasp of the motivations and personalities of those supernatural folk. Faeries are more comfortable around you than around other humans, and given time, may even forget the mortal blood in your veins. You are resistant to aging, and get -1 to all aging rolls. Type of Faerie Blood (pick one, or create a similar one): Blood of the Bee King: The descendants of Bee Kings may give simple instructions to bees they touch, and may understand the thoughts dominating hives of bees. They are unable to give bees instructions that will kill them, except to command warrior bees to attack, since warrior bees are so willing to die. (Penetration 25) Dwarf Blood: You are descended from the master craftsmen of the fay, and get a +1 bonus to any total including a Craft Ability. Goblin Blood: Your ancestors were the sneaky inhabitants of the shadows underground, and you get a +1 bonus on all totals involving stealth. Satyr Blood: The satyrs are notoriously lecherous. You get a +1 bonus to Communication and Presence totals when dealing with sexually compatible characters. Sidhe Blood: You are descended from one of the noble fay who rule the lands of Summer and sunlight. Because of the striking and unusual qualities of your nature add +1 to your Presence, but not to more than +3. Many mortals may consider you fascinating or alluring. Spinnen Blood: A character who has Spinnen Blood can convert his or her own body weight of fiber into cloth per day, simply by touching it. Old cloth, or products made of cloth fibers, can be unwoven using the same ability, but this counts toward the maximum weight of cloth a character can alter per day. Some Spinnen, particularly those who have served as companions to magi, create other useful objects, like tents, ropes, or sails in lieu of the same weight of cloth. These characters are from a single family line that originated near Ghent; see The Lion and the Lily, page 97, for details of how most of the family live. Undine Blood: The undines are the faeries of the water, and you get a +2 bonus to any action taken underwater, which will partially offset any penalty applied. Characters with Faerie Blood can learn Faerie Lore at character generation."
@@ -1952,6 +2031,9 @@
       "category": "Supernatural",
       "tier": "Minor",
       "cost": 1,
+      "parameters": [
+        "favored"
+      ],
       "source": "RoP:F",
       "summary": "Replaces its Faerie Blood variety's benefit with the stronger Legacy version (e.g. Sidhe: Presence +1, up to +4).",
       "description": "This Virtue can only be taken by characters with Faerie Blood or Strong Faerie Blood. Your Faerie Blood is particularly potent, and the usual benefit deriving from it is replaced with a more powerful version. See Varieties of Faerie Blood (earlier) for details on how the benefit is affected. Note that the legacy benefit from this Virtue is instead of the normal benefit, not in addition to it."
@@ -3314,6 +3396,12 @@
       "category": "Supernatural",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "soak",
+          "amount": 2
+        }
+      ],
       "repeatable": true,
       "audience": [
         "faerie"
@@ -4219,6 +4307,12 @@
       "category": "General",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "aging_roll",
+          "amount": -1
+        }
+      ],
       "source": "DE",
       "summary": "Minor: -1 to Aging rolls, +3 to resist disease. Major: also three linked Arcane/Supernatural Abilities sharing half Source Quality xp.",
       "description": "This Virtue makes the character a true blood descendent of the Median tribe of Magians, the original priestly caste of Persia. Many mobeds, the priests of Zoroastrianism, possess this Virtue, either Minor or Major, but it is not a requisite. More details about Mythic Zoroastrianism can be found in The Cradle and the Crescent, Chapter 5. Minor: Your character's lineage is weak, although he or she is still ethnically Magian, and gains a strong constitution due to his purity. The character gains a -1 bonus to Aging rolls and a +3 bonus to resist the effects of disease. Major: In addition to the benefits of the Minor Virtue, your character has an affinity with the ancient prophetic and other mystical arts of your ancestors. The player must choose three Arcane or Supernatural Abilities which the character need not start play with, and which cannot be True Names. These Abilities are considered connected, so that whenever your character gains experience from a source dedicated to one of these Abilities, he gains half the Source Quality (round up) in experience points in each of the other two Abilities. A character must have access to a Supernatural Ability in one of the normal ways, such as taking the Virtue at character creation or Initiating it later, in order to put any experience points into it. If you choose a Supernatural Ability that your character does not yet have access to, any experience points generated for it by this Virtue before the character gains access to the Ability are lost."
@@ -4230,6 +4324,12 @@
       "category": "General",
       "tier": "Major",
       "cost": 3,
+      "modifiers": [
+        {
+          "applies_to": "aging_roll",
+          "amount": -1
+        }
+      ],
       "source": "DE",
       "summary": "Minor: -1 to Aging rolls, +3 to resist disease. Major: also three linked Arcane/Supernatural Abilities sharing half Source Quality xp.",
       "description": "This Virtue makes the character a true blood descendent of the Median tribe of Magians, the original priestly caste of Persia. Many mobeds, the priests of Zoroastrianism, possess this Virtue, either Minor or Major, but it is not a requisite. More details about Mythic Zoroastrianism can be found in The Cradle and the Crescent, Chapter 5. Minor: Your character's lineage is weak, although he or she is still ethnically Magian, and gains a strong constitution due to his purity. The character gains a -1 bonus to Aging rolls and a +3 bonus to resist the effects of disease. Major: In addition to the benefits of the Minor Virtue, your character has an affinity with the ancient prophetic and other mystical arts of your ancestors. The player must choose three Arcane or Supernatural Abilities which the character need not start play with, and which cannot be True Names. These Abilities are considered connected, so that whenever your character gains experience from a source dedicated to one of these Abilities, he gains half the Source Quality (round up) in experience points in each of the other two Abilities. A character must have access to a Supernatural Ability in one of the normal ways, such as taking the Virtue at character creation or Initiating it later, in order to put any experience points into it. If you choose a Supernatural Ability that your character does not yet have access to, any experience points generated for it by this Virtue before the character gains access to the Ability are lost."
@@ -4322,6 +4422,12 @@
       "cost": 1,
       "parameters": [
         "being"
+      ],
+      "modifiers": [
+        {
+          "applies_to": "aging_roll",
+          "amount": -1
+        }
       ],
       "source": "DE",
       "summary": "May take Magic Lore at creation, -1 to Aging rolls, plus a minor advantage by bloodline type (animal, human, spirit, or thing).",
@@ -4733,6 +4839,16 @@
       "category": "General",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "living_conditions",
+          "amount": 1
+        },
+        {
+          "applies_to": "crisis_survival",
+          "amount": 3
+        }
+      ],
       "source": "DE",
       "summary": "+1 to the Living Conditions Modifier for aging and +3 to rolls to survive an aging crisis.",
       "description": "The character's aging rolls benefit from a +1 bonus to the Living Conditions Modifier, in addition to whatever his social standing normally offers him. Furthermore, he receives a +3 bonus to rolls to survive an aging crisis. He may be dedicated to living a healthy life, or else have been blessed by some supernatural being."
@@ -4861,6 +4977,18 @@
       "category": "Hermetic",
       "tier": "Major",
       "cost": 3,
+      "modifiers": [
+        {
+          "applies_to": "casting_fatigue",
+          "activity": "formulaic",
+          "amount": -1
+        },
+        {
+          "applies_to": "casting_fatigue",
+          "activity": "ritual",
+          "amount": -3
+        }
+      ],
       "source": "DE",
       "summary": "No Fatigue loss if Formulaic spells fall short by 10 or less; Rituals cost 3 fewer Fatigue; one at-will magic feat (level+Penetration up to 30).",
       "description": "You are a blood descendant of either a wizard of legend (possibly one of the Twelve Founders, or some other ancient and powerful sorcerer) or a supernatural being (such as a dragon). Your potent Gift means that you do not lose Fatigue levels if your Casting Total falls short of the level of a formulaic spell by ten points or less, although you do lose Fatigue if the spell fails completely. When casting Ritual spells, lose three fewer Fatigue levels than normal. This means that you lose no Fatigue levels if you succeed, or fail by ten points or less. You must expend Fatigue normally to cast Spontaneous magic, and if you fail to cast a Formulaic spell you lose the normal number of Fatigue levels. Additionally, you may choose one special magic feat which you can invoke at will and cancel at will, as often as you like. Invoking this feat takes as long as fast-casting a Mastered Formulaic spell (see page 213), and requires the same level of concentration. The effect should be designed as a non-Ritual Hermetic effect, with a level + Penetration limited as below. The Penetration of the effect is not modified by the magus's Penetration Ability score, and cannot be negative, so that the highest possible level of the effect is 30. Invocation Speak and gesture Speak Gesture Neither speak nor gesture Level + Penetration 30 25 20 15 This Virtue includes a Minor Magical Focus in an area related to your legendary ancestor and a hereditary Minor Personality Flaw (both at no extra cost). Mythic Blood is not particularly uncommon in the Order of Hermes, so this Virtue does not grant any Reputation."
@@ -5571,6 +5699,12 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "casting_words",
+          "amount": 5
+        }
+      ],
       "repeatable": true,
       "max_count": 2,
       "source": "DE",
@@ -6464,6 +6598,43 @@
       "category": "Supernatural",
       "tier": "Major",
       "cost": 3,
+      "parameters": [
+        "blood"
+      ],
+      "modifiers": [
+        {
+          "applies_to": "ability_score_effective",
+          "target": "Craft: *",
+          "amount": 1,
+          "when": {
+            "blood": "dwarf"
+          }
+        },
+        {
+          "applies_to": "ability_score_effective",
+          "target": "Profession: *",
+          "amount": 1,
+          "when": {
+            "blood": "brownie"
+          }
+        },
+        {
+          "applies_to": "ability_score_effective",
+          "target": "Stealth",
+          "amount": 1,
+          "when": {
+            "blood": "goblin"
+          }
+        },
+        {
+          "applies_to": "aging_roll",
+          "amount": -3
+        },
+        {
+          "applies_to": "aging_start",
+          "amount": 50
+        }
+      ],
       "source": "DE",
       "summary": "Aging starts at 50 with -3 to Aging rolls; free Second Sight and dark vision; Faerie Lore at creation; a Faerie Blood heritage benefit.",
       "description": "The blood of the fay is strong in you. Perhaps one of your parents was actually a faerie, or maybe you were conceived or born in a place of great faerie power. This ancestry grants you several abilities. First, you have natural longevity. You start making aging rolls at the age of fifty, rather than the normal 35, and get -3 to Aging Rolls, cumulative with any other bonuses. Second, you have faerie eyes. This gives you the Virtue Second Sight (see page 106) at no cost, and you can see normally in total darkness or semi-darkness, such as in deep woods or at night. Your eyes look mostly normal, but are an unusual and vivid color. Third, you may learn Faerie Lore during character generation. Finally, you get the benefits of a particular type of fay heritage, as given in the Virtue Faerie Blood ([[#Faerie Blood|page 7900). Your specific fay heritage is clearly visible. Choose one physical quirk, such as small horns, literally blue blood, or eyes without irises and pupils, appropriate to the faeries from which you are descended. You may not have both Faerie Blood and Strong Faerie Blood. This is a Supernatural Virtue, and you cannot lose it when being trained as a magus (see page 64). If your master cannot preserve the ability, you cannot be trained."
@@ -6489,6 +6660,40 @@
       "parameters": [
         "realm"
       ],
+      "modifiers": [
+        {
+          "applies_to": "ability_score_effective",
+          "target": "Dominion Lore",
+          "amount": 2,
+          "when": {
+            "realm": "divine"
+          }
+        },
+        {
+          "applies_to": "ability_score_effective",
+          "target": "Faerie Lore",
+          "amount": 2,
+          "when": {
+            "realm": "faerie"
+          }
+        },
+        {
+          "applies_to": "ability_score_effective",
+          "target": "Infernal Lore",
+          "amount": 2,
+          "when": {
+            "realm": "infernal"
+          }
+        },
+        {
+          "applies_to": "ability_score_effective",
+          "target": "Magic Lore",
+          "amount": 2,
+          "when": {
+            "realm": "magic"
+          }
+        }
+      ],
       "repeatable": true,
       "source": "DE",
       "summary": "+2 on all uses of one realm's Lore, which may be taken at character creation.",
@@ -6512,6 +6717,12 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "casting_gestures",
+          "amount": 5
+        }
+      ],
       "source": "DE",
       "summary": "Cast without gestures at no penalty; no bonus for normal gestures, normal bonus for exaggerated ones.",
       "description": "You may cast spells without using gestures at no penalty. You gain no benefits from using normal gestures but gain the normal benefit for exaggerated gestures."
@@ -6930,7 +7141,9 @@
       "category": "General",
       "tier": "Minor",
       "cost": 1,
-      "granted_by": ["familiar_bond"],
+      "granted_by": [
+        "familiar_bond"
+      ],
       "source": "DE",
       "summary": "The DE's True Love (PC), renamed for a close non-romantic bond; magus and familiar both gain it (familiar bond).",
       "description": "You share an unbreakable bond of mutual trust and loyalty with another -- not romantic, but no less profound. Whenever you are suffering, in danger, or dejected, the thought of your friend gives you strength to persevere, and you may add +3 to appropriate Personality Trait rolls. You are bound to help each other; if any enchantment keeps you apart, the strength of your bond can probably break it. This Virtue is granted automatically to a magus and their bound familiar (see the Familiar rules), and is otherwise the platonic counterpart to True Love -- your bonded partner must hold the same Virtue in return."
@@ -6986,6 +7199,12 @@
       "category": "Supernatural",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "unaging",
+          "amount": 1
+        }
+      ],
       "source": "DE",
       "summary": "Aging points never reduce Characteristics; only fatal crises harm; no enfeeblement at 4 Decrepitude; choose apparent age.",
       "description": "You do not suffer the effects of age. In game terms, your aging points do not decrease your Characteristics, only building up to give you Decrepitude points. If a crisis is not potentially fatal, you suffer no ill-effects. You may die from terminal and potentially fatal crises, according to the normal rules. You are not enfeebled when you reach four Decrepitude points, but you die as normal when you reach five. You may choose your apparent age freely, although if you are basically human it should be less than or equal to your actual age."
@@ -7264,6 +7483,12 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "casting_fatigue",
+          "amount": -1
+        }
+      ],
       "repeatable": true,
       "source": "DE",
       "summary": "Lose 1 fewer Fatigue level per Virtue level when casting (minimum 1 if any would be lost); no gain if withstanding life-powered Fatigue.",
@@ -8612,6 +8837,12 @@
       "category": "General",
       "tier": "Major",
       "cost": -3,
+      "modifiers": [
+        {
+          "applies_to": "casting_fatigue",
+          "multiplier": 2
+        }
+      ],
       "source": "DE",
       "summary": "Cannot exert yourself; cannot learn Martial or physical Abilities; magi lose double Fatigue when casting.",
       "description": "You cannot exert yourself for longer than a few seconds. Any need for rapid movement, such as combat or a chase, leaves you helpless. Long hikes are likewise beyond your capability. You are unable to learn Martial Abilities or any other skills involving physical exertion, since you cannot train in them. If you are a magus, you lose double the normal number of Fatigue levels from casting spells, but you may carry out Laboratory activities as normal."
@@ -9042,6 +9273,13 @@
       "cost": -1,
       "parameters": [
         "form"
+      ],
+      "modifiers": [
+        {
+          "applies_to": "parma_resistance",
+          "target": "{form}",
+          "multiplier": 0.5
+        }
       ],
       "repeatable": true,
       "source": "DE",
@@ -9886,6 +10124,12 @@
       "category": "General",
       "tier": "Major",
       "cost": -3,
+      "modifiers": [
+        {
+          "applies_to": "living_conditions",
+          "amount": -2
+        }
+      ],
       "source": "DE",
       "summary": "-2 Living Condition (-3 in a leper colony), Heavy Wound on each Aging Crisis, no positive Reputation.",
       "description": "The character has leprosy. A leper has a permanent -2 modifier to her Living Condition (with an additional -1 if she lives in a leper colony), and whenever she undergoes an Aging Crisis (page 382) the leper sustains a Heavy Wound in addition to any other result. Lepers cannot gain a positive Reputation due to a pungent rotting smell that they emit."
@@ -9932,6 +10176,13 @@
       "cost": -1,
       "parameters": [
         "form"
+      ],
+      "modifiers": [
+        {
+          "applies_to": "form_resistance",
+          "target": "{form}",
+          "multiplier": 0
+        }
       ],
       "repeatable": true,
       "source": "DE",
@@ -10005,6 +10256,16 @@
       "category": "General",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "wound_penalty",
+          "amount": -1
+        },
+        {
+          "applies_to": "fatigue_penalty",
+          "amount": -1
+        }
+      ],
       "source": "DE",
       "summary": "Fatigue-level and total wound penalties each worsened by 1; -3 on rolls to resist pain.",
       "description": "The character cannot easily withstand pain and fatigue. Increase the penalties for reduced Fatigue levels by one point, and increase the total penalty from wounds the character has received by one point. You also suffer a -3 penalty on rolls for the character to resist pain."
@@ -10290,6 +10551,12 @@
       "category": "Supernatural",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "aging_roll",
+          "amount": -1
+        }
+      ],
       "source": "DE",
       "summary": "Visible magical taint: -1 to Aging rolls, may learn Magic Lore at creation, plus a minor deformity by magic-being type.",
       "description": "The character's essential nature has been changed through exposure to the Magic realm, often because of a relationship to a magic being, which gives her true form unfortunate supernatural properties. This changes the character's appearance enough that others can immediately recognize that there is something wrong about her, and people might say that she has tainted blood. The character is more resistant to age and receives a -1 bonus to all Aging rolls, and may learn Magic Lore during character creation. However, the character also gains a minor physical deformity appropriate to the Magic being type that is associated with the character's background. Some examples are below, or you can make up your own. Magic Animal: The character has a physical feature normally associated with animals, such as wings, scales, gills, sharp teeth, or claws. These are not usable by the character, and give a -3 penalty to appropriate activities (such as running or climbing) as these deformities get in the way. Magic Human: The character must decrease one of his Characteristics by 1, but not below -3. This might be Strength or Stamina to represent weakened blood, or Presence to indicate a dowdy appearance. The character also has a poor Reputation of level 3 among other magic beings. Magic Spirit: The character has a mental block against many activities that are not supernatural, possibly due to a noticeable difficulty with retaining memories. Subtract 3 from all of the character's Intelligence and Perception rolls that do not involve a Supernatural Ability or Art. Magic Thing: The character has a constant Lesser Power that is mostly detrimental to it in some way, such as a ward that prevents it from picking up wooden objects, or that causes books it touches to burst into flame. The effect normally occurs involuntarily, but the character can spend a Confidence Point to prevent it from triggering."
@@ -10314,11 +10581,7 @@
       "cost": -3,
       "modifiers": [
         {
-          "applies_to": "casting_total",
-          "amount": -10
-        },
-        {
-          "applies_to": "spontaneous_total",
+          "applies_to": "casting_words",
           "amount": -10
         }
       ],
@@ -10387,11 +10650,7 @@
       "cost": -3,
       "modifiers": [
         {
-          "applies_to": "casting_total",
-          "amount": -5
-        },
-        {
-          "applies_to": "spontaneous_total",
+          "applies_to": "casting_gestures",
           "amount": -5
         }
       ],
@@ -10841,6 +11100,12 @@
       "category": "General",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "living_conditions",
+          "amount": -1
+        }
+      ],
       "source": "DE",
       "summary": "Additional -1 Living Conditions Modifier, cumulative with the base modifier.",
       "description": "Either because of this character's own poor living conditions, or those of people he is in frequent contact with, he is more susceptible to the rigors of daily life. The character has an additional -1 Living Conditions Modifier. This is cumulative with the character's base Living Conditions Modifier."
@@ -11117,6 +11382,12 @@
       "category": "Supernatural",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "soak",
+          "amount": -2
+        }
+      ],
       "repeatable": true,
       "audience": [
         "faerie"
@@ -12096,6 +12367,12 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "casting_fatigue",
+          "amount": 1
+        }
+      ],
       "repeatable": true,
       "source": "DE",
       "summary": "Lose one extra Fatigue level (of the same kind) whenever casting costs Fatigue.",
@@ -12257,6 +12534,12 @@
       "category": "Hermetic",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "penetration_total",
+          "multiplier": 0.5
+        }
+      ],
       "source": "DE",
       "summary": "Penetration Totals halved (after subtracting spell level) and half benefit when instilling Penetration in items.",
       "description": "Your magic is particularly bad at penetrating Magic Resistance. You halve the normal Penetration Total for all spells, and only get half the normal benefit when instilling Penetration into an item. Note that you halve the Penetration Total, after subtracting the spell level and making any adjustments for the use of Arcane Connections. You do not halve the Casting Total and calculate Penetration from that."
@@ -12945,6 +13228,12 @@
       "category": "Magic",
       "tier": "Minor",
       "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "soak",
+          "amount": 2
+        }
+      ],
       "repeatable": true,
       "audience": [
         "magic being"
@@ -12974,6 +13263,13 @@
       "category": "Mundane Beast",
       "tier": "Free",
       "cost": 0,
+      "modifiers": [
+        {
+          "applies_to": "ability_score_effective",
+          "target": "Hunt",
+          "amount": 2
+        }
+      ],
       "audience": [
         "animal"
       ],
@@ -13237,6 +13533,12 @@
       "category": "Mundane Beast",
       "tier": "Free",
       "cost": 0,
+      "modifiers": [
+        {
+          "applies_to": "soak",
+          "amount": 4
+        }
+      ],
       "audience": [
         "animal"
       ],
@@ -13280,6 +13582,12 @@
       "category": "Mundane Beast",
       "tier": "Free",
       "cost": 0,
+      "modifiers": [
+        {
+          "applies_to": "soak",
+          "amount": 1
+        }
+      ],
       "audience": [
         "animal"
       ],
@@ -13294,6 +13602,12 @@
       "category": "Mundane Beast",
       "tier": "Free",
       "cost": 0,
+      "modifiers": [
+        {
+          "applies_to": "soak",
+          "amount": 1
+        }
+      ],
       "audience": [
         "animal"
       ],
@@ -13336,6 +13650,12 @@
       "category": "Mundane Beast",
       "tier": "Free",
       "cost": 0,
+      "modifiers": [
+        {
+          "applies_to": "soak",
+          "amount": 2
+        }
+      ],
       "audience": [
         "animal"
       ],
@@ -13408,6 +13728,12 @@
       "category": "Magic",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "casting_gestures",
+          "amount": -5
+        }
+      ],
       "audience": [
         "magic being",
         "animal"
@@ -13437,6 +13763,12 @@
       "category": "Magic",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "casting_words",
+          "amount": -5
+        }
+      ],
       "audience": [
         "magic being"
       ],
@@ -13654,6 +13986,12 @@
       "category": "Magic",
       "tier": "Minor",
       "cost": -1,
+      "modifiers": [
+        {
+          "applies_to": "soak",
+          "amount": -2
+        }
+      ],
       "repeatable": true,
       "audience": [
         "magic being"

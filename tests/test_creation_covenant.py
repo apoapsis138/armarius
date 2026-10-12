@@ -332,6 +332,61 @@ async def test_the_covenant_worksheet_lists_what_build_points_went_on():
         assert "Add a Book" in str(app.screen.query_one("#fields-title").render())
 
 
+async def test_the_covenant_worksheet_lists_and_deletes_each_lab_text():
+    """Lab Texts are priced as a pool, so each text gets its own row under
+    the pool's, and d on it deletes the text."""
+    from support import wait_until
+    from textual.widgets import OptionList
+
+    from ars_magica_manager import storage
+    from ars_magica_manager.app import ArsMagicaManagerApp
+    from ars_magica_manager.screens import ConfirmScreen
+    from ars_magica_manager.screens.workspace.base import NodeKind
+
+    saga = _saga()
+    saga.id = "test_saga"
+    for book_id, name, level in (
+        ("t1", "Pilum of Fire", 20),
+        ("t2", "Wizard's Leap", 15),
+    ):
+        saga.books.append(
+            Book(
+                id=book_id,
+                name=name,
+                type="Lab Text",
+                level=level,
+                owner_kind="covenant",
+                owner_id="cov1",
+            )
+        )
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        screen = await _open(
+            pilot, app, (NodeKind.COVENANT, "cov1"), "_covenant_sheet_view"
+        )
+        screen.query_one("#ws-steps", OptionList).highlighted = 1
+        assert await wait_until(pilot, lambda: screen.step == "build_points")
+        assert await wait_until(
+            pilot, lambda: any("Lab Texts: 35 levels" in r for r in _rows(screen))
+        )
+        rows = _rows(screen)
+        assert any("Lab Text: Pilum of Fire level 20" in r for r in rows)
+        assert any("Lab Text: Wizard's Leap level 15" in r for r in rows)
+        await _choose(pilot, screen, "Pilum of Fire")
+        await pilot.press("d")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await pilot.press("y")
+        assert await wait_until(
+            pilot,
+            lambda: [b.id for b in storage.load_saga("test_saga").books] == ["t2"],
+        )
+        assert await wait_until(
+            pilot, lambda: any("Lab Texts: 15 levels" in r for r in _rows(screen))
+        )
+        assert not any("Pilum of Fire" in r for r in _rows(screen))
+
+
 async def test_the_covenant_worksheet_lists_boons_and_hooks():
     from support import wait_until
     from textual.widgets import OptionList, Static

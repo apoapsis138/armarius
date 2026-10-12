@@ -41,6 +41,25 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.43.0 — 2026-10-12
+
+- You can choose where your sagas, backups, exports and settings are
+  kept: More (`m`) on the saga picker has Change save folder. It checks
+  the folder can be written to (some system settings, or a synced or
+  read-only folder, may not allow it), offers to move your files there
+  without overwriting anything, and remembers the choice. The saga
+  picker always shows which folder it is reading and why.
+- Many more Virtues and Flaws now change the numbers they should:
+  Student of (Realm) and the Faerie Blood heritages' Ability bonuses,
+  Characteristic bonuses taken at creation, Soak and Protection, Wound
+  and Fatigue penalties, aging rolls, Magic Resistance and Penetration,
+  casting totals, and creation experience. The blood kinds from Realms
+  of Power: Faerie are in the catalog, and spontaneous casting text names
+  its Fatigue cost.
+- On the covenant creation worksheet, each Lab Text and Casting Tablet
+  has its own row under the Lab Texts pool, so you can edit (`e`) or
+  delete (`d`) one there; the pool's levels and Build Points update.
+
 ## 2.42.0 — 2026-10-09
 
 - Planning an Initiation now says what its Ordeal costs: the Initiate

@@ -13,6 +13,9 @@ be chosen, in order of precedence:
 2. a `data_dir` in LOCATION_FILE, a small JSON file in the user's config
    folder (it can't live in the data folder it points to).
 
+The saga picker's Change save folder writes LOCATION_FILE
+(remember_data_dir()) and can move the user data across (move_user_data()).
+
 Older versions kept the user data in the repo's data/ folder;
 move_legacy_data() moves it across once, the first time the app starts.
 
@@ -45,6 +48,8 @@ LOCATION_FILE = (
 SAGAS = "sagas"
 EXPORTS = "exports"
 SETTINGS = "app_settings.json"
+#: The hosted app's SSH host key (hosting.py).
+HOST_KEY = "ssh_host_key"
 
 
 #: Where Windows says OneDrive is, in order: the user's own OneDrive is set
@@ -92,6 +97,37 @@ def data_dir() -> Path:
     return _fallback or chosen_data_dir() or default_data_dir()
 
 
+def source() -> str:
+    """What chose the data folder: "fallback" (the chosen one couldn't be
+    used), "env" (ARS_MAGICA_MANAGER_DATA), "chosen" (LOCATION_FILE) or
+    "default"."""
+    if _fallback is not None:
+        return "fallback"
+    if os.environ.get(ENV_VAR, "").strip():
+        return "env"
+    return "chosen" if chosen_data_dir() is not None else "default"
+
+
+#: How the saga picker says what chose the folder.
+SOURCE_TEXT = {
+    "fallback": "the folder chosen couldn't be used, so the app fell back to this one",
+    "env": f"set by the {ENV_VAR} environment variable",
+    "chosen": "chosen in the app",
+    "default": "the default",
+}
+
+
+def remember_data_dir(folder: Path) -> None:
+    """Use `folder` as the data folder from now on: it goes in
+    LOCATION_FILE, and any fallback is dropped."""
+    global _fallback
+    LOCATION_FILE.parent.mkdir(parents=True, exist_ok=True)
+    LOCATION_FILE.write_text(
+        json.dumps({"data_dir": str(folder)}, indent=2), encoding="utf-8"
+    )
+    _fallback = None
+
+
 def writable(folder: Path) -> bool:
     """Whether `folder` exists or can be made, and a file can be written in
     it (Controlled folder access lets a folder be listed but not written)."""
@@ -122,29 +158,37 @@ def settle_data_dir(legacy: Path = DATA_DIR) -> str | None:
     return (
         f"Couldn't use {wanted} (on Windows, Controlled folder access in "
         f"Windows Security may be blocking it). Using {_fallback} instead; "
-        "nothing was moved. The README says how to choose another folder."
+        "nothing was moved. Change save folder, in More (m) on the saga "
+        "picker, chooses another."
     )
 
 
 def move_legacy_data(old: Path = DATA_DIR, new: Path | None = None) -> list[str]:
     """Move the user data from the repo's data/ folder (`old`) to the data
-    folder (`new`), once: each saga file, backup, export and the settings
-    file not already at `new` is moved; one already there is left where it
-    was, never overwritten. Returns a line per thing moved or left, for the
-    app to say so."""
-    new = data_dir() if new is None else new
+    folder (`new`), once (see move_user_data())."""
+    return move_user_data(old, data_dir() if new is None else new)
+
+
+def move_user_data(old: Path, new: Path) -> list[str]:
+    """Move the user data from the folder `old` to `new`: each saga file,
+    backup, export, the settings file and the host key not already at
+    `new` is moved; one already there is left where it was, never
+    overwritten. Hidden files (a saga's presence marks) stay. Returns a
+    line per thing moved or left, for the app to say so."""
     if old.resolve() == new.resolve():
         return []
     notes: list[str] = []
     sources: list[Path] = []
     for folder in (old / SAGAS, old / EXPORTS):
         if folder.is_dir():
-            sources += sorted(p for p in folder.rglob("*") if p.is_file())
-    if (old / SETTINGS).is_file():
-        sources.append(old / SETTINGS)
+            sources += sorted(
+                p
+                for p in folder.rglob("*")
+                if p.is_file()
+                and not any(part.startswith(".") for part in p.relative_to(old).parts)
+            )
+    sources += [old / name for name in (SETTINGS, HOST_KEY) if (old / name).is_file()]
     for source in sources:
-        if source.name == ".gitkeep":
-            continue
         relative = source.relative_to(old)
         target = new / relative
         if target.exists():
@@ -154,8 +198,7 @@ def move_legacy_data(old: Path = DATA_DIR, new: Path | None = None) -> list[str]
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.move(source, target)
         except OSError as problem:
-            # Left where it was: the app still finds the rest, and the next
-            # start tries again.
+            # Left where it was, and the note says so.
             notes.append(f"Couldn't move {relative.as_posix()}: {problem}")
             continue
         notes.append(f"Moved {relative.as_posix()}")

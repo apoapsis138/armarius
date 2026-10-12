@@ -254,7 +254,7 @@
 
       Every score adds: Stamina +0, Aura (Magic 1) +1 (firm words, bold gestures).
       Formulaic: score + die >= level casts it; up to 10 short costs a Fatigue level.
-      Spontaneous without Fatigue: score / 5; with Fatigue: (score + stress die) / 2.                 ▁▁
+      Spontaneous: score / 5 without Fatigue; (score + stress die) / 2 for a Fatigue level.           ▁▁
       Magic Resistance (Form + Parma 0 x 5 + aura): An 1, Aq 1, Au 1, Co 1, He 1, Ig 1, Im 1, Me 1, Te
       1, Vi 1
       Penetration: Casting Total - spell level +0 (Penetration), multiplied by Arcane Connections.

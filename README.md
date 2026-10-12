@@ -76,25 +76,23 @@ uv run python tools/serve.py --ssh-port 2222  # host the app for players
 
 ### Where your data is kept
 
-Your sagas, their backups, exports and the app's settings are kept in
-**Ars Magica Manager** at the top of your OneDrive folder, wherever OneDrive
-is on that computer (without OneDrive: in your app data folder, e.g.
-`~/Library/Application Support/Ars Magica Manager` on a Mac). Saves kept in
-the repo's `data/` folder by older versions are moved there the first time
-the app starts.
+Your sagas, their backups, exports and the app's settings are kept in your
+**save folder**, which the saga picker shows under the list of sagas. To
+use another one, press `m` (More) on the saga picker and choose **Change
+save folder**: pick the folder, and the app can move your saves there
+(it never overwrites a file already in the new folder). It remembers the
+choice in `location.json` in the app's config folder.
 
-To keep them somewhere else, either set the `ARS_MAGICA_MANAGER_DATA`
-environment variable to a folder, or create `location.json` in the app's
-config folder (`%LOCALAPPDATA%\Ars Magica Manager` on Windows) holding
-`{"data_dir": "D:/Somewhere/Ars Magica"}`. Move the existing files there
-yourself first: the app only moves them out of the repo.
+Some folders may not allow saving: system settings (on Windows,
+Controlled folder access protects Documents and the Desktop), a read-only
+folder or a sync service can refuse. The app checks it can save in a
+folder before using it, and if the save folder ever can't be used when the
+app starts, it uses another and says so.
 
-If the folder can't be created or written to, the app keeps using the
-repo's `data/` folder (or, with no saves there, its app data folder) and
-says so when it starts. On Windows the usual cause is **Controlled folder
-access** (Windows Security, Ransomware protection), which stops Python
-from writing in protected folders such as Documents: choose a folder
-outside them as above, or allow `python.exe` there.
+The `ARS_MAGICA_MANAGER_DATA` environment variable, if set, chooses the
+folder instead (the saga picker says so). Saves kept in the repo's `data/`
+folder by older versions are moved to the save folder the first time the
+app starts.
 
 ## Layout
 

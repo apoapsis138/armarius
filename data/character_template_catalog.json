@@ -1154,7 +1154,7 @@
    "virtues_flaws": [
     {"vf_id": "vf_the_gift", "params": {}},
     {"vf_id": "vf_hermetic_magus", "params": {}},
-    {"vf_id": "vf_strong_faerie_blood", "params": {}, "note": "Undine"},
+    {"vf_id": "vf_strong_faerie_blood", "params": {"blood": "undine"}},
     {"vf_id": "vf_deft_form", "params": {"form": "imaginem"}},
     {"vf_id": "vf_faerie_magic", "params": {}, "free": true},
     {"vf_id": "vf_free_study", "params": {}},

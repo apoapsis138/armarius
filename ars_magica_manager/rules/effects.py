@@ -76,7 +76,20 @@ def resolve_target(target: str | None, params: Mapping[str, str]) -> str | None:
 
 
 def _same(a: str, b: str) -> bool:
-    return a.strip().casefold() == b.strip().casefold()
+    """Whether target `a` names `b`; a target ending in "*" names every
+    name it begins ("Craft: *" names "Craft: Smith")."""
+    a, b = a.strip().casefold(), b.strip().casefold()
+    if a.endswith("*"):
+        return b.startswith(a[:-1].strip())
+    return a == b
+
+
+def _chosen(modifier: Modifier, params: Mapping[str, str]) -> bool:
+    """Whether the instance's parameters are those the modifier is for."""
+    return all(
+        params.get(key, "").strip().casefold() == value.casefold()
+        for key, value in (modifier.when or {}).items()
+    )
 
 
 def collect(
@@ -103,6 +116,8 @@ def collect(
                 if modifier.applies_to != applies_to:
                     continue
                 if activity is not None and modifier.activity not in (None, activity):
+                    continue
+                if not _chosen(modifier, instance.params):
                     continue
                 resolved = resolve_target(modifier.target, instance.params)
                 if (

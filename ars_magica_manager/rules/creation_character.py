@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from .. import catalog
 from ..models import Character, Saga, character_age
+from . import aging
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 
 DE_CH3 = (
@@ -95,9 +96,15 @@ def age(saga: Saga, character: Character) -> int | None:
 
 def pre_play_aging_rolls(saga: Saga, character: Character) -> int:
     """How many aging rolls the character makes before play: one for each
-    year from 35 up to their starting age (§12)."""
+    year from 35 (50 with Strong Faerie Blood) up to their starting age
+    (§12)."""
     years = age(saga, character)
-    return max(0, years - AGING_AGE) if years is not None else 0
+    return max(0, years - aging_age(character)) if years is not None else 0
+
+
+def aging_age(character: Character) -> int:
+    """The age the character's aging rolls start at."""
+    return aging.start_age(character)
 
 
 @check("concept", CHARACTER_CHECKS)
@@ -188,7 +195,7 @@ def concept_checks(saga: Saga, record: Record) -> list[Check]:
         found.append(
             Check(
                 "concept",
-                f"Older than {AGING_AGE}: aging rolls before play",
+                f"Older than {aging_age(character)}: aging rolls before play",
                 "pass",
                 f"{rolls} roll(s)",
                 AGE_SOURCE,

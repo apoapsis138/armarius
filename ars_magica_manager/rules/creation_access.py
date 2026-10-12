@@ -135,8 +135,15 @@ class VirtueXp:
 
 _SOCIAL = ("Charm", "Etiquette", "Folk Ken", "Guile", "Intrigue", "Leadership")
 _AREA, _LANGUAGE, _ORG = "Area Lore: ", "Living Language: ", "Organization Lore: "
+_BARDIC = (
+    "Art of Memory",
+    "Profession: Storyteller",
+    "Profession: Poet",
+    "Faerie Lore",
+    "Magic Lore",
+)
 
-#: The DE Virtues that give xp at creation (their catalog summaries).
+#: The Virtues that give xp at creation (their catalog summaries).
 VIRTUE_XP: dict[str, VirtueXp] = {
     "vf_educated": VirtueXp(50, names=("Dead Language: Latin", "Artes Liberales")),
     "vf_arcane_lore": VirtueXp(50, types=(ARCANE,)),
@@ -215,6 +222,63 @@ VIRTUE_XP: dict[str, VirtueXp] = {
         50, names=("Art of Memory",), prefixes=("Profession: ", _AREA, _ORG)
     ),
     "vf_mentored_by_demons": VirtueXp(50),
+    "vf_educated_hebrew": VirtueXp(
+        50,
+        names=(
+            "Dead Language: Hebrew",
+            "Living Language: Hebrew",
+            "Dead Language: Aramaic",
+            "Living Language: Aramaic",
+            "Theology: Judaism",
+            "Judaic Lore",
+        ),
+    ),
+    "vf_educated_islamic": VirtueXp(
+        50,
+        names=(
+            "Living Language: Arabic",
+            "Living Language: Persian",
+            "Living Language: Greek",
+            "Dead Language: Greek",
+            "Dead Language: Latin",
+            "Theology: Islam",
+            "Islamic Law",
+            "Artes Liberales",
+        ),
+    ),
+    "vf_rosh_beth_din": VirtueXp(
+        50, types=(ACADEMIC,), names=("Rabbinic Law", "Theology: Judaism")
+    ),
+    "vf_master_bard": VirtueXp(240, names=_BARDIC, prefixes=(_AREA, _ORG)),
+    "vf_senior_bard": VirtueXp(90, names=_BARDIC, prefixes=(_AREA, _ORG)),
+    "vf_clan_ilfetu": VirtueXp(
+        50,
+        names=(
+            "Bjornaer Lore",
+            "House Bjornaer Lore",
+            "Magic Lore",
+            "Dead Language: Gothic",
+        ),
+    ),
+    "vf_ineslemen": VirtueXp(
+        50,
+        names=(
+            "Theology: Islam",
+            "Islamic Law",
+            "Dominion Lore",
+            "Faerie Lore",
+            "Infernal Lore",
+            "Magic Lore",
+        ),
+    ),
+    "vf_forge_companion": VirtueXp(50, prefixes=("Craft: ",)),
+    "vf_herbalism": VirtueXp(50, names=("Herbalism", "Profession: Apothecary")),
+    "vf_gild_trained": VirtueXp(
+        90,
+        types=("General", ARCANE),
+        names=("Organization Lore: Order of Hermes", "Intrigue", "Durenmar Lore"),
+    ),
+    "vf_improved_abilities": VirtueXp(50),
 }
 
 

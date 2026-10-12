@@ -48,7 +48,7 @@ def _art(magus: Character, art: str) -> int:
 
 def certamen_totals(magus: Character, technique: str, form: str) -> CertamenTotals:
     c = magus.characteristics
-    penalty = fatigue_penalty(magus.fatigue_level)
+    penalty = fatigue_penalty(magus.fatigue_level, magus.virtues_flaws)
     tech, frm = _art(magus, technique), _art(magus, form)
     return CertamenTotals(
         initiative=c.quickness + sum(ability_score(magus, "Finesse")),

@@ -1,9 +1,10 @@
-"""The start screen: pick, create or delete a saga, or open Help (which
-holds About). In a browser copy of a hosted app it only opens
-sagas, each after signing in."""
+"""The start screen: pick, create or delete a saga, change the save
+folder, or open Help (which holds About). In a browser copy of a hosted
+app it only opens sagas, each after signing in."""
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any, ClassVar
 
 from textual.app import ComposeResult
@@ -17,13 +18,13 @@ from textual.widgets import (
     Static,
 )
 
-from .. import __version__, creation, storage
+from .. import __version__, creation, paths, storage
 from ..markup import escape, problem
 from ..models import Player
 from .fields import FieldsDialog
-from .forms import _saga_fields
+from .forms import _saga_fields, _save_folder_dialog
 from .help import HelpContext, HelpScreen, shown_keys
-from .prompts import ConfirmScreen, _sign_in_dialog
+from .prompts import ConfirmScreen, MenuScreen, _sign_in_dialog
 from .widgets import BottomBar
 from .workspace import WorkspaceScreen
 
@@ -39,6 +40,7 @@ class SagaPickerScreen(Screen[None]):
         ("n", "create_saga", "New Saga"),
         ("d", "delete_saga", "Delete Saga"),
         Binding("delete", "delete_saga", "Delete Saga", show=False),
+        ("m", "more", "More"),
         ("q", "quit", "Quit"),
         # Shown at the footer's right end (BottomBar right_actions).
         ("question_mark", "help", "Help"),
@@ -54,6 +56,7 @@ class SagaPickerScreen(Screen[None]):
             id="picker-hint",
         )
         yield ListView(id="saga-list")
+        yield Static(self._folder_text(), id="picker-folder")
         yield Static(f"[dim]Ars Magica Manager {__version__}[/]", id="picker-version")
         yield BottomBar(right_actions=["help"])
 
@@ -62,8 +65,21 @@ class SagaPickerScreen(Screen[None]):
 
     def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
         # Players in a browser open sagas; only the storyguide's own window
-        # makes or deletes them.
-        return not (action in ("create_saga", "delete_saga") and self.app.is_web)
+        # makes or deletes them, or moves the saves.
+        return not (
+            action in ("create_saga", "delete_saga", "more") and self.app.is_web
+        )
+
+    def _folder_text(self) -> str:
+        """Which folder the sagas are read from, and what chose it (not in
+        a player's browser: the host's folders are the storyguide's
+        business)."""
+        if self.app.is_web:
+            return ""
+        return (
+            f"[dim]Save folder: {escape(str(paths.data_dir()))} "
+            f"({paths.SOURCE_TEXT[paths.source()]})[/]"
+        )
 
     async def refresh_list(self) -> None:
         list_view = self.query_one("#saga-list", ListView)
@@ -162,6 +178,51 @@ class SagaPickerScreen(Screen[None]):
             ),
             handle_confirmed,
         )
+
+    def action_more(self) -> None:
+        def chosen(key: str | None) -> None:
+            if key == "save_folder":
+                self.change_save_folder()
+
+        self.app.push_screen(
+            MenuScreen("More", [("f", "save_folder", "Change save folder")]), chosen
+        )
+
+    def change_save_folder(self) -> None:
+        """Choose another save folder, moving the saves there if asked,
+        and read the sagas from it from now on."""
+        if paths.source() == "env":
+            self.notify(
+                f"The save folder is set by {paths.ENV_VAR}: unset it to "
+                "choose one here.",
+                severity="warning",
+            )
+            return
+        old = paths.data_dir()
+
+        async def handle_result(result: tuple[Path, bool] | None) -> None:
+            if result is None:
+                return
+            folder, move = result
+            notes = paths.move_user_data(old, folder) if move else []
+            paths.remember_data_dir(folder)
+            storage.use_data_dir(folder)
+            self.query_one("#picker-folder", Static).update(self._folder_text())
+            await self.refresh_list()
+            moved = sum(1 for note in notes if note.startswith("Moved"))
+            left = [note for note in notes if not note.startswith("Moved")]
+            self.notify(
+                escape(
+                    "\n".join(
+                        [f"Moved {moved} file(s)." if move else "Nothing moved."] + left
+                    )
+                ),
+                title="Save folder: " + escape(str(folder)),
+                severity="warning" if left else "information",
+                timeout=15,
+            )
+
+        self.app.push_screen(_save_folder_dialog(old), handle_result)
 
     def on_list_view_selected(self, event: ListView.Selected) -> None:
         item_id = event.item.id

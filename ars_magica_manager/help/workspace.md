@@ -5,6 +5,8 @@ The start screen. It lists every saga saved on this computer, so you can open on
 
 Each row shows the saga's name, its storyguide and its current date. A saga file that the app can't read is still listed, marked "can't be read", so that you can delete it.
 
+Under the list, **Save folder** shows the folder the sagas are read from and what chose it: the default, chosen in the app, set by the ARS_MAGICA_MANAGER_DATA environment variable, or a folder the app fell back to because the chosen one couldn't be used.
+
 **You type:** for a new saga, its Name and Storyguide (both required), the Start Year and Start Season, and an optional one-line Description.
 
 **The app works out:** nothing here; the saga starts on the date you give and is saved at once.
@@ -15,6 +17,7 @@ Each row shows the saga's name, its storyguide and its current date. A saga file
 - Highlight a saga and press Enter to open it in the workspace.
 - `n` opens the Create a New Saga form.
 - `d` (or Delete) deletes the highlighted saga after a confirmation. This deletes the saga's file and everything in it (covenants, characters, laboratories, library) for good, so the confirmation says so and No is the safe answer.
+- More (`m`) offers **Change save folder**: choose a folder with the folder browser (Enter opens a folder, Up goes to the parent, or type a path), and whether to move the saves there. The sagas, their backups, exports and settings are moved; a file already in the new folder is never overwritten. Some folders may not allow saving (on Windows, Controlled folder access protects Documents and the Desktop; a read-only or synced folder can refuse too), so the app checks it can save in the folder before using it. When ARS_MAGICA_MANAGER_DATA sets the folder, it can't be changed here.
 - `q` quits the app.
 
 In a browser opened on a hosted saga, the list only opens sagas: New and Delete are left to the storyguide's own window, and opening a saga first asks who you are. See [Signing in](help:sign-in).

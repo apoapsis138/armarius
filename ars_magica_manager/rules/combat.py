@@ -54,7 +54,9 @@ def combat_totals(character: Character, weapon: Possession) -> CombatTotals:
     c = character.characteristics
     ability = weapon_ability(weapon)
     skill = sum(ability_score(character, ability)) if ability else 0
-    penalty = wound_penalty(character.wounds) + fatigue_penalty(character.fatigue_level)
+    penalty = wound_penalty(
+        character.wounds, character.virtues_flaws
+    ) + fatigue_penalty(character.fatigue_level, character.virtues_flaws)
     penalties = (
         [Line("Wounds and fatigue", amount=penalty, source=SOURCE)] if penalty else []
     )

@@ -110,7 +110,8 @@ Warping Points from a Longevity Ritual or a strong aura of another realm
 
 The left column shows Soak, Encumbrance and the Wound Penalty, worked out
 from Stamina, armour, Virtues and the load of the character's Personal Gear,
-then the wounds as typed. The right column shows the Fatigue Level, the
+then the wounds as typed. Enduring Constitution makes the wound and fatigue
+penalties 1 better and Low Tolerance 1 worse. The right column shows the Fatigue Level, the
 total penalty from wounds and fatigue, and the Damage Table for the
 character's Size (Ars Magica Definitive Edition, Chapter 11: Obstacles).
 `e` edits the wounds and a Soak adjustment; the Edit Fatigue button, or
@@ -205,7 +206,11 @@ Worked out, not typed: the Casting Score for every pair of Technique and
 Form, from the Arts, Stamina and the aura of the magus's covenant, with the
 lines below it giving Magic Resistance, Penetration and the Certamen totals
 (Ars Magica Definitive Edition, Chapter 7: Hermetic Magic). It changes as
-the Arts, Characteristics or covenant change.
+the Arts, Characteristics or covenant change. Virtues and Flaws that change
+words and gestures (Mute, Quiet Magic, Deft Form), Magic Resistance (Flawed
+Parma Magica), Penetration (Weak Magic) or the Fatigue a spell costs
+(Enfeebled, Withstand Casting, Mythic Blood) are counted, and named where
+they apply.
 
 ### Raw Vis
 <!-- help: section-raw-vis-hermetic -->

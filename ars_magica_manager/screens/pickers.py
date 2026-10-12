@@ -1417,6 +1417,51 @@ class CsvFilePickerScreen(ModalDialog[Path | None]):
             self.dismiss(None)
 
 
+class _FolderTree(DirectoryTree):
+    """Folders only (hidden ones left out)."""
+
+    def filter_paths(self, paths):
+        return [p for p in paths if p.is_dir() and not p.name.startswith(".")]
+
+
+class FolderPickerScreen(CsvFilePickerScreen):
+    """The file explorer for choosing a folder: Enter opens a folder, Up
+    goes to the parent, the path box takes a typed folder (one that doesn't
+    exist yet is made when it's used), and Choose takes the highlighted
+    folder or the typed one. Dismisses with the folder, or None."""
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="picker-dialog", classes="dialog-box"):
+            yield Label(self.title_text, id="picker-title", classes="dialog-title")
+            with Horizontal(id="picker-path-row"):
+                yield Button("Up", id="btn-picker-up", compact=True)
+                yield Input(str(self.start), id="picker-path", compact=True)
+            yield _FolderTree(self.start, id="picker-tree")
+            yield Static("", id="picker-error")
+            with Horizontal(id="picker-buttons"):
+                yield Button("Choose", id="btn-picker-open", variant="success")
+                yield Button("Cancel", id="btn-picker-cancel")
+
+    def _choose(self, raw: str) -> None:
+        path = Path(raw.strip().strip('"')).expanduser()
+        if path.is_file():
+            self.query_one("#picker-error", Static).update(
+                f"{escape(path.name)} is a file, not a folder."
+            )
+        elif raw.strip():
+            self.dismiss(path)
+
+    def on_input_submitted(self, event: Input.Submitted) -> None:
+        # Enter in the path box shows a typed folder that exists; Choose
+        # takes it.
+        event.stop()
+        path = Path(event.value.strip().strip('"')).expanduser()
+        if path.is_dir():
+            self._show_folder(path)
+        else:
+            self._choose(event.value)
+
+
 _BOOK_ITEM_ID_PREFIX = "bookpick-"
 
 

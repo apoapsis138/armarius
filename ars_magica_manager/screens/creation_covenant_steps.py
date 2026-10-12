@@ -420,6 +420,9 @@ def _cost_details(saga: Saga, cost: cov.Cost) -> str:
         if isinstance(item, Laboratory)
         else "e changes it, d deletes it."
         if item is not None
+        else "Bought as a pool of levels: each text is listed below it, where "
+        "e changes it and d deletes it."
+        if cost.category in cov.POOL_CATEGORIES
         else "Worked out from what the covenant has."
     )
     category = f" ({escape(cost.category)})" if cost.category else ""
@@ -429,22 +432,36 @@ def _cost_details(saga: Saga, cost: cov.Cost) -> str:
     )
 
 
+def _pooled_text_row(saga: Saga, book: Book) -> StepRow:
+    """A Lab Text or Casting Tablet, under its pool's row: it has no Build
+    Points of its own (the pool has them), but e and d act on it."""
+    name = book.name or "(untitled)"
+    label = name if name.startswith(book.type) else f"{book.type}: {name}"
+    level = bk.level_of(book, saga)
+    note = f"level {level}" if level else "set its level"
+    return StepRow(
+        _bp_label(f"  {label}", "", note),
+        bk.detail_text(saga, book),
+        edit=lambda ws: ws._book_form(book),
+        delete=lambda ws: ws._delete_book(book),
+    )
+
+
 def _build_points_rows(saga: Saga, record: Record) -> list[StepRow]:
     """Everything the Build Points bought, under its category, each with
     its points; a book with no level or Quality yet shows 0. e and d edit
-    or delete the record a row prices."""
+    or delete the record a row prices. Lab Texts and Casting Tablets are
+    priced as a pool, so each text gets its own row under the pool's."""
     covenant = _covenant(record)
     found = cov.costs(saga, covenant)
     priced = {id(c.item) for c in found if c.item is not None}
-    unpriced = [
-        b
-        for b in bk.books_owned_by(saga, "covenant", covenant.id)
-        if id(b) not in priced and not bk.pooled(b.type)
-    ]
+    library = bk.books_owned_by(saga, "covenant", covenant.id)
+    unpriced = [b for b in library if id(b) not in priced and not bk.pooled(b.type)]
     rows: list[StepRow] = []
     for category in (*cov.CATEGORIES, ""):
         lines = [c for c in found if c.category == category]
-        if not lines:
+        texts = [b for b in library if cov.POOL_CATEGORIES.get(b.type) == category]
+        if not lines and not texts:
             continue
         rows.append(StepRow(category or "Other", heading=True))
         for cost in lines:
@@ -457,6 +474,7 @@ def _build_points_rows(saga: Saga, record: Record) -> list[StepRow]:
                     delete=delete,
                 )
             )
+        rows += [_pooled_text_row(saga, book) for book in texts]
     if unpriced:
         rows.append(StepRow("Not priced yet", heading=True))
         for book in unpriced:

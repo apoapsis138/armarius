@@ -47,6 +47,7 @@ from .library import _book_from_values as _book_from_values
 from .library import _book_live as _book_live
 from .library import _research_fields as _research_fields
 from .library import _research_from_values as _research_from_values
+from .saga import _save_folder_dialog as _save_folder_dialog
 from .season_plans import _breakthrough_dialog as _breakthrough_dialog
 from .season_plans import _grog_year_dialog as _grog_year_dialog
 from .season_plans import _season_plan_dialog as _season_plan_dialog

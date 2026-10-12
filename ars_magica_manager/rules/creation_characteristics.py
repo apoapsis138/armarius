@@ -68,6 +68,50 @@ IMPROVED = "vf_improved_characteristics"
 #: The point a copy of Great or Poor (Characteristic) moves its score.
 STEPS = {GREAT: 1, POOR: -1}
 
+
+@dataclass(frozen=True)
+class Heritage:
+    """A free point a Virtue adds to one Characteristic, never taking it
+    past `cap` (Sidhe Blood: +1 Presence, not above +3)."""
+
+    key: str
+    step: int
+    cap: int
+
+
+#: The kinds of Faerie Blood whose benefit is a Characteristic point.
+BLOOD_CHARACTERISTICS: dict[str, str] = {
+    "bloodcap": "strength",
+    "ettin": "stamina",
+    "nymph": "communication",
+    "padfoot": "perception",
+    "sidhe": "presence",
+}
+FAERIE_BLOODS = ("vf_faerie_blood", "vf_strong_faerie_blood")
+BLOODCAP = "vf_faerie_blood_bloodcap"
+#: Faerie Legacy lets a heritage point take the score one higher.
+FAERIE_LEGACY = "vf_faerie_legacy"
+HERITAGE_CAP = 3
+UNINSPIRATIONAL = "vf_uninspirational"
+
+
+def heritage(instance: VirtueFlawInstance) -> Heritage | None:
+    """The free Characteristic point this Virtue adds, if any."""
+    if instance.vf_id == BLOODCAP:
+        return Heritage("strength", 1, HERITAGE_CAP)
+    if instance.vf_id in FAERIE_BLOODS:
+        key = BLOOD_CHARACTERISTICS.get(instance.params.get("blood", "").casefold())
+        return Heritage(key, 1, HERITAGE_CAP) if key else None
+    return None
+
+
+def heritage_cap(character: Character, found: Heritage) -> int:
+    """How high a heritage point can take its score: one more with Faerie
+    Legacy."""
+    legacy = any(vf.vf_id == FAERIE_LEGACY for vf in character.virtues_flaws)
+    return found.cap + legacy
+
+
 #: The Grogs book's pre-bought arrays, each spending the standard 7 points.
 GROG_ARRAYS: tuple[tuple[int, ...], ...] = (
     (2, 2, 2, 2, 1, 1, -1, -3),
@@ -110,6 +154,8 @@ class CharacteristicLine:
     #: The score bought with points.
     bought: int
     cost: int
+    #: Free points from a heritage (Sidhe Blood's Presence).
+    free: int = 0
 
 
 def lines(
@@ -135,8 +181,18 @@ def lines(
             for vf in character.virtues_flaws
             if vf.vf_id == POOR and vf.params.get("characteristic") == key
         )
+        heritages = [
+            found
+            for vf in character.virtues_flaws
+            if (found := heritage(vf)) is not None and found.key == key
+        ]
         virtue = great - poor
         base = score - modifier
+        # A heritage's free point is counted as given whenever the score
+        # allows it (at its cap it may instead have been bought).
+        cap = max((heritage_cap(character, h) for h in heritages), default=0)
+        free = sum(h.step for h in heritages) if -BOUGHT_LIMIT <= base <= cap else 0
+        base -= free
         # Great/Poor count only past +3/-3: a Great copy on a score not yet
         # at +3 is bought points still to find.
         if base > BOUGHT_LIMIT:
@@ -146,7 +202,7 @@ def lines(
         else:
             bought = base
         result.append(
-            CharacteristicLine(key, name, score, virtue, bought, cost(bought))
+            CharacteristicLine(key, name, score, virtue, bought, cost(bought), free)
         )
     return result
 
@@ -171,7 +227,20 @@ def virtue_refusal(
     saga: Saga, character: Character, instance: VirtueFlawInstance
 ) -> str:
     """Why `character` can't take this Great or Poor copy ("" if it can):
-    Great needs the Characteristic at +3 or +4, Poor at -3 or -4."""
+    Great needs the Characteristic at +3 or +4, Poor at -3 or -4.
+    Uninspirational needs Presence and Communication at 0 or less."""
+    if instance.vf_id == UNINSPIRATIONAL:
+        high = [
+            f"{name} {getattr(character.characteristics, key):+d}"
+            for key, name in CHARACTERISTICS
+            if key in ("presence", "communication")
+            and getattr(character.characteristics, key) > 0
+        ]
+        return (
+            f"Uninspirational caps Presence and Communication at 0 ({', '.join(high)})."
+            if high
+            else ""
+        )
     found = _stepped(saga, character, instance)
     if found is None:
         return ""
@@ -190,7 +259,13 @@ def virtue_refusal(
 def apply_virtue(
     saga: Saga, character: Character, instance: VirtueFlawInstance
 ) -> None:
-    """Move the Characteristic a newly taken Great or Poor copy names."""
+    """Move the Characteristic a newly taken Great or Poor copy names, or
+    add a heritage's free point (not past its cap)."""
+    if (free := heritage(instance)) is not None:
+        score = getattr(character.characteristics, free.key)
+        if score - child_modifier(age(saga, character)) < heritage_cap(character, free):
+            setattr(character.characteristics, free.key, score + free.step)
+        return
     found = _stepped(saga, character, instance)
     if found is not None:
         key, _, step, _ = found
@@ -203,7 +278,13 @@ def removal_change(
 ) -> tuple[str, int, int] | None:
     """(name, before, after) of the Characteristic removing this Great or
     Poor copy moves back, or None when it moves nothing: a score not past
-    +3 or -3 never had the copy's point added."""
+    +3 or -3 never had the copy's point added. A heritage's free point
+    comes back off while the score is at its cap or below."""
+    if (free := heritage(instance)) is not None:
+        score = getattr(character.characteristics, free.key)
+        if score - child_modifier(age(saga, character)) > heritage_cap(character, free):
+            return None
+        return dict(CHARACTERISTICS)[free.key], score, score - free.step
     found = _stepped(saga, character, instance)
     if found is None:
         return None
@@ -217,11 +298,17 @@ def removal_change(
 def unapply_virtue(
     saga: Saga, character: Character, instance: VirtueFlawInstance
 ) -> None:
-    """Take back the point of a Great or Poor copy being removed."""
-    found = _stepped(saga, character, instance)
+    """Take back the point of a Great or Poor copy, or a heritage's free
+    point, being removed."""
     change = removal_change(saga, character, instance)
-    if found is not None and change is not None:
-        setattr(character.characteristics, found[0], change[2])
+    free = heritage(instance)
+    key = (
+        free.key
+        if free is not None
+        else (_stepped(saga, character, instance) or ("",))[0]
+    )
+    if change is not None and key:
+        setattr(character.characteristics, key, change[2])
 
 
 def budget(character: Character) -> int:
