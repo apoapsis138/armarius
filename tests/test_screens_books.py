@@ -19,7 +19,7 @@ from screen_helpers import (
     _show_library_tab,
     _wait_for_screen,
 )
-from support import menu, wait_until
+from support import build_all_tabs, menu, wait_until
 from textual.widgets import (
     Button,
     Collapsible,
@@ -322,6 +322,7 @@ async def test_renaming_a_character_updates_their_book_list():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
         await _select_character(pilot, app)
+        await build_all_tabs(pilot, app.screen._current_sheet_view())
         await pilot.press("e")  # the top panel: Edit Character Info
         await wait_until(pilot, lambda: _is_form(app.screen, "Edit Character Info"))
         app.screen.query_one("#fld-name", Input).value = "Leandro the Elder"

@@ -1,7 +1,7 @@
 """Helpers shared by the test_screens_*.py tests: sample sagas, waiting for
 screens and pickers, opening sections and reading what a sheet shows."""
 
-from support import build_all_tabs, strip_markup, wait_until
+from support import strip_markup, wait_until
 from textual.widgets import (
     Button,
     Collapsible,
@@ -108,7 +108,9 @@ _SHEET_VIEW_ATTR: dict[str, str] = {
 
 
 async def _select(pilot, app, data) -> None:
-    """Select a nav-tree node by its `.data`, the same way a click/enter would."""
+    """Select a nav-tree node by its `.data`, the same way a click/enter would.
+    A sheet shows only its first tab: other tabs are built when a test shows
+    them, or by `build_all_tabs` for a test that reaches into one unseen."""
     tree = app.screen.query_one("#nav-tree", Tree)
     node = _find_node(tree, data)
     assert node is not None, f"tree node with data={data!r} not found"
@@ -117,7 +119,9 @@ async def _select(pilot, app, data) -> None:
     attr = _SHEET_VIEW_ATTR.get(data[0])
     if attr is not None:
         await wait_until(pilot, lambda: getattr(app.screen, attr) is not None)
-        await build_all_tabs(pilot, getattr(app.screen, attr))
+        view = getattr(app.screen, attr)
+        await wait_until(pilot, lambda: view.initial_tab_seen)
+        await pilot.pause()
 
 
 async def _open_workspace(pilot) -> None:
@@ -288,12 +292,12 @@ async def _select_covenant(pilot, app, covenant_id: str = "cov1") -> None:
 
 
 async def _select_character(pilot, app, character_id: str = "char1") -> None:
-    await _select_covenant(pilot, app)
+    await _open_workspace(pilot)
     await _select(pilot, app, ("character", character_id))
 
 
 async def _select_laboratory(pilot, app, laboratory_id: str = "lab1") -> None:
-    await _select_covenant(pilot, app)
+    await _open_workspace(pilot)
     await _select(pilot, app, ("laboratory", laboratory_id))
 
 
@@ -344,7 +348,7 @@ def _lab_characteristics_text(view) -> str:
 
 
 async def _select_familiar(pilot, app, familiar_id: str = "fam1") -> None:
-    await _select_covenant(pilot, app)
+    await _open_workspace(pilot)
     await _select(pilot, app, ("familiar", familiar_id))
 
 

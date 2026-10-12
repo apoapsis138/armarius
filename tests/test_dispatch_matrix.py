@@ -13,17 +13,19 @@ here. After an intended change, regenerate the file with
 the diff.
 """
 
+import asyncio
 import json
 import os
 from pathlib import Path
 
 import pytest
+from rich.text import Text
 from support import NODES, build_all_tabs, everything_saga, wait_until
 from textual.widgets import Collapsible, TabbedContent, TabPane, Tree
 
 from ars_magica_manager import storage
 from ars_magica_manager.app import ArsMagicaManagerApp
-from ars_magica_manager.screens import WorkspaceScreen
+from ars_magica_manager.screens import ConfirmScreen, FieldsDialog, WorkspaceScreen
 from ars_magica_manager.screens.prompts import MenuScreen
 from ars_magica_manager.screens.widgets import first_stop, section_stop
 
@@ -49,9 +51,19 @@ _SHEET_VIEW_ATTR = {
 }
 
 
+#: Dialogs recorded without being shown: their title is known before they
+#: mount, and building them is most of this test's time. Every other screen
+#: (pickers, menus) is shown, as a user would see it.
+_SPIED = (FieldsDialog, ConfirmScreen)
+
+
 def _title(screen) -> str:
     """The text of a dialog's first Label/Static whose id mentions "title";
     for the More menu, what it offers."""
+    if isinstance(screen, FieldsDialog):
+        return Text.from_markup(screen.title_text).plain.strip()
+    if isinstance(screen, ConfirmScreen):
+        return ""
     if isinstance(screen, MenuScreen):
         return ", ".join(label for _, _, label in screen.items)
     for widget in screen.query("Label, Static"):
@@ -102,19 +114,44 @@ async def _focus_target(pilot, app, view, target) -> None:
         await pilot.pause()
 
 
-async def _record_keys(pilot, app, workspace, notices: list[str]) -> dict[str, str]:
+def _spy_on_dialogs(app, spied: list) -> None:
+    """Record, instead of showing, each _SPIED dialog the app is asked to
+    push: what opens is the outcome, and every dialog is cancelled anyway."""
+    push_screen = app.push_screen
+
+    def record(screen, *args, **kwargs):
+        if not isinstance(screen, _SPIED):
+            return push_screen(screen, *args, **kwargs)
+        spied.append(screen)
+        done = asyncio.get_running_loop().create_future()
+        if not kwargs.get("wait_for_dismiss"):
+            done.set_result(None)
+        return done  # waiting for a dismissal: never comes, like a cancel
+
+    app.push_screen = record
+
+
+async def _record_keys(
+    pilot, app, workspace, notices: list[str], spied: list
+) -> dict[str, str]:
     outcomes: dict[str, str] = {}
     for key, actions in KEYS.items():
         if not any(workspace.check_action(action, ()) for action in actions):
             outcomes[key] = "(disabled)"
             continue
         notices.clear()
+        spied.clear()
         await pilot.press(key)
         await pilot.pause()
         await wait_until(
-            pilot, lambda: app.screen is not workspace or notices, timeout=1.0
+            pilot,
+            lambda: app.screen is not workspace or notices or spied,
+            timeout=1.0,
         )
-        if app.screen is not workspace:
+        if spied and app.screen is workspace:
+            title = _title(spied[0])
+            outcomes[key] = type(spied[0]).__name__ + (f": {title}" if title else "")
+        elif app.screen is not workspace:
             screen = app.screen
             title = _title(screen)
             outcomes[key] = type(screen).__name__ + (f": {title}" if title else "")
@@ -135,6 +172,7 @@ async def _matrix_for(
     storage.save_saga(everything_saga())
     app = ArsMagicaManagerApp()
     notices: list[str] = []
+    spied: list = []
     async with app.run_test(size=(140, 70)) as pilot:
         await pilot.press("enter")  # picker -> workspace
         assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
@@ -146,6 +184,7 @@ async def _matrix_for(
             return original_notify(message, *args, **kwargs)
 
         app.notify = record  # type: ignore[method-assign]
+        _spy_on_dialogs(app, spied)
 
         tree = workspace.query_one("#nav-tree", Tree)
 
@@ -168,7 +207,7 @@ async def _matrix_for(
         if attr is None:  # no sheet: the node itself decides the section
             record = {
                 "active": workspace._active_section(),
-                "keys": await _record_keys(pilot, app, workspace, notices),
+                "keys": await _record_keys(pilot, app, workspace, notices, spied),
             }
             return {"(node)": record}, ["(node)"]
 
@@ -191,7 +230,7 @@ async def _matrix_for(
             await _focus_target(pilot, app, view, target)
             result[_label(target)] = {
                 "active": workspace._active_section(),
-                "keys": await _record_keys(pilot, app, workspace, notices),
+                "keys": await _record_keys(pilot, app, workspace, notices, spied),
             }
         return result, labels
 

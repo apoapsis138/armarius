@@ -15,7 +15,7 @@ from screen_helpers import (
     _select_covenant,
     _wait_for_screen,
 )
-from support import menu, wait_until
+from support import build_all_tabs, menu, wait_until
 from textual.widgets import (
     Button,
     Collapsible,
@@ -717,6 +717,7 @@ def _saga_with_a_deficit(deficit: int, wealth: int) -> Saga:
 
 async def _edit_emergency_savings(pilot, app) -> None:
     view = app.screen._covenant_sheet_view
+    await build_all_tabs(pilot, view)
     rows = view.query_one("#eco-savings-list", SelectableList)
     await _select_eco_row(pilot, app, "savings", len(rows._rows) - 1)
     await pilot.press("e")

@@ -852,6 +852,11 @@ async def test_switching_back_to_the_attributes_tab_focuses_its_first_section():
 
         tabbed = view.query_one(TabbedContent)
         tabbed.active = "tab-cov-diary"  # a flat tab: dispatches on its own id
+        # Its first showing builds it: wait for that, or the TabActivated
+        # still on its way can switch the tabs back after the next line.
+        diary = view.query_one("#tab-cov-diary", TabPane)
+        await wait_until(pilot, lambda: len(diary.children) > 0)
+        await pilot.pause()
         await wait_until(pilot, lambda: app.screen._active_section() == "tab-cov-diary")
         assert app.screen._active_section() == "tab-cov-diary"
 

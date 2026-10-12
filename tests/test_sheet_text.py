@@ -1,8 +1,8 @@
 """Characterization snapshot of what every sheet shows.
 
 For each tree node of the one-of-everything saga (support.everything_saga),
-show every tab of its detail pane at two terminal sizes and record the
-pane's rendered text. The result is compared with
+show every tab of its detail pane at two terminal sizes, check its details
+panel, and record the pane's rendered text. The result is compared with
 tests/golden/sheet_text/<node>-<W>x<H>.txt, so a refactor of the sheet
 views (compose, refresh, CSS, shared widgets) that changes what is on
 screen fails here. Each sheet is then refreshed section by section and
@@ -38,10 +38,6 @@ GOLDEN_DIR = Path(__file__).parent / "golden" / "sheet_text"
 
 SIZES = [(140, 70), (120, 45)]
 
-#: The sizes the details panels are checked at: the user's, and the smallest
-#: supported.
-PANEL_SIZES = [(140, 60), (120, 45)]
-
 #: The nodes that show a sheet view (the others show a list or a summary).
 SHEETS = {"covenant", "character", "laboratory", "familiar"}
 
@@ -66,12 +62,36 @@ def _pane_text(app, workspace) -> list[str]:
 _UNDERLINE = str.maketrans({"╸": "━", "╺": "━"})
 
 
-async def _all_tabs(pilot, app, workspace) -> list[str]:
-    """Every tab's text, each under a "===== <tab id>" line."""
+def _check_details_panel(app, pane, tab: TabPane | None, where: str) -> None:
+    """One details panel per tab (or list), at the bottom of its tab below
+    the part that scrolls. It fits its text, so with nothing chosen (focus
+    is kept out of the sheet) it is the minimum, one line of hint plus its
+    padding."""
+    panels = list((tab or pane).query(DetailsPanel))
+    assert len(panels) <= 1, where
+    # A list outside a sheet (books, spells) takes focus and chooses a row;
+    # a sheet's sections don't (see _open_node).
+    chosen = app.focused is not None and pane in app.focused.ancestors
+    for panel in panels:
+        if chosen:
+            height = panel.region.height
+            assert DETAILS_PANEL_MIN_HEIGHT <= height, where
+            assert height <= DETAILS_PANEL_MAX_HEIGHT, where
+        else:
+            assert panel.region.height == DETAILS_PANEL_MIN_HEIGHT, where
+        assert panel.region.bottom == panel.parent.region.bottom, where
+        assert panel is panel.parent.children[-1], where
+
+
+async def _all_tabs(pilot, app, workspace, check_panels: bool = False) -> list[str]:
+    """Every tab's text, each under a "===== <tab id>" line; with
+    `check_panels`, each tab's details panel is checked on the way."""
     pane = workspace._detail_pane()
     tabbed = next(iter(pane.query(TabbedContent)), None)
     if tabbed is None:
         await _settle(pilot)
+        if check_panels:
+            _check_details_panel(app, pane, None, "(no tabs)")
         return ["===== (no tabs)", *_pane_text(app, workspace)]
     lines: list[str] = []
     for tab in tabbed.query(TabPane):
@@ -79,6 +99,8 @@ async def _all_tabs(pilot, app, workspace) -> list[str]:
         tabbed.active = tab.id
         await wait_until(pilot, lambda tab=tab: tabbed.active == tab.id)
         await _settle(pilot)
+        if check_panels:
+            _check_details_panel(app, pane, tab, tab.id)
         lines += [f"===== {tab.id}", *_pane_text(app, workspace)]
     return lines
 
@@ -127,13 +149,14 @@ async def _snapshot(
 ) -> tuple[str, str | None]:
     """The node's text as first shown, and (for a sheet) after `change`
     (if any) is made to the open saga and every section and tab id is
-    refreshed. The saga shown is `saga`, by default everything_saga()."""
+    refreshed. The saga shown is `saga`, by default everything_saga(), whose
+    details panels are checked as it is first shown."""
     storage.save_saga(saga if saga is not None else everything_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=size) as pilot:
         workspace = await _open_node(pilot, app, node)
         view = workspace._current_sheet_view()
-        shown = "\n".join(await _all_tabs(pilot, app, workspace)) + "\n"
+        shown = "\n".join(await _all_tabs(pilot, app, workspace, saga is None)) + "\n"
         if view is None:
             return shown, None
         if change is not None:
@@ -159,43 +182,6 @@ async def test_sheet_text(node, size):
     assert shown == golden.read_text(encoding="utf-8")
     if refreshed is not None:
         assert refreshed == shown
-
-
-@pytest.mark.parametrize(
-    ("node", "size"), [(node, size) for node in NODES for size in PANEL_SIZES]
-)
-async def test_every_details_panel_is_one_panel_docked_at_the_bottom(node, size):
-    # One details panel per tab (or list), at the bottom of its
-    # tab below the part that scrolls. It fits its text, so
-    # with nothing chosen (focus is kept out of the sheet) it is the
-    # minimum, one line of hint plus its padding.
-    storage.save_saga(everything_saga())
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=size) as pilot:
-        workspace = await _open_node(pilot, app, node)
-        pane = workspace._detail_pane()
-        tabbed = next(iter(pane.query(TabbedContent)), None)
-        tabs = list(tabbed.query(TabPane)) if tabbed is not None else [None]
-        for tab in tabs:
-            if tab is not None:
-                tabbed.active = tab.id
-                await wait_until(pilot, lambda tab=tab: tabbed.active == tab.id)
-                await _settle(pilot)
-            where = tab.id if tab is not None else node
-            panels = list((tab or pane).query(DetailsPanel))
-            assert len(panels) <= 1, where
-            # A list outside a sheet (books, spells) takes focus and chooses
-            # a row; a sheet's sections don't (see _open_node).
-            chosen = app.focused is not None and pane in app.focused.ancestors
-            for panel in panels:
-                if chosen:
-                    height = panel.region.height
-                    assert DETAILS_PANEL_MIN_HEIGHT <= height, where
-                    assert height <= DETAILS_PANEL_MAX_HEIGHT, where
-                else:
-                    assert panel.region.height == DETAILS_PANEL_MIN_HEIGHT, where
-                assert panel.region.bottom == panel.parent.region.bottom, where
-                assert panel is panel.parent.children[-1], where
 
 
 _RECORD_LISTS = ("covenants", "characters", "laboratories", "familiars")
@@ -237,14 +223,14 @@ def _fill(saga: Saga) -> None:
                 setattr(record, f.name, getattr(source, f.name))
 
 
-@pytest.mark.parametrize(
-    ("node", "size"), [(node, size) for node in sorted(SHEETS) for size in SIZES]
-)
-async def test_refresh_shows_changed_data(node, size):
+@pytest.mark.parametrize("node", sorted(SHEETS))
+async def test_refresh_shows_changed_data(node):
     """A sheet opened on nearly empty records, then refreshed section by
     section after the records get their full data, shows exactly what a
     sheet composed on the full data shows -- so every widget that shows
-    record data is refreshed by some section."""
+    record data is refreshed by some section. Which widgets refresh doesn't
+    depend on the terminal size, so one size does."""
+    size = SIZES[0]
     golden = GOLDEN_DIR / f"{node}-{size[0]}x{size[1]}.txt"
     _, refreshed = await _snapshot(node, size, _sparse_saga(), _fill)
     assert refreshed is not None

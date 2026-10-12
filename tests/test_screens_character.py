@@ -22,7 +22,14 @@ from screen_helpers import (
     _wait_for_picker_ready,
     _wait_for_screen,
 )
-from support import close_worksheet, menu, screen_lines, strip_markup, wait_until
+from support import (
+    build_all_tabs,
+    close_worksheet,
+    menu,
+    screen_lines,
+    strip_markup,
+    wait_until,
+)
 from textual.widgets import (
     Button,
     Collapsible,
@@ -253,6 +260,7 @@ async def test_arts_and_spells_tabs_are_absent_for_non_magi():
     async with app.run_test() as pilot:
         await _select_covenant(pilot, app)
         await _select(pilot, app, ("character", "grog1"))
+        await build_all_tabs(pilot, app.screen._current_sheet_view())
         assert app.screen.selected_character.type == "grog"
 
         view = app.screen._character_sheet_view
@@ -496,6 +504,7 @@ async def test_virtue_and_flaw_titles_show_the_points_and_whether_they_balance()
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
         await _select_character(pilot, app)
+        await build_all_tabs(pilot, app.screen._current_sheet_view())
         view = app.screen._character_sheet_view
         virtues = view.query_one("#section-vf-virtues", Collapsible)
         flaws = view.query_one("#section-vf-flaws", Collapsible)
@@ -519,6 +528,7 @@ async def test_side_by_side_lists_and_text_blocks_have_one_gap_each():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
         await _select_character(pilot, app)
+        await build_all_tabs(pilot, app.screen._current_sheet_view())
         view = app.screen._character_sheet_view
         for row_id, gap in (
             ("pt-rep-row", LIST_COLUMN_GAP),

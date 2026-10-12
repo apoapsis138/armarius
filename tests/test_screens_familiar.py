@@ -20,7 +20,7 @@ from screen_helpers import (
     _wait_for_picker_ready,
     _wait_for_screen,
 )
-from support import menu, wait_until
+from support import build_all_tabs, menu, wait_until
 from textual.widgets import Button, Checkbox, Input, Select, Static, Tree
 
 from ars_magica_manager import familiars as fam
@@ -441,6 +441,7 @@ async def test_familiar_details_panels_are_shaded_like_every_other_sheet():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         await _select_familiar(pilot, app)
+        await build_all_tabs(pilot, app.screen._current_sheet_view())
         view = app.screen._familiar_sheet_view
         for panel_id in (
             "fam-vf-info",

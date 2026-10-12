@@ -41,6 +41,15 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.43.2 — 2026-10-12
+
+- The automatic checks run about a quarter faster (from about 32 to about
+  24 minutes when run one at a time), with the same coverage: screen tests
+  open only the sheet and tab they look at, the key-routing check notes
+  which form a key opens without drawing it, and the list and sheet-text
+  checks share one app session where they repeated it. Nothing in the app
+  itself changed.
+
 ## 2.43.1 — 2026-10-12
 
 - Behind the scenes, first step toward a desktop version: what each form

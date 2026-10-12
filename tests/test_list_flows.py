@@ -439,49 +439,30 @@ async def _save_name(pilot, app, name: str) -> None:
     assert await wait_until(pilot, lambda: app.screen is not dialog)
 
 
-@pytest.mark.parametrize("name", list(ITEM_LISTS))
-async def test_item_list_edit_needs_no_choosing_first(name):
-    case = ITEM_LISTS[name]
-    storage.save_saga(_saga())
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _open(pilot, app, case)
-        await pilot.press("down")
-        await _press(pilot, app, "e", FieldsDialog)
-        await _save_name(pilot, app, "Renamed")
-        assert await wait_until(pilot, lambda: _saved(case)[1].name == "Renamed")
-    assert len(_saved(case)) == 2
-
-
-@pytest.mark.parametrize("name", list(ITEM_LISTS))
-async def test_item_list_edit_uses_the_chosen_row(name):
-    case = ITEM_LISTS[name]
-    storage.save_saga(_saga())
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        _, view = await _open(pilot, app, case)
-        await _choose_row(pilot, view, case, 0)
-        await _press(pilot, app, "e", FieldsDialog)  # no picker
-        await _save_name(pilot, app, "Renamed")
-        assert await wait_until(pilot, lambda: _saved(case)[0].name == "Renamed")
-    assert _saved(case)[1].name == case.entries(_saga())[1].name
-
-
 def _confirm_message(app) -> str:
     return str(app.screen.query_one("#confirm-message").render())
 
 
 @pytest.mark.parametrize("name", list(ITEM_LISTS))
-async def test_item_list_remove_uses_the_chosen_row_after_asking(name):
-    """d on the chosen row asks "Delete <name>?" (brackets and all): No
-    keeps it, Yes deletes it, and afterwards the row that took its place is
-    chosen."""
+async def test_item_list_edit_and_delete_act_on_the_chosen_row(name):
+    """In one session: e and d need no choosing first (the list opens with
+    its first row chosen), act on the chosen row, and d asks "Delete
+    <name>?" (brackets and all) first -- No keeps it, Yes deletes it, and
+    afterwards the row that took its place is chosen."""
     case = ITEM_LISTS[name]
     storage.save_saga(_saga())
-    first, second = (entry.name for entry in case.entries(_saga()))
+    first, _ = (entry.name for entry in case.entries(_saga()))
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         workspace, view = await _open(pilot, app, case)
+        rows = view.query_one(f"#{case.list_id}", SelectableList)
+
+        await pilot.press("down")  # from the first row, chosen on opening
+        await _press(pilot, app, "e", FieldsDialog)
+        await _save_name(pilot, app, "Renamed")
+        assert await wait_until(pilot, lambda: _saved(case)[1].name == "Renamed")
+        assert _saved(case)[0].name == first
+
         await _choose_row(pilot, view, case, 0)
         await _press(pilot, app, "d", ConfirmScreen)  # no picker
         assert _confirm_message(app) == f"Delete {first}?"
@@ -489,30 +470,20 @@ async def test_item_list_remove_uses_the_chosen_row_after_asking(name):
         assert await wait_until(pilot, lambda: app.screen is workspace)
         assert len(_saved(case)) == 2
 
+        await _press(pilot, app, "e", FieldsDialog)  # no picker
+        await _save_name(pilot, app, "Chosen")
+        assert await wait_until(pilot, lambda: _saved(case)[0].name == "Chosen")
+        assert _saved(case)[1].name == "Renamed"
+
         await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete Chosen?"
         await pilot.press("y")
         assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
-        assert [entry.name for entry in _saved(case)] == [second]
-        rows = view.query_one(f"#{case.list_id}", SelectableList)
-        assert await wait_until(pilot, lambda: first not in str(rows._rows))
+        assert [entry.name for entry in _saved(case)] == ["Renamed"]
+        assert await wait_until(pilot, lambda: "Chosen" not in str(rows._rows))
 
         await _press(pilot, app, "d", ConfirmScreen)
-        assert _confirm_message(app) == f"Delete {second}?"
-
-
-@pytest.mark.parametrize("name", list(ITEM_LISTS))
-async def test_item_list_delete_needs_no_choosing_first(name):
-    case = ITEM_LISTS[name]
-    storage.save_saga(_saga())
-    first, _ = (entry.name for entry in case.entries(_saga()))
-    app = ArsMagicaManagerApp()
-    async with app.run_test(size=(140, 70)) as pilot:
-        await _open(pilot, app, case)
-        await pilot.press("down")
-        await _press(pilot, app, "d", ConfirmScreen)
-        await pilot.press("y")
-        assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
-    assert [entry.name for entry in _saved(case)] == [first]
+        assert _confirm_message(app) == "Delete Renamed?"
 
 
 # -- Saga Content's own lists --

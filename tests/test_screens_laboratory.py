@@ -15,7 +15,7 @@ from screen_helpers import (
     _select_character,
     _select_laboratory,
 )
-from support import strip_markup, wait_until
+from support import build_all_tabs, strip_markup, wait_until
 from textual.widgets import (
     Button,
     Collapsible,
@@ -119,6 +119,7 @@ async def test_every_character_sheet_section_starts_expanded():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_character(pilot, app)
+        await build_all_tabs(pilot, app.screen._current_sheet_view())
         view = app.screen._character_sheet_view
         sections = list(view.query(Collapsible))
         assert len(sections) >= 10
@@ -471,6 +472,7 @@ async def test_add_a_feature_with_a_new_feature_virtue_then_remove_it():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_laboratory(pilot, app)
+        await build_all_tabs(pilot, app.screen._current_sheet_view())
         view = app.screen._laboratory_sheet_view
         await _open_lab_section(pilot, app, "section-lab-features")
 
@@ -604,6 +606,7 @@ async def test_deleting_a_feature_virtue_or_focus_flaw_takes_its_feature_or_focu
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_laboratory(pilot, app)
+        await build_all_tabs(pilot, app.screen._current_sheet_view())
         view = app.screen._laboratory_sheet_view
         await _open_lab_section(pilot, app, "section-lab-vf-flaws")
 
@@ -643,6 +646,7 @@ async def test_a_new_feature_virtue_is_given_to_a_feature_waiting_for_one():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await _select_laboratory(pilot, app)
+        await build_all_tabs(pilot, app.screen._current_sheet_view())
         view = app.screen._laboratory_sheet_view
         await _open_lab_section(pilot, app, "section-lab-vf-virtues")
         await pilot.press("a")
