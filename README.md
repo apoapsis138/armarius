@@ -136,6 +136,11 @@ app starts.
   `settings.py` — app settings (the chosen theme).
 - `ars_magica_manager/markup.py` — escaping and `**bold**`/`*italic*` for
   user-written text.
+- `ars_magica_manager/artwork.py` — the registry of the desktop version's
+  artwork in `assets/`: the Arts and House symbols (traced from Atlas's
+  released images by `tools/trace_symbols.py`), the Phosphor icons
+  (`tools/fetch_icons.py`), the app icon and the fonts. Credits are in
+  NOTICE.md.
 - `data/spell_catalog.json` — the published Hermetic spells, built by
   `tools/build_spell_catalog.py` from the Definitive Edition's spell chapter
   and Atlas Games' Grand Grimoire of Hermetic Spells (two PDFs kept in the

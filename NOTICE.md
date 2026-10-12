@@ -46,6 +46,32 @@ structured data (names, costs, prerequisites, game effects) for use in the
 program; some entries are summarised rather than quoted, and examples and
 sidebars are left out.
 
+### Artwork, icons and fonts
+
+**The Technique, Form and House symbols** in
+`ars_magica_manager/assets/symbols/` are adapted from the released images
+on Atlas Games's [Open Ars Magica](https://atlas-games.com/arsmagica/openars)
+page, and **the app icon** in `ars_magica_manager/assets/app/` from its
+Order of Hermes sigil. Based on the material for Ars Magica, ©1993–2024,
+licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons
+Attribution-ShareAlike 4.0 International license 4.0 ("CC-BY-SA 4.0").
+These adaptations are available under CC BY-SA 4.0 too.
+
+**Changes made:** the symbols were trimmed, centred on a square and traced
+from the original black-and-white bitmaps to vector outlines (SVG), drawn
+in a single colour that the app tints to its theme. House Guernicus has no
+released symbol and shows the Quaesitor symbol. The sigil was scaled down
+and made into an icon file.
+
+**The icons** in `ars_magica_manager/assets/icons/` are
+[Phosphor Icons](https://phosphoricons.com) (Light weight), © 2023
+Phosphor Icons, under the MIT licence (`assets/icons/LICENSE.txt`).
+
+**The fonts** in `ars_magica_manager/assets/fonts/` are under the SIL Open
+Font License, version 1.1, with each font's licence beside it: EB Garamond,
+© 2017 The EB Garamond Project Authors; Uncial Antiqua, © 2011 Brian J.
+Bonislawsky DBA Astigmatic (AOETI), Reserved Font Name "Uncial Antiqua".
+
 ## Trademarks
 
 Ars Magica Open License Logo ©2024 Trident, Inc. The Ars Magica Open

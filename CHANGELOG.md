@@ -41,6 +41,16 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.43.5 — 2026-10-12
+
+- Behind the scenes, preparing for the desktop version: the fifteen Arts
+  and the Houses now have their symbols, traced from the artwork Atlas
+  Games has released under its open licence (Guernicus shows the
+  Quaesitor's), along with a set of everyday icons, the Order of Hermes
+  sigil as the app icon, and the EB Garamond and Uncial Antiqua fonts.
+  Help's About page credits them all. The terminal version doesn't show
+  them, so nothing in the app itself changed.
+
 ## 2.43.4 — 2026-10-12
 
 - Behind the scenes, preparing for the desktop version: the terminal
