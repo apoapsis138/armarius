@@ -41,6 +41,13 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.43.3 — 2026-10-12
+
+- Behind the scenes, preparing for the desktop version: an automatic check
+  now makes sure the shared rules, saga and form code never depends on the
+  terminal screens, so a second front-end can use it unchanged. Nothing in
+  the app itself changed.
+
 ## 2.43.2 — 2026-10-12
 
 - The automatic checks run about a quarter faster (from about 32 to about

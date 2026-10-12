@@ -57,7 +57,9 @@ realm lore) are deferred until there's a reason to pull them in.
   `sections.py` (the section ids both refer to). `screens/` is the Textual
   front-end: it draws those forms and binds those actions to keys. A
   desktop GUI (FEAT-16) is planned as a second front-end on the same core
-  (Ports and Adapters).
+  (Ports and Adapters). `tests/test_core_boundary.py` enforces the line:
+  outside `screens/`, `app.py`, `themes.py` and `hosting.py`, no module
+  may import Textual, Rich, PySide6 or those front-end modules.
 - **Plain JSON files** for persistence. One file per saga (or a small set of
   files per saga), human-readable and git-diffable. Relationships between
   entities are stored as IDs and resolved in code — no ORM/SQL.
