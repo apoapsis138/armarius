@@ -10,10 +10,10 @@ from support import wait_until
 from textual.widgets import Button, Tree
 
 from ars_magica_manager import creation, storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Character, Covenant, Laboratory, Saga
 from ars_magica_manager.rules import creation as rules
-from ars_magica_manager.screens import ConfirmScreen, WorkspaceScreen
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import ConfirmScreen, WorkspaceScreen
 
 
 def _saga() -> Saga:

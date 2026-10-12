@@ -5,7 +5,7 @@ isn't built doesn't stop the rest."""
 from textual.css.query import NoMatches
 
 from ars_magica_manager.models import Saga
-from ars_magica_manager.screens.sheets import SheetView
+from ars_magica_manager.tui.screens.sheets import SheetView
 
 
 def test_refreshers_run_once_in_order_and_survive_an_unbuilt_tab():

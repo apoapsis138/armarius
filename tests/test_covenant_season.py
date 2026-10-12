@@ -107,8 +107,8 @@ async def test_advancing_asks_whether_a_lapsed_resource_was_secured():
     from textual.widgets import Button
 
     from ars_magica_manager import storage
-    from ars_magica_manager.app import ArsMagicaManagerApp
-    from ars_magica_manager.screens.prompts import ConfirmScreen
+    from ars_magica_manager.tui.app import ArsMagicaManagerApp
+    from ars_magica_manager.tui.screens.prompts import ConfirmScreen
 
     saga = everything_saga()
     covenant = saga.covenants[0]

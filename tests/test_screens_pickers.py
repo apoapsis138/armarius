@@ -18,9 +18,9 @@ from support import picker_labels, wait_until
 from textual.widgets import Button, Input, Label, Select, Static
 
 from ars_magica_manager import catalog, storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Character, Saga, VirtueFlawInstance
-from ars_magica_manager.screens import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import (
     AbilityPickerScreen,
     CovenantBoonHookPickerScreen,
     FieldsDialog,

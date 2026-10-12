@@ -9,7 +9,6 @@ from test_list_flows import ListCase, _open
 
 from ars_magica_manager import possessions as pos
 from ars_magica_manager import storage, vis
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     Character,
     Covenant,
@@ -17,7 +16,8 @@ from ars_magica_manager.models import (
     Possession,
     Saga,
 )
-from ars_magica_manager.screens import FieldsDialog
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import FieldsDialog
 
 
 def _saga() -> Saga:

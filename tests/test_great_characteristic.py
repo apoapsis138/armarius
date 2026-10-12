@@ -12,13 +12,13 @@ from support import wait_until
 from textual.widgets import Select, Static
 
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Character, Saga, VirtueFlawInstance
 from ars_magica_manager.rules import creation_characteristics as cch
-from ars_magica_manager.screens.fields import FieldsDialog
-from ars_magica_manager.screens.pickers import VirtueFlawPickerScreen
-from ars_magica_manager.screens.prompts import ConfirmScreen
-from ars_magica_manager.screens.workspace import WorkspaceScreen
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens.fields import FieldsDialog
+from ars_magica_manager.tui.screens.pickers import VirtueFlawPickerScreen
+from ars_magica_manager.tui.screens.prompts import ConfirmScreen
+from ars_magica_manager.tui.screens.workspace import WorkspaceScreen
 
 
 def _great(key: str = "intelligence") -> VirtueFlawInstance:

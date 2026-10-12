@@ -9,8 +9,8 @@ import pytest
 
 from ars_magica_manager import actions
 from ars_magica_manager.models import Saga
-from ars_magica_manager.screens.workspace import base
-from ars_magica_manager.screens.workspace.screen import WorkspaceScreen
+from ars_magica_manager.tui.screens.workspace import base
+from ars_magica_manager.tui.screens.workspace.screen import WorkspaceScreen
 
 
 def _handler_name(item: actions.MenuItem) -> str:

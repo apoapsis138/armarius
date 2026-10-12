@@ -209,7 +209,7 @@ def test_a_virtue_s_ability_or_characteristic_is_chosen_from_a_list():
     # The valid values, leaving out one already taken as often as
     # the book allows; the picked value reaches the totals.
     from ars_magica_manager import catalog
-    from ars_magica_manager.screens.prompts import param_choices
+    from ars_magica_manager.tui.screens.prompts import param_choices
 
     by_id = catalog.load_virtue_flaw_catalog_by_id()
     puissant = by_id["vf_puissant_ability"]

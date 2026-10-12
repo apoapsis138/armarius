@@ -10,11 +10,11 @@ from textual.widgets import Button, Input, ListView, Select, Static, Tree
 
 from ars_magica_manager import players as pl
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Book, Character, Player, Saga
-from ars_magica_manager.screens import SagaPickerScreen, WorkspaceScreen
-from ars_magica_manager.screens.fields import FieldsDialog
-from ars_magica_manager.screens.workspace.base import NodeKind
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import SagaPickerScreen, WorkspaceScreen
+from ars_magica_manager.tui.screens.fields import FieldsDialog
+from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
 
 def _saga_with(*players: tuple[str, str, str]) -> Saga:

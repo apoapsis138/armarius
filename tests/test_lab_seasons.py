@@ -6,7 +6,6 @@ from support import strip_markup, wait_until
 from textual.widgets import Button, Input, Select, Static, Tree
 
 from ars_magica_manager import seasons, storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     Ability,
     ArtScore,
@@ -25,7 +24,8 @@ from ars_magica_manager.models import (
 from ars_magica_manager.rules import activities as rules
 from ars_magica_manager.rules import lab_seasons
 from ars_magica_manager.rules.xp import ability_xp, art_xp
-from ars_magica_manager.screens.invent_spell import OTHER, InventSpellScreen
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens.invent_spell import OTHER, InventSpellScreen
 
 
 def _saga() -> Saga:

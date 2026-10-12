@@ -133,8 +133,8 @@ async def _until(pilot, condition, timeout: float = 30.0) -> None:
 async def ui_timings(rows: list[tuple[str, float]]) -> None:  # noqa: PLR0915
     from textual.widgets import TabbedContent, TabPane, Tree
 
-    from ars_magica_manager.app import ArsMagicaManagerApp
-    from ars_magica_manager.screens import SagaPickerScreen, WorkspaceScreen
+    from ars_magica_manager.tui.app import ArsMagicaManagerApp
+    from ars_magica_manager.tui.screens import SagaPickerScreen, WorkspaceScreen
 
     app = ArsMagicaManagerApp()
     start = time.perf_counter()

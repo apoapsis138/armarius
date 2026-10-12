@@ -11,7 +11,6 @@ from support import build_all_tabs, everything_saga, strip_markup, wait_until
 from textual.widgets import Button, Collapsible, Select, Static, TabbedContent, Tree
 
 from ars_magica_manager import seasons, storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     Ability,
     ArtScore,
@@ -32,8 +31,9 @@ from ars_magica_manager.rules import experiment
 from ars_magica_manager.rules import laboratory_seasons as ls
 from ars_magica_manager.rules import supplement_seasons as sup
 from ars_magica_manager.rules.xp import ability_xp
-from ars_magica_manager.screens import ConfirmScreen, FieldsDialog, WorkspaceScreen
-from ars_magica_manager.screens.widgets import section_stop
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import ConfirmScreen, FieldsDialog, WorkspaceScreen
+from ars_magica_manager.tui.screens.widgets import section_stop
 
 
 def _magus() -> Character:

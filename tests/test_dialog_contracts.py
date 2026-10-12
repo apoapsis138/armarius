@@ -46,7 +46,7 @@ from ars_magica_manager.models import (
     Saga,
     VirtueFlawInstance,
 )
-from ars_magica_manager.screens import SelectableList
+from ars_magica_manager.tui.screens import SelectableList
 
 SAGA_ID = contract_saga().id
 

@@ -34,7 +34,7 @@ from ars_magica_manager.models import (
     Spell,
     VirtueFlawInstance,
 )
-from ars_magica_manager.screens import (
+from ars_magica_manager.tui.screens import (
     ConfirmScreen,
     CsvFilePickerScreen,
     FieldsDialog,
@@ -42,7 +42,7 @@ from ars_magica_manager.screens import (
     SpellChooserScreen,
     WorkspaceScreen,
 )
-from ars_magica_manager.screens.widgets import section_stop
+from ars_magica_manager.tui.screens.widgets import section_stop
 
 
 def _is_form(screen, title: str) -> bool:

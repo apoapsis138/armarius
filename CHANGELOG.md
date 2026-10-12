@@ -41,6 +41,14 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.43.4 — 2026-10-12
+
+- Behind the scenes, preparing for the desktop version: the terminal
+  screens now sit in a package of their own beside an empty one for the
+  desktop window, and the desktop's libraries are an optional install
+  (`uv sync --group gui`) so the terminal install stays as it is. The app
+  starts and works exactly as before.
+
 ## 2.43.3 — 2026-10-12
 
 - Behind the scenes, preparing for the desktop version: an automatic check

@@ -43,7 +43,6 @@ from textual.widgets import (
 )
 
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     Character,
     Covenant,
@@ -51,7 +50,8 @@ from ars_magica_manager.models import (
     ScoredTrait,
     VirtueFlawInstance,
 )
-from ars_magica_manager.screens import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import (
     AdvanceSeasonScreen,
     ConfirmScreen,
     CovenantBoonHookPickerScreen,
@@ -527,7 +527,7 @@ async def test_a_boon_hook_refresh_rebuilds_economics_once(monkeypatch):
     storage.save_saga(saga)
 
     # Counted on the class: the sheet registers its refreshers as it's made.
-    from ars_magica_manager.screens.sheets import CovenantSheetView
+    from ars_magica_manager.tui.screens.sheets import CovenantSheetView
 
     rebuilds = []
     original = CovenantSheetView._rebuild_economics

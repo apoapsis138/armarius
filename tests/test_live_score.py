@@ -11,8 +11,8 @@ from ars_magica_manager.models import VirtueFlawInstance
 from ars_magica_manager.rules import creation_access
 from ars_magica_manager.rules import xp as xp_rules
 from ars_magica_manager.rules.rounding import round_up
-from ars_magica_manager.screens.forms import EditArtsScreen
-from ars_magica_manager.screens.prompts import _ability_dialog
+from ars_magica_manager.tui.screens.forms import EditArtsScreen
+from ars_magica_manager.tui.screens.prompts import _ability_dialog
 
 
 @pytest.mark.parametrize(

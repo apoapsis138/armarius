@@ -24,7 +24,7 @@ from textual_serve.server import Server
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))  # run as a script: the package is beside tools/
-from ars_magica_manager import hosting
+from ars_magica_manager.tui import hosting
 
 MAIN = REPO / "main.py"
 

@@ -18,9 +18,9 @@ from support import close_worksheet, menu
 from textual.widgets import Button, Collapsible, Input, ListView, Select, Static, Tree
 
 from ars_magica_manager import settings, storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Saga
-from ars_magica_manager.screens import SagaPickerScreen, ThemeBar, WorkspaceScreen
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import SagaPickerScreen, ThemeBar, WorkspaceScreen
 
 
 async def test_picker_shows_placeholder_with_no_sagas():

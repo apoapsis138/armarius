@@ -7,7 +7,6 @@ from textual.widgets import Tree
 
 from ars_magica_manager import deletion, storage
 from ars_magica_manager import familiars as fam
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     Book,
     Character,
@@ -22,7 +21,8 @@ from ars_magica_manager.models import (
     SeasonPlan,
     Spell,
 )
-from ars_magica_manager.screens import ConfirmScreen, WorkspaceScreen
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import ConfirmScreen, WorkspaceScreen
 
 
 def _saga() -> Saga:

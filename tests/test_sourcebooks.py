@@ -6,10 +6,10 @@ from support import picker_rows, wait_until
 from textual.widgets import Button, Collapsible, SelectionList, Tree
 
 from ars_magica_manager import catalog, sourcebooks, storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Saga
-from ars_magica_manager.screens import FieldsDialog, SelectableList, WorkspaceScreen
-from ars_magica_manager.screens.pickers import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import FieldsDialog, SelectableList, WorkspaceScreen
+from ars_magica_manager.tui.screens.pickers import (
     LabVirtueFlawPickerScreen,
     SourcebookPickerScreen,
 )

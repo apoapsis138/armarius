@@ -11,9 +11,10 @@ from pathlib import Path
 import asyncssh
 import pytest
 
-from ars_magica_manager import hosting, storage
 from ars_magica_manager import players as pl
+from ars_magica_manager import storage
 from ars_magica_manager.models import Saga
+from ars_magica_manager.tui import hosting
 
 MAIN = Path(__file__).resolve().parent.parent / "main.py"
 

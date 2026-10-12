@@ -15,17 +15,17 @@ from support import (
 from textual.widgets import Button, Input, Select, Static, TabbedContent, TabPane, Tree
 
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import CHARGED, LESSER, InstilledEffect, Saga
-from ars_magica_manager.screens import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import (
     ConfirmScreen,
     FieldsDialog,
     SelectableList,
     WorkspaceScreen,
 )
-from ars_magica_manager.screens.pickers import ShapeMaterialPickerScreen
-from ars_magica_manager.screens.prompts import ListFieldScreen
-from ars_magica_manager.screens.widgets import section_stop
+from ars_magica_manager.tui.screens.pickers import ShapeMaterialPickerScreen
+from ars_magica_manager.tui.screens.prompts import ListFieldScreen
+from ars_magica_manager.tui.screens.widgets import section_stop
 
 SECTIONS = {
     "laboratory": ("lab1", "section-lab-devices"),

@@ -15,9 +15,9 @@ from textual.app import App
 from textual.widgets import Button, Input, Static
 
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import VirtueFlawInstance
-from ars_magica_manager.screens import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import (
     CovenantBoonHookPickerScreen,
     FieldsDialog,
     SelectableList,

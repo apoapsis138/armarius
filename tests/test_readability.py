@@ -6,10 +6,10 @@ import pytest
 from textual.color import Color
 from textual.widgets import Input
 
-from ars_magica_manager import themes
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.form_spec import DialogField
-from ars_magica_manager.screens.fields import FieldsDialog
+from ars_magica_manager.tui import themes
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens.fields import FieldsDialog
 
 
 def _form() -> FieldsDialog:
@@ -192,7 +192,7 @@ async def test_a_focused_entity_name_stays_readable(theme):
     from textual.containers import Vertical
     from textual.widgets._collapsible import CollapsibleTitle
 
-    from ars_magica_manager.screens.widgets import FocusableSection
+    from ars_magica_manager.tui.screens.widgets import FocusableSection
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:

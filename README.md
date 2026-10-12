@@ -96,8 +96,13 @@ app starts.
 
 ## Layout
 
-- `main.py`, `ars_magica_manager/app.py` — the Textual app entry point.
-- `ars_magica_manager/screens/` — every screen and widget, one module per
+- `ars_magica_manager/tui/` — the terminal front-end: `app.py` (the
+  Textual app, started by `main.py`), `themes.py` (the Scriptorum
+  light/dark themes), `styles.py` (the app-wide CSS) and `hosting.py`
+  (serving it to players, started by `tools/serve.py`).
+- `ars_magica_manager/gui/` — the desktop front-end (PySide6), in
+  progress; its libraries come with `uv sync --group gui`.
+- `ars_magica_manager/tui/screens/` — every screen and widget, one module per
   layer, each importing only from those before it: `widgets` (bottom bar,
   selectable list, sections), `fields` (the modal-dialog base and the
   config-driven `FieldsDialog` form), `prompts` (confirmations and short
@@ -130,7 +135,7 @@ app starts.
   the user's data folder (`paths.py`, see above), never in the repo;
   `settings.py` — app settings (the chosen theme).
 - `ars_magica_manager/markup.py` — escaping and `**bold**`/`*italic*` for
-  user-written text; `themes.py` — the Scriptorum light/dark themes.
+  user-written text.
 - `data/spell_catalog.json` — the published Hermetic spells, built by
   `tools/build_spell_catalog.py` from the Definitive Edition's spell chapter
   and Atlas Games' Grand Grimoire of Hermetic Spells (two PDFs kept in the

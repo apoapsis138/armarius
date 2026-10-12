@@ -14,7 +14,7 @@ from textual.app import App
 from textual.widgets import Checkbox, Input, Select, Static, TextArea
 
 from ars_magica_manager import ROOT, storage
-from ars_magica_manager.screens import DialogField, FieldsDialog
+from ars_magica_manager.tui.screens import DialogField, FieldsDialog
 
 
 def _fields() -> list[DialogField]:
@@ -157,7 +157,7 @@ def test_pyright_flags_a_typed_dialog_without_build(tmp_path):
     probe = tmp_path / "probe.py"
     probe.write_text(
         "from ars_magica_manager.models import ScoredTrait\n"
-        "from ars_magica_manager.screens import FieldsDialog\n"
+        "from ars_magica_manager.tui.screens import FieldsDialog\n"
         "good: FieldsDialog[ScoredTrait] = FieldsDialog(\n"
         "    't', [], build=lambda v: ScoredTrait('a', 1)\n"
         ")\n"

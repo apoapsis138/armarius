@@ -7,14 +7,14 @@ from textual.widgets import Static, TabbedContent, Tree
 from ars_magica_manager import covenant_diary as cd
 from ars_magica_manager import inhabitants as inh
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     Covenant,
     CovenantDiaryEntry,
     Saga,
     VirtueFlawInstance,
 )
-from ars_magica_manager.screens import ConfirmScreen, FieldsDialog, WorkspaceScreen
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import ConfirmScreen, FieldsDialog, WorkspaceScreen
 
 HOOK_ID = "covbh_hook_minor_contested_resource"
 

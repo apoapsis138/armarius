@@ -25,10 +25,10 @@ from support import NODES, everything_saga, screen_lines, wait_until
 from textual.widgets import TabbedContent, TabPane, Tree
 
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Saga
-from ars_magica_manager.screens import WorkspaceScreen
-from ars_magica_manager.screens.widgets import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import WorkspaceScreen
+from ars_magica_manager.tui.screens.widgets import (
     DETAILS_PANEL_MAX_HEIGHT,
     DETAILS_PANEL_MIN_HEIGHT,
     DetailsPanel,

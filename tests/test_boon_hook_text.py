@@ -12,7 +12,7 @@ from ars_magica_manager.models import (
     Covenant,
     VirtueFlawInstance,
 )
-from ars_magica_manager.screens.widgets import (
+from ars_magica_manager.tui.screens.widgets import (
     boon_hook_info_text,
     boon_hook_rows,
     boon_hook_title,

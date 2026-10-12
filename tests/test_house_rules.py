@@ -10,7 +10,6 @@ from textual.widgets import Collapsible, Select, Static, TabbedContent, Tree
 
 from ars_magica_manager import catalog, storage
 from ars_magica_manager import house_rules as hr
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     Character,
     Covenant,
@@ -18,13 +17,14 @@ from ars_magica_manager.models import (
     Saga,
     VirtueFlawInstance,
 )
-from ars_magica_manager.screens import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import (
     ConfirmScreen,
     FieldsDialog,
     SelectableList,
     WorkspaceScreen,
 )
-from ars_magica_manager.screens.workspace.base import NodeKind
+from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
 
 def _saga() -> Saga:

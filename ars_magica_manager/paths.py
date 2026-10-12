@@ -48,7 +48,7 @@ LOCATION_FILE = (
 SAGAS = "sagas"
 EXPORTS = "exports"
 SETTINGS = "app_settings.json"
-#: The hosted app's SSH host key (hosting.py).
+#: The hosted app's SSH host key (tui/hosting.py).
 HOST_KEY = "ssh_host_key"
 
 

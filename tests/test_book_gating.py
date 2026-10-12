@@ -6,13 +6,13 @@ import re
 from ars_magica_manager import book_kinds, sourcebooks
 from ars_magica_manager.models import Book, Character, Codex, Saga, SeasonPlan
 from ars_magica_manager.rules import activities, options
-from ars_magica_manager.screens.forms import (
+from ars_magica_manager.tui.screens.forms import (
     _book_fields,
     _saga_fields,
     saga_rule_options,
 )
-from ars_magica_manager.screens.forms.creation import RULE_OPTION_PREFIX
-from ars_magica_manager.screens.forms.season_plans import _study_fields
+from ars_magica_manager.tui.screens.forms.creation import RULE_OPTION_PREFIX
+from ars_magica_manager.tui.screens.forms.season_plans import _study_fields
 
 
 def _words(text: str) -> str:

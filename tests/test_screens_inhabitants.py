@@ -19,10 +19,10 @@ from textual.widgets import Button, Collapsible, Input, Label, ListView, Select,
 
 from ars_magica_manager import inhabitants as inh
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Inhabitant, VirtueFlawInstance
 from ars_magica_manager.rules.xp import ability_xp
-from ars_magica_manager.screens import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import (
     ConfirmScreen,
     FieldsDialog,
     RemovalPickerScreen,

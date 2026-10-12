@@ -10,9 +10,9 @@ from support import screen_lines, wait_until
 from textual.widgets import OptionList
 
 from ars_magica_manager import DATA_DIR, ROOT, catalog
-from ars_magica_manager.app import ArsMagicaManagerApp
-from ars_magica_manager.screens.help import HelpScreen
-from ars_magica_manager.screens.saga_picker import SagaPickerScreen
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens.help import HelpScreen
+from ars_magica_manager.tui.screens.saga_picker import SagaPickerScreen
 
 #: The attribution statement Atlas Games asks for, word for word.
 ATLAS = (

@@ -9,12 +9,16 @@ from support import strip_markup, wait_until
 from textual.widgets import Button, OptionList, Select, Static, Tree
 
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Character, Covenant, Laboratory, Saga
 from ars_magica_manager.rules import creation as rules
-from ars_magica_manager.screens import ConfirmScreen, SelectableList, WorkspaceScreen
-from ars_magica_manager.screens import creation_worksheet as ws
-from ars_magica_manager.screens.creation_worksheet import CreationWorksheetScreen
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import (
+    ConfirmScreen,
+    SelectableList,
+    WorkspaceScreen,
+)
+from ars_magica_manager.tui.screens import creation_worksheet as ws
+from ars_magica_manager.tui.screens.creation_worksheet import CreationWorksheetScreen
 
 
 def _saga(character_type: str = "magus") -> Saga:
@@ -243,7 +247,7 @@ async def test_concept_adds_a_magus_virtues_and_opens_the_sheets_dialogs():
 
 
 async def test_virtues_and_flaws_step_opens_the_picker_on_each_side():
-    from ars_magica_manager.screens.pickers import VirtueFlawPickerScreen
+    from ars_magica_manager.tui.screens.pickers import VirtueFlawPickerScreen
 
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
@@ -265,7 +269,7 @@ async def test_virtues_and_flaws_step_opens_the_picker_on_each_side():
 
 
 async def test_characteristics_step_fills_a_grog_from_a_grogs_array():
-    from ars_magica_manager.screens.pickers import RemovalPickerScreen
+    from ars_magica_manager.tui.screens.pickers import RemovalPickerScreen
 
     saga = _saga("grog")
     saga.books_in_play = ["Grogs"]
@@ -299,8 +303,8 @@ async def test_characteristics_step_fills_a_grog_from_a_grogs_array():
 async def test_childhood_step_sets_the_native_language_and_a_sample_childhood():
     from textual.widgets import Input
 
-    from ars_magica_manager.screens.fields import FieldsDialog
-    from ars_magica_manager.screens.pickers import RemovalPickerScreen
+    from ars_magica_manager.tui.screens.fields import FieldsDialog
+    from ars_magica_manager.tui.screens.pickers import RemovalPickerScreen
 
     storage.save_saga(_saga("companion"))
     app = ArsMagicaManagerApp()
@@ -360,7 +364,7 @@ async def _wait_for(pilot, app, cls):
 
 async def test_later_life_step_offers_virtue_xp_and_free_scores():
     from ars_magica_manager.models import VirtueFlawInstance
-    from ars_magica_manager.screens.fields import FieldsDialog
+    from ars_magica_manager.tui.screens.fields import FieldsDialog
 
     saga = _saga("companion")
     companion = saga.characters[0]
@@ -422,7 +426,7 @@ async def _choose_row(pilot, screen, text: str) -> None:
 
 
 async def test_later_life_takes_and_drops_a_training_package():
-    from ars_magica_manager.screens.pickers import RemovalPickerScreen
+    from ars_magica_manager.tui.screens.pickers import RemovalPickerScreen
 
     saga = _saga("grog")
     saga.characters[0].background.year_born = 1195
@@ -463,7 +467,7 @@ async def test_later_life_takes_and_drops_a_training_package():
 
 async def test_apprenticeship_step_learns_a_spell_with_its_lab_total():
     from ars_magica_manager import spells as spl
-    from ars_magica_manager.screens.pickers import SpellChooserScreen
+    from ars_magica_manager.tui.screens.pickers import SpellChooserScreen
 
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
@@ -514,7 +518,7 @@ async def test_xp_list_spends_changes_and_takes_back_in_pool_xp():
     from textual.widgets import Input
 
     from ars_magica_manager.models import VirtueFlawInstance
-    from ars_magica_manager.screens.fields import FieldsDialog
+    from ars_magica_manager.tui.screens.fields import FieldsDialog
 
     saga = _saga()
     saga.characters[0].virtues_flaws = [
@@ -572,7 +576,7 @@ async def test_xp_list_spends_changes_and_takes_back_in_pool_xp():
 async def test_spending_on_an_ability_sets_its_specialty():
     from textual.widgets import Input
 
-    from ars_magica_manager.screens.fields import FieldsDialog
+    from ars_magica_manager.tui.screens.fields import FieldsDialog
 
     storage.save_saga(_saga("companion"))
     app = ArsMagicaManagerApp()
@@ -683,7 +687,7 @@ async def test_gauntlet_step_rolls_pre_play_aging_after_asking():
 
 
 async def test_finishing_touches_reviews_every_step_and_adds_a_trait():
-    from ars_magica_manager.screens.fields import FieldsDialog
+    from ars_magica_manager.tui.screens.fields import FieldsDialog
 
     storage.save_saga(_saga("grog"))
     app = ArsMagicaManagerApp()
@@ -701,7 +705,7 @@ async def test_finishing_touches_reviews_every_step_and_adds_a_trait():
 
 
 async def test_concept_adds_the_house_virtue_asking_which_when_there_is_a_choice():
-    from ars_magica_manager.screens.pickers import RemovalPickerScreen
+    from ars_magica_manager.tui.screens.pickers import RemovalPickerScreen
 
     saga = _saga()
     saga.characters[0].hermetic.house = "house_flambeau"

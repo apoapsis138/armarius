@@ -392,8 +392,8 @@ async def test_the_lab_work_screen_offers_an_effects_lab_texts():
     from textual.widgets import Select, Tree
 
     from ars_magica_manager import storage
-    from ars_magica_manager.app import ArsMagicaManagerApp
-    from ars_magica_manager.screens.invent_spell import InventSpellScreen
+    from ars_magica_manager.tui.app import ArsMagicaManagerApp
+    from ars_magica_manager.tui.screens.invent_spell import InventSpellScreen
 
     saga = _saga()
     text = _text(saga, "wand", "bolt")

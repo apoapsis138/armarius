@@ -8,8 +8,8 @@ from textual.widgets import Button, Collapsible, Input, TabbedContent, Tree
 from textual.widgets._collapsible import CollapsibleTitle
 
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
-from ars_magica_manager.screens import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import (
     ConfirmScreen,
     FieldsDialog,
     SagaPickerScreen,
@@ -17,9 +17,9 @@ from ars_magica_manager.screens import (
     VirtueFlawPickerScreen,
     WorkspaceScreen,
 )
-from ars_magica_manager.screens.forms import ImportScreen
-from ars_magica_manager.screens.prompts import MenuScreen
-from ars_magica_manager.screens.widgets import (
+from ars_magica_manager.tui.screens.forms import ImportScreen
+from ars_magica_manager.tui.screens.prompts import MenuScreen
+from ars_magica_manager.tui.screens.widgets import (
     SheetSection,
     section_of,
 )

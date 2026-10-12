@@ -33,9 +33,9 @@ from textual.widgets import (
 )
 
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Book, Covenant, Saga
-from ars_magica_manager.screens import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import (
     ConfirmScreen,
     CsvFilePickerScreen,
     DuplicateBookScreen,
@@ -46,7 +46,7 @@ from ars_magica_manager.screens import (
     WorkspaceScreen,
     _CsvDirectoryTree,
 )
-from ars_magica_manager.screens.widgets import DetailsPanel, section_stop
+from ars_magica_manager.tui.screens.widgets import DetailsPanel, section_stop
 
 
 def _saga_with_books() -> Saga:

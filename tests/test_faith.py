@@ -4,9 +4,9 @@ from support import wait_until
 from textual.widgets import Input, Static
 
 from ars_magica_manager import faith, storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Character, Saga, VirtueFlawInstance
-from ars_magica_manager.screens import FieldsDialog, WorkspaceScreen
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import FieldsDialog, WorkspaceScreen
 
 
 def _believer(**background) -> Character:

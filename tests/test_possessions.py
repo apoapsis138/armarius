@@ -18,7 +18,7 @@ from ars_magica_manager.models import (
     Possession,
     Saga,
 )
-from ars_magica_manager.screens.forms import _possession_fields
+from ars_magica_manager.tui.screens.forms import _possession_fields
 
 
 def _saga() -> tuple[Saga, Covenant]:

@@ -22,7 +22,7 @@ from ars_magica_manager.rules import (
 )
 from ars_magica_manager.rules import creation_characteristics as cch
 from ars_magica_manager.rules.xp import ability_xp, art_xp
-from ars_magica_manager.screens.prompts import param_choices
+from ars_magica_manager.tui.screens.prompts import param_choices
 
 
 @pytest.mark.parametrize(

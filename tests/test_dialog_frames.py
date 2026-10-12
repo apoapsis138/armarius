@@ -5,9 +5,9 @@ dimmed screen."""
 import pytest
 from support import wait_until
 
-from ars_magica_manager.app import ArsMagicaManagerApp
-from ars_magica_manager.screens.forms.importing import DuplicateBookScreen
-from ars_magica_manager.screens.prompts import ConfirmScreen
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens.forms.importing import DuplicateBookScreen
+from ars_magica_manager.tui.screens.prompts import ConfirmScreen
 
 
 @pytest.mark.parametrize(

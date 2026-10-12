@@ -27,9 +27,9 @@ from textual.widgets import (
 
 from ars_magica_manager import catalog, storage
 from ars_magica_manager import spells as spl
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Spell
-from ars_magica_manager.screens import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import (
     ConfirmScreen,
     DuplicateBookScreen,
     FieldsDialog,

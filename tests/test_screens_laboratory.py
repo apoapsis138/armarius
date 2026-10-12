@@ -27,7 +27,6 @@ from textual.widgets import (
 )
 
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     LAB_CHARACTERISTICS,
     LAB_SPECIALIZATIONS,
@@ -42,7 +41,8 @@ from ars_magica_manager.models import (
     Saga,
     VirtueFlawInstance,
 )
-from ars_magica_manager.screens import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import (
     ConfirmScreen,
     FieldsDialog,
     LabVirtueFlawPickerScreen,

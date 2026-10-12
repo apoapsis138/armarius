@@ -7,9 +7,9 @@ from test_list_flows import ListCase, _open
 
 from ars_magica_manager import spells as spl
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Book, Character, Covenant, KnownSpell, Saga
-from ars_magica_manager.screens import ConfirmScreen
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import ConfirmScreen
 
 
 def _saga() -> tuple[Saga, Character]:

@@ -24,10 +24,10 @@ from support import NODES, build_all_tabs, everything_saga, wait_until
 from textual.widgets import Collapsible, TabbedContent, TabPane, Tree
 
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
-from ars_magica_manager.screens import ConfirmScreen, FieldsDialog, WorkspaceScreen
-from ars_magica_manager.screens.prompts import MenuScreen
-from ars_magica_manager.screens.widgets import first_stop, section_stop
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import ConfirmScreen, FieldsDialog, WorkspaceScreen
+from ars_magica_manager.tui.screens.prompts import MenuScreen
+from ars_magica_manager.tui.screens.widgets import first_stop, section_stop
 
 GOLDEN = Path(__file__).parent / "golden" / "dispatch_matrix.json"
 

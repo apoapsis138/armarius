@@ -5,7 +5,7 @@ import pytest
 from ars_magica_manager import spells
 from ars_magica_manager.models import Spell
 from ars_magica_manager.rules import spell_levels as sl
-from ars_magica_manager.screens.forms import _level_fill
+from ars_magica_manager.tui.screens.forms import _level_fill
 
 
 @pytest.mark.parametrize(

@@ -209,8 +209,10 @@ async def _open(pilot, app, node_data, attr):
     from support import wait_until
     from textual.widgets import Button, Tree
 
-    from ars_magica_manager.screens import WorkspaceScreen
-    from ars_magica_manager.screens.creation_worksheet import CreationWorksheetScreen
+    from ars_magica_manager.tui.screens import WorkspaceScreen
+    from ars_magica_manager.tui.screens.creation_worksheet import (
+        CreationWorksheetScreen,
+    )
 
     await pilot.press("enter")
     assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
@@ -241,7 +243,7 @@ def _rows(screen) -> list[str]:
     """The worksheet step list's rows as plain text."""
     from support import strip_markup
 
-    from ars_magica_manager.screens import SelectableList
+    from ars_magica_manager.tui.screens import SelectableList
 
     listing = screen.query_one("#ws-list", SelectableList)
     return [
@@ -253,7 +255,7 @@ def _rows(screen) -> list[str]:
 async def _choose(pilot, screen, text: str) -> None:
     from support import strip_markup, wait_until
 
-    from ars_magica_manager.screens import SelectableList
+    from ars_magica_manager.tui.screens import SelectableList
 
     assert await wait_until(pilot, lambda: any(text in r for r in _rows(screen)))
     listing = screen.query_one("#ws-list", SelectableList)
@@ -272,10 +274,10 @@ async def test_the_covenant_worksheet_lists_what_build_points_went_on():
     from textual.widgets import OptionList, Static
 
     from ars_magica_manager import storage
-    from ars_magica_manager.app import ArsMagicaManagerApp
-    from ars_magica_manager.screens.fields import FieldsDialog
-    from ars_magica_manager.screens.prompts import MenuScreen
-    from ars_magica_manager.screens.workspace.base import NodeKind
+    from ars_magica_manager.tui.app import ArsMagicaManagerApp
+    from ars_magica_manager.tui.screens.fields import FieldsDialog
+    from ars_magica_manager.tui.screens.prompts import MenuScreen
+    from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
     saga = _saga()
     saga.id = "test_saga"
@@ -339,9 +341,9 @@ async def test_the_covenant_worksheet_lists_and_deletes_each_lab_text():
     from textual.widgets import OptionList
 
     from ars_magica_manager import storage
-    from ars_magica_manager.app import ArsMagicaManagerApp
-    from ars_magica_manager.screens import ConfirmScreen
-    from ars_magica_manager.screens.workspace.base import NodeKind
+    from ars_magica_manager.tui.app import ArsMagicaManagerApp
+    from ars_magica_manager.tui.screens import ConfirmScreen
+    from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
     saga = _saga()
     saga.id = "test_saga"
@@ -392,9 +394,9 @@ async def test_the_covenant_worksheet_lists_boons_and_hooks():
     from textual.widgets import OptionList, Static
 
     from ars_magica_manager import storage
-    from ars_magica_manager.app import ArsMagicaManagerApp
-    from ars_magica_manager.screens import ConfirmScreen
-    from ars_magica_manager.screens.workspace.base import NodeKind
+    from ars_magica_manager.tui.app import ArsMagicaManagerApp
+    from ars_magica_manager.tui.screens import ConfirmScreen
+    from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
     saga = _saga()
     saga.id = "test_saga"
@@ -430,8 +432,8 @@ async def test_the_laboratory_worksheet_toggles_starting():
     from textual.widgets import Static
 
     from ars_magica_manager import storage
-    from ars_magica_manager.app import ArsMagicaManagerApp
-    from ars_magica_manager.screens.workspace.base import NodeKind
+    from ars_magica_manager.tui.app import ArsMagicaManagerApp
+    from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
     saga = _saga()
     saga.id = "test_saga"
@@ -576,8 +578,8 @@ async def test_the_laboratory_worksheet_lists_its_virtues_and_flaws():
     from textual.widgets import Static
 
     from ars_magica_manager import storage
-    from ars_magica_manager.app import ArsMagicaManagerApp
-    from ars_magica_manager.screens.workspace.base import NodeKind
+    from ars_magica_manager.tui.app import ArsMagicaManagerApp
+    from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
     saga = _saga()
     saga.id = "test_saga"
@@ -718,9 +720,9 @@ async def test_the_baseline_step_starts_the_income_by_the_rules():
     from support import wait_until
 
     from ars_magica_manager import storage
-    from ars_magica_manager.app import ArsMagicaManagerApp
-    from ars_magica_manager.screens.pickers import RemovalPickerScreen
-    from ars_magica_manager.screens.workspace.base import NodeKind
+    from ars_magica_manager.tui.app import ArsMagicaManagerApp
+    from ars_magica_manager.tui.screens.pickers import RemovalPickerScreen
+    from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
     saga = _saga()
     saga.id = "test_saga"
@@ -770,9 +772,9 @@ async def test_e_on_a_resource_hook_names_its_source():
     from textual.widgets import OptionList, Select
 
     from ars_magica_manager import storage
-    from ars_magica_manager.app import ArsMagicaManagerApp
-    from ars_magica_manager.screens.fields import FieldsDialog
-    from ars_magica_manager.screens.workspace.base import NodeKind
+    from ars_magica_manager.tui.app import ArsMagicaManagerApp
+    from ars_magica_manager.tui.screens.fields import FieldsDialog
+    from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
     saga = _saga()
     saga.id = "test_saga"
@@ -815,10 +817,10 @@ async def test_the_baseline_step_starts_from_a_base_covenant():
     from textual.widgets import OptionList, Static
 
     from ars_magica_manager import storage
-    from ars_magica_manager.app import ArsMagicaManagerApp
-    from ars_magica_manager.screens import ConfirmScreen
-    from ars_magica_manager.screens.pickers import RemovalPickerScreen
-    from ars_magica_manager.screens.workspace.base import NodeKind
+    from ars_magica_manager.tui.app import ArsMagicaManagerApp
+    from ars_magica_manager.tui.screens import ConfirmScreen
+    from ars_magica_manager.tui.screens.pickers import RemovalPickerScreen
+    from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
     saga = _saga()
     saga.id = "test_saga"
@@ -967,10 +969,10 @@ async def test_resources_buys_a_copy_of_one_of_the_sagas_books():
     from textual.widgets import OptionList, Static
 
     from ars_magica_manager import storage
-    from ars_magica_manager.app import ArsMagicaManagerApp
-    from ars_magica_manager.screens.pickers import SagaBookPickerScreen
-    from ars_magica_manager.screens.prompts import MenuScreen
-    from ars_magica_manager.screens.workspace.base import NodeKind
+    from ars_magica_manager.tui.app import ArsMagicaManagerApp
+    from ars_magica_manager.tui.screens.pickers import SagaBookPickerScreen
+    from ars_magica_manager.tui.screens.prompts import MenuScreen
+    from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
     saga = _saga()
     saga.id = "test_saga"

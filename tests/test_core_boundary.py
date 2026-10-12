@@ -1,11 +1,12 @@
 """The shared core never imports a UI library.
 
 The rules, models, seasons, storage, catalogs, form specs and actions are
-shared by every front-end; only the front-ends (the Textual screens, the
-app shell, its themes and the hosting that serves it) may import a UI
-library. A core module that imported one, or imported a front-end module,
-would tie the core to that UI and break the other front-end. Read from the
-source, so an import inside a function or under TYPE_CHECKING counts too."""
+shared by every front-end; only the front-ends, tui/ (Textual) and gui/
+(PySide6), may import a UI library. A core module that imported one, or
+imported a front-end module, would tie the core to that UI and break the
+other front-end; and neither front-end imports the other or the other's
+libraries. Read from the source, so an import inside a function or under
+TYPE_CHECKING counts too."""
 
 import ast
 from pathlib import Path
@@ -15,15 +16,13 @@ import pytest
 PACKAGE = "ars_magica_manager"
 ROOT = Path(__file__).resolve().parent.parent / PACKAGE
 
-#: The front-end: the Textual screens, and the top-level modules that run
-#: or serve them.
-FRONT_END_PACKAGES = frozenset({"screens"})
-FRONT_END_MODULES = frozenset({"app", "themes", "hosting"})
-
-#: UI libraries and the libraries only a UI front-end uses.
-UI_LIBRARIES = frozenset(
-    {"textual", "textual_serve", "rich", "asyncssh", "PySide6", "shiboken6"}
-)
+#: Each front-end package, with the UI libraries (and the libraries only
+#: that front-end uses) that it alone may import.
+FRONT_ENDS = {
+    "tui": frozenset({"textual", "textual_serve", "rich", "asyncssh"}),
+    "gui": frozenset({"PySide6", "shiboken6"}),
+}
+UI_LIBRARIES = frozenset().union(*FRONT_ENDS.values())
 
 
 def _module_name(path: Path, root: Path = ROOT) -> str:
@@ -31,16 +30,19 @@ def _module_name(path: Path, root: Path = ROOT) -> str:
     return ".".join(parts[:-1] if parts[-1] == "__init__" else parts)
 
 
-def _is_front_end(module: str) -> bool:
+def _front_end(module: str) -> str | None:
+    """The front-end package `module` belongs to, or None for the core."""
     parts = module.split(".")
-    if parts[0] != PACKAGE or len(parts) < 2:
-        return False
-    return parts[1] in FRONT_END_PACKAGES or parts[1] in FRONT_END_MODULES
+    if parts[0] != PACKAGE or len(parts) < 2 or parts[1] not in FRONT_ENDS:
+        return None
+    return parts[1]
 
 
-def _core_files() -> list[Path]:
+def _files(front_end: str | None) -> list[Path]:
     return sorted(
-        path for path in ROOT.rglob("*.py") if not _is_front_end(_module_name(path))
+        path
+        for path in ROOT.rglob("*.py")
+        if _front_end(_module_name(path)) == front_end
     )
 
 
@@ -69,19 +71,36 @@ def _imports(path: Path, root: Path = ROOT) -> list[str]:
     return found
 
 
-def _breaks_the_boundary(module: str) -> bool:
-    return module.split(".")[0] in UI_LIBRARIES or _is_front_end(module)
+def _breaks_the_boundary(module: str, front_end: str | None = None) -> bool:
+    """Whether code in `front_end` (None: the core) may not import `module`."""
+    allowed = FRONT_ENDS.get(front_end or "", frozenset())
+    library = module.split(".")[0]
+    if library in UI_LIBRARIES and library not in allowed:
+        return True
+    return _front_end(module) not in (None, front_end)
 
 
 def test_the_core_is_most_of_the_package():
     # A guard against the walk finding nothing (a moved package).
-    assert len(_core_files()) > 50
+    assert len(_files(None)) > 50
+    assert len(_files("tui")) > 30
 
 
-@pytest.mark.parametrize("path", _core_files(), ids=lambda path: _module_name(path))
+@pytest.mark.parametrize("path", _files(None), ids=lambda path: _module_name(path))
 def test_core_module_imports_no_ui(path):
     bad = sorted({m for m in _imports(path) if _breaks_the_boundary(m)})
     assert not bad, f"{_module_name(path)} imports {', '.join(bad)}"
+
+
+@pytest.mark.parametrize("front_end", sorted(FRONT_ENDS))
+def test_a_front_end_imports_only_the_core_and_its_own_libraries(front_end):
+    bad = sorted(
+        f"{_module_name(path)} imports {module}"
+        for path in _files(front_end)
+        for module in _imports(path)
+        if _breaks_the_boundary(module, front_end)
+    )
+    assert not bad, "; ".join(bad)
 
 
 def test_the_check_catches_a_ui_import(tmp_path):
@@ -91,8 +110,20 @@ def test_the_check_catches_a_ui_import(tmp_path):
     module.write_text(
         "from textual.widgets import Static\n"
         "def f():\n"
-        "    from ..screens import fields\n"
-        "    from .. import hosting\n"
+        "    from ..tui.screens import fields\n"
+        "    from ..tui import hosting\n"
     )
     bad = {m for m in _imports(module, root) if _breaks_the_boundary(m)}
-    assert {"textual.widgets", f"{PACKAGE}.screens", f"{PACKAGE}.hosting"} <= bad
+    assert {
+        "textual.widgets",
+        f"{PACKAGE}.tui.screens",
+        f"{PACKAGE}.tui.hosting",
+    } <= bad
+
+
+def test_the_check_catches_one_front_end_importing_the_other():
+    assert _breaks_the_boundary("PySide6.QtWidgets", "tui")
+    assert _breaks_the_boundary(f"{PACKAGE}.tui.screens", "gui")
+    assert _breaks_the_boundary("textual.app", "gui")
+    assert not _breaks_the_boundary("textual.app", "tui")
+    assert not _breaks_the_boundary(f"{PACKAGE}.form_spec", "gui")

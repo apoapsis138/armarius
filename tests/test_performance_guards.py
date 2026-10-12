@@ -11,10 +11,10 @@ from textual.widgets import TabbedContent, TabPane
 from textual.widgets._footer import FooterKey
 
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import DiaryEntry
-from ars_magica_manager.screens.sheets import LazyTabPane
-from ars_magica_manager.screens.widgets import SelectableList, SplitFooter
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens.sheets import LazyTabPane
+from ars_magica_manager.tui.screens.widgets import SelectableList, SplitFooter
 
 #: Footer rebuilds allowed per action (a tab switch, a focus move, an arrow
 #: key). A tab switch once rebuilt it 4-6 times.

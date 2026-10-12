@@ -29,9 +29,9 @@ from textual.widgets import (
 
 from ars_magica_manager import economics as eco
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import IncomeSource, Inhabitant, Saga
-from ars_magica_manager.screens import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import (
     AdvanceSeasonScreen,
     ConfirmScreen,
     FieldsDialog,
@@ -39,7 +39,7 @@ from ars_magica_manager.screens import (
     SelectableList,
     WorkspaceScreen,
 )
-from ars_magica_manager.screens.widgets import section_stop
+from ars_magica_manager.tui.screens.widgets import section_stop
 
 
 def _saga_for_economics() -> Saga:

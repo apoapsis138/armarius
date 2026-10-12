@@ -6,13 +6,13 @@ from support import wait_until
 from textual.widgets import Input, Static
 
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Character, Saga, VirtueFlawInstance
 from ars_magica_manager.rules import creation as rules
 from ars_magica_manager.rules import creation_character as cc
 from ars_magica_manager.rules import creation_characteristics as cch
-from ars_magica_manager.screens import FieldsDialog, WorkspaceScreen
-from ars_magica_manager.screens.forms import _characteristics_dialog
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import FieldsDialog, WorkspaceScreen
+from ars_magica_manager.tui.screens.forms import _characteristics_dialog
 
 
 def _saga() -> Saga:

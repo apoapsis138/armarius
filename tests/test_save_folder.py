@@ -6,10 +6,10 @@ from support import screen_lines, strip_markup, wait_until
 from textual.widgets import Button, Checkbox, Static
 
 from ars_magica_manager import paths, settings, storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Saga
-from ars_magica_manager.screens import SagaPickerScreen
-from ars_magica_manager.screens.fields import FieldsDialog
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import SagaPickerScreen
+from ars_magica_manager.tui.screens.fields import FieldsDialog
 
 
 def _user_data(folder):

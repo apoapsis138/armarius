@@ -27,9 +27,9 @@ from support import menu, picker_rows, strip_markup, wait_until
 from textual.widgets import Input, Select, Static
 
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Laboratory, VirtueFlawInstance
-from ars_magica_manager.screens import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import (
     AbilityPickerScreen,
     ConfirmScreen,
     FieldsDialog,
@@ -37,7 +37,7 @@ from ars_magica_manager.screens import (
     VirtueFlawPickerScreen,
     WorkspaceScreen,
 )
-from ars_magica_manager.screens.creation_worksheet import CreationWorksheetScreen
+from ars_magica_manager.tui.screens.creation_worksheet import CreationWorksheetScreen
 
 
 async def test_add_virtue_flaw_without_parameters_to_character():

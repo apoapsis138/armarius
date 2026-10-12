@@ -1,10 +1,10 @@
 """What an add/edit form asks for, independent of how it is drawn.
 
 A form is a list of DialogField specs. The `_*_fields` builders in
-screens/forms/ return them; a front-end draws each field and hands back
+tui/screens/forms/ return them; a front-end draws each field and hands back
 what the user typed, and the functions here turn that into the form's
 values: parsing numbers, checking required fields, and deciding which
-fields are shown. The Textual front-end's FieldsDialog (screens/fields.py)
+fields are shown. The Textual front-end's FieldsDialog (tui/screens/fields.py)
 draws them today; any other front-end draws the same specs."""
 
 from __future__ import annotations

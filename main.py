@@ -6,7 +6,7 @@ def main() -> None:
     # settings, which read it on import) is loaded: if it can't be used,
     # another is, and the app says why.
     problem = paths.settle_data_dir()
-    from ars_magica_manager.app import ArsMagicaManagerApp
+    from ars_magica_manager.tui.app import ArsMagicaManagerApp
 
     app = ArsMagicaManagerApp()
     # Saves made by older versions move from the repo's data/ folder to the

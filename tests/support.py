@@ -96,7 +96,7 @@ async def wait_until(pilot, condition, timeout: float = 5.0, interval: float = 0
 async def menu(pilot, app, key: str, label: str) -> None:
     """Press a menu key (`m` More or `n` New) and pick `label` -- or, when
     it is the only thing the menu has to offer there, it runs at once."""
-    from ars_magica_manager.screens.prompts import MenuScreen
+    from ars_magica_manager.tui.screens.prompts import MenuScreen
 
     await pilot.press(key)
     await pilot.pause()
@@ -109,8 +109,10 @@ async def menu(pilot, app, key: str, label: str) -> None:
 async def close_worksheet(pilot, app) -> None:
     """A new covenant, laboratory or character opens its Creation
     Worksheet: wait for it, then close it to get back to the workspace."""
-    from ars_magica_manager.screens import WorkspaceScreen
-    from ars_magica_manager.screens.creation_worksheet import CreationWorksheetScreen
+    from ars_magica_manager.tui.screens import WorkspaceScreen
+    from ars_magica_manager.tui.screens.creation_worksheet import (
+        CreationWorksheetScreen,
+    )
 
     assert await wait_until(
         pilot, lambda: isinstance(app.screen, CreationWorksheetScreen)

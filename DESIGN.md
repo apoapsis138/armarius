@@ -54,12 +54,15 @@ realm lore) are deferred until there's a reason to pull them in.
   storage never import a UI library; nor do `form_spec.py` (what a form
   asks for and how its entries are checked), `actions.py` (what can be done
   in each sheet section and the More / New menus, and where) and
-  `sections.py` (the section ids both refer to). `screens/` is the Textual
-  front-end: it draws those forms and binds those actions to keys. A
-  desktop GUI (FEAT-16) is planned as a second front-end on the same core
-  (Ports and Adapters). `tests/test_core_boundary.py` enforces the line:
-  outside `screens/`, `app.py`, `themes.py` and `hosting.py`, no module
-  may import Textual, Rich, PySide6 or those front-end modules.
+  `sections.py` (the section ids both refer to). The front-ends are the
+  two sub-packages around that core (Ports and Adapters): `tui/` is the
+  Textual front-end (the app, its screens, themes and CSS, and the hosting
+  that serves it to players), which draws those forms and binds those
+  actions to keys; `gui/` is the desktop GUI (FEAT-16, PySide6), whose
+  libraries come with the optional `gui` dependency group so the terminal
+  install stays lean. `tests/test_core_boundary.py` enforces the line:
+  outside `tui/` and `gui/`, no module may import Textual, Rich, PySide6
+  or a front-end module, and neither front-end imports the other.
 - **Plain JSON files** for persistence. One file per saga (or a small set of
   files per saga), human-readable and git-diffable. Relationships between
   entities are stored as IDs and resolved in code — no ORM/SQL.

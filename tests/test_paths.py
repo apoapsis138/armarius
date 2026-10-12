@@ -119,7 +119,7 @@ def test_nothing_moves_when_the_data_folder_is_the_repos(tmp_path):
 
 
 async def test_the_app_says_what_moved_on_start():
-    from ars_magica_manager.app import ArsMagicaManagerApp
+    from ars_magica_manager.tui.app import ArsMagicaManagerApp
 
     app = ArsMagicaManagerApp()
     app.startup_notes = ("Moved sagas/a.json",)

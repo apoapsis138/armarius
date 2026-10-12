@@ -7,13 +7,13 @@ from support import NODES, build_all_tabs, everything_saga, first_vf, wait_until
 from textual.widgets import Tree
 
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     INHABITANT_KINDS,
     POSSESSION_KINDS,
     VirtueFlawInstance,
 )
-from ars_magica_manager.screens import SelectableList, WorkspaceScreen
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import SelectableList, WorkspaceScreen
 
 GROUPS: dict[str, list[list[str]]] = {
     "character": [["vf-virtues-list", "vf-flaws-list"]],

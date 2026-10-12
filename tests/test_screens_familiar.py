@@ -25,9 +25,9 @@ from textual.widgets import Button, Checkbox, Input, Select, Static, Tree
 
 from ars_magica_manager import familiars as fam
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import VirtueFlawInstance
-from ars_magica_manager.screens import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import (
     AbilityPickerScreen,
     ConfirmScreen,
     FieldsDialog,
@@ -35,7 +35,7 @@ from ars_magica_manager.screens import (
     VirtueFlawPickerScreen,
     WorkspaceScreen,
 )
-from ars_magica_manager.screens.widgets import DetailsPanel
+from ars_magica_manager.tui.screens.widgets import DetailsPanel
 
 
 def _fam_ability_labels(view) -> str:

@@ -11,7 +11,6 @@ from textual.widgets import Collapsible, Select, Static
 
 from ars_magica_manager import lab_texts as lt
 from ars_magica_manager import seasons, storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     Ability,
     ArtScore,
@@ -29,7 +28,8 @@ from ars_magica_manager.models import (
 from ars_magica_manager.rules import book_seasons as bs
 from ars_magica_manager.rules import lab_seasons
 from ars_magica_manager.rules.xp import ability_xp, art_xp
-from ars_magica_manager.screens import FieldsDialog, SelectableList
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import FieldsDialog, SelectableList
 
 
 def _saga() -> Saga:

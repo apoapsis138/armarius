@@ -13,8 +13,6 @@ from textual.widgets import TabbedContent, Tree
 
 from ars_magica_manager import catalog, spells, storage, vis
 from ars_magica_manager import economics as eco
-from ars_magica_manager import screens as scr
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     Ability,
     Book,
@@ -24,10 +22,12 @@ from ars_magica_manager.models import (
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules import creation_xp
-from ars_magica_manager.screens.forms import _mastery_dialog
-from ars_magica_manager.screens.prompts import ListFieldScreen
-from ars_magica_manager.screens.widgets import section_stop
-from ars_magica_manager.screens.workspace import _COVENANT_REPUTATIONS
+from ars_magica_manager.tui import screens as scr
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens.forms import _mastery_dialog
+from ars_magica_manager.tui.screens.prompts import ListFieldScreen
+from ars_magica_manager.tui.screens.widgets import section_stop
+from ars_magica_manager.tui.screens.workspace import _COVENANT_REPUTATIONS
 
 
 def contract_saga() -> Saga:

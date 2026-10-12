@@ -12,10 +12,10 @@ from textual.widgets import Tree
 
 from ars_magica_manager import players as pl
 from ars_magica_manager import presence, storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Character, Saga
-from ars_magica_manager.screens import WorkspaceScreen
-from ars_magica_manager.screens.workspace.base import _tree_node_with_data
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import WorkspaceScreen
+from ars_magica_manager.tui.screens.workspace.base import _tree_node_with_data
 
 
 @contextmanager

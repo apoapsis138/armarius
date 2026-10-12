@@ -43,7 +43,6 @@ from textual.widgets import (
 )
 
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     ArtScore,
     Character,
@@ -55,7 +54,8 @@ from ars_magica_manager.models import (
     Spell,
     VirtueFlawInstance,
 )
-from ars_magica_manager.screens import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import (
     ConfirmScreen,
     DialogField,
     EditArtsScreen,
@@ -65,8 +65,8 @@ from ars_magica_manager.screens import (
     SpellChooserScreen,
     WorkspaceScreen,
 )
-from ars_magica_manager.screens.prompts import ListFieldScreen
-from ars_magica_manager.screens.widgets import LIST_COLUMN_GAP, TEXT_COLUMN_GAP
+from ars_magica_manager.tui.screens.prompts import ListFieldScreen
+from ars_magica_manager.tui.screens.widgets import LIST_COLUMN_GAP, TEXT_COLUMN_GAP
 
 
 async def test_edit_arts_prefills_existing_scores_and_saves_full_grid():

@@ -11,7 +11,6 @@ from support import build_all_tabs, wait_until
 from textual.widgets import Input, TabPane, Tree
 
 from ars_magica_manager import storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     BondPower,
     Breakthrough,
@@ -28,14 +27,15 @@ from ars_magica_manager.models import (
     SagaSource,
     ScoredTrait,
 )
-from ars_magica_manager.screens import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import (
     ConfirmScreen,
     FieldsDialog,
     SelectableList,
     WorkspaceScreen,
 )
-from ars_magica_manager.screens.widgets import SheetSection, section_stop
-from ars_magica_manager.screens.workspace.base import CHOOSE_FIRST
+from ars_magica_manager.tui.screens.widgets import SheetSection, section_stop
+from ars_magica_manager.tui.screens.workspace.base import CHOOSE_FIRST
 
 
 def _saga() -> Saga:

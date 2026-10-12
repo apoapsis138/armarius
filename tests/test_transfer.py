@@ -362,14 +362,14 @@ async def test_x_exports_a_character_and_the_saga_imports_it():  # noqa: PLR0915
     from support import wait_until
     from textual.widgets import Input, OptionList, Static, Tree
 
-    from ars_magica_manager.app import ArsMagicaManagerApp
-    from ars_magica_manager.screens import (
+    from ars_magica_manager.tui.app import ArsMagicaManagerApp
+    from ars_magica_manager.tui.screens import (
         ConfirmScreen,
         CsvFilePickerScreen,
         FieldsDialog,
         WorkspaceScreen,
     )
-    from ars_magica_manager.screens.forms import ImportScreen
+    from ars_magica_manager.tui.screens.forms import ImportScreen
 
     source = _source()
     source.id = "test_saga"

@@ -9,8 +9,8 @@ from support import screen_lines
 from textual.widgets import Static
 
 from ars_magica_manager import ROOT, __version__, storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Saga
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
 
 
 def test_the_version_comes_from_pyproject_and_is_major_minor_patch():

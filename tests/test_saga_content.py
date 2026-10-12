@@ -9,15 +9,15 @@ from textual.widgets import Collapsible, Input, Tree
 from ars_magica_manager import catalog, sourcebooks, storage
 from ars_magica_manager import house_rules as hr
 from ars_magica_manager import saga_content as sc
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import Saga, SagaSource
-from ars_magica_manager.screens import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import (
     ConfirmScreen,
     FieldsDialog,
     SelectableList,
     WorkspaceScreen,
 )
-from ars_magica_manager.screens.pickers import (
+from ars_magica_manager.tui.screens.pickers import (
     AbilityPickerScreen,
     CatalogEntryPickerScreen,
     VirtueFlawPickerScreen,

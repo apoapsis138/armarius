@@ -5,7 +5,7 @@ import pytest
 from ars_magica_manager import storage
 from ars_magica_manager.models import Saga
 from ars_magica_manager.rules import options, rounding
-from ars_magica_manager.screens.forms import (
+from ars_magica_manager.tui.screens.forms import (
     RULE_OPTION_PREFIX,
     _saga_fields,
     saga_rule_options,

@@ -6,7 +6,6 @@ from support import wait_until
 from textual.widgets import Button, ListView, Static, Tree
 
 from ars_magica_manager import catalog, covenants, sourcebooks, storage
-from ars_magica_manager.app import ArsMagicaManagerApp
 from ars_magica_manager.models import (
     Covenant,
     IncomeSource,
@@ -14,10 +13,11 @@ from ars_magica_manager.models import (
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules import creation as rules
-from ars_magica_manager.screens import ConfirmScreen, WorkspaceScreen
-from ars_magica_manager.screens.creation_worksheet import CreationWorksheetScreen
-from ars_magica_manager.screens.pickers import RemovalPickerScreen
-from ars_magica_manager.screens.workspace.base import NodeKind
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import ConfirmScreen, WorkspaceScreen
+from ars_magica_manager.tui.screens.creation_worksheet import CreationWorksheetScreen
+from ars_magica_manager.tui.screens.pickers import RemovalPickerScreen
+from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
 BY_ID = catalog.load_covenant_boon_hook_catalog_by_id()
 

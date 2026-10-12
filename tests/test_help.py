@@ -9,19 +9,19 @@ from textual.widgets import Markdown, OptionList, TabbedContent, TextArea, Tree
 
 from ars_magica_manager import ROOT, __version__, storage
 from ars_magica_manager import help_text as ht
-from ars_magica_manager.app import ArsMagicaManagerApp
-from ars_magica_manager.screens import WorkspaceScreen
-from ars_magica_manager.screens.creation_worksheet import CreationWorksheetScreen
-from ars_magica_manager.screens.forms import (
+from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens import WorkspaceScreen
+from ars_magica_manager.tui.screens.creation_worksheet import CreationWorksheetScreen
+from ars_magica_manager.tui.screens.forms import (
     ImportScreen,
     SpellImportHelperScreen,
 )
-from ars_magica_manager.screens.help import HelpScreen, page_chunks, whats_new_text
-from ars_magica_manager.screens.invent_spell import InventSpellScreen
-from ars_magica_manager.screens.prompts import AdvanceSeasonScreen
-from ars_magica_manager.screens.saga_picker import SagaPickerScreen
-from ars_magica_manager.screens.season_records import SeasonSummaryScreen
-from ars_magica_manager.screens.workspace.base import _HELP_PAGES
+from ars_magica_manager.tui.screens.help import HelpScreen, page_chunks, whats_new_text
+from ars_magica_manager.tui.screens.invent_spell import InventSpellScreen
+from ars_magica_manager.tui.screens.prompts import AdvanceSeasonScreen
+from ars_magica_manager.tui.screens.saga_picker import SagaPickerScreen
+from ars_magica_manager.tui.screens.season_records import SeasonSummaryScreen
+from ars_magica_manager.tui.screens.workspace.base import _HELP_PAGES
 
 BOOK = ht.load()
 
