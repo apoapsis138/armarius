@@ -50,6 +50,14 @@ realm lore) are deferred until there's a reason to pull them in.
 - **Python 3.14+**, managed with `uv` (mirrors Ars-Magica-Solo).
 - **Textual** for the TUI. Consistent with Solo, keyboard-driven, no web
   server needed.
+- **A shared core, front-ends on top.** The rules, models, seasons and
+  storage never import a UI library; nor do `form_spec.py` (what a form
+  asks for and how its entries are checked), `actions.py` (what can be done
+  in each sheet section and the More / New menus, and where) and
+  `sections.py` (the section ids both refer to). `screens/` is the Textual
+  front-end: it draws those forms and binds those actions to keys. A
+  desktop GUI (FEAT-16) is planned as a second front-end on the same core
+  (Ports and Adapters).
 - **Plain JSON files** for persistence. One file per saga (or a small set of
   files per saga), human-readable and git-diffable. Relationships between
   entities are stored as IDs and resolved in code — no ORM/SQL.

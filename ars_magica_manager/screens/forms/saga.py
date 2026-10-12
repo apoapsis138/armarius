@@ -6,8 +6,9 @@ from pathlib import Path
 from typing import Any
 
 from ... import paths
+from ...form_spec import DialogField
 from ...markup import escape
-from ..fields import DialogField, FieldsDialog
+from ..fields import FieldsDialog
 from ..pickers import FolderPickerScreen
 
 #: Why a folder may refuse saves, shown under the folder field.

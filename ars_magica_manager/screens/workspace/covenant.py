@@ -11,6 +11,7 @@ from ... import economics as eco
 from ... import inhabitants as inh
 from ... import possessions as pos
 from ...covenants import boon_hook_is_unknown
+from ...form_spec import EMPHASIS_HINT, DialogField, description_field, pairs
 from ...markup import escape
 from ...models import (
     BOON_HOOK_DESCRIPTION,
@@ -28,13 +29,7 @@ from ...models import (
     boon_hook_params,
     new_instance_id,
 )
-from ..fields import (
-    _EMPHASIS_HINT,
-    DialogField,
-    FieldsDialog,
-    _description_field,
-    _pairs,
-)
+from ..fields import FieldsDialog
 from ..forms import (
     _contested_fields,
     _covenant_fields,
@@ -223,7 +218,7 @@ class CovenantActions(WorkspaceBase):
                 "Type",
                 "select",
                 source.type if source else "Typical",
-                options=_pairs(INCOME_TYPES),
+                options=pairs(INCOME_TYPES),
                 required=True,
             ),
             DialogField(
@@ -233,7 +228,7 @@ class CovenantActions(WorkspaceBase):
                 source.income if source else None,
                 hint=f"Usual per year: {usual}.",
             ),
-            _description_field(source.description if source else ""),
+            description_field(source.description if source else ""),
             *_contested_fields(source),
         ]
 
@@ -603,14 +598,14 @@ class CovenantActions(WorkspaceBase):
                 "Equipment",
                 "select",
                 loyalty.equipment,
-                options=_pairs(LOYALTY_EQUIPMENT),
+                options=pairs(LOYALTY_EQUIPMENT),
             ),
             DialogField(
                 "money",
                 "Money",
                 "select",
                 loyalty.money,
-                options=_pairs(LOYALTY_MONEY),
+                options=pairs(LOYALTY_MONEY),
             ),
             DialogField(
                 "pension",
@@ -756,7 +751,7 @@ class CovenantActions(WorkspaceBase):
                         "Description",
                         "area",
                         covenant.notes,
-                        hint=_EMPHASIS_HINT,
+                        hint=EMPHASIS_HINT,
                     )
                 ],
             ),

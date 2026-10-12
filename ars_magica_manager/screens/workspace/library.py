@@ -16,6 +16,7 @@ from ... import players as pl
 from ... import saga_content as sc
 from ... import seasons, storage, transfer
 from ... import spells as spl
+from ...form_spec import DialogField
 from ...markup import escape
 from ...models import (
     TEXT_LONGEVITY,
@@ -25,10 +26,7 @@ from ...models import (
     SagaSource,
     Spell,
 )
-from ..fields import (
-    DialogField,
-    FieldsDialog,
-)
+from ..fields import FieldsDialog
 from ..forms import (
     DuplicateBookScreen,
     ImportScreen,
@@ -60,11 +58,11 @@ from ..prompts import (
     _saga_source_dialog,
 )
 from ..sheets import (
-    _LIBRARY_SECTIONS,
     BOOKS_SECTION,
     CATALOGS_SECTION,
     HIDDEN_SECTION,
     LAB_TEXTS_SECTION,
+    LIBRARY_SECTIONS,
     SOURCES_SECTION,
     BookListView,
     HouseRulesView,
@@ -754,7 +752,7 @@ class LibraryActions(WorkspaceBase):
             self.app.push_screen(ImportScreen(), handle_kind)
         elif (
             self.selected_covenant is not None
-            and self._active_section() in _LIBRARY_SECTIONS
+            and self._active_section() in LIBRARY_SECTIONS
         ):
             self._import_books(self.selected_covenant)
 

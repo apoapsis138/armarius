@@ -41,6 +41,14 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.43.1 — 2026-10-12
+
+- Behind the scenes, first step toward a desktop version: what each form
+  asks for and how its entries are checked, and what can be done in each
+  part of a sheet (add, edit, delete, and the More and New menus), now
+  live outside the terminal screens, so a second front-end can share
+  them. Nothing in the app looks or behaves differently.
+
 ## 2.43.0 — 2026-10-12
 
 - You can choose where your sagas, backups, exports and settings are

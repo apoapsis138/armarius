@@ -8,7 +8,8 @@ from textual.widgets import Input
 
 from ars_magica_manager import themes
 from ars_magica_manager.app import ArsMagicaManagerApp
-from ars_magica_manager.screens.fields import DialogField, FieldsDialog
+from ars_magica_manager.form_spec import DialogField
+from ars_magica_manager.screens.fields import FieldsDialog
 
 
 def _form() -> FieldsDialog:

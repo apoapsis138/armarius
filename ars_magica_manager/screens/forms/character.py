@@ -15,6 +15,14 @@ from ... import catalog, faith
 from ... import familiars as fam
 from ... import sheet_text as st
 from ...arts import ART_ABBREVIATIONS, ARTS, FORMS, TECHNIQUES
+from ...form_spec import (
+    EMPHASIS_HINT,
+    DialogField,
+    attr,
+    covenant_options,
+    pairs,
+    year_born_field,
+)
 from ...markup import escape, problem
 from ...models import (
     COMPANION_TYPES,
@@ -37,16 +45,7 @@ from ...models import (
 )
 from ...rules import creation_characteristics, scores
 from ...rules import xp as xp_rules
-from ..fields import (
-    _EMPHASIS_HINT,
-    DialogField,
-    FieldsDialog,
-    ModalDialog,
-    _attr,
-    _covenant_options,
-    _pairs,
-    _year_born_field,
-)
+from ..fields import FieldsDialog, ModalDialog
 from .creation import _CHARACTER_TYPES
 
 #: The eight Characteristics as (label, attribute), in the book's order.
@@ -119,7 +118,7 @@ def _character_info_fields(saga: Saga, character: Character) -> list[DialogField
             "Covenant",
             "select",
             character.covenant_id,
-            options=_covenant_options(saga),
+            options=covenant_options(saga),
             allow_blank=True,
             placeholder="(unassigned)",
         ),
@@ -238,7 +237,7 @@ def _biographical_fields(
             for label, attribute in _BIOGRAPHY_TEXT_FIELDS
         ),
         *_played_by_field(background, players, may_assign),
-        _year_born_field(background.year_born),
+        year_born_field(background.year_born),
         *(
             DialogField(attribute, label, "text", getattr(background, attribute))
             for label, attribute in _BIOGRAPHY_TEXT_FIELDS_AFTER_YEAR
@@ -260,7 +259,7 @@ def _biographical_fields(
             "text",
             d.physical_description,
         ),
-        DialogField("biography", "Biography", "area", d.biography, hint=_EMPHASIS_HINT),
+        DialogField("biography", "Biography", "area", d.biography, hint=EMPHASIS_HINT),
     ]
 
 
@@ -368,7 +367,7 @@ def _familiar_info_fields(familiar: Familiar) -> list[DialogField]:
             "Season Bound",
             "select",
             f.season_bound or None,
-            options=_pairs(SEASONS),
+            options=pairs(SEASONS),
             allow_blank=True,
             placeholder="(not set)",
         ),
@@ -386,15 +385,15 @@ def _bond_power_fields(power: BondPower | None) -> list[DialogField]:
 
     return [
         DialogField(
-            "name", "Power Name", "text", _attr(power, "name", ""), required=True
+            "name", "Power Name", "text", attr(power, "name", ""), required=True
         ),
-        DialogField("level", "Level", "int", _attr(power, "level", 0)),
+        DialogField("level", "Level", "int", attr(power, "level", 0)),
         DialogField(
             "technique",
             "Technique",
             "select",
-            _attr(power, "technique", ""),
-            options=_pairs(TECHNIQUES),
+            attr(power, "technique", ""),
+            options=pairs(TECHNIQUES),
             allow_blank=True,
             placeholder="(none)",
         ),
@@ -402,8 +401,8 @@ def _bond_power_fields(power: BondPower | None) -> list[DialogField]:
             "form",
             "Form",
             "select",
-            _attr(power, "form", ""),
-            options=_pairs(FORMS),
+            attr(power, "form", ""),
+            options=pairs(FORMS),
             allow_blank=True,
             placeholder="(none)",
         ),
@@ -411,25 +410,23 @@ def _bond_power_fields(power: BondPower | None) -> list[DialogField]:
             "target_controller",
             "Target & Controller",
             "text",
-            _attr(power, "target_controller", ""),
+            attr(power, "target_controller", ""),
             placeholder="e.g. Magus (controlled by Familiar)",
         ),
-        DialogField("uses_per_day", "Uses/Day", "int", _attr(power, "uses_per_day", 0)),
-        DialogField(
-            "penetration", "Penetration", "int", _attr(power, "penetration", 0)
-        ),
-        DialogField("vis_spent", "Vis Spent", "int", _attr(power, "vis_spent", 0)),
+        DialogField("uses_per_day", "Uses/Day", "int", attr(power, "uses_per_day", 0)),
+        DialogField("penetration", "Penetration", "int", attr(power, "penetration", 0)),
+        DialogField("vis_spent", "Vis Spent", "int", attr(power, "vis_spent", 0)),
         DialogField(
             "cosmetic_trait",
             "Cosmetic Trait Manifested",
             "text",
-            _attr(power, "cosmetic_trait", ""),
+            attr(power, "cosmetic_trait", ""),
         ),
         DialogField(
             "instilling_progress",
             "Instilling (blank = finished)",
             "optint",
-            _attr(power, "instilling_progress", None),
+            attr(power, "instilling_progress", None),
             hint="0 to instil it as lab work (the lab's Planning tab).",
         ),
     ]
@@ -662,7 +659,7 @@ def _familiar_binding_fields(familiar: Familiar) -> list[DialogField]:
             "Binding Technique",
             "select",
             familiar.binding_technique or None,
-            options=_pairs(TECHNIQUES),
+            options=pairs(TECHNIQUES),
             allow_blank=True,
             placeholder="(not set)",
         ),
@@ -671,7 +668,7 @@ def _familiar_binding_fields(familiar: Familiar) -> list[DialogField]:
             "Binding Form",
             "select",
             familiar.binding_form or None,
-            options=_pairs(FORMS),
+            options=pairs(FORMS),
             allow_blank=True,
             placeholder="(not set)",
         ),

@@ -8,6 +8,7 @@ from typing import Any
 
 from ... import spells as spl
 from ...arts import FORMS, TECHNIQUES
+from ...form_spec import DialogField, attr, pairs
 from ...markup import escape
 from ...models import (
     SPELL_DURATIONS,
@@ -17,7 +18,7 @@ from ...models import (
     Spell,
 )
 from ...rules import spell_levels
-from ..fields import DialogField, FieldsDialog, _attr, _pairs
+from ..fields import FieldsDialog
 from ..prompts import _list_field, _mastery_ability_dialog
 
 #: The choice in a Range/Duration/Target select that opens a free-text box.
@@ -40,7 +41,7 @@ def _rdt_field(
             label,
             "select",
             _OTHER if other else value,
-            options=_pairs(standard) + [("Other...", _OTHER)],
+            options=pairs(standard) + [("Other...", _OTHER)],
             required=True,
             allow_blank=True,
             placeholder=f"(choose a {label})",
@@ -59,13 +60,13 @@ def _rdt_field(
 
 def _spell_fields(spell: Spell | None) -> list[DialogField]:
     return [
-        DialogField("name", "Name", "text", _attr(spell, "name", ""), required=True),
+        DialogField("name", "Name", "text", attr(spell, "name", ""), required=True),
         DialogField(
             "technique",
             "Technique",
             "select",
-            _attr(spell, "technique", ""),
-            options=_pairs(TECHNIQUES),
+            attr(spell, "technique", ""),
+            options=pairs(TECHNIQUES),
             required=True,
             allow_blank=True,
             placeholder="(choose a Technique)",
@@ -74,8 +75,8 @@ def _spell_fields(spell: Spell | None) -> list[DialogField]:
             "form",
             "Form",
             "select",
-            _attr(spell, "form", ""),
-            options=_pairs(FORMS),
+            attr(spell, "form", ""),
+            options=pairs(FORMS),
             required=True,
             allow_blank=True,
             placeholder="(choose a Form)",
@@ -84,35 +85,35 @@ def _spell_fields(spell: Spell | None) -> list[DialogField]:
             "level",
             "Level",
             "optint",
-            _attr(spell, "level", None),
+            attr(spell, "level", None),
             hint="Leave blank for a General spell (cast at any level).",
         ),
         DialogField(
             "requisites",
             "Requisites",
             "text",
-            ", ".join(_attr(spell, "requisites", [])),
+            ", ".join(attr(spell, "requisites", [])),
             placeholder="e.g. Rego, Corpus",
         ),
         *_rdt_field(
-            "range", "Range", SPELL_RANGES, _attr(spell, "range", ""), _level_fill
+            "range", "Range", SPELL_RANGES, attr(spell, "range", ""), _level_fill
         ),
         *_rdt_field(
             "duration",
             "Duration",
             SPELL_DURATIONS,
-            _attr(spell, "duration", ""),
+            attr(spell, "duration", ""),
             _level_fill,
         ),
         *_rdt_field(
-            "target", "Target", SPELL_TARGETS, _attr(spell, "target", ""), _level_fill
+            "target", "Target", SPELL_TARGETS, attr(spell, "target", ""), _level_fill
         ),
-        DialogField("ritual", "Ritual", "check", _attr(spell, "ritual", False)),
+        DialogField("ritual", "Ritual", "check", attr(spell, "ritual", False)),
         DialogField(
             "base_level",
             "Base level",
             "optint",
-            _attr(spell, "base_level", None),
+            attr(spell, "base_level", None),
             hint="The guideline's level; with Range, Duration and Target it "
             "fills in Level (add any size or requisite magnitudes yourself).",
             fills=_level_fill,
@@ -121,11 +122,11 @@ def _spell_fields(spell: Spell | None) -> list[DialogField]:
             "source",
             "Source",
             "text",
-            _attr(spell, "source", ""),
+            attr(spell, "source", ""),
             placeholder="e.g. a house rule, or a book",
         ),
         DialogField(
-            "description", "Description", "area", _attr(spell, "description", "")
+            "description", "Description", "area", attr(spell, "description", "")
         ),
     ]
 

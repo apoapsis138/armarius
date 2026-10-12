@@ -14,7 +14,6 @@ import uuid
 from collections.abc import Awaitable, Callable, Sequence
 from dataclasses import dataclass, replace
 from dataclasses import field as dataclass_field
-from enum import StrEnum
 from functools import cached_property, partial
 from pathlib import Path
 from typing import Any, ClassVar, NamedTuple
@@ -39,9 +38,8 @@ from textual.widgets import (
 from textual.widgets._collapsible import CollapsibleTitle
 from textual.widgets.tree import TreeNode
 
-from ... import book_value as bv
-from ... import books as bk
 from ... import (
+    actions,
     catalog,
     character_templates,
     creation,
@@ -54,19 +52,23 @@ from ... import (
     transfer,
     vis,
 )
+from ... import books as bk
 from ... import economics as eco
 from ... import familiars as fam
-from ... import inhabitants as inh
-from ... import lab_texts as lt
 from ... import laboratories as lab_rules
 from ... import players as pl
 from ... import sheet_text as st
-from ... import spells as spl
+from ...actions import (
+    MORE_MENU,
+    NEW_MENU,
+    RECORD_SECTION,
+    MenuItem,
+    NodeKind,
+)
 from ...markup import escape
 from ...models import (
     FOCUS_FLAWS,
     SEASONS,
-    TEXT_LONGEVITY,
     Ability,
     Character,
     CharacterTemplateDef,
@@ -119,8 +121,6 @@ from ..prompts import (
 )
 from ..season_records import SeasonRecordsView, SeasonSummaryScreen
 from ..sheets import (
-    _LIBRARY_SECTIONS,
-    DEVICE_SECTIONS,
     LAB_FEATURE_SECTIONS,
     LAB_TEXTS_SECTION,
     LAB_VF_SECTIONS,
@@ -236,23 +236,6 @@ _COVENANT_REPUTATIONS = _TraitList(
 _BOON_HOOK_SECTION = {"Boon": "section-cov-boons", "Hook": "section-cov-hooks"}
 
 
-class NodeKind(StrEnum):
-    """What a nav-tree node stands for: the first item of its `.data` tuple
-    (the second, where there is one, is the record's or covenant's id).
-    Also `WorkspaceScreen.selected_kind`."""
-
-    SAGA = "saga"
-    COVENANT = "covenant"
-    CHARACTER_GROUP = "character_group"
-    CHARACTER = "character"
-    FAMILIAR = "familiar"
-    LABORATORY_GROUP = "laboratory_group"
-    LABORATORY = "laboratory"
-    SAGA_CONTENT = "saga_content"
-    SEASONS = "seasons"
-    BOOK_GROUP = "book_group"
-
-
 #: Each tree node's help page (help/*.md), by the kind of node selected.
 _HELP_PAGES: dict[NodeKind, str] = {
     NodeKind.SAGA: "saga",
@@ -304,103 +287,12 @@ _LOOKING_ACTIONS = frozenset(
     }
 )
 
-#: Each sheet's own section: the top panel that names the record. With
-#: focus there (or on its tree node), d and More act on the record itself.
-_RECORD_SECTION: dict[NodeKind, str] = {
-    NodeKind.CHARACTER: "section-char-info",
-    NodeKind.COVENANT: "section-cov-info",
-    NodeKind.LABORATORY: "section-lab-identity",
-    NodeKind.FAMILIAR: "section-fam-info",
-}
-
-
-#: Where in the tree each record can be created: the saga, and
-#: the covenant, group or record it would sit beside -- so a sheet's footer
-#: offers only what belongs there. A new character or laboratory defaults
-#: to the covenant on show. Binding a Familiar also needs a magus without
-#: one (and, on a character's node, that character to be a magus).
-_CREATE_PLACES: dict[str, frozenset[NodeKind]] = {
-    "create_covenant": frozenset({NodeKind.SAGA}),
-    "create_character": frozenset(
-        {
-            NodeKind.SAGA,
-            NodeKind.COVENANT,
-            NodeKind.CHARACTER_GROUP,
-            NodeKind.CHARACTER,
-        }
-    ),
-    "create_laboratory": frozenset(
-        {
-            NodeKind.SAGA,
-            NodeKind.COVENANT,
-            NodeKind.LABORATORY_GROUP,
-            NodeKind.LABORATORY,
-        }
-    ),
-    "create_familiar": frozenset(
-        {
-            NodeKind.SAGA,
-            NodeKind.COVENANT,
-            NodeKind.CHARACTER_GROUP,
-            NodeKind.CHARACTER,
-        }
-    ),
-}
-
-
-class MenuItem(NamedTuple):
-    """One entry of the More or New menu: the letter that picks it, the
-    action WorkspaceBase._available() is asked about, its label, and the
-    method that runs it (by default `action_<action>`)."""
-
-    letter: str
-    action: str
-    label: str
-    handler: str = ""
-
-    def run(self, screen: WorkspaceBase) -> None:
-        getattr(screen, self.handler or f"action_{self.action}")()
-
-
-#: New (n): what can be made, each offered only where it belongs (see
-#: _CREATE_PLACES).
-_NEW_MENU: tuple[MenuItem, ...] = (
-    MenuItem("v", "create_covenant", "New Covenant"),
-    MenuItem("c", "create_character", "New Character"),
-    MenuItem("l", "create_laboratory", "New Laboratory"),
-    MenuItem("f", "create_familiar", "Bind Familiar"),
-)
-
-
-#: More (m): what only a few sections, or the record itself, can do. Each
-#: is offered only where _available() says it applies.
-_MORE_MENU: tuple[MenuItem, ...] = (
-    MenuItem("r", "restore", "Restore"),
-    MenuItem("i", "improve", "Improve Income"),
-    MenuItem("i", "instill_effect", "Instill an Effect"),
-    MenuItem("c", "use_charge", "Use a Charge"),
-    MenuItem("p", "perform_ritual", "Perform Ritual"),
-    MenuItem("s", "share_spell", "Share Spell"),
-    MenuItem("v", "move_vis", "Move Vis"),
-    MenuItem("l", "lab_text_access", "Lab Texts Read", "_edit_lab_text_access"),
-    MenuItem("f", "edit_fatigue", "Edit Fatigue", "_edit_fatigue"),
-    MenuItem("f", "edit_familiar_fatigue", "Edit Fatigue", "_edit_familiar_fatigue"),
-    MenuItem("i", "import_data", "Import"),
-    MenuItem("b", "research_bonuses", "Research Bonuses"),
-    MenuItem("x", "export_record", "Export"),
-    MenuItem("m", "toggle_mode", "In Creation / In Play"),
-    MenuItem(
-        "w", "creation_worksheet", "Creation Worksheet", "_open_creation_worksheet"
-    ),
-    MenuItem("t", "set_date", "Set Date"),
-)
-
-
-#: The sections More offers something in by their id alone.
-_MORE_SECTIONS: dict[str, str] = {
-    "lab_text_access": "section-hermetic-background",
-    "edit_fatigue": "section-char-health",
-    "edit_familiar_fatigue": "section-fam-health",
+#: The More commands whose handler isn't `action_<action>`.
+_MENU_HANDLERS: dict[str, str] = {
+    "lab_text_access": "_edit_lab_text_access",
+    "edit_fatigue": "_edit_fatigue",
+    "edit_familiar_fatigue": "_edit_familiar_fatigue",
+    "creation_worksheet": "_open_creation_worksheet",
 }
 
 
@@ -487,6 +379,62 @@ _VIS_REFRESH: dict[str, tuple[str, ...]] = {
     vis.LABORATORY: ("section-lab-raw-vis", "tab-lab-diary"),
     vis.COVENANT: ("section-pos-vis_store", "tab-cov-diary"),
 }
+
+
+class _ScreenFacts:
+    """The workspace as actions.available sees it (actions.ActionFacts)."""
+
+    def __init__(self, screen: WorkspaceBase) -> None:
+        self._screen = screen
+
+    @property
+    def saga(self) -> Saga:
+        return self._screen.saga
+
+    @property
+    def selected_kind(self) -> NodeKind | None:
+        return self._screen.selected_kind
+
+    @property
+    def selected_covenant(self) -> Covenant | None:
+        return self._screen.selected_covenant
+
+    @property
+    def selected_character(self) -> Character | None:
+        return self._screen.selected_character
+
+    @property
+    def selected_laboratory(self) -> Laboratory | None:
+        return self._screen.selected_laboratory
+
+    def active_section(self) -> str | None:
+        return self._screen._active_section()
+
+    def player_may(self, action: str) -> bool:
+        return self._screen._player_may(action)
+
+    def on_record(self) -> bool:
+        return self._screen._on_record()
+
+    def creation_record(self) -> Character | Covenant | Laboratory | None:
+        view = self._screen._current_sheet_view()
+        return view.creation_record if view is not None else None
+
+    def device_action_enabled(self, action: str) -> bool:
+        return self._screen._device_action_enabled(action)
+
+    def vis_holder(self) -> vis.Holder | None:
+        return self._screen._vis_holder()
+
+    def record_to_export(self) -> transfer.Record | None:
+        return self._screen._record_to_export()
+
+    def record_to_delete(self) -> Covenant | Character | Laboratory | Familiar | None:
+        return self._screen._record_to_delete()
+
+    def can_send_files(self) -> bool:
+        # Over SSH there is nowhere to send the file.
+        return hosting.transport() != "ssh"
 
 
 class WorkspaceBase(Screen[None]):
@@ -994,108 +942,8 @@ class WorkspaceBase(Screen[None]):
         return self._available(action)
 
     def _available(self, action: str) -> bool:
-        """Whether `action` can run where focus is: what enables a/e and
-        decides what More and New offer."""
-        if not self._player_may(action):
-            return False
-        if (
-            action in _CREATE_PLACES
-            and self.selected_kind not in _CREATE_PLACES[action]
-        ):
-            return False
-        if action == "edit" and self.selected_kind == NodeKind.SAGA:
-            return True
-        if action in ("add", "remove", "edit"):
-            return self._section_op(action) is not None
-        if action == "restore":
-            # Offered only while someone has departed (Magi, Companions).
-            covenant = self.selected_covenant
-            section = self._active_section() or ""
-            return (
-                self._section_op(action) is not None
-                and covenant is not None
-                and bool(
-                    inh.departed_entries_for_kind(
-                        self.saga, covenant, section.removeprefix("section-inh-")
-                    )
-                )
-            )
-        if action == "set_date":
-            return self.selected_kind == NodeKind.SAGA
-        if action in _MORE_SECTIONS:
-            return self._active_section() == _MORE_SECTIONS[action]
-        if action in ("toggle_mode", "creation_worksheet"):
-            view = self._current_sheet_view()
-            record = view.creation_record if view is not None else None
-            return (
-                record is not None
-                and self._on_record()
-                and (action == "toggle_mode" or record.in_creation)
-            )
-        if action == "improve":
-            return self._active_section() == "section-eco-income"
-        if action in ("instill_effect", "use_charge"):
-            return (
-                self._active_section() in DEVICE_SECTIONS
-                and self._device_action_enabled(action)
-            )
-        if action == "share_spell":
-            character = self.selected_character
-            return (
-                self._active_section() == "section-known-spells"
-                and character is not None
-                and bool(spl.shareable_spells(character))
-            )
-        if action == "filter_lab_texts":
-            return self._active_section() == LAB_TEXTS_SECTION
-        if action == "perform_ritual":
-            lab = self.selected_laboratory
-            return (
-                self._active_section() == LAB_TEXTS_SECTION
-                and lab is not None
-                and any(
-                    lt.kind(b) == TEXT_LONGEVITY
-                    for b in lt.texts_of(self.saga, "laboratory", lab.id)
-                )
-            )
-        if action == "move_vis":
-            holder = self._vis_holder()
-            return (
-                holder is not None
-                and bool(vis.held(holder))
-                and bool(vis.destinations(self.saga, holder))
-            )
-        if action == "export_record":
-            # Over SSH there is nowhere to send the file.
-            return (
-                hosting.transport() != "ssh"
-                and self._record_to_export() is not None
-                and self._on_record()
-            )
-        if action == "research_bonuses":
-            # Library research values are Covenants'.
-            return (
-                sourcebooks.in_play(bv.SOURCE_BOOK, sourcebooks.saga_books(self.saga))
-                and self.selected_kind == NodeKind.COVENANT
-                and self._active_section() in _LIBRARY_SECTIONS
-                and self.selected_covenant is not None
-                and bool(bv.library_subjects(self.saga, self.selected_covenant))
-            )
-        if action == "import_data":
-            return (
-                self.selected_kind == NodeKind.SAGA
-                or self._active_section() in _LIBRARY_SECTIONS
-            )
-        if action == "create_familiar":
-            character = self.selected_character
-            if self.selected_kind == NodeKind.CHARACTER and (
-                character is None or character.type != "magus"
-            ):
-                return False
-            return bool(fam.unbonded_magi(self.saga))
-        if action == "delete_record":
-            return self._record_to_delete() is not None
-        return True
+        """Whether `action` can run where focus is (actions.available)."""
+        return actions.available(action, _ScreenFacts(self))
 
     # -- focus: one stop per section, the tree, Esc and the tab numbers --
 
@@ -1147,9 +995,7 @@ class WorkspaceBase(Screen[None]):
         if self._tree_focused():
             return True
         section = self._active_section()
-        return section is not None and section == _RECORD_SECTION.get(
-            self.selected_kind
-        )
+        return section is not None and section == RECORD_SECTION.get(self.selected_kind)
 
     def action_step_out(self) -> None:
         """Esc: from the sheet back to the tree; from the tree, back to the
@@ -1208,28 +1054,31 @@ class WorkspaceBase(Screen[None]):
         """What More offers where focus is."""
         return self._in_pass(
             "more",
-            lambda: [item for item in _MORE_MENU if self._available(item.action)],
+            lambda: [item for item in MORE_MENU if self._available(item.action)],
         )
 
     def _new_items(self) -> list[MenuItem]:
         """What New can make from the selected tree node."""
         return self._in_pass(
             "new",
-            lambda: [item for item in _NEW_MENU if self._available(item.action)],
+            lambda: [item for item in NEW_MENU if self._available(item.action)],
         )
+
+    def _run_menu_item(self, item: MenuItem) -> None:
+        getattr(self, _MENU_HANDLERS.get(item.action, f"action_{item.action}"))()
 
     def _run_menu(self, title: str, items: list[MenuItem]) -> None:
         """Run the only item directly; with several, ask which."""
         if not items:
             return
         if len(items) == 1:
-            items[0].run(self)
+            self._run_menu_item(items[0])
             return
         by_action = {item.action: item for item in items}
 
         def handle_choice(action: str | None) -> None:
             if action is not None:
-                by_action[action].run(self)
+                self._run_menu_item(by_action[action])
 
         self.app.push_screen(
             MenuScreen(
@@ -1566,7 +1415,7 @@ class WorkspaceBase(Screen[None]):
                 if tabbed.active and tabbed in focused.ancestors:
                     label = str(tabbed.get_tab(tabbed.active).label)
                     parts.append(_TAB_NUMBER.sub("", label))
-                if section is not None and section.id != _RECORD_SECTION.get(
+                if section is not None and section.id != RECORD_SECTION.get(
                     self.selected_kind
                 ):
                     parts.append(_COUNT.sub("", _plain(section.title)))

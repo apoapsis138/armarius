@@ -12,6 +12,7 @@ from ... import book_kinds, catalog, seasons, sourcebooks
 from ... import books as bk
 from ... import lab_texts as lt
 from ... import spells as spl
+from ...form_spec import EMPHASIS_HINT, DialogField, attr
 from ...markup import escape
 from ...models import (
     Breakthrough,
@@ -33,7 +34,7 @@ from ...rules import (
 )
 from ...rules import supplement_work as sw
 from ...seasons import plans as season_plans_text
-from ..fields import _EMPHASIS_HINT, DialogField, FieldsDialog, _attr
+from ..fields import FieldsDialog
 from ..pickers import VirtueFlawPickerScreen
 
 
@@ -816,9 +817,9 @@ def _study_fields(
     """The Activity, and the Source Quality, book or teacher it studies from."""
     books = sourcebooks.saga_books(saga)
     activities = season_rules.activities_for(
-        character, books=books, keep=_attr(existing, "activity", "")
+        character, books=books, keep=attr(existing, "activity", "")
     )
-    gloss = _attr(existing, "gloss", False)
+    gloss = attr(existing, "gloss", False)
     # Glossing is Covenants': off the form with the book out of play, unless
     # the plan already glosses.
     hidden = (
@@ -831,7 +832,7 @@ def _study_fields(
             "activity",
             "Activity",
             "select",
-            _attr(existing, "activity", None),
+            attr(existing, "activity", None),
             options=[(a.label, a.key) for a in activities],
             required=True,
             hint="The line above Save shows what the season will give.",
@@ -840,7 +841,7 @@ def _study_fields(
             "source_quality",
             "Source Quality",
             "optint",
-            _attr(existing, "source_quality", None),
+            attr(existing, "source_quality", None),
             show_if=_activity_is(
                 season_rules.PRACTICE, season_rules.ADVENTURE, *_SUPPLEMENT_XP
             ),
@@ -853,7 +854,7 @@ def _study_fields(
             "book_id",
             "Book",
             "select",
-            _attr(existing, "book_id", None),
+            attr(existing, "book_id", None),
             options=_book_options(saga, character),
             allow_blank=True,
             show_if=_activity_is(season_rules.READ),
@@ -872,7 +873,7 @@ def _study_fields(
             "teacher_id",
             "Teacher / master",
             "select",
-            _attr(existing, "teacher_id", None),
+            attr(existing, "teacher_id", None),
             options=[
                 (escape(c.name), c.id)
                 for c in saga.characters
@@ -968,7 +969,7 @@ def _book_work_fields(
             "title",
             "Title",
             "text",
-            _attr(existing, "title", ""),
+            attr(existing, "title", ""),
             placeholder="blank: named for its subject",
             show_if=_activity_is(
                 book_seasons.WRITE_SUMMA,
@@ -980,7 +981,7 @@ def _book_work_fields(
             "book_level",
             "Summa Level (blank: the most)",
             "optint",
-            _attr(existing, "book_level", None),
+            attr(existing, "book_level", None),
             show_if=_activity_is(book_seasons.WRITE_SUMMA),
             hint="Each Level below the most adds Quality (+1, +3 for an Ability).",
         ),
@@ -988,7 +989,7 @@ def _book_work_fields(
             "language",
             "Language",
             "text",
-            _attr(existing, "language", "") or "Latin",
+            attr(existing, "language", "") or "Latin",
             show_if=_activity_is(
                 book_seasons.WRITE_SUMMA,
                 book_seasons.WRITE_TRACTATUS,
@@ -1000,7 +1001,7 @@ def _book_work_fields(
             "copy_book_id",
             "Book",
             "select",
-            _attr(existing, "book_id", None),
+            attr(existing, "book_id", None),
             options=_book_options(saga, character),
             allow_blank=True,
             show_if=_activity_is(book_seasons.COPY_BOOK, book_seasons.TRANSLATE_BOOK),
@@ -1009,14 +1010,14 @@ def _book_work_fields(
             "quick",
             "Quick copy (x3, Quality -1)",
             "check",
-            _attr(existing, "quick", False),
+            attr(existing, "quick", False),
             show_if=_activity_is(book_seasons.COPY_BOOK),
         ),
         DialogField(
             "text_id",
             "Lab Text",
             "select",
-            _attr(existing, "book_id", None),
+            attr(existing, "book_id", None),
             # Every text he can get at: one he can't read yet says so, and
             # the season refuses it with the reason.
             options=[
@@ -1032,7 +1033,7 @@ def _book_work_fields(
             "florilegium_subject",
             "Florilegium subject",
             "select",
-            _attr(existing, "florilegium_subject", "") or None,
+            attr(existing, "florilegium_subject", "") or None,
             options=_florilegium_subjects(saga, character),
             allow_blank=True,
             hint="The tractatus on it you can get at, not bound in a codex, are "
@@ -1043,7 +1044,7 @@ def _book_work_fields(
             "tablet_spell_id",
             "Spell (mastered)",
             "select",
-            _attr(existing, "spell_id", None),
+            attr(existing, "spell_id", None),
             options=_mastered_spells(saga, character),
             allow_blank=True,
             show_if=_activity_is(book_seasons.WRITE_TABLET),
@@ -1089,7 +1090,7 @@ def _student_and_research_fields(
             "student_id",
             "Student",
             "select",
-            _attr(existing, "subject_id", None),
+            attr(existing, "subject_id", None),
             options=[
                 (escape(c.name), c.id)
                 for c in saga.characters
@@ -1106,14 +1107,14 @@ def _student_and_research_fields(
             "research",
             "Research goal",
             "text",
-            _attr(existing, "research", ""),
+            attr(existing, "research", ""),
             show_if=_activity_is(experiment.INTEGRATE),
         ),
         DialogField(
             "research_kind",
             "Breakthrough",
             "select",
-            _attr(existing, "research_kind", "") or "Minor",
+            attr(existing, "research_kind", "") or "Minor",
             options=[(k, k) for k in experiment.KINDS],
             show_if=_activity_is(experiment.INTEGRATE),
         ),
@@ -1132,7 +1133,7 @@ def _correspondence_fields(
             "correspondence",
             "Correspondence on",
             "select",
-            _attr(existing, "correspondence", "") or None,
+            attr(existing, "correspondence", "") or None,
             options=seasons.subject_options(saga, character),
             allow_blank=True,
             placeholder="(none this season)",
@@ -1151,7 +1152,7 @@ def _closing_fields(
             "virtue_id",
             "Hermetic Virtue",
             "select",
-            _attr(existing, "effect_id", None),
+            attr(existing, "effect_id", None),
             options=apprentice_seasons.teachable_virtues(character),
             allow_blank=True,
             show_if=_activity_is(apprentice_seasons.TEACH_VIRTUE),
@@ -1160,7 +1161,7 @@ def _closing_fields(
             "vis_from",
             "Vis from",
             "select",
-            _attr(existing, "vis_from", "") or "character",
+            attr(existing, "vis_from", "") or "character",
             options=[
                 ("Their own raw vis", "character"),
                 ("Their laboratory's raw vis", "laboratory"),
@@ -1172,7 +1173,7 @@ def _closing_fields(
             "die",
             "Stress die (blank: rolled)",
             "optint",
-            _attr(existing, "die", None),
+            attr(existing, "die", None),
             show_if=_activity_is(
                 season_rules.VIS_STUDY,
                 apprentice_seasons.SEARCH,
@@ -1185,7 +1186,7 @@ def _closing_fields(
             "months_lost",
             "Months lost (0-3)",
             "int",
-            _attr(existing, "months_lost", 0),
+            attr(existing, "months_lost", 0),
             show_if=_activity_is(
                 season_rules.EXPOSURE,
                 season_rules.PRACTICE,
@@ -1200,8 +1201,8 @@ def _closing_fields(
             "details",
             "Notes",
             "area",
-            _attr(existing, "details", ""),
-            hint=_EMPHASIS_HINT,
+            attr(existing, "details", ""),
+            hint=EMPHASIS_HINT,
         ),
     ]
 

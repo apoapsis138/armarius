@@ -7,10 +7,11 @@ from typing import Any
 
 from ... import character_templates
 from ... import familiars as fam
+from ...form_spec import DialogField, attr, covenant_options, pairs
 from ...markup import escape
 from ...models import REALMS, SEASONS, Saga
 from ...rules import options as rule_options
-from ..fields import DialogField, FieldsDialog, _attr, _covenant_options, _pairs
+from ..fields import FieldsDialog
 
 
 def _saga_fields(saga: Saga | None) -> list[DialogField]:
@@ -21,7 +22,7 @@ def _saga_fields(saga: Saga | None) -> list[DialogField]:
             "name",
             "Name",
             "text",
-            _attr(saga, "name", ""),
+            attr(saga, "name", ""),
             required=True,
             placeholder="e.g. Dammerstein",
         ),
@@ -29,7 +30,7 @@ def _saga_fields(saga: Saga | None) -> list[DialogField]:
             "storyguide",
             "Storyguide",
             "text",
-            _attr(saga, "storyguide", ""),
+            attr(saga, "storyguide", ""),
             required=True,
             placeholder="e.g. Alex",
         ),
@@ -38,7 +39,7 @@ def _saga_fields(saga: Saga | None) -> list[DialogField]:
         fields += [
             DialogField("year", "Start Year", "int", 1220),
             DialogField(
-                "season", "Start Season", "select", SEASONS[0], options=_pairs(SEASONS)
+                "season", "Start Season", "select", SEASONS[0], options=pairs(SEASONS)
             ),
         ]
     fields.append(
@@ -46,7 +47,7 @@ def _saga_fields(saga: Saga | None) -> list[DialogField]:
             "description",
             "Description",
             "text",
-            _attr(saga, "description", ""),
+            attr(saga, "description", ""),
             placeholder="A one-line premise for the saga",
         )
     )
@@ -111,7 +112,7 @@ def _covenant_create_fields() -> list[DialogField]:
             "Season",
             "select",
             "Spring",
-            options=_pairs(SEASONS),
+            options=pairs(SEASONS),
             hint="Its stage of life. Spring or Winter, Summer or Autumn set "
             "each inhabitant's points and Living Conditions.",
         ),
@@ -120,7 +121,7 @@ def _covenant_create_fields() -> list[DialogField]:
             "Aura realm",
             "select",
             "Magic",
-            options=_pairs(REALMS),
+            options=pairs(REALMS),
             hint="The creation rules assume Magic (aura 3); a Faerie aura is a Hook.",
         ),
     ]
@@ -142,7 +143,7 @@ def _covenant_field(saga: Saga, covenant_id: str | None) -> DialogField:
         "Covenant",
         "select",
         covenant_id,
-        options=_covenant_options(saga),
+        options=covenant_options(saga),
         allow_blank=True,
         placeholder="(no covenant)",
     )

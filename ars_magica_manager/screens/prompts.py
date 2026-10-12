@@ -28,6 +28,7 @@ from .. import players as pl
 from .. import saga_content as sc
 from .. import sheet_text as st
 from ..arts import ART_DESCRIPTIONS, ARTS, FORMS, TECHNIQUES
+from ..form_spec import EMPHASIS_HINT, DialogField, attr, description_field, pairs
 from ..markup import escape, todo
 from ..models import (
     COVENANT_DIARY_CATEGORIES,
@@ -70,22 +71,14 @@ from ..rules.creation_covenant import (
     band,
     in_band,
 )
-from .fields import (
-    _EMPHASIS_HINT,
-    DialogField,
-    FieldsDialog,
-    ModalDialog,
-    _attr,
-    _description_field,
-    _pairs,
-)
+from .fields import FieldsDialog, ModalDialog
 from .widgets import SelectableList
 
 
 def _date_fields(season: str, year: int) -> list[DialogField]:
     """Set the saga's date."""
     return [
-        DialogField("season", "Season", "select", season, options=_pairs(SEASONS)),
+        DialogField("season", "Season", "select", season, options=pairs(SEASONS)),
         DialogField("year", "Year", "int", year),
     ]
 
@@ -93,12 +86,12 @@ def _date_fields(season: str, year: int) -> list[DialogField]:
 def _ability_fields(ability: Ability | None) -> list[DialogField]:
     """An Ability's total xp and Specialty (its name is the form's title)."""
     return [
-        DialogField("xp", "XP", "int", _attr(ability, "xp", 0)),
+        DialogField("xp", "XP", "int", attr(ability, "xp", 0)),
         DialogField(
             "specialty",
             "Specialty",
             "text",
-            _attr(ability, "specialty", None) or "",
+            attr(ability, "specialty", None) or "",
             placeholder="e.g. Swords",
         ),
     ]
@@ -206,7 +199,7 @@ def _boon_hook_fields(
                 placeholder="e.g. the specific building or resource",
             ),
             DialogField(
-                "description", "Description", "area", description, hint=_EMPHASIS_HINT
+                "description", "Description", "area", description, hint=EMPHASIS_HINT
             ),
         ]
     )
@@ -348,7 +341,7 @@ def _lab_choice_dialog(entry: LabVirtueFlawDef) -> FieldsDialog[dict[str, str]]:
                 "Specialization",
                 "select",
                 None,
-                options=_pairs(options),
+                options=pairs(options),
                 required=True,
                 allow_blank=True,
                 placeholder="(choose one)",
@@ -376,8 +369,8 @@ def _lab_specialty_entry_dialog(
                 "specialization",
                 "Specialization",
                 "select",
-                _attr(existing, "specialization", "") or None,
-                options=_pairs(LAB_SPECIALIZATIONS),
+                attr(existing, "specialization", "") or None,
+                options=pairs(LAB_SPECIALIZATIONS),
                 required=True,
                 allow_blank=True,
                 placeholder="(choose an Activity or Art)",
@@ -386,14 +379,14 @@ def _lab_specialty_entry_dialog(
                 "points",
                 "Points",
                 "int",
-                _attr(existing, "points", 1),
+                attr(existing, "points", 1),
                 hint="Negative for a penalty (e.g. Undecorated).",
             ),
             DialogField(
                 "source",
                 "Source",
                 "text",
-                _attr(existing, "source", ""),
+                attr(existing, "source", ""),
                 placeholder="e.g. Subterranean",
             ),
         ],
@@ -425,11 +418,11 @@ def _scored_trait_dialog(
             "name",
             "Name",
             "text",
-            _attr(existing, "name", ""),
+            attr(existing, "name", ""),
             required=True,
             placeholder=name_placeholder,
         ),
-        DialogField("score", score_label, "int", _attr(existing, "score", 0)),
+        DialogField("score", score_label, "int", attr(existing, "score", 0)),
     ]
     if include_known:
         fields.append(
@@ -437,7 +430,7 @@ def _scored_trait_dialog(
                 "known",
                 "Known by the covenant?",
                 "check",
-                _attr(existing, "known", True),
+                attr(existing, "known", True),
             )
         )
 
@@ -469,12 +462,12 @@ def _mastery_ability_dialog(
                 "name",
                 "Name",
                 "text",
-                _attr(existing, "name", ""),
+                attr(existing, "name", ""),
                 required=True,
                 placeholder="e.g. Fast Casting",
             ),
-            DialogField("level", "Level", "int", _attr(existing, "level", 0)),
-            DialogField("xp", "XP", "int", _attr(existing, "xp", 0)),
+            DialogField("level", "Level", "int", attr(existing, "level", 0)),
+            DialogField("xp", "XP", "int", attr(existing, "xp", 0)),
         ],
         build=lambda values: MasteryAbility(**values),
     )
@@ -757,7 +750,7 @@ def _house_rule_dialog(
             "Category",
             "select",
             current if current in hr.CATEGORIES[of] else hr.CATEGORIES[of][0],
-            options=_pairs(hr.CATEGORIES[of]),
+            options=pairs(hr.CATEGORIES[of]),
             show_if=lambda values: kind(values) == of,
         )
 
@@ -782,7 +775,7 @@ def _house_rule_dialog(
                 "Type",
                 "select",
                 entry.type if entry is not None and not covenant_entry else "Virtue",
-                options=_pairs(hr.TYPES[hr.CHARACTER]),
+                options=pairs(hr.TYPES[hr.CHARACTER]),
                 show_if=lambda values: kind(values) != hr.COVENANT,
             ),
             DialogField(
@@ -790,7 +783,7 @@ def _house_rule_dialog(
                 "Type",
                 "select",
                 entry.type if entry is not None and covenant_entry else "Boon",
-                options=_pairs(hr.TYPES[hr.COVENANT]),
+                options=pairs(hr.TYPES[hr.COVENANT]),
                 show_if=lambda values: kind(values) == hr.COVENANT,
             ),
             DialogField(
@@ -798,7 +791,7 @@ def _house_rule_dialog(
                 "Tier",
                 "select",
                 entry.tier if entry else "Minor",
-                options=_pairs(hr.TIERS),
+                options=pairs(hr.TIERS),
             ),
             *(category(of) for of in hr.KINDS),
             DialogField(
@@ -808,7 +801,7 @@ def _house_rule_dialog(
                 bool(entry.repeatable) if entry else False,
             ),
             *_house_rule_source_field(saga, entry),
-            _description_field(entry.description if entry else ""),
+            description_field(entry.description if entry else ""),
         ],
         validate=lambda values: hr.form_problem(
             saga, kind(values), built(values), entry
@@ -1367,11 +1360,11 @@ def _named_description_dialog(
                 "name",
                 "Name",
                 "text",
-                _attr(existing, "name", ""),
+                attr(existing, "name", ""),
                 required=True,
                 placeholder=name_placeholder,
             ),
-            _description_field(_attr(existing, "description", "")),
+            description_field(attr(existing, "description", "")),
         ],
         build=lambda values: NamedDescription(**values),
     )
@@ -1403,16 +1396,16 @@ def _arcane_connection_dialog(
                 "to",
                 "Connection to",
                 "text",
-                _attr(existing, "to", ""),
+                attr(existing, "to", ""),
                 required=True,
                 placeholder="e.g. a lock of Banna's hair",
             ),
-            DialogField("fixed", "Fixed", "check", _attr(existing, "fixed", False)),
+            DialogField("fixed", "Fixed", "check", attr(existing, "fixed", False)),
             DialogField(
                 "lasts",
                 "Lasts",
                 "text",
-                _attr(existing, "lasts", ""),
+                attr(existing, "lasts", ""),
                 placeholder="e.g. until Summer 1222",
                 show_if=lambda v: not v.get("fixed"),
             ),
@@ -1420,10 +1413,10 @@ def _arcane_connection_dialog(
                 "source",
                 "Where from",
                 "text",
-                _attr(existing, "source", ""),
+                attr(existing, "source", ""),
                 placeholder="e.g. taken at the Tribunal",
             ),
-            _description_field(_attr(existing, "description", "")),
+            description_field(attr(existing, "description", "")),
         ],
         build=build,
     )
@@ -1440,31 +1433,31 @@ def _diary_entry_dialog(
     return FieldsDialog(
         "Add a Diary Entry" if existing is None else "Edit a Diary Entry",
         [
-            DialogField("year", "Year", "int", _attr(existing, "year", default_year)),
+            DialogField("year", "Year", "int", attr(existing, "year", default_year)),
             DialogField(
                 "season",
                 "Season",
                 "select",
-                _attr(existing, "season", default_season),
-                options=_pairs(SEASONS),
+                attr(existing, "season", default_season),
+                options=pairs(SEASONS),
             ),
             DialogField(
                 "activity",
                 "Activity Type",
                 "select",
-                _attr(existing, "activity", "") or None,
-                options=_pairs(activities),
+                attr(existing, "activity", "") or None,
+                options=pairs(activities),
                 allow_blank=True,
             ),
             DialogField(
-                "name", "Name", "text", _attr(existing, "name", ""), required=True
+                "name", "Name", "text", attr(existing, "name", ""), required=True
             ),
             DialogField(
                 "details",
                 "Details",
                 "area",
-                _attr(existing, "details", ""),
-                hint=_EMPHASIS_HINT,
+                attr(existing, "details", ""),
+                hint=EMPHASIS_HINT,
             ),
         ],
         build=lambda values: DiaryEntry(
@@ -1531,38 +1524,38 @@ def _covenant_diary_entry_dialog(
     return FieldsDialog(
         "Add a Diary Entry" if existing is None else "Edit a Diary Entry",
         [
-            DialogField("year", "Year", "int", _attr(existing, "year", default_year)),
+            DialogField("year", "Year", "int", attr(existing, "year", default_year)),
             DialogField(
                 "season",
                 "Season",
                 "select",
-                _attr(existing, "season", default_season),
-                options=_pairs(SEASONS),
+                attr(existing, "season", default_season),
+                options=pairs(SEASONS),
             ),
             DialogField(
                 "category",
                 "Category",
                 "select",
-                _attr(existing, "category", "") or None,
-                options=_pairs(COVENANT_DIARY_CATEGORIES),
+                attr(existing, "category", "") or None,
+                options=pairs(COVENANT_DIARY_CATEGORIES),
                 allow_blank=True,
             ),
             DialogField(
-                "name", "Name", "text", _attr(existing, "name", ""), required=True
+                "name", "Name", "text", attr(existing, "name", ""), required=True
             ),
             DialogField(
                 "status",
                 "Status",
                 "select",
-                _attr(existing, "status", "") or STORY_EVENT_STATUSES[0],
-                options=_pairs(STORY_EVENT_STATUSES),
+                attr(existing, "status", "") or STORY_EVENT_STATUSES[0],
+                options=pairs(STORY_EVENT_STATUSES),
                 show_if=story,
             ),
             DialogField(
                 "boon_hook_id",
                 "Linked Boon/Hook",
                 "select",
-                _attr(existing, "boon_hook_id", None),
+                attr(existing, "boon_hook_id", None),
                 options=boons_hooks,
                 allow_blank=True,
                 placeholder="(none)",
@@ -1572,14 +1565,14 @@ def _covenant_diary_entry_dialog(
                 "revisit_year",
                 "Revisit in year",
                 "optint",
-                _attr(existing, "revisit_year", None),
+                attr(existing, "revisit_year", None),
                 show_if=story,
             ),
             DialogField(
                 "build_points",
                 "Build Points unlocked",
                 "optint",
-                _attr(existing, "build_points", None),
+                attr(existing, "build_points", None),
                 hint="Of the Hidden Resources Boon's 250; counted once Resolved.",
                 show_if=hidden,
             ),
@@ -1587,7 +1580,7 @@ def _covenant_diary_entry_dialog(
                 "illusory_points",
                 "Build Points found illusory",
                 "optint",
-                _attr(existing, "build_points", None),
+                attr(existing, "build_points", None),
                 hint="Of the Illusory Resources Hook's 250; counted once Resolved.",
                 show_if=illusory,
             ),
@@ -1595,35 +1588,35 @@ def _covenant_diary_entry_dialog(
                 "pounds",
                 "Pounds (+ received, - spent)",
                 "optfloat",
-                _attr(existing, "pounds", None),
+                attr(existing, "pounds", None),
             ),
             DialogField(
                 "vis_pawns",
                 "Vis pawns (+ gained, - spent)",
                 "optint",
-                _attr(existing, "vis_pawns", None),
+                attr(existing, "vis_pawns", None),
             ),
             DialogField(
                 "vis_art",
                 "Vis Art",
                 "select",
-                _attr(existing, "vis_art", "") or None,
-                options=_pairs(ARTS),
+                attr(existing, "vis_art", "") or None,
+                options=pairs(ARTS),
                 allow_blank=True,
             ),
             DialogField(
                 "loyalty",
                 "Loyalty points",
                 "optint",
-                _attr(existing, "loyalty", None),
+                attr(existing, "loyalty", None),
                 hint="Added into the Loyalty block's Actions and Events.",
             ),
             DialogField(
                 "details",
                 "Details",
                 "area",
-                _attr(existing, "details", ""),
-                hint=_EMPHASIS_HINT,
+                attr(existing, "details", ""),
+                hint=EMPHASIS_HINT,
             ),
         ],
         validate=problem,

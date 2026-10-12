@@ -5,7 +5,7 @@ tests import from the package."""
 
 from __future__ import annotations
 
-from .fields import DialogField as DialogField
+from ..form_spec import DialogField as DialogField
 from .fields import FieldsDialog as FieldsDialog
 from .forms import DuplicateBookScreen as DuplicateBookScreen
 from .forms import EditArtsScreen as EditArtsScreen

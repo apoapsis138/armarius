@@ -13,23 +13,27 @@ from textual.widgets import Static, TabbedContent, TabPane
 
 from ... import saga_content as sc
 from ...models import Saga, SagaSource
+from ...sections import (
+    BOOKS_SECTION,
+    CATALOGS_SECTION,
+    HIDDEN_SECTION,
+    HOUSE_RULES_SECTION,
+    PLAYERS_SECTION,
+    SOURCES_SECTION,
+    SPELL_SECTION,
+)
 from ..widgets import SelectableList, SheetSection, TableHeader, counted
 from .base import SheetView
 from .lists import HouseRulesView, PlayersView, SpellListView
-
-BOOKS_SECTION = "section-books-in-play"
-SOURCES_SECTION = "section-saga-sources"
-CATALOGS_SECTION = "section-catalogs"
-HIDDEN_SECTION = "section-hidden-entries"
 
 #: Each tab's list section: what a / e / d act on when focus is elsewhere
 #: in the tab (the Spells tab's filter bar).
 TAB_SECTIONS: dict[str, str] = {
     "tab-content-books": BOOKS_SECTION,
     "tab-content-catalogs": CATALOGS_SECTION,
-    "tab-content-house-rules": "section-house-rules",
-    "tab-content-spells": "section-spells",
-    "tab-content-players": "section-players",
+    "tab-content-house-rules": HOUSE_RULES_SECTION,
+    "tab-content-spells": SPELL_SECTION,
+    "tab-content-players": PLAYERS_SECTION,
 }
 
 

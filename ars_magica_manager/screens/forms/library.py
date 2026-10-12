@@ -10,6 +10,7 @@ from ... import book_value as bv
 from ... import books as bk
 from ... import spells as spl
 from ...arts import ARTS, FORMS, TECHNIQUES
+from ...form_spec import DialogField, attr, description_field, pairs
 from ...markup import escape, problem
 from ...models import (
     BOOK_TYPES,
@@ -24,7 +25,6 @@ from ...models import (
     Covenant,
     Saga,
 )
-from ..fields import DialogField, _attr, _description_field, _pairs
 from ..pickers import SpellChooserScreen
 
 #: The Codex select's value for binding the book into a new codex.
@@ -91,7 +91,7 @@ class _BookShows:
         if spell is None:
             # No spell chosen: ask for the spell first -- unless this is a book
             # whose typed spell is unknown, which keeps its own Level.
-            return bool(_attr(self.book, "spell_name", ""))
+            return bool(attr(self.book, "spell_name", ""))
         return spell.level is None
 
 
@@ -100,13 +100,13 @@ def _book_identity_fields(
 ) -> list[DialogField]:
     """Name, Type and a Lab Text's Kind."""
     return [
-        DialogField("name", "Name", "text", _attr(book, "name", ""), required=True),
+        DialogField("name", "Name", "text", attr(book, "name", ""), required=True),
         DialogField(
             "type",
             "Type",
             "select",
-            _attr(book, "type", default_type),
-            options=_pairs(BOOK_TYPES),
+            attr(book, "type", default_type),
+            options=pairs(BOOK_TYPES),
             required=True,
             allow_blank=True,
             placeholder="(choose a Type)",
@@ -115,8 +115,8 @@ def _book_identity_fields(
             "text_kind",
             "Kind",
             "select",
-            _attr(book, "text_kind", "") or TEXT_SPELL,
-            options=_pairs(LAB_TEXT_KINDS),
+            attr(book, "text_kind", "") or TEXT_SPELL,
+            options=pairs(LAB_TEXT_KINDS),
             show_if=shows.lab_text,
         ),
     ]
@@ -129,9 +129,9 @@ def _book_subject_fields(
     Technique and Form."""
     ability_names = [a.name for a in catalog.load_ability_catalog()]
     ability, ability_detail = _book_ability_choice(
-        _attr(book, "ability", ""), ability_names
+        attr(book, "ability", ""), ability_names
     )
-    ability_options = _pairs(ability_names)
+    ability_options = pairs(ability_names)
     if ability and ability not in ability_names:
         ability_options.insert(0, (ability, ability))
 
@@ -151,8 +151,8 @@ def _book_subject_fields(
             "subject_kind",
             "Subject",
             "select",
-            _attr(book, "subject_kind", ""),
-            options=_pairs(TRACTATUS_SUBJECTS),
+            attr(book, "subject_kind", ""),
+            options=pairs(TRACTATUS_SUBJECTS),
             required=True,
             allow_blank=True,
             placeholder="(Art or Ability)",
@@ -162,8 +162,8 @@ def _book_subject_fields(
             "art",
             "Art",
             "select",
-            _attr(book, "art", ""),
-            options=_pairs(ARTS),
+            attr(book, "art", ""),
+            options=pairs(ARTS),
             required=True,
             allow_blank=True,
             placeholder="(choose an Art)",
@@ -194,8 +194,8 @@ def _book_subject_fields(
             "picker",
             spell_id,
             placeholder=(
-                f"Unknown: {_attr(book, 'spell_name', '')} -- choose the spell..."
-                if spell_id is None and _attr(book, "spell_name", "")
+                f"Unknown: {attr(book, 'spell_name', '')} -- choose the spell..."
+                if spell_id is None and attr(book, "spell_name", "")
                 else "(choose the spell...)"
             ),
             picker=lambda _current: SpellChooserScreen(saga),
@@ -206,8 +206,8 @@ def _book_subject_fields(
             "technique",
             "Technique",
             "select",
-            _attr(book, "technique", ""),
-            options=_pairs(TECHNIQUES),
+            attr(book, "technique", ""),
+            options=pairs(TECHNIQUES),
             allow_blank=True,
             placeholder="(not recorded)",
             show_if=lambda v: shows.text_kind(v) in (TEXT_ENCHANTMENT, TEXT_OTHER),
@@ -216,8 +216,8 @@ def _book_subject_fields(
             "form",
             "Form",
             "select",
-            _attr(book, "form", ""),
-            options=_pairs(FORMS),
+            attr(book, "form", ""),
+            options=pairs(FORMS),
             allow_blank=True,
             placeholder="(not recorded)",
             show_if=lambda v: shows.text_kind(v) in (TEXT_ENCHANTMENT, TEXT_OTHER),
@@ -232,7 +232,7 @@ def _book_level_fields(book: Book | None, shows: _BookShows) -> list[DialogField
             "level",
             "Level",
             "optint",
-            _attr(book, "level", None),
+            attr(book, "level", None),
             required=True,
             hint="",
             show_if=shows.needs_level,
@@ -241,7 +241,7 @@ def _book_level_fields(book: Book | None, shows: _BookShows) -> list[DialogField
             "quality",
             "Quality",
             "optint",
-            _attr(book, "quality", None),
+            attr(book, "quality", None),
             required=True,
             show_if=lambda v: bk.has_quality(shows.book_type(v)),
         ),
@@ -266,9 +266,9 @@ def _book_kind_fields(
         )
 
     books = sourcebooks.saga_books(saga)
-    opus = book_kinds.offered(book_kinds.OPUS_TYPES, books, _attr(book, "opus", ""))
+    opus = book_kinds.offered(book_kinds.OPUS_TYPES, books, attr(book, "opus", ""))
     forms = book_kinds.offered(
-        book_kinds.PHYSICAL_FORMS, books, _attr(book, "physical_form", "")
+        book_kinds.PHYSICAL_FORMS, books, attr(book, "physical_form", "")
     )
     # What a book out of play adds is left off, unless this book uses it.
     hidden: set[str] = set()
@@ -278,12 +278,12 @@ def _book_kind_fields(
         hidden.add("physical_form")
     if not (
         sourcebooks.in_play(book_kinds.EPITOME_BOOK, books)
-        or _attr(book, "device_id", None)
+        or attr(book, "device_id", None)
     ):
         hidden.add("epitome")
     if not (
         sourcebooks.in_play(book_kinds.GLOSS.book, books)
-        or _attr(book, "glossed", False)
+        or attr(book, "glossed", False)
     ):
         hidden.add("glossed")
     fields = [
@@ -291,7 +291,7 @@ def _book_kind_fields(
             "opus",
             "Opus",
             "select",
-            _attr(book, "opus", "") or None,
+            attr(book, "opus", "") or None,
             options=[(k.name, k.name) for k in opus],
             allow_blank=True,
             placeholder="(an ordinary tractatus)",
@@ -302,7 +302,7 @@ def _book_kind_fields(
             "commentary_on",
             "Commentary on",
             "select",
-            _attr(book, "commentary_on", None),
+            attr(book, "commentary_on", None),
             options=summae,
             allow_blank=True,
             placeholder="(its summa isn't in the saga)",
@@ -312,7 +312,7 @@ def _book_kind_fields(
             "epitome",
             "Epitome",
             "select",
-            _attr(book, "device_id", None),
+            attr(book, "device_id", None),
             options=[(d.name, d.id) for d in saga.enchanted_devices]
             + [("(enchant it: a new invested device)", NEW_EPITOME)],
             allow_blank=True,
@@ -325,7 +325,7 @@ def _book_kind_fields(
             "glossed",
             "Glossed (+1)",
             "check",
-            bool(_attr(book, "glossed", False)),
+            bool(attr(book, "glossed", False)),
             hint="Annotated by a reader at least half as skilled as its Level, "
             "with better Communication than the author (a Read season can do "
             "it); +1 once.",
@@ -335,7 +335,7 @@ def _book_kind_fields(
             "physical_form",
             "Physical form",
             "select",
-            _attr(book, "physical_form", "") or None,
+            attr(book, "physical_form", "") or None,
             options=[
                 (f"{k.name} ({k.quality:+d} Quality)" if k.quality else k.name, k.name)
                 for k in forms
@@ -365,7 +365,7 @@ def _craft_fields(
     (book_kinds.CRAFT), each adding to its Quality."""
     if not bk.extended_quality(saga):
         return []
-    craft = list(_attr(book, "craft", []) or [])
+    craft = list(attr(book, "craft", []) or [])
 
     def has_quality(values: dict[str, Any]) -> bool:
         return bk.has_quality(shows.book_type(values))
@@ -423,7 +423,7 @@ def _lab_text_fields(book: Book | None, shows: _BookShows) -> list[DialogField]:
             "effect_rdt",
             "Range / Duration / Target",
             "text",
-            _attr(book, "effect_rdt", ""),
+            attr(book, "effect_rdt", ""),
             placeholder="Touch / Sun / Individual",
             show_if=lambda v: shows.text_kind(v) == TEXT_ENCHANTMENT,
         ),
@@ -431,8 +431,8 @@ def _lab_text_fields(book: Book | None, shows: _BookShows) -> list[DialogField]:
             "device_type",
             "Device",
             "select",
-            _attr(book, "device_type", ""),
-            options=_pairs((*DEVICE_TYPES, "Talisman")),
+            attr(book, "device_type", ""),
+            options=pairs((*DEVICE_TYPES, "Talisman")),
             allow_blank=True,
             placeholder="(not recorded)",
             show_if=lambda v: shows.text_kind(v) == TEXT_ENCHANTMENT,
@@ -441,21 +441,21 @@ def _lab_text_fields(book: Book | None, shows: _BookShows) -> list[DialogField]:
             "shape_material",
             "Shape and material",
             "text",
-            _attr(book, "shape_material", ""),
+            attr(book, "shape_material", ""),
             show_if=lambda v: shows.text_kind(v) == TEXT_ENCHANTMENT,
         ),
         DialogField(
             "ritual_subject",
             "Ritual's subject",
             "text",
-            _attr(book, "ritual_subject", ""),
+            attr(book, "ritual_subject", ""),
             show_if=lambda v: shows.text_kind(v) == TEXT_LONGEVITY,
         ),
         DialogField(
             "ritual_extra_vis",
             "Extra vis (each time)",
             "int",
-            _attr(book, "ritual_extra_vis", 0),
+            attr(book, "ritual_extra_vis", 0),
             hint="Pawns beyond age / 5 the ritual was first made with: spent "
             "again whenever it is performed.",
             show_if=lambda v: shows.text_kind(v) == TEXT_LONGEVITY,
@@ -468,13 +468,13 @@ def _book_authorship_fields(
 ) -> list[DialogField]:
     """Language, author and when it was written."""
     return [
-        DialogField("language", "Language", "text", _attr(book, "language", "Latin")),
-        DialogField("author", "Author", "text", _attr(book, "author", "")),
+        DialogField("language", "Language", "text", attr(book, "language", "Latin")),
+        DialogField("author", "Author", "text", attr(book, "author", "")),
         DialogField(
             "author_id",
             "Author's sheet",
             "select",
-            _attr(book, "author_id", None),
+            attr(book, "author_id", None),
             options=[(c.name, c.id) for c in saga.characters if c.type == "magus"],
             allow_blank=True,
             placeholder="(not a magus of this saga)",
@@ -486,7 +486,7 @@ def _book_authorship_fields(
             "raw",
             "Raw (author's shorthand)",
             "check",
-            bool(_attr(book, "raw", False)),
+            bool(attr(book, "raw", False)),
             hint="Only the author, and whoever has decoded his texts, can use "
             "it until he rewrites it.",
             show_if=shows.lab_text,
@@ -495,7 +495,7 @@ def _book_authorship_fields(
             "year_published",
             "Year Published",
             "optint",
-            _attr(book, "year_published", None),
+            attr(book, "year_published", None),
         ),
     ]
 
@@ -576,7 +576,7 @@ def _book_ownership_fields(
             "codex_name",
             "New codex's name",
             "text",
-            _attr(book, "name", ""),
+            attr(book, "name", ""),
             show_if=lambda v: v.get("codex") == NEW_CODEX,
         ),
         DialogField(
@@ -643,7 +643,7 @@ def _book_fields(
         *_lab_text_fields(book, shows),
         *_book_authorship_fields(saga, book, shows),
         *_book_ownership_fields(saga, book, default_owner),
-        _description_field(_attr(book, "description", "")),
+        description_field(attr(book, "description", "")),
     ]
 
 

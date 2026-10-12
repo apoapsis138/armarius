@@ -12,6 +12,7 @@ from ... import inhabitants as inh
 from ... import possessions as pos
 from ... import sheet_text as st
 from ...arts import ARTS
+from ...form_spec import DialogField, attr, description_field, pairs, year_born_field
 from ...markup import escape
 from ...models import (
     COVENANT_ROLES,
@@ -31,14 +32,7 @@ from ...models import (
     Covenant,
     IncomeSource,
 )
-from ..fields import (
-    DialogField,
-    FieldsDialog,
-    _attr,
-    _description_field,
-    _pairs,
-    _year_born_field,
-)
+from ..fields import FieldsDialog
 from ..pickers import AbilityPickerScreen
 from ..prompts import ConfirmScreen
 
@@ -71,7 +65,7 @@ def _inhabitant_fields(
                 "Covenant Role",
                 "select",
                 entry.role if entry else "",
-                options=_pairs(OTHER_COVENFOLK_ROLES),
+                options=pairs(OTHER_COVENFOLK_ROLES),
                 required=True,
                 allow_blank=True,
                 placeholder="(choose a Covenant Role)",
@@ -83,7 +77,7 @@ def _inhabitant_fields(
         fields.append(
             DialogField("quantity", "Quantity", "int", entry.quantity if entry else 1)
         )
-    fields.append(_description_field(entry.description if entry else ""))
+    fields.append(description_field(entry.description if entry else ""))
     return fields
 
 
@@ -136,7 +130,7 @@ def _inhabitant_identity_fields(
                 placeholder="Unknown",
             )
         )
-    fields.append(_year_born_field(year_born))
+    fields.append(year_born_field(year_born))
     if kind == "magus":
         fields.append(
             DialogField(
@@ -144,7 +138,7 @@ def _inhabitant_identity_fields(
                 "Gift",
                 "select",
                 entry.record.gift if entry and entry.record else "",
-                options=_pairs(GIFT_CHOICES),
+                options=pairs(GIFT_CHOICES),
                 allow_blank=True,
                 placeholder="Unknown (assumed The Gift)",
             )
@@ -161,7 +155,7 @@ def _covenant_role_fields(entry: inh.InhabitantEntry | None) -> list[DialogField
             "Covenant Role",
             "select",
             entry.role if entry else "",
-            options=_pairs(COVENANT_ROLES),
+            options=pairs(COVENANT_ROLES),
             allow_blank=True,
         )
     ]
@@ -232,14 +226,14 @@ def _craftsperson_fields(
             "Field of Work",
             "select",
             entry.field_of_work if entry else "None",
-            options=_pairs(CRAFT_FIELDS),
+            options=pairs(CRAFT_FIELDS),
         ),
         DialogField("rare", "Rare", "check", entry.rare if entry else False),
     ]
     abilities = inh.ability_names(character)
     current = entry.linked_ability if entry else ""
     if character is not None:
-        options = _pairs(abilities)
+        options = pairs(abilities)
         if current and current not in abilities:
             options.append((current, current))
         fields.append(
@@ -299,7 +293,7 @@ def _possession_fields(
         _sanctum_from_lab_fields(kind, entry)
         if auto and entry is not None
         else [
-            DialogField("name", "Name", "text", _attr(entry, "name", ""), required=True)
+            DialogField("name", "Name", "text", attr(entry, "name", ""), required=True)
         ]
     )
     if kind == "property":
@@ -312,7 +306,7 @@ def _possession_fields(
         fields += _vis_possession_fields(kind, entry, places, place)
 
     if kind != "vis_store":
-        fields.append(_description_field(_attr(entry, "description", "")))
+        fields.append(description_field(attr(entry, "description", "")))
     return fields
 
 
@@ -342,10 +336,10 @@ def _sanctum_from_lab_fields(
 
 def _property_fields(entry: pos.PossessionEntry | None) -> list[DialogField]:
     return [
-        DialogField("location", "Location", "text", _attr(entry, "location", "")),
-        DialogField("dimensions", "Dimensions", "text", _attr(entry, "dimensions", "")),
+        DialogField("location", "Location", "text", attr(entry, "location", "")),
+        DialogField("dimensions", "Dimensions", "text", attr(entry, "dimensions", "")),
         DialogField(
-            "inhabitants", "Inhabitants", "text", _attr(entry, "inhabitants", "")
+            "inhabitants", "Inhabitants", "text", attr(entry, "inhabitants", "")
         ),
     ]
 
@@ -357,17 +351,17 @@ def _sanctum_fields(entry: pos.PossessionEntry | None, auto: bool) -> list[Dialo
     if not auto:
         fields += [
             # Unowned sanctums are "Free": narratively, visitors can use them.
-            DialogField("owner", "Owner", "text", _attr(entry, "owner", "Free")),
-            DialogField("location", "Location", "text", _attr(entry, "location", "")),
-            DialogField("quality", "Quality", "optint", _attr(entry, "quality", None)),
+            DialogField("owner", "Owner", "text", attr(entry, "owner", "Free")),
+            DialogField("location", "Location", "text", attr(entry, "location", "")),
+            DialogField("quality", "Quality", "optint", attr(entry, "quality", None)),
             DialogField(
-                "upkeep", "Upkeep (Points)", "optint", _attr(entry, "upkeep", None)
+                "upkeep", "Upkeep (Points)", "optint", attr(entry, "upkeep", None)
             ),
             DialogField(
                 "build_points",
                 "Build Points",
                 "optint",
-                _attr(entry, "build_points", None),
+                attr(entry, "build_points", None),
             ),
         ]
     fields.append(
@@ -375,8 +369,8 @@ def _sanctum_fields(entry: pos.PossessionEntry | None, auto: bool) -> list[Dialo
             "usage",
             "Usage",
             "select",
-            _attr(entry, "usage", SANCTUM_USAGE_DEFAULT),
-            options=_pairs(SANCTUM_USAGES),
+            attr(entry, "usage", SANCTUM_USAGE_DEFAULT),
+            options=pairs(SANCTUM_USAGES),
         )
     )
     return fields
@@ -417,7 +411,7 @@ def _gear_book_field(
         "gear_id",
         label,
         "select",
-        _attr(entry, "gear_id", None),
+        attr(entry, "gear_id", None),
         options=options,
         allow_blank=True,
         placeholder="(custom)",
@@ -440,8 +434,8 @@ def _quantity_possession_fields(
                 "gear_type",
                 "Type",
                 "select",
-                _attr(entry, "gear_type", types[0]) or types[0],
-                options=_pairs(types),
+                attr(entry, "gear_type", types[0]) or types[0],
+                options=pairs(types),
                 # Partial or full armor changes the book's figures.
                 fills=book.fills if kind == "armor" else None,
             ),
@@ -449,30 +443,30 @@ def _quantity_possession_fields(
                 "gear_quality",
                 "Quality",
                 "select",
-                _attr(entry, "gear_quality", GEAR_QUALITY_DEFAULT),
-                options=_pairs(GEAR_QUALITIES),
+                attr(entry, "gear_quality", GEAR_QUALITY_DEFAULT),
+                options=pairs(GEAR_QUALITIES),
             ),
         ]
     fields.append(
-        DialogField("quantity", "Quantity", "int", _attr(entry, "quantity", 1))
+        DialogField("quantity", "Quantity", "int", attr(entry, "quantity", 1))
     )
     if kind == "weapon":
         fields += [
-            DialogField("weapon_init", "Init", "int", _attr(entry, "weapon_init", 0)),
+            DialogField("weapon_init", "Init", "int", attr(entry, "weapon_init", 0)),
             DialogField(
                 "weapon_attack",
                 "Attack (blank = n/a)",
                 "optint",
-                _attr(entry, "weapon_attack", 0),
+                attr(entry, "weapon_attack", 0),
             ),
             DialogField(
-                "weapon_defense", "Defense", "int", _attr(entry, "weapon_defense", 0)
+                "weapon_defense", "Defense", "int", attr(entry, "weapon_defense", 0)
             ),
             DialogField(
                 "weapon_damage",
                 "Damage (blank = n/a)",
                 "optint",
-                _attr(entry, "weapon_damage", 0),
+                attr(entry, "weapon_damage", 0),
             ),
         ]
     elif kind == "armor":
@@ -481,11 +475,11 @@ def _quantity_possession_fields(
                 "armor_protection",
                 "Protection",
                 "int",
-                _attr(entry, "armor_protection", 0),
+                attr(entry, "armor_protection", 0),
             )
         )
     if kind in GEAR_TYPES_BY_KIND and not natural:
-        fields.append(DialogField("load", "Load", "int", _attr(entry, "load", 0)))
+        fields.append(DialogField("load", "Load", "int", attr(entry, "load", 0)))
     return fields
 
 
@@ -502,8 +496,8 @@ def _vis_possession_fields(
             "art",
             "Art",
             "select",
-            _attr(entry, "art", ""),
-            options=_pairs(ARTS),
+            attr(entry, "art", ""),
+            options=pairs(ARTS),
             required=True,
             allow_blank=True,
             placeholder="(choose an Art)",
@@ -515,8 +509,8 @@ def _vis_possession_fields(
                 "season",
                 "Season harvested",
                 "select",
-                _attr(entry, "season", ""),
-                options=_pairs(SEASONS),
+                attr(entry, "season", ""),
+                options=pairs(SEASONS),
                 required=True,
                 allow_blank=True,
                 placeholder="(choose a Season)",
@@ -524,7 +518,7 @@ def _vis_possession_fields(
         )
         # The Hooks are on the record: a PossessionEntry has no such fields.
         fields += _contested_fields(entry.record if entry is not None else None)
-    fields.append(DialogField("pawns", "Pawns", "int", _attr(entry, "pawns", 1) or 1))
+    fields.append(DialogField("pawns", "Pawns", "int", attr(entry, "pawns", 1) or 1))
     if kind == "vis_store" and places:
         fields.append(
             DialogField(
@@ -539,12 +533,12 @@ def _vis_possession_fields(
             )
         )
     fields += [
-        DialogField("location", "Location", "text", _attr(entry, "location", "")),
+        DialogField("location", "Location", "text", attr(entry, "location", "")),
         DialogField(
             "physical_form",
             "Physical Form",
             "text",
-            _attr(entry, "physical_form", ""),
+            attr(entry, "physical_form", ""),
         ),
     ]
     return fields
@@ -557,7 +551,7 @@ def _contested_fields(entry: Any) -> list[DialogField]:
             "contested",
             "Contested Resource",
             "check",
-            bool(_attr(entry, "contested", False)),
+            bool(attr(entry, "contested", False)),
             hint="Covered by a Contested or Indiscreet Resource Hook: advancing "
             "asks whether it was secured once its security lapses.",
         ),
@@ -565,7 +559,7 @@ def _contested_fields(entry: Any) -> list[DialogField]:
             "secured_until",
             "Secured through (year)",
             "optint",
-            _attr(entry, "secured_until", None),
+            attr(entry, "secured_until", None),
             show_if=lambda values: bool(values.get("contested")),
             hint="A story secures it for five years.",
         ),
@@ -573,7 +567,7 @@ def _contested_fields(entry: Any) -> list[DialogField]:
             "dwindling",
             "Dwindling Resource (gone in 10 years)",
             "check",
-            bool(_attr(entry, "dwindling", False)),
+            bool(attr(entry, "dwindling", False)),
         ),
     ]
 
@@ -614,7 +608,7 @@ def _covenant_fields(covenant: Covenant) -> list[DialogField]:
             "Aura Realm",
             "select",
             cov.aura_realm,
-            options=_pairs(REALMS),
+            options=pairs(REALMS),
             hint="Hermetic magic gains the full aura only in a Magic aura.",
         ),
         DialogField(
@@ -622,7 +616,7 @@ def _covenant_fields(covenant: Covenant) -> list[DialogField]:
             "Covenant Season",
             "select",
             cov.covenant_season,
-            options=_pairs(SEASONS),
+            options=pairs(SEASONS),
         ),
     ]
 
@@ -669,7 +663,7 @@ def _improve_income_dialog(
                 "Annual Improvement Effect",
                 "select",
                 "Status Quo",
-                options=_pairs(INCOME_EFFECTS),
+                options=pairs(INCOME_EFFECTS),
                 required=True,
             ),
             # A Note is a sentence or two: shown under its label, wrapped.
@@ -784,7 +778,7 @@ def _buy_specialist_dialog(
                 "Saves money on",
                 "select",
                 "None",
-                options=_pairs(CRAFT_FIELDS),
+                options=pairs(CRAFT_FIELDS),
                 show_if=craft,
             ),
             DialogField(

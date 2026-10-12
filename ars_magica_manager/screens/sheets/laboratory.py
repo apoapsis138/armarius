@@ -34,6 +34,7 @@ from ...models import (
     Saga,
 )
 from ...rules import realms
+from ...sections import LAB_TEXTS_SECTION, LAB_VF_SECTIONS
 from ..widgets import (
     DetailsPanel,
     PinnedCollapsible,
@@ -47,11 +48,7 @@ from ..widgets import (
     points_title,
 )
 from .base import SheetView
-from .lists import LAB_TEXTS_SECTION, BookListView, LabTextListView
-
-#: The lab's Virtues and Flaws sections: either refreshes both lists and
-#: their shared details panel.
-LAB_VF_SECTIONS = ("section-lab-vf-virtues", "section-lab-vf-flaws")
+from .lists import BookListView, LabTextListView
 
 #: What refreshes the lab's Characteristics: their own section, and the
 #: Virtues & Flaws (whose modifiers and points feed every figure there).

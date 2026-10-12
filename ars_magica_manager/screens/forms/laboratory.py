@@ -6,6 +6,7 @@ from typing import Any
 
 from ... import catalog
 from ... import laboratories as lab_rules
+from ...form_spec import DialogField, covenant_options, pairs
 from ...markup import escape
 from ...models import (
     FEATURE_VIRTUE_POINTS,
@@ -15,7 +16,7 @@ from ...models import (
     Laboratory,
     Saga,
 )
-from ..fields import DialogField, FieldsDialog, _covenant_options, _pairs
+from ..fields import FieldsDialog
 
 
 def _lab_identity_fields(saga: Saga, lab: Laboratory) -> list[DialogField]:
@@ -35,7 +36,7 @@ def _lab_identity_fields(saga: Saga, lab: Laboratory) -> list[DialogField]:
             "Covenant",
             "select",
             lab.covenant_id,
-            options=_covenant_options(saga),
+            options=covenant_options(saga),
             allow_blank=True,
             placeholder="(unassigned)",
         ),
@@ -165,7 +166,7 @@ def _lab_feature_dialog(
     a matching Focus Flaw no other Feature holds -- whether it's the Focus,
     with a Specialization per Focus point. Every point must be placed, and
     only on the Specializations the Feature offers."""
-    options = _pairs(lab_rules.feature_options(feature_id))
+    options = pairs(lab_rules.feature_options(feature_id))
     offered = {value for _, value in options}
     definition = catalog.load_lab_feature_catalog_by_id().get(feature_id or "")
     budget = FEATURE_VIRTUE_POINTS[virtue_vf_id]

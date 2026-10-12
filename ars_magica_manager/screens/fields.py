@@ -1,11 +1,9 @@
-"""The modal-dialog base and the config-driven FieldsDialog form, with the
-small helpers form builders share."""
+"""The modal-dialog base and FieldsDialog, the Textual form that draws a
+list of DialogField specs (form_spec.py)."""
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterable
-from dataclasses import dataclass
-from dataclasses import field as dataclass_field
+from collections.abc import Callable
 from typing import Any, ClassVar, cast, overload
 
 from textual import events
@@ -24,40 +22,9 @@ from textual.widgets import (
     TextArea,
 )
 
+from .. import form_spec as fs
+from ..form_spec import DialogField
 from ..markup import escape
-from ..models import (
-    Saga,
-)
-
-
-def _year_born_field(value: int | None) -> DialogField:
-    """Year Born is never required: blank means Unknown."""
-    return DialogField("year_born", "Year Born (blank = Unknown)", "optint", value)
-
-
-def _pairs(values: Iterable[str]) -> list[tuple[str, str]]:
-    """Select options whose label is the value itself."""
-    return [(value, value) for value in values]
-
-
-def _covenant_options(saga: Saga) -> list[tuple[str, str]]:
-    """Select options for choosing one of the saga's covenants."""
-    return [(escape(c.name), c.id) for c in saga.covenants]
-
-
-#: The hint under every free-text field that is shown with markdown_inline.
-_EMPHASIS_HINT = "Supports **bold** and *italic*."
-
-
-def _description_field(value: str) -> DialogField:
-    """The multi-line Description field most forms end with."""
-    return DialogField("description", "Description", "area", value, hint=_EMPHASIS_HINT)
-
-
-def _attr(record: object | None, attribute: str, default: Any) -> Any:
-    """`record.attribute`, or `default` when there's no record yet (a form
-    opened to add one)."""
-    return getattr(record, attribute) if record is not None else default
 
 
 class ModalDialog[ResultT](ModalScreen[ResultT]):
@@ -108,78 +75,6 @@ class ModalDialog[ResultT](ModalScreen[ResultT]):
         """The chosen value of the Select at `selector`, or None if blank."""
         value = self.query_one(selector, Select).value
         return value if isinstance(value, str) else None
-
-
-@dataclass
-class DialogField:
-    """One row of a FieldsDialog.
-
-    `kind`: "text" (a stripped string), "secret" (text shown as dots: a
-    passcode), "int" (a whole number), "optint" (a
-    whole number or blank -> None), "optfloat" (a number, decimals allowed,
-    or blank -> None), "select" (one of `options` as (label,
-    value) pairs; blank -> None when `allow_blank`; a stored value that isn't
-    among them is offered as "... (not in the list)"), "check" (a boolean),
-    "area" (multi-line text, trailing whitespace dropped), "picker" (a button showing `display(value)`
-    that opens the screen `picker(value)` returns; its result becomes the
-    value; Delete clears it when `allow_blank`) or "info" (read-only text,
-    not returned).
-    """
-
-    key: str
-    label: str
-    kind: str
-    value: object = None
-    options: list[tuple[str, str]] = dataclass_field(default_factory=list)
-    required: bool = False
-    allow_blank: bool = False
-    placeholder: str = ""
-    hint: str = ""
-    #: Shown only while this returns True for the form's current values
-    #: (`FieldsDialog.current_values`); re-checked as the user edits. A hidden
-    #: field is left out of the result and isn't checked.
-    show_if: Callable[[dict[str, Any]], bool] | None = None
-    #: A "picker" field's chooser (a screen dismissing with the new value, or
-    #: None to keep the old one) and how it shows its value on the button.
-    picker: Callable[[Any], Screen[Any]] | None = None
-    display: Callable[[Any], str] | None = None
-    #: Suggested values for other fields when the user changes this one
-    #: (`FieldsDialog.current_values` -> {key: value}; None blanks a
-    #: number field). Never run as the form opens, so a record's own
-    #: figures stay until its source field is changed; the user can still
-    #: edit what it filled.
-    fills: Callable[[dict[str, Any]], dict[str, Any]] | None = None
-
-
-class _FieldError(ValueError):
-    """A field's text doesn't parse; the message is shown under the form."""
-
-
-def _parse_int(spec: DialogField, raw: str) -> int | None:
-    if not raw and spec.kind == "optint":
-        return None
-    try:
-        return int(raw)
-    except ValueError:
-        raise _FieldError(f"{spec.label} must be a whole number.") from None
-
-
-def _parse_float(spec: DialogField, raw: str) -> float | None:
-    if not raw:
-        return None
-    try:
-        return float(raw)
-    except ValueError:
-        raise _FieldError(f"{spec.label} must be a number.") from None
-
-
-#: Field kinds whose widget text becomes a number. Every other kind's value is
-#: what FieldsDialog._read gets from its widget.
-_PARSERS: dict[str, Callable[[DialogField, str], Any]] = {
-    "int": _parse_int,
-    "optint": _parse_int,
-    "optfloat": _parse_float,
-}
 
 
 class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
@@ -389,21 +284,8 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
                     compact=True,
                 )
             elif spec.kind == "select":
-                options = list(spec.options)
-                values = [value for _, value in options]
-                stored = spec.value
-                if isinstance(stored, str) and stored and stored not in values:
-                    # A stored choice the list no longer offers (a House gone
-                    # from the catalog): show it, so Save keeps it unless it's
-                    # changed.
-                    options.append((f"{escape(stored)} (not in the list)", stored))
-                    values.append(stored)
-                if spec.value in values:
-                    current = spec.value
-                elif spec.allow_blank or not values:
-                    current = Select.NULL
-                else:
-                    current = values[0]
+                options, chosen = fs.select_choices(spec)
+                current = Select.NULL if chosen is None else chosen
                 yield Select(
                     options,
                     value=current,
@@ -472,33 +354,10 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
             return self.query_one(widget_id, TextArea).text.rstrip()
         return self.query_one(widget_id, Input).value.strip()  # text, numbers
 
-    def _value(self, spec: DialogField) -> Any:
-        """A field's value, parsed; raises _FieldError if it doesn't parse or
-        is required and empty."""
-        value = self._read(spec)
-        parse = _PARSERS.get(spec.kind)
-        if parse is not None:
-            value = parse(spec, value)
-        if spec.required and value in (None, ""):
-            raise _FieldError(f"{spec.label} is required.")
-        return value
-
     def current_values(self) -> dict[str, Any]:
         """Every non-info field's value as it stands, leniently: a number
         that doesn't parse (yet) is None; nothing is validated."""
-        values: dict[str, Any] = {}
-        for spec in self.fields:
-            if spec.kind == "info":
-                continue
-            value = self._read(spec)
-            parse = _PARSERS.get(spec.kind)
-            if parse is not None:
-                try:
-                    value = parse(spec, value)
-                except _FieldError:
-                    value = None
-            values[spec.key] = value
-        return values
+        return fs.current_values(self.fields, self._read)
 
     def _picker_label(self, spec: DialogField) -> str:
         value = self._picked.get(spec.key)
@@ -516,9 +375,6 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
 
         if spec.picker is not None:
             self.app.push_screen(spec.picker(self._picked.get(spec.key)), handle_choice)
-
-    def _shown(self, spec: DialogField, values: dict[str, Any]) -> bool:
-        return spec.show_if is None or bool(spec.show_if(values))
 
     def _write(self, spec: DialogField, value: Any) -> None:
         """Put `value` in a field's widget (a select's only if it's one of
@@ -559,7 +415,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         values = self.current_values()
         for spec in self.fields:
             if spec.show_if is not None:
-                self.query_one(f"#fdw-{spec.key}").display = self._shown(spec, values)
+                self.query_one(f"#fdw-{spec.key}").display = fs.shown(spec, values)
         if self.live is not None:
             self.query_one("#fields-live", Static).update(self.live(values))
             self.call_after_refresh(self._refit)
@@ -606,16 +462,11 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
 
     def _save(self) -> None:
         error = self.query_one("#fields-error", Static)
-        result: dict[str, Any] = {}
-        current = self.current_values()
-        for spec in self.fields:
-            if spec.kind == "info" or not self._shown(spec, current):
-                continue
-            try:
-                result[spec.key] = self._value(spec)
-            except _FieldError as problem:
-                error.update(str(problem))
-                return
+        try:
+            result = fs.result(self.fields, self._read)
+        except fs.FieldError as problem:
+            error.update(str(problem))
+            return
         problem = self.validate(result) if self.validate else None
         if problem:
             error.update(problem)

@@ -10,6 +10,7 @@ from typing import Any
 from ... import enchanted_devices as ed
 from ... import storage
 from ...arts import FORMS, TECHNIQUES
+from ...form_spec import DialogField, attr, description_field, pairs
 from ...markup import escape, problem
 from ...models import (
     CHARGED,
@@ -30,7 +31,7 @@ from ...models import (
     ShapeMaterialBonus,
     new_instance_id,
 )
-from ..fields import DialogField, FieldsDialog, _attr, _description_field, _pairs
+from ..fields import FieldsDialog
 from ..pickers import ShapeMaterialPickerScreen
 from ..prompts import _list_field
 
@@ -55,14 +56,14 @@ def _component_dialog(
                 "description",
                 "Description",
                 "text",
-                _attr(component, "description", ""),
+                attr(component, "description", ""),
                 placeholder="e.g. oak staff",
             ),
             DialogField(
                 "material",
                 "Material",
                 "select",
-                _attr(component, "material", "wood"),
+                attr(component, "material", "wood"),
                 options=[
                     (f"{name} ({base})", name)
                     for name, base in ENCHANT_MATERIALS.items()
@@ -72,7 +73,7 @@ def _component_dialog(
                 "size",
                 "Size",
                 "select",
-                _attr(component, "size", "small"),
+                attr(component, "size", "small"),
                 options=[(f"{name} (x{n})", name) for name, n in ENCHANT_SIZES.items()],
                 hint=f"From the {MATERIAL_SIZE_CITATION}.",
             ),
@@ -106,12 +107,12 @@ def _bonus_fields(
                 else {}
             ),
         ),
-        DialogField("bonus", "Bonus", "int", _attr(bonus, "bonus", 0)),
+        DialogField("bonus", "Bonus", "int", attr(bonus, "bonus", 0)),
         DialogField(
             "applies_to",
             "Applies to",
             "text",
-            _attr(bonus, "applies_to", ""),
+            attr(bonus, "applies_to", ""),
             required=True,
             placeholder="e.g. project bolt or other missile",
         ),
@@ -119,7 +120,7 @@ def _bonus_fields(
             "shape",
             "Shape or material",
             "text",
-            _attr(bonus, "shape", ""),
+            attr(bonus, "shape", ""),
             placeholder="e.g. Wand/Staff",
         ),
     ]
@@ -129,10 +130,10 @@ def _bonus_fields(
                 "season",
                 "Season gained",
                 "select",
-                _attr(bonus, "season", season) or season,
-                options=_pairs(SEASONS),
+                attr(bonus, "season", season) or season,
+                options=pairs(SEASONS),
             ),
-            DialogField("year", "Year gained", "optint", _attr(bonus, "year", year)),
+            DialogField("year", "Year gained", "optint", attr(bonus, "year", year)),
         ]
     return fields
 
@@ -297,7 +298,7 @@ def _enchanted_device_dialog(
             required=True,
             placeholder="e.g. Wand of Flames",
         ),
-        DialogField("type", "Type", "select", base.type, options=_pairs(DEVICE_TYPES)),
+        DialogField("type", "Type", "select", base.type, options=pairs(DEVICE_TYPES)),
         DialogField(
             "talisman",
             "Talisman",
@@ -347,7 +348,7 @@ def _enchanted_device_dialog(
             "Opening paid for",
             "select",
             base.payment,
-            options=_pairs(DEVICE_PAYMENTS),
+            options=pairs(DEVICE_PAYMENTS),
             show_if=lambda values: (
                 values.get("type") == INVESTED
                 and len(values.get("components") or []) > 1
@@ -424,7 +425,7 @@ def _enchanted_device_dialog(
             show_if=is_type(CHARGED),
             hint="e.g. 5 arrows or potions.",
         ),
-        _description_field(base.description),
+        description_field(base.description),
     ]
 
     def build(values: dict[str, Any]) -> EnchantedDevice:
@@ -544,7 +545,7 @@ def _instilled_effect_dialog(
             "Technique",
             "select",
             base.technique,
-            options=_pairs(TECHNIQUES),
+            options=pairs(TECHNIQUES),
             allow_blank=True,
             placeholder="(none)",
         ),
@@ -553,7 +554,7 @@ def _instilled_effect_dialog(
             "Form",
             "select",
             base.form,
-            options=_pairs(FORMS),
+            options=pairs(FORMS),
             allow_blank=True,
             placeholder="(none)",
         ),
@@ -630,7 +631,7 @@ def _instilled_effect_dialog(
                 "Effect Expiry",
                 "select",
                 base.expiry,
-                options=_pairs(EFFECT_EXPIRIES),
+                options=pairs(EFFECT_EXPIRIES),
             ),
             DialogField(
                 "first_use_year",
@@ -671,7 +672,7 @@ def _instilled_effect_dialog(
                 base.vis_override,
             )
         )
-    fields.append(_description_field(base.description))
+    fields.append(description_field(base.description))
     return FieldsDialog(
         f"Instill an Effect in {escape(device.name)}"
         if effect is None

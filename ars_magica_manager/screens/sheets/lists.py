@@ -23,6 +23,7 @@ from ... import lab_texts as lt
 from ... import players as pl
 from ... import spells as spl
 from ...arts import FORMS, TECHNIQUES
+from ...form_spec import pairs
 from ...models import (
     Book,
     Character,
@@ -30,7 +31,7 @@ from ...models import (
     Saga,
     Spell,
 )
-from ..fields import _pairs
+from ...sections import HOUSE_RULES_SECTION, PLAYERS_SECTION, SPELL_SECTION
 from ..widgets import (
     DETAILS_PANEL_MAX_HEIGHT,
     DETAILS_PANEL_MIN_HEIGHT,
@@ -41,39 +42,6 @@ from ..widgets import (
     TwoColumns,
     counted,
 )
-
-#: The covenant Library tab's sections, where More's Import puts books into the
-#: covenant's library.
-_LIBRARY_SECTIONS: frozenset[str] = frozenset(
-    {"section-lib-summary", "section-lib-books"}
-)
-
-
-#: The Enchanted Devices section of each sheet, and the kind of
-#: holder whose devices it lists.
-DEVICE_SECTIONS: dict[str, str] = {
-    "section-char-devices": "character",
-    "section-lab-devices": "laboratory",
-    "section-cov-devices": "covenant",
-}
-
-
-#: The laboratory's Lab Texts database: a book list of its own.
-LAB_TEXTS_SECTION = "section-lab-texts"
-
-#: Section ids of every book list (see BookListView); 'a' in any of them adds
-#: a book, and e / d act on books everywhere but the read-only Summary.
-BOOK_SECTIONS: frozenset[str] = frozenset(
-    {
-        "section-lib-summary",
-        "section-lib-books",
-        "section-lab-books",
-        "section-books",
-        "section-unassigned-books",
-        LAB_TEXTS_SECTION,
-    }
-)
-
 
 #: Rows a docked book list keeps however short the screen (see
 #: _fit_panel); and what its section takes besides the rows: its title,
@@ -309,10 +277,6 @@ class BookListView(Vertical):
             return  # the sheet is being replaced
 
 
-#: The House Rules view's list section (a / e / d act on user-made entries).
-HOUSE_RULES_SECTION = "section-house-rules"
-
-
 class HouseRulesView(Vertical):
     """The saga's House Rules: its user-made Virtues, Flaws,
     Boons and Hooks in one list, stretching down to the details panel of
@@ -383,10 +347,6 @@ class HouseRulesView(Vertical):
             )
         except NoMatches:
             return  # the view is being replaced
-
-
-#: The Players view's list section (a / e / d act on the saga's players).
-PLAYERS_SECTION = "section-players"
 
 
 class PlayersView(Vertical):
@@ -524,10 +484,6 @@ class LabTextListView(BookListView):
         return lt.detail_text(self.saga, self._reader(), book)
 
 
-#: The Spells view's list section (a / e / d act on the saga's own spells).
-SPELL_SECTION = "section-spells"
-
-
 class SpellListView(Vertical):
     """The saga's Spells view: a filter bar, the list of spells (the catalog
     plus the saga's own) stretching down to a scrolling details panel.
@@ -625,13 +581,13 @@ class SpellListView(Vertical):
                 )
             with Horizontal(classes="spell-filter-row"):
                 yield Select(
-                    _pairs(TECHNIQUES),
+                    pairs(TECHNIQUES),
                     prompt=f"Technique: {arts_blank}",
                     id="spell-technique",
                     compact=True,
                 )
                 yield Select(
-                    _pairs(FORMS),
+                    pairs(FORMS),
                     prompt=f"Form: {arts_blank}",
                     id="spell-form",
                     compact=True,
