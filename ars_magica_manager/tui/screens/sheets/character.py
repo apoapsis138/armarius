@@ -16,24 +16,19 @@ from textual.widgets import (
 )
 
 from .... import books as bk
-from .... import casting_text, catalog, faith, seasons
+from .... import casting_text, seasons
+from .... import character_sheet as cs
 from .... import enchanted_devices as ed
 from .... import lab_texts as lt
 from .... import laboratories as lab_text
-from .... import players as pl
-from .... import possessions as pos
 from .... import sheet_text as st
-from .... import spells as spl
-from ....arts import ART_ABBREVIATIONS, ART_DESCRIPTIONS, FORMS, TECHNIQUES
-from ....markup import aligned, escape, problem
+from ....arts import FORMS, TECHNIQUES
+from ....markup import escape
 from ....models import (
-    ArtScore,
     Character,
     Saga,
-    character_age,
 )
 from ....rules import creation_virtues as cv
-from ....rules import scores
 from ..widgets import (
     DetailsPanel,
     PinnedCollapsible,
@@ -578,78 +573,16 @@ class CharacterSheetView(SheetView):
         self.query_one("#vf-info", Static).update(self._vf_info_text(event.data_index))
 
     def _info_left_text(self) -> str:
-        b = self.character.background
-        age = character_age(b.year_born, self.saga.current_year)
-        return aligned(
-            [
-                ("Setting", b.setting or "(not set)"),
-                (
-                    "Age",
-                    age if age is not None else "(unknown -- set Year Born)",
-                ),
-                ("Current Year", self._inherited(str(self.saga.current_year))),
-                ("Current Season", self._inherited(self.saga.current_season)),
-            ]
-        )
+        return cs.info_left_text(self.saga, self.character)
 
     def _info_right_text(self) -> str:
-        saga, character = self.saga, self.character
-        covenant = saga.covenant(character.covenant_id)
-        rows = [("Covenant", escape(covenant.name) if covenant else "(unassigned)")]
-        if character.type == "magus":
-            lab = saga.laboratory(character.assigned_lab_id)
-            rows.append(
-                ("Assigned Laboratory", escape(lab.name) if lab else "(unassigned)")
-            )
-        b = character.background
-        rows += [
-            ("Type", character.type),
-            ("Confidence Score", str(b.confidence_score)),
-            ("Confidence Points", str(b.confidence_points)),
-        ]
-        if faith.shows_faith(character):
-            rows += [
-                ("True Faith Score", st.faith_score_text(character)),
-                ("Faith Points", str(b.faith_points)),
-            ]
-        rows.append(("Size", st.size_text(character)))
-        return aligned(rows)
+        return cs.info_right_text(self.saga, self.character)
 
     def _biographical_left_text(self) -> str:
-        """Column 1 of Biographical Detail: every field except Biography
-        (column 2, see _biographical_right_text()) -- the remaining
-        Background fields (Setting/Confidence/Size live in the top panel)
-        plus every Description field but the free-text Biography box."""
-        b, d = self.character.background, self.character.description
-        played_by = []
-        if self.saga.players:  # a hosted saga's sign-in
-            player = pl.player_by_id(self.saga, b.player_id)
-            played_by = [f"Played by: {escape(player.name) if player else '(no one)'}"]
-        return "\n".join(
-            [
-                f"Player: {escape(b.player) or '(not set)'}",
-                *played_by,
-                f"Birth Name: {escape(b.birth_name) or '(not set)'}",
-                f"Year Born: {b.year_born if b.year_born is not None else '(not set)'}",
-                f"Race/Nationality: {escape(b.race_nationality) or '(not set)'}",
-                f"Place of Origin: {escape(b.place_of_origin) or '(not set)'}",
-                f"Religion: {escape(b.religion) or '(not set)'}",
-                f"Title/Profession: {escape(b.title_profession) or '(not set)'}",
-                f"Height: {d.height if d.height is not None else '(not set)'}",
-                f"Weight: {d.weight if d.weight is not None else '(not set)'}",
-                f"Hair: {escape(d.hair) or '(not set)'}",
-                f"Eyes: {escape(d.eyes) or '(not set)'}",
-                f"Handedness: {d.handedness}",
-                f"Physical Description: "
-                f"{escape(d.physical_description) or '(not set)'}",
-            ]
-        )
+        return cs.biographical_left_text(self.saga, self.character)
 
     def _biographical_right_text(self) -> str:
-        """Column 2 of Biographical Detail: just the free-text Biography
-        box (distinct from Physical Description -- see Description's
-        docstring in models/character.py)."""
-        return escape(self.character.description.biography) or "(none recorded)"
+        return cs.biographical_right_text(self.character)
 
     def _characteristics_text(self) -> str:
         return st.characteristics_text(self.character.characteristics)
@@ -685,29 +618,7 @@ class CharacterSheetView(SheetView):
         return st.vf_info_text(self.character.virtues_flaws, index)
 
     def _aging_text(self) -> str:
-        a = self.character.aging
-        lines = [f"Decrepitude: {a.decrepitude}"]
-        # The yearly aging roll's figures, once there are any.
-        if a.decrepitude_points:
-            lines[0] += f" ({a.decrepitude_points} points)"
-        if a.apparent_age is not None:
-            lines.append(f"Apparent age: {a.apparent_age}")
-        points = [f"{n.title()} {p}" for n, p in a.aging_points.items() if p]
-        if points:
-            lines.append("Aging Points: " + ", ".join(points))
-        if a.longevity_modifier:
-            lines.append(f"Longevity Ritual: -{a.longevity_modifier} to aging rolls")
-        if a.recovering:
-            lines.append(f"Recovering from an Aging Crisis: {a.recovering}")
-        return "\n".join(
-            [
-                *lines,
-                "Effects of Aging:",
-                escape(a.effects) or "(none recorded)",
-                "",
-                f"Warping: {a.warping_score}/{a.warping_points}",
-            ]
-        )
+        return cs.aging_text(self.character)
 
     def _personality_trait_rows(self) -> list[tuple[int | None, str]]:
         return st.trait_rows(self.character.personality_traits)
@@ -722,38 +633,13 @@ class CharacterSheetView(SheetView):
         return st.character_fatigue_text(self.character)
 
     def _raw_vis_rows(self) -> list[tuple[int | None, str]]:
-        return [
-            (index, f"{art.title()}: {self.character.raw_vis[art]} pawn(s)")
-            for index, art in enumerate(sorted(self.character.raw_vis))
-        ]
+        return cs.raw_vis_rows(self.character)
 
     def _hermetic_background_left_text(self) -> str:
-        """Column 1 of Hermetic Background: everything but Wizard's Sigil
-        (column 2, see _hermetic_background_right_text())."""
-        h = self.character.hermetic
-        house_catalog = catalog.load_house_catalog_by_id()
-        house = house_catalog.get(h.house) if h.house else None
-        return "\n".join(
-            [
-                f"House: {escape(house.name) if house else '(not set)'}",
-                f"Domus Magna: {escape(h.domus_magna) or '(not set)'}",
-                f"Primus: {escape(h.primus) or '(not set)'}",
-                f"Parens: {escape(h.parens) or '(not set)'}",
-                f"Covenant of Apprenticeship: "
-                f"{escape(h.covenant_of_apprenticeship) or '(not set)'}",
-                f"Age of Apprenticeship: "
-                f"{h.age_of_apprenticeship if h.age_of_apprenticeship is not None else '(not set)'}",
-            ]
-        )
+        return cs.hermetic_background_left_text(self.character)
 
     def _hermetic_background_right_text(self) -> str:
-        """Column 2 of Hermetic Background: Wizard's Sigil, and whose raw
-        Lab Texts the magus reads."""
-        sigil = self.character.hermetic.wizards_sigil
-        return (
-            f"Wizard's Sigil: {escape(sigil) or '(not set)'}\n"
-            f"{lt.access_text(self.saga, self.character)}"
-        )
+        return cs.hermetic_background_right_text(self.saga, self.character)
 
     _ARTS_NAME_WIDTH: ClassVar[int] = 16
     _ARTS_NUM_WIDTH: ClassVar[int] = 6
@@ -769,29 +655,18 @@ class CharacterSheetView(SheetView):
         )
 
     def _art_row_label(self, art: str) -> str:
-        score = self.character.arts.get(art.lower(), ArtScore())
-        bonus, _ = scores.art_bonus(self.character.virtues_flaws, art)
-        shown = st.adjusted_score(score.level, bonus)
-        name = f"{art} ({ART_ABBREVIATIONS[art]})"
+        row = cs.art_row(self.character, art)
+        name = f"{row.art} ({row.abbreviation})"
         return (
             f"{name:<{self._ARTS_NAME_WIDTH}}"
-            f"{shown:>{self._ARTS_SCORE_WIDTH}}{score.xp:>{self._ARTS_NUM_WIDTH}}"
+            f"{row.score:>{self._ARTS_SCORE_WIDTH}}{row.xp:>{self._ARTS_NUM_WIDTH}}"
         )
 
     def _arts_rows(self, arts: Sequence[str]) -> list[tuple[int, str]]:
         return [(i, self._art_row_label(art)) for i, art in enumerate(arts)]
 
     def _art_info_text(self, art: str) -> str:
-        score = self.character.arts.get(art.lower(), ArtScore())
-        bonus, bonus_from = scores.art_bonus(self.character.virtues_flaws, art)
-        return "\n".join(
-            [
-                f"[b]Name:[/] {art} ({ART_ABBREVIATIONS[art]})",
-                st.xp_line(score.progress, bonus, bonus_from),
-                "",
-                f"[b]Description:[/] {ART_DESCRIPTIONS[art]}",
-            ]
-        )
+        return cs.art_info_text(self.character, art)
 
     def _refresh_hermetic_info(self) -> None:
         """The Hermetic Magic tab's single details panel, shared by the
@@ -838,52 +713,10 @@ class CharacterSheetView(SheetView):
     def _known_spell_info_text(self, index: int | None) -> str:
         if index is None:  # nothing chosen in any of the panel's three lists
             return self._HERMETIC_INFO_PLACEHOLDER
-        known = self.character.spells_known[index]
-        spell = spl.find_spell(self.saga, known.spell_id)
-        if spell is None:
-            lines = [problem(f"Unknown spell: {escape(known.spell_id)}")]
-        else:
-            lines = [spl.detail_text(self.saga, spell), ""]
-            lines += casting_text.known_spell_casting_lines(
-                self.saga, self.character, known, spell
-            )
-        lines += [
-            "",
-            "[b]Mastery:[/]",
-            f"Score {known.mastery_score}, XP {known.mastery_xp}",
-        ]
-        if known.mastery_abilities:
-            for ability in known.mastery_abilities:
-                lines.append(f"  {escape(ability.name)} {ability.level}/{ability.xp}")
-        else:
-            lines.append("  (no Mastery Abilities)")
-        return "\n".join(lines)
-
-    #: Character Inventory's group headers, in display order.
-    _INVENTORY_KINDS: ClassVar[tuple[str, ...]] = ("weapon", "armor", "item")
-    _INVENTORY_HEADERS: ClassVar[dict[str, str]] = {
-        "weapon": "Weapons",
-        "armor": "Armor",
-        "item": "Other Items",
-    }
+        return cs.known_spell_info_text(self.saga, self.character, index)
 
     def _inventory_rows(self) -> list[tuple[int | None, str]]:
-        """One selectable list for all of Inventory, with a header row --
-        its title and column titles -- before each non-empty kind (Weapons,
-        Armor, Other Items)."""
-        rows: list[tuple[int | None, str]] = []
-        for kind in self._INVENTORY_KINDS:
-            indexed = [
-                (i, item)
-                for i, item in enumerate(self.character.inventory)
-                if item.kind == kind
-            ]
-            if not indexed:
-                continue
-            rows.append((None, pos.group_header(kind, self._INVENTORY_HEADERS[kind])))
-            for index, item in indexed:
-                rows.append((index, pos.row_label(pos.PossessionEntry(kind, item))))
-        return rows
+        return cs.inventory_rows(self.character)
 
     #: The Inventory tab's details panel with nothing chosen.
     _INVENTORY_HINT = (
@@ -893,11 +726,7 @@ class CharacterSheetView(SheetView):
     def _inventory_info_text(self, index: int | None) -> str:
         if index is None:
             return self._INVENTORY_HINT
-        item = self.character.inventory[index]
-        text = pos.detail_text(pos.PossessionEntry(item.kind, item))
-        if item.kind == "weapon":
-            text += "\n\n" + st.combat_text(self.character, item)
-        return text
+        return cs.inventory_item_text(self.character, index)
 
     def _refresh_inventory_info(self) -> None:
         """The Inventory tab's details panel: the chosen item, enchanted

@@ -41,6 +41,18 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.44.0 — 2026-10-12
+
+- A first look at the desktop version: `run-gui.bat` (or `uv run --group gui
+  python gui.py`) opens a window with your saga's covenants and characters
+  and a read-only Character sheet, with the same tabs and text as the
+  terminal's, the Arts' symbols, the House symbol beside a magus's name and
+  the Scriptorum light and dark themes. It never saves, so it is safe to
+  open beside the terminal app. The terminal's Character sheet now reads
+  its text from the same shared place, and shows exactly what it did.
+- The desktop version's libraries now come with the developer install
+  (`uv sync`), so the automatic checks cover it too.
+
 ## 2.43.5 — 2026-10-12
 
 - Behind the scenes, preparing for the desktop version: the fifteen Arts

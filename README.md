@@ -101,7 +101,13 @@ app starts.
   light/dark themes), `styles.py` (the app-wide CSS) and `hosting.py`
   (serving it to players, started by `tools/serve.py`).
 - `ars_magica_manager/gui/` — the desktop front-end (PySide6), in
-  progress; its libraries come with `uv sync --group gui`.
+  progress and read-only so far: `window.py` (saga chooser, covenant tree
+  and sheet), `character_sheet.py`, `themes.py` (the Scriptorum palettes as
+  Qt style sheets). Start it with `run-gui.bat` or `uv run --group gui
+  python gui.py`; the dev group includes its libraries, so a plain
+  `uv sync` installs them for the tests and pyright.
+- `ars_magica_manager/character_sheet.py` — what the Character sheet
+  shows, as text and rows, read by both front-ends.
 - `ars_magica_manager/tui/screens/` — every screen and widget, one module per
   layer, each importing only from those before it: `widgets` (bottom bar,
   selectable list, sections), `fields` (the modal-dialog base and the
