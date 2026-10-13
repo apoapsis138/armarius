@@ -22,7 +22,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import shiboken6
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import QEvent, Qt, QTimer
 from PySide6.QtGui import QFont, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QApplication,
@@ -58,6 +58,7 @@ from .covenant import CovenantPage
 from .editing import InPlace, place_for
 from .familiar import FamiliarPage
 from .forms import ConfirmDialog, answer, run_steps, step_dialog
+from .frame import MAXIMISE, DragStrip, Grips, TopStrip, WindowButtons
 from .help import HelpPage
 from .laboratory import LaboratoryPage
 from .markup_html import plain
@@ -150,6 +151,8 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Armarius")
         self.setWindowIcon(pictures.app_icon())
+        # The window draws its own title bar (frame.py).
+        self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.palette_index = 0
         self.saga_ids = storage.list_sagas() if saga_ids is None else saga_ids
         self.saga: Saga | None = None
@@ -182,6 +185,7 @@ class MainWindow(QMainWindow):
         self.stack.addWidget(body)
         self.setCentralWidget(self.stack)
         self.title: TitleScreen | None = None
+        self.grips = Grips(self)
 
         self._apply_theme()
         if len(self.saga_ids) == 1:
@@ -190,8 +194,10 @@ class MainWindow(QMainWindow):
             self.go([Place(SHELF)])
 
     def _top_bar(self) -> QHBoxLayout:
-        """The trail on the left; the page's New and More, Advance Season,
-        Help and the theme on the right."""
+        """The window's title bar: the trail on the left, the app's name
+        in the middle (drag it to move the window), and the page's New and
+        More, Advance Season, Help, the theme and the window's own buttons
+        on the right."""
         self.crumbs = QHBoxLayout()
         self.crumbs.setSpacing(2)
         self.theme = QPushButton()
@@ -200,7 +206,8 @@ class MainWindow(QMainWindow):
         bar = QHBoxLayout()
         bar.setContentsMargins(12, 4, 8, 0)
         bar.addLayout(self.crumbs)
-        bar.addStretch(1)
+        self.drag = DragStrip(self, self.palette_, "Armarius")
+        bar.addWidget(self.drag, 1)
         #: The New and More menus for the page on show (menus.py).
         self.menus = QHBoxLayout()
         self.menus.setSpacing(2)
@@ -219,7 +226,20 @@ class MainWindow(QMainWindow):
         bar.addWidget(self.help)
         QShortcut(QKeySequence(Qt.Key.Key_F1), self, self.open_help)
         bar.addWidget(self.theme)
+        bar.addSpacing(10)
+        self.controls = WindowButtons(self, self.palette_)
+        bar.addWidget(self.controls, 0, Qt.AlignmentFlag.AlignTop)
         return bar
+
+    def changeEvent(self, event: QEvent) -> None:
+        """Maximise turns to restore (and back) as the window does."""
+        if event.type() == QEvent.Type.WindowStateChange:
+            self.controls.update()
+            self.controls.buttons[MAXIMISE].update()
+            self.controls.buttons[MAXIMISE].setToolTip(
+                "Restore" if self.isMaximized() else "Maximise"
+            )
+        super().changeEvent(event)
 
     @property
     def palette_(self) -> Palette:
@@ -238,6 +258,7 @@ class MainWindow(QMainWindow):
         """Show the title page over the whole window, fading in."""
         page = title_page.title_page(self.saga_ids)
         self.title = TitleScreen(page, self.palette_, self.leave_title)
+        TopStrip(self.title, self, self.palette_)
         self.stack.addWidget(self.title)
         self.stack.setCurrentWidget(self.title)
         self.title.setFocus()
@@ -842,6 +863,8 @@ class MainWindow(QMainWindow):
             body.update()
         self.headpiece.p = p
         self.headpiece.update()
+        self.drag.set_palette(p)
+        self.controls.set_palette(p)
         app = QApplication.instance()
         if isinstance(app, QApplication):
             app.setFont(QFont(pictures.UI, 10))

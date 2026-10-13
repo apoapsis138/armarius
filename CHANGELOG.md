@@ -46,6 +46,14 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.55.0 — 2026-10-13
+
+- The desktop window draws its own title bar on the paper, in place of
+  the system's: minimise, maximise and close as small glyphs at the right
+  of the top bar, and the app's name in the middle. Drag the bar to move
+  the window and double-click it to maximise; drag an edge or corner to
+  resize it. The title page has the same buttons.
+
 ## 2.54.0 — 2026-10-13
 
 - On the desktop, the lists that were lines of fixed-width text are now
