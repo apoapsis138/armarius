@@ -530,7 +530,7 @@ class CharacterSheet(QWidget):
                     *([prose(effects, p, initial=False)] if effects else []),
                 )
             )
-        return scrolling_page(*parts)
+        return scrolling_page(p, *parts)
 
     def _abilities(self) -> QWidget:
         p, c = self.p, self.character
@@ -547,7 +547,7 @@ class CharacterSheet(QWidget):
 
         table = ability_view(cs.ability_table(c), p, show)
         return scrolling_page(
-            chapter_title(f"Abilities ({len(c.abilities)})", p), table
+            p, chapter_title(f"Abilities ({len(c.abilities)})", p), table
         )
 
     def _virtues_flaws(self) -> QWidget:
@@ -564,7 +564,7 @@ class CharacterSheet(QWidget):
                 stack.addWidget(self._vf_card(card, p[tone]))
             stack.addStretch(1)
             columns.append(column)
-        return scrolling_page(side_by_side(*columns, spacing=18))
+        return scrolling_page(p, side_by_side(*columns, spacing=18))
 
     def _vf_card(self, card: cs.VirtueFlawCard, colour: str) -> QWidget:
         c = self.character
@@ -601,7 +601,7 @@ class CharacterSheet(QWidget):
                     ),
                 )
             )
-        return scrolling_page(*parts)
+        return scrolling_page(p, *parts)
 
     def _show_art(self, art: object) -> None:
         assert isinstance(art, str)
@@ -756,16 +756,17 @@ class CharacterSheet(QWidget):
                 ),
             )
         )
-        return scrolling_page(*parts)
+        return scrolling_page(p, *parts)
 
     def _planning(self) -> QWidget:
         saga, p = self.saga, self.p
         return scrolling_page(
+            p,
             section(
                 f"This Season ({saga.current_season} {saga.current_year})",
                 p,
                 TextBlock(seasons.plan_text(saga, self.character), p),
-            )
+            ),
         )
 
     def _diary(self) -> QWidget:
@@ -780,6 +781,7 @@ class CharacterSheet(QWidget):
             current=(saga.current_season, saga.current_year),
         )
         return scrolling_page(
+            p,
             section("Seasons", p, legend(p), self.calendar),
             section(
                 f"Diary ({len(diary)})",

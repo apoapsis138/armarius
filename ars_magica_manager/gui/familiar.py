@@ -157,6 +157,7 @@ class FamiliarPage(QWidget):
         traits = [(t.name, t.score) for t in f.personality_traits]
         reputations = [(t.name, t.score) for t in f.reputations]
         return scrolling_page(
+            p,
             section("The Bond", p, fact_grid(fs.binding_facts(f), p, 4)),
             section("Cords", p, card_grid(cords, 3)),
             side_by_side(
@@ -194,7 +195,7 @@ class FamiliarPage(QWidget):
                 )
             stack.addStretch(1)
             columns.append(column)
-        return scrolling_page(side_by_side(*columns, spacing=18))
+        return scrolling_page(p, side_by_side(*columns, spacing=18))
 
     def _combat(self) -> QWidget:
         """The wounds it has on its Size's Damage Table, its Fatigue, and
@@ -212,6 +213,7 @@ class FamiliarPage(QWidget):
             ),
         )
         return scrolling_page(
+            p,
             section(
                 "Health",
                 p,
@@ -242,6 +244,7 @@ class FamiliarPage(QWidget):
 
         self.ability_table = ability_view(fs.ability_table(f), p, show)
         return scrolling_page(
+            p,
             chapter_title(f"Abilities ({len(f.abilities)})", p),
             text(
                 "Shares its magus's Language scores.",
@@ -291,6 +294,7 @@ class FamiliarPage(QWidget):
             )
             cards.append(card)
         return scrolling_page(
+            p,
             chapter_title(f"Bond Powers ({len(cards)})", p),
             card_grid(cards, 2) if cards else _none("None yet.", p),
         )

@@ -363,6 +363,13 @@ def _short(value: str) -> str:
     return _SHORT_NAMES.get(value, value)
 
 
+def rdt_text(spell: Spell) -> str:
+    """Range/Duration/Target in short: "Voice/Mom/Ind"."""
+    if spell.details_missing:
+        return "(details missing)"
+    return "/".join(_short(v) for v in (spell.range, spell.duration, spell.target))
+
+
 _NAME_WIDTH = 30
 _ARTS_WIDTH = 16
 _LEVEL_WIDTH = 5
@@ -387,11 +394,7 @@ def table_header() -> str:
 def row_label(saga: Saga, spell: Spell) -> str:
     """One list row (markup), lined up with `table_header`."""
     level = "Gen" if spell.level is None else str(spell.level)
-    rdt = (
-        "(details missing)"
-        if spell.details_missing
-        else "/".join(_short(v) for v in (spell.range, spell.duration, spell.target))
-    )
+    rdt = rdt_text(spell)
     source = "Saga" if is_own(saga, spell) else spell.source
     row = (
         f"{escape(fit(spell.name, _NAME_WIDTH))} {escape(fit(arts(spell), _ARTS_WIDTH))}"

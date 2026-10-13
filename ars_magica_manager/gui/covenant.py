@@ -221,7 +221,7 @@ class CovenantPage(QWidget):
         for problem in problems:
             parts.append(text(problem, p["text-error"], wrap=True))
         parts.append(side_by_side(*columns, spacing=18))
-        return scrolling_page(*parts)
+        return scrolling_page(p, *parts)
 
     def _boon_hook_card(
         self, covenant: Covenant, card: cvs.BoonHookCard, colour: str
@@ -282,7 +282,7 @@ class CovenantPage(QWidget):
             ]
         if not parts:
             parts.append(_none("No one yet.", p))
-        return scrolling_page(*parts)
+        return scrolling_page(p, *parts)
 
     def _covenfolk(self, covenant: Covenant) -> QWidget:
         """Loyalty and how it is reached, the household's numbers, and a
@@ -325,7 +325,7 @@ class CovenantPage(QWidget):
             household,
         ]
         parts += self._groups(cvs.inhabitant_groups(saga, covenant), "Inhabitant")
-        return scrolling_page(*parts)
+        return scrolling_page(p, *parts)
 
     def _groups(self, groups: Sequence[cvs.Group], noun: str) -> list[QWidget]:
         """Each group's title over its table; choosing a row shows its
@@ -365,13 +365,15 @@ class CovenantPage(QWidget):
             card.clicked = lambda lab_id=figures.id: self.open_laboratory(lab_id)
             cards.append(card)
         return scrolling_page(
+            p,
             chapter_title(f"Laboratories ({len(labs)})", p),
             card_grid(cards, 2) if cards else _none("No laboratories yet.", p),
         )
 
     def _possessions(self, covenant: Covenant) -> QWidget:
         return scrolling_page(
-            *self._groups(cvs.possession_groups(self.saga, covenant), "Possession")
+            self.p,
+            *self._groups(cvs.possession_groups(self.saga, covenant), "Possession"),
         )
 
     def _treasury(self, covenant: Covenant) -> QWidget:
@@ -408,7 +410,7 @@ class CovenantPage(QWidget):
             fact_grid(figures.wealth, p, 6),
         ]
         parts += self._groups(figures.groups, "Row")
-        return scrolling_page(*parts)
+        return scrolling_page(p, *parts)
 
     def _library(self, covenant: Covenant) -> QWidget:
         """The books on their shelves, a summa as tall as its level."""
@@ -433,7 +435,7 @@ class CovenantPage(QWidget):
             ]
         if not shelves:
             parts += [chapter_title("Library", p), _none("No books yet.", p)]
-        return scrolling_page(*parts)
+        return scrolling_page(p, *parts)
 
     def _seasons(self) -> QWidget:
         p, saga = self.p, self.saga
@@ -450,6 +452,7 @@ class CovenantPage(QWidget):
             ),
         )
         return scrolling_page(
+            p,
             chapter_title(
                 f"Seasons  ·  now {saga.current_season} {saga.current_year}", p
             ),
@@ -491,6 +494,7 @@ class CovenantPage(QWidget):
             )
             cards.append(card)
         return scrolling_page(
+            p,
             chapter_title(f"Diary ({len(cards)})", p),
             card_grid(cards, 2) if cards else _none("Nothing written yet.", p),
         )
@@ -504,6 +508,7 @@ class CovenantPage(QWidget):
         )
         counted.column.addWidget(columns_text(cov_build.items_text(saga, covenant), p))
         return scrolling_page(
+            p,
             chapter_title(cov_build.title(saga, covenant), p),
             side_by_side(table, counted, spacing=14),
         )

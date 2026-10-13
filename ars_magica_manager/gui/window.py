@@ -1,6 +1,7 @@
 """The desktop main window: one page at a time, the way a book is read,
 with a trail across the top back to the pages above it (Sagas, the saga,
-the covenant, the character, their familiar).
+the covenant, the character, their familiar) and a printer's headpiece
+over every page.
 
 The pages are the shelf of sagas, a saga's covenants, a covenant (its
 people, laboratories and seasons), a laboratory, a character's sheet and a
@@ -35,17 +36,20 @@ from .character_sheet import CharacterSheet
 from .covenant import CovenantPage
 from .familiar import FamiliarPage
 from .laboratory import LaboratoryPage
+from .ornaments import Headpiece
 from .pages import SagaPage, SagaShelf
 from .paper import Paper
+from .saga_content import SagaContentPage
 from .themes import PALETTES, Palette, style_sheet
 
-SHELF, SAGA, COVENANT, CHARACTER, LABORATORY, FAMILIAR = (
+SHELF, SAGA, COVENANT, CHARACTER, LABORATORY, FAMILIAR, CONTENT = (
     "shelf",
     "saga",
     "covenant",
     "character",
     "laboratory",
     "familiar",
+    "content",
 )
 
 
@@ -87,6 +91,8 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout(body)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addLayout(bar)
+        self.headpiece = Headpiece(self.palette_)
+        layout.addWidget(self.headpiece)
         layout.addWidget(self.sheet_area, 1)
         self.setCentralWidget(body)
 
@@ -146,6 +152,10 @@ class MainWindow(QMainWindow):
             ]
         )
 
+    def open_content(self) -> None:
+        """Open the saga's Saga Content, below the saga."""
+        self.go([Place(SHELF), Place(SAGA), Place(CONTENT)])
+
     def open_familiar(self, familiar_id: str) -> None:
         """Open a familiar's page, below its magus."""
         saga = self.saga
@@ -181,7 +191,9 @@ class MainWindow(QMainWindow):
             sagas = [storage.load_saga(saga_id) for saga_id in self.saga_ids]
             return SagaShelf(sagas, p, self.open_saga)
         if place.kind == SAGA:
-            return SagaPage(saga, p, self.open_covenant)
+            return SagaPage(saga, p, self.open_covenant, self.open_content)
+        if place.kind == CONTENT:
+            return SagaContentPage(saga, p)
         if place.kind == COVENANT:
             return CovenantPage(
                 saga,
@@ -230,6 +242,8 @@ class MainWindow(QMainWindow):
             return ""
         if place.kind == SAGA:
             return saga.name
+        if place.kind == CONTENT:
+            return "Saga Content"
         if place.kind == COVENANT:
             covenant = saga.covenant(place.id)
             return covenant.name if covenant else "Unassigned"
@@ -280,6 +294,8 @@ class MainWindow(QMainWindow):
         if isinstance(body, Paper):
             body.p = p
             body.update()
+        self.headpiece.p = p
+        self.headpiece.update()
         app = QApplication.instance()
         if isinstance(app, QApplication):
             app.setFont(QFont(pictures.UI, 10))

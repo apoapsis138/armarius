@@ -24,8 +24,10 @@ from ars_magica_manager.gui.familiar import FamiliarPage
 from ars_magica_manager.gui.figures import Bookcase, BookSpine, CordFigure, Dial
 from ars_magica_manager.gui.laboratory import LaboratoryPage
 from ars_magica_manager.gui.markup_html import plain, to_html
+from ars_magica_manager.gui.ornaments import FleuronRule, Headpiece, Tailpiece
 from ars_magica_manager.gui.pages import SagaPage
 from ars_magica_manager.gui.paper import Paper, _paper, paper
+from ars_magica_manager.gui.saga_content import SagaContentPage
 from ars_magica_manager.gui.themes import PALETTES, SCRIPTORUM
 from ars_magica_manager.gui.timeline import SEASON
 from ars_magica_manager.gui.widgets import XP_BAR, ClickableCard
@@ -141,6 +143,25 @@ def test_the_pages_lie_on_paper_and_their_cards_cast_shadows(app):
     assert isinstance(card.graphicsEffect(), QGraphicsDropShadowEffect)
     window.toggle_theme()
     assert body.p is PALETTES[1]
+
+
+def test_the_pages_are_set_with_printers_ornaments(app):
+    window = MainWindow(saga_ids=[])
+    saga = _sample_saga_with_covenant()
+    window.load(saga)
+    window.show_character(saga.characters[0].id)
+    sheet = window.sheet_area.findChild(CharacterSheet)
+    assert sheet is not None
+    headpiece = window.findChild(Headpiece)
+    assert headpiece is not None and headpiece.p is PALETTES[0]
+    # Each heading's rule opens with a hedera leaf and each chapter ends
+    # with a tailpiece.
+    assert sheet.findChildren(FleuronRule)
+    assert len(sheet.findChildren(Tailpiece)) >= len(sheet.chapters()) - 1
+    window.resize(1400, 900)
+    window.grab()  # the ornaments and the cards' corner flourishes paint
+    window.toggle_theme()
+    assert headpiece.p is PALETTES[1]
 
 
 def test_paper_is_the_same_every_time_it_is_made(app):
@@ -391,6 +412,43 @@ def test_a_magus_sheet_shows_their_familiar(app):
         sheet = sheet.window_.sheet_area.findChild(CharacterSheet)
     cards = _chapter(sheet, "Description").findChildren(ClickableCard)
     assert any("Nox" in _texts(card) for card in cards)
+
+
+def test_saga_content_opens_from_the_saga_page_with_its_chapters(app):
+    saga = _sample_saga_with_covenant()
+    window = MainWindow(saga_ids=[])
+    window.load(saga)
+    window.sheet_area.findChild(SagaPage).content.clicked()
+    page = window.sheet_area.findChild(SagaContentPage)
+    assert page is not None
+    assert window.crumb_names() == ["Sagas", saga.name, "Saga Content"]
+    assert page.chapters() == ["Books", "Catalogs", "House Rules", "Spells"]
+
+
+def test_the_spells_filter_as_on_the_terminal_and_show_in_the_inspector(app):
+    page = SagaContentPage(_sample_saga_with_covenant(), SCRIPTORUM)
+    every = page.spell_model.rowCount()
+    assert every == len(page.all_spells) > 100
+    page.spell_technique.setCurrentIndex(page.spell_technique.findData("Creo"))
+    page.spell_form.setCurrentIndex(page.spell_form.findData("Ignem"))
+    assert 0 < page.spell_model.rowCount() < every
+    assert all(
+        spell.technique == "Creo" or "Creo" in spell.requisites
+        for spell in page.shown_spells
+    )
+    page.spell_view.selectRow(0)
+    chosen = page.spell_view.model().index(0, 0).data()
+    assert page.inspector.title.text() == chosen
+
+
+def test_spells_sort_by_level_as_numbers(app):
+    page = SagaContentPage(_sample_saga_with_covenant(), SCRIPTORUM)
+    page.spell_view.sortByColumn(2, Qt.SortOrder.DescendingOrder)
+    model = page.spell_view.model()
+    levels = [model.index(r, 2).data() for r in range(5)]
+    assert levels == sorted(
+        levels, key=lambda v: -1 if v == "Gen" else int(v), reverse=True
+    )
 
 
 def test_the_treasury_shows_the_years_balance(app):

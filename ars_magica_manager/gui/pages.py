@@ -16,6 +16,7 @@ from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWi
 from .. import artwork
 from .. import character_sheet as cs
 from .. import familiar_sheet as fs
+from .. import saga_content_sheet as scs
 from .. import saga_overview as ov
 from ..models import Saga
 from . import pictures
@@ -142,6 +143,7 @@ class SagaShelf(QWidget):
         column.setContentsMargins(0, 0, 0, 0)
         column.addWidget(
             scrolling_page(
+                p,
                 page_header("Sagas", "Choose a saga to open", p, "saga"),
                 card_grid(cards)
                 if cards
@@ -151,10 +153,15 @@ class SagaShelf(QWidget):
 
 
 class SagaPage(QWidget):
-    """A saga's covenants as cards, with anyone who belongs to none."""
+    """A saga's covenants as cards, with anyone who belongs to none, and
+    a card that opens its Saga Content."""
 
     def __init__(
-        self, saga: Saga, p: Palette, open_covenant: Callable[[str | None], None]
+        self,
+        saga: Saga,
+        p: Palette,
+        open_covenant: Callable[[str | None], None],
+        open_content: Callable[[], None] = lambda: None,
     ) -> None:
         super().__init__()
         cards = []
@@ -170,10 +177,23 @@ class SagaPage(QWidget):
             card.column.addWidget(fact_grid(list(figures.facts), p, 5))
             card.clicked = lambda covenant_id=figures.id: open_covenant(covenant_id)
             cards.append(card)
+        content = ClickableCard(p, pad=16)
+        card_title(
+            content,
+            "Saga Content",
+            "The books in play, catalogs, House Rules and spells",
+            p,
+            symbol_label(artwork.icon("library"), p),
+        )
+        content.column.addWidget(fact_grid(scs.header_facts(saga), p, 4))
+        content.clicked = open_content
+        self.content = content
         parts: list[QWidget] = [
             page_header(saga.name, ov.saga_card(saga).subtitle, p, "saga"),
             chapter_title("Covenants", p),
             card_grid(cards, 2),
+            chapter_title("The Saga's Books and Rules", p),
+            card_grid([content], 2),
         ]
         if saga.description:
             parts.insert(
@@ -181,4 +201,4 @@ class SagaPage(QWidget):
             )
         column = QVBoxLayout(self)
         column.setContentsMargins(0, 0, 0, 0)
-        column.addWidget(scrolling_page(*parts))
+        column.addWidget(scrolling_page(p, *parts))

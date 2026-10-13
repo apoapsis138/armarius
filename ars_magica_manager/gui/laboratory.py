@@ -164,6 +164,7 @@ class LaboratoryPage(QWidget):
         if totals is None:
             self.totals_view = None
             return scrolling_page(
+                p,
                 chapter_title("Lab Totals", p),
                 text(
                     "Lab Totals are worked out for the magus who works here: "
@@ -201,6 +202,7 @@ class LaboratoryPage(QWidget):
             columns_text(lab_planning.activity_totals_text(saga, lab, magus), p)
         )
         return scrolling_page(
+            p,
             chapter_title(f"Lab Totals  ·  {magus.name} working here", p),
             self.totals_view,
             side_by_side(base, by_activity, spacing=14),
@@ -225,7 +227,7 @@ class LaboratoryPage(QWidget):
                 )
             stack.addStretch(1)
             columns.append(column)
-        return scrolling_page(side_by_side(*columns, spacing=18))
+        return scrolling_page(p, side_by_side(*columns, spacing=18))
 
     def _vf_card(self, card: ls.VirtueFlawCard, colour: str) -> QWidget:
         p, lab = self.p, self.lab
@@ -285,7 +287,7 @@ class LaboratoryPage(QWidget):
         )
         parts.append(chapter_title(f"Rooms ({len(lab.rooms)})", p))
         parts.append(self._named_cards(lab.rooms, "a room"))
-        return scrolling_page(*parts)
+        return scrolling_page(p, *parts)
 
     def _named_cards(self, entries, noun: str) -> QWidget:
         p = self.p
@@ -364,6 +366,7 @@ class LaboratoryPage(QWidget):
             book_cards.append(card)
         none = "None recorded."
         return scrolling_page(
+            p,
             chapter_title("Raw Vis", p),
             card_grid(phials, 4)
             if phials
@@ -406,6 +409,7 @@ class LaboratoryPage(QWidget):
             )
             entries.append(card)
         return scrolling_page(
+            p,
             chapter_title("Seasons", p),
             legend(p),
             self.calendar,

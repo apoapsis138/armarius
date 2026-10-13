@@ -43,6 +43,19 @@ teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript.
 
+## 2.48.0 — 2026-10-13
+
+- The desktop version has a Saga Content page, opened from the saga's
+  page under "The Saga's Books and Rules". It shows which books are in
+  play, the saga's own sources, the catalogs and what is hidden from
+  them, the House Rules as cards with their points, and every spell the
+  saga can use, which can be searched, filtered and sorted as on the
+  terminal, plus the players and who they play.
+- Every desktop page is set with printer's ornaments: a headpiece band
+  across the top, a hedera leaf opening each heading's rule, a tailpiece
+  closing each chapter, and gilt flourishes in the corners of every card
+  and the inspector.
+
 ## 2.47.0 — 2026-10-13
 
 - The desktop version has a page for each covenant, with every chapter of

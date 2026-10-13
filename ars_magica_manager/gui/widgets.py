@@ -1,5 +1,6 @@
 """The desktop sheet's building blocks: headings, cards, pips,
-the experience bar the tables draw, and the inspector.
+the experience bar the tables draw, and the inspector, with the printer's
+ornaments (ornaments.py) a book sets around them.
 
 Colours always come from the palette, so a widget is rebuilt (not
 restyled) when the theme changes.
@@ -45,6 +46,7 @@ from .. import artwork
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from . import pictures
 from .markup_html import to_html
+from .ornaments import FleuronRule, Tailpiece, corner_flourishes
 from .paper import lift, translucent
 from .themes import Palette
 
@@ -87,19 +89,14 @@ def mix(a: str, b: str, t: float) -> QColor:
 
 
 def chapter_title(words: str, p: Palette) -> QWidget:
-    """A heading in small-caps serif over a gilded rule that fades out."""
+    """A heading in small-caps serif over a rule that opens with a hedera
+    leaf and fades out."""
     box = QWidget()
     column = QVBoxLayout(box)
     column.setContentsMargins(0, 6, 0, 2)
-    column.setSpacing(3)
+    column.setSpacing(1)
     column.addWidget(text(words, p["foreground"], serif(15, caps=True, bold=True)))
-    rule = QFrame()
-    rule.setFixedHeight(2)
-    rule.setStyleSheet(
-        "background: qlineargradient(x1:0, y1:0, x2:1, y2:0,"
-        f" stop:0 {p['accent']}, stop:0.6 {p['rule']}, stop:1 transparent);"
-    )
-    column.addWidget(rule)
+    column.addWidget(FleuronRule(p))
     return box
 
 
@@ -118,11 +115,12 @@ def display_name(name: str, p: Palette, size: int = 34) -> QLabel:
 
 
 class Card(QFrame):
-    """A panel lying on the page, with a soft shadow; `edge` colours its
-    left border (a Virtue's green)."""
+    """A panel lying on the page, with a soft shadow and a flourish in
+    each corner; `edge` colours its left border (a Virtue's green)."""
 
     def __init__(self, p: Palette, *, pad: int = 12, edge: str | None = None) -> None:
         super().__init__()
+        self.p, self.edge = p, edge
         self.setObjectName("card")
         left = f"border-left:4px solid {edge};" if edge else ""
         self.setStyleSheet(
@@ -135,6 +133,13 @@ class Card(QFrame):
         self.column = QVBoxLayout(self)
         self.column.setContentsMargins(pad, pad - 2, pad, pad)
         self.column.setSpacing(6)
+
+    def paintEvent(self, event) -> None:
+        super().paintEvent(event)
+        frame = QRectF(self.rect()).adjusted(3 if self.edge else 0, 0, 0, 0)
+        corner_flourishes(
+            QPainter(self), frame, self.p, 8 if self.height() < 80 else 12
+        )
 
 
 def badge(words: str, colour: str, p: Palette) -> QLabel:
@@ -157,14 +162,16 @@ def chip(words: str, colour: str) -> QLabel:
     return label
 
 
-def scrolling_page(*widgets: QWidget) -> QScrollArea:
-    """A chapter: its parts one under another, scrolling."""
+def scrolling_page(p: Palette, *widgets: QWidget) -> QScrollArea:
+    """A chapter: its parts one under another, closed by a tailpiece,
+    scrolling."""
     body = QWidget()
     column = QVBoxLayout(body)
     column.setContentsMargins(18, 4, 18, 12)
     column.setSpacing(12)
     for widget in widgets:
         column.addWidget(widget)
+    column.addWidget(Tailpiece(p))
     column.addStretch(1)
     area = QScrollArea()
     area.setWidgetResizable(True)
@@ -269,7 +276,8 @@ class XpBarDelegate(TallRows):
 
 class Inspector(QFrame):
     """The panel beside every chapter that shows what was last chosen: a
-    symbol, a title, a line under it and the details (app markup)."""
+    symbol, a title, a line under it and the details (app markup), framed
+    by corner flourishes."""
 
     def __init__(self, p: Palette) -> None:
         super().__init__()
@@ -306,6 +314,11 @@ class Inspector(QFrame):
         area.setWidget(self.body)
         area.setStyleSheet("background:transparent")
         column.addWidget(area, 1)
+
+    def paintEvent(self, event) -> None:
+        super().paintEvent(event)
+        frame = QRectF(self.rect()).adjusted(4, 2, -2, -2)
+        corner_flourishes(QPainter(self), frame, self.p, 18)
 
     def show_item(
         self, title: str, subtitle: str, markup: str, symbol: Path | None = None
