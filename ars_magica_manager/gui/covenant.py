@@ -14,24 +14,45 @@ saga_overview.py), as the terminal's covenant sheet does.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QTableView, QVBoxLayout, QWidget
 
-from .. import artwork, boon_hook_text, catalog
+from .. import (
+    artwork,
+    boon_hook_text,
+    catalog,
+    covenant_forms,
+    diary_forms,
+    inhabitant_forms,
+    library_forms,
+    possession_forms,
+    season_forms,
+    seasons,
+)
 from .. import books as bk
 from .. import covenant_build as cov_build
 from .. import covenant_diary as cov_diary
 from .. import covenant_sheet as cvs
 from .. import familiar_sheet as fs
 from .. import inhabitants as inh
+from .. import possessions as pos
 from .. import saga_overview as ov
 from ..character_sheet import Fact
+from ..commands import SectionOps
 from ..covenants import boon_hook_problems
-from ..models import Covenant, Saga
-from .character_sheet import columns_text, label_values, side_by_side
-from .figures import Seal, aura_seal, fact_grid, prose, shelf, trait_list
+from ..models import INHABITANT_KINDS, POSSESSION_KINDS, Covenant, Saga
+from .character_sheet import (
+    columns_text,
+    label_values,
+    row_list,
+    section,
+    side_by_side,
+    trait_section,
+)
+from .editing import Chooser, Run, choose_cards, verb_buttons
+from .figures import Seal, aura_seal, fact_grid, prose, shelf
 from .pages import Open, card_grid, card_title, familiar_card, symbol_label
 from .themes import Palette
 from .timeline import SeasonTimeline, legend, season_text
@@ -53,6 +74,27 @@ def _none(words: str, p: Palette) -> QLabel:
     return text(words, p["dim"], serif(12.5, italic=True))
 
 
+def _choose_cards_by(
+    cards: Sequence[ClickableCard], indexes: Sequence[int], chooser: Chooser
+) -> None:
+    """As editing.choose_cards, for cards shown in another order than
+    their rows: clicking card i chooses row `indexes[i]`."""
+    for card, index in zip(cards, indexes, strict=True):
+        before = card.clicked
+
+        def clicked(index: int = index, before: Callable[[], None] = before) -> None:
+            chooser.choose(index)
+            before()
+
+        card.clicked = clicked
+
+    def outline(chosen: int | None) -> None:
+        for card, index in zip(cards, indexes, strict=True):
+            card.set_chosen(index == chosen)
+
+    chooser.listeners.append(outline)
+
+
 class CovenantPage(QWidget):
     """A covenant in the Codex layout. Choosing a person or a laboratory
     opens their page; choosing anything else shows it in the inspector."""
@@ -65,9 +107,11 @@ class CovenantPage(QWidget):
         open_character: Open,
         open_laboratory: Open,
         open_familiar: Open = lambda _id: None,
+        run: Run = lambda _command: None,
     ) -> None:
         super().__init__()
         self.saga, self.p = saga, p
+        self.run = run
         self.open_character, self.open_laboratory = open_character, open_laboratory
         self.open_familiar = open_familiar
         self.covenant_id = covenant_id
@@ -183,7 +227,11 @@ class CovenantPage(QWidget):
             stack = QVBoxLayout(column)
             stack.setContentsMargins(0, 0, 0, 0)
             stack.setSpacing(10)
-            heading = chapter_title(f"{kind}s", p)
+            chooser = Chooser()
+            ops = covenant_forms.boon_hook_ops(self.saga, covenant, kind)
+            heading = section(
+                f"{kind}s", p, buttons=verb_buttons(ops, chooser, self.run, p)
+            )
             stack.addWidget(heading)
             stack.addWidget(
                 text(
@@ -194,25 +242,34 @@ class CovenantPage(QWidget):
                 )
             )
             cards = cvs.boon_hook_cards(covenant, kind)
-            for card in cards:
-                stack.addWidget(self._boon_hook_card(covenant, card, p[tone]))
+            frames = [self._boon_hook_card(covenant, card, p[tone]) for card in cards]
+            choose_cards(frames, chooser)
+            for frame in frames:
+                stack.addWidget(frame)
             if not cards:
                 stack.addWidget(_none(f"No {kind}s.", p))
             stack.addStretch(1)
             columns.append(column)
         parts: list[QWidget] = [
-            chapter_title("The Covenant", p),
-            prose(covenant.notes.strip(), p),
-        ]
-        reputations = cvs.reputations(covenant)
-        parts += [
-            chapter_title(f"Reputations ({len(reputations)})", p),
-            trait_list(
-                [
-                    (r.name + ("" if r.known else " (not known here)"), r.score)
-                    for r in reputations
-                ],
+            section(
+                "The Covenant",
                 p,
+                prose(covenant.notes.strip(), p),
+                edits={
+                    "Edit Covenant": lambda: self.run(
+                        covenant_forms.covenant_form(covenant)
+                    ),
+                    "Edit Description": lambda: self.run(
+                        covenant_forms.description_form(covenant)
+                    ),
+                },
+            ),
+            trait_section(
+                "Reputations",
+                covenant.reputations,
+                "section-cov-reputations",
+                p,
+                self.run,
             ),
         ]
         problems = boon_hook_problems(
@@ -225,7 +282,7 @@ class CovenantPage(QWidget):
 
     def _boon_hook_card(
         self, covenant: Covenant, card: cvs.BoonHookCard, colour: str
-    ) -> QWidget:
+    ) -> ClickableCard:
         p = self.p
         frame = ClickableCard(p, edge=colour, pad=10)
         top = QHBoxLayout()
@@ -311,43 +368,89 @@ class CovenantPage(QWidget):
         )
         modifiers.column.addWidget(label_values(situation, p))
         household = Card(p)
-        household.column.addWidget(
-            text("The Household", p["heading"], serif(13, bold=True))
-        )
         household.column.addWidget(label_values(inh.population_text(saga, covenant), p))
         left, right = inh.misc_text(covenant)
         household.column.addWidget(
             side_by_side(label_values(left, p), label_values(right, p), spacing=18)
         )
+        run = self.run
         parts: list[QWidget] = [
-            chapter_title("Loyalty", p),
-            side_by_side(standing, modifiers, spacing=14),
-            household,
+            section(
+                "Loyalty",
+                p,
+                side_by_side(standing, modifiers, spacing=14),
+                edits={
+                    "Edit": lambda: run(inhabitant_forms.loyalty_form(saga, covenant))
+                },
+            ),
+            section(
+                "The Household",
+                p,
+                household,
+                edits={
+                    "Edit Inhabitants": lambda: run(
+                        inhabitant_forms.population_form(saga, covenant)
+                    ),
+                    "Edit Miscellaneous": lambda: run(
+                        inhabitant_forms.misc_form(covenant)
+                    ),
+                },
+            ),
         ]
-        parts += self._groups(cvs.inhabitant_groups(saga, covenant), "Inhabitant")
+        parts += self._every_kind(
+            cvs.inhabitant_groups(saga, covenant),
+            {kind: inh.KIND_TITLES[kind] for kind in INHABITANT_KINDS},
+            lambda kind: inhabitant_forms.inhabitant_ops(saga, covenant, kind),
+        )
         return scrolling_page(p, *parts)
 
-    def _groups(self, groups: Sequence[cvs.Group], noun: str) -> list[QWidget]:
-        """Each group's title over its table; choosing a row shows its
-        details in the inspector."""
+    def _groups(
+        self,
+        groups: Sequence[cvs.Group],
+        ops: Callable[[str], SectionOps | None] = lambda _kind: None,
+    ) -> list[QWidget]:
+        """Each group's table under its title, with the buttons of its
+        `ops` (by its kind) beside the title; choosing a row shows its
+        details in the inspector, and is the row Edit and Delete act on."""
+        return [self._group(group, ops(group.kind)) for group in groups]
+
+    def _group(self, group: cvs.Group, ops: SectionOps | None) -> QWidget:
         p = self.p
-        parts: list[QWidget] = []
-        for group in groups:
+        chooser = Chooser()
 
-            def show(row: int, group: cvs.Group = group) -> None:
-                if 0 <= row < len(group.details):
-                    self.inspect(
-                        group.table.rows[row][0],
-                        group.title.split(" (")[0],
-                        group.details[row],
-                    )
+        def show(row: int) -> None:
+            chooser.choose(row)
+            if 0 <= row < len(group.details):
+                self.inspect(
+                    group.table.rows[row][0],
+                    group.title.split(" (")[0],
+                    group.details[row],
+                )
 
-            view = cells_table(group.table.columns, group.table.rows, p, show)
-            self.tables[group.kind] = view
-            parts += [chapter_title(group.title, p), view]
-        if not parts:
-            parts.append(_none(f"No {noun.lower()}s recorded.", p))
-        return parts
+        buttons = verb_buttons(ops, chooser, self.run, p) if ops is not None else []
+        if not group.table.rows:
+            return section(group.title, p, _none("None recorded.", p), buttons=buttons)
+        view = cells_table(group.table.columns, group.table.rows, p, show)
+        self.tables[group.kind] = view
+        return section(group.title, p, view, buttons=buttons)
+
+    def _every_kind(
+        self,
+        groups: Sequence[cvs.Group],
+        titles: dict[str, str],
+        ops: Callable[[str], SectionOps],
+    ) -> list[QWidget]:
+        """A section for every kind in `titles`, those with no rows too, so
+        each can be added to."""
+        by_kind = {group.kind: group for group in groups}
+        return self._groups(
+            [
+                by_kind.get(kind)
+                or cvs.Group(kind, f"{title} (0)", cvs.Table([], []), [])
+                for kind, title in titles.items()
+            ],
+            ops,
+        )
 
     def _labs(self, labs: Sequence[ov.LabCard]) -> QWidget:
         p = self.p
@@ -371,9 +474,14 @@ class CovenantPage(QWidget):
         )
 
     def _possessions(self, covenant: Covenant) -> QWidget:
+        saga = self.saga
         return scrolling_page(
             self.p,
-            *self._groups(cvs.possession_groups(self.saga, covenant), "Possession"),
+            *self._every_kind(
+                cvs.possession_groups(saga, covenant),
+                {kind: pos.KIND_TITLES[kind] for kind in POSSESSION_KINDS},
+                lambda kind: possession_forms.possession_ops(saga, covenant, kind),
+            ),
         )
 
     def _treasury(self, covenant: Covenant) -> QWidget:
@@ -405,19 +513,38 @@ class CovenantPage(QWidget):
         ]
         if figures.status:
             parts.append(text(figures.status, p["text-error"], serif(13), wrap=True))
-        parts += [
-            chapter_title("Wealth", p),
-            fact_grid(figures.wealth, p, 6),
-        ]
-        parts += self._groups(figures.groups, "Row")
+        saga = self.saga
+        parts.append(
+            section(
+                "Wealth",
+                p,
+                fact_grid(figures.wealth, p, 6),
+                edits={"Edit": lambda: self.run(covenant_forms.wealth_form(covenant))},
+            )
+        )
+
+        def ops(kind: str) -> SectionOps:
+            if kind == "income":
+                return covenant_forms.income_ops(covenant)
+            return covenant_forms.economics_row_ops(saga, covenant, kind)
+
+        parts += self._groups(figures.groups, ops)
         return scrolling_page(p, *parts)
 
     def _library(self, covenant: Covenant) -> QWidget:
         """The books on their shelves, a summa as tall as its level."""
         p, saga = self.p, self.saga
+        books = bk.books_in_covenant(saga, covenant)
+        chooser = Chooser()
+        ops = library_forms.book_ops(
+            saga,
+            lambda: bk.books_in_covenant(saga, covenant),
+            bk.owner_value("covenant", covenant.id),
+        )
 
         def show(spine: cvs.Spine) -> None:
             book = spine.book
+            chooser.choose(next(i for i, b in enumerate(books) if b is book))
             symbol = artwork.art_symbol(spine.art) if spine.art else None
             self.inspect(
                 book.name,
@@ -426,15 +553,19 @@ class CovenantPage(QWidget):
                 symbol,
             )
 
-        parts: list[QWidget] = []
-        shelves = cvs.shelves(saga, covenant)
-        for title, spines in shelves:
+        parts: list[QWidget] = [
+            section(
+                f"Library ({len(books)})",
+                p,
+                *([] if books else [_none("No books yet.", p)]),
+                buttons=verb_buttons(ops, chooser, self.run, p),
+            )
+        ]
+        for title, spines in cvs.shelves(saga, covenant):
             parts += [
                 chapter_title(f"{title} ({len(spines)})", p),
                 shelf(spines, p, show),
             ]
-        if not shelves:
-            parts += [chapter_title("Library", p), _none("No books yet.", p)]
         return scrolling_page(p, *parts)
 
     def _seasons(self) -> QWidget:
@@ -451,19 +582,61 @@ class CovenantPage(QWidget):
                 name, when, season_text(season)
             ),
         )
+        covenant = saga.covenant(self.covenant_id)
+        plans = (
+            [
+                self._season_list(covenant, kind, title)
+                for kind, title in seasons.SEASON_KINDS
+            ]
+            if covenant is not None
+            else []
+        )
         return scrolling_page(
             p,
             chapter_title(
                 f"Seasons  ·  now {saga.current_season} {saga.current_year}", p
             ),
+            *plans,
             legend(p),
             self.timeline,
         )
 
+    def _season_list(self, covenant: Covenant, kind: str, title: str) -> QWidget:
+        """The covenant's people of `kind` and what each has planned this
+        season, with Plan and Clear for the one chosen."""
+        p, saga = self.p, self.saga
+        people = seasons.covenant_people(saga, covenant, kind)
+        chooser = Chooser()
+
+        def show(index: int) -> None:
+            chooser.choose(index)
+            self.inspect(
+                people[index].name,
+                f"{saga.current_season} {saga.current_year}",
+                seasons.season_info_text(saga, people[index]),
+            )
+
+        rows = seasons.season_rows(saga, covenant, kind)
+        return section(
+            seasons.season_title(saga, covenant, kind, title),
+            p,
+            row_list(rows, show) if rows else _none("Nobody here.", p),
+            buttons=verb_buttons(
+                season_forms.covenant_season_ops(saga, covenant, kind),
+                chooser,
+                self.run,
+                p,
+                nouns=season_forms.COVENANT_NOUNS,
+            ),
+        )
+
     def _diary(self, covenant: Covenant) -> QWidget:
         p = self.p
-        cards = []
-        for entry in cvs.diary_cards(covenant.diary):
+        chooser = Chooser()
+        ops = diary_forms.covenant_diary_ops(self.saga, covenant)
+        cards: list[ClickableCard] = []
+        entries = cvs.diary_cards(covenant.diary)
+        for entry in entries:
             card = ClickableCard(p, pad=10)
             top = QHBoxLayout()
             top.addWidget(text(entry.when, p["label"], serif(11.5, italic=True)), 1)
@@ -493,10 +666,15 @@ class CovenantPage(QWidget):
                 name, "Diary", cov_diary.info_text(covenant, index)
             )
             cards.append(card)
+        _choose_cards_by(cards, [entry.index for entry in entries], chooser)
         return scrolling_page(
             p,
-            chapter_title(f"Diary ({len(cards)})", p),
-            card_grid(cards, 2) if cards else _none("Nothing written yet.", p),
+            section(
+                f"Diary ({len(cards)})",
+                p,
+                card_grid(cards, 2) if cards else _none("Nothing written yet.", p),
+                buttons=verb_buttons(ops, chooser, self.run, p),
+            ),
         )
 
     def _build(self, covenant: Covenant) -> QWidget:

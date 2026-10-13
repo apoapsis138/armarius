@@ -1,6 +1,6 @@
-"""A character's forms: Characteristics, details, biography, aging, wounds,
-fatigue, Hermetic background, familiar details and bond powers, and the
-Arts and familiar binding editors."""
+"""A character's forms: Characteristics and Character Info (their fields
+and what saving does are in the core's character_forms.py), and the Arts
+editor. A familiar's are in the core's familiar_forms.py."""
 
 from __future__ import annotations
 
@@ -11,61 +11,19 @@ from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.widgets import Button, Input, Label, Static
 
-from .... import catalog, faith
-from .... import familiars as fam
+from .... import character_forms
 from .... import sheet_text as st
 from ....arts import ART_ABBREVIATIONS, ARTS, FORMS, TECHNIQUES
-from ....form_spec import (
-    EMPHASIS_HINT,
-    DialogField,
-    attr,
-    covenant_options,
-    pairs,
-    year_born_field,
-)
-from ....markup import escape, problem
+from ....markup import escape
 from ....models import (
-    COMPANION_TYPES,
-    CORD_SCORE_COSTS,
-    FATIGUE_LEVELS,
-    SEASONS,
-    Aging,
     ArtScore,
-    Background,
-    BondPower,
     Character,
-    Characteristics,
-    Description,
-    Familiar,
-    HermeticBackground,
-    Player,
     Saga,
     VirtueFlawInstance,
-    Wounds,
 )
-from ....rules import creation_characteristics, scores
+from ....rules import scores
 from ....rules import xp as xp_rules
 from ..fields import FieldsDialog, ModalDialog
-from .creation import _CHARACTER_TYPES
-
-#: The eight Characteristics as (label, attribute), in the book's order.
-_CHARACTERISTIC_FIELDS: list[tuple[str, str]] = [
-    ("Intelligence (Int)", "intelligence"),
-    ("Perception (Per)", "perception"),
-    ("Presence (Pre)", "presence"),
-    ("Communication (Com)", "communication"),
-    ("Strength (Str)", "strength"),
-    ("Stamina (Sta)", "stamina"),
-    ("Dexterity (Dex)", "dexterity"),
-    ("Quickness (Qik)", "quickness"),
-]
-
-
-def _characteristics_fields(characteristics: Characteristics) -> list[DialogField]:
-    return [
-        DialogField(attribute, label, "int", getattr(characteristics, attribute))
-        for label, attribute in _CHARACTERISTIC_FIELDS
-    ]
 
 
 def _characteristics_dialog(
@@ -75,361 +33,22 @@ def _characteristics_dialog(
     shows the points spent and left as each score is typed."""
     return FieldsDialog(
         "Edit Characteristics",
-        _characteristics_fields(character.characteristics),
-        live=(
-            (
-                lambda values: creation_characteristics.points_text(
-                    saga, character, values
-                )
-            )
-            if character.in_creation
-            else None
-        ),
+        character_forms.characteristics_fields(character.characteristics),
+        live=character_forms.characteristics_live(saga, character),
     )
 
 
-def _characteristics_from(values: dict[str, Any]) -> Characteristics:
-    return Characteristics(
-        **{attribute: values[attribute] for _, attribute in _CHARACTERISTIC_FIELDS}
-    )
-
-
-def _character_info_fields(saga: Saga, character: Character) -> list[DialogField]:
-    """The top panel's Edit form: name, a companion's type (Companion or
-    Mythic Companion), covenant, a magus's laboratory, and the Background
-    figures shown there."""
-    b = character.background
-    fields = [
-        DialogField("name", "Name", "text", character.name, required=True),
-    ]
-    if character.type in COMPANION_TYPES:
-        fields.append(
-            DialogField(
-                "type",
-                "Type",
-                "select",
-                character.type,
-                options=[t for t in _CHARACTER_TYPES if t[1] in COMPANION_TYPES],
-            )
-        )
-    fields += [
-        DialogField(
-            "covenant_id",
-            "Covenant",
-            "select",
-            character.covenant_id,
-            options=covenant_options(saga),
-            allow_blank=True,
-            placeholder="(unassigned)",
-        ),
-    ]
-    if character.type == "magus":
-        fields.append(
-            DialogField(
-                "laboratory_id",
-                "Assigned Laboratory",
-                "select",
-                character.assigned_lab_id,
-                options=[(escape(lab.name), lab.id) for lab in saga.laboratories],
-                allow_blank=True,
-                placeholder="(unassigned)",
-            )
-        )
-    return fields + [
-        DialogField("setting", "Setting", "text", b.setting),
-        DialogField("confidence_score", "Confidence Score", "int", b.confidence_score),
-        DialogField(
-            "confidence_points", "Confidence Points", "int", b.confidence_points
-        ),
-        DialogField(
-            "true_faith_score",
-            "True Faith Score",
-            "int",
-            b.true_faith_score,
-            hint="Only with the True Faith Virtue; 2+ is a Mythic Companion.",
-        ),
-        DialogField("faith_points", "Faith Points", "int", b.faith_points),
-        DialogField("size", "Size", "int", b.size),
-    ]
+_characteristics_from = character_forms.characteristics_from
 
 
 def _character_info_dialog(saga: Saga, character: Character) -> FieldsDialog:
     """Edit Character Info, warning (not refusing) as the True Faith Score
     is typed if the character can't have it (faith.faith_warnings)."""
-
-    def live(values: dict[str, Any]) -> str:
-        score = values.get("true_faith_score") or 0
-        kind = values.get("type") or character.type
-        warnings = faith.faith_warnings(character, score, kind)
-        return "\n".join(problem(escape(w)) for w in warnings)
-
     return FieldsDialog(
-        "Edit Character Info", _character_info_fields(saga, character), live=live
+        "Edit Character Info",
+        character_forms.character_info_fields(saga, character),
+        live=character_forms.character_info_live(character),
     )
-
-
-_HANDEDNESS_OPTIONS: list[tuple[str, str]] = [
-    ("Right", "right"),
-    ("Left", "left"),
-    ("Ambidextrous", "ambidextrous"),
-]
-
-
-#: Biographical Detail's free-text Background fields, as (label, attribute).
-_BIOGRAPHY_TEXT_FIELDS: list[tuple[str, str]] = [
-    ("Player", "player"),
-    ("Birth Name", "birth_name"),
-]
-
-
-_BIOGRAPHY_TEXT_FIELDS_AFTER_YEAR: list[tuple[str, str]] = [
-    ("Race/Nationality", "race_nationality"),
-    ("Place of Origin", "place_of_origin"),
-    ("Religion", "religion"),
-    ("Title/Profession", "title_profession"),
-]
-
-
-def _played_by_field(
-    background: Background, players: Sequence[Player], may_assign: bool
-) -> list[DialogField]:
-    """Who plays the character, from the saga's players: only
-    when the saga has players, and only the storyguide may change it."""
-    if not players:
-        return []
-    if not may_assign:
-        playing = next((p for p in players if p.id == background.player_id), None)
-        return [
-            DialogField(
-                "_played_by",
-                "Played by",
-                "info",
-                playing.name if playing else "(no one)",
-            )
-        ]
-    return [
-        DialogField(
-            "player_id",
-            "Played by",
-            "select",
-            background.player_id,
-            options=[(escape(p.name), p.id) for p in players],
-            allow_blank=True,
-            placeholder="(no one)",
-            hint="The player who may change this character when they sign in.",
-        )
-    ]
-
-
-def _biographical_fields(
-    background: Background,
-    description: Description,
-    players: Sequence[Player] = (),
-    *,
-    may_assign: bool = True,
-) -> list[DialogField]:
-    """The Background fields not in the top panel, then every Description
-    field."""
-    d = description
-    return [
-        *(
-            DialogField(attribute, label, "text", getattr(background, attribute))
-            for label, attribute in _BIOGRAPHY_TEXT_FIELDS
-        ),
-        *_played_by_field(background, players, may_assign),
-        year_born_field(background.year_born),
-        *(
-            DialogField(attribute, label, "text", getattr(background, attribute))
-            for label, attribute in _BIOGRAPHY_TEXT_FIELDS_AFTER_YEAR
-        ),
-        DialogField("height", "Height", "optfloat", d.height),
-        DialogField("weight", "Weight", "optfloat", d.weight),
-        DialogField("hair", "Hair", "text", d.hair),
-        DialogField("eyes", "Eyes", "text", d.eyes),
-        DialogField(
-            "handedness",
-            "Handedness",
-            "select",
-            d.handedness,
-            options=_HANDEDNESS_OPTIONS,
-        ),
-        DialogField(
-            "physical_description",
-            "Physical Description",
-            "text",
-            d.physical_description,
-        ),
-        DialogField("biography", "Biography", "area", d.biography, hint=EMPHASIS_HINT),
-    ]
-
-
-def _aging_fields(aging: Aging) -> list[DialogField]:
-    return [
-        DialogField("decrepitude", "Decrepitude", "int", aging.decrepitude),
-        DialogField("effects", "Effects of Aging", "text", aging.effects),
-        DialogField("warping_score", "Warping Score", "int", aging.warping_score),
-        DialogField("warping_points", "Warping Points", "int", aging.warping_points),
-        DialogField(
-            "gain_warping",
-            "Gain Warping Points now",
-            "int",
-            0,
-            hint="From one event (a powerful effect, a botch...): 2 or more "
-            "take a magus to the edge of Wizard's Twilight, rolled at once.",
-        ),
-    ]
-
-
-def _wounds_fields(wounds: Wounds, *, soak: bool = True) -> list[DialogField]:
-    """Wound counts and Incapacitated/Dead; a character's Soak too (a
-    Familiar's lives with its Characteristics instead)."""
-    fields = (
-        [
-            DialogField(
-                "soak",
-                "Soak adjustment",
-                "int",
-                wounds.soak,
-                hint="Added to the Soak worked out from Stamina, armour and Virtues.",
-            )
-        ]
-        if soak
-        else []
-    )
-    return fields + [
-        DialogField("light", "Light Wounds (-1 each)", "int", wounds.light),
-        DialogField("medium", "Medium Wounds (-3 each)", "int", wounds.medium),
-        DialogField("heavy", "Heavy Wounds (-5 each)", "int", wounds.heavy),
-        DialogField("incapacitated", "Incapacitated", "check", wounds.incapacitated),
-        DialogField("dead", "Dead", "check", wounds.dead),
-    ]
-
-
-def _fatigue_fields(level: str) -> list[DialogField]:
-    return [
-        DialogField(
-            "level",
-            "Level",
-            "select",
-            level,
-            options=[(level.title(), level) for level in FATIGUE_LEVELS],
-        )
-    ]
-
-
-def _hermetic_fields(hermetic: HermeticBackground) -> list[DialogField]:
-    h = hermetic
-    return [
-        DialogField(
-            "house",
-            "House",
-            "select",
-            h.house,
-            options=[(house.name, house.id) for house in catalog.load_house_catalog()],
-            allow_blank=True,
-            placeholder="(none selected)",
-        ),
-        DialogField("domus_magna", "Domus Magna", "text", h.domus_magna),
-        DialogField("primus", "Primus", "text", h.primus),
-        DialogField("parens", "Parens", "text", h.parens),
-        DialogField(
-            "covenant_of_apprenticeship",
-            "Covenant of Apprenticeship",
-            "text",
-            h.covenant_of_apprenticeship,
-        ),
-        DialogField(
-            "age_of_apprenticeship",
-            "Age of Apprenticeship",
-            "optint",
-            h.age_of_apprenticeship,
-        ),
-        DialogField("wizards_sigil", "Wizard's Sigil", "area", h.wizards_sigil),
-    ]
-
-
-def _familiar_characteristics_fields(familiar: Familiar) -> list[DialogField]:
-    return _characteristics_fields(familiar.characteristics) + [
-        DialogField("base_soak", "Base Soak", "int", familiar.base_soak),
-        DialogField(
-            "magic_resistance", "Magic Resistance", "int", familiar.magic_resistance
-        ),
-    ]
-
-
-def _familiar_info_fields(familiar: Familiar) -> list[DialogField]:
-    f = familiar
-    return [
-        DialogField("name", "Name", "text", f.name, required=True),
-        DialogField("species", "Species / Description", "text", f.species),
-        DialogField(
-            "season_bound",
-            "Season Bound",
-            "select",
-            f.season_bound or None,
-            options=pairs(SEASONS),
-            allow_blank=True,
-            placeholder="(not set)",
-        ),
-        DialogField("year_bound", "Year Bound", "optint", f.year_bound),
-        DialogField("magic_might", "Magic Might Score", "int", f.magic_might),
-        DialogField("might_pool", "Current Might Pool", "optint", f.might_pool),
-        DialogField("size", "Size", "int", f.size),
-        DialogField("wound_multiplier", "Wound Multiplier", "int", f.wound_multiplier),
-    ]
-
-
-def _bond_power_fields(power: BondPower | None) -> list[DialogField]:
-    """The add/edit form for one Empowered Bond Power -- all typed-in, no
-    Lab Total formula computed (see BondPower's docstring)."""
-
-    return [
-        DialogField(
-            "name", "Power Name", "text", attr(power, "name", ""), required=True
-        ),
-        DialogField("level", "Level", "int", attr(power, "level", 0)),
-        DialogField(
-            "technique",
-            "Technique",
-            "select",
-            attr(power, "technique", ""),
-            options=pairs(TECHNIQUES),
-            allow_blank=True,
-            placeholder="(none)",
-        ),
-        DialogField(
-            "form",
-            "Form",
-            "select",
-            attr(power, "form", ""),
-            options=pairs(FORMS),
-            allow_blank=True,
-            placeholder="(none)",
-        ),
-        DialogField(
-            "target_controller",
-            "Target & Controller",
-            "text",
-            attr(power, "target_controller", ""),
-            placeholder="e.g. Magus (controlled by Familiar)",
-        ),
-        DialogField("uses_per_day", "Uses/Day", "int", attr(power, "uses_per_day", 0)),
-        DialogField("penetration", "Penetration", "int", attr(power, "penetration", 0)),
-        DialogField("vis_spent", "Vis Spent", "int", attr(power, "vis_spent", 0)),
-        DialogField(
-            "cosmetic_trait",
-            "Cosmetic Trait Manifested",
-            "text",
-            attr(power, "cosmetic_trait", ""),
-        ),
-        DialogField(
-            "instilling_progress",
-            "Instilling (blank = finished)",
-            "optint",
-            attr(power, "instilling_progress", None),
-            hint="0 to instil it as lab work (the lab's Planning tab).",
-        ),
-    ]
 
 
 class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
@@ -644,75 +263,3 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
                 return
             result[key] = ArtScore(xp=xp)
         self.dismiss(result)
-
-
-def _familiar_binding_fields(familiar: Familiar) -> list[DialogField]:
-    """A Familiar's Initial Binding details and its three Cords (each
-    option shows its point cost)."""
-    cord_options = [
-        (f"+{score} ({fam.cord_cost(score)} pts)", str(score))
-        for score in CORD_SCORE_COSTS
-    ]
-    return [
-        DialogField(
-            "binding_technique",
-            "Binding Technique",
-            "select",
-            familiar.binding_technique or None,
-            options=pairs(TECHNIQUES),
-            allow_blank=True,
-            placeholder="(not set)",
-        ),
-        DialogField(
-            "binding_form",
-            "Binding Form",
-            "select",
-            familiar.binding_form or None,
-            options=pairs(FORMS),
-            allow_blank=True,
-            placeholder="(not set)",
-        ),
-        DialogField(
-            "binding_lab_total",
-            "Initial Binding Lab Total",
-            "int",
-            familiar.binding_lab_total,
-        ),
-        DialogField(
-            "target_binding_level",
-            "Target Binding Level",
-            "int",
-            familiar.target_binding_level,
-        ),
-        DialogField(
-            "vis_spent_binding",
-            "Cumulative Vis Spent (pawns)",
-            "int",
-            familiar.vis_spent_binding,
-        ),
-        *(
-            DialogField(
-                attribute,
-                label,
-                "select",
-                str(getattr(familiar, attribute)),
-                options=cord_options,
-            )
-            for attribute, label, _blurb in fam.CORDS
-        ),
-    ]
-
-
-def _familiar_binding_dialog(familiar: Familiar) -> FieldsDialog[dict[str, object]]:
-    """Edits a Familiar's binding and Cords; builds the fields to set on it."""
-    cords = {attribute for attribute, _label, _blurb in fam.CORDS}
-
-    def build(values: dict[str, Any]) -> dict[str, object]:
-        return {
-            key: int(value) if key in cords else ("" if value is None else value)
-            for key, value in values.items()
-        }
-
-    return FieldsDialog(
-        "Edit Binding & Cords", _familiar_binding_fields(familiar), build=build
-    )

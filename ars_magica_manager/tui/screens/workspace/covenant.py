@@ -5,22 +5,26 @@ from __future__ import annotations
 
 from typing import Any, ClassVar
 
-from .... import catalog, covenant_diary, seasons, sourcebooks, vis
+from .... import (
+    catalog,
+    covenant_diary,
+    covenant_forms,
+    inhabitant_forms,
+    seasons,
+    sourcebooks,
+    vis,
+)
 from .... import covenants as cov_rules
 from .... import economics as eco
 from .... import inhabitants as inh
 from .... import possessions as pos
+from ....commands import Form
 from ....covenants import boon_hook_is_unknown
-from ....form_spec import EMPHASIS_HINT, DialogField, description_field, pairs
 from ....markup import escape
 from ....models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
     BOON_HOOK_RESOURCE,
-    INCOME_TYPE_DEFAULTS,
-    INCOME_TYPES,
-    LOYALTY_EQUIPMENT,
-    LOYALTY_MONEY,
     Character,
     Covenant,
     CovenantDiaryEntry,
@@ -31,8 +35,6 @@ from ....models import (
 )
 from ..fields import FieldsDialog
 from ..forms import (
-    _contested_fields,
-    _covenant_fields,
     _improve_income_dialog,
     _inhabitant_fields,
     _possession_dialog,
@@ -56,6 +58,21 @@ class CovenantActions(WorkspaceBase):
     """WorkspaceScreen's actions for the Covenant sheet: Possessions,
     Economics, Inhabitants, Description, Reputations, Boons & Hooks and the
     covenant itself."""
+
+    def _run_form(self, form: Form, section: str) -> None:
+        """Show a core form (commands.Form) and, once saved, apply it and
+        refresh `section`."""
+
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is None:
+                return
+            form.apply(values)
+            self._commit(section)
+
+        self.app.push_screen(
+            FieldsDialog(form.title, form.fields(), validate=form.validate),
+            handle_result,
+        )
 
     # -- Covenant: Possessions tab --
 
@@ -163,25 +180,15 @@ class CovenantActions(WorkspaceBase):
         covenant = self.selected_covenant
         if covenant is None:
             return
-        economics = covenant.economics
+        form = covenant_forms.wealth_form(covenant)
 
         def handle_result(values: dict[str, Any] | None) -> None:
             if values is None:
                 return
-            economics.wealth = values["wealth"]
+            form.apply(values)
             self._commit("section-eco-wealth")
 
-        self.app.push_screen(
-            FieldsDialog(
-                "Edit Wealth",
-                [
-                    DialogField(
-                        "wealth", "Wealth (pounds in stores)", "int", economics.wealth
-                    )
-                ],
-            ),
-            handle_result,
-        )
+        self.app.push_screen(FieldsDialog(form.title, form.fields()), handle_result)
 
     def _add_income_source(self) -> None:
         self._income_form(None)
@@ -203,46 +210,20 @@ class CovenantActions(WorkspaceBase):
         covenant = self.selected_covenant
         if covenant is None:
             return
-        title = (
-            "Add a Source of Income"
-            if source is None
-            else f"Edit {escape(source.name or 'this source of income')}"
-        )
-        usual = ", ".join(f"{t} {n}" for t, n in INCOME_TYPE_DEFAULTS.items())
-        fields = [
-            DialogField(
-                "name", "Name", "text", source.name if source else "", required=True
-            ),
-            DialogField(
-                "type",
-                "Type",
-                "select",
-                source.type if source else "Typical",
-                options=pairs(INCOME_TYPES),
-                required=True,
-            ),
-            DialogField(
-                "income",
-                "Current Income (blank = usual)",
-                "optint",
-                source.income if source else None,
-                hint=f"Usual per year: {usual}.",
-            ),
-            description_field(source.description if source else ""),
-            *_contested_fields(source),
-        ]
 
         def handle_result(values: dict[str, Any] | None) -> None:
             if values is None:
                 return
-            if source is None:
-                eco.add_income_source(covenant, values)
-            else:
-                for key, value in values.items():
-                    setattr(source, key, value)
+            covenant_forms.apply_income(covenant, source, values)
             self._commit("section-eco-income")
 
-        self.app.push_screen(FieldsDialog(title, fields), handle_result)
+        self.app.push_screen(
+            FieldsDialog(
+                covenant_forms.income_title(source),
+                covenant_forms.income_fields(source),
+            ),
+            handle_result,
+        )
 
     def _remove_income_source(self) -> None:
         """Delete the chosen source of income (after confirming)."""
@@ -368,42 +349,17 @@ class CovenantActions(WorkspaceBase):
             if summary.surplus_deficit < 0:
                 self._offer_emergency_draw(which, row, summary)
                 return
-        economics = covenant.economics
-        first = "Cost" if which == "expenditure" else "Quantity"
-        fields = [DialogField("_n", "Row", "info", row.name)]
-        if row.typed:
-            fields += [
-                DialogField(
-                    attribute,
-                    self._ECONOMICS_TYPED_LABELS[attribute],
-                    "int",
-                    getattr(economics, attribute),
-                )
-                for attribute in row.typed
-            ]
-        else:
-            fields += [
-                DialogField(
-                    "_c", f"{first} (calculated)", "info", eco.money(row.first)
-                ),
-                DialogField(
-                    "_s", "Savings (calculated)", "info", eco.money(row.savings)
-                ),
-            ]
-        fields.append(
-            DialogField("notes", "Notes", "text", economics.notes.get(row.key, ""))
-        )
 
         def handle_result(values: dict[str, Any] | None) -> None:
             if values is None:
                 return
-            eco.apply_row_edit(economics, row.key, values)
+            eco.apply_row_edit(covenant.economics, row.key, values)
             self._commit(f"section-eco-{which}")
 
         self.app.push_screen(
             FieldsDialog(
                 f"Edit {row.name}",
-                fields,
+                covenant_forms.economics_row_fields(covenant, which, row),
                 validate=lambda values: eco.row_problem(row.key, values),
             ),
             handle_result,
@@ -561,174 +517,24 @@ class CovenantActions(WorkspaceBase):
         covenant = self.selected_covenant
         if covenant is None:
             return
-        loyalty = covenant.loyalty
-        styles = inh.governance_names(covenant)
-        if styles:
-            governance = DialogField(
-                "_g",
-                "Type of Governance",
-                "info",
-                f"{', '.join(styles)} (from your Boons)",
-            )
-        else:
-            governance = DialogField(
-                "governance", "Type of Governance", "text", loyalty.governance
-            )
-        base = inh.base_loyalty(self.saga, covenant)
-        modifiers = inh.total_modifiers(self.saga, covenant)
-        fields = [
-            governance,
-            DialogField("_bp", "Base Loyalty Points", "info", base),
-            DialogField("_tm", "Total modifiers", "info", modifiers),
-            DialogField("_cp", "Current Loyalty Points", "info", base + modifiers),
-            DialogField(
-                "_ps",
-                "Prevailing Loyalty Score",
-                "info",
-                inh.prevailing_loyalty_score(base + modifiers),
-            ),
-            DialogField(
-                "_lc",
-                "Living Conditions (from the covenant's Living Conditions (Mundane))",
-                "info",
-                inh.living_conditions_loyalty(covenant),
-            ),
-            DialogField(
-                "equipment",
-                "Equipment",
-                "select",
-                loyalty.equipment,
-                options=pairs(LOYALTY_EQUIPMENT),
-            ),
-            DialogField(
-                "money",
-                "Money",
-                "select",
-                loyalty.money,
-                options=pairs(LOYALTY_MONEY),
-            ),
-            DialogField(
-                "pension",
-                "  Pension? (half Wages until death)",
-                "check",
-                loyalty.pension,
-            ),
-            DialogField(
-                "_sp",
-                "Specialists (Presence + Ability of Steward/Chamberlain/Turb "
-                "Captain/Autocrat)",
-                "info",
-                inh.specialists_loyalty(self.saga, covenant),
-            ),
-            DialogField("familiarity", "Familiarity", "int", loyalty.familiarity),
-            DialogField(
-                "_rp",
-                "Reputation (-5 per point of a known bad Reputation)",
-                "info",
-                inh.reputation_loyalty_penalty(covenant),
-            ),
-            DialogField(
-                "actions_and_events",
-                "Actions and events (manual, on top of the Diary's "
-                f"{covenant_diary.diary_loyalty(covenant):+d})",
-                "int",
-                loyalty.actions_and_events,
-            ),
-            DialogField(
-                "magical_influence",
-                "Magical Influence",
-                "int",
-                loyalty.magical_influence,
-            ),
-        ]
-
-        def handle_result(values: dict[str, Any] | None) -> None:
-            if values is None:
-                return
-            for key, value in values.items():
-                setattr(loyalty, key, value)
-            self._commit("section-inh-loyalty")
-
-        self.app.push_screen(FieldsDialog("Edit Loyalty", fields), handle_result)
+        self._run_form(
+            inhabitant_forms.loyalty_form(self.saga, covenant), "section-inh-loyalty"
+        )
 
     def _edit_population(self) -> None:
         covenant = self.selected_covenant
         if covenant is None:
             return
-        pop = covenant.population
-        fields = [
-            DialogField(
-                "_tm",
-                "Number of Teamsters",
-                "info",
-                inh.other_covenfolk_count(self.saga, covenant, "Teamster"),
-            ),
-            DialogField(
-                "_tn",
-                "Teamsters Needed",
-                "info",
-                inh.minimum_teamsters(self.saga, covenant),
-            ),
-            DialogField(
-                "_sv",
-                "Number of Servants",
-                "info",
-                inh.other_covenfolk_count(self.saga, covenant, "Servant"),
-            ),
-            DialogField(
-                "_sn",
-                "Servants Needed",
-                "info",
-                inh.minimum_servants(self.saga, covenant),
-            ),
-            DialogField(
-                "_lb",
-                "Number of Laborers",
-                "info",
-                inh.other_covenfolk_count(self.saga, covenant, "Laborer"),
-            ),
-            DialogField("other_people", "Other People", "int", pop.other_people),
-            DialogField(
-                "_t",
-                "Total Inhabitants",
-                "info",
-                f"{inh.total_inhabitants(self.saga, covenant)} (calculated)",
-            ),
-        ]
-
-        def handle_result(values: dict[str, Any] | None) -> None:
-            if values is None:
-                return
-            for key, value in values.items():
-                setattr(pop, key, value)
-            self._commit("section-inh-population")
-
-        self.app.push_screen(FieldsDialog("Edit Inhabitants", fields), handle_result)
+        self._run_form(
+            inhabitant_forms.population_form(self.saga, covenant),
+            "section-inh-population",
+        )
 
     def _edit_miscellaneous(self) -> None:
         covenant = self.selected_covenant
         if covenant is None:
             return
-        pop = covenant.population
-        fields = [
-            DialogField("aging_magi", "Aging for Magi", "int", pop.aging_magi),
-            DialogField("aging_mundane", "Aging for Mundane", "int", pop.aging_mundane),
-            DialogField("magic_laborers", "Magic Laborers", "int", pop.magic_laborers),
-            DialogField("magic_servants", "Magic Servants", "int", pop.magic_servants),
-            DialogField(
-                "magic_teamsters", "Magic Teamsters", "int", pop.magic_teamsters
-            ),
-            DialogField("magic_turbula", "Magic Turbula", "int", pop.magic_turbula),
-        ]
-
-        def handle_result(values: dict[str, Any] | None) -> None:
-            if values is None:
-                return
-            for key, value in values.items():
-                setattr(pop, key, value)
-            self._commit("section-inh-misc")
-
-        self.app.push_screen(FieldsDialog("Edit Miscellaneous", fields), handle_result)
+        self._run_form(inhabitant_forms.misc_form(covenant), "section-inh-misc")
 
     # -- Covenant: Description / Reputations / Boons & Hooks --
 
@@ -736,26 +542,8 @@ class CovenantActions(WorkspaceBase):
         covenant = self.selected_covenant
         if covenant is None:
             return
-
-        def handle_result(result: dict[str, Any] | None) -> None:
-            if result is not None:
-                covenant.notes = result["notes"]
-                self._commit("section-cov-description")
-
-        self.app.push_screen(
-            FieldsDialog(
-                "Edit Covenant Description",
-                [
-                    DialogField(
-                        "notes",
-                        "Description",
-                        "area",
-                        covenant.notes,
-                        hint=EMPHASIS_HINT,
-                    )
-                ],
-            ),
-            handle_result,
+        self._run_form(
+            covenant_forms.description_form(covenant), "section-cov-description"
         )
 
     def _selected_reputation(self) -> int | None:
@@ -902,17 +690,15 @@ class CovenantActions(WorkspaceBase):
         covenant = self.selected_covenant
         if covenant is None:
             return
+        form = covenant_forms.covenant_form(covenant)
 
-        def handle_result(result: dict[str, Any] | None) -> None:
-            if result is None:
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is None:
                 return
-            for field, value in result.items():
-                setattr(covenant, field, value)
+            form.apply(values)
             self._commit("section-cov-info", tree=True)
 
-        self.app.push_screen(
-            FieldsDialog("Edit Covenant", _covenant_fields(covenant)), handle_result
-        )
+        self.app.push_screen(FieldsDialog(form.title, form.fields()), handle_result)
 
     def action_improve(self) -> None:
         self._improve_income_source()

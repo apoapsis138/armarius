@@ -1,0 +1,1277 @@
+"""The More and New menus and deleting a record, for a front-end that
+shows one record's page at a time (the desktop), independent of how they
+are drawn.
+
+A `Page` is actions.ActionFacts for such a front-end: the record on show,
+and no focused section. Its menus offer what actions.available offers
+anywhere on the page: each More command is asked about with the page's
+sections (PAGE_SECTIONS) one by one, and kept if any offers it. Every
+command acts on the record on show, so the page counts as being "on the
+record" (Delete, Export, In Creation / In Play); a command that would act
+on a chosen row asks which first (a commands.Choose).
+
+`command(page, action)` builds the first step of a menu entry, or of
+Delete (`DELETE_RECORD`), as commands.py steps: mutating the saga only in
+the last step's apply, so cancelling any step changes nothing.
+"""
+
+from __future__ import annotations
+
+from collections.abc import Callable
+from dataclasses import dataclass, replace
+from pathlib import Path
+from typing import Any
+
+from . import books as bk
+from . import (
+    creation,
+    creation_forms,
+    deletion,
+    library_forms,
+    seasons,
+    storage,
+    transfer,
+    vis,
+)
+from . import economics as eco
+from . import familiars as fam
+from . import inhabitants as inh
+from . import lab_texts as lt
+from . import spells as spl
+from .actions import (
+    MORE_MENU,
+    NEW_MENU,
+    RECORD_SECTION,
+    MenuItem,
+    NodeKind,
+    available,
+)
+from .commands import Choice, Choose, Command, Confirm, Form, Refuse, notes
+from .form_spec import DialogField, pairs
+from .markup import escape, todo
+from .models import (
+    INCOME_EFFECTS,
+    SEASONS,
+    TEXT_LONGEVITY,
+    Book,
+    Character,
+    Covenant,
+    Familiar,
+    IncomeSource,
+    Laboratory,
+    LabTextAccess,
+    Saga,
+    Spell,
+)
+from .rules import creation as creation_rules
+from .rules import creation_covenant as cov_creation
+from .rules import lab_seasons
+from .sections import LAB_TEXTS_SECTION
+
+#: The record a page shows, as deletion and actions take it.
+Record = Covenant | Character | Laboratory | Familiar
+
+#: Delete's action: the record on show, after a confirmation that says
+#: what happens to what it owns.
+DELETE_RECORD = "delete_record"
+
+#: The More commands a page offers nowhere: the desktop shows them as the
+#: section's own button (Fatigue beside Wounds in Health), or doesn't show
+#: the section or workflow yet (Enchanted Devices, the Creation Worksheet).
+NOT_ON_PAGES = frozenset(
+    {
+        "edit_fatigue",
+        "edit_familiar_fatigue",
+        "instill_effect",
+        "use_charge",
+        "creation_worksheet",
+    }
+)
+
+#: Per page, the sections whose More commands its menu offers (None: the
+#: page itself, with no section).
+PAGE_SECTIONS: dict[NodeKind, tuple[str | None, ...]] = {
+    NodeKind.SAGA: (None,),
+    NodeKind.CHARACTER: (
+        RECORD_SECTION[NodeKind.CHARACTER],
+        "section-hermetic-background",
+        "section-known-spells",
+        "section-raw-vis-hermetic",
+        "section-raw-vis-inventory",
+    ),
+    NodeKind.FAMILIAR: (RECORD_SECTION[NodeKind.FAMILIAR],),
+    NodeKind.LABORATORY: (
+        RECORD_SECTION[NodeKind.LABORATORY],
+        "section-lab-raw-vis",
+        LAB_TEXTS_SECTION,
+    ),
+    NodeKind.COVENANT: (
+        RECORD_SECTION[NodeKind.COVENANT],
+        *(f"section-inh-{kind}" for kind in inh.AUTO_KINDS),
+        "section-eco-income",
+        "section-pos-vis_store",
+        "section-lib-books",
+    ),
+}
+
+#: The sections whose raw vis Move Vis moves, and whose it is.
+_VIS_SECTIONS: dict[str, str] = {
+    "section-raw-vis-hermetic": "character",
+    "section-raw-vis-inventory": "character",
+    "section-lab-raw-vis": "laboratory",
+    "section-pos-vis_store": "covenant",
+}
+
+
+@dataclass(frozen=True)
+class Page:
+    """The page on show, as actions.available asks about it
+    (actions.ActionFacts): the saga, what kind of page, whose, and the
+    section a command is being asked about (None: the page itself)."""
+
+    saga: Saga
+    kind: NodeKind | None
+    covenant: Covenant | None = None
+    character: Character | None = None
+    laboratory: Laboratory | None = None
+    familiar: Familiar | None = None
+    section: str | None = None
+
+    # -- actions.ActionFacts --
+
+    @property
+    def selected_kind(self) -> NodeKind | None:
+        return self.kind
+
+    @property
+    def selected_covenant(self) -> Covenant | None:
+        return self.covenant
+
+    @property
+    def selected_character(self) -> Character | None:
+        return self.character
+
+    @property
+    def selected_laboratory(self) -> Laboratory | None:
+        return self.laboratory
+
+    def active_section(self) -> str | None:
+        return self.section
+
+    def player_may(self, action: str) -> bool:
+        # The desktop is the storyguide's own copy.
+        return True
+
+    def on_record(self) -> bool:
+        return True
+
+    def creation_record(self) -> Character | Covenant | Laboratory | None:
+        if self.kind == NodeKind.CHARACTER:
+            return self.character
+        if self.kind == NodeKind.COVENANT:
+            return self.covenant
+        if self.kind == NodeKind.LABORATORY:
+            return self.laboratory
+        return None
+
+    def device_action_enabled(self, action: str) -> bool:
+        return False
+
+    def vis_holder(self) -> vis.Holder | None:
+        holder = _VIS_SECTIONS.get(self.section or "")
+        return {
+            "character": self.character,
+            "laboratory": self.laboratory,
+            "covenant": self.covenant,
+        }.get(holder or "")
+
+    def record_to_export(self) -> transfer.Record | None:
+        return self.creation_record()
+
+    def record_to_delete(self) -> Record | None:
+        if self.kind == NodeKind.FAMILIAR:
+            return self.familiar
+        return self.creation_record()
+
+    def can_send_files(self) -> bool:
+        return True
+
+
+def page_for(
+    saga: Saga,
+    kind: NodeKind | None,
+    *,
+    covenant_id: str | None = None,
+    character_id: str | None = None,
+    laboratory_id: str | None = None,
+    familiar_id: str | None = None,
+) -> Page:
+    """The Page for a record's page, found by id: a character's or
+    laboratory's covenant comes with it, and a familiar's magus."""
+    character = saga.character(character_id)
+    laboratory = saga.laboratory(laboratory_id)
+    familiar = next((f for f in saga.familiars if f.id == familiar_id), None)
+    if familiar is not None and character is None:
+        character = fam.magus_of(saga, familiar)
+    if covenant_id is None:
+        covenant_id = (
+            character.covenant_id
+            if character is not None
+            else laboratory.covenant_id
+            if laboratory is not None
+            else None
+        )
+    return Page(
+        saga,
+        kind,
+        covenant=saga.covenant(covenant_id),
+        character=character,
+        laboratory=laboratory,
+        familiar=familiar,
+    )
+
+
+#: The sections only a magus's sheet has.
+_MAGUS_SECTIONS = frozenset(
+    {"section-hermetic-background", "section-known-spells", "section-raw-vis-hermetic"}
+)
+
+
+def page_sections(page: Page) -> tuple[str | None, ...]:
+    """The sections of PAGE_SECTIONS the page shows."""
+    sections = PAGE_SECTIONS.get(page.kind, ()) if page.kind else ()
+    if page.kind == NodeKind.CHARACTER and (
+        page.character is None or page.character.type != "magus"
+    ):
+        sections = tuple(s for s in sections if s not in _MAGUS_SECTIONS)
+    return sections
+
+
+def _anything(_page: Page) -> bool:
+    return True
+
+
+#: More commands the page's menu leaves out while they have nothing to act
+#: on (the terminal offers them in their section and then says so).
+_PAGE_CHECKS: dict[str, Callable[[Page], bool]] = {
+    "improve": lambda page: bool(
+        page.covenant is not None and page.covenant.economics.income_sources
+    ),
+}
+
+
+def more_items(page: Page) -> list[MenuItem]:
+    """What More offers on the page, in the menu's order."""
+    sections = page_sections(page)
+    return [
+        item
+        for item in MORE_MENU
+        if item.action not in NOT_ON_PAGES
+        and _PAGE_CHECKS.get(item.action, _anything)(page)
+        and any(
+            available(item.action, replace(page, section=section))
+            for section in sections
+        )
+    ]
+
+
+def section_of(page: Page, action: str) -> str | None:
+    """The first of the page's sections that offers `action`."""
+    for section in page_sections(page):
+        if available(action, replace(page, section=section)):
+            return section
+    return None
+
+
+def new_items(page: Page) -> list[MenuItem]:
+    """What New can make from the page."""
+    return [item for item in NEW_MENU if available(item.action, page)]
+
+
+def deletes(page: Page) -> Record | None:
+    """The record Delete deletes on the page, if any."""
+    if page.kind is None or not available(DELETE_RECORD, page):
+        return None
+    return page.record_to_delete()
+
+
+def command(page: Page, action: str) -> Command:
+    """The first step of the menu entry `action` on the page."""
+    saga = page.saga
+    if action == DELETE_RECORD:
+        record = deletes(page)
+        if record is None:
+            return Refuse("Delete", "Nothing here to delete.")
+        return delete_record(saga, record)
+    builder = _COMMANDS.get(action)
+    if builder is None:
+        return Refuse("More", "That isn't available here.")
+    return builder(page)
+
+
+# ------------------------------------------------------------ the record
+
+
+def delete_record(saga: Saga, record: Record) -> Confirm:
+    """ "Delete <name>?", saying what happens to what it owns."""
+    consequences, do = _deletion_of(saga, record)
+    message = f"Delete {escape(record.name)}?"
+    if consequences:
+        message += "\n\n" + "\n".join(map(escape, consequences))
+    return Confirm(message, do)
+
+
+def _deletion_of(saga: Saga, record: Record) -> tuple[list[str], Callable[[], None]]:
+    if isinstance(record, Covenant):
+        return (
+            deletion.covenant_consequences(saga, record),
+            lambda: deletion.delete_covenant(saga, record),
+        )
+    if isinstance(record, Character):
+        return (
+            deletion.character_consequences(saga, record),
+            lambda: deletion.delete_character(saga, record),
+        )
+    if isinstance(record, Familiar):
+        return (
+            deletion.familiar_consequences(saga, record),
+            lambda: deletion.delete_familiar(saga, record),
+        )
+    return (
+        deletion.laboratory_consequences(saga, record),
+        lambda: deletion.delete_laboratory(saga, record),
+    )
+
+
+def toggle_mode(saga: Saga, record: Character | Covenant | Laboratory) -> Command:
+    """In Creation / In Play: asks first either way. With strict creation
+    rules on, a record that breaks a rule it must follow stays In
+    Creation."""
+    name = escape(record.name)
+    if record.in_creation:
+        if not creation_rules.can_move_to_play(saga, record):
+            broken = creation_rules.broken_musts(creation_rules.checks(saga, record))
+            return Refuse(
+                "In Creation / In Play",
+                f"{name} stays In Creation: it breaks {len(broken)} "
+                "creation rule(s) it must follow, and this saga enforces "
+                "them strictly.",
+            )
+        found = creation_rules.checks(saga, record)
+        message = (
+            f"Move {name} to In Play? Creation checks: "
+            f"{creation_rules.summary(found)}. They stop once it is In Play."
+        )
+        if isinstance(record, Covenant):
+            note = cov_creation.leftover_note(saga, record)
+            if note:
+                message += f"\n\n{escape(note)}"
+    else:
+        message = (
+            f"Move {name} back to In Creation? The creation checks come "
+            "back until it moves to In Play again."
+        )
+
+    def apply() -> None:
+        creation.set_in_creation(saga, record, not record.in_creation)
+
+    return Confirm(message, apply, yes_label="Yes")
+
+
+def export_fields(record: transfer.Record, folder: Path) -> list[DialogField]:
+    kind = transfer.kind_of(record)
+    fields = [
+        DialogField(
+            "_what", "Exporting", "info", f"{transfer.KIND_LABELS[kind]}: {record.name}"
+        ),
+        DialogField(
+            "file",
+            "File",
+            "text",
+            str(folder / transfer.default_file_name(record)),
+            hint="What it holds travels with it: a character's familiar, devices, "
+            "books and Diary; a laboratory's books and devices. Import it into "
+            "another saga with More's Import on that saga.",
+        ),
+    ]
+    if kind == transfer.COVENANT:
+        fields.append(
+            DialogField(
+                "with_members",
+                "With its laboratories and characters",
+                "check",
+                False,
+            )
+        )
+    return fields
+
+
+def export_path(values: dict[str, Any]) -> Path:
+    """The export form's file, with the export suffix if it has none."""
+    name = (values.get("file") or "").strip().strip('"')
+    path = Path(name).expanduser()
+    if name and not path.name.lower().endswith(".json"):
+        path = path.with_name(path.name + transfer.SUFFIX)
+    return path
+
+
+def export_problem(values: dict[str, Any]) -> str | None:
+    if not (values.get("file") or "").strip():
+        return "Give the file to write."
+    if export_path(values).is_dir():
+        return "That is a folder: add a file name."
+    return None
+
+
+def export_live(values: dict[str, Any]) -> str:
+    if export_problem(values):
+        return ""
+    path = export_path(values)
+    if path.exists():
+        return todo(f"{escape(path.name)} exists: it will be replaced.")
+    return f"[dim]Writes {escape(str(path))}[/]"
+
+
+def export_record(saga: Saga, record: transfer.Record, folder: Path) -> Form:
+    """Export a covenant, laboratory or character to a file another saga
+    can import."""
+
+    def apply(values: dict[str, Any]) -> Command | list[str]:
+        path = export_path(values)
+        try:
+            transfer.export_to(
+                path, saga, record, with_members=bool(values.get("with_members"))
+            )
+        except OSError as problem:
+            return Refuse(
+                f"Export {escape(record.name)}",
+                f"Couldn't write {escape(path.name)}: {escape(str(problem))}",
+            )
+        return notes(f"Exported {escape(record.name)} to {escape(str(path))}.")
+
+    return Form(
+        f"Export {escape(record.name)}",
+        lambda: export_fields(record, folder),
+        apply,
+        validate=export_problem,
+        live=export_live,
+        save_label="Export",
+    )
+
+
+# ---------------------------------------------------------------- the saga
+
+
+def date_fields(season: str, year: int) -> list[DialogField]:
+    """Set the saga's date."""
+    return [
+        DialogField("season", "Season", "select", season, options=pairs(SEASONS)),
+        DialogField("year", "Year", "int", year),
+    ]
+
+
+def set_date(saga: Saga) -> Form:
+    def apply(values: dict[str, Any]) -> list[str] | None:
+        season, year = values["season"], values["year"]
+        if (season, year) == (saga.current_season, saga.current_year):
+            return None
+        saga.current_season, saga.current_year = season, year
+        return notes(f"Date set to {season} {year}.")
+
+    return Form(
+        "Set the Saga's Date",
+        lambda: date_fields(saga.current_season, saga.current_year),
+        apply,
+        save_label="Set",
+    )
+
+
+# ---------------------------------------------------------------- choosing
+
+
+def _one_of[T](
+    title: str,
+    entries: list[T],
+    label: Callable[[T], str],
+    then: Callable[[T], Command],
+) -> Command:
+    """`then` the only entry, or the one chosen from a list."""
+    if len(entries) == 1:
+        return then(entries[0])
+    return Choose(
+        title,
+        lambda: [Choice(label(e), i) for i, e in enumerate(entries)],
+        lambda index: then(entries[index]),
+    )
+
+
+# ------------------------------------------------------------- the covenant
+
+
+def restore(saga: Saga, covenant: Covenant) -> Command:
+    """Bring back a departed Magus or Companion: still on their sheet,
+    they start counting as an inhabitant again."""
+    kinds = [
+        kind
+        for kind in inh.AUTO_KINDS
+        if inh.departed_entries_for_kind(saga, covenant, kind)
+    ]
+    entries = [
+        (kind, entry)
+        for kind in kinds
+        for entry in inh.departed_entries_for_kind(saga, covenant, kind)
+    ]
+    if not entries:
+        return Refuse("Restore", "No departed Magi or Companions to restore.")
+    who = inh.KIND_SINGULAR[kinds[0]] if len(kinds) == 1 else "Magus or Companion"
+
+    def label(pair: tuple[str, inh.InhabitantEntry]) -> str:
+        kind, entry = pair
+        name = escape(entry.name) or "(unnamed)"
+        return name if len(kinds) == 1 else f"{name} ({inh.KIND_SINGULAR[kind]})"
+
+    def choose(pair: tuple[str, inh.InhabitantEntry]) -> None:
+        _, entry = pair
+        if entry.record is not None:
+            entry.record.departed = False
+
+    return Choose(
+        f"Restore which {who}?",
+        lambda: [Choice(label(pair), i) for i, pair in enumerate(entries)],
+        lambda index: choose(entries[index]),
+    )
+
+
+def improve_fields(source: IncomeSource) -> list[DialogField]:
+    return [
+        DialogField("name", "Name", "info", source.name or "(unnamed)"),
+        DialogField("current", "Current Income", "info", str(source.current_income)),
+        DialogField(
+            "effect",
+            "Annual Improvement Effect",
+            "select",
+            "Status Quo",
+            options=pairs(INCOME_EFFECTS),
+            required=True,
+        ),
+        # A Note is a sentence or two: shown under its label, wrapped.
+        DialogField(
+            "note",
+            "Note",
+            "info",
+            "" if source.note.strip() else "(none)",
+            hint=escape(source.note.strip()),
+        ),
+    ]
+
+
+def improve_live(source: IncomeSource) -> Callable[[dict[str, Any]], str]:
+    def live(values: dict[str, Any]) -> str:
+        effect = values.get("effect") or "Status Quo"
+        return (
+            f"Income Multiplier {eco.income_multiplier_text(effect)}. "
+            f"Projected Income {eco.projected_income(source.current_income, effect)}"
+        )
+
+    return live
+
+
+def improve_form(saga: Saga, source: IncomeSource) -> Form:
+    """Manually simulate a year's Income Modification: choosing an Effect
+    shows the Multiplier and Projected Income; Commit asks to confirm."""
+    name = escape(source.name or "this source of income")
+
+    def apply(values: dict[str, Any]) -> Confirm:
+        current = source.current_income
+        effect = values["effect"]
+        projected = eco.projected_income(current, effect)
+
+        def update() -> None:
+            source.income = projected
+            source.note = eco.improvement_note(
+                saga.current_year, source.name, effect, current, projected
+            )
+
+        return Confirm(
+            f"Update {name}'s income from {current} to {projected}?",
+            update,
+            yes_label="Update",
+        )
+
+    return Form(
+        f"Improve {name}",
+        lambda: improve_fields(source),
+        apply,
+        live=improve_live(source),
+        save_label="Commit",
+    )
+
+
+def improve(saga: Saga, covenant: Covenant) -> Command:
+    sources = covenant.economics.income_sources
+    if not sources:
+        return Refuse("Improve Income", "No sources of income to improve.")
+    return _one_of(
+        "Improve which source of income?",
+        list(sources),
+        lambda s: escape(s.name) or "(unnamed)",
+        lambda s: improve_form(saga, s),
+    )
+
+
+def research_bonuses(saga: Saga, covenant: Covenant) -> Form:
+    """Set the covenant library's research bonus per subject."""
+    return Form(
+        f"Research Bonuses: {escape(covenant.name)}'s library",
+        lambda: library_forms.research_fields(saga, covenant),
+        lambda values: library_forms.research_from_values(saga, covenant, values),
+    )
+
+
+# ------------------------------------------------------------- the character
+
+
+def share_spell(saga: Saga, character: Character) -> Command:
+    """Make one of the magus's invented spells available to the saga: it
+    moves to the saga's Spells, and they still know it."""
+    shareable = spl.shareable_spells(character)
+    if not shareable:
+        return Refuse("Share Spell", "No invented spells to share.")
+
+    def confirm(spell: Spell) -> Confirm:
+        return Confirm(
+            f"Make {escape(spell.name)} available to the whole saga? It "
+            f"moves to the saga's Spells, where anyone can learn it or "
+            f"write it up; {escape(character.name)} still knows it.",
+            lambda: spl.share_invented_spell(saga, character, spell),
+            yes_label="Share",
+        )
+
+    return _one_of(
+        "Share which invented spell?",
+        shareable,
+        lambda s: f"{escape(s.name)} ({spl.shorthand(s)})",
+        confirm,
+    )
+
+
+def lab_text_access_fields(saga: Saga, character: Character) -> list[DialogField]:
+    """Whose raw Lab Texts a magus reads: an author -- a magus of the saga,
+    or a name typed for one outside it --, the level he reads them to (0
+    forgets the author) and how he came to. Choosing an author he already
+    reads fills in what is recorded."""
+    magi = lt.author_options(saga, character)
+    known = dict(lt.access_rows(saga, character))
+    outside = [key for key in known if saga.character(key) is None]
+
+    def recorded(values: dict[str, Any]) -> dict[str, Any]:
+        access = character.lab_text_access.get(values.get("author") or "")
+        if access is None:
+            return {}
+        return {"level": access.level, "via": access.via or None}
+
+    return [
+        DialogField(
+            "_known",
+            "Reads now",
+            "info",
+            "; ".join(known.values()) or "(only his own and general texts)",
+        ),
+        DialogField(
+            "author",
+            "Author",
+            "select",
+            None,
+            options=magi,
+            allow_blank=True,
+            placeholder="(a magus of the saga)",
+            fills=recorded,
+        ),
+        DialogField(
+            "name",
+            "or an author outside it",
+            "text",
+            outside[0] if len(outside) == 1 and not magi else "",
+            show_if=lambda values: not values.get("author"),
+        ),
+        DialogField(
+            "level",
+            "Reads to level",
+            "int",
+            0,
+            hint="0 forgets this author. A text above the level needs more decoding.",
+        ),
+        DialogField(
+            "via",
+            "How",
+            "select",
+            None,
+            options=[("Decoded", "decoded"), ("Taught", "taught")],
+            allow_blank=True,
+            placeholder="(not recorded)",
+        ),
+    ]
+
+
+def _access_author(values: dict[str, Any]) -> str:
+    return values.get("author") or (values.get("name") or "").strip()
+
+
+def lab_text_access_problem(values: dict[str, Any]) -> str | None:
+    if not _access_author(values):
+        return "Choose the author, or type the name of one outside the saga."
+    if values["level"] < 0:
+        return "Level can't be negative."
+    return None
+
+
+def lab_text_access(saga: Saga, character: Character) -> Form:
+    """Set whose raw Lab Texts the magus reads, and to what level: an
+    author's entry is added, changed, or -- at level 0 -- removed."""
+
+    def apply(values: dict[str, Any]) -> None:
+        author, level = _access_author(values), values["level"]
+        if level > 0:
+            character.lab_text_access[author] = LabTextAccess(
+                level, values.get("via") or ""
+            )
+        else:
+            character.lab_text_access.pop(author, None)
+
+    return Form(
+        f"Lab Texts {escape(character.name)} reads",
+        lambda: lab_text_access_fields(saga, character),
+        apply,
+        validate=lab_text_access_problem,
+    )
+
+
+# --------------------------------------------------------------- raw vis
+
+
+def move_vis_fields(
+    source: str, what: vis.Held, destinations: list[tuple[str, str]]
+) -> list[DialogField]:
+    return [
+        DialogField("_from", "From", "info", f"{source}: {what.label}"),
+        DialogField("pawns", "Pawns", "int", what.pawns),
+        DialogField(
+            "destination",
+            "To",
+            "select",
+            None,
+            options=list(destinations),
+            required=True,
+            allow_blank=True,
+            placeholder="(choose who gets it)",
+            hint="A covenant takes it into its Raw Vis Store of that Art. "
+            "Both Diaries record the move.",
+        ),
+    ]
+
+
+def move_vis_form(saga: Saga, holder: vis.Holder, what: vis.Held) -> Command:
+    """How many of `what`'s pawns leave `holder` and who gets them; both
+    sides' Diaries record it."""
+    destinations = vis.destinations(saga, holder)
+    if not destinations:
+        return Refuse("Move Raw Vis", "Nowhere else in the saga to move raw vis to.")
+
+    def apply(values: dict[str, Any]) -> list[str] | None:
+        destination = vis.parse_destination(saga, values["destination"])
+        if destination is None:
+            return None
+        pawns = values["pawns"]
+        vis.move(saga, holder, what, pawns, destination)
+        return notes(
+            f"Moved {pawns} pawn(s) of {what.art} vis to {escape(destination.name)}."
+        )
+
+    return Form(
+        "Move Raw Vis",
+        lambda: move_vis_fields(holder.name, what, destinations),
+        apply,
+        validate=lambda values: vis.move_problem(what, values["pawns"]),
+        save_label="Move",
+    )
+
+
+def move_vis(saga: Saga, holder: vis.Holder) -> Command:
+    held = vis.held(holder)
+    if not held:
+        return Refuse("Move Raw Vis", "No Raw Vis to move.")
+    return _one_of(
+        "Move which Raw Vis?",
+        held,
+        lambda h: escape(h.label),
+        lambda h: move_vis_form(saga, holder, h),
+    )
+
+
+# ------------------------------------------------------------ the laboratory
+
+
+def ritual_texts(saga: Saga, lab: Laboratory) -> list[Book]:
+    """The laboratory's Longevity Ritual Lab Texts."""
+    return [
+        b
+        for b in lt.texts_of(saga, "laboratory", lab.id)
+        if lt.kind(b) == TEXT_LONGEVITY
+    ]
+
+
+def ritual_again_form(
+    saga: Saga, magus: Character, lab: Laboratory, text: Book
+) -> Form:
+    """Perform a Longevity Ritual again from its Lab Text: the vis to pay
+    with and whose. It takes no season, so it is done at once."""
+
+    def check(values: dict[str, Any]):
+        return lab_seasons.ritual_again(
+            saga,
+            magus,
+            lab,
+            text,
+            values.get("vis_art") or "",
+            values.get("vis_from") or "laboratory",
+        )
+
+    def live(values: dict[str, Any]) -> str:
+        found, again = check(values)
+        if again is None:
+            return todo(escape(found[0]))
+        return (
+            f"{again.pawns} pawn(s) of {values['vis_art']} vis; "
+            f"{escape(again.subject.name)}'s aging rolls -{again.modifier}. "
+            "No season is taken."
+        )
+
+    def problem(values: dict[str, Any]) -> str | None:
+        found, _ = check(values)
+        return found[0] if found else None
+
+    def apply(values: dict[str, Any]) -> Command | list[str]:
+        found = seasons.perform_ritual_again(
+            saga, magus, lab, text, values["vis_art"], values["vis_from"]
+        )
+        if found:
+            return Refuse("Perform the Longevity Ritual again", escape(found[0]))
+        return notes(f"{escape(text.ritual_subject)}'s ritual is renewed.")
+
+    return Form(
+        "Perform the Longevity Ritual again",
+        lambda: [
+            DialogField("_text", "Lab Text", "info", text.name),
+            DialogField("_by", "Performed by", "info", magus.name),
+            DialogField(
+                "vis_art",
+                "Vis",
+                "select",
+                "Creo",
+                options=[(art, art) for art in lab_seasons.LONGEVITY_VIS_ARTS],
+            ),
+            DialogField(
+                "vis_from",
+                "Vis from",
+                "select",
+                "laboratory",
+                options=[
+                    ("The laboratory's raw vis", "laboratory"),
+                    (f"{magus.name}'s raw vis", "character"),
+                    ("The covenant's vis stores", "covenant"),
+                ],
+            ),
+        ],
+        apply,
+        validate=problem,
+        live=live,
+        save_label="Perform",
+    )
+
+
+def perform_ritual(saga: Saga, lab: Laboratory) -> Command:
+    texts = ritual_texts(saga, lab)
+    if not texts:
+        return Refuse("Perform Ritual", "No Longevity Ritual texts here.")
+    magus = saga.character(lab.owner_id)
+    if magus is None:
+        return Refuse(
+            "Perform Ritual", "The laboratory has no owner to perform the ritual."
+        )
+    return _one_of(
+        "Perform which Longevity Ritual again?",
+        texts,
+        lambda b: escape(b.name),
+        lambda b: ritual_again_form(saga, magus, lab, b),
+    )
+
+
+# ------------------------------------------------------------------ import
+
+#: What the saga's Import offers: (key, label).
+IMPORT_KINDS: tuple[tuple[str, str], ...] = (
+    ("characters", "Characters"),
+    ("covenants", "Covenants"),
+    ("laboratories", "Laboratories"),
+    ("books", "Books"),
+    ("spells", "Spells"),
+)
+
+_RECORD_IMPORTS: dict[str, str] = {
+    "characters": transfer.CHARACTER,
+    "covenants": transfer.COVENANT,
+    "laboratories": transfer.LABORATORY,
+}
+
+
+def _file_field(start: Path, hint: str) -> DialogField:
+    return DialogField(
+        "file",
+        "File",
+        "text",
+        str(start) + ("" if str(start).endswith(("/", "\\")) else "/"),
+        required=True,
+        hint=hint,
+    )
+
+
+def _file_of(values: dict[str, Any]) -> Path:
+    return Path((values.get("file") or "").strip().strip('"')).expanduser()
+
+
+def _file_problem(values: dict[str, Any]) -> str | None:
+    path = _file_of(values)
+    if not path.is_file():
+        return f"No file {path.name or str(path)}: give the file to import."
+    return None
+
+
+def import_data(saga: Saga, covenant: Covenant | None) -> Command:
+    """More's Import: on the saga, choose what to import first; on a
+    covenant, import books straight into its library."""
+    if covenant is not None:
+        return import_books(saga, covenant)
+
+    def chosen(kind: str) -> Command:
+        if kind == "books":
+            return import_books(saga, None)
+        if kind == "spells":
+            return import_spells(saga)
+        return import_record(saga, _RECORD_IMPORTS[kind])
+
+    return Choose(
+        "Import Data",
+        lambda: [Choice(label, key) for key, label in IMPORT_KINDS],
+        chosen,
+    )
+
+
+def import_record(saga: Saga, kind: str) -> Form:
+    """Import an exported character, covenant or laboratory: preview what
+    it adds and which of its links this saga can keep, then add it."""
+    wanted = transfer.KIND_LABELS[kind].lower()
+    start = storage.EXPORTS_DIR if storage.EXPORTS_DIR.is_dir() else Path.cwd()
+
+    def apply(values: dict[str, Any]) -> Command:
+        path = _file_of(values)
+        try:
+            data = transfer.read(path)
+            if data["kind"] != kind:
+                found = transfer.KIND_LABELS[data["kind"]]
+                raise ValueError(
+                    f"it holds a {found.lower()}, not a {wanted}: choose "
+                    f"{found} in the Import list"
+                )
+            plan = transfer.plan_import(saga, data)
+        except (OSError, ValueError, KeyError, TypeError) as problem:
+            return Refuse(
+                f"Import a {wanted}",
+                f"Couldn't import {escape(path.name)}: {escape(str(problem))}",
+            )
+
+        def add() -> list[str]:
+            transfer.apply(saga, plan)
+            return notes(
+                f"Imported {escape(plan.name)} "
+                f"({transfer.KIND_LABELS[plan.kind].lower()})."
+            )
+
+        return Confirm(escape(transfer.preview(plan)), add, yes_label="Import")
+
+    return Form(
+        f"Import a {wanted}",
+        lambda: [
+            _file_field(
+                start, f"An export ({transfer.SUFFIX}) made with More's Export."
+            )
+        ],
+        apply,
+        validate=_file_problem,
+        save_label="Import",
+    )
+
+
+#: The answers to "a book of that name is already in the saga".
+_DUPLICATE_ANSWERS: tuple[tuple[str, str], ...] = (
+    ("Duplicate", "duplicate"),
+    ("Duplicate All", "duplicate_all"),
+    ("Skip", "skip"),
+    ("Skip All", "skip_all"),
+)
+
+
+def _ask_about_duplicates[T: Book | Spell](
+    items: list[T],
+    names: set[str],
+    noun: str,
+    finish: Callable[[list[T], int], list[str]],
+    key: Callable[[str], str] = str,
+) -> Command | list[str]:
+    """Go through imported items, asking about each whose name is already
+    taken -- by `names` or earlier in `items` -- (Duplicate / Duplicate All
+    / Skip / Skip All), then `finish(accepted, skipped)`. Nothing is added
+    until every question is answered."""
+    taken = {key(name) for name in names}
+    accepted: list[T] = []
+
+    def step(index: int, everyone: str | None, skipped: int) -> Command | list[str]:
+        while index < len(items):
+            item = items[index]
+            if key(item.name) in taken and everyone is None:
+                remaining = len(bk.duplicate_names(items[index + 1 :], taken, key))
+                more = (
+                    f" {remaining} more duplicate(s) after this one."
+                    if remaining
+                    else ""
+                )
+
+                def answered(
+                    answer: str,
+                    item: T = item,
+                    index: int = index,
+                    skipped: int = skipped,
+                ) -> Command | list[str]:
+                    every = None
+                    if answer.endswith("_all"):
+                        answer = answer.removesuffix("_all")
+                        every = answer
+                    skip = 1 if answer == "skip" else 0
+                    if not skip:
+                        accepted.append(item)
+                        taken.add(key(item.name))
+                    return step(index + 1, every, skipped + skip)
+
+                return Choose(
+                    f"A {noun} named {escape(item.name)} is already in the saga. "
+                    f"Add this one as well?{more}",
+                    lambda: [
+                        Choice(label, value) for label, value in _DUPLICATE_ANSWERS
+                    ],
+                    answered,
+                )
+            if key(item.name) in taken and everyone == "skip":
+                skipped += 1
+            else:
+                accepted.append(item)
+                taken.add(key(item.name))
+            index += 1
+        return finish(accepted, skipped)
+
+    return step(0, None, 0)
+
+
+def _imported(count: int, noun: str, destination: str, skipped: int) -> str:
+    message = f"Imported {count} {noun}{'s' if count != 1 else ''}"
+    message += f" {destination}" if count and destination else ""
+    if skipped:
+        message += f"; skipped {skipped} duplicate{'s' if skipped != 1 else ''}"
+    return escape(message + ".")
+
+
+def import_books(saga: Saga, covenant: Covenant | None) -> Form:
+    """Import books from a CSV file: all owned by `covenant`, or all
+    unassigned when it's None (the file's own owner column isn't used)."""
+    destination = (
+        f"into {covenant.name}'s library"
+        if covenant is not None
+        else "as unassigned books"
+    )
+    title = (
+        f"Import books into {covenant.name}'s library"
+        if covenant is not None
+        else "Import books (as unassigned books)"
+    )
+
+    def apply(values: dict[str, Any]) -> Command:
+        path = _file_of(values)
+        try:
+            result = bk.read_books_csv(path)
+        except (OSError, ValueError) as problem:
+            return Refuse(
+                escape(title),
+                f"Couldn't read {escape(path.name)}: {escape(str(problem))}",
+            )
+        if not result.books:
+            reason = f" {escape(result.skipped[0])}" if result.skipped else ""
+            return Refuse(
+                escape(title), f"No books to import from {escape(path.name)}.{reason}"
+            )
+        existing = {b.name for b in saga.books}
+
+        def finish(accepted: list[Book], skipped: int) -> list[str]:
+            bk.add_imported_books(saga, accepted, covenant, result.encyclopedias)
+            return notes(_imported(len(accepted), "book", destination, skipped))
+
+        return Confirm(
+            bk.import_preview(result, path.name, destination, existing),
+            lambda: _ask_about_duplicates(result.books, existing, "book", finish),
+            yes_label="Import",
+        )
+
+    return Form(
+        escape(title),
+        lambda: [_file_field(Path.cwd(), "A CSV file of books, one per row.")],
+        apply,
+        validate=_file_problem,
+        save_label="Import",
+    )
+
+
+def import_spells(saga: Saga) -> Form:
+    """Import spells from a CSV file into the saga's own."""
+
+    def apply(values: dict[str, Any]) -> Command:
+        path = _file_of(values)
+        try:
+            result = spl.read_spells_csv(path)
+        except (OSError, ValueError) as problem:
+            return Refuse(
+                "Import Spells",
+                f"Couldn't read {escape(path.name)}: {escape(str(problem))}",
+            )
+        if not result.spells:
+            reason = f" {escape(result.skipped[0])}" if result.skipped else ""
+            return Refuse(
+                "Import Spells",
+                f"No spells to import from {escape(path.name)}.{reason}",
+            )
+        existing = {sp.name for sp in spl.all_spells(saga)}
+
+        def finish(accepted: list[Spell], skipped: int) -> list[str]:
+            spl.add_imported_spells(saga, accepted)
+            return notes(_imported(len(accepted), "spell", "", skipped))
+
+        return Confirm(
+            spl.spell_import_preview(result, path.name, existing),
+            lambda: _ask_about_duplicates(
+                result.spells, existing, "spell", finish, spl.name_key
+            ),
+            yes_label="Import",
+        )
+
+    return Form(
+        "Import Spells",
+        lambda: [_file_field(Path.cwd(), "A CSV file of spells, one per row.")],
+        apply,
+        validate=_file_problem,
+        save_label="Import",
+    )
+
+
+# --------------------------------------------------------------- New
+
+
+def _default_magus(page: Page) -> str | None:
+    """The magus on show, if they have no Familiar yet: Bind Familiar's
+    first choice."""
+    character = page.character
+    if (
+        page.kind == NodeKind.CHARACTER
+        and character is not None
+        and character.type == "magus"
+        and fam.familiar_of(page.saga, character.id) is None
+    ):
+        return character.id
+    return None
+
+
+def _covenant_id(page: Page) -> str | None:
+    return page.covenant.id if page.covenant is not None else None
+
+
+def _record_command(page: Page) -> Command:
+    record = page.creation_record()
+    if record is None:
+        return Refuse("In Creation / In Play", "Nothing here has a creation mode.")
+    return toggle_mode(page.saga, record)
+
+
+def _export_command(page: Page) -> Command:
+    record = page.record_to_export()
+    if record is None:
+        return Refuse("Export", "Nothing here to export.")
+    return export_record(page.saga, record, storage.EXPORTS_DIR)
+
+
+def _needs[T](
+    get: Callable[[Page], T | None], build: Callable[[Saga, T], Command]
+) -> Callable[[Page], Command]:
+    def run(page: Page) -> Command:
+        record = get(page)
+        if record is None:
+            return Refuse("More", "That isn't available here.")
+        return build(page.saga, record)
+
+    return run
+
+
+def _vis_command(page: Page) -> Command:
+    section = section_of(page, "move_vis")
+    holder = replace(page, section=section).vis_holder()
+    if holder is None:
+        return Refuse("Move Raw Vis", "No Raw Vis to move.")
+    return move_vis(page.saga, holder)
+
+
+def _import_command(page: Page) -> Command:
+    return import_data(
+        page.saga, page.covenant if page.kind == NodeKind.COVENANT else None
+    )
+
+
+def _covenant(page: Page) -> Covenant | None:
+    return page.covenant
+
+
+def _character(page: Page) -> Character | None:
+    return page.character
+
+
+def _laboratory(page: Page) -> Laboratory | None:
+    return page.laboratory
+
+
+#: Each menu entry's first step, by its action.
+_COMMANDS: dict[str, Callable[[Page], Command]] = {
+    "restore": _needs(_covenant, restore),
+    "improve": _needs(_covenant, improve),
+    "perform_ritual": _needs(_laboratory, perform_ritual),
+    "share_spell": _needs(_character, share_spell),
+    "move_vis": _vis_command,
+    "lab_text_access": _needs(_character, lab_text_access),
+    "import_data": _import_command,
+    "research_bonuses": _needs(_covenant, research_bonuses),
+    "export_record": _export_command,
+    "toggle_mode": _record_command,
+    "set_date": lambda page: set_date(page.saga),
+    "create_covenant": lambda page: creation_forms.new_covenant_form(page.saga),
+    "create_character": lambda page: creation_forms.new_character_form(
+        page.saga, _covenant_id(page)
+    ),
+    "create_laboratory": lambda page: creation_forms.new_laboratory_form(
+        page.saga, _covenant_id(page)
+    ),
+    "create_familiar": lambda page: creation_forms.bind_familiar_form(
+        page.saga, _default_magus(page)
+    ),
+}

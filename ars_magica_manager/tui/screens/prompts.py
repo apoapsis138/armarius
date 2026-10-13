@@ -21,23 +21,33 @@ from textual.widgets import (
 from textual.widgets.button import ButtonVariant
 from textual.widgets.option_list import Option
 
-from ... import catalog, covenant_diary, creation, transfer, vis
+from ... import (
+    ability_forms,
+    covenant_forms,
+    creation,
+    diary_forms,
+    laboratory_forms,
+    trait_forms,
+    transfer,
+    virtue_forms,
+    vis,
+    vis_forms,
+)
 from ... import house_rules as hr
 from ... import lab_texts as lt
 from ... import players as pl
 from ... import saga_content as sc
+from ... import saga_content_forms as scf
 from ... import sheet_text as st
+from ...ability_forms import ability_fields as _ability_fields
+from ...ability_forms import ability_problem as _ability_problem
 from ...arts import ART_DESCRIPTIONS, ARTS, FORMS, TECHNIQUES
-from ...form_spec import EMPHASIS_HINT, DialogField, attr, description_field, pairs
+from ...form_spec import DialogField, attr, pairs
 from ...markup import escape, todo
 from ...models import (
-    COVENANT_DIARY_CATEGORIES,
     LAB_ACTIVITIES,
-    LAB_SPECIALIZATIONS,
     LAB_TEXT_KINDS,
     SEASONS,
-    STORY_EVENT,
-    STORY_EVENT_STATUSES,
     Ability,
     ArcaneConnection,
     Book,
@@ -56,12 +66,10 @@ from ...models import (
     Saga,
     SagaSource,
     ScoredTrait,
-    VirtueFlawDef,
     VirtueFlawInstance,
-    new_instance_id,
     next_season,
 )
-from ...rules import creation_access, lab_seasons, scores
+from ...rules import creation_access, lab_seasons
 from ...rules import xp as xp_rules
 from ...rules.creation_character import age as creation_age
 from ...rules.creation_covenant import (
@@ -74,26 +82,16 @@ from ...rules.creation_covenant import (
 from .fields import FieldsDialog, ModalDialog
 from .widgets import SelectableList
 
+#: In the core now; the terminal's pickers and lists still import them here.
+_ability_from = ability_forms.ability_from
+param_choices = virtue_forms.param_choices
+
 
 def _date_fields(season: str, year: int) -> list[DialogField]:
     """Set the saga's date."""
     return [
         DialogField("season", "Season", "select", season, options=pairs(SEASONS)),
         DialogField("year", "Year", "int", year),
-    ]
-
-
-def _ability_fields(ability: Ability | None) -> list[DialogField]:
-    """An Ability's total xp and Specialty (its name is the form's title)."""
-    return [
-        DialogField("xp", "XP", "int", attr(ability, "xp", 0)),
-        DialogField(
-            "specialty",
-            "Specialty",
-            "text",
-            attr(ability, "specialty", None) or "",
-            placeholder="e.g. Swords",
-        ),
     ]
 
 
@@ -109,34 +107,12 @@ def _ability_dialog(
     (with the owner's Puissant, from `virtues_flaws`), and its Specialty.
     `note` follows the live line (e.g. how much xp the Creation Worksheet
     gave it)."""
-    bonus, _ = scores.ability_bonus(virtues_flaws, name)
-
-    def live(values: dict[str, Any]) -> str:
-        score = st.live_score(values["xp"], xp_rules.ABILITY_FACTOR, bonus)
-        line = f"{escape(name)}: {score}"
-        return f"{line}\n[$text-warning]{escape(note)}[/]" if note else line
-
     return FieldsDialog(
         escape(name),
         _ability_fields(ability),
         validate=_ability_problem,
-        live=live,
+        live=ability_forms.ability_live(name, virtues_flaws, note),
         save_label=save_label,
-    )
-
-
-def _ability_problem(values: dict[str, Any]) -> str | None:
-    if values["xp"] < 0:
-        return "XP can't be negative."
-    return None
-
-
-def _ability_from(name: str, category: str, values: dict[str, Any]) -> Ability:
-    return Ability(
-        name=name,
-        category=category,
-        xp=values["xp"],
-        specialty=values["specialty"] or None,
     )
 
 
@@ -149,148 +125,15 @@ def _boon_hook_fields(
     sources: Sequence[tuple[str, str]] | None = None,
     source: str = "",
 ) -> list[DialogField]:
-    """A covenant Boon's or Hook's own Detail (shown in the list) and
-    Description (shown ahead of the rules text); both optional. A Minor
-    Hook that may be Unknown also gets an Unknown checkbox, and a Resource
-    Hook (`sources` given: (label, id) pairs) the vis or income source it is
-    about, `source` now."""
-    source_fields = (
-        [
-            DialogField(
-                "resource",
-                "About which source",
-                "select",
-                source or None,
-                options=list(sources),
-                allow_blank=True,
-                placeholder="(not yet)",
-                hint="Marks that source Contested or Dwindling. It can wait "
-                "until the source exists."
-                if sources
-                else "Add the vis or income source first, then choose it here.",
-            )
-        ]
-        if sources is not None
-        else []
+    """covenant_forms.boon_hook_fields, under the name the terminal uses."""
+    return covenant_forms.boon_hook_fields(
+        detail,
+        description,
+        can_be_unknown=can_be_unknown,
+        unknown=unknown,
+        sources=list(sources) if sources is not None else None,
+        source=source,
     )
-    unknown_fields = (
-        [
-            DialogField(
-                "unknown",
-                "Unknown",
-                "check",
-                unknown,
-                hint="Only the player who storyguides it knows it; "
-                "counts 3 points, as a Major Hook.",
-            )
-        ]
-        if can_be_unknown
-        else []
-    )
-    return (
-        unknown_fields
-        + source_fields
-        + [
-            DialogField(
-                "detail",
-                "Detail",
-                "text",
-                detail,
-                placeholder="e.g. the specific building or resource",
-            ),
-            DialogField(
-                "description", "Description", "area", description, hint=EMPHASIS_HINT
-            ),
-        ]
-    )
-
-
-#: The eight Characteristics, as a Virtue or Flaw's {characteristic}.
-CHARACTERISTIC_NAMES: tuple[str, ...] = (
-    "Intelligence",
-    "Perception",
-    "Strength",
-    "Stamina",
-    "Presence",
-    "Communication",
-    "Dexterity",
-    "Quickness",
-)
-
-#: The four realms, as a Virtue or Flaw's {realm}.
-REALM_NAMES: tuple[str, ...] = ("Divine", "Faerie", "Infernal", "Magic")
-
-#: The kinds of Faerie Blood (the Definitive Edition's and Realms of
-#: Power: Faerie's), as a {blood}.
-BLOOD_NAMES: tuple[str, ...] = (
-    "Bee King",
-    "Bloodcap",
-    "Brownie",
-    "Dwarf",
-    "Ettin",
-    "Faerie God",
-    "Ghul",
-    "Goblin",
-    "Huldra",
-    "Nymph",
-    "Padfoot",
-    "Satyr",
-    "Selkie",
-    "Sidhe",
-    "Spinnen",
-    "Undine",
-)
-
-
-def param_choices(
-    entry: VirtueFlawDef,
-    taken: Sequence[VirtueFlawInstance] = (),
-    own_abilities: Sequence[str] = (),
-) -> dict[str, list[tuple[str, str]]]:
-    """The valid values of each of `entry`'s parameters that name a
-    Characteristic, an Ability, an Art, a Technique, a Form, a realm or a
-    kind of Faerie Blood,
-    as (label, stored value) pairs; other parameters are typed. A value
-    the character already holds this entry for, as often as the book
-    allows, is left out."""
-    names: dict[str, Sequence[str]] = {
-        "characteristic": CHARACTERISTIC_NAMES,
-        "art": ARTS,
-        "technique": TECHNIQUES,
-        "form": FORMS,
-        "realm": REALM_NAMES,
-        "blood": BLOOD_NAMES,
-    }
-    found: dict[str, list[tuple[str, str]]] = {}
-    for param in entry.parameters:
-        if param == "ability":
-            listed = {
-                d.name for d in catalog.load_ability_catalog() if not d.parameters
-            }
-            choices: Sequence[str] = sorted(listed | set(own_abilities))
-        elif param in names:
-            choices = names[param]
-        else:
-            continue
-        single = len(entry.parameters) == 1
-        found[param] = [
-            (escape(name), name.lower())
-            for name in choices
-            if not single
-            or not catalog.virtue_flaw_repeat_refusal(
-                entry, taken, {param: name.lower()}
-            )
-        ]
-    return found
-
-
-#: Parameters that may be left blank: (label, placeholder).
-OPTIONAL_PARAMS: dict[str, tuple[str, str]] = {
-    "favored": (
-        "Favoured Craft or Profession",
-        "Dwarf or Brownie Blood only, e.g. Craft: Smith",
-    ),
-}
 
 
 def _param_dialog(
@@ -301,32 +144,11 @@ def _param_dialog(
     """Fill in a catalog entry's {placeholders} ("Affinity with {art}"):
     dismisses with {parameter: value}, values lower-cased. A parameter with
     `choices` is picked from them; the rest are typed."""
-    choices = choices or {}
-
-    def field(param: str) -> DialogField:
-        if param in choices:
-            return DialogField(
-                param,
-                param.title(),
-                "select",
-                None,
-                options=choices[param],
-                required=True,
-                allow_blank=True,
-                placeholder=f"(choose the {param})",
-            )
-        if param in OPTIONAL_PARAMS:
-            label, hint = OPTIONAL_PARAMS[param]
-            return DialogField(param, label, "text", "", placeholder=hint)
-        return DialogField(
-            param, param.title(), "text", "", required=True, placeholder="e.g. Creo"
-        )
-
     return FieldsDialog(
         title,
-        [field(param) for param in parameters],
+        virtue_forms.param_fields(parameters, choices),
         save_label="Confirm",
-        build=lambda values: {param: values[param].lower() for param in parameters},
+        build=lambda values: virtue_forms.params_from(parameters, values),
     )
 
 
@@ -335,20 +157,7 @@ def _lab_choice_dialog(entry: LabVirtueFlawDef) -> FieldsDialog[dict[str, str]]:
     to, from the ones its catalog entry allows."""
     return FieldsDialog(
         entry.name,
-        [
-            DialogField(
-                param,
-                "Specialization",
-                "select",
-                None,
-                options=pairs(options),
-                required=True,
-                allow_blank=True,
-                placeholder="(choose one)",
-                hint=f"{entry.name} grants its points to the one you choose.",
-            )
-            for param, options in entry.choices.items()
-        ],
+        virtue_forms.lab_choice_fields(entry),
         save_label="Confirm",
         build=lambda values: {param: values[param] for param in entry.choices},
     )
@@ -358,43 +167,15 @@ def _lab_specialty_entry_dialog(
     existing: LabSpecialtyEntry | None = None,
 ) -> FieldsDialog[LabSpecialtyEntry]:
     """Points in a laboratory Specialization from a source the app doesn't
-    work out itself: which Specialization, how many points (a Flaw's may be
-    negative) and where they come from."""
+    work out itself (laboratory_forms.specialty_entry_fields)."""
     return FieldsDialog(
         "Add a Specialization source"
         if existing is None
         else "Edit a Specialization source",
-        [
-            DialogField(
-                "specialization",
-                "Specialization",
-                "select",
-                attr(existing, "specialization", "") or None,
-                options=pairs(LAB_SPECIALIZATIONS),
-                required=True,
-                allow_blank=True,
-                placeholder="(choose an Activity or Art)",
-            ),
-            DialogField(
-                "points",
-                "Points",
-                "int",
-                attr(existing, "points", 1),
-                hint="Negative for a penalty (e.g. Undecorated).",
-            ),
-            DialogField(
-                "source",
-                "Source",
-                "text",
-                attr(existing, "source", ""),
-                placeholder="e.g. Subterranean",
-            ),
-        ],
+        laboratory_forms.specialty_entry_fields(existing),
         save_label="Add" if existing is None else "Save",
-        validate=lambda values: "Points can't be 0." if values["points"] == 0 else None,
-        build=lambda values: LabSpecialtyEntry(
-            values["specialization"], values["points"], values["source"]
-        ),
+        validate=laboratory_forms.specialty_entry_problem,
+        build=laboratory_forms.specialty_entry_from,
     )
 
 
@@ -407,48 +188,18 @@ def _scored_trait_dialog(
     max_score: int | None = None,
     include_known: bool = False,
 ) -> FieldsDialog[ScoredTrait]:
-    """A Personality Trait or Reputation: a name and a score, optionally
-    bounded (covenant Reputations are -3..+3) and, for a covenant
-    Reputation, whether the covenant knows of it (see
-    inhabitants.reputation_loyalty_penalty())."""
-    bounded = min_score is not None and max_score is not None
-    score_label = f"Score ({min_score:+d} to {max_score:+d})" if bounded else "Score"
-    fields = [
-        DialogField(
-            "name",
-            "Name",
-            "text",
-            attr(existing, "name", ""),
-            required=True,
-            placeholder=name_placeholder,
-        ),
-        DialogField("score", score_label, "int", attr(existing, "score", 0)),
-    ]
-    if include_known:
-        fields.append(
-            DialogField(
-                "known",
-                "Known by the covenant?",
-                "check",
-                attr(existing, "known", True),
-            )
-        )
-
-    def validate(values: dict[str, Any]) -> str | None:
-        score = values["score"]
-        if (min_score is not None and score < min_score) or (
-            max_score is not None and score > max_score
-        ):
-            return f"Score must be between {score_label[6:-1]}."
-        return None
-
+    """A Personality Trait or Reputation (trait_forms.scored_trait_fields)."""
     return FieldsDialog(
         title,
-        fields,
-        validate=validate,
-        build=lambda values: ScoredTrait(
-            name=values["name"], score=values["score"], known=values.get("known", True)
+        trait_forms.scored_trait_fields(
+            name_placeholder,
+            existing,
+            min_score=min_score,
+            max_score=max_score,
+            include_known=include_known,
         ),
+        validate=lambda values: trait_forms.score_problem(values, min_score, max_score),
+        build=trait_forms.trait_from,
     )
 
 
@@ -479,21 +230,9 @@ def _raw_vis_dialog(
     """An Art (stored lower-case) and a number of pawns."""
     return FieldsDialog(
         "Add Raw Vis" if existing is None else "Edit Raw Vis",
-        [
-            DialogField(
-                "art",
-                "Art",
-                "select",
-                existing[0] if existing else None,
-                options=[(art, art.lower()) for art in ARTS],
-                required=True,
-                allow_blank=True,
-                placeholder="(choose an Art)",
-            ),
-            DialogField("pawns", "Pawns", "int", existing[1] if existing else 1),
-        ],
+        vis_forms.raw_vis_fields(existing),
         save_label="Add" if existing is None else "Save",
-        build=lambda values: (values["art"], values["pawns"]),
+        build=vis_forms.raw_vis_from,
     )
 
 
@@ -561,52 +300,13 @@ def _export_dialog(
 
 
 def _player_dialog(saga: Saga, existing: Player | None) -> FieldsDialog[dict[str, Any]]:
-    """Add or edit someone who can sign in to the saga from a browser: their name, role
-    and passcode. Editing leaves the passcode blank, which keeps the old one. Builds the
-    values players.add / update take."""
-
-    def problem(values: dict[str, Any]) -> str | None:
-        if existing is None and not values.get("passcode"):
-            return "Passcode is required."
-        return pl.name_problem(saga, values.get("name") or "", existing)
-
+    """Add or edit someone who can sign in to the saga from a browser
+    (saga_content_forms.player_fields). Builds the values players.add /
+    update take."""
     dialog = FieldsDialog(
-        "Add a Player" if existing is None else f"Edit {escape(existing.name)}",
-        [
-            DialogField(
-                "name",
-                "Name",
-                "text",
-                existing.name if existing else "",
-                required=True,
-                hint="What they type to sign in.",
-            ),
-            DialogField(
-                "role",
-                "Role",
-                "select",
-                existing.role if existing else pl.PLAYER,
-                options=[(pl.ROLE_LABELS[r], r) for r in pl.ROLES],
-            ),
-            DialogField(
-                "covenant_rights",
-                "May change covenants",
-                "check",
-                existing.covenant_rights if existing else False,
-                show_if=lambda values: values.get("role") == pl.PLAYER,
-                hint="A storyguide always may.",
-            ),
-            DialogField(
-                "passcode",
-                "Passcode" if existing is None else "New passcode",
-                "secret",
-                "",
-                hint="Give it to them yourself; it is stored only scrambled."
-                if existing is None
-                else "Blank keeps the one they have.",
-            ),
-        ],
-        validate=problem,
+        scf.player_title(existing),
+        scf.player_fields(existing),
+        validate=lambda values: scf.player_problem(saga, existing, values),
     )
     dialog.help_id = "tab-content-players"
     return dialog
@@ -615,31 +315,12 @@ def _player_dialog(saga: Saga, existing: Player | None) -> FieldsDialog[dict[str
 def _saga_source_dialog(
     saga: Saga, existing: SagaSource | None
 ) -> FieldsDialog[dict[str, Any]]:
-    """Add or edit a source of the saga's own: the abbreviation its House
-    Rules cite, and its title. Builds the values saga_content.add_source /
-    update_source take."""
+    """Add or edit a source of the saga's own
+    (saga_content_forms.source_fields). Builds the values
+    saga_content.add_source / update_source take."""
     dialog = FieldsDialog(
-        "Add a Saga Source"
-        if existing is None
-        else f"Edit {escape(existing.title or existing.abbreviation)}",
-        [
-            DialogField(
-                "abbreviation",
-                "Abbreviation",
-                "text",
-                existing.abbreviation if existing else "",
-                required=True,
-                placeholder="e.g. HR",
-                hint="What its entries cite, as books are cited (DE, HoH:TL...).",
-            ),
-            DialogField(
-                "title",
-                "Title",
-                "text",
-                existing.title if existing else "",
-                placeholder="e.g. Our house rules",
-            ),
-        ],
+        scf.source_title(existing),
+        scf.source_fields(existing),
         validate=lambda values: sc.source_problem(saga, values, existing),
     )
     dialog.help_id = "saga-content"
@@ -648,20 +329,7 @@ def _saga_source_dialog(
 
 def _catalog_dialog(saga: Saga, key: str) -> FieldsDialog[dict[str, Any]]:
     """Whether the saga's pickers offer a shared catalog at all."""
-    info = sc.CATALOGS[key]
-    dialog = FieldsDialog(
-        f"Catalog: {escape(info.label)}",
-        [
-            DialogField(
-                "shown",
-                "Offered in this saga",
-                "check",
-                key not in saga.hidden_catalogs,
-                hint="Off: its pickers list only the saga's own entries (F3 in "
-                "a picker shows the others). Entries already on a record stay.",
-            ),
-        ],
-    )
+    dialog = FieldsDialog(scf.catalog_title(key), scf.catalog_fields(saga, key))
     dialog.help_id = "saga-content"
     return dialog
 
@@ -669,19 +337,7 @@ def _catalog_dialog(saga: Saga, key: str) -> FieldsDialog[dict[str, Any]]:
 def _hide_entry_dialog(key: str | None) -> FieldsDialog[dict[str, Any]]:
     """Which catalog to hide an entry of (the entry is picked next)."""
     dialog = FieldsDialog(
-        "Hide a Catalog Entry",
-        [
-            DialogField(
-                "catalog",
-                "Catalog",
-                "select",
-                key or next(iter(sc.CATALOGS)),
-                options=[(c.label, c.key) for c in sc.CATALOGS.values()],
-                hint="The entry is chosen next. The saga's pickers leave it "
-                "out, as if its book were out of play.",
-            ),
-        ],
-        save_label="Next",
+        "Hide a Catalog Entry", scf.hide_entry_fields(key), save_label="Next"
     )
     dialog.help_id = "saga-content"
     return dialog
@@ -719,121 +375,16 @@ def _sign_in_dialog(saga: Saga) -> FieldsDialog[Player]:
 def _house_rule_dialog(
     saga: Saga, existing: tuple[str, hr.Entry] | None
 ) -> FieldsDialog[dict[str, Any]]:
-    """Add or edit a user-made catalog entry: what it is for (a
-    character, a laboratory or a covenant -- fixed once made), its name,
-    type, tier (which gives its points), category and description. Text
-    only: the rules engine applies no effects for it. Builds the values
+    """Add or edit a user-made catalog entry
+    (saga_content_forms.house_rule_fields). Builds the values
     house_rules.add / update take (with "kind")."""
-    kind_now, entry = existing if existing is not None else (None, None)
-
-    def kind(values: dict[str, Any]) -> str:
-        return kind_now or values.get("kind") or hr.CHARACTER
-
-    def built(values: dict[str, Any]) -> dict[str, Any]:
-        of = kind(values)
-        covenant = of == hr.COVENANT
-        return {
-            "kind": of,
-            "name": values.get("name") or "",
-            "type": values.get("bh_type" if covenant else "vf_type"),
-            "tier": values.get("tier"),
-            "category": values.get(f"category_{of}"),
-            "repeatable": bool(values.get("repeatable")),
-            "description": values.get("description") or "",
-            "source": values.get("source") or "",
-        }
-
-    def category(of: str) -> DialogField:
-        current = entry.category if entry is not None and kind_now == of else ""
-        return DialogField(
-            f"category_{of}",
-            "Category",
-            "select",
-            current if current in hr.CATEGORIES[of] else hr.CATEGORIES[of][0],
-            options=pairs(hr.CATEGORIES[of]),
-            show_if=lambda values: kind(values) == of,
-        )
-
-    covenant_entry = kind_now == hr.COVENANT
     return FieldsDialog(
-        "Add a House Rule" if entry is None else f"Edit {escape(entry.name)}",
-        [
-            DialogField("_kind", "For", "info", hr.KIND_LABELS[kind_now])
-            if kind_now is not None
-            else DialogField(
-                "kind",
-                "For",
-                "select",
-                hr.CHARACTER,
-                options=[(hr.KIND_LABELS[k], k) for k in hr.KINDS],
-            ),
-            DialogField(
-                "name", "Name", "text", entry.name if entry else "", required=True
-            ),
-            DialogField(
-                "vf_type",
-                "Type",
-                "select",
-                entry.type if entry is not None and not covenant_entry else "Virtue",
-                options=pairs(hr.TYPES[hr.CHARACTER]),
-                show_if=lambda values: kind(values) != hr.COVENANT,
-            ),
-            DialogField(
-                "bh_type",
-                "Type",
-                "select",
-                entry.type if entry is not None and covenant_entry else "Boon",
-                options=pairs(hr.TYPES[hr.COVENANT]),
-                show_if=lambda values: kind(values) == hr.COVENANT,
-            ),
-            DialogField(
-                "tier",
-                "Tier",
-                "select",
-                entry.tier if entry else "Minor",
-                options=pairs(hr.TIERS),
-            ),
-            *(category(of) for of in hr.KINDS),
-            DialogField(
-                "repeatable",
-                "Can be taken more than once",
-                "check",
-                bool(entry.repeatable) if entry else False,
-            ),
-            *_house_rule_source_field(saga, entry),
-            description_field(entry.description if entry else ""),
-        ],
-        validate=lambda values: hr.form_problem(
-            saga, kind(values), built(values), entry
-        ),
-        live=lambda values: (
-            hr.points_text(built(values)["type"], built(values)["tier"])
-            + ". Text only: no effects are applied."
-        ),
-        build=built,
+        scf.house_rule_title(existing),
+        scf.house_rule_fields(saga, existing),
+        validate=lambda values: scf.house_rule_problem(saga, existing, values),
+        live=lambda values: scf.house_rule_live(existing, values),
+        build=lambda values: scf.house_rule_values(existing, values),
     )
-
-
-def _house_rule_source_field(saga: Saga, entry: hr.Entry | None) -> list[DialogField]:
-    """The saga source a user-made entry cites, when the saga has any
-    (Saga Content's Saga Sources): out of play with it, like a book."""
-    if not saga.sources:
-        return []
-    return [
-        DialogField(
-            "source",
-            "Source",
-            "select",
-            (entry.source if entry is not None else "") or None,
-            options=[
-                (f"{s.title or s.abbreviation} ({s.abbreviation})", s.abbreviation)
-                for s in saga.sources
-            ],
-            allow_blank=True,
-            placeholder="(none: always in play)",
-            hint="Out of play with its source, like an entry from a book.",
-        )
-    ]
 
 
 def _lab_text_access_dialog(
@@ -1355,70 +906,19 @@ def _named_description_dialog(
     (multi-line) description."""
     return FieldsDialog(
         title,
-        [
-            DialogField(
-                "name",
-                "Name",
-                "text",
-                attr(existing, "name", ""),
-                required=True,
-                placeholder=name_placeholder,
-            ),
-            description_field(attr(existing, "description", "")),
-        ],
-        build=lambda values: NamedDescription(**values),
+        laboratory_forms.named_description_fields(name_placeholder, existing),
+        build=laboratory_forms.named_description_from,
     )
 
 
 def _arcane_connection_dialog(
     title: str, existing: ArcaneConnection | None = None
 ) -> FieldsDialog[ArcaneConnection]:
-    """A laboratory's Arcane Connection: what it connects to, fixed or how
-    long it lasts, where it came from, and notes."""
-
-    def build(values: dict[str, Any]) -> ArcaneConnection:
-        fixed = bool(values["fixed"])
-        return ArcaneConnection(
-            id=existing.id if existing else new_instance_id(),
-            to=values["to"],
-            fixed=fixed,
-            lasts="" if fixed else values.get("lasts", ""),
-            source=values["source"],
-            description=values["description"],
-            fixed_year=existing.fixed_year if existing and fixed else None,
-            fixed_season=existing.fixed_season if existing and fixed else "",
-        )
-
+    """A laboratory's Arcane Connection (laboratory_forms.connection_fields)."""
     return FieldsDialog(
         title,
-        [
-            DialogField(
-                "to",
-                "Connection to",
-                "text",
-                attr(existing, "to", ""),
-                required=True,
-                placeholder="e.g. a lock of Banna's hair",
-            ),
-            DialogField("fixed", "Fixed", "check", attr(existing, "fixed", False)),
-            DialogField(
-                "lasts",
-                "Lasts",
-                "text",
-                attr(existing, "lasts", ""),
-                placeholder="e.g. until Summer 1222",
-                show_if=lambda v: not v.get("fixed"),
-            ),
-            DialogField(
-                "source",
-                "Where from",
-                "text",
-                attr(existing, "source", ""),
-                placeholder="e.g. taken at the Tribunal",
-            ),
-            description_field(attr(existing, "description", "")),
-        ],
-        build=build,
+        laboratory_forms.connection_fields(existing),
+        build=lambda values: laboratory_forms.connection_from(values, existing),
     )
 
 
@@ -1431,38 +931,9 @@ def _diary_entry_dialog(
     """Add or edit a Diary entry: a laboratory's (`activities` the lab
     activities) or a character's (the seasonal activities)."""
     return FieldsDialog(
-        "Add a Diary Entry" if existing is None else "Edit a Diary Entry",
-        [
-            DialogField("year", "Year", "int", attr(existing, "year", default_year)),
-            DialogField(
-                "season",
-                "Season",
-                "select",
-                attr(existing, "season", default_season),
-                options=pairs(SEASONS),
-            ),
-            DialogField(
-                "activity",
-                "Activity Type",
-                "select",
-                attr(existing, "activity", "") or None,
-                options=pairs(activities),
-                allow_blank=True,
-            ),
-            DialogField(
-                "name", "Name", "text", attr(existing, "name", ""), required=True
-            ),
-            DialogField(
-                "details",
-                "Details",
-                "area",
-                attr(existing, "details", ""),
-                hint=EMPHASIS_HINT,
-            ),
-        ],
-        build=lambda values: DiaryEntry(
-            **{**values, "activity": values["activity"] or ""}
-        ),
+        diary_forms.entry_title(existing),
+        diary_forms.entry_fields(default_year, existing, default_season, activities),
+        build=diary_forms.entry_from,
     )
 
 
@@ -1472,155 +943,14 @@ def _covenant_diary_entry_dialog(
     existing: CovenantDiaryEntry | None = None,
     default_season: str = SEASONS[0],
 ) -> FieldsDialog[CovenantDiaryEntry]:
-    """Add or edit a covenant Diary entry. The amounts are
-    optional; Status, the linked Boon/Hook and Revisit are shown for Story
-    Events only (a hidden field is left out, so it falls back to blank)."""
-    by_id = catalog.load_covenant_boon_hook_catalog_by_id()
-    boons_hooks = [
-        (
-            escape(catalog.describe_boon_hook(bh, by_id))
-            + f" ({by_id[bh.vf_id].type if bh.vf_id in by_id else 'Boon/Hook'})",
-            bh.id,
-        )
-        for bh in covenant.boons_hooks
-        if bh.id
-    ]
-
-    def story(values: dict[str, Any]) -> bool:
-        return values.get("category") == STORY_EVENT
-
-    def pool(values: dict[str, Any]) -> covenant_diary.Pool | None:
-        if not story(values):
-            return None
-        return covenant_diary.pool_of(covenant, values.get("boon_hook_id"))
-
-    def hidden(values: dict[str, Any]) -> bool:
-        return pool(values) == covenant_diary.POOLS[covenant_diary.HIDDEN_RESOURCES]
-
-    def illusory(values: dict[str, Any]) -> bool:
-        return pool(values) == covenant_diary.POOLS[covenant_diary.ILLUSORY_RESOURCES]
-
-    def points(values: dict[str, Any]) -> dict[str, Any]:
-        """One Build Points value, whichever pool's field it was typed in."""
-        values = dict(values)
-        illusory_points = values.pop("illusory_points", None)
-        if illusory_points is not None:
-            values["build_points"] = illusory_points
-        return values
-
-    # The entry being edited, left out of its pool's points so far.
-    skip = next((i for i, e in enumerate(covenant.diary) if e is existing), None)
-
-    def problem(values: dict[str, Any]) -> str | None:
-        return covenant_diary.points_problem(covenant, points(values), skip)
-
-    def build(values: dict[str, Any]) -> CovenantDiaryEntry:
-        values = {**points(values), "category": values["category"] or ""}
-        values["vis_art"] = values.get("vis_art") or ""
-        if story(values):
-            values["status"] = values.get("status") or STORY_EVENT_STATUSES[0]
-        return CovenantDiaryEntry(**values)
-
+    """Add or edit a covenant Diary entry (diary_forms.covenant_entry_fields)."""
     return FieldsDialog(
-        "Add a Diary Entry" if existing is None else "Edit a Diary Entry",
-        [
-            DialogField("year", "Year", "int", attr(existing, "year", default_year)),
-            DialogField(
-                "season",
-                "Season",
-                "select",
-                attr(existing, "season", default_season),
-                options=pairs(SEASONS),
-            ),
-            DialogField(
-                "category",
-                "Category",
-                "select",
-                attr(existing, "category", "") or None,
-                options=pairs(COVENANT_DIARY_CATEGORIES),
-                allow_blank=True,
-            ),
-            DialogField(
-                "name", "Name", "text", attr(existing, "name", ""), required=True
-            ),
-            DialogField(
-                "status",
-                "Status",
-                "select",
-                attr(existing, "status", "") or STORY_EVENT_STATUSES[0],
-                options=pairs(STORY_EVENT_STATUSES),
-                show_if=story,
-            ),
-            DialogField(
-                "boon_hook_id",
-                "Linked Boon/Hook",
-                "select",
-                attr(existing, "boon_hook_id", None),
-                options=boons_hooks,
-                allow_blank=True,
-                placeholder="(none)",
-                show_if=story,
-            ),
-            DialogField(
-                "revisit_year",
-                "Revisit in year",
-                "optint",
-                attr(existing, "revisit_year", None),
-                show_if=story,
-            ),
-            DialogField(
-                "build_points",
-                "Build Points unlocked",
-                "optint",
-                attr(existing, "build_points", None),
-                hint="Of the Hidden Resources Boon's 250; counted once Resolved.",
-                show_if=hidden,
-            ),
-            DialogField(
-                "illusory_points",
-                "Build Points found illusory",
-                "optint",
-                attr(existing, "build_points", None),
-                hint="Of the Illusory Resources Hook's 250; counted once Resolved.",
-                show_if=illusory,
-            ),
-            DialogField(
-                "pounds",
-                "Pounds (+ received, - spent)",
-                "optfloat",
-                attr(existing, "pounds", None),
-            ),
-            DialogField(
-                "vis_pawns",
-                "Vis pawns (+ gained, - spent)",
-                "optint",
-                attr(existing, "vis_pawns", None),
-            ),
-            DialogField(
-                "vis_art",
-                "Vis Art",
-                "select",
-                attr(existing, "vis_art", "") or None,
-                options=pairs(ARTS),
-                allow_blank=True,
-            ),
-            DialogField(
-                "loyalty",
-                "Loyalty points",
-                "optint",
-                attr(existing, "loyalty", None),
-                hint="Added into the Loyalty block's Actions and Events.",
-            ),
-            DialogField(
-                "details",
-                "Details",
-                "area",
-                attr(existing, "details", ""),
-                hint=EMPHASIS_HINT,
-            ),
-        ],
-        validate=problem,
-        build=build,
+        diary_forms.entry_title(existing),
+        diary_forms.covenant_entry_fields(
+            covenant, default_year, existing, default_season
+        ),
+        validate=diary_forms.covenant_entry_problem(covenant, existing),
+        build=diary_forms.covenant_entry_from(covenant, existing),
     )
 
 

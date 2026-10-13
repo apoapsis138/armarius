@@ -19,6 +19,7 @@ from PySide6.QtCore import QEasingCurve, QPointF, QRectF, Qt, QVariantAnimation
 from PySide6.QtGui import (
     QColor,
     QFont,
+    QFontMetricsF,
     QLinearGradient,
     QPainter,
     QPen,
@@ -198,8 +199,13 @@ class TraitBar(QWidget):
         painter.end()
 
 
-def trait_list(traits: Sequence[tuple[str, int]], p: Palette) -> QWidget:
-    """Traits as name, score and a bar, one under another."""
+def trait_list(
+    traits: Sequence[tuple[str, int]],
+    p: Palette,
+    on_choose: Callable[[int], None] | None = None,
+) -> QWidget:
+    """Traits as name, score and a bar, one under another. With
+    `on_choose`, clicking a row chooses it (its index) and outlines it."""
     box = QWidget()
     grid = QGridLayout(box)
     grid.setContentsMargins(0, 0, 0, 0)
@@ -207,14 +213,53 @@ def trait_list(traits: Sequence[tuple[str, int]], p: Palette) -> QWidget:
     grid.setVerticalSpacing(6)
     if not traits:
         grid.addWidget(text("None recorded.", p["dim"], serif(12, italic=True)), 0, 0)
+    rows: list[_TraitRow] = []
     for row, (name, score) in enumerate(traits):
-        grid.addWidget(text(name, p["foreground"], serif(13)), row, 0)
+        if on_choose is not None:
+            band = _TraitRow(row, p, lambda index: _chose(rows, index, on_choose))
+            grid.addWidget(band, row, 0, 1, 3)
+            rows.append(band)
+        label = text(name, p["foreground"], serif(13))
         number = text(f"{score:+d}", p["heading"], serif(13, bold=True))
         number.setAlignment(Qt.AlignmentFlag.AlignRight)
-        grid.addWidget(number, row, 1)
-        grid.addWidget(TraitBar(score, p), row, 2)
+        bar = TraitBar(score, p)
+        for column, part in enumerate((label, number, bar)):
+            # Clicks go through to the row's band beneath.
+            part.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+            grid.addWidget(part, row, column)
     grid.setColumnStretch(2, 1)
     return box
+
+
+def _chose(rows: Sequence[_TraitRow], index: int, on_choose: Callable[[int], None]):
+    for row in rows:
+        row.chosen = row.index == index
+        row.update()
+    on_choose(index)
+
+
+class _TraitRow(QWidget):
+    """The band behind one trait's row: clicking it chooses the row, and
+    the chosen row is shaded."""
+
+    def __init__(self, index: int, p: Palette, clicked: Callable[[int], None]):
+        super().__init__()
+        self.index, self.p, self.clicked = index, p, clicked
+        self.chosen = False
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+
+    def mousePressEvent(self, event) -> None:
+        self.clicked(self.index)
+        super().mousePressEvent(event)
+
+    def paintEvent(self, event) -> None:
+        if not self.chosen:
+            return
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.setBrush(QColor(self.p["selection"]))
+        painter.drawRoundedRect(QRectF(self.rect()).adjusted(-4, -2, 4, 2), 4, 4)
 
 
 class CordFigure(QWidget):
@@ -536,13 +581,32 @@ _LEATHERS = (
 )
 
 
+def _spine_lines(title: str, metrics: QFontMetricsF, length: float) -> list[str]:
+    """`title` on one line if it fits in `length`, else on two, the
+    second cut short with an ellipsis if it is still too long."""
+    if metrics.horizontalAdvance(title) <= length:
+        return [title]
+    words = title.split()
+    first = words[0]
+    rest = words[1:]
+    while rest and metrics.horizontalAdvance(f"{first} {rest[0]}") <= length:
+        first = f"{first} {rest.pop(0)}"
+    if metrics.horizontalAdvance(first) > length:
+        first = metrics.elidedText(first, Qt.TextElideMode.ElideRight, length)
+    second = metrics.elidedText(" ".join(rest), Qt.TextElideMode.ElideRight, length)
+    return [first, second] if second else [first]
+
+
 class BookSpine(QWidget):
     """A book standing on a shelf: bound in a muted leather picked by its
     subject, as wide as its kind is thick (a summa stout, a lab text slim),
     a summa as tall as its level, with raised bands, its Art's symbol and
-    its title tooled in gilt up the spine, wrapped onto two lines rather
-    than cut short, and its level and quality at the foot; clicking it
-    calls `clicked`."""
+    its title tooled in gilt up the spine, on two lines when it is long
+    (the book bound thicker to hold them), and its level and quality at
+    the foot; clicking it calls `clicked`."""
+
+    #: The title's size up the spine, in points.
+    TITLE_SIZE = 10.5
 
     def __init__(self, spine: cs_cov.Spine, p: Palette) -> None:
         super().__init__()
@@ -552,12 +616,19 @@ class BookSpine(QWidget):
         book = spine.book
         tall = 176 + 3 * min(spine.level or 0, 20)
         width, height = {
-            "Art Summa": (46, tall),
-            "Ability Summa": (44, tall),
-            "Tractatus": (38, 186),
-            "Lab Text": (34, 170),
-            "Casting Tablet": (46, 96),
-        }.get(book.type, (40, 190))
+            "Art Summa": (48, tall),
+            "Ability Summa": (46, tall),
+            "Tractatus": (40, 186),
+            "Lab Text": (36, 170),
+            "Casting Tablet": (48, 96),
+        }.get(book.type, (42, 190))
+        # The title runs up the spine below the Art's symbol and above the
+        # numbers; a title too long for one line takes two, and a book
+        # with a two-line title is bound thicker to hold them.
+        metrics = QFontMetricsF(serif(self.TITLE_SIZE))
+        length = height - 36 - (20 + (26 if spine.art else 0)) - 8
+        self.lines = _spine_lines(book.name, metrics, length)
+        width = max(width, int(len(self.lines) * metrics.lineSpacing()) + 14)
         self.setFixedSize(width + 2, height + 2)
         self.body = QRectF(1, 1, width, height)
         key = spine.subject or book.name
@@ -629,25 +700,23 @@ class BookSpine(QWidget):
                 *([f"Q{spine.quality}"] if spine.quality is not None else []),
             ]
         )
-        painter.setFont(serif(7.5))
+        painter.setFont(serif(8.5))
         painter.setPen(gilt)
         painter.drawText(
-            QRectF(body.left(), body.bottom() - 26, body.width(), 14),
+            QRectF(body.left(), body.bottom() - 27, body.width(), 15),
             Qt.AlignmentFlag.AlignCenter,
             numbers,
         )
-        # The title up the spine, wrapped onto a second line when it is long.
+        # The title up the spine, on its one or two lines.
         area = QRectF(body.left() + 4, top, body.width() - 8, body.bottom() - 36 - top)
         painter.save()
         painter.translate(area.left(), area.bottom())
         painter.rotate(-90)
-        painter.setFont(serif(8.5))
+        painter.setFont(serif(self.TITLE_SIZE))
         painter.drawText(
             QRectF(4, 1, area.height() - 8, area.width() - 2),
-            Qt.AlignmentFlag.AlignVCenter
-            | Qt.AlignmentFlag.AlignLeft
-            | Qt.TextFlag.TextWordWrap,
-            spine.book.name,
+            Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft,
+            "\n".join(self.lines),
         )
         painter.restore()
         # The rounded back: lit down its left, falling into shade on its right.

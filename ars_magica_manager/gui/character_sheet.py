@@ -1,4 +1,4 @@
-"""The desktop Character sheet, read-only, in the Codex layout: a header
+"""The desktop Character sheet in the Codex layout: a header
 with the name and the character's state at a glance, the
 Characteristics as cards, a rail of chapters on the left and an
 inspector on the right that shows whatever was last chosen.
@@ -43,8 +43,21 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, seasons
+from .. import (
+    ability_forms,
+    artwork,
+    creation,
+    diary_forms,
+    season_forms,
+    seasons,
+    sourcebooks,
+    spell_forms,
+    trait_forms,
+    virtue_forms,
+    vis_forms,
+)
 from .. import books as bk
+from .. import character_forms as cf
 from .. import character_sheet as cs
 from .. import familiar_sheet as fs
 from .. import familiars as fam
@@ -54,8 +67,10 @@ from .. import saga_overview as ov
 from .. import sheet_text as st
 from .. import spells as spl
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
-from ..models import Character, Characteristics, Saga
+from ..commands import Command
+from ..models import Character, Characteristics, Saga, ScoredTrait
 from . import pictures
+from .editing import Chooser, Section, choose_cards, choose_rows, verb_buttons
 from .figures import (
     Dial,
     fact_grid,
@@ -82,6 +97,7 @@ from .widgets import (
     chapter_title,
     chip,
     display_name,
+    edit_button,
     scrolling_page,
     serif,
     text,
@@ -250,15 +266,55 @@ def side_by_side(*widgets: QWidget, spacing: int = 24) -> QWidget:
     return box
 
 
-def section(title: str, p: Palette, *widgets: QWidget) -> QWidget:
-    box = QWidget()
-    column = QVBoxLayout(box)
-    column.setContentsMargins(0, 0, 0, 0)
-    column.setSpacing(6)
-    column.addWidget(chapter_title(title, p))
+def section(
+    title: str,
+    p: Palette,
+    *widgets: QWidget,
+    edits: dict[str, Callable[[], None]] | None = None,
+    buttons: Sequence[QWidget] = (),
+) -> Section:
+    """A titled part of a chapter; `edits` (label -> what clicking it
+    does) and `buttons` sit beside the title, and their steps open in
+    place, under it (editing.place_for)."""
+    box = Section()
+    column = box.column
+    box.body = list(widgets)
+    heading = chapter_title(title, p)
+    controls = [
+        edit_button(words, p, on_click) for words, on_click in (edits or {}).items()
+    ] + list(buttons)
+    if controls:
+        row = QHBoxLayout()
+        row.setSpacing(6)
+        row.addWidget(heading, 1)
+        for control in controls:
+            row.addWidget(control, 0, Qt.AlignmentFlag.AlignTop)
+        column.addLayout(row)
+    else:
+        column.addWidget(heading)
     for widget in widgets:
         column.addWidget(widget)
     return box
+
+
+def trait_section(
+    title: str,
+    traits: list[ScoredTrait],
+    section_id: str,
+    p: Palette,
+    run: Callable[[Command], None],
+) -> QWidget:
+    """A Personality Traits or Reputations section, with Add, Edit and
+    Delete for the row clicked (trait_forms.trait_ops)."""
+    chooser = Chooser()
+    ops = trait_forms.trait_ops(traits, section_id)
+    rows = [(t.name, t.score) for t in traits]
+    return section(
+        f"{title} ({len(rows)})",
+        p,
+        trait_list(rows, p, chooser.choose),
+        buttons=verb_buttons(ops, chooser, run, p),
+    )
 
 
 def _fit_height(view: QAbstractItemView, rows: int) -> None:
@@ -369,10 +425,12 @@ class CharacterSheet(QWidget):
         character: Character,
         palette: Palette,
         open_familiar: Callable[[str], None] = lambda _id: None,
+        run: Callable[[Command], None] = lambda _command: None,
     ) -> None:
         super().__init__()
         self.saga, self.character, self.p = saga, character, palette
         self.open_familiar = open_familiar
+        self.run = run
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
@@ -456,10 +514,31 @@ class CharacterSheet(QWidget):
             status.addWidget(chip(words, p[TONES[tone]]))
         status.addStretch(1)
         row.addLayout(status)
+        self.info_edit = edit_button(
+            "Edit",
+            p,
+            lambda: self.run(cf.character_info_form(self.saga, c)),
+        )
+        self.info_edit.setToolTip("Edit Character Info")
+        row.addWidget(self.info_edit, 0, Qt.AlignmentFlag.AlignTop)
         return box
 
     def _characteristics(self) -> QWidget:
-        return characteristic_cards(self.character.characteristics, self.p)
+        """The Characteristic cards, with their Edit button at the end of
+        the strip."""
+        box = QWidget()
+        row = QHBoxLayout(box)
+        row.setContentsMargins(0, 0, 0, 0)
+        row.setSpacing(8)
+        row.addWidget(characteristic_cards(self.character.characteristics, self.p), 1)
+        self.characteristics_edit = edit_button(
+            "Edit",
+            self.p,
+            lambda: self.run(cf.characteristics_form(self.saga, self.character)),
+        )
+        self.characteristics_edit.setToolTip("Edit Characteristics")
+        row.addWidget(self.characteristics_edit, 0, Qt.AlignmentFlag.AlignVCenter)
+        return box
 
     # Chapters
 
@@ -468,6 +547,18 @@ class CharacterSheet(QWidget):
         labels, prose with a rubricated initial, and traits, wounds and
         Fatigue drawn rather than listed."""
         saga, c, p = self.saga, self.character, self.p
+        forms = cf.description_edits(saga, c)
+
+        def edits(*names: str, label: str = "Edit") -> dict[str, Callable[[], None]]:
+            """The Edit buttons for the forms `names`: one called `label`,
+            or one per form named for it."""
+            return {
+                (label if len(names) == 1 else name): (
+                    lambda form=forms[name]: self.run(form)
+                )
+                for name in names
+            }
+
         parts: list[QWidget] = [
             section("At a Glance", p, fact_grid(cs.glance_facts(saga, c), p, 6))
         ]
@@ -477,7 +568,14 @@ class CharacterSheet(QWidget):
             if sigil:
                 lineage.append(_sigil(sigil, p))
             lineage.append(TextBlock(lt.access_text(saga, c), p))
-            parts.append(section("Hermetic Background", p, *lineage))
+            parts.append(
+                section(
+                    "Hermetic Background",
+                    p,
+                    *lineage,
+                    edits=edits("Hermetic Background"),
+                )
+            )
             familiar = fam.familiar_of(saga, c.id)
             if familiar is not None:
                 parts.append(
@@ -489,16 +587,20 @@ class CharacterSheet(QWidget):
                         ),
                     )
                 )
-        traits = [(t.name, t.score) for t in c.personality_traits]
-        reputations = [(t.name, t.score) for t in c.reputations]
+        # One above the other: side by side, with their buttons, they are
+        # wider than the chapter beside the inspector.
         parts.append(
-            side_by_side(
-                section(
-                    f"Personality Traits ({len(traits)})", p, trait_list(traits, p)
-                ),
-                section(
-                    f"Reputations ({len(reputations)})", p, trait_list(reputations, p)
-                ),
+            trait_section(
+                "Personality Traits",
+                c.personality_traits,
+                "section-personality-traits",
+                p,
+                self.run,
+            )
+        )
+        parts.append(
+            trait_section(
+                "Reputations", c.reputations, "section-reputations", p, self.run
             )
         )
         parts.append(
@@ -510,6 +612,7 @@ class CharacterSheet(QWidget):
                 prose(c.description.physical_description, p, initial=False),
                 _subheading("Biography", p),
                 prose(c.description.biography, p),
+                edits=edits("Biographical Detail"),
             )
         )
         health: list[QWidget] = [
@@ -518,25 +621,33 @@ class CharacterSheet(QWidget):
             fatigue_ladder(cs.fatigue_track(c), p),
             fact_grid(cs.health_facts(c), p, 4),
         ]
-        parts.append(section("Health", p, *health))
+        parts.append(section("Health", p, *health, edits=edits("Wounds", "Fatigue")))
         aging = cs.aging_facts(c)
         effects = c.aging.effects
-        if aging or effects:
-            parts.append(
-                section(
-                    "Aging",
-                    p,
-                    *([fact_grid(aging, p, 4)] if aging else []),
-                    *([prose(effects, p, initial=False)] if effects else []),
-                )
+        parts.append(
+            section(
+                "Aging",
+                p,
+                *([fact_grid(aging, p, 4)] if aging else []),
+                *([prose(effects, p, initial=False)] if effects or not aging else []),
+                edits=edits("Aging"),
             )
+        )
         return scrolling_page(p, *parts)
 
     def _abilities(self) -> QWidget:
         p, c = self.p, self.character
+        chooser = Chooser()
+        ops = ability_forms.ability_ops(
+            c.abilities,
+            c.virtues_flaws,
+            books=sourcebooks.saga_books(self.saga),
+            note=lambda name: creation.worksheet_note(c, [name]),
+        )
 
         def show(index: object) -> None:
             assert isinstance(index, int)
+            chooser.choose(index)
             ability = c.abilities[index]
             specialty = f"  ·  {ability.specialty}" if ability.specialty else ""
             self.inspect(
@@ -545,28 +656,47 @@ class CharacterSheet(QWidget):
                 st.ability_info_text(c.abilities, index, c.virtues_flaws),
             )
 
-        table = ability_view(cs.ability_table(c), p, show)
+        self.ability_table = ability_view(cs.ability_table(c), p, show)
         return scrolling_page(
-            p, chapter_title(f"Abilities ({len(c.abilities)})", p), table
+            p,
+            section(
+                f"Abilities ({len(c.abilities)})",
+                p,
+                self.ability_table,
+                buttons=verb_buttons(ops, chooser, self.run, p),
+            ),
         )
 
     def _virtues_flaws(self) -> QWidget:
+        """The Virtues beside the Flaws, as cards, each side with its Add
+        and Delete (no Edit: a Virtue or Flaw is deleted and taken again)."""
         p, c = self.p, self.character
         columns = []
         for side, tone in (("Virtue", "text-success"), ("Flaw", "text-error")):
+            chooser = Chooser()
+            ops = virtue_forms.virtue_flaw_ops(self.saga, c, side)
+            points = cs.virtue_flaw_points(c, side)
+            cards = [
+                self._vf_card(card, p[tone]) for card in cs.virtue_flaw_cards(c, side)
+            ]
+            choose_cards(cards, chooser)
             column = QWidget()
             stack = QVBoxLayout(column)
             stack.setContentsMargins(0, 0, 0, 0)
             stack.setSpacing(10)
-            points = cs.virtue_flaw_points(c, side)
-            stack.addWidget(chapter_title(f"{side}s  ·  {points:g} points", p))
-            for card in cs.virtue_flaw_cards(c, side):
-                stack.addWidget(self._vf_card(card, p[tone]))
+            stack.addWidget(
+                section(
+                    f"{side}s  ·  {points:g} points",
+                    p,
+                    *cards,
+                    buttons=verb_buttons(ops, chooser, self.run, p),
+                )
+            )
             stack.addStretch(1)
             columns.append(column)
         return scrolling_page(p, side_by_side(*columns, spacing=18))
 
-    def _vf_card(self, card: cs.VirtueFlawCard, colour: str) -> QWidget:
+    def _vf_card(self, card: cs.VirtueFlawCard, colour: str) -> ClickableCard:
         c = self.character
         return vf_card(
             card,
@@ -580,27 +710,45 @@ class CharacterSheet(QWidget):
         )
 
     def _hermetic(self) -> QWidget:
-        p, c = self.p, self.character
+        p, saga, c = self.p, self.saga, self.character
+        spells = Chooser()
+        goals = Chooser()
+
+        def show_goal(index: int) -> None:
+            goals.choose(index)
+            self.inspect("Research Goal", "", st.goal_text(c.breakthroughs[index]))
+
         parts: list[QWidget] = [
-            chapter_title("Magical Arts", p),
-            self._arts(),
+            section(
+                "Magical Arts",
+                p,
+                self._arts(),
+                edits={"Edit": lambda: self.run(cf.arts_form(c))},
+            ),
             chapter_title("Casting Scores", p),
             self._casting_grid(),
-            chapter_title(f"Known Spells ({len(c.spells_known)})", p),
-            self._spells(),
-            chapter_title("Raw Vis", p),
-            row_list(cs.raw_vis_rows(c)),
-        ]
-        if c.breakthroughs:
-            parts.append(chapter_title(f"Research Goals ({len(c.breakthroughs)})", p))
-            parts.append(
+            section(
+                f"Known Spells ({len(c.spells_known)})",
+                p,
+                self._spells(spells),
+                buttons=verb_buttons(
+                    spell_forms.known_spell_ops(saga, c),
+                    spells,
+                    self.run,
+                    p,
+                ),
+            ),
+            self._raw_vis(),
+            section(
+                f"Research Goals ({len(c.breakthroughs)})",
+                p,
                 row_list(
                     [(i, st.goal_row(goal)) for i, goal in enumerate(c.breakthroughs)],
-                    lambda index: self.inspect(
-                        "Research Goal", "", st.goal_text(c.breakthroughs[index])
-                    ),
-                )
-            )
+                    show_goal,
+                ),
+                buttons=verb_buttons(cf.research_goal_ops(c), goals, self.run, p),
+            ),
+        ]
         return scrolling_page(p, *parts)
 
     def _show_art(self, art: object) -> None:
@@ -658,9 +806,9 @@ class CharacterSheet(QWidget):
         )
         return self.casting_view
 
-    def _spells(self) -> QWidget:
+    def _spells(self, chooser: Chooser | None = None) -> QWidget:
         """Known Spells as a table that sorts by any column and filters by
-        name."""
+        name; choosing a row chooses it for `chooser`."""
         p, saga, c = self.p, self.saga, self.character
         rows = cs.spell_table(saga, c)
         model = _spell_model(rows, p)
@@ -706,6 +854,8 @@ class CharacterSheet(QWidget):
             )
 
         view.selectionModel().currentRowChanged.connect(show)
+        if chooser is not None:
+            choose_rows(view, chooser, lambda row: rows[row].index)
 
         search = QLineEdit()
         search.setPlaceholderText("Filter spells…")
@@ -730,17 +880,19 @@ class CharacterSheet(QWidget):
         p, saga, c = self.p, self.saga, self.character
         parts: list[QWidget] = []
         if c.type == "magus":
-            parts.append(section("Raw Vis", p, row_list(cs.raw_vis_rows(c))))
+            parts.append(self._raw_vis())
+        gear = Chooser()
+
+        def show_item(index: int) -> None:
+            gear.choose(index)
+            self.inspect(c.inventory[index].name, "", cs.inventory_item_text(c, index))
+
         parts.append(
             section(
                 f"Personal Gear ({len(c.inventory)})",
                 p,
-                row_list(
-                    cs.inventory_rows(c),
-                    lambda index: self.inspect(
-                        c.inventory[index].name, "", cs.inventory_item_text(c, index)
-                    ),
-                ),
+                row_list(cs.inventory_rows(c), show_item),
+                buttons=verb_buttons(cf.inventory_ops(c), gear, self.run, p),
             )
         )
         books = bk.books_owned_by(saga, "character", c.id)
@@ -758,14 +910,38 @@ class CharacterSheet(QWidget):
         )
         return scrolling_page(p, *parts)
 
+    def _raw_vis(self) -> QWidget:
+        """The magus's raw vis, by Art, with Add, Edit and Delete."""
+        c, p = self.character, self.p
+        chooser = Chooser()
+        ops = vis_forms.raw_vis_ops(c.raw_vis)
+        return section(
+            "Raw Vis",
+            p,
+            row_list(cs.raw_vis_rows(c), chooser.choose),
+            buttons=verb_buttons(ops, chooser, self.run, p),
+        )
+
     def _planning(self) -> QWidget:
-        saga, p = self.saga, self.p
+        """This Season: the plan and what it will give, with Plan, Edit
+        and Clear (a grog's Yearly Update instead)."""
+        saga, p, c = self.saga, self.p, self.character
+        buttons = verb_buttons(
+            season_forms.character_season_ops(saga, c),
+            Chooser(),
+            self.run,
+            p,
+            nouns=season_forms.season_nouns(c),
+        )
         return scrolling_page(
             p,
             section(
                 f"This Season ({saga.current_season} {saga.current_year})",
                 p,
-                TextBlock(seasons.plan_text(saga, self.character), p),
+                TextBlock(
+                    seasons.plan_text(saga, c, "Click Plan to plan the season."), p
+                ),
+                buttons=buttons,
             ),
         )
 
@@ -780,17 +956,26 @@ class CharacterSheet(QWidget):
             who=c.name,
             current=(saga.current_season, saga.current_year),
         )
+        entries = Chooser()
+
+        def show_entry(index: int) -> None:
+            entries.choose(index)
+            self.inspect("Diary", "", labs.diary_info_text(diary, index))
+
         return scrolling_page(
             p,
             section("Seasons", p, legend(p), self.calendar),
             section(
                 f"Diary ({len(diary)})",
                 p,
-                row_list(
-                    labs.diary_rows(diary),
-                    lambda index: self.inspect(
-                        "Diary", "", labs.diary_info_text(diary, index)
+                row_list(labs.diary_rows(diary), show_entry),
+                buttons=verb_buttons(
+                    diary_forms.entry_ops(
+                        saga, diary, diary_forms.character_activities()
                     ),
+                    entries,
+                    self.run,
+                    p,
                 ),
             ),
         )

@@ -5,12 +5,12 @@ from __future__ import annotations
 
 from typing import Any
 
+from .... import character_forms, sourcebooks, storage
+from .... import familiar_forms as ff
 from .... import possessions as pos
-from .... import sourcebooks, storage
 from ....markup import escape
 from ....models import (
     Ability,
-    BondPower,
     Possession,
     Wounds,
 )
@@ -18,14 +18,7 @@ from ..fields import (
     FieldsDialog,
 )
 from ..forms import (
-    _bond_power_fields,
-    _characteristics_from,
-    _familiar_binding_dialog,
-    _familiar_characteristics_fields,
-    _familiar_info_fields,
-    _fatigue_fields,
     _possession_dialog,
-    _wounds_fields,
 )
 from ..pickers import (
     AbilityPickerScreen,
@@ -54,13 +47,11 @@ class FamiliarActions(WorkspaceBase):
         def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
-            result["season_bound"] = result["season_bound"] or ""
-            for field_name, value in result.items():
-                setattr(familiar, field_name, value)
+            ff.apply_info(familiar, result)
             self._commit("section-fam-info", tree=True)
 
         self.app.push_screen(
-            FieldsDialog("Edit Familiar", _familiar_info_fields(familiar)),
+            FieldsDialog("Edit Familiar", ff.info_fields(familiar)),
             handle_result,
         )
 
@@ -69,14 +60,16 @@ class FamiliarActions(WorkspaceBase):
         if familiar is None:
             return
 
-        def handle_result(result: dict[str, object] | None) -> None:
+        def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
-            for field_name, value in result.items():
-                setattr(familiar, field_name, value)
+            ff.apply_binding(familiar, result)
             self._commit("section-fam-binding")
 
-        self.app.push_screen(_familiar_binding_dialog(familiar), handle_result)
+        self.app.push_screen(
+            FieldsDialog("Edit Binding & Cords", ff.binding_fields(familiar)),
+            handle_result,
+        )
 
     def _edit_familiar_characteristics(self) -> None:
         familiar = self.selected_familiar
@@ -86,14 +79,12 @@ class FamiliarActions(WorkspaceBase):
         def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
-            familiar.characteristics = _characteristics_from(result)
-            familiar.base_soak = result["base_soak"]
-            familiar.magic_resistance = result["magic_resistance"]
+            ff.apply_characteristics(familiar, result)
             self._commit("section-fam-characteristics")
 
         self.app.push_screen(
             FieldsDialog(
-                "Edit Characteristics", _familiar_characteristics_fields(familiar)
+                "Edit Characteristics", ff.familiar_characteristics_fields(familiar)
             ),
             handle_result,
         )
@@ -111,7 +102,10 @@ class FamiliarActions(WorkspaceBase):
                 self._commit("section-fam-health")
 
         self.app.push_screen(
-            FieldsDialog("Edit Wounds", _wounds_fields(familiar.wounds, soak=False)),
+            FieldsDialog(
+                "Edit Wounds",
+                character_forms.wounds_fields(familiar.wounds, soak=False),
+            ),
             handle_result,
         )
 
@@ -126,7 +120,10 @@ class FamiliarActions(WorkspaceBase):
                 self._commit("section-fam-health")
 
         self.app.push_screen(
-            FieldsDialog("Edit Fatigue Level", _fatigue_fields(familiar.fatigue_level)),
+            FieldsDialog(
+                "Edit Fatigue Level",
+                character_forms.fatigue_fields(familiar.fatigue_level),
+            ),
             handle_result,
         )
 
@@ -314,27 +311,11 @@ class FamiliarActions(WorkspaceBase):
         def handle_result(values: dict[str, Any] | None) -> None:
             if values is None:
                 return
-            # "select" fields with allow_blank dismiss None for "not set";
-            # BondPower uses "" like Familiar.binding_technique/_form do.
-            values["technique"] = values.get("technique") or ""
-            values["form"] = values.get("form") or ""
-            if existing is not None:
-                for key, value in values.items():
-                    setattr(existing, key, value)
-            else:
-                familiar.bond_powers.append(
-                    BondPower(
-                        id=storage.generate_unique_id(
-                            values.get("name") or "power",
-                            [p.id for p in familiar.bond_powers],
-                        ),
-                        **values,
-                    )
-                )
+            ff.save_bond_power(familiar.bond_powers, existing, values)
             self._commit("tab-fam-powers")
 
         self.app.push_screen(
-            FieldsDialog(title, _bond_power_fields(existing)), handle_result
+            FieldsDialog(title, ff.bond_power_fields(existing)), handle_result
         )
 
     def _add_familiar_bond_power(self) -> None:

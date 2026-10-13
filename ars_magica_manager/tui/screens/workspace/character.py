@@ -4,10 +4,9 @@ Diary."""
 
 from __future__ import annotations
 
-import random
 from typing import Any
 
-from .... import creation, seasons, sourcebooks, storage
+from .... import character_forms, creation, sourcebooks, storage
 from .... import laboratories as lab_text
 from .... import possessions as pos
 from .... import spells as spl
@@ -16,10 +15,8 @@ from ....markup import escape
 from ....models import (
     Ability,
     ArtScore,
-    Background,
     Breakthrough,
     Character,
-    Description,
     DiaryEntry,
     HermeticBackground,
     KnownSpell,
@@ -28,28 +25,20 @@ from ....models import (
     Spell,
     Wounds,
     add_raw_vis,
-    assign_laboratory,
-    known_fields,
     replace_raw_vis,
 )
 from ....rules import activities as season_rules
-from ....rules import aging as aging_rules
 from ..fields import (
     FieldsDialog,
 )
 from ..forms import (
     EditArtsScreen,
-    _aging_fields,
-    _biographical_fields,
     _breakthrough_dialog,
     _character_info_dialog,
     _characteristics_dialog,
     _characteristics_from,
-    _fatigue_fields,
-    _hermetic_fields,
     _mastery_dialog,
     _possession_dialog,
-    _wounds_fields,
 )
 from ..pickers import (
     AbilityPickerScreen,
@@ -84,19 +73,8 @@ class CharacterActions(WorkspaceBase):
         def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
-            character.name = result["name"]
-            character.type = result.get("type", character.type)
-            character.covenant_id = result["covenant_id"]
+            character_forms.apply_character_info(self.saga, character, result)
             self.selected_covenant = self.saga.covenant(character.covenant_id)
-            if character.type == "magus":
-                assign_laboratory(self.saga, character, result["laboratory_id"])
-            background = character.background
-            background.setting = result["setting"]
-            background.confidence_score = result["confidence_score"]
-            background.confidence_points = result["confidence_points"]
-            background.true_faith_score = result["true_faith_score"]
-            background.faith_points = result["faith_points"]
-            background.size = result["size"]
             # Only a magus has a free House Virtue.
             self._commit(
                 "section-char-info", "section-vf-virtues", "section-vf-flaws", tree=True
@@ -127,9 +105,7 @@ class CharacterActions(WorkspaceBase):
 
         def handle_result(result: dict[str, Any] | None) -> None:
             if result is not None:
-                for attribute in known_fields(Background, result):
-                    setattr(character.background, attribute, result[attribute])
-                character.description = Description(**known_fields(Description, result))
+                character_forms.apply_biographical(character, result)
                 self._commit("section-char-biographical")
                 # Age (derived from Year Born) lives in the top panel.
                 self._refresh_character_section("section-char-info")
@@ -137,7 +113,7 @@ class CharacterActions(WorkspaceBase):
         self.app.push_screen(
             FieldsDialog(
                 "Edit Biographical Detail",
-                _biographical_fields(
+                character_forms.biographical_fields(
                     character.background,
                     character.description,
                     self.saga.players,
@@ -155,25 +131,15 @@ class CharacterActions(WorkspaceBase):
         def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
-            gained = result.pop("gain_warping", 0) or 0
-            aging = character.aging
-            if result["decrepitude"] != aging.decrepitude:
-                aging.decrepitude_points = aging_rules.points_for_score(
-                    result["decrepitude"]
-                )
-            # Only the fields on the form: the rest (Longevity, Aging Points)
-            # stays as it is.
-            for key, value in result.items():
-                setattr(aging, key, value)
-            if gained > 0:
-                notes = seasons.gain_warping(
-                    self.saga, character, gained, random.Random()
-                )
+            notes = character_forms.apply_aging(self.saga, character, result)
+            if notes:
                 self.notify(" ".join(notes), timeout=12)
             self._commit("section-aging", "tab-diary")
 
         self.app.push_screen(
-            FieldsDialog("Edit Aging & Warping", _aging_fields(character.aging)),
+            FieldsDialog(
+                "Edit Aging & Warping", character_forms.aging_fields(character.aging)
+            ),
             handle_result,
         )
 
@@ -279,7 +245,9 @@ class CharacterActions(WorkspaceBase):
                 self._commit("section-char-health")
 
         self.app.push_screen(
-            FieldsDialog("Edit Wounds", _wounds_fields(character.wounds)),
+            FieldsDialog(
+                "Edit Wounds", character_forms.wounds_fields(character.wounds)
+            ),
             handle_result,
         )
 
@@ -295,7 +263,8 @@ class CharacterActions(WorkspaceBase):
 
         self.app.push_screen(
             FieldsDialog(
-                "Edit Fatigue Level", _fatigue_fields(character.fatigue_level)
+                "Edit Fatigue Level",
+                character_forms.fatigue_fields(character.fatigue_level),
             ),
             handle_result,
         )
@@ -420,7 +389,8 @@ class CharacterActions(WorkspaceBase):
 
         self.app.push_screen(
             FieldsDialog(
-                "Edit Hermetic Background", _hermetic_fields(character.hermetic)
+                "Edit Hermetic Background",
+                character_forms.hermetic_fields(character.hermetic),
             ),
             handle_result,
         )

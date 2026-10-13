@@ -43,6 +43,26 @@ teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript.
 
+## 2.49.0 — 2026-10-13
+
+- The desktop version can now edit everything it shows. Every section of
+  a character, familiar, laboratory, covenant and the Saga Content page
+  has Add, Edit and Delete buttons, using the same forms and rules as
+  the terminal, and a deletion always asks first.
+- Forms, lists to choose from and delete questions open in place, inside
+  the section they belong to, rather than in a separate window; the
+  rest of the page waits until the step is saved or cancelled.
+- Seasons can be planned on the desktop: a character's, a laboratory's
+  and a covenant's season plans are added, changed and cleared there.
+- Each desktop page has New and More menus with the terminal's rarer
+  actions, including creating characters and deleting records.
+- The books on the library shelves have larger spine titles that can
+  run to two lines, so a long title makes a thicker book.
+- Every desktop page fits a 1280-pixel-wide window without scrolling
+  sideways.
+- The message for a reputation score out of range now reads "between -3
+  and +3".
+
 ## 2.48.0 — 2026-10-13
 
 - The desktop version has a Saga Content page, opened from the saga's

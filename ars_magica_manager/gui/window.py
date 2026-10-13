@@ -9,38 +9,53 @@ familiar's. Where the
 reader is is a list of places, the trail; the page shown is built from
 the last one, so changing the theme just builds it again.
 
-Read-only for now: it loads sagas and never saves them, so it is safe to
-open beside the terminal app.
+A sheet's Edit buttons open the same forms the terminal shows
+(character_forms.py); saving one saves the saga, merged with whatever the
+terminal app (or the hosted copies players use) saved meanwhile, so the
+two are safe to run side by side.
 """
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 
+import shiboken6
+from PySide6.QtCore import QTimer
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QApplication,
+    QDialog,
     QHBoxLayout,
     QLabel,
     QMainWindow,
+    QMessageBox,
     QPushButton,
+    QScrollArea,
     QVBoxLayout,
     QWidget,
 )
 
 from .. import familiars as fam
-from .. import storage
+from .. import menu_forms, storage
+from ..actions import NodeKind
+from ..commands import Choose, Command, Confirm, Form, Refuse
 from ..models import Familiar, Saga
 from . import pictures
 from .character_sheet import CharacterSheet
 from .covenant import CovenantPage
+from .editing import InPlace, place_for
 from .familiar import FamiliarPage
+from .forms import ChooseDialog, ConfirmDialog, FieldsDialog
 from .laboratory import LaboratoryPage
+from .markup_html import plain
+from .menus import menu_buttons
 from .ornaments import Headpiece
 from .pages import SagaPage, SagaShelf
 from .paper import Paper
 from .saga_content import SagaContentPage
 from .themes import PALETTES, Palette, style_sheet
+from .widgets import take_pressed
 
 SHELF, SAGA, COVENANT, CHARACTER, LABORATORY, FAMILIAR, CONTENT = (
     "shelf",
@@ -51,6 +66,19 @@ SHELF, SAGA, COVENANT, CHARACTER, LABORATORY, FAMILIAR, CONTENT = (
     "familiar",
     "content",
 )
+
+
+def _first_input(dialog: QDialog) -> QWidget | None:
+    """The widget a step's typing starts in: a form's first field, a
+    list's search, a question's Cancel."""
+    inputs = getattr(dialog, "inputs", None)
+    if inputs:
+        return next(iter(inputs.values()))
+    return getattr(dialog, "search", None) or getattr(dialog, "cancel", None)
+
+
+def _title(command: Command) -> str:
+    return command.question if isinstance(command, Confirm) else command.title
 
 
 @dataclass(frozen=True)
@@ -71,6 +99,12 @@ class MainWindow(QMainWindow):
         self.saga_ids = storage.list_sagas() if saga_ids is None else saga_ids
         self.saga: Saga | None = None
         self.trail: list[Place] = []
+        #: Shows a step and waits for it (in place; a test answers it).
+        self.ask: Callable[[QDialog], int] = self._present
+        #: Where the running button's steps open (editing.place_for), and
+        #: the step open there now.
+        self._place: InPlace | None = None
+        self._open: QDialog | None = None
 
         self.crumbs = QHBoxLayout()
         self.crumbs.setSpacing(2)
@@ -81,6 +115,10 @@ class MainWindow(QMainWindow):
         bar.setContentsMargins(12, 4, 8, 0)
         bar.addLayout(self.crumbs)
         bar.addStretch(1)
+        #: The New and More menus for the page on show (menus.py).
+        self.menus = QHBoxLayout()
+        self.menus.setSpacing(2)
+        bar.addLayout(self.menus)
         bar.addWidget(self.theme)
 
         self.sheet_area = QWidget()
@@ -177,11 +215,144 @@ class MainWindow(QMainWindow):
         kinds = [place.kind for place in self.trail]
         return self.trail[: kinds.index(kind) + 1] if kind in kinds else [Place(kind)]
 
+    def run(self, command: Command, then: Callable[[], None] | None = None) -> None:
+        """Run a button's steps (commands.py), each in its dialog; once
+        the last is answered, save the saga and show the page again at the
+        same chapter and place (or, given `then`, call it instead: a
+        menu's New shows the new record). Cancelling any step changes
+        nothing."""
+        if self.saga is None:
+            return
+        title = _title(command)
+        page = self.page()
+        pressed = take_pressed()
+        self._place = place_for(pressed, page) if page is not None else None
+        step: object = command
+        try:
+            while isinstance(step, Form | Choose | Confirm):
+                answered, step = self._answer(step)
+                if not answered:
+                    return
+        finally:
+            if self._place is not None:
+                self._place.close()
+            self._place = None
+        if isinstance(step, Refuse):
+            # A refusal changes nothing, so there is nothing to save.
+            QMessageBox.information(self, plain(step.title), plain(step.why))
+            return
+        storage.save_saga(self.saga)
+        if then is not None:
+            then()
+        else:
+            self.redraw()
+        if isinstance(step, list) and step:
+            QMessageBox.information(self, plain(title), plain("\n".join(step)))
+
+    def _answer(self, step: Form | Choose | Confirm) -> tuple[bool, object]:
+        """Show one step; whether it was answered, and what it led to."""
+        p = self.palette_
+        inline = self._place is not None
+        if isinstance(step, Form):
+            form = FieldsDialog(
+                step.title,
+                step.fields(),
+                p,
+                self,
+                validate=step.validate,
+                live=step.live,
+                save_label=step.save_label,
+                inline=inline,
+            )
+            if self.ask(form) != QDialog.DialogCode.Accepted:
+                return False, None
+            return True, step.apply(form.values)
+        if isinstance(step, Choose):
+            choices = step.choices()
+            if not choices:
+                QMessageBox.information(self, plain(step.title), plain(step.empty))
+                return False, None
+            chooser = ChooseDialog(
+                step.title, choices, p, self, empty=step.empty, inline=inline
+            )
+            if self.ask(chooser) != QDialog.DialogCode.Accepted:
+                return False, None
+            return True, step.apply(chooser.chosen)
+        confirm = ConfirmDialog(
+            step.question, p, self, yes_label=step.yes_label, inline=inline
+        )
+        if self.ask(confirm) != QDialog.DialogCode.Accepted:
+            return False, None
+        return True, step.apply()
+
+    def _present(self, dialog: QDialog) -> int:
+        """Show a step and wait for it: in place on the page when it was
+        made to be (editing.place_for), else as a window. While a step is
+        open in place, the page's other buttons and the menus wait."""
+        place = self._place
+        if place is None or not getattr(dialog, "inline", False):
+            return dialog.exec()
+        place.open(dialog, replace=not isinstance(dialog, ConfirmDialog))
+        waiting = [
+            button
+            for button in self.findChildren(QPushButton)
+            if button.isEnabled()
+            and not dialog.isAncestorOf(button)
+            and (button.objectName() == "edit" or button.menu() is not None)
+        ]
+        for button in waiting:
+            button.setEnabled(False)
+        first = _first_input(dialog)
+        if first is not None:
+            first.setFocus()
+        fit = getattr(dialog, "_fit", None)
+        if fit is not None:
+            # Wrapped hints know their height only once drawn at width.
+            QTimer.singleShot(0, fit)
+        self._open = dialog
+        try:
+            return dialog.exec()
+        finally:
+            self._open = None
+            for button in waiting:
+                if shiboken6.isValid(button):
+                    button.setEnabled(True)
+
+    def redraw(self) -> None:
+        """Build the page on show again, at the chapter and scroll place it
+        was at."""
+        codex = getattr(self.page(), "codex", None)
+        chapter, scrolled = 0, 0
+        if codex is not None:
+            chapter = codex.rail.currentRow()
+            area = codex.pages.currentWidget()
+            if isinstance(area, QScrollArea):
+                scrolled = area.verticalScrollBar().value()
+        self.go(self.trail)
+        codex = getattr(self.page(), "codex", None)
+        if codex is not None:
+            codex.rail.setCurrentRow(chapter)
+            area = codex.pages.currentWidget()
+            if isinstance(area, QScrollArea):
+                body = area.widget()
+                if body is not None:
+                    body.adjustSize()
+                area.verticalScrollBar().setValue(scrolled)
+
+    def page(self) -> QWidget | None:
+        """The page on show."""
+        item = self.sheet_layout.itemAt(0)
+        return item.widget() if item is not None else None
+
     def go(self, trail: list[Place]) -> None:
-        """Show the last page of `trail`, with the trail above it."""
+        """Show the last page of `trail`, with the trail above it. Leaving
+        a page cancels a step open on it."""
+        if self._open is not None and shiboken6.isValid(self._open):
+            self._open.reject()
         self.trail = trail
         self._show(self._build(trail[-1]))
         self._draw_trail()
+        self._draw_menus()
 
     # Drawing
 
@@ -193,7 +364,7 @@ class MainWindow(QMainWindow):
         if place.kind == SAGA:
             return SagaPage(saga, p, self.open_covenant, self.open_content)
         if place.kind == CONTENT:
-            return SagaContentPage(saga, p)
+            return SagaContentPage(saga, p, self.run)
         if place.kind == COVENANT:
             return CovenantPage(
                 saga,
@@ -202,21 +373,22 @@ class MainWindow(QMainWindow):
                 self.show_character,
                 self.open_laboratory,
                 self.open_familiar,
+                self.run,
             )
         if place.kind == LABORATORY:
             lab = saga.laboratory(place.id)
             if lab is None:
                 return QLabel("No laboratory chosen.")
-            return LaboratoryPage(saga, lab, p)
+            return LaboratoryPage(saga, lab, p, self.run)
         if place.kind == FAMILIAR:
             familiar = self._familiar(place.id)
             if familiar is None:
                 return QLabel("No familiar chosen.")
-            return FamiliarPage(saga, familiar, p)
+            return FamiliarPage(saga, familiar, p, self.run)
         character = saga.character(place.id)
         if character is None:
             return QLabel("No character chosen.")
-        return CharacterSheet(saga, character, p, self.open_familiar)
+        return CharacterSheet(saga, character, p, self.open_familiar, self.run)
 
     def _familiar(self, familiar_id: str | None) -> Familiar | None:
         saga = self.saga
@@ -278,6 +450,56 @@ class MainWindow(QMainWindow):
                 lambda _checked=False, upto=i: self.go(self.trail[: upto + 1])
             )
             self.crumbs.addWidget(crumb)
+
+    def menu_page(self) -> menu_forms.Page | None:
+        """The page on show, as its New and More menus see it."""
+        saga = self.saga
+        place = self.trail[-1] if self.trail else None
+        if saga is None or place is None or place.kind == SHELF:
+            return None
+        if place.kind == SAGA:
+            return menu_forms.page_for(saga, NodeKind.SAGA)
+        if place.kind == CONTENT:
+            return menu_forms.page_for(saga, NodeKind.SAGA_CONTENT)
+        if place.kind == COVENANT:
+            if saga.covenant(place.id) is None:
+                # The saga's unassigned characters and laboratories.
+                return menu_forms.page_for(saga, NodeKind.CHARACTER_GROUP)
+            return menu_forms.page_for(saga, NodeKind.COVENANT, covenant_id=place.id)
+        if place.kind == CHARACTER:
+            return menu_forms.page_for(saga, NodeKind.CHARACTER, character_id=place.id)
+        if place.kind == LABORATORY:
+            return menu_forms.page_for(
+                saga, NodeKind.LABORATORY, laboratory_id=place.id
+            )
+        return menu_forms.page_for(saga, NodeKind.FAMILIAR, familiar_id=place.id)
+
+    def _draw_menus(self) -> None:
+        while self.menus.count():
+            item = self.menus.takeAt(0)
+            old = item.widget() if item is not None else None
+            if old is not None:
+                old.hide()
+                old.deleteLater()
+        for button in menu_buttons(
+            self.menu_page(), self.palette_, self.run, self._show_made, self._go_up
+        ):
+            self.menus.addWidget(button)
+
+    def _show_made(self, action: str, record_id: str) -> None:
+        """Open the page of what a New entry made."""
+        if action == "create_covenant":
+            self.open_covenant(record_id)
+        elif action == "create_character":
+            self.show_character(record_id)
+        elif action == "create_laboratory":
+            self.open_laboratory(record_id)
+        else:
+            self.open_familiar(record_id)
+
+    def _go_up(self) -> None:
+        """Leave a deleted record's page for the one above it."""
+        self.go(self.trail[:-1] or [Place(SHELF)])
 
     def crumb_names(self) -> list[str]:
         return [self._name(place) for place in self.trail]

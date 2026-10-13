@@ -1,11 +1,14 @@
-"""The desktop laboratory page, read-only, in the Codex layout: a header
-with the name, whose sanctum it is and its aura as a seal; the eight
+"""The desktop laboratory page, in the Codex layout: a header with the
+name, whose sanctum it is and its aura as a seal; the eight
 Characteristics as a compass rose beside their cards; then chapters for the
 Lab Totals, Virtues & Flaws, Specializations and Features, the stores and
 the seasons, with the inspector beside them.
 
 What it says comes from the shared core (laboratory_sheet.py and the
-modules it reads), as the terminal's laboratory sheet does.
+modules it reads), as the terminal's laboratory sheet does. Its Edit
+buttons and each list's Add, Edit and Delete run the core's forms
+(laboratory_forms.py, vis_forms.py), the same the terminal draws; Edit and
+Delete act on the card or row last clicked.
 """
 
 from __future__ import annotations
@@ -13,16 +16,27 @@ from __future__ import annotations
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
-from .. import artwork, lab_planning
+from .. import (
+    artwork,
+    diary_forms,
+    lab_plan_forms,
+    lab_planning,
+    seasons,
+    virtue_forms,
+    vis_forms,
+)
 from .. import books as bk
 from .. import laboratories as labs
+from .. import laboratory_forms as lf
 from .. import laboratory_sheet as ls
 from .. import saga_overview as ov
 from ..arts import ART_ABBREVIATIONS
+from ..commands import SectionOps
 from ..models import Laboratory, Saga
 from . import pictures
-from .character_sheet import columns_text, side_by_side
-from .figures import CompassRose, aura_seal, bar_list, fact_grid
+from .character_sheet import columns_text, row_list, section, side_by_side
+from .editing import Chooser, Run, choose_cards, verb_buttons
+from .figures import CompassRose, aura_seal, bar_list, fact_grid, trait_list
 from .pages import card_grid
 from .themes import Palette
 from .timeline import Calendar, legend, season_text
@@ -34,6 +48,7 @@ from .widgets import (
     badge,
     chapter_title,
     display_name,
+    edit_button,
     scrolling_page,
     serif,
     text,
@@ -60,9 +75,16 @@ def _sign_colour(value: float, p: Palette) -> str:
 class LaboratoryPage(QWidget):
     """One laboratory in the Codex layout."""
 
-    def __init__(self, saga: Saga, lab: Laboratory, palette: Palette) -> None:
+    def __init__(
+        self,
+        saga: Saga,
+        lab: Laboratory,
+        palette: Palette,
+        run: Run = lambda _command: None,
+    ) -> None:
         super().__init__()
         self.saga, self.lab, self.p = saga, lab, palette
+        self.run = run
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
@@ -113,6 +135,11 @@ class LaboratoryPage(QWidget):
         row.addWidget(fact_grid(ls.capacity_facts(lab), p, 3))
         row.addSpacing(10)
         row.addWidget(aura_seal(ls.aura(saga, lab), p))
+        self.identity_button = edit_button(
+            "Edit", p, lambda: self.run(lf.identity_form(saga, lab))
+        )
+        self.identity_button.setToolTip("Edit the laboratory's Identity")
+        row.addWidget(self.identity_button, 0, Qt.AlignmentFlag.AlignTop)
         return box
 
     def _characteristics(self) -> QWidget:
@@ -153,7 +180,12 @@ class LaboratoryPage(QWidget):
         line.setSpacing(14)
         line.addWidget(CompassRose(rows, p))
         line.addWidget(card_grid(cards, 4), 1)
-        return box
+        return section(
+            "Characteristics",
+            p,
+            box,
+            edits={"Edit": lambda: self.run(lf.characteristics_form(self.lab))},
+        )
 
     # Chapters
 
@@ -217,19 +249,32 @@ class LaboratoryPage(QWidget):
             stack.setContentsMargins(0, 0, 0, 0)
             stack.setSpacing(10)
             points = labs.vf_points(lab, side)
-            stack.addWidget(chapter_title(f"{side}s  ·  {points:g} points", p))
-            cards = ls.virtue_flaw_cards(lab, side)
-            for card in cards:
-                stack.addWidget(self._vf_card(card, p[tone]))
-            if not cards:
-                stack.addWidget(
-                    text(f"No {side}s.", p["dim"], serif(12.5, italic=True))
+            chooser = Chooser()
+            cards = [
+                self._vf_card(card, p[tone]) for card in ls.virtue_flaw_cards(lab, side)
+            ]
+            choose_cards(cards, chooser)
+            stack.addWidget(
+                section(
+                    f"{side}s  ·  {points:g} points",
+                    p,
+                    *(
+                        cards
+                        or [text(f"No {side}s.", p["dim"], serif(12.5, italic=True))]
+                    ),
+                    buttons=verb_buttons(
+                        virtue_forms.virtue_flaw_ops(self.saga, lab, side),
+                        chooser,
+                        self.run,
+                        p,
+                    ),
                 )
+            )
             stack.addStretch(1)
             columns.append(column)
         return scrolling_page(p, side_by_side(*columns, spacing=18))
 
-    def _vf_card(self, card: ls.VirtueFlawCard, colour: str) -> QWidget:
+    def _vf_card(self, card: ls.VirtueFlawCard, colour: str) -> ClickableCard:
         p, lab = self.p, self.lab
         frame = ClickableCard(p, edge=colour, pad=10)
         top = QHBoxLayout()
@@ -263,8 +308,34 @@ class LaboratoryPage(QWidget):
                 chapter_title("Specializations", p),
                 text("None yet.", p["dim"], serif(12.5, italic=True)),
             ]
+        parts.append(self._specialty_sources())
+        parts.append(self._features())
+        parts.append(self._named_section("Rooms", "section-lab-rooms", "a room"))
+        return scrolling_page(p, *parts)
+
+    def _specialty_sources(self) -> QWidget:
+        """The Specialization points typed in from sources the app doesn't
+        work out itself, each a row to choose."""
+        p, lab = self.p, self.lab
+        chooser = Chooser()
+        rows = [
+            (
+                f"{entry.specialization or 'needs a Specialization'}"
+                + (f"  ·  {entry.source}" if entry.source else ""),
+                entry.points,
+            )
+            for entry in lab.specialties
+        ]
+        return section(
+            f"Specialization sources ({len(rows)})",
+            p,
+            trait_list(rows, p, chooser.choose),
+            buttons=verb_buttons(lf.specialty_ops(lab), chooser, self.run, p),
+        )
+
+    def _features(self) -> QWidget:
+        p, lab = self.p, self.lab
         features = ls.feature_cards(lab)
-        parts.append(chapter_title(f"Features ({len(features)})", p))
         cards = []
         for feature in features:
             card = ClickableCard(p, pad=10)
@@ -280,17 +351,32 @@ class LaboratoryPage(QWidget):
                 name, "Feature", labs.feature_info_text(lab, index)
             )
             cards.append(card)
-        parts.append(
+        return self._card_section(
+            f"Features ({len(features)})", cards, lf.feature_ops(lab), "None yet."
+        )
+
+    def _card_section(
+        self, title: str, cards: list[ClickableCard], ops: SectionOps, none: str
+    ) -> QWidget:
+        """A titled grid of cards with the list's Add, Edit and Delete,
+        acting on the card last clicked."""
+        p = self.p
+        chooser = Chooser()
+        choose_cards(cards, chooser)
+        return section(
+            title,
+            p,
             card_grid(cards, 3)
             if cards
-            else text("None yet.", p["dim"], serif(12.5, italic=True))
+            else text(none, p["dim"], serif(12.5, italic=True)),
+            buttons=verb_buttons(ops, chooser, self.run, p),
         )
-        parts.append(chapter_title(f"Rooms ({len(lab.rooms)})", p))
-        parts.append(self._named_cards(lab.rooms, "a room"))
-        return scrolling_page(p, *parts)
 
-    def _named_cards(self, entries, noun: str) -> QWidget:
+    def _named_section(self, title: str, section_id: str, noun: str) -> QWidget:
+        """Rooms or Equipment & Stores: a card for each, with Add, Edit and
+        Delete."""
         p = self.p
+        entries = getattr(self.lab, lf.NAMED_LISTS[section_id].attr)
         cards = []
         for index, entry in enumerate(entries):
             card = ClickableCard(p, pad=10)
@@ -305,9 +391,12 @@ class LaboratoryPage(QWidget):
                 name, "", labs.named_info_text(entries, index, noun)
             )
             cards.append(card)
-        if not cards:
-            return text("None recorded.", p["dim"], serif(12.5, italic=True))
-        return card_grid(cards, 3)
+        return self._card_section(
+            f"{title} ({len(entries)})",
+            cards,
+            lf.named_ops(self.lab, section_id),
+            "None recorded.",
+        )
 
     def _stores(self) -> QWidget:
         """Raw vis as a phial for each Art, then the equipment and stores,
@@ -365,18 +454,27 @@ class LaboratoryPage(QWidget):
             )
             book_cards.append(card)
         none = "None recorded."
+        chooser = Chooser()
+        choose_cards(phials, chooser)
         return scrolling_page(
             p,
-            chapter_title("Raw Vis", p),
-            card_grid(phials, 4)
-            if phials
-            else text(none, p["dim"], serif(12.5, italic=True)),
-            chapter_title(f"Equipment & Stores ({len(lab.inventory_items)})", p),
-            self._named_cards(lab.inventory_items, "an item"),
-            chapter_title(f"Arcane Connections ({len(connections)})", p),
-            card_grid(connections, 3)
-            if connections
-            else text(none, p["dim"], serif(12.5, italic=True)),
+            section(
+                "Raw Vis",
+                p,
+                card_grid(phials, 4)
+                if phials
+                else text(none, p["dim"], serif(12.5, italic=True)),
+                buttons=verb_buttons(
+                    vis_forms.raw_vis_ops(lab.raw_vis), chooser, self.run, p
+                ),
+            ),
+            self._named_section("Equipment & Stores", "section-lab-items", "an item"),
+            self._card_section(
+                f"Arcane Connections ({len(connections)})",
+                connections,
+                lf.connection_ops(lab),
+                none,
+            ),
             chapter_title(f"Books ({len(books)})", p),
             card_grid(book_cards, 3)
             if book_cards
@@ -408,15 +506,52 @@ class LaboratoryPage(QWidget):
                 "Diary", "", labs.diary_info_text(lab.diary, index)
             )
             entries.append(card)
+        # Chosen by their place in the Diary, though shown newest first.
+        diary = Chooser()
+        choose_cards(entries, diary)
         return scrolling_page(
             p,
             chapter_title("Seasons", p),
+            self._planning(),
             legend(p),
             self.calendar,
-            chapter_title(f"Diary ({len(lab.diary)})", p),
-            card_grid(list(reversed(entries)), 2)
-            if entries
-            else text("Nothing written yet.", p["dim"], serif(12.5, italic=True)),
+            section(
+                f"Diary ({len(lab.diary)})",
+                p,
+                card_grid(list(reversed(entries)), 2)
+                if entries
+                else text("Nothing written yet.", p["dim"], serif(12.5, italic=True)),
+                buttons=verb_buttons(
+                    diary_forms.entry_ops(saga, lab.diary), diary, self.run, p
+                ),
+            ),
+        )
+
+    def _planning(self) -> QWidget:
+        """The owner's lab work from this season on, with New Spell, and
+        Plan and Clear for the season chosen."""
+        p, saga, lab = self.p, self.saga, self.lab
+        chooser = Chooser()
+
+        def show(index: int) -> None:
+            chooser.choose(index)
+            self.inspect(
+                "Lab work",
+                "",
+                seasons.lab_queue_info(saga, lab, index, plan_hint="Click Plan"),
+            )
+
+        return section(
+            "Planning",
+            p,
+            row_list(seasons.lab_queue_rows(saga, lab), show),
+            buttons=verb_buttons(
+                lab_plan_forms.planning_ops(saga, lab, lambda: chooser.index),
+                chooser,
+                self.run,
+                p,
+                nouns=lab_plan_forms.NOUNS,
+            ),
         )
 
 

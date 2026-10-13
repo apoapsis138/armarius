@@ -6,6 +6,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
+from .... import spell_forms
 from .... import spells as spl
 from ....arts import FORMS, TECHNIQUES
 from ....form_spec import DialogField, attr, pairs
@@ -210,16 +211,15 @@ def _mastery_dialog(spell_name: str, existing: KnownSpell) -> FieldsDialog[Known
     (each with its own name/level/xp, see MasteryAbility). Builds the
     finished KnownSpell."""
     return FieldsDialog(
-        f"Mastery: {escape(spell_name)}",
-        [
-            DialogField("mastery_score", "Score", "int", existing.mastery_score),
-            DialogField("mastery_xp", "XP", "int", existing.mastery_xp),
+        spell_forms.mastery_title(spell_name),
+        spell_forms.mastery_fields(
+            existing,
             _list_field(
                 "mastery_abilities",
                 "Mastery Abilities",
                 existing.mastery_abilities,
                 f"Mastery Abilities: {escape(spell_name)}",
-                lambda ability: f"{ability.name} {ability.level}/{ability.xp}",
+                spell_forms.mastery_ability_row,
                 lambda ability: _mastery_ability_dialog(
                     "Add a Mastery Ability"
                     if ability is None
@@ -227,6 +227,6 @@ def _mastery_dialog(spell_name: str, existing: KnownSpell) -> FieldsDialog[Known
                     ability,
                 ),
             ),
-        ],
-        build=lambda values: KnownSpell(spell_id=existing.spell_id, **values),
+        ),
+        build=lambda values: spell_forms.known_spell_from(existing, values),
     )

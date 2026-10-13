@@ -10,18 +10,27 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
+from gui_steps import answering, section_buttons
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QGraphicsDropShadowEffect, QLabel
+from PySide6.QtWidgets import (
+    QApplication,
+    QGraphicsDropShadowEffect,
+    QLabel,
+    QPushButton,
+)
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import character_sheet as cs
 from ars_magica_manager import covenant_sheet as cvs
 from ars_magica_manager import familiars as fam
+from ars_magica_manager import storage
+from ars_magica_manager.form_spec import DialogField
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.covenant import CovenantPage
 from ars_magica_manager.gui.familiar import FamiliarPage
 from ars_magica_manager.gui.figures import Bookcase, BookSpine, CordFigure, Dial
+from ars_magica_manager.gui.forms import ConfirmDialog, FieldsDialog
 from ars_magica_manager.gui.laboratory import LaboratoryPage
 from ars_magica_manager.gui.markup_html import plain, to_html
 from ars_magica_manager.gui.ornaments import FleuronRule, Headpiece, Tailpiece
@@ -162,6 +171,84 @@ def test_the_pages_are_set_with_printers_ornaments(app):
     window.grab()  # the ornaments and the cards' corner flourishes paint
     window.toggle_theme()
     assert headpiece.p is PALETTES[1]
+
+
+def test_a_form_draws_its_fields_and_refuses_what_does_not_parse(app):
+    dialog = FieldsDialog(
+        "Edit Something",
+        [
+            DialogField("name", "Name", "text", "Hilde", required=True),
+            DialogField("age", "Age", "optint", 30),
+            DialogField(
+                "hand",
+                "Hand",
+                "select",
+                "left",
+                options=[("Left", "left"), ("Right", "right")],
+            ),
+            DialogField("dead", "Dead", "check", False),
+            DialogField("notes", "Notes", "area", "Quiet."),
+            DialogField("owner", "Owner", "info", "Leandro"),
+            DialogField(
+                "why", "Why", "text", "", show_if=lambda v: bool(v.get("dead"))
+            ),
+        ],
+        PALETTES[0],
+    )
+    assert dialog.read(dialog.fields[2]) == "left"
+    assert not dialog.rows["why"][1].isVisibleTo(dialog)
+    dialog.set_value("age", "thirty")
+    dialog.try_save()
+    assert dialog.result() != dialog.DialogCode.Accepted
+    assert "Age must be a whole number" in dialog.error.text()
+    dialog.set_value("age", "")
+    dialog.set_value("dead", True)
+    assert dialog.rows["why"][1].isVisibleTo(dialog)
+    dialog.set_value("why", "  a fall  ")
+    dialog.try_save()
+    assert dialog.result() == dialog.DialogCode.Accepted
+    assert dialog.values == {
+        "name": "Hilde",
+        "age": None,
+        "hand": "left",
+        "dead": True,
+        "notes": "Quiet.",
+        "why": "a fall",
+    }
+
+
+def test_editing_a_section_saves_the_saga_and_stays_on_its_chapter(app):
+    saga = _sample_saga_with_covenant()
+    storage.save_saga(saga)
+    window = MainWindow(saga_ids=[saga.id])
+    character = window.saga.characters[0] if window.saga else None
+    assert character is not None
+    window.show_character(character.id)
+    sheet = window.page()
+    assert isinstance(sheet, CharacterSheet)
+    sheet.open_chapter("Abilities")
+    sheet.open_chapter("Description")
+    asked: list[FieldsDialog] = []
+
+    def answer(dialog):
+        asked.append(dialog)
+        dialog.set_value("hair", "Grey")
+        dialog.try_save()
+        return dialog.result()
+
+    window.ask = answer
+    section_buttons(sheet, "Biographical Detail")["Edit"].click()
+    assert asked[0].windowTitle() == "Edit Biographical Detail"
+    assert storage.load_saga(saga.id).characters[0].description.hair == "Grey"
+    page = window.page()
+    assert isinstance(page, CharacterSheet) and page is not sheet
+    assert page.codex.rail.currentRow() == 0
+    # Cancelling changes nothing.
+    window.ask = lambda dialog: dialog.DialogCode.Rejected
+    next(
+        b for b in page.findChildren(QPushButton) if b.text().strip() == "Fatigue"
+    ).click()
+    assert window.page() is page
 
 
 def test_paper_is_the_same_every_time_it_is_made(app):
@@ -422,7 +509,13 @@ def test_saga_content_opens_from_the_saga_page_with_its_chapters(app):
     page = window.sheet_area.findChild(SagaContentPage)
     assert page is not None
     assert window.crumb_names() == ["Sagas", saga.name, "Saga Content"]
-    assert page.chapters() == ["Books", "Catalogs", "House Rules", "Spells"]
+    assert page.chapters() == [
+        "Books",
+        "Catalogs",
+        "House Rules",
+        "Spells",
+        "Players",
+    ]
 
 
 def test_the_spells_filter_as_on_the_terminal_and_show_in_the_inspector(app):
@@ -474,3 +567,42 @@ def test_an_art_row_carries_its_score_and_experience():
     row = cs.art_row(character, "Creo")
     assert (row.abbreviation, row.score, row.xp) == ("Cr", "10", 55)
     assert (row.level_xp, row.next_xp, row.fraction) == (55, 66, 0.0)
+
+
+def test_adding_editing_and_deleting_a_personality_trait(app):
+    saga = _sample_saga_with_covenant()
+    storage.save_saga(saga)
+    window = MainWindow(saga_ids=[saga.id])
+    assert window.saga is not None
+    character = window.saga.characters[0]
+    character.personality_traits = []
+    window.show_character(character.id)
+    sheet = window.page()
+    assert isinstance(sheet, CharacterSheet)
+    sheet.open_chapter("Description")
+    asked = answering(window, {"name": "Brave", "score": "2"})
+    controls = section_buttons(sheet, "Personality Traits")
+    assert not controls["Edit"].isEnabled()
+    controls["Add"].click()
+    assert asked[0].windowTitle() == "Add a Personality Trait"
+    saved = storage.load_saga(saga.id).characters[0]
+    assert [(t.name, t.score) for t in saved.personality_traits] == [("Brave", 2)]
+    # One row: Edit acts on it without choosing.
+    page = window.page()
+    assert isinstance(page, CharacterSheet)
+    answering(window, {"score": "3"})
+    section_buttons(page, "Personality Traits")["Edit"].click()
+    saved = storage.load_saga(saga.id).characters[0]
+    assert [(t.name, t.score) for t in saved.personality_traits] == [("Brave", 3)]
+    page = window.page()
+    assert isinstance(page, CharacterSheet)
+    asked = answering(window, False, True)
+    controls = section_buttons(page, "Personality Traits")
+    controls["Delete"].click()
+    assert storage.load_saga(saga.id).characters[0].personality_traits
+    page = window.page()
+    assert isinstance(page, CharacterSheet)
+    section_buttons(page, "Personality Traits")["Delete"].click()
+    assert isinstance(asked[0], ConfirmDialog)
+    assert asked[0].question == "Delete Brave?"
+    assert not storage.load_saga(saga.id).characters[0].personality_traits

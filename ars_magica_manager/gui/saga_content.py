@@ -1,11 +1,12 @@
-"""The desktop Saga Content page, read-only, in the Codex layout: what the
-saga's pickers offer. Chapters for the books in play and the saga's own
-sources, the shared catalogs and the single entries it hides, its House
-Rules, every spell (sorted and filtered as on the terminal) and its
-players, with the inspector beside them.
+"""The desktop Saga Content page in the Codex layout: what the saga's
+pickers offer. Chapters for the books in play and the saga's own sources,
+the shared catalogs and the single entries it hides, its House Rules,
+every spell (sorted and filtered as on the terminal) and its players,
+with the inspector beside them, and each section's Add, Edit and Delete.
 
 What it says comes from the shared core (saga_content_sheet.py and the
-modules behind it), as the terminal's Saga Content view does.
+modules behind it), and what its buttons do from saga_content_forms.py,
+as the terminal's Saga Content view does.
 """
 
 from __future__ import annotations
@@ -31,12 +32,14 @@ from .. import artwork
 from .. import house_rules as hr
 from .. import players as pl
 from .. import saga_content as sc
+from .. import saga_content_forms as scf
 from .. import saga_content_sheet as scs
 from .. import spells as spl
 from ..arts import FORMS, TECHNIQUES
-from ..models import Saga
+from ..models import Saga, Spell
 from . import pictures
 from .character_sheet import section
+from .editing import Chooser, Run, choose_cards, choose_rows, verb_buttons
 from .figures import fact_grid
 from .pages import card_grid, page_header
 from .themes import Palette
@@ -47,7 +50,6 @@ from .widgets import (
     Codex,
     badge,
     cells_table,
-    chapter_title,
     chip,
     scrolling_page,
     serif,
@@ -81,9 +83,12 @@ class SagaContentPage(QWidget):
     """The saga's content in the Codex layout; choosing anything shows it
     in the inspector."""
 
-    def __init__(self, saga: Saga, p: Palette) -> None:
+    def __init__(
+        self, saga: Saga, p: Palette, run: Run = lambda _command: None
+    ) -> None:
         super().__init__()
         self.saga, self.p = saga, p
+        self.run = run
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
@@ -108,8 +113,6 @@ class SagaContentPage(QWidget):
             "Players": self._players,
         }
         for name, concept in CHAPTERS:
-            if name == "Players" and not saga.players:
-                continue
             self.codex.add(name, concept, builders[name]())
         outer.addWidget(self.codex, 1)
 
@@ -151,6 +154,7 @@ class SagaContentPage(QWidget):
             )
             cards.append(card)
         in_play = sum(1 for c in scs.book_cards(saga) if c.state != scs.OUT_OF_PLAY)
+        sources_chooser = Chooser()
         sources = scs.sources_table(saga)
         self.sources = cells_table(
             sources.columns,
@@ -162,14 +166,22 @@ class SagaContentPage(QWidget):
                 sc.source_detail(saga, saga.sources[row]),
             ),
         )
+        choose_rows(self.sources, sources_chooser)
         return scrolling_page(
             p,
-            chapter_title(f"Books in Play ({in_play} of {len(cards)})", p),
-            card_grid(cards, 3),
+            section(
+                f"Books in Play ({in_play} of {len(cards)})",
+                p,
+                card_grid(cards, 3),
+                edits={"Edit": lambda: self.run(scf.books_form(saga))},
+            ),
             section(
                 f"Saga Sources ({len(saga.sources)})",
                 p,
                 self.sources if saga.sources else _none("None yet.", p),
+                buttons=verb_buttons(
+                    scf.source_ops(saga), sources_chooser, self.run, p
+                ),
             ),
         )
 
@@ -187,7 +199,10 @@ class SagaContentPage(QWidget):
                 sc.catalog_detail(saga, keys[row]),
             ),
         )
+        catalogs_chooser = Chooser()
+        choose_rows(self.catalogs, catalogs_chooser)
         hidden = sc.hidden_entries(saga)
+        hidden_chooser = Chooser()
         table = scs.hidden_table(saga)
         hidden_view = cells_table(
             table.columns,
@@ -199,13 +214,36 @@ class SagaContentPage(QWidget):
                 sc.hidden_detail(hidden[row]),
             ),
         )
+        choose_rows(hidden_view, hidden_chooser)
+
+        def chosen_key() -> str | None:
+            row = hidden_chooser.row(len(hidden))
+            if row is not None:
+                return hidden[row][0]
+            row = catalogs_chooser.row(len(keys))
+            return keys[row] if row is not None else None
+
         return scrolling_page(
             p,
-            section(f"Catalogs ({len(keys)})", p, self.catalogs),
+            section(
+                f"Catalogs ({len(keys)})",
+                p,
+                self.catalogs,
+                buttons=verb_buttons(
+                    scf.catalog_ops(saga), catalogs_chooser, self.run, p
+                ),
+            ),
             section(
                 f"Hidden Entries ({len(hidden)})",
                 p,
                 hidden_view if hidden else _none("The saga hides none.", p),
+                buttons=verb_buttons(
+                    scf.hidden_ops(saga, chosen_key),
+                    hidden_chooser,
+                    self.run,
+                    p,
+                    nouns=("Hide", "Edit", "Offer again"),
+                ),
             ),
         )
 
@@ -235,10 +273,16 @@ class SagaContentPage(QWidget):
                 hr.detail_text(saga, entries[rule.index]),
             )
             cards.append(card)
+        chooser = Chooser()
+        choose_cards(cards, chooser)
         return scrolling_page(
             p,
-            chapter_title(f"House Rules ({len(cards)})", p),
-            card_grid(cards, 2) if cards else _none("None yet.", p),
+            section(
+                f"House Rules ({len(cards)})",
+                p,
+                card_grid(cards, 2) if cards else _none("None yet.", p),
+                buttons=verb_buttons(scf.house_rule_ops(saga), chooser, self.run, p),
+            ),
         )
 
     def _spells(self) -> QWidget:
@@ -249,7 +293,14 @@ class SagaContentPage(QWidget):
         box = QWidget()
         column = QVBoxLayout(box)
         column.setContentsMargins(18, 4, 18, 12)
-        heading = chapter_title("Spells", p)
+        self.spell_chooser = Chooser()
+        self.spell_ops = scf.spell_ops(self.saga, lambda: self.shown_spells)
+        self.shown_spells: list[Spell] = []
+        heading = section(
+            "Spells",
+            p,
+            buttons=verb_buttons(self.spell_ops, self.spell_chooser, self.run, p),
+        )
         self.spell_title = heading.findChild(QLabel)
         column.addWidget(heading)
 
@@ -277,6 +328,7 @@ class SagaContentPage(QWidget):
         table_style(view, p)
         view.selectionModel().currentRowChanged.connect(self._show_spell)
         self.spell_view = view
+        choose_rows(view, self.spell_chooser)
         column.addWidget(view, 1)
 
         self.spell_search.textChanged.connect(self.refilter)
@@ -355,6 +407,7 @@ class SagaContentPage(QWidget):
         )
         model = self.spell_model
         model.removeRows(0, model.rowCount())
+        self.spell_chooser.choose(None)
         for index, row in enumerate(scs.spell_rows(saga, self.shown_spells)):
             name = _cell(row.name, row.name.lower(), font=serif(12.5))
             name.setData(index, Qt.ItemDataRole.UserRole)
@@ -398,6 +451,7 @@ class SagaContentPage(QWidget):
 
     def _players(self) -> QWidget:
         p, saga = self.p, self.saga
+        chooser = Chooser()
         players = scs.players_table(saga)
         self.players = cells_table(
             players.columns,
@@ -409,6 +463,7 @@ class SagaContentPage(QWidget):
                 pl.detail_text(saga, saga.players[row]),
             ),
         )
+        choose_rows(self.players, chooser)
         note = Card(p, pad=10)
         note.column.addWidget(
             text(
@@ -419,7 +474,14 @@ class SagaContentPage(QWidget):
             )
         )
         return scrolling_page(
-            p, section(f"Players ({len(saga.players)})", p, self.players), note
+            p,
+            section(
+                f"Players ({len(saga.players)})",
+                p,
+                self.players if saga.players else _none("None yet.", p),
+                buttons=verb_buttons(scf.player_ops(saga), chooser, self.run, p),
+            ),
+            note,
         )
 
 

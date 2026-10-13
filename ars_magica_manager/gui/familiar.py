@@ -1,19 +1,24 @@
-"""The desktop familiar page, read-only, in the Codex layout: a header
+"""The desktop familiar page in the Codex layout: a header
 with the name, whose familiar it is, its Size, Soak and Magic Resistance
 and its Magic Might as a seal, over its Characteristics; then chapters
 for its bond and Cords (each in its metal), Virtues and Flaws, combat and health, Abilities
 and Bond Powers, with the inspector beside them.
 
 What it says comes from the shared core (familiar_sheet.py and
-familiars.py), as the terminal's familiar sheet does.
+familiars.py), as the terminal's familiar sheet does, and its Edit, Add
+and Delete buttons run the core's forms (familiar_forms.py and
+trait_forms.py).
 """
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
-from .. import artwork
+from .. import artwork, virtue_forms
+from .. import familiar_forms as ff
 from .. import familiar_sheet as fs
 from .. import familiars as fam
 from .. import sheet_text as st
@@ -23,14 +28,15 @@ from .character_sheet import (
     characteristic_cards,
     section,
     side_by_side,
+    trait_section,
     vf_card,
 )
+from .editing import Chooser, Run, choose_cards, verb_buttons
 from .figures import (
     CordFigure,
     Seal,
     fact_grid,
     fatigue_ladder,
-    trait_list,
     wound_track,
 )
 from .pages import card_grid, card_title, symbol_label
@@ -41,8 +47,8 @@ from .widgets import (
     Codex,
     badge,
     cells_table,
-    chapter_title,
     display_name,
+    edit_button,
     mix,
     scrolling_page,
     serif,
@@ -66,9 +72,17 @@ class FamiliarPage(QWidget):
     """A familiar in the Codex layout; choosing anything shows it in the
     inspector."""
 
-    def __init__(self, saga: Saga, familiar: Familiar, p: Palette) -> None:
+    def __init__(
+        self,
+        saga: Saga,
+        familiar: Familiar,
+        p: Palette,
+        run: Run = lambda _command: None,
+    ) -> None:
         super().__init__()
         self.saga, self.familiar, self.p = saga, familiar, p
+        self.run = run
+        self.edits = ff.edits(familiar)
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
@@ -92,6 +106,16 @@ class FamiliarPage(QWidget):
 
     def inspect(self, title: str, subtitle: str, markup: str, symbol=None) -> None:
         self.codex.inspect(title, subtitle, markup, symbol)
+
+    def _edit(self, *names: str, label: str = "Edit") -> dict[str, Callable[[], None]]:
+        """Edit buttons for the forms `names`: one called `label`, or one
+        per form named for it."""
+        return {
+            (label if len(names) == 1 else name): (
+                lambda form=self.edits[name]: self.run(form)
+            )
+            for name in names
+        }
 
     # Above the chapters
 
@@ -124,6 +148,17 @@ class FamiliarPage(QWidget):
                 p,
             )
         )
+        buttons = QVBoxLayout()
+        buttons.setSpacing(4)
+        for words, form in (
+            ("Edit", self.edits["Familiar"]),
+            ("Characteristics", self.edits["Characteristics"]),
+        ):
+            button = edit_button(words, p, lambda form=form: self.run(form))
+            button.setToolTip(form.title)
+            buttons.addWidget(button)
+        buttons.addStretch(1)
+        row.addLayout(buttons)
         return box
 
     # Chapters
@@ -154,19 +189,30 @@ class FamiliarPage(QWidget):
                 text(f"{cord.cost} points", p["dim"], serif(10, caps=True))
             )
             cords.append(card)
-        traits = [(t.name, t.score) for t in f.personality_traits]
-        reputations = [(t.name, t.score) for t in f.reputations]
         return scrolling_page(
             p,
-            section("The Bond", p, fact_grid(fs.binding_facts(f), p, 4)),
+            section(
+                "The Bond",
+                p,
+                fact_grid(fs.binding_facts(f), p, 4),
+                edits=self._edit("Binding & Cords"),
+            ),
             section("Cords", p, card_grid(cords, 3)),
-            side_by_side(
-                section(
-                    f"Personality Traits ({len(traits)})", p, trait_list(traits, p)
-                ),
-                section(
-                    f"Reputations ({len(reputations)})", p, trait_list(reputations, p)
-                ),
+            # One above the other: side by side, their buttons would make
+            # the chapter wider than the space beside the inspector.
+            trait_section(
+                "Personality Traits",
+                f.personality_traits,
+                "section-fam-personality-traits",
+                p,
+                self.run,
+            ),
+            trait_section(
+                "Reputations",
+                f.reputations,
+                "section-fam-reputations",
+                p,
+                self.run,
             ),
         )
 
@@ -179,20 +225,34 @@ class FamiliarPage(QWidget):
             stack.setContentsMargins(0, 0, 0, 0)
             stack.setSpacing(10)
             points = fs.vf_points(f, side)
-            stack.addWidget(chapter_title(f"{side}s  ·  {points:g} points", p))
-            for card in fs.vf_cards(f, side):
-                stack.addWidget(
-                    vf_card(
-                        card,
-                        p[tone],
-                        p,
-                        lambda card=card: self.inspect(
-                            card.name,
-                            f"{card.tier}  ·  {card.category}",
-                            fam.vf_info_text(f, card.index),
-                        ),
-                    )
+            chooser = Chooser()
+            cards = [
+                vf_card(
+                    card,
+                    p[tone],
+                    p,
+                    lambda card=card: self.inspect(
+                        card.name,
+                        f"{card.tier}  ·  {card.category}",
+                        fam.vf_info_text(f, card.index),
+                    ),
                 )
+                for card in fs.vf_cards(f, side)
+            ]
+            choose_cards(cards, chooser)
+            stack.addWidget(
+                section(
+                    f"{side}s  ·  {points:g} points",
+                    p,
+                    *cards,
+                    buttons=verb_buttons(
+                        virtue_forms.virtue_flaw_ops(self.saga, f, side),
+                        chooser,
+                        self.run,
+                        p,
+                    ),
+                )
+            )
             stack.addStretch(1)
             columns.append(column)
         return scrolling_page(p, side_by_side(*columns, spacing=18))
@@ -202,16 +262,17 @@ class FamiliarPage(QWidget):
         its natural weapons."""
         p, f = self.p, self.familiar
         weapons = fs.natural_weapons(f)
-        self.weapons = cells_table(
-            weapons.columns,
-            weapons.rows,
-            p,
-            lambda row: self.inspect(
+        chooser = Chooser()
+
+        def choose(row: int) -> None:
+            chooser.choose(row)
+            self.inspect(
                 weapons.rows[row][0],
                 "Natural Weapon",
                 fam.natural_weapon_info_text(f, row),
-            ),
-        )
+            )
+
+        self.weapons = cells_table(weapons.columns, weapons.rows, p, choose)
         return scrolling_page(
             p,
             section(
@@ -221,19 +282,23 @@ class FamiliarPage(QWidget):
                 text("Fatigue", p["heading"], serif(12, italic=True)),
                 fatigue_ladder(fs.fatigue_track(f), p),
                 fact_grid(fs.health_facts(f), p, 4),
+                edits=self._edit("Wounds", "Fatigue"),
             ),
             section(
                 f"Natural Weapons & Attacks ({len(f.natural_weapons)})",
                 p,
                 self.weapons if f.natural_weapons else _none("None recorded.", p),
+                buttons=verb_buttons(ff.natural_weapon_ops(f), chooser, self.run, p),
             ),
         )
 
     def _abilities(self) -> QWidget:
         p, f = self.p, self.familiar
+        chooser = Chooser()
 
         def show(index: object) -> None:
             assert isinstance(index, int)
+            chooser.choose(index)
             ability = f.abilities[index]
             specialty = f"  ·  {ability.specialty}" if ability.specialty else ""
             self.inspect(
@@ -245,13 +310,19 @@ class FamiliarPage(QWidget):
         self.ability_table = ability_view(fs.ability_table(f), p, show)
         return scrolling_page(
             p,
-            chapter_title(f"Abilities ({len(f.abilities)})", p),
-            text(
-                "Shares its magus's Language scores.",
-                p["label"],
-                serif(12, italic=True),
+            section(
+                f"Abilities ({len(f.abilities)})",
+                p,
+                text(
+                    "Shares its magus's Language scores.",
+                    p["label"],
+                    serif(12, italic=True),
+                ),
+                self.ability_table,
+                buttons=verb_buttons(
+                    ff.ability_ops(self.saga, f), chooser, self.run, p
+                ),
             ),
-            self.ability_table,
         )
 
     def _powers(self) -> QWidget:
@@ -293,8 +364,14 @@ class FamiliarPage(QWidget):
                 )
             )
             cards.append(card)
+        chooser = Chooser()
+        choose_cards(cards, chooser)
         return scrolling_page(
             p,
-            chapter_title(f"Bond Powers ({len(cards)})", p),
-            card_grid(cards, 2) if cards else _none("None yet.", p),
+            section(
+                f"Bond Powers ({len(cards)})",
+                p,
+                card_grid(cards, 2) if cards else _none("None yet.", p),
+                buttons=verb_buttons(ff.bond_power_ops(f), chooser, self.run, p),
+            ),
         )

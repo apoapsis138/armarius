@@ -20,6 +20,7 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import (
     QAbstractItemView,
+    QGridLayout,
     QHBoxLayout,
     QHeaderView,
     QLabel,
@@ -115,25 +116,37 @@ class SeasonDelegate(QStyledItemDelegate):
 
 
 def legend(p: Palette) -> QWidget:
-    """A key to the colours, and how a planned season looks."""
+    """A key to the colours, and how a planned season looks, four to a
+    line so it fits a narrow chapter."""
     box = QWidget()
-    row = QHBoxLayout(box)
-    row.setContentsMargins(0, 0, 0, 0)
-    row.setSpacing(14)
-    for kind in ov.KINDS:
+    grid = QGridLayout(box)
+    grid.setContentsMargins(0, 0, 0, 0)
+    grid.setHorizontalSpacing(14)
+    grid.setVerticalSpacing(4)
+    keys: list[tuple[str, str]] = [
+        (kind, f"background:{p[KIND_COLOURS[kind]]}; border-radius:4px")
+        for kind in ov.KINDS
+    ]
+    keys.append(
+        (
+            "Planned",
+            f"border:2px dashed {p['label']}; border-radius:4px;"
+            " background:transparent",
+        )
+    )
+    for index, (words, style) in enumerate(keys):
+        entry = QWidget()
+        row = QHBoxLayout(entry)
+        row.setContentsMargins(0, 0, 0, 0)
+        row.setSpacing(6)
         swatch = QLabel()
         swatch.setFixedSize(14, 14)
-        swatch.setStyleSheet(f"background:{p[KIND_COLOURS[kind]]}; border-radius:4px")
+        swatch.setStyleSheet(style)
         row.addWidget(swatch)
-        row.addWidget(text(kind, p["label"]))
-    planned = QLabel()
-    planned.setFixedSize(14, 14)
-    planned.setStyleSheet(
-        f"border:2px dashed {p['label']}; border-radius:4px; background:transparent"
-    )
-    row.addWidget(planned)
-    row.addWidget(text("Planned", p["label"]))
-    row.addStretch(1)
+        row.addWidget(text(words, p["label"]))
+        row.addStretch(1)
+        grid.addWidget(entry, index // 4, index % 4)
+    grid.setColumnStretch(4, 1)
     return box
 
 

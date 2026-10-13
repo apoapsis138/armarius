@@ -7,11 +7,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from .... import catalog, seasons
 from .... import laboratories as lab_text
+from .... import laboratory_forms as lf
+from .... import seasons
 from ....markup import escape
 from ....models import (
-    FEATURE_VIRTUE_POINTS,
     LAB_SPECIALIZATIONS,
     ArcaneConnection,
     Character,
@@ -22,10 +22,7 @@ from ....models import (
     LabSpecialtyEntry,
     NamedDescription,
     SeasonPlan,
-    VirtueFlawInstance,
     add_raw_vis,
-    assign_laboratory_owner,
-    new_instance_id,
     replace_raw_vis,
 )
 from ....rules import lab_seasons
@@ -102,13 +99,8 @@ class LaboratoryActions(WorkspaceBase):
         def handle_result(result: dict[str, Any] | None) -> None:
             if result is None:
                 return
-            lab.name = result["name"]
-            lab.location = result["location"]
-            lab.aura_modifier = result["aura_modifier"]
-            lab.sanctum_marked = result["sanctum_marked"]
-            lab.covenant_id = result["covenant_id"]
+            lf.apply_identity(self.saga, lab, result)
             self.selected_covenant = self.saga.covenant(lab.covenant_id)
-            assign_laboratory_owner(self.saga, lab, result["owner_id"])
             self._commit("section-lab-identity", tree=True)
 
         self.app.push_screen(
@@ -268,21 +260,13 @@ class LaboratoryActions(WorkspaceBase):
                 self._feature_details(lab, feature, feature_id, virtue_choice)
                 return
             vf_id = virtue_choice.removeprefix(NEW_FEATURE_VIRTUE)
-            points = FEATURE_VIRTUE_POINTS[vf_id]
-            free = lab_text.lab_free_virtues(
-                lab, catalog.load_lab_virtue_flaw_catalog_by_id()
-            )
 
             def handle_confirmed(confirmed: bool | None) -> None:
                 if confirmed:
                     self._feature_details(lab, feature, feature_id, virtue_choice)
 
             self.app.push_screen(
-                ConfirmScreen(
-                    f"Add a {lab_text.tier_word(vf_id)} Feature Virtue to the "
-                    f"lab ({points} {'point' if points == 1 else 'points'}; "
-                    f"Free Virtues {free:g} → {free - points:g})?"
-                ),
+                ConfirmScreen(lf.new_feature_virtue_question(lab, vf_id)),
                 handle_confirmed,
             )
 
@@ -299,11 +283,8 @@ class LaboratoryActions(WorkspaceBase):
         Focus, for a `feature_id` Feature (None: Custom) on the Virtue
         `virtue_choice` (an instance id, or NEW_FEATURE_VIRTUE + a catalog
         id to add one with it); saving adds or updates the Feature."""
-        new_virtue: VirtueFlawInstance | None = None
         if virtue_choice.startswith(NEW_FEATURE_VIRTUE):
-            vf_id = virtue_choice.removeprefix(NEW_FEATURE_VIRTUE)
-            new_virtue = VirtueFlawInstance(vf_id, id=new_instance_id())
-            virtue_vf_id = vf_id
+            virtue_vf_id = virtue_choice.removeprefix(NEW_FEATURE_VIRTUE)
         else:
             virtue_vf_id = next(
                 vf.vf_id for vf in lab.virtues_flaws if vf.id == virtue_choice
@@ -312,19 +293,7 @@ class LaboratoryActions(WorkspaceBase):
         def handle_result(values: dict[str, Any] | None) -> None:
             if values is None:
                 return
-            counted = lab_text.counted_specializations(lab)
-            if new_virtue is not None:
-                lab.virtues_flaws.append(new_virtue)
-            target = feature or LabFeature(id=new_instance_id(), name="")
-            target.name = values["name"]
-            target.feature_id = feature_id
-            target.virtue_id = new_virtue.id if new_virtue else virtue_choice
-            target.allocations = values["allocations"]
-            target.focus = values["focus"]
-            target.focus_allocations = values["focus_allocations"]
-            if feature is None:
-                lab.features.append(target)
-            lab_text.reconcile_dropped(lab, counted)
+            lf.save_feature(lab, feature, feature_id, virtue_choice, values)
             self._commit(*LAB_FEATURE_SECTIONS)
 
         self.app.push_screen(

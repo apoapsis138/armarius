@@ -201,6 +201,30 @@ def style_sheet(p: Palette, serif: str) -> str:
         border: 1px solid {p["rule"]};
         padding: 3px 6px;
     }}
+    QLineEdit, QPlainTextEdit {{
+        background: {p["surface"]};
+        border: 1px solid {p["rule"]};
+        border-radius: 3px;
+        padding: 3px 6px;
+        selection-background-color: {p["selection"]};
+        selection-color: {p["foreground"]};
+    }}
+    QLineEdit:focus, QPlainTextEdit:focus, QComboBox:focus {{
+        border: 1px solid {p["accent"]};
+    }}
+    QPushButton#edit, QDialog QPushButton {{
+        font-family: "{serif}";
+        font-size: 12pt;
+        color: {p["heading"]};
+        background: {p["surface"]};
+        border: 1px solid {p["rule"]};
+        border-radius: 4px;
+        padding: 3px 14px;
+    }}
+    QPushButton#edit:hover, QDialog QPushButton:hover {{
+        border: 1px solid {p["accent"]};
+    }}
+    QDialog QPushButton:default {{ border: 1px solid {p["heading"]}; }}
     QScrollArea {{ border: none; }}
     QScrollBar:vertical {{ background: transparent; width: 10px; }}
     QScrollBar::handle:vertical {{ background: {p["rule"]}; min-height: 24px; }}

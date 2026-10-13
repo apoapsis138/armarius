@@ -31,6 +31,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QListWidget,
     QListWidgetItem,
+    QPushButton,
     QScrollArea,
     QSplitter,
     QStackedWidget,
@@ -98,6 +99,30 @@ def chapter_title(words: str, p: Palette) -> QWidget:
     column.addWidget(text(words, p["foreground"], serif(15, caps=True, bold=True)))
     column.addWidget(FleuronRule(p))
     return box
+
+
+#: The section button pressed last, so the window can open the steps it
+#: starts in place, beside it (see editing.place_for).
+_pressed: list[QPushButton] = []
+
+
+def edit_button(
+    words: str, p: Palette, on_click: Callable[[], None], concept: str = "edit"
+) -> QPushButton:
+    """A section's button (Edit, Add, Delete...), with its verb's icon."""
+    button = QPushButton(pictures.icon(concept, p["heading"], 16), f" {words}")
+    button.setObjectName("edit")
+    button.setCursor(Qt.CursorShape.PointingHandCursor)
+    button.pressed.connect(lambda: _pressed.__setitem__(slice(None), [button]))
+    button.clicked.connect(lambda _checked=False: on_click())
+    return button
+
+
+def take_pressed() -> QPushButton | None:
+    """The section button pressed last, forgotten once taken."""
+    button = _pressed[0] if _pressed else None
+    _pressed.clear()
+    return button
 
 
 def display_name(name: str, p: Palette, size: int = 34) -> QLabel:
@@ -351,6 +376,20 @@ class ClickableCard(Card):
     def mousePressEvent(self, event) -> None:
         self.clicked()
         super().mousePressEvent(event)
+
+    def set_chosen(self, chosen: bool) -> None:
+        """Outline the card as the row its section's Edit and Delete act
+        on."""
+        self.chosen = chosen
+        self.update()
+
+    def paintEvent(self, event) -> None:
+        super().paintEvent(event)
+        if getattr(self, "chosen", False):
+            painter = QPainter(self)
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+            painter.setPen(QPen(QColor(self.p["heading"]), 2))
+            painter.drawRoundedRect(QRectF(self.rect()).adjusted(1, 1, -1, -1), 6, 6)
 
 
 class Codex(QSplitter):

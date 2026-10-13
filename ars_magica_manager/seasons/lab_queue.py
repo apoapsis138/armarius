@@ -190,9 +190,12 @@ def lab_queue_rows(saga: Saga, lab: Laboratory) -> list[tuple[int, str]]:
     return rows
 
 
-def lab_queue_info(saga: Saga, lab: Laboratory, index: int | None) -> str:
+def lab_queue_info(
+    saga: Saga, lab: Laboratory, index: int | None, *, plan_hint: str = "Press e"
+) -> str:
     """The Planning tab's details panel: the chosen season's plan and its
-    Lab Total, line by line."""
+    Lab Total, line by line. `plan_hint` says how to plan a free season
+    ("Press e" on the terminal, "Click Plan" on the desktop)."""
     if index is None:
         return (
             "[dim]Select an activity to see its plan and Lab Total; e plans a "
@@ -207,7 +210,7 @@ def lab_queue_info(saga: Saga, lab: Laboratory, index: int | None) -> str:
     if owner is None:
         return head + "\n[dim]Give the laboratory an owner to plan its seasons.[/]"
     if row.plan is None:
-        return head + "\n[dim]Nothing planned. Press e to plan lab work.[/]"
+        return head + f"\n[dim]Nothing planned. {plan_hint} to plan lab work.[/]"
     lines = [head, f"[b]{escape(plan_summary(saga, owner, row.plan))}[/]"]
     if not row.plan.lab_id:
         lines.append(
