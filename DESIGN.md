@@ -53,7 +53,9 @@ realm lore) are deferred until there's a reason to pull them in.
 - **A shared core, front-ends on top.** The rules, models, seasons and
   storage never import a UI library; nor do `form_spec.py` (what a form
   asks for and how its entries are checked), `actions.py` (what can be done
-  in each sheet section and the More / New menus, and where) and
+  in each sheet section and the More / New menus, and where),
+  `tables.py` (a list as columns and cells, which the desktop draws as a
+  table while the terminal pads the same values into lines) and
   `sections.py` (the section ids both refer to). The front-ends are the
   two sub-packages around that core (Ports and Adapters): `tui/` is the
   Textual front-end (the app, its screens, themes and CSS, and the hosting

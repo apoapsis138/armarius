@@ -20,6 +20,7 @@ from ..models import (
 )
 from ..rules import activities as rules
 from ..rules.rounding import round_away_from_zero, round_down
+from ..tables import Table
 from .plans import is_departed, plan_for, plan_summary, plan_text
 
 DWINDLING_SOURCE = (
@@ -230,15 +231,14 @@ def season_title(saga: Saga, covenant: Covenant, kind: str, title: str) -> str:
     return f"{title} ({planned} of {len(people)} planned)"
 
 
-def season_rows(saga: Saga, covenant: Covenant, kind: str) -> list[tuple[int, str]]:
-    """(index, row) per person: their name and what they have planned for
-    the current season ("Practice: Latin"), or that nothing is."""
-    rows: list[tuple[int, str]] = []
-    for index, character in enumerate(covenant_people(saga, covenant, kind)):
+def _season_cells(saga: Saga, covenant: Covenant, kind: str) -> list[tuple[str, str]]:
+    """Each person's name and what they have planned for the current
+    season ("Practice: Latin"), or that nothing is (markup)."""
+    cells = []
+    for character in covenant_people(saga, covenant, kind):
         name = character.name + (
             " (Mythic)" if character.type == "mythic companion" else ""
         )
-        name = escape(fit(name, _NAME_WIDTH).ljust(_NAME_WIDTH))
         if not rules.is_planned(character):
             what = "[dim]updated yearly[/]"
         else:
@@ -248,8 +248,27 @@ def season_rows(saga: Saga, covenant: Covenant, kind: str) -> list[tuple[int, st
                 if plan is not None
                 else todo("nothing planned")
             )
-        rows.append((index, f"{name}  {what}"))
-    return rows
+        cells.append((name, what))
+    return cells
+
+
+def season_rows(saga: Saga, covenant: Covenant, kind: str) -> list[tuple[int, str]]:
+    """(index, row) per person: their name and what they have planned for
+    the current season ("Practice: Latin"), or that nothing is."""
+    return [
+        (index, f"{escape(fit(name, _NAME_WIDTH).ljust(_NAME_WIDTH))}  {what}")
+        for index, (name, what) in enumerate(_season_cells(saga, covenant, kind))
+    ]
+
+
+def season_table(saga: Saga, covenant: Covenant, kind: str) -> Table:
+    """season_rows as a table (markup): each person and their season."""
+    return Table(
+        ["Name", "This season"],
+        [[escape(name), what] for name, what in _season_cells(saga, covenant, kind)],
+        markup=True,
+        stretch=1,
+    )
 
 
 def season_info_text(saga: Saga, character: Character | None) -> str:

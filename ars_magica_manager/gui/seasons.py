@@ -3,8 +3,8 @@ Seasons node lists them, and the results of the season just advanced.
 
 It is a Codex: the rail lists the seasons, newest first (the season just
 played out first of all, even when the saga keeps no records); the
-chapter shows the chosen season's record (seasons.record_text), grouped
-by covenant, one line a person.
+chapter shows the chosen season's record (seasons.record_table), grouped
+by covenant, a row a person.
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ from ..models import Saga, SeasonRecord
 from .character_sheet import TextBlock
 from .pages import page_header
 from .themes import Palette
-from .widgets import Codex, scrolling_page, serif, text
+from .widgets import Codex, scrolling_page, serif, table_view, text
 
 #: The chapter of the season just played out.
 RESULTS = "Just played"
@@ -82,7 +82,17 @@ class SeasonsPage(QWidget):
         parts: list[QWidget] = []
         if message:
             parts.append(TextBlock(message, p))
-        parts.append(TextBlock(seasons.record_text(self.saga, record), p, pre=True))
+        parts.append(
+            text(f"{record.season} {record.year}", p["heading"], serif(15, bold=True))
+        )
+        if record.lines:
+            parts.append(
+                table_view(seasons.record_table(self.saga, record), p, lambda _: None)
+            )
+        else:
+            parts.append(
+                TextBlock("[dim]Nobody's season was planned or applied.[/]", p)
+            )
         if results:
             parts.append(
                 TextBlock(f"[dim]{advance_forms.records_note(self.saga)}[/]", p)

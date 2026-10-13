@@ -31,6 +31,7 @@ from ..rules import enchant_seasons as es
 from ..rules import familiar_seasons as fs
 from ..rules import lab_seasons
 from ..rules import laboratory_seasons as ls
+from ..tables import Table
 from .plans import plan_for, plan_summary, set_plan, work_text
 
 #: How many seasons the laboratory's Planning tab shows, the current first.
@@ -167,13 +168,11 @@ def _progress(work: lab_seasons.LabWork, plan: SeasonPlan) -> str:
     return f"{work.points_after}/{work.level} points"
 
 
-def lab_queue_rows(saga: Saga, lab: Laboratory) -> list[tuple[int, str]]:
-    """The laboratory Planning tab's rows: each coming season and what its
-    owner has planned."""
+def _queue_cells(saga: Saga, lab: Laboratory) -> list[tuple[str, str]]:
+    """Each coming season's span and what its owner has planned (markup)."""
     owner = saga.character(lab.owner_id)
-    rows: list[tuple[int, str]] = []
-    for index, row in enumerate(lab_queue(saga, lab)):
-        when = row.span.ljust(27)
+    cells = []
+    for row in lab_queue(saga, lab):
         if owner is None:
             what = "[dim]no owner[/]"
         elif row.plan is None:
@@ -186,8 +185,27 @@ def lab_queue_rows(saga: Saga, lab: Laboratory) -> list[tuple[int, str]]:
                 what += f"  {problem("can't be done (see below)")}"
             elif row.work is not None:
                 what += f"  [dim]{escape(_progress(row.work, row.plan))}[/]"
-        rows.append((index, f"{when}{what}"))
-    return rows
+        cells.append((row.span, what))
+    return cells
+
+
+def lab_queue_rows(saga: Saga, lab: Laboratory) -> list[tuple[int, str]]:
+    """The laboratory Planning tab's rows: each coming season and what its
+    owner has planned."""
+    return [
+        (index, f"{when.ljust(27)}{what}")
+        for index, (when, what) in enumerate(_queue_cells(saga, lab))
+    ]
+
+
+def lab_queue_table(saga: Saga, lab: Laboratory) -> Table:
+    """lab_queue_rows as a table (markup): the seasons, and the plan."""
+    return Table(
+        ["Seasons", "Plan"],
+        [[escape(when), what] for when, what in _queue_cells(saga, lab)],
+        markup=True,
+        stretch=1,
+    )
 
 
 def lab_queue_info(

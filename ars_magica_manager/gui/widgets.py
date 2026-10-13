@@ -47,8 +47,9 @@ from PySide6.QtWidgets import (
 
 from .. import artwork
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
+from ..tables import Table
 from . import pictures
-from .markup_html import to_html
+from .markup_html import cell_style, to_html
 from .ornaments import FleuronRule, Tailpiece, corner_flourishes
 from .paper import lift, translucent
 from .themes import Palette
@@ -527,33 +528,76 @@ def cells_table(
     p: Palette,
     on_choose: Callable[[int], None],
 ) -> QTableView:
-    """Rows of plain cells under their column titles, every row shown (the
-    chapter scrolls, not the table); choosing a row calls `on_choose` with
-    its index. The first column stretches; a column of numbers is centred."""
+    """Rows of plain cells under their column titles (see table_view)."""
+    return table_view(Table(columns, rows), p, on_choose)
+
+
+def _numeric(words: str) -> bool:
+    return words.lstrip("+-").isdigit() or words in ("", "-")
+
+
+def _table_model(table: Table, p: Palette) -> QStandardItemModel:
+    """table_view's cells: each in its markup's style, the numbers
+    centred, the headings on the panel colour."""
+    columns, rows = table.columns, table.rows
+
+    def words(cell: str) -> tuple[str, str | None, bool, bool]:
+        return cell_style(cell, p) if table.markup else (cell, None, False, False)
+
+    def cell_of(row: list[str], c: int) -> str:
+        return row[c] if c < len(row) else ""
+
+    body = [row for r, row in enumerate(rows) if table.key(r) is not None]
+    numeric = [
+        bool(body) and all(_numeric(words(cell_of(row, c))[0]) for row in body)
+        for c in range(len(columns))
+    ]
     model = QStandardItemModel(len(rows), len(columns))
     for c, title in enumerate(columns):
         head = QStandardItem(title)
-        if c == 0:
+        if not numeric[c]:
             head.setTextAlignment(
                 Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
             )
         model.setHorizontalHeaderItem(c, head)
-    numeric = [
-        bool(rows)
-        and all(row[c].lstrip("+-").isdigit() or row[c] in ("", "-") for row in rows)
-        for c in range(len(columns))
-    ]
     for r, row in enumerate(rows):
-        for c, words in enumerate(row):
-            cell = QStandardItem(words)
+        heading = table.key(r) is None
+        for c in range(len(columns)):
+            shown, colour, bold, italic = words(cell_of(row, c))
+            cell = QStandardItem(shown)
             cell.setEditable(False)
-            if numeric[c]:
+            font = serif(12.5) if c == 0 else cell.font()
+            font.setBold(bold or heading)
+            font.setItalic(italic)
+            cell.setFont(font)
+            if colour is not None:
+                cell.setForeground(QBrush(QColor(colour)))
+            if heading:
+                cell.setFlags(Qt.ItemFlag.ItemIsEnabled)
+                cell.setBackground(QBrush(QColor(p["panel"])))
+                cell.setForeground(QBrush(QColor(colour or p["heading"])))
+            elif numeric[c]:
                 cell.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-            if c == 0:
-                cell.setFont(serif(12.5))
             model.setItem(r, c, cell)
+    return model
+
+
+def table_view(
+    table: Table, p: Palette, on_choose: Callable[[int], None]
+) -> QTableView:
+    """The core's table, every row shown (the chapter scrolls, not the
+    table); choosing a row calls `on_choose` with its key. The first
+    column is set in the serif and the table's `stretch` column takes the
+    spare room; a column of numbers is centred, the others start at the
+    left. A markup cell takes its tags' colour, bold and italics; a
+    heading row is bold on the panel colour, its first cell across the row
+    when it has no others, and can't be chosen."""
+    rows = table.rows
     view = QTableView()
-    view.setModel(model)
+    view.setModel(_table_model(table, p))
+    for r, row in enumerate(rows):
+        if table.key(r) is None and not any(row[1:]):
+            view.setSpan(r, 0, 1, len(table.columns))
     view.verticalHeader().hide()
     view.verticalHeader().setDefaultSectionSize(ROW_HEIGHT)
     view.setShowGrid(False)
@@ -563,7 +607,7 @@ def cells_table(
     view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
     header = view.horizontalHeader()
     header.setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
-    header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+    header.setSectionResizeMode(table.stretch, QHeaderView.ResizeMode.Stretch)
     table_style(view, p)
     view.setFixedHeight(
         max(len(rows), 1) * ROW_HEIGHT
@@ -572,9 +616,13 @@ def cells_table(
         + 2
     )
     view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-    view.selectionModel().currentRowChanged.connect(
-        lambda current, _previous: on_choose(current.row())
-    )
+
+    def chosen(current: QModelIndex, _previous: QModelIndex) -> None:
+        key = table.key(current.row()) if current.isValid() else None
+        if key is not None:
+            on_choose(key)
+
+    view.selectionModel().currentRowChanged.connect(chosen)
     return view
 
 

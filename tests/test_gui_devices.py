@@ -13,7 +13,7 @@ pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from gui_steps import answering, list_add, section_buttons
-from PySide6.QtWidgets import QApplication, QListWidget
+from PySide6.QtWidgets import QApplication, QTableView
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import storage
@@ -46,9 +46,9 @@ def _choose(window: MainWindow, row: int) -> None:
     holder = next(iter(buttons.values())).parentWidget()
     section = holder.parentWidget() if holder is not None else None
     assert section is not None
-    view = section.findChild(QListWidget)
+    view = section.findChild(QTableView)
     assert view is not None
-    view.setCurrentRow(row)
+    view.selectRow(row)
 
 
 def test_a_magus_adds_a_device_with_a_component_then_instills_an_effect(app):

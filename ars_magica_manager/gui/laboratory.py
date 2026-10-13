@@ -48,7 +48,6 @@ from .character_sheet import (
     TextBlock,
     columns_text,
     device_section,
-    row_list,
     section,
     side_by_side,
 )
@@ -71,6 +70,7 @@ from .widgets import (
     level_box,
     scrolling_page,
     serif,
+    table_view,
     text,
 )
 
@@ -630,14 +630,7 @@ class LaboratoryPage(QWidget):
                 holder.addWidget(TextBlock(f"[$text-warning]{escape(problem)}[/]", p))
             title.setText(lt.title(len(shown), len(every), wanted))
             holder.addWidget(
-                row_list(
-                    [(None, lt.table_header())]
-                    + [
-                        (i, lt.row_label(saga, reader, book))
-                        for i, book in enumerate(shown)
-                    ],
-                    show,
-                )
+                table_view(lt.text_table(saga, reader, shown), p, show)
                 if shown
                 else text(
                     "None match the filter." if wanted.active else "None recorded.",
@@ -727,7 +720,7 @@ class LaboratoryPage(QWidget):
         return section(
             "Planning",
             p,
-            row_list(seasons.lab_queue_rows(saga, lab), show),
+            table_view(seasons.lab_queue_table(saga, lab), p, show),
             buttons=verb_buttons(
                 lab_plan_forms.planning_ops(saga, lab, lambda: chooser.index),
                 chooser,

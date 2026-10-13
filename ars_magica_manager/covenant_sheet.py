@@ -39,6 +39,7 @@ from .models import (
     Saga,
 )
 from .rules import realms
+from .tables import Table
 
 
 def subtitle(saga: Saga, covenant: Covenant) -> str:
@@ -167,12 +168,6 @@ def loyalty(saga: Saga, covenant: Covenant) -> Loyalty:
 # Tables
 
 
-@dataclass(frozen=True)
-class Table:
-    columns: list[str]
-    rows: list[list[str]]  # a cell per column
-
-
 def _year(year: int | None) -> str:
     return "" if year is None else str(year)
 
@@ -208,43 +203,6 @@ _INHABITANT_COLUMNS: dict[str, tuple[tuple[str, Callable[[Any], str]], ...]] = {
         ("Qty", lambda e: str(e.quantity)),
     ),
     **dict.fromkeys(("horse", "livestock"), (("Qty", lambda e: str(e.quantity)),)),
-}
-
-_POSSESSION_COLUMNS: dict[str, tuple[tuple[str, Callable[[Any], str]], ...]] = {
-    "property": (
-        ("Location", lambda e: e.location),
-        ("Dimensions", lambda e: e.dimensions),
-        ("Inhabitants", lambda e: e.inhabitants),
-    ),
-    "sanctum": (
-        ("Owner", lambda e: e.owner),
-        ("Quality", lambda e: "" if e.quality is None else str(e.quality)),
-        ("Upkeep", lambda e: "" if e.upkeep is None else str(e.upkeep)),
-    ),
-    "weapon": (
-        ("Type", lambda e: e.gear_type),
-        ("Quality", lambda e: e.gear_quality),
-        ("Qty", lambda e: str(e.quantity)),
-        ("Init", lambda e: pos.signed(e.weapon_init)),
-        ("Atk", lambda e: pos.signed(e.weapon_attack)),
-        ("Def", lambda e: pos.signed(e.weapon_defense)),
-        ("Dmg", lambda e: pos.signed(e.weapon_damage)),
-        ("Load", lambda e: str(e.load)),
-    ),
-    "armor": (
-        ("Type", lambda e: e.gear_type),
-        ("Quality", lambda e: e.gear_quality),
-        ("Qty", lambda e: str(e.quantity)),
-        ("Prot", lambda e: pos.signed(e.armor_protection)),
-        ("Load", lambda e: str(e.load)),
-    ),
-    "item": (("Qty", lambda e: str(e.quantity)),),
-    "vis_source": (
-        ("Art", lambda e: e.art),
-        ("Pawns", lambda e: str(e.pawns)),
-        ("Season", lambda e: e.season),
-    ),
-    "vis_store": (("Art", lambda e: e.art), ("Pawns", lambda e: str(e.pawns))),
 }
 
 
@@ -299,7 +257,7 @@ def possession_groups(saga: Saga, covenant: Covenant) -> list[Group]:
             Group(
                 kind,
                 f"{pos.KIND_TITLES[kind]} ({len(entries)})",
-                _table(_POSSESSION_COLUMNS[kind], entries),
+                pos.table(kind, entries),
                 [pos.detail_text(e) for e in entries],
             )
         )

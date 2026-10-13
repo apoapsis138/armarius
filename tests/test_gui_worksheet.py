@@ -13,7 +13,7 @@ pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from gui_steps import answering, section_buttons
-from PySide6.QtWidgets import QApplication, QListWidget, QPushButton
+from PySide6.QtWidgets import QApplication, QPushButton, QTableView
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import creation, storage
@@ -56,15 +56,14 @@ def _worksheet(window: MainWindow) -> WorksheetPage:
 
 
 def _choose_row(page: WorksheetPage, title: str, row: int) -> None:
-    """Click row `row` (counting the column headings as row 0) of the
-    list in the step titled `title`."""
+    """Click row `row` of the table in the step titled `title`."""
     buttons = section_buttons(page, title)
     holder = next(iter(buttons.values())).parentWidget()
     section = holder.parentWidget() if holder is not None else None
     assert section is not None
-    view = section.findChild(QListWidget)
+    view = section.findChild(QTableView)
     assert view is not None
-    view.setCurrentRow(row)
+    view.selectRow(row)
 
 
 def _press(page: WorksheetPage, words: str) -> None:
@@ -116,7 +115,7 @@ def test_the_worksheet_spends_childhood_xp_and_takes_it_back(app):
     page = _worksheet(window)
     # The window stays on the step it was on.
     assert page.codex.rail.currentRow() == 3
-    _choose_row(page, "Early Childhood", 2)
+    _choose_row(page, "Early Childhood", 1)
     assert "Brawl" in page.codex.inspector.title.text()
     asked = answering(window, True)
     section_buttons(page, "Early Childhood")["Take it back"].click()
@@ -144,7 +143,7 @@ def test_a_rows_verbs_are_greyed_out_where_they_cant_act(app):
     page = _worksheet(window)
     buttons = section_buttons(page, "Early Childhood")
     assert not buttons["Change its xp"].isEnabled()
-    _choose_row(page, "Early Childhood", 1)
+    _choose_row(page, "Early Childhood", 0)
     assert buttons["Change its xp"].isEnabled()
     # The Virtues step has no Edit: its rows are only removed.
     assert "Edit" not in section_buttons(page, "Virtues and Flaws")

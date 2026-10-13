@@ -8,7 +8,7 @@ cannot disagree about what a character's sheet says.
 
 from __future__ import annotations
 
-from collections.abc import Collection, Sequence
+from collections.abc import Collection, Mapping, Sequence
 from dataclasses import dataclass
 
 from . import casting_text as ct
@@ -35,6 +35,7 @@ from .rules import aging, casting, derived, scores, warping
 from .rules import creation_virtues as cv
 from .rules import xp as xp_rules
 from .rules.breakdown import Breakdown
+from .tables import Table
 
 
 def info_left_text(saga: Saga, character: Character) -> str:
@@ -143,6 +144,13 @@ def raw_vis_rows(character: Character) -> list[tuple[int | None, str]]:
         (index, f"{art.title()}: {character.raw_vis[art]} pawn(s)")
         for index, art in enumerate(sorted(character.raw_vis))
     ]
+
+
+def raw_vis_table(pool: Mapping[str, int]) -> Table:
+    """Raw Vis by Art name, as raw_vis_rows orders it (plain cells)."""
+    return Table(
+        ["Art", "Pawns"], [[art.title(), str(pool[art])] for art in sorted(pool)]
+    )
 
 
 def house_name(character: Character) -> str | None:
@@ -335,6 +343,29 @@ def inventory_rows(character: Character) -> list[tuple[int | None, str]]:
         for index, item in indexed:
             rows.append((index, pos.row_label(pos.PossessionEntry(kind, item))))
     return rows
+
+
+def inventory_tables(character: Character) -> list[tuple[str, Table]]:
+    """Personal Gear as a table per kind the character has (its title,
+    then the kind's columns); choosing a row picks its index in the
+    inventory."""
+    tables = []
+    for kind, header in INVENTORY_GROUPS:
+        indexed = [
+            (i, item) for i, item in enumerate(character.inventory) if item.kind == kind
+        ]
+        if indexed:
+            tables.append(
+                (
+                    header,
+                    pos.table(
+                        kind,
+                        [pos.PossessionEntry(kind, item) for _, item in indexed],
+                        [i for i, _ in indexed],
+                    ),
+                )
+            )
+    return tables
 
 
 def inventory_item_text(character: Character, index: int) -> str:

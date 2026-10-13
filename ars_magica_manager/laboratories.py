@@ -31,6 +31,7 @@ from .models import (
     VirtueFlawInstance,
 )
 from .rules import effects
+from .tables import Table
 
 #: The two Focus Flaws; a lab may only have one Focus at a time.
 FOCUS_FLAW_IDS = frozenset(FOCUS_FLAWS)
@@ -877,6 +878,24 @@ def diary_rows(diary: Sequence[DiaryEntry]) -> list[tuple[int | None, str]]:
         )
         for index, (entry, activity) in enumerate(zip(diary, activities, strict=True))
     ]
+
+
+def diary_table(diary: Sequence[DiaryEntry]) -> Table:
+    """Diary entries as a table (markup), in diary_rows' order."""
+    return Table(
+        ["Year", "Season", "Activity", "Entry"],
+        [
+            [
+                str(entry.year),
+                entry.season,
+                escape(entry.activity or "-"),
+                escape(entry.name),
+            ]
+            for entry in diary
+        ],
+        markup=True,
+        stretch=3,
+    )
 
 
 def diary_info_text(diary: Sequence[DiaryEntry], index: int | None) -> str:

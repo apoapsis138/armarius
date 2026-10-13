@@ -24,6 +24,7 @@ from ..rules import aging as aging_rules
 from ..rules import apprentice_seasons as aps
 from ..rules import experiment as ex
 from ..rules import warping as warping_rules
+from ..tables import Table
 from .character_effects import _add_xp, _yearly_warping, age_character, diary_entry
 from .covenant import covenant_season
 from .lab_apply import (
@@ -292,20 +293,19 @@ def record_label(record: SeasonRecord) -> str:
     return f"{record.season} {record.year} ({len(record.lines)} people)"
 
 
-def record_text(saga: Saga, record: SeasonRecord) -> str:
-    """A season's record as markup: grouped by covenant, one line a person
-    with what they did and what it gave."""
-    lines = [f"[b]{record.season} {record.year}[/]"]
-    if not record.lines:
-        return lines[0] + "\n[dim]Nobody's season was planned or applied.[/]"
+def _record_cells(
+    saga: Saga, record: SeasonRecord
+) -> list[tuple[str, list[tuple[str, str]]]]:
+    """A season's record grouped by covenant: each covenant's name, then
+    each person's name and what they did and what it gave (markup)."""
     order: list[str | None] = []
     for line in record.lines:
         if line.covenant_id not in order:
             order.append(line.covenant_id)
+    groups = []
     for covenant_id in order:
         covenant = saga.covenant(covenant_id)
-        heading = covenant.name if covenant else "No covenant"
-        lines += ["", f"[b]{escape(heading)}[/]"]
+        people = []
         for line in record.lines:
             if line.covenant_id != covenant_id:
                 continue
@@ -319,5 +319,32 @@ def record_text(saga: Saga, record: SeasonRecord) -> str:
                     did += f" -- {problem(escape(line.result))}"
                 elif line.result:
                     did += f" -- {escape(line.result)}"
-            lines.append(f"  {escape(line.name)}: {did}")
+            people.append((line.name, did))
+        groups.append((covenant.name if covenant else "No covenant", people))
+    return groups
+
+
+def record_text(saga: Saga, record: SeasonRecord) -> str:
+    """A season's record as markup: grouped by covenant, one line a person
+    with what they did and what it gave."""
+    lines = [f"[b]{record.season} {record.year}[/]"]
+    if not record.lines:
+        return lines[0] + "\n[dim]Nobody's season was planned or applied.[/]"
+    for heading, people in _record_cells(saga, record):
+        lines += ["", f"[b]{escape(heading)}[/]"]
+        lines += [f"  {escape(name)}: {did}" for name, did in people]
     return "\n".join(lines)
+
+
+def record_table(saga: Saga, record: SeasonRecord) -> Table:
+    """A season's record as a table (markup): a heading row per covenant,
+    then a row per person with what they did and what it gave."""
+    rows: list[list[str]] = []
+    keys: list[int | None] = []
+    for heading, people in _record_cells(saga, record):
+        rows.append([f"[b]{escape(heading)}[/]", ""])
+        keys.append(None)
+        for name, did in people:
+            rows.append([escape(name), did])
+            keys.append(len(keys))
+    return Table(["Who", "What they did"], rows, keys, markup=True, stretch=1)

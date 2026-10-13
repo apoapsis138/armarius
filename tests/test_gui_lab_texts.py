@@ -12,7 +12,7 @@ pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from gui_steps import answering, section_buttons
-from PySide6.QtWidgets import QApplication, QListWidget
+from PySide6.QtWidgets import QApplication, QTableView
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import storage
@@ -38,13 +38,17 @@ def _lab_page(window: MainWindow) -> LaboratoryPage:
 
 
 def _texts(page: LaboratoryPage) -> list[str]:
-    """The Lab Texts list's rows, without the column headings."""
+    """The Lab Texts table's rows, each its cells joined by spaces."""
     holder = page.lab_text_filter.parentWidget()
     assert holder is not None
-    found = holder.findChild(QListWidget)
+    found = holder.findChild(QTableView)
     if found is None:
         return []
-    return [found.item(i).text() for i in range(1, found.count())]
+    model = found.model()
+    return [
+        " ".join(str(model.index(r, c).data()) for c in range(model.columnCount()))
+        for r in range(model.rowCount())
+    ]
 
 
 def test_lab_texts_are_filtered_and_the_filter_is_kept(app):

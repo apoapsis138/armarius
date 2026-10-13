@@ -17,6 +17,7 @@ from .advance import apply as apply
 from .advance import finish_season as finish_season
 from .advance import make_record as make_record
 from .advance import record_label as record_label
+from .advance import record_table as record_table
 from .advance import record_text as record_text
 from .advance import resolve as resolve
 from .advance import year_end_aging as year_end_aging
@@ -29,6 +30,7 @@ from .covenant import covenant_season as covenant_season
 from .covenant import lapsed_resources as lapsed_resources
 from .covenant import season_info_text as season_info_text
 from .covenant import season_rows as season_rows
+from .covenant import season_table as season_table
 from .covenant import season_title as season_title
 from .lab_apply import discovery_moves as discovery_moves
 from .lab_apply import perform_ritual_again as perform_ritual_again
@@ -37,6 +39,7 @@ from .lab_apply import year_end_business as year_end_business
 from .lab_queue import lab_queue as lab_queue
 from .lab_queue import lab_queue_info as lab_queue_info
 from .lab_queue import lab_queue_rows as lab_queue_rows
+from .lab_queue import lab_queue_table as lab_queue_table
 from .lab_queue import plan_lab_work as plan_lab_work
 from .lab_queue import scheduled_with as scheduled_with
 from .plans import book_label as book_label

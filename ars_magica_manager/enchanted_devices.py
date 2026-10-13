@@ -35,6 +35,7 @@ from .models import (
     ShapeMaterialBonus,
 )
 from .rules.rounding import round_down, round_up
+from .tables import Table
 
 #: Level additions for the effect modifications (DE ch. 8, Effect
 #: Modifications), as (InstilledEffect flag, label, levels).
@@ -513,6 +514,27 @@ def device_rows(saga: Saga, kind: str, holder_id: str) -> list[tuple[int, str]]:
                 label += "  " + effect_summary(device, effect)
         rows.append((index, label.rstrip()))
     return rows
+
+
+def device_table(saga: Saga, kind: str, holder_id: str) -> Table:
+    """The holder's devices as a table (markup), each followed by its
+    effects, indented, in the same order as device_rows: a device's Type
+    and charges or effects, an effect's Arts and level and the rest of
+    its summary. A device with warnings ends in a red "!"."""
+    rows: list[list[str]] = []
+    for device, effect in device_targets(saga, kind, holder_id):
+        if effect is None:
+            word = "Talisman" if is_talisman(device) else TYPE_WORDS[device.type]
+            state = device_status(saga, device)
+            if warnings(saga, device):
+                state += f"  [$text-error]{PROBLEM_GLYPH}[/]"
+            rows.append([escape(device.name), word, state])
+        elif effect.known:
+            first, *rest = effect_summary(device, effect).split("  ")
+            rows.append(["    " + escape(effect_name(effect)), first, "  ".join(rest)])
+        else:
+            rows.append(["    " + escape(effect_name(effect)), "", ""])
+    return Table(["Device", "Type", "Charges or effects"], rows, markup=True)
 
 
 def effect_summary(device: EnchantedDevice, effect: InstilledEffect) -> str:

@@ -37,6 +37,7 @@ from .models import (
 )
 from .rules import book_seasons as bs
 from .rules import lab_seasons
+from .tables import Table
 
 LAB_TEXT = "Lab Text"
 
@@ -338,6 +339,33 @@ def row_label(
         f"{short_copy(saga, reader, book)}"
     ).rstrip()
     return row if can_use(reader, book) else f"[dim]{row}[/]"
+
+
+def text_table(saga: Saga, reader: Character | None, books: list[Book]) -> Table:
+    """`books` as a table (markup) with row_label's columns, whole; dim
+    for a text the reader can't use yet."""
+    rows = []
+    for book in books:
+        technique, form = arts(saga, book)
+        cells = [
+            escape(_short_name(book)),
+            KIND_SHORT[kind(book)],
+            ART_ABBREVIATIONS.get(technique, "-"),
+            ART_ABBREVIATIONS.get(form, "-"),
+            str(level(saga, book)),
+            escape(bs.author_name(saga, book) or "-"),
+            escape(sigil(saga, book) or "-"),
+            short_status(reader, book),
+            short_copy(saga, reader, book),
+        ]
+        if not can_use(reader, book):
+            cells = [f"[dim]{cell}[/]" for cell in cells]
+        rows.append(cells)
+    return Table(
+        ["Name", "Kind", "Te", "Fo", "Lvl", "Author", "Sigil", "Status", "Copy"],
+        rows,
+        markup=True,
+    )
 
 
 def detail_text(saga: Saga, reader: Character | None, book: Book | None) -> str:

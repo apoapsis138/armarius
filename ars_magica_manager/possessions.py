@@ -6,7 +6,7 @@ plus stored entries) and the text for list rows and the details panel.
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
 
@@ -26,6 +26,7 @@ from .models import (
     Saga,
     WeaponDef,
 )
+from .tables import Table
 
 #: Section titles on the tab.
 KIND_TITLES: dict[str, str] = {
@@ -615,3 +616,61 @@ def book_text(kind: str, gear_id: str | None) -> str:
         name = armor.name
     text = f"[b]{escape(name)}[/] ({escape(summary)})"
     return f"{text}: {escape(description)}" if description else text
+
+
+# As a table (tables.py)
+
+#: Each kind's columns after its name: a title, and how to read the cell
+#: from a PossessionEntry.
+_TABLE_COLUMNS: dict[str, tuple[tuple[str, Callable[[Any], str]], ...]] = {
+    "property": (
+        ("Location", lambda e: e.location),
+        ("Dimensions", lambda e: e.dimensions),
+        ("Inhabitants", lambda e: e.inhabitants),
+    ),
+    "sanctum": (
+        ("Owner", lambda e: e.owner),
+        ("Quality", lambda e: "" if e.quality is None else str(e.quality)),
+        ("Upkeep", lambda e: "" if e.upkeep is None else str(e.upkeep)),
+    ),
+    "weapon": (
+        ("Type", lambda e: e.gear_type),
+        ("Quality", lambda e: e.gear_quality),
+        ("Qty", lambda e: str(e.quantity)),
+        ("Init", lambda e: signed(e.weapon_init)),
+        ("Atk", lambda e: signed(e.weapon_attack)),
+        ("Def", lambda e: signed(e.weapon_defense)),
+        ("Dmg", lambda e: signed(e.weapon_damage)),
+        ("Load", lambda e: str(e.load)),
+    ),
+    "armor": (
+        ("Type", lambda e: e.gear_type),
+        ("Quality", lambda e: e.gear_quality),
+        ("Qty", lambda e: str(e.quantity)),
+        ("Prot", lambda e: signed(e.armor_protection)),
+        ("Load", lambda e: str(e.load)),
+    ),
+    "item": (("Qty", lambda e: str(e.quantity)),),
+    "vis_source": (
+        ("Art", lambda e: e.art),
+        ("Pawns", lambda e: str(e.pawns)),
+        ("Season", lambda e: e.season),
+    ),
+    "vis_store": (("Art", lambda e: e.art), ("Pawns", lambda e: str(e.pawns))),
+}
+
+
+def table(
+    kind: str, entries: Sequence[PossessionEntry], keys: list[int | None] | None = None
+) -> Table:
+    """`entries` of one kind as a table (plain cells): the Name column,
+    then the kind's own columns."""
+    columns = _TABLE_COLUMNS[kind]
+    return Table(
+        ["Name", *(title for title, _ in columns)],
+        [
+            [entry.name or "(unnamed)", *(cell(entry) for _, cell in columns)]
+            for entry in entries
+        ],
+        keys,
+    )

@@ -22,12 +22,13 @@ from .. import worksheet_forms as wf
 from ..commands import Command, SectionOps
 from ..markup import escape
 from ..rules import creation as rules
-from .character_sheet import TextBlock, row_list, section
+from ..tables import Table
+from .character_sheet import TextBlock, is_aligned, label_values, section
 from .editing import Chooser, Run, verb_buttons
 from .markup_html import plain
 from .pages import page_header
 from .themes import Palette
-from .widgets import Codex, edit_button, scrolling_page
+from .widgets import Codex, edit_button, scrolling_page, table_view
 
 #: The record kinds' icons (artwork.ICON_NAMES).
 _ICONS = {"character": "character", "covenant": "covenant", "laboratory": "laboratory"}
@@ -87,7 +88,7 @@ class WorksheetPage(QWidget):
         panel = ws.panel_for(record, step.key)
         parts: list[QWidget] = []
         budget = panel.budget(saga, record)
-        shown: list[QWidget] = [TextBlock(budget, p, mono=True)] if budget else []
+        shown: list[QWidget] = [budget_view(budget, p)] if budget else []
         if panel.list is not None:
             parts.append(self._list(step, panel.list, shown))
         elif shown:
@@ -168,15 +169,21 @@ class WorksheetPage(QWidget):
         def show(index: int) -> None:
             chooser.choose(index)
             row = rows[index]
-            name = plain(row.label).strip().split("  ")[0]
+            name = (
+                plain(row.cells[0]).strip()
+                if row.cells
+                else plain(row.label).strip().split("  ")[0]
+            )
             self.codex.inspect(name, step.title, row.details or escape(name))
 
-        listed = [(None, step_list.header.strip())] + [
-            (None if row.heading else index, row.label)
-            for index, row in enumerate(rows)
-        ]
+        table = Table(
+            step_list.columns,
+            [row.cells or [row.label] for row in rows],
+            [None if row.heading else index for index, row in enumerate(rows)],
+            markup=True,
+        )
         body: QWidget = (
-            row_list(listed, show)
+            table_view(table, p, show)
             if rows
             else TextBlock(f"[dim]{escape(step_list.hint)}[/]", p)
         )
@@ -194,3 +201,37 @@ class WorksheetPage(QWidget):
                 more=more,
             ),
         )
+
+
+def budget_view(words: str, p: Palette) -> QWidget:
+    """A step's budget: its `label: value` lines as a grid, the core's
+    indented columns (a tally) in a fixed-pitch font so they line up, and
+    any other line as text."""
+    runs: list[tuple[str, list[str]]] = []
+    for line in words.splitlines():
+        kind = (
+            "aligned"
+            if is_aligned(line)
+            else "columns"
+            if line.startswith("  ")
+            else "text"
+        )
+        if runs and runs[-1][0] == kind:
+            runs[-1][1].append(line)
+        else:
+            runs.append((kind, [line]))
+    parts = [
+        label_values("\n".join(lines), p)
+        if kind == "aligned"
+        else TextBlock("\n".join(lines), p, mono=kind == "columns")
+        for kind, lines in runs
+    ]
+    if len(parts) == 1:
+        return parts[0]
+    box = QWidget()
+    column = QVBoxLayout(box)
+    column.setContentsMargins(0, 0, 0, 0)
+    column.setSpacing(4)
+    for part in parts:
+        column.addWidget(part)
+    return box

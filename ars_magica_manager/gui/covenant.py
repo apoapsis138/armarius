@@ -47,7 +47,6 @@ from .character_sheet import (
     columns_text,
     device_section,
     label_values,
-    row_list,
     section,
     side_by_side,
     trait_section,
@@ -68,6 +67,7 @@ from .widgets import (
     edit_button,
     scrolling_page,
     serif,
+    table_view,
     text,
 )
 
@@ -639,11 +639,11 @@ class CovenantPage(QWidget):
                 seasons.season_info_text(saga, people[index]),
             )
 
-        rows = seasons.season_rows(saga, covenant, kind)
+        table = seasons.season_table(saga, covenant, kind)
         return section(
             seasons.season_title(saga, covenant, kind, title),
             p,
-            row_list(rows, show) if rows else _none("Nobody here.", p),
+            table_view(table, p, show) if table.rows else _none("Nobody here.", p),
             buttons=verb_buttons(
                 season_forms.covenant_season_ops(saga, covenant, kind),
                 chooser,

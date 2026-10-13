@@ -7,7 +7,7 @@ and the details panel, and reading books from a CSV file.
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field, replace
 from functools import lru_cache
 from pathlib import Path
@@ -33,6 +33,7 @@ from .models import (
 )
 from .rules import options
 from .rules.rounding import round_up
+from .tables import Table
 
 #: Book types whose subject is an Art / an Ability (a Tractatus depends on its
 #: `subject_kind`).
@@ -726,6 +727,28 @@ def row_label(saga: Saga, book: Book, subject_cols: int = SUBJECT_MIN_WIDTH) -> 
     if status_problems(book, saga):
         return f"[$text-error]{row} {PROBLEM_GLYPH}[/]"
     return row
+
+
+def book_table(saga: Saga, books: Sequence[Book]) -> Table:
+    """`books` as a table (markup) with row_label's columns, whole; a
+    book with a status problem in the theme's error colour."""
+    rows = []
+    for book in books:
+        cells = [
+            escape(_codex_mark(saga, book) + (book.name or "(untitled)")),
+            escape(book.type),
+            escape(subject(book, saga) or "-"),
+            _number(level_of(book, saga)),
+            _number(effective_quality(saga, book)),
+            escape(location_label(saga, book)),
+        ]
+        if status_problems(book, saga):
+            cells[-1] += f" {PROBLEM_GLYPH}"
+            cells = [f"[$text-error]{cell}[/]" for cell in cells]
+        rows.append(cells)
+    return Table(
+        ["Name", "Type", "Subject", "Level", "Quality", "Location"], rows, markup=True
+    )
 
 
 #: What a row's name starts with when the book is bound in a codex with

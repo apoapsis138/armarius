@@ -68,3 +68,23 @@ def _looks_like_markup(spec: str) -> bool:
 def plain(text: str) -> str:
     """`text` without its markup, for a list row."""
     return _TAG.sub("", text).replace("\\[", "[")
+
+
+def cell_style(text: str, palette: Palette) -> tuple[str, str | None, bool, bool]:
+    """A table cell's markup as its plain words, and the colour (None: the
+    table's own), boldness and italics its tags ask for anywhere in it: a
+    cell is drawn in one style."""
+    colour, bold, italic = None, False, False
+    for match in _TAG.finditer(text):
+        if match.group(1) or not _looks_like_markup(match.group(2)):
+            continue
+        for word in match.group(2).split():
+            if word == "b":
+                bold = True
+            elif word == "i":
+                italic = True
+            elif word == "dim":
+                colour = colour or palette["dim"]
+            elif word.startswith("$") and word[1:] in palette.colours:
+                colour = colour or palette[word[1:]]
+    return plain(text), colour, bold, italic

@@ -35,8 +35,6 @@ from PySide6.QtWidgets import (
     QHeaderView,
     QLabel,
     QLineEdit,
-    QListWidget,
-    QListWidgetItem,
     QTableView,
     QTreeView,
     QVBoxLayout,
@@ -81,7 +79,7 @@ from .figures import (
     trait_list,
     wound_track,
 )
-from .markup_html import plain, to_html
+from .markup_html import to_html
 from .pages import familiar_card
 from .themes import Palette
 from .timeline import Calendar, legend, season_text
@@ -102,6 +100,7 @@ from .widgets import (
     edit_button,
     scrolling_page,
     serif,
+    table_view,
     text,
 )
 from .widgets import (
@@ -127,8 +126,6 @@ CHAPTERS = (
 
 #: A status tone's colour (character_sheet.condition).
 TONES = {cs.GOOD: "text-success", cs.WARNING: "text-warning", cs.BAD: "text-error"}
-
-Rows = Sequence[tuple[int | None, str]]
 
 
 def _html(words: str) -> str:
@@ -161,6 +158,12 @@ class TextBlock(QLabel):
 _ALIGNED = re.compile(r"^\[\$label\](.*?):\s*\[/\] (.*)$")
 
 
+def is_aligned(line: str) -> bool:
+    """Whether `line` is one of the core's `label: value` lines
+    (markup.aligned)."""
+    return _ALIGNED.match(line) is not None
+
+
 def label_values(words: str, palette: Palette) -> QWidget:
     """The core's `label: value` lines (markup.aligned) as a two-column
     grid, since a proportional font can't line them up with spaces; any
@@ -185,39 +188,6 @@ def label_values(words: str, palette: Palette) -> QWidget:
     grid.setColumnStretch(1, 1)
     grid.setRowStretch(len(lines), 1)
     return box
-
-
-def row_list(rows: Rows, on_choose: Callable[[int], None] | None = None) -> QListWidget:
-    """A list of the core's padded rows, in a fixed-pitch font so their
-    columns line up; a header row (no index) can't be chosen. Choosing a
-    row calls `on_choose` with its index."""
-    widget = QListWidget()
-    widget.setFont(_fixed_font())
-    for index, words in rows:
-        item = QListWidgetItem(plain(words))
-        if index is None:
-            item.setFlags(Qt.ItemFlag.NoItemFlags)
-            font = item.font()
-            font.setBold(True)
-            item.setFont(font)
-        else:
-            item.setData(Qt.ItemDataRole.UserRole, index)
-        widget.addItem(item)
-    # Tall enough for its rows (up to 14), measured as drawn, so a
-    # high-DPI screen's taller rows aren't cut off.
-    row = widget.sizeHintForRow(0) if rows else widget.fontMetrics().height() + 8
-    widget.setFixedHeight(
-        min(max(len(rows), 1), 14) * row + 2 * widget.frameWidth() + 4
-    )
-    if on_choose is not None:
-        widget.currentItemChanged.connect(
-            lambda item, _old: (
-                on_choose(item.data(Qt.ItemDataRole.UserRole))
-                if item is not None and item.data(Qt.ItemDataRole.UserRole) is not None
-                else None
-            )
-        )
-    return widget
 
 
 _GAP = re.compile(r"\s{2,}")
@@ -359,7 +329,7 @@ def device_section(
     return section(
         f"Enchanted Devices ({devices})",
         p,
-        row_list(ed.device_rows(saga, kind, holder_id), show)
+        table_view(ed.device_table(saga, kind, holder_id), p, show)
         if targets
         else TextBlock("[dim]None recorded.[/]", p),
         buttons=verb_buttons(ops, chooser, run, p, more=more),
@@ -791,10 +761,9 @@ class CharacterSheet(QWidget):
             section(
                 f"Research Goals ({len(c.breakthroughs)})",
                 p,
-                row_list(
-                    [(i, st.goal_row(goal)) for i, goal in enumerate(c.breakthroughs)],
-                    show_goal,
-                ),
+                table_view(st.goal_table(c.breakthroughs), p, show_goal)
+                if c.breakthroughs
+                else TextBlock("[dim]None recorded.[/]", p),
                 buttons=verb_buttons(cf.research_goal_ops(c), goals, self.run, p),
             ),
         ]
@@ -936,11 +905,15 @@ class CharacterSheet(QWidget):
             gear.choose(index)
             self.inspect(c.inventory[index].name, "", cs.inventory_item_text(c, index))
 
+        tables: list[QWidget] = []
+        for title, table in cs.inventory_tables(c):
+            tables.append(text(title, p["label"], serif(12.5, italic=True)))
+            tables.append(table_view(table, p, show_item))
         parts.append(
             section(
                 f"Personal Gear ({len(c.inventory)})",
                 p,
-                row_list(cs.inventory_rows(c), show_item),
+                *(tables or [TextBlock("[dim]None recorded.[/]", p)]),
                 buttons=verb_buttons(cf.inventory_ops(c), gear, self.run, p),
             )
         )
@@ -950,12 +923,15 @@ class CharacterSheet(QWidget):
             section(
                 f"Books ({len(books)})",
                 p,
-                row_list(
-                    [(i, bk.row_label(saga, book)) for i, book in enumerate(books)],
+                table_view(
+                    bk.book_table(saga, books),
+                    p,
                     lambda index: self.inspect(
                         books[index].name, "", bk.detail_text(saga, books[index])
                     ),
-                ),
+                )
+                if books
+                else TextBlock("[dim]None recorded.[/]", p),
             )
         )
         return scrolling_page(p, *parts)
@@ -968,7 +944,9 @@ class CharacterSheet(QWidget):
         return section(
             "Raw Vis",
             p,
-            row_list(cs.raw_vis_rows(c), chooser.choose),
+            table_view(cs.raw_vis_table(c.raw_vis), p, chooser.choose)
+            if c.raw_vis
+            else TextBlock("[dim]None recorded.[/]", p),
             buttons=verb_buttons(ops, chooser, self.run, p),
         )
 
@@ -1018,7 +996,9 @@ class CharacterSheet(QWidget):
             section(
                 f"Diary ({len(diary)})",
                 p,
-                row_list(labs.diary_rows(diary), show_entry),
+                table_view(labs.diary_table(diary), p, show_entry)
+                if diary
+                else TextBlock("[dim]None recorded.[/]", p),
                 buttons=verb_buttons(
                     diary_forms.entry_ops(
                         saga, diary, diary_forms.character_activities()

@@ -83,13 +83,17 @@ class Row:
     """A row of a step's list: its label (markup, in the list's columns),
     the details shown while it is chosen, and what Edit and Delete start
     (None: that verb does nothing on this row). A heading row has no
-    verbs and can't be chosen."""
+    verbs and can't be chosen. `cells` is the same row a cell per column
+    of its list's `columns`, for a front-end that draws a real table (a
+    heading's other cells, when set, title the columns of the rows under
+    it)."""
 
     label: str
     details: str = ""
     edit: Start | None = None
     delete: Start | None = None
     heading: bool = False
+    cells: list[str] | None = None
 
 
 @dataclass
@@ -106,6 +110,8 @@ class StepList:
     delete_label: str = "Delete"
     #: The details before a row is chosen.
     hint: str = "Choose a row to see its details."
+    #: `header`'s column titles, one a cell of each row (Row.cells).
+    columns: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -305,6 +311,7 @@ def _virtues_budget(saga: Saga, record: Record) -> str:
 VF_NAME = 44
 VF_TIER = 8
 VF_HEADER = f"  {'Virtue or Flaw':<{VF_NAME}}{'Tier':<{VF_TIER}}Type"
+VF_COLUMNS = ["Virtue or Flaw", "Tier", "Type"]
 
 
 def _remove_virtue_flaw(saga: Saga, owner: Any, instance: Any) -> Start:
@@ -329,7 +336,7 @@ def _virtue_rows(saga: Saga, record: Record) -> list[Row]:
         ]
         if not taken:
             continue
-        rows.append(Row(heading, heading=True))
+        rows.append(Row(heading, heading=True, cells=[heading]))
         for index, instance, definition in taken:
             name = catalog.describe_virtue_flaw(instance, by_id)
             rows.append(
@@ -338,6 +345,11 @@ def _virtue_rows(saga: Saga, record: Record) -> list[Row]:
                     f"{escape(definition.category_label)}",
                     st.vf_info_text(character.virtues_flaws, index),
                     delete=_remove_virtue_flaw(saga, character, instance),
+                    cells=[
+                        escape(name),
+                        definition.tier,
+                        escape(definition.category_label),
+                    ],
                 )
             )
     return rows
@@ -357,6 +369,7 @@ PANELS[("character", "virtues_flaws")] = Panel(
     StepList(
         VF_HEADER,
         _virtue_rows,
+        columns=VF_COLUMNS,
         add=lambda saga, record: _add_virtue_flaw(saga, record, "Virtue"),
         add_label="Add a Virtue",
         edit_label=None,
@@ -424,6 +437,7 @@ XP_NAME = 30
 XP_HEADER = (
     f"  {'Ability or Art':<{XP_NAME}}{'Spent':>6}{'Gained':>8}{'Score':>7}   Specialty"
 )
+XP_COLUMNS = ["Ability or Art", "Spent", "Gained", "Score", "Specialty"]
 
 
 def _target_score(character: Character, target: str) -> tuple[xp_rules.Progress, str]:
@@ -449,6 +463,22 @@ def xp_label(character: Character, entry: CreationXp, suffix: str = "") -> str:
         f"{pad(entry.target + suffix, XP_NAME)}{entry.xp:>6}{gained_text}"
         f"{progress.score:>7}   {escape(specialty)}"
     )
+
+
+def xp_cells(character: Character, entry: CreationXp, suffix: str = "") -> list[str]:
+    """xp_label's row, a cell per XP_COLUMNS."""
+    progress, specialty = _target_score(character, entry.target)
+    gained = creation.gained_xp(entry)
+    gained_text = str(gained)
+    if gained != entry.xp:
+        gained_text = f"[$text-success]{gained_text}[/]"
+    return [
+        escape(entry.target + suffix),
+        str(entry.xp),
+        gained_text,
+        str(progress.score),
+        escape(specialty),
+    ]
 
 
 def xp_details(saga: Saga, character: Character, target: str) -> str:
@@ -512,6 +542,7 @@ def xp_row(
             else lambda: wf.change_xp(saga, character, entry, targets)
         ),
         delete=lambda: wf.refund_xp(character, entry),
+        cells=xp_cells(character, entry),
     )
 
 
@@ -544,6 +575,7 @@ def xp_list(
         edit_label="Change its xp",
         delete_label="Take it back",
         hint="Choose a row to see what the xp bought.",
+        columns=XP_COLUMNS,
     )
 
 
@@ -575,6 +607,7 @@ def _childhood_rows(saga: Saga, record: Record) -> list[Row]:
         row = xp_row(saga, character, entry, targets)
         if entry.note == cx.NATIVE:
             row.label = xp_label(character, entry, " (native)")
+            row.cells = xp_cells(character, entry, " (native)")
             row.edit = lambda: wf.native_language(character)
         rows.append(row)
     return rows
@@ -625,8 +658,10 @@ def _later_life_rows(saga: Saga, record: Record) -> list[Row]:
     for taken in packages.taken(character):
         rows.append(
             Row(
-                f"Training package: {escape(taken.name)} ({taken.years} years)",
+                label
+                := f"Training package: {escape(taken.name)} ({taken.years} years)",
                 heading=True,
+                cells=[label],
             )
         )
         for entry in cx.entries(character, "package"):
@@ -638,12 +673,15 @@ def _later_life_rows(saga: Saga, record: Record) -> list[Row]:
     for vf_id in access.virtue_xp(character):
         own = [x for x in cx.entries(character, "virtue") if x.note == vf_id]
         if own:
-            rows.append(Row(f"{escape(by_id[vf_id].name)} xp", heading=True))
+            heading = f"{escape(by_id[vf_id].name)} xp"
+            rows.append(Row(heading, heading=True, cells=[heading]))
             targets = later.virtue_targets(character, vf_id)
             rows += [xp_row(saga, character, x, targets) for x in own]
     free = cx.entries(character, "free")
     if free:
-        rows.append(Row("Free Virtue scores", heading=True))
+        rows.append(
+            Row("Free Virtue scores", heading=True, cells=["Free Virtue scores"])
+        )
         rows += [xp_row(saga, character, x, None) for x in free]
     return rows
 
@@ -701,7 +739,7 @@ def spell_rows(saga: Saga, character: Character, step: str, heading: str) -> lis
     """A heading, then the spells learned at `step`: each with its level
     and the magus's Lab Total for it; Delete forgets one."""
     found = cx.entries(character, step)
-    rows = [Row(heading, heading=True)]
+    rows = [Row(heading, heading=True, cells=[heading, "", "", "Level", "Lab Total"])]
     for entry in found:
         spell = spl.find_spell(saga, entry.target)
 
@@ -713,6 +751,13 @@ def spell_rows(saga: Saga, character: Character, step: str, heading: str) -> lis
                 Row(
                     f"{pad(entry.target, SPELL_NAME)} (missing)  level {entry.xp}",
                     delete=forget,
+                    cells=[
+                        f"{escape(entry.target)} (missing)",
+                        "",
+                        "",
+                        str(entry.xp),
+                        "",
+                    ],
                 )
             )
             continue
@@ -726,10 +771,18 @@ def spell_rows(saga: Saga, character: Character, step: str, heading: str) -> lis
                 + f"\n\n[b]Learned at level:[/] {entry.xp}"
                 + f"\n[b]{escape(character.name)}'s Lab Total for it (aura 3):[/] {cap}",
                 delete=forget,
+                cells=[
+                    f"{escape(spell.name)} ({spl.shorthand(spell)})",
+                    "",
+                    "",
+                    str(entry.xp),
+                    f"{cap}{over}",
+                ],
             )
         )
     if not found:
-        rows.append(Row("[dim](no spells yet: Learn a spell)[/]", heading=True))
+        empty = "[dim](no spells yet: Learn a spell)[/]"
+        rows.append(Row(empty, heading=True, cells=[empty]))
     return rows
 
 
@@ -965,6 +1018,7 @@ def _power_budget(saga: Saga, record: Record) -> str:
 #: The income list's columns.
 INCOME_NAME = 40
 INCOME_HEADER = f"  {'Source of income':<{INCOME_NAME}}{'Type':<11}{'Pounds':>7}"
+INCOME_COLUMNS = ["Source of income", "Type", "Pounds", "Hooks"]
 
 
 def _income_pounds(source: IncomeSource) -> int:
@@ -1017,6 +1071,12 @@ def _income_rows(saga: Saga, record: Record) -> list[Row]:
                 "\n".join(details),
                 edit=lambda s=source: covf.income_form(covenant, s),
                 delete=_remove_income(covenant, source),
+                cells=[
+                    escape(source.name or "(unnamed)"),
+                    source.type,
+                    str(_income_pounds(source)),
+                    f"[dim]{', '.join(flags)}[/]" if flags else "",
+                ],
             )
         )
     return rows
@@ -1045,6 +1105,7 @@ PANELS[("covenant", "power")] = Panel(
         add_label="Add a source of income",
         delete_label="Delete",
         hint="Its sources of income: Set starting income makes them by the rules.",
+        columns=INCOME_COLUMNS,
     ),
 )
 
@@ -1055,11 +1116,21 @@ PANELS[("covenant", "power")] = Panel(
 #: The Resources list's columns.
 BP_NAME = 56
 BP_HEADER = f"  {'What':<{BP_NAME}}{'Points':>7}"
+BP_COLUMNS = ["What", "Points", "Note"]
 
 
 def _bp_label(text: str, points: object, note: str = "") -> str:
     tail = f"  [dim]{escape(note)}[/]" if note else ""
     return f"{pad(text, BP_NAME)}{points!s:>7}{tail}"
+
+
+def _bp_row(text: str, points: object, note: str = "", **verbs: Any) -> Row:
+    """A Resources row: what was bought, its Build Points and a note."""
+    return Row(
+        _bp_label(text, points, note),
+        cells=[escape(text), str(points), f"[dim]{escape(note)}[/]" if note else ""],
+        **verbs,
+    )
 
 
 def tally(saga: Saga, covenant: Covenant) -> str:
@@ -1221,9 +1292,11 @@ def _pooled_text_row(saga: Saga, covenant: Covenant, book: Book) -> Row:
     level = bk.level_of(book, saga)
     note = f"level {level}" if level else "set its level"
     edit, delete = _book_ops(saga, covenant, book)
-    return Row(
-        _bp_label(f"  {_book_label(book)}", "", note),
-        bk.detail_text(saga, book),
+    return _bp_row(
+        f"  {_book_label(book)}",
+        "",
+        note,
+        details=bk.detail_text(saga, book),
         edit=edit,
         delete=delete,
     )
@@ -1245,26 +1318,29 @@ def _build_points_rows(saga: Saga, record: Record) -> list[Row]:
         texts = [b for b in library if cov.POOL_CATEGORIES.get(b.type) == category]
         if not lines and not texts:
             continue
-        rows.append(Row(category or "Other", heading=True))
+        rows.append(Row(category or "Other", heading=True, cells=[category or "Other"]))
         for cost in lines:
             edit, delete = _resource_ops(saga, covenant, cost.item)
             rows.append(
-                Row(
-                    _bp_label(cost.label, cost.points),
-                    _cost_details(saga, cost),
+                _bp_row(
+                    cost.label,
+                    cost.points,
+                    details=_cost_details(saga, cost),
                     edit=edit,
                     delete=delete,
                 )
             )
         rows += [_pooled_text_row(saga, covenant, book) for book in texts]
     if unpriced:
-        rows.append(Row("Not priced yet", heading=True))
+        rows.append(Row("Not priced yet", heading=True, cells=["Not priced yet"]))
         for book in unpriced:
             edit, delete = _book_ops(saga, covenant, book)
             rows.append(
-                Row(
-                    _bp_label(_book_label(book), 0, "set its level or Quality"),
-                    bk.detail_text(saga, book),
+                _bp_row(
+                    _book_label(book),
+                    0,
+                    "set its level or Quality",
+                    details=bk.detail_text(saga, book),
                     edit=edit,
                     delete=delete,
                 )
@@ -1331,6 +1407,7 @@ PANELS[("covenant", "build_points")] = Panel(
         add_label="Buy something",
         delete_label="Delete",
         hint="Choose a row to see what it is and what it costs.",
+        columns=BP_COLUMNS,
     ),
 )
 
@@ -1349,6 +1426,7 @@ def _boons_hooks_budget(saga: Saga, record: Record) -> str:
 #: The Boons and Hooks list's columns.
 BH_NAME = 56
 BH_HEADER = f"  {'Boon or Hook':<{BH_NAME}}{'Points':>7}"
+BH_COLUMNS = ["Boon or Hook", "Points", "Note"]
 
 
 def _boons_hooks_rows(saga: Saga, record: Record) -> list[Row]:
@@ -1367,15 +1445,18 @@ def _boons_hooks_rows(saga: Saga, record: Record) -> list[Row]:
         ]
         if not found:
             continue
-        rows.append(Row(heading, heading=True))
+        rows.append(Row(heading, heading=True, cells=[heading]))
         for index, bh, definition in found:
             points = boon_hook_points(bh, definition)
-            label = f"{pad(catalog.describe_boon_hook(bh, by_id), BH_NAME)}{points:>7g}"
+            name = catalog.describe_boon_hook(bh, by_id)
+            label = f"{pad(name, BH_NAME)}{points:>7g}"
+            note = ""
             details = boon_hook_info_text(covenant, index)
             if bh.vf_id in cov_rules.RESOURCE_HOOKS:
                 source = cov_rules.linked_source(covenant, bh)
                 if source is None:
-                    label += "  [$text-warning]needs its source[/]"
+                    note = "[$text-warning]needs its source[/]"
+                    label += f"  {note}"
                     about = (
                         "(not yet: Edit names it, once the vis or income source exists)"
                     )
@@ -1388,6 +1469,7 @@ def _boons_hooks_rows(saga: Saga, record: Record) -> list[Row]:
                     details,
                     edit=lambda i=index: covf.edit_boon_hook(covenant, i),
                     delete=lambda i=index: covf.remove_boon_hook(covenant, i),
+                    cells=[escape(name), f"{points:g}", note],
                 )
             )
     return rows
@@ -1407,6 +1489,7 @@ PANELS[("covenant", "boons_hooks")] = Panel(
         add_label="Add a Boon",
         delete_label="Remove",
         hint="Choose a Boon or Hook to read its rules.",
+        columns=BH_COLUMNS,
     ),
 )
 
@@ -1474,14 +1557,16 @@ def _lab_virtue_rows(saga: Saga, record: Record) -> list[Row]:
         ]
         if not taken:
             continue
-        rows.append(Row(heading, heading=True))
+        rows.append(Row(heading, heading=True, cells=[heading]))
         for index, instance, definition in taken:
+            name = catalog.describe_virtue_flaw(instance, by_id)
             rows.append(
                 Row(
-                    f"{pad(catalog.describe_virtue_flaw(instance, by_id), VF_NAME)}"
+                    f"{pad(name, VF_NAME)}"
                     f"{definition.tier:<{VF_TIER}}{escape(definition.category)}",
                     lab_rules.vf_info_text(lab, index),
                     delete=_remove_virtue_flaw(saga, lab, instance),
+                    cells=[escape(name), definition.tier, escape(definition.category)],
                 )
             )
     return rows
@@ -1493,6 +1578,7 @@ PANELS[("laboratory", "setup")] = Panel(
     StepList(
         VF_HEADER,
         _lab_virtue_rows,
+        columns=VF_COLUMNS,
         add=lambda saga, record: _add_virtue_flaw(saga, record, None),
         add_label="Add a Virtue or Flaw",
         edit_label=None,

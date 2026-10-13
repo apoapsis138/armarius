@@ -46,6 +46,16 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.54.0 — 2026-10-13
+
+- On the desktop, the lists that were lines of fixed-width text are now
+  real tables in the app's own fonts: Enchanted Devices, Research Goals,
+  Personal Gear (a table for each kind), Books, Raw Vis, the Diary, the
+  covenant's season lists, Lab Texts, a laboratory's Planning, the
+  Creation Worksheet's lists and the Seasons records. Long names show in
+  full, headings run across the table, and problems keep their colours.
+- The Creation Worksheet's budget lines up its figures in a grid.
+
 ## 2.53.0 — 2026-10-13
 
 - The app now opens on a title page: an illuminated initial A in gold
