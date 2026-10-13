@@ -1,5 +1,5 @@
 {
-  "attribution": "Spells from Ars Magica Definitive Edition, Chapter Nine: Spells, and from The Grand Grimoire of Hermetic Spells (published by Atlas Games), which collects the Hermetic spells of the Ars Magica Fifth Edition books; each spell's source names its book and page. Restructured as data for Ars Magica Manager. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+  "attribution": "Spells from Ars Magica Definitive Edition, Chapter Nine: Spells, and from The Grand Grimoire of Hermetic Spells (published by Atlas Games), which collects the Hermetic spells of the Ars Magica Fifth Edition books; each spell's source names its book and page. Restructured as data for Armarius. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
   "spells": [
     {
       "id": "spell_boundless_wealth_of_the_oceans",

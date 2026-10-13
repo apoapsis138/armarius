@@ -1,5 +1,5 @@
 {
-  "attribution": "Shape and Material bonuses from the Ars Magica Definitive Edition, Chapter 8 (Laboratory, Shape and Material Bonuses Table), via Project: Redcap (redcap.org); each entry cites its source. Condensed and restructured as data for Ars Magica Manager. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+  "attribution": "Shape and Material bonuses from the Ars Magica Definitive Edition, Chapter 8 (Laboratory, Shape and Material Bonuses Table), via Project: Redcap (redcap.org); each entry cites its source. Condensed and restructured as data for Armarius. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
   "notes": "One entry per row of the book's table, in its order. Each bonus adds to the Lab Total for instilling a matching effect (the total from shapes and materials is capped at Magic Theory) and is the menu of a talisman's attunements. An entry with no bonuses keeps the book's text as its note.",
   "entries": [
     {

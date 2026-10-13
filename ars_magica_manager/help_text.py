@@ -226,7 +226,7 @@ def about_text() -> str:
         notice = (ROOT / "NOTICE.md").read_text(encoding="utf-8")
     except OSError:
         notice = "NOTICE.md is missing: see the repository for licences."
-    return f"# Ars Magica Manager v{__version__}\n\n{notice}"
+    return f"# Armarius v{__version__}\n\nA saga manager for Ars Magica.\n\n{notice}"
 
 
 def page_text(help_book: HelpBook, topic_id: str) -> tuple[str, str] | None:

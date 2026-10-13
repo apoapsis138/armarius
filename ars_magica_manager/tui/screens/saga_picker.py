@@ -57,7 +57,10 @@ class SagaPickerScreen(Screen[None]):
         )
         yield ListView(id="saga-list")
         yield Static(self._folder_text(), id="picker-folder")
-        yield Static(f"[dim]Ars Magica Manager {__version__}[/]", id="picker-version")
+        yield Static(
+            f"[dim]Armarius {__version__}, a saga manager for Ars Magica[/]",
+            id="picker-version",
+        )
         yield BottomBar(right_actions=["help"])
 
     async def on_mount(self) -> None:
@@ -78,7 +81,7 @@ class SagaPickerScreen(Screen[None]):
             return ""
         return (
             f"[dim]Save folder: {escape(str(paths.data_dir()))} "
-            f"({paths.SOURCE_TEXT[paths.source()]})[/]"
+            f"({paths.source_text()})[/]"
         )
 
     async def refresh_list(self) -> None:
@@ -193,7 +196,7 @@ class SagaPickerScreen(Screen[None]):
         and read the sagas from it from now on."""
         if paths.source() == "env":
             self.notify(
-                f"The save folder is set by {paths.ENV_VAR}: unset it to "
+                f"The save folder is set by {paths.env_var()}: unset it to "
                 "choose one here.",
                 severity="warning",
             )

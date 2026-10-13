@@ -46,7 +46,7 @@ def main() -> None:
     )
     args = parser.parse_args()
     command = f'"{sys.executable}" "{MAIN}"'
-    server = Server(command, host=args.host, port=args.port, title="Ars Magica Manager")
+    server = Server(command, host=args.host, port=args.port, title="Armarius")
     server.initialize_logging()
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)

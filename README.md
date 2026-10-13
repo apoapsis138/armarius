@@ -1,6 +1,8 @@
-# Ars Magica Manager
+# Armarius
 
-A GM-facing tool for tracking **Ars Magica 5th Edition** characters,
+*A saga manager for Ars Magica.*
+
+Armarius (named for the monastery officer who kept the books and records) is a GM-facing tool for tracking **Ars Magica 5th Edition** characters,
 covenants, laboratories, and libraries, and the relationships between them
 (who belongs to which covenant, who works in which lab, who's read which
 book). See [DESIGN.md](DESIGN.md) for the full design and roadmap.
@@ -77,7 +79,9 @@ uv run python tools/serve.py --ssh-port 2222  # host the app for players
 ### Where your data is kept
 
 Your sagas, their backups, exports and the app's settings are kept in your
-**save folder**, which the saga picker shows under the list of sagas. To
+**save folder**, which the saga picker shows under the list of sagas: by
+default `Armarius` at the top of your OneDrive (or your app data folder
+without OneDrive). To
 use another one, press `m` (More) on the saga picker and choose **Change
 save folder**: pick the folder, and the app can move your saves there
 (it never overwrites a file already in the new folder). It remembers the
@@ -89,10 +93,17 @@ folder or a sync service can refuse. The app checks it can save in a
 folder before using it, and if the save folder ever can't be used when the
 app starts, it uses another and says so.
 
-The `ARS_MAGICA_MANAGER_DATA` environment variable, if set, chooses the
-folder instead (the saga picker says so). Saves kept in the repo's `data/`
-folder by older versions are moved to the save folder the first time the
-app starts.
+The `ARMARIUS_DATA` environment variable, if set, chooses the folder
+instead (the saga picker says so); the older `ARS_MAGICA_MANAGER_DATA`
+still works. Saves kept in the repo's `data/` folder by older versions
+are moved to the save folder the first time the app starts.
+
+The app was called Ars Magica Manager before. The first time Armarius
+starts, it renames the default `Ars Magica Manager` folder to `Armarius`
+(a folder you chose, or one set by the environment variable, stays where
+it is; if both folders exist, nothing is merged and `Armarius` is used).
+A folder chosen under the old name is still remembered, and exports made
+before the rename still import.
 
 ## Layout
 
@@ -161,7 +172,7 @@ app starts.
 
 ## Licence and credits
 
-Ars Magica Manager is free software under the GNU General Public License
+Armarius is free software under the GNU General Public License
 v3.0 (see [LICENSE](LICENSE)). The Ars Magica rules text in its
 catalogs (`data/`) and code is adapted from material licensed under
 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/):

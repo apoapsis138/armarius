@@ -87,7 +87,7 @@ def save_folder_form(current: Path, folder: Path) -> Form:
                 "now",
                 "Now",
                 "info",
-                f"{current} ({paths.SOURCE_TEXT[paths.source()]})",
+                f"{current} ({paths.source_text()})",
             ),
             DialogField("new", "New folder", "info", str(folder)),
             DialogField(
@@ -110,6 +110,6 @@ def save_folder_refused() -> str | None:
     environment), or None."""
     if paths.source() == "env":
         return (
-            f"The save folder is set by {paths.ENV_VAR}: unset it to choose one here."
+            f"The save folder is set by {paths.env_var()}: unset it to choose one here."
         )
     return None

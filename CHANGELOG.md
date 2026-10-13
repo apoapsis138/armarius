@@ -1,6 +1,7 @@
 # Changelog
 
-What changed in each version of Ars Magica Manager, newest first.
+What changed in each version of Armarius (called Ars Magica Manager
+before 2.52.0), newest first.
 
 Versions are `MAJOR.MINOR.PATCH`: MAJOR marks a finished phase of the
 plan (1.0.0: Phase 1, the core tracker; 2.0.0: Phase 4, creation by the
@@ -18,6 +19,7 @@ are not named; each named version's heading carries its name.
 
 | Name | Versions | What it brought |
 | --- | --- | --- |
+| Nomen Novum | 2.52.0 | The app's new name: Armarius, a saga manager for Ars Magica |
 | Illuminatio | 2.45.0 to ... | The desktop version, drawn rather than printed |
 | Sodales | 2.12.0 to 2.18.0 | The troupe shares a saga: hosted for players' browsers and SSH, with sign-in and safe saves |
 | Foundations | 2.11.0 | Your data in its own folder, packaging, automatic checks |
@@ -41,7 +43,24 @@ magus; the Hermetic Techniques are verbs (*verbum*); an *exemplar* was the
 copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide; an *illuminatio* is the
-painted and gilded copy of a manuscript.
+painted and gilded copy of a manuscript; *nomen novum* is a new name,
+and an *armarius* kept a monastery's books and records.
+
+## 2.52.0 — 2026-10-13 — Nomen Novum
+
+- The app is now called **Armarius**, a saga manager for Ars Magica.
+  The title bar, the saga picker, Help's About page, the desktop
+  window and the hosted browser tab say so.
+- Your save folder's default is now `Armarius` at the top of your
+  OneDrive. The first time the app starts, it renames the old `Ars
+  Magica Manager` folder and says so. A folder you chose yourself stays
+  where it is; if both folders exist, nothing is merged and `Armarius`
+  is used.
+- Everything set up under the old name still works: a save folder you
+  chose, the `ARS_MAGICA_MANAGER_DATA` and
+  `ARS_MAGICA_MANAGER_TRANSPORT` environment variables (now also
+  `ARMARIUS_DATA` and `ARMARIUS_TRANSPORT`), and exports made before
+  the rename, which still import.
 
 ## 2.51.0 — 2026-10-13
 

@@ -1,4 +1,4 @@
-# Ars Magica Manager — Design Document
+# Armarius — Design Document
 
 ## 1. Overview
 

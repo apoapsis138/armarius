@@ -45,7 +45,7 @@ def hosted_data(tmp_path, monkeypatch):
     the SSH server starts (they read the environment, not this process's
     monkeypatched storage), and by this process's host key."""
     data = tmp_path / "hosted"
-    monkeypatch.setenv("ARS_MAGICA_MANAGER_DATA", str(data))
+    monkeypatch.setenv(hosting.paths.ENV_VAR, str(data))
     monkeypatch.setattr(storage, "SAGAS_DIR", data / "sagas")
     monkeypatch.setattr(hosting.paths, "data_dir", lambda: data)
     saga = Saga(id="dammerstein", name="Dammerstein")
@@ -89,7 +89,13 @@ async def test_an_ssh_client_gets_the_app_and_signs_in(hosted_data):
 
 def test_a_copy_knows_how_it_is_reached(monkeypatch):
     monkeypatch.delenv(hosting.TRANSPORT_VAR, raising=False)
+    monkeypatch.delenv(hosting.OLD_TRANSPORT_VAR, raising=False)
     assert hosting.transport() == ""
+    # The variable's name before the rename is still read.
+    monkeypatch.setenv(hosting.OLD_TRANSPORT_VAR, "web")
+    assert hosting.transport() == "web"
+    monkeypatch.setenv(hosting.TRANSPORT_VAR, "ssh")
+    assert hosting.transport() == "ssh"
 
     async def nothing(*_args) -> None:
         pass

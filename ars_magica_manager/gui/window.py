@@ -138,7 +138,7 @@ class Place:
 class MainWindow(QMainWindow):
     def __init__(self, saga_ids: list[str] | None = None) -> None:
         super().__init__()
-        self.setWindowTitle("Ars Magica Manager")
+        self.setWindowTitle("Armarius")
         self.setWindowIcon(pictures.app_icon())
         self.palette_index = 0
         self.saga_ids = storage.list_sagas() if saga_ids is None else saga_ids

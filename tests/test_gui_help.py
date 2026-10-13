@@ -79,4 +79,4 @@ def test_about_and_whats_new_come_from_the_core(app):
     page.show_topic(ht.WHATS_NEW)
     assert page.shown_text().startswith("What's New")
     page.show_topic(ht.ABOUT)
-    assert "Ars Magica Manager v" in page.shown_text()
+    assert "Armarius v" in page.shown_text()

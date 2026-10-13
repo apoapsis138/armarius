@@ -30,13 +30,15 @@ from .. import paths
 
 #: How a hosted copy is reached, told to it in this environment variable:
 #: "web" (a browser) or "ssh".
-TRANSPORT_VAR = "ARS_MAGICA_MANAGER_TRANSPORT"
+TRANSPORT_VAR = "ARMARIUS_TRANSPORT"
+#: The variable's name before the app was Armarius, still read.
+OLD_TRANSPORT_VAR = "ARS_MAGICA_MANAGER_TRANSPORT"
 
 
 def transport() -> str:
     """How this copy of the app is reached: "web", "ssh", or "" for the
     storyguide's own window."""
-    return os.environ.get(TRANSPORT_VAR, "")
+    return os.environ.get(TRANSPORT_VAR) or os.environ.get(OLD_TRANSPORT_VAR, "")
 
 
 class HostedAppService(AppService):

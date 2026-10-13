@@ -1,4 +1,5 @@
-"""Ars Magica Manager: tracks characters, covenants, laboratories, and libraries."""
+"""Armarius, a saga manager for Ars Magica: tracks characters, covenants,
+laboratories, and libraries."""
 
 import tomllib
 from pathlib import Path

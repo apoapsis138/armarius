@@ -113,7 +113,7 @@ async def test_a_folder_set_by_the_environment_isnt_changed_here(tmp_path, monke
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:
         await pilot.pause()
-        assert "ARS_MAGICA_MANAGER_DATA" in str(
+        assert "ARMARIUS_DATA" in str(
             app.screen.query_one("#picker-folder", Static).render()
         )
         await pilot.press("m")

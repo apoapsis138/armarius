@@ -1,7 +1,7 @@
 [project]
 name = "ars-magica-manager"
-version = "2.51.0"
-description = "A GM-facing management tool for Ars Magica 5th Edition covenants, characters, laboratories, and libraries."
+version = "2.52.0"
+description = "Armarius, a saga manager for Ars Magica: a GM-facing tool for Ars Magica 5th Edition covenants, characters, laboratories, and libraries."
 readme = "README.md"
 license = "GPL-3.0-only"
 license-files = ["LICENSE", "NOTICE.md"]

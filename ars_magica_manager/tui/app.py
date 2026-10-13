@@ -21,11 +21,11 @@ DEFAULT_THEME = SCRIPTORUM.name
 
 
 class ArsMagicaManagerApp(App[None]):
-    """Ars Magica Manager TUI."""
+    """Armarius's TUI."""
 
     # In the title, not the sub-title: the workspace uses that for the saga
     # and its date (the Header shows "title — sub_title").
-    TITLE = f"Ars Magica Manager v{__version__}"
+    TITLE = f"Armarius v{__version__}"
     BINDINGS: ClassVar[list[BindingType]] = [
         ("q", "quit", "Quit"),
         # Help: F1 anywhere, even in a dialog and while typing

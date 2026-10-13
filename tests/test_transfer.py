@@ -338,10 +338,19 @@ def test_an_export_file_is_written_and_read_back(tmp_path):
     assert plan.characters[0].lab_text_access == {"Flavia": LabTextAccess(20)}
 
 
+def test_exports_made_before_the_rename_are_read(tmp_path):
+    data = _roundtrip(_source(), _source().character("leandro"))
+    assert data["format"] == "armarius-export"
+    data["format"] = "ars-magica-manager-export"
+    old = tmp_path / "leandro.amm.json"
+    old.write_text(json.dumps(data), "utf-8")
+    assert transfer.read(old)["name"] == "Leandro"
+
+
 def test_only_export_files_are_read(tmp_path):
     other = tmp_path / "saga.json"
     other.write_text(json.dumps({"id": "x", "name": "A saga"}), "utf-8")
-    with pytest.raises(ValueError, match="not an Ars Magica Manager export"):
+    with pytest.raises(ValueError, match="not an Armarius export"):
         transfer.read(other)
     other.write_text("not json", "utf-8")
     with pytest.raises(ValueError, match="not a JSON file"):

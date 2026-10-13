@@ -97,7 +97,7 @@ async def test_help_holds_about_and_escape_shuts_it():
             pilot,
             lambda: "Licences, credits and trademarks" in "\n".join(screen_lines(app)),
         )
-        assert "Ars Magica Manager v" in "\n".join(screen_lines(app))
+        assert "Armarius v" in "\n".join(screen_lines(app))
 
         await pilot.press("escape")
         await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))

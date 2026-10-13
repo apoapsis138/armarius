@@ -1,6 +1,6 @@
 # Licences, credits and trademarks
 
-Ars Magica Manager is an unofficial, fan-made tool. It is not published,
+Armarius, a saga manager for Ars Magica, is an unofficial, fan-made tool. It is not published,
 approved or endorsed by Trident, Inc. d/b/a Atlas Games or by Paradox
 Interactive AB.
 

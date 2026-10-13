@@ -46,7 +46,10 @@ from .models import (
     Spell,
 )
 
-FORMAT = "ars-magica-manager-export"
+FORMAT = "armarius-export"
+#: The labels an import accepts: exports made before the app was Armarius
+#: carry the older one.
+FORMATS = (FORMAT, "ars-magica-manager-export")
 SUFFIX = ".amm.json"
 CHARACTER, LABORATORY, COVENANT = "character", "laboratory", "covenant"
 KIND_LABELS: dict[str, str] = {
@@ -189,9 +192,9 @@ def read(path: Path) -> dict[str, Any]:
         data = json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as problem:
         raise ValueError(f"not a JSON file ({problem.msg})") from problem
-    if not isinstance(data, dict) or data.get("format") != FORMAT:
+    if not isinstance(data, dict) or data.get("format") not in FORMATS:
         raise ValueError(
-            "not an Ars Magica Manager export (export a covenant, laboratory or "
+            "not an Armarius export (export a covenant, laboratory or "
             "character from its sheet first)"
         )
     if data.get("kind") not in KIND_LABELS or not isinstance(data.get("saga"), dict):

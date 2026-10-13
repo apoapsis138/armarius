@@ -34,7 +34,7 @@ async def test_the_version_is_shown_in_the_header_and_on_the_saga_picker():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:
         await pilot.pause()
-        assert app.title == f"Ars Magica Manager v{__version__}"
+        assert app.title == f"Armarius v{__version__}"
         line = app.screen.query_one("#picker-version", Static)
         assert __version__ in str(line.render())
         assert line.region.height == 1 and line.region.bottom <= 44
@@ -45,4 +45,4 @@ async def test_the_version_is_shown_in_the_header_and_on_the_saga_picker():
         await pilot.press("enter")
         await pilot.pause()
         header = screen_lines(app)[0]
-        assert f"Ars Magica Manager v{__version__} — S | Spring 1220" in header
+        assert f"Armarius v{__version__} — S | Spring 1220" in header

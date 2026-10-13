@@ -41,7 +41,7 @@ def _save_folder_dialog(current: Path) -> FieldsDialog[tuple[Path, bool]]:
                 "now",
                 "Now",
                 "info",
-                f"{current} ({paths.SOURCE_TEXT[paths.source()]})",
+                f"{current} ({paths.source_text()})",
             ),
             DialogField(
                 "folder",
