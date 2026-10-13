@@ -18,6 +18,7 @@ are not named; each named version's heading carries its name.
 
 | Name | Versions | What it brought |
 | --- | --- | --- |
+| Illuminatio | 2.45.0 to ... | The desktop version, drawn rather than printed |
 | Sodales | 2.12.0 to 2.18.0 | The troupe shares a saga: hosted for players' browsers and SSH, with sign-in and safe saves |
 | Foundations | 2.11.0 | Your data in its own folder, packaging, automatic checks |
 | Summa | 2.10.0 | How-to guides in Help |
@@ -39,9 +40,26 @@ follows the labours of the seasons; the Gauntlet makes an apprentice a
 magus; the Hermetic Techniques are verbs (*verbum*); an *exemplar* was the
 copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
-the troupe's players are to the storyguide.
+the troupe's players are to the storyguide; an *illuminatio* is the
+painted and gilded copy of a manuscript.
 
-## 2.45.0 — 2026-10-13
+## 2.46.0 — 2026-10-13
+
+- The desktop version has a page for each laboratory, opened from its
+  card on the covenant's page. The header shows whose sanctum it is, the
+  Size its Virtues and Flaws take up, the free Virtues left, the Base
+  Safety, and the aura as a seal in its realm's colour. The eight
+  Characteristics are drawn as a compass rose, each point as long as its
+  score (gilt when it adds, red when it takes away), beside a card each
+  that shows what you typed and what the Virtues and Flaws add.
+- Its chapters: the owner's Lab Total for every Technique and Form as a
+  coloured grid (click one to see its terms), with the Base Lab Total and
+  what each activity adds; the Virtues and Flaws as cards; Specializations
+  as bars, with the Features and rooms; the stores (raw vis, equipment,
+  Arcane Connections, books); and the lab's seasons as a calendar beside
+  its diary.
+
+## 2.45.0 — 2026-10-13 — Illuminatio
 
 - The desktop Character sheet is laid out as a codex: a chapter list on the
   left, the chapter in the middle, and a panel on the right that shows

@@ -57,3 +57,17 @@ def test_the_calendar_has_a_row_per_year_newest_first():
     rows = ov.calendar(saga, character)
     assert [year for year, _ in rows] == [1220, 1219, 1218]
     assert rows[2][1][1] is not None and rows[2][1][1].kind == ov.ADVENTURE
+
+
+def test_a_laboratorys_seasons_are_its_diary_and_the_plans_made_in_it():
+    saga = _sample_saga_with_covenant()  # Spring 1220
+    lab = saga.laboratories[0]
+    lab.diary.append(DiaryEntry(1219, "Autumn", "", "", "Invent a spell"))
+    plan = SeasonPlan(saga.characters[0].id, 1220, "Summer", "invent_spell")
+    plan.lab_id = lab.id
+    saga.season_plans.append(plan)
+    rows = ov.calendar_rows(saga, ov.lab_seasons(saga, lab))
+    assert [year for year, _ in rows] == [1220, 1219]
+    planned, written = rows[0][1][1], rows[1][1][2]
+    assert planned is not None and planned.planned and planned.detail == "Leandro"
+    assert written is not None and written.kind == ov.LAB

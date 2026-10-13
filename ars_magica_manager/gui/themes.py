@@ -49,6 +49,11 @@ SCRIPTORUM = Palette(
         "season-adventure": "#6E4A7E",
         "season-rest": "#8A7F72",
         "season-other": "#A39580",
+        # An aura's realm.
+        "realm-Magic": "#2F5D8A",
+        "realm-Divine": "#B8860B",
+        "realm-Faerie": "#4A7A5C",
+        "realm-Infernal": "#8B0000",
     },
 )
 
@@ -78,6 +83,10 @@ SCRIPTORUM_DARK = Palette(
         "season-adventure": "#9A7AB6",
         "season-rest": "#7E7A70",
         "season-other": "#5F5B52",
+        "realm-Magic": "#6E9BD1",
+        "realm-Divine": "#E3C25A",
+        "realm-Faerie": "#74B08A",
+        "realm-Infernal": "#F87171",
     },
 )
 

@@ -18,6 +18,7 @@ from ars_magica_manager import character_sheet as cs
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.figures import Dial
+from ars_magica_manager.gui.laboratory import LaboratoryPage
 from ars_magica_manager.gui.markup_html import plain, to_html
 from ars_magica_manager.gui.pages import CovenantPage, SagaPage
 from ars_magica_manager.gui.themes import PALETTES, SCRIPTORUM
@@ -168,6 +169,62 @@ def test_the_diary_opens_with_a_calendar_of_the_characters_seasons(app):
     model = sheet.calendar.view.model()
     assert model.headerData(1, Qt.Orientation.Vertical) == "1219"
     assert model.index(1, 2).data(SEASON).kind == "Study"
+
+
+def _lab_page(window: MainWindow, saga) -> LaboratoryPage:
+    window.load(saga)
+    window.open_covenant(saga.covenants[0].id)
+    covenant = window.sheet_area.findChild(CovenantPage)
+    assert covenant is not None
+    labs = covenant.codex.pages.widget(1)
+    next(iter(labs.findChildren(ClickableCard))).clicked()
+    page = window.sheet_area.findChild(LaboratoryPage)
+    assert page is not None
+    return page
+
+
+def test_a_laboratory_opens_from_its_covenants_card_with_every_chapter(app):
+    window = MainWindow(saga_ids=[])
+    saga = _sample_saga_with_covenant()
+    page = _lab_page(window, saga)
+    assert window.crumb_names() == [
+        "Sagas",
+        saga.name,
+        "Test Covenant",
+        "Leandro's Sanctum",
+    ]
+    assert page.chapters() == [
+        "Lab Totals",
+        "Virtues & Flaws",
+        "Specializations",
+        "Stores",
+        "Seasons",
+    ]
+    assert "Superior Construction" in _texts(page)
+
+
+def test_choosing_a_lab_total_or_characteristic_shows_it_in_the_inspector(app):
+    window = MainWindow(saga_ids=[])
+    page = _lab_page(window, _sample_saga_with_covenant())
+    view = page.totals_view
+    assert view is not None
+    view.clicked.emit(view.model().index(0, 5))  # Creo Ignem
+    assert page.inspector.title.text() == "Creo Ignem"
+    assert "Lab Total 26" in plain(page.inspector.body.text())
+    safety = page.characteristic_cards[4]
+    safety.clicked()
+    assert page.inspector.title.text() == "Safety"
+
+
+def test_a_laboratorys_calendar_shows_its_diary(app):
+    saga = _sample_saga_with_covenant()
+    saga.laboratories[0].diary.append(
+        DiaryEntry(1219, "Autumn", "", "", "Invent a spell")
+    )
+    page = _lab_page(MainWindow(saga_ids=[]), saga)
+    model = page.calendar.view.model()
+    assert model.headerData(1, Qt.Orientation.Vertical) == "1219"
+    assert model.index(1, 2).data(SEASON).kind == "Laboratory"
 
 
 def test_markup_becomes_spans_in_the_palettes_colours():

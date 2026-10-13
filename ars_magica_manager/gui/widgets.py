@@ -12,10 +12,21 @@ from collections.abc import Callable
 from pathlib import Path
 
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QRectF, QSize, Qt
-from PySide6.QtGui import QColor, QFont, QPainter, QPen
+from PySide6.QtGui import (
+    QBrush,
+    QColor,
+    QFont,
+    QIcon,
+    QPainter,
+    QPen,
+    QStandardItem,
+    QStandardItemModel,
+)
 from PySide6.QtWidgets import (
+    QAbstractItemView,
     QFrame,
     QHBoxLayout,
+    QHeaderView,
     QLabel,
     QListWidget,
     QListWidgetItem,
@@ -25,10 +36,13 @@ from PySide6.QtWidgets import (
     QStyle,
     QStyledItemDelegate,
     QStyleOptionViewItem,
+    QTableView,
     QVBoxLayout,
     QWidget,
 )
 
+from .. import artwork
+from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from . import pictures
 from .markup_html import to_html
 from .themes import Palette
@@ -372,3 +386,77 @@ class Codex(QSplitter):
         self, title: str, subtitle: str, markup: str, symbol: Path | None = None
     ) -> None:
         self.inspector.show_item(title, subtitle, markup, symbol)
+
+
+def table_style(view: QAbstractItemView, p: Palette) -> None:
+    view.setStyleSheet(
+        f"QAbstractItemView {{ background:{p['surface']};"
+        f" alternate-background-color:{p['background']};"
+        f" border:1px solid {p['rule']}; selection-background-color:"
+        f" {p['selection']}; selection-color:{p['foreground']}; }}"
+        f" QHeaderView::section {{ background:{p['panel']}; color:{p['foreground']};"
+        " border:none; padding:5px; font-weight:600; }"
+    )
+
+
+def arts_heat_grid(
+    totals: dict[tuple[str, str], int],
+    p: Palette,
+    on_choose: Callable[[str, str], None],
+) -> QTableView:
+    """A total for every Technique (down) and Form (across) as a heat map,
+    the higher the deeper its colour; choosing a cell calls `on_choose`
+    with its Technique and Form. The Casting Scores and the Lab Totals."""
+    values = list(totals.values())
+    low, high = min(values), max(values)
+    model = QStandardItemModel(len(TECHNIQUES), len(FORMS))
+    for column, form in enumerate(FORMS):
+        head = QStandardItem(ART_ABBREVIATIONS[form])
+        head.setIcon(
+            QIcon(pictures.pixmap(artwork.art_symbol(form), p["foreground"], 20, 2.0))
+        )
+        head.setToolTip(form)
+        model.setHorizontalHeaderItem(column, head)
+    for row, technique in enumerate(TECHNIQUES):
+        head = QStandardItem(technique)
+        head.setIcon(
+            QIcon(
+                pictures.pixmap(artwork.art_symbol(technique), p["foreground"], 20, 2.0)
+            )
+        )
+        model.setVerticalHeaderItem(row, head)
+        for column, form in enumerate(FORMS):
+            total = totals[technique, form]
+            heat = (total - low) / max(high - low, 1)
+            cell = QStandardItem(str(total))
+            cell.setEditable(False)
+            cell.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            cell.setBackground(
+                QBrush(mix(p["surface"], p["primary"], 0.08 + 0.62 * heat))
+            )
+            cell.setForeground(
+                QBrush(QColor(p["background"] if heat > 0.55 else p["foreground"]))
+            )
+            font = QFont(pictures.UI)
+            font.setPointSizeF(11)
+            font.setBold(heat > 0.55)
+            cell.setFont(font)
+            cell.setToolTip(f"{technique} {form}: {total}")
+            model.setItem(row, column, cell)
+    view = QTableView()
+    view.setModel(model)
+    view.setIconSize(QSize(20, 20))
+    view.setShowGrid(False)
+    view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+    view.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+    view.verticalHeader().setDefaultSectionSize(34)
+    view.verticalHeader().setFont(serif(12, italic=True))
+    table_style(view, p)
+    view.setFixedHeight(
+        34 * len(TECHNIQUES) + view.horizontalHeader().sizeHint().height() + 4
+    )
+    view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+    view.clicked.connect(
+        lambda index: on_choose(TECHNIQUES[index.row()], FORMS[index.column()])
+    )
+    return view

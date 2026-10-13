@@ -170,7 +170,8 @@ class SagaPage(QWidget):
 
 class CovenantPage(QWidget):
     """A covenant in the Codex layout: its people as cards, its
-    laboratories, and the timeline of everyone's seasons."""
+    laboratories, and the timeline of everyone's seasons. Choosing a
+    person or a laboratory opens their page."""
 
     def __init__(
         self,
@@ -178,9 +179,11 @@ class CovenantPage(QWidget):
         covenant_id: str | None,
         p: Palette,
         open_character: Open,
+        open_laboratory: Open,
     ) -> None:
         super().__init__()
         self.saga, self.p = saga, p
+        self.open_laboratory = open_laboratory
         covenant = saga.covenant(covenant_id)
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
@@ -245,11 +248,7 @@ class CovenantPage(QWidget):
                 _symbol(artwork.icon("laboratory"), p),
             )
             card.column.addWidget(fact_grid(list(figures.facts), p, 4))
-            card.clicked = lambda figures=figures: self.codex.inspect(
-                figures.name,
-                figures.subtitle,
-                "\n".join(f"[$label]{f.label}:[/] {f.value}" for f in figures.facts),
-            )
+            card.clicked = lambda lab_id=figures.id: self.open_laboratory(lab_id)
             cards.append(card)
         return scrolling_page(
             chapter_title(f"Laboratories ({len(labs)})", p),

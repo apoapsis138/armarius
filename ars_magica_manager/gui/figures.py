@@ -1,20 +1,24 @@
-"""Painted figures for the desktop sheet: the Warping and Decrepitude
+"""Painted figures for the desktop pages: the Warping and Decrepitude
 dials, Personality Trait bars, the wound track and the Fatigue ladder,
-and labelled facts and prose in the Codex's type.
+a laboratory's Characteristics compass rose, aura seal and Specialization
+bars, and labelled facts and prose in the Codex's type.
 
 Each draws one of the core's plain figures (character_sheet.Dial, Fact,
-WoundBand...), so what it shows is the same as the terminal sheet's text.
+WoundBand, laboratory_sheet.Characteristic...), so what it shows is the
+same as the terminal sheet's text.
 """
 
 from __future__ import annotations
 
+import math
 from collections.abc import Sequence
 
-from PySide6.QtCore import QEasingCurve, QRectF, Qt, QVariantAnimation
-from PySide6.QtGui import QColor, QFont, QPainter, QPen
+from PySide6.QtCore import QEasingCurve, QPointF, QRectF, Qt, QVariantAnimation
+from PySide6.QtGui import QColor, QFont, QPainter, QPen, QPolygonF
 from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from .. import character_sheet as cs
+from .. import laboratory_sheet as cs_lab
 from . import pictures
 from .themes import Palette
 from .widgets import mix, serif, text
@@ -270,3 +274,164 @@ def fatigue_ladder(levels: Sequence[tuple[str, int, bool]], p: Palette) -> QWidg
         row.addWidget(step)
     row.addStretch(1)
     return box
+
+
+class CompassRose(QWidget):
+    """A laboratory's eight Characteristics as the rose of a sea chart:
+    a point each, as long as its score, gilt when it adds and red when it
+    takes away, inside a ruled ring with the dotted circle at 0."""
+
+    REACH = 6  # the score at the rim, either way
+    CENTRE, RADIUS = QPointF(150, 122), 70.0
+
+    def __init__(self, rows: Sequence[cs_lab.Characteristic], p: Palette) -> None:
+        super().__init__()
+        self.rows, self.p = rows, p
+        self.setFixedSize(300, 244)
+        self.setToolTip("\n".join(f"{row.name} {row.total:+d}" for row in rows))
+
+    def _length(self, value: float) -> float:
+        """How far a point reaches: a stub at -REACH, the rim at +REACH."""
+        clamped = max(-self.REACH, min(value, self.REACH))
+        return self.RADIUS * (0.3 + 0.7 * (clamped + self.REACH) / (2 * self.REACH))
+
+    def _at(self, degrees: float, distance: float) -> QPointF:
+        angle = math.radians(degrees - 90)
+        c = self.CENTRE
+        return QPointF(
+            c.x() + math.cos(angle) * distance, c.y() + math.sin(angle) * distance
+        )
+
+    def paintEvent(self, event) -> None:
+        p = self.p
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        c, r = self.CENTRE, self.RADIUS
+        ink = QColor(p["rule"])
+        # The ring: two circles with a tick every 10 degrees between them,
+        # and the rhumb lines, sixteen of them, out to it.
+        painter.setBrush(Qt.BrushStyle.NoBrush)
+        painter.setPen(QPen(ink, 1))
+        for ring in (r + 6, r + 11):
+            painter.drawEllipse(c, ring, ring)
+        for degrees in range(0, 360, 10):
+            painter.drawLine(self._at(degrees, r + 6), self._at(degrees, r + 11))
+        faint = QColor(ink)
+        faint.setAlpha(140)
+        painter.setPen(QPen(faint, 0.8))
+        for i in range(16):
+            painter.drawLine(c, self._at(i * 22.5, r + 6))
+        zero = self._length(0)
+        painter.setPen(QPen(ink, 1, Qt.PenStyle.DotLine))
+        painter.drawEllipse(c, zero, zero)
+        # The points, each in two halves, the darker one clockwise.
+        n = len(self.rows)
+        for i, row in enumerate(self.rows):
+            degrees = 360 * i / n
+            colour = p["text-error"] if row.total < 0 else p["accent"]
+            tip = self._at(degrees, self._length(row.total))
+            left = self._at(degrees - 360 / (2 * n), r * 0.24)
+            right = self._at(degrees + 360 / (2 * n), r * 0.24)
+            painter.setPen(QPen(mix(colour, p["foreground"], 0.35), 0.8))
+            painter.setBrush(mix(colour, p["surface"], 0.55))
+            painter.drawPolygon(QPolygonF([c, left, tip]))
+            painter.setBrush(QColor(colour))
+            painter.drawPolygon(QPolygonF([c, tip, right]))
+        # The boss at the centre.
+        painter.setPen(QPen(QColor(p["accent"]), 1.5))
+        painter.setBrush(QColor(p["surface"]))
+        painter.drawEllipse(c, 7, 7)
+        painter.setBrush(QColor(p["heading"]))
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.drawEllipse(c, 2.5, 2.5)
+        # The names outside the ring.
+        painter.setFont(serif(9, caps=True))
+        painter.setPen(QColor(p["label"]))
+        for i, row in enumerate(self.rows):
+            at = self._at(360 * i / n, r + 30)
+            painter.drawText(
+                QRectF(at.x() - 55, at.y() - 8, 110, 16),
+                Qt.AlignmentFlag.AlignCenter,
+                row.name,
+            )
+        painter.end()
+
+
+class AuraSeal(QWidget):
+    """The laboratory's aura as a seal in its realm's colour: the total in
+    the middle, the realm round it."""
+
+    def __init__(self, aura: cs_lab.Aura, p: Palette) -> None:
+        super().__init__()
+        self.aura, self.p = aura, p
+        self.setFixedSize(96, 104)
+        working = f"{aura.covenant} from the covenant, {aura.modifier:+d} here"
+        self.setToolTip(
+            f"{aura.realm} aura {aura.total}: {working}"
+            + (f"\n{aura.note}" if aura.note else "")
+        )
+
+    def paintEvent(self, event) -> None:
+        p, a = self.p, self.aura
+        colour = QColor(p[f"realm-{a.realm}"])
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        seal = QRectF(14, 6, 68, 68)
+        painter.setPen(QPen(colour, 2))
+        painter.setBrush(mix(p["surface"], colour.name(), 0.18))
+        painter.drawEllipse(seal)
+        painter.setPen(QPen(colour, 1, Qt.PenStyle.DotLine))
+        painter.setBrush(Qt.BrushStyle.NoBrush)
+        painter.drawEllipse(seal.adjusted(6, 6, -6, -6))
+        painter.setPen(QColor(p["foreground"]))
+        painter.setFont(serif(22, bold=True))
+        painter.drawText(seal, Qt.AlignmentFlag.AlignCenter, str(a.total))
+        painter.setPen(QColor(p["label"]))
+        painter.setFont(serif(10, caps=True))
+        painter.drawText(
+            QRectF(0, 78, 96, 16), Qt.AlignmentFlag.AlignCenter, f"{a.realm} Aura"
+        )
+        painter.end()
+
+
+def bar_list(
+    rows: Sequence[tuple[str, int, bool]], p: Palette, reach: int = 6
+) -> QWidget:
+    """Names with a score and a bar from the left, one under another; a
+    row that doesn't count is dimmed."""
+    box = QWidget()
+    grid = QGridLayout(box)
+    grid.setContentsMargins(0, 0, 0, 0)
+    grid.setHorizontalSpacing(12)
+    grid.setVerticalSpacing(6)
+    for row, (name, score, counts) in enumerate(rows):
+        ink = p["foreground"] if counts else p["dim"]
+        grid.addWidget(text(name, ink, serif(13)), row, 0)
+        number = text(
+            f"{score:+d}", p["heading"] if counts else p["dim"], serif(13, bold=True)
+        )
+        number.setAlignment(Qt.AlignmentFlag.AlignRight)
+        grid.addWidget(number, row, 1)
+        grid.addWidget(_Bar(score / reach, p, counts), row, 2)
+    grid.setColumnStretch(2, 1)
+    return box
+
+
+class _Bar(QWidget):
+    def __init__(self, share: float, p: Palette, lit: bool) -> None:
+        super().__init__()
+        self.share, self.p, self.lit = max(0.0, min(share, 1.0)), p, lit
+        self.setFixedHeight(14)
+        self.setMinimumWidth(90)
+
+    def paintEvent(self, event) -> None:
+        p = self.p
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.setBrush(QColor(p["panel"]))
+        painter.drawRoundedRect(QRectF(0, 4, self.width(), 6), 3, 3)
+        if self.share:
+            painter.setBrush(QColor(p["accent"] if self.lit else p["dim"]))
+            painter.drawRoundedRect(QRectF(0, 4, self.width() * self.share, 6), 3, 3)
+        painter.end()

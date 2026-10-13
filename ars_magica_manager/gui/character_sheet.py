@@ -74,14 +74,17 @@ from .widgets import (
     Pips,
     TallRows,
     XpBarDelegate,
+    arts_heat_grid,
     badge,
     chapter_title,
     chip,
     display_name,
-    mix,
     scrolling_page,
     serif,
     text,
+)
+from .widgets import (
+    table_style as _table_style,
 )
 
 #: The House symbol beside the name, and an Art's in a table, in pixels.
@@ -215,17 +218,6 @@ def section(title: str, p: Palette, *widgets: QWidget) -> QWidget:
     for widget in widgets:
         column.addWidget(widget)
     return box
-
-
-def _table_style(view: QAbstractItemView, p: Palette) -> None:
-    view.setStyleSheet(
-        f"QAbstractItemView {{ background:{p['surface']};"
-        f" alternate-background-color:{p['background']};"
-        f" border:1px solid {p['rule']}; selection-background-color:"
-        f" {p['selection']}; selection-color:{p['foreground']}; }}"
-        f" QHeaderView::section {{ background:{p['panel']}; color:{p['foreground']};"
-        " border:none; padding:5px; font-weight:600; }"
-    )
 
 
 def _fit_height(view: QAbstractItemView, rows: int) -> None:
@@ -644,63 +636,9 @@ class CharacterSheet(QWidget):
     def _casting_grid(self) -> QWidget:
         """Every Casting Score as a heat map, Forms across and Techniques
         down; choosing a cell shows its terms."""
-        p = self.p
         scores = cs.casting_grid(self.saga, self.character)
-        totals = [int(score.total) for score in scores.values()]
-        low, high = min(totals), max(totals)
-        model = QStandardItemModel(len(TECHNIQUES), len(FORMS))
-        for column, form in enumerate(FORMS):
-            head = _item(ART_ABBREVIATIONS[form])
-            head.setIcon(
-                QIcon(
-                    pictures.pixmap(artwork.art_symbol(form), p["foreground"], 20, 2.0)
-                )
-            )
-            head.setToolTip(form)
-            model.setHorizontalHeaderItem(column, head)
-        for row, technique in enumerate(TECHNIQUES):
-            head = _item(technique)
-            head.setIcon(
-                QIcon(
-                    pictures.pixmap(
-                        artwork.art_symbol(technique), p["foreground"], 20, 2.0
-                    )
-                )
-            )
-            model.setVerticalHeaderItem(row, head)
-            for column, form in enumerate(FORMS):
-                total = int(scores[technique, form].total)
-                heat = (total - low) / max(high - low, 1)
-                cell = _item(str(total))
-                cell.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-                cell.setBackground(
-                    QBrush(mix(p["surface"], p["primary"], 0.08 + 0.62 * heat))
-                )
-                cell.setForeground(
-                    QBrush(QColor(p["background"] if heat > 0.55 else p["foreground"]))
-                )
-                font = QFont(pictures.UI)
-                font.setPointSizeF(11)
-                font.setBold(heat > 0.55)
-                cell.setFont(font)
-                cell.setToolTip(f"{technique} {form}: {total}")
-                model.setItem(row, column, cell)
-        view = QTableView()
-        view.setModel(model)
-        view.setIconSize(QSize(20, 20))
-        view.setShowGrid(False)
-        view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        view.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        view.verticalHeader().setDefaultSectionSize(34)
-        view.verticalHeader().setFont(serif(12, italic=True))
-        _table_style(view, p)
-        view.setFixedHeight(
-            34 * len(TECHNIQUES) + view.horizontalHeader().sizeHint().height() + 4
-        )
-        view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
-        def show(index) -> None:
-            technique, form = TECHNIQUES[index.row()], FORMS[index.column()]
+        def show(technique: str, form: str) -> None:
             self.inspect(
                 f"{technique} {form}",
                 f"{ART_ABBREVIATIONS[technique]}{ART_ABBREVIATIONS[form]}"
@@ -709,9 +647,10 @@ class CharacterSheet(QWidget):
                 artwork.art_symbol(form),
             )
 
-        view.clicked.connect(show)
-        self.casting_view = view
-        return view
+        self.casting_view = arts_heat_grid(
+            {pair: int(score.total) for pair, score in scores.items()}, self.p, show
+        )
+        return self.casting_view
 
     def _spells(self) -> QWidget:
         """Known Spells as a table that sorts by any column and filters by

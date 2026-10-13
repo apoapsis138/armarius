@@ -3,7 +3,7 @@ with a trail across the top back to the pages above it (Sagas, the saga,
 the covenant, the character).
 
 The pages are the shelf of sagas, a saga's covenants, a covenant (its
-people, laboratories and seasons) and a character's sheet. Where the
+people, laboratories and seasons), a laboratory and a character's sheet. Where the
 reader is is a list of places, the trail; the page shown is built from
 the last one, so changing the theme just builds it again.
 
@@ -30,10 +30,17 @@ from .. import storage
 from ..models import Saga
 from . import pictures
 from .character_sheet import CharacterSheet
+from .laboratory import LaboratoryPage
 from .pages import CovenantPage, SagaPage, SagaShelf
 from .themes import PALETTES, Palette, style_sheet
 
-SHELF, SAGA, COVENANT, CHARACTER = "shelf", "saga", "covenant", "character"
+SHELF, SAGA, COVENANT, CHARACTER, LABORATORY = (
+    "shelf",
+    "saga",
+    "covenant",
+    "character",
+    "laboratory",
+)
 
 
 @dataclass(frozen=True)
@@ -119,6 +126,20 @@ class MainWindow(QMainWindow):
             ]
         )
 
+    def open_laboratory(self, lab_id: str) -> None:
+        """Open a laboratory's page, below its covenant."""
+        lab = self.saga.laboratory(lab_id) if self.saga else None
+        if lab is None:
+            return
+        self.go(
+            [
+                Place(SHELF),
+                Place(SAGA),
+                Place(COVENANT, lab.covenant_id),
+                Place(LABORATORY, lab_id),
+            ]
+        )
+
     def _up_to(self, kind: str) -> list[Place]:
         kinds = [place.kind for place in self.trail]
         return self.trail[: kinds.index(kind) + 1] if kind in kinds else [Place(kind)]
@@ -139,7 +160,14 @@ class MainWindow(QMainWindow):
         if place.kind == SAGA:
             return SagaPage(saga, p, self.open_covenant)
         if place.kind == COVENANT:
-            return CovenantPage(saga, place.id, p, self.show_character)
+            return CovenantPage(
+                saga, place.id, p, self.show_character, self.open_laboratory
+            )
+        if place.kind == LABORATORY:
+            lab = saga.laboratory(place.id)
+            if lab is None:
+                return QLabel("No laboratory chosen.")
+            return LaboratoryPage(saga, lab, p)
         character = saga.character(place.id)
         if character is None:
             return QLabel("No character chosen.")
@@ -166,6 +194,9 @@ class MainWindow(QMainWindow):
         if place.kind == COVENANT:
             covenant = saga.covenant(place.id)
             return covenant.name if covenant else "Unassigned"
+        if place.kind == LABORATORY:
+            lab = saga.laboratory(place.id)
+            return lab.name if lab else ""
         character = saga.character(place.id)
         return character.name if character else ""
 

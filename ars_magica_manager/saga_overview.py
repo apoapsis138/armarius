@@ -363,7 +363,41 @@ def calendar(saga: Saga, character: Character) -> list[tuple[int, list[Season | 
     """One character's seasons as a calendar: a row per year, newest
     first, from their first recorded season (or this year) to the last
     planned, each with its four seasons."""
-    seasons = character_seasons(saga, character)
+    return calendar_rows(saga, character_seasons(saga, character))
+
+
+def lab_seasons(saga: Saga, lab: Laboratory) -> dict[int, Season]:
+    """A laboratory's seasons by when: each entry of its Diary, then each
+    locked-in plan made in it for a season not yet written up."""
+    seasons: dict[int, Season] = {}
+    for entry in lab.diary:
+        if entry.season in SEASONS:
+            label = entry.activity or entry.name or "Diary entry"
+            name = entry.name if entry.name != label else ""
+            detail = "\n".join(part for part in (name, entry.details) if part)
+            seasons[_when(entry.season, entry.year)] = Season(LAB, label, detail, False)
+    for plan in saga.season_plans:
+        if plan.lab_id != lab.id or plan.season not in SEASONS:
+            continue
+        activity = ACTIVITIES.get(plan.activity)
+        who = saga.character(plan.character_id)
+        seasons.setdefault(
+            _when(plan.season, plan.year),
+            Season(
+                activity_kind(plan.activity),
+                activity.label if activity else plan.activity,
+                who.name if who else "",
+                True,
+            ),
+        )
+    return seasons
+
+
+def calendar_rows(
+    saga: Saga, seasons: dict[int, Season]
+) -> list[tuple[int, list[Season | None]]]:
+    """Seasons by when as a calendar: a row per year, newest first, from
+    the first (or this year) to the last, each with its four seasons."""
     now = _when(saga.current_season, saga.current_year)
     years = [when // len(SEASONS) for when in seasons] or [saga.current_year]
     first, last = min(*years, now // len(SEASONS)), max(*years, now // len(SEASONS))
