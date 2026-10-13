@@ -20,6 +20,7 @@ from textual.widgets import (
 from textual.widgets._collapsible import CollapsibleTitle
 
 from .... import enchanted_devices as ed
+from ....boon_hook_text import counted
 from ....markup import escape, inherited
 from ....models import (
     Book,
@@ -28,13 +29,7 @@ from ....models import (
     Laboratory,
     Saga,
 )
-from ..widgets import (
-    DetailsPanel,
-    SelectableList,
-    SheetSection,
-    counted,
-    first_stop,
-)
+from ..widgets import DetailsPanel, SelectableList, SheetSection, first_stop
 from .lists import BookListView
 
 

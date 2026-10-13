@@ -13,6 +13,7 @@ from textual.widgets import (
 from .... import familiars as fam
 from .... import possessions as pos
 from .... import sheet_text as st
+from ....boon_hook_text import counted, points_title
 from ....models import (
     Familiar,
     Saga,
@@ -23,8 +24,6 @@ from ..widgets import (
     SheetSection,
     TableHeader,
     TwoColumns,
-    counted,
-    points_title,
 )
 from .base import SheetView
 

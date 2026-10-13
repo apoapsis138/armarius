@@ -21,6 +21,12 @@ from .... import covenant_diary as cov_diary
 from .... import economics as eco
 from .... import inhabitants as inh
 from .... import possessions as pos
+from ....boon_hook_text import (
+    boon_hook_info_text,
+    boon_hook_rows,
+    boon_hook_title,
+    counted,
+)
 from ....covenants import (
     boon_hook_problems,
     covenant_effective_aura,
@@ -41,10 +47,6 @@ from ..widgets import (
     SheetSection,
     TableHeader,
     TwoColumns,
-    boon_hook_info_text,
-    boon_hook_rows,
-    boon_hook_title,
-    counted,
 )
 from .base import SheetView
 

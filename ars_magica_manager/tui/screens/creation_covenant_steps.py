@@ -20,6 +20,7 @@ from ... import covenants as cov_rules
 from ... import inhabitants as inh
 from ... import laboratories as lab_rules
 from ... import possessions as pos
+from ...boon_hook_text import boon_hook_info_text
 from ...covenants import boon_hook_points, covenant_boon_points, covenant_hook_points
 from ...markup import aligned, escape
 from ...models import (
@@ -48,7 +49,6 @@ from .creation_worksheet import (
 from .forms import _enchanted_device_dialog
 from .pickers import RemovalPickerScreen, SagaBookPickerScreen
 from .prompts import ConfirmScreen, MenuScreen
-from .widgets import boon_hook_info_text
 
 if TYPE_CHECKING:
     from .workspace.screen import WorkspaceScreen

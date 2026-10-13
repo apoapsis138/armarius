@@ -23,6 +23,7 @@ from .... import lab_texts as lt
 from .... import laboratories as lab_text
 from .... import sheet_text as st
 from ....arts import FORMS, TECHNIQUES
+from ....boon_hook_text import counted, match_colour, points_title
 from ....markup import escape
 from ....models import (
     Character,
@@ -36,9 +37,6 @@ from ..widgets import (
     SheetSection,
     TableHeader,
     TwoColumns,
-    counted,
-    match_colour,
-    points_title,
 )
 from .base import SheetView
 from .lists import BookListView

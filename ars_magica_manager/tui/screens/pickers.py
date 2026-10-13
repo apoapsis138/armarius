@@ -34,6 +34,7 @@ from ... import laboratories as labs
 from ... import saga_content as sc
 from ... import sheet_text as st
 from ... import spells as spl
+from ...boon_hook_text import boon_hook_entry_text, boon_hook_names
 from ...markup import escape, fit
 from ...models import (
     VIRTUE_FLAW_TIER_COST,
@@ -60,7 +61,6 @@ from .prompts import (
     _param_dialog,
     param_choices,
 )
-from .widgets import _boon_hook_names, boon_hook_entry_text
 
 _VIRTUE_FLAW_ITEM_ID_PREFIX = "vf-"
 
@@ -843,7 +843,7 @@ class CovenantBoonHookPickerScreen(
         return f"{entry.name} {entry.category} {entry.tier} {entry.description}"
 
     def _names(self, ids: list[str]) -> str:
-        return _boon_hook_names(ids, self._by_id)
+        return boon_hook_names(ids, self._by_id)
 
     def _label_for(self, entry: CovenantBoonHookDef) -> str:
         facts = [entry.category] if entry.category else []

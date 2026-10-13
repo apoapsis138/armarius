@@ -1,7 +1,8 @@
 """Painted figures for the desktop pages: the Warping and Decrepitude
 dials, Personality Trait bars, the wound track and the Fatigue ladder,
-a laboratory's Characteristics compass rose, aura seal and Specialization
-bars, and labelled facts and prose in the Codex's type.
+a laboratory's Characteristics compass rose, seals (aura, Loyalty),
+Specialization bars, a library's book spines, and labelled facts and prose
+in the Codex's type.
 
 Each draws one of the core's plain figures (character_sheet.Dial, Fact,
 WoundBand, laboratory_sheet.Characteristic...), so what it shows is the
@@ -11,15 +12,27 @@ same as the terminal sheet's text.
 from __future__ import annotations
 
 import math
-from collections.abc import Sequence
+import random
+from collections.abc import Callable, Sequence
 
 from PySide6.QtCore import QEasingCurve, QPointF, QRectF, Qt, QVariantAnimation
-from PySide6.QtGui import QColor, QFont, QPainter, QPen, QPolygonF
+from PySide6.QtGui import (
+    QColor,
+    QFont,
+    QLinearGradient,
+    QPainter,
+    QPen,
+    QPolygonF,
+    QRadialGradient,
+)
 from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
+from .. import artwork
 from .. import character_sheet as cs
+from .. import covenant_sheet as cs_cov
 from .. import laboratory_sheet as cs_lab
 from . import pictures
+from .paper import lift, shade
 from .themes import Palette
 from .widgets import mix, serif, text
 
@@ -204,6 +217,66 @@ def trait_list(traits: Sequence[tuple[str, int]], p: Palette) -> QWidget:
     return box
 
 
+class CordFigure(QWidget):
+    """A Cord of the bond as a twisted cord of its `metal` with a knot for
+    each point of its score: tied knots shine, the cord beyond them is
+    still bare thread."""
+
+    TOP = 5
+    HEIGHT = 34
+
+    def __init__(self, score: int, metal: str, p: Palette) -> None:
+        super().__init__()
+        self.score, self.metal, self.p = score, metal, p
+        self.setFixedHeight(self.HEIGHT)
+        self.setMinimumWidth(160)
+        self.setToolTip(f"{score} of {self.TOP}")
+
+    def knots(self) -> list[float]:
+        step = (self.width() - 16) / self.TOP
+        return [8 + step * (i + 0.5) for i in range(self.TOP)]
+
+    def paintEvent(self, event) -> None:
+        p, metal = self.p, self.metal
+        dark, light = p["binding-ink"], p["binding-light"]
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        knots = self.knots()
+        middle = self.HEIGHT / 2
+        tied = knots[self.score - 1] if self.score else 0.0
+        # Two strands twisted round each other: metal as far as the last
+        # knot tied, bare thread after it.
+        for phase, shade_to in ((math.pi, dark), (0.0, light)):
+            strand = [
+                QPointF(x, middle + 3.5 * math.sin(x / 5 + phase))
+                for x in range(4, self.width() - 3)
+            ]
+            for points, reached in (
+                ([q for q in strand if q.x() <= tied], True),
+                ([q for q in strand if q.x() >= tied], False),
+            ):
+                if len(points) < 2:
+                    continue
+                colour = mix(metal, shade_to, 0.35) if reached else QColor(p["rule"])
+                painter.setPen(QPen(colour, 2.6 if reached else 1.4))
+                painter.drawPolyline(QPolygonF(points))
+        for i, x in enumerate(knots):
+            centre = QPointF(x, middle)
+            if i < self.score:
+                shine = QRadialGradient(QPointF(x - 2, middle - 2), 8)
+                shine.setColorAt(0, mix(metal, light, 0.6))
+                shine.setColorAt(0.5, QColor(metal))
+                shine.setColorAt(1, mix(metal, dark, 0.4))
+                painter.setPen(QPen(mix(metal, dark, 0.5), 1))
+                painter.setBrush(shine)
+                painter.drawEllipse(centre, 7.5, 7.5)
+            else:
+                painter.setPen(QPen(QColor(p["rule"]), 1.2))
+                painter.setBrush(QColor(p["panel"]))
+                painter.drawEllipse(centre, 4.5, 4.5)
+        painter.end()
+
+
 class _Box(QWidget):
     """One wound band's box: filled in the band's colour when the
     character has a wound of that kind."""
@@ -357,26 +430,26 @@ class CompassRose(QWidget):
         painter.end()
 
 
-class AuraSeal(QWidget):
-    """The laboratory's aura as a seal in its realm's colour: the total in
-    the middle, the realm round it."""
+class Seal(QWidget):
+    """A figure as a wax seal in `colour`: the value in the middle, the
+    caption under it. A laboratory's or covenant's aura, a covenant's
+    Loyalty."""
 
-    def __init__(self, aura: cs_lab.Aura, p: Palette) -> None:
+    def __init__(
+        self, value: str, caption: str, colour: str, tooltip: str, p: Palette
+    ) -> None:
         super().__init__()
-        self.aura, self.p = aura, p
-        self.setFixedSize(96, 104)
-        working = f"{aura.covenant} from the covenant, {aura.modifier:+d} here"
-        self.setToolTip(
-            f"{aura.realm} aura {aura.total}: {working}"
-            + (f"\n{aura.note}" if aura.note else "")
-        )
+        self.value, self.caption, self.colour, self.p = value, caption, colour, p
+        self.setFixedSize(104, 104)
+        self.setToolTip(tooltip)
+        lift(self, p, blur=12, drop=2)
 
     def paintEvent(self, event) -> None:
-        p, a = self.p, self.aura
-        colour = QColor(p[f"realm-{a.realm}"])
+        p = self.p
+        colour = QColor(self.colour)
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        seal = QRectF(14, 6, 68, 68)
+        seal = QRectF(18, 6, 68, 68)
         painter.setPen(QPen(colour, 2))
         painter.setBrush(mix(p["surface"], colour.name(), 0.18))
         painter.drawEllipse(seal)
@@ -385,13 +458,29 @@ class AuraSeal(QWidget):
         painter.drawEllipse(seal.adjusted(6, 6, -6, -6))
         painter.setPen(QColor(p["foreground"]))
         painter.setFont(serif(22, bold=True))
-        painter.drawText(seal, Qt.AlignmentFlag.AlignCenter, str(a.total))
+        painter.drawText(seal, Qt.AlignmentFlag.AlignCenter, self.value)
         painter.setPen(QColor(p["label"]))
         painter.setFont(serif(10, caps=True))
         painter.drawText(
-            QRectF(0, 78, 96, 16), Qt.AlignmentFlag.AlignCenter, f"{a.realm} Aura"
+            QRectF(0, 78, 104, 16), Qt.AlignmentFlag.AlignCenter, self.caption
         )
         painter.end()
+
+
+def aura_seal(aura: cs_lab.Aura, p: Palette) -> Seal:
+    """An aura (a laboratory's or a covenant's) as a seal in its realm's
+    colour."""
+    working = (
+        f"{aura.covenant} from the covenant, {aura.modifier:+d} {aura.modifier_from}"
+    )
+    return Seal(
+        str(aura.total),
+        f"{aura.realm} Aura",
+        p[f"realm-{aura.realm}"],
+        f"{aura.realm} aura {aura.total}: {working}"
+        + (f"\n{aura.note}" if aura.note else ""),
+        p,
+    )
 
 
 def bar_list(
@@ -435,3 +524,261 @@ class _Bar(QWidget):
             painter.setBrush(QColor(p["accent"] if self.lit else p["dim"]))
             painter.drawRoundedRect(QRectF(0, 4, self.width() * self.share, 6), 3, 3)
         painter.end()
+
+
+#: The leathers a book can be bound in, as palette keys.
+_LEATHERS = (
+    "season-lab",
+    "season-study",
+    "season-writing",
+    "season-work",
+    "season-adventure",
+)
+
+
+class BookSpine(QWidget):
+    """A book standing on a shelf: bound in a muted leather picked by its
+    subject, as wide as its kind is thick (a summa stout, a lab text slim),
+    a summa as tall as its level, with raised bands, its Art's symbol and
+    its title tooled in gilt up the spine, wrapped onto two lines rather
+    than cut short, and its level and quality at the foot; clicking it
+    calls `clicked`."""
+
+    def __init__(self, spine: cs_cov.Spine, p: Palette) -> None:
+        super().__init__()
+        self.spine, self.p = spine, p
+        self.clicked: Callable[[], None] = lambda: None
+        self.hovered = False
+        book = spine.book
+        tall = 176 + 3 * min(spine.level or 0, 20)
+        width, height = {
+            "Art Summa": (46, tall),
+            "Ability Summa": (44, tall),
+            "Tractatus": (38, 186),
+            "Lab Text": (34, 170),
+            "Casting Tablet": (46, 96),
+        }.get(book.type, (40, 190))
+        self.setFixedSize(width + 2, height + 2)
+        self.body = QRectF(1, 1, width, height)
+        key = spine.subject or book.name
+        tint = p[_LEATHERS[sum(map(ord, key)) % len(_LEATHERS)]]
+        self.leather = mix(mix(tint, p["leather"], 0.5).name(), p["binding-ink"], 0.12)
+        numbers = [
+            *([f"Level {spine.level}"] if spine.level is not None else []),
+            *([f"Quality {spine.quality}"] if spine.quality is not None else []),
+        ]
+        self.setToolTip(
+            "\n".join(
+                [
+                    book.name,
+                    book.type + (f" on {spine.subject}" if spine.subject else ""),
+                ]
+                + (["  ·  ".join(numbers)] if numbers else [])
+            )
+        )
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+
+    def enterEvent(self, event) -> None:
+        self.hovered = True
+        self.update()
+
+    def leaveEvent(self, event) -> None:
+        self.hovered = False
+        self.update()
+
+    def mousePressEvent(self, event) -> None:
+        self.clicked()
+
+    def paintEvent(self, event) -> None:
+        p, body, spine = self.p, self.body, self.spine
+        hide = self.leather.name()
+        gilt = mix(p["accent"], p["gilt"], 0.25)
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        edge = gilt if self.hovered else mix(hide, p["binding-ink"], 0.45)
+        painter.setPen(QPen(edge, 1.5 if self.hovered else 1))
+        painter.setBrush(self.leather)
+        painter.drawRoundedRect(body, 2, 2)
+        # Raised bands: a dark groove with a lighter ridge under it.
+        for y in (body.top() + 12, body.bottom() - 30):
+            painter.setPen(QPen(mix(hide, p["binding-ink"], 0.4), 2))
+            painter.drawLine(QPointF(body.left() + 1, y), QPointF(body.right() - 1, y))
+            painter.setPen(QPen(mix(hide, p["binding-light"], 0.12), 1))
+            painter.drawLine(
+                QPointF(body.left() + 1, y + 2), QPointF(body.right() - 1, y + 2)
+            )
+        # Gilt fillets at the head and the foot.
+        painter.setPen(QPen(gilt, 0.8))
+        for y in (body.top() + 6, body.bottom() - 6):
+            painter.drawLine(QPointF(body.left() + 3, y), QPointF(body.right() - 3, y))
+        top = body.top() + 20
+        if spine.art:
+            side = min(body.width() - 14, 20)
+            symbol = pictures.pixmap(
+                artwork.art_symbol(spine.art), gilt.name(), int(side), 2.0
+            )
+            painter.drawPixmap(
+                QRectF(body.center().x() - side / 2, top, side, side),
+                symbol,
+                QRectF(symbol.rect()),
+            )
+            top += side + 6
+        numbers = " ".join(
+            [
+                *([f"L{spine.level}"] if spine.level is not None else []),
+                *([f"Q{spine.quality}"] if spine.quality is not None else []),
+            ]
+        )
+        painter.setFont(serif(7.5))
+        painter.setPen(gilt)
+        painter.drawText(
+            QRectF(body.left(), body.bottom() - 26, body.width(), 14),
+            Qt.AlignmentFlag.AlignCenter,
+            numbers,
+        )
+        # The title up the spine, wrapped onto a second line when it is long.
+        area = QRectF(body.left() + 4, top, body.width() - 8, body.bottom() - 36 - top)
+        painter.save()
+        painter.translate(area.left(), area.bottom())
+        painter.rotate(-90)
+        painter.setFont(serif(8.5))
+        painter.drawText(
+            QRectF(4, 1, area.height() - 8, area.width() - 2),
+            Qt.AlignmentFlag.AlignVCenter
+            | Qt.AlignmentFlag.AlignLeft
+            | Qt.TextFlag.TextWordWrap,
+            spine.book.name,
+        )
+        painter.restore()
+        # The rounded back: lit down its left, falling into shade on its right.
+        light, dark = p["binding-light"], p["binding-ink"]
+        round_ = QLinearGradient(body.topLeft(), body.topRight())
+        round_.setColorAt(0, shade(dark, 70))
+        round_.setColorAt(0.18, shade(light, 26))
+        round_.setColorAt(0.45, shade(light, 0))
+        round_.setColorAt(0.8, shade(dark, 30))
+        round_.setColorAt(1, shade(dark, 95))
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.setBrush(round_)
+        painter.drawRoundedRect(body, 2, 2)
+        # The leather's scuffs, the same each time it is drawn.
+        chance = random.Random(sum(map(ord, spine.book.name)))
+        for _ in range(int(body.width() * body.height() / 18)):
+            if chance.random() < 0.6:
+                painter.setPen(shade(dark, chance.randint(8, 26)))
+            else:
+                painter.setPen(shade(light, chance.randint(4, 12)))
+            painter.drawPoint(
+                QPointF(
+                    chance.uniform(body.left() + 1, body.right() - 1),
+                    chance.uniform(body.top() + 1, body.bottom() - 1),
+                )
+            )
+        painter.end()
+
+
+class Bookcase(QWidget):
+    """Books standing side by side on wooden shelves, as many to a shelf as
+    the page is wide: narrowing the window moves books down a shelf."""
+
+    MARGIN, GAP, PLANK, BETWEEN = 12, 2, 9, 18
+
+    def __init__(self, spines: Sequence[cs_cov.Spine], p: Palette) -> None:
+        super().__init__()
+        self.p = p
+        self.books = [BookSpine(spine, p) for spine in spines]
+        for book in self.books:
+            book.setParent(self)
+        self.rows: list[tuple[float, float]] = []
+        self._arrange(self.width())
+
+    def _shelves(self, width: int) -> list[list[BookSpine]]:
+        rows: list[list[BookSpine]] = [[]]
+        used = self.MARGIN
+        for book in self.books:
+            if rows[-1] and used + book.width() > width - self.MARGIN:
+                rows.append([])
+                used = self.MARGIN
+            rows[-1].append(book)
+            used += book.width() + self.GAP
+        return rows
+
+    def _arrange(self, width: int) -> None:
+        self.rows = []
+        y = 0
+        for row in self._shelves(max(width, 200)):
+            tallest = max((book.height() for book in row), default=0)
+            floor = y + 10 + tallest
+            x = self.MARGIN
+            for book in row:
+                book.move(x, floor - book.height())
+                x += book.width() + self.GAP
+            self.rows.append((y, floor))
+            y = floor + self.PLANK + self.BETWEEN
+        self.setFixedHeight(max(y - self.BETWEEN, 0))
+
+    def resizeEvent(self, event) -> None:
+        self._arrange(event.size().width())
+
+    def paintEvent(self, event) -> None:
+        p, width = self.p, self.width()
+        wall, wood = p["shelf-back"], p["shelf-plank"]
+        dark, light = p["binding-ink"], p["binding-light"]
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.setPen(Qt.PenStyle.NoPen)
+        for top, floor in self.rows:
+            # The back wall, in shadow under the shelf above.
+            back = QRectF(0, top, width, floor - top)
+            fall = QLinearGradient(back.topLeft(), back.bottomLeft())
+            fall.setColorAt(0, mix(wall, dark, 0.45))
+            fall.setColorAt(0.35, QColor(wall))
+            fall.setColorAt(1, mix(wall, dark, 0.15))
+            painter.setBrush(fall)
+            painter.drawRect(back)
+            for outside, inside in ((0, 10), (width, width - 10)):
+                side = QLinearGradient(QPointF(outside, 0), QPointF(inside, 0))
+                side.setColorAt(0, shade(dark, 110))
+                side.setColorAt(1, shade(dark, 0))
+                painter.setBrush(side)
+                painter.drawRect(QRectF(min(outside, inside), top, 10, floor - top))
+            # Each book's shadow on the wall behind it.
+            for book in self.books:
+                cover = book.geometry()
+                if not top <= cover.top() < floor:
+                    continue
+                cast = QLinearGradient(
+                    QPointF(cover.right(), 0), QPointF(cover.right() + 7, 0)
+                )
+                cast.setColorAt(0, shade(dark, 90))
+                cast.setColorAt(1, shade(dark, 0))
+                painter.setBrush(cast)
+                painter.drawRect(
+                    QRectF(cover.right(), cover.top() + 4, 7, cover.height() - 4)
+                )
+            # The plank: lit along its edge, its shadow falling below.
+            plank = QRectF(0, floor, width, self.PLANK)
+            lit = QLinearGradient(plank.topLeft(), plank.bottomLeft())
+            lit.setColorAt(0, mix(wood, light, 0.25))
+            lit.setColorAt(0.25, QColor(wood))
+            lit.setColorAt(1, mix(wood, dark, 0.35))
+            painter.setBrush(lit)
+            painter.drawRect(plank)
+            under = QLinearGradient(plank.bottomLeft(), QPointF(0, plank.bottom() + 8))
+            under.setColorAt(0, shade(dark, 70))
+            under.setColorAt(1, shade(dark, 0))
+            painter.setBrush(under)
+            painter.drawRect(QRectF(0, plank.bottom(), width, 8))
+        painter.end()
+
+
+def shelf(
+    spines: Sequence[cs_cov.Spine],
+    p: Palette,
+    on_choose: Callable[[cs_cov.Spine], None],
+) -> QWidget:
+    """A bookcase of `spines`; clicking a book calls `on_choose` with it."""
+    case = Bookcase(spines, p)
+    for figure in case.books:
+        figure.clicked = lambda spine=figure.spine: on_choose(spine)
+    return case

@@ -46,13 +46,15 @@ from PySide6.QtWidgets import (
 from .. import artwork, seasons
 from .. import books as bk
 from .. import character_sheet as cs
+from .. import familiar_sheet as fs
+from .. import familiars as fam
 from .. import lab_texts as lt
 from .. import laboratories as labs
 from .. import saga_overview as ov
 from .. import sheet_text as st
 from .. import spells as spl
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
-from ..models import Character, Saga
+from ..models import Character, Characteristics, Saga
 from . import pictures
 from .figures import (
     Dial,
@@ -63,6 +65,7 @@ from .figures import (
     wound_track,
 )
 from .markup_html import plain, to_html
+from .pages import familiar_card
 from .themes import Palette
 from .timeline import Calendar, legend, season_text
 from .widgets import (
@@ -199,6 +202,44 @@ def row_list(rows: Rows, on_choose: Callable[[int], None] | None = None) -> QLis
     return widget
 
 
+_GAP = re.compile(r"\s{2,}")
+_BOLD_LINE = re.compile(r"^\[b\](.*)\[/\]$")
+
+
+def columns_text(words: str, p: Palette) -> QWidget:
+    """The core's text padded into columns with spaces, as a grid, since
+    the page's proportional type can't line them up: a line in bold stays
+    bold in every cell, and the first column doesn't wrap."""
+    box = QWidget()
+    grid = QGridLayout(box)
+    grid.setContentsMargins(0, 0, 0, 0)
+    grid.setHorizontalSpacing(14)
+    grid.setVerticalSpacing(1)
+    rows = []
+    for line in words.splitlines():
+        bold = _BOLD_LINE.match(line.strip())
+        inner = bold.group(1) if bold else line
+        cells = _GAP.split(inner.strip()) if inner.strip() else [""]
+        if bold:
+            cells = [f"[b]{cell}[/]" if cell else "" for cell in cells]
+        if inner.startswith("  ") and len(cells) > 1:
+            cells.insert(0, "")
+        rows.append(cells)
+    width = max((len(cells) for cells in rows), default=1)
+    for row, cells in enumerate(rows):
+        if len(cells) == 1:
+            grid.addWidget(TextBlock(cells[0] or " ", p), row, 0, 1, width)
+            continue
+        for column, cell in enumerate(cells):
+            block = TextBlock(cell, p)
+            if column == 0:
+                block.setWordWrap(False)
+            span = width - column if column == len(cells) - 1 else 1
+            grid.addWidget(block, row, column, 1, span)
+    grid.setColumnStretch(width - 1, 1)
+    return box
+
+
 def side_by_side(*widgets: QWidget, spacing: int = 24) -> QWidget:
     box = QWidget()
     row = QHBoxLayout(box)
@@ -322,9 +363,16 @@ def _xp_words(xp: int, next_xp: int) -> str:
 class CharacterSheet(QWidget):
     """One character's sheet in the Codex layout."""
 
-    def __init__(self, saga: Saga, character: Character, palette: Palette) -> None:
+    def __init__(
+        self,
+        saga: Saga,
+        character: Character,
+        palette: Palette,
+        open_familiar: Callable[[str], None] = lambda _id: None,
+    ) -> None:
         super().__init__()
         self.saga, self.character, self.p = saga, character, palette
+        self.open_familiar = open_familiar
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
@@ -411,40 +459,7 @@ class CharacterSheet(QWidget):
         return box
 
     def _characteristics(self) -> QWidget:
-        p, ch = self.p, self.character.characteristics
-        box = QWidget()
-        row = QHBoxLayout(box)
-        row.setContentsMargins(0, 0, 0, 0)
-        row.setSpacing(8)
-        for name in (
-            "intelligence",
-            "perception",
-            "strength",
-            "stamina",
-            "presence",
-            "communication",
-            "dexterity",
-            "quickness",
-        ):
-            value = getattr(ch, name)
-            colour = (
-                p["text-success"]
-                if value > 0
-                else p["text-error"]
-                if value < 0
-                else p["dim"]
-            )
-            card = Card(p, pad=6)
-            card.setFixedHeight(64)
-            card.column.setSpacing(0)
-            number = text(f"{value:+d}" if value else "0", colour, serif(20, bold=True))
-            number.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            caption = text(name.title(), p["label"], serif(10.5, caps=True))
-            caption.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            card.column.addWidget(number)
-            card.column.addWidget(caption)
-            row.addWidget(card, 1)
-        return box
+        return characteristic_cards(self.character.characteristics, self.p)
 
     # Chapters
 
@@ -463,6 +478,17 @@ class CharacterSheet(QWidget):
                 lineage.append(_sigil(sigil, p))
             lineage.append(TextBlock(lt.access_text(saga, c), p))
             parts.append(section("Hermetic Background", p, *lineage))
+            familiar = fam.familiar_of(saga, c.id)
+            if familiar is not None:
+                parts.append(
+                    section(
+                        "Familiar",
+                        p,
+                        familiar_card(
+                            fs.familiar_card(saga, familiar), p, self.open_familiar
+                        ),
+                    )
+                )
         traits = [(t.name, t.score) for t in c.personality_traits]
         reputations = [(t.name, t.score) for t in c.reputations]
         parts.append(
@@ -519,21 +545,7 @@ class CharacterSheet(QWidget):
                 st.ability_info_text(c.abilities, index, c.virtues_flaws),
             )
 
-        table = XpTable(["Ability", "Specialty", "Score", "Experience"], p, show)
-        groups: dict[str, QStandardItem] = {}
-        for row in cs.ability_table(c):
-            if row.category not in groups:
-                groups[row.category] = table.group(row.category)
-            specialty = _item(row.specialty, font=serif(11.5, italic=True))
-            specialty.setForeground(QBrush(QColor(p["label"])))
-            table.add(
-                groups[row.category],
-                row.index,
-                [_item(row.name), specialty, _score_item(row.score)],
-                row.fraction,
-                _xp_words(row.xp, row.next_xp),
-            )
-        table.finish()
+        table = ability_view(cs.ability_table(c), p, show)
         return scrolling_page(
             chapter_title(f"Abilities ({len(c.abilities)})", p), table
         )
@@ -555,23 +567,17 @@ class CharacterSheet(QWidget):
         return scrolling_page(side_by_side(*columns, spacing=18))
 
     def _vf_card(self, card: cs.VirtueFlawCard, colour: str) -> QWidget:
-        p, c = self.p, self.character
-        frame = ClickableCard(p, edge=colour, pad=10)
-        top = QHBoxLayout()
-        top.addWidget(text(card.name, p["foreground"], serif(13.5, bold=True)))
-        top.addStretch(1)
-        top.addWidget(badge(card.tier, p["dim"] if card.tier == "Free" else colour, p))
-        frame.column.addLayout(top)
-        if card.summary:
-            summary = text(card.summary, p["label"], wrap=True)
-            frame.column.addWidget(summary)
-        frame.column.addWidget(text(card.category, p["dim"], serif(10, caps=True)))
-        frame.clicked = lambda: self.inspect(
-            card.name,
-            f"{card.tier}  ·  {card.category}",
-            st.vf_info_text(c.virtues_flaws, card.index),
+        c = self.character
+        return vf_card(
+            card,
+            colour,
+            self.p,
+            lambda: self.inspect(
+                card.name,
+                f"{card.tier}  ·  {card.category}",
+                st.vf_info_text(c.virtues_flaws, card.index),
+            ),
         )
-        return frame
 
     def _hermetic(self) -> QWidget:
         p, c = self.p, self.character
@@ -786,6 +792,85 @@ class CharacterSheet(QWidget):
                 ),
             ),
         )
+
+
+def characteristic_cards(ch: Characteristics, p: Palette) -> QWidget:
+    """The eight Characteristics as a row of cards, each coloured by its
+    sign."""
+    box = QWidget()
+    row = QHBoxLayout(box)
+    row.setContentsMargins(0, 0, 0, 0)
+    row.setSpacing(8)
+    for name in (
+        "intelligence",
+        "perception",
+        "strength",
+        "stamina",
+        "presence",
+        "communication",
+        "dexterity",
+        "quickness",
+    ):
+        value = getattr(ch, name)
+        colour = (
+            p["text-success"]
+            if value > 0
+            else p["text-error"]
+            if value < 0
+            else p["dim"]
+        )
+        card = Card(p, pad=6)
+        card.setFixedHeight(64)
+        card.column.setSpacing(0)
+        number = text(f"{value:+d}" if value else "0", colour, serif(20, bold=True))
+        number.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        caption = text(name.title(), p["label"], serif(10.5, caps=True))
+        caption.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        card.column.addWidget(number)
+        card.column.addWidget(caption)
+        row.addWidget(card, 1)
+    return box
+
+
+def ability_view(
+    rows: Sequence[cs.AbilityRow], p: Palette, show: Callable[[object], None]
+) -> XpTable:
+    """Abilities as a table grouped by category, with their specialties,
+    scores and experience; choosing one calls `show` with its index."""
+    table = XpTable(["Ability", "Specialty", "Score", "Experience"], p, show)
+    groups: dict[str, QStandardItem] = {}
+    for row in rows:
+        if row.category not in groups:
+            groups[row.category] = table.group(row.category)
+        specialty = _item(row.specialty, font=serif(11.5, italic=True))
+        specialty.setForeground(QBrush(QColor(p["label"])))
+        table.add(
+            groups[row.category],
+            row.index,
+            [_item(row.name), specialty, _score_item(row.score)],
+            row.fraction,
+            _xp_words(row.xp, row.next_xp),
+        )
+    table.finish()
+    return table
+
+
+def vf_card(
+    card: cs.VirtueFlawCard, colour: str, p: Palette, on_click: Callable[[], None]
+) -> ClickableCard:
+    """A Virtue or Flaw as a card edged in `colour`: its name, tier, summary
+    and category."""
+    frame = ClickableCard(p, edge=colour, pad=10)
+    top = QHBoxLayout()
+    top.addWidget(text(card.name, p["foreground"], serif(13.5, bold=True)))
+    top.addStretch(1)
+    top.addWidget(badge(card.tier, p["dim"] if card.tier == "Free" else colour, p))
+    frame.column.addLayout(top)
+    if card.summary:
+        frame.column.addWidget(text(card.summary, p["label"], wrap=True))
+    frame.column.addWidget(text(card.category, p["dim"], serif(10, caps=True)))
+    frame.clicked = on_click
+    return frame
 
 
 def _subheading(words: str, p: Palette) -> QLabel:

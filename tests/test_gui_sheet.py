@@ -11,21 +11,33 @@ pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QLabel
+from PySide6.QtWidgets import QApplication, QGraphicsDropShadowEffect, QLabel
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import character_sheet as cs
+from ars_magica_manager import covenant_sheet as cvs
+from ars_magica_manager import familiars as fam
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.character_sheet import CharacterSheet
-from ars_magica_manager.gui.figures import Dial
+from ars_magica_manager.gui.covenant import CovenantPage
+from ars_magica_manager.gui.familiar import FamiliarPage
+from ars_magica_manager.gui.figures import Bookcase, BookSpine, CordFigure, Dial
 from ars_magica_manager.gui.laboratory import LaboratoryPage
 from ars_magica_manager.gui.markup_html import plain, to_html
-from ars_magica_manager.gui.pages import CovenantPage, SagaPage
+from ars_magica_manager.gui.pages import SagaPage
+from ars_magica_manager.gui.paper import Paper, _paper, paper
 from ars_magica_manager.gui.themes import PALETTES, SCRIPTORUM
 from ars_magica_manager.gui.timeline import SEASON
 from ars_magica_manager.gui.widgets import XP_BAR, ClickableCard
 from ars_magica_manager.gui.window import MainWindow
-from ars_magica_manager.models import DiaryEntry, SeasonPlan
+from ars_magica_manager.models import (
+    BondPower,
+    DiaryEntry,
+    IncomeSource,
+    Inhabitant,
+    SeasonPlan,
+    VirtueFlawInstance,
+)
 
 
 @pytest.fixture(scope="module")
@@ -120,6 +132,22 @@ def test_the_theme_toggle_redraws_the_sheet_in_the_other_palette(app):
     assert window.sheet_area.findChild(CharacterSheet) is not None
 
 
+def test_the_pages_lie_on_paper_and_their_cards_cast_shadows(app):
+    window = MainWindow(saga_ids=[])
+    window.load(_sample_saga_with_covenant())
+    body = window.centralWidget()
+    assert isinstance(body, Paper) and body.p is PALETTES[0]
+    card = window.findChildren(ClickableCard)[0]
+    assert isinstance(card.graphicsEffect(), QGraphicsDropShadowEffect)
+    window.toggle_theme()
+    assert body.p is PALETTES[1]
+
+
+def test_paper_is_the_same_every_time_it_is_made(app):
+    assert _paper(PALETTES[0]) == _paper(PALETTES[0])
+    assert paper(PALETTES[0]) is paper(PALETTES[0])
+
+
 def test_a_saga_opens_at_its_covenants_and_the_trail_leads_back(app):
     window = MainWindow(saga_ids=[])
     saga = _sample_saga_with_covenant()
@@ -131,8 +159,19 @@ def test_a_saga_opens_at_its_covenants_and_the_trail_leads_back(app):
     assert window.crumb_names() == ["Sagas", saga.name, "Test Covenant"]
     page = window.sheet_area.findChild(CovenantPage)
     assert page is not None
-    assert page.codex.chapters() == ["People", "Laboratories", "Seasons"]
-    people = page.codex.pages.widget(0)
+    assert page.codex.chapters() == [
+        "Charter",
+        "People",
+        "Covenfolk",
+        "Laboratories",
+        "Possessions",
+        "Treasury",
+        "Library",
+        "Seasons",
+        "Diary",
+        "Build",
+    ]
+    people = _chapter(page, "People")
     person = next(
         card
         for card in people.findChildren(ClickableCard)
@@ -171,12 +210,16 @@ def test_the_diary_opens_with_a_calendar_of_the_characters_seasons(app):
     assert model.index(1, 2).data(SEASON).kind == "Study"
 
 
+def _chapter(page, name: str):
+    return page.codex.pages.widget(page.codex.chapters().index(name))
+
+
 def _lab_page(window: MainWindow, saga) -> LaboratoryPage:
     window.load(saga)
     window.open_covenant(saga.covenants[0].id)
     covenant = window.sheet_area.findChild(CovenantPage)
     assert covenant is not None
-    labs = covenant.codex.pages.widget(1)
+    labs = _chapter(covenant, "Laboratories")
     next(iter(labs.findChildren(ClickableCard))).clicked()
     page = window.sheet_area.findChild(LaboratoryPage)
     assert page is not None
@@ -225,6 +268,138 @@ def test_a_laboratorys_calendar_shows_its_diary(app):
     model = page.calendar.view.model()
     assert model.headerData(1, Qt.Orientation.Vertical) == "1219"
     assert model.index(1, 2).data(SEASON).kind == "Laboratory"
+
+
+def _covenant_page(saga) -> CovenantPage:
+    window = MainWindow(saga_ids=[])
+    window.load(saga)
+    window.open_covenant(saga.covenants[0].id)
+    page = window.sheet_area.findChild(CovenantPage)
+    assert page is not None
+    page.window_ = window  # keep the window alive with the page
+    return page
+
+
+def test_the_unassigned_have_only_their_people_and_seasons(app):
+    saga = _sample_saga_with_covenant()
+    saga.characters[0].covenant_id = None
+    window = MainWindow(saga_ids=[])
+    window.load(saga)
+    window.open_covenant(None)
+    page = window.sheet_area.findChild(CovenantPage)
+    assert page is not None
+    assert page.chapters() == ["People", "Seasons"]
+
+
+def test_choosing_a_boon_or_an_inhabitant_shows_it_in_the_inspector(app):
+    saga = _sample_saga_with_covenant()
+    covenant = saga.covenants[0]
+    covenant.boons_hooks.append(VirtueFlawInstance("covbh_boon_major_wealth"))
+    covenant.inhabitants.append(
+        Inhabitant("i1", "turb", "The watch", quantity=6, responsibility="Walls")
+    )
+    page = _covenant_page(saga)
+    boon = next(
+        card
+        for card in _chapter(page, "Charter").findChildren(ClickableCard)
+        if "Wealth" in _texts(card)
+    )
+    boon.clicked()
+    assert page.inspector.title.text() == "Wealth"
+    assert "Major" in page.inspector.subtitle.text()
+    turb = page.tables["turb"]
+    turb.setCurrentIndex(turb.model().index(0, 0))
+    assert page.inspector.title.text() == "The watch"
+    assert "Walls" in plain(page.inspector.body.text())
+
+
+def test_the_library_stands_the_books_on_shelves(app):
+    page = _covenant_page(_sample_saga_with_covenant())
+    spines = _chapter(page, "Library").findChildren(BookSpine)
+    assert [s.spine.book.name for s in spines] == [
+        "On the Theory of Magic",
+        "Ball of Abysmal Flame",
+    ]
+    spines[0].clicked()
+    assert page.inspector.title.text() == "On the Theory of Magic"
+
+
+def test_a_narrower_bookcase_moves_books_down_a_shelf(app):
+    saga = _sample_saga_with_covenant()
+    spines = [s for _, shelf_ in cvs.shelves(saga, saga.covenants[0]) for s in shelf_]
+    case = Bookcase(spines * 10, SCRIPTORUM)
+    case.show()
+    case.resize(1000, case.height())
+    wide = len(case.rows)
+    case.resize(300, case.height())
+    assert len(case.rows) > wide
+    assert all(book.geometry().right() < 300 for book in case.books)
+
+
+def _with_familiar():
+    saga = _sample_saga_with_covenant()
+    magus = next(c for c in saga.characters if c.type == "magus")
+    familiar = fam.bind_familiar(saga, magus, "Nox")
+    familiar.bond_powers = [BondPower("b1", "Silent Wings", 10, "Perdo", "Imaginem")]
+    return saga, magus, familiar
+
+
+def test_a_familiar_opens_from_its_covenants_people_below_its_magus(app):
+    saga, magus, _familiar = _with_familiar()
+    page = _covenant_page(saga)
+    window = page.window_
+    cards = _chapter(page, "People").findChildren(ClickableCard)
+    next(c for c in cards if "Nox" in _texts(c)).clicked()
+    familiar_page = window.sheet_area.findChild(FamiliarPage)
+    assert familiar_page is not None
+    assert window.crumb_names() == [
+        "Sagas",
+        saga.name,
+        "Test Covenant",
+        magus.name,
+        "Nox",
+    ]
+    assert familiar_page.chapters() == [
+        "Identity & Cords",
+        "Virtues & Flaws",
+        "Combat & Health",
+        "Abilities",
+        "Bond Powers",
+    ]
+    power = _chapter(familiar_page, "Bond Powers").findChildren(ClickableCard)[0]
+    power.clicked()
+    assert familiar_page.inspector.title.text() == "Silent Wings"
+
+
+def test_each_cord_is_drawn_in_its_metal_with_a_knot_per_point(app):
+    saga, _magus, familiar = _with_familiar()
+    familiar.golden_cord, familiar.bronze_cord = 3, 1
+    page = FamiliarPage(saga, familiar, SCRIPTORUM)
+    cords = _chapter(page, "Identity & Cords").findChildren(CordFigure)
+    assert [(c.score, c.metal) for c in cords] == [
+        (3, SCRIPTORUM["cord-golden"]),
+        (0, SCRIPTORUM["cord-silver"]),
+        (1, SCRIPTORUM["cord-bronze"]),
+    ]
+
+
+def test_a_magus_sheet_shows_their_familiar(app):
+    saga, magus, _familiar = _with_familiar()
+    sheet = _sheet(saga)
+    if sheet.character.id != magus.id:
+        sheet.window_.show_character(magus.id)
+        sheet = sheet.window_.sheet_area.findChild(CharacterSheet)
+    cards = _chapter(sheet, "Description").findChildren(ClickableCard)
+    assert any("Nox" in _texts(card) for card in cards)
+
+
+def test_the_treasury_shows_the_years_balance(app):
+    saga = _sample_saga_with_covenant()
+    saga.covenants[0].economics.income_sources = [IncomeSource("s1", "Mill", income=40)]
+    page = _covenant_page(saga)
+    shown = _texts(_chapter(page, "Treasury"))
+    assert "40 £" in shown
+    assert page.tables["income"].model().index(0, 0).data() == "Mill"
 
 
 def test_markup_becomes_spans_in_the_palettes_colours():

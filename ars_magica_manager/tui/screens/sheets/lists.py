@@ -23,6 +23,7 @@ from .... import lab_texts as lt
 from .... import players as pl
 from .... import spells as spl
 from ....arts import FORMS, TECHNIQUES
+from ....boon_hook_text import counted
 from ....form_spec import pairs
 from ....models import (
     Book,
@@ -40,7 +41,6 @@ from ..widgets import (
     SheetSection,
     TableHeader,
     TwoColumns,
-    counted,
 )
 
 #: Rows a docked book list keeps however short the screen (see

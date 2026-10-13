@@ -5,17 +5,17 @@ import pytest
 from support import strip_markup
 from textual.content import Content
 
+from ars_magica_manager.boon_hook_text import (
+    boon_hook_info_text,
+    boon_hook_rows,
+    boon_hook_title,
+)
 from ars_magica_manager.models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
     BOON_HOOK_UNKNOWN,
     Covenant,
     VirtueFlawInstance,
-)
-from ars_magica_manager.tui.screens.widgets import (
-    boon_hook_info_text,
-    boon_hook_rows,
-    boon_hook_title,
 )
 
 

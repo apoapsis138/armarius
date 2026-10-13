@@ -10,10 +10,8 @@ modules it reads), as the terminal's laboratory sheet does.
 
 from __future__ import annotations
 
-import re
-
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from .. import artwork, lab_planning
 from .. import books as bk
@@ -23,8 +21,8 @@ from .. import saga_overview as ov
 from ..arts import ART_ABBREVIATIONS
 from ..models import Laboratory, Saga
 from . import pictures
-from .character_sheet import TextBlock, side_by_side
-from .figures import AuraSeal, CompassRose, bar_list, fact_grid
+from .character_sheet import columns_text, side_by_side
+from .figures import CompassRose, aura_seal, bar_list, fact_grid
 from .pages import card_grid
 from .themes import Palette
 from .timeline import Calendar, legend, season_text
@@ -114,7 +112,7 @@ class LaboratoryPage(QWidget):
         row.addStretch(1)
         row.addWidget(fact_grid(ls.capacity_facts(lab), p, 3))
         row.addSpacing(10)
-        row.addWidget(AuraSeal(ls.aura(saga, lab), p))
+        row.addWidget(aura_seal(ls.aura(saga, lab), p))
         return box
 
     def _characteristics(self) -> QWidget:
@@ -194,13 +192,13 @@ class LaboratoryPage(QWidget):
             text("Base Lab Total", p["heading"], serif(13, bold=True))
         )
         base.column.addWidget(
-            _markup(lab_planning.base_lab_total_text(saga, lab, magus), p)
+            columns_text(lab_planning.base_lab_total_text(saga, lab, magus), p)
         )
         by_activity.column.addWidget(
             text("By Activity", p["heading"], serif(13, bold=True))
         )
         by_activity.column.addWidget(
-            _markup(lab_planning.activity_totals_text(saga, lab, magus), p)
+            columns_text(lab_planning.activity_totals_text(saga, lab, magus), p)
         )
         return scrolling_page(
             chapter_title(f"Lab Totals  ·  {magus.name} working here", p),
@@ -416,30 +414,6 @@ class LaboratoryPage(QWidget):
             if entries
             else text("Nothing written yet.", p["dim"], serif(12.5, italic=True)),
         )
-
-
-_GAP = re.compile(r"\s{2,}")
-
-
-def _markup(words: str, p: Palette) -> QWidget:
-    """The core's text padded into two columns with spaces, as a grid,
-    since the page's proportional type can't line them up."""
-    box = QWidget()
-    grid = QGridLayout(box)
-    grid.setContentsMargins(0, 0, 0, 0)
-    grid.setHorizontalSpacing(14)
-    grid.setVerticalSpacing(1)
-    for row, line in enumerate(words.splitlines()):
-        cells = _GAP.split(line.strip(), maxsplit=1)
-        if len(cells) == 2:
-            name = TextBlock(cells[0], p)
-            name.setWordWrap(False)
-            grid.addWidget(name, row, 0)
-            grid.addWidget(TextBlock(cells[1], p), row, 1)
-        else:
-            grid.addWidget(TextBlock(line or " ", p), row, 0, 1, 2)
-    grid.setColumnStretch(1, 1)
-    return box
 
 
 def _first_line(words: str) -> str:

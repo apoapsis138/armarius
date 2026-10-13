@@ -1,6 +1,6 @@
-"""The pages above a character's sheet, in the Codex's style: the shelf
-of sagas, a saga's covenants, and a covenant with its people,
-laboratories and seasons.
+"""The pages at the top, in the Codex's style: the shelf of sagas and a
+saga's covenants, and the cards and headings the pages below them share
+(the covenant's is covenant.py), such as a familiar's card.
 
 Each is cards and headings over the core's figures (saga_overview);
 choosing a card calls back to the window, which opens the next page.
@@ -15,15 +15,14 @@ from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWi
 
 from .. import artwork
 from .. import character_sheet as cs
+from .. import familiar_sheet as fs
 from .. import saga_overview as ov
 from ..models import Saga
 from . import pictures
 from .figures import fact_grid
 from .themes import Palette
-from .timeline import SeasonTimeline, legend, season_text
 from .widgets import (
     ClickableCard,
-    Codex,
     chapter_title,
     display_name,
     scrolling_page,
@@ -72,7 +71,7 @@ def page_header(
     return box
 
 
-def _card_title(
+def card_title(
     card: ClickableCard, title: str, subtitle: str, p: Palette, symbol: QLabel | None
 ) -> None:
     top = QHBoxLayout()
@@ -88,10 +87,27 @@ def _card_title(
     card.column.addLayout(top)
 
 
-def _symbol(path, p: Palette, size: int = 36) -> QLabel:
+def symbol_label(path, p: Palette, size: int = 36) -> QLabel:
     label = QLabel()
     label.setPixmap(pictures.pixmap(path, p["heading"], size, 2.0))
     return label
+
+
+def familiar_card(
+    figures: fs.FamiliarCard, p: Palette, open_familiar: Open
+) -> ClickableCard:
+    """A familiar as a card that opens its page."""
+    card = ClickableCard(p, pad=12)
+    card_title(
+        card,
+        figures.name,
+        figures.subtitle,
+        p,
+        symbol_label(artwork.icon("familiar"), p, 32),
+    )
+    card.column.addWidget(text(figures.detail, p["label"]))
+    card.clicked = lambda: open_familiar(figures.id)
+    return card
 
 
 class SagaShelf(QWidget):
@@ -103,12 +119,12 @@ class SagaShelf(QWidget):
         for saga in sagas:
             figures = ov.saga_card(saga)
             card = ClickableCard(p, pad=16)
-            _card_title(
+            card_title(
                 card,
                 figures.name,
                 figures.subtitle,
                 p,
-                _symbol(artwork.icon("saga"), p),
+                symbol_label(artwork.icon("saga"), p),
             )
             card.column.addWidget(
                 fact_grid(
@@ -144,12 +160,12 @@ class SagaPage(QWidget):
         cards = []
         for figures in ov.covenant_cards(saga):
             card = ClickableCard(p, pad=16)
-            _card_title(
+            card_title(
                 card,
                 figures.name,
                 figures.subtitle,
                 p,
-                _symbol(artwork.icon("covenant"), p),
+                symbol_label(artwork.icon("covenant"), p),
             )
             card.column.addWidget(fact_grid(list(figures.facts), p, 5))
             card.clicked = lambda covenant_id=figures.id: open_covenant(covenant_id)
@@ -166,113 +182,3 @@ class SagaPage(QWidget):
         column = QVBoxLayout(self)
         column.setContentsMargins(0, 0, 0, 0)
         column.addWidget(scrolling_page(*parts))
-
-
-class CovenantPage(QWidget):
-    """A covenant in the Codex layout: its people as cards, its
-    laboratories, and the timeline of everyone's seasons. Choosing a
-    person or a laboratory opens their page."""
-
-    def __init__(
-        self,
-        saga: Saga,
-        covenant_id: str | None,
-        p: Palette,
-        open_character: Open,
-        open_laboratory: Open,
-    ) -> None:
-        super().__init__()
-        self.saga, self.p = saga, p
-        self.open_laboratory = open_laboratory
-        covenant = saga.covenant(covenant_id)
-        outer = QVBoxLayout(self)
-        outer.setContentsMargins(18, 12, 12, 8)
-        outer.setSpacing(10)
-        outer.addWidget(
-            page_header(
-                covenant.name if covenant else "Unassigned",
-                ov.covenant_subtitle(covenant)
-                if covenant
-                else "Characters who belong to no covenant",
-                p,
-                "covenant",
-            )
-        )
-        self.codex = Codex(p)
-        self.codex.add("People", "character", self._people(covenant_id, open_character))
-        labs = ov.lab_cards(saga, covenant_id)
-        if covenant is not None or labs:
-            self.codex.add("Laboratories", "laboratory", self._labs(labs))
-        self.codex.add("Seasons", "season", self._seasons(covenant_id))
-        outer.addWidget(self.codex, 1)
-
-    def _people(self, covenant_id: str | None, open_character: Open) -> QWidget:
-        p, saga = self.p, self.saga
-        parts: list[QWidget] = []
-        for title, people in ov.people_groups(saga, covenant_id):
-            cards = []
-            for character in people:
-                figures = ov.person_card(saga, character)
-                house = artwork.house_symbol(figures.house)
-                card = ClickableCard(p, pad=12)
-                _card_title(
-                    card,
-                    figures.name,
-                    figures.subtitle,
-                    p,
-                    _symbol(house, p, 40)
-                    if house
-                    else _symbol(artwork.icon("character"), p, 32),
-                )
-                if figures.detail:
-                    card.column.addWidget(text(figures.detail, p["label"]))
-                card.clicked = lambda character_id=figures.id: open_character(
-                    character_id
-                )
-                cards.append(card)
-            parts += [chapter_title(f"{title} ({len(people)})", p), card_grid(cards)]
-        if not parts:
-            parts.append(text("No one yet.", p["dim"], serif(13, italic=True)))
-        return scrolling_page(*parts)
-
-    def _labs(self, labs: Sequence[ov.LabCard]) -> QWidget:
-        p = self.p
-        cards = []
-        for figures in labs:
-            card = ClickableCard(p, pad=14)
-            _card_title(
-                card,
-                figures.name,
-                figures.subtitle,
-                p,
-                _symbol(artwork.icon("laboratory"), p),
-            )
-            card.column.addWidget(fact_grid(list(figures.facts), p, 4))
-            card.clicked = lambda lab_id=figures.id: self.open_laboratory(lab_id)
-            cards.append(card)
-        return scrolling_page(
-            chapter_title(f"Laboratories ({len(labs)})", p),
-            card_grid(cards, 2)
-            if cards
-            else text("No laboratories yet.", p["dim"], serif(13, italic=True)),
-        )
-
-    def _seasons(self, covenant_id: str | None) -> QWidget:
-        p, saga = self.p, self.saga
-        people = [
-            c for _title, group in ov.people_groups(saga, covenant_id) for c in group
-        ]
-        self.timeline = SeasonTimeline(
-            ov.timeline(saga, people),
-            p,
-            lambda name, when, season: self.codex.inspect(
-                name, when, season_text(season)
-            ),
-        )
-        return scrolling_page(
-            chapter_title(
-                f"Seasons  ·  now {saga.current_season} {saga.current_year}", p
-            ),
-            legend(p),
-            self.timeline,
-        )

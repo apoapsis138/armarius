@@ -8,7 +8,7 @@ cannot disagree about what a character's sheet says.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Collection, Sequence
 from dataclasses import dataclass
 
 from . import casting_text as ct
@@ -21,7 +21,16 @@ from . import spells as spl
 from .arts import ART_ABBREVIATIONS, ART_DESCRIPTIONS, FORMS, TECHNIQUES
 from .covenants import home_aura
 from .markup import aligned, escape, inherited, problem
-from .models import ABILITY_CATEGORIES, ArtScore, Character, Saga, character_age
+from .models import (
+    ABILITY_CATEGORIES,
+    Ability,
+    ArtScore,
+    Character,
+    Saga,
+    VirtueFlawInstance,
+    Wounds,
+    character_age,
+)
 from .rules import aging, casting, derived, scores, warping
 from .rules import creation_virtues as cv
 from .rules import xp as xp_rules
@@ -237,12 +246,20 @@ class AbilityRow:
 def ability_table(character: Character) -> list[AbilityRow]:
     """The character's Abilities, grouped by category in the book's order
     (ABILITY_CATEGORIES), each kept in the order it was added."""
+    return abilities_table(character.abilities, character.virtues_flaws)
+
+
+def abilities_table(
+    abilities: Sequence[Ability], virtues_flaws: Sequence[VirtueFlawInstance]
+) -> list[AbilityRow]:
+    """`abilities` (a character's or a familiar's) as ability_table rows,
+    with the bonuses `virtues_flaws` give."""
     rows = []
     for category in ABILITY_CATEGORIES:
-        for index, ability in enumerate(character.abilities):
+        for index, ability in enumerate(abilities):
             if ability.category != category:
                 continue
-            bonus, _ = scores.ability_bonus(character.virtues_flaws, ability.name)
+            bonus, _ = scores.ability_bonus(virtues_flaws, ability.name)
             progress = ability.progress
             rows.append(
                 AbilityRow(
@@ -443,10 +460,21 @@ class VirtueFlawCard:
 def virtue_flaw_cards(character: Character, side: str) -> list[VirtueFlawCard]:
     """The character's Virtues or Flaws (`side`), Qualities and
     Inferiorities among them, in the order taken."""
+    return vf_cards(
+        character.virtues_flaws, side, cv.house_benefit(character).free_indices
+    )
+
+
+def vf_cards(
+    virtues_flaws: Sequence[VirtueFlawInstance],
+    side: str,
+    free: Collection[int] = (),
+) -> list[VirtueFlawCard]:
+    """The Virtues or Flaws (`side`) of `virtues_flaws` as cards, those at
+    the `free` indices marked Free."""
     vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
-    free = cv.house_benefit(character).free_indices
     cards = []
-    for index, vf in enumerate(character.virtues_flaws):
+    for index, vf in enumerate(virtues_flaws):
         definition = vf_catalog.get(vf.vf_id)
         if definition is None or definition.side != side:
             continue
@@ -649,8 +677,11 @@ class WoundBand:
 
 def wound_track(character: Character) -> list[WoundBand]:
     """The Damage Table for the character's Size, with their wounds."""
-    w = character.wounds
-    size = int(derived.size(character).total)
+    return damage_table(character.wounds, int(derived.size(character).total))
+
+
+def damage_table(w: Wounds, size: int) -> list[WoundBand]:
+    """The Damage Table for `size`, with wounds `w`."""
     counts = {
         "Light": w.light,
         "Medium": w.medium,
@@ -673,11 +704,18 @@ def wound_track(character: Character) -> list[WoundBand]:
 def fatigue_track(character: Character) -> list[tuple[str, int, bool]]:
     """Each Fatigue level as (name, penalty, whether it is the current
     one), Fresh first."""
+    return fatigue_levels(character.fatigue_level, character.virtues_flaws)
+
+
+def fatigue_levels(
+    current: str, virtues_flaws: Sequence[VirtueFlawInstance]
+) -> list[tuple[str, int, bool]]:
+    """fatigue_track for anyone at Fatigue level `current`."""
     return [
         (
             level.title(),
-            derived.fatigue_penalty(level, character.virtues_flaws),
-            level == character.fatigue_level,
+            derived.fatigue_penalty(level, virtues_flaws),
+            level == current,
         )
         for level in derived.FATIGUE_PENALTIES
     ]

@@ -17,6 +17,7 @@ from .... import books as bk
 from .... import catalog, lab_planning, seasons
 from .... import lab_texts as lt
 from .... import laboratories as lab_text
+from ....boon_hook_text import counted, points_title
 from ....covenants import (
     covenant_effective_aura,
 )
@@ -44,8 +45,6 @@ from ..widgets import (
     ToggleList,
     TwoColumns,
     _sign_colored,
-    counted,
-    points_title,
 )
 from .base import SheetView
 from .lists import BookListView, LabTextListView

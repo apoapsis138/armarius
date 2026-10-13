@@ -51,6 +51,8 @@ class Aura:
     total: int
     realm: str
     note: str
+    #: Where the modifier comes from, for a tooltip.
+    modifier_from: str = "here"
 
 
 def aura(saga: Saga, lab: Laboratory) -> Aura:

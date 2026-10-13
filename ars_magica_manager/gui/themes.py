@@ -54,6 +54,24 @@ SCRIPTORUM = Palette(
         "realm-Divine": "#B8860B",
         "realm-Faerie": "#4A7A5C",
         "realm-Infernal": "#8B0000",
+        # A book's binding: the brown its leather is tanned toward, the gilt
+        # of its tooling, and the light and shade on its bands.
+        "leather": "#4A3324",
+        "gilt": "#E8D9A8",
+        "binding-light": "#FFFFFF",
+        "binding-ink": "#000000",
+        # A bookcase's back wall and its planks.
+        "shelf-back": "#644A20",
+        "shelf-plank": "#705220",
+        # The page's paper: its darker flecks and fibres, its lighter grain,
+        # and the shade its edges and every shadow fall into.
+        "paper-fleck": "#6E5032",
+        "paper-sheen": "#FFFFFF",
+        "shadow": "#1E0F00",
+        # The bond's three Cords, in their metals.
+        "cord-golden": "#B8860B",
+        "cord-silver": "#8C939B",
+        "cord-bronze": "#9C5B26",
     },
 )
 
@@ -87,6 +105,21 @@ SCRIPTORUM_DARK = Palette(
         "realm-Divine": "#E3C25A",
         "realm-Faerie": "#74B08A",
         "realm-Infernal": "#F87171",
+        # A book's binding: the brown its leather is tanned toward, the gilt
+        # of its tooling, and the light and shade on its bands.
+        "leather": "#4A3324",
+        "gilt": "#E8D9A8",
+        "binding-light": "#FFFFFF",
+        "binding-ink": "#000000",
+        "shelf-back": "#2C220E",
+        "shelf-plank": "#644D1F",
+        # Vellum by candlelight: dark flecks, pale fibres, a black shade.
+        "paper-fleck": "#000000",
+        "paper-sheen": "#C8BEA0",
+        "shadow": "#000000",
+        "cord-golden": "#E3C25A",
+        "cord-silver": "#C3CAD2",
+        "cord-bronze": "#C9844A",
     },
 )
 
@@ -100,8 +133,11 @@ def style_sheet(p: Palette, serif: str) -> str:
     widget's own (the fixed-pitch lists, the Arts' italic serif names)."""
     return f"""
     QWidget {{
-        background: {p["background"]};
+        background: transparent;
         color: {p["foreground"]};
+    }}
+    QMenu, QToolTip, QDialog, QComboBox QAbstractItemView {{
+        background: {p["background"]};
     }}
     QSplitter::handle {{ background: {p["rule"]}; }}
     QTreeWidget, QListWidget {{
@@ -166,10 +202,11 @@ def style_sheet(p: Palette, serif: str) -> str:
         padding: 3px 6px;
     }}
     QScrollArea {{ border: none; }}
-    QScrollBar:vertical {{ background: {p["background"]}; width: 10px; }}
+    QScrollBar:vertical {{ background: transparent; width: 10px; }}
     QScrollBar::handle:vertical {{ background: {p["rule"]}; min-height: 24px; }}
-    QScrollBar:horizontal {{ background: {p["background"]}; height: 10px; }}
+    QScrollBar:horizontal {{ background: transparent; height: 10px; }}
     QScrollBar::handle:horizontal {{ background: {p["rule"]}; min-width: 24px; }}
     QScrollBar::add-line, QScrollBar::sub-line {{ height: 0; width: 0; }}
+    QScrollBar::add-page, QScrollBar::sub-page {{ background: transparent; }}
     QTableCornerButton::section {{ background: {p["surface"]}; border: none; }}
     """

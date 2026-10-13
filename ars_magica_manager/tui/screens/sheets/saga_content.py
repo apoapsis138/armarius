@@ -12,6 +12,7 @@ from textual.widget import Widget
 from textual.widgets import Static, TabbedContent, TabPane
 
 from .... import saga_content as sc
+from ....boon_hook_text import counted
 from ....models import Saga, SagaSource
 from ....sections import (
     BOOKS_SECTION,
@@ -22,7 +23,7 @@ from ....sections import (
     SOURCES_SECTION,
     SPELL_SECTION,
 )
-from ..widgets import SelectableList, SheetSection, TableHeader, counted
+from ..widgets import SelectableList, SheetSection, TableHeader
 from .base import SheetView
 from .lists import HouseRulesView, PlayersView, SpellListView
 

@@ -43,6 +43,27 @@ teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript.
 
+## 2.47.0 — 2026-10-13
+
+- The desktop version has a page for each covenant, with every chapter of
+  the terminal's covenant sheet. The header shows the Tribunal, season and
+  founding, the Aegis of the Hearth and living conditions, and the aura
+  and Loyalty as seals. Its chapters: the charter (the description, Boons
+  and Hooks as cards, Reputations), its people, covenfolk with Loyalty,
+  laboratories, possessions, the treasury as a year's account, the
+  library, its seasons, the Diary and the Build Points.
+- The library stands its books on wooden shelves, bound in muted leather
+  with gilt lettering: each spine carries its Art's symbol, its whole
+  title and its level and quality. The shelves fill to the page's width.
+- Every desktop page now lies on paper (vellum by candlelight in the dark
+  theme), darker toward its edges; cards, seals and the inspector sit on
+  it with soft shadows, and the bookcase has depth.
+- A familiar has its own page, opened from its covenant's people or its
+  magus's sheet: its Magic Might as a seal, its Characteristics, the
+  binding, the three Cords as twisted cords of gold, silver and bronze
+  with a knot for each point, its Virtues and Flaws, health and natural
+  weapons, Abilities, and Bond Powers as cards.
+
 ## 2.46.0 — 2026-10-13
 
 - The desktop version has a page for each laboratory, opened from its

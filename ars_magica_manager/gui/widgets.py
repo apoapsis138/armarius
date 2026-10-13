@@ -45,6 +45,7 @@ from .. import artwork
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from . import pictures
 from .markup_html import to_html
+from .paper import lift, translucent
 from .themes import Palette
 
 #: The item-data role holding an experience bar's (fraction, text).
@@ -117,17 +118,20 @@ def display_name(name: str, p: Palette, size: int = 34) -> QLabel:
 
 
 class Card(QFrame):
-    """A raised panel; `edge` colours its left border (a Virtue's green)."""
+    """A panel lying on the page, with a soft shadow; `edge` colours its
+    left border (a Virtue's green)."""
 
     def __init__(self, p: Palette, *, pad: int = 12, edge: str | None = None) -> None:
         super().__init__()
         self.setObjectName("card")
         left = f"border-left:4px solid {edge};" if edge else ""
         self.setStyleSheet(
-            f"QFrame#card {{ background:{p['surface']}; border:1px solid"
-            f" {p['rule']}; border-radius:6px; {left} }}"
+            f"QFrame#card {{ background:{translucent(p['surface'], 215)};"
+            f" border:1px solid {translucent(p['rule'], 150)}; border-radius:6px;"
+            f" {left} }}"
             " QFrame#card QWidget { background:transparent; }"
         )
+        lift(self, p)
         self.column = QVBoxLayout(self)
         self.column.setContentsMargins(pad, pad - 2, pad, pad)
         self.column.setSpacing(6)
@@ -272,10 +276,11 @@ class Inspector(QFrame):
         self.p = p
         self.setObjectName("inspector")
         self.setStyleSheet(
-            f"QFrame#inspector {{ background:{p['surface']};"
-            f" border-left:1px solid {p['rule']}; }}"
+            f"QFrame#inspector {{ background:{translucent(p['surface'], 225)};"
+            f" border-left:1px solid {translucent(p['rule'], 160)}; }}"
             " QFrame#inspector QLabel { background:transparent; }"
         )
+        lift(self, p, blur=24, drop=0)
         self.setMinimumWidth(280)
         column = QVBoxLayout(self)
         column.setContentsMargins(16, 14, 16, 14)
@@ -458,5 +463,62 @@ def arts_heat_grid(
     view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
     view.clicked.connect(
         lambda index: on_choose(TECHNIQUES[index.row()], FORMS[index.column()])
+    )
+    return view
+
+
+def cells_table(
+    columns: list[str],
+    rows: list[list[str]],
+    p: Palette,
+    on_choose: Callable[[int], None],
+) -> QTableView:
+    """Rows of plain cells under their column titles, every row shown (the
+    chapter scrolls, not the table); choosing a row calls `on_choose` with
+    its index. The first column stretches; a column of numbers is centred."""
+    model = QStandardItemModel(len(rows), len(columns))
+    for c, title in enumerate(columns):
+        head = QStandardItem(title)
+        if c == 0:
+            head.setTextAlignment(
+                Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
+            )
+        model.setHorizontalHeaderItem(c, head)
+    numeric = [
+        bool(rows)
+        and all(row[c].lstrip("+-").isdigit() or row[c] in ("", "-") for row in rows)
+        for c in range(len(columns))
+    ]
+    for r, row in enumerate(rows):
+        for c, words in enumerate(row):
+            cell = QStandardItem(words)
+            cell.setEditable(False)
+            if numeric[c]:
+                cell.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            if c == 0:
+                cell.setFont(serif(12.5))
+            model.setItem(r, c, cell)
+    view = QTableView()
+    view.setModel(model)
+    view.verticalHeader().hide()
+    view.verticalHeader().setDefaultSectionSize(ROW_HEIGHT)
+    view.setShowGrid(False)
+    view.setAlternatingRowColors(True)
+    view.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+    view.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+    view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+    header = view.horizontalHeader()
+    header.setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
+    header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+    table_style(view, p)
+    view.setFixedHeight(
+        max(len(rows), 1) * ROW_HEIGHT
+        + header.sizeHint().height()
+        + 2 * view.frameWidth()
+        + 2
+    )
+    view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+    view.selectionModel().currentRowChanged.connect(
+        lambda current, _previous: on_choose(current.row())
     )
     return view
