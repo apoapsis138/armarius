@@ -7,12 +7,13 @@ from typing import ClassVar
 from textual.app import App
 from textual.binding import Binding, BindingType
 
-from .. import __version__, paths
+from .. import __version__, paths, title_page
 from ..markup import escape
 from ..models import Player
 from ..settings import load_settings, update_settings
 from .screens import SagaPickerScreen
 from .screens.help import HelpScreen, help_context
+from .screens.title import TitleScreen
 from .styles import APP_CSS
 from .themes import SCRIPTORUM, SCRIPTORUM_DARK, app_variable_defaults
 
@@ -57,6 +58,10 @@ class ArsMagicaManagerApp(App[None]):
     #: whenever no saga is open.
     player: Player | None = None
 
+    #: Open on the title page (main.py: only the storyguide's own window,
+    #: not a player's hosted copy).
+    show_title: bool = False
+
     def on_mount(self) -> None:
         # Notes about the host's data folder are the storyguide's business:
         # a player's browser copy doesn't show them.
@@ -73,6 +78,8 @@ class ArsMagicaManagerApp(App[None]):
             saved_theme if saved_theme in self.available_themes else DEFAULT_THEME
         )
         self.push_screen(SagaPickerScreen())
+        if self.show_title:
+            self.push_screen(TitleScreen(title_page.title_page()))
 
     def watch_theme(self, theme_name: str) -> None:
         update_settings(theme=theme_name)

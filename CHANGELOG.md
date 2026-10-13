@@ -46,6 +46,16 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.53.0 — 2026-10-13
+
+- The app now opens on a title page: an illuminated initial A in gold
+  and knotwork, the name Armarius and its tagline, and the version.
+  From it you can open the saga you had open last, choose or begin
+  another saga, or read Help. Enter takes the first of these.
+- The terminal version opens on a matching title card in front of the
+  saga picker. Players joining a hosted saga skip it.
+- The app remembers the saga you opened last.
+
 ## 2.52.0 — 2026-10-13 — Nomen Novum
 
 - The app is now called **Armarius**, a saga manager for Ars Magica.

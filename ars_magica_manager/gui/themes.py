@@ -125,6 +125,40 @@ SCRIPTORUM_DARK = Palette(
 
 PALETTES = (SCRIPTORUM, SCRIPTORUM_DARK)
 
+#: An illuminated initial's pigments (illumination.py): the same in either
+#: theme, as a painted letter is the same colours on any page.
+PIGMENTS = {
+    "lapis": "#1E3F8A",
+    "lapis-deep": "#132A5E",
+    "vermilion": "#B3261E",
+    "vermilion-deep": "#7E1712",
+    "verdigris": "#2F7A55",
+    "verdigris-light": "#A9D8B8",
+    "ink": "#2A1A0C",
+    "lead-white": "#FBF6E9",
+    # The knotwork band's ground, darker than the lapis so the gold shows.
+    "knot-ground": "#10203F",
+    "gold": "#E3B341",
+    "gold-light": "#FFE9A0",
+    "gold-dark": "#7A5212",
+    "garnet-light": "#F08A80",
+    "glow": "#F2C94C",
+}
+
+#: Burnished gold along a gradient, (stop, colour): dark ochre, bright
+#: yellow, a white glint, and back, so the gold seems to catch the light.
+BURNISH = (
+    (0.00, "#7A5212"),
+    (0.18, "#C9971F"),
+    (0.32, "#F7DA6A"),
+    (0.40, "#FFF6C8"),
+    (0.48, "#F2C94C"),
+    (0.66, "#B07D18"),
+    (0.80, "#E8BF45"),
+    (0.90, "#FFE89A"),
+    (1.00, "#8A5D14"),
+)
+
 
 def style_sheet(p: Palette, serif: str) -> str:
     """The whole window's Qt style sheet in palette `p`; `serif` is the

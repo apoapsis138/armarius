@@ -6,7 +6,7 @@ This guide takes you from the start screen to a saga you can play: a saga with i
 ### Create and open a saga
 <!-- help: guide-getting-started-saga -->
 
-1. The app opens on the [saga picker](help:saga-picker), which lists the sagas saved on this computer ("No sagas yet" the first time).
+1. The app opens on its [title page](help:title-page). Choose **All Sagas** to go to the [saga picker](help:saga-picker), which lists the sagas saved on this computer ("No sagas yet" the first time).
 2. Press `n`. The Create a New Saga form asks for a Name and a Storyguide (both required), a Start Year and Start Season, and an optional one-line Description. Choose Create.
 3. The new saga appears in the list. Highlight it with the arrow keys and press Enter to open it in the [workspace](help:workspace).
 

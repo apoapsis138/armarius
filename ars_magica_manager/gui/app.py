@@ -22,6 +22,7 @@ def main() -> int:
     app.setWindowIcon(pictures.app_icon())
     pictures.register_fonts()
     window = MainWindow()
+    window.show_title()
     if problem or renamed:
         window.statusBar().showMessage(problem or renamed or "")
     window.resize(1400, 900)

@@ -18,7 +18,7 @@ from textual.widgets import (
     Static,
 )
 
-from ... import __version__, creation, paths, storage
+from ... import __version__, creation, paths, storage, title_page
 from ...markup import escape, problem
 from ...models import Player
 from .fields import FieldsDialog
@@ -231,7 +231,11 @@ class SagaPickerScreen(Screen[None]):
         item_id = event.item.id
         if item_id is None or not item_id.startswith(_SAGA_ITEM_ID_PREFIX):
             return
-        saga_id = item_id.removeprefix(_SAGA_ITEM_ID_PREFIX)
+        self.open_saga(item_id.removeprefix(_SAGA_ITEM_ID_PREFIX))
+
+    def open_saga(self, saga_id: str) -> None:
+        """Open the saga `saga_id` in the workspace (in a player's browser,
+        once they have signed in)."""
         try:
             saga = storage.load_saga(saga_id)
         except _UNREADABLE as problem:
@@ -241,6 +245,7 @@ class SagaPickerScreen(Screen[None]):
             )
             return
         if not self.app.is_web:
+            title_page.remember_saga(saga.id)
             self.app.push_screen(WorkspaceScreen(saga))
             return
         if not saga.players:

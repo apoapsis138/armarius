@@ -90,7 +90,14 @@ def test_parse_puts_level_three_topics_on_the_page_above():
 
 
 def test_every_tree_node_and_process_dialog_has_a_page():
-    wanted = {*_HELP_PAGES.values(), *DIALOG_PAGES, "workspace", "saga-picker", "keys"}
+    wanted = {
+        *_HELP_PAGES.values(),
+        *DIALOG_PAGES,
+        "workspace",
+        "saga-picker",
+        "title-page",
+        "keys",
+    }
     assert not wanted - BOOK.pages.keys()
 
 

@@ -146,7 +146,7 @@ def test_the_theme_toggle_redraws_the_sheet_in_the_other_palette(app):
 def test_the_pages_lie_on_paper_and_their_cards_cast_shadows(app):
     window = MainWindow(saga_ids=[])
     window.load(_sample_saga_with_covenant())
-    body = window.centralWidget()
+    body = window.stack.widget(0)
     assert isinstance(body, Paper) and body.p is PALETTES[0]
     card = window.findChildren(ClickableCard)[0]
     assert isinstance(card.graphicsEffect(), QGraphicsDropShadowEffect)

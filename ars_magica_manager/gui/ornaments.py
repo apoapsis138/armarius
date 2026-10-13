@@ -85,6 +85,22 @@ class FleuronRule(_Ornament):
         painter.drawLine(QPointF(start, cy + 3), QPointF(width * 0.55, cy + 3))
 
 
+class ShortRule(_Ornament):
+    """A short rule under a title: a hedera leaf, with a rule fading out
+    to each side."""
+
+    HEIGHT = 26
+
+    def draw(self, painter, width, cy):
+        gilt = self.p["accent"]
+        cx = width / 2
+        _leaf(painter, cx, cy, HEDERA, 15, gilt)
+        for side in (-1, 1):
+            near, far = cx + side * 18, cx + side * 210
+            painter.setPen(_fading(gilt, near, far, 1.2))
+            painter.drawLine(QPointF(near, cy), QPointF(far, cy))
+
+
 class Headpiece(_Ornament):
     """The band over a page: a hedera between two leaves, and a double
     rule set with lozenges running out to each side and fading."""

@@ -34,11 +34,20 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPushButton,
     QScrollArea,
+    QStackedWidget,
     QVBoxLayout,
     QWidget,
 )
 
-from .. import advance_forms, help_text, menu_forms, paths, saga_forms, storage
+from .. import (
+    advance_forms,
+    help_text,
+    menu_forms,
+    paths,
+    saga_forms,
+    storage,
+    title_page,
+)
 from .. import familiars as fam
 from ..actions import NodeKind
 from ..commands import Act, Choose, ChooseFile, Command, Confirm, Form, Picked, Refuse
@@ -59,6 +68,7 @@ from .paper import Paper
 from .saga_content import SagaContentPage
 from .seasons import SeasonsPage
 from .themes import PALETTES, Palette, style_sheet
+from .title import TitleScreen
 from .widgets import take_pressed
 from .worksheet import WorksheetPage
 
@@ -167,7 +177,11 @@ class MainWindow(QMainWindow):
         self.headpiece = Headpiece(self.palette_)
         layout.addWidget(self.headpiece)
         layout.addWidget(self.sheet_area, 1)
-        self.setCentralWidget(body)
+        #: The pages, and over them the title page while it is on show.
+        self.stack = QStackedWidget()
+        self.stack.addWidget(body)
+        self.setCentralWidget(self.stack)
+        self.title: TitleScreen | None = None
 
         self._apply_theme()
         if len(self.saga_ids) == 1:
@@ -217,6 +231,35 @@ class MainWindow(QMainWindow):
         return place.id if place and place.kind == CHARACTER else None
 
     # Where to go
+
+    # The title page
+
+    def show_title(self) -> None:
+        """Show the title page over the whole window, fading in."""
+        page = title_page.title_page(self.saga_ids)
+        self.title = TitleScreen(page, self.palette_, self.leave_title)
+        self.stack.addWidget(self.title)
+        self.stack.setCurrentWidget(self.title)
+        self.title.setFocus()
+        self.title.fade_in()
+
+    def leave_title(self, key: str) -> None:
+        """Go on from the title page by the way chosen (title_page.OPEN,
+        SAGAS or HELP)."""
+        title, self.title = self.title, None
+        if title is None:
+            return
+        self.stack.setCurrentIndex(0)
+        self.stack.removeWidget(title)
+        title.deleteLater()
+        if key == title_page.OPEN and title.page.saga_id is not None:
+            self.open_saga(title.page.saga_id)
+            return
+        self.saga_ids = storage.list_sagas()
+        self.saga = None
+        self.go([Place(SHELF)])
+        if key == title_page.HELP:
+            self.open_help()
 
     # The shelf of sagas
 
@@ -285,6 +328,7 @@ class MainWindow(QMainWindow):
     def load(self, saga: Saga) -> None:
         """Open `saga` at its page of covenants."""
         self.saga = saga
+        title_page.remember_saga(saga.id)
         self.go([Place(SHELF), Place(SAGA)])
 
     def open_covenant(self, covenant_id: str | None) -> None:
@@ -792,7 +836,7 @@ class MainWindow(QMainWindow):
 
     def _apply_theme(self) -> None:
         p = self.palette_
-        body = self.centralWidget()
+        body = self.stack.widget(0)
         if isinstance(body, Paper):
             body.p = p
             body.update()

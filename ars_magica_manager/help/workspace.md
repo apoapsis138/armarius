@@ -1,3 +1,20 @@
+# Title page
+<!-- help: title-page -->
+
+The page the app opens on: the illuminated A and the name Armarius, the tagline, the version and its release name, and the ways on.
+
+- **Open Saga** opens the saga you had open last (or the only saga, if there is one). It isn't offered when there is no saga to open.
+- **All Sagas** goes to the [saga picker](help:saga-picker), to choose a saga, start a new one or delete one.
+- **Help** opens Help.
+
+Enter takes the first of them. In the terminal, choose with the arrow keys and Enter, and `q` quits; on the desktop, click one. A player's copy of a hosted saga skips the title page and opens on the saga picker, where they sign in.
+
+**You type:** nothing here; you choose where to go.
+
+**The app works out:** which saga you had open last, which it remembers in the settings each time you open one.
+
+**See also:** [Saga picker](help:saga-picker), [Getting started](help:guide-getting-started)
+
 # Saga picker
 <!-- help: saga-picker -->
 
