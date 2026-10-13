@@ -62,7 +62,7 @@ People marked departed on the Inhabitants tab are left out of this tab and aren'
 1. Press `t` from anywhere in the workspace. The **Advance Time** dialog asks whether to advance from this season to the next.
 2. Read its summary: how many planned seasons will be applied, who has nothing planned (they gain nothing this season), and any plan that can't be carried out, with the reason. To fix anything, choose Cancel, change the plan and press `t` again.
 3. Choose **Advance**.
-4. The app may then ask questions, one at a time: whether each contested vis or income source whose security has lapsed was secured this season, and, for an experiment seeking a Discovery, whether to use the risk to move the roll. In Winter it first asks about any covenant in deficit (see below).
+4. The app may then ask a few questions: which contested vis or income sources whose security has lapsed were secured this season, and, for an experiment seeking a Discovery, whether to use the risk to move the roll. In Winter it first asks about any covenant in deficit (see below).
 5. Before anything is applied, the saga is backed up to `sagas/backups` in your data folder (Ars Magica Manager in your OneDrive folder).
 
 See [Advance Season](help:advance-season) for how the plans are applied.
@@ -82,7 +82,7 @@ The season's plans are removed once applied, so every This Season section starts
 
 Advancing Winter also closes the year:
 
-1. If any covenant spends more than it earns, the app asks whether to resolve the deficit first. Yes leaves the date alone: balance the books on the covenant's [Economics tab](help:tab-cov-economics), then press `t` again. No advances anyway.
+1. If any covenant spends more than it earns, the app asks whether to advance anyway. No leaves the date alone: balance the books on the covenant's [Economics tab](help:tab-cov-economics), then advance again. Advance anyway rolls the year over.
 2. Each grog's yearly update is applied, yearly Warping Points are added where they are due, and aging rolls are made for those who need them. The updates and aging rolls appear in the Season Summary and in each Diary.
 3. Each covenant's surplus is added to its Wealth, and its Emergency Savings start again at 0. A deficit is never taken from Wealth by itself.
 
@@ -144,7 +144,7 @@ The [Economics tab](help:tab-cov-economics) (`5`) shows a year's finances. Most 
 
 **At the end of each year,** when Winter is advanced, the surplus is added to Wealth and Emergency Savings start again at 0.
 
-**With a deficit,** the app asks before closing the year whether you want to resolve it. To cover it from Wealth, choose **Emergency Savings** on Cost Savings and press `e`: the app offers to draw the deficit, or as much as Wealth holds, from Wealth. A covenant with no Wealth to draw is broke. A deficit is never taken from Wealth unless you choose to.
+**With a deficit,** the app asks before closing the year whether to advance anyway. To cover it from Wealth, choose **Emergency Savings** on Cost Savings and press `e`: the app offers to draw the deficit, or as much as Wealth holds, from Wealth. A covenant with no Wealth to draw is broke. A deficit is never taken from Wealth unless you choose to.
 
 ### Books
 <!-- help: guide-covenant-books -->

@@ -169,8 +169,8 @@ The app comes with one such file: `data/book_packages/ArM5_books_by_ability.csv`
 <!-- help: guide-import-export-spells -->
 
 1. Select the saga, press `m` (More), choose **Import**, then **Spells**. The [Import Spells](help:import-spells) helper opens and lists the columns it reads; **name**, **technique** and **form** are needed.
-2. If you have no file yet, choose **Save example CSV**. It writes `spells_example.csv` with two example spells to the folder the app was started from. Edit it in a spreadsheet and save it as CSV.
-3. Choose **Choose CSV file...** and pick the file.
+2. If you have no file yet, tick **Save an example CSV instead** and choose **Choose CSV File**. It writes `spells_example.csv` with two example spells to the folder the app was started from. Edit it in a spreadsheet, save it as CSV, and start the import again.
+3. Choose **Choose CSV File** and pick the file.
 4. Read the preview and choose **Import**.
 
 The spells become the saga's own spells, which you can edit on [Spells](help:tab-content-spells).
@@ -178,7 +178,7 @@ The spells become the saga's own spells, which you can edit on [Spells](help:tab
 ### When a name is already taken
 <!-- help: guide-import-export-duplicates -->
 
-When an imported book or spell has the name of one already in the saga, the app asks about each one: **Duplicate** adds it anyway, **Skip** leaves it out, and **Duplicate All** and **Skip All** answer the same for the rest of that import. Spell names are compared in any case. Nothing is added until every question is answered.
+When an imported book or spell has the name of one already in the saga, the app asks about each one: **Skip** leaves it out, **Duplicate** adds it anyway, and **Skip All** and **Duplicate All** answer the same for the rest of that import. Spell names are compared in any case. Nothing is added until every question is answered, and cancelling a question imports nothing.
 
 ### Keeping backups
 <!-- help: guide-import-export-backups -->

@@ -7,7 +7,8 @@ from __future__ import annotations
 import pytest
 
 from ars_magica_manager import sheet_text as st
-from ars_magica_manager.models import VirtueFlawInstance
+from ars_magica_manager.character_forms import arts_form
+from ars_magica_manager.models import Character, VirtueFlawInstance
 from ars_magica_manager.rules import creation_access
 from ars_magica_manager.rules import xp as xp_rules
 from ars_magica_manager.rules.rounding import round_up
@@ -61,7 +62,9 @@ def test_ability_dialog_live_line_names_the_ability_and_uses_puissant():
 
 def test_arts_grid_shows_score_and_next_total_in_columns():
     virtues = [VirtueFlawInstance("vf_puissant_art", params={"art": "creo"})]
-    screen = EditArtsScreen({}, virtues)
+    screen = EditArtsScreen(
+        arts_form(Character(id="m", name="M", type="magus")), virtues
+    )
     assert screen._score_label("creo", 6) == "3 (6)    10 xp"
     assert screen._score_label("vim", 6) == "3        10 xp"
     assert screen._score_label("vim", None) == "?"

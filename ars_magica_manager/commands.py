@@ -2,8 +2,8 @@
 they are drawn.
 
 A command is one step the user answers: a form to fill (`Form`), a list
-to choose from (`Choose`) or a question to confirm (`Confirm`); an `Act`
-asks nothing and runs at once. Answering
+to choose from (`Choose`), a question to confirm (`Confirm`) or a file to
+read (`ChooseFile`); an `Act` asks nothing and runs at once. Answering
 it runs its `apply`, which changes the saga and returns the next step: a
 further command (choose an Ability, then fill in its score), the notes to
 show the user, or None when there is nothing more. A form field's chooser
@@ -21,6 +21,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, MutableSequence, Sequence
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 from .form_spec import DialogField
@@ -40,6 +41,8 @@ class Form:
     validate: Callable[[dict[str, Any]], str | None] | None = None
     live: Callable[[dict[str, Any]], str] | None = None
     save_label: str = "Save"
+    #: The form's own help page (help/*.md), if it has one.
+    help_id: str = ""
 
 
 @dataclass(frozen=True)
@@ -67,6 +70,8 @@ class Choose:
     apply: Callable[[Any], Any]
     empty: str = "Nothing to choose from."
     others: Callable[[], list[Choice]] | None = None
+    #: The list's own help page (help/*.md), if it has one.
+    help_id: str = ""
 
 
 def not_offered(choice: Choice, why: str) -> Choice:
@@ -82,11 +87,13 @@ def not_offered(choice: Choice, why: str) -> Choice:
 
 @dataclass(frozen=True)
 class Confirm:
-    """A yes-or-no question (markup); `apply` runs on Yes."""
+    """A yes-or-no question (markup); `apply` runs on Yes. `title` heads
+    it where a front-end titles its questions ("" for its own)."""
 
     question: str
     apply: Callable[[], Any]
     yes_label: str = "Delete"
+    title: str = ""
 
 
 @dataclass(frozen=True)
@@ -107,6 +114,19 @@ class Act:
 
 
 @dataclass(frozen=True)
+class ChooseFile:
+    """A file to read, chosen the front-end's own way (the terminal's list
+    of files, the desktop's Open window): `suffix` the kind of file
+    (".csv"), opening on the folder `start`; `apply` gets the chosen
+    file's path."""
+
+    title: str
+    suffix: str
+    start: Path
+    apply: Callable[[Path], Any]
+
+
+@dataclass(frozen=True)
 class Picked:
     """What a form field's chooser (form_spec.DialogField.choose) ends
     with: the field's new value. Nothing in the saga changes."""
@@ -114,7 +134,7 @@ class Picked:
     value: Any
 
 
-Command = Form | Choose | Confirm | Act | Refuse
+Command = Form | Choose | Confirm | Act | Refuse | ChooseFile
 
 
 def picked(form: Callable[[dict[str, Any]], Any]) -> Callable[[dict[str, Any]], Picked]:

@@ -8,62 +8,106 @@ The other lab work of a season is planned here too:
 extracting vis, fixing an Arcane Connection and Longevity Rituals, each
 with its own few fields in place of the spell design.
 
-A full screen rather than a FieldsDialog: it has too many fields for one
-field per row at 120 x 45."""
+It is the core's lab work form (lab_plan_forms.LabPlanForm) drawn on a
+full screen rather than a FieldsDialog, since it has too many fields for
+one field per row at 120 x 45: its choices, the plan its values describe,
+what refuses it and the level and When text are the core's; this screen
+lays the fields out several to a row and reads them back as the form's
+values."""
 
 from __future__ import annotations
 
 import uuid
 from collections.abc import Sequence
-from typing import ClassVar
+from typing import Any, ClassVar
 
 from textual.app import ComposeResult
 from textual.binding import BindingType
 from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.widgets import Button, Checkbox, Input, Label, Select, Static, TextArea
 
-from ... import books, seasons
 from ... import enchanted_devices as ed
+from ... import form_spec
+from ... import lab_plan_forms as lpf
 from ... import lab_texts as lt
 from ... import spells as spl
 from ...arts import FORMS, TECHNIQUES
-from ...familiars import familiar_of
-from ...markup import escape, todo
+from ...form_spec import DialogField
+from ...lab_plan_forms import KINDS, OTHER, LabPlanForm, design_from, level_text
+from ...markup import escape
 from ...models import (
     Character,
     Laboratory,
     Saga,
     SeasonPlan,
-    Spell,
     SpellDesign,
-    next_season,
 )
 from ...rules import activities as season_rules
 from ...rules import book_seasons as bs
 from ...rules import enchant_seasons as es
 from ...rules import experiment as ex
 from ...rules import familiar_seasons as fs
-from ...rules import lab_seasons, spell_levels
+from ...rules import lab_seasons
 from ...rules import laboratory_seasons as ls
 from .fields import ModalDialog
 from .pickers import SpellChooserScreen
 
-#: The drop-down choice for a Range/Duration/Target the app doesn't list.
-OTHER = "__other__"
-#: The design Range/Duration/Target select ids, by kind.
-_KINDS: tuple[str, ...] = ("range", "duration", "target")
-_STANDARD = {
-    "range": spell_levels.RANGE_STEPS,
-    "duration": spell_levels.DURATION_STEPS,
-    "target": spell_levels.TARGET_STEPS,
+#: The Exposure line, as the When column wraps it.
+_EXPOSURE_LINES = ("Every lab season also gives 2 xp", "Exposure in Magic Theory.")
+
+#: The widget drawing each field of the core's form (LabPlanForm.fields),
+#: by its key.
+_WIDGET_OF: dict[str, str] = {
+    "activity": "inv-activity",
+    "name": "inv-name",
+    "description": "inv-description",
+    "technique": "inv-technique",
+    "form": "inv-form",
+    "requisites": "inv-requisites",
+    "base_level": "inv-base",
+    "ritual": "inv-ritual",
+    **{kind: f"inv-{kind}" for kind in KINDS},
+    **{f"{kind}_name": f"inv-{kind}-name" for kind in KINDS},
+    **{f"{kind}_steps": f"inv-{kind}-steps" for kind in KINDS},
+    "extra_magnitudes": "inv-extra",
+    "base_effect": "inv-base-effect",
+    "lab_text": "inv-lab-text",
+    "decode": "inv-decode",
+    "connection": "inv-connection",
+    "subject": "inv-subject",
+    "longevity_vis": "inv-vis-art",
+    "extra_vis": "inv-extra-vis",
+    "device": "inv-device",
+    "shape": "inv-shape",
+    "effect": "inv-effect",
+    "effect_text": "inv-effect-text",
+    "bind_technique": "inv-bind-t",
+    "bind_form": "inv-bind-f",
+    "golden_cord": "inv-golden",
+    "silver_cord": "inv-silver",
+    "bronze_cord": "inv-bronze",
+    "power": "inv-power",
+    "effect_vis": "inv-effect-vis",
+    "creature": "inv-creature",
+    "creature_form": "inv-creature-form",
+    "might": "inv-creature-might",
+    "move_to": "inv-move-to",
+    "by_spell": "inv-by-spell",
+    "die": "inv-die",
+    # One drop-down says where vis comes from, or goes to when extracting.
+    "vis_to": "inv-vis-from",
+    "vis_from": "inv-vis-from",
+    "experimenting": "inv-experimenting",
+    "risk": "inv-risk",
+    "research": "inv-research",
+    "research_kind": "inv-research-kind",
+    "similar": "inv-similar",
+    "focus": "inv-focus",
+    "specialty": "inv-specialty",
+    "days_away": "inv-days",
+    "other_modifier": "inv-other",
+    "details": "inv-notes",
 }
-
-
-def _int(text: str) -> int | None:
-    try:
-        return int(text.strip())
-    except ValueError:
-        return None
 
 
 def _number(value: str, widget_id: str, *, placeholder: str = "") -> Input:
@@ -275,27 +319,15 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         self.lab = lab
         self.season = season
         self.year = year
-        lab_plan = existing if existing is not None and existing.lab_id else None
-        self.initial = lab_plan
-        self.initial_activity = lab_plan.activity if lab_plan else activity
-        design = lab_plan.design if lab_plan and lab_plan.design else None
-        if design is None and lab_plan and lab_plan.spell_id:
-            spell = spl.find_spell(saga, lab_plan.spell_id)
-            design = self._design_from(spell) if spell else None
-        self.key = design.key if design else uuid.uuid4().hex[:12]
-        self.source_id = design.source_spell_id if design else None
-        self.printed_level = design.printed_level if design else None
-        vf_ids = {vf.vf_id for vf in magus.virtues_flaws}
-        self.parameter_options = {
-            kind: [(name, name) for name in _STANDARD[kind]]
-            + [
-                (f"{e.name} (as {e.costs_as})", e.name)
-                for e in spell_levels.extra_parameters(kind, vf_ids)
-            ]
-            + [("Other...", OTHER)]
-            for kind in _KINDS
-        }
-        self._design = design
+        self.form = LabPlanForm(
+            saga, magus, lab, season, year, existing, activity=activity
+        )
+        self.initial = self.form.existing
+        self.initial_activity = self.form.activity
+        self._design = self.form.design
+        self.parameter_options = self.form.parameter_options
+        #: The core form's fields, each drawn by its widget (_WIDGET_OF).
+        self._fields = self.form.fields()
         self._ready = False
 
     # -- layout --------------------------------------------------------------
@@ -373,7 +405,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                 compact=True,
             )
         with Horizontal(classes="inv-row"):
-            for kind in _KINDS:
+            for kind in KINDS:
                 yield Label(("" if kind == "range" else " ") + kind.title())
                 current = getattr(design, kind) if design else ""
                 values = [v for _, v in self.parameter_options[kind]]
@@ -389,12 +421,13 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                     compact=True,
                 )
         with Horizontal(classes="inv-row", id="inv-other-row"):
-            for kind in _KINDS:
+            for kind in KINDS:
                 current = getattr(design, kind) if design else ""
                 steps = design.custom_steps.get(kind) if design else None
                 yield Label(("" if kind == "range" else " ") + f"Other {kind}")
+                listed = [v for _, v in self.parameter_options[kind]]
                 yield Input(
-                    current if current not in _STANDARD[kind] else "",
+                    current if current not in listed else "",
                     placeholder="name",
                     id=f"inv-{kind}-name",
                     classes="inv-other",
@@ -436,13 +469,13 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             yield Select(
                 [
                     (f"{escape(b.name)} ({escape(bs.author_name(self.saga, b))})", b.id)
-                    for b in self._undecoded()
+                    for b in self.form.undecoded()
                 ],
                 value=(
                     plan.book_id
                     if plan
                     and plan.activity == bs.DECODE_TEXT
-                    and plan.book_id in [b.id for b in self._undecoded()]
+                    and plan.book_id in [b.id for b in self.form.undecoded()]
                     else Select.NULL
                 ),
                 prompt="(a raw text by another magus)",
@@ -456,7 +489,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         with Horizontal(classes="inv-row", id="inv-connection-row"):
             yield Label("Connection to")
             yield Select(
-                self._connections(),
+                self.form.connections(),
                 value=self._connection_value(plan),
                 prompt="(choose; add them on the Inventory tab)",
                 id="inv-connection",
@@ -465,7 +498,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         with Horizontal(classes="inv-row", id="inv-subject-row"):
             yield Label("For")
             yield Select(
-                self._subjects(),
+                self.form.subjects(),
                 value=(plan.subject_id if plan and plan.subject_id else self.magus.id),
                 allow_blank=False,
                 id="inv-subject",
@@ -488,7 +521,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         with Horizontal(classes="inv-row", id="inv-device-row"):
             yield Label("Device")
             yield Select(
-                self._devices(),
+                self.form.devices(),
                 value=self._device_value(plan),
                 prompt="(choose; they're kept on the Inventory tabs)",
                 id="inv-device",
@@ -533,7 +566,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         with Horizontal(classes="inv-row", id="inv-power-row"):
             yield Label("Bond power")
             yield Select(
-                self._powers(),
+                self.form.powers(),
                 value=self._power_value(plan),
                 prompt="(choose; add it on the familiar's sheet)",
                 id="inv-power",
@@ -583,11 +616,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         with Horizontal(classes="inv-row", id="inv-vis-from-row"):
             yield Label("Vis", id="inv-vis-from-label")
             yield Select(
-                [
-                    ("the laboratory's raw vis", "laboratory"),
-                    (f"{escape(self.magus.name)}'s raw vis", "character"),
-                    ("the covenant's vis stores", "covenant"),
-                ],
+                self.form.vis_places(),
                 value=(plan.vis_from if plan and plan.vis_from else "laboratory"),
                 allow_blank=False,
                 id="inv-vis-from",
@@ -698,182 +727,52 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
 
     # -- reading the form ------------------------------------------------------
 
-    def _value(self, selector: str) -> str:
-        return self.query_one(selector, Input).value
-
     def _select(self, selector: str) -> str | None:
         value = self.query_one(selector, Select).value
         return value if isinstance(value, str) else None
 
-    def _checked(self, selector: str) -> bool:
-        found = self.query(selector)
-        return bool(found) and bool(found.first(Checkbox).value)
+    def _read(self, spec: DialogField) -> Any:
+        """What the widget for one of the core form's fields holds."""
+        found = self.query(f"#{_WIDGET_OF[spec.key]}")
+        if not found:
+            return None
+        widget = found.first()
+        if isinstance(widget, Select):
+            return widget.value if isinstance(widget.value, str) else None
+        if isinstance(widget, Checkbox):
+            return bool(widget.value)
+        if isinstance(widget, TextArea):
+            return widget.text.rstrip()
+        return widget.value.strip() if isinstance(widget, Input) else None
 
-    def _current_design(self) -> SpellDesign:
-        custom: dict[str, int] = {}
-        chosen: dict[str, str] = {}
-        for kind in _KINDS:
-            value = self._select(f"#inv-{kind}") or ""
-            if value == OTHER:
-                name = self._value(f"#inv-{kind}-name").strip() or "Other"
-                chosen[kind] = name
-                steps = _int(self._value(f"#inv-{kind}-steps"))
-                if steps is not None:
-                    custom[kind] = steps
-            else:
-                chosen[kind] = value
-        return SpellDesign(
-            key=self.key,
-            name=self._value("#inv-name").strip(),
-            technique=self._select("#inv-technique") or "",
-            form=self._select("#inv-form") or "",
-            requisites=spl.parse_requisites(self._value("#inv-requisites")),
-            base_level=_int(self._value("#inv-base")),
-            range=chosen["range"],
-            duration=chosen["duration"],
-            target=chosen["target"],
-            custom_steps=custom,
-            extra_magnitudes=_int(self._value("#inv-extra")) or 0,
-            ritual=self._checked("#inv-ritual"),
-            description=self.query_one("#inv-description", TextArea).text.rstrip(),
-            base_effect=self._value("#inv-base-effect").strip(),
-            source_spell_id=self.source_id,
-            printed_level=self.printed_level,
-        )
+    def values(self) -> dict[str, Any]:
+        """The form's values as they stand, as the core's form holds them
+        (a number not typed yet is None; hidden fields are left out)."""
+        current = form_spec.current_values(self._fields, self._read)
+        return {
+            spec.key: current[spec.key]
+            for spec in self._fields
+            if spec.key in current and form_spec.shown(spec, current)
+        }
 
     def current_plan(self) -> SeasonPlan:
-        activity = self._select("#inv-activity") or ""
-        inventing = activity == lab_seasons.INVENT
-        spell_work = activity in lab_seasons.SPELL_ACTIVITIES
-        longevity = activity == lab_seasons.LONGEVITY
-        enchanting = activity in es.ACTIVITIES
-        familiar_work = activity in fs.ACTIVITIES
-        binding = activity == fs.BIND
-        subject = self._select("#inv-subject")
-        return SeasonPlan(
-            character_id=self.magus.id,
-            year=self.year,
-            season=self.season,
-            activity=activity,
-            lab_id=self.lab.id,
-            design=self._current_design() if inventing else None,
-            book_id=(
-                self._select("#inv-lab-text")
-                if activity == lab_seasons.LAB_TEXT
-                else self._select("#inv-decode")
-                if activity == bs.DECODE_TEXT
-                else self._select("#inv-effect-text")
-                if activity in es.EFFECT_ACTIVITIES
-                else None
-            ),
-            similar_spell_id=self._select("#inv-similar") if inventing else None,
-            days_away=_int(self._value("#inv-days")) or 0,
-            focus=self._checked("#inv-focus"),
-            theory_specialty=self._checked("#inv-specialty"),
-            other_modifier=_int(self._value("#inv-other")) or 0,
-            details=self._value("#inv-notes").strip(),
-            vis_from="" if spell_work else (self._select("#inv-vis-from") or ""),
-            subject_id=(
-                subject if longevity and subject and subject != self.magus.id else None
-            ),
-            vis_art=(
-                (self._select("#inv-vis-art") or "")
-                if longevity
-                else (self._select("#inv-effect-vis") or "")
-                if enchanting or familiar_work
-                else ""
-            ),
-            device_id=self._select("#inv-device") if enchanting else None,
-            effect_id=(
-                self._select("#inv-effect")
-                if activity in es.EFFECT_ACTIVITIES
-                else self._select("#inv-power")
-                if activity == fs.EMPOWER
-                else None
-            ),
-            experimenting=(
-                self._checked("#inv-experimenting")
-                if activity in lab_seasons.EXPERIMENTAL
-                else False
-            ),
-            risk=(
-                (_int(self._value("#inv-risk")) or 0)
-                if activity in (*lab_seasons.EXPERIMENTAL, ex.STABILIZE)
-                else 0
-            ),
-            research=(
-                self._value("#inv-research").strip()
-                if activity in (*lab_seasons.EXPERIMENTAL, ex.STABILIZE)
-                else ""
-            ),
-            research_kind=self._select("#inv-research-kind") or "Minor",
-            title=(
-                self._value("#inv-move-to").strip()
-                if activity == ls.MOVE
-                else self._value("#inv-creature").strip()
-                if activity == lab_seasons.TAMING
-                else ""
-            ),
-            book_level=(
-                _int(self._value("#inv-creature-might"))
-                if activity == lab_seasons.TAMING
-                else None
-            ),
-            by_spell=self._checked("#inv-by-spell") if activity == ls.MOVE else False,
-            technique=(self._select("#inv-bind-t") or "") if binding else "",
-            form=(
-                (self._select("#inv-bind-f") or "")
-                if binding
-                else (self._select("#inv-creature-form") or "")
-                if activity == lab_seasons.TAMING
-                else ""
-            ),
-            golden_cord=(_int(self._value("#inv-golden")) or 0) if binding else 0,
-            silver_cord=(_int(self._value("#inv-silver")) or 0) if binding else 0,
-            bronze_cord=(_int(self._value("#inv-bronze")) or 0) if binding else 0,
-            shape_bonus=(_int(self._value("#inv-shape")) or 0) if enchanting else 0,
-            die=(
-                _int(self._value("#inv-die"))
-                if activity in (es.INVESTIGATE, *ls.ROLLED)
-                else None
-            ),
-            extra_vis=(_int(self._value("#inv-extra-vis")) or 0) if longevity else 0,
-            connection_id=(
-                self._select("#inv-connection")
-                if activity == lab_seasons.FIX_AC
-                else None
-            ),
-        )
-
-    def _connections(self) -> list[tuple[str, str]]:
-        """The lab's Arcane Connections not yet fixed (and the plan's own)."""
-        mine = self.initial.connection_id if self.initial else None
-        return [
-            (escape(c.to), c.id)
-            for c in self.lab.arcane_connections
-            if not c.fixed or c.id == mine
-        ]
+        return self.form.plan_of(self.values())
 
     def _connection_value(self, plan: SeasonPlan | None) -> object:
-        ids = [value for _, value in self._connections()]
+        ids = [value for _, value in self.form.connections()]
         if plan is not None and plan.connection_id in ids:
             return plan.connection_id
         return Select.NULL
 
-    def _devices(self) -> list[tuple[str, str]]:
-        """The enchanted devices the magus can work on here."""
-        return [
-            (f"{escape(d.name)} ({d.type})", d.id)
-            for d in es.devices_for(self.saga, self.magus, self.lab)
-        ]
-
     def _device_value(self, plan: SeasonPlan | None) -> object:
-        ids = [value for _, value in self._devices()]
+        ids = [value for _, value in self.form.devices()]
         if plan is not None and plan.device_id in ids:
             return plan.device_id
         return Select.NULL
 
     def _effects(self, device_id: str | None) -> list[tuple[str, str]]:
+        """The chosen device's effects (the core's form lists every
+        device's; here the device is chosen first)."""
         device = next(
             (d for d in self.saga.enchanted_devices if d.id == device_id), None
         )
@@ -912,75 +811,23 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         ids = [value for _, value in self._effects(plan.device_id)]
         return plan.effect_id if plan.effect_id in ids else Select.NULL
 
-    def _undecoded(self) -> list:
-        """Raw Lab Texts by other magi that the magus can get at but not
-        read yet."""
-        return [
-            b
-            for b in self.saga.books
-            if b.type == "Lab Text"
-            and b.raw
-            and books.can_read(self.saga, self.magus, b)
-            and not bs.can_use_lab_text(self.magus, b)
-        ]
-
-    def _powers(self) -> list[tuple[str, str]]:
-        familiar = familiar_of(self.saga, self.magus.id)
-        if familiar is None:
-            return []
-        return [
-            (f"{escape(p.name) or '(unnamed)'} (level {p.level})", p.id)
-            for p in familiar.bond_powers
-        ]
-
     def _power_value(self, plan: SeasonPlan | None) -> object:
-        ids = [value for _, value in self._powers()]
+        ids = [value for _, value in self.form.powers()]
         if plan is not None and plan.effect_id in ids:
             return plan.effect_id
         return Select.NULL
 
     def _effect_arts(self, plan: SeasonPlan | None) -> list[tuple[str, str]]:
-        if plan is not None and plan.activity == fs.BIND:
-            return [(a, a) for a in (plan.technique, plan.form) if a]
-        if plan is not None and plan.activity == fs.EMPOWER:
-            familiar = familiar_of(self.saga, self.magus.id)
-            power = fs.power_of(familiar, plan) if familiar is not None else None
-            if power is None:
-                return []
-            return [(a, a) for a in (power.technique, power.form) if a]
-        device = next(
-            (
-                d
-                for d in self.saga.enchanted_devices
-                if plan is not None and d.id == plan.device_id
-            ),
-            None,
-        )
-        effect = (
-            next((e for e in device.effects if plan and e.id == plan.effect_id), None)
-            if device is not None
-            else None
-        )
-        if effect is None:
+        """The Technique and Form whose vis the work may spend."""
+        if plan is None:
             return []
-        return [(art, art) for art in (effect.technique, effect.form) if art]
+        return [(art, art) for art in self.form.work_arts(plan)]
 
     def _effect_art_value(self, plan: SeasonPlan | None) -> object:
         arts = [value for _, value in self._effect_arts(plan)]
         if plan is not None and plan.vis_art in arts:
             return plan.vis_art
         return arts[0] if arts else Select.NULL
-
-    def _subjects(self) -> list[tuple[str, str]]:
-        """Who a Longevity Ritual can be for: the magus first, then everyone
-        else in the saga."""
-        others = sorted(
-            (c for c in self.saga.characters if c.id != self.magus.id),
-            key=lambda c: c.name.lower(),
-        )
-        return [(f"{escape(self.magus.name)} (own)", self.magus.id)] + [
-            (f"{escape(c.name)} ({c.type})", c.id) for c in others
-        ]
 
     def _header(self, activity: str) -> str:
         found = season_rules.ACTIVITIES.get(activity)
@@ -993,44 +840,18 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
     # -- showing the results ---------------------------------------------------
 
     def _start_label(self) -> str:
-        source = spl.find_spell(self.saga, getattr(self, "source_id", None))
+        design = self.form.design
+        source = spl.find_spell(self.saga, design.source_spell_id if design else None)
         if source is None:
             return "(New spell) -- choose a spell to start from..."
         level = "Gen" if source.level is None else source.level
         return f"{source.name}  {spl.shorthand(source)}  (level {level})"
 
-    def _level_text(self, design: SpellDesign) -> str:
-        if design.base_level is None:
-            if design.printed_level is not None:
-                return (
-                    f"Level {design.printed_level} (as printed: type a base level "
-                    "to work it out from the parameters)"
-                )
-            return "[dim]Type a base level: the level is worked out from it.[/]"
-        worked = spell_levels.spell_level(
-            design.base_level,
-            design.range,
-            design.duration,
-            design.target,
-            extra_magnitudes=design.extra_magnitudes,
-            ritual=design.ritual,
-            custom_steps=design.custom_steps,
-        )
-        if worked is None:
-            return todo(
-                "An Other parameter needs its magnitudes typed "
-                "(+n) to work out the level."
-            )
-        notes = "".join(f"  {todo(escape(n))}" for n in worked.notes)
-        return (
-            f"[b]Level {worked.level}[/]  {escape(worked.design_line(design.base_level))}"
-            + notes
-        )
-
     def _refresh(self) -> None:  # noqa: PLR0915
         if not self._ready:
             return
-        plan = self.current_plan()
+        values = self.values()
+        plan = self.form.plan_of(values)
         inventing = plan.activity == lab_seasons.INVENT
         chosen = bool(plan.activity)
         self.query_one("#inv-header", Static).update(self._header(plan.activity))
@@ -1083,14 +904,14 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         )
         self.query_one("#inv-similar").disabled = not inventing
         self.query_one("#inv-other-row").display = inventing and any(
-            self._select(f"#inv-{kind}") == OTHER for kind in _KINDS
+            self._select(f"#inv-{kind}") == OTHER for kind in KINDS
         )
         if plan.design is not None:
-            self.query_one("#inv-level", Static).update(self._level_text(plan.design))
+            self.query_one("#inv-level", Static).update(level_text(plan.design))
         if not chosen:
             self.query_one("#inv-error", Static).update("")
             return
-        problems = season_rules.problems(self.magus, plan, self.saga)
+        problem = self.form.problem(values)
         _, work = lab_seasons.work(self.saga, self.magus, plan)
         total, when = (
             self.query_one("#inv-total", Static),
@@ -1112,97 +933,14 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             lines.append(f"[b]{'Lab Total':<30} {int(work.lab_total.total)}[/]")
             total.update("\n".join(lines))
             when.update(self._when_text(plan, work))
-        self.query_one("#inv-error", Static).update(
-            escape(problems[0]) if problems else ""
-        )
+        self.query_one("#inv-error", Static).update(escape(problem or ""))
 
     def _when_text(self, plan: SeasonPlan, work: lab_seasons.LabWork) -> str:
-        lab_total = int(work.lab_total.total)
-        exposure = ["", "Every lab season also gives 2 xp", "Exposure in Magic Theory."]
-        if plan.activity == lab_seasons.EXTRACT:
-            return "\n".join(
-                [
-                    "[b]When[/]",
-                    f"Lab Total {lab_total}: {work.vis_gained} pawn(s) of Vim vis "
-                    f"this season, {self.season} {self.year}.",
-                    *exposure,
-                ]
-            )
-        if plan.activity == lab_seasons.FIX_AC:
-            return "\n".join(
-                [
-                    "[b]When[/]",
-                    f"Fixed this season, {self.season} {self.year}, for 1 pawn "
-                    "of Vim vis.",
-                    *exposure,
-                ]
-            )
-        if plan.activity == lab_seasons.LONGEVITY:
-            name = work.subject.name if work.subject is not None else "?"
-            paid = ", ".join(f"{n} pawn(s) of {a}" for a, n in work.vis_cost.items())
-            return "\n".join(
-                [
-                    "[b]When[/]",
-                    f"This season, {self.season} {self.year}: aging rolls "
-                    f"-{work.longevity} for {escape(name)}.",
-                    f"Vis: {paid}.",
-                    *exposure,
-                ]
-            )
-        if plan.activity == ex.STABILIZE:
-            return "\n".join(
-                [
-                    "[b]When[/]",
-                    f"This season, {self.season} {self.year}: stabilizing the "
-                    f"Discovery (magnitude {work.research_magnitude}) toward "
-                    f"{escape(plan.research)}.",
-                    "The Extraordinary Results chart is rolled when it's played.",
-                    *exposure,
-                ]
-            )
-        if plan.activity == bs.DECODE_TEXT:
-            return "\n".join(
-                [
-                    "[b]When[/]",
-                    escape(seasons.work_text(work, plan)) + ".",
-                    *exposure,
-                ]
-            )
-        if plan.activity == lab_seasons.LAB_TEXT:
-            return (
-                f"[b]When[/]\nLevel {work.level}, Lab Total {lab_total}: learned "
-                f"this season, {self.season} {self.year}."
-            )
-        if (
-            plan.activity in (*es.ACTIVITIES, *ls.ACTIVITIES)
-            or plan.activity == fs.BIND
-        ) and plan.activity != es.INSTIL:
-            return "\n".join(
-                [
-                    "[b]When[/]",
-                    f"This season, {self.season} {self.year}:",
-                    escape(seasons.work_text(work, plan)) + ".",
-                    *exposure,
-                ]
-            )
-        season, year = self.season, self.year
-        for _ in range(lab_seasons.seasons_left(work)):
-            season, year = next_season(season, year)
-        seasons_needed = lab_seasons.seasons_left(work) + 1
-        return "\n".join(
-            [
-                "[b]When[/]",
-                f"Level {work.level}, Lab Total {lab_total}: "
-                f"{work.points_gained} points a season",
-                f"{work.points_before} of {work.level} points so far",
-                f"{'Invented' if plan.activity == lab_seasons.INVENT else 'Instilled'} "
-                f"{season} {year} (projected: {seasons_needed} "
-                f"season{'s' if seasons_needed != 1 else ''})",
-                "",
-                "Every lab season also gives 2 xp",
-                "Exposure in Magic Theory.",
-            ]
-        )
+        """The core's When lines, one to a line, the Exposure apart."""
+        lines = ["[b]When[/]"]
+        for line in self.form.when_lines(plan, work):
+            lines += ["", *_EXPOSURE_LINES] if line == lpf.EXPOSURE else [line]
+        return "\n".join(lines)
 
     # -- events ------------------------------------------------------------------
 
@@ -1252,7 +990,6 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             self._fill(self._initial_design(), self.initial)
             self._reset_work(self.initial)
         elif button == "inv-new":
-            self.key = uuid.uuid4().hex[:12]
             self._fill(None, None)
         elif button == "inv-start":
             self.app.push_screen(
@@ -1264,51 +1001,24 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                 self._start_from,
             )
         elif button == "btn-save":
-            plan = self.current_plan()
-            if not plan.activity:
-                self.query_one("#inv-error", Static).update("Choose the lab work.")
+            try:
+                values = form_spec.result(self._fields, self._read)
+            except form_spec.FieldError as error:
+                self.query_one("#inv-error", Static).update(escape(str(error)))
                 return
-            problems = season_rules.problems(self.magus, plan, self.saga)
-            if problems:
-                self.query_one("#inv-error", Static).update(escape(problems[0]))
+            problem = self.form.problem(values)
+            if problem:
+                self.query_one("#inv-error", Static).update(escape(problem))
                 return
-            self.dismiss(plan)
+            self.dismiss(self.form.plan_of(values))
 
     def _start_from(self, spell_id: str | None) -> None:
         spell = spl.find_spell(self.saga, spell_id)
         if spell is not None:
-            self._fill(self._design_from(spell), None, keep_lab_options=True)
+            self._fill(design_from(spell), None, keep_lab_options=True)
 
     def _initial_design(self) -> SpellDesign | None:
         return self._design
-
-    @staticmethod
-    def _design_from(spell: Spell) -> SpellDesign:
-        """A design filled in from `spell`: its level is worked out from its
-        base level where it has one (the rest of its level becomes extra
-        magnitudes), otherwise kept as printed."""
-        extra = 0
-        if spell.base_level is not None and spell.level is not None:
-            found = spell_levels.extra_magnitudes(
-                spell.base_level, spell.range, spell.duration, spell.target, spell.level
-            )
-            extra = found or 0
-        return SpellDesign(
-            key=uuid.uuid4().hex[:12],
-            name=spell.name,
-            technique=spell.technique,
-            form=spell.form,
-            requisites=list(spell.requisites),
-            base_level=spell.base_level,
-            range=spell.range or "Personal",
-            duration=spell.duration or "Momentary",
-            target=spell.target or "Individual",
-            extra_magnitudes=extra,
-            ritual=spell.ritual,
-            description=spell.description,
-            source_spell_id=spell.id,
-            printed_level=spell.level if spell.base_level is None else None,
-        )
 
     def _fill(
         self,
@@ -1320,10 +1030,8 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         """Put `design` (None: a blank one) and, unless kept, `plan`'s lab
         options into the form."""
         self._ready = False
-        self.source_id = design.source_spell_id if design else None
-        self.printed_level = design.printed_level if design else None
-        if design is not None and design.key:
-            self.key = design.key
+        self.form.design = design
+        self.form.key = design.key if design and design.key else uuid.uuid4().hex[:12]
         self.query_one("#inv-start", Button).label = self._start_label()
         self.query_one("#inv-name", Input).value = design.name if design else ""
         self.query_one("#inv-description", TextArea).text = (
@@ -1341,8 +1049,8 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             "" if not design or design.base_level is None else str(design.base_level)
         )
         self.query_one("#inv-ritual", Checkbox).value = bool(design and design.ritual)
-        for kind in _KINDS:
-            current = getattr(design, kind) if design else _STANDARD_FIRST[kind]
+        for kind in KINDS:
+            current = getattr(design, kind) if design else lpf.FIRST_STEPS[kind]
             values = [v for _, v in self.parameter_options[kind]]
             self.query_one(f"#inv-{kind}", Select).value = (
                 current if current in values else OTHER
@@ -1397,10 +1105,3 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         )
         self._ready = True
         self.call_after_refresh(self._refresh)
-
-
-_STANDARD_FIRST: dict[str, str] = {
-    "range": "Personal",
-    "duration": "Momentary",
-    "target": "Individual",
-}

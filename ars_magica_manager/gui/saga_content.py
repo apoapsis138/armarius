@@ -11,13 +11,10 @@ as the terminal's Saga Content view does.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
-
 from PySide6.QtCore import QSize, QSortFilterProxyModel, Qt
 from PySide6.QtGui import QIcon, QStandardItem, QStandardItemModel
 from PySide6.QtWidgets import (
     QAbstractItemView,
-    QComboBox,
     QHBoxLayout,
     QHeaderView,
     QLabel,
@@ -44,6 +41,7 @@ from .figures import fact_grid
 from .pages import card_grid, page_header
 from .themes import Palette
 from .widgets import (
+    ANY_LEVEL,
     ROW_HEIGHT,
     Card,
     ClickableCard,
@@ -51,6 +49,8 @@ from .widgets import (
     badge,
     cells_table,
     chip,
+    filter_choice,
+    level_box,
     scrolling_page,
     serif,
     table_style,
@@ -72,7 +72,6 @@ SPELL_COLUMNS = ["Spell", "Arts", "Level", "Range/Duration/Target", "Ritual", "S
 SORT = Qt.ItemDataRole.UserRole + 2
 
 #: A level filter's lowest value, shown as "any".
-ANY_LEVEL = -1
 
 
 def _none(words: str, p: Palette) -> QLabel:
@@ -355,7 +354,7 @@ class SagaContentPage(QWidget):
             pictures.icon("search", p["label"], 16),
             QLineEdit.ActionPosition.LeadingPosition,
         )
-        self.spell_source = _choice(
+        self.spell_source = filter_choice(
             "Any source",
             [(f"{key} – {name}", key) for key, name in spl.catalog_sources()]
             + [
@@ -363,13 +362,15 @@ class SagaContentPage(QWidget):
                 ("Not in play", spl.OUT_OF_PLAY_SOURCE),
             ],
         )
-        self.spell_technique = _choice("Any Technique", [(t, t) for t in TECHNIQUES])
-        self.spell_form = _choice("Any Form", [(f, f) for f in FORMS])
-        self.spell_ritual = _choice(
+        self.spell_technique = filter_choice(
+            "Any Technique", [(t, t) for t in TECHNIQUES]
+        )
+        self.spell_form = filter_choice("Any Form", [(f, f) for f in FORMS])
+        self.spell_ritual = filter_choice(
             "Rituals or not", [("Rituals", True), ("Formulaic", False)]
         )
-        self.spell_min = _level("From level")
-        self.spell_max = _level("To level")
+        self.spell_min = level_box("From level")
+        self.spell_max = level_box("To level")
         first, second = QHBoxLayout(), QHBoxLayout()
         first.addWidget(self.spell_search, 1)
         first.addWidget(self.spell_source)
@@ -492,23 +493,3 @@ def _cell(words: str, sort: object, *, font=None) -> QStandardItem:
     if font is not None:
         item.setFont(font)
     return item
-
-
-def _choice(blank: str, options: Sequence[tuple[str, object]]) -> QComboBox:
-    """A filter's drop-down: `blank` (no filter) first, then `options` as
-    (label, value)."""
-    combo = QComboBox()
-    combo.addItem(blank, None)
-    for label, value in options:
-        combo.addItem(label, value)
-    return combo
-
-
-def _level(prefix: str) -> QSpinBox:
-    spin = QSpinBox()
-    spin.setRange(ANY_LEVEL, 100)
-    spin.setSingleStep(5)
-    spin.setValue(ANY_LEVEL)
-    spin.setSpecialValueText(f"{prefix}: any")
-    spin.setPrefix(f"{prefix}: ")
-    return spin

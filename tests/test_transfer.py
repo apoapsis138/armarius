@@ -6,7 +6,7 @@ from __future__ import annotations
 import json
 
 import pytest
-from support import menu
+from support import choose, menu
 
 from ars_magica_manager import catalog, storage, transfer
 from ars_magica_manager import house_rules as hr
@@ -360,7 +360,7 @@ def _node(tree, data):
 
 async def test_x_exports_a_character_and_the_saga_imports_it():  # noqa: PLR0915
     from support import wait_until
-    from textual.widgets import Input, OptionList, Static, Tree
+    from textual.widgets import Input, Static, Tree
 
     from ars_magica_manager.tui.app import ArsMagicaManagerApp
     from ars_magica_manager.tui.screens import (
@@ -369,7 +369,6 @@ async def test_x_exports_a_character_and_the_saga_imports_it():  # noqa: PLR0915
         FieldsDialog,
         WorkspaceScreen,
     )
-    from ars_magica_manager.tui.screens.forms import ImportScreen
 
     source = _source()
     source.id = "test_saga"
@@ -409,19 +408,8 @@ async def test_x_exports_a_character_and_the_saga_imports_it():  # noqa: PLR0915
         tree.select_node(tree.root)
         assert await wait_until(pilot, lambda: workspace.selected_kind.value == "saga")
         await menu(pilot, app, "m", "Import")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
-        options = app.screen.query_one("#import-list", OptionList)
-
-        def choose(kind: str) -> None:
-            options.highlighted = next(
-                i
-                for i in range(options.option_count)
-                if options.get_option_at_index(i).id == kind
-            )
-
         # One entry per kind: a character's file isn't taken as a covenant.
-        choose("covenants")
-        await pilot.press("enter")
+        await choose(pilot, app, "Covenants")
         assert await wait_until(
             pilot, lambda: isinstance(app.screen, CsvFilePickerScreen)
         )
@@ -432,10 +420,7 @@ async def test_x_exports_a_character_and_the_saga_imports_it():  # noqa: PLR0915
         assert await wait_until(pilot, lambda: app.screen is workspace)
         assert len(storage.load_saga("test_saga").characters) == 3
         await menu(pilot, app, "m", "Import")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
-        options = app.screen.query_one("#import-list", OptionList)
-        choose("characters")
-        await pilot.press("enter")
+        await choose(pilot, app, "Characters")
         assert await wait_until(
             pilot, lambda: isinstance(app.screen, CsvFilePickerScreen)
         )

@@ -96,9 +96,11 @@ When the year is about to end it also says that each covenant's surplus will be 
 
 After you choose Advance, the app may ask:
 
-- In Winter, if a covenant is in deficit, whether you want to resolve it first. Yes leaves the date alone so the books can be balanced; No advances anyway.
-- For each contested vis or income source whose security has lapsed, whether it was secured this season. Yes secures it for five years; No means it gives nothing until it is.
-- For an experiment seeking a Discovery, whether to use the risk to move the roll, when it could.
+- In Winter, if a covenant is in deficit, whether to advance anyway. Advance anyway rolls the year over; No (or Escape) leaves the date alone so the books can be balanced first.
+- Which contested vis or income sources whose security has lapsed were secured this season, one tick each. A ticked one is secure for five years; one left unticked gives nothing until it is.
+- For an experiment seeking a Discovery, whether to take the Discovery by using the risk to move the roll, when it could (a tick each).
+
+Cancelling any of these leaves the date and the saga as they were.
 
 ### How the season is applied
 <!-- help: advance-season-apply -->
@@ -205,7 +207,7 @@ Checks never stop an edit. If the saga has **Enforce creation rules strictly** t
 
 Brings records into the saga from files. Open it from More's **Import** on the saga node.
 
-**You type:** what to import, then the file. The dialog opens on Books.
+**You choose:** what to import, then the file: the terminal lists the folders and files of that kind, the desktop opens its Open window.
 
 **The app works out:** a preview of what the file adds, shown before anything is added.
 
@@ -216,7 +218,7 @@ Brings records into the saga from files. Open it from More's **Import** on the s
 - **Books**: a CSV file with a header row. Columns, in any order and any case: name, type, language, author, year_published, description, art, ability, level, quality, tractatus_type, spell, codex, encyclopedia, opus and physical_form; name and type are needed. Rows with the same codex are bound together in one new codex of that name, an encyclopedia when its rows' encyclopedia column says yes. A tractatus's opus can be commentary or correspondence; physical_form is one of exemplar, flap-bound, juvenilia, edition de luxe, treasure-bound, ex libris, holographic, huge codex, unbound or damaged. A level or quality of "var" means the figure is to be set later: the book is imported, highlighted until you edit it to give its numbers, and can't be studied until then. Books imported here go to Unassigned Books. From a covenant's **Library** tab, More's Import puts them straight into that covenant's library instead. An owner or cost column is ignored: the cost is always worked out.
 - **Spells**: a CSV file, through the [Import Spells](help:import-spells) helper.
 
-A row that can't be read is skipped, and the preview says why. When a book or spell has the name of one already in the saga, the app asks: Duplicate, Duplicate All, Skip or Skip All. Nothing is added until every question is answered.
+A row that can't be read is skipped, and the preview says why. When a book or spell has the name of one already in the saga, the app asks: Skip, Skip All, Duplicate or Duplicate All. Nothing is added until every question is answered, and cancelling a question imports nothing.
 
 ### Importing an exported record
 <!-- help: import-data-records -->
@@ -244,7 +246,7 @@ Season plans, season records and lab projects under way stay behind.
 # Import Spells
 <!-- help: import-spells -->
 
-Explains what a spell CSV file looks like before you choose one, and can save an example to start from. The spells imported become the saga's own spells, which you can edit on [Spells](help:tab-content-spells).
+Explains what a spell CSV file looks like before you choose one. Tick **Save an example CSV instead** to save one to start from, rather than choosing a file. The spells imported become the saga's own spells, which you can edit on [Spells](help:tab-content-spells).
 
 Open it from More's Import on the saga node, then Spells.
 

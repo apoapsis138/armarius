@@ -14,27 +14,38 @@ Delete act on the card or row last clicked.
 from __future__ import annotations
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QHBoxLayout,
+    QLabel,
+    QSpinBox,
+    QVBoxLayout,
+    QWidget,
+)
 
 from .. import (
     artwork,
     diary_forms,
     lab_plan_forms,
     lab_planning,
+    library_forms,
     seasons,
     virtue_forms,
     vis_forms,
 )
 from .. import books as bk
+from .. import lab_texts as lt
 from .. import laboratories as labs
 from .. import laboratory_forms as lf
 from .. import laboratory_sheet as ls
 from .. import saga_overview as ov
-from ..arts import ART_ABBREVIATIONS
+from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from ..commands import SectionOps
-from ..models import Laboratory, Saga
+from ..markup import escape
+from ..models import LAB_TEXT_KINDS, Book, Laboratory, Saga
 from . import pictures
 from .character_sheet import (
+    TextBlock,
     columns_text,
     device_section,
     row_list,
@@ -47,6 +58,7 @@ from .pages import card_grid
 from .themes import Palette
 from .timeline import Calendar, legend, season_text
 from .widgets import (
+    ANY_LEVEL,
     Card,
     ClickableCard,
     Codex,
@@ -55,6 +67,8 @@ from .widgets import (
     chapter_title,
     display_name,
     edit_button,
+    filter_choice,
+    level_box,
     scrolling_page,
     serif,
     text,
@@ -76,6 +90,68 @@ def _sign_colour(value: float, p: Palette) -> str:
     if value < 0:
         return p["text-error"]
     return p["dim"]
+
+
+class LabTextFilterBar(QWidget):
+    """What a laboratory's Lab Texts are narrowed to, as a row of
+    drop-downs, levels and a tick (lab_texts.Filter)."""
+
+    def __init__(self, wanted: lt.Filter) -> None:
+        super().__init__()
+        self.kind = filter_choice("Any kind", [(k, k) for k in LAB_TEXT_KINDS])
+        self.technique = filter_choice("Any Technique", [(t, t) for t in TECHNIQUES])
+        self.form = filter_choice("Any Form", [(f, f) for f in FORMS])
+        self.lowest, self.highest = level_box("From level"), level_box("To level")
+        self.readable = QCheckBox("Readable only")
+        for combo, value in (
+            (self.kind, wanted.kind),
+            (self.technique, wanted.technique),
+            (self.form, wanted.form),
+        ):
+            combo.setCurrentIndex(max(combo.findData(value or None), 0))
+        for spin, value in (
+            (self.lowest, wanted.min_level),
+            (self.highest, wanted.max_level),
+        ):
+            spin.setValue(ANY_LEVEL if value is None else value)
+        self.readable.setChecked(wanted.readable)
+        rows = QVBoxLayout(self)
+        rows.setContentsMargins(0, 0, 0, 0)
+        for widgets in (
+            (self.kind, self.technique, self.form),
+            (self.lowest, self.highest, self.readable),
+        ):
+            row = QHBoxLayout()
+            for widget in widgets:
+                row.addWidget(widget)
+            row.addStretch(1)
+            rows.addLayout(row)
+
+    def wanted(self) -> lt.Filter:
+        def level(spin: QSpinBox) -> int | None:
+            return None if spin.value() == ANY_LEVEL else spin.value()
+
+        return lt.Filter(
+            kind=self.kind.currentData() or "",
+            technique=self.technique.currentData() or "",
+            form=self.form.currentData() or "",
+            min_level=level(self.lowest),
+            max_level=level(self.highest),
+            readable=self.readable.isChecked(),
+        )
+
+    def changed(self, then) -> None:
+        """Call `then` whenever any part of the filter changes."""
+        for combo in (self.kind, self.technique, self.form):
+            combo.currentIndexChanged.connect(lambda _index: then())
+        for spin in (self.lowest, self.highest):
+            spin.valueChanged.connect(lambda _value: then())
+        self.readable.toggled.connect(lambda _on: then())
+
+
+#: Each laboratory's Lab Texts filter, kept while the app runs (the page
+#: is drawn again after every change).
+_LAB_TEXT_FILTERS: dict[str, lt.Filter] = {}
 
 
 class LaboratoryPage(QWidget):
@@ -476,7 +552,7 @@ class LaboratoryPage(QWidget):
                 f"Arcane Connection to {to}", "", labs.connection_info_text(lab, index)
             )
             connections.append(card)
-        books = bk.books_owned_by(saga, "laboratory", lab.id)
+        books = lt.other_books_of(saga, "laboratory", lab.id)
         book_cards = []
         for book in books:
             card = ClickableCard(p, pad=10)
@@ -510,11 +586,83 @@ class LaboratoryPage(QWidget):
                 none,
             ),
             device_section(saga, "laboratory", lab.id, p, self.run, self.inspect),
+            self._lab_texts(),
             chapter_title(f"Books ({len(books)})", p),
             card_grid(book_cards, 3)
             if book_cards
             else text(none, p["dim"], serif(12.5, italic=True)),
         )
+
+    def _lab_texts(self) -> QWidget:
+        """The laboratory's Lab Texts, read for its owner, with a filter
+        bar (kind, Arts, levels, readable only: lab_texts.Filter) that
+        narrows the list as it is changed; Add, Edit and Delete for the
+        text clicked."""
+        p, saga, lab = self.p, self.saga, self.lab
+        reader = saga.character(lab.owner_id) if lab.owner_id else None
+        every = lt.texts_of(saga, "laboratory", lab.id)
+        shown: list[Book] = []
+        chooser = Chooser()
+        bar = LabTextFilterBar(_LAB_TEXT_FILTERS.get(lab.id, lt.Filter()))
+        holder = QVBoxLayout()
+        holder.setContentsMargins(0, 0, 0, 0)
+        box = QWidget()
+        box.setLayout(holder)
+
+        def show(index: int) -> None:
+            chooser.choose(index)
+            book = shown[index]
+            self.inspect(book.name, "Lab Text", lt.detail_text(saga, reader, book))
+
+        def refilter() -> None:
+            wanted = bar.wanted()
+            _LAB_TEXT_FILTERS[lab.id] = wanted
+            shown[:] = lt.filtered(saga, reader, every, wanted)
+            chooser.choose(None)
+            while holder.count():
+                item = holder.takeAt(0)
+                old = item.widget() if item is not None else None
+                if old is not None:
+                    old.setParent(None)
+                    old.deleteLater()
+            problem = lt.filter_problem(wanted)
+            if problem:
+                holder.addWidget(TextBlock(f"[$text-warning]{escape(problem)}[/]", p))
+            title.setText(lt.title(len(shown), len(every), wanted))
+            holder.addWidget(
+                row_list(
+                    [(None, lt.table_header())]
+                    + [
+                        (i, lt.row_label(saga, reader, book))
+                        for i, book in enumerate(shown)
+                    ],
+                    show,
+                )
+                if shown
+                else text(
+                    "None match the filter." if wanted.active else "None recorded.",
+                    p["dim"],
+                    serif(12.5, italic=True),
+                )
+            )
+
+        ops = library_forms.book_ops(
+            saga, lambda: shown, bk.owner_value("laboratory", lab.id), "Lab Text"
+        )
+        part = section(
+            "Lab Texts",
+            p,
+            bar,
+            box,
+            buttons=verb_buttons(ops, chooser, self.run, p),
+        )
+        title = next(
+            label for label in part.findChildren(QLabel) if label.text() == "Lab Texts"
+        )
+        refilter()
+        bar.changed(refilter)
+        self.lab_text_filter = bar
+        return part
 
     def _seasons(self) -> QWidget:
         p, saga, lab = self.p, self.saga, self.lab

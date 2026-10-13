@@ -473,20 +473,34 @@ def arts_problem(values: dict[str, Any]) -> str | None:
     return None
 
 
+def art_bonuses(virtues_flaws: Sequence[VirtueFlawInstance]) -> dict[str, int]:
+    """Each Art's fixed bonus (Puissant), by the Art's name."""
+    return {art: scores.art_bonus(virtues_flaws, art)[0] for art in ARTS}
+
+
+def art_score(xp: int | None, bonus: int) -> tuple[str, int] | None:
+    """An Art's score as a list shows it ("10 (13)" with a `bonus`) and the
+    total xp its next score needs, or None while `xp` isn't a number."""
+    if xp is None or xp < 0:
+        return None
+    progress = xp_rules.progress(xp, xp_rules.ART_FACTOR)
+    return st.adjusted_score(progress.score, bonus), progress.next_total
+
+
 def arts_live(
     virtues_flaws: Sequence[VirtueFlawInstance], note: str = ""
 ) -> Callable[[dict[str, Any]], str]:
     """Each Art's score (with the owner's Puissant) and the total xp its
     next score needs, kept up to date as the xp is typed; `note` after
     them (e.g. how much xp the Creation Worksheet gave the Arts)."""
-    bonus = {art: scores.art_bonus(virtues_flaws, art)[0] for art in ARTS}
+    bonus = art_bonuses(virtues_flaws)
 
     def score(art: str, xp: int | None) -> str:
-        if xp is None or xp < 0:
+        found = art_score(xp, bonus[art])
+        if found is None:
             return f"{ART_ABBREVIATIONS[art]} ?"
-        progress = xp_rules.progress(xp, xp_rules.ART_FACTOR)
-        shown = st.adjusted_score(progress.score, bonus[art])
-        return f"{ART_ABBREVIATIONS[art]} {shown} (next at {progress.next_total})"
+        shown, next_total = found
+        return f"{ART_ABBREVIATIONS[art]} {shown} (next at {next_total})"
 
     def live(values: dict[str, Any]) -> str:
         lines = [

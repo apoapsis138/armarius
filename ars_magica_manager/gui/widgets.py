@@ -9,7 +9,7 @@ restyled) when the theme changes.
 from __future__ import annotations
 
 import html
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from pathlib import Path
 
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QRectF, QSize, Qt
@@ -25,6 +25,7 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import (
     QAbstractItemView,
+    QComboBox,
     QFrame,
     QHBoxLayout,
     QHeaderView,
@@ -33,6 +34,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
     QPushButton,
     QScrollArea,
+    QSpinBox,
     QSplitter,
     QStackedWidget,
     QStyle,
@@ -574,3 +576,28 @@ def cells_table(
         lambda current, _previous: on_choose(current.row())
     )
     return view
+
+
+#: A level filter left at "any".
+ANY_LEVEL = -1
+
+
+def filter_choice(blank: str, options: Sequence[tuple[str, object]]) -> QComboBox:
+    """A filter's drop-down: `blank` (no filter) first, then `options` as
+    (label, value)."""
+    combo = QComboBox()
+    combo.addItem(blank, None)
+    for label, value in options:
+        combo.addItem(label, value)
+    return combo
+
+
+def level_box(prefix: str) -> QSpinBox:
+    """A filter's level: ANY_LEVEL (shown "`prefix`: any") for none."""
+    spin = QSpinBox()
+    spin.setRange(ANY_LEVEL, 100)
+    spin.setSingleStep(5)
+    spin.setValue(ANY_LEVEL)
+    spin.setSpecialValueText(f"{prefix}: any")
+    spin.setPrefix(f"{prefix}: ")
+    return spin

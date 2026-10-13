@@ -14,7 +14,6 @@ from ....arts import ARTS
 from ....markup import escape
 from ....models import (
     Ability,
-    ArtScore,
     Breakthrough,
     Character,
     DiaryEntry,
@@ -276,14 +275,16 @@ class CharacterActions(WorkspaceBase):
         if character is None:
             return
 
-        def handle_result(arts: dict[str, ArtScore] | None) -> None:
-            if arts is not None:
-                character.arts = arts
+        form = character_forms.arts_form(character)
+
+        def handle_result(values: dict[str, Any] | None) -> None:
+            if values is not None:
+                form.apply(values)
                 self._commit("section-arts")
 
         self.app.push_screen(
             EditArtsScreen(
-                character.arts,
+                form,
                 character.virtues_flaws,
                 note=creation.worksheet_note(character, ARTS),
             ),

@@ -1,21 +1,22 @@
 """Running the core's command steps (commands.py) in the terminal: a Form
 as a FieldsDialog, a Choose as a searchable list (`ChooseScreen`, F3
-listing what isn't offered too), a Confirm as a ConfirmScreen; an Act runs
-at once and a Refuse is shown as a warning. The desktop runs the same
+listing what isn't offered too), a Confirm as a ConfirmScreen, a ChooseFile as the
+list of files (CsvFilePickerScreen); an Act runs at once and a Refuse is shown as a warning. The desktop runs the same
 steps in its own dialogs (gui/forms.py), so a button whose steps live in
 the core behaves the same in both."""
 
 from __future__ import annotations
 
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any, ClassVar
 
 from textual.app import App
 from textual.widgets import Static
 
-from ...commands import Act, Choice, Choose, Confirm, Form, Refuse
+from ...commands import Act, Choice, Choose, ChooseFile, Confirm, Form, Refuse
 from .fields import FieldsDialog
-from .pickers import SearchablePickerScreen
+from .pickers import CsvFilePickerScreen, SearchablePickerScreen
 from .prompts import ConfirmScreen, terminal_fields
 
 
@@ -109,16 +110,15 @@ def run_steps(
             if values is not None:
                 run_steps(app, form.apply(values), done, notify)
 
-        app.push_screen(
-            FieldsDialog(
-                form.title,
-                terminal_fields(form.fields()),
-                validate=form.validate,
-                live=form.live,
-                save_label=form.save_label,
-            ),
-            handle_values,
+        dialog = FieldsDialog(
+            form.title,
+            terminal_fields(form.fields()),
+            validate=form.validate,
+            live=form.live,
+            save_label=form.save_label,
         )
+        dialog.help_id = form.help_id or None
+        app.push_screen(dialog, handle_values)
         return
     if isinstance(step, Choose):
         choose = step
@@ -127,12 +127,25 @@ def run_steps(
             warn(choose.title, choose.empty)
             return
         screen = ChooseScreen(choose, choices)
+        screen.help_id = choose.help_id or None
 
         def handle_index(index: int | None) -> None:
             if index is not None:
                 run_steps(app, choose.apply(screen.value_of(index)), done, notify)
 
         app.push_screen(screen, handle_index)
+        return
+    if isinstance(step, ChooseFile):
+        choose_file = step
+
+        def handle_path(path: Path | None) -> None:
+            if path is not None:
+                run_steps(app, choose_file.apply(path), done, notify)
+
+        app.push_screen(
+            CsvFilePickerScreen(step.title, step.start, suffix=step.suffix),
+            handle_path,
+        )
         return
     if isinstance(step, Confirm):
         confirm = step

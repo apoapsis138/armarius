@@ -14,28 +14,17 @@ from textual.screen import Screen
 from textual.widgets import Input, Label, Markdown, OptionList, Static
 from textual.widgets.option_list import Option, OptionDoesNotExist
 
-from ... import ROOT, __version__
 from ... import help_text as ht
 from ...markup import escape
 from .fields import ModalDialog
 
-#: The About page: the version and NOTICE.md (licences, credits).
-ABOUT = "about"
-NOTICE_PATH = ROOT / "NOTICE.md"
-
-#: What's New: CHANGELOG.md, every version with its release name.
-WHATS_NEW = "whats-new"
-CHANGELOG_PATH = ROOT / "CHANGELOG.md"
-
-#: The pages under REFERENCE, after the generated About and What's New.
-_REFERENCE = ("keys",)
+ABOUT, WHATS_NEW = ht.ABOUT, ht.WHATS_NEW
+whats_new_text = ht.whats_new_text
 
 #: Option ids say which group a topic was listed in, so one topic can be
 #: listed twice (THIS SCREEN and ALL PAGES).
 _HERE, _GUIDE, _REF, _ALL, _FOUND = "here:", "guide:", "ref:", "all:", "found:"
-
-#: How-to guides are the pages whose id starts with this.
-GUIDE_PREFIX = "guide-"
+_PREFIX = {"here": _HERE, "guide": _GUIDE, "ref": _REF, "all": _ALL, "found": _FOUND}
 
 
 @dataclass
@@ -176,48 +165,21 @@ class HelpScreen(ModalDialog[None]):
 
     def _here(self) -> list[str]:
         """THIS SCREEN: the context's topics the help has, once each."""
-        found: list[str] = []
-        for topic_id in self.context.ids:
-            if topic_id in self.book.topics and topic_id not in found:
-                found.append(topic_id)
-        return found
+        return [t for t in dict.fromkeys(self.context.ids) if t in self.book.topics]
 
     def _list_topics(self, query: str = "") -> None:
         topics = self.query_one("#help-topics", OptionList)
         topics.clear_options()
         options: list[Option] = []
-        if query.strip():
-            found = self.book.search(query)
-            options.append(_heading(f"FOUND ({len(found)})"))
-            options += [Option(escape(t.title), id=_FOUND + t.id) for t in found]
-        else:
-            here = self._here()
-            if here:
-                options.append(_heading("THIS SCREEN"))
-                options += [
-                    Option(escape(self.book.topics[t].title), id=_HERE + t)
-                    for t in here
-                ]
-            guides = [p for p in self.book.pages.values() if _is_guide(p.id)]
-            if guides:
-                options.append(_heading("HOW-TO GUIDES"))
-                options += [
-                    Option(escape(page.title), id=_GUIDE + page.id) for page in guides
-                ]
-            options.append(_heading("REFERENCE"))
-            options.append(Option("About this App", id=_REF + ABOUT))
-            options.append(Option("What's New", id=_REF + WHATS_NEW))
+        for heading, entries in ht.contents(self.book, self.context.ids, query):
+            options.append(_heading(heading))
             options += [
-                Option(escape(self.book.topics[t].title), id=_REF + t)
-                for t in _REFERENCE
-                if t in self.book.topics
+                Option(
+                    "  " * entry.indent + escape(entry.title),
+                    id=_PREFIX[entry.group] + entry.id,
+                )
+                for entry in entries
             ]
-            options.append(_heading("ALL PAGES"))
-            for page in self.book.pages.values():
-                if page.id in _REFERENCE or _is_guide(page.id):
-                    continue
-                indent = "  " if self.book.topics[page.id].level == 2 else ""
-                options.append(Option(indent + escape(page.title), id=_ALL + page.id))
         topics.add_options(options)
 
     def _highlight(self, option_id: str) -> None:
@@ -255,18 +217,7 @@ class HelpScreen(ModalDialog[None]):
 
     def _page_text(self, topic_id: str) -> tuple[str, str] | None:
         """The page `topic_id` is on: its id and Markdown."""
-        if topic_id == ABOUT:
-            try:
-                notice = NOTICE_PATH.read_text(encoding="utf-8")
-            except OSError:
-                notice = "NOTICE.md is missing: see the repository for licences."
-            return ABOUT, f"# Ars Magica Manager v{__version__}\n\n{notice}"
-        if topic_id == WHATS_NEW:
-            return WHATS_NEW, whats_new_text()
-        page = self.book.page_for(topic_id)
-        if page is None:
-            return None
-        return page.id, ht.display_text(page.text)
+        return ht.page_text(self.book, topic_id)
 
     def show_topic(self, topic_id: str, *, here: bool = False) -> None:
         """Show `topic_id`'s page, scrolled to it; the keys line only for
@@ -331,7 +282,7 @@ class HelpScreen(ModalDialog[None]):
         if href.startswith("help:"):
             event.prevent_default()
             topic_id = href.removeprefix("help:")
-            option = (_GUIDE if _is_guide(topic_id) else _ALL) + topic_id
+            option = (_GUIDE if ht.is_guide(topic_id) else _ALL) + topic_id
             topics = self.query_one("#help-topics", OptionList)
             try:
                 topics.highlighted = topics.get_option_index(option)
@@ -339,16 +290,6 @@ class HelpScreen(ModalDialog[None]):
                 self.show_topic(topic_id)
         elif href.startswith(("http://", "https://")):
             self.app.open_url(href)
-
-
-def whats_new_text() -> str:
-    """The What's New page: CHANGELOG.md under a title of its own."""
-    try:
-        changelog = CHANGELOG_PATH.read_text(encoding="utf-8")
-    except OSError:
-        return "# What's New\n\nCHANGELOG.md is missing: see the repository."
-    _, _, body = changelog.partition("\n")  # its own "# Changelog" title
-    return f"# What's New\n{body}"
 
 
 def page_chunks(text: str, lines: int = 60) -> list[str]:
@@ -363,10 +304,6 @@ def page_chunks(text: str, lines: int = 60) -> list[str]:
         current.append(line)
     chunks.append("".join(current))
     return chunks
-
-
-def _is_guide(topic_id: str) -> bool:
-    return topic_id.startswith(GUIDE_PREFIX)
 
 
 def _heading(text: str) -> Option:

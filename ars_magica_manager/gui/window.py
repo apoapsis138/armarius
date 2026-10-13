@@ -19,13 +19,15 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from pathlib import Path
 
 import shiboken6
-from PySide6.QtCore import QTimer
-from PySide6.QtGui import QFont
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtGui import QFont, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QApplication,
     QDialog,
+    QFileDialog,
     QHBoxLayout,
     QLabel,
     QMainWindow,
@@ -36,17 +38,18 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from .. import advance_forms, help_text, menu_forms, paths, saga_forms, storage
 from .. import familiars as fam
-from .. import menu_forms, storage
 from ..actions import NodeKind
-from ..commands import Act, Choose, Command, Confirm, Form, Refuse
+from ..commands import Act, Choose, ChooseFile, Command, Confirm, Form, Picked, Refuse
 from ..models import Character, Covenant, Familiar, Laboratory, Saga
 from . import pictures
 from .character_sheet import CharacterSheet
 from .covenant import CovenantPage
 from .editing import InPlace, place_for
 from .familiar import FamiliarPage
-from .forms import ConfirmDialog, answer, step_dialog
+from .forms import ConfirmDialog, answer, run_steps, step_dialog
+from .help import HelpPage
 from .laboratory import LaboratoryPage
 from .markup_html import plain
 from .menus import menu_buttons
@@ -54,11 +57,23 @@ from .ornaments import Headpiece
 from .pages import SagaPage, SagaShelf
 from .paper import Paper
 from .saga_content import SagaContentPage
+from .seasons import SeasonsPage
 from .themes import PALETTES, Palette, style_sheet
 from .widgets import take_pressed
 from .worksheet import WorksheetPage
 
-SHELF, SAGA, COVENANT, CHARACTER, LABORATORY, FAMILIAR, CONTENT, WORKSHEET = (
+(
+    SHELF,
+    SAGA,
+    COVENANT,
+    CHARACTER,
+    LABORATORY,
+    FAMILIAR,
+    CONTENT,
+    WORKSHEET,
+    SEASONS,
+    HELP,
+) = (
     "shelf",
     "saga",
     "covenant",
@@ -67,7 +82,33 @@ SHELF, SAGA, COVENANT, CHARACTER, LABORATORY, FAMILIAR, CONTENT, WORKSHEET = (
     "familiar",
     "content",
     "worksheet",
+    "seasons",
+    "help",
 )
+
+#: Each page's help topic (help_text: a page's id), most specific first.
+_HELP_IDS = {
+    SHELF: ["saga-picker"],
+    SAGA: ["saga", "workspace"],
+    COVENANT: ["covenant"],
+    CHARACTER: ["character"],
+    LABORATORY: ["laboratory"],
+    FAMILIAR: ["familiar"],
+    CONTENT: ["saga-content"],
+    WORKSHEET: ["creation-worksheet"],
+    SEASONS: ["seasons", "advance-season", "season-summary"],
+}
+
+#: The prefix of each page's tab topics; a character's are the plain
+#: "tab-" ones.
+_TAB_PREFIX = {
+    COVENANT: "tab-cov-",
+    LABORATORY: "tab-lab-",
+    FAMILIAR: "tab-fam-",
+    CONTENT: "tab-content-",
+    CHARACTER: "tab-",
+}
+_OTHER_TABS = tuple(v for k, v in _TAB_PREFIX.items() if k != CHARACTER)
 
 
 def _first_input(dialog: QDialog) -> QWidget | None:
@@ -81,7 +122,7 @@ def _first_input(dialog: QDialog) -> QWidget | None:
 
 def _title(command: Command) -> str:
     if isinstance(command, Confirm):
-        return command.question
+        return command.title or command.question
     return "" if isinstance(command, Act) else command.title
 
 
@@ -109,21 +150,11 @@ class MainWindow(QMainWindow):
         #: the step open there now.
         self._place: InPlace | None = None
         self._open: QDialog | None = None
+        self._help_from: QWidget | None = None
+        #: The season just advanced, for the Seasons page to show first.
+        self._played: advance_forms.Played | None = None
 
-        self.crumbs = QHBoxLayout()
-        self.crumbs.setSpacing(2)
-        self.theme = QPushButton()
-        self.theme.setFlat(True)
-        self.theme.clicked.connect(self.toggle_theme)
-        bar = QHBoxLayout()
-        bar.setContentsMargins(12, 4, 8, 0)
-        bar.addLayout(self.crumbs)
-        bar.addStretch(1)
-        #: The New and More menus for the page on show (menus.py).
-        self.menus = QHBoxLayout()
-        self.menus.setSpacing(2)
-        bar.addLayout(self.menus)
-        bar.addWidget(self.theme)
+        bar = self._top_bar()
 
         self.sheet_area = QWidget()
         self.sheet_layout = QVBoxLayout(self.sheet_area)
@@ -144,6 +175,38 @@ class MainWindow(QMainWindow):
         else:
             self.go([Place(SHELF)])
 
+    def _top_bar(self) -> QHBoxLayout:
+        """The trail on the left; the page's New and More, Advance Season,
+        Help and the theme on the right."""
+        self.crumbs = QHBoxLayout()
+        self.crumbs.setSpacing(2)
+        self.theme = QPushButton()
+        self.theme.setFlat(True)
+        self.theme.clicked.connect(self.toggle_theme)
+        bar = QHBoxLayout()
+        bar.setContentsMargins(12, 4, 8, 0)
+        bar.addLayout(self.crumbs)
+        bar.addStretch(1)
+        #: The New and More menus for the page on show (menus.py).
+        self.menus = QHBoxLayout()
+        self.menus.setSpacing(2)
+        bar.addLayout(self.menus)
+        #: Advance Season, while a saga is open: its date, and a click
+        #: plays the season out (advance_forms).
+        self.advance = QPushButton()
+        self.advance.setObjectName("edit")
+        self.advance.setFlat(True)
+        self.advance.clicked.connect(self.advance_season)
+        bar.addWidget(self.advance)
+        self.help = QPushButton("  Help")
+        self.help.setFlat(True)
+        self.help.setToolTip("Help on this page (F1)")
+        self.help.clicked.connect(self.open_help)
+        bar.addWidget(self.help)
+        QShortcut(QKeySequence(Qt.Key.Key_F1), self, self.open_help)
+        bar.addWidget(self.theme)
+        return bar
+
     @property
     def palette_(self) -> Palette:
         return PALETTES[self.palette_index]
@@ -154,6 +217,67 @@ class MainWindow(QMainWindow):
         return place.id if place and place.kind == CHARACTER else None
 
     # Where to go
+
+    # The shelf of sagas
+
+    def _run_on_shelf(self, command: Command) -> tuple[bool, object]:
+        """Run steps that act on the sagas themselves (saga_forms): they
+        save what they change. Whether every step was answered, and what
+        they ended with; a refusal is said and counts as unanswered."""
+        self._place = None
+        answered, end = run_steps(command, self.palette_, self, self.ask)
+        if isinstance(end, Refuse):
+            self.tell(end.title, end.why)
+            return False, end
+        return answered, end
+
+    def _shelf_again(self) -> None:
+        """Read the sagas again and show the shelf."""
+        self.saga_ids = storage.list_sagas()
+        self.saga = None
+        self.go([Place(SHELF)])
+
+    def new_saga(self) -> None:
+        """Create a New Saga and open it."""
+        answered, end = self._run_on_shelf(saga_forms.new_saga_form())
+        if answered and isinstance(end, Picked):
+            self.saga_ids = storage.list_sagas()
+            self.open_saga(end.value)
+
+    def delete_saga(self, saga_id: str) -> None:
+        """Delete a saga, after asking."""
+        try:
+            name = storage.load_saga(saga_id).name
+        except OSError, ValueError:
+            name = saga_id
+        answered, _end = self._run_on_shelf(saga_forms.delete_saga(saga_id, name))
+        if answered:
+            self._shelf_again()
+
+    def change_save_folder(self) -> None:
+        """Choose another folder to keep the saves in (moving them there
+        if asked), and read the sagas from it from now on."""
+        refused = saga_forms.save_folder_refused()
+        if refused:
+            self.tell("Change Save Folder", refused)
+            return
+        current = paths.data_dir()
+        chosen = self.choose_folder(current)
+        if not chosen:
+            return
+        answered, end = self._run_on_shelf(
+            saga_forms.save_folder_form(current, Path(chosen))
+        )
+        if answered and isinstance(end, list):
+            self._shelf_again()
+            self.tell("Change Save Folder", "\n".join(end))
+
+    def choose_folder(self, start: Path) -> str:
+        """The folder chosen in the system's folder dialog ("" for none).
+        Tests replace it."""
+        return QFileDialog.getExistingDirectory(
+            self, "Choose the save folder", str(start)
+        )
 
     def open_saga(self, saga_id: str) -> None:
         self.load(storage.load_saga(saga_id))
@@ -215,6 +339,62 @@ class MainWindow(QMainWindow):
             ]
         )
 
+    def open_help(self) -> None:
+        """Open Help on the page on show, below it (the trail leads back
+        to it)."""
+        if self.trail and self.trail[-1].kind == HELP:
+            return
+        self.go([*self.trail, Place(HELP)])
+
+    def _help_ids(self, place: Place, page: QWidget | None) -> list[str]:
+        """The help topics for `place`: the tab whose title starts with
+        the name of the chapter on show, then the page's."""
+        ids = list(_HELP_IDS.get(place.kind, []))
+        codex = getattr(page, "codex", None)
+        item = codex.rail.currentItem() if codex is not None else None
+        chapter = plain(item.text()).strip().casefold() if item is not None else ""
+        prefix = _TAB_PREFIX.get(place.kind)
+        if chapter and prefix is not None:
+            tab = next(
+                (
+                    topic.id
+                    for topic in help_text.book().topics.values()
+                    if topic.id.startswith(prefix)
+                    and (prefix != "tab-" or not topic.id.startswith(_OTHER_TABS))
+                    and topic.title.casefold().startswith(chapter)
+                ),
+                None,
+            )
+            if tab is not None:
+                ids.insert(0, tab)
+        return ids
+
+    def open_seasons(self) -> None:
+        """Open the saga's Seasons, below the saga."""
+        self.go([Place(SHELF), Place(SAGA), Place(SEASONS)])
+
+    def advance_season(self) -> None:
+        """Advance the saga by one season (advance_forms), then show the
+        season's results on the Seasons page when it did anything."""
+        saga = self.saga
+        if saga is None:
+            return
+        self.run(
+            advance_forms.advance_season(saga, storage.backup_saga),
+            ended=self._season_played,
+        )
+
+    def _season_played(self, end: object) -> None:
+        if not isinstance(end, advance_forms.Played):
+            self.redraw()
+            return
+        if end.results:
+            self._played = end
+            self.open_seasons()
+            return
+        self.redraw()
+        self.tell("Advance Season", end.message)
+
     def open_worksheet(self, record_id: str) -> None:
         """Open the Creation Worksheet of a character, covenant or
         laboratory, below its page."""
@@ -245,12 +425,18 @@ class MainWindow(QMainWindow):
         kinds = [place.kind for place in self.trail]
         return self.trail[: kinds.index(kind) + 1] if kind in kinds else [Place(kind)]
 
-    def run(self, command: Command, then: Callable[[], None] | None = None) -> None:
+    def run(
+        self,
+        command: Command,
+        then: Callable[[], None] | None = None,
+        *,
+        ended: Callable[[object], None] | None = None,
+    ) -> None:
         """Run a button's steps (commands.py), each in its dialog; once
         the last is answered, save the saga and show the page again at the
         same chapter and place (or, given `then`, call it instead: a
-        menu's New shows the new record). Cancelling any step changes
-        nothing."""
+        menu's New shows the new record; given `ended`, call it with what
+        the steps ended with). Cancelling any step changes nothing."""
         if self.saga is None:
             return
         title = _title(command)
@@ -259,7 +445,7 @@ class MainWindow(QMainWindow):
         self._place = place_for(pressed, page) if page is not None else None
         step: object = command
         try:
-            while isinstance(step, Form | Choose | Confirm | Act):
+            while isinstance(step, Form | Choose | Confirm | ChooseFile | Act):
                 if isinstance(step, Act):
                     step = step.apply()
                     continue
@@ -275,6 +461,9 @@ class MainWindow(QMainWindow):
             self.tell(step.title, step.why)
             return
         storage.save_saga(self.saga)
+        if ended is not None:
+            ended(step)
+            return
         if then is not None:
             then()
         else:
@@ -282,7 +471,9 @@ class MainWindow(QMainWindow):
         if isinstance(step, list) and step:
             self.tell(title, "\n".join(step))
 
-    def _answer(self, step: Form | Choose | Confirm) -> tuple[bool, object]:
+    def _answer(
+        self, step: Form | Choose | Confirm | ChooseFile
+    ) -> tuple[bool, object]:
         """Show one step; whether it was answered, and what it led to."""
         dialog = step_dialog(
             step,
@@ -368,6 +559,8 @@ class MainWindow(QMainWindow):
         a page cancels a step open on it."""
         if self._open is not None and shiboken6.isValid(self._open):
             self._open.reject()
+        #: The page Help is opened from, to find the chapter on show.
+        self._help_from = self.page()
         self.trail = trail
         self._show(self._build(trail[-1]))
         self._draw_trail()
@@ -375,15 +568,39 @@ class MainWindow(QMainWindow):
 
     # Drawing
 
+    def _help_page(self) -> HelpPage:
+        """Help on the page below it in the trail."""
+        below = self.trail[-2] if len(self.trail) > 1 else Place(SHELF)
+        return HelpPage(
+            self.palette_,
+            self._help_ids(below, self._help_from),
+            self._name(below),
+        )
+
     def _build(self, place: Place) -> QWidget:
         p, saga = self.palette_, self.saga
+        if place.kind == HELP:
+            return self._help_page()
         if place.kind == SHELF or saga is None:
             sagas = [storage.load_saga(saga_id) for saga_id in self.saga_ids]
-            return SagaShelf(sagas, p, self.open_saga)
+            return SagaShelf(
+                sagas,
+                p,
+                self.open_saga,
+                self.new_saga,
+                self.delete_saga,
+                self.change_save_folder,
+                str(paths.data_dir()),
+            )
         if place.kind == SAGA:
-            return SagaPage(saga, p, self.open_covenant, self.open_content)
+            return SagaPage(
+                saga, p, self.open_covenant, self.open_content, self.open_seasons
+            )
         if place.kind == CONTENT:
             return SagaContentPage(saga, p, self.run)
+        if place.kind == SEASONS:
+            played, self._played = self._played, None
+            return SeasonsPage(saga, p, played)
         if place.kind == COVENANT:
             return CovenantPage(
                 saga,
@@ -446,6 +663,10 @@ class MainWindow(QMainWindow):
             return saga.name
         if place.kind == CONTENT:
             return "Saga Content"
+        if place.kind == SEASONS:
+            return "Seasons"
+        if place.kind == HELP:
+            return "Help"
         if place.kind == COVENANT:
             covenant = saga.covenant(place.id)
             return covenant.name if covenant else "Unassigned"
@@ -487,7 +708,17 @@ class MainWindow(QMainWindow):
         """The page on show, as its New and More menus see it."""
         saga = self.saga
         place = self.trail[-1] if self.trail else None
-        if saga is None or place is None or place.kind in (SHELF, WORKSHEET):
+        if (
+            saga is None
+            or place is None
+            or place.kind
+            in (
+                SHELF,
+                WORKSHEET,
+                SEASONS,
+                HELP,
+            )
+        ):
             return None
         if place.kind == SAGA:
             return menu_forms.page_for(saga, NodeKind.SAGA)
@@ -507,6 +738,14 @@ class MainWindow(QMainWindow):
         return menu_forms.page_for(saga, NodeKind.FAMILIAR, familiar_id=place.id)
 
     def _draw_menus(self) -> None:
+        saga = self.saga
+        shown = saga is not None and bool(self.trail) and self.trail[-1].kind != SHELF
+        self.advance.setVisible(shown)
+        if saga is not None:
+            self.advance.setText(
+                f"  {saga.current_season} {saga.current_year} · Advance Season"
+            )
+            self.advance.setIcon(pictures.icon("season", self.palette_["label"]))
         while self.menus.count():
             item = self.menus.takeAt(0)
             old = item.widget() if item is not None else None
@@ -566,3 +805,4 @@ class MainWindow(QMainWindow):
         other = PALETTES[(self.palette_index + 1) % len(PALETTES)]
         self.theme.setText(f"  {other.name}")
         self.theme.setIcon(pictures.icon("theme", p["label"]))
+        self.help.setIcon(pictures.icon("help", p["label"]))

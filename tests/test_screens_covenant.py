@@ -268,9 +268,8 @@ async def test_advancing_past_winter_rolls_the_year_and_cancel_changes_nothing()
         await pilot.pause()
         # No income, and Sundry is at least 1: a deficit, so it asks first.
         assert isinstance(app.screen, ConfirmScreen)
-        await pilot.press("n")
-        await pilot.pause()
-        assert "Spring 1221" in app.screen.sub_title
+        await pilot.press("y")  # Advance anyway
+        assert await wait_until(pilot, lambda: "Spring 1221" in app.screen.sub_title)
 
     saga = storage.load_saga("test_saga")
     assert (saga.current_season, saga.current_year) == ("Spring", 1221)

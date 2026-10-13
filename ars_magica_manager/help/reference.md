@@ -35,5 +35,7 @@ the keys that always work.
 - `?` Help, here. In a dialog where you're typing, `F1` opens it instead.
 - `q` Quit, and `Ctrl+P` the command palette (themes and more).
 
+On the desktop, the top bar always has Advance Season (with the saga's date) and Help; `F1` opens Help too, on the page on show.
+
 In Help itself, the arrow keys choose a topic, `/` filters the topics,
 `Tab` moves between the topic list and the page, and `esc` closes it.

@@ -8,7 +8,6 @@ from __future__ import annotations
 import asyncio
 import io
 import json
-import random
 import re
 import uuid
 from collections.abc import Awaitable, Callable, Sequence
@@ -40,6 +39,7 @@ from textual.widgets.tree import TreeNode
 
 from .... import (
     actions,
+    advance_forms,
     catalog,
     character_templates,
     creation,
@@ -53,7 +53,6 @@ from .... import (
     vis,
 )
 from .... import books as bk
-from .... import economics as eco
 from .... import familiars as fam
 from .... import laboratories as lab_rules
 from .... import players as pl
@@ -68,7 +67,6 @@ from ....actions import (
 from ....markup import escape
 from ....models import (
     FOCUS_FLAWS,
-    SEASONS,
     Ability,
     Character,
     CharacterTemplateDef,
@@ -134,6 +132,7 @@ from ..sheets import (
     SagaContentSheetView,
     SheetView,
 )
+from ..steps import run_steps
 from ..widgets import (
     BottomBar,
     SelectableList,
@@ -2034,142 +2033,45 @@ class WorkspaceBase(Screen[None]):
         if self.selected_kind == NodeKind.SAGA:
             await self._show_saga_detail()
 
-    def action_advance_season(self) -> None:  # noqa: PLR0915
+    def action_advance_season(self) -> None:
+        """Advance the saga by one season: the core's steps
+        (advance_forms), the first drawn as the Advance Time dialog."""
         saga = self.saga
 
-        async def handle_result(confirmed: bool | None) -> None:
-            if not confirmed:
-                return
-            if saga.current_season == SEASONS[-1]:
-                in_deficit = eco.covenants_in_deficit(saga)
-                if in_deficit:
-                    self._offer_to_resolve_deficit(in_deficit, advance)
-                    return
-            await advance()
+        def done(end: object) -> None:
+            if isinstance(end, advance_forms.Played):
+                storage.save_saga(saga)
+                self.run_worker(self._season_played(end))
 
-        async def advance() -> None:
-            # Contested resources whose security lapsed: was each secured
-            # this season? Asked one by one, then the season
-            # is played out.
-            lapsed = seasons.lapsed_resources(saga)
-            answers: dict[str, bool] = {}
-
-            async def ask(index: int) -> None:
-                if index >= len(lapsed):
-                    await play_out(answers)
-                    return
-                resource_id, label = lapsed[index]
-
-                async def answered(yes: bool | None) -> None:
-                    answers[resource_id] = bool(yes)
-                    await ask(index + 1)
-
-                self.app.push_screen(
-                    ConfirmScreen(
-                        f"Was {escape(label)} secured this season? (A contested "
-                        "resource: yes secures it for five years; no loses its "
-                        "harvest or income.)"
-                    ),
-                    answered,
+        def handle_result(confirmed: bool | None) -> None:
+            if confirmed:
+                run_steps(
+                    self.app,
+                    advance_forms.play_season(saga, storage.backup_saga),
+                    done,
                 )
-
-            await ask(0)
-
-        async def play_out(answers: dict[str, bool]) -> None:
-            # Every plan's outcome is worked out before any is applied, so a
-            # season's results can't change that same season.
-            worked = seasons.resolve(saga, random.Random())
-            # An experiment seeking a Discovery whose roll the risk can move
-            # onto 10: the player is asked each time.
-            moves = seasons.discovery_moves(saga, worked)
-
-            async def ask_move(index: int) -> None:
-                if index >= len(moves):
-                    await finish(answers, worked)
-                    return
-                outcome, text = moves[index]
-
-                async def answered(yes: bool | None) -> None:
-                    seasons.take_discovery_move(saga, outcome, bool(yes))
-                    await ask_move(index + 1)
-
-                self.app.push_screen(ConfirmScreen(escape(text)), answered)
-
-            await ask_move(0)
-
-        async def finish(answers: dict[str, bool], worked: list[Any]) -> None:
-            # The season played out in the rules' order, the date moved on
-            # (seasons.finish_season); here, only saving and showing it.
-            done = seasons.finish_season(
-                saga, worked, answers, random.Random(), backup=storage.backup_saga
-            )
-            record, applied, aged, added = (
-                done.record,
-                done.applied,
-                done.year_end,
-                done.added,
-            )
-            await self._apply_saga_date(saga.current_season, saga.current_year)
-            # Applied seasons change xp (scores, casting and lab totals) and
-            # the Diary; the new date changes This Season.
-            for section in _SEASON_SECTIONS:
-                self._refresh_character_section(section)
-            self._refresh_laboratory_section("tab-lab-planning")
-            self._refresh_covenant_section("tab-cov-seasons")
-            if saga.keep_season_records and worked:
-                self._rebuild_tree()
-            if worked or aged:
-                self.app.push_screen(SeasonSummaryScreen(saga, record))
-            message = f"It is now {saga.current_season} {saga.current_year}."
-            if applied:
-                message += (
-                    f" Seasons applied for {', '.join(c.name for c in applied)}"
-                    " (see each one's Diary)."
-                )
-            if added:
-                message += " Added to Wealth: " + ", ".join(
-                    f"{name} {amount}" for name, amount in added
-                )
-                message += "."
-                self._refresh_covenant_section("section-eco-wealth")
-            self.notify(escape(message))
 
         self.app.push_screen(
-            AdvanceSeasonScreen(
-                saga.current_season,
-                saga.current_year,
-                seasons.advance_summary(saga),
-            ),
-            handle_result,
+            AdvanceSeasonScreen(advance_forms.advance_text(saga)), handle_result
         )
 
-    def _offer_to_resolve_deficit(
-        self, in_deficit: list[tuple[str, int]], advance: Callable[[], Any]
-    ) -> None:
-        """Before the year rolls over with a covenant in deficit: Yes (the
-        focused, Escape answer) leaves the date alone so the books can be
-        balanced; No advances anyway."""
-        lines = "\n".join(
-            f"  {escape(name)}: {deficit}" for name, deficit in in_deficit
-        )
-
-        async def handle_answer(resolve: bool | None) -> None:
-            if resolve:
-                self.notify(
-                    "The year hasn't advanced. Balance the books, then press t again."
-                )
-                return
-            await advance()
-
-        self.app.push_screen(
-            ConfirmScreen(
-                "The Covenant is currently in a deficit - do you wish to attempt "
-                f"to resolve this?\n\n{lines}",
-                yes_variant="primary",
-                safe_answer=True,
-            ),
-            handle_answer,
-        )
+    async def _season_played(self, played: advance_forms.Played) -> None:
+        """Save the season played out and redraw what it changed: xp
+        (scores, casting and lab totals), the Diary, This Season and
+        Wealth; then show its results."""
+        saga = self.saga
+        await self._apply_saga_date(saga.current_season, saga.current_year)
+        for section in _SEASON_SECTIONS:
+            self._refresh_character_section(section)
+        self._refresh_laboratory_section("tab-lab-planning")
+        self._refresh_covenant_section("tab-cov-seasons")
+        if played.advanced.added:
+            self._refresh_covenant_section("section-eco-wealth")
+        if saga.keep_season_records and played.results:
+            self._rebuild_tree()
+        if played.results:
+            self.app.push_screen(SeasonSummaryScreen(saga, played.advanced.record))
+        self.notify(played.message)
 
     # -- season plans (shared by the character and covenant sheets) --
 

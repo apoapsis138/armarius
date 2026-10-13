@@ -18,6 +18,7 @@ steps the same way, in place.
 from __future__ import annotations
 
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import QRectF, Qt
@@ -27,6 +28,7 @@ from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
     QDialog,
+    QFileDialog,
     QFormLayout,
     QHBoxLayout,
     QLabel,
@@ -44,7 +46,7 @@ from PySide6.QtWidgets import (
 )
 
 from .. import form_spec
-from ..commands import Act, Choice, Choose, Confirm, Form, Picked, Refuse
+from ..commands import Act, Choice, Choose, ChooseFile, Confirm, Form, Picked, Refuse
 from ..form_spec import DialogField, FieldError, ListEditor
 from .markup_html import plain, to_html
 from .ornaments import FleuronRule, corner_flourishes
@@ -643,8 +645,9 @@ class ConfirmDialog(_Sheet):
         *,
         yes_label: str = "Delete",
         inline: bool = False,
+        title: str = "",
     ) -> None:
-        super().__init__("Are you sure?", p, yes_label, parent, inline=inline)
+        super().__init__(title or "Are you sure?", p, yes_label, parent, inline=inline)
         words = QLabel(to_html(question, p))
         words.setTextFormat(Qt.TextFormat.RichText)
         words.setWordWrap(True)
@@ -663,7 +666,7 @@ class ConfirmDialog(_Sheet):
 # -- running steps --
 
 
-Step = Form | Choose | Confirm
+Step = Form | Choose | Confirm | ChooseFile
 
 
 def step_dialog(
@@ -675,6 +678,8 @@ def step_dialog(
     ask: Ask | None = None,
 ) -> QDialog | None:
     """The dialog that asks `step` (None: a list with nothing in it)."""
+    if isinstance(step, ChooseFile):
+        return file_dialog(step, parent)
     if isinstance(step, Form):
         return FieldsDialog(
             step.title,
@@ -701,7 +706,12 @@ def step_dialog(
             others=step.others,
         )
     return ConfirmDialog(
-        step.question, p, parent, yes_label=step.yes_label, inline=inline
+        step.question,
+        p,
+        parent,
+        yes_label=step.yes_label,
+        inline=inline,
+        title=step.title,
     )
 
 
@@ -714,7 +724,22 @@ def answer(step: Step, dialog: QDialog) -> object:
     if isinstance(step, Choose):
         assert isinstance(dialog, ChooseDialog)
         return step.apply(dialog.chosen)
+    if isinstance(step, ChooseFile):
+        assert isinstance(dialog, QFileDialog)
+        return step.apply(Path(dialog.selectedFiles()[0]))
     return step.apply()
+
+
+def file_dialog(step: ChooseFile, parent: QWidget | None) -> QFileDialog:
+    """The system's Open window for a ChooseFile: files of its kind, in
+    the folder it starts on."""
+    kind = step.suffix.removeprefix(".").upper()
+    dialog = QFileDialog(
+        parent, plain(step.title), str(step.start), f"{kind} files (*{step.suffix})"
+    )
+    dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+    dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptOpen)
+    return dialog
 
 
 def run_steps(
@@ -723,7 +748,7 @@ def run_steps(
     """Run `step` and the steps it leads to, each as a window; whether
     every one was answered, and what the last led to (a Picked value, a
     Refuse...)."""
-    while isinstance(step, Form | Choose | Confirm | Act):
+    while isinstance(step, Form | Choose | Confirm | ChooseFile | Act):
         if isinstance(step, Act):
             step = step.apply()
             continue

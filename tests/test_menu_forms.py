@@ -8,7 +8,13 @@ from typing import Any
 
 from screen_helpers import _saga_with_familiar, _sample_saga_with_covenant
 
-from ars_magica_manager import commands, creation_forms, form_spec, menu_forms
+from ars_magica_manager import (
+    commands,
+    creation_forms,
+    form_spec,
+    import_forms,
+    menu_forms,
+)
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.models import (
     IncomeSource,
@@ -287,20 +293,21 @@ def test_exporting_and_importing_a_character(tmp_path: Path):
     choose = menu_forms.command(_page(other, NodeKind.SAGA), "import_data")
     assert isinstance(choose, commands.Choose)
     assert [c.label for c in choose.choices()] == [
+        "Books",
+        "Spells",
         "Characters",
         "Covenants",
         "Laboratories",
-        "Books",
-        "Spells",
     ]
     wrong = choose.apply("covenants")
-    assert isinstance(wrong, commands.Form)
-    refused = wrong.apply(_answer(wrong, {"file": str(written)}))
+    assert isinstance(wrong, commands.ChooseFile)
+    refused = wrong.apply(written)
     assert isinstance(refused, commands.Refuse)
     assert "it holds a character, not a covenant" in refused.why
-    form = choose.apply("characters")
-    assert isinstance(form, commands.Form)
-    confirm = form.apply(_answer(form, {"file": str(written)}))
+    pick = choose.apply("characters")
+    assert isinstance(pick, commands.ChooseFile)
+    assert (pick.title, pick.suffix) == ("Import a character", ".json")
+    confirm = pick.apply(written)
     assert isinstance(confirm, commands.Confirm)
     assert other.characters == []
     assert confirm.apply() == ["Imported Leandro (character)."]
@@ -318,18 +325,19 @@ def test_importing_books_asks_about_each_duplicate(tmp_path: Path):
         encoding="utf-8",
     )
     page = _page(saga, NodeKind.COVENANT, covenant_id="cov1")
-    form = menu_forms.import_books(saga, saga.covenants[0])
-    assert form.title == "Import books into Test Covenant's library"
-    confirm = form.apply(_answer(form, {"file": str(csv)}))
+    pick = menu_forms.command(page, "import_data")
+    assert isinstance(pick, commands.ChooseFile)
+    assert pick.title == "Import books into Test Covenant's library"
+    confirm = pick.apply(csv)
     assert isinstance(confirm, commands.Confirm)
     ask = confirm.apply()
     assert isinstance(ask, commands.Choose)
     assert ask.title.startswith("A book named On the Theory of Magic is already")
     assert [c.label for c in ask.choices()] == [
-        "Duplicate",
-        "Duplicate All",
         "Skip",
         "Skip All",
+        "Duplicate",
+        "Duplicate All",
     ]
     assert len(saga.books) == 2  # nothing until every question is answered
     done = ask.apply("skip_all")
@@ -340,13 +348,23 @@ def test_importing_books_asks_about_each_duplicate(tmp_path: Path):
     assert page.covenant is saga.covenants[0]
 
 
-def test_a_missing_file_is_refused_by_the_form(tmp_path: Path):
+def test_spells_come_after_the_csv_help_which_can_save_an_example(tmp_path: Path):
     saga = _sample_saga_with_covenant()
-    form = menu_forms.import_spells(saga)
-    assert form.validate is not None
-    values = {f.key: f.value for f in form.fields()}
-    problem = form.validate(values | {"file": str(tmp_path / "none.csv")})
-    assert problem is not None and problem.startswith("No file none.csv")
+    help_form = import_forms.spell_import_help(saga, tmp_path)
+    assert help_form.save_label == "Choose CSV File"
+    assert help_form.live is not None
+    assert "Columns, in any order" in help_form.live({})
+    saved = help_form.apply(_answer(help_form, {"example": True}))
+    assert saved == [
+        f"Saved spells_example.csv in {tmp_path}. Edit it, then import it."
+    ]
+    assert (tmp_path / "spells_example.csv").is_file()
+    pick = help_form.apply(_answer(help_form, {}))
+    assert isinstance(pick, commands.ChooseFile)
+    assert pick.suffix == ".csv"
+    refused = pick.apply(tmp_path / "none.csv")
+    assert isinstance(refused, commands.Refuse)
+    assert refused.why.startswith("Couldn't read none.csv")
 
 
 def test_a_ritual_needs_the_laboratory_to_have_an_owner():

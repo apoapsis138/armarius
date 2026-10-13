@@ -40,6 +40,7 @@ from ... import saga_content as sc
 from ... import saga_content_forms as scf
 from ...ability_forms import ability_fields as _ability_fields
 from ...ability_forms import ability_problem as _ability_problem
+from ...advance_forms import AdvanceText
 from ...arts import FORMS, TECHNIQUES
 from ...commands import Form, Picked
 from ...form_spec import DialogField, pairs
@@ -64,7 +65,6 @@ from ...models import (
     SagaSource,
     ScoredTrait,
     VirtueFlawInstance,
-    next_season,
 )
 from ...rules import lab_seasons
 from .fields import FieldsDialog, ModalDialog
@@ -663,41 +663,21 @@ class AdvanceSeasonScreen(ModalDialog[bool]):
     }
     """
 
-    def __init__(self, season: str, year: int, plans: str = "") -> None:
+    def __init__(self, text: AdvanceText) -> None:
         super().__init__()
-        self.season = season
-        self.year = year
-        #: What happens to the season's plans (seasons.advance_summary):
-        #: markup, "" for nothing to say.
-        self.plans = plans
+        #: What advancing will do (advance_forms.advance_text).
+        self.text = text
 
     def compose(self) -> ComposeResult:
-        new_season, new_year = next_season(self.season, self.year)
+        text = self.text
         with Vertical(id="advance-dialog", classes="dialog-box"):
             yield Label("Advance Time", id="advance-title", classes="dialog-title")
-            yield Static(
-                f"Advance the saga from {self.season} {self.year} "
-                f"to {new_season} {new_year}?",
-                id="advance-message",
-            )
-            if self.plans:
-                yield Static(self.plans, id="advance-plans")
-            if new_year != self.year:
-                yield Static(
-                    "A new year: each covenant's surplus is added to its Wealth, "
-                    "and Emergency Savings start again at 0.",
-                    id="advance-year-note",
-                )
-            yield Static(
-                "Advanced by mistake? Set Date (More on the saga) puts the date back"
-                + (" (Wealth isn't changed back)." if new_year != self.year else ".")
-                + (
-                    " The saga is backed up first (sagas/backups in your data folder)."
-                    if self.plans
-                    else ""
-                ),
-                id="advance-note",
-            )
+            yield Static(text.question, id="advance-message")
+            if text.plans:
+                yield Static(text.plans, id="advance-plans")
+            if text.year_note:
+                yield Static(text.year_note, id="advance-year-note")
+            yield Static(text.note, id="advance-note")
             with Horizontal(id="advance-buttons"):
                 yield Button("Advance", id="btn-advance", variant="success")
                 yield Button("Cancel", id="btn-cancel")

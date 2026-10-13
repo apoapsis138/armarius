@@ -104,11 +104,11 @@ def test_a_resource_no_longer_dwindling_forgets_its_original_value():
 
 async def test_advancing_asks_whether_a_lapsed_resource_was_secured():
     from support import everything_saga, wait_until
-    from textual.widgets import Button
+    from textual.widgets import Button, Checkbox
 
     from ars_magica_manager import storage
     from ars_magica_manager.tui.app import ArsMagicaManagerApp
-    from ars_magica_manager.tui.screens.prompts import ConfirmScreen
+    from ars_magica_manager.tui.screens.fields import FieldsDialog
 
     saga = everything_saga()
     covenant = saga.covenants[0]
@@ -132,8 +132,12 @@ async def test_advancing_asks_whether_a_lapsed_resource_was_secured():
         await pilot.press("t")
         await pilot.pause()
         app.screen.query_one("#btn-advance", Button).press()
-        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
-        app.screen.query_one("#btn-yes", Button).press()
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        await pilot.pause()
+        assert app.screen.title_text == "Contested Resources"
+        [secured] = [f for f in app.screen.fields if f.kind == "check"]
+        app.screen.query_one(f"#fld-{secured.key}", Checkbox).value = True
+        app.screen.query_one("#btn-save", Button).press()
         assert await wait_until(
             pilot, lambda: workspace.saga.current_season != saga.current_season
         )

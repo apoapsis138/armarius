@@ -11,6 +11,7 @@ opens, in turn, and records them:
 - a ChooseDialog: the label of the entry to choose (`everything(label)`
   ticks Show everything first);
 - a ConfirmDialog: True (yes) or False;
+- a ChooseFile's Open window (QFileDialog): the path of the file;
 - None (any dialog): cancel.
 
 A dialog that refuses its answer (a form with a bad entry) is recorded
@@ -22,7 +23,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from PySide6.QtWidgets import QDialog, QPushButton, QWidget
+from PySide6.QtWidgets import QDialog, QFileDialog, QPushButton, QWidget
 
 from ars_magica_manager.gui.forms import ChooseDialog, ConfirmDialog, FieldsDialog
 
@@ -57,6 +58,9 @@ def answering(window: Any, *answers: Any) -> list[QDialog]:
             return (
                 QDialog.DialogCode.Accepted if answer else QDialog.DialogCode.Rejected
             )
+        elif isinstance(dialog, QFileDialog):
+            dialog.selectFile(str(answer))
+            return QDialog.DialogCode.Accepted
         return dialog.result()
 
     window.ask = ask

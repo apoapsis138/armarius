@@ -4,33 +4,28 @@ the saga's spells, players) and Books (every book list)."""
 from __future__ import annotations
 
 from collections.abc import Callable
-from pathlib import Path
 from typing import Any
 
 from textual.css.query import NoMatches
 
 from .... import books as bk
 from .... import house_rules as hr
+from .... import import_forms, seasons, storage
 from .... import lab_texts as lt
 from .... import players as pl
 from .... import saga_content as sc
-from .... import seasons, storage, transfer
 from .... import spells as spl
 from ....form_spec import DialogField
 from ....markup import escape
 from ....models import (
     TEXT_LONGEVITY,
     Book,
-    Covenant,
     Player,
     SagaSource,
     Spell,
 )
 from ..fields import FieldsDialog
 from ..forms import (
-    DuplicateBookScreen,
-    ImportScreen,
-    SpellImportHelperScreen,
     _book_fields,
     _book_from_values,
     _book_live,
@@ -43,7 +38,6 @@ from ..forms import (
 )
 from ..pickers import (
     CatalogEntryPickerScreen,
-    CsvFilePickerScreen,
     RemovalPickerScreen,
     SourcebookPickerScreen,
 )
@@ -70,19 +64,12 @@ from ..sheets import (
     PlayersView,
     SpellListView,
 )
+from ..steps import run_steps
 from .base import (
     NodeKind,
     WorkspaceBase,
     _tree_node_with_data,
 )
-
-#: The Import dialog's entries that take an exported record, and the kind
-#: of export each takes.
-_RECORD_IMPORTS: dict[str, str] = {
-    "characters": transfer.CHARACTER,
-    "covenants": transfer.COVENANT,
-    "laboratories": transfer.LABORATORY,
-}
 
 
 class LibraryActions(WorkspaceBase):
@@ -737,274 +724,28 @@ class LibraryActions(WorkspaceBase):
         )
 
     def action_import_data(self) -> None:
-        """More's Import: on the saga, choose what to import (Books or Spells so far);
-        on a covenant's Library tab, import books straight into its library."""
-        if self.selected_kind == NodeKind.SAGA:
-
-            def handle_kind(kind: str | None) -> None:
-                if kind == "books":
-                    self._import_books(None)
-                elif kind == "spells":
-                    self._import_spells()
-                elif kind in _RECORD_IMPORTS:
-                    self._import_record(_RECORD_IMPORTS[kind])
-
-            self.app.push_screen(ImportScreen(), handle_kind)
-        elif (
-            self.selected_covenant is not None
-            and self._active_section() in LIBRARY_SECTIONS
-        ):
-            self._import_books(self.selected_covenant)
-
-    def _import_record(self, kind: str) -> None:
-        """Pick an exported character, covenant or laboratory -- a file of
-        the `kind` chosen in the Import dialog --, preview what
-        importing it adds and which of its links this saga can keep, then
-        add it."""
-        saga = self.saga
-        wanted = transfer.KIND_LABELS[kind].lower()
-
-        def handle_path(path: Path | None) -> None:
-            if path is None:
-                return
-            try:
-                data = transfer.read(path)
-                if data["kind"] != kind:
-                    found = transfer.KIND_LABELS[data["kind"]].lower()
-                    raise ValueError(
-                        f"it holds a {found}, not a {wanted}: choose "
-                        f"{transfer.KIND_LABELS[data['kind']]} in the Import list"
-                    )
-                plan = transfer.plan_import(saga, data)
-            except (OSError, ValueError, KeyError, TypeError) as problem:
-                self.notify(
-                    f"Couldn't import {escape(path.name)}: {escape(str(problem))}",
-                    severity="error",
-                )
+        """More's Import (import_forms): on the saga, choose what to import;
+        on a covenant's Library tab, import books straight into its
+        library."""
+        covenant = None
+        if self.selected_kind != NodeKind.SAGA:
+            covenant = self.selected_covenant
+            if covenant is None or self._active_section() not in LIBRARY_SECTIONS:
                 return
 
-            def handle_confirmed(confirmed: bool | None) -> None:
-                if not confirmed:
-                    return
-                transfer.apply(saga, plan)
-                storage.save_saga(saga)
-                self._rebuild_tree()
-                self.notify(
-                    f"Imported {escape(plan.name)} "
-                    f"({transfer.KIND_LABELS[plan.kind].lower()})."
-                )
-
-            self.app.push_screen(
-                ConfirmScreen(
-                    escape(transfer.preview(plan)),
-                    yes_label="Import",
-                    yes_variant="success",
-                ),
-                handle_confirmed,
-            )
-
-        start = storage.EXPORTS_DIR if storage.EXPORTS_DIR.is_dir() else Path.cwd()
-        self.app.push_screen(
-            CsvFilePickerScreen(f"Import a {wanted}", start, suffix=".json"),
-            handle_path,
-        )
-
-    def _import_books(self, covenant: Covenant | None) -> None:
-        """Pick a CSV file, preview what it holds, then add its books: all
-        owned by `covenant`, or all unassigned when it's None (the file's own
-        owner column isn't used)."""
-        saga = self.saga
-        destination = (
-            f"into {covenant.name}'s library"
-            if covenant is not None
-            else "as unassigned books"
-        )
-
-        def handle_path(path: Path | None) -> None:
-            if path is None:
+        def done(end: object) -> None:
+            if not isinstance(end, list):
                 return
-            try:
-                result = bk.read_books_csv(path)
-            except (OSError, ValueError) as problem:
-                self.notify(
-                    f"Couldn't read {escape(path.name)}: {escape(str(problem))}",
-                    severity="error",
-                )
-                return
-            if not result.books:
-                reason = f" {escape(result.skipped[0])}" if result.skipped else ""
-                self.notify(
-                    f"No books to import from {escape(path.name)}.{reason}",
-                    severity="warning",
-                )
-                return
+            storage.save_saga(self.saga)
+            self._books_changed()
+            self._spells_changed()
+            self._rebuild_tree()
+            if self.selected_kind == NodeKind.SAGA:
+                self.call_later(self._show_saga_detail)  # its Books count
+            if end:
+                self.notify("\n".join(end))
 
-            def handle_confirmed(confirmed: bool | None) -> None:
-                if confirmed:
-                    self._add_imported_books(
-                        result.books, covenant, destination, result.encyclopedias
-                    )
-
-            self.app.push_screen(
-                ConfirmScreen(
-                    bk.import_preview(
-                        result, path.name, destination, {b.name for b in saga.books}
-                    ),
-                    yes_label="Import",
-                    yes_variant="success",
-                ),
-                handle_confirmed,
-            )
-
-        title = (
-            f"Import books into {covenant.name}'s library"
-            if covenant is not None
-            else "Import books (as unassigned books)"
-        )
-        self.app.push_screen(CsvFilePickerScreen(title, Path.cwd()), handle_path)
-
-    def _add_imported_books(
-        self,
-        books: list[Book],
-        covenant: Covenant | None,
-        destination: str,
-        encyclopedias: set[str] | None = None,
-    ) -> None:
-        """Add confirmed imported books, asking about each one whose name is
-        already taken (Duplicate / Duplicate All / Skip / Skip All). Nothing
-        is added until every question is answered."""
-        saga = self.saga
-
-        def finish(accepted: list[Book], skipped: int) -> None:
-            bk.add_imported_books(saga, accepted, covenant, encyclopedias)
-            if accepted:
-                storage.save_saga(saga)
-                self._books_changed()
-                if self.selected_kind == NodeKind.SAGA:
-                    self.call_later(self._show_saga_detail)  # its Books count
-            count = len(accepted)
-            message = f"Imported {count} book{'s' if count != 1 else ''}"
-            message += f" {destination}" if count else ""
-            if skipped:
-                message += f"; skipped {skipped} duplicate{'s' if skipped != 1 else ''}"
-            self.notify(escape(message + "."))
-
-        self._ask_about_duplicates(books, {b.name for b in saga.books}, "book", finish)
-
-    def _ask_about_duplicates(
-        self,
-        items: list[Any],
-        names: set[str],
-        noun: str,
-        finish: Callable[[list[Any], int], None],
-        key: Callable[[str], str] = str,
-    ) -> None:
-        """Go through imported items (anything with a `.name`), asking about
-        each whose name is already taken -- by `names` or earlier in `items`,
-        comparing names by `key` -- (Duplicate / Duplicate All / Skip / Skip
-        All), then call `finish(accepted, skipped)`. Nothing is added until
-        every question is answered."""
-        pending = list(items)
-        accepted: list[Any] = []
-        taken = {key(name) for name in names}
-        state: dict[str, Any] = {"all": None, "skipped": 0}
-
-        def take(item: Any, answer: str) -> None:
-            if answer == "skip":
-                state["skipped"] += 1
-            else:
-                accepted.append(item)
-                taken.add(key(item.name))
-
-        def step() -> None:
-            while pending:
-                item = pending[0]
-                if key(item.name) in taken and state["all"] is None:
-                    remaining = len(bk.duplicate_names(pending[1:], taken, key))
-
-                    def handle_answer(answer: str | None, item=item) -> None:
-                        answer = answer or "skip"
-                        if answer.endswith("_all"):
-                            answer = answer[: -len("_all")]
-                            state["all"] = answer
-                        pending.pop(0)
-                        take(item, answer)
-                        step()
-
-                    self.app.push_screen(
-                        DuplicateBookScreen(item.name, remaining, noun=noun),
-                        handle_answer,
-                    )
-                    return
-                pending.pop(0)
-                take(item, state["all"] if key(item.name) in taken else "duplicate")
-            finish(accepted, state["skipped"])
-
-        step()
-
-    def _import_spells(self) -> None:
-        """The Import Spells helper, then pick a CSV, preview it, and add its
-        spells to the saga's own (asking about duplicate names)."""
-        saga = self.saga
-
-        def handle_path(path: Path | None) -> None:
-            if path is None:
-                return
-            try:
-                result = spl.read_spells_csv(path)
-            except (OSError, ValueError) as problem:
-                self.notify(
-                    f"Couldn't read {escape(path.name)}: {escape(str(problem))}",
-                    severity="error",
-                )
-                return
-            if not result.spells:
-                reason = f" {escape(result.skipped[0])}" if result.skipped else ""
-                self.notify(
-                    f"No spells to import from {escape(path.name)}.{reason}",
-                    severity="warning",
-                )
-                return
-            existing = {sp.name for sp in spl.all_spells(saga)}
-
-            def finish(accepted: list[Spell], skipped: int) -> None:
-                spl.add_imported_spells(saga, accepted)
-                if accepted:
-                    storage.save_saga(saga)
-                    self._spells_changed()
-                count = len(accepted)
-                message = f"Imported {count} spell{'s' if count != 1 else ''}"
-                if skipped:
-                    message += (
-                        f"; skipped {skipped} duplicate{'s' if skipped != 1 else ''}"
-                    )
-                self.notify(escape(message + "."))
-
-            def handle_confirmed(confirmed: bool | None) -> None:
-                if confirmed:
-                    self._ask_about_duplicates(
-                        result.spells, existing, "spell", finish, spl.name_key
-                    )
-
-            self.app.push_screen(
-                ConfirmScreen(
-                    spl.spell_import_preview(result, path.name, existing),
-                    yes_label="Import",
-                    yes_variant="success",
-                ),
-                handle_confirmed,
-            )
-
-        def handle_helper(choice: str | None) -> None:
-            if choice == "choose":
-                self.app.push_screen(
-                    CsvFilePickerScreen(
-                        "Import spells (into the saga's own spells)", Path.cwd()
-                    ),
-                    handle_path,
-                )
-
-        self.app.push_screen(SpellImportHelperScreen(Path.cwd()), handle_helper)
+        run_steps(self.app, import_forms.import_data(self.saga, covenant), done)
 
     def _books_changed(self) -> None:
         """After any book edit: re-render the book list on show, and keep the

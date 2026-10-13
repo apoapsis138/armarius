@@ -5,9 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from .... import paths
+from .... import paths, saga_forms
 from ....form_spec import DialogField
-from ....markup import escape
 from ..fields import FieldsDialog
 from ..pickers import FolderPickerScreen
 
@@ -28,17 +27,7 @@ def _existing(folder: Path) -> Path:
 
 
 def _save_folder_problem(values: dict[str, Any], current: Path) -> str | None:
-    folder = values["folder"]
-    if folder is None:
-        return "Choose a folder."
-    if folder.resolve() == current.resolve():
-        return "That is already the save folder."
-    if not paths.writable(folder):
-        return (
-            f"The app can't save in {escape(str(folder))}: a system setting "
-            "or the folder's permissions stop it. Choose another folder."
-        )
-    return None
+    return saga_forms.save_folder_problem(values["folder"], current)
 
 
 def _save_folder_dialog(current: Path) -> FieldsDialog[tuple[Path, bool]]:

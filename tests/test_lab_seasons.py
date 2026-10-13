@@ -395,6 +395,23 @@ async def test_reset_and_new_spell_clear_the_form_without_closing_it():
         assert app.screen is screen
 
 
+async def test_a_number_that_isnt_one_refuses_the_plan():
+    storage.save_saga(_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await pilot.press("enter")
+        await pilot.pause()
+        _ws, screen = await _open_invent(pilot, app)
+        screen.query_one("#inv-activity", Select).value = lab_seasons.EXTRACT
+        screen.query_one("#inv-days", Input).value = "a week"
+        await pilot.pause()
+        screen.query_one("#btn-save", Button).press()
+        await pilot.pause()
+        assert _text(screen, "#inv-error") == "Days away must be a whole number."
+        assert app.screen is screen
+    assert storage.load_saga("s").season_plans == []
+
+
 async def test_the_invent_spell_screen_offers_parameters_from_virtues():
     saga = _saga()
     saga.character("m").virtues_flaws = [VirtueFlawInstance("vf_spell_timing")]

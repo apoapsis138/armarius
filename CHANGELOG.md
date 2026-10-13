@@ -43,6 +43,27 @@ teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript.
 
+## 2.51.0 — 2026-10-13
+
+- Advance Season is on the desktop, as a button in the top bar. After a
+  season with plans, a Seasons page shows what it did; the saga page
+  opens the seasons kept.
+- Advancing asks the same questions in both: at the year's end with a
+  covenant in deficit, whether to advance anyway; each contested
+  resource secured, and each Discovery taken, is a tick on one form.
+- Help on the desktop: F1 (or Help in the top bar) opens the help pages
+  on the page you're looking at, with the guides and a filter.
+- The desktop's Sagas page has New Saga, Change Save Folder and a Delete
+  on each saga.
+- A laboratory's Lab Texts on the desktop can be filtered by kind, Arts,
+  level and whether the owner can read them.
+- Import chooses its file in the desktop's Open window. In the terminal,
+  Books comes first in the Import list, a duplicate's question offers
+  Skip first, cancelling it imports nothing, and the spell CSV help is a
+  form with a tick to save an example.
+- Invent a Spell refuses a number box that isn't a number, rather than
+  reading it as 0.
+
 ## 2.50.0 — 2026-10-13
 
 - The Creation Worksheet is on the desktop: a new character, covenant or

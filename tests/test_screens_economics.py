@@ -852,7 +852,7 @@ def _winter_saga_with_a_deficit() -> Saga:
     return saga
 
 
-async def test_rolling_the_year_over_in_deficit_offers_to_resolve_it_first():
+async def test_rolling_the_year_over_in_deficit_asks_first():
     storage.save_saga(_winter_saga_with_a_deficit())
 
     app = ArsMagicaManagerApp()
@@ -861,20 +861,16 @@ async def test_rolling_the_year_over_in_deficit_offers_to_resolve_it_first():
         await _advance_from_winter(pilot, app)
         assert isinstance(app.screen, ConfirmScreen)
         message = str(app.screen.query_one("#confirm-message", Static).render())
-        assert message.startswith(
-            "The Covenant is currently in a deficit - do you wish to attempt to "
-            "resolve this?"
-        )
+        assert message.startswith("The year ends with a covenant in deficit:")
         assert "Test Covenant: -36" in message
-        # Yes is the safe answer here: it has the focus.
-        assert app.screen.focused.id == "btn-yes"
-        # Escape keeps the year, like Yes.
+        assert "Balance its books first" in message
+        # Escape (or No) keeps the year, so the books can be balanced.
         await pilot.press("escape")
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         assert storage.load_saga("test_saga").current_season == "Winter"
         await _advance_from_winter(pilot, app)
         assert isinstance(app.screen, ConfirmScreen)
-        await pilot.press("y")
+        await pilot.press("n")
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
     saga = storage.load_saga("test_saga")
@@ -882,14 +878,14 @@ async def test_rolling_the_year_over_in_deficit_offers_to_resolve_it_first():
     assert saga.covenants[0].economics.wealth == 100
 
 
-async def test_answering_no_advances_the_year_regardless():
+async def test_advance_anyway_advances_the_year_regardless():
     storage.save_saga(_winter_saga_with_a_deficit())
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
         await _open_workspace(pilot)
         await _advance_from_winter(pilot, app)
-        await pilot.press("n")
+        await pilot.press("y")
         await wait_until(
             pilot, lambda: storage.load_saga("test_saga").current_season == "Spring"
         )

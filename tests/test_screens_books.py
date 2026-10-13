@@ -19,13 +19,12 @@ from screen_helpers import (
     _show_library_tab,
     _wait_for_screen,
 )
-from support import build_all_tabs, menu, wait_until
+from support import build_all_tabs, choose, menu, wait_until
 from textual.widgets import (
     Button,
     Collapsible,
     DirectoryTree,
     Input,
-    OptionList,
     Select,
     Static,
     TabbedContent,
@@ -38,14 +37,13 @@ from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
     ConfirmScreen,
     CsvFilePickerScreen,
-    DuplicateBookScreen,
     FieldsDialog,
-    ImportScreen,
     RemovalPickerScreen,
     SelectableList,
     WorkspaceScreen,
     _CsvDirectoryTree,
 )
+from ars_magica_manager.tui.screens.steps import ChooseScreen
 from ars_magica_manager.tui.screens.widgets import DetailsPanel, section_stop
 
 
@@ -395,15 +393,14 @@ async def test_saga_import_offers_books_and_spells_and_files_books_unassigned(tm
     async with app.run_test(size=(140, 50)) as pilot:
         await _open_workspace(pilot)
         await menu(pilot, app, "m", "Import")
-        await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
-        options = app.screen.query_one("#import-list", OptionList)
-        kinds = [options.get_option_at_index(i) for i in range(options.option_count)]
-        assert [(o.id, o.disabled) for o in kinds] == [
-            ("characters", False),
-            ("covenants", False),
-            ("laboratories", False),
-            ("books", False),
-            ("spells", False),
+        await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
+        await pilot.pause()
+        assert [c.label for c in app.screen.choices] == [
+            "Books",
+            "Spells",
+            "Characters",
+            "Covenants",
+            "Laboratories",
         ]
         await pilot.press("enter")  # Books is the one highlighted
         await wait_until(pilot, lambda: isinstance(app.screen, CsvFilePickerScreen))
@@ -468,8 +465,7 @@ async def test_file_picker_browses_folders_and_rejects_other_files(tmp_path):
     async with app.run_test(size=(120, 45)) as pilot:
         await _open_workspace(pilot)
         await menu(pilot, app, "m", "Import")
-        await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
-        await pilot.press("enter")
+        await choose(pilot, app, "Books")
         await wait_until(pilot, lambda: isinstance(app.screen, CsvFilePickerScreen))
         picker = app.screen
         for button in picker.query(Button):  # fits a small terminal
@@ -597,8 +593,7 @@ async def _import_with_answers(pilot, app, csv_path: str, answers: list[str]) ->
     await _pick_csv(pilot, app, csv_path)
     await pilot.press("y")
     for answer in answers:
-        await wait_until(pilot, lambda: isinstance(app.screen, DuplicateBookScreen))
-        app.screen.query_one(f"#btn-{answer}", Button).press()
+        await choose(pilot, app, answer)
         await pilot.pause()
     await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
 
@@ -617,18 +612,18 @@ async def test_importing_duplicates_asks_about_each(tmp_path):
     async with app.run_test(size=(140, 50)) as pilot:
         await _open_workspace(pilot)
         await menu(pilot, app, "m", "Import")
-        await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
-        await pilot.press("enter")
+        await choose(pilot, app, "Books")
         await _pick_csv(pilot, app, csv_path)
         await pilot.press("y")
-        await wait_until(pilot, lambda: isinstance(app.screen, DuplicateBookScreen))
-        message = str(app.screen.query_one("#duplicate-message", Static).render())
-        assert "A book named On Flame is already in the saga" in message
-        assert "2 more duplicate(s) after this one." in message
-        assert app.screen.focused.id == "btn-skip"  # the safe answer
-        app.screen.query_one("#btn-duplicate", Button).press()  # add On Flame
+        await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
         await pilot.pause()
-        app.screen.query_one("#btn-skip-all", Button).press()  # skip the rest
+        question = app.screen
+        assert "A book named On Flame is already in the saga" in question.picker_title
+        assert "2 more duplicate(s) after this one." in question.picker_title
+        assert question.choices[0].label == "Skip"  # the safe answer, first
+        await choose(pilot, app, "Duplicate")  # add On Flame
+        await pilot.pause()
+        await choose(pilot, app, "Skip All")  # skip the rest
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         await wait_until(pilot, lambda: len(app.screen.saga.books) == 4)
 
@@ -647,7 +642,7 @@ async def test_duplicate_all_adds_every_duplicate_without_asking_again(tmp_path)
         await _import_with_answers(pilot, app, csv_path, [])  # nothing to ask
         await wait_until(pilot, lambda: len(_book_names(app)) == 5)
         # The same file again: all three are duplicates now.
-        await _import_with_answers(pilot, app, csv_path, ["skip", "duplicate-all"])
+        await _import_with_answers(pilot, app, csv_path, ["Skip", "Duplicate All"])
         await wait_until(pilot, lambda: len(_book_names(app)) == 7)
         assert _book_names(app)[-2:] == ["Notes", "Pilum"]
 

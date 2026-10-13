@@ -678,7 +678,11 @@ async def _advance(pilot, app):
     await pilot.pause()
     app.screen.query_one("#btn-advance", Button).press()
     assert await wait_until(
-        pilot, lambda: type(app.screen).__name__ == "SeasonSummaryScreen"
+        pilot,
+        lambda: (
+            type(app.screen).__name__ == "SeasonSummaryScreen"
+            and bool(app.screen.query("#summary-text"))
+        ),
     )
     return workspace
 

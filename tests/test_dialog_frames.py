@@ -6,7 +6,6 @@ import pytest
 from support import wait_until
 
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
-from ars_magica_manager.tui.screens.forms.importing import DuplicateBookScreen
 from ars_magica_manager.tui.screens.prompts import ConfirmScreen
 
 
@@ -14,9 +13,9 @@ from ars_magica_manager.tui.screens.prompts import ConfirmScreen
     "make",
     [
         lambda: ConfirmScreen("Delete [b]Summa[/]?"),
-        lambda: DuplicateBookScreen("Summa", 2),
+        lambda: ConfirmScreen("Leave without saving?", safe_answer=True),
     ],
-    ids=["confirm", "duplicate book"],
+    ids=["confirm", "safe confirm"],
 )
 async def test_the_dialog_is_framed(make):
     app = ArsMagicaManagerApp()
@@ -37,10 +36,9 @@ async def test_escape_still_gives_the_safe_answer():
         for screen in (
             ConfirmScreen("Delete it?"),
             ConfirmScreen("Leave without saving?", safe_answer=True),
-            DuplicateBookScreen("Summa", 0),
         ):
             app.push_screen(screen, answers.append)
             assert await wait_until(pilot, lambda s=screen: app.screen is s)
             await pilot.press("escape")
             assert await wait_until(pilot, lambda s=screen: app.screen is not s)
-    assert answers == [False, True, "skip"]
+    assert answers == [False, True]

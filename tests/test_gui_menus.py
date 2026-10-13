@@ -131,3 +131,25 @@ def test_a_familiars_page_only_deletes_it(app):
     _entries(window, "More")["Delete Ashwing"].trigger()
     assert storage.load_saga("test_saga").familiars == []
     assert window.crumb_names()[-1] == "Leandro"
+
+
+def test_more_import_reads_a_file_chosen_in_the_open_window(app, tmp_path):
+    window = _window(_sample_saga_with_covenant())
+    csv = tmp_path / "books.csv"
+    csv.write_text(
+        "name,type,ability,quality,level\n"
+        "On the Theory of Magic,Ability Summa,Magic Theory,5,3\n"
+        "Notes on Flame,Ability Summa,Magic Theory,5,3\n",
+        encoding="utf-8",
+    )
+    before = len(storage.load_saga("test_saga").books)
+    asked = answering(window, "Books", str(csv), True, "Skip")
+    _entries(window, "More")["Import"].trigger()
+    assert asked[1].windowTitle() == "Import books (as unassigned books)"
+    assert "Import 2 books from books.csv" in asked[2].question
+    assert asked[3].windowTitle().startswith("A book named On the Theory of Magic")
+    books = storage.load_saga("test_saga").books
+    assert [b.name for b in books[before:]] == ["Notes on Flame"]
+    assert window.told == [
+        ("Import Data", "Imported 1 book as unassigned books; skipped 1 duplicate.")
+    ]

@@ -26,6 +26,7 @@ from .widgets import (
     ClickableCard,
     chapter_title,
     display_name,
+    edit_button,
     scrolling_page,
     serif,
     text,
@@ -112,9 +113,20 @@ def familiar_card(
 
 
 class SagaShelf(QWidget):
-    """Every saga as a card; choosing one opens it."""
+    """Every saga as a card; choosing one opens it. Above them, New Saga
+    and Change Save Folder with the folder the saves are in; each card has
+    a Delete."""
 
-    def __init__(self, sagas: Sequence[Saga], p: Palette, open_saga: Open) -> None:
+    def __init__(
+        self,
+        sagas: Sequence[Saga],
+        p: Palette,
+        open_saga: Open,
+        new_saga: Callable[[], None] = lambda: None,
+        delete_saga: Open = lambda _saga_id: None,
+        change_folder: Callable[[], None] = lambda: None,
+        folder: str = "",
+    ) -> None:
         super().__init__()
         cards = []
         for saga in sagas:
@@ -137,17 +149,44 @@ class SagaShelf(QWidget):
                     2,
                 )
             )
+            delete = edit_button(
+                "Delete",
+                p,
+                lambda _checked=False, saga_id=figures.id: delete_saga(saga_id),
+                "delete",
+            )
+            card.column.addWidget(delete, 0, Qt.AlignmentFlag.AlignRight)
             card.clicked = lambda saga_id=figures.id: open_saga(saga_id)
             cards.append(card)
+        self.new_saga = edit_button("New Saga", p, new_saga, "add")
+        self.change_folder = edit_button("Change Save Folder", p, change_folder, "edit")
+        buttons = QHBoxLayout()
+        buttons.setContentsMargins(0, 0, 0, 0)
+        buttons.addWidget(self.new_saga)
+        buttons.addWidget(self.change_folder)
+        buttons.addStretch(1)
+        actions = QWidget()
+        actions.setLayout(buttons)
         column = QVBoxLayout(self)
         column.setContentsMargins(0, 0, 0, 0)
         column.addWidget(
             scrolling_page(
                 p,
-                page_header("Sagas", "Choose a saga to open", p, "saga"),
+                page_header(
+                    "Sagas",
+                    "Choose a saga to open"
+                    + (f" · the saves are in {folder}" if folder else ""),
+                    p,
+                    "saga",
+                ),
+                actions,
                 card_grid(cards)
                 if cards
-                else text("No sagas yet.", p["dim"], serif(13, italic=True)),
+                else text(
+                    "No sagas yet: New Saga starts one.",
+                    p["dim"],
+                    serif(13, italic=True),
+                ),
             )
         )
 
@@ -162,6 +201,7 @@ class SagaPage(QWidget):
         p: Palette,
         open_covenant: Callable[[str | None], None],
         open_content: Callable[[], None] = lambda: None,
+        open_seasons: Callable[[], None] = lambda: None,
     ) -> None:
         super().__init__()
         cards = []
@@ -188,12 +228,25 @@ class SagaPage(QWidget):
         content.column.addWidget(fact_grid(scs.header_facts(saga), p, 4))
         content.clicked = open_content
         self.content = content
+        kept = len(saga.season_records)
+        past = ClickableCard(p, pad=16)
+        card_title(
+            past,
+            "Seasons",
+            f"It is {saga.current_season} {saga.current_year}; the seasons "
+            "played out, and what each gave",
+            p,
+            symbol_label(artwork.icon("season"), p),
+        )
+        past.column.addWidget(fact_grid([cs.Fact("Recorded", str(kept))], p, 4))
+        past.clicked = open_seasons
+        self.seasons = past
         parts: list[QWidget] = [
             page_header(saga.name, ov.saga_card(saga).subtitle, p, "saga"),
             chapter_title("Covenants", p),
             card_grid(cards, 2),
-            chapter_title("The Saga's Books and Rules", p),
-            card_grid([content], 2),
+            chapter_title("The Saga's Books, Rules and Seasons", p),
+            card_grid([content, past], 2),
         ]
         if saga.description:
             parts.insert(

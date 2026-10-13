@@ -140,6 +140,17 @@ def style_sheet(p: Palette, serif: str) -> str:
         background: {p["background"]};
     }}
     QSplitter::handle {{ background: {p["rule"]}; }}
+    QCheckBox::indicator {{
+        width: 13px;
+        height: 13px;
+        border: 1px solid {p["label"]};
+        border-radius: 2px;
+        background: {p["background"]};
+    }}
+    QCheckBox::indicator:checked {{
+        background: {p["primary"]};
+        border-color: {p["primary"]};
+    }}
     QTreeWidget, QListWidget {{
         background: {p["surface"]};
         border: 1px solid {p["rule"]};

@@ -9,9 +9,8 @@ work that uses it: inventing a spell (from a spell chosen first, or a
 blank design), learning one from a Lab Text, decoding a text, extracting
 vis, fixing an Arcane Connection, a Longevity Ritual, enchanting, binding
 and empowering a familiar, taming, moving the lab and the rest. The
-terminal plans the same work on its own full screen (InventSpellScreen),
-which needs more than one field per row; both build the same SeasonPlan
-and refuse it for the same reasons (rules.activities.problems).
+terminal draws this same form on its own full screen (InventSpellScreen),
+which needs more than one field per row.
 """
 
 from __future__ import annotations
@@ -56,10 +55,14 @@ _STANDARD = {
     "duration": spell_levels.DURATION_STEPS,
     "target": spell_levels.TARGET_STEPS,
 }
-_STANDARD_FIRST = {"range": "Personal", "duration": "Momentary", "target": "Individual"}
+#: A new design's Range, Duration and Target.
+FIRST_STEPS = {"range": "Personal", "duration": "Momentary", "target": "Individual"}
 
 #: The desktop's names for the Planning list's buttons.
 NOUNS = ("New Spell", "Plan", "Clear")
+
+#: The last line of most lab work's results.
+EXPOSURE = "Every lab season also gives 2 xp Exposure in Magic Theory."
 
 NO_OWNER = "Give the laboratory a magus as its owner to plan lab work."
 
@@ -252,7 +255,7 @@ class LabPlanForm:
             ),
         ]
         for kind in KINDS:
-            current = getattr(design, kind) if design else _STANDARD_FIRST[kind]
+            current = getattr(design, kind) if design else FIRST_STEPS[kind]
             values = [v for _, v in self.parameter_options[kind]]
             steps = design.custom_steps.get(kind) if design else None
             other = _other_is(kind)
@@ -313,7 +316,7 @@ class LabPlanForm:
     def _text_fields(self) -> list[DialogField]:
         """The Lab Text to invent from, and the raw text to decode."""
         plan = self.existing
-        undecoded = self._undecoded()
+        undecoded = self.undecoded()
         return [
             DialogField(
                 "lab_text",
@@ -353,8 +356,8 @@ class LabPlanForm:
         """What lab work other than inventing acts on: an Arcane Connection,
         the person a Longevity Ritual is for, a device and its effects."""
         plan = self.existing
-        connections = self._connections()
-        devices = self._devices()
+        connections = self.connections()
+        devices = self.devices()
         effects = self._effects()
         texts = self._effect_texts()
         enchanting = _doing(*es.ACTIVITIES)
@@ -375,7 +378,7 @@ class LabPlanForm:
                 "For",
                 "select",
                 plan.subject_id if plan and plan.subject_id else self.magus.id,
-                options=self._subjects(),
+                options=self.subjects(),
                 show_if=_doing(lab_seasons.LONGEVITY),
             ),
             DialogField(
@@ -443,7 +446,7 @@ class LabPlanForm:
         binding = _doing(fs.BIND)
         taming = _doing(lab_seasons.TAMING)
         moving = _doing(ls.MOVE)
-        powers = self._powers()
+        powers = self.powers()
         found = [
             DialogField(
                 "bind_technique",
@@ -556,7 +559,7 @@ class LabPlanForm:
                 "Vis goes to",
                 "select",
                 (plan.vis_from if plan and plan.vis_from else "laboratory"),
-                options=self._vis_places(),
+                options=self.vis_places(),
                 show_if=_doing(lab_seasons.EXTRACT),
             ),
             DialogField(
@@ -564,7 +567,7 @@ class LabPlanForm:
                 "Vis from",
                 "select",
                 (plan.vis_from if plan and plan.vis_from else "laboratory"),
-                options=self._vis_places(),
+                options=self.vis_places(),
                 show_if=_vis_from_shown,
             ),
         ]
@@ -672,14 +675,14 @@ class LabPlanForm:
 
     # -- the choices --------------------------------------------------------
 
-    def _vis_places(self) -> list[tuple[str, str]]:
+    def vis_places(self) -> list[tuple[str, str]]:
         return [
             ("the laboratory's raw vis", "laboratory"),
             (f"{escape(self.magus.name)}'s raw vis", "character"),
             ("the covenant's vis stores", "covenant"),
         ]
 
-    def _connections(self) -> list[tuple[str, str]]:
+    def connections(self) -> list[tuple[str, str]]:
         """The lab's Arcane Connections not yet fixed (and the plan's own)."""
         mine = self.existing.connection_id if self.existing else None
         return [
@@ -688,7 +691,7 @@ class LabPlanForm:
             if not c.fixed or c.id == mine
         ]
 
-    def _devices(self) -> list[tuple[str, str]]:
+    def devices(self) -> list[tuple[str, str]]:
         """The enchanted devices the magus can work on here."""
         return [
             (f"{escape(d.name)} ({d.type})", d.id)
@@ -734,7 +737,7 @@ class LabPlanForm:
                     )
         return found
 
-    def _undecoded(self) -> list[Book]:
+    def undecoded(self) -> list[Book]:
         """Raw Lab Texts by other magi that the magus can get at but not
         read yet."""
         return [
@@ -746,7 +749,7 @@ class LabPlanForm:
             and not bs.can_use_lab_text(self.magus, b)
         ]
 
-    def _powers(self) -> list[tuple[str, str]]:
+    def powers(self) -> list[tuple[str, str]]:
         familiar = familiar_of(self.saga, self.magus.id)
         if familiar is None:
             return []
@@ -755,7 +758,7 @@ class LabPlanForm:
             for p in familiar.bond_powers
         ]
 
-    def _subjects(self) -> list[tuple[str, str]]:
+    def subjects(self) -> list[tuple[str, str]]:
         """Who a Longevity Ritual can be for: the magus first, then everyone
         else in the saga."""
         others = sorted(
@@ -766,7 +769,7 @@ class LabPlanForm:
             (f"{escape(c.name)} ({c.type})", c.id) for c in others
         ]
 
-    def _work_arts(self, plan: SeasonPlan) -> list[str]:
+    def work_arts(self, plan: SeasonPlan) -> list[str]:
         """The Technique and Form of what `plan` works on, whose vis it may
         spend."""
         if plan.activity == fs.BIND:
@@ -895,7 +898,7 @@ class LabPlanForm:
         )
         if activity in (*es.ACTIVITIES, *fs.ACTIVITIES):
             # The vis is of the work's Technique unless its Form is chosen.
-            arts = self._work_arts(plan)
+            arts = self.work_arts(plan)
             chosen = values.get("effect_vis")
             plan.vis_art = chosen if chosen in arts else (arts[0] if arts else "")
         return plan
@@ -936,7 +939,7 @@ class LabPlanForm:
             parts.append("[b]Lab Total[/] [dim]--[/]")
         elif not work.lab_total.lines:
             parts.append("[b]Lab Total[/] [dim]none needed[/]")
-            parts.append(self._when_text(plan, work))
+            parts.append(" ".join(self.when_lines(plan, work)))
         else:
             terms = []
             for line in work.lab_total.lines:
@@ -948,64 +951,72 @@ class LabPlanForm:
                 f"[b]Lab Total {int(work.lab_total.total)}[/]  "
                 f"[dim]({', '.join(terms)})[/]"
             )
-            parts.append(self._when_text(plan, work))
+            parts.append(" ".join(self.when_lines(plan, work)))
         problems = season_rules.problems(self.magus, plan, self.saga)
         if problems:
             parts.append(f"[$text-error]{escape(problems[0])}[/]")
         return "\n".join(p for p in parts if p)
 
-    def _when_text(self, plan: SeasonPlan, work: lab_seasons.LabWork) -> str:
+    def when_lines(self, plan: SeasonPlan, work: lab_seasons.LabWork) -> list[str]:
+        """When the work is done and what it gives, a sentence a line
+        (markup); EXPOSURE last when the season gives it."""
         season, year = self.season, self.year
         lab_total = int(work.lab_total.total)
-        exposure = "Every lab season also gives 2 xp Exposure in Magic Theory."
         if plan.activity == lab_seasons.EXTRACT:
-            return (
+            return [
                 f"Lab Total {lab_total}: {work.vis_gained} pawn(s) of Vim vis "
-                f"this season, {season} {year}. {exposure}"
-            )
+                f"this season, {season} {year}.",
+                EXPOSURE,
+            ]
         if plan.activity == lab_seasons.FIX_AC:
-            return (
-                f"Fixed this season, {season} {year}, for 1 pawn of Vim vis. {exposure}"
-            )
+            return [
+                f"Fixed this season, {season} {year}, for 1 pawn of Vim vis.",
+                EXPOSURE,
+            ]
         if plan.activity == lab_seasons.LONGEVITY:
             name = work.subject.name if work.subject is not None else "?"
             paid = ", ".join(f"{n} pawn(s) of {a}" for a, n in work.vis_cost.items())
-            return (
+            return [
                 f"This season, {season} {year}: aging rolls -{work.longevity} "
-                f"for {escape(name)}. Vis: {paid}. {exposure}"
-            )
+                f"for {escape(name)}.",
+                f"Vis: {paid}.",
+                EXPOSURE,
+            ]
         if plan.activity == ex.STABILIZE:
-            return (
+            return [
                 f"This season, {season} {year}: stabilizing the Discovery "
                 f"(magnitude {work.research_magnitude}) toward "
-                f"{escape(plan.research)}. The Extraordinary Results chart is "
-                f"rolled when it's played. {exposure}"
-            )
+                f"{escape(plan.research)}.",
+                "The Extraordinary Results chart is rolled when it's played.",
+                EXPOSURE,
+            ]
         if plan.activity == bs.DECODE_TEXT:
-            return f"{escape(seasons.work_text(work, plan))}. {exposure}"
+            return [f"{escape(seasons.work_text(work, plan))}.", EXPOSURE]
         if plan.activity == lab_seasons.LAB_TEXT:
-            return (
+            return [
                 f"Level {work.level}, Lab Total {lab_total}: learned this season, "
                 f"{season} {year}."
-            )
+            ]
         if (
             plan.activity in (*es.ACTIVITIES, *ls.ACTIVITIES)
             or plan.activity == fs.BIND
         ) and plan.activity != es.INSTIL:
-            return (
+            return [
                 f"This season, {season} {year}: "
-                f"{escape(seasons.work_text(work, plan))}. {exposure}"
-            )
+                f"{escape(seasons.work_text(work, plan))}.",
+                EXPOSURE,
+            ]
         for _ in range(lab_seasons.seasons_left(work)):
             season, year = next_season(season, year)
         needed = lab_seasons.seasons_left(work) + 1
         done = "Invented" if plan.activity == lab_seasons.INVENT else "Instilled"
-        return (
+        return [
             f"Level {work.level}, Lab Total {lab_total}: {work.points_gained} "
-            f"points a season, {work.points_before} of {work.level} so far. "
+            f"points a season, {work.points_before} of {work.level} so far.",
             f"{done} {season} {year} (projected: {needed} "
-            f"season{'s' if needed != 1 else ''}). {exposure}"
-        )
+            f"season{'s' if needed != 1 else ''}).",
+            EXPOSURE,
+        ]
 
     # -- the step -----------------------------------------------------------
 

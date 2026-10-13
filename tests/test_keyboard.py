@@ -17,8 +17,8 @@ from ars_magica_manager.tui.screens import (
     VirtueFlawPickerScreen,
     WorkspaceScreen,
 )
-from ars_magica_manager.tui.screens.forms import ImportScreen
 from ars_magica_manager.tui.screens.prompts import MenuScreen
+from ars_magica_manager.tui.screens.steps import ChooseScreen
 from ars_magica_manager.tui.screens.widgets import (
     SheetSection,
     section_of,
@@ -451,7 +451,8 @@ async def test_more_on_the_saga_offers_import_and_set_date():
         await pilot.press("escape")
         assert await wait_until(pilot, lambda: app.screen is workspace)
         await menu(pilot, app, "m", "Import")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
+        assert app.screen.help_id == "import-data"
 
 
 async def test_more_on_a_record_offers_export_and_its_mode():

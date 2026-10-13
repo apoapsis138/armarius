@@ -12,10 +12,6 @@ from ars_magica_manager import help_text as ht
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import WorkspaceScreen
 from ars_magica_manager.tui.screens.creation_worksheet import CreationWorksheetScreen
-from ars_magica_manager.tui.screens.forms import (
-    ImportScreen,
-    SpellImportHelperScreen,
-)
 from ars_magica_manager.tui.screens.help import HelpScreen, page_chunks, whats_new_text
 from ars_magica_manager.tui.screens.invent_spell import InventSpellScreen
 from ars_magica_manager.tui.screens.prompts import AdvanceSeasonScreen
@@ -25,7 +21,7 @@ from ars_magica_manager.tui.screens.workspace.base import _HELP_PAGES
 
 BOOK = ht.load()
 
-#: The process dialogs with a page of their own (help_id); the two forms
+#: The process dialogs with a page of their own (help_id); the forms
 #: built by functions set theirs on the instance.
 DIALOG_PAGES = {
     *(
@@ -35,12 +31,13 @@ DIALOG_PAGES = {
             AdvanceSeasonScreen,
             SeasonSummaryScreen,
             CreationWorksheetScreen,
-            ImportScreen,
-            SpellImportHelperScreen,
         )
     ),
     "plan-season",
     "grog-year",
+    # The core's steps that name their page (commands.Form/Choose.help_id).
+    "import-data",
+    "import-spells",
 }
 
 #: The sheets whose tabs and sections need help, by tree node.

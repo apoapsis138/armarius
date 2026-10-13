@@ -1,6 +1,6 @@
 """A character's forms: Characteristics and Character Info (their fields
 and what saving does are in the core's character_forms.py), and the Arts
-editor. A familiar's are in the core's familiar_forms.py."""
+grid (the core's Edit Arts form, drawn two columns wide). A familiar's are in the core's familiar_forms.py."""
 
 from __future__ import annotations
 
@@ -11,18 +11,16 @@ from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.widgets import Button, Input, Label, Static
 
-from .... import character_forms
-from .... import sheet_text as st
-from ....arts import ART_ABBREVIATIONS, ARTS, FORMS, TECHNIQUES
+from .... import character_forms, form_spec
+from ....arts import FORMS, TECHNIQUES
+from ....commands import Form
+from ....form_spec import DialogField
 from ....markup import escape
 from ....models import (
-    ArtScore,
     Character,
     Saga,
     VirtueFlawInstance,
 )
-from ....rules import scores
-from ....rules import xp as xp_rules
 from ..fields import FieldsDialog, ModalDialog
 
 
@@ -51,14 +49,15 @@ def _character_info_dialog(saga: Saga, character: Character) -> FieldsDialog:
     )
 
 
-class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
-    """Edits all 15 Hermetic Arts at once -- a fixed grid, not an addable
-    list. Two side-by-side columns (Techniques, Forms), mirroring the sheet's
-    own two-column Magical Arts display -- sized to fit every row without a
-    scrollbar (Forms, the taller column, is only 10 rows). Each Art's total
-    XP is typed, with its score and the total xp the next score needs
-    beside it in columns, updated as it changes. Dismisses with a dict of every art's lowercase name ->
-    ArtScore, or None if cancelled.
+class EditArtsScreen(ModalDialog[dict[str, Any] | None]):
+    """The core's Edit Arts form (character_forms.arts_form) drawn as a
+    fixed grid of all 15 Hermetic Arts at once, rather than a FieldsDialog's
+    one field a row. Two side-by-side columns (Techniques, Forms), mirroring
+    the sheet's own two-column Magical Arts display -- sized to fit every
+    row without a scrollbar (Forms, the taller column, is only 10 rows).
+    Each Art's total XP is typed, with its score and the total xp the next
+    score needs beside it in columns, updated as it changes. Dismisses with
+    the form's values (for its apply), or None if cancelled.
     """
 
     DEFAULT_CSS = """
@@ -153,7 +152,7 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
 
     def __init__(
         self,
-        arts: dict[str, ArtScore],
+        form: Form,
         virtues_flaws: Sequence[VirtueFlawInstance] = (),
         *,
         note: str = "",
@@ -161,26 +160,29 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
         """`note`: a line under the subtitle (e.g. how much xp the Creation
         Worksheet gave the Arts)."""
         super().__init__()
-        self.arts = arts
+        self.form = form
+        self.fields = {spec.key: spec for spec in form.fields()}
         self.note = note
         # the owner's Puissant, for each Art's live score
         self._bonus = {
-            art.lower(): scores.art_bonus(virtues_flaws, art)[0] for art in ARTS
+            art.lower(): bonus
+            for art, bonus in character_forms.art_bonuses(virtues_flaws).items()
         }
 
     def compose(self) -> ComposeResult:
         def row(art_name: str):
             key = art_name.lower()
-            score = self.arts.get(key, ArtScore())
-            yield Label(f"{art_name} ({ART_ABBREVIATIONS[art_name]})")
+            spec = self.fields[f"art_{key}"]
+            yield Label(spec.label.removesuffix(" XP"))
             yield Input(
-                value=str(score.xp),
+                value=str(spec.value),
                 type="integer",
                 id=f"input-art-{key}-xp",
                 compact=True,
             )
+            xp = spec.value if isinstance(spec.value, int) else None
             yield Label(
-                self._score_label(key, score.xp),
+                self._score_label(key, xp),
                 id=f"art-score-{key}",
                 classes="art-score",
             )
@@ -228,11 +230,11 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
     def _score_label(self, key: str, xp: int | None) -> str:
         """The Art's score and the total xp the next score needs, "10 (13)
         66 xp" with Puissant, or "?" while the XP isn't a number."""
-        if xp is None or xp < 0:
+        found = character_forms.art_score(xp, self._bonus[key])
+        if found is None:
             return "?"
-        progress = xp_rules.progress(xp, xp_rules.ART_FACTOR)
-        score = st.adjusted_score(progress.score, self._bonus[key])
-        return f"{score:<{self._SCORE_WIDTH}}{progress.next_total} xp"
+        shown, next_total = found
+        return f"{shown:<{self._SCORE_WIDTH}}{next_total} xp"
 
     def on_input_changed(self, event: Input.Changed) -> None:
         """Keep each Art's score and next total beside its XP as the user
@@ -241,25 +243,22 @@ class EditArtsScreen(ModalDialog[dict[str, ArtScore] | None]):
         if not (input_id.startswith("input-art-") and input_id.endswith("-xp")):
             return
         key = input_id.removeprefix("input-art-").removesuffix("-xp")
-        try:
-            xp: int | None = int(event.value.strip())
-        except ValueError:
-            xp = None
+        xp = form_spec.lenient(self.fields[f"art_{key}"], event.value.strip())
         self.query_one(f"#art-score-{key}", Label).update(self._score_label(key, xp))
+
+    def _read(self, spec: DialogField) -> str:
+        key = spec.key.removeprefix("art_")
+        return self.query_one(f"#input-art-{key}-xp", Input).value.strip()
 
     def _try_save(self) -> None:
         error = self.query_one("#arts-error", Static)
-        result: dict[str, ArtScore] = {}
-        for art_name in ARTS:
-            key = art_name.lower()
-            xp_raw = self.query_one(f"#input-art-{key}-xp", Input).value.strip()
-            try:
-                xp = int(xp_raw)
-            except ValueError:
-                error.update(f"{art_name} needs a whole number of XP.")
-                return
-            if xp < 0:
-                error.update(f"{art_name}'s XP can't be negative.")
-                return
-            result[key] = ArtScore(xp=xp)
-        self.dismiss(result)
+        try:
+            values = form_spec.result(self.fields.values(), self._read)
+        except form_spec.FieldError as problem:
+            error.update(escape(str(problem)))
+            return
+        refused = self.form.validate(values) if self.form.validate else None
+        if refused:
+            error.update(escape(refused))
+            return
+        self.dismiss(values)

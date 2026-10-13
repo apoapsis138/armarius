@@ -14,12 +14,12 @@ from screen_helpers import (
     _show_library_tab,
     _wait_for_screen,
 )
-from support import menu, wait_until
+from support import choose, menu, screen_lines, wait_until
 from textual.widgets import (
     Button,
+    Checkbox,
     Collapsible,
     Input,
-    OptionList,
     Select,
     Static,
     TabbedContent,
@@ -31,11 +31,8 @@ from ars_magica_manager.models import Spell
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
     ConfirmScreen,
-    DuplicateBookScreen,
     FieldsDialog,
-    ImportScreen,
     SelectableList,
-    SpellImportHelperScreen,
     SpellListView,
     WorkspaceScreen,
 )
@@ -232,6 +229,15 @@ async def test_the_spell_picker_lists_the_sagas_own_and_invented_spells():
     assert (saved.spell_id, saved.level) == ("inv_x", 5)
 
 
+async def _import_spells(pilot, app) -> FieldsDialog:
+    """More's Import, Spells: the Import Spells form (its CSV help)."""
+    await menu(pilot, app, "m", "Import")
+    await choose(pilot, app, "Spells")
+    assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+    await pilot.pause()
+    return app.screen
+
+
 async def test_import_data_offers_spells_with_a_helper_and_an_example_file(
     tmp_path, monkeypatch
 ):
@@ -241,31 +247,27 @@ async def test_import_data_offers_spells_with_a_helper_and_an_example_file(
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
         await _open_workspace(pilot)
-        await menu(pilot, app, "m", "Import")
-        await wait_until(pilot, lambda: isinstance(app.screen, ImportScreen))
-        options = app.screen.query_one("#import-list", OptionList)
-        options.highlighted = next(
-            i
-            for i in range(options.option_count)
-            if options.get_option_at_index(i).id == "spells"
-        )
-        await pilot.press("enter")
-        await wait_until(pilot, lambda: isinstance(app.screen, SpellImportHelperScreen))
-        helper = str(app.screen.query_one("#spell-import-help", Static).render())
-        assert "technique" in helper and "Gen (or blank)" in helper
+        workspace = app.screen
+        helper = await _import_spells(pilot, app)
+        assert helper.title_text == "Import Spells"
+        assert helper.help_id == "import-spells"
+        shown = "\n".join(screen_lines(app))
+        assert "technique" in shown and "Gen (or blank)" in shown
 
-        app.screen.query_one("#btn-spell-import-example", Button).press()
-        await pilot.pause()
+        helper.query_one("#fld-example", Checkbox).value = True
+        helper.query_one("#btn-save", Button).press()
+        assert await wait_until(pilot, lambda: app.screen is workspace)
         example = tmp_path / "spells_example.csv"
         assert example.read_text(encoding="utf-8") == spl.EXAMPLE_CSV
-        status = str(app.screen.query_one("#spell-import-status", Static).render())
-        assert "Saved spells_example.csv" in status
         # A second save doesn't overwrite the first.
-        app.screen.query_one("#btn-spell-import-example", Button).press()
-        await pilot.pause()
+        helper = await _import_spells(pilot, app)
+        helper.query_one("#fld-example", Checkbox).value = True
+        helper.query_one("#btn-save", Button).press()
+        assert await wait_until(pilot, lambda: app.screen is workspace)
         assert (tmp_path / "spells_example_2.csv").exists()
 
-        app.screen.query_one("#btn-spell-import-choose", Button).press()
+        helper = await _import_spells(pilot, app)
+        helper.query_one("#btn-save", Button).press()
         await _pick_csv(pilot, app, str(example))
         message = str(app.screen.query_one("#confirm-message", Static).render())
         assert "Import 2 spells from spells_example.csv" in message
@@ -287,24 +289,14 @@ async def test_importing_spells_twice_asks_about_duplicates(tmp_path):
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
         await _open_workspace(pilot)
-        for answers in ([], ["skip-all"]):
-            app.screen._import_spells()
-            await wait_until(
-                pilot, lambda: isinstance(app.screen, SpellImportHelperScreen)
-            )
-            await pilot.pause()
-            app.screen.query_one("#btn-spell-import-choose", Button).press()
+        for answers in ([], ["Skip All"]):
+            helper = await _import_spells(pilot, app)
+            helper.query_one("#btn-save", Button).press()
             await _pick_csv(pilot, app, str(csv_path))
             await pilot.press("y")
             for answer in answers:
-                await wait_until(
-                    pilot, lambda: isinstance(app.screen, DuplicateBookScreen)
-                )
-                message = str(
-                    app.screen.query_one("#duplicate-message", Static).render()
-                )
-                assert "A spell named Palm of Warming Flame" in message
-                app.screen.query_one(f"#btn-{answer}", Button).press()
+                picker = await choose(pilot, app, answer)
+                assert "A spell named Palm of Warming Flame" in picker.picker_title
                 await pilot.pause()
             await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
             await pilot.pause()
@@ -327,16 +319,13 @@ async def test_a_spell_import_asks_about_a_name_in_another_case(tmp_path):
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
         await _open_workspace(pilot)
-        app.screen._import_spells()
-        await wait_until(pilot, lambda: isinstance(app.screen, SpellImportHelperScreen))
-        await pilot.pause()
-        app.screen.query_one("#btn-spell-import-choose", Button).press()
+        helper = await _import_spells(pilot, app)
+        helper.query_one("#btn-save", Button).press()
         await _pick_csv(pilot, app, str(csv_path))
         message = str(app.screen.query_one("#confirm-message", Static).render())
         assert "1 has the same name as another spell" in message
         await pilot.press("y")
-        await wait_until(pilot, lambda: isinstance(app.screen, DuplicateBookScreen))
-        app.screen.query_one("#btn-skip", Button).press()
+        await choose(pilot, app, "Skip")
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         assert [s.name for s in app.screen.saga.spells] == ["Palm of Warming Flame"]
 
@@ -347,8 +336,6 @@ async def test_the_spell_import_helper_fits_a_small_terminal():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:
         await _open_workspace(pilot)
-        app.screen._import_spells()
-        await wait_until(pilot, lambda: isinstance(app.screen, SpellImportHelperScreen))
-        await pilot.pause()
-        for button in app.screen.query(Button):
+        helper = await _import_spells(pilot, app)
+        for button in helper.query(Button):
             assert button.region.height > 0 and button.region.bottom <= 45, button.id
