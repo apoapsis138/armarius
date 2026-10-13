@@ -18,10 +18,14 @@ from . import players as pl
 from . import possessions as pos
 from . import sheet_text as st
 from . import spells as spl
-from .arts import ART_ABBREVIATIONS, ART_DESCRIPTIONS
+from .arts import ART_ABBREVIATIONS, ART_DESCRIPTIONS, FORMS, TECHNIQUES
+from .covenants import home_aura
 from .markup import aligned, escape, inherited, problem
-from .models import ArtScore, Character, Saga, character_age
-from .rules import scores
+from .models import ABILITY_CATEGORIES, ArtScore, Character, Saga, character_age
+from .rules import aging, casting, derived, scores, warping
+from .rules import creation_virtues as cv
+from .rules import xp as xp_rules
+from .rules.breakdown import Breakdown
 
 
 def info_left_text(saga: Saga, character: Character) -> str:
@@ -169,27 +173,90 @@ def hermetic_background_right_text(saga: Saga, character: Character) -> str:
     )
 
 
+def _fraction(xp: int, level_xp: int, next_xp: int) -> float:
+    """How far `xp` has come from the current score's total to the next's."""
+    return (xp - level_xp) / max(next_xp - level_xp, 1)
+
+
 @dataclass(frozen=True)
 class ArtRow:
     """One Art's line on the sheet: its score as shown (with any bonus, as
-    "10 (13)") and its experience."""
+    "10 (13)"), its experience, and the totals the score began at
+    (`level_xp`) and the next score needs (`next_xp`)."""
 
     art: str
     abbreviation: str
     score: str
     xp: int
+    level_xp: int = 0
+    next_xp: int = 1
+
+    @property
+    def fraction(self) -> float:
+        """The way to the next score, from 0 to 1."""
+        return _fraction(self.xp, self.level_xp, self.next_xp)
 
 
 def art_row(character: Character, art: str) -> ArtRow:
     score = character.arts.get(art.lower(), ArtScore())
     bonus, _ = scores.art_bonus(character.virtues_flaws, art)
+    progress = score.progress
     return ArtRow(
-        art, ART_ABBREVIATIONS[art], st.adjusted_score(score.level, bonus), score.xp
+        art,
+        ART_ABBREVIATIONS[art],
+        st.adjusted_score(score.level, bonus),
+        score.xp,
+        xp_rules.xp_for_score(progress.score, xp_rules.ART_FACTOR),
+        progress.next_total,
     )
 
 
 def art_rows(character: Character, arts: Sequence[str]) -> list[ArtRow]:
     return [art_row(character, art) for art in arts]
+
+
+@dataclass(frozen=True)
+class AbilityRow:
+    """One Ability as a table row: `index` into the character's Abilities,
+    its score as shown (with any bonus) and its experience, as ArtRow."""
+
+    index: int
+    category: str
+    name: str
+    specialty: str
+    score: str
+    xp: int
+    level_xp: int
+    next_xp: int
+
+    @property
+    def fraction(self) -> float:
+        return _fraction(self.xp, self.level_xp, self.next_xp)
+
+
+def ability_table(character: Character) -> list[AbilityRow]:
+    """The character's Abilities, grouped by category in the book's order
+    (ABILITY_CATEGORIES), each kept in the order it was added."""
+    rows = []
+    for category in ABILITY_CATEGORIES:
+        for index, ability in enumerate(character.abilities):
+            if ability.category != category:
+                continue
+            bonus, _ = scores.ability_bonus(character.virtues_flaws, ability.name)
+            progress = ability.progress
+            rows.append(
+                AbilityRow(
+                    index,
+                    category,
+                    ability.name,
+                    ability.specialty or "",
+                    st.adjusted_score(progress.score, bonus),
+                    progress.total,
+                    xp_rules.xp_for_score(progress.score, xp_rules.ABILITY_FACTOR),
+                    progress.next_total,
+                )
+            )
+    return rows
 
 
 def art_info_text(character: Character, art: str) -> str:
@@ -260,3 +327,372 @@ def inventory_item_text(character: Character, index: int) -> str:
     if item.kind == "weapon":
         text += "\n\n" + st.combat_text(character, item)
     return text
+
+
+def subtitle(saga: Saga, character: Character) -> str:
+    """The line under the name: what the character is, where and when."""
+    house = house_name(character)
+    kind = f"Magus of House {house}" if house else character.type.title()
+    covenant = saga.covenant(character.covenant_id)
+    parts = [kind, covenant.name if covenant else "no covenant"]
+    if character.background.setting:
+        parts.append(character.background.setting)
+    parts.append(f"{saga.current_season} {saga.current_year}")
+    return "  ·  ".join(parts)
+
+
+#: A status's tone, which a front-end draws in its own colour.
+GOOD, WARNING, BAD = "success", "warning", "error"
+
+
+def condition(character: Character) -> list[tuple[str, str]]:
+    """The character's Fatigue and wounds in a few words, each with its
+    tone: ("Fresh", GOOD), ("2 Light Wounds", WARNING)..."""
+    level = character.fatigue_level
+    chips = [(level.title(), GOOD if level == "fresh" else WARNING)]
+    w = character.wounds
+    counts = [
+        (w.light, "Light", WARNING),
+        (w.medium, "Medium", WARNING),
+        (w.heavy, "Heavy", BAD),
+    ]
+    hurt = [
+        (f"{n} {name} Wound{'s' if n > 1 else ''}", tone)
+        for n, name, tone in counts
+        if n
+    ]
+    if w.incapacitated:
+        hurt.append(("Incapacitated", BAD))
+    if w.dead:
+        hurt.append(("Dead", BAD))
+    penalty = derived.wound_penalty(w, character.virtues_flaws)
+    if hurt and penalty:
+        hurt.append((f"{penalty:+d} to rolls", BAD))
+    return chips + (hurt or [("Unhurt", GOOD)])
+
+
+@dataclass(frozen=True)
+class SpellRow:
+    """A known spell as a table row; `index` is into spells_known. A spell
+    the saga can't find has only its id as the name."""
+
+    index: int
+    name: str
+    technique: str
+    form: str
+    arts: str
+    level: int | None
+    range: str
+    duration: str
+    target: str
+    ritual: bool
+    mastery: int
+
+
+def spell_table(saga: Saga, character: Character) -> list[SpellRow]:
+    rows = []
+    for index, known in enumerate(character.spells_known):
+        spell = spl.find_spell(saga, known.spell_id)
+        if spell is None:
+            rows.append(
+                SpellRow(
+                    index,
+                    known.spell_id,
+                    "",
+                    "",
+                    "?",
+                    None,
+                    "",
+                    "",
+                    "",
+                    False,
+                    known.mastery_score,
+                )
+            )
+            continue
+        rows.append(
+            SpellRow(
+                index,
+                spell.name,
+                spell.technique,
+                spell.form,
+                spl.shorthand(spell).rsplit(" ", 1)[0],
+                spell.level,
+                spell.range,
+                spell.duration,
+                spell.target,
+                spell.ritual,
+                known.mastery_score,
+            )
+        )
+    return rows
+
+
+@dataclass(frozen=True)
+class VirtueFlawCard:
+    """A Virtue or Flaw as a card: its name as taken, tier ("Free" for a
+    magus's House Virtue too), category and one-line summary."""
+
+    index: int
+    name: str
+    tier: str
+    category: str
+    summary: str
+
+
+def virtue_flaw_cards(character: Character, side: str) -> list[VirtueFlawCard]:
+    """The character's Virtues or Flaws (`side`), Qualities and
+    Inferiorities among them, in the order taken."""
+    vf_catalog = catalog.load_virtue_flaw_catalog_by_id()
+    free = cv.house_benefit(character).free_indices
+    cards = []
+    for index, vf in enumerate(character.virtues_flaws):
+        definition = vf_catalog.get(vf.vf_id)
+        if definition is None or definition.side != side:
+            continue
+        cards.append(
+            VirtueFlawCard(
+                index,
+                catalog.describe_virtue_flaw(vf, vf_catalog),
+                "Free" if index in free else definition.tier,
+                definition.category_label,
+                definition.summary,
+            )
+        )
+    return cards
+
+
+def virtue_flaw_points(character: Character, side: str) -> float:
+    return st.vf_points(
+        character.virtues_flaws, side, cv.house_benefit(character).free_indices
+    )
+
+
+def casting_grid(saga: Saga, character: Character) -> dict[tuple[str, str], Breakdown]:
+    """Every Technique and Form's Casting Score, with its terms, in the
+    magus's home aura."""
+    aura, realm = home_aura(saga, character)
+    return {
+        (technique, form): casting.casting_score(
+            character, technique, form, aura=aura, aura_realm=realm
+        )
+        for technique in TECHNIQUES
+        for form in FORMS
+    }
+
+
+def casting_cell_text(score: Breakdown) -> str:
+    """One Casting Score's terms and what it casts."""
+    lines = []
+    for line in score.lines:
+        if line.amount is not None:
+            lines.append(f"[$label]{escape(line.label)}[/] {line.amount:+g}")
+        elif line.multiplier is not None:
+            lines.append(f"[$label]{escape(line.label)}[/] x{line.multiplier:g}")
+    total = int(score.total)
+    return "\n".join(
+        [
+            *lines,
+            "",
+            f"[b]Casting Score {total}[/]",
+            "",
+            "Formulaic: score + die >= level casts it; up to 10 short costs a "
+            "Fatigue level.",
+            f"Spontaneous: level {total // 5} without Fatigue, "
+            "(score + stress die) / 2 with it.",
+        ]
+    )
+
+
+# The figures a graphical sheet draws: plain values rather than markup,
+# so a front-end can give each its own type and emphasis.
+
+
+@dataclass(frozen=True)
+class Fact:
+    """One labelled value; `value` is plain text, "" when not set."""
+
+    label: str
+    value: str
+
+    @property
+    def missing(self) -> bool:
+        return not self.value
+
+
+def _fact(label: str, value: object) -> Fact:
+    return Fact(label, "" if value is None else str(value))
+
+
+def glance_facts(saga: Saga, character: Character) -> list[Fact]:
+    """Who the character is at a glance: age, covenant, laboratory, type
+    and Size, and True Faith when it shows."""
+    b = character.background
+    covenant = saga.covenant(character.covenant_id)
+    facts = [
+        _fact("Age", character_age(b.year_born, saga.current_year)),
+        _fact("Covenant", covenant.name if covenant else None),
+    ]
+    if character.type == "magus":
+        lab = saga.laboratory(character.assigned_lab_id)
+        facts.append(_fact("Laboratory", lab.name if lab else None))
+    facts += [
+        _fact("Type", character.type.title()),
+        _fact("Size", st.size_text(character)),
+    ]
+    if faith.shows_faith(character):
+        facts.append(_fact("True Faith", st.faith_score_text(character)))
+    return facts
+
+
+def hermetic_facts(character: Character) -> list[Fact]:
+    """A magus's House and lineage, as Hermetic Background lists them."""
+    h = character.hermetic
+    return [
+        _fact("House", house_name(character)),
+        _fact("Domus Magna", h.domus_magna),
+        _fact("Primus", h.primus),
+        _fact("Parens", h.parens),
+        _fact("Covenant of Apprenticeship", h.covenant_of_apprenticeship),
+        _fact("Age of Apprenticeship", h.age_of_apprenticeship),
+    ]
+
+
+def biographical_facts(saga: Saga, character: Character) -> list[Fact]:
+    """Biographical Detail's short fields; the physical description and
+    Biography are prose and drawn apart."""
+    b, d = character.background, character.description
+    facts = [_fact("Player", b.player)]
+    if saga.players:  # a hosted saga's sign-in
+        player = pl.player_by_id(saga, b.player_id)
+        facts.append(_fact("Played by", player.name if player else None))
+    return [
+        *facts,
+        _fact("Birth Name", b.birth_name),
+        _fact("Year Born", b.year_born),
+        _fact("Race/Nationality", b.race_nationality),
+        _fact("Place of Origin", b.place_of_origin),
+        _fact("Religion", b.religion),
+        _fact("Title/Profession", b.title_profession),
+        _fact("Height", d.height),
+        _fact("Weight", d.weight),
+        _fact("Hair", d.hair),
+        _fact("Eyes", d.eyes),
+        _fact("Handedness", d.handedness.title()),
+    ]
+
+
+def aging_facts(character: Character) -> list[Fact]:
+    """The aging roll's figures, once there are any."""
+    a = character.aging
+    facts = []
+    if a.apparent_age is not None:
+        facts.append(_fact("Apparent Age", a.apparent_age))
+    for name, points in a.aging_points.items():
+        if points:
+            facts.append(_fact(f"{name.title()} Aging Points", points))
+    if a.longevity_modifier:
+        facts.append(_fact("Longevity Ritual", f"-{a.longevity_modifier} to aging"))
+    if a.recovering:
+        facts.append(_fact("Recovering", a.recovering))
+    return facts
+
+
+@dataclass(frozen=True)
+class Dial:
+    """A score that rises as points gather: `points` of the `span` the next
+    score needs (span 0 at the top score). `top` is the score that ends
+    the character's story (Warping 10, Decrepitude 5)."""
+
+    score: int
+    points: int
+    span: int
+    top: int
+
+    @property
+    def fraction(self) -> float:
+        """The way to the next score, from 0 to 1."""
+        return min(self.points / self.span, 1.0) if self.span else 1.0
+
+
+def warping_dial(character: Character) -> Dial:
+    a = character.aging
+    score = a.warping_score
+    span = warping.points_for(score + 1) - warping.points_for(score)
+    return Dial(score, a.warping_points, span, WARPING_TOP)
+
+
+def decrepitude_dial(character: Character) -> Dial:
+    a = character.aging
+    score = max(0, min(a.decrepitude, DECREPITUDE_TOP))
+    base = aging.points_for_score(score)
+    span = 0 if score >= DECREPITUDE_TOP else aging.points_for_score(score + 1) - base
+    return Dial(score, max(0, a.decrepitude_points - base), span, DECREPITUDE_TOP)
+
+
+#: Warping 10 is Final Twilight; Decrepitude 5, death from old age.
+WARPING_TOP, DECREPITUDE_TOP = 10, 5
+
+
+@dataclass(frozen=True)
+class WoundBand:
+    """One column of the Damage Table: the wound, the damage it takes
+    (`high` None for Dead), how many the character has and each one's
+    penalty (None where a wound ends acting rather than penalising it)."""
+
+    name: str
+    low: int
+    high: int | None
+    count: int
+    penalty: int | None
+
+
+def wound_track(character: Character) -> list[WoundBand]:
+    """The Damage Table for the character's Size, with their wounds."""
+    w = character.wounds
+    size = int(derived.size(character).total)
+    counts = {
+        "Light": w.light,
+        "Medium": w.medium,
+        "Heavy": w.heavy,
+        "Incapacitating": int(w.incapacitated),
+        "Dead": int(w.dead),
+    }
+    return [
+        WoundBand(
+            name,
+            low,
+            high,
+            counts[name],
+            derived.WOUND_PENALTIES.get(name.lower()),
+        )
+        for name, low, high in derived.wound_ranges(size)
+    ]
+
+
+def fatigue_track(character: Character) -> list[tuple[str, int, bool]]:
+    """Each Fatigue level as (name, penalty, whether it is the current
+    one), Fresh first."""
+    return [
+        (
+            level.title(),
+            derived.fatigue_penalty(level, character.virtues_flaws),
+            level == character.fatigue_level,
+        )
+        for level in derived.FATIGUE_PENALTIES
+    ]
+
+
+def health_facts(character: Character) -> list[Fact]:
+    """Soak, Encumbrance and the penalties wounds and Fatigue give."""
+    soak = derived.soak(character)
+    load = derived.carried_load(character.inventory)
+    encumbrance = derived.encumbrance(load, character.characteristics.strength)
+    wounds = derived.wound_penalty(character.wounds, character.virtues_flaws)
+    fatigue = derived.fatigue_penalty(character.fatigue_level, character.virtues_flaws)
+    return [
+        _fact("Soak", int(soak.total)),
+        _fact("Encumbrance", encumbrance),
+        _fact("Wound Penalty", f"{wounds:+d}"),
+        _fact("Total Penalty", f"{wounds + fatigue:+d}"),
+    ]

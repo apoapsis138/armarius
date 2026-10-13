@@ -1,5 +1,11 @@
-"""The desktop main window: a saga chooser, the saga's covenants and
-characters as a tree, and the chosen character's sheet beside it.
+"""The desktop main window: one page at a time, the way a book is read,
+with a trail across the top back to the pages above it (Sagas, the saga,
+the covenant, the character).
+
+The pages are the shelf of sagas, a saga's covenants, a covenant (its
+people, laboratories and seasons) and a character's sheet. Where the
+reader is is a list of places, the trail; the page shown is built from
+the last one, so changing the theme just builds it again.
 
 Read-only for now: it loads sagas and never saves them, so it is safe to
 open beside the terminal app.
@@ -7,18 +13,15 @@ open beside the terminal app.
 
 from __future__ import annotations
 
-from PySide6.QtCore import Qt
+from dataclasses import dataclass
+
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QApplication,
-    QComboBox,
     QHBoxLayout,
     QLabel,
     QMainWindow,
     QPushButton,
-    QSplitter,
-    QTreeWidget,
-    QTreeWidgetItem,
     QVBoxLayout,
     QWidget,
 )
@@ -27,10 +30,19 @@ from .. import storage
 from ..models import Saga
 from . import pictures
 from .character_sheet import CharacterSheet
+from .pages import CovenantPage, SagaPage, SagaShelf
 from .themes import PALETTES, Palette, style_sheet
 
-#: The tree's role holding a character's id.
-CHARACTER_ID = Qt.ItemDataRole.UserRole
+SHELF, SAGA, COVENANT, CHARACTER = "shelf", "saga", "covenant", "character"
+
+
+@dataclass(frozen=True)
+class Place:
+    """A page the reader has opened: what kind, and whose (a covenant's or
+    a character's id; None for the saga's unassigned characters)."""
+
+    kind: str
+    id: str | None = None
 
 
 class MainWindow(QMainWindow):
@@ -39,120 +51,155 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Ars Magica Manager")
         self.setWindowIcon(pictures.app_icon())
         self.palette_index = 0
+        self.saga_ids = storage.list_sagas() if saga_ids is None else saga_ids
         self.saga: Saga | None = None
-        self.character_id: str | None = None
+        self.trail: list[Place] = []
 
-        self.sagas = QComboBox()
-        self.sagas.addItems(storage.list_sagas() if saga_ids is None else saga_ids)
-        self.sagas.currentTextChanged.connect(self.open_saga)
+        self.crumbs = QHBoxLayout()
+        self.crumbs.setSpacing(2)
         self.theme = QPushButton()
         self.theme.setFlat(True)
         self.theme.clicked.connect(self.toggle_theme)
-
         bar = QHBoxLayout()
-        bar.addWidget(QLabel("Saga"))
-        bar.addWidget(self.sagas, 1)
-        bar.addStretch(2)
+        bar.setContentsMargins(12, 4, 8, 0)
+        bar.addLayout(self.crumbs)
+        bar.addStretch(1)
         bar.addWidget(self.theme)
 
-        self.tree = QTreeWidget()
-        self.tree.setHeaderHidden(True)
-        self.tree.itemSelectionChanged.connect(self._tree_chosen)
         self.sheet_area = QWidget()
         self.sheet_layout = QVBoxLayout(self.sheet_area)
         self.sheet_layout.setContentsMargins(0, 0, 0, 0)
 
-        splitter = QSplitter()
-        splitter.addWidget(self.tree)
-        splitter.addWidget(self.sheet_area)
-        splitter.setStretchFactor(1, 1)
-        splitter.setSizes([240, 1000])
-
         body = QWidget()
         layout = QVBoxLayout(body)
+        layout.setContentsMargins(0, 0, 0, 0)
         layout.addLayout(bar)
-        layout.addWidget(splitter, 1)
+        layout.addWidget(self.sheet_area, 1)
         self.setCentralWidget(body)
 
         self._apply_theme()
-        if self.sagas.count():
-            self.open_saga(self.sagas.currentText())
+        if len(self.saga_ids) == 1:
+            self.open_saga(self.saga_ids[0])
+        else:
+            self.go([Place(SHELF)])
 
     @property
     def palette_(self) -> Palette:
         return PALETTES[self.palette_index]
 
+    @property
+    def character_id(self) -> str | None:
+        place = self.trail[-1] if self.trail else None
+        return place.id if place and place.kind == CHARACTER else None
+
+    # Where to go
+
     def open_saga(self, saga_id: str) -> None:
         self.load(storage.load_saga(saga_id))
 
     def load(self, saga: Saga) -> None:
-        """Show `saga`: its covenants with their characters, then anyone
-        unassigned; the first character's sheet is opened."""
+        """Open `saga` at its page of covenants."""
         self.saga = saga
-        self.tree.clear()
-        groups: list[tuple[str, str | None]] = [(c.name, c.id) for c in saga.covenants]
-        if any(ch.covenant_id is None for ch in saga.characters):
-            groups.append(("Unassigned", None))
-        first: QTreeWidgetItem | None = None
-        for name, covenant_id in groups:
-            group = QTreeWidgetItem(self.tree, [name])
-            group.setFlags(Qt.ItemFlag.ItemIsEnabled)
-            group.setIcon(0, pictures.icon("covenant", self.palette_["label"]))
-            for ch in saga.characters:
-                if ch.covenant_id == covenant_id:
-                    item = QTreeWidgetItem(group, [ch.name])
-                    item.setData(0, CHARACTER_ID, ch.id)
-                    first = first or item
-        self.tree.expandAll()
-        if first is not None:
-            self.tree.setCurrentItem(first)
-        else:
-            self._show(None)
+        self.go([Place(SHELF), Place(SAGA)])
+
+    def open_covenant(self, covenant_id: str | None) -> None:
+        self.go([*self._up_to(SAGA), Place(COVENANT, covenant_id)])
 
     def show_character(self, character_id: str) -> None:
-        for item in self._character_items():
-            if item.data(0, CHARACTER_ID) == character_id:
-                self.tree.setCurrentItem(item)
+        """Open a character's sheet, below their covenant."""
+        character = self.saga.character(character_id) if self.saga else None
+        if character is None:
+            return
+        self.go(
+            [
+                Place(SHELF),
+                Place(SAGA),
+                Place(COVENANT, character.covenant_id),
+                Place(CHARACTER, character_id),
+            ]
+        )
 
-    def _character_items(self) -> list[QTreeWidgetItem]:
-        items = []
-        for i in range(self.tree.topLevelItemCount()):
-            group = self.tree.topLevelItem(i)
-            if group is not None:
-                items += [group.child(j) for j in range(group.childCount())]
-        return items
+    def _up_to(self, kind: str) -> list[Place]:
+        kinds = [place.kind for place in self.trail]
+        return self.trail[: kinds.index(kind) + 1] if kind in kinds else [Place(kind)]
 
-    def _tree_chosen(self) -> None:
-        chosen = self.tree.selectedItems()
-        if chosen and chosen[0].data(0, CHARACTER_ID):
-            self._show(chosen[0].data(0, CHARACTER_ID))
+    def go(self, trail: list[Place]) -> None:
+        """Show the last page of `trail`, with the trail above it."""
+        self.trail = trail
+        self._show(self._build(trail[-1]))
+        self._draw_trail()
 
-    def _show(self, character_id: str | None) -> None:
-        self.character_id = character_id
+    # Drawing
+
+    def _build(self, place: Place) -> QWidget:
+        p, saga = self.palette_, self.saga
+        if place.kind == SHELF or saga is None:
+            sagas = [storage.load_saga(saga_id) for saga_id in self.saga_ids]
+            return SagaShelf(sagas, p, self.open_saga)
+        if place.kind == SAGA:
+            return SagaPage(saga, p, self.open_covenant)
+        if place.kind == COVENANT:
+            return CovenantPage(saga, place.id, p, self.show_character)
+        character = saga.character(place.id)
+        if character is None:
+            return QLabel("No character chosen.")
+        return CharacterSheet(saga, character, p)
+
+    def _show(self, page: QWidget) -> None:
         layout = self.sheet_layout
         while layout.count():
             item = layout.takeAt(0)
             old = item.widget() if item is not None else None
             if old is not None:
+                old.hide()
                 old.deleteLater()
-        character = (
-            next((c for c in self.saga.characters if c.id == character_id), None)
-            if self.saga
-            else None
-        )
-        if character is None or self.saga is None:
-            layout.addWidget(QLabel("No character chosen."))
-        else:
-            layout.addWidget(CharacterSheet(self.saga, character, self.palette_))
+        layout.addWidget(page)
+
+    def _name(self, place: Place) -> str:
+        saga = self.saga
+        if place.kind == SHELF:
+            return "Sagas"
+        if saga is None:
+            return ""
+        if place.kind == SAGA:
+            return saga.name
+        if place.kind == COVENANT:
+            covenant = saga.covenant(place.id)
+            return covenant.name if covenant else "Unassigned"
+        character = saga.character(place.id)
+        return character.name if character else ""
+
+    def _draw_trail(self) -> None:
+        while self.crumbs.count():
+            item = self.crumbs.takeAt(0)
+            old = item.widget() if item is not None else None
+            if old is not None:
+                old.hide()
+                old.deleteLater()
+        label = self.palette_["label"]
+        for i, place in enumerate(self.trail):
+            if i:
+                arrow = QLabel("›")
+                arrow.setStyleSheet(f"color:{label}; background:transparent")
+                self.crumbs.addWidget(arrow)
+            crumb = QPushButton(self._name(place))
+            crumb.setObjectName("crumb")
+            crumb.setFlat(True)
+            last = i == len(self.trail) - 1
+            crumb.setEnabled(not last)
+            crumb.clicked.connect(
+                lambda _checked=False, upto=i: self.go(self.trail[: upto + 1])
+            )
+            self.crumbs.addWidget(crumb)
+
+    def crumb_names(self) -> list[str]:
+        return [self._name(place) for place in self.trail]
 
     def toggle_theme(self) -> None:
         self.palette_index = (self.palette_index + 1) % len(PALETTES)
         self._apply_theme()
-        if self.saga is not None:  # the sheet's colours are drawn in
-            character_id = self.character_id
-            self.load(self.saga)
-            if character_id:
-                self.show_character(character_id)
+        if self.trail:  # the pages' colours are drawn in
+            self.go(self.trail)
 
     def _apply_theme(self) -> None:
         p = self.palette_

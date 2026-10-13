@@ -41,6 +41,28 @@ copy scribes worked from; a *glossa* is a note in the margin; a *summa*
 teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide.
 
+## 2.45.0 — 2026-10-13
+
+- The desktop Character sheet is laid out as a codex: a chapter list on the
+  left, the chapter in the middle, and a panel on the right that shows
+  whatever you click (an Art, a Virtue, a spell, a casting score). The
+  header shows the House symbol, the name with a red initial,
+  Confidence, and Warping and Decrepitude as dials: the arc and its notches
+  fill with the points toward the next score, and wind up as the sheet
+  opens. Characteristics are cards; the Arts are two tables, Techniques
+  beside Forms, each with its score and a bar of experience toward the next,
+  like the Abilities; every casting score is a coloured grid; the known
+  spells sort and filter; Virtues and Flaws are cards.
+- The Description chapter sets its facts in the book's type with unset
+  fields dimmed, the Biography opens with a red initial, Personality Traits
+  and Reputations are bars, wounds are a row of boxes and Fatigue a ladder.
+- No more tree or saga drop-down: a trail across the top (Sagas, the saga,
+  the covenant, the character) leads back up. A saga shows its covenants
+  as cards; a covenant shows its people (Magi, Companions, Grogs) and
+  laboratories as cards, and a timeline of everyone's seasons, coloured by
+  kind of activity, with planned seasons dashed. A character's Diary opens
+  with the same seasons as a calendar, a row per year.
+
 ## 2.44.0 — 2026-10-12
 
 - A first look at the desktop version: `run-gui.bat` (or `uv run --group gui

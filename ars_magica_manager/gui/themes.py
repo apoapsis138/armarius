@@ -41,6 +41,14 @@ SCRIPTORUM = Palette(
         "text-success": "#4A6741",
         "text-accent": "#6B4E06",
         "selection": "#E3D2B1",
+        # A season's kind on the timeline, in manuscript pigments.
+        "season-lab": "#A23B2A",
+        "season-study": "#2F5D8A",
+        "season-writing": "#4A7A5C",
+        "season-work": "#A87A22",
+        "season-adventure": "#6E4A7E",
+        "season-rest": "#8A7F72",
+        "season-other": "#A39580",
     },
 )
 
@@ -63,6 +71,13 @@ SCRIPTORUM_DARK = Palette(
         "text-success": "#6FA287",
         "text-accent": "#D4AF37",
         "selection": "#2B2612",
+        "season-lab": "#C8644F",
+        "season-study": "#5F8CC4",
+        "season-writing": "#62A07A",
+        "season-work": "#C99A3E",
+        "season-adventure": "#9A7AB6",
+        "season-rest": "#7E7A70",
+        "season-other": "#5F5B52",
     },
 )
 
@@ -126,6 +141,16 @@ def style_sheet(p: Palette, serif: str) -> str:
         border-radius: 4px;
     }}
     QFrame#details QLabel {{ background: transparent; }}
+    QPushButton#crumb {{
+        font-family: "{serif}";
+        font-size: 12.5pt;
+        color: {p["label"]};
+        background: transparent;
+        border: none;
+        padding: 2px 4px;
+    }}
+    QPushButton#crumb:hover {{ color: {p["heading"]}; }}
+    QPushButton#crumb:disabled {{ color: {p["foreground"]}; }}
     QComboBox {{
         background: {p["surface"]};
         border: 1px solid {p["rule"]};
@@ -134,5 +159,8 @@ def style_sheet(p: Palette, serif: str) -> str:
     QScrollArea {{ border: none; }}
     QScrollBar:vertical {{ background: {p["background"]}; width: 10px; }}
     QScrollBar::handle:vertical {{ background: {p["rule"]}; min-height: 24px; }}
-    QScrollBar::add-line, QScrollBar::sub-line {{ height: 0; }}
+    QScrollBar:horizontal {{ background: {p["background"]}; height: 10px; }}
+    QScrollBar::handle:horizontal {{ background: {p["rule"]}; min-width: 24px; }}
+    QScrollBar::add-line, QScrollBar::sub-line {{ height: 0; width: 0; }}
+    QTableCornerButton::section {{ background: {p["surface"]}; border: none; }}
     """
