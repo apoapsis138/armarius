@@ -34,7 +34,13 @@ from ..arts import ART_ABBREVIATIONS
 from ..commands import SectionOps
 from ..models import Laboratory, Saga
 from . import pictures
-from .character_sheet import columns_text, row_list, section, side_by_side
+from .character_sheet import (
+    columns_text,
+    device_section,
+    row_list,
+    section,
+    side_by_side,
+)
 from .editing import Chooser, Run, choose_cards, verb_buttons
 from .figures import CompassRose, aura_seal, bar_list, fact_grid, trait_list
 from .pages import card_grid
@@ -299,10 +305,8 @@ class LaboratoryPage(QWidget):
         parts: list[QWidget] = []
         for kind in ("Activity", "Art"):
             group = [s for s in rows if s.kind == kind]
-            if not group:
-                continue
-            parts.append(chapter_title(f"{kind} Specializations", p))
-            parts.append(bar_list([(s.name, s.points, s.counts) for s in group], p))
+            if group:
+                parts.append(self._specialization_group(kind, group))
         if not parts:
             parts += [
                 chapter_title("Specializations", p),
@@ -312,6 +316,36 @@ class LaboratoryPage(QWidget):
         parts.append(self._features())
         parts.append(self._named_section("Rooms", "section-lab-rooms", "a room"))
         return scrolling_page(p, *parts)
+
+    def _specialization_group(
+        self, kind: str, group: list[ls.Specialization]
+    ) -> QWidget:
+        """One kind's Specializations as bars; clicking one shows where
+        its points come from, and Turn Off/On drops it from (or brings it
+        back to) the Lab Totals."""
+        p, lab = self.p, self.lab
+        chooser = Chooser()
+
+        def show(index: int) -> None:
+            chooser.choose(index)
+            name = group[index].name
+            self.inspect(
+                name, f"{kind} Specialization", ls.specialization_text(lab, name)
+            )
+
+        ops = SectionOps(rows=lambda: [s.name for s in group])
+        toggle = (
+            "Turn Off/On",
+            "edit",
+            lambda row: lf.toggle_specialization(lab, group[row].name),
+            lambda _row: True,
+        )
+        return section(
+            f"{kind} Specializations",
+            p,
+            bar_list([(s.name, s.points, s.counts) for s in group], p, show),
+            buttons=verb_buttons(ops, chooser, self.run, p, more=[toggle]),
+        )
 
     def _specialty_sources(self) -> QWidget:
         """The Specialization points typed in from sources the app doesn't
@@ -475,6 +509,7 @@ class LaboratoryPage(QWidget):
                 lf.connection_ops(lab),
                 none,
             ),
+            device_section(saga, "laboratory", lab.id, p, self.run, self.inspect),
             chapter_title(f"Books ({len(books)})", p),
             card_grid(book_cards, 3)
             if book_cards

@@ -218,6 +218,12 @@ class SheetView(Vertical):
                 # dialog callback can land after that).
                 continue
 
+    def refresh_all(self) -> None:
+        """Re-render every section the sheet shows (after a change that may
+        touch any part of the record, such as a Creation Worksheet step)."""
+        for section_id in list(self._refreshers):
+            self.refresh_section(section_id)
+
     def _on_refresh(
         self, sections: str | tuple[str, ...], refresh: Callable[[], None]
     ) -> None:

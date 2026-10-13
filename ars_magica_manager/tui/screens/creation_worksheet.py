@@ -12,15 +12,15 @@ draft): its keys and buttons open the sheet's own dialogs through the
 workspace, and every step's checks are worked out again when a dialog
 closes. The last step's "Move to In Play" shows every check first.
 
-Each step registers a StepPanel for its step: the budget text, its list
-and its buttons. A step with no panel shows its checks.
+What each step shows and does comes from the core's worksheet
+(worksheet.py), which the desktop draws too: its buttons and rows start
+the core's command steps, run here in the terminal's own dialogs
+(steps.py).
 """
 
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Callable
-from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, ClassVar
 
 from textual.app import ComposeResult
@@ -29,104 +29,15 @@ from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.widgets import Button, Label, OptionList, Static
 from textual.widgets.option_list import Option
 
-from ... import creation
-from ...markup import PROBLEM_GLYPH, TODO_GLYPH, escape
-from ...models import Character, Covenant, Laboratory, Saga
+from ... import worksheet as ws
+from ... import worksheet_forms as wf
+from ...commands import Command
 from ...rules import creation as rules
-from ...rules import creation_covenant as cov_rules
 from .fields import ModalDialog
-from .prompts import ConfirmScreen
 from .widgets import DetailsPanel, SelectableList, TableHeader
 
 if TYPE_CHECKING:
     from .workspace.screen import WorkspaceScreen
-
-Record = Character | Covenant | Laboratory
-
-MARKS: dict[str, str] = {
-    "pass": "[$text-success]✔[/]",
-    "warn": f"[$text-error]{PROBLEM_GLYPH}[/]",
-    "advice": f"[$text-warning]{TODO_GLYPH}[/]",
-    "none": "[dim]○[/]",
-}
-
-
-def check_lines(found: list[rules.Check]) -> str:
-    """Creation checks as worksheet lines: a mark, the rule, what the record
-    has."""
-    if not found:
-        return "[dim]No creation checks at this step.[/]"
-    return "\n".join(
-        f"{MARKS[c.status]} {escape(c.label)}: {escape(c.detail)}" for c in found
-    )
-
-
-@dataclass
-class StepAction:
-    """A button on a step: `run(workspace, record)` opens the dialog that
-    edits this part of the record."""
-
-    label: str
-    run: Callable[[WorkspaceScreen, Record], None]
-
-
-@dataclass
-class StepRow:
-    """A row of a step's list: its label (markup, in the list's columns),
-    the details shown while it is chosen, and what e and d do to it (None:
-    that key does nothing on this row). A heading row has no actions and
-    can't be chosen."""
-
-    label: str
-    details: str = ""
-    edit: Callable[[WorkspaceScreen], None] | None = None
-    delete: Callable[[WorkspaceScreen], None] | None = None
-    heading: bool = False
-
-
-@dataclass
-class StepList:
-    """A step's list: its column headings, rows, and what a adds."""
-
-    header: str
-    rows: Callable[[Saga, Record], list[StepRow]]
-    add: Callable[[WorkspaceScreen, Record], None] | None = None
-    #: What a, e and d do here, for the key line ("Spend xp").
-    add_label: str = "Add"
-    #: None: no row can be edited (e is left off the key line).
-    edit_label: str | None = "Edit"
-    delete_label: str = "Delete"
-    #: The details panel before a row is chosen.
-    hint: str = "Choose a row to see its details."
-
-
-@dataclass
-class StepPanel:
-    """What a step shows above its checks."""
-
-    #: The step's budget and what's spent, as markup (may be "").
-    budget: Callable[[Saga, Record], str] = lambda saga, record: ""
-    #: The step's buttons for this record.
-    actions: Callable[[Saga, Record], list[StepAction]] = lambda saga, record: []
-    #: The step's list (None: it has none).
-    list: StepList | None = field(default=None)
-
-
-#: (record kind, step key) -> the step's panel; each step adds its
-#: own. Record kind: "character", "covenant" or "laboratory".
-PANELS: dict[tuple[str, str], StepPanel] = {}
-
-
-def record_kind(record: Record) -> str:
-    if isinstance(record, Character):
-        return "character"
-    if isinstance(record, Covenant):
-        return "covenant"
-    return "laboratory"
-
-
-def panel_for(record: Record, step: str) -> StepPanel:
-    return PANELS.get((record_kind(record), step), StepPanel())
 
 
 class CreationWorksheetScreen(ModalDialog[None]):
@@ -227,7 +138,7 @@ class CreationWorksheetScreen(ModalDialog[None]):
     """
 
     def __init__(
-        self, workspace: WorkspaceScreen, record: Record, step: str | None = None
+        self, workspace: WorkspaceScreen, record: wf.Record, step: str | None = None
     ) -> None:
         super().__init__()
         self.workspace = workspace
@@ -238,7 +149,7 @@ class CreationWorksheetScreen(ModalDialog[None]):
         keys = [s.key for s in steps]
         self.step = step if step in keys else keys[0]
         #: The rows of the step's list on show, by data index.
-        self._rows: list[StepRow] = []
+        self._rows: list[ws.Row] = []
         self._busy = asyncio.Lock()
 
     # -- composing --
@@ -271,8 +182,7 @@ class CreationWorksheetScreen(ModalDialog[None]):
         return [Option(self._step_prompt(step), id=step.key) for step in self.steps]
 
     def _step_prompt(self, step: rules.Step) -> str:
-        found = rules.checks(self.saga, self.record, step.key)
-        return f"{MARKS[rules.step_status(found)]} {step.title}"
+        return ws.step_label(self.saga, self.record, step)
 
     # -- refreshing --
 
@@ -296,23 +206,12 @@ class CreationWorksheetScreen(ModalDialog[None]):
         if not self.is_attached or self not in self.app.screen_stack:
             return  # closed since the refresh was asked for
         record = self.record
-        mode = "In Creation" if record.in_creation else "In Play"
-        self.query_one("#ws-title", Label).update(
-            f"Creation Worksheet: {escape(record.name)} ({mode})"
-        )
+        self.query_one("#ws-title", Label).update(ws.title(record))
         steps = self.query_one("#ws-steps", OptionList)
         for position, step in enumerate(self.steps):
             steps.replace_option_prompt_at_index(position, self._step_prompt(step))
-        statuses = [
-            rules.step_status(rules.checks(self.saga, record, s.key))
-            for s in self.steps
-        ]
-        # Steps with no checks (a review) don't count either way.
-        checked = [status for status in statuses if status != "none"]
-        done = sum(status == "pass" for status in checked)
-        found = rules.checks(self.saga, record)
         self.query_one("#ws-progress", Static).update(
-            f"{done} of {len(checked)} steps pass\n{rules.summary(found)}"
+            ws.progress_text(self.saga, record)
         )
         await self._show_step_now(keep_row=True)
 
@@ -322,14 +221,14 @@ class CreationWorksheetScreen(ModalDialog[None]):
 
     async def _show_step_now(self, *, keep_row: bool) -> None:
         step = next(s for s in self.steps if s.key == self.step)
-        panel = panel_for(self.record, step.key)
+        panel = ws.panel_for(self.record, step.key)
         self.query_one("#ws-step-title", Label).update(step.title)
         self.query_one("#ws-budget", Static).update(
             panel.budget(self.saga, self.record)
         )
         self._show_list(panel.list, keep_row=keep_row)
         found = rules.checks(self.saga, self.record, step.key)
-        self.query_one("#ws-checks", Static).update(check_lines(found))
+        self.query_one("#ws-checks", Static).update(ws.check_lines(found))
         actions = self.query_one("#ws-actions", Vertical)
         await actions.remove_children()
         buttons = [
@@ -343,7 +242,7 @@ class CreationWorksheetScreen(ModalDialog[None]):
         await actions.mount_all(buttons)
         self._show_hint()
 
-    def _show_list(self, step_list: StepList | None, *, keep_row: bool) -> None:
+    def _show_list(self, step_list: ws.StepList | None, *, keep_row: bool) -> None:
         """The step's list and its details panel (both hidden without one);
         `keep_row`: choose the row at the same place again (after an edit)."""
         header = self.query_one("#ws-list-header", TableHeader)
@@ -367,14 +266,14 @@ class CreationWorksheetScreen(ModalDialog[None]):
             listing.choose_near(min(position, listing.row_count - 1))
         self._show_details()
 
-    def _chosen_row(self) -> StepRow | None:
+    def _chosen_row(self) -> ws.Row | None:
         index = self.query_one("#ws-list", SelectableList).selected_data_index
         if index is None or index >= len(self._rows):
             return None
         return self._rows[index]
 
     def _show_details(self) -> None:
-        step_list = panel_for(self.record, self.step).list
+        step_list = ws.panel_for(self.record, self.step).list
         row = self._chosen_row()
         if row is not None:
             text = row.details
@@ -389,7 +288,7 @@ class CreationWorksheetScreen(ModalDialog[None]):
 
     def _show_hint(self) -> None:
         """The key line: what a, e and d do on this step."""
-        step_list = panel_for(self.record, self.step).list
+        step_list = ws.panel_for(self.record, self.step).list
         keys = []
         if step_list is not None:
             if step_list.add is not None:
@@ -411,10 +310,10 @@ class CreationWorksheetScreen(ModalDialog[None]):
     # -- a / e / d on the step's list --
 
     def action_add(self) -> None:
-        step_list = panel_for(self.record, self.step).list
+        step_list = ws.panel_for(self.record, self.step).list
         if step_list is None or step_list.add is None:
             return
-        step_list.add(self.workspace, self.record)
+        self._run(step_list.add(self.saga, self.record))
 
     def action_edit(self) -> None:
         self._act_on_row("edit")
@@ -423,7 +322,7 @@ class CreationWorksheetScreen(ModalDialog[None]):
         self._act_on_row("delete")
 
     def _act_on_row(self, verb: str) -> None:
-        if panel_for(self.record, self.step).list is None:
+        if ws.panel_for(self.record, self.step).list is None:
             return
         row = self._chosen_row()
         if row is None:
@@ -435,7 +334,7 @@ class CreationWorksheetScreen(ModalDialog[None]):
                 f"That row can't be {'changed' if verb == 'edit' else 'taken back'} here."
             )
             return
-        act(self.workspace)
+        self._run(act())
 
     # -- buttons --
 
@@ -445,53 +344,22 @@ class CreationWorksheetScreen(ModalDialog[None]):
         if button_id == "ws-play":
             self._move_to_play()
         elif button_id.startswith("ws-action-"):
-            panel = panel_for(self.record, self.step)
+            panel = ws.panel_for(self.record, self.step)
             actions = panel.actions(self.saga, self.record)
-            actions[int(button_id.removeprefix("ws-action-"))].run(
-                self.workspace, self.record
-            )
+            self._run(actions[int(button_id.removeprefix("ws-action-"))].start())
+
+    def _run(self, command: Command) -> None:
+        self.workspace._run_steps(command)
 
     def _move_to_play(self) -> None:
         """Show the review of every check, then move the record to In Play
-        (with strict creation rules, not while a must is broken)."""
-        record = self.record
-        if not record.in_creation:
-            self.notify(f"{escape(record.name)} is already In Play.")
-            return
-        found = rules.checks(self.saga, record)
-        if not rules.can_move_to_play(self.saga, record):
-            self.notify(
-                f"{escape(record.name)} stays In Creation: it breaks "
-                f"{len(rules.broken_musts(found))} creation rule(s) it must "
-                "follow, and this saga enforces them strictly.",
-                severity="warning",
-            )
-            return
-        open_checks = [c for c in found if c.status != "pass"]
-        review = "\n".join(
-            f"{MARKS[c.status]} {escape(c.label)}" for c in open_checks[:12]
-        )
-        if len(open_checks) > 12:
-            review += f"\n...and {len(open_checks) - 12} more"
-        message = f"Move {escape(record.name)} to In Play? Creation checks: {rules.summary(found)}."
-        if isinstance(record, Covenant):
-            note = cov_rules.leftover_note(self.saga, record)
-            if note:
-                message += f"\n\n{escape(note)}"
-        if review:
-            message += f"\n\n{review}"
+        (with strict creation rules, not while a must is broken) and close
+        the worksheet."""
 
-        def handle_confirmed(confirmed: bool | None) -> None:
-            if confirmed:
-                creation.set_in_creation(self.saga, record, False)
-                self.workspace._commit("section-creation", tree=True)
+        def moved() -> None:
+            if not self.record.in_creation and self.is_attached:
                 self.dismiss(None)
 
-        self.app.push_screen(
-            ConfirmScreen(message, yes_label="Move to In Play", yes_variant="primary"),
-            handle_confirmed,
+        self.workspace._run_steps(
+            wf.move_to_play(self.saga, self.record), tree=True, then=moved
         )
-
-
-# The step panels register themselves on import.
-from . import creation_covenant_steps, creation_steps  # noqa: F401

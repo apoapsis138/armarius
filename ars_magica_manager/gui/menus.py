@@ -54,10 +54,13 @@ def menu_buttons(
     show: Callable[[str, str], None],
     up: Callable[[], None],
     parent: QWidget | None = None,
+    *,
+    worksheet: Callable[[str], None] = lambda _record_id: None,
 ) -> list[QPushButton]:
     """The New and More buttons for `page` (none for no page, or a menu
     with nothing in it). `show(action, id)` opens what a New entry made;
-    `up()` leaves a deleted record's page."""
+    `up()` leaves a deleted record's page; `worksheet(id)` opens a
+    record's Creation Worksheet."""
     if page is None:
         return []
     saga = page.saga
@@ -96,6 +99,11 @@ def menu_buttons(
             )
         )
     for item in menu_forms.more_items(page):
+        if item.action == "creation_worksheet":
+            record = page.creation_record()
+            if record is not None:
+                more.append((item.label, item.action, lambda r=record.id: worksheet(r)))
+            continue
         more.append(
             (
                 item.label,

@@ -23,6 +23,7 @@ from textual.widgets import (
 )
 
 from ... import form_spec as fs
+from ...commands import Picked
 from ...form_spec import DialogField
 from ...markup import escape
 
@@ -375,6 +376,18 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
 
         if spec.picker is not None:
             self.app.push_screen(spec.picker(self._picked.get(spec.key)), handle_choice)
+        elif spec.choose is not None:
+            # The core's own steps, when the terminal has no screen of its
+            # own for this field.
+            from .steps import run_steps
+
+            run_steps(
+                self.app,
+                spec.choose(self._picked.get(spec.key)),
+                lambda end: handle_choice(
+                    end.value if isinstance(end, Picked) else None
+                ),
+            )
 
     def _write(self, spec: DialogField, value: Any) -> None:
         """Put `value` in a field's widget (a select's only if it's one of
@@ -456,7 +469,9 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
             spec = next(
                 (f for f in self.fields if f.key == key and f.kind == "picker"), None
             )
-            if spec is not None and spec.picker is not None:
+            if spec is not None and (
+                spec.picker is not None or spec.choose is not None
+            ):
                 event.stop()
                 self._open_picker(spec)
 

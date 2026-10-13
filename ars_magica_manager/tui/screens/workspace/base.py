@@ -43,6 +43,7 @@ from .... import (
     catalog,
     character_templates,
     creation,
+    creation_forms,
     deletion,
     presence,
     seasons,
@@ -113,7 +114,6 @@ from ..prompts import (
     AdvanceSeasonScreen,
     ConfirmScreen,
     MenuScreen,
-    _blanks_dialog,
     _date_fields,
     _export_dialog,
     _move_vis_dialog,
@@ -1686,6 +1686,10 @@ class WorkspaceBase(Screen[None]):
 
         self.app.push_screen(ConfirmScreen(message), handle_confirmed)
 
+    def _books_changed(self) -> None:
+        """After a change that may touch books (the library's actions
+        redraw the book lists and the tree's Unassigned Books)."""
+
     def _commit(self, *sections: str, tree: bool = False) -> None:
         """Save a change: write the saga, rebuild the navigation tree if a
         name or the structure changed (`tree`), and refresh `sections` of the
@@ -1782,7 +1786,11 @@ class WorkspaceBase(Screen[None]):
                     await create(values, template, filled)
 
             self.app.push_screen(
-                _blanks_dialog(f"{escape(template.name)} template", wanted),
+                FieldsDialog(
+                    f"{escape(template.name)} template",
+                    creation_forms.blanks_fields(wanted),
+                    save_label="Use",
+                ),
                 handle_blanks,
             )
 

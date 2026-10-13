@@ -121,21 +121,30 @@ def test_a_grog_plans_the_yearly_update():
     assert grog.grog_year.vocational_xp == 7
 
 
-def test_the_initiation_virtue_is_a_drop_down_without_a_picker():
+def test_the_initiation_virtue_is_chosen_by_the_cores_list_or_the_terminals():
     saga = _sample_saga_with_covenant()
     magus = saga.characters[0]
     by_key = {f.key: f for f in sf.season_plan_fields(saga, magus, None)}
     virtue = by_key["mystery_virtue"]
-    assert virtue.kind == "select"
-    assert ("vf_affinity_with_art" in {v for _, v in virtue.options}) is True
-    # With the terminal's picker it is a picker field.
+    assert virtue.kind == "picker" and virtue.picker is None
+    assert virtue.choose is not None
+    step = virtue.choose(None)
+    assert isinstance(step, commands.Choose)
+    affinity = next(c for c in step.choices() if c.value.id == "vf_affinity_with_art")
+    form = step.apply(affinity.value)
+    assert isinstance(form, commands.Form)
+    chosen = form.apply({"art": "ignem"})
+    assert chosen == commands.Picked(
+        VirtueFlawInstance("vf_affinity_with_art", {"art": "ignem"})
+    )
+    # With the terminal's picker it is that picker field.
     picked = {
         f.key: f
         for f in sf.season_plan_fields(
             saga, magus, None, vf_picker=lambda *_args: lambda _current: None
         )
     }
-    assert picked["mystery_virtue"].kind == "picker"
+    assert picked["mystery_virtue"].picker is not None
     # Choosing the plan's own Virtue again keeps what it names.
     existing = SeasonPlan(
         character_id=magus.id,

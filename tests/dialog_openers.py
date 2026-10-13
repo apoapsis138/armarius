@@ -13,6 +13,7 @@ from textual.widgets import TabbedContent, Tree
 
 from ars_magica_manager import catalog, spells, storage, vis
 from ars_magica_manager import economics as eco
+from ars_magica_manager import worksheet_forms as wf
 from ars_magica_manager.models import (
     Ability,
     Book,
@@ -426,38 +427,51 @@ OPENERS: dict[str, Opener] = {
         "laboratory",
         _pick(lambda ws: ws._edit_named("section-lab-rooms"), "lab-rooms-list"),
     ),
-    # Creation Worksheet
+    # Creation Worksheet: the core's steps (worksheet_forms), run by the
+    # terminal's step runner.
     "spend creation xp": Opener(
         "character",
-        lambda ws: ws._spend_creation_xp(
-            ws.selected_character, "childhood", creation_xp.childhood_targets()
+        lambda ws: ws._run_steps(
+            wf.spend_xp(
+                ws.saga,
+                ws.selected_character,
+                "childhood",
+                creation_xp.childhood_targets(),
+            )
         ),
     ),
     "native language": Opener(
-        "character", lambda ws: ws._set_native_language(ws.selected_character)
+        "character",
+        lambda ws: ws._run_steps(wf.native_language(ws.selected_character)),
     ),
     "general spell level": Opener(
         "character",
-        lambda ws: ws._learn_spell_at_its_level(
-            ws.selected_character,
-            "apprenticeship_spells",
-            spells.find_spell(ws.saga, "spell_aegis_of_the_hearth"),
+        lambda ws: ws._run_steps(
+            wf.spell_level_form(
+                ws.selected_character,
+                "apprenticeship_spells",
+                spells.find_spell(ws.saga, "spell_aegis_of_the_hearth"),
+            )
         ),
     ),
     "gauntlet conditions": Opener(
-        "character", lambda ws: ws._edit_gauntlet_conditions(ws.selected_character)
+        "character",
+        lambda ws: ws._run_steps(wf.gauntlet_conditions(ws.selected_character)),
     ),
     "power level": Opener(
-        "covenant", lambda ws: ws._choose_power_level(ws.selected_covenant)
+        "covenant", lambda ws: ws._run_steps(wf.power_level(ws.selected_covenant))
     ),
     "buy specialist": Opener(
-        "covenant", lambda ws: ws._buy_specialist(ws.selected_covenant)
+        "covenant",
+        lambda ws: ws._run_steps(wf.buy_specialist(ws.saga, ws.selected_covenant)),
     ),
     "childhood blanks": Opener(
         "character",
-        lambda ws: ws._ask_childhood_blanks(
-            ws.selected_character,
-            next(c for c in creation_xp.CHILDHOODS if c.name == "Traveling"),
+        lambda ws: ws._run_steps(
+            wf.use_childhood(
+                ws.selected_character,
+                next(c for c in creation_xp.CHILDHOODS if c.name == "Traveling"),
+            )
         ),
     ),
 }

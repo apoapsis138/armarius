@@ -6,7 +6,6 @@ from .character import EditArtsScreen as EditArtsScreen
 from .character import _character_info_dialog as _character_info_dialog
 from .character import _characteristics_dialog as _characteristics_dialog
 from .character import _characteristics_from as _characteristics_from
-from .covenant import _buy_specialist_dialog as _buy_specialist_dialog
 from .covenant import _contested_fields as _contested_fields
 from .covenant import _covenant_fields as _covenant_fields
 from .covenant import _improve_income_dialog as _improve_income_dialog

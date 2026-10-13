@@ -20,6 +20,7 @@ from ars_magica_manager.gui import window as window_module
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.covenant import CovenantPage
 from ars_magica_manager.gui.window import MainWindow
+from ars_magica_manager.gui.worksheet import WorksheetPage
 
 
 @pytest.fixture(scope="module")
@@ -64,7 +65,7 @@ def _window(saga) -> MainWindow:
     return window
 
 
-def test_new_makes_a_record_and_opens_its_page(app):
+def test_new_makes_a_record_and_opens_its_creation_worksheet(app):
     window = _window(_sample_saga_with_covenant())
     assert set(_menus(window)) == {"New", "More"}
     assert list(_entries(window, "More")) == ["Edit Saga", "Import", "Set Date"]
@@ -76,17 +77,25 @@ def test_new_makes_a_record_and_opens_its_page(app):
     ]
     answering(window, {"name": "Fengheld"})
     _entries(window, "New")["New Covenant"].trigger()
-    assert window.crumb_names() == ["Sagas", "Test Saga", "Fengheld"]
+    # A new record is In Creation: it opens on its worksheet, below its page.
+    assert window.crumb_names() == [
+        "Sagas",
+        "Test Saga",
+        "Fengheld",
+        "Creation Worksheet",
+    ]
+    assert isinstance(window.page(), WorksheetPage)
+    window.go(window.trail[:-1])
     assert isinstance(window.page(), CovenantPage)
     saved = storage.load_saga("test_saga")
     assert [c.name for c in saved.covenants] == ["Test Covenant", "Fengheld"]
 
 
-def test_more_on_the_saga_sets_its_date(app, told):
+def test_more_on_the_saga_sets_its_date(app):
     window = _window(_sample_saga_with_covenant())
     answering(window, {"season": "Autumn", "year": "1225"})
     _entries(window, "More")["Set Date"].trigger()
-    assert told == ["Date set to Autumn 1225."]
+    assert [words for _title, words in window.told] == ["Date set to Autumn 1225."]
     saved = storage.load_saga("test_saga")
     assert (saved.current_season, saved.current_year) == ("Autumn", 1225)
 

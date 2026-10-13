@@ -320,13 +320,16 @@ def test_adding_editing_and_deleting_a_book():
     assert added not in saga.books
 
 
-def test_the_desktop_book_form_offers_the_spells_as_a_list():
+def test_the_book_forms_spell_is_chosen_from_a_searchable_list():
     saga = _sample_saga_with_covenant()
     lab_text = saga.books[1]
     fields = {f.key: f for f in library_forms.book_fields(saga, lab_text, "")}
     spell = fields["spell_id"]
-    assert spell.kind == "select"
-    assert "spell1" in [value for _, value in spell.options]
+    assert spell.kind == "picker" and spell.choose is not None
+    step = spell.choose(None)
+    assert isinstance(step, commands.Choose)
+    first = step.choices()[0]
+    assert step.apply(first.value) == commands.Picked(first.value)
     picked = library_forms.book_fields(
         saga, lab_text, "", spell_picker=lambda _current: None
     )

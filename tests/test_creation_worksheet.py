@@ -9,6 +9,8 @@ from support import strip_markup, wait_until
 from textual.widgets import Button, OptionList, Select, Static, Tree
 
 from ars_magica_manager import storage
+from ars_magica_manager import worksheet as ws
+from ars_magica_manager.commands import Act
 from ars_magica_manager.models import Character, Covenant, Laboratory, Saga
 from ars_magica_manager.rules import creation as rules
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
@@ -17,8 +19,8 @@ from ars_magica_manager.tui.screens import (
     SelectableList,
     WorkspaceScreen,
 )
-from ars_magica_manager.tui.screens import creation_worksheet as ws
 from ars_magica_manager.tui.screens.creation_worksheet import CreationWorksheetScreen
+from ars_magica_manager.tui.screens.steps import ChooseScreen
 
 
 def _saga(character_type: str = "magus") -> Saga:
@@ -137,17 +139,18 @@ async def test_moving_between_steps_shows_each_steps_checks(concept_checks):
 async def test_a_steps_button_runs_its_action_and_the_checks_rerun(monkeypatch):
     calls = []
 
-    def rename(workspace, record):
+    def rename(record):
         calls.append(record.name)
         record.name = "Renamed"
-        workspace._commit("section-char-info", tree=True)
 
     monkeypatch.setitem(
         ws.PANELS,
         ("character", "concept"),
-        ws.StepPanel(
+        ws.Panel(
             budget=lambda saga, record: f"Name: {record.name}",
-            actions=lambda saga, record: [ws.StepAction("Rename", rename)],
+            actions=lambda saga, record: [
+                ws.Action("Rename", lambda: Act(lambda: rename(record)))
+            ],
         ),
     )
     storage.save_saga(_saga())
@@ -247,8 +250,6 @@ async def test_concept_adds_a_magus_virtues_and_opens_the_sheets_dialogs():
 
 
 async def test_virtues_and_flaws_step_opens_the_picker_on_each_side():
-    from ars_magica_manager.tui.screens.pickers import VirtueFlawPickerScreen
-
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(120, 45)) as pilot:
@@ -260,17 +261,13 @@ async def test_virtues_and_flaws_step_opens_the_picker_on_each_side():
             str(b.label) for b in screen.query("#ws-actions Button")
         ]
         await _press_button(pilot, screen, "Add a Flaw")
-        assert await wait_until(
-            pilot, lambda: isinstance(app.screen, VirtueFlawPickerScreen)
-        )
-        assert app.screen._side == "Flaw"
+        picker = await _wait_for(pilot, app, ChooseScreen)
+        assert picker.picker_title == "Add a Flaw"
         await pilot.press("escape")
         assert await wait_until(pilot, lambda: app.screen is screen)
 
 
 async def test_characteristics_step_fills_a_grog_from_a_grogs_array():
-    from ars_magica_manager.tui.screens.pickers import RemovalPickerScreen
-
     saga = _saga("grog")
     saga.books_in_play = ["Grogs"]
     storage.save_saga(saga)
@@ -281,10 +278,8 @@ async def test_characteristics_step_fills_a_grog_from_a_grogs_array():
         assert await wait_until(pilot, lambda: screen.step == "characteristics")
         assert "Points:        0 of 7" in _text(screen, "#ws-budget")
         await _press_button(pilot, screen, "Fill from a Grogs array")
-        assert await wait_until(
-            pilot, lambda: isinstance(app.screen, RemovalPickerScreen)
-        )
-        await pilot.press("enter")
+        picker = await _wait_for(pilot, app, ChooseScreen)
+        picker.dismiss(0)
         assert await wait_until(
             pilot,
             lambda: (
@@ -304,7 +299,6 @@ async def test_childhood_step_sets_the_native_language_and_a_sample_childhood():
     from textual.widgets import Input
 
     from ars_magica_manager.tui.screens.fields import FieldsDialog
-    from ars_magica_manager.tui.screens.pickers import RemovalPickerScreen
 
     storage.save_saga(_saga("companion"))
     app = ArsMagicaManagerApp()
@@ -322,11 +316,7 @@ async def test_childhood_step_sets_the_native_language_and_a_sample_childhood():
         )
         assert await wait_until(pilot, lambda: app.screen is screen)
         await _press_button(pilot, screen, "Use a sample childhood")
-        picker = await _wait_for(pilot, app, RemovalPickerScreen)
-        # Chosen by its label: keys can outrun the list filling up under load.
-        picker.dismiss(
-            next(i for i, label in enumerate(picker.labels) if "Traveling" in label)
-        )
+        picker = await _choose(pilot, app, "Traveling")
         dialog = await _wait_for(pilot, app, FieldsDialog)
         for key, value in (
             ("area", "Rhine"),
@@ -360,6 +350,16 @@ async def _wait_for(pilot, app, cls):
     assert await wait_until(pilot, lambda: isinstance(app.screen, cls))
     await pilot.pause()
     return app.screen
+
+
+async def _choose(pilot, app, text: str) -> ChooseScreen:
+    """Choose the first entry of the list on show whose label has `text`
+    (by its label: keys can outrun the list filling up under load)."""
+    picker = await _wait_for(pilot, app, ChooseScreen)
+    picker.dismiss(
+        next(i for i, c in enumerate(picker._all()) if text in strip_markup(c.label))
+    )
+    return picker
 
 
 async def test_later_life_step_offers_virtue_xp_and_free_scores():
@@ -426,8 +426,6 @@ async def _choose_row(pilot, screen, text: str) -> None:
 
 
 async def test_later_life_takes_and_drops_a_training_package():
-    from ars_magica_manager.tui.screens.pickers import RemovalPickerScreen
-
     saga = _saga("grog")
     saga.characters[0].background.year_born = 1195
     saga.books_in_play = ["Grogs"]
@@ -438,9 +436,8 @@ async def test_later_life_takes_and_drops_a_training_package():
         screen.query_one("#ws-steps", OptionList).highlighted = 4
         assert await wait_until(pilot, lambda: screen.step == "later_life")
         await _press_button(pilot, screen, "Take a training package")
-        await _wait_for(pilot, app, RemovalPickerScreen)
-        # Animal Trainer, 5 years: no blanks.
-        await pilot.press("down", "down", "enter")
+        # Animal Trainer, 5 years (listed before 3): no blanks.
+        await _choose(pilot, app, "Animal Trainer")
         assert await wait_until(
             pilot,
             lambda: len(storage.load_saga("test_saga").characters[0].creation_xp) == 3,
@@ -466,8 +463,6 @@ async def test_later_life_takes_and_drops_a_training_package():
 
 
 async def test_apprenticeship_step_learns_a_spell_with_its_lab_total():
-    from ars_magica_manager import spells as spl
-    from ars_magica_manager.tui.screens.pickers import SpellChooserScreen
 
     storage.save_saga(_saga())
     app = ArsMagicaManagerApp()
@@ -477,11 +472,15 @@ async def test_apprenticeship_step_learns_a_spell_with_its_lab_total():
         assert await wait_until(pilot, lambda: screen.step == "apprenticeship")
         assert "Apprenticeship: 240 xp" in _text(screen, "#ws-budget")
         await _press_button(pilot, screen, "Learn a spell")
-        picker = await _wait_for(pilot, app, SpellChooserScreen)
+        picker = await _wait_for(pilot, app, ChooseScreen)
         details = str(picker.query_one("#picker-details-text", Static).render())
         assert "Lab Total for it (aura 3)" in details
-        picker._on_entry_selected(
-            spl.find_spell(screen.saga, "spell_wizard_s_sidestep")
+        picker.dismiss(
+            next(
+                i
+                for i, c in enumerate(picker._all())
+                if c.value == "spell_wizard_s_sidestep"
+            )
         )
         assert await wait_until(
             pilot,
@@ -705,8 +704,6 @@ async def test_finishing_touches_reviews_every_step_and_adds_a_trait():
 
 
 async def test_concept_adds_the_house_virtue_asking_which_when_there_is_a_choice():
-    from ars_magica_manager.tui.screens.pickers import RemovalPickerScreen
-
     saga = _saga()
     saga.characters[0].hermetic.house = "house_flambeau"
     storage.save_saga(saga)
@@ -715,8 +712,7 @@ async def test_concept_adds_the_house_virtue_asking_which_when_there_is_a_choice
         screen = await _open_worksheet(pilot, app)
         assert "Puissant Perdo or Puissant Ignem." in _text(screen, "#ws-budget")
         await _press_button(pilot, screen, "Add the House Virtue")
-        await _wait_for(pilot, app, RemovalPickerScreen)
-        await pilot.press("down", "enter")  # Puissant Ignem
+        await _choose(pilot, app, "Puissant Ignem")
         assert await wait_until(
             pilot,
             lambda: (

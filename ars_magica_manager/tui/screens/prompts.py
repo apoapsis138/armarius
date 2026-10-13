@@ -5,6 +5,7 @@ open."""
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
+from dataclasses import replace
 from pathlib import Path
 from typing import Any, ClassVar
 
@@ -24,7 +25,6 @@ from textual.widgets.option_list import Option
 from ... import (
     ability_forms,
     covenant_forms,
-    creation,
     diary_forms,
     laboratory_forms,
     trait_forms,
@@ -38,11 +38,11 @@ from ... import lab_texts as lt
 from ... import players as pl
 from ... import saga_content as sc
 from ... import saga_content_forms as scf
-from ... import sheet_text as st
 from ...ability_forms import ability_fields as _ability_fields
 from ...ability_forms import ability_problem as _ability_problem
-from ...arts import ART_DESCRIPTIONS, ARTS, FORMS, TECHNIQUES
-from ...form_spec import DialogField, attr, pairs
+from ...arts import FORMS, TECHNIQUES
+from ...commands import Form, Picked
+from ...form_spec import DialogField, pairs
 from ...markup import escape, todo
 from ...models import (
     LAB_ACTIVITIES,
@@ -54,13 +54,10 @@ from ...models import (
     Character,
     Covenant,
     CovenantDiaryEntry,
-    CreationConditions,
-    CreationXp,
     DiaryEntry,
     Laboratory,
     LabSpecialtyEntry,
     LabVirtueFlawDef,
-    MasteryAbility,
     NamedDescription,
     Player,
     Saga,
@@ -69,16 +66,7 @@ from ...models import (
     VirtueFlawInstance,
     next_season,
 )
-from ...rules import creation_access, lab_seasons
-from ...rules import xp as xp_rules
-from ...rules.creation_character import age as creation_age
-from ...rules.creation_covenant import (
-    POWER_BY_NAME,
-    POWER_LEVELS,
-    PowerLevel,
-    band,
-    in_band,
-)
+from ...rules import lab_seasons
 from .fields import FieldsDialog, ModalDialog
 from .widgets import SelectableList
 
@@ -200,27 +188,6 @@ def _scored_trait_dialog(
         ),
         validate=lambda values: trait_forms.score_problem(values, min_score, max_score),
         build=trait_forms.trait_from,
-    )
-
-
-def _mastery_ability_dialog(
-    title: str, existing: MasteryAbility | None = None
-) -> FieldsDialog[MasteryAbility]:
-    return FieldsDialog(
-        title,
-        [
-            DialogField(
-                "name",
-                "Name",
-                "text",
-                attr(existing, "name", ""),
-                required=True,
-                placeholder="e.g. Fast Casting",
-            ),
-            DialogField("level", "Level", "int", attr(existing, "level", 0)),
-            DialogField("xp", "XP", "int", attr(existing, "xp", 0)),
-        ],
-        build=lambda values: MasteryAbility(**values),
     )
 
 
@@ -601,301 +568,6 @@ def _move_vis_dialog(
         save_label="Move",
         validate=lambda values: vis.move_problem(what, values["pawns"]),
         build=lambda values: (values["pawns"], values["destination"]),
-    )
-
-
-def _family_prefix(name: str) -> str:
-    """ "Area Lore: " for "Area Lore: {region}"; "" for a plain name."""
-    return name.split("{", 1)[0] if "{" in name else ""
-
-
-#: How much of an Ability's or Art's description the spend dialog shows.
-_SPEND_DESCRIPTION_CHARS = 240
-
-
-def _spend_live(
-    saga: Saga,
-    character: Character,
-    name: str,
-    xp: int | None,
-    replacing: CreationXp | None,
-) -> str:
-    """The spend dialog's live lines for `xp` pool xp on `name`: what it
-    gains (half again with an Affinity), the score that buys and the pool
-    xp the next score needs, a cap warning, and what the Ability or Art
-    is."""
-    if not name:
-        return "[dim]Choose an Ability or Art.[/]"
-    lines = []
-    if xp is not None and xp >= 0:
-        gained, total = creation.spend_preview(character, name, xp, replacing)
-        multiplier = creation_access.xp_multiplier(character, name)
-        affinity = " (Affinity x1.5)" if multiplier > 1 else ""
-        lines.append(f"{escape(name)}: gains {gained} xp{affinity}")
-        is_art = name in ARTS
-        factor = xp_rules.ART_FACTOR if is_art else xp_rules.ABILITY_FACTOR
-        progress = xp_rules.progress(total, factor)
-        more = creation_access.xp_giving(progress.next_total - total, multiplier)
-        lines.append(f"{st.live_score(total, factor)} ({more} more pool xp)")
-        cap = (
-            None
-            if is_art
-            else creation_access.ability_cap_for(
-                character, creation_age(saga, character), name
-            )
-        )
-        if cap is not None and progress.score > cap:
-            lines.append(f"[$text-error]Over the creation cap of {cap}[/]")
-    if name in ARTS:
-        description = ART_DESCRIPTIONS.get(name, "")
-    else:
-        definition = st.ability_definition(name)
-        description = definition.description if definition else ""
-    if description:
-        if len(description) > _SPEND_DESCRIPTION_CHARS:
-            description = description[: _SPEND_DESCRIPTION_CHARS - 1].rstrip() + "…"
-        lines.append(f"[dim]{escape(description)}[/]")
-    return "\n".join(lines)
-
-
-def _creation_xp_dialog(
-    title: str,
-    targets: Sequence[str],
-    existing: tuple[str, int] | None = None,
-    *,
-    xp_label: str = "Pool xp",
-    saga: Saga | None = None,
-    character: Character | None = None,
-    replacing: CreationXp | None = None,
-) -> FieldsDialog[tuple[str, int, str]]:
-    """xp spent at a creation step: an Ability or Art
-    from `targets` -- a family ("Area Lore: {region}") asks for its detail
-    -- and how much pool xp, and an Ability's Specialty. Given the
-    `character` (and `saga`), a live line shows what the xp gains and the
-    score it buys; `replacing` is the entry being changed. Builds (the
-    Ability or Art's name, the xp, the Specialty or "")."""
-    families = [t for t in targets if "{" in t]
-    target, detail = None, ""
-    if existing is not None:
-        name = existing[0]
-        family = next((f for f in families if name.startswith(_family_prefix(f))), None)
-        if name in targets:
-            target = name
-        elif family is not None:
-            target, detail = family, name.removeprefix(_family_prefix(family))
-        else:
-            target = name
-    options = [(t.replace("{", "(").replace("}", ")"), t) for t in targets]
-    if existing is not None and target not in targets:
-        options.append((existing[0], existing[0]))
-
-    def resolved(values: dict[str, Any]) -> str:
-        chosen = values["target"] or ""
-        prefix = _family_prefix(chosen)
-        return prefix + (values.get("detail") or "").strip() if prefix else chosen
-
-    def problem(values: dict[str, Any]) -> str | None:
-        prefix = _family_prefix(values["target"] or "")
-        if prefix and not (values.get("detail") or "").strip():
-            return f"Say which {prefix.rstrip(': ')}."
-        if values["xp"] < 1:
-            return "xp must be at least 1."
-        return None
-
-    def live(values: dict[str, Any]) -> str:
-        assert saga is not None and character is not None
-        return _spend_live(saga, character, resolved(values), values["xp"], replacing)
-
-    ability = (
-        next((a for a in character.abilities if a.name == existing[0]), None)
-        if character is not None and existing is not None
-        else None
-    )
-    specialty = (ability.specialty or "") if ability is not None else ""
-
-    return FieldsDialog(
-        title,
-        [
-            DialogField(
-                "target",
-                "Ability or Art",
-                "select",
-                target,
-                options=options,
-                required=True,
-                allow_blank=True,
-                placeholder="(choose one)",
-            ),
-            DialogField(
-                "detail",
-                "Which one",
-                "text",
-                detail,
-                placeholder="e.g. the region, language or craft",
-                show_if=lambda values: bool(_family_prefix(values["target"] or "")),
-            ),
-            DialogField("xp", xp_label, "int", existing[1] if existing else 5),
-            DialogField(
-                "specialty",
-                "Specialty",
-                "text",
-                specialty,
-                placeholder="(optional) e.g. Swords",
-                show_if=lambda values: (
-                    character is not None
-                    and bool(values["target"])
-                    and values["target"] not in ARTS
-                ),
-            ),
-        ],
-        validate=problem,
-        live=live if character is not None and saga is not None else None,
-        save_label="Spend" if existing is None else "Save",
-        build=lambda values: (
-            resolved(values),
-            values["xp"],
-            (values.get("specialty") or "").strip(),
-        ),
-    )
-
-
-def _blanks_dialog(title: str, blanks: Sequence[str]) -> FieldsDialog:
-    """The names a sample childhood or training package leaves blank
-    ("area", "second_area", "language"), one text field each."""
-    return FieldsDialog(
-        title,
-        [
-            DialogField(
-                blank, blank.replace("_", " ").capitalize(), "text", "", required=True
-            )
-            for blank in blanks
-        ],
-        save_label="Use",
-    )
-
-
-def _spell_level_dialog(spell_name: str) -> FieldsDialog[int]:
-    """The level a General-level spell is learned at."""
-    return FieldsDialog(
-        f"Learn {escape(spell_name)} at what level?",
-        [DialogField("level", "Level", "int", 5)],
-        validate=lambda values: (
-            None if values["level"] >= 1 else "Level must be at least 1."
-        ),
-        save_label="Learn",
-        build=lambda values: values["level"],
-    )
-
-
-def _gauntlet_conditions_dialog(
-    conditions: CreationConditions,
-) -> FieldsDialog[dict[str, Any]]:
-    """A magus's years past Gauntlet: the seasons of lab work,
-    and the working conditions the storyguide set."""
-
-    def problem(values: dict[str, Any]) -> str | None:
-        if values["lab_seasons"] < 0:
-            return "Lab seasons can't be negative."
-        return None
-
-    return FieldsDialog(
-        "Years past Gauntlet",
-        [
-            DialogField(
-                "lab_seasons",
-                "Seasons of lab work",
-                "int",
-                conditions.lab_seasons,
-                hint="Each costs 10 of that year's 30 points (4 a year: all 30).",
-            ),
-            DialogField("aura", "Aura", "int", conditions.aura),
-            DialogField("lab_quality", "Lab quality", "int", conditions.lab_quality),
-            DialogField(
-                "living_conditions",
-                "Living Conditions",
-                "int",
-                conditions.living_conditions,
-                hint="Used for the aging rolls before play.",
-            ),
-        ],
-        validate=problem,
-    )
-
-
-def _power_level_dialog(covenant: Covenant) -> FieldsDialog[dict[str, Any]]:
-    """A new covenant's Power Level and when it was founded."""
-
-    def label(power: PowerLevel) -> str:
-        top = f"{power.most}" if power.most is not None else "+"
-        cap = f"level {power.max_level}" if power.max_level is not None else "any level"
-        return f"{power.name} ({power.least}-{top} BP, {cap})"
-
-    return FieldsDialog(
-        "Power Level",
-        [
-            DialogField(
-                "power_level",
-                "Power Level",
-                "select",
-                covenant.power_level or None,
-                options=[(label(p), p.name) for p in POWER_LEVELS],
-                required=True,
-                allow_blank=True,
-                placeholder="(choose one)",
-            ),
-            DialogField(
-                "build_points_budget",
-                "Build Points",
-                "optint",
-                covenant.build_points_budget,
-                hint="Set by the storyguide, within the Power Level's range.",
-            ),
-            DialogField(
-                "magi_without_lab",
-                "Magi without a laboratory",
-                "int",
-                covenant.magi_without_lab,
-                hint="Each refunds 50 Build Points. Every other magus has a "
-                "free standard lab, entered or not.",
-            ),
-            DialogField(
-                "year_founded",
-                "Year Founded",
-                "optint",
-                covenant.year_founded,
-                hint="Medium needs 10 years, High 50, Legendary 100.",
-            ),
-        ],
-        validate=_power_level_problem,
-    )
-
-
-def _power_level_problem(values: dict[str, Any]) -> str | None:
-    power = POWER_BY_NAME.get(values.get("power_level") or "")
-    points = values.get("build_points_budget")
-    if power is not None and points is not None and not in_band(power, points):
-        return f"{power.name} gives {band(power)} Build Points."
-    if (values.get("magi_without_lab") or 0) < 0:
-        return "Magi without a laboratory can't be negative."
-    return None
-
-
-def _native_language_dialog(current: str = "") -> FieldsDialog[str]:
-    """The character's Native Language (a Living Language, 75 xp)."""
-    return FieldsDialog(
-        "Native Language",
-        [
-            DialogField(
-                "language",
-                "Language",
-                "text",
-                current.removeprefix("Living Language: "),
-                required=True,
-                placeholder="e.g. German",
-            )
-        ],
-        save_label="Save",
-        build=lambda values: "Living Language: " + values["language"],
     )
 
 
@@ -1368,26 +1040,49 @@ def _list_display(label: Callable[[Any], str]) -> Callable[[Any], str]:
     return display
 
 
-def _list_field(
-    key: str,
-    label: str,
-    items: list[Any],
-    title: str,
-    row: Callable[[Any], str],
-    dialog: Callable[[Any], FieldsDialog[Any]],
-    **extra: Any,
-) -> DialogField:
-    """A form field holding a small list: a button showing its entries that
-    opens a ListFieldScreen to add, edit and delete them (`row` labels an
-    entry in plain text; `dialog` edits one)."""
-    return DialogField(
-        key,
-        label,
-        "picker",
-        list(items),
+def core_form_dialog(form: Form) -> FieldsDialog[Any]:
+    """A core Form whose apply hands back a commands.Picked value (a list
+    field's entry), as a dialog dismissing with that value."""
+
+    def build(values: dict[str, Any]) -> Any:
+        chosen = form.apply(values)
+        return chosen.value if isinstance(chosen, Picked) else chosen
+
+    return FieldsDialog(
+        form.title,
+        form.fields(),
+        validate=form.validate,
+        live=form.live,
+        save_label=form.save_label,
+        build=build,
+    )
+
+
+def terminal_fields(fields: list[DialogField]) -> list[DialogField]:
+    """Core fields with the terminal's own chooser for each list field
+    (one with `items` and no `picker`): a ListFieldScreen whose entries are
+    edited through the core's entry forms."""
+    return [
+        _with_list_screen(spec)
+        if spec.items is not None and spec.picker is None
+        else spec
+        for spec in fields
+    ]
+
+
+def _with_list_screen(spec: DialogField) -> DialogField:
+    editor = spec.items
+    assert editor is not None
+
+    def dialog(item: Any) -> FieldsDialog[Any]:
+        step = editor.entry(item)
+        assert isinstance(step, Form)
+        return core_form_dialog(step)
+
+    return replace(
+        spec,
         picker=lambda current: ListFieldScreen(
-            title, current or [], lambda item: escape(row(item)), dialog
+            editor.title, current or [], lambda item: escape(editor.row(item)), dialog
         ),
-        display=_list_display(row),
-        **extra,
+        display=_list_display(editor.row),
     )

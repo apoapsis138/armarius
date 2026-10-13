@@ -39,14 +39,14 @@ from PySide6.QtWidgets import (
 from .. import familiars as fam
 from .. import menu_forms, storage
 from ..actions import NodeKind
-from ..commands import Choose, Command, Confirm, Form, Refuse
-from ..models import Familiar, Saga
+from ..commands import Act, Choose, Command, Confirm, Form, Refuse
+from ..models import Character, Covenant, Familiar, Laboratory, Saga
 from . import pictures
 from .character_sheet import CharacterSheet
 from .covenant import CovenantPage
 from .editing import InPlace, place_for
 from .familiar import FamiliarPage
-from .forms import ChooseDialog, ConfirmDialog, FieldsDialog
+from .forms import ConfirmDialog, answer, step_dialog
 from .laboratory import LaboratoryPage
 from .markup_html import plain
 from .menus import menu_buttons
@@ -56,8 +56,9 @@ from .paper import Paper
 from .saga_content import SagaContentPage
 from .themes import PALETTES, Palette, style_sheet
 from .widgets import take_pressed
+from .worksheet import WorksheetPage
 
-SHELF, SAGA, COVENANT, CHARACTER, LABORATORY, FAMILIAR, CONTENT = (
+SHELF, SAGA, COVENANT, CHARACTER, LABORATORY, FAMILIAR, CONTENT, WORKSHEET = (
     "shelf",
     "saga",
     "covenant",
@@ -65,6 +66,7 @@ SHELF, SAGA, COVENANT, CHARACTER, LABORATORY, FAMILIAR, CONTENT = (
     "laboratory",
     "familiar",
     "content",
+    "worksheet",
 )
 
 
@@ -78,7 +80,9 @@ def _first_input(dialog: QDialog) -> QWidget | None:
 
 
 def _title(command: Command) -> str:
-    return command.question if isinstance(command, Confirm) else command.title
+    if isinstance(command, Confirm):
+        return command.question
+    return "" if isinstance(command, Act) else command.title
 
 
 @dataclass(frozen=True)
@@ -211,6 +215,32 @@ class MainWindow(QMainWindow):
             ]
         )
 
+    def open_worksheet(self, record_id: str) -> None:
+        """Open the Creation Worksheet of a character, covenant or
+        laboratory, below its page."""
+        record = self._creation_record(record_id)
+        if record is None:
+            return
+        if isinstance(record, Character):
+            self.show_character(record_id)
+        elif isinstance(record, Covenant):
+            self.open_covenant(record_id)
+        else:
+            self.open_laboratory(record_id)
+        self.go([*self.trail, Place(WORKSHEET, record_id)])
+
+    def _creation_record(
+        self, record_id: str | None
+    ) -> Character | Covenant | Laboratory | None:
+        saga = self.saga
+        if saga is None:
+            return None
+        return (
+            saga.character(record_id)
+            or saga.covenant(record_id)
+            or saga.laboratory(record_id)
+        )
+
     def _up_to(self, kind: str) -> list[Place]:
         kinds = [place.kind for place in self.trail]
         return self.trail[: kinds.index(kind) + 1] if kind in kinds else [Place(kind)]
@@ -229,7 +259,10 @@ class MainWindow(QMainWindow):
         self._place = place_for(pressed, page) if page is not None else None
         step: object = command
         try:
-            while isinstance(step, Form | Choose | Confirm):
+            while isinstance(step, Form | Choose | Confirm | Act):
+                if isinstance(step, Act):
+                    step = step.apply()
+                    continue
                 answered, step = self._answer(step)
                 if not answered:
                     return
@@ -239,7 +272,7 @@ class MainWindow(QMainWindow):
             self._place = None
         if isinstance(step, Refuse):
             # A refusal changes nothing, so there is nothing to save.
-            QMessageBox.information(self, plain(step.title), plain(step.why))
+            self.tell(step.title, step.why)
             return
         storage.save_saga(self.saga)
         if then is not None:
@@ -247,43 +280,29 @@ class MainWindow(QMainWindow):
         else:
             self.redraw()
         if isinstance(step, list) and step:
-            QMessageBox.information(self, plain(title), plain("\n".join(step)))
+            self.tell(title, "\n".join(step))
 
     def _answer(self, step: Form | Choose | Confirm) -> tuple[bool, object]:
         """Show one step; whether it was answered, and what it led to."""
-        p = self.palette_
-        inline = self._place is not None
-        if isinstance(step, Form):
-            form = FieldsDialog(
-                step.title,
-                step.fields(),
-                p,
-                self,
-                validate=step.validate,
-                live=step.live,
-                save_label=step.save_label,
-                inline=inline,
-            )
-            if self.ask(form) != QDialog.DialogCode.Accepted:
-                return False, None
-            return True, step.apply(form.values)
-        if isinstance(step, Choose):
-            choices = step.choices()
-            if not choices:
-                QMessageBox.information(self, plain(step.title), plain(step.empty))
-                return False, None
-            chooser = ChooseDialog(
-                step.title, choices, p, self, empty=step.empty, inline=inline
-            )
-            if self.ask(chooser) != QDialog.DialogCode.Accepted:
-                return False, None
-            return True, step.apply(chooser.chosen)
-        confirm = ConfirmDialog(
-            step.question, p, self, yes_label=step.yes_label, inline=inline
+        dialog = step_dialog(
+            step,
+            self.palette_,
+            self,
+            inline=self._place is not None,
+            ask=lambda shown: self.ask(shown),
         )
-        if self.ask(confirm) != QDialog.DialogCode.Accepted:
+        if dialog is None:
+            assert isinstance(step, Choose)
+            self.tell(step.title, step.empty)
             return False, None
-        return True, step.apply()
+        if self.ask(dialog) != QDialog.DialogCode.Accepted:
+            return False, None
+        return True, answer(step, dialog)
+
+    def tell(self, title: str, words: str) -> None:
+        """Show a message (markup): what a step refused, or the notes
+        after it. Tests replace it to read the message instead."""
+        QMessageBox.information(self, plain(title), plain(words))
 
     def _present(self, dialog: QDialog) -> int:
         """Show a step and wait for it: in place on the page when it was
@@ -385,6 +404,17 @@ class MainWindow(QMainWindow):
             if familiar is None:
                 return QLabel("No familiar chosen.")
             return FamiliarPage(saga, familiar, p, self.run)
+        if place.kind == WORKSHEET:
+            record = self._creation_record(place.id)
+            if record is None:
+                return QLabel("No record chosen.")
+            return WorksheetPage(
+                saga,
+                record,
+                p,
+                self.run,
+                played=lambda command: self.run(command, self._go_up),
+            )
         character = saga.character(place.id)
         if character is None:
             return QLabel("No character chosen.")
@@ -425,6 +455,8 @@ class MainWindow(QMainWindow):
         if place.kind == FAMILIAR:
             familiar = self._familiar(place.id)
             return (familiar.name or "(unnamed)") if familiar else ""
+        if place.kind == WORKSHEET:
+            return "Creation Worksheet"
         character = saga.character(place.id)
         return character.name if character else ""
 
@@ -455,7 +487,7 @@ class MainWindow(QMainWindow):
         """The page on show, as its New and More menus see it."""
         saga = self.saga
         place = self.trail[-1] if self.trail else None
-        if saga is None or place is None or place.kind == SHELF:
+        if saga is None or place is None or place.kind in (SHELF, WORKSHEET):
             return None
         if place.kind == SAGA:
             return menu_forms.page_for(saga, NodeKind.SAGA)
@@ -482,13 +514,22 @@ class MainWindow(QMainWindow):
                 old.hide()
                 old.deleteLater()
         for button in menu_buttons(
-            self.menu_page(), self.palette_, self.run, self._show_made, self._go_up
+            self.menu_page(),
+            self.palette_,
+            self.run,
+            self._show_made,
+            self._go_up,
+            worksheet=self.open_worksheet,
         ):
             self.menus.addWidget(button)
 
     def _show_made(self, action: str, record_id: str) -> None:
-        """Open the page of what a New entry made."""
-        if action == "create_covenant":
+        """Open the page of what a New entry made: its Creation Worksheet
+        while it is In Creation."""
+        record = self._creation_record(record_id)
+        if action != "create_familiar" and record is not None and record.in_creation:
+            self.open_worksheet(record_id)
+        elif action == "create_covenant":
             self.open_covenant(record_id)
         elif action == "create_character":
             self.show_character(record_id)

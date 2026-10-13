@@ -18,7 +18,7 @@ from typing import Any
 
 from . import catalog
 from . import laboratories as lab_rules
-from .commands import Command, Confirm, Form, SectionOps, delete
+from .commands import Act, Command, Confirm, Form, Refuse, SectionOps, delete
 from .form_spec import DialogField, attr, covenant_options, description_field, pairs
 from .markup import escape
 from .models import (
@@ -194,6 +194,19 @@ def _reconciled(lab: Laboratory, change: Callable[[], None]) -> None:
     counted = lab_rules.counted_specializations(lab)
     change()
     lab_rules.reconcile_dropped(lab, counted)
+
+
+def toggle_specialization(lab: Laboratory, name: str) -> Act:
+    """Turn a Specialization off, or back on (refused when it scores 0 or
+    less, or when turning it on would break a cap)."""
+
+    def apply() -> Refuse | None:
+        refusal = lab_rules.toggle_specialization(lab, name)
+        if refusal is None:
+            return None
+        return Refuse(f"Turn {escape(name)} on or off", escape(refusal))
+
+    return Act(apply)
 
 
 def specialty_ops(lab: Laboratory) -> SectionOps:

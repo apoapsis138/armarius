@@ -25,7 +25,7 @@ from .character_forms import (
     fatigue_fields,
     wounds_fields,
 )
-from .commands import Choice, Choose, Command, Form, SectionOps, delete
+from .commands import Choice, Choose, Command, Form, SectionOps, delete, not_offered
 from .form_spec import DialogField, attr, description_field, pairs
 from .markup import escape
 from .models import (
@@ -378,20 +378,32 @@ def _ability_label(entry: AbilityDef) -> str:
     return f"{entry.name}  [{entry.category}]{needs}"
 
 
-def ability_choices(saga: Saga, held: Sequence[str]) -> list[Choice]:
+def ability_choices(
+    saga: Saga, held: Sequence[str], *, in_play: bool = True
+) -> list[Choice]:
     """The catalog Abilities a familiar holding `held` can still take,
-    from the saga's books in play and not hidden by the saga."""
+    from the saga's books in play and not hidden by the saga. `in_play`
+    False: the others instead, marked with why (for Show everything)."""
     books = sourcebooks.saga_books(saga)
-    return [
-        Choice(
+    found = []
+    for entry in catalog.abilities_to_offer(held):
+        why = (
+            "hidden in this saga"
+            if catalog.hidden(entry)
+            else ""
+            if sourcebooks.in_play(entry.source, books)
+            else "book not in play"
+        )
+        if bool(why) == in_play:
+            continue
+        choice = Choice(
             escape(_ability_label(entry)),
             entry,
             st.ability_entry_text(entry),
             entry.category,
         )
-        for entry in catalog.abilities_to_offer(held)
-        if sourcebooks.in_play(entry.source, books) and not catalog.hidden(entry)
-    ]
+        found.append(not_offered(choice, why) if why else choice)
+    return found
 
 
 def ability_ops(saga: Saga, familiar: Familiar) -> SectionOps:
@@ -427,6 +439,9 @@ def ability_ops(saga: Saga, familiar: Familiar) -> SectionOps:
             lambda: ability_choices(saga, [a.name for a in abilities]),
             chosen,
             empty="(no more Abilities available)",
+            others=lambda: ability_choices(
+                saga, [a.name for a in abilities], in_play=False
+            ),
         )
 
     def edit(index: int) -> Form:

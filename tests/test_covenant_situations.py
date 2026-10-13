@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from support import wait_until
-from textual.widgets import Button, ListView, Static, Tree
+from textual.widgets import Button, Static, Tree
 
 from ars_magica_manager import catalog, covenants, sourcebooks, storage
 from ars_magica_manager.models import (
@@ -16,7 +16,7 @@ from ars_magica_manager.rules import creation as rules
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import ConfirmScreen, WorkspaceScreen
 from ars_magica_manager.tui.screens.creation_worksheet import CreationWorksheetScreen
-from ars_magica_manager.tui.screens.pickers import RemovalPickerScreen
+from ars_magica_manager.tui.screens.steps import ChooseScreen
 from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
 BY_ID = catalog.load_covenant_boon_hook_catalog_by_id()
@@ -190,14 +190,11 @@ async def _choose_situation(pilot, app, screen, index: int) -> None:
 
     assert await wait_until(pilot, lambda: button() is not None)
     button().press()
-    assert await wait_until(pilot, lambda: isinstance(app.screen, RemovalPickerScreen))
-    # Only the core book's six are offered with no supplements in play.
-    assert len(app.screen.labels) == 6
-    options = app.screen.query_one("#removal-picker-list", ListView)
-    assert await wait_until(pilot, lambda: len(options.children) == 6)
-    options.index = index
+    assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
     await pilot.pause()
-    await pilot.press("enter")
+    # Only the core book's six are offered with no supplements in play.
+    assert len(app.screen.choices) == 6
+    app.screen.dismiss(index)
     assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
 
 

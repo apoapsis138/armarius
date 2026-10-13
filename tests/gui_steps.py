@@ -4,13 +4,18 @@
 opens, in turn, and records them:
 
 - a FieldsDialog: a dict of field key -> what to type (a string, or a
-  select's value, or a bool for a check), then Save;
-- a ChooseDialog: the label of the entry to choose;
+  select's value, or a bool for a check, or a picker's value), then Save;
+  a callable instead (`pick`, `list_add`, `list_edit(row)`,
+  `list_delete(row)`) acts on the field as clicking it does, its own
+  steps answered by the answers that follow;
+- a ChooseDialog: the label of the entry to choose (`everything(label)`
+  ticks Show everything first);
 - a ConfirmDialog: True (yes) or False;
 - None (any dialog): cancel.
 
 A dialog that refuses its answer (a form with a bad entry) is recorded
-with its error and counts as cancelled.
+with its error and counts as cancelled. A message the window shows (a
+refusal, the notes after a step) goes to `window.told` as (title, words).
 """
 
 from __future__ import annotations
@@ -37,10 +42,16 @@ def answering(window: Any, *answers: Any) -> list[QDialog]:
             return QDialog.DialogCode.Rejected
         if isinstance(dialog, FieldsDialog):
             for key, value in answer.items():
-                dialog.set_value(key, value)
+                if callable(value):
+                    value(dialog, key)
+                else:
+                    dialog.set_value(key, value)
             dialog.try_save()
         elif isinstance(dialog, ChooseDialog):
-            dialog.choose(answer)
+            if callable(answer):
+                answer(dialog)
+            else:
+                dialog.choose(answer)
             dialog.try_save()
         elif isinstance(dialog, ConfirmDialog):
             return (
@@ -49,7 +60,48 @@ def answering(window: Any, *answers: Any) -> list[QDialog]:
         return dialog.result()
 
     window.ask = ask
+    window.told = []
+    window.tell = lambda title, words: window.told.append((title, words))
     return asked
+
+
+def everything(label: str):
+    """Tick a list's Show everything, then choose `label`."""
+
+    def act(dialog: ChooseDialog) -> None:
+        dialog.everything.setChecked(True)
+        dialog.choose(label)
+
+    return act
+
+
+def pick(form: FieldsDialog, key: str) -> None:
+    """Run a picker field's chooser."""
+    form.pick(key)
+
+
+def _list_button(words: str, row: int | None = None):
+    def act(form: FieldsDialog, key: str) -> None:
+        field = form.inputs[key]
+        if row is not None:
+            field.choose(row)  # type: ignore[attr-defined]
+        field.buttons[words].click()  # type: ignore[attr-defined]
+
+    return act
+
+
+#: Add an entry to a list field.
+list_add = _list_button("Add")
+
+
+def list_edit(row: int):
+    """Edit a list field's entry `row`."""
+    return _list_button("Edit", row)
+
+
+def list_delete(row: int):
+    """Delete a list field's entry `row`."""
+    return _list_button("Delete", row)
 
 
 def buttons(page: QWidget, words: str) -> list[QPushButton]:

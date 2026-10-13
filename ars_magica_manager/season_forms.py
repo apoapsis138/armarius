@@ -6,8 +6,8 @@ character sheet's This Season and the covenant's Seasons lists
 
 Each field of the Plan Season form shows only for the activities that use
 it. The form's Virtue and Flaw fields (an Initiation's) are "picker"
-fields when the front-end gives a chooser (`VfPicker`, the terminal's
-catalog picker), else drop-downs of the catalog's entries.
+fields: the front-end's own chooser when it gives one (`VfPicker`, the
+terminal's catalog picker), else the core's searchable list.
 """
 
 from __future__ import annotations
@@ -15,7 +15,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from . import book_kinds, catalog, seasons, sourcebooks
+from . import book_kinds, catalog, seasons, sourcebooks, virtue_forms
 from . import books as bk
 from . import lab_texts as lt
 from . import spells as spl
@@ -324,10 +324,10 @@ def _vf_field(
     show_if: ShowIf,
     vf_picker: VfPicker | None,
 ) -> DialogField:
-    """A field choosing a Virtue or Flaw (`side`) for `character`: the
-    front-end's catalog picker, which asks for anything the entry names
-    (Delete clears it), or without one a drop-down of the catalog's
-    entries the character could take."""
+    """A field choosing a Virtue or Flaw (`side`) for `character`, asking
+    for anything the entry names (Delete clears it): the front-end's own
+    catalog picker when it gives one, else the core's searchable list
+    (virtue_forms.choose_virtue_flaw)."""
     by_id = catalog.load_virtue_flaw_catalog_by_id()
 
     def display(instance: VirtueFlawInstance) -> str:
@@ -335,37 +335,16 @@ def _vf_field(
         tier = f" ({definition.tier})" if definition else ""
         return catalog.describe_virtue_flaw(instance, by_id) + tier
 
-    if vf_picker is not None:
-        return DialogField(
-            key,
-            label,
-            "picker",
-            value,
-            allow_blank=True,
-            placeholder=f"(choose the {side}...)",
-            picker=vf_picker(saga, character, side),
-            display=display,
-            show_if=show_if,
-        )
-    chooser = catalog.VirtueFlawChooser.for_character(
-        character, sourcebooks.saga_books(saga)
-    )
-    entries = sorted(
-        (d for d in by_id.values() if d.side == side and not chooser.refusal(d)),
-        key=lambda d: (d.name.lower(), d.tier),
-    )
-    options = [(escape(f"{d.name} ({d.tier})"), d.id) for d in entries]
-    chosen = value.vf_id if value is not None else None
-    if value is not None and value.vf_id not in {d.id for d in entries}:
-        options.append((escape(display(value)), value.vf_id))
     return DialogField(
         key,
         label,
-        "select",
-        chosen,
-        options=options,
+        "picker",
+        value,
         allow_blank=True,
         placeholder=f"(choose the {side}...)",
+        picker=vf_picker(saga, character, side) if vf_picker is not None else None,
+        choose=lambda _current: virtue_forms.choose_virtue_flaw(saga, character, side),
+        display=display,
         show_if=show_if,
     )
 

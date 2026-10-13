@@ -6,8 +6,13 @@ to choose from; and a yes-or-no question.
 
 A field's kind picks its widget: a line for text and numbers, a box for
 multi-line text, a drop-down for a choice, a tick box for a check, and a
-plain line for read-only information. A "picker" field, whose chooser is
-a terminal screen, is shown read-only.
+plain line for read-only information. A "picker" field is a button
+showing its value that runs the field's chooser (its core steps, each as
+a window over the form), or, holding a list, the list with Add, Edit and
+Delete; one with only a terminal chooser is shown read-only.
+
+`run_steps` runs a chain of steps as windows; the window runs a button's
+steps the same way, in place.
 """
 
 from __future__ import annotations
@@ -18,6 +23,7 @@ from typing import Any
 from PySide6.QtCore import QRectF, Qt
 from PySide6.QtGui import QPainter
 from PySide6.QtWidgets import (
+    QAbstractItemView,
     QCheckBox,
     QComboBox,
     QDialog,
@@ -27,6 +33,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QListWidget,
     QListWidgetItem,
+    QMessageBox,
     QPlainTextEdit,
     QPushButton,
     QScrollArea,
@@ -37,13 +44,17 @@ from PySide6.QtWidgets import (
 )
 
 from .. import form_spec
-from ..commands import Choice
-from ..form_spec import DialogField, FieldError
+from ..commands import Act, Choice, Choose, Confirm, Form, Picked, Refuse
+from ..form_spec import DialogField, FieldError, ListEditor
 from .markup_html import plain, to_html
 from .ornaments import FleuronRule, corner_flourishes
 from .paper import Paper
 from .themes import Palette
 from .widgets import serif, text
+
+#: Shows a step's dialog and waits: Accepted or Rejected. The window's
+#: `ask`, which tests replace to answer without showing anything.
+Ask = Callable[[QDialog], int]
 
 #: Field kinds the dialog reads as typed text, parsed by form_spec.
 _LINE_KINDS = {"text", "secret", "int", "optint", "optfloat"}
@@ -135,9 +146,11 @@ class FieldsDialog(_Sheet):
         live: Callable[[dict[str, Any]], str] | None = None,
         save_label: str = "Save",
         inline: bool = False,
+        ask: Ask | None = None,
     ) -> None:
         super().__init__(title, p, save_label, parent, inline=inline)
         self.fields = fields
+        self.ask: Ask = ask or (lambda dialog: dialog.exec())
         self.validate, self.live = validate, live
         self.values: dict[str, Any] = {}
         self.inputs: dict[str, QWidget] = {}
@@ -228,6 +241,10 @@ class FieldsDialog(_Sheet):
             tick.toggled.connect(changed)
             return tick
         if spec.kind == "picker":
+            if spec.items is not None:
+                return _ListField(spec, spec.items, self)
+            if spec.choose is not None:
+                return _PickerField(spec, self)
             shown = spec.display(spec.value) if spec.display else spec.value
             return _Held(spec.value, plain(_shown_text(shown)), self.p)
         if spec.kind == "info":
@@ -249,7 +266,7 @@ class FieldsDialog(_Sheet):
             return widget.currentData()
         if isinstance(widget, QCheckBox):
             return widget.isChecked()
-        if isinstance(widget, _Held):
+        if isinstance(widget, _Held | _PickerField | _ListField):
             return widget.value
         return None
 
@@ -268,6 +285,25 @@ class FieldsDialog(_Sheet):
             widget.setCurrentIndex(max(0, widget.findData(value)))
         elif isinstance(widget, QCheckBox):
             widget.setChecked(bool(value))
+        elif isinstance(widget, _PickerField | _ListField):
+            widget.put(value)
+
+    def pick(self, key: str) -> None:
+        """Run a picker field's chooser, as clicking it does."""
+        widget = self.inputs[key]
+        assert isinstance(widget, _PickerField)
+        widget.pick()
+
+    def run(self, step: object) -> tuple[bool, object]:
+        """Run a field's steps as windows over the form (run_steps); a
+        refusal is shown as the form's error."""
+        answered, result = run_steps(step, self.p, self, self.ask)
+        if isinstance(result, Refuse):
+            self.refuse(f"{result.title}: {result.why}")
+            return False, None
+        if answered and isinstance(result, Picked):
+            self.error.hide()
+        return answered, result
 
     def _changed(self, spec: DialogField) -> Callable[..., None]:
         def changed(*_args) -> None:
@@ -344,6 +380,150 @@ class _Held(QLabel):
         self.setToolTip("Change this in the terminal app for now.")
 
 
+class _PickerField(QWidget):
+    """A picker field: a button showing the value, which runs the field's
+    chooser, and Clear when the field may be blank."""
+
+    def __init__(self, spec: DialogField, form: FieldsDialog) -> None:
+        super().__init__()
+        self.spec, self.form = spec, form
+        self.value: Any = spec.value
+        row = QHBoxLayout(self)
+        row.setContentsMargins(0, 0, 0, 0)
+        self.button = QPushButton()
+        self.button.setObjectName("picker")
+        self.button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.button.setStyleSheet("text-align:left; padding:3px 8px")
+        self.button.clicked.connect(lambda _checked=False: self.pick())
+        row.addWidget(self.button, 1)
+        self.clear = QPushButton("Clear")
+        self.clear.clicked.connect(lambda _checked=False: self._set(None))
+        self.clear.setVisible(spec.allow_blank)
+        row.addWidget(self.clear)
+        self._show()
+
+    def _show(self) -> None:
+        if self.value is None:
+            words = plain(self.spec.placeholder) or "(choose…)"
+        elif self.spec.display is not None:
+            words = plain(self.spec.display(self.value))
+        else:
+            words = _shown_text(self.value)
+        self.button.setText(words)
+        self.button.setToolTip(words)
+        self.clear.setEnabled(self.value is not None)
+
+    def pick(self) -> None:
+        assert self.spec.choose is not None
+        answered, result = self.form.run(self.spec.choose(self.value))
+        if answered and isinstance(result, Picked):
+            self._set(result.value)
+
+    def put(self, value: Any) -> None:
+        self.value = value
+        self._show()
+
+    def _set(self, value: Any) -> None:
+        self.put(value)
+        self.form._changed(self.spec)()
+
+
+class _ListField(QWidget):
+    """A picker field holding a small list: its entries, with Add, Edit
+    and Delete for the one chosen (each entry's steps as windows)."""
+
+    def __init__(
+        self, spec: DialogField, editor: ListEditor, form: FieldsDialog
+    ) -> None:
+        super().__init__()
+        self.spec, self.editor, self.form = spec, editor, form
+        self.value: list[Any] = list(spec.value) if isinstance(spec.value, list) else []
+        column = QVBoxLayout(self)
+        column.setContentsMargins(0, 0, 0, 0)
+        column.setSpacing(4)
+        self.list = QListWidget()
+        self.list.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.list.itemDoubleClicked.connect(lambda _item: self.edit())
+        self.list.currentRowChanged.connect(lambda _row: self._enable())
+        column.addWidget(self.list)
+        row = QHBoxLayout()
+        row.setContentsMargins(0, 0, 0, 0)
+        self.buttons: dict[str, QPushButton] = {}
+        for words, act in (
+            ("Add", self.add),
+            ("Edit", self.edit),
+            ("Delete", self.delete),
+        ):
+            button = QPushButton(words)
+            button.clicked.connect(lambda _checked=False, act=act: act())
+            row.addWidget(button)
+            self.buttons[words] = button
+        row.addStretch(1)
+        column.addLayout(row)
+        self._show()
+
+    def _show(self, chosen: int | None = None) -> None:
+        self.list.clear()
+        for item in self.value:
+            self.list.addItem(plain(self.editor.row(item)))
+        if not self.value:
+            self.list.addItem("(none)")
+            self.list.item(0).setFlags(Qt.ItemFlag.NoItemFlags)
+        elif chosen is not None:
+            self.list.setCurrentRow(min(chosen, len(self.value) - 1))
+        rows = max(1, len(self.value))
+        self.list.setFixedHeight(min(6, rows) * 22 + 2 * self.list.frameWidth() + 4)
+        self._enable()
+
+    def _chosen(self) -> int | None:
+        row = self.list.currentRow()
+        if 0 <= row < len(self.value):
+            return row
+        return 0 if len(self.value) == 1 else None
+
+    def _enable(self) -> None:
+        some = self._chosen() is not None
+        self.buttons["Edit"].setEnabled(some)
+        self.buttons["Delete"].setEnabled(some)
+
+    def choose(self, row: int) -> None:
+        self.list.setCurrentRow(row)
+
+    def add(self) -> None:
+        answered, result = self.form.run(self.editor.entry(None))
+        if answered and isinstance(result, Picked):
+            self._set([*self.value, result.value], len(self.value))
+
+    def edit(self) -> None:
+        row = self._chosen()
+        if row is None:
+            return
+        answered, result = self.form.run(self.editor.entry(self.value[row]))
+        if answered and isinstance(result, Picked):
+            items = list(self.value)
+            items[row] = result.value
+            self._set(items, row)
+
+    def delete(self) -> None:
+        row = self._chosen()
+        if row is None:
+            return
+        items = list(self.value)
+        del items[row]
+        self._set(items, row)
+
+    def put(self, value: Any) -> None:
+        self.value = list(value or [])
+        self._show()
+
+    def _set(self, items: list[Any], chosen: int | None) -> None:
+        self.value = items
+        self._show(chosen)
+        self.form._changed(self.spec)()
+        if self.form.inline and hasattr(self.form, "area"):
+            self.form._fit()
+
+
 class ChooseDialog(_Sheet):
     """A searchable list of `choices`, with the highlighted one's details
     beside it; `chosen` holds the value picked, after exec() returns
@@ -358,14 +538,26 @@ class ChooseDialog(_Sheet):
         *,
         empty: str = "Nothing to choose from.",
         inline: bool = False,
+        others: Callable[[], list[Choice]] | None = None,
     ) -> None:
         super().__init__(title, p, "Choose", parent, inline=inline)
+        self.offered = choices
         self.choices = choices
         self.chosen: Any = None
         self.search = QLineEdit()
         self.search.setPlaceholderText("Search…")
         self.search.textChanged.connect(self.refilter)
         self.column.addWidget(self.search)
+        #: Lists the entries not offered too, each marked with why (the
+        #: terminal's F3); only for a list that has any.
+        self.everything = QCheckBox("Show everything")
+        self.everything.setToolTip(
+            "Also list what isn't offered here (from books not in play, or "
+            "what the rules say can't be taken), marked with why."
+        )
+        self.everything.toggled.connect(lambda on: self._list_everything(on, others))
+        self.everything.setVisible(others is not None)
+        self.column.addWidget(self.everything)
         self.list = QListWidget()
         self.list.setFont(serif(12.5))
         self.details = QLabel()
@@ -393,6 +585,12 @@ class ChooseDialog(_Sheet):
             split.setMinimumHeight(320)
         else:
             self.resize(760 if not details.isHidden() else 520, 620)
+
+    def _list_everything(
+        self, on: bool, others: Callable[[], list[Choice]] | None
+    ) -> None:
+        self.choices = [*self.offered, *(others() if on and others else [])]
+        self.refilter(self.search.text())
 
     def refilter(self, words: str) -> None:
         """List the choices whose label or search words have every word
@@ -460,3 +658,81 @@ class ConfirmDialog(_Sheet):
         self.finish()
         if not inline:
             self.resize(460, 200)
+
+
+# -- running steps --
+
+
+Step = Form | Choose | Confirm
+
+
+def step_dialog(
+    step: Step,
+    p: Palette,
+    parent: QWidget | None,
+    *,
+    inline: bool = False,
+    ask: Ask | None = None,
+) -> QDialog | None:
+    """The dialog that asks `step` (None: a list with nothing in it)."""
+    if isinstance(step, Form):
+        return FieldsDialog(
+            step.title,
+            step.fields(),
+            p,
+            parent,
+            validate=step.validate,
+            live=step.live,
+            save_label=step.save_label,
+            inline=inline,
+            ask=ask,
+        )
+    if isinstance(step, Choose):
+        choices = step.choices()
+        if not choices and step.others is None:
+            return None
+        return ChooseDialog(
+            step.title,
+            choices,
+            p,
+            parent,
+            empty=step.empty,
+            inline=inline,
+            others=step.others,
+        )
+    return ConfirmDialog(
+        step.question, p, parent, yes_label=step.yes_label, inline=inline
+    )
+
+
+def answer(step: Step, dialog: QDialog) -> object:
+    """Run `step`'s apply with what its (accepted) dialog holds: the next
+    step, or what the steps end with."""
+    if isinstance(step, Form):
+        assert isinstance(dialog, FieldsDialog)
+        return step.apply(dialog.values)
+    if isinstance(step, Choose):
+        assert isinstance(dialog, ChooseDialog)
+        return step.apply(dialog.chosen)
+    return step.apply()
+
+
+def run_steps(
+    step: object, p: Palette, parent: QWidget | None, ask: Ask
+) -> tuple[bool, object]:
+    """Run `step` and the steps it leads to, each as a window; whether
+    every one was answered, and what the last led to (a Picked value, a
+    Refuse...)."""
+    while isinstance(step, Form | Choose | Confirm | Act):
+        if isinstance(step, Act):
+            step = step.apply()
+            continue
+        dialog = step_dialog(step, p, parent, ask=ask)
+        if dialog is None:
+            assert isinstance(step, Choose)
+            QMessageBox.information(parent, plain(step.title), plain(step.empty))
+            return False, None
+        if ask(dialog) != QDialog.DialogCode.Accepted:
+            return False, None
+        step = answer(step, dialog)
+    return True, step

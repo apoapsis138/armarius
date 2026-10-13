@@ -18,7 +18,6 @@ from ars_magica_manager import saga_content_forms as scf
 from ars_magica_manager import spells as spl
 from ars_magica_manager import storage
 from ars_magica_manager.gui import pictures
-from ars_magica_manager.gui import window as window_module
 from ars_magica_manager.gui.markup_html import plain
 from ars_magica_manager.gui.saga_content import SagaContentPage
 from ars_magica_manager.gui.window import MainWindow
@@ -46,7 +45,7 @@ def _page(window: MainWindow) -> SagaContentPage:
     return page
 
 
-def test_a_saga_source_is_added_edited_and_refused_while_cited(app, monkeypatch):
+def test_a_saga_source_is_added_edited_and_refused_while_cited(app):
     window, saga_id = _content("Books")
     asked = answering(window, {"abbreviation": "HR", "title": "Ours"})
     controls = section_buttons(_page(window), "Saga Sources")
@@ -63,15 +62,11 @@ def test_a_saga_source_is_added_edited_and_refused_while_cited(app, monkeypatch)
     assert saga is not None
     entry = hr.add(saga, hr.CHARACTER, {"name": "X", "type": "Virtue", "tier": "Minor"})
     entry.source = "HR"
-    told: list[str] = []
-    monkeypatch.setattr(
-        window_module.QMessageBox,
-        "information",
-        lambda _parent, _title, why: told.append(why),
-    )
     answering(window)
     section_buttons(_page(window), "Saga Sources")["Delete"].click()
-    assert told == ["HR is cited by X: change them first."]
+    assert [why for _title, why in window.told] == [
+        "HR is cited by X: change them first."
+    ]
     assert saga.sources
 
 

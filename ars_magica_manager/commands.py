@@ -2,10 +2,12 @@
 they are drawn.
 
 A command is one step the user answers: a form to fill (`Form`), a list
-to choose from (`Choose`) or a question to confirm (`Confirm`). Answering
+to choose from (`Choose`) or a question to confirm (`Confirm`); an `Act`
+asks nothing and runs at once. Answering
 it runs its `apply`, which changes the saga and returns the next step: a
 further command (choose an Ability, then fill in its score), the notes to
-show the user, or None when there is nothing more. A `Refuse`, as the
+show the user, or None when there is nothing more. A form field's chooser
+runs the same steps and ends with a `Picked` value instead. A `Refuse`, as the
 first step or the next, says why the button can't act, changing nothing. A front-end runs the
 steps, then saves the saga and redraws the page.
 
@@ -55,12 +57,27 @@ class Choice:
 @dataclass(frozen=True)
 class Choose:
     """A list to choose one entry from, searchable; `apply` gets the
-    chosen entry's value."""
+    chosen entry's value. `others` are the entries not offered (from a
+    book not in play, or ones the rules say this record can't take),
+    listed too only when the user asks to see everything, each marked
+    with why (`not_offered`)."""
 
     title: str
     choices: Callable[[], list[Choice]]
     apply: Callable[[Any], Any]
     empty: str = "Nothing to choose from."
+    others: Callable[[], list[Choice]] | None = None
+
+
+def not_offered(choice: Choice, why: str) -> Choice:
+    """`choice` as Show everything lists it: marked with why it isn't
+    offered."""
+    return Choice(
+        f"{choice.label}  [dim]({escape(why)})[/]",
+        choice.value,
+        f"[$text-warning]Not offered: {escape(why)}[/]\n{choice.detail}",
+        f"{choice.search} {why}",
+    )
 
 
 @dataclass(frozen=True)
@@ -81,7 +98,29 @@ class Refuse:
     why: str
 
 
-Command = Form | Choose | Confirm | Refuse
+@dataclass(frozen=True)
+class Act:
+    """A step with nothing to ask: `apply` runs at once (a button that
+    just does its work, such as adding the Virtues a magus must have)."""
+
+    apply: Callable[[], Any]
+
+
+@dataclass(frozen=True)
+class Picked:
+    """What a form field's chooser (form_spec.DialogField.choose) ends
+    with: the field's new value. Nothing in the saga changes."""
+
+    value: Any
+
+
+Command = Form | Choose | Confirm | Act | Refuse
+
+
+def picked(form: Callable[[dict[str, Any]], Any]) -> Callable[[dict[str, Any]], Picked]:
+    """A Form's apply that hands back what `form` builds from the values
+    as the chosen value."""
+    return lambda values: Picked(form(values))
 
 
 @dataclass(frozen=True)

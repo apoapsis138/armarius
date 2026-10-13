@@ -45,6 +45,7 @@ from ..covenants import boon_hook_problems
 from ..models import INHABITANT_KINDS, POSSESSION_KINDS, Covenant, Saga
 from .character_sheet import (
     columns_text,
+    device_section,
     label_values,
     row_list,
     section,
@@ -64,6 +65,7 @@ from .widgets import (
     cells_table,
     chapter_title,
     display_name,
+    edit_button,
     scrolling_page,
     serif,
     text,
@@ -482,6 +484,9 @@ class CovenantPage(QWidget):
                 {kind: pos.KIND_TITLES[kind] for kind in POSSESSION_KINDS},
                 lambda kind: possession_forms.possession_ops(saga, covenant, kind),
             ),
+            device_section(
+                saga, "covenant", covenant.id, self.p, self.run, self.inspect
+            ),
         )
 
     def _treasury(self, covenant: Covenant) -> QWidget:
@@ -558,7 +563,25 @@ class CovenantPage(QWidget):
                 f"Library ({len(books)})",
                 p,
                 *([] if books else [_none("No books yet.", p)]),
-                buttons=verb_buttons(ops, chooser, self.run, p),
+                buttons=[
+                    *verb_buttons(ops, chooser, self.run, p),
+                    *(
+                        [
+                            edit_button(
+                                "Change Owner",
+                                p,
+                                lambda: self.run(
+                                    library_forms.change_owner(
+                                        saga, bk.books_in_covenant(saga, covenant)
+                                    )
+                                ),
+                                "library",
+                            )
+                        ]
+                        if len(books) > 1
+                        else []
+                    ),
+                ],
             )
         ]
         for title, spines in cvs.shelves(saga, covenant):

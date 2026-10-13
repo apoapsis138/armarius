@@ -529,10 +529,14 @@ def aura_seal(aura: cs_lab.Aura, p: Palette) -> Seal:
 
 
 def bar_list(
-    rows: Sequence[tuple[str, int, bool]], p: Palette, reach: int = 6
+    rows: Sequence[tuple[str, int, bool]],
+    p: Palette,
+    on_choose: Callable[[int], None] | None = None,
+    reach: int = 6,
 ) -> QWidget:
     """Names with a score and a bar from the left, one under another; a
-    row that doesn't count is dimmed."""
+    row that doesn't count is dimmed. Clicking a name calls `on_choose`
+    with its row."""
     box = QWidget()
     grid = QGridLayout(box)
     grid.setContentsMargins(0, 0, 0, 0)
@@ -540,7 +544,11 @@ def bar_list(
     grid.setVerticalSpacing(6)
     for row, (name, score, counts) in enumerate(rows):
         ink = p["foreground"] if counts else p["dim"]
-        grid.addWidget(text(name, ink, serif(13)), row, 0)
+        label = text(name, ink, serif(13))
+        if on_choose is not None:
+            label.setCursor(Qt.CursorShape.PointingHandCursor)
+            label.mousePressEvent = lambda _event, row=row: on_choose(row)
+        grid.addWidget(label, row, 0)
         number = text(
             f"{score:+d}", p["heading"] if counts else p["dim"], serif(13, bold=True)
         )

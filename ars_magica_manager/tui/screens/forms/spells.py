@@ -20,7 +20,7 @@ from ....models import (
 )
 from ....rules import spell_levels
 from ..fields import FieldsDialog
-from ..prompts import _list_field, _mastery_ability_dialog
+from ..prompts import terminal_fields
 
 #: The choice in a Range/Duration/Target select that opens a free-text box.
 _OTHER = "__other__"
@@ -212,21 +212,6 @@ def _mastery_dialog(spell_name: str, existing: KnownSpell) -> FieldsDialog[Known
     finished KnownSpell."""
     return FieldsDialog(
         spell_forms.mastery_title(spell_name),
-        spell_forms.mastery_fields(
-            existing,
-            _list_field(
-                "mastery_abilities",
-                "Mastery Abilities",
-                existing.mastery_abilities,
-                f"Mastery Abilities: {escape(spell_name)}",
-                spell_forms.mastery_ability_row,
-                lambda ability: _mastery_ability_dialog(
-                    "Add a Mastery Ability"
-                    if ability is None
-                    else "Edit a Mastery Ability",
-                    ability,
-                ),
-            ),
-        ),
+        terminal_fields(spell_forms.mastery_fields(existing, spell_name=spell_name)),
         build=lambda values: spell_forms.known_spell_from(existing, values),
     )

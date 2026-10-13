@@ -28,19 +28,17 @@ from textual.widgets import (
 )
 from textual.widgets.option_list import Option
 
-from ... import books as bk
 from ... import catalog, sourcebooks
 from ... import laboratories as labs
 from ... import saga_content as sc
 from ... import sheet_text as st
 from ... import spells as spl
 from ...boon_hook_text import boon_hook_entry_text, boon_hook_names
-from ...markup import escape, fit
+from ...markup import escape
 from ...models import (
     VIRTUE_FLAW_TIER_COST,
     Ability,
     AbilityDef,
-    Book,
     CovenantBoonHookDef,
     LabVirtueFlawDef,
     Saga,
@@ -1460,98 +1458,3 @@ class FolderPickerScreen(CsvFilePickerScreen):
             self._show_folder(path)
         else:
             self._choose(event.value)
-
-
-_BOOK_ITEM_ID_PREFIX = "bookpick-"
-
-
-class SagaBookPickerScreen(SearchablePickerScreen[Book, Book | None]):
-    """Pick one of the saga's own books (Unassigned Books: e.g. an
-    imported book list) for a new covenant to buy. Only the books a new
-    covenant may buy are listed, each with its Build Point cost; F3 also
-    lists the others, marked with why (books.creation_refusals). Dismisses
-    with the chosen book (the caller copies it), or None."""
-
-    PICKER_TITLE: ClassVar[str] = "Buy one of the saga's books"
-    EMPTY_MESSAGE: ClassVar[str] = "(no books a new covenant may buy)"
-    SEARCH_PLACEHOLDER: ClassVar[str] = "Search titles, types, subjects, authors..."
-    LIST_VIEW_ID: ClassVar[str] = "book-picker-list"
-    DETAILS_HEIGHT: ClassVar[int] = 12
-
-    BINDINGS: ClassVar[list[BindingType]] = [
-        Binding("f3", "toggle_ineligible", "Show over the limits"),
-    ]
-
-    def __init__(self, saga: Saga, books: list[Book], max_level: int | None) -> None:
-        super().__init__()
-        self.saga = saga
-        self._all = books
-        self._refusals = {b.id: bk.creation_refusals(saga, b, max_level) for b in books}
-        self._show_ineligible = False
-        self._hidden = 0
-
-    def _compose_below_list(self) -> ComposeResult:
-        yield Static(id="book-picker-status")
-
-    def action_toggle_ineligible(self) -> None:
-        self._show_ineligible = not self._show_ineligible
-        self.run_worker(
-            self._render_list(self.query_one("#picker-search", Input).value),
-            exclusive=True,
-            group="book-picker",
-        )
-
-    def _load_entries(self) -> list[Book]:
-        return sorted(self._all, key=lambda b: (b.type, b.name.lower()))
-
-    def _candidates(self) -> list[Book]:
-        eligible = [b for b in self._entries if not self._refusals[b.id]]
-        self._hidden = len(self._entries) - len(eligible)
-        return self._entries if self._show_ineligible else eligible
-
-    def _filled(self, shown: list[Book]) -> None:
-        verb = (
-            "marked (F3 hides them)"
-            if self._show_ineligible
-            else "hidden (F3 shows them)"
-        )
-        self.query_one("#book-picker-status", Static).update(
-            f"{len(shown)} listed, {self._hidden} over a new covenant's limits {verb}."
-        )
-
-    def _search_text(self, entry: Book) -> str:
-        return (
-            f"{entry.name} {entry.type} {bk.subject(entry, self.saga)} "
-            f"{entry.author} {entry.language}"
-        )
-
-    #: The list's columns: the title, the type, level, quality and cost
-    #: (the subject and the rest are in the details under the list).
-    _TITLE = 54
-    _TYPE = 14
-
-    def _label_for(self, entry: Book) -> str:
-        level = bk.level_of(entry, self.saga)
-        figures = (
-            f"L{level if level is not None else '-':>2} Q{entry.quality or '-':>2}"
-        )
-        cost = f"{bk.cost(entry, self.saga)} BP"
-        label = (
-            f"{escape(fit(entry.name, self._TITLE))} "
-            f"{escape(fit(entry.type, self._TYPE))}{figures}  {cost:>6}"
-        )
-        if self._refusals.get(entry.id):
-            label += "  [$text-error]over the limits[/]"
-        return label
-
-    def _item_id(self, entry: Book) -> str:
-        return f"{_BOOK_ITEM_ID_PREFIX}{entry.id}"
-
-    def _details(self, entry: Book) -> str:
-        text = bk.detail_text(self.saga, entry)
-        if refusals := self._refusals.get(entry.id):
-            text += "\n\n[$text-error]" + escape(" ".join(refusals)) + "[/]"
-        return text
-
-    def _on_entry_selected(self, entry: Book) -> None:
-        self.dismiss(entry)

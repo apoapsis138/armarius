@@ -76,15 +76,15 @@ Record = Covenant | Character | Laboratory | Familiar
 DELETE_RECORD = "delete_record"
 
 #: The More commands a page offers nowhere: the desktop shows them as the
-#: section's own button (Fatigue beside Wounds in Health), or doesn't show
-#: the section or workflow yet (Enchanted Devices, the Creation Worksheet).
+#: section's own button (Fatigue beside Wounds in Health; Instill and Use
+#: a Charge beside Enchanted Devices). The Creation Worksheet is offered,
+#: but opens a page rather than running a command.
 NOT_ON_PAGES = frozenset(
     {
         "edit_fatigue",
         "edit_familiar_fatigue",
         "instill_effect",
         "use_charge",
-        "creation_worksheet",
     }
 )
 

@@ -8,9 +8,10 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+from .... import device_forms
 from .... import enchanted_devices as ed
 from ....markup import escape
-from ....models import CHARGED, INVESTED, EnchantedDevice, InstilledEffect
+from ....models import CHARGED, EnchantedDevice, InstilledEffect
 from ..forms import _enchanted_device_dialog, _instilled_effect_dialog
 from ..prompts import ConfirmScreen
 from ..sheets import DEVICE_SECTIONS
@@ -116,30 +117,16 @@ class DeviceActions(WorkspaceBase):
 
     def _confirm_remove(self, target: Target) -> None:
         device, effect = target
-        if effect is None:
-            count = len(device.effects)
-            extra = (
-                f" and its {count} effect{'' if count == 1 else 's'}" if count else ""
-            )
-            message = f"Delete {escape(device.name)}{extra}?"
-        else:
-            message = (
-                f"Delete {escape(ed.effect_name(effect))} from {escape(device.name)}?"
-            )
 
         def handle_confirmed(confirmed: bool | None) -> None:
-            if not confirmed:
-                return
-            if effect is None:
-                self.saga.enchanted_devices.remove(device)
-            else:
-                device.effects.remove(effect)
-                for other in device.effects:
-                    if other.linked_to == effect.id:
-                        other.linked_to = ""
-            self._commit_devices()
+            if confirmed:
+                device_forms.remove_target(self.saga, device, effect)
+                self._commit_devices()
 
-        self.app.push_screen(ConfirmScreen(message), handle_confirmed)
+        self.app.push_screen(
+            ConfirmScreen(device_forms.remove_question(device, effect)),
+            handle_confirmed,
+        )
 
     # -- i: Instill Effect, u: Use Charge (only where they can act) --
 
@@ -164,14 +151,14 @@ class DeviceActions(WorkspaceBase):
             return False
         device, effect = target
         if action == "instill_effect":
-            return _can_take_effect(device)
+            return device_forms.can_take_effect(device)
         return effect is None and device.type == CHARGED
 
     def action_instill_effect(self) -> None:
         """Instil an effect in the chosen device (or the chosen effect's
         device). A Lesser Enchantment or Charged Item has exactly one."""
         target = self._chosen_target()
-        if target is not None and _can_take_effect(target[0]):
+        if target is not None and device_forms.can_take_effect(target[0]):
             self._effect_form(target[0], None)
 
     def _effect_form(
@@ -202,8 +189,3 @@ class DeviceActions(WorkspaceBase):
         self.notify(
             f"{escape(device.name)}: {left} charge{'' if left == 1 else 's'} left."
         )
-
-
-def _can_take_effect(device: EnchantedDevice) -> bool:
-    """An invested device takes any number of effects; the others one."""
-    return device.type == INVESTED or not device.effects

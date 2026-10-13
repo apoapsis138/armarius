@@ -34,6 +34,11 @@ from .widgets import ClickableCard, edit_button
 
 Run = Callable[[Command], None]
 
+#: A further button acting on the chosen row: its words, its icon's
+#: concept, its first step (for the row) and whether it can act on the
+#: row (Instill an Effect only on a device with room for one).
+RowVerb = tuple[str, str, Callable[[int], Command], Callable[[int], bool]]
+
 
 class Chooser:
     """The row of a section that Edit and Delete act on."""
@@ -62,21 +67,26 @@ def verb_buttons(
     p: Palette,
     *,
     nouns: tuple[str, str, str] = ("Add", "Edit", "Delete"),
+    more: Sequence[RowVerb] = (),
 ) -> list[QPushButton]:
     """The section's buttons, for character_sheet.section(buttons=...):
-    one per verb `ops` has, named `nouns` (Add, Edit, Delete)."""
+    one per verb `ops` has, named `nouns` (Add, Edit, Delete), then the
+    `more` that act on the chosen row."""
     add, edit, remove = nouns
     buttons: list[QPushButton] = []
     if ops.add is not None:
         start = ops.add
         buttons.append(edit_button(add, p, lambda: run(start()), "add"))
-    per_row: list[QPushButton] = []
-    for words, concept, step in (
-        (edit, "edit", ops.edit),
-        (remove, "delete", ops.remove),
-    ):
-        if step is None:
-            continue
+    per_row: list[tuple[QPushButton, Callable[[int], bool]]] = []
+    verbs: list[RowVerb] = [
+        (words, concept, step, lambda _row: True)
+        for words, concept, step in (
+            (edit, "edit", ops.edit),
+            (remove, "delete", ops.remove),
+        )
+        if step is not None
+    ]
+    for words, concept, step, allowed in [*verbs, *more]:
 
         def act(step: Callable[[int], Command] = step) -> None:
             row = chooser.row(len(ops.rows()))
@@ -84,18 +94,23 @@ def verb_buttons(
                 run(step(row))
 
         button = edit_button(words, p, act, concept)
-        per_row.append(button)
+        per_row.append((button, allowed))
         buttons.append(button)
 
     def refresh(_index: int | None = None) -> None:
         rows = ops.rows()
         row = chooser.row(len(rows))
-        for button in per_row:
-            button.setEnabled(row is not None)
+        for button, allowed in per_row:
             verb = button.text().strip()
-            button.setToolTip(
-                f"{verb} {rows[row]}" if row is not None else "Choose a row first."
-            )
+            if row is None:
+                button.setEnabled(False)
+                button.setToolTip("Choose a row first.")
+            elif not allowed(row):
+                button.setEnabled(False)
+                button.setToolTip(f"Not for {rows[row]}.")
+            else:
+                button.setEnabled(True)
+                button.setToolTip(f"{verb} {rows[row]}")
 
     chooser.listeners.append(refresh)
     refresh()

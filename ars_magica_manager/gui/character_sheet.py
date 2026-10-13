@@ -47,6 +47,7 @@ from .. import (
     ability_forms,
     artwork,
     creation,
+    device_forms,
     diary_forms,
     season_forms,
     seasons,
@@ -59,6 +60,7 @@ from .. import (
 from .. import books as bk
 from .. import character_forms as cf
 from .. import character_sheet as cs
+from .. import enchanted_devices as ed
 from .. import familiar_sheet as fs
 from .. import familiars as fam
 from .. import lab_texts as lt
@@ -68,7 +70,7 @@ from .. import sheet_text as st
 from .. import spells as spl
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from ..commands import Command
-from ..models import Character, Characteristics, Saga, ScoredTrait
+from ..models import CHARGED, Character, Characteristics, Saga, ScoredTrait
 from . import pictures
 from .editing import Chooser, Section, choose_cards, choose_rows, verb_buttons
 from .figures import (
@@ -314,6 +316,53 @@ def trait_section(
         p,
         trait_list(rows, p, chooser.choose),
         buttons=verb_buttons(ops, chooser, run, p),
+    )
+
+
+def device_section(
+    saga: Saga,
+    kind: str,
+    holder_id: str,
+    p: Palette,
+    run: Callable[[Command], None],
+    inspect: Callable[[str, str, str], None],
+) -> QWidget:
+    """The Enchanted Devices a character, laboratory or covenant holds:
+    each device and its effects, with Add, Edit and Delete for the row
+    clicked, and Instill an Effect and Use a Charge where they can act
+    (device_forms)."""
+    chooser = Chooser()
+    ops = device_forms.device_ops(saga, kind, holder_id)
+    targets = ed.device_targets(saga, kind, holder_id)
+
+    def show(index: int) -> None:
+        chooser.choose(index)
+        device, effect = targets[index]
+        name = ed.effect_name(effect) if effect is not None else device.name
+        inspect(name, "Enchanted Device", ed.target_info_text(saga, targets[index]))
+
+    more = [
+        (
+            "Instill",
+            "magic",
+            lambda row: device_forms.instill(saga, kind, holder_id, row),
+            lambda row: device_forms.can_take_effect(targets[row][0]),
+        ),
+        (
+            "Use Charge",
+            "enchanted_item",
+            lambda row: device_forms.use_charge(saga, kind, holder_id, row),
+            lambda row: targets[row][1] is None and targets[row][0].type == CHARGED,
+        ),
+    ]
+    devices = len(ed.held_by(saga, kind, holder_id))
+    return section(
+        f"Enchanted Devices ({devices})",
+        p,
+        row_list(ed.device_rows(saga, kind, holder_id), show)
+        if targets
+        else TextBlock("[dim]None recorded.[/]", p),
+        buttons=verb_buttons(ops, chooser, run, p, more=more),
     )
 
 
@@ -895,6 +944,7 @@ class CharacterSheet(QWidget):
                 buttons=verb_buttons(cf.inventory_ops(c), gear, self.run, p),
             )
         )
+        parts.append(device_section(saga, "character", c.id, p, self.run, self.inspect))
         books = bk.books_owned_by(saga, "character", c.id)
         parts.append(
             section(

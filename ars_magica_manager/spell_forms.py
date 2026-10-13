@@ -8,8 +8,8 @@ from typing import Any
 
 from . import sourcebooks
 from . import spells as spl
-from .commands import Choice, Choose, Form, SectionOps, delete
-from .form_spec import DialogField
+from .commands import Choice, Choose, Form, SectionOps, delete, not_offered, picked
+from .form_spec import DialogField, ListEditor, attr
 from .markup import escape
 from .models import Character, KnownSpell, MasteryAbility, Saga, Spell
 
@@ -25,8 +25,41 @@ def mastery_ability_row(ability: MasteryAbility) -> str:
     return f"{ability.name} {ability.level}/{ability.xp}"
 
 
+def mastery_ability_fields(existing: MasteryAbility | None) -> list[DialogField]:
+    """One Mastery Ability: its name, level and xp."""
+    return [
+        DialogField(
+            "name",
+            "Name",
+            "text",
+            attr(existing, "name", ""),
+            required=True,
+            placeholder="e.g. Fast Casting",
+        ),
+        DialogField("level", "Level", "int", attr(existing, "level", 0)),
+        DialogField("xp", "XP", "int", attr(existing, "xp", 0)),
+    ]
+
+
+def mastery_ability_title(existing: MasteryAbility | None) -> str:
+    return "Add a Mastery Ability" if existing is None else "Edit a Mastery Ability"
+
+
+def mastery_ability_form(existing: MasteryAbility | None) -> Form:
+    """Add or edit one Mastery Ability, picked as a MasteryAbility."""
+    return Form(
+        mastery_ability_title(existing),
+        lambda: mastery_ability_fields(existing),
+        picked(lambda values: MasteryAbility(**values)),
+        save_label="Add" if existing is None else "Save",
+    )
+
+
 def mastery_fields(
-    known: KnownSpell, abilities: DialogField | None = None
+    known: KnownSpell,
+    abilities: DialogField | None = None,
+    *,
+    spell_name: str = "",
 ) -> list[DialogField]:
     """A known spell's Mastery: its score, its xp and its Mastery
     Abilities. `abilities` is the front-end's own field for the list
@@ -40,6 +73,13 @@ def mastery_fields(
             list(known.mastery_abilities),
             display=lambda items: (
                 "; ".join(mastery_ability_row(a) for a in items) or "(none)"
+            ),
+            items=ListEditor(
+                mastery_ability_row,
+                mastery_ability_form,
+                f"Mastery Abilities: {escape(spell_name)}"
+                if spell_name
+                else "Mastery Abilities",
             ),
         )
     return [
@@ -64,10 +104,14 @@ def mastery_title(spell_name: str) -> str:
     return f"Mastery: {escape(spell_name)}"
 
 
-def spell_choices(saga: Saga, exclude: set[str]) -> list[Choice]:
+def spell_choices(
+    saga: Saga, exclude: set[str], *, in_play: bool = True
+) -> list[Choice]:
     """Every spell there is (the catalog, the saga's own, any magus's
     invented spells) but those in `exclude`, from books in play: its name,
-    Arts and where it is from, with its details beside the list."""
+    Arts and where it is from, with its details beside the list.
+    `in_play` False: those from books not in play instead, marked so (for
+    Show everything)."""
     books = sourcebooks.saga_books(saga)
     found = []
     for spell, origin in spl.pickable_spells(saga):
@@ -76,9 +120,10 @@ def spell_choices(saga: Saga, exclude: set[str]) -> list[Choice]:
         # A catalog spell's book; the saga's own and invented spells are
         # always in play.
         source = spell.source if origin == spell.source else ""
-        if not sourcebooks.in_play(source, books):
+        if sourcebooks.in_play(source, books) != in_play:
             continue
-        found.append(_spell_choice(saga, spell, origin))
+        choice = _spell_choice(saga, spell, origin)
+        found.append(choice if in_play else not_offered(choice, "book not in play"))
     return found
 
 
@@ -105,6 +150,9 @@ def known_spell_ops(saga: Saga, character: Character) -> SectionOps:
             lambda: spell_choices(saga, {k.spell_id for k in known}),
             apply,
             empty="(no spells)",
+            others=lambda: spell_choices(
+                saga, {k.spell_id for k in known}, in_play=False
+            ),
         )
 
     def edit(index: int) -> Form:

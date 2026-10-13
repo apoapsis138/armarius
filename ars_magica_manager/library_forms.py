@@ -3,21 +3,21 @@ shows as it is filled in, the book it builds, and a book list's Add, Edit
 and Delete (commands.SectionOps); and the covenant library's research
 bonuses form.
 
-The form's Spell is a "picker" field when the front-end gives a
-`spell_picker` (the terminal's searchable spell chooser), else a
-drop-down of every spell there is."""
+The form's Spell is a "picker" field: the front-end's own chooser when it
+gives a `spell_picker` (the terminal's searchable spell chooser), else a
+searchable list of every spell there is."""
 
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 from typing import Any
 
-from . import book_kinds, catalog, sourcebooks
+from . import book_kinds, catalog, sourcebooks, spell_forms
 from . import book_value as bv
 from . import books as bk
 from . import spells as spl
 from .arts import ARTS, FORMS, TECHNIQUES
-from .commands import Confirm, Form, SectionOps
+from .commands import Choose, Confirm, Form, Picked, SectionOps
 from .form_spec import DialogField, attr, description_field, pairs
 from .markup import escape, problem
 from .models import (
@@ -230,42 +230,33 @@ def _spell_field(
     shows: _BookShows,
     spell_picker: Callable[[Any], Any] | None,
 ) -> DialogField:
-    """The spell a Lab Text or Casting Tablet records: a picker when the
-    front-end has one, else a drop-down of every spell there is."""
+    """The spell a Lab Text or Casting Tablet records, chosen from every
+    spell there is: by the front-end's own `spell_picker` when it has one,
+    else by a searchable list (spell_forms.spell_choices)."""
     unknown = spell_id is None and attr(book, "spell_name", "")
-    if spell_picker is not None:
-        return DialogField(
-            "spell_id",
-            "Spell",
-            "picker",
-            spell_id,
-            placeholder=(
-                f"Unknown: {attr(book, 'spell_name', '')} -- choose the spell..."
-                if unknown
-                else "(choose the spell...)"
-            ),
-            picker=spell_picker,
-            display=spell_display,
-            show_if=shows.of_spell,
+
+    def choose(_current: Any) -> Choose:
+        return Choose(
+            "Choose the spell",
+            lambda: spell_forms.spell_choices(saga, set()),
+            Picked,
+            empty="(no spells)",
+            others=lambda: spell_forms.spell_choices(saga, set(), in_play=False),
         )
+
     return DialogField(
         "spell_id",
         "Spell",
-        "select",
+        "picker",
         spell_id,
-        options=sorted(
-            (
-                (escape(f"{spell.name}  ({spl.shorthand(spell)})"), spell.id)
-                for spell, _origin in spl.pickable_spells(saga)
-            ),
-            key=lambda option: option[0].casefold(),
-        ),
-        allow_blank=True,
         placeholder=(
-            f"Unknown: {attr(book, 'spell_name', '')} -- choose the spell"
+            f"Unknown: {attr(book, 'spell_name', '')} -- choose the spell..."
             if unknown
-            else "(choose the spell)"
+            else "(choose the spell...)"
         ),
+        picker=spell_picker,
+        choose=choose,
+        display=spell_display,
         show_if=shows.of_spell,
     )
 
@@ -932,6 +923,61 @@ def delete_book(saga: Saga, book: Book) -> Confirm:
             bk.prune_codices(saga)
 
     return Confirm(f"Delete {escape(book.name or 'this book')}?", apply)
+
+
+def change_owner_fields(saga: Saga, books: Sequence[Book]) -> list[DialogField]:
+    """The new owner, then a tick for each of `books` to give them."""
+    return [
+        DialogField(
+            "owner",
+            "New owner",
+            "select",
+            None,
+            options=bk.owner_options(saga),
+            required=True,
+            allow_blank=True,
+            placeholder="(choose one)",
+        ),
+        *(
+            DialogField(f"book_{index}", book.name or "(untitled)", "check", False)
+            for index, book in enumerate(books)
+        ),
+    ]
+
+
+def change_owner(saga: Saga, books: Sequence[Book]) -> Form:
+    """Give several of `books` one new owner (the only edit that makes
+    sense for many at once), confirming first."""
+
+    def ticked(values: dict[str, Any]) -> list[Book]:
+        return [b for i, b in enumerate(books) if values.get(f"book_{i}")]
+
+    def apply(values: dict[str, Any]) -> Confirm:
+        chosen = ticked(values)
+        owner = values["owner"]
+        label = next(lbl for lbl, value in bk.owner_options(saga) if value == owner)
+        plural = "s" if len(chosen) != 1 else ""
+
+        def move() -> None:
+            kind, owner_id = bk.parse_owner_value(owner)
+            for book in chosen:
+                bk.set_owner(saga, book, kind, owner_id)
+
+        return Confirm(
+            f"Changing ownership of {len(chosen)} book{plural} to "
+            f"[b]{escape(label)}[/]. Continue?",
+            move,
+            yes_label="Change",
+        )
+
+    return Form(
+        "Change the owner of several books",
+        lambda: change_owner_fields(saga, books),
+        apply,
+        validate=lambda values: None if ticked(values) else "Tick at least one book.",
+        live=lambda values: f"{len(ticked(values))} of {len(books)} books ticked",
+        save_label="Change",
+    )
 
 
 def book_ops(

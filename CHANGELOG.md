@@ -43,6 +43,26 @@ teaches a whole subject; *sodales* are fellow magi of the Order, as
 the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript.
 
+## 2.50.0 — 2026-10-13
+
+- The Creation Worksheet is on the desktop: a new character, covenant or
+  laboratory opens on it, each step listed down the side with its
+  budget, what's been spent, its checks and its buttons, ending with
+  Move to In Play. The terminal and the desktop now share one worksheet,
+  so both offer the same steps.
+- Lists to choose from are searchable on the desktop, and a Show
+  everything switch lists what isn't offered too, each marked with why
+  (the terminal's F3). In the terminal, the sample childhoods, training
+  packages, Covenant Situations and the saga's books a new covenant may
+  buy are searchable lists too.
+- Enchanted devices on the desktop: characters, laboratories and
+  covenants show the devices they hold, with Instill an Effect and Use a
+  Charge.
+- A laboratory's Specializations can be turned off and on from the
+  desktop, and several books can be given one new owner at once.
+- On the worksheet's Virtues step, Add a Virtue and Add a Flaw are
+  separate buttons.
+
 ## 2.49.0 — 2026-10-13
 
 - The desktop version can now edit everything it shows. Every section of

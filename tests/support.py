@@ -303,3 +303,18 @@ def everything_saga() -> Saga:
             Spell(id="own1", name="Own Spell", technique="Creo", form="Ignem", level=5)
         ],
     )
+
+
+async def choose(pilot, app, text: str):
+    """Wait for a core Choose's list (ChooseScreen) and choose the first
+    entry whose label has `text` (by its label, Show everything's ones too:
+    keys can outrun the list filling up under load). Returns the list."""
+    from ars_magica_manager.tui.screens.steps import ChooseScreen
+
+    assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
+    await pilot.pause()
+    picker = app.screen
+    picker.dismiss(
+        next(i for i, c in enumerate(picker._all()) if text in strip_markup(c.label))
+    )
+    return picker

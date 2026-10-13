@@ -270,13 +270,12 @@ async def _choose(pilot, screen, text: str) -> None:
 
 
 async def test_the_covenant_worksheet_lists_what_build_points_went_on():
-    from support import wait_until
+    from support import choose, strip_markup, wait_until
     from textual.widgets import OptionList, Static
 
     from ars_magica_manager import storage
     from ars_magica_manager.tui.app import ArsMagicaManagerApp
     from ars_magica_manager.tui.screens.fields import FieldsDialog
-    from ars_magica_manager.tui.screens.prompts import MenuScreen
     from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
     saga = _saga()
@@ -323,12 +322,10 @@ async def test_the_covenant_worksheet_lists_what_build_points_went_on():
         # a asks what to buy; n is a new book for the covenant's library
         # (with no books of the saga's own, that's the only book offered).
         await pilot.press("a")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, MenuScreen))
-        await pilot.pause()
+        picker = await choose(pilot, app, "A new book")
         assert "A book from the saga's books" not in [
-            label for _, _, label in app.screen.items
+            strip_markup(c.label) for c in picker.choices
         ]
-        await pilot.press("n")
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         await pilot.pause()
         assert "Add a Book" in str(app.screen.query_one("#fields-title").render())
@@ -721,7 +718,7 @@ async def test_the_baseline_step_starts_the_income_by_the_rules():
 
     from ars_magica_manager import storage
     from ars_magica_manager.tui.app import ArsMagicaManagerApp
-    from ars_magica_manager.tui.screens.pickers import RemovalPickerScreen
+    from ars_magica_manager.tui.screens.steps import ChooseScreen
     from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
     saga = _saga()
@@ -746,9 +743,7 @@ async def test_the_baseline_step_starts_the_income_by_the_rules():
 
         assert await wait_until(pilot, lambda: button() is not None)
         button().press()
-        assert await wait_until(
-            pilot, lambda: isinstance(app.screen, RemovalPickerScreen)
-        )
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
         app.screen.dismiss(1)  # two Lesser sources
         assert await wait_until(
             pilot,
@@ -819,7 +814,7 @@ async def test_the_baseline_step_starts_from_a_base_covenant():
     from ars_magica_manager import storage
     from ars_magica_manager.tui.app import ArsMagicaManagerApp
     from ars_magica_manager.tui.screens import ConfirmScreen
-    from ars_magica_manager.tui.screens.pickers import RemovalPickerScreen
+    from ars_magica_manager.tui.screens.steps import ChooseScreen
     from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
     saga = _saga()
@@ -843,9 +838,7 @@ async def test_the_baseline_step_starts_from_a_base_covenant():
 
         assert await wait_until(pilot, lambda: button() is not None)
         button().press()
-        assert await wait_until(
-            pilot, lambda: isinstance(app.screen, RemovalPickerScreen)
-        )
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ChooseScreen))
         app.screen.dismiss(0)  # Weak
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         await pilot.press("y")
@@ -965,13 +958,12 @@ def test_a_saga_book_a_new_covenant_may_buy_is_copied_into_its_library():
 
 
 async def test_resources_buys_a_copy_of_one_of_the_sagas_books():
-    from support import wait_until
-    from textual.widgets import OptionList, Static
+    from support import choose, strip_markup, wait_until
+    from textual.widgets import OptionList
 
     from ars_magica_manager import storage
     from ars_magica_manager.tui.app import ArsMagicaManagerApp
-    from ars_magica_manager.tui.screens.pickers import SagaBookPickerScreen
-    from ars_magica_manager.tui.screens.prompts import MenuScreen
+    from ars_magica_manager.tui.screens.steps import ChooseScreen
     from ars_magica_manager.tui.screens.workspace.base import NodeKind
 
     saga = _saga()
@@ -999,21 +991,23 @@ async def test_resources_buys_a_copy_of_one_of_the_sagas_books():
         screen.query_one("#ws-steps", OptionList).highlighted = 1
         assert await wait_until(pilot, lambda: screen.step == "build_points")
         await pilot.press("a")
-        assert await wait_until(pilot, lambda: isinstance(app.screen, MenuScreen))
-        await pilot.pause()
-        await pilot.press("b")
-        assert await wait_until(
-            pilot, lambda: isinstance(app.screen, SagaBookPickerScreen)
-        )
-        picker = app.screen
+        await choose(pilot, app, "A book from the saga's books")
         assert await wait_until(
             pilot,
             lambda: (
-                "1 listed, 1 over a new covenant's limits hidden"
-                in str(picker.query_one("#book-picker-status", Static).render())
+                isinstance(app.screen, ChooseScreen)
+                and app.screen.picker_title == "Buy one of the saga's books"
             ),
         )
-        picker._on_entry_selected(next(b for b in picker._all if b.id == "b1"))
+        picker = app.screen
+        # Liber Magnus is over a new covenant's limits: listed only by F3.
+        assert [strip_markup(c.label).split("  ")[0] for c in picker.choices] == [
+            "Of Fire"
+        ]
+        assert [strip_markup(c.label).split("  ")[0] for c in picker.others] == [
+            "Liber Magnus"
+        ]
+        await choose(pilot, app, "Of Fire")
         assert await wait_until(
             pilot,
             lambda: (

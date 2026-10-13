@@ -36,6 +36,10 @@ class DialogField:
     that opens the chooser `picker(value)` returns; its result becomes the
     value; Delete clears it when `allow_blank`) or "info" (read-only text,
     not returned).
+
+    A "picker" field's chooser comes in two forms: `picker`, the
+    terminal's own screen, and `choose` or `items`, the same choice as the
+    core's command steps (commands.py), which any front-end can draw.
     """
 
     key: str
@@ -62,6 +66,25 @@ class DialogField:
     #: figures stay until its source field is changed; the user can still
     #: edit what it filled.
     fills: Callable[[dict[str, Any]], dict[str, Any]] | None = None
+    #: A "picker" field's chooser as command steps: the current value ->
+    #: the first step (a commands.Command), whose last step's apply
+    #: returns commands.Picked(the new value).
+    choose: Callable[[Any], Any] | None = None
+    #: A "picker" field holding a small list, edited entry by entry.
+    items: ListEditor | None = None
+
+
+@dataclass(frozen=True)
+class ListEditor:
+    """How a list field's entries are shown and edited: `row` names an
+    entry (plain text); `entry(item)` is the first step of editing `item`,
+    or of adding one when it is None (a commands.Command whose last step's
+    apply returns commands.Picked(the entry))."""
+
+    row: Callable[[Any], str]
+    entry: Callable[[Any], Any]
+    #: The title of the list, where a front-end shows it on its own.
+    title: str = ""
 
 
 class FieldError(ValueError):

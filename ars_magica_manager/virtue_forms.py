@@ -19,7 +19,17 @@ from typing import Any
 from . import catalog, sourcebooks
 from . import laboratories as lab_rules
 from .arts import ARTS, FORMS, TECHNIQUES
-from .commands import Choice, Choose, Command, Confirm, Form, Refuse, SectionOps
+from .commands import (
+    Choice,
+    Choose,
+    Command,
+    Confirm,
+    Form,
+    Picked,
+    Refuse,
+    SectionOps,
+    not_offered,
+)
 from .form_spec import DialogField, pairs
 from .markup import escape
 from .models import (
@@ -272,6 +282,23 @@ class _Adder:
             return False
         return not self.choices(entry).get("characteristic")
 
+    def others(self) -> list[Choice]:
+        """The entries on the side asked for the owner may not take (and
+        hasn't already), each marked with why, for Show everything."""
+        taken = self.owner.virtues_flaws
+        found = []
+        for entry in catalog.load_virtue_flaw_catalog():
+            if self.side not in (None, entry.side):
+                continue
+            if not catalog.virtue_flaw_offerable(entry, taken):
+                continue
+            why = self.chooser.refusal(entry) or (
+                "every Characteristic is refused" if self.no_choice_left(entry) else ""
+            )
+            if why:
+                found.append(not_offered(virtue_flaw_choice(entry), why))
+        return found
+
     def offered(self) -> list[VirtueFlawDef]:
         """The entries the owner may take, on the side asked for: not taken
         already (unless repeatable), allowed them (catalog.VirtueFlawChooser),
@@ -316,6 +343,40 @@ class _Adder:
             validate=problem,
             save_label="Confirm",
         )
+
+    def picked(self, entry: VirtueFlawDef) -> Command | Picked:
+        """As `chosen`, but the entry (with what it names) is handed back
+        as the chosen value rather than taken."""
+        if not entry.parameters:
+            if why := self.refusal(entry, {}):
+                return Refuse(escape(entry.name), escape(why))
+            return Picked(VirtueFlawInstance(entry.id, {}))
+
+        def problem(values: dict[str, Any]) -> str | None:
+            return self.refusal(entry, params_from(entry.parameters, values)) or None
+
+        return Form(
+            escape(entry.name),
+            lambda: param_fields(entry.parameters, self.choices(entry)),
+            lambda values: Picked(
+                VirtueFlawInstance(entry.id, params_from(entry.parameters, values))
+            ),
+            validate=problem,
+            save_label="Confirm",
+        )
+
+
+def choose_virtue_flaw(saga: Saga, character: Character, side: str) -> Choose:
+    """Choose a Virtue or Flaw (`side`) `character` could take, asking for
+    anything it names, for a form field (nothing is taken)."""
+    adder = _Adder(saga, character, side)
+    return Choose(
+        f"Choose the {side}",
+        lambda: [virtue_flaw_choice(entry) for entry in adder.offered()],
+        adder.picked,
+        empty=f"(no {side}s available)",
+        others=adder.others,
+    )
 
 
 def virtue_flaw_choice(entry: VirtueFlawDef) -> Choice:
@@ -386,7 +447,7 @@ def _lab_add(saga: Saga, lab: Laboratory, side: str | None) -> Choose:
 # -- deleting --
 
 
-def _remove(saga: Saga, owner: Owner, index: int) -> Confirm:
+def remove_virtue_flaw(saga: Saga, owner: Owner, index: int) -> Confirm:
     """Delete the owner's Virtue/Flaw at `index` after confirming, saying
     what goes with it: a character's Characteristic point, a laboratory's
     Feature or Focus."""
@@ -453,10 +514,11 @@ def virtue_flaw_ops(saga: Saga, owner: Owner, side: str | None = None) -> Sectio
             lambda: [virtue_flaw_choice(entry) for entry in adder.offered()],
             adder.chosen,
             empty="(no more Virtues/Flaws available)",
+            others=adder.others,
         )
 
     def remove(row: int) -> Confirm:
-        return _remove(saga, owner, side_indices(owner, side)[row])
+        return remove_virtue_flaw(saga, owner, side_indices(owner, side)[row])
 
     return SectionOps(
         add=add,
