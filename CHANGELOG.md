@@ -46,6 +46,28 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.61.0 — 2026-10-14
+
+- Print to PDF lays a character out as a sheet made for paper, not a
+  picture of the screen. The name is set in the title lettering, with a
+  gilt edge and a bound strip down each page, and the text is real text
+  you can search and copy. Nothing is cut by a page edge: a table that
+  fits on a page is never split, a heading stays with what it heads, and
+  empty sections are left off.
+- A magus's Hermetic Arts, Grimoire and Biography each start a page. The
+  Grimoire lists the spells by Form, under each Form's symbol, and every
+  Art and Ability has its symbol beside it.
+- Combat & Condition follows the published character sheet: boxes for
+  each Fatigue level and for five Light, Medium and Heavy Wounds, the
+  current ones ticked, and blank lines to pencil in weapons, armor and
+  equipment.
+- A Virtue or Flaw taken more than once prints once with its count, as
+  Great Intelligence × 2. The screens still show each one.
+- Print to PDF first asks the paper size (US Letter or A4), and for a
+  character short or full spells and a parchment or plain white page. It
+  remembers your choices. Covenants, laboratories and familiars still
+  print their page as it looks on screen, now on Letter or A4.
+
 ## 2.60.0 — 2026-10-14
 
 - Give: vis, books and lab texts, enchanted devices (with their

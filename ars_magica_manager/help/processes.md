@@ -250,13 +250,37 @@ Season plans, season records and lab projects under way stay behind.
 <!-- help: print-record -->
 
 On the desktop, a covenant's, laboratory's, character's or familiar's
-**Manage** chapter has **Print to PDF**. It asks where to save the file
-(it starts in the exports folder, named after the record), then lays the
-page out for paper: the header, then each chapter in turn under its name,
-in the Scriptorum parchment colours whatever theme is on show, with the
-buttons and the inspector left off. Pages break between sections where
-they can, and a section's title is never left alone at the foot of a page.
-Manage, Planning and Seasons are left off, since they are for the screen.
+**Manage** chapter has **Print to PDF**. It first asks a few options, then
+where to save the file (it starts in the exports folder, named after the
+record). The options you choose are kept for next time.
+
+- **Paper size:** US Letter, or A4 outside North America.
+- **Spells in the Grimoire** (characters only): **Short**, just each
+  spell's Arts and level, Range, Duration and Target, Casting Total and
+  Mastery; or **Full description**, which adds each spell's text.
+- **Background** (characters only): **Textured parchment**, or **Plain
+  white** to save ink.
+
+A character prints as a sheet laid out for paper, not a picture of the
+screen. Their name is set in the title lettering, with a bound edge down
+the left of each page. Nothing is cut by the page edge: a table that fits
+on a page is never split, and a heading always stays with what it heads.
+A magus's Hermetic Arts, Grimoire, and Biography & Story each start a new
+page; companions and grogs have no magic pages. Each Art and Ability has
+its symbol beside it. The Grimoire lists the spells by Form. A Virtue or
+Flaw taken more than once is printed once with its count, as **Great
+Intelligence × 2**; the screens still show each one. Combat & Condition
+follows the published character sheet. It has a box for each Fatigue
+level and five for each Light, Medium and Heavy Wound, with the current
+ones ticked. It also has blank lines to pencil in weapons, armor and
+equipment, with the character's own already filled in. Empty sections
+are left off.
+
+Covenants, laboratories and familiars still print their page as it looks
+on screen: the header, then each chapter under its name, in the
+Scriptorum parchment colours, with the buttons left off. Manage, Planning
+and Seasons are left off, since they are for the screen.
+
 The PDF can be printed or sent like any other.
 
 ### Giving to another record

@@ -1,9 +1,11 @@
-"""Print to PDF: a record's page laid out for paper in the parchment
-palette, from its Manage chapter."""
+"""Print to PDF from a record's Manage chapter: its options, then where to
+save it; a character prints as a sheet laid out for paper, other records
+as their page in the parchment palette."""
 
 from __future__ import annotations
 
 import os
+import re
 
 import pytest
 
@@ -14,8 +16,9 @@ from gui_steps import answering
 from PySide6.QtWidgets import QApplication, QFileDialog, QPushButton
 from screen_helpers import _sample_saga_with_covenant
 
-from ars_magica_manager import storage
+from ars_magica_manager import settings, storage
 from ars_magica_manager.gui import printing
+from ars_magica_manager.gui.forms import FieldsDialog
 from ars_magica_manager.gui.window import MainWindow
 
 
@@ -37,13 +40,32 @@ def test_manage_prints_the_record_to_a_pdf(app, tmp_path):
     window = MainWindow(saga_ids=[saga.id])
     window.show_character("char1")
     target = tmp_path / "Leandro.pdf"
-    asked = answering(window, target)
+    asked = answering(window, {"paper": "A4", "background": "white"}, target)
     _manage_button(window, "Print to PDF").click()
-    assert isinstance(asked[0], QFileDialog)
-    assert asked[0].acceptMode() == QFileDialog.AcceptMode.AcceptSave
+    assert isinstance(asked[0], FieldsDialog)
+    assert isinstance(asked[1], QFileDialog)
+    assert asked[1].acceptMode() == QFileDialog.AcceptMode.AcceptSave
     data = target.read_bytes()
     assert data.startswith(b"%PDF")
+    (box,) = set(re.findall(rb"/MediaBox \[\s*0 0 ([\d.]+) ([\d.]+)\s*\]", data))
+    assert tuple(round(float(n)) for n in box) == (595, 842)  # A4
     assert window.told and "saved to" in window.told[0][1]
+    # The choices are kept for next time.
+    kept = settings.load_settings()["print_options"]
+    assert kept == {"paper": "A4", "spells": "short", "background": "white"}
+
+
+def test_a_covenant_is_asked_only_its_paper(app, tmp_path):
+    saga = _sample_saga_with_covenant()
+    storage.save_saga(saga)
+    window = MainWindow(saga_ids=[saga.id])
+    window.open_covenant("cov1")
+    target = tmp_path / "cov.pdf"
+    asked = answering(window, {"paper": "Letter"}, target)
+    _manage_button(window, "Print to PDF").click()
+    assert isinstance(asked[0], FieldsDialog)
+    assert [f.key for f in asked[0].fields] == ["paper"]
+    assert target.read_bytes().startswith(b"%PDF")
     # The window goes back to its own colours.
     assert window._printing is None
 

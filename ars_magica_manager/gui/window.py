@@ -44,17 +44,19 @@ from .. import (
     help_text,
     menu_forms,
     paths,
+    print_forms,
     saga_forms,
     storage,
     title_page,
 )
 from .. import familiars as fam
 from .. import laboratory_sheet as ls
+from .. import print_layout as pl
 from ..actions import NodeKind
 from ..commands import Act, Choose, ChooseFile, Command, Confirm, Form, Picked, Refuse
 from ..markup import escape
 from ..models import Character, Covenant, Familiar, Laboratory, Saga
-from . import pictures, printing, snapping
+from . import pictures, print_sheet, printing, snapping
 from .character_sheet import CharacterSheet
 from .covenant import CovenantPage
 from .editing import InPlace, place_for
@@ -827,7 +829,9 @@ class MainWindow(QMainWindow):
         )
 
     def print_pdf(self) -> None:
-        """Print the record on show to a PDF, asking where to save it."""
+        """Print the record on show to a PDF: its options first (the
+        paper, and for a character's sheet the spells and background), then
+        where to save it."""
         page = self.menu_page()
         record = page.record_to_delete() if page is not None else None
         if record is None:
@@ -835,26 +839,41 @@ class MainWindow(QMainWindow):
         name = record.name or "Untitled"
         folder = storage.EXPORTS_DIR
         folder.mkdir(parents=True, exist_ok=True)
-        self.run(
-            ChooseFile(
+
+        def where(options: pl.PrintOptions) -> ChooseFile:
+            return ChooseFile(
                 f"Print {escape(name)} to PDF",
                 ".pdf",
                 folder / f"{printing.file_stem(name)}.pdf",
-                lambda path: self.print_to(path, name),
+                lambda path: self.print_to(path, name, options),
                 save=True,
-            ),
-            None,
+            )
+
+        self.run(
+            print_forms.print_form(where, sheet=isinstance(record, Character)), None
         )
 
-    def print_to(self, path: Path, title: str) -> list[str]:
-        """Print the page on show to the PDF at `path`, drawn afresh in
-        the parchment palette; what it did, to tell."""
-        self._printing = printing.PARCHMENT
-        try:
-            page = self._build(self.trail[-1])
-        finally:
-            self._printing = None
-        pages = printing.print_page(page, path, title)
+    def print_to(
+        self, path: Path, title: str, options: pl.PrintOptions = pl.DEFAULT_OPTIONS
+    ) -> list[str]:
+        """Print the record on show to the PDF at `path`; what it did, to
+        tell. A character prints as a sheet laid out for paper
+        (print_layout.py); other records print their page, drawn afresh in
+        the parchment palette."""
+        page = self.menu_page()
+        record = page.record_to_delete() if page is not None else None
+        if isinstance(record, Character) and self.saga is not None:
+            doc = pl.document(self.saga, "character", record, options)
+            pages = print_sheet.print_document(doc, path, options)
+        else:
+            self._printing = printing.PARCHMENT
+            try:
+                built = self._build(self.trail[-1])
+            finally:
+                self._printing = None
+            pages = printing.print_page(
+                built, path, title, printing.PARCHMENT, options.paper
+            )
         return [f"{pages} page{'s' if pages != 1 else ''} saved to {path}."]
 
     def toggle_mode(self, record: Moded) -> None:

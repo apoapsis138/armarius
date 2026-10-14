@@ -51,8 +51,9 @@ ICONS: dict[str, str] = {
 #: Print to PDF: the desktop's own, as only it draws the page for paper.
 PRINT = "Print to PDF"
 PRINT_DETAIL = (
-    "Lay the page out for paper, in the parchment colours, chapter by "
-    "chapter, and save it as a PDF to print or send."
+    "Lay the record out for paper and save it as a PDF to print or send: "
+    "choose US Letter or A4, and for a character short or full spells and a "
+    "parchment or plain white page."
 )
 
 #: How long the palette takes to change between the modes, in ms.

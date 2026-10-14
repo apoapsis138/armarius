@@ -32,6 +32,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from .. import print_layout as pl
 from . import pictures
 from .editing import Section
 from .paper import paper
@@ -119,7 +120,7 @@ class _Printer:
     """Draws onto the PDF a page at a time, keeping track of where the
     next part goes."""
 
-    def __init__(self, path: Path, title: str, p: Palette) -> None:
+    def __init__(self, path: Path, title: str, p: Palette, size: str = pl.A4) -> None:
         self.p = p
         self.writer = QPdfWriter(str(path))
         self.writer.setTitle(title)
@@ -127,7 +128,11 @@ class _Printer:
         self.writer.setResolution(RESOLUTION)
         self.writer.setPageLayout(
             QPageLayout(
-                QPageSize(QPageSize.PageSizeId.A4),
+                QPageSize(
+                    QPageSize.PageSizeId.Letter
+                    if size == pl.LETTER
+                    else QPageSize.PageSizeId.A4
+                ),
                 QPageLayout.Orientation.Portrait,
                 QMarginsF(MARGIN_MM, MARGIN_MM, MARGIN_MM, MARGIN_MM),
                 QPageLayout.Unit.Millimeter,
@@ -237,9 +242,16 @@ def _laid_out(body: QWidget, width: int) -> None:
     QApplication.processEvents()
 
 
-def print_page(page: QWidget, path: Path, title: str, p: Palette = PARCHMENT) -> int:
+def print_page(
+    page: QWidget,
+    path: Path,
+    title: str,
+    p: Palette = PARCHMENT,
+    size: str = pl.A4,
+) -> int:
     """Print `page` (a record's page, built in palette `p`) to the PDF at
-    `path`; how many pages it took."""
+    `path` on paper `size` (print_layout's LETTER or A4); how many pages it
+    took."""
     codex = page.findChild(Codex)
     host = QWidget()
     host.setAttribute(Qt.WidgetAttribute.WA_DontShowOnScreen)
@@ -247,7 +259,7 @@ def print_page(page: QWidget, path: Path, title: str, p: Palette = PARCHMENT) ->
     column = QVBoxLayout(host)
     column.setContentsMargins(0, 0, 0, 0)
     column.addWidget(page)
-    printer = _Printer(path, title, p)
+    printer = _Printer(path, title, p, size)
     host.resize(printer.width, 900)
     _hide_controls(page)
     host.show()
