@@ -12,6 +12,24 @@ The ids are the sheet's own: a tab's or section's widget id, a tree node's
 page (`character`, `spells`...) or a dialog's `help_id`. A link to another
 topic is written `[Lab Totals](help:tab-lab-totals)`. The comment lines don't
 show on screen or on GitHub, so the files read as plain Markdown there too.
+
+The terminal and the desktop are drawn differently, so some help is for one
+of them only. A topic for one front-end names it after its id, and a page's
+topics go with it:
+
+    # The workspace
+    <!-- help: workspace; gui -->
+
+The same id may then be used once for each front-end, so the page a screen
+opens Help on is the one that describes it. Lines for one front-end inside
+a topic that is for both sit between markers on lines of their own:
+
+    <!-- tui -->
+    `e` edits the chosen row.
+    <!-- /tui -->
+
+Each front-end reads its own book (`book(TUI)`, `book(GUI)`): what is for
+the other is left out, so it is neither listed, shown nor found.
 """
 
 from __future__ import annotations
@@ -27,7 +45,15 @@ from . import ROOT, __version__
 HELP_DIR = Path(__file__).parent / "help"
 
 _HEADING = re.compile(r"^(#{1,3})\s+(.+?)\s*$")
-_ID = re.compile(r"^<!--\s*help:\s*([\w-]+)\s*-->\s*$")
+_ID = re.compile(r"^<!--\s*help:\s*([\w-]+)\s*(?:;\s*(\w+)\s*)?-->\s*$")
+_ONLY = re.compile(r"^<!--\s*(/?)(\w+)\s*-->\s*$")
+_ANY_ONLY = re.compile(r"<!--\s*/?(?:tui|gui)\s*-->")
+
+#: The front-ends, as the help files name them: the terminal (Textual)
+#: and the desktop (PySide6).
+TUI = "tui"
+GUI = "gui"
+FRONT_ENDS = (TUI, GUI)
 _LINK = re.compile(r"\]\(help:([\w-]+)\)")
 
 
@@ -45,6 +71,8 @@ class Topic:
     file: str
     #: Its heading and body as Markdown (without the id line).
     text: str
+    #: The front-end it is for (TUI or GUI); None for both.
+    front_end: str | None = None
 
 
 @dataclass(frozen=True)
@@ -112,26 +140,68 @@ def display_text(text: str) -> str:
     return "\n".join(line for line in text.splitlines() if not _ID.match(line))
 
 
-def parse(name: str, text: str) -> list[Topic]:
-    """The topics in one help file, in order."""
-    lines = text.splitlines()
+def _for(name: str, front_end: str | None) -> str | None:
+    """`front_end`, checked: None (for both) or one of FRONT_ENDS."""
+    if front_end is not None and front_end not in FRONT_ENDS:
+        raise HelpError(
+            f"{name}: {front_end!r} is not a front-end ({', '.join(FRONT_ENDS)})"
+        )
+    return front_end
+
+
+def _lines_for(name: str, text: str, front_end: str) -> list[str]:
+    """`text`'s lines with those for another front-end left out (and the
+    markers around them)."""
+    kept: list[str] = []
+    inside: str | None = None
+    for line in text.splitlines():
+        marker = _ONLY.match(line)
+        if marker is not None and marker.group(2) in FRONT_ENDS:
+            closing, which = marker.group(1) == "/", marker.group(2)
+            if closing != (inside is not None) or (closing and which != inside):
+                raise HelpError(f"{name}: {line.strip()!r} doesn't match")
+            inside = None if closing else which
+            continue
+        if _ANY_ONLY.search(line):
+            raise HelpError(
+                f"{name}: {line.strip()[:40]!r}: a marker goes on a line of its own"
+            )
+        if inside is not None and _HEADING.match(line):
+            raise HelpError(
+                f"{name}: heading {line!r} inside <!-- {inside} -->: give the "
+                "topic its front-end instead"
+            )
+        if inside is None or inside == front_end:
+            kept.append(line)
+    if inside is not None:
+        raise HelpError(f"{name}: <!-- {inside} --> is never closed")
+    return kept
+
+
+def parse(name: str, text: str, front_end: str) -> list[Topic]:
+    """The topics in one help file for `front_end`, in order."""
+    _for(name, front_end)
+    lines = _lines_for(name, text, front_end)
     topics: list[Topic] = []
     page_id: str | None = None
-    current: tuple[str, str, int, list[str]] | None = None
+    page_for: str | None = None
+    current: tuple[str, str, int, str | None, list[str]] | None = None
 
     def close() -> None:
         if current is not None:
-            topic_id, title, level, body = current
-            topics.append(
-                Topic(
-                    topic_id,
-                    title,
-                    level,
-                    page_id or topic_id,
-                    name,
-                    "\n".join(body).strip() + "\n",
+            topic_id, title, level, only, body = current
+            if only in (None, front_end):
+                topics.append(
+                    Topic(
+                        topic_id,
+                        title,
+                        level,
+                        page_id or topic_id,
+                        name,
+                        "\n".join(body).strip() + "\n",
+                        only,
+                    )
                 )
-            )
 
     index = 0
     while index < len(lines):
@@ -142,7 +212,7 @@ def parse(name: str, text: str) -> list[Topic]:
                 if line.strip():
                     raise HelpError(f"{name}: text before the first heading")
             else:
-                current[3].append(line)
+                current[4].append(line)
             index += 1
             continue
         found = _ID.match(lines[index + 1]) if index + 1 < len(lines) else None
@@ -151,23 +221,31 @@ def parse(name: str, text: str) -> list[Topic]:
         close()
         level = len(heading.group(1))
         topic_id = found.group(1)
+        only = _for(name, found.group(2))
         if level < 3:
-            page_id = topic_id
+            page_id, page_for = topic_id, only
         elif page_id is None:
             raise HelpError(f"{name}: {line!r} comes before any page")
-        current = (topic_id, heading.group(2), level, [line])
+        elif page_for is not None:
+            if only not in (None, page_for):
+                raise HelpError(
+                    f"{name}: {line!r} is for {only}, its page for {page_for}"
+                )
+            only = page_for
+        current = (topic_id, heading.group(2), level, only, [line])
         index += 2
     close()
     return topics
 
 
-def load(folder: Path = HELP_DIR) -> HelpBook:
-    """Read every help file in `folder` (by name)."""
+def load(front_end: str, folder: Path = HELP_DIR) -> HelpBook:
+    """Read every help file in `folder` (by name), as `front_end` shows
+    it."""
     topics: dict[str, Topic] = {}
     for path in sorted(folder.glob("*.md")):
         if path.name.casefold() == "readme.md":
             continue
-        for topic in parse(path.name, path.read_text(encoding="utf-8")):
+        for topic in parse(path.name, path.read_text(encoding="utf-8"), front_end):
             if topic.id in topics:
                 raise HelpError(
                     f"{path.name}: help id {topic.id!r} is also in "
@@ -189,9 +267,9 @@ def load(folder: Path = HELP_DIR) -> HelpBook:
 
 
 @cache
-def book() -> HelpBook:
-    """The app's help, read once."""
-    return load()
+def book(front_end: str) -> HelpBook:
+    """The app's help as `front_end` shows it, read once."""
+    return load(front_end)
 
 
 # -- what Help lists and shows (both front-ends) --

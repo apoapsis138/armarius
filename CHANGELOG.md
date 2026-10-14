@@ -46,6 +46,21 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.62.0 — 2026-10-14
+
+- Help now fits the version you are using. The desktop version's Help
+  describes the desktop: its window, trail, chapters, Inspector and
+  buttons, with a Keys page of its own. The terminal's Help keeps its
+  tree, footer and keys. Pages, sheet sections and how-to guides that
+  differ between the two say what to click on the desktop and what to
+  press in the terminal, and neither shows the other's.
+- Where something can't be done on the desktop yet, such as Unassigned
+  Books or hosting a saga for players, the desktop's Help says so and
+  points to the terminal version.
+- Help opened from a desktop chapter named differently from the
+  terminal's tab (Charter, People, Covenfolk, Treasury, Specializations,
+  Stores, Seasons) opens on that chapter's help.
+
 ## 2.61.0 — 2026-10-14
 
 - Print to PDF lays a character out as a sheet made for paper, not a

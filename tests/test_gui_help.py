@@ -19,7 +19,7 @@ from ars_magica_manager import storage
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.help import HelpPage
-from ars_magica_manager.gui.window import MainWindow
+from ars_magica_manager.gui.window import _HELP_IDS, MainWindow
 
 
 @pytest.fixture(scope="module")
@@ -66,7 +66,7 @@ def test_the_filter_lists_what_matches_and_links_show_their_topic(app):
     assert "HOW-TO GUIDES" in page.entries()
     page.filter.setText("vis")
     assert page.entries()[0].startswith("FOUND (")
-    assert page.topic_id == ht.book().search("vis")[0].id
+    assert page.topic_id == ht.book(ht.GUI).search("vis")[0].id
     page._link(QUrl("help:advance-season"))
     assert page.topic_id == "advance-season"
     assert "Advance" in page.shown_text()
@@ -80,3 +80,28 @@ def test_about_and_whats_new_come_from_the_core(app):
     assert page.shown_text().startswith("What's New")
     page.show_topic(ht.ABOUT)
     assert "Armarius v" in page.shown_text()
+
+
+def test_every_desktop_page_has_help_written_for_the_desktop():
+    """Each page opens Help on a page the desktop's help has, and none
+    of it is the terminal's own."""
+    book = ht.book(ht.GUI)
+    for kind, ids in _HELP_IDS.items():
+        assert ids[0] in book.pages, kind
+    assert not [t.id for t in book.topics.values() if t.front_end == ht.TUI]
+
+
+def test_help_on_the_saga_shows_the_desktop_workspace(app):
+    window = _window()
+    window.open_help()
+    page = _help(window)
+    page.show_topic("workspace")
+    assert "navigation tree" not in page.shown_text()
+
+
+def test_a_chapter_named_otherwise_opens_help_on_its_tab(app):
+    window = _window()
+    window.open_covenant(window.saga.covenants[0].id)
+    window.page().codex.rail.setCurrentRow(0)  # Charter
+    window.help.click()
+    assert _help(window).topic_id == "tab-cov-attributes"

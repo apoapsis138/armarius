@@ -6,28 +6,51 @@ what has happened in it. A laboratory belongs to a covenant and has an owner,
 a magus whose lab work is planned on this sheet and whose Lab Totals it
 shows.
 
+<!-- tui -->
 The top panel, with the laboratory's identity and Characteristics, is always
 on show above the tabs. Below it are six numbered tabs, opened with `1` to
 `6`. On most tabs a details panel at the bottom shows more about the chosen
 row, including the rules text of a Virtue, Flaw or Feature.
 
 With focus on the top panel, More (`m`) offers Export and Update from a
-File (on the desktop, in the laboratory's **Manage** chapter), and switches the
-laboratory between In Creation and In Play (In Creation / In Play). While it
-is In Creation, More also opens the Creation Worksheet, which walks through
-setting the laboratory up: its owner, Size and Refinement, its Virtues, and
-whether it is one of its covenant's starting laboratories, paid for from the
-covenant's Build Points. `d` on the top panel deletes the laboratory, after
-asking.
+File, and switches the laboratory between In Creation and In Play (In
+Creation / In Play). While it is In Creation, More also opens the Creation
+Worksheet. `d` on the top panel deletes the laboratory, after asking.
+<!-- /tui -->
+<!-- gui -->
+The header names the laboratory and whose sanctum it is, with the room its
+Virtues leave and its aura as a seal; **Edit** beside it changes the
+[Identity](help:section-lab-identity). The eight
+[Characteristics](help:section-lab-characteristics) sit under the header.
+The rail on the left holds the chapters: **Lab Totals**, **Virtues &
+Flaws**, **Specializations** (with the Features and rooms of the
+[Attributes tab](help:tab-lab-attributes)), **Stores** (what the
+[Inventory tab](help:tab-lab-inventory) lists), **Seasons** (the
+[Planning](help:tab-lab-planning) list and the [Diary](help:tab-lab-diary))
+and **Manage**. Clicking a card or row shows more about it in the inspector
+on the right, including the rules text of a Virtue, Flaw or Feature.
 
-On the desktop, the owner's name is a button in the top panel that opens
+The button in the header showing **In Creation** or **In Play** switches
+the laboratory between them, after asking. While it is In Creation,
+**Worksheet** beside it opens the Creation Worksheet. The **Manage**
+chapter offers Export, Update from a File and Delete, which asks first.
+<!-- /gui -->
+
+The Creation Worksheet walks through setting the laboratory up: its owner,
+Size and Refinement, its Virtues, and whether it is one of its covenant's
+starting laboratories, paid for from the covenant's Build Points.
+
+<!-- gui -->
+The owner's name is a button in the header that opens
 their sheet below the laboratory, so the trail leads back to it.
+<!-- /gui -->
 
 **See also:** [How lab planning works](help:guide-lab-planning), [How to create a character, covenant or laboratory](help:guide-creation)
 
 ### Identity
 <!-- help: section-lab-identity -->
 
+<!-- tui -->
 The panel is titled with the laboratory's name. **You type** (with `e`) its
 name, location, aura modifier, whether its sanctum is marked, its covenant
 and its owner, chosen from the saga's magi. **The app works out** the aura,
@@ -35,14 +58,31 @@ the covenant's aura (with any Boons that raise it) plus the modifier, shown
 with the covenant's realm, and the Build Points: Size x 20, plus 10 for each
 Minor Virtue and 20 for each Major one (Ars Magica Definitive Edition,
 Chapter 8: Laboratory).
+<!-- /tui -->
+<!-- gui -->
+The laboratory's header. **You type** (with **Edit** beside it) its name,
+location, aura modifier, whether its sanctum is marked, its covenant and its
+owner, chosen from the saga's magi. **The app works out** the aura, the
+covenant's aura (with any Boons that raise it) plus the modifier, shown as
+a seal in the covenant's realm's colour, and, beside it, the Occupied Size,
+Free Virtues and Base Safety from the
+[Characteristics](help:section-lab-characteristics).
+<!-- /gui -->
 
 ### Characteristics
 <!-- help: section-lab-characteristics -->
 
 The eight Characteristics (Size, Refinement, General Quality, Upkeep, Safety,
 Warping, Health and Aesthetics) each show three figures: the value you type,
-what the laboratory's Virtues and Flaws add, and the total. `e` edits only
-the typed values. The app also works out Occupied Size (Virtue points less
+what the laboratory's Virtues and Flaws add, and the total.
+<!-- tui -->
+`e` edits only the typed values.
+<!-- /tui -->
+<!-- gui -->
+They are drawn as a compass rose beside a card for each; **Edit** changes
+only the typed values, and clicking a card shows where its total comes from.
+<!-- /gui -->
+The app also works out Occupied Size (Virtue points less
 Flaw points less Refinement), Free Virtues (Size plus Refinement less the
 Virtue points net of Flaws) and Base Safety (Refinement less any positive
 Occupied Size), following Ars Magica Fifth Edition: Covenants, Chapter 9.
@@ -56,6 +96,7 @@ seasons it spans and how far it will have got, any free seasons in between,
 and the first free season after the last plan. A season planned on the
 owner's own sheet (study, say) shows here too, marked as such.
 
+<!-- tui -->
 **You type:** nothing here directly. `e` plans lab work for the chosen
 season on the [Invent Spell screen](help:invent-spell), or reopens the plan
 already there; `a` starts inventing a new spell from a blank design in the
@@ -67,6 +108,26 @@ so in red, and the details panel says why), the Lab Total of each plan line
 by line in the details panel, and the progress of work that takes several
 seasons. The laboratory needs a magus as its owner before anything can be
 planned.
+<!-- /tui -->
+<!-- gui -->
+On the desktop this list is **Planning**, at the top of the laboratory's
+**Seasons** chapter, above the calendar of its seasons and the Diary.
+
+**You type:** nothing here directly. **Plan** plans lab work for the season
+last clicked on the [lab work form](help:invent-spell), or reopens the plan
+already there; **New Spell** starts inventing a spell in that season (or the
+current one), first asking for a spell to start from or a blank design;
+**Clear** clears the season's plan, with any later seasons scheduled to
+continue it, after asking. Beside them, **Bind Familiar** is there while the
+owner has no familiar, and **Perform Ritual** while the laboratory has a
+Longevity Ritual's Lab Text (see [Lab Texts](help:section-lab-texts)).
+
+**The app works out:** whether each plan can be done (a row that can't says
+so in red, and the inspector says why when it is clicked), the Lab Total of
+each plan line by line in the inspector, and the progress of work that
+takes several seasons. The laboratory needs a magus as its owner before
+anything can be planned.
+<!-- /gui -->
 
 **See also:** [Invent Spell screen](help:invent-spell),
 [Lab Totals tab](help:tab-lab-totals),
@@ -97,6 +158,10 @@ A grid of the owner's Lab Total for each Technique (rows) and Form
 (columns) in this laboratory: the Technique plus the Form plus the Base Lab
 Total below, with any Art Specialization of the laboratory included where
 it applies. Nothing here is typed.
+<!-- gui -->
+Each square is shaded by its total; clicking one shows that Lab Total line
+by line in the inspector.
+<!-- /gui -->
 
 ### Base Lab Total
 <!-- help: section-lab-totals-base -->
@@ -127,11 +192,13 @@ Covenants, Chapter 9, side by side.
 **You type:** which Virtues and Flaws the laboratory has, chosen from the
 catalog.
 
-**The app works out:** the points each side comes to, what they add to the
-Characteristics, Specializations and Lab Totals, and a warning line above
-the lists when the laboratory has more Virtues (net of Flaws) than Size plus
-Refinement allow, more than one Focus, or a Virtue whose Specialization
-hasn't been chosen.
+**The app works out:** the points each side comes to and what they add to
+the Characteristics, Specializations and Lab Totals.
+<!-- tui -->
+A warning line above the lists says when the laboratory has more Virtues
+(net of Flaws) than Size plus Refinement allow, more than one Focus, or a
+Virtue whose Specialization hasn't been chosen.
+<!-- /tui -->
 
 **See also:** [Characteristics](help:section-lab-characteristics),
 [Features](help:section-lab-features),
@@ -141,8 +208,8 @@ hasn't been chosen.
 <!-- help: section-lab-vf-virtues -->
 
 The laboratory's Virtues, with the points they come to in the title. Adding
-one picks it from the catalog, which shows the highlighted entry's
-rules, effects and book under the list; a Virtue that grants a Specialization of the
+one picks it from the catalog, which shows each entry's rules, effects and
+book as you go through it; a Virtue that grants a Specialization of the
 owner's choice asks for it then. Virtues can't be edited, only deleted and
 added again. A Feature Virtue is usually added along with its Feature on the
 Attributes tab.
@@ -158,6 +225,9 @@ laboratory may have only one Focus Flaw.
 <!-- help: tab-lab-attributes -->
 
 The laboratory's Specializations, its Features and its rooms.
+<!-- gui -->
+On the desktop they are in the laboratory's **Specializations** chapter.
+<!-- /gui -->
 
 **You type:** the Features and what their points go to, any Specialization
 points from a source the app doesn't work out itself, and the rooms.
@@ -172,21 +242,42 @@ how many count against the limits on Activity and Art Specializations
 ### Specializations
 <!-- help: section-lab-specializations -->
 
+<!-- tui -->
 A grid of every Specialization the laboratory has points in, grouped into
 Activity and Art, each group's title saying how many count against its cap
-(two Activities, four Arts, no more than two of them Techniques). The scores
-are worked out from the Features, their Focus, the Virtues and Flaws and the
-sources typed below. `Space` turns the chosen Specialization off or back on;
+(two Activities, four Arts, no more than two of them Techniques).
+<!-- /tui -->
+<!-- gui -->
+Every Specialization the laboratory has points in, as bars in two sections,
+Activity Specializations and Art Specializations (two Activities and four
+Arts count, no more than two of them Techniques). Clicking one shows where
+its points come from.
+<!-- /gui -->
+The scores are worked out from the Features, their Focus, the Virtues and
+Flaws and the sources typed below.
+<!-- tui -->
+`Space` turns the chosen Specialization off or back on;
+<!-- /tui -->
+<!-- gui -->
+**Turn Off/On** turns the one last clicked off or back on;
+<!-- /gui -->
 the app refuses to turn one on that would break a cap, and a newly gained
 one that would break a cap arrives turned off.
 
 ### Specializations: Other
 <!-- help: section-lab-specialties -->
 
+<!-- tui -->
 Specialization points from sources the app doesn't work out itself, nested
-inside Specializations. You type which Specialization, how many points
-(negative for a penalty) and where they come from; the grid above adds them
-in.
+inside Specializations.
+<!-- /tui -->
+<!-- gui -->
+Specialization points from sources the app doesn't work out itself, in the
+**Specialization sources** section under the Specializations.
+<!-- /gui -->
+You type which Specialization, how many points
+(negative for a penalty) and where they come from; the Specializations
+add them in.
 
 ### Features
 <!-- help: section-lab-features -->
@@ -210,6 +301,9 @@ works nothing out from them.
 
 What the laboratory holds: raw vis, equipment, Arcane Connections, enchanted
 devices, Lab Texts and other books.
+<!-- gui -->
+On the desktop this is the laboratory's **Stores** chapter.
+<!-- /gui -->
 
 **You type:** each entry, in its own section.
 
@@ -226,9 +320,14 @@ a Lab Text written.
 
 The pawns of raw vis kept in the laboratory, one row per Art. You type the
 Art and the pawns. Lab work that pays with the laboratory's vis takes it from
-here when the season is advanced, and extracted vis can be sent here. [Give](help:give)
-(More, `m`; on the desktop, the Give button here) gives the chosen Art's
-pawns to another laboratory, covenant or magus, and both Diaries record it.
+here when the season is advanced, and extracted vis can be sent here.
+<!-- tui -->
+[Give](help:give) in More (`m`) gives the chosen Art's pawns
+<!-- /tui -->
+<!-- gui -->
+The **Give** button here gives the chosen Art's pawns
+<!-- /gui -->
+to another laboratory, covenant or magus, and both Diaries record it.
 
 ### Equipment & Stores
 <!-- help: section-lab-items -->
@@ -250,9 +349,17 @@ season is advanced, the connection is marked fixed.
 The enchanted devices kept in the laboratory, each followed by its effects.
 The app works out each device's figures, such as capacity, effect levels and
 charges, from what you type (Ars Magica Definitive Edition, Chapter 8:
-Laboratory). `e` and `d` act on the chosen device or effect. More (`m`)
-offers Instill an Effect on a device that can take another effect, and Use a
-Charge on a Charged Item.
+Laboratory).
+<!-- tui -->
+`e` and `d` act on the chosen device or effect. More (`m`) offers Instill
+an Effect on a device that can take another effect, and Use a Charge on a
+Charged Item.
+<!-- /tui -->
+<!-- gui -->
+**Edit** and **Delete** act on the row last clicked, a device or one of its
+effects. **Instill** adds an effect to a device that can take another, and
+**Use Charge** uses up a charge of a Charged Item.
+<!-- /gui -->
 
 ### Lab Texts
 <!-- help: section-lab-texts -->
@@ -260,25 +367,45 @@ Charge on a Charged Item.
 The laboratory's Lab Texts, as a table with each text's kind, Arts, level,
 author and whether the owner can use it. A Lab Text is added like a book;
 inventing a spell, instilling an effect and a Longevity Ritual each write one
-here when the season is advanced. `/` filters the table by kind, Technique,
-Form, level, and to texts the owner can read. Perform Ritual in More (`m`)
-performs a Longevity Ritual again from its text at once: it takes vis but no
-season. On the desktop, Perform Ritual is a button beside Planning in the Seasons
-chapter, with Bind Familiar while the owner has no familiar, and **Texts Read**
-beside the Lab Texts sets whose texts the owner reads.
+here when the season is advanced.
+<!-- tui -->
+`/` filters the table by kind, Technique, Form, level, and to texts the
+owner can read. Perform Ritual in More (`m`) performs a Longevity Ritual
+again from its text at once: it takes vis but no season.
+<!-- /tui -->
+<!-- gui -->
+The bar above the table narrows it by kind, Technique, Form and level, and
+**Readable only** to texts the owner can read. **Texts Read**, beside Add,
+Edit and Delete, sets whose texts the owner reads. **Perform Ritual**, a
+button on the [Planning](help:tab-lab-planning) list in the Seasons chapter,
+performs a Longevity Ritual again from its text at once: it takes vis but
+no season.
+<!-- /gui -->
 
 ### Books
 <!-- help: section-lab-books -->
 
+<!-- tui -->
 The laboratory's other books (everything kept here that isn't a Lab Text),
 the same as in any other book list. `Space` marks several books; with books
 marked, `e` gives them all a new owner and `d` deletes them all, after
 asking.
+<!-- /tui -->
+<!-- gui -->
+The laboratory's other books (everything kept here that isn't a Lab Text),
+as cards at the foot of the Stores chapter; clicking one shows it in the
+inspector. On the desktop they can't be added, edited or deleted here yet:
+use the terminal version.
+<!-- /gui -->
 
 ## Diary tab
 <!-- help: tab-lab-diary -->
 
 A record of what has happened in the laboratory, by season.
+<!-- gui -->
+On the desktop the Diary is at the foot of the laboratory's **Seasons**
+chapter, newest first, with Add, Edit and Delete.
+<!-- /gui -->
 
 **You type:** entries of your own: year, season, activity type, a name and
 details.
@@ -303,6 +430,10 @@ enchanted item), decoding another magus's Lab Texts, taming a magical beast,
 stabilizing a Discovery, setting up, refining, taking over or moving the
 laboratory, and binding or empowering a familiar.
 
+<!-- gui -->
+On the desktop it is a form that opens in place of the Planning list, from
+its **Plan** or **New Spell**.
+<!-- /gui -->
 Its title names the work, the magus, the laboratory and the season. As you
 type, it shows the Lab Total and when the work will be done, worked out under
 Ars Magica Definitive Edition, Chapter 8: Laboratory.
@@ -314,8 +445,8 @@ Ars Magica Definitive Edition, Chapter 8: Laboratory.
 ### Lab work
 <!-- help: invent-spell-activity -->
 
-The first field chooses the lab work. The screen then shows only the fields
-that work needs: a spell design for inventing a spell, a Lab Text to work
+The first field chooses the lab work. Then only the fields that work needs
+are shown: a spell design for inventing a spell, a Lab Text to work
 from, a connection to fix, a device and effect to enchant, a subject and vis
 for a Longevity Ritual, and so on. Where the work pays or gains vis, you
 choose whose: the laboratory's raw vis, the magus's own, or the covenant's
@@ -324,8 +455,15 @@ vis stores.
 ### Spell design
 <!-- help: invent-spell-design -->
 
+<!-- tui -->
 For inventing a spell, Start from picks an existing spell the magus doesn't
-know as the starting point, and New spell clears the design. You type the
+know as the starting point, and New spell clears the design.
+<!-- /tui -->
+<!-- gui -->
+For inventing a spell, **New Spell** first asks for an existing spell the
+magus doesn't know as the starting point, or a blank design.
+<!-- /gui -->
+You type the
 name, the effect, the Technique and Form, any requisites, the base level,
 whether it is a Ritual, the Range, Duration and Target, any size or extra
 magnitudes and the guideline used. The app works out the spell's level from
@@ -335,8 +473,14 @@ doesn't list can be chosen as Other, with the magnitudes it adds typed in.
 ### Lab Total
 <!-- help: invent-spell-total -->
 
-The Lab Total panel lists every term of the total and the result. For a
-spell it uses the lower of each Art and the requisites of the same kind, and
+<!-- tui -->
+The Lab Total panel lists every term of the total and the result.
+<!-- /tui -->
+<!-- gui -->
+The line under the fields gives the Lab Total, with every term of it in
+brackets.
+<!-- /gui -->
+For a spell it uses the lower of each Art and the requisites of the same kind, and
 adds the laboratory's terms from the [Lab Totals tab](help:tab-lab-totals).
 The Lab work fields below the design add their own terms: the magnitude of a
 similar spell the magus knows, a Magical Focus (the lower Art counted again)
@@ -363,9 +507,15 @@ the magus's Leadership allows (at least one).
 ### When
 <!-- help: invent-spell-when -->
 
-Beside the Lab Total, the When panel says what the season will achieve. For
+<!-- tui -->
+Beside the Lab Total, the When panel says what the season will achieve.
+<!-- /tui -->
+<!-- gui -->
+After the Lab Total, the same line says what the season will achieve.
+<!-- /gui -->
+For
 inventing a spell, the Lab Total must be above the spell's level, each season
-adds the Lab Total less the level in points, and the panel shows the points
+adds the Lab Total less the level in points, and it shows the points
 so far and the season the spell is projected to be invented. Other work says
 what it will produce this season, such as pawns extracted or the aging-roll
 modifier. Every lab season also gives 2 experience points of Exposure in
@@ -377,9 +527,15 @@ Magic Theory.
 Schedule locks in the plan, replacing anything already planned for that
 season; it refuses, and says why, if the work can't be done. For work that
 takes several seasons, the app also plans each following season the work is
-projected to need, stopping at a season that already has a plan. Reset puts
-back the plan as it was when the screen opened, and Cancel leaves without
-changing anything. Nothing happens to the magus or the laboratory until the
+projected to need, stopping at a season that already has a plan.
+<!-- tui -->
+Reset puts back the plan as it was when the screen opened, and Cancel
+leaves without changing anything.
+<!-- /tui -->
+<!-- gui -->
+Cancel leaves without changing anything.
+<!-- /gui -->
+Nothing happens to the magus or the laboratory until the
 season is advanced: then the work is applied, so a finished spell joins the
 magus's spells, its Lab Text goes into the laboratory, and the laboratory's
 Diary records the season. An unfinished invention keeps its points and

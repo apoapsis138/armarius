@@ -130,7 +130,7 @@ class HelpScreen(ModalDialog[None]):
     def __init__(self, context: HelpContext | None = None) -> None:
         super().__init__()
         self.context = context or HelpContext()
-        self.book = ht.book()
+        self.book = ht.book(ht.TUI)
         self._page_shown: str | None = None
         #: The topic on show.
         self.topic_id: str | None = None

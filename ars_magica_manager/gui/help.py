@@ -48,7 +48,7 @@ class HelpPage(QWidget):
     def __init__(self, p: Palette, here: list[str], where: str = "") -> None:
         super().__init__()
         self.p = p
-        self.book = ht.book()
+        self.book = ht.book(ht.GUI)
         self.here = here
         self._page_shown: str | None = None
         #: The topic on show.

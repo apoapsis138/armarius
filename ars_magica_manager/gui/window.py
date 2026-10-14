@@ -126,6 +126,18 @@ _TAB_PREFIX = {
 }
 _OTHER_TABS = tuple(v for k, v in _TAB_PREFIX.items() if k != CHARACTER)
 
+#: The chapters whose help is a tab named otherwise, by page and the
+#: chapter's name (folded): the terminal's tabs are cut differently.
+_CHAPTER_TABS = {
+    (COVENANT, "charter"): "tab-cov-attributes",
+    (COVENANT, "people"): "tab-cov-inhabitants",
+    (COVENANT, "covenfolk"): "tab-cov-inhabitants",
+    (COVENANT, "treasury"): "tab-cov-economics",
+    (LABORATORY, "specializations"): "tab-lab-attributes",
+    (LABORATORY, "stores"): "tab-lab-inventory",
+    (LABORATORY, "seasons"): "tab-lab-planning",
+}
+
 
 def _first_input(dialog: QDialog) -> QWidget | None:
     """The widget a step's typing starts in: a form's first field, a
@@ -489,18 +501,19 @@ class MainWindow(QMainWindow):
         self.go([*self.trail, Place(HELP)])
 
     def _help_ids(self, place: Place, page: QWidget | None) -> list[str]:
-        """The help topics for `place`: the tab whose title starts with
-        the name of the chapter on show, then the page's."""
+        """The help topics for `place`: the tab for the chapter on show
+        (_CHAPTER_TABS, else the one whose title starts with its name),
+        then the page's."""
         ids = list(_HELP_IDS.get(place.kind, []))
         codex = getattr(page, "codex", None)
         item = codex.rail.currentItem() if codex is not None else None
         chapter = plain(item.text()).strip().casefold() if item is not None else ""
         prefix = _TAB_PREFIX.get(place.kind)
         if chapter and prefix is not None:
-            tab = next(
+            tab = _CHAPTER_TABS.get((place.kind, chapter)) or next(
                 (
                     topic.id
-                    for topic in help_text.book().topics.values()
+                    for topic in help_text.book(help_text.GUI).topics.values()
                     if topic.id.startswith(prefix)
                     and (prefix != "tab-" or not topic.id.startswith(_OTHER_TABS))
                     and topic.title.casefold().startswith(chapter)

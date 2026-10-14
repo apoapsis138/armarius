@@ -19,7 +19,9 @@ from ars_magica_manager.tui.screens.saga_picker import SagaPickerScreen
 from ars_magica_manager.tui.screens.season_records import SeasonSummaryScreen
 from ars_magica_manager.tui.screens.workspace.base import _HELP_PAGES
 
-BOOK = ht.load()
+BOOK = ht.load(ht.TUI)
+#: The help as the desktop shows it.
+GUI_BOOK = ht.load(ht.GUI)
 
 #: The process dialogs with a page of their own (help_id); the forms
 #: built by functions set theirs on the instance.
@@ -50,28 +52,90 @@ SHEETS = {
 }
 
 
-def test_help_files_load_and_every_link_leads_somewhere():
-    for page, targets in BOOK.links().items():
-        missing = targets - BOOK.topics.keys()
+@pytest.mark.parametrize("book", [BOOK, GUI_BOOK], ids=ht.FRONT_ENDS)
+def test_help_files_load_and_every_link_leads_somewhere(book):
+    for page, targets in book.links().items():
+        missing = targets - book.topics.keys()
         assert not missing, f"{page} links to {missing}"
 
 
-def test_headings_on_a_page_are_unique():
+@pytest.mark.parametrize("book", [BOOK, GUI_BOOK], ids=ht.FRONT_ENDS)
+def test_headings_on_a_page_are_unique(book):
     """Help scrolls to a topic by its heading, so none may repeat on a
     page."""
-    for page in BOOK.pages.values():
-        titles = [BOOK.topics[t].title for t in page.topics]
+    for page in book.pages.values():
+        titles = [book.topics[t].title for t in page.topics]
         assert len(titles) == len(set(titles)), page.id
+
+
+@pytest.mark.parametrize("book", [BOOK, GUI_BOOK], ids=ht.FRONT_ENDS)
+def test_no_front_end_marker_is_left_on_a_page(book):
+    for page in book.pages.values():
+        assert "<!-- tui" not in page.text and "<!-- gui" not in page.text, page.id
+        assert "<!-- /" not in page.text, page.id
+
+
+def test_each_front_end_has_its_own_workspace_and_keys():
+    for topic_id in ("workspace", "keys"):
+        assert BOOK.topics[topic_id].front_end == ht.TUI
+        assert GUI_BOOK.topics[topic_id].front_end == ht.GUI
+    assert "navigation tree" in BOOK.pages["workspace"].text
+    assert "navigation tree" not in GUI_BOOK.pages["workspace"].text
+
+
+def test_a_topic_for_one_front_end_is_left_out_of_the_other():
+    text = (
+        "# Shared\n<!-- help: shared -->\nBoth.\n<!-- tui -->\nPress `e`.\n"
+        "<!-- /tui -->\n<!-- gui -->\nClick Edit.\n<!-- /gui -->\nAfter.\n"
+        "# Screen\n<!-- help: screen; tui -->\nThe tree.\n"
+        "### Keys\n<!-- help: screen-keys -->\nArrows.\n"
+        "# Screen\n<!-- help: screen; gui -->\nThe pages.\n"
+    )
+    tui = ht.parse("x.md", text, ht.TUI)
+    gui = ht.parse("x.md", text, ht.GUI)
+    assert [(t.id, t.front_end) for t in tui] == [
+        ("shared", None),
+        ("screen", ht.TUI),
+        ("screen-keys", ht.TUI),
+    ]
+    assert [(t.id, t.front_end) for t in gui] == [
+        ("shared", None),
+        ("screen", ht.GUI),
+    ]
+    assert tui[0].text == "# Shared\nBoth.\nPress `e`.\nAfter.\n"
+    assert gui[0].text == "# Shared\nBoth.\nClick Edit.\nAfter.\n"
+    assert gui[1].text == "# Screen\nThe pages.\n"
+
+
+@pytest.mark.parametrize(
+    ("text", "error"),
+    [
+        ("# A\n<!-- help: a; web -->\n", "not a front-end"),
+        ("# A\n<!-- help: a -->\n<!-- tui -->\nx\n", "never closed"),
+        ("# A\n<!-- help: a -->\n<!-- /gui -->\n", "doesn't match"),
+        ("# A\n<!-- help: a -->\n<!-- tui -->\n<!-- /gui -->\n", "doesn't match"),
+        ("# A\n<!-- help: a -->\n<!-- gui -->\n### B\n<!-- /gui -->\n", "inside"),
+        ("# A\n<!-- help: a; gui -->\n### B\n<!-- help: b; tui -->\n", "its page"),
+        ("# A\n<!-- help: a -->\n<!-- tui -->\nx\n<!-- /tui --> y\n", "own"),
+    ],
+)
+def test_a_misused_front_end_marker_is_refused(text, error):
+    with pytest.raises(ht.HelpError, match=error):
+        ht.parse("x.md", text, ht.GUI)
 
 
 def test_a_malformed_file_is_refused(tmp_path):
     (tmp_path / "a.md").write_text("# Page\nno id\n", encoding="utf-8")
     with pytest.raises(ht.HelpError, match="no help id"):
-        ht.load(tmp_path)
+        ht.load(ht.TUI, tmp_path)
     (tmp_path / "a.md").write_text("# A\n<!-- help: x -->\n", encoding="utf-8")
     (tmp_path / "b.md").write_text("# B\n<!-- help: x -->\n", encoding="utf-8")
     with pytest.raises(ht.HelpError, match="also in"):
-        ht.load(tmp_path)
+        ht.load(ht.TUI, tmp_path)
+    # Once for each front-end is allowed.
+    (tmp_path / "a.md").write_text("# A\n<!-- help: x; tui -->\n", encoding="utf-8")
+    (tmp_path / "b.md").write_text("# B\n<!-- help: x; gui -->\n", encoding="utf-8")
+    assert ht.load(ht.GUI, tmp_path).topics["x"].title == "B"
 
 
 def test_parse_puts_level_three_topics_on_the_page_above():
@@ -79,6 +143,7 @@ def test_parse_puts_level_three_topics_on_the_page_above():
         "x.md",
         "# Sheet\n<!-- help: sheet -->\nIntro.\n### Top\n<!-- help: top -->\n"
         "## Tab\n<!-- help: tab -->\nText.\n### Part\n<!-- help: part -->\nMore.\n",
+        ht.TUI,
     )
     assert [(t.id, t.page) for t in topics] == [
         ("sheet", "sheet"),

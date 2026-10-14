@@ -1,5 +1,5 @@
 # Keys
-<!-- help: keys -->
+<!-- help: keys; tui -->
 
 The same keys work on every sheet. The footer shows the ones that work where
 you are: on its left what the focused part of the sheet can do, on its right
@@ -35,7 +35,32 @@ the keys that always work.
 - `?` Help, here. In a dialog where you're typing, `F1` opens it instead.
 - `q` Quit, and `Ctrl+P` the command palette (themes and more).
 
-On the desktop, the top bar always has Advance Season (with the saga's date) and Help; `F1` opens Help too, on the page on show.
-
 In Help itself, the arrow keys choose a topic, `/` filters the topics,
 `Tab` moves between the topic list and the page, and `esc` closes it.
+
+# Keys
+<!-- help: keys; gui -->
+
+The desktop version is used with the mouse: every action is a button on the page, in the chapter or section it acts on. A few keys work too.
+
+### Always there
+<!-- help: keys-always; gui -->
+
+- `F1` opens Help on the page on show, as the top bar's **Help** does.
+- **Advance Season**, in the top bar, advances the saga by one season (see [Advancing a season](help:advance-season)).
+- The trail at the top left goes back to any page above this one.
+
+### In a form
+<!-- help: keys-forms; gui -->
+
+- `Tab` and `Shift+Tab` move from field to field.
+- `Enter` saves the form, as its Save button does; in a question that deletes something, Enter is No.
+- `Esc` cancels the form or question, as Cancel does.
+
+### On the title page and in Help
+<!-- help: keys-elsewhere; gui -->
+
+- On the title page, `Enter` takes the first way on (Open Saga, or All Sagas).
+- In Help, type in the filter box to narrow the topics, and click a topic to show it. A link in the page shows its topic; the trail leads back to the page Help was opened from.
+
+See [The window](help:workspace) for what the buttons act on.
