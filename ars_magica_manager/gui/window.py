@@ -391,7 +391,13 @@ class MainWindow(QMainWindow):
         )
 
     def open_saga(self, saga_id: str) -> None:
-        self.load(storage.load_saga(saga_id))
+        saga = storage.load_saga(saga_id)
+        self.load(saga)
+        note = storage.newer_save_note(saga)
+        if note is not None:
+            # Once the saga is on show (open_saga runs before the window does
+            # when only one saga is on the shelf).
+            QTimer.singleShot(0, lambda: self.tell("Saved by a newer Armarius", note))
 
     def load(self, saga: Saga) -> None:
         """Open `saga` at its page of covenants."""

@@ -79,6 +79,12 @@ def saga_path(saga_id: str) -> Path:
 #: saga as plain data then -- what save_saga merges its changes against.
 _last_seen: dict[str, tuple[str, dict[str, Any], dict[str, Any]]] = {}
 
+#: The data of each saga file last read that a newer version of the app
+#: saved, by its file, while this copy holds it: what this copy can't read
+#: of it (fields and keys it doesn't know) is put back on every save, so
+#: opening a saga in an older copy never loses what a newer one added.
+_newer_data: dict[str, dict[str, Any]] = {}
+
 #: Takes back, before a save, the changes whoever is signed in to this copy
 #: may not make (players.guard_changes, set while a player is signed
 #: in): (this copy's saga as last seen, as now) -> (as it may be
@@ -101,10 +107,11 @@ def save_saga(saga: Saga) -> Path:
     lock, the file is re-read and only what this copy changed since it last loaded or
     saved the saga is written into it, so another copy's changes stay. Where both
     changed the same value, this save's wins (listed in last_conflicts)."""
-    saga.app_version = __version__
-    saga.saved_by = saved_by
     path = saga_path(saga.id)
-    ours = asdict(saga)
+    newer = _newer_data.get(str(path))
+    saga.app_version = __version__ if newer is None else newer["app_version"]
+    saga.saved_by = saved_by
+    ours = _with_newer(asdict(saga), newer)
     with _saga_lock(saga.id):
         seen = _last_seen.get(str(path))
         theirs = base = None
@@ -139,11 +146,12 @@ def reload_into(saga: Saga) -> list[tuple[str, str]] | None:
     if text is None or (seen is not None and seen[0] == text):
         return None
     try:
-        fresh = _from_data(json.loads(text))
+        raw = json.loads(text)
+        fresh = _from_data(raw)
     except ValueError, TypeError, KeyError:
         return None
     changed = _update_in_place(saga, fresh)
-    data = asdict(saga)
+    data = _with_newer(asdict(saga), _remember_newer(path, raw))
     _last_seen[str(path)] = (text, data, data)
     return changed
 
@@ -201,9 +209,85 @@ def _normalized(text: str | None) -> dict[str, Any] | None:
     if text is None:
         return None
     try:
-        return asdict(_from_data(json.loads(text)))
+        raw = json.loads(text)
+        return _with_newer(asdict(_from_data(raw)), raw if _is_newer(raw) else None)
     except ValueError, TypeError, KeyError:
         return None
+
+
+def version_tuple(version: object) -> tuple[int, ...] | None:
+    """ "2.62.0" as (2, 62, 0); None for anything that isn't a version."""
+    if not isinstance(version, str):
+        return None
+    try:
+        return tuple(int(part) for part in version.split("."))
+    except ValueError:
+        return None
+
+
+def is_newer_version(version: object) -> bool:
+    """Whether `version` is a later version of the app than this one."""
+    mine, theirs = version_tuple(__version__), version_tuple(version)
+    return mine is not None and theirs is not None and theirs > mine
+
+
+def _is_newer(raw: object) -> bool:
+    return isinstance(raw, dict) and is_newer_version(raw.get("app_version"))
+
+
+def _remember_newer(path: Path, raw: object) -> dict[str, Any] | None:
+    """Keep `raw`, the data just read from `path`, if a newer app saved it."""
+    if _is_newer(raw):
+        assert isinstance(raw, dict)
+        _newer_data[str(path)] = raw
+        return raw
+    _newer_data.pop(str(path), None)
+    return None
+
+
+def _with_newer(data: dict[str, Any], newer: dict[str, Any] | None) -> dict[str, Any]:
+    """`data` with what this copy can't read of `newer` (a newer app's save
+    of the same saga) put back: its unknown keys, in the saga and in each
+    record still there (matched by id)."""
+    if newer is None:
+        return data
+    return _overlay(data, newer)
+
+
+def _overlay(known: Any, raw: Any) -> Any:
+    if isinstance(known, dict) and isinstance(raw, dict):
+        merged = {
+            key: _overlay(value, raw[key]) if key in raw else value
+            for key, value in known.items()
+        }
+        merged.update({key: value for key, value in raw.items() if key not in known})
+        return merged
+    if isinstance(known, list) and isinstance(raw, list):
+        raw_by_id = {
+            item["id"]: item
+            for item in raw
+            if isinstance(item, dict) and isinstance(item.get("id"), str)
+        }
+        return [
+            _overlay(item, raw_by_id[item["id"]])
+            if isinstance(item, dict) and item.get("id") in raw_by_id
+            else item
+            for item in known
+        ]
+    return known
+
+
+def newer_save_note(saga: Saga) -> str | None:
+    """What to tell whoever opens `saga` when a newer version of the app
+    saved it, or None when this copy is as new as the save."""
+    if not is_newer_version(saga.app_version):
+        return None
+    return (
+        f"This saga was saved by Armarius {saga.app_version}, which is newer "
+        f"than this copy ({__version__}). What this copy doesn't know of it "
+        "is kept when you save, but you can't see or change it here. "
+        "Update the app to use it."
+    )
 
 
 #: How long save_saga waits for another copy's save to finish, and after
@@ -262,16 +346,18 @@ def backup_saga(saga: Saga) -> Path:
         if older.exists():
             older.replace(backup_path(saga.id, age + 1))
     path = backup_path(saga.id)
-    saga.app_version = __version__
-    write_atomic(path, json.dumps(asdict(saga), indent=2))
+    newer = _newer_data.get(str(saga_path(saga.id)))
+    saga.app_version = __version__ if newer is None else newer["app_version"]
+    write_atomic(path, json.dumps(_with_newer(asdict(saga), newer), indent=2))
     return path
 
 
 def load_saga(saga_id: str) -> Saga:
     path = saga_path(saga_id)
     text = path.read_text(encoding="utf-8")
-    saga = _from_data(json.loads(text))
-    data = asdict(saga)
+    raw = json.loads(text)
+    saga = _from_data(raw)
+    data = _with_newer(asdict(saga), _remember_newer(path, raw))
     _last_seen[str(path)] = (text, data, data)
     return saga
 
@@ -288,6 +374,7 @@ def delete_saga(saga_id: str) -> None:
     """Permanently delete a saga's file (no-op if it is already gone)."""
     saga_path(saga_id).unlink(missing_ok=True)
     _last_seen.pop(str(saga_path(saga_id)), None)
+    _newer_data.pop(str(saga_path(saga_id)), None)
 
 
 def list_sagas() -> list[str]:

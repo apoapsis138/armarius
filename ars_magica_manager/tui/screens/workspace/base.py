@@ -565,6 +565,11 @@ class WorkspaceBase(Screen[None]):
             self._session = uuid.uuid4().hex
             self.set_interval(_SHARED_TICK, self._shared_tick)
         await self._show_saga_detail()
+        note = storage.newer_save_note(self.saga)
+        if note is not None:
+            self.notify(
+                note, title="Saved by a newer Armarius", severity="warning", timeout=20
+            )
 
     def on_unmount(self) -> None:
         # Back to the saga list: whoever signed in to this saga is signed out.

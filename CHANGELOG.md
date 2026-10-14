@@ -46,6 +46,15 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.62.1 — 2026-10-14
+
+- Opening a saga that a newer version of Armarius saved no longer loses
+  what this version doesn't know about. Whatever the newer version added
+  is kept through every save and backup, even though you can't see or
+  change it here, and the saga stays marked as the newer version's.
+- Opening such a saga now says which version saved it and which one you
+  are using, so you know to update the app.
+
 ## 2.62.0 — 2026-10-14
 
 - Help now fits the version you are using. The desktop version's Help

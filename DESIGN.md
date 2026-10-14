@@ -317,7 +317,27 @@ which entity owns which relationship.
   book's "should" is advice, never blocking. 2.0.0 ships when this phase
   is done. Plan: `reference/feat-13-plan.md` (not committed).
 
-**Phase 5+ — Polish / open-ended**
+**Phase 5 — The Saga World**
+- The world outside the covenant: Tribunals and their meetings (Hold
+  Tribunal, resumable, with its debate, vote, rulings, minutes and Acta),
+  neighbours (lords, towns, the Church, universities, factions, threats)
+  with an attitude toward each player covenant, places and regiones,
+  sketch covenants and characters (a detail level on the existing
+  records, never a separate type), what's coming (Ahead) and a yearly
+  step that proposes changes for the storyguide to tick, and covenant
+  arms. Both front-ends; forms are `form_spec` fields as everywhere else.
+- Decided: each Tribunal's customs are a package of their own, never
+  mixed; the Definitive Edition rule is the default and a supplement's
+  version a Rule Option; nothing outside the covenant changes unless the
+  storyguide ticks it, and every automatic change is a diary entry that
+  can be deleted to undo it. One migration: a covenant's free-text
+  Tribunal becomes a Tribunal record.
+- Spec: the "Saga World: data and forms spec" Claude Doc; mockups in the
+  project's shared files (`saga-modules/mockups/`). FEAT-17 in the
+  kanban. 3.0.0 ships when this phase and the desktop's parity with
+  the terminal are both done (decided 2026-10-14).
+
+**Phase 6+ — Polish / open-ended**
 - Character sheet export/printing, multi-saga management UI, possible
   data-bridge with Ars-Magica-Solo, house-rule/customization hooks
   (mirroring Solo's `config.json` + CSV table pattern).
