@@ -17,6 +17,7 @@ from PySide6.QtGui import (
     QBrush,
     QColor,
     QFont,
+    QFontMetrics,
     QIcon,
     QPainter,
     QPen,
@@ -126,6 +127,72 @@ def take_pressed() -> QPushButton | None:
     button = _pressed[0] if _pressed else None
     _pressed.clear()
     return button
+
+
+class GiltButton(QPushButton):
+    """A page's own action, set like a manuscript's opening: gilt-edged,
+    its first letter an illuminated initial on a small gilt-framed panel,
+    the rest in the book face."""
+
+    PAD, GAP, INITIAL = 6, 4, 30
+
+    def __init__(self, words: str, p: Palette, on_click: Callable[[], None]) -> None:
+        super().__init__(words)
+        self.p = p
+        self.setObjectName("gilt")
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.setAttribute(Qt.WidgetAttribute.WA_Hover)
+        self.setToolTip(words)
+        self.pressed.connect(lambda: _pressed.__setitem__(slice(None), [self]))
+        self.clicked.connect(lambda _checked=False: on_click())
+
+    def _fonts(self) -> tuple[QFont, QFont]:
+        return QFont(pictures.DISPLAY, 17), serif(12.5)
+
+    def sizeHint(self) -> QSize:
+        _, rest = self._fonts()
+        words = self.text()
+        width = (
+            self.PAD * 2
+            + self.INITIAL
+            + self.GAP
+            + QFontMetrics(rest).horizontalAdvance(words[1:])
+            + 14
+        )
+        return QSize(width, self.INITIAL + 2 * self.PAD)
+
+    def minimumSizeHint(self) -> QSize:
+        return self.sizeHint()
+
+    def paintEvent(self, _event) -> None:
+        p = self.p
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        box = QRectF(self.rect()).adjusted(1, 1, -1, -1)
+        hover = self.underMouse() or self.hasFocus()
+        painter.setBrush(QColor(p["selection" if hover else "surface"]))
+        painter.setPen(QPen(QColor(p["accent"]), 1.4))
+        painter.drawRoundedRect(box, 4, 4)
+        painter.setBrush(Qt.BrushStyle.NoBrush)
+        painter.setPen(QPen(QColor(p["accent"]), 0.6))
+        painter.drawRoundedRect(box.adjusted(3, 3, -3, -3), 2.5, 2.5)
+        words = self.text() or " "
+        square = QRectF(self.PAD, self.PAD, self.INITIAL, self.INITIAL)
+        painter.setBrush(QColor(p["panel"]))
+        painter.setPen(QPen(QColor(p["accent"]), 1.0))
+        painter.drawRect(square)
+        initial, rest = self._fonts()
+        painter.setFont(initial)
+        painter.setPen(QColor(p["heading"]))
+        painter.drawText(square, Qt.AlignmentFlag.AlignCenter, words[0])
+        painter.setFont(rest)
+        painter.setPen(QColor(p["foreground"]))
+        after = QRectF(
+            square.right() + self.GAP, 0, self.width() - square.right(), self.height()
+        )
+        painter.drawText(
+            after, Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft, words[1:]
+        )
 
 
 def display_name(name: str, p: Palette, size: int = 34) -> QLabel:

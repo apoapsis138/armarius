@@ -46,6 +46,19 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.57.0 — 2026-10-14
+
+- The desktop's saga page sets out what it does as a row of buttons under
+  its name: Edit Saga, Import, Set Date, New Covenant, New Character and
+  New Laboratory. Each button is gilt-edged, and its first letter is an
+  illuminated initial.
+- A covenant's People chapter opens with New Character and its
+  Laboratories chapter with New Laboratory. What they make belongs to
+  that covenant.
+- New and More keep only what has no place on the page: Bind Familiar is
+  on a covenant or a magus, not the saga, and companions and grogs no
+  longer offer New.
+
 ## 2.56.0 — 2026-10-14
 
 - Every character, covenant, laboratory and familiar on the desktop ends

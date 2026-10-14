@@ -380,3 +380,53 @@ def test_a_ritual_needs_the_laboratory_to_have_an_owner():
     assert isinstance(
         menu_forms.perform_ritual(saga, lab), commands.Refuse
     )  # no texts, and no owner
+
+
+def test_places_sets_out_where_each_action_is_offered():
+    saga = _sample_saga_with_covenant()
+    page = _page(saga, NodeKind.SAGA)
+    assert _labels(menu_forms.placed(page, menu_forms.PAGE)) == [
+        "Edit Saga",
+        "Import",
+        "Set Date",
+        "New Covenant",
+        "New Character",
+        "New Laboratory",
+    ]
+    # Bind Familiar leaves the saga page: it is offered on a covenant or
+    # a magus.
+    assert not any(
+        menu_forms.in_menu(page, item, "New") for item in menu_forms.new_items(page)
+    )
+    covenant = _page(saga, NodeKind.COVENANT, covenant_id="cov1")
+    assert menu_forms.placed(covenant, menu_forms.PAGE) == []
+    assert _labels(menu_forms.placed(covenant, "People")) == ["New Character"]
+    assert _labels(menu_forms.placed(covenant, "Laboratories")) == ["New Laboratory"]
+    assert [
+        item.label
+        for item in menu_forms.new_items(covenant)
+        if menu_forms.in_menu(covenant, item, "New")
+    ] == ["Bind Familiar"]
+    assert [
+        item.label
+        for item in menu_forms.more_items(covenant)
+        if menu_forms.in_menu(covenant, item, "More")
+    ][:2] == ["Move Vis", "Import"]
+    # A character's page makes no other records, only a magus's familiar.
+    magus = _page(saga, NodeKind.CHARACTER, character_id="char1")
+    assert [
+        item.label
+        for item in menu_forms.new_items(magus)
+        if menu_forms.in_menu(magus, item, "New")
+    ] == ["Bind Familiar"]
+
+
+def test_every_placed_action_is_in_a_menu_and_has_a_command():
+    actions = {item.action for item in (*menu_forms.NEW_MENU, *menu_forms.MORE_MENU)}
+    for action in menu_forms.PLACES:
+        assert action in actions | {menu_forms.EDIT_SAGA.action}
+    saga = _sample_saga_with_covenant()
+    page = _page(saga, NodeKind.SAGA)
+    assert isinstance(
+        menu_forms.command(page, menu_forms.EDIT_SAGA.action), commands.Form
+    )

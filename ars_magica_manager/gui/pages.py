@@ -13,7 +13,7 @@ from collections.abc import Callable, Sequence
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
-from .. import artwork
+from .. import artwork, menu_forms
 from .. import character_sheet as cs
 from .. import familiar_sheet as fs
 from .. import saga_content_sheet as scs
@@ -21,6 +21,7 @@ from .. import saga_overview as ov
 from ..models import Saga
 from . import pictures
 from .figures import fact_grid
+from .menus import ButtonsAt, button_row
 from .themes import Palette
 from .widgets import (
     ClickableCard,
@@ -202,6 +203,7 @@ class SagaPage(QWidget):
         open_covenant: Callable[[str | None], None],
         open_content: Callable[[], None] = lambda: None,
         open_seasons: Callable[[], None] = lambda: None,
+        buttons_at: ButtonsAt = lambda _spot: [],
     ) -> None:
         super().__init__()
         cards = []
@@ -252,6 +254,9 @@ class SagaPage(QWidget):
             parts.insert(
                 1, text(saga.description, p["foreground"], serif(13), wrap=True)
             )
+        row = button_row(buttons_at(menu_forms.PAGE))
+        if row is not None:
+            parts.insert(1, row)
         column = QVBoxLayout(self)
         column.setContentsMargins(0, 0, 0, 0)
         column.addWidget(scrolling_page(p, *parts))

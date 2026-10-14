@@ -63,7 +63,7 @@ from .help import HelpPage
 from .laboratory import LaboratoryPage
 from .manage import Moded, RecordControls, fade_from
 from .markup_html import plain
-from .menus import menu_buttons
+from .menus import menu_buttons, placed_buttons
 from .ornaments import Headpiece
 from .pages import SagaPage, SagaShelf
 from .paper import Paper
@@ -686,7 +686,12 @@ class MainWindow(QMainWindow):
             )
         if place.kind == SAGA:
             return SagaPage(
-                saga, p, self.open_covenant, self.open_content, self.open_seasons
+                saga,
+                p,
+                self.open_covenant,
+                self.open_content,
+                self.open_seasons,
+                self._buttons_at,
             )
         if place.kind == CONTENT:
             return SagaContentPage(saga, p, self.run)
@@ -703,6 +708,7 @@ class MainWindow(QMainWindow):
                 self.open_familiar,
                 self.run,
                 self._controls(),
+                self._buttons_at,
             )
         if place.kind == LABORATORY:
             lab = saga.laboratory(place.id)
@@ -877,6 +883,12 @@ class MainWindow(QMainWindow):
             self.menu_page(), self.palette_, self.run, self._show_made
         ):
             self.menus.addWidget(button)
+
+    def _buttons_at(self, spot: str) -> list[QPushButton]:
+        """The page on show's own buttons at `spot` (menu_forms.PLACES)."""
+        return placed_buttons(
+            self.menu_page(), spot, self.palette_, self.run, self._show_made
+        )
 
     def _show_made(self, action: str, record_id: str) -> None:
         """Open the page of what a New entry made: its Creation Worksheet

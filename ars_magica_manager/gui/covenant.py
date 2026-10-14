@@ -54,6 +54,7 @@ from .character_sheet import (
 from .editing import Chooser, Run, choose_cards, verb_buttons
 from .figures import Seal, aura_seal, fact_grid, prose, shelf
 from .manage import RecordControls
+from .menus import ButtonsAt, button_row
 from .pages import Open, card_grid, card_title, familiar_card, symbol_label
 from .themes import Palette
 from .timeline import SeasonTimeline, legend, season_text
@@ -112,11 +113,13 @@ class CovenantPage(QWidget):
         open_familiar: Open = lambda _id: None,
         run: Run = lambda _command: None,
         controls: RecordControls | None = None,
+        buttons_at: ButtonsAt = lambda _spot: [],
     ) -> None:
         super().__init__()
         self.saga, self.p = saga, p
         self.run = run
         self.controls = controls
+        self.buttons_at = buttons_at
         self.open_character, self.open_laboratory = open_character, open_laboratory
         self.open_familiar = open_familiar
         self.covenant_id = covenant_id
@@ -349,6 +352,9 @@ class CovenantPage(QWidget):
             ]
         if not parts:
             parts.append(_none("No one yet.", p))
+        row = button_row(self.buttons_at("People"))
+        if row is not None:
+            parts.insert(0, row)
         return scrolling_page(p, *parts)
 
     def _covenfolk(self, covenant: Covenant) -> QWidget:
@@ -477,8 +483,10 @@ class CovenantPage(QWidget):
             card.column.addWidget(fact_grid(list(figures.facts), p, 4))
             card.clicked = lambda lab_id=figures.id: self.open_laboratory(lab_id)
             cards.append(card)
+        row = button_row(self.buttons_at("Laboratories"))
         return scrolling_page(
             p,
+            *([row] if row is not None else []),
             chapter_title(f"Laboratories ({len(labs)})", p),
             card_grid(cards, 2) if cards else _none("No laboratories yet.", p),
         )

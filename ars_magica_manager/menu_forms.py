@@ -330,6 +330,60 @@ def manage_items(page: Page) -> list[ManageItem]:
     return items
 
 
+#: Edit Saga: on the saga's own page, where the terminal's e edits it.
+EDIT_SAGA = MenuItem("e", "edit_saga", "Edit Saga")
+
+#: The page's own buttons, as opposed to a chapter's.
+PAGE = "page"
+
+#: Where a front-end that shows one page at a time (the desktop) offers
+#: each New and More action that isn't in its menus: on a page's own row
+#: of buttons (PAGE), at the head of one of its chapters (by the
+#: chapter's name), or in a menu ("New", "More"). An action listed here
+#: is offered only where it is listed; one not listed stays in its menu
+#: wherever `available` offers it.
+PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
+    "edit_saga": ((NodeKind.SAGA, PAGE),),
+    "import_data": ((NodeKind.SAGA, PAGE), (NodeKind.COVENANT, "More")),
+    "set_date": ((NodeKind.SAGA, PAGE),),
+    "create_covenant": ((NodeKind.SAGA, PAGE),),
+    "create_character": (
+        (NodeKind.SAGA, PAGE),
+        (NodeKind.COVENANT, "People"),
+        (NodeKind.CHARACTER_GROUP, "People"),
+    ),
+    "create_laboratory": (
+        (NodeKind.SAGA, PAGE),
+        (NodeKind.COVENANT, "Laboratories"),
+    ),
+    "create_familiar": (
+        (NodeKind.COVENANT, "New"),
+        (NodeKind.CHARACTER, "New"),
+    ),
+}
+
+
+def placed(page: Page, spot: str) -> list[MenuItem]:
+    """The actions the page offers at `spot` (PAGE, a chapter's name, or
+    "New" / "More"), in PLACES's order."""
+    items = {item.action: item for item in (EDIT_SAGA, *NEW_MENU, *MORE_MENU)}
+    offered = {i.action for i in (*new_items(page), *more_items(page))}
+    if page.kind == NodeKind.SAGA:
+        offered.add(EDIT_SAGA.action)
+    return [
+        items[action]
+        for action, places in PLACES.items()
+        if (page.kind, spot) in places and action in offered
+    ]
+
+
+def in_menu(page: Page, item: MenuItem, menu: str) -> bool:
+    """Whether a page-at-a-time front-end offers `item` in `menu` ("New"
+    or "More") on the page, rather than somewhere else (PLACES)."""
+    places = PLACES.get(item.action)
+    return places is None or (page.kind, menu) in places
+
+
 def new_items(page: Page) -> list[MenuItem]:
     """What New can make from the page."""
     return [item for item in NEW_MENU if available(item.action, page)]
@@ -1047,6 +1101,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "update_record": _update_command,
     "toggle_mode": _record_command,
     "set_date": lambda page: set_date(page.saga),
+    "edit_saga": lambda page: creation_forms.edit_saga_form(page.saga),
     "create_covenant": lambda page: creation_forms.new_covenant_form(page.saga),
     "create_character": lambda page: creation_forms.new_character_form(
         page.saga, _covenant_id(page)

@@ -105,6 +105,10 @@ At the right end of the same row the app names the theme in use. Change it from 
 
 The top node of the tree. It shows the saga's own details and what it holds.
 
+On the desktop, the saga's page sets out its actions as a row of buttons
+under its name: Edit Saga, Import, Set Date, New Covenant, New Character
+and New Laboratory. A familiar is bound from its covenant or its magus.
+
 **You type:** with `e` (Edit Saga): the Name, Storyguide and Description; whether to Keep season records; and the optional rules of the books in play, each off until you turn it on. The books in play are chosen on [Saga Content](help:section-books-in-play).
 
 **The app works out:** the counts of covenants, characters, laboratories, books and spells, and a summary of the books in play and the optional rules turned on ("none (the book's standard rules)" when none is).
