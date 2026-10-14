@@ -23,7 +23,7 @@ from pathlib import Path
 
 import shiboken6
 from PySide6.QtCore import QEvent, Qt, QTimer
-from PySide6.QtGui import QFont, QKeySequence, QShortcut
+from PySide6.QtGui import QFont, QKeySequence, QShortcut, QShowEvent
 from PySide6.QtWidgets import (
     QApplication,
     QDialog,
@@ -31,7 +31,6 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QMainWindow,
-    QMessageBox,
     QPushButton,
     QScrollArea,
     QStackedWidget,
@@ -41,6 +40,7 @@ from PySide6.QtWidgets import (
 
 from .. import (
     advance_forms,
+    creation_forms,
     help_text,
     menu_forms,
     paths,
@@ -49,21 +49,23 @@ from .. import (
     title_page,
 )
 from .. import familiars as fam
+from .. import laboratory_sheet as ls
 from ..actions import NodeKind
 from ..commands import Act, Choose, ChooseFile, Command, Confirm, Form, Picked, Refuse
+from ..markup import escape
 from ..models import Character, Covenant, Familiar, Laboratory, Saga
-from . import pictures
+from . import pictures, printing, snapping
 from .character_sheet import CharacterSheet
 from .covenant import CovenantPage
 from .editing import InPlace, place_for
 from .familiar import FamiliarPage
-from .forms import ConfirmDialog, answer, run_steps, step_dialog
+from .forms import ConfirmDialog, NoticeDialog, answer, run_steps, step_dialog
 from .frame import MAXIMISE, DragStrip, Grips, TopStrip, WindowButtons
 from .help import HelpPage
 from .laboratory import LaboratoryPage
 from .manage import Moded, RecordControls, fade_from
 from .markup_html import plain
-from .menus import Placer, menu_buttons
+from .menus import Placer
 from .ornaments import Headpiece
 from .pages import SagaPage, SagaShelf
 from .paper import Paper
@@ -155,6 +157,8 @@ class MainWindow(QMainWindow):
         # The window draws its own title bar (frame.py).
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.palette_index = 0
+        #: The palette pages are built in while one is printed.
+        self._printing: Palette | None = None
         #: The palette the window is drawn in now.
         self._applied = PALETTES[0]
         self.saga_ids = storage.list_sagas() if saga_ids is None else saga_ids
@@ -198,9 +202,8 @@ class MainWindow(QMainWindow):
 
     def _top_bar(self) -> QHBoxLayout:
         """The window's title bar: the trail on the left, the app's name
-        in the middle (drag it to move the window), and the page's New and
-        More, Advance Season, Help, the theme and the window's own buttons
-        on the right."""
+        in the middle (drag it to move the window), and Advance Season,
+        Help, the theme and the window's own buttons on the right."""
         self.crumbs = QHBoxLayout()
         self.crumbs.setSpacing(2)
         self.theme = QPushButton()
@@ -211,10 +214,6 @@ class MainWindow(QMainWindow):
         bar.addLayout(self.crumbs)
         self.drag = DragStrip(self, self.palette_, "Armarius")
         bar.addWidget(self.drag, 1)
-        #: The New and More menus for the page on show (menus.py).
-        self.menus = QHBoxLayout()
-        self.menus.setSpacing(2)
-        bar.addLayout(self.menus)
         #: Advance Season, while a saga is open: its date, and a click
         #: plays the season out (advance_forms).
         self.advance = QPushButton()
@@ -234,9 +233,21 @@ class MainWindow(QMainWindow):
         bar.addWidget(self.controls, 0, Qt.AlignmentFlag.AlignTop)
         return bar
 
+    def showEvent(self, event: QShowEvent) -> None:
+        snapping.make_snappable(self)
+        super().showEvent(event)
+
+    def nativeEvent(self, eventType, message) -> tuple[bool, int]:
+        """Windows Snap for the drawn title bar (snapping.py)."""
+        result = snapping.native_event(self, bytes(eventType), int(message))
+        if result is not None:
+            return True, result
+        return super().nativeEvent(eventType, message)  # pyright: ignore[reportReturnType]
+
     def changeEvent(self, event: QEvent) -> None:
         """Maximise turns to restore (and back) as the window does."""
         if event.type() == QEvent.Type.WindowStateChange:
+            snapping.make_snappable(self)
             self.controls.update()
             self.controls.buttons[MAXIMISE].update()
             self.controls.buttons[MAXIMISE].setToolTip(
@@ -247,7 +258,10 @@ class MainWindow(QMainWindow):
     @property
     def palette_(self) -> Palette:
         """The theme, in the mode of the record on show: drafting vellum
-        while it is In Creation (themes.for_mode)."""
+        while it is In Creation (themes.for_mode); parchment while a page
+        is built for printing."""
+        if self._printing is not None:
+            return self._printing
         return for_mode(PALETTES[self.palette_index], self._drafting())
 
     def _drafting(self) -> bool:
@@ -401,6 +415,48 @@ class MainWindow(QMainWindow):
                 Place(LABORATORY, lab_id),
             ]
         )
+
+    def open_sanctum(self, character_id: str) -> None:
+        """Open the magus's laboratory below their sheet, so Back returns
+        to them; while they have none, create one first (it opens on its
+        Creation Worksheet)."""
+        saga = self.saga
+        magus = saga.character(character_id) if saga else None
+        if saga is None or magus is None:
+            return
+        lab = ls.sanctum(saga, magus)
+        if lab is not None:
+            self._visit(Place(LABORATORY, lab.id))
+            return
+        before = {lab.id for lab in saga.laboratories}
+
+        def made() -> None:
+            fresh = [lab.id for lab in saga.laboratories if lab.id not in before]
+            if fresh:
+                self._visit(Place(LABORATORY, fresh[-1]))
+                self.go([*self.trail, Place(WORKSHEET, fresh[-1])])
+
+        self.run(
+            creation_forms.new_laboratory_form(saga, magus.covenant_id, magus.id),
+            made,
+        )
+
+    def open_owner(self, lab_id: str) -> None:
+        """Open the laboratory's owner below it, so Back returns to it."""
+        saga = self.saga
+        lab = saga.laboratory(lab_id) if saga else None
+        magus = ls.owner(saga, lab) if saga and lab else None
+        if magus is not None:
+            self._visit(Place(CHARACTER, magus.id))
+
+    def _visit(self, place: Place) -> None:
+        """Go to `place` below the page on show, or back to it if the
+        trail already passes through it (from a sanctum to its magus and
+        back again)."""
+        if place in self.trail:
+            self.go(self.trail[: self.trail.index(place) + 1])
+        else:
+            self.go([*self.trail, place])
 
     def open_content(self) -> None:
         """Open the saga's Saga Content, below the saga."""
@@ -577,7 +633,7 @@ class MainWindow(QMainWindow):
     def tell(self, title: str, words: str) -> None:
         """Show a message (markup): what a step refused, or the notes
         after it. Tests replace it to read the message instead."""
-        QMessageBox.information(self, plain(title), plain(words))
+        NoticeDialog(title, words, self.palette_, self).exec()
 
     def _present(self, dialog: QDialog) -> int:
         """Show a step and wait for it: in place on the page when it was
@@ -654,7 +710,7 @@ class MainWindow(QMainWindow):
             self._apply_theme()
         self._show(self._build(trail[-1]))
         self._draw_trail()
-        self._draw_menus()
+        self._draw_advance()
         if before is not None:
             fade_from(self.stack, before)
 
@@ -717,7 +773,13 @@ class MainWindow(QMainWindow):
             if lab is None:
                 return QLabel("No laboratory chosen.")
             return LaboratoryPage(
-                saga, lab, p, self.run, self._controls(), self._placer()
+                saga,
+                lab,
+                p,
+                self.run,
+                self._controls(),
+                self._placer(),
+                open_owner=lambda: self.open_owner(lab.id),
             )
         if place.kind == FAMILIAR:
             familiar = self._familiar(place.id)
@@ -746,6 +808,7 @@ class MainWindow(QMainWindow):
             self.run,
             self._controls(),
             self._placer(),
+            open_sanctum=lambda: self.open_sanctum(character.id),
         )
 
     def _controls(self) -> RecordControls | None:
@@ -755,8 +818,44 @@ class MainWindow(QMainWindow):
         if page is None or page.record_to_delete() is None:
             return None
         return RecordControls(
-            page, self.run, self._go_up, self.toggle_mode, self.open_worksheet
+            page,
+            self.run,
+            self._go_up,
+            self.toggle_mode,
+            self.open_worksheet,
+            self.print_pdf,
         )
+
+    def print_pdf(self) -> None:
+        """Print the record on show to a PDF, asking where to save it."""
+        page = self.menu_page()
+        record = page.record_to_delete() if page is not None else None
+        if record is None:
+            return
+        name = record.name or "Untitled"
+        folder = storage.EXPORTS_DIR
+        folder.mkdir(parents=True, exist_ok=True)
+        self.run(
+            ChooseFile(
+                f"Print {escape(name)} to PDF",
+                ".pdf",
+                folder / f"{printing.file_stem(name)}.pdf",
+                lambda path: self.print_to(path, name),
+                save=True,
+            ),
+            None,
+        )
+
+    def print_to(self, path: Path, title: str) -> list[str]:
+        """Print the page on show to the PDF at `path`, drawn afresh in
+        the parchment palette; what it did, to tell."""
+        self._printing = printing.PARCHMENT
+        try:
+            page = self._build(self.trail[-1])
+        finally:
+            self._printing = None
+        pages = printing.print_page(page, path, title)
+        return [f"{pages} page{'s' if pages != 1 else ''} saved to {path}."]
 
     def toggle_mode(self, record: Moded) -> None:
         """Move `record` between In Creation and In Play (the core asks
@@ -842,7 +941,7 @@ class MainWindow(QMainWindow):
             self.crumbs.addWidget(crumb)
 
     def menu_page(self) -> menu_forms.Page | None:
-        """The page on show, as its New and More menus see it."""
+        """The page on show, as the actions it sets out see it."""
         saga = self.saga
         place = self.trail[-1] if self.trail else None
         if (
@@ -874,7 +973,7 @@ class MainWindow(QMainWindow):
             )
         return menu_forms.page_for(saga, NodeKind.FAMILIAR, familiar_id=place.id)
 
-    def _draw_menus(self) -> None:
+    def _draw_advance(self) -> None:
         saga = self.saga
         shown = saga is not None and bool(self.trail) and self.trail[-1].kind != SHELF
         self.advance.setVisible(shown)
@@ -883,16 +982,6 @@ class MainWindow(QMainWindow):
                 f"  {saga.current_season} {saga.current_year} · Advance Season"
             )
             self.advance.setIcon(pictures.icon("season", self.palette_["label"]))
-        while self.menus.count():
-            item = self.menus.takeAt(0)
-            old = item.widget() if item is not None else None
-            if old is not None:
-                old.hide()
-                old.deleteLater()
-        for button in menu_buttons(
-            self.menu_page(), self.palette_, self.run, self._show_made
-        ):
-            self.menus.addWidget(button)
 
     def _placer(self) -> Placer:
         """What the page on show sets out itself (menu_forms.PLACES)."""

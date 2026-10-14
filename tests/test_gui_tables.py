@@ -57,6 +57,19 @@ def test_a_heading_spans_its_row_and_cant_be_chosen(app):
     assert chosen == [5]
 
 
+def test_an_art_column_shows_each_arts_symbol(app):
+    """Raw vis and vis stores and sources, wherever they are listed."""
+    view = table_view(
+        Table(["Art", "Pawns"], [["Vim", "4"], ["herbam", "1"], ["", "2"]]),
+        P,
+        lambda _key: None,
+    )
+    model = view.model()
+    icons = [model.index(r, 0).data(Qt.ItemDataRole.DecorationRole) for r in range(3)]
+    assert icons[0] is not None and icons[1] is not None and icons[2] is None
+    assert model.index(0, 1).data(Qt.ItemDataRole.DecorationRole) is None
+
+
 def test_the_stretch_column_takes_the_room(app):
     view = table_view(
         Table(["Year", "Entry"], [["1220", "A walk"]], stretch=1), P, lambda _: None

@@ -461,3 +461,57 @@ async def test_x_exports_a_character_and_the_saga_imports_it():  # noqa: PLR0915
             labels.append(str(node.label))
             pending.extend(node.children)
         assert sum(1 for label in labels if label.startswith("Leandro")) == 2
+
+
+def test_a_whole_saga_exports_and_imports_every_record(tmp_path):
+    source = _source()
+    path = transfer.export_saga_to(tmp_path / "all.amm.json", source)
+    data = transfer.read(path)
+    assert data["kind"] == transfer.SAGA and data["name"] == "Source Saga"
+    target = Saga(id="dst", name="Target")
+    plan = transfer.plan_import(target, data)
+    assert transfer.preview(plan).startswith("Import Saga: Source Saga")
+    transfer.apply(target, plan)
+    assert [c.name for c in target.characters] == ["Leandro", "Flavia", "Hugo"]
+    assert [c.name for c in target.covenants] == ["Keep"]
+    assert target.laboratory(target.characters[0].assigned_lab_id) is not None
+    assert len(target.books) == len(source.books)
+    assert len(target.familiars) == len(source.familiars)
+
+
+def test_import_names_the_entry_a_wrong_file_belongs_under(tmp_path):
+    from ars_magica_manager import import_forms
+    from ars_magica_manager.commands import Refuse
+
+    saga = _source()
+    path = transfer.export_saga_to(tmp_path / "all.amm.json", saga)
+    refused = import_forms.import_file(saga, "characters", path)
+    assert isinstance(refused, Refuse)
+    assert "choose A Whole Saga in the Import list" in refused.why
+
+
+async def test_the_terminal_exports_the_saga_from_more():
+    from support import wait_until
+    from textual.widgets import Tree
+
+    from ars_magica_manager.tui.app import ArsMagicaManagerApp
+    from ars_magica_manager.tui.screens import FieldsDialog, WorkspaceScreen
+
+    source = _source()
+    source.id = "test_saga"
+    storage.save_saga(source)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(120, 45)) as pilot:
+        await pilot.press("enter")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        workspace = app.screen
+        tree = workspace.query_one("#nav-tree", Tree)
+        tree.select_node(tree.root)
+        assert await wait_until(pilot, lambda: workspace.selected_kind.value == "saga")
+        await menu(pilot, app, "m", "Export Saga")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        assert await wait_until(pilot, lambda: bool(app.screen.query("#btn-save")))
+        app.screen.query_one("#btn-save").press()
+        target = storage.EXPORTS_DIR / "source_saga.amm.json"
+        assert await wait_until(pilot, lambda: target.is_file())
+        assert transfer.read(target)["kind"] == transfer.SAGA

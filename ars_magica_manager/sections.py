@@ -65,3 +65,29 @@ TRAIT_SECTIONS: tuple[str, ...] = (
     "section-fam-reputations",
     "section-cov-reputations",
 )
+
+#: The sections whose chosen row Give hands to another record, and what
+#: kind of thing (a giving.GIVERS key) each lists.
+GIVE_SECTIONS: dict[str, str] = {
+    "section-raw-vis-hermetic": "vis",
+    "section-raw-vis-inventory": "vis",
+    "section-lab-raw-vis": "vis",
+    "section-pos-vis_store": "vis",
+    **{
+        section: "book"
+        for section in BOOK_SECTIONS
+        if section not in ("section-lib-summary", "section-unassigned-books")
+    },
+    **dict.fromkeys(DEVICE_SECTIONS, "device"),
+    "section-inventory": "gear",
+    "section-pos-weapon": "gear",
+    "section-pos-armor": "gear",
+    "section-pos-item": "gear",
+}
+
+#: Where Give Silver gives from, and whose purse it is: a character's
+#: Personal Gear, a covenant's Wealth.
+SILVER_SECTIONS: dict[str, str] = {
+    "section-inventory": "character",
+    "section-eco-wealth": "covenant",
+}

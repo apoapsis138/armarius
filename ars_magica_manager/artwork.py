@@ -86,6 +86,8 @@ ICON_NAMES: dict[str, str] = {
     "year": "calendar",
     "vis": "drop-half",
     "income": "coins",
+    "give": "hand-arrow-up",
+    "silver": "hand-coins",
     # Magic and its dangers
     "warping": "lightning",
     "twilight": "moon-stars",

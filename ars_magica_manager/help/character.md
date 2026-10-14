@@ -16,6 +16,15 @@ between the two after asking first. While the character is In Creation, More
 also offers the Creation Worksheet, which walks through the creation steps,
 and the button beside the mode opens it too.
 
+On the desktop, the frame beside the name holds the character's portrait:
+click it to choose a picture from anywhere on the computer. The app copies
+the picture into the save folder's `portraits` folder, so moving or deleting
+the original does not lose it, and clicking again changes or removes it.
+While there is no portrait the frame shows the House symbol. A magus's
+**Sanctum** button opens their laboratory below their sheet, so the trail
+leads back to them; while they have no laboratory it reads **New Sanctum**
+and creates one that is theirs.
+
 **See also:** [How the app handles advancement](help:guide-advancement), [How to plan and run a season](help:guide-seasons), [How to create a character, covenant or laboratory](help:guide-creation)
 
 ### Character info
@@ -32,7 +41,8 @@ the top panel focused, `d` deletes the character after saying what happens
 to what they own, and More (`m`) offers Export, which writes the character
 to a file another saga can import, and Update from a File, which reads such
 a file back over them. On the desktop these and Delete are in the sheet's
-last chapter, **Manage**, and the sheet's header shows its mode: In Play
+last chapter, **Manage**, with **Print to PDF** (see Processes, Printing a
+record), and the sheet's header shows its mode: In Play
 (a seal) or In Creation (a quill, with the Creation Worksheet beside it).
 Click it to switch; while it is In Creation the sheet is drawn on ruled
 drafting vellum.
@@ -146,6 +156,12 @@ gives a fixed bonus or penalty, such as Puissant, the score used follows in
 brackets. While the XP is typed, the form shows the score it buys and the
 total XP the next score needs ("Latin: Score 2 · Score 3 at 30 xp").
 
+**On the desktop** each Ability has a mark beside its name, cut like the
+Art symbols: a dark block with a light figure, such as a quill for every
+Dead Language or a shield for Parma Magica. The chosen Ability's mark is
+shown larger, with its engraved lines, in the panel beside the list. An
+Ability the app has no mark for shows its category's.
+
 **See also:** [Virtues & Flaws tab](help:tab-vf),
 [Planning tab](help:tab-planning), [How the app handles advancement](help:guide-advancement)
 
@@ -225,7 +241,7 @@ they apply.
 
 The pawns of raw vis the magus holds, by Art. This is the same pool as the
 Raw Vis section on the [Inventory tab](help:tab-inventory); a change in one
-shows in both. Move Vis in More (`m`) moves vis to a covenant, laboratory or
+shows in both. [Give](help:give) in More (`m`; on the desktop, the Give button on Raw Vis) gives vis to a covenant, laboratory or
 another magus, and both sides' Diaries record it.
 
 ### Known Spells
@@ -273,7 +289,7 @@ Encumbrance.
 
 The magus's raw vis, by Art: the same pool as Raw Vis on the
 [Hermetic Magic tab](help:tab-hermetic), so a change in one shows in both.
-Move Vis in More (`m`) moves vis to a covenant, laboratory or another magus.
+[Give](help:give) in More (`m`; on the desktop, the Give button on Raw Vis) gives vis to a covenant, laboratory or another magus.
 
 ### Personal Gear
 <!-- help: section-inventory -->
@@ -284,6 +300,11 @@ Damage totals and the character's Soak, worked out from the weapon and the
 character (Ars Magica Definitive Edition, Chapter 11: Obstacles). A weapon
 typed in by hand rather than chosen from the catalog counts no Combat
 Ability.
+
+The title also shows the character's silver, in pounds, when they have
+any; type it in the character's details (Silver). [Give](help:give) in More
+hands the chosen gear to another character or the covenant, and **Give
+Silver** gives pounds from the purse.
 
 ### Enchanted Devices
 <!-- help: section-char-devices -->

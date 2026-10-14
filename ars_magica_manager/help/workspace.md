@@ -80,7 +80,7 @@ A character's node shows its type, for example "Leandro (magus)". A covenant, la
 
 **a**, **e** and **d** act on whatever has focus: the highlighted row of a list, a section, or the record itself. On a record's tree node, or the top panel that names it, **d** deletes the whole covenant, laboratory, character or familiar, and the confirmation lists what happens to what it owns. A focused list always has a row chosen; in a collapsed section, e and d say "Choose a row first." unless there is only one entry.
 
-- **m** (More) holds the actions only a few places have, such as Import, Export, Set Date, Move Vis or the Creation Worksheet. It offers only what applies where focus is. With one thing to do it runs straight away, and the footer names it; with several it opens a menu with a letter for each.
+- **m** (More) holds the actions only a few places have, such as Import, Export, Set Date, Give or the Creation Worksheet. It offers only what applies where focus is. With one thing to do it runs straight away, and the footer names it; with several it opens a menu with a letter for each.
 - **n** (New) makes a covenant, character, laboratory or familiar bond, offering only what belongs at the selected tree node. A new character or laboratory starts in the covenant on show.
 - **/** filters a list that can be filtered: on the Saga Content Spells tab it moves to the search box, and on a laboratory's Lab Texts it opens the filter.
 - **t** advances the saga by one season. See [Advance Season](help:advance-season).
@@ -110,7 +110,7 @@ Covenants, Unassigned Characters and Unassigned Laboratories as cards, each
 heading ending in a blank card (New Covenant, New Character, New
 Laboratory) that makes one more. **Seasons** sets the date (Set Date) and
 opens the seasons played; **Rules and Content** opens Saga Content; and
-**Saga Management** holds Edit Saga and Import. A familiar is bound on its
+**Saga Management** holds Edit Saga, Import and Export Saga. A familiar is bound on its
 magus or in their laboratory.
 
 **You type:** with `e` (Edit Saga): the Name, Storyguide and Description; whether to Keep season records; and the optional rules of the books in play, each off until you turn it on. The books in play are chosen on [Saga Content](help:section-books-in-play).
@@ -331,7 +331,7 @@ Choose who plays a character with **Played by** in the character's Biographical 
 - change the covenants too, if you ticked May change covenants for them;
 - look at everything else, and Export a character, laboratory or covenant (the file downloads in their browser).
 
-Only the storyguide (your own window, or someone signed in as Storyguide) can make new records (New), advance or set the season, import, move vis, share spells, or change the saga itself, its content and its players. Keys a player can't use there don't appear, and if a change slips through anyway, the app doesn't save it and says so.
+Only the storyguide (your own window, or someone signed in as Storyguide) can make new records (New), advance or set the season, import, give things between records, share spells, or change the saga itself, its content and its players. Keys a player can't use there don't appear, and if a change slips through anyway, the app doesn't save it and says so.
 
 **See also:** [Signing in](help:sign-in), [How to host a saga](help:guide-hosting), [The saga](help:saga)
 

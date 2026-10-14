@@ -440,7 +440,7 @@ XP_HEADER = (
 XP_COLUMNS = ["Ability or Art", "Spent", "Gained", "Score", "Specialty"]
 
 
-def _target_score(character: Character, target: str) -> tuple[xp_rules.Progress, str]:
+def target_score(character: Character, target: str) -> tuple[xp_rules.Progress, str]:
     """`target`'s score and xp on the sheet, and its Specialty."""
     if target in ARTS:
         score = character.arts.get(target.lower(), ArtScore())
@@ -454,7 +454,7 @@ def _target_score(character: Character, target: str) -> tuple[xp_rules.Progress,
 def xp_label(character: Character, entry: CreationXp, suffix: str = "") -> str:
     """An xp row: what it went on, the pool xp spent and the xp it gained
     (more with an Affinity), the score now and the Specialty."""
-    progress, specialty = _target_score(character, entry.target)
+    progress, specialty = target_score(character, entry.target)
     gained = creation.gained_xp(entry)
     gained_text = f"{gained:>8}"
     if gained != entry.xp:
@@ -467,7 +467,7 @@ def xp_label(character: Character, entry: CreationXp, suffix: str = "") -> str:
 
 def xp_cells(character: Character, entry: CreationXp, suffix: str = "") -> list[str]:
     """xp_label's row, a cell per XP_COLUMNS."""
-    progress, specialty = _target_score(character, entry.target)
+    progress, specialty = target_score(character, entry.target)
     gained = creation.gained_xp(entry)
     gained_text = str(gained)
     if gained != entry.xp:
@@ -485,7 +485,7 @@ def xp_details(saga: Saga, character: Character, target: str) -> str:
     """The details of an Art or Ability xp was spent on: its score and xp,
     any Affinity and the creation cap, every worksheet spend on it, and
     what it is."""
-    progress, _ = _target_score(character, target)
+    progress, _ = target_score(character, target)
     is_art = target in ARTS
     if is_art:
         bonus, bonus_from = 0, []

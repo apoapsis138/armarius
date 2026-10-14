@@ -292,7 +292,7 @@ async def test_a_signed_in_player_changes_only_their_own(in_a_browser):
         assert ws.check_action("edit", ()) is not False
         assert ws.check_action("new", ()) is False
         assert ws.check_action("advance_season", ()) is False
-        assert not ws._available("move_vis")
+        assert not ws._available("give")
 
         await _show(pilot, ws, ("saga",))
         assert ws.check_action("edit", ()) is False

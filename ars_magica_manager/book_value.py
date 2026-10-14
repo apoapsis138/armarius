@@ -201,9 +201,22 @@ def library_level(saga: Saga, covenant: Covenant, subject: str) -> int:
     """The library's research bonus on `subject`: the level the troupe set,
     one more for its pictorial works and for a long expert correspondence
     on it, at most +5."""
-    level = covenant.library_research.get(subject, 0)
-    if subject in covenant.pictorial_works:
-        level += 1
+    return research_level(
+        saga,
+        covenant,
+        subject,
+        covenant.library_research.get(subject, 0),
+        subject in covenant.pictorial_works,
+    )
+
+
+def research_level(
+    saga: Saga, covenant: Covenant, subject: str, chosen: int, pictorial: bool
+) -> int:
+    """The research bonus on `subject` the `chosen` level would give, with
+    pictorial works or not: one more for them and for a long expert
+    correspondence in the library, at most +5."""
+    level = chosen + (1 if pictorial else 0)
     for book in library_subjects(saga, covenant).get(subject, []):
         kind = book_kinds.OPUS_TYPES.get(book.opus)
         if kind is not None and kind.research_level:
@@ -225,8 +238,8 @@ def subject_research_text(saga: Saga, covenant: Covenant, subject: str) -> str:
 def research_count(saga: Saga, covenant: Covenant) -> str:
     """The Library Summary's Research row (plain text): how many subjects
     the library aids research on, by a bonus set or an encyclopedia, e.g.
-    "6 subjects"; "" when none. The details panel and the Research Bonuses
-    form give each one."""
+    "6 subjects"; "" when none. The details panel and Set Up Research
+    Library give each one."""
     count = sum(
         1
         for subject in library_subjects(saga, covenant)

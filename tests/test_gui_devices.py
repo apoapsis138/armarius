@@ -59,7 +59,14 @@ def test_a_magus_adds_a_device_with_a_component_then_instills_an_effect(app):
     assert isinstance(page, CharacterSheet)
     page.open_chapter("Inventory")
     buttons = _devices(window)
-    assert list(buttons) == ["Add", "Edit", "Delete", "Instill", "Use Charge"]
+    assert list(buttons) == [
+        "Add",
+        "Edit",
+        "Delete",
+        "Instill",
+        "Use Charge",
+        "Give",
+    ]
     assert not buttons["Instill"].isEnabled()  # no row yet
     asked = answering(
         window,

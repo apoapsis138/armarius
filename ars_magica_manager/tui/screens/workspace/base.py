@@ -45,13 +45,14 @@ from .... import (
     creation,
     creation_forms,
     deletion,
+    giving,
     import_forms,
+    menu_forms,
     presence,
     seasons,
     sourcebooks,
     storage,
     transfer,
-    vis,
 )
 from .... import books as bk
 from .... import familiars as fam
@@ -115,7 +116,6 @@ from ..prompts import (
     MenuScreen,
     _date_fields,
     _export_dialog,
-    _move_vis_dialog,
     _scored_trait_dialog,
 )
 from ..season_records import SeasonRecordsView, SeasonSummaryScreen
@@ -256,7 +256,7 @@ _SHARED_TICK = 2.0
 
 #: What only the storyguide may do, whatever a player owns:
 #: making records, the saga's calendar, reading files on the host's disk,
-#: and moving vis or spells between characters.
+#: writing out the whole saga, and moving vis or spells between characters.
 _STORYGUIDE_ACTIONS = frozenset(
     {
         "new",
@@ -267,9 +267,11 @@ _STORYGUIDE_ACTIONS = frozenset(
         "advance_season",
         "set_date",
         "import_data",
-        "move_vis",
+        "give",
+        "give_silver",
         "share_spell",
         "update_record",
+        "export_saga",
     }
 )
 
@@ -372,16 +374,6 @@ _SEASON_SECTIONS: tuple[str, ...] = (
 )
 
 
-_CHARACTER_VIS_SECTIONS = ("section-raw-vis-hermetic", "section-raw-vis-inventory")
-
-#: The sections a move of raw vis changes on its source's sheet.
-_VIS_REFRESH: dict[str, tuple[str, ...]] = {
-    vis.CHARACTER: (*_CHARACTER_VIS_SECTIONS, "tab-diary"),
-    vis.LABORATORY: ("section-lab-raw-vis", "tab-lab-diary"),
-    vis.COVENANT: ("section-pos-vis_store", "tab-cov-diary"),
-}
-
-
 class _ScreenFacts:
     """The workspace as actions.available sees it (actions.ActionFacts)."""
 
@@ -424,8 +416,8 @@ class _ScreenFacts:
     def device_action_enabled(self, action: str) -> bool:
         return self._screen._device_action_enabled(action)
 
-    def vis_holder(self) -> vis.Holder | None:
-        return self._screen._vis_holder()
+    def to_give(self) -> giving.Gift | None:
+        return self._screen._to_give()
 
     def record_to_export(self) -> transfer.Record | None:
         return self._screen._record_to_export()
@@ -1208,6 +1200,30 @@ class WorkspaceBase(Screen[None]):
 
         self.app.push_screen(_export_dialog(record, storage.EXPORTS_DIR), handle_result)
 
+    def action_export_saga(self) -> None:
+        """More's Export Saga on the saga: write every record to a file
+        that Import reads back (A Whole Saga)."""
+        if self.app.is_web:
+            # A browser copy: the file goes to the player's computer.
+            data = transfer.export_saga_data(self.saga)
+            self.app.deliver_binary(
+                io.BytesIO(json.dumps(data, indent=2).encode("utf-8")),
+                save_filename=transfer.saga_file_name(self.saga),
+                mime_type="application/json",
+            )
+            self.notify(
+                f"Exported {escape(self.saga.name)}: your browser downloads it."
+            )
+            return
+
+        def done(end: object) -> None:
+            if isinstance(end, list) and end:
+                self.notify("\n".join(end))
+
+        run_steps(
+            self.app, menu_forms.export_saga(self.saga, storage.EXPORTS_DIR), done
+        )
+
     def action_update_record(self) -> None:
         """More's Update from a File on a covenant, laboratory or
         character: read an export of it over it, after showing what
@@ -1226,75 +1242,9 @@ class WorkspaceBase(Screen[None]):
 
         run_steps(self.app, import_forms.update_record(self.saga, record), done)
 
-    def _vis_holder(self) -> vis.Holder | None:
-        """Whose raw vis the active section lists: the
-        character's or the laboratory's pool, or the covenant's Raw Vis
-        Stores. None anywhere else."""
-        section = self._active_section()
-        if section in _CHARACTER_VIS_SECTIONS:
-            return self.selected_character
-        if section == "section-lab-raw-vis":
-            return self.selected_laboratory
-        if section == "section-pos-vis_store":
-            return self.selected_covenant
+    def _to_give(self) -> giving.Gift | None:
+        """What More's Give would give (see GivingActions)."""
         return None
-
-    def action_move_vis(self) -> None:
-        """Move raw vis from the sheet on show to another covenant,
-        laboratory or magus: the chosen row's, else the one
-        picked. Both sides' Diaries record it."""
-        holder = self._vis_holder()
-        section = self._active_section()
-        if holder is None or section is None:
-            return
-        held = vis.held(holder)
-        selected: int | None = None
-        if isinstance(holder, Covenant):
-            if self._covenant_sheet_view is not None:
-                selected = self._covenant_sheet_view.selected_possession("vis_store")
-        elif isinstance(holder, Character):
-            if self._character_sheet_view is not None:
-                selected = self._character_sheet_view.selected_raw_vis(section)
-        elif self._laboratory_sheet_view is not None:
-            selected = self._laboratory_sheet_view.selected_raw_vis()
-        if selected is not None and selected >= len(held):
-            selected = None
-        if selected is None and len(held) == 1:
-            selected = 0  # only one thing to move: no need to ask which
-
-        self._chosen_or_pick(
-            selected,
-            [escape(h.label) for h in held],
-            empty="No Raw Vis to move.",
-            then=lambda index: self._move_vis_form(holder, held[index]),
-        )
-
-    def _move_vis_form(self, holder: vis.Holder, what: vis.Held) -> None:
-        """Ask how many of `what`'s pawns leave `holder` and who gets them,
-        then move them."""
-        destinations = vis.destinations(self.saga, holder)
-        if not destinations:
-            self.notify("Nowhere else in the saga to move raw vis to.")
-            return
-
-        def handle_result(result: tuple[int, str] | None) -> None:
-            if result is None:
-                return
-            pawns, value = result
-            destination = vis.parse_destination(self.saga, value)
-            if destination is None:
-                return
-            vis.move(self.saga, holder, what, pawns, destination)
-            self._commit(*_VIS_REFRESH[vis.kind_of(holder)])
-            self.refresh_bindings()
-            self.notify(
-                f"Moved {pawns} pawn(s) of {what.art} vis to "
-                f"{escape(destination.name)}."
-            )
-
-        self.app.push_screen(
-            _move_vis_dialog(holder.name, what, destinations), handle_result
-        )
 
     def _active_section(self) -> str | None:
         return self._in_pass("section", self._find_active_section)

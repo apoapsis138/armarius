@@ -46,6 +46,43 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.60.0 — 2026-10-14
+
+- Give: vis, books and lab texts, enchanted devices (with their
+  epitome), personal gear and silver can be handed from one character,
+  covenant or laboratory to another, and both sides' Diaries record it.
+  Gear can be split by how many, and gear and silver never go to a
+  laboratory. Characters now carry pounds of silver, and Give Silver
+  gives from a character's purse or a covenant's Wealth.
+- On the desktop, a magus's Sanctum button opens their laboratory (or
+  makes one), and the laboratory's owner is a button back to them.
+- A character can have a portrait in a gilt frame beside their name.
+  The picture you choose is copied into the saves folder, and the House
+  symbol shows while there is none.
+- The creation worksheet shows each stage's budgets as bars (gold, red
+  when over), every stage's experience in each Ability and Art with its
+  total and score, and a red line naming any broken creation rule.
+- Set Up Research Library walks the covenant's research subjects one at
+  a time, showing which books back each bonus and the bonuses so far.
+- Print to PDF, in every record's Manage chapter on the desktop, lays
+  the sheet out on parchment-coloured A4.
+- Export Saga writes the whole saga in one file, and Import reads it
+  back as A Whole Saga.
+- Every ability on the desktop has a drawn woodcut-style mark in its
+  row, larger in the details panel. An ability with no mark of its own
+  shows its category's.
+- The Treasury reads Annual Income and Annual Expense, and every Raw Vis
+  and vis store shows its Art's symbol.
+- The desktop has no New or More buttons. Every action they held now
+  sits on the section or page it acts on.
+- Section buttons are quieter, sitting on the section title's line at
+  the far right, flat with a soft shadow line. Every button in the app
+  takes the same look, and a button with nothing to act on is hidden.
+- The message after a step is drawn on the app's paper, with no system
+  title bar.
+- Windows Snap, Win+arrow keys and maximising work again with the
+  desktop's own title bar.
+
 ## 2.59.0 — 2026-10-14
 
 - On the desktop, the saga's page is in chapters. The World shows its

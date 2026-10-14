@@ -321,6 +321,16 @@ def known_spell_info_text(saga: Saga, character: Character, index: int) -> str:
     return "\n".join(lines)
 
 
+def gear_title(character: Character) -> str:
+    """Personal Gear's title: how many things, and the character's silver
+    when they have any ("Personal Gear (3) · 12 pounds of silver")."""
+    title = f"Personal Gear ({len(character.inventory)})"
+    if character.silver:
+        unit = "pound" if character.silver == 1 else "pounds"
+        title += f" · {character.silver} {unit} of silver"
+    return title
+
+
 #: Personal Gear's groups, in display order, with their headers.
 INVENTORY_GROUPS: tuple[tuple[str, str], ...] = (
     ("weapon", "Weapons"),

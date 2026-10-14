@@ -13,14 +13,19 @@ draws the page again at the same step.
 
 from __future__ import annotations
 
+import html
 from collections.abc import Callable
 
-from PySide6.QtWidgets import QVBoxLayout, QWidget
+from PySide6.QtCore import QRectF, Qt
+from PySide6.QtGui import QColor, QPainter
+from PySide6.QtWidgets import QLabel, QSizePolicy, QVBoxLayout, QWidget
 
 from .. import worksheet as ws
+from .. import worksheet_feedback as feedback
 from .. import worksheet_forms as wf
 from ..commands import Command, SectionOps
 from ..markup import escape
+from ..models import Character
 from ..rules import creation as rules
 from ..tables import Table
 from .character_sheet import TextBlock, is_aligned, label_values, section
@@ -28,7 +33,7 @@ from .editing import Chooser, Run, verb_buttons
 from .markup_html import plain
 from .pages import page_header
 from .themes import Palette
-from .widgets import Codex, edit_button, scrolling_page, table_view
+from .widgets import Codex, edit_button, scrolling_page, serif, table_view
 
 #: The record kinds' icons (artwork.ICON_NAMES).
 _ICONS = {"character": "character", "covenant": "covenant", "laboratory": "laboratory"}
@@ -63,6 +68,8 @@ class WorksheetPage(QWidget):
                 _ICONS.get(ws.record_kind(record)),
             )
         )
+        self.broken = broken_line(saga, record, palette, self.open_step)
+        outer.addWidget(self.broken)
         self.codex = Codex(palette)
         self.codex.inspect(
             "Creation Worksheet",
@@ -88,11 +95,27 @@ class WorksheetPage(QWidget):
         panel = ws.panel_for(record, step.key)
         parts: list[QWidget] = []
         budget = panel.budget(saga, record)
-        shown: list[QWidget] = [budget_view(budget, p)] if budget else []
+        shown: list[QWidget] = [
+            MeterBar(meter, p) for meter in feedback.meters(saga, record, step.key)
+        ]
+        if budget:
+            shown.append(budget_view(budget, p))
         if panel.list is not None:
             parts.append(self._list(step, panel.list, shown))
         elif shown:
             parts.append(section(step.title, p, *shown))
+        if feedback.shows_ledger(record, step.key):
+            assert isinstance(record, Character)
+            table = feedback.ledger(record, step.key)
+            parts.append(
+                section(
+                    "Experience So Far",
+                    p,
+                    table_view(table, p, lambda _row: None)
+                    if table.rows
+                    else TextBlock("[dim]No experience spent yet.[/]", p),
+                )
+            )
         found = rules.checks(saga, record, step.key)
         parts.append(section("Creation Checks", p, TextBlock(ws.check_lines(found), p)))
         buttons = [
@@ -235,3 +258,83 @@ def budget_view(words: str, p: Palette) -> QWidget:
     for part in parts:
         column.addWidget(part)
     return box
+
+
+class MeterBar(QWidget):
+    """A step's budget as a bar that fills as it is spent: gold while some
+    is left, red once it is over, with what it is and the sums beside it."""
+
+    HEIGHT = 26
+
+    def __init__(self, meter: feedback.Meter, p: Palette) -> None:
+        super().__init__()
+        self.meter, self.p = meter, p
+        self.setFixedHeight(self.HEIGHT)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.setToolTip(f"{meter.label}: {meter.words()}")
+
+    def colour(self) -> str:
+        return self.p["text-error"] if self.meter.over else self.p["accent"]
+
+    def paintEvent(self, event) -> None:
+        meter, p = self.meter, self.p
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        whole = QRectF(self.rect())
+        label_width = min(220.0, whole.width() * 0.3)
+        words_width = min(200.0, whole.width() * 0.3)
+        track = QRectF(
+            whole.left() + label_width,
+            whole.center().y() - 6,
+            whole.width() - label_width - words_width - 12,
+            12,
+        )
+        painter.setFont(serif(12))
+        painter.setPen(QColor(p["foreground"]))
+        painter.drawText(
+            QRectF(0, 0, label_width - 8, whole.height()),
+            Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft,
+            meter.label,
+        )
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.setBrush(QColor(p["panel"]))
+        painter.drawRoundedRect(track, 6, 6)
+        share = 1.0 if meter.total <= 0 else min(meter.spent / meter.total, 1.0)
+        if meter.spent > 0:
+            filled = QRectF(track)
+            filled.setWidth(max(track.width() * share, track.height()))
+            painter.setBrush(QColor(self.colour()))
+            painter.drawRoundedRect(filled, 6, 6)
+        painter.setPen(QColor(p["text-error"] if meter.over else p["label"]))
+        painter.drawText(
+            QRectF(track.right() + 12, 0, words_width, whole.height()),
+            Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft,
+            meter.words(),
+        )
+        painter.end()
+
+
+def broken_line(
+    saga, record: wf.Record, p: Palette, open_step: Callable[[str], None]
+) -> QLabel:
+    """One line naming each step with a broken creation rule and how many,
+    each a link to that step (its rules in the tooltip); hidden while none
+    is broken."""
+    found = feedback.broken(saga, record)
+    by_step: dict[str, list[feedback.Broken]] = {}
+    for rule in found:
+        by_step.setdefault(rule.step, []).append(rule)
+    colour = p["text-error"]
+    links = "  ·  ".join(
+        f'<a href="{step}" style="color:{colour}">'
+        f"{html.escape(rules[0].step_title)} ({len(rules)})</a>"
+        for step, rules in by_step.items()
+    )
+    line = QLabel(f'<span style="color:{colour}">Rules broken: </span>{links}')
+    line.setTextFormat(Qt.TextFormat.RichText)
+    line.setWordWrap(True)
+    line.setFont(serif(12.5, italic=True))
+    line.setToolTip("\n".join(rule.words() for rule in found))
+    line.linkActivated.connect(open_step)
+    line.setVisible(bool(found))
+    return line

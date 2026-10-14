@@ -342,7 +342,8 @@ began dwindling at the end of each year, so it is gone after ten years.
 
 The covenant's raw vis, by Art, with where it is kept: the covenant itself,
 one of its laboratories or one of its characters. Harvests from the Vis
-Sources land here. More's **Move Vis** sends pawns from the chosen store to
+Sources land here. More's [Give](help:give) (on the desktop, the Give button
+on this section) sends pawns from the chosen store to
 another covenant, laboratory or magus, and both sides' Diaries record it.
 
 ### Items
@@ -387,7 +388,9 @@ from the Covenants supplement.
 
 The totals. On the left, the points of inhabitants, laboratories and
 weapons and armour that the costs are worked out from, and Wealth, the
-pounds in store, which you type with `e`. On the right, Total Income, the
+pounds in store, which you type with `e`. **Give Silver** (More, `m`; on
+the desktop, a button here) gives pounds to a character or another
+covenant ([Give](help:give)). On the right, Total Income, the
 expenditure before and after cost savings, and the Surplus/Deficit. At the
 end of each year the surplus is added to Wealth; a deficit is not taken
 from it unless you choose to (see Cost Savings).
@@ -459,10 +462,15 @@ Books list.
 **Research** counts the subjects the library aids research on, when a
 magus looks up a fact (Covenants, Use: Research: an Intelligence + Ability
 roll with the library's bonus); a book's details panel gives its subject's
-bonuses. More's **Research Bonuses** sets the library's bonus for
+bonuses. More's **Set Up Research Library** sets the library's bonus for
 each subject it has a book on, from None to +5 (a few books, a respectable
 collection, a broad and deep one, specialized, peerless); under each, what
-the library holds on it is a guide. **Pictorial works** on a subject raise
+the library holds on it is a guide. On the desktop it is a button on the
+Library, beside Import (which brings a list of books straight into it),
+and walks through the subjects one at a time: each step lists the books on
+that subject that back its bonus, and its encyclopedias, with the bonus
+the level you choose comes to and the bonuses chosen so far. Nothing is
+saved until the last step's Finish. **Pictorial works** on a subject raise
 it one level (10 Build Points at creation, a row of the Build tab), as does
 an expert correspondence on it; the bonus stops at +5. An **encyclopedia** aids research like a
 library of its own: +1 for each of its tractatus on the subject (Art &

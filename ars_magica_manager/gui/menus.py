@@ -1,15 +1,12 @@
-"""The window's New and More menus, beside the trail: the desktop's
-equivalent of the terminal's n and m keys, and of d on the record itself.
-
-Each page offers what menu_forms (and so actions.available) offers there:
-New what can be made from it, More the commands that apply anywhere on the
-page, except those a record's page offers itself (menu_forms.ON_THE_PAGE:
-its Manage chapter, with Delete, and its mode toggle) and those
-menu_forms.PLACES sets out on the page itself (a Placer draws them): a
-button in a chapter or section, or a New card at the end of the cards it
-adds to. A menu with nothing in it isn't shown. Choosing an entry runs its steps through the window,
-which then shows where the change leaves the reader: a new record's page,
-the page above a deleted one, or the same page again.
+"""The desktop's equivalent of the terminal's n and m keys: each New and
+More action the core offers on a page (menu_forms, and so
+actions.available), set out where menu_forms.PLACES puts it, as a button
+in a chapter or section or a New card at the end of the cards it adds to
+(a Placer draws them). A record's page offers the rest itself
+(menu_forms.ON_THE_PAGE: its Manage chapter, with Delete, and its mode
+toggle). Choosing one runs its steps through the window, which then shows
+where the change leaves the reader: a new record's page, or the same page
+again.
 """
 
 from __future__ import annotations
@@ -17,15 +14,13 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QMenu, QPushButton
+from PySide6.QtWidgets import QPushButton
 
 from .. import menu_forms
 from ..actions import MenuItem
 from ..commands import Command
 from ..menu_forms import Page
 from ..models import Saga
-from . import pictures
 from .markup_html import plain
 from .themes import Palette
 from .widgets import NewCard, edit_button
@@ -41,14 +36,6 @@ _MADE: dict[str, Callable[[Saga], list[str]]] = {
     "create_laboratory": lambda saga: [lab.id for lab in saga.laboratories],
     "create_familiar": lambda saga: [f.id for f in saga.familiars],
 }
-
-
-def menu_button(words: str, concept: str, p: Palette) -> QPushButton:
-    button = QPushButton(pictures.icon(concept, p["label"]), f" {words}")
-    button.setObjectName("menu")
-    button.setFlat(True)
-    button.setCursor(Qt.CursorShape.PointingHandCursor)
-    return button
 
 
 def _choose(
@@ -91,6 +78,9 @@ ICONS: dict[str, str] = {
     "set_date": "season",
     "lab_text_access": "lab_text",
     "perform_ritual": "magic",
+    "research_bonuses": "library",
+    "export_saga": "export",
+    "give_silver": "silver",
 }
 
 #: What each New card makes, as artwork.ICON_NAMES has it.
@@ -162,40 +152,3 @@ class Placer:
             _choose(page, item.action, self.run, self.show, command),
             hint,
         )
-
-
-def menu_buttons(
-    page: Page | None,
-    p: Palette,
-    run: RunThen,
-    show: Callable[[str, str], None],
-) -> list[QPushButton]:
-    """The New and More buttons for `page` (none for no page, or a menu
-    with nothing in it): what the page offers that it doesn't set out
-    itself (menu_forms.PLACES, ON_THE_PAGE). `show(action, id)` opens
-    what a New entry made."""
-    if page is None:
-        return []
-    buttons: list[QPushButton] = []
-    for words, concept, items in (
-        ("New", "new", menu_forms.new_items(page)),
-        ("More", "more", menu_forms.more_items(page)),
-    ):
-        entries = [
-            item
-            for item in items
-            if item.action not in menu_forms.ON_THE_PAGE
-            and menu_forms.in_menu(page, item, words)
-        ]
-        if not entries:
-            continue
-        button = menu_button(words, concept, p)
-        menu = QMenu(button)
-        for item in entries:
-            action = menu.addAction(plain(item.label))
-            action.setData(item.action)
-            go = _choose(page, item.action, run, show)
-            action.triggered.connect(lambda _checked=False, go=go: go())
-        button.setMenu(menu)
-        buttons.append(button)
-    return buttons

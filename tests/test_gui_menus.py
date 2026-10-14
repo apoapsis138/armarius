@@ -1,5 +1,5 @@
-"""The desktop window's New and More menus, beside the trail, and the
-page's own buttons for what it sets out itself (menu_forms.PLACES)."""
+"""The desktop sets out the terminal's New and More actions on the page
+itself, where menu_forms.PLACES puts them, and has no New or More menu."""
 
 from __future__ import annotations
 
@@ -11,8 +11,8 @@ pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from gui_steps import answering, section_buttons
-from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QApplication, QPushButton
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 from screen_helpers import _saga_with_familiar, _sample_saga_with_covenant
 
 from ars_magica_manager import storage
@@ -37,27 +37,21 @@ def told(monkeypatch) -> list[str]:
     """What the window tells the user (its notes), without showing it."""
     said: list[str] = []
     monkeypatch.setattr(
-        window_module.QMessageBox,
-        "information",
-        lambda _parent, _title, words: said.append(words),
+        window_module.MainWindow,
+        "tell",
+        lambda _window, _title, words: said.append(words),
     )
     return said
 
 
 def _menus(window: MainWindow) -> dict[str, QPushButton]:
-    found = {}
-    for i in range(window.menus.count()):
-        item = window.menus.itemAt(i)
-        button = item.widget() if item is not None else None
-        if isinstance(button, QPushButton):
-            found[button.text().strip()] = button
-    return found
-
-
-def _entries(window: MainWindow, menu: str) -> dict[str, QAction]:
-    found = _menus(window)[menu].menu()
-    assert found is not None
-    return {a.text(): a for a in found.actions() if not a.isSeparator()}
+    """Any New or More menu button in the window: there are none, as each
+    action is set out on the page."""
+    return {
+        b.text().strip(): b
+        for b in window.findChildren(QPushButton)
+        if b.text().strip() in ("New", "More")
+    }
 
 
 def _new(window: MainWindow) -> dict[str, NewCard]:
@@ -263,3 +257,69 @@ def test_texts_read_sits_beside_the_lab_texts(app):
     asked = answering(window, None)
     section_buttons(window.page(), "Lab Texts")["Texts Read"].click()
     assert asked[0].windowTitle().startswith("Lab Texts")
+
+
+def test_give_sits_on_each_raw_vis_section(app):
+    saga = _sample_saga_with_covenant()
+    magus = saga.characters[0]
+    magus.raw_vis = {"vim": 3}
+    saga.laboratories[0].raw_vis = {"ignem": 2}
+    window = _window(saga)
+    window.show_character("char1")
+    window.page().codex.open_chapter("Inventory")
+    asked = answering(window, {"count": 2, "to": "laboratory:lab1"})
+    section_buttons(window.page(), "Raw Vis")["Give"].click()
+    assert asked, "Give asks how much and to whom"
+    assert storage.load_saga(saga.id).laboratories[0].raw_vis == {"ignem": 2, "vim": 2}
+    window.open_laboratory("lab1")
+    window.page().codex.open_chapter("Stores")
+    assert "Give" in section_buttons(window.page(), "Raw Vis")
+    assert "Move Vis" not in section_buttons(window.page(), "Raw Vis")
+
+
+def test_a_covenants_library_imports_books(app):
+    window = _window(_sample_saga_with_covenant())
+    window.open_covenant("cov1")
+    window.page().codex.open_chapter("Library")
+    assert "Import" in section_buttons(window.page(), "Library")
+
+
+def test_silver_shows_on_personal_gear_and_is_given_from_there(app):
+    saga = _sample_saga_with_covenant()
+    saga.characters[0].silver = 5
+    wealth = saga.covenants[0].economics.wealth
+    window = _window(saga)
+    window.show_character("char1")
+    window.page().codex.open_chapter("Inventory")
+    buttons = section_buttons(window.page(), "Personal Gear")
+    assert any(
+        "5 pounds of silver" in label.text()
+        for label in window.page().findChildren(QLabel)
+    )
+    answering(window, {"count": 3, "to": "covenant:cov1"})
+    buttons["Give Silver"].click()
+    saved = storage.load_saga(saga.id)
+    assert saved.characters[0].silver == 2
+    assert saved.covenants[0].economics.wealth == wealth + 3
+
+
+def test_a_notice_is_drawn_on_paper_with_only_ok(app):
+    from ars_magica_manager.gui.forms import NoticeDialog
+    from ars_magica_manager.gui.themes import PALETTES
+
+    notice = NoticeDialog("Give", "Gave [b]2 pawns[/] of Vim vis.", PALETTES[0])
+    assert notice.words == "Gave 2 pawns of Vim vis."
+    assert notice.save.text() == "OK" and notice.cancel.isHidden()
+    # No system title bar: the paper is the whole window.
+    assert notice.windowFlags() & Qt.WindowType.FramelessWindowHint
+
+
+def test_a_verb_with_nothing_to_act_on_is_not_offered(app):
+    window = _window(_sample_saga_with_covenant())
+    window.show_character("char1")
+    window.page().codex.open_chapter("Inventory")
+    # No books: no Give; no gear: Add only, Edit and Delete hidden.
+    assert section_buttons(window.page(), "Books")["Give"].isHidden()
+    gear = section_buttons(window.page(), "Personal Gear")
+    assert not gear["Add"].isHidden()
+    assert gear["Edit"].isHidden() and gear["Delete"].isHidden()

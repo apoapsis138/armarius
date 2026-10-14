@@ -19,6 +19,7 @@ from .commands import Form
 from .form_spec import DialogField, attr, covenant_options, pairs
 from .markup import escape
 from .models import REALMS, SEASONS, CharacterTemplateDef, Saga
+from .models.saga import assign_laboratory_owner
 from .rules import options as rule_options
 
 #: Saga-form keys for the optional rules: the prefix plus the option's key.
@@ -320,18 +321,27 @@ def _covenant_in_creation(saga: Saga, covenant_id: str | None) -> bool:
     return covenant is not None and covenant.in_creation
 
 
-def new_laboratory_form(saga: Saga, covenant_id: str | None) -> Form:
+def new_laboratory_form(
+    saga: Saga, covenant_id: str | None, owner_id: str | None = None
+) -> Form:
+    """Create a laboratory; given `owner_id`, as that magus's sanctum."""
+    owner = saga.character(owner_id)
+
     def apply(values: dict[str, Any]) -> None:
-        creation.add_laboratory(
+        lab = creation.add_laboratory(
             saga,
             values["name"],
             values["size"],
             values["covenant_id"],
             starting=values.get("starting", False),
         )
+        if owner is not None:
+            assign_laboratory_owner(saga, lab, owner.id)
 
     return Form(
-        "Create a New Laboratory",
+        f"Create {escape(owner.name)}'s Sanctum"
+        if owner is not None
+        else "Create a New Laboratory",
         lambda: laboratory_create_fields(saga, covenant_id),
         apply,
         save_label="Create",

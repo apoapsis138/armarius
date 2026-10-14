@@ -159,27 +159,23 @@ async def test_instill_and_charge_show_only_on_rows_they_can_act_on():
         # The section took focus on its first row: a Charged Item.
         await _choose(pilot, view, "covenant", 0)
         assert enabled() == (False, True)
-        # More has one thing to do there, so the footer names it.
-        assert await wait_until(
-            pilot, lambda: "m Use a Charge" in screen_lines(app)[-1]
-        )
+        # More offers Use a Charge and Give there.
+        assert workspace.check_action("give", ())
+        assert await wait_until(pilot, lambda: "m More" in screen_lines(app)[-1])
         footer = screen_lines(app)[-1]
         assert "Instill" not in footer and "q Quit" in footer
         assert "Set Date" not in footer
         await _choose(pilot, view, "covenant", 1)  # its effect
         assert enabled() == (False, False)
-        assert not workspace.check_action("more", ())
-        await pilot.press("m")
-        await pilot.pause()
-        assert isinstance(app.screen, WorkspaceScreen)
+        # An effect's row gives its device: Give is all More has, so the
+        # footer names it.
+        assert await wait_until(pilot, lambda: "m Give" in screen_lines(app)[-1])
     app = _new_app()
     async with app.run_test(size=(140, 70)) as pilot:
         workspace, view = await _open(pilot, app, "laboratory")
         await _choose(pilot, view, "laboratory", 1)  # an Invested Device's effect
         assert enabled() == (True, False)
-        assert await wait_until(
-            pilot, lambda: "m Instill an Effect" in screen_lines(app)[-1]
-        )
+        assert await wait_until(pilot, lambda: "m More" in screen_lines(app)[-1])
         assert "q Quit" in screen_lines(app)[-1]
 
 

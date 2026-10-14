@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import QRectF, Qt
-from PySide6.QtGui import QPainter
+from PySide6.QtGui import QColor, QMouseEvent, QPainter, QPen
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QCheckBox,
@@ -35,7 +35,6 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QListWidget,
     QListWidgetItem,
-    QMessageBox,
     QPlainTextEdit,
     QPushButton,
     QScrollArea,
@@ -67,11 +66,18 @@ def _shown_text(value: object) -> str:
 
 
 class _Page(Paper):
-    """A dialog's sheet of paper, with a flourish in each corner."""
+    """A dialog's sheet of paper, with a flourish in each corner; ruled
+    round its edge when it is a window of its own (`edged`)."""
+
+    edged = False
 
     def paintEvent(self, event) -> None:
         super().paintEvent(event)
-        corner_flourishes(QPainter(self), QRectF(self.rect()), self.p, 18)
+        painter = QPainter(self)
+        if self.edged:
+            painter.setPen(QPen(QColor(self.p["rule"]), 1))
+            painter.drawRect(QRectF(self.rect()).adjusted(0.5, 0.5, -0.5, -0.5))
+        corner_flourishes(painter, QRectF(self.rect()), self.p, 18)
 
 
 class _Sheet(QDialog):
@@ -95,7 +101,7 @@ class _Sheet(QDialog):
         if inline:
             self.setWindowFlags(Qt.WindowType.Widget)
             self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
-        page = _Page(p)
+        page = self.page = _Page(p)
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
         outer.addWidget(page)
@@ -663,6 +669,36 @@ class ConfirmDialog(_Sheet):
             self.resize(460, 200)
 
 
+class NoticeDialog(_Sheet):
+    """A message on paper with an OK button: what a step refused, or the
+    notes after it."""
+
+    def __init__(
+        self, title: str, words: str, p: Palette, parent: QWidget | None = None
+    ) -> None:
+        super().__init__(title, p, "OK", parent)
+        # Paper all over: no system title bar, ruled round, and moved by
+        # dragging the paper.
+        self.setWindowFlags(Qt.WindowType.Dialog | Qt.WindowType.FramelessWindowHint)
+        self.page.edged = True
+        body = QLabel(to_html(words, p))
+        body.setTextFormat(Qt.TextFormat.RichText)
+        body.setWordWrap(True)
+        body.setFont(serif(13))
+        self.words = plain(words)
+        self.column.addWidget(body)
+        self.save.clicked.connect(self.accept)
+        self.cancel.hide()
+        self.finish()
+        self.setMinimumWidth(420)
+
+    def mousePressEvent(self, event: QMouseEvent) -> None:
+        handle = self.windowHandle()
+        if event.button() == Qt.MouseButton.LeftButton and handle is not None:
+            handle.startSystemMove()
+        event.accept()
+
+
 # -- running steps --
 
 
@@ -731,14 +767,22 @@ def answer(step: Step, dialog: QDialog) -> object:
 
 
 def file_dialog(step: ChooseFile, parent: QWidget | None) -> QFileDialog:
-    """The system's Open window for a ChooseFile: files of its kind, in
-    the folder it starts on."""
+    """The system's Open window for a ChooseFile (its Save window for one
+    that saves): files of its kind, in the folder it starts on."""
     kind = step.suffix.removeprefix(".").upper()
+    patterns = " ".join(f"*{suffix}" for suffix in step.suffixes)
     dialog = QFileDialog(
-        parent, plain(step.title), str(step.start), f"{kind} files (*{step.suffix})"
+        parent, plain(step.title), str(step.start), f"{kind} files ({patterns})"
     )
-    dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
-    dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptOpen)
+    if step.save:
+        dialog.setFileMode(QFileDialog.FileMode.AnyFile)
+        dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptSave)
+        dialog.setDefaultSuffix(step.suffix.removeprefix("."))
+        if step.start.suffix:
+            dialog.selectFile(step.start.name)
+    else:
+        dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+        dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptOpen)
     return dialog
 
 
@@ -755,7 +799,7 @@ def run_steps(
         dialog = step_dialog(step, p, parent, ask=ask)
         if dialog is None:
             assert isinstance(step, Choose)
-            QMessageBox.information(parent, plain(step.title), plain(step.empty))
+            NoticeDialog(step.title, step.empty, p, parent).exec()
             return False, None
         if ask(dialog) != QDialog.DialogCode.Accepted:
             return False, None

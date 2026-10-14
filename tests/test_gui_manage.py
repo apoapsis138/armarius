@@ -57,14 +57,19 @@ def _manage(window: MainWindow) -> dict[str, QPushButton]:
 def test_a_characters_manage_chapter_exports_updates_and_deletes(app):
     window = _window(_sample_saga_with_covenant())
     window.show_character("char1")
-    assert list(_manage(window)) == ["Export", "Update from a File", "Delete Leandro"]
+    assert list(_manage(window)) == [
+        "Export",
+        "Update from a File",
+        "Print to PDF",
+        "Delete Leandro",
+    ]
 
 
-def test_a_familiar_can_only_be_deleted(app):
+def test_a_familiar_can_only_be_printed_or_deleted(app):
     window = _window(_saga_with_familiar())
     window.open_familiar("fam1")
     buttons = _manage(window)
-    assert list(buttons) == ["Delete Ashwing"]
+    assert list(buttons) == ["Print to PDF", "Delete Ashwing"]
     answering(window, True)
     buttons["Delete Ashwing"].click()
     assert storage.load_saga("test_saga").familiars == []

@@ -70,6 +70,8 @@ SCRIPTORUM = Palette(
         "paper-fleck": "#6E5032",
         "paper-sheen": "#FFFFFF",
         "shadow": "#1E0F00",
+        # The soft line under and beside a button, a shadow it casts.
+        "button-shadow": "#A39D97",
         # The bond's three Cords, in their metals.
         "cord-golden": "#B8860B",
         "cord-silver": "#8C939B",
@@ -119,6 +121,7 @@ SCRIPTORUM_DARK = Palette(
         "paper-fleck": "#000000",
         "paper-sheen": "#C8BEA0",
         "shadow": "#000000",
+        "button-shadow": "#3A4150",
         "cord-golden": "#E3C25A",
         "cord-silver": "#C3CAD2",
         "cord-bronze": "#C9844A",
@@ -148,6 +151,7 @@ DRAFTING = _drafting(
         "dim": "#5C6560",
         "paper-fleck": "#3C4E56",
         "shadow": "#0E1A20",
+        "button-shadow": "#98A09C",
     },
 )
 
@@ -158,6 +162,7 @@ DRAFTING_DARK = _drafting(
         "surface": "#16252A",
         "panel": "#1E343A",
         "rule": "#2F4A50",
+        "button-shadow": "#2F4A50",
         "selection": "#1A2D31",
         "label": "#9AA39C",
         "paper-sheen": "#A8BAC2",
@@ -309,19 +314,34 @@ def style_sheet(p: Palette, serif: str) -> str:
     QLineEdit:focus, QPlainTextEdit:focus, QComboBox:focus {{
         border: 1px solid {p["accent"]};
     }}
-    QPushButton#edit, QDialog QPushButton {{
+    QPushButton {{
         font-family: "{serif}";
-        font-size: 12pt;
+        font-size: 11pt;
+        color: {p["label"]};
+        background: transparent;
+        border: 1px solid transparent;
+        border-right-color: {p["button-shadow"]};
+        border-bottom-color: {p["button-shadow"]};
+        border-radius: 4px;
+        padding: 2px 8px;
+    }}
+    QPushButton:hover {{
         color: {p["heading"]};
+        background: {p["panel"]};
+    }}
+    QPushButton:disabled {{
+        color: {p["dim"]};
+        border-color: transparent;
+    }}
+    QDialog QPushButton {{ font-size: 12pt; padding: 3px 14px; }}
+    QDialog QPushButton:default {{ color: {p["heading"]}; }}
+    QPushButton#picker {{
+        color: {p["foreground"]};
         background: {p["surface"]};
         border: 1px solid {p["rule"]};
-        border-radius: 4px;
-        padding: 3px 14px;
+        border-radius: 3px;
     }}
-    QPushButton#edit:hover, QDialog QPushButton:hover {{
-        border: 1px solid {p["accent"]};
-    }}
-    QDialog QPushButton:default {{ border: 1px solid {p["heading"]}; }}
+    QPushButton#picker:hover {{ border: 1px solid {p["accent"]}; }}
     QScrollArea {{ border: none; }}
     QScrollBar:vertical {{ background: transparent; width: 10px; }}
     QScrollBar::handle:vertical {{ background: {p["rule"]}; min-height: 24px; }}

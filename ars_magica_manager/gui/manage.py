@@ -1,6 +1,6 @@
 """What a record's page draws to manage the record itself: its Manage
-chapter (Export, Update from a File, Delete: the record as a file rather
-than as part of the saga) and, in its header, the In Creation / In Play
+chapter (Export, Update from a File, Print to PDF, Delete: the record as a
+file rather than as part of the saga) and, in its header, the In Creation / In Play
 toggle with the Creation Worksheet beside it.
 
 The chapter is built from the core's list of what the record offers
@@ -48,6 +48,13 @@ ICONS: dict[str, str] = {
     DELETE_RECORD: "delete",
 }
 
+#: Print to PDF: the desktop's own, as only it draws the page for paper.
+PRINT = "Print to PDF"
+PRINT_DETAIL = (
+    "Lay the page out for paper, in the parchment colours, chapter by "
+    "chapter, and save it as a PDF to print or send."
+)
+
 #: How long the palette takes to change between the modes, in ms.
 FADE = 450
 
@@ -56,13 +63,15 @@ FADE = 450
 class RecordControls:
     """The window's side of a record's page: the page as the core's
     menus see it, how to run a command, where to go once the record is
-    deleted, how to change its mode and how to open its worksheet."""
+    deleted, how to change its mode, how to open its worksheet and how to
+    print it."""
 
     page: Page
     run: RunThen
     up: Callable[[], None]
     toggle_mode: Callable[[Moded], None]
     worksheet: Callable[[str], None]
+    print_pdf: Callable[[], None] | None = None
 
     def chapter(self, p: Palette) -> QWidget:
         return manage_chapter(self, p)
@@ -84,14 +93,23 @@ def manage_chapter(controls: RecordControls, p: Palette) -> QWidget:
     grid.setHorizontalSpacing(16)
     grid.setVerticalSpacing(14)
     grid.setColumnStretch(1, 1)
-    for row, item in enumerate(menu_forms.manage_items(page)):
-        deleting = item.action == DELETE_RECORD
-        then = controls.up if deleting else None
-
-        def go(action: str = item.action, then=then) -> None:
-            controls.run(menu_forms.command(page, action), then)
-
-        button = edit_button(plain(item.label), p, go, ICONS[item.action])
+    entries: list[tuple[str, str, str, Callable[[], None]]] = []
+    for item in menu_forms.manage_items(page):
+        then = controls.up if item.action == DELETE_RECORD else None
+        entries.append(
+            (
+                item.action,
+                plain(item.label),
+                item.detail,
+                _runs(controls, item.action, then),
+            )
+        )
+    if controls.print_pdf is not None:
+        at = len(entries) - (entries[-1][0] == DELETE_RECORD if entries else 0)
+        entries.insert(at, ("print", PRINT, PRINT_DETAIL, controls.print_pdf))
+    for row, (action, label, detail, go) in enumerate(entries):
+        deleting = action == DELETE_RECORD
+        button = edit_button(label, p, go, ICONS.get(action, "export"))
         if deleting:
             button.setIcon(pictures.icon("delete", p["text-error"], 16))
             button.setStyleSheet(
@@ -99,14 +117,21 @@ def manage_chapter(controls: RecordControls, p: Palette) -> QWidget:
             )
             if row:
                 grid.addWidget(rule(p), 2 * row - 1, 0, 1, 2)
-        button.setToolTip(plain(item.label))
+        button.setToolTip(label)
         grid.addWidget(button, 2 * row, 0, Qt.AlignmentFlag.AlignTop)
         grid.addWidget(
-            text(item.detail, p["label"], serif(12.5, italic=True), wrap=True),
+            text(detail, p["label"], serif(12.5, italic=True), wrap=True),
             2 * row,
             1,
         )
     return scrolling_page(p, chapter_title("Manage", p), grid_box)
+
+
+def _runs(
+    controls: RecordControls, action: str, then: Callable[[], None] | None
+) -> Callable[[], None]:
+    """Run the Manage entry `action`, then `then` (or draw the page again)."""
+    return lambda: controls.run(menu_forms.command(controls.page, action), then)
 
 
 def rule(p: Palette) -> QWidget:

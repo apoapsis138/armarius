@@ -26,12 +26,12 @@ from . import (
     creation,
     creation_forms,
     deletion,
+    giving,
     import_forms,
     library_forms,
     seasons,
     storage,
     transfer,
-    vis,
 )
 from . import economics as eco
 from . import familiars as fam
@@ -45,6 +45,7 @@ from .actions import (
     MenuItem,
     NodeKind,
     available,
+    silver_purse,
 )
 from .commands import Choice, Choose, Command, Confirm, Form, Refuse, notes
 from .form_spec import DialogField, pairs
@@ -85,6 +86,7 @@ NOT_ON_PAGES = frozenset(
         "edit_familiar_fatigue",
         "instill_effect",
         "use_charge",
+        "give",
     }
 )
 
@@ -98,6 +100,7 @@ PAGE_SECTIONS: dict[NodeKind, tuple[str | None, ...]] = {
         "section-known-spells",
         "section-raw-vis-hermetic",
         "section-raw-vis-inventory",
+        "section-inventory",
     ),
     NodeKind.FAMILIAR: (RECORD_SECTION[NodeKind.FAMILIAR],),
     NodeKind.LABORATORY: (
@@ -109,17 +112,10 @@ PAGE_SECTIONS: dict[NodeKind, tuple[str | None, ...]] = {
         RECORD_SECTION[NodeKind.COVENANT],
         *(f"section-inh-{kind}" for kind in inh.AUTO_KINDS),
         "section-eco-income",
+        "section-eco-wealth",
         "section-pos-vis_store",
         "section-lib-books",
     ),
-}
-
-#: The sections whose raw vis Move Vis moves, and whose it is.
-_VIS_SECTIONS: dict[str, str] = {
-    "section-raw-vis-hermetic": "character",
-    "section-raw-vis-inventory": "character",
-    "section-lab-raw-vis": "laboratory",
-    "section-pos-vis_store": "covenant",
 }
 
 
@@ -177,13 +173,9 @@ class Page:
     def device_action_enabled(self, action: str) -> bool:
         return False
 
-    def vis_holder(self) -> vis.Holder | None:
-        holder = _VIS_SECTIONS.get(self.section or "")
-        return {
-            "character": self.character,
-            "laboratory": self.laboratory,
-            "covenant": self.covenant,
-        }.get(holder or "")
+    def to_give(self) -> giving.Gift | None:
+        # The desktop gives from each row's own Give.
+        return None
 
     def record_to_export(self) -> transfer.Record | None:
         return self.creation_record()
@@ -334,16 +326,19 @@ def manage_items(page: Page) -> list[ManageItem]:
 #: edits it.
 EDIT_SAGA = MenuItem("e", "edit_saga", "Edit Saga")
 
-#: Where a front-end that shows one page at a time (the desktop) offers
-#: each New and More action that isn't in its menus: in one of the page's
-#: chapters or sections (by its name), or in a menu ("New", "More"). A New
-#: action there is a New card at the end of the cards it adds to. An
-#: action listed here is offered only where it is listed (Restore
-#: nowhere: Add on the Magi and Companions lists brings someone back); one
-#: not listed stays in its menu wherever `available` offers it.
+#: Where a front-end that shows one page at a time (the desktop), and so
+#: has no New or More menu, offers each New and More action: in one of the
+#: page's chapters or sections, by its name. A New action there is a New
+#: card at the end of the cards it adds to. An action is offered only
+#: where it is listed (Restore nowhere: Add on the Magi and Companions
+#: lists brings someone back); every New and More action is listed, or
+#: is one a record's page offers itself (ON_THE_PAGE) or a section's own
+#: button (NOT_ON_PAGES).
 PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "edit_saga": ((NodeKind.SAGA, "Saga Management"),),
-    "import_data": ((NodeKind.SAGA, "Saga Management"), (NodeKind.COVENANT, "More")),
+    # On a covenant, books straight into its library.
+    "import_data": ((NodeKind.SAGA, "Saga Management"), (NodeKind.COVENANT, "Library")),
+    "export_saga": ((NodeKind.SAGA, "Saga Management"),),
     "set_date": ((NodeKind.SAGA, "Seasons"),),
     "create_covenant": ((NodeKind.SAGA, "Covenants"),),
     "create_character": (
@@ -369,6 +364,11 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     # The Shared tick in a known spell's form.
     "share_spell": ((NodeKind.CHARACTER, "Known Spells"),),
     "perform_ritual": ((NodeKind.LABORATORY, "Planning"),),
+    "give_silver": (
+        (NodeKind.CHARACTER, "Personal Gear"),
+        (NodeKind.COVENANT, "Wealth"),
+    ),
+    "research_bonuses": ((NodeKind.COVENANT, "Library"),),
 }
 
 #: The saga page's Saga Management: each entry with what it does.
@@ -377,6 +377,8 @@ SAGA_MANAGEMENT: dict[str, str] = {
     "records are kept, and the optional rules of the books in play.",
     "import_data": "Bring books, spells or records in from a file, such as "
     "another saga's export or a list of books.",
+    "export_saga": "Write the whole saga, every record and what it holds, to "
+    "one file that another saga, or this one on another computer, can import.",
 }
 
 
@@ -426,13 +428,6 @@ def placed(page: Page, spot: str) -> list[MenuItem]:
             else action in offered
         )
     ]
-
-
-def in_menu(page: Page, item: MenuItem, menu: str) -> bool:
-    """Whether a page-at-a-time front-end offers `item` in `menu` ("New"
-    or "More") on the page, rather than somewhere else (PLACES)."""
-    places = PLACES.get(item.action)
-    return places is None or (page.kind, menu) in places
 
 
 def new_items(page: Page) -> list[MenuItem]:
@@ -771,13 +766,10 @@ def improve(saga: Saga, covenant: Covenant) -> Command:
     )
 
 
-def research_bonuses(saga: Saga, covenant: Covenant) -> Form:
-    """Set the covenant library's research bonus per subject."""
-    return Form(
-        f"Research Bonuses: {escape(covenant.name)}'s library",
-        lambda: library_forms.research_fields(saga, covenant),
-        lambda values: library_forms.research_from_values(saga, covenant, values),
-    )
+def research_bonuses(saga: Saga, covenant: Covenant) -> Command:
+    """Set up the covenant library's research bonuses, a subject at a
+    time."""
+    return library_forms.research_walkthrough(saga, covenant)
 
 
 # ------------------------------------------------------------- the character
@@ -895,68 +887,6 @@ def lab_text_access(saga: Saga, character: Character) -> Form:
         lambda: lab_text_access_fields(saga, character),
         apply,
         validate=lab_text_access_problem,
-    )
-
-
-# --------------------------------------------------------------- raw vis
-
-
-def move_vis_fields(
-    source: str, what: vis.Held, destinations: list[tuple[str, str]]
-) -> list[DialogField]:
-    return [
-        DialogField("_from", "From", "info", f"{source}: {what.label}"),
-        DialogField("pawns", "Pawns", "int", what.pawns),
-        DialogField(
-            "destination",
-            "To",
-            "select",
-            None,
-            options=list(destinations),
-            required=True,
-            allow_blank=True,
-            placeholder="(choose who gets it)",
-            hint="A covenant takes it into its Raw Vis Store of that Art. "
-            "Both Diaries record the move.",
-        ),
-    ]
-
-
-def move_vis_form(saga: Saga, holder: vis.Holder, what: vis.Held) -> Command:
-    """How many of `what`'s pawns leave `holder` and who gets them; both
-    sides' Diaries record it."""
-    destinations = vis.destinations(saga, holder)
-    if not destinations:
-        return Refuse("Move Raw Vis", "Nowhere else in the saga to move raw vis to.")
-
-    def apply(values: dict[str, Any]) -> list[str] | None:
-        destination = vis.parse_destination(saga, values["destination"])
-        if destination is None:
-            return None
-        pawns = values["pawns"]
-        vis.move(saga, holder, what, pawns, destination)
-        return notes(
-            f"Moved {pawns} pawn(s) of {what.art} vis to {escape(destination.name)}."
-        )
-
-    return Form(
-        "Move Raw Vis",
-        lambda: move_vis_fields(holder.name, what, destinations),
-        apply,
-        validate=lambda values: vis.move_problem(what, values["pawns"]),
-        save_label="Move",
-    )
-
-
-def move_vis(saga: Saga, holder: vis.Holder) -> Command:
-    held = vis.held(holder)
-    if not held:
-        return Refuse("Move Raw Vis", "No Raw Vis to move.")
-    return _one_of(
-        "Move which Raw Vis?",
-        held,
-        lambda h: escape(h.label),
-        lambda h: move_vis_form(saga, holder, h),
     )
 
 
@@ -1079,6 +1009,59 @@ def _record_command(page: Page) -> Command:
     return toggle_mode(page.saga, record)
 
 
+def export_saga(saga: Saga, folder: Path) -> Form:
+    """Export the whole saga to a file Import reads back (A Whole Saga)."""
+
+    def apply(values: dict[str, Any]) -> Command | list[str]:
+        path = export_path(values)
+        try:
+            transfer.export_saga_to(path, saga)
+        except OSError as problem:
+            return Refuse(
+                "Export Saga",
+                f"Couldn't write {escape(path.name)}: {escape(str(problem))}",
+            )
+        return notes(f"Exported {escape(saga.name)} to {escape(str(path))}.")
+
+    return Form(
+        f"Export {escape(saga.name)}",
+        lambda: [
+            DialogField(
+                "_what",
+                "Exporting",
+                "info",
+                f"Saga: {saga.name} ({_saga_count(saga)})",
+            ),
+            DialogField(
+                "file",
+                "File",
+                "text",
+                str(folder / transfer.saga_file_name(saga)),
+                hint="Every covenant, laboratory, character and familiar, with "
+                "their books, devices and the saga's own spells and house rules. "
+                "Import it into another saga with Import, A Whole Saga.",
+            ),
+        ],
+        apply,
+        validate=export_problem,
+        live=export_live,
+        save_label="Export",
+    )
+
+
+def _saga_count(saga: Saga) -> str:
+    """ "1 covenant, 2 laboratories, 5 characters, 12 books"."""
+    return ", ".join(
+        f"{len(found)} {one if len(found) == 1 else many}"
+        for found, one, many in (
+            (saga.covenants, "covenant", "covenants"),
+            (saga.laboratories, "laboratory", "laboratories"),
+            (saga.characters, "character", "characters"),
+            (saga.books, "book", "books"),
+        )
+    )
+
+
 def _export_command(page: Page) -> Command:
     record = page.record_to_export()
     if record is None:
@@ -1105,12 +1088,12 @@ def _needs[T](
     return run
 
 
-def _vis_command(page: Page) -> Command:
-    section = section_of(page, "move_vis")
-    holder = replace(page, section=section).vis_holder()
-    if holder is None:
-        return Refuse("Move Raw Vis", "No Raw Vis to move.")
-    return move_vis(page.saga, holder)
+def _silver_command(page: Page) -> Command:
+    section = section_of(page, "give_silver")
+    purse = silver_purse(replace(page, section=section))
+    if purse is None:
+        return Refuse("Give Silver", "No silver to give here.")
+    return giving.give(page.saga, giving.SILVER, purse)
 
 
 def _import_command(page: Page) -> Command:
@@ -1137,11 +1120,12 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "improve": _needs(_covenant, improve),
     "perform_ritual": _needs(_laboratory, perform_ritual),
     "share_spell": _needs(_character, share_spell),
-    "move_vis": _vis_command,
+    "give_silver": _silver_command,
     "lab_text_access": _needs(_character, lab_text_access),
     "import_data": _import_command,
     "research_bonuses": _needs(_covenant, research_bonuses),
     "export_record": _export_command,
+    "export_saga": lambda page: export_saga(page.saga, storage.EXPORTS_DIR),
     "update_record": _update_command,
     "toggle_mode": _record_command,
     "set_date": lambda page: set_date(page.saga),

@@ -405,6 +405,14 @@ def character_info_fields(saga: Saga, character: Character) -> list[DialogField]
         ),
         DialogField("faith_points", "Faith Points", "int", b.faith_points),
         DialogField("size", "Size", "int", b.size),
+        DialogField(
+            "silver",
+            "Silver (pounds)",
+            "int",
+            character.silver,
+            hint="What they carry, counted as a covenant's Wealth is. Give "
+            "moves it to another character or a covenant.",
+        ),
     ]
 
 
@@ -439,6 +447,7 @@ def apply_character_info(
         "size",
     ):
         setattr(background, key, result[key])
+    character.silver = max(0, result.get("silver", character.silver) or 0)
 
 
 def character_info_form(saga: Saga, character: Character) -> Form:

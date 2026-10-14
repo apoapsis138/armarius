@@ -40,6 +40,7 @@ from .covenant import CovenantActions
 from .creation import CreationActions
 from .devices import DeviceActions
 from .familiar import FamiliarActions
+from .giving import GivingActions
 from .laboratory import LaboratoryActions
 from .library import LibraryActions
 
@@ -51,6 +52,7 @@ class WorkspaceScreen(
     LaboratoryActions,
     FamiliarActions,
     DeviceActions,
+    GivingActions,
     CreationActions,
 ):
     """Persistent nav tree (left) + detail pane (right) for one open saga.

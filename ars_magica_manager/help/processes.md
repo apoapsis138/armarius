@@ -191,6 +191,8 @@ Up and Down choose a step; Tab moves to the step's list, then its buttons; Escap
 
 The step's list works like every list on the sheets: **a** adds (Add a Virtue on Virtues and Flaws, where F2 in the picker turns to Flaws; Spend xp on the xp steps), **e** changes the chosen row and **d** takes it back after asking. On an xp step each row shows the pool xp spent and the xp it gained, which is half again with an Affinity, rounded up on the whole spend. The Spend xp dialog shows, as you type, what the pool xp gains, the score that buys and the pool xp the next score needs, and warns past the creation cap; an Ability's Specialty can be given there too. Taking xp back always gives back the pool xp spent and takes off exactly what it gained. On the Later Life step, d on a training package's row drops the whole package.
 
+On the desktop, each budget is also a bar that fills as it is spent: gold while some is left, red once it is over, with the sums beside it. Every xp step (Early Childhood, Later Life, Apprenticeship, Years past Gauntlet) adds **Experience So Far**: each Ability and Art the worksheet has put xp into, with what each step gave it (this step's column first, in bold), the total and the score it buys, so a step shows what the others already gave. Above the steps, **Rules broken** names each step with a rule that must hold and doesn't, and how many; click one to go to that step (its rules are in the line's tooltip).
+
 The Ability cap at creation goes by age (5 under 30); an Affinity with the Ability raises it by 2 for that Ability, and Mentored by Demons lifts it. Puissant never counts, since it adds only when the Ability is used. While a character is In Creation, the sheet's Edit Ability and Edit Arts say how much xp came from the worksheet: take that back on the worksheet, not by lowering the total. The checks follow Ars Magica Definitive Edition, Chapter 3: Characters, Detailed Character Creation Summary, for characters, and Ars Magica Definitive Edition, Chapter 6: Covenants, for covenants.
 
 ### Moving to In Play
@@ -215,6 +217,7 @@ Brings records into the saga from files. Open it from More's **Import** on the s
 <!-- help: import-data-kinds -->
 
 - **Characters**, **Covenants** and **Laboratories**: a file exported from another saga with More's Export. The file must hold the kind you chose. The file picker starts in the exports folder.
+- **A Whole Saga**: a file written by **Export Saga**. Every covenant, laboratory, character and familiar in it is added beside this saga's own, with their books and devices and the saga's own spells and house rules, as importing each record would.
 - **Books**: a CSV file with a header row. Columns, in any order and any case: name, type, language, author, year_published, description, art, ability, level, quality, tractatus_type, spell, codex, encyclopedia, opus and physical_form; name and type are needed. Rows with the same codex are bound together in one new codex of that name, an encyclopedia when its rows' encyclopedia column says yes. A tractatus's opus can be commentary or correspondence; physical_form is one of exemplar, flap-bound, juvenilia, edition de luxe, treasure-bound, ex libris, holographic, huge codex, unbound or damaged. A level or quality of "var" means the figure is to be set later: the book is imported, highlighted until you edit it to give its numbers, and can't be studied until then. Books imported here go to Unassigned Books. From a covenant's **Library** tab, More's Import puts them straight into that covenant's library instead. An owner or cost column is ignored: the cost is always worked out.
 - **Spells**: a CSV file, through the [Import Spells](help:import-spells) helper.
 
@@ -240,6 +243,41 @@ What goes with it:
 - the saga's own spells and house rules that these use.
 
 Season plans, season records and lab projects under way stay behind.
+
+**Export Saga**, in More on the saga node (on the desktop, a button in the saga page's **Saga Management**, beside Import), writes the whole saga to one file in the same shape: every record and what it holds. Import it into another saga with Import, **A Whole Saga**. In a browser copy, the file downloads instead. Only the storyguide can use it.
+
+### Printing a record
+<!-- help: print-record -->
+
+On the desktop, a covenant's, laboratory's, character's or familiar's
+**Manage** chapter has **Print to PDF**. It asks where to save the file
+(it starts in the exports folder, named after the record), then lays the
+page out for paper: the header, then each chapter in turn under its name,
+in the Scriptorum parchment colours whatever theme is on show, with the
+buttons and the inspector left off. Pages break between sections where
+they can, and a section's title is never left alone at the foot of a page.
+Manage, Planning and Seasons are left off, since they are for the screen.
+The PDF can be printed or sent like any other.
+
+### Giving to another record
+<!-- help: give -->
+
+**Give** hands what one record holds to another record of the saga: the
+chosen row of a Raw Vis list, a books list (a laboratory's Lab Texts too),
+Enchanted Devices, a character's Personal Gear or a covenant's Weapons,
+Armor or Items. In the terminal it is in More (`m`) on those lists; on the
+desktop, a Give button beside the list. It asks who gets it and, for vis
+and gear, how many. A book changes owner and a device changes holder (a
+device's epitome goes with it); gear given in part is split, so both keep
+some. Vis goes to a covenant, a laboratory or a magus; a laboratory takes
+no gear or silver.
+
+**Give Silver** gives pounds of silver from a character's purse (on
+Personal Gear) or a covenant's Wealth to another character or covenant,
+so someone leaving a covenant can take silver with them. Both sides'
+Diaries record every gift; a covenant files it under Library for a book,
+else Purchases & Sales, with the pounds for silver. Only the storyguide
+can give.
 
 ### Updating a record from a file
 <!-- help: import-data-update -->

@@ -118,12 +118,21 @@ class ChooseFile:
     """A file to read, chosen the front-end's own way (the terminal's list
     of files, the desktop's Open window): `suffix` the kind of file
     (".csv"), opening on the folder `start`; `apply` gets the chosen
-    file's path."""
+    file's path. With `save`, a file to write instead (the desktop's Save
+    window), `start` naming the file it suggests."""
 
     title: str
     suffix: str
     start: Path
     apply: Callable[[Path], Any]
+    #: Other kinds of file it takes too (".jpg" beside ".png"); the
+    #: terminal, which has no use for pictures, offers only `suffix`.
+    more: tuple[str, ...] = ()
+    save: bool = False
+
+    @property
+    def suffixes(self) -> tuple[str, ...]:
+        return (self.suffix, *self.more)
 
 
 @dataclass(frozen=True)

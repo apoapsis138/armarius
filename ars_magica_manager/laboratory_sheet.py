@@ -28,6 +28,11 @@ def owner(saga: Saga, lab: Laboratory) -> Character | None:
     return saga.character(lab.owner_id)
 
 
+def sanctum(saga: Saga, magus: Character) -> Laboratory | None:
+    """The magus's own laboratory, if they have one."""
+    return saga.laboratory(magus.assigned_lab_id)
+
+
 def subtitle(saga: Saga, lab: Laboratory) -> str:
     """The line under the name: whose it is, where and when."""
     magus = owner(saga, lab)

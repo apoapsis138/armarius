@@ -28,7 +28,9 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from .. import giving
 from ..commands import Command, SectionOps
+from ..models import Saga
 from .themes import Palette
 from .widgets import ClickableCard, edit_button
 
@@ -38,6 +40,28 @@ Run = Callable[[Command], None]
 #: concept, its first step (for the row) and whether it can act on the
 #: row (Instill an Effect only on a device with room for one).
 RowVerb = tuple[str, str, Callable[[int], Command], Callable[[int], bool]]
+
+
+def give_verb(
+    saga: Saga,
+    kind: str,
+    shown: giving.Holder,
+    things: Callable[[], Sequence[object]],
+) -> RowVerb:
+    """Give: the chosen row's thing (row `i` is `things()[i]`, of
+    giving's `kind`) to another record, offered while it can be given."""
+
+    def gift(row: int) -> giving.Gift | None:
+        listed = things()
+        return (
+            giving.gift(saga, kind, shown, listed[row]) if row < len(listed) else None
+        )
+
+    def can(row: int) -> bool:
+        found = gift(row)
+        return found is not None and giving.blocked(saga, *found) is None
+
+    return ("Give", "give", lambda row: giving.give_gift(saga, gift(row)), can)
 
 
 class Chooser:
@@ -71,7 +95,9 @@ def verb_buttons(
 ) -> list[QPushButton]:
     """The section's buttons, for character_sheet.section(buttons=...):
     one per verb `ops` has, named `nouns` (Add, Edit, Delete), then the
-    `more` that act on the chosen row."""
+    `more` that act on the chosen row. A verb with no row it could act on
+    (an empty list, or Give with nobody to take any of it) isn't shown;
+    one whose row isn't chosen yet is greyed out."""
     add, edit, remove = nouns
     buttons: list[QPushButton] = []
     if ops.add is not None:
@@ -102,6 +128,14 @@ def verb_buttons(
         row = chooser.row(len(rows))
         for button, allowed in per_row:
             verb = button.text().strip()
+            # Nothing listed it could act on: not offered at all (a filter
+            # that empties the list hides it until the filter changes).
+            if not any(allowed(index) for index in range(len(rows))):
+                button.setEnabled(False)
+                button.hide()
+                continue
+            if button.isHidden() and button.parentWidget() is not None:
+                button.show()
             if row is None:
                 button.setEnabled(False)
                 button.setToolTip("Choose a row first.")
@@ -168,7 +202,8 @@ class Section(QWidget):
     def __init__(self) -> None:
         super().__init__()
         self.column = QVBoxLayout(self)
-        self.column.setContentsMargins(0, 0, 0, 0)
+        # Room above the title, so it sits apart from the section above.
+        self.column.setContentsMargins(0, 10, 0, 0)
         self.column.setSpacing(6)
         self.body: list[QWidget] = []
 

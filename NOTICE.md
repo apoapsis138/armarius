@@ -61,7 +61,12 @@ These adaptations are available under CC BY-SA 4.0 too.
 from the original black-and-white bitmaps to vector outlines (SVG), drawn
 in a single colour that the app tints to its theme. House Guernicus has no
 released symbol and shows the Quaesitor symbol. The sigil was scaled down
-and made into an icon file.
+and made into an icon file, and its light parts are cut out of a block as
+the Code of Hermes Ability's mark.
+
+**The Ability marks** are drawn by the app's own code
+(`ars_magica_manager/gui/mark_charges.py`) in the style of the Art
+symbols; they are part of the app and under its licence.
 
 **The icons** in `ars_magica_manager/assets/icons/` are
 [Phosphor Icons](https://phosphoricons.com) (Light weight), © 2023

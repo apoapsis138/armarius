@@ -183,7 +183,7 @@ def test_a_store_whose_keeper_is_gone_falls_back_to_the_covenant():
     ]
 
 
-async def test_m_on_a_vis_store_moves_pawns_to_a_laboratory():
+async def test_give_on_a_vis_store_gives_pawns_to_a_laboratory():
     saga = _saga()
     storage.save_saga(saga)
     case = ListCase(
@@ -195,13 +195,13 @@ async def test_m_on_a_vis_store_moves_pawns_to_a_laboratory():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
         workspace, _ = await _open(pilot, app, case)
-        assert workspace.check_action("move_vis", ())
+        assert workspace.check_action("give", ())
         assert not workspace.check_action("share_spell", ())
-        await menu(pilot, app, "m", "Move Vis")  # the chosen (only) store: no picker
+        await menu(pilot, app, "m", "Give")  # the chosen (only) store
         assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
         dialog = app.screen
-        dialog.query_one("#fld-pawns").value = "2"
-        dialog.query_one("#fld-destination").value = "laboratory:lab1"
+        dialog.query_one("#fld-count").value = "2"
+        dialog.query_one("#fld-to").value = "laboratory:lab1"
         await pilot.pause()
         dialog.query_one("#btn-save").press()
         assert await wait_until(

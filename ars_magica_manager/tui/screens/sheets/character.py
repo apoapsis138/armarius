@@ -455,7 +455,7 @@ class CharacterSheetView(SheetView):
                     title=self._titled(
                         "section-inventory",
                         "section-inventory",
-                        lambda: counted("Personal Gear", len(self.character.inventory)),
+                        lambda: cs.gear_title(self.character),
                     ),
                     id="section-inventory",
                 ):

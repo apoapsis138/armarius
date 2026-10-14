@@ -522,7 +522,7 @@ CONTRACTS: dict[str, Contract] = {
         expected={"creo": 5},
         invalid={"Pawns": "-"},
     ),
-    "move raw vis": Contract(
+    "give raw vis": Contract(
         prefill={"Pawns": "3", "To": Select.NULL},
         edits={"Pawns": "2", "To": "laboratory:lab1"},
         saved=lambda s: (

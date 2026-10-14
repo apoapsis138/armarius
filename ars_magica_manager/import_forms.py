@@ -45,6 +45,7 @@ IMPORT_KINDS: tuple[tuple[str, str], ...] = (
     ("characters", "Characters"),
     ("covenants", "Covenants"),
     ("laboratories", "Laboratories"),
+    ("saga", "A Whole Saga"),
 )
 
 #: The records imported from an export, by Import Data's key.
@@ -52,11 +53,14 @@ RECORD_IMPORTS: dict[str, str] = {
     "characters": transfer.CHARACTER,
     "covenants": transfer.COVENANT,
     "laboratories": transfer.LABORATORY,
+    "saga": transfer.SAGA,
 }
 
 _DETAILS = {
     "books": "Books from a CSV file, added as unassigned books.",
     "spells": "Spells from a CSV file, added to the saga's own spells.",
+    "saga": "Every record of a saga exported from its Saga Management, "
+    "added beside this saga's own.",
 }
 
 TITLE = "Import Data"
@@ -193,16 +197,18 @@ def import_file(
 
 
 def _import_record(saga: Saga, kind: str, path: Path) -> Command:
-    """Preview what importing an exported character, covenant or laboratory
-    adds and which of its links this saga can keep, then add it."""
+    """Preview what importing an exported character, covenant, laboratory
+    or saga adds and which of its links this saga can keep, then add it."""
     wanted = transfer.KIND_LABELS[kind].lower()
     try:
         data = transfer.read(path)
         if data["kind"] != kind:
             found = transfer.KIND_LABELS[data["kind"]]
+            labels = dict(IMPORT_KINDS)
+            entry = next(k for k, v in RECORD_IMPORTS.items() if v == data["kind"])
             raise ValueError(
                 f"it holds a {found.lower()}, not a {wanted}: choose "
-                f"{found} in the Import list"
+                f"{labels[entry]} in the Import list"
             )
         plan = transfer.plan_import(saga, data)
     except (OSError, ValueError, KeyError, TypeError) as problem:

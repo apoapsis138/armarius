@@ -24,6 +24,7 @@ from .. import familiars as fam
 from .. import sheet_text as st
 from ..models import Familiar, Saga
 from .character_sheet import (
+    ability_mark,
     ability_view,
     characteristic_cards,
     section,
@@ -309,6 +310,7 @@ class FamiliarPage(QWidget):
                 ability.name,
                 f"{ability.category} Ability{specialty}",
                 st.ability_info_text(f.abilities, index, f.virtues_flaws),
+                ability_mark(ability.name, ability.category, p),
             )
 
         self.ability_table = ability_view(fs.ability_table(f), p, show)

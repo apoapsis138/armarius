@@ -46,7 +46,7 @@ def _page(saga: Saga, kind: NodeKind, **ids: str) -> menu_forms.Page:
 def test_each_page_offers_what_applies_there():
     saga = _sample_saga_with_covenant()
     page = _page(saga, NodeKind.SAGA)
-    assert _labels(menu_forms.more_items(page)) == ["Import", "Set Date"]
+    assert _labels(menu_forms.more_items(page)) == ["Import", "Export Saga", "Set Date"]
     assert _labels(menu_forms.new_items(page)) == [
         "New Covenant",
         "New Character",
@@ -72,9 +72,8 @@ def test_each_page_offers_what_applies_there():
 
     page = _page(saga, NodeKind.COVENANT, covenant_id="cov1")
     assert _labels(menu_forms.more_items(page)) == [
-        "Move Vis",
         "Import",
-        "Research Bonuses",
+        "Set Up Research Library",
         "Export",
         "Update from a File",
         "In Creation / In Play",
@@ -201,19 +200,6 @@ def test_binding_a_familiar_starts_with_the_magus_on_show():
     assert [(f.name, f.character_id) for f in saga.familiars] == [("Ashwing", "char1")]
 
 
-def test_moving_vis_asks_how_much_and_to_whom():
-    saga = _sample_saga_with_covenant()
-    page = _page(saga, NodeKind.COVENANT, covenant_id="cov1")
-    form = menu_forms.command(page, "move_vis")
-    # One store: no need to ask which.
-    assert isinstance(form, commands.Form)
-    assert form.title == "Move Raw Vis"
-    result = form.apply(_answer(form, {"pawns": "2", "destination": "laboratory:lab1"}))
-    assert result == ["Moved 2 pawn(s) of Ignem vis to Leandro's Sanctum."]
-    assert saga.covenants[0].possessions[0].pawns == 3
-    assert saga.laboratories[0].raw_vis == {"ignem": 2}
-
-
 def test_restoring_a_departed_magus():
     saga = _sample_saga_with_covenant()
     covenant = saga.covenants[0]
@@ -304,6 +290,7 @@ def test_exporting_and_importing_a_character(tmp_path: Path):
         "Characters",
         "Covenants",
         "Laboratories",
+        "A Whole Saga",
     ]
     wrong = choose.apply("covenants")
     assert isinstance(wrong, commands.ChooseFile)
@@ -399,30 +386,15 @@ def test_places_sets_out_where_each_action_is_offered():
         "Unassigned Characters": ["New Character"],
         "Unassigned Laboratories": ["New Laboratory"],
         "Seasons": ["Set Date"],
-        "Saga Management": ["Edit Saga", "Import"],
+        "Saga Management": ["Edit Saga", "Import", "Export Saga"],
     }
-    # Bind Familiar leaves the saga page: it is offered on a covenant or
-    # a magus.
-    assert not any(
-        menu_forms.in_menu(page, item, "New") for item in menu_forms.new_items(page)
-    )
     covenant = _page(saga, NodeKind.COVENANT, covenant_id="cov1")
     assert _labels(menu_forms.placed(covenant, "People")) == ["New Character"]
     assert _labels(menu_forms.placed(covenant, "Laboratories")) == ["New Laboratory"]
-    assert not any(
-        menu_forms.in_menu(covenant, item, "New")
-        for item in menu_forms.new_items(covenant)
-    )
-    assert [
-        item.label
-        for item in menu_forms.more_items(covenant)
-        if menu_forms.in_menu(covenant, item, "More")
-    ][:2] == ["Move Vis", "Import"]
+    # A covenant's Import brings books into its library.
+    assert "Import" in _labels(menu_forms.placed(covenant, "Library"))
     # A familiar is bound on the magus, in a card where it would be shown.
     magus = _page(saga, NodeKind.CHARACTER, character_id="char1")
-    assert not any(
-        menu_forms.in_menu(magus, item, "New") for item in menu_forms.new_items(magus)
-    )
     assert _labels(menu_forms.placed(magus, "Familiar")) == ["Bind Familiar"]
 
 
@@ -446,15 +418,27 @@ def test_a_familiar_is_bound_on_the_magus_or_in_their_laboratory():
     assert menu_forms.placed(lab, "Planning") == []
 
 
+def test_every_new_and_more_action_has_a_place_on_the_page():
+    """The desktop has no New or More menu: each action is set out on the
+    page, offered by the record's own page, or is a section's button."""
+    for item in (*menu_forms.NEW_MENU, *menu_forms.MORE_MENU):
+        assert (
+            item.action in menu_forms.PLACES
+            or item.action in menu_forms.ON_THE_PAGE
+            or item.action in menu_forms.NOT_ON_PAGES
+        ), item.label
+
+
+def test_give_silver_is_on_personal_gear_and_wealth():
+    for kind, spot in (
+        (NodeKind.CHARACTER, "Personal Gear"),
+        (NodeKind.COVENANT, "Wealth"),
+    ):
+        assert menu_forms.lives_at("give_silver", kind, spot)
+    assert menu_forms.lives_at("research_bonuses", NodeKind.COVENANT, "Library")
+
+
 def test_the_actions_moved_to_their_sections_leave_more():
-    saga = _sample_saga_with_covenant()
-    magus = _page(saga, NodeKind.CHARACTER, character_id="char1")
-    more = [
-        item.label
-        for item in menu_forms.more_items(magus)
-        if menu_forms.in_menu(magus, item, "More")
-    ]
-    assert "Lab Texts Read" not in more and "Share Spell" not in more
     assert menu_forms.lives_at(
         "lab_text_access", NodeKind.CHARACTER, "Hermetic Background"
     )

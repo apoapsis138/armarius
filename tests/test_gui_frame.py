@@ -91,3 +91,13 @@ def test_the_title_page_has_the_window_buttons_too(app):
     assert strip is not None
     assert strip.width() == window.title.width()
     assert set(strip.controls.buttons) == {MINIMISE, MAXIMISE, CLOSE}
+
+
+def test_other_systems_leave_native_messages_to_qt(app):
+    from ars_magica_manager.gui import snapping
+
+    window = _window(app)
+    # Snap's styles and frame are Windows's; elsewhere nothing is answered.
+    assert snapping.native_event(window, b"xcb_generic_event_t", 0) is None
+    snapping.make_snappable(window)
+    assert window.windowFlags() & Qt.WindowType.FramelessWindowHint

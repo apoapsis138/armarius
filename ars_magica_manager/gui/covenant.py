@@ -26,12 +26,14 @@ from .. import (
     covenant_forms,
     creation_forms,
     diary_forms,
+    giving,
     inhabitant_forms,
     library_forms,
     menu_forms,
     possession_forms,
     season_forms,
     seasons,
+    vis,
 )
 from .. import books as bk
 from .. import covenant_build as cov_build
@@ -54,7 +56,7 @@ from .character_sheet import (
     side_by_side,
     trait_section,
 )
-from .editing import Chooser, RowVerb, Run, choose_cards, verb_buttons
+from .editing import Chooser, RowVerb, Run, choose_cards, give_verb, verb_buttons
 from .figures import Seal, aura_seal, fact_grid, prose, shelf
 from .manage import RecordControls
 from .menus import Placer
@@ -473,6 +475,7 @@ class CovenantPage(QWidget):
         groups: Sequence[cvs.Group],
         titles: dict[str, str],
         ops: Callable[[str], SectionOps],
+        more: Callable[[str], Sequence[RowVerb]] = lambda _kind: (),
     ) -> list[QWidget]:
         """A section for every kind in `titles`, those with no rows too, so
         each can be added to."""
@@ -484,6 +487,7 @@ class CovenantPage(QWidget):
                 for kind, title in titles.items()
             ],
             ops,
+            more,
         )
 
     def _labs(self, labs: Sequence[ov.LabCard]) -> QWidget:
@@ -501,12 +505,32 @@ class CovenantPage(QWidget):
 
     def _possessions(self, covenant: Covenant) -> QWidget:
         saga = self.saga
+
+        def more(kind: str) -> list[RowVerb]:
+            if kind == "vis_store":
+                return [
+                    give_verb(saga, giving.VIS, covenant, lambda: vis.held(covenant))
+                ]
+            if kind not in giving.GEAR_KINDS:
+                return []
+            return [
+                give_verb(
+                    saga,
+                    giving.GEAR,
+                    covenant,
+                    lambda: [
+                        e.record for e in pos.entries_for_kind(saga, covenant, kind)
+                    ],
+                )
+            ]
+
         return scrolling_page(
             self.p,
             *self._every_kind(
                 cvs.possession_groups(saga, covenant),
                 {kind: pos.KIND_TITLES[kind] for kind in POSSESSION_KINDS},
                 lambda kind: possession_forms.possession_ops(saga, covenant, kind),
+                more,
             ),
             device_section(
                 saga, "covenant", covenant.id, self.p, self.run, self.inspect
@@ -520,8 +544,8 @@ class CovenantPage(QWidget):
         figures = cvs.treasury(self.saga, covenant)
         account = []
         for caption, value, colour in (
-            ("Income a year", f"{figures.income} £", p["text-success"]),
-            ("Expenditure a year", f"{figures.expenditure} £", p["text-error"]),
+            ("Annual Income", f"{figures.income} £", p["text-success"]),
+            ("Annual Expense", f"{figures.expenditure} £", p["text-error"]),
             (
                 "Surplus" if figures.balance >= 0 else "Deficit",
                 f"{figures.balance:+d} £",
@@ -549,6 +573,7 @@ class CovenantPage(QWidget):
                 p,
                 fact_grid(figures.wealth, p, 6),
                 edits={"Edit": lambda: self.run(covenant_forms.wealth_form(covenant))},
+                buttons=self.placer.buttons("Wealth") if self.placer else [],
             )
         )
 
@@ -603,7 +628,20 @@ class CovenantPage(QWidget):
                 p,
                 *([] if books else [_none("No books yet.", p)]),
                 buttons=[
-                    *verb_buttons(ops, chooser, self.run, p),
+                    *verb_buttons(
+                        ops,
+                        chooser,
+                        self.run,
+                        p,
+                        more=[
+                            give_verb(
+                                saga,
+                                giving.BOOK,
+                                covenant,
+                                lambda: bk.books_in_covenant(saga, covenant),
+                            )
+                        ],
+                    ),
                     *(
                         [
                             edit_button(
@@ -620,6 +658,7 @@ class CovenantPage(QWidget):
                         if len(books) > 1
                         else []
                     ),
+                    *(self.placer.buttons("Library") if self.placer else []),
                 ],
             )
         ]

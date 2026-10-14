@@ -335,6 +335,9 @@ class Character:
     #: {"weapon", "armor", "item"} (a character-scale subset of what the
     #: covenant Possessions tab holds; no sanctums/vis on a character sheet).
     inventory: list[Possession] = field(default_factory=list)
+    #: Silver carried, in pounds, as a covenant's Wealth is counted: what a
+    #: character takes with them when they leave a covenant or join one.
+    silver: int = 0
     assigned_lab_id: str | None = None
     background: Background = field(default_factory=Background)
     description: Description = field(default_factory=Description)
@@ -382,6 +385,9 @@ class Character:
     creation_xp: list[CreationXp] = field(default_factory=list)
     #: Years past Gauntlet and pre-play aging.
     creation_conditions: CreationConditions = field(default_factory=CreationConditions)
+    #: The portrait's file name in the save folder's portraits folder ("":
+    #: none; older saves load with none).
+    portrait: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Character:

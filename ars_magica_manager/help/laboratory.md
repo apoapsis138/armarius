@@ -20,6 +20,9 @@ whether it is one of its covenant's starting laboratories, paid for from the
 covenant's Build Points. `d` on the top panel deletes the laboratory, after
 asking.
 
+On the desktop, the owner's name is a button in the top panel that opens
+their sheet below the laboratory, so the trail leads back to it.
+
 **See also:** [How lab planning works](help:guide-lab-planning), [How to create a character, covenant or laboratory](help:guide-creation)
 
 ### Identity
@@ -223,9 +226,9 @@ a Lab Text written.
 
 The pawns of raw vis kept in the laboratory, one row per Art. You type the
 Art and the pawns. Lab work that pays with the laboratory's vis takes it from
-here when the season is advanced, and extracted vis can be sent here. Move
-Vis in More (`m`) moves pawns to another laboratory, covenant or magus, and
-both Diaries record it.
+here when the season is advanced, and extracted vis can be sent here. [Give](help:give)
+(More, `m`; on the desktop, the Give button here) gives the chosen Art's
+pawns to another laboratory, covenant or magus, and both Diaries record it.
 
 ### Equipment & Stores
 <!-- help: section-lab-items -->

@@ -20,6 +20,7 @@ from PySide6.QtGui import (
     QIcon,
     QPainter,
     QPen,
+    QPixmap,
     QStandardItem,
     QStandardItemModel,
 )
@@ -46,7 +47,7 @@ from PySide6.QtWidgets import (
 )
 
 from .. import artwork
-from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
+from ..arts import ART_ABBREVIATIONS, ARTS, FORMS, TECHNIQUES
 from ..tables import Table
 from . import pictures
 from .markup_html import cell_style, to_html
@@ -56,6 +57,9 @@ from .themes import Palette
 
 #: The item-data role holding an experience bar's (fraction, text).
 XP_BAR = Qt.ItemDataRole.UserRole + 1
+
+#: What the inspector shows beside a title: an SVG symbol, or a picture.
+Symbol = Path | QPixmap | None
 
 
 def serif(
@@ -92,15 +96,19 @@ def mix(a: str, b: str, t: float) -> QColor:
     )
 
 
-def chapter_title(words: str, p: Palette) -> QWidget:
+def chapter_title(words: str, p: Palette, *, rule: bool = True) -> QWidget:
     """A heading in small-caps serif over a rule that opens with a hedera
-    leaf and fades out."""
+    leaf and fades out (the rule left to the caller when not `rule`)."""
     box = QWidget()
     column = QVBoxLayout(box)
-    column.setContentsMargins(0, 6, 0, 2)
+    column.setContentsMargins(0, 6, 0, 2 if rule else 0)
     column.setSpacing(1)
-    column.addWidget(text(words, p["foreground"], serif(15, caps=True, bold=True)))
-    column.addWidget(FleuronRule(p))
+    # Beside buttons (no rule of its own), a long title wraps rather than
+    # push them off the page.
+    title = text(words, p["foreground"], serif(15, caps=True, bold=True), wrap=not rule)
+    column.addWidget(title)
+    if rule:
+        column.addWidget(FleuronRule(p))
     return box
 
 
@@ -113,7 +121,7 @@ def edit_button(
     words: str, p: Palette, on_click: Callable[[], None], concept: str = "edit"
 ) -> QPushButton:
     """A section's button (Edit, Add, Delete...), with its verb's icon."""
-    button = QPushButton(pictures.icon(concept, p["heading"], 16), f" {words}")
+    button = QPushButton(pictures.icon(concept, p["label"], 14), f" {words}")
     button.setObjectName("edit")
     button.setCursor(Qt.CursorShape.PointingHandCursor)
     button.pressed.connect(lambda: _pressed.__setitem__(slice(None), [button]))
@@ -281,13 +289,18 @@ ROW_HEIGHT = 30
 
 
 class TallRows(QStyledItemDelegate):
-    """Draws cells as usual in rows ROW_HEIGHT tall."""
+    """Draws cells as usual in rows `height` tall (ROW_HEIGHT unless the
+    table's icons need more)."""
+
+    def __init__(self, height: int = ROW_HEIGHT) -> None:
+        super().__init__()
+        self.height = height
 
     def sizeHint(
         self, option: QStyleOptionViewItem, index: QModelIndex | QPersistentModelIndex
     ) -> QSize:
         size = super().sizeHint(option, index)
-        size.setHeight(max(size.height(), ROW_HEIGHT))
+        size.setHeight(max(size.height(), self.height))
         return size
 
 
@@ -295,8 +308,11 @@ class XpBarDelegate(TallRows):
     """Draws a cell's XP_BAR data, (fraction, text), as a rounded bar with
     the text over it: the way to the next score."""
 
-    def __init__(self, p: Palette) -> None:
-        super().__init__()
+    #: The bar's height, whatever the row's.
+    BAR = ROW_HEIGHT - 12
+
+    def __init__(self, p: Palette, height: int = ROW_HEIGHT) -> None:
+        super().__init__(height)
         self.p = p
 
     def paint(
@@ -311,7 +327,13 @@ class XpBarDelegate(TallRows):
             return
         fraction, words = bar
         p = self.p
-        rect = QRectF(option.rect).adjusted(4, 6, -4, -6)  # type: ignore[attr-defined]
+        cell = QRectF(option.rect)  # type: ignore[attr-defined]
+        rect = QRectF(
+            cell.left() + 4,
+            cell.center().y() - self.BAR / 2,
+            cell.width() - 8,
+            self.BAR,
+        )
         painter.save()
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         if option.state & QStyle.StateFlag.State_Selected:  # type: ignore[attr-defined]
@@ -394,17 +416,22 @@ class Inspector(QFrame):
         corner_flourishes(QPainter(self), frame, self.p, 18)
 
     def show_item(
-        self, title: str, subtitle: str, markup: str, symbol: Path | None = None
+        self, title: str, subtitle: str, markup: str, symbol: Symbol = None
     ) -> None:
+        """Show an item: `symbol` is an Art's or House's SVG, drawn small in
+        the heading colour, or a picture already drawn (an Ability's mark),
+        shown at its own size."""
         self.title.setText(title)
         self.subtitle.setText(subtitle)
         self.subtitle.setVisible(bool(subtitle))
         self.body.setText(to_html(markup, self.p))
         if symbol is None:
             self.symbol.hide()
-        else:
-            self.symbol.setPixmap(pictures.pixmap(symbol, self.p["heading"], 34, 2.0))
-            self.symbol.show()
+            return
+        if isinstance(symbol, Path):
+            symbol = pictures.pixmap(symbol, self.p["heading"], 34, 2.0)
+        self.symbol.setPixmap(symbol)
+        self.symbol.show()
 
 
 class ClickableCard(Card):
@@ -488,7 +515,7 @@ class Codex(QSplitter):
         self.rail.setCurrentRow(self.chapters().index(name))
 
     def inspect(
-        self, title: str, subtitle: str, markup: str, symbol: Path | None = None
+        self, title: str, subtitle: str, markup: str, symbol: Symbol = None
     ) -> None:
         self.inspector.show_item(title, subtitle, markup, symbol)
 
@@ -623,8 +650,15 @@ def _table_model(table: Table, p: Palette) -> QStandardItemModel:
                 cell.setForeground(QBrush(QColor(colour or p["heading"])))
             elif numeric[c]:
                 cell.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            elif columns[c] == "Art" and shown.title() in ARTS:
+                cell.setIcon(art_icon(shown.title(), p))
             model.setItem(r, c, cell)
     return model
+
+
+def art_icon(art: str, p: Palette) -> QIcon:
+    """An Art's symbol, the size of a table's text."""
+    return QIcon(pictures.pixmap(artwork.art_symbol(art), p["foreground"], 18, 2.0))
 
 
 def table_view(
@@ -634,9 +668,10 @@ def table_view(
     table); choosing a row calls `on_choose` with its key. The first
     column is set in the serif and the table's `stretch` column takes the
     spare room; a column of numbers is centred, the others start at the
-    left. A markup cell takes its tags' colour, bold and italics; a
-    heading row is bold on the panel colour, its first cell across the row
-    when it has no others, and can't be chosen."""
+    left, and an Art column shows each Art's symbol. A markup cell takes
+    its tags' colour, bold and italics; a heading row is bold on the panel
+    colour, its first cell across the row when it has no others, and
+    can't be chosen."""
     rows = table.rows
     view = QTableView()
     view.setModel(_table_model(table, p))

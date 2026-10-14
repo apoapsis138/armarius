@@ -1,5 +1,5 @@
-"""Exporting one covenant, laboratory or character to a file, and importing
-it into another saga.
+"""Exporting one covenant, laboratory or character, or a whole saga, to a
+file, and importing it into another saga.
 
 An export is the app's own JSON: a small saga holding just the record and
 what travels with it, so reading one runs the same load-time migrations a
@@ -12,6 +12,8 @@ save does and older exports keep working.
   characters too, each with their own things.
 - The saga's own spells and user-made catalog entries that
   those records use come along.
+- A whole saga takes everything in it; importing it adds every one of its
+  records, as importing each of them would.
 
 Links to records that aren't in the file (a character's covenant, a
 laboratory's owner, a book's author...) are kept by name: importing matches
@@ -52,10 +54,13 @@ FORMAT = "armarius-export"
 FORMATS = (FORMAT, "ars-magica-manager-export")
 SUFFIX = ".amm.json"
 CHARACTER, LABORATORY, COVENANT = "character", "laboratory", "covenant"
+#: The kind of a whole saga's export.
+SAGA = "saga"
 KIND_LABELS: dict[str, str] = {
     CHARACTER: "Character",
     LABORATORY: "Laboratory",
     COVENANT: "Covenant",
+    SAGA: "Saga",
 }
 
 Record = Character | Laboratory | Covenant
@@ -183,6 +188,31 @@ def export_to(
     return path
 
 
+def saga_file_name(saga: Saga) -> str:
+    return f"{storage.slugify(saga.name) or SAGA}{SUFFIX}"
+
+
+def export_saga_data(saga: Saga) -> dict[str, Any]:
+    """The export of the whole saga as JSON-ready data: every record and
+    what they hold, so nothing it points at is left outside it."""
+    return {
+        "format": FORMAT,
+        "app_version": __version__,
+        "kind": SAGA,
+        "name": saga.name,
+        "from_saga": saga.name,
+        "links": {CHARACTER: {}, LABORATORY: {}, COVENANT: {}},
+        "saga": asdict(saga),
+    }
+
+
+def export_saga_to(path: Path, saga: Saga) -> Path:
+    """Write the whole saga's export to `path` (its folder is made if
+    needed)."""
+    write_atomic(path, json.dumps(export_saga_data(saga), indent=2))
+    return path
+
+
 # ------------------------------------------------------------------ import
 
 
@@ -195,7 +225,7 @@ def read(path: Path) -> dict[str, Any]:
     if not isinstance(data, dict) or data.get("format") not in FORMATS:
         raise ValueError(
             "not an Armarius export (export a covenant, laboratory or "
-            "character from its sheet first)"
+            "character from its sheet, or a saga from Saga Management, first)"
         )
     if data.get("kind") not in KIND_LABELS or not isinstance(data.get("saga"), dict):
         raise ValueError("the export is incomplete")

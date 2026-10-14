@@ -16,15 +16,17 @@ from __future__ import annotations
 import html
 import re
 from collections.abc import Callable, Sequence
-from pathlib import Path
 
-from PySide6.QtCore import QSize, QSortFilterProxyModel, Qt
+from PySide6.QtCore import QRectF, QSize, QSortFilterProxyModel, Qt
 from PySide6.QtGui import (
     QBrush,
     QColor,
     QFont,
     QFontDatabase,
     QIcon,
+    QPainter,
+    QPen,
+    QPixmap,
     QStandardItem,
     QStandardItemModel,
 )
@@ -48,13 +50,16 @@ from .. import (
     creation,
     device_forms,
     diary_forms,
+    giving,
     menu_forms,
+    portraits,
     season_forms,
     seasons,
     sourcebooks,
     spell_forms,
     trait_forms,
     virtue_forms,
+    vis,
     vis_forms,
 )
 from .. import books as bk
@@ -65,15 +70,23 @@ from .. import familiar_sheet as fs
 from .. import familiars as fam
 from .. import lab_texts as lt
 from .. import laboratories as labs
+from .. import laboratory_sheet as labs_sheet
 from .. import saga_overview as ov
 from .. import sheet_text as st
 from .. import spells as spl
 from ..actions import NodeKind
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
-from ..commands import Command
+from ..commands import Command, SectionOps
 from ..models import CHARGED, Character, Characteristics, Saga, ScoredTrait
-from . import pictures
-from .editing import Chooser, Section, choose_cards, choose_rows, verb_buttons
+from . import marks, pictures
+from .editing import (
+    Chooser,
+    Section,
+    choose_cards,
+    choose_rows,
+    give_verb,
+    verb_buttons,
+)
 from .figures import (
     Dial,
     fact_grid,
@@ -85,6 +98,7 @@ from .figures import (
 from .manage import RecordControls
 from .markup_html import to_html
 from .menus import Placer
+from .ornaments import FleuronRule
 from .pages import card_grid, familiar_card
 from .themes import Palette
 from .timeline import Calendar, legend, season_text
@@ -95,6 +109,7 @@ from .widgets import (
     ClickableCard,
     Codex,
     Pips,
+    Symbol,
     TallRows,
     XpBarDelegate,
     arts_heat_grid,
@@ -117,6 +132,11 @@ HOUSE_SYMBOL = 56
 ART_SYMBOL = 20
 #: Row heights of the tables.
 ROW = ROW_HEIGHT
+#: An Ability's mark in its row, the taller row it needs, and the mark
+#: drawn large, with its engraved lines, in the panel beside the chapter.
+ABILITY_MARK = 24
+ABILITY_ROW = 34
+ABILITY_MARK_LARGE = 64
 
 #: The chapters, in order, with each one's icon (artwork.ICON_NAMES).
 CHAPTERS = (
@@ -243,6 +263,10 @@ def side_by_side(*widgets: QWidget, spacing: int = 24) -> QWidget:
     return box
 
 
+#: How many buttons sit beside a section's title.
+SIDE_BUTTONS = 6
+
+
 def section(
     title: str,
     p: Palette,
@@ -252,23 +276,49 @@ def section(
 ) -> Section:
     """A titled part of a chapter; `edits` (label -> what clicking it
     does) and `buttons` sit beside the title, and their steps open in
-    place, under it (editing.place_for)."""
+    place, under it (editing.place_for). Past SIDE_BUTTONS of them, the
+    rest go on a row of their own under the title, so a narrow window
+    never scrolls sideways."""
     box = Section()
     column = box.column
     box.body = list(widgets)
-    heading = chapter_title(title, p)
     controls = [
         edit_button(words, p, on_click) for words, on_click in (edits or {}).items()
     ] + list(buttons)
     if controls:
+        # The buttons sit on the title's own line, above its rule, so they
+        # read as the section's and not the one above.
+        # Count only the buttons on offer (verb_buttons hides those with
+        # nothing to act on).
+        shown = [
+            c
+            for c in controls
+            if not (
+                c.testAttribute(Qt.WidgetAttribute.WA_WState_ExplicitShowHide)
+                and c.isHidden()
+            )
+        ]
+        cut = controls.index(shown[SIDE_BUTTONS]) if len(shown) > SIDE_BUTTONS else None
+        beside, under = controls[:cut], controls[cut:] if cut is not None else []
+        head = QVBoxLayout()
+        head.setSpacing(1)
         row = QHBoxLayout()
-        row.setSpacing(6)
-        row.addWidget(heading, 1)
-        for control in controls:
-            row.addWidget(control, 0, Qt.AlignmentFlag.AlignTop)
-        column.addLayout(row)
+        row.setSpacing(2)
+        row.addWidget(chapter_title(title, p, rule=False), 1)
+        for control in beside:
+            row.addWidget(control, 0, Qt.AlignmentFlag.AlignBottom)
+        head.addLayout(row)
+        if under:
+            more = QHBoxLayout()
+            more.setSpacing(2)
+            more.addStretch(1)
+            for control in under:
+                more.addWidget(control)
+            head.addLayout(more)
+        head.addWidget(FleuronRule(p))
+        column.addLayout(head)
     else:
-        column.addWidget(heading)
+        column.addWidget(chapter_title(title, p))
     for widget in widgets:
         column.addWidget(widget)
     return box
@@ -330,6 +380,11 @@ def device_section(
             lambda row: targets[row][1] is None and targets[row][0].type == CHARGED,
         ),
     ]
+    holder = vis.find_holder(saga, kind, holder_id)
+    if holder is not None:
+        more.append(
+            give_verb(saga, giving.DEVICE, holder, lambda: [t[0] for t in targets])
+        )
     devices = len(ed.held_by(saga, kind, holder_id))
     return section(
         f"Enchanted Devices ({devices})",
@@ -341,13 +396,13 @@ def device_section(
     )
 
 
-def _fit_height(view: QAbstractItemView, rows: int) -> None:
+def _fit_height(view: QAbstractItemView, rows: int, row: int = ROW) -> None:
     """Show every row, so the chapter scrolls rather than the table."""
     header = view.horizontalHeader() if isinstance(view, QTableView) else None
     if isinstance(view, QTreeView):
         header = view.header()
     top = header.sizeHint().height() if header is not None else 0
-    view.setFixedHeight(rows * ROW + top + 2 * view.frameWidth() + 2)
+    view.setFixedHeight(rows * row + top + 2 * view.frameWidth() + 2)
     view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
 
@@ -362,22 +417,29 @@ def _item(words: str = "", *, font: QFont | None = None) -> QStandardItem:
 class XpTable(QTreeView):
     """Arts or Abilities as a table grouped under headings, the last column
     an experience bar to the next score. A row's `key` (an Art's name or
-    an Ability's index) goes to `on_choose` when the row is chosen."""
+    an Ability's index) goes to `on_choose` when the row is chosen. Rows
+    are `row` pixels tall, with `icon`-pixel symbols."""
 
     def __init__(
-        self, columns: Sequence[str], p: Palette, on_choose: Callable[[object], None]
+        self,
+        columns: Sequence[str],
+        p: Palette,
+        on_choose: Callable[[object], None],
+        *,
+        row: int = ROW,
+        icon: int = ART_SYMBOL,
     ) -> None:
         super().__init__()
-        self.p, self.on_choose = p, on_choose
+        self.p, self.on_choose, self.row = p, on_choose, row
         self.model_ = QStandardItemModel(0, len(columns))
         self.model_.setHorizontalHeaderLabels(list(columns))
         self.setModel(self.model_)
-        self.setItemDelegate(TallRows())
-        self.setItemDelegateForColumn(len(columns) - 1, XpBarDelegate(p))
+        self.setItemDelegate(TallRows(row))
+        self.setItemDelegateForColumn(len(columns) - 1, XpBarDelegate(p, row))
         self.setRootIsDecorated(False)
         self.setIndentation(10)
         self.setUniformRowHeights(True)
-        self.setIconSize(QSize(ART_SYMBOL, ART_SYMBOL))
+        self.setIconSize(QSize(icon, icon))
         self.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         _table_style(self, p)
@@ -416,10 +478,10 @@ class XpTable(QTreeView):
             self.model_.columnCount() - 1, QHeaderView.ResizeMode.Stretch
         )
         header.setStretchLastSection(True)
-        _fit_height(self, self.rows)
+        _fit_height(self, self.rows, self.row)
 
     def sizeHintForRow(self, row: int) -> int:
-        return ROW
+        return self.row
 
     def _chosen(self, current, _previous) -> None:
         key = current.siblingAtColumn(0).data(Qt.ItemDataRole.UserRole)
@@ -452,10 +514,13 @@ class CharacterSheet(QWidget):
         run: Callable[[Command], None] = lambda _command: None,
         controls: RecordControls | None = None,
         placer: Placer | None = None,
+        open_sanctum: Callable[[], None] | None = None,
     ) -> None:
         super().__init__()
         self.saga, self.character, self.p = saga, character, palette
         self.open_familiar = open_familiar
+        #: Opens the magus's laboratory, or creates it while they have none.
+        self.open_sanctum = open_sanctum
         self.run = run
         self.controls = controls
         self.placer = placer
@@ -491,7 +556,7 @@ class CharacterSheet(QWidget):
         self.codex.open_chapter(name)
 
     def inspect(
-        self, title: str, subtitle: str, markup: str, symbol: Path | None = None
+        self, title: str, subtitle: str, markup: str, symbol: Symbol = None
     ) -> None:
         self.codex.inspect(title, subtitle, markup, symbol)
 
@@ -505,12 +570,8 @@ class CharacterSheet(QWidget):
         row = QHBoxLayout(box)
         row.setContentsMargins(0, 0, 0, 0)
         row.setSpacing(14)
-        house = artwork.house_symbol(c.hermetic.house)
-        if c.type == "magus" and house is not None:
-            symbol = QLabel()
-            symbol.setPixmap(pictures.pixmap(house, p["heading"], HOUSE_SYMBOL, 2.0))
-            symbol.setToolTip(f"House {cs.house_name(c)}")
-            row.addWidget(symbol, 0, Qt.AlignmentFlag.AlignTop)
+        self.portrait = Portrait(self.saga, c, p, self.run)
+        row.addWidget(self.portrait, 0, Qt.AlignmentFlag.AlignTop)
         names = QVBoxLayout()
         names.setSpacing(0)
         heading = display_name(c.name, p)
@@ -547,6 +608,9 @@ class CharacterSheet(QWidget):
         mode = self.controls.mode(p) if self.controls is not None else None
         if mode is not None:
             row.addWidget(mode, 0, Qt.AlignmentFlag.AlignTop)
+        self.sanctum_button = self._sanctum_button()
+        if self.sanctum_button is not None:
+            row.addWidget(self.sanctum_button, 0, Qt.AlignmentFlag.AlignTop)
         self.info_edit = edit_button(
             "Edit",
             p,
@@ -555,6 +619,24 @@ class CharacterSheet(QWidget):
         self.info_edit.setToolTip("Edit Character Info")
         row.addWidget(self.info_edit, 0, Qt.AlignmentFlag.AlignTop)
         return box
+
+    def _sanctum_button(self) -> QPushButton | None:
+        """A magus's Sanctum, one click from their sheet: New Sanctum while
+        they have none."""
+        c, open_sanctum = self.character, self.open_sanctum
+        if c.type != "magus" or open_sanctum is None:
+            return None
+        lab = labs_sheet.sanctum(self.saga, c)
+        button = edit_button(
+            "Sanctum" if lab is not None else "New Sanctum",
+            self.p,
+            open_sanctum,
+            "laboratory",
+        )
+        button.setToolTip(
+            f"Open {lab.name}" if lab is not None else "Create their laboratory"
+        )
+        return button
 
     def _characteristics(self) -> QWidget:
         """The Characteristic cards, with their Edit button at the end of
@@ -694,6 +776,7 @@ class CharacterSheet(QWidget):
                 ability.name,
                 f"{ability.category} Ability{specialty}",
                 st.ability_info_text(c.abilities, index, c.virtues_flaws),
+                ability_mark(ability.name, ability.category, p),
             )
 
         self.ability_table = ability_view(cs.ability_table(c), p, show)
@@ -947,33 +1030,50 @@ class CharacterSheet(QWidget):
             tables.append(table_view(table, p, show_item))
         parts.append(
             section(
-                f"Personal Gear ({len(c.inventory)})",
+                cs.gear_title(c),
                 p,
                 *(tables or [TextBlock("[dim]None recorded.[/]", p)]),
-                buttons=verb_buttons(cf.inventory_ops(c), gear, self.run, p),
+                buttons=[
+                    *verb_buttons(
+                        cf.inventory_ops(c),
+                        gear,
+                        self.run,
+                        p,
+                        more=[give_verb(saga, giving.GEAR, c, lambda: c.inventory)],
+                    ),
+                    *(self.placer.buttons("Personal Gear") if self.placer else []),
+                ],
             )
         )
         parts.append(device_section(saga, "character", c.id, p, self.run, self.inspect))
         books = bk.books_owned_by(saga, "character", c.id)
+        chosen_book = Chooser()
+
+        def show_book(index: int) -> None:
+            chosen_book.choose(index)
+            self.inspect(books[index].name, "", bk.detail_text(saga, books[index]))
+
         parts.append(
             section(
                 f"Books ({len(books)})",
                 p,
-                table_view(
-                    bk.book_table(saga, books),
-                    p,
-                    lambda index: self.inspect(
-                        books[index].name, "", bk.detail_text(saga, books[index])
-                    ),
-                )
+                table_view(bk.book_table(saga, books), p, show_book)
                 if books
                 else TextBlock("[dim]None recorded.[/]", p),
+                buttons=verb_buttons(
+                    SectionOps(rows=lambda: [b.name for b in books]),
+                    chosen_book,
+                    self.run,
+                    p,
+                    more=[give_verb(saga, giving.BOOK, c, lambda: books)],
+                ),
             )
         )
         return scrolling_page(p, *parts)
 
     def _raw_vis(self) -> QWidget:
-        """The magus's raw vis, by Art, with Add, Edit and Delete."""
+        """The magus's raw vis, by Art, with Add, Edit and Delete, and Give
+        while there is someone to give it to."""
         c, p = self.character, self.p
         chooser = Chooser()
         ops = vis_forms.raw_vis_ops(c.raw_vis)
@@ -983,7 +1083,13 @@ class CharacterSheet(QWidget):
             table_view(cs.raw_vis_table(c.raw_vis), p, chooser.choose)
             if c.raw_vis
             else TextBlock("[dim]None recorded.[/]", p),
-            buttons=verb_buttons(ops, chooser, self.run, p),
+            buttons=verb_buttons(
+                ops,
+                chooser,
+                self.run,
+                p,
+                more=[give_verb(self.saga, giving.VIS, c, lambda: vis.held(c))],
+            ),
         )
 
     def _planning(self) -> QWidget:
@@ -1088,24 +1194,117 @@ def characteristic_cards(ch: Characteristics, p: Palette) -> QWidget:
 def ability_view(
     rows: Sequence[cs.AbilityRow], p: Palette, show: Callable[[object], None]
 ) -> XpTable:
-    """Abilities as a table grouped by category, with their specialties,
-    scores and experience; choosing one calls `show` with its index."""
-    table = XpTable(["Ability", "Specialty", "Score", "Experience"], p, show)
+    """Abilities as a table grouped by category, each with its mark,
+    specialty, score and experience; choosing one calls `show` with its
+    index."""
+    table = XpTable(
+        ["Ability", "Specialty", "Score", "Experience"],
+        p,
+        show,
+        row=ABILITY_ROW,
+        icon=ABILITY_MARK,
+    )
     groups: dict[str, QStandardItem] = {}
     for row in rows:
         if row.category not in groups:
             groups[row.category] = table.group(row.category)
         specialty = _item(row.specialty, font=serif(11.5, italic=True))
         specialty.setForeground(QBrush(QColor(p["label"])))
+        name = _item(row.name)
+        name.setIcon(ability_icon(row.name, row.category, p))
         table.add(
             groups[row.category],
             row.index,
-            [_item(row.name), specialty, _score_item(row.score)],
+            [name, specialty, _score_item(row.score)],
             row.fraction,
             _xp_words(row.xp, row.next_xp),
         )
     table.finish()
     return table
+
+
+class Portrait(QWidget):
+    """The character's portrait in a gilt frame beside their name: the
+    House symbol (or a figure, for one with no House) while they have
+    none. Clicking it chooses one."""
+
+    WIDTH, HEIGHT = 64, 80
+
+    def __init__(
+        self,
+        saga: Saga,
+        character: Character,
+        p: Palette,
+        run: Callable[[Command], None],
+    ) -> None:
+        super().__init__()
+        self.p = p
+        self.setFixedSize(self.WIDTH, self.HEIGHT)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.clicked = lambda: run(portraits.portrait(saga, character))
+        found = portraits.path(character)
+        self.picture = QPixmap(str(found)) if found is not None else QPixmap()
+        house = artwork.house_symbol(character.hermetic.house)
+        if character.type != "magus" or house is None:
+            house = artwork.icon("character")
+        self.symbol = pictures.pixmap(house, p["heading"], HOUSE_SYMBOL - 12, 2.0)
+        self.setToolTip(
+            "Change the portrait" if not self.picture.isNull() else "Choose a portrait"
+        )
+
+    def has_picture(self) -> bool:
+        return not self.picture.isNull()
+
+    def mousePressEvent(self, event) -> None:
+        self.clicked()
+        super().mousePressEvent(event)
+
+    def paintEvent(self, event) -> None:
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+        outer = QRectF(self.rect()).adjusted(1, 1, -1, -1)
+        inner = outer.adjusted(4, 4, -4, -4)
+        painter.setPen(QPen(QColor(self.p["accent"]), 2))
+        painter.setBrush(QColor(self.p["panel"]))
+        painter.drawRoundedRect(outer, 4, 4)
+        if self.has_picture():
+            # Fill the frame, cropping what overhangs it.
+            picture = self.picture
+            scale = max(
+                inner.width() / picture.width(), inner.height() / picture.height()
+            )
+            w, h = inner.width() / scale, inner.height() / scale
+            source = QRectF((picture.width() - w) / 2, (picture.height() - h) / 2, w, h)
+            painter.drawPixmap(inner, picture, source)
+        else:
+            size = self.symbol.deviceIndependentSize()
+            painter.drawPixmap(
+                QRectF(
+                    inner.center().x() - size.width() / 2,
+                    inner.center().y() - size.height() / 2,
+                    size.width(),
+                    size.height(),
+                ).toRect(),
+                self.symbol,
+            )
+        painter.setPen(QPen(QColor(self.p["heading"]), 1))
+        painter.setBrush(Qt.BrushStyle.NoBrush)
+        painter.drawRect(inner)
+        painter.end()
+
+
+def ability_icon(name: str, category: str, p: Palette) -> QIcon:
+    """An Ability's mark as its row shows it, untinted when chosen."""
+    mark = marks.pixmap(name, category, p["foreground"], ABILITY_MARK)
+    icon = QIcon(mark)
+    icon.addPixmap(mark, QIcon.Mode.Selected)
+    return icon
+
+
+def ability_mark(name: str, category: str, p: Palette) -> QPixmap:
+    """An Ability's mark as the panel beside the chapter shows it."""
+    return marks.pixmap(name, category, p["heading"], ABILITY_MARK_LARGE)
 
 
 def vf_card(

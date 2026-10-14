@@ -4,8 +4,8 @@ moves the window (a double-click maximises it), and thin grips along the
 edges and corners that resize it.
 
 Moving and resizing go through the system (QWindow.startSystemMove and
-startSystemResize), so Windows still snaps the window to the screen's
-edges and halves.
+startSystemResize), and snapping.py gives the window back the styles
+Windows snaps by, so it still snaps to the screen's edges and halves.
 """
 
 from __future__ import annotations

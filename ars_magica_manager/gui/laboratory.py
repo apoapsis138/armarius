@@ -13,6 +13,8 @@ Delete act on the card or row last clicked.
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QCheckBox,
@@ -27,12 +29,14 @@ from PySide6.QtWidgets import (
 from .. import (
     artwork,
     diary_forms,
+    giving,
     lab_plan_forms,
     lab_planning,
     library_forms,
     menu_forms,
     seasons,
     virtue_forms,
+    vis,
     vis_forms,
 )
 from .. import books as bk
@@ -54,7 +58,7 @@ from .character_sheet import (
     section,
     side_by_side,
 )
-from .editing import Chooser, Run, choose_cards, verb_buttons
+from .editing import Chooser, Run, choose_cards, give_verb, verb_buttons
 from .figures import CompassRose, aura_seal, bar_list, fact_grid, trait_list
 from .manage import RecordControls
 from .menus import Placer
@@ -170,9 +174,12 @@ class LaboratoryPage(QWidget):
         run: Run = lambda _command: None,
         controls: RecordControls | None = None,
         placer: Placer | None = None,
+        open_owner: Callable[[], None] | None = None,
     ) -> None:
         super().__init__()
         self.saga, self.lab, self.p = saga, lab, palette
+        #: Opens the magus whose sanctum it is.
+        self.open_owner = open_owner
         self.run = run
         self.controls = controls
         self.placer = placer
@@ -231,6 +238,11 @@ class LaboratoryPage(QWidget):
         mode = self.controls.mode(p) if self.controls is not None else None
         if mode is not None:
             row.addWidget(mode, 0, Qt.AlignmentFlag.AlignTop)
+        self.owner_button = None
+        if magus is not None and self.open_owner is not None:
+            self.owner_button = edit_button(magus.name, p, self.open_owner, "character")
+            self.owner_button.setToolTip(f"Open {magus.name}'s sheet")
+            row.addWidget(self.owner_button, 0, Qt.AlignmentFlag.AlignTop)
         self.identity_button = edit_button(
             "Edit", p, lambda: self.run(lf.identity_form(saga, lab))
         )
@@ -577,6 +589,8 @@ class LaboratoryPage(QWidget):
                 book.name, "", bk.detail_text(saga, book)
             )
             book_cards.append(card)
+        chosen_book = Chooser()
+        choose_cards(book_cards, chosen_book)
         none = "None recorded."
         chooser = Chooser()
         choose_cards(phials, chooser)
@@ -589,7 +603,11 @@ class LaboratoryPage(QWidget):
                 if phials
                 else text(none, p["dim"], serif(12.5, italic=True)),
                 buttons=verb_buttons(
-                    vis_forms.raw_vis_ops(lab.raw_vis), chooser, self.run, p
+                    vis_forms.raw_vis_ops(lab.raw_vis),
+                    chooser,
+                    self.run,
+                    p,
+                    more=[give_verb(saga, giving.VIS, lab, lambda: vis.held(lab))],
                 ),
             ),
             self._named_section("Equipment & Stores", "section-lab-items", "an item"),
@@ -601,10 +619,20 @@ class LaboratoryPage(QWidget):
             ),
             device_section(saga, "laboratory", lab.id, p, self.run, self.inspect),
             self._lab_texts(),
-            chapter_title(f"Books ({len(books)})", p),
-            card_grid(book_cards, 3)
-            if book_cards
-            else text(none, p["dim"], serif(12.5, italic=True)),
+            section(
+                f"Books ({len(books)})",
+                p,
+                card_grid(book_cards, 3)
+                if book_cards
+                else text(none, p["dim"], serif(12.5, italic=True)),
+                buttons=verb_buttons(
+                    SectionOps(rows=lambda: [b.name for b in books]),
+                    chosen_book,
+                    self.run,
+                    p,
+                    more=[give_verb(saga, giving.BOOK, lab, lambda: books)],
+                ),
+            ),
         )
 
     def _lab_texts(self) -> QWidget:
@@ -661,7 +689,16 @@ class LaboratoryPage(QWidget):
             p,
             bar,
             box,
-            buttons=[*verb_buttons(ops, chooser, self.run, p), *self._texts_read()],
+            buttons=[
+                *verb_buttons(
+                    ops,
+                    chooser,
+                    self.run,
+                    p,
+                    more=[give_verb(saga, giving.BOOK, lab, lambda: shown)],
+                ),
+                *self._texts_read(),
+            ],
         )
         title = next(
             label for label in part.findChildren(QLabel) if label.text() == "Lab Texts"

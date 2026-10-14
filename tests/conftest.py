@@ -10,6 +10,8 @@ def isolated_sagas_dir(tmp_path, monkeypatch):
     monkeypatch.setattr(storage, "SAGAS_DIR", tmp_path)
     # Exports ('x' on a sheet) go to a temp folder too.
     monkeypatch.setattr(storage, "EXPORTS_DIR", tmp_path / "exports")
+    # And portraits chosen for a character.
+    monkeypatch.setattr(storage, "PORTRAITS_DIR", tmp_path / "portraits")
     # What this "copy" of the app last saw of each saga.
     monkeypatch.setattr(storage, "_last_seen", {})
 

@@ -6,7 +6,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Saga",
         "d": "(disabled)",
-        "m": "MenuScreen: Import, Set Date",
+        "m": "MenuScreen: Import, Export Saga, Set Date",
         "slash": "(disabled)"
       }
     }
@@ -228,7 +228,7 @@
         "a": "FieldsDialog: Add a Weapon",
         "e": "FieldsDialog: Edit A weapon",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Give A weapon",
         "slash": "(disabled)"
       }
     },
@@ -238,7 +238,7 @@
         "a": "FieldsDialog: Add a Armor",
         "e": "FieldsDialog: Edit A armor",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Give A armor",
         "slash": "(disabled)"
       }
     },
@@ -258,7 +258,7 @@
         "a": "FieldsDialog: Add a Raw Vis Store",
         "e": "FieldsDialog: Edit A vis_store",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: Move Raw Vis",
+        "m": "(disabled)",
         "slash": "(disabled)"
       }
     },
@@ -268,7 +268,7 @@
         "a": "FieldsDialog: Add a Item",
         "e": "FieldsDialog: Edit A item",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Give A item",
         "slash": "(disabled)"
       }
     },
@@ -278,7 +278,7 @@
         "a": "FieldsDialog: Add an Enchanted Device",
         "e": "FieldsDialog: Edit an Enchanted Device",
         "d": "ConfirmScreen",
-        "m": "notice: Potions: 1 charge left.",
+        "m": "MenuScreen: Use a Charge, Give",
         "slash": "(disabled)"
       }
     },
@@ -338,7 +338,7 @@
         "a": "FieldsDialog: Add a Book",
         "e": "FieldsDialog: Edit Summa",
         "d": "ConfirmScreen",
-        "m": "CsvFilePickerScreen: Import books into Keep's library",
+        "m": "MenuScreen: Give, Import",
         "slash": "(disabled)"
       }
     },
@@ -510,7 +510,7 @@
         "a": "FieldsDialog: Add Raw Vis",
         "e": "FieldsDialog: Edit Raw Vis",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: Move Raw Vis",
+        "m": "FieldsDialog: Give 3 pawns of Creo vis",
         "slash": "(disabled)"
       }
     },
@@ -540,7 +540,7 @@
         "a": "FieldsDialog: Add Raw Vis",
         "e": "FieldsDialog: Edit Raw Vis",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: Move Raw Vis",
+        "m": "FieldsDialog: Give 3 pawns of Creo vis",
         "slash": "(disabled)"
       }
     },
@@ -550,7 +550,7 @@
         "a": "RemovalPickerScreen: Add which kind of item?",
         "e": "FieldsDialog: Edit Staff",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Give Staff",
         "slash": "(disabled)"
       }
     },
@@ -560,7 +560,7 @@
         "a": "FieldsDialog: Add an Enchanted Device",
         "e": "FieldsDialog: Edit an Enchanted Device",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: Instill an Effect in Ring",
+        "m": "MenuScreen: Instill an Effect, Give",
         "slash": "(disabled)"
       }
     },
@@ -570,7 +570,7 @@
         "a": "FieldsDialog: Add a Book",
         "e": "FieldsDialog: Edit Diary",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Give Diary",
         "slash": "(disabled)"
       }
     },
@@ -722,7 +722,7 @@
         "a": "FieldsDialog: Add Raw Vis",
         "e": "FieldsDialog: Edit Raw Vis",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: Move Raw Vis",
+        "m": "FieldsDialog: Give 2 pawns of Ignem vis",
         "slash": "(disabled)"
       }
     },
@@ -752,7 +752,7 @@
         "a": "FieldsDialog: Add an Enchanted Device",
         "e": "FieldsDialog: Edit an Enchanted Device",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: Instill an Effect in Wand",
+        "m": "MenuScreen: Instill an Effect, Give",
         "slash": "(disabled)"
       }
     },
@@ -772,7 +772,7 @@
         "a": "FieldsDialog: Add a Book",
         "e": "FieldsDialog: Edit Notes",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Give Notes",
         "slash": "(disabled)"
       }
     },

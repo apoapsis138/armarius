@@ -17,9 +17,9 @@ from typing import TYPE_CHECKING, NamedTuple, Protocol
 
 from . import book_value as bv
 from . import familiars as fam
+from . import giving, seasons, sourcebooks
 from . import inhabitants as inh
 from . import lab_texts as lt
-from . import seasons, sourcebooks, vis
 from . import spells as spl
 from .models import (
     INHABITANT_KINDS,
@@ -42,6 +42,7 @@ from .sections import (
     LAB_VF_SECTIONS,
     LIBRARY_SECTIONS,
     PLAYERS_SECTION,
+    SILVER_SECTIONS,
     SOURCES_SECTION,
     SPELL_SECTION,
     TRAIT_SECTIONS,
@@ -203,13 +204,15 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("c", "use_charge", "Use a Charge"),
     MenuItem("p", "perform_ritual", "Perform Ritual"),
     MenuItem("s", "share_spell", "Share Spell"),
-    MenuItem("v", "move_vis", "Move Vis"),
+    MenuItem("g", "give", "Give"),
+    MenuItem("s", "give_silver", "Give Silver"),
     MenuItem("l", "lab_text_access", "Lab Texts Read"),
     MenuItem("f", "edit_fatigue", "Edit Fatigue"),
     MenuItem("f", "edit_familiar_fatigue", "Edit Fatigue"),
     MenuItem("i", "import_data", "Import"),
-    MenuItem("b", "research_bonuses", "Research Bonuses"),
+    MenuItem("b", "research_bonuses", "Set Up Research Library"),
     MenuItem("x", "export_record", "Export"),
+    MenuItem("x", "export_saga", "Export Saga"),
     MenuItem("u", "update_record", "Update from a File"),
     MenuItem("m", "toggle_mode", "In Creation / In Play"),
     MenuItem("w", "creation_worksheet", "Creation Worksheet"),
@@ -300,8 +303,9 @@ class ActionFacts(Protocol):
         device."""
         ...
 
-    def vis_holder(self) -> vis.Holder | None:
-        """Whoever's raw vis is on show, for Move Vis."""
+    def to_give(self) -> giving.Gift | None:
+        """What Give would give: the chosen row of the section focus is
+        in, if that section lists things that can be given away."""
         ...
 
     def record_to_export(self) -> Record | None: ...
@@ -313,6 +317,17 @@ class ActionFacts(Protocol):
     def can_send_files(self) -> bool:
         """Whether an exported file has somewhere to go (not over SSH)."""
         ...
+
+
+def silver_purse(facts: ActionFacts) -> giving.Holder | None:
+    """Whose silver Give Silver gives in the section focus is in: the
+    character's on Personal Gear, the covenant's on Wealth."""
+    whose = SILVER_SECTIONS.get(facts.active_section() or "")
+    if whose == "character":
+        return facts.selected_character
+    if whose == "covenant":
+        return facts.selected_covenant
+    return None
 
 
 def available(action: str, facts: ActionFacts) -> bool:
@@ -327,6 +342,8 @@ def available(action: str, facts: ActionFacts) -> bool:
         return True
     if action == "set_date":
         return kind == NodeKind.SAGA
+    if action == "export_saga":
+        return kind == NodeKind.SAGA and facts.can_send_files()
     if action in ("toggle_mode", "creation_worksheet"):
         record = facts.creation_record()
         return (
@@ -334,12 +351,14 @@ def available(action: str, facts: ActionFacts) -> bool:
             and facts.on_record()
             and (action == "toggle_mode" or record.in_creation)
         )
-    if action == "move_vis":
-        holder = facts.vis_holder()
+    if action == "give":
+        found = facts.to_give()
+        return found is not None and giving.blocked(facts.saga, *found) is None
+    if action == "give_silver":
+        purse = silver_purse(facts)
         return (
-            holder is not None
-            and bool(vis.held(holder))
-            and bool(vis.destinations(facts.saga, holder))
+            purse is not None
+            and giving.blocked(facts.saga, giving.SILVER, purse) is None
         )
     if action == "export_record":
         return (

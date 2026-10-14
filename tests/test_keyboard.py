@@ -435,13 +435,14 @@ async def test_new_runs_directly_when_only_one_thing_can_be_made():
         assert app.screen is workspace
 
 
-async def test_more_on_the_saga_offers_import_and_set_date():
+async def test_more_on_the_saga_offers_import_export_and_set_date():
     storage.save_saga(everything_saga())
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
         workspace = await _open(pilot, app, "saga")
         assert [item.label for item in workspace._more_items()] == [
             "Import",
+            "Export Saga",
             "Set Date",
         ]
         assert "m More" in _footer(app)

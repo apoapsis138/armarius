@@ -11,7 +11,7 @@ from support import NODES, everything_saga, wait_until
 from textual.screen import ModalScreen
 from textual.widgets import TabbedContent, Tree
 
-from ars_magica_manager import catalog, spells, storage, vis
+from ars_magica_manager import catalog, giving, spells, storage, vis
 from ars_magica_manager import economics as eco
 from ars_magica_manager import worksheet_forms as wf
 from ars_magica_manager.models import (
@@ -256,10 +256,15 @@ OPENERS: dict[str, Opener] = {
     ),
     "edit ability": Opener("character", lambda ws: ws._edit_ability_at(0)),
     "edit raw vis": Opener("character", lambda ws: ws._edit_raw_vis_at(0)),
-    "move raw vis": Opener(
+    "give raw vis": Opener(
         "character",
-        lambda ws: ws._move_vis_form(
-            ws.selected_character, vis.held(ws.selected_character)[0]
+        lambda ws: ws._run_steps(
+            giving.give(
+                ws.saga,
+                giving.VIS,
+                ws.selected_character,
+                vis.held(ws.selected_character)[0],
+            )
         ),
     ),
     "add research goal": Opener("character", lambda ws: ws._add_research_goal()),

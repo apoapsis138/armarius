@@ -1,7 +1,7 @@
 """The book form, independent of how it is drawn: its fields, what it
 shows as it is filled in, the book it builds, and a book list's Add, Edit
 and Delete (commands.SectionOps); and the covenant library's research
-bonuses form.
+bonuses, as one form or a walkthrough of a step per subject.
 
 The form's Spell is a "picker" field: the front-end's own chooser when it
 gives a `spell_picker` (the terminal's searchable spell chooser), else a
@@ -17,7 +17,7 @@ from . import book_value as bv
 from . import books as bk
 from . import spells as spl
 from .arts import ARTS, FORMS, TECHNIQUES
-from .commands import Choose, Confirm, Form, Picked, SectionOps
+from .commands import Choose, Command, Confirm, Form, Picked, Refuse, SectionOps
 from .form_spec import DialogField, attr, description_field, pairs
 from .markup import escape, problem
 from .models import (
@@ -877,6 +877,119 @@ def research_from_values(
         for i, subject in enumerate(bv.library_subjects(saga, covenant))
         if values.get(f"pictorial_{i}")
     ]
+
+
+def _book_line(book: Book) -> str:
+    """A book backing a research bonus: its name, type, Level and Quality."""
+    figures = [
+        f"{label} {value}"
+        for label, value in (("Level", book.level), ("Quality", book.quality))
+        if value is not None
+    ]
+    return " · ".join([escape(book.name or "(untitled)"), book.type, *figures])
+
+
+def _bonus_words(level: int) -> str:
+    return f"+{level}" if level else "none"
+
+
+def research_walkthrough(saga: Saga, covenant: Covenant) -> Command:
+    """Set up the library's research bonuses a subject at a time: each
+    step shows the books on the subject that back its bonus, the level
+    and pictorial works to choose, and the bonuses chosen so far. Nothing
+    changes until the last step is saved."""
+    subjects = bv.library_subjects(saga, covenant)
+    if not subjects:
+        return Refuse(
+            "Set Up Research Library",
+            "The library has no summa or tractatus yet: add books first.",
+        )
+    order = list(subjects)
+    options = [(label, str(level)) for level, label in bv.RESEARCH_LEVELS]
+    chosen: dict[str, tuple[int, bool]] = {
+        subject: (
+            covenant.library_research.get(subject, 0),
+            subject in covenant.pictorial_works,
+        )
+        for subject in order
+    }
+
+    def bonus(subject: str, level: int, pictorial: bool) -> int:
+        return bv.research_level(saga, covenant, subject, level, pictorial)
+
+    def finish() -> None:
+        levels = dict(covenant.library_research)
+        pictorial = [s for s in covenant.pictorial_works if s not in chosen]
+        for subject in order:
+            level, drawn = chosen[subject]
+            if level:
+                levels[subject] = level
+            else:
+                levels.pop(subject, None)
+            if drawn:
+                pictorial.append(subject)
+        covenant.library_research = levels
+        covenant.pictorial_works = pictorial
+
+    def step(index: int) -> Form:
+        subject = order[index]
+        level, pictorial = chosen[subject]
+        earlier = [
+            f"{escape(s)} {_bonus_words(bonus(s, *chosen[s]))}" for s in order[:index]
+        ]
+        fields = [
+            DialogField(
+                "_books",
+                "Books",
+                "info",
+                "\n".join(_book_line(book) for book in subjects[subject]),
+            ),
+        ]
+        found = bv.encyclopedias(saga, covenant, subject)
+        if found:
+            fields.append(
+                DialogField(
+                    "_encyclopedias",
+                    "Encyclopedias",
+                    "info",
+                    ", ".join(f"{escape(e.name)} +{e.bonus}" for e in found),
+                )
+            )
+        fields += [
+            DialogField(
+                "level", "Research bonus", "select", str(level), options=options
+            ),
+            DialogField("pictorial", "Pictorial works (+1)", "check", pictorial),
+        ]
+        if earlier:
+            fields.append(DialogField("_so_far", "So far", "info", ", ".join(earlier)))
+
+        def live(values: dict[str, Any]) -> str:
+            got = bonus(
+                subject, int(values.get("level") or 0), bool(values.get("pictorial"))
+            )
+            return f"Research on {escape(subject)}: [b]{_bonus_words(got)}[/]"
+
+        def apply(values: dict[str, Any]) -> Form | None:
+            chosen[subject] = (
+                int(values.get("level") or 0),
+                bool(values.get("pictorial")),
+            )
+            if index + 1 < len(order):
+                return step(index + 1)
+            finish()
+            return None
+
+        last = index + 1 == len(order)
+        return Form(
+            f"Research Library ({index + 1} of {len(order)}): {escape(subject)}",
+            lambda: fields,
+            apply,
+            live=live,
+            save_label="Finish" if last else "Next",
+        )
+
+    return step(0)
 
 
 # A book list's Add, Edit and Delete

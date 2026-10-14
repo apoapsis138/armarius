@@ -28,13 +28,17 @@ _SLUG_RE = re.compile(r"[^a-z0-9]+")
 #: the folder is made on the first export.
 EXPORTS_DIR = paths.data_dir() / paths.EXPORTS
 
+#: Where a character's portrait is copied when it is chosen.
+PORTRAITS_DIR = paths.data_dir() / paths.PORTRAITS
+
 
 def use_data_dir(folder: Path) -> None:
     """Read and write the sagas, exports and settings in `folder` from now
     on (a save folder chosen while the app runs)."""
-    global SAGAS_DIR, EXPORTS_DIR
+    global SAGAS_DIR, EXPORTS_DIR, PORTRAITS_DIR
     SAGAS_DIR = folder / paths.SAGAS
     EXPORTS_DIR = folder / paths.EXPORTS
+    PORTRAITS_DIR = folder / paths.PORTRAITS
     settings.SETTINGS_PATH = folder / paths.SETTINGS
 
 
