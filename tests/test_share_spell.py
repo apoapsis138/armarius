@@ -84,3 +84,23 @@ async def test_share_spell_on_known_spells_shares_it_after_asking():
     assert [k.spell_id for k in saved.characters[0].spells_known] == [
         saved.spells[0].id
     ]
+
+
+def test_the_shared_tick_shares_it_and_then_stays():
+    from ars_magica_manager import commands, form_spec, spell_forms
+
+    saga, magus = _saga()
+    ops = spell_forms.known_spell_ops(saga, magus)
+    form = ops.edit(0)
+    assert isinstance(form, commands.Form)
+    fields = {f.key: f for f in form.fields()}
+    assert fields["shared"].value is False
+    raw = {f.key: f.value for f in form.fields()} | {"shared": True}
+    form.apply(form_spec.result(form.fields(), lambda f: raw[f.key]))
+    assert [s.name for s in saga.spells] == ["Spark of Wit"]
+    assert spl.invention(saga, magus, saga.spells[0].id) == "Shared"
+    # Once shared, the tick is a mark that can't be undone.
+    again = ops.edit(0)
+    assert isinstance(again, commands.Form)
+    keys = {f.key: f for f in again.fields()}
+    assert "shared" not in keys and keys["_shared"].kind == "info"

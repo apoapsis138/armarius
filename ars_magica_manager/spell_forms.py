@@ -137,6 +137,30 @@ def _spell_choice(saga: Saga, spell: Spell, origin: str) -> Choice:
     )
 
 
+def shared_fields(
+    saga: Saga, character: Character, spell: Spell | None
+) -> list[DialogField]:
+    """A spell the magus invented: the Shared tick, which puts it in the
+    saga's Spells for anyone to learn; once shared it stays shared."""
+    if spell is None:
+        return []
+    own = spl.invention(saga, character, spell.id)
+    if own == "Shared":
+        return [DialogField("_shared", "Shared", "info", "Yes, with the whole saga")]
+    if own == "Own":
+        return [
+            DialogField(
+                "shared",
+                "Shared",
+                "check",
+                False,
+                hint="Puts it in the saga's Spells, where anyone can learn it "
+                "or write it up. Once shared, it stays shared.",
+            )
+        ]
+    return []
+
+
 def known_spell_ops(saga: Saga, character: Character) -> SectionOps:
     """Add, Edit (its Mastery) and Delete for the magus's Known Spells."""
     known = character.spells_known
@@ -162,8 +186,14 @@ def known_spell_ops(saga: Saga, character: Character) -> SectionOps:
 
         def apply(values: dict[str, Any]) -> None:
             known[index] = known_spell_from(existing, values)
+            if values.get("shared") and spell in character.invented_spells:
+                spl.share_invented_spell(saga, character, spell)
 
-        return Form(mastery_title(name), lambda: mastery_fields(existing), apply)
+        return Form(
+            mastery_title(name),
+            lambda: mastery_fields(existing) + shared_fields(saga, character, spell),
+            apply,
+        )
 
     return SectionOps(
         add=add,

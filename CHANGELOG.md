@@ -46,6 +46,21 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.58.0 — 2026-10-14
+
+- On the desktop, the actions that were in More now sit on what they act
+  on: Improve beside a covenant's Sources of Income, Texts Read beside a
+  magus's Hermetic Background and their laboratory's Lab Texts, and
+  Perform Ritual in the laboratory's Seasons chapter.
+- A spell a magus invented has a Shared tick in its Edit form, and Known
+  Spells marks it once it is shared. A shared spell stays shared.
+- Bind Familiar is a button on a magus who has none, and in their
+  laboratory's Seasons chapter.
+- Add on a covenant's Magi and Companions offers every magus or companion
+  in the saga who isn't on the list: someone taken off comes back, and
+  someone from another covenant moves here after asking. This replaces
+  Restore on the desktop; the terminal keeps Restore too.
+
 ## 2.57.0 — 2026-10-14
 
 - The desktop's saga page sets out what it does as a row of buttons under

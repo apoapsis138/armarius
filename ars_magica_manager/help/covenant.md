@@ -21,8 +21,8 @@ covenant step by step. The same switch and worksheet are the buttons beside
 there too; on the desktop they are in the covenant's **Manage** chapter,
 with Delete, and the mode is the switch in its header. On the desktop, New
 Character opens the covenant's People chapter and New Laboratory its
-Laboratories chapter, and what they make belongs to the covenant; New keeps
-only Bind Familiar.
+Laboratories chapter, and what they make belongs to the covenant. A
+familiar is bound on its magus or in their laboratory.
 
 **See also:** [Saga](help:saga), [Keys](help:keys),
 [Advancing a season](help:advance-season), [How to manage the covenant](help:guide-covenant).
@@ -167,8 +167,10 @@ sheet. You can also add a magus who has no sheet, typing those details
 yourself. `e` on a listed magus edits only the covenant's own notes about
 them. `d` on a listed magus does not delete anyone: it marks them as
 departed, so they stop counting as an inhabitant (and leave the Seasons
-tab) while staying in the covenant on their sheet. More's **Restore**
-brings a departed magus back.
+tab) while staying in the covenant on their sheet. `a` offers every
+magus of the saga who isn't on the list: one taken off earlier counts
+again, and one from another covenant moves here (it asks first). More's
+**Restore** also brings a departed magus back in the terminal.
 
 ### Companions
 <!-- help: section-inh-companion -->
@@ -178,7 +180,8 @@ listed automatically; companions without a sheet can be added by hand. Each
 can have a Responsibility and a Covenant Role. A Steward, Chamberlain, Turb
 Captain or Autocrat earns the covenant a Loyalty bonus of Presence plus the
 role's Ability, read from the character sheet. As with magi, `d` marks a
-listed companion as departed and More's **Restore** brings them back.
+listed companion as departed, and `a` (or More's **Restore** in the
+terminal) brings them back.
 
 ### Specialists
 <!-- help: section-inh-specialist -->
@@ -396,7 +399,8 @@ Greater or Legendary). Leave Current Income blank to use the Type's usual
 income. A source can be marked as a Contested Resource, which gives nothing
 until it is secured, or a Dwindling Resource, which loses a tenth of the
 income it gave when it began dwindling at the end of each year (gone after
-ten years). More's **Improve Income** applies one
+ten years). More's **Improve Income** (on the desktop, **Improve** beside
+the section) applies one
 year's Income Modification to the chosen source: pick an effect, see the
 projected income, and confirm to set the new income and record a note.
 

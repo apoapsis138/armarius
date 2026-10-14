@@ -705,6 +705,22 @@ def shareable_spells(magus: Character) -> list[Spell]:
     return [spell for spell in magus.invented_spells if spell.id in known]
 
 
+def shared_spells(saga: Saga, magus: Character) -> list[Spell]:
+    """The saga's spells `magus` invented and shared (share_invented_spell
+    names the inventor as the source)."""
+    return [s for s in saga.spells if s.source == f"Invented by {magus.name}"]
+
+
+def invention(saga: Saga, magus: Character, spell_id: str) -> str:
+    """Whether `magus` invented the spell: "Shared" once it is the saga's,
+    "Own" while it is still theirs alone, else ""."""
+    if any(s.id == spell_id for s in magus.invented_spells):
+        return "Own"
+    if any(s.id == spell_id for s in shared_spells(saga, magus)):
+        return "Shared"
+    return ""
+
+
 def share_invented_spell(saga: Saga, magus: Character, spell: Spell) -> None:
     """Make an invented spell freely available: it moves from the magus's own
     spells to the saga's, keeping its id (so the magus still knows it and

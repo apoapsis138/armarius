@@ -181,3 +181,42 @@ def test_a_diary_entry_is_added_and_its_card_edited(app):
     section_buttons(page, "Diary")["Edit"].click()
     assert asked[0].windowTitle() == "Edit a Diary Entry"
     assert _saved(window).diary[0].details == "In the hills."
+
+
+def test_improve_acts_on_the_source_of_income_chosen(app):
+    saga = _sample_saga_with_covenant()
+    saga.covenants[0].economics.income_sources = [
+        IncomeSource("s1", "Mill", income=40),
+        IncomeSource("s2", "Tolls", income=10),
+    ]
+    window = _window(saga)
+    page = _page(window)
+    page.codex.open_chapter("Treasury")
+    controls = section_buttons(page, "Sources of Income")
+    assert not controls["Improve"].isEnabled()
+    table = page.tables["income"]
+    table.setCurrentIndex(table.model().index(1, 0))
+    asked = answering(window, {"effect": "Status Quo"}, True)
+    controls["Improve"].click()
+    assert asked[0].windowTitle() == "Improve Tolls"
+
+
+def test_add_on_the_magi_takes_in_a_magus_of_the_saga(app):
+    from ars_magica_manager.models import Character, Covenant
+
+    saga = _sample_saga_with_covenant()
+    saga.covenants.append(Covenant(id="cov2", saga_id=saga.id, name="Elsewhere"))
+    saga.characters.append(
+        Character(id="mag2", name="Far Away", type="magus", covenant_id="cov2")
+    )
+    window = _window(saga)
+    page = _page(window)
+    page.codex.open_chapter("Covenfolk")
+    chapter = page.codex.pages.currentWidget()
+    assert chapter is not None
+    asked = answering(window, "Far Away  (of Elsewhere)", True)
+    section_buttons(chapter, "Magi")["Add"].click()
+    assert asked[1].question.startswith("Move Far Away from Elsewhere")
+    assert window.saga is not None
+    saved = storage.load_saga(window.saga.id)
+    assert saved.character("mag2").covenant_id == "cov1"

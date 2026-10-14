@@ -35,6 +35,7 @@ from PySide6.QtWidgets import (
     QHeaderView,
     QLabel,
     QLineEdit,
+    QPushButton,
     QTableView,
     QTreeView,
     QVBoxLayout,
@@ -47,6 +48,7 @@ from .. import (
     creation,
     device_forms,
     diary_forms,
+    menu_forms,
     season_forms,
     seasons,
     sourcebooks,
@@ -66,6 +68,7 @@ from .. import laboratories as labs
 from .. import saga_overview as ov
 from .. import sheet_text as st
 from .. import spells as spl
+from ..actions import NodeKind
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from ..commands import Command
 from ..models import CHARGED, Character, Characteristics, Saga, ScoredTrait
@@ -81,6 +84,7 @@ from .figures import (
 )
 from .manage import RecordControls
 from .markup_html import to_html
+from .menus import ButtonsAt, button_row
 from .pages import familiar_card
 from .themes import Palette
 from .timeline import Calendar, legend, season_text
@@ -447,12 +451,14 @@ class CharacterSheet(QWidget):
         open_familiar: Callable[[str], None] = lambda _id: None,
         run: Callable[[Command], None] = lambda _command: None,
         controls: RecordControls | None = None,
+        buttons_at: ButtonsAt = lambda _spot: [],
     ) -> None:
         super().__init__()
         self.saga, self.character, self.p = saga, character, palette
         self.open_familiar = open_familiar
         self.run = run
         self.controls = controls
+        self.buttons_at = buttons_at
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
@@ -601,6 +607,7 @@ class CharacterSheet(QWidget):
                     p,
                     *lineage,
                     edits=edits("Hermetic Background"),
+                    buttons=self._texts_read(),
                 )
             )
             familiar = fam.familiar_of(saga, c.id)
@@ -614,6 +621,10 @@ class CharacterSheet(QWidget):
                         ),
                     )
                 )
+            else:
+                bind = button_row(self.buttons_at("Familiar"))
+                if bind is not None:
+                    parts.append(section("Familiar", p, bind))
         # One above the other: side by side, with their buttons, they are
         # wider than the chapter beside the inspector.
         parts.append(
@@ -735,6 +746,21 @@ class CharacterSheet(QWidget):
                 st.vf_info_text(c.virtues_flaws, card.index),
             ),
         )
+
+    def _texts_read(self) -> list[QPushButton]:
+        """Whose Lab Texts they read, beside the lines that say so."""
+        if not menu_forms.lives_at(
+            "lab_text_access", NodeKind.CHARACTER, "Hermetic Background"
+        ):
+            return []
+        return [
+            edit_button(
+                "Texts Read",
+                self.p,
+                lambda: self.run(menu_forms.lab_text_access(self.saga, self.character)),
+                "lab_text",
+            )
+        ]
 
     def _hermetic(self) -> QWidget:
         p, saga, c = self.p, self.saga, self.character
@@ -1121,7 +1147,16 @@ def _sigil(sigil: str, p: Palette) -> QWidget:
 
 def _spell_model(rows: Sequence[cs.SpellRow], p: Palette) -> QStandardItemModel:
     """The known spells as a model a table view shows, one row each."""
-    columns = ["Spell", "Arts", "Level", "Range", "Duration", "Target", "Mastery"]
+    columns = [
+        "Spell",
+        "Arts",
+        "Level",
+        "Range",
+        "Duration",
+        "Target",
+        "Mastery",
+        "Shared",
+    ]
     model = QStandardItemModel(0, len(columns))
     model.setHorizontalHeaderLabels(columns)
     for row in rows:
@@ -1145,6 +1180,16 @@ def _spell_model(rows: Sequence[cs.SpellRow], p: Palette) -> QStandardItemModel:
         mastery.setForeground(QBrush(QColor(p["accent"])))
         mastery.setToolTip(f"Mastery {row.mastery}")
         duration = row.duration + (", Ritual" if row.ritual else "")
+        # A spell they invented: a mark once the saga has it.
+        shared = _item(
+            {"Shared": "✓", "Own": "Not yet"}.get(row.invented, ""),
+        )
+        if row.invented == "Shared":
+            shared.setForeground(QBrush(QColor(p["accent"])))
+            shared.setToolTip("Invented and shared with the saga")
+        elif row.invented == "Own":
+            shared.setForeground(QBrush(QColor(p["dim"])))
+            shared.setToolTip("Invented; Edit it to share it with the saga")
         model.appendRow(
             [
                 name,
@@ -1154,6 +1199,7 @@ def _spell_model(rows: Sequence[cs.SpellRow], p: Palette) -> QStandardItemModel:
                 _item(duration),
                 _item(row.target),
                 mastery,
+                shared,
             ]
         )
     return model

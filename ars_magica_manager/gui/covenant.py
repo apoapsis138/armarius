@@ -27,6 +27,7 @@ from .. import (
     diary_forms,
     inhabitant_forms,
     library_forms,
+    menu_forms,
     possession_forms,
     season_forms,
     seasons,
@@ -39,6 +40,7 @@ from .. import familiar_sheet as fs
 from .. import inhabitants as inh
 from .. import possessions as pos
 from .. import saga_overview as ov
+from ..actions import NodeKind
 from ..character_sheet import Fact
 from ..commands import SectionOps
 from ..covenants import boon_hook_problems
@@ -51,7 +53,7 @@ from .character_sheet import (
     side_by_side,
     trait_section,
 )
-from .editing import Chooser, Run, choose_cards, verb_buttons
+from .editing import Chooser, RowVerb, Run, choose_cards, verb_buttons
 from .figures import Seal, aura_seal, fact_grid, prose, shelf
 from .manage import RecordControls
 from .menus import ButtonsAt, button_row
@@ -424,13 +426,18 @@ class CovenantPage(QWidget):
         self,
         groups: Sequence[cvs.Group],
         ops: Callable[[str], SectionOps | None] = lambda _kind: None,
+        more: Callable[[str], Sequence[RowVerb]] = lambda _kind: (),
     ) -> list[QWidget]:
         """Each group's table under its title, with the buttons of its
-        `ops` (by its kind) beside the title; choosing a row shows its
-        details in the inspector, and is the row Edit and Delete act on."""
-        return [self._group(group, ops(group.kind)) for group in groups]
+        `ops` and `more` (by its kind) beside the title; choosing a row
+        shows its details in the inspector, and is the row they act on."""
+        return [
+            self._group(group, ops(group.kind), more(group.kind)) for group in groups
+        ]
 
-    def _group(self, group: cvs.Group, ops: SectionOps | None) -> QWidget:
+    def _group(
+        self, group: cvs.Group, ops: SectionOps | None, more: Sequence[RowVerb] = ()
+    ) -> QWidget:
         p = self.p
         chooser = Chooser()
 
@@ -443,7 +450,11 @@ class CovenantPage(QWidget):
                     group.details[row],
                 )
 
-        buttons = verb_buttons(ops, chooser, self.run, p) if ops is not None else []
+        buttons = (
+            verb_buttons(ops, chooser, self.run, p, more=more)
+            if ops is not None
+            else []
+        )
         if not group.table.rows:
             return section(group.title, p, _none("None recorded.", p), buttons=buttons)
         view = cells_table(group.table.columns, group.table.rows, p, show)
@@ -549,7 +560,22 @@ class CovenantPage(QWidget):
                 return covenant_forms.income_ops(covenant)
             return covenant_forms.economics_row_ops(saga, covenant, kind)
 
-        parts += self._groups(figures.groups, ops)
+        def more(kind: str) -> list[RowVerb]:
+            if kind != "income" or not menu_forms.lives_at(
+                "improve", NodeKind.COVENANT, "Income"
+            ):
+                return []
+            sources = covenant.economics.income_sources
+            return [
+                (
+                    "Improve",
+                    "income",
+                    lambda row: menu_forms.improve_form(saga, sources[row]),
+                    lambda _row: True,
+                )
+            ]
+
+        parts += self._groups(figures.groups, ops, more)
         return scrolling_page(p, *parts)
 
     def _library(self, covenant: Covenant) -> QWidget:

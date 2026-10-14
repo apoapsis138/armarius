@@ -933,3 +933,26 @@ def test_form_problem_needs_a_quantity_of_at_least_one():
     assert inh.form_problem({"quantity": 0}) == "Quantity must be at least 1."
     assert inh.form_problem({"quantity": 3}) is None
     assert inh.form_problem({}) is None
+
+
+def test_add_on_the_magi_offers_every_magus_not_on_the_list():
+    saga, cov = _saga()
+    cov.inhabitants.append(
+        Inhabitant(id="d1", kind="magus", character_id="mag1", departed=True)
+    )
+    assert [c.name for c in inh.addable_characters(saga, cov, "magus")] == [
+        "Corvinus",
+        "Far Away",
+    ]
+    assert inh.addable_characters(saga, cov, "craftsperson") == []
+    # Taken back on: counted again.
+    corvinus = saga.character("mag1")
+    assert corvinus is not None
+    inh.take_in(cov, "magus", corvinus)
+    assert [e.name for e in inh.entries_for_kind(saga, cov, "magus")] == ["Corvinus"]
+    # From another covenant: they join this one.
+    far = saga.character("mag2")
+    assert far is not None
+    inh.take_in(cov, "magus", far)
+    assert far.covenant_id == "cov1"
+    assert inh.addable_characters(saga, cov, "magus") == []

@@ -18,6 +18,7 @@ from PySide6.QtWidgets import (
     QCheckBox,
     QHBoxLayout,
     QLabel,
+    QPushButton,
     QSpinBox,
     QVBoxLayout,
     QWidget,
@@ -29,6 +30,7 @@ from .. import (
     lab_plan_forms,
     lab_planning,
     library_forms,
+    menu_forms,
     seasons,
     virtue_forms,
     vis_forms,
@@ -39,6 +41,7 @@ from .. import laboratories as labs
 from .. import laboratory_forms as lf
 from .. import laboratory_sheet as ls
 from .. import saga_overview as ov
+from ..actions import NodeKind
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from ..commands import SectionOps
 from ..markup import escape
@@ -54,6 +57,7 @@ from .character_sheet import (
 from .editing import Chooser, Run, choose_cards, verb_buttons
 from .figures import CompassRose, aura_seal, bar_list, fact_grid, trait_list
 from .manage import RecordControls
+from .menus import ButtonsAt, button_row
 from .pages import card_grid
 from .themes import Palette
 from .timeline import Calendar, legend, season_text
@@ -165,11 +169,13 @@ class LaboratoryPage(QWidget):
         palette: Palette,
         run: Run = lambda _command: None,
         controls: RecordControls | None = None,
+        buttons_at: ButtonsAt = lambda _spot: [],
     ) -> None:
         super().__init__()
         self.saga, self.lab, self.p = saga, lab, palette
         self.run = run
         self.controls = controls
+        self.buttons_at = buttons_at
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
@@ -655,7 +661,7 @@ class LaboratoryPage(QWidget):
             p,
             bar,
             box,
-            buttons=verb_buttons(ops, chooser, self.run, p),
+            buttons=[*verb_buttons(ops, chooser, self.run, p), *self._texts_read()],
         )
         title = next(
             label for label in part.findChildren(QLabel) if label.text() == "Lab Texts"
@@ -664,6 +670,26 @@ class LaboratoryPage(QWidget):
         bar.changed(refilter)
         self.lab_text_filter = bar
         return part
+
+    def _texts_read(self) -> list[QPushButton]:
+        """Whose Lab Texts the owner reads, which decides the readable ones."""
+        owner = self.saga.character(self.lab.owner_id)
+        if (
+            owner is None
+            or owner.type != "magus"
+            or not menu_forms.lives_at(
+                "lab_text_access", NodeKind.LABORATORY, "Lab Texts"
+            )
+        ):
+            return []
+        return [
+            edit_button(
+                "Texts Read",
+                self.p,
+                lambda: self.run(menu_forms.lab_text_access(self.saga, owner)),
+                "lab_text",
+            )
+        ]
 
     def _seasons(self) -> QWidget:
         p, saga, lab = self.p, self.saga, self.lab
@@ -693,9 +719,13 @@ class LaboratoryPage(QWidget):
         # Chosen by their place in the Diary, though shown newest first.
         diary = Chooser()
         choose_cards(entries, diary)
+        # The season's work done here besides the plan: binding the
+        # owner's familiar, or performing a Longevity Ritual again.
+        work = button_row(self.buttons_at("Seasons"))
         return scrolling_page(
             p,
             chapter_title("Seasons", p),
+            *([work] if work is not None else []),
             self._planning(),
             legend(p),
             self.calendar,

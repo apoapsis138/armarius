@@ -338,10 +338,11 @@ PAGE = "page"
 
 #: Where a front-end that shows one page at a time (the desktop) offers
 #: each New and More action that isn't in its menus: on a page's own row
-#: of buttons (PAGE), at the head of one of its chapters (by the
-#: chapter's name), or in a menu ("New", "More"). An action listed here
-#: is offered only where it is listed; one not listed stays in its menu
-#: wherever `available` offers it.
+#: of buttons (PAGE), in one of its chapters or sections (by its name),
+#: or in a menu ("New", "More"). An action listed here is offered only
+#: where it is listed (Restore nowhere: Add on the Magi and Companions
+#: lists brings someone back); one not listed stays in its menu wherever
+#: `available` offers it.
 PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "edit_saga": ((NodeKind.SAGA, PAGE),),
     "import_data": ((NodeKind.SAGA, PAGE), (NodeKind.COVENANT, "More")),
@@ -357,23 +358,67 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
         (NodeKind.COVENANT, "Laboratories"),
     ),
     "create_familiar": (
-        (NodeKind.COVENANT, "New"),
-        (NodeKind.CHARACTER, "New"),
+        (NodeKind.CHARACTER, "Familiar"),
+        (NodeKind.LABORATORY, "Seasons"),
     ),
+    "restore": (),
+    # On each source of income's row.
+    "improve": ((NodeKind.COVENANT, "Income"),),
+    "lab_text_access": (
+        (NodeKind.CHARACTER, "Hermetic Background"),
+        (NodeKind.LABORATORY, "Lab Texts"),
+    ),
+    # The Shared tick in a known spell's form.
+    "share_spell": ((NodeKind.CHARACTER, "Known Spells"),),
+    "perform_ritual": ((NodeKind.LABORATORY, "Seasons"),),
+}
+
+
+def lives_at(action: str, kind: NodeKind, spot: str) -> bool:
+    """Whether PLACES puts `action` at `spot` on a `kind` page."""
+    return (kind, spot) in PLACES.get(action, ())
+
+
+def familiar_binder(page: Page) -> Character | None:
+    """The magus a familiar would be bound to from the page: the magus on
+    show, or the laboratory's owner, while they have none."""
+    if page.kind == NodeKind.CHARACTER:
+        magus = page.character
+    elif page.kind == NodeKind.LABORATORY and page.laboratory is not None:
+        magus = page.saga.character(page.laboratory.owner_id)
+    else:
+        return None
+    if (
+        magus is None
+        or magus.type != "magus"
+        or fam.familiar_of(page.saga, magus.id) is not None
+    ):
+        return None
+    return magus
+
+
+#: Whether the page offers a placed action where `available`, which
+#: answers for the terminal's New and More, doesn't say.
+_PLACED_CHECKS: dict[str, Callable[[Page], bool]] = {
+    "edit_saga": lambda page: page.kind == NodeKind.SAGA,
+    "create_familiar": lambda page: familiar_binder(page) is not None,
 }
 
 
 def placed(page: Page, spot: str) -> list[MenuItem]:
-    """The actions the page offers at `spot` (PAGE, a chapter's name, or
-    "New" / "More"), in PLACES's order."""
+    """The actions the page offers at `spot` (PAGE, a chapter's or
+    section's name, or "New" / "More"), in PLACES's order."""
     items = {item.action: item for item in (EDIT_SAGA, *NEW_MENU, *MORE_MENU)}
     offered = {i.action for i in (*new_items(page), *more_items(page))}
-    if page.kind == NodeKind.SAGA:
-        offered.add(EDIT_SAGA.action)
     return [
         items[action]
         for action, places in PLACES.items()
-        if (page.kind, spot) in places and action in offered
+        if (page.kind, spot) in places
+        and (
+            _PLACED_CHECKS[action](page)
+            if action in _PLACED_CHECKS
+            else action in offered
+        )
     ]
 
 
@@ -1011,17 +1056,10 @@ def perform_ritual(saga: Saga, lab: Laboratory) -> Command:
 
 
 def _default_magus(page: Page) -> str | None:
-    """The magus on show, if they have no Familiar yet: Bind Familiar's
-    first choice."""
-    character = page.character
-    if (
-        page.kind == NodeKind.CHARACTER
-        and character is not None
-        and character.type == "magus"
-        and fam.familiar_of(page.saga, character.id) is None
-    ):
-        return character.id
-    return None
+    """The magus on show, or the laboratory's owner, if they have no
+    Familiar yet: Bind Familiar's first choice."""
+    magus = familiar_binder(page)
+    return magus.id if magus is not None else None
 
 
 def _covenant_id(page: Page) -> str | None:

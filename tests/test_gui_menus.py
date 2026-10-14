@@ -10,7 +10,7 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from gui_steps import answering
+from gui_steps import answering, section_buttons
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QApplication, QPushButton
 from screen_helpers import _saga_with_familiar, _sample_saga_with_covenant
@@ -122,8 +122,9 @@ def test_a_covenants_people_and_laboratories_open_with_new(app):
     assert list(_gilt(window)) == ["New Character"]
     page.codex.open_chapter("Laboratories")
     assert list(_gilt(window)) == ["New Laboratory"]
-    # The menu keeps only what has no chapter: binding a familiar.
-    assert list(_entries(window, "New")) == ["Bind Familiar"]
+    # Nothing is left for New: a familiar is bound on its magus or in
+    # their laboratory.
+    assert "New" not in _menus(window)
     answering(window, {"name": "Aelfric"})
     _gilt(window)["New Laboratory"].click()
     saga = window.saga
@@ -166,11 +167,13 @@ def test_the_saga_page_sets_its_date(app):
 
 def test_more_on_a_record_leaves_out_what_its_page_offers(app):
     """Export, Update from a File and Delete are in the record's Manage
-    chapter, the mode and the worksheet in its header (test_gui_manage)."""
+    chapter, the mode and the worksheet in its header (test_gui_manage),
+    and the rest in their sections."""
     window = _window(_sample_saga_with_covenant())
     window.show_character("char1")
     assert isinstance(window.page(), CharacterSheet)
-    assert list(_entries(window, "More")) == ["Lab Texts Read"]
+    # Lab Texts Read is beside the Lab Texts too: nothing is left.
+    assert _menus(window) == {}
     window = _window(_saga_with_familiar())
     window.open_familiar("fam1")
     assert _menus(window) == {}
@@ -196,3 +199,44 @@ def test_more_import_reads_a_file_chosen_in_the_open_window(app, tmp_path):
     assert window.told == [
         ("Import Data", "Imported 1 book as unassigned books; skipped 1 duplicate.")
     ]
+
+
+def test_a_magus_binds_a_familiar_where_it_would_be_shown(app):
+    window = _window(_sample_saga_with_covenant())
+    window.show_character("char1")
+    assert list(_gilt(window)) == ["Bind Familiar"]
+    answering(window, {"name": "Ashwing"})
+    _gilt(window)["Bind Familiar"].click()
+    saga = window.saga
+    assert saga is not None
+    assert [f.name for f in saga.familiars] == ["Ashwing"]
+    assert window.crumb_names()[-1] == "Ashwing"
+    window.show_character("char1")
+    assert _gilt(window) == {}
+
+
+def test_the_laboratorys_seasons_bind_its_owners_familiar(app):
+    window = _window(_sample_saga_with_covenant())
+    window.open_laboratory("lab1")
+    page = window.page()
+    page.codex.open_chapter("Seasons")
+    assert list(_gilt(window)) == ["Bind Familiar"]
+    asked = answering(window, {"name": "Ashwing"})
+    _gilt(window)["Bind Familiar"].click()
+    assert asked[0].windowTitle() == "Bind a New Familiar"
+    saga = window.saga
+    assert saga is not None
+    assert [(f.name, f.character_id) for f in saga.familiars] == [("Ashwing", "char1")]
+
+
+def test_texts_read_sits_beside_the_lab_texts(app):
+    window = _window(_sample_saga_with_covenant())
+    window.show_character("char1")
+    asked = answering(window, None)
+    section_buttons(window.page(), "Hermetic Background")["Texts Read"].click()
+    assert asked[0].windowTitle().startswith("Lab Texts")
+    window.open_laboratory("lab1")
+    window.page().codex.open_chapter("Stores")
+    asked = answering(window, None)
+    section_buttons(window.page(), "Lab Texts")["Texts Read"].click()
+    assert asked[0].windowTitle().startswith("Lab Texts")

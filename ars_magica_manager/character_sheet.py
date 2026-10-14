@@ -435,6 +435,8 @@ class SpellRow:
     target: str
     ritual: bool
     mastery: int
+    #: "Own" for a spell they invented, "Shared" once it is the saga's.
+    invented: str = ""
 
 
 def spell_table(saga: Saga, character: Character) -> list[SpellRow]:
@@ -471,6 +473,7 @@ def spell_table(saga: Saga, character: Character) -> list[SpellRow]:
                 spell.target,
                 spell.ritual,
                 known.mastery_score,
+                spl.invention(saga, character, spell.id),
             )
         )
     return rows

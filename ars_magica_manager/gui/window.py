@@ -714,7 +714,9 @@ class MainWindow(QMainWindow):
             lab = saga.laboratory(place.id)
             if lab is None:
                 return QLabel("No laboratory chosen.")
-            return LaboratoryPage(saga, lab, p, self.run, self._controls())
+            return LaboratoryPage(
+                saga, lab, p, self.run, self._controls(), self._buttons_at
+            )
         if place.kind == FAMILIAR:
             familiar = self._familiar(place.id)
             if familiar is None:
@@ -735,7 +737,13 @@ class MainWindow(QMainWindow):
         if character is None:
             return QLabel("No character chosen.")
         return CharacterSheet(
-            saga, character, p, self.open_familiar, self.run, self._controls()
+            saga,
+            character,
+            p,
+            self.open_familiar,
+            self.run,
+            self._controls(),
+            self._buttons_at,
         )
 
     def _controls(self) -> RecordControls | None:

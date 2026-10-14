@@ -73,7 +73,10 @@ points on the [Virtues & Flaws tab](help:tab-vf). Reads Lab Texts of lists
 the authors whose Lab Texts this magus can read; the Lab Texts Read
 button, or Lab Texts Read in More (`m`), sets an author, the level the magus
 reads them to (0 forgets the author) and whether the magus decoded them or
-was taught.
+was taught. On the desktop it is the **Texts Read** button beside the
+section, and beside the Lab Texts of the magus's laboratory. While a magus
+has no familiar, the desktop shows a **Bind Familiar** button where the
+familiar would be.
 
 ### Biographical Detail
 <!-- help: section-char-biographical -->
@@ -233,7 +236,9 @@ saga's own spells. The picker shows the highlighted spell's details under the
 list, description included, so you can compare spells before choosing. `e` edits the spell's Mastery, its score and XP and the
 Mastery Abilities. The details panel shows the spell and what the magus
 casts it at. Share Spell in More (`m`) makes a spell the magus invented
-available to the whole saga. The picker offers only spells from books in
+available to the whole saga. On the desktop, a spell the magus invented has
+a **Shared** tick in its Edit form, and the list's Shared column marks it
+(✓ once shared, "Not yet" before). Once shared, a spell stays shared. The picker offers only spells from books in
 play (F3 shows the rest); a spell already known from a book that goes out
 of play stays, marked "(not in play)".
 

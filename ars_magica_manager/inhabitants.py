@@ -366,6 +366,31 @@ def departed_entries_for_kind(
     return entries
 
 
+def addable_characters(saga: Saga, covenant: Covenant, kind: str) -> list[Character]:
+    """The saga's characters `kind`'s list (Magi or Companions) could take
+    in: every one of that kind not on it, whether in another covenant, in
+    none, or taken off it earlier."""
+    if kind not in AUTO_KINDS:
+        return []
+    listed = {
+        e.character.id
+        for e in entries_for_kind(saga, covenant, kind)
+        if e.character is not None
+    }
+    return [
+        c for c in saga.characters if character_kind(c) == kind and c.id not in listed
+    ]
+
+
+def take_in(covenant: Covenant, kind: str, character: Character) -> None:
+    """Put a character on `kind`'s list: they join the covenant, and count
+    as an inhabitant again if they had been taken off."""
+    character.covenant_id = covenant.id
+    for record in covenant.inhabitants:
+        if record.kind == kind and record.character_id == character.id:
+            record.departed = False
+
+
 def headcount(entries: list[InhabitantEntry]) -> int:
     """How many people or animals a list stands for: quantities added up, so
     "Servants x2" counts as two, not one."""

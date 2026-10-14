@@ -14,7 +14,7 @@ A magus can have one familiar at a time, so Bind Familiar is only offered while 
 <!-- help: guide-familiars-record -->
 
 1. In the tree, select the magus's node (or the saga, a covenant or a Characters node).
-2. Press `n` (New) and choose **Bind Familiar**.
+2. Press `n` (New) and choose **Bind Familiar**. On the desktop, click **Bind Familiar** on the magus's sheet, or in the Seasons chapter of their laboratory.
 3. In the Bind a New Familiar form, type the familiar's **Name** and choose its **Magus Partner**. When you started from the magus's own node, they are already chosen. Choose **Create**.
 4. The familiar's sheet opens. In the tree, the magus's node now has the familiar beneath it, as "Familiar: " and its name; select it there to come back to the [Familiar sheet](help:familiar) later.
 

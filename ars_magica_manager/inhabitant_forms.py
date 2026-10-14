@@ -286,8 +286,11 @@ def grog_label(grog: Character) -> str:
 
 def add_inhabitant(saga: Saga, covenant: Covenant, kind: str) -> Form | Choose:
     """Add one. A grog-derived kind first offers the covenant's unassigned
-    grogs (or a new person) when it has any; Magi, Companions and animals
-    go straight to the form."""
+    grogs (or a new person) when it has any; Magi and Companions offer the
+    saga's characters of that kind who aren't on the list (or someone with
+    no sheet); animals go straight to the form."""
+    if kind in inh.AUTO_KINDS:
+        return _add_from_sheets(saga, covenant, kind)
     grogs = inh.available_grogs(saga, covenant) if kind in inh.GROG_KINDS else []
     if not grogs:
         return inhabitant_form(covenant, kind, None)
@@ -298,6 +301,45 @@ def add_inhabitant(saga: Saga, covenant: Covenant, kind: str) -> Form | Choose:
             + [Choice(grog_label(g), g, search=g.name) for g in grogs]
         ),
         lambda grog: inhabitant_form(covenant, kind, None, grog),
+    )
+
+
+def _add_from_sheets(saga: Saga, covenant: Covenant, kind: str) -> Form | Choose:
+    """Magi or Companions: a character of the saga who isn't on the list
+    joins it (and the covenant), or a new entry with no sheet."""
+    people = inh.addable_characters(saga, covenant, kind)
+    if not people:
+        return inhabitant_form(covenant, kind, None)
+
+    def label(character: Character) -> str:
+        home = saga.covenant(character.covenant_id)
+        if home is covenant:
+            return f"{escape(character.name)}  (taken off the list)"
+        if home is not None:
+            return f"{escape(character.name)}  (of {escape(home.name)})"
+        return escape(character.name)
+
+    def chosen(character: Character | None) -> Form | Confirm | None:
+        if character is None:
+            return inhabitant_form(covenant, kind, None)
+        home = saga.covenant(character.covenant_id)
+        if home is not None and home is not covenant:
+            return Confirm(
+                f"Move {escape(character.name)} from {escape(home.name)} to "
+                f"{escape(covenant.name)}?",
+                lambda: inh.take_in(covenant, kind, character),
+                yes_label="Move",
+            )
+        inh.take_in(covenant, kind, character)
+        return None
+
+    return Choose(
+        f"Add a {inh.KIND_SINGULAR[kind]}",
+        lambda: (
+            [Choice(NEW_PERSON, None)]
+            + [Choice(label(c), c, search=c.name) for c in people]
+        ),
+        chosen,
     )
 
 

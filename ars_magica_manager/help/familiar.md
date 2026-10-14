@@ -3,7 +3,9 @@
 
 The familiar sheet holds a magus's familiar: a magical creature bound to the
 magus (Ars Magica Definitive Edition, Chapter 8: Laboratory, Familiars). A
-magus has one familiar at a time, bound with Bind Familiar in New (`n`).
+magus has one familiar at a time, bound with Bind Familiar in New (`n`); on
+the desktop, with the Bind Familiar button on the magus's sheet or in their
+laboratory's Seasons chapter.
 Binding gives both the magus and the familiar the True Friend Virtue and a
 Loyal (Partner) +3 Personality Trait.
 
