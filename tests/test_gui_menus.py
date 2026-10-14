@@ -100,37 +100,16 @@ def test_more_on_the_saga_sets_its_date(app):
     assert (saved.current_season, saved.current_year) == ("Autumn", 1225)
 
 
-def test_deleting_a_character_from_their_sheet(app):
+def test_more_on_a_record_leaves_out_what_its_page_offers(app):
+    """Export, Update from a File and Delete are in the record's Manage
+    chapter, the mode and the worksheet in its header (test_gui_manage)."""
     window = _window(_sample_saga_with_covenant())
     window.show_character("char1")
     assert isinstance(window.page(), CharacterSheet)
-    more = _entries(window, "More")
-    assert list(more) == [
-        "Lab Texts Read",
-        "Export",
-        "In Creation / In Play",
-        "Delete Leandro",
-    ]
-    asked = answering(window, False)
-    more["Delete Leandro"].trigger()
-    assert asked[0].question.startswith("Delete Leandro?")
-    assert storage.load_saga("test_saga").characters
-    answering(window, True)
-    _entries(window, "More")["Delete Leandro"].trigger()
-    assert storage.load_saga("test_saga").characters == []
-    # The page above the deleted one: their covenant's.
-    assert window.crumb_names() == ["Sagas", "Test Saga", "Test Covenant"]
-
-
-def test_a_familiars_page_only_deletes_it(app):
+    assert list(_entries(window, "More")) == ["Lab Texts Read"]
     window = _window(_saga_with_familiar())
     window.open_familiar("fam1")
-    assert set(_menus(window)) == {"More"}
-    assert list(_entries(window, "More")) == ["Delete Ashwing"]
-    answering(window, True)
-    _entries(window, "More")["Delete Ashwing"].trigger()
-    assert storage.load_saga("test_saga").familiars == []
-    assert window.crumb_names()[-1] == "Leandro"
+    assert _menus(window) == {}
 
 
 def test_more_import_reads_a_file_chosen_in_the_open_window(app, tmp_path):

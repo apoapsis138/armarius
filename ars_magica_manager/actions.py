@@ -210,6 +210,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("i", "import_data", "Import"),
     MenuItem("b", "research_bonuses", "Research Bonuses"),
     MenuItem("x", "export_record", "Export"),
+    MenuItem("u", "update_record", "Update from a File"),
     MenuItem("m", "toggle_mode", "In Creation / In Play"),
     MenuItem("w", "creation_worksheet", "Creation Worksheet"),
     MenuItem("t", "set_date", "Set Date"),
@@ -346,6 +347,8 @@ def available(action: str, facts: ActionFacts) -> bool:
             and facts.record_to_export() is not None
             and facts.on_record()
         )
+    if action == "update_record":
+        return facts.record_to_export() is not None and facts.on_record()
     if action == "create_familiar":
         character = facts.selected_character
         if kind == NodeKind.CHARACTER and (

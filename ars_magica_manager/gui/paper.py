@@ -3,7 +3,8 @@ things off it.
 
 The window's body is a sheet of laid paper (grain, fibres, a little
 mottling and the faint chain lines of the mould; vellum by candlelight in
-the dark theme), darker toward its edges. Plain widgets are transparent
+the dark theme; ruled drafting vellum for a record In Creation), darker
+toward its edges. Plain widgets are transparent
 (themes.style_sheet), so the paper shows through them; cards, seals and
 the inspector sit on it with a soft shadow.
 """
@@ -95,10 +96,16 @@ def _paper(p: Palette) -> QImage:
             QPointF(x + chance.uniform(-14, 14), y + chance.uniform(-6, 6)),
         )
     # The chain lines the mould leaves in laid paper.
-    if not p.dark:
+    if not p.dark and not p.ruled:
         painter.setPen(QPen(shade(p["paper-fleck"], 10), 1))
         for x in range(0, TILE, 48):
             painter.drawLine(x, 0, x, TILE)
+    # A draft's ruling: faint lines across, as for writing.
+    if p.ruled:
+        ink = p["paper-sheen"] if p.dark else p["paper-fleck"]
+        painter.setPen(QPen(shade(ink, 14 if p.dark else 22), 1))
+        for y in range(0, TILE, 32):
+            painter.drawLine(0, y, TILE, y)
     painter.end()
     return tile
 

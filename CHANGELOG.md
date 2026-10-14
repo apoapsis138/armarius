@@ -46,6 +46,22 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.56.0 — 2026-10-14
+
+- Every character, covenant, laboratory and familiar on the desktop ends
+  with a Manage chapter: Export, Update from a File and Delete, each with
+  a line on what it does. Delete is set apart in the warning colour.
+- Update from a File (also in the terminal's More, for the storyguide)
+  reads an export of a record back over it, for example after working on
+  it on another computer. It shows what would change first and keeps the
+  record's place in the saga: its covenant, laboratory or owner.
+- The record's header shows its mode, a seal for In Play or a quill for
+  In Creation; click it to switch. While a record is In Creation, its
+  page fades to ruled drafting vellum and the Creation Worksheet is a
+  click away beside the mode.
+- The desktop's More menu no longer lists what the page now offers
+  itself: Export, Delete, the mode and the worksheet.
+
 ## 2.55.0 — 2026-10-13
 
 - The desktop window draws its own title bar on the paper, in place of

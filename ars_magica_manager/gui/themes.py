@@ -17,6 +17,8 @@ class Palette:
     name: str
     dark: bool
     colours: dict[str, str]
+    #: Whether the paper is ruled, as a draft is (In Creation).
+    ruled: bool = False
 
     def __getitem__(self, key: str) -> str:
         return self.colours[key]
@@ -124,6 +126,56 @@ SCRIPTORUM_DARK = Palette(
 )
 
 PALETTES = (SCRIPTORUM, SCRIPTORUM_DARK)
+
+
+def _drafting(base: Palette, colours: dict[str, str]) -> Palette:
+    return Palette(
+        f"{base.name} Drafting", base.dark, {**base.colours, **colours}, ruled=True
+    )
+
+
+#: A record In Creation is drawn on drafting vellum: the same inks on a
+#: cooler, greyer skin, ruled.
+DRAFTING = _drafting(
+    SCRIPTORUM,
+    {
+        "background": "#ECEEE7",
+        "surface": "#E1E5DC",
+        "panel": "#CBD4CA",
+        "rule": "#A9B5AD",
+        "selection": "#D8DFD4",
+        "label": "#4E5853",
+        "dim": "#5C6560",
+        "paper-fleck": "#3C4E56",
+        "shadow": "#0E1A20",
+    },
+)
+
+DRAFTING_DARK = _drafting(
+    SCRIPTORUM_DARK,
+    {
+        "background": "#0F1A1C",
+        "surface": "#16252A",
+        "panel": "#1E343A",
+        "rule": "#2F4A50",
+        "selection": "#1A2D31",
+        "label": "#9AA39C",
+        "paper-sheen": "#A8BAC2",
+    },
+)
+
+#: Each palette's In Creation counterpart, by name.
+IN_CREATION: dict[str, Palette] = {
+    SCRIPTORUM.name: DRAFTING,
+    SCRIPTORUM_DARK.name: DRAFTING_DARK,
+}
+
+
+def for_mode(p: Palette, in_creation: bool) -> Palette:
+    """`p` as a record in that mode is drawn: drafting vellum while it is
+    In Creation, `p` itself In Play."""
+    return IN_CREATION.get(p.name, p) if in_creation else p
+
 
 #: An illuminated initial's pigments (illumination.py): the same in either
 #: theme, as a painted letter is the same colours on any page.

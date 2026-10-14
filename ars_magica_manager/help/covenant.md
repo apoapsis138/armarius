@@ -17,7 +17,9 @@ More (`m`) on the top panel offers **In Creation / In Play**, which switches
 the covenant between being built and being played, and, while it is In
 Creation, the **Creation Worksheet**, which walks through building a
 covenant step by step. The same switch and worksheet are the buttons beside
-**Edit (e)** in the top panel. Export is in More there too.
+**Edit (e)** in the top panel. Export and Update from a File are in More
+there too; on the desktop they are in the covenant's **Manage** chapter,
+with Delete, and the mode is the switch in its header.
 
 **See also:** [Saga](help:saga), [Keys](help:keys),
 [Advancing a season](help:advance-season), [How to manage the covenant](help:guide-covenant).

@@ -8,6 +8,9 @@ ends with the notes saying what was imported.
 Books and spells come from a CSV file (books.read_books_csv,
 spells.read_spells_csv); a character, covenant or laboratory from a file
 exported from its sheet (transfer.py).
+
+Update from a File reads an export too, over the record it was made from
+(record_update.py): the file, then what would change, to confirm.
 """
 
 from __future__ import annotations
@@ -17,8 +20,8 @@ from pathlib import Path
 from typing import Any
 
 from . import books as bk
+from . import record_update, storage, transfer
 from . import spells as spl
-from . import storage, transfer
 from .commands import (
     Choice,
     Choose,
@@ -215,6 +218,42 @@ def _import_record(saga: Saga, kind: str, path: Path) -> Command:
 
     return Confirm(
         escape(transfer.preview(plan)), apply, yes_label="Import", title=TITLE
+    )
+
+
+def update_record(saga: Saga, record: transfer.Record) -> Command:
+    """Update a character, covenant or laboratory from an export of it:
+    choose the file, see what would change, then confirm."""
+    kind = transfer.KIND_LABELS[transfer.kind_of(record)].lower()
+    title = f"Update {escape(record.name)} from a File"
+    start = storage.EXPORTS_DIR if storage.EXPORTS_DIR.is_dir() else Path.cwd()
+
+    def read(path: Path) -> Command:
+        try:
+            plan = record_update.plan_update(saga, record, transfer.read(path))
+        except (OSError, ValueError, KeyError, TypeError, IndexError) as problem:
+            return Refuse(
+                title, f"Couldn't read {escape(path.name)}: {escape(str(problem))}"
+            )
+        if not plan.changes:
+            return Refuse(
+                title,
+                f"Nothing in {escape(path.name)} differs from {escape(record.name)}.",
+            )
+
+        def apply() -> list[str]:
+            record_update.apply(saga, plan)
+            return notes(escape(f"Updated {record.name} from {path.name}."))
+
+        return Confirm(
+            escape(record_update.preview(plan, path.name)),
+            apply,
+            yes_label="Update",
+            title=title,
+        )
+
+    return ChooseFile(
+        f"Update {record.name} from a {kind}'s export", ".json", start, read
     )
 
 

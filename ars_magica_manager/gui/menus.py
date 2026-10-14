@@ -3,7 +3,8 @@ equivalent of the terminal's n and m keys, and of d on the record itself.
 
 Each page offers what menu_forms (and so actions.available) offers there:
 New what can be made from it, More the commands that apply anywhere on the
-page and, last, Delete for the record the page shows. A menu with nothing
+page, except those a record's page offers itself (menu_forms.ON_THE_PAGE:
+its Manage chapter, with Delete, and its mode toggle). A menu with nothing
 in it isn't shown. Choosing an entry runs its steps through the window,
 which then shows where the change leaves the reader: a new record's page,
 the page above a deleted one, or the same page again.
@@ -14,13 +15,12 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QMenu, QPushButton, QWidget
+from PySide6.QtWidgets import QMenu, QPushButton
 
 from .. import menu_forms
 from ..actions import NodeKind
 from ..commands import Command
-from ..markup import escape
-from ..menu_forms import DELETE_RECORD, Page
+from ..menu_forms import Page
 from ..models import Saga
 from . import pictures
 from .markup_html import plain
@@ -52,15 +52,9 @@ def menu_buttons(
     p: Palette,
     run: RunThen,
     show: Callable[[str, str], None],
-    up: Callable[[], None],
-    parent: QWidget | None = None,
-    *,
-    worksheet: Callable[[str], None] = lambda _record_id: None,
 ) -> list[QPushButton]:
     """The New and More buttons for `page` (none for no page, or a menu
-    with nothing in it). `show(action, id)` opens what a New entry made;
-    `up()` leaves a deleted record's page; `worksheet(id)` opens a
-    record's Creation Worksheet."""
+    with nothing in it). `show(action, id)` opens what a New entry made."""
     if page is None:
         return []
     saga = page.saga
@@ -99,10 +93,7 @@ def menu_buttons(
             )
         )
     for item in menu_forms.more_items(page):
-        if item.action == "creation_worksheet":
-            record = page.creation_record()
-            if record is not None:
-                more.append((item.label, item.action, lambda r=record.id: worksheet(r)))
+        if item.action in menu_forms.ON_THE_PAGE:
             continue
         more.append(
             (
@@ -111,25 +102,13 @@ def menu_buttons(
                 lambda name=item.action: run(menu_forms.command(page, name), None),
             )
         )
-    record = menu_forms.deletes(page)
-    if more or record is not None:
+    if more:
         button = menu_button("More", "more", p)
         menu = QMenu(button)
         for label, name, go in more:
             action = menu.addAction(plain(label))
             action.setData(name)
             action.triggered.connect(lambda _checked=False, go=go: go())
-        if record is not None:
-            if more:
-                menu.addSeparator()
-            action = menu.addAction(
-                pictures.icon("delete", p["label"]),
-                plain(f"Delete {escape(record.name or '(unnamed)')}"),
-            )
-            action.setData(DELETE_RECORD)
-            action.triggered.connect(
-                lambda _checked=False: run(menu_forms.command(page, DELETE_RECORD), up)
-            )
         button.setMenu(menu)
         buttons.append(button)
     return buttons

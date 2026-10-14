@@ -11,7 +11,8 @@ on show above the tabs. Below it are six numbered tabs, opened with `1` to
 `6`. On most tabs a details panel at the bottom shows more about the chosen
 row, including the rules text of a Virtue, Flaw or Feature.
 
-With focus on the top panel, More (`m`) offers Export, and switches the
+With focus on the top panel, More (`m`) offers Export and Update from a
+File (on the desktop, in the laboratory's **Manage** chapter), and switches the
 laboratory between In Creation and In Play (In Creation / In Play). While it
 is In Creation, More also opens the Creation Worksheet, which walks through
 setting the laboratory up: its owner, Size and Refinement, its Virtues, and

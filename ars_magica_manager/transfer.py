@@ -76,7 +76,7 @@ def default_file_name(record: Record) -> str:
 # ------------------------------------------------------------------ export
 
 
-def _strings(value: Any) -> Iterable[str]:
+def strings(value: Any) -> Iterable[str]:
     """Every string in a JSON-shaped value, dict keys included."""
     if isinstance(value, str):
         yield value
@@ -84,10 +84,10 @@ def _strings(value: Any) -> Iterable[str]:
         for key, inner in value.items():
             if isinstance(key, str):
                 yield key
-            yield from _strings(inner)
+            yield from strings(inner)
     elif isinstance(value, (list, tuple)):
         for inner in value:
-            yield from _strings(inner)
+            yield from strings(inner)
 
 
 def export_data(
@@ -153,7 +153,7 @@ def export_data(
     )
     content = asdict(mini)
     # The records the file points at but doesn't hold, by name.
-    used = set(_strings(content))
+    used = set(strings(content))
     links: dict[str, dict[str, str]] = {CHARACTER: {}, LABORATORY: {}, COVENANT: {}}
     for other_kind, others in (
         (CHARACTER, saga.characters),
@@ -592,9 +592,16 @@ _PLANNERS: dict[str, Callable[[_Import], None]] = {
 }
 
 
-def plan_import(target: Saga, data: dict[str, Any]) -> ImportPlan:
+def plan_import(
+    target: Saga,
+    data: dict[str, Any],
+    *,
+    same_ids: dict[str, dict[str, str]] | None = None,
+) -> ImportPlan:
     """Work out an import of `data` (from read()) into `target`, changing
-    nothing yet: apply() does it."""
+    nothing yet: apply() does it. `same_ids` (kind -> the file's id -> an
+    id) gives records in the file the id they are to have, whatever is
+    free: updating a record from a file keeps the record's own id."""
     source = Saga.from_dict(data["saga"])  # runs the load-time migrations
     job = _Import(
         source=source,
@@ -607,6 +614,8 @@ def plan_import(target: Saga, data: dict[str, Any]) -> ImportPlan:
         links=data.get("links") or {},
     )
     _map_records(job)
+    for record_kind, ids in (same_ids or {}).items():
+        job.record_map[record_kind].update(ids)
     _match_outside(job)
     _map_entries(job)
     _map_spells(job)

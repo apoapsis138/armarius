@@ -228,7 +228,7 @@ What travels with the record comes too, and everything imported gets new ids. Li
 ### Exporting
 <!-- help: import-data-export -->
 
-More's **Export**, on a covenant's, laboratory's or character's tree node or top panel, writes that record to a file another saga can import.
+More's **Export**, on a covenant's, laboratory's or character's tree node or top panel, writes that record to a file another saga can import. On the desktop, Export is in the record's **Manage** chapter, the last one on its page, with Update from a File and Delete.
 
 **You type:** the File to write (it starts in the exports folder, and `.amm.json` is added if you give no `.json` ending), and for a covenant whether to include its laboratories and characters. The line above Export warns when the file exists and will be replaced.
 
@@ -240,6 +240,17 @@ What goes with it:
 - the saga's own spells and house rules that these use.
 
 Season plans, season records and lab projects under way stay behind.
+
+### Updating a record from a file
+<!-- help: import-data-update -->
+
+More's **Update from a File**, on a covenant's, laboratory's or character's tree node or top panel (on the desktop, in its **Manage** chapter), reads an export of that same record over it: for example after working on a character on another computer. Only the storyguide can use it.
+
+**You choose:** the exported file. It must hold the same kind of record.
+
+**The app works out:** what would change, field by field ("Abilities: 1 added, 2 changed", "Name: Old → New"), and the links in the file it can't match here. Nothing changes until you choose **Update**; a file that changes nothing says so.
+
+What it replaces: the record's own contents, and what travels with it in an export (a character's familiar, devices and books; a laboratory's or covenant's books and devices). What it keeps: the record itself, so everything that points at it still does, and where it sits in this saga (a character's covenant and laboratory, a laboratory's covenant and owner). A covenant's file made with its laboratories and characters updates the covenant only; update each of them from its own export.
 
 **See also:** [Import Spells](help:import-spells), [Unassigned Books](help:unassigned-books), [The saga](help:saga), [How to import and export](help:guide-import-export)
 

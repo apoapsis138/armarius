@@ -20,6 +20,7 @@ from ars_magica_manager import creation, storage
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.forms import ChooseDialog, ConfirmDialog, FieldsDialog
+from ars_magica_manager.gui.manage import ModeToggle
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.gui.worksheet import WorksheetPage
 
@@ -36,17 +37,11 @@ def _window(saga) -> MainWindow:
     return MainWindow(saga_ids=[saga.id])
 
 
-def _more(window: MainWindow, action: str) -> None:
-    """Choose `action` from the window's More menu."""
-    for button in window.findChildren(QPushButton):
-        menu = button.menu()
-        if menu is None:
-            continue
-        for entry in menu.actions():
-            if entry.data() == action:
-                entry.trigger()
-                return
-    raise AssertionError(f"No {action} in the menus")
+def _open_worksheet(window: MainWindow) -> None:
+    """Click Worksheet beside the record's mode in its header."""
+    toggle = window.findChild(ModeToggle)
+    assert toggle is not None and toggle.worksheet is not None
+    toggle.worksheet.click()
 
 
 def _worksheet(window: MainWindow) -> WorksheetPage:
@@ -88,7 +83,7 @@ def test_the_worksheet_spends_childhood_xp_and_takes_it_back(app):
     character = _new_companion(saga)
     window = _window(saga)
     window.show_character(character.id)
-    _more(window, "creation_worksheet")
+    _open_worksheet(window)
     page = _worksheet(window)
     assert window.crumb_names()[-2:] == ["Brother Anselm", "Creation Worksheet"]
     assert [name[2:] for name in page.chapters()] == [

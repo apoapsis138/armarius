@@ -61,6 +61,7 @@ from .forms import ConfirmDialog, answer, run_steps, step_dialog
 from .frame import MAXIMISE, DragStrip, Grips, TopStrip, WindowButtons
 from .help import HelpPage
 from .laboratory import LaboratoryPage
+from .manage import Moded, RecordControls, fade_from
 from .markup_html import plain
 from .menus import menu_buttons
 from .ornaments import Headpiece
@@ -68,7 +69,7 @@ from .pages import SagaPage, SagaShelf
 from .paper import Paper
 from .saga_content import SagaContentPage
 from .seasons import SeasonsPage
-from .themes import PALETTES, Palette, style_sheet
+from .themes import PALETTES, Palette, for_mode, style_sheet
 from .title import TitleScreen
 from .widgets import take_pressed
 from .worksheet import WorksheetPage
@@ -154,6 +155,8 @@ class MainWindow(QMainWindow):
         # The window draws its own title bar (frame.py).
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.palette_index = 0
+        #: The palette the window is drawn in now.
+        self._applied = PALETTES[0]
         self.saga_ids = storage.list_sagas() if saga_ids is None else saga_ids
         self.saga: Saga | None = None
         self.trail: list[Place] = []
@@ -243,7 +246,23 @@ class MainWindow(QMainWindow):
 
     @property
     def palette_(self) -> Palette:
-        return PALETTES[self.palette_index]
+        """The theme, in the mode of the record on show: drafting vellum
+        while it is In Creation (themes.for_mode)."""
+        return for_mode(PALETTES[self.palette_index], self._drafting())
+
+    def _drafting(self) -> bool:
+        """Whether the page on show is a record In Creation, or its
+        Creation Worksheet."""
+        place = self.trail[-1] if self.trail else None
+        if place is None or place.kind not in (
+            CHARACTER,
+            COVENANT,
+            LABORATORY,
+            WORKSHEET,
+        ):
+            return False
+        record = self._creation_record(place.id)
+        return record is not None and record.in_creation
 
     @property
     def character_id(self) -> str | None:
@@ -627,9 +646,17 @@ class MainWindow(QMainWindow):
         #: The page Help is opened from, to find the chapter on show.
         self._help_from = self.page()
         self.trail = trail
+        before = None
+        if self.palette_ is not self._applied:
+            # Into or out of a record In Creation: the colours change.
+            if self.isVisible() and self.title is None:
+                before = self.stack.grab()
+            self._apply_theme()
         self._show(self._build(trail[-1]))
         self._draw_trail()
         self._draw_menus()
+        if before is not None:
+            fade_from(self.stack, before)
 
     # Drawing
 
@@ -675,17 +702,18 @@ class MainWindow(QMainWindow):
                 self.open_laboratory,
                 self.open_familiar,
                 self.run,
+                self._controls(),
             )
         if place.kind == LABORATORY:
             lab = saga.laboratory(place.id)
             if lab is None:
                 return QLabel("No laboratory chosen.")
-            return LaboratoryPage(saga, lab, p, self.run)
+            return LaboratoryPage(saga, lab, p, self.run, self._controls())
         if place.kind == FAMILIAR:
             familiar = self._familiar(place.id)
             if familiar is None:
                 return QLabel("No familiar chosen.")
-            return FamiliarPage(saga, familiar, p, self.run)
+            return FamiliarPage(saga, familiar, p, self.run, self._controls())
         if place.kind == WORKSHEET:
             record = self._creation_record(place.id)
             if record is None:
@@ -700,7 +728,35 @@ class MainWindow(QMainWindow):
         character = saga.character(place.id)
         if character is None:
             return QLabel("No character chosen.")
-        return CharacterSheet(saga, character, p, self.open_familiar, self.run)
+        return CharacterSheet(
+            saga, character, p, self.open_familiar, self.run, self._controls()
+        )
+
+    def _controls(self) -> RecordControls | None:
+        """What the record's page needs to manage the record (manage.py):
+        none for a page with no record to manage."""
+        page = self.menu_page()
+        if page is None or page.record_to_delete() is None:
+            return None
+        return RecordControls(
+            page, self.run, self._go_up, self.toggle_mode, self.open_worksheet
+        )
+
+    def toggle_mode(self, record: Moded) -> None:
+        """Move `record` between In Creation and In Play (the core asks
+        first): into In Creation opens its Creation Worksheet; back to In
+        Play shows its page."""
+
+        def moved() -> None:
+            if record.in_creation:
+                self.open_worksheet(record.id)
+            elif self.trail and self.trail[-1].kind == WORKSHEET:
+                self._go_up()
+            else:
+                self.redraw()
+
+        if self.saga is not None:
+            self.run(menu_forms.toggle_mode(self.saga, record), moved)
 
     def _familiar(self, familiar_id: str | None) -> Familiar | None:
         saga = self.saga
@@ -818,12 +874,7 @@ class MainWindow(QMainWindow):
                 old.hide()
                 old.deleteLater()
         for button in menu_buttons(
-            self.menu_page(),
-            self.palette_,
-            self.run,
-            self._show_made,
-            self._go_up,
-            worksheet=self.open_worksheet,
+            self.menu_page(), self.palette_, self.run, self._show_made
         ):
             self.menus.addWidget(button)
 
@@ -856,7 +907,7 @@ class MainWindow(QMainWindow):
             self.go(self.trail)
 
     def _apply_theme(self) -> None:
-        p = self.palette_
+        p = self._applied = self.palette_
         body = self.stack.widget(0)
         if isinstance(body, Paper):
             body.p = p

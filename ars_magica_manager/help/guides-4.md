@@ -139,6 +139,16 @@ This guide covers moving records between sagas, bringing books and spells in fro
 
 What goes with the record, and what stays behind, is listed under [Exporting](help:import-data-export). In short: a character takes their familiar, their enchanted devices, their books and their Diary; a laboratory takes its books and devices; and the saga's own spells and [House Rules](help:tab-content-house-rules) that these use go too. Season plans and lab work under way stay behind.
 
+### Bringing a record's changes back from another computer
+<!-- help: guide-import-export-update -->
+
+1. Export the record where it was changed, and copy the file to this computer.
+2. Open its page here. In the terminal, leave focus on its tree node or top panel and press `m` (More); on the desktop, open its **Manage** chapter.
+3. Choose **Update from a File**, then the file.
+4. Read what would change, then choose **Update**.
+
+The record keeps its place in the saga; see [Updating a record from a file](help:import-data-update).
+
 ### Importing a record into another saga
 <!-- help: guide-import-export-records -->
 

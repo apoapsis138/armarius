@@ -53,6 +53,7 @@ from .character_sheet import (
 )
 from .editing import Chooser, Run, choose_cards, verb_buttons
 from .figures import Seal, aura_seal, fact_grid, prose, shelf
+from .manage import RecordControls
 from .pages import Open, card_grid, card_title, familiar_card, symbol_label
 from .themes import Palette
 from .timeline import SeasonTimeline, legend, season_text
@@ -110,10 +111,12 @@ class CovenantPage(QWidget):
         open_laboratory: Open,
         open_familiar: Open = lambda _id: None,
         run: Run = lambda _command: None,
+        controls: RecordControls | None = None,
     ) -> None:
         super().__init__()
         self.saga, self.p = saga, p
         self.run = run
+        self.controls = controls
         self.open_character, self.open_laboratory = open_character, open_laboratory
         self.open_familiar = open_familiar
         self.covenant_id = covenant_id
@@ -149,6 +152,8 @@ class CovenantPage(QWidget):
             ]
         for name, concept, build in chapters:
             self.codex.add(name, concept, build())
+        if covenant is not None and controls is not None:
+            self.codex.add("Manage", "manage", controls.chapter(p))
         outer.addWidget(self.codex, 1)
 
     def chapters(self) -> list[str]:
@@ -205,6 +210,9 @@ class CovenantPage(QWidget):
                 p,
             )
         )
+        mode = self.controls.mode(p) if self.controls is not None else None
+        if mode is not None:
+            row.addWidget(mode, 0, Qt.AlignmentFlag.AlignTop)
         return box
 
     # Chapters

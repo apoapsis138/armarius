@@ -53,6 +53,7 @@ from .character_sheet import (
 )
 from .editing import Chooser, Run, choose_cards, verb_buttons
 from .figures import CompassRose, aura_seal, bar_list, fact_grid, trait_list
+from .manage import RecordControls
 from .pages import card_grid
 from .themes import Palette
 from .timeline import Calendar, legend, season_text
@@ -163,10 +164,12 @@ class LaboratoryPage(QWidget):
         lab: Laboratory,
         palette: Palette,
         run: Run = lambda _command: None,
+        controls: RecordControls | None = None,
     ) -> None:
         super().__init__()
         self.saga, self.lab, self.p = saga, lab, palette
         self.run = run
+        self.controls = controls
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
@@ -183,6 +186,8 @@ class LaboratoryPage(QWidget):
         }
         for name, concept in CHAPTERS:
             self.codex.add(name, concept, builders[name]())
+        if controls is not None:
+            self.codex.add("Manage", "manage", controls.chapter(palette))
         outer.addWidget(self.codex, 1)
 
     def chapters(self) -> list[str]:
@@ -217,6 +222,9 @@ class LaboratoryPage(QWidget):
         row.addWidget(fact_grid(ls.capacity_facts(lab), p, 3))
         row.addSpacing(10)
         row.addWidget(aura_seal(ls.aura(saga, lab), p))
+        mode = self.controls.mode(p) if self.controls is not None else None
+        if mode is not None:
+            row.addWidget(mode, 0, Qt.AlignmentFlag.AlignTop)
         self.identity_button = edit_button(
             "Edit", p, lambda: self.run(lf.identity_form(saga, lab))
         )

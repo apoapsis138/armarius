@@ -18,7 +18,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Covenant",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Export, In Creation / In Play",
+        "m": "MenuScreen: Export, Update from a File, In Creation / In Play",
         "slash": "(disabled)"
       }
     },
@@ -380,7 +380,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Character Info",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Export, In Creation / In Play",
+        "m": "MenuScreen: Export, Update from a File, In Creation / In Play",
         "slash": "(disabled)"
       }
     },
@@ -602,7 +602,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Laboratory Identity",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Export, In Creation / In Play",
+        "m": "MenuScreen: Export, Update from a File, In Creation / In Play",
         "slash": "(disabled)"
       }
     },

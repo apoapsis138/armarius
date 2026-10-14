@@ -60,7 +60,12 @@ def test_each_page_offers_what_applies_there():
     # Fatigue has its own button in Health; the device commands and the
     # Creation Worksheet aren't on the desktop yet.
     assert "Edit Fatigue" not in more
-    assert more == ["Lab Texts Read", "Export", "In Creation / In Play"]
+    assert more == [
+        "Lab Texts Read",
+        "Export",
+        "Update from a File",
+        "In Creation / In Play",
+    ]
     assert _labels(menu_forms.new_items(page)) == ["New Character", "Bind Familiar"]
     deleted = menu_forms.deletes(page)
     assert deleted is not None and deleted.name == "Leandro"
@@ -71,6 +76,7 @@ def test_each_page_offers_what_applies_there():
         "Import",
         "Research Bonuses",
         "Export",
+        "Update from a File",
         "In Creation / In Play",
     ]
     assert _labels(menu_forms.new_items(page)) == [

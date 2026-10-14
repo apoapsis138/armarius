@@ -462,6 +462,7 @@ async def test_more_on_a_record_offers_export_and_its_mode():
         workspace = await _open(pilot, app, "character")
         assert [item.label for item in workspace._more_items()] == [
             "Export",
+            "Update from a File",
             "In Creation / In Play",
         ]
         await menu(pilot, app, "m", "In Creation / In Play")

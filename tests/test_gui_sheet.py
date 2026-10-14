@@ -83,6 +83,7 @@ def test_the_window_shows_the_first_characters_sheet_with_every_chapter(app):
         "Inventory",
         "Planning",
         "Diary",
+        "Manage",
     ]
     shown = _texts(sheet)
     assert "Test Covenant" in shown
@@ -278,6 +279,7 @@ def test_a_saga_opens_at_its_covenants_and_the_trail_leads_back(app):
         "Seasons",
         "Diary",
         "Build",
+        "Manage",
     ]
     people = _chapter(page, "People")
     person = next(
@@ -350,6 +352,7 @@ def test_a_laboratory_opens_from_its_covenants_card_with_every_chapter(app):
         "Specializations",
         "Stores",
         "Seasons",
+        "Manage",
     ]
     assert "Superior Construction" in _texts(page)
 
@@ -473,6 +476,7 @@ def test_a_familiar_opens_from_its_covenants_people_below_its_magus(app):
         "Combat & Health",
         "Abilities",
         "Bond Powers",
+        "Manage",
     ]
     power = _chapter(familiar_page, "Bond Powers").findChildren(ClickableCard)[0]
     power.clicked()

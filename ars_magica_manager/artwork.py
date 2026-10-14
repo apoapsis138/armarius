@@ -107,6 +107,13 @@ ICON_NAMES: dict[str, str] = {
     "help": "question",
     "theme": "palette",
     "close": "x",
+    # A record's Manage chapter, and its In Creation / In Play mode
+    "manage": "archive",
+    "export": "export",
+    "update": "file-arrow-down",
+    "in_creation": "feather",
+    "in_play": "seal-check",
+    "worksheet": "clipboard-text",
 }
 
 

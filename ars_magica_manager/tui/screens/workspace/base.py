@@ -45,6 +45,7 @@ from .... import (
     creation,
     creation_forms,
     deletion,
+    import_forms,
     presence,
     seasons,
     sourcebooks,
@@ -268,6 +269,7 @@ _STORYGUIDE_ACTIONS = frozenset(
         "import_data",
         "move_vis",
         "share_spell",
+        "update_record",
     }
 )
 
@@ -1205,6 +1207,24 @@ class WorkspaceBase(Screen[None]):
             self.notify(f"Exported {escape(record.name)} to {escape(str(path))}.")
 
         self.app.push_screen(_export_dialog(record, storage.EXPORTS_DIR), handle_result)
+
+    def action_update_record(self) -> None:
+        """More's Update from a File on a covenant, laboratory or
+        character: read an export of it over it, after showing what
+        changes."""
+        record = self._record_to_export()
+        if record is None:
+            return
+
+        def done(end: object) -> None:
+            if not isinstance(end, list):
+                return
+            view = self._current_sheet_view()
+            self._commit(*(view._refreshers if view is not None else ()), tree=True)
+            if end:
+                self.notify("\n".join(end))
+
+        run_steps(self.app, import_forms.update_record(self.saga, record), done)
 
     def _vis_holder(self) -> vis.Holder | None:
         """Whose raw vis the active section lists: the

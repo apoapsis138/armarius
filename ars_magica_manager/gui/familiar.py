@@ -39,6 +39,7 @@ from .figures import (
     fatigue_ladder,
     wound_track,
 )
+from .manage import RecordControls
 from .pages import card_grid, card_title, symbol_label
 from .themes import Palette
 from .widgets import (
@@ -78,6 +79,7 @@ class FamiliarPage(QWidget):
         familiar: Familiar,
         p: Palette,
         run: Run = lambda _command: None,
+        controls: RecordControls | None = None,
     ) -> None:
         super().__init__()
         self.saga, self.familiar, self.p = saga, familiar, p
@@ -99,6 +101,8 @@ class FamiliarPage(QWidget):
         }
         for name, concept in CHAPTERS:
             self.codex.add(name, concept, builders[name]())
+        if controls is not None:
+            self.codex.add("Manage", "manage", controls.chapter(p))
         outer.addWidget(self.codex, 1)
 
     def chapters(self) -> list[str]:

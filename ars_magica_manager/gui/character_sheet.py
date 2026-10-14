@@ -79,6 +79,7 @@ from .figures import (
     trait_list,
     wound_track,
 )
+from .manage import RecordControls
 from .markup_html import to_html
 from .pages import familiar_card
 from .themes import Palette
@@ -445,11 +446,13 @@ class CharacterSheet(QWidget):
         palette: Palette,
         open_familiar: Callable[[str], None] = lambda _id: None,
         run: Callable[[Command], None] = lambda _command: None,
+        controls: RecordControls | None = None,
     ) -> None:
         super().__init__()
         self.saga, self.character, self.p = saga, character, palette
         self.open_familiar = open_familiar
         self.run = run
+        self.controls = controls
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
@@ -471,6 +474,8 @@ class CharacterSheet(QWidget):
             if name == "Hermetic Magic" and character.type != "magus":
                 continue
             self.codex.add(name, concept, builders[name]())
+        if controls is not None:
+            self.codex.add("Manage", "manage", controls.chapter(palette))
         outer.addWidget(self.codex, 1)
 
     def chapters(self) -> list[str]:
@@ -533,6 +538,9 @@ class CharacterSheet(QWidget):
             status.addWidget(chip(words, p[TONES[tone]]))
         status.addStretch(1)
         row.addLayout(status)
+        mode = self.controls.mode(p) if self.controls is not None else None
+        if mode is not None:
+            row.addWidget(mode, 0, Qt.AlignmentFlag.AlignTop)
         self.info_edit = edit_button(
             "Edit",
             p,

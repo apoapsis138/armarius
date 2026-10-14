@@ -30,7 +30,12 @@ and season dimmed because they belong to the saga. Size includes any Virtue
 that changes it (Ars Magica Definitive Edition, Chapter 3: Characters). With
 the top panel focused, `d` deletes the character after saying what happens
 to what they own, and More (`m`) offers Export, which writes the character
-to a file another saga can import.
+to a file another saga can import, and Update from a File, which reads such
+a file back over them. On the desktop these and Delete are in the sheet's
+last chapter, **Manage**, and the sheet's header shows its mode: In Play
+(a seal) or In Creation (a quill, with the Creation Worksheet beside it).
+Click it to switch; while it is In Creation the sheet is drawn on ruled
+drafting vellum.
 
 ### Characteristics
 <!-- help: section-char-characteristics -->

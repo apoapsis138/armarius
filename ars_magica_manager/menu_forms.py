@@ -20,7 +20,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
 
 from . import (
     creation,
@@ -281,6 +281,53 @@ def section_of(page: Page, action: str) -> str | None:
         if available(action, replace(page, section=section)):
             return section
     return None
+
+
+class ManageItem(NamedTuple):
+    """One entry of a record's Manage chapter: its action (a More
+    command's, or DELETE_RECORD), its label and a line on what it does."""
+
+    action: str
+    label: str
+    detail: str
+
+
+#: A record's Manage chapter: what manages it as a file rather than as
+#: part of the saga, each with what it does; Delete is last.
+MANAGE: dict[str, str] = {
+    "export_record": "Write it to a file that another saga, or this saga on "
+    "another computer, can import.",
+    "update_record": "Read an export of it over it, for example after working "
+    "on it elsewhere: shows what would change first, and keeps its place in "
+    "this saga.",
+    DELETE_RECORD: "Remove it from the saga, after saying what happens to "
+    "what it holds.",
+}
+
+#: The More commands a record's own page offers instead: in its Manage
+#: chapter, or as its In Creation / In Play toggle and the Creation
+#: Worksheet beside it.
+ON_THE_PAGE = frozenset({*MANAGE, "toggle_mode", "creation_worksheet"})
+
+
+def manage_items(page: Page) -> list[ManageItem]:
+    """What the page's Manage chapter offers, in order."""
+    labels = {item.action: item.label for item in MORE_MENU}
+    items = [
+        ManageItem(action, labels[action], detail)
+        for action, detail in MANAGE.items()
+        if action != DELETE_RECORD and available(action, page)
+    ]
+    record = deletes(page)
+    if record is not None:
+        items.append(
+            ManageItem(
+                DELETE_RECORD,
+                f"Delete {escape(record.name or '(unnamed)')}",
+                MANAGE[DELETE_RECORD],
+            )
+        )
+    return items
 
 
 def new_items(page: Page) -> list[MenuItem]:
@@ -941,6 +988,13 @@ def _export_command(page: Page) -> Command:
     return export_record(page.saga, record, storage.EXPORTS_DIR)
 
 
+def _update_command(page: Page) -> Command:
+    record = page.record_to_export()
+    if record is None:
+        return Refuse("Update from a File", "Nothing here to update.")
+    return import_forms.update_record(page.saga, record)
+
+
 def _needs[T](
     get: Callable[[Page], T | None], build: Callable[[Saga, T], Command]
 ) -> Callable[[Page], Command]:
@@ -990,6 +1044,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "import_data": _import_command,
     "research_bonuses": _needs(_covenant, research_bonuses),
     "export_record": _export_command,
+    "update_record": _update_command,
     "toggle_mode": _record_command,
     "set_date": lambda page: set_date(page.saga),
     "create_covenant": lambda page: creation_forms.new_covenant_form(page.saga),
