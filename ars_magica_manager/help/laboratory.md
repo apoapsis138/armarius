@@ -260,8 +260,8 @@ inventing a spell, instilling an effect and a Longevity Ritual each write one
 here when the season is advanced. `/` filters the table by kind, Technique,
 Form, level, and to texts the owner can read. Perform Ritual in More (`m`)
 performs a Longevity Ritual again from its text at once: it takes vis but no
-season. On the desktop, Perform Ritual is a button in the Seasons chapter,
-beside Bind Familiar while the owner has no familiar, and **Texts Read**
+season. On the desktop, Perform Ritual is a button beside Planning in the Seasons
+chapter, with Bind Familiar while the owner has no familiar, and **Texts Read**
 beside the Lab Texts sets whose texts the owner reads.
 
 ### Books

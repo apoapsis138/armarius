@@ -16,7 +16,8 @@ def test_a_covenant_card_counts_its_people_and_laboratories():
     cards = ov.covenant_cards(saga)
     facts = {f.label: f.value for f in cards[0].facts}
     assert (facts["Magi"], facts["Grogs"], facts["Laboratories"]) == ("1", "1", "1")
-    assert cards[-1].id is None and cards[-1].name == "Unassigned"
+    # The unassigned have their own headings on the saga page.
+    assert [c.name for c in cards] == ["Test Covenant"]
 
 
 def test_people_are_grouped_magi_first_and_empty_groups_left_out():
@@ -24,6 +25,13 @@ def test_people_are_grouped_magi_first_and_empty_groups_left_out():
     saga.characters.append(Character("g1", "Hilde", "grog", "cov1"))
     groups = ov.people_groups(saga, "cov1")
     assert [title for title, _ in groups] == ["Magi", "Grogs"]
+    every = ov.people_groups(saga, "cov1", every=True)
+    assert [title for title, _ in every] == ["Magi", "Companions", "Grogs"]
+    assert [ov.NEW_PERSON[title] for title, _ in every] == [
+        ("magus", "New Magus"),
+        ("companion", "New Companion"),
+        ("grog", "New Grog"),
+    ]
 
 
 def test_every_activity_has_a_kind_and_lab_work_is_laboratory():

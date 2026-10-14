@@ -11,20 +11,28 @@ from __future__ import annotations
 from collections.abc import Callable, Sequence
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from PySide6.QtWidgets import (
+    QGridLayout,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
 from .. import artwork, menu_forms
 from .. import character_sheet as cs
 from .. import familiar_sheet as fs
 from .. import saga_content_sheet as scs
 from .. import saga_overview as ov
-from ..models import Saga
+from ..models import Character, Saga
 from . import pictures
 from .figures import fact_grid
-from .menus import ButtonsAt, button_row
+from .menus import Placer
 from .themes import Palette
 from .widgets import (
     ClickableCard,
+    Codex,
     chapter_title,
     display_name,
     edit_button,
@@ -192,9 +200,67 @@ class SagaShelf(QWidget):
         )
 
 
+def person_card(saga: Saga, character: Character, p: Palette, open_: Open) -> QWidget:
+    """A person as a card, with their House's symbol, that opens their
+    sheet."""
+    figures = ov.person_card(saga, character)
+    house = artwork.house_symbol(figures.house)
+    card = ClickableCard(p, pad=12)
+    card_title(
+        card,
+        figures.name,
+        figures.subtitle,
+        p,
+        symbol_label(house, p, 40)
+        if house
+        else symbol_label(artwork.icon("character"), p, 32),
+    )
+    if figures.detail:
+        card.column.addWidget(text(figures.detail, p["label"]))
+    card.clicked = lambda: open_(figures.id)
+    return card
+
+
+def lab_card(figures: ov.LabCard, p: Palette, open_: Open) -> QWidget:
+    """A laboratory as a card with its main figures, that opens it."""
+    card = ClickableCard(p, pad=14)
+    card_title(
+        card,
+        figures.name,
+        figures.subtitle,
+        p,
+        symbol_label(artwork.icon("laboratory"), p),
+    )
+    card.column.addWidget(fact_grid(list(figures.facts), p, 4))
+    card.clicked = lambda: open_(figures.id)
+    return card
+
+
+def with_new(cards: list[QWidget], new: QWidget | None) -> list[QWidget]:
+    """`cards`, then the New card that adds to them, if there is one."""
+    return [*cards, new] if new is not None else cards
+
+
+def action_rows(rows: Sequence[tuple[QWidget, str]], p: Palette) -> QWidget:
+    """Each button beside a line on what it does."""
+    box = QWidget()
+    grid = QGridLayout(box)
+    grid.setContentsMargins(0, 0, 0, 0)
+    grid.setHorizontalSpacing(16)
+    grid.setVerticalSpacing(14)
+    grid.setColumnStretch(1, 1)
+    for row, (button, detail) in enumerate(rows):
+        grid.addWidget(button, row, 0, Qt.AlignmentFlag.AlignTop)
+        grid.addWidget(
+            text(detail, p["label"], serif(12.5, italic=True), wrap=True), row, 1
+        )
+    return box
+
+
 class SagaPage(QWidget):
-    """A saga's covenants as cards, with anyone who belongs to none, and
-    a card that opens its Saga Content."""
+    """A saga as a Codex: The World (its covenants, and the characters and
+    laboratories that belong to none, each list ending in a New card),
+    its Seasons, its Rules and Content, and Saga Management."""
 
     def __init__(
         self,
@@ -203,10 +269,44 @@ class SagaPage(QWidget):
         open_covenant: Callable[[str | None], None],
         open_content: Callable[[], None] = lambda: None,
         open_seasons: Callable[[], None] = lambda: None,
-        buttons_at: ButtonsAt = lambda _spot: [],
+        placer: Placer | None = None,
+        open_character: Open = lambda _id: None,
+        open_laboratory: Open = lambda _id: None,
     ) -> None:
         super().__init__()
-        cards = []
+        self.saga, self.p = saga, p
+        self.placer = placer
+        self.open_covenant = open_covenant
+        self.open_character, self.open_laboratory = open_character, open_laboratory
+        column = QVBoxLayout(self)
+        column.setContentsMargins(18, 12, 12, 8)
+        column.setSpacing(10)
+        column.addWidget(page_header(saga.name, ov.saga_card(saga).subtitle, p, "saga"))
+        if saga.description:
+            column.addWidget(
+                text(saga.description, p["foreground"], serif(13), wrap=True)
+            )
+        self.codex = Codex(p)
+        self.codex.add("The World", "covenant", self._world())
+        self.codex.add("Seasons", "season", self._seasons(open_seasons))
+        self.codex.add(
+            "Rules and Content", "library", self._rules_and_content(open_content)
+        )
+        self.codex.add("Saga Management", "manage", self._management())
+        column.addWidget(self.codex, 1)
+
+    def chapters(self) -> list[str]:
+        return self.codex.chapters()
+
+    def _new(self, spot: str, hint: str = "") -> QWidget | None:
+        return self.placer.new_card(spot, hint=hint) if self.placer else None
+
+    def _buttons(self, spot: str) -> list[QPushButton]:
+        return self.placer.buttons(spot) if self.placer else []
+
+    def _world(self) -> QWidget:
+        p, saga = self.p, self.saga
+        covenants: list[QWidget] = []
         for figures in ov.covenant_cards(saga):
             card = ClickableCard(p, pad=16)
             card_title(
@@ -217,8 +317,66 @@ class SagaPage(QWidget):
                 symbol_label(artwork.icon("covenant"), p),
             )
             card.column.addWidget(fact_grid(list(figures.facts), p, 5))
-            card.clicked = lambda covenant_id=figures.id: open_covenant(covenant_id)
-            cards.append(card)
+            card.clicked = lambda covenant_id=figures.id: self.open_covenant(
+                covenant_id
+            )
+            covenants.append(card)
+        people = [
+            person_card(saga, c, p, self.open_character) for c in ov.members(saga, None)
+        ]
+        labs = [lab_card(f, p, self.open_laboratory) for f in ov.lab_cards(saga, None)]
+        parts: list[QWidget] = []
+        for title, cards, across in (
+            ("Covenants", covenants, 2),
+            ("Unassigned Characters", people, CARDS_ACROSS),
+            ("Unassigned Laboratories", labs, 2),
+        ):
+            listed = with_new(cards, self._new(title))
+            parts.append(chapter_title(f"{title} ({len(cards)})", p))
+            parts.append(
+                card_grid(listed, across)
+                if listed
+                else text("None.", p["dim"], serif(12.5, italic=True))
+            )
+        return scrolling_page(p, *parts)
+
+    def _seasons(self, open_seasons: Callable[[], None]) -> QWidget:
+        p, saga = self.p, self.saga
+        kept = len(saga.season_records)
+        past = ClickableCard(p, pad=16)
+        card_title(
+            past,
+            "The Seasons Played",
+            "What everyone did each season, and what it gave them",
+            p,
+            symbol_label(artwork.icon("season"), p),
+        )
+        past.column.addWidget(fact_grid([cs.Fact("Recorded", str(kept))], p, 4))
+        past.clicked = open_seasons
+        self.seasons = past
+        heading = QWidget()
+        row = QHBoxLayout(heading)
+        row.setContentsMargins(0, 0, 0, 0)
+        row.setSpacing(6)
+        row.addWidget(chapter_title("The Date", p), 1)
+        for button in self._buttons("Seasons"):
+            row.addWidget(button, 0, Qt.AlignmentFlag.AlignTop)
+        return scrolling_page(
+            p,
+            heading,
+            text(
+                f"It is {saga.current_season} {saga.current_year}. Advance Season, "
+                "at the top of the window, plays the season out.",
+                p["foreground"],
+                serif(13),
+                wrap=True,
+            ),
+            chapter_title("Records", p),
+            card_grid([past], 2),
+        )
+
+    def _rules_and_content(self, open_content: Callable[[], None]) -> QWidget:
+        p, saga = self.p, self.saga
         content = ClickableCard(p, pad=16)
         card_title(
             content,
@@ -230,33 +388,21 @@ class SagaPage(QWidget):
         content.column.addWidget(fact_grid(scs.header_facts(saga), p, 4))
         content.clicked = open_content
         self.content = content
-        kept = len(saga.season_records)
-        past = ClickableCard(p, pad=16)
-        card_title(
-            past,
-            "Seasons",
-            f"It is {saga.current_season} {saga.current_year}; the seasons "
-            "played out, and what each gave",
-            p,
-            symbol_label(artwork.icon("season"), p),
+        return scrolling_page(
+            p, chapter_title("Rules and Content", p), card_grid([content], 2)
         )
-        past.column.addWidget(fact_grid([cs.Fact("Recorded", str(kept))], p, 4))
-        past.clicked = open_seasons
-        self.seasons = past
-        parts: list[QWidget] = [
-            page_header(saga.name, ov.saga_card(saga).subtitle, p, "saga"),
-            chapter_title("Covenants", p),
-            card_grid(cards, 2),
-            chapter_title("The Saga's Books, Rules and Seasons", p),
-            card_grid([content, past], 2),
+
+    def _management(self) -> QWidget:
+        p = self.p
+        placed = self.placer.placed_buttons("Saga Management") if self.placer else []
+        rows = [
+            (button, menu_forms.SAGA_MANAGEMENT.get(item.action, ""))
+            for item, button in placed
         ]
-        if saga.description:
-            parts.insert(
-                1, text(saga.description, p["foreground"], serif(13), wrap=True)
-            )
-        row = button_row(buttons_at(menu_forms.PAGE))
-        if row is not None:
-            parts.insert(1, row)
-        column = QVBoxLayout(self)
-        column.setContentsMargins(0, 0, 0, 0)
-        column.addWidget(scrolling_page(p, *parts))
+        return scrolling_page(
+            p,
+            chapter_title("Saga Management", p),
+            action_rows(rows, p)
+            if rows
+            else text("Nothing to manage.", p["dim"], serif(12.5, italic=True)),
+        )

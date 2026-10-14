@@ -84,8 +84,8 @@ from .figures import (
 )
 from .manage import RecordControls
 from .markup_html import to_html
-from .menus import ButtonsAt, button_row
-from .pages import familiar_card
+from .menus import Placer
+from .pages import card_grid, familiar_card
 from .themes import Palette
 from .timeline import Calendar, legend, season_text
 from .widgets import (
@@ -451,14 +451,14 @@ class CharacterSheet(QWidget):
         open_familiar: Callable[[str], None] = lambda _id: None,
         run: Callable[[Command], None] = lambda _command: None,
         controls: RecordControls | None = None,
-        buttons_at: ButtonsAt = lambda _spot: [],
+        placer: Placer | None = None,
     ) -> None:
         super().__init__()
         self.saga, self.character, self.p = saga, character, palette
         self.open_familiar = open_familiar
         self.run = run
         self.controls = controls
-        self.buttons_at = buttons_at
+        self.placer = placer
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
@@ -621,10 +621,12 @@ class CharacterSheet(QWidget):
                         ),
                     )
                 )
-            else:
-                bind = button_row(self.buttons_at("Familiar"))
+            elif self.placer is not None:
+                bind = self.placer.new_card(
+                    "Familiar", hint="Bind one: the familiar is shown here."
+                )
                 if bind is not None:
-                    parts.append(section("Familiar", p, bind))
+                    parts.append(section("Familiar", p, card_grid([bind], 2)))
         # One above the other: side by side, with their buttons, they are
         # wider than the chapter beside the inspector.
         parts.append(

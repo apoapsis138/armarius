@@ -330,36 +330,34 @@ def manage_items(page: Page) -> list[ManageItem]:
     return items
 
 
-#: Edit Saga: on the saga's own page, where the terminal's e edits it.
+#: Edit Saga: in the saga page's Saga Management, where the terminal's e
+#: edits it.
 EDIT_SAGA = MenuItem("e", "edit_saga", "Edit Saga")
 
-#: The page's own buttons, as opposed to a chapter's.
-PAGE = "page"
-
 #: Where a front-end that shows one page at a time (the desktop) offers
-#: each New and More action that isn't in its menus: on a page's own row
-#: of buttons (PAGE), in one of its chapters or sections (by its name),
-#: or in a menu ("New", "More"). An action listed here is offered only
-#: where it is listed (Restore nowhere: Add on the Magi and Companions
-#: lists brings someone back); one not listed stays in its menu wherever
-#: `available` offers it.
+#: each New and More action that isn't in its menus: in one of the page's
+#: chapters or sections (by its name), or in a menu ("New", "More"). A New
+#: action there is a New card at the end of the cards it adds to. An
+#: action listed here is offered only where it is listed (Restore
+#: nowhere: Add on the Magi and Companions lists brings someone back); one
+#: not listed stays in its menu wherever `available` offers it.
 PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
-    "edit_saga": ((NodeKind.SAGA, PAGE),),
-    "import_data": ((NodeKind.SAGA, PAGE), (NodeKind.COVENANT, "More")),
-    "set_date": ((NodeKind.SAGA, PAGE),),
-    "create_covenant": ((NodeKind.SAGA, PAGE),),
+    "edit_saga": ((NodeKind.SAGA, "Saga Management"),),
+    "import_data": ((NodeKind.SAGA, "Saga Management"), (NodeKind.COVENANT, "More")),
+    "set_date": ((NodeKind.SAGA, "Seasons"),),
+    "create_covenant": ((NodeKind.SAGA, "Covenants"),),
     "create_character": (
-        (NodeKind.SAGA, PAGE),
+        (NodeKind.SAGA, "Unassigned Characters"),
         (NodeKind.COVENANT, "People"),
         (NodeKind.CHARACTER_GROUP, "People"),
     ),
     "create_laboratory": (
-        (NodeKind.SAGA, PAGE),
+        (NodeKind.SAGA, "Unassigned Laboratories"),
         (NodeKind.COVENANT, "Laboratories"),
     ),
     "create_familiar": (
         (NodeKind.CHARACTER, "Familiar"),
-        (NodeKind.LABORATORY, "Seasons"),
+        (NodeKind.LABORATORY, "Planning"),
     ),
     "restore": (),
     # On each source of income's row.
@@ -370,7 +368,15 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     ),
     # The Shared tick in a known spell's form.
     "share_spell": ((NodeKind.CHARACTER, "Known Spells"),),
-    "perform_ritual": ((NodeKind.LABORATORY, "Seasons"),),
+    "perform_ritual": ((NodeKind.LABORATORY, "Planning"),),
+}
+
+#: The saga page's Saga Management: each entry with what it does.
+SAGA_MANAGEMENT: dict[str, str] = {
+    "edit_saga": "Its name, storyguide and description, whether season "
+    "records are kept, and the optional rules of the books in play.",
+    "import_data": "Bring books, spells or records in from a file, such as "
+    "another saga's export or a list of books.",
 }
 
 
@@ -406,8 +412,8 @@ _PLACED_CHECKS: dict[str, Callable[[Page], bool]] = {
 
 
 def placed(page: Page, spot: str) -> list[MenuItem]:
-    """The actions the page offers at `spot` (PAGE, a chapter's or
-    section's name, or "New" / "More"), in PLACES's order."""
+    """The actions the page offers at `spot` (a chapter's or section's
+    name, or "New" / "More"), in PLACES's order."""
     items = {item.action: item for item in (EDIT_SAGA, *NEW_MENU, *MORE_MENU)}
     offered = {i.action for i in (*new_items(page), *more_items(page))}
     return [

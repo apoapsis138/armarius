@@ -84,7 +84,8 @@ def test_lab_work_and_a_new_spell_from_the_laboratory(app):
     window = _window()
     window.open_laboratory("lab1")
     controls = section_buttons(window.page(), "Planning")
-    assert list(controls) == ["New Spell", "Plan", "Clear"]
+    # Bind Familiar too, while its owner has no familiar.
+    assert list(controls) == ["New Spell", "Plan", "Clear", "Bind Familiar"]
     answering(window, {"activity": lab_seasons.EXTRACT})
     controls["Plan"].click()
     assert _plans() == [("char1", lab_seasons.EXTRACT)]

@@ -31,6 +31,12 @@ PEOPLE = (
     ("Grogs", ("grog",)),
 )
 
+#: What a new person made from each group is (its first type), and what
+#: making one is called.
+NEW_PERSON: dict[str, tuple[str, str]] = {
+    title: (types[0], f"New {types[0].title()}") for title, types in PEOPLE
+}
+
 
 @dataclass(frozen=True)
 class SagaCard:
@@ -74,7 +80,7 @@ def covenant_subtitle(covenant: Covenant) -> str:
 
 def covenant_cards(saga: Saga) -> list[CovenantCard]:
     """Each covenant with its aura and how many people and laboratories
-    it has; then, if anyone belongs to none, a card for them."""
+    it has."""
     cards = []
     for covenant in saga.covenants:
         people = members(saga, covenant.id)
@@ -90,16 +96,6 @@ def covenant_cards(saga: Saga) -> list[CovenantCard]:
         cards.append(
             CovenantCard(
                 covenant.id, covenant.name, covenant_subtitle(covenant), tuple(facts)
-            )
-        )
-    unassigned = members(saga, None)
-    if unassigned:
-        cards.append(
-            CovenantCard(
-                None,
-                "Unassigned",
-                "Characters who belong to no covenant",
-                (cs.Fact("Characters", str(len(unassigned))),),
             )
         )
     return cards
@@ -139,15 +135,15 @@ def person_card(saga: Saga, character: Character) -> PersonCard:
 
 
 def people_groups(
-    saga: Saga, covenant_id: str | None
+    saga: Saga, covenant_id: str | None, *, every: bool = False
 ) -> list[tuple[str, list[Character]]]:
-    """A covenant's people by group (Magi, Companions, Grogs), each group
-    that has anyone."""
+    """A covenant's people by group (Magi, Companions, Grogs): each group
+    that has anyone, or with `every` each group, so it can be added to."""
     people = members(saga, covenant_id)
     groups = [
         (title, [c for c in people if c.type in types]) for title, types in PEOPLE
     ]
-    return [(title, group) for title, group in groups if group]
+    return [(title, group) for title, group in groups if every or group]
 
 
 @dataclass(frozen=True)

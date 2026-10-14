@@ -17,7 +17,6 @@ from PySide6.QtGui import (
     QBrush,
     QColor,
     QFont,
-    QFontMetrics,
     QIcon,
     QPainter,
     QPen,
@@ -129,70 +128,49 @@ def take_pressed() -> QPushButton | None:
     return button
 
 
-class GiltButton(QPushButton):
-    """A page's own action, set like a manuscript's opening: gilt-edged,
-    its first letter an illuminated initial on a small gilt-framed panel,
-    the rest in the book face."""
+class NewCard(QFrame):
+    """A blank card at the end of a list of cards, which makes one more:
+    a dashed gilt outline with the kind's icon, faint, and what it makes
+    in italics."""
 
-    PAD, GAP, INITIAL = 6, 4, 30
-
-    def __init__(self, words: str, p: Palette, on_click: Callable[[], None]) -> None:
-        super().__init__(words)
-        self.p = p
-        self.setObjectName("gilt")
+    def __init__(
+        self,
+        words: str,
+        concept: str,
+        p: Palette,
+        on_click: Callable[[], None],
+        hint: str = "",
+    ) -> None:
+        super().__init__()
+        self.words = words
+        self.on_click = on_click
+        self.setObjectName("newCard")
         self.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.setAttribute(Qt.WidgetAttribute.WA_Hover)
-        self.setToolTip(words)
-        self.pressed.connect(lambda: _pressed.__setitem__(slice(None), [self]))
-        self.clicked.connect(lambda _checked=False: on_click())
-
-    def _fonts(self) -> tuple[QFont, QFont]:
-        return QFont(pictures.DISPLAY, 17), serif(12.5)
-
-    def sizeHint(self) -> QSize:
-        _, rest = self._fonts()
-        words = self.text()
-        width = (
-            self.PAD * 2
-            + self.INITIAL
-            + self.GAP
-            + QFontMetrics(rest).horizontalAdvance(words[1:])
-            + 14
+        self.setToolTip(hint or words)
+        self.setStyleSheet(
+            f"QFrame#newCard {{ background:transparent;"
+            f" border:1.5px dashed {p['accent']}; border-radius:6px; }}"
+            f" QFrame#newCard:hover {{ background:{translucent(p['surface'], 160)}; }}"
+            " QFrame#newCard QLabel { background:transparent; border:none; }"
         )
-        return QSize(width, self.INITIAL + 2 * self.PAD)
+        self.setMinimumHeight(64)
+        row = QHBoxLayout(self)
+        row.setContentsMargins(14, 10, 14, 10)
+        row.setSpacing(10)
+        symbol = QLabel()
+        symbol.setPixmap(pictures.pixmap(artwork.icon(concept), p["dim"], 28, 2.0))
+        row.addWidget(symbol, 0, Qt.AlignmentFlag.AlignVCenter)
+        column = QVBoxLayout()
+        column.setSpacing(0)
+        column.addWidget(text(words, p["label"], serif(13.5, italic=True)))
+        if hint:
+            column.addWidget(text(hint, p["dim"], serif(11, italic=True), wrap=True))
+        row.addLayout(column, 1)
 
-    def minimumSizeHint(self) -> QSize:
-        return self.sizeHint()
-
-    def paintEvent(self, _event) -> None:
-        p = self.p
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        box = QRectF(self.rect()).adjusted(1, 1, -1, -1)
-        hover = self.underMouse() or self.hasFocus()
-        painter.setBrush(QColor(p["selection" if hover else "surface"]))
-        painter.setPen(QPen(QColor(p["accent"]), 1.4))
-        painter.drawRoundedRect(box, 4, 4)
-        painter.setBrush(Qt.BrushStyle.NoBrush)
-        painter.setPen(QPen(QColor(p["accent"]), 0.6))
-        painter.drawRoundedRect(box.adjusted(3, 3, -3, -3), 2.5, 2.5)
-        words = self.text() or " "
-        square = QRectF(self.PAD, self.PAD, self.INITIAL, self.INITIAL)
-        painter.setBrush(QColor(p["panel"]))
-        painter.setPen(QPen(QColor(p["accent"]), 1.0))
-        painter.drawRect(square)
-        initial, rest = self._fonts()
-        painter.setFont(initial)
-        painter.setPen(QColor(p["heading"]))
-        painter.drawText(square, Qt.AlignmentFlag.AlignCenter, words[0])
-        painter.setFont(rest)
-        painter.setPen(QColor(p["foreground"]))
-        after = QRectF(
-            square.right() + self.GAP, 0, self.width() - square.right(), self.height()
-        )
-        painter.drawText(
-            after, Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft, words[1:]
-        )
+    def mousePressEvent(self, event) -> None:
+        _pressed[:] = []
+        self.on_click()
+        super().mousePressEvent(event)
 
 
 def display_name(name: str, p: Palette, size: int = 34) -> QLabel:

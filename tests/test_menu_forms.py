@@ -385,21 +385,28 @@ def test_a_ritual_needs_the_laboratory_to_have_an_owner():
 def test_places_sets_out_where_each_action_is_offered():
     saga = _sample_saga_with_covenant()
     page = _page(saga, NodeKind.SAGA)
-    assert _labels(menu_forms.placed(page, menu_forms.PAGE)) == [
-        "Edit Saga",
-        "Import",
-        "Set Date",
-        "New Covenant",
-        "New Character",
-        "New Laboratory",
-    ]
+    assert {
+        spot: _labels(menu_forms.placed(page, spot))
+        for spot in (
+            "Covenants",
+            "Unassigned Characters",
+            "Unassigned Laboratories",
+            "Seasons",
+            "Saga Management",
+        )
+    } == {
+        "Covenants": ["New Covenant"],
+        "Unassigned Characters": ["New Character"],
+        "Unassigned Laboratories": ["New Laboratory"],
+        "Seasons": ["Set Date"],
+        "Saga Management": ["Edit Saga", "Import"],
+    }
     # Bind Familiar leaves the saga page: it is offered on a covenant or
     # a magus.
     assert not any(
         menu_forms.in_menu(page, item, "New") for item in menu_forms.new_items(page)
     )
     covenant = _page(saga, NodeKind.COVENANT, covenant_id="cov1")
-    assert menu_forms.placed(covenant, menu_forms.PAGE) == []
     assert _labels(menu_forms.placed(covenant, "People")) == ["New Character"]
     assert _labels(menu_forms.placed(covenant, "Laboratories")) == ["New Laboratory"]
     assert not any(
@@ -423,7 +430,7 @@ def test_a_familiar_is_bound_on_the_magus_or_in_their_laboratory():
     saga = _sample_saga_with_covenant()
     magus = _page(saga, NodeKind.CHARACTER, character_id="char1")
     lab = _page(saga, NodeKind.LABORATORY, laboratory_id="lab1")
-    assert _labels(menu_forms.placed(lab, "Seasons")) == ["Bind Familiar"]
+    assert _labels(menu_forms.placed(lab, "Planning")) == ["Bind Familiar"]
     step = menu_forms.command(lab, "create_familiar")
     assert isinstance(step, commands.Form)
     chosen = {f.key: f.value for f in step.fields()}
@@ -436,7 +443,7 @@ def test_a_familiar_is_bound_on_the_magus_or_in_their_laboratory():
     assert menu_forms.placed(magus, "Familiar") == []
     saga.characters[0].type = "magus"
     saga.laboratories[0].owner_id = None
-    assert menu_forms.placed(lab, "Seasons") == []
+    assert menu_forms.placed(lab, "Planning") == []
 
 
 def test_the_actions_moved_to_their_sections_leave_more():
@@ -452,7 +459,7 @@ def test_the_actions_moved_to_their_sections_leave_more():
         "lab_text_access", NodeKind.CHARACTER, "Hermetic Background"
     )
     assert menu_forms.lives_at("improve", NodeKind.COVENANT, "Income")
-    assert menu_forms.lives_at("perform_ritual", NodeKind.LABORATORY, "Seasons")
+    assert menu_forms.lives_at("perform_ritual", NodeKind.LABORATORY, "Planning")
     # Restore has no place: Add on the Magi and Companions brings them back.
     assert menu_forms.PLACES["restore"] == ()
 

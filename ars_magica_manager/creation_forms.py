@@ -190,14 +190,16 @@ def covenant_field(saga: Saga, covenant_id: str | None) -> DialogField:
     )
 
 
-def character_create_fields(saga: Saga, covenant_id: str | None) -> list[DialogField]:
-    """Name, Type, a Template of that Type (one field per Type,
-    shown while it is chosen) and covenant."""
+def character_create_fields(
+    saga: Saga, covenant_id: str | None, kind: str = "magus"
+) -> list[DialogField]:
+    """Name, Type (`kind` to start with), a Template of that Type (one
+    field per Type, shown while it is chosen) and covenant."""
     return [
         DialogField(
             "name", "Name", "text", "", required=True, placeholder="e.g. Leandro"
         ),
-        DialogField("type", "Type", "select", "magus", options=CHARACTER_TYPES),
+        DialogField("type", "Type", "select", kind, options=CHARACTER_TYPES),
         *(_template_field(kind) for _, kind in CHARACTER_TYPES),
         covenant_field(saga, covenant_id),
     ]
@@ -248,9 +250,12 @@ def blanks_fields(blanks: Sequence[str]) -> list[DialogField]:
     ]
 
 
-def new_character_form(saga: Saga, covenant_id: str | None) -> Form:
-    """Create a New Character; a Template that leaves names blank asks
-    for them next (cancelling that cancels the new character)."""
+def new_character_form(
+    saga: Saga, covenant_id: str | None, kind: str = "magus"
+) -> Form:
+    """Create a New Character, a `kind` to start with; a Template that
+    leaves names blank asks for them next (cancelling that cancels the new
+    character)."""
 
     def create(
         values: dict[str, Any],
@@ -278,7 +283,7 @@ def new_character_form(saga: Saga, covenant_id: str | None) -> Form:
 
     return Form(
         "Create a New Character",
-        lambda: character_create_fields(saga, covenant_id),
+        lambda: character_create_fields(saga, covenant_id, kind),
         apply,
         live=character_create_live,
         save_label="Create",

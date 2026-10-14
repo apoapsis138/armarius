@@ -24,6 +24,7 @@ from .. import (
     boon_hook_text,
     catalog,
     covenant_forms,
+    creation_forms,
     diary_forms,
     inhabitant_forms,
     library_forms,
@@ -56,8 +57,16 @@ from .character_sheet import (
 from .editing import Chooser, RowVerb, Run, choose_cards, verb_buttons
 from .figures import Seal, aura_seal, fact_grid, prose, shelf
 from .manage import RecordControls
-from .menus import ButtonsAt, button_row
-from .pages import Open, card_grid, card_title, familiar_card, symbol_label
+from .menus import Placer
+from .pages import (
+    Open,
+    card_grid,
+    familiar_card,
+    lab_card,
+    person_card,
+    symbol_label,
+    with_new,
+)
 from .themes import Palette
 from .timeline import SeasonTimeline, legend, season_text
 from .widgets import (
@@ -115,13 +124,13 @@ class CovenantPage(QWidget):
         open_familiar: Open = lambda _id: None,
         run: Run = lambda _command: None,
         controls: RecordControls | None = None,
-        buttons_at: ButtonsAt = lambda _spot: [],
+        placer: Placer | None = None,
     ) -> None:
         super().__init__()
         self.saga, self.p = saga, p
         self.run = run
         self.controls = controls
-        self.buttons_at = buttons_at
+        self.placer = placer
         self.open_character, self.open_laboratory = open_character, open_laboratory
         self.open_familiar = open_familiar
         self.covenant_id = covenant_id
@@ -318,30 +327,31 @@ class CovenantPage(QWidget):
         return frame
 
     def _people(self) -> QWidget:
+        """Each group of people (every group, so each can be added to),
+        ending in a New card for one more of its kind."""
         p, saga = self.p, self.saga
         parts: list[QWidget] = []
-        for title, people in ov.people_groups(saga, self.covenant_id):
-            cards = []
-            for character in people:
-                figures = ov.person_card(saga, character)
-                house = artwork.house_symbol(figures.house)
-                card = ClickableCard(p, pad=12)
-                card_title(
-                    card,
-                    figures.name,
-                    figures.subtitle,
-                    p,
-                    symbol_label(house, p, 40)
-                    if house
-                    else symbol_label(artwork.icon("character"), p, 32),
+        for title, people in ov.people_groups(saga, self.covenant_id, every=True):
+            cards = [
+                person_card(saga, character, p, self.open_character)
+                for character in people
+            ]
+            kind, words = ov.NEW_PERSON[title]
+            new = (
+                self.placer.new_card(
+                    "People",
+                    words,
+                    creation_forms.new_character_form(saga, self.covenant_id, kind),
                 )
-                if figures.detail:
-                    card.column.addWidget(text(figures.detail, p["label"]))
-                card.clicked = lambda character_id=figures.id: self.open_character(
-                    character_id
-                )
-                cards.append(card)
-            parts += [chapter_title(f"{title} ({len(people)})", p), card_grid(cards)]
+                if self.placer
+                else None
+            )
+            listed = with_new(cards, new)
+            if listed:
+                parts += [
+                    chapter_title(f"{title} ({len(people)})", p),
+                    card_grid(listed),
+                ]
         familiars = fs.familiars_in(saga, self.covenant_id)
         if familiars:
             cards = [
@@ -354,9 +364,6 @@ class CovenantPage(QWidget):
             ]
         if not parts:
             parts.append(_none("No one yet.", p))
-        row = button_row(self.buttons_at("People"))
-        if row is not None:
-            parts.insert(0, row)
         return scrolling_page(p, *parts)
 
     def _covenfolk(self, covenant: Covenant) -> QWidget:
@@ -480,26 +487,16 @@ class CovenantPage(QWidget):
         )
 
     def _labs(self, labs: Sequence[ov.LabCard]) -> QWidget:
+        """The laboratories as cards, ending in a New Laboratory card."""
         p = self.p
-        cards = []
-        for figures in labs:
-            card = ClickableCard(p, pad=14)
-            card_title(
-                card,
-                figures.name,
-                figures.subtitle,
-                p,
-                symbol_label(artwork.icon("laboratory"), p),
-            )
-            card.column.addWidget(fact_grid(list(figures.facts), p, 4))
-            card.clicked = lambda lab_id=figures.id: self.open_laboratory(lab_id)
-            cards.append(card)
-        row = button_row(self.buttons_at("Laboratories"))
+        cards = [lab_card(figures, p, self.open_laboratory) for figures in labs]
+        listed = with_new(
+            cards, self.placer.new_card("Laboratories") if self.placer else None
+        )
         return scrolling_page(
             p,
-            *([row] if row is not None else []),
             chapter_title(f"Laboratories ({len(labs)})", p),
-            card_grid(cards, 2) if cards else _none("No laboratories yet.", p),
+            card_grid(listed, 2) if listed else _none("No laboratories yet.", p),
         )
 
     def _possessions(self, covenant: Covenant) -> QWidget:

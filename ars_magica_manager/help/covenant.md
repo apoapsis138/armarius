@@ -19,9 +19,10 @@ Creation, the **Creation Worksheet**, which walks through building a
 covenant step by step. The same switch and worksheet are the buttons beside
 **Edit (e)** in the top panel. Export and Update from a File are in More
 there too; on the desktop they are in the covenant's **Manage** chapter,
-with Delete, and the mode is the switch in its header. On the desktop, New
-Character opens the covenant's People chapter and New Laboratory its
-Laboratories chapter, and what they make belongs to the covenant. A
+with Delete, and the mode is the switch in its header. On the desktop, each
+group of the People chapter (Magi, Companions, Grogs) ends in a blank card,
+New Magus, New Companion or New Grog, and the Laboratories chapter ends in
+New Laboratory; what they make belongs to the covenant. A
 familiar is bound on its magus or in their laboratory.
 
 **See also:** [Saga](help:saga), [Keys](help:keys),

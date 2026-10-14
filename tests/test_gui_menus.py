@@ -20,7 +20,7 @@ from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui import window as window_module
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.covenant import CovenantPage
-from ars_magica_manager.gui.widgets import GiltButton
+from ars_magica_manager.gui.widgets import NewCard
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.gui.worksheet import WorksheetPage
 
@@ -60,11 +60,28 @@ def _entries(window: MainWindow, menu: str) -> dict[str, QAction]:
     return {a.text(): a for a in found.actions() if not a.isSeparator()}
 
 
-def _gilt(window: MainWindow) -> dict[str, GiltButton]:
-    """The page's own buttons on show, by their words."""
+def _new(window: MainWindow) -> dict[str, NewCard]:
+    """The page's New cards on show, by their words."""
     page = window.page()
     assert page is not None
-    return {b.text(): b for b in page.findChildren(GiltButton) if b.isVisibleTo(page)}
+    return {c.words: c for c in page.findChildren(NewCard) if c.isVisibleTo(page)}
+
+
+def _buttons(window: MainWindow) -> dict[str, QPushButton]:
+    """The page's section buttons on show, by their words."""
+    page = window.page()
+    assert page is not None
+    return {
+        b.text().strip(): b
+        for b in page.findChildren(QPushButton)
+        if b.objectName() == "edit" and b.isVisibleTo(page)
+    }
+
+
+def _saga_chapter(window: MainWindow, chapter: str) -> None:
+    page = window.page()
+    assert page is not None
+    page.codex.open_chapter(chapter)  # type: ignore[attr-defined]
 
 
 def _window(saga) -> MainWindow:
@@ -74,16 +91,19 @@ def _window(saga) -> MainWindow:
     return window
 
 
-def test_the_saga_page_sets_out_its_actions_as_buttons(app):
+def test_the_saga_page_sets_out_its_actions_in_its_chapters(app):
     window = _window(_sample_saga_with_covenant())
-    assert list(_gilt(window)) == [
-        "Edit Saga",
-        "Import",
-        "Set Date",
-        "New Covenant",
-        "New Character",
-        "New Laboratory",
+    assert window.page().chapters() == [  # type: ignore[union-attr]
+        "The World",
+        "Seasons",
+        "Rules and Content",
+        "Saga Management",
     ]
+    assert list(_new(window)) == ["New Covenant", "New Character", "New Laboratory"]
+    _saga_chapter(window, "Seasons")
+    assert "Set Date" in _buttons(window)
+    _saga_chapter(window, "Saga Management")
+    assert {"Edit Saga", "Import"} <= set(_buttons(window))
     # Nothing is left for New and More; Bind Familiar is on a covenant
     # or a magus.
     assert _menus(window) == {}
@@ -92,13 +112,13 @@ def test_the_saga_page_sets_out_its_actions_as_buttons(app):
 def test_new_makes_a_record_and_opens_its_creation_worksheet(app):
     window = _window(_sample_saga_with_covenant())
     asked = answering(window, None)
-    _gilt(window)["New Covenant"].click()
+    _new(window)["New Covenant"].on_click()
     assert asked[0].windowTitle() == "Create a New Covenant"
     assert [c.name for c in storage.load_saga("test_saga").covenants] == [
         "Test Covenant"
     ]
     answering(window, {"name": "Fengheld"})
-    _gilt(window)["New Covenant"].click()
+    _new(window)["New Covenant"].on_click()
     # A new record is In Creation: it opens on its worksheet, below its page.
     assert window.crumb_names() == [
         "Sagas",
@@ -119,14 +139,14 @@ def test_a_covenants_people_and_laboratories_open_with_new(app):
     page = window.page()
     assert isinstance(page, CovenantPage)
     page.codex.open_chapter("People")
-    assert list(_gilt(window)) == ["New Character"]
+    assert list(_new(window)) == ["New Magus", "New Companion", "New Grog"]
     page.codex.open_chapter("Laboratories")
-    assert list(_gilt(window)) == ["New Laboratory"]
+    assert list(_new(window)) == ["New Laboratory"]
     # Nothing is left for New: a familiar is bound on its magus or in
     # their laboratory.
     assert "New" not in _menus(window)
     answering(window, {"name": "Aelfric"})
-    _gilt(window)["New Laboratory"].click()
+    _new(window)["New Laboratory"].on_click()
     saga = window.saga
     assert saga is not None
     lab = next(lab for lab in saga.laboratories if lab.name == "Aelfric")
@@ -140,11 +160,11 @@ def test_new_character_on_a_covenant_belongs_to_it(app):
     assert isinstance(page, CovenantPage)
     page.codex.open_chapter("People")
     answering(window, {"name": "Osric"})
-    _gilt(window)["New Character"].click()
+    _new(window)["New Companion"].on_click()
     saga = window.saga
     assert saga is not None
     made = next(c for c in saga.characters if c.name == "Osric")
-    assert made.covenant_id == "cov1"
+    assert (made.covenant_id, made.type) == ("cov1", "companion")
     assert window.crumb_names()[-2:] == ["Osric", "Creation Worksheet"]
 
 
@@ -158,8 +178,9 @@ def test_no_new_on_a_companion(app):
 
 def test_the_saga_page_sets_its_date(app):
     window = _window(_sample_saga_with_covenant())
+    _saga_chapter(window, "Seasons")
     answering(window, {"season": "Autumn", "year": "1225"})
-    _gilt(window)["Set Date"].click()
+    _buttons(window)["Set Date"].click()
     assert [words for _title, words in window.told] == ["Date set to Autumn 1225."]
     saved = storage.load_saga("test_saga")
     assert (saved.current_season, saved.current_year) == ("Autumn", 1225)
@@ -189,8 +210,9 @@ def test_more_import_reads_a_file_chosen_in_the_open_window(app, tmp_path):
         encoding="utf-8",
     )
     before = len(storage.load_saga("test_saga").books)
+    _saga_chapter(window, "Saga Management")
     asked = answering(window, "Books", str(csv), True, "Skip")
-    _gilt(window)["Import"].click()
+    _buttons(window)["Import"].click()
     assert asked[1].windowTitle() == "Import books (as unassigned books)"
     assert "Import 2 books from books.csv" in asked[2].question
     assert asked[3].windowTitle().startswith("A book named On the Theory of Magic")
@@ -204,25 +226,26 @@ def test_more_import_reads_a_file_chosen_in_the_open_window(app, tmp_path):
 def test_a_magus_binds_a_familiar_where_it_would_be_shown(app):
     window = _window(_sample_saga_with_covenant())
     window.show_character("char1")
-    assert list(_gilt(window)) == ["Bind Familiar"]
+    assert list(_new(window)) == ["Bind Familiar"]
     answering(window, {"name": "Ashwing"})
-    _gilt(window)["Bind Familiar"].click()
+    _new(window)["Bind Familiar"].on_click()
     saga = window.saga
     assert saga is not None
     assert [f.name for f in saga.familiars] == ["Ashwing"]
     assert window.crumb_names()[-1] == "Ashwing"
     window.show_character("char1")
-    assert _gilt(window) == {}
+    assert _new(window) == {}
 
 
-def test_the_laboratorys_seasons_bind_its_owners_familiar(app):
+def test_the_laboratorys_planning_binds_its_owners_familiar(app):
     window = _window(_sample_saga_with_covenant())
     window.open_laboratory("lab1")
     page = window.page()
     page.codex.open_chapter("Seasons")
-    assert list(_gilt(window)) == ["Bind Familiar"]
+    planning = section_buttons(page, "Planning")
+    assert "Bind Familiar" in planning
     asked = answering(window, {"name": "Ashwing"})
-    _gilt(window)["Bind Familiar"].click()
+    planning["Bind Familiar"].click()
     assert asked[0].windowTitle() == "Bind a New Familiar"
     saga = window.saga
     assert saga is not None

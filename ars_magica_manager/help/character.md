@@ -75,7 +75,7 @@ button, or Lab Texts Read in More (`m`), sets an author, the level the magus
 reads them to (0 forgets the author) and whether the magus decoded them or
 was taught. On the desktop it is the **Texts Read** button beside the
 section, and beside the Lab Texts of the magus's laboratory. While a magus
-has no familiar, the desktop shows a **Bind Familiar** button where the
+has no familiar, the desktop shows a blank **Bind Familiar** card where the
 familiar would be.
 
 ### Biographical Detail

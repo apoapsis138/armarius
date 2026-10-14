@@ -46,6 +46,19 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.59.0 — 2026-10-14
+
+- On the desktop, the saga's page is in chapters. The World shows its
+  covenants, unassigned characters and unassigned laboratories, each list
+  ending in a blank card that makes a new one. Seasons sets the date, Rules
+  and Content opens Saga Content, and Saga Management holds Edit Saga and
+  Import. The row of buttons under the saga's name is gone.
+- A covenant's People chapter shows every group, each ending in a blank
+  New Magus, New Companion or New Grog card, and its Laboratories end in a
+  New Laboratory card shaped like the labs beside it.
+- A magus with no familiar has a blank Bind Familiar card where the
+  familiar would be; in the laboratory it is a button beside Planning.
+
 ## 2.58.0 — 2026-10-14
 
 - On the desktop, the actions that were in More now sit on what they act
