@@ -551,6 +551,17 @@ def faerie_lore() -> QPainterPath:
     return union(cap.subtracted(spots), stem)
 
 
+def forest_lore() -> QPainterPath:
+    """A fir tree of three tiers on its trunk, with a spirit's eye in it."""
+    tiers = union(
+        poly((50, 6), (70, 34), (30, 34)),
+        poly((50, 22), (76, 56), (24, 56)),
+        poly((50, 40), (84, 78), (16, 78)),
+    )
+    eye = circle(50, 58, 5)
+    return union(tiers.subtracted(eye), rect(44, 76, 12, 16), circle(50, 58, 2))
+
+
 def finesse() -> QPainterPath:
     """A threaded needle."""
     needle = union(poly((50, 90), (53, 30), (47, 30)), rrect(46, 10, 8, 22, 4))
@@ -1119,6 +1130,7 @@ MARKS: dict[str, Charge] = {
     "Enigmatic Wisdom": enigmatic_wisdom,
     "Faerie Lore": faerie_lore,
     "Finesse": finesse,
+    "Forest Lore": forest_lore,
     "Infernal Lore": infernal_lore,
     "Magic Lore": magic_lore,
     "Magic Theory": magic_theory,

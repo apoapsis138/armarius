@@ -20,6 +20,8 @@ what the old ones recorded, hidden, and switching back shows it again.
 - **Rhine: Gilds** (Guardians of the Forests): the Rhine's covenants band
   together in gilds, each with its dues; the sheet gains a Gilds list and
   the roster a Gild column. Notice is wanted a year before the meeting.
+  The book's Tribunal of 1220 ships as a content pack: see [How to start a
+  saga from a Tribunal book](help:guide-book-packs).
 - **Theban: Tokens** (The Sundered Eagle): its magi vote with
   tokens and ostracise with shards, and it elects its archai at each
   meeting; the sheet gains a Tokens and Archai tab, and Your votes counts

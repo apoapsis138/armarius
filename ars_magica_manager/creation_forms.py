@@ -63,7 +63,9 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
             placeholder="A one-line premise for the saga",
         )
     )
-    found = packs.available(storage.EXPORTS_DIR) if saga is None else []
+    found = (
+        packs.available(packs.SHIPPED_DIR, storage.EXPORTS_DIR) if saga is None else []
+    )
     if found:
         fields.append(
             DialogField(

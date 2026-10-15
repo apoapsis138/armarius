@@ -53,7 +53,7 @@
       ○ Virtues & Flaws              yes          1100        0
       ○ Laboratory Virtues & Flaws   yes           128        0
       ○ Boons & Hooks                yes           216        0
-      ○ Abilities                    yes            91        0
+      ○ Abilities                    yes            92        0
       ○ Spells                       yes          1313        0
       ○ Shapes & Materials           yes           242        0
 

@@ -511,9 +511,12 @@ those records skipped), what else is skipped (a calendar entry already in
 the calendar, or one for a covenant that isn't here), and the links kept
 and dropped. Importing the same pack twice adds nothing the second time.
 
-**Starting a saga from a pack:** when the exports folder holds a pack, the
-Create a New Saga form offers **Start from a pack**; the new saga begins
-with everything in it.
+**Starting a saga from a pack:** the Create a New Saga form offers **Start
+from a pack**, listing the packs shipped with the app (one per Tribunal
+sourcebook; see [How to start a saga from a Tribunal book](help:guide-book-packs))
+and then any pack in the exports folder; the new saga begins with
+everything in it. A pack built from a sourcebook puts that book in play
+when it is imported.
 
 ### Printing a record
 <!-- help: print-record; gui -->

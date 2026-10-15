@@ -373,6 +373,7 @@ GUIDES = [
     "guide-initiation",
     "guide-import-export",
     "guide-hosting",
+    "guide-book-packs",
 ]
 
 

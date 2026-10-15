@@ -42,6 +42,18 @@ class Grid:
             stretch=self.stretch,
         )
 
+    def row_text(self, key: int) -> str:
+        """The row chosen by `key` as markup for a details panel: each
+        column's title and its words in full; "" for no such row."""
+        if key not in self.keys:
+            return ""
+        row = self.rows[self.keys.index(key)]
+        return "\n".join(
+            f"[$label]{escape(title)}:[/] {escape(cell)}"
+            for title, cell in zip(self.columns, row)
+            if cell.strip()
+        )
+
     def lines(self) -> list[tuple[int | None, str]]:
         """The grid as a list's rows (key, markup): a heading of the
         column titles, then each row padded into columns."""

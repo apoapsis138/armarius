@@ -225,12 +225,18 @@ def _import_record(saga: Saga, kind: str, path: Path) -> Command:
     return _confirm_import(saga, plan)
 
 
-def _confirm_import(saga: Saga, plan: transfer.ImportPlan) -> Confirm:
+def _confirm_import(
+    saga: Saga, plan: transfer.ImportPlan, data: dict[str, Any] | None = None
+) -> Confirm:
+    """`data`, a pack's, for what importing it does besides its records
+    (packs.after_import)."""
+
     def apply() -> list[str]:
         transfer.apply(saga, plan)
-        return notes(
+        found = notes(
             escape(f"Imported {plan.name} ({transfer.KIND_LABELS[plan.kind].lower()}).")
         )
+        return found + (packs.after_import(saga, data) if data is not None else [])
 
     return Confirm(
         escape(transfer.preview(plan)), apply, yes_label="Import", title=TITLE
@@ -243,14 +249,14 @@ def _import_pack(saga: Saga, data: dict[str, Any]) -> Command:
     A pack with nothing to leave out goes straight to the preview."""
     fields = packs.import_fields(data)
     if not fields:
-        return _confirm_import(saga, transfer.plan_import(saga, data))
+        return _confirm_import(saga, transfer.plan_import(saga, data), data)
 
     def apply(values: dict[str, Any]) -> Command:
         try:
             plan = transfer.plan_import(saga, packs.narrow(data, values))
         except (ValueError, KeyError, TypeError) as problem:
             return Refuse(TITLE, f"Couldn't import the pack: {escape(str(problem))}")
-        return _confirm_import(saga, plan)
+        return _confirm_import(saga, plan, data)
 
     def live(values: dict[str, Any]) -> str:
         return f"Brings {escape(packs.summary(packs.narrow(data, values)))}."

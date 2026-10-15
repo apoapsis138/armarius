@@ -499,3 +499,33 @@ def test_the_desktop_shows_a_tribunal_and_lists_them_on_the_saga():
     saga_page = SagaPage(saga, PALETTES[0], lambda _id: None)
     titles = [label.text() for label in saga_page.findChildren(QLabel)]
     assert any("Tribunals (3)" in title for title in titles)
+
+
+def test_choosing_a_ruling_a_gild_or_a_diary_entry_shows_it_in_the_inspector():
+    pytest.importorskip("PySide6")
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    from PySide6.QtWidgets import QApplication, QTableView
+
+    from ars_magica_manager.gui.markup_html import plain
+    from ars_magica_manager.gui.themes import PALETTES
+    from ars_magica_manager.gui.tribunal import TribunalPage
+
+    QApplication.instance() or QApplication([])
+    saga = everything_saga()
+    tribunal = next(t for t in saga.tribunals if t.rulings and t.diary)
+    page = TribunalPage(saga, tribunal, PALETTES[0])
+    codex = page.codex
+
+    def choose(chapter: str, row: int = 0) -> str:
+        index = codex.chapters().index(chapter)
+        view = codex.pages.widget(index).findChildren(QTableView)[0]
+        view.setCurrentIndex(view.model().index(row, 0))
+        return plain(codex.inspector.body.text())
+
+    ruling = tribunal.rulings[0]
+    assert ruling.says.strip().splitlines()[-1] in choose("Peripheral Code")
+    assert codex.inspector.title.text() == ruling.title
+    choose("Diary")
+    assert codex.inspector.title.text() in {e.title for e in tribunal.diary}
+    if "Gilds" in codex.chapters():
+        assert "Members" in choose("Gilds")

@@ -20,6 +20,7 @@ from .models import (
     Case,
     Character,
     Covenant,
+    Ruling,
     Saga,
     TreasuryEntry,
     Tribunal,
@@ -481,6 +482,23 @@ def code_grid(tribunal: Tribunal) -> Grid:
     )
 
 
+def ruling_text(tribunal: Tribunal, ruling: Ruling | None) -> str:
+    """One ruling of the Peripheral Code, as markup for a details panel:
+    the year it was made, all it says, and the case it came from."""
+    if ruling is None:
+        return "[$label]Choose a ruling to read it.[/]"
+    lines = []
+    if ruling.year is not None:
+        lines.append(f"[$label]Made in:[/] {ruling.year}")
+    case = _case_title(tribunal, ruling.case_id)
+    if case:
+        lines.append(f"[$label]Case:[/] {escape(case)}")
+    if lines:
+        lines.append("")
+    lines.append(escape(ruling.says.strip()) or "[$label]Nothing written yet.[/]")
+    return "\n".join(lines)
+
+
 # -- the treasury --
 
 
@@ -606,6 +624,16 @@ def diary_order(tribunal: Tribunal) -> list[int]:
 
 def diary_title(tribunal: Tribunal) -> str:
     return f"Diary ({len(tribunal.diary)})"
+
+
+def diary_text(entry: TribunalDiaryEntry | None) -> str:
+    """One Diary entry, as markup for a details panel: its numbers and
+    all its details."""
+    if entry is None:
+        return "[$label]Choose an entry to read it.[/]"
+    lines = [f"[$label]Numbers:[/] {escape(entry.margin)}", ""] if entry.margin else []
+    lines.append(escape(entry.details.strip()) or "[$label]No details written.[/]")
+    return "\n".join(lines)
 
 
 def diary_grid(tribunal: Tribunal) -> Grid:

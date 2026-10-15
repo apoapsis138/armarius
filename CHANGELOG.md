@@ -46,6 +46,31 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.86.0 — 2026-10-15
+
+The first book pack: the Rhine Tribunal.
+
+- **The Rhine pack.** Start from a pack (and Import, A Content Pack) now
+  lists the packs that ship with the app first, and the first is
+  Guardians of the Forests: the Rhine Tribunal as of spring 1220. It
+  brings the Tribunal with its six gilds, Peripheral Code and open cases;
+  ten covenants with 74 magi and others and their libraries; the forests,
+  regions and regiones; the lords, towns, churches and factions of the
+  mundane world with their arms; the Curse of the Rhine Gorge as a threat
+  with its stages; and the Tribunal's history in its Diary. Secrets sit
+  under a Secrets heading. Importing a pack puts its book in play.
+  Help: a new guide, How to start a saga from a Tribunal book.
+- **Proxy sigils.** The pack's covenants carry the Rhine's proxies to
+  the meeting of 1221: one for each master, two for each archmage, and
+  the Tremere sigils their exarchs hold.
+- **Full characters from the book.** Philippus Niger, Imanitos Mendax,
+  Falke and Ioannes Acer, and six people of the Rhine Gorge story, come
+  with their full stats.
+- **Forest Lore.** A new Arcane Ability from Guardians of the Forests.
+- **Fixed: the Tribunal's inspector.** On the desktop, choosing a ruling
+  of the Peripheral Code, a Diary entry or a gild now shows it in the
+  inspector, instead of leaving the last thing chosen there.
+
 ## 2.85.0 — 2026-10-15
 
 Groundwork for the book packs, one content pack per Tribunal book.

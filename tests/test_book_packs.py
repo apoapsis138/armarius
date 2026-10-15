@@ -1,0 +1,199 @@
+"""The content packs built from the Tribunal sourcebooks: each builds,
+is shipped up to date, imports clean into a new saga, and puts its book
+in play."""
+
+from __future__ import annotations
+
+import json
+
+from ars_magica_manager import book_packs, creation_forms, packs, sourcebooks, transfer
+from ars_magica_manager.book_packs import builder
+from ars_magica_manager.models import Saga
+from ars_magica_manager.tribunal_packages import rhine as rhine_package
+
+RHINE = book_packs.PACKS["rhine"]
+
+
+def _texts(value) -> list[str]:
+    """Every string in a JSON-ready structure."""
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, dict):
+        return [t for v in value.values() for t in _texts(v)]
+    if isinstance(value, list):
+        return [t for v in value for t in _texts(v)]
+    return []
+
+
+def test_the_rhine_pack_holds_the_tribunal_of_1220():
+    saga = RHINE.build()
+    (tribunal,) = saga.tribunals
+    assert tribunal.package == rhine_package.KEY
+    assert (tribunal.next_year, tribunal.meets_every) == (1221, 7)
+    names = {c.name for c in saga.covenants}
+    assert names >= {
+        "Durenmar",
+        "Crintera",
+        "Irencillia",
+        "Fengheld",
+        "Dankmar",
+        "Roznov",
+        "Oculus Septentrionalis",
+        "Triamore",
+        "Waddenzee",
+        "Heorot",
+    }
+    assert all(c.tribunal_id == tribunal.id and not c.played for c in saga.covenants)
+    founded = {c.name: c.year_founded for c in saga.covenants}
+    assert founded["Durenmar"] == 767 and founded["Heorot"] == 1215
+    gilds = {g["name"].split(" (")[0]: g for g in rhine_package.gilds(tribunal)}
+    assert set(gilds) == {
+        "Oak Gild",
+        "Hawthorn Gild",
+        "Ash Gild",
+        "Elder Gild",
+        "Linden Gild",
+        "Apple Gild",
+    }
+    durenmar = next(c for c in saga.covenants if c.name == "Durenmar")
+    assert durenmar.id in gilds["Oak Gild"]["members"]
+    praeco = saga.character(tribunal.praeco_id or "")
+    quaesitor = saga.character(tribunal.quaesitor_id or "")
+    assert praeco is not None and praeco.name == "Murion"
+    assert quaesitor is not None and quaesitor.name == "Caecilius"
+    assert praeco.covenant_id == durenmar.id
+    assert praeco.hermetic.house == "house_bonisagus"
+    assert len([c for c in saga.characters if c.type == "magus"]) >= 60
+    assert len(tribunal.rulings) >= 10 and len(tribunal.cases) >= 8
+    assert all(case.status == "open" for case in tribunal.cases)
+    # Hermetic history only, in order, and up to the pack's date.
+    years = [e.year for e in tribunal.diary]
+    assert years == sorted(years) and years[-1] <= 1220 and len(years) >= 50
+    # The Great Library comes as Book records owned by Durenmar.
+    owned = [b for b in saga.books if b.owner_id == durenmar.id]
+    assert len(owned) >= 10
+    assert all(b.owner_kind == "covenant" for b in saga.books)
+
+
+def test_the_rhine_pack_places_its_covenants_in_the_forests():
+    saga = RHINE.build()
+    place_ids = {n.id for n in saga.neighbours if n.kind == "place"}
+    kinds = {n.kind for n in saga.neighbours}
+    assert kinds >= {"place", "town", "lord", "church", "faction", "threat"}
+    for covenant in saga.covenants:
+        if covenant.name == "Oculus Septentrionalis":
+            continue
+        assert covenant.place_id in place_ids, covenant.name
+    for neighbour in saga.neighbours:
+        assert neighbour.place_id is None or neighbour.place_id in place_ids
+        if neighbour.answers_to is not None:
+            assert any(n.id == neighbour.answers_to for n in saga.neighbours)
+    threats = [n for n in saga.neighbours if n.kind == "threat"]
+    assert any(n.name == "The Curse of the Rhine Gorge" for n in threats)
+    gorge = next(n for n in threats if n.name == "The Curse of the Rhine Gorge")
+    assert len(gorge.details["stages"]) >= 5
+    regios = [n for n in saga.neighbours if n.kind == "place" and n.details["levels"]]
+    assert len(regios) >= 5
+    for place in regios:
+        for level in place.details["levels"]:
+            assert level["realm"] in ("Magic", "Faerie", "Divine", "Infernal")
+
+
+def test_the_pack_text_keeps_its_secrets_under_the_heading():
+    data = book_packs.data(RHINE)
+    texts = _texts(data["saga"])
+    assert not [t for t in texts if "SECRET" in t]
+    hidden = [t for t in texts if builder.SECRETS + "\n" in t]
+    assert len(hidden) >= 10
+    assert data["book"] == "GotF" and "Creative Commons" in data["source"]
+
+
+def test_the_shipped_rhine_pack_is_up_to_date():
+    """data/packs/rhine.amm.json is what the module builds (rebuild it
+    with tools/build_packs.py after changing the module)."""
+    shipped = json.loads(book_packs.path_of(RHINE).read_text(encoding="utf-8"))
+    built = book_packs.data(RHINE)
+    assert shipped["name"] == built["name"] and shipped["book"] == built["book"]
+    assert packs.summary(shipped) == packs.summary(built)
+    for kind in ("covenants", "characters", "neighbours", "books", "tribunals"):
+        assert {r["name"] for r in shipped["saga"][kind]} == {
+            r["name"] for r in built["saga"][kind]
+        }, kind
+
+
+def test_the_rhine_pack_imports_clean_into_a_new_saga():
+    data = book_packs.data(RHINE)
+    target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
+    plan = transfer.plan_import(target, data)
+    transfer.apply(target, plan)
+    assert packs.after_import(target, data) == [
+        "Guardians of the Forests: The Rhine Tribunal is now in play."
+    ]
+    assert target.books_in_play is not None and "GotF" in target.books_in_play
+    assert len(target.covenants) == len(data["saga"]["covenants"])
+    assert len(target.neighbours) == len(data["saga"]["neighbours"])
+    ids = {n.id for n in target.neighbours}
+    for record in [*target.covenants, *target.neighbours]:
+        assert record.place_id is None or record.place_id in ids
+    (tribunal,) = target.tribunals
+    assert tribunal.praeco_id in {c.id for c in target.characters}
+    # Importing it again adds nothing.
+    again = transfer.plan_import(target, data)
+    assert not again.covenants and not again.characters and not again.neighbours
+
+
+def test_a_saga_with_every_book_in_play_stays_so():
+    saga = Saga(id="s", name="S")
+    assert not sourcebooks.put_in_play(saga, "GotF") and saga.books_in_play is None
+
+
+def test_new_saga_offers_the_shipped_packs_first():
+    fields = {f.key: f for f in creation_forms.saga_fields(None)}
+    options = fields["pack"].options or []
+    assert options[0] == ("None", "")
+    assert options[1][0].startswith("Guardians of the Forests: the Rhine Tribunal (")
+    assert options[1][1] == str(book_packs.path_of(RHINE))
+
+
+def test_masters_and_archmagi_carry_retired_magi_s_sigils():
+    saga = RHINE.build()
+    (tribunal,) = saga.tribunals
+    held = {c.name: tribunal.proxies.get(c.id, 0) for c in saga.covenants}
+    # Murion, Caecilius and Philippus Niger two each, eight masters one;
+    # Fengheld's exarch also holds Triamore's two Tremere sigils, and
+    # Roznov's Hygwald Veritas's.
+    assert held["Durenmar"] == 12
+    assert held["Fengheld"] == 12
+    assert held["Roznov"] == 4
+    assert held["Waddenzee"] == 0
+
+
+def test_a_magus_s_rank_decides_the_sigils_they_hold():
+    from ars_magica_manager.book_packs.rhine import tribunal
+
+    assert tribunal.sigils_by_rank("Archmage of House Flambeau, ...") == 2
+    assert tribunal.sigils_by_rank("Archmaga of House Merinita") == 2
+    assert tribunal.sigils_by_rank("Master of House Bjornaer") == 1
+    assert tribunal.sigils_by_rank("Journeyman of House Tremere") == 0
+    assert tribunal.sigils_by_rank("Maga of House Bjornaer (rank not given)") == 0
+
+
+def test_the_characters_the_book_prints_stat_blocks_for_are_full():
+    saga = RHINE.build()
+    by_name = {c.name: c for c in saga.characters}
+    philippus = by_name["Philippus Niger"]
+    assert philippus.detail == "Full"
+    assert philippus.characteristics.intelligence == 5
+    assert philippus.arts["perdo"].level > 0 and philippus.spells_known
+    # The Minor printing of a Flaw the catalog has at both tiers.
+    assert "vf_ambitious" in {v.vf_id for v in philippus.virtues_flaws}
+    for name in ("Imanitos Mendax", "Falke", "Ioannes Acer", "Hilda", "Torven"):
+        assert by_name[name].detail == "Full" and by_name[name].abilities
+    assert by_name["Murion"].detail != "Full"
+
+
+def test_a_stat_block_names_only_catalog_virtues():
+    import pytest
+
+    with pytest.raises(KeyError):
+        builder._virtue_flaw("No Such Virtue")

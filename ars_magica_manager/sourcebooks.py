@@ -133,6 +133,17 @@ def normalized(
     return [book for book in every if book in chosen]
 
 
+def put_in_play(saga: Saga, book: str | None) -> bool:
+    """Put `book` (an abbreviation) in play for `saga`, if it is a known
+    supplement the saga has out of play: whether anything changed."""
+    if book not in SUPPLEMENTS or saga.books_in_play is None:
+        return False
+    if book in saga.books_in_play:
+        return False
+    saga.books_in_play = normalized([*saga.books_in_play, book], saga_sources(saga))
+    return True
+
+
 def summary(books_in_play: Iterable[str] | None, sources: Iterable[str] = ()) -> str:
     """A short description of a saga's books, for its detail ("All books",
     "Core book only", "Core book + 3 supplements"), and its own sources

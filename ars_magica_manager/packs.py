@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from . import places, storage, transfer
+from . import DATA_DIR, places, sourcebooks, storage, transfer
 from .commands import Form, Refuse, notes
 from .files import write_atomic
 from .form_spec import DialogField
@@ -472,22 +472,37 @@ def narrow(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
 
 # -- starting a saga from a pack --
 
+#: The packs shipped with the app, built from the Tribunal books
+#: (book_packs).
+SHIPPED_DIR = DATA_DIR / "packs"
 
-def available(folder: Path) -> list[tuple[str, str]]:
-    """The packs in `folder`, as (label, path) choices."""
-    if not folder.is_dir():
-        return []
+
+def available(*folders: Path) -> list[tuple[str, str]]:
+    """The packs in `folders`, as (label, path) choices: the shipped
+    packs first when SHIPPED_DIR is given first."""
     found = []
-    for path in sorted(folder.glob(f"*{transfer.SUFFIX}")):
-        try:
-            data = transfer.read(path)
-        except OSError, ValueError:
+    for folder in folders:
+        if not folder.is_dir():
             continue
-        if data.get("kind") == PACK:
-            found.append(
-                (f"{data.get('name') or path.stem} ({summary(data)})", str(path))
-            )
+        for path in sorted(folder.glob(f"*{transfer.SUFFIX}")):
+            try:
+                data = transfer.read(path)
+            except OSError, ValueError:
+                continue
+            if data.get("kind") == PACK:
+                found.append(
+                    (f"{data.get('name') or path.stem} ({summary(data)})", str(path))
+                )
     return found
+
+
+def after_import(saga: Saga, data: dict[str, Any]) -> list[str]:
+    """What importing a pack does besides its records: a pack built from
+    a sourcebook (its "book") puts that book in play. The notes to show."""
+    book = data.get("book")
+    if isinstance(book, str) and sourcebooks.put_in_play(saga, book):
+        return notes(escape(f"{sourcebooks.title_of(book)} is now in play."))
+    return []
 
 
 def start_from(saga: Saga, path: Path) -> list[str]:
@@ -498,4 +513,6 @@ def start_from(saga: Saga, path: Path) -> list[str]:
         raise ValueError("it is not a content pack")
     plan = transfer.plan_import(saga, data)
     transfer.apply(saga, plan)
-    return notes(escape(f"Started from {plan.name}: {summary(data)}."))
+    return notes(escape(f"Started from {plan.name}: {summary(data)}.")) + after_import(
+        saga, data
+    )

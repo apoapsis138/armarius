@@ -23,7 +23,11 @@ adaptations are also available on their own under CC BY-SA 4.0. They are:
   Virtues & Flaws and Features, Abilities, Houses, covenant Boons & Hooks,
   spells, weapons & armor);
 - rules descriptions written into the code, such as the descriptions of
-  the fifteen Arts in `ars_magica_manager/arts.py`.
+  the fifteen Arts in `ars_magica_manager/arts.py`;
+- the content packs in `data/packs/` and the modules that build them in
+  `ars_magica_manager/book_packs/`: summaries, in the program's own words,
+  of the Tribunal sourcebooks' open content (*Guardians of the Forests:
+  The Rhine Tribunal*, from its [open content on Project: Redcap](https://redcap.org/page/Guardians_of_the_Forest:_The_Rhine_Tribunal_Open_Content)).
 
 ### Attribution
 
@@ -34,7 +38,8 @@ International license 4.0 ("CC-BY-SA 4.0").
 Sources: the *Ars Magica Fifth Edition* and *Ars Magica Definitive Edition*
 core rules, and the sourcebooks *Covenants*, *Art & Academe*, *Houses of
 Hermes: True Lineages*, *Houses of Hermes: Mystery Cults*, *Houses of
-Hermes: Societates* and *The Mysteries: Revised Edition*. Where it is
+Hermes: Societates*, *The Mysteries: Revised Edition* and, for the content
+packs, *Guardians of the Forests: The Rhine Tribunal*. Where it is
 recorded, each catalog entry's `source` field names its book. The spell
 catalog was built from [The Grand
 Grimoire](https://www.redcap.org/page/The_Grand_Grimoire) on Project:

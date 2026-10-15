@@ -128,6 +128,9 @@ class TribunalPage(QWidget):
             chooser.choose(row)
             if on_choose is not None:
                 on_choose(row)
+            elif text := grid.row_text(row):
+                # A list with no inspector of its own shows its row in full.
+                self.codex.inspect(grid.rows[grid.keys.index(row)][0], title, text)
 
         body = (
             table_view(grid.table(), p, choose) if grid.rows else _none(grid.empty, p)
@@ -167,6 +170,28 @@ class TribunalPage(QWidget):
             )
 
         return show
+
+    def _show_ruling(self, row: int) -> None:
+        rulings = self.tribunal.rulings
+        if row >= len(rulings):
+            return
+        ruling = rulings[row]
+        self.codex.inspect(
+            ruling.title,
+            "Peripheral Code",
+            tribunal_sheet.ruling_text(self.tribunal, ruling),
+        )
+
+    def _show_diary_entry(self, row: int) -> None:
+        diary = self.tribunal.diary
+        if row >= len(diary):
+            return
+        entry = diary[row]
+        self.codex.inspect(
+            entry.title,
+            world.when_text(entry.year, entry.season),
+            tribunal_sheet.diary_text(entry),
+        )
 
     def _header(self) -> QWidget:
         p, t = self.p, self.tribunal
@@ -339,7 +364,10 @@ class TribunalPage(QWidget):
             p,
             *customs,
             self._grid(
-                tribunal_sheet.code_title(t), tribunal_sheet.code_grid(t), CODE_SECTION
+                tribunal_sheet.code_title(t),
+                tribunal_sheet.code_grid(t),
+                CODE_SECTION,
+                self._show_ruling,
             ),
         )
 
@@ -387,6 +415,7 @@ class TribunalPage(QWidget):
                 tribunal_sheet.diary_title(t),
                 tribunal_sheet.diary_grid(t),
                 TRIB_DIARY_SECTION,
+                self._show_diary_entry,
                 more=[printing],
             ),
         )

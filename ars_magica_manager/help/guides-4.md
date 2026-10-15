@@ -405,3 +405,44 @@ Players connect with `ssh -p 2222 player@ADDRESS` from Windows Terminal (Windows
 - Everyone's changes reach the others within a few seconds. See [Signing in](help:sign-in).
 
 **See also:** [Players](help:tab-content-players), [Signing in](help:sign-in), [Saga picker](help:saga-picker)
+
+# How to start a saga from a Tribunal book
+<!-- help: guide-book-packs -->
+
+The app ships a content pack for each Tribunal sourcebook it covers, written in its own words from the book's open content: the Tribunal with its customs filled in, its covenants and the magi the book names, the forests, regiones and places of the region, its towns, lords, churches and factions, its Peripheral Code and the quarrels open at the book's date, and its history as Tribunal Diary entries. Use one to begin a saga in a Tribunal already peopled, or to add that Tribunal to a saga you are running.
+
+### The packs
+<!-- help: guide-book-packs-packs -->
+
+- **Guardians of the Forests: the Rhine Tribunal** (spring 1220): the Rhine's ten covenants with the gilds they belong to, about seventy magi, the Black Forest and the great forests with their regiones, the Rhine cities and princes, the Peripheral Code, nine open cases for the Tribunal of 1221, and the Curse of the Rhine Gorge as a threat. Durenmar's Great Library comes as Book records.
+
+More books follow in later versions.
+
+### Starting a saga from a pack
+<!-- help: guide-book-packs-start -->
+
+1. On the saga list, choose **New Saga**.
+2. Fill in the name, storyguide and date as usual. The packs are written as of the book's own year (the Rhine's is 1220), so a saga at another date keeps its own date and the pack's records their years.
+3. In **Start from a pack**, pick the book. The list shows the shipped packs first, then any pack in your exports folder.
+4. Create the saga: it begins with everything in the pack, and the pack's book is put in play (see [The saga](help:saga)), so the book's rules and neighbour kinds show.
+
+### Adding a book to a saga you already have
+<!-- help: guide-book-packs-add -->
+
+1. In the saga, choose Import Data, **A Content Pack**, and pick the pack's file from the app's `data/packs` folder (next to the program).
+2. The form asks what to bring: untick the parts you don't want, such as the mundane world or the history; the Tribunal and its covenants always come (see [Choosing what a pack imports](help:import-pack)).
+3. Preview, then import. A covenant, character, place or neighbour the saga already has one of the same name of is kept as it is, so importing over a saga that already holds part of the Tribunal doubles nothing.
+
+### What a pack puts where
+<!-- help: guide-book-packs-where -->
+
+- The Tribunal: its sheet, with the book's customs (the Rhine's gilds), its officers, its Peripheral Code under Rulings, the open quarrels under Cases, and its Hermetic history in the Diary. The mundane history is in its summary, by era.
+- Covenants: sketch records, not played, each with a summary, what matters (vis, income, tensions) and the magi the book names as sketch characters; the count of magi the book leaves unnamed is on the covenant.
+- Places: the regions and forests as places, with the regiones inside them and their levels and auras; covenants and towns sit in them.
+- The mundane world: lords, towns, churches, schools, factions and threats, with historical arms where they are known.
+- Secrets: what the book tells the storyguide and not the players is at the end of a record's summary or notes under a **Secrets** heading.
+
+The packs follow the Definitive Edition where a book's numbers differ from it; the differences are listed in the project's notes.
+
+**See also:** [Content packs](help:export-pack), [Choosing what a pack imports](help:import-pack), [Tribunal](help:tribunal), [How to import and export](help:guide-import-export)
+
