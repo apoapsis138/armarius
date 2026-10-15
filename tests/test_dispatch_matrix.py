@@ -50,6 +50,7 @@ _SHEET_VIEW_ATTR = {
     "saga_content": "_saga_content_view",
     "sketch_covenant": "_covenant_sheet_view",
     "tribunal": "_tribunal_sheet_view",
+    "theban_tribunal": "_tribunal_sheet_view",
 }
 
 

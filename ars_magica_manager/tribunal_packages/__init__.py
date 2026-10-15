@@ -36,16 +36,23 @@ class RosterColumn:
 
 @dataclass(frozen=True)
 class PackageList:
-    """A list a package adds to the sheet, on its own tab: the tab's
-    title, its tab and section ids, the section's title, its rows and its
-    Add, Edit and Delete."""
+    """A list a package adds to the sheet: its section's id and title, its
+    rows and its Add, Edit and Delete."""
 
-    title: str
-    tab_id: str
     section_id: str
     section_title: Callable[[Saga, Tribunal], str]
     grid: Callable[[Saga, Tribunal], Grid]
     ops: Callable[[Saga, Tribunal], SectionOps]
+
+
+@dataclass(frozen=True)
+class PackageTab:
+    """A tab (a chapter, on the desktop) a package adds to the sheet,
+    holding its lists."""
+
+    title: str
+    tab_id: str
+    lists: tuple[PackageList, ...]
 
 
 @dataclass(frozen=True)
@@ -65,9 +72,19 @@ class TribunalPackage:
     #: That, in words, for the docket ("a season").
     notice_words: str = "a season"
     columns: tuple[RosterColumn, ...] = ()
-    lists: tuple[PackageList, ...] = ()
+    tabs: tuple[PackageTab, ...] = ()
+    #: The troupe's votes, as its customs count them ("2 tokens"); None
+    #: counts a vote for each magus and proxy.
+    your_votes: Callable[[Saga, Tribunal], str] | None = None
+    #: The steps it adds to holding a meeting ("elections"), by name.
+    meeting_steps: tuple[str, ...] = ()
     #: A sentence on what the package adds, for the form and help.
     about: str = ""
+
+    @property
+    def lists(self) -> tuple[PackageList, ...]:
+        """Every list its tabs hold."""
+        return tuple(entry for tab in self.tabs for entry in tab.lists)
 
 
 CORE = TribunalPackage(
@@ -121,4 +138,4 @@ def entries(tribunal: Tribunal, key: str, name: str) -> list[dict[str, Any]]:
 
 
 # The packages register themselves as they are imported.
-from . import rhine  # noqa: F401
+from . import rhine, theban  # noqa: F401

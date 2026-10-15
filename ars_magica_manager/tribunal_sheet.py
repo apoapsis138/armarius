@@ -67,6 +67,15 @@ def your_votes(saga: Saga, tribunal: Tribunal) -> int:
     )
 
 
+def your_votes_text(saga: Saga, tribunal: Tribunal) -> str:
+    """ "3 of 23": the troupe's votes of every vote in the hall, or as
+    the Tribunal's customs count them."""
+    counted = tribunal_packages.of(tribunal).your_votes
+    if counted is not None:
+        return counted(saga, tribunal)
+    return f"{your_votes(saga, tribunal)} of {_all_votes(saga, tribunal)}"
+
+
 def _all_votes(saga: Saga, tribunal: Tribunal) -> int:
     """Every vote in the hall: its magi in all, or those recorded."""
     if tribunal.magi_total is not None:
@@ -131,10 +140,7 @@ def facts(saga: Saga, tribunal: Tribunal) -> list[Fact]:
         Fact("Presiding Quaesitor", _officer(saga, tribunal.quaesitor_id)),
         Fact("Covenants", _of_total(len(members), tribunal.covenants_total)),
         Fact("Magi", _of_total(magi, tribunal.magi_total)),
-        Fact(
-            "Your votes",
-            f"{your_votes(saga, tribunal)} of {_all_votes(saga, tribunal)}",
-        ),
+        Fact("Your votes", your_votes_text(saga, tribunal)),
     ]
 
 

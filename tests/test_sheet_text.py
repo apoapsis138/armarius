@@ -46,6 +46,7 @@ SHEETS = {
     "familiar",
     "sketch_covenant",
     "tribunal",
+    "theban_tribunal",
 }
 
 

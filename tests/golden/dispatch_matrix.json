@@ -1146,5 +1146,107 @@
         "slash": "(disabled)"
       }
     }
+  },
+  "theban_tribunal": {
+    "PinnedCollapsible#section-trib-info": {
+      "active": "section-trib-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Tribunal",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-roster": {
+      "active": "section-trib-roster",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-magi": {
+      "active": "section-trib-magi",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-cases": {
+      "active": "section-trib-cases",
+      "keys": {
+        "a": "FieldsDialog: Add a Case",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(nothing)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-past": {
+      "active": "section-trib-past",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-code": {
+      "active": "section-trib-code",
+      "keys": {
+        "a": "FieldsDialog: Add a Ruling",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-treasury": {
+      "active": "section-trib-treasury",
+      "keys": {
+        "a": "ChooseScreen: Add to the Treasury",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-tokens": {
+      "active": "section-trib-tokens",
+      "keys": {
+        "a": "FieldsDialog: Add a Magus's Tokens",
+        "e": "FieldsDialog: Edit Tokens and Shards",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-archai": {
+      "active": "section-trib-archai",
+      "keys": {
+        "a": "FieldsDialog: Add an Office",
+        "e": "FieldsDialog: Edit an Office",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-diary": {
+      "active": "section-trib-diary",
+      "keys": {
+        "a": "FieldsDialog: Add a Diary Entry",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    }
   }
 }

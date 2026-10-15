@@ -22,6 +22,8 @@ from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Choose, Confirm, Form, Refuse
 from ars_magica_manager.models import Covenant, Saga, Tribunal, TribunalDiaryEntry
 from ars_magica_manager.tribunal_packages.rhine import gilds as rhine_gilds
+from ars_magica_manager.tribunal_packages.theban import magi as theban_magi
+from ars_magica_manager.tribunal_packages.theban import standing as tokens_standing
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import ConfirmScreen, WorkspaceScreen
 
@@ -99,7 +101,7 @@ def test_deleting_a_tribunal_names_and_frees_its_covenants():
         "Keep, Fengheld will belong to no Tribunal; nothing else about them changes."
     ]
     trib.delete(saga, rhine)
-    assert saga.tribunals == []
+    assert [t.id for t in saga.tribunals] == ["thebes"]
     assert {c.tribunal_id for c in saga.covenants} == {None}
 
 
@@ -231,6 +233,23 @@ def test_switching_customs_hides_the_old_ones_and_keeps_them():
     assert tribunal_sheet.roster_grid(saga, again).rows[0][5] == "Hermetic"
 
 
+def test_a_theban_tribunal_counts_tokens_and_marks_the_ostracised():
+    saga = everything_saga()
+    thebes = saga.tribunal("thebes")
+    assert thebes is not None
+    facts = {f.label: f.value for f in tribunal_sheet.facts(saga, thebes)}
+    assert facts["Customs"] == "Theban: Tokens"
+    assert facts["Your votes"] == "2 tokens of 2"  # Leandro's, of Keep
+    package = tribunal_packages.of(thebes)
+    assert package.meeting_steps == ("elections",)
+    tokens = package.tabs[0].lists[0].grid(saga, thebes)
+    assert [row[5] for row in tokens.rows] == ["Archon of Rites", "Ostracised to 1225"]
+    archai = package.tabs[0].lists[1].grid(saga, thebes)
+    assert [row[1] for row in archai.rows] == ["Leandro", "vacant"]
+    saga.current_year = 1226
+    assert tokens_standing(saga, thebes, theban_magi(thebes)[1]) == ""
+
+
 def _export(saga: Saga) -> dict:
     return transfer.export_data(saga, saga.covenants[0])
 
@@ -285,12 +304,13 @@ async def test_the_region_holds_each_tribunal_and_the_covenants_not_played():
         region = tree.root.children[1]
         assert [n.data for n in region.children] == [
             (NodeKind.TRIBUNAL, "rhine"),
+            (NodeKind.TRIBUNAL, "thebes"),
             (NodeKind.COVENANT, "lone"),
         ]
         assert [n.data for n in region.children[0].children] == [
             (NodeKind.COVENANT, "cov_sketch")
         ]
-        assert region.children[1].allow_expand is False  # a line with nothing
+        assert region.children[2].allow_expand is False  # a line with nothing
 
 
 async def test_new_tribunal_opens_it_and_d_deletes_it():
@@ -316,7 +336,11 @@ async def test_new_tribunal_opens_it_and_d_deletes_it():
         assert await wait_until(
             pilot,
             lambda: (
-                [t.name for t in storage.load_saga("test_saga").tribunals] == ["Rhine"]
+                [t.name for t in storage.load_saga("test_saga").tribunals]
+                == [
+                    "Rhine",
+                    "Theban",
+                ]
             ),
         )
 
@@ -417,4 +441,4 @@ def test_the_desktop_shows_a_tribunal_and_lists_them_on_the_saga():
     ]
     saga_page = SagaPage(saga, PALETTES[0], lambda _id: None)
     titles = [label.text() for label in saga_page.findChildren(QLabel)]
-    assert any("Tribunals (1)" in title for title in titles)
+    assert any("Tribunals (2)" in title for title in titles)

@@ -46,6 +46,14 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.69.0 — 2026-10-15
+
+- The Theban Tribunal's customs (The Sundered Eagle): a Tokens and Archai
+  tab with each magus's tokens, shards and liturgies served and their
+  standing (an office, or ostracised and until when), and the archai who
+  hold its offices, with their terms and duties. Its Your votes counts the
+  troupe's tokens. Holding a Theban meeting will add its elections.
+
 ## 2.68.0 — 2026-10-15
 
 - A Tribunal follows the core rules or one region's customs, chosen as

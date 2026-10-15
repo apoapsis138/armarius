@@ -51,6 +51,7 @@ SHEETS = {
     "familiar": "_familiar_sheet_view",
     "saga_content": "_saga_content_view",
     "tribunal": "_tribunal_sheet_view",
+    "theban_tribunal": "_tribunal_sheet_view",
 }
 
 
@@ -205,9 +206,13 @@ async def test_every_tab_and_section_has_help():
         tree = workspace.query_one("#nav-tree", Tree)
         for kind, attr in SHEETS.items():
             node = _node(tree, NODES[kind])
+            before = getattr(workspace, attr)
             tree.select_node(node)
             assert await wait_until(
-                pilot, lambda attr=attr: getattr(workspace, attr) is not None
+                pilot,
+                lambda attr=attr, before=before: (
+                    getattr(workspace, attr) not in (None, before)
+                ),
             )
             view = getattr(workspace, attr)
             await build_all_tabs(pilot, view)

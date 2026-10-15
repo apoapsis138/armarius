@@ -17,7 +17,14 @@ from ..grids import Grid
 from ..markup import escape
 from ..models import Covenant, Saga, Tribunal
 from ..sections import GILDS_SECTION
-from . import PackageList, RosterColumn, TribunalPackage, entries, register
+from . import (
+    PackageList,
+    PackageTab,
+    RosterColumn,
+    TribunalPackage,
+    entries,
+    register,
+)
 
 KEY = "rhine"
 
@@ -151,14 +158,11 @@ RHINE = TribunalPackage(
             20,
         ),
     ),
-    lists=(
-        PackageList(
+    tabs=(
+        PackageTab(
             "Gilds",
             "tab-trib-gilds",
-            GILDS_SECTION,
-            gilds_title,
-            gilds_grid,
-            gild_ops,
+            (PackageList(GILDS_SECTION, gilds_title, gilds_grid, gild_ops),),
         ),
     ),
     about="Its covenants band together in gilds, with dues; notice of a case "

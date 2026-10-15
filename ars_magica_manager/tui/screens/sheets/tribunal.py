@@ -75,7 +75,7 @@ class TribunalSheetView(SheetView):
             yield self._tab("Docket", "tab-trib-docket", self._docket_tab)
             yield self._tab("Peripheral Code", "tab-trib-code", self._code_tab)
             yield self._tab("Treasury", "tab-trib-treasury", self._treasury_tab)
-            for extra in self.package.lists:
+            for extra in self.package.tabs:
                 yield self._tab(extra.title, extra.tab_id, self._package_tab(extra))
             yield self._tab("Diary", "tab-trib-diary", self._diary_tab)
 
@@ -85,17 +85,20 @@ class TribunalSheetView(SheetView):
         return tribunal_packages.of(self.tribunal) is not self.package
 
     def _package_tab(
-        self, extra: tribunal_packages.PackageList
+        self, extra: tribunal_packages.PackageTab
     ) -> Callable[[], ComposeResult]:
+        """A tab the Tribunal's customs add, with each of their lists."""
+
         def build() -> ComposeResult:
             saga, t = self.saga, self.tribunal
-            yield from self._grid_section(
-                extra.section_id,
-                (ROSTER_SECTION,),
-                lambda: extra.section_title(saga, t),
-                lambda: extra.grid(saga, t).lines(),
-                f"{extra.section_id.removeprefix('section-')}-list",
-            )
+            for entry in extra.lists:
+                yield from self._grid_section(
+                    entry.section_id,
+                    (ROSTER_SECTION, *(e.section_id for e in extra.lists)),
+                    lambda entry=entry: entry.section_title(saga, t),
+                    lambda entry=entry: entry.grid(saga, t).lines(),
+                    f"{entry.section_id.removeprefix('section-')}-list",
+                )
 
         return build
 

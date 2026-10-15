@@ -148,6 +148,7 @@ NODES: dict[str, tuple[str, ...]] = {
     "familiar": ("familiar", "fam1"),
     "sketch_covenant": ("covenant", "cov_sketch"),
     "tribunal": ("tribunal", "rhine"),
+    "theban_tribunal": ("tribunal", "thebes"),
     "book_group": ("book_group",),
     "saga_content": ("saga_content",),
 }
@@ -393,7 +394,38 @@ def everything_saga() -> Saga:
                         1221, "Summer", "The Tribunal of 1221", "Gild dues set."
                     )
                 ],
-            )
+            ),
+            Tribunal(
+                id="thebes",
+                name="Theban",
+                next_year=1225,
+                meeting_place="Thebes",
+                package="theban",
+                package_data={
+                    "theban": {
+                        "magi": [
+                            {"character_id": "mag1", "tokens": 2, "shards": 1},
+                            {
+                                "character_id": "mag_sketch",
+                                "tokens": 0,
+                                "shards": 3,
+                                "liturgies": 1,
+                                "ostracised_until": 1225,
+                                "why": "Struck a Theban magus",
+                            },
+                        ],
+                        "archai": [
+                            {
+                                "office": "Archon of Rites",
+                                "holder_id": "mag1",
+                                "term_ends": 1225,
+                                "duties": "The Tribunal's ceremonies and oaths",
+                            },
+                            {"office": "Strategos", "holder_id": None},
+                        ],
+                    }
+                },
+            ),
         ],
         characters=[magus, companion, rival],
         laboratories=[lab],

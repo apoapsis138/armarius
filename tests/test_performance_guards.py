@@ -97,6 +97,7 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "laboratory": 50,
     "sketch_covenant": 50,
     "tribunal": 40,
+    "theban_tribunal": 40,
 }
 
 

@@ -113,8 +113,11 @@ PAST_CASES_SECTION = "section-trib-past"
 CODE_SECTION = "section-trib-code"
 TREASURY_SECTION = "section-trib-treasury"
 TRIB_DIARY_SECTION = "section-trib-diary"
-#: The lists Tribunal packages add (tribunal_packages): the Rhine's Gilds.
+#: The lists Tribunal packages add (tribunal_packages): the Rhine's
+#: Gilds, the Theban Tribunal's tokens and shards and its archai.
 GILDS_SECTION = "section-trib-gilds"
+TOKENS_SECTION = "section-trib-tokens"
+ARCHAI_SECTION = "section-trib-archai"
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),
@@ -129,4 +132,6 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     TREASURY_SECTION: frozenset({"add", "edit", "remove"}),
     TRIB_DIARY_SECTION: frozenset({"add", "edit", "remove"}),
     GILDS_SECTION: frozenset({"add", "edit", "remove"}),
+    TOKENS_SECTION: frozenset({"add", "edit", "remove"}),
+    ARCHAI_SECTION: frozenset({"add", "edit", "remove"}),
 }

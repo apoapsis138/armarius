@@ -456,6 +456,26 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Gild": ""},
         shown={"#trib-gilds-list": "Mercantile", "#trib-roster": "Hermetic, Mercan"},
     ),
+    "add tokens": Contract(
+        prefill={"Tokens": "0", "Shards": "0", "Ostracised until (year)": ""},
+        edits={"Magus": "mag1", "Tokens": "3", "Liturgies served": "2"},
+        saved=lambda s: s.tribunal("thebes").package_data["theban"]["magi"][-1][
+            "tokens"
+        ],
+        expected=3,
+        invalid={"Shards": "-1"},
+        shown={"#trib-tokens-list": "3"},
+    ),
+    "edit office": Contract(
+        prefill={"Office": "Strategos"},
+        edits={"Held by": "mag1", "Term ends (year)": "1232"},
+        saved=lambda s: s.tribunal("thebes").package_data["theban"]["archai"][1][
+            "holder_id"
+        ],
+        expected="mag1",
+        invalid={"Office": ""},
+        shown={"#trib-archai-list": "to 1232"},
+    ),
     "add tribunal diary entry": Contract(
         prefill={"Year": "1220", "Entry": ""},
         edits={"Entry": "Gild dues raised"},

@@ -71,16 +71,19 @@ class TribunalPage(QWidget):
         self.codex.add("Docket", "worksheet", self._docket())
         self.codex.add("Peripheral Code", "lab_text", self._code())
         self.codex.add("Treasury", "income", self._treasury())
-        for extra in tribunal_packages.of(tribunal).lists:
+        for extra in tribunal_packages.of(tribunal).tabs:
             self.codex.add(
                 extra.title,
                 "tribunal",
                 scrolling_page(
                     p,
-                    self._grid(
-                        extra.section_title(saga, tribunal),
-                        extra.grid(saga, tribunal),
-                        extra.section_id,
+                    *(
+                        self._grid(
+                            entry.section_title(saga, tribunal),
+                            entry.grid(saga, tribunal),
+                            entry.section_id,
+                        )
+                        for entry in extra.lists
                     ),
                 ),
             )

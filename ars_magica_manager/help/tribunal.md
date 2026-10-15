@@ -34,6 +34,10 @@ what the old ones recorded, hidden, and switching back shows it again.
 - **Rhine: Gilds** (Guardians of the Forests): the Rhine's covenants band
   together in gilds, each with its dues; the sheet gains a Gilds list and
   the roster a Gild column. Notice is wanted a year before the meeting.
+- **Theban: Tokens** (The Sundered Eagle): its magi vote with
+  tokens and ostracise with shards, and it elects its archai at each
+  meeting; the sheet gains a Tokens and Archai tab, and Your votes counts
+  the troupe's tokens.
 
 Older sagas typed a covenant's Tribunal as a name. Each name became a
 Tribunal of its own when the saga was first opened by this version, and
@@ -192,6 +196,28 @@ Each gild with its member covenants and its dues. Add a gild, edit it
 (its name, its dues, and a tick for each covenant of the Tribunal that
 belongs to it) or delete it. The roster's Gild column shows the gilds
 each covenant belongs to.
+
+## Tokens and Archai tab
+<!-- help: tab-trib-tokens -->
+
+A Theban Tribunal's own records: each magus's tokens and shards, and the
+archai who hold its offices. Only a Tribunal following the Theban
+customs has this tab.
+
+### Tokens and Shards
+<!-- help: section-trib-tokens -->
+
+Each magus of note's tokens (the Theban Tribunal's votes, earned by
+serving liturgies and passed between magi), the shards cast against
+them, the liturgies they have served, and their standing: an office they
+hold, or that they are ostracised and until when (they may not attend or
+vote until then). Add a magus, edit their counts or delete the entry.
+
+### The Archai
+<!-- help: section-trib-archai -->
+
+The Tribunal's offices: who holds each (or that it is vacant), when
+their term ends, and its duties. The archai are elected at each meeting.
 
 ## Diary tab
 <!-- help: tab-trib-diary -->
