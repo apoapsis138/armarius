@@ -160,6 +160,19 @@ order of business the next one would hold. Each step is saved as it
 is held, so you can leave the meeting at any point and come back to it
 later at the step in hand. See [Hold Tribunal](help:hold-tribunal).
 
+<!-- gui -->
+At the top of the tab is **The Hall**: the meeting drawn as a
+hemicycle, one seat for each vote, the seats of a covenant together
+under its pennant (its arms, if it bears any). Each seat shows its
+magus's House and is coloured by the side its vote went on the case in
+hand, with the magi who spoke in the debate at the centre and a pair of
+scales weighing the tally. **Call the Vote** calls the covenants one by
+one in the order of the roll, filling their seats as the Praeco calls
+them. When **Hold** opens a meeting, a card announces it: the year,
+the Tribunal and where it meets, the arms of its covenants, and its
+numbers; a key or a click enters the hall.
+<!-- /gui -->
+
 ### Order of Business
 <!-- help: section-meeting-business -->
 

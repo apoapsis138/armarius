@@ -11,13 +11,16 @@ terminal's Tribunal sheet does, and its buttons run the core's forms
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
+from dataclasses import replace
+from typing import Any
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from .. import (
     acta,
     artwork,
+    hall,
     meeting,
     tribunal_forms,
     tribunal_packages,
@@ -26,7 +29,7 @@ from .. import (
     world,
 )
 from .. import character_sheet as cs
-from ..commands import Command, Refuse
+from ..commands import Command, Form, Refuse, SectionOps
 from ..markup import aligned, escape
 from ..models import Case, Saga, Tribunal, TribunalDiaryEntry
 from ..sections import (
@@ -45,6 +48,7 @@ from . import print_sheet
 from .character_sheet import TextBlock, section
 from .editing import Chooser, RowVerb, Run, verb_buttons
 from .figures import fact_grid, prose
+from .hall import GrandHall, OpeningCard
 from .manage import RecordControls
 from .pages import symbol_label
 from .themes import Palette
@@ -74,6 +78,7 @@ class TribunalPage(QWidget):
         outer.addWidget(self._header())
         self.codex = Codex(p)
         self.ops = tribunal_forms.tribunal_ops(saga, tribunal)
+        self.ops[BUSINESS_SECTION] = self._with_opening_card(self.ops[BUSINESS_SECTION])
         self.codex.add("Roster", "tribunal", self._roster())
         self.codex.add("Docket", "worksheet", self._docket())
         self.codex.add("Meeting", "tribunal", self._meeting())
@@ -275,9 +280,18 @@ class TribunalPage(QWidget):
                 nouns=("Add", "Hold", "Abandon"),
             ),
         )
+        case = meeting.vote_case(saga, t)
+        grand = GrandHall(saga, t, case, p)
+        the_hall = section(
+            "The Hall",
+            p,
+            grand,
+            edits={"Call the Vote": grand.call_the_vote} if case is not None else None,
+        )
         return scrolling_page(
             p,
             section(meeting.title(saga, t), p, TextBlock(facts, p)),
+            the_hall,
             business,
             self._grid(
                 meeting.vote_title(saga, t),
@@ -290,6 +304,32 @@ class TribunalPage(QWidget):
                 ATTENDANCE_SECTION,
             ),
         )
+
+    def _with_opening_card(self, ops: SectionOps) -> SectionOps:
+        """Hold, when it opens the meeting, plays the opening card over the
+        window once the Opening is saved."""
+        hold, saga, t, p = ops.edit, self.saga, self.tribunal, self.p
+        if hold is None:
+            return ops
+
+        def play(window: QWidget) -> None:
+            if t.meeting is not None:
+                OpeningCard(window, hall.opening_card(saga, t), p).play()
+
+        def edit(row: int) -> Command:
+            step = hold(row)
+            if t.meeting is not None or not isinstance(step, Form):
+                return step
+            window = self.window()
+
+            def apply(values: dict[str, Any]) -> Any:
+                ended = step.apply(values)
+                QTimer.singleShot(0, lambda: play(window))
+                return ended
+
+            return replace(step, apply=apply)
+
+        return replace(ops, edit=edit)
 
     def _code(self) -> QWidget:
         p, t = self.p, self.tribunal

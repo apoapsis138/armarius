@@ -46,6 +46,19 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.83.0 — 2026-10-15
+
+- The desktop's Meeting tab opens on the Grand Hall: the Tribunal drawn
+  as a hemicycle with a seat for every vote, each covenant's seats
+  together under its pennant, every seat marked with its magus's House
+  and coloured by the side its vote went. The debate's speakers stand at
+  the centre and a pair of scales weighs the tally.
+- **Call the Vote** calls the covenants one at a time, their seats filling
+  as the Praeco calls each one.
+- Opening a meeting on the desktop shows an opening card first: the year
+  in Roman numerals, the Tribunal and where it meets, the arms of its
+  covenants hung one by one, and the meeting's numbers.
+
 ## 2.82.0 — 2026-10-15
 
 - **Arms.** A covenant, and a lord, town or faction, can bear arms: choose

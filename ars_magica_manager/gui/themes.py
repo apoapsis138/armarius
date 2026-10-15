@@ -364,3 +364,16 @@ TINCTURES: dict[str, str] = {
     "Sable": "#262322",
     "Purpure": "#6b3f9e",
 }
+
+
+#: The opening card's colours: gold and parchment on the dark of the hall,
+#: whatever the theme, as a cover page would be.
+OPENING_CARD: dict[str, str] = {
+    "gold": "#e7c56a",
+    "parchment": "#e9dcc0",
+    "numbers": "#c9b98f",
+    "button": "#d9b04a",
+    "button-text": "#2a1d0a",
+    "dark": "#1e1610",
+    "darker": "#080604",
+}
