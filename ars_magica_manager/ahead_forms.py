@@ -7,12 +7,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import ahead
+from . import ahead, world_turns
 from .commands import Command, Confirm, Form, Refuse, SectionOps
 from .form_spec import DialogField, pairs
 from .markup import escape
 from .models import SEASONS, CalendarEntry, Covenant, Saga
-from .sections import AHEAD_SECTION, SEASONS_INFO_SECTION
+from .sections import AHEAD_SECTION, SEASONS_INFO_SECTION, WORLD_TURNS_SECTION
 
 _SPAN_CHOICES = [(ahead.span_label(years), str(years)) for years in ahead.SPANS]
 
@@ -188,4 +188,5 @@ def seasons_ops(saga: Saga) -> dict[str, SectionOps]:
     return {
         SEASONS_INFO_SECTION: SectionOps(edit=lambda _row: looking_form(saga)),
         AHEAD_SECTION: ahead_ops(saga),
+        WORLD_TURNS_SECTION: world_turns.turn_ops(saga),
     }

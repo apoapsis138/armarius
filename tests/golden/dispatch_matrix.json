@@ -1888,6 +1888,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-world-turns": {
+      "active": "section-world-turns",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-seasons-recorded": {
       "active": "section-seasons-recorded",
       "keys": {

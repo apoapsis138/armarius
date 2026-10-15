@@ -157,6 +157,7 @@ from .seasons import SeasonPlan as SeasonPlan
 from .seasons import SeasonRecord as SeasonRecord
 from .seasons import SeasonRecordLine as SeasonRecordLine
 from .seasons import SpellDesign as SpellDesign
+from .seasons import WorldTurn as WorldTurn
 from .seasons import XpAllocation as XpAllocation
 from .seasons import next_season as next_season
 from .traits import Ability as Ability

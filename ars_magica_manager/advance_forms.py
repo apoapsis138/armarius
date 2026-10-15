@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from . import economics as eco
-from . import seasons
+from . import seasons, world_turns
 from .commands import Command, Confirm, Form
 from .form_spec import DialogField
 from .markup import escape
@@ -173,14 +173,14 @@ def _discoveries(
     worked = seasons.resolve(saga, rng())
     moves = seasons.discovery_moves(saga, worked)
     if not moves:
-        return _finish(saga, worked, secured, backup, rng)
+        return _world_turns(saga, worked, secured, backup, rng)
 
-    def apply(values: dict[str, Any]) -> Played:
+    def apply(values: dict[str, Any]) -> Played | Form:
         for index, (outcome, _text) in enumerate(moves):
             seasons.take_discovery_move(
                 saga, outcome, bool(values.get(f"move_{index}"))
             )
-        return _finish(saga, worked, secured, backup, rng)
+        return _world_turns(saga, worked, secured, backup, rng)
 
     fields: list[DialogField] = []
     for index, (_outcome, text) in enumerate(moves):
@@ -189,6 +189,25 @@ def _discoveries(
             DialogField(f"move_{index}", "Take the Discovery", "check", False),
         ]
     return Form("Discoveries", lambda: fields, apply, save_label="Continue")
+
+
+def _world_turns(
+    saga: Saga,
+    worked: list[Any],
+    secured: dict[str, bool],
+    backup: Backup,
+    rng: Callable[[], random.Random],
+):
+    """When Winter is played: the yearly step's review of what the year
+    brought (world_turns), then the season played out."""
+    found = (
+        world_turns.proposals(saga, rng()) if saga.current_season == SEASONS[-1] else []
+    )
+    if not found:
+        return _finish(saga, worked, secured, backup, rng)
+    return world_turns.review(
+        saga, found, lambda: _finish(saga, worked, secured, backup, rng)
+    )
 
 
 def _finish(

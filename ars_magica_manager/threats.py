@@ -67,7 +67,7 @@ def stages(neighbour: Neighbour) -> list[dict[str, Any]]:
 # -- worked out --
 
 
-def _when(stage: dict[str, Any]) -> int | None:
+def stage_order(stage: dict[str, Any]) -> int | None:
     """A dated stage's season, as a number that sorts by date."""
     year = stage.get("year")
     if year is None:
@@ -90,7 +90,7 @@ def has_come(saga: Saga, neighbour: Neighbour, stage: dict[str, Any]) -> bool:
     if outcome != PENDING:
         return outcome == "Happened"
     if by_date(neighbour):
-        when = _when(stage)
+        when = stage_order(stage)
         return when is not None and when <= _now(saga)
     at = stage.get("at")
     return at is not None and at <= position(neighbour)
@@ -126,7 +126,7 @@ def due(saga: Saga, neighbour: Neighbour) -> tuple[int, str] | None:
     upcoming = reached(saga, neighbour).next
     if upcoming is None or not by_date(neighbour):
         return None
-    when = _when(upcoming)
+    when = stage_order(upcoming)
     if when is None:
         return None
     return when, f"{neighbour.name}, {when_text(neighbour, upcoming)}"

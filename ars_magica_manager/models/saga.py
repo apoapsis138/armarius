@@ -19,7 +19,7 @@ from .definitions import CovenantBoonHookDef, LabVirtueFlawDef, VirtueFlawDef
 from .devices import EnchantedDevice
 from .familiar import Familiar
 from .laboratory import Laboratory
-from .seasons import CalendarEntry, LabProject, SeasonPlan, SeasonRecord
+from .seasons import CalendarEntry, LabProject, SeasonPlan, SeasonRecord, WorldTurn
 from .traits import Spell
 from .tribunal import Tribunal
 from .world import Neighbour
@@ -110,6 +110,8 @@ class Saga:
     ahead_show: str = "Everything"
     #: The storyguide's own entries in the saga's calendar, for Ahead.
     calendar: list[CalendarEntry] = field(default_factory=list)
+    #: Each yearly step's entry (world_turns.py), oldest first.
+    world_turns: list[WorldTurn] = field(default_factory=list)
     #: Lab work in progress over several seasons.
     lab_projects: list[LabProject] = field(default_factory=list)
     #: User-made catalog entries: house rules and entries from
@@ -172,6 +174,7 @@ class Saga:
             SeasonRecord.from_dict(r) for r in d.get("season_records", [])
         ]
         d["calendar"] = [CalendarEntry.from_dict(e) for e in d.get("calendar", [])]
+        d["world_turns"] = [WorldTurn.from_dict(t) for t in d.get("world_turns", [])]
         d["lab_projects"] = [LabProject.from_dict(p) for p in d.get("lab_projects", [])]
         d["custom_virtues_flaws"] = [
             VirtueFlawDef.from_dict(e) for e in d.get("custom_virtues_flaws", [])

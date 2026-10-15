@@ -180,6 +180,40 @@ The date moves on. When anything happened, the [Seasons](help:seasons) page open
 
 **See also:** [Plan Season](help:plan-season), [Season Summary](help:season-summary), [Seasons](help:seasons), [The saga](help:saga), [How to plan and run a season](help:guide-seasons)
 
+# The World Turns
+<!-- help: world-turns -->
+
+The yearly step. When Winter is played, Advance Season asks one more
+question before the season is played out: what the year brought beyond
+the covenants. Each line has a tick box, and only the ticked lines are
+applied.
+
+- **Places**: each place's triggers that came this year (written into
+  the place's Diary), and, with the Auras change rule option, the roll
+  to raise a Magic aura (already rolled: what you see is what is
+  applied).
+- **Threats**: a dated stage whose season has come is marked as having
+  happened.
+- **Neighbours**: each fair a covenant trades at rolls its income for
+  the year.
+- **Tribunal treasury**: a loan due this year; tick it if it was repaid
+  (it starts unticked).
+- **Attitudes**: the year's events with each neighbour (favours begun or
+  repaid, a covenant's Diary entries naming it). Nothing moves unless
+  you choose a change, and a change needs its reason: the app never
+  guesses how a lord feels.
+
+**You type:** the ticks, and each attitude's change and reason.
+
+**The app works out:** everything applied goes into one entry, *The
+world turns, Winter 1220*, under The World Turned on Seasons. Delete
+that entry to undo all of it; a value changed by hand since is left as
+it is, and you are told.
+
+Cancel stops Advance Season: the date stays.
+
+**See also:** [Advance Season](help:advance-season), [Seasons](help:seasons)
+
 # Season Summary
 <!-- help: season-summary -->
 

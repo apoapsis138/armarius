@@ -2313,6 +2313,9 @@ class WorkspaceBase(Screen[None]):
             self._refresh_character_section(section)
         self._refresh_laboratory_section("tab-lab-planning")
         self._refresh_covenant_section("tab-cov-seasons")
+        self._refresh_covenant_section("section-cov-ahead")
+        if self._seasons_view is not None:
+            self._seasons_view.refresh_all()
         if played.advanced.added:
             self._refresh_covenant_section("section-eco-wealth")
         if saga.keep_season_records and played.results:

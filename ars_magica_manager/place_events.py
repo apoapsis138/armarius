@@ -97,6 +97,23 @@ def next_date(saga: Saga, trigger: dict[str, Any]) -> tuple[int, str] | None:
     return None
 
 
+def comes_in(trigger: dict[str, Any], year: int) -> str | None:
+    """The season a dated trigger comes in `year`, or None."""
+    when = trigger.get("when") or ONCE
+    season = trigger.get("season") or SEASONS[0]
+    start = trigger.get("year")
+    if when == ONCE:
+        return season if start == year else None
+    if when == YEARLY:
+        return season
+    if when == EVERY:
+        step = max(1, _int(trigger.get("every")))
+        if start is None:
+            return season
+        return season if year >= start and (year - start) % step == 0 else None
+    return None
+
+
 def when_text(trigger: dict[str, Any]) -> str:
     """ "Summer 1220", "Summer each year", "Winter every 7 years" (its
     next date says which), or "Whenever"."""
@@ -506,16 +523,28 @@ def change_text(saga: Saga, place: Neighbour) -> str:
     return "Steady"
 
 
+def aura_roll(
+    saga: Saga, place: Neighbour, rng: random.Random
+) -> tuple[int, bool] | None:
+    """The year's roll to raise a Magic aura: its total and whether the
+    aura rises; None when the option is off or the aura isn't Magic."""
+    if not changes(saga) or (place.realm or "Magic") != "Magic":
+        return None
+    bonus = _int(place.details.get("raising"))
+    die = dice.stress_die(rng, saga=saga)
+    total = (0 if die.botched else die.value) + bonus
+    return total, not die.botched and total >= RAISE_EASE
+
+
 def raise_aura(saga: Saga, place: Neighbour, rng: random.Random) -> str:
     """The year's roll to raise a Magic aura: on success the aura rises
     by 1 and the diary says so. Returns what happened ("" when the
     option is off or the aura isn't Magic)."""
-    if not changes(saga) or (place.realm or "Magic") != "Magic":
+    rolled = aura_roll(saga, place, rng)
+    if rolled is None:
         return ""
-    bonus = _int(place.details.get("raising"))
-    die = dice.stress_die(rng, saga=saga)
-    total = (0 if die.botched else die.value) + bonus
-    if die.botched or total < RAISE_EASE:
+    total, rises = rolled
+    if not rises:
         return f"{place.name}: the aura holds ({total} against {RAISE_EASE})."
     place.details["aura"] = _int(place.details.get("aura")) + 1
     text = f"The aura rose to Magic {place.details['aura']} ({total} against {RAISE_EASE})."

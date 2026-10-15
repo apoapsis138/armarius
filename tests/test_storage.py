@@ -61,6 +61,7 @@ from ars_magica_manager.models import (
     TribunalDiaryEntry,
     VirtueFlawDef,
     VirtueFlawInstance,
+    WorldTurn,
     Wounds,
     XpAllocation,
 )
@@ -384,6 +385,7 @@ def _saga_with_every_record() -> Saga:
         SeasonRecord(1220, "Spring", lines=[SeasonRecordLine(magus.id, "M")])
     )
     saga.lab_projects.append(LabProject(magus.id, saga.spells[0].id))
+    saga.world_turns.append(WorldTurn(1220, lines=["Threats: the ford floods"]))
     bonus = Modifier("study_total", amount=1)
     saga.custom_virtues_flaws.append(
         VirtueFlawDef("vf", "VF", "Virtue", "General", "Minor", 1, modifiers=[bonus])

@@ -158,6 +158,7 @@ SEASONS_INFO_SECTION = "section-seasons-info"
 AHEAD_SECTION = "section-ahead"
 SEASONS_RECORDED_SECTION = "section-seasons-recorded"
 COV_AHEAD_SECTION = "section-cov-ahead"
+WORLD_TURNS_SECTION = "section-world-turns"
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),
@@ -199,4 +200,5 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     SEASONS_INFO_SECTION: frozenset({"edit"}),
     AHEAD_SECTION: frozenset({"add", "edit", "remove"}),
     COV_AHEAD_SECTION: frozenset({"add", "edit", "remove"}),
+    WORLD_TURNS_SECTION: frozenset({"remove"}),
 }

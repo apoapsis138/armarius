@@ -218,6 +218,21 @@ class CalendarEntry:
 
 
 @dataclass
+class WorldTurn:
+    """One yearly step (world_turns.py): the lines applied when Winter
+    was played, and the changes they made, so deleting it undoes them."""
+
+    year: int
+    season: str = "Winter"
+    lines: list[str] = field(default_factory=list)
+    changes: list[dict[str, Any]] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> WorldTurn:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
 class SeasonRecordLine:
     """One person's line in a season's record: kept as the text
     it showed, so it still reads right after the character is renamed or

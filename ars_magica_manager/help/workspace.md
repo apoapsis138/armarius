@@ -384,6 +384,13 @@ The chips under the title narrow the cards to one kind of entry; click a
 card to read it in the inspector.
 <!-- /gui -->
 
+## The World Turned
+<!-- help: section-world-turns -->
+
+Each Winter's yearly step: what was applied when the world turned
+([The World Turns](help:world-turns)), newest first. Delete one to undo
+its changes (a value changed by hand since is left as it is).
+
 ## Seasons Recorded
 <!-- help: section-seasons-recorded -->
 

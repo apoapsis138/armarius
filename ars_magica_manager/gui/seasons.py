@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
-from .. import advance_forms, seasons
+from .. import advance_forms, seasons, world_turns
 from ..models import Saga, SeasonRecord
 from .ahead import ahead_section
 from .character_sheet import TextBlock
@@ -20,6 +20,7 @@ from .editing import Run
 from .pages import page_header
 from .themes import Palette
 from .widgets import Codex, scrolling_page, serif, table_view, text
+from .world import table_section
 
 #: The chapter of the season just played out.
 RESULTS = "Just played"
@@ -63,11 +64,7 @@ class SeasonsPage(QWidget):
             )
             if records and records[0] is record:
                 records = records[1:]
-        self.codex.add(
-            AHEAD,
-            "season",
-            scrolling_page(p, ahead_section(saga, p, run, self.codex.inspect)),
-        )
+        self.codex.add(AHEAD, "season", self._ahead())
         for record in records:
             self.codex.add(seasons.record_label(record), "season", self._record(record))
         if not records and played is None:
@@ -84,6 +81,33 @@ class SeasonsPage(QWidget):
                 )
             )
         outer.addWidget(self.codex, 1)
+
+    def _ahead(self) -> QWidget:
+        """What is coming, then each yearly step's entry, to undo."""
+        saga, p = self.saga, self.p
+        turns = list(reversed(saga.world_turns))
+
+        def show(row: int) -> None:
+            self.codex.inspect(
+                world_turns.entry_title(turns[row]),
+                "The world turned",
+                world_turns.turn_text(turns[row]),
+            )
+
+        return scrolling_page(
+            p,
+            ahead_section(saga, p, self.run, self.codex.inspect),
+            table_section(
+                world_turns.turns_title(saga),
+                world_turns.turns_grid(saga).table(),
+                world_turns.turn_ops(saga),
+                p,
+                self.run,
+                empty="Nothing yet: each Winter, Advance Season asks what the "
+                "year brought.",
+                on_choose=show,
+            ),
+        )
 
     def chapters(self) -> list[str]:
         return self.codex.chapters()

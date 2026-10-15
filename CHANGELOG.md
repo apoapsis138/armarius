@@ -46,6 +46,23 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.78.0 — 2026-10-15
+
+- **The world turns.** When Winter is played, Advance Season now asks
+  one more question before the season is played out: what the year
+  brought beyond the covenants. A place's triggers that came this year
+  (written into its Diary) and, with Auras change on, the roll to raise
+  a Magic aura; a threat's dated stages that have come; each fair's
+  income roll; a loan due to a Tribunal; and the year's events with
+  each neighbour. Each line has a tick box, and only the ticked lines
+  are applied.
+- **Attitudes are never guessed.** A neighbour's attitude moves only by
+  the change you choose, and a change needs its reason.
+- **Undo by deleting.** Everything applied goes into one entry, "The
+  world turns, Winter 1220", under The World Turned on Seasons. Delete
+  it to undo the lot; anything changed by hand since is left alone, and
+  you are told.
+
 ## 2.77.0 — 2026-10-15
 
 - **Ahead: what's coming.** Seasons (the tree's Seasons in the terminal,
