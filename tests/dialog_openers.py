@@ -250,6 +250,13 @@ OPENERS: dict[str, Opener] = {
     "edit faction": Opener(
         "faction", lambda ws: ws._core_verb("section-nb-info", "edit")
     ),
+    "add stage": Opener("threat", lambda ws: ws._core_verb("section-nb-stages", "add")),
+    "edit stage": Opener(
+        "threat",
+        _pick(
+            lambda ws: ws._core_verb("section-nb-stages", "edit"), "nb-stages-list", 1
+        ),
+    ),
     "edit tribunal": Opener(
         "tribunal", lambda ws: ws._core_verb("section-trib-info", "edit")
     ),

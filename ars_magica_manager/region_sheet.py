@@ -5,7 +5,7 @@ neighbour's own facts and details."""
 
 from __future__ import annotations
 
-from . import neighbours, tribunal_packages, tribunals, world
+from . import neighbours, threats, tribunal_packages, tribunals, world
 from .character_sheet import Fact
 from .grids import Grid
 from .markup import escape
@@ -60,7 +60,19 @@ def facts(saga: Saga) -> list[Fact]:
         Fact("Neighbours", standing),
         Fact("Other covenants", str(len(others(saga)))),
         Fact("Next Tribunal", _next_meeting(tribunal)),
+        Fact("Threat due", threat_due(saga)),
     ]
+
+
+def threat_due(saga: Saga) -> str:
+    """The threat whose next stage comes soonest: "The Hollow Crown,
+    Winter 1220"; "" if none has a dated stage to come."""
+    due = [
+        found
+        for n in saga.neighbours
+        if n.kind == "threat" and (found := threats.due(saga, n)) is not None
+    ]
+    return min(due)[1] if due else ""
 
 
 def neighbours_title(saga: Saga) -> str:

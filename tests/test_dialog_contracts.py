@@ -494,6 +494,22 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Members": "-3"},
         shown={"#nb-kind-facts": "A council"},
     ),
+    "add stage": Contract(
+        prefill={"Stage": "", "What became of it": "Pending"},
+        edits={"Stage": "The king is crowned", "Year": "1221", "Season": "Summer"},
+        saved=lambda s: s.neighbour("crown").details["stages"][-1]["season"],
+        expected="Summer",
+        invalid={"Stage": ""},
+        shown={"#nb-stages-list": "Summer 1221"},
+    ),
+    "edit stage": Contract(
+        prefill={"Stage": "The ford floods", "Year": "1220", "Season": "Winter"},
+        edits={"What became of it": "Stopped", "If stopped": "The mill is saved"},
+        saved=lambda s: s.neighbour("crown").details["stages"][1]["outcome"],
+        expected="Stopped",
+        invalid={"Stage": ""},
+        shown={"#nb-stages-list": "Stopped", "#nb-kind-facts": "The crowning"},
+    ),
     "edit tribunal": Contract(
         prefill={
             "Name": "Rhine",

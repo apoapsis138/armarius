@@ -157,6 +157,7 @@ NODES: dict[str, tuple[str, ...]] = {
     "church": ("neighbour", "cologne"),
     "university": ("neighbour", "studium"),
     "faction": ("neighbour", "coven"),
+    "threat": ("neighbour", "crown"),
     "book_group": ("book_group",),
     "saga_content": ("saga_content",),
 }
@@ -527,6 +528,21 @@ def everything_saga() -> Saga:
                     "decides": "Its leader",
                     "members": 7,
                     "wants": "The Black Pool kept secret",
+                },
+            ),
+            Neighbour(
+                id="crown",
+                name="The Hollow Crown",
+                kind="threat",
+                details={
+                    "antagonist": "A faerie king without a court",
+                    "stages": [
+                        {"title": "Cattle go missing", "year": 1219}
+                        | {"season": "Spring", "outcome": "Pending"},
+                        {"title": "The ford floods", "year": 1220}
+                        | {"season": "Winter", "ignored": "The mill is lost"},
+                        {"title": "The crowning", "year": 1222, "season": None},
+                    ],
                 },
             ),
             Neighbour(

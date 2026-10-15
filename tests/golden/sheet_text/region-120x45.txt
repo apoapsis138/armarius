@@ -3,9 +3,10 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      The Region
 
-      Player covenant: Keep                    Neighbours:      5, 1 warm, 1 wary
-      Tribunal:        Rhine                   Other covenants: 1
-      Customs:         Rhine: Gilds            Next Tribunal:   Summer 1228
+      Player covenant: Keep                    Other covenants: 1
+      Tribunal:        Rhine                   Next Tribunal:   Summer 1228
+      Customs:         Rhine: Gilds            Threat due:      The Hollow Crown,
+      Neighbours:      6, 1 warm, 1 wary       Winter 1220
 
    1 Neighbours
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -25,16 +26,15 @@
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ The Church (1)
-
+                                                                                  ▃▃
         Name                   Kind    Ruler or leader  Attitude     Detail
-      ○ Archbishop of Cologne  Church                   ◉ 0 Neutral  Line         ▅▅
+      ○ Archbishop of Cologne  Church                   ◉ 0 Neutral  Line
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Universities (1)
 
         Name                    Kind        Ruler or leader  Attitude     Detail
       ○ The Studium of Cologne  University                   ◉ 0 Neutral  Sketch
-
 
   ▌
   ▌  Choose a neighbour to see how it stands.

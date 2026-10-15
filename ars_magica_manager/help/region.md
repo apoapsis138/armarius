@@ -101,7 +101,8 @@ needs), then a plain form:
   [A church](help:tab-nb-church)); a university's kind and fees (see
   [A university](help:tab-nb-studium)); a faction's kind, how it
   decides, its members, rules, wants and offers (see
-  [A faction](help:tab-nb-faction)).
+  [A faction](help:tab-nb-faction)); a threat's antagonist and how it
+  moves (see [A threat](help:tab-nb-threat)).
 - **Summary**: a paragraph on who they are and what they want.
 - **Detail**: a line, a sketch, or written in full.
 - **Ruler or leader**: a name.
@@ -277,3 +278,27 @@ what it offers; its Faction tab shows them. Members who are characters
 can be linked on its Standing tab, and the Faction tab counts them.
 
 **See also:** [A neighbour](help:neighbour)
+
+# A threat
+<!-- help: tab-nb-threat -->
+
+A threat is a story that grows if the troupe leaves it alone: a
+faerie king gathering a court, a plague, a heresy. New Threat and Edit
+record its antagonist and how it moves: by **fixed dates** (each stage
+has its season and year), or along **a track** or **an omen count**
+(each stage comes at a number, and Edit moves the threat's position).
+Its Stages tab shows the stage it has reached and the next to come,
+worked out from the saga's date (or its position); the Region's top
+panel names the threat whose next stage is due soonest.
+
+**See also:** [A neighbour](help:neighbour)
+
+## Stages
+<!-- help: section-nb-stages -->
+
+The threat's stages in order, each with when it comes, the clues that
+warn of it, and what happens if it is ignored, stopped or turned. A
+pending stage comes when its date (or its place on the track) is
+reached; mark one **Happened** to say it came anyway, or **Stopped** or
+**Turned** to say the troupe kept it from coming. The stage reached is
+in bold. Add, edit or delete one.

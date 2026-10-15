@@ -1416,8 +1416,8 @@
       "active": "section-region-threats",
       "keys": {
         "a": "FieldsDialog: New Threat",
-        "e": "(nothing)",
-        "d": "(nothing)",
+        "e": "FieldsDialog: Edit The Hollow Crown",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -1677,6 +1677,58 @@
       "keys": {
         "a": "(disabled)",
         "e": "FieldsDialog: Edit The Black Pool Coven",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-attitudes": {
+      "active": "section-attitudes",
+      "keys": {
+        "a": "FieldsDialog: Add a Reason",
+        "e": "FieldsDialog: Attitude toward Keep",
+        "d": "notice: Where it started can't be deleted: edit it to change it.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-favours": {
+      "active": "section-favours",
+      "keys": {
+        "a": "FieldsDialog: Add a Favour",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-links": {
+      "active": "section-links",
+      "keys": {
+        "a": "ChooseScreen: Link to what?",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    }
+  },
+  "threat": {
+    "PinnedCollapsible#section-nb-info": {
+      "active": "section-nb-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit The Hollow Crown",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-stages": {
+      "active": "section-nb-stages",
+      "keys": {
+        "a": "FieldsDialog: Add a Stage",
+        "e": "FieldsDialog: Edit a Stage",
         "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"

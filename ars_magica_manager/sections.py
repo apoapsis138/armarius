@@ -142,6 +142,8 @@ FAIRS_SECTION = "section-nb-fairs"
 RELICS_SECTION = "section-nb-relics"
 FACULTIES_SECTION = "section-nb-faculties"
 MASTERS_SECTION = "section-nb-masters"
+#: A threat's stages.
+STAGES_SECTION = "section-nb-stages"
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),
@@ -173,4 +175,5 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     RELICS_SECTION: frozenset({"add", "edit", "remove"}),
     FACULTIES_SECTION: frozenset({"add", "edit", "remove"}),
     MASTERS_SECTION: frozenset({"add", "edit", "remove"}),
+    STAGES_SECTION: frozenset({"add", "edit", "remove"}),
 }

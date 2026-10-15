@@ -3,9 +3,10 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      The Region
 
-      Player covenant: Keep                              Neighbours:      5, 1 warm, 1 wary
-      Tribunal:        Rhine                             Other covenants: 1
-      Customs:         Rhine: Gilds                      Next Tribunal:   Summer 1228
+      Player covenant: Keep                              Other covenants: 1
+      Tribunal:        Rhine                             Next Tribunal:   Summer 1228
+      Customs:         Rhine: Gilds                      Threat due:      The Hollow Crown, Winter 1220
+      Neighbours:      6, 1 warm, 1 wary
 
    1 Neighbours
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -42,11 +43,10 @@
       ○ The Black Pool Coven  Faction                   ◉ +2 Friendly  Sketch
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Threats (0)
+    ▼ Threats (1)
 
-      None yet: add a threat here.
-
-
+        Name              Kind    Ruler or leader  Attitude     Detail
+      ○ The Hollow Crown  Threat                   ◉ 0 Neutral  Sketch
 
 
 

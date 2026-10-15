@@ -105,6 +105,7 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "church": 40,
     "university": 40,
     "faction": 40,
+    "threat": 40,
 }
 
 

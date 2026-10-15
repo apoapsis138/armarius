@@ -46,6 +46,16 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.74.0 — 2026-10-15
+
+- Threats and their stages. A threat has an antagonist, a way of moving
+  (by fixed dates, along a track, or by an omen count) and an ordered
+  list of stages, each with when it comes, its clues, and what happens
+  if it is ignored, stopped or turned. Its Stages tab shows the stage it
+  has reached and the next to come, worked out from the saga's date (or
+  its position on the track); a stage can be marked as happened, stopped
+  or turned. The Region's top panel names the threat due soonest.
+
 ## 2.73.0 — 2026-10-15
 
 - Churches in detail (The Church). A church has a kind (a chapel up to

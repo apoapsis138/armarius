@@ -20,6 +20,7 @@ from . import (
     lords,
     sourcebooks,
     storage,
+    threats,
     towns,
     universities,
     world,
@@ -142,7 +143,17 @@ for _kind in (
         factions.facts,
         factions.TAB,
     ),
-    NeighbourKind("threat", "Threat", "a story that grows if left alone", "threats"),
+    NeighbourKind(
+        "threat",
+        "Threat",
+        "a story that grows if left alone",
+        "threats",
+        "",
+        threats.fields,
+        threats.problem,
+        threats.facts,
+        threats.TAB,
+    ),
 ):
     register(_kind)
 

@@ -19,6 +19,7 @@ from ars_magica_manager import (
     neighbours,
     region_sheet,
     storage,
+    threats,
     towns,
     universities,
 )
@@ -83,7 +84,7 @@ def test_deleting_a_liege_frees_those_who_answered_to_it():
 def test_the_region_counts_the_warm_and_the_wary():
     saga = everything_saga()
     facts = {f.label: f.value for f in region_sheet.facts(saga)}
-    assert facts["Neighbours"] == "5, 1 warm, 1 wary"
+    assert facts["Neighbours"] == "6, 1 warm, 1 wary"
     assert facts["Player covenant"] == "Keep"
     assert facts["Next Tribunal"] == "Summer 1228"
     grid = region_sheet.group_grid(saga, "lords")
@@ -332,3 +333,46 @@ def test_a_faction_counts_its_linked_members():
     assert facts["Members"] == "7, 1 linked"
     coven.details["faction"] = None  # left blank
     assert {f.label: f.value for f in factions.facts(saga, coven)}["Faction"] == ""
+
+
+def test_a_threats_stage_is_worked_out_from_the_date():
+    saga = everything_saga()
+    crown = saga.neighbour("crown")
+    assert crown is not None
+    at = threats.reached(saga, crown)
+    assert at.current is not None and at.current["title"] == "Cattle go missing"
+    assert at.next is not None and at.next["title"] == "The ford floods"
+    assert region_sheet.threat_due(saga) == "The Hollow Crown, Winter 1220"
+    saga.current_season = "Winter"
+    assert threats.reached(saga, crown).current["title"] == "The ford floods"
+    stages = threats.stages(crown)
+    stages[1]["outcome"] = "Stopped"
+    at = threats.reached(saga, crown)
+    assert at.current["title"] == "Cattle go missing"
+    assert at.next["title"] == "The crowning"
+    stages[2]["outcome"] = "Happened"  # before its date
+    assert threats.reached(saga, crown).current["title"] == "The crowning"
+    assert threats.reached(saga, crown).next is None
+    assert region_sheet.threat_due(saga) == ""
+
+
+def test_a_threat_on_a_track_moves_with_its_position():
+    saga = everything_saga()
+    omen = Neighbour(
+        "omen",
+        "The Black Dog",
+        kind="threat",
+        details={
+            "moves": "An omen count",
+            "position": 2,
+            "stages": [{"title": "Howling", "at": 1}, {"title": "A death", "at": 3}],
+        },
+    )
+    saga.neighbours.append(omen)
+    facts = {f.label: f.value for f in threats.facts(saga, omen)}
+    assert facts["Stage reached"] == "Howling"
+    assert facts["Next"] == "A death, at 3"
+    assert facts["Position"] == "2"
+    assert threats.due(saga, omen) is None  # not dated: not in Threat due
+    keys = [f.key for f in threats.stage_fields(saga, omen, None)]
+    assert "at" in keys and "year" not in keys

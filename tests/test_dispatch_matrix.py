@@ -58,6 +58,7 @@ _SHEET_VIEW_ATTR = {
     "church": "_neighbour_sheet_view",
     "university": "_neighbour_sheet_view",
     "faction": "_neighbour_sheet_view",
+    "threat": "_neighbour_sheet_view",
 }
 
 
