@@ -606,6 +606,29 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Proxies held": "-1"},
         shown={"#trib-roster": "3 held", "#trib-info-right": "Your votes"},
     ),
+    "hold tribunal": Contract(
+        prefill={"Held at": "Durenmar", "Days": "3", "Fengheld v. Keep": "1"},
+        edits={"Days": "4", "Gild dues": "2"},
+        saved=lambda s: (
+            s.tribunals[0].meeting["days"],
+            s.tribunals[0].meeting["day_of"][s.tribunals[0].cases[1].id],
+        ),
+        expected=(4, 2),
+        invalid=[{"Days": "0"}, {"Fengheld v. Keep": "9"}],
+        shown={"#meeting-business": "The Fourth Day"},
+    ),
+    "attendance and proxies": Contract(
+        prefill={"Keep: absent": "0", "Fengheld: proxies": "1"},
+        edits={
+            "Keep: absent": "1",
+            "Fengheld: proxies": "2",
+            "Fengheld: Quaesitor": "Set aside",
+        },
+        saved=lambda s: s.tribunals[0].meeting["attendance"]["cov_sketch"],
+        expected={"absent": 0, "proxies": 2, "ruling": "Set aside"},
+        invalid={"Keep: absent": "-1"},
+        shown={"#meeting-attendance": "2 (set aside)"},
+    ),
     "add case": Contract(
         prefill={"Case": "", "Kind": "charge", "Filed (year)": "1220"},
         edits={

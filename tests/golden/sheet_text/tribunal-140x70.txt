@@ -11,7 +11,7 @@
       Gilds and forests.
           Edit (e)
 
-   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Gilds  6 Diary
+   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Gilds  7 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -79,7 +79,7 @@
       Gilds and forests.
           Edit (e)
 
-   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Gilds  6 Diary
+   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Gilds  7 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -134,6 +134,74 @@
   ▌
 
 
+===== tab-trib-meeting
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Rhine
+
+      Customs:       Rhine: Gilds                        Praeco:              Severinus
+      Meets every:   7 years                             Presiding Quaesitor: (not chosen)
+      Next meeting:  Summer 1228                         Covenants:           2
+      Meeting place: Durenmar                            Magi:                4
+      Cases:         2 (1 against you)                   Your votes:          1 of 4
+      Gilds and forests.
+          Edit (e)
+
+   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Gilds  7 Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  The Next Meeting: Summer 1228
+  Held at: Durenmar
+  Now:     Not yet opened: hold any step (e) to open it
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Order of Business (3 days)
+
+        Step                    Day
+      ○ Opening and the oaths   The First Day
+      ○ Attendance and proxies
+      ○ Fengheld v. Keep
+      ○ Motion: Gild dues       The Second Day
+      ○ Rulings and fines       The Third Day
+      ○ Treasury and vis
+      ○ Closing
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Attendance (5 votes in the hall)
+
+        Covenant  Magi  Absent  Proxies  Votes
+      ○ Keep      1                      1
+      ○ Fengheld  3             1        4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a step to read what was entered at it.
+  ▌
+
+
 ===== tab-trib-code
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -147,7 +215,7 @@
       Gilds and forests.
           Edit (e)
 
-   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Gilds  6 Diary
+   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Gilds  7 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Rhine: Gilds. Its covenants band together in gilds, with dues; notice of a case is wanted a year
@@ -215,7 +283,7 @@
       Gilds and forests.
           Edit (e)
 
-   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Gilds  6 Diary
+   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Gilds  7 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Silver in hand: 30 pounds
@@ -283,7 +351,7 @@
       Gilds and forests.
           Edit (e)
 
-   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Gilds  6 Diary
+   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Gilds  7 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -351,7 +419,7 @@
       Gilds and forests.
           Edit (e)
 
-   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Gilds  6 Diary
+   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Gilds  7 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

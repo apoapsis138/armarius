@@ -46,6 +46,23 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.79.0 — 2026-10-15
+
+- **Hold Tribunal.** Each Tribunal has a new Meeting tab (a chapter on
+  the desktop): the order of business day by day, who is in the hall,
+  and the step in hand. Hold any step to open the meeting: the Opening
+  (where, how many days, and the day each case and motion is heard),
+  Attendance and proxies (who is absent, the proxies each covenant
+  carries and whether the Presiding Quaesitor allows them), each case
+  and motion with its prosecutor and defender, the Theban elections,
+  the rulings, the treasury, and the Closing, which decides the cases
+  with a ruling, writes the meeting into the Diary and sets the next
+  one.
+- **Leave and come back.** The meeting is saved after every step, so
+  you can leave it at any point; holding it again resumes at the step
+  in hand. Any step can be held again to change it, or the meeting
+  abandoned.
+
 ## 2.78.0 — 2026-10-15
 
 - **The world turns.** When Winter is played, Advance Season now asks

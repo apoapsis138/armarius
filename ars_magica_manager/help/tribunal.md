@@ -152,6 +152,50 @@ The cases past meetings decided, with their outcome, and those
 withdrawn. Edit one to correct it, or set its Status back to open to
 return it to the docket.
 
+## Meeting tab
+<!-- help: tab-trib-meeting -->
+
+Holding the Tribunal: the meeting being held, or (before it opens) the
+order of business the next one would hold. Each step is saved as it
+is held, so you can leave the meeting at any point and come back to it
+later at the step in hand. See [Hold Tribunal](help:hold-tribunal).
+
+### Order of Business
+<!-- help: section-meeting-business -->
+
+The meeting's steps, day by day: the Opening and Attendance on the
+first day, each case and motion on the day the Opening set for it, and
+the rulings, the treasury and the Closing on the last. A step held is
+marked ✓, and the step in hand ▶.
+
+<!-- tui -->
+`e` holds the chosen step (again, if it was held already); before the
+meeting opens, it opens it. `d` abandons the meeting, keeping whatever
+its steps changed. Choose a step to read what was entered at it under
+the lists.
+<!-- /tui -->
+<!-- gui -->
+**Hold** holds the chosen step (again, if it was held already); before
+the meeting opens, it opens it. **Abandon** gives up the meeting,
+keeping whatever its steps changed. Choose a step to read what was
+entered at it beside the list.
+<!-- /gui -->
+
+### Attendance
+<!-- help: section-meeting-attendance -->
+
+Each covenant's magi, how many are absent, the proxies it carries and
+its votes in the hall: its magi present, and its proxies if the
+Presiding Quaesitor allowed them. Proxies set aside are shown but not
+counted.
+
+<!-- tui -->
+`e` holds Attendance and proxies again.
+<!-- /tui -->
+<!-- gui -->
+**Edit** holds Attendance and proxies again.
+<!-- /gui -->
+
 ## Peripheral Code tab
 <!-- help: tab-trib-code -->
 

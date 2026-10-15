@@ -11,7 +11,7 @@ from support import NODES, everything_saga, wait_until
 from textual.screen import ModalScreen
 from textual.widgets import TabbedContent, Tree
 
-from ars_magica_manager import catalog, giving, spells, storage, vis
+from ars_magica_manager import catalog, giving, meeting, spells, storage, vis
 from ars_magica_manager import economics as eco
 from ars_magica_manager import worksheet_forms as wf
 from ars_magica_manager.models import (
@@ -165,6 +165,17 @@ def _pick(open_editor, list_id: str, index: int = 0):
     return opener
 
 
+async def _open_attendance(ws) -> None:
+    """Attendance and proxies, the meeting opened first."""
+    tribunal = ws.saga.tribunals[0]
+    opening = meeting.hold(ws.saga, tribunal)
+    opening.apply({f.key: f.value for f in opening.fields() if f.kind != "info"})
+    await _pick(
+        lambda ws: ws._core_verb("section-meeting-attendance", "edit"),
+        "meeting-attendance",
+    )(ws)
+
+
 def _economics_row(which: str, key: str):
     """Edit the Yearly Expenditure / Cost Savings row with `key`."""
 
@@ -292,6 +303,14 @@ OPENERS: dict[str, Opener] = {
             lambda ws: ws._core_verb("section-trib-roster", "edit"), "trib-roster", 1
         ),
     ),
+    "hold tribunal": Opener(
+        "tribunal",
+        _pick(
+            lambda ws: ws._core_verb("section-meeting-business", "edit"),
+            "meeting-business",
+        ),
+    ),
+    "attendance and proxies": Opener("tribunal", _open_attendance),
     "add case": Opener(
         "tribunal",
         _pick(lambda ws: ws._core_verb("section-trib-cases", "add"), "trib-cases"),

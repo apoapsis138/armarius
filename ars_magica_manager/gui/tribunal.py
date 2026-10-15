@@ -1,8 +1,8 @@
 """The desktop Tribunal page in the Codex layout: a header with its name,
 when it next meets and its facts, over its chapters: the Roster of its
 covenants and magi of note, worked out from the covenants that belong to
-it, its Docket of cases, its Peripheral Code, its Treasury, its Diary,
-and Manage.
+it, its Docket of cases, the Meeting being held, its Peripheral Code,
+its Treasury, its Diary, and Manage.
 
 What it says comes from the shared core (tribunal_sheet.py), as the
 terminal's Tribunal sheet does, and its buttons run the core's forms
@@ -17,6 +17,7 @@ from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from .. import (
     artwork,
+    meeting,
     tribunal_forms,
     tribunal_packages,
     tribunal_sheet,
@@ -27,6 +28,8 @@ from .. import character_sheet as cs
 from ..markup import aligned, escape
 from ..models import Case, Saga, Tribunal
 from ..sections import (
+    ATTENDANCE_SECTION,
+    BUSINESS_SECTION,
     CASES_SECTION,
     CODE_SECTION,
     PAST_CASES_SECTION,
@@ -69,6 +72,7 @@ class TribunalPage(QWidget):
         self.ops = tribunal_forms.tribunal_ops(saga, tribunal)
         self.codex.add("Roster", "tribunal", self._roster())
         self.codex.add("Docket", "worksheet", self._docket())
+        self.codex.add("Meeting", "tribunal", self._meeting())
         self.codex.add("Peripheral Code", "lab_text", self._code())
         self.codex.add("Treasury", "income", self._treasury())
         for extra in tribunal_packages.of(tribunal).tabs:
@@ -234,6 +238,47 @@ class TribunalPage(QWidget):
                 tribunal_sheet.past_grid(t),
                 PAST_CASES_SECTION,
                 self._show_case(lambda: tribunal_sheet.closed_cases(t)),
+            ),
+        )
+
+    def _show_step(self, row: int) -> None:
+        self.codex.inspect(
+            meeting.title(self.saga, self.tribunal),
+            "",
+            meeting.step_text(self.saga, self.tribunal, row),
+        )
+
+    def _meeting(self) -> QWidget:
+        """The meeting being held (or the next): where and what is in
+        hand, its order of business by day, and who is in the hall."""
+        p, saga, t = self.p, self.saga, self.tribunal
+        facts = aligned([(f.label, escape(f.value)) for f in meeting.facts(saga, t)])
+        chooser = Chooser()
+
+        def choose(row: int) -> None:
+            chooser.choose(row)
+            self._show_step(row)
+
+        business = section(
+            meeting.business_title(saga, t),
+            p,
+            table_view(meeting.business_grid(saga, t).table(), p, choose),
+            buttons=verb_buttons(
+                self.ops[BUSINESS_SECTION],
+                chooser,
+                self.run,
+                p,
+                nouns=("Add", "Hold", "Abandon"),
+            ),
+        )
+        return scrolling_page(
+            p,
+            section(meeting.title(saga, t), p, TextBlock(facts, p)),
+            business,
+            self._grid(
+                meeting.attendance_title(saga, t),
+                meeting.attendance_grid(saga, t),
+                ATTENDANCE_SECTION,
             ),
         )
 

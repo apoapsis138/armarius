@@ -490,6 +490,7 @@ def test_the_desktop_shows_a_tribunal_and_lists_them_on_the_saga():
     assert page.chapters() == [
         "Roster",
         "Docket",
+        "Meeting",
         "Peripheral Code",
         "Treasury",
         "Gilds",

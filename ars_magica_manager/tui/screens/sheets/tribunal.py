@@ -12,10 +12,12 @@ from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Button, Collapsible, Static, TabbedContent
 
-from .... import tribunal_forms, tribunal_packages, tribunal_sheet
+from .... import meeting, tribunal_forms, tribunal_packages, tribunal_sheet
 from ....markup import aligned, escape, markdown_inline
 from ....models import Case, Saga, Tribunal
 from ....sections import (
+    ATTENDANCE_SECTION,
+    BUSINESS_SECTION,
     CASES_SECTION,
     CODE_SECTION,
     PAST_CASES_SECTION,
@@ -31,6 +33,9 @@ from .base import SheetView
 #: What each list's rows depend on besides its own section: the top
 #: panel's next meeting and sizes, and the cases the others name.
 _CASES = (CASES_SECTION, PAST_CASES_SECTION)
+#: The meeting's lists: holding a step can change the cases, the
+#: roster's proxies, the Diary and the next meeting.
+_HALL = (BUSINESS_SECTION, ATTENDANCE_SECTION)
 
 
 class TribunalSheetView(SheetView):
@@ -56,9 +61,12 @@ class TribunalSheetView(SheetView):
         self.package = tribunal_packages.of(tribunal)
         #: The case the Docket's details panel shows.
         self._case: Case | None = None
+        #: The step of the meeting its details panel shows (None: the
+        #: step in hand).
+        self._step: int | None = None
 
     def compose(self) -> ComposeResult:
-        info = (TRIBUNAL_INFO_SECTION, ROSTER_SECTION, *_CASES)
+        info = (TRIBUNAL_INFO_SECTION, ROSTER_SECTION, *_CASES, *_HALL)
         with (
             Vertical(id="trib-top-panel"),
             PinnedCollapsible(
@@ -76,6 +84,7 @@ class TribunalSheetView(SheetView):
         with TabbedContent(initial=self.INITIAL_TAB):
             yield self._tab("Roster", "tab-trib-roster", self._roster_tab)
             yield self._tab("Docket", "tab-trib-docket", self._docket_tab)
+            yield self._tab("Meeting", "tab-trib-meeting", self._meeting_tab)
             yield self._tab("Peripheral Code", "tab-trib-code", self._code_tab)
             yield self._tab("Treasury", "tab-trib-treasury", self._treasury_tab)
             for extra in self.package.tabs:
@@ -139,7 +148,11 @@ class TribunalSheetView(SheetView):
         saga, t = self.saga, self.tribunal
         yield from self._grid_section(
             ROSTER_SECTION,
-            (TRIBUNAL_INFO_SECTION, *(e.section_id for e in self.package.lists)),
+            (
+                TRIBUNAL_INFO_SECTION,
+                *_HALL,
+                *(e.section_id for e in self.package.lists),
+            ),
             lambda: tribunal_sheet.roster_title(saga, t),
             lambda: tribunal_sheet.roster_grid(saga, t).lines(),
             "trib-roster",
@@ -160,14 +173,14 @@ class TribunalSheetView(SheetView):
             with VerticalScroll():
                 yield from self._grid_section(
                     CASES_SECTION,
-                    (TRIBUNAL_INFO_SECTION, PAST_CASES_SECTION),
+                    (TRIBUNAL_INFO_SECTION, PAST_CASES_SECTION, *_HALL),
                     lambda: tribunal_sheet.cases_title(t),
                     lambda: tribunal_sheet.cases_grid(saga, t).lines(),
                     "trib-cases",
                 )
                 yield from self._grid_section(
                     PAST_CASES_SECTION,
-                    (CASES_SECTION,),
+                    (CASES_SECTION, *_HALL),
                     lambda: tribunal_sheet.past_title(t),
                     lambda: tribunal_sheet.past_grid(t).lines(),
                     "trib-past",
@@ -181,9 +194,50 @@ class TribunalSheetView(SheetView):
             self._case = None
         return tribunal_sheet.case_text(self.saga, self.tribunal, self._case)
 
+    def _meeting_tab(self) -> ComposeResult:
+        """The meeting being held (or the next): where and what is in
+        hand, its order of business by day and who is in the hall, and
+        (docked below) the details panel of the chosen step."""
+        saga, t = self.saga, self.tribunal
+        watched = (TRIBUNAL_INFO_SECTION, *_CASES, *_HALL)
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                yield self._static(watched, self._meeting_facts, id="meeting-facts")
+                yield from self._grid_section(
+                    BUSINESS_SECTION,
+                    (TRIBUNAL_INFO_SECTION, *_CASES, ATTENDANCE_SECTION),
+                    lambda: meeting.business_title(saga, t),
+                    lambda: meeting.business_grid(saga, t).lines(),
+                    "meeting-business",
+                )
+                yield from self._grid_section(
+                    ATTENDANCE_SECTION,
+                    (TRIBUNAL_INFO_SECTION, *_CASES, BUSINESS_SECTION),
+                    lambda: meeting.attendance_title(saga, t),
+                    lambda: meeting.attendance_grid(saga, t).lines(),
+                    "meeting-attendance",
+                )
+            yield self._panel(watched, self._step_text, id="meeting-step-info")
+
+    def _meeting_facts(self) -> str:
+        facts = meeting.facts(self.saga, self.tribunal)
+        heading = escape(meeting.title(self.saga, self.tribunal))
+        return f"[b]{heading}[/]\n" + aligned(
+            [(f.label, escape(f.value)) for f in facts]
+        )
+
+    def _step_text(self) -> str:
+        return meeting.step_text(self.saga, self.tribunal, self._step)
+
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
-        """A case was chosen: show it in the Docket's details panel."""
+        """A case or a step of the meeting was chosen: show it in its
+        tab's details panel."""
         list_id = event.selectable_list.id or ""
+        if list_id == "meeting-business":
+            event.stop()
+            self._step = event.data_index
+            self.query_one("#meeting-step-info", Static).update(self._step_text())
+            return
         if list_id not in ("trib-cases", "trib-past"):
             return
         event.stop()
@@ -235,7 +289,7 @@ class TribunalSheetView(SheetView):
         t = self.tribunal
         yield from self._grid_section(
             TRIB_DIARY_SECTION,
-            (),
+            _HALL,
             lambda: tribunal_sheet.diary_title(t),
             lambda: tribunal_sheet.diary_grid(t).lines(),
             "trib-diary",

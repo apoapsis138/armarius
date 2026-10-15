@@ -11,7 +11,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Tokens and Archai  6 Diary
+   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Tokens and Archai  7 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -79,7 +79,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Tokens and Archai  6 Diary
+   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Tokens and Archai  7 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -134,6 +134,74 @@
   ▌
 
 
+===== tab-trib-meeting
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Theban
+
+      Customs:       Theban: Tokens                      Praeco:              (not chosen)
+      Meets every:   7 years                             Presiding Quaesitor: (not chosen)
+      Next meeting:  Summer 1225                         Covenants:           0
+      Meeting place: Thebes                              Magi:                0
+      Cases:         none pending                        Your votes:          2 tokens of 2
+      In the Saga: not written yet. Edit the Tribunal to say.
+          Edit (e)
+
+   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Tokens and Archai  7 Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  The Next Meeting: Summer 1225
+  Held at: Thebes
+  Now:     Not yet opened: hold any step (e) to open it
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Order of Business (3 days)
+
+        Step                    Day
+      ○ Opening and the oaths   The First Day
+      ○ Attendance and proxies
+      ○ Elections               The Third Day
+      ○ Rulings and fines
+      ○ Treasury and vis
+      ○ Closing
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Attendance (0 votes in the hall)
+
+      No covenant belongs to this Tribunal yet.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a step to read what was entered at it.
+  ▌
+
+
 ===== tab-trib-code
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -147,7 +215,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Tokens and Archai  6 Diary
+   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Tokens and Archai  7 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Theban: Tokens. Its magi vote with tokens and ostracise with shards, and elect its archai at each
@@ -215,7 +283,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Tokens and Archai  6 Diary
+   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Tokens and Archai  7 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Silver in hand: 0 pounds
@@ -283,7 +351,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Tokens and Archai  6 Diary
+   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Tokens and Archai  7 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -351,7 +419,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Tokens and Archai  6 Diary
+   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Tokens and Archai  7 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

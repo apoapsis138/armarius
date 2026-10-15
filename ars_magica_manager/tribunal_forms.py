@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import tribunal_packages, tribunal_sheet, tribunals
+from . import meeting, tribunal_packages, tribunal_sheet, tribunals
 from .arts import ARTS
 from .commands import (
     Choice,
@@ -689,4 +689,5 @@ def tribunal_ops(saga: Saga, tribunal: Tribunal) -> dict[str, SectionOps]:
     }
     for extra in tribunal_packages.of(tribunal).lists:
         ops[extra.section_id] = extra.ops(saga, tribunal)
+    ops.update(meeting.ops(saga, tribunal))
     return ops

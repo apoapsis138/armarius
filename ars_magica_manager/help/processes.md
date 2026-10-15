@@ -180,6 +180,40 @@ The date moves on. When anything happened, the [Seasons](help:seasons) page open
 
 **See also:** [Plan Season](help:plan-season), [Season Summary](help:season-summary), [Seasons](help:seasons), [The saga](help:saga), [How to plan and run a season](help:guide-seasons)
 
+# Hold Tribunal
+<!-- help: hold-tribunal -->
+
+A Tribunal's meeting, held a step at a time from its **Meeting**
+tab. Each step is a short form: you make the decisions and enter the
+rolls, and the app works out the rest. The meeting is saved after
+every step, so leaving it simply leaves it; holding it again resumes
+at the step in hand.
+
+The steps run in a fixed order:
+
+- **Opening and the oaths**: where it is held, how many days it lasts
+  (3 unless you say otherwise) and the day each case and motion is
+  heard. Saving it opens the meeting; cancelling holds none.
+- **Attendance and proxies**: for each covenant, how many of its magi
+  are absent and the proxies it carries, and whether the Presiding
+  Quaesitor allows them or sets them aside. Its votes in the hall are
+  worked out, and the proxies are kept on the roster.
+- **Each case and motion**, on its day: the prosecutor and defender (a
+  motion has one who speaks for it), taken from the case.
+- **Elections**, when the Tribunal's customs have offices (the Theban
+  archai): each office's holder and when the term ends.
+- **Rulings and fines**: the ruling on each case.
+- **Treasury and vis**: the treasury as it stands and the loans that
+  fall due this year.
+- **Closing**: each case with a ruling is decided, the meeting is
+  written in the Tribunal's Diary, and the next meeting is set for when
+  the Tribunal next meets.
+
+Any step can be held again to change it. Every step has a Note for
+anything said or decided in your own words.
+
+**See also:** [Tribunal sheet](help:tribunal), [Meeting tab](help:tab-trib-meeting)
+
 # The World Turns
 <!-- help: world-turns -->
 
