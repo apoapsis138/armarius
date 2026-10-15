@@ -7,14 +7,14 @@ from __future__ import annotations
 import os
 
 import pytest
-from support import everything_saga, wait_until
-from textual.widgets import Tree
+from support import everything_saga, screen_lines, wait_until
+from textual.widgets import Collapsible, TabbedContent, Tree
 
 from ars_magica_manager import storage, transfer, tribunal_forms, tribunal_sheet
 from ars_magica_manager import tribunals as trib
 from ars_magica_manager.actions import NodeKind
-from ars_magica_manager.commands import Form
-from ars_magica_manager.models import Covenant, Saga, Tribunal
+from ars_magica_manager.commands import Choose, Confirm, Form, Refuse
+from ars_magica_manager.models import Covenant, Saga, Tribunal, TribunalDiaryEntry
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import ConfirmScreen, WorkspaceScreen
 
@@ -103,10 +103,79 @@ def test_the_sheet_counts_the_covenants_and_the_troupes_votes():
     facts = {f.label: f.value for f in tribunal_sheet.facts(saga, rhine)}
     assert facts["Covenants"] == "2 recorded of 6"
     assert facts["Praeco"] == "Severinus"
-    assert [row[0] for row in tribunal_sheet.roster_rows(saga, rhine)] == [
+    assert [row[0] for row in tribunal_sheet.roster_grid(saga, rhine).rows] == [
         "Keep",
         "Fengheld",
+        "4 unnamed",
     ]
+
+
+def test_a_covenant_votes_its_magi_and_its_proxies():
+    saga = everything_saga()
+    rhine = saga.tribunals[0]
+    grid = tribunal_sheet.roster_grid(saga, rhine)
+    assert grid.rows[1][:5] == ["Fengheld", "Sketch", "3", "4", "1 held"]
+    form = tribunal_forms.roster_ops(saga, rhine).edit(1)
+    assert isinstance(form, Form)
+    form.apply({"proxies": 0})
+    assert rhine.proxies == {}
+    assert isinstance(tribunal_forms.roster_ops(saga, rhine).edit(5), Refuse)
+
+
+def test_the_docket_flags_notice_not_given_and_cases_against_yours():
+    saga = everything_saga()
+    rhine = saga.tribunals[0]
+    assert tribunal_sheet.notice_due(rhine) == "Spring 1228"
+    assert tribunal_sheet.season_before(1228, "Spring", 1) == (1227, "Winter")
+    grid = tribunal_sheet.cases_grid(saga, rhine)
+    assert [row[3] for row in grid.rows] == ["Spring 1228", "not given"]
+    assert grid.styles[(0, 0)] == "$text-error"  # against Keep, the troupe's
+    facts = {f.label: f.value for f in tribunal_sheet.facts(saga, rhine)}
+    assert facts["Cases"] == "2 (1 against you)"
+
+
+def test_withdraw_moves_a_case_to_the_past_rulings():
+    saga = everything_saga()
+    rhine = saga.tribunals[0]
+    step = tribunal_forms.withdraw_case(rhine, 1)
+    assert isinstance(step, Confirm)
+    step.apply()
+    assert [c.title for c in tribunal_sheet.open_cases(rhine)] == ["Fengheld v. Keep"]
+    past = tribunal_sheet.past_grid(rhine)
+    assert [(row[0], row[3]) for row in past.rows] == [
+        ("Gild dues", "withdrawn"),
+        ("Oakheart's founding", "granted 1214"),
+    ]
+
+
+def test_treasury_add_chooses_the_kind_then_its_form():
+    saga = everything_saga()
+    rhine = saga.tribunals[0]
+    choose = tribunal_forms.treasury_ops(rhine).add()
+    assert isinstance(choose, Choose)
+    assert [c.value for c in choose.choices()] == ["vis", "silver", "loan", "fine"]
+    form = choose.apply("fine")
+    assert isinstance(form, Form)
+    labels = [f.label for f in form.fields()]
+    assert "From the case" in labels and "Paid" in labels
+    form.apply({"who": "Fengheld", "amount": 5, "paid": True})
+    assert dict(tribunal_sheet.balance_lines(rhine))["Silver in hand"] == (
+        "35 pounds"  # 40, less the loan of 10 still out, and the fine of 5 in
+    )
+
+
+def test_the_diary_lists_newest_first_by_its_own_index():
+    saga = everything_saga()
+    rhine = saga.tribunals[0]
+    rhine.diary.append(TribunalDiaryEntry(1214, "Summer", "The Tribunal of 1214"))
+    grid = tribunal_sheet.diary_grid(rhine)
+    assert [row[1] for row in grid.rows] == [
+        "The Tribunal of 1221",
+        "The Tribunal of 1214",
+    ]
+    assert grid.keys == [0, 1]
+    rhine.diary.append(TribunalDiaryEntry(1228, "Summer", "The Tribunal of 1228"))
+    assert tribunal_sheet.diary_grid(rhine).keys == [2, 0, 1]
 
 
 def _export(saga: Saga) -> dict:
@@ -199,6 +268,49 @@ async def test_new_tribunal_opens_it_and_d_deletes_it():
         )
 
 
+async def test_the_docket_keys_act_on_the_chosen_case():
+    storage.save_saga(everything_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        workspace = await _workspace(pilot, app)
+        tree = workspace.query_one("#nav-tree", Tree)
+        node = next(
+            n for n in _walk(tree.root) if n.data == (NodeKind.TRIBUNAL, "rhine")
+        )
+        tree.select_node(node)
+        assert await wait_until(
+            pilot, lambda: workspace._tribunal_sheet_view is not None
+        )
+        view = workspace._tribunal_sheet_view
+        view.query_one(TabbedContent).active = "tab-trib-docket"
+        assert await wait_until(pilot, lambda: bool(view.query("#trib-cases")))
+        view.query_one("#section-trib-cases", Collapsible).focus_section()
+        assert await wait_until(
+            pilot, lambda: workspace._active_section() == "section-trib-cases"
+        )
+        await pilot.press("down")
+        assert await wait_until(pilot, lambda: "m Withdraw" in screen_lines(app)[-1])
+        await pilot.press("m")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await pilot.press("y")
+        assert await wait_until(
+            pilot,
+            lambda: (
+                [c.status for c in storage.load_saga("test_saga").tribunals[0].cases]
+                == ["open", "withdrawn", "decided"]
+            ),
+        )
+        assert await wait_until(
+            pilot,
+            lambda: "Gild dues" in str(view.query_one("#trib-past")._rows),
+        )
+        await pilot.press("d")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        assert "Fengheld v. Keep" in str(
+            app.screen.query_one("#confirm-message").render()
+        )
+
+
 # -- the desktop --
 
 
@@ -214,7 +326,13 @@ def test_the_desktop_shows_a_tribunal_and_lists_them_on_the_saga():
     QApplication.instance() or QApplication([])
     saga = everything_saga()
     page = TribunalPage(saga, saga.tribunals[0], PALETTES[0])
-    assert page.chapters() == ["Roster"]
+    assert page.chapters() == [
+        "Roster",
+        "Docket",
+        "Peripheral Code",
+        "Treasury",
+        "Diary",
+    ]
     saga_page = SagaPage(saga, PALETTES[0], lambda _id: None)
     titles = [label.text() for label in saga_page.findChildren(QLabel)]
     assert any("Tribunals (1)" in title for title in titles)

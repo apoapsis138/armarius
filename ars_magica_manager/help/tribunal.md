@@ -52,7 +52,10 @@ The facts under the Tribunal's name:
   characters, at any detail.
 - **Covenants** and **Magi**: how many are recorded here, and of how many
   in all when you have said (most are never written down).
-- **Your votes**: the troupe's covenants' votes.
+- **Your votes**: the troupe's covenants' votes, proxies included, of
+  every vote in the hall.
+- **Cases**: how many are on the docket, and how many are against the
+  troupe's covenants or their magi.
 
 <!-- tui -->
 Press `e` (or Edit) to change them, and to write what the Tribunal is
@@ -65,19 +68,111 @@ like in the saga.
 ## Roster tab
 <!-- help: tab-trib-roster -->
 
-Every covenant that belongs to the Tribunal, the troupe's first, with its
-detail and its votes: one for each of its magi, named or not.
+Every covenant that belongs to the Tribunal, the troupe's first, and the
+magi worth keeping an eye on.
 
-### Roster
+### Covenants
 <!-- help: section-trib-roster -->
 
+Each covenant of the Tribunal: how much of it is written down, its magi
+(named or not), its votes at the next meeting and the proxies it holds,
+and its attitude toward the troupe's covenant. When the Tribunal's size
+says there are more covenants than are recorded, a last row counts them
+and the magi they hold.
+
+A covenant has one vote for each of its magi, and one for each proxy it
+carries: the sigil of an absent magus, given for one meeting. Proxies
+change at every meeting, so they are kept here rather than on the
+covenant.
+
 <!-- tui -->
-The covenants of the Tribunal, each with whether the troupe plays it,
-its detail and its votes. Choose a covenant's Tribunal in its Edit
-Covenant to add it here.
+Press `e` on a covenant to set the proxies it holds. Choose a covenant's
+Tribunal in its Edit Covenant to add it here.
 <!-- /tui -->
 <!-- gui -->
-The covenants of the Tribunal, each with its detail and its votes; choose
-one to read about it beside the list. Choose a covenant's Tribunal in its
-Edit Covenant to add it here.
+Choose a covenant to read about it beside the list, and **Edit** to set
+the proxies it holds. Choose a covenant's Tribunal in its Edit Covenant
+to add it here.
 <!-- /gui -->
+
+### Magi of Note
+<!-- help: section-trib-magi -->
+
+The Tribunal's Praeco and Presiding Quaesitor, the magi of its covenants
+the troupe doesn't play, and anyone prosecuting or defending a case on
+its docket, with their House, covenant and part in the Tribunal. Edit a
+magus on their covenant's sheet or their own.
+
+## Docket tab
+<!-- help: tab-trib-docket -->
+
+The cases the Tribunal will hear at its next meeting, and those heard or
+withdrawn before.
+
+### Cases
+<!-- help: section-trib-cases -->
+
+Each charge, motion or appeal for the next meeting: when it was filed,
+when notice of it is due, and what is sought. Under the core rules,
+notice is due a season before the meeting; a case whose notice hasn't
+been given is flagged, and a case against one of the troupe's covenants
+or magi is drawn in red.
+
+<!-- tui -->
+`a` adds a case, `e` edits the chosen one and `d` deletes it. More (`m`)
+offers **Withdraw**, which takes it off the docket and keeps it among
+the past rulings. Choose a case to read all of it under the lists.
+<!-- /tui -->
+<!-- gui -->
+**Add**, **Edit** and **Delete** change the cases; **Withdraw** takes
+the chosen one off the docket and keeps it among the past rulings.
+Choose a case to read all of it beside the list.
+<!-- /gui -->
+
+### Rulings of Past Tribunals
+<!-- help: section-trib-past -->
+
+The cases past meetings decided, with their outcome, and those
+withdrawn. Edit one to correct it, or set its Status back to open to
+return it to the docket.
+
+## Peripheral Code tab
+<!-- help: tab-trib-code -->
+
+The rulings of this Tribunal's own Peripheral Code: what each says, the
+year it was made, and the case it came from.
+
+### Peripheral Code
+<!-- help: section-trib-code -->
+
+Add a ruling, edit it or delete it. A ruling can name one of the
+Tribunal's cases as where it came from.
+
+## Treasury tab
+<!-- help: tab-trib-treasury -->
+
+What the Tribunal holds in common, and what is owed to it.
+
+### Treasury
+<!-- help: section-trib-treasury -->
+
+Each entry is vis, silver, a loan or a fine; Add asks which first. Vis
+and silver are taken in (a positive amount) or paid out (a negative
+one). A loan is silver or vis lent out of the treasury: it leaves the
+treasury until it is marked repaid. A fine, from a case, comes in once it
+is marked paid.
+
+The balance above the list adds them up: the silver and vis in hand,
+the loans still out and the fines still unpaid.
+
+## Diary tab
+<!-- help: tab-trib-diary -->
+
+The Tribunal's own record of what happened: the minutes of each meeting
+and anything else worth writing down.
+
+### Diary
+<!-- help: section-trib-diary -->
+
+Entries newest first, each with its year and season. Add one, edit it
+or delete it.

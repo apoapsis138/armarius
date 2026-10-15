@@ -217,6 +217,36 @@ OPENERS: dict[str, Opener] = {
     "edit tribunal": Opener(
         "tribunal", lambda ws: ws._core_verb("section-trib-info", "edit")
     ),
+    "edit proxies": Opener(
+        "tribunal",
+        _pick(
+            lambda ws: ws._core_verb("section-trib-roster", "edit"), "trib-roster", 1
+        ),
+    ),
+    "add case": Opener(
+        "tribunal",
+        _pick(lambda ws: ws._core_verb("section-trib-cases", "add"), "trib-cases"),
+    ),
+    "edit case": Opener(
+        "tribunal",
+        _pick(lambda ws: ws._core_verb("section-trib-cases", "edit"), "trib-cases"),
+    ),
+    "add ruling": Opener(
+        "tribunal",
+        _pick(lambda ws: ws._core_verb("section-trib-code", "add"), "trib-code"),
+    ),
+    "edit treasury loan": Opener(
+        "tribunal",
+        _pick(
+            lambda ws: ws._core_verb("section-trib-treasury", "edit"),
+            "trib-treasury",
+            2,
+        ),
+    ),
+    "add tribunal diary entry": Opener(
+        "tribunal",
+        _pick(lambda ws: ws._core_verb("section-trib-diary", "add"), "trib-diary"),
+    ),
     # Covenant
     "create character": Opener("covenant", lambda ws: ws.action_create_character()),
     "create laboratory": Opener("covenant", lambda ws: ws.action_create_laboratory()),

@@ -44,6 +44,9 @@ class Case:
     charge: str = ""
     filed_year: int | None = None
     filed_season: str = ""
+    #: Whether notice of it has been given (by the package's rule it is
+    #: due a while before the meeting).
+    notice_given: bool = False
     penalty: str = ""
     evidence: str = ""
     prosecutor: str = ""
@@ -117,6 +120,9 @@ class Tribunal:
     #: down (None: only those recorded).
     covenants_total: int | None = None
     magi_total: int | None = None
+    #: Proxies each covenant holds for the next meeting, by covenant id:
+    #: they change at every meeting, so they are kept here.
+    proxies: dict[str, int] = field(default_factory=dict)
     cases: list[Case] = field(default_factory=list)
     #: The Peripheral Code in force.
     rulings: list[Ruling] = field(default_factory=list)

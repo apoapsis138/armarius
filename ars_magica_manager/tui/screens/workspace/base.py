@@ -93,7 +93,7 @@ from ....rules import creation as creation_rules
 from ....rules import creation_characteristics as cch
 from ....rules import creation_covenant as cov_creation
 from ....rules import options as rule_options
-from ....sections import TRIBUNAL_INFO_SECTION
+from ....sections import CASES_SECTION, TRIBUNAL_INFO_SECTION
 from ... import hosting
 from ..creation_worksheet import CreationWorksheetScreen
 from ..fields import (
@@ -1819,6 +1819,18 @@ class WorkspaceBase(Screen[None]):
                     self.call_after_refresh(self._nav_tree().select_node, node)
 
         run_steps(self.app, tribunal_forms.new_tribunal_form(self.saga), done)
+
+    def action_withdraw_case(self) -> None:
+        """More's Withdraw on the docket's chosen case."""
+        view = self._tribunal_sheet_view
+        row = view.section_row(CASES_SECTION) if view is not None else None
+        if view is None or row is None:
+            return
+        run_steps(
+            self.app,
+            tribunal_forms.withdraw_case(view.tribunal, row),
+            lambda _end: self._commit(CASES_SECTION),
+        )
 
     def action_create_character(self) -> None:
         covenant = self.selected_covenant

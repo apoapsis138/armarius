@@ -1070,8 +1070,68 @@
       "active": "section-trib-roster",
       "keys": {
         "a": "(disabled)",
+        "e": "FieldsDialog: Proxies held by Keep",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-magi": {
+      "active": "section-trib-magi",
+      "keys": {
+        "a": "(disabled)",
         "e": "(disabled)",
         "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-cases": {
+      "active": "section-trib-cases",
+      "keys": {
+        "a": "FieldsDialog: Add a Case",
+        "e": "FieldsDialog: Edit Fengheld v. Keep",
+        "d": "ConfirmScreen",
+        "m": "ConfirmScreen",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-past": {
+      "active": "section-trib-past",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Oakheart's founding",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-code": {
+      "active": "section-trib-code",
+      "keys": {
+        "a": "FieldsDialog: Add a Ruling",
+        "e": "FieldsDialog: Edit a Ruling",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-treasury": {
+      "active": "section-trib-treasury",
+      "keys": {
+        "a": "ChooseScreen: Add to the Treasury",
+        "e": "FieldsDialog: Edit Silver",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-diary": {
+      "active": "section-trib-diary",
+      "keys": {
+        "a": "FieldsDialog: Add a Diary Entry",
+        "e": "FieldsDialog: Edit a Diary Entry",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"
       }

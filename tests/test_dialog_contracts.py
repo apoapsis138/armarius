@@ -397,6 +397,66 @@ CONTRACTS: dict[str, Contract] = {
             "#trib-info-left": "Leandro",
         },
     ),
+    "edit proxies": Contract(
+        prefill={"Proxies held": "1"},
+        edits={"Proxies held": "3"},
+        saved=lambda s: s.tribunals[0].proxies,
+        expected={"cov_sketch": 3},
+        invalid={"Proxies held": "-1"},
+        shown={"#trib-roster": "3 held", "#trib-info-right": "Your votes"},
+    ),
+    "add case": Contract(
+        prefill={"Case": "", "Kind": "charge", "Filed (year)": "1220"},
+        edits={
+            "Case": "Keep v. Fengheld",
+            "Kind": "appeal",
+            "Against": "Fengheld",
+            "Notice given": True,
+        },
+        saved=lambda s: [
+            (c.title, c.kind, c.against, c.notice_given)
+            for c in s.tribunals[0].cases
+            if c.title == "Keep v. Fengheld"
+        ],
+        expected=[("Keep v. Fengheld", "appeal", "Fengheld", True)],
+        invalid={"Case": ""},
+        shown={"#trib-cases": "Keep v. Fengheld", "#section-trib-cases": "(3)"},
+    ),
+    "edit case": Contract(
+        prefill={"Case": "Fengheld v. Keep", "Against": "Keep", "Status": "open"},
+        edits={"Status": "decided", "Outcome": "Fengheld keeps the ford"},
+        saved=lambda s: (
+            s.tribunals[0].cases[0].status,
+            s.tribunals[0].cases[0].outcome,
+        ),
+        expected=("decided", "Fengheld keeps the ford"),
+        invalid={"Case": ""},
+        shown={"#trib-past": "Fengheld keeps the ford", "#trib-cases": "Gild dues"},
+    ),
+    "add ruling": Contract(
+        prefill={"Ruling": "", "Year": "1220"},
+        edits={"Ruling": "Ford sources", "What it says": "A source moves with it."},
+        saved=lambda s: [r.title for r in s.tribunals[0].rulings],
+        expected=["Gild membership", "Ford sources"],
+        invalid={"Ruling": ""},
+        shown={"#trib-code": "Ford sources"},
+    ),
+    "edit treasury loan": Contract(
+        prefill={"To whom": "Fengheld", "Amount": "10", "Due (year)": "1229"},
+        edits={"Repaid": True},
+        saved=lambda s: s.tribunals[0].treasury[2].paid,
+        expected=True,
+        invalid=[{"To whom": ""}, {"Amount": ""}],
+        shown={"#trib-treasury": "repaid", "#trib-balance": "Silver in hand: 40"},
+    ),
+    "add tribunal diary entry": Contract(
+        prefill={"Year": "1220", "Entry": ""},
+        edits={"Entry": "Gild dues raised"},
+        saved=lambda s: [e.title for e in s.tribunals[0].diary],
+        expected=["The Tribunal of 1221", "Gild dues raised"],
+        invalid={"Entry": ""},
+        shown={"#trib-diary": "Gild dues raised"},
+    ),
     "what matters": Contract(
         prefill={"What Matters": "Vis: the ford, 3 Aquam a year"},
         edits={"What Matters": "Library: strong in Rego"},

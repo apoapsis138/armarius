@@ -13,6 +13,7 @@ from ars_magica_manager.models import (
     Attitude,
     BondPower,
     Book,
+    Case,
     Character,
     Covenant,
     DeviceComponent,
@@ -31,10 +32,13 @@ from ars_magica_manager.models import (
     NamedDescription,
     Possession,
     Reason,
+    Ruling,
     Saga,
     ScoredTrait,
     Spell,
+    TreasuryEntry,
     Tribunal,
+    TribunalDiaryEntry,
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules.xp import ability_xp
@@ -334,6 +338,49 @@ def everything_saga() -> Saga:
                 next_year=1228,
                 meeting_place="Durenmar",
                 praeco_id="mag_sketch",
+                proxies={"cov_sketch": 1},
+                cases=[
+                    Case(
+                        "Fengheld v. Keep",
+                        brought_by="Fengheld",
+                        against="Keep",
+                        charge="Depriving a magus of magical power.",
+                        filed_year=1219,
+                        filed_season="Winter",
+                        notice_given=True,
+                        penalty="the ford source",
+                        evidence="Fengheld's register\nThe miller's account",
+                        prosecutor="Severinus",
+                    ),
+                    Case(
+                        "Gild dues",
+                        kind="motion",
+                        filed_year=1220,
+                        filed_season="Spring",
+                        penalty="dues of 3 pawns",
+                    ),
+                    Case(
+                        "Oakheart's founding",
+                        kind="appeal",
+                        filed_year=1212,
+                        status="decided",
+                        outcome="granted 1214",
+                    ),
+                ],
+                rulings=[
+                    Ruling("Gild membership", 1214, "Any covenant may join a gild.")
+                ],
+                treasury=[
+                    TreasuryEntry("silver", 40),
+                    TreasuryEntry("vis", 6, art="Vim"),
+                    TreasuryEntry("loan", 10, who="Fengheld", due_year=1229),
+                    TreasuryEntry("fine", 3, art="Corpus", who="Keep"),
+                ],
+                diary=[
+                    TribunalDiaryEntry(
+                        1221, "Summer", "The Tribunal of 1221", "Gild dues set."
+                    )
+                ],
             )
         ],
         characters=[magus, companion, rival],

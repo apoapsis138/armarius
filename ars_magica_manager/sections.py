@@ -102,8 +102,17 @@ MAGI_SECTION = "section-cov-magi"
 WHAT_MATTERS_SECTION = "section-cov-what-matters"
 #: A Tribunal sheet's top panel.
 TRIBUNAL_INFO_SECTION = "section-trib-info"
-#: Its roster of covenants.
+#: Its roster of covenants, where the proxies each holds are entered.
 ROSTER_SECTION = "section-trib-roster"
+#: Its magi of note (worked out, not edited here).
+TRIB_MAGI_SECTION = "section-trib-magi"
+#: Its docket: the cases for the next meeting, and those past.
+CASES_SECTION = "section-trib-cases"
+PAST_CASES_SECTION = "section-trib-past"
+#: Its Peripheral Code, treasury and Diary.
+CODE_SECTION = "section-trib-code"
+TREASURY_SECTION = "section-trib-treasury"
+TRIB_DIARY_SECTION = "section-trib-diary"
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),
@@ -111,4 +120,10 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     MAGI_SECTION: frozenset({"add", "edit", "remove"}),
     WHAT_MATTERS_SECTION: frozenset({"edit"}),
     TRIBUNAL_INFO_SECTION: frozenset({"edit"}),
+    ROSTER_SECTION: frozenset({"edit"}),
+    CASES_SECTION: frozenset({"add", "edit", "remove"}),
+    PAST_CASES_SECTION: frozenset({"edit", "remove"}),
+    CODE_SECTION: frozenset({"add", "edit", "remove"}),
+    TREASURY_SECTION: frozenset({"add", "edit", "remove"}),
+    TRIB_DIARY_SECTION: frozenset({"add", "edit", "remove"}),
 }

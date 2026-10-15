@@ -6,19 +6,291 @@
       Meets every:   7 years                             Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1228                         Covenants:           2
       Meeting place: Durenmar                            Magi:                4
-      Praeco:        Severinus                           Your votes:          1
+      Praeco:        Severinus                           Your votes:          1 of 4
+      Cases:         2 (1 against you)
       Gilds and forests.
           Edit (e)
 
-   1 Roster
+   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Roster
+    ▼ Covenants (2)
 
-      Keep      yours  Full    1 vote
-      Fengheld         Sketch  3 votes
+        Covenant  Detail  Magi  Votes  Proxies  Attitude
+      ○ Keep      Full    1     1
+      ○ Fengheld  Sketch  3     4      1 held   ◉ −2 Unfriendly
 
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Magi of Note (1)
+
+        Magus      House  Covenant  Office                   Detail
+      ○ Severinus         Fengheld  Praeco, Prosecutes Keep  Sketch
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-trib-docket
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Rhine
+
+      Meets every:   7 years                             Presiding Quaesitor: (not chosen)
+      Next meeting:  Summer 1228                         Covenants:           2
+      Meeting place: Durenmar                            Magi:                4
+      Praeco:        Severinus                           Your votes:          1 of 4
+      Cases:         2 (1 against you)
+      Gilds and forests.
+          Edit (e)
+
+   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Cases for 1228 (2)
+
+        Case              Kind    Filed        Notice due   Sought
+      ○ Fengheld v. Keep  Charge  Winter 1219  Spring 1228  the ford source
+      ○ Gild dues         Motion  Spring 1220  not given    dues of 3 pawns
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Rulings of Past Tribunals (1)
+
+        Case                 Kind    Filed  Outcome
+      ○ Oakheart's founding  Appeal  1212   granted 1214
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a case to read it.
+  ▌
+
+
+===== tab-trib-code
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Rhine
+
+      Meets every:   7 years                             Presiding Quaesitor: (not chosen)
+      Next meeting:  Summer 1228                         Covenants:           2
+      Meeting place: Durenmar                            Magi:                4
+      Praeco:        Severinus                           Your votes:          1 of 4
+      Cases:         2 (1 against you)
+      Gilds and forests.
+          Edit (e)
+
+   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Peripheral Code (1)
+
+        Ruling           Year  Says                           Case
+      ○ Gild membership  1214  Any covenant may join a gild.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-trib-treasury
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Rhine
+
+      Meets every:   7 years                             Presiding Quaesitor: (not chosen)
+      Next meeting:  Summer 1228                         Covenants:           2
+      Meeting place: Durenmar                            Magi:                4
+      Praeco:        Severinus                           Your votes:          1 of 4
+      Cases:         2 (1 against you)
+      Gilds and forests.
+          Edit (e)
+
+   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Silver in hand: 30 pounds
+  Vis in hand:    6 Vim (pawns)
+  Loans out:      10 pounds
+  Fines unpaid:   3 pawns of Corpus
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Treasury (4)
+
+        Entry   Amount             Who       Due or case  Note
+      ○ Silver  40 pounds
+      ○ Vis     6 pawns of Vim
+      ○ Loan    10 pounds          Fengheld  due 1229
+      ○ Fine    3 pawns of Corpus  Keep      unpaid
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-trib-diary
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Rhine
+
+      Meets every:   7 years                             Presiding Quaesitor: (not chosen)
+      Next meeting:  Summer 1228                         Covenants:           2
+      Meeting place: Durenmar                            Magi:                4
+      Praeco:        Severinus                           Your votes:          1 of 4
+      Cases:         2 (1 against you)
+      Gilds and forests.
+          Edit (e)
+
+   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Diary (1)
+
+        When         Entry                 Details
+      ○ Summer 1221  The Tribunal of 1221  Gild dues set.
 
 
 

@@ -46,6 +46,23 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.67.0 — 2026-10-15
+
+- A Tribunal's sheet has its lists. The Roster shows each covenant's
+  detail, magi, votes, the proxies it holds for the next meeting and its
+  attitude toward the troupe's covenant, then the covenants not written
+  down, counted; under it, the Magi of Note: the Praeco, the Presiding
+  Quaesitor, the magi of its other covenants and anyone pleading a case.
+- The Docket lists the cases for the next meeting (charges, motions and
+  appeals), with when notice is due and whether it has been given, and
+  flags the ones against the troupe. Withdraw takes a case off the
+  docket; decided and withdrawn cases are kept as the Rulings of Past
+  Tribunals.
+- The Peripheral Code holds the Tribunal's own rulings, the Treasury its
+  vis, silver, loans and fines with the balance worked out, and the
+  Diary its minutes. The top panel counts the cases pending and the
+  troupe's votes, proxies included.
+
 ## 2.66.0 — 2026-10-15
 
 - Tribunals are records of their own. A covenant chooses its Tribunal

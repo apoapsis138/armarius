@@ -94,6 +94,7 @@ NOT_ON_PAGES = frozenset(
         "instill_effect",
         "use_charge",
         "give",
+        "withdraw_case",
     }
 )
 
