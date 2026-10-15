@@ -465,6 +465,7 @@ async def test_more_on_a_record_offers_export_and_its_mode():
             "Export",
             "Update from a File",
             "In Creation / In Play",
+            "Demote",
         ]
         await menu(pilot, app, "m", "In Creation / In Play")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))

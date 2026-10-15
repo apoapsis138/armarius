@@ -380,7 +380,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Character Info",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Export, Update from a File, In Creation / In Play",
+        "m": "MenuScreen: Export, Update from a File, In Creation / In Play, Demote",
         "slash": "(disabled)"
       }
     },

@@ -32,6 +32,7 @@ from . import (
     seasons,
     storage,
     transfer,
+    world,
 )
 from . import economics as eco
 from . import familiars as fam
@@ -51,8 +52,11 @@ from .commands import Choice, Choose, Command, Confirm, Form, Refuse, notes
 from .form_spec import DialogField, pairs
 from .markup import escape, todo
 from .models import (
+    FULL,
     INCOME_EFFECTS,
+    LINE,
     SEASONS,
+    SKETCH,
     TEXT_LONGEVITY,
     Book,
     Character,
@@ -292,6 +296,12 @@ MANAGE: dict[str, str] = {
     "update_record": "Read an export of it over it, for example after working "
     "on it elsewhere: shows what would change first, and keeps its place in "
     "this saga.",
+    "promote": "Write more of it down: a line becomes a sketch with a "
+    "statblock, and a sketch a full character, In Creation, keeping every "
+    "score it had.",
+    "demote": "Keep less of it: a full character becomes a sketch, left out "
+    "of seasons and ageing, and a sketch a line. Nothing is deleted; the "
+    "chapters it no longer shows keep what they hold.",
     DELETE_RECORD: "Remove it from the saga, after saying what happens to "
     "what it holds.",
 }
@@ -523,6 +533,51 @@ def toggle_mode(saga: Saga, record: Character | Covenant | Laboratory) -> Comman
         creation.set_in_creation(saga, record, not record.in_creation)
 
     return Confirm(message, apply, yes_label="Yes")
+
+
+#: What moving to each detail level does, said before it is done.
+_DETAIL_WORDS: dict[str, str] = {
+    LINE: "a line: a name and who they are, nothing more",
+    SKETCH: "a sketch: the statblock play needs, left out of seasons, "
+    "ageing and creation budgets",
+    FULL: "a full character, In Creation, with the Creation Worksheet "
+    "open on what the sketch already has",
+}
+
+
+def change_detail(saga: Saga, record: Character, detail: str) -> Command:
+    """Promote or Demote `record` to `detail`, asking first. Nothing is
+    copied or deleted: a promoted sketch keeps every score it had, and a
+    demoted character keeps what its hidden chapters hold. Promoted to
+    Full, it is In Creation so its budget checks apply from there."""
+    name = escape(record.name)
+
+    def apply() -> None:
+        record.detail = detail
+        if detail == FULL:
+            creation.set_in_creation(saga, record, True)
+        else:
+            record.in_creation = False
+
+    verb = (
+        "Promote"
+        if world.DETAIL_LEVELS.index(detail) > world.DETAIL_LEVELS.index(record.detail)
+        else "Demote"
+    )
+    return Confirm(f"{verb} {name} to {_DETAIL_WORDS[detail]}?", apply, yes_label=verb)
+
+
+def _detail_command(action: str) -> Callable[[Page], Command]:
+    step = world.promoted if action == "promote" else world.demoted
+
+    def command(page: Page) -> Command:
+        record = page.creation_record()
+        detail = step(record.detail) if isinstance(record, Character) else None
+        if not isinstance(record, Character) or detail is None:
+            return Refuse(action.title(), "That isn't available here.")
+        return change_detail(page.saga, record, detail)
+
+    return command
 
 
 def export_fields(record: transfer.Record, folder: Path) -> list[DialogField]:
@@ -1128,6 +1183,8 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "export_saga": lambda page: export_saga(page.saga, storage.EXPORTS_DIR),
     "update_record": _update_command,
     "toggle_mode": _record_command,
+    "promote": _detail_command("promote"),
+    "demote": _detail_command("demote"),
     "set_date": lambda page: set_date(page.saga),
     "edit_saga": lambda page: creation_forms.edit_saga_form(page.saga),
     "create_covenant": lambda page: creation_forms.new_covenant_form(page.saga),

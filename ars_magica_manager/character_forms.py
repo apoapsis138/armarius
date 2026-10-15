@@ -24,6 +24,7 @@ from .markup import escape, problem
 from .models import (
     COMPANION_TYPES,
     FATIGUE_LEVELS,
+    FULL,
     Aging,
     ArtScore,
     Background,
@@ -357,6 +358,17 @@ def character_info_fields(saga: Saga, character: Character) -> list[DialogField]
     fields = [
         DialogField("name", "Name", "text", character.name, required=True),
     ]
+    if character.detail != FULL:
+        # A Line or Sketch character has no Biography: this says who they are.
+        fields.append(
+            DialogField(
+                "summary",
+                "In the Saga",
+                "area",
+                character.summary,
+                placeholder="Who they are and what they want, in a sentence or two",
+            )
+        )
     if character.type in COMPANION_TYPES:
         fields.append(
             DialogField(
@@ -433,6 +445,7 @@ def apply_character_info(
     saga: Saga, character: Character, result: dict[str, Any]
 ) -> None:
     character.name = result["name"]
+    character.summary = result.get("summary", character.summary)
     character.type = result.get("type", character.type)
     character.covenant_id = result["covenant_id"]
     if character.type == "magus":

@@ -25,10 +25,10 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import menu_forms
+from .. import menu_forms, world
 from ..commands import Command
 from ..menu_forms import DELETE_RECORD, Page
-from ..models import Character, Covenant, Laboratory
+from ..models import FULL, Character, Covenant, Laboratory
 from . import pictures
 from .markup_html import plain
 from .themes import Palette
@@ -79,7 +79,7 @@ class RecordControls:
 
     def mode(self, p: Palette) -> QWidget | None:
         record = self.page.creation_record()
-        if record is None:
+        if record is None or getattr(record, "detail", FULL) != FULL:
             return None
         return ModeToggle(record, p, self.toggle_mode, self.worksheet)
 
@@ -97,6 +97,8 @@ def manage_chapter(controls: RecordControls, p: Palette) -> QWidget:
     entries: list[tuple[str, str, str, Callable[[], None]]] = []
     for item in menu_forms.manage_items(page):
         then = controls.up if item.action == DELETE_RECORD else None
+        if item.action == "promote":
+            then = _worksheet_once_creating(controls)
         entries.append(
             (
                 item.action,
@@ -133,6 +135,16 @@ def _runs(
 ) -> Callable[[], None]:
     """Run the Manage entry `action`, then `then` (or draw the page again)."""
     return lambda: controls.run(menu_forms.command(controls.page, action), then)
+
+
+def _worksheet_once_creating(controls: RecordControls) -> Callable[[], None] | None:
+    """After Promote: a sketch promoted to Full is In Creation, and its
+    Creation Worksheet opens on what it already has; any other promotion
+    draws the page again (None)."""
+    record = controls.page.creation_record()
+    if record is None or world.promoted(getattr(record, "detail", FULL)) != FULL:
+        return None
+    return lambda: controls.worksheet(record.id)
 
 
 def rule(p: Palette) -> QWidget:

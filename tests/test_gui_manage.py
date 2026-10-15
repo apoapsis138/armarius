@@ -60,6 +60,7 @@ def test_a_characters_manage_chapter_exports_updates_and_deletes(app):
     assert list(_manage(window)) == [
         "Export",
         "Update from a File",
+        "Demote",
         "Print to PDF",
         "Delete Leandro",
     ]

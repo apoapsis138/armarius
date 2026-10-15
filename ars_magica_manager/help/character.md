@@ -77,6 +77,21 @@ to what they own, and More (`m`) offers Export, which writes the character
 to a file another saga can import, and Update from a File, which reads such
 a file back over them.
 <!-- /tui -->
+
+How much of a character is written down is their detail level: a **Line**
+(a name and who they are), a **Sketch** (the statblock play needs, as the
+books print their NPCs) or **Full** (the whole sheet). Only a full
+character is played: a Line or Sketch character is left out of season
+plans, ageing and creation budgets. **Promote** writes one more level down,
+and **Demote** keeps one less; nothing is deleted, and the parts a level
+doesn't show keep what they hold. Promoting a sketch to Full moves them In
+Creation and opens the Creation Worksheet on what the sketch already has.
+<!-- tui -->
+Both are in More (`m`) on the top panel.
+<!-- /tui -->
+<!-- gui -->
+Both are in the **Manage** chapter.
+<!-- /gui -->
 <!-- gui -->
 The sheet's last chapter, **Manage**, offers **Export**, which writes the
 character to a file another saga can import, **Update from a File**, which
@@ -97,6 +112,30 @@ The eight Characteristics, as cards under the header, typed in with the
 <!-- /gui -->
 because so much of the sheet is worked out from them: Soak, Encumbrance,
 Casting Scores and combat totals all use them.
+
+## Statblock tab
+<!-- help: tab-statblock -->
+
+A Line or Sketch character opens here: who they are ("In the Saga"), and
+for a sketch their Characteristics, the Arts and Abilities that matter,
+their Virtues and Flaws, signature spells, Personality and Reputations.
+**Abilities not listed count as 0.** Each part is edited where it lives:
+"In the Saga" with the character's Edit, the rest on its own
+<!-- tui -->
+tab.
+<!-- /tui -->
+<!-- gui -->
+chapter.
+<!-- /gui -->
+A Line or Sketch character's sheet has no Inventory or Planning, since
+they are not played season by season; a Line character has no Abilities,
+Virtues and Flaws or Hermetic Magic either.
+
+### Statblock
+<!-- help: section-char-statblock; tui -->
+
+The statblock as one block, redrawn whenever one of its parts changes on
+another tab.
 
 ## Description tab
 <!-- help: tab-description -->

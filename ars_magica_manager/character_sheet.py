@@ -23,6 +23,8 @@ from .covenants import home_aura
 from .markup import aligned, escape, inherited, problem
 from .models import (
     ABILITY_CATEGORIES,
+    FULL,
+    LINE,
     Ability,
     ArtScore,
     Character,
@@ -36,6 +38,7 @@ from .rules import creation_virtues as cv
 from .rules import xp as xp_rules
 from .rules.breakdown import Breakdown
 from .tables import Table
+from .world import signed
 
 
 def info_left_text(saga: Saga, character: Character) -> str:
@@ -57,6 +60,8 @@ def info_right_text(saga: Saga, character: Character) -> str:
     Faith and Size."""
     covenant = saga.covenant(character.covenant_id)
     rows = [("Covenant", escape(covenant.name) if covenant else "(unassigned)")]
+    if character.detail != FULL:
+        rows.append(("Detail", character.detail))
     if character.type == "magus":
         lab = saga.laboratory(character.assigned_lab_id)
         rows.append(
@@ -778,3 +783,100 @@ def health_facts(character: Character) -> list[Fact]:
         _fact("Wound Penalty", f"{wounds:+d}"),
         _fact("Total Penalty", f"{wounds + fatigue:+d}"),
     ]
+
+
+# -- a Line or Sketch character --
+
+#: Said under a sketch's Abilities: the rule for those it doesn't list.
+UNLISTED_ABILITIES = "Abilities not listed count as 0."
+
+
+def has_statblock(character: Character) -> bool:
+    """Whether the sheet opens on a statblock: a Line or Sketch character,
+    whose sheet leaves out what only play needs (Inventory, Planning)."""
+    return character.detail != FULL
+
+
+def statblock(saga: Saga, character: Character) -> list[tuple[str, str]]:
+    """A Line or Sketch character as the books print an NPC: (heading,
+    markup) pairs, each left out while it is empty. A Line character has
+    only who they are; a Sketch has the scores play needs."""
+    summary = (
+        escape(character.summary)
+        if character.summary
+        else "[$label]Not written yet: Edit the character to say.[/]"
+    )
+    block = [("In the Saga", summary)]
+    if character.detail == LINE:
+        return block
+    c = character.characteristics
+    block.append(
+        (
+            "Characteristics",
+            ", ".join(
+                f"{label} {signed(value)}"
+                for label, value in (
+                    ("Int", c.intelligence),
+                    ("Per", c.perception),
+                    ("Pre", c.presence),
+                    ("Com", c.communication),
+                    ("Str", c.strength),
+                    ("Sta", c.stamina),
+                    ("Dex", c.dexterity),
+                    ("Qik", c.quickness),
+                )
+            ),
+        )
+    )
+    if character.type == "magus":
+        arts = sorted(
+            (row for row in art_rows(character, (*TECHNIQUES, *FORMS)) if row.xp),
+            key=lambda row: -character.arts[row.art.lower()].level,
+        )
+        if arts:
+            block.append(("Arts", ", ".join(f"{row.art} {row.score}" for row in arts)))
+    abilities = [
+        f"{escape(row.name)} {row.score}"
+        + (f" ({escape(row.specialty)})" if row.specialty else "")
+        for row in ability_table(character)
+    ]
+    block.append(
+        (
+            "Abilities",
+            (", ".join(abilities) + "\n" if abilities else "")
+            + f"[$label]{UNLISTED_ABILITIES}[/]",
+        )
+    )
+    virtues_flaws = [
+        f"{escape(card.name)} ({card.tier})"
+        for side in ("Virtue", "Flaw")
+        for card in virtue_flaw_cards(character, side)
+    ]
+    if virtues_flaws:
+        block.append(("Virtues and Flaws", ", ".join(virtues_flaws)))
+    spells = [
+        escape(row.name)
+        + (f" {row.arts} {row.level}" if row.level is not None else "")
+        + (f" (Mastery {row.mastery})" if row.mastery else "")
+        for row in spell_table(saga, character)
+    ]
+    if spells:
+        block.append(("Signature Spells", ", ".join(spells)))
+    for heading, traits in (
+        ("Personality", character.personality_traits),
+        ("Reputations", character.reputations),
+    ):
+        if traits:
+            block.append(
+                (heading, ", ".join(label for _, label in st.trait_rows(traits)))
+            )
+    return block
+
+
+def statblock_text(saga: Saga, character: Character) -> str:
+    """The statblock as one block of markup: each heading in the label
+    colour over its line."""
+    return "\n\n".join(
+        f"[b $label]{heading}[/]\n{words}"
+        for heading, words in statblock(saga, character)
+    )

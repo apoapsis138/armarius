@@ -17,11 +17,12 @@ from typing import TYPE_CHECKING, NamedTuple, Protocol
 
 from . import book_value as bv
 from . import familiars as fam
-from . import giving, seasons, sourcebooks
+from . import giving, seasons, sourcebooks, world
 from . import inhabitants as inh
 from . import lab_texts as lt
 from . import spells as spl
 from .models import (
+    FULL,
     INHABITANT_KINDS,
     POSSESSION_KINDS,
     TEXT_LONGEVITY,
@@ -215,6 +216,8 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("x", "export_saga", "Export Saga"),
     MenuItem("u", "update_record", "Update from a File"),
     MenuItem("m", "toggle_mode", "In Creation / In Play"),
+    MenuItem("p", "promote", "Promote"),
+    MenuItem("o", "demote", "Demote"),
     MenuItem("w", "creation_worksheet", "Creation Worksheet"),
     MenuItem("t", "set_date", "Set Date"),
 )
@@ -349,8 +352,15 @@ def available(action: str, facts: ActionFacts) -> bool:
         return (
             record is not None
             and facts.on_record()
+            and getattr(record, "detail", FULL) == FULL
             and (action == "toggle_mode" or record.in_creation)
         )
+    if action in ("promote", "demote"):
+        record = facts.creation_record()
+        if not isinstance(record, Character) or not facts.on_record():
+            return False
+        step = world.promoted if action == "promote" else world.demoted
+        return step(record.detail) is not None
     if action == "give":
         found = facts.to_give()
         return found is not None and giving.blocked(facts.saga, *found) is None

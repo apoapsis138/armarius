@@ -10,6 +10,7 @@ from typing import Any
 from .markup import escape
 from .models import (
     ATTITUDE_RANGE,
+    DETAIL_LEVELS,
     FULL,
     Attitude,
     Character,
@@ -50,6 +51,18 @@ def takes_part_in_play(record: Character | Covenant) -> bool:
     for, and kept in upkeep and creation budgets. A Line or Sketch record
     is part of the world but not of play."""
     return record.detail == FULL
+
+
+def promoted(detail: str) -> str | None:
+    """The detail level Promote moves a record to, or None at Full."""
+    index = DETAIL_LEVELS.index(detail)
+    return DETAIL_LEVELS[index + 1] if index + 1 < len(DETAIL_LEVELS) else None
+
+
+def demoted(detail: str) -> str | None:
+    """The detail level Demote moves a record to, or None at Line."""
+    index = DETAIL_LEVELS.index(detail)
+    return DETAIL_LEVELS[index - 1] if index else None
 
 
 def player_covenants(saga: Saga) -> list[Covenant]:

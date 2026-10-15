@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from .... import character_forms, creation, sourcebooks, storage
+from .... import character_forms, creation, menu_forms, sourcebooks, storage, world
 from .... import laboratories as lab_text
 from .... import possessions as pos
 from .... import spells as spl
@@ -52,6 +52,7 @@ from ..prompts import (
     _lab_text_access_dialog,
     _raw_vis_dialog,
 )
+from ..steps import run_steps
 from .base import (
     WorkspaceBase,
 )
@@ -61,6 +62,31 @@ class CharacterActions(WorkspaceBase):
     """WorkspaceScreen's actions for the Character sheet: Info,
     Characteristics, Abilities, traits, Health, Arts, Raw Vis, Hermetic
     Background, Known Spells and Inventory."""
+
+    # -- Promote / Demote --
+
+    def action_promote(self) -> None:
+        self._change_detail(world.promoted)
+
+    def action_demote(self) -> None:
+        self._change_detail(world.demoted)
+
+    def _change_detail(self, step: Any) -> None:
+        """More's Promote or Demote: the character's detail level one step
+        up or down (the core asks first). The sheet is built again, since
+        a sketch's tabs are not a full character's."""
+        character = self.selected_character
+        detail = step(character.detail) if character is not None else None
+        if character is None or detail is None:
+            return
+
+        def done(_end: object) -> None:
+            self._commit("section-char-info", tree=True)
+            self.call_later(self._show_character, character)
+
+        run_steps(
+            self.app, menu_forms.change_detail(self.saga, character, detail), done
+        )
 
     # -- Character Info / Characteristics --
 

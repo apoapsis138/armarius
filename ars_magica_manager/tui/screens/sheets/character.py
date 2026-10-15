@@ -26,6 +26,7 @@ from ....arts import FORMS, TECHNIQUES
 from ....boon_hook_text import counted, match_colour, points_title
 from ....markup import escape
 from ....models import (
+    LINE,
     Character,
     Saga,
 )
@@ -101,6 +102,8 @@ class CharacterSheetView(SheetView):
     def __init__(self, saga: Saga, character: Character) -> None:
         super().__init__(saga)
         self.character = character
+        if cs.has_statblock(character):
+            self.INITIAL_TAB = "tab-statblock"
 
     @property
     def creation_record(self) -> Character:
@@ -111,17 +114,50 @@ class CharacterSheetView(SheetView):
     def compose(self) -> ComposeResult:
         character = self.character
         yield from self._top_panel()
+        # A Line or Sketch character opens on its statblock and leaves out
+        # what only play needs; a Line one has only who they are.
+        sketch = cs.has_statblock(character)
+        scores = character.detail != LINE
         with TabbedContent(initial=self.INITIAL_TAB):
+            if sketch:
+                yield self._tab(
+                    "Statblock", "tab-statblock", self._scrolling(self._statblock_tab)
+                )
             yield self._tab("Description", "tab-description", self._description_tab)
-            yield self._tab("Abilities", "tab-abilities", self._abilities_tab)
-            yield self._tab("Virtues & Flaws", "tab-vf", self._virtues_flaws_tab)
-            if character.type == "magus":
+            if scores:
+                yield self._tab("Abilities", "tab-abilities", self._abilities_tab)
+                yield self._tab("Virtues & Flaws", "tab-vf", self._virtues_flaws_tab)
+            if scores and character.type == "magus":
                 yield self._tab("Hermetic Magic", "tab-hermetic", self._hermetic_tab)
-            yield self._tab("Inventory", "tab-inventory", self._inventory_tab)
-            yield self._tab(
-                "Planning", "tab-planning", self._scrolling(self._planning_tab)
-            )
+            if not sketch:
+                yield self._tab("Inventory", "tab-inventory", self._inventory_tab)
+                yield self._tab(
+                    "Planning", "tab-planning", self._scrolling(self._planning_tab)
+                )
             yield self._tab("Diary", "tab-diary", self._diary_tab)
+
+    #: Every section a statblock summarises: it is redrawn when one changes.
+    _STATBLOCK_SOURCES = (
+        "section-char-info",
+        "section-char-characteristics",
+        "tab-abilities",
+        "section-vf-virtues",
+        "section-vf-flaws",
+        "section-arts",
+        "section-known-spells",
+        "section-personality-traits",
+        "section-reputations",
+    )
+
+    def _statblock_tab(self) -> ComposeResult:
+        """A Line or Sketch character as the books print an NPC. Each part
+        is edited where it lives: the top panel, or its own tab."""
+        with SheetSection(title="Statblock", id="section-char-statblock"):
+            yield self._static(
+                self._STATBLOCK_SOURCES,
+                lambda: cs.statblock_text(self.saga, self.character),
+                id="char-statblock",
+            )
 
     def _abilities_tab(self) -> ComposeResult:
         with Vertical(classes="panel-body"):

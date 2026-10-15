@@ -46,6 +46,20 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.64.0 — 2026-10-15
+
+- Characters can be kept as a line or a sketch instead of in full, the
+  way the books print their NPCs. A sketch opens on its Statblock: who
+  they are in the saga, then their Characteristics, Arts, the Abilities
+  they have (any not listed count as 0), Virtues and Flaws, signature
+  spells, Personality and Reputations. A line is only who they are.
+  Sketches leave out Inventory and Planning; a line leaves out
+  Abilities, Virtues & Flaws and Hermetic Magic too.
+- Promote and Demote (under More in the terminal, under Manage on the
+  desktop) move a character one level up or down without losing
+  anything written. Promoting a sketch to full starts its creation, so
+  the Creation Worksheet can check it.
+
 ## 2.63.0 — 2026-10-15
 
 - The groundwork for the Saga World. Characters and covenants can now be

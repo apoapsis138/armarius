@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
-from typing import Any, ClassVar
+from typing import Any
 
 from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical, VerticalScroll
@@ -23,6 +23,7 @@ from .... import enchanted_devices as ed
 from ....boon_hook_text import counted
 from ....markup import escape, inherited
 from ....models import (
+    FULL,
     Book,
     Character,
     Covenant,
@@ -125,8 +126,8 @@ class SheetView(Vertical):
         self.tab_ids: list[str] = []
 
     #: The tab shown first, built as the sheet opens (the others are built on
-    #: first visit -- see LazyTabPane).
-    INITIAL_TAB: ClassVar[str] = ""
+    #: first visit -- see LazyTabPane). A sheet may choose it per record.
+    INITIAL_TAB: str = ""
 
     def _tab(
         self, title: str, id: str, build: Callable[[], ComposeResult]
@@ -158,7 +159,11 @@ class SheetView(Vertical):
         record = self.creation_record
         with Horizontal(classes="sheet-buttons"):
             yield Button("Edit (e)", id=edit_id, compact=True)
-            yield Button(self._mode_label(), id="btn-mode", compact=True)
+            mode = Button(self._mode_label(), id="btn-mode", compact=True)
+            # A Line or Sketch record has no creation mode: Promote makes it
+            # a full one, In Creation.
+            mode.display = getattr(record, "detail", FULL) == FULL
+            yield mode
             # The Creation Worksheet, while In Creation.
             worksheet = Button("Creation Worksheet", id="btn-worksheet", compact=True)
             worksheet.display = record is not None and record.in_creation

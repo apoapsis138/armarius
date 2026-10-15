@@ -9,6 +9,7 @@ from textual.widgets import Markdown, OptionList, TabbedContent, TextArea, Tree
 
 from ars_magica_manager import ROOT, __version__, storage
 from ars_magica_manager import help_text as ht
+from ars_magica_manager.models import SKETCH
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import WorkspaceScreen
 from ars_magica_manager.tui.screens.creation_worksheet import CreationWorksheetScreen
@@ -175,7 +176,11 @@ def test_search_finds_titles_before_text():
 async def test_every_tab_and_section_has_help():
     """The coverage rule: a tab or section without help fails
     here, and so does help for one that no longer exists."""
-    storage.save_saga(everything_saga())
+    saga = everything_saga()
+    # A sketch's sheet has a tab of its own: the companion is drawn as one.
+    sketch = next(c for c in saga.characters if c.id != NODES["character"][1])
+    sketch.detail = SKETCH
+    storage.save_saga(saga)
     app = ArsMagicaManagerApp()
     on_sheets: set[str] = set()
     async with app.run_test(size=(140, 60)) as pilot:
@@ -192,6 +197,18 @@ async def test_every_tab_and_section_has_help():
             view = getattr(workspace, attr)
             await build_all_tabs(pilot, view)
             on_sheets |= {w.id for w in view.query("Collapsible, TabPane") if w.id}
+        tree.select_node(_node(tree, ("character", sketch.id)))
+        assert await wait_until(
+            pilot,
+            lambda: (
+                (view := workspace._character_sheet_view) is not None
+                and view.character.id == sketch.id
+            ),
+        )
+        view = workspace._character_sheet_view
+        assert view is not None
+        await build_all_tabs(pilot, view)
+        on_sheets |= {w.id for w in view.query("Collapsible, TabPane") if w.id}
     missing = on_sheets - BOOK.topics.keys()
     assert not missing, f"no help for {sorted(missing)}"
     stale = {

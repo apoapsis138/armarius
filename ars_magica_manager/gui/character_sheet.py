@@ -77,7 +77,7 @@ from .. import spells as spl
 from ..actions import NodeKind
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
 from ..commands import Command, SectionOps
-from ..models import CHARGED, Character, Characteristics, Saga, ScoredTrait
+from ..models import CHARGED, LINE, Character, Characteristics, Saga, ScoredTrait
 from . import marks, pictures
 from .editing import (
     Chooser,
@@ -140,6 +140,7 @@ ABILITY_MARK_LARGE = 64
 
 #: The chapters, in order, with each one's icon (artwork.ICON_NAMES).
 CHAPTERS = (
+    ("Statblock", "character"),
     ("Description", "character"),
     ("Abilities", "library"),
     ("Virtues & Flaws", "magic"),
@@ -533,6 +534,7 @@ class CharacterSheet(QWidget):
         self.codex = Codex(palette)
         self.inspector = self.codex.inspector
         builders = {
+            "Statblock": self._statblock,
             "Description": self._description,
             "Abilities": self._abilities,
             "Virtues & Flaws": self._virtues_flaws,
@@ -542,7 +544,7 @@ class CharacterSheet(QWidget):
             "Diary": self._diary,
         }
         for name, concept in CHAPTERS:
-            if name == "Hermetic Magic" and character.type != "magus":
+            if name in _left_out(character):
                 continue
             self.codex.add(name, concept, builders[name]())
         if controls is not None:
@@ -656,6 +658,27 @@ class CharacterSheet(QWidget):
         return box
 
     # Chapters
+
+    def _statblock(self) -> QWidget:
+        """A Line or Sketch character as the books print an NPC; each part
+        is edited where it lives, in the header or its own chapter."""
+        p = self.p
+        parts: list[QWidget] = []
+        for heading, words in cs.statblock(self.saga, self.character):
+            parts += [_subheading(heading, p), TextBlock(words, p)]
+        return scrolling_page(
+            p,
+            section(
+                "Statblock",
+                p,
+                *parts,
+                edits={
+                    "Edit": lambda: self.run(
+                        cf.character_info_form(self.saga, self.character)
+                    )
+                },
+            ),
+        )
 
     def _description(self) -> QWidget:
         """Who the character is, in the book's type: facts with small-caps
@@ -1151,6 +1174,23 @@ class CharacterSheet(QWidget):
                 ),
             ),
         )
+
+
+def _left_out(character: Character) -> set[str]:
+    """The chapters the character's sheet doesn't have: Hermetic Magic but
+    for a magus, the Statblock but for a Line or Sketch character, and
+    what only play needs (Inventory, Planning) for those. A Line character
+    has no scores either."""
+    left = set()
+    if character.type != "magus":
+        left.add("Hermetic Magic")
+    if cs.has_statblock(character):
+        left |= {"Inventory", "Planning"}
+    else:
+        left.add("Statblock")
+    if character.detail == LINE:
+        left |= {"Abilities", "Virtues & Flaws", "Hermetic Magic"}
+    return left
 
 
 def characteristic_cards(ch: Characteristics, p: Palette) -> QWidget:
