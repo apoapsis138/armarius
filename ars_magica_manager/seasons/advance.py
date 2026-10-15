@@ -25,6 +25,7 @@ from ..rules import apprentice_seasons as aps
 from ..rules import experiment as ex
 from ..rules import warping as warping_rules
 from ..tables import Table
+from ..world import takes_part_in_play
 from .character_effects import _add_xp, _yearly_warping, age_character, diary_entry
 from .covenant import covenant_season
 from .lab_apply import (
@@ -114,7 +115,11 @@ def year_end_grogs(saga: Saga) -> list[SeasonRecordLine]:
     practice and exposure xp; the year's story awards are then cleared."""
     lines: list[SeasonRecordLine] = []
     for character in saga.characters:
-        if rules.is_planned(character) or character.grog_year is None:
+        if (
+            rules.is_planned(character)
+            or character.grog_year is None
+            or not takes_part_in_play(character)
+        ):
             continue
         gains = grog_year_gains(character)
         for ability, xp, _ in gains:
@@ -156,6 +161,8 @@ def year_end_aging(saga: Saga, rng: random.Random) -> list[SeasonRecordLine]:
     character who rolled."""
     lines: list[SeasonRecordLine] = []
     for character in saga.characters:
+        if not takes_part_in_play(character):
+            continue
         warped = _yearly_warping(saga, character)
         if warped:
             character.diary.append(

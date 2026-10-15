@@ -46,6 +46,22 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.63.0 — 2026-10-15
+
+- The groundwork for the Saga World. Characters and covenants can now be
+  written down at three levels of detail: a line, a sketch or in full.
+  Only full records are played: sketches are left out of season plans,
+  ageing, the year's accounts and creation budgets. Your existing
+  characters and covenants are all full, so nothing changes for them.
+- A covenant can hold an attitude toward each player covenant, from
+  Hostile to Allied, worked out from where it started and every reason
+  since, along with the favours owed and links to other records. The
+  forms for these arrive with the sketch covenants and neighbours that
+  use them.
+- A Reputation can now say its type (Hermetic, Local, Noble, Academic,
+  Ecclesiastical or Infernal) and how far it reaches. Both show in
+  brackets on its row.
+
 ## 2.62.1 — 2026-10-14
 
 - Opening a saga that a newer version of Armarius saved no longer loses

@@ -29,6 +29,7 @@ from .models import (
     Saga,
 )
 from .rules.rounding import round_away_from_zero, round_down
+from .world import takes_part_in_play
 
 # --------------------------------------------------------------- the rules
 
@@ -624,13 +625,19 @@ def apply_row_edit(economics: Economics, row_key: str, values: dict[str, Any]) -
 
 def covenants_in_deficit(saga: Saga) -> list[tuple[str, int]]:
     """(name, surplus/deficit) for each covenant spending more than it earns."""
-    results = [(c.name, summarize(saga, c).surplus_deficit) for c in saga.covenants]
+    results = [
+        (c.name, summarize(saga, c).surplus_deficit)
+        for c in filter(takes_part_in_play, saga.covenants)
+    ]
     return [(name, d) for name, d in results if d < 0]
 
 
 def close_all_years(saga: Saga) -> list[tuple[str, int]]:
     """Close the year for every covenant (see close_year): (name, added)."""
-    return [(c.name, close_year(saga, c)) for c in saga.covenants]
+    return [
+        (c.name, close_year(saga, c))
+        for c in filter(takes_part_in_play, saga.covenants)
+    ]
 
 
 def row_problem(row_key: str, values: dict[str, Any]) -> str | None:

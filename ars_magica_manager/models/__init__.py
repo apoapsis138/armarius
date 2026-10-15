@@ -165,3 +165,13 @@ from .traits import MasteryAbility as MasteryAbility
 from .traits import Spell as Spell
 from .traits import VirtueFlawInstance as VirtueFlawInstance
 from .traits import new_instance_id as new_instance_id
+from .world import ATTITUDE_RANGE as ATTITUDE_RANGE
+from .world import DETAIL_LEVELS as DETAIL_LEVELS
+from .world import FULL as FULL
+from .world import LINE as LINE
+from .world import LINK_KINDS as LINK_KINDS
+from .world import SKETCH as SKETCH
+from .world import Attitude as Attitude
+from .world import Favour as Favour
+from .world import Link as Link
+from .world import Reason as Reason

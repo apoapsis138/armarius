@@ -40,6 +40,7 @@ from ..rules import familiar_seasons as fs
 from ..rules import lab_seasons
 from ..rules import laboratory_seasons as ls
 from ..rules import supplement_work as sw
+from ..world import takes_part_in_play
 from .character_effects import _add_xp, age_character, gain_warping
 from .lab_queue import (
     _effect_text,
@@ -393,7 +394,9 @@ def year_end_business(saga: Saga) -> list[SeasonRecordLine]:
     and 5 for each point of Raw Materials."""
     lines: list[SeasonRecordLine] = []
     for character in saga.characters:
-        if not character.labor_points and not character.workshop_raw_materials:
+        if not takes_part_in_play(character) or (
+            not character.labor_points and not character.workshop_raw_materials
+        ):
             continue
         cost = (
             sw.BUSINESS_UPKEEP

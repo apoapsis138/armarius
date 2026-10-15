@@ -10,6 +10,7 @@ from ars_magica_manager.models import (
     Aging,
     ArcaneConnection,
     ArtScore,
+    Attitude,
     Background,
     BondPower,
     Book,
@@ -26,6 +27,7 @@ from ars_magica_manager.models import (
     DiaryEntry,
     EnchantedDevice,
     Familiar,
+    Favour,
     GrogYear,
     HermeticBackground,
     InstilledEffect,
@@ -35,6 +37,7 @@ from ars_magica_manager.models import (
     LabSpecialtyEntry,
     LabTextAccess,
     LabVirtueFlawDef,
+    Link,
     MasteryAbility,
     Modifier,
     NamedDescription,
@@ -42,6 +45,7 @@ from ars_magica_manager.models import (
     Player,
     Possession,
     Progress,
+    Reason,
     Saga,
     SagaSource,
     ScoredTrait,
@@ -383,6 +387,10 @@ def _saga_with_every_record() -> Saga:
     saga.sources.append(SagaSource("HR", "House rules"))
     saga.codices.append(Codex("codex", "Bound together", palimpsest=True))
     saga.books[0].codex_id = "codex"
+    other = saga.covenants[0]
+    other.attitudes.append(Attitude(other.id, 1, [Reason("Helped at the ford", 1)]))
+    other.favours.append(Favour("Shelter", "Fengheld", other.id))
+    other.links.append(Link("characters", magus.id, "its founder"))
     return saga
 
 

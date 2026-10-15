@@ -2,7 +2,7 @@
 are drawn: the form for one trait and its Add, Edit and Delete
 (commands.SectionOps). A character, a familiar and a covenant share them;
 a covenant's Reputations are bounded and say whether the covenant knows
-of them."""
+of them, and every Reputation may say its kind and how far it reaches."""
 
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ from . import sheet_text as st
 from .commands import Form, SectionOps, delete
 from .form_spec import DialogField, attr
 from .models import ScoredTrait
+from .world import REPUTATION_TYPES
 
 #: A covenant Reputation's least and greatest score.
 COVENANT_REPUTATION_RANGE = (-3, 3)
@@ -25,6 +26,11 @@ NOUNS: dict[str, tuple[str, str]] = {
     "section-cov-reputations": ("Reputation", "e.g. Feared by the local nobility"),
 }
 
+#: The sections whose traits are Reputations.
+REPUTATION_SECTIONS = frozenset(
+    section for section, (noun, _) in NOUNS.items() if noun == "Reputation"
+)
+
 
 def scored_trait_fields(
     name_placeholder: str,
@@ -33,11 +39,12 @@ def scored_trait_fields(
     min_score: int | None = None,
     max_score: int | None = None,
     include_known: bool = False,
+    include_reach: bool = False,
 ) -> list[DialogField]:
     """A Personality Trait or Reputation: a name and a score, optionally
-    bounded (covenant Reputations are -3..+3) and, for a covenant
-    Reputation, whether the covenant knows of it (see
-    inhabitants.reputation_loyalty_penalty())."""
+    bounded (covenant Reputations are -3..+3); for a Reputation, its kind
+    and reach (`include_reach`) and, for a covenant's, whether the
+    covenant knows of it (see inhabitants.reputation_loyalty_penalty())."""
     fields = [
         DialogField(
             "name",
@@ -54,6 +61,24 @@ def scored_trait_fields(
             attr(existing, "score", 0),
         ),
     ]
+    if include_reach:
+        fields += [
+            DialogField(
+                "type",
+                "Type",
+                "select",
+                attr(existing, "type", "") or None,
+                options=[(t, t) for t in REPUTATION_TYPES],
+                allow_blank=True,
+            ),
+            DialogField(
+                "reach",
+                "Reaches",
+                "text",
+                attr(existing, "reach", ""),
+                placeholder="e.g. the Rhine Tribunal",
+            ),
+        ]
     if include_known:
         fields.append(
             DialogField(
@@ -86,7 +111,11 @@ def score_problem(
 
 def trait_from(values: dict[str, Any]) -> ScoredTrait:
     return ScoredTrait(
-        name=values["name"], score=values["score"], known=values.get("known", True)
+        name=values["name"],
+        score=values["score"],
+        known=values.get("known", True),
+        type=values.get("type") or "",
+        reach=values.get("reach", ""),
     )
 
 
@@ -98,6 +127,8 @@ def trait_ops(traits: list[ScoredTrait], section: str) -> SectionOps:
     if section == "section-cov-reputations":
         low, high = COVENANT_REPUTATION_RANGE
         bounds = {"min_score": low, "max_score": high, "include_known": True}
+    if section in REPUTATION_SECTIONS:
+        bounds["include_reach"] = True
 
     def form(title: str, index: int | None) -> Form:
         existing = traits[index] if index is not None else None

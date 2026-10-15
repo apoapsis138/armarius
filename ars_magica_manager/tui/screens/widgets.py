@@ -33,6 +33,9 @@ from textual.widgets._footer import FooterKey
 from textual.widgets._tabbed_content import ContentTabs
 from textual.widgets.option_list import Option
 
+from ... import world
+from ...models import Attitude
+
 
 def _sign_colored(value: float, text: str) -> str:
     """Wraps `text` in Textual markup coloured by the sign of `value`, in
@@ -791,6 +794,21 @@ class PanelText(Static):
         super().update(content, layout=layout)
         if isinstance(self.parent, DetailsPanel):
             self.parent.scroll_home(animate=False)
+
+
+class AttitudeSeal(Static):
+    """An attitude toward a player covenant on one line: "◉ −1 Wary" in its
+    colour."""
+
+    DEFAULT_CSS = """
+    AttitudeSeal { width: auto; height: 1; }
+    """
+
+    def __init__(self, attitude: Attitude | None, **kwargs: Any) -> None:
+        super().__init__(world.seal_markup(world.attitude_score(attitude)), **kwargs)
+
+    def show(self, attitude: Attitude | None) -> None:
+        self.update(world.seal_markup(world.attitude_score(attitude)))
 
 
 class DetailsPanel(VerticalScroll):

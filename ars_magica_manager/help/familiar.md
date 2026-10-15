@@ -127,7 +127,9 @@ The Loyal (Partner) trait comes from the bond.
 ### Reputations
 <!-- help: section-fam-reputations -->
 
-The familiar's Reputations, each a name and a score that you type.
+The familiar's Reputations, each a name and a score that you type. A Reputation may also say its type (Hermetic, Local, Noble, Academic,
+Ecclesiastical or Infernal) and how far it reaches, both shown in
+brackets after its score.
 
 ## Virtues & Flaws tab
 <!-- help: tab-fam-vf; gui -->

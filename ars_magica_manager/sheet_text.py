@@ -314,10 +314,16 @@ def vf_info_text(instances: Sequence[VirtueFlawInstance], index: int | None) -> 
 
 
 def trait_rows(traits: Sequence[ScoredTrait]) -> list[tuple[int | None, str]]:
-    """Personality Traits or Reputations as (index, "Name: +2") rows."""
-    return [
-        (index, f"{escape(t.name)}: {t.score:+d}") for index, t in enumerate(traits)
-    ]
+    """Personality Traits or Reputations as (index, "Name: +2") rows; a
+    Reputation's kind and reach follow in brackets when set."""
+    rows: list[tuple[int | None, str]] = []
+    for index, t in enumerate(traits):
+        row = f"{escape(t.name)}: {t.score:+d}"
+        where = ", ".join(x for x in (t.type, t.reach) if x)
+        if where:
+            row += f" [$label]({escape(where)})[/]"
+        rows.append((index, row))
+    return rows
 
 
 def known_spell_rows(saga: Saga, character: Character) -> list[tuple[int | None, str]]:

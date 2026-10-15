@@ -123,7 +123,9 @@ The covenant's Reputations, each with a score from -3 to +3. Each one also
 records whether the covenant knows about it: an unknown one is marked
 "(not known by the covenant)" on its row. Every point of a bad Reputation
 the covenant knows about costs 5 Loyalty points on the Inhabitants tab; good
-Reputations and unknown ones cost nothing.
+Reputations and unknown ones cost nothing. A Reputation may also say its type (Hermetic, Local, Noble, Academic,
+Ecclesiastical or Infernal) and how far it reaches, both shown in
+brackets after its score.
 
 ### Boons
 <!-- help: section-cov-boons -->

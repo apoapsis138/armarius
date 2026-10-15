@@ -180,7 +180,9 @@ delete like any other.
 <!-- help: section-reputations -->
 
 The character's Reputations, each a name and a score that you type
-(Ars Magica Definitive Edition, Chapter 3: Characters).
+(Ars Magica Definitive Edition, Chapter 3: Characters). A Reputation may also say its type (Hermetic, Local, Noble, Academic,
+Ecclesiastical or Infernal) and how far it reaches, both shown in
+brackets after its score.
 
 ### Aging & Warping
 <!-- help: section-aging -->

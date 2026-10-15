@@ -28,10 +28,11 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
-from .. import artwork
+from .. import artwork, world
 from .. import character_sheet as cs
 from .. import covenant_sheet as cs_cov
 from .. import laboratory_sheet as cs_lab
+from ..models import Attitude
 from . import pictures
 from .paper import lift, shade
 from .themes import Palette
@@ -524,6 +525,19 @@ def aura_seal(aura: cs_lab.Aura, p: Palette) -> Seal:
         p[f"realm-{aura.realm}"],
         f"{aura.realm} aura {aura.total}: {working}"
         + (f"\n{aura.note}" if aura.note else ""),
+        p,
+    )
+
+
+def attitude_seal(attitude: Attitude | None, p: Palette) -> Seal:
+    """An attitude toward a player covenant as a seal: the score, its word
+    under it, in its colour; the reasons behind it in the tooltip."""
+    score = world.attitude_score(attitude)
+    return Seal(
+        world.signed(score),
+        world.attitude_word(score),
+        p[world.attitude_colour(score)],
+        world.attitude_working(attitude),
         p,
     )
 

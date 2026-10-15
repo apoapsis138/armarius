@@ -10,6 +10,7 @@ from .common import CharacterType, FatigueLevel, Handedness, known_fields
 from .holdings import Possession
 from .laboratory import DiaryEntry
 from .traits import Ability, Characteristics, KnownSpell, Spell, VirtueFlawInstance
+from .world import FULL, Link
 
 
 @dataclass
@@ -160,6 +161,10 @@ class ScoredTrait:
     #: inhabitants.reputation_loyalty_penalty). Always True and never edited
     #: for a Character's own Personality Traits/Reputations.
     known: bool = True
+    #: Reputations only: the kind of reputation (REPUTATION_TYPES, or "")
+    #: and how far it reaches ("the Rhine", "the parish"), both optional.
+    type: str = ""
+    reach: str = ""
 
 
 @dataclass
@@ -388,6 +393,13 @@ class Character:
     #: The portrait's file name in the save folder's portraits folder ("":
     #: none; older saves load with none).
     portrait: str = ""
+    #: How much of the character is written down (world.DETAIL_LEVELS):
+    #: a Line or Sketch character is part of the world but not of play.
+    #: Older saves load as Full.
+    detail: str = FULL
+    #: A paragraph about the character in the saga.
+    summary: str = ""
+    links: list[Link] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Character:
@@ -438,6 +450,7 @@ class Character:
         if d.get("grog_year") is not None:
             d["grog_year"] = GrogYear.from_dict(d["grog_year"])
         d["progress"] = [Progress.from_dict(p) for p in d.get("progress", [])]
+        d["links"] = [Link(**known_fields(Link, x)) for x in d.get("links", [])]
         d["ordeals"] = [Ordeal.from_dict(o) for o in d.get("ordeals", [])]
         # Older saves kept only the last Ordeal.
         if d.get("ordeal"):

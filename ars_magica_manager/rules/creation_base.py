@@ -18,7 +18,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from typing import Literal
 
-from ..models import Character, Covenant, Laboratory, Saga
+from ..models import FULL, Character, Covenant, Laboratory, Saga
 from . import options
 
 SOURCE = (
@@ -125,8 +125,9 @@ def _registry(record: Record) -> dict[str, list[CheckFn]]:
 
 def checks(saga: Saga, record: Record, step: str | None = None) -> list[Check]:
     """Every creation check for `record` (only `step`'s, if given), in
-    worksheet order; none once it is In Play."""
-    if not record.in_creation:
+    worksheet order; none once it is In Play, nor for a sketch, which no
+    budget applies to."""
+    if not record.in_creation or getattr(record, "detail", FULL) != FULL:
         return []
     registry = _registry(record)
     keys = [s.key for s in steps_for(record)]

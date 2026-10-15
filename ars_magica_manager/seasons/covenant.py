@@ -21,6 +21,7 @@ from ..models import (
 from ..rules import activities as rules
 from ..rules.rounding import round_away_from_zero, round_down
 from ..tables import Table
+from ..world import takes_part_in_play
 from .plans import is_departed, plan_for, plan_summary, plan_text
 
 DWINDLING_SOURCE = (
@@ -68,7 +69,7 @@ def lapsed_resources(saga: Saga) -> list[tuple[str, str]]:
     whose security has lapsed."""
     year = saga.current_year
     found: list[tuple[str, str]] = []
-    for covenant in saga.covenants:
+    for covenant in filter(takes_part_in_play, saga.covenants):
         for source in _vis_sources(covenant):
             if (
                 source.contested
@@ -131,7 +132,7 @@ def covenant_season(saga: Saga, secured: dict[str, bool]) -> list[SeasonRecordLi
     is written in the covenant Diary. Returns record lines."""
     season, year = saga.current_season, saga.current_year
     lines: list[SeasonRecordLine] = []
-    for covenant in saga.covenants:
+    for covenant in filter(takes_part_in_play, saga.covenants):
         resources = [*_vis_sources(covenant), *covenant.economics.income_sources]
         for resource in resources:
             if secured.get(resource.id):
@@ -218,6 +219,7 @@ def covenant_people(saga: Saga, covenant: Covenant, kind: str) -> list[Character
         for c in saga.characters
         if c.covenant_id == covenant.id
         and character_kind(c) == kind
+        and takes_part_in_play(c)
         and not is_departed(saga, c)
     ]
 

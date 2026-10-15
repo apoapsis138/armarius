@@ -194,6 +194,7 @@ _CHARACTER_REPUTATIONS = _TraitList(
     "Reputation",
     "e.g. Skilled Enchanter",
     "_selected_character_reputation",
+    prompt_options={"include_reach": True},
 )
 
 
@@ -214,6 +215,7 @@ _FAMILIAR_REPUTATIONS = _TraitList(
     "Reputation",
     "e.g. Fierce Protector",
     "_selected_familiar_reputation",
+    prompt_options={"include_reach": True},
 )
 
 
@@ -228,6 +230,7 @@ _COVENANT_REPUTATIONS = _TraitList(
         "min_score": _COVENANT_REPUTATION_RANGE[0],
         "max_score": _COVENANT_REPUTATION_RANGE[1],
         "include_known": True,
+        "include_reach": True,
     },
 )
 

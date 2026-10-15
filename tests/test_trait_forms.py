@@ -46,7 +46,7 @@ def test_a_covenant_reputation_is_bounded_and_may_be_unknown():
     form = ops.add()
     assert isinstance(form, commands.Form)
     keys = [f.key for f in form.fields()]
-    assert keys == ["name", "score", "known"]
+    assert keys == ["name", "score", "type", "reach", "known"]
     _values, problem = _answer(form, {"name": "Feared", "score": "5"})
     assert problem == "Score must be between -3 and +3."
     values, problem = _answer(form, {"name": "Feared", "score": "-2", "known": False})

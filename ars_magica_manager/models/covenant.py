@@ -10,6 +10,7 @@ from .character import ScoredTrait
 from .common import known_fields
 from .holdings import Economics, Inhabitant, Loyalty, Population, Possession
 from .traits import VirtueFlawInstance
+from .world import FULL, Attitude, Favour, Link
 
 #: A Covenant Diary entry's categories, in the spec's order.
 COVENANT_DIARY_CATEGORIES: tuple[str, ...] = (
@@ -130,6 +131,19 @@ class Covenant:
     #: Other Opus Types): each raises research on it one level, for 10
     #: Build Points at creation.
     pictorial_works: list[str] = field(default_factory=list)
+    #: How much of the covenant is written down (world.DETAIL_LEVELS).
+    #: Older saves load as Full.
+    detail: str = FULL
+    #: A paragraph about the covenant in the saga.
+    summary: str = ""
+    #: A player covenant: one the troupe plays, which other records'
+    #: attitudes point at. Sketch covenants are not; older saves are.
+    played: bool = True
+    #: Its attitude toward each player covenant (none for those it has no
+    #: settled view of).
+    attitudes: list[Attitude] = field(default_factory=list)
+    favours: list[Favour] = field(default_factory=list)
+    links: list[Link] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Covenant:
@@ -151,6 +165,9 @@ class Covenant:
             ScoredTrait(**known_fields(ScoredTrait, r))
             for r in d.get("reputations", [])
         ]
+        d["attitudes"] = [Attitude.from_dict(a) for a in d.get("attitudes", [])]
+        d["favours"] = [Favour(**known_fields(Favour, f)) for f in d.get("favours", [])]
+        d["links"] = [Link(**known_fields(Link, x)) for x in d.get("links", [])]
         d["inhabitants"] = [
             Inhabitant(**known_fields(Inhabitant, i)) for i in d.get("inhabitants", [])
         ]

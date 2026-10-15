@@ -22,6 +22,7 @@ from ..rules import laboratory_seasons as ls
 from ..rules import supplement_work as sw
 from ..rules import xp as xp_rules
 from ..rules.rounding import round_up
+from ..world import takes_part_in_play
 
 
 def plan_for(
@@ -81,6 +82,7 @@ def unplanned(saga: Saga) -> list[Character]:
         c
         for c in saga.characters
         if rules.is_planned(c)
+        and takes_part_in_play(c)
         and not is_departed(saga, c)
         and plan_for(saga, c) is None
     ]
