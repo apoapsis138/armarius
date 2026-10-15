@@ -393,8 +393,7 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"Name": ""}, {"Meets every (years)": "-1"}],
         shown={
             "#section-trib-info": "The Rhine",
-            "#trib-info-right": "recorded of 40",
-            "#trib-info-left": "Leandro",
+            "#trib-info-right": "Leandro",
         },
     ),
     "edit proxies": Contract(
@@ -448,6 +447,14 @@ CONTRACTS: dict[str, Contract] = {
         expected=True,
         invalid=[{"To whom": ""}, {"Amount": ""}],
         shown={"#trib-treasury": "repaid", "#trib-balance": "Silver in hand: 40"},
+    ),
+    "add gild": Contract(
+        prefill={"Gild": "", "Dues": "", "Keep": False, "Fengheld": False},
+        edits={"Gild": "Mercantile", "Fengheld": True},
+        saved=lambda s: s.tribunals[0].package_data["rhine"]["gilds"][-1],
+        expected={"name": "Mercantile", "dues": "", "members": ["cov_sketch"]},
+        invalid={"Gild": ""},
+        shown={"#trib-gilds-list": "Mercantile", "#trib-roster": "Hermetic, Mercan"},
     ),
     "add tribunal diary entry": Contract(
         prefill={"Year": "1220", "Entry": ""},

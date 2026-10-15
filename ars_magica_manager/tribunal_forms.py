@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import tribunal_sheet, tribunals
+from . import tribunal_packages, tribunal_sheet, tribunals
 from .arts import ARTS
 from .commands import (
     Choice,
@@ -75,6 +75,18 @@ def tribunal_fields(saga: Saga, tribunal: Tribunal | None) -> list[DialogField]:
     officer = {"allow_blank": True, "placeholder": "(none chosen)"}
     return [
         DialogField("name", "Name", "text", t.name, required=True),
+        DialogField(
+            "package",
+            "Customs",
+            "select",
+            t.package,
+            options=[
+                (escape(tribunal_packages.label(p)), p.key)
+                for p in tribunal_packages.offered(saga, t.package)
+            ],
+            hint="Core rules, or a region's customs from a book in play. "
+            "Switching keeps the other customs' records, hidden.",
+        ),
         DialogField(
             "summary",
             "In the Saga",
@@ -659,4 +671,6 @@ def tribunal_ops(saga: Saga, tribunal: Tribunal) -> dict[str, SectionOps]:
         TREASURY_SECTION: treasury_ops(tribunal),
         TRIB_DIARY_SECTION: diary_ops(saga, tribunal),
     }
+    for extra in tribunal_packages.of(tribunal).lists:
+        ops[extra.section_id] = extra.ops(saga, tribunal)
     return ops

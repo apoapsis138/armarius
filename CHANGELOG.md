@@ -46,6 +46,17 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.68.0 — 2026-10-15
+
+- A Tribunal follows the core rules or one region's customs, chosen as
+  Customs in Edit Tribunal; a region's customs are offered while its
+  sourcebook is in play, and are never mixed. The top panel names them.
+- The Rhine's customs: its covenants' gilds, each with its members and
+  dues, on a Gilds tab, and a Gild column on the roster. Notice of a case
+  is due a year before a Rhine meeting, a season under the core rules.
+- Switching a Tribunal's customs keeps what the old ones recorded,
+  hidden; switching back shows it again.
+
 ## 2.67.0 — 2026-10-15
 
 - A Tribunal's sheet has its lists. The Roster shows each covenant's

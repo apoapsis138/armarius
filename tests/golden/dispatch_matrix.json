@@ -1126,6 +1126,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-trib-gilds": {
+      "active": "section-trib-gilds",
+      "keys": {
+        "a": "FieldsDialog: Add a Gild",
+        "e": "FieldsDialog: Edit a Gild",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-trib-diary": {
       "active": "section-trib-diary",
       "keys": {

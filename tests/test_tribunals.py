@@ -10,11 +10,18 @@ import pytest
 from support import everything_saga, screen_lines, wait_until
 from textual.widgets import Collapsible, TabbedContent, Tree
 
-from ars_magica_manager import storage, transfer, tribunal_forms, tribunal_sheet
+from ars_magica_manager import (
+    storage,
+    transfer,
+    tribunal_forms,
+    tribunal_packages,
+    tribunal_sheet,
+)
 from ars_magica_manager import tribunals as trib
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Choose, Confirm, Form, Refuse
 from ars_magica_manager.models import Covenant, Saga, Tribunal, TribunalDiaryEntry
+from ars_magica_manager.tribunal_packages.rhine import gilds as rhine_gilds
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import ConfirmScreen, WorkspaceScreen
 
@@ -125,10 +132,12 @@ def test_a_covenant_votes_its_magi_and_its_proxies():
 def test_the_docket_flags_notice_not_given_and_cases_against_yours():
     saga = everything_saga()
     rhine = saga.tribunals[0]
-    assert tribunal_sheet.notice_due(rhine) == "Spring 1228"
+    assert tribunal_sheet.notice_due(rhine) == "Summer 1227"  # the Rhine's year
     assert tribunal_sheet.season_before(1228, "Spring", 1) == (1227, "Winter")
     grid = tribunal_sheet.cases_grid(saga, rhine)
-    assert [row[3] for row in grid.rows] == ["Spring 1228", "not given"]
+    assert [row[3] for row in grid.rows] == ["Summer 1227", "not given"]
+    rhine.package = "core"
+    assert tribunal_sheet.notice_due(rhine) == "Spring 1228"
     assert grid.styles[(0, 0)] == "$text-error"  # against Keep, the troupe's
     facts = {f.label: f.value for f in tribunal_sheet.facts(saga, rhine)}
     assert facts["Cases"] == "2 (1 against you)"
@@ -176,6 +185,50 @@ def test_the_diary_lists_newest_first_by_its_own_index():
     assert grid.keys == [0, 1]
     rhine.diary.append(TribunalDiaryEntry(1228, "Summer", "The Tribunal of 1228"))
     assert tribunal_sheet.diary_grid(rhine).keys == [2, 0, 1]
+
+
+def test_a_package_is_offered_while_its_book_is_in_play():
+    saga = everything_saga()
+    rhine = saga.tribunals[0]
+    saga.books_in_play = []
+    assert [p.key for p in tribunal_packages.offered(saga)] == ["core"]
+    # The one a Tribunal follows stays on offer, whatever its book.
+    assert "rhine" in [p.key for p in tribunal_packages.offered(saga, rhine.package)]
+    saga.books_in_play = ["GotF"]
+    assert "rhine" in [p.key for p in tribunal_packages.offered(saga)]
+
+
+def test_the_rhine_adds_gilds_and_a_gild_column():
+    saga = everything_saga()
+    rhine = saga.tribunals[0]
+    roster = tribunal_sheet.roster_grid(saga, rhine)
+    assert roster.columns[5] == "Gild"
+    assert [row[5] for row in roster.rows] == ["Hermetic", "Hermetic"]
+    ops = tribunal_forms.tribunal_ops(saga, rhine)
+    form = ops["section-trib-gilds"].add()
+    assert isinstance(form, Form)
+    labels = [f.label for f in form.fields()]
+    assert labels == ["Gild", "Dues", "Keep", "Fengheld"]
+    form.apply({"name": "Mercantile", "dues": "", "member_cov_sketch": True})
+    assert rhine_gilds(rhine)[-1] == {
+        "name": "Mercantile",
+        "dues": "",
+        "members": ["cov_sketch"],
+    }
+    assert tribunal_sheet.roster_grid(saga, rhine).rows[1][5] == "Hermetic, Mercantile"
+
+
+def test_switching_customs_hides_the_old_ones_and_keeps_them():
+    saga = everything_saga()
+    rhine = saga.tribunals[0]
+    tribunal_forms.edit_tribunal_form(saga, rhine).apply({"package": "core"})
+    assert "Gild" not in tribunal_sheet.roster_grid(saga, rhine).columns
+    assert "section-trib-gilds" not in tribunal_forms.tribunal_ops(saga, rhine)
+    storage.save_saga(saga)
+    again = storage.load_saga(saga.id).tribunals[0]
+    assert again.package_data["rhine"]["gilds"][0]["name"] == "Hermetic"
+    again.package = "rhine"
+    assert tribunal_sheet.roster_grid(saga, again).rows[0][5] == "Hermetic"
 
 
 def _export(saga: Saga) -> dict:
@@ -311,6 +364,34 @@ async def test_the_docket_keys_act_on_the_chosen_case():
         )
 
 
+async def test_switching_customs_redraws_the_sheets_tabs():
+    storage.save_saga(everything_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        workspace = await _workspace(pilot, app)
+        tree = workspace.query_one("#nav-tree", Tree)
+        node = next(
+            n for n in _walk(tree.root) if n.data == (NodeKind.TRIBUNAL, "rhine")
+        )
+        tree.select_node(node)
+        assert await wait_until(
+            pilot, lambda: workspace._tribunal_sheet_view is not None
+        )
+        assert workspace._tribunal_sheet_view.query("#tab-trib-gilds")
+        workspace._core_verb("section-trib-info", "edit")
+        assert await wait_until(pilot, lambda: bool(app.screen.query("#fld-package")))
+        app.screen.query_one("#fld-package").value = "core"
+        app.screen.query_one("#btn-save").press()
+        assert await wait_until(
+            pilot,
+            lambda: (
+                (view := workspace._tribunal_sheet_view) is not None
+                and view.package.key == "core"
+                and not view.query("#tab-trib-gilds")
+            ),
+        )
+
+
 # -- the desktop --
 
 
@@ -331,6 +412,7 @@ def test_the_desktop_shows_a_tribunal_and_lists_them_on_the_saga():
         "Docket",
         "Peripheral Code",
         "Treasury",
+        "Gilds",
         "Diary",
     ]
     saga_page = SagaPage(saga, PALETTES[0], lambda _id: None)

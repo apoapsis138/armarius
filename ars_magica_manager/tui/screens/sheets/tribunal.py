@@ -12,7 +12,7 @@ from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Button, Collapsible, Static, TabbedContent
 
-from .... import tribunal_forms, tribunal_sheet
+from .... import tribunal_forms, tribunal_packages, tribunal_sheet
 from ....markup import aligned, escape, markdown_inline
 from ....models import Case, Saga, Tribunal
 from ....sections import (
@@ -49,6 +49,8 @@ class TribunalSheetView(SheetView):
         super().__init__(saga)
         self.tribunal = tribunal
         self.core_ops = tribunal_forms.tribunal_ops(saga, tribunal)
+        #: The customs the sheet was built for: its tabs are theirs.
+        self.package = tribunal_packages.of(tribunal)
         #: The case the Docket's details panel shows.
         self._case: Case | None = None
 
@@ -73,7 +75,29 @@ class TribunalSheetView(SheetView):
             yield self._tab("Docket", "tab-trib-docket", self._docket_tab)
             yield self._tab("Peripheral Code", "tab-trib-code", self._code_tab)
             yield self._tab("Treasury", "tab-trib-treasury", self._treasury_tab)
+            for extra in self.package.lists:
+                yield self._tab(extra.title, extra.tab_id, self._package_tab(extra))
             yield self._tab("Diary", "tab-trib-diary", self._diary_tab)
+
+    def stale(self) -> bool:
+        """Whether the Tribunal's customs changed since the sheet was
+        built, so its tabs are no longer theirs."""
+        return tribunal_packages.of(self.tribunal) is not self.package
+
+    def _package_tab(
+        self, extra: tribunal_packages.PackageList
+    ) -> Callable[[], ComposeResult]:
+        def build() -> ComposeResult:
+            saga, t = self.saga, self.tribunal
+            yield from self._grid_section(
+                extra.section_id,
+                (ROSTER_SECTION,),
+                lambda: extra.section_title(saga, t),
+                lambda: extra.grid(saga, t).lines(),
+                f"{extra.section_id.removeprefix('section-')}-list",
+            )
+
+        return build
 
     def _refresh_title(self) -> None:
         panel = self.query_one(f"#{TRIBUNAL_INFO_SECTION}", Collapsible)
@@ -109,7 +133,7 @@ class TribunalSheetView(SheetView):
         saga, t = self.saga, self.tribunal
         yield from self._grid_section(
             ROSTER_SECTION,
-            (TRIBUNAL_INFO_SECTION,),
+            (TRIBUNAL_INFO_SECTION, *(e.section_id for e in self.package.lists)),
             lambda: tribunal_sheet.roster_title(saga, t),
             lambda: tribunal_sheet.roster_grid(saga, t).lines(),
             "trib-roster",

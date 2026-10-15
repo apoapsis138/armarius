@@ -22,6 +22,19 @@ and where it next meets, its Praeco and Presiding Quaesitor, and how big
 it really is. Everything else is worked out from the covenants that
 belong to it.
 
+A Tribunal follows either the core rules or one region's customs, from
+that region's sourcebook, never a mix: choose them as **Customs** in Edit
+Tribunal (a region's customs are offered while its book is in play).
+The customs can add lists of their own to the sheet, a column to the
+roster, and change when notice of a case is due. Switching customs keeps
+what the old ones recorded, hidden, and switching back shows it again.
+
+- **Core rules**: the Definitive Edition's Tribunal; notice of a case is
+  due a season before the meeting.
+- **Rhine: Gilds** (Guardians of the Forests): the Rhine's covenants band
+  together in gilds, each with its dues; the sheet gains a Gilds list and
+  the roster a Gild column. Notice is wanted a year before the meeting.
+
 Older sagas typed a covenant's Tribunal as a name. Each name became a
 Tribunal of its own when the saga was first opened by this version, and
 covenants that typed the same name share it.
@@ -45,6 +58,7 @@ nothing else about them changes.
 
 The facts under the Tribunal's name:
 
+- **Customs**: the core rules, or the region's customs it follows.
 - **Meets every**: how many years between its meetings (seven, unless
   its customs say otherwise).
 - **Next meeting** and **Meeting place**: when and where it next meets.
@@ -164,6 +178,20 @@ is marked paid.
 
 The balance above the list adds them up: the silver and vis in hand,
 the loans still out and the fines still unpaid.
+
+## Gilds tab
+<!-- help: tab-trib-gilds -->
+
+A Rhine Tribunal's gilds: the bands its covenants join, each with its
+dues. Only a Tribunal following the Rhine's customs has this tab.
+
+### Gilds
+<!-- help: section-trib-gilds -->
+
+Each gild with its member covenants and its dues. Add a gild, edit it
+(its name, its dues, and a tick for each covenant of the Tribunal that
+belongs to it) or delete it. The roster's Gild column shows the gilds
+each covenant belongs to.
 
 ## Diary tab
 <!-- help: tab-trib-diary -->

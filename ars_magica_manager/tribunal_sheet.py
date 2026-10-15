@@ -3,16 +3,16 @@ its name, its roster of covenants and magi of note, its docket of cases,
 its Peripheral Code, its treasury and its Diary. The roster is worked
 out from the covenants and characters that belong to it (tribunals.py).
 
-Each list is a `Grid` of plain words: the desktop draws it as a table,
-the terminal as padded lines, from the same cells."""
+Each list is a grids.Grid of plain words: the desktop draws it as a
+table, the terminal as padded lines, from the same cells. What a
+Tribunal's package adds (tribunal_packages) is drawn the same way."""
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-
-from . import tribunals, world
+from . import tribunal_packages, tribunals, world
 from .character_sheet import Fact, house_name
-from .markup import escape, fit
+from .grids import Grid
+from .markup import escape
 from .models import (
     CASE_OPEN,
     CASE_WITHDRAWN,
@@ -25,81 +25,6 @@ from .models import (
     Tribunal,
     TribunalDiaryEntry,
 )
-from .tables import Table
-
-#: How many seasons before the meeting the core rules want notice of a
-#: case given.
-NOTICE_SEASONS = 1
-
-
-@dataclass(frozen=True)
-class Grid:
-    """A list as columns of plain words, each row chosen by its key (an
-    index into what the list shows). `styles` colours a cell, by (row,
-    column), with a theme colour or style ("$text-warning", "b"); `caps`
-    is the widest each column may be on a padded line."""
-
-    columns: list[str]
-    rows: list[list[str]]
-    keys: list[int | None]
-    empty: str
-    styles: dict[tuple[int, int], str] = field(default_factory=dict)
-    caps: list[int] = field(default_factory=list)
-    stretch: int = 0
-
-    def _styled(self, row: int, column: int, words: str) -> str:
-        style = self.styles.get((row, column))
-        return f"[{style}]{words}[/]" if style else words
-
-    def table(self) -> Table:
-        """The grid as a table, for a front-end that draws columns."""
-        return Table(
-            self.columns,
-            [
-                [self._styled(r, c, escape(cell)) for c, cell in enumerate(row)]
-                for r, row in enumerate(self.rows)
-            ],
-            list(self.keys),
-            markup=True,
-            stretch=self.stretch,
-        )
-
-    def lines(self) -> list[tuple[int | None, str]]:
-        """The grid as a list's rows (key, markup): a heading of the
-        column titles, then each row padded into columns."""
-        if not self.rows:
-            return [(None, f"[$label]{escape(self.empty)}[/]")]
-        widths = []
-        for column, title in enumerate(self.columns):
-            width = max([len(title), *(len(row[column]) for row in self.rows)])
-            cap = self.caps[column] if column < len(self.caps) else 0
-            widths.append(min(width, cap) if cap else width)
-        last = len(self.columns) - 1
-
-        def padded(cells: list[str], row: int | None) -> str:
-            out = []
-            for column, cell in enumerate(cells):
-                words = fit(cell, widths[column])
-                if column == last:
-                    words = words.rstrip()
-                shown = escape(words)
-                if row is not None and (row, column) in self.styles:
-                    plain = shown.rstrip()
-                    shown = self._styled(row, column, plain) + " " * (
-                        len(shown) - len(plain)
-                    )
-                out.append(shown)
-            return "  ".join(out).rstrip()
-
-        lines: list[tuple[int | None, str]] = [
-            (None, f"[$label]  {padded(self.columns, None)}[/]")
-        ]
-        lines += [
-            (key, padded(row, index))
-            for index, (key, row) in enumerate(zip(self.keys, self.rows, strict=True))
-        ]
-        return lines
-
 
 # -- the facts under its name --
 
@@ -192,6 +117,7 @@ def facts(saga: Saga, tribunal: Tribunal) -> list[Fact]:
     members = tribunals.covenants_of(saga, tribunal)
     magi = sum(world.votes(saga, c) for c in members)
     return [
+        Fact("Customs", tribunal_packages.label(tribunal_packages.of(tribunal))),
         Fact("Meets every", f"{tribunal.meets_every} years"),
         Fact(
             "Next meeting",
@@ -200,8 +126,8 @@ def facts(saga: Saga, tribunal: Tribunal) -> list[Fact]:
             else f"{tribunal.next_season} {tribunal.next_year}",
         ),
         Fact("Meeting place", tribunal.meeting_place.strip() or "(not set)"),
-        Fact("Praeco", _officer(saga, tribunal.praeco_id)),
         Fact("Cases", cases_fact(saga, tribunal)),
+        Fact("Praeco", _officer(saga, tribunal.praeco_id)),
         Fact("Presiding Quaesitor", _officer(saga, tribunal.quaesitor_id)),
         Fact("Covenants", _of_total(len(members), tribunal.covenants_total)),
         Fact("Magi", _of_total(magi, tribunal.magi_total)),
@@ -248,6 +174,8 @@ def roster_grid(saga: Saga, tribunal: Tribunal) -> Grid:
     magi, votes, the proxies it holds and its attitude toward the
     troupe's covenant; then the covenants not recorded, counted."""
     target = attitude_target(saga)
+    columns = tribunal_packages.of(tribunal).columns
+    attitude_column = 5 + len(columns)
     rows: list[list[str]] = []
     styles: dict[tuple[int, int], str] = {}
     for index, covenant in enumerate(tribunals.covenants_of(saga, tribunal)):
@@ -258,7 +186,7 @@ def roster_grid(saga: Saga, tribunal: Tribunal) -> Grid:
             attitude = (
                 f"{world.SEAL_GLYPH} {world.signed(score)} {world.attitude_word(score)}"
             )
-            styles[(index, 5)] = f"${world.attitude_colour(score)}"
+            styles[(index, attitude_column)] = f"${world.attitude_colour(score)}"
         if covenant.played:
             styles[(index, 0)] = "b"
         rows.append(
@@ -268,6 +196,7 @@ def roster_grid(saga: Saga, tribunal: Tribunal) -> Grid:
                 str(world.votes(saga, covenant)),
                 str(covenant_votes(saga, tribunal, covenant)),
                 f"{held} held" if held else "",
+                *(c.value(saga, tribunal, covenant) for c in columns),
                 attitude,
             ]
         )
@@ -280,17 +209,26 @@ def roster_grid(saga: Saga, tribunal: Tribunal) -> Grid:
                 "" if magi is None else str(magi),
                 "" if magi is None else str(magi),
                 "",
+                *("" for _ in columns),
                 "",
             ]
         )
     return Grid(
-        ["Covenant", "Detail", "Magi", "Votes", "Proxies", "Attitude"],
+        [
+            "Covenant",
+            "Detail",
+            "Magi",
+            "Votes",
+            "Proxies",
+            *(c.title for c in columns),
+            "Attitude",
+        ],
         rows,
         list(range(len(rows))),
         "No covenant belongs to it yet: choose it as a covenant's Tribunal "
         "in Edit Covenant.",
         styles,
-        caps=[22, 6, 4, 5, 8, 0],
+        caps=[22, 6, 4, 5, 8, *(c.cap for c in columns), 0],
     )
 
 
@@ -384,7 +322,9 @@ def notice_due(tribunal: Tribunal) -> str:
     if tribunal.next_year is None:
         return ""
     year, season = season_before(
-        tribunal.next_year, tribunal.next_season, NOTICE_SEASONS
+        tribunal.next_year,
+        tribunal.next_season,
+        tribunal_packages.of(tribunal).notice_seasons,
     )
     return f"{season} {year}"
 
@@ -478,7 +418,11 @@ def case_text(saga: Saga, tribunal: Tribunal, case: Case | None) -> str:
     if case.status == CASE_OPEN:
         due = notice_due(tribunal)
         given = "given" if case.notice_given else "not yet given"
-        line("Notice", f"{given}; due {due}" if due else given)
+        ahead = tribunal_packages.of(tribunal).notice_words
+        line(
+            "Notice",
+            f"{given}; due {due}, {ahead} before the meeting" if due else given,
+        )
     line("Sought", case.penalty)
     evidence = [e.strip() for e in case.evidence.splitlines() if e.strip()]
     if evidence:

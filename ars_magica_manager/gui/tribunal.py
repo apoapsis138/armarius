@@ -15,7 +15,14 @@ from collections.abc import Callable, Sequence
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
-from .. import artwork, tribunal_forms, tribunal_sheet, tribunals, world
+from .. import (
+    artwork,
+    tribunal_forms,
+    tribunal_packages,
+    tribunal_sheet,
+    tribunals,
+    world,
+)
 from .. import character_sheet as cs
 from ..markup import aligned, escape
 from ..models import Case, Saga, Tribunal
@@ -64,6 +71,19 @@ class TribunalPage(QWidget):
         self.codex.add("Docket", "worksheet", self._docket())
         self.codex.add("Peripheral Code", "lab_text", self._code())
         self.codex.add("Treasury", "income", self._treasury())
+        for extra in tribunal_packages.of(tribunal).lists:
+            self.codex.add(
+                extra.title,
+                "tribunal",
+                scrolling_page(
+                    p,
+                    self._grid(
+                        extra.section_title(saga, tribunal),
+                        extra.grid(saga, tribunal),
+                        extra.section_id,
+                    ),
+                ),
+            )
         self.codex.add("Diary", "year", self._diary())
         if controls is not None:
             self.codex.add("Manage", "manage", controls.chapter(p))

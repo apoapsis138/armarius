@@ -1756,6 +1756,9 @@ class WorkspaceBase(Screen[None]):
         if view is not None:
             for section in sections:
                 view.refresh_section(section)
+        # A Tribunal whose customs changed shows their tabs instead.
+        if isinstance(view, TribunalSheetView) and view.stale():
+            self.call_later(self._show_tribunal_detail, view.tribunal)
         # An open Creation Worksheet shows the record too.
         for screen in self.app.screen_stack:
             changed = getattr(screen, "record_changed", None)

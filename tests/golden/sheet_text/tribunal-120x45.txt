@@ -3,23 +3,23 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Rhine
 
+      Customs:       Rhine: Gilds              Praeco:              Severinus
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1228               Covenants:           2
       Meeting place: Durenmar                  Magi:                4
-      Praeco:        Severinus                 Your votes:          1 of 4
-      Cases:         2 (1 against you)
+      Cases:         2 (1 against you)         Your votes:          1 of 4
       Gilds and forests.
           Edit (e)
 
-   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Diary
+   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Gilds  6 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Covenants (2)
 
-        Covenant  Detail  Magi  Votes  Proxies  Attitude
-      ○ Keep      Full    1     1
-      ○ Fengheld  Sketch  3     4      1 held   ◉ −2 Unfriendly
+        Covenant  Detail  Magi  Votes  Proxies  Gild      Attitude
+      ○ Keep      Full    1     1               Hermetic
+      ○ Fengheld  Sketch  3     4      1 held   Hermetic  ◉ −2 Unfriendly
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Magi of Note (1)
@@ -46,22 +46,22 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Rhine
 
+      Customs:       Rhine: Gilds              Praeco:              Severinus
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1228               Covenants:           2
       Meeting place: Durenmar                  Magi:                4
-      Praeco:        Severinus                 Your votes:          1 of 4
-      Cases:         2 (1 against you)
+      Cases:         2 (1 against you)         Your votes:          1 of 4
       Gilds and forests.
           Edit (e)
 
-   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Diary
+   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Gilds  6 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Cases for 1228 (2)
 
         Case              Kind    Filed        Notice due   Sought
-      ○ Fengheld v. Keep  Charge  Winter 1219  Spring 1228  the ford source
+      ○ Fengheld v. Keep  Charge  Winter 1219  Summer 1227  the ford source
       ○ Gild dues         Motion  Spring 1220  not given    dues of 3 pawns
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -89,15 +89,15 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Rhine
 
+      Customs:       Rhine: Gilds              Praeco:              Severinus
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1228               Covenants:           2
       Meeting place: Durenmar                  Magi:                4
-      Praeco:        Severinus                 Your votes:          1 of 4
-      Cases:         2 (1 against you)
+      Cases:         2 (1 against you)         Your votes:          1 of 4
       Gilds and forests.
           Edit (e)
 
-   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Diary
+   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Gilds  6 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -132,15 +132,15 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Rhine
 
+      Customs:       Rhine: Gilds              Praeco:              Severinus
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1228               Covenants:           2
       Meeting place: Durenmar                  Magi:                4
-      Praeco:        Severinus                 Your votes:          1 of 4
-      Cases:         2 (1 against you)
+      Cases:         2 (1 against you)         Your votes:          1 of 4
       Gilds and forests.
           Edit (e)
 
-   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Diary
+   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Gilds  6 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Silver in hand: 30 pounds
@@ -170,20 +170,63 @@
 
 
 
+===== tab-trib-gilds
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Rhine
+
+      Customs:       Rhine: Gilds              Praeco:              Severinus
+      Meets every:   7 years                   Presiding Quaesitor: (not chosen)
+      Next meeting:  Summer 1228               Covenants:           2
+      Meeting place: Durenmar                  Magi:                4
+      Cases:         2 (1 against you)         Your votes:          1 of 4
+      Gilds and forests.
+          Edit (e)
+
+   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Gilds  6 Diary
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Gilds (1)
+
+        Gild      Members         Dues
+      ○ Hermetic  Keep, Fengheld  2 pawns a year
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ===== tab-trib-diary
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Rhine
 
+      Customs:       Rhine: Gilds              Praeco:              Severinus
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1228               Covenants:           2
       Meeting place: Durenmar                  Magi:                4
-      Praeco:        Severinus                 Your votes:          1 of 4
-      Cases:         2 (1 against you)
+      Cases:         2 (1 against you)         Your votes:          1 of 4
       Gilds and forests.
           Edit (e)
 
-   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Diary
+   1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Gilds  6 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

@@ -338,6 +338,18 @@ def everything_saga() -> Saga:
                 next_year=1228,
                 meeting_place="Durenmar",
                 praeco_id="mag_sketch",
+                package="rhine",
+                package_data={
+                    "rhine": {
+                        "gilds": [
+                            {
+                                "name": "Hermetic",
+                                "members": ["cov1", "cov_sketch"],
+                                "dues": "2 pawns a year",
+                            }
+                        ]
+                    }
+                },
                 proxies={"cov_sketch": 1},
                 cases=[
                     Case(

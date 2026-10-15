@@ -243,6 +243,10 @@ OPENERS: dict[str, Opener] = {
             2,
         ),
     ),
+    "add gild": Opener(
+        "tribunal",
+        _pick(lambda ws: ws._core_verb("section-trib-gilds", "add"), "trib-gilds-list"),
+    ),
     "add tribunal diary entry": Opener(
         "tribunal",
         _pick(lambda ws: ws._core_verb("section-trib-diary", "add"), "trib-diary"),

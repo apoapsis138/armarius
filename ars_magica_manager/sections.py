@@ -113,6 +113,8 @@ PAST_CASES_SECTION = "section-trib-past"
 CODE_SECTION = "section-trib-code"
 TREASURY_SECTION = "section-trib-treasury"
 TRIB_DIARY_SECTION = "section-trib-diary"
+#: The lists Tribunal packages add (tribunal_packages): the Rhine's Gilds.
+GILDS_SECTION = "section-trib-gilds"
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),
@@ -126,4 +128,5 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     CODE_SECTION: frozenset({"add", "edit", "remove"}),
     TREASURY_SECTION: frozenset({"add", "edit", "remove"}),
     TRIB_DIARY_SECTION: frozenset({"add", "edit", "remove"}),
+    GILDS_SECTION: frozenset({"add", "edit", "remove"}),
 }
