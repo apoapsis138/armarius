@@ -35,4 +35,5 @@ from .region import NeighbourSheetView as NeighbourSheetView
 from .region import RegionSheetView as RegionSheetView
 from .saga_content import TAB_SECTIONS as TAB_SECTIONS
 from .saga_content import SagaContentSheetView as SagaContentSheetView
+from .seasons import SeasonsSheetView as SeasonsSheetView
 from .tribunal import TribunalSheetView as TribunalSheetView

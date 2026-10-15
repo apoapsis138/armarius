@@ -152,6 +152,12 @@ EFFECTS_SECTION = "section-nb-effects"
 TRIGGERS_SECTION = "section-nb-triggers"
 TABLES_SECTION = "section-nb-tables"
 DIARY_SECTION = "section-nb-place-diary"
+#: The saga's Seasons sheet: its top panel, what is coming, and the
+#: seasons recorded; and a covenant's own Ahead, on its Seasons tab.
+SEASONS_INFO_SECTION = "section-seasons-info"
+AHEAD_SECTION = "section-ahead"
+SEASONS_RECORDED_SECTION = "section-seasons-recorded"
+COV_AHEAD_SECTION = "section-cov-ahead"
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),
@@ -190,4 +196,7 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     TRIGGERS_SECTION: frozenset({"add", "edit", "remove"}),
     TABLES_SECTION: frozenset({"add", "edit", "remove"}),
     DIARY_SECTION: frozenset({"add", "edit", "remove"}),
+    SEASONS_INFO_SECTION: frozenset({"edit"}),
+    AHEAD_SECTION: frozenset({"add", "edit", "remove"}),
+    COV_AHEAD_SECTION: frozenset({"add", "edit", "remove"}),
 }

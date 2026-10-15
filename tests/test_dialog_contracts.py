@@ -551,6 +551,21 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"Trigger": ""}, {"Year": ""}],
         shown={"#nb-triggers-list": "Level 3 opens"},
     ),
+    "edit looking ahead": Contract(
+        prefill={"Looking ahead": "2", "Show": "Everything"},
+        edits={"Looking ahead": "3", "Show": "Places"},
+        saved=lambda s: (s.ahead_span, s.ahead_show),
+        expected=(3, "Places"),
+        shown={"#section-ahead": "Looking Ahead: 3 years · Places"},
+    ),
+    "add calendar entry": Contract(
+        prefill={"What": "", "Year": "1220", "Season": "Autumn", "Comes": "Once"},
+        edits={"What": "Vis lease ends", "Year": "1221", "Season": "Spring"},
+        saved=lambda s: (s.calendar[-1].title, s.calendar[-1].year),
+        expected=("Vis lease ends", 1221),
+        invalid=[{"What": ""}, {"Comes": "Every N years"}],
+        shown={"#ahead-list": "Vis lease ends"},
+    ),
     "edit roll table": Contract(
         prefill={"Table": "Who walks the Mist Wood", "Die": "Simple die"},
         edits={"Rows": "1-9: No one\n10: The king"},

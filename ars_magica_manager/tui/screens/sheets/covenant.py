@@ -14,7 +14,16 @@ from textual.widgets import (
     TabbedContent,
 )
 
-from .... import book_value, catalog, seasons, tribunals, world, world_forms
+from .... import (
+    ahead,
+    ahead_forms,
+    book_value,
+    catalog,
+    seasons,
+    tribunals,
+    world,
+    world_forms,
+)
 from .... import books as bk
 from .... import covenant_build as cov_build
 from .... import covenant_diary as cov_diary
@@ -42,7 +51,7 @@ from ....models import (
     Saga,
 )
 from ....rules import realms
-from ....sections import MAGI_SECTION, WHAT_MATTERS_SECTION
+from ....sections import COV_AHEAD_SECTION, MAGI_SECTION, WHAT_MATTERS_SECTION
 from ..widgets import (
     DetailsPanel,
     PinnedCollapsible,
@@ -78,6 +87,11 @@ class CovenantSheetView(SheetView):
             self.core_ops = world_forms.covenant_ops(saga, covenant)
         elif not covenant.played:
             self.core_ops = world_forms.record_ops(saga, covenant)
+        if not self.sketch:
+            self.core_ops = {
+                **self.core_ops,
+                COV_AHEAD_SECTION: ahead_forms.ahead_ops(saga, covenant),
+            }
         self._register_refreshers()
 
     def _register_refreshers(self) -> None:
@@ -285,6 +299,19 @@ class CovenantSheetView(SheetView):
         season, by kind, over the chosen person's details."""
         with Vertical(classes="panel-body"):
             with VerticalScroll():
+                with SheetSection(
+                    title=self._titled(
+                        COV_AHEAD_SECTION,
+                        COV_AHEAD_SECTION,
+                        lambda: ahead.title(self.saga, self.covenant),
+                    ),
+                    id=COV_AHEAD_SECTION,
+                ):
+                    yield self._list(
+                        COV_AHEAD_SECTION,
+                        lambda: ahead.grid(self.saga, self.covenant).lines(),
+                        id="cov-ahead-list",
+                    )
                 for kind, title in seasons.SEASON_KINDS:
                     section = f"section-cov-seasons-{kind}"
                     with SheetSection(
@@ -649,6 +676,15 @@ class CovenantSheetView(SheetView):
             self.query_one("#cov-seasons-info", Static).update(
                 seasons.season_info_text(self.saga, self.selected_season_person())
             )
+            return
+        if list_id == "cov-ahead-list":
+            event.stop()
+            found = ahead.shown(self.saga, self.covenant)
+            index = event.data_index
+            if index < len(found):
+                self.query_one("#cov-seasons-info", Static).update(
+                    ahead.detail_text(self.saga, found[index])
+                )
             return
         if list_id == "cov-diary-list":
             event.stop()

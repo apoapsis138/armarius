@@ -199,6 +199,25 @@ class LabProject:
 
 
 @dataclass
+class CalendarEntry:
+    """Something the storyguide wrote into the saga's calendar, for Ahead
+    to show: in its season, once, each year or every `every` years (see
+    ahead.REPEATS), for one covenant or (None) the whole saga."""
+
+    title: str
+    year: int
+    season: str = "Spring"
+    repeats: str = "Once"
+    every: int | None = None
+    note: str = ""
+    covenant_id: str | None = None
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> CalendarEntry:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
 class SeasonRecordLine:
     """One person's line in a season's record: kept as the text
     it showed, so it still reads right after the character is renamed or

@@ -322,16 +322,80 @@ The saga's record of past seasons: what everyone did each season and what it gav
 **You type:** nothing; the records are written by the app.
 
 <!-- tui -->
-**The app works out:** one row per season, newest first ("Spring 1220 (3 people)"), and below the list the chosen season's record, grouped by covenant.
+**The app works out:** what is coming ([Looking Ahead](help:section-ahead)), then one row per season recorded, newest first ("Spring 1220 (3 people)"), and below the list the chosen season's record, grouped by covenant.
 <!-- /tui -->
 <!-- gui -->
-**The app works out:** the Seasons page, opened from the saga's Seasons chapter (The Seasons Played), lists the seasons in its rail, newest first, and shows the chosen season's record, grouped by covenant, a row a person. Just after Advance Season, the season just played out is first.
+**The app works out:** the Seasons page, opened from the saga's Seasons chapter (The Seasons Played), starts with what is coming ([Ahead](help:section-ahead)), then lists the seasons in its rail, newest first, and shows the chosen season's record, grouped by covenant, a row a person. Just after Advance Season, the season just played out is first.
 <!-- /gui -->
 Each person's line gives the activity, what it was on and its result. A plan that could not be carried out says why, and a magus or companion with nothing planned is shown as "nothing planned". Winter's lines also include aging rolls, grogs' yearly updates, business upkeep and vis harvests.
 
 When season records are off, the page says so and no new seasons are added; each character's Diary still has their own entry.
 
 **See also:** [Advance Season](help:advance-season), [Season Summary](help:season-summary), [How to plan and run a season](help:guide-seasons)
+
+## The Seasons panel
+<!-- help: section-seasons-info -->
+
+The date, how far Ahead looks, the next Tribunal's meeting and how many
+things come this season.
+
+**You type:** how far to look ahead (a number of years, or to the next
+Tribunal) and what to show, with
+<!-- tui -->
+Edit (`e`).
+<!-- /tui -->
+<!-- gui -->
+**Looking ahead** on the Ahead section.
+<!-- /gui -->
+Both are kept with the saga; looking ahead starts at 2 years.
+
+## Seasons tab
+<!-- help: tab-seasons -->
+
+What is coming, season by season, over the seasons already recorded.
+
+## Looking Ahead
+<!-- help: section-ahead -->
+
+What is coming in the seasons ahead, from this one to the end of the
+span, a season at a time. Nothing here is kept as a list: each part of
+the saga is asked what it has coming.
+
+- **Tribunal**: each Tribunal's next meeting, and the season notice of
+  its open cases is due.
+- **Neighbours** and **Income**: each town's fairs and markets (a fair a
+  covenant trades at is its income roll).
+- **Places**: each place's dated triggers.
+- **Threats**: a threat's dated stages still to come.
+- **Characters**: the year a character's aging rolls begin, and the
+  season one comes back from Twilight.
+- **Every Winter**: the world turns (the yearly step).
+- **Calendar**: your own entries, once, each year or every so many
+  years, for the whole saga or one covenant.
+
+**You type:** your own calendar entries: Add one, and Edit or Delete
+it. A row worked out from another record is changed on that record:
+Edit and Delete say where.
+<!-- tui -->
+Show (Edit on the Seasons panel) narrows the list to one kind of entry.
+<!-- /tui -->
+<!-- gui -->
+The chips under the title narrow the cards to one kind of entry; click a
+card to read it in the inspector.
+<!-- /gui -->
+
+## Seasons Recorded
+<!-- help: section-seasons-recorded -->
+
+The seasons applied so far, newest first; the chosen season's record is
+shown
+<!-- tui -->
+in the details panel.
+<!-- /tui -->
+<!-- gui -->
+in its chapter.
+<!-- /gui -->
+See [Seasons](help:seasons).
 
 # Saga Content
 <!-- help: saga-content -->

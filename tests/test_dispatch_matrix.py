@@ -60,6 +60,7 @@ _SHEET_VIEW_ATTR = {
     "faction": "_neighbour_sheet_view",
     "threat": "_neighbour_sheet_view",
     "place": "_neighbour_sheet_view",
+    "seasons": "_seasons_view",
 }
 
 

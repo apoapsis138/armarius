@@ -104,6 +104,7 @@ from ....sections import (
     FAIRS_SECTION,
     NEIGHBOUR_INFO_SECTION,
     REGION_INFO_SECTION,
+    SEASONS_INFO_SECTION,
     TABLES_SECTION,
     TRIBUNAL_INFO_SECTION,
 )
@@ -136,7 +137,7 @@ from ..prompts import (
     _export_dialog,
     _scored_trait_dialog,
 )
-from ..season_records import SeasonRecordsView, SeasonSummaryScreen
+from ..season_records import SeasonSummaryScreen
 from ..sheets import (
     LAB_FEATURE_SECTIONS,
     LAB_TEXTS_SECTION,
@@ -151,6 +152,7 @@ from ..sheets import (
     NeighbourSheetView,
     RegionSheetView,
     SagaContentSheetView,
+    SeasonsSheetView,
     SheetView,
     TribunalSheetView,
 )
@@ -549,6 +551,7 @@ class WorkspaceBase(Screen[None]):
         NodeKind.REGION: (set(), REGION_INFO_SECTION),
         NodeKind.NEIGHBOUR_GROUP: (set(), REGION_INFO_SECTION),
         NodeKind.NEIGHBOUR: (set(), NEIGHBOUR_INFO_SECTION),
+        NodeKind.SEASONS: (set(), SEASONS_INFO_SECTION),
     }
 
     DEFAULT_CSS = """
@@ -587,6 +590,7 @@ class WorkspaceBase(Screen[None]):
         self._tribunal_sheet_view: TribunalSheetView | None = None
         self._region_sheet_view: RegionSheetView | None = None
         self._neighbour_sheet_view: NeighbourSheetView | None = None
+        self._seasons_view: SeasonsSheetView | None = None
         #: One detail-pane swap at a time (see _set_detail).
         self._detail_lock = asyncio.Lock()
         #: While the Footer's keys are worked out (active_bindings), what
@@ -904,6 +908,7 @@ class WorkspaceBase(Screen[None]):
         self._tribunal_sheet_view = None
         self._region_sheet_view = None
         self._neighbour_sheet_view = None
+        self._seasons_view = None
 
         handler = self._NODE_SELECTED.get(kind)
         if handler is not None:
@@ -993,7 +998,10 @@ class WorkspaceBase(Screen[None]):
 
     async def _select_seasons(self, ident: str | None) -> None:
         self.selected_covenant = None
-        await self._set_detail(SeasonRecordsView(self.saga))
+        view = SeasonsSheetView(self.saga)
+        await self._set_detail(view)
+        self._seasons_view = view
+        self._focus_first_section(initial=True)
 
     async def _select_region(self, ident: str | None) -> None:
         """The Region, or (`ident`) one of its groups of neighbours, whose
@@ -1654,6 +1662,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.REGION: self._region_sheet_view,
             NodeKind.NEIGHBOUR_GROUP: self._region_sheet_view,
             NodeKind.NEIGHBOUR: self._neighbour_sheet_view,
+            NodeKind.SEASONS: self._seasons_view,
         }.get(self.selected_kind)
 
     def _open_creation_worksheet(

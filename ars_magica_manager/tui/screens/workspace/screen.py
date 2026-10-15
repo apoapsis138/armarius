@@ -18,6 +18,7 @@ from ....models import (
 from ....sections import (
     CORE_SECTIONS,
     NEIGHBOUR_INFO_SECTION,
+    SEASONS_INFO_SECTION,
     TRIBUNAL_INFO_SECTION,
 )
 from ..sheets import (
@@ -77,6 +78,7 @@ class WorkspaceScreen(
             "btn-cov-edit": self._edit_covenant,
             "btn-trib-edit": partial(self._core_verb, TRIBUNAL_INFO_SECTION, "edit"),
             "btn-nb-edit": partial(self._core_verb, NEIGHBOUR_INFO_SECTION, "edit"),
+            "btn-seasons-edit": partial(self._core_verb, SEASONS_INFO_SECTION, "edit"),
             "btn-char-info-edit": self._edit_character_info,
             "btn-char-characteristics-edit": self._edit_characteristics,
             "btn-char-health-wounds-edit": self._edit_wounds,

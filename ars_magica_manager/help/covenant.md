@@ -509,6 +509,20 @@ yearly":
 sets up the chosen grog's yearly update, whose training,
 practice and exposure experience is applied at the end of Winter.
 
+
+## Ahead for the covenant
+<!-- help: section-cov-ahead -->
+
+What is coming that concerns the covenant, season by season: its fairs'
+income rolls, its people's aging and returns from Twilight, its
+Tribunal's meetings, the region's threats and places, and your calendar
+entries for it or for the whole saga. It looks as far ahead as the
+saga's [Looking Ahead](help:section-ahead).
+
+**You type:** your own calendar entries: Add one (it is for this
+covenant), and Edit or Delete it. A row worked out from another record
+is changed on that record.
+
 ## Possessions tab
 <!-- help: tab-cov-possessions -->
 

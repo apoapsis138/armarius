@@ -19,7 +19,7 @@ from .definitions import CovenantBoonHookDef, LabVirtueFlawDef, VirtueFlawDef
 from .devices import EnchantedDevice
 from .familiar import Familiar
 from .laboratory import Laboratory
-from .seasons import LabProject, SeasonPlan, SeasonRecord
+from .seasons import CalendarEntry, LabProject, SeasonPlan, SeasonRecord
 from .traits import Spell
 from .tribunal import Tribunal
 from .world import Neighbour
@@ -104,6 +104,12 @@ class Saga:
     keep_season_records: bool = True
     #: Those records, oldest first.
     season_records: list[SeasonRecord] = field(default_factory=list)
+    #: How many years Ahead looks (0: to the next Tribunal); see ahead.
+    ahead_span: int = 2
+    #: Which of Ahead's entries the terminal shows (ahead.SHOWS).
+    ahead_show: str = "Everything"
+    #: The storyguide's own entries in the saga's calendar, for Ahead.
+    calendar: list[CalendarEntry] = field(default_factory=list)
     #: Lab work in progress over several seasons.
     lab_projects: list[LabProject] = field(default_factory=list)
     #: User-made catalog entries: house rules and entries from
@@ -165,6 +171,7 @@ class Saga:
         d["season_records"] = [
             SeasonRecord.from_dict(r) for r in d.get("season_records", [])
         ]
+        d["calendar"] = [CalendarEntry.from_dict(e) for e in d.get("calendar", [])]
         d["lab_projects"] = [LabProject.from_dict(p) for p in d.get("lab_projects", [])]
         d["custom_virtues_flaws"] = [
             VirtueFlawDef.from_dict(e) for e in d.get("custom_virtues_flaws", [])

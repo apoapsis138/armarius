@@ -172,6 +172,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-cov-ahead": {
+      "active": "section-cov-ahead",
+      "keys": {
+        "a": "FieldsDialog: Add a Calendar Entry",
+        "e": "FieldsDialog: Edit a Calendar Entry",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-cov-seasons-magus": {
       "active": "section-cov-seasons-magus",
       "keys": {
@@ -1852,6 +1862,38 @@
         "a": "ChooseScreen: Link to what?",
         "e": "(nothing)",
         "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    }
+  },
+  "seasons": {
+    "PinnedCollapsible#section-seasons-info": {
+      "active": "section-seasons-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Looking Ahead",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-ahead": {
+      "active": "section-ahead",
+      "keys": {
+        "a": "FieldsDialog: Add a Calendar Entry",
+        "e": "FieldsDialog: Edit a Calendar Entry",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-seasons-recorded": {
+      "active": "section-seasons-recorded",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }

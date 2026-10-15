@@ -51,6 +51,7 @@ from ..character_sheet import Fact
 from ..commands import SectionOps
 from ..covenants import boon_hook_problems
 from ..models import FULL, INHABITANT_KINDS, LINE, POSSESSION_KINDS, Covenant, Saga
+from .ahead import ahead_section
 from .character_sheet import (
     TextBlock,
     columns_text,
@@ -786,8 +787,14 @@ class CovenantPage(QWidget):
             if covenant is not None
             else []
         )
+        ahead = (
+            [ahead_section(saga, p, self.run, self.inspect, covenant)]
+            if covenant is not None
+            else []
+        )
         return scrolling_page(
             p,
+            *ahead,
             chapter_title(
                 f"Seasons  ·  now {saga.current_season} {saga.current_year}", p
             ),

@@ -13,6 +13,7 @@ from ars_magica_manager.models import (
     Attitude,
     BondPower,
     Book,
+    CalendarEntry,
     Case,
     Character,
     Covenant,
@@ -161,6 +162,7 @@ NODES: dict[str, tuple[str, ...]] = {
     "place": ("neighbour", "drachenfels"),
     "book_group": ("book_group",),
     "saga_content": ("saga_content",),
+    "seasons": ("seasons",),
 }
 
 
@@ -341,6 +343,12 @@ def everything_saga() -> Saga:
         id="test_saga",
         name="Matrix",
         covenants=[covenant, sketch],
+        calendar=[
+            CalendarEntry(
+                "Elsbeth leaves for Paris", 1220, "Spring", covenant_id="cov1"
+            ),
+            CalendarEntry("Midsummer rites", 1219, "Summer", repeats="Each year"),
+        ],
         tribunals=[
             Tribunal(
                 id="rhine",

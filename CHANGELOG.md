@@ -46,6 +46,25 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.77.0 — 2026-10-15
+
+- **Ahead: what's coming.** Seasons (the tree's Seasons in the terminal,
+  the Seasons page on the desktop) now opens on Looking Ahead:
+  everything coming in the seasons ahead, a season at a time, worked out
+  from the saga itself. Each Tribunal's next meeting and when notice of
+  its cases is due; the towns' fairs (a covenant's income roll among
+  them); the places' triggers; the threats' dated stages; the year a
+  character's aging rolls begin and the season one comes back from
+  Twilight; and the world turning each Winter.
+- **How far it looks** is kept with the saga: 2 years to start with, or
+  1, 3 or 5, or to the next Tribunal. Show narrows the list to one kind
+  of entry (chips on the desktop).
+- **Your own calendar.** Add your own entries to Ahead: once, each year
+  or every so many years, for the whole saga or one covenant. A row
+  worked out from another record is changed on that record.
+- **Ahead for a covenant.** A covenant's Seasons tab starts with what
+  concerns it.
+
 ## 2.76.0 — 2026-10-15
 
 - **Triggers.** A place's Regio tab lists its triggers: what comes once,

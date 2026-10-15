@@ -270,6 +270,12 @@ OPENERS: dict[str, Opener] = {
     "add trigger": Opener(
         "place", lambda ws: ws._core_verb("section-nb-triggers", "add")
     ),
+    "edit looking ahead": Opener(
+        "seasons", lambda ws: ws._core_verb("section-seasons-info", "edit")
+    ),
+    "add calendar entry": Opener(
+        "seasons", lambda ws: ws._core_verb("section-ahead", "add")
+    ),
     "edit roll table": Opener(
         "place",
         _pick(lambda ws: ws._core_verb("section-nb-tables", "edit"), "nb-tables-list"),

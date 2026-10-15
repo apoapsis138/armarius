@@ -1,5 +1,5 @@
-"""Season records: the summary shown after advancing the season,
-and the saga's Seasons view listing past seasons."""
+"""The summary shown after advancing the season (the saga's Seasons
+sheet, sheets/seasons.py, lists the seasons recorded)."""
 
 from __future__ import annotations
 
@@ -13,7 +13,6 @@ from textual.widgets import Button, Label, Static
 from ... import seasons
 from ...models import Saga, SeasonRecord
 from .fields import ModalDialog
-from .widgets import SelectableList
 
 
 class SeasonSummaryScreen(ModalDialog[None]):
@@ -92,62 +91,3 @@ class SeasonSummaryScreen(ModalDialog[None]):
     def on_button_pressed(self, event: Button.Pressed) -> None:
         event.stop()
         self.dismiss(None)
-
-
-class SeasonRecordsView(Vertical):
-    """The saga's Seasons node: its past seasons, newest first, over the
-    chosen season's record (the newest to start with)."""
-
-    DEFAULT_CSS = """
-    SeasonRecordsView {
-        height: 1fr;
-    }
-
-    SeasonRecordsView #season-records-list {
-        height: auto;
-        max-height: 12;
-    }
-
-    SeasonRecordsView #season-record-scroll {
-        height: 1fr;
-        margin-top: 1;
-    }
-    """
-
-    def __init__(self, saga: Saga) -> None:
-        super().__init__()
-        self.saga = saga
-
-    def _records(self) -> list[SeasonRecord]:
-        return list(reversed(self.saga.season_records))
-
-    def compose(self) -> ComposeResult:
-        records = self._records()
-        yield Label(f"[b]Seasons ({len(records)})[/]", id="season-records-title")
-        if not self.saga.keep_season_records:
-            yield Static(
-                "[dim]Season records are off (Edit Saga): new seasons aren't "
-                "kept here.[/]",
-                id="season-records-off",
-            )
-        yield SelectableList(
-            [(i, seasons.record_label(r)) for i, r in enumerate(records)],
-            id="season-records-list",
-        )
-        with VerticalScroll(id="season-record-scroll"):
-            yield Static(self._text(0), id="season-record-text")
-
-    def _text(self, index: int) -> str:
-        records = self._records()
-        if not records:
-            return (
-                "[dim]No seasons recorded yet: they're kept as seasons are "
-                "applied (t).[/]"
-            )
-        return seasons.record_text(self.saga, records[min(index, len(records) - 1)])
-
-    def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
-        event.stop()
-        self.query_one("#season-record-text", Static).update(
-            self._text(event.data_index)
-        )

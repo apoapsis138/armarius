@@ -151,6 +151,7 @@ from .saga import assign_laboratory as assign_laboratory
 from .saga import assign_laboratory_owner as assign_laboratory_owner
 from .saga import boon_hook_params as boon_hook_params
 from .saga import replace_raw_vis as replace_raw_vis
+from .seasons import CalendarEntry as CalendarEntry
 from .seasons import LabProject as LabProject
 from .seasons import SeasonPlan as SeasonPlan
 from .seasons import SeasonRecord as SeasonRecord

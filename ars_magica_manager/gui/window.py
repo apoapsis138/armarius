@@ -805,7 +805,7 @@ class MainWindow(QMainWindow):
             return NeighbourPage(saga, neighbour, p, self.run, self._controls())
         if place.kind == SEASONS:
             played, self._played = self._played, None
-            return SeasonsPage(saga, p, played)
+            return SeasonsPage(saga, p, played, self.run)
         if place.kind == COVENANT:
             return CovenantPage(
                 saga,

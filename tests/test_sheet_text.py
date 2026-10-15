@@ -56,6 +56,7 @@ SHEETS = {
     "faction",
     "threat",
     "place",
+    "seasons",
 }
 
 

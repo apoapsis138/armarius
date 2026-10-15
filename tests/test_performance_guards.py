@@ -107,6 +107,7 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "faction": 40,
     "threat": 40,
     "place": 40,
+    "seasons": 40,
 }
 
 
