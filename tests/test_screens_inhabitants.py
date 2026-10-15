@@ -13,6 +13,7 @@ from screen_helpers import (
     _select_covenant,
     _show_inhabitants_tab,
     _wait_for_screen,
+    _wait_until_active,
 )
 from support import menu, wait_until
 from textual.widgets import Button, Collapsible, Input, Label, ListView, Select, Static
@@ -38,7 +39,9 @@ async def _select_inh_row(pilot, app, kind: str, row: int) -> None:
     rows.focus()
     await pilot.pause()
     rows.highlighted = row
-    await pilot.pause()
+    await wait_until(pilot, lambda: app.focused is rows and rows.highlighted == row)
+    await _wait_until_active(pilot, app, f"section-inh-{kind}")
+    await pilot.pause()  # the panel follows the highlighted row
 
 
 def _records(kind: str | None = None) -> list[Inhabitant]:
@@ -164,7 +167,7 @@ async def test_removing_a_listed_magus_keeps_them_in_the_covenant_but_stops_coun
         await _select_covenant(pilot, app)
         await _select_inh_row(pilot, app, "magus", 0)
         await pilot.press("d")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         assert isinstance(app.screen, ConfirmScreen)
         message = str(app.screen.query_one("#confirm-message", Static).render())
         assert "Remove Corvinus from the Magi list?" in message
@@ -174,7 +177,7 @@ async def test_removing_a_listed_magus_keeps_them_in_the_covenant_but_stops_coun
         assert len(_inh_labels(app, "magus")) == 1  # No keeps them
 
         await pilot.press("d")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         await pilot.press("y")
         await wait_until(pilot, lambda: not _inh_labels(app, "magus"))
         assert _inh_title(app, "magus") == "Magi (0)"
@@ -197,7 +200,7 @@ async def test_removing_a_listed_companion_with_no_record_creates_one():
         await _select_covenant(pilot, app)
         await _select_inh_row(pilot, app, "companion", 0)
         await pilot.press("d")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         await pilot.press("y")
         await wait_until(pilot, lambda: not _inh_labels(app, "companion"))
         assert _inh_title(app, "companion") == "Companions (0)"
@@ -249,7 +252,7 @@ async def test_specialist_from_an_unassigned_grog_prefills_and_marks_it_assigned
         await _open_inh_section(pilot, app, "section-inh-specialist")
 
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, RemovalPickerScreen)
         assert isinstance(app.screen, RemovalPickerScreen)
         labels = [
             str(item.query_one(Label).render())
@@ -323,7 +326,7 @@ async def test_a_grog_without_a_year_born_is_assigned_with_it_unknown():
         await pilot.pause()
         await pilot.press("down", "down")  # Dieter: no year on his sheet
         await pilot.press("enter")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert app.screen.query_one("#fld-name", Input).value == "Dieter"
         assert app.screen.query_one("#fld-year_born", Input).value == ""
         await _save_dialog(pilot, app)
@@ -339,7 +342,7 @@ async def test_other_covenfolk_requires_a_covenant_role_and_suppresses_it_when_r
         await _select_covenant(pilot, app)
         await _open_inh_section(pilot, app, "section-inh-inhabitant")
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, RemovalPickerScreen)
         assert isinstance(app.screen, RemovalPickerScreen)  # a GROG_KINDS section
         await pilot.press("enter")
         await _wait_for_screen(pilot, app, FieldsDialog)
@@ -456,7 +459,7 @@ async def test_forms_and_the_remove_confirmation_fit_an_80_by_24_terminal():
         await _select_covenant(pilot, app)
         await _select_inh_row(pilot, app, "craftsperson", 0)
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         region = app.screen.query_one("#fields-dialog").region
         assert region.right <= 120 and region.bottom <= 45  # right border on screen
         await pilot.press("escape")
@@ -489,7 +492,7 @@ async def test_craftsperson_score_is_typed_when_there_is_no_sheet_ability():
 
         await _select_inh_row(pilot, app, "craftsperson", 0)
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert app.screen.query_one("#fld-skill_value", Input).value == "6"  # editable
 
 
@@ -548,7 +551,7 @@ async def test_deleting_an_assigned_grog_returns_it_to_the_available_list():
         await _select_covenant(pilot, app)
         await _select_inh_row(pilot, app, "specialist", 0)
         await pilot.press("d")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         await pilot.press("y")
         await wait_until(pilot, lambda: not _inh_labels(app, "specialist"))
         cov = app.screen.selected_covenant

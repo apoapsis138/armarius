@@ -78,7 +78,7 @@ async def test_edit_arts_prefills_existing_scores_and_saves_full_grid():
         await _open_section(pilot, app, "section-arts")
 
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, EditArtsScreen)
         assert isinstance(app.screen, EditArtsScreen)
 
         assert app.screen.query_one("#input-art-creo-xp", Input).value == "55"
@@ -96,7 +96,7 @@ async def test_edit_arts_prefills_existing_scores_and_saves_full_grid():
         )
 
         await pilot.click("#btn-save")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, WorkspaceScreen)
 
         assert isinstance(app.screen, WorkspaceScreen)
 
@@ -209,7 +209,7 @@ async def test_edit_arts_grid_fits_default_terminal_and_accepts_real_typing():
         await _select_character(pilot, app)
         await _open_section(pilot, app, "section-arts")
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, EditArtsScreen)
         assert isinstance(app.screen, EditArtsScreen)
 
         screen_width = app.screen.size.width
@@ -419,7 +419,7 @@ async def test_edit_character_info_updates_name_covenant_and_laboratory():
         app.screen.query_one("#fld-confidence_points", Input).value = "5"
 
         await pilot.click("#btn-save")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, WorkspaceScreen)
 
         assert isinstance(app.screen, WorkspaceScreen)
         view = app.screen._character_sheet_view
@@ -459,14 +459,14 @@ async def test_edit_ability_updates_existing_entry():
         await _open_section(pilot, app, "tab-abilities")
 
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         assert app.screen.query_one("#fld-xp", Input).value == "75"
 
         app.screen.query_one("#fld-xp", Input).value = "105"
 
         await pilot.click("#btn-save")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, WorkspaceScreen)
 
         assert isinstance(app.screen, WorkspaceScreen)
         assert "Magic Theory (Lab Totals) 6 105/140" in _ability_labels(
@@ -563,7 +563,7 @@ async def test_add_and_remove_spell_known():
         await pilot.pause()
         app.screen.query_one("#picker-search", Input).focus()
         await pilot.press("down", "down", "enter")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, WorkspaceScreen)
 
         assert isinstance(app.screen, WorkspaceScreen)
         labels = _known_spell_labels(app.screen._character_sheet_view)
@@ -577,10 +577,10 @@ async def test_add_and_remove_spell_known():
         await pilot.pause()
 
         await pilot.press("d")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, WorkspaceScreen)
 
         assert isinstance(app.screen, WorkspaceScreen)
         assert app.screen._character_sheet_view._known_spell_rows() == []
@@ -729,7 +729,7 @@ async def test_add_and_remove_inventory_item():
         await _open_section(pilot, app, "section-inventory")
 
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, RemovalPickerScreen)
         assert isinstance(app.screen, RemovalPickerScreen)  # which kind?
         await pilot.press("down")  # Weapon, Armor, [Item]
         await pilot.press("down")
@@ -744,10 +744,10 @@ async def test_add_and_remove_inventory_item():
         assert "Fine wool cloak" in _inventory_labels(app.screen._character_sheet_view)
 
         await pilot.press("d")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, WorkspaceScreen)
 
         assert isinstance(app.screen, WorkspaceScreen)
 
@@ -777,7 +777,7 @@ async def test_edit_biographical_detail_updates_background_and_description():
         # terminal -- pilot.click() needs an on-screen target, so trigger
         # the button directly rather than by pixel coordinate.
         app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, WorkspaceScreen)
 
         assert isinstance(app.screen, WorkspaceScreen)
         view = app.screen._character_sheet_view
@@ -837,13 +837,13 @@ async def test_add_and_remove_raw_vis():
         await _open_section(pilot, app, "section-raw-vis-hermetic")
 
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
 
         app.screen.query_one("#fld-art", Select).value = "creo"
         app.screen.query_one("#fld-pawns", Input).value = "5"
         await pilot.click("#btn-save", offset=(8, 1))
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, WorkspaceScreen)
 
         assert isinstance(app.screen, WorkspaceScreen)
         rows = app.screen._character_sheet_view._raw_vis_rows()
@@ -851,7 +851,7 @@ async def test_add_and_remove_raw_vis():
 
         # Adding the same Art again accumulates rather than overwriting.
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         app.screen.query_one("#fld-art", Select).value = "creo"
         app.screen.query_one("#fld-pawns", Input).value = "3"
         await pilot.click("#btn-save", offset=(8, 1))
@@ -860,10 +860,10 @@ async def test_add_and_remove_raw_vis():
         assert "Creo: 8 pawn(s)" in rows[0][1]
 
         await pilot.press("d")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, WorkspaceScreen)
         assert isinstance(app.screen, WorkspaceScreen)
 
     saga = storage.load_saga("test_saga")
@@ -890,7 +890,7 @@ async def test_raw_vis_stays_live_across_both_tabs():
         # Add from the Hermetic Magic tab.
         await _open_section(pilot, app, "section-raw-vis-hermetic")
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         app.screen.query_one("#fld-art", Select).value = "creo"
         app.screen.query_one("#fld-pawns", Input).value = "5"
         await pilot.click("#btn-save", offset=(8, 1))
@@ -910,7 +910,7 @@ async def test_raw_vis_stays_live_across_both_tabs():
         # Edit from the Inventory tab.
         await _open_section(pilot, app, "section-raw-vis-inventory")
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         app.screen.query_one("#fld-pawns", Input).value = "3"
         await pilot.click("#btn-save", offset=(8, 1))
@@ -926,7 +926,7 @@ async def test_raw_vis_stays_live_across_both_tabs():
 
         # Remove from the Hermetic Magic tab.
         await pilot.press("d")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
         await pilot.pause()
@@ -957,7 +957,7 @@ async def test_edit_hermetic_background_sets_house_and_fields():
         app.screen.query_one("#fld-age_of_apprenticeship", Input).value = "12"
 
         app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, WorkspaceScreen)
 
         assert isinstance(app.screen, WorkspaceScreen)
         view = app.screen._character_sheet_view

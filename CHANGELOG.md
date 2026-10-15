@@ -46,6 +46,10 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.86.2 — 2026-10-15
+
+Steadier tests. Screen tests that sometimes failed when the computer was busy now wait for a section to keep its focus, and for a form or confirmation to actually open, before they go on.
+
 ## 2.86.1 — 2026-10-15
 
 Faster tests. The desktop tests now close the windows they open, so later

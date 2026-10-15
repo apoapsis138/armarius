@@ -2,11 +2,13 @@
 
 from screen_helpers import (
     _fill,
+    _focus_section,
     _plain_title,
     _saga_with_bare_laboratory,
     _save_dialog,
     _select_covenant,
     _wait_for_screen,
+    _wait_until_active,
 )
 from support import wait_until
 from textual.widgets import Button, Collapsible, Input, Select, Static, TabbedContent
@@ -21,7 +23,6 @@ from ars_magica_manager.tui.screens import (
     SelectableList,
     WorkspaceScreen,
 )
-from ars_magica_manager.tui.screens.widgets import section_stop
 
 
 async def _show_possessions_tab(pilot, app) -> None:
@@ -36,11 +37,9 @@ async def _open_pos_section(pilot, app, kind: str) -> None:
     """Focus a Possessions section (so its a / e / d keys apply)."""
     await _show_possessions_tab(pilot, app)
     view = app.screen._covenant_sheet_view
-    section_stop(view.query_one(f"#section-pos-{kind}", Collapsible)).focus()
-    await pilot.pause()
-    await wait_until(
-        pilot, lambda: app.screen._active_section() == f"section-pos-{kind}"
-    )
+    section_id = f"section-pos-{kind}"
+    collapsible = view.query_one(f"#{section_id}", Collapsible)
+    await _focus_section(pilot, app, collapsible, section_id)
 
 
 async def _select_pos_row(pilot, app, kind: str, row: int) -> None:
@@ -51,7 +50,9 @@ async def _select_pos_row(pilot, app, kind: str, row: int) -> None:
     rows.focus()
     await pilot.pause()
     rows.highlighted = row
-    await pilot.pause()
+    await wait_until(pilot, lambda: app.focused is rows and rows.highlighted == row)
+    await _wait_until_active(pilot, app, f"section-pos-{kind}")
+    await pilot.pause()  # the panel follows the highlighted row
 
 
 def _pos_labels(app, kind: str) -> list[str]:
@@ -133,7 +134,7 @@ async def test_a_laboratory_sanctum_edits_only_covenant_side_fields_and_cannot_b
 
         # A laboratory of the covenant can't be deleted from here.
         await pilot.press("d")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, WorkspaceScreen)
         assert isinstance(app.screen, WorkspaceScreen)  # no confirmation
         assert len(_pos_labels(app, "sanctum")) == 1
 
@@ -149,7 +150,7 @@ async def test_manual_sanctums_have_every_field_and_can_be_deleted():
         await _select_covenant(pilot, app)
         await _open_pos_section(pilot, app, "sanctum")
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert (
             app.screen.query_one("#fld-usage", Select).value == "Standard (2 Seasons)"
         )
@@ -173,7 +174,7 @@ async def test_manual_sanctums_have_every_field_and_can_be_deleted():
         assert "Build Points: 15" in _pos_panel(app)
 
         await pilot.press("d")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
         await wait_until(pilot, lambda: len(_pos_labels(app, "sanctum")) == 1)
@@ -194,7 +195,7 @@ async def test_weapons_armor_and_items_need_a_name_and_a_quantity_defaulting_to_
         ):
             await _open_pos_section(pilot, app, kind)
             await pilot.press("a")
-            await pilot.pause()
+            await _wait_for_screen(pilot, app, FieldsDialog)
             assert app.screen.query_one("#fld-quantity", Input).value == "1"  # default
             await _save_dialog(pilot, app)
             assert "Name is required" in str(

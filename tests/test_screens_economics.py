@@ -5,6 +5,7 @@ import re
 from screen_helpers import (
     _cov_view,
     _fill,
+    _focus_section,
     _inh_labels,
     _is_form,
     _open_inh_section,
@@ -14,6 +15,7 @@ from screen_helpers import (
     _save_dialog,
     _select_covenant,
     _wait_for_screen,
+    _wait_until_active,
 )
 from support import build_all_tabs, menu, wait_until
 from textual.widgets import (
@@ -39,7 +41,6 @@ from ars_magica_manager.tui.screens import (
     SelectableList,
     WorkspaceScreen,
 )
-from ars_magica_manager.tui.screens.widgets import section_stop
 
 
 def _saga_for_economics() -> Saga:
@@ -73,11 +74,9 @@ async def _open_eco_section(pilot, app, which: str) -> None:
     """Focus an Economics section (so its a / e / d keys apply)."""
     await _show_economics_tab(pilot, app)
     view = app.screen._covenant_sheet_view
-    section_stop(view.query_one(f"#section-eco-{which}", Collapsible)).focus()
-    await pilot.pause()
-    await wait_until(
-        pilot, lambda: app.screen._active_section() == f"section-eco-{which}"
-    )
+    section_id = f"section-eco-{which}"
+    collapsible = view.query_one(f"#{section_id}", Collapsible)
+    await _focus_section(pilot, app, collapsible, section_id)
 
 
 async def _select_eco_row(pilot, app, which: str, row: int) -> None:
@@ -88,7 +87,9 @@ async def _select_eco_row(pilot, app, which: str, row: int) -> None:
     rows.focus()
     await pilot.pause()
     rows.highlighted = row
-    await pilot.pause()
+    await wait_until(pilot, lambda: app.focused is rows and rows.highlighted == row)
+    await _wait_until_active(pilot, app, f"section-eco-{which}")
+    await pilot.pause()  # the panel follows the highlighted row
 
 
 def _eco_panel(app) -> str:
@@ -187,7 +188,7 @@ async def test_a_new_income_source_takes_its_income_from_its_type_unless_typed_o
         await _select_covenant(pilot, app)
         await _open_eco_section(pilot, app, "income")
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert app.screen.query_one("#fld-type", Select).value == "Typical"
         assert app.screen.query_one("#fld-income", Input).value == ""  # follows type
         types = app.screen.query_one("#fld-type", Select)
@@ -273,7 +274,7 @@ async def test_e_and_d_act_on_the_selected_income_source_and_delete_confirms():
 
         await _select_eco_row(pilot, app, "income", 1)
         await pilot.press("d")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         assert isinstance(app.screen, ConfirmScreen)
         message = str(app.screen.query_one("#confirm-message", Static).render())
         assert message == "Delete [Toll] bridge?"
@@ -282,7 +283,7 @@ async def test_e_and_d_act_on_the_selected_income_source_and_delete_confirms():
         assert len(_eco_labels(app, "income")) == 2
 
         await pilot.press("d")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         await pilot.press("y")
         await wait_until(pilot, lambda: len(_eco_labels(app, "income")) == 1)
         assert re.search(r"Total Income:\s+100\b", _eco_wealth(app))
@@ -290,12 +291,12 @@ async def test_e_and_d_act_on_the_selected_income_source_and_delete_confirms():
         # The list keeps focus, so the row left is chosen: d and e are
         # about that one, without asking which.
         await pilot.press("d")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("escape")
         await pilot.pause()
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
 
     assert [s.name for s in _saved_economics().income_sources] == ["Salt Mine"]
@@ -310,7 +311,7 @@ async def test_improve_updates_multiplier_and_projected_income_live_then_confirm
         await _select_eco_row(pilot, app, "income", 0)  # Salt Mine, income 100
 
         await menu(pilot, app, "m", "Improve Income")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         assert app.screen.query_one("#fld-effect", Select).value == "Status Quo"
         live = lambda: str(app.screen.query_one("#fields-live", Static).render())
@@ -321,13 +322,13 @@ async def test_improve_updates_multiplier_and_projected_income_live_then_confirm
         assert live() == "Income Multiplier x1.5. Projected Income 150"
 
         app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         assert isinstance(app.screen, ConfirmScreen)
         message = str(app.screen.query_one("#confirm-message", Static).render())
         assert message == "Update Salt Mine's income from 100 to 150?"
 
         await pilot.press("n")  # decline: still on the Improve dialog, unchanged
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
 
         app.screen.query_one("#btn-save", Button).press()
@@ -365,7 +366,7 @@ async def test_improve_with_status_quo_records_the_no_change_note():
         await menu(pilot, app, "m", "Improve Income")
         await pilot.pause()
         app.screen.query_one("#btn-save", Button).press()
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         assert isinstance(app.screen, ConfirmScreen)
         assert "from 100 to 100" in str(
             app.screen.query_one("#confirm-message", Static).render()
@@ -389,10 +390,10 @@ async def test_improve_cancel_and_acting_on_the_focused_row():
         # Nothing chosen: 'i' falls back to asking which one, same as e/A.
         await _open_eco_section(pilot, app, "income")
         await menu(pilot, app, "m", "Improve Income")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
         await pilot.press("escape")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, WorkspaceScreen)
         assert isinstance(app.screen, WorkspaceScreen)
 
     assert _saved_economics().income_sources[0].income is None  # untouched
@@ -423,7 +424,7 @@ async def test_expenditure_rows_take_notes_and_the_typed_ones_take_amounts():
         # A typed row: an amount, which feeds the totals.
         await _select_eco_row(pilot, app, "expenditure", 7)
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         assert app.screen.query_one("#fld-tithes", Input).value == "0"
         _fill(app, tithes=4, notes="Church")
         await _save_dialog(pilot, app)
@@ -455,6 +456,8 @@ async def test_e_edits_the_expenditure_row_the_cursor_is_on():
         await _select_covenant(pilot, app)
         await _open_eco_section(pilot, app, "expenditure")
         await pilot.press("down")  # Consumables (the section starts on row 0)
+        rows = _cov_view(app).query_one("#eco-expenditure-list", SelectableList)
+        await wait_until(pilot, lambda: rows.highlighted == 1)
         await pilot.press("e")
         await _wait_for_screen(pilot, app, FieldsDialog)
         assert isinstance(app.screen, FieldsDialog)
@@ -541,7 +544,7 @@ async def test_the_economics_forms_fit_a_120_by_45_terminal():
         await _select_covenant(pilot, app)
         await _open_eco_section(pilot, app, "income")
         await pilot.press("a")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, FieldsDialog)
         region = app.screen.query_one("#fields-dialog").region
         assert region.right <= 120 and region.bottom <= 45
         # The usual income of each type is shown as a hint.
@@ -598,7 +601,7 @@ async def test_d_deletes_the_highlighted_saga_only_after_confirmation():
         assert _picker_labels(app)[1].startswith("[Beta] Saga")  # not read as markup
 
         await pilot.press("d")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         assert isinstance(app.screen, ConfirmScreen)
         message = str(app.screen.query_one("#confirm-message", Static).render())
         assert "Delete the saga [Beta] Saga?" in message  # brackets survive
@@ -615,12 +618,12 @@ async def test_d_deletes_the_highlighted_saga_only_after_confirmation():
         await pilot.press("d")
         await pilot.pause()
         await pilot.press("enter")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, SagaPickerScreen)
         assert isinstance(app.screen, SagaPickerScreen)
         assert storage.list_sagas() == ["alpha", "beta_saga", "gamma"]
 
         await pilot.press("d")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         await pilot.press("y")
         await wait_until(pilot, lambda: len(_picker_labels(app)) == 2)
         assert storage.list_sagas() == ["alpha", "gamma"]  # exactly that one
@@ -629,7 +632,7 @@ async def test_d_deletes_the_highlighted_saga_only_after_confirmation():
 
         # Opening still works on what is left.
         await pilot.press("enter")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, WorkspaceScreen)
         assert isinstance(app.screen, WorkspaceScreen)
         assert app.screen.saga.id == "gamma"
 
@@ -650,7 +653,7 @@ async def test_an_unreadable_saga_is_listed_and_can_be_deleted():
         list_view = app.screen.query_one("#saga-list", ListView)
         list_view.index = 1
         await pilot.press("enter")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, SagaPickerScreen)
         assert isinstance(app.screen, SagaPickerScreen)
 
         await pilot.press("d")
@@ -668,7 +671,7 @@ async def test_the_delete_key_works_and_deleting_the_last_saga_shows_the_placeho
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await pilot.press("delete")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         assert isinstance(app.screen, ConfirmScreen)
         await pilot.press("y")
         await wait_until(pilot, lambda: storage.list_sagas() == [])
@@ -679,7 +682,7 @@ async def test_the_delete_key_works_and_deleting_the_last_saga_shows_the_placeho
 
         # Nothing left to delete: no dialog, just a notice.
         await pilot.press("d")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, SagaPickerScreen)
         assert isinstance(app.screen, SagaPickerScreen)
 
 
@@ -689,7 +692,7 @@ async def test_a_saga_can_still_be_created_after_deleting_all_of_them():
     app = ArsMagicaManagerApp()
     async with app.run_test() as pilot:
         await pilot.press("d")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, ConfirmScreen)
         await pilot.press("y")
         await wait_until(pilot, lambda: storage.list_sagas() == [])
 
@@ -700,7 +703,7 @@ async def test_a_saga_can_still_be_created_after_deleting_all_of_them():
         app.screen.query_one("#fld-storyguide", Input).value = "Alex"
         app.screen.query_one("#fld-year", Input).value = "1220"
         await pilot.click("#btn-save")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, SagaPickerScreen)
         assert isinstance(app.screen, SagaPickerScreen)
 
     assert storage.list_sagas() == ["old"]
@@ -795,7 +798,7 @@ async def test_the_new_year_adds_each_covenants_surplus_to_its_wealth():
     async with app.run_test(size=(140, 60)) as pilot:
         await _open_workspace(pilot)
         await pilot.press("t")
-        await pilot.pause()
+        await _wait_for_screen(pilot, app, AdvanceSeasonScreen)
         assert isinstance(app.screen, AdvanceSeasonScreen)
         note = str(app.screen.query_one("#advance-year-note", Static).render())
         assert "surplus is added to its Wealth" in note

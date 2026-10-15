@@ -109,12 +109,17 @@ async def menu(pilot, app, key: str, label: str) -> None:
     it is the only thing the menu has to offer there, it runs at once."""
     from ars_magica_manager.tui.screens.prompts import MenuScreen
 
+    before = app.screen
     await pilot.press(key)
     await pilot.pause()
+    # The menu, or what a lone item opened at once; some items open nothing.
+    await wait_until(pilot, lambda: app.screen is not before, timeout=2.0)
     if isinstance(app.screen, MenuScreen):
-        letter = next(letter for letter, _, item in app.screen.items if item == label)
+        menu_screen = app.screen
+        letter = next(letter for letter, _, item in menu_screen.items if item == label)
         await pilot.press(letter)
         await pilot.pause()
+        await wait_until(pilot, lambda: app.screen is not menu_screen)
 
 
 async def close_worksheet(pilot, app) -> None:
