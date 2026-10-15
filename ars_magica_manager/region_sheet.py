@@ -5,7 +5,7 @@ neighbour's own facts and details."""
 
 from __future__ import annotations
 
-from . import neighbours, places, threats, tribunal_packages, tribunals, world
+from . import arms, neighbours, places, threats, tribunal_packages, tribunals, world
 from .character_sheet import Fact
 from .grids import Grid
 from .markup import escape
@@ -231,6 +231,9 @@ def details_text(saga: Saga, record: Neighbour | Covenant | None) -> str:
         neighbours.kind_of(record).name if isinstance(record, Neighbour) else "Covenant"
     )
     lines = [f"[b]{escape(record.name)}[/]   {escape(kind)} · {escape(record.detail)}"]
+    borne = arms.arms_of(record)
+    if borne is not None:
+        lines.append(f"[$label]Arms:[/] {escape(arms.blazon(borne))}")
     for covenant in world.player_covenants(saga):
         if covenant is record:
             continue

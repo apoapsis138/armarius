@@ -351,3 +351,16 @@ def style_sheet(p: Palette, serif: str) -> str:
     QScrollBar::add-page, QScrollBar::sub-page {{ background: transparent; }}
     QTableCornerButton::section {{ background: {p["surface"]}; border: none; }}
     """
+
+
+#: The colour each heraldic tincture (arms.TINCTURES) is painted in, the
+#: same in every theme: arms are the bearer's, not the theme's.
+TINCTURES: dict[str, str] = {
+    "Or": "#d4a72c",
+    "Argent": "#f1ede2",
+    "Gules": "#b8282e",
+    "Azure": "#2556a8",
+    "Vert": "#2e8540",
+    "Sable": "#262322",
+    "Purpure": "#6b3f9e",
+}

@@ -158,6 +158,8 @@ class Covenant:
     #: A sketch covenant's What Matters: one short entry a line (its vis,
     #: library, Boons and Hooks), each optionally "Label: what".
     what_matters: str = ""
+    #: Its arms (arms.Arms.to_dict); empty for none.
+    arms: dict[str, str] = field(default_factory=dict)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Covenant:

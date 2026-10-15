@@ -46,6 +46,23 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.82.0 — 2026-10-15
+
+- **Arms.** A covenant, and a lord, town or faction, can bear arms: choose
+  the field's tincture, how it is divided (plain, per pale, per fess, per
+  bend, quarterly or per chevron) and its second tincture, a charge (a
+  tower, a book, a key, a star, a sword, a crown, a cross, a crescent, a
+  tree or a chalice) and its tincture, and a motto. The blazon is written
+  for you as you choose ("Per bend azure and argent, a tower or"), and a
+  charge that breaks the rule of tincture (a colour on a colour, a metal
+  on a metal) is warned of but allowed.
+- On the desktop the shield is painted in the Arms section of a
+  covenant's Charter or Sketch and of a neighbour's Standing, and in the
+  form as you choose; a covenant's Charter also shows the arms of the
+  other covenants of its Tribunal. In the terminal, More's Arms draws the
+  shield in half-blocks beside the blazon, and the blazon shows in the
+  record's panel and in the Region.
+
 ## 2.81.0 — 2026-10-15
 
 - **The minutes.** Each step of a meeting, once held, writes its

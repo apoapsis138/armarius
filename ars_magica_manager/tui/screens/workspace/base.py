@@ -40,6 +40,7 @@ from textual.widgets.tree import TreeNode
 from .... import (
     actions,
     advance_forms,
+    arms,
     catalog,
     character_templates,
     creation,
@@ -2376,6 +2377,19 @@ class WorkspaceBase(Screen[None]):
             ),
             handle_confirmed,
         )
+
+    def action_edit_arms(self) -> None:
+        """More's Arms on a covenant, or a lord, town or faction: its shield
+        and blazon."""
+        record = self._record_to_delete()
+        if record is None or not arms.bears_arms(record):
+            return
+        section = (
+            NEIGHBOUR_INFO_SECTION
+            if isinstance(record, Neighbour)
+            else "section-cov-info"
+        )
+        run_steps(self.app, arms.arms_form(record), lambda _end: self._commit(section))
 
     def action_set_date(self) -> None:
         saga = self.saga

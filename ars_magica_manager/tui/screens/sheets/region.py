@@ -14,7 +14,7 @@ from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Button, Collapsible, Static, TabbedContent
 
-from .... import neighbour_forms, neighbours, region_sheet
+from .... import arms, neighbour_forms, neighbours, region_sheet
 from ....character_sheet import Fact
 from ....markup import aligned, escape, markdown_inline
 from ....models import Covenant, Neighbour, Saga
@@ -238,9 +238,11 @@ class NeighbourSheetView(SheetView):
         panel.title = escape(self.neighbour.name)
 
     def _facts(self, column: int) -> str:
-        return _facts_text(
-            region_sheet.neighbour_facts(self.saga, self.neighbour), column
-        )
+        facts = region_sheet.neighbour_facts(self.saga, self.neighbour)
+        borne = arms.arms_of(self.neighbour)
+        if borne is not None:
+            facts.append(Fact("Arms", arms.blazon(borne)))
+        return _facts_text(facts, column)
 
     def _summary_text(self) -> str:
         summary = self.neighbour.summary.strip()

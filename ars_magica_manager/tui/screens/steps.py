@@ -15,6 +15,7 @@ from textual.app import App
 from textual.widgets import Static
 
 from ...commands import Act, Choice, Choose, ChooseFile, Confirm, Form, Refuse
+from ..heraldry import beside
 from .fields import FieldsDialog
 from .pickers import CsvFilePickerScreen, SearchablePickerScreen
 from .prompts import ConfirmScreen, terminal_fields
@@ -114,7 +115,7 @@ def run_steps(
             form.title,
             terminal_fields(form.fields()),
             validate=form.validate,
-            live=form.live,
+            live=_with_picture(form),
             save_label=form.save_label,
         )
         dialog.help_id = form.help_id or None
@@ -163,3 +164,12 @@ def run_steps(
         )
         return
     done(step)
+
+
+def _with_picture(form: Form) -> Callable[[dict[str, Any]], str] | None:
+    """The form's live line, with its picture (a shield) drawn beside it in
+    half-blocks."""
+    live, picture = form.live, form.picture
+    if picture is None:
+        return live
+    return lambda values: beside(picture(values), live(values) if live else "")

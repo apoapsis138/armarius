@@ -10,7 +10,7 @@ from collections.abc import Sequence
 
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
-from .. import neighbour_forms, neighbours, place_events, region_sheet, towns
+from .. import arms, neighbour_forms, neighbours, place_events, region_sheet, towns
 from ..grids import Grid
 from ..models import Neighbour, Saga
 from ..neighbour_lists import KindTab
@@ -18,6 +18,7 @@ from ..sections import FAIRS_SECTION, TABLES_SECTION
 from .character_sheet import section
 from .editing import Chooser, RowVerb, Run, verb_buttons
 from .figures import fact_grid, prose
+from .heraldry import arms_section
 from .manage import RecordControls
 from .pages import page_header
 from .themes import Palette
@@ -146,6 +147,11 @@ class NeighbourPage(QWidget):
                     wrap=True,
                 ),
                 edits={"Edit Neighbour": self._edit},
+            ),
+            *(
+                [arms_section(self.neighbour, p, self.run)]
+                if arms.bears_arms(self.neighbour)
+                else []
             ),
             *relations(
                 self.saga,

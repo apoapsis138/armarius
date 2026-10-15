@@ -63,6 +63,7 @@ from .character_sheet import (
 )
 from .editing import Chooser, RowVerb, Run, choose_cards, give_verb, verb_buttons
 from .figures import Seal, attitude_seal, aura_seal, fact_grid, prose, shelf
+from .heraldry import arms_section, neighbours_arms
 from .manage import RecordControls
 from .menus import Placer
 from .pages import (
@@ -302,7 +303,10 @@ class CovenantPage(QWidget):
                 stack.addWidget(_none(f"No {kind}s.", p))
             stack.addStretch(1)
             columns.append(column)
+        others = neighbours_arms(self.saga, covenant, p)
         parts: list[QWidget] = [
+            arms_section(covenant, p, self.run),
+            *([others] if others is not None else []),
             section(
                 "The Covenant",
                 p,
@@ -342,6 +346,7 @@ class CovenantPage(QWidget):
         ops = world_forms.covenant_ops(saga, covenant)
         summary = covenant.summary.strip()
         parts: list[QWidget] = [
+            arms_section(covenant, p, self.run),
             section(
                 "In the Saga",
                 p,
@@ -353,7 +358,7 @@ class CovenantPage(QWidget):
                         world_forms.sketch_covenant_form(self.saga, covenant)
                     )
                 },
-            )
+            ),
         ]
         if covenant.detail != LINE:
 

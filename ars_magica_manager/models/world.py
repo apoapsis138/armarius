@@ -117,6 +117,9 @@ class Neighbour:
     attitudes: list[Attitude] = field(default_factory=list)
     favours: list[Favour] = field(default_factory=list)
     links: list[Link] = field(default_factory=list)
+    #: A lord's, town's or faction's arms (arms.Arms.to_dict); empty for
+    #: none.
+    arms: dict[str, str] = field(default_factory=dict)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Neighbour:

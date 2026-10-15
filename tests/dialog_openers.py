@@ -395,6 +395,7 @@ OPENERS: dict[str, Opener] = {
     "create laboratory": Opener("covenant", lambda ws: ws.action_create_laboratory()),
     "bind familiar": Opener("covenant", lambda ws: ws.action_create_familiar()),
     "edit covenant": Opener("covenant", lambda ws: ws._edit_covenant()),
+    "covenant arms": Opener("covenant", lambda ws: ws.action_edit_arms()),
     "edit sketch covenant": Opener("sketch_covenant", lambda ws: ws._edit_covenant()),
     "what matters": Opener(
         "sketch_covenant", lambda ws: ws._core_verb("section-cov-what-matters", "edit")

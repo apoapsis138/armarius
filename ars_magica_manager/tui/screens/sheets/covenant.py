@@ -17,6 +17,7 @@ from textual.widgets import (
 from .... import (
     ahead,
     ahead_forms,
+    arms,
     book_value,
     catalog,
     seasons,
@@ -795,7 +796,7 @@ class CovenantSheetView(SheetView):
                     ("Votes", world.votes_text(saga, cov)),
                     ("Aura", self._aura_text()),
                 ]
-            return aligned(rows)
+            return aligned(rows + self._arms_rows())
         return aligned(
             [
                 ("Tribunal", self._tribunal_text()),
@@ -811,8 +812,13 @@ class CovenantSheetView(SheetView):
                     if cov.in_creation
                     else []
                 ),
+                *self._arms_rows(),
             ]
         )
+
+    def _arms_rows(self) -> list[tuple[str, str]]:
+        borne = arms.arms_of(self.covenant)
+        return [("Arms", escape(arms.blazon(borne)))] if borne is not None else []
 
     def _description_text(self) -> str:
         # Backed by Covenant.notes (the free-text field set at creation).

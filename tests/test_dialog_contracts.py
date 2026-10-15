@@ -656,6 +656,30 @@ CONTRACTS: dict[str, Contract] = {
         expected="Undecided",
         shown={"#meeting-tally": "2 undecided"},
     ),
+    "covenant arms": Contract(
+        prefill={"Motto": ""},
+        edits={
+            "Field": "Azure",
+            "Division": "Per pale",
+            "Second tincture": "Or",
+            "Charge": "Tower",
+            "Charge tincture": "Gules",
+            "Motto": "Per aquas, lux",
+        },
+        saved=lambda s: s.covenants[0].arms,
+        expected={
+            "field": "Azure",
+            "division": "Per pale",
+            "second": "Or",
+            "charge": "Tower",
+            "charge_tincture": "Gules",
+            "motto": "Per aquas, lux",
+        },
+        live={
+            "#fields-live": "Per pale azure and or, a tower gules",
+        },
+        shown={"#cov-info-right": "Arms"},
+    ),
     "hold the rulings": Contract(
         prefill={"Fengheld v. Keep": "", "Fengheld v. Keep: into the Code": False},
         edits={

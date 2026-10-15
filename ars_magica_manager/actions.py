@@ -15,9 +15,9 @@ from __future__ import annotations
 from enum import StrEnum
 from typing import TYPE_CHECKING, NamedTuple, Protocol
 
+from . import arms, giving, seasons, sourcebooks, world
 from . import book_value as bv
 from . import familiars as fam
-from . import giving, seasons, sourcebooks, world
 from . import inhabitants as inh
 from . import lab_texts as lt
 from . import spells as spl
@@ -235,6 +235,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("o", "demote", "Demote"),
     MenuItem("w", "creation_worksheet", "Creation Worksheet"),
     MenuItem("t", "set_date", "Set Date"),
+    MenuItem("a", "edit_arms", "Arms"),
     MenuItem("w", "withdraw_case", "Withdraw"),
     MenuItem("r", "roll_fair", "Roll Income"),
     MenuItem("r", "roll_table", "Roll"),
@@ -414,6 +415,9 @@ def available(action: str, facts: ActionFacts) -> bool:
         return bool(fam.unbonded_magi(facts.saga))
     if action == "delete_record":
         return facts.record_to_delete() is not None
+    if action == "edit_arms":
+        record = facts.record_to_delete()
+        return facts.on_record() and record is not None and arms.bears_arms(record)
     if action not in _BY_SECTION:
         return True
     return _available_in_section(action, facts, facts.active_section() or "")

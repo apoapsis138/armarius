@@ -47,6 +47,7 @@ from PySide6.QtWidgets import (
 from .. import form_spec
 from ..commands import Act, Choice, Choose, ChooseFile, Confirm, Form, Picked, Refuse
 from ..form_spec import DialogField, FieldError, ListEditor
+from . import heraldry
 from .markup_html import plain, to_html
 from .ornaments import FleuronRule, corner_flourishes
 from .paper import Paper
@@ -155,8 +156,10 @@ class FieldsDialog(_Sheet):
         save_label: str = "Save",
         inline: bool = False,
         ask: Ask | None = None,
+        picture: Callable[[dict[str, Any]], Any] | None = None,
     ) -> None:
         super().__init__(title, p, save_label, parent, inline=inline)
+        self.picture = picture
         self.fields = fields
         self.ask: Ask = ask or (lambda dialog: dialog.exec())
         self.validate, self.live = validate, live
@@ -181,7 +184,14 @@ class FieldsDialog(_Sheet):
         self.live_line.setTextFormat(Qt.TextFormat.RichText)
         self.live_line.setWordWrap(True)
         self.live_line.setVisible(live is not None)
-        self.column.addWidget(self.live_line)
+        # The picture (a shield) sits left of the live line.
+        self.picture_label = QLabel()
+        self.picture_label.setVisible(False)
+        under = QHBoxLayout()
+        under.setSpacing(16)
+        under.addWidget(self.picture_label)
+        under.addWidget(self.live_line, 1)
+        self.column.addLayout(under)
         self.save.clicked.connect(self.try_save)
         self.finish()
         self._update_shown()
@@ -191,7 +201,8 @@ class FieldsDialog(_Sheet):
             area.setMinimumWidth(0)
             self._fit()
         else:
-            self.resize(640, min(780, 170 + 44 * len(fields)))
+            pictured = 140 if picture is not None else 0
+            self.resize(640, min(820, 170 + 44 * len(fields) + pictured))
 
     # Drawing the fields
 
@@ -350,6 +361,13 @@ class FieldsDialog(_Sheet):
             words = self.live(current)
             self.live_line.setText(to_html(words, self.p))
             self.live_line.setVisible(bool(words))
+        if self.picture is not None:
+            drawn = self.picture(current)
+            if drawn is not None:
+                self.picture_label.setPixmap(
+                    heraldry.pixmap(drawn, 96, self.p["accent"])
+                )
+            self.picture_label.setVisible(drawn is not None)
         if self.inline and hasattr(self, "area"):
             self._fit()
 
@@ -727,6 +745,7 @@ def step_dialog(
             save_label=step.save_label,
             inline=inline,
             ask=ask,
+            picture=step.picture,
         )
     if isinstance(step, Choose):
         choices = step.choices()

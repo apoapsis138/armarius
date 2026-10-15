@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any, NamedTuple
 
 from . import (
+    arms,
     creation,
     creation_forms,
     deletion,
@@ -92,6 +93,7 @@ DELETE_RECORD = "delete_record"
 #: but opens a page rather than running a command.
 NOT_ON_PAGES = frozenset(
     {
+        "edit_arms",
         "edit_fatigue",
         "edit_familiar_fatigue",
         "instill_effect",
@@ -1214,6 +1216,13 @@ def _laboratory(page: Page) -> Laboratory | None:
     return page.laboratory
 
 
+def _arms_command(page: Page) -> Command:
+    record = page.record_to_delete()
+    if record is None or not arms.bears_arms(record):
+        return Refuse("Arms", "Only a covenant, lord, town or faction bears arms.")
+    return arms.arms_form(record)
+
+
 #: Each menu entry's first step, by its action.
 _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "restore": _needs(_covenant, restore),
@@ -1231,6 +1240,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "promote": _detail_command("promote"),
     "demote": _detail_command("demote"),
     "set_date": lambda page: set_date(page.saga),
+    "edit_arms": _arms_command,
     "edit_saga": lambda page: creation_forms.edit_saga_form(page.saga),
     "create_covenant": lambda page: creation_forms.new_covenant_form(page.saga),
     "create_tribunal": lambda page: tribunal_forms.new_tribunal_form(page.saga),

@@ -979,3 +979,34 @@ Level step says go without a laboratory refund 50 each.
 Every resource that has a Build Point price, under the row it counts
 towards, with its points: each book, vis source and stock, enchanted item,
 laboratory and specialist.
+
+# Arms
+<!-- help: arms -->
+
+A covenant's shield, or a lord's, town's or faction's. Five choices make
+it: the **Field**'s tincture, how it is divided (**Division**: plain, per
+pale, per fess, per bend, quarterly or per chevron) and the **Second
+tincture** of a divided field, a **Charge** laid on it (a tower, a book,
+a key, a star, a sword and more) and the **Charge tincture**. A **Motto**
+goes under it. Leave the Field blank for no arms.
+
+The tinctures are the two metals, Or (gold) and Argent (silver), and the
+colours Gules (red), Azure (blue), Vert (green), Sable (black) and
+Purpure (purple). The blazon, the arms in heralds' words ("Per bend
+azure and argent, a tower or"), is written for you as you choose, and
+the shield is drawn beside it. Heralds' rule of tincture says a colour
+never lies on a colour, nor a metal on a metal: the form warns of a
+charge that breaks it, which is allowed, and of one in the same tincture
+as its field, which can't be seen.
+
+<!-- tui -->
+Open it with More (m) and Arms on the covenant or neighbour itself. Its
+blazon shows in the record's panel and on its card in the Region.
+<!-- /tui -->
+<!-- gui -->
+Edit Arms in the Arms section (on a covenant's Charter or Sketch, on a
+neighbour's Standing) opens it. A covenant's Charter also shows the arms
+of the other covenants of its Tribunal.
+<!-- /gui -->
+
+**See also:** [Covenant sheet](help:covenant)
