@@ -46,6 +46,14 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.86.1 — 2026-10-15
+
+Faster tests. The desktop tests now close the windows they open, so later
+tests no longer slow down, and the full suite takes about half as long
+(about 10 minutes instead of 21 on a 4-core machine). Work in progress now
+runs a quick tier of tests after each step, and the full suite runs once
+per story.
+
 ## 2.86.0 — 2026-10-15
 
 The first book pack: the Rhine Tribunal.

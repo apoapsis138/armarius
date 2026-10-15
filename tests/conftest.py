@@ -1,6 +1,23 @@
+import sys
+
 import pytest
+from tiers import is_screen_test_file
 
 from ars_magica_manager import catalog, paths, settings, storage
+
+
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers",
+        "ui: a screen test (Textual Pilot or Qt), marked automatically; "
+        "-m 'not ui' runs the fast tier",
+    )
+
+
+def pytest_collection_modifyitems(config, items):
+    for item in items:
+        if is_screen_test_file(item.path):
+            item.add_marker(pytest.mark.ui)
 
 
 @pytest.fixture(autouse=True)
@@ -50,3 +67,24 @@ def no_saga_entries_in_the_catalogs():
     catalog.use_saga(None)
     yield
     catalog.use_saga(None)
+
+
+@pytest.fixture(autouse=True)
+def close_qt_windows():
+    """Close and delete every top-level Qt window a test left open. The
+    QApplication lives for the whole process, so without this each test's
+    windows stay alive and every later test in that process gets slower."""
+    yield
+    if "PySide6.QtWidgets" not in sys.modules:
+        return
+    from PySide6.QtCore import QCoreApplication, QEvent
+    from PySide6.QtWidgets import QApplication
+
+    app = QApplication.instance()
+    if app is None:
+        return
+    for window in QApplication.topLevelWidgets():
+        window.close()
+        window.deleteLater()
+    QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+    app.processEvents()
