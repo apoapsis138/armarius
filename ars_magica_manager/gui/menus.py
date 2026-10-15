@@ -33,6 +33,7 @@ RunThen = Callable[[Command, Callable[[], None] | None], None]
 _MADE: dict[str, Callable[[Saga], list[str]]] = {
     "create_covenant": lambda saga: [c.id for c in saga.covenants],
     "create_tribunal": lambda saga: [t.id for t in saga.tribunals],
+    "create_neighbour": lambda saga: [n.id for n in saga.neighbours],
     "create_character": lambda saga: [c.id for c in saga.characters],
     "create_laboratory": lambda saga: [lab.id for lab in saga.laboratories],
     "create_familiar": lambda saga: [f.id for f in saga.familiars],
@@ -88,6 +89,7 @@ ICONS: dict[str, str] = {
 NEW_ICONS: dict[str, str] = {
     "create_covenant": "covenant",
     "create_tribunal": "tribunal",
+    "create_neighbour": "region",
     "create_character": "character",
     "create_laboratory": "laboratory",
     "create_familiar": "familiar",

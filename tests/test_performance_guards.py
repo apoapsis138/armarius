@@ -99,6 +99,8 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "tribunal": 40,
     "theban_tribunal": 40,
     "normandy_tribunal": 40,
+    "region": 50,
+    "neighbour": 40,
 }
 
 

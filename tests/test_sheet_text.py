@@ -48,6 +48,8 @@ SHEETS = {
     "tribunal",
     "theban_tribunal",
     "normandy_tribunal",
+    "region",
+    "neighbour",
 }
 
 

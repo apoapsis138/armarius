@@ -121,6 +121,17 @@ TOKENS_SECTION = "section-trib-tokens"
 ARCHAI_SECTION = "section-trib-archai"
 TENURE_SECTION = "section-trib-tenure"
 TOURNEY_SECTION = "section-trib-tourney"
+#: The Region's top panel, and the covenants the troupe doesn't play.
+REGION_INFO_SECTION = "section-region-info"
+REGION_COVENANTS_SECTION = "section-region-covenants"
+#: The Region's neighbours, a section per group (neighbours.GROUPS).
+REGION_LORDS_SECTION = "section-region-lords"
+REGION_CHURCH_SECTION = "section-region-church"
+REGION_UNIVERSITIES_SECTION = "section-region-universities"
+REGION_FACTIONS_SECTION = "section-region-factions"
+REGION_THREATS_SECTION = "section-region-threats"
+#: A neighbour's sheet's top panel.
+NEIGHBOUR_INFO_SECTION = "section-nb-info"
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),
@@ -139,4 +150,10 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     ARCHAI_SECTION: frozenset({"add", "edit", "remove"}),
     TENURE_SECTION: frozenset({"add", "edit", "remove"}),
     TOURNEY_SECTION: frozenset({"add", "edit", "remove"}),
+    REGION_LORDS_SECTION: frozenset({"add", "edit", "remove"}),
+    REGION_CHURCH_SECTION: frozenset({"add", "edit", "remove"}),
+    REGION_UNIVERSITIES_SECTION: frozenset({"add", "edit", "remove"}),
+    REGION_FACTIONS_SECTION: frozenset({"add", "edit", "remove"}),
+    REGION_THREATS_SECTION: frozenset({"add", "edit", "remove"}),
+    NEIGHBOUR_INFO_SECTION: frozenset({"edit"}),
 }

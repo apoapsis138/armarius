@@ -46,6 +46,20 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.71.0 — 2026-10-15
+
+- The Region and its neighbours. A saga keeps the lords, towns, churches,
+  universities, factions and threats of its region, each with its
+  summary, its detail, its ruler, who it answers to and its realm, and
+  its attitude toward each player covenant, the favours owed and its
+  links, as a sketch covenant has. New Neighbour asks for the kind first,
+  offering those whose book is in play.
+- The terminal's Region sheet shows the other covenants and a list per
+  group of neighbours, with each one's attitude toward the troupe and the
+  chosen one's details below; each neighbour has its own sheet, under its
+  group in the tree. On the desktop, the saga's page gains a Region
+  chapter of neighbour cards, each opening the neighbour's own page.
+
 ## 2.70.0 — 2026-10-15
 
 - Four more Tribunals' customs. Normandy (The Lion and the Lily): a

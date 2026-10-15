@@ -29,7 +29,7 @@ def _from_newer_app(version: str = NEWER) -> dict:
     storage.save_saga(everything_saga())
     data = _file("test_saga")
     data["app_version"] = version
-    data["neighbours"] = [{"id": "lord1", "name": "Count Otto"}]
+    data["gazetteer"] = [{"id": "inn1", "name": "The Swan"}]
     data["covenants"][0]["arms"] = {"field": "azure"}
     data["characters"][0]["detail"] = "sketch"
     storage._last_seen.clear()
@@ -61,7 +61,7 @@ def test_a_newer_saves_unknown_data_survives_a_save():
 
     data = _file("test_saga")
     assert data["name"] == "Renamed"
-    assert data["neighbours"] == [{"id": "lord1", "name": "Count Otto"}]
+    assert data["gazetteer"] == [{"id": "inn1", "name": "The Swan"}]
     assert data["covenants"][0]["arms"] == {"field": "azure"}
     assert data["characters"][0]["detail"] == "sketch"
     # Still marked as the newer app's, so it keeps them in its turn.
@@ -94,7 +94,7 @@ def test_the_backup_keeps_a_newer_saves_data():
     _from_newer_app()
     storage.backup_saga(storage.load_saga("test_saga"))
     backup = json.loads(storage.backup_path("test_saga").read_text(encoding="utf-8"))
-    assert backup["neighbours"] == [{"id": "lord1", "name": "Count Otto"}]
+    assert backup["gazetteer"] == [{"id": "inn1", "name": "The Swan"}]
 
 
 def test_reloading_a_newer_copys_save_keeps_its_data():
@@ -109,7 +109,7 @@ def test_reloading_a_newer_copys_save_keeps_its_data():
     saga.characters[0].name = "Changed here"
     storage.save_saga(saga)
     on_disk = _file("test_saga")
-    assert on_disk["neighbours"] == [{"id": "lord1", "name": "Count Otto"}]
+    assert on_disk["gazetteer"] == [{"id": "inn1", "name": "The Swan"}]
     assert on_disk["characters"][0]["detail"] == "sketch"
     assert on_disk["characters"][0]["name"] == "Changed here"
 

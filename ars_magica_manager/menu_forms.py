@@ -29,6 +29,8 @@ from . import (
     giving,
     import_forms,
     library_forms,
+    neighbour_forms,
+    neighbours,
     seasons,
     storage,
     transfer,
@@ -67,6 +69,7 @@ from .models import (
     IncomeSource,
     Laboratory,
     LabTextAccess,
+    Neighbour,
     Saga,
     Spell,
     Tribunal,
@@ -77,7 +80,7 @@ from .rules import lab_seasons
 from .sections import LAB_TEXTS_SECTION
 
 #: The record a page shows, as deletion and actions take it.
-Record = Covenant | Character | Laboratory | Familiar | Tribunal
+Record = Covenant | Character | Laboratory | Familiar | Tribunal | Neighbour
 
 #: Delete's action: the record on show, after a confirmation that says
 #: what happens to what it owns.
@@ -112,6 +115,7 @@ PAGE_SECTIONS: dict[NodeKind, tuple[str | None, ...]] = {
     ),
     NodeKind.FAMILIAR: (RECORD_SECTION[NodeKind.FAMILIAR],),
     NodeKind.TRIBUNAL: (RECORD_SECTION[NodeKind.TRIBUNAL],),
+    NodeKind.NEIGHBOUR: (RECORD_SECTION[NodeKind.NEIGHBOUR],),
     NodeKind.LABORATORY: (
         RECORD_SECTION[NodeKind.LABORATORY],
         "section-lab-raw-vis",
@@ -141,6 +145,7 @@ class Page:
     laboratory: Laboratory | None = None
     familiar: Familiar | None = None
     tribunal: Tribunal | None = None
+    neighbour: Neighbour | None = None
     section: str | None = None
 
     # -- actions.ActionFacts --
@@ -195,6 +200,8 @@ class Page:
             return self.familiar
         if self.kind == NodeKind.TRIBUNAL:
             return self.tribunal
+        if self.kind == NodeKind.NEIGHBOUR:
+            return self.neighbour
         return self.creation_record()
 
     def can_send_files(self) -> bool:
@@ -210,6 +217,7 @@ def page_for(
     laboratory_id: str | None = None,
     familiar_id: str | None = None,
     tribunal_id: str | None = None,
+    neighbour_id: str | None = None,
 ) -> Page:
     """The Page for a record's page, found by id: a character's or
     laboratory's covenant comes with it, and a familiar's magus."""
@@ -234,6 +242,7 @@ def page_for(
         laboratory=laboratory,
         familiar=familiar,
         tribunal=saga.tribunal(tribunal_id),
+        neighbour=saga.neighbour(neighbour_id),
     )
 
 
@@ -362,6 +371,7 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "set_date": ((NodeKind.SAGA, "Seasons"),),
     "create_covenant": ((NodeKind.SAGA, "Covenants"),),
     "create_tribunal": ((NodeKind.SAGA, "Tribunals"),),
+    "create_neighbour": ((NodeKind.SAGA, "Neighbours"),),
     "create_character": (
         (NodeKind.SAGA, "Unassigned Characters"),
         (NodeKind.COVENANT, "People"),
@@ -494,6 +504,11 @@ def _deletion_of(saga: Saga, record: Record) -> tuple[list[str], Callable[[], No
         return (
             tribunals.deletion_consequences(saga, record),
             lambda: tribunals.delete(saga, record),
+        )
+    if isinstance(record, Neighbour):
+        return (
+            neighbours.deletion_consequences(saga, record),
+            lambda: neighbours.delete(saga, record),
         )
     if isinstance(record, Covenant):
         return (
@@ -1217,6 +1232,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "edit_saga": lambda page: creation_forms.edit_saga_form(page.saga),
     "create_covenant": lambda page: creation_forms.new_covenant_form(page.saga),
     "create_tribunal": lambda page: tribunal_forms.new_tribunal_form(page.saga),
+    "create_neighbour": lambda page: neighbour_forms.new_neighbour(page.saga),
     "create_character": lambda page: creation_forms.new_character_form(
         page.saga, _covenant_id(page)
     ),

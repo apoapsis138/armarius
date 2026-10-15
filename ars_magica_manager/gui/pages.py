@@ -20,12 +20,12 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, menu_forms, tribunal_sheet
+from .. import artwork, menu_forms, neighbours, region_sheet, tribunal_sheet
 from .. import character_sheet as cs
 from .. import familiar_sheet as fs
 from .. import saga_content_sheet as scs
 from .. import saga_overview as ov
-from ..models import Character, Saga
+from ..models import Character, Neighbour, Saga
 from . import pictures
 from .figures import fact_grid
 from .menus import Placer
@@ -257,10 +257,54 @@ def action_rows(rows: Sequence[tuple[QWidget, str]], p: Palette) -> QWidget:
     return box
 
 
+def neighbour_card(
+    saga: Saga, neighbour: Neighbour, p: Palette, open_neighbour: Open
+) -> ClickableCard:
+    """A neighbour as a card that opens its page."""
+    card = ClickableCard(p, pad=16)
+    card_title(
+        card,
+        neighbour.name,
+        region_sheet.card_subtitle(neighbour),
+        p,
+        symbol_label(artwork.icon(neighbours.kind_of(neighbour).key), p),
+    )
+    facts = region_sheet.card_facts(saga, neighbour)
+    if facts:
+        card.column.addWidget(fact_grid(facts, p, 1))
+    card.clicked = lambda: open_neighbour(neighbour.id)
+    return card
+
+
+def region_chapter(
+    saga: Saga, p: Palette, open_neighbour: Open, new: QWidget | None
+) -> QWidget:
+    """The Region: its facts, then each group's neighbours as cards, and
+    the New card that adds one."""
+    parts: list[QWidget] = [
+        chapter_title(region_sheet.neighbours_title(saga), p),
+        fact_grid(region_sheet.facts(saga), p, 3),
+    ]
+    for group in neighbours.groups_shown(saga):
+        members = neighbours.members(saga, group.key)
+        if not members:
+            continue
+        parts.append(chapter_title(region_sheet.group_title(saga, group.key), p))
+        parts.append(
+            card_grid([neighbour_card(saga, n, p, open_neighbour) for n in members])
+        )
+    if new is not None:
+        parts.append(card_grid(with_new([], new)))
+    elif not saga.neighbours:
+        parts.append(text("None yet.", p["dim"], serif(12.5, italic=True)))
+    return scrolling_page(p, *parts)
+
+
 class SagaPage(QWidget):
     """A saga as a Codex: The World (its covenants, and the characters and
     laboratories that belong to none, each list ending in a New card),
-    its Seasons, its Rules and Content, and Saga Management."""
+    The Region (its neighbours), its Seasons, its Rules and Content, and
+    Saga Management."""
 
     def __init__(
         self,
@@ -273,10 +317,12 @@ class SagaPage(QWidget):
         open_character: Open = lambda _id: None,
         open_laboratory: Open = lambda _id: None,
         open_tribunal: Open = lambda _id: None,
+        open_neighbour: Open = lambda _id: None,
     ) -> None:
         super().__init__()
         self.saga, self.p = saga, p
         self.open_tribunal = open_tribunal
+        self.open_neighbour = open_neighbour
         self.placer = placer
         self.open_covenant = open_covenant
         self.open_character, self.open_laboratory = open_character, open_laboratory
@@ -290,6 +336,11 @@ class SagaPage(QWidget):
             )
         self.codex = Codex(p)
         self.codex.add("The World", "covenant", self._world())
+        self.codex.add(
+            "The Region",
+            "region",
+            region_chapter(saga, p, self.open_neighbour, self._new("Neighbours")),
+        )
         self.codex.add("Seasons", "season", self._seasons(open_seasons))
         self.codex.add(
             "Rules and Content", "library", self._rules_and_content(open_content)

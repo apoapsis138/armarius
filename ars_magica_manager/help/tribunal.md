@@ -1,17 +1,3 @@
-# The Region
-<!-- help: region; tui -->
-
-The Region node, under the troupe's covenants in the navigation tree,
-holds the saga's world beyond them. Each Tribunal is listed here, with
-the covenants the troupe doesn't play under the Tribunal they belong to;
-a covenant with no Tribunal sits directly under The Region.
-
-Press `n` (New) here, or on the saga, and choose **New Tribunal** to add
-one. A covenant joins a Tribunal through the Tribunal choice in Edit
-Covenant.
-
-**See also:** [Tribunal sheet](help:tribunal), [Covenant sheet](help:covenant)
-
 # Tribunal sheet
 <!-- help: tribunal -->
 

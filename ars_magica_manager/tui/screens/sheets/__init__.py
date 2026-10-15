@@ -31,6 +31,8 @@ from .lists import HouseRulesView as HouseRulesView
 from .lists import LabTextListView as LabTextListView
 from .lists import PlayersView as PlayersView
 from .lists import SpellListView as SpellListView
+from .region import NeighbourSheetView as NeighbourSheetView
+from .region import RegionSheetView as RegionSheetView
 from .saga_content import TAB_SECTIONS as TAB_SECTIONS
 from .saga_content import SagaContentSheetView as SagaContentSheetView
 from .tribunal import TribunalSheetView as TribunalSheetView

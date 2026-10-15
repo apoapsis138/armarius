@@ -214,6 +214,12 @@ OPENERS: dict[str, Opener] = {
     "set date": Opener("saga", lambda ws: ws.action_set_date()),
     "create covenant": Opener("saga", lambda ws: ws.action_create_covenant()),
     "create tribunal": Opener("saga", lambda ws: ws.action_create_tribunal()),
+    "add faction": Opener(
+        "region", lambda ws: ws._core_verb("section-region-factions", "add")
+    ),
+    "edit neighbour": Opener(
+        "neighbour", lambda ws: ws._core_verb("section-nb-info", "edit")
+    ),
     "edit tribunal": Opener(
         "tribunal", lambda ws: ws._core_verb("section-trib-info", "edit")
     ),

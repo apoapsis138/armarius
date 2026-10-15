@@ -30,6 +30,7 @@ from .models import (
     Covenant,
     Familiar,
     Laboratory,
+    Neighbour,
     Saga,
     Tribunal,
 )
@@ -45,6 +46,7 @@ from .sections import (
     LAB_TEXTS_SECTION,
     LAB_VF_SECTIONS,
     LIBRARY_SECTIONS,
+    NEIGHBOUR_INFO_SECTION,
     PLAYERS_SECTION,
     SILVER_SECTIONS,
     SOURCES_SECTION,
@@ -73,6 +75,8 @@ class NodeKind(StrEnum):
     BOOK_GROUP = "book_group"
     REGION = "region"
     TRIBUNAL = "tribunal"
+    NEIGHBOUR_GROUP = "neighbour_group"
+    NEIGHBOUR = "neighbour"
 
 
 # -- the section verbs: a / d / e, and More's Restore --
@@ -202,6 +206,7 @@ NEW_MENU: tuple[MenuItem, ...] = (
     MenuItem("l", "create_laboratory", "New Laboratory"),
     MenuItem("f", "create_familiar", "Bind Familiar"),
     MenuItem("t", "create_tribunal", "New Tribunal"),
+    MenuItem("b", "create_neighbour", "New Neighbour"),
 )
 
 #: More: what only a few sections, or the record itself, can do. Each
@@ -247,6 +252,9 @@ MORE_SECTIONS: dict[str, str] = {
 CREATE_PLACES: dict[str, frozenset[NodeKind]] = {
     "create_covenant": frozenset({NodeKind.SAGA}),
     "create_tribunal": frozenset({NodeKind.SAGA, NodeKind.REGION, NodeKind.TRIBUNAL}),
+    "create_neighbour": frozenset(
+        {NodeKind.SAGA, NodeKind.REGION, NodeKind.NEIGHBOUR_GROUP, NodeKind.NEIGHBOUR}
+    ),
     "create_character": frozenset(
         {NodeKind.SAGA, NodeKind.COVENANT, NodeKind.CHARACTER_GROUP, NodeKind.CHARACTER}
     ),
@@ -272,6 +280,7 @@ RECORD_SECTION: dict[NodeKind, str] = {
     NodeKind.LABORATORY: "section-lab-identity",
     NodeKind.FAMILIAR: "section-fam-info",
     NodeKind.TRIBUNAL: TRIBUNAL_INFO_SECTION,
+    NodeKind.NEIGHBOUR: NEIGHBOUR_INFO_SECTION,
 }
 
 
@@ -327,7 +336,7 @@ class ActionFacts(Protocol):
 
     def record_to_delete(
         self,
-    ) -> Covenant | Character | Laboratory | Familiar | Tribunal | None: ...
+    ) -> Covenant | Character | Laboratory | Familiar | Tribunal | Neighbour | None: ...
 
     def can_send_files(self) -> bool:
         """Whether an exported file has somewhere to go (not over SSH)."""

@@ -1350,5 +1350,119 @@
         "slash": "(disabled)"
       }
     }
+  },
+  "region": {
+    "PinnedCollapsible#section-region-info": {
+      "active": "section-region-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-region-covenants": {
+      "active": "section-region-covenants",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-region-lords": {
+      "active": "section-region-lords",
+      "keys": {
+        "a": "ChooseScreen: New Neighbour: what kind?",
+        "e": "FieldsDialog: Edit Gottfried of Arnsberg",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-region-church": {
+      "active": "section-region-church",
+      "keys": {
+        "a": "FieldsDialog: New Church",
+        "e": "FieldsDialog: Edit Archbishop of Cologne",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-region-universities": {
+      "active": "section-region-universities",
+      "keys": {
+        "a": "FieldsDialog: New University",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-region-factions": {
+      "active": "section-region-factions",
+      "keys": {
+        "a": "FieldsDialog: New Faction",
+        "e": "FieldsDialog: Edit The Black Pool Coven",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-region-threats": {
+      "active": "section-region-threats",
+      "keys": {
+        "a": "FieldsDialog: New Threat",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    }
+  },
+  "neighbour": {
+    "PinnedCollapsible#section-nb-info": {
+      "active": "section-nb-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Gottfried of Arnsberg",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-attitudes": {
+      "active": "section-attitudes",
+      "keys": {
+        "a": "FieldsDialog: Add a Reason",
+        "e": "FieldsDialog: Attitude toward Keep",
+        "d": "notice: Where it started can't be deleted: edit it to change it.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-favours": {
+      "active": "section-favours",
+      "keys": {
+        "a": "FieldsDialog: Add a Favour",
+        "e": "FieldsDialog: Edit a Favour",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-links": {
+      "active": "section-links",
+      "keys": {
+        "a": "ChooseScreen: Link to what?",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    }
   }
 }

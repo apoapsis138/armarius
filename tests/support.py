@@ -30,6 +30,7 @@ from ars_magica_manager.models import (
     LabSpecialtyEntry,
     LabSpecialtyGrant,
     NamedDescription,
+    Neighbour,
     Possession,
     Reason,
     Ruling,
@@ -150,6 +151,8 @@ NODES: dict[str, tuple[str, ...]] = {
     "tribunal": ("tribunal", "rhine"),
     "theban_tribunal": ("tribunal", "thebes"),
     "normandy_tribunal": ("tribunal", "normandy"),
+    "region": ("region",),
+    "neighbour": ("neighbour", "gottfried"),
     "book_group": ("book_group",),
     "saga_content": ("saga_content",),
 }
@@ -456,6 +459,39 @@ def everything_saga() -> Saga:
                         ],
                     }
                 },
+            ),
+        ],
+        neighbours=[
+            Neighbour(
+                id="gottfried",
+                name="Gottfried of Arnsberg",
+                kind="lord",
+                summary="Count of Arnsberg. Wants the mill rent.",
+                ruler="Count Gottfried",
+                answers_to="cologne",
+                attitudes=[
+                    Attitude(
+                        "cov1",
+                        0,
+                        [Reason("The mill undercuts his own", -1, 1218, "Autumn")],
+                    )
+                ],
+                favours=[
+                    Favour("Safe passage for the wool carts", "Keep", "Gottfried")
+                ],
+            ),
+            Neighbour(
+                id="cologne",
+                name="Archbishop of Cologne",
+                kind="church",
+                detail="Line",
+                realm="Divine",
+            ),
+            Neighbour(
+                id="coven",
+                name="The Black Pool Coven",
+                kind="faction",
+                attitudes=[Attitude("cov1", 2)],
             ),
         ],
         characters=[magus, companion, rival],

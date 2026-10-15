@@ -48,6 +48,8 @@ from .... import (
     giving,
     import_forms,
     menu_forms,
+    neighbour_forms,
+    neighbours,
     presence,
     seasons,
     sourcebooks,
@@ -79,6 +81,7 @@ from ....models import (
     Familiar,
     GrogYear,
     Laboratory,
+    Neighbour,
     Player,
     Saga,
     ScoredTrait,
@@ -93,7 +96,12 @@ from ....rules import creation as creation_rules
 from ....rules import creation_characteristics as cch
 from ....rules import creation_covenant as cov_creation
 from ....rules import options as rule_options
-from ....sections import CASES_SECTION, TRIBUNAL_INFO_SECTION
+from ....sections import (
+    CASES_SECTION,
+    NEIGHBOUR_INFO_SECTION,
+    REGION_INFO_SECTION,
+    TRIBUNAL_INFO_SECTION,
+)
 from ... import hosting
 from ..creation_worksheet import CreationWorksheetScreen
 from ..fields import (
@@ -135,6 +143,8 @@ from ..sheets import (
     CovenantSheetView,
     FamiliarSheetView,
     LaboratorySheetView,
+    NeighbourSheetView,
+    RegionSheetView,
     SagaContentSheetView,
     SheetView,
     TribunalSheetView,
@@ -259,6 +269,8 @@ _HELP_PAGES: dict[NodeKind, str] = {
     NodeKind.SAGA_CONTENT: "saga-content",
     NodeKind.REGION: "region",
     NodeKind.TRIBUNAL: "tribunal",
+    NodeKind.NEIGHBOUR_GROUP: "region",
+    NodeKind.NEIGHBOUR: "neighbour",
 }
 
 #: How often, in seconds, a hosted saga's copies look for each other's saves
@@ -273,6 +285,7 @@ _STORYGUIDE_ACTIONS = frozenset(
         "new",
         "create_covenant",
         "create_tribunal",
+        "create_neighbour",
         "create_character",
         "create_laboratory",
         "create_familiar",
@@ -338,10 +351,16 @@ DETAIL_PANE_ID = "detail-pane"
 
 
 def _deletion_of(
-    saga: Saga, record: Covenant | Character | Laboratory | Familiar | Tribunal
+    saga: Saga,
+    record: Covenant | Character | Laboratory | Familiar | Tribunal | Neighbour,
 ) -> tuple[list[str], Callable[[], None]]:
     """What deleting `record` would do, for the confirmation, and the
     function that does it."""
+    if isinstance(record, Neighbour):
+        return (
+            neighbours.deletion_consequences(saga, record),
+            partial(neighbours.delete, saga, record),
+        )
     if isinstance(record, Tribunal):
         return (
             tribunals.deletion_consequences(saga, record),
@@ -441,7 +460,7 @@ class _ScreenFacts:
 
     def record_to_delete(
         self,
-    ) -> Covenant | Character | Laboratory | Familiar | Tribunal | None:
+    ) -> Covenant | Character | Laboratory | Familiar | Tribunal | Neighbour | None:
         return self._screen._record_to_delete()
 
     def can_send_files(self) -> bool:
@@ -520,6 +539,9 @@ class WorkspaceBase(Screen[None]):
         NodeKind.COVENANT: (_COVENANT_DISPATCH_TABS, "section-cov-info"),
         NodeKind.FAMILIAR: (_FAMILIAR_DISPATCH_TABS, "section-fam-info"),
         NodeKind.TRIBUNAL: (set(), TRIBUNAL_INFO_SECTION),
+        NodeKind.REGION: (set(), REGION_INFO_SECTION),
+        NodeKind.NEIGHBOUR_GROUP: (set(), REGION_INFO_SECTION),
+        NodeKind.NEIGHBOUR: (set(), NEIGHBOUR_INFO_SECTION),
     }
 
     DEFAULT_CSS = """
@@ -549,12 +571,15 @@ class WorkspaceBase(Screen[None]):
         self.selected_laboratory: Laboratory | None = None
         self.selected_familiar: Familiar | None = None
         self.selected_tribunal: Tribunal | None = None
+        self.selected_neighbour: Neighbour | None = None
         self._character_sheet_view: CharacterSheetView | None = None
         self._laboratory_sheet_view: LaboratorySheetView | None = None
         self._covenant_sheet_view: CovenantSheetView | None = None
         self._familiar_sheet_view: FamiliarSheetView | None = None
         self._saga_content_view: SagaContentSheetView | None = None
         self._tribunal_sheet_view: TribunalSheetView | None = None
+        self._region_sheet_view: RegionSheetView | None = None
+        self._neighbour_sheet_view: NeighbourSheetView | None = None
         #: One detail-pane swap at a time (see _set_detail).
         self._detail_lock = asyncio.Lock()
         #: While the Footer's keys are worked out (active_bindings), what
@@ -621,6 +646,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.LABORATORY: ("laboratories", self.selected_laboratory),
             NodeKind.COVENANT: ("covenants", self.selected_covenant),
             NodeKind.TRIBUNAL: ("tribunals", self.selected_tribunal),
+            NodeKind.NEIGHBOUR: ("neighbours", self.selected_neighbour),
         }
         kind, record = records.get(self.selected_kind, ("", None))
         return f"{kind}:{record.id}" if record is not None else None
@@ -690,6 +716,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.LABORATORY: (self.saga.laboratories, self.selected_laboratory),
             NodeKind.COVENANT: (self.saga.covenants, self.selected_covenant),
             NodeKind.TRIBUNAL: (self.saga.tribunals, self.selected_tribunal),
+            NodeKind.NEIGHBOUR: (self.saga.neighbours, self.selected_neighbour),
         }
         listed, record = records.get(self.selected_kind, ([], None))
         return record is None or any(r is record for r in listed)
@@ -822,6 +849,19 @@ class WorkspaceBase(Screen[None]):
         for covenant in others:
             if covenant.tribunal_id not in known:
                 self._add_covenant_node(region, covenant, expand=False)
+        for group in neighbours.GROUPS:
+            members = neighbours.members(self.saga, group.key)
+            if not members:
+                continue
+            node = region.add(
+                f"{group.title} ({len(members)})",
+                data=(NodeKind.NEIGHBOUR_GROUP, group.key),
+                expand=False,
+            )
+            for neighbour in members:
+                node.add_leaf(
+                    escape(neighbour.name), data=(NodeKind.NEIGHBOUR, neighbour.id)
+                )
 
     def _add_character_node(self, parent, character: Character) -> None:
         """A character's own tree node: a plain leaf, unless it's a magus
@@ -855,6 +895,8 @@ class WorkspaceBase(Screen[None]):
         self._familiar_sheet_view = None
         self._saga_content_view = None
         self._tribunal_sheet_view = None
+        self._region_sheet_view = None
+        self._neighbour_sheet_view = None
 
         handler = self._NODE_SELECTED.get(kind)
         if handler is not None:
@@ -947,14 +989,30 @@ class WorkspaceBase(Screen[None]):
         await self._set_detail(SeasonRecordsView(self.saga))
 
     async def _select_region(self, ident: str | None) -> None:
+        """The Region, or (`ident`) one of its groups of neighbours, whose
+        list takes focus."""
         self.selected_covenant = None
-        count = len(self.saga.tribunals)
-        await self._show_placeholder_detail(
-            "The Region",
-            f"{count} Tribunal{'' if count == 1 else 's'}, and the covenants "
-            "the troupe doesn't play, each under its Tribunal. Select one from "
-            "the tree, or press 'n' to add a Tribunal.",
-        )
+        view = RegionSheetView(self.saga, ident)
+        await self._set_detail(view)
+        self._region_sheet_view = view
+        group = next((g for g in neighbours.GROUPS if g.key == ident), None)
+        if group is not None and view.query(f"#{group.section_id}"):
+            self.call_after_refresh(
+                view.query_one(f"#{group.section_id}", SheetSection).focus_section
+            )
+        else:
+            self._focus_first_section(initial=True)
+
+    async def _select_neighbour(self, ident: str | None) -> None:
+        neighbour = self.saga.neighbour(ident)
+        if neighbour is None:
+            return
+        self.selected_covenant = None
+        self.selected_neighbour = neighbour
+        view = NeighbourSheetView(self.saga, neighbour)
+        await self._set_detail(view)
+        self._neighbour_sheet_view = view
+        self._focus_first_section(initial=True)
 
     async def _select_tribunal(self, ident: str | None) -> None:
         tribunal = self.saga.tribunal(ident)
@@ -997,6 +1055,8 @@ class WorkspaceBase(Screen[None]):
         NodeKind.BOOK_GROUP: _select_book_group,
         NodeKind.REGION: _select_region,
         NodeKind.TRIBUNAL: _select_tribunal,
+        NodeKind.NEIGHBOUR_GROUP: _select_region,
+        NodeKind.NEIGHBOUR: _select_neighbour,
     }
 
     def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
@@ -1438,6 +1498,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.LABORATORY: self.selected_laboratory,
             NodeKind.FAMILIAR: self.selected_familiar,
             NodeKind.TRIBUNAL: self.selected_tribunal,
+            NodeKind.NEIGHBOUR: self.selected_neighbour,
         }.get(self.selected_kind)
         if record is not None:
             return record.name
@@ -1449,6 +1510,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.SEASONS: "Seasons",
             NodeKind.BOOK_GROUP: "Unassigned Books",
             NodeKind.REGION: "The Region",
+            NodeKind.NEIGHBOUR_GROUP: "The Region",
         }.get(self.selected_kind, "")
 
     def _update_where(self) -> None:
@@ -1582,6 +1644,9 @@ class WorkspaceBase(Screen[None]):
             NodeKind.FAMILIAR: self._familiar_sheet_view,
             NodeKind.SAGA_CONTENT: self._saga_content_view,
             NodeKind.TRIBUNAL: self._tribunal_sheet_view,
+            NodeKind.REGION: self._region_sheet_view,
+            NodeKind.NEIGHBOUR_GROUP: self._region_sheet_view,
+            NodeKind.NEIGHBOUR: self._neighbour_sheet_view,
         }.get(self.selected_kind)
 
     def _open_creation_worksheet(
@@ -1823,6 +1888,22 @@ class WorkspaceBase(Screen[None]):
 
         run_steps(self.app, tribunal_forms.new_tribunal_form(self.saga), done)
 
+    def action_create_neighbour(self) -> None:
+        before = {n.id for n in self.saga.neighbours}
+
+        def done(_end: object) -> None:
+            storage.save_saga(self.saga)
+            self._rebuild_tree()
+            made = [n for n in self.saga.neighbours if n.id not in before]
+            if made:
+                node = _tree_node_with_data(
+                    self._nav_tree(), (NodeKind.NEIGHBOUR, made[-1].id)
+                )
+                if node is not None:
+                    self.call_after_refresh(self._nav_tree().select_node, node)
+
+        run_steps(self.app, neighbour_forms.new_neighbour(self.saga), done)
+
     def action_withdraw_case(self) -> None:
         """More's Withdraw on the docket's chosen case."""
         view = self._tribunal_sheet_view
@@ -1955,7 +2036,7 @@ class WorkspaceBase(Screen[None]):
 
     def _record_to_delete(
         self,
-    ) -> Covenant | Character | Laboratory | Familiar | Tribunal | None:
+    ) -> Covenant | Character | Laboratory | Familiar | Tribunal | Neighbour | None:
         """The record d deletes: the covenant, character, laboratory or
         Familiar selected in the tree, if that's what's selected."""
         return {
@@ -1964,6 +2045,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.LABORATORY: self.selected_laboratory,
             NodeKind.FAMILIAR: self.selected_familiar,
             NodeKind.TRIBUNAL: self.selected_tribunal,
+            NodeKind.NEIGHBOUR: self.selected_neighbour,
         }.get(self.selected_kind)
 
     def action_delete_record(self) -> None:
@@ -2036,7 +2118,12 @@ class WorkspaceBase(Screen[None]):
 
     #: Core sections whose changes can rename or add records in the tree.
     _TREE_SECTIONS: ClassVar[frozenset[str]] = frozenset(
-        {"section-cov-magi", TRIBUNAL_INFO_SECTION}
+        {
+            "section-cov-magi",
+            TRIBUNAL_INFO_SECTION,
+            NEIGHBOUR_INFO_SECTION,
+            *(g.section_id for g in neighbours.GROUPS),
+        }
     )
 
     def _core_verb(self, section: str, verb: str) -> None:
@@ -2103,6 +2190,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.LABORATORY: self.selected_laboratory,
             NodeKind.COVENANT: self.selected_covenant,
             NodeKind.TRIBUNAL: self.selected_tribunal,
+            NodeKind.NEIGHBOUR: self.selected_neighbour,
         }.get(self.selected_kind)
         return pl.may_change(self.saga, self._signed_in(), record)
 

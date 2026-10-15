@@ -187,4 +187,5 @@ from .world import SKETCH as SKETCH
 from .world import Attitude as Attitude
 from .world import Favour as Favour
 from .world import Link as Link
+from .world import Neighbour as Neighbour
 from .world import Reason as Reason

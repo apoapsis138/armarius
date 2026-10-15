@@ -88,3 +88,37 @@ class Link:
     target_id: str
     note: str = ""
     id: str = field(default_factory=new_instance_id, compare=False)
+
+
+@dataclass
+class Neighbour:
+    """Someone or something of the saga's world beyond the covenants: a
+    lord, a town, a church, a university, a faction or a threat
+    (neighbours.KINDS). Its kind's own fields are kept in `details`.
+    Only the name is required."""
+
+    id: str
+    name: str
+    kind: str = "faction"
+    summary: str = ""
+    detail: str = SKETCH
+    #: Its ruler or leader, as a name.
+    ruler: str = ""
+    #: The neighbour it answers to (its liege, its bishop), by id.
+    answers_to: str | None = None
+    #: One of common.REALMS, or "".
+    realm: str = ""
+    #: What its kind adds, by field.
+    details: dict[str, Any] = field(default_factory=dict)
+    attitudes: list[Attitude] = field(default_factory=list)
+    favours: list[Favour] = field(default_factory=list)
+    links: list[Link] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Neighbour:
+        d = known_fields(cls, data)
+        d["attitudes"] = [Attitude.from_dict(a) for a in d.get("attitudes", [])]
+        d["favours"] = [Favour(**known_fields(Favour, f)) for f in d.get("favours", [])]
+        d["links"] = [Link(**known_fields(Link, x)) for x in d.get("links", [])]
+        d["details"] = dict(d.get("details") or {})
+        return cls(**d)

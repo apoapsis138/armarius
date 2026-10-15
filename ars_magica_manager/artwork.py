@@ -82,6 +82,14 @@ ICON_NAMES: dict[str, str] = {
     "players": "users-three",
     # A Tribunal: the magi of a region in council.
     "tribunal": "users-three",
+    # The Region beyond the covenants, and each kind of neighbour in it.
+    "region": "shield",
+    "lord": "sword",
+    "town": "coins",
+    "church": "church",
+    "university": "book-open",
+    "faction": "users-three",
+    "threat": "skull",
     "enchanted_item": "magic-wand",
     # Time and resources
     "season": "hourglass-medium",

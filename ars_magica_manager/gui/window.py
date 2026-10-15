@@ -71,6 +71,7 @@ from .menus import Placer
 from .ornaments import Headpiece
 from .pages import SagaPage, SagaShelf
 from .paper import Paper
+from .region import NeighbourPage
 from .saga_content import SagaContentPage
 from .seasons import SeasonsPage
 from .themes import PALETTES, Palette, for_mode, style_sheet
@@ -91,6 +92,7 @@ from .worksheet import WorksheetPage
     SEASONS,
     HELP,
     TRIBUNAL,
+    NEIGHBOUR,
 ) = (
     "shelf",
     "saga",
@@ -103,6 +105,7 @@ from .worksheet import WorksheetPage
     "seasons",
     "help",
     "tribunal",
+    "neighbour",
 )
 
 #: Each page's help topic (help_text: a page's id), most specific first.
@@ -117,6 +120,7 @@ _HELP_IDS = {
     WORKSHEET: ["creation-worksheet"],
     SEASONS: ["seasons", "advance-season", "season-summary"],
     TRIBUNAL: ["tribunal"],
+    NEIGHBOUR: ["neighbour"],
 }
 
 #: The prefix of each page's tab topics; a character's are the plain
@@ -127,6 +131,7 @@ _TAB_PREFIX = {
     FAMILIAR: "tab-fam-",
     CONTENT: "tab-content-",
     TRIBUNAL: "tab-trib-",
+    NEIGHBOUR: "tab-nb-",
     CHARACTER: "tab-",
 }
 _OTHER_TABS = tuple(v for k, v in _TAB_PREFIX.items() if k != CHARACTER)
@@ -416,6 +421,9 @@ class MainWindow(QMainWindow):
 
     def open_tribunal(self, tribunal_id: str) -> None:
         self.go([*self._up_to(SAGA), Place(TRIBUNAL, tribunal_id)])
+
+    def open_neighbour(self, neighbour_id: str) -> None:
+        self.go([*self._up_to(SAGA), Place(NEIGHBOUR, neighbour_id)])
 
     def show_character(self, character_id: str) -> None:
         """Open a character's sheet, below their covenant."""
@@ -781,6 +789,7 @@ class MainWindow(QMainWindow):
                 self.show_character,
                 self.open_laboratory,
                 self.open_tribunal,
+                self.open_neighbour,
             )
         if place.kind == CONTENT:
             return SagaContentPage(saga, p, self.run)
@@ -789,6 +798,11 @@ class MainWindow(QMainWindow):
             if tribunal is None:
                 return QLabel("No Tribunal chosen.")
             return TribunalPage(saga, tribunal, p, self.run, self._controls())
+        if place.kind == NEIGHBOUR:
+            neighbour = saga.neighbour(place.id)
+            if neighbour is None:
+                return QLabel("No neighbour chosen.")
+            return NeighbourPage(saga, neighbour, p, self.run, self._controls())
         if place.kind == SEASONS:
             played, self._played = self._played, None
             return SeasonsPage(saga, p, played)
@@ -970,6 +984,9 @@ class MainWindow(QMainWindow):
         if place.kind == TRIBUNAL:
             tribunal = saga.tribunal(place.id)
             return tribunal.name if tribunal else ""
+        if place.kind == NEIGHBOUR:
+            neighbour = saga.neighbour(place.id)
+            return neighbour.name if neighbour else ""
         character = saga.character(place.id)
         return character.name if character else ""
 
@@ -1025,6 +1042,8 @@ class MainWindow(QMainWindow):
             return menu_forms.page_for(saga, NodeKind.CHARACTER, character_id=place.id)
         if place.kind == TRIBUNAL:
             return menu_forms.page_for(saga, NodeKind.TRIBUNAL, tribunal_id=place.id)
+        if place.kind == NEIGHBOUR:
+            return menu_forms.page_for(saga, NodeKind.NEIGHBOUR, neighbour_id=place.id)
         if place.kind == LABORATORY:
             return menu_forms.page_for(
                 saga, NodeKind.LABORATORY, laboratory_id=place.id
@@ -1055,6 +1074,8 @@ class MainWindow(QMainWindow):
             self.open_covenant(record_id)
         elif action == "create_tribunal":
             self.open_tribunal(record_id)
+        elif action == "create_neighbour":
+            self.open_neighbour(record_id)
         elif action == "create_character":
             self.show_character(record_id)
         elif action == "create_laboratory":

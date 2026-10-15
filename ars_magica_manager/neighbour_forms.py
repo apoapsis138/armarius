@@ -1,0 +1,204 @@
+"""New Neighbour and Edit Neighbour, and the Region's lists' Add, Edit
+and Delete (commands.SectionOps), for either front-end.
+
+New Neighbour asks for the kind first, offering only the kinds whose
+book is in play, then a plain form: a name is all it needs. Pattern:
+the kinds' registry (neighbours.KINDS) is the Strategy; New's choice of
+form per kind reduces to looking the kind up there."""
+
+from __future__ import annotations
+
+from typing import Any
+
+from . import neighbours, sourcebooks, world_forms
+from .commands import Choice, Choose, Command, Confirm, Form, SectionOps, not_offered
+from .form_spec import DialogField, pairs
+from .markup import escape
+from .models import DETAIL_LEVELS, REALMS, Neighbour, Saga
+from .sections import NEIGHBOUR_INFO_SECTION
+
+
+def neighbour_fields(
+    saga: Saga, neighbour: Neighbour | None, kind: str
+) -> list[DialogField]:
+    """A neighbour's common fields: only the name is required."""
+    n = neighbour or Neighbour(id="", name="", kind=kind)
+    liege = [
+        (escape(other.name), other.id)
+        for other in saga.neighbours
+        if other is not neighbour
+    ]
+    fields = [
+        DialogField("name", "Name", "text", n.name, required=True),
+    ]
+    if neighbour is not None:
+        kinds = [
+            k
+            for k in neighbours.KINDS.values()
+            if k.key == n.kind or neighbours.in_play(saga, k)
+        ]
+        fields.append(
+            DialogField(
+                "kind",
+                "Kind",
+                "select",
+                n.kind,
+                options=[(k.name, k.key) for k in kinds],
+                required=True,
+            )
+        )
+    fields += [
+        DialogField(
+            "summary",
+            "Summary",
+            "area",
+            n.summary,
+            hint="A paragraph: who they are and what they want.",
+        ),
+        DialogField(
+            "detail",
+            "Detail",
+            "select",
+            n.detail,
+            options=pairs(DETAIL_LEVELS),
+            hint="A line, a sketch, or written in full.",
+        ),
+        DialogField(
+            "ruler",
+            "Ruler or leader",
+            "text",
+            n.ruler,
+            placeholder="e.g. Count Gottfried",
+        ),
+        DialogField(
+            "answers_to",
+            "Answers to",
+            "select",
+            n.answers_to,
+            options=liege,
+            allow_blank=True,
+            placeholder="(no one)",
+            hint="Its liege, bishop or master among the neighbours.",
+        ),
+        DialogField(
+            "realm",
+            "Realm",
+            "select",
+            n.realm or None,
+            options=pairs(REALMS),
+            allow_blank=True,
+            placeholder="(none)",
+        ),
+    ]
+    return fields
+
+
+def _apply(neighbour: Neighbour, values: dict[str, Any]) -> None:
+    for key, value in values.items():
+        setattr(neighbour, key, value)
+    neighbour.answers_to = values.get("answers_to") or None
+    neighbour.realm = values.get("realm") or ""
+
+
+def new_neighbour_form(saga: Saga, kind: str) -> Form:
+    name = neighbours.KINDS[kind].name
+
+    def apply(values: dict[str, Any]) -> None:
+        _apply(neighbours.add(saga, kind, values["name"]), values)
+
+    return Form(
+        f"New {name}",
+        lambda: neighbour_fields(saga, None, kind),
+        apply,
+        save_label="Create",
+    )
+
+
+def edit_neighbour_form(saga: Saga, neighbour: Neighbour) -> Form:
+    return Form(
+        f"Edit {escape(neighbour.name)}",
+        lambda: neighbour_fields(saga, neighbour, neighbour.kind),
+        lambda values: _apply(neighbour, values),
+    )
+
+
+def _kind_choice(kind: neighbours.NeighbourKind) -> Choice:
+    book = sourcebooks.SOURCEBOOKS.get(kind.book, "") if kind.book else ""
+    detail = f"{escape(kind.blurb.capitalize())}."
+    if book:
+        detail += f"\n[$label]From {escape(book)}.[/]"
+    return Choice(f"{kind.name}  [$label]{escape(kind.blurb)}[/]", kind.key, detail)
+
+
+def new_neighbour(saga: Saga, group: str | None = None) -> Command:
+    """New Neighbour: the kind (of `group`, if given) whose book is in
+    play, then its form. With one kind to choose, its form at once."""
+    kinds = (
+        neighbours.kinds_of(group)
+        if group is not None
+        else list(neighbours.KINDS.values())
+    )
+    offered = [k for k in kinds if neighbours.in_play(saga, k)]
+    if group is not None and len(offered) == 1:
+        return new_neighbour_form(saga, offered[0].key)
+
+    def others() -> list[Choice]:
+        return [
+            not_offered(
+                _kind_choice(k),
+                f"add {sourcebooks.SOURCEBOOKS.get(k.book, k.book)} in Saga Content",
+            )
+            for k in kinds
+            if not neighbours.in_play(saga, k)
+        ]
+
+    return Choose(
+        "New Neighbour: what kind?",
+        lambda: [_kind_choice(k) for k in offered],
+        lambda key: new_neighbour_form(saga, key),
+        empty="No kind of neighbour has its book in play.",
+        others=others,
+    )
+
+
+def _delete(saga: Saga, neighbour: Neighbour) -> Confirm:
+    consequences = neighbours.deletion_consequences(saga, neighbour)
+    message = f"Delete {escape(neighbour.name)}?"
+    if consequences:
+        message += "\n\n" + "\n".join(escape(c) for c in consequences)
+    return Confirm(message, lambda: neighbours.delete(saga, neighbour))
+
+
+def group_ops(saga: Saga, group: str) -> SectionOps:
+    """A group of the Region: Add one of its kinds, Edit or Delete the
+    chosen neighbour."""
+
+    def members() -> list[Neighbour]:
+        return neighbours.members(saga, group)
+
+    return SectionOps(
+        add=lambda: new_neighbour(saga, group),
+        edit=lambda index: edit_neighbour_form(saga, members()[index]),
+        remove=lambda index: _delete(saga, members()[index]),
+        rows=lambda: [n.name for n in members()],
+    )
+
+
+def region_ops(saga: Saga) -> dict[str, SectionOps]:
+    """Every list of the Region the core edits, by section id."""
+    return {g.section_id: group_ops(saga, g.key) for g in neighbours.GROUPS}
+
+
+def neighbour_ops(saga: Saga, neighbour: Neighbour) -> dict[str, SectionOps]:
+    """A neighbour's sheet: its top panel, its attitude, favours and
+    links."""
+    return {
+        NEIGHBOUR_INFO_SECTION: SectionOps(
+            edit=lambda _row: edit_neighbour_form(saga, neighbour)
+        ),
+        **world_forms.record_ops(saga, neighbour),
+    }
+
+
+def delete_neighbour(saga: Saga, neighbour: Neighbour) -> Confirm:
+    return _delete(saga, neighbour)

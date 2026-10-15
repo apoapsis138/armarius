@@ -380,6 +380,26 @@ CONTRACTS: dict[str, Contract] = {
         expected=[("Provence", 1227, "Avignon", 7)],
         invalid=[{"Name": ""}, {"Meets every (years)": "0"}, {"Magi in all": "-2"}],
     ),
+    "add faction": Contract(
+        prefill={"Name": "", "Ruler or leader": "", "Detail": "Sketch"},
+        edits={"Name": "The Soest wool merchants", "Ruler or leader": "Hanno"},
+        saved=lambda s: [(n.name, n.kind, n.ruler) for n in s.neighbours][-1],
+        expected=("The Soest wool merchants", "faction", "Hanno"),
+        invalid={"Name": ""},
+        shown={"#region-factions-list": "The Soest wool merchants"},
+    ),
+    "edit neighbour": Contract(
+        prefill={
+            "Name": "Gottfried of Arnsberg",
+            "Kind": "lord",
+            "Answers to": "cologne",
+        },
+        edits={"Realm": "Divine", "Answers to": Select.NULL, "Detail": "Full"},
+        saved=lambda s: (s.neighbours[0].realm, s.neighbours[0].answers_to),
+        expected=("Divine", None),
+        invalid={"Name": ""},
+        shown={"#nb-info-right": "Divine", "#nb-info-left": "Full"},
+    ),
     "edit tribunal": Contract(
         prefill={
             "Name": "Rhine",

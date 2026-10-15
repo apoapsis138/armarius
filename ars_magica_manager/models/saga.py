@@ -22,6 +22,7 @@ from .laboratory import Laboratory
 from .seasons import LabProject, SeasonPlan, SeasonRecord
 from .traits import Spell
 from .tribunal import Tribunal
+from .world import Neighbour
 
 
 @dataclass
@@ -68,6 +69,9 @@ class Saga:
     covenants: list[Covenant] = field(default_factory=list)
     #: The Tribunals of the saga's region; each covenant names its own.
     tribunals: list[Tribunal] = field(default_factory=list)
+    #: The lords, towns, churches, universities, factions and threats of
+    #: the region (neighbours.py).
+    neighbours: list[Neighbour] = field(default_factory=list)
     characters: list[Character] = field(default_factory=list)
     laboratories: list[Laboratory] = field(default_factory=list)
     books: list[Book] = field(default_factory=list)
@@ -128,6 +132,10 @@ class Saga:
         """The Tribunal with this id, if there is one."""
         return next((t for t in self.tribunals if t.id == tribunal_id), None)
 
+    def neighbour(self, neighbour_id: str | None) -> Neighbour | None:
+        """The neighbour with this id, if there is one."""
+        return next((n for n in self.neighbours if n.id == neighbour_id), None)
+
     def character(self, character_id: str | None) -> Character | None:
         """The character with this id, if there is one."""
         return next((c for c in self.characters if c.id == character_id), None)
@@ -140,6 +148,7 @@ class Saga:
     def from_dict(cls, data: dict[str, Any]) -> Saga:
         d = dict(data)
         d["tribunals"] = [Tribunal.from_dict(t) for t in d.get("tribunals", [])]
+        d["neighbours"] = [Neighbour.from_dict(n) for n in d.get("neighbours", [])]
         raw_covenants = [dict(c) for c in d.get("covenants", [])]
         _tribunals_from_names(raw_covenants, d["tribunals"])
         d["covenants"] = [Covenant.from_dict(c) for c in raw_covenants]

@@ -17,6 +17,7 @@ from .models import (
     Covenant,
     Favour,
     Link,
+    Neighbour,
     Saga,
 )
 
@@ -70,7 +71,9 @@ def player_covenants(saga: Saga) -> list[Covenant]:
     return [c for c in saga.covenants if c.played]
 
 
-def attitude_toward(record: Character | Covenant, covenant_id: str) -> Attitude | None:
+def attitude_toward(
+    record: Character | Covenant | Neighbour, covenant_id: str
+) -> Attitude | None:
     """`record`'s attitude toward the player covenant `covenant_id`, or None
     when none is set."""
     attitudes: list[Attitude] = getattr(record, "attitudes", [])
@@ -168,9 +171,10 @@ def favour_rows(favours: list[Favour]) -> list[tuple[int | None, str]]:
     return rows
 
 
-def _records(saga: Saga) -> Iterator[Character | Covenant]:
+def _records(saga: Saga) -> Iterator[Character | Covenant | Neighbour]:
     yield from saga.covenants
     yield from saga.characters
+    yield from saga.neighbours
 
 
 def link_target(saga: Saga, link: Link) -> Any | None:
