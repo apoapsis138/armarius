@@ -8,31 +8,117 @@
       A crag above the Rhine where a dragon died.
           Edit (e)
 
-   1 Regio  2 Found Here
+   1 Regio  2 Roll Tables  3 Diary  4 Found Here
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Aura:       Magic 5
+  Next:       Level 2 opens, Summer 1220
   Regio:      2 levels
+  Can see:    Level 1: no one yet; Level 2: no one yet
   Gazetteer:  Visited, locally
   Claimed by: Keep
   Tethers:    The dragon's bones
   Here:       —
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Regio Levels (2)
 
-        Level    Name               Aura      To enter                    Can see
-      Can enter
-      ○ Level 2  The Vine Terraces  Magic 7   Per + Awareness against 12  no one yet
-      no one yet
-      ○ Level 1  The Mist Wood      Faerie 6  walk the path backwards a…  no one yet
+        Level    Name               Aura      To enter                Can enter
+      ○ Level 2  The Vine Terraces  Magic 7   Per + Awareness again…  no one yet
+      ○ Level 1  The Mist Wood      Faerie 6  walk the path backwar…
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Effects (2)
 
-        Effect      Amount       Where    Applies to             Note
-      ○ Lab totals  +2 Herbam    Level 2  Labs here              a lab built in the
-      regio
-      ○ Warping     +1 a season  Level 2  Anyone who lives here
+        Effect      Amount       Where    Applies to      Note
+      ○ Lab totals  +2 Herbam    Level 2  Labs here       a lab built in the regio
+      ○ Warping     +1 a season  Level 2  Who lives here
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Triggers (2)
+
+        Trigger         When                  Next         What happens           ▅▅
+      ○ Level 2 opens   Summer each year      Summer 1220  The terraces can be
+      reached
+
+
+===== tab-nb-tables
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     The Drachenfels
+
+      Kind:  Place                             Inside: The Siebengebirge
+      Realm: Magic                             Book:   core rules
+      A crag above the Rhine where a dragon died.
+          Edit (e)
+
+   1 Regio  2 Roll Tables  3 Diary  4 Found Here
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Roll Tables (1)
+
+        Table                    Die         Rows  Last rolled
+      ○ Who walks the Mist Wood  Simple die  3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-nb-place-diary
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     The Drachenfels
+
+      Kind:  Place                             Inside: The Siebengebirge
+      Realm: Magic                             Book:   core rules
+      A crag above the Rhine where a dragon died.
+          Edit (e)
+
+   1 Regio  2 Roll Tables  3 Diary  4 Found Here
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Diary (1)
+
+        When         What happened
+      ○ Autumn 1218  Leandro found the path backwards.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -51,7 +137,7 @@
       A crag above the Rhine where a dragon died.
           Edit (e)
 
-   1 Regio  2 Found Here
+   1 Regio  2 Roll Tables  3 Diary  4 Found Here
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

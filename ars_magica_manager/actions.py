@@ -52,6 +52,7 @@ from .sections import (
     SILVER_SECTIONS,
     SOURCES_SECTION,
     SPELL_SECTION,
+    TABLES_SECTION,
     TRAIT_SECTIONS,
     TRIBUNAL_INFO_SECTION,
 )
@@ -236,6 +237,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("t", "set_date", "Set Date"),
     MenuItem("w", "withdraw_case", "Withdraw"),
     MenuItem("r", "roll_fair", "Roll Income"),
+    MenuItem("r", "roll_table", "Roll"),
 )
 
 #: The More commands offered in one section only, by that section's id.
@@ -245,6 +247,7 @@ MORE_SECTIONS: dict[str, str] = {
     "edit_familiar_fatigue": "section-fam-health",
     "withdraw_case": CASES_SECTION,
     "roll_fair": FAIRS_SECTION,
+    "roll_table": TABLES_SECTION,
 }
 
 #: Where in the navigation each record can be created: the saga, and

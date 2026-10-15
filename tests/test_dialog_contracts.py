@@ -538,6 +538,35 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Art or realm": "Lettuce"},
         shown={"#nb-effects-list": "+3 Herbam"},
     ),
+    "add trigger": Contract(
+        prefill={"Trigger": "", "Comes": "Once"},
+        edits={
+            "Trigger": "Level 3 opens",
+            "Season": "Summer",
+            "Year": "1221",
+            "What happens": "The Hall of Stones can be reached",
+        },
+        saved=lambda s: s.neighbour("drachenfels").details["triggers"][-1]["year"],
+        expected=1221,
+        invalid=[{"Trigger": ""}, {"Year": ""}],
+        shown={"#nb-triggers-list": "Level 3 opens"},
+    ),
+    "edit roll table": Contract(
+        prefill={"Table": "Who walks the Mist Wood", "Die": "Simple die"},
+        edits={"Rows": "1-9: No one\n10: The king"},
+        saved=lambda s: s.neighbour("drachenfels").details["tables"][0]["rows"],
+        expected="1-9: No one\n10: The king",
+        invalid=[{"Table": ""}, {"Rows": "a stag"}],
+        shown={"#nb-tables-list": "Who walks the Mist Wood"},
+    ),
+    "add place diary entry": Contract(
+        prefill={"Year": "1220"},
+        edits={"What happened": "The mist lifted for a day."},
+        saved=lambda s: s.neighbour("drachenfels").details["diary"][-1]["text"],
+        expected="The mist lifted for a day.",
+        invalid={"What happened": ""},
+        shown={"#nb-place-diary-list": "The mist lifted"},
+    ),
     "edit tribunal": Contract(
         prefill={
             "Name": "Rhine",

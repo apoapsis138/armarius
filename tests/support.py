@@ -616,6 +616,24 @@ def everything_saga() -> Saga:
                         | {"where": "2", "note": "a lab built in the regio"},
                         {"what": "warping_per_season", "amount": 1, "where": "2"},
                     ],
+                    "triggers": [
+                        {"name": "Level 2 opens", "when": "Each year"}
+                        | {"season": "Summer", "what": "The terraces can be reached"},
+                        {"name": "The white stag", "when": "Every N years"}
+                        | {"season": "Winter", "year": 1218, "every": 7}
+                        | {"what": "It walks the Mist Wood: roll"},
+                    ],
+                    "tables": [
+                        {
+                            "name": "Who walks the Mist Wood",
+                            "die": "Simple die",
+                            "rows": "1-5: No one\n6-9: A white stag\n10: The king",
+                        }
+                    ],
+                    "diary": [
+                        {"year": 1218, "season": "Autumn"}
+                        | {"text": "Leandro found the path backwards."}
+                    ],
                 },
             ),
         ],

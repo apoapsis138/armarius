@@ -133,6 +133,20 @@ OPTIONS: tuple[RuleOption, ...] = (
         ),
         book="RoP:D",
     ),
+    RuleOption(
+        key="aura_change",
+        label="Auras change",
+        effect=(
+            "A Magic aura rises by 1 on a yearly stress die, plus the magic "
+            "worked there, against 15; an Infernal aura whose focus is gone "
+            "falls by 1 after as many years as its strength."
+        ),
+        source=(
+            "Realms of Power: Magic, Chapter Two: Magic Auras, Changing an "
+            "Aura, as summarised in The Mysteries and Mythic Locations"
+        ),
+        book="RoP:M",
+    ),
 )
 
 OPTIONS_BY_KEY: dict[str, RuleOption] = {option.key: option for option in OPTIONS}

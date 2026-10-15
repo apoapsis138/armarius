@@ -8,8 +8,8 @@ import random
 
 from support import everything_saga
 
-from ars_magica_manager import laboratory_sheet, neighbour_forms, places
-from ars_magica_manager.commands import Confirm, Form
+from ars_magica_manager import laboratory_sheet, neighbour_forms, place_events, places
+from ars_magica_manager.commands import Confirm, Form, Refuse
 from ars_magica_manager.covenant_forms import covenant_form
 from ars_magica_manager.laboratory_forms import identity_form
 from ars_magica_manager.models import Ability, Neighbour
@@ -188,3 +188,86 @@ def test_new_place_is_offered_and_made():
         "siebengebirge",
         2,
     )
+
+
+def test_a_dated_trigger_comes_on_its_next_date():
+    saga = everything_saga()
+    saga.current_year, saga.current_season = 1220, "Autumn"
+    drachenfels = _drachenfels(saga)
+    yearly, every = place_events.triggers(drachenfels)
+    assert place_events.next_date(saga, yearly) == (1221, "Summer")
+    assert place_events.next_date(saga, every) == (1225, "Winter")
+    assert place_events.when_text(every) == "Winter every 7 years"
+    once = {"name": "Level 3 opens", "when": "Once", "season": "Winter", "year": 1220}
+    assert place_events.next_date(saga, once) == (1220, "Winter")
+    once["year"] = 1219
+    assert place_events.next_date(saga, once) is None
+    assert place_events.next_date(saga, {"name": "x", "when": "Whenever"}) is None
+    assert place_events.next_text(saga, drachenfels) == "Level 2 opens, Summer 1221"
+    facts = {f.label: f.value for f in place_events.place_facts(saga, drachenfels)}
+    assert facts["Next"] == "Level 2 opens, Summer 1221"
+
+
+def test_a_trigger_needs_what_its_kind_of_date_needs():
+    problem = place_events._trigger_problem
+    assert problem({"when": "Once", "season": "Summer", "year": None})
+    assert problem({"when": "Each year", "season": None})
+    assert problem({"when": "Every N years", "season": "Winter", "every": 0})
+    assert problem({"when": "Whenever", "what": ""})
+    assert problem({"when": "Each year", "season": "Summer"}) is None
+
+
+def test_a_roll_table_reads_its_rows_and_writes_to_the_diary():
+    rows = place_events.parse_rows("1-3: Nothing\n4: A hare\n9+: The Hall\nbotch: Mist")
+    assert rows is not None
+    assert [r.result for r in rows if r.covers(4, False)] == ["A hare"]
+    assert [r.result for r in rows if r.covers(12, False)] == ["The Hall"]
+    assert [r.result for r in rows if r.covers(0, True)] == ["Mist"]
+    assert place_events.parse_rows("a stag") is None
+    saga = everything_saga()
+    drachenfels = _drachenfels(saga)
+    before = len(place_events.diary(drachenfels))
+    command = place_events.roll_table(saga, drachenfels, 0, random.Random(1))
+    assert isinstance(command, Confirm)
+    assert command.yes_label == "Write"
+    command.apply()
+    entry = place_events.diary(drachenfels)[-1]
+    assert len(place_events.diary(drachenfels)) == before + 1
+    assert entry["text"].startswith("Who walks the Mist Wood: rolled ")
+    assert place_events.tables(drachenfels)[0]["last"].startswith("Spring 1220: ")
+    assert isinstance(place_events.roll_table(saga, drachenfels, 5), Refuse)
+
+
+def test_auras_change_only_with_the_option():
+    saga = everything_saga()
+    drachenfels = _drachenfels(saga)
+    assert place_events.change_text(saga, drachenfels) == ""
+    assert place_events.raise_aura(saga, drachenfels, random.Random(1)) == ""
+    keys = [f.key for f in place_events.place_fields(saga, drachenfels)]
+    assert "raising" not in keys
+    saga.rule_options["aura_change"] = True
+    keys = [f.key for f in place_events.place_fields(saga, drachenfels)]
+    assert "raising" in keys and "focus_gone" in keys
+    drachenfels.details["raising"] = 30  # sure to rise
+    assert "rose to Magic 6" in place_events.raise_aura(
+        saga, drachenfels, random.Random(1)
+    )
+    assert drachenfels.details["aura"] == 6
+    assert "aura rose" in place_events.diary(drachenfels)[-1]["text"]
+    facts = {f.label: f.value for f in place_events.place_facts(saga, drachenfels)}
+    assert facts["Aura change"].startswith("Rises by 1 on a stress die +30")
+
+
+def test_an_infernal_aura_fades_once_its_focus_is_gone():
+    saga = everything_saga()
+    saga.rule_options["aura_change"] = True
+    pit = Neighbour(id="pit", name="The Pit", kind="place", realm="Infernal")
+    pit.details = {"aura": 3}
+    assert place_events.change_text(saga, pit) == "Steady while its focus remains"
+    pit.details["focus_gone"] = 1215  # 3 to 2 in 1218, to 1 in 1220
+    saga.current_year = 1220
+    assert place_events.infernal_aura(saga, pit) == 1
+    saga.current_year = 1219
+    assert place_events.change_text(saga, pit) == "Fading: Infernal 2 this year"
+    saga.current_year = 1221
+    assert place_events.infernal_aura(saga, pit) == 0

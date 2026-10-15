@@ -243,8 +243,9 @@ def neighbour_ops(saga: Saga, neighbour: Neighbour) -> dict[str, SectionOps]:
 
 def tab_lists(neighbour: Neighbour) -> tuple[KindList, ...]:
     """The lists the neighbour's kind adds to its sheet."""
-    tab = neighbours.kind_of(neighbour).tab
-    return tab.lists if tab is not None else ()
+    kind = neighbours.kind_of(neighbour)
+    tabs = ([kind.tab] if kind.tab is not None else []) + list(kind.more)
+    return tuple(entry for tab in tabs for entry in tab.lists)
 
 
 def delete_neighbour(saga: Saga, neighbour: Neighbour) -> Confirm:

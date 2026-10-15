@@ -51,7 +51,7 @@ from .models import (
     Saga,
     VirtueFlawInstance,
 )
-from .neighbour_lists import KindList, KindTab, details_list, list_ops
+from .neighbour_lists import KindList, details_list, list_ops
 from .rules import effects as fx
 from .sections import EFFECTS_SECTION, LEVELS_SECTION
 
@@ -80,9 +80,9 @@ EFFECT_TYPES: dict[str, EffectType] = {
     t.key: t
     for t in (
         EffectType("lab_total", "Lab totals", "Labs here"),
-        EffectType("aging_roll", "Aging rolls", "Anyone who lives here"),
-        EffectType("living_conditions", "Living Conditions", "Anyone who lives here"),
-        EffectType("warping_per_season", "Warping", "Anyone who lives here"),
+        EffectType("aging_roll", "Aging rolls", "Who lives here"),
+        EffectType("living_conditions", "Living Conditions", "Who lives here"),
+        EffectType("warping_per_season", "Warping", "Who lives here"),
         EffectType("aura", "The aura", "Everything here"),
     )
 }
@@ -479,9 +479,15 @@ def facts(saga: Saga, place: Neighbour) -> list[Fact]:
     )
     shown = levels(place)
     regio = f"{len(shown)} level{'' if len(shown) == 1 else 's'}" if shown else "none"
+    seen = [
+        f"Level {index}: {who_can_text(saga, entry.get('see', ''))}"
+        for index, entry in enumerate(shown, start=1)
+        if parse_roll(entry.get("see", "")) is not None
+    ]
     return [
         Fact("Aura", aura_text(place)),
         Fact("Regio", regio),
+        *([Fact("Can see", "; ".join(seen))] if seen else []),
         Fact("Gazetteer", status),
         Fact("Claimed by", claimed.name if claimed is not None else ""),
         Fact("Tethers", d.get("tethers", "")),
@@ -555,8 +561,8 @@ def levels_title(_saga: Saga, place: Neighbour) -> str:
 
 def levels_grid(saga: Saga, place: Neighbour) -> Grid:
     """Each level, deepest first (the surface's aura is the place's own):
-    its aura, how to enter it, and who can see and enter it without a
-    die."""
+    its aura, how to enter it, and who can enter it without a die (who
+    can see it is among the place's facts)."""
     shown = levels(place)
     rows = []
     keys: list[int | None] = []  # deepest first, so each row's own index
@@ -568,17 +574,16 @@ def levels_grid(saga: Saga, place: Neighbour) -> Grid:
                 entry.get("name", ""),
                 aura_text(place, index + 1),
                 entry.get("enter", ""),
-                who_can_text(saga, entry.get("see", "")),
                 who_can_text(saga, entry.get("enter", "")),
             ]
         )
         keys.append(index)
     return Grid(
-        ["Level", "Name", "Aura", "To enter", "Can see", "Can enter"],
+        ["Level", "Name", "Aura", "To enter", "Can enter"],
         rows,
         keys,
         "No regio: add its levels, from just above the surface upward.",
-        caps=[8, 20, 10, 26, 16, 0],
+        caps=[7, 18, 9, 22, 0],
         stretch=3,
     )
 
@@ -691,7 +696,7 @@ def effects_grid(_saga: Saga, place: Neighbour) -> Grid:
         list(range(len(rows))),
         "No effects: a lab bonus, Warping, an aging change or an aura that "
         "replaces a level's.",
-        caps=[17, 16, 16, 21, 0],
+        caps=[17, 12, 14, 15, 0],
         stretch=4,
     )
 
@@ -765,11 +770,8 @@ def effect_ops(saga: Saga, place: Neighbour) -> SectionOps:
     )
 
 
-TAB = KindTab(
-    "Regio",
-    "tab-nb-place",
-    (
-        KindList(LEVELS_SECTION, levels_title, levels_grid, level_ops),
-        KindList(EFFECTS_SECTION, effects_title, effects_grid, effect_ops),
-    ),
+#: The lists on a place's Regio tab (place_events adds its triggers).
+LISTS = (
+    KindList(LEVELS_SECTION, levels_title, levels_grid, level_ops),
+    KindList(EFFECTS_SECTION, effects_title, effects_grid, effect_ops),
 )

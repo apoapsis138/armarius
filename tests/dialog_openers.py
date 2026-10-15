@@ -267,6 +267,16 @@ OPENERS: dict[str, Opener] = {
             lambda ws: ws._core_verb("section-nb-effects", "edit"), "nb-effects-list"
         ),
     ),
+    "add trigger": Opener(
+        "place", lambda ws: ws._core_verb("section-nb-triggers", "add")
+    ),
+    "edit roll table": Opener(
+        "place",
+        _pick(lambda ws: ws._core_verb("section-nb-tables", "edit"), "nb-tables-list"),
+    ),
+    "add place diary entry": Opener(
+        "place", lambda ws: ws._core_verb("section-nb-place-diary", "add")
+    ),
     "edit tribunal": Opener(
         "tribunal", lambda ws: ws._core_verb("section-trib-info", "edit")
     ),

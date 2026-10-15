@@ -338,10 +338,20 @@ comes back if it is moved out, so its Edit form doesn't ask for an aura
 while it is placed. A laboratory placed in a regio of its own takes that
 level's aura instead of its covenant's.
 
-Its Regio tab shows the place's regio levels and its effects; its
-Found Here tab its favours and links (the vis sources, books and
-creatures found there). Deleting a place leaves what was in it placed
-nowhere.
+Its Regio tab shows what is worked out for it (its next trigger, and
+how its aura changes with the Auras change option), its regio levels,
+its effects and its triggers; its Roll Tables and Diary tabs its tables
+and what has happened there; its Found Here tab its favours and links
+(the vis sources, books and creatures found there). Deleting a place
+leaves what was in it placed nowhere.
+
+With the **Auras change** Rule Option on (Realms of Power: Magic, in
+Saga Content), Edit also asks for **Magic worked there** (+1 to +3 for
+lab work, spells and vis study) and, for an Infernal place, the year
+its **Infernal focus** was removed. A Magic aura then rises by 1 on a
+yearly stress die plus the magic worked there against 15, and an
+Infernal aura whose focus is gone falls by 1 after as many years as its
+strength, until it is gone.
 
 **See also:** [A neighbour](help:neighbour)
 
@@ -373,3 +383,48 @@ level and those above it:
   named.
 
 Add, edit or delete one.
+
+## Triggers
+<!-- help: section-nb-triggers -->
+
+What comes at the place, and when: **once** (a season and year), **each
+year** (a season), **every N years** (a season, and a year it comes),
+or **whenever** something happens (say what in What happens). The
+dated ones show their next date, and the soonest is the place's Next.
+Add, edit or delete one.
+
+## Roll Tables tab
+<!-- help: tab-nb-tables -->
+
+The place's roll tables: what the troupe might meet there, or what a
+night in the regio brings.
+
+## Roll Tables
+<!-- help: section-nb-tables -->
+
+Each table names its die (a simple die, a stress die, a d6 or a d10)
+and its rows, one a line: "1-3: Nothing stirs", "4: A hare", "9+: The
+Hall opens", and for a stress die "botch: The mist closes".
+
+<!-- tui -->
+More (`m`) > **Roll** rolls the chosen table and shows the row it lands
+on; **Write** puts it in the place's diary.
+<!-- /tui -->
+<!-- gui -->
+**Roll** rolls the chosen table and shows the row it lands on; **Write**
+puts it in the place's diary.
+<!-- /gui -->
+
+Add, edit or delete one.
+
+## Diary tab
+<!-- help: tab-nb-place-diary -->
+
+What has happened at the place.
+
+## Diary
+<!-- help: section-nb-place-diary -->
+
+What has happened at the place, a line each, with the season it
+happened: the rolls on its tables, the aura rising, or anything the
+storyguide writes. Add, edit or delete an entry.

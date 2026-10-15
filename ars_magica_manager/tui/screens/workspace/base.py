@@ -50,6 +50,7 @@ from .... import (
     menu_forms,
     neighbour_forms,
     neighbours,
+    place_events,
     presence,
     seasons,
     sourcebooks,
@@ -99,9 +100,11 @@ from ....rules import creation_covenant as cov_creation
 from ....rules import options as rule_options
 from ....sections import (
     CASES_SECTION,
+    DIARY_SECTION,
     FAIRS_SECTION,
     NEIGHBOUR_INFO_SECTION,
     REGION_INFO_SECTION,
+    TABLES_SECTION,
     TRIBUNAL_INFO_SECTION,
 )
 from ... import hosting
@@ -289,6 +292,7 @@ _STORYGUIDE_ACTIONS = frozenset(
         "create_tribunal",
         "create_neighbour",
         "roll_fair",
+        "roll_table",
         "create_character",
         "create_laboratory",
         "create_familiar",
@@ -1934,6 +1938,18 @@ class WorkspaceBase(Screen[None]):
             self.app,
             towns.roll_fair(self.saga, view.neighbour, row),
             lambda _end: self._commit(FAIRS_SECTION),
+        )
+
+    def action_roll_table(self) -> None:
+        """More's Roll on a place's chosen roll table."""
+        view = self._neighbour_sheet_view
+        row = view.section_row(TABLES_SECTION) if view is not None else None
+        if view is None or row is None:
+            return
+        run_steps(
+            self.app,
+            place_events.roll_table(self.saga, view.neighbour, row),
+            lambda _end: self._commit(TABLES_SECTION, DIARY_SECTION),
         )
 
     def action_create_character(self) -> None:

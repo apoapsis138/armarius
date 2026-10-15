@@ -1806,6 +1806,36 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-nb-triggers": {
+      "active": "section-nb-triggers",
+      "keys": {
+        "a": "FieldsDialog: Add a Trigger",
+        "e": "FieldsDialog: Edit a Trigger",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-tables": {
+      "active": "section-nb-tables",
+      "keys": {
+        "a": "FieldsDialog: Add a Roll Table",
+        "e": "FieldsDialog: Edit a Roll Table",
+        "d": "ConfirmScreen",
+        "m": "ConfirmScreen",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-place-diary": {
+      "active": "section-nb-place-diary",
+      "keys": {
+        "a": "FieldsDialog: Add a Diary Entry",
+        "e": "FieldsDialog: Edit a Diary Entry",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-favours": {
       "active": "section-favours",
       "keys": {

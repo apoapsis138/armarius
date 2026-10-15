@@ -19,6 +19,7 @@ from . import (
     churches,
     factions,
     lords,
+    place_events,
     places,
     sourcebooks,
     storage,
@@ -79,8 +80,10 @@ class NeighbourKind:
     problem: Callable[[dict[str, Any]], str | None] | None = None
     #: What is worked out for one of its neighbours, shown on its tab.
     facts: Callable[[Saga, Neighbour], list[Fact]] | None = None
-    #: The tab it adds to its neighbours' sheets.
+    #: The tab it adds to its neighbours' sheets (what it works out, then
+    #: its lists), and any more tabs of lists after it.
     tab: KindTab | None = None
+    more: tuple[KindTab, ...] = ()
     #: Whether it holds an attitude toward the troupe (a place doesn't),
     #: and which common fields it has no use for.
     attitude: bool = True
@@ -168,10 +171,11 @@ for _kind in (
         "a forest, a ruin, a regio",
         "places",
         "",
-        places.fields,
+        place_events.place_fields,
         places.problem,
-        places.facts,
-        places.TAB,
+        place_events.place_facts,
+        place_events.REGIO_TAB,
+        (place_events.TABLES_TAB, place_events.DIARY_TAB),
         attitude=False,
         hides=frozenset({"detail", "ruler", "answers_to"}),
     ),

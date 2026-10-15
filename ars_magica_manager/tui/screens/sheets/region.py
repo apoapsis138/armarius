@@ -187,6 +187,10 @@ class NeighbourSheetView(SheetView):
             tab = self.kind.tab
             if tab is not None:
                 yield self._tab(tab.title, tab.tab_id, partial(self._kind_tab, tab))
+            for more in self.kind.more:
+                yield self._tab(
+                    more.title, more.tab_id, partial(self._kind_tab, more, facts=False)
+                )
             yield self._tab(
                 "Standing" if self.kind.attitude else "Found Here",
                 "tab-nb-standing",
@@ -198,12 +202,13 @@ class NeighbourSheetView(SheetView):
         so its tab is no longer theirs."""
         return neighbours.kind_of(self.neighbour) is not self.kind
 
-    def _kind_tab(self, tab: KindTab) -> ComposeResult:
-        """What the kind works out, then its lists."""
+    def _kind_tab(self, tab: KindTab, facts: bool = True) -> ComposeResult:
+        """What the kind works out (on its first tab), then its lists."""
         saga, n = self.saga, self.neighbour
         watched = (NEIGHBOUR_INFO_SECTION, *(e.section_id for e in tab.lists))
         with VerticalScroll():
-            yield self._static(watched, self._kind_facts, id="nb-kind-facts")
+            if facts:
+                yield self._static(watched, self._kind_facts, id="nb-kind-facts")
             for entry in tab.lists:
                 with SheetSection(
                     title=self._titled(

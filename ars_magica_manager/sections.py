@@ -148,6 +148,10 @@ STAGES_SECTION = "section-nb-stages"
 #: A place's regio levels and effects.
 LEVELS_SECTION = "section-nb-levels"
 EFFECTS_SECTION = "section-nb-effects"
+#: A place's triggers, roll tables and diary.
+TRIGGERS_SECTION = "section-nb-triggers"
+TABLES_SECTION = "section-nb-tables"
+DIARY_SECTION = "section-nb-place-diary"
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),
@@ -183,4 +187,7 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     STAGES_SECTION: frozenset({"add", "edit", "remove"}),
     LEVELS_SECTION: frozenset({"add", "edit", "remove"}),
     EFFECTS_SECTION: frozenset({"add", "edit", "remove"}),
+    TRIGGERS_SECTION: frozenset({"add", "edit", "remove"}),
+    TABLES_SECTION: frozenset({"add", "edit", "remove"}),
+    DIARY_SECTION: frozenset({"add", "edit", "remove"}),
 }

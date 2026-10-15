@@ -46,6 +46,23 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.76.0 — 2026-10-15
+
+- **Triggers.** A place's Regio tab lists its triggers: what comes once,
+  each year, every few years, or whenever something happens. The dated
+  ones show their next date, and the soonest is shown as the place's
+  Next.
+- **Roll tables.** A place has a Roll Tables tab: name the die and write
+  the rows ("1-3: Nothing stirs", "9+: The Hall opens"), then More >
+  Roll (or the Roll button on the desktop) rolls it and writes the
+  result to the place's new Diary tab.
+- **Auras change**, a new Rule Option with Realms of Power: Magic in
+  play: a Magic aura can rise by 1 on a yearly stress die plus the magic
+  worked there against 15, and an Infernal aura whose focus is gone
+  fades by 1 after as many years as its strength.
+- Who can see each regio level now shows among the place's facts, which
+  leaves room for the level list at narrower windows.
+
 ## 2.75.0 — 2026-10-15
 
 - **Places and regiones.** The Region has a list of Places: forests,
