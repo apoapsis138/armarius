@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -20,6 +21,7 @@ from .familiar import Familiar
 from .laboratory import Laboratory
 from .seasons import LabProject, SeasonPlan, SeasonRecord
 from .traits import Spell
+from .tribunal import Tribunal
 
 
 @dataclass
@@ -64,6 +66,8 @@ class Saga:
     current_year: int = 1220
     current_season: str = "Spring"
     covenants: list[Covenant] = field(default_factory=list)
+    #: The Tribunals of the saga's region; each covenant names its own.
+    tribunals: list[Tribunal] = field(default_factory=list)
     characters: list[Character] = field(default_factory=list)
     laboratories: list[Laboratory] = field(default_factory=list)
     books: list[Book] = field(default_factory=list)
@@ -120,6 +124,10 @@ class Saga:
         """The covenant with this id, if there is one."""
         return next((c for c in self.covenants if c.id == covenant_id), None)
 
+    def tribunal(self, tribunal_id: str | None) -> Tribunal | None:
+        """The Tribunal with this id, if there is one."""
+        return next((t for t in self.tribunals if t.id == tribunal_id), None)
+
     def character(self, character_id: str | None) -> Character | None:
         """The character with this id, if there is one."""
         return next((c for c in self.characters if c.id == character_id), None)
@@ -131,7 +139,10 @@ class Saga:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Saga:
         d = dict(data)
-        d["covenants"] = [Covenant.from_dict(c) for c in d.get("covenants", [])]
+        d["tribunals"] = [Tribunal.from_dict(t) for t in d.get("tribunals", [])]
+        raw_covenants = [dict(c) for c in d.get("covenants", [])]
+        _tribunals_from_names(raw_covenants, d["tribunals"])
+        d["covenants"] = [Covenant.from_dict(c) for c in raw_covenants]
         d["characters"] = [Character.from_dict(c) for c in d.get("characters", [])]
         d["laboratories"] = [
             Laboratory.from_dict(lab) for lab in d.get("laboratories", [])
@@ -172,6 +183,31 @@ class Saga:
         _link_vis_store_locations(saga)
         _key_lab_text_access_by_author(saga)
         return saga
+
+
+def _tribunals_from_names(
+    covenants: list[dict[str, Any]], tribunals: list[Tribunal]
+) -> None:
+    """Older saves typed a covenant's Tribunal as text: each distinct name
+    becomes a Tribunal record (the core rules, nothing else filled in) and
+    the covenant points at it. Covenants that typed the same name, in any
+    case, share one; a name matching a Tribunal already there joins it."""
+    by_name = {t.name.strip().casefold(): t for t in tribunals}
+    for covenant in covenants:
+        name = (covenant.pop("tribunal", None) or "").strip()
+        if not name or covenant.get("tribunal_id"):
+            continue
+        tribunal = by_name.get(name.casefold())
+        if tribunal is None:
+            taken = {t.id for t in tribunals}
+            base = re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_") or "tribunal"
+            ident, n = base, 2
+            while ident in taken:
+                ident, n = f"{base}_{n}", n + 1
+            tribunal = Tribunal(id=ident, name=name)
+            tribunals.append(tribunal)
+            by_name[name.casefold()] = tribunal
+        covenant["tribunal_id"] = tribunal.id
 
 
 def _key_lab_text_access_by_author(saga: Saga) -> None:

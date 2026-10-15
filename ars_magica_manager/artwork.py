@@ -80,6 +80,8 @@ ICON_NAMES: dict[str, str] = {
     "lab_text": "scroll",
     "familiar": "paw-print",
     "players": "users-three",
+    # A Tribunal: the magi of a region in council.
+    "tribunal": "users-three",
     "enchanted_item": "magic-wand",
     # Time and resources
     "season": "hourglass-medium",

@@ -33,3 +33,4 @@ from .lists import PlayersView as PlayersView
 from .lists import SpellListView as SpellListView
 from .saga_content import TAB_SECTIONS as TAB_SECTIONS
 from .saga_content import SagaContentSheetView as SagaContentSheetView
+from .tribunal import TribunalSheetView as TribunalSheetView

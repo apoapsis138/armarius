@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, menu_forms
+from .. import artwork, menu_forms, tribunal_sheet
 from .. import character_sheet as cs
 from .. import familiar_sheet as fs
 from .. import saga_content_sheet as scs
@@ -272,9 +272,11 @@ class SagaPage(QWidget):
         placer: Placer | None = None,
         open_character: Open = lambda _id: None,
         open_laboratory: Open = lambda _id: None,
+        open_tribunal: Open = lambda _id: None,
     ) -> None:
         super().__init__()
         self.saga, self.p = saga, p
+        self.open_tribunal = open_tribunal
         self.placer = placer
         self.open_covenant = open_covenant
         self.open_character, self.open_laboratory = open_character, open_laboratory
@@ -321,6 +323,23 @@ class SagaPage(QWidget):
                 covenant_id
             )
             covenants.append(card)
+        courts: list[QWidget] = []
+        for tribunal in saga.tribunals:
+            card = ClickableCard(p, pad=16)
+            card_title(
+                card,
+                tribunal.name,
+                f"Next meeting: {tribunal_sheet.next_meeting(tribunal)}",
+                p,
+                symbol_label(artwork.icon("tribunal"), p),
+            )
+            card.column.addWidget(
+                fact_grid(tribunal_sheet.facts(saga, tribunal)[5:], p, 3)
+            )
+            card.clicked = lambda tribunal_id=tribunal.id: self.open_tribunal(
+                tribunal_id
+            )
+            courts.append(card)
         people = [
             person_card(saga, c, p, self.open_character) for c in ov.members(saga, None)
         ]
@@ -328,6 +347,7 @@ class SagaPage(QWidget):
         parts: list[QWidget] = []
         for title, cards, across in (
             ("Covenants", covenants, 2),
+            ("Tribunals", courts, 2),
             ("Unassigned Characters", people, CARDS_ACROSS),
             ("Unassigned Laboratories", labs, 2),
         ):

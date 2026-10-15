@@ -53,6 +53,8 @@ from .... import (
     sourcebooks,
     storage,
     transfer,
+    tribunal_forms,
+    tribunals,
 )
 from .... import books as bk
 from .... import familiars as fam
@@ -69,6 +71,7 @@ from ....actions import (
 from ....markup import escape
 from ....models import (
     FOCUS_FLAWS,
+    FULL,
     Ability,
     Character,
     CharacterTemplateDef,
@@ -80,6 +83,7 @@ from ....models import (
     Saga,
     ScoredTrait,
     SeasonPlan,
+    Tribunal,
     VirtueFlawInstance,
     link_unlinked_features,
     new_instance_id,
@@ -89,6 +93,7 @@ from ....rules import creation as creation_rules
 from ....rules import creation_characteristics as cch
 from ....rules import creation_covenant as cov_creation
 from ....rules import options as rule_options
+from ....sections import TRIBUNAL_INFO_SECTION
 from ... import hosting
 from ..creation_worksheet import CreationWorksheetScreen
 from ..fields import (
@@ -132,6 +137,7 @@ from ..sheets import (
     LaboratorySheetView,
     SagaContentSheetView,
     SheetView,
+    TribunalSheetView,
 )
 from ..steps import run_steps
 from ..widgets import (
@@ -251,6 +257,8 @@ _HELP_PAGES: dict[NodeKind, str] = {
     NodeKind.BOOK_GROUP: "unassigned-books",
     NodeKind.SEASONS: "seasons",
     NodeKind.SAGA_CONTENT: "saga-content",
+    NodeKind.REGION: "region",
+    NodeKind.TRIBUNAL: "tribunal",
 }
 
 #: How often, in seconds, a hosted saga's copies look for each other's saves
@@ -264,6 +272,7 @@ _STORYGUIDE_ACTIONS = frozenset(
     {
         "new",
         "create_covenant",
+        "create_tribunal",
         "create_character",
         "create_laboratory",
         "create_familiar",
@@ -329,10 +338,15 @@ DETAIL_PANE_ID = "detail-pane"
 
 
 def _deletion_of(
-    saga: Saga, record: Covenant | Character | Laboratory | Familiar
+    saga: Saga, record: Covenant | Character | Laboratory | Familiar | Tribunal
 ) -> tuple[list[str], Callable[[], None]]:
     """What deleting `record` would do, for the confirmation, and the
     function that does it."""
+    if isinstance(record, Tribunal):
+        return (
+            tribunals.deletion_consequences(saga, record),
+            partial(tribunals.delete, saga, record),
+        )
     if isinstance(record, Covenant):
         return (
             deletion.covenant_consequences(saga, record),
@@ -425,7 +439,9 @@ class _ScreenFacts:
     def record_to_export(self) -> transfer.Record | None:
         return self._screen._record_to_export()
 
-    def record_to_delete(self) -> Covenant | Character | Laboratory | Familiar | None:
+    def record_to_delete(
+        self,
+    ) -> Covenant | Character | Laboratory | Familiar | Tribunal | None:
         return self._screen._record_to_delete()
 
     def can_send_files(self) -> bool:
@@ -503,6 +519,7 @@ class WorkspaceBase(Screen[None]):
         NodeKind.LABORATORY: (set(), None),
         NodeKind.COVENANT: (_COVENANT_DISPATCH_TABS, "section-cov-info"),
         NodeKind.FAMILIAR: (_FAMILIAR_DISPATCH_TABS, "section-fam-info"),
+        NodeKind.TRIBUNAL: (set(), TRIBUNAL_INFO_SECTION),
     }
 
     DEFAULT_CSS = """
@@ -531,11 +548,13 @@ class WorkspaceBase(Screen[None]):
         self.selected_character: Character | None = None
         self.selected_laboratory: Laboratory | None = None
         self.selected_familiar: Familiar | None = None
+        self.selected_tribunal: Tribunal | None = None
         self._character_sheet_view: CharacterSheetView | None = None
         self._laboratory_sheet_view: LaboratorySheetView | None = None
         self._covenant_sheet_view: CovenantSheetView | None = None
         self._familiar_sheet_view: FamiliarSheetView | None = None
         self._saga_content_view: SagaContentSheetView | None = None
+        self._tribunal_sheet_view: TribunalSheetView | None = None
         #: One detail-pane swap at a time (see _set_detail).
         self._detail_lock = asyncio.Lock()
         #: While the Footer's keys are worked out (active_bindings), what
@@ -601,6 +620,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.FAMILIAR: ("familiars", self.selected_familiar),
             NodeKind.LABORATORY: ("laboratories", self.selected_laboratory),
             NodeKind.COVENANT: ("covenants", self.selected_covenant),
+            NodeKind.TRIBUNAL: ("tribunals", self.selected_tribunal),
         }
         kind, record = records.get(self.selected_kind, ("", None))
         return f"{kind}:{record.id}" if record is not None else None
@@ -669,6 +689,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.FAMILIAR: (self.saga.familiars, self.selected_familiar),
             NodeKind.LABORATORY: (self.saga.laboratories, self.selected_laboratory),
             NodeKind.COVENANT: (self.saga.covenants, self.selected_covenant),
+            NodeKind.TRIBUNAL: (self.saga.tribunals, self.selected_tribunal),
         }
         listed, record = records.get(self.selected_kind, ([], None))
         return record is None or any(r is record for r in listed)
@@ -702,37 +723,12 @@ class WorkspaceBase(Screen[None]):
         tree.reset(escape(self.saga.name), data=(NodeKind.SAGA,))
         tree.root.expand()
 
+        # The troupe's covenants at the top; the others in the Region,
+        # each under its Tribunal.
         for covenant in self.saga.covenants:
-            cov_node = tree.root.add(
-                escape(covenant.name) + _creating(covenant),
-                data=(NodeKind.COVENANT, covenant.id),
-                expand=True,
-            )
-
-            characters = [
-                c for c in self.saga.characters if c.covenant_id == covenant.id
-            ]
-            char_group = cov_node.add(
-                f"Characters ({len(characters)})",
-                data=(NodeKind.CHARACTER_GROUP, covenant.id),
-                expand=True,
-            )
-            for character in characters:
-                self._add_character_node(char_group, character)
-
-            labs = [
-                lab for lab in self.saga.laboratories if lab.covenant_id == covenant.id
-            ]
-            lab_group = cov_node.add(
-                f"Laboratories ({len(labs)})",
-                data=(NodeKind.LABORATORY_GROUP, covenant.id),
-                expand=True,
-            )
-            for lab in labs:
-                lab_group.add_leaf(
-                    escape(lab.name) + _creating(lab),
-                    data=(NodeKind.LABORATORY, lab.id),
-                )
+            if covenant.played:
+                self._add_covenant_node(tree.root, covenant, expand=True)
+        self._add_region(tree.root)
 
         # Characters and labs with no (or a no-longer-existing) covenant live
         # directly under the saga -- assigning to a covenant is optional, and
@@ -775,6 +771,58 @@ class WorkspaceBase(Screen[None]):
         )
         tree.root.add_leaf("Saga Content", data=(NodeKind.SAGA_CONTENT,))
 
+    def _add_covenant_node(self, parent, covenant: Covenant, *, expand: bool) -> None:
+        """A covenant's node, with its characters and laboratories under it.
+        A covenant kept at Line or Sketch detail lists only the groups it
+        has anything in."""
+        characters = [c for c in self.saga.characters if c.covenant_id == covenant.id]
+        labs = [lab for lab in self.saga.laboratories if lab.covenant_id == covenant.id]
+        label = escape(covenant.name) + _creating(covenant)
+        data = (NodeKind.COVENANT, covenant.id)
+        full = covenant.detail == FULL
+        if not full and not characters and not labs:
+            parent.add_leaf(label, data=data)
+            return
+        cov_node = parent.add(label, data=data, expand=expand)
+        if full or characters:
+            char_group = cov_node.add(
+                f"Characters ({len(characters)})",
+                data=(NodeKind.CHARACTER_GROUP, covenant.id),
+                expand=True,
+            )
+            for character in characters:
+                self._add_character_node(char_group, character)
+        if full or labs:
+            lab_group = cov_node.add(
+                f"Laboratories ({len(labs)})",
+                data=(NodeKind.LABORATORY_GROUP, covenant.id),
+                expand=True,
+            )
+            for lab in labs:
+                lab_group.add_leaf(
+                    escape(lab.name) + _creating(lab),
+                    data=(NodeKind.LABORATORY, lab.id),
+                )
+
+    def _add_region(self, parent) -> None:
+        """The Region: each Tribunal with the covenants the troupe doesn't
+        play under it, then any such covenant that has no Tribunal."""
+        region = parent.add("The Region", data=(NodeKind.REGION,), expand=True)
+        others = [c for c in self.saga.covenants if not c.played]
+        for tribunal in self.saga.tribunals:
+            node = region.add(
+                escape(tribunal.name),
+                data=(NodeKind.TRIBUNAL, tribunal.id),
+                expand=True,
+            )
+            for covenant in others:
+                if covenant.tribunal_id == tribunal.id:
+                    self._add_covenant_node(node, covenant, expand=False)
+        known = {t.id for t in self.saga.tribunals}
+        for covenant in others:
+            if covenant.tribunal_id not in known:
+                self._add_covenant_node(region, covenant, expand=False)
+
     def _add_character_node(self, parent, character: Character) -> None:
         """A character's own tree node: a plain leaf, unless it's a magus
         with a bound Familiar, in which case it becomes an expandable node
@@ -806,6 +854,7 @@ class WorkspaceBase(Screen[None]):
         self._covenant_sheet_view = None
         self._familiar_sheet_view = None
         self._saga_content_view = None
+        self._tribunal_sheet_view = None
 
         handler = self._NODE_SELECTED.get(kind)
         if handler is not None:
@@ -897,6 +946,30 @@ class WorkspaceBase(Screen[None]):
         self.selected_covenant = None
         await self._set_detail(SeasonRecordsView(self.saga))
 
+    async def _select_region(self, ident: str | None) -> None:
+        self.selected_covenant = None
+        count = len(self.saga.tribunals)
+        await self._show_placeholder_detail(
+            "The Region",
+            f"{count} Tribunal{'' if count == 1 else 's'}, and the covenants "
+            "the troupe doesn't play, each under its Tribunal. Select one from "
+            "the tree, or press 'n' to add a Tribunal.",
+        )
+
+    async def _select_tribunal(self, ident: str | None) -> None:
+        tribunal = self.saga.tribunal(ident)
+        if tribunal is None:
+            return
+        self.selected_covenant = None
+        self.selected_tribunal = tribunal
+        await self._show_tribunal_detail(tribunal)
+
+    async def _show_tribunal_detail(self, tribunal: Tribunal) -> None:
+        view = TribunalSheetView(self.saga, tribunal)
+        await self._set_detail(view)
+        self._tribunal_sheet_view = view
+        self._focus_first_section(initial=True)
+
     async def _select_book_group(self, ident: str | None) -> None:
         self.selected_covenant = None
         await self._set_detail(
@@ -922,6 +995,8 @@ class WorkspaceBase(Screen[None]):
         NodeKind.SAGA_CONTENT: _select_saga_content,
         NodeKind.SEASONS: _select_seasons,
         NodeKind.BOOK_GROUP: _select_book_group,
+        NodeKind.REGION: _select_region,
+        NodeKind.TRIBUNAL: _select_tribunal,
     }
 
     def check_action(self, action: str, parameters: tuple[object, ...]) -> bool | None:
@@ -1362,6 +1437,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.CHARACTER: self.selected_character,
             NodeKind.LABORATORY: self.selected_laboratory,
             NodeKind.FAMILIAR: self.selected_familiar,
+            NodeKind.TRIBUNAL: self.selected_tribunal,
         }.get(self.selected_kind)
         if record is not None:
             return record.name
@@ -1372,6 +1448,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.SAGA_CONTENT: "Saga Content",
             NodeKind.SEASONS: "Seasons",
             NodeKind.BOOK_GROUP: "Unassigned Books",
+            NodeKind.REGION: "The Region",
         }.get(self.selected_kind, "")
 
     def _update_where(self) -> None:
@@ -1504,6 +1581,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.COVENANT: self._covenant_sheet_view,
             NodeKind.FAMILIAR: self._familiar_sheet_view,
             NodeKind.SAGA_CONTENT: self._saga_content_view,
+            NodeKind.TRIBUNAL: self._tribunal_sheet_view,
         }.get(self.selected_kind)
 
     def _open_creation_worksheet(
@@ -1726,6 +1804,22 @@ class WorkspaceBase(Screen[None]):
             handle_result,
         )
 
+    def action_create_tribunal(self) -> None:
+        before = {t.id for t in self.saga.tribunals}
+
+        def done(_end: object) -> None:
+            storage.save_saga(self.saga)
+            self._rebuild_tree()
+            made = [t for t in self.saga.tribunals if t.id not in before]
+            if made:
+                node = _tree_node_with_data(
+                    self._nav_tree(), (NodeKind.TRIBUNAL, made[-1].id)
+                )
+                if node is not None:
+                    self.call_after_refresh(self._nav_tree().select_node, node)
+
+        run_steps(self.app, tribunal_forms.new_tribunal_form(self.saga), done)
+
     def action_create_character(self) -> None:
         covenant = self.selected_covenant
 
@@ -1846,7 +1940,7 @@ class WorkspaceBase(Screen[None]):
 
     def _record_to_delete(
         self,
-    ) -> Covenant | Character | Laboratory | Familiar | None:
+    ) -> Covenant | Character | Laboratory | Familiar | Tribunal | None:
         """The record d deletes: the covenant, character, laboratory or
         Familiar selected in the tree, if that's what's selected."""
         return {
@@ -1854,6 +1948,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.CHARACTER: self.selected_character,
             NodeKind.LABORATORY: self.selected_laboratory,
             NodeKind.FAMILIAR: self.selected_familiar,
+            NodeKind.TRIBUNAL: self.selected_tribunal,
         }.get(self.selected_kind)
 
     def action_delete_record(self) -> None:
@@ -1925,7 +2020,9 @@ class WorkspaceBase(Screen[None]):
         return None if ops is None else getattr(ops, name)
 
     #: Core sections whose changes can rename or add records in the tree.
-    _TREE_SECTIONS: ClassVar[frozenset[str]] = frozenset({"section-cov-magi"})
+    _TREE_SECTIONS: ClassVar[frozenset[str]] = frozenset(
+        {"section-cov-magi", TRIBUNAL_INFO_SECTION}
+    )
 
     def _core_verb(self, section: str, verb: str) -> None:
         """Run the sheet's core Add, Edit or Delete (commands.SectionOps)
@@ -1990,6 +2087,7 @@ class WorkspaceBase(Screen[None]):
             NodeKind.FAMILIAR: self.selected_familiar,
             NodeKind.LABORATORY: self.selected_laboratory,
             NodeKind.COVENANT: self.selected_covenant,
+            NodeKind.TRIBUNAL: self.selected_tribunal,
         }.get(self.selected_kind)
         return pl.may_change(self.saga, self._signed_in(), record)
 

@@ -71,7 +71,8 @@ class Covenant:
     aura: int = 0  # inherited by all of the covenant's laboratories
     #: Which realm the aura belongs to (REALMS); older saves load as Magic.
     aura_realm: str = "Magic"
-    tribunal: str = ""
+    #: The Tribunal it belongs to (Saga.tribunals), if any.
+    tribunal_id: str | None = None
     year_founded: int | None = None
     aegis_of_the_hearth: int = 0
     aegis_penetration: int = 0

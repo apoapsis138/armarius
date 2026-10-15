@@ -51,9 +51,10 @@ async def test_edit_warns_but_saves_and_the_sheet_shows_it():
         await pilot.press("enter")
         await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
         tree = app.screen.query_one("#nav-tree")
-        node = next(
-            n for n in tree.root.children[0].children if n.data == ("character", "c1")
+        group = next(
+            n for n in tree.root.children if n.data == ("character_group", None)
         )
+        node = next(n for n in group.children if n.data == ("character", "c1"))
         tree.select_node(node)
         await wait_until(pilot, lambda: app.screen._character_sheet_view is not None)
         await pilot.pause()

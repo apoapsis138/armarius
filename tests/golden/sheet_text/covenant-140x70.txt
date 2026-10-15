@@ -3,7 +3,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Keep
 
-      Saga:                     Matrix                   Tribunal:                    (not set)
+      Saga:                     Matrix                   Tribunal:                    Rhine
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
@@ -71,7 +71,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Keep
 
-      Saga:                     Matrix                   Tribunal:                    (not set)
+      Saga:                     Matrix                   Tribunal:                    Rhine
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
@@ -139,7 +139,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Keep
 
-      Saga:                     Matrix                   Tribunal:                    (not set)
+      Saga:                     Matrix                   Tribunal:                    Rhine
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
@@ -207,7 +207,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Keep
 
-      Saga:                     Matrix                   Tribunal:                    (not set)
+      Saga:                     Matrix                   Tribunal:                    Rhine
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
@@ -275,7 +275,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Keep
 
-      Saga:                     Matrix                   Tribunal:                    (not set)
+      Saga:                     Matrix                   Tribunal:                    Rhine
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
@@ -343,7 +343,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Keep
 
-      Saga:                     Matrix                   Tribunal:                    (not set)
+      Saga:                     Matrix                   Tribunal:                    Rhine
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
@@ -411,7 +411,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Keep
 
-      Saga:                     Matrix                   Tribunal:                    (not set)
+      Saga:                     Matrix                   Tribunal:                    Rhine
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0
@@ -479,7 +479,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Keep
 
-      Saga:                     Matrix                   Tribunal:                    (not set)
+      Saga:                     Matrix                   Tribunal:                    Rhine
       Storyguide:               (not set)                Current Season:              Spring
       Year Founded:             (not set)                Current Year:                1220
       Aegis of the Hearth:      0                        Aegis' Penetration:          0

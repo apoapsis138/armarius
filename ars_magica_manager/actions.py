@@ -31,6 +31,7 @@ from .models import (
     Familiar,
     Laboratory,
     Saga,
+    Tribunal,
 )
 from .sections import (
     BOOK_SECTIONS,
@@ -48,6 +49,7 @@ from .sections import (
     SOURCES_SECTION,
     SPELL_SECTION,
     TRAIT_SECTIONS,
+    TRIBUNAL_INFO_SECTION,
 )
 
 if TYPE_CHECKING:
@@ -68,6 +70,8 @@ class NodeKind(StrEnum):
     SAGA_CONTENT = "saga_content"
     SEASONS = "seasons"
     BOOK_GROUP = "book_group"
+    REGION = "region"
+    TRIBUNAL = "tribunal"
 
 
 # -- the section verbs: a / d / e, and More's Restore --
@@ -196,6 +200,7 @@ NEW_MENU: tuple[MenuItem, ...] = (
     MenuItem("c", "create_character", "New Character"),
     MenuItem("l", "create_laboratory", "New Laboratory"),
     MenuItem("f", "create_familiar", "Bind Familiar"),
+    MenuItem("t", "create_tribunal", "New Tribunal"),
 )
 
 #: More: what only a few sections, or the record itself, can do. Each
@@ -238,6 +243,7 @@ MORE_SECTIONS: dict[str, str] = {
 #: magus).
 CREATE_PLACES: dict[str, frozenset[NodeKind]] = {
     "create_covenant": frozenset({NodeKind.SAGA}),
+    "create_tribunal": frozenset({NodeKind.SAGA, NodeKind.REGION, NodeKind.TRIBUNAL}),
     "create_character": frozenset(
         {NodeKind.SAGA, NodeKind.COVENANT, NodeKind.CHARACTER_GROUP, NodeKind.CHARACTER}
     ),
@@ -262,6 +268,7 @@ RECORD_SECTION: dict[NodeKind, str] = {
     NodeKind.COVENANT: "section-cov-info",
     NodeKind.LABORATORY: "section-lab-identity",
     NodeKind.FAMILIAR: "section-fam-info",
+    NodeKind.TRIBUNAL: TRIBUNAL_INFO_SECTION,
 }
 
 
@@ -317,7 +324,7 @@ class ActionFacts(Protocol):
 
     def record_to_delete(
         self,
-    ) -> Covenant | Character | Laboratory | Familiar | None: ...
+    ) -> Covenant | Character | Laboratory | Familiar | Tribunal | None: ...
 
     def can_send_files(self) -> bool:
         """Whether an exported file has somewhere to go (not over SSH)."""

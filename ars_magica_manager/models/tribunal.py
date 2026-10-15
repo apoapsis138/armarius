@@ -1,0 +1,144 @@
+"""A Tribunal: the record of a region's magi in council, its cases, its
+Peripheral Code, its treasury and its diary, and the meeting being held.
+Most of its sheet is worked out from the covenants that belong to it
+(tribunals.py); only what belongs to the Tribunal itself is kept here."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from typing import Any
+
+from .common import known_fields
+from .traits import new_instance_id
+
+#: The Tribunal package every saga has: the Definitive Edition's rules,
+#: with no regional customs.
+CORE_PACKAGE = "core"
+
+#: How often a Tribunal meets, in years, unless its package says otherwise.
+MEETS_EVERY = 7
+
+#: A case's kinds.
+CASE_KINDS: tuple[str, ...] = ("charge", "motion", "appeal")
+
+#: A case's status: still to be heard, decided at a meeting, or withdrawn.
+CASE_OPEN = "open"
+CASE_DECIDED = "decided"
+CASE_WITHDRAWN = "withdrawn"
+CASE_STATUSES: tuple[str, ...] = (CASE_OPEN, CASE_DECIDED, CASE_WITHDRAWN)
+
+#: What a treasury entry is.
+TREASURY_KINDS: tuple[str, ...] = ("vis", "silver", "loan", "fine")
+
+
+@dataclass
+class Case:
+    """A charge, motion or appeal on the Tribunal's docket. Who brings it
+    and who it is against are names (or covenant and character names as
+    typed); the evidence is one short entry a line."""
+
+    title: str
+    kind: str = "charge"
+    brought_by: str = ""
+    against: str = ""
+    charge: str = ""
+    filed_year: int | None = None
+    filed_season: str = ""
+    penalty: str = ""
+    evidence: str = ""
+    prosecutor: str = ""
+    defender: str = ""
+    status: str = CASE_OPEN
+    outcome: str = ""
+    id: str = field(default_factory=new_instance_id, compare=False)
+
+
+@dataclass
+class Ruling:
+    """A ruling of the Peripheral Code: the year it was made and what it
+    says; one made at a meeting names its case."""
+
+    title: str
+    year: int | None = None
+    says: str = ""
+    case_id: str = ""
+    id: str = field(default_factory=new_instance_id, compare=False)
+
+
+@dataclass
+class TreasuryEntry:
+    """One line of the Tribunal's treasury: vis (pawns of an Art), silver
+    (pounds), a loan out of it (to whom, how much, when due) or a fine owed
+    to it (by whom, from which case, paid or not). Loans and unpaid fines
+    are not yet in hand."""
+
+    kind: str
+    amount: float = 0
+    art: str = ""
+    who: str = ""
+    due_year: int | None = None
+    case_id: str = ""
+    paid: bool = False
+    note: str = ""
+    id: str = field(default_factory=new_instance_id, compare=False)
+
+
+@dataclass
+class TribunalDiaryEntry:
+    """A line of the Tribunal's Diary: the minutes of a meeting, a change
+    the yearly step made, or a note typed in."""
+
+    year: int
+    season: str = ""
+    title: str = ""
+    details: str = ""
+    #: What the entry changed, so deleting it can undo it (see the
+    #: yearly step); empty for an entry typed in.
+    changes: list[dict[str, Any]] = field(default_factory=list)
+    id: str = field(default_factory=new_instance_id, compare=False)
+
+
+@dataclass
+class Tribunal:
+    id: str
+    name: str
+    summary: str = ""
+    #: Its package (tribunal_packages.PACKAGES): the core rules, or a
+    #: region's customs. Never mixed.
+    package: str = CORE_PACKAGE
+    meets_every: int = MEETS_EVERY
+    next_year: int | None = None
+    next_season: str = "Summer"
+    meeting_place: str = ""
+    #: The Praeco and the Presiding Quaesitor (characters, any detail).
+    praeco_id: str | None = None
+    quaesitor_id: str | None = None
+    #: How many covenants and magi it really has: most are never written
+    #: down (None: only those recorded).
+    covenants_total: int | None = None
+    magi_total: int | None = None
+    cases: list[Case] = field(default_factory=list)
+    #: The Peripheral Code in force.
+    rulings: list[Ruling] = field(default_factory=list)
+    treasury: list[TreasuryEntry] = field(default_factory=list)
+    diary: list[TribunalDiaryEntry] = field(default_factory=list)
+    #: Each package's own data, by package key: kept when the package is
+    #: switched, so switching back finds it again.
+    package_data: dict[str, dict[str, Any]] = field(default_factory=dict)
+    #: The meeting being held (a dict the meeting module reads), or None.
+    meeting: dict[str, Any] | None = None
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Tribunal:
+        d = known_fields(cls, data)
+        d["cases"] = [Case(**known_fields(Case, c)) for c in d.get("cases", [])]
+        d["rulings"] = [Ruling(**known_fields(Ruling, r)) for r in d.get("rulings", [])]
+        d["treasury"] = [
+            TreasuryEntry(**known_fields(TreasuryEntry, t))
+            for t in d.get("treasury", [])
+        ]
+        d["diary"] = [
+            TribunalDiaryEntry(**known_fields(TribunalDiaryEntry, e))
+            for e in d.get("diary", [])
+        ]
+        return cls(**d)

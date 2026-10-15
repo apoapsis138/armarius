@@ -1054,5 +1054,27 @@
         "slash": "(disabled)"
       }
     }
+  },
+  "tribunal": {
+    "PinnedCollapsible#section-trib-info": {
+      "active": "section-trib-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Tribunal",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-roster": {
+      "active": "section-trib-roster",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    }
   }
 }

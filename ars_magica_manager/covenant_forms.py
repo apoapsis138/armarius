@@ -36,6 +36,7 @@ from .models import (
     new_instance_id,
 )
 from .possession_forms import contested_fields
+from .tribunal_forms import tribunal_field
 
 # Edit Covenant and its Description
 
@@ -50,13 +51,13 @@ _COVENANT_INT_FIELDS: tuple[tuple[str, str], ...] = (
 )
 
 
-def covenant_fields(covenant: Covenant) -> list[DialogField]:
+def covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
     """Edit Covenant: its name, Tribunal, founding, Aegis, living
     conditions, aura and season."""
     cov = covenant
     return [
         DialogField("name", "Name", "text", cov.name, required=True),
-        DialogField("tribunal", "Tribunal", "text", cov.tribunal),
+        tribunal_field(saga, cov.tribunal_id),
         DialogField("year_founded", "Year Founded", "optint", cov.year_founded),
         *(
             DialogField(
@@ -102,10 +103,10 @@ def apply_covenant(covenant: Covenant, values: dict[str, Any]) -> None:
         setattr(covenant, attribute, value)
 
 
-def covenant_form(covenant: Covenant) -> Form:
+def covenant_form(saga: Saga, covenant: Covenant) -> Form:
     return Form(
         "Edit Covenant",
-        lambda: covenant_fields(covenant),
+        lambda: covenant_fields(saga, covenant),
         lambda values: apply_covenant(covenant, values),
     )
 

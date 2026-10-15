@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from . import books as bk
-from . import catalog, world, world_forms
+from . import catalog, tribunals, world, world_forms
 from . import covenant_build as cov_build
 from . import covenant_diary as cov_diary
 from . import economics as eco
@@ -46,8 +46,9 @@ from .tables import Table
 def subtitle(saga: Saga, covenant: Covenant) -> str:
     """The line under the name: its Tribunal, season, founding and now."""
     parts = [f"{covenant.covenant_season} covenant"]
-    if covenant.tribunal:
-        parts.insert(0, f"{covenant.tribunal} Tribunal")
+    tribunal = tribunals.title_of(saga, covenant)
+    if tribunal:
+        parts.insert(0, tribunal)
     if covenant.year_founded is not None:
         parts.append(f"founded {covenant.year_founded}")
     parts.append(f"{saga.current_season} {saga.current_year}")
@@ -83,7 +84,8 @@ def charter_facts(saga: Saga, covenant: Covenant) -> list[Fact]:
 
 def sketch_facts(saga: Saga, covenant: Covenant) -> list[Fact]:
     """A Line or Sketch covenant's facts under its name."""
-    facts = [Fact("Tribunal", covenant.tribunal or "(not set)")]
+    tribunal = tribunals.of(saga, covenant)
+    facts = [Fact("Tribunal", tribunal.name if tribunal is not None else "(not set)")]
     if covenant.detail != LINE:
         founded = covenant.year_founded
         facts += [

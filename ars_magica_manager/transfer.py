@@ -46,6 +46,7 @@ from .models import (
     Laboratory,
     Saga,
     Spell,
+    Tribunal,
 )
 
 FORMAT = "armarius-export"
@@ -137,12 +138,20 @@ def export_data(
         for holder in [*characters, *familiars, *labs]
         for vf in holder.virtues_flaws
     } | {bh.vf_id for c in covenants for bh in c.boons_hooks}
+    # A covenant's Tribunal travels by name only: the importing saga joins
+    # its own of that name, or starts one.
+    tribunals = []
+    for covenant in covenants:
+        tribunal = saga.tribunal(covenant.tribunal_id)
+        if tribunal is not None and all(t.id != tribunal.id for t in tribunals):
+            tribunals.append(Tribunal(id=tribunal.id, name=tribunal.name))
     mini = Saga(
         id="export",
         name=saga.name,
         current_year=saga.current_year,
         current_season=saga.current_season,
         covenants=covenants,
+        tribunals=tribunals,
         characters=characters,
         laboratories=labs,
         familiars=familiars,
@@ -241,6 +250,8 @@ class ImportPlan:
     name: str
     from_saga: str
     covenants: list[Covenant] = field(default_factory=list)
+    #: Tribunals the covenants name that the saga has none of the name of.
+    tribunals: list[Tribunal] = field(default_factory=list)
     characters: list[Character] = field(default_factory=list)
     laboratories: list[Laboratory] = field(default_factory=list)
     familiars: list[Familiar] = field(default_factory=list)
@@ -437,10 +448,31 @@ def _map_spells(job: _Import) -> None:
             spell.id = new_id
 
 
+def _plan_tribunal(job: _Import, tribunal_id: str | None) -> str | None:
+    """The target's id for the file's Tribunal `tribunal_id`: one of the
+    same name, or a new one the import adds."""
+    tribunal = job.source.tribunal(tribunal_id)
+    if tribunal is None:
+        return None
+    key = tribunal.name.strip().casefold()
+    for known in [*job.target.tribunals, *job.plan.tribunals]:
+        if known.name.strip().casefold() == key:
+            if known in job.target.tribunals:
+                line = f"Tribunal {known.name} (matched by name)"
+                if line not in job.plan.matched:
+                    job.plan.matched.append(line)
+            return known.id
+    taken = [t.id for t in [*job.target.tribunals, *job.plan.tribunals]]
+    added = Tribunal(id=_Ids(taken).new(tribunal.id, tribunal.name), name=tribunal.name)
+    job.plan.tribunals.append(added)
+    return added.id
+
+
 def _plan_covenants(job: _Import) -> None:
     for covenant in job.source.covenants:
         covenant.id = job.record_map[COVENANT][covenant.id]
         covenant.saga_id = job.target.id
+        covenant.tribunal_id = _plan_tribunal(job, covenant.tribunal_id)
         for held in covenant.boons_hooks:
             held.vf_id = job.entry(held.vf_id)
         for person in covenant.inhabitants:
@@ -667,6 +699,7 @@ def preview(plan: ImportPlan) -> str:
     origin = f" from {plan.from_saga}" if plan.from_saga else ""
     lines = [f"Import {KIND_LABELS[plan.kind]}: {plan.name}{origin}", "", "Adds:"]
     lines += [f"  Covenant: {c.name}" for c in plan.covenants]
+    lines += [f"  Tribunal: {t.name}" for t in plan.tribunals]
     lines += [f"  Laboratory: {lab.name}" for lab in plan.laboratories]
     lines += [f"  Character: {c.name} ({c.type})" for c in plan.characters]
     lines += [f"  Familiar: {f.name}" for f in plan.familiars]
@@ -690,6 +723,7 @@ def preview(plan: ImportPlan) -> str:
 def apply(target: Saga, plan: ImportPlan) -> None:
     """Add everything in `plan` to `target` (the caller saves it)."""
     target.covenants += plan.covenants
+    target.tribunals += plan.tribunals
     target.characters += plan.characters
     target.laboratories += plan.laboratories
     target.familiars += plan.familiars

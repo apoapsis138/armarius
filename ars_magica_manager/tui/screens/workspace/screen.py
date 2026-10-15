@@ -15,7 +15,7 @@ from ....models import (
     INHABITANT_KINDS,
     POSSESSION_KINDS,
 )
-from ....sections import CORE_SECTIONS
+from ....sections import CORE_SECTIONS, TRIBUNAL_INFO_SECTION
 from ..sheets import (
     BOOK_SECTIONS,
     BOOKS_SECTION,
@@ -71,6 +71,7 @@ class WorkspaceScreen(
             "btn-lab-identity-edit": self._edit_lab_identity,
             "btn-lab-characteristics-edit": self._edit_lab_characteristics,
             "btn-cov-edit": self._edit_covenant,
+            "btn-trib-edit": partial(self._core_verb, TRIBUNAL_INFO_SECTION, "edit"),
             "btn-char-info-edit": self._edit_character_info,
             "btn-char-characteristics-edit": self._edit_characteristics,
             "btn-char-health-wounds-edit": self._edit_wounds,

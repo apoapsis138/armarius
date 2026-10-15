@@ -46,6 +46,24 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.66.0 — 2026-10-15
+
+- Tribunals are records of their own. A covenant chooses its Tribunal
+  from the saga's in Edit Covenant, and New Tribunal adds one: its name,
+  how often and where it next meets, its Praeco and Presiding Quaesitor,
+  and how many covenants and magi it really has.
+- A Tribunal's sheet shows those facts, the troupe's votes and its roster
+  of covenants with their votes. Deleting a Tribunal says which
+  covenants it leaves without one.
+- In the terminal, The Region sits below the troupe's covenants in the
+  tree, with each Tribunal and, under it, the covenants the troupe
+  doesn't play. On the desktop, the saga's World chapter lists the
+  Tribunals.
+- Older sagas typed a covenant's Tribunal as a name: each name becomes a
+  Tribunal the first time the saga is opened, shared by the covenants
+  that typed it. An exported covenant brings its Tribunal's name, and
+  joins the Tribunal of that name where it is imported.
+
 ## 2.65.0 — 2026-10-15
 
 - Covenants can be kept as a line or a sketch too, for the other

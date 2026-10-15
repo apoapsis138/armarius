@@ -1086,7 +1086,9 @@ def _power_actions(saga: Saga, record: Record) -> list[Action]:
     covenant = _covenant(record)
     return [
         Action("Choose Power Level", lambda: wf.power_level(covenant)),
-        Action("Edit covenant (season, aura)", lambda: covf.covenant_form(covenant)),
+        Action(
+            "Edit covenant (season, aura)", lambda: covf.covenant_form(saga, covenant)
+        ),
         Action("Set starting income", lambda: wf.starting_income(saga, covenant)),
         Action(
             "Use a Covenant Situation", lambda: wf.covenant_situation(saga, covenant)

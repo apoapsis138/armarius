@@ -308,7 +308,7 @@ class CovenantPage(QWidget):
                 prose(covenant.notes.strip(), p),
                 edits={
                     "Edit Covenant": lambda: self.run(
-                        covenant_forms.covenant_form(covenant)
+                        covenant_forms.covenant_form(self.saga, covenant)
                     ),
                     "Edit Description": lambda: self.run(
                         covenant_forms.description_form(covenant)
@@ -349,7 +349,7 @@ class CovenantPage(QWidget):
                 else _none("Not written yet: edit the covenant to say.", p),
                 edits={
                     "Edit Covenant": lambda: self.run(
-                        world_forms.sketch_covenant_form(covenant)
+                        world_forms.sketch_covenant_form(self.saga, covenant)
                     )
                 },
             )

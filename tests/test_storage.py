@@ -15,6 +15,7 @@ from ars_magica_manager.models import (
     BondPower,
     Book,
     Breakthrough,
+    Case,
     Character,
     Characteristics,
     Codex,
@@ -46,6 +47,7 @@ from ars_magica_manager.models import (
     Possession,
     Progress,
     Reason,
+    Ruling,
     Saga,
     SagaSource,
     ScoredTrait,
@@ -55,6 +57,8 @@ from ars_magica_manager.models import (
     ShapeMaterialBonus,
     Spell,
     SpellDesign,
+    TreasuryEntry,
+    TribunalDiaryEntry,
     VirtueFlawDef,
     VirtueFlawInstance,
     Wounds,
@@ -210,7 +214,7 @@ def _one_of_everything_filled_in() -> Saga:
     saga.books_in_play = ["DE", "Covenants"]
     saga.keep_season_records = False
     cov = saga.covenants[0]
-    cov.tribunal = "Rhine"
+    saga.tribunals[0].meets_every = 5
     cov.year_founded = 1100
     cov.aura = 3
     cov.notes = "An old keep."
@@ -359,6 +363,11 @@ def _saga_with_every_record() -> Saga:
     magus.grog_year = GrogYear()
     saga.laboratories[0].arcane_connections.append(ArcaneConnection("ac", "a tree"))
     saga.covenants[0].diary.append(CovenantDiaryEntry(1220))
+    rhine = saga.tribunals[0]
+    rhine.cases.append(Case("Interference"))
+    rhine.rulings.append(Ruling("No new covenants on the Rhine"))
+    rhine.treasury.append(TreasuryEntry("vis", 5, "Vim"))
+    rhine.diary.append(TribunalDiaryEntry(1221))
     device = saga.enchanted_devices[0]
     device.bonuses.append(ShapeMaterialBonus(3, "fire", "Oak"))
     saga.season_plans.append(

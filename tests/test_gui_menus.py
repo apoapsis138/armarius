@@ -93,7 +93,12 @@ def test_the_saga_page_sets_out_its_actions_in_its_chapters(app):
         "Rules and Content",
         "Saga Management",
     ]
-    assert list(_new(window)) == ["New Covenant", "New Character", "New Laboratory"]
+    assert list(_new(window)) == [
+        "New Covenant",
+        "New Tribunal",
+        "New Character",
+        "New Laboratory",
+    ]
     _saga_chapter(window, "Seasons")
     assert "Set Date" in _buttons(window)
     _saga_chapter(window, "Saga Management")

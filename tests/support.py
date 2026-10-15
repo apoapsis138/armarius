@@ -34,6 +34,7 @@ from ars_magica_manager.models import (
     Saga,
     ScoredTrait,
     Spell,
+    Tribunal,
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules.xp import ability_xp
@@ -142,6 +143,7 @@ NODES: dict[str, tuple[str, ...]] = {
     "laboratory": ("laboratory", "lab1"),
     "familiar": ("familiar", "fam1"),
     "sketch_covenant": ("covenant", "cov_sketch"),
+    "tribunal": ("tribunal", "rhine"),
     "book_group": ("book_group",),
     "saga_content": ("saga_content",),
 }
@@ -171,7 +173,7 @@ def everything_saga() -> Saga:
     trait = [ScoredTrait("Brave", 2)]
     rep = [ScoredTrait("Wise", 1)]
 
-    covenant = Covenant(id="cov1", saga_id="s", name="Keep")
+    covenant = Covenant(id="cov1", saga_id="s", name="Keep", tribunal_id="rhine")
     covenant.reputations = [ScoredTrait("Fair dealing", 2)]
     covenant.boons_hooks = [VirtueFlawInstance(boon), VirtueFlawInstance(hook)]
     covenant.inhabitants = [
@@ -301,6 +303,7 @@ def everything_saga() -> Saga:
         id="cov_sketch",
         saga_id="s",
         name="Fengheld",
+        tribunal_id="rhine",
         detail=SKETCH,
         played=False,
         summary="Rivals for the ford.",
@@ -323,6 +326,16 @@ def everything_saga() -> Saga:
         id="test_saga",
         name="Matrix",
         covenants=[covenant, sketch],
+        tribunals=[
+            Tribunal(
+                id="rhine",
+                name="Rhine",
+                summary="Gilds and forests.",
+                next_year=1228,
+                meeting_place="Durenmar",
+                praeco_id="mag_sketch",
+            )
+        ],
         characters=[magus, companion, rival],
         laboratories=[lab],
         familiars=[familiar],

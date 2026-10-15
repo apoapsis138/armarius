@@ -395,6 +395,7 @@ async def test_new_offers_what_can_be_made_here_and_a_letter_picks_it():
             "New Covenant",
             "New Character",
             "New Laboratory",
+            "New Tribunal",
         ]  # no Bind Familiar: the only magus has one
         assert "n New " in _footer(app)
         await pilot.press("n")

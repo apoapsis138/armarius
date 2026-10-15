@@ -14,7 +14,7 @@ from textual.widgets import (
     TabbedContent,
 )
 
-from .... import book_value, catalog, seasons, world, world_forms
+from .... import book_value, catalog, seasons, tribunals, world, world_forms
 from .... import books as bk
 from .... import covenant_build as cov_build
 from .... import covenant_diary as cov_diary
@@ -723,10 +723,14 @@ class CovenantSheetView(SheetView):
         note = realms.aura_note(cov.aura_realm, effective)
         return cov.aura_realm + (f" ({note})" if note else "")
 
+    def _tribunal_text(self) -> str:
+        tribunal = tribunals.of(self.saga, self.covenant)
+        return escape(tribunal.name) if tribunal is not None else "(not set)"
+
     def _info_left_text(self) -> str:
         cov, saga = self.covenant, self.saga
         if self.sketch:
-            rows = [("Tribunal", escape(cov.tribunal) if cov.tribunal else "(not set)")]
+            rows = [("Tribunal", self._tribunal_text())]
             if cov.detail != LINE:
                 founded = (
                     "(not set)" if cov.year_founded is None else str(cov.year_founded)
@@ -758,7 +762,7 @@ class CovenantSheetView(SheetView):
             return aligned(rows)
         return aligned(
             [
-                ("Tribunal", escape(cov.tribunal) if cov.tribunal else "(not set)"),
+                ("Tribunal", self._tribunal_text()),
                 ("Current Season", self._inherited(saga.current_season)),
                 ("Current Year", self._inherited(str(saga.current_year))),
                 ("Aegis' Penetration", str(cov.aegis_penetration)),

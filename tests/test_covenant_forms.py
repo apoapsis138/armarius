@@ -47,7 +47,7 @@ def _save(form: Any, typed: dict[str, Any]) -> Any:
 def test_edit_covenant_and_its_description():
     saga = _sample_saga_with_covenant()
     covenant = saga.covenants[0]
-    form = covenant_forms.covenant_form(covenant)
+    form = covenant_forms.covenant_form(saga, covenant)
     assert form.title == "Edit Covenant"
     _save(form, {"name": "Fengheld", "aura": "5"})
     assert (covenant.name, covenant.aura) == ("Fengheld", 5)

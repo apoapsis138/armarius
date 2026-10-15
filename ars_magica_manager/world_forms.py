@@ -35,6 +35,7 @@ from .sections import (
     WHAT_MATTERS_SECTION,
 )
 from .tables import Table
+from .tribunal_forms import tribunal_field
 
 #: How each link kind is named in a form.
 LINK_NOUNS: dict[str, str] = {
@@ -470,12 +471,12 @@ def link_rows(saga: Saga, record: Any) -> list[tuple[int | None, str]]:
 # -- a sketch covenant --
 
 
-def sketch_covenant_fields(covenant: Covenant) -> list[DialogField]:
+def sketch_covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
     """Edit Covenant at Line or Sketch detail: who it is, and for a sketch
     its season, aura, founding and unnamed magi."""
     fields = [
         DialogField("name", "Name", "text", covenant.name, required=True),
-        DialogField("tribunal", "Tribunal", "text", covenant.tribunal),
+        tribunal_field(saga, covenant.tribunal_id),
         DialogField(
             "summary",
             "In the Saga",
@@ -523,14 +524,14 @@ def _unnamed_problem(values: dict[str, Any]) -> str | None:
     return None
 
 
-def sketch_covenant_form(covenant: Covenant) -> Form:
+def sketch_covenant_form(saga: Saga, covenant: Covenant) -> Form:
     def apply(values: dict[str, Any]) -> None:
         for key, value in values.items():
             setattr(covenant, key, value)
 
     return Form(
         "Edit Covenant",
-        lambda: sketch_covenant_fields(covenant),
+        lambda: sketch_covenant_fields(saga, covenant),
         apply,
         validate=_unnamed_problem,
     )

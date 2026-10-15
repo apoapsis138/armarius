@@ -11,6 +11,7 @@ from ars_magica_manager.models import (
     IncomeSource,
     Inhabitant,
     ScoredTrait,
+    Tribunal,
     VirtueFlawInstance,
 )
 
@@ -22,7 +23,8 @@ def _covenant():
 
 def test_the_subtitle_names_the_tribunal_season_and_founding():
     saga, covenant = _covenant()
-    covenant.tribunal, covenant.year_founded = "Rhine", 1137
+    saga.tribunals.append(Tribunal(id="rhine", name="Rhine"))
+    covenant.tribunal_id, covenant.year_founded = "rhine", 1137
     assert cvs.subtitle(saga, covenant) == (
         "Rhine Tribunal  ·  Spring covenant  ·  founded 1137  ·  Spring 1220"
     )

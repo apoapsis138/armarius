@@ -3,14 +3,13 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Keep
 
-      Saga:                     Matrix         Tribunal:                    (not
-      Storyguide:               (not set)      set)
-      Year Founded:             (not set)      Current Season:              Spring
-      Aegis of the Hearth:      0              Current Year:                1220
-      Living Conditions (Magi): 0              Aegis' Penetration:          0
-      Aura:                     1 (base 0,     Living Conditions (Mundane): 0
-      +1 Boons)                                Covenant Season:             Spring
-                                               Aura Realm:                  Magic
+      Saga:                     Matrix         Tribunal:                    Rhine
+      Storyguide:               (not set)      Current Season:              Spring
+      Year Founded:             (not set)      Current Year:                1220
+      Aegis of the Hearth:      0              Aegis' Penetration:          0
+      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
+      Aura:                     1 (base 0,     Covenant Season:             Spring
+      +1 Boons)                                Aura Realm:                  Magic
           Edit (e)          In Play
 
    1 Attributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7
@@ -36,6 +35,7 @@
 
 
 
+
   ▌
   ▌  Select a Boon or Hook to see its details.
   ▌
@@ -46,14 +46,13 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Keep
 
-      Saga:                     Matrix         Tribunal:                    (not
-      Storyguide:               (not set)      set)
-      Year Founded:             (not set)      Current Season:              Spring
-      Aegis of the Hearth:      0              Current Year:                1220
-      Living Conditions (Magi): 0              Aegis' Penetration:          0
-      Aura:                     1 (base 0,     Living Conditions (Mundane): 0
-      +1 Boons)                                Covenant Season:             Spring
-                                               Aura Realm:                  Magic
+      Saga:                     Matrix         Tribunal:                    Rhine
+      Storyguide:               (not set)      Current Season:              Spring
+      Year Founded:             (not set)      Current Year:                1220
+      Aegis of the Hearth:      0              Aegis' Penetration:          0
+      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
+      Aura:                     1 (base 0,     Covenant Season:             Spring
+      +1 Boons)                                Aura Realm:                  Magic
           Edit (e)          In Play
 
    1 Attributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7
@@ -63,8 +62,8 @@
     ▼ Loyalty
 
       Type of Governance:       (not set)     Situational Modifiers for:
-      Base Loyalty Points:      -30           Living Conditions:  +0  (+0)        ▂▂
-      Total modifiers:          0             Equipment:          Standard  (+0)
+      Base Loyalty Points:      -30           Living Conditions:  +0  (+0)
+      Total modifiers:          0             Equipment:          Standard  (+0)  ▆▆
       Current Loyalty Points:   -30           Money:              Standard salary
       Prevailing Loyalty Score: -3            (+0)
                                               Specialists:        0
@@ -78,6 +77,7 @@
 
       Number of Teamsters / Needed: 0 / 2
       Number of Servants / Needed:  0 / 4
+      Number of Laborers:           0
 
   ▌
   ▌  Select an inhabitant to see its details.
@@ -89,14 +89,13 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Keep
 
-      Saga:                     Matrix         Tribunal:                    (not
-      Storyguide:               (not set)      set)
-      Year Founded:             (not set)      Current Season:              Spring
-      Aegis of the Hearth:      0              Current Year:                1220
-      Living Conditions (Magi): 0              Aegis' Penetration:          0
-      Aura:                     1 (base 0,     Living Conditions (Mundane): 0
-      +1 Boons)                                Covenant Season:             Spring
-                                               Aura Realm:                  Magic
+      Saga:                     Matrix         Tribunal:                    Rhine
+      Storyguide:               (not set)      Current Season:              Spring
+      Year Founded:             (not set)      Current Year:                1220
+      Aegis of the Hearth:      0              Aegis' Penetration:          0
+      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
+      Aura:                     1 (base 0,     Covenant Season:             Spring
+      +1 Boons)                                Aura Realm:                  Magic
           Edit (e)          In Play
 
    1 Attributes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7
@@ -122,6 +121,7 @@
 
 
 
+
   ▌
   ▌  Select someone to see their season.
   ▌
@@ -132,14 +132,13 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Keep
 
-      Saga:                     Matrix         Tribunal:                    (not
-      Storyguide:               (not set)      set)
-      Year Founded:             (not set)      Current Season:              Spring
-      Aegis of the Hearth:      0              Current Year:                1220
-      Living Conditions (Magi): 0              Aegis' Penetration:          0
-      Aura:                     1 (base 0,     Living Conditions (Mundane): 0
-      +1 Boons)                                Covenant Season:             Spring
-                                               Aura Realm:                  Magic
+      Saga:                     Matrix         Tribunal:                    Rhine
+      Storyguide:               (not set)      Current Season:              Spring
+      Year Founded:             (not set)      Current Year:                1220
+      Aegis of the Hearth:      0              Aegis' Penetration:          0
+      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
+      Aura:                     1 (base 0,     Covenant Season:             Spring
+      +1 Boons)                                Aura Realm:                  Magic
           Edit (e)          In Play
 
   ibutes  2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary
@@ -152,7 +151,7 @@
       ○ A property
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Sanctums (1)                                                                ▆▆
+    ▼ Sanctums (1)
 
         Name                Owner           Quality  Upkeep
       ○ Tower               Leandro              -2       0
@@ -165,6 +164,7 @@
       ○ A weapon                                Standard        1   +0   +0   +0
       +0    0
 
+
   ▌
   ▌  Select a possession to see its details.
   ▌
@@ -175,14 +175,13 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Keep
 
-      Saga:                     Matrix         Tribunal:                    (not
-      Storyguide:               (not set)      set)
-      Year Founded:             (not set)      Current Season:              Spring
-      Aegis of the Hearth:      0              Current Year:                1220
-      Living Conditions (Magi): 0              Aegis' Penetration:          0
-      Aura:                     1 (base 0,     Living Conditions (Mundane): 0
-      +1 Boons)                                Covenant Season:             Spring
-                                               Aura Realm:                  Magic
+      Saga:                     Matrix         Tribunal:                    Rhine
+      Storyguide:               (not set)      Current Season:              Spring
+      Year Founded:             (not set)      Current Year:                1220
+      Aegis of the Hearth:      0              Aegis' Penetration:          0
+      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
+      Aura:                     1 (base 0,     Covenant Season:             Spring
+      +1 Boons)                                Aura Realm:                  Magic
           Edit (e)          In Play
 
   2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build
@@ -196,8 +195,8 @@
       Points of Weapons and Armor: 0          Expenditure (Before Cost Savings):
       Wealth:                      0          21
                                               Cost Savings:                      0
-                                              Total Expenditure:                  ▄▄
-                                              21
+                                              Total Expenditure:
+                                              21                                  ▅▅
                                               Surplus/Deficit:
                                               +79
 
@@ -207,6 +206,7 @@
                             Type        Income  Note
       ○ Mill                Typical        100
 
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 
   ▌
   ▌  Select a source of income or a row to see its details.
@@ -218,14 +218,13 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Keep
 
-      Saga:                     Matrix         Tribunal:                    (not
-      Storyguide:               (not set)      set)
-      Year Founded:             (not set)      Current Season:              Spring
-      Aegis of the Hearth:      0              Current Year:                1220
-      Living Conditions (Magi): 0              Aegis' Penetration:          0
-      Aura:                     1 (base 0,     Living Conditions (Mundane): 0
-      +1 Boons)                                Covenant Season:             Spring
-                                               Aura Realm:                  Magic
+      Saga:                     Matrix         Tribunal:                    Rhine
+      Storyguide:               (not set)      Current Season:              Spring
+      Year Founded:             (not set)      Current Year:                1220
+      Aegis of the Hearth:      0              Aegis' Penetration:          0
+      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
+      Aura:                     1 (base 0,     Covenant Season:             Spring
+      +1 Boons)                                Aura Realm:                  Magic
           Edit (e)          In Play
 
   2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build
@@ -251,6 +250,7 @@
 
 
 
+
   ▌
   ▌  Select a book to see its details.
   ▌
@@ -261,20 +261,20 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Keep
 
-      Saga:                     Matrix         Tribunal:                    (not
-      Storyguide:               (not set)      set)
-      Year Founded:             (not set)      Current Season:              Spring
-      Aegis of the Hearth:      0              Current Year:                1220
-      Living Conditions (Magi): 0              Aegis' Penetration:          0
-      Aura:                     1 (base 0,     Living Conditions (Mundane): 0
-      +1 Boons)                                Covenant Season:             Spring
-                                               Aura Realm:                  Magic
+      Saga:                     Matrix         Tribunal:                    Rhine
+      Storyguide:               (not set)      Current Season:              Spring
+      Year Founded:             (not set)      Current Year:                1220
+      Aegis of the Hearth:      0              Aegis' Penetration:          0
+      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
+      Aura:                     1 (base 0,     Covenant Season:             Spring
+      +1 Boons)                                Aura Realm:                  Magic
           Edit (e)          In Play
 
   2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   (none recorded)
+
 
 
 
@@ -304,14 +304,13 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Keep
 
-      Saga:                     Matrix         Tribunal:                    (not
-      Storyguide:               (not set)      set)
-      Year Founded:             (not set)      Current Season:              Spring
-      Aegis of the Hearth:      0              Current Year:                1220
-      Living Conditions (Magi): 0              Aegis' Penetration:          0
-      Aura:                     1 (base 0,     Living Conditions (Mundane): 0
-      +1 Boons)                                Covenant Season:             Spring
-                                               Aura Realm:                  Magic
+      Saga:                     Matrix         Tribunal:                    Rhine
+      Storyguide:               (not set)      Current Season:              Spring
+      Year Founded:             (not set)      Current Year:                1220
+      Aegis of the Hearth:      0              Aegis' Penetration:          0
+      Living Conditions (Magi): 0              Living Conditions (Mundane): 0
+      Aura:                     1 (base 0,     Covenant Season:             Spring
+      +1 Boons)                                Aura Realm:                  Magic
           Edit (e)          In Play
 
   2 Inhabitants  3 Seasons  4 Possessions  5 Economics  6 Library  7 Diary  8 Build
@@ -334,11 +333,12 @@
       Specialists                 -        0
       Money                       -        0
       Total                       -       28
-                                                                                  ▇▇
-      Power Level: (not set)
+
+      Power Level: (not set)                                                      ▃▃
       Storyguide's Build Points: (not set)
       Initial wasn't recorded: this covenant was in play before Build Points were
       tracked.
 
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 
 

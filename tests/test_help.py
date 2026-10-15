@@ -50,6 +50,7 @@ SHEETS = {
     "laboratory": "_laboratory_sheet_view",
     "familiar": "_familiar_sheet_view",
     "saga_content": "_saga_content_view",
+    "tribunal": "_tribunal_sheet_view",
 }
 
 

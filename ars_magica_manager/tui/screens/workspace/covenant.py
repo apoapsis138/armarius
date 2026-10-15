@@ -693,9 +693,9 @@ class CovenantActions(WorkspaceBase):
         if covenant is None:
             return
         form = (
-            covenant_forms.covenant_form(covenant)
+            covenant_forms.covenant_form(self.saga, covenant)
             if covenant.detail == FULL
-            else world_forms.sketch_covenant_form(covenant)
+            else world_forms.sketch_covenant_form(self.saga, covenant)
         )
 
         def handle_result(values: dict[str, Any] | None) -> None:

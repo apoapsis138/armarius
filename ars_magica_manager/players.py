@@ -18,7 +18,7 @@ from typing import Any
 
 from . import storage
 from .markup import escape, fit
-from .models import Character, Covenant, Familiar, Laboratory, Player, Saga
+from .models import Character, Covenant, Familiar, Laboratory, Player, Saga, Tribunal
 
 PLAYER = "player"
 STORYGUIDE = "storyguide"
@@ -121,7 +121,7 @@ def characters_of(saga: Saga, player: Player) -> list[Character]:
 def may_change(
     saga: Saga,
     player: Player | None,
-    record: Character | Familiar | Laboratory | Covenant | None,
+    record: Character | Familiar | Laboratory | Covenant | Tribunal | None,
 ) -> bool:
     """Whether `player` may change `record` (None: something of the whole
     saga). A storyguide may change anything; a player their own characters,

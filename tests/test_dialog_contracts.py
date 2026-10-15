@@ -330,21 +330,21 @@ CONTRACTS: dict[str, Contract] = {
         prefill={"Name": "Keep", "Aura": "0", "Covenant Season": "Spring"},
         edits={
             "Name": "Keep II",
-            "Tribunal": "Rhine",
+            "Tribunal": Select.NULL,
             "Year Founded": "1100",
             "Aura": "3",
             "Covenant Season": "Summer",
         },
         saved=lambda s: (
             _cov(s).name,
-            _cov(s).tribunal,
+            _cov(s).tribunal_id,
             _cov(s).year_founded,
             _cov(s).aura,
             _cov(s).covenant_season,
         ),
-        expected=("Keep II", "Rhine", 1100, 3, "Summer"),
+        expected=("Keep II", None, 1100, 3, "Summer"),
         invalid=[{"Name": ""}, {"Name": "  "}],
-        shown={"#cov-info-right": "Rhine", "#cov-info-left": "1100"},
+        shown={"#cov-info-right": "(not set)", "#cov-info-left": "1100"},
     ),
     "edit sketch covenant": Contract(
         prefill={"Name": "Fengheld", "Unnamed magi": "2"},
@@ -363,6 +363,38 @@ CONTRACTS: dict[str, Contract] = {
         shown={
             "#cov-info-right": "4 (1 named, 3 unnamed)",
             "#cov-summary": "Old rivals.",
+        },
+    ),
+    "create tribunal": Contract(
+        prefill={"Name": "", "Meets every (years)": "7"},
+        edits={
+            "Name": "Normandy",
+            "Next meeting (year)": "1227",
+            "Meeting place": "Fudarus",
+        },
+        saved=lambda s: [
+            (t.name, t.next_year, t.meeting_place, t.meets_every)
+            for t in s.tribunals
+            if t.name == "Normandy"
+        ],
+        expected=[("Normandy", 1227, "Fudarus", 7)],
+        invalid=[{"Name": ""}, {"Meets every (years)": "0"}, {"Magi in all": "-2"}],
+    ),
+    "edit tribunal": Contract(
+        prefill={
+            "Name": "Rhine",
+            "Next meeting (year)": "1228",
+            "Meeting place": "Durenmar",
+            "Praeco": "mag_sketch",
+        },
+        edits={"Name": "The Rhine", "Magi in all": "40", "Praeco": "mag1"},
+        saved=lambda s: (s.tribunals[0].name, s.tribunals[0].magi_total),
+        expected=("The Rhine", 40),
+        invalid=[{"Name": ""}, {"Meets every (years)": "-1"}],
+        shown={
+            "#section-trib-info": "The Rhine",
+            "#trib-info-right": "recorded of 40",
+            "#trib-info-left": "Leandro",
         },
     ),
     "what matters": Contract(

@@ -39,7 +39,14 @@ GOLDEN_DIR = Path(__file__).parent / "golden" / "sheet_text"
 SIZES = [(140, 70), (120, 45)]
 
 #: The nodes that show a sheet view (the others show a list or a summary).
-SHEETS = {"covenant", "character", "laboratory", "familiar", "sketch_covenant"}
+SHEETS = {
+    "covenant",
+    "character",
+    "laboratory",
+    "familiar",
+    "sketch_covenant",
+    "tribunal",
+}
 
 
 async def _settle(pilot) -> None:

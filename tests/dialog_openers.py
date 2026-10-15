@@ -213,6 +213,10 @@ OPENERS: dict[str, Opener] = {
     "edit saga": Opener("saga", lambda ws: ws._edit_saga()),
     "set date": Opener("saga", lambda ws: ws.action_set_date()),
     "create covenant": Opener("saga", lambda ws: ws.action_create_covenant()),
+    "create tribunal": Opener("saga", lambda ws: ws.action_create_tribunal()),
+    "edit tribunal": Opener(
+        "tribunal", lambda ws: ws._core_verb("section-trib-info", "edit")
+    ),
     # Covenant
     "create character": Opener("covenant", lambda ws: ws.action_create_character()),
     "create laboratory": Opener("covenant", lambda ws: ws.action_create_laboratory()),

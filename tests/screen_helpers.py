@@ -32,6 +32,7 @@ from ars_magica_manager.models import (
     Possession,
     Saga,
     Spell,
+    Tribunal,
     VirtueFlawInstance,
 )
 from ars_magica_manager.tui.screens import (
@@ -515,7 +516,8 @@ def _saga_with_configured_covenant() -> Saga:
     saga.current_season = "Spring"
     saga.current_year = 1220
     cov = saga.covenants[0]
-    cov.tribunal = "Rhine"
+    saga.tribunals.append(Tribunal(id="rhine", name="Rhine"))
+    cov.tribunal_id = "rhine"
     cov.year_founded = 1100
     cov.aegis_of_the_hearth = 2
     cov.aegis_penetration = 1

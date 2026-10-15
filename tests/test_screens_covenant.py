@@ -48,6 +48,7 @@ from ars_magica_manager.models import (
     Covenant,
     Saga,
     ScoredTrait,
+    Tribunal,
     VirtueFlawInstance,
 )
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
@@ -153,7 +154,9 @@ async def test_opening_a_covenant_focuses_info_panel_so_edit_hotkey_works():
 
 
 async def test_edit_covenant_saves_fields_and_labs_inherit_the_aura():
-    storage.save_saga(_saga_with_bare_laboratory())
+    saga = _saga_with_bare_laboratory()
+    saga.tribunals.append(Tribunal(id="rhine", name="Rhine"))
+    storage.save_saga(saga)
 
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 50)) as pilot:
@@ -167,7 +170,7 @@ async def test_edit_covenant_saves_fields_and_labs_inherit_the_aura():
             dialog.query_one(f"#fld-{field.replace('-', '_')}", Input).value = value
 
         set_input("name", "Dammerstein")
-        set_input("tribunal", "Rhine")
+        dialog.query_one("#fld-tribunal_id", Select).value = "rhine"
         set_input("year-founded", "1100")
         set_input("aegis-of-the-hearth", "2")
         set_input("aegis-penetration", "1")
@@ -189,7 +192,11 @@ async def test_edit_covenant_saves_fields_and_labs_inherit_the_aura():
         assert "Aura: 3 (covenant) +0 (modifier) = 3" in text
 
     cov = storage.load_saga("test_saga").covenants[0]
-    assert (cov.name, cov.tribunal, cov.year_founded) == ("Dammerstein", "Rhine", 1100)
+    assert (cov.name, cov.tribunal_id, cov.year_founded) == (
+        "Dammerstein",
+        "rhine",
+        1100,
+    )
     assert (cov.aegis_of_the_hearth, cov.aegis_penetration) == (2, 1)
     assert (cov.living_conditions_magi, cov.living_conditions_mundane) == (1, -2)
     assert (cov.aura, cov.covenant_season) == (3, "Autumn")

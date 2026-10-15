@@ -32,6 +32,8 @@ from . import (
     seasons,
     storage,
     transfer,
+    tribunal_forms,
+    tribunals,
     world,
 )
 from . import economics as eco
@@ -67,6 +69,7 @@ from .models import (
     LabTextAccess,
     Saga,
     Spell,
+    Tribunal,
 )
 from .rules import creation as creation_rules
 from .rules import creation_covenant as cov_creation
@@ -74,7 +77,7 @@ from .rules import lab_seasons
 from .sections import LAB_TEXTS_SECTION
 
 #: The record a page shows, as deletion and actions take it.
-Record = Covenant | Character | Laboratory | Familiar
+Record = Covenant | Character | Laboratory | Familiar | Tribunal
 
 #: Delete's action: the record on show, after a confirmation that says
 #: what happens to what it owns.
@@ -107,6 +110,7 @@ PAGE_SECTIONS: dict[NodeKind, tuple[str | None, ...]] = {
         "section-inventory",
     ),
     NodeKind.FAMILIAR: (RECORD_SECTION[NodeKind.FAMILIAR],),
+    NodeKind.TRIBUNAL: (RECORD_SECTION[NodeKind.TRIBUNAL],),
     NodeKind.LABORATORY: (
         RECORD_SECTION[NodeKind.LABORATORY],
         "section-lab-raw-vis",
@@ -135,6 +139,7 @@ class Page:
     character: Character | None = None
     laboratory: Laboratory | None = None
     familiar: Familiar | None = None
+    tribunal: Tribunal | None = None
     section: str | None = None
 
     # -- actions.ActionFacts --
@@ -187,6 +192,8 @@ class Page:
     def record_to_delete(self) -> Record | None:
         if self.kind == NodeKind.FAMILIAR:
             return self.familiar
+        if self.kind == NodeKind.TRIBUNAL:
+            return self.tribunal
         return self.creation_record()
 
     def can_send_files(self) -> bool:
@@ -201,6 +208,7 @@ def page_for(
     character_id: str | None = None,
     laboratory_id: str | None = None,
     familiar_id: str | None = None,
+    tribunal_id: str | None = None,
 ) -> Page:
     """The Page for a record's page, found by id: a character's or
     laboratory's covenant comes with it, and a familiar's magus."""
@@ -224,6 +232,7 @@ def page_for(
         character=character,
         laboratory=laboratory,
         familiar=familiar,
+        tribunal=saga.tribunal(tribunal_id),
     )
 
 
@@ -351,6 +360,7 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "export_saga": ((NodeKind.SAGA, "Saga Management"),),
     "set_date": ((NodeKind.SAGA, "Seasons"),),
     "create_covenant": ((NodeKind.SAGA, "Covenants"),),
+    "create_tribunal": ((NodeKind.SAGA, "Tribunals"),),
     "create_character": (
         (NodeKind.SAGA, "Unassigned Characters"),
         (NodeKind.COVENANT, "People"),
@@ -479,6 +489,11 @@ def delete_record(saga: Saga, record: Record) -> Confirm:
 
 
 def _deletion_of(saga: Saga, record: Record) -> tuple[list[str], Callable[[], None]]:
+    if isinstance(record, Tribunal):
+        return (
+            tribunals.deletion_consequences(saga, record),
+            lambda: tribunals.delete(saga, record),
+        )
     if isinstance(record, Covenant):
         return (
             deletion.covenant_consequences(saga, record),
@@ -1200,6 +1215,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "set_date": lambda page: set_date(page.saga),
     "edit_saga": lambda page: creation_forms.edit_saga_form(page.saga),
     "create_covenant": lambda page: creation_forms.new_covenant_form(page.saga),
+    "create_tribunal": lambda page: tribunal_forms.new_tribunal_form(page.saga),
     "create_character": lambda page: creation_forms.new_character_form(
         page.saga, _covenant_id(page)
     ),

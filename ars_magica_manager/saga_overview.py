@@ -10,7 +10,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass
 
-from . import catalog
+from . import catalog, tribunals
 from . import character_sheet as cs
 from . import laboratories as labs
 from .models import (
@@ -69,10 +69,11 @@ class CovenantCard:
     facts: tuple[cs.Fact, ...]
 
 
-def covenant_subtitle(covenant: Covenant) -> str:
+def covenant_subtitle(saga: Saga, covenant: Covenant) -> str:
     parts = [f"{covenant.covenant_season} covenant"]
-    if covenant.tribunal:
-        parts.insert(0, f"{covenant.tribunal} Tribunal")
+    tribunal = tribunals.title_of(saga, covenant)
+    if tribunal:
+        parts.insert(0, tribunal)
     if covenant.year_founded is not None:
         parts.append(f"founded {covenant.year_founded}")
     return "  ·  ".join(parts)
@@ -95,7 +96,10 @@ def covenant_cards(saga: Saga) -> list[CovenantCard]:
         ]
         cards.append(
             CovenantCard(
-                covenant.id, covenant.name, covenant_subtitle(covenant), tuple(facts)
+                covenant.id,
+                covenant.name,
+                covenant_subtitle(saga, covenant),
+                tuple(facts),
             )
         )
     return cards

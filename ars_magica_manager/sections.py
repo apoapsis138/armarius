@@ -100,10 +100,15 @@ FAVOURS_SECTION = "section-favours"
 LINKS_SECTION = "section-links"
 MAGI_SECTION = "section-cov-magi"
 WHAT_MATTERS_SECTION = "section-cov-what-matters"
+#: A Tribunal sheet's top panel.
+TRIBUNAL_INFO_SECTION = "section-trib-info"
+#: Its roster of covenants.
+ROSTER_SECTION = "section-trib-roster"
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),
     LINKS_SECTION: frozenset({"add", "edit", "remove"}),
     MAGI_SECTION: frozenset({"add", "edit", "remove"}),
     WHAT_MATTERS_SECTION: frozenset({"edit"}),
+    TRIBUNAL_INFO_SECTION: frozenset({"edit"}),
 }
