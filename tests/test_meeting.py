@@ -4,11 +4,14 @@ closing it into the Diary."""
 
 from __future__ import annotations
 
+import random
+
 from support import everything_saga
 
 from ars_magica_manager import meeting, storage
 from ars_magica_manager.commands import Confirm, Form, Refuse
 from ars_magica_manager.models import CASE_DECIDED, Saga
+from ars_magica_manager.rules import debate
 
 
 def _rhine(saga: Saga):
@@ -115,7 +118,8 @@ def test_a_hearing_takes_its_sides_from_the_case():
     _save(hearing, defender="Leandro")
     assert rhine.cases[0].defender == "Leandro"
     motion = next(s for s in steps if s.title == "Motion: Gild dues")
-    assert "defender" not in {f.key for f in motion.fields(saga, rhine, rhine.meeting)}
+    labels = [f.label for f in motion.fields(saga, rhine, rhine.meeting)]
+    assert "Speaks against it" in labels and "Proposal" in labels
 
 
 def test_closing_writes_the_diary_and_sets_the_next_meeting():
@@ -164,3 +168,117 @@ def test_the_theban_meeting_holds_elections():
     _save(form, holder_1="mag1", term_1=1232)
     office = thebes.package_data["theban"]["archai"][1]
     assert (office["holder_id"], office["term_ends"]) == ("mag1", 1232)
+
+
+# -- the debate and the vote --
+
+
+def _open(saga: Saga):
+    rhine = _rhine(saga)
+    _save(meeting.hold(saga, rhine))
+    _save(meeting.hold(saga, rhine))
+    return rhine
+
+
+def _step(rhine, key: str):
+    return next(s for s in meeting.steps(rhine, rhine.meeting) if s.key == key)
+
+
+def test_each_case_has_its_debate_then_its_vote():
+    saga = everything_saga()
+    rhine = _open(saga)
+    titles = [s.title for s in meeting.steps(rhine, rhine.meeting)]
+    at = titles.index("Fengheld v. Keep")
+    assert titles[at + 1] == "The vote: Fengheld v. Keep"
+
+
+def test_testimony_bonus_follows_who_gives_it():
+    assert debate.testimony_bonus("Fengheld's register") == 1
+    assert debate.testimony_bonus("The apprentice saw it") == 2
+    assert debate.testimony_bonus("A magus of Durenmar") == 3
+    assert debate.testimony_bonus("A peer, examined by a Quaesitor") == 6
+
+
+def test_a_debate_runs_until_a_side_is_knocked_out_or_the_rounds_end():
+    strong = debate.Debater(
+        "Severinus",
+        communication=3,
+        presence=3,
+        attacks={"Intrigue": 6},
+        defences={"Guile": 6},
+    )
+    weak = debate.Debater("Novice")
+    held = debate.run((strong, weak), ([3], []), 10, random.Random(4))
+    assert held.victor == 0
+    assert held.lost[1] >= debate.KNOCKED_OUT or held.rounds == 10
+    assert held.lines and held.lines[0].startswith("Round 1:")
+    assert held.strength == held.lost[1] - held.lost[0]
+
+
+def test_argument_strength_sways_neutral_then_hostile_votes():
+    # Societates' example: Upper Hand wins 20% of 25 neutral votes.
+    assert debate.swayed(3, 25, 20) == (5, 0)
+    # A Triumphant Victory also wins 10% of the other side.
+    assert debate.swayed(5, 25, 20) == (10, 2)
+    assert debate.sway(9)[0] == "Landslide Victory"
+    assert debate.swayed(1, 25, 20) == (0, 0)
+
+
+def test_leanings_default_from_the_parties_and_attitude():
+    saga = everything_saga()
+    rhine = _open(saga)
+    case = rhine.cases[0]
+    lean = meeting.leanings(saga, rhine, rhine.meeting, case)
+    # Fengheld brings it, Keep defends it.
+    assert lean == {"cov1": meeting.AGAINST, "cov_sketch": meeting.FOR}
+
+
+def test_entered_levels_decide_the_debate_and_the_vote_is_called_in_order():
+    saga = everything_saga()
+    rhine = _open(saga)
+    case = rhine.cases[0]
+    hearing = meeting.step_form(saga, rhine, _step(rhine, f"case:{case.id}"))
+    _save(hearing, lost_for=0, lost_against=3)
+    assert meeting.strength(rhine.meeting, case) == (meeting.FOR, 3)
+    assert "Upper Hand" in meeting.debate_text(rhine.meeting, case)
+    vote = meeting.step_form(saga, rhine, _step(rhine, f"vote:{case.id}"))
+    assert vote.live is not None
+    assert vote.live(_values(vote)).startswith("For 4, against 1")
+    called = list(meeting.call_the_vote(saga, rhine, rhine.meeting, case))
+    assert [c.covenant.name for c in called] == ["Keep", "Fengheld"]
+    assert called[0].tally == (0, 1, 0) and called[-1].tally == (4, 1, 0)
+    # Keep undecided: an Upper Hand wins 20% of its one vote, rounded.
+    lean = {"cov1": meeting.UNDECIDED, "cov_sketch": meeting.FOR}
+    assert meeting.tally(saga, rhine, rhine.meeting, case, lean) == (4, 0, 1)
+    _save(vote)
+    assert rhine.meeting["votes"][case.id]["for"] == 4
+    rulings = meeting.step_form(saga, rhine, _step(rhine, "rulings"))
+    assert _values(rulings)[f"outcome_{case.id}"] == "Carried, 4 to 1"
+
+
+def test_a_rolled_debate_uses_the_dice(monkeypatch):
+    saga = everything_saga()
+    rhine = _open(saga)
+    case = rhine.cases[0]
+    monkeypatch.setattr(meeting, "rng", lambda: random.Random(7))
+    _save(meeting.step_form(saga, rhine, _step(rhine, f"case:{case.id}")))
+    held = rhine.meeting["debates"][case.id]
+    assert not held["entered"] and held["lines"]
+    form = meeting.step_form(saga, rhine, _step(rhine, f"case:{case.id}"))
+    assert "both sides" in (form.validate(_values(form, lost_for=1)) or "")
+
+
+def test_an_alteration_costs_a_motion_argument_strength():
+    saga = everything_saga()
+    rhine = _open(saga)
+    motion = rhine.cases[1]
+    form = meeting.step_form(saga, rhine, _step(rhine, f"case:{motion.id}"))
+    _save(
+        form,
+        prosecutor="Leandro",
+        defender="Severinus",
+        proposal="Alteration",
+        lost_for=0,
+        lost_against=4,
+    )
+    assert meeting.strength(rhine.meeting, motion) == (meeting.FOR, 1)

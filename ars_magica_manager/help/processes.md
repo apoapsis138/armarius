@@ -198,11 +198,29 @@ The steps run in a fixed order:
   are absent and the proxies it carries, and whether the Presiding
   Quaesitor allows them or sets them aside. Its votes in the hall are
   worked out, and the proxies are kept on the roster.
-- **Each case and motion**, on its day: the prosecutor and defender (a
-  motion has one who speaks for it), taken from the case.
+- **Each case and motion**, on its day: the debate between the
+  prosecutor and defender (for a motion, one who speaks for it and one
+  against), taken from the case. Enter each side's debate Fatigue levels
+  lost, or leave both blank and the debate is rolled round by round by
+  the rules of Houses of Hermes: Societates (The Fine Arts of Debate):
+  Communication + Folk Ken, Intrigue or Artes Liberales against
+  Intelligence + Charm, Guile or Leadership, each debater using what
+  they are best at; a name that is no character in the saga debates as
+  an ordinary magus. The case's Evidence is the prosecution's testimony
+  and the Defence testimony the defence's, each used once: a peer's +3,
+  an apprentice's or familiar's +2, any other +1, and +3 more if a
+  Quaesitor examined it. The side that lost fewer levels wins, and the
+  difference is its Argument Strength (less 1 for a motion that adds to
+  the Code, 3 for one that alters it).
+- **The vote** on each case: each covenant's leaning, which you can
+  change, and the votes the debate won: an Edge wins 10% of the
+  undecided votes, up to a Landslide's 60%, and from a Triumphant
+  Victory 10% to 30% of the other side's too. The covenants are called
+  one by one and the tally kept; what is left undecided abstains.
 - **Elections**, when the Tribunal's customs have offices (the Theban
   archai): each office's holder and when the term ends.
-- **Rulings and fines**: the ruling on each case.
+- **Rulings and fines**: the ruling on each case, starting from how its
+  vote went.
 - **Treasury and vis**: the treasury as it stands and the loans that
   fall due this year.
 - **Closing**: each case with a ruling is decided, the meeting is

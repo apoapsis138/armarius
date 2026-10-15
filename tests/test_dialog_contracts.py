@@ -629,6 +629,33 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Keep: absent": "-1"},
         shown={"#meeting-attendance": "2 (set aside)"},
     ),
+    "hold the debate": Contract(
+        prefill={"Prosecutor": "Severinus", "Defender": "Keep", "Rounds": "5"},
+        edits={
+            "Defender": "Leandro",
+            "Levels lost (for)": "0",
+            "Levels lost (against)": "3",
+        },
+        saved=lambda s: (
+            s.tribunals[0].cases[0].defender,
+            s.tribunals[0].meeting["debates"][s.tribunals[0].cases[0].id]["lost"],
+        ),
+        expected=("Leandro", [0, 3]),
+        invalid=[
+            {"Rounds": "11"},
+            {"Levels lost (for)": "1", "Levels lost (against)": ""},
+        ],
+        shown={"#meeting-vote": "brings it", "#meeting-business": "✓ held"},
+    ),
+    "hold the vote": Contract(
+        prefill={"Keep: leans": "Against", "Fengheld: leans": "For"},
+        edits={"Keep: leans": "Undecided"},
+        saved=lambda s: s.tribunals[0].meeting["votes"][s.tribunals[0].cases[0].id][
+            "leanings"
+        ]["cov1"],
+        expected="Undecided",
+        shown={"#meeting-tally": "2 undecided"},
+    ),
     "add case": Contract(
         prefill={"Case": "", "Kind": "charge", "Filed (year)": "1220"},
         edits={

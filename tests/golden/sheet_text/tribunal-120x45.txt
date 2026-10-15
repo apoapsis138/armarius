@@ -106,21 +106,21 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Order of Business (3 days)
 
-        Step                    Day
-      ○ Opening and the oaths   The First Day
+        Step                        Day
+      ○ Opening and the oaths       The First Day
       ○ Attendance and proxies
       ○ Fengheld v. Keep
-      ○ Motion: Gild dues       The Second Day
-      ○ Rulings and fines       The Third Day
+      ○ The vote: Fengheld v. Keep
+      ○ Motion: Gild dues           The Second Day
+      ○ The vote: Gild dues
+      ○ Rulings and fines           The Third Day                                 ▁▁
       ○ Treasury and vis
       ○ Closing
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Attendance (5 votes in the hall)
+    ▼ The Vote: Fengheld v. Keep (5)
 
-        Covenant  Magi  Absent  Proxies  Votes
-      ○ Keep      1                      1
-      ○ Fengheld  3             1        4                                        ▇▇
+        Covenant  Votes  For  Against  Undecided  Note
 
   ▌
   ▌  Choose a step to read what was entered at it.

@@ -165,15 +165,35 @@ def _pick(open_editor, list_id: str, index: int = 0):
     return opener
 
 
+def _open_meeting(saga: Saga, tribunal) -> None:
+    """Open the Tribunal's meeting (its Opening as it comes), once: the
+    dialog is opened again after a cancel."""
+    if tribunal.meeting is None:
+        opening = meeting.hold(saga, tribunal)
+        opening.apply({f.key: f.value for f in opening.fields() if f.kind != "info"})
+
+
 async def _open_attendance(ws) -> None:
     """Attendance and proxies, the meeting opened first."""
     tribunal = ws.saga.tribunals[0]
-    opening = meeting.hold(ws.saga, tribunal)
-    opening.apply({f.key: f.value for f in opening.fields() if f.kind != "info"})
+    _open_meeting(ws.saga, tribunal)
     await _pick(
         lambda ws: ws._core_verb("section-meeting-attendance", "edit"),
         "meeting-attendance",
     )(ws)
+
+
+def _open_meeting_step(row: int, list_id: str):
+    """The meeting opened, then Edit on `list_id`'s row `row`: the
+    Order of Business's third row is the first case's debate."""
+
+    async def opener(ws) -> None:
+        tribunal = ws.saga.tribunals[0]
+        _open_meeting(ws.saga, tribunal)
+        section = "section-" + list_id
+        await _pick(lambda ws: ws._core_verb(section, "edit"), list_id, row)(ws)
+
+    return opener
 
 
 def _economics_row(which: str, key: str):
@@ -311,6 +331,8 @@ OPENERS: dict[str, Opener] = {
         ),
     ),
     "attendance and proxies": Opener("tribunal", _open_attendance),
+    "hold the debate": Opener("tribunal", _open_meeting_step(2, "meeting-business")),
+    "hold the vote": Opener("tribunal", _open_meeting_step(0, "meeting-vote")),
     "add case": Opener(
         "tribunal",
         _pick(lambda ws: ws._core_verb("section-trib-cases", "add"), "trib-cases"),

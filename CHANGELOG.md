@@ -46,6 +46,26 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.80.0 — 2026-10-15
+
+- **The debate.** Each case and motion at a meeting is now debated by
+  the rules of Houses of Hermes: Societates (The Fine Arts of Debate).
+  Enter each side's debate Fatigue levels lost, or leave them blank and
+  the debate is rolled round by round from the debaters' own scores
+  (Communication with Folk Ken, Intrigue or Artes Liberales against
+  Intelligence with Charm, Guile or Leadership), with the case's
+  evidence as the prosecution's testimony and any you add for the
+  defence. Each round is written down, with who won and the Argument
+  Strength; a motion that adds to or alters the Code is harder to carry.
+- **Calling the vote.** After each debate comes its vote. Each covenant
+  starts from its leaning (a party votes its own side; any other leans
+  by its attitude to a troupe covenant in the case), which you can
+  change; the debate's winner then sways a share of the undecided votes
+  (and, from a Triumphant Victory, of the other side's). The Meeting tab
+  shows the vote covenant by covenant as the Praeco calls it, with the
+  tally and a bar for the hall, and the rulings start from how each vote
+  went.
+
 ## 2.79.0 — 2026-10-15
 
 - **Hold Tribunal.** Each Tribunal has a new Meeting tab (a chapter on

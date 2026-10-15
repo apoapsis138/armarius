@@ -36,6 +36,7 @@ from ..sections import (
     ROSTER_SECTION,
     TREASURY_SECTION,
     TRIB_DIARY_SECTION,
+    VOTE_SECTION,
 )
 from ..tribunal_sheet import Grid
 from .character_sheet import TextBlock, section
@@ -275,6 +276,11 @@ class TribunalPage(QWidget):
             p,
             section(meeting.title(saga, t), p, TextBlock(facts, p)),
             business,
+            self._grid(
+                meeting.vote_title(saga, t),
+                meeting.vote_grid(saga, t, tally_row=True),
+                VOTE_SECTION,
+            ),
             self._grid(
                 meeting.attendance_title(saga, t),
                 meeting.attendance_grid(saga, t),

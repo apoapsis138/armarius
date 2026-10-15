@@ -181,6 +181,28 @@ keeping whatever its steps changed. Choose a step to read what was
 entered at it beside the list.
 <!-- /gui -->
 
+### The Vote
+<!-- help: section-meeting-vote -->
+
+The vote on the case in hand (or the last voted on): each covenant as
+the Praeco calls it, in the order of the roll, with its votes for,
+against and undecided, and how many of them the debate swayed; then the
+tally, with a bar for the hall.
+
+Each covenant starts from its leaning: a party votes its own side, and
+any other leans by its attitude toward a troupe covenant that is a
+party (Warm or better with it, Wary or worse against it), otherwise
+undecided. The winner of the debate then wins a share of the undecided
+votes, and from a Triumphant Victory a share of the other side's, taken
+from the first covenants called. See [Hold Tribunal](help:hold-tribunal).
+
+<!-- tui -->
+`e` holds the vote, where you can change each covenant's leaning.
+<!-- /tui -->
+<!-- gui -->
+**Edit** holds the vote, where you can change each covenant's leaning.
+<!-- /gui -->
+
 ### Attendance
 <!-- help: section-meeting-attendance -->
 

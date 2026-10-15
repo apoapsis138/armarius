@@ -160,9 +160,10 @@ SEASONS_RECORDED_SECTION = "section-seasons-recorded"
 COV_AHEAD_SECTION = "section-cov-ahead"
 WORLD_TURNS_SECTION = "section-world-turns"
 #: A Tribunal's meeting being held (or the next): its order of
-#: business, and who is in the hall.
+#: business, who is in the hall, and the vote on the case in hand.
 BUSINESS_SECTION = "section-meeting-business"
 ATTENDANCE_SECTION = "section-meeting-attendance"
+VOTE_SECTION = "section-meeting-vote"
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),
@@ -207,4 +208,5 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     WORLD_TURNS_SECTION: frozenset({"remove"}),
     BUSINESS_SECTION: frozenset({"edit", "remove"}),
     ATTENDANCE_SECTION: frozenset({"edit"}),
+    VOTE_SECTION: frozenset({"edit"}),
 }

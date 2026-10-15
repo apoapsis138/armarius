@@ -1126,6 +1126,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-meeting-vote": {
+      "active": "section-meeting-vote",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Hold Tribunal: Rhine Tribunal",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-meeting-attendance": {
       "active": "section-meeting-attendance",
       "keys": {
@@ -1234,6 +1244,16 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Hold Tribunal: Theban Tribunal",
         "d": "notice: No meeting is being held.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-meeting-vote": {
+      "active": "section-meeting-vote",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(disabled)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -1356,6 +1376,16 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Hold Tribunal: Normandy Tribunal",
         "d": "notice: No meeting is being held.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-meeting-vote": {
+      "active": "section-meeting-vote",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(disabled)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }

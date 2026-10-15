@@ -26,6 +26,7 @@ from ....sections import (
     TRIB_DIARY_SECTION,
     TRIB_MAGI_SECTION,
     TRIBUNAL_INFO_SECTION,
+    VOTE_SECTION,
 )
 from ..widgets import PinnedCollapsible, SelectableList, SheetSection, TwoColumns
 from .base import SheetView
@@ -35,7 +36,7 @@ from .base import SheetView
 _CASES = (CASES_SECTION, PAST_CASES_SECTION)
 #: The meeting's lists: holding a step can change the cases, the
 #: roster's proxies, the Diary and the next meeting.
-_HALL = (BUSINESS_SECTION, ATTENDANCE_SECTION)
+_HALL = (BUSINESS_SECTION, VOTE_SECTION, ATTENDANCE_SECTION)
 
 
 class TribunalSheetView(SheetView):
@@ -205,14 +206,31 @@ class TribunalSheetView(SheetView):
                 yield self._static(watched, self._meeting_facts, id="meeting-facts")
                 yield from self._grid_section(
                     BUSINESS_SECTION,
-                    (TRIBUNAL_INFO_SECTION, *_CASES, ATTENDANCE_SECTION),
+                    (TRIBUNAL_INFO_SECTION, *_CASES, VOTE_SECTION, ATTENDANCE_SECTION),
                     lambda: meeting.business_title(saga, t),
                     lambda: meeting.business_grid(saga, t).lines(),
                     "meeting-business",
                 )
+                watched_vote = (TRIBUNAL_INFO_SECTION, *_CASES, *_HALL)
+                with SheetSection(
+                    title=self._titled(
+                        watched_vote,
+                        VOTE_SECTION,
+                        lambda: meeting.vote_title(saga, t),
+                    ),
+                    id=VOTE_SECTION,
+                ):
+                    yield self._list(
+                        watched_vote,
+                        lambda: meeting.vote_grid(saga, t).lines(),
+                        id="meeting-vote",
+                    )
+                    yield self._static(
+                        watched_vote, self._tally_text, id="meeting-tally"
+                    )
                 yield from self._grid_section(
                     ATTENDANCE_SECTION,
-                    (TRIBUNAL_INFO_SECTION, *_CASES, BUSINESS_SECTION),
+                    (TRIBUNAL_INFO_SECTION, *_CASES, BUSINESS_SECTION, VOTE_SECTION),
                     lambda: meeting.attendance_title(saga, t),
                     lambda: meeting.attendance_grid(saga, t).lines(),
                     "meeting-attendance",
@@ -225,6 +243,21 @@ class TribunalSheetView(SheetView):
         return f"[b]{heading}[/]\n" + aligned(
             [(f.label, escape(f.value)) for f in facts]
         )
+
+    def _tally_text(self) -> str:
+        """The tally as a bar: for in green, undecided, against in red."""
+        case = meeting.vote_case(self.saga, self.tribunal)
+        if case is None:
+            return ""
+        record = meeting.record(self.saga, self.tribunal)
+        yes, no, abstain = meeting.tally(self.saga, self.tribunal, record, case)
+        bar = meeting.tally_bar((yes, no, abstain))
+        split = bar.count("█"), bar.count("░"), bar.count("▓")
+        drawn = (
+            f"[$success]{'█' * split[0]}[/][$label]{'░' * split[1]}[/]"
+            f"[$error]{'█' * split[2]}[/]"
+        )
+        return f"  [b]For {yes}[/] {drawn} [b]Against {no}[/]  {abstain} undecided"
 
     def _step_text(self) -> str:
         return meeting.step_text(self.saga, self.tribunal, self._step)
