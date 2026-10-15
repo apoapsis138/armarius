@@ -46,6 +46,23 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.72.0 — 2026-10-15
+
+- Lords in detail (Lords of Men). A lord has a title, a wealth, his
+  manors and his seat, and a Fief tab that works out his income, what he
+  has to spend, the knights, serjeants, infantry and levies his title
+  raises, and what he owes the neighbour he answers to (knight service
+  or scutage, aids and relief). Where the book gives two figures, the
+  lower is used. The tab lists his castles and the Gratitude he owes
+  each character, with what its points are enough for.
+- Towns in detail (City & Guild). A town has a charter, a council and a
+  population, and a Town tab showing its size and how many guilds a
+  town its size has in the saga's year, then its guilds and its fairs
+  and markets. A fair a covenant trades at is a source of income to it;
+  Roll Income rolls its year's Income Modification on a stress die and
+  keeps the new income.
+- Changing a neighbour's kind shows its new kind's tab at once.
+
 ## 2.71.0 — 2026-10-15
 
 - The Region and its neighbours. A saga keeps the lords, towns, churches,

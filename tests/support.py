@@ -153,6 +153,7 @@ NODES: dict[str, tuple[str, ...]] = {
     "normandy_tribunal": ("tribunal", "normandy"),
     "region": ("region",),
     "neighbour": ("neighbour", "gottfried"),
+    "town": ("neighbour", "soest"),
     "book_group": ("book_group",),
     "saga_content": ("saga_content",),
 }
@@ -479,6 +480,23 @@ def everything_saga() -> Saga:
                 favours=[
                     Favour("Safe passage for the wool carts", "Keep", "Gottfried")
                 ],
+                details={
+                    "title": "count",
+                    "wealth": "Average",
+                    "manors": 50,
+                    "seat": "Arnsberg",
+                    "castles": [
+                        {
+                            "name": "Arnsberg",
+                            "garrison": "6 knights",
+                            "defences": "stone keep",
+                            "supplies": "",
+                        }
+                    ],
+                    "gratitude": [
+                        {"who": "comp1", "points": 6, "why": "Drove off the wolves"}
+                    ],
+                },
             ),
             Neighbour(
                 id="cologne",
@@ -492,6 +510,27 @@ def everything_saga() -> Saga:
                 name="The Black Pool Coven",
                 kind="faction",
                 attitudes=[Attitude("cov1", 2)],
+            ),
+            Neighbour(
+                id="soest",
+                name="Soest",
+                kind="town",
+                details={
+                    "charter": "Commune",
+                    "council": 12,
+                    "population": 5000,
+                    "guilds": [{"trade": "Weavers", "dean": "Heinrich", "masters": 9}],
+                    "fairs": [
+                        {
+                            "name": "St. Patroclus' fair",
+                            "kind": "Fair",
+                            "season": "Autumn",
+                            "band": "Lesser",
+                            "income": None,
+                            "covenant_id": "cov1",
+                        }
+                    ],
+                },
             ),
         ],
         characters=[magus, companion, rival],

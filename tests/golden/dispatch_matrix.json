@@ -1434,6 +1434,26 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-nb-castles": {
+      "active": "section-nb-castles",
+      "keys": {
+        "a": "FieldsDialog: Add a Castle",
+        "e": "FieldsDialog: Edit a Castle",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-gratitude": {
+      "active": "section-nb-gratitude",
+      "keys": {
+        "a": "FieldsDialog: Add a Debt of Gratitude",
+        "e": "FieldsDialog: Edit a Debt of Gratitude",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-attitudes": {
       "active": "section-attitudes",
       "keys": {
@@ -1450,6 +1470,68 @@
         "a": "FieldsDialog: Add a Favour",
         "e": "FieldsDialog: Edit a Favour",
         "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-links": {
+      "active": "section-links",
+      "keys": {
+        "a": "ChooseScreen: Link to what?",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    }
+  },
+  "town": {
+    "PinnedCollapsible#section-nb-info": {
+      "active": "section-nb-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Soest",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-guilds": {
+      "active": "section-nb-guilds",
+      "keys": {
+        "a": "FieldsDialog: Add a Guild",
+        "e": "FieldsDialog: Edit a Guild",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-fairs": {
+      "active": "section-nb-fairs",
+      "keys": {
+        "a": "FieldsDialog: Add a Fair or Market",
+        "e": "FieldsDialog: Edit a Fair or Market",
+        "d": "ConfirmScreen",
+        "m": "ConfirmScreen",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-attitudes": {
+      "active": "section-attitudes",
+      "keys": {
+        "a": "FieldsDialog: Add a Reason",
+        "e": "FieldsDialog: Attitude toward Keep",
+        "d": "notice: Where it started can't be deleted: edit it to change it.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-favours": {
+      "active": "section-favours",
+      "keys": {
+        "a": "FieldsDialog: Add a Favour",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "(disabled)",
         "slash": "(disabled)"
       }

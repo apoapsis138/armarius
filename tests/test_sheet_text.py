@@ -50,6 +50,7 @@ SHEETS = {
     "normandy_tribunal",
     "region",
     "neighbour",
+    "town",
 }
 
 

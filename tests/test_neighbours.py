@@ -5,20 +5,25 @@ front-ends' pages."""
 from __future__ import annotations
 
 import os
+import random
 
 import pytest
 from support import everything_saga, wait_until
 from textual.widgets import Tree
 
 from ars_magica_manager import (
+    lords,
     neighbour_forms,
     neighbours,
     region_sheet,
     storage,
+    towns,
 )
 from ars_magica_manager.actions import NodeKind
-from ars_magica_manager.commands import Choose, Confirm, Form
+from ars_magica_manager.commands import Choose, Confirm, Form, Refuse
 from ars_magica_manager.models import Attitude, Neighbour, Reason, Saga
+from ars_magica_manager.rules import dice
+from ars_magica_manager.sections import NEIGHBOUR_INFO_SECTION
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import WorkspaceScreen
 
@@ -74,7 +79,7 @@ def test_deleting_a_liege_frees_those_who_answered_to_it():
 def test_the_region_counts_the_warm_and_the_wary():
     saga = everything_saga()
     facts = {f.label: f.value for f in region_sheet.facts(saga)}
-    assert facts["Neighbours"] == "3, 1 warm, 1 wary"
+    assert facts["Neighbours"] == "4, 1 warm, 1 wary"
     assert facts["Player covenant"] == "Keep"
     assert facts["Next Tribunal"] == "Summer 1228"
     grid = region_sheet.group_grid(saga, "lords")
@@ -120,7 +125,10 @@ async def test_the_tree_lists_neighbours_and_new_neighbour_opens_the_new_one():
         lords = next(
             n for n in region.children if n.data == (NodeKind.NEIGHBOUR_GROUP, "lords")
         )
-        assert [n.data for n in lords.children] == [(NodeKind.NEIGHBOUR, "gottfried")]
+        assert [n.data for n in lords.children] == [
+            (NodeKind.NEIGHBOUR, "gottfried"),
+            (NodeKind.NEIGHBOUR, "soest"),
+        ]
         workspace.saga.books_in_play = []  # only factions and threats
         workspace.action_create_neighbour()
         await pilot.pause()
@@ -153,10 +161,116 @@ def test_the_desktop_lists_neighbours_and_opens_one():
         saga, PALETTES[0], lambda _id: None, open_neighbour=opened.append
     )
     titles = [label.text() for label in saga_page.findChildren(QLabel)]
-    assert any("Lords and Towns (1)" in title for title in titles)
+    assert any("Lords and Towns (2)" in title for title in titles)
     gottfried = saga.neighbour("gottfried")
     assert gottfried is not None
     page = NeighbourPage(saga, gottfried, PALETTES[0])
-    assert page.chapters() == ["Standing"]
+    assert page.chapters() == ["Fief", "Standing"]
     words = [label.text() for label in page.findChildren(QLabel)]
     assert any("Archbishop of Cologne" in w for w in words)
+
+
+def test_a_lord_works_out_his_fief_from_the_lower_figures():
+    saga = everything_saga()
+    gottfried = saga.neighbour("gottfried")
+    assert gottfried is not None
+    facts = {f.label: f.value for f in lords.facts(saga, gottfried)}
+    assert facts["Income"] == "1000 pounds a year"
+    assert facts["To spend"] == "100 pounds a year"
+    assert facts["Owes"] == (
+        "Archbishop of Cologne: 50 knights for 40 days, or 100 pounds scutage"
+    )
+    assert facts["Aids"] == "50 pounds; relief 100 pounds"
+    assert lords.army_of("duke", "Wealthy").knights == 75
+    landed = Neighbour("k", "Sir Konrad", kind="lord", details={"manors": 1})
+    facts = {f.label: f.value for f in lords.facts(saga, landed)}
+    assert facts["To spend"] == "2 pounds a year"
+    assert facts["Free time"] == "2 seasons"
+    assert "Owes" not in facts
+    assert lords.relief(landed) == 5
+    assert lords.earns(4) == "5 for knighthood or freedom"
+    assert lords.earns(6) == "Knighthood or freedom; 10 for a manor"
+    assert lords.earns(25) == "A barony"
+
+
+def test_new_lord_keeps_its_title_in_its_details():
+    saga = everything_saga()
+    form = neighbour_forms.new_neighbour_form(saga, "lord")
+    keys = [f.key for f in form.fields()]
+    assert keys[:5] == ["name", "title", "wealth", "manors", "seat"]
+    assert form.validate is not None
+    assert form.validate({"manors": -1}) == "Manors can't be fewer than none."
+    form.apply(
+        {"name": "Wolfram", "title": "baron", "wealth": "Poor", "manors": 20}
+        | {"seat": "Hachen", "summary": "", "detail": "Sketch", "ruler": ""}
+        | {"answers_to": None, "realm": None}
+    )
+    made = saga.neighbours[-1]
+    assert made.details == {
+        "title": "baron",
+        "wealth": "Poor",
+        "manors": 20,
+        "seat": "Hachen",
+    }
+    assert not hasattr(made, "seat")
+
+
+def test_a_town_shows_its_size_and_rolls_its_fairs_income():
+    saga = everything_saga()
+    soest = saga.neighbour("soest")
+    assert soest is not None
+    facts = {f.label: f.value for f in towns.facts(saga, soest)}
+    assert facts["Population"] == "5,000 (large town)"
+    assert facts["Guilds"] == "1 recorded; a town its size has 0 to 3 in 1220"
+    effects = {
+        towns.effect_of(dice.DieResult(value, (value,))): value
+        for value in (0, 2, 5, 9, 12, 24)
+    }
+    assert list(effects) == [
+        "Contraction",
+        "Stagnation",
+        "Status Quo",
+        "Growth",
+        "Expansion",
+        "Boom",
+    ]
+    botch = dice.DieResult(0, (0,), botch_faces=(0,))
+    assert towns.effect_of(botch) == "Slump"
+    roll = towns.roll_fair(saga, soest, 0, random.Random(14))  # an 18
+    assert isinstance(roll, Confirm)
+    assert "Expansion (x1.2). Its income goes from 40 to 48" in roll.question
+    roll.apply()
+    fair = towns.fairs(soest)[0]
+    assert (fair["income"], fair["last"]) == (48, "1220: Expansion x1.2, 40 to 48")
+    fair["covenant_id"] = None
+    assert isinstance(towns.roll_fair(saga, soest, 0), Refuse)
+    soest.details["charter"] = fair["season"] = None  # left blank
+    assert {f.label: f.value for f in towns.facts(saga, soest)}["Charter"] == ""
+    assert towns.fairs_grid(saga, soest).rows[0][2] == ""
+
+
+async def test_changing_a_neighbours_kind_rebuilds_its_sheet():
+    storage.save_saga(everything_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await pilot.pause()
+        app.screen.query_one("#saga-list").focus()
+        await pilot.press("enter")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, WorkspaceScreen))
+        workspace = app.screen
+        tree = workspace.query_one("#nav-tree", Tree)
+        node = next(
+            n
+            for n in tree.root.children[1].children
+            if n.data == (NodeKind.NEIGHBOUR_GROUP, "lords")
+        ).children[0]
+        tree.select_node(node)
+        assert await wait_until(
+            pilot, lambda: workspace._neighbour_sheet_view is not None
+        )
+        assert workspace.query("#section-nb-castles")
+        workspace.saga.neighbour("gottfried").kind = "town"
+        workspace._commit(NEIGHBOUR_INFO_SECTION, tree=True)
+        assert await wait_until(
+            pilot, lambda: bool(workspace.query("#section-nb-fairs"))
+        )

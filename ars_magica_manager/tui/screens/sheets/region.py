@@ -8,6 +8,8 @@ neighbour_forms.py."""
 
 from __future__ import annotations
 
+from functools import partial
+
 from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Button, Collapsible, Static, TabbedContent
@@ -16,6 +18,7 @@ from .... import neighbour_forms, neighbours, region_sheet
 from ....character_sheet import Fact
 from ....markup import aligned, escape, markdown_inline
 from ....models import Covenant, Neighbour, Saga
+from ....neighbour_lists import KindTab
 from ....sections import (
     ATTITUDE_SECTION,
     FAVOURS_SECTION,
@@ -156,6 +159,10 @@ class NeighbourSheetView(SheetView):
         super().__init__(saga)
         self.neighbour = neighbour
         self.core_ops = neighbour_forms.neighbour_ops(saga, neighbour)
+        #: The kind the sheet was built for: its tab is theirs.
+        self.kind = neighbours.kind_of(neighbour)
+        if self.kind.tab is not None:
+            self.INITIAL_TAB = self.kind.tab.tab_id
 
     def compose(self) -> ComposeResult:
         with (
@@ -177,7 +184,45 @@ class NeighbourSheetView(SheetView):
             )
             yield Button("Edit (e)", id="btn-nb-edit", compact=True)
         with TabbedContent(initial=self.INITIAL_TAB):
+            tab = self.kind.tab
+            if tab is not None:
+                yield self._tab(tab.title, tab.tab_id, partial(self._kind_tab, tab))
             yield self._tab("Standing", "tab-nb-standing", self._standing_tab)
+
+    def stale(self) -> bool:
+        """Whether the neighbour's kind changed since the sheet was built,
+        so its tab is no longer theirs."""
+        return neighbours.kind_of(self.neighbour) is not self.kind
+
+    def _kind_tab(self, tab: KindTab) -> ComposeResult:
+        """What the kind works out, then its lists."""
+        saga, n = self.saga, self.neighbour
+        watched = (NEIGHBOUR_INFO_SECTION, *(e.section_id for e in tab.lists))
+        with VerticalScroll():
+            yield self._static(watched, self._kind_facts, id="nb-kind-facts")
+            for entry in tab.lists:
+                with SheetSection(
+                    title=self._titled(
+                        watched, entry.section_id, lambda e=entry: e.title(saga, n)
+                    ),
+                    id=entry.section_id,
+                ):
+                    yield self._list(
+                        watched,
+                        lambda e=entry: e.grid(saga, n).lines(),
+                        id=_list_id(entry.section_id),
+                    )
+
+    def _kind_facts(self) -> str:
+        facts = self.kind.facts
+        if facts is None:
+            return ""
+        return aligned(
+            [
+                (f.label, escape(f.value) or "[$label]—[/]")
+                for f in facts(self.saga, self.neighbour)
+            ]
+        )
 
     def _refresh_title(self) -> None:
         panel = self.query_one(f"#{NEIGHBOUR_INFO_SECTION}", Collapsible)

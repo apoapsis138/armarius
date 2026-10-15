@@ -1,3 +1,46 @@
+===== tab-nb-fief
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Gottfried of Arnsberg
+
+      Kind:            Lord                    Answers to: Archbishop of Cologne
+      Detail:          Sketch                  Realm:      none
+      Ruler or leader: Count Gottfried         Book:       LoM
+      Count of Arnsberg. Wants the mill rent.
+          Edit (e)
+
+   1 Fief  2 Standing
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Title:    Count or earl, average
+  Seat:     Arnsberg
+  Manors:   50
+  Income:   1000 pounds a year
+  To spend: 100 pounds a year
+  Army:     50 knights, 50 serjeants, 500 infantry; 500 levies at home
+  Owes:     Archbishop of Cologne: 50 knights for 40 days, or 100 pounds scutage
+  Aids:     50 pounds; relief 100 pounds
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Castles (1)
+
+        Castle    Garrison   Defences    Supplies
+      ○ Arnsberg  6 knights  stone keep
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Gratitude (1)
+
+        Owed to  Points  Earns                                  For
+      ○ Alys     6       Knighthood or freedom; 10 for a manor  Drove off the wolves
+
+
+
+
+
+
+
+
+
+
 ===== tab-nb-standing
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -9,7 +52,7 @@
       Count of Arnsberg. Wants the mill rent.
           Edit (e)
 
-   1 Standing
+   1 Fief  2 Standing
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

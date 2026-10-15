@@ -15,14 +15,17 @@ from .commands import Choice, Choose, Command, Confirm, Form, SectionOps, not_of
 from .form_spec import DialogField, pairs
 from .markup import escape
 from .models import DETAIL_LEVELS, REALMS, Neighbour, Saga
+from .neighbour_lists import KindList
 from .sections import NEIGHBOUR_INFO_SECTION
 
 
 def neighbour_fields(
     saga: Saga, neighbour: Neighbour | None, kind: str
 ) -> list[DialogField]:
-    """A neighbour's common fields: only the name is required."""
+    """A neighbour's common fields, with its kind's after the name: only
+    the name is required."""
     n = neighbour or Neighbour(id="", name="", kind=kind)
+    own = neighbours.KINDS[kind].fields if kind in neighbours.KINDS else None
     liege = [
         (escape(other.name), other.id)
         for other in saga.neighbours
@@ -47,6 +50,8 @@ def neighbour_fields(
                 required=True,
             )
         )
+    if own is not None:
+        fields += own(saga, neighbour)
     fields += [
         DialogField(
             "summary",
@@ -93,9 +98,19 @@ def neighbour_fields(
     return fields
 
 
-def _apply(neighbour: Neighbour, values: dict[str, Any]) -> None:
+def _kind_keys(saga: Saga, kind: str) -> set[str]:
+    """The keys of the fields `kind` adds, kept in the details."""
+    own = neighbours.KINDS[kind].fields if kind in neighbours.KINDS else None
+    return {f.key for f in own(saga, None)} if own is not None else set()
+
+
+def _apply(saga: Saga, neighbour: Neighbour, values: dict[str, Any]) -> None:
+    detailed = _kind_keys(saga, neighbour.kind)
     for key, value in values.items():
-        setattr(neighbour, key, value)
+        if key in detailed:
+            neighbour.details[key] = value
+        else:
+            setattr(neighbour, key, value)
     neighbour.answers_to = values.get("answers_to") or None
     neighbour.realm = values.get("realm") or ""
 
@@ -104,12 +119,13 @@ def new_neighbour_form(saga: Saga, kind: str) -> Form:
     name = neighbours.KINDS[kind].name
 
     def apply(values: dict[str, Any]) -> None:
-        _apply(neighbours.add(saga, kind, values["name"]), values)
+        _apply(saga, neighbours.add(saga, kind, values["name"]), values)
 
     return Form(
         f"New {name}",
         lambda: neighbour_fields(saga, None, kind),
         apply,
+        validate=neighbours.KINDS[kind].problem,
         save_label="Create",
     )
 
@@ -118,7 +134,8 @@ def edit_neighbour_form(saga: Saga, neighbour: Neighbour) -> Form:
     return Form(
         f"Edit {escape(neighbour.name)}",
         lambda: neighbour_fields(saga, neighbour, neighbour.kind),
-        lambda values: _apply(neighbour, values),
+        lambda values: _apply(saga, neighbour, values),
+        validate=neighbours.kind_of(neighbour).problem,
     )
 
 
@@ -197,7 +214,17 @@ def neighbour_ops(saga: Saga, neighbour: Neighbour) -> dict[str, SectionOps]:
             edit=lambda _row: edit_neighbour_form(saga, neighbour)
         ),
         **world_forms.record_ops(saga, neighbour),
+        **{
+            entry.section_id: entry.ops(saga, neighbour)
+            for entry in tab_lists(neighbour)
+        },
     }
+
+
+def tab_lists(neighbour: Neighbour) -> tuple[KindList, ...]:
+    """The lists the neighbour's kind adds to its sheet."""
+    tab = neighbours.kind_of(neighbour).tab
+    return tab.lists if tab is not None else ()
 
 
 def delete_neighbour(saga: Saga, neighbour: Neighbour) -> Confirm:

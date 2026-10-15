@@ -132,6 +132,12 @@ REGION_FACTIONS_SECTION = "section-region-factions"
 REGION_THREATS_SECTION = "section-region-threats"
 #: A neighbour's sheet's top panel.
 NEIGHBOUR_INFO_SECTION = "section-nb-info"
+#: The lists a kind of neighbour adds: a lord's castles and Gratitude, a
+#: town's guilds and fairs.
+CASTLES_SECTION = "section-nb-castles"
+GRATITUDE_SECTION = "section-nb-gratitude"
+GUILDS_SECTION = "section-nb-guilds"
+FAIRS_SECTION = "section-nb-fairs"
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),
@@ -156,4 +162,8 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     REGION_FACTIONS_SECTION: frozenset({"add", "edit", "remove"}),
     REGION_THREATS_SECTION: frozenset({"add", "edit", "remove"}),
     NEIGHBOUR_INFO_SECTION: frozenset({"edit"}),
+    CASTLES_SECTION: frozenset({"add", "edit", "remove"}),
+    GRATITUDE_SECTION: frozenset({"add", "edit", "remove"}),
+    GUILDS_SECTION: frozenset({"add", "edit", "remove"}),
+    FAIRS_SECTION: frozenset({"add", "edit", "remove"}),
 }

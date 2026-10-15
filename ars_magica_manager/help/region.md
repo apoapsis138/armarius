@@ -95,6 +95,9 @@ is in play (Show everything lists the others, with the book each
 needs), then a plain form:
 
 - **Name**: the only field required.
+- What its kind adds: a lord's title, wealth, manors and seat (see
+  [A lord](help:tab-nb-fief)); a town's charter, council and population
+  (see [A town](help:tab-nb-town)).
 - **Summary**: a paragraph on who they are and what they want.
 - **Detail**: a line, a sketch, or written in full.
 - **Ruler or leader**: a name.
@@ -121,3 +124,81 @@ the favours owed between it and the troupe, and its links to other
 records, as on a sketch covenant: see
 [Attitude](help:section-attitudes), [Favours](help:section-favours) and
 [Links](help:section-links).
+
+# A lord
+<!-- help: tab-nb-fief -->
+
+A lord (Lords of Men) has a title (landed noble, baron, count or earl,
+duke), a wealth (poor, average, wealthy), a number of manors and a
+seat, entered on New Lord or Edit. His Fief tab works out the rest:
+
+- **Income**: 20 pounds a year for each manor.
+- **To spend**: what is left after his household and his knights: 0
+  if poor; a landed noble 2 (5 if wealthy), a baron 40 (100), a count
+  100 (250), a duke 250 (500).
+- **Free time**: a landed noble's free seasons a year: 1 if poor, 2,
+  or 3 if wealthy.
+- **Army**: the knights, serjeants, infantry and levies his title
+  raises.
+- **Owes** and **Aids**: when he answers to another neighbour, what he
+  owes it: a knight's service for 40 days for each manor, or 2 pounds
+  scutage a knight; aids of a pound a manor; and his heir's relief, a
+  year's income but at most 5 pounds a manor (100 for a baron or
+  greater).
+
+Where Lords of Men gives two figures for the same thing, the lower is
+used: a landed noble's spending money, a duke's knights and scutage.
+
+**See also:** [A neighbour](help:neighbour)
+
+## Castles
+<!-- help: section-nb-castles -->
+
+His castles, each with its garrison, defences and supplies. Add, edit
+or delete one.
+
+## Gratitude
+<!-- help: section-nb-gratitude -->
+
+The Gratitude he owes each character who has served him: a story that
+serves his interest earns 1 point (2 if it was the story's aim), a
+renowned feat 5. Each line says what its points are enough for: 5 for
+freedom or knighthood, 10 for a manor of one's own, 20 for a barony
+held of the king. Add, edit or delete one.
+
+# A town
+<!-- help: tab-nb-town -->
+
+A town (City & Guild) has a charter (granted by a noble lord, the
+Church, or held by its townsmen as a commune; or a faerie's or a
+demon's), a council and a population, entered on New Town or Edit. Its
+Town tab shows them with its size (a small, medium or large town, or a
+city) and how many guilds a town its size has in the saga's year.
+
+**See also:** [A neighbour](help:neighbour)
+
+## Guilds
+<!-- help: section-nb-guilds -->
+
+The town's guilds: each one's trade, its dean, and how many masters,
+journeymen and apprentices it has. Add, edit or delete one.
+
+## Fairs and markets
+<!-- help: section-nb-fairs -->
+
+The town's fairs and markets, each with its season. A fair a covenant
+trades at is a source of income to it, by its size: a town's yearly
+fair 40 pounds a year, a county fair 100, a fair that draws traders
+from across Europe 250 (or the income entered).
+
+<!-- tui -->
+More (`m`) > **Roll Income** rolls the chosen fair's year:
+<!-- /tui -->
+<!-- gui -->
+**Roll Income** rolls the chosen fair's year:
+<!-- /gui -->
+a stress die picks the Income Modification (a botch a Slump, x0.5; 0 a
+Contraction, x0.8; 2 Stagnation, x0.95; 3 to 8 Status Quo; 9 Growth,
+x1.05; 10 to 19 Expansion, x1.2; 20 or more a Boom, x1.5), and Keep
+records the new income and the roll. Add, edit or delete a fair or
+market.

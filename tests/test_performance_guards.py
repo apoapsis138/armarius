@@ -101,6 +101,7 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "normandy_tribunal": 40,
     "region": 50,
     "neighbour": 40,
+    "town": 40,
 }
 
 

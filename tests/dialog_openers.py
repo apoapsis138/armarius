@@ -220,6 +220,20 @@ OPENERS: dict[str, Opener] = {
     "edit neighbour": Opener(
         "neighbour", lambda ws: ws._core_verb("section-nb-info", "edit")
     ),
+    "add castle": Opener(
+        "neighbour", lambda ws: ws._core_verb("section-nb-castles", "add")
+    ),
+    "add gratitude": Opener(
+        "neighbour", lambda ws: ws._core_verb("section-nb-gratitude", "add")
+    ),
+    "edit guild": Opener(
+        "town",
+        _pick(lambda ws: ws._core_verb("section-nb-guilds", "edit"), "nb-guilds-list"),
+    ),
+    "edit fair": Opener(
+        "town",
+        _pick(lambda ws: ws._core_verb("section-nb-fairs", "edit"), "nb-fairs-list"),
+    ),
     "edit tribunal": Opener(
         "tribunal", lambda ws: ws._core_verb("section-trib-info", "edit")
     ),

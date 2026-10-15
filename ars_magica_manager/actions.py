@@ -41,6 +41,7 @@ from .sections import (
     CATALOGS_SECTION,
     CORE_SECTIONS,
     DEVICE_SECTIONS,
+    FAIRS_SECTION,
     HIDDEN_SECTION,
     HOUSE_RULES_SECTION,
     LAB_TEXTS_SECTION,
@@ -234,6 +235,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("w", "creation_worksheet", "Creation Worksheet"),
     MenuItem("t", "set_date", "Set Date"),
     MenuItem("w", "withdraw_case", "Withdraw"),
+    MenuItem("r", "roll_fair", "Roll Income"),
 )
 
 #: The More commands offered in one section only, by that section's id.
@@ -242,6 +244,7 @@ MORE_SECTIONS: dict[str, str] = {
     "edit_fatigue": "section-char-health",
     "edit_familiar_fatigue": "section-fam-health",
     "withdraw_case": CASES_SECTION,
+    "roll_fair": FAIRS_SECTION,
 }
 
 #: Where in the navigation each record can be created: the saga, and

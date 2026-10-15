@@ -10,10 +10,15 @@ is one entry here."""
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
+from typing import Any
 
-from . import sourcebooks, storage, world
+from . import lords, sourcebooks, storage, towns, world
+from .character_sheet import Fact
+from .form_spec import DialogField
 from .models import Covenant, Neighbour, Saga
+from .neighbour_lists import KindTab
 from .sections import (
     REGION_CHURCH_SECTION,
     REGION_FACTIONS_SECTION,
@@ -54,6 +59,14 @@ class NeighbourKind:
     group: str
     #: The sourcebook it needs in play; "" for the core rules.
     book: str = ""
+    #: The fields it adds to New and Edit, kept in the neighbour's
+    #: details under their keys, and what is wrong with what was entered.
+    fields: Callable[[Saga, Neighbour | None], list[DialogField]] | None = None
+    problem: Callable[[dict[str, Any]], str | None] | None = None
+    #: What is worked out for one of its neighbours, shown on its tab.
+    facts: Callable[[Saga, Neighbour], list[Fact]] | None = None
+    #: The tab it adds to its neighbours' sheets.
+    tab: KindTab | None = None
 
 
 #: Every kind, in the order New Neighbour offers them.
@@ -65,8 +78,28 @@ def register(kind: NeighbourKind) -> None:
 
 
 for _kind in (
-    NeighbourKind("lord", "Lord", "a noble and his household", "lords", "LoM"),
-    NeighbourKind("town", "Town", "a town, its council and its market", "lords", "C&G"),
+    NeighbourKind(
+        "lord",
+        "Lord",
+        "a noble and his household",
+        "lords",
+        "LoM",
+        lords.fields,
+        lords.problem,
+        lords.facts,
+        lords.TAB,
+    ),
+    NeighbourKind(
+        "town",
+        "Town",
+        "a town, its council and its market",
+        "lords",
+        "C&G",
+        towns.fields,
+        towns.problem,
+        towns.facts,
+        towns.TAB,
+    ),
     NeighbourKind("church", "Church", "a bishop, an abbey, a parish", "church", "TC"),
     NeighbourKind(
         "university", "University", "a studium and its masters", "universities", "A&A"

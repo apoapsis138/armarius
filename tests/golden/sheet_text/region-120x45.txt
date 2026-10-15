@@ -3,7 +3,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      The Region
 
-      Player covenant: Keep                    Neighbours:      3, 1 warm, 1 wary
+      Player covenant: Keep                    Neighbours:      4, 1 warm, 1 wary
       Tribunal:        Rhine                   Other covenants: 1
       Customs:         Rhine: Gilds            Next Tribunal:   Summer 1228
 
@@ -17,24 +17,24 @@
       ○ Fengheld  Rhine     3      ◉ −2 Unfriendly  Sketch
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Lords and Towns (1)
+    ▼ Lords and Towns (2)
 
-        Name                   Kind  Ruler or leader  Attitude   Detail
-      ○ Gottfried of Arnsberg  Lord  Count Gottfried  ◉ −1 Wary  Sketch
+        Name                   Kind  Ruler or leader  Attitude     Detail
+      ○ Gottfried of Arnsberg  Lord  Count Gottfried  ◉ −1 Wary    Sketch
+      ○ Soest                  Town                   ◉ 0 Neutral  Sketch
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ The Church (1)
 
         Name                   Kind    Ruler or leader  Attitude     Detail
-      ○ Archbishop of Cologne  Church                   ◉ 0 Neutral  Line
+      ○ Archbishop of Cologne  Church                   ◉ 0 Neutral  Line         ▁▁
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▄▄
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Universities (0)
 
       None yet: add a university here.
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Factions (1)
 
   ▌
   ▌  Choose a neighbour to see how it stands.

@@ -98,6 +98,7 @@ NOT_ON_PAGES = frozenset(
         "use_charge",
         "give",
         "withdraw_case",
+        "roll_fair",
     }
 )
 

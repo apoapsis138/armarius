@@ -54,6 +54,7 @@ from .... import (
     seasons,
     sourcebooks,
     storage,
+    towns,
     transfer,
     tribunal_forms,
     tribunals,
@@ -98,6 +99,7 @@ from ....rules import creation_covenant as cov_creation
 from ....rules import options as rule_options
 from ....sections import (
     CASES_SECTION,
+    FAIRS_SECTION,
     NEIGHBOUR_INFO_SECTION,
     REGION_INFO_SECTION,
     TRIBUNAL_INFO_SECTION,
@@ -286,6 +288,7 @@ _STORYGUIDE_ACTIONS = frozenset(
         "create_covenant",
         "create_tribunal",
         "create_neighbour",
+        "roll_fair",
         "create_character",
         "create_laboratory",
         "create_familiar",
@@ -1815,6 +1818,8 @@ class WorkspaceBase(Screen[None]):
         name or the structure changed (`tree`), and refresh `sections` of the
         sheet on show -- the one whose handler made the change."""
         storage.save_saga(self.saga)
+        # The sheet on show, before rebuilding the tree lets it go.
+        shown = self._current_sheet_view()
         if tree:
             self._rebuild_tree()
         view = self._current_sheet_view()
@@ -1824,6 +1829,9 @@ class WorkspaceBase(Screen[None]):
         # A Tribunal whose customs changed shows their tabs instead.
         if isinstance(view, TribunalSheetView) and view.stale():
             self.call_later(self._show_tribunal_detail, view.tribunal)
+        # A neighbour whose kind changed shows its new kind's tab.
+        if isinstance(shown, NeighbourSheetView) and shown.stale():
+            self.call_later(self._select_neighbour, shown.neighbour.id)
         # An open Creation Worksheet shows the record too.
         for screen in self.app.screen_stack:
             changed = getattr(screen, "record_changed", None)
@@ -1914,6 +1922,18 @@ class WorkspaceBase(Screen[None]):
             self.app,
             tribunal_forms.withdraw_case(view.tribunal, row),
             lambda _end: self._commit(CASES_SECTION),
+        )
+
+    def action_roll_fair(self) -> None:
+        """More's Roll Income on a town's chosen fair."""
+        view = self._neighbour_sheet_view
+        row = view.section_row(FAIRS_SECTION) if view is not None else None
+        if view is None or row is None:
+            return
+        run_steps(
+            self.app,
+            towns.roll_fair(self.saga, view.neighbour, row),
+            lambda _end: self._commit(FAIRS_SECTION),
         )
 
     def action_create_character(self) -> None:
