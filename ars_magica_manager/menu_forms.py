@@ -297,10 +297,10 @@ MANAGE: dict[str, str] = {
     "on it elsewhere: shows what would change first, and keeps its place in "
     "this saga.",
     "promote": "Write more of it down: a line becomes a sketch with a "
-    "statblock, and a sketch a full character, In Creation, keeping every "
-    "score it had.",
-    "demote": "Keep less of it: a full character becomes a sketch, left out "
-    "of seasons and ageing, and a sketch a line. Nothing is deleted; the "
+    "statblock, and a sketch a full record, In Creation, keeping everything "
+    "it had.",
+    "demote": "Keep less of it: a full record becomes a sketch, left out "
+    "of seasons, ageing and upkeep, and a sketch a line. Nothing is deleted; the "
     "chapters it no longer shows keep what they hold.",
     DELETE_RECORD: "Remove it from the saga, after saying what happens to "
     "what it holds.",
@@ -544,11 +544,20 @@ _DETAIL_WORDS: dict[str, str] = {
     "open on what the sketch already has",
 }
 
+#: The same for a covenant.
+_COVENANT_DETAIL_WORDS: dict[str, str] = {
+    LINE: "a line: a name, its Tribunal and who they are",
+    SKETCH: "a sketch: its magi, what matters to it and its attitudes, "
+    "left out of upkeep, income and Loyalty",
+    FULL: "a full covenant, In Creation, with the Creation Worksheet "
+    "open on what the sketch already has",
+}
 
-def change_detail(saga: Saga, record: Character, detail: str) -> Command:
+
+def change_detail(saga: Saga, record: Character | Covenant, detail: str) -> Command:
     """Promote or Demote `record` to `detail`, asking first. Nothing is
     copied or deleted: a promoted sketch keeps every score it had, and a
-    demoted character keeps what its hidden chapters hold. Promoted to
+    demoted record keeps what its hidden chapters hold. Promoted to
     Full, it is In Creation so its budget checks apply from there."""
     name = escape(record.name)
 
@@ -564,7 +573,8 @@ def change_detail(saga: Saga, record: Character, detail: str) -> Command:
         if world.DETAIL_LEVELS.index(detail) > world.DETAIL_LEVELS.index(record.detail)
         else "Demote"
     )
-    return Confirm(f"{verb} {name} to {_DETAIL_WORDS[detail]}?", apply, yes_label=verb)
+    words = _COVENANT_DETAIL_WORDS if isinstance(record, Covenant) else _DETAIL_WORDS
+    return Confirm(f"{verb} {name} to {words[detail]}?", apply, yes_label=verb)
 
 
 def _detail_command(action: str) -> Callable[[Page], Command]:
@@ -572,8 +582,10 @@ def _detail_command(action: str) -> Callable[[Page], Command]:
 
     def command(page: Page) -> Command:
         record = page.creation_record()
-        detail = step(record.detail) if isinstance(record, Character) else None
-        if not isinstance(record, Character) or detail is None:
+        if not isinstance(record, (Character, Covenant)):
+            return Refuse(action.title(), "That isn't available here.")
+        detail = step(record.detail)
+        if detail is None:
             return Refuse(action.title(), "That isn't available here.")
         return change_detail(page.saga, record, detail)
 

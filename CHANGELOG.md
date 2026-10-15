@@ -46,6 +46,24 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.65.0 — 2026-10-15
+
+- Covenants can be kept as a line or a sketch too, for the other
+  covenants of the Tribunal. A sketch opens on its Overview: its magi
+  (named ones, at any detail, plus how many more go unnamed) and the
+  votes they give it, What Matters to it, its Attitude toward each
+  player covenant, the favours owed either way and its links. A line
+  is only who they are and their relations.
+- An Attitude starts somewhere between -3 and +3 and moves only with a
+  reason: what happened, by how much and when.
+- Favours (who owes whom, for what, and whether it has been repaid) and
+  links to other characters and covenants, which show on both records.
+- Promote and Demote work on covenants. A covenant not played by the
+  troupe ("Played by the troupe" in Edit Covenant) is left out of the
+  seasons, and a full covenant that isn't played shows its Attitude,
+  Favours and Links too.
+- Bind Familiar offers only magi kept in full.
+
 ## 2.64.0 — 2026-10-15
 
 - Characters can be kept as a line or a sketch instead of in full, the

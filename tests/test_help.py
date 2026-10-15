@@ -9,7 +9,7 @@ from textual.widgets import Markdown, OptionList, TabbedContent, TextArea, Tree
 
 from ars_magica_manager import ROOT, __version__, storage
 from ars_magica_manager import help_text as ht
-from ars_magica_manager.models import SKETCH
+from ars_magica_manager.models import SKETCH, Covenant
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import WorkspaceScreen
 from ars_magica_manager.tui.screens.creation_worksheet import CreationWorksheetScreen
@@ -177,9 +177,23 @@ async def test_every_tab_and_section_has_help():
     """The coverage rule: a tab or section without help fails
     here, and so does help for one that no longer exists."""
     saga = everything_saga()
-    # A sketch's sheet has a tab of its own: the companion is drawn as one.
+    # A sketch's sheet has tabs of its own: the companion is drawn as one,
+    # and a sketch covenant is added.
     sketch = next(c for c in saga.characters if c.id != NODES["character"][1])
     sketch.detail = SKETCH
+    saga.covenants.append(
+        Covenant(
+            id="sketch_cov",
+            saga_id=saga.id,
+            name="Fengheld",
+            detail=SKETCH,
+            played=False,
+        )
+    )
+    extra = {
+        ("character", sketch.id): "_character_sheet_view",
+        ("covenant", "sketch_cov"): "_covenant_sheet_view",
+    }
     storage.save_saga(saga)
     app = ArsMagicaManagerApp()
     on_sheets: set[str] = set()
@@ -197,18 +211,18 @@ async def test_every_tab_and_section_has_help():
             view = getattr(workspace, attr)
             await build_all_tabs(pilot, view)
             on_sheets |= {w.id for w in view.query("Collapsible, TabPane") if w.id}
-        tree.select_node(_node(tree, ("character", sketch.id)))
-        assert await wait_until(
-            pilot,
-            lambda: (
-                (view := workspace._character_sheet_view) is not None
-                and view.character.id == sketch.id
-            ),
-        )
-        view = workspace._character_sheet_view
-        assert view is not None
-        await build_all_tabs(pilot, view)
-        on_sheets |= {w.id for w in view.query("Collapsible, TabPane") if w.id}
+        for (kind, record_id), attr in extra.items():
+            tree.select_node(_node(tree, (kind, record_id)))
+            assert await wait_until(
+                pilot,
+                lambda attr=attr, record_id=record_id: (
+                    (view := getattr(workspace, attr)) is not None
+                    and view.creation_record.id == record_id
+                ),
+            )
+            view = getattr(workspace, attr)
+            await build_all_tabs(pilot, view)
+            on_sheets |= {w.id for w in view.query("Collapsible, TabPane") if w.id}
     missing = on_sheets - BOOK.topics.keys()
     assert not missing, f"no help for {sorted(missing)}"
     stale = {

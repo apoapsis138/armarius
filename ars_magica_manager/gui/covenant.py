@@ -34,8 +34,11 @@ from .. import (
     season_forms,
     seasons,
     vis,
+    world,
+    world_forms,
 )
 from .. import books as bk
+from .. import character_sheet as cs
 from .. import covenant_build as cov_build
 from .. import covenant_diary as cov_diary
 from .. import covenant_sheet as cvs
@@ -47,8 +50,9 @@ from ..actions import NodeKind
 from ..character_sheet import Fact
 from ..commands import SectionOps
 from ..covenants import boon_hook_problems
-from ..models import INHABITANT_KINDS, POSSESSION_KINDS, Covenant, Saga
+from ..models import FULL, INHABITANT_KINDS, LINE, POSSESSION_KINDS, Covenant, Saga
 from .character_sheet import (
+    TextBlock,
     columns_text,
     device_section,
     label_values,
@@ -57,7 +61,7 @@ from .character_sheet import (
     trait_section,
 )
 from .editing import Chooser, RowVerb, Run, choose_cards, give_verb, verb_buttons
-from .figures import Seal, aura_seal, fact_grid, prose, shelf
+from .figures import Seal, attitude_seal, aura_seal, fact_grid, prose, shelf
 from .manage import RecordControls
 from .menus import Placer
 from .pages import (
@@ -85,6 +89,7 @@ from .widgets import (
     table_view,
     text,
 )
+from .world import relations, table_section
 
 
 def _none(words: str, p: Palette) -> QLabel:
@@ -147,21 +152,31 @@ class CovenantPage(QWidget):
         self.inspector = self.codex.inspector
         labs = ov.lab_cards(saga, covenant_id)
         chapters = []
-        if covenant is not None:
+        if covenant is not None and covenant.detail != FULL:
+            # A Line or Sketch covenant: one chapter of what it is to the
+            # saga, and its Diary.
+            chapters += [
+                ("Sketch", "covenant", lambda: self._sketch(covenant)),
+                ("Diary", "year", lambda: self._diary(covenant)),
+            ]
+        elif covenant is not None:
             chapters.append(("Charter", "lab_text", lambda: self._charter(covenant)))
-        chapters.append(("People", "character", self._people))
-        if covenant is not None:
+        if covenant is None or covenant.detail == FULL:
+            chapters.append(("People", "character", self._people))
+        if covenant is not None and covenant.detail == FULL:
             chapters.append(("Covenfolk", "players", lambda: self._covenfolk(covenant)))
-        if covenant is not None or labs:
+        full = covenant is None or covenant.detail == FULL
+        if full and (covenant is not None or labs):
             chapters.append(("Laboratories", "laboratory", lambda: self._labs(labs)))
-        if covenant is not None:
+        if covenant is not None and full:
             chapters += [
                 ("Possessions", "vis", lambda: self._possessions(covenant)),
                 ("Treasury", "income", lambda: self._treasury(covenant)),
                 ("Library", "library", lambda: self._library(covenant)),
             ]
-        chapters.append(("Seasons", "season", self._seasons))
-        if covenant is not None:
+        if full:
+            chapters.append(("Seasons", "season", self._seasons))
+        if covenant is not None and full:
             chapters += [
                 ("Diary", "year", lambda: self._diary(covenant)),
                 ("Build", "covenant", lambda: self._build(covenant)),
@@ -204,6 +219,16 @@ class CovenantPage(QWidget):
         row.addLayout(names)
         row.addStretch(1)
         if covenant is None:
+            return box
+        if covenant.detail != FULL:
+            row.addWidget(fact_grid(cvs.sketch_facts(saga, covenant), p, 3))
+            row.addSpacing(10)
+            if covenant.detail != LINE:
+                row.addWidget(aura_seal(cvs.aura(covenant), p))
+            for target in world_forms.attitude_targets(saga, covenant):
+                seal = attitude_seal(world.attitude_toward(covenant, target.id), p)
+                seal.setToolTip(f"Toward {target.name}: {seal.toolTip()}")
+                row.addWidget(seal)
             return box
         row.addWidget(fact_grid(cvs.charter_facts(saga, covenant), p, 2))
         row.addSpacing(10)
@@ -298,12 +323,81 @@ class CovenantPage(QWidget):
                 self.run,
             ),
         ]
+        if not covenant.played:
+            parts += relations(self.saga, covenant, p, self.run)
         problems = boon_hook_problems(
             covenant, catalog.load_covenant_boon_hook_catalog_by_id()
         )
         for problem in problems:
             parts.append(text(problem, p["text-error"], wrap=True))
         parts.append(side_by_side(*columns, spacing=18))
+        return scrolling_page(p, *parts)
+
+    def _sketch(self, covenant: Covenant) -> QWidget:
+        """A Line or Sketch covenant: who it is, its magi and their votes,
+        What Matters, and its attitude to each player covenant, the favours
+        owed and its links. A Line covenant has no magi or What Matters."""
+        p, saga = self.p, self.saga
+        ops = world_forms.covenant_ops(saga, covenant)
+        summary = covenant.summary.strip()
+        parts: list[QWidget] = [
+            section(
+                "In the Saga",
+                p,
+                prose(summary, p)
+                if summary
+                else _none("Not written yet: edit the covenant to say.", p),
+                edits={
+                    "Edit Covenant": lambda: self.run(
+                        world_forms.sketch_covenant_form(covenant)
+                    )
+                },
+            )
+        ]
+        if covenant.detail != LINE:
+
+            def show(index: int) -> None:
+                magus = world.covenant_magi(saga, covenant)[index]
+                self.inspect(
+                    magus.name,
+                    f"{magus.detail} · {covenant.name}",
+                    cs.statblock_text(saga, magus),
+                )
+
+            parts.append(
+                table_section(
+                    world_forms.magi_title(saga, covenant),
+                    world_forms.magi_table(saga, covenant),
+                    ops[world_forms.MAGI_SECTION],
+                    p,
+                    self.run,
+                    empty="No magi written down.",
+                    on_choose=show,
+                )
+            )
+            parts.append(
+                section(
+                    "What Matters",
+                    p,
+                    TextBlock(world_forms.what_matters_text(covenant), p),
+                    edits={
+                        "Edit": lambda: self.run(
+                            world_forms.what_matters_form(covenant)
+                        )
+                    },
+                )
+            )
+        parts += relations(saga, covenant, p, self.run)
+        parts.append(
+            text(
+                "A sketch covenant counts toward its Tribunal's roster and votes. "
+                "It plays no seasons, and the yearly step leaves it alone, until "
+                "it is promoted.",
+                p["dim"],
+                serif(12, italic=True),
+                wrap=True,
+            )
+        )
         return scrolling_page(p, *parts)
 
     def _boon_hook_card(

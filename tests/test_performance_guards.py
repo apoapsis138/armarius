@@ -95,6 +95,7 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "covenant": 65,
     "familiar": 65,
     "laboratory": 50,
+    "sketch_covenant": 50,
 }
 
 

@@ -87,6 +87,13 @@ def covenant_fields(covenant: Covenant) -> list[DialogField]:
             cov.covenant_season,
             options=pairs(SEASONS),
         ),
+        DialogField(
+            "played",
+            "Played by the troupe",
+            "check",
+            cov.played,
+            hint="A player covenant: other records' attitudes point at it.",
+        ),
     ]
 
 

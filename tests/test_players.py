@@ -221,7 +221,11 @@ def test_the_save_guard_takes_back_what_a_player_may_not_change():
 
     kept, refused = pl.guard_changes(ana, before, after)
     names = {c["id"]: c["name"] for c in kept["characters"]}
-    assert names == {"mag1": "Leandro the Wise", "comp1": "Alys"}
+    assert names == {
+        "mag1": "Leandro the Wise",
+        "comp1": "Alys",
+        "mag_sketch": "Severinus",
+    }
     assert kept["current_year"] == before["current_year"]
     assert "bk-new" in {b["id"] for b in kept["books"]}  # books are shared
     assert sorted(refused) == ["characters[comp1]", "characters[new1]", "current_year"]

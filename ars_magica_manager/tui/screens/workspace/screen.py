@@ -15,6 +15,7 @@ from ....models import (
     INHABITANT_KINDS,
     POSSESSION_KINDS,
 )
+from ....sections import CORE_SECTIONS
 from ..sheets import (
     BOOK_SECTIONS,
     BOOKS_SECTION,
@@ -301,6 +302,13 @@ class WorkspaceScreen(
                 partial(self._plan_covenant_season, kind),
                 partial(self._clear_covenant_season, kind),
                 partial(self._plan_covenant_season, kind),
+            )
+        for section, verbs in CORE_SECTIONS.items():
+            ops[section] = _SectionOps(
+                *(
+                    partial(self._core_verb, section, verb) if verb in verbs else None
+                    for verb in ("add", "remove", "edit")
+                )
             )
         for section in DEVICE_SECTIONS:
             ops[section] = _SectionOps(

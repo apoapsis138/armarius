@@ -12,6 +12,7 @@ from . import sheet_text as st
 from .markup import escape
 from .models import (
     CORD_SCORE_COSTS,
+    FULL,
     Character,
     Familiar,
     Saga,
@@ -26,9 +27,14 @@ def familiar_of(saga: Saga, character_id: str) -> Familiar | None:
 
 
 def unbonded_magi(saga: Saga) -> list[Character]:
-    """Magi with no Familiar bound yet -- one per magus at a time."""
+    """Full magi with no Familiar bound yet -- one per magus at a time. A
+    line or sketch magus has no sheet to bind one to."""
     bonded = {f.character_id for f in saga.familiars}
-    return [c for c in saga.characters if c.type == "magus" and c.id not in bonded]
+    return [
+        c
+        for c in saga.characters
+        if c.type == "magus" and c.detail == FULL and c.id not in bonded
+    ]
 
 
 def bind_familiar(saga: Saga, magus: Character, name: str) -> Familiar:

@@ -115,6 +115,10 @@ def _cov(saga: Saga):
     return saga.covenants[0]
 
 
+def _sketch(saga: Saga):
+    return saga.covenant("cov_sketch")
+
+
 def _gear(possessions: list[Possession], kind: str) -> tuple:
     """The last weapon's (or armor's) name, book entry, Quality and
     figures."""
@@ -341,6 +345,60 @@ CONTRACTS: dict[str, Contract] = {
         expected=("Keep II", "Rhine", 1100, 3, "Summer"),
         invalid=[{"Name": ""}, {"Name": "  "}],
         shown={"#cov-info-right": "Rhine", "#cov-info-left": "1100"},
+    ),
+    "edit sketch covenant": Contract(
+        prefill={"Name": "Fengheld", "Unnamed magi": "2"},
+        edits={
+            "Name": "Fengheld II",
+            "Unnamed magi": "3",
+            "In the Saga": "Old rivals.",
+        },
+        saved=lambda s: (
+            _sketch(s).name,
+            _sketch(s).unnamed_magi,
+            _sketch(s).summary,
+        ),
+        expected=("Fengheld II", 3, "Old rivals."),
+        invalid=[{"Name": ""}, {"Unnamed magi": "-1"}],
+        shown={
+            "#cov-info-right": "4 (1 named, 3 unnamed)",
+            "#cov-summary": "Old rivals.",
+        },
+    ),
+    "what matters": Contract(
+        prefill={"What Matters": "Vis: the ford, 3 Aquam a year"},
+        edits={"What Matters": "Library: strong in Rego"},
+        saved=lambda s: _sketch(s).what_matters,
+        expected="Library: strong in Rego",
+        shown={"#cov-what-matters": "Library: strong in Rego"},
+    ),
+    "add reason": Contract(
+        prefill={"Toward": "cov1", "Change": "1", "Year": "1220", "Season": "Autumn"},
+        edits={"What happened": "Shared the vis", "Change": "2"},
+        saved=lambda s: [(r.what, r.change) for r in _sketch(s).attitudes[0].reasons],
+        expected=[("Claimed the ford", -1), ("Shared the vis", 2)],
+        invalid=[{"What happened": ""}, {"What happened": "x", "Change": "0"}],
+        shown={"#attitude-list": "Shared the vis"},
+    ),
+    "add favour": Contract(
+        prefill={"What for": "", "Year": "1220", "Season": "Autumn"},
+        edits={"What for": "Lent a book", "Owed by": "Keep", "Owed to": "Fengheld"},
+        saved=lambda s: [(f.what, f.owed_by) for f in _sketch(s).favours],
+        expected=[("Hid a grog", "Fengheld"), ("Lent a book", "Keep")],
+        invalid={"What for": ""},
+        shown={"#favours-list": "Keep owes Fengheld: Lent a book"},
+    ),
+    "add sketch magus": Contract(
+        prefill={"Name": "", "Detail": "Line"},
+        edits={"Name": "Ulla", "Detail": "Sketch", "In the Saga": "Votes with him."},
+        saved=lambda s: [
+            (c.detail, c.summary, c.in_creation)
+            for c in s.characters
+            if c.name == "Ulla"
+        ],
+        expected=[("Sketch", "Votes with him.", False)],
+        invalid={"Name": ""},
+        shown={"#cov-magi-list": "Ulla"},
     ),
     "edit covenant description": Contract(
         prefill={"Description": ""},

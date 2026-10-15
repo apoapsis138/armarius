@@ -39,7 +39,7 @@ GOLDEN_DIR = Path(__file__).parent / "golden" / "sheet_text"
 SIZES = [(140, 70), (120, 45)]
 
 #: The nodes that show a sheet view (the others show a list or a summary).
-SHEETS = {"covenant", "character", "laboratory", "familiar"}
+SHEETS = {"covenant", "character", "laboratory", "familiar", "sketch_covenant"}
 
 
 async def _settle(pilot) -> None:
@@ -128,7 +128,7 @@ async def _open_node(pilot, app, node: str) -> WorkspaceScreen:
 
     assert await wait_until(pilot, lambda: find_node() is not None)
     tree.select_node(find_node())
-    assert await wait_until(pilot, lambda: workspace.selected_kind == node)
+    assert await wait_until(pilot, lambda: workspace.selected_kind == NODES[node][0])
     # selected_kind changes before the sheet is mounted and recorded.
     if node in SHEETS:
         assert await wait_until(

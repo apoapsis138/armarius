@@ -1924,6 +1924,30 @@ class WorkspaceBase(Screen[None]):
         ops = self._section_ops.get(self._active_section() or "")
         return None if ops is None else getattr(ops, name)
 
+    #: Core sections whose changes can rename or add records in the tree.
+    _TREE_SECTIONS: ClassVar[frozenset[str]] = frozenset({"section-cov-magi"})
+
+    def _core_verb(self, section: str, verb: str) -> None:
+        """Run the sheet's core Add, Edit or Delete (commands.SectionOps)
+        for `section` on its chosen row, then save and redraw it."""
+        view = self._current_sheet_view()
+        ops = view.core_ops.get(section) if view is not None else None
+        step_of = getattr(ops, verb, None) if ops is not None else None
+        if view is None or step_of is None:
+            return
+        if verb == "add":
+            step = step_of()
+        else:
+            row = view.section_row(section)
+            if row is None:
+                return
+            step = step_of(row)
+        run_steps(
+            self.app,
+            step,
+            lambda _end: self._commit(section, tree=section in self._TREE_SECTIONS),
+        )
+
     def action_add(self) -> None:
         if (handler := self._section_op("add")) is not None:
             handler()

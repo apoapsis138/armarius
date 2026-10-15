@@ -36,6 +36,7 @@ from .sections import (
     BOOK_SECTIONS,
     BOOKS_SECTION,
     CATALOGS_SECTION,
+    CORE_SECTIONS,
     DEVICE_SECTIONS,
     HIDDEN_SECTION,
     HOUSE_RULES_SECTION,
@@ -138,6 +139,7 @@ def _section_verbs() -> dict[str, frozenset[str]]:
         "section-inh-population": _EDIT,
         "section-inh-misc": _EDIT,
         "tab-cov-diary": _ALL3,
+        **CORE_SECTIONS,
     }
     for section in TRAIT_SECTIONS:
         verbs[section] = _ALL3
@@ -357,7 +359,7 @@ def available(action: str, facts: ActionFacts) -> bool:
         )
     if action in ("promote", "demote"):
         record = facts.creation_record()
-        if not isinstance(record, Character) or not facts.on_record():
+        if not isinstance(record, (Character, Covenant)) or not facts.on_record():
             return False
         step = world.promoted if action == "promote" else world.demoted
         return step(record.detail) is not None

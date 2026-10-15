@@ -14,7 +14,7 @@ from textual.widgets import (
     TabbedContent,
 )
 
-from .... import book_value, catalog, seasons
+from .... import book_value, catalog, seasons, world, world_forms
 from .... import books as bk
 from .... import covenant_build as cov_build
 from .... import covenant_diary as cov_diary
@@ -33,13 +33,16 @@ from ....covenants import (
 )
 from ....markup import aligned, escape, markdown_inline, problem
 from ....models import (
+    FULL,
     INHABITANT_KINDS,
+    LINE,
     POSSESSION_KINDS,
     Character,
     Covenant,
     Saga,
 )
 from ....rules import realms
+from ....sections import MAGI_SECTION, WHAT_MATTERS_SECTION
 from ..widgets import (
     DetailsPanel,
     PinnedCollapsible,
@@ -67,6 +70,14 @@ class CovenantSheetView(SheetView):
     def __init__(self, saga: Saga, covenant: Covenant) -> None:
         super().__init__(saga)
         self.covenant = covenant
+        #: A Line or Sketch covenant: its magi, What Matters and attitudes
+        #: on one Overview, and only its Diary beside it.
+        self.sketch = covenant.detail != FULL
+        if self.sketch:
+            self.INITIAL_TAB = "tab-cov-overview"
+            self.core_ops = world_forms.covenant_ops(saga, covenant)
+        elif not covenant.played:
+            self.core_ops = world_forms.record_ops(saga, covenant)
         self._register_refreshers()
 
     def _register_refreshers(self) -> None:
@@ -140,7 +151,18 @@ class CovenantSheetView(SheetView):
             with TwoColumns(id="cov-info-body", text=True):
                 yield Static(self._info_left_text(), id="cov-info-left")
                 yield Static(self._info_right_text(), id="cov-info-right")
+            if self.sketch:
+                yield self._static(
+                    "section-cov-info", self._summary_text, id="cov-summary"
+                )
             yield from self._top_buttons("btn-cov-edit")
+        if self.sketch:
+            with TabbedContent(initial=self.INITIAL_TAB):
+                yield self._tab(
+                    "Overview", "tab-cov-overview", self._scrolling(self._overview_tab)
+                )
+                yield self._tab("Diary", "tab-cov-diary", self._diary_tab)
+            return
         with TabbedContent(initial=self.INITIAL_TAB):
             yield self._tab("Attributes", "tab-cov-attributes", self._attributes_tab)
             yield self._tab("Inhabitants", "tab-cov-inhabitants", self._inhabitants_tab)
@@ -150,6 +172,43 @@ class CovenantSheetView(SheetView):
             yield self._tab("Library", "tab-cov-library", self._library_tab)
             yield self._tab("Diary", "tab-cov-diary", self._diary_tab)
             yield self._tab("Build", "tab-cov-build", self._scrolling(self._build_tab))
+
+    def _summary_text(self) -> str:
+        summary = self.covenant.summary.strip()
+        if not summary:
+            return "[$label]In the Saga: not written yet. Edit the covenant to say.[/]"
+        return markdown_inline(summary)
+
+    def _overview_tab(self) -> ComposeResult:
+        """A Line or Sketch covenant: its magi and their votes, What Matters
+        beside its attitude to each player covenant, then favours and
+        links. A Line covenant has only its attitudes, favours and links."""
+        saga, covenant = self.saga, self.covenant
+        if covenant.detail != LINE:
+            with SheetSection(
+                title=self._titled(
+                    (MAGI_SECTION, "section-cov-info"),
+                    MAGI_SECTION,
+                    lambda: world_forms.magi_title(saga, covenant),
+                ),
+                id=MAGI_SECTION,
+            ):
+                yield self._list(
+                    (MAGI_SECTION, "section-cov-info"),
+                    lambda: world_forms.magi_rows(saga, covenant),
+                    id="cov-magi-list",
+                )
+            with TwoColumns(id="cov-sketch-row"):
+                with SheetSection(title="What Matters", id=WHAT_MATTERS_SECTION):
+                    yield self._static(
+                        WHAT_MATTERS_SECTION,
+                        lambda: world_forms.what_matters_text(covenant),
+                        id="cov-what-matters",
+                    )
+                with Vertical():
+                    yield from self._relations(covenant)
+        else:
+            yield from self._relations(covenant)
 
     def _build_tab(self) -> ComposeResult:
         """What the covenant's Build Points went on: the one
@@ -200,6 +259,8 @@ class CovenantSheetView(SheetView):
                 warnings = Static(self._bh_warnings_text(), id="cov-bh-warnings")
                 warnings.display = bool(self._bh_warnings_text())
                 yield warnings
+                if not self.covenant.played:
+                    yield from self._relations(self.covenant)
                 with TwoColumns(id="cov-bh-row"):
                     with SheetSection(
                         title=self._bh_title("Boon"), id="section-cov-boons"
@@ -664,6 +725,14 @@ class CovenantSheetView(SheetView):
 
     def _info_left_text(self) -> str:
         cov, saga = self.covenant, self.saga
+        if self.sketch:
+            rows = [("Tribunal", escape(cov.tribunal) if cov.tribunal else "(not set)")]
+            if cov.detail != LINE:
+                founded = (
+                    "(not set)" if cov.year_founded is None else str(cov.year_founded)
+                )
+                rows += [("Founded", founded), ("Season", cov.covenant_season)]
+            return aligned(rows)
         founded = "(not set)" if cov.year_founded is None else str(cov.year_founded)
         return aligned(
             [
@@ -678,6 +747,15 @@ class CovenantSheetView(SheetView):
 
     def _info_right_text(self) -> str:
         cov, saga = self.covenant, self.saga
+        if self.sketch:
+            played = "yes" if cov.played else "no"
+            rows = [("Detail", f"{cov.detail}   played: {played}")]
+            if cov.detail != LINE:
+                rows += [
+                    ("Votes", world.votes_text(saga, cov)),
+                    ("Aura", self._aura_text()),
+                ]
+            return aligned(rows)
         return aligned(
             [
                 ("Tribunal", escape(cov.tribunal) if cov.tribunal else "(not set)"),

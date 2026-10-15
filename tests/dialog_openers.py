@@ -218,6 +218,19 @@ OPENERS: dict[str, Opener] = {
     "create laboratory": Opener("covenant", lambda ws: ws.action_create_laboratory()),
     "bind familiar": Opener("covenant", lambda ws: ws.action_create_familiar()),
     "edit covenant": Opener("covenant", lambda ws: ws._edit_covenant()),
+    "edit sketch covenant": Opener("sketch_covenant", lambda ws: ws._edit_covenant()),
+    "what matters": Opener(
+        "sketch_covenant", lambda ws: ws._core_verb("section-cov-what-matters", "edit")
+    ),
+    "add reason": Opener(
+        "sketch_covenant", lambda ws: ws._core_verb("section-attitudes", "add")
+    ),
+    "add favour": Opener(
+        "sketch_covenant", lambda ws: ws._core_verb("section-favours", "add")
+    ),
+    "add sketch magus": Opener(
+        "sketch_covenant", lambda ws: ws._core_verb("section-cov-magi", "add")
+    ),
     "edit covenant description": Opener(
         "covenant", lambda ws: ws._edit_covenant_description()
     ),
@@ -530,7 +543,9 @@ async def open_dialog(
 
         assert await wait_until(pilot, lambda: find_node() is not None)
         tree.select_node(find_node())
-        assert await wait_until(pilot, lambda: base.selected_kind == opener.node)
+        assert await wait_until(
+            pilot, lambda: base.selected_kind == NODES[opener.node][0]
+        )
         if opener.node not in ("saga", "book_group"):
             assert await wait_until(
                 pilot, lambda: base._current_sheet_view() is not None

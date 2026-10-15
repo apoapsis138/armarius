@@ -144,6 +144,12 @@ class Covenant:
     attitudes: list[Attitude] = field(default_factory=list)
     favours: list[Favour] = field(default_factory=list)
     links: list[Link] = field(default_factory=list)
+    #: Magi of a sketch covenant who are counted but never named: each has
+    #: a Tribunal vote, as its named magi do.
+    unnamed_magi: int = 0
+    #: A sketch covenant's What Matters: one short entry a line (its vis,
+    #: library, Boons and Hooks), each optionally "Label: what".
+    what_matters: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Covenant:

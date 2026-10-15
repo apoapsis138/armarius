@@ -78,6 +78,7 @@ def test_each_page_offers_what_applies_there():
         "Export",
         "Update from a File",
         "In Creation / In Play",
+        "Demote",
     ]
     assert _labels(menu_forms.new_items(page)) == [
         "New Character",

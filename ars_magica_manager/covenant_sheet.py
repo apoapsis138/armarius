@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from . import books as bk
-from . import catalog
+from . import catalog, world, world_forms
 from . import covenant_build as cov_build
 from . import covenant_diary as cov_diary
 from . import economics as eco
@@ -32,6 +32,7 @@ from .covenants import (
 from .laboratory_sheet import Aura
 from .models import (
     INHABITANT_KINDS,
+    LINE,
     POSSESSION_KINDS,
     Book,
     Covenant,
@@ -77,6 +78,21 @@ def charter_facts(saga: Saga, covenant: Covenant) -> list[Fact]:
     ]
     if covenant.in_creation:
         facts.append(Fact("Build Points", cov_build.summary(saga, covenant)))
+    return facts
+
+
+def sketch_facts(saga: Saga, covenant: Covenant) -> list[Fact]:
+    """A Line or Sketch covenant's facts under its name."""
+    facts = [Fact("Tribunal", covenant.tribunal or "(not set)")]
+    if covenant.detail != LINE:
+        founded = covenant.year_founded
+        facts += [
+            Fact("Founded", "(not set)" if founded is None else str(founded)),
+            Fact("Season", covenant.covenant_season),
+            Fact("Magi", world_forms.magi_title(saga, covenant).removeprefix("Magi ")),
+            Fact("Votes", world.votes_text(saga, covenant)),
+        ]
+    facts.append(Fact("Detail", covenant.detail))
     return facts
 
 

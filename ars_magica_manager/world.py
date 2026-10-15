@@ -203,3 +203,44 @@ def links_to(saga: Saga, kind: str, target_id: str) -> list[tuple[Any, Link]]:
         for link in record.links
         if link.kind == kind and link.target_id == target_id
     ]
+
+
+# -- a covenant's magi and votes --
+
+
+def covenant_magi(saga: Saga, covenant: Covenant) -> list[Character]:
+    """The named magi whose covenant is `covenant`, at any detail."""
+    return [
+        c for c in saga.characters if c.covenant_id == covenant.id and c.type == "magus"
+    ]
+
+
+def votes(saga: Saga, covenant: Covenant) -> int:
+    """A covenant's Tribunal votes: one for each of its magi, named or not.
+    Proxies are carried at each meeting, not here."""
+    return len(covenant_magi(saga, covenant)) + covenant.unnamed_magi
+
+
+def votes_text(saga: Saga, covenant: Covenant) -> str:
+    """ "5 (3 named, 2 unnamed)", or just "3" when every magus is named."""
+    named = len(covenant_magi(saga, covenant))
+    total = named + covenant.unnamed_magi
+    if not covenant.unnamed_magi:
+        return str(total)
+    return f"{total} ({named} named, {covenant.unnamed_magi} unnamed)"
+
+
+def what_matters_rows(what_matters: str) -> list[tuple[str, str]]:
+    """What Matters as (label, words) entries, one a line; a line "Vis:
+    Vim 6 a year" has the label "Vis", any other none."""
+    rows: list[tuple[str, str]] = []
+    for line in what_matters.splitlines():
+        line = line.strip().lstrip("•-* ").strip()
+        if not line:
+            continue
+        label, sep, words = line.partition(":")
+        if sep and words.strip() and len(label.split()) <= 3:
+            rows.append((label.strip(), words.strip()))
+        else:
+            rows.append(("", line))
+    return rows

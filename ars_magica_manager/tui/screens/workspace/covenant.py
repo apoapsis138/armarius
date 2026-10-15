@@ -13,6 +13,7 @@ from .... import (
     seasons,
     sourcebooks,
     vis,
+    world_forms,
 )
 from .... import covenants as cov_rules
 from .... import economics as eco
@@ -25,6 +26,7 @@ from ....models import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
     BOON_HOOK_RESOURCE,
+    FULL,
     Character,
     Covenant,
     CovenantDiaryEntry,
@@ -690,7 +692,11 @@ class CovenantActions(WorkspaceBase):
         covenant = self.selected_covenant
         if covenant is None:
             return
-        form = covenant_forms.covenant_form(covenant)
+        form = (
+            covenant_forms.covenant_form(covenant)
+            if covenant.detail == FULL
+            else world_forms.sketch_covenant_form(covenant)
+        )
 
         def handle_result(values: dict[str, Any] | None) -> None:
             if values is None:
@@ -698,7 +704,10 @@ class CovenantActions(WorkspaceBase):
             form.apply(values)
             self._commit("section-cov-info", tree=True)
 
-        self.app.push_screen(FieldsDialog(form.title, form.fields()), handle_result)
+        self.app.push_screen(
+            FieldsDialog(form.title, form.fields(), validate=form.validate),
+            handle_result,
+        )
 
     def action_improve(self) -> None:
         self._improve_income_source()

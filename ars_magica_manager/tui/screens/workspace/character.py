@@ -16,6 +16,7 @@ from ....models import (
     Ability,
     Breakthrough,
     Character,
+    Covenant,
     DiaryEntry,
     HermeticBackground,
     KnownSpell,
@@ -72,21 +73,26 @@ class CharacterActions(WorkspaceBase):
         self._change_detail(world.demoted)
 
     def _change_detail(self, step: Any) -> None:
-        """More's Promote or Demote: the character's detail level one step
-        up or down (the core asks first). The sheet is built again, since
-        a sketch's tabs are not a full character's."""
-        character = self.selected_character
-        detail = step(character.detail) if character is not None else None
-        if character is None or detail is None:
+        """More's Promote or Demote: the character's or covenant's detail
+        level one step up or down (the core asks first). The sheet is built
+        again, since a sketch's tabs are not a full record's."""
+        view = self._current_sheet_view()
+        record = view.creation_record if view is not None else None
+        if not isinstance(record, (Character, Covenant)):
+            return
+        detail = step(record.detail)
+        if detail is None:
             return
 
         def done(_end: object) -> None:
-            self._commit("section-char-info", tree=True)
-            self.call_later(self._show_character, character)
+            if isinstance(record, Character):
+                self._commit("section-char-info", tree=True)
+                self.call_later(self._show_character, record)
+            else:
+                self._commit("section-cov-info", tree=True)
+                self.call_later(self._show_covenant_detail, record)
 
-        run_steps(
-            self.app, menu_forms.change_detail(self.saga, character, detail), done
-        )
+        run_steps(self.app, menu_forms.change_detail(self.saga, record, detail), done)
 
     # -- Character Info / Characteristics --
 

@@ -18,7 +18,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Covenant",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Export, Update from a File, In Creation / In Play",
+        "m": "MenuScreen: Export, Update from a File, In Creation / In Play, Demote",
         "slash": "(disabled)"
       }
     },
@@ -978,6 +978,78 @@
         "a": "FieldsDialog: Add a Player",
         "e": "notice: No players yet: 'a' adds one.",
         "d": "notice: No players yet: 'a' adds one.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    }
+  },
+  "sketch_covenant": {
+    "PinnedCollapsible#section-cov-info": {
+      "active": "section-cov-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Covenant",
+        "d": "ConfirmScreen",
+        "m": "MenuScreen: Export, Update from a File, Promote, Demote",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cov-magi": {
+      "active": "section-cov-magi",
+      "keys": {
+        "a": "FieldsDialog: Add a Magus",
+        "e": "FieldsDialog: Edit Severinus",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cov-what-matters": {
+      "active": "section-cov-what-matters",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: What Matters",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-attitudes": {
+      "active": "section-attitudes",
+      "keys": {
+        "a": "FieldsDialog: Add a Reason",
+        "e": "FieldsDialog: Attitude toward Keep",
+        "d": "notice: Where it started can't be deleted: edit it to change it.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-favours": {
+      "active": "section-favours",
+      "keys": {
+        "a": "FieldsDialog: Add a Favour",
+        "e": "FieldsDialog: Edit a Favour",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-links": {
+      "active": "section-links",
+      "keys": {
+        "a": "ChooseScreen: Link to what?",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "TabPane#tab-cov-diary": {
+      "active": "tab-cov-diary",
+      "keys": {
+        "a": "FieldsDialog: Add a Diary Entry",
+        "e": "notice: No Diary entries to edit.",
+        "d": "notice: No Diary entries to remove.",
         "m": "(disabled)",
         "slash": "(disabled)"
       }

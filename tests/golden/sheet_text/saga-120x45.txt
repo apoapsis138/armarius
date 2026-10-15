@@ -6,8 +6,8 @@
   Books in play: All books
   Optional rules: none (the book's standard rules)
 
-  Covenants: 1
-  Characters: 2
+  Covenants: 2
+  Characters: 3
   Laboratories: 1
   Books: 4
   Spells: 1

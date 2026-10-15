@@ -91,3 +91,19 @@ SILVER_SECTIONS: dict[str, str] = {
     "section-inventory": "character",
     "section-eco-wealth": "covenant",
 }
+
+#: Sections whose Add, Edit and Delete come straight from the core
+#: (commands.SectionOps): the sheet showing one names the ops for its
+#: record, and each front-end runs their steps the same way.
+ATTITUDE_SECTION = "section-attitudes"
+FAVOURS_SECTION = "section-favours"
+LINKS_SECTION = "section-links"
+MAGI_SECTION = "section-cov-magi"
+WHAT_MATTERS_SECTION = "section-cov-what-matters"
+CORE_SECTIONS: dict[str, frozenset[str]] = {
+    ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
+    FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),
+    LINKS_SECTION: frozenset({"add", "edit", "remove"}),
+    MAGI_SECTION: frozenset({"add", "edit", "remove"}),
+    WHAT_MATTERS_SECTION: frozenset({"edit"}),
+}

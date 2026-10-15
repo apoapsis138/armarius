@@ -50,6 +50,25 @@ Laboratories chapter ends in New Laboratory; what they make belongs to the
 covenant. A familiar is bound on its magus or in their laboratory.
 <!-- /gui -->
 
+How much of a covenant is written down is its detail level: a **Line** (a
+name, its Tribunal and who they are), a **Sketch** (its magi, what matters
+to it and its attitude to each player covenant) or **Full** (the whole
+sheet). Only a full covenant is played: a Line or Sketch covenant is left
+out of upkeep, income, Loyalty and the seasons, though its magi still count
+toward its Tribunal's votes. **Promote** and **Demote** move it one level;
+nothing is deleted. Promoting a sketch to Full moves it In Creation and
+opens the Creation Worksheet on what the sketch already has.
+<!-- tui -->
+Both are in More (`m`) on the top panel.
+<!-- /tui -->
+<!-- gui -->
+Both are in the **Manage** chapter.
+<!-- /gui -->
+
+A covenant is a **player covenant** when the troupe plays it ("Played by the
+troupe" in its Edit): other records' attitudes point at the player
+covenants. A covenant you make is played; a sketch covenant usually isn't.
+
 **See also:** [Saga](help:saga), [Keys](help:keys),
 [Advancing a season](help:advance-season), [How to manage the covenant](help:guide-covenant).
 
@@ -82,6 +101,68 @@ panel
 header
 <!-- /gui -->
 also shows the Build Points spent.
+
+## Overview tab
+<!-- help: tab-cov-overview -->
+
+A Line or Sketch covenant opens here, beside its Diary: who it is in the
+saga (typed in its Edit), its magi and their votes, What Matters, its
+attitude to each player covenant, the favours owed and its links.
+<!-- gui -->
+On the desktop this is the **Sketch** chapter.
+<!-- /gui -->
+A Line covenant has only its attitude, favours and links.
+
+**You type:** its magi (a line or a sketch each), how many more are
+unnamed, What Matters, and each reason its attitude moved.
+
+**The app works out:** its votes, one for each magus named or not, and
+each attitude from where it started and every reason since.
+
+### Magi
+<!-- help: section-cov-magi -->
+
+The magi whose covenant this is, at any detail, with their House and
+votes, then how many more are unnamed (set in the covenant's Edit). Add
+writes a new magus in as a line or a sketch; Edit changes their name,
+House, detail and part in the saga; Delete removes them from the saga,
+saying first what goes with them. Proxies are carried at each Tribunal
+meeting, not here.
+<!-- tui -->
+To promote a magus to a full character, open them in the tree.
+<!-- /tui -->
+<!-- gui -->
+Click a magus to see their statblock in the inspector.
+<!-- /gui -->
+
+### What Matters
+<!-- help: section-cov-what-matters -->
+
+Short entries, one a line, about what the covenant cares for: its vis, its
+library, its Boons and Hooks. Start a line with a word and a colon ("Vis:
+Vim 6 a year") to head it.
+
+### Attitude
+<!-- help: section-attitudes -->
+
+How the record feels toward each player covenant, from −3 (Hostile) to +3
+(Allied). Each starts somewhere (the "Started" row; Edit it to change it),
+and every reason written down moves it: +1, −1 or more. The score is
+worked out from those, never typed, and kept within −3 to +3. Add a reason
+for what happened and when; delete one and the score moves back.
+
+### Favours
+<!-- help: section-favours -->
+
+Favours owed: what for, who owes whom, and since when. A favour stays open
+until a season it was repaid in is set, then shows dimmed.
+
+### Links
+<!-- help: section-links -->
+
+Links to other records of the saga (a character, covenant, book,
+possession or familiar), each with a short note. Below them, unselectable,
+are the records that link here.
 
 ## Attributes tab
 <!-- help: tab-cov-attributes -->

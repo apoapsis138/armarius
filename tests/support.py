@@ -8,7 +8,9 @@ from textual.widgets import OptionList
 from ars_magica_manager import catalog
 from ars_magica_manager.models import (
     CHARGED,
+    SKETCH,
     Ability,
+    Attitude,
     BondPower,
     Book,
     Character,
@@ -17,6 +19,7 @@ from ars_magica_manager.models import (
     DiaryEntry,
     EnchantedDevice,
     Familiar,
+    Favour,
     IncomeSource,
     Inhabitant,
     InstilledEffect,
@@ -27,6 +30,7 @@ from ars_magica_manager.models import (
     LabSpecialtyGrant,
     NamedDescription,
     Possession,
+    Reason,
     Saga,
     ScoredTrait,
     Spell,
@@ -137,6 +141,7 @@ NODES: dict[str, tuple[str, ...]] = {
     "character": ("character", "mag1"),
     "laboratory": ("laboratory", "lab1"),
     "familiar": ("familiar", "fam1"),
+    "sketch_covenant": ("covenant", "cov_sketch"),
     "book_group": ("book_group",),
     "saga_content": ("saga_content",),
 }
@@ -290,11 +295,35 @@ def everything_saga() -> Saga:
             ],
         ),
     ]
+    # A sketch covenant across the river: one sketch magus, two unnamed,
+    # and its attitude toward the player covenant.
+    sketch = Covenant(
+        id="cov_sketch",
+        saga_id="s",
+        name="Fengheld",
+        detail=SKETCH,
+        played=False,
+        summary="Rivals for the ford.",
+        unnamed_magi=2,
+        what_matters="Vis: the ford, 3 Aquam a year",
+        attitudes=[
+            Attitude("cov1", -1, [Reason("Claimed the ford", -1, 1219, "Autumn")])
+        ],
+        favours=[Favour("Hid a grog", "Fengheld", "Keep", 1219, "Spring")],
+    )
+    rival = Character(
+        id="mag_sketch",
+        name="Severinus",
+        type="magus",
+        covenant_id="cov_sketch",
+        detail=SKETCH,
+        in_creation=False,
+    )
     return Saga(
         id="test_saga",
         name="Matrix",
-        covenants=[covenant],
-        characters=[magus, companion],
+        covenants=[covenant, sketch],
+        characters=[magus, companion, rival],
         laboratories=[lab],
         familiars=[familiar],
         books=books,

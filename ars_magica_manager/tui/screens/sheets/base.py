@@ -20,7 +20,9 @@ from textual.widgets import (
 from textual.widgets._collapsible import CollapsibleTitle
 
 from .... import enchanted_devices as ed
+from .... import world, world_forms
 from ....boon_hook_text import counted
+from ....commands import SectionOps
 from ....markup import escape, inherited
 from ....models import (
     FULL,
@@ -30,6 +32,7 @@ from ....models import (
     Laboratory,
     Saga,
 )
+from ....sections import ATTITUDE_SECTION, FAVOURS_SECTION, LINKS_SECTION
 from ..widgets import DetailsPanel, SelectableList, SheetSection, first_stop
 from .lists import BookListView
 
@@ -124,6 +127,21 @@ class SheetView(Vertical):
         #: The ids of the tabs _tab() has made, in order (they are numbered
         #: as they go; the workspace's 1 to 9 keys open them).
         self.tab_ids: list[str] = []
+        #: The core's Add, Edit and Delete (commands.SectionOps) for each
+        #: section in sections.CORE_SECTIONS this sheet shows.
+        self.core_ops: dict[str, SectionOps] = {}
+
+    def section_row(self, section_id: str) -> int | None:
+        """The chosen row of `section_id`'s list, by its data index; 0 for a
+        section with no list (its one Edit), None with no row chosen."""
+        try:
+            section = self.query_one(f"#{section_id}")
+        except NoMatches:
+            return None
+        lists = section.query(SelectableList)
+        if not lists:
+            return 0
+        return lists.first().selected_data_index
 
     #: The tab shown first, built as the sheet opens (the others are built on
     #: first visit -- see LazyTabPane). A sheet may choose it per record.
@@ -307,6 +325,50 @@ class SheetView(Vertical):
             sections, lambda: self.query_one(f"#{id}", Static).update(text())
         )
         return DetailsPanel(text(), id=id)
+
+    def _relations(self, record: Any, *, attitude: bool = True) -> ComposeResult:
+        """A world record's Attitude (toward each player covenant), Favours
+        and Links sections, edited through the core (world_forms)."""
+        saga = self.saga
+        if attitude:
+            with SheetSection(title="Attitude", id=ATTITUDE_SECTION):
+                yield self._list(
+                    ATTITUDE_SECTION,
+                    lambda: world_forms.attitude_rows(saga, record),
+                    id="attitude-list",
+                )
+        with SheetSection(
+            title=self._titled(
+                FAVOURS_SECTION,
+                FAVOURS_SECTION,
+                lambda: counted("Favours", len(record.favours)),
+            ),
+            id=FAVOURS_SECTION,
+        ):
+            yield self._list(
+                FAVOURS_SECTION,
+                lambda: (
+                    world.favour_rows(record.favours)
+                    or [(None, "[$label]None owed.[/]")]
+                ),
+                id="favours-list",
+            )
+        with SheetSection(
+            title=self._titled(
+                LINKS_SECTION,
+                LINKS_SECTION,
+                lambda: counted("Links", len(record.links)),
+            ),
+            id=LINKS_SECTION,
+        ):
+            yield self._list(
+                LINKS_SECTION,
+                lambda: (
+                    world_forms.link_rows(saga, record)
+                    or [(None, "[$label]No links.[/]")]
+                ),
+                id="links-list",
+            )
 
     def _list(
         self,
