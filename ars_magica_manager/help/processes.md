@@ -220,15 +220,33 @@ The steps run in a fixed order:
 - **Elections**, when the Tribunal's customs have offices (the Theban
   archai): each office's holder and when the term ends.
 - **Rulings and fines**: the ruling on each case, starting from how its
-  vote went.
+  vote went; any fine, in pawns of an Art or (with no Art) pounds of
+  silver, and who pays it; whether the ruling goes into the Peripheral
+  Code (a motion's does unless you say otherwise); and, for a case
+  between a troupe covenant and another, how the other's attitude
+  toward the troupe's moves (a party that lost takes it ill, -1).
 - **Treasury and vis**: the treasury as it stands and the loans that
   fall due this year.
-- **Closing**: each case with a ruling is decided, the meeting is
-  written in the Tribunal's Diary, and the next meeting is set for when
-  the Tribunal next meets.
+- **Closing**: each case with a ruling is decided and what its ruling
+  says is written: the fine, owed to the Tribunal's treasury; the
+  ruling, into the Peripheral Code; and the attitude's move, as a reason
+  on the covenant's attitude. The Acta, the meeting's acts set out as a
+  charter, goes into the Tribunal's Diary, and the next meeting is set
+  for when the Tribunal next meets.
 
 Any step can be held again to change it. Every step has a Note for
 anything said or decided in your own words.
+
+Each step held writes its minutes into the Tribunal's Diary, an entry
+headed with its day ("¶ The First Day: Attendance and proxies"), its
+numbers in the margin (the votes in the hall, a vote's tally, a fine)
+and its Note after its own words. Holding a step again rewrites its
+entry rather than adding another. The Acta, like any Diary entry, can be
+reworded by editing it.
+<!-- gui -->
+On the desktop, choose the Acta in the Diary and press Print to print it
+to a PDF.
+<!-- /gui -->
 
 **See also:** [Tribunal sheet](help:tribunal), [Meeting tab](help:tab-trib-meeting)
 

@@ -98,6 +98,9 @@ class TribunalDiaryEntry:
     #: What the entry changed, so deleting it can undo it (see the
     #: yearly step); empty for an entry typed in.
     changes: list[dict[str, Any]] = field(default_factory=list)
+    #: The numbers a meeting's minutes set in the margin ("23 votes, 3
+    #: by proxy").
+    margin: str = ""
     id: str = field(default_factory=new_instance_id, compare=False)
 
 

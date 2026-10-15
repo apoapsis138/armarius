@@ -619,14 +619,15 @@ def diary_grid(tribunal: Tribunal) -> Grid:
             [
                 world.when_text(entry.year, entry.season),
                 entry.title,
+                entry.margin,
                 details.splitlines()[0] if details else "",
             ]
         )
     return Grid(
-        ["When", "Entry", "Details"],
+        ["When", "Entry", "Numbers", "Details"],
         rows,
         list(order),
         "Nothing written yet: each meeting's minutes go here.",
-        caps=[11, 28, 0],
-        stretch=2,
+        caps=[11, 30, 18, 0],
+        stretch=3,
     )

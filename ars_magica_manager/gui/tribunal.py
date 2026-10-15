@@ -16,6 +16,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from .. import (
+    acta,
     artwork,
     meeting,
     tribunal_forms,
@@ -25,8 +26,9 @@ from .. import (
     world,
 )
 from .. import character_sheet as cs
+from ..commands import Command, Refuse
 from ..markup import aligned, escape
-from ..models import Case, Saga, Tribunal
+from ..models import Case, Saga, Tribunal, TribunalDiaryEntry
 from ..sections import (
     ATTENDANCE_SECTION,
     BUSINESS_SECTION,
@@ -39,6 +41,7 @@ from ..sections import (
     VOTE_SECTION,
 )
 from ..tribunal_sheet import Grid
+from . import print_sheet
 from .character_sheet import TextBlock, section
 from .editing import Chooser, RowVerb, Run, verb_buttons
 from .figures import fact_grid, prose
@@ -317,11 +320,33 @@ class TribunalPage(QWidget):
 
     def _diary(self) -> QWidget:
         t = self.tribunal
+
+        def entry(row: int) -> TribunalDiaryEntry | None:
+            # The table gives the chosen row's key: its place in the Diary.
+            return t.diary[row] if row < len(t.diary) else None
+
+        def print_acta(row: int) -> Command:
+            found = entry(row)
+            if found is None:
+                return Refuse("Print", "Choose an Acta to print.")
+            return acta.print_entry(
+                t,
+                tribunals.title(t),
+                found,
+                lambda doc, path: print_sheet.print_document(doc, path),
+            )
+
+        def is_acta(row: int) -> bool:
+            found = entry(row)
+            return found is not None and acta.is_acta(found.title)
+
+        printing: RowVerb = ("Print", "export", print_acta, is_acta)
         return scrolling_page(
             self.p,
             self._grid(
                 tribunal_sheet.diary_title(t),
                 tribunal_sheet.diary_grid(t),
                 TRIB_DIARY_SECTION,
+                more=[printing],
             ),
         )

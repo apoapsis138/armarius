@@ -8,8 +8,9 @@ import random
 
 from support import everything_saga
 
-from ars_magica_manager import meeting, storage
-from ars_magica_manager.commands import Confirm, Form, Refuse
+from ars_magica_manager import acta, meeting, storage
+from ars_magica_manager import print_layout as pl
+from ars_magica_manager.commands import ChooseFile, Confirm, Form, Refuse
 from ars_magica_manager.models import CASE_DECIDED, Saga
 from ars_magica_manager.rules import debate
 
@@ -139,8 +140,9 @@ def test_closing_writes_the_diary_and_sets_the_next_meeting():
     assert rhine.meeting is None
     assert rhine.cases[0].status == CASE_DECIDED
     assert rhine.cases[1].status == "open"
-    assert len(rhine.diary) == diary + 1
-    assert rhine.diary[-1].title == "The Tribunal met at Durenmar"
+    # The Closing's own minutes, then the Acta.
+    assert len(rhine.diary) == diary + 2
+    assert rhine.diary[-1].title == "Acta of the Rhine Tribunal, Summer 1228"
     assert rhine.next_year == 1235
 
 
@@ -213,6 +215,10 @@ def test_a_debate_runs_until_a_side_is_knocked_out_or_the_rounds_end():
     assert held.lost[1] >= debate.KNOCKED_OUT or held.rounds == 10
     assert held.lines and held.lines[0].startswith("Round 1:")
     assert held.strength == held.lost[1] - held.lost[0]
+    # However hard the last blow, a side loses no more than five levels.
+    for seed in range(30):
+        held = debate.run((strong, weak), ([3], []), 10, random.Random(seed))
+        assert max(held.lost) <= debate.KNOCKED_OUT
 
 
 def test_argument_strength_sways_neutral_then_hostile_votes():
@@ -282,3 +288,118 @@ def test_an_alteration_costs_a_motion_argument_strength():
         lost_against=4,
     )
     assert meeting.strength(rhine.meeting, motion) == (meeting.FOR, 1)
+
+
+def _rulings(saga, rhine, **values):
+    _save(meeting.hold(saga, rhine))
+    found = meeting.steps(rhine, rhine.meeting)
+    rulings = next(s for s in found if s.key == "rulings")
+    _save(meeting.step_form(saga, rhine, rulings), **values)
+    return found
+
+
+def test_each_step_held_writes_its_minutes_once():
+    saga = everything_saga()
+    rhine = _rhine(saga)
+    before = len(rhine.diary)
+    _save(meeting.hold(saga, rhine))
+    entry = rhine.diary[-1]
+    assert len(rhine.diary) == before + 1
+    assert entry.title == "¶ The First Day: Opening and the oaths"
+    assert "the oaths were sworn" in entry.details
+    assert entry.margin == "3 days"
+    # Held again, its entry is rewritten, not added to.
+    opening = meeting.step_form(saga, rhine, meeting.steps(rhine, rhine.meeting)[0])
+    _save(opening, days=2)
+    assert len(rhine.diary) == before + 1
+    assert rhine.diary[-1].margin == "2 days"
+
+
+def test_closing_writes_the_fine_the_code_and_the_attitude():
+    saga = everything_saga()
+    rhine = _rhine(saga)
+    case = rhine.cases[0]
+    fengheld = saga.covenant("cov_sketch")
+    assert fengheld is not None
+    reasons = len(fengheld.attitudes[0].reasons)
+    treasury, code = len(rhine.treasury), len(rhine.rulings)
+    found = _rulings(
+        saga,
+        rhine,
+        **{
+            f"outcome_{case.id}": "Keep pays 3 pawns of Aquam",
+            f"fine_{case.id}": 3.0,
+            f"art_{case.id}": "Aquam",
+            f"code_{case.id}": True,
+            f"attitude_{case.id}": "-2",
+        },
+    )
+    _save(meeting.step_form(saga, rhine, found[-1]))
+    fine = rhine.treasury[treasury]
+    assert (fine.kind, fine.amount, fine.art, fine.who) == (
+        "fine",
+        3.0,
+        "Aquam",
+        "Keep",
+    )
+    assert len(rhine.rulings) == code + 1
+    assert rhine.rulings[-1].says == "Keep pays 3 pawns of Aquam"
+    moved = fengheld.attitudes[0].reasons
+    assert len(moved) == reasons + 1 and moved[-1].change == -2
+    assert "Fengheld v. Keep" in moved[-1].what
+
+
+def test_the_acta_is_built_from_the_meeting():
+    saga = everything_saga()
+    rhine = _rhine(saga)
+    case = rhine.cases[0]
+    _rulings(
+        saga,
+        rhine,
+        **{f"outcome_{case.id}": "Keep pays", f"fine_{case.id}": 10.0},
+    )
+    text = meeting.acta_text(saga, rhine, rhine.meeting)
+    assert text.startswith("The Rhine Tribunal, gathered")
+    assert "In the matter of Fengheld v. Keep, the Tribunal ruled: Keep pays; " in text
+    assert "Keep pays; Keep is to pay a fine of 10 pounds." in text
+    assert "Witnessed by Severinus." in text
+
+
+def test_a_fine_must_be_more_than_nothing():
+    saga = everything_saga()
+    rhine = _rhine(saga)
+    _save(meeting.hold(saga, rhine))
+    rulings = next(s for s in meeting.steps(rhine, rhine.meeting) if s.key == "rulings")
+    form = meeting.step_form(saga, rhine, rulings)
+    assert isinstance(form, Form) and form.validate is not None
+    values = _values(form, **{f"fine_{rhine.cases[0].id}": 0.0})
+    assert (
+        form.validate(values) == "A fine is more than nothing; leave it blank for none."
+    )
+
+
+def test_an_acta_prints_and_the_minutes_do_not(tmp_path):
+    saga = everything_saga()
+    rhine = _rhine(saga)
+    found = _rulings(saga, rhine, **{f"outcome_{rhine.cases[0].id}": "Keep pays"})
+    _save(meeting.step_form(saga, rhine, found[-1]))
+    written = rhine.diary[-1]
+    printed = []
+    step = acta.print_entry(
+        rhine, "Rhine Tribunal", written, lambda doc, path: printed.append(doc) or 2
+    )
+    assert isinstance(step, ChooseFile) and step.save
+    assert step.start.name == "Acta of the Rhine Tribunal, Summer 1228.pdf"
+    assert step.apply(tmp_path / "acta.pdf") == [
+        f"2 pages saved to {tmp_path / 'acta.pdf'}."
+    ]
+    doc = printed[0]
+    assert doc.blocks[0] == pl.Title("Acta", "Rhine Tribunal, Summer 1228")
+    assert any(
+        isinstance(b, pl.Paragraph) and b.text.startswith("In the matter of")
+        for b in doc.blocks
+    )
+    minutes = rhine.diary[-2]
+    assert isinstance(
+        acta.print_entry(rhine, "Rhine Tribunal", minutes, lambda d, p: 1), Refuse
+    )

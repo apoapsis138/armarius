@@ -333,6 +333,7 @@ OPENERS: dict[str, Opener] = {
     "attendance and proxies": Opener("tribunal", _open_attendance),
     "hold the debate": Opener("tribunal", _open_meeting_step(2, "meeting-business")),
     "hold the vote": Opener("tribunal", _open_meeting_step(0, "meeting-vote")),
+    "hold the rulings": Opener("tribunal", _open_meeting_step(6, "meeting-business")),
     "add case": Opener(
         "tribunal",
         _pick(lambda ws: ws._core_verb("section-trib-cases", "add"), "trib-cases"),

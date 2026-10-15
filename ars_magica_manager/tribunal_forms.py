@@ -642,6 +642,13 @@ def diary_fields(saga: Saga, entry: TribunalDiaryEntry | None) -> list[DialogFie
             required=True,
             placeholder="e.g. The Tribunal of 1221",
         ),
+        DialogField(
+            "margin",
+            "Numbers",
+            "text",
+            attr(entry, "margin", ""),
+            hint='Set in the margin, e.g. "23 votes, 3 by proxy".',
+        ),
         DialogField("details", "Details", "area", attr(entry, "details", "")),
     ]
 
@@ -655,6 +662,7 @@ def diary_ops(saga: Saga, tribunal: Tribunal) -> SectionOps:
             target.year = values["year"]
             target.season = values.get("season") or ""
             target.title = values["title"]
+            target.margin = values.get("margin", "")
             target.details = values.get("details", "")
             if entry is None:
                 diary.append(target)

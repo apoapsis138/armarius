@@ -656,6 +656,25 @@ CONTRACTS: dict[str, Contract] = {
         expected="Undecided",
         shown={"#meeting-tally": "2 undecided"},
     ),
+    "hold the rulings": Contract(
+        prefill={"Fengheld v. Keep": "", "Fengheld v. Keep: into the Code": False},
+        edits={
+            "Fengheld v. Keep": "Keep pays",
+            "Fengheld v. Keep: fine": "3",
+            "Fengheld v. Keep: fine in": "Aquam",
+            "Fengheld v. Keep: into the Code": True,
+        },
+        saved=lambda s: {
+            k: v
+            for k, v in s.tribunals[0]
+            .meeting["rulings"][s.tribunals[0].cases[0].id]
+            .items()
+            if k in ("outcome", "fine", "art", "code")
+        },
+        expected={"outcome": "Keep pays", "fine": 3.0, "art": "Aquam", "code": True},
+        invalid={"Fengheld v. Keep: fine": "0"},
+        shown={"#meeting-step-info": "fine 3 pawns of Aquam"},
+    ),
     "add case": Contract(
         prefill={"Case": "", "Kind": "charge", "Filed (year)": "1220"},
         edits={
@@ -753,12 +772,12 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#trib-archai-list": "to 1232"},
     ),
     "add tribunal diary entry": Contract(
-        prefill={"Year": "1220", "Entry": ""},
-        edits={"Entry": "Gild dues raised"},
-        saved=lambda s: [e.title for e in s.tribunals[0].diary],
-        expected=["The Tribunal of 1221", "Gild dues raised"],
+        prefill={"Year": "1220", "Entry": "", "Numbers": ""},
+        edits={"Entry": "Gild dues raised", "Numbers": "12 votes"},
+        saved=lambda s: [(e.title, e.margin) for e in s.tribunals[0].diary],
+        expected=[("The Tribunal of 1221", ""), ("Gild dues raised", "12 votes")],
         invalid={"Entry": ""},
-        shown={"#trib-diary": "Gild dues raised"},
+        shown={"#trib-diary": "12 votes"},
     ),
     "what matters": Contract(
         prefill={"What Matters": "Vis: the ford, 3 Aquam a year"},

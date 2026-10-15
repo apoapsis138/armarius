@@ -247,7 +247,8 @@ def run(
                 if weakening <= d.resistance
                 else round_up((weakening - d.resistance) / 5)
             )
-            lost[defender] += hit
+            # Knocked out at five levels: no more can be lost.
+            lost[defender] = min(KNOCKED_OUT, lost[defender] + hit)
             lines.append(
                 f"Round {number}: {a.name}'s {attack_ability} ({attack}) beats "
                 f"{d.name}'s {defence_ability} ({defence}): "

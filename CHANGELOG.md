@@ -46,6 +46,27 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.81.0 — 2026-10-15
+
+- **The minutes.** Each step of a meeting, once held, writes its
+  minutes into the Tribunal's Diary: an entry headed with its day, what
+  was done in plain words, its numbers in the margin (the votes in the
+  hall, a debate's levels lost, a vote's tally, a fine) and its Note.
+  Holding a step again rewrites its entry. The Diary has a new Numbers
+  column, and any entry's numbers can be edited.
+- **Rulings that take effect.** The Rulings step now takes, for each
+  case, any fine (pawns of an Art, or pounds of silver) and who pays it,
+  whether the ruling goes into the Peripheral Code, and how the other
+  party's attitude toward a troupe covenant moves. When the meeting
+  closes, the fines are owed to the Tribunal's treasury, the rulings go
+  into the Code and the attitudes move, each with its reason.
+- **The Acta.** Closing a meeting writes its Acta into the Diary: the
+  meeting's acts set out as a charter (who attended, each ruling and
+  its fine, the offices filled, the witnesses), which you can reword
+  like any entry. On the desktop, Print prints the chosen Acta to a PDF.
+- A debater now loses no more than five levels, however hard the last
+  blow.
+
 ## 2.80.0 — 2026-10-15
 
 - **The debate.** Each case and motion at a meeting is now debated by

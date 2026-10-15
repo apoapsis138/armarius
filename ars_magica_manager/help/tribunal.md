@@ -335,5 +335,10 @@ and anything else worth writing down.
 ### Diary
 <!-- help: section-trib-diary -->
 
-Entries newest first, each with its year and season. Add one, edit it
-or delete it.
+Entries newest first, each with its year and season, the numbers set in
+its margin and the first line of its details. Add one, edit it or delete
+it. A meeting writes its minutes here a step at a time, and its Acta
+when it closes (see [Hold Tribunal](help:hold-tribunal)).
+<!-- gui -->
+Print prints the chosen Acta to a PDF.
+<!-- /gui -->
