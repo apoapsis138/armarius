@@ -46,6 +46,27 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.85.0 — 2026-10-15
+
+Groundwork for the book packs, one content pack per Tribunal book.
+
+- **Choose what a pack imports.** Import, A Content Pack now asks what to
+  bring in before the preview. The pack's Tribunals and covenants always
+  come; five ticks, all on to begin with, cover their people, places and
+  regiones, the mundane world, the Peripheral Code with its cases and
+  fines, and the history. A part the pack holds nothing of isn't asked
+  about, and a line under the ticks says what the pack brings as you
+  change them. What a left-out part held is matched by name to the
+  saga's own or its links are dropped, and the preview lists which.
+  Starting a new saga from a pack still brings everything. Help: a new
+  Import a Content Pack page.
+- **More arms.** Four new charges: an eagle, a lion, a wheel and a
+  fleur-de-lis. The Arms form asks How many of the charge (one, two side
+  by side, or three as two and one, as heralds place them) and the
+  blazon says so ("Gules, three crowns or"). Churches bear arms too, so a
+  bishop's see can carry its own. A wheel keeps its spokes: a hole in a
+  charge now cuts only the shapes drawn before it.
+
 ## 2.84.0 — 2026-10-15
 
 - Content packs: **Export Pack** in Saga Management writes chosen

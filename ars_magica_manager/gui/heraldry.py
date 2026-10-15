@@ -20,12 +20,12 @@ from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWi
 
 from .. import arms as heraldry
 from ..arms import (
-    CHARGE_BOX,
     CHARGE_SHAPES,
     DIVISION_AREAS,
     HEIGHT,
     Arms,
     Shape,
+    charge_boxes,
     shield_outline,
 )
 from ..markup import escape
@@ -39,9 +39,9 @@ from .widgets import serif, text
 def _path(
     shapes: Sequence[Shape], left: float, top: float, scale: float
 ) -> QPainterPath:
-    """`shapes` (in their own unit square) as one path: the solid ones
-    together, less the holes."""
-    solid, holes = QPainterPath(), QPainterPath()
+    """`shapes` (in their own unit square) as one path: each solid one
+    added, each hole cut from what came before it."""
+    solid = QPainterPath()
     for shape in shapes:
         part = QPainterPath()
         if shape.radius:
@@ -58,11 +58,8 @@ def _path(
                 )
             )
             part.closeSubpath()
-        if shape.hole:
-            holes = holes.united(part)
-        else:
-            solid = solid.united(part)
-    return solid.subtracted(holes)
+        solid = solid.subtracted(part) if shape.hole else solid.united(part)
+    return solid
 
 
 def shield_path(rect: QRectF) -> QPainterPath:
@@ -95,15 +92,15 @@ def paint(painter: QPainter, arms: Arms, rect: QRectF, edge: str) -> None:
     )
     painter.fillPath(second, QColor(TINCTURES[arms.second]))
     if arms.charge in CHARGE_SHAPES:
-        left, top, side = CHARGE_BOX
-        charge = _path(
-            CHARGE_SHAPES[arms.charge],
-            rect.left() + left * scale,
-            rect.top() + top * scale,
-            side * scale,
-        )
-        painter.fillPath(charge, QColor(TINCTURES[arms.charge_tincture]))
-        painter.strokePath(charge, QPen(QColor(0, 0, 0, 70), max(0.6, scale / 160)))
+        for left, top, side in charge_boxes(arms):
+            charge = _path(
+                CHARGE_SHAPES[arms.charge],
+                rect.left() + left * scale,
+                rect.top() + top * scale,
+                side * scale,
+            )
+            painter.fillPath(charge, QColor(TINCTURES[arms.charge_tincture]))
+            painter.strokePath(charge, QPen(QColor(0, 0, 0, 70), max(0.6, scale / 160)))
     # A sheen from the upper left, as on a painted shield.
     sheen = QLinearGradient(
         rect.topLeft(), QPointF(rect.right(), rect.top() + scale * HEIGHT)

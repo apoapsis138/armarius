@@ -19,6 +19,18 @@ def test_the_blazon_is_written_from_the_choices():
         "Vert, a key argent"
     )
     assert arms.blazon(Arms("Sable", "Quarterly", "Or")) == "Quarterly sable and or"
+    assert arms.blazon(Arms("Gules", charge="Crown", count=3)) == (
+        "Gules, three crowns or"
+    )
+    assert arms.blazon(Arms("Or", charge="Eagle", charge_tincture="Sable")) == (
+        "Or, an eagle sable"
+    )
+    assert arms.blazon(Arms("Azure", charge="Fleur-de-lis", count=2)) == (
+        "Azure, two fleurs-de-lis or"
+    )
+    assert arms.blazon(
+        Arms("Argent", charge="Cross", count=2, charge_tincture="Gules")
+    ) == ("Argent, two crosses gules")
 
 
 def test_colour_on_colour_is_warned_of_but_allowed():
@@ -60,6 +72,34 @@ def test_the_shield_is_drawn_from_its_divisions_and_charge():
         assert any(cell == "Or" for row in drawn for cell in row), division
 
 
+def _spots(drawn: list[list[str | None]], tincture: str) -> int:
+    """How many separate runs of `tincture` its fullest row holds."""
+    row = max(drawn, key=lambda r: r.count(tincture))
+    return sum(
+        1
+        for i, cell in enumerate(row)
+        if cell == tincture and (i == 0 or row[i - 1] != tincture)
+    )
+
+
+def test_two_or_three_charges_are_placed_as_heralds_place_them():
+    one = arms.pixels(Arms("Azure", charge="Tree", count=1), 30)
+    two = arms.pixels(Arms("Azure", charge="Tree", count=2), 30)
+    three = arms.pixels(Arms("Azure", charge="Tree", count=3), 30)
+    assert _spots(one, "Or") == 1 and _spots(two, "Or") == 2
+    # Three: two above, and one below them in the middle.
+    assert _spots(three, "Or") == 2
+    rows = [r for r, row in enumerate(three) if "Or" in row]
+    lower = three[rows[-1]]
+    assert lower.index("Or") > 8 and len(lower) - 1 - lower[::-1].index("Or") < 22
+    assert len(arms.charge_boxes(Arms(count=3))) == 3
+    # A save without a count, or with a bad one, bears one charge.
+    assert arms.Arms.from_dict({"field": "Azure", "charge": "Tower"}) == Arms(
+        "Azure", charge="Tower"
+    )
+    assert arms.Arms.from_dict({"field": "Azure", "count": 7}).count == 1
+
+
 def test_arms_are_kept_with_the_saga():
     saga = everything_saga()
     keep = saga.covenant("cov1")
@@ -73,11 +113,12 @@ def test_arms_are_kept_with_the_saga():
     assert found == Arms("Azure", "Per bend", "Argent", "Tower", "Or", "Per aquas, lux")
 
 
-def test_lords_towns_and_factions_bear_arms():
+def test_lords_towns_churches_and_factions_bear_arms():
     saga = everything_saga()
     kinds = {n.kind: arms.bears_arms(n) for n in saga.neighbours}
     assert kinds.get("lord") is True and kinds.get("town") is True
-    assert kinds.get("church", False) is False and kinds.get("threat", False) is False
+    assert kinds.get("church") is True
+    assert kinds.get("threat", False) is False and kinds.get("place", False) is False
     assert all(arms.bears_arms(c) for c in saga.covenants)
 
 
@@ -93,16 +134,21 @@ def test_the_form_writes_the_blazon_as_the_choices_are_made():
         "charge": "Tower",
         "charge_tincture": "Gules",
         "motto": " Per aquas, lux ",
+        "count": 3,
     }
     assert form.live is not None and form.picture is not None
     live = form.live(values)
-    assert "Per pale azure and or, a tower gules" in live
+    assert "Per pale azure and or, three towers gules" in live
     assert "colour on colour" in live
     assert form.picture(values) == Arms(
-        "Azure", "Per pale", "Or", "Tower", "Gules", "Per aquas, lux"
+        "Azure", "Per pale", "Or", "Tower", "Gules", "Per aquas, lux", 3
     )
     form.apply(values)
-    assert keep.arms["motto"] == "Per aquas, lux"
+    assert keep.arms["motto"] == "Per aquas, lux" and keep.arms["count"] == 3
+    # With no charge the count means nothing and is one.
+    assert arms.from_values({**values, "charge": None}) == Arms(
+        "Azure", "Per pale", "Or", "", "Gules", "Per aquas, lux"
+    )
     # A blank field takes the arms away.
     form.apply({**values, "field": None})
     assert keep.arms == {} and arms.arms_of(keep) is None

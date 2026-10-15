@@ -504,8 +504,8 @@ holds.
 A Tribunal's meeting under way stays behind, and its Diary comes without
 what its entries changed.
 
-**Importing a pack** (Import, **A Content Pack**) shows first what it
-adds, what this saga already has of the same name (kept as it is, with
+**Importing a pack** (Import, **A Content Pack**) asks first what to bring
+in, then shows what it adds, what this saga already has of the same name (kept as it is, with
 the pack's links pointing to it, and the books, devices and familiars of
 those records skipped), what else is skipped (a calendar entry already in
 the calendar, or one for a covenant that isn't here), and the links kept
@@ -596,6 +596,34 @@ reads an export of that same record over it: for example after working on a char
 What it replaces: the record's own contents, and what travels with it in an export (a character's familiar, devices and books; a laboratory's or covenant's books and devices). What it keeps: the record itself, so everything that points at it still does, and where it sits in this saga (a character's covenant and laboratory, a laboratory's covenant and owner). A covenant's file made with its laboratories and characters updates the covenant only; update each of them from its own export.
 
 **See also:** [Import Spells](help:import-spells), [Unassigned Books](help:unassigned-books), [The saga](help:saga), [How to import and export](help:guide-import-export)
+
+# Import a Content Pack
+<!-- help: import-pack -->
+
+The form shown after choosing a pack's file in Import Data, **A Content Pack**: which of its parts to bring in.
+
+A pack's Tribunals and covenants always come in: they are what the rest
+hangs on. The rest is a tick each, all ticked to begin with, and a part
+the pack holds nothing of isn't asked about:
+
+- **Their people**: the covenants' characters, laboratories and
+  familiars, and each Tribunal's Praeco and Presiding Quaesitor.
+- **Places and regiones**: the places the covenants sit in, the places
+  round and inside those, and their regio levels.
+- **The mundane world**: lords, towns, the Church, universities, factions
+  and threats.
+- **Code, cases and fines**: each Tribunal's Peripheral Code,
+  docket and fines.
+- **The history**: each Tribunal's Diary, and the calendar entries.
+
+The line under the ticks says what the pack brings with the ticks as they
+are. **Preview** then shows the import as above. What a left-out part
+held is matched by name to this saga's own (a covenant's place, a
+Tribunal's Praeco) or the link is dropped, and the preview lists which;
+a covenant whose place is left out sits nowhere until you place it.
+Starting a saga from a pack brings everything.
+
+**See also:** [Content packs](help:export-pack), [Import Data](help:import-data), [How to import and export](help:guide-import-export)
 
 # Import Spells
 <!-- help: import-spells -->

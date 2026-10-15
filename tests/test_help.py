@@ -41,6 +41,7 @@ DIALOG_PAGES = {
     # The core's steps that name their page (commands.Form/Choose.help_id).
     "import-data",
     "import-spells",
+    "import-pack",
 }
 
 #: The sheets whose tabs and sections need help, by tree node.

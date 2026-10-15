@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -338,6 +339,135 @@ def export_pack(
         save_label="Export",
         help_id="export-pack",
     )
+
+
+# -- choosing what a pack imports --
+
+
+@dataclass(frozen=True)
+class Group:
+    """A part of a pack the importer can leave out: its tick's key and
+    label, what it holds in words, and how many records of it a pack's
+    data holds (for the tick's hint)."""
+
+    key: str
+    label: str
+    hint: str
+    count: Callable[[dict[str, Any]], int]
+
+
+def _held(data: dict[str, Any], key: str) -> list[dict[str, Any]]:
+    return list((data.get("saga") or {}).get(key) or [])
+
+
+def _is_place(neighbour: dict[str, Any]) -> bool:
+    return neighbour.get("kind") == places.PLACE
+
+
+#: What a pack holds beyond its Tribunals and covenants, each a tick on
+#: the import form. The Tribunals and covenants always come: they are
+#: what the rest hangs on. A dict of predicates, not a class each.
+GROUPS: tuple[Group, ...] = (
+    Group(
+        "people",
+        "Their people",
+        "The covenants' characters, laboratories and familiars, and each "
+        "Tribunal's Praeco and Presiding Quaesitor.",
+        lambda data: len(_held(data, "characters")),
+    ),
+    Group(
+        "places",
+        "Places and regiones",
+        "The places the covenants sit in, the places round and inside those, "
+        "and their regio levels.",
+        lambda data: sum(1 for n in _held(data, "neighbours") if _is_place(n)),
+    ),
+    Group(
+        "world",
+        "The mundane world",
+        "Lords, towns, the Church, universities, factions and threats.",
+        lambda data: sum(1 for n in _held(data, "neighbours") if not _is_place(n)),
+    ),
+    Group(
+        "code",
+        "Code, cases and fines",
+        "Each Tribunal's Peripheral Code, docket and fines.",
+        lambda data: sum(
+            len(t.get("rulings") or []) + len(t.get("cases") or [])
+            for t in _held(data, "tribunals")
+        ),
+    ),
+    Group(
+        "history",
+        "The history",
+        "Each Tribunal's Diary, and the calendar entries.",
+        lambda data: (
+            sum(len(t.get("diary") or []) for t in _held(data, "tribunals"))
+            + len(_held(data, "calendar"))
+        ),
+    ),
+)
+
+
+def import_fields(data: dict[str, Any]) -> list[DialogField]:
+    """Import a Content Pack: a tick for each group the pack holds any
+    of, all ticked. A group the pack has nothing of isn't asked about."""
+    fields = []
+    for group in GROUPS:
+        number = group.count(data)
+        if not number:
+            continue
+        fields.append(
+            DialogField(
+                group.key,
+                f"{group.label} ({number})",
+                "check",
+                True,
+                hint=group.hint,
+            )
+        )
+    return fields
+
+
+def narrow(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
+    """`data` (a pack, from transfer.read) without the groups unticked in
+    `values`, as a new dict. A record left out is named in the pack's
+    links instead, so the import plan matches what the pack points at
+    to the saga's own of that name, or says the link is dropped."""
+    out = ("people", "places", "world", "code", "history")
+    left = {key for key in out if key in values and not values.get(key)}
+    if not left:
+        return data
+    held = {k: list(v) if isinstance(v, list) else v for k, v in data["saga"].items()}
+    links = {k: dict(v) for k, v in (data.get("links") or {}).items()}
+
+    def name_links(kind: str, records: list[dict[str, Any]]) -> None:
+        links.setdefault(kind, {})
+        for record in records:
+            links[kind][record["id"]] = record.get("name", "")
+
+    if "people" in left:
+        name_links(transfer.CHARACTER, held.get("characters") or [])
+        name_links(transfer.LABORATORY, held.get("laboratories") or [])
+        held["characters"], held["laboratories"], held["familiars"] = [], [], []
+    neighbours = held.get("neighbours") or []
+    gone = [
+        n
+        for n in neighbours
+        if ("places" in left and _is_place(n)) or ("world" in left and not _is_place(n))
+    ]
+    if gone:
+        name_links(transfer.NEIGHBOUR, gone)
+        held["neighbours"] = [n for n in neighbours if n not in gone]
+    if "code" in left or "history" in left:
+        blank = ("rulings", "cases", "treasury") if "code" in left else ()
+        blank += ("diary",) if "history" in left else ()
+        held["tribunals"] = [
+            {**t, **{key: [] for key in blank}} for t in held.get("tribunals") or []
+        ]
+    if "history" in left:
+        held["calendar"] = []
+    return {**data, "links": links, "saga": held}
 
 
 # -- starting a saga from a pack --

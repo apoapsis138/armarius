@@ -202,3 +202,70 @@ async def test_the_terminal_exports_a_pack_from_more():
         target = storage.EXPORTS_DIR / packs.file_name(f"{source.name} pack")
         assert await wait_until(pilot, lambda: target.is_file())
         assert transfer.read(target)["kind"] == transfer.PACK
+
+
+def test_narrowing_a_pack_leaves_out_what_is_unticked():
+    saga = everything_saga()
+    keep = saga.covenant("cov1")
+    assert keep is not None
+    keep.place_id = "drachenfels"
+    data = _rhine_pack(saga)
+    fields = {f.key: f for f in packs.import_fields(data)}
+    assert set(fields) == {"people", "places", "world", "code", "history"}
+    assert all(f.value is True for f in fields.values())
+    assert fields["places"].label.startswith("Places and regiones (")
+    # All ticked: the data as it is.
+    ticked = {key: True for key in fields}
+    assert packs.narrow(data, ticked) is data
+    # Nothing but the Tribunal and its covenants.
+    bare = packs.narrow(data, {key: False for key in fields})
+    held = bare["saga"]
+    assert held["characters"] == [] and held["laboratories"] == []
+    assert held["neighbours"] == [] and held["calendar"] == []
+    assert all(t["diary"] == [] for t in held["tribunals"])
+    assert {c["name"] for c in held["covenants"]} == {"Keep", "Fengheld"}
+    # The records left out are named in the links, so the plan can say
+    # what became of what pointed at them.
+    assert bare["links"][transfer.NEIGHBOUR]["drachenfels"] == "The Drachenfels"
+    assert "mag_sketch" in bare["links"][transfer.CHARACTER]
+    assert data["saga"]["neighbours"], "the pack itself is untouched"
+    # Places only: the mundane world stays out, the places come.
+    some = packs.narrow(data, {**ticked, "world": False})
+    assert all(n["kind"] == "place" for n in some["saga"]["neighbours"])
+    assert "Tribunal" in packs.summary(some)
+
+
+def test_an_import_without_places_drops_the_covenants_place():
+    saga = everything_saga()
+    keep = saga.covenant("cov1")
+    assert keep is not None
+    keep.place_id = "drachenfels"
+    data = _rhine_pack(saga)
+    target = Saga(id="dst", name="Target")
+    plan = transfer.plan_import(target, packs.narrow(data, {"places": False}))
+    assert "Neighbour The Drachenfels: not in this saga" in transfer.preview(plan)
+    transfer.apply(target, plan)
+    assert all(c.place_id is None for c in target.covenants)
+    assert all(n.kind != "place" for n in target.neighbours)
+
+
+def test_importing_a_pack_asks_what_to_bring_then_previews(tmp_path):
+    from ars_magica_manager import import_forms
+    from ars_magica_manager.commands import Confirm, Form
+
+    saga = everything_saga()
+    path = packs.write(tmp_path / "rhine.amm.json", _rhine_pack(saga))
+    target = Saga(id="dst", name="Target")
+    step = import_forms.import_file(target, "pack", path)
+    assert isinstance(step, Form) and step.help_id == "import-pack"
+    assert step.title == "Import The Rhine" and step.save_label == "Preview"
+    values = {f.key: f.value for f in step.fields()}
+    assert step.live is not None and step.live(values).startswith("Brings 1 Tribunal")
+    values["world"] = False
+    confirm = step.apply(values)
+    assert isinstance(confirm, Confirm)
+    assert "  Covenant: Keep" in confirm.question
+    assert "Lord: Gottfried of Arnsberg" not in confirm.question
+    confirm.apply()
+    assert {c.name for c in target.covenants} == {"Keep", "Fengheld"}
+    assert all(n.kind == "place" for n in target.neighbours)

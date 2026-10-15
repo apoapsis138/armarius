@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any
 
 from . import books as bk
-from . import record_update, storage, transfer
+from . import packs, record_update, storage, transfer
 from . import spells as spl
 from .commands import (
     Choice,
@@ -215,12 +215,17 @@ def _import_record(saga: Saga, kind: str, path: Path) -> Command:
                 f"it holds a {found.lower()}, not a {wanted}: choose "
                 f"{labels[entry]} in the Import list"
             )
+        if kind == transfer.PACK:
+            return _import_pack(saga, data)
         plan = transfer.plan_import(saga, data)
     except (OSError, ValueError, KeyError, TypeError) as problem:
         return Refuse(
             TITLE, f"Couldn't import {escape(path.name)}: {escape(str(problem))}"
         )
+    return _confirm_import(saga, plan)
 
+
+def _confirm_import(saga: Saga, plan: transfer.ImportPlan) -> Confirm:
     def apply() -> list[str]:
         transfer.apply(saga, plan)
         return notes(
@@ -229,6 +234,34 @@ def _import_record(saga: Saga, kind: str, path: Path) -> Command:
 
     return Confirm(
         escape(transfer.preview(plan)), apply, yes_label="Import", title=TITLE
+    )
+
+
+def _import_pack(saga: Saga, data: dict[str, Any]) -> Command:
+    """Import a Content Pack: which of its parts to bring in (its
+    Tribunals and covenants always come), then the preview to confirm.
+    A pack with nothing to leave out goes straight to the preview."""
+    fields = packs.import_fields(data)
+    if not fields:
+        return _confirm_import(saga, transfer.plan_import(saga, data))
+
+    def apply(values: dict[str, Any]) -> Command:
+        try:
+            plan = transfer.plan_import(saga, packs.narrow(data, values))
+        except (ValueError, KeyError, TypeError) as problem:
+            return Refuse(TITLE, f"Couldn't import the pack: {escape(str(problem))}")
+        return _confirm_import(saga, plan)
+
+    def live(values: dict[str, Any]) -> str:
+        return f"Brings {escape(packs.summary(packs.narrow(data, values)))}."
+
+    return Form(
+        f"Import {escape(str(data.get('name') or 'a Content Pack'))}",
+        lambda: fields,
+        apply,
+        live=live,
+        save_label="Preview",
+        help_id="import-pack",
     )
 
 
