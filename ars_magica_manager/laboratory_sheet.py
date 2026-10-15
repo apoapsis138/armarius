@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from . import catalog
+from . import catalog, places
 from . import laboratories as labs
 from .arts import FORMS, TECHNIQUES
 from .character_sheet import Fact
@@ -70,6 +70,9 @@ def aura(saga: Saga, lab: Laboratory) -> Aura:
         else 0
     )
     realm = covenant.aura_realm if covenant else "Magic"
+    own = places.lab_aura(saga, lab)
+    if own is not None:
+        inherited, realm = own
     total = labs.lab_aura_total(lab, inherited)
     return Aura(
         inherited, lab.aura_modifier, total, realm, realms.aura_note(realm, total)

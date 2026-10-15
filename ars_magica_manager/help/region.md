@@ -83,6 +83,13 @@ core rules). Add, edit or delete one.
 The stories that grow if left alone (the core rules). Add, edit or
 delete one.
 
+### Places
+<!-- help: section-region-places -->
+
+The forests, ruins, crags and regiones of the region: where each is,
+its aura, how many regio levels it has and how far the troupe has got
+with it. Add, edit or delete one; see [A place](help:tab-nb-place).
+
 # A neighbour
 <!-- help: neighbour -->
 
@@ -102,7 +109,8 @@ needs), then a plain form:
   [A university](help:tab-nb-studium)); a faction's kind, how it
   decides, its members, rules, wants and offers (see
   [A faction](help:tab-nb-faction)); a threat's antagonist and how it
-  moves (see [A threat](help:tab-nb-threat)).
+  moves (see [A threat](help:tab-nb-threat)); a place's aura, tethers
+  and gazetteer (see [A place](help:tab-nb-place)).
 - **Summary**: a paragraph on who they are and what they want.
 - **Detail**: a line, a sketch, or written in full.
 - **Ruler or leader**: a name.
@@ -110,6 +118,7 @@ needs), then a plain form:
   Deleting a neighbour leaves those that answered to it answering to no
   one.
 - **Realm**: Divine, Faerie, Infernal or Magic, or none.
+- **Place**: the place it is in, or one of that place's regio levels.
 
 Edit can also change its kind.
 
@@ -128,7 +137,8 @@ Its attitude toward each player covenant, with the reasons it moved,
 the favours owed between it and the troupe, and its links to other
 records, as on a sketch covenant: see
 [Attitude](help:section-attitudes), [Favours](help:section-favours) and
-[Links](help:section-links).
+[Links](help:section-links). A place holds no attitude: its tab is
+called Found Here and shows only its favours and links.
 
 # A lord
 <!-- help: tab-nb-fief -->
@@ -302,3 +312,64 @@ pending stage comes when its date (or its place on the track) is
 reached; mark one **Happened** to say it came anyway, or **Stopped** or
 **Turned** to say the troupe kept it from coming. The stage reached is
 in bold. Add, edit or delete one.
+
+# A place
+<!-- help: tab-nb-place -->
+
+A place is somewhere the saga's records can be: a forest, a ruin, a
+crag, a regio. It is a kind of neighbour without an attitude or a
+ruler, listed under Places in the Region. New Place and Edit record:
+
+- **Aura**: the aura of its surface (its mundane level); the Realm field
+  says whose.
+- **Tethers**: the monuments, creatures or vis sources that anchor it.
+- **Status** and **Known**: how far the troupe has got with it
+  (rumoured, known, visited, claimed) and how widely it is known.
+- **Claimed by**: the covenant that claims it.
+- **Inside**: the place it is part of, so a regio can sit inside a
+  forest inside a county. A place can't be put inside itself or inside
+  a place within it.
+
+A covenant, a laboratory or another neighbour names its place with
+**Place** in its own Edit form, choosing the place or one of its regio
+levels. A covenant placed somewhere takes its aura from there (the
+level's, if it is in one); the aura typed on the covenant is kept, and
+comes back if it is moved out, so its Edit form doesn't ask for an aura
+while it is placed. A laboratory placed in a regio of its own takes that
+level's aura instead of its covenant's.
+
+Its Regio tab shows the place's regio levels and its effects; its
+Found Here tab its favours and links (the vis sources, books and
+creatures found there). Deleting a place leaves what was in it placed
+nowhere.
+
+**See also:** [A neighbour](help:neighbour)
+
+## Regio Levels
+<!-- help: section-nb-levels -->
+
+The regio's levels, deepest first, over its surface. Each has a name, a
+realm and an aura, how to see it and how to enter it, and notes. Write
+the roll to see or to enter it as "Per + Awareness against 9" (a
+Characteristic, an Ability and the number to reach): the list then
+shows which of the player covenants' characters reach it with their
+scores alone, best first. Anything else is kept as a sentence ("walk the
+path backwards at dusk"). Add puts a new level above the deepest; edit
+or delete one.
+
+## Effects
+<!-- help: section-nb-effects -->
+
+What the place does to those in it, at every level, one level, or a
+level and those above it:
+
+- **Lab totals**: added to the Lab Totals of the laboratories there, for
+  the Art named (or every Art).
+- **Aging rolls** and **Living Conditions**: added to the aging rolls of
+  the characters who live there (their covenant is there).
+- **Warping**: Warping Points a season for those who live there, added
+  each year with the rest of their Warping.
+- **The aura**: replaces the aura of the levels it covers, in the realm
+  named.
+
+Add, edit or delete one.

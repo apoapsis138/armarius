@@ -516,6 +516,11 @@ def _one_season_work(
     if plan.activity == EXTRACT:
         covenant = saga.covenant(lab_.covenant_id)
         realm = covenant.aura_realm if covenant is not None else "Magic"
+        from .. import places  # places reads the sheets, which read this
+
+        own = places.lab_aura(saga, lab_)
+        if own is not None:
+            realm = own[1]
         if realm != "Magic":
             return [
                 f"Vis is extracted only in a Magic aura; {lab_.name}'s is {realm}."

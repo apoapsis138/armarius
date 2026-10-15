@@ -90,6 +90,7 @@ ICON_NAMES: dict[str, str] = {
     "university": "book-open",
     "faction": "users-three",
     "threat": "skull",
+    "place": "sparkle",
     "enchanted_item": "magic-wand",
     # Time and resources
     "season": "hourglass-medium",

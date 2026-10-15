@@ -55,7 +55,9 @@ class NeighbourPage(QWidget):
         kind = neighbours.kind_of(neighbour)
         if kind.tab is not None:
             self.codex.add(kind.tab.title, kind.key, self._kind_chapter(kind.tab))
-        self.codex.add("Standing", "region", self._standing())
+        self.codex.add(
+            "Standing" if kind.attitude else "Found Here", "region", self._standing()
+        )
         if controls is not None:
             self.codex.add("Manage", "manage", controls.chapter(p))
         outer.addWidget(self.codex, 1)
@@ -129,5 +131,11 @@ class NeighbourPage(QWidget):
                 ),
                 edits={"Edit Neighbour": self._edit},
             ),
-            *relations(self.saga, self.neighbour, p, self.run),
+            *relations(
+                self.saga,
+                self.neighbour,
+                p,
+                self.run,
+                attitude=neighbours.kind_of(self.neighbour).attitude,
+            ),
         )

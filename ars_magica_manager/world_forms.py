@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import catalog, creation, deletion, world
+from . import catalog, creation, deletion, places, world
 from .character_sheet import house_name
 from .commands import Choice, Choose, Command, Confirm, Form, Refuse, SectionOps
 from .form_spec import DialogField, attr, pairs
@@ -494,7 +494,12 @@ def sketch_covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
                 covenant.covenant_season,
                 options=pairs(SEASONS),
             ),
-            DialogField("aura", "Aura", "int", covenant.aura),
+            *(
+                []
+                if places.place(saga, covenant.place_id) is not None
+                else [DialogField("aura", "Aura", "int", covenant.aura)]
+            ),
+            places.where_field(saga, covenant, "Place"),
             DialogField(
                 "year_founded", "Year Founded", "optint", covenant.year_founded
             ),
@@ -526,8 +531,12 @@ def _unnamed_problem(values: dict[str, Any]) -> str | None:
 
 def sketch_covenant_form(saga: Saga, covenant: Covenant) -> Form:
     def apply(values: dict[str, Any]) -> None:
+        values = dict(values)
+        if "where" in values:
+            places.put(covenant, values.pop("where"))
         for key, value in values.items():
             setattr(covenant, key, value)
+        places.sync(saga)
 
     return Form(
         "Edit Covenant",

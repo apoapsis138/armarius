@@ -1,5 +1,6 @@
 """The saga's neighbours: the lords, towns, churches, universities,
-factions and threats of the region, each a Neighbour record of one kind.
+factions and threats of the region, and its places, each a Neighbour
+record of one kind.
 
 Pattern: Strategy, as a registry (KINDS), the way rules/activities.py
 registers the seasonal activities and tribunal_packages the Tribunals'
@@ -18,6 +19,7 @@ from . import (
     churches,
     factions,
     lords,
+    places,
     sourcebooks,
     storage,
     threats,
@@ -33,6 +35,7 @@ from .sections import (
     REGION_CHURCH_SECTION,
     REGION_FACTIONS_SECTION,
     REGION_LORDS_SECTION,
+    REGION_PLACES_SECTION,
     REGION_THREATS_SECTION,
     REGION_UNIVERSITIES_SECTION,
 )
@@ -54,6 +57,7 @@ GROUPS: tuple[Group, ...] = (
     Group("universities", "Universities", REGION_UNIVERSITIES_SECTION),
     Group("factions", "Factions", REGION_FACTIONS_SECTION),
     Group("threats", "Threats", REGION_THREATS_SECTION),
+    Group("places", "Places", REGION_PLACES_SECTION),
 )
 
 
@@ -77,6 +81,10 @@ class NeighbourKind:
     facts: Callable[[Saga, Neighbour], list[Fact]] | None = None
     #: The tab it adds to its neighbours' sheets.
     tab: KindTab | None = None
+    #: Whether it holds an attitude toward the troupe (a place doesn't),
+    #: and which common fields it has no use for.
+    attitude: bool = True
+    hides: frozenset[str] = frozenset()
 
 
 #: Every kind, in the order New Neighbour offers them.
@@ -154,6 +162,19 @@ for _kind in (
         threats.facts,
         threats.TAB,
     ),
+    NeighbourKind(
+        places.PLACE,
+        "Place",
+        "a forest, a ruin, a regio",
+        "places",
+        "",
+        places.fields,
+        places.problem,
+        places.facts,
+        places.TAB,
+        attitude=False,
+        hides=frozenset({"detail", "ruler", "answers_to"}),
+    ),
 ):
     register(_kind)
 
@@ -212,16 +233,23 @@ def vassals(saga: Saga, neighbour: Neighbour) -> list[Neighbour]:
 
 def deletion_consequences(saga: Saga, neighbour: Neighbour) -> list[str]:
     """What deleting `neighbour` does besides removing it."""
+    found = []
     below = [n.name for n in vassals(saga, neighbour)]
-    if not below:
-        return []
-    return [f"{', '.join(below)} will answer to no one; nothing else changes."]
+    if below:
+        found.append(f"{', '.join(below)} will answer to no one.")
+    held = places.here(saga, neighbour)
+    if held:
+        found.append(f"{', '.join(held)} will be placed nowhere.")
+    if found:
+        found[-1] = found[-1].removesuffix(".") + "; nothing else changes."
+    return found
 
 
 def delete(saga: Saga, neighbour: Neighbour) -> None:
     for other in vassals(saga, neighbour):
         other.answers_to = None
     saga.neighbours.remove(neighbour)
+    places.sync(saga)
 
 
 # -- attitude, as the Region shows it --
@@ -239,6 +267,8 @@ def score(saga: Saga, record: Neighbour | Covenant) -> int | None:
     covenant (or when `record` is it)."""
     covenant = home(saga)
     if covenant is None or record is covenant:
+        return None
+    if isinstance(record, Neighbour) and not kind_of(record).attitude:
         return None
     return world.attitude_score(world.attitude_toward(record, covenant.id))
 

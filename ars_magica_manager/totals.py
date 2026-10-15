@@ -40,6 +40,11 @@ MODIFIER_TYPES: dict[str, str] = {
     "study_total": "Study total, for seasonal learning",
     "teaching_source_quality": "Source Quality of those this character teaches",
     "aging_roll": "Aging roll",
+    # Warping Points each season spent somewhere (a place's effect).
+    "warping_per_season": "Warping Points a season",
+    # Replaces the aura (a place's effect: the amount is the new aura, the
+    # target its realm).
+    "aura": "The aura, replaced",
     # The age aging rolls start at (the largest counts; 35 without one).
     "aging_start": "Age aging rolls start",
     # Added to the Living Conditions modifier for aging.

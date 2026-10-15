@@ -16,7 +16,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
-from . import catalog
+from . import catalog, places
 from . import laboratories as lab_rules
 from .commands import Act, Command, Confirm, Form, Refuse, SectionOps, delete
 from .form_spec import DialogField, attr, covenant_options, description_field, pairs
@@ -61,6 +61,12 @@ def identity_fields(saga: Saga, lab: Laboratory) -> list[DialogField]:
             allow_blank=True,
             placeholder="(unassigned)",
         ),
+        places.where_field(
+            saga,
+            lab,
+            "Place",
+            "Only if it is not where its covenant is: a lab built in a regio.",
+        ),
         DialogField(
             "owner_id",
             "Owner",
@@ -91,6 +97,8 @@ def apply_identity(saga: Saga, lab: Laboratory, values: dict[str, Any]) -> None:
     lab.aura_modifier = values["aura_modifier"]
     lab.sanctum_marked = values["sanctum_marked"]
     lab.covenant_id = values["covenant_id"]
+    if "where" in values:
+        places.put(lab, values["where"])
     assign_laboratory_owner(saga, lab, values["owner_id"])
 
 

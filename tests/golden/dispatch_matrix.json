@@ -1421,6 +1421,16 @@
         "m": "(disabled)",
         "slash": "(disabled)"
       }
+    },
+    "SheetSection#section-region-places": {
+      "active": "section-region-places",
+      "keys": {
+        "a": "FieldsDialog: New Place",
+        "e": "FieldsDialog: Edit The Siebengebirge",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
     }
   },
   "neighbour": {
@@ -1740,6 +1750,58 @@
         "a": "FieldsDialog: Add a Reason",
         "e": "FieldsDialog: Attitude toward Keep",
         "d": "notice: Where it started can't be deleted: edit it to change it.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-favours": {
+      "active": "section-favours",
+      "keys": {
+        "a": "FieldsDialog: Add a Favour",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-links": {
+      "active": "section-links",
+      "keys": {
+        "a": "ChooseScreen: Link to what?",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    }
+  },
+  "place": {
+    "PinnedCollapsible#section-nb-info": {
+      "active": "section-nb-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit The Drachenfels",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-levels": {
+      "active": "section-nb-levels",
+      "keys": {
+        "a": "FieldsDialog: Add a Regio Level",
+        "e": "FieldsDialog: Edit a Regio Level",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-effects": {
+      "active": "section-nb-effects",
+      "keys": {
+        "a": "FieldsDialog: Add an Effect",
+        "e": "FieldsDialog: Edit an Effect",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"
       }

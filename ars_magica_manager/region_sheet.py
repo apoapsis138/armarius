@@ -5,7 +5,7 @@ neighbour's own facts and details."""
 
 from __future__ import annotations
 
-from . import neighbours, threats, tribunal_packages, tribunals, world
+from . import neighbours, places, threats, tribunal_packages, tribunals, world
 from .character_sheet import Fact
 from .grids import Grid
 from .markup import escape
@@ -41,10 +41,11 @@ def facts(saga: Saga) -> list[Fact]:
     stand, and when the Tribunal next meets."""
     home = neighbours.home(saga)
     tribunal = tribunals.of(saga, home) if home is not None else None
-    scores = [neighbours.score(saga, n) for n in saga.neighbours]
+    held = [n for n in saga.neighbours if neighbours.kind_of(n).attitude]
+    scores = [neighbours.score(saga, n) for n in held]
     warm = sum(1 for s in scores if s is not None and s > 0)
     wary = sum(1 for s in scores if s is not None and s < 0)
-    count = len(saga.neighbours)
+    count = len(held)
     standing = f"{count}, {warm} warm, {wary} wary" if home is not None else str(count)
     customs = tribunal_packages.of(tribunal) if tribunal is not None else None
     return [
@@ -76,7 +77,9 @@ def threat_due(saga: Saga) -> str:
 
 
 def neighbours_title(saga: Saga) -> str:
-    return f"Neighbours ({len(saga.neighbours)})"
+    """ "Neighbours (6)": those that hold an attitude, places aside."""
+    held = [n for n in saga.neighbours if neighbours.kind_of(n).attitude]
+    return f"Neighbours ({len(held)})"
 
 
 # -- the lists --
@@ -125,9 +128,34 @@ def group_title(saga: Saga, group_key: str) -> str:
     return f"{group.title} ({len(neighbours.members(saga, group_key))})"
 
 
+def places_grid(saga: Saga) -> Grid:
+    """The places: where each is, its aura, its regio and the gazetteer."""
+    rows = []
+    for found in places.all_places(saga):
+        levels = len(places.levels(found))
+        rows.append(
+            [
+                found.name,
+                places.where_text(saga, found.place_id, found.place_level),
+                places.aura_text(found),
+                f"{levels} level{'' if levels == 1 else 's'}" if levels else "",
+                found.details.get("status") or "",
+            ]
+        )
+    return Grid(
+        ["Name", "Inside", "Aura", "Regio", "Status"],
+        rows,
+        list(range(len(rows))),
+        "None yet: add a forest, a ruin or a regio here.",
+        caps=[26, 26, 10, 9, 0],
+    )
+
+
 def group_grid(saga: Saga, group_key: str) -> Grid:
     """The group's neighbours: kind, ruler, attitude toward the home
     covenant and detail."""
+    if group_key == "places":
+        return places_grid(saga)
     rows = []
     styles: dict[tuple[int, int], str] = {}
     members = neighbours.members(saga, group_key)
@@ -160,6 +188,14 @@ def group_grid(saga: Saga, group_key: str) -> Grid:
 
 def neighbour_facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
     kind = neighbours.kind_of(neighbour)
+    where = places.where_text(saga, neighbour.place_id, neighbour.place_level)
+    if not kind.attitude:
+        return [
+            Fact("Kind", kind.name),
+            Fact("Realm", neighbour.realm or "none"),
+            Fact("Inside", places.inside_text(saga, neighbour) or "nowhere entered"),
+            Fact("Book", kind.book or "core rules"),
+        ]
     return [
         Fact("Kind", kind.name),
         Fact("Detail", neighbour.detail),
@@ -167,7 +203,7 @@ def neighbour_facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
         Fact("Answers to", neighbours.answers_to_name(saga, neighbour) or "no one"),
         Fact("Realm", neighbour.realm or "none"),
         Fact("Book", kind.book or "core rules"),
-    ]
+    ] + ([Fact("Place", where)] if where else [])
 
 
 def details_text(saga: Saga, record: Neighbour | Covenant | None) -> str:
@@ -176,6 +212,21 @@ def details_text(saga: Saga, record: Neighbour | Covenant | None) -> str:
     summary and the favours owed."""
     if record is None:
         return "[$label]Choose a neighbour to see how it stands.[/]"
+    if places.is_place(record):
+        assert isinstance(record, Neighbour)
+        lines = [f"[b]{escape(record.name)}[/]   Place · {places.aura_text(record)}"]
+        inside = places.inside_text(saga, record)
+        if inside:
+            lines.append(f"[$label]Inside:[/] {escape(inside)}")
+        lines += [
+            f"[$label]{escape(f.label)}:[/] {escape(f.value)}"
+            for f in places.facts(saga, record)
+            if f.value and f.label in ("Regio", "Here")
+        ]
+        summary = record.summary.strip()
+        if summary:
+            lines.append(escape(summary.splitlines()[0]))
+        return "\n".join(lines)
     kind = (
         neighbours.kind_of(record).name if isinstance(record, Neighbour) else "Covenant"
     )
@@ -203,13 +254,22 @@ def details_text(saga: Saga, record: Neighbour | Covenant | None) -> str:
 
 
 def card_subtitle(neighbour: Neighbour) -> str:
-    """ "Lord · Sketch"."""
+    """ "Lord · Sketch"; a place's aura, "Place · Magic 5"."""
+    if places.is_place(neighbour):
+        return f"Place · {places.aura_text(neighbour)}"
     return f"{kind_text(neighbour)} · {neighbour.detail}"
 
 
 def card_facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
     """Its attitude toward the home covenant, and its ruler and liege
     when it has them."""
+    if places.is_place(neighbour):
+        inside = places.inside_text(saga, neighbour)
+        return ([Fact("Inside", inside)] if inside else []) + [
+            f
+            for f in places.facts(saga, neighbour)
+            if f.value and f.label in ("Regio", "Claimed by")
+        ]
     words, _colour = _attitude_cell(saga, neighbour)
     facts = [Fact("Attitude", words)] if words else []
     if neighbour.ruler:

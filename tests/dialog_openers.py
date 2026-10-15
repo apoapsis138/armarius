@@ -257,6 +257,16 @@ OPENERS: dict[str, Opener] = {
             lambda ws: ws._core_verb("section-nb-stages", "edit"), "nb-stages-list", 1
         ),
     ),
+    "edit place": Opener("place", lambda ws: ws._core_verb("section-nb-info", "edit")),
+    "add regio level": Opener(
+        "place", lambda ws: ws._core_verb("section-nb-levels", "add")
+    ),
+    "edit place effect": Opener(
+        "place",
+        _pick(
+            lambda ws: ws._core_verb("section-nb-effects", "edit"), "nb-effects-list"
+        ),
+    ),
     "edit tribunal": Opener(
         "tribunal", lambda ws: ws._core_verb("section-trib-info", "edit")
     ),

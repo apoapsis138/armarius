@@ -55,6 +55,7 @@ SHEETS = {
     "university",
     "faction",
     "threat",
+    "place",
 }
 
 

@@ -108,6 +108,10 @@ class Neighbour:
     answers_to: str | None = None
     #: One of common.REALMS, or "".
     realm: str = ""
+    #: The place it is in (a place's: the place it is inside), by id, and
+    #: which of that place's levels (0 for the surface; places.py).
+    place_id: str | None = None
+    place_level: int = 0
     #: What its kind adds, by field.
     details: dict[str, Any] = field(default_factory=dict)
     attitudes: list[Attitude] = field(default_factory=list)

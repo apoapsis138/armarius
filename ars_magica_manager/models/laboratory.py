@@ -284,6 +284,10 @@ class Laboratory:
     #: Manual adjustment on top of the covenant's aura this lab inherits
     #: (e.g. from Virtues) -- see laboratories.lab_aura_total().
     aura_modifier: int = 0
+    #: The place it is in and which level, when not its covenant's (a lab
+    #: built in a regio; places.py).
+    place_id: str | None = None
+    place_level: int = 0
     characteristics: LabCharacteristics = field(default_factory=LabCharacteristics)
     features: list[LabFeature] = field(default_factory=list)
     #: Specialization points from sources entered by hand (see

@@ -37,7 +37,12 @@ def test_new_neighbour_offers_the_kinds_whose_book_is_in_play():
     saga.books_in_play = ["LoM"]
     command = neighbour_forms.new_neighbour(saga)
     assert isinstance(command, Choose)
-    assert [c.value for c in command.choices()] == ["lord", "faction", "threat"]
+    assert [c.value for c in command.choices()] == [
+        "lord",
+        "faction",
+        "threat",
+        "place",
+    ]
     assert command.others is not None
     shown = [c.value for c in command.others()]
     assert shown == ["town", "church", "university"]
@@ -61,6 +66,7 @@ def test_a_group_with_one_kind_in_play_opens_its_form_at_once():
         "universities",  # the Studium is in it
         "factions",
         "threats",
+        "places",
     ]
 
 

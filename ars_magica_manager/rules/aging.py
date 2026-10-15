@@ -140,6 +140,10 @@ def roll(
     longevity = character.aging.longevity_modifier
     living = living_conditions(character, living)
     virtues = _effects(character, "aging_roll")
+    if saga is not None:
+        from .. import places  # places reads the sheets, which read this
+
+        virtues += places.character_effects(saga, character, "aging_roll")
     total = (
         die
         + round_up(age / 10)

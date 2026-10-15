@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import neighbours, sourcebooks, world_forms
+from . import neighbours, places, sourcebooks, world_forms
 from .commands import Choice, Choose, Command, Confirm, Form, SectionOps, not_offered
 from .form_spec import DialogField, pairs
 from .markup import escape
@@ -22,10 +22,12 @@ from .sections import NEIGHBOUR_INFO_SECTION
 def neighbour_fields(
     saga: Saga, neighbour: Neighbour | None, kind: str
 ) -> list[DialogField]:
-    """A neighbour's common fields, with its kind's after the name: only
-    the name is required."""
+    """A neighbour's common fields, with its kind's after the name, less
+    those its kind hides: only the name is required."""
     n = neighbour or Neighbour(id="", name="", kind=kind)
-    own = neighbours.KINDS[kind].fields if kind in neighbours.KINDS else None
+    known = neighbours.KINDS.get(kind)
+    own = known.fields if known is not None else None
+    hides = known.hides if known is not None else frozenset()
     liege = [
         (escape(other.name), other.id)
         for other in saga.neighbours
@@ -95,7 +97,21 @@ def neighbour_fields(
             placeholder="(none)",
         ),
     ]
-    return fields
+    if kind == places.PLACE:
+        mine = {n.id, *places.within(saga, n)} if neighbour is not None else set()
+        fields.insert(
+            len(fields) - 1,
+            places.where_field(
+                saga,
+                n,
+                "Inside",
+                "The place it is part of: a regio inside a forest inside a county.",
+                mine,
+            ),
+        )
+    else:
+        fields.append(places.where_field(saga, n, "Place"))
+    return [f for f in fields if f.key not in hides]
 
 
 def _kind_keys(saga: Saga, kind: str) -> set[str]:
@@ -106,6 +122,9 @@ def _kind_keys(saga: Saga, kind: str) -> set[str]:
 
 def _apply(saga: Saga, neighbour: Neighbour, values: dict[str, Any]) -> None:
     detailed = _kind_keys(saga, neighbour.kind)
+    values = dict(values)
+    if "where" in values:
+        places.put(neighbour, values.pop("where"))
     for key, value in values.items():
         if key in detailed:
             neighbour.details[key] = value
@@ -113,6 +132,7 @@ def _apply(saga: Saga, neighbour: Neighbour, values: dict[str, Any]) -> None:
             setattr(neighbour, key, value)
     neighbour.answers_to = values.get("answers_to") or None
     neighbour.realm = values.get("realm") or ""
+    places.sync(saga)
 
 
 def new_neighbour_form(saga: Saga, kind: str) -> Form:

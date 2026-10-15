@@ -158,6 +158,7 @@ NODES: dict[str, tuple[str, ...]] = {
     "university": ("neighbour", "studium"),
     "faction": ("neighbour", "coven"),
     "threat": ("neighbour", "crown"),
+    "place": ("neighbour", "drachenfels"),
     "book_group": ("book_group",),
     "saga_content": ("saga_content",),
 }
@@ -579,6 +580,41 @@ def everything_saga() -> Saga:
                             "income": None,
                             "covenant_id": "cov1",
                         }
+                    ],
+                },
+            ),
+            Neighbour(
+                id="siebengebirge",
+                name="The Siebengebirge",
+                kind="place",
+                realm="Magic",
+                details={"aura": 2},
+            ),
+            Neighbour(
+                id="drachenfels",
+                name="The Drachenfels",
+                kind="place",
+                realm="Magic",
+                place_id="siebengebirge",
+                summary="A crag above the Rhine where a dragon died.",
+                details={
+                    "aura": 5,
+                    "tethers": "The dragon's bones",
+                    "status": "Visited",
+                    "known": "Locally",
+                    "claimed_by": "cov1",
+                    "levels": [
+                        {"name": "The Mist Wood", "realm": "Faerie", "aura": 6}
+                        | {"see": "Per + Awareness against 9"}
+                        | {"enter": "walk the path backwards at dusk"},
+                        {"name": "The Vine Terraces", "realm": "Magic", "aura": 7}
+                        | {"see": "Per + Awareness against 9"}
+                        | {"enter": "Per + Awareness against 12"},
+                    ],
+                    "effects": [
+                        {"what": "lab_total", "amount": 2, "target": "Herbam"}
+                        | {"where": "2", "note": "a lab built in the regio"},
+                        {"what": "warping_per_season", "amount": 1, "where": "2"},
                     ],
                 },
             ),

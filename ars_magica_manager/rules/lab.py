@@ -155,8 +155,13 @@ def lab_total(  # noqa: PLR0915
     covenant = saga.covenant(lab.covenant_id)
     boons = catalog.load_covenant_boon_hook_catalog_by_id()
     covenant_aura = covenant_effective_aura(covenant, boons) if covenant else 0
-    aura = lab_aura_total(lab, covenant_aura)
     realm = covenant.aura_realm if covenant else realms.HERMETIC
+    from .. import places  # places reads the sheets, which read this
+
+    own = places.lab_aura(saga, lab)
+    if own is not None:
+        covenant_aura, realm = own
+    aura = lab_aura_total(lab, covenant_aura)
     lines.append(
         Line(
             f"Aura ({realm} {aura})",
@@ -242,6 +247,7 @@ def lab_total(  # noqa: PLR0915
     ]
     if covenant is not None:
         sources.append(effects.EffectSource("covenant", covenant.boons_hooks, boons))
+    sources.append(places.lab_source(saga, lab))
     found = _pair_effects(sources, technique, form, activity, experimenting)
     if from_lab_text:
         found = [e for e in found if e.entry.id not in NOT_FROM_A_TEXT]

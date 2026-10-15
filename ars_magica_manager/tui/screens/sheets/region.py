@@ -187,7 +187,11 @@ class NeighbourSheetView(SheetView):
             tab = self.kind.tab
             if tab is not None:
                 yield self._tab(tab.title, tab.tab_id, partial(self._kind_tab, tab))
-            yield self._tab("Standing", "tab-nb-standing", self._standing_tab)
+            yield self._tab(
+                "Standing" if self.kind.attitude else "Found Here",
+                "tab-nb-standing",
+                self._standing_tab,
+            )
 
     def stale(self) -> bool:
         """Whether the neighbour's kind changed since the sheet was built,
@@ -240,4 +244,4 @@ class NeighbourSheetView(SheetView):
         return markdown_inline(summary)
 
     def _standing_tab(self) -> ComposeResult:
-        yield from self._relations(self.neighbour)
+        yield from self._relations(self.neighbour, attitude=self.kind.attitude)

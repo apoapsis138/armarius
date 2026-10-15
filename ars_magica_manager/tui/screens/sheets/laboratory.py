@@ -14,7 +14,7 @@ from textual.widgets import (
 )
 
 from .... import books as bk
-from .... import catalog, lab_planning, seasons
+from .... import catalog, lab_planning, places, seasons
 from .... import lab_texts as lt
 from .... import laboratories as lab_text
 from ....boon_hook_text import counted, points_title
@@ -714,10 +714,14 @@ class LaboratorySheetView(SheetView):
             else 0
         )
         realm = covenant.aura_realm if covenant else "Magic"
+        source = "covenant"
+        own = places.lab_aura(self.saga, lab)
+        if own is not None:
+            (covenant_aura, realm), source = own, "place"
         total = lab_aura_total(lab, covenant_aura)
         note = realms.aura_note(realm, total)
         return (
-            f"Aura: {covenant_aura} (covenant) {lab.aura_modifier:+d} (modifier) "
+            f"Aura: {covenant_aura} ({source}) {lab.aura_modifier:+d} (modifier) "
             f"= {total} {realm}" + (f" ({note})" if note else "")
         )
 

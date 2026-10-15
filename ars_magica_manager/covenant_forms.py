@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import boon_hook_text, catalog, sourcebooks
+from . import boon_hook_text, catalog, places, sourcebooks
 from . import covenants as cov_rules
 from . import economics as eco
 from .commands import Choice, Choose, Confirm, Form, SectionOps, notes
@@ -53,9 +53,10 @@ _COVENANT_INT_FIELDS: tuple[tuple[str, str], ...] = (
 
 def covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
     """Edit Covenant: its name, Tribunal, founding, Aegis, living
-    conditions, aura and season."""
+    conditions, aura (unless its place gives it one), place and season."""
     cov = covenant
-    return [
+    placed = places.place(saga, cov.place_id) is not None
+    fields = [
         DialogField("name", "Name", "text", cov.name, required=True),
         tribunal_field(saga, cov.tribunal_id),
         DialogField("year_founded", "Year Founded", "optint", cov.year_founded),
@@ -72,6 +73,7 @@ def covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
                 ),
             )
             for attribute, label in _COVENANT_INT_FIELDS
+            if not (placed and attribute == "aura")
         ),
         DialogField(
             "aura_realm",
@@ -81,6 +83,7 @@ def covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
             options=pairs(REALMS),
             hint="Hermetic magic gains the full aura only in a Magic aura.",
         ),
+        places.where_field(saga, cov, "Place", _PLACE_HINT),
         DialogField(
             "covenant_season",
             "Covenant Season",
@@ -96,19 +99,32 @@ def covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
             hint="A player covenant: other records' attitudes point at it.",
         ),
     ]
+    if placed:
+        fields = [f for f in fields if f.key != "aura_realm"]
+    return fields
+
+
+#: The hint on a covenant's Place.
+_PLACE_HINT = (
+    "Its aura then comes from the place; the aura typed here comes back if "
+    "it is moved out."
+)
 
 
 def apply_covenant(covenant: Covenant, values: dict[str, Any]) -> None:
+    values = dict(values)
+    if "where" in values:
+        places.put(covenant, values.pop("where"))
     for attribute, value in values.items():
         setattr(covenant, attribute, value)
 
 
 def covenant_form(saga: Saga, covenant: Covenant) -> Form:
-    return Form(
-        "Edit Covenant",
-        lambda: covenant_fields(saga, covenant),
-        lambda values: apply_covenant(covenant, values),
-    )
+    def apply(values: dict[str, Any]) -> None:
+        apply_covenant(covenant, values)
+        places.sync(saga)
+
+    return Form("Edit Covenant", lambda: covenant_fields(saga, covenant), apply)
 
 
 def description_fields(covenant: Covenant) -> list[DialogField]:

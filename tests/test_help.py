@@ -60,6 +60,7 @@ SHEETS = {
     "university": "_neighbour_sheet_view",
     "faction": "_neighbour_sheet_view",
     "threat": "_neighbour_sheet_view",
+    "place": "_neighbour_sheet_view",
 }
 
 

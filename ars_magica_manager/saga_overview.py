@@ -10,7 +10,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass
 
-from . import catalog, tribunals
+from . import catalog, places, tribunals
 from . import character_sheet as cs
 from . import laboratories as labs
 from .models import (
@@ -169,7 +169,10 @@ def lab_cards(saga: Saga, covenant_id: str | None) -> list[LabCard]:
 def _lab_card(saga: Saga, lab: Laboratory) -> LabCard:
     owner = saga.character(lab.owner_id)
     covenant = saga.covenant(lab.covenant_id)
-    aura = labs.lab_aura_total(lab, covenant.aura if covenant else 0)
+    own = places.lab_aura(saga, lab)
+    aura = labs.lab_aura_total(
+        lab, own[0] if own is not None else covenant.aura if covenant else 0
+    )
     by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
 
     def total(name: str) -> str:

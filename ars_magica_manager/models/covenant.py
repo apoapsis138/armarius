@@ -71,6 +71,13 @@ class Covenant:
     aura: int = 0  # inherited by all of the covenant's laboratories
     #: Which realm the aura belongs to (REALMS); older saves load as Magic.
     aura_realm: str = "Magic"
+    #: The place it is in and which level (places.py). While it is
+    #: placed, its aura comes from the place, and the aura typed on it is
+    #: kept in own_aura and own_realm until it is moved out.
+    place_id: str | None = None
+    place_level: int = 0
+    own_aura: int | None = None
+    own_realm: str = ""
     #: The Tribunal it belongs to (Saga.tribunals), if any.
     tribunal_id: str | None = None
     year_founded: int | None = None

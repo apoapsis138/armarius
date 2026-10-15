@@ -130,6 +130,7 @@ REGION_CHURCH_SECTION = "section-region-church"
 REGION_UNIVERSITIES_SECTION = "section-region-universities"
 REGION_FACTIONS_SECTION = "section-region-factions"
 REGION_THREATS_SECTION = "section-region-threats"
+REGION_PLACES_SECTION = "section-region-places"
 #: A neighbour's sheet's top panel.
 NEIGHBOUR_INFO_SECTION = "section-nb-info"
 #: The lists a kind of neighbour adds: a lord's castles and Gratitude, a
@@ -144,6 +145,9 @@ FACULTIES_SECTION = "section-nb-faculties"
 MASTERS_SECTION = "section-nb-masters"
 #: A threat's stages.
 STAGES_SECTION = "section-nb-stages"
+#: A place's regio levels and effects.
+LEVELS_SECTION = "section-nb-levels"
+EFFECTS_SECTION = "section-nb-effects"
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),
@@ -167,6 +171,7 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     REGION_UNIVERSITIES_SECTION: frozenset({"add", "edit", "remove"}),
     REGION_FACTIONS_SECTION: frozenset({"add", "edit", "remove"}),
     REGION_THREATS_SECTION: frozenset({"add", "edit", "remove"}),
+    REGION_PLACES_SECTION: frozenset({"add", "edit", "remove"}),
     NEIGHBOUR_INFO_SECTION: frozenset({"edit"}),
     CASTLES_SECTION: frozenset({"add", "edit", "remove"}),
     GRATITUDE_SECTION: frozenset({"add", "edit", "remove"}),
@@ -176,4 +181,6 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     FACULTIES_SECTION: frozenset({"add", "edit", "remove"}),
     MASTERS_SECTION: frozenset({"add", "edit", "remove"}),
     STAGES_SECTION: frozenset({"add", "edit", "remove"}),
+    LEVELS_SECTION: frozenset({"add", "edit", "remove"}),
+    EFFECTS_SECTION: frozenset({"add", "edit", "remove"}),
 }

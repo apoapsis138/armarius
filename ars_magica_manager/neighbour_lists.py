@@ -58,9 +58,13 @@ def list_ops(
     fields: Callable[[Saga, Neighbour, Entry | None], list[DialogField]],
     describe: Callable[[Entry], str],
     validate: Callable[[dict[str, Any]], str | None] | None = None,
+    after: Callable[[], None] = lambda: None,
 ) -> SectionOps:
     """Add, Edit and Delete on the list `name`: a form of `fields` titled
-    "Add a `noun`", and a confirmation naming `describe(entry)`."""
+    "Add a `noun`" (or an), and a confirmation naming `describe(entry)`; `after`
+    runs once each has changed the list."""
+
+    article = "an" if noun[:1] in "AEIOU" else "a"
 
     def entries() -> list[Entry]:
         return details_list(neighbour, name)
@@ -71,9 +75,10 @@ def list_ops(
             target.update(values)
             if entry is None:
                 entries().append(target)
+            after()
 
         return Form(
-            f"Add a {noun}" if entry is None else f"Edit a {noun}",
+            f"Add {article} {noun}" if entry is None else f"Edit {article} {noun}",
             lambda: fields(saga, neighbour, entry),
             apply,
             validate=validate,
@@ -82,9 +87,12 @@ def list_ops(
 
     def remove(index: int) -> Command:
         entry = entries()[index]
-        return Confirm(
-            f"Delete {escape(describe(entry))}?", lambda: entries().remove(entry)
-        )
+
+        def delete() -> None:
+            entries().remove(entry)
+            after()
+
+        return Confirm(f"Delete {escape(describe(entry))}?", delete)
 
     return SectionOps(
         add=lambda: form(None),

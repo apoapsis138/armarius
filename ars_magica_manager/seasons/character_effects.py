@@ -18,6 +18,7 @@ from ..models import (
 )
 from ..rules import activities as rules
 from ..rules import aging as aging_rules
+from ..rules import effects
 from ..rules import warping as warping_rules
 from ..rules import xp as xp_rules
 from ..rules.rounding import round_down
@@ -116,7 +117,10 @@ def _living_conditions(saga: Saga, character: Character) -> int:
             lab, catalog.load_lab_virtue_flaw_catalog_by_id(), "health"
         )[3]
         living += round_down(health / LAB_HEALTH_DIVISOR)
-    return living
+    from .. import places
+
+    here = places.character_effects(saga, character, "living_conditions")
+    return living + int(effects.amount_total(here))
 
 
 def _yearly_warping(saga: Saga, character: Character) -> str:
@@ -134,6 +138,14 @@ def _yearly_warping(saga: Saga, character: Character) -> str:
         if from_aura:
             points += from_aura
             gained.append(f"{realm} aura {aura}: {from_aura}")
+    from .. import places
+
+    from_place = places.warping_per_year(saga, character)
+    if from_place:
+        points += from_place
+        where = places.character_place(saga, character)
+        name = where[0].name if where is not None else "Where they live"
+        gained.append(f"{name}: {from_place}")
     if not points:
         return ""
     warping_rules.set_total(character, warping_rules.total_points(character) + points)

@@ -48,12 +48,12 @@
         Name              Kind    Ruler or leader  Attitude     Detail
       ○ The Hollow Crown  Threat                   ◉ 0 Neutral  Sketch
 
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Places (2)
 
-
-
-
-
-
+        Name               Inside             Aura     Regio     Status
+      ○ The Siebengebirge                     Magic 2
+      ○ The Drachenfels    The Siebengebirge  Magic 5  2 levels  Visited
 
 
 

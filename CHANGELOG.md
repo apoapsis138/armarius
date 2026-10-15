@@ -46,6 +46,26 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.75.0 — 2026-10-15
+
+- **Places and regiones.** The Region has a list of Places: forests,
+  ruins, crags and regiones. A place has an aura, its tethers, how far
+  the troupe has got with it and how widely it is known, and the
+  covenant that claims it, and can sit inside another place (a regio
+  inside a forest inside a county).
+- A covenant, a laboratory or a neighbour can name the place it is in,
+  or one of its regio levels. A covenant placed somewhere takes its aura
+  from there, and gets back the aura typed on it if it is moved out; a
+  laboratory built in a regio takes that level's aura.
+- A place's Regio tab lists its regio levels, deepest first, each with
+  its realm and aura and how to see and enter it. Write a roll as "Per +
+  Awareness against 9" and it shows which of the troupe's characters
+  reach it with their scores alone.
+- A place's effects work for real: a lab bonus reaches the Lab Totals of
+  the laboratories there, an aging or Living Conditions change reaches
+  the aging rolls of those who live there, Warping a season is added to
+  their yearly Warping, and an aura effect replaces a level's aura.
+
 ## 2.74.0 — 2026-10-15
 
 - Threats and their stages. A threat has an antagonist, a way of moving
