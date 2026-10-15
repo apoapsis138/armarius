@@ -51,6 +51,7 @@ from .... import (
     menu_forms,
     neighbour_forms,
     neighbours,
+    packs,
     place_events,
     presence,
     seasons,
@@ -307,6 +308,7 @@ _STORYGUIDE_ACTIONS = frozenset(
         "share_spell",
         "update_record",
         "export_saga",
+        "export_pack",
     }
 )
 
@@ -1381,6 +1383,29 @@ class WorkspaceBase(Screen[None]):
 
         run_steps(
             self.app, menu_forms.export_saga(self.saga, storage.EXPORTS_DIR), done
+        )
+
+    def action_export_pack(self) -> None:
+        """More's Export Pack on the saga: write the chosen Tribunals,
+        covenants, places and neighbours to a content pack."""
+
+        def download(name: str, data: dict[str, Any]) -> list[str]:
+            self.app.deliver_binary(
+                io.BytesIO(json.dumps(data, indent=2).encode("utf-8")),
+                save_filename=name,
+                mime_type="application/json",
+            )
+            return [f"Exported {escape(data['name'])}: your browser downloads it."]
+
+        # A browser copy: the file goes to the player's computer.
+        deliver = download if self.app.is_web else None
+
+        def done(end: object) -> None:
+            if isinstance(end, list) and end:
+                self.notify("\n".join(end))
+
+        run_steps(
+            self.app, packs.export_pack(self.saga, storage.EXPORTS_DIR, deliver), done
         )
 
     def action_update_record(self) -> None:

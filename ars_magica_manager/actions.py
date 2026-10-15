@@ -229,6 +229,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("b", "research_bonuses", "Set Up Research Library"),
     MenuItem("x", "export_record", "Export"),
     MenuItem("x", "export_saga", "Export Saga"),
+    MenuItem("k", "export_pack", "Export Pack"),
     MenuItem("u", "update_record", "Update from a File"),
     MenuItem("m", "toggle_mode", "In Creation / In Play"),
     MenuItem("p", "promote", "Promote"),
@@ -373,7 +374,7 @@ def available(action: str, facts: ActionFacts) -> bool:
         return True
     if action == "set_date":
         return kind == NodeKind.SAGA
-    if action == "export_saga":
+    if action in ("export_saga", "export_pack"):
         return kind == NodeKind.SAGA and facts.can_send_files()
     if action in ("toggle_mode", "creation_worksheet"):
         record = facts.creation_record()

@@ -46,6 +46,22 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.84.0 — 2026-10-15
+
+- Content packs: **Export Pack** in Saga Management writes chosen
+  Tribunals, covenants, places and neighbours to one file, with their
+  characters and calendar if you like. A Tribunal takes everything in it:
+  its covenants, the places they sit in and whoever is there, and the
+  neighbours that deal with them.
+- Import, **A Content Pack**, previews what a pack adds, what the saga
+  already has of the same name (kept, with the pack's links pointing to
+  it) and what is skipped; importing the same pack twice adds nothing
+  the second time.
+- Create a New Saga can start from a pack in the exports folder.
+- Importing a whole saga now brings its places, neighbours, calendar and
+  Tribunals' records too, and an imported covenant keeps its place and
+  links where the saga has them.
+
 ## 2.83.0 — 2026-10-15
 
 - The desktop's Meeting tab opens on the Grand Hall: the Tribunal drawn

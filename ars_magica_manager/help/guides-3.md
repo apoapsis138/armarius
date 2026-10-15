@@ -17,6 +17,8 @@ This guide takes you from the start screen to a saga you can play: a saga with i
 3. The new saga opens at once, on [its page](help:saga). Next time, click its card on the Sagas page, or choose **Open Saga** on the title page to go back to the saga you had open last.
 <!-- /gui -->
 
+To begin with a Tribunal and its covenants already written, choose a pack in **Start from a pack** (offered when the exports folder holds one; see [Content packs](help:export-pack)).
+
 The saga is saved as soon as it is made, and every change after that is saved as you make it: there is no Save command to remember.
 
 ### Choose the books and optional rules

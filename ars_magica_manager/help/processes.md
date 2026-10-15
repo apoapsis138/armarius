@@ -426,7 +426,8 @@ Brings records into the saga from files. Open it from **Import** in the saga pag
 <!-- help: import-data-kinds -->
 
 - **Characters**, **Covenants** and **Laboratories**: a file exported from another saga with Export. The file must hold the kind you chose. The file picker starts in the exports folder.
-- **A Whole Saga**: a file written by **Export Saga**. Every covenant, laboratory, character and familiar in it is added beside this saga's own, with their books and devices and the saga's own spells and house rules, as importing each record would.
+- **A Whole Saga**: a file written by **Export Saga**. Every covenant, laboratory, character and familiar in it is added beside this saga's own, with their books and devices and the saga's own spells and house rules, as importing each record would; so are its places, neighbours and calendar entries, and its Tribunals, joined to this saga's own of the same name.
+- **A Content Pack**: a file written by **Export Pack**. Its Tribunals, covenants, characters, places, neighbours and calendar entries are added, except those this saga already has one of the same name of: those are kept as they are, and the pack's links to them go to this saga's own. See [Content packs](help:export-pack).
 - **Books**: a CSV file with a header row. Columns, in any order and any case: name, type, language, author, year_published, description, art, ability, level, quality, tractatus_type, spell, codex, encyclopedia, opus and physical_form; name and type are needed. Rows with the same codex are bound together in one new codex of that name, an encyclopedia when its rows' encyclopedia column says yes. A tractatus's opus can be commentary or correspondence; physical_form is one of exemplar, flap-bound, juvenilia, edition de luxe, treasure-bound, ex libris, holographic, huge codex, unbound or damaged. A level or quality of "var" means the figure is to be set later: the book is imported, highlighted until you edit it to give its numbers, and can't be studied until then. Books imported here go to Unassigned Books.
 <!-- tui -->
 From a covenant's **Library** tab, More's Import puts them straight into that covenant's library instead.
@@ -471,6 +472,48 @@ Season plans, season records and lab projects under way stay behind.
 <!-- gui -->
 **Export Saga**, a button in the saga page's **Saga Management**, beside Import, writes the whole saga to one file in the same shape: every record and what it holds. Import it into another saga with Import, **A Whole Saga**.
 <!-- /gui -->
+
+### Content packs
+<!-- help: export-pack -->
+
+A content pack is part of a saga's world written to one file, to fill
+another saga with it or start a new saga from it: Tribunals, covenants,
+characters, places, neighbours and calendar entries, with their links to
+one another.
+
+<!-- tui -->
+**Export Pack**, in More on the saga node, writes one. Only the storyguide
+can use it; in a browser copy the file downloads instead.
+<!-- /tui -->
+<!-- gui -->
+**Export Pack**, a button in the saga page's **Saga Management**, writes
+one.
+<!-- /gui -->
+
+**You choose:** the pack's name and file, and a tick for each Tribunal,
+covenant, place and neighbour it holds. A Tribunal takes everything in
+it: its covenants, the places they sit in (and the places round and
+inside those), whoever is in those places, and the neighbours that hold
+an attitude toward or a link to its covenants. A covenant of a ticked
+Tribunal is not asked about. **With their characters** adds the
+covenants' characters and laboratories and each Tribunal's Praeco and
+Presiding Quaesitor; **With the calendar** the covenants' calendar
+entries and the saga's own. The line above Export says what the pack
+holds.
+
+A Tribunal's meeting under way stays behind, and its Diary comes without
+what its entries changed.
+
+**Importing a pack** (Import, **A Content Pack**) shows first what it
+adds, what this saga already has of the same name (kept as it is, with
+the pack's links pointing to it, and the books, devices and familiars of
+those records skipped), what else is skipped (a calendar entry already in
+the calendar, or one for a covenant that isn't here), and the links kept
+and dropped. Importing the same pack twice adds nothing the second time.
+
+**Starting a saga from a pack:** when the exports folder holds a pack, the
+Create a New Saga form offers **Start from a pack**; the new saga begins
+with everything in it.
 
 ### Printing a record
 <!-- help: print-record; gui -->

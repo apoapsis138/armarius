@@ -445,6 +445,7 @@ async def test_more_on_the_saga_offers_import_export_and_set_date():
         assert [item.label for item in workspace._more_items()] == [
             "Import",
             "Export Saga",
+            "Export Pack",
             "Set Date",
         ]
         assert "m More" in _footer(app)

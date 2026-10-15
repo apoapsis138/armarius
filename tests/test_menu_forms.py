@@ -46,7 +46,12 @@ def _page(saga: Saga, kind: NodeKind, **ids: str) -> menu_forms.Page:
 def test_each_page_offers_what_applies_there():
     saga = _sample_saga_with_covenant()
     page = _page(saga, NodeKind.SAGA)
-    assert _labels(menu_forms.more_items(page)) == ["Import", "Export Saga", "Set Date"]
+    assert _labels(menu_forms.more_items(page)) == [
+        "Import",
+        "Export Saga",
+        "Export Pack",
+        "Set Date",
+    ]
     assert _labels(menu_forms.new_items(page)) == [
         "New Covenant",
         "New Character",
@@ -295,6 +300,7 @@ def test_exporting_and_importing_a_character(tmp_path: Path):
         "Covenants",
         "Laboratories",
         "A Whole Saga",
+        "A Content Pack",
     ]
     wrong = choose.apply("covenants")
     assert isinstance(wrong, commands.ChooseFile)
@@ -390,7 +396,7 @@ def test_places_sets_out_where_each_action_is_offered():
         "Unassigned Characters": ["New Character"],
         "Unassigned Laboratories": ["New Laboratory"],
         "Seasons": ["Set Date"],
-        "Saga Management": ["Edit Saga", "Import", "Export Saga"],
+        "Saga Management": ["Edit Saga", "Import", "Export Saga", "Export Pack"],
     }
     covenant = _page(saga, NodeKind.COVENANT, covenant_id="cov1")
     assert _labels(menu_forms.placed(covenant, "People")) == ["New Character"]

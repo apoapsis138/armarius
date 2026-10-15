@@ -8,26 +8,36 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from . import creation, creation_forms, paths, storage
+from . import creation, creation_forms, packs, paths, storage
 from .commands import Confirm, Form, Picked, notes
 from .form_spec import DialogField
 from .markup import escape
+from .models import Saga
+
+
+def create_saga(values: dict[str, Any]) -> Saga:
+    """The saga the Create a New Saga form describes, started from its
+    pack if it names one, and saved."""
+    saga = creation.new_saga(
+        values["name"],
+        values["storyguide"],
+        values["description"],
+        values["year"],
+        values["season"],
+    )
+    if values.get("pack"):
+        packs.start_from(saga, Path(values["pack"]))
+    storage.save_saga(saga)
+    return saga
 
 
 def new_saga_form() -> Form:
     """Create a New Saga: its name, storyguide, starting date and
-    premise; saved at once, ending with the new saga's id."""
+    premise, and the pack it starts from, if any; saved at once, ending
+    with the new saga's id."""
 
     def apply(values: dict[str, Any]) -> Picked:
-        saga = creation.new_saga(
-            values["name"],
-            values["storyguide"],
-            values["description"],
-            values["year"],
-            values["season"],
-        )
-        storage.save_saga(saga)
-        return Picked(saga.id)
+        return Picked(create_saga(values).id)
 
     return Form(
         "Create a New Saga",

@@ -46,6 +46,7 @@ IMPORT_KINDS: tuple[tuple[str, str], ...] = (
     ("covenants", "Covenants"),
     ("laboratories", "Laboratories"),
     ("saga", "A Whole Saga"),
+    ("pack", "A Content Pack"),
 )
 
 #: The records imported from an export, by Import Data's key.
@@ -54,6 +55,7 @@ RECORD_IMPORTS: dict[str, str] = {
     "covenants": transfer.COVENANT,
     "laboratories": transfer.LABORATORY,
     "saga": transfer.SAGA,
+    "pack": transfer.PACK,
 }
 
 _DETAILS = {
@@ -61,6 +63,9 @@ _DETAILS = {
     "spells": "Spells from a CSV file, added to the saga's own spells.",
     "saga": "Every record of a saga exported from its Saga Management, "
     "added beside this saga's own.",
+    "pack": "Tribunals, covenants, characters, places, neighbours and calendar "
+    "entries from a pack written by Export Pack; what this saga already has "
+    "is kept.",
 }
 
 TITLE = "Import Data"

@@ -13,7 +13,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import Any
 
-from . import character_templates, creation
+from . import character_templates, creation, packs, storage
 from . import familiars as fam
 from .commands import Form
 from .form_spec import DialogField, attr, covenant_options, pairs
@@ -63,6 +63,19 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
             placeholder="A one-line premise for the saga",
         )
     )
+    found = packs.available(storage.EXPORTS_DIR) if saga is None else []
+    if found:
+        fields.append(
+            DialogField(
+                "pack",
+                "Start from a pack",
+                "select",
+                "",
+                options=[("None", ""), *found],
+                hint="Its Tribunals, covenants, characters, places, neighbours "
+                "and calendar are added to the new saga.",
+            )
+        )
     if saga is not None:
         fields.append(
             DialogField(

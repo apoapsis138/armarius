@@ -32,6 +32,7 @@ from . import (
     library_forms,
     neighbour_forms,
     neighbours,
+    packs,
     seasons,
     storage,
     transfer,
@@ -372,6 +373,7 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     # On a covenant, books straight into its library.
     "import_data": ((NodeKind.SAGA, "Saga Management"), (NodeKind.COVENANT, "Library")),
     "export_saga": ((NodeKind.SAGA, "Saga Management"),),
+    "export_pack": ((NodeKind.SAGA, "Saga Management"),),
     "set_date": ((NodeKind.SAGA, "Seasons"),),
     "create_covenant": ((NodeKind.SAGA, "Covenants"),),
     "create_tribunal": ((NodeKind.SAGA, "Tribunals"),),
@@ -414,6 +416,9 @@ SAGA_MANAGEMENT: dict[str, str] = {
     "another saga's export or a list of books.",
     "export_saga": "Write the whole saga, every record and what it holds, to "
     "one file that another saga, or this one on another computer, can import.",
+    "export_pack": "Write chosen Tribunals, covenants, places and neighbours, "
+    "with what goes with them, to a content pack another saga can import or "
+    "start from.",
 }
 
 
@@ -1235,6 +1240,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "research_bonuses": _needs(_covenant, research_bonuses),
     "export_record": _export_command,
     "export_saga": lambda page: export_saga(page.saga, storage.EXPORTS_DIR),
+    "export_pack": lambda page: packs.export_pack(page.saga, storage.EXPORTS_DIR),
     "update_record": _update_command,
     "toggle_mode": _record_command,
     "promote": _detail_command("promote"),

@@ -14,6 +14,10 @@ save does and older exports keep working.
   those records use come along.
 - A whole saga takes everything in it; importing it adds every one of its
   records, as importing each of them would.
+- A content pack (packs.py) takes chosen Tribunals, covenants, characters,
+  places, neighbours and calendar entries; importing one matches each
+  record to one of the same name already in the saga instead of adding
+  it beside it.
 
 Links to records that aren't in the file (a character's covenant, a
 laboratory's owner, a book's author...) are kept by name: importing matches
@@ -29,21 +33,23 @@ from __future__ import annotations
 
 import json
 from collections.abc import Callable, Iterable
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 from typing import Any
 
-from . import __version__, catalog, storage
+from . import __version__, catalog, places, storage
 from . import spells as spl
 from .files import write_atomic
 from .models import (
     Book,
+    CalendarEntry,
     Character,
     Codex,
     Covenant,
     EnchantedDevice,
     Familiar,
     Laboratory,
+    Neighbour,
     Saga,
     Spell,
     Tribunal,
@@ -55,13 +61,17 @@ FORMAT = "armarius-export"
 FORMATS = (FORMAT, "ars-magica-manager-export")
 SUFFIX = ".amm.json"
 CHARACTER, LABORATORY, COVENANT = "character", "laboratory", "covenant"
-#: The kind of a whole saga's export.
-SAGA = "saga"
+#: The kind of a whole saga's export, and of a content pack's.
+SAGA, PACK = "saga", "pack"
+#: The kind of record a place or neighbour is, among the links.
+NEIGHBOUR = "neighbour"
 KIND_LABELS: dict[str, str] = {
     CHARACTER: "Character",
     LABORATORY: "Laboratory",
     COVENANT: "Covenant",
     SAGA: "Saga",
+    PACK: "Content Pack",
+    NEIGHBOUR: "Neighbour",
 }
 
 Record = Character | Laboratory | Covenant
@@ -101,13 +111,46 @@ def export_data(
 ) -> dict[str, Any]:
     """The export of `record` as JSON-ready data. `with_members` (a covenant
     only) adds its laboratories and characters."""
-    kind = kind_of(record)
     covenants = [record] if isinstance(record, Covenant) else []
     characters = [record] if isinstance(record, Character) else []
     labs = [record] if isinstance(record, Laboratory) else []
     if isinstance(record, Covenant) and with_members:
         characters += [c for c in saga.characters if c.covenant_id == record.id]
         labs += [lab for lab in saga.laboratories if lab.covenant_id == record.id]
+    # A covenant's Tribunal travels by name only: the importing saga joins
+    # its own of that name, or starts one.
+    tribunals: list[Tribunal] = []
+    for covenant in covenants:
+        tribunal = saga.tribunal(covenant.tribunal_id)
+        if tribunal is not None and all(t.id != tribunal.id for t in tribunals):
+            tribunals.append(Tribunal(id=tribunal.id, name=tribunal.name))
+    return bundle_data(
+        saga,
+        kind_of(record),
+        record.name,
+        covenants=covenants,
+        characters=characters,
+        laboratories=labs,
+        tribunals=tribunals,
+    )
+
+
+def bundle_data(
+    saga: Saga,
+    kind: str,
+    name: str,
+    *,
+    covenants: list[Covenant],
+    characters: list[Character],
+    laboratories: list[Laboratory],
+    tribunals: list[Tribunal],
+    neighbours: list[Neighbour] | None = None,
+    calendar: list[CalendarEntry] | None = None,
+) -> dict[str, Any]:
+    """An export of the records given, and what travels with them, as
+    JSON-ready data. A Tribunal's meeting under way stays behind."""
+    labs = laboratories
+    neighbours = neighbours or []
     character_ids = {c.id for c in characters}
     owners = (
         {(CHARACTER, c.id) for c in characters}
@@ -138,20 +181,15 @@ def export_data(
         for holder in [*characters, *familiars, *labs]
         for vf in holder.virtues_flaws
     } | {bh.vf_id for c in covenants for bh in c.boons_hooks}
-    # A covenant's Tribunal travels by name only: the importing saga joins
-    # its own of that name, or starts one.
-    tribunals = []
-    for covenant in covenants:
-        tribunal = saga.tribunal(covenant.tribunal_id)
-        if tribunal is not None and all(t.id != tribunal.id for t in tribunals):
-            tribunals.append(Tribunal(id=tribunal.id, name=tribunal.name))
     mini = Saga(
         id="export",
         name=saga.name,
         current_year=saga.current_year,
         current_season=saga.current_season,
         covenants=covenants,
-        tribunals=tribunals,
+        tribunals=[replace(t, meeting=None) for t in tribunals],
+        neighbours=neighbours,
+        calendar=list(calendar or []),
         characters=characters,
         laboratories=labs,
         familiars=familiars,
@@ -168,11 +206,18 @@ def export_data(
     content = asdict(mini)
     # The records the file points at but doesn't hold, by name.
     used = set(strings(content))
-    links: dict[str, dict[str, str]] = {CHARACTER: {}, LABORATORY: {}, COVENANT: {}}
+    owners |= {(NEIGHBOUR, n.id) for n in neighbours}
+    links: dict[str, dict[str, str]] = {
+        CHARACTER: {},
+        LABORATORY: {},
+        COVENANT: {},
+        NEIGHBOUR: {},
+    }
     for other_kind, others in (
         (CHARACTER, saga.characters),
         (LABORATORY, saga.laboratories),
         (COVENANT, saga.covenants),
+        (NEIGHBOUR, saga.neighbours),
     ):
         for other in others:
             if (other_kind, other.id) not in owners and other.id in used:
@@ -181,7 +226,7 @@ def export_data(
         "format": FORMAT,
         "app_version": __version__,
         "kind": kind,
-        "name": record.name,
+        "name": name,
         "from_saga": saga.name,
         "links": links,
         "saga": content,
@@ -210,8 +255,10 @@ def export_saga_data(saga: Saga) -> dict[str, Any]:
         "kind": SAGA,
         "name": saga.name,
         "from_saga": saga.name,
-        "links": {CHARACTER: {}, LABORATORY: {}, COVENANT: {}},
-        "saga": asdict(saga),
+        "links": {CHARACTER: {}, LABORATORY: {}, COVENANT: {}, NEIGHBOUR: {}},
+        "saga": asdict(
+            replace(saga, tribunals=[replace(t, meeting=None) for t in saga.tribunals])
+        ),
     }
 
 
@@ -260,6 +307,14 @@ class ImportPlan:
     codices: list[Codex] = field(default_factory=list)
     spells: list[Spell] = field(default_factory=list)
     custom: dict[str, list[Any]] = field(default_factory=dict)
+    neighbours: list[Neighbour] = field(default_factory=list)
+    calendar: list[CalendarEntry] = field(default_factory=list)
+    #: A pack's records the saga already has one of the same name of:
+    #: "Covenant Keep". The saga's own is kept as it is, and links to the
+    #: pack's go to it.
+    already: list[str] = field(default_factory=list)
+    #: What a pack holds that isn't added: "Book Summa: Keep is already here".
+    skipped: list[str] = field(default_factory=list)
     #: Links kept: "Covenant Keep (matched by name)".
     matched: list[str] = field(default_factory=list)
     #: Links dropped: "Laboratory Tower: not in this saga".
@@ -312,8 +367,13 @@ class _Import:
     plan: ImportPlan
     #: The export's links to records outside the file: kind -> id -> name.
     links: dict[str, dict[str, str]]
+    #: Whether a record the target has one of the same name of is taken
+    #: for that one rather than added (a pack).
+    match: bool = False
     #: Records in the file: kind -> old id -> new id.
     record_map: dict[str, dict[str, str]] = field(default_factory=dict)
+    #: Records in the file the target already has: kind -> old ids.
+    kept: dict[str, set[str]] = field(default_factory=dict)
     #: Records outside the file: kind -> old id -> the target's match, if any.
     outside: dict[str, dict[str, str | None]] = field(default_factory=dict)
     entry_map: dict[str, str] = field(default_factory=dict)
@@ -321,6 +381,10 @@ class _Import:
     book_map: dict[str, str] = field(default_factory=dict)
     codex_map: dict[str, str] = field(default_factory=dict)
     device_map: dict[str, str] = field(default_factory=dict)
+    tribunal_map: dict[str, str] = field(default_factory=dict)
+    familiar_map: dict[str, str] = field(default_factory=dict)
+    #: The ids of the possessions of the covenants added.
+    possessions: set[str] = field(default_factory=set)
 
     def link(self, record_kind: str, old_id: str | None) -> str | None:
         if not old_id:
@@ -330,7 +394,15 @@ class _Import:
         return self.outside[record_kind].get(old_id)
 
     def imported(self, record_kind: str, old_id: str | None) -> bool:
-        return bool(old_id) and old_id in self.record_map[record_kind]
+        """Whether the record is in the file and added (not kept)."""
+        return (
+            bool(old_id)
+            and old_id in self.record_map[record_kind]
+            and old_id not in self.kept.get(record_kind, set())
+        )
+
+    def held_by_kept(self, record_kind: str | None, old_id: str | None) -> bool:
+        return bool(old_id) and old_id in self.kept.get(record_kind or "", set())
 
     def link_name(self, record_kind: str, old_id: str | None) -> str:
         return (self.links.get(record_kind) or {}).get(old_id or "", "")
@@ -343,23 +415,45 @@ class _Import:
 
 
 def _map_records(job: _Import) -> None:
-    """New ids for the covenants, characters and laboratories in the file."""
+    """New ids for the covenants, characters, laboratories, places and
+    neighbours in the file; in a pack, the target's own for one it has of
+    the same name (and, for a neighbour, the same kind)."""
     source, target = job.source, job.target
     for record_kind, incoming, existing in (
         (COVENANT, source.covenants, target.covenants),
         (CHARACTER, source.characters, target.characters),
         (LABORATORY, source.laboratories, target.laboratories),
+        (NEIGHBOUR, source.neighbours, target.neighbours),
     ):
         ids = _Ids(r.id for r in existing)
         names = {r.name for r in existing}
         job.record_map[record_kind] = {}
+        job.kept[record_kind] = set()
         for record in incoming:
-            if record.name in names:
+            same = [
+                r
+                for r in existing
+                if r.name == record.name
+                and getattr(r, "kind", None) == getattr(record, "kind", None)
+            ]
+            if job.match and len(same) == 1:
+                job.record_map[record_kind][record.id] = same[0].id
+                job.kept[record_kind].add(record.id)
+                job.plan.already.append(f"{_label(record_kind, record)} {record.name}")
+                continue
+            if record.name in names and record_kind != NEIGHBOUR:
                 job.plan.notes.append(
                     f"This saga already has a {KIND_LABELS[record_kind].lower()} "
                     f"named {record.name}: the imported one is added beside it."
                 )
             job.record_map[record_kind][record.id] = ids.new(record.id, record.name)
+
+
+def _label(record_kind: str, record: Any) -> str:
+    """ "Covenant", or a neighbour's kind: "Place", "Lord"."""
+    if record_kind == NEIGHBOUR:
+        return str(getattr(record, "kind", "") or "neighbour").capitalize()
+    return KIND_LABELS[record_kind]
 
 
 def _match_outside(job: _Import) -> None:
@@ -368,8 +462,9 @@ def _match_outside(job: _Import) -> None:
         CHARACTER: job.target.characters,
         LABORATORY: job.target.laboratories,
         COVENANT: job.target.covenants,
+        NEIGHBOUR: job.target.neighbours,
     }
-    job.outside = {CHARACTER: {}, LABORATORY: {}, COVENANT: {}}
+    job.outside = {CHARACTER: {}, LABORATORY: {}, COVENANT: {}, NEIGHBOUR: {}}
     for record_kind, named in job.links.items():
         if record_kind not in targets:
             continue
@@ -448,31 +543,98 @@ def _map_spells(job: _Import) -> None:
             spell.id = new_id
 
 
-def _plan_tribunal(job: _Import, tribunal_id: str | None) -> str | None:
-    """The target's id for the file's Tribunal `tribunal_id`: one of the
-    same name, or a new one the import adds."""
-    tribunal = job.source.tribunal(tribunal_id)
-    if tribunal is None:
-        return None
-    key = tribunal.name.strip().casefold()
-    for known in [*job.target.tribunals, *job.plan.tribunals]:
-        if known.name.strip().casefold() == key:
+def _plan_tribunals(job: _Import) -> None:
+    """Each of the file's Tribunals: the target's of the same name, or a
+    new one the import adds with what the file holds of it (its officers
+    and proxies when they are here too; its Diary without what its
+    entries changed, which belongs to the other saga)."""
+    for tribunal in job.source.tribunals:
+        key = tribunal.name.strip().casefold()
+        known = next(
+            (
+                t
+                for t in [*job.target.tribunals, *job.plan.tribunals]
+                if t.name.strip().casefold() == key
+            ),
+            None,
+        )
+        if known is not None:
+            job.tribunal_map[tribunal.id] = known.id
             if known in job.target.tribunals:
-                line = f"Tribunal {known.name} (matched by name)"
-                if line not in job.plan.matched:
-                    job.plan.matched.append(line)
-            return known.id
-    taken = [t.id for t in [*job.target.tribunals, *job.plan.tribunals]]
-    added = Tribunal(id=_Ids(taken).new(tribunal.id, tribunal.name), name=tribunal.name)
-    job.plan.tribunals.append(added)
-    return added.id
+                line = f"Tribunal {known.name}"
+                if job.match:
+                    job.plan.already.append(line)
+                elif f"{line} (matched by name)" not in job.plan.matched:
+                    job.plan.matched.append(f"{line} (matched by name)")
+            continue
+        taken = [t.id for t in [*job.target.tribunals, *job.plan.tribunals]]
+        proxies = {}
+        for covenant_id, count in tribunal.proxies.items():
+            found = job.link(COVENANT, covenant_id)
+            if found is not None:
+                proxies[found] = count
+        added = replace(
+            tribunal,
+            id=_Ids(taken).new(tribunal.id, tribunal.name),
+            praeco_id=job.link(CHARACTER, tribunal.praeco_id),
+            quaesitor_id=job.link(CHARACTER, tribunal.quaesitor_id),
+            proxies=proxies,
+            diary=[replace(entry, changes=[]) for entry in tribunal.diary],
+            meeting=None,
+        )
+        job.tribunal_map[tribunal.id] = added.id
+        job.plan.tribunals.append(added)
+
+
+def _relink(job: _Import, record: Any) -> None:
+    """A record's place, attitudes, favours and links, through the maps:
+    those to records that aren't here are dropped (a favour's names
+    stay)."""
+    if hasattr(record, "place_id"):
+        record.place_id = job.link(NEIGHBOUR, record.place_id)
+        if record.place_id is None:
+            record.place_level = 0
+    if hasattr(record, "attitudes"):
+        kept = []
+        for attitude in record.attitudes:
+            attitude.covenant_id = job.link(COVENANT, attitude.covenant_id)
+            if attitude.covenant_id is not None:
+                kept.append(attitude)
+        record.attitudes = kept
+    for favour in getattr(record, "favours", []):
+        for side in ("owed_by", "owed_to"):
+            old = getattr(favour, side)
+            for record_kind in (COVENANT, CHARACTER, NEIGHBOUR):
+                new = job.link(record_kind, old)
+                if new is not None:
+                    setattr(favour, side, new)
+                    break
+    if hasattr(record, "links"):
+        maps: dict[str, Callable[[str], str | None]] = {
+            "characters": lambda old: job.link(CHARACTER, old),
+            "covenants": lambda old: job.link(COVENANT, old),
+            "places": lambda old: job.link(NEIGHBOUR, old),
+            "books": job.book_map.get,
+            "familiars": job.familiar_map.get,
+            "possessions": lambda old: old if old in job.possessions else None,
+        }
+        kept_links = []
+        for link in record.links:
+            mapped = maps.get(link.kind, lambda _old: None)(link.target_id)
+            if mapped is not None:
+                link.target_id = mapped
+                kept_links.append(link)
+        record.links = kept_links
 
 
 def _plan_covenants(job: _Import) -> None:
     for covenant in job.source.covenants:
+        if covenant.id in job.kept[COVENANT]:
+            continue
         covenant.id = job.record_map[COVENANT][covenant.id]
         covenant.saga_id = job.target.id
-        covenant.tribunal_id = _plan_tribunal(job, covenant.tribunal_id)
+        covenant.tribunal_id = job.tribunal_map.get(covenant.tribunal_id or "")
+        _relink(job, covenant)
         for held in covenant.boons_hooks:
             held.vf_id = job.entry(held.vf_id)
         for person in covenant.inhabitants:
@@ -499,6 +661,8 @@ def _plan_covenants(job: _Import) -> None:
 
 def _plan_characters(job: _Import) -> None:
     for character in job.source.characters:
+        if character.id in job.kept[CHARACTER]:
+            continue
         old_id = character.id
         character.id = job.record_map[CHARACTER][old_id]
         character.covenant_id = job.link(COVENANT, character.covenant_id)
@@ -526,13 +690,17 @@ def _plan_characters(job: _Import) -> None:
             new_author = job.link(CHARACTER, author) or job.link_name(CHARACTER, author)
             access[new_author] = level
         character.lab_text_access = access
+        _relink(job, character)
         job.plan.characters.append(character)
 
 
 def _plan_laboratories(job: _Import) -> None:
     for lab in job.source.laboratories:
+        if lab.id in job.kept[LABORATORY]:
+            continue
         lab.id = job.record_map[LABORATORY][lab.id]
         lab.covenant_id = job.link(COVENANT, lab.covenant_id)
+        _relink(job, lab)
         for held in lab.virtues_flaws:
             held.vf_id = job.entry(held.vf_id)
         job.plan.laboratories.append(lab)
@@ -583,12 +751,23 @@ def _pair_magi_and_labs(job: _Import) -> None:
             )
 
 
-def _plan_familiars(job: _Import) -> None:
+def _map_familiars(job: _Import) -> None:
     familiar_ids = _Ids(f.id for f in job.target.familiars)
+    job.familiar_map = {
+        f.id: familiar_ids.new(f.id, f.name)
+        for f in job.source.familiars
+        if job.imported(CHARACTER, f.character_id)
+    }
+
+
+def _plan_familiars(job: _Import) -> None:
     for familiar in job.source.familiars:
+        if job.held_by_kept(CHARACTER, familiar.character_id):
+            job.plan.skipped.append(_held_line("Familiar", familiar.name))
+            continue
         if not job.imported(CHARACTER, familiar.character_id):
             continue
-        familiar.id = familiar_ids.new(familiar.id, familiar.name)
+        familiar.id = job.familiar_map[familiar.id]
         familiar.character_id = job.record_map[CHARACTER][familiar.character_id]
         for held in familiar.virtues_flaws:
             held.vf_id = job.entry(held.vf_id)
@@ -601,6 +780,9 @@ def _plan_devices(job: _Import) -> None:
         d.id: device_ids.new(d.id, d.name) for d in job.source.enchanted_devices
     }
     for device in job.source.enchanted_devices:
+        if job.held_by_kept(device.holder_kind, device.holder_id):
+            job.plan.skipped.append(_held_line("Enchanted device", device.name))
+            continue
         device.id = job.device_map[device.id]
         device.holder_id = (
             job.link(device.holder_kind or "", device.holder_id)
@@ -619,6 +801,9 @@ def _plan_devices(job: _Import) -> None:
 
 def _plan_books(job: _Import) -> None:
     for book in job.source.books:
+        if job.held_by_kept(book.owner_kind, book.owner_id):
+            job.plan.skipped.append(_held_line("Book", book.name))
+            continue
         book.id = job.book_map[book.id]
         book.owner_id = (
             job.link(book.owner_kind or "", book.owner_id)
@@ -637,20 +822,59 @@ def _plan_books(job: _Import) -> None:
         book.commentary_on = job.book_map.get(book.commentary_on or "")
         book.device_id = job.device_map.get(book.device_id or "")
         job.plan.books.append(book)
+    held = {b.codex_id for b in job.plan.books}
     for codex in job.source.codices:
         codex.id = job.codex_map[codex.id]
-        job.plan.codices.append(codex)
+        if codex.id in held:
+            job.plan.codices.append(codex)
+
+
+def _held_line(what: str, name: str) -> str:
+    return f"{what} {name}: its holder is already here"
+
+
+def _plan_neighbours(job: _Import) -> None:
+    for neighbour in job.source.neighbours:
+        if neighbour.id in job.kept[NEIGHBOUR]:
+            continue
+        neighbour.id = job.record_map[NEIGHBOUR][neighbour.id]
+        neighbour.answers_to = job.link(NEIGHBOUR, neighbour.answers_to)
+        _relink(job, neighbour)
+        job.plan.neighbours.append(neighbour)
+
+
+def _plan_calendar(job: _Import) -> None:
+    """Calendar entries: each for the whole saga or for a covenant that is
+    here; one the saga already has is skipped."""
+    for entry in job.source.calendar:
+        title = f"Calendar entry {entry.title} ({entry.season} {entry.year})"
+        if entry.covenant_id:
+            entry.covenant_id = job.link(COVENANT, entry.covenant_id)
+            if entry.covenant_id is None:
+                job.plan.skipped.append(f"{title}: its covenant isn't here")
+                continue
+        same = (entry.title, entry.year, entry.season, entry.covenant_id)
+        if any(
+            (e.title, e.year, e.season, e.covenant_id) == same
+            for e in [*job.target.calendar, *job.plan.calendar]
+        ):
+            job.plan.skipped.append(f"{title}: already in the calendar")
+            continue
+        job.plan.calendar.append(entry)
 
 
 #: How each kind of record in the file is added, in order: a laboratory
 #: pairs with a magus planned before it, and a familiar follows its magus.
 _PLANNERS: dict[str, Callable[[_Import], None]] = {
+    "tribunal": _plan_tribunals,
     COVENANT: _plan_covenants,
     CHARACTER: _plan_characters,
     LABORATORY: _plan_laboratories,
     "familiar": _plan_familiars,
     "device": _plan_devices,
     "book": _plan_books,
+    NEIGHBOUR: _plan_neighbours,
+    "calendar": _plan_calendar,
 }
 
 
@@ -663,11 +887,13 @@ def plan_import(
     """Work out an import of `data` (from read()) into `target`, changing
     nothing yet: apply() does it. `same_ids` (kind -> the file's id -> an
     id) gives records in the file the id they are to have, whatever is
-    free: updating a record from a file keeps the record's own id."""
+    free: updating a record from a file keeps the record's own id. A
+    pack's records are matched by name to the target's own."""
     source = Saga.from_dict(data["saga"])  # runs the load-time migrations
     job = _Import(
         source=source,
         target=target,
+        match=data["kind"] == PACK,
         plan=ImportPlan(
             kind=data["kind"],
             name=str(data.get("name") or ""),
@@ -685,13 +911,23 @@ def plan_import(
     job.book_map = {b.id: book_ids.new(b.id, b.name) for b in source.books}
     codex_ids = _Ids(c.id for c in target.codices)
     job.codex_map = {c.id: codex_ids.new(c.id, c.name) for c in source.codices}
+    _map_familiars(job)
+    job.possessions = {
+        p.id
+        for c in source.covenants
+        if c.id not in job.kept[COVENANT]
+        for p in c.possessions
+    }
     for planner in _PLANNERS.values():
         planner(job)
     return job.plan
 
 
 def _count(number: int, noun: str) -> str:
-    return f"{number} {noun}{'s' if number != 1 else ''}"
+    if number == 1:
+        return f"1 {noun}"
+    plural = f"{noun[:-1]}ies" if noun.endswith("y") else f"{noun}s"
+    return f"{number} {plural}"
 
 
 def preview(plan: ImportPlan) -> str:
@@ -703,14 +939,21 @@ def preview(plan: ImportPlan) -> str:
     lines += [f"  Laboratory: {lab.name}" for lab in plan.laboratories]
     lines += [f"  Character: {c.name} ({c.type})" for c in plan.characters]
     lines += [f"  Familiar: {f.name}" for f in plan.familiars]
+    lines += [f"  {_label(NEIGHBOUR, n)}: {n.name}" for n in plan.neighbours]
     for number, noun in (
         (len(plan.books), "book"),
         (len(plan.devices), "enchanted device"),
         (len(plan.spells), "spell"),
         (sum(len(added) for added in plan.custom.values()), "House Rule"),
+        (len(plan.calendar), "calendar entry"),
     ):
         if number:
             lines.append(f"  {_count(number, noun)}")
+    if plan.already:
+        lines += ["", "Already here, kept as they are:"]
+        lines += [f"  {text}" for text in plan.already]
+    if plan.skipped:
+        lines += ["", "Skipped:"] + [f"  {text}" for text in plan.skipped]
     if plan.matched:
         lines += ["", "Links kept:"] + [f"  {text}" for text in plan.matched]
     if plan.dropped:
@@ -734,8 +977,11 @@ def apply(target: Saga, plan: ImportPlan) -> None:
     target.custom_virtues_flaws += plan.custom.get("custom_virtues_flaws", [])
     target.custom_lab_virtues_flaws += plan.custom.get("custom_lab_virtues_flaws", [])
     target.custom_boons_hooks += plan.custom.get("custom_boons_hooks", [])
+    target.neighbours += plan.neighbours
+    target.calendar += plan.calendar
     for lab, owner_id in plan.new_owners:
         lab.owner_id = owner_id
     for owner, lab_id in plan.new_labs:
         owner.assigned_lab_id = lab_id
+    places.sync(target)
     catalog.use_saga(target)

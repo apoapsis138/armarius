@@ -18,7 +18,7 @@ from textual.widgets import (
     Static,
 )
 
-from ... import __version__, creation, paths, storage, title_page
+from ... import __version__, paths, saga_forms, storage, title_page
 from ...markup import escape, problem
 from ...models import Player
 from .fields import FieldsDialog
@@ -129,15 +129,7 @@ class SagaPickerScreen(Screen[None]):
     def action_create_saga(self) -> None:
         async def handle_result(values: dict[str, Any] | None) -> None:
             if values is not None:
-                storage.save_saga(
-                    creation.new_saga(
-                        values["name"],
-                        values["storyguide"],
-                        values["description"],
-                        values["year"],
-                        values["season"],
-                    )
-                )
+                saga_forms.create_saga(values)
                 await self.refresh_list()
 
         self.app.push_screen(
