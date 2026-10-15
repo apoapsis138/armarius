@@ -303,6 +303,17 @@ def style_sheet(p: Palette, serif: str) -> str:
         border: 1px solid {p["rule"]};
         padding: 3px 6px;
     }}
+    QComboBox#quiet {{
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid {p["rule"]};
+        color: {p["label"]};
+        font-family: "{serif}";
+        font-size: 11pt;
+        font-style: italic;
+        padding: 1px 4px;
+    }}
+    QComboBox#quiet:hover {{ color: {p["heading"]}; }}
     QLineEdit, QPlainTextEdit {{
         background: {p["surface"]};
         border: 1px solid {p["rule"]};

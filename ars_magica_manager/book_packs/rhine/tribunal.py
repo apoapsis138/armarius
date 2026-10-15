@@ -343,9 +343,9 @@ def finish(rhine: Rhine) -> None:
 
     b, tribunal = rhine.b, rhine.tribunal
     assert tribunal is not None
-    # The mundane history, by era, between the summary and its secrets.
-    eras = paragraphs(*(f"{title}. {text}" for title, text in ERAS))
-    tribunal.summary = secrets(paragraphs(SUMMARY, "The mundane history", eras), SECRET)
+    # The mundane history, by era, in the Tribunal's own History.
+    tribunal.history = paragraphs(*(f"{title}. {text}" for title, text in ERAS))
+    tribunal.summary = secrets(SUMMARY, SECRET)
     # Each region's own history after its description, before any secrets.
     for key, history in REGION_HISTORY.items():
         region = rhine.places.get(key)

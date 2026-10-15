@@ -10,7 +10,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass
 
-from . import catalog, places, tribunals
+from . import catalog, places, tribunals, world
 from . import character_sheet as cs
 from . import laboratories as labs
 from .models import (
@@ -67,6 +67,8 @@ class CovenantCard:
     name: str
     subtitle: str
     facts: tuple[cs.Fact, ...]
+    #: A troupe covenant, listed first and marked.
+    played: bool = False
 
 
 def covenant_subtitle(saga: Saga, covenant: Covenant) -> str:
@@ -83,7 +85,7 @@ def covenant_cards(saga: Saga) -> list[CovenantCard]:
     """Each covenant with its aura and how many people and laboratories
     it has."""
     cards = []
-    for covenant in saga.covenants:
+    for covenant in world.troupe_first(saga.covenants):
         people = members(saga, covenant.id)
         labs = [lab for lab in saga.laboratories if lab.covenant_id == covenant.id]
         facts = [
@@ -100,6 +102,7 @@ def covenant_cards(saga: Saga) -> list[CovenantCard]:
                 covenant.name,
                 covenant_subtitle(saga, covenant),
                 tuple(facts),
+                covenant.played,
             )
         )
     return cards

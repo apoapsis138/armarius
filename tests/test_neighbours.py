@@ -15,6 +15,7 @@ from ars_magica_manager import (
     churches,
     factions,
     lords,
+    neighbour_filter,
     neighbour_forms,
     neighbours,
     region_sheet,
@@ -179,6 +180,60 @@ def test_the_desktop_lists_neighbours_and_opens_one():
     assert page.chapters() == ["Fief", "Standing"]
     words = [label.text() for label in page.findChildren(QLabel)]
     assert any("Archbishop of Cologne" in w for w in words)
+
+
+def test_the_region_s_lists_narrow_to_a_region_and_a_kind():
+    saga = everything_saga()
+    soest = saga.neighbour("soest")
+    assert soest is not None
+    soest.place_id = "drachenfels"  # inside the Siebengebirge, two deep
+    assert [r.id for r in neighbour_filter.regions(saga)] == ["siebengebirge"]
+    assert [k.key for k in neighbour_filter.kinds(saga)][:2] == ["lord", "town"]
+    form = neighbour_forms.filter_form(saga)
+    assert [f.label for f in form.fields()] == ["Region", "Kind"]
+    form.apply({"region": "siebengebirge", "kind": None})
+    assert region_sheet.group_title(saga, "lords") == "Lords and Towns (1 of 2)"
+    assert [row[0] for row in region_sheet.group_grid(saga, "lords").rows] == ["Soest"]
+    # The region itself shows among the places, beside what it holds.
+    assert [row[0] for row in region_sheet.group_grid(saga, "places").rows] == [
+        "The Siebengebirge",
+        "The Drachenfels",
+    ]
+    # Edit acts on the row shown, not on the list as entered.
+    edit = neighbour_forms.group_ops(saga, "lords").edit(0)
+    assert isinstance(edit, Form) and edit.fields()[0].value == "Soest"
+    facts = {f.label: f.value for f in region_sheet.facts(saga)}
+    assert facts["Showing"] == "in The Siebengebirge"
+    assert "Showing" not in {f.label for f in region_sheet.facts(saga, False)}
+    form = neighbour_forms.filter_form(saga)
+    form.apply({"region": "siebengebirge", "kind": "lord"})
+    assert region_sheet.group_grid(saga, "lords").rows == []
+    assert region_sheet.group_grid(saga, "lords").empty == "None match the filter."
+    assert neighbour_filter.describe(saga, neighbour_filter.current(saga)) == (
+        "Lord, in The Siebengebirge"
+    )
+    neighbour_filter.choose(saga, neighbour_filter.Filter())
+    assert region_sheet.group_title(saga, "lords") == "Lords and Towns (2)"
+
+
+def test_the_desktop_filter_bar_narrows_the_region_s_cards():
+    pytest.importorskip("PySide6")
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    from PySide6.QtWidgets import QApplication, QLabel
+
+    from ars_magica_manager.gui.pages import NeighbourFilterBar, SagaPage
+    from ars_magica_manager.gui.themes import PALETTES
+
+    QApplication.instance() or QApplication([])
+    saga = everything_saga()
+    page = SagaPage(saga, PALETTES[0], lambda _id: None)
+    bar = page.findChild(NeighbourFilterBar)
+    assert bar is not None
+    bar.kind.setCurrentIndex(bar.kind.findData("town"))
+    assert neighbour_filter.current(saga).kind == "town"
+    titles = [label.text() for label in page.findChildren(QLabel)]
+    assert any("Lords and Towns (1 of 2)" in title for title in titles)
+    assert not any("The Church" in title for title in titles)
 
 
 def test_a_lord_works_out_his_fief_from_the_lower_figures():

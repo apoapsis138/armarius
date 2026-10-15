@@ -13,7 +13,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import Any
 
-from . import character_templates, creation, packs, storage
+from . import character_templates, creation, packs, storage, tribunal_forms
 from . import familiars as fam
 from .commands import Form
 from .form_spec import DialogField, attr, covenant_options, pairs
@@ -167,18 +167,37 @@ def covenant_create_fields() -> list[DialogField]:
     ]
 
 
+def new_covenant_fields(saga: Saga) -> list[DialogField]:
+    """New Covenant: covenant_create_fields(), and, once the saga has
+    Tribunals, which it belongs to and what its customs ask (the Rhine's
+    gilds)."""
+    if not saga.tribunals:
+        return covenant_create_fields()
+    return [
+        *covenant_create_fields(),
+        tribunal_forms.tribunal_field(saga, None),
+        *tribunal_forms.package_fields(saga, None),
+    ]
+
+
 def new_covenant_form(saga: Saga) -> Form:
     def apply(values: dict[str, Any]) -> None:
-        creation.add_covenant(
+        values = dict(values)
+        covenant = creation.add_covenant(
             saga,
             values["name"],
             values["notes"],
             season=values["season"] or "Spring",
             aura_realm=values["aura_realm"] or "Magic",
         )
+        covenant.tribunal_id = values.get("tribunal_id")
+        tribunal_forms.save_package_fields(saga, covenant, values)
 
     return Form(
-        "Create a New Covenant", covenant_create_fields, apply, save_label="Create"
+        "Create a New Covenant",
+        lambda: new_covenant_fields(saga),
+        apply,
+        save_label="Create",
     )
 
 

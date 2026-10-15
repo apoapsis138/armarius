@@ -68,6 +68,12 @@ Both are in the **Manage** chapter.
 A covenant is a **player covenant** when the troupe plays it ("Played by the
 troupe" in its Edit): other records' attitudes point at the player
 covenants. A covenant you make is played; a sketch covenant usually isn't.
+Every list of covenants puts the player covenants first, each marked
+with ✦, above the others.
+<!-- gui -->
+On the World page their cards carry gold corners, and a divider stands
+before the rest.
+<!-- /gui -->
 
 **See also:** [Saga](help:saga), [Keys](help:keys),
 [Advancing a season](help:advance-season), [How to manage the covenant](help:guide-covenant).

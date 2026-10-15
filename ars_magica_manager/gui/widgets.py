@@ -49,7 +49,8 @@ from PySide6.QtWidgets import (
 from .. import artwork
 from ..arts import ART_ABBREVIATIONS, ARTS, FORMS, TECHNIQUES
 from ..tables import Table
-from . import pictures
+from ..tribunal_packages.rhine import gild_tree
+from . import marks, pictures
 from .markup_html import cell_style, to_html
 from .ornaments import FleuronRule, Tailpiece, corner_flourishes
 from .paper import lift, translucent
@@ -436,10 +437,19 @@ class Inspector(QFrame):
 
 class ClickableCard(Card):
     """A card that calls `clicked` when clicked, and lights its border
-    under the mouse."""
+    under the mouse. A `flourished` card (a troupe covenant's) has a gilt
+    scroll in each corner."""
 
-    def __init__(self, p: Palette, *, pad: int = 12, edge: str | None = None) -> None:
+    def __init__(
+        self,
+        p: Palette,
+        *,
+        pad: int = 12,
+        edge: str | None = None,
+        flourished: bool = False,
+    ) -> None:
         super().__init__(p, pad=pad, edge=edge)
+        self.flourished = flourished
         self.clicked: Callable[[], None] = lambda: None
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         left = f"border-left:4px solid {edge};" if edge else ""
@@ -460,6 +470,12 @@ class ClickableCard(Card):
 
     def paintEvent(self, event) -> None:
         super().paintEvent(event)
+        if self.flourished:
+            painter = QPainter(self)
+            corner_flourishes(
+                painter, QRectF(self.rect()).adjusted(1, 1, -1, -1), self.p, 16
+            )
+            painter.end()
         if getattr(self, "chosen", False):
             painter = QPainter(self)
             painter.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -652,6 +668,8 @@ def _table_model(table: Table, p: Palette) -> QStandardItemModel:
                 cell.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
             elif columns[c] == "Art" and shown.title() in ARTS:
                 cell.setIcon(art_icon(shown.title(), p))
+            elif columns[c] == "Gild" and (tree := gild_tree(shown)) is not None:
+                cell.setIcon(QIcon(marks.gild_pixmap(tree, p["foreground"], 18)))
             model.setItem(r, c, cell)
     return model
 
@@ -668,7 +686,8 @@ def table_view(
     table); choosing a row calls `on_choose` with its key. The first
     column is set in the serif and the table's `stretch` column takes the
     spare room; a column of numbers is centred, the others start at the
-    left, and an Art column shows each Art's symbol. A markup cell takes
+    left, and an Art column shows each Art's symbol (a Gild column, each
+    gild's). A markup cell takes
     its tags' colour, bold and italics; a heading row is bold on the panel
     colour, its first cell across the row when it has no others, and
     can't be chosen."""

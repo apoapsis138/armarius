@@ -7,6 +7,7 @@ front-end draws it."""
 
 from __future__ import annotations
 
+from dataclasses import replace as dataclass_replace
 from typing import Any
 
 from . import meeting, tribunal_packages, tribunal_sheet, tribunals
@@ -31,6 +32,7 @@ from .models import (
     SEASONS,
     TREASURY_KINDS,
     Case,
+    Covenant,
     Ruling,
     Saga,
     TreasuryEntry,
@@ -64,6 +66,46 @@ def tribunal_field(saga: Saga, tribunal_id: str | None) -> DialogField:
     )
 
 
+def package_fields(saga: Saga, covenant: Covenant | None) -> list[DialogField]:
+    """What each Tribunal's customs add to a covenant's own form (the
+    Rhine's gilds), each shown only while that Tribunal is chosen."""
+    fields = []
+    for tribunal in saga.tribunals:
+        package = tribunal_packages.of(tribunal)
+        if package.covenant_fields is None:
+            continue
+        for field in package.covenant_fields(saga, tribunal, covenant):
+            fields.append(
+                dataclass_replace(
+                    field,
+                    key=f"package_{tribunal.id}_{field.key}",
+                    show_if=lambda values, ident=tribunal.id: (
+                        values.get("tribunal_id") == ident
+                    ),
+                )
+            )
+    return fields
+
+
+def save_package_fields(saga: Saga, covenant: Covenant, values: dict[str, Any]) -> None:
+    """Take package_fields()' values out of `values` and keep them with
+    the covenant's Tribunal."""
+    for tribunal in saga.tribunals:
+        prefix = f"package_{tribunal.id}_"
+        own = {
+            k[len(prefix) :]: values.pop(k)
+            for k in list(values)
+            if k.startswith(prefix)
+        }
+        package = tribunal_packages.of(tribunal)
+        if (
+            own
+            and package.save_covenant is not None
+            and tribunal.id == covenant.tribunal_id
+        ):
+            package.save_covenant(tribunal, covenant.id, own)
+
+
 def _character_options(saga: Saga) -> list[tuple[str, str]]:
     return [(escape(c.name), c.id) for c in saga.characters]
 
@@ -93,6 +135,13 @@ def tribunal_fields(saga: Saga, tribunal: Tribunal | None) -> list[DialogField]:
             "area",
             t.summary,
             hint="A sentence or a paragraph: what the Tribunal is like.",
+        ),
+        DialogField(
+            "history",
+            "History",
+            "area",
+            t.history,
+            hint="How it came to be, era by era: shown in its own History tab.",
         ),
         DialogField(
             "meets_every",

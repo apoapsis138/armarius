@@ -5,7 +5,16 @@ neighbour's own facts and details."""
 
 from __future__ import annotations
 
-from . import arms, neighbours, places, threats, tribunal_packages, tribunals, world
+from . import (
+    arms,
+    neighbour_filter,
+    neighbours,
+    places,
+    threats,
+    tribunal_packages,
+    tribunals,
+    world,
+)
 from .character_sheet import Fact
 from .grids import Grid
 from .markup import escape
@@ -36,9 +45,11 @@ def _next_meeting(tribunal: Tribunal | None) -> str:
     return f"{tribunal.next_season} {tribunal.next_year}"
 
 
-def facts(saga: Saga) -> list[Fact]:
+def facts(saga: Saga, showing: bool = True) -> list[Fact]:
     """The home covenant, its Tribunal, the neighbours and how they
-    stand, and when the Tribunal next meets."""
+    stand, and when the Tribunal next meets; then what the lists are
+    narrowed to, unless `showing` is False (a front-end whose filter
+    controls say so themselves)."""
     home = neighbours.home(saga)
     tribunal = tribunals.of(saga, home) if home is not None else None
     held = [n for n in saga.neighbours if neighbours.kind_of(n).attitude]
@@ -62,7 +73,16 @@ def facts(saga: Saga) -> list[Fact]:
         Fact("Other covenants", str(len(others(saga)))),
         Fact("Next Tribunal", _next_meeting(tribunal)),
         Fact("Threat due", threat_due(saga)),
+        *(_filter_fact(saga) if showing else []),
     ]
+
+
+def _filter_fact(saga: Saga) -> list[Fact]:
+    """What the lists are narrowed to, while they are."""
+    wanted = neighbour_filter.current(saga)
+    if not wanted.active:
+        return []
+    return [Fact("Showing", neighbour_filter.describe(saga, wanted))]
 
 
 def threat_due(saga: Saga) -> str:
@@ -124,14 +144,27 @@ def kind_text(neighbour: Neighbour) -> str:
 
 
 def group_title(saga: Saga, group_key: str) -> str:
+    """ "Lords and Towns (102)", or "(12 of 102)" while filtered."""
     group = neighbours.group(group_key)
-    return f"{group.title} ({len(neighbours.members(saga, group_key))})"
+    total = len(neighbours.members(saga, group_key))
+    if not neighbour_filter.current(saga).active:
+        return f"{group.title} ({total})"
+    shown = len(neighbour_filter.shown(saga, group_key))
+    return f"{group.title} ({shown} of {total})"
+
+
+def _empty(saga: Saga, words: str) -> str:
+    """A list's words when it shows nothing: `words`, or that the
+    filter lets none through."""
+    if neighbour_filter.current(saga).active:
+        return "None match the filter."
+    return words
 
 
 def places_grid(saga: Saga) -> Grid:
     """The places: where each is, its aura, its regio and the gazetteer."""
     rows = []
-    for found in places.all_places(saga):
+    for found in neighbour_filter.shown(saga, "places"):
         levels = len(places.levels(found))
         rows.append(
             [
@@ -146,7 +179,7 @@ def places_grid(saga: Saga) -> Grid:
         ["Name", "Inside", "Aura", "Regio", "Status"],
         rows,
         list(range(len(rows))),
-        "None yet: add a forest, a ruin or a regio here.",
+        _empty(saga, "None yet: add a forest, a ruin or a regio here."),
         caps=[26, 26, 10, 9, 0],
     )
 
@@ -158,7 +191,7 @@ def group_grid(saga: Saga, group_key: str) -> Grid:
         return places_grid(saga)
     rows = []
     styles: dict[tuple[int, int], str] = {}
-    members = neighbours.members(saga, group_key)
+    members = neighbour_filter.shown(saga, group_key)
     for index, neighbour in enumerate(members):
         words, colour = _attitude_cell(saga, neighbour)
         if colour:
@@ -177,7 +210,7 @@ def group_grid(saga: Saga, group_key: str) -> Grid:
         ["Name", "Kind", "Ruler or leader", "Attitude", "Detail"],
         rows,
         list(range(len(rows))),
-        f"None yet: add a {kinds} here.",
+        _empty(saga, f"None yet: add a {kinds} here."),
         styles,
         caps=[26, 10, 20, 15, 0],
     )

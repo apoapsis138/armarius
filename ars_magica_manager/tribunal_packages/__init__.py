@@ -85,6 +85,13 @@ class TribunalPackage:
     meeting_steps: tuple[str, ...] = ()
     #: A sentence on what the package adds, for the form and help.
     about: str = ""
+    #: The fields it adds to a covenant's own forms (its gilds), for a
+    #: covenant of this Tribunal or about to join it (None: a new one), and
+    #: how to keep what they say for the covenant with that id.
+    covenant_fields: (
+        Callable[[Saga, Tribunal, Covenant | None], list[DialogField]] | None
+    ) = None
+    save_covenant: Callable[[Tribunal, str, dict[str, Any]], None] | None = None
 
     @property
     def lists(self) -> tuple[PackageList, ...]:

@@ -36,7 +36,7 @@ from .models import (
     new_instance_id,
 )
 from .possession_forms import contested_fields
-from .tribunal_forms import tribunal_field
+from .tribunal_forms import package_fields, save_package_fields, tribunal_field
 
 # Edit Covenant and its Description
 
@@ -98,6 +98,7 @@ def covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
             cov.played,
             hint="A player covenant: other records' attitudes point at it.",
         ),
+        *package_fields(saga, cov),
     ]
     if placed:
         fields = [f for f in fields if f.key != "aura_realm"]
@@ -121,6 +122,9 @@ def apply_covenant(covenant: Covenant, values: dict[str, Any]) -> None:
 
 def covenant_form(saga: Saga, covenant: Covenant) -> Form:
     def apply(values: dict[str, Any]) -> None:
+        values = dict(values)
+        covenant.tribunal_id = values.get("tribunal_id", covenant.tribunal_id)
+        save_package_fields(saga, covenant, values)
         apply_covenant(covenant, values)
         places.sync(saga)
 

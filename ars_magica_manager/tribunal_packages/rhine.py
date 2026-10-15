@@ -9,6 +9,7 @@ list."""
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from .. import tribunals
@@ -33,6 +34,18 @@ KEY = "rhine"
 def gilds(tribunal: Tribunal) -> list[dict[str, Any]]:
     """The Tribunal's gilds, in the order entered."""
     return entries(tribunal, KEY, "gilds")
+
+
+#: The trees the Rhine's gilds are named for, each with its symbol.
+GILD_TREES = ("Oak", "Hawthorn", "Ash", "Elder", "Linden", "Apple")
+
+
+def gild_tree(name: str) -> str | None:
+    """The tree a gild's name names ("Oak Gild (Eichengilde)": "Oak"),
+    whose symbol it bears; None for a name naming none, or several."""
+    words = set(re.findall(r"[a-z]+", name.lower()))
+    found = [tree for tree in GILD_TREES if tree.lower() in words]
+    return found[0] if len(found) == 1 else None
 
 
 def gilds_of(tribunal: Tribunal, covenant: Covenant) -> list[str]:
@@ -68,6 +81,38 @@ def gilds_grid(saga: Saga, tribunal: Tribunal) -> Grid:
         caps=[18, 40, 0],
         stretch=1,
     )
+
+
+def covenant_gild_fields(
+    _saga: Saga, tribunal: Tribunal, covenant: Covenant | None
+) -> list[DialogField]:
+    """A covenant's own form: a tick for each of the Tribunal's gilds,
+    on for those it belongs to."""
+    ident = covenant.id if covenant is not None else None
+    return [
+        DialogField(
+            f"gild_{index}",
+            escape(gild["name"]),
+            "check",
+            ident in gild.get("members", []),
+            hint="The gilds it belongs to." if index == 0 else "",
+        )
+        for index, gild in enumerate(gilds(tribunal))
+    ]
+
+
+def save_covenant_gilds(tribunal: Tribunal, ident: str, values: dict[str, Any]) -> None:
+    """Keep a covenant's gild ticks: it joins the gilds ticked and
+    leaves the others."""
+    for index, gild in enumerate(gilds(tribunal)):
+        key = f"gild_{index}"
+        if key not in values:
+            continue
+        members = gild.setdefault("members", [])
+        if values[key] and ident not in members:
+            members.append(ident)
+        elif not values[key] and ident in members:
+            members.remove(ident)
 
 
 def gild_fields(
@@ -165,6 +210,8 @@ RHINE = TribunalPackage(
         ),
     ),
     about="Its covenants band together in gilds, with dues.",
+    covenant_fields=covenant_gild_fields,
+    save_covenant=save_covenant_gilds,
 )
 
 register(RHINE)

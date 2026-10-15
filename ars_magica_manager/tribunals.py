@@ -5,7 +5,7 @@ worked out from the covenants and characters that belong to it."""
 
 from __future__ import annotations
 
-from . import storage
+from . import storage, world
 from .models import Covenant, Saga, Tribunal
 
 
@@ -29,8 +29,9 @@ def title_of(saga: Saga, covenant: Covenant) -> str:
 
 def covenants_of(saga: Saga, tribunal: Tribunal) -> list[Covenant]:
     """The covenants that belong to `tribunal`, the troupe's first."""
-    members = [c for c in saga.covenants if c.tribunal_id == tribunal.id]
-    return sorted(members, key=lambda c: not c.played)
+    return world.troupe_first(
+        [c for c in saga.covenants if c.tribunal_id == tribunal.id]
+    )
 
 
 def options(saga: Saga) -> list[tuple[str, str]]:

@@ -61,6 +61,7 @@ from .... import (
     transfer,
     tribunal_forms,
     tribunals,
+    world,
 )
 from .... import books as bk
 from .... import familiars as fam
@@ -818,7 +819,7 @@ class WorkspaceBase(Screen[None]):
         has anything in."""
         characters = [c for c in self.saga.characters if c.covenant_id == covenant.id]
         labs = [lab for lab in self.saga.laboratories if lab.covenant_id == covenant.id]
-        label = escape(covenant.name) + _creating(covenant)
+        label = escape(world.marked_name(covenant)) + _creating(covenant)
         data = (NodeKind.COVENANT, covenant.id)
         full = covenant.detail == FULL
         if not full and not characters and not labs:
@@ -1248,17 +1249,22 @@ class WorkspaceBase(Screen[None]):
         self._run_menu("New", self._new_items())
 
     def _filter_target(self) -> str | None:
-        """What / filters here: the Lab Texts list or the Spells list."""
+        """What / filters here: the Lab Texts list, the Spells list or the
+        Region's neighbours."""
         if self._active_section() == LAB_TEXTS_SECTION:
             return "lab_texts"
         if self._active_section() == SPELL_SECTION:
             return "spells"
+        if self._active_section() in self._NEIGHBOUR_GROUP_SECTIONS:
+            return "neighbours"
         return None
 
     def action_filter(self) -> None:
         target = self._filter_target()
         if target == "lab_texts":
             self.action_filter_lab_texts()
+        elif target == "neighbours":
+            self._filter_neighbours()
         elif target == "spells":
             try:
                 self.query_one("#spell-search").focus()
@@ -1267,6 +1273,20 @@ class WorkspaceBase(Screen[None]):
 
     def action_filter_lab_texts(self) -> None:
         raise NotImplementedError
+
+    _NEIGHBOUR_GROUP_SECTIONS: ClassVar[frozenset[str]] = frozenset(
+        g.section_id for g in neighbours.GROUPS
+    )
+
+    def _filter_neighbours(self) -> None:
+        """/ on a list of the Region: narrow every list to a region and a
+        kind (neighbour_filter), then redraw them and their titles."""
+
+        def done(_end: object) -> None:
+            if self._region_sheet_view is not None:
+                self._region_sheet_view.refresh_all()
+
+        run_steps(self.app, neighbour_forms.filter_form(self.saga), done)
 
     def action_toggle_mode(self) -> None:
         self._toggle_creation_mode()

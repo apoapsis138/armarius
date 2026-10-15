@@ -1096,6 +1096,16 @@
         "slash": "(disabled)"
       }
     },
+    "TabPane#tab-trib-history": {
+      "active": "section-trib-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Tribunal",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-trib-cases": {
       "active": "section-trib-cases",
       "keys": {
@@ -1214,6 +1224,16 @@
         "a": "(disabled)",
         "e": "(disabled)",
         "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "TabPane#tab-trib-history": {
+      "active": "section-trib-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Tribunal",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -1350,6 +1370,16 @@
         "slash": "(disabled)"
       }
     },
+    "TabPane#tab-trib-history": {
+      "active": "section-trib-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Tribunal",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-trib-cases": {
       "active": "section-trib-cases",
       "keys": {
@@ -1479,7 +1509,7 @@
         "e": "FieldsDialog: Edit Gottfried of Arnsberg",
         "d": "ConfirmScreen",
         "m": "(disabled)",
-        "slash": "(disabled)"
+        "slash": "FieldsDialog: Filter Neighbours"
       }
     },
     "SheetSection#section-region-church": {
@@ -1489,7 +1519,7 @@
         "e": "FieldsDialog: Edit Archbishop of Cologne",
         "d": "ConfirmScreen",
         "m": "(disabled)",
-        "slash": "(disabled)"
+        "slash": "FieldsDialog: Filter Neighbours"
       }
     },
     "SheetSection#section-region-universities": {
@@ -1499,7 +1529,7 @@
         "e": "FieldsDialog: Edit The Studium of Cologne",
         "d": "ConfirmScreen",
         "m": "(disabled)",
-        "slash": "(disabled)"
+        "slash": "FieldsDialog: Filter Neighbours"
       }
     },
     "SheetSection#section-region-factions": {
@@ -1509,7 +1539,7 @@
         "e": "FieldsDialog: Edit The Black Pool Coven",
         "d": "ConfirmScreen",
         "m": "(disabled)",
-        "slash": "(disabled)"
+        "slash": "FieldsDialog: Filter Neighbours"
       }
     },
     "SheetSection#section-region-threats": {
@@ -1519,7 +1549,7 @@
         "e": "FieldsDialog: Edit The Hollow Crown",
         "d": "ConfirmScreen",
         "m": "(disabled)",
-        "slash": "(disabled)"
+        "slash": "FieldsDialog: Filter Neighbours"
       }
     },
     "SheetSection#section-region-places": {
@@ -1529,7 +1559,7 @@
         "e": "FieldsDialog: Edit The Siebengebirge",
         "d": "ConfirmScreen",
         "m": "(disabled)",
-        "slash": "(disabled)"
+        "slash": "FieldsDialog: Filter Neighbours"
       }
     }
   },

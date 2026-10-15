@@ -11,7 +11,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Tenure  7 Tourney
+   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -24,6 +24,49 @@
     ▼ Magi of Note (0)
 
       No magi of note: its officers and the magi of its other covenants show here.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-trib-history
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Normandy
+
+      Customs:       Normandy: Vis tenure      Praeco:              (not chosen)
+      Meets every:   7 years                   Presiding Quaesitor: (not chosen)
+      Next meeting:  Summer 1227               Covenants:           0
+      Meeting place: Confluensis               Magi:                0
+      Cases:         none pending              Your votes:          0 of 0
+      In the Saga: not written yet. Edit the Tribunal to say.
+          Edit (e)
+
+   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  History: not written yet. Edit the Tribunal (e) to tell it.
+
+
+
+
+
+
+
+
+
 
 
 
@@ -54,7 +97,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Tenure  7 Tourney
+   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -97,7 +140,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Tenure  7 Tourney
+   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   The Next Meeting: Summer 1227
@@ -140,7 +183,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Tenure  7 Tourney
+  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Normandy: Vis tenure. Every vis source is held on a tenure of the Perthean
@@ -183,7 +226,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Tenure  7 Tourney  8 Diary
+   3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Silver in hand: 0 pounds
@@ -226,7 +269,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Tenure  7 Tourney  8 Diary
+   3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -269,7 +312,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Tenure  7 Tourney  8 Diary
+   3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -312,7 +355,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Tenure  7 Tourney  8 Diary
+   3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tenure  8 Tourney  9 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

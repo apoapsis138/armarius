@@ -20,7 +20,15 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, menu_forms, neighbours, region_sheet, tribunal_sheet
+from .. import (
+    artwork,
+    menu_forms,
+    neighbour_filter,
+    neighbours,
+    region_sheet,
+    tribunal_sheet,
+    world,
+)
 from .. import character_sheet as cs
 from .. import familiar_sheet as fs
 from .. import saga_content_sheet as scs
@@ -29,6 +37,7 @@ from ..models import Character, Neighbour, Saga
 from . import pictures
 from .figures import fact_grid
 from .menus import Placer
+from .ornaments import ShortRule
 from .themes import Palette
 from .widgets import (
     ClickableCard,
@@ -36,6 +45,7 @@ from .widgets import (
     chapter_title,
     display_name,
     edit_button,
+    filter_choice,
     scrolling_page,
     serif,
     text,
@@ -45,6 +55,20 @@ from .widgets import (
 CARDS_ACROSS = 3
 
 Open = Callable[[str], None]
+
+
+def divider(words: str, p: Palette) -> QWidget:
+    """A quiet break inside a chapter's cards: a gilt rule with a few
+    words in italics under it."""
+    box = QWidget()
+    column = QVBoxLayout(box)
+    column.setContentsMargins(0, 4, 0, 0)
+    column.setSpacing(0)
+    column.addWidget(ShortRule(p))
+    label = text(words, p["label"], serif(12, italic=True))
+    label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+    column.addWidget(label)
+    return box
 
 
 def card_grid(cards: Sequence[QWidget], across: int = CARDS_ACROSS) -> QWidget:
@@ -276,23 +300,88 @@ def neighbour_card(
     return card
 
 
+class NeighbourFilterBar(QWidget):
+    """What the Region's neighbours are narrowed to, as two quiet
+    drop-downs on one line (neighbour_filter.Filter)."""
+
+    def __init__(self, saga: Saga, p: Palette) -> None:
+        super().__init__()
+        self.saga = saga
+        wanted = neighbour_filter.current(saga)
+        self.region = filter_choice(
+            "Every region", [(r.name, r.id) for r in neighbour_filter.regions(saga)]
+        )
+        self.kind = filter_choice(
+            "Every kind", [(k.name, k.key) for k in neighbour_filter.kinds(saga)]
+        )
+        row = QHBoxLayout(self)
+        row.setContentsMargins(0, 0, 0, 0)
+        row.setSpacing(10)
+        row.addStretch(1)
+        row.addWidget(text("Show", p["dim"], serif(12, italic=True)))
+        for combo, value in ((self.region, wanted.region), (self.kind, wanted.kind)):
+            combo.setObjectName("quiet")
+            combo.setCurrentIndex(max(combo.findData(value or None), 0))
+            row.addWidget(combo)
+
+    def wanted(self) -> neighbour_filter.Filter:
+        return neighbour_filter.Filter(
+            region=self.region.currentData() or "", kind=self.kind.currentData() or ""
+        )
+
+    def changed(self, then: Callable[[], None]) -> None:
+        """Call `then` whenever either drop-down changes."""
+        for combo in (self.region, self.kind):
+            combo.currentIndexChanged.connect(lambda _index: then())
+
+
 def region_chapter(
     saga: Saga, p: Palette, open_neighbour: Open, new: QWidget | None
 ) -> QWidget:
-    """The Region: its facts, then each group's neighbours as cards, and
+    """The Region: its facts, a quiet filter bar when it has neighbours,
+    then each group's neighbours the filter lets through as cards, and
     the New card that adds one."""
-    parts: list[QWidget] = [
-        chapter_title(region_sheet.neighbours_title(saga), p),
-        fact_grid(region_sheet.facts(saga), p, 3),
-    ]
-    for group in neighbours.groups_shown(saga):
-        members = neighbours.members(saga, group.key)
-        if not members:
-            continue
-        parts.append(chapter_title(region_sheet.group_title(saga, group.key), p))
-        parts.append(
-            card_grid([neighbour_card(saga, n, p, open_neighbour) for n in members])
-        )
+    facts = fact_grid(region_sheet.facts(saga, showing=False), p, 3)
+    parts: list[QWidget] = [chapter_title(region_sheet.neighbours_title(saga), p)]
+    groups = QWidget()
+    holder = QVBoxLayout(groups)
+    holder.setContentsMargins(0, 0, 0, 0)
+    holder.setSpacing(12)
+    bar = NeighbourFilterBar(saga, p) if saga.neighbours else None
+
+    def fill() -> None:
+        while holder.count():
+            item = holder.takeAt(0)
+            old = item.widget() if item is not None else None
+            if old is not None:
+                old.setParent(None)
+                old.deleteLater()
+        for group in neighbours.groups_shown(saga):
+            members = neighbour_filter.shown(saga, group.key)
+            if not members:
+                continue
+            holder.addWidget(
+                chapter_title(region_sheet.group_title(saga, group.key), p)
+            )
+            holder.addWidget(
+                card_grid([neighbour_card(saga, n, p, open_neighbour) for n in members])
+            )
+        if saga.neighbours and holder.count() == 0:
+            holder.addWidget(
+                text("None match the filter.", p["dim"], serif(12.5, italic=True))
+            )
+
+    def refilter() -> None:
+        assert bar is not None
+        neighbour_filter.choose(saga, bar.wanted())
+        fill()
+
+    parts.append(facts)
+    if bar is not None:
+        parts.append(bar)
+        bar.changed(refilter)
+    fill()
+    parts.append(groups)
     if new is not None:
         parts.append(card_grid(with_new([], new)))
     elif not saga.neighbours:
@@ -360,11 +449,15 @@ class SagaPage(QWidget):
     def _world(self) -> QWidget:
         p, saga = self.p, self.saga
         covenants: list[QWidget] = []
+        troupe = 0
         for figures in ov.covenant_cards(saga):
-            card = ClickableCard(p, pad=16)
+            troupe += figures.played
+            card = ClickableCard(p, pad=16, flourished=figures.played)
             card_title(
                 card,
-                figures.name,
+                f"{world.TROUPE_GLYPH} {figures.name}"
+                if figures.played
+                else figures.name,
                 figures.subtitle,
                 p,
                 symbol_label(artwork.icon("covenant"), p),
@@ -404,6 +497,11 @@ class SagaPage(QWidget):
         ):
             listed = with_new(cards, self._new(title))
             parts.append(chapter_title(f"{title} ({len(cards)})", p))
+            if title == "Covenants" and 0 < troupe < len(cards):
+                # The troupe's covenants, then a divider, then the rest.
+                parts.append(card_grid(cards[:troupe], across))
+                parts.append(divider("Other covenants", p))
+                listed = listed[troupe:]
             parts.append(
                 card_grid(listed, across)
                 if listed

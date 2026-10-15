@@ -33,7 +33,7 @@ from textual.widgets import (
     TextArea,
 )
 
-from ars_magica_manager import catalog, storage
+from ars_magica_manager import catalog, neighbour_filter, storage
 from ars_magica_manager import players as pl
 from ars_magica_manager.models import (
     BOON_HOOK_DESCRIPTION,
@@ -387,6 +387,16 @@ CONTRACTS: dict[str, Contract] = {
         expected=("The Soest wool merchants", "faction", "Hanno"),
         invalid={"Name": ""},
         shown={"#region-factions-list": "The Soest wool merchants"},
+    ),
+    "filter neighbours": Contract(
+        prefill={"Region": "siebengebirge"},
+        edits={"Kind": "church"},
+        saved=lambda s: neighbour_filter.current(s),
+        expected=neighbour_filter.Filter(region="siebengebirge", kind="church"),
+        shown={
+            "#region-lords-list": "None match the filter.",
+            "#region-info-right": "Church, in The Siebengebirge",
+        },
     ),
     "edit neighbour": Contract(
         prefill={

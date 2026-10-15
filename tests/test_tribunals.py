@@ -115,17 +115,20 @@ def test_the_sheet_counts_the_covenants_and_the_troupes_votes():
     assert facts["Covenants"] == "2 recorded of 6"
     assert facts["Praeco"] == "Severinus"
     assert [row[0] for row in tribunal_sheet.roster_grid(saga, rhine).rows] == [
-        "Keep",
+        "✦ Keep",
+        "Other covenants",
         "Fengheld",
         "4 unnamed",
     ]
+    # The divider row is a heading: no covenant is chosen through it.
+    assert tribunal_sheet.roster_grid(saga, rhine).keys == [0, None, 1, 2]
 
 
 def test_a_covenant_votes_its_magi_and_its_proxies():
     saga = everything_saga()
     rhine = saga.tribunals[0]
     grid = tribunal_sheet.roster_grid(saga, rhine)
-    assert grid.rows[1][:5] == ["Fengheld", "Sketch", "3", "4", "1 held"]
+    assert grid.rows[2][:5] == ["Fengheld", "Sketch", "3", "4", "1 held"]
     form = tribunal_forms.roster_ops(saga, rhine).edit(1)
     assert isinstance(form, Form)
     form.apply({"proxies": 0})
@@ -205,7 +208,7 @@ def test_the_rhine_adds_gilds_and_a_gild_column():
     rhine = saga.tribunals[0]
     roster = tribunal_sheet.roster_grid(saga, rhine)
     assert roster.columns[5] == "Gild"
-    assert [row[5] for row in roster.rows] == ["Hermetic", "Hermetic"]
+    assert [row[5] for row in roster.rows] == ["Hermetic", "", "Hermetic"]
     ops = tribunal_forms.tribunal_ops(saga, rhine)
     form = ops["section-trib-gilds"].add()
     assert isinstance(form, Form)
@@ -217,7 +220,7 @@ def test_the_rhine_adds_gilds_and_a_gild_column():
         "dues": "",
         "members": ["cov_sketch"],
     }
-    assert tribunal_sheet.roster_grid(saga, rhine).rows[1][5] == "Hermetic, Mercantile"
+    assert tribunal_sheet.roster_grid(saga, rhine).rows[2][5] == "Hermetic, Mercantile"
 
 
 def test_switching_customs_hides_the_old_ones_and_keeps_them():
@@ -283,7 +286,7 @@ def test_transylvania_enters_a_class_through_the_roster():
     form.apply({"proxies": 1, "privilege": "Cives"})
     roster = tribunal_sheet.roster_grid(saga, rhine)
     assert roster.columns[5] == "Class"
-    assert [row[5] for row in roster.rows] == ["Cives", ""]
+    assert [row[5] for row in roster.rows] == ["Cives", "", ""]
     form.apply({"proxies": 1, "privilege": None})
     assert rhine.package_data["transylvania"]["classes"] == {}
 
@@ -487,6 +490,7 @@ def test_the_desktop_shows_a_tribunal_and_lists_them_on_the_saga():
     page = TribunalPage(saga, saga.tribunals[0], PALETTES[0])
     assert page.chapters() == [
         "Roster",
+        "History",
         "Docket",
         "Meeting",
         "Peripheral Code",
@@ -527,3 +531,37 @@ def test_choosing_a_ruling_a_gild_or_a_diary_entry_shows_it_in_the_inspector():
     assert codex.inspector.title.text() in {e.title for e in tribunal.diary}
     if "Gilds" in codex.chapters():
         assert "Members" in choose("Gilds")
+
+
+def test_a_rhine_covenant_s_own_form_ticks_its_gilds():
+    from ars_magica_manager import covenant_forms, creation_forms
+    from ars_magica_manager.tribunal_packages import rhine as rhine_package
+
+    saga = everything_saga()
+    rhine = saga.tribunals[0]
+    rhine_package.gilds(rhine)[:] = [
+        {"name": "Oak Gild", "members": [], "dues": ""},
+        {"name": "Ash Gild", "members": [], "dues": ""},
+    ]
+    covenant = saga.covenants[0]
+    covenant.tribunal_id = rhine.id
+    form = covenant_forms.covenant_form(saga, covenant)
+    fields = form.fields()
+    ticks = [f for f in fields if f.label in {"Oak Gild", "Ash Gild"}]
+    values = {f.key: f.value for f in fields}
+    assert len(ticks) == 2 and all(t.show_if(values) for t in ticks)
+    # Shown only while a Tribunal with gilds is chosen.
+    assert not ticks[0].show_if({**values, "tribunal_id": None})
+    values[ticks[1].key] = True
+    form.apply({k: v for k, v in values.items() if k != "where"})
+    assert rhine_package.gilds_of(rhine, covenant) == ["Ash Gild"]
+    # New Covenant asks the Tribunal too, and its gilds.
+    new = creation_forms.new_covenant_form(saga)
+    fields = new.fields()
+    values = {f.key: f.value for f in fields} | {"name": "Waldheim"}
+    values["tribunal_id"] = rhine.id
+    values[next(f.key for f in fields if f.label == "Oak Gild")] = True
+    new.apply(values)
+    added = saga.covenants[-1]
+    assert added.tribunal_id == rhine.id
+    assert rhine_package.gilds_of(rhine, added) == ["Oak Gild"]

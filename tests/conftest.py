@@ -3,7 +3,7 @@ import sys
 import pytest
 from tiers import is_screen_test_file
 
-from ars_magica_manager import catalog, paths, settings, storage
+from ars_magica_manager import catalog, neighbour_filter, paths, settings, storage
 
 
 def pytest_configure(config):
@@ -31,6 +31,8 @@ def isolated_sagas_dir(tmp_path, monkeypatch):
     monkeypatch.setattr(storage, "PORTRAITS_DIR", tmp_path / "portraits")
     # What this "copy" of the app last saw of each saga.
     monkeypatch.setattr(storage, "_last_seen", {})
+    # And how each saga's Region lists are filtered.
+    monkeypatch.setattr(neighbour_filter, "_CURRENT", {})
 
 
 @pytest.fixture(autouse=True)

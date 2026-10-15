@@ -46,6 +46,30 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.87.0 — 2026-10-15
+
+- **A covenant's gilds on its own form.** In a Tribunal that follows the
+  Rhine's customs, Edit Covenant, New Covenant and a sketch covenant's
+  form each have a tick for every gild; ticking one makes the covenant a
+  member, just as the Gilds tab does.
+- **The troupe's covenants stand out.** Every list of covenants puts the
+  ones the troupe plays first, marked with ✦. The Tribunal's roster and
+  the desktop's World page set the rest under an "Other covenants"
+  divider, and the troupe's cards there have gold corners.
+- **Filter the Region's neighbours.** The Region's lists can be narrowed
+  to one region (everything inside it, however deep) and one kind, and
+  each list's title says how many it shows of how many. On the desktop
+  it is two quiet drop-downs under the facts; in the terminal, press `/`
+  on any of the lists.
+- **A Tribunal's history.** A Tribunal has a History of its own, written
+  on its form and shown in a History chapter (a tab in the terminal), so
+  In the Saga stays a short summary. The Rhine pack's eras of history
+  have moved there.
+- **The Rhine's gild symbols.** Each of the six gilds bears its tree (an
+  oak leaf, a thorn, an ash spearhead, an elder sprig, a linden leaf, an
+  apple), cut like the Arts' woodblocks: small beside its name on the
+  Gilds tab, large in the inspector.
+
 ## 2.86.3 — 2026-10-15
 
 - **The Rhine's notice of cases.** Notice of a case is now due a season

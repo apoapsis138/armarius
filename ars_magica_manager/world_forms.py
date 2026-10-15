@@ -35,7 +35,7 @@ from .sections import (
     WHAT_MATTERS_SECTION,
 )
 from .tables import Table
-from .tribunal_forms import tribunal_field
+from .tribunal_forms import package_fields, save_package_fields, tribunal_field
 
 #: How each link kind is named in a form.
 LINK_NOUNS: dict[str, str] = {
@@ -520,7 +520,7 @@ def sketch_covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
             hint="A player covenant: other records' attitudes point at it.",
         )
     )
-    return fields
+    return fields + package_fields(saga, covenant)
 
 
 def _unnamed_problem(values: dict[str, Any]) -> str | None:
@@ -532,6 +532,8 @@ def _unnamed_problem(values: dict[str, Any]) -> str | None:
 def sketch_covenant_form(saga: Saga, covenant: Covenant) -> Form:
     def apply(values: dict[str, Any]) -> None:
         values = dict(values)
+        covenant.tribunal_id = values.get("tribunal_id", covenant.tribunal_id)
+        save_package_fields(saga, covenant, values)
         if "where" in values:
             places.put(covenant, values.pop("where"))
         for key, value in values.items():

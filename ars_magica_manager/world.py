@@ -45,6 +45,19 @@ ATTITUDE_WORDS: dict[int, str] = {
 
 #: The seal drawn for an attitude, before its score and word.
 SEAL_GLYPH = "◉"
+#: The mark before a troupe covenant's name in a list.
+TROUPE_GLYPH = "✦"
+
+
+def troupe_first(covenants: list[Covenant]) -> list[Covenant]:
+    """`covenants`, the troupe's first, each group in its own order."""
+    return sorted(covenants, key=lambda c: not c.played)
+
+
+def marked_name(covenant: Covenant) -> str:
+    """A covenant's name as a list shows it: a troupe covenant's after
+    its mark."""
+    return f"{TROUPE_GLYPH} {covenant.name}" if covenant.played else covenant.name
 
 
 def takes_part_in_play(record: Character | Covenant) -> bool:

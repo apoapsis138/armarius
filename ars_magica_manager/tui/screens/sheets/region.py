@@ -14,7 +14,7 @@ from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Button, Collapsible, Static, TabbedContent
 
-from .... import arms, neighbour_forms, neighbours, region_sheet
+from .... import arms, neighbour_filter, neighbour_forms, neighbours, region_sheet
 from ....character_sheet import Fact
 from ....markup import aligned, escape, markdown_inline
 from ....models import Covenant, Neighbour, Saga
@@ -136,7 +136,7 @@ class RegionSheetView(SheetView):
             )
             if group is None:
                 return
-            listed = neighbours.members(self.saga, group.key)
+            listed = neighbour_filter.shown(self.saga, group.key)
         event.stop()
         self._chosen = listed[index] if index < len(listed) else None
         self.query_one("#region-info-panel", Static).update(self._details())

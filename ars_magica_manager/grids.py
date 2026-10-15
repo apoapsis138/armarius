@@ -15,7 +15,9 @@ class Grid:
     """A list as columns of plain words, each row chosen by its key (an
     index into what the list shows). `styles` colours a cell, by (row,
     column), with a theme colour or style ("$text-warning", "b"); `caps`
-    is the widest each column may be on a padded line."""
+    is the widest each column may be on a padded line. A row in `spans`
+    is a divider: its first cell runs across the line instead of
+    setting the first column's width."""
 
     columns: list[str]
     rows: list[list[str]]
@@ -24,6 +26,7 @@ class Grid:
     styles: dict[tuple[int, int], str] = field(default_factory=dict)
     caps: list[int] = field(default_factory=list)
     stretch: int = 0
+    spans: frozenset[int] = frozenset()
 
     def _styled(self, row: int, column: int, words: str) -> str:
         style = self.styles.get((row, column))
@@ -61,7 +64,16 @@ class Grid:
             return [(None, f"[$label]{escape(self.empty)}[/]")]
         widths = []
         for column, title in enumerate(self.columns):
-            width = max([len(title), *(len(row[column]) for row in self.rows)])
+            width = max(
+                [
+                    len(title),
+                    *(
+                        len(row[column])
+                        for index, row in enumerate(self.rows)
+                        if index not in self.spans
+                    ),
+                ]
+            )
             cap = self.caps[column] if column < len(self.caps) else 0
             widths.append(min(width, cap) if cap else width)
         last = len(self.columns) - 1
@@ -85,7 +97,12 @@ class Grid:
             (None, f"[$label]  {padded(self.columns, None)}[/]")
         ]
         lines += [
-            (key, padded(row, index))
+            (
+                key,
+                self._styled(index, 0, escape(row[0]))
+                if index in self.spans
+                else padded(row, index),
+            )
             for index, (key, row) in enumerate(zip(self.keys, self.rows, strict=True))
         ]
         return lines

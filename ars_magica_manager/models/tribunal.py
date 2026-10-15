@@ -109,6 +109,9 @@ class Tribunal:
     id: str
     name: str
     summary: str = ""
+    #: Its history, era by era: a chapter of its own, apart from the
+    #: summary of what it is like now.
+    history: str = ""
     #: Its package (tribunal_packages.PACKAGES): the core rules, or a
     #: region's customs. Never mixed.
     package: str = CORE_PACKAGE

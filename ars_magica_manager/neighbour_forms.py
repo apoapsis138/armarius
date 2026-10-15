@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import neighbours, places, sourcebooks, world_forms
+from . import neighbour_filter, neighbours, places, sourcebooks, world_forms
 from .commands import Choice, Choose, Command, Confirm, Form, SectionOps, not_offered
 from .form_spec import DialogField, pairs
 from .markup import escape
@@ -211,7 +211,7 @@ def group_ops(saga: Saga, group: str) -> SectionOps:
     chosen neighbour."""
 
     def members() -> list[Neighbour]:
-        return neighbours.members(saga, group)
+        return neighbour_filter.shown(saga, group)
 
     return SectionOps(
         add=lambda: new_neighbour(saga, group),
@@ -219,6 +219,48 @@ def group_ops(saga: Saga, group: str) -> SectionOps:
         remove=lambda index: _delete(saga, members()[index]),
         rows=lambda: [n.name for n in members()],
     )
+
+
+def filter_form(saga: Saga) -> Form:
+    """Narrow the Region's lists of neighbours to a region (a place that
+    sits inside no other) and a kind; both blank shows them all."""
+    wanted = neighbour_filter.current(saga)
+
+    def fields() -> list[DialogField]:
+        return [
+            DialogField(
+                "region",
+                "Region",
+                "select",
+                wanted.region or None,
+                options=[
+                    (escape(p.name), p.id) for p in neighbour_filter.regions(saga)
+                ],
+                allow_blank=True,
+                placeholder="(any)",
+                hint="A neighbour inside it at any depth, or the region itself.",
+            ),
+            DialogField(
+                "kind",
+                "Kind",
+                "select",
+                wanted.kind or None,
+                options=[(k.name, k.key) for k in neighbour_filter.kinds(saga)],
+                allow_blank=True,
+                placeholder="(any)",
+                hint="Blank both to show every neighbour.",
+            ),
+        ]
+
+    def apply(values: dict[str, Any]) -> None:
+        neighbour_filter.choose(
+            saga,
+            neighbour_filter.Filter(
+                region=values.get("region") or "", kind=values.get("kind") or ""
+            ),
+        )
+
+    return Form("Filter Neighbours", fields, apply, save_label="Filter")
 
 
 def region_ops(saga: Saga) -> dict[str, SectionOps]:

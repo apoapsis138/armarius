@@ -106,3 +106,26 @@ def test_the_abilities_chapter_shows_each_mark_and_the_chosen_one_large(app):
     corner = image.pixelColor(image.width() // 8, image.height() // 8)
     assert corner.rgb() == QColor(window.palette_["heading"]).rgb()
     assert sheet.codex.inspector.title.text() == rows[0].text()
+
+
+def test_each_rhine_gild_bears_its_tree_cut_as_a_mark(app):
+    from ars_magica_manager.gui.gild_charges import GILD_DETAILS, GILD_PLAIN, GILDS
+    from ars_magica_manager.tribunal_packages.rhine import GILD_TREES, gild_tree
+
+    assert set(GILDS) == set(GILD_TREES) == set(GILD_DETAILS)
+    assert GILD_PLAIN <= set(GILDS)
+    assert gild_tree("Oak Gild (Eichengilde)") == "Oak"
+    assert gild_tree("The Apple") == "Apple"
+    assert gild_tree("Mercantile") is None
+    assert gild_tree("Oak Gild, Ash Gild") is None  # a roster cell of two
+    assert marks.key("gild:Oak") == "gild:Oak"
+    for tree in GILD_TREES:
+        image = marks.gild_pixmap(tree, "#2c221e", 64).toImage()
+        side = image.width()
+        assert image.pixelColor(side // 8, side // 8).alpha() > 200, tree
+        clear = sum(
+            image.pixelColor(x, y).alpha() < 60
+            for x in range(side // 5, side * 4 // 5, 2)
+            for y in range(side // 5, side * 4 // 5, 2)
+        )
+        assert clear > 10, tree

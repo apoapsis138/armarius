@@ -95,7 +95,8 @@ magi worth keeping an eye on.
 
 Each covenant of the Tribunal: how much of it is written down, its magi
 (named or not), its votes at the next meeting and the proxies it holds,
-and its attitude toward the troupe's covenant. When the Tribunal's size
+and its attitude toward the troupe's covenant. The troupe's covenants
+come first, marked ✦, above an "Other covenants" line. When the Tribunal's size
 says there are more covenants than are recorded, a last row counts them
 and the magi they hold.
 
@@ -121,6 +122,13 @@ The Tribunal's Praeco and Presiding Quaesitor, the magi of its covenants
 the troupe doesn't play, and anyone prosecuting or defending a case on
 its docket, with their House, covenant and part in the Tribunal. Edit a
 magus on their covenant's sheet or their own.
+
+## History tab
+<!-- help: tab-trib-history -->
+
+How the Tribunal came to be, era by era, kept apart from In the Saga
+(what it is like now) so that stays short. Write it in the History field
+of the Tribunal's own form; a Tribunal book fills it in.
 
 ## Docket tab
 <!-- help: tab-trib-docket -->
@@ -303,6 +311,11 @@ the loans still out and the fines still unpaid.
 A Rhine Tribunal's gilds: the bands its covenants join, each with its
 dues. Only a Tribunal following the Rhine's customs has this tab.
 
+A covenant's own form shows the same choice from its side: while its
+Tribunal follows the Rhine's customs, Edit Covenant and New Covenant
+have a tick for each gild, and ticking one makes the covenant a member.
+Choose another Tribunal and the ticks disappear.
+
 ### Gilds
 <!-- help: section-trib-gilds -->
 
@@ -310,6 +323,13 @@ Each gild with its member covenants and its dues. Add a gild, edit it
 (its name, its dues, and a tick for each covenant of the Tribunal that
 belongs to it) or delete it. The roster's Gild column shows the gilds
 each covenant belongs to.
+<!-- gui -->
+
+A gild named for one of the Rhine's six trees (Oak, Hawthorn, Ash,
+Elder, Linden, Apple) bears its symbol, cut like the Arts' woodblocks:
+small beside its name in the list, and large in the inspector when it is
+chosen.
+<!-- /gui -->
 
 ## Tokens and Archai tab
 <!-- help: tab-trib-tokens -->

@@ -11,7 +11,15 @@ from support import NODES, everything_saga, wait_until
 from textual.screen import ModalScreen
 from textual.widgets import TabbedContent, Tree
 
-from ars_magica_manager import catalog, giving, meeting, spells, storage, vis
+from ars_magica_manager import (
+    catalog,
+    giving,
+    meeting,
+    neighbour_filter,
+    spells,
+    storage,
+    vis,
+)
 from ars_magica_manager import economics as eco
 from ars_magica_manager import worksheet_forms as wf
 from ars_magica_manager.models import (
@@ -95,6 +103,14 @@ def _open_saga_source(ws) -> None:
     if not ws.saga.sources:
         ws.saga.sources.append(SagaSource("HR", "House rules"))
     ws._saga_source_form(ws.saga.sources[0])
+
+
+def _filter_neighbours(ws) -> None:
+    """Filter Neighbours, the Region already narrowed to the
+    Siebengebirge, from its Lords and Towns."""
+    neighbour_filter.choose(ws.saga, neighbour_filter.Filter(region="siebengebirge"))
+    ws._region_sheet_view.refresh_all()
+    ws._filter_neighbours()
 
 
 def _param_vf() -> str:
@@ -248,6 +264,7 @@ OPENERS: dict[str, Opener] = {
     "add faction": Opener(
         "region", lambda ws: ws._core_verb("section-region-factions", "add")
     ),
+    "filter neighbours": Opener("region", _filter_neighbours),
     "edit neighbour": Opener(
         "neighbour", lambda ws: ws._core_verb("section-nb-info", "edit")
     ),

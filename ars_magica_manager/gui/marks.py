@@ -14,6 +14,7 @@ from pathlib import Path
 from PySide6.QtCore import QRectF, Qt
 from PySide6.QtGui import QColor, QImage, QPainter, QPainterPath, QPixmap, QTransform
 
+from .gild_charges import GILD_DETAILS, GILD_PLAIN, GILDS
 from .mark_charges import CATEGORIES, DETAILS, IMAGES, MARKS, PLAIN
 from .mark_shapes import rough, stroke, tile
 
@@ -29,14 +30,28 @@ def key(name: str, category: str = "") -> str:
     """The mark an ability is drawn with: its own (by its name, or the part
     before its ":" or "(", as in Craft: Smith or Area Lore (Normandy)),
     else its category's."""
+    if name.startswith(GILD) and name.removeprefix(GILD) in GILDS:
+        return name
     for candidate in (name, name.split(":")[0].split(" (")[0].strip()):
         if candidate in MARKS or candidate in IMAGES:
             return candidate
     return category if category in CATEGORIES else "General"
 
 
+#: A gild's mark is keyed by this and its tree: "gild:Oak".
+GILD = "gild:"
+
+
 def _charge(name: str) -> QPainterPath:
+    if name.startswith(GILD):
+        return GILDS[name.removeprefix(GILD)]()
     return (MARKS.get(name) or CATEGORIES[name])()
+
+
+def _details(name: str) -> QPainterPath | None:
+    if name.startswith(GILD):
+        return GILD_DETAILS[name.removeprefix(GILD)]()
+    return DETAILS[name]() if name in DETAILS else None
 
 
 def _fit(charge: QPainterPath) -> QTransform:
@@ -113,12 +128,20 @@ def pixmap(
             painter.setCompositionMode(
                 QPainter.CompositionMode.CompositionMode_SourceOver
             )
-            if mark not in PLAIN:
+            if mark not in PLAIN and not (
+                mark.startswith(GILD) and mark.removeprefix(GILD) in GILD_PLAIN
+            ):
                 # The cutter's second line, just inside the charge's edge.
                 inset = smooth.subtracted(stroke(smooth, 9)).simplified()
                 painter.fillPath(stroke(inset, 1.5), ink)
-            if mark in DETAILS:
-                painter.fillPath(fit.map(DETAILS[mark]()), ink)
+            details = _details(mark)
+            if details is not None:
+                painter.fillPath(fit.map(details), ink)
     painter.end()
     picture.setDevicePixelRatio(ratio)
     return picture
+
+
+def gild_pixmap(tree: str, colour: str, size: int, ratio: float = 2.0) -> QPixmap:
+    """The symbol of the gild named for `tree` ("Oak"), cut as a mark."""
+    return pixmap(GILD + tree, "", colour, size, ratio)

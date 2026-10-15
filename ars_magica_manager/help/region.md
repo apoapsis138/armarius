@@ -45,6 +45,22 @@ player covenant and how it was reached, the first line of its summary
 and the favours still open. A group is listed when it has a neighbour,
 or when the book one of its kinds needs is in play.
 
+A Tribunal book brings a great many neighbours, so the lists can be
+narrowed to one **region** (a place that sits inside no other, such as
+the Black Forest: everything inside it at any depth, and the region
+itself) and to one **kind** (lords, towns, places...). Each list's title
+then says how many it shows of how many. The filter stays while the
+app is open.
+
+<!-- tui -->
+The Region's facts say what the lists are narrowed to ("Showing"). Press `/` (Filter) on any of the lists and choose a region, a kind or
+both; blank both to show everything again.
+<!-- /tui -->
+<!-- gui -->
+Choose them in the two quiet drop-downs after the facts ("Show: Every
+region, Every kind"); set both back to Every to show everything again.
+<!-- /gui -->
+
 ### Other Covenants
 <!-- help: section-region-covenants -->
 

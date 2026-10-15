@@ -84,6 +84,7 @@ class TribunalSheetView(SheetView):
             yield Button("Edit (e)", id="btn-trib-edit", compact=True)
         with TabbedContent(initial=self.INITIAL_TAB):
             yield self._tab("Roster", "tab-trib-roster", self._roster_tab)
+            yield self._tab("History", "tab-trib-history", self._history_tab)
             yield self._tab("Docket", "tab-trib-docket", self._docket_tab)
             yield self._tab("Meeting", "tab-trib-meeting", self._meeting_tab)
             yield self._tab("Peripheral Code", "tab-trib-code", self._code_tab)
@@ -317,6 +318,20 @@ class TribunalSheetView(SheetView):
             lambda: tribunal_sheet.treasury_grid(t).lines(),
             "trib-treasury",
         )
+
+    def _history_tab(self) -> ComposeResult:
+        with VerticalScroll():
+            yield self._static(
+                TRIBUNAL_INFO_SECTION, self._history_text, id="trib-history"
+            )
+
+    def _history_text(self) -> str:
+        history = self.tribunal.history.strip()
+        if not history:
+            return (
+                "[$label]History: not written yet. Edit the Tribunal (e) to tell it.[/]"
+            )
+        return markdown_inline(history)
 
     def _diary_tab(self) -> ComposeResult:
         t = self.tribunal

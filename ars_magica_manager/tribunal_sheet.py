@@ -184,8 +184,18 @@ def roster_grid(saga: Saga, tribunal: Tribunal) -> Grid:
     columns = tribunal_packages.of(tribunal).columns
     attitude_column = 5 + len(columns)
     rows: list[list[str]] = []
+    keys: list[int | None] = []
     styles: dict[tuple[int, int], str] = {}
-    for index, covenant in enumerate(tribunals.covenants_of(saga, tribunal)):
+    spans: set[int] = set()
+    members = tribunals.covenants_of(saga, tribunal)
+    for index, covenant in enumerate(members):
+        if index and members[index - 1].played and not covenant.played:
+            # The troupe's covenants stand above a divider.
+            styles[(len(rows), 0)] = "$label"
+            spans.add(len(rows))
+            rows.append(["Other covenants", *("" for _ in range(5 + len(columns)))])
+            keys.append(None)
+        row = len(rows)
         held = proxies(tribunal, covenant)
         attitude = ""
         if target is not None and covenant is not target:
@@ -193,12 +203,13 @@ def roster_grid(saga: Saga, tribunal: Tribunal) -> Grid:
             attitude = (
                 f"{world.SEAL_GLYPH} {world.signed(score)} {world.attitude_word(score)}"
             )
-            styles[(index, attitude_column)] = f"${world.attitude_colour(score)}"
+            styles[(row, attitude_column)] = f"${world.attitude_colour(score)}"
         if covenant.played:
-            styles[(index, 0)] = "b"
+            styles[(row, 0)] = "b"
+        keys.append(index)
         rows.append(
             [
-                covenant.name,
+                world.marked_name(covenant),
                 covenant.detail,
                 str(world.votes(saga, covenant)),
                 str(covenant_votes(saga, tribunal, covenant)),
@@ -209,6 +220,7 @@ def roster_grid(saga: Saga, tribunal: Tribunal) -> Grid:
         )
     covenants, magi = _unnamed(saga, tribunal)
     if covenants or magi:
+        keys.append(len(members))
         rows.append(
             [
                 f"{covenants} unnamed" if covenants else "Unnamed covenants",
@@ -231,11 +243,12 @@ def roster_grid(saga: Saga, tribunal: Tribunal) -> Grid:
             "Attitude",
         ],
         rows,
-        list(range(len(rows))),
+        keys,
         "No covenant belongs to it yet: choose it as a covenant's Tribunal "
         "in Edit Covenant.",
         styles,
         caps=[22, 6, 4, 5, 8, *(c.cap for c in columns), 0],
+        spans=frozenset(spans),
     )
 
 

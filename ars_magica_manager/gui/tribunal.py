@@ -43,8 +43,9 @@ from ..sections import (
     TRIB_DIARY_SECTION,
     VOTE_SECTION,
 )
+from ..tribunal_packages.rhine import gild_tree
 from ..tribunal_sheet import Grid
-from . import print_sheet
+from . import marks, print_sheet
 from .character_sheet import TextBlock, section
 from .editing import Chooser, RowVerb, Run, verb_buttons
 from .figures import fact_grid, prose
@@ -80,6 +81,7 @@ class TribunalPage(QWidget):
         self.ops = tribunal_forms.tribunal_ops(saga, tribunal)
         self.ops[BUSINESS_SECTION] = self._with_opening_card(self.ops[BUSINESS_SECTION])
         self.codex.add("Roster", "tribunal", self._roster())
+        self.codex.add("History", "year", self._history())
         self.codex.add("Docket", "worksheet", self._docket())
         self.codex.add("Meeting", "tribunal", self._meeting())
         self.codex.add("Peripheral Code", "lab_text", self._code())
@@ -129,8 +131,12 @@ class TribunalPage(QWidget):
             if on_choose is not None:
                 on_choose(row)
             elif text := grid.row_text(row):
-                # A list with no inspector of its own shows its row in full.
-                self.codex.inspect(grid.rows[grid.keys.index(row)][0], title, text)
+                # A list with no inspector of its own shows its row in full,
+                # a gild with its symbol.
+                name = grid.rows[grid.keys.index(row)][0]
+                tree = gild_tree(name) if grid.columns[0] == "Gild" else None
+                symbol = marks.gild_pixmap(tree, p["heading"], 96) if tree else None
+                self.codex.inspect(name, title, text, symbol)
 
         body = (
             table_view(grid.table(), p, choose) if grid.rows else _none(grid.empty, p)
@@ -247,6 +253,20 @@ class TribunalPage(QWidget):
                 tribunal_sheet.magi_grid(saga, t),
                 None,
                 self._show_magus,
+            ),
+        )
+
+    def _history(self) -> QWidget:
+        p, history = self.p, self.tribunal.history.strip()
+        return scrolling_page(
+            p,
+            section(
+                "History",
+                p,
+                prose(history, p)
+                if history
+                else _none("Not written yet: edit the Tribunal to tell it.", p),
+                edits={"Edit Tribunal": self._edit},
             ),
         )
 
