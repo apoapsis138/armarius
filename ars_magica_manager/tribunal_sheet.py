@@ -451,6 +451,15 @@ def code_title(tribunal: Tribunal) -> str:
     return f"Peripheral Code ({len(tribunal.rulings)})"
 
 
+def customs_note(tribunal: Tribunal) -> str:
+    """What the Tribunal's customs add, for its Peripheral Code; "" under
+    the core rules."""
+    package = tribunal_packages.of(tribunal)
+    if package is tribunal_packages.CORE:
+        return ""
+    return f"{tribunal_packages.label(package)}. {package.about}"
+
+
 def code_grid(tribunal: Tribunal) -> Grid:
     """The rulings in force: the year made, what each says, and its case."""
     rows = [

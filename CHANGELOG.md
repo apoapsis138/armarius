@@ -46,6 +46,18 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.70.0 — 2026-10-15
+
+- Four more Tribunals' customs. Normandy (The Lion and the Lily): a
+  Tenure tab recording who holds each vis source under the Perthean
+  Compact (seisin, legacy, tropaeum, luctatio or interim lease) and until
+  when, and a Tourney tab where each team's points give its rank, prize
+  pawns and any named Siege. Transylvania (Against the Dark): each
+  covenant's privilege class, entered with the roster's Edit and shown in
+  a Class column. Provence (Faith & Flame) and Hibernia (The Contested
+  Isle) add no lists: their customs are a note on the Peripheral Code
+  tab, as they now are for every region.
+
 ## 2.69.0 — 2026-10-15
 
 - The Theban Tribunal's customs (The Sundered Eagle): a Tokens and Archai

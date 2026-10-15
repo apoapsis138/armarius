@@ -41,6 +41,9 @@ class TribunalSheetView(SheetView):
         width: 1fr;
         height: auto;
     }
+    TribunalSheetView #trib-customs {
+        margin-bottom: 1;
+    }
     """
 
     INITIAL_TAB = "tab-trib-roster"
@@ -195,6 +198,12 @@ class TribunalSheetView(SheetView):
 
     def _code_tab(self) -> ComposeResult:
         t = self.tribunal
+        if tribunal_sheet.customs_note(t):
+            yield self._static(
+                TRIBUNAL_INFO_SECTION,
+                lambda: escape(tribunal_sheet.customs_note(t)),
+                id="trib-customs",
+            )
         yield from self._grid_section(
             CODE_SECTION,
             _CASES,

@@ -38,6 +38,18 @@ what the old ones recorded, hidden, and switching back shows it again.
   tokens and ostracise with shards, and it elects its archai at each
   meeting; the sheet gains a Tokens and Archai tab, and Your votes counts
   the troupe's tokens.
+- **Normandy: Vis tenure** (The Lion and the Lily): every vis source is
+  held on a tenure of the Perthean Compact, and the covenants' teams
+  contest the Hermetic Tourney after each meeting; the sheet gains Tenure
+  and Tourney tabs.
+- **Transylvania: Privileges** (Against the Dark): each covenant holds
+  one of five privilege classes; the roster gains a Class column, entered
+  with the roster's Edit beside its proxies.
+- **Provence: Open founding** (Faith & Flame): any magus may found a
+  covenant without the Tribunal's leave. A rule, not a list: it shows as
+  a note on the Peripheral Code tab.
+- **Hibernia: Notes** (The Contested Isle): the core rules, with its
+  customs noted on the Peripheral Code tab.
 
 Older sagas typed a covenant's Tribunal as a name. Each name became a
 Tribunal of its own when the saga was first opened by this version, and
@@ -218,6 +230,49 @@ vote until then). Add a magus, edit their counts or delete the entry.
 
 The Tribunal's offices: who holds each (or that it is vacant), when
 their term ends, and its duties. The archai are elected at each meeting.
+
+## Tenure tab
+<!-- help: tab-trib-tenure -->
+
+A Normandy Tribunal's record of who holds each vis source under the
+Perthean Compact. Only a Tribunal following the Normandy customs has
+this tab.
+
+### Vis Tenure
+<!-- help: section-trib-tenure -->
+
+Each vis source, who holds it (a covenant of the Tribunal, or the
+Tribunal itself), its tenure and when that runs out, in warning colour
+once the year has come:
+
+- **Seisin**: within a day's return march of the covenant's council
+  chamber, held while it qualifies.
+- **Legacy**: granted by vote for seven years; renewing it needs another
+  vote, and a failed renewal makes it a tropaeum.
+- **Tropaeum**: the Tribunal's, leased for seven years as a Tourney prize.
+- **Luctatio**: the Tribunal's, harvested by any magus who dares; winning
+  it gives no right to it afterwards.
+- **Interim lease**: reported by its finders, who may harvest it until
+  the next meeting.
+
+Add a source, edit it or delete it.
+
+## Tourney tab
+<!-- help: tab-trib-tourney -->
+
+A Normandy Tribunal's Hermetic Tourney, held after each meeting. Only a
+Tribunal following the Normandy customs has this tab.
+
+### The Tourney
+<!-- help: section-trib-tourney -->
+
+Each team's result at each Tourney, the latest first. Enter a team's
+points (its starting tally and every event's); its rank, its prize pawns
+and any named rank (the Sieges of Normandy, Valor, Notatus, Shame and
+Alms, each a Hermetic Reputation of 2 for seven years) are worked out.
+Teams level on points keep the order they were entered, since the book
+breaks ties by seniority: enter the senior first. The 21st team keeps
+6 pawns and gives 6 to the teams below it.
 
 ## Diary tab
 <!-- help: tab-trib-diary -->

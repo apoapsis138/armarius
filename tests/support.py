@@ -149,6 +149,7 @@ NODES: dict[str, tuple[str, ...]] = {
     "sketch_covenant": ("covenant", "cov_sketch"),
     "tribunal": ("tribunal", "rhine"),
     "theban_tribunal": ("tribunal", "thebes"),
+    "normandy_tribunal": ("tribunal", "normandy"),
     "book_group": ("book_group",),
     "saga_content": ("saga_content",),
 }
@@ -422,6 +423,36 @@ def everything_saga() -> Saga:
                                 "duties": "The Tribunal's ceremonies and oaths",
                             },
                             {"office": "Strategos", "holder_id": None},
+                        ],
+                    }
+                },
+            ),
+            Tribunal(
+                id="normandy",
+                name="Normandy",
+                next_year=1227,
+                meeting_place="Confluensis",
+                package="normandy",
+                package_data={
+                    "normandy": {
+                        "tenures": [
+                            {
+                                "source": "The Weeping Oak (3 Herbam)",
+                                "holder_id": None,
+                                "tenure": "tropaeum",
+                                "until": 1220,
+                                "notes": "Won at the Tourney",
+                            },
+                            {
+                                "source": "Saint Michael's Spring (2 Aquam)",
+                                "holder_id": None,
+                                "tenure": "luctatio",
+                            },
+                        ],
+                        "tourney": [
+                            {"year": 1220, "team": "Fudarus", "points": 30},
+                            {"year": 1220, "team": "Mont Saint Michel", "points": 45},
+                            {"year": 1220, "team": "Visitors of Iberia", "points": 30},
                         ],
                     }
                 },

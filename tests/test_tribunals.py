@@ -21,6 +21,8 @@ from ars_magica_manager import tribunals as trib
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Choose, Confirm, Form, Refuse
 from ars_magica_manager.models import Covenant, Saga, Tribunal, TribunalDiaryEntry
+from ars_magica_manager.tribunal_packages.normandy import lapsed, prize
+from ars_magica_manager.tribunal_packages.normandy import tenures as normandy_tenures
 from ars_magica_manager.tribunal_packages.rhine import gilds as rhine_gilds
 from ars_magica_manager.tribunal_packages.theban import magi as theban_magi
 from ars_magica_manager.tribunal_packages.theban import standing as tokens_standing
@@ -101,7 +103,7 @@ def test_deleting_a_tribunal_names_and_frees_its_covenants():
         "Keep, Fengheld will belong to no Tribunal; nothing else about them changes."
     ]
     trib.delete(saga, rhine)
-    assert [t.id for t in saga.tribunals] == ["thebes"]
+    assert [t.id for t in saga.tribunals] == ["thebes", "normandy"]
     assert {c.tribunal_id for c in saga.covenants} == {None}
 
 
@@ -250,6 +252,56 @@ def test_a_theban_tribunal_counts_tokens_and_marks_the_ostracised():
     assert tokens_standing(saga, thebes, theban_magi(thebes)[1]) == ""
 
 
+def test_normandy_ranks_its_tourney_and_marks_lapsed_tenures():
+    saga = everything_saga()
+    normandy = saga.tribunal("normandy")
+    assert normandy is not None
+    package = tribunal_packages.of(normandy)
+    assert package.meeting_steps == ("tourney",)
+    tourney = package.tabs[1].lists[0].grid(saga, normandy)
+    # The highest points first; teams level keep the order entered.
+    assert [(r[1], r[2], r[4], r[5]) for r in tourney.rows] == [
+        ("1", "Mont Saint Michel", "31", "Siege of Normandy"),
+        ("2", "Fudarus", "24", "Siege of Valor"),
+        ("3", "Visitors of Iberia", "18", ""),
+    ]
+    assert tourney.keys == [1, 0, 2]
+    assert (prize(21), prize(22)) == ("6, and 6 to give", "0")
+    saga.current_year = 1220
+    assert [lapsed(saga, t) for t in normandy_tenures(normandy)] == [True, False]
+    tenure = package.tabs[0].lists[0].grid(saga, normandy)
+    assert tenure.rows[0][1:4] == ["the Tribunal", "Tropaeum", "1220"]
+
+
+def test_transylvania_enters_a_class_through_the_roster():
+    saga = everything_saga()
+    rhine = saga.tribunals[0]
+    rhine.package = "transylvania"
+    ops = tribunal_forms.tribunal_ops(saga, rhine)
+    form = ops["section-trib-roster"].edit(0)
+    assert isinstance(form, Form)
+    assert form.title == "Keep at the Tribunal"
+    assert [f.label for f in form.fields()] == ["Proxies held", "Privilege class"]
+    form.apply({"proxies": 1, "privilege": "Cives"})
+    roster = tribunal_sheet.roster_grid(saga, rhine)
+    assert roster.columns[5] == "Class"
+    assert [row[5] for row in roster.rows] == ["Cives", ""]
+    form.apply({"proxies": 1, "privilege": None})
+    assert rhine.package_data["transylvania"]["classes"] == {}
+
+
+def test_a_package_without_data_is_a_note_on_the_peripheral_code():
+    saga = everything_saga()
+    rhine = saga.tribunals[0]
+    assert tribunal_sheet.customs_note(Tribunal("x", "X")) == ""
+    for key, words in (("provence", "found a covenant"), ("hibernia", "Hill of Tara")):
+        rhine.package = key
+        assert words in tribunal_sheet.customs_note(rhine)
+        assert tribunal_packages.of(rhine).tabs == ()
+    saga.books_in_play = ["F&F"]
+    assert [p.key for p in tribunal_packages.offered(saga)] == ["core", "provence"]
+
+
 def _export(saga: Saga) -> dict:
     return transfer.export_data(saga, saga.covenants[0])
 
@@ -305,12 +357,13 @@ async def test_the_region_holds_each_tribunal_and_the_covenants_not_played():
         assert [n.data for n in region.children] == [
             (NodeKind.TRIBUNAL, "rhine"),
             (NodeKind.TRIBUNAL, "thebes"),
+            (NodeKind.TRIBUNAL, "normandy"),
             (NodeKind.COVENANT, "lone"),
         ]
         assert [n.data for n in region.children[0].children] == [
             (NodeKind.COVENANT, "cov_sketch")
         ]
-        assert region.children[2].allow_expand is False  # a line with nothing
+        assert region.children[3].allow_expand is False  # a line with nothing
 
 
 async def test_new_tribunal_opens_it_and_d_deletes_it():
@@ -320,13 +373,13 @@ async def test_new_tribunal_opens_it_and_d_deletes_it():
         workspace = await _workspace(pilot, app)
         workspace.action_create_tribunal()
         await pilot.pause()
-        app.screen.query_one("#fld-name").value = "Normandy"
+        app.screen.query_one("#fld-name").value = "Provence"
         app.screen.query_one("#btn-save").press()
         assert await wait_until(
             pilot,
             lambda: (
                 (view := workspace._tribunal_sheet_view) is not None
-                and view.tribunal.name == "Normandy"
+                and view.tribunal.name == "Provence"
             ),
         )
         workspace.query_one("#nav-tree", Tree).focus()
@@ -337,10 +390,7 @@ async def test_new_tribunal_opens_it_and_d_deletes_it():
             pilot,
             lambda: (
                 [t.name for t in storage.load_saga("test_saga").tribunals]
-                == [
-                    "Rhine",
-                    "Theban",
-                ]
+                == ["Rhine", "Theban", "Normandy"]
             ),
         )
 
@@ -441,4 +491,4 @@ def test_the_desktop_shows_a_tribunal_and_lists_them_on_the_saga():
     ]
     saga_page = SagaPage(saga, PALETTES[0], lambda _id: None)
     titles = [label.text() for label in saga_page.findChildren(QLabel)]
-    assert any("Tribunals (2)" in title for title in titles)
+    assert any("Tribunals (3)" in title for title in titles)

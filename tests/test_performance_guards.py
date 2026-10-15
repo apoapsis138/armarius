@@ -98,6 +98,7 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "sketch_covenant": 50,
     "tribunal": 40,
     "theban_tribunal": 40,
+    "normandy_tribunal": 40,
 }
 
 

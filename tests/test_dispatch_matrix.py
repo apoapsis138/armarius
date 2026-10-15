@@ -51,6 +51,7 @@ _SHEET_VIEW_ATTR = {
     "sketch_covenant": "_covenant_sheet_view",
     "tribunal": "_tribunal_sheet_view",
     "theban_tribunal": "_tribunal_sheet_view",
+    "normandy_tribunal": "_tribunal_sheet_view",
 }
 
 

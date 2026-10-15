@@ -150,14 +150,14 @@
    1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Gilds  6 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+  Rhine: Gilds. Its covenants band together in gilds, with dues; notice of a case is wanted a year
+  before the meeting.
+
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Peripheral Code (1)
 
         Ruling           Year  Says                           Case
       ○ Gild membership  1214  Any covenant may join a gild.
-
-
-
 
 
 

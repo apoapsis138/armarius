@@ -238,9 +238,12 @@ class TribunalPage(QWidget):
         )
 
     def _code(self) -> QWidget:
-        t = self.tribunal
+        p, t = self.p, self.tribunal
+        note = tribunal_sheet.customs_note(t)
+        customs = [section("Customs", p, TextBlock(escape(note), p))] if note else []
         return scrolling_page(
-            self.p,
+            p,
+            *customs,
             self._grid(
                 tribunal_sheet.code_title(t), tribunal_sheet.code_grid(t), CODE_SECTION
             ),

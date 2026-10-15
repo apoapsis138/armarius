@@ -52,6 +52,7 @@ SHEETS = {
     "saga_content": "_saga_content_view",
     "tribunal": "_tribunal_sheet_view",
     "theban_tribunal": "_tribunal_sheet_view",
+    "normandy_tribunal": "_tribunal_sheet_view",
 }
 
 

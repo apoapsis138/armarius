@@ -20,6 +20,7 @@ from typing import Any
 
 from .. import sourcebooks
 from ..commands import SectionOps
+from ..form_spec import DialogField
 from ..grids import Grid
 from ..models import CORE_PACKAGE, Covenant, Saga, Tribunal
 
@@ -27,11 +28,15 @@ from ..models import CORE_PACKAGE, Covenant, Saga, Tribunal
 @dataclass(frozen=True)
 class RosterColumn:
     """A column a package adds to the roster: its title, a covenant's
-    entry in it, and how wide it may be on a padded line."""
+    entry in it, and how wide it may be on a padded line. A column the
+    storyguide enters has the field the roster's Edit shows for it, and
+    how to keep what is entered."""
 
     title: str
     value: Callable[[Saga, Tribunal, Covenant], str]
     cap: int = 16
+    field: Callable[[Saga, Tribunal, Covenant], DialogField] | None = None
+    save: Callable[[Tribunal, Covenant, Any], None] | None = None
 
 
 @dataclass(frozen=True)
@@ -138,4 +143,4 @@ def entries(tribunal: Tribunal, key: str, name: str) -> list[dict[str, Any]]:
 
 
 # The packages register themselves as they are imported.
-from . import rhine, theban  # noqa: F401
+from . import hibernia, normandy, provence, rhine, theban, transylvania  # noqa: F401

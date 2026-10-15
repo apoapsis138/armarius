@@ -150,13 +150,13 @@
    1 Roster  2 Docket  3 Peripheral Code  4 Treasury  5 Tokens and Archai  6 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+  Theban: Tokens. Its magi vote with tokens and ostracise with shards, and elect its archai at each
+  meeting.
+
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Peripheral Code (0)
 
       No rulings recorded: the Peripheral Code's rulings go here.
-
-
-
 
 
 

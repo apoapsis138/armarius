@@ -185,7 +185,9 @@ def _proxies_problem(values: dict[str, Any]) -> str | None:
 
 def roster_ops(saga: Saga, tribunal: Tribunal) -> SectionOps:
     """The roster's Edit: the proxies the chosen covenant carries to the
-    next meeting. The unrecorded covenants' row holds none."""
+    next meeting, and whatever the Tribunal's customs enter for it (its
+    privilege class, in Transylvania). The unrecorded covenants' row
+    holds none."""
 
     def edit(index: int) -> Command:
         members = tribunals.covenants_of(saga, tribunal)
@@ -196,17 +198,12 @@ def roster_ops(saga: Saga, tribunal: Tribunal) -> SectionOps:
                 "it some.",
             )
         covenant = members[index]
+        entered = [
+            c for c in tribunal_packages.of(tribunal).columns if c.field is not None
+        ]
 
-        def apply(values: dict[str, Any]) -> None:
-            held = values.get("proxies") or 0
-            if held:
-                tribunal.proxies[covenant.id] = held
-            else:
-                tribunal.proxies.pop(covenant.id, None)
-
-        return Form(
-            f"Proxies held by {escape(covenant.name)}",
-            lambda: [
+        def fields() -> list[DialogField]:
+            shown = [
                 DialogField(
                     "proxies",
                     "Proxies held",
@@ -215,7 +212,26 @@ def roster_ops(saga: Saga, tribunal: Tribunal) -> SectionOps:
                     hint="The sigils it carries for absent magi at the next "
                     "meeting: each is a vote.",
                 )
-            ],
+            ]
+            return shown + [
+                c.field(saga, tribunal, covenant) for c in entered if c.field
+            ]
+
+        def apply(values: dict[str, Any]) -> None:
+            held = values.get("proxies") or 0
+            if held:
+                tribunal.proxies[covenant.id] = held
+            else:
+                tribunal.proxies.pop(covenant.id, None)
+            for column in entered:
+                if column.field is not None and column.save is not None:
+                    key = column.field(saga, tribunal, covenant).key
+                    column.save(tribunal, covenant, values.get(key))
+
+        name = escape(covenant.name)
+        return Form(
+            f"{name} at the Tribunal" if entered else f"Proxies held by {name}",
+            fields,
             apply,
             validate=_proxies_problem,
         )

@@ -253,6 +253,20 @@ OPENERS: dict[str, Opener] = {
             lambda ws: ws._core_verb("section-trib-tokens", "add"), "trib-tokens-list"
         ),
     ),
+    "add tenure": Opener(
+        "normandy_tribunal",
+        _pick(
+            lambda ws: ws._core_verb("section-trib-tenure", "add"), "trib-tenure-list"
+        ),
+    ),
+    "edit tourney result": Opener(
+        "normandy_tribunal",
+        _pick(
+            lambda ws: ws._core_verb("section-trib-tourney", "edit"),
+            "trib-tourney-list",
+            2,
+        ),
+    ),
     "edit office": Opener(
         "theban_tribunal",
         _pick(

@@ -368,16 +368,16 @@ CONTRACTS: dict[str, Contract] = {
     "create tribunal": Contract(
         prefill={"Name": "", "Meets every (years)": "7"},
         edits={
-            "Name": "Normandy",
+            "Name": "Provence",
             "Next meeting (year)": "1227",
-            "Meeting place": "Fudarus",
+            "Meeting place": "Avignon",
         },
         saved=lambda s: [
             (t.name, t.next_year, t.meeting_place, t.meets_every)
             for t in s.tribunals
-            if t.name == "Normandy"
+            if t.name == "Provence"
         ],
-        expected=[("Normandy", 1227, "Fudarus", 7)],
+        expected=[("Provence", 1227, "Avignon", 7)],
         invalid=[{"Name": ""}, {"Meets every (years)": "0"}, {"Magi in all": "-2"}],
     ),
     "edit tribunal": Contract(
@@ -465,6 +465,30 @@ CONTRACTS: dict[str, Contract] = {
         expected=3,
         invalid={"Shards": "-1"},
         shown={"#trib-tokens-list": "3"},
+    ),
+    "add tenure": Contract(
+        prefill={"Vis source": "", "Until (year)": "", "Notes": ""},
+        edits={
+            "Vis source": "The Grey Stone",
+            "Tenure": "legacy",
+            "Until (year)": "1227",
+        },
+        saved=lambda s: s.tribunal("normandy").package_data["normandy"]["tenures"][-1][
+            "tenure"
+        ],
+        expected="legacy",
+        invalid={"Vis source": ""},
+        shown={"#trib-tenure-list": "The Grey Stone"},
+    ),
+    "edit tourney result": Contract(
+        prefill={"Year": "1220", "Team": "Visitors of Iberia", "Points": "30"},
+        edits={"Points": "50"},
+        saved=lambda s: s.tribunal("normandy").package_data["normandy"]["tourney"][2][
+            "points"
+        ],
+        expected=50,
+        invalid={"Points": "-1"},
+        shown={"#trib-tourney-list": "50"},
     ),
     "edit office": Contract(
         prefill={"Office": "Strategos"},
