@@ -447,6 +447,53 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"Name": ""}, {"Income (pounds a year)": "-5"}],
         shown={"#nb-fairs-list": "100 pounds"},
     ),
+    "edit church": Contract(
+        prefill={
+            "Church": "Archbishop's cathedral",
+            "Order": "The secular clergy",
+            "Worship since (year)": "1180",
+        },
+        edits={"Church": "Monastery or nunnery", "Order": "Benedictine"},
+        saved=lambda s: s.neighbour("cologne").details["order"],
+        expected="Benedictine",
+        invalid=[{"Name": ""}, {"Abandoned in (year)": "1100"}],
+        shown={"#nb-kind-facts": "Monastery or nunnery"},
+    ),
+    "add relic": Contract(
+        prefill={"Relic": "", "Faith Points": "1"},
+        edits={"Relic": "A finger of St. Ursula", "Faith Points": "2"},
+        saved=lambda s: s.neighbour("cologne").details["relics"][-1]["faith"],
+        expected=2,
+        invalid=[{"Relic": ""}, {"Faith Points": "-1"}],
+        shown={"#nb-relics-list": "A finger of St. Ursula"},
+    ),
+    "add faculty": Contract(
+        prefill={"Faculty": "Arts"},
+        edits={"Faculty": "Medicine", "Rector": "Master Hugo", "Endowed chairs": "6"},
+        saved=lambda s: s.neighbour("studium").details["faculties"][-1]["rector"],
+        expected="Master Hugo",
+        invalid={"Endowed chairs": "-1"},
+        shown={
+            "#nb-faculties-list": "Master Hugo",
+            "#nb-kind-facts": "Doctor in Medicine",
+        },
+    ),
+    "edit master": Contract(
+        prefill={"Name": "Master Gerard", "Licence": "Doctor", "Faculty": "Theology"},
+        edits={"Licence": "Magister in Artibus", "Faculty": "Arts"},
+        saved=lambda s: s.neighbour("studium").details["masters"][0]["licence"],
+        expected="Magister in Artibus",
+        invalid={"Name": ""},
+        shown={"#nb-masters-list": "Magister in Artibus"},
+    ),
+    "edit faction": Contract(
+        prefill={"Faction": "Hedge coven", "Members": "7"},
+        edits={"Decides by": "A council", "Offers": "Herb-lore"},
+        saved=lambda s: s.neighbour("coven").details["offers"],
+        expected="Herb-lore",
+        invalid={"Members": "-3"},
+        shown={"#nb-kind-facts": "A council"},
+    ),
     "edit tribunal": Contract(
         prefill={
             "Name": "Rhine",

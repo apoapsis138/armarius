@@ -102,6 +102,9 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "region": 50,
     "neighbour": 40,
     "town": 40,
+    "church": 40,
+    "university": 40,
+    "faction": 40,
 }
 
 

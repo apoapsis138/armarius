@@ -97,7 +97,11 @@ needs), then a plain form:
 - **Name**: the only field required.
 - What its kind adds: a lord's title, wealth, manors and seat (see
   [A lord](help:tab-nb-fief)); a town's charter, council and population
-  (see [A town](help:tab-nb-town)).
+  (see [A town](help:tab-nb-town)); a church's kind and order (see
+  [A church](help:tab-nb-church)); a university's kind and fees (see
+  [A university](help:tab-nb-studium)); a faction's kind, how it
+  decides, its members, rules, wants and offers (see
+  [A faction](help:tab-nb-faction)).
 - **Summary**: a paragraph on who they are and what they want.
 - **Detail**: a line, a sketch, or written in full.
 - **Ruler or leader**: a name.
@@ -202,3 +206,74 @@ Contraction, x0.8; 2 Stagnation, x0.95; 3 to 8 Status Quo; 9 Growth,
 x1.05; 10 to 19 Expansion, x1.2; 20 or more a Boom, x1.5), and Keep
 records the new income and the roll. Add, edit or delete a fair or
 market.
+
+# A church
+<!-- help: tab-nb-church -->
+
+A church (The Church) has a kind (a chapel, a parish church, a large
+urban church, a monastery or nunnery, a bishop's or an archbishop's
+cathedral) and an order, entered on New Church or Edit. Its Church tab
+shows its Dominion aura: a chapel's 3, a parish church's 4, any greater
+church's 5.
+
+With Realms of Power: The Divine in play, a church also records the
+year worship began there, and the year it was abandoned. With the
+**Dominion growth** Rule Option on (Saga Content), its aura grows with
+the years of worship instead: 3 when consecrated, 4 after a year, 5
+after a decade, never above its kind's; once worship stops it fades to
+nothing over as long as the site was in use; and its greatest relic
+raises it by 1 for each Faith Point above 5.
+
+**See also:** [A neighbour](help:neighbour)
+
+## Relics
+<!-- help: section-nb-relics -->
+
+The church's relics, each with its saint and its Faith Points. A
+relic's Divine Might is 10 for each Faith Point, and whoever bears it
+gains as much Magic Resistance. With Realms of Power: The Divine in
+play, touching a relic is worth +1 to an invocation of its saint (its
+Touched column). Add, edit or delete one.
+
+# A university
+<!-- help: tab-nb-studium -->
+
+A university or school (Art & Academe) has a kind (a university, or a
+cathedral, monastic, urban or parish school) and its fees, entered on
+New University or Edit. Its Studium tab shows the fees (blank for its
+kind's: 4 pounds a year at a university, with books, 1 at a cathedral
+school), the highest an Academic Ability can be taught there (a
+university has no limit, a cathedral school 6, a rural parish school 2)
+and, for a university, the degrees its faculties grant.
+
+**See also:** [A neighbour](help:neighbour)
+
+## Faculties
+<!-- help: section-nb-faculties -->
+
+The university's faculties (Arts, Medicine, Law, Theology), each with
+its rector, its endowed chairs (six to twelve) and how many of the
+masters listed teach in it. A Faculty of Arts grants the Baccalaureus
+and the Magister in Artibus; each higher faculty its Doctorate. Add,
+edit or delete one.
+
+## Masters
+<!-- help: section-nb-masters -->
+
+Its masters, each named or chosen from the saga's characters, with
+the licence he holds and his faculty. A licence starts its holder's
+Good Academic Reputation: 1 for a Baccalaureus, 2 for a Magister in
+Artibus or a cathedral school master, 3 for a Doctor. Add, edit or
+delete one.
+
+# A faction
+<!-- help: tab-nb-faction -->
+
+A faction (the core rules) is a hedge coven, a faerie court, a gild, a
+family or any other company with a will of its own. New Faction and
+Edit record what kind it is, how it decides (its leader, a council, or
+a vote of all), how many members it has, its rules, what it wants and
+what it offers; its Faction tab shows them. Members who are characters
+can be linked on its Standing tab, and the Faction tab counts them.
+
+**See also:** [A neighbour](help:neighbour)

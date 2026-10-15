@@ -3,7 +3,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      The Region
 
-      Player covenant: Keep                    Neighbours:      4, 1 warm, 1 wary
+      Player covenant: Keep                    Neighbours:      5, 1 warm, 1 wary
       Tribunal:        Rhine                   Other covenants: 1
       Customs:         Rhine: Gilds            Next Tribunal:   Summer 1228
 
@@ -27,14 +27,14 @@
     ▼ The Church (1)
 
         Name                   Kind    Ruler or leader  Attitude     Detail
-      ○ Archbishop of Cologne  Church                   ◉ 0 Neutral  Line         ▁▁
+      ○ Archbishop of Cologne  Church                   ◉ 0 Neutral  Line         ▅▅
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Universities (0)
+    ▼ Universities (1)
 
-      None yet: add a university here.
+        Name                    Kind        Ruler or leader  Attitude     Detail
+      ○ The Studium of Cologne  University                   ◉ 0 Neutral  Sketch
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 
   ▌
   ▌  Choose a neighbour to see how it stands.

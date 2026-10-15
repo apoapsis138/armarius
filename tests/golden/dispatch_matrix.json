@@ -1396,8 +1396,8 @@
       "active": "section-region-universities",
       "keys": {
         "a": "FieldsDialog: New University",
-        "e": "(nothing)",
-        "d": "(nothing)",
+        "e": "FieldsDialog: Edit The Studium of Cologne",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -1513,6 +1513,172 @@
         "e": "FieldsDialog: Edit a Fair or Market",
         "d": "ConfirmScreen",
         "m": "ConfirmScreen",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-attitudes": {
+      "active": "section-attitudes",
+      "keys": {
+        "a": "FieldsDialog: Add a Reason",
+        "e": "FieldsDialog: Attitude toward Keep",
+        "d": "notice: Where it started can't be deleted: edit it to change it.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-favours": {
+      "active": "section-favours",
+      "keys": {
+        "a": "FieldsDialog: Add a Favour",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-links": {
+      "active": "section-links",
+      "keys": {
+        "a": "ChooseScreen: Link to what?",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    }
+  },
+  "church": {
+    "PinnedCollapsible#section-nb-info": {
+      "active": "section-nb-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Archbishop of Cologne",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-relics": {
+      "active": "section-nb-relics",
+      "keys": {
+        "a": "FieldsDialog: Add a Relic",
+        "e": "FieldsDialog: Edit a Relic",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-attitudes": {
+      "active": "section-attitudes",
+      "keys": {
+        "a": "FieldsDialog: Add a Reason",
+        "e": "FieldsDialog: Attitude toward Keep",
+        "d": "notice: Where it started can't be deleted: edit it to change it.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-favours": {
+      "active": "section-favours",
+      "keys": {
+        "a": "FieldsDialog: Add a Favour",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-links": {
+      "active": "section-links",
+      "keys": {
+        "a": "ChooseScreen: Link to what?",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    }
+  },
+  "university": {
+    "PinnedCollapsible#section-nb-info": {
+      "active": "section-nb-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit The Studium of Cologne",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-faculties": {
+      "active": "section-nb-faculties",
+      "keys": {
+        "a": "FieldsDialog: Add a Faculty",
+        "e": "FieldsDialog: Edit a Faculty",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-masters": {
+      "active": "section-nb-masters",
+      "keys": {
+        "a": "FieldsDialog: Add a Master",
+        "e": "FieldsDialog: Edit a Master",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-attitudes": {
+      "active": "section-attitudes",
+      "keys": {
+        "a": "FieldsDialog: Add a Reason",
+        "e": "FieldsDialog: Attitude toward Keep",
+        "d": "notice: Where it started can't be deleted: edit it to change it.",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-favours": {
+      "active": "section-favours",
+      "keys": {
+        "a": "FieldsDialog: Add a Favour",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-links": {
+      "active": "section-links",
+      "keys": {
+        "a": "ChooseScreen: Link to what?",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    }
+  },
+  "faction": {
+    "PinnedCollapsible#section-nb-info": {
+      "active": "section-nb-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit The Black Pool Coven",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "TabPane#tab-nb-faction": {
+      "active": "section-nb-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit The Black Pool Coven",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
         "slash": "(disabled)"
       }
     },

@@ -118,6 +118,21 @@ OPTIONS: tuple[RuleOption, ...] = (
         ),
         book="Covenants",
     ),
+    RuleOption(
+        key="dominion_growth",
+        label="Dominion growth",
+        effect=(
+            "A church's aura grows with the years of worship (3, then 4 after "
+            "a year, 5 after a decade), fades once worship stops, and rises "
+            "by 1 for each Faith Point above 5 in its greatest relic."
+        ),
+        source=(
+            "Realms of Power: The Divine, Chapter Two: Heaven and Earth, "
+            "Creating a Dominion Aura (https://www.redcap.org/page/Realms_of"
+            "_Power:_The_Divine_Open_Content#The_Dominion)"
+        ),
+        book="RoP:D",
+    ),
 )
 
 OPTIONS_BY_KEY: dict[str, RuleOption] = {option.key: option for option in OPTIONS}

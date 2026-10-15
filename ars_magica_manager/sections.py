@@ -138,6 +138,10 @@ CASTLES_SECTION = "section-nb-castles"
 GRATITUDE_SECTION = "section-nb-gratitude"
 GUILDS_SECTION = "section-nb-guilds"
 FAIRS_SECTION = "section-nb-fairs"
+#: A church's relics; a university's faculties and masters.
+RELICS_SECTION = "section-nb-relics"
+FACULTIES_SECTION = "section-nb-faculties"
+MASTERS_SECTION = "section-nb-masters"
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     ATTITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     FAVOURS_SECTION: frozenset({"add", "edit", "remove"}),
@@ -166,4 +170,7 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     GRATITUDE_SECTION: frozenset({"add", "edit", "remove"}),
     GUILDS_SECTION: frozenset({"add", "edit", "remove"}),
     FAIRS_SECTION: frozenset({"add", "edit", "remove"}),
+    RELICS_SECTION: frozenset({"add", "edit", "remove"}),
+    FACULTIES_SECTION: frozenset({"add", "edit", "remove"}),
+    MASTERS_SECTION: frozenset({"add", "edit", "remove"}),
 }

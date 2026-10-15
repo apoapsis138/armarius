@@ -14,7 +14,16 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
-from . import lords, sourcebooks, storage, towns, world
+from . import (
+    churches,
+    factions,
+    lords,
+    sourcebooks,
+    storage,
+    towns,
+    universities,
+    world,
+)
 from .character_sheet import Fact
 from .form_spec import DialogField
 from .models import Covenant, Neighbour, Saga
@@ -100,11 +109,39 @@ for _kind in (
         towns.facts,
         towns.TAB,
     ),
-    NeighbourKind("church", "Church", "a bishop, an abbey, a parish", "church", "TC"),
     NeighbourKind(
-        "university", "University", "a studium and its masters", "universities", "A&A"
+        "church",
+        "Church",
+        "a bishop, an abbey, a parish",
+        "church",
+        "TC",
+        churches.fields,
+        churches.problem,
+        churches.facts,
+        churches.TAB,
     ),
-    NeighbourKind("faction", "Faction", "a gild, a hedge coven, a family", "factions"),
+    NeighbourKind(
+        "university",
+        "University",
+        "a studium and its masters",
+        "universities",
+        "A&A",
+        universities.fields,
+        universities.problem,
+        universities.facts,
+        universities.TAB,
+    ),
+    NeighbourKind(
+        "faction",
+        "Faction",
+        "a gild, a hedge coven, a family",
+        "factions",
+        "",
+        factions.fields,
+        factions.problem,
+        factions.facts,
+        factions.TAB,
+    ),
     NeighbourKind("threat", "Threat", "a story that grows if left alone", "threats"),
 ):
     register(_kind)

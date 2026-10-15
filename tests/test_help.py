@@ -56,6 +56,9 @@ SHEETS = {
     "region": "_region_sheet_view",
     "neighbour": "_neighbour_sheet_view",
     "town": "_neighbour_sheet_view",
+    "church": "_neighbour_sheet_view",
+    "university": "_neighbour_sheet_view",
+    "faction": "_neighbour_sheet_view",
 }
 
 

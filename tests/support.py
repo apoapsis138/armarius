@@ -154,6 +154,9 @@ NODES: dict[str, tuple[str, ...]] = {
     "region": ("region",),
     "neighbour": ("neighbour", "gottfried"),
     "town": ("neighbour", "soest"),
+    "church": ("neighbour", "cologne"),
+    "university": ("neighbour", "studium"),
+    "faction": ("neighbour", "coven"),
     "book_group": ("book_group",),
     "saga_content": ("saga_content",),
 }
@@ -504,12 +507,43 @@ def everything_saga() -> Saga:
                 kind="church",
                 detail="Line",
                 realm="Divine",
+                details={
+                    "church": "Archbishop's cathedral",
+                    "order": "The secular clergy",
+                    "founded": 1180,
+                    "relics": [
+                        {"name": "The Shrine of the Three Kings", "saint": "The Magi"}
+                        | {"faith": 7}
+                    ],
+                },
             ),
             Neighbour(
                 id="coven",
                 name="The Black Pool Coven",
                 kind="faction",
                 attitudes=[Attitude("cov1", 2)],
+                details={
+                    "faction": "Hedge coven",
+                    "decides": "Its leader",
+                    "members": 7,
+                    "wants": "The Black Pool kept secret",
+                },
+            ),
+            Neighbour(
+                id="studium",
+                name="The Studium of Cologne",
+                kind="university",
+                details={
+                    "school": "University",
+                    "faculties": [
+                        {"faculty": "Arts", "rector": "Master Albert", "chairs": 8},
+                        {"faculty": "Theology", "rector": "", "chairs": None},
+                    ],
+                    "masters": [
+                        {"name": "Master Gerard", "licence": "Doctor"}
+                        | {"faculty": "Theology", "who": None}
+                    ],
+                },
             ),
             Neighbour(
                 id="soest",

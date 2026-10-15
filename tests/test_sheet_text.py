@@ -51,6 +51,9 @@ SHEETS = {
     "region",
     "neighbour",
     "town",
+    "church",
+    "university",
+    "faction",
 }
 
 

@@ -12,16 +12,19 @@ from support import everything_saga, wait_until
 from textual.widgets import Tree
 
 from ars_magica_manager import (
+    churches,
+    factions,
     lords,
     neighbour_forms,
     neighbours,
     region_sheet,
     storage,
     towns,
+    universities,
 )
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Choose, Confirm, Form, Refuse
-from ars_magica_manager.models import Attitude, Neighbour, Reason, Saga
+from ars_magica_manager.models import Attitude, Link, Neighbour, Reason, Saga
 from ars_magica_manager.rules import dice
 from ars_magica_manager.sections import NEIGHBOUR_INFO_SECTION
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
@@ -54,6 +57,7 @@ def test_a_group_with_one_kind_in_play_opens_its_form_at_once():
     assert [g.key for g in neighbours.groups_shown(saga)] == [
         "lords",  # Gottfried is in it, though Lords of Men isn't in play
         "church",
+        "universities",  # the Studium is in it
         "factions",
         "threats",
     ]
@@ -79,7 +83,7 @@ def test_deleting_a_liege_frees_those_who_answered_to_it():
 def test_the_region_counts_the_warm_and_the_wary():
     saga = everything_saga()
     facts = {f.label: f.value for f in region_sheet.facts(saga)}
-    assert facts["Neighbours"] == "4, 1 warm, 1 wary"
+    assert facts["Neighbours"] == "5, 1 warm, 1 wary"
     assert facts["Player covenant"] == "Keep"
     assert facts["Next Tribunal"] == "Summer 1228"
     grid = region_sheet.group_grid(saga, "lords")
@@ -274,3 +278,57 @@ async def test_changing_a_neighbours_kind_rebuilds_its_sheet():
         assert await wait_until(
             pilot, lambda: bool(workspace.query("#section-nb-fairs"))
         )
+
+
+def test_a_church_grows_its_dominion_as_a_rule_option():
+    saga = everything_saga()
+    cologne = saga.neighbour("cologne")
+    assert cologne is not None
+    assert churches.aura_text(saga, cologne) == "Dominion 5"
+    saga.rule_options["dominion_growth"] = True
+    assert churches.aura(saga, cologne) == 7  # a relic of 7 Faith Points
+    cologne.details["relics"] = []
+    cologne.details["founded"] = 1215
+    assert churches.aura_text(saga, cologne) == "Dominion 4, worship since 1215"
+    cologne.details["church"] = "Chapel"
+    cologne.details["founded"] = 1100
+    assert churches.aura(saga, cologne) == 3
+    cologne.details["church"] = "Parish church"
+    cologne.details |= {"founded": 1205, "abandoned": 1215}  # 4, over 10 years
+    assert churches.aura_text(saga, cologne) == "Dominion 2, fading since 1215"
+    saga.current_year = 1230
+    assert churches.aura(saga, cologne) == 0
+    assert churches.problem({"founded": 1210, "abandoned": 1200}) is not None
+    saga.books_in_play = ["TC"]  # without Realms of Power: The Divine
+    assert churches.aura(saga, cologne) == 4
+    assert [f.key for f in churches.fields(saga, cologne)] == ["church", "order"]
+    assert churches.relics_grid(saga, cologne).rows == []
+
+
+def test_a_university_grants_its_faculties_degrees():
+    saga = everything_saga()
+    studium = saga.neighbour("studium")
+    assert studium is not None
+    facts = {f.label: f.value for f in universities.facts(saga, studium)}
+    assert facts["Degrees"] == "Baccalaureus, Magister in Artibus, Doctor in Theology"
+    assert facts["Fees"] == "4 pounds a year"
+    assert universities.masters_grid(saga, studium).rows == [
+        ["Master Gerard", "Doctor", "Theology", "3"]
+    ]
+    assert universities.faculties_grid(saga, studium).rows[1][3] == "1"
+    studium.details["school"] = "Rural parish school"
+    facts = {f.label: f.value for f in universities.facts(saga, studium)}
+    assert (facts["Fees"], facts["Teaches up to"]) == ("0.1 pounds a year", "2")
+    assert "Degrees" not in facts
+    assert universities._master_problem({"name": " ", "who": None}) is not None
+
+
+def test_a_faction_counts_its_linked_members():
+    saga = everything_saga()
+    coven = saga.neighbour("coven")
+    assert coven is not None
+    coven.links.append(Link("character", "mag1", "member"))
+    facts = {f.label: f.value for f in factions.facts(saga, coven)}
+    assert facts["Members"] == "7, 1 linked"
+    coven.details["faction"] = None  # left blank
+    assert {f.label: f.value for f in factions.facts(saga, coven)}["Faction"] == ""

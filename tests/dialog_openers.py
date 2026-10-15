@@ -234,6 +234,22 @@ OPENERS: dict[str, Opener] = {
         "town",
         _pick(lambda ws: ws._core_verb("section-nb-fairs", "edit"), "nb-fairs-list"),
     ),
+    "edit church": Opener(
+        "church", lambda ws: ws._core_verb("section-nb-info", "edit")
+    ),
+    "add relic": Opener("church", lambda ws: ws._core_verb("section-nb-relics", "add")),
+    "add faculty": Opener(
+        "university", lambda ws: ws._core_verb("section-nb-faculties", "add")
+    ),
+    "edit master": Opener(
+        "university",
+        _pick(
+            lambda ws: ws._core_verb("section-nb-masters", "edit"), "nb-masters-list"
+        ),
+    ),
+    "edit faction": Opener(
+        "faction", lambda ws: ws._core_verb("section-nb-info", "edit")
+    ),
     "edit tribunal": Opener(
         "tribunal", lambda ws: ws._core_verb("section-trib-info", "edit")
     ),

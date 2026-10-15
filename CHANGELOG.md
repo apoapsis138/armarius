@@ -46,6 +46,25 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.73.0 — 2026-10-15
+
+- Churches in detail (The Church). A church has a kind (a chapel up to
+  an archbishop's cathedral) and an order, and a Church tab showing its
+  Dominion aura and its relics, each with its saint, Faith Points,
+  Might and the Magic Resistance it gives its bearer. With Realms of
+  Power: The Divine in play, touching a relic adds +1 to invoking its
+  saint, and a new Rule Option, Dominion growth, grows a church's aura
+  with the years of worship, fades it once worship stops, and raises it
+  for a relic of more than 5 Faith Points.
+- Universities in detail (Art & Academe). A university or school has a
+  kind and fees, and a Studium tab showing the highest it can teach,
+  the degrees its faculties grant, its faculties with their rectors and
+  chairs, and its masters with the Academic Reputation their licences
+  start.
+- Factions in detail. A faction records what kind it is, how it
+  decides, its members, its rules, what it wants and what it offers, on
+  a Faction tab.
+
 ## 2.72.0 — 2026-10-15
 
 - Lords in detail (Lords of Men). A lord has a title, a wealth, his
