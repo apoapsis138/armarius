@@ -46,6 +46,21 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.86.3 — 2026-10-15
+
+- **The Rhine's notice of cases.** Notice of a case is now due a season
+  before a Rhine meeting, as under the core rules: Guardians of the
+  Forests sets no other period, and the pack no longer lists a ruling
+  saying otherwise.
+- **The Rhine's gild dues.** The book sets no dues, so each gild in the
+  Rhine pack now says: "None: a member owes the gild their vote and
+  reasonable aid."
+- **The docket explained.** The Cases help now says what each field of a
+  case records, among them Sought: what the case asks the Tribunal to do
+  if it succeeds. The case form gives Sought a hint too. The help also
+  says where the Peripheral Code's Case column comes from, and which
+  treasury entries a meeting adds by itself.
+
 ## 2.86.2 — 2026-10-15
 
 Steadier tests. Screen tests that sometimes failed when the computer was busy now wait for a section to keep its focus, and for a form or confirmation to actually open, before they go on.

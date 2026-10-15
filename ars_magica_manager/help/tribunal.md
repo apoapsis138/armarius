@@ -19,7 +19,8 @@ what the old ones recorded, hidden, and switching back shows it again.
   due a season before the meeting.
 - **Rhine: Gilds** (Guardians of the Forests): the Rhine's covenants band
   together in gilds, each with its dues; the sheet gains a Gilds list and
-  the roster a Gild column. Notice is wanted a year before the meeting.
+  the roster a Gild column. Notice is due a season before the meeting,
+  as under the core rules.
   The book's Tribunal of 1220 ships as a content pack: see [How to start a
   saga from a Tribunal book](help:guide-book-packs).
 - **Theban: Tokens** (The Sundered Eagle): its magi vote with
@@ -136,6 +137,32 @@ notice is due a season before the meeting; a case whose notice hasn't
 been given is flagged, and a case against one of the troupe's covenants
 or magi is drawn in red.
 
+What a case records:
+
+- **Case**: its name, as the docket lists it.
+- **Kind**: a *charge* accuses someone of breaking the Code; a *motion*
+  asks the Tribunal to decide or declare something (a new ruling, a
+  boundary, recognising a covenant); an *appeal* asks it to reverse an
+  earlier ruling.
+- **Brought by** and **Against**: who brings it and who it is against,
+  as names. A covenant or magus of the troupe's named in Against is
+  flagged.
+- **Charge**: what is alleged or proposed, in a sentence or two.
+- **Filed**: the year and season it was filed.
+- **Notice given**: whether the parties have been told of it in time.
+  Notice is due a season before the meeting; the Notice due column says
+  when.
+- **Sought**: what the one bringing it asks the Tribunal to do if it
+  succeeds: the penalty for a charge (a fine of vis or silver, the loss
+  of a right, a Wizard's March) or the ruling a motion or appeal wants.
+  Leave it empty while nobody has said.
+- **Evidence**: what each side can show, one piece a line.
+- **Prosecutor** and **Defender**: who speaks for each side at the
+  meeting.
+- **Status** and **Outcome** (when editing): open, decided or withdrawn,
+  and what was decided. A decided or withdrawn case moves to the Rulings
+  of Past Tribunals.
+
 <!-- tui -->
 `a` adds a case, `e` edits the chosen one and `d` deletes it. More (`m`)
 offers **Withdraw**, which takes it off the docket and keeps it among
@@ -243,7 +270,10 @@ year it was made, and the case it came from.
 <!-- help: section-trib-code -->
 
 Add a ruling, edit it or delete it. A ruling can name one of the
-Tribunal's cases as where it came from.
+Tribunal's cases as where it came from: the Case column shows it. When a
+meeting decides a case and its ruling is written into the Code, the new
+ruling names that case by itself. Older rulings, such as those a
+content pack brings, name none.
 
 ## Treasury tab
 <!-- help: tab-trib-treasury -->
@@ -258,6 +288,11 @@ and silver are taken in (a positive amount) or paid out (a negative
 one). A loan is silver or vis lent out of the treasury: it leaves the
 treasury until it is marked repaid. A fine, from a case, comes in once it
 is marked paid.
+
+Most entries are typed in by the storyguide. A meeting adds one by
+itself: when a case is decided with a fine, the fine owed is entered,
+naming who owes it and the case. A new Tribunal, or one from a content
+pack, starts with an empty treasury, since the books give no figures.
 
 The balance above the list adds them up: the silver and vis in hand,
 the loans still out and the fines still unpaid.

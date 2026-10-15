@@ -81,7 +81,7 @@ def build(rhine: Rhine) -> None:
 GILDS: tuple[tuple[str, str, tuple[str, ...]], ...] = (
     (
         "Oak Gild (Eichengilde)",
-        "No dues given; mutual aid, no Wizard War within the gild. The "
+        "None: a member owes the gild their vote and reasonable aid. The "
         "oldest and largest gild, a quarter of the Tribunal: tradition, "
         "respect for elders and the Founders, the Rhine's old glory. Led by "
         "Murion of Durenmar; Bonisagus, Guernicus and Tremere favour it.",
@@ -89,28 +89,28 @@ GILDS: tuple[tuple[str, str, tuple[str, ...]], ...] = (
     ),
     (
         "Hawthorn Gild (Weissdorngilde)",
-        "No dues given. The smallest: protects the wild places and beasts "
+        "None: a member owes the gild their vote and reasonable aid. The smallest: protects the wild places and beasts "
         "from mundanes and shuns contact with them. Led by Urgen of "
         "Crintera; mostly Wilderist Bjornaer.",
         ("crintera",),
     ),
     (
         "Ash Gild (Eschengilde)",
-        "No dues given. Dominion over the land, a forthright Order, and "
+        "None: a member owes the gild their vote and reasonable aid. Dominion over the land, a forthright Order, and "
         "(unspoken) war on the Order of Odin. Led by Philippus Niger of "
         "Durenmar; Flambeau, Tremere and Tytalus.",
         (),
     ),
     (
         "Elder Gild (Holundergilde)",
-        "No dues given. Split from the Hawthorn: the fae and friendship with "
+        "None: a member owes the gild their vote and reasonable aid. Split from the Hawthorn: the fae and friendship with "
         "them above all. Led by Iacob of Irencillia; nearly all of "
         "Irencillia and Dankmar, with a few Harmonist Bjornaer.",
         ("irencillia", "dankmar"),
     ),
     (
         "Linden Gild (Lindengilde)",
-        "No dues given. Founded after the Schism War by former Fengheld "
+        "None: a member owes the gild their vote and reasonable aid. Founded after the Schism War by former Fengheld "
         "magi: co-operation, peace and an end to apathy; nearly a fifth of "
         "the Tribunal, the go-between. Led by Occultes of Durenmar; Mercere, "
         "Jerbiton, Verditius, Tremere and Trianoma's Bonisagus.",
@@ -118,7 +118,7 @@ GILDS: tuple[tuple[str, str, tuple[str, ...]], ...] = (
     ),
     (
         "Apple Gild (Apfelgilde)",
-        "No dues given. The newest and weakest: friendship with mundanes, "
+        "None: a member owes the gild their vote and reasonable aid. The newest and weakest: friendship with mundanes, "
         "acceptance, humility before God. Led by Henri de Tours of Oculus "
         "Septentrionalis, Wilhelm Weiss of Fengheld and Daria la Gris of "
         "Triamore.",
@@ -213,11 +213,6 @@ RULINGS: tuple[tuple[int | None, str, str], ...] = (
         "charter and symbol; a vote to call it a new covenant needing leave "
         "failed, by the Oak and Ash Gilds. The same year Rethra, silent for "
         "decades, was declared abolished.",
-    ),
-    (
-        None,
-        "Notice of cases",
-        "A case is notified a year before the meeting (the package's rule).",
     ),
 )
 

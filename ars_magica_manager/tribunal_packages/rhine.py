@@ -1,6 +1,7 @@
 """The Rhine Tribunal's customs (Guardians of the Forests: The Rhine
-Tribunal): its covenants band together in gilds, each with its dues, and
-notice of a case is wanted a year before the meeting.
+Tribunal): its covenants band together in gilds, each with its dues.
+Notice of a case is due a season before the meeting, as under the core
+rules: the book sets no other period.
 
 A gild is kept in the package's data as {"name", "members" (covenant
 ids), "dues"}: the roster gains a Gild column, and the sheet a Gilds
@@ -149,8 +150,6 @@ RHINE = TribunalPackage(
     "Rhine",
     customs="Gilds",
     book="GotF",
-    notice_seasons=4,
-    notice_words="a year",
     columns=(
         RosterColumn(
             "Gild",
@@ -165,8 +164,7 @@ RHINE = TribunalPackage(
             (PackageList(GILDS_SECTION, gilds_title, gilds_grid, gild_ops),),
         ),
     ),
-    about="Its covenants band together in gilds, with dues; notice of a case "
-    "is wanted a year before the meeting.",
+    about="Its covenants band together in gilds, with dues.",
 )
 
 register(RHINE)

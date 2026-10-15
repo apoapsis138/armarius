@@ -136,12 +136,10 @@ def test_a_covenant_votes_its_magi_and_its_proxies():
 def test_the_docket_flags_notice_not_given_and_cases_against_yours():
     saga = everything_saga()
     rhine = saga.tribunals[0]
-    assert tribunal_sheet.notice_due(rhine) == "Summer 1227"  # the Rhine's year
+    assert tribunal_sheet.notice_due(rhine) == "Spring 1228"  # a season, as core
     assert tribunal_sheet.season_before(1228, "Spring", 1) == (1227, "Winter")
     grid = tribunal_sheet.cases_grid(saga, rhine)
-    assert [row[3] for row in grid.rows] == ["Summer 1227", "not given"]
-    rhine.package = "core"
-    assert tribunal_sheet.notice_due(rhine) == "Spring 1228"
+    assert [row[3] for row in grid.rows] == ["Spring 1228", "not given"]
     assert grid.styles[(0, 0)] == "$text-error"  # against Keep, the troupe's
     facts = {f.label: f.value for f in tribunal_sheet.facts(saga, rhine)}
     assert facts["Cases"] == "2 (1 against you)"

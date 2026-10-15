@@ -298,7 +298,13 @@ def case_fields(saga: Saga, case: Case | None) -> list[DialogField]:
             "check",
             attr(case, "notice_given", False),
         ),
-        DialogField("penalty", "Sought", "text", attr(case, "penalty", "")),
+        DialogField(
+            "penalty",
+            "Sought",
+            "text",
+            attr(case, "penalty", ""),
+            hint="What it asks the Tribunal to do: a penalty or a ruling.",
+        ),
         DialogField(
             "evidence",
             "Evidence",

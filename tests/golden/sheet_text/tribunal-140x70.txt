@@ -86,7 +86,7 @@
     ▼ Cases for 1228 (2)
 
         Case              Kind    Filed        Notice due   Sought
-      ○ Fengheld v. Keep  Charge  Winter 1219  Summer 1227  the ford source
+      ○ Fengheld v. Keep  Charge  Winter 1219  Spring 1228  the ford source
       ○ Gild dues         Motion  Spring 1220  not given    dues of 3 pawns
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -218,14 +218,14 @@
    1 Roster  2 Docket  3 Meeting  4 Peripheral Code  5 Treasury  6 Gilds  7 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Rhine: Gilds. Its covenants band together in gilds, with dues; notice of a case is wanted a year
-  before the meeting.
+  Rhine: Gilds. Its covenants band together in gilds, with dues.
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Peripheral Code (1)
 
         Ruling           Year  Says                           Case
       ○ Gild membership  1214  Any covenant may join a gild.
+
 
 
 
