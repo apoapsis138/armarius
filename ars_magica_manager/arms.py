@@ -10,20 +10,38 @@ paths, the terminal in half-blocks."""
 from __future__ import annotations
 
 import math
+import re
 from collections.abc import Sequence
 from dataclasses import asdict, dataclass
+from pathlib import Path
 from typing import Any
 
+from . import svg_paths
+from .artwork import CHARGE_DRAWINGS
 from .commands import Form
 from .form_spec import DialogField
 from .markup import escape
 
-#: The tinctures, metals first. Each front-end's themes give the colour
-#: each is painted in.
-TINCTURES = ("Or", "Argent", "Gules", "Azure", "Vert", "Sable", "Purpure")
+#: The tinctures, metals first, then the colours, then the fur. Each
+#: front-end's themes give the colour each is painted in.
+TINCTURES = ("Or", "Argent", "Gules", "Azure", "Vert", "Sable", "Purpure", "Ermine")
 METALS = frozenset({"Or", "Argent"})
 
-DIVISIONS = ("Plain", "Per pale", "Per fess", "Per bend", "Quarterly", "Per chevron")
+#: A fur is neither metal nor colour, so the rule of tincture leaves it
+#: alone. It is painted as its ground strewn with its spots: ermine is
+#: argent with sable tails.
+FURS: dict[str, tuple[str, str]] = {"Ermine": ("Argent", "Sable")}
+
+DIVISIONS = (
+    "Plain",
+    "Per pale",
+    "Per fess",
+    "Per bend",
+    "Quarterly",
+    "Per chevron",
+    "Bendy",
+    "Checky",
+)
 
 #: The charges, by name, each with how the blazon names one of it.
 CHARGES: dict[str, str] = {
@@ -41,7 +59,12 @@ CHARGES: dict[str, str] = {
     "Lion": "a lion",
     "Wheel": "a wheel",
     "Fleur-de-lis": "a fleur-de-lis",
+    "Bend": "a bend",
 }
+
+#: The charges that are ordinaries: drawn across the whole shield, and
+#: borne once.
+ORDINARIES = frozenset({"Bend"})
 
 #: How many of the charge a shield may bear, and the word for each.
 COUNTS: dict[int, str] = {1: "one", 2: "two", 3: "three"}
@@ -74,7 +97,7 @@ class Arms:
         if not data or data.get("field") not in TINCTURES:
             return None
         known = {k: v for k, v in data.items() if k in cls.__dataclass_fields__}
-        if known.get("count") not in COUNTS:
+        if known.get("count") not in COUNTS or known.get("charge") in ORDINARIES:
             known["count"] = 1
         return cls(**known)
 
@@ -123,6 +146,8 @@ def blazon(arms: Arms) -> str:
 
 
 def _kind(tincture: str) -> str:
+    if tincture in FURS:
+        return "fur"
     return "metal" if tincture in METALS else "colour"
 
 
@@ -145,7 +170,7 @@ def warning(arms: Arms) -> str:
                 "against the field."
             )
     for ground in arms.tinctures():
-        if _kind(on) == _kind(ground):
+        if _kind(on) == _kind(ground) != "fur":
             kind = _kind(on)
             return (
                 f"{on} on {ground.lower()} is {kind} on {kind}: heralds would "
@@ -161,22 +186,51 @@ HEIGHT = 1.2
 
 Point = tuple[float, float]
 
+#: A square on the shield: its top left corner and its side.
+Box = tuple[float, float, float]
+
 
 @dataclass(frozen=True)
 class Shape:
-    """A polygon or a circle (`radius` set, `points` its one centre); a
-    hole cuts out of the solid shapes before it, so a shape after it (a
-    wheel's spokes inside its rim) is whole."""
+    """A polygon, a circle (`radius` set, `points` its one centre), or a
+    drawing of several rings filled even-odd (`rings` set: a traced
+    outline, its inner rings cut out of it); a hole cuts out of the
+    solid shapes before it, so a shape after it (a wheel's spokes inside
+    its rim) is whole."""
 
     points: tuple[Point, ...]
     radius: float = 0.0
     hole: bool = False
+    rings: tuple[tuple[Point, ...], ...] = ()
 
     def contains(self, x: float, y: float) -> bool:
         if self.radius:
             cx, cy = self.points[0]
             return (x - cx) ** 2 + (y - cy) ** 2 <= self.radius**2
+        if self.rings:
+            return sum(_inside(ring, x, y) for ring in self.rings) % 2 == 1
         return _inside(self.points, x, y)
+
+
+def drawing(d: str, box: tuple[float, float, float, float]) -> Shape:
+    """A charge drawn as SVG path data, its viewBox `box` fitted to the
+    unit square."""
+    return Shape((), rings=tuple(svg_paths.fitted(d, box)))
+
+
+def layers(path: Path) -> dict[str, Shape]:
+    """A charge file cleaned by tools/clean_charge.py: its layers by id
+    (body, lines, armed), each a drawing fitted to the unit square by the
+    file's viewBox."""
+    text = path.read_text(encoding="utf-8")
+    found = re.search(r'viewBox="([^"]+)"', text)
+    if found is None:
+        raise ValueError(f"{path.name} has no viewBox")
+    left, top, width, height = (float(v) for v in found.group(1).split())
+    return {
+        name: drawing(d, (left, top, width, height))
+        for name, d in re.findall(r'<path id="(\w+)" d="([^"]+)"', text)
+    }
 
 
 def _inside(points: Sequence[Point], x: float, y: float) -> bool:
@@ -245,6 +299,52 @@ DIVISION_AREAS: dict[str, tuple[Shape, ...]] = {
         ),
     ),
 }
+
+
+def _band(c0: float, c1: float) -> Shape:
+    """The strip of the shield between two lines parallel to its bend
+    (top left to bottom right), y - HEIGHT x = c0 and = c1, running past
+    the shield's edges."""
+    return _poly(
+        (-1, c0 - HEIGHT),
+        (2, c0 + 2 * HEIGHT),
+        (2, c1 + 2 * HEIGHT),
+        (-1, c1 - HEIGHT),
+    )
+
+
+#: Bendy of six: every other of six bends across the shield.
+_BEND_STEP = 2 * HEIGHT / 6
+DIVISION_AREAS["Bendy"] = tuple(
+    _band(-HEIGHT + i * _BEND_STEP, -HEIGHT + (i + 1) * _BEND_STEP)
+    for i in range(1, 6, 2)
+)
+
+#: Checky: squares a fifth of the shield wide, alternating.
+_CHECK = 0.2
+DIVISION_AREAS["Checky"] = tuple(
+    _rect(col * _CHECK, row * _CHECK, (col + 1) * _CHECK, (row + 1) * _CHECK)
+    for row in range(round(HEIGHT / _CHECK))
+    for col in range(5)
+    if (row + col) % 2
+)
+
+#: A drawn charge's line work (painted in `line_tincture`) and its claws
+#: and tongue (in `armed_tincture`), over its silhouette, by charge.
+CHARGE_LINES: dict[str, Shape | None] = {}
+CHARGE_ARMED: dict[str, Shape | None] = {}
+
+
+def line_tincture(arms: Arms) -> str:
+    """A charge's line work is sable, or argent on a sable charge."""
+    return "Argent" if arms.charge_tincture == "Sable" else "Sable"
+
+
+def armed_tincture(arms: Arms) -> str:
+    """A beast's claws and tongue are gules, or azure where gules would
+    vanish (a gules beast, or a gules field)."""
+    return "Azure" if "Gules" in (arms.charge_tincture, arms.field) else "Gules"
+
 
 #: Each charge's shapes, in a unit square.
 CHARGE_SHAPES: dict[str, tuple[Shape, ...]] = {
@@ -356,54 +456,14 @@ CHARGE_SHAPES["Eagle"] = (
     _poly((0.36, 0.1), (0.25, 0.17), (0.37, 0.19)),
 )
 
-# A lion rampant: on its hind legs, forepaws raised, tail up. One
-# polygon, read clockwise from the raised forepaw.
-CHARGE_SHAPES["Lion"] = (
-    _poly(
-        (0.30, 0.04),
-        (0.40, 0.06),
-        (0.44, 0.16),
-        (0.52, 0.26),
-        (0.62, 0.42),
-        (0.70, 0.56),
-        (0.84, 0.66),
-        (0.92, 0.82),
-        (0.88, 0.96),
-        (0.74, 0.96),
-        (0.76, 0.80),
-        (0.68, 0.72),
-        (0.62, 0.84),
-        (0.64, 0.96),
-        (0.50, 0.96),
-        (0.50, 0.80),
-        (0.54, 0.66),
-        (0.46, 0.58),
-        (0.34, 0.64),
-        (0.22, 0.66),
-        (0.20, 0.58),
-        (0.32, 0.52),
-        (0.36, 0.44),
-        (0.26, 0.40),
-        (0.12, 0.34),
-        (0.06, 0.24),
-        (0.14, 0.20),
-        (0.24, 0.30),
-        (0.26, 0.22),
-        (0.16, 0.18),
-        (0.12, 0.10),
-        (0.22, 0.12),
-    ),
-    _poly(
-        (0.64, 0.46),
-        (0.74, 0.36),
-        (0.82, 0.26),
-        (0.92, 0.28),
-        (0.94, 0.40),
-        (0.86, 0.36),
-        (0.80, 0.44),
-        (0.72, 0.54),
-    ),
-)
+
+# A lion rampant, drawn from a Wikimedia Commons file (see NOTICE.md):
+# its silhouette in the charge's tincture, its line work and its claws
+# and tongue painted over it.
+_LION = layers(CHARGE_DRAWINGS["Lion"])
+CHARGE_SHAPES["Lion"] = (_LION["body"],)
+CHARGE_LINES["Lion"] = _LION.get("lines")
+CHARGE_ARMED["Lion"] = _LION.get("armed")
 
 # A wheel of six spokes (the wheel of Mainz).
 CHARGE_SHAPES["Wheel"] = (
@@ -448,12 +508,55 @@ CHARGE_SHAPES["Fleur-de-lis"] = (
     _rect(0.1, 0.56, 0.4, 0.64),
 )
 
+
+def _bend(half_width: float) -> Shape:
+    """A band along the line from the top left corner to the bottom
+    right, in the shield's own coordinates."""
+    length = math.hypot(1, HEIGHT)
+    nx, ny = -HEIGHT / length * half_width, 1 / length * half_width
+    start, end = (-0.2, -0.2 * HEIGHT), (1.2, 1.2 * HEIGHT)
+    return _poly(
+        (start[0] + nx, start[1] + ny),
+        (end[0] + nx, end[1] + ny),
+        (end[0] - nx, end[1] - ny),
+        (start[0] - nx, start[1] - ny),
+    )
+
+
+#: An ordinary's shapes are in the shield's coordinates (its width 1),
+#: not a charge's unit square.
+CHARGE_SHAPES["Bend"] = (_bend(0.14),)
+
+#: An ermine tail: three dots over a spreading tail, in a unit square.
+ERMINE_SPOT: tuple[Shape, ...] = (
+    _circle(0.5, 0.12, 0.12),
+    _circle(0.24, 0.3, 0.11),
+    _circle(0.76, 0.3, 0.11),
+    _poly(
+        (0.5, 0.3), (0.62, 0.62), (0.86, 1.0), (0.5, 0.82), (0.14, 1.0), (0.38, 0.62)
+    ),
+)
+
+
+def _fur_boxes() -> tuple[Box, ...]:
+    """Where a fur's spots sit, in the shield's coordinates: rows a fifth
+    of the shield apart, every other row shifted half a step."""
+    step, side = 0.25, 0.11
+    boxes = []
+    for row in range(round(HEIGHT / step) + 1):
+        shift = step / 2 if row % 2 else 0.0
+        for col in range(5):
+            x = shift + col * step + (step - side) / 2
+            if x + side <= 1:
+                boxes.append((x, row * step + 0.05, side))
+    return tuple(boxes)
+
+
 #: Where one charge sits on the shield: its square's corner and side.
 CHARGE_BOX = (0.21, HEIGHT * 0.15, 0.58)
 
 #: Where the charges sit by their count: two side by side, three as two
 #: and one, as heralds place them.
-Box = tuple[float, float, float]
 CHARGE_BOXES: dict[int, tuple[Box, ...]] = {
     1: (CHARGE_BOX,),
     2: ((0.07, HEIGHT * 0.2, 0.4), (0.53, HEIGHT * 0.2, 0.4)),
@@ -465,34 +568,57 @@ CHARGE_BOXES: dict[int, tuple[Box, ...]] = {
 }
 
 
+#: An ordinary's one box: the whole shield.
+WHOLE_SHIELD: Box = (0.0, 0.0, 1.0)
+
+#: Where a fur's spots sit.
+FUR_BOXES = _fur_boxes()
+
+
 def charge_boxes(arms: Arms) -> tuple[Box, ...]:
-    """The squares `arms`' charges are drawn in."""
+    """The squares `arms`' charges are drawn in: the whole shield for an
+    ordinary."""
+    if arms.charge in ORDINARIES:
+        return (WHOLE_SHIELD,)
     return CHARGE_BOXES.get(arms.count, CHARGE_BOXES[1])
 
 
-def _in_charge(charge: str, box: Box, x: float, y: float) -> bool:
+def _in_shapes(shapes: Sequence[Shape], box: Box, x: float, y: float) -> bool:
     left, top, side = box
     u, v = (x - left) / side, (y - top) / side
-    if not (0 <= u <= 1 and 0 <= v <= 1):
+    # A charge's square is a unit one; an ordinary's box runs the
+    # shield's full height.
+    if not (0 <= u <= 1 and 0 <= v <= HEIGHT):
         return False
     inside = False
-    for shape in CHARGE_SHAPES[charge]:
+    for shape in shapes:
         if shape.contains(u, v):
             inside = not shape.hole
     return inside
 
 
+def painted(tincture: str, x: float, y: float) -> str:
+    """The plain tincture painted at (x, y) of a field or charge in
+    `tincture`: a fur's ground, or its spot colour on a spot."""
+    if tincture not in FURS:
+        return tincture
+    ground, spots = FURS[tincture]
+    on_spot = any(_in_shapes(ERMINE_SPOT, box, x, y) for box in FUR_BOXES)
+    return spots if on_spot else ground
+
+
 def tincture_at(arms: Arms, x: float, y: float) -> str | None:
-    """The tincture at (x, y) on the shield, or None off it."""
+    """The plain tincture painted at (x, y) on the shield (a fur resolved
+    to its ground or spots), or None off it."""
     if not _inside(shield_outline(), x, y):
         return None
     if arms.charge in CHARGE_SHAPES and any(
-        _in_charge(arms.charge, box, x, y) for box in charge_boxes(arms)
+        _in_shapes(CHARGE_SHAPES[arms.charge], box, x, y) for box in charge_boxes(arms)
     ):
-        return arms.charge_tincture
+        return painted(arms.charge_tincture, x, y)
     if any(s.contains(x, y) for s in DIVISION_AREAS.get(arms.division, ())):
-        return arms.second
-    return arms.field
+        return painted(arms.second, x, y)
+    return painted(arms.field, x, y)
 
 
 def pixels(arms: Arms, width: int) -> list[list[str | None]]:
@@ -558,7 +684,11 @@ def arms_fields(arms: Arms | None) -> list[DialogField]:
             str(shown.count),
             options=[(word.capitalize(), str(n)) for n, word in COUNTS.items()],
             required=True,
-            show_if=lambda v: bool(v.get("field")) and bool(v.get("charge")),
+            show_if=lambda v: (
+                bool(v.get("field"))
+                and bool(v.get("charge"))
+                and v.get("charge") not in ORDINARIES
+            ),
         ),
         DialogField(
             "charge_tincture",
@@ -590,7 +720,9 @@ def from_values(values: dict[str, Any]) -> Arms | None:
         charge=values.get("charge") or "",
         charge_tincture=values.get("charge_tincture") or "Or",
         motto=(values.get("motto") or "").strip(),
-        count=int(values.get("count") or 1) if values.get("charge") else 1,
+        count=int(values.get("count") or 1)
+        if values.get("charge") and values.get("charge") not in ORDINARIES
+        else 1,
     )
 
 

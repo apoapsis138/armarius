@@ -1,0 +1,12 @@
+lion.svg
+
+Source: "Lion rampant element.svg" on Wikimedia Commons,
+https://commons.wikimedia.org/wiki/File:Lion_rampant_element.svg
+Author: Inductiveload, traced from an original by Jiri Louda.
+Licence: public domain (released by its author into the public domain;
+the original it was traced from is stated to be public domain).
+
+Changes made: its shapes were merged with tools/clean_charge.py into
+three layers (the silhouette, the black line work, the red claws and
+tongue), flattened to straight steps and fitted to a new viewBox, so
+the app can paint the lion in any tincture.

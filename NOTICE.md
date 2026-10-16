@@ -73,6 +73,12 @@ the Code of Hermes Ability's mark.
 (`ars_magica_manager/gui/mark_charges.py`) in the style of the Art
 symbols; they are part of the app and under its licence.
 
+**The lion** in `ars_magica_manager/assets/charges/` is adapted from
+[Lion rampant element](https://commons.wikimedia.org/wiki/File:Lion_rampant_element.svg)
+on Wikimedia Commons, by Inductiveload after Jiří Louda, in the public
+domain. Its shapes were merged into a silhouette, line work and claws so
+the app can paint it in any tincture (`assets/charges/LICENSE.txt`).
+
 **The icons** in `ars_magica_manager/assets/icons/` are
 [Phosphor Icons](https://phosphoricons.com) (Light weight), © 2023
 Phosphor Icons, under the MIT licence (`assets/icons/LICENSE.txt`).

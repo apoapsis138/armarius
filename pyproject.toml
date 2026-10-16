@@ -1,6 +1,6 @@
 [project]
 name = "ars-magica-manager"
-version = "2.90.0"
+version = "2.91.0"
 description = "Armarius, a saga manager for Ars Magica: a GM-facing tool for Ars Magica 5th Edition covenants, characters, laboratories, and libraries."
 readme = "README.md"
 license = "GPL-3.0-only"
@@ -29,6 +29,9 @@ Repository = "https://github.com/apoapsis138/Ars-Magica-Manager"
 Changelog = "https://github.com/apoapsis138/Ars-Magica-Manager/blob/main/CHANGELOG.md"
 
 [dependency-groups]
+charges = [
+    "shapely>=2.1",
+]
 catalog = [
     "pymupdf>=1.28.2",
     "pytesseract>=0.3.13",

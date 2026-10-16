@@ -14,6 +14,9 @@ it to its theme. Two sets:
   NOTICE.md). They are woodcut tiles: the ink is the tile and its frame,
   and the symbol shows through as the background. House Guernicus has no
   released symbol and uses the Quaesitor's.
+- charges/: heraldic charges from Wikimedia Commons (see NOTICE.md),
+  cleaned by tools/clean_charge.py into layers (silhouette, line work,
+  claws), each tinted by arms.py's tincture rules.
 - icons/: Phosphor Icons at Light weight (MIT), copied by
   tools/fetch_icons.py, for everything else.
 
@@ -31,6 +34,10 @@ ASSETS = Path(__file__).resolve().parent / "assets"
 SYMBOLS = ASSETS / "symbols"
 ICONS = ASSETS / "icons"
 SOUNDS_DIR = ASSETS / "sounds"
+CHARGES = ASSETS / "charges"
+
+#: The heraldic charges drawn from a file, by charge name.
+CHARGE_DRAWINGS: dict[str, Path] = {"Lion": CHARGES / "lion.svg"}
 
 #: The app's window and taskbar icon (a Windows .ico of several sizes), and
 #: the sigil as a picture.

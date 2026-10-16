@@ -46,6 +46,18 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.91.0 — 2026-10-16
+
+- **New arms: ermine, a bend, bendy and checky.** Ermine joins the
+  tinctures as a fur (argent with black tails), free of the rule of
+  tincture. A shield can bear a bend across it, or be divided bendy or
+  checky. They are available in every saga.
+- **A proper lion.** The lion rampant is now drawn from a public-domain
+  heraldic lion from Wikimedia Commons, in place of the old one that
+  looked like a bear. It takes any tincture with black line work (silver
+  on a black lion), and its claws and tongue are red (blue on a red lion
+  or a red field).
+
 ## 2.90.0 — 2026-10-16
 
 - **A gilt title page.** The name Armarius on the title page is drawn

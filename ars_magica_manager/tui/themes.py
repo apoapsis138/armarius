@@ -120,4 +120,7 @@ TINCTURES: dict[str, str] = {
     "Vert": "#2e8540",
     "Sable": "#262322",
     "Purpure": "#6b3f9e",
+    # A fur is painted as its ground and spots (arms.FURS); this is the
+    # ground, for anything that shows one colour for it.
+    "Ermine": "#f1ede2",
 }

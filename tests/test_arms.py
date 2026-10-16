@@ -72,6 +72,32 @@ def test_the_shield_is_drawn_from_its_divisions_and_charge():
         assert any(cell == "Or" for row in drawn for cell in row), division
 
 
+def test_ermine_a_bend_bendy_and_checky():
+    assert arms.blazon(Arms("Ermine")) == "Ermine"
+    assert arms.blazon(Arms("Or", "Checky", "Azure")) == "Checky or and azure"
+    assert arms.blazon(Arms("Or", "Bendy", "Azure")) == "Bendy or and azure"
+    assert arms.blazon(Arms("Azure", charge="Bend", charge_tincture="Argent")) == (
+        "Azure, a bend argent"
+    )
+    # Ermine is painted argent with sable tails.
+    ermine = {c for row in arms.pixels(Arms("Ermine"), 40) for c in row} - {None}
+    assert ermine == {"Argent", "Sable"}
+    # A fur is neither metal nor colour: the rule of tincture leaves it be.
+    assert arms.warning(Arms("Ermine", charge="Bend", charge_tincture="Gules")) == ""
+    assert arms.warning(Arms("Gules", charge="Lion", charge_tincture="Ermine")) == ""
+    # A bend crosses the shield from its top left to its bottom right.
+    bend = Arms("Azure", charge="Bend", charge_tincture="Argent")
+    assert arms.tincture_at(bend, 0.1, 0.12) == "Argent"
+    assert arms.tincture_at(bend, 0.75, 0.9) == "Argent"
+    assert arms.tincture_at(bend, 0.9, 0.1) == "Azure"
+    # An ordinary is borne once, whatever a save or the form says.
+    assert Arms.from_dict({"field": "Azure", "charge": "Bend", "count": 3}).count == 1
+    values = {"field": "Azure", "charge": "Bend", "count": "3"}
+    assert arms.from_values(values) == Arms("Azure", charge="Bend")
+    count = next(f for f in arms.arms_fields(None) if f.key == "count")
+    assert count.show_if is not None and not count.show_if(values)
+
+
 def _spots(drawn: list[list[str | None]], tincture: str) -> int:
     """How many separate runs of `tincture` its fullest row holds."""
     row = max(drawn, key=lambda r: r.count(tincture))

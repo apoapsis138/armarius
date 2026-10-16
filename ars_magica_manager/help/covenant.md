@@ -991,20 +991,24 @@ laboratory and specialist.
 
 A covenant's shield, or a lord's, town's, church's or faction's. Six
 choices make it: the **Field**'s tincture, how it is divided
-(**Division**: plain, per pale, per fess, per bend, quarterly or per
-chevron) and the **Second tincture** of a divided field, a **Charge**
-laid on it (a tower, a book, a key, a star, a sword, a crown, a cross, a
-crescent, a tree, a chalice, an eagle, a lion, a wheel or a
-fleur-de-lis), **How many** of it (one, two side by side, or three as
-two and one, as heralds place them) and the **Charge tincture**. A
-**Motto** goes under it. Leave the Field blank for no arms. The
-historical arms of Mythic Europe's lords, towns and sees are mostly
-within reach: the Emperor's eagle, the wheel of Mainz, the cross of
-Trier, the three crowns of Cologne.
+(**Division**: plain, per pale, per fess, per bend, quarterly, per
+chevron, bendy or checky) and the **Second tincture** of a divided
+field, a **Charge** laid on it (a tower, a book, a key, a star, a sword,
+a crown, a cross, a crescent, a tree, a chalice, an eagle, a lion, a
+wheel, a fleur-de-lis, or a bend, the band from the top left corner to
+the bottom right, which is borne once), **How many** of it (one, two
+side by side, or three as two and one, as heralds place them) and the
+**Charge tincture**. A **Motto**, the bearer's own words, leads above
+the blazon. Leave the Field blank for no arms. The historical arms of Mythic
+Europe's lords, towns and sees are mostly within reach: the Emperor's
+eagle, the wheel of Mainz, the cross of Trier, the three crowns of
+Cologne, the lion of Flanders, the bendy of Burgundy, the checky of
+Dreux.
 
-The tinctures are the two metals, Or (gold) and Argent (silver), and the
+The tinctures are the two metals, Or (gold) and Argent (silver), the
 colours Gules (red), Azure (blue), Vert (green), Sable (black) and
-Purpure (purple). The blazon, the arms in heralds' words ("Per bend
+Purpure (purple), and the fur Ermine (argent strewn with black tails).
+A fur is neither metal nor colour, so it may lie on either. The blazon, the arms in heralds' words ("Per bend
 azure and argent, a tower or"; "Gules, three crowns or"), is written
 for you as you choose, and
 the shield is drawn beside it. Heralds' rule of tincture says a colour

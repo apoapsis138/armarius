@@ -20,12 +20,19 @@ from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWi
 
 from .. import arms as heraldry
 from ..arms import (
+    CHARGE_ARMED,
+    CHARGE_LINES,
     CHARGE_SHAPES,
     DIVISION_AREAS,
+    ERMINE_SPOT,
+    FUR_BOXES,
+    FURS,
     HEIGHT,
     Arms,
     Shape,
+    armed_tincture,
     charge_boxes,
+    line_tincture,
     shield_outline,
 )
 from ..markup import escape
@@ -44,7 +51,16 @@ def _path(
     solid = QPainterPath()
     for shape in shapes:
         part = QPainterPath()
-        if shape.radius:
+        if shape.rings:
+            part.setFillRule(Qt.FillRule.OddEvenFill)
+            for ring in shape.rings:
+                part.addPolygon(
+                    QPolygonF(
+                        [QPointF(left + x * scale, top + y * scale) for x, y in ring]
+                    )
+                )
+                part.closeSubpath()
+        elif shape.radius:
             cx, cy = shape.points[0]
             r = shape.radius * scale
             part.addEllipse(QPointF(left + cx * scale, top + cy * scale), r, r)
@@ -78,6 +94,28 @@ def shield_path(rect: QRectF) -> QPainterPath:
     return path
 
 
+def _fill(painter: QPainter, area: QPainterPath, tincture: str, rect: QRectF) -> None:
+    """Fill `area` in `tincture`: a fur as its ground strewn with its
+    spots, placed on the shield in `rect` so they line up across parts."""
+    if tincture not in FURS:
+        painter.fillPath(area, QColor(TINCTURES[tincture]))
+        return
+    ground, spot = FURS[tincture]
+    painter.fillPath(area, QColor(TINCTURES[ground]))
+    scale = rect.width()
+    spots = QPainterPath()
+    for left, top, side in FUR_BOXES:
+        spots = spots.united(
+            _path(
+                ERMINE_SPOT,
+                rect.left() + left * scale,
+                rect.top() + top * scale,
+                side * scale,
+            )
+        )
+    painter.fillPath(area.intersected(spots), QColor(TINCTURES[spot]))
+
+
 def paint(painter: QPainter, arms: Arms, rect: QRectF, edge: str) -> None:
     """Paint `arms` in `rect` (as wide as the shield; its height follows),
     edged in `edge`."""
@@ -86,11 +124,11 @@ def paint(painter: QPainter, arms: Arms, rect: QRectF, edge: str) -> None:
     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
     outline = shield_path(rect)
     painter.setClipPath(outline)
-    painter.fillPath(outline, QColor(TINCTURES[arms.field]))
+    _fill(painter, outline, arms.field, rect)
     second = _path(
         DIVISION_AREAS.get(arms.division, ()), rect.left(), rect.top(), scale
     )
-    painter.fillPath(second, QColor(TINCTURES[arms.second]))
+    _fill(painter, second, arms.second, rect)
     if arms.charge in CHARGE_SHAPES:
         for left, top, side in charge_boxes(arms):
             charge = _path(
@@ -99,8 +137,20 @@ def paint(painter: QPainter, arms: Arms, rect: QRectF, edge: str) -> None:
                 rect.top() + top * scale,
                 side * scale,
             )
-            painter.fillPath(charge, QColor(TINCTURES[arms.charge_tincture]))
+            _fill(painter, charge, arms.charge_tincture, rect)
             painter.strokePath(charge, QPen(QColor(0, 0, 0, 70), max(0.6, scale / 160)))
+            for layer, tincture in (
+                (CHARGE_LINES.get(arms.charge), line_tincture(arms)),
+                (CHARGE_ARMED.get(arms.charge), armed_tincture(arms)),
+            ):
+                if layer is not None:
+                    detail = _path(
+                        (layer,),
+                        rect.left() + left * scale,
+                        rect.top() + top * scale,
+                        side * scale,
+                    )
+                    painter.fillPath(detail, QColor(TINCTURES[tincture]))
     # A sheen from the upper left, as on a painted shield.
     sheen = QLinearGradient(
         rect.topLeft(), QPointF(rect.right(), rect.top() + scale * HEIGHT)
