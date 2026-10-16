@@ -15,6 +15,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor, QPalette
 from PySide6.QtWidgets import (
     QApplication,
+    QComboBox,
     QGraphicsDropShadowEffect,
     QLabel,
     QPushButton,
@@ -27,7 +28,7 @@ from ars_magica_manager import covenant_sheet as cvs
 from ars_magica_manager import familiars as fam
 from ars_magica_manager import storage
 from ars_magica_manager.form_spec import DialogField
-from ars_magica_manager.gui import pictures, sounds
+from ars_magica_manager.gui import choices, pictures, sounds
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.covenant import CovenantPage
 from ars_magica_manager.gui.familiar import FamiliarPage
@@ -263,6 +264,48 @@ def test_a_form_draws_its_fields_and_refuses_what_does_not_parse(app):
         "notes": "Quiet.",
         "why": "a fall",
     }
+
+
+def test_a_drop_down_is_an_inked_blank_with_a_purple_bookmark(app):
+    window = MainWindow(saga_ids=[])
+    dialog = FieldsDialog(
+        "Pick",
+        [
+            DialogField(
+                "hand",
+                "Hand",
+                "select",
+                "left",
+                options=[("Left", "left"), ("Right", "right"), ("Both", "both")],
+            )
+        ],
+        PALETTES[0],
+        window,
+    )
+    dialog.resize(400, 160)
+    dialog.show()
+    app.processEvents()
+    combo = dialog.inputs["hand"]
+    assert isinstance(combo, QComboBox)
+    assert isinstance(combo.itemDelegate(), choices.InkSlipRows)
+    closed = combo.grab().toImage()
+    ribbon = closed.pixelColor(closed.width() - 12, closed.height() // 2)
+    assert ribbon.blue() > ribbon.green() + 40 and ribbon.red() > ribbon.green()
+    # Open, the chosen line is washed in purple and the others are not.
+    combo.showPopup()
+    app.processEvents()
+    view = combo.view()
+    lines = view.viewport().grab().toImage()
+
+    def purple(row: int) -> int:
+        y = view.visualRect(combo.model().index(row, 0)).center().y()
+        colour = lines.pixelColor(choices.MARGIN + 4, y)
+        return colour.blue() - colour.green()
+
+    assert purple(0) > purple(2) + 8
+    combo.hidePopup()
+    dialog.close()
+    window.close()
 
 
 def test_editing_a_section_saves_the_saga_and_stays_on_its_chapter(app):

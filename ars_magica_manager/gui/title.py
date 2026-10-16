@@ -1,36 +1,37 @@
 """The title page the desktop window opens on (title_page.TitlePage): the
-illuminated initial, the name and tagline, and a button for each way on,
-inside a gilt frame on the paper. It fades in; Enter takes the first way
-on (the saga opened last, else every saga).
+illuminated initial, the name in gilt-edged letters and the tagline, and a
+button for each way on, inside a burnished gilt frame on the paper. It
+fades in; Enter takes the first way on (the saga opened last, else every
+saga).
 """
 
 from __future__ import annotations
 
 from collections.abc import Callable
 
-from PySide6.QtCore import QEasingCurve, QPropertyAnimation, QRectF, Qt
+from PySide6.QtCore import QEasingCurve, QPointF, QPropertyAnimation, QRectF, Qt
 from PySide6.QtGui import (
-    QColor,
     QFont,
+    QFontMetricsF,
     QKeySequence,
     QPainter,
     QPaintEvent,
-    QPen,
     QShortcut,
 )
 from PySide6.QtWidgets import (
     QGraphicsOpacityEffect,
     QHBoxLayout,
+    QLabel,
     QPushButton,
     QVBoxLayout,
 )
 
 from .. import title_page as tp
-from . import pictures
+from . import gilding, pictures
 from .illumination import IlluminatedInitial
 from .ornaments import Headpiece, ShortRule, Tailpiece, corner_flourishes
 from .paper import Paper
-from .themes import Palette
+from .themes import Palette, wash_style
 from .widgets import serif, text
 
 #: How long the page takes to fade in, in milliseconds.
@@ -54,7 +55,7 @@ def _choice_button(choice: tp.TitleChoice, p: Palette, first: bool) -> QPushButt
         }}
         QPushButton#titleChoice:hover, QPushButton#titleChoice:focus {{
             border: 2px solid {p["accent"]};
-            background: {p["selection"]};
+            background: {wash_style(p)};
         }}
         """
     )
@@ -72,6 +73,31 @@ def _choice_button(choice: tp.TitleChoice, p: Palette, first: bool) -> QPushButt
         label.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
         column.addWidget(label)
     return button
+
+
+class GiltTitle(QLabel):
+    """The book's name, every letter in the rubric's colour with a gilt
+    edge (gilding.gilt_word). Its text is the name, so it reads as a
+    plain label; only its painting is its own."""
+
+    def __init__(self, name: str, p: Palette, font: QFont) -> None:
+        super().__init__(name)
+        self.p = p
+        self.setFont(font)
+        self.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+
+    def paintEvent(self, _event: QPaintEvent) -> None:
+        metrics = QFontMetricsF(self.font())
+        box = QRectF(self.contentsRect())
+        width = metrics.horizontalAdvance(self.text())
+        height = metrics.ascent() + metrics.descent()
+        baseline = QPointF(
+            box.left() + (box.width() - width) / 2,
+            box.top() + (box.height() - height) / 2 + metrics.ascent(),
+        )
+        painter = QPainter(self)
+        gilding.gilt_word(painter, self.text(), self.font(), baseline, self.p)
+        painter.end()
 
 
 class TitleScreen(Paper):
@@ -93,9 +119,9 @@ class TitleScreen(Paper):
             IlluminatedInitial(page.name[0], p), 0, Qt.AlignmentFlag.AlignHCenter
         )
         column.addSpacing(10)
-        name = text(page.name, p["heading"], QFont(pictures.DISPLAY, 64))
-        name.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        column.addWidget(name)
+        #: The book's name in gilt-edged letters.
+        self.name = GiltTitle(page.name, p, QFont(pictures.DISPLAY, 64))
+        column.addWidget(self.name)
         column.addSpacing(4)
         column.addWidget(ShortRule(p))
         column.addSpacing(6)
@@ -149,9 +175,6 @@ class TitleScreen(Paper):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         frame = QRectF(self.rect()).adjusted(28, 22, -28, -22)
-        painter.setPen(QPen(QColor(p["accent"]), 1.4))
-        painter.drawRect(frame)
-        painter.setPen(QPen(QColor(p["accent"]), 0.7))
-        painter.drawRect(frame.adjusted(6, 6, -6, -6))
+        gilding.gilt_frame(painter, frame, p, gap=6)
         corner_flourishes(painter, frame.adjusted(10, 10, -10, -10), p, 34)
         painter.end()

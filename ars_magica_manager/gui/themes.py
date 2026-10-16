@@ -232,6 +232,16 @@ def wash_style(p: Palette, alpha: int = WASH) -> str:
     )
 
 
+#: Murex purple, the drop-downs' ink (choices.py): on parchment, and
+#: lighter on the dark page.
+MUREX = ("#6B3F9E", "#B993E6")
+
+
+def murex(p: Palette) -> str:
+    """The drop-downs' purple in palette `p`."""
+    return MUREX[p.dark]
+
+
 def style_sheet(p: Palette, serif: str) -> str:
     """The whole window's Qt style sheet in palette `p`; `serif` is the
     headings' family (EB Garamond). The data font is the application's
@@ -242,10 +252,19 @@ def style_sheet(p: Palette, serif: str) -> str:
         background: transparent;
         color: {p["foreground"]};
     }}
-    QMenu, QToolTip, QDialog, QComboBox QAbstractItemView {{
+    QMenu, QToolTip, QDialog {{
         background: {p["background"]};
     }}
-    QMenu::item:selected, QComboBox QAbstractItemView::item:selected {{
+    QComboBox QAbstractItemView {{
+        background: {p["surface"]};
+        border: 1px solid {p["label"]};
+        outline: none;
+        font-family: "{serif}";
+        font-size: 12.5pt;
+        font-style: normal;
+        padding: 6px 0;
+    }}
+    QMenu::item:selected {{
         background: {wash_style(p)};
         color: {p["foreground"]};
     }}
@@ -318,21 +337,15 @@ def style_sheet(p: Palette, serif: str) -> str:
     QPushButton#crumb:hover {{ color: {p["heading"]}; }}
     QPushButton#crumb:disabled {{ color: {p["foreground"]}; }}
     QComboBox {{
-        background: {p["surface"]};
-        border: 1px solid {p["rule"]};
-        padding: 3px 6px;
-    }}
-    QComboBox#quiet {{
         background: transparent;
         border: none;
-        border-bottom: 1px solid {p["rule"]};
-        color: {p["label"]};
         font-family: "{serif}";
-        font-size: 11pt;
+        font-size: 12.5pt;
         font-style: italic;
-        padding: 1px 4px;
+        padding: 3px 30px 7px 6px;
     }}
-    QComboBox#quiet:hover {{ color: {p["heading"]}; }}
+    QComboBox::drop-down {{ width: 0; border: none; }}
+    QComboBox#quiet {{ font-size: 11pt; padding: 1px 30px 6px 4px; }}
     QLineEdit, QPlainTextEdit {{
         background: {p["surface"]};
         border: 1px solid {p["rule"]};
@@ -341,7 +354,7 @@ def style_sheet(p: Palette, serif: str) -> str:
         selection-background-color: {p["selection"]};
         selection-color: {p["foreground"]};
     }}
-    QLineEdit:focus, QPlainTextEdit:focus, QComboBox:focus {{
+    QLineEdit:focus, QPlainTextEdit:focus {{
         border: 1px solid {p["accent"]};
     }}
     QPushButton {{

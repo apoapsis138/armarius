@@ -22,7 +22,7 @@ from ars_magica_manager.gui.help import HelpPage
 from ars_magica_manager.gui.illumination import paint_initial
 from ars_magica_manager.gui.pages import SagaPage, SagaShelf
 from ars_magica_manager.gui.themes import PALETTES
-from ars_magica_manager.gui.title import TitleScreen
+from ars_magica_manager.gui.title import GiltTitle, TitleScreen
 from ars_magica_manager.gui.window import MainWindow
 
 
@@ -99,3 +99,25 @@ def test_the_initial_paints_gold_on_its_ground(app):
     assert rim.red() > rim.blue() + 60
     band = image.pixelColor(28, 120)
     assert band.lightness() < 120
+
+
+def test_the_name_and_frame_are_gilt(app):
+    window = _titled([])
+    title = window.title
+    assert title is not None
+    title.resize(1400, 860)
+    assert isinstance(title.name, GiltTitle)
+    assert title.name.text() == "Armarius"
+    name = title.name.grab().toImage()
+    pixels = [
+        name.pixelColor(x, y)
+        for x in range(0, name.width(), 2)
+        for y in range(0, name.height(), 2)
+    ]
+    # Rubric red letters, edged in gold.
+    assert any(c.red() > 120 and c.green() < 40 for c in pixels)
+    assert any(c.red() > 180 and c.green() > 140 and c.blue() < 110 for c in pixels)
+    title.setGraphicsEffect(None)  # as once faded in
+    page = title.grab().toImage()
+    frame = page.pixelColor(28, page.height() // 2)
+    assert frame.red() > frame.blue() + 60

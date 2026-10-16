@@ -46,6 +46,18 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.90.0 — 2026-10-16
+
+- **A gilt title page.** The name Armarius on the title page is drawn
+  letter by letter with a gilt edge, as a record's initial is, and the
+  page's frame is burnished gold; its buttons take the gold wash under
+  the pointer.
+- **Drop-downs as a blank in a manuscript.** On the desktop each
+  drop-down shows its choice in italic on a dotted line, with a purple
+  silk bookmark at its right; the line turns solid purple while it has
+  focus. Its open list is a slip ruled in ink, a purple margin rule down
+  its side, the chosen line washed in purple.
+
 ## 2.89.0 — 2026-10-16
 
 - **Tables as a ruled ledger.** On the desktop, tables lose their boxes,

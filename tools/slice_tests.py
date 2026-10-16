@@ -73,6 +73,7 @@ EVERYTHING = {
 }
 
 AREA_TESTS: dict[str, tuple[str, ...]] = {
+    "ars_magica_manager/gui/choices.py": ("test_gui_sheet.py",),
     "ars_magica_manager/actions.py": ("test_dispatch_matrix.py", "test_keyboard.py"),
     "ars_magica_manager/sections.py": ("test_dispatch_matrix.py", "test_sheet_text.py"),
     "ars_magica_manager/form_spec.py": (

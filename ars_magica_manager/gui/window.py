@@ -56,7 +56,7 @@ from ..actions import NodeKind
 from ..commands import Act, Choose, ChooseFile, Command, Confirm, Form, Picked, Refuse
 from ..markup import escape
 from ..models import Character, Covenant, Familiar, Laboratory, Saga
-from . import gilding, pictures, print_sheet, printing, snapping, sounds
+from . import choices, gilding, pictures, print_sheet, printing, snapping, sounds
 from .character_sheet import CharacterSheet
 from .covenant import CovenantPage
 from .editing import InPlace, place_for
@@ -1150,6 +1150,7 @@ class MainWindow(QMainWindow):
             app.setFont(QFont(pictures.UI, 10))
             app.setStyleSheet(style_sheet(p, pictures.SERIF))
             gilding.gild_application(app, p)
+            choices.ink_choices(app, p)
         other = PALETTES[(self.palette_index + 1) % len(PALETTES)]
         self.theme.setText(f"  {other.name}")
         self.theme.setIcon(pictures.icon("theme", p["label"]))

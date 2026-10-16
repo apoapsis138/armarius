@@ -1,6 +1,8 @@
 """The gilt the desktop version lays on its working parts: the inspector
 framed as a gilt leaf, every scroll bar drawn as a burnished rod, and the
-gold wash a chosen row takes, dark at its left and fading to nothing.
+gold wash a chosen row takes, dark at its left and fading to nothing;
+and the gilt edge on a name's initial, or on every letter of the title
+page's name, inside the title page's burnished frame.
 
 The gold is the illuminated initials' own (illumination.gold), so the
 rods and frames shine as the letters do.
@@ -13,6 +15,7 @@ from PySide6.QtGui import (
     QBrush,
     QColor,
     QFont,
+    QFontMetricsF,
     QLinearGradient,
     QPainter,
     QPainterPath,
@@ -53,12 +56,18 @@ def gilt_leaf(painter: QPainter, rect: QRectF, p: Palette) -> None:
     painter.drawTiledPixmap(rect.toRect(), paper(p))
     painter.fillRect(rect, shade(p["panel"], 70))
     outer = rect.adjusted(8, 8, -8, -8)
-    painter.setBrush(Qt.BrushStyle.NoBrush)
-    painter.setPen(QPen(gold(outer), 2.4))
-    painter.drawRect(outer)
-    painter.setPen(QPen(shade(p["accent"], 200), 0.8))
-    painter.drawRect(outer.adjusted(5, 5, -5, -5))
+    gilt_frame(painter, outer, p)
     corner_flourishes(painter, outer.adjusted(6, 6, -6, -6), p, 30)
+
+
+def gilt_frame(painter: QPainter, rect: QRectF, p: Palette, gap: float = 5) -> None:
+    """A burnished gold frame on `rect`, with a fine rule `gap` inside it."""
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+    painter.setBrush(Qt.BrushStyle.NoBrush)
+    painter.setPen(QPen(gold(rect), 2.4))
+    painter.drawRect(rect)
+    painter.setPen(QPen(shade(p["accent"], 200), 0.8))
+    painter.drawRect(rect.adjusted(gap, gap, -gap, -gap))
 
 
 # -- the scroll bars --
@@ -190,3 +199,16 @@ def gilt_letter(
     edge.setColorAt(0.7, QColor(PIGMENTS["gold"]))
     edge.setColorAt(1.0, shade(PIGMENTS["gold"], 0))
     painter.strokePath(path, QPen(QBrush(edge), 1.7))
+
+
+def gilt_word(
+    painter: QPainter, word: str, font: QFont, baseline: QPointF, p: Palette
+) -> None:
+    """Draw `word` as gilt_letter draws one letter, each letter with its
+    own gilt edge: for a title, where every letter is a capital's size."""
+    metrics = QFontMetricsF(font)
+    for i, letter in enumerate(word):
+        if letter.isspace():
+            continue
+        x = baseline.x() + metrics.horizontalAdvance(word[:i])
+        gilt_letter(painter, letter, font, QPointF(x, baseline.y()), p)
