@@ -36,6 +36,11 @@ customs, how many neighbours there are and how many are warm or wary
 toward it, how many other covenants there are, and when the Tribunal
 next meets.
 
+**Threat due** names the threat whose next stage comes soonest.
+<!-- gui -->
+The leaf after it (❧) opens that threat's page.
+<!-- /gui -->
+
 ## Neighbours tab
 <!-- help: tab-region-neighbours -->
 
@@ -57,8 +62,9 @@ The Region's facts say what the lists are narrowed to ("Showing"). Press `/` (Fi
 both; blank both to show everything again.
 <!-- /tui -->
 <!-- gui -->
-Choose them in the two quiet drop-downs after the facts ("Show: Every
-region, Every kind"); set both back to Every to show everything again.
+Choose them in the two quiet drop-downs at the right of the first list's
+heading ("Show: Every region, Every kind"); set both back to Every to
+show everything again.
 <!-- /gui -->
 
 ### Other Covenants

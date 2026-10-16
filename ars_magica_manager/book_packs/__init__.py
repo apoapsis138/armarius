@@ -21,12 +21,15 @@ licence, and NOTICE.md the credit."""
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from .. import DATA_DIR, packs, transfer
 from ..models import Saga
+
+if TYPE_CHECKING:
+    from .builder import Builder
 
 #: Where the shipped packs live.
 PACKS_DIR = DATA_DIR / "packs"
@@ -36,13 +39,17 @@ PACKS_DIR = DATA_DIR / "packs"
 class BookPack:
     """One sourcebook's pack: its key (the file's stem), the book's
     abbreviation (sourcebooks.SOURCEBOOKS), the pack's name as the user
-    sees it, the function that builds its saga, and the credit line."""
+    sees it, the function that assembles its saga with a Builder, and the
+    credit line."""
 
     key: str
     book: str
     name: str
-    build: Callable[[], Saga]
+    assemble: Callable[[], Builder]
     source: str
+
+    def build(self) -> Saga:
+        return self.assemble().saga
 
 
 PACKS: dict[str, BookPack] = {}
@@ -54,12 +61,17 @@ def register(pack: BookPack) -> None:
 
 def data(pack: BookPack) -> dict[str, Any]:
     """The pack as JSON-ready data: everything its saga holds, with the
-    book it comes from and its credit line."""
-    saga = pack.build()
+    book it comes from, its credit line, and the sketch of each magus
+    whose stats were generated (packs.GENERATED)."""
+    b = pack.assemble()
+    saga = b.saga
     found = packs.pack_data(
         saga, pack.name, saga.tribunals, saga.covenants, saga.neighbours
     )
-    return {**found, "book": pack.book, "source": pack.source}
+    held = {c["id"] for c in found["saga"]["characters"]}
+    sketches = {i: asdict(c) for i, c in b.sketches.items() if i in held}
+    extra = {packs.GENERATED: sketches} if sketches else {}
+    return {**found, "book": pack.book, "source": pack.source, **extra}
 
 
 def path_of(pack: BookPack, folder: Path = PACKS_DIR) -> Path:

@@ -85,15 +85,29 @@ def _filter_fact(saga: Saga) -> list[Fact]:
     return [Fact("Showing", neighbour_filter.describe(saga, wanted))]
 
 
-def threat_due(saga: Saga) -> str:
-    """The threat whose next stage comes soonest: "The Hollow Crown,
-    Winter 1220"; "" if none has a dated stage to come."""
+def _soonest(saga: Saga) -> tuple[Neighbour, str] | None:
     due = [
-        found
+        (found, n)
         for n in saga.neighbours
         if n.kind == "threat" and (found := threats.due(saga, n)) is not None
     ]
-    return min(due)[1] if due else ""
+    if not due:
+        return None
+    (_when, words), threat = min(due, key=lambda pair: pair[0])
+    return threat, words
+
+
+def threat_due(saga: Saga) -> str:
+    """The threat whose next stage comes soonest: "The Hollow Crown,
+    Winter 1220"; "" if none has a dated stage to come."""
+    soonest = _soonest(saga)
+    return soonest[1] if soonest else ""
+
+
+def due_threat(saga: Saga) -> Neighbour | None:
+    """The threat Threat due names, to open from the Region."""
+    soonest = _soonest(saga)
+    return soonest[0] if soonest else None
 
 
 def neighbours_title(saga: Saga) -> str:

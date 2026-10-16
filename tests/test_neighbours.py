@@ -234,6 +234,29 @@ def test_the_desktop_filter_bar_narrows_the_region_s_cards():
     titles = [label.text() for label in page.findChildren(QLabel)]
     assert any("Lords and Towns (1 of 2)" in title for title in titles)
     assert not any("The Church" in title for title in titles)
+    # The filter sits on the first list's heading line, and stays there.
+    assert bar.parent() is not None and bar.parent() is not page
+    bar.kind.setCurrentIndex(bar.kind.findData("church"))
+    assert bar.parent() is not None
+
+
+def test_the_desktop_opens_the_threat_that_is_due():
+    pytest.importorskip("PySide6")
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    from PySide6.QtWidgets import QApplication
+
+    from ars_magica_manager.gui.ornaments import FleuronButton
+    from ars_magica_manager.gui.pages import SagaPage
+    from ars_magica_manager.gui.themes import PALETTES
+
+    QApplication.instance() or QApplication([])
+    saga = everything_saga()
+    opened: list[str] = []
+    page = SagaPage(saga, PALETTES[0], lambda _id: None, open_neighbour=opened.append)
+    leaf = page.findChild(FleuronButton)
+    assert leaf is not None and leaf.toolTip() == "Open The Hollow Crown"
+    leaf.click()
+    assert opened == ["crown"]
 
 
 def test_a_lord_works_out_his_fief_from_the_lower_figures():
@@ -404,6 +427,7 @@ def test_a_threats_stage_is_worked_out_from_the_date():
     assert at.current is not None and at.current["title"] == "Cattle go missing"
     assert at.next is not None and at.next["title"] == "The ford floods"
     assert region_sheet.threat_due(saga) == "The Hollow Crown, Winter 1220"
+    assert region_sheet.due_threat(saga) is crown
     saga.current_season = "Winter"
     assert threats.reached(saga, crown).current["title"] == "The ford floods"
     stages = threats.stages(crown)
@@ -415,6 +439,7 @@ def test_a_threats_stage_is_worked_out_from_the_date():
     assert threats.reached(saga, crown).current["title"] == "The crowning"
     assert threats.reached(saga, crown).next is None
     assert region_sheet.threat_due(saga) == ""
+    assert region_sheet.due_threat(saga) is None
 
 
 def test_a_threat_on_a_track_moves_with_its_position():

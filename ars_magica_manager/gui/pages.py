@@ -37,7 +37,7 @@ from ..models import Character, Neighbour, Saga
 from . import pictures
 from .figures import fact_grid
 from .menus import Placer
-from .ornaments import ShortRule
+from .ornaments import FleuronButton, ShortRule
 from .themes import Palette
 from .widgets import (
     ClickableCard,
@@ -315,7 +315,8 @@ class NeighbourFilterBar(QWidget):
             "Every kind", [(k.name, k.key) for k in neighbour_filter.kinds(saga)]
         )
         row = QHBoxLayout(self)
-        row.setContentsMargins(0, 0, 0, 0)
+        # Level with the heading's words beside it.
+        row.setContentsMargins(0, 8, 0, 0)
         row.setSpacing(10)
         row.addStretch(1)
         row.addWidget(text("Show", p["dim"], serif(12, italic=True)))
@@ -335,13 +336,25 @@ class NeighbourFilterBar(QWidget):
             combo.currentIndexChanged.connect(lambda _index: then())
 
 
+def _region_facts(saga: Saga, p: Palette, open_neighbour: Open) -> QWidget:
+    """The Region's facts, Threat due with a leaf that opens the threat."""
+    beside: dict[str, QWidget] = {}
+    threat = region_sheet.due_threat(saga)
+    if threat is not None:
+        leaf = FleuronButton(p, f"Open {threat.name}")
+        leaf.clicked.connect(lambda: open_neighbour(threat.id))
+        beside["Threat due"] = leaf
+    return fact_grid(region_sheet.facts(saga, showing=False), p, 3, beside)
+
+
 def region_chapter(
     saga: Saga, p: Palette, open_neighbour: Open, new: QWidget | None
 ) -> QWidget:
-    """The Region: its facts, a quiet filter bar when it has neighbours,
-    then each group's neighbours the filter lets through as cards, and
-    the New card that adds one."""
-    facts = fact_grid(region_sheet.facts(saga, showing=False), p, 3)
+    """The Region: its facts (Threat due with a leaf that opens the
+    threat), then each group's neighbours the filter lets through as
+    cards, the filter's quiet drop-downs at the right of the first
+    group's heading, and the New card that adds one."""
+    facts = _region_facts(saga, p, open_neighbour)
     parts: list[QWidget] = [chapter_title(region_sheet.neighbours_title(saga), p)]
     groups = QWidget()
     holder = QVBoxLayout(groups)
@@ -349,7 +362,22 @@ def region_chapter(
     holder.setSpacing(12)
     bar = NeighbourFilterBar(saga, p) if saga.neighbours else None
 
+    def heading(words: str, first: bool) -> QWidget:
+        """A group's heading; the first shown carries the filter."""
+        title = chapter_title(words, p)
+        if bar is None or not first:
+            return title
+        row = QWidget()
+        line = QHBoxLayout(row)
+        line.setContentsMargins(0, 0, 0, 0)
+        line.setSpacing(16)
+        line.addWidget(title, 1)
+        line.addWidget(bar, 0, Qt.AlignmentFlag.AlignTop)
+        return row
+
     def fill() -> None:
+        if bar is not None:
+            bar.setParent(None)
         while holder.count():
             item = holder.takeAt(0)
             old = item.widget() if item is not None else None
@@ -360,13 +388,14 @@ def region_chapter(
             members = neighbour_filter.shown(saga, group.key)
             if not members:
                 continue
-            holder.addWidget(
-                chapter_title(region_sheet.group_title(saga, group.key), p)
-            )
+            first = holder.count() == 0
+            holder.addWidget(heading(region_sheet.group_title(saga, group.key), first))
             holder.addWidget(
                 card_grid([neighbour_card(saga, n, p, open_neighbour) for n in members])
             )
         if saga.neighbours and holder.count() == 0:
+            if bar is not None:
+                holder.addWidget(bar)
             holder.addWidget(
                 text("None match the filter.", p["dim"], serif(12.5, italic=True))
             )
@@ -378,7 +407,6 @@ def region_chapter(
 
     parts.append(facts)
     if bar is not None:
-        parts.append(bar)
         bar.changed(refilter)
     fill()
     parts.append(groups)

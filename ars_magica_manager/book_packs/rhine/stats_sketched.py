@@ -1,0 +1,1068 @@
+"""Generated stats for the magi Guardians of the Forests describes but
+prints no stat block for: a profile each, read off the book's paragraph
+(see book_packs.generated). Ages the book leaves out are assumed from
+the magus's rank and history, and the sheet says so."""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+from ..generated import Profile, apply
+
+if TYPE_CHECKING:
+    from . import Rhine
+
+P = Profile
+LOW = "Low German"
+
+
+def _art(name: str, art: str) -> tuple[str, dict[str, str]]:
+    return (name, {"art": art})
+
+
+def _ability(name: str, ability: str) -> tuple[str, dict[str, str]]:
+    return (name, {"ability": ability})
+
+
+def _focus(name: str, focus: str) -> tuple[str, dict[str, str]]:
+    return (name, {"focus": focus})
+
+
+def _gild(gild: str) -> tuple[str, dict[str, str]]:
+    return ("{gild} Trained", {"gild": f"{gild} Gild"})
+
+
+def _great(characteristic: str) -> tuple[str, dict[str, str]]:
+    return ("Great {characteristic}", {"characteristic": characteristic})
+
+
+def _deficient(form: str) -> tuple[str, dict[str, str]]:
+    return ("Deficient Form", {"form": form})
+
+
+#: Each sketched magus's profile, by character id.
+PROFILES: dict[str, Profile] = {
+    # -- Durenmar --
+    "murion": P(
+        strong="int pre com",
+        arts={
+            "Re": 6,
+            "Im": 6,
+            "In": 3,
+            "Cr": 3,
+            "Mu": 3,
+            "Pe": 3,
+            "Me": 3,
+            "Vi": 3,
+            "An": 2,
+            "Au": 2,
+            "Co": 2,
+            "He": 2,
+            "Ig": 2,
+            "Aq": 2,
+            "Te": 2,
+        },
+        abilities={
+            "Intrigue": (4, "Hermetic politics"),
+            "Leadership": (3, "magi"),
+            "Organization Lore: Durenmar": 2,
+            "Animal Ken": (1, "ravens"),
+        },
+        virtues=[
+            _ability("Puissant {ability}", "intrigue"),
+            _great("intelligence"),
+            _focus("Minor Magical Focus", "illusions"),
+            "Magic Items",
+            "Proud (Major)",
+            "Ambitious (Minor)",
+            "Dark Secret",
+            "Enemies",
+        ],
+        reputations={
+            "Prima of House Bonisagus (Hermetic)": 5,
+            "Archmage (Hermetic)": 4,
+        },
+    ),
+    "andrus": P(
+        strong="int per",
+        arts={"In": 4, "Re": 3, "Vi": 3, "Im": 2, "Cr": 2},
+        abilities={
+            "Organization Lore: Durenmar": 3,
+            "Profession: Scribe": 2,
+            "Intrigue": 2,
+            "Artes Liberales": 2,
+            "Philosophiae": 1,
+        },
+        virtues=[
+            "Colens Arcanorum",
+            "Piercing Gaze",
+            "Book Learner",
+            "Busybody",
+            "Ambitious (Minor)",
+            "Dutybound",
+            "Weak-Willed",
+        ],
+    ),
+    "tandaline": P(
+        strong="int pre",
+        arts={"Mu": 6, "Au": 6, "Co": 3, "Re": 2, "Im": 2},
+        abilities={
+            "Intrigue": (3, "House Bonisagus"),
+            "Folk Ken": 2,
+            "Organization Lore: Durenmar": 2,
+        },
+        virtues=[
+            "Tenens Occultorum",
+            _art("Affinity with {art}", "muto"),
+            _art("Affinity with {art}", "auram"),
+            ("Social Contacts", {"group": "Bonisagus magi"}),
+            "Secretive",
+            "Driven (Minor)",
+            "Hermetic Patron",
+            "Grudge",
+        ],
+    ),
+    "caecilius": P(
+        strong="int per",
+        weak="pre qik",
+        arts={"In": 6, "Me": 4, "Co": 3, "Vi": 3, "Re": 2, "Im": 2},
+        abilities={
+            "Code of Hermes": (4, "investigations"),
+            "Folk Ken": 2,
+            "Animal Ken": (1, "wolves"),
+            "Awareness": 2,
+        },
+        virtues=[
+            "Hermetic Prestige",
+            _art("Affinity with {art}", "intellego"),
+            _focus("Minor Magical Focus", "investigation"),
+            "Clear Thinker",
+            "Twilight Prone",
+            "Slothful",
+            "Oversensitive (Minor)",
+            "Dutybound",
+        ],
+        reputations={"Senior Quaesitor (Hermetic)": 5, "Archmage (Hermetic)": 4},
+    ),
+    "occultes": P(
+        strong="int com pre",
+        arts={"Re": 4, "Vi": 4, "Te": 3, "In": 3, "Cr": 2, "Im": 2},
+        abilities={
+            "Magic Lore": (3, "foreign traditions"),
+            "Bargain": 2,
+            "Profession: Scribe": 2,
+            "Charm": 1,
+        },
+        virtues=[
+            "Inventive Genius",
+            "Craft Automata",
+            ("Social Contacts", {"group": "collectors of curiosities"}),
+            "Ambitious (Minor)",
+            "Dark Secret",
+            "Busybody",
+            "Magical Fascination",
+        ],
+    ),
+    "ricardus_caespuus": P(
+        strong="int sta",
+        weak="pre com",
+        arts={"He": 7, "Cr": 4, "Vi": 4, "In": 2, "Mu": 2},
+        abilities={
+            "Profession: Gardener": (3, "exotic plants"),
+            "Magic Lore": 2,
+            "Craft: Glazier": 1,
+        },
+        virtues=[
+            ("Extractor of {form} Vis", {"form": "herbam"}),
+            _art("Affinity with {art}", "herbam"),
+            "Personal Vis Source",
+            "Reclusive",
+            "Incomprehensible",
+            "Higher Purpose (Minor)",
+        ],
+    ),
+    "petrus_virilis": P(
+        strong="int sta",
+        weak="pre com",
+        arts={"Co": 3, "Vi": 3, "Cr": 2, "In": 2},
+        abilities={"Medicine": (2, "fertility"), "Profession: Scribe": 1},
+        virtues=[
+            "Personal Vis Source",
+            "Study Bonus",
+            "Fear",
+            "Close Family Ties",
+            "Secretive",
+            "Weak Parens",
+        ],
+    ),
+    # -- Durenmar's guests and officers --
+    "winfrida": P(
+        strong="int per",
+        weak="pre str",
+        arts={"In": 4, "Me": 3, "Re": 2, "Vi": 2},
+        abilities={"Code of Hermes": (2, "investigations"), "Folk Ken": 1},
+        virtues=["Book Learner", "Weak-Willed", "Low Tolerance", "Follower"],
+    ),
+    "gudrun_tigurina": P(
+        age=70,
+        strong="int dex",
+        arts={"Te": 4, "Re": 4, "Ig": 3, "Vi": 3, "Mu": 2},
+        abilities={
+            "Craft: Goldsmith": (4, "enchanted settings"),
+            "Craft: Blacksmith": 2,
+            "Organization Lore: Durenmar": 1,
+        },
+        virtues=["Inventive Genius", "Proud (Minor)", "Weak Spontaneous Magic"],
+    ),
+    "xavier": P(
+        age=60,
+        strong="com int per",
+        arts={"Cr": 3, "In": 3, "Re": 3, "Me": 3, "Im": 2},
+        abilities={
+            "Profession: Scribe": (3, "archives"),
+            "Ride": 2,
+            "Area Lore: Rhine Tribunal": (3, "covenants"),
+            "Organization Lore: Order of Hermes": 2,
+        },
+        virtues=["Good Teacher", "Magical Memory", "Dutybound", "Covenant Upbringing"],
+    ),
+    # -- Dankmar --
+    "schadrit": P(
+        strong="int pre",
+        weak="dex qik",
+        arts={"Pe": 5, "Mu": 4, "Co": 4, "Im": 4, "Me": 3, "An": 2},
+        abilities={
+            "Faerie Magic": (5, "curses"),
+            "Faerie Lore": (3, "dark fae"),
+            "Hex": 4,
+            "Intrigue": 2,
+        },
+        virtues=[
+            "Faerie Magic",
+            "Hex",
+            "Blatant Gift",
+            "Wrathful (Minor)",
+            "Proud (Minor)",
+            "Hatred (Minor)",
+            "Disfigured",
+            "Infamous",
+        ],
+    ),
+    "orphedra": P(
+        strong="int pre",
+        arts={"Im": 5, "Me": 4, "Pe": 4, "Ig": 3, "An": 2, "He": 2},
+        abilities={
+            "Faerie Lore": (4, "dark fae"),
+            "Faerie Magic": (2, "illusions"),
+            "Area Lore: Black Forest": 2,
+            "Survival": 1,
+        },
+        virtues=[
+            "Faerie Sympathy",
+            _art("Affinity with {art}", "imaginem"),
+            "Magical Air",
+            "Wrathful (Minor)",
+            "Faerie Upbringing",
+        ],
+    ),
+    "jiphella": P(
+        strong="int pre",
+        weak="dex qik",
+        arts={"Me": 7, "Re": 4, "Im": 3, "In": 2},
+        abilities={"Entrancement": (5, "covenfolk"), "Leadership": 2, "Intrigue": 2},
+        virtues=[
+            "Faerie Magic",
+            "Entrancement",
+            "Necessary Condition",
+            "Evil Eye",
+            "Weak-Willed",
+            "Obese",
+            "Close Family Ties",
+        ],
+    ),
+    "larinda": P(
+        strong="int sta pre",
+        arts={"An": 3, "He": 3, "Aq": 3, "Au": 3, "Cr": 2, "Mu": 2},
+        abilities={
+            "Profession: Brewer": (2, "potions"),
+            "Animal Ken": 1,
+            "Faerie Lore": 1,
+        },
+        virtues=[
+            "Hermetic Alchemy",
+            "Animal Ken",
+            "Short-Lived Magic",
+            "Close Family Ties",
+            "Optimistic (Minor)",
+        ],
+    ),
+    # -- Triamore --
+    "daria_la_gris": P(
+        strong="int pre com",
+        native="French",
+        arts={"Re": 4, "Me": 4, "Vi": 3, "In": 2},
+        abilities={
+            "Intrigue": (4, "Tribunal politics"),
+            "Leadership": 3,
+            "Etiquette": 2,
+            "Code of Hermes": 2,
+            "Living Language: High German": 3,
+        },
+        virtues=[
+            ("Social Contacts", {"group": "Normandy's covenants"}),
+            "Strong-Willed",
+            "Proud (Minor)",
+            "Enemies",
+            "Ambitious (Minor)",
+        ],
+    ),
+    "remi_of_museau": P(
+        strong="com dex pre",
+        native="French",
+        arts={"An": 3, "Cr": 2, "Im": 2, "In": 2, "Me": 2},
+        abilities={
+            "Music": (3, "lute"),
+            "Single Weapon": 2,
+            "Hunt": 2,
+            "Ride": 2,
+            "Artes Liberales": (2, "rhetoric"),
+            "Charm": 2,
+            "Living Language: High German": 3,
+        },
+        virtues=[
+            "Gentle Gift",
+            "Jack-of-All-Trades",
+            "Master of None",
+            "Optimistic (Minor)",
+            "Generous (Minor)",
+        ],
+    ),
+    "sicero": P(
+        strong="int sta",
+        native="English",
+        arts={"Re": 3, "Pe": 3, "Vi": 3, "Co": 2},
+        abilities={"Living Language: High German": 2},
+        virtues=["Prestigious Student", "Ambitious (Minor)", "Sheltered Upbringing"],
+    ),
+    # -- Waddenzee --
+    "hygwald_veritas": P(
+        strong="int pre com",
+        native="English",
+        arts={"Re": 6, "Me": 6, "In": 2, "Im": 2},
+        abilities={
+            "Guile": (3, "lying to mundanes"),
+            "Code of Hermes": 2,
+            "Living Language: Low German": 3,
+            "Bargain": 2,
+        },
+        virtues=[
+            _art("Affinity with {art}", "mentem"),
+            "Wealthy",
+            "Proud (Minor)",
+            "Avaricious (Minor)",
+            "Dark Secret",
+            "Compulsive Lying (Minor)",
+        ],
+    ),
+    "eric_ribecus": P(
+        strong="pre com str",
+        native="West Norse",
+        arts={"Aq": 4, "Au": 4, "Im": 3, "Cr": 2, "Re": 2},
+        abilities={
+            "Single Weapon": (3, "sword"),
+            "Profession: Sailor": 3,
+            "Leadership": 2,
+            "Living Language: Low German": 3,
+        },
+        virtues=[
+            "Magic Items",
+            "Animal Ken",
+            "Reckless (Major)",
+            "Overconfident (Minor)",
+            "Outlaw Leader",
+            "Beloved Rival (Minor)",
+        ],
+    ),
+    "lucas_von_beck": P(
+        strong="int sta str",
+        arts={"Pe": 6, "Co": 5, "Me": 3, "Re": 2},
+        abilities={
+            "Single Weapon": 2,
+            "Etiquette": 2,
+            "Infernal Lore": 1,
+            "Living Language: Low German": 2,
+        },
+        virtues=["Corpse Magic", "Wrathful (Minor)", "Warped Magic", "Black Sheep"],
+    ),
+    "hachim_al_khalejj": P(
+        strong="int per",
+        native="Arabic",
+        arts={"In": 5, "Vi": 3, "Au": 2, "Me": 2},
+        abilities={
+            "Artes Liberales": (3, "astronomy"),
+            "Theology: Islam": 2,
+            "Living Language: Low German": 2,
+            "Profession: Sailor": 1,
+        },
+        virtues=["Astrological Magic", "Pious (Minor)", "Lame", "Outsider (Minor)"],
+    ),
+    # -- Oculus Septentrionalis --
+    "henri_de_tours": P(
+        strong="com pre int",
+        native="French",
+        arts={"Me": 6, "Re": 4, "In": 3, "Im": 2},
+        abilities={
+            "Bargain": (4, "the Hanse"),
+            "Etiquette": 3,
+            "Profession: Merchant": 3,
+            "Intrigue": 3,
+            "Living Language: Low German": 4,
+            "Leadership": 2,
+        },
+        virtues=[
+            "Wealthy",
+            _gild("Apple"),
+            "Gentle Gift",
+            "Ambitious (Major)",
+            "Close Family Ties",
+            "Proud (Minor)",
+            "Obese",
+            "Poor Formulaic Magic",
+        ],
+    ),
+    "gunhilda_henrasdottir": P(
+        strong="com int",
+        native=LOW,
+        arts={"Cr": 3, "Re": 3, "He": 2, "An": 2, "Ig": 2},
+        abilities={"Profession: Steward": (3, "housekeeping"), "Etiquette": 1},
+        virtues=[
+            _gild("Apple"),
+            "Gentle Gift",
+            "Sheltered Upbringing",
+            "Close Family Ties",
+            "Obese",
+        ],
+    ),
+    "estrid_danesson": P(
+        strong="pre sta com",
+        native="West Norse",
+        arts={"Au": 5, "Aq": 5, "Re": 3, "In": 2},
+        abilities={
+            "Profession: Sailor": (4, "the Baltic"),
+            "Whistle Up The Wind": 3,
+            "Living Language: Low German": 3,
+            "Leadership": 1,
+        },
+        virtues=[
+            "Hermetic Experience",
+            "Whistle Up The Wind",
+            "Rigid Magic",
+            _gild("Apple"),
+            "Beloved Rival (Minor)",
+            "Reckless (Minor)",
+            "Rolling Stone",
+        ],
+    ),
+    "marcus_navicularius": P(
+        strong="int str sta",
+        native=LOW,
+        arts={"Te": 6, "He": 4, "Re": 4, "Aq": 3, "Mu": 2},
+        abilities={
+            "Craft: Shipwright": (5, "cogs"),
+            "Bargain": 2,
+            "Profession: Merchant": 2,
+        },
+        virtues=[
+            _gild("Apple"),
+            "Wealthy",
+            _art("Affinity with {art}", "terram"),
+            "Proud (Minor)",
+            "Restriction",
+            "Dark Secret",
+        ],
+    ),
+    "carolus": P(
+        strong="int com",
+        native=LOW,
+        arts={"In": 3, "Me": 3, "An": 2, "Cr": 2},
+        abilities={"Artes Liberales": (3, "grammar"), "Teaching": 2, "Philosophiae": 2},
+        virtues=[
+            _gild("Apple"),
+            "Good Teacher",
+            "Short Attention Span",
+            "Gullible",
+            "Poor Memory",
+        ],
+    ),
+    "boris_of_novgorod": P(
+        gifted=False,
+        strong="per com",
+        native="East Slavonic",
+        abilities={
+            "Ride": (3, "long journeys"),
+            "Bargain": (4, "vis"),
+            "Area Lore: Rhine Tribunal": 2,
+            "Area Lore: Novgorod Tribunal": 3,
+            "Living Language: Low German": 3,
+            "Organization Lore: Order of Hermes": 2,
+            "Folk Ken": 2,
+            "Dead Language: Latin": 3,
+            "Code of Hermes": 2,
+        },
+        virtues=[
+            "Redcap",
+            "Well-Traveled",
+            "Slothful",
+            "Avaricious (Minor)",
+            "Outsider (Minor)",
+            "Poor Hearing",
+        ],
+    ),
+    # -- Fengheld --
+    "stentorius": P(
+        strong="int pre sta",
+        arts={
+            "Re": 8,
+            "Vi": 4,
+            "Me": 3,
+            "Te": 3,
+            "Co": 3,
+            "Au": 3,
+            "An": 3,
+            "Aq": 3,
+            "He": 3,
+            "Ig": 3,
+            "Im": 3,
+        },
+        abilities={
+            "Leadership": (4, "magi"),
+            "Intrigue": (3, "House Tremere"),
+            "Code of Hermes": 3,
+            "Animal Ken": (1, "cats"),
+        },
+        virtues=[
+            _art("Affinity with {art}", "rego"),
+            _art("Puissant {art}", "rego"),
+            "Magic Items",
+            "Proud (Major)",
+            "Enemies",
+            "Dutybound",
+            "Ambitious (Minor)",
+        ],
+        reputations={"Exarch of House Tremere (Hermetic)": 4, "Archmage (Hermetic)": 4},
+    ),
+    "horst": P(
+        gifted=False,
+        strong="int com per",
+        abilities={
+            "Magic Theory": (5, "teaching it"),
+            "Profession: Scribe": 4,
+            "Artes Liberales": 4,
+            "Philosophiae": 3,
+            "Code of Hermes": (4, "obscure rulings"),
+            "Organization Lore: Order of Hermes": 3,
+            "Dead Language: Latin": 5,
+            "Ride": 2,
+            "Area Lore: Rhine Tribunal": 3,
+        },
+        virtues=[
+            "Redcap",
+            "Good Teacher",
+            "Educated",
+            "Obese",
+            "Poor Living Conditions",
+            "Dutybound",
+            "Secretive",
+            "Poor Eyesight",
+        ],
+        reputations={"Author (Hermetic)": 4},
+    ),
+    "eule": P(
+        strong="int per",
+        weak="com pre",
+        arts={"In": 6, "Me": 5, "An": 5, "Pe": 3, "Re": 3, "Vi": 3},
+        abilities={"Heartbeast": (6, "the owl"), "Code of Hermes": 4, "Folk Ken": 2},
+        virtues=[
+            "Hermetic Prestige",
+            "Clear Thinker",
+            "Twilight Prone",
+            "Dark Secret",
+            "Slothful",
+        ],
+        reputations={"Wise Counsellor (Hermetic)": 5},
+    ),
+    "peter_von_w_rzburg": P(
+        strong="int pre dex",
+        arts={"He": 5, "Cr": 4, "Re": 3, "Aq": 3, "Vi": 2},
+        abilities={
+            "Profession: Vintner": (5, "enchanted wines"),
+            "Charm": 2,
+            "Etiquette": 2,
+            "Animal Ken": (1, "squirrels"),
+        },
+        virtues=[
+            "Inventive Genius",
+            ("Social Contacts", {"group": "Saxon nobles"}),
+            "Generous (Minor)",
+            "Busybody",
+            "Weak Spontaneous Magic",
+        ],
+    ),
+    "dorana": P(
+        strong="int com pre",
+        arts={"Au": 7, "Cr": 3, "Re": 4, "Aq": 3, "In": 2, "Me": 2},
+        abilities={
+            "Area Lore: Rhine Tribunal": (4, "covenants"),
+            "Intrigue": 3,
+            "Charm": 2,
+            "Teaching": 2,
+        },
+        virtues=[
+            _art("Affinity with {art}", "auram"),
+            "Well-Traveled",
+            "Grudge",
+            "Lecherous (Minor)",
+            "Hermetic Patron",
+        ],
+    ),
+    "indulius": P(
+        age=65,
+        strong="sta str int",
+        arts={"Pe": 6, "Ig": 5, "Co": 3, "Vi": 3, "In": 2},
+        abilities={
+            "Single Weapon": (4, "sword"),
+            "Code of Hermes": 3,
+            "Survival": 2,
+            "Hunt": (3, "renegades"),
+        },
+        virtues=["Warrior", "Wrathful (Minor)", "Dutybound", "Enemies"],
+    ),
+    "g_nther_lupus": P(
+        age=55,
+        strong="int sta",
+        arts={"An": 5, "Me": 4, "Pe": 3, "In": 3, "Co": 2},
+        abilities={
+            "Heartbeast": (4, "the wolf"),
+            "Hunt": (2, "renegades"),
+            "Guile": 3,
+            "Survival": 2,
+        },
+        virtues=["Inventive Genius", "Dark Secret", "Devoted Parent/Child"],
+    ),
+    "balastor": P(
+        strong="sta per pre",
+        weak="com",
+        arts={"Me": 5, "An": 3, "Mu": 3, "Re": 2},
+        abilities={"Survival": 2, "Athletics": 2, "Guile": 1},
+        virtues=[
+            "Wilderness Sense",
+            "Warped Magic",
+            "Feral Upbringing",
+            "Hatred (Minor)",
+        ],
+    ),
+    "beechleaf": P(
+        strong="per int",
+        weak="com",
+        arts={"He": 4, "An": 2, "Me": 2, "Im": 2},
+        abilities={"Faerie Lore": (3, "dryads"), "Survival": 1},
+        virtues=["Faerie Sympathy", "Faerie Upbringing", "Magical Air", "Gullible"],
+    ),
+    "rudolph": P(
+        age=45,
+        strong="int com",
+        arts={"Re": 3, "Me": 3, "In": 3, "Vi": 2},
+        abilities={
+            "Intrigue": (3, "House Bonisagus"),
+            "Organization Lore: Durenmar": 2,
+        },
+        virtues=[
+            _ability("Puissant {ability}", "intrigue"),
+            "Ambitious (Minor)",
+            "Meddler (Minor)",
+        ],
+    ),
+    "clemens": P(
+        age=65,
+        strong="int pre",
+        arts={"Re": 5, "Vi": 4, "Te": 3, "Me": 3},
+        abilities={"Leadership": (3, "covenfolk"), "Intrigue": 2},
+        virtues=["Skilled Parens", "Dutybound"],
+    ),
+    "marguerite": P(
+        age=40,
+        strong="pre int",
+        native="French",
+        arts={"Ig": 5, "Pe": 5, "Co": 3},
+        abilities={"Etiquette": 1, "Bargain": 2, "Living Language: High German": 2},
+        virtues=["Venus' Blessing", "Proud (Minor)", "Social Handicap"],
+    ),
+    "wilhelm_weiss": P(
+        age=60,
+        strong="com pre int",
+        arts={"Me": 4, "Re": 3, "Te": 3, "Cr": 2},
+        abilities={
+            "Bargain": (4, "supplies"),
+            "Profession: Merchant": 3,
+            "Area Lore: Cologne": 3,
+            "Etiquette": 2,
+        },
+        virtues=[
+            "Gentle Gift",
+            _gild("Apple"),
+            ("Social Contacts", {"group": "Cologne's merchants"}),
+            "Greedy (Minor)",
+            "Dutybound",
+            "Covenant Upbringing",
+            "Close Family Ties",
+        ],
+    ),
+    "garrinchus": P(
+        age=27,
+        strong="int com",
+        arts={"Cr": 4, "Co": 4, "He": 2},
+        abilities={"Medicine": (3, "physick"), "Chirurgy": 2, "Bargain": 1},
+        virtues=[
+            "Hermetic Alchemy",
+            ("Greater Purifying Touch", {"disease": "fevers"}),
+            "Necessary Condition",
+            "Gentle Gift",
+            _gild("Apple"),
+            "Covenant Upbringing",
+            "Dutybound",
+            "Soft-Hearted",
+            "Overconfident (Minor)",
+        ],
+    ),
+    "hassan_el_megrayhi": P(
+        age=80,
+        strong="int per",
+        native="Arabic",
+        arts={"In": 6, "Vi": 4, "Au": 3, "Me": 3},
+        abilities={
+            "Artes Liberales": (5, "astronomy"),
+            "Enigmatic Wisdom": 2,
+            "Theology: Islam": 2,
+            "Philosophiae": 3,
+        },
+        virtues=[
+            "Astrological Magic",
+            "Clear Thinker",
+            "Reclusive",
+            "Outsider (Minor)",
+            "Pious (Minor)",
+        ],
+    ),
+    "odorpes": P(
+        age=60,
+        strong="sta str",
+        weak="com pre",
+        arts={"An": 6, "Mu": 3, "Co": 3, "Te": 2, "He": 2},
+        abilities={
+            "Heartbeast": (6, "the bear"),
+            "Survival": 3,
+            "Living Language: West Slavonic": 2,
+        },
+        virtues=["Hermetic Experience", "Slothful", "Reclusive", "Dark Secret"],
+    ),
+    # -- Heorot --
+    "signum_irruptus": P(
+        strong="int sta",
+        native="West Norse",
+        arts={"In": 4, "An": 4, "Co": 3, "Te": 3, "Vi": 2},
+        abilities={
+            "Magic Lore": (3, "trolls"),
+            "Survival": 2,
+            "Leadership": 2,
+            "Enigmatic Wisdom": 3,
+        },
+        virtues=["Magic Sensitivity", "Obsessed (Major)", "Missing Hand"],
+    ),
+    "theoderich_of_augsburg": P(
+        strong="int com",
+        arts={"In": 4, "Me": 5, "Co": 3, "Pe": 2},
+        abilities={
+            "Artes Liberales": (2, "history"),
+            "Infernal Lore": 1,
+            "Dominion Lore": 1,
+            "Living Language: West Norse": 2,
+        },
+        virtues=["Corpse Magic", "Obsessed (Minor)", "Dutybound", "Weak Parens"],
+    ),
+    "pancrestis_filius_occultes": P(
+        strong="int com",
+        arts={"Vi": 4, "In": 3, "Re": 3, "Me": 2},
+        abilities={
+            "Magic Lore": (3, "Norse wizards"),
+            "Living Language: West Norse": 2,
+        },
+        virtues=["Skilled Parens", "Mentor", "Ambitious (Minor)", "Fear"],
+    ),
+    # -- Crintera --
+    "urgen": P(
+        strong="str sta int",
+        weak="com",
+        arts={"An": 7, "Pe": 5, "Mu": 4, "Co": 4, "Re": 3, "Te": 3, "Vi": 3},
+        abilities={
+            "Heartbeast": (7, "the bear"),
+            "Leadership": (3, "Wilderists"),
+            "Brawl": 4,
+            "Survival": 2,
+            "Intrigue": 2,
+        },
+        virtues=[_great("strength"), "Wrathful (Major)", "Enemies", "Dark Secret"],
+        reputations={
+            "Former Primus of House Bjornaer (Hermetic)": 5,
+            "Victor in Wizard War (Hermetic)": 4,
+        },
+    ),
+    "jon_arnsson": P(
+        strong="sta int",
+        native="West Norse",
+        arts={"An": 5, "Co": 4, "Re": 4, "Vi": 3, "Te": 2},
+        abilities={
+            "Heartbeast": (5, "the lion"),
+            "Theology: Christian": 3,
+            "Single Weapon": 2,
+            "Leadership": 2,
+        },
+        virtues=["Pious (Major)", "Dutybound", "Uncertain Faith"],
+    ),
+    "phyllia": P(
+        strong="com per",
+        weak="pre",
+        arts={"In": 4, "An": 4, "Me": 3, "Im": 2},
+        abilities={
+            "Heartbeast": (3, "the polecat"),
+            "Area Lore: Rhine Tribunal": 3,
+            "Charm": 2,
+            "Folk Ken": 2,
+            "Organization Lore: Order of Hermes": 3,
+        },
+        virtues=[
+            ("Social Contacts", {"group": "Hermetic gossips"}),
+            "Gossip",
+            "Indiscreet",
+            "Busybody",
+        ],
+    ),
+    "ardea": P(
+        strong="int per",
+        arts={"In": 7, "Vi": 4, "An": 4, "Au": 3, "Aq": 3, "Im": 2},
+        abilities={
+            "Heartbeast": (3, "the heron"),
+            "Magic Lore": (3, "legends"),
+            "Premonitions": 2,
+        },
+        virtues=[
+            _art("Affinity with {art}", "intellego"),
+            "Premonitions",
+            "Temperate",
+            "Magical Fascination",
+            "Driven (Minor)",
+        ],
+    ),
+    "istvan_padas": P(
+        strong="sta str pre",
+        native="Magyar",
+        arts={"An": 5, "Co": 3, "Mu": 3, "Re": 3, "Ig": 2},
+        abilities={
+            "Heartbeast": (5, "the stallion"),
+            "Ride": 3,
+            "Athletics": 2,
+            "Leadership": 2,
+        },
+        virtues=[
+            "Strong-Willed",
+            "Wrathful (Minor)",
+            "Reckless (Minor)",
+            "True Love (Minor)",
+        ],
+    ),
+    "caprea": P(
+        age=50,
+        strong="int per",
+        arts={"An": 6, "In": 4, "Mu": 3, "Co": 2},
+        abilities={
+            "Heartbeast": (3, "the goat"),
+            "Magic Lore": (3, "beasts"),
+            "Animal Ken": 2,
+            "Profession: Scribe": 2,
+        },
+        virtues=[
+            _art("Affinity with {art}", "animal"),
+            "Animal Ken",
+            "Reckless (Minor)",
+            "Feud",
+        ],
+    ),
+    # -- Irencillia --
+    "handri": P(
+        strong="int pre",
+        arts={"Im": 5, "Me": 5, "Mu": 4, "Re": 3, "He": 3, "An": 3, "Vi": 3},
+        abilities={
+            "Faerie Magic": (6, "faerie courts"),
+            "Faerie Lore": (5, "Arcadia"),
+            "Intrigue": 2,
+            "Magic Lore": 2,
+        },
+        virtues=[
+            "Faerie Sympathy",
+            "Mastered Spells",
+            "Secretive",
+            "Fear",
+            "Dark Secret",
+            "Weak Spontaneous Magic",
+        ],
+        reputations={"Primus of House Merinita (Hermetic)": 5},
+    ),
+    "vinaria": P(
+        strong="pre int com",
+        arts={"Au": 6, "Aq": 6, "Ig": 6, "Te": 6, "Cr": 4, "Re": 4, "Mu": 4, "Im": 3},
+        abilities={
+            "Faerie Magic": (5, "glamour"),
+            "Intrigue": (4, "the Primi"),
+            "Faerie Lore": 4,
+            "Etiquette": 2,
+        },
+        virtues=[
+            _great("presence"),
+            "Elemental Magic",
+            ("Social Contacts", {"group": "the Primi"}),
+            "Faerie Upbringing",
+            "Twilight Prone",
+            "Proud (Minor)",
+            "Enemies",
+        ],
+        reputations={
+            "Archmaga (Hermetic)": 4,
+            "Former Prima of House Merinita (Hermetic)": 4,
+        },
+    ),
+    "glesig": P(
+        strong="sta str int",
+        weak="pre",
+        arts={"Te": 7, "Re": 3, "In": 3, "Mu": 3, "An": 2},
+        abilities={
+            "Faerie Lore": (4, "the fae beneath the earth"),
+            "Faerie Magic": (3, "Terram"),
+            "Area Lore: Black Forest": 2,
+        },
+        virtues=[
+            _art("Affinity with {art}", "terram"),
+            "Faerie Friend",
+            "Wrathful (Minor)",
+            "Social Handicap",
+            "Warped Magic",
+        ],
+    ),
+    "iacob_filius_handri": P(
+        strong="int com pre",
+        arts={"Me": 7, "Im": 4, "Re": 3, "Cr": 3},
+        abilities={
+            "Faerie Magic": 3,
+            "Charm": 3,
+            "Intrigue": 3,
+            "Theology: Christian": 2,
+            "Folk Ken": 2,
+        },
+        virtues=[
+            _art("Affinity with {art}", "mentem"),
+            "Inventive Genius",
+            "Dark Secret",
+            "Secretive",
+            "Ambitious (Minor)",
+        ],
+    ),
+    "gravis": P(
+        strong="int com",
+        arts={"In": 4, "Im": 3, "Me": 3, "He": 2},
+        abilities={"Faerie Lore": (5, "Irencillia's fae")},
+        virtues=[
+            "Book Learner",
+            _ability("Affinity with {ability}", "faerie lore"),
+            "Optimistic (Minor)",
+            "Obsessed (Minor)",
+            "Magical Fascination",
+        ],
+    ),
+    "richenda_spinosa": P(
+        strong="int pre",
+        native="West Slavonic",
+        arts={"He": 6, "Pe": 3, "Re": 3, "Ig": 2},
+        abilities={"Faerie Lore": 2, "Living Language: High German": 3},
+        virtues=[
+            _art("Affinity with {art}", "herbam"),
+            ("Faerie Blood", {"blood": "Kupala's"}),
+            _deficient("ignem"),
+            "Grudge",
+            "Wrathful (Minor)",
+            "Proud (Minor)",
+        ],
+    ),
+    # -- Roznov --
+    "igor_rastvan": P(
+        strong="int pre sta",
+        native="West Slavonic",
+        arts={"Pe": 6, "Co": 5, "Me": 5, "Vi": 4, "In": 3, "Re": 3},
+        abilities={
+            "Curse-Throwing": (5, "from afar"),
+            "Theology: Pagan": 4,
+            "Leadership": 3,
+            "Penetration": 2,
+        },
+        virtues=[
+            "Hermetic Theurgy",
+            "Curse-Throwing",
+            "Necessary Condition",
+            "Pagan (Major)",
+            "Overconfident (Minor)",
+            "Obsessed (Minor)",
+        ],
+        reputations={"High Priest of Radegast (Local)": 5, "Archmage (Hermetic)": 3},
+    ),
+    "severicus": P(
+        strong="int sta",
+        native="West Slavonic",
+        arts={"Te": 7, "Re": 5, "Vi": 3, "Pe": 3},
+        abilities={
+            "Leadership": (3, "magi"),
+            "Intrigue": 3,
+            "Living Language: High German": 3,
+        },
+        virtues=[
+            _art("Affinity with {art}", "terram"),
+            "Strong-Willed",
+            "Stuck in Your Ways",
+            "Obsessed (Minor)",
+            "Proud (Minor)",
+        ],
+    ),
+    # -- the Peregrinator --
+    "tabanus": P(
+        age=50,
+        strong="int per",
+        arts={"In": 6, "Me": 4, "Co": 3, "Vi": 3},
+        abilities={
+            "Code of Hermes": (5, "evidence"),
+            "Area Lore: Rhine Tribunal": 3,
+            "Folk Ken": 3,
+            "Ride": 2,
+        },
+        virtues=[
+            _art("Affinity with {art}", "intellego"),
+            "Clear Thinker",
+            "Infamous",
+            "Rolling Stone",
+            "Proud (Minor)",
+        ],
+    ),
+}
+
+
+def build(rhine: Rhine) -> None:
+    """Stat every magus the book leaves a sketch, from their profile."""
+    for character in list(rhine.b.saga.characters):
+        profile = PROFILES.get(character.id)
+        if profile is not None:
+            apply(rhine.b, character, profile)

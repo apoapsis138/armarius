@@ -19,7 +19,7 @@ from PySide6.QtGui import (
     QPainterPath,
     QPen,
 )
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QPushButton, QWidget
 
 from . import pictures
 from .themes import Palette
@@ -155,6 +155,45 @@ class Tailpiece(_Ornament):
         painter.setPen(Qt.PenStyle.NoPen)
         painter.setBrush(QColor(gilt))
         painter.drawEllipse(QPointF(cx, top + 38), 2.2, 2.2)
+
+
+class FleuronButton(QPushButton):
+    """A quiet button drawn as a printer's leaf pointing on (❧), as a
+    book points its reader to the page that follows: in the label's
+    colour, the heading's when the pointer is over it, with a fine rule
+    under it as the filter's drop-downs have."""
+
+    def __init__(self, p: Palette, tip: str) -> None:
+        super().__init__()
+        self.p = p
+        self.setToolTip(tip)
+        self.setAccessibleName(tip)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.setFlat(True)
+        self.setFixedSize(30, 22)
+        self.setStyleSheet("QPushButton { background: transparent; border: none; }")
+
+    def paintEvent(self, _event) -> None:
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        hot = self.underMouse() or self.hasFocus()
+        colour = self.p["heading"] if hot else self.p["label"]
+        cy = self.height() / 2 - 1
+        _leaf(painter, self.width() / 2, cy, HEDERA_RIGHT, 13, colour)
+        painter.setPen(QPen(_alpha(self.p["rule"], 255), 1))
+        painter.drawLine(
+            QPointF(3, self.height() - 1.5),
+            QPointF(self.width() - 3, self.height() - 1.5),
+        )
+        painter.end()
+
+    def enterEvent(self, event) -> None:
+        self.update()
+        super().enterEvent(event)
+
+    def leaveEvent(self, event) -> None:
+        self.update()
+        super().leaveEvent(event)
 
 
 def corner_flourishes(painter: QPainter, rect: QRectF, p: Palette, arm: float) -> None:

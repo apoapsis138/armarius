@@ -77,6 +77,10 @@ class Builder:
             current_season=season,
         )
         self.year = year
+        #: Each generated magus's sketch, by id, as the book gives them
+        #: (book_packs.generated): the pack offers it in place of the
+        #: generated stats.
+        self.sketches: dict[str, Character] = {}
 
     # -- ids --
 

@@ -437,7 +437,8 @@ More books follow in later versions.
 <!-- help: guide-book-packs-where -->
 
 - The Tribunal: its sheet, with the book's customs (the Rhine's gilds), its officers, its Peripheral Code under Rulings, the open quarrels under Cases, and its Hermetic history in the Diary. The mundane history is in its summary, by era.
-- Covenants: sketch records, not played, each with a summary, what matters (vis, income, tensions) and the magi the book names as sketch characters; the count of magi the book leaves unnamed is on the covenant.
+- Covenants: sketch records, not played, each with a summary, what matters (vis, income, tensions) and the magi the book names; the count of magi the book leaves unnamed is on the covenant.
+- Magi: every magus the book names is a full character. Those it prints a stat block for have the book's stats; the rest have stats inferred from what the book says of them (their House, age, favoured Arts, Virtues and Flaws) by the creation rules: not an official write-up, as their Biography says. Untick **Generated stats for magi** when importing to bring those magi in as sketches instead. Where the book gives no age, one is assumed from the magus's rank and noted there too.
 - Places: the regions and forests as places, with the regiones inside them and their levels and auras; covenants and towns sit in them.
 - The mundane world: lords, towns, churches, schools, factions and threats, with historical arms where they are known.
 - Secrets: what the book tells the storyguide and not the players is at the end of a record's summary or notes under a **Secrets** heading.

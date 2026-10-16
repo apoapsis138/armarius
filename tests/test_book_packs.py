@@ -116,8 +116,8 @@ def test_the_shipped_rhine_pack_is_up_to_date():
     assert shipped["name"] == built["name"] and shipped["book"] == built["book"]
     assert packs.summary(shipped) == packs.summary(built)
     for kind in ("covenants", "characters", "neighbours", "books", "tribunals"):
-        assert {r["name"] for r in shipped["saga"][kind]} == {
-            r["name"] for r in built["saga"][kind]
+        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
+            (r["name"], r.get("detail")) for r in built["saga"][kind]
         }, kind
 
 
@@ -189,7 +189,7 @@ def test_the_characters_the_book_prints_stat_blocks_for_are_full():
     assert "vf_ambitious" in {v.vf_id for v in philippus.virtues_flaws}
     for name in ("Imanitos Mendax", "Falke", "Ioannes Acer", "Hilda", "Torven"):
         assert by_name[name].detail == "Full" and by_name[name].abilities
-    assert by_name["Murion"].detail != "Full"
+    assert packs.INFERRED not in by_name["Philippus Niger"].description.biography
 
 
 def test_a_stat_block_names_only_catalog_virtues():

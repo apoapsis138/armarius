@@ -611,6 +611,13 @@ the pack holds nothing of isn't asked about:
 
 - **Their people**: the covenants' characters, laboratories and
   familiars, and each Tribunal's Praeco and Presiding Quaesitor.
+- **Generated stats for magi**: asked only while their people are
+  ticked. A book pack gives full stats to the magi its book describes
+  but prints no stat block for. Those stats are not an official
+  write-up: they are inferred from the book's description by the
+  creation rules, and each such magus's Biography says so. Untick it to
+  bring those magi in as the book's sketches; the magi the book does
+  print stat blocks for come in full either way.
 - **Places and regiones**: the places the covenants sit in, the places
   round and inside those, and their regio levels.
 - **The mundane world**: lords, towns, the Church, universities, factions

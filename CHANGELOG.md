@@ -46,6 +46,24 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.88.0 — 2026-10-16
+
+- **Every Rhine magus statted.** The 61 magi Guardians of the Forests
+  describes but prints no stat block for now have full sheets:
+  Characteristics, Virtues and Flaws, Arts, Abilities, spells, aging and
+  Warping, inferred from what the book says of each by the creation
+  rules. They are not an official write-up, and each one's Biography
+  says so; where the book gives no age, the one assumed is noted too.
+- **Full stats or the book's sketches.** Importing a content pack asks
+  "Generated stats for magi": untick it to bring those magi in as the
+  book's sketches. The magi the book does print stat blocks for come in
+  full either way.
+- **The Region's filter on its heading's line.** On the desktop, the
+  Show drop-downs sit at the right of the first list's heading instead of
+  on a line of their own.
+- **Open the threat that is due.** On the desktop, a small leaf beside
+  the Region's Threat due opens that threat's page.
+
 ## 2.87.0 — 2026-10-15
 
 - **A covenant's gilds on its own form.** In a Tribunal that follows the

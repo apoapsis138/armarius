@@ -35,7 +35,7 @@ class Rhine:
     world: dict[str, Neighbour] = field(default_factory=dict)
 
 
-def build() -> Saga:
+def assemble() -> Builder:
     from . import (
         covenants_east,
         covenants_west,
@@ -44,6 +44,7 @@ def build() -> Saga:
         places,
         stats_gorge,
         stats_magi,
+        stats_sketched,
         tribunal,
         world_north_east,
         world_west,
@@ -61,7 +62,12 @@ def build() -> Saga:
     stats_gorge.build(rhine)
     history.build(rhine)
     tribunal.finish(rhine)
-    return rhine.b.saga
+    stats_sketched.build(rhine)
+    return rhine.b
 
 
-register(BookPack("rhine", "GotF", NAME, build, SOURCE))
+def build() -> Saga:
+    return assemble().saga
+
+
+register(BookPack("rhine", "GotF", NAME, assemble, SOURCE))

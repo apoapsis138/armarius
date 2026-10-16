@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import math
 import random
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 
 from PySide6.QtCore import QEasingCurve, QPointF, QRectF, Qt, QVariantAnimation
 from PySide6.QtGui import (
@@ -119,9 +119,16 @@ class Dial(QWidget):
         painter.end()
 
 
-def fact_grid(facts: Sequence[cs.Fact], p: Palette, columns: int = 3) -> QWidget:
+def fact_grid(
+    facts: Sequence[cs.Fact],
+    p: Palette,
+    columns: int = 3,
+    beside: Mapping[str, QWidget] | None = None,
+) -> QWidget:
     """Facts as small-caps labels over their values in the book face; a
-    value not set is a dim dash, so the ones that are stand out."""
+    value not set is a dim dash, so the ones that are stand out. A widget
+    in `beside`, by a fact's label, sits just after its value (a button
+    that opens what it names)."""
     box = QWidget()
     grid = QGridLayout(box)
     grid.setContentsMargins(0, 0, 0, 0)
@@ -133,11 +140,22 @@ def fact_grid(facts: Sequence[cs.Fact], p: Palette, columns: int = 3) -> QWidget
         stack.setContentsMargins(0, 0, 0, 0)
         stack.setSpacing(0)
         stack.addWidget(text(fact.label, p["label"], serif(9.5, caps=True)))
+        extra = (beside or {}).get(fact.label)
         if fact.missing:
             value = text("—", p["dim"], serif(13))
         else:
-            value = text(fact.value, p["foreground"], serif(13.5), wrap=True)
-        stack.addWidget(value)
+            # A value with a button after it keeps to one line, beside it.
+            value = text(fact.value, p["foreground"], serif(13.5), wrap=extra is None)
+        if extra is not None and not fact.missing:
+            line = QHBoxLayout()
+            line.setContentsMargins(0, 0, 0, 0)
+            line.setSpacing(6)
+            line.addWidget(value)
+            line.addWidget(extra, 0, Qt.AlignmentFlag.AlignVCenter)
+            line.addStretch(1)
+            stack.addLayout(line)
+        else:
+            stack.addWidget(value)
         stack.addStretch(1)
         grid.addWidget(cell, i // columns, i % columns)
     for column in range(columns):

@@ -364,6 +364,17 @@ def _is_place(neighbour: dict[str, Any]) -> bool:
     return neighbour.get("kind") == places.PLACE
 
 
+#: The pack key holding the sketch of each magus a book describes but
+#: prints no stat block for, whose stats the pack generated
+#: (book_packs.generated): {character id: the character as a sketch}.
+GENERATED = "generated"
+#: What a generated magus's sheet and the import form say of the stats.
+INFERRED = (
+    "These stats are not an official write-up: they are inferred from the "
+    "book's description by the creation rules."
+)
+
+
 #: What a pack holds beyond its Tribunals and covenants, each a tick on
 #: the import form. The Tribunals and covenants always come: they are
 #: what the rest hangs on. A dict of predicates, not a class each.
@@ -374,6 +385,13 @@ GROUPS: tuple[Group, ...] = (
         "The covenants' characters, laboratories and familiars, and each "
         "Tribunal's Praeco and Presiding Quaesitor.",
         lambda data: len(_held(data, "characters")),
+    ),
+    Group(
+        GENERATED,
+        "Generated stats for magi",
+        f"The magi the book prints no stat block for come with full stats. "
+        f"{INFERRED} Untick to bring them in as the book's sketches.",
+        lambda data: len(data.get(GENERATED) or {}),
     ),
     Group(
         "places",
@@ -424,17 +442,24 @@ def import_fields(data: dict[str, Any]) -> list[DialogField]:
                 "check",
                 True,
                 hint=group.hint,
+                show_if=_with_people if group.key == GENERATED else None,
             )
         )
     return fields
+
+
+def _with_people(values: dict[str, Any]) -> bool:
+    return bool(values.get("people", True))
 
 
 def narrow(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
     """`data` (a pack, from transfer.read) without the groups unticked in
     `values`, as a new dict. A record left out is named in the pack's
     links instead, so the import plan matches what the pack points at
-    to the saga's own of that name, or says the link is dropped."""
-    out = ("people", "places", "world", "code", "history")
+    to the saga's own of that name, or says the link is dropped. With
+    the generated stats unticked, each magus the pack stats by inference
+    comes in as the book's sketch instead."""
+    out = ("people", GENERATED, "places", "world", "code", "history")
     left = {key for key in out if key in values and not values.get(key)}
     if not left:
         return data
@@ -450,6 +475,11 @@ def narrow(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
         name_links(transfer.CHARACTER, held.get("characters") or [])
         name_links(transfer.LABORATORY, held.get("laboratories") or [])
         held["characters"], held["laboratories"], held["familiars"] = [], [], []
+    elif GENERATED in left:
+        sketches = data.get(GENERATED) or {}
+        held["characters"] = [
+            sketches.get(c["id"], c) for c in held.get("characters") or []
+        ]
     neighbours = held.get("neighbours") or []
     gone = [
         n
