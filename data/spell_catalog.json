@@ -19103,6 +19103,22 @@
       "description": "The target of the spell becomes tainted with magic as most magi are. Beasts and people react to the target as though he were a magus. Those who normally associate with the victim do not become hostile, but do give him or her a wider berth. The spell has no effect on those who already have The Gift, including those blessed with the Gentle Gift.\n\n(Base 3, +2 Voice, +2 Sun)"
     },
     {
+      "id": "spell_enigma_s_caress",
+      "name": "Enigma's Caress",
+      "technique": "Creo",
+      "form": "Vim",
+      "level": 20,
+      "requisites": [],
+      "range": "Voice",
+      "duration": "Momentary",
+      "target": "Individual",
+      "ritual": false,
+      "base_level": 10,
+      "source": "F&F",
+      "page": "71",
+      "description": "A variant of The Enigma's Gift, as ArM5 printed it, in which the target suffers two Warping Points rather than one; a Hermetic magus so Warped checks for Twilight as usual. Known to Dama of the Praeco.\n\n(Base 10, +2 Voice)"
+    },
+    {
       "id": "spell_plucking_the_hair_from_the_billy_goat_s_chin",
       "name": "Plucking the Hair from the Billy Goat's Chin",
       "technique": "Creo",
@@ -20609,6 +20625,22 @@
       "source": "TtA",
       "page": "109",
       "description": "As per Demon's Eternal Oblivion, described in Ars Magica Fifth Edition, page 160, but for magical spirits.\n\n(Base, +2 Voice)"
+    },
+    {
+      "id": "spell_faerie_scourged_from_memory",
+      "name": "Faerie Scourged from Memory",
+      "technique": "Perdo",
+      "form": "Vim",
+      "level": 15,
+      "requisites": [],
+      "range": "Voice",
+      "duration": "Momentary",
+      "target": "Individual",
+      "ritual": false,
+      "base_level": 5,
+      "source": "F&F",
+      "page": "71",
+      "description": "The faerie counterpart of Demon's Eternal Oblivion: if it penetrates the Magic Resistance of a creature with Faerie Might, the creature loses Might Score equal to the spell's level. Dama of the Praeco has mastered it with Multicasting.\n\n(Base 5, +2 Voice)"
     },
     {
       "id": "spell_belittle_the_ferocious_warlock",

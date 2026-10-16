@@ -270,3 +270,78 @@ def test_the_normandy_pack_imports_clean_into_a_new_saga():
     # Its wandering magus, printed in full, comes too.
     anacron = next(c for c in target.characters if c.name.startswith("Anacr"))
     assert anacron.detail == "Full"
+
+
+# -- Faith & Flame --
+
+PROVENCE = book_packs.PACKS["provence"]
+
+
+def test_the_provence_pack_holds_the_tribunal_of_1220():
+    saga = PROVENCE.build()
+    (tribunal,) = saga.tribunals
+    assert tribunal.package == "provence"
+    assert (tribunal.next_year, tribunal.meets_every) == (1221, 7)
+    names = {c.name for c in saga.covenants}
+    assert names >= {
+        "Tolosa Paratge",
+        "Ostal des Exiles",
+        "Castra Solis",
+        "Tres' Band",
+        "Aedes Mercurii",
+        "Bellaquin",
+        "Miniata Sophia",
+        "Stella Durus",
+        "Ara Maxima Nova",
+        "The Coenobium Rhodanien",
+        "Fraxinetum Redux",
+    }
+    # Dama is Praeco, printed in full; the Presiding Quaesitor's seat is empty.
+    praeco = saga.character(tribunal.praeco_id or "")
+    assert praeco is not None and praeco.name.startswith("Dama")
+    assert praeco.detail == "Full" and praeco.spells_known
+    assert tribunal.quaesitor_id is None
+    assert len(tribunal.rulings) >= 10 and len(tribunal.cases) >= 8
+    years = [e.year for e in tribunal.diary]
+    assert years == sorted(years) and years[-1] <= 1220 and len(years) >= 50
+    # Val-Negra is a ruin with its regio, and its demon sleeps.
+    ruins = {n.name: n for n in saga.neighbours if n.details.get("ruined")}
+    assert len(ruins) >= 25
+    assert ruins["Val-Negra"].details.get("levels")
+    threats = {n.name: n for n in saga.neighbours if n.kind == "threat"}
+    assert "The Albigensian Crusade" in threats
+    assert threats["The Adulteration of Flambeau"].details.get("dormant")
+    # No record is made twice by two regions.
+    keys = [(n.name, n.kind) for n in saga.neighbours]
+    assert len(keys) == len(set(keys))
+
+
+def test_the_provence_pack_keeps_its_secrets_and_credit():
+    data = book_packs.data(PROVENCE)
+    texts = _texts(data["saga"])
+    assert len([t for t in texts if builder.SECRETS + "\n" in t]) >= 10
+    assert data["book"] == "F&F" and "Creative Commons" in data["source"]
+
+
+def test_the_shipped_provence_pack_is_up_to_date():
+    shipped = json.loads(book_packs.path_of(PROVENCE).read_text(encoding="utf-8"))
+    built = book_packs.data(PROVENCE)
+    assert packs.summary(shipped) == packs.summary(built)
+    for kind in ("covenants", "characters", "neighbours", "books", "tribunals"):
+        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
+            (r["name"], r.get("detail")) for r in built["saga"][kind]
+        }, kind
+
+
+def test_the_provence_pack_imports_clean_into_a_new_saga():
+    data = book_packs.data(PROVENCE)
+    target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
+    transfer.apply(target, transfer.plan_import(target, data))
+    assert packs.after_import(target, data) == [
+        "Faith & Flame: The Provençal Tribunal is now in play."
+    ]
+    assert target.books_in_play is not None and "F&F" in target.books_in_play
+    assert len(target.characters) == len(data["saga"]["characters"])
+    ids = {n.id for n in target.neighbours}
+    for record in [*target.covenants, *target.neighbours]:
+        assert record.place_id is None or record.place_id in ids

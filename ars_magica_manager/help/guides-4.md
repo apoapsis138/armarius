@@ -415,6 +415,8 @@ The app ships a content pack for each Tribunal sourcebook it covers, written in 
 <!-- help: guide-book-packs-packs -->
 
 - **Guardians of the Forests: the Rhine Tribunal** (spring 1220): the Rhine's ten covenants with the gilds they belong to, about seventy magi, the Black Forest and the great forests with their regiones, the Rhine cities and princes, the Peripheral Code, nine open cases for the Tribunal of 1221, and the Curse of the Rhine Gorge as a threat. Durenmar's Great Library comes as Book records.
+- **The Lion and the Lily: the Normandy Tribunal** (1220): fifteen covenants and the lines of fealty between them, about fifty magi, the duchy's places, lords and churches, the ruined covenants, the vis tenures under the Perthean Compact, the Tourney, the Peripheral Code and open cases, and the Tribunal's stories as threats.
+- **Faith & Flame: the Provençal Tribunal** (1220): eleven covenants with their votes, about sixty magi (Dama the Praeco and Rebecca as the book prints them), Toulouse, Gascony, the Pyrenees, the Narbonnais and the Arelat with their auras and vis, thirty ruined covenants and Val-Negra's regio, the Albigensian Crusade, the Peripheral Code and the docket for the Tribunal of 1221 at Glanum, and the Praeco's secret as a story.
 
 More books follow in later versions.
 

@@ -46,6 +46,22 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.95.0 — 2026-10-16
+
+- **The Provence pack.** New Saga and Import offer *Faith & Flame*: the
+  Provençal Tribunal of 1220, with its eleven covenants and their votes,
+  about sixty magi (the Praeco Dama and Rebecca as the book prints
+  them), Toulouse, Gascony, the Pyrenees, the Narbonnais and the Arelat
+  with their auras, vis, towns, lords and churches, thirty ruined
+  covenants and Val-Negra's regio, the Albigensian Crusade, its
+  Peripheral Code and the cases for the Tribunal of 1221 at Glanum, its
+  history, and the Praeco's secret as a story. The text is a paraphrase
+  of the book, credited to it. The Virtues, Flaws and spells it names
+  that the catalogs lacked are added.
+- **Clean artwork.** Two of the app's drawings carried a hidden
+  content-credential tag that a file sync had added; it is removed, and
+  a check keeps any shipped file from carrying one.
+
 ## 2.94.1 — 2026-10-16
 
 - **A lab Servant adds its Safety.** The Servant Virtue now gives the

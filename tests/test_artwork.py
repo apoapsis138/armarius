@@ -55,6 +55,18 @@ def test_every_bundled_picture_and_font_is_registered():
     assert bundled - _registered() == set()
 
 
+def test_no_bundled_file_carries_a_content_credential():
+    """A file passed through some tools gains a C2PA manifest saying an AI
+    may have made it; the app's art is drawn in code or freely licensed,
+    so no shipped file may carry one."""
+    stamped = sorted(
+        path.name
+        for path in artwork.ASSETS.rglob("*")
+        if path.is_file() and b"c2pa" in path.read_bytes()
+    )
+    assert not stamped
+
+
 def test_there_are_svgs_to_check():
     assert len(SVGS) > 40
 

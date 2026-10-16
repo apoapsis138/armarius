@@ -20,6 +20,7 @@ KNOWN_BOOKS = {
     # The DE and the open-content books
     *("DE", "HoH:TL", "HoH:MC", "TMRE", "App", "RoP:M", "RoP:F", "RoP:D"),
     *("RoP:I", "C&G", "LoM", "TC", "GotF", "L&L", "AtD", "TCI", "A&A"),
+    "F&F",
     # Books only the index was read for
     *("AnM", "Ant", "BCoC", "TC&TC", "Gr", "HMRE", "HP", "HoH:S"),
     *("LoH", "MoH", "RM", "TSE", "ToME"),
@@ -33,11 +34,12 @@ def by_id() -> dict[str, VirtueFlawDef]:
 def test_catalog_counts_after_adding_the_supplements():
     # 625 DE entries, the 2 the catalog had lost, 33 Major versions of
     # "Major or Minor" DE entries, and 440 open-content supplement entries
-    # (423 definitions, 17 of them at both tiers).
+    # (423 definitions, 17 of them at both tiers), plus 13 Virtues from
+    # Faith & Flame (11 definitions, 2 of them at both tiers).
     entries = catalog.load_virtue_flaw_catalog()
-    assert len(entries) == 1100
+    assert len(entries) == 1113
     counts = Counter(e.type for e in entries)
-    assert counts == {"Virtue": 597, "Flaw": 416, "Quality": 67, "Inferiority": 20}
+    assert counts == {"Virtue": 610, "Flaw": 416, "Quality": 67, "Inferiority": 20}
     assert sum(e.source == "DE" for e in entries) == 660
 
 

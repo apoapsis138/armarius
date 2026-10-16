@@ -912,6 +912,17 @@
       "description": "Some magi practice a kind of magic that is peripherally associated with the Infernal realm because of its negativity, though it is not actually diabolic. This low magic, or chthonic magic, is more associated with the gods of the underworld and spirits of the night than the servants of Hell. Such beings are not necessarily evil, but they have a dark reputation and are often conflated with demons in legends. Still, chthonic Powers are only ambiguously Infernal, and thus can be possessed and practiced by more sinister magi without their immediately being charged with diabolism. The chthonic magus becomes attuned to both Magical and Infernal auras, and so gains Warping Points from neither, and the benefits of both. He may also take full advantage of Infernal vis without suffering any of the negative consequences. However, because of this association, his magic becomes tainted, just as if he had the False Power Flaw: his spells appear to be unholy when investigated by Divine or Infernal Powers, though they do not seem Infernal to magical and faerie detection. For demon hunters, spirit summoners, masters of wards, and necromancers, this Virtue is exceptionally useful, for it allows them to make use of the vis they often find in evil places without fear, and ensures that their magic is not penalized in the auras where they are most likely to use it. Many magi already have very evil reputations, even if they are wholly devoted to their magic and have no interest in serving Hell, and thus this penalty is really no penalty at all for them, as long as they avoid the agents of the Divine. This form of magic is primarily represented by a Supernatural Ability: Chthonic Magic. This Ability may be substituted for the character's score in Magic Theory when performing laboratory work that involves dark or sinister effects, and may be added to his score in Magic Theory or the appropriate Art when determining how many pawns of infernal vis he may use at once. It may be learned by magi who belong to an appropriate lineage, tradition, or societas (see Chapter 13: Infernal Traditions), taken as a Hermetic Virtue during character creation, or initiated as part of an appropriate Mystery Cult (see The Mysteries Revised Edition for rules that may be adapted to this purpose). There are other benefits to this Virtue, but all of them make the character's magic a clearly Infernal Power when used, recognizable as such to magical and faerie Powers as well as Divine and Infernal ones, though he still benefits from Magic auras. He can use the special Ranges, Durations, and Targets associated with the maleficia in his spells -- that is, he has access to Range Crossroads, Duration Cursed, Duration Forsaken, and Target Passion. If he has unholy Methods or Powers, he may substitute his scores in those Abilities for Philosophiae and Artes Liberales when casting appropriate rituals, so long as he performs the necessary actions associated with them. Use the guidelines for maleficia to determine which Method and Power are necessary for a particular effect. A chthonic magus may also act as the focus character for a ritual using the Ceremony Ability, adding the other participants' Characteristic and Method scores to his Casting Total as normal. And, he may bind a demon as his familiar if he so chooses. Finally, a chthonic magus may always add his lowest Art score to his Lab Total or Casting Total twice, much as if he had an applicable magical focus. To activate this, he must perform some kind of sinful act immediately before or during the casting, which influences and becomes part of the spell. This must be something that the caster himself knows to be wicked or evil (though not necessarily a mortal sin) and must be performed deliberately. Often this involves idolatry, sacrilege, profanity, or blasphemy: cursing at the target, invoking dark gods, or an ugly sacrifice. If the character already has his lowest Art score doubled (from a magical focus, for example), this effect triples it instead; that is, a chthonic magus with Diedne Magic would add his lowest Art three times when casting a spontaneous spell with fatigue."
     },
     {
+      "id": "vf_chthonic_sorginak_magic",
+      "name": "Chthonic Sorginak Magic",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "F&F",
+      "summary": "Sorginak Chthonic Magic at 1: attuned to Magic and Infernal auras, safe Infernal vis, +6 for blasphemous magic; no maleficia Ranges or Durations.",
+      "description": "A sorginak Inner Mystery, said to have been taught by Mari, giving a variant of the Supernatural Ability Chthonic Magic at 1. The witch counts as attuned to both the Magic and the Infernal realm: neither aura adds botch dice for her, and she gains the benefit of both. Infernal vis does her no harm, and the number of its pawns she may use in a season is figured from her Folk Witch Magic Theory plus her Chthonic Magic. Divine and Infernal powers can detect this hidden Infernal taint, but Magic and Faerie detection cannot. When her magic deliberately includes a blasphemous act, she gets +6 to the roll or total, and may also add the Shape and Material bonuses of Casting Items, up to her Folk Witch Magic Theory. Unlike the Hermetic Chthonic Magic (Realms of Power: The Infernal), it grants none of the maleficia Ranges, Durations or Targets."
+    },
+    {
       "id": "vf_clan_ilfetu",
       "name": "Clan Ilfetu",
       "type": "Virtue",
@@ -1227,6 +1238,17 @@
       "description": "Characters from some Sufi traditions have the ability to dance objects to wholeness, much as magi on the Path of Walking Backward do."
     },
     {
+      "id": "vf_dark_magic",
+      "name": "Dark Magic",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "F&F",
+      "summary": "Gain the benefits of Magic, Faerie and Infernal auras and no Warping from them; drawing on a foreign aura makes your magic read as unholy.",
+      "description": "A Mystery of the highest level of the Matres and Matrones. Her powers count as aligned to the Magic, Faerie and Infernal realms alike, so she enjoys the bonus of any of those auras, and living in one of them gives her no Warping Points. The cost is a taint: whenever she draws on an aura not her own through this Virtue, Divine or Infernal powers able to sense holiness or its absence perceive her influence as unholy. It is thought to be kin to Chthonic Magic, perhaps learned long ago from the witches of Thessaly."
+    },
+    {
       "id": "vf_death_prophecy",
       "name": "Death Prophecy",
       "type": "Virtue",
@@ -1529,6 +1551,17 @@
       "source": "RoP:D",
       "summary": "As the core Priest Virtue, but the Vow of celibacy is not required; priests married before ordination may still administer sacraments.",
       "description": "This Virtue is the same as Priest in Ars Magica 5th Edition, except that the Vow of celibacy is not necessarily required. Eastern priests are not supposed to marry after they have been ordained, but those who are already married may still oversee the sacraments."
+    },
+    {
+      "id": "vf_ecstatic_magic",
+      "name": "Ecstatic Magic",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "F&F",
+      "summary": "Ecstatic Magic 1: during an akelarre, leave your body as an intangible spirit for an hour or more and travel to places you know.",
+      "description": "A sorginak Mystery giving the Ability Ecstatic Magic at 1. During an akelarre the witch can send her spirit out of her body for an hour on a Stamina + Ecstatic Magic stress roll against 12, plus another hour for each 3 points of success. Out of the body she moves with a Stamina + Athletics roll: 3 to reach a place she sees every day, with harder rolls (6, 9, 12) for places seen within the week, within the year or longer ago, and 15 for a place she has never seen but holds an arcane connection to. While out she has Second Sight equal to her Ecstatic Magic, carries the likeness of what she holds, and can strike and be struck by spirits. A Stamina + Concentration roll of 12 makes her solid, and so open to ordinary harm; if wounded she must roll again, with wound penalties, to stay solid. It works like a nightwalker's straying (Hedge Magic Revised Edition), with all its drawbacks, but only during an akelarre, alone, in her own shape, and not among dreamers."
     },
     {
       "id": "vf_educated",
@@ -1986,6 +2019,59 @@
       "description": "You are descended from a frightening spirit of cruel, dark winter, and receive a +1 bonus to your Strength, though this does not increase your score beyond +3. Your teeth and nails tend to be much longer than normal and you look older than you actually are. You also tend to be very susceptible to the Divine, and should_ take a Flaw to represent that fact. This faerie lineage is rare in humans, and probably found only in characters of House Mercere."
     },
     {
+      "id": "vf_faerie_blood_jentil",
+      "name": "Faerie Blood (Jentil)",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "modifiers": [
+        {
+          "applies_to": "aging_roll",
+          "amount": -1
+        }
+      ],
+      "source": "F&F",
+      "summary": "Descended from the Basque giants: -1 to Aging rolls, +1 to recovery rolls, +1 Strength (max +3); compatible with Large and Giant Blood.",
+      "description": "Your family traces itself to the Jentilak, the giants who held the Basque lands before men, raised great stone monuments, and taught smithing and farming before they all but vanished. As a Minor Virtue you age more slowly (+1 against aging), recover better (+1 to recovery rolls) and gain +1 Strength, which cannot take it above +3. You may also have Large or Giant Blood."
+    },
+    {
+      "id": "vf_faerie_blood_jentil_major",
+      "name": "Faerie Blood (Jentil)",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "modifiers": [
+        {
+          "applies_to": "aging_roll",
+          "amount": -3
+        },
+        {
+          "applies_to": "aging_start",
+          "amount": 50
+        },
+        {
+          "applies_to": "size",
+          "amount": 1
+        }
+      ],
+      "source": "F&F",
+      "summary": "Strong Jentil blood: +1 Strength (max +3), +1 Size, Second Sight, -3 to Aging rolls and none before 50; a giant's looks give you away.",
+      "description": "Your family traces itself to the Jentilak, the giants who held the Basque lands before men, raised great stone monuments, and taught smithing and farming before they all but vanished. As a Major Virtue you keep the Minor version's +1 Strength (to at most +3), but in place of its recovery bonus you gain +1 Size; you also have Second Sight, a +3 bonus against aging, and make no aging rolls until you are 50. Something in your build betrays the giant ancestry, such as huge hands and feet or heavy, outsized features. You may also have Large or Giant Blood."
+    },
+    {
+      "id": "vf_faerie_blood_laminak",
+      "name": "Faerie Blood (Laminak)",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "F&F",
+      "summary": "Descended from Basque river faeries: +1 Stamina or +1 Presence (max +3); people find you oddly fascinating; your toes are webbed.",
+      "description": "One of your forebears was a lamia, one of the river faeries of the Basque Country, known both for their tireless work and for their beauty. Take after one side or the other: +1 to Stamina or +1 to Presence, in either case to no more than +3. Folk are drawn to you without knowing why. Your toes are joined by webs of skin."
+    },
+    {
       "id": "vf_faerie_blood_spinnen",
       "name": "Faerie Blood (Spinnen)",
       "type": "Virtue",
@@ -2277,6 +2363,53 @@
       "source": "AtD",
       "summary": "Gifted hunter Opened to the Hunters' Arts: has all three Practice Arts (Scry, Ban, Slay), three Foe Arts, and Second Sight free.",
       "description": "A Fector character takes the place of a player's magus character. They have both The Gift and the free Fector Social Status Virtue; the latter is akin to Hermetic Magus, and represents the fact that the character has been Opened to the Hunters' Arts. A Fector has all three Practice Arts of Scry, Ban, and Slay, and can choose three Foe Arts. The character is Opened to these hedge Arts (Hedge Magic Revised Edition, page 7) using his master's Intelligence + Scry total. Currently, the Fectores only know the Foe Arts of Vampire, Werewolf, Ghost, Nightwalker, and Witch, but are working to integrate other Foes. A Fector also has the Second Sight Virtue at no cost. They are usually apprenticed to a Fector around adolescence, and training takes five years. During this time, the Fector receives 120 experience points that can be spent on the Hunters' Arts or on Abilities. A Fector can take Martial and Arcane Abilities at Character Creation, as well as Latin, but a Virtue is required to take any other Academic Abilities. The Fectores, unlike many other hedge traditions, do not have Magical Defenses except for those granted by the Ban Art. However, Fectores who are members of the Order (that is, most of them) can be taught the Parma Magica."
+    },
+    {
+      "id": "vf_feminine_ceremony",
+      "name": "Feminine Ceremony",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "F&F",
+      "summary": "A Matres & Matrones form of the Ceremony Ability, used for group casting; named in a stat block only, so it follows Ceremony's rules.",
+      "description": "The Matres and Matrones' own version of Ceremony, which lets the character lead a group of participants in a joint casting. The book gives it only as a Major Virtue and an Ability (used for group casting) in the statistics of the cult's founder, with no rules of its own; treat it as the Ceremony Virtue and Ability, practised among the cult's women."
+    },
+    {
+      "id": "vf_the_feminine_gift",
+      "name": "The Feminine Gift",
+      "type": "Virtue",
+      "category": "Hermetic",
+      "extra_categories": [
+        "Supernatural"
+      ],
+      "tier": "Minor",
+      "cost": 1,
+      "source": "F&F",
+      "summary": "Matres & Matrones Initiation: your Gift acts as the Gentle Gift toward women and the Blatant Gift toward men; others react as usual.",
+      "description": "A Mystery of the Matres and Matrones, open to a character who already has the normal Gift. Human women respond to her as if she had the Gentle Gift, while human men respond as if she had the Blatant Gift, and need as long to grow used to her as they would to a Blatant magus. Animals, beings with Might and everyone else meet her ordinary Gift. Printed as either a Hermetic or a Supernatural Virtue."
+    },
+    {
+      "id": "vf_feminine_sympathy",
+      "name": "Feminine Sympathy",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "F&F",
+      "summary": "Feminine Sympathy Trait +1 (Major: +3), added like a specialty to mundane Ability rolls that act directly on a woman; a faerie power using stress dice.",
+      "description": "Initiated by the second level of the Matres and Matrones. The character gains a Sympathy Trait, Feminine Sympathy, at +1 for the Minor Virtue or +3 for the Major. Following the Sympathy rules of Realms of Power: The Faerie, she may add it in place of a specialty to a roll of a non-Supernatural Ability whenever she is acting directly on another woman, for instance to recall what she knows of a fellow maga. Each such roll counts as a faerie power: it is subject to aura and realm modifiers, always uses a stress die, and a botch brings one Warping Point per zero. The Trait improves with experience as an Ability does, never above her Warping Score, and also rises by one when the stress roll comes up 1; it falls by one when a botch check comes up 0."
+    },
+    {
+      "id": "vf_feminine_sympathy_major",
+      "name": "Feminine Sympathy",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "F&F",
+      "summary": "Feminine Sympathy Trait +1 (Major: +3), added like a specialty to mundane Ability rolls that act directly on a woman; a faerie power using stress dice.",
+      "description": "Initiated by the second level of the Matres and Matrones. The character gains a Sympathy Trait, Feminine Sympathy, at +1 for the Minor Virtue or +3 for the Major. Following the Sympathy rules of Realms of Power: The Faerie, she may add it in place of a specialty to a roll of a non-Supernatural Ability whenever she is acting directly on another woman, for instance to recall what she knows of a fellow maga. Each such roll counts as a faerie power: it is subject to aura and realm modifiers, always uses a stress die, and a botch brings one Warping Point per zero. The Trait improves with experience as an Ability does, never above her Warping Score, and also rises by one when the stress roll comes up 1; it falls by one when a botch check comes up 0."
     },
     {
       "id": "vf_ferocity",
@@ -4994,6 +5127,17 @@
       "description": "You are a blood descendant of either a wizard of legend (possibly one of the Twelve Founders, or some other ancient and powerful sorcerer) or a supernatural being (such as a dragon). Your potent Gift means that you do not lose Fatigue levels if your Casting Total falls short of the level of a formulaic spell by ten points or less, although you do lose Fatigue if the spell fails completely. When casting Ritual spells, lose three fewer Fatigue levels than normal. This means that you lose no Fatigue levels if you succeed, or fail by ten points or less. You must expend Fatigue normally to cast Spontaneous magic, and if you fail to cast a Formulaic spell you lose the normal number of Fatigue levels. Additionally, you may choose one special magic feat which you can invoke at will and cancel at will, as often as you like. Invoking this feat takes as long as fast-casting a Mastered Formulaic spell (see page 213), and requires the same level of concentration. The effect should be designed as a non-Ritual Hermetic effect, with a level + Penetration limited as below. The Penetration of the effect is not modified by the magus's Penetration Ability score, and cannot be negative, so that the highest possible level of the effect is 30. Invocation Speak and gesture Speak Gesture Neither speak nor gesture Level + Penetration 30 25 20 15 This Virtue includes a Minor Magical Focus in an area related to your legendary ancestor and a hereditary Minor Personality Flaw (both at no extra cost). Mythic Blood is not particularly uncommon in the Order of Hermes, so this Virtue does not grant any Reputation."
     },
     {
+      "id": "vf_mythic_blood_balthazarine",
+      "name": "Mythic Blood (Balthazarine)",
+      "type": "Virtue",
+      "category": "Hermetic",
+      "tier": "Major",
+      "cost": 3,
+      "source": "F&F",
+      "summary": "Mythic Blood of the Balthazarine line: free Minor Focus (Fear or Obedience), Cruel/Proud Flaw, and a lasting aura of authority struck by a haughty pose.",
+      "description": "The Mythic Blood of the Balthazarine lineage of Provence. Its free Minor Magical Focus covers either Fear or Obedience, and its hereditary Minor Personality Flaw is usually Cruel or Proud. The at-will power is normally a form of Aura of Rightful Authority lasting until sunrise or sunset, with no Penetration, called up without words simply by taking an arrogant stance. Otherwise it follows the Mythic Blood Virtue."
+    },
+    {
       "id": "vf_mythic_blood_zmey",
       "name": "Mythic Blood (Zmey)",
       "type": "Virtue",
@@ -5888,6 +6032,17 @@
       "description": "The Rosh Beth Din, or Head of the Court, presides at the Beth Din rabbinic court. Your character must be (30 - Int) years old to take this Virtue and have scores of at least 5 in Hebrew, Rabbinic Law, and Theology: Judaism. Your character may purchase Academic Abilities at character generation and gains 50 extra experience points to be spent on the required Abilities. The Rosh Beth Din gains the +2 good Reputation Rosh Beth Din, which applies across his country. This Virtue also includes the effects of the Social Contacts Virtue and you are able to find contacts within any Jewish community that supports a yeshivah. This Virtue is only available to male characters."
     },
     {
+      "id": "vf_saints_aid",
+      "name": "Saint's Aid",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "F&F",
+      "summary": "Saint's Aid Ability 1: call on a patron saint to skip the Fatigue or Confidence cost of Divine Powers, Methods or Holy Magic, score times per confession.",
+      "description": "Known among the Valerene cult of Agen. The character starts with the Ability Saint's Aid at 1. When she uses Divine Powers, Divine Methods or Holy Magic, she may pray to St. Valerie, or to another saint who takes an interest in her, and pay no Fatigue or Confidence for that use. She can do so a number of times equal to her Saint's Aid score, after which she must go to confession before calling on the saint again. The Virtue belongs to the Divine realm."
+    },
+    {
       "id": "vf_samovily_blood",
       "name": "Samovily Blood",
       "type": "Virtue",
@@ -6227,6 +6382,17 @@
       "source": "TMRE",
       "summary": "Performance Magic (Music): singing or playing replaces words and/or gestures; Voice Range spells carry as far as the music is heard.",
       "description": "Performance Magic (Music) is often known as Sorcerous Music. Music is unusual among Performance Magic Abilities -- perhaps because instrumental music is similar to the human voice -- in that playing a tune on an instrument can freely replace either or both of gesture and words. The magus needs to play an instrument in order to replace gestures, but has a free choice as to whether he sings or plays a tune to replace mystical words. Indeed, wind instruments require that he play a tune to replace words, as he cannot sing while playing a whistle! Sorcerous Music can be performed as singing-only and not replace gestures (with normal spellcasting penalties and benefits of Subtle Magic), or can be performed without singing (if the magus plays an instrumental tune), but cannot be performed silently. When using Voice Range with Sorcerous Music, the spell carries as far as the music (song or instrument) could be heard. For some loud instruments, this may be a long way. New Duration for Performance Magic New Duration: Performance. The spell lasts as long as the caster performs the Performance Ability. Performance is equivalent to Concentration Duration. To cast a Performance Duration spell, the magus must succeed in a roll (simple or stress die, according to circumstances) of Characteristic (varies with Ability) + Ability against an Ease Factor of 3. The spell fails if this fails, and botches if the roll botches. The spell ends when the magus ceases to perform the Ability, but no Concentration or Ability rolls are needed to maintain the spell while the performance continues. Formulaic spells must be devised with the new Duration to use this Ability; if so designed, the spell cannot be cast without performing. Example: Harold knows Performance Magic (Hunt), and casts Hunter's Tracks of the Faerie Glow (a variant of Tracks of the Faerie Glow), and succeeds with his simple Hunt roll. His magically enhanced vision persists as long as he keeps up the hunt, even if he is distracted by chatter or other spellcasting. Example: Orlando sings while he casts a Sung Lamp Without Flame. The light continues while he continues to sing, however badly, but ends when he stops singing. Needing to convey urgent instructions to a recalcitrant grog, he uses an enchanted device with Maintaining the Demanding Spell to maintain the spell while he stops to shout at the grog; before the Maintaining effect ends he resumes his sung performance. Recognizing Performance Magic Most people do not recognize performing an Ability as spellcasting, so the performer may act more openly than most magi; even other Hermetic magi do not automatically recognize his actions: If a Hermetic magus contemplates Fast Casting to oppose a spell and the caster is using Hermetic words and gestures, a magus may determine the Form automatically (ArM5, page 83). In other circumstances, the magus must work the Form out. Determining the Form of a Magical Effect: Stress Die + Perception + Awareness Vs. 15 - Effect Magnitude If the spell is being cast with mundane words or gestures, the Ease Factor is adjusted as follows: -3 if Hermetic words are spoken (and can be heard) _ +0 if Hermetic gestures are made (and seen) +3 if both words and gestures are mundane"
+    },
+    {
+      "id": "vf_sorgina",
+      "name": "Sorgina",
+      "type": "Virtue",
+      "category": "Social Status",
+      "tier": "Free",
+      "cost": 0,
+      "source": "F&F",
+      "summary": "Trained Basque folk witch in a coven: as the Folk Witch status; may go with Hermetic Magus; must spend two seasons a year earning a living.",
+      "description": "The character belongs to the folk witches of the Pyrenees, found in Provence and Iberia, and was trained as one. Basque villagers respect or fear her, while churchmen may hound her as a heretic. It counts as the Folk Witch Social Status of Hedge Magic, and may be combined with Hermetic Magus, with Wealthy or Poor, and with most other Social Status choices. She can do the folk witch laboratory work, such as brewing potions, casts her Supernatural Virtues by sorginak methods and gains their magical defences, and attends the akelarre with her coven. Having no covenant to keep her, she spends two seasons a year earning her keep, usually with magic for her neighbours. She cannot take the Witch's Moon Virtues and Flaws."
     },
     {
       "id": "vf_special_circumstances",
