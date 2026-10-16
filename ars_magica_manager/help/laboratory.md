@@ -80,7 +80,8 @@ what the laboratory's Virtues and Flaws add, and the total.
 <!-- /tui -->
 <!-- gui -->
 They are drawn as a compass rose beside a card for each; **Edit** changes
-only the typed values, and clicking a card shows where its total comes from.
+only the typed values, and clicking a card shows where its total comes from,
+naming each Virtue and Flaw's part (a Servant's with whose Intelligence it is).
 <!-- /gui -->
 The app also works out Occupied Size (Virtue points less
 Flaw points less Refinement), Free Virtues (Size plus Refinement less the
@@ -194,11 +195,12 @@ catalog.
 
 **The app works out:** the points each side comes to and what they add to
 the Characteristics, Specializations and Lab Totals.
-<!-- tui -->
+
 A warning line above the lists says when the laboratory has more Virtues
-(net of Flaws) than Size plus Refinement allow, more than one Focus, or a
-Virtue whose Specialization hasn't been chosen.
-<!-- /tui -->
+(net of Flaws) than Size plus Refinement allow, more than one Focus, a
+Virtue whose Specialization hasn't been chosen, a Servant, Greater Guardian
+or Greater Horde with no Intelligence entered, or a Servant whose grog is no
+longer in the saga.
 
 **See also:** [Characteristics](help:section-lab-characteristics),
 [Features](help:section-lab-features),
@@ -211,7 +213,21 @@ The laboratory's Virtues, with the points they come to in the title. Adding
 one picks it from the catalog, which shows each entry's rules, effects and
 book as you go through it; a Virtue that grants a Specialization of the
 owner's choice asks for it then. Virtues can't be edited, only deleted and
-added again. A Feature Virtue is usually added along with its Feature on the
+added again.
+
+A few Virtues add Safety worked out from an Intelligence (Ars Magica
+Definitive Edition, Chapter 8):
+
+- **Servant** asks for the servant: one of the saga's grogs (those of the
+  laboratory's covenant first), or, with none chosen, the servant's
+  Intelligence typed in. It adds half that Intelligence, rounded up, to
+  Safety. A chosen grog's Intelligence is read from their sheet each time,
+  so it follows aging or any change to it.
+- **Greater Guardian** and **Greater Horde** ask for the creature's
+  Intelligence and add all of it to Safety.
+
+The Virtue's details, and its card, say whose Intelligence it is and what it
+comes to: "Safety +2 (Kurt's Intelligence +3, halved, rounded up)". A Feature Virtue is usually added along with its Feature on the
 Attributes tab.
 
 ### Flaws

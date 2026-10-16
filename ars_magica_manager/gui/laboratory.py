@@ -254,7 +254,7 @@ class LaboratoryPage(QWidget):
         """The eight Characteristics: a compass rose of them, and a card
         each with its total and where it comes from."""
         p = self.p
-        rows = ls.characteristics(self.lab)
+        rows = ls.characteristics(self.lab, self.saga)
         cards = []
         for characteristic in rows:
             card = ClickableCard(p, pad=6)
@@ -359,7 +359,8 @@ class LaboratoryPage(QWidget):
             points = labs.vf_points(lab, side)
             chooser = Chooser()
             cards = [
-                self._vf_card(card, p[tone]) for card in ls.virtue_flaw_cards(lab, side)
+                self._vf_card(card, p[tone])
+                for card in ls.virtue_flaw_cards(lab, side, self.saga)
             ]
             choose_cards(cards, chooser)
             stack.addWidget(
@@ -380,7 +381,12 @@ class LaboratoryPage(QWidget):
             )
             stack.addStretch(1)
             columns.append(column)
-        return scrolling_page(p, side_by_side(*columns, spacing=18))
+        warnings = labs.vf_warnings(lab, self.saga)
+        return scrolling_page(
+            p,
+            *([TextBlock(warnings, p)] if warnings else []),
+            side_by_side(*columns, spacing=18),
+        )
 
     def _vf_card(self, card: ls.VirtueFlawCard, colour: str) -> ClickableCard:
         p, lab = self.p, self.lab
@@ -397,7 +403,7 @@ class LaboratoryPage(QWidget):
         frame.clicked = lambda: self.inspect(
             card.name,
             f"{card.tier}  ·  {card.category}",
-            labs.vf_info_text(lab, card.index),
+            labs.vf_info_text(lab, card.index, self.saga),
         )
         return frame
 

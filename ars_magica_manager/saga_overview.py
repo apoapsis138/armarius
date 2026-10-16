@@ -179,7 +179,7 @@ def _lab_card(saga: Saga, lab: Laboratory) -> LabCard:
     by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
 
     def total(name: str) -> str:
-        return f"{labs.lab_characteristic_total(lab, by_id, name)[3]:+d}"
+        return f"{labs.lab_characteristic_total(lab, by_id, name, saga)[3]:+d}"
 
     return LabCard(
         lab.id,

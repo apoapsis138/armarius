@@ -1339,7 +1339,14 @@
     "category": "Outfittings",
     "tier": "Free",
     "cost": 0,
+    "parameters": ["servant", "intelligence"],
     "modifiers": [
+      {
+        "applies_to": "lab_characteristic",
+        "target": "safety",
+        "amount_param": "intelligence",
+        "amount_divisor": 2
+      },
       {
         "applies_to": "lab_characteristic",
         "target": "aesthetics",
@@ -1351,7 +1358,7 @@
         "amount": 1
       }
     ],
-    "description": "One of the covenfolk is employed as a full-time lab servant, performing the most mundane or bothersome tasks and catering to the magus's needs. Grants Safety equal to half the servant's Intelligence (rounded up, not a fixed number) and +1 to a Mentem Specialization."
+    "description": "One of the covenfolk is employed as a full-time lab servant, performing the most mundane or bothersome tasks and catering to the magus's needs. Grants Safety equal to half the servant's Intelligence (rounded up) and +1 to a Mentem Specialization."
   },
   {
     "id": "labvf_spotless",
@@ -1962,7 +1969,13 @@
     "category": "Supernatural",
     "tier": "Major",
     "cost": 3,
+    "parameters": ["intelligence"],
     "modifiers": [
+      {
+        "applies_to": "lab_characteristic",
+        "target": "safety",
+        "amount_param": "intelligence"
+      },
       {
         "applies_to": "lab_characteristic",
         "target": "warping",
@@ -1974,7 +1987,7 @@
         "amount": 1
       }
     ],
-    "description": "A powerful supernatural creature (Might 20 or higher), not the owner's familiar, resides in the lab and acts as its protector, well-disposed to the owner. Grants Safety equal to the creature's Intelligence (not a fixed number) and 3 points on appropriate Art Specialization(s)."
+    "description": "A powerful supernatural creature (Might 20 or higher), not the owner's familiar, resides in the lab and acts as its protector, well-disposed to the owner. Grants Safety equal to the creature's Intelligence and 3 points on appropriate Art Specialization(s)."
   },
   {
     "id": "labvf_greater_horde",
@@ -1983,7 +1996,13 @@
     "category": "Supernatural",
     "tier": "Major",
     "cost": 3,
+    "parameters": ["intelligence"],
     "modifiers": [
+      {
+        "applies_to": "lab_characteristic",
+        "target": "safety",
+        "amount_param": "intelligence"
+      },
       {
         "applies_to": "lab_characteristic",
         "target": "general_quality",
@@ -2000,7 +2019,7 @@
         "amount": 2
       }
     ],
-    "description": "A large community of resident minor supernatural creatures is at the owner's command, intelligent enough to protect the lab and help with simple lab tasks. Grants Safety equal to the creatures' Intelligence (not a fixed number) and 2 points on Rego or other appropriate Art Specialization(s)."
+    "description": "A large community of resident minor supernatural creatures is at the owner's command, intelligent enough to protect the lab and help with simple lab tasks. Grants Safety equal to the creatures' Intelligence and 2 points on Rego or other appropriate Art Specialization(s)."
   },
   {
     "id": "labvf_familiar",

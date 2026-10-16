@@ -2543,7 +2543,10 @@ class WorkspaceBase(Screen[None]):
         if isinstance(target, Laboratory):
             existing_ids = {vf.vf_id for vf in target.virtues_flaws}
             self.app.push_screen(
-                LabVirtueFlawPickerScreen(existing_ids, books=books), handle_result
+                LabVirtueFlawPickerScreen(
+                    existing_ids, books=books, saga=self.saga, lab=target
+                ),
+                handle_result,
             )
             return
         chooser = (

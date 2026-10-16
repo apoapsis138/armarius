@@ -1110,6 +1110,15 @@ CONTRACTS: dict[str, Contract] = {
         expected={"specialization": "Muto"},
         invalid={"Specialization": Select.NULL},
     ),
+    "lab servant": Contract(
+        # A grog of the saga, or the servant's Intelligence typed in.
+        prefill={"Servant": Select.NULL, "Intelligence": ""},
+        edits={"Servant": "grog9"},
+        saved=lambda s: _lab(s).virtues_flaws[-1].params,
+        expected={"servant": "grog9"},
+        invalid={"Servant": Select.NULL, "Intelligence": "clever"},
+        shown={"#lab-vf-virtues-list": "Servant"},
+    ),
     "virtue parameters": Contract(
         prefill={"Subject": ""},
         edits={"Subject": "Latin"},

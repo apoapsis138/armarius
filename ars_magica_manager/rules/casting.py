@@ -134,9 +134,7 @@ def casting_score(
             or e.target.casefold() in (technique.casefold(), form.casefold())
         )
     ]
-    combined = effects.combine(
-        base, [e for e in found if e.modifier.amount is not None]
-    )
+    combined = effects.combine(base, [e for e in found if e.amount is not None])
     # A multiplier (Deficient Art) acts on the Casting Total, die included,
     # so it's listed but left out of the score: see casting_total().
     multipliers = [
@@ -158,12 +156,12 @@ def _voice(magus: Character, kind: str, form: str, base: int) -> tuple[int, str]
         for e in effects.collect([scores.character_source(magus.virtues_flaws)], kind)
         if e.target is None or e.target.casefold() == form.casefold()
     ]
-    flaws = [e for e in found if (e.modifier.amount or 0) < 0]
+    flaws = [e for e in found if (e.amount or 0) < 0]
     amount, name = base, ""
-    worst = min(flaws, key=lambda e: e.modifier.amount or 0, default=None)
-    if worst is not None and (worst.modifier.amount or 0) < amount:
-        amount, name = int(worst.modifier.amount or 0), worst.entry.name
-    relief = sum(int(e.modifier.amount or 0) for e in found if e not in flaws)
+    worst = min(flaws, key=lambda e: e.amount or 0, default=None)
+    if worst is not None and (worst.amount or 0) < amount:
+        amount, name = int(worst.amount or 0), worst.entry.name
+    relief = sum(int(e.amount or 0) for e in found if e not in flaws)
     if amount < 0 and relief:
         amount = min(0, amount + relief)
     return amount, name
@@ -184,13 +182,9 @@ def fatigue_levels(
     for e in found:
         if e.modifier.multiplier is not None:
             levels = round_down(levels * e.modifier.multiplier)
-    general = sum(
-        int(e.modifier.amount or 0) for e in found if e.modifier.activity is None
-    )
+    general = sum(int(e.amount or 0) for e in found if e.modifier.activity is None)
     levels = max(1, levels + general)
-    own = sum(
-        int(e.modifier.amount or 0) for e in found if e.modifier.activity is not None
-    )
+    own = sum(int(e.amount or 0) for e in found if e.modifier.activity is not None)
     return max(0, levels + own)
 
 

@@ -40,6 +40,7 @@ from .common import ABILITY_CATEGORIES as ABILITY_CATEGORIES
 from .common import COMPANION_TYPES as COMPANION_TYPES
 from .common import FATIGUE_LEVELS as FATIGUE_LEVELS
 from .common import LAB_CHARACTERISTICS as LAB_CHARACTERISTICS
+from .common import LAB_VF_PARAMETERS as LAB_VF_PARAMETERS
 from .common import REALMS as REALMS
 from .common import SEASONS as SEASONS
 from .common import SUPERNATURAL_CATEGORIES as SUPERNATURAL_CATEGORIES

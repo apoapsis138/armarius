@@ -178,6 +178,79 @@ def params_from(parameters: Sequence[str], values: dict[str, Any]) -> dict[str, 
     return {param: values[param].lower() for param in parameters}
 
 
+def lab_needs_input(entry: LabVirtueFlawDef) -> bool:
+    """Whether adding the laboratory Virtue or Flaw asks for anything: a
+    Specialization to choose, or what its effect is read from."""
+    return bool(entry.choices or entry.parameters)
+
+
+def lab_param_fields(
+    saga: Saga | None, lab: Laboratory | None, entry: LabVirtueFlawDef
+) -> list[DialogField]:
+    """What adding a laboratory Virtue or Flaw asks for: its Specialization
+    (lab_choice_fields), and for one whose effect is read from an
+    Intelligence, the servant (one of the saga's grogs, whose Intelligence
+    is then used) or the Intelligence typed in. lab_params_from reads the
+    values."""
+    fields = lab_choice_fields(entry)
+    grogs = servant_options(saga, lab) if "servant" in entry.parameters else []
+    if grogs:
+        fields.append(
+            DialogField(
+                "servant",
+                "Servant",
+                "select",
+                None,
+                options=grogs,
+                allow_blank=True,
+                placeholder="(none: type the Intelligence)",
+                hint="A grog of the saga: their Intelligence is used, and follows "
+                "any change to their sheet.",
+            )
+        )
+    if "intelligence" in entry.parameters:
+        whose = "the servant's" if "servant" in entry.parameters else "the creature's"
+        divisor = max(
+            (m.amount_divisor for m in entry.characteristic_readings), default=1
+        )
+        fields.append(
+            DialogField(
+                "intelligence",
+                "Intelligence",
+                "optint",
+                None,
+                hint=f"{whose[0].upper()}{whose[1:]} Intelligence; Safety "
+                + ("+half of it, rounded up." if divisor == 2 else "+that much."),
+                show_if=(lambda values: not values.get("servant")) if grogs else None,
+            )
+        )
+    return fields
+
+
+def lab_params_from(entry: LabVirtueFlawDef, values: dict[str, Any]) -> dict[str, str]:
+    """The new instance's params from lab_param_fields' values: the chosen
+    Specialization, the grog's id, the typed Intelligence; blanks left out."""
+    params = {param: values[param] for param in entry.choices}
+    if values.get("servant"):
+        params["servant"] = str(values["servant"])
+    elif values.get("intelligence") is not None and "intelligence" in entry.parameters:
+        params["intelligence"] = str(values["intelligence"])
+    return params
+
+
+def servant_options(saga: Saga | None, lab: Laboratory | None) -> list[tuple[str, str]]:
+    """The saga's grogs as (label, id), those of the laboratory's covenant
+    first, each group by name."""
+    if saga is None:
+        return []
+    covenant_id = lab.covenant_id if lab is not None else None
+    grogs = sorted(
+        (c for c in saga.characters if c.type == "grog"),
+        key=lambda c: (c.covenant_id != covenant_id, c.name.casefold()),
+    )
+    return [(escape(c.name), c.id) for c in grogs]
+
+
 def lab_choice_fields(entry: LabVirtueFlawDef) -> list[DialogField]:
     """Choose the Specialization a laboratory Virtue or Flaw grants points
     to, from the ones its catalog entry allows."""
@@ -414,15 +487,13 @@ def _lab_add(saga: Saga, lab: Laboratory, side: str | None) -> Choose:
         link_unlinked_features(lab)
 
     def chosen(entry: LabVirtueFlawDef) -> Command | None:
-        if not entry.choices:
+        if not lab_needs_input(entry):
             add(entry, {})
             return None
         return Form(
             escape(entry.name),
-            lambda: lab_choice_fields(entry),
-            lambda values: add(
-                entry, {param: values[param] for param in entry.choices}
-            ),
+            lambda: lab_param_fields(saga, lab, entry),
+            lambda values: add(entry, lab_params_from(entry, values)),
             save_label="Confirm",
         )
 

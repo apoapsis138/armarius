@@ -245,10 +245,12 @@ class LaboratorySheetView(SheetView):
             with VerticalScroll():
                 warnings = self._static(
                     (*LAB_VF_SECTIONS, "section-lab-characteristics"),
-                    lambda: lab_text.vf_warnings(self.laboratory),
+                    lambda: lab_text.vf_warnings(self.laboratory, self.saga),
                     id="lab-vf-warnings",
                 )
-                warnings.display = bool(lab_text.vf_warnings(self.laboratory))
+                warnings.display = bool(
+                    lab_text.vf_warnings(self.laboratory, self.saga)
+                )
                 yield warnings
                 self._on_refresh(
                     (*LAB_VF_SECTIONS, "section-lab-characteristics"),
@@ -289,7 +291,7 @@ class LaboratorySheetView(SheetView):
                         )
             yield self._panel(
                 LAB_VF_SECTIONS,
-                lambda: lab_text.vf_info_text(self.laboratory, None),
+                lambda: lab_text.vf_info_text(self.laboratory, None, self.saga),
                 id="lab-vf-info",
             )
 
@@ -453,11 +455,11 @@ class LaboratorySheetView(SheetView):
         return {
             "lab-vf-virtues-list": (
                 "lab-vf-info",
-                lambda i: lab_text.vf_info_text(lab, i),
+                lambda i: lab_text.vf_info_text(lab, i, self.saga),
             ),
             "lab-vf-flaws-list": (
                 "lab-vf-info",
-                lambda i: lab_text.vf_info_text(lab, i),
+                lambda i: lab_text.vf_info_text(lab, i, self.saga),
             ),
             "lab-specializations-list": (
                 "lab-attr-panel",
@@ -565,7 +567,7 @@ class LaboratorySheetView(SheetView):
 
     def _show_vf_warnings_if_any(self) -> None:
         warnings = self.query_one("#lab-vf-warnings", Static)
-        warnings.display = bool(lab_text.vf_warnings(self.laboratory))
+        warnings.display = bool(lab_text.vf_warnings(self.laboratory, self.saga))
 
     def _selected(self, list_id: str) -> int | None:
         return self.query_one(f"#{list_id}", SelectableList).selected_data_index
@@ -749,7 +751,7 @@ class LaboratorySheetView(SheetView):
         rows: dict[str, tuple[int, int, int]] = {}
         for characteristic in LAB_CHARACTERISTICS:
             manual, virtue_sum, flaw_sum, total = lab_characteristic_total(
-                lab, lab_catalog, characteristic
+                lab, lab_catalog, characteristic, self.saga
             )
             rows[characteristic] = (manual, virtue_sum + flaw_sum, total)
         num_width = max(len(f"{value:+d}") for row in rows.values() for value in row)

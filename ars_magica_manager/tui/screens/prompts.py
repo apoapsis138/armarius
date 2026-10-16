@@ -139,14 +139,19 @@ def _param_dialog(
     )
 
 
-def _lab_choice_dialog(entry: LabVirtueFlawDef) -> FieldsDialog[dict[str, str]]:
-    """Choose the Specialization a laboratory Virtue or Flaw grants points
-    to, from the ones its catalog entry allows."""
+def _lab_choice_dialog(
+    entry: LabVirtueFlawDef,
+    saga: Saga | None = None,
+    lab: Laboratory | None = None,
+) -> FieldsDialog[dict[str, str]]:
+    """What adding a laboratory Virtue or Flaw asks for: the Specialization
+    it grants points to, and for a Servant its grog or Intelligence
+    (virtue_forms.lab_param_fields)."""
     return FieldsDialog(
         entry.name,
-        virtue_forms.lab_choice_fields(entry),
+        virtue_forms.lab_param_fields(saga, lab, entry),
         save_label="Confirm",
-        build=lambda values: {param: values[param] for param in entry.choices},
+        build=lambda values: virtue_forms.lab_params_from(entry, values),
     )
 
 

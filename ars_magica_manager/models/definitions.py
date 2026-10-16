@@ -9,6 +9,7 @@ from typing import Any
 from .common import (
     ABILITY_CATEGORIES,
     LAB_CHARACTERISTICS,
+    LAB_VF_PARAMETERS,
     VIRTUE_FLAW_AUDIENCES,
     VIRTUE_FLAW_SIDE,
     BoonHookType,
@@ -135,6 +136,11 @@ class LabVirtueFlawDef:
     `repeatable` marks the (asterisked in the book) entries a lab can hold
     more than once -- e.g. two Lesser Features -- so the picker shouldn't
     exclude them just because one's already attached.
+
+    `parameters` are what the owner enters as the Virtue is added, from
+    LAB_VF_PARAMETERS: "intelligence" (a whole number) and "servant" (a
+    grog's id, whose Intelligence is used instead). A modifier reads one
+    with `amount_param` (Servant: Safety +half the servant's Intelligence).
     """
 
     id: str
@@ -147,6 +153,7 @@ class LabVirtueFlawDef:
     modifiers: list[Modifier] = field(default_factory=list)
     #: A parameter the lab's owner chooses -> the values allowed.
     choices: dict[str, list[str]] = field(default_factory=dict)
+    parameters: list[str] = field(default_factory=list)
     description: str = ""
     #: The book(s) it's from (sourcebooks); every entry so far is Covenants'.
     source: str = "Covenants"
@@ -157,7 +164,18 @@ class LabVirtueFlawDef:
             unknown = set(options) - set(LAB_SPECIALIZATIONS)
             if unknown:
                 raise ValueError(f"Unknown Specializations {unknown} for {self.id!r}")
+        unknown_params = set(self.parameters) - set(LAB_VF_PARAMETERS)
+        if unknown_params:
+            raise ValueError(f"Unknown parameters {unknown_params} for {self.id!r}")
         for modifier in self.modifiers:
+            if (
+                modifier.amount_param is not None
+                and modifier.amount_param not in self.parameters
+            ):
+                raise ValueError(
+                    f"{self.id!r} reads {modifier.amount_param!r}, "
+                    "which isn't one of its parameters"
+                )
             if modifier.applies_to == "lab_specialization" and not (
                 modifier.target in LAB_SPECIALIZATIONS
                 or modifier.target == "{specialization}"
@@ -188,14 +206,29 @@ class LabVirtueFlawDef:
     @property
     def characteristic_modifiers(self) -> dict[str, float]:
         """Its flat effects on the Characteristics, {characteristic: amount}
-        in catalog order (read from `modifiers`)."""
+        in catalog order (read from `modifiers`); one read from a parameter
+        is in `characteristic_readings` instead."""
         amounts: dict[str, float] = {}
         for modifier in self.modifiers:
-            if modifier.applies_to == "lab_characteristic" and modifier.target:
+            if (
+                modifier.applies_to == "lab_characteristic"
+                and modifier.target
+                and modifier.amount_param is None
+            ):
                 amounts[modifier.target] = amounts.get(modifier.target, 0) + (
                     modifier.amount or 0
                 )
         return amounts
+
+    @property
+    def characteristic_readings(self) -> list[Modifier]:
+        """Its effects on the Characteristics that are read from a
+        parameter (Servant's Safety), in catalog order."""
+        return [
+            m
+            for m in self.modifiers
+            if m.applies_to == "lab_characteristic" and m.amount_param is not None
+        ]
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> LabVirtueFlawDef:

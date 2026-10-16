@@ -21,13 +21,16 @@ from .models import (
     LAB_ACTIVITY_SPECIALIZATIONS,
     LAB_SPECIALIZATIONS,
     ArcaneConnection,
+    Character,
     DiaryEntry,
     LabFeature,
     Laboratory,
     LabSpecialtyEntry,
     LabSpecialtyGrant,
     LabVirtueFlawDef,
+    Modifier,
     NamedDescription,
+    Saga,
     VirtueFlawInstance,
 )
 from .rules import effects
@@ -113,22 +116,35 @@ def lab_characteristic_total(
     lab: Laboratory,
     catalog_by_id: dict[str, LabVirtueFlawDef],
     characteristic: str,
+    saga: Saga | None = None,
 ) -> tuple[int, int, int, int]:
     """(manual, virtue_sum, flaw_sum, total) for one of LAB_CHARACTERISTICS.
 
     manual + virtue_sum + flaw_sum = total, per the user's explicit
     formula: the manual component is a free player adjustment on top of
-    whatever the lab's attached Virtues/Flaws contribute.
+    whatever the lab's attached Virtues/Flaws contribute. Given the `saga`,
+    a Servant who is one of its grogs counts with the grog's Intelligence.
     """
     manual = getattr(lab.characteristics, characteristic)
-    found = effects.collect(
-        [laboratory_source(lab, catalog_by_id)],
-        "lab_characteristic",
-        target=characteristic,
-    )
+    found = characteristic_effects(lab, catalog_by_id, characteristic, saga)
     virtue_sum = int(effects.amount_total(e for e in found if not e.is_negative_side))
     flaw_sum = int(effects.amount_total(e for e in found if e.is_negative_side))
     return manual, virtue_sum, flaw_sum, manual + virtue_sum + flaw_sum
+
+
+def characteristic_effects(
+    lab: Laboratory,
+    catalog_by_id: dict[str, LabVirtueFlawDef],
+    characteristic: str,
+    saga: Saga | None = None,
+) -> list[effects.Effect]:
+    """What the lab's Virtues and Flaws do to one Characteristic, one
+    effect each (lab_characteristic_total adds them up)."""
+    return effects.collect(
+        [laboratory_source(lab, catalog_by_id, saga)],
+        "lab_characteristic",
+        target=characteristic,
+    )
 
 
 def migrate_specialty_stand_ins(
@@ -173,12 +189,84 @@ def _absorb_stand_in(
 
 
 def laboratory_source(
-    lab: Laboratory, catalog_by_id: dict[str, LabVirtueFlawDef] | None = None
+    lab: Laboratory,
+    catalog_by_id: dict[str, LabVirtueFlawDef] | None = None,
+    saga: Saga | None = None,
 ) -> effects.EffectSource:
-    """The lab's Virtues and Flaws as a source for the shared effect lookup."""
+    """The lab's Virtues and Flaws as a source for the shared effect
+    lookup; given the `saga`, a Servant who is one of its grogs reads the
+    grog's Intelligence (vf_params)."""
     if catalog_by_id is None:
         catalog_by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
-    return effects.EffectSource("laboratory", lab.virtues_flaws, catalog_by_id)
+    params = None if saga is None else lambda vf: vf_params(saga, vf)
+    return effects.EffectSource("laboratory", lab.virtues_flaws, catalog_by_id, params)
+
+
+# -- a Virtue's servant --
+
+
+def servant(saga: Saga, instance: VirtueFlawInstance) -> Character | None:
+    """The grog a Virtue names as its servant, or None: none named, or the
+    character named is gone or no longer a grog."""
+    character = saga.character(instance.params.get("servant") or None)
+    return character if character is not None and character.type == "grog" else None
+
+
+def vf_params(saga: Saga, instance: VirtueFlawInstance) -> dict[str, str]:
+    """The Virtue's parameters, with its servant's Intelligence in place of
+    the typed one when it names a grog of the saga: the grog's sheet is
+    read each time, so a change to it follows."""
+    grog = servant(saga, instance)
+    if grog is None:
+        return dict(instance.params)
+    return {**instance.params, "intelligence": str(grog.characteristics.intelligence)}
+
+
+def entered_intelligence(saga: Saga | None, instance: VirtueFlawInstance) -> int | None:
+    """The Intelligence a Virtue's effect is read from: its grog's, else the
+    typed number; None when neither is there."""
+    params = vf_params(saga, instance) if saga is not None else instance.params
+    try:
+        return int(str(params.get("intelligence", "")).strip())
+    except ValueError:
+        return None
+
+
+def reading_text(
+    saga: Saga | None,
+    instance: VirtueFlawInstance,
+    modifier: Modifier,
+) -> str:
+    """A Characteristic read from a parameter, in plain words: "Safety +2
+    (Kurt's Intelligence +3, halved, rounded up)", or "Safety
+    +(Intelligence, halved, rounded up)" until one is entered."""
+    label = _characteristic_label(modifier.target or "")
+    value = entered_intelligence(saga, instance)
+    if value is None:
+        return f"{label} +(Intelligence{_divided(modifier)})"
+    amount = effects.resolve_amount(modifier, {modifier.amount_param or "": str(value)})
+    return f"{label} {amount or 0:+g} ({reading_detail(saga, instance, modifier)})"
+
+
+def reading_detail(
+    saga: Saga | None, instance: VirtueFlawInstance, modifier: Modifier
+) -> str:
+    """Where an amount read from a parameter comes from: "Kurt's
+    Intelligence +3, halved, rounded up", "Intelligence +2"."""
+    value = entered_intelligence(saga, instance)
+    grog = servant(saga, instance) if saga is not None else None
+    who = f"{grog.name}'s Intelligence" if grog is not None else "Intelligence"
+    shown = "not entered" if value is None else f"{value:+d}"
+    return f"{who} {shown}{_divided(modifier)}"
+
+
+def _divided(modifier: Modifier) -> str:
+    divisor = modifier.amount_divisor
+    if divisor == 1:
+        return ""
+    if divisor == 2:
+        return ", halved, rounded up"
+    return f", divided by {divisor}, rounded up"
 
 
 # -- Features --
@@ -429,7 +517,7 @@ def specialization_scores(lab: Laboratory) -> list[SpecializationScore]:
         ]
     source = laboratory_source(lab)
     found += [
-        (effect.target or "", effect.entry.name, int(effect.modifier.amount or 0))
+        (effect.target or "", effect.entry.name, int(effect.amount or 0))
         for effect in effects.collect([source], "lab_specialization")
     ]
     found += [
@@ -445,7 +533,7 @@ def specialization_scores(lab: Laboratory) -> list[SpecializationScore]:
     for effect in effects.collect([source], "lab_specialization_high"):
         for name, entries in sources.items():
             if sum(points for _, points in entries) >= 2:
-                entries.append((effect.entry.name, int(effect.modifier.amount or 0)))
+                entries.append((effect.entry.name, int(effect.amount or 0)))
     return [
         SpecializationScore(
             name,
@@ -654,9 +742,10 @@ def vf_rows(lab: Laboratory, vf_type: str) -> list[tuple[int | None, str]]:
     ]
 
 
-def vf_info_text(lab: Laboratory, index: int | None) -> str:
+def vf_info_text(lab: Laboratory, index: int | None, saga: Saga | None = None) -> str:
     """The details panel for the lab Virtue/Flaw at `index`: name, category,
-    tier and points, its effect on the Characteristics, and the rules."""
+    tier and points, its effect on the Characteristics (a Servant's read
+    from its grog's Intelligence, given the `saga`), and the rules."""
     if index is None:
         return "[dim]Select a Virtue or Flaw to see its details.[/]"
     lab_catalog = catalog.load_lab_virtue_flaw_catalog_by_id()
@@ -669,7 +758,12 @@ def vf_info_text(lab: Laboratory, index: int | None) -> str:
         f"[b]Category:[/] {definition.category}",
         f"[b]Tier:[/] {definition.tier} {definition.type} ({_points(definition.cost)})",
     ]
-    lines += _vf_effect_lines(instance, definition)
+    if "servant" in definition.parameters:
+        grog = servant(saga, instance) if saga is not None else None
+        lines.append(
+            f"[b]Servant:[/] {escape(grog.name) if grog else '(none: Intelligence typed)'}"
+        )
+    lines += _vf_effect_lines(instance, definition, saga=saga)
     if instance.vf_id in FEATURE_VIRTUE_POINTS:
         feature = feature_on(lab, instance)
         lines.append(
@@ -704,6 +798,7 @@ def _vf_effect_lines(
     definition: LabVirtueFlawDef,
     *,
     unchosen: str = "not chosen",
+    saga: Saga | None = None,
 ) -> list[str]:
     """A lab Virtue/Flaw's Specialization grants and effects on the
     Characteristics, one details-panel line each."""
@@ -711,13 +806,27 @@ def _vf_effect_lines(
     grants = specialization_grant_text(instance, definition, unchosen=unchosen)
     if grants:
         lines.append(f"[b]Specializations:[/] {grants}")
-    if definition.characteristic_modifiers:
-        effects = ", ".join(
-            f"{_characteristic_label(c)} {amount:+d}"
-            for c, amount in definition.characteristic_modifiers.items()
-        )
-        lines.append(f"[b]Characteristics:[/] {effects}")
+    effects = characteristic_effect_texts(instance, definition, saga)
+    if effects:
+        lines.append(f"[b]Characteristics:[/] {escape(', '.join(effects))}")
     return lines
+
+
+def characteristic_effect_texts(
+    instance: VirtueFlawInstance,
+    definition: LabVirtueFlawDef,
+    saga: Saga | None = None,
+) -> list[str]:
+    """What it does to the Characteristics, in plain words, catalog order:
+    "Safety +2 (Kurt's Intelligence +3, halved, rounded up)",
+    "Aesthetics +1"."""
+    return [
+        reading_text(saga, instance, modifier)
+        for modifier in definition.characteristic_readings
+    ] + [
+        f"{_characteristic_label(c)} {amount:+g}"
+        for c, amount in definition.characteristic_modifiers.items()
+    ]
 
 
 def unchosen_specialization(
@@ -757,11 +866,12 @@ def specialization_grant_text(
     return ", ".join(parts)
 
 
-def vf_warnings(lab: Laboratory) -> str:
+def vf_warnings(lab: Laboratory, saga: Saga | None = None) -> str:
     """What's wrong with the lab's Virtues & Flaws as a whole, one line
     each in the theme's error colour -- or "" when nothing is: more Virtue
-    points (net of Flaws) than Size + Refinement allow, or more than one
-    Focus."""
+    points (net of Flaws) than Size + Refinement allow, more than one
+    Focus, a Specialization not chosen, or a Virtue whose Safety is read
+    from an Intelligence with none entered or its grog gone."""
     lab_catalog = catalog.load_lab_virtue_flaw_catalog_by_id()
     lines = []
     free = lab_free_virtues(lab, lab_catalog)
@@ -781,7 +891,31 @@ def vf_warnings(lab: Laboratory) -> str:
                 f"{definition.name}: its Specialization isn't chosen "
                 "(remove it and add it again to choose)."
             )
+        if definition is not None and definition.characteristic_readings:
+            lines += _reading_warnings(saga, vf, definition)
     return "\n".join(problem(line) for line in lines)
+
+
+def _reading_warnings(
+    saga: Saga | None, instance: VirtueFlawInstance, definition: LabVirtueFlawDef
+) -> list[str]:
+    """A Virtue whose effect is read from an Intelligence: its grog gone
+    (the typed number, if any, is used instead), or nothing entered."""
+    lines = []
+    named = instance.params.get("servant")
+    if saga is not None and named and servant(saga, instance) is None:
+        lines.append(
+            f"{definition.name}: its servant is no longer one of the saga's grogs"
+            " (the typed Intelligence is used)."
+        )
+    if entered_intelligence(saga, instance) is None:
+        whom = (
+            "no servant or Intelligence"
+            if "servant" in definition.parameters
+            else "no Intelligence"
+        )
+        lines.append(f"{definition.name}: {whom} entered, so it adds no Safety.")
+    return lines
 
 
 def named_rows(entries: Sequence[NamedDescription]) -> list[tuple[int | None, str]]:

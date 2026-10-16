@@ -107,7 +107,7 @@ def season_of_study(
         lines.append(
             Line(
                 effect.entry.name,
-                amount=effect.modifier.amount or 0,
+                amount=effect.amount or 0,
                 source="character",
             )
         )

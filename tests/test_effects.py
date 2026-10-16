@@ -116,13 +116,19 @@ def test_lab_catalog_effects_are_modifiers():
         ("lab_characteristic", "safety", 1),
         ("lab_characteristic", "aesthetics", 1),
     ]
-    total = sum(
+    fixed = sum(
         1
         for entry in by_id.values()
         for m in entry.modifiers
-        if m.applies_to == "lab_characteristic"
+        if m.applies_to == "lab_characteristic" and m.amount_param is None
     )
-    assert total == 254  # every value of the old characteristic map
+    assert fixed == 254  # every value of the old characteristic map
+    read = sorted(id_ for id_, entry in by_id.items() if entry.characteristic_readings)
+    assert read == [
+        "labvf_greater_guardian",
+        "labvf_greater_horde",
+        "labvf_servant",
+    ]
 
 
 def test_an_old_characteristic_map_still_loads():

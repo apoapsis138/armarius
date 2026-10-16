@@ -17,6 +17,7 @@ is left to the rule that owns it (Affinity rounds up; the default is down).
 
 from __future__ import annotations
 
+import math
 import re
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
@@ -40,23 +41,33 @@ class _Entry(Protocol):
 class EffectSource:
     """One record's attached entries: its instances and the catalog they
     come from. `kind` names the record ("character", "laboratory",
-    "covenant") for the breakdown."""
+    "covenant") for the breakdown. `params`, when given, is what an
+    instance's parameters come to once the record has looked up what they
+    point at (a laboratory's Servant naming a grog -> that grog's
+    Intelligence); without it the instance's own parameters are used."""
 
     kind: str
     instances: Sequence[VirtueFlawInstance]
     catalog: Mapping[str, Any]
+    params: Callable[[VirtueFlawInstance], Mapping[str, str]] | None = None
+
+    def params_of(self, instance: VirtueFlawInstance) -> Mapping[str, str]:
+        return self.params(instance) if self.params else instance.params
 
 
 @dataclass(frozen=True)
 class Effect:
     """One modifier from one attached instance, with its target resolved
-    from the instance's parameters ("{art}" -> "creo")."""
+    from the instance's parameters ("{art}" -> "creo") and its flat amount
+    worked out (the modifier's own, or read from a parameter: see
+    Modifier.amount_param)."""
 
     kind: str
     entry: _Entry
     instance: VirtueFlawInstance
     modifier: Modifier
     target: str | None
+    amount: float | None = None
 
     @property
     def is_negative_side(self) -> bool:
@@ -92,6 +103,19 @@ def _chosen(modifier: Modifier, params: Mapping[str, str]) -> bool:
     )
 
 
+def resolve_amount(modifier: Modifier, params: Mapping[str, str]) -> float | None:
+    """The modifier's flat amount: its own, or its `amount_param`'s whole
+    number divided by `amount_divisor`, rounded up; None when that
+    parameter isn't a number (not entered yet)."""
+    if modifier.amount_param is None:
+        return modifier.amount
+    try:
+        value = int(str(params.get(modifier.amount_param, "")).strip())
+    except ValueError:
+        return None
+    return math.ceil(value / modifier.amount_divisor)
+
+
 def collect(
     sources: Iterable[EffectSource],
     applies_to: str,
@@ -112,27 +136,33 @@ def collect(
             entry = source.catalog.get(instance.vf_id)
             if entry is None:
                 continue
+            params = source.params_of(instance)
             for modifier in entry.modifiers:
                 if modifier.applies_to != applies_to:
                     continue
                 if activity is not None and modifier.activity not in (None, activity):
                     continue
-                if not _chosen(modifier, instance.params):
+                if not _chosen(modifier, params):
                     continue
-                resolved = resolve_target(modifier.target, instance.params)
+                resolved = resolve_target(modifier.target, params)
                 if (
                     target is not None
                     and resolved is not None
                     and not _same(resolved, target)
                 ):
                     continue
-                found.append(Effect(source.kind, entry, instance, modifier, resolved))
+                amount = resolve_amount(modifier, params)
+                if modifier.amount_param is not None and amount is None:
+                    continue
+                found.append(
+                    Effect(source.kind, entry, instance, modifier, resolved, amount)
+                )
     return found
 
 
 def amount_total(effects: Iterable[Effect]) -> float:
     """The sum of the effects' flat amounts."""
-    return sum(effect.modifier.amount or 0 for effect in effects)
+    return sum(effect.amount or 0 for effect in effects)
 
 
 def combine(
@@ -150,12 +180,10 @@ def combine(
     lines = [Line(base_label, amount=base, source=base_source)]
     total = base
     for effect in effects:
-        if effect.modifier.amount is not None:
-            total += effect.modifier.amount
+        if effect.amount is not None:
+            total += effect.amount
             lines.append(
-                Line(
-                    effect.entry.name, amount=effect.modifier.amount, source=effect.kind
-                )
+                Line(effect.entry.name, amount=effect.amount, source=effect.kind)
             )
     for effect in effects:
         if effect.modifier.multiplier is not None:

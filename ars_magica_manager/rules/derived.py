@@ -148,7 +148,7 @@ def soak(character: Character) -> Breakdown:
         lines.append(Line(armour.name, amount=armour.armor_protection, source=SOURCE))
         total += armour.armor_protection
     for effect in effects.collect([character_source(character.virtues_flaws)], "soak"):
-        amount = effect.modifier.amount or 0
+        amount = effect.amount or 0
         lines.append(Line(effect.entry.name, amount=amount, source="character"))
         total += amount
     if character.wounds.soak:

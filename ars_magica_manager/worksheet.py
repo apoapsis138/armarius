@@ -1566,7 +1566,7 @@ def _lab_virtue_rows(saga: Saga, record: Record) -> list[Row]:
                 Row(
                     f"{pad(name, VF_NAME)}"
                     f"{definition.tier:<{VF_TIER}}{escape(definition.category)}",
-                    lab_rules.vf_info_text(lab, index),
+                    lab_rules.vf_info_text(lab, index, saga),
                     delete=_remove_virtue_flaw(saga, lab, instance),
                     cells=[escape(name), definition.tier, escape(definition.category)],
                 )

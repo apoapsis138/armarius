@@ -89,7 +89,7 @@ def _amount(character: Character, applies_to: str) -> int:
 
 def start_age(character: Character) -> int:
     """The age the character's aging rolls start at."""
-    found = [e.modifier.amount or 0 for e in _effects(character, "aging_start")]
+    found = [e.amount or 0 for e in _effects(character, "aging_start")]
     return int(max([START_AGE, *found]))
 
 
@@ -163,7 +163,7 @@ def roll(
     if bronze_cord:
         parts.append(f"- bronze cord {bronze_cord}")
     for effect in virtues:
-        amount = int(effect.modifier.amount or 0)
+        amount = int(effect.amount or 0)
         parts.append(f"{'+' if amount >= 0 else '-'} {effect.entry.name} {abs(amount)}")
     result.notes.append(f"Aging Total {total} ({' '.join(parts)}).")
     if total >= 3:
@@ -206,8 +206,6 @@ def crisis(
         text += " The Longevity Ritual sees the character through, then ends."
     elif against is not None:
         bonus = _effects(character, "crisis_survival")
-        extra = "".join(
-            f" + {e.entry.name} {int(e.modifier.amount or 0)}" for e in bonus
-        )
+        extra = "".join(f" + {e.entry.name} {int(e.amount or 0)}" for e in bonus)
         text += f" Survival: Stamina{extra} stress roll against {against}."
     return text, ritual

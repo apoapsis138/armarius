@@ -221,14 +221,18 @@ def describe_virtue_flaw(
     becomes "Affinity with Creo" (the catalog name's "{art}" placeholder
     matches the entry's `parameters`). A parameter the name has no
     placeholder for follows it in brackets: "Deficient Technique (Creo)".
+    A laboratory Virtue's parameters (a Servant's grog or Intelligence)
+    are what its effect is read from, not part of its name.
     """
     definition = catalog_by_id.get(instance.vf_id)
     if definition is None:
         return f"{instance.vf_id} (not in catalog)"
     name = _fill_placeholders(definition.name, instance.params)
+    if isinstance(definition, LabVirtueFlawDef):
+        return name
     extra = [
         instance.params[key].title()
-        for key in getattr(definition, "parameters", [])
+        for key in definition.parameters
         if f"{{{key}}}" not in definition.name and instance.params.get(key)
     ]
     return f"{name} ({', '.join(extra)})" if extra else name

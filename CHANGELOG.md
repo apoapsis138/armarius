@@ -46,6 +46,20 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.94.1 — 2026-10-16
+
+- **A lab Servant adds its Safety.** The Servant Virtue now gives the
+  laboratory Safety equal to half the servant's Intelligence, rounded up,
+  as the book says. Adding it asks for the servant: one of the saga's
+  grogs, whose Intelligence is then read from their sheet and follows any
+  change to it, or, with no grog chosen, the servant's Intelligence typed
+  in. Greater Guardian and Greater Horde likewise ask for the creature's
+  Intelligence and add it to Safety. The Virtue's card and details say
+  whose Intelligence it is, the desktop's Characteristic cards list what
+  each Virtue and Flaw adds, and a warning appears when nothing has been
+  entered or the servant has left the saga. The desktop's Virtues & Flaws
+  chapter now shows the laboratory's warnings too.
+
 ## 2.94.0 — 2026-10-16
 
 - **The Normandy pack.** New Saga and Import offer *The Lion and the

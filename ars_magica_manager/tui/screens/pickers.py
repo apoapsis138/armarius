@@ -28,7 +28,7 @@ from textual.widgets import (
 )
 from textual.widgets.option_list import Option
 
-from ... import catalog, sourcebooks
+from ... import catalog, sourcebooks, virtue_forms
 from ... import laboratories as labs
 from ... import saga_content as sc
 from ... import sheet_text as st
@@ -40,6 +40,7 @@ from ...models import (
     Ability,
     AbilityDef,
     CovenantBoonHookDef,
+    Laboratory,
     LabVirtueFlawDef,
     Saga,
     SagaSource,
@@ -742,8 +743,8 @@ class LabVirtueFlawPickerScreen(
     -- Structure/Outfittings/Supernatural). Dismisses with the new
     instance, or None if cancelled.
 
-    No ParamPromptScreen branch -- unlike character Virtues/Flaws, lab
-    entries are never templated. `repeatable` entries (asterisked in the
+    An entry that asks for something (a Specialization, a Servant's grog
+    or Intelligence) opens _lab_choice_dialog. `repeatable` entries (asterisked in the
     book -- Feature*, Person*, etc.) aren't excluded just because one's
     already attached, the same way templated character entries aren't.
     """
@@ -759,9 +760,12 @@ class LabVirtueFlawPickerScreen(
         exclude_ids: set[str] | None = None,
         *,
         books: frozenset[str] | None = None,
+        saga: Saga | None = None,
+        lab: Laboratory | None = None,
     ) -> None:
         super().__init__(books=books)
         self._exclude_ids = exclude_ids or set()
+        self._saga, self._lab = saga, lab
 
     def _load_entries(self) -> list[LabVirtueFlawDef]:
         return [
@@ -786,7 +790,7 @@ class LabVirtueFlawPickerScreen(
         return labs.vf_entry_text(entry)
 
     def _on_entry_selected(self, entry: LabVirtueFlawDef) -> None:
-        if not entry.choices:
+        if not virtue_forms.lab_needs_input(entry):
             self.dismiss(VirtueFlawInstance(vf_id=entry.id))
             return
 
@@ -794,7 +798,9 @@ class LabVirtueFlawPickerScreen(
             if params is not None:
                 self.dismiss(VirtueFlawInstance(vf_id=entry.id, params=params))
 
-        self.app.push_screen(_lab_choice_dialog(entry), handle_choice)
+        self.app.push_screen(
+            _lab_choice_dialog(entry, self._saga, self._lab), handle_choice
+        )
 
 
 class CovenantBoonHookPickerScreen(

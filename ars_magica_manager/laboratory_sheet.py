@@ -20,8 +20,8 @@ from .character_sheet import Fact
 from .covenants import covenant_effective_aura
 from .markup import escape
 from .models import LAB_CHARACTERISTICS, Character, Laboratory, Saga
+from .rules import effects, realms
 from .rules import lab as lab_rules
-from .rules import realms
 
 
 def owner(saga: Saga, lab: Laboratory) -> Character | None:
@@ -101,21 +101,44 @@ class Characteristic:
     manual: int
     virtues: int
     flaws: int
+    #: Each Virtue or Flaw's part: "Servant +2 (Kurt's Intelligence +3,
+    #: halved, rounded up)", "Superior Construction +1".
+    sources: tuple[str, ...] = ()
 
     @property
     def total(self) -> int:
         return self.manual + self.virtues + self.flaws
 
 
-def characteristics(lab: Laboratory) -> list[Characteristic]:
+def characteristics(lab: Laboratory, saga: Saga | None = None) -> list[Characteristic]:
+    """The eight Characteristics; given the `saga`, a Servant who is one of
+    its grogs counts with the grog's Intelligence."""
     by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
     rows = []
     for key in LAB_CHARACTERISTICS:
-        manual, virtues, flaws, _total = labs.lab_characteristic_total(lab, by_id, key)
+        manual, virtues, flaws, _total = labs.lab_characteristic_total(
+            lab, by_id, key, saga
+        )
+        sources = tuple(
+            _source_text(saga, effect)
+            for effect in labs.characteristic_effects(lab, by_id, key, saga)
+        )
         rows.append(
-            Characteristic(key, key.replace("_", " ").title(), manual, virtues, flaws)
+            Characteristic(
+                key, key.replace("_", " ").title(), manual, virtues, flaws, sources
+            )
         )
     return rows
+
+
+def _source_text(saga: Saga | None, effect: effects.Effect) -> str:
+    """One Virtue or Flaw's part in a Characteristic: "Superior
+    Construction +1", or for one read from an Intelligence, whose:
+    "Servant +2 (Kurt's Intelligence +3, halved, rounded up)"."""
+    text = f"{effect.entry.name} {effect.amount or 0:+g}"
+    if effect.modifier.amount_param is None:
+        return text
+    return f"{text} ({labs.reading_detail(saga, effect.instance, effect.modifier)})"
 
 
 def characteristic_text(row: Characteristic) -> str:
@@ -125,6 +148,7 @@ def characteristic_text(row: Characteristic) -> str:
             f"[$label]Typed:[/] {row.manual:+d}",
             f"[$label]Virtues:[/] {row.virtues:+d}",
             f"[$label]Flaws:[/] {row.flaws:+d}",
+            *(f"  {escape(source)}" for source in row.sources),
             "",
             f"[b]{escape(row.name)} {row.total:+d}[/]",
         ]
@@ -151,19 +175,19 @@ class VirtueFlawCard:
     summary: str  # its effects on Characteristics and Specializations
 
 
-def virtue_flaw_cards(lab: Laboratory, side: str) -> list[VirtueFlawCard]:
+def virtue_flaw_cards(
+    lab: Laboratory, side: str, saga: Saga | None = None
+) -> list[VirtueFlawCard]:
     """The lab's Virtues or Flaws (`side`), each with what it does in
-    a few words: "Safety +1, Aesthetics +1"."""
+    a few words: "Safety +1, Aesthetics +1" (a Servant's Safety read from
+    its grog's Intelligence, given the `saga`)."""
     by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
     cards = []
     for index, instance in enumerate(lab.virtues_flaws):
         definition = by_id.get(instance.vf_id)
         if definition is None or definition.type != side:
             continue
-        effects = [
-            f"{c.replace('_', ' ').title()} {amount:+g}"
-            for c, amount in definition.characteristic_modifiers.items()
-        ]
+        effects = labs.characteristic_effect_texts(instance, definition, saga)
         grants = labs.specialization_grant_text(instance, definition)
         if grants:
             effects.append(grants)

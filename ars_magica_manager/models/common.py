@@ -93,6 +93,10 @@ LAB_CHARACTERISTICS: tuple[str, ...] = (
     "health",
     "aesthetics",
 )
+#: What a laboratory Virtue or Flaw may ask for as it is added: a whole
+#: number its effect is read from ("intelligence"), and a grog standing in
+#: for it ("servant": the grog's id; the grog's Intelligence is used).
+LAB_VF_PARAMETERS: tuple[str, ...] = ("servant", "intelligence")
 ABILITY_CATEGORIES: tuple[str, ...] = (
     "General",
     "Academic",
@@ -140,9 +144,25 @@ class Modifier:
     #: (Student of (Realm), a Faerie Blood's heritage) carries one modifier
     #: per choice.
     when: dict[str, str] | None = None
+    #: The amount is read from the instance's parameter of this name, a
+    #: whole number, divided by `amount_divisor` and rounded up: Servant's
+    #: "+(servant's Intelligence / 2, rounding up) Safety" is
+    #: amount_param "intelligence", amount_divisor 2. Used instead of
+    #: `amount`; an instance that hasn't entered the number gets nothing.
+    amount_param: str | None = None
+    amount_divisor: int = 1
 
     def __post_init__(self) -> None:
         validate_modifier_type(self.applies_to, self.activity)
+        if self.amount_param is not None and self.amount is not None:
+            raise ValueError(
+                f"A modifier has both an amount and amount_param "
+                f"{self.amount_param!r}; it reads one or the other"
+            )
+        if self.amount_divisor < 1:
+            raise ValueError(
+                f"amount_divisor must be 1 or more, not {self.amount_divisor}"
+            )
 
 
 def _validate_vf_tier_cost(id_: str, tier: str, cost: float) -> None:
