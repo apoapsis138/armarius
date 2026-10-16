@@ -46,6 +46,13 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.92.0 — 2026-10-16
+
+- **Spin boxes to match the drop-downs.** On the desktop the level
+  filters are the same inked blank: their number in italic on a dotted
+  line, solid purple while in use, with two small purple steps for the
+  arrows, faint at the end of the range.
+
 ## 2.91.0 — 2026-10-16
 
 - **New arms: ermine, a bend, bendy and checky.** Ermine joins the

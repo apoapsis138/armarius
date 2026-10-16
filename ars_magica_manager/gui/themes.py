@@ -346,6 +346,20 @@ def style_sheet(p: Palette, serif: str) -> str:
     }}
     QComboBox::drop-down {{ width: 0; border: none; }}
     QComboBox#quiet {{ font-size: 11pt; padding: 1px 30px 6px 4px; }}
+    QAbstractSpinBox {{
+        background: transparent;
+        border: none;
+        font-family: "{serif}";
+        font-size: 12.5pt;
+        font-style: italic;
+        padding: 3px 2px 7px 6px;
+    }}
+    QAbstractSpinBox QLineEdit {{ background: transparent; border: none; padding: 0; }}
+    QAbstractSpinBox::up-button, QAbstractSpinBox::down-button {{
+        width: 16px;
+        border: none;
+    }}
+    QAbstractSpinBox::up-arrow, QAbstractSpinBox::down-arrow {{ image: none; }}
     QLineEdit, QPlainTextEdit {{
         background: {p["surface"]};
         border: 1px solid {p["rule"]};

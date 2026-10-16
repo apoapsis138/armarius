@@ -48,6 +48,7 @@ from ars_magica_manager.gui.widgets import (
     GiltName,
     RuledRows,
     XpBarDelegate,
+    level_box,
 )
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.models import (
@@ -305,6 +306,27 @@ def test_a_drop_down_is_an_inked_blank_with_a_purple_bookmark(app):
     assert purple(0) > purple(2) + 8
     combo.hidePopup()
     dialog.close()
+    window.close()
+
+
+def test_a_spin_box_is_an_inked_blank_with_purple_steps(app):
+    window = MainWindow(saga_ids=[])
+    spin = level_box("Level")
+    spin.setParent(window)
+    spin.resize(160, 34)
+    spin.show()
+    app.processEvents()
+    image = spin.grab().toImage()
+
+    def purple_at(x: int) -> int:
+        return max(
+            image.pixelColor(x, y).blue() - image.pixelColor(x, y).green()
+            for y in range(image.height())
+        )
+
+    # The up step is lit; at "any" (its lowest) the down step is faint.
+    steps = image.width() - 10
+    assert purple_at(steps) > 40
     window.close()
 
 

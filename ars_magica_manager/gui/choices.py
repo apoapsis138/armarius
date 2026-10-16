@@ -1,7 +1,8 @@
 """Every drop-down drawn as a blank in a manuscript: its choice in italic
 on a dotted line, a murex-purple silk bookmark hanging at its right; and
 its open list as a slip of paper ruled in ink, a purple margin rule down
-its left and the chosen line washed in purple, fading to the right.
+its left and the chosen line washed in purple, fading to the right. A
+spin box is the same blank, with two small purple steps for its arrows.
 
 The purple is murex, the dye of royal books, and is kept apart from the
 rubric's red and the gilt, which stay with headings and selections.
@@ -21,11 +22,14 @@ from PySide6.QtGui import (
     QPen,
 )
 from PySide6.QtWidgets import (
+    QAbstractSpinBox,
     QApplication,
     QComboBox,
     QStyle,
     QStyledItemDelegate,
+    QStyleOptionSpinBox,
     QStyleOptionViewItem,
+    QWidget,
 )
 
 from .paper import shade
@@ -65,21 +69,31 @@ def paint_ribbon(
     painter.fillPath(path, QBrush(silk))
 
 
-def paint_choice(painter: QPainter, combo: QComboBox, p: Palette) -> None:
-    """A closed drop-down: its choice in italic on a dotted line (solid
-    purple while it has focus or the pointer), its bookmark at its right."""
+def _lively(widget: QWidget) -> bool:
+    return widget.hasFocus() or widget.underMouse()
+
+
+def paint_blank(painter: QPainter, widget: QWidget, right: float, p: Palette) -> None:
+    """The dotted line a blank's words sit on, from `widget`'s left to
+    `right`: solid purple while it has focus or the pointer."""
     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-    box = QRectF(combo.rect()).adjusted(1, 1, -1, -1)
-    purple = murex(p)
-    lively = combo.hasFocus() or combo.underMouse()
+    box = QRectF(widget.rect()).adjusted(1, 1, -1, -1)
+    lively = _lively(widget)
     line = box.bottom() - 3
-    pen = QPen(QColor(purple) if lively else shade(p["label"], 200), 1.2)
+    pen = QPen(QColor(murex(p)) if lively else shade(p["label"], 200), 1.2)
     if not lively:
         pen.setStyle(Qt.PenStyle.DotLine)
     painter.setPen(pen)
-    painter.drawLine(
-        QPointF(box.left(), line), QPointF(box.right() - RIBBON_ROOM, line)
-    )
+    painter.drawLine(QPointF(box.left(), line), QPointF(right, line))
+
+
+def paint_choice(painter: QPainter, combo: QComboBox, p: Palette) -> None:
+    """A closed drop-down: its choice in italic on a dotted line (solid
+    purple while it has focus or the pointer), its bookmark at its right."""
+    box = QRectF(combo.rect()).adjusted(1, 1, -1, -1)
+    purple = murex(p)
+    lively = _lively(combo)
+    paint_blank(painter, combo, box.right() - RIBBON_ROOM, p)
     font = combo.font()
     painter.setFont(font)
     if not combo.isEnabled():
@@ -97,6 +111,42 @@ def paint_choice(painter: QPainter, combo: QComboBox, p: Palette) -> None:
         room, Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft, words
     )
     paint_ribbon(painter, box.right() - 17, box.top(), box.bottom() + 1, purple)
+
+
+def _step(painter: QPainter, centre: QPointF, up: bool, colour: QColor) -> None:
+    """A small solid triangle pointing up or down."""
+    tip, base = (-3.0, 2.0) if up else (3.0, -2.0)
+    path = QPainterPath(QPointF(centre.x() - 4, centre.y() + base))
+    path.lineTo(centre.x() + 4, centre.y() + base)
+    path.lineTo(centre.x(), centre.y() + tip)
+    path.closeSubpath()
+    painter.fillPath(path, colour)
+
+
+def paint_spin(painter: QPainter, spin: QAbstractSpinBox, p: Palette) -> None:
+    """A spin box as a blank: the dotted line under its number (which its
+    own line edit draws), and its arrows as two small purple steps, faint
+    at the end of its range."""
+    option = QStyleOptionSpinBox()
+    spin.initStyleOption(option)
+    style = spin.style()
+    complex_ = QStyle.ComplexControl.CC_SpinBox
+    up = QRectF(
+        style.subControlRect(complex_, option, QStyle.SubControl.SC_SpinBoxUp, spin)
+    )
+    down = QRectF(
+        style.subControlRect(complex_, option, QStyle.SubControl.SC_SpinBoxDown, spin)
+    )
+    paint_blank(painter, spin, min(up.left(), down.left()) - 4, p)
+    enabled = spin.stepEnabled()
+    purple = murex(p)
+    for rect, flag, pointing_up in (
+        (up, QAbstractSpinBox.StepEnabledFlag.StepUpEnabled, True),
+        (down, QAbstractSpinBox.StepEnabledFlag.StepDownEnabled, False),
+    ):
+        on = spin.isEnabled() and bool(enabled & flag)
+        colour = QColor(purple) if on else shade(purple, 80)
+        _step(painter, rect.center(), pointing_up, colour)
 
 
 class InkSlipRows(QStyledItemDelegate):
@@ -146,8 +196,8 @@ class InkSlipRows(QStyledItemDelegate):
 
 
 class InkedChoices(QObject):
-    """Draws every drop-down in the application as an inked blank and
-    rules its open list, in the palette `p` (set again when the theme
+    """Draws every drop-down and spin box in the application as an inked
+    blank and rules a drop-down's open list, in the palette `p` (set again when the theme
     changes). The window's style sheet still sizes them; this only paints
     them, as gilding.GiltRods paints the scroll bars."""
 
@@ -156,17 +206,26 @@ class InkedChoices(QObject):
         self.p = p
 
     def eventFilter(self, watched: QObject, event: QEvent) -> bool:
-        if not isinstance(watched, QComboBox) or watched.isEditable():
+        if isinstance(watched, QComboBox) and not watched.isEditable():
+            paint = paint_choice
+        elif isinstance(watched, QAbstractSpinBox):
+            paint = paint_spin
+        else:
             return False
         kind = event.type()
         if kind == QEvent.Type.Paint:
             painter = QPainter(watched)
-            paint_choice(painter, watched, self.p)
+            paint(painter, watched, self.p)  # type: ignore[arg-type]
             painter.end()
             return True
-        if kind == QEvent.Type.Polish:
+        if kind == QEvent.Type.Polish and isinstance(watched, QComboBox):
             self.rule(watched)
-        elif kind in (QEvent.Type.Enter, QEvent.Type.Leave):
+        elif kind in (
+            QEvent.Type.Enter,
+            QEvent.Type.Leave,
+            QEvent.Type.FocusIn,
+            QEvent.Type.FocusOut,
+        ):
             watched.update()
         return False
 
@@ -181,7 +240,8 @@ _choices: InkedChoices | None = None
 
 
 def ink_choices(app: QApplication, p: Palette) -> None:
-    """Draw every drop-down in `app` as an inked blank, in palette `p`."""
+    """Draw every drop-down and spin box in `app` as an inked blank, in
+    palette `p`."""
     global _choices
     if _choices is None:
         _choices = InkedChoices(p)
@@ -190,4 +250,6 @@ def ink_choices(app: QApplication, p: Palette) -> None:
     for widget in app.allWidgets():
         if isinstance(widget, QComboBox) and not widget.isEditable():
             _choices.rule(widget)
+            widget.update()
+        elif isinstance(widget, QAbstractSpinBox):
             widget.update()
