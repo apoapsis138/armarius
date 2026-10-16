@@ -12,11 +12,13 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from gui_steps import answering, section_buttons
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QColor, QPalette
 from PySide6.QtWidgets import (
     QApplication,
     QGraphicsDropShadowEffect,
     QLabel,
     QPushButton,
+    QScrollArea,
 )
 from screen_helpers import _sample_saga_with_covenant
 
@@ -25,7 +27,7 @@ from ars_magica_manager import covenant_sheet as cvs
 from ars_magica_manager import familiars as fam
 from ars_magica_manager import storage
 from ars_magica_manager.form_spec import DialogField
-from ars_magica_manager.gui import pictures
+from ars_magica_manager.gui import pictures, sounds
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.covenant import CovenantPage
 from ars_magica_manager.gui.familiar import FamiliarPage
@@ -39,7 +41,13 @@ from ars_magica_manager.gui.paper import Paper, _paper, paper
 from ars_magica_manager.gui.saga_content import SagaContentPage
 from ars_magica_manager.gui.themes import PALETTES, SCRIPTORUM
 from ars_magica_manager.gui.timeline import SEASON
-from ars_magica_manager.gui.widgets import XP_BAR, ClickableCard
+from ars_magica_manager.gui.widgets import (
+    XP_BAR,
+    ClickableCard,
+    GiltName,
+    RuledRows,
+    XpBarDelegate,
+)
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.models import (
     BondPower,
@@ -172,6 +180,45 @@ def test_the_pages_are_set_with_printers_ornaments(app):
     window.grab()  # the ornaments and the cards' corner flourishes paint
     window.toggle_theme()
     assert headpiece.p is PALETTES[1]
+
+
+def test_the_tables_are_ruled_as_a_ledger_and_keep_their_own_cells(app):
+    sheet = _sheet()
+    sheet.codex.open_chapter("Abilities")
+    table = sheet.ability_table
+    # No stripes; each delegate is wrapped, the experience column's too.
+    assert not table.alternatingRowColors()
+    assert isinstance(table.itemDelegate(), RuledRows)
+    last = table.itemDelegateForColumn(table.model().columnCount() - 1)
+    assert isinstance(last, RuledRows) and isinstance(last.inner, XpBarDelegate)
+    first = table.model().index(0, 0)
+    table.setCurrentIndex(table.model().index(0, 0, first))
+    sheet.window_.resize(1400, 900)
+    sheet.window_.grab()  # the ruling, wash and ink lines paint
+
+
+def test_selections_scroll_bars_and_the_inspector_are_gilded(app):
+    sheet = _sheet()
+    p = sheet.p
+    palette = QApplication.instance().palette()
+    # Whatever the platform draws itself is chosen in the theme's colours,
+    # not the system's accent.
+    assert palette.color(QPalette.ColorRole.Highlight) == QColor(p["selection"])
+    assert palette.color(QPalette.ColorRole.Accent) == QColor(p["accent"])
+    assert sheet.inspector.body.font().family() == pictures.SERIF
+    # The record's name is drawn whole, its initial with a gilt edge.
+    name = sheet.findChild(GiltName)
+    assert name is not None and name.name == sheet.character.name
+    sheet.inspect("Pilum of Fire", "Creo Ignem 20", "Notes. " * 400)
+    sheet.window_.resize(1400, 900)
+    sheet.window_.show()
+    bar = sheet.inspector.findChild(QScrollArea).verticalScrollBar()
+    assert bar.maximum() > 0
+    # The rod is drawn in gold where the scroll bar's handle is.
+    shot = bar.grab().toImage()
+    middle = shot.pixelColor(shot.width() // 2, 20)
+    assert middle.red() > middle.blue() + 100
+    sheet.window_.close()
 
 
 def test_a_form_draws_its_fields_and_refuses_what_does_not_parse(app):
@@ -563,7 +610,7 @@ def test_the_treasury_shows_the_years_balance(app):
 def test_markup_becomes_spans_in_the_palettes_colours():
     html = to_html("[b]Name:[/] [$label]x \\[y][/]", SCRIPTORUM)
     assert html == (
-        '<span style="font-weight:600">Name:</span> '
+        '<span style="font-weight:700">Name:</span> '
         f'<span style="color:{SCRIPTORUM["label"]}">x [y]</span>'
     )
     assert plain("[i $label]1220[/]") == "1220"
@@ -613,3 +660,51 @@ def test_adding_editing_and_deleting_a_personality_trait(app):
     assert isinstance(asked[0], ConfirmDialog)
     assert asked[0].question == "Delete Brave?"
     assert not storage.load_saga(saga.id).characters[0].personality_traits
+
+
+class _Heard:
+    """A player that writes down what it was asked to play."""
+
+    def __init__(self) -> None:
+        self.cues: list[str] = []
+
+    def play(self, path) -> None:
+        self.cues.append(path.stem)
+
+
+def test_chapters_turn_a_page_and_the_inventory_opens_a_chest(app, monkeypatch):
+    heard = _Heard()
+    monkeypatch.setattr(sounds, "_player", heard)
+    sheet = _sheet()
+    sheet.window_.show()
+    sheet.codex.open_chapter("Abilities")
+    sheet.codex.open_chapter("Inventory")
+    assert heard.cues[-2:] == ["page", "chest"]
+    sheet.window_.close()
+
+
+def test_a_refused_entry_knocks(app, monkeypatch):
+    heard = _Heard()
+    monkeypatch.setattr(sounds, "_player", heard)
+    dialog = FieldsDialog("Test", [DialogField("n", "Number", "text")], SCRIPTORUM)
+    dialog.refuse("Not a number")
+    assert heard.cues == ["tock"]
+
+
+def test_the_sounds_are_silent_under_test_and_remember_being_turned_off(monkeypatch):
+    monkeypatch.setattr(sounds, "_player", None)
+    assert isinstance(sounds._chosen(), sounds.Silent)
+    assert sounds.enabled()
+    sounds.set_enabled(False)
+    assert not sounds.enabled()
+    monkeypatch.delenv(sounds.ENV_VAR)
+    assert isinstance(sounds._chosen(), sounds.Silent)
+
+
+def test_a_save_writes_with_a_quill_and_the_treasury_counts_coins(app):
+    page = _covenant_page(_sample_saga_with_covenant())
+    window = page.window_
+    page.codex.open_chapter("Treasury")
+    assert window._saved_cue(page) == "coins"
+    page.codex.open_chapter(page.codex.chapters()[0])
+    assert window._saved_cue(page) == "quill"

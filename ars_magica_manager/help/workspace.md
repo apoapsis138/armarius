@@ -178,6 +178,8 @@ The Inspector, on the right of a record's page, shows whatever you last clicked 
 
 The button beside Help switches between the two themes, Scriptorum (aged parchment and iron gall ink) and Scriptorum Dark (vellum by candlelight); it names the one it switches to. The desktop opens in Scriptorum each time.
 
+The speaker beside the theme turns the sounds on or off, and the app remembers which. Sounds are kept for moments that mean something: a page turning when you open a chapter (a longer one for a record or page), a quill when a form is saved, coins in a Treasury, a chest for the Inventory, a wax seal when the season advances, and a dull knock when an entry is refused. Plain button presses stay silent. The sounds play on Windows only.
+
 **See also:** [The saga](help:saga), [Saga Content](help:saga-content), [Seasons](help:seasons), [Getting started](help:guide-getting-started)
 
 # The saga

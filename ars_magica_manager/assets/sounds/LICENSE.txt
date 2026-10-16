@@ -1,0 +1,22 @@
+The sounds in this folder are recordings from Freesound (https://freesound.org),
+each dedicated to the public domain by its recordist under the Creative
+Commons CC0 1.0 Universal Public Domain Dedication:
+https://creativecommons.org/publicdomain/zero/1.0/
+
+  page.wav       book_page.wav by fellur        https://freesound.org/people/fellur/sounds/429724/
+  page-long.wav  Page Turn by davidbain         https://freesound.org/people/davidbain/sounds/136778/
+  quill.wav      Scribble by Tomoyo Ichijouji   https://freesound.org/people/Tomoyo%20Ichijouji/sounds/211247/
+  coins.wav      Money Bag by PhilSavlem        https://freesound.org/people/PhilSavlem/sounds/338260/
+  chest.wav      Wooden Chest Open.wav by The_Frisbee_of_Peace  https://freesound.org/people/The_Frisbee_of_Peace/sounds/573654/
+  seal.wav       Wax seal by Cerise_Virtuelle   https://freesound.org/people/Cerise_Virtuelle/sounds/759526/
+  tock.wav       wood_knock.wav by 110110010    https://freesound.org/people/110110010/sounds/66397/
+
+Each was converted from Freesound's preview to mono 44.1 kHz WAV, its
+silence trimmed and its level evened with the others.
+
+CC0 1.0: the person who associated a work with this deed has dedicated the
+work to the public domain by waiving all of their rights to the work
+worldwide under copyright law, including all related and neighboring
+rights, to the extent allowed by law. You can copy, modify, distribute and
+perform the work, even for commercial purposes, all without asking
+permission.

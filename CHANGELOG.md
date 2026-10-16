@@ -46,6 +46,25 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.89.0 — 2026-10-16
+
+- **Tables as a ruled ledger.** On the desktop, tables lose their boxes,
+  fills and stripes: a small-caps serif heading over a gilt double rule,
+  a hairline under each row, and the chosen row a gold wash that fades to
+  the right, with a leaf in the margin. XP is an ink line ending in a
+  lozenge. No selection anywhere turns the system's blue.
+- **A gilt leaf and gilt rods.** The inspector is a leaf of paper in a
+  burnished frame with flourishes in its corners, its text in the serif;
+  every scroll bar is a gilt rod with a bead at each end.
+- **Gilt initials.** A character's, covenant's or place's name opens with
+  its first letter in rubric red, a gold edge catching the light along its
+  left side.
+- **Sounds.** A page turns for a chapter, a longer one for another record;
+  a quill marks a saved form, coins a save in the Treasury, a chest the
+  Inventory, a wax seal Advance Season, and a dull knock a refused entry.
+  The speaker button in the top bar turns them off. Windows only; the
+  sounds are CC0, credited in NOTICE.md.
+
 ## 2.88.1 — 2026-10-16
 
 - **Create a New Saga fits its window.** Start from a pack now names the

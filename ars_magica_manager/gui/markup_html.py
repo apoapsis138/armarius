@@ -22,7 +22,9 @@ def _open(spec: str, palette: Palette) -> tuple[str, str]:
     styles: list[str] = []
     for word in spec.split():
         if word == "b":
-            styles.append("font-weight:600")
+            # 700, not 600: rich text sets the bundled serif, a variable
+            # font, in its regular weight at 600.
+            styles.append("font-weight:700")
         elif word == "i":
             styles.append("font-style:italic")
         elif word == "dim":

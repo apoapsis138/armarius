@@ -217,6 +217,21 @@ BURNISH = (
 )
 
 
+#: How strongly a chosen row's gold wash starts, at its left (0 to 255); a
+#: row under the pointer takes a fainter one.
+WASH, HOVER_WASH = 70, 22
+
+
+def wash_style(p: Palette, alpha: int = WASH) -> str:
+    """A chosen row's background in a style sheet: the accent's gold at
+    `alpha` at its left, fading to nothing at its right."""
+    gilt = p["accent"].lstrip("#")
+    return (
+        "qlineargradient(x1:0, y1:0, x2:1, y2:0,"
+        f" stop:0 #{alpha:02X}{gilt}, stop:1 #00{gilt})"
+    )
+
+
 def style_sheet(p: Palette, serif: str) -> str:
     """The whole window's Qt style sheet in palette `p`; `serif` is the
     headings' family (EB Garamond). The data font is the application's
@@ -229,6 +244,10 @@ def style_sheet(p: Palette, serif: str) -> str:
     }}
     QMenu, QToolTip, QDialog, QComboBox QAbstractItemView {{
         background: {p["background"]};
+    }}
+    QMenu::item:selected, QComboBox QAbstractItemView::item:selected {{
+        background: {wash_style(p)};
+        color: {p["foreground"]};
     }}
     QSplitter::handle {{ background: {p["rule"]}; }}
     QCheckBox::indicator {{
@@ -249,7 +268,7 @@ def style_sheet(p: Palette, serif: str) -> str:
     }}
     QTreeWidget::item, QListWidget::item {{ padding: 3px 4px; }}
     QTreeWidget::item:selected, QListWidget::item:selected {{
-        background: {p["selection"]};
+        background: {wash_style(p)};
         color: {p["foreground"]};
         border-left: 2px solid {p["primary"]};
     }}
@@ -354,10 +373,10 @@ def style_sheet(p: Palette, serif: str) -> str:
     }}
     QPushButton#picker:hover {{ border: 1px solid {p["accent"]}; }}
     QScrollArea {{ border: none; }}
-    QScrollBar:vertical {{ background: transparent; width: 10px; }}
-    QScrollBar::handle:vertical {{ background: {p["rule"]}; min-height: 24px; }}
-    QScrollBar:horizontal {{ background: transparent; height: 10px; }}
-    QScrollBar::handle:horizontal {{ background: {p["rule"]}; min-width: 24px; }}
+    QScrollBar:vertical {{ background: transparent; width: 14px; }}
+    QScrollBar::handle:vertical {{ background: {p["rule"]}; min-height: 36px; }}
+    QScrollBar:horizontal {{ background: transparent; height: 14px; }}
+    QScrollBar::handle:horizontal {{ background: {p["rule"]}; min-width: 36px; }}
     QScrollBar::add-line, QScrollBar::sub-line {{ height: 0; width: 0; }}
     QScrollBar::add-page, QScrollBar::sub-page {{ background: transparent; }}
     QTableCornerButton::section {{ background: {p["surface"]}; border: none; }}

@@ -30,11 +30,21 @@ from .arts import ARTS
 ASSETS = Path(__file__).resolve().parent / "assets"
 SYMBOLS = ASSETS / "symbols"
 ICONS = ASSETS / "icons"
+SOUNDS_DIR = ASSETS / "sounds"
 
 #: The app's window and taskbar icon (a Windows .ico of several sizes), and
 #: the sigil as a picture.
 APP_ICON = ASSETS / "app" / "sigil.ico"
 SIGIL = ASSETS / "app" / "sigil.png"
+
+#: The desktop version's sounds, by cue (CC0 recordings from Freesound,
+#: credited in NOTICE.md): a page for a chapter and a longer one for a
+#: record, a quill for a saved form, coins for the Treasury, a chest for
+#: the Inventory, a wax seal for Advance Season, a knock for a refusal.
+SOUNDS: dict[str, Path] = {
+    cue: SOUNDS_DIR / f"{cue}.wav"
+    for cue in ("page", "page-long", "quill", "coins", "chest", "seal", "tock")
+}
 
 #: The bundled typefaces' files, by family name.
 FONTS: dict[str, tuple[Path, ...]] = {
@@ -119,6 +129,8 @@ ICON_NAMES: dict[str, str] = {
     "search": "magnifying-glass",
     "help": "question",
     "theme": "palette",
+    "sounds_on": "speaker-high",
+    "sounds_off": "speaker-slash",
     "close": "x",
     # A record's Manage chapter, and its In Creation / In Play mode
     "manage": "archive",

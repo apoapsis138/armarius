@@ -1,9 +1,13 @@
+import os
 import sys
 
 import pytest
 from tiers import is_screen_test_file
 
 from ars_magica_manager import catalog, neighbour_filter, paths, settings, storage
+
+# The desktop version's sounds stay silent under test (gui/sounds.py).
+os.environ["ARMARIUS_SOUNDS"] = "off"
 
 
 def pytest_configure(config):

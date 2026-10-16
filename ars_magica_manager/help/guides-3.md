@@ -111,7 +111,7 @@ Giving a laboratory to a magus who already had one frees their old laboratory, a
 2. **Chapters.** A page is a book of chapters, listed in the rail on its left; click one to show it.
 3. **The buttons that act.** A section's **Add** adds to it, and **Edit** and **Delete** act on the row or card last clicked in it (they stay greyed out until there is one; Delete asks first). Forms open in place, in the section. See [What the buttons act on](help:workspace-keys).
 4. **Making and managing.** A **New** card at the end of a page's cards makes one more (New Covenant, New Character, New Laboratory), and the rarer actions are buttons in the chapter or section they act on. A record's own **Manage** chapter holds Export, Update from a File, Print to PDF and Delete.
-5. **The top bar.** **Advance Season** shows the saga's date and plays the season out; **Help** opens help on the page on show; the button beside it switches the theme.
+5. **The top bar.** **Advance Season** shows the saga's date and plays the season out; **Help** opens help on the page on show; the button beside it switches the theme, and the speaker turns the sounds on or off.
 6. **The Inspector.** The right of a page shows whatever you last clicked in full, with the rules text of a Virtue, Flaw or spell. See [The Inspector and the theme](help:workspace-status).
 <!-- /gui -->
 

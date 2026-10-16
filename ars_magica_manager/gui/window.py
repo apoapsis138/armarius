@@ -56,7 +56,7 @@ from ..actions import NodeKind
 from ..commands import Act, Choose, ChooseFile, Command, Confirm, Form, Picked, Refuse
 from ..markup import escape
 from ..models import Character, Covenant, Familiar, Laboratory, Saga
-from . import pictures, print_sheet, printing, snapping
+from . import gilding, pictures, print_sheet, printing, snapping, sounds
 from .character_sheet import CharacterSheet
 from .covenant import CovenantPage
 from .editing import InPlace, place_for
@@ -253,6 +253,11 @@ class MainWindow(QMainWindow):
         bar.addWidget(self.help)
         QShortcut(QKeySequence(Qt.Key.Key_F1), self, self.open_help)
         bar.addWidget(self.theme)
+        #: The sounds on or off (gui/sounds.py); its icon says which.
+        self.sound = QPushButton()
+        self.sound.setFlat(True)
+        self.sound.clicked.connect(self.toggle_sounds)
+        bar.addWidget(self.sound)
         bar.addSpacing(10)
         self.controls = WindowButtons(self, self.palette_)
         bar.addWidget(self.controls, 0, Qt.AlignmentFlag.AlignTop)
@@ -349,6 +354,7 @@ class MainWindow(QMainWindow):
         self._place = None
         answered, end = run_steps(command, self.palette_, self, self.ask)
         if isinstance(end, Refuse):
+            sounds.play("tock")
             self.tell(end.title, end.why)
             return False, end
         return answered, end
@@ -569,8 +575,11 @@ class MainWindow(QMainWindow):
         if end.results:
             self._played = end
             self.open_seasons()
+            # The seal after the page's own turn, which it cuts short.
+            sounds.play("seal")
             return
         self.redraw()
+        sounds.play("seal")
         self.tell("Advance Season", end.message)
 
     def open_worksheet(self, record_id: str) -> None:
@@ -636,18 +645,28 @@ class MainWindow(QMainWindow):
             self._place = None
         if isinstance(step, Refuse):
             # A refusal changes nothing, so there is nothing to save.
+            sounds.play("tock")
             self.tell(step.title, step.why)
             return
         storage.save_saga(self.saga)
         if ended is not None:
             ended(step)
             return
+        sounds.play(self._saved_cue(page))
         if then is not None:
             then()
         else:
             self.redraw()
         if isinstance(step, list) and step:
             self.tell(title, "\n".join(step))
+
+    def _saved_cue(self, page: QWidget | None) -> str:
+        """The sound of a saved step: coins in a Treasury, else a quill."""
+        codex = getattr(page, "codex", None)
+        chapter = codex.rail.currentItem() if codex is not None else None
+        return (
+            "coins" if chapter is not None and chapter.text() == "Treasury" else "quill"
+        )
 
     def _answer(
         self, step: Form | Choose | Confirm | ChooseFile
@@ -739,6 +758,9 @@ class MainWindow(QMainWindow):
             self._open.reject()
         #: The page Help is opened from, to find the chapter on show.
         self._help_from = self.page()
+        if self.isVisible() and (not self.trail or self.trail[-1] != trail[-1]):
+            # A longer page turned for another record or page.
+            sounds.play("page-long")
         self.trail = trail
         before = None
         if self.palette_ is not self._applied:
@@ -1096,6 +1118,23 @@ class MainWindow(QMainWindow):
         if self.trail:  # the pages' colours are drawn in
             self.go(self.trail)
 
+    def toggle_sounds(self) -> None:
+        sounds.set_enabled(not sounds.enabled())
+        self._draw_sound()
+        sounds.play("page")
+
+    def _draw_sound(self) -> None:
+        on = sounds.enabled()
+        self.sound.setIcon(
+            pictures.icon("sounds_on" if on else "sounds_off", self._applied["label"])
+        )
+        self.sound.setToolTip(
+            "Sounds are on: click to turn them off"
+            if on
+            else "Sounds are off: click to turn them on"
+        )
+        self.sound.setAccessibleName("Sounds")
+
     def _apply_theme(self) -> None:
         p = self._applied = self.palette_
         body = self.stack.widget(0)
@@ -1110,7 +1149,9 @@ class MainWindow(QMainWindow):
         if isinstance(app, QApplication):
             app.setFont(QFont(pictures.UI, 10))
             app.setStyleSheet(style_sheet(p, pictures.SERIF))
+            gilding.gild_application(app, p)
         other = PALETTES[(self.palette_index + 1) % len(PALETTES)]
         self.theme.setText(f"  {other.name}")
         self.theme.setIcon(pictures.icon("theme", p["label"]))
         self.help.setIcon(pictures.icon("help", p["label"]))
+        self._draw_sound()

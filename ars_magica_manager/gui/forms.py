@@ -47,7 +47,7 @@ from PySide6.QtWidgets import (
 from .. import form_spec
 from ..commands import Act, Choice, Choose, ChooseFile, Confirm, Form, Picked, Refuse
 from ..form_spec import DialogField, FieldError, ListEditor
-from . import heraldry
+from . import heraldry, sounds
 from .markup_html import plain, to_html
 from .ornaments import FleuronRule, corner_flourishes
 from .paper import Paper
@@ -136,6 +136,7 @@ class _Sheet(QDialog):
         self.column.addLayout(buttons)
 
     def refuse(self, words: str) -> None:
+        sounds.play("tock")
         self.error.setText(plain(words))
         self.error.show()
 

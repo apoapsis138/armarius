@@ -307,7 +307,10 @@ Each Ability has a mark beside its name, cut like the
 Art symbols: a dark block with a light figure, such as a quill for every
 Dead Language or a shield for Parma Magica. The chosen Ability's mark is
 shown larger, with its engraved lines, in the panel beside the list. An
-Ability the app has no mark for shows its category's.
+Ability the app has no mark for shows its category's. The way to the next
+score is drawn as a gold line along a dotted rule, ending in a red
+lozenge as far as the XP reaches, with the XP over the next total after
+it.
 <!-- /gui -->
 
 **See also:** [Virtues & Flaws tab](help:tab-vf),

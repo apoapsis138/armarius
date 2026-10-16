@@ -77,6 +77,23 @@ symbols; they are part of the app and under its licence.
 [Phosphor Icons](https://phosphoricons.com) (Light weight), © 2023
 Phosphor Icons, under the MIT licence (`assets/icons/LICENSE.txt`).
 
+**The sounds** in `ars_magica_manager/assets/sounds/` are recordings from
+[Freesound](https://freesound.org), each dedicated to the public domain
+under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
+(`assets/sounds/LICENSE.txt`). No credit is required; with thanks to
+their recordists:
+
+- `page.wav`: [book_page.wav](https://freesound.org/people/fellur/sounds/429724/) by fellur;
+- `page-long.wav`: [Page Turn](https://freesound.org/people/davidbain/sounds/136778/) by davidbain;
+- `quill.wav`: [Scribble](https://freesound.org/people/Tomoyo%20Ichijouji/sounds/211247/) by Tomoyo Ichijouji;
+- `coins.wav`: [Money Bag](https://freesound.org/people/PhilSavlem/sounds/338260/) by PhilSavlem;
+- `chest.wav`: [Wooden Chest Open.wav](https://freesound.org/people/The_Frisbee_of_Peace/sounds/573654/) by The_Frisbee_of_Peace;
+- `seal.wav`: [Wax seal](https://freesound.org/people/Cerise_Virtuelle/sounds/759526/) by Cerise_Virtuelle;
+- `tock.wav`: [wood_knock.wav](https://freesound.org/people/110110010/sounds/66397/) by 110110010.
+
+Changes made: each was converted from Freesound's preview to mono 44.1 kHz
+WAV, its silence trimmed, and its level evened with the others.
+
 **The fonts** in `ars_magica_manager/assets/fonts/` are under the SIL Open
 Font License, version 1.1, with each font's licence beside it: EB Garamond,
 © 2017 The EB Garamond Project Authors; Uncial Antiqua, © 2011 Brian J.

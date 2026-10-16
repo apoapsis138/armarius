@@ -10,15 +10,25 @@ from __future__ import annotations
 
 import html
 from collections.abc import Callable, Sequence
+from math import ceil
 from pathlib import Path
 
-from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QRectF, QSize, Qt
+from PySide6.QtCore import (
+    QModelIndex,
+    QPersistentModelIndex,
+    QPointF,
+    QRectF,
+    QSize,
+    Qt,
+)
 from PySide6.QtGui import (
     QBrush,
     QColor,
     QFont,
+    QFontMetricsF,
     QIcon,
     QPainter,
+    QPainterPath,
     QPen,
     QPixmap,
     QStandardItem,
@@ -50,11 +60,11 @@ from .. import artwork
 from ..arts import ART_ABBREVIATIONS, ARTS, FORMS, TECHNIQUES
 from ..tables import Table
 from ..tribunal_packages.rhine import gild_tree
-from . import marks, pictures
+from . import gilding, marks, pictures, sounds
 from .markup_html import cell_style, to_html
 from .ornaments import FleuronRule, Tailpiece, corner_flourishes
-from .paper import lift, translucent
-from .themes import Palette
+from .paper import lift, shade, translucent
+from .themes import HOVER_WASH, WASH, Palette, wash_style
 
 #: The item-data role holding an experience bar's (fraction, text).
 XP_BAR = Qt.ItemDataRole.UserRole + 1
@@ -182,18 +192,66 @@ class NewCard(QFrame):
         super().mousePressEvent(event)
 
 
+class GiltName(QLabel):
+    """A record's name in the book face, its first letter a rubricated
+    initial in the display face with a gilt edge, as a chapter of a
+    manuscript opens. Its text is
+    the name as rich text, so it reads (and is read) as a plain label;
+    only its painting is its own."""
+
+    def __init__(self, name: str, p: Palette, size: int) -> None:
+        first, rest = html.escape(name[0]), html.escape(name[1:])
+        super().__init__(
+            f"<span style=\"font-family:'{pictures.DISPLAY}';"
+            f'font-size:{size}pt">{first}</span>{rest}'
+        )
+        self.name, self.p = name, p
+        self.initial = QFont(pictures.DISPLAY)
+        self.initial.setPointSizeF(size)
+        self.setObjectName("sheetName")
+        self.setTextFormat(Qt.TextFormat.RichText)
+
+    def _metrics(self) -> tuple[QFontMetricsF, QFontMetricsF]:
+        return QFontMetricsF(self.initial), QFontMetricsF(self.font())
+
+    def sizeHint(self) -> QSize:
+        big, small = self._metrics()
+        width = big.horizontalAdvance(self.name[0]) + small.horizontalAdvance(
+            self.name[1:]
+        )
+        height = max(big.ascent(), small.ascent()) + max(big.descent(), small.descent())
+        margins = self.contentsMargins()
+        return QSize(
+            ceil(width) + 4 + margins.left() + margins.right(),
+            ceil(height) + margins.top() + margins.bottom(),
+        )
+
+    def minimumSizeHint(self) -> QSize:
+        return self.sizeHint()
+
+    def paintEvent(self, _event) -> None:
+        big, small = self._metrics()
+        box = QRectF(self.contentsRect())
+        ascent = max(big.ascent(), small.ascent())
+        height = ascent + max(big.descent(), small.descent())
+        baseline = box.top() + (box.height() - height) / 2 + ascent
+        painter = QPainter(self)
+        gilding.gilt_letter(
+            painter, self.name[0], self.initial, QPointF(box.left(), baseline), self.p
+        )
+        painter.setFont(self.font())
+        painter.setPen(self.palette().color(self.foregroundRole()))
+        painter.drawText(
+            QPointF(box.left() + big.horizontalAdvance(self.name[0]), baseline),
+            self.name[1:],
+        )
+        painter.end()
+
+
 def display_name(name: str, p: Palette, size: int = 34) -> QLabel:
-    """A name in the book face with its first letter a rubricated
-    initial, as a chapter of a manuscript opens."""
-    name = name or "(unnamed)"
-    first, rest = html.escape(name[0]), html.escape(name[1:])
-    label = QLabel(
-        f"<span style=\"font-family:'{pictures.DISPLAY}';color:{p['heading']};"
-        f'font-size:{size}pt">{first}</span>{rest}'
-    )
-    label.setObjectName("sheetName")
-    label.setTextFormat(Qt.TextFormat.RichText)
-    return label
+    """A name in the book face with its first letter a gilt-edged
+    initial."""
+    return GiltName(name or "(unnamed)", p, size)
 
 
 class Card(QFrame):
@@ -306,11 +364,9 @@ class TallRows(QStyledItemDelegate):
 
 
 class XpBarDelegate(TallRows):
-    """Draws a cell's XP_BAR data, (fraction, text), as a rounded bar with
-    the text over it: the way to the next score."""
-
-    #: The bar's height, whatever the row's.
-    BAR = ROW_HEIGHT - 12
+    """Draws a cell's XP_BAR data, (fraction, text), as a scribe would: a
+    gilt line inked along a dotted rule as far as the experience reaches,
+    ending in a rubric lozenge, with the words in italic after it."""
 
     def __init__(self, p: Palette, height: int = ROW_HEIGHT) -> None:
         super().__init__(height)
@@ -328,66 +384,123 @@ class XpBarDelegate(TallRows):
             return
         fraction, words = bar
         p = self.p
-        cell = QRectF(option.rect)  # type: ignore[attr-defined]
-        rect = QRectF(
-            cell.left() + 4,
-            cell.center().y() - self.BAR / 2,
-            cell.width() - 8,
-            self.BAR,
-        )
+        cell = QRectF(option.rect).adjusted(8, 0, -8, 0)  # type: ignore[attr-defined]
         painter.save()
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        if option.state & QStyle.StateFlag.State_Selected:  # type: ignore[attr-defined]
-            painter.fillRect(option.rect, QColor(p["selection"]))  # type: ignore[attr-defined]
+        painter.setFont(serif(10.5, italic=True))
+        room = painter.fontMetrics().horizontalAdvance(words) + 12
+        y = cell.center().y()
+        start, stop = cell.left(), max(cell.left(), cell.right() - room)
+        painter.setPen(QPen(QColor(p["rule"]), 1, Qt.PenStyle.DotLine))
+        painter.drawLine(QPointF(start, y), QPointF(stop, y))
+        reach = start + (stop - start) * min(max(fraction, 0.0), 1.0)
+        if reach > start:
+            ink = QPen(QColor(p["accent"]), 2.6)
+            ink.setCapStyle(Qt.PenCapStyle.RoundCap)
+            painter.setPen(ink)
+            painter.drawLine(QPointF(start, y), QPointF(reach, y))
         painter.setPen(Qt.PenStyle.NoPen)
-        painter.setBrush(QColor(p["panel"]))
-        radius = rect.height() / 2
-        painter.drawRoundedRect(rect, radius, radius)
-        if fraction > 0:
-            filled = QRectF(rect)
-            filled.setWidth(max(rect.width() * min(fraction, 1.0), rect.height()))
-            painter.setBrush(QColor(p["accent"]))
-            painter.drawRoundedRect(filled, radius, radius)
-        font = QFont(option.font)  # type: ignore[attr-defined]
-        font.setPointSizeF(8.5)
-        painter.setFont(font)
-        # The words in the ink colour over the track and in the page colour
-        # over the filled part, so they read on both.
-        split = rect.left() + rect.width() * min(max(fraction, 0.0), 1.0)
-        for clip, ink in (
-            (
-                QRectF(split, rect.top(), rect.right() - split, rect.height()),
-                "foreground",
-            ),
-            (
-                QRectF(rect.left(), rect.top(), split - rect.left(), rect.height()),
-                "background",
-            ),
-        ):
-            painter.setClipRect(clip)
-            painter.setPen(QColor(p[ink]))
-            painter.drawText(rect, Qt.AlignmentFlag.AlignCenter, words)
+        painter.setBrush(QColor(p["heading"]))
+        lozenge = QPainterPath(QPointF(reach, y - 3.2))
+        lozenge.lineTo(reach + 3.2, y)
+        lozenge.lineTo(reach, y + 3.2)
+        lozenge.lineTo(reach - 3.2, y)
+        lozenge.closeSubpath()
+        painter.drawPath(lozenge)
+        painter.setPen(QColor(p["label"]))
+        painter.drawText(
+            QRectF(cell.right() - room + 8, cell.top(), room, cell.height()),
+            Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft,
+            words,
+        )
+        painter.restore()
+
+
+class RuledRows(QStyledItemDelegate):
+    """A table's own delegate (`inner`) with the table ruled as a ledger:
+    a hairline under every row and a gilt double rule under a heading,
+    the chosen row in a gold wash fading to the right with a leaf in the
+    margin before it, and no fill of the platform's own. With a `margin`
+    (a table chosen by the row), the first column keeps room for the
+    leaf."""
+
+    #: The first column's margin, which the chosen row's leaf sits in.
+    MARGIN = 14
+
+    def __init__(
+        self, inner: QStyledItemDelegate, p: Palette, *, margin: bool = True
+    ) -> None:
+        super().__init__()
+        self.inner, self.p = inner, p
+        self.margin = self.MARGIN if margin else 0
+
+    def sizeHint(
+        self, option: QStyleOptionViewItem, index: QModelIndex | QPersistentModelIndex
+    ) -> QSize:
+        size = self.inner.sizeHint(option, index)
+        if index.column() == 0:
+            size.setWidth(size.width() + self.margin)
+        return size
+
+    def paint(
+        self,
+        painter: QPainter,
+        option: QStyleOptionViewItem,
+        index: QModelIndex | QPersistentModelIndex,
+    ) -> None:
+        p, rect = self.p, QRectF(option.rect)  # type: ignore[attr-defined]
+        state = option.state  # type: ignore[attr-defined]
+        chosen = bool(state & QStyle.StateFlag.State_Selected)
+        under = bool(state & QStyle.StateFlag.State_MouseOver)
+        heading = not index.flags() & Qt.ItemFlag.ItemIsSelectable
+        view = option.widget  # type: ignore[attr-defined]
+        width = view.viewport().width() if isinstance(view, QAbstractItemView) else 0
+        if (chosen or under) and not heading:
+            alpha = WASH if chosen else HOVER_WASH
+            painter.fillRect(rect, gilding.wash(p, 0, max(width, 1), alpha))
+        plain = QStyleOptionViewItem(option)
+        plain.state &= ~(  # type: ignore[attr-defined]
+            QStyle.StateFlag.State_Selected
+            | QStyle.StateFlag.State_HasFocus
+            | QStyle.StateFlag.State_MouseOver
+        )
+        if index.column() == 0 and not heading:
+            plain.rect = option.rect.adjusted(self.margin, 0, 0, 0)  # type: ignore[attr-defined]
+        self.inner.paint(painter, plain, index)
+        painter.save()
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        if chosen and self.margin and index.column() == 0 and not heading:
+            gilding.margin_leaf(
+                painter, rect.left() + 7, rect.center().y(), p["heading"]
+            )
+        y = rect.bottom() + 0.5
+        painter.setPen(QPen(shade(p["rule"], 170), 0.8))
+        painter.drawLine(QPointF(rect.left(), y), QPointF(rect.right() + 1, y))
+        if heading:
+            painter.setPen(QPen(shade(p["accent"], 200), 0.8))
+            painter.drawLine(
+                QPointF(rect.left(), y - 2.5), QPointF(rect.right() + 1, y - 2.5)
+            )
         painter.restore()
 
 
 class Inspector(QFrame):
     """The panel beside every chapter that shows what was last chosen: a
-    symbol, a title, a line under it and the details (app markup), framed
-    by corner flourishes."""
+    symbol, a title, a line under it and the details (app markup) in the
+    serif, on a gilt leaf (gilding.gilt_leaf)."""
 
     def __init__(self, p: Palette) -> None:
         super().__init__()
         self.p = p
         self.setObjectName("inspector")
         self.setStyleSheet(
-            f"QFrame#inspector {{ background:{translucent(p['surface'], 225)};"
-            f" border-left:1px solid {translucent(p['rule'], 160)}; }}"
+            "QFrame#inspector { background:transparent; border:none; }"
             " QFrame#inspector QLabel { background:transparent; }"
         )
         lift(self, p, blur=24, drop=0)
         self.setMinimumWidth(280)
         column = QVBoxLayout(self)
-        column.setContentsMargins(16, 14, 16, 14)
+        column.setContentsMargins(26, 22, 26, 26)
         top = QHBoxLayout()
         self.symbol = QLabel()
         top.addWidget(self.symbol)
@@ -401,6 +514,7 @@ class Inspector(QFrame):
         rule.setStyleSheet(f"background:{p['rule']}")
         column.addWidget(rule)
         self.body = QLabel()
+        self.body.setFont(serif(12.5))
         self.body.setTextFormat(Qt.TextFormat.RichText)
         self.body.setWordWrap(True)
         self.body.setAlignment(Qt.AlignmentFlag.AlignTop)
@@ -412,9 +526,9 @@ class Inspector(QFrame):
         column.addWidget(area, 1)
 
     def paintEvent(self, event) -> None:
-        super().paintEvent(event)
-        frame = QRectF(self.rect()).adjusted(4, 2, -2, -2)
-        corner_flourishes(QPainter(self), frame, self.p, 18)
+        painter = QPainter(self)
+        gilding.gilt_leaf(painter, QRectF(self.rect()), self.p)
+        painter.end()
 
     def show_item(
         self, title: str, subtitle: str, markup: str, symbol: Symbol = None
@@ -504,11 +618,12 @@ class Codex(QSplitter):
             "QListWidget#rail { background:transparent; border:none; }"
             f" QListWidget#rail::item {{ padding:8px 6px; color:{p['label']};"
             " border:none; }"
-            f" QListWidget#rail::item:selected {{ background:{p['selection']};"
+            f" QListWidget#rail::item:selected {{ background:{wash_style(p)};"
             f" color:{p['heading']}; border-left:3px solid {p['heading']}; }}"
         )
         self.pages = QStackedWidget()
         self.rail.currentRowChanged.connect(self.pages.setCurrentIndex)
+        self.rail.currentRowChanged.connect(self._turned)
         self.setHandleWidth(1)
         self.addWidget(self.rail)
         self.addWidget(self.pages)
@@ -524,6 +639,13 @@ class Codex(QSplitter):
         if self.rail.count() == 1:
             self.rail.setCurrentRow(0)
 
+    def _turned(self, row: int) -> None:
+        """A page turned for the chapter chosen (the chest opened for the
+        Inventory), once the page is on show."""
+        if self.isVisible() and row >= 0:
+            name = self.rail.item(row).text()
+            sounds.play("chest" if name == "Inventory" else "page")
+
     def chapters(self) -> list[str]:
         return [self.rail.item(i).text() for i in range(self.rail.count())]
 
@@ -537,14 +659,38 @@ class Codex(QSplitter):
 
 
 def table_style(view: QAbstractItemView, p: Palette) -> None:
+    """Rule `view` as a ledger: no box, fill or stripes; the column titles
+    in small capitals over a gilt double rule; and its delegates wrapped
+    in RuledRows, so the rows are ruled and the chosen one washed in gold.
+    Called after the view's own delegates are set."""
+    view.setAlternatingRowColors(False)
+    view.setMouseTracking(True)
     view.setStyleSheet(
-        f"QAbstractItemView {{ background:{p['surface']};"
-        f" alternate-background-color:{p['background']};"
-        f" border:1px solid {p['rule']}; selection-background-color:"
-        f" {p['selection']}; selection-color:{p['foreground']}; }}"
-        f" QHeaderView::section {{ background:{p['panel']}; color:{p['foreground']};"
-        " border:none; padding:5px; font-weight:600; }"
+        "QAbstractItemView { background:transparent; border:none; outline:0;"
+        f" selection-background-color:transparent; selection-color:{p['foreground']}; }}"
+        " QHeaderView { background:transparent; border:none; }"
+        f" QHeaderView::section {{ background:transparent; color:{p['label']};"
+        " border:none; padding:4px 6px; }"
+        f" QHeaderView::section:horizontal {{ border-bottom:3px double {p['accent']}; }}"
+        " QHeaderView::section:vertical { font-weight:600; }"
+        " QTableCornerButton::section { background:transparent; border:none; }"
     )
+    for header in (
+        getattr(view, "horizontalHeader", None),
+        getattr(view, "header", None),
+    ):
+        if header is not None:
+            header().setFont(serif(11.5, caps=True))
+    # A table chosen by the row keeps a margin for the chosen row's leaf.
+    margin = view.selectionBehavior() == QAbstractItemView.SelectionBehavior.SelectRows
+    inner = view.itemDelegate()
+    assert isinstance(inner, QStyledItemDelegate)
+    view.setItemDelegate(RuledRows(inner, p, margin=margin))
+    model = view.model()
+    for column in range(model.columnCount() if model is not None else 0):
+        own = view.itemDelegateForColumn(column)
+        if isinstance(own, QStyledItemDelegate) and not isinstance(own, RuledRows):
+            view.setItemDelegateForColumn(column, RuledRows(own, p, margin=margin))
 
 
 def arts_heat_grid(
@@ -626,7 +772,7 @@ def _numeric(words: str) -> bool:
 
 def _table_model(table: Table, p: Palette) -> QStandardItemModel:
     """table_view's cells: each in its markup's style, the numbers
-    centred, the headings on the panel colour."""
+    centred, the headings in rubric."""
     columns, rows = table.columns, table.rows
 
     def words(cell: str) -> tuple[str, str | None, bool, bool]:
@@ -662,7 +808,6 @@ def _table_model(table: Table, p: Palette) -> QStandardItemModel:
                 cell.setForeground(QBrush(QColor(colour)))
             if heading:
                 cell.setFlags(Qt.ItemFlag.ItemIsEnabled)
-                cell.setBackground(QBrush(QColor(p["panel"])))
                 cell.setForeground(QBrush(QColor(colour or p["heading"])))
             elif numeric[c]:
                 cell.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -688,7 +833,7 @@ def table_view(
     spare room; a column of numbers is centred, the others start at the
     left, and an Art column shows each Art's symbol (a Gild column, each
     gild's). A markup cell takes
-    its tags' colour, bold and italics; a heading row is bold on the panel
+    its tags' colour, bold and italics; a heading row is bold in rubric
     colour, its first cell across the row when it has no others, and
     can't be chosen."""
     rows = table.rows

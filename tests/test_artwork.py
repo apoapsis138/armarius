@@ -35,6 +35,7 @@ def _registered() -> set[Path]:
         | {artwork.icon(concept) for concept in artwork.ICON_NAMES}
         | {artwork.APP_ICON, artwork.SIGIL}
         | {path for paths in artwork.FONTS.values() for path in paths}
+        | set(artwork.SOUNDS.values())
     )
 
 
@@ -47,7 +48,7 @@ def test_every_bundled_picture_and_font_is_registered():
     bundled = {
         path
         for path in artwork.ASSETS.rglob("*")
-        if path.suffix in {".svg", ".png", ".ico", ".ttf"}
+        if path.suffix in {".svg", ".png", ".ico", ".ttf", ".wav"}
     }
     assert bundled - _registered() == set()
 
@@ -72,7 +73,7 @@ def test_svg_is_one_colour_sized_by_its_viewbox(path):
     assert 'stroke="#' not in path.read_text(encoding="utf-8")
 
 
-def test_notice_credits_the_artwork_icons_and_fonts():
+def test_notice_credits_the_artwork_icons_fonts_and_sounds():
     notice = " ".join((ROOT / "NOTICE.md").read_text(encoding="utf-8").split())
     for credit in (
         "assets/symbols/",
@@ -81,8 +82,11 @@ def test_notice_credits_the_artwork_icons_and_fonts():
         "SIL Open Font License",
         "EB Garamond",
         "Uncial Antiqua",
+        "assets/sounds/",
+        "Freesound",
     ):
         assert credit in notice
+    assert "CC0" in (artwork.SOUNDS_DIR / "LICENSE.txt").read_text(encoding="utf-8")
     assert (artwork.ICONS / "LICENSE.txt").is_file()
     for family in artwork.FONTS:
         licence = artwork.ASSETS / "fonts" / f"{family.replace(' ', '')}-OFL.txt"
