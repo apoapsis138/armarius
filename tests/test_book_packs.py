@@ -151,7 +151,7 @@ def test_new_saga_offers_the_shipped_packs_first():
     fields = {f.key: f for f in creation_forms.saga_fields(None)}
     options = fields["pack"].options or []
     assert options[0] == ("None", "")
-    assert options[1][0].startswith("Guardians of the Forests: the Rhine Tribunal (")
+    assert options[1][0].startswith("Rhine Tribunal: 10 covenants, ")
     assert options[1][1] == str(book_packs.path_of(RHINE))
 
 

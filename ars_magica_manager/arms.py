@@ -595,12 +595,12 @@ def from_values(values: dict[str, Any]) -> Arms | None:
 
 
 def arms_text(arms: Arms | None) -> str:
-    """The blazon, and any warning on the line under it (markup)."""
+    """The motto, the blazon under it, and any warning on the line under
+    that (markup). The motto is the bearer's own words, so it leads."""
     if arms is None:
         return "[$text-muted]No arms.[/]"
-    lines = [f"[b]{escape(blazon(arms))}[/]"]
-    if arms.motto:
-        lines.append(f"[i]{escape(arms.motto)}[/]")
+    lines = [f"[b][i]{escape(arms.motto)}[/][/]"] if arms.motto else []
+    lines.append(escape(blazon(arms)))
     said = warning(arms)
     if said:
         lines.append(f"[$text-warning]{escape(said)}[/]")

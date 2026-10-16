@@ -280,6 +280,8 @@ def details_text(saga: Saga, record: Neighbour | Covenant | None) -> str:
     lines = [f"[b]{escape(record.name)}[/]   {escape(kind)} · {escape(record.detail)}"]
     borne = arms.arms_of(record)
     if borne is not None:
+        if borne.motto:
+            lines.append(f"[$label]Motto:[/] [i]{escape(borne.motto)}[/]")
         lines.append(f"[$label]Arms:[/] {escape(arms.blazon(borne))}")
     for covenant in world.player_covenants(saga):
         if covenant is record:

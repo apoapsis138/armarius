@@ -140,6 +140,8 @@ def test_the_form_writes_the_blazon_as_the_choices_are_made():
     live = form.live(values)
     assert "Per pale azure and or, three towers gules" in live
     assert "colour on colour" in live
+    # The motto is the bearer's own words: it leads, the blazon under it.
+    assert live.index("Per aquas, lux") < live.index("Per pale azure")
     assert form.picture(values) == Arms(
         "Azure", "Per pale", "Or", "Tower", "Gules", "Per aquas, lux", 3
     )

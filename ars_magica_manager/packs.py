@@ -133,12 +133,13 @@ def write(path: Path, data: dict[str, Any]) -> Path:
     return path
 
 
-def summary(data: dict[str, Any]) -> str:
+def summary(data: dict[str, Any], tribunals: bool = True) -> str:
     """ "2 Tribunals, 5 covenants, 12 characters, 9 places and neighbours":
-    what a pack holds."""
+    what a pack holds; without the Tribunals' count when not
+    `tribunals`."""
     held = data.get("saga") or {}
     counts = (
-        (len(held.get("tribunals") or []), "Tribunal", "Tribunals"),
+        (len(held.get("tribunals") or []) if tribunals else 0, "Tribunal", "Tribunals"),
         (len(held.get("covenants") or []), "covenant", "covenants"),
         (len(held.get("characters") or []), "character", "characters"),
         (
@@ -520,10 +521,30 @@ def available(*folders: Path) -> list[tuple[str, str]]:
             except OSError, ValueError:
                 continue
             if data.get("kind") == PACK:
-                found.append(
-                    (f"{data.get('name') or path.stem} ({summary(data)})", str(path))
-                )
+                found.append((choice_label(data, path.stem), str(path)))
     return found
+
+
+def _tribunal_title(name: str) -> str:
+    """ "Rhine Tribunal" for "The Rhine Tribunal" or "Rhine"."""
+    name = name.removeprefix("The ").strip()
+    return name if name.endswith("Tribunal") else f"{name} Tribunal"
+
+
+def choice_label(data: dict[str, Any], fallback: str) -> str:
+    """How Start from a pack lists a pack: its Tribunals and what else it
+    holds ("Rhine Tribunal: 10 covenants, 74 characters"), or, holding
+    no Tribunal, its name (else `fallback`) and what it holds. Kept short
+    so the choice fits the form."""
+    names = [
+        _tribunal_title(t["name"])
+        for t in (data.get("saga") or {}).get("tribunals") or []
+        if isinstance(t, dict) and t.get("name")
+    ]
+    if names:
+        rest = summary(data, tribunals=False)
+        return f"{', '.join(names)}: {rest}" if rest else ", ".join(names)
+    return f"{data.get('name') or fallback}: {summary(data)}"
 
 
 def after_import(saga: Saga, data: dict[str, Any]) -> list[str]:

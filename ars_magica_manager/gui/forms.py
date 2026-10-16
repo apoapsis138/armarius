@@ -178,6 +178,7 @@ class FieldsDialog(_Sheet):
         area.setWidgetResizable(True)
         area.setWidget(body)
         area.setMinimumWidth(520)
+        area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.area, self.body = area, body
         self.column.addWidget(area, 1)
         self.live_line = QLabel()
@@ -202,7 +203,7 @@ class FieldsDialog(_Sheet):
             self._fit()
         else:
             pictured = 140 if picture is not None else 0
-            self.resize(640, min(820, 170 + 44 * len(fields) + pictured))
+            self.resize(700, min(820, 170 + 44 * len(fields) + pictured))
 
     # Drawing the fields
 
@@ -252,6 +253,13 @@ class FieldsDialog(_Sheet):
             for label, value in options:
                 combo.addItem(plain(label), value)
             combo.setCurrentIndex(max(0, combo.findData(chosen)))
+            # A long choice is cut short in the box, not let widen the
+            # form; its list still opens wide enough to read it.
+            combo.setSizeAdjustPolicy(
+                QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon
+            )
+            combo.setMinimumContentsLength(16)
+            combo.view().setMinimumWidth(combo.view().sizeHintForColumn(0) + 24)
             combo.currentIndexChanged.connect(changed)
             return combo
         if spec.kind == "check":

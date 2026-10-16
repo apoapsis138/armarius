@@ -818,7 +818,10 @@ class CovenantSheetView(SheetView):
 
     def _arms_rows(self) -> list[tuple[str, str]]:
         borne = arms.arms_of(self.covenant)
-        return [("Arms", escape(arms.blazon(borne)))] if borne is not None else []
+        if borne is None:
+            return []
+        motto = [("Motto", f"[i]{escape(borne.motto)}[/]")] if borne.motto else []
+        return [*motto, ("Arms", escape(arms.blazon(borne)))]
 
     def _description_text(self) -> str:
         # Backed by Covenant.notes (the free-text field set at creation).

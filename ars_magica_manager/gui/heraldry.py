@@ -144,7 +144,8 @@ LARGE, SMALL = 110, 44
 
 
 def arms_section(record, p: Palette, run: Run) -> QWidget:
-    """Arms: the shield and its blazon, with Edit."""
+    """Arms: the shield, its motto and, smaller under it, its blazon,
+    with Edit. The motto is the bearer's own words, so it leads."""
     found = heraldry.arms_of(record)
     body = QWidget()
     row = QHBoxLayout(body)
@@ -158,18 +159,15 @@ def arms_section(record, p: Palette, run: Run) -> QWidget:
         row.addWidget(
             shield_label(found, LARGE, p["accent"]), 0, Qt.AlignmentFlag.AlignTop
         )
-        words.addWidget(
-            text(
-                heraldry.blazon(found),
-                p["foreground"],
-                serif(17, italic=True),
-                wrap=True,
-            )
-        )
         if found.motto:
             words.addWidget(
-                text(found.motto, p["label"], serif(13, italic=True), wrap=True)
+                text(found.motto, p["foreground"], serif(17, italic=True), wrap=True)
             )
+        words.addWidget(
+            text(
+                heraldry.blazon(found), p["label"], serif(12.5, italic=True), wrap=True
+            )
+        )
         said = heraldry.warning(found)
         if said:
             words.addWidget(TextBlock(f"[$text-warning]{escape(said)}[/]", p))

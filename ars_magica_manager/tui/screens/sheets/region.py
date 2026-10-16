@@ -241,6 +241,8 @@ class NeighbourSheetView(SheetView):
         facts = region_sheet.neighbour_facts(self.saga, self.neighbour)
         borne = arms.arms_of(self.neighbour)
         if borne is not None:
+            if borne.motto:
+                facts.append(Fact("Motto", borne.motto))
             facts.append(Fact("Arms", arms.blazon(borne)))
         return _facts_text(facts, column)
 

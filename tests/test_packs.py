@@ -147,7 +147,8 @@ def test_a_new_saga_starts_from_a_pack(tmp_path):
     # Other exports in the folder are not packs.
     transfer.export_saga_to(storage.EXPORTS_DIR / "all.amm.json", saga)
     found = packs.available(storage.EXPORTS_DIR)
-    assert [label.split(" (")[0] for label, _path in found] == ["The Rhine"]
+    assert [label.split(":")[0] for label, _path in found] == ["Rhine Tribunal"]
+    assert "Tribunal," not in found[0][0]
     fields = {f.key: f for f in creation_forms.saga_fields(None)}
     assert fields["pack"].value == ""
     assert (fields["pack"].options or [])[0] == ("None", "")

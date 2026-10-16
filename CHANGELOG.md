@@ -46,6 +46,19 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.88.1 — 2026-10-16
+
+- **Create a New Saga fits its window.** Start from a pack now names the
+  Tribunal and what it brings ("Rhine Tribunal: 10 covenants, 74
+  characters, 319 places and neighbours") instead of the pack's long
+  title. On the desktop a long choice no longer stretches a form past its
+  window, so forms never scroll sideways, and forms open a little wider.
+- **The motto leads a coat of arms.** On the desktop the motto is set
+  large above the blazon, which sits smaller beneath it, on a covenant's
+  and a neighbour's Arms. The terminal's covenant and neighbour sheets and
+  the Region's details now show the motto too, above the arms, and the
+  arms form's preview puts it first.
+
 ## 2.88.0 — 2026-10-16
 
 - **Every Rhine magus statted.** The 61 magi Guardians of the Forests
