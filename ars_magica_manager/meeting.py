@@ -17,6 +17,7 @@ The record is a plain dict, so a save holds it as it is:
 
 from __future__ import annotations
 
+import itertools
 import random
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass
@@ -917,6 +918,187 @@ class Elections(Step):
         return " ".join(lines), ""
 
 
+def eldest_magi(saga: Saga, tribunal: Tribunal) -> list[Character]:
+    """The Tribunal's named magi, eldest first (those whose birth year
+    isn't known last)."""
+    magi = [
+        m
+        for c in tribunals.covenants_of(saga, tribunal)
+        for m in world.covenant_magi(saga, c)
+    ]
+    return sorted(
+        magi,
+        key=lambda m: (m.background.year_born is None, m.background.year_born or 0),
+    )
+
+
+class Succession(Step):
+    """A Tribunal whose customs name its eldest magus Praeco: with none,
+    the eldest is offered; set them aside and the next eldest is."""
+
+    def fields(self, saga, tribunal, meeting):
+        praeco = saga.character(tribunal.praeco_id)
+        if praeco is not None:
+            return [
+                DialogField(
+                    "none",
+                    "",
+                    "info",
+                    f"{escape(praeco.name)} is Praeco: there is no succession.",
+                ),
+                _note_field(meeting, self.key),
+            ]
+        magi = eldest_magi(saga, tribunal)
+        if not magi:
+            return [
+                DialogField(
+                    "none",
+                    "",
+                    "info",
+                    "No magus of the Tribunal is recorded to name.",
+                ),
+                _note_field(meeting, self.key),
+            ]
+        return [
+            DialogField(
+                "praeco",
+                "Praeco",
+                "select",
+                magi[0].id,
+                options=[(escape(_aged(saga, m)), m.id) for m in magi],
+                required=True,
+                hint="The eldest magus is named Praeco; if they decline or are "
+                "set aside, choose the next eldest.",
+            ),
+            _note_field(meeting, self.key),
+        ]
+
+    def apply(self, saga, tribunal, meeting, values):
+        if values.get("praeco"):
+            meeting["succession"] = {
+                "named": values["praeco"],
+                "set_aside": [
+                    m.id
+                    for m in itertools.takewhile(
+                        lambda m: m.id != values["praeco"], eldest_magi(saga, tribunal)
+                    )
+                ],
+            }
+            tribunal.praeco_id = values["praeco"]
+        _keep_note(meeting, self.key, values)
+
+    def text(self, saga, tribunal, meeting):
+        praeco = saga.character(tribunal.praeco_id)
+        if praeco is None:
+            return _join("[$label]Praeco:[/] vacant", _note_text(meeting, self.key))
+        return _join(
+            f"[$label]Praeco:[/] {escape(praeco.name)}", _note_text(meeting, self.key)
+        )
+
+    def save_label(self):
+        return "Name"
+
+    def minutes(self, saga, tribunal, meeting):
+        held = meeting.get("succession") or {}
+        named = saga.character(held.get("named"))
+        if named is None:
+            return "", ""
+        aside = [saga.character(i) for i in held.get("set_aside", [])]
+        passed = ", ".join(m.name for m in aside if m is not None)
+        words = f"The Praeco's seat being vacant, {named.name} was named Praeco"
+        words += f", {passed} being set aside." if passed else ", as the eldest."
+        return words, "Praeco"
+
+
+def _aged(saga: Saga, magus: Character) -> str:
+    born = magus.background.year_born
+    return f"{magus.name} (age {saga.current_year - born})" if born else magus.name
+
+
+def lot_choices(saga: Saga, tribunal: Tribunal) -> list[Covenant]:
+    """The covenants the next host is drawn from: the Tribunal's own."""
+    return tribunals.covenants_of(saga, tribunal)
+
+
+class HostByLot(Step):
+    """The next meeting's host covenant drawn by lot, with one redraw;
+    it becomes the Tribunal's meeting place."""
+
+    def _lot(
+        self, saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]
+    ) -> list[str]:
+        """The two draws (the lot and its one redraw), made once and kept
+        with the meeting so the form shows the same each time."""
+        ids = [c.id for c in lot_choices(saga, tribunal)]
+        drawn = [i for i in meeting.get("lot", []) if i in ids]
+        if len(drawn) < 2 and ids:
+            drawn = [random.choice(ids), random.choice(ids)]
+            meeting["lot"] = drawn
+        return drawn
+
+    def _host(self, saga, tribunal, meeting, redraw: bool) -> Covenant | None:
+        drawn = self._lot(saga, tribunal, meeting)
+        if not drawn:
+            return None
+        return saga.covenant(drawn[1] if redraw else drawn[0])
+
+    def fields(self, saga, tribunal, meeting):
+        host = self._host(saga, tribunal, meeting, False)
+        if host is None:
+            return [
+                DialogField("none", "", "info", "No covenant is recorded to draw."),
+                _note_field(meeting, self.key),
+            ]
+        return [
+            DialogField(
+                "drawn",
+                "",
+                "info",
+                f"The lot falls on {escape(host.name)}.",
+            ),
+            DialogField(
+                "redraw",
+                "Redraw",
+                "check",
+                False,
+                hint="The lot may be drawn again once; the second draw stands.",
+            ),
+            _note_field(meeting, self.key),
+        ]
+
+    def live(self, saga, tribunal, meeting, values):
+        host = self._host(saga, tribunal, meeting, bool(values.get("redraw")))
+        return f"Next host: {escape(host.name)}." if host is not None else ""
+
+    def apply(self, saga, tribunal, meeting, values):
+        host = self._host(saga, tribunal, meeting, bool(values.get("redraw")))
+        if host is not None:
+            meeting["host"] = {"id": host.id, "redrawn": bool(values.get("redraw"))}
+            tribunal.meeting_place = host.name
+        _keep_note(meeting, self.key, values)
+
+    def text(self, saga, tribunal, meeting):
+        held = meeting.get("host") or {}
+        host = saga.covenant(held.get("id"))
+        shown = f"[$label]Next host:[/] {escape(host.name)}" if host else ""
+        return _join(shown, _note_text(meeting, self.key))
+
+    def save_label(self):
+        return "Draw"
+
+    def minutes(self, saga, tribunal, meeting):
+        held = meeting.get("host") or {}
+        host = saga.covenant(held.get("id"))
+        if host is None:
+            return "", ""
+        again = " on the second draw" if held.get("redrawn") else ""
+        return (
+            f"The lot for the next host fell{again} on {host.name}, where the "
+            "Tribunal meets next.",
+            "By lot",
+        )
+
+
 class Rulings(Step):
     """The ruling on each case heard (starting from how its vote went),
     any fine and who pays it, whether the ruling goes into the Peripheral
@@ -1168,16 +1350,28 @@ def closing_text(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> str
     )
 
 
-#: The package steps the core knows how to hold, by name.
-_PACKAGE_STEPS = {"elections": ("Elections", Elections)}
+#: The package steps the core knows how to hold, by name: what the list
+#: calls each, its kind, and when it is held: on the first day after the
+#: attendance ("opening"), or on the last day before the rulings ("end")
+#: or just before the closing ("closing").
+_PACKAGE_STEPS: dict[str, tuple[str, type[Step], str]] = {
+    "elections": ("Elections", Elections, "end"),
+    "succession": ("The Praeco's succession", Succession, "opening"),
+    "host_by_lot": ("The next host, by lot", HostByLot, "closing"),
+}
 
 
 def steps(tribunal: Tribunal, meeting: dict[str, Any]) -> list[Step]:
     """The order of business, in the order it is held."""
     last = days(meeting)
+    added: dict[str, list[Step]] = {"opening": [], "end": [], "closing": []}
+    for name in tribunal_packages.of(tribunal).meeting_steps:
+        title, kind, when = _PACKAGE_STEPS.get(name, (name.title(), Step, "end"))
+        added[when].append(kind(name, title, 1 if when == "opening" else last))
     found: list[Step] = [
         Opening("opening", "Opening and the oaths", 1),
         Attendance("attendance", "Attendance and proxies", 1),
+        *added["opening"],
     ]
     cases = sorted(business(tribunal), key=lambda c: day_of(meeting, c))
     for case in cases:
@@ -1185,12 +1379,11 @@ def steps(tribunal: Tribunal, meeting: dict[str, Any]) -> list[Step]:
             Hearing(case, day_of(meeting, case)),
             Vote(case, day_of(meeting, case)),
         ]
-    for name in tribunal_packages.of(tribunal).meeting_steps:
-        title, kind = _PACKAGE_STEPS.get(name, (name.title(), Step))
-        found.append(kind(name, title, last))
     found += [
+        *added["end"],
         Rulings("rulings", "Rulings and fines", last),
         Treasury("treasury", "Treasury and vis", last),
+        *added["closing"],
         Closing("closing", "Closing", last),
     ]
     return found

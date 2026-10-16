@@ -103,7 +103,8 @@ core rules). Add, edit or delete one.
 <!-- help: section-region-threats -->
 
 The stories that grow if left alone (the core rules). Add, edit or
-delete one.
+delete one. A story not yet begun shows as **Dormant**: open it and
+choose **Begin This Story** in More to start it.
 
 ### Places
 <!-- help: section-region-places -->
@@ -322,6 +323,13 @@ has its season and year), or along **a track** or **an omen count**
 Its Stages tab shows the stage it has reached and the next to come,
 worked out from the saga's date (or its position); the Region's top
 panel names the threat whose next stage is due soonest.
+
+A threat can be **dormant**: a story the storyguide hasn't begun, such
+as one left unticked when its pack was imported. It reaches no stage,
+nothing of it comes due, and the Tribunal sheet counts it under
+**Stories**. **Begin This Story**, in the threat's More, starts it:
+dated stages move later together so the first still to come is due next
+season at the soonest; a track or omen count starts where it stands.
 
 **See also:** [A neighbour](help:neighbour)
 

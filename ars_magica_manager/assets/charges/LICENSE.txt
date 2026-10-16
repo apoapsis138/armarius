@@ -10,3 +10,50 @@ Changes made: its shapes were merged with tools/clean_charge.py into
 three layers (the silhouette, the black line work, the red claws and
 tongue), flattened to straight steps and fitted to a new viewBox, so
 the app can paint the lion in any tincture.
+
+The other charges are drawn the same way, each from a Wikimedia Commons
+file. Their shapes were merged with tools/clean_charge.py into a
+silhouette, line work and (where drawn in red) claws or a door, so the
+app can paint them in any tincture.
+
+lion-tail-knotted.svg
+Source: "Lion rampant (tail nowed).svg",
+https://commons.wikimedia.org/wiki/File:Lion_rampant_(tail_nowed).svg
+Author: Inductiveload. Licence: public domain.
+
+eagle.svg
+Source: "Meuble héraldique Aigle éployée.svg",
+https://commons.wikimedia.org/wiki/File:Meuble_h%C3%A9raldique_Aigle_%C3%A9ploy%C3%A9e.svg
+Author: not stated. Licence: public domain.
+
+fleur-de-lis.svg
+Source: "Meuble héraldique Fleur de lis.svg",
+https://commons.wikimedia.org/wiki/File:Meuble_h%C3%A9raldique_Fleur_de_lis.svg
+Author: not stated. Licence: public domain.
+
+tower.svg
+Source: "Meuble Héraldique Tour ajourée.svg",
+https://commons.wikimedia.org/wiki/File:Meuble_H%C3%A9raldique_Tour_ajour%C3%A9e.svg
+Author: not stated. Licence: public domain.
+
+cross.svg
+Source: "Pièce héraldique croix dentelée.svg",
+https://commons.wikimedia.org/wiki/File:Pi%C3%A8ce_h%C3%A9raldique_croix_dentel%C3%A9e.svg
+Author: not stated. Licence: CC0 1.0 (public domain dedication).
+Drawn in one colour, so it was kept as a silhouette alone (--plain).
+
+crescent.svg
+Source: "Coa Illustration Elements Planet Crescent.svg",
+https://commons.wikimedia.org/wiki/File:Coa_Illustration_Elements_Planet_Crescent.svg
+Author: after Arthur Charles Fox-Davies, illustrated by Graham Johnston.
+Licence: public domain.
+
+star.svg
+Source: "Coa Illustration Elements Planet Star.svg",
+https://commons.wikimedia.org/wiki/File:Coa_Illustration_Elements_Planet_Star.svg
+Author: not stated. Licence: public domain.
+
+tree.svg
+Source: "Coa Illustration Elements Plant Pear Tree.svg",
+https://commons.wikimedia.org/wiki/File:Coa_Illustration_Elements_Plant_Pear_Tree.svg
+Author: after Jérôme de Bara (Lyon). Licence: public domain.

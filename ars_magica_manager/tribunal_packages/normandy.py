@@ -17,7 +17,7 @@ from ..commands import Command, Confirm, Form, SectionOps
 from ..form_spec import DialogField
 from ..grids import Grid
 from ..markup import escape
-from ..models import Saga, Tribunal
+from ..models import Covenant, Saga, Tribunal
 from ..sections import TENURE_SECTION, TOURNEY_SECTION
 from . import PackageList, PackageTab, TribunalPackage, entries, register
 
@@ -339,6 +339,23 @@ def tourney_ops(saga: Saga, tribunal: Tribunal) -> SectionOps:
     )
 
 
+#: What the Code asks of a covenant founded in the Tribunal.
+FOUNDING = (
+    "Normandy's Code: a new covenant must hold exclusive vis sources "
+    "yielding at least a pawn a year for each of its magi (four at the "
+    "least), and a council chamber, to be recognised."
+)
+
+
+def covenant_fields(
+    _saga: Saga, _tribunal: Tribunal, covenant: Covenant | None
+) -> list[DialogField]:
+    """A covenant being founded here is told the vis it must hold."""
+    if covenant is not None:
+        return []
+    return [DialogField("founding", "", "info", FOUNDING)]
+
+
 NORMANDY = TribunalPackage(
     KEY,
     "Normandy",
@@ -356,10 +373,12 @@ NORMANDY = TribunalPackage(
             (PackageList(TOURNEY_SECTION, tourney_title, tourney_grid, tourney_ops),),
         ),
     ),
-    meeting_steps=("tourney",),
+    meeting_steps=("succession", "tourney", "host_by_lot"),
+    covenant_fields=covenant_fields,
     about="Every vis source is held on a tenure of the Perthean Compact, and "
     "the covenants' teams contest the Hermetic Tourney after each meeting "
-    "for prize pawns.",
+    "for prize pawns. The eldest magus is Praeco, and the next host is drawn "
+    "by lot.",
 )
 
 register(NORMANDY)

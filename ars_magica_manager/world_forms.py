@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import catalog, creation, deletion, places, world
+from . import catalog, creation, deletion, places, vassals, world
 from .character_sheet import house_name
 from .commands import Choice, Choose, Command, Confirm, Form, Refuse, SectionOps
 from .form_spec import DialogField, attr, pairs
@@ -520,7 +520,7 @@ def sketch_covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
             hint="A player covenant: other records' attitudes point at it.",
         )
     )
-    return fields + package_fields(saga, covenant)
+    return fields + package_fields(saga, covenant) + vassals.fields(saga, covenant)
 
 
 def _unnamed_problem(values: dict[str, Any]) -> str | None:
@@ -534,6 +534,7 @@ def sketch_covenant_form(saga: Saga, covenant: Covenant) -> Form:
         values = dict(values)
         covenant.tribunal_id = values.get("tribunal_id", covenant.tribunal_id)
         save_package_fields(saga, covenant, values)
+        vassals.save(saga, covenant, values)
         if "where" in values:
             places.put(covenant, values.pop("where"))
         for key, value in values.items():

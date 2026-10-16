@@ -247,7 +247,7 @@ def _import_pack(saga: Saga, data: dict[str, Any]) -> Command:
     """Import a Content Pack: which of its parts to bring in (its
     Tribunals and covenants always come), then the preview to confirm.
     A pack with nothing to leave out goes straight to the preview."""
-    fields = packs.import_fields(data)
+    fields = packs.import_fields(data, saga)
     if not fields:
         return _confirm_import(saga, transfer.plan_import(saga, data), data)
 

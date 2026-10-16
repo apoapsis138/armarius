@@ -273,7 +273,11 @@ def _threats(saga: Saga, year: int) -> list[Proposal]:
     found = []
     end = year * len(SEASONS) + len(SEASONS) - 1
     for threat in saga.neighbours:
-        if threat.kind != "threat" or not threats.by_date(threat):
+        if (
+            threat.kind != "threat"
+            or not threats.by_date(threat)
+            or threats.is_dormant(threat)
+        ):
             continue
         for index, stage in enumerate(threats.stages(threat)):
             if (stage.get("outcome") or threats.PENDING) != threats.PENDING:

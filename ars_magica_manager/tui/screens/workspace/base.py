@@ -59,6 +59,7 @@ from .... import (
     seasons,
     sourcebooks,
     storage,
+    threats,
     towns,
     transfer,
     tribunal_forms,
@@ -110,6 +111,7 @@ from ....sections import (
     NEIGHBOUR_INFO_SECTION,
     REGION_INFO_SECTION,
     SEASONS_INFO_SECTION,
+    STAGES_SECTION,
     TABLES_SECTION,
     TRIBUNAL_INFO_SECTION,
 )
@@ -301,6 +303,7 @@ _STORYGUIDE_ACTIONS = frozenset(
         "roll_fair",
         "roll_table",
         "found_covenant",
+        "begin_story",
         "create_character",
         "create_laboratory",
         "create_familiar",
@@ -2460,6 +2463,18 @@ class WorkspaceBase(Screen[None]):
                 self.run_worker(show(fresh[-1]))
 
         run_steps(self.app, ruins.found_form(self.saga, record), finished)
+
+    def action_begin_story(self) -> None:
+        """More's Begin This Story on a dormant threat."""
+        record = self._record_to_delete()
+        if not threats.is_dormant(record):
+            return
+        assert isinstance(record, Neighbour)
+        run_steps(
+            self.app,
+            threats.begin_command(self.saga, record),
+            lambda _end: self._commit(NEIGHBOUR_INFO_SECTION, STAGES_SECTION),
+        )
 
     def action_set_date(self) -> None:
         saga = self.saga

@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "2.91.0",
+  "app_version": "2.93.0",
   "kind": "pack",
   "name": "Guardians of the Forests: the Rhine Tribunal",
   "from_saga": "Guardians of the Forests: the Rhine Tribunal",
@@ -30,6 +30,8 @@
         "own_aura": null,
         "own_realm": "",
         "tribunal_id": "the_rhine_tribunal",
+        "liege_id": null,
+        "oath": "",
         "year_founded": 767,
         "aegis_of_the_hearth": 0,
         "aegis_penetration": 0,
@@ -100,6 +102,8 @@
         "own_aura": null,
         "own_realm": "",
         "tribunal_id": "the_rhine_tribunal",
+        "liege_id": null,
+        "oath": "",
         "year_founded": 1052,
         "aegis_of_the_hearth": 0,
         "aegis_penetration": 0,
@@ -170,6 +174,8 @@
         "own_aura": null,
         "own_realm": "",
         "tribunal_id": "the_rhine_tribunal",
+        "liege_id": null,
+        "oath": "",
         "year_founded": 1151,
         "aegis_of_the_hearth": 0,
         "aegis_penetration": 0,
@@ -240,6 +246,8 @@
         "own_aura": null,
         "own_realm": "",
         "tribunal_id": "the_rhine_tribunal",
+        "liege_id": null,
+        "oath": "",
         "year_founded": 1165,
         "aegis_of_the_hearth": 0,
         "aegis_penetration": 0,
@@ -310,6 +318,8 @@
         "own_aura": null,
         "own_realm": "",
         "tribunal_id": "the_rhine_tribunal",
+        "liege_id": null,
+        "oath": "",
         "year_founded": 1144,
         "aegis_of_the_hearth": 0,
         "aegis_penetration": 0,
@@ -380,6 +390,8 @@
         "own_aura": null,
         "own_realm": "",
         "tribunal_id": "the_rhine_tribunal",
+        "liege_id": null,
+        "oath": "",
         "year_founded": 1039,
         "aegis_of_the_hearth": 0,
         "aegis_penetration": 0,
@@ -450,6 +462,8 @@
         "own_aura": null,
         "own_realm": "",
         "tribunal_id": "the_rhine_tribunal",
+        "liege_id": null,
+        "oath": "",
         "year_founded": 1215,
         "aegis_of_the_hearth": 0,
         "aegis_penetration": 0,
@@ -520,6 +534,8 @@
         "own_aura": null,
         "own_realm": "",
         "tribunal_id": "the_rhine_tribunal",
+        "liege_id": null,
+        "oath": "",
         "year_founded": 773,
         "aegis_of_the_hearth": 0,
         "aegis_penetration": 0,
@@ -590,6 +606,8 @@
         "own_aura": null,
         "own_realm": "",
         "tribunal_id": "the_rhine_tribunal",
+        "liege_id": null,
+        "oath": "",
         "year_founded": 792,
         "aegis_of_the_hearth": 0,
         "aegis_penetration": 0,
@@ -660,6 +678,8 @@
         "own_aura": null,
         "own_realm": "",
         "tribunal_id": "the_rhine_tribunal",
+        "liege_id": null,
+        "oath": "",
         "year_founded": 1067,
         "aegis_of_the_hearth": 0,
         "aegis_penetration": 0,
@@ -761,7 +781,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "fef190e6f21f"
+            "id": "7498854d17bf"
           },
           {
             "title": "The Lusatia chapter and the Novgorod border",
@@ -778,7 +798,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "35282516539d"
+            "id": "2b677c7f94ad"
           },
           {
             "title": "Choosing the Praeco by age",
@@ -795,7 +815,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "43ab5505f642"
+            "id": "b272789138a3"
           },
           {
             "title": "Crintera and the Danes",
@@ -812,7 +832,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "60021d4fe1d9"
+            "id": "9fc648d6638f"
           },
           {
             "title": "Triamore's dealings with mundanes",
@@ -829,7 +849,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "c2e0d4d45885"
+            "id": "7438e7375297"
           },
           {
             "title": "Fengheld's house at Durenmar",
@@ -846,7 +866,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "aaab462e54f4"
+            "id": "40d4df8464c2"
           },
           {
             "title": "Waddenzee's piracy",
@@ -863,7 +883,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "65f2abec0af2"
+            "id": "d9ae00666af6"
           },
           {
             "title": "Odorpes of Fengheld's neglect",
@@ -880,7 +900,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "483bb0239a4c"
+            "id": "983fba2ed1ad"
           },
           {
             "title": "The Rhine Gorge after the ban",
@@ -897,7 +917,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "af7420dbbc5b"
+            "id": "44898c1b1bc9"
           }
         ],
         "rulings": [
@@ -906,77 +926,77 @@
             "year": null,
             "says": "From the Tribunal's founding: every apprentice trained in the Rhine spends at least one season at Durenmar, taught by a magus of House Bonisagus.",
             "case_id": "",
-            "id": "25279c94e272"
+            "id": "34464fa2a15f"
           },
           {
             "title": "The laws of hospitality (961 AA)",
             "year": 822,
             "says": "A magus may ask hospitality of any lawful Rhine covenant, which must publish its conditions; a guest who accepts them is guaranteed at least three and at most seven years, pays at least three pawns of vis a year, and the conditions are the same for every guest in residence and change only when there are none.",
             "case_id": "",
-            "id": "d675ae7d8a88"
+            "id": "e546507c1a7b"
           },
           {
             "title": "Proxy sigils (1017 AA)",
             "year": 878,
             "says": "Firm rules on the voting of retired magi, ending twenty years of dispute: a master is entrusted with one retired magus's sigil, an archmage with a second, cast in the retired magus's name and, by custom, by his likely wishes.",
             "case_id": "",
-            "id": "9c4698bfd676"
+            "id": "5545de7e65e4"
           },
           {
             "title": "Ranks",
             "year": null,
             "says": "Only a master may take an apprentice (a journeyman's filius is treated as a new hedge recruit); three masters of other covenants, Houses and gilds confer the rank; in any dispute certamen would otherwise settle, the higher rank has the right. House Tremere contests this, as it was made to curb them.",
             "case_id": "",
-            "id": "a678a8fa7c17"
+            "id": "7cc044f159a7"
           },
           {
             "title": "Founding a covenant (1024 AA)",
             "year": 885,
             "says": "A new covenant needs a sponsoring magus from every existing covenant of the Tribunal. Arae Flaviae and Schwarzburg abolished the same year. Chapter houses need no such leave, which is how Fengheld grows.",
             "case_id": "",
-            "id": "6d9d99dd14cf"
+            "id": "8398ca8c6f40"
           },
           {
             "title": "Guardians of the Forests (1192 AA)",
             "year": 1053,
             "says": "Magi may actively defend the wilderness against those who would destroy it. In 1194 Caecilius ruled that the Danish occupation of R\u00fcgen is no such destruction, as no wilderness was invaded.",
             "case_id": "",
-            "id": "f0bdb81a4889"
+            "id": "5ba1f2539eb6"
           },
           {
             "title": "A day's march (1248 AA)",
             "year": 1109,
             "says": "A magical site within a day's march of a covenant belongs to it; Valdus of Tytalus, who harvested Treverorum's, was fined a pawn as the covenant had lost nothing, and told to ask in future.",
             "case_id": "",
-            "id": "11fdcd8b35eb"
+            "id": "1442c68b3604"
           },
           {
             "title": "A covenant without a site",
             "year": 1144,
             "says": "At the Ash Gild's urging the Tribunal founded Oculus Septentrionalis to learn of the Norse wizards, ruling that a covenant needs no site at founding, only magi bound by a charter. In 1158 its magi were fined three pawns each for keeping neither.",
             "case_id": "",
-            "id": "2f916971f2c6"
+            "id": "34e049a3c674"
           },
           {
             "title": "Dankmar against Durenmar",
             "year": 1151,
             "says": "Durenmar, found to have molested the fay and plundered faerie sites, paid a rook of vis to every other covenant and was barred from faerie sites for fourteen years unless it made peace with them.",
             "case_id": "",
-            "id": "840bbdc54632"
+            "id": "257901a0fc86"
           },
           {
             "title": "No magic in the Rhine Gorge (1339 AA)",
             "year": 1200,
             "says": "After Rheinstein was destroyed by the archbishop of Trier's army, largely through its own doing, no magical activity in the Rhine Gorge for twenty years: a ban that ends in 1220.",
             "case_id": "",
-            "id": "f2a3b1720bd4"
+            "id": "12887b5c7d0d"
           },
           {
             "title": "Waddenzee is Terschelling",
             "year": 1207,
             "says": "The two survivors of Terschelling renamed it Waddenzee with a new charter and symbol; a vote to call it a new covenant needing leave failed, by the Oak and Ash Gilds. The same year Rethra, silent for decades, was declared abolished.",
             "case_id": "",
-            "id": "d979fb7592ea"
+            "id": "df24cc95fb23"
           }
         ],
         "treasury": [],
@@ -988,7 +1008,7 @@
             "details": "Priests of the Roman Cult of Mercury raise a temple deep in the Black Forest, on the ground Durenmar later takes, hoping to turn the primeval power of the Hercynian Forest to their own use. In the Roman years they bind the forest's spirit by its own oaths into what is now the Fane of the Founders; a wild splinter of it escapes south and in time becomes the King of the Black Mountain.",
             "changes": [],
             "margin": "",
-            "id": "df65dfdf3e42"
+            "id": "9c7cd733207a"
           },
           {
             "year": 74,
@@ -997,7 +1017,7 @@
             "details": "The Eighth Legion under Cornelius Clemens completes the road from Offenburg to Rottweil with the help of Mercurian priests, who set warding milestones along it. The Roman limes of the same age cuts the Black Forest, and its spirit, off from the rest of the Hercynian Forest.",
             "changes": [],
             "margin": "",
-            "id": "756da4872213"
+            "id": "fe5b3cff0cf8"
           },
           {
             "year": 725,
@@ -1006,7 +1026,7 @@
             "details": "St Boniface cuts down the Donar Oak at Geismar in Thuringia and builds an oratory of St Peter from its wood. Pagan magic, relics and belief wane from that day, and the one great spirit of the Hercynian Forest is shattered into the many lesser forests of Germany.",
             "changes": [],
             "margin": "",
-            "id": "c1e65eb86ec2"
+            "id": "b02f3ab76254"
           },
           {
             "year": 731,
@@ -1015,7 +1035,7 @@
             "details": "Trianoma finds Bonisagus in his cave in the Alps, becomes his apprentice and learns the Parma Magica.",
             "changes": [],
             "margin": "",
-            "id": "9ac57c55f0c3"
+            "id": "42ac3d344eb3"
           },
           {
             "year": 731,
@@ -1024,7 +1044,7 @@
             "details": "From 731 to 767 Trianoma seeks out the wizards who will be the Founders and brings them to Bonisagus, who refines his theory with each. Merinita comes in from the wild and persuades the shapeshifter Bjornaer to join, for which Bjornaer's old fellows, the sorceress Gyongy among them, condemn her.",
             "changes": [],
             "margin": "",
-            "id": "24a651e065cb"
+            "id": "059305690745"
           },
           {
             "year": 754,
@@ -1033,7 +1053,7 @@
             "details": "Bonisagus leaves his Alpine cave for the ruined Roman temple in the Black Forest, hoping to reconcile his Hermetic theory with the forest's primeval magic; between 754 and 767 the place is built up with room for many magi.",
             "changes": [],
             "margin": "",
-            "id": "6432438b63a1"
+            "id": "cd082d409571"
           },
           {
             "year": 767,
@@ -1042,7 +1062,7 @@
             "details": "The Founders compose and swear the Oath at the Fane of the Founders and hold the first Tribunal gathering. Bonisagus's followers and some of the Founders settle at Durenmar and build the covenant.",
             "changes": [],
             "margin": "",
-            "id": "a7981f341438"
+            "id": "89a56e002f81"
           },
           {
             "year": 767,
@@ -1051,7 +1071,7 @@
             "details": "Between 767 and 773 Flambeau and his apprentices leave to found Val-Negra in the Pyrenees, and other magi found covenants of their own after Durenmar's pattern.",
             "changes": [],
             "margin": "",
-            "id": "97c2cdacd29f"
+            "id": "c1a341b15778"
           },
           {
             "year": 771,
@@ -1060,7 +1080,7 @@
             "details": "Bjornaer and her followers meet in council on R\u00fcgen; her House has gathered there every twelve years since.",
             "changes": [],
             "margin": "",
-            "id": "5d1d1f74304e"
+            "id": "e6b94f4b6425"
           },
           {
             "year": 773,
@@ -1069,7 +1089,7 @@
             "details": "A Tribunal is ruled to need at least twelve magi from four covenants. Crintera, the domus magna of House Bjornaer, and Fenistal, the domus magna of House Merinita, are founded.",
             "changes": [],
             "margin": "",
-            "id": "22e60c16c422"
+            "id": "a2d17005db2d"
           },
           {
             "year": 780,
@@ -1078,7 +1098,7 @@
             "details": "The Rhine Tribunal meets for the first time, at Durenmar. Arae Flaviae in Swabia and Rethra in the Eastern Marches are founded.",
             "changes": [],
             "margin": "",
-            "id": "0f7feba110bb"
+            "id": "37915b15a345"
           },
           {
             "year": 789,
@@ -1087,7 +1107,7 @@
             "details": "Jerbiton, who has taken on the apprentices of the imperial mage-smith Carolinus, meets Charlemagne. The emperor outlaws sorcery and paganism but allows the kind of benevolent magic Jerbiton practises.",
             "changes": [],
             "margin": "",
-            "id": "fe077ec71d7e"
+            "id": "19896f28e806"
           },
           {
             "year": 792,
@@ -1096,7 +1116,7 @@
             "details": "The Founder Merinita is seen for the last time, going to seek the spirit of the wilderness; the Bohemian chapter dates her going to 785 and says her last words are carved over Irencillia's gate. Fenistal becomes the first covenant to enter Winter, and the new Primus Quendalon founds Irencillia.",
             "changes": [],
             "margin": "",
-            "id": "9fce16ca4622"
+            "id": "f7c13dd6abb4"
           },
           {
             "year": 799,
@@ -1105,7 +1125,7 @@
             "details": "After the gathering Quendalon goes into the faerie woods of Bohemia, leaving Myanar to lead House Merinita.",
             "changes": [],
             "margin": "",
-            "id": "7fc1e0e9b632"
+            "id": "61c367c5a726"
           },
           {
             "year": 801,
@@ -1114,7 +1134,7 @@
             "details": "In 801 and 802 Quendalon comes back from the faerie woods and Myanar denies he is the true Quendalon. The struggle kills Myanar and loses Fenistal; Irencillia becomes the domus magna of House Merinita, the House turns to faerie magic, and the Elder Gild splits away from the Hawthorn Gild.",
             "changes": [],
             "margin": "",
-            "id": "7c8789794a72"
+            "id": "4b08b221ca62"
           },
           {
             "year": 807,
@@ -1123,7 +1143,7 @@
             "details": "The Founder Tytalus enters the Maddenhofen Woods in Bohemia, saying he will face the Queen of all the Fae, and is never seen again.",
             "changes": [],
             "margin": "",
-            "id": "ff1395ae5802"
+            "id": "f1c68b9d16ee"
           },
           {
             "year": 817,
@@ -1132,7 +1152,7 @@
             "details": "",
             "changes": [],
             "margin": "",
-            "id": "4cd6e6f68c19"
+            "id": "f66aa1a33c49"
           },
           {
             "year": 831,
@@ -1141,7 +1161,7 @@
             "details": "At the Gathering of Twelve Years at Crintera, Bjornaer speaks for the last time to her House and goes into the forest as a bear.",
             "changes": [],
             "margin": "",
-            "id": "a239c4741c76"
+            "id": "fb08fb6d2ac4"
           },
           {
             "year": 832,
@@ -1150,7 +1170,7 @@
             "details": "Grand Tribunals are to meet every thirty-three years from now on, and the regional Tribunals every seven years from 836.",
             "changes": [],
             "margin": "",
-            "id": "f20d80f115b0"
+            "id": "30e29b2d9584"
           },
           {
             "year": 850,
@@ -1159,7 +1179,7 @@
             "details": "From about 850 to 948 Hercynius of Bonisagus founds a lineage within his House and draws other magi to his teaching on the forest's magic.",
             "changes": [],
             "margin": "",
-            "id": "e3ca18e6e70c"
+            "id": "18df4976bae1"
           },
           {
             "year": 857,
@@ -1168,7 +1188,7 @@
             "details": "The spirits of three magi lost to Twilight famously return to the gathering.",
             "changes": [],
             "margin": "",
-            "id": "dfc0d73aa898"
+            "id": "8cf39ed0026e"
           },
           {
             "year": 865,
@@ -1177,7 +1197,7 @@
             "details": "The borders of the Tribunals are fixed along the lines of the Frankish partition and named: Rhine, Normandy, Provencal, Britannian, Roman, Theban, Eastern and Greater Alps.",
             "changes": [],
             "margin": "",
-            "id": "4030c9674427"
+            "id": "2f8ee251257f"
           },
           {
             "year": 878,
@@ -1186,7 +1206,7 @@
             "details": "Firm rules on the votes of retired magi end twenty years of dispute over whether and how their sigils may be cast.",
             "changes": [],
             "margin": "",
-            "id": "f0fb2be98bb9"
+            "id": "8c0db42360b7"
           },
           {
             "year": 885,
@@ -1195,7 +1215,7 @@
             "details": "Arae Flaviae and Schwarzburg are abolished, and strict rules for the founding of new covenants are agreed.",
             "changes": [],
             "margin": "",
-            "id": "1c891d17b37b"
+            "id": "3a68e0ec2590"
           },
           {
             "year": 892,
@@ -1204,7 +1224,7 @@
             "details": "The Tribunal sponsors Rudiaria, a Flambeau-leaning covenant on the right bank of the Rhine opposite Bingen, and grants it every magical site along the river between Mainz and Cologne.",
             "changes": [],
             "margin": "",
-            "id": "6dec36fad2f3"
+            "id": "544d5a809d5c"
           },
           {
             "year": 898,
@@ -1213,7 +1233,7 @@
             "details": "",
             "changes": [],
             "margin": "",
-            "id": "57046c902a0e"
+            "id": "20fd1dd5aa77"
           },
           {
             "year": 930,
@@ -1222,7 +1242,7 @@
             "details": "Magyar raiders destroy the covenant of Sirmium in Meissen, and with it the region's known vis sources. Wiederich of Flambeau, the only survivor, joins Henry the Fowler's army for revenge and serves at Riade in 933 and on the Lech in 955; after the Magyars' defeat House Bjornaer adopts three Magyar shapechangers, whose horse-hearted line survives, and Wiederich's descendants have hounded them as blood enemies ever since.",
             "changes": [],
             "margin": "",
-            "id": "6b0ab6e22cba"
+            "id": "10454a02bece"
           },
           {
             "year": 931,
@@ -1231,7 +1251,7 @@
             "details": "",
             "changes": [],
             "margin": "",
-            "id": "71456b848fc6"
+            "id": "ebc4b4cbe4dc"
           },
           {
             "year": 934,
@@ -1240,7 +1260,7 @@
             "details": "Diedne magi found Oakdell in the Westerwald, a dozen miles east of the Rhine, with the Tribunal's sponsorship and on condition that it keeps out of Rudiaria's territory.",
             "changes": [],
             "margin": "",
-            "id": "5ef5381e3d3c"
+            "id": "7fa1b8e0e77f"
           },
           {
             "year": 941,
@@ -1249,7 +1269,7 @@
             "details": "The Tribunal's followers of Diedne, until now of the Hawthorn Gild, found the Rowan Gild.",
             "changes": [],
             "margin": "",
-            "id": "0cfe21260b46"
+            "id": "421e2cf80b09"
           },
           {
             "year": 962,
@@ -1258,7 +1278,7 @@
             "details": "Charges of diabolism against Eginolf of Flambeau of Rudiaria are not proven, but the reports of malefic doings near the covenant are noted with disapproval; Rudiaria is ordered to investigate, report within seven years and stop troubling the mundanes.",
             "changes": [],
             "margin": "",
-            "id": "7c0ca0663716"
+            "id": "ab11ae02b471"
           },
           {
             "year": 964,
@@ -1267,7 +1287,7 @@
             "details": "",
             "changes": [],
             "margin": "",
-            "id": "c45565df5d8a"
+            "id": "879653d3013e"
           },
           {
             "year": 969,
@@ -1276,7 +1296,7 @@
             "details": "House Mercere reports Rudiaria burnt out in what looks like a catastrophic magical accident, every magus slain or missing; diabolism is suspected. The fall comes with a crippling famine and unrest in the region.",
             "changes": [],
             "margin": "",
-            "id": "69e9446be11d"
+            "id": "2dd26d406d56"
           },
           {
             "year": 976,
@@ -1285,7 +1305,7 @@
             "details": "Nothing can be salvaged at Rudiaria; an archbishop of Mainz has sanctified the ground. Oakdell's claim to Rudiaria's sites is refused.",
             "changes": [],
             "margin": "",
-            "id": "e76683aaa826"
+            "id": "b0506281bfb6"
           },
           {
             "year": 990,
@@ -1294,7 +1314,7 @@
             "details": "Followers of Hercynius leave Durenmar to found Waldherz, first as a chapter house and later as a disputed covenant in its own right.",
             "changes": [],
             "margin": "",
-            "id": "5f9e00f2816c"
+            "id": "1fcd597c269b"
           },
           {
             "year": 993,
@@ -1303,7 +1323,7 @@
             "details": "Crintera and Rethra sponsor Grand Silesia, the Order's easternmost covenant yet; its Bjornaer and the Bonisagi of Waldherz join the Rowan Gild.",
             "changes": [],
             "margin": "",
-            "id": "3fff9e5968f0"
+            "id": "a20bdd799eb6"
           },
           {
             "year": 997,
@@ -1312,7 +1332,7 @@
             "details": "The Rhine's own gathering of this year is the first of three (997, 1004 and 1011) at which distrust within the Order stops the renewal of the Founders' vows at the Fane.",
             "changes": [],
             "margin": "",
-            "id": "6e882435351e"
+            "id": "8d1caf486098"
           },
           {
             "year": 997,
@@ -1321,7 +1341,7 @@
             "details": "Oakdell's accusations of espionage and meddling against magi of Durenmar are thrown out as spurious and unproven.",
             "changes": [],
             "margin": "",
-            "id": "09307ae07b84"
+            "id": "416f68ff33a5"
           },
           {
             "year": 1004,
@@ -1330,7 +1350,7 @@
             "details": "The whole Rowan Gild is Marched, beginning the Schism War in the Rhine. Severus Maximus of Flambeau declares Wizard's War on Caithlinn of Oakdell and Cirion of Tremere on Pietro of Oakdell; Tremere and Flambeau magi set about destroying Oakdell and Waldherz.",
             "changes": [],
             "margin": "",
-            "id": "13e468ddc7ad"
+            "id": "ba4344560ab0"
           },
           {
             "year": 1008,
@@ -1339,7 +1359,7 @@
             "details": "The Slavic covenants, Rethra and Grand Silesia among them, break with their sponsors and declare a New Slavonic Tribunal. Grand Silesia is destroyed the same year.",
             "changes": [],
             "margin": "",
-            "id": "3a56eaf461c0"
+            "id": "365ecdaf8356"
           },
           {
             "year": 1016,
@@ -1348,7 +1368,7 @@
             "details": "Oakdell is razed and all its Diedne magi slain in the Schism War.",
             "changes": [],
             "margin": "",
-            "id": "a1bf40e25e6c"
+            "id": "e810d2d297fb"
           },
           {
             "year": 1018,
@@ -1357,7 +1377,7 @@
             "details": "The Schism War is declared over; the Linden Gild grows up over the following decades. The renewal of the Founders' vows at the Fane resumes, an Ex Miscellanea magus taking the place Diedne's representative once held.",
             "changes": [],
             "margin": "",
-            "id": "40d21b921ade"
+            "id": "146b5f5e034d"
           },
           {
             "year": 1030,
@@ -1366,7 +1386,7 @@
             "details": "Over the Rhine's protests, the New Slavonic Tribunal is given authority over new covenants in Slavic lands.",
             "changes": [],
             "margin": "",
-            "id": "d5df04b4c919"
+            "id": "1794e91828d8"
           },
           {
             "year": 1039,
@@ -1375,7 +1395,7 @@
             "details": "Veteran Tremere and Flambeau magi back from the Schism War in Britannia (fought in Stonehenge and Normandy) found Fengheld in the Harz with the Tribunal's ready approval, as a quiet retreat for ageing war heroes away from the mundanes.",
             "changes": [],
             "margin": "",
-            "id": "a8be9a9e449c"
+            "id": "ed0d9a3ac8df"
           },
           {
             "year": 1039,
@@ -1384,7 +1404,7 @@
             "details": "Through the reign of Henry III (1039 to 1056) Fengheld's political Tremere, working with the Transylvanian Tribunal, take part in the emperor's conquests of Bohemia, Poland and Hungary and seize many vis sites.",
             "changes": [],
             "margin": "",
-            "id": "1cef97fc8479"
+            "id": "741508de8c67"
           },
           {
             "year": 1048,
@@ -1393,7 +1413,7 @@
             "details": "Aschlaranda, once of Waldherz, reappears at Durenmar.",
             "changes": [],
             "margin": "",
-            "id": "7c29d7259cd4"
+            "id": "cf40a0ea5e70"
           },
           {
             "year": 1052,
@@ -1402,7 +1422,7 @@
             "details": "Aschlaranda, exiled from Durenmar and from House Bonisagus, settles with her apprentice Schadrit at Dankmar in the Black Forest (the timeline puts their occupation of the site in 1053).",
             "changes": [],
             "margin": "",
-            "id": "9d6bacf0a81f"
+            "id": "60a9b7ddc48f"
           },
           {
             "year": 1052,
@@ -1411,7 +1431,7 @@
             "details": "Bjornaer magi once of Grand Silesia settle at Pripet Maior in the New Slavonic Tribunal, and Crintera and Pripet Maior form an alliance across the Tribunal border.",
             "changes": [],
             "margin": "",
-            "id": "c35a8a9c09ec"
+            "id": "8417364a9867"
           },
           {
             "year": 1053,
@@ -1420,7 +1440,7 @@
             "details": "The Guardians of the Forest ruling is made, allowing magi to defend wild places. Dankmar goes unrecognised as a covenant, Durenmar's influence seeing to it.",
             "changes": [],
             "margin": "",
-            "id": "d2bf58d89df7"
+            "id": "dfde32e38842"
           },
           {
             "year": 1063,
@@ -1429,7 +1449,7 @@
             "details": "To curb the Rhine, the Grand Tribunal rejects its claim to the Polish lands left empty by Grand Silesia's fall and grants all Slavic lands to the New Slavonic Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "50dbdfe4625a"
+            "id": "f18cf8aded0e"
           },
           {
             "year": 1067,
@@ -1438,7 +1458,7 @@
             "details": "Roznov is founded in Moravia by three Ex Miscellanea magi, and Dankmar is at last recognised as a covenant of the Rhine.",
             "changes": [],
             "margin": "",
-            "id": "9bc856ad3b76"
+            "id": "b2c3e5bfb01c"
           },
           {
             "year": 1074,
@@ -1447,7 +1467,7 @@
             "details": "Roznov is admitted to the Rhine Tribunal; two Tremere from Transylvania join it almost at once.",
             "changes": [],
             "margin": "",
-            "id": "e46b707e2f0e"
+            "id": "0b6eee6c0584"
           },
           {
             "year": 1081,
@@ -1456,7 +1476,7 @@
             "details": "Durenmar accuses Dankmar before the Tribunal of being secretly in league with the forest fay. Nothing is proven.",
             "changes": [],
             "margin": "",
-            "id": "17aec16d12aa"
+            "id": "09c4bd9efac1"
           },
           {
             "year": 1085,
@@ -1465,7 +1485,7 @@
             "details": "The great faerie lord of the Black Forest attacks Durenmar; several Bonisagus magi and many covenfolk are killed or carried off, and the captives are never returned. In the years after, Durenmar's magi devise the most powerful Aegis of the Hearth yet known.",
             "changes": [],
             "margin": "",
-            "id": "881a64eaa248"
+            "id": "922baee845c8"
           },
           {
             "year": 1088,
@@ -1474,7 +1494,7 @@
             "details": "Xantippes and Julia of Jerbiton and Selena Tibicena of Bonisagus propose a covenant in Trier to recover Roman secrets; with no sponsor from Irencillia, Crintera or Dankmar it is not recognised.",
             "changes": [],
             "margin": "",
-            "id": "eb53c0dc6e60"
+            "id": "643f74cbf206"
           },
           {
             "year": 1095,
@@ -1483,7 +1503,7 @@
             "details": "The same three, now joined by Arliandus of Tremere, propose again and Treverorum is approved.",
             "changes": [],
             "margin": "",
-            "id": "d0c7804c878d"
+            "id": "73b4fcfade82"
           },
           {
             "year": 1096,
@@ -1492,7 +1512,7 @@
             "details": "",
             "changes": [],
             "margin": "",
-            "id": "a49711d8bc1f"
+            "id": "da1c7678925c"
           },
           {
             "year": 1100,
@@ -1501,7 +1521,7 @@
             "details": "From about 1100 to 1150 Durenmar loses several magical sites to Z\u00e4hringen settlement, runs short of vis and raids the forest's faerie sites greedily to make it up. The Black Fir begins to grow at the edge of its Aegis about this time.",
             "changes": [],
             "margin": "",
-            "id": "75bbc41383be"
+            "id": "d344a9fd94ff"
           },
           {
             "year": 1109,
@@ -1510,7 +1530,7 @@
             "details": "Treverorum charges Valdus of Tytalus with twice harvesting vis from its site outside Trier's walls; he admits it but calls the site neglected and not theirs. The Tribunal rules that a site within a day's march of a covenant belongs to it, yet as Treverorum lost nothing Valdus pays one pawn and must ask leave in future.",
             "changes": [],
             "margin": "",
-            "id": "9155e954a263"
+            "id": "29ece17b3a8b"
           },
           {
             "year": 1123,
@@ -1519,7 +1539,7 @@
             "details": "Schwall of Bjornaer and Fulmonious of Tytalus found Rheinstein on Pfalz Island in the Rhine Gorge with the Tribunal's sponsorship, promising every other covenant a tithe of three pawns of vis a Tribunal for five Tribunals.",
             "changes": [],
             "margin": "",
-            "id": "ad314a76e84f"
+            "id": "7c321d9f1078"
           },
           {
             "year": 1129,
@@ -1528,7 +1548,7 @@
             "details": "",
             "changes": [],
             "margin": "",
-            "id": "6d9fbc86d803"
+            "id": "60cf95774f81"
           },
           {
             "year": 1144,
@@ -1537,7 +1557,7 @@
             "details": "At the Ash Gild's urging the Tribunal resolves to learn more of the Norse wizards, the supposed Order of Odin, and orders a covenant founded for the purpose; three magi under Axior volunteer and Oculus Septentrionalis is born. The Tribunal rules that a covenant need have no site at its founding, only magi bound by a charter.\n\nSecrets\nThree Verditius magestones were secretly given to the new covenant.",
             "changes": [],
             "margin": "",
-            "id": "86a88b3af8d2"
+            "id": "eec2ad1c69c5"
           },
           {
             "year": 1151,
@@ -1546,7 +1566,7 @@
             "details": "Dankmar accuses Durenmar of molesting faeries and plundering the Black Forest's faerie sites for vis. With Crintera, Irencillia and Fengheld, and the Hawthorn and Elder Gilds, behind the charge, Durenmar is fined a rook of vis to every other covenant and barred from faerie-site vis for fourteen years unless it makes peace with the fay; no such peace has ever been made.",
             "changes": [],
             "margin": "",
-            "id": "4ea8239961cf"
+            "id": "8561172b5d0e"
           },
           {
             "year": 1151,
@@ -1555,7 +1575,7 @@
             "details": "The newly risen Apple Gild founds Triamore at the court of Conrad III; Oculus Septentrionalis takes up the Gild as well.",
             "changes": [],
             "margin": "",
-            "id": "d479190eddc0"
+            "id": "9644ac399f5a"
           },
           {
             "year": 1151,
@@ -1564,7 +1584,7 @@
             "details": "The Redcap Ioanna is murdered in Trier; Treverorum denies all knowledge and a Quaesitorial investigation is ordered.",
             "changes": [],
             "margin": "",
-            "id": "86dc1767dfc6"
+            "id": "8fe81b2bf88f"
           },
           {
             "year": 1158,
@@ -1573,7 +1593,7 @@
             "details": "The magi of Oculus Septentrionalis are found to have broken their charter: no site, no investigation, and still living in their old sancta. Each is fined three pawns of vis and ordered out of the old sancta within a year, with a permanent site to be found before the next Tribunal; two Jerbiton join them.",
             "changes": [],
             "margin": "",
-            "id": "908c5b2a581c"
+            "id": "c40b9b97a2a3"
           },
           {
             "year": 1158,
@@ -1582,7 +1602,7 @@
             "details": "Xantippes of Jerbiton is found guilty of major mundane meddling, having worked Mentem magic of his own devising on the people of Trier for gain, to the harm of the Order's standing and perhaps a cause of Ioanna's death. He is fined ten pawns, his fortune is shared equally among the Tribunal's covenants and he owes three seasons' scribing to the Great Library.",
             "changes": [],
             "margin": "",
-            "id": "c8bf25482d0a"
+            "id": "9169ec724483"
           },
           {
             "year": 1158,
@@ -1591,7 +1611,7 @@
             "details": "Agnes of Irencillia tells the Tribunal she has seen the Founder Merinita in Bohemia; few believe her.",
             "changes": [],
             "margin": "",
-            "id": "6259251651e9"
+            "id": "88204560172d"
           },
           {
             "year": 1158,
@@ -1600,7 +1620,7 @@
             "details": "Hildegard of Bingen is said to have been taken into House Jerbiton about this year as an unGifted maga under its protection and tutelage; she never attends a Tribunal and meets few magi, and the tale is unconfirmed.",
             "changes": [],
             "margin": "",
-            "id": "5fe89728974d"
+            "id": "f39ca660ac7c"
           },
           {
             "year": 1160,
@@ -1609,7 +1629,7 @@
             "details": "About 1160 three magi of Oculus Septentrionalis settle in Henry the Lion's new city of L\u00fcbeck; Axior leaves them.",
             "changes": [],
             "margin": "",
-            "id": "40befac7d5df"
+            "id": "48fdef39ce9d"
           },
           {
             "year": 1162,
@@ -1618,7 +1638,7 @@
             "details": "The Rhine again loses the Polish boundary dispute to Novgorod, as the New Slavonic Tribunal is now called.",
             "changes": [],
             "margin": "",
-            "id": "06eaab85a420"
+            "id": "c269ffa63b49"
           },
           {
             "year": 1165,
@@ -1627,7 +1647,7 @@
             "details": "Oculus Septentrionalis announces its new seat at L\u00fcbeck, and the Quaesitores force additions to its charter, among them that it admit only Gentle-Gifted magi.",
             "changes": [],
             "margin": "",
-            "id": "d0435c97d91f"
+            "id": "25e3f5cf0755"
           },
           {
             "year": 1165,
@@ -1636,7 +1656,7 @@
             "details": "A Quaesitorial inquiry into the unrest in Trier finds Treverorum guilty of interfering with mundanes and the Church to the possible harm of its sodales; it is fined fifty pawns, payable by the next Tribunal, and ordered to repair its relations with the town.",
             "changes": [],
             "margin": "",
-            "id": "7fda7dddba10"
+            "id": "d0742794c22e"
           },
           {
             "year": 1165,
@@ -1645,7 +1665,7 @@
             "details": "Axior of Flambeau founds Terschelling on the Frisian island of that name. He dies in a magical accident within twenty years.",
             "changes": [],
             "margin": "",
-            "id": "731993431905"
+            "id": "b229c5128215"
           },
           {
             "year": 1165,
@@ -1654,7 +1674,7 @@
             "details": "Urgen takes the Primacy of House Bjornaer, which he holds through the Danish conquest of R\u00fcgen until 1203.",
             "changes": [],
             "margin": "",
-            "id": "79de1b555927"
+            "id": "be504c1240e6"
           },
           {
             "year": 1167,
@@ -1663,7 +1683,7 @@
             "details": "Jon Arnsson takes the Seat of the Stag on Crintera's council, a year before the Danes land on R\u00fcgen.",
             "changes": [],
             "margin": "",
-            "id": "bb4ac019ba4b"
+            "id": "50454b1e7000"
           },
           {
             "year": 1168,
@@ -1672,7 +1692,7 @@
             "details": "Valdemar I of Denmark conquers R\u00fcgen and Bishop Absolon breaks the temple of Arkona the next year. Over the Wilderists' objections Crintera chooses to wait the Danes out; the covenant falls into crisis and the Winter it has lived in for fifty years begins.",
             "changes": [],
             "margin": "",
-            "id": "c39b58272f7e"
+            "id": "d8f5b46b68f3"
           },
           {
             "year": 1172,
@@ -1681,7 +1701,7 @@
             "details": "Scholastus of Jerbiton declares himself Treverorum's last survivor and the covenant is abolished; he calls Trier unsafe for magi because of its churchmen, gives no details and leaves for the Greater Alps. The fine is partly unpaid, so he is held liable and a Redcap request follows him. No one from Crintera attends.",
             "changes": [],
             "margin": "",
-            "id": "60abea360da9"
+            "id": "d37ed4e73b22"
           },
           {
             "year": 1179,
@@ -1690,7 +1710,7 @@
             "details": "Primus Urgen of Bjornaer charges Oculus Septentrionalis with aiding the Danish invasion of R\u00fcgen but offers no proof. Failing, he declares Wizard's War on its leader Prudentum of Jerbiton and kills him.",
             "changes": [],
             "margin": "",
-            "id": "36d18cb9ce69"
+            "id": "96a970c38283"
           },
           {
             "year": 1179,
@@ -1699,7 +1719,7 @@
             "details": "Eule of Fengheld lays before the gathering her evidence that magi of Luctatio in the Roman Tribunal helped Milan beat Barbarossa at Legnano and that a necromancer of Vardian's Tomb made the plague that stopped his army before Rome.",
             "changes": [],
             "margin": "",
-            "id": "3f8dc8deaa5a"
+            "id": "efb5d8d6d93a"
           },
           {
             "year": 1186,
@@ -1708,7 +1728,7 @@
             "details": "The Hawthorn Gild invokes the Guardians of the Forest ruling to strike back at the Danes on R\u00fcgen, with the Ash and, unexpectedly, the Elder Gilds in support. The Tribunal splits along factional lines and reaches no decision beyond a promised inquiry, so Crintera is refused leave to expel the Danes; several Bjornaer are prosecuted afterwards for attacking Danish settlers.",
             "changes": [],
             "margin": "",
-            "id": "9a5fc2341035"
+            "id": "6c4f187a8a9d"
           },
           {
             "year": 1191,
@@ -1717,7 +1737,7 @@
             "details": "Avarret becomes Primus of House Bonisagus and turns the House back to the conservative refinement of existing theory.",
             "changes": [],
             "margin": "",
-            "id": "ead1e1ed0e3a"
+            "id": "840b775646f1"
           },
           {
             "year": 1194,
@@ -1726,7 +1746,7 @@
             "details": "Held a year late because of the Grand Tribunal. Falke of Fengheld pleads passionately for Crintera to be allowed to resist the Danes, but Quaesitor Caecilius rules that no wilderness has been invaded or destroyed, Crintera's forest standing intact; the Guardians ruling is much narrowed and Crintera falls into factional infighting.",
             "changes": [],
             "margin": "",
-            "id": "7c201627ef40"
+            "id": "5dd78ea41c77"
           },
           {
             "year": 1195,
@@ -1735,7 +1755,7 @@
             "details": "Five magi of the Roman Tribunal are Marched over the Luctatio affair.",
             "changes": [],
             "margin": "",
-            "id": "83707b8454f8"
+            "id": "d605b1a846a0"
           },
           {
             "year": 1200,
@@ -1744,7 +1764,7 @@
             "details": "Horst of Mercere reports Rheinstein attacked and destroyed by an army of angry mundanes led by the archbishop of Trier, its magi's fate unknown; their own conduct drew the attention that undid them. The Tribunal bans all magical activity in the Rhine Gorge for twenty years.",
             "changes": [],
             "margin": "",
-            "id": "a68b8643ed40"
+            "id": "b2963154ff29"
           },
           {
             "year": 1200,
@@ -1753,7 +1773,7 @@
             "details": "Eric Ribecus and Hygwald Veritas join Terschelling and about this year kill a pirate chief and seize his three ships and their crews; the covenant takes to piracy, and Imanitos Mendax spends some years there as a guest soon after.",
             "changes": [],
             "margin": "",
-            "id": "e1378cf977d3"
+            "id": "68b06a9c652e"
           },
           {
             "year": 1203,
@@ -1762,7 +1782,7 @@
             "details": "Urgen resigns the Primacy of House Bjornaer but keeps the Seat of the Bear; Falke of Fengheld is elected Prima and takes the Seat of the Wolf.",
             "changes": [],
             "margin": "",
-            "id": "802ecbbd2016"
+            "id": "84fda217fb28"
           },
           {
             "year": 1207,
@@ -1771,7 +1791,7 @@
             "details": "Eric Ribecus and Hygwald Veritas announce they are the only magi left at Terschelling, rename it Waddenzee and change its charter and symbol. A Quaesitorial inquiry finds no wrongdoing, and a motion to treat it as a new covenant needing the Tribunal's leave narrowly fails, the Oak and Ash Gilds voting it down.",
             "changes": [],
             "margin": "",
-            "id": "42c9f2af49de"
+            "id": "6fd9f72194dd"
           },
           {
             "year": 1207,
@@ -1780,7 +1800,7 @@
             "details": "The Tribunal declares the Slavic covenant of Rethra abolished, nothing having been heard from its magi for decades; the Knights of the Sword had lately desecrated and plundered its site.",
             "changes": [],
             "margin": "",
-            "id": "f803bbce57d1"
+            "id": "7d96cd9f690a"
           },
           {
             "year": 1208,
@@ -1789,7 +1809,7 @@
             "details": "The monastery of St Georgen in the Black Forest is destroyed and its monks found dead among dark vines; Dankmar is suspected.",
             "changes": [],
             "margin": "",
-            "id": "8db4d8aa0f26"
+            "id": "a1581f98a26d"
           },
           {
             "year": 1210,
@@ -1798,7 +1818,7 @@
             "details": "Over the last decade the religion of the God of Truth, preached by the prophet Iacob, spreads near the Bohemian Forest.",
             "changes": [],
             "margin": "",
-            "id": "7f3dc462b3bf"
+            "id": "b5bf3e81f75f"
           },
           {
             "year": 1213,
@@ -1807,7 +1827,7 @@
             "details": "Before his Final Twilight Primus Avarret names Murion his successor, passing over the better-qualified but 'too dangerous' Occultes and keeping the conservative line in charge of the House.",
             "changes": [],
             "margin": "",
-            "id": "8956c40b6bf8"
+            "id": "612948014d04"
           },
           {
             "year": 1214,
@@ -1816,7 +1836,7 @@
             "details": "The latest Rhine gathering raises the destruction of St Georgen; Jiphella, Dankmar's only delegate, denies any part in it, and a close vote declines to investigate.",
             "changes": [],
             "margin": "",
-            "id": "99ed4df3de7e"
+            "id": "540e32c4a777"
           },
           {
             "year": 1215,
@@ -1825,7 +1845,7 @@
             "details": "Three Rhine magi found Heorot on the Danish island of Zealand, on the site of Hrothgar's hall, in what is formally Novgorod's territory; Theoderich of Jerbiton leaves Oculus Septentrionalis to join them. It means to ask the Tribunal of 1221 for membership.",
             "changes": [],
             "margin": "",
-            "id": "344dbfbd1503"
+            "id": "9eec40ff0b91"
           },
           {
             "year": 1220,
@@ -1834,7 +1854,7 @@
             "details": "The twenty-year ban on magic in the Rhine Gorge runs out. Durenmar's leadership, with no covenant founded for decades and Fengheld's chapters multiplying, sponsors newly Gauntleted magi to survey the Gorge's lost sites and found a new Middle Rhine covenant.",
             "changes": [],
             "margin": "",
-            "id": "4535718873ee"
+            "id": "32f82fb3afe0"
           },
           {
             "year": 1220,
@@ -1843,7 +1863,7 @@
             "details": "Fengheld, having been refused leave to sponsor daughter covenants of young Tremere, has lately founded a chapter house in Lusatia, ten miles from the agreed Novgorod border, provoking the latest boundary dispute between the two Tribunals; it has also loosened its Transylvanian ties, and Rudolph of Bonisagus proposes a Fengheld chapter at Durenmar itself.",
             "changes": [],
             "margin": "",
-            "id": "14fc9bb8e05c"
+            "id": "8fe7de0d9f68"
           },
           {
             "year": 1220,
@@ -1852,7 +1872,7 @@
             "details": "Imanitos Mendax attains Master rank at Fengheld, Beechleaf joins its main site, Felecia, Dorana's apprentice, passes her Gauntlet and Garrinchus is newly Gauntleted at the Rheingasse chapter.",
             "changes": [],
             "margin": "",
-            "id": "5348c9daf3fa"
+            "id": "748b26790141"
           },
           {
             "year": 1220,
@@ -1861,7 +1881,7 @@
             "details": "Waddenzee's pirates have lately taken the ship Nebelk\u00f6nigin, with vis and books aboard, from Oculus Septentrionalis; as the Quaesitores had forbidden the trading venture she carried, the covenant cannot lawfully pursue her.",
             "changes": [],
             "margin": "",
-            "id": "08bf74f27d9f"
+            "id": "a5f473d0cbf0"
           },
           {
             "year": 1220,
@@ -1870,7 +1890,7 @@
             "details": "At Crintera the guest maga Caprea blinds the familiar of Carolus of Oculus Septentrionalis, sent as a peace envoy, and the two covenants' feud worsens.",
             "changes": [],
             "margin": "",
-            "id": "4ecb5474c3ef"
+            "id": "f393486b6ff9"
           }
         ],
         "package_data": {
@@ -40718,6 +40738,2739 @@
         "detail": "Sketch",
         "summary": "A trusted companion of Roznov and its buyer at the Prague slave market, where he passes for a shady-looking dealer.\n\nHe has Magic Sensitivity.\n\nSecrets\nHe uses it to pick out Gifted children among the slaves, who are sent to Coeris, the domus magna of House Tremere in the Transylvanian Tribunal; the other slaves he buys are traded or put to work by Roznov.",
         "links": []
+      },
+      {
+        "id": "hilda",
+        "name": "Hilda",
+        "type": "grog",
+        "covenant_id": null,
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 4,
+          "stamina": 2,
+          "presence": -1,
+          "communication": 1,
+          "dexterity": 1,
+          "quickness": -2
+        },
+        "arts": {},
+        "abilities": [
+          {
+            "name": "Athletics",
+            "category": "General",
+            "xp": 15,
+            "specialty": "endurance"
+          },
+          {
+            "name": "Awareness",
+            "category": "General",
+            "xp": 30,
+            "specialty": "ambushes"
+          },
+          {
+            "name": "Bows",
+            "category": "Martial",
+            "xp": 15,
+            "specialty": "short bow"
+          },
+          {
+            "name": "Brawl",
+            "category": "General",
+            "xp": 50,
+            "specialty": "grappling"
+          },
+          {
+            "name": "Carouse",
+            "category": "General",
+            "xp": 5,
+            "specialty": "drinking quantity"
+          },
+          {
+            "name": "Folk Ken",
+            "category": "General",
+            "xp": 15,
+            "specialty": "peasants"
+          },
+          {
+            "name": "Living Language: High German",
+            "category": "General",
+            "xp": 75,
+            "specialty": "orders"
+          },
+          {
+            "name": "Great Weapon",
+            "category": "Martial",
+            "xp": 15,
+            "specialty": "pole axe"
+          },
+          {
+            "name": "Dead Language: Latin",
+            "category": "Academic",
+            "xp": 30,
+            "specialty": "making reports"
+          },
+          {
+            "name": "Leadership",
+            "category": "General",
+            "xp": 75,
+            "specialty": "grogs"
+          },
+          {
+            "name": "Music",
+            "category": "General",
+            "xp": 5,
+            "specialty": "singing loudly"
+          },
+          {
+            "name": "Organization Lore: Order of Hermes",
+            "category": "General",
+            "xp": 15,
+            "specialty": "Fengheld"
+          },
+          {
+            "name": "Single Weapon",
+            "category": "Martial",
+            "xp": 105,
+            "specialty": "mace and heater shield"
+          },
+          {
+            "name": "Teaching",
+            "category": "General",
+            "xp": 15,
+            "specialty": "Martial Abilities"
+          }
+        ],
+        "virtues_flaws": [
+          {
+            "vf_id": "vf_custos",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_great_characteristic",
+            "params": {
+              "characteristic": "strength"
+            },
+            "id": ""
+          },
+          {
+            "vf_id": "vf_puissant_ability",
+            "params": {
+              "ability": "single weapon"
+            },
+            "id": ""
+          },
+          {
+            "vf_id": "vf_covenant_upbringing",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_obese",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_oversensitive",
+            "params": {},
+            "id": ""
+          }
+        ],
+        "spells_known": [],
+        "invented_spells": [],
+        "inventory": [],
+        "silver": 0,
+        "assigned_lab_id": null,
+        "background": {
+          "player": "",
+          "player_id": null,
+          "setting": "",
+          "size": 1,
+          "confidence_score": 0,
+          "confidence_points": 0,
+          "true_faith_score": 0,
+          "faith_points": 0,
+          "birth_name": "",
+          "year_born": 1192,
+          "race_nationality": "",
+          "place_of_origin": "",
+          "religion": "",
+          "title_profession": ""
+        },
+        "description": {
+          "height": null,
+          "weight": null,
+          "hair": "",
+          "eyes": "",
+          "handedness": "right",
+          "physical_description": "",
+          "biography": "Age 28. Oversensitive to disrespect. A stout, strong custos raised at a covenant, who leads its grogs and drills them.\nMace and heater shield: Init -1, Atk +13, Def +10, Dam +12. Mace: Init -1, Atk +12, Def +6, Dam +12. Short bow: Init -4, Atk +7, Def +1, Dam +10. Pole axe: Init -1, Atk +9, Def +1, Dam +15. Dagger: Init -2, Atk +7, Def +2, Dam +7. Fist: Init -2, Atk +5, Def +2, Dam +4. Grapple: Init -2, Atk +6, Def +3, Dam +4. Soak +9; Encumbrance 0 (4). Wounds: -1 (1-6), -3 (7-12), -5 (13-18), Incapacitated (19-24).\nEquipment: full metal scale armour, mace, heater shield, pole axe, short bow, a traveller's kit of tools."
+        },
+        "aging": {
+          "decrepitude": 0,
+          "effects": "",
+          "warping_score": 0,
+          "warping_points": 0,
+          "longevity_modifier": 0,
+          "longevity_year": null,
+          "longevity_by": "",
+          "decrepitude_points": 0,
+          "aging_points": {},
+          "apparent_age": null,
+          "recovering": "",
+          "twilight_until": ""
+        },
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "personality_traits": [
+          {
+            "name": "Brave",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Loyal to Magi",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Tolerant",
+            "score": -3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "raw_vis": {},
+        "hermetic": {
+          "house": "",
+          "domus_magna": "",
+          "primus": "",
+          "parens": "",
+          "covenant_of_apprenticeship": "",
+          "age_of_apprenticeship": null,
+          "wizards_sigil": ""
+        },
+        "diary": [],
+        "tractatus_read": [],
+        "summae_read": [],
+        "lab_text_access": {},
+        "breakthroughs": [],
+        "grog_year": null,
+        "labor_points": 0,
+        "workshop_innovation": 0,
+        "workshop_raw_materials": 0,
+        "progress": [],
+        "formulas": [],
+        "ordeals": [],
+        "in_creation": false,
+        "creation_xp": [],
+        "creation_conditions": {
+          "lab_seasons": 0,
+          "aura": 3,
+          "lab_quality": 0,
+          "living_conditions": 1,
+          "aged_to": null
+        },
+        "portrait": "",
+        "detail": "Full",
+        "summary": "A custos born and bred at Fengheld and given by it to the young magi: an immense blonde woman of Size +1 with piercing blue eyes in barrel-like scale armour made to measure, fighting with mace and heater shield (Attack +13, Defence +10, Damage +12, Soak +9) and carrying a pole axe and short bow besides. Great Strength and Puissant Single Weapon; Covenant Upbringing, Obese and Oversensitive to disrespect; Single Weapon 6+2, Leadership 5, Brawl 4, Latin 3, Order of Hermes Lore 2 (Fengheld). Prime leader material, she drills raw grogs into shape, brooks no disobedience, and is unpopular with the other grogs and untroubled by it; it puzzles her that mundanes object to a woman warrior.",
+        "links": []
+      },
+      {
+        "id": "byrek",
+        "name": "Byrek",
+        "type": "grog",
+        "covenant_id": null,
+        "characteristics": {
+          "intelligence": 0,
+          "perception": -2,
+          "strength": 0,
+          "stamina": 2,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 1,
+          "quickness": 3
+        },
+        "arts": {},
+        "abilities": [
+          {
+            "name": "Athletics",
+            "category": "General",
+            "xp": 140,
+            "specialty": "running"
+          },
+          {
+            "name": "Awareness",
+            "category": "General",
+            "xp": 15,
+            "specialty": "obstacles"
+          },
+          {
+            "name": "Brawl",
+            "category": "General",
+            "xp": 15,
+            "specialty": "fist"
+          },
+          {
+            "name": "Carouse",
+            "category": "General",
+            "xp": 5,
+            "specialty": "solitary drinking"
+          },
+          {
+            "name": "Craft: Whittling",
+            "category": "General",
+            "xp": 15,
+            "specialty": "figurines"
+          },
+          {
+            "name": "Folk Ken",
+            "category": "General",
+            "xp": 15,
+            "specialty": "emotions"
+          },
+          {
+            "name": "Area Lore: Germany",
+            "category": "General",
+            "xp": 15,
+            "specialty": "Pomerania"
+          },
+          {
+            "name": "Great Weapon",
+            "category": "Martial",
+            "xp": 75,
+            "specialty": "long spear"
+          },
+          {
+            "name": "Hunt",
+            "category": "General",
+            "xp": 15,
+            "specialty": "birds"
+          },
+          {
+            "name": "Leadership",
+            "category": "General",
+            "xp": 5,
+            "specialty": "revolt"
+          },
+          {
+            "name": "Living Language: Low German",
+            "category": "General",
+            "xp": 15,
+            "specialty": "Pomeranian"
+          },
+          {
+            "name": "Ride",
+            "category": "General",
+            "xp": 30,
+            "specialty": "at speed"
+          },
+          {
+            "name": "Single Weapon",
+            "category": "Martial",
+            "xp": 15,
+            "specialty": "axe and round shield"
+          },
+          {
+            "name": "Survival",
+            "category": "General",
+            "xp": 30,
+            "specialty": "heathland"
+          },
+          {
+            "name": "Living Language: West Norse",
+            "category": "General",
+            "xp": 15,
+            "specialty": "Danish curses"
+          },
+          {
+            "name": "Living Language: West Slavonic",
+            "category": "General",
+            "xp": 75,
+            "specialty": "Sorbian"
+          }
+        ],
+        "virtues_flaws": [
+          {
+            "vf_id": "vf_covenfolk",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_affinity_with_ability",
+            "params": {
+              "ability": "athletics"
+            },
+            "id": ""
+          },
+          {
+            "vf_id": "vf_enduring_constitution",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_long_winded",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_clumsy",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_depressed",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_simple_minded",
+            "params": {},
+            "id": ""
+          }
+        ],
+        "spells_known": [],
+        "invented_spells": [],
+        "inventory": [],
+        "silver": 0,
+        "assigned_lab_id": null,
+        "background": {
+          "player": "",
+          "player_id": null,
+          "setting": "",
+          "size": 0,
+          "confidence_score": 0,
+          "confidence_points": 0,
+          "true_faith_score": 0,
+          "faith_points": 0,
+          "birth_name": "",
+          "year_born": 1193,
+          "race_nationality": "",
+          "place_of_origin": "",
+          "religion": "",
+          "title_profession": ""
+        },
+        "description": {
+          "height": null,
+          "weight": null,
+          "hair": "",
+          "eyes": "",
+          "handedness": "right",
+          "physical_description": "",
+          "biography": "Age 27. A tall, unkempt runner sent away from Crintera, where his mother is a Horse Clan witch. He wears a horse-bone amulet she gave him and credits it with his speed and stamina; his Affinity with Athletics, Enduring Constitution and Long-Winded may come from it. He feels rejected and gloomy until given a real job.\nLong spear: Init +6, Atk +10, Def +10, Dam +7. Axe and round shield: Init +4, Atk +8, Def +8, Dam +6. Axe: Init +4, Atk +7, Def +5, Dam +6. Fist: Init +3, Atk +4, Def +7, Dam 0. Soak +4; Encumbrance 2 (2); Fatigue OK, 0, 0, -2, -4, Unconscious.\nEquipment: long spear, axe, round shield, heavy leather hauberk (taken off to run)."
+        },
+        "aging": {
+          "decrepitude": 0,
+          "effects": "",
+          "warping_score": 0,
+          "warping_points": 0,
+          "longevity_modifier": 0,
+          "longevity_year": null,
+          "longevity_by": "",
+          "decrepitude_points": 0,
+          "aging_points": {},
+          "apparent_age": null,
+          "recovering": "",
+          "twilight_until": ""
+        },
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "personality_traits": [
+          {
+            "name": "Demoralized",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Morose",
+            "score": 2,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "raw_vis": {},
+        "hermetic": {
+          "house": "",
+          "domus_magna": "",
+          "primus": "",
+          "parens": "",
+          "covenant_of_apprenticeship": "",
+          "age_of_apprenticeship": null,
+          "wizards_sigil": ""
+        },
+        "diary": [],
+        "tractatus_read": [],
+        "summae_read": [],
+        "lab_text_access": {},
+        "breakthroughs": [],
+        "grog_year": null,
+        "labor_points": 0,
+        "workshop_innovation": 0,
+        "workshop_raw_materials": 0,
+        "progress": [],
+        "formulas": [],
+        "ordeals": [],
+        "in_creation": false,
+        "creation_xp": [],
+        "creation_conditions": {
+          "lab_seasons": 0,
+          "aura": 3,
+          "lab_quality": 0,
+          "living_conditions": 1,
+          "aged_to": null
+        },
+        "portrait": "",
+        "detail": "Full",
+        "summary": "Covenfolk given away by Crintera: tall, sturdy and awkward, filthy and lice-ridden, slouching on a long spear (Attack +10, Defence +10, Damage +7). Affinity with Athletics, Enduring Constitution and Long-Winded, perhaps from his amulet; Clumsy, Depressed and Simple-Minded; Athletics 7 (running), Great Weapon 5, West Slavonic 5 (Sorbian), Survival 3, Ride 3. His mother, a witch of Crintera's Horse Clan, gave him a horse-bone amulet to make him swift and tireless as a horse, and he never takes it off, whether or not it works. A remarkable endurance runner and a reliable carrier of messages, single-minded and careless of routine; he feels Crintera cast him off, and his gloom may lift once he feels useful.",
+        "links": []
+      },
+      {
+        "id": "lord_robert_sch_nburg",
+        "name": "Lord Robert Sch\u00f6nburg",
+        "type": "companion",
+        "covenant_id": null,
+        "characteristics": {
+          "intelligence": 3,
+          "perception": -1,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 2,
+          "communication": 1,
+          "dexterity": -1,
+          "quickness": -1
+        },
+        "arts": {},
+        "abilities": [
+          {
+            "name": "Artes Liberales",
+            "category": "Academic",
+            "xp": 15,
+            "specialty": "accounts"
+          },
+          {
+            "name": "Athletics",
+            "category": "General",
+            "xp": 15,
+            "specialty": "jumping"
+          },
+          {
+            "name": "Awareness",
+            "category": "General",
+            "xp": 5,
+            "specialty": "light sleeper"
+          },
+          {
+            "name": "Bargain",
+            "category": "General",
+            "xp": 5,
+            "specialty": "gaining advantage"
+          },
+          {
+            "name": "Brawl",
+            "category": "General",
+            "xp": 15,
+            "specialty": "dirty fighting"
+          },
+          {
+            "name": "Charm",
+            "category": "General",
+            "xp": 50,
+            "specialty": "women"
+          },
+          {
+            "name": "Chirurgy",
+            "category": "General",
+            "xp": 15,
+            "specialty": "burn wounds"
+          },
+          {
+            "name": "Civil and Canon Law",
+            "category": "Academic",
+            "xp": 15,
+            "specialty": "tolls"
+          },
+          {
+            "name": "Concentration",
+            "category": "General",
+            "xp": 5,
+            "specialty": "Entrancement"
+          },
+          {
+            "name": "Entrancement",
+            "category": "Supernatural",
+            "xp": 75,
+            "specialty": "women"
+          },
+          {
+            "name": "Etiquette",
+            "category": "General",
+            "xp": 15,
+            "specialty": "subtle insults"
+          },
+          {
+            "name": "Faerie Lore",
+            "category": "Arcane",
+            "xp": 5,
+            "specialty": "Loreley"
+          },
+          {
+            "name": "Folk Ken",
+            "category": "General",
+            "xp": 15,
+            "specialty": "soldiers"
+          },
+          {
+            "name": "Living Language: High German",
+            "category": "General",
+            "xp": 75,
+            "specialty": "fine speech"
+          },
+          {
+            "name": "Guile",
+            "category": "General",
+            "xp": 30,
+            "specialty": "to affronted husbands"
+          },
+          {
+            "name": "Hunt",
+            "category": "General",
+            "xp": 15,
+            "specialty": "from horseback"
+          },
+          {
+            "name": "Infernal Lore",
+            "category": "Arcane",
+            "xp": 50,
+            "specialty": "pacts"
+          },
+          {
+            "name": "Intrigue",
+            "category": "General",
+            "xp": 15,
+            "specialty": "nobility"
+          },
+          {
+            "name": "Dead Language: Latin",
+            "category": "Academic",
+            "xp": 30,
+            "specialty": "incantation"
+          },
+          {
+            "name": "Leadership",
+            "category": "General",
+            "xp": 15,
+            "specialty": "ruffians"
+          },
+          {
+            "name": "Magic Lore",
+            "category": "Arcane",
+            "xp": 30,
+            "specialty": "occult properties"
+          },
+          {
+            "name": "Philosophiae",
+            "category": "Academic",
+            "xp": 30,
+            "specialty": "natural magic"
+          },
+          {
+            "name": "Premonitions",
+            "category": "Supernatural",
+            "xp": 30,
+            "specialty": "expeditious retreats"
+          },
+          {
+            "name": "Ride",
+            "category": "General",
+            "xp": 15,
+            "specialty": "while hunting"
+          },
+          {
+            "name": "Area Lore: Rhine",
+            "category": "General",
+            "xp": 30,
+            "specialty": "nobles"
+          },
+          {
+            "name": "Stealth",
+            "category": "General",
+            "xp": 5,
+            "specialty": "eavesdropping"
+          },
+          {
+            "name": "Theology: Christian",
+            "category": "Academic",
+            "xp": 5,
+            "specialty": "mortal sin"
+          }
+        ],
+        "virtues_flaws": [
+          {
+            "vf_id": "vf_gentleman_woman",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_entrancement",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_arcane_lore",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_educated",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_premonitions",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_privileged_upbringing",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_avaricious_major",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_black_sheep",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_nocturnal",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_tainted_with_evil",
+            "params": {},
+            "id": ""
+          }
+        ],
+        "spells_known": [],
+        "invented_spells": [],
+        "inventory": [],
+        "silver": 0,
+        "assigned_lab_id": null,
+        "background": {
+          "player": "",
+          "player_id": null,
+          "setting": "",
+          "size": 0,
+          "confidence_score": 1,
+          "confidence_points": 3,
+          "true_faith_score": 0,
+          "faith_points": 0,
+          "birth_name": "",
+          "year_born": 1191,
+          "race_nationality": "",
+          "place_of_origin": "",
+          "religion": "",
+          "title_profession": ""
+        },
+        "description": {
+          "height": null,
+          "weight": null,
+          "hair": "",
+          "eyes": "",
+          "handedness": "right",
+          "physical_description": "",
+          "biography": "Age 29. The baron of Sch\u00f6nburg's bastard, schooled in Cologne, where a mentor drew him into the Dark Arts. He serves the Devil for gain, bewitches people into obeying him, senses when he is about to be exposed, and works small natural magics: Intelligence + Infernal Lore + aura + stress die, cast like a Ritual (time and vis), with Shape and Material bonuses from stones and the like. A villain, not a player character.\nFist: Init -1, Atk +1, Def +1, Dam 0. Soak 0; Encumbrance 0 (0).\nEquipment: fine clothes, a sword he cannot use, pouches of herbs, odd stones and animal parts; about 10 pawns of mixed vis."
+        },
+        "aging": {
+          "decrepitude": 0,
+          "effects": "",
+          "warping_score": 0,
+          "warping_points": 0,
+          "longevity_modifier": 0,
+          "longevity_year": null,
+          "longevity_by": "",
+          "decrepitude_points": 0,
+          "aging_points": {},
+          "apparent_age": null,
+          "recovering": "",
+          "twilight_until": ""
+        },
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "personality_traits": [
+          {
+            "name": "Arrogant",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Greedy",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Scheming",
+            "score": 2,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [
+          {
+            "name": "Little More than a Thug",
+            "score": 2,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "raw_vis": {},
+        "hermetic": {
+          "house": "",
+          "domus_magna": "",
+          "primus": "",
+          "parens": "",
+          "covenant_of_apprenticeship": "",
+          "age_of_apprenticeship": null,
+          "wizards_sigil": ""
+        },
+        "diary": [],
+        "tractatus_read": [],
+        "summae_read": [],
+        "lab_text_access": {},
+        "breakthroughs": [],
+        "grog_year": null,
+        "labor_points": 0,
+        "workshop_innovation": 0,
+        "workshop_raw_materials": 0,
+        "progress": [],
+        "formulas": [],
+        "ordeals": [],
+        "in_creation": false,
+        "creation_xp": [],
+        "creation_conditions": {
+          "lab_seasons": 0,
+          "aura": 3,
+          "lab_quality": 0,
+          "living_conditions": 1,
+          "aged_to": null
+        },
+        "portrait": "",
+        "detail": "Full",
+        "summary": "The bastard son of Baron Sch\u00f6nburg and the villain of the Gorge, not for a player. Tall and handsome with shoulder-length black hair, clean-shaven, dressed in costly black or dark green with showy jewellery bearing his device, an eagle displayed pierced through the heart by a spear, and startling green eyes that captivate women (Int +3, Pre +2). A gentleman with the Entrancement Virtue, Arcane Lore, Educated, Premonitions and a Privileged Upbringing; Avaricious, a Black Sheep, Nocturnal and Tainted with Evil; locally reputed little more than a thug. Entrancement 5 (women), Infernal Lore 4, Charm 4, Magic Lore 3, Philosophiae 3, Premonitions 3, Latin 3, Guile 3, Rhine Lore 3, Faerie Lore 1 (the Loreley); a useless fighter who carries a sword for show. He owns some 10 pawns of mixed vis and pouches of herbs, odd stones and animal parts.\n\nSchooled in Cologne, where a mentor initiated him into the Dark Arts, he was then given the Pfalz tolls by his father and runs a gang of ruffians there in what is really piracy, gate-crashing noble gatherings to behave disgracefully.\n\nSecrets\nA committed servant of the Devil for the gains rather than from fervour; his greed grew with his initiation, and people shun him, which he does not mind since his bewitchment compels obedience, used frivolously. Premonitions warn him when exposure nears. He works minor natural magics as rituals needing time and vis, with Intelligence, Infernal Lore, the aura and a stress die and Shape and Material bonuses from gemstones, and might grow to rival a magus by dealing with a demon directly. He robbed the burial mounds on the upstream island and woke their guardians, and he is behind the attack on his half-sister Karlotte.",
+        "links": []
+      },
+      {
+        "id": "wolkan",
+        "name": "Wolkan",
+        "type": "grog",
+        "covenant_id": null,
+        "characteristics": {
+          "intelligence": 1,
+          "perception": 1,
+          "strength": 1,
+          "stamina": 1,
+          "presence": -1,
+          "communication": 1,
+          "dexterity": 2,
+          "quickness": 2
+        },
+        "arts": {},
+        "abilities": [
+          {
+            "name": "Athletics",
+            "category": "General",
+            "xp": 5,
+            "specialty": "escaping"
+          },
+          {
+            "name": "Awareness",
+            "category": "General",
+            "xp": 5,
+            "specialty": "being watched"
+          },
+          {
+            "name": "Brawl",
+            "category": "General",
+            "xp": 15,
+            "specialty": "dagger"
+          },
+          {
+            "name": "Carouse",
+            "category": "General",
+            "xp": 5,
+            "specialty": "putting at ease"
+          },
+          {
+            "name": "Charm",
+            "category": "General",
+            "xp": 15,
+            "specialty": "getting out of trouble"
+          },
+          {
+            "name": "Folk Ken",
+            "category": "General",
+            "xp": 15,
+            "specialty": "criminals"
+          },
+          {
+            "name": "Living Language: High German",
+            "category": "General",
+            "xp": 75,
+            "specialty": "criminal cant"
+          },
+          {
+            "name": "Guile",
+            "category": "General",
+            "xp": 15,
+            "specialty": "to authorities"
+          },
+          {
+            "name": "Intrigue",
+            "category": "General",
+            "xp": 30,
+            "specialty": "outlaws"
+          },
+          {
+            "name": "Leadership",
+            "category": "General",
+            "xp": 5,
+            "specialty": "thieves"
+          },
+          {
+            "name": "Legerdemain",
+            "category": "General",
+            "xp": 30,
+            "specialty": "filching"
+          },
+          {
+            "name": "Profession: Boatman",
+            "category": "General",
+            "xp": 15,
+            "specialty": "rowing"
+          },
+          {
+            "name": "Area Lore: Rhine",
+            "category": "General",
+            "xp": 30,
+            "specialty": "criminal types"
+          },
+          {
+            "name": "Single Weapon",
+            "category": "Martial",
+            "xp": 50,
+            "specialty": "short sword"
+          },
+          {
+            "name": "Stealth",
+            "category": "General",
+            "xp": 30,
+            "specialty": "in towns"
+          },
+          {
+            "name": "Survival",
+            "category": "General",
+            "xp": 15,
+            "specialty": "in towns"
+          },
+          {
+            "name": "Swim",
+            "category": "General",
+            "xp": 5,
+            "specialty": "holding breath"
+          },
+          {
+            "name": "Thrown Weapon",
+            "category": "Martial",
+            "xp": 30,
+            "specialty": "knife"
+          }
+        ],
+        "virtues_flaws": [
+          {
+            "vf_id": "vf_branded_criminal",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_improved_characteristics",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_social_contacts",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_ambitious",
+            "params": {},
+            "id": ""
+          }
+        ],
+        "spells_known": [],
+        "invented_spells": [],
+        "inventory": [],
+        "silver": 0,
+        "assigned_lab_id": null,
+        "background": {
+          "player": "",
+          "player_id": null,
+          "setting": "",
+          "size": 0,
+          "confidence_score": 0,
+          "confidence_points": 0,
+          "true_faith_score": 0,
+          "faith_points": 0,
+          "birth_name": "",
+          "year_born": 1197,
+          "race_nationality": "",
+          "place_of_origin": "",
+          "religion": "",
+          "title_profession": ""
+        },
+        "description": {
+          "height": null,
+          "weight": null,
+          "hair": "",
+          "eyes": "",
+          "handedness": "right",
+          "physical_description": "",
+          "biography": "Age 23. A thief branded on the cheek, let out of the Pfalz jail to collect Lord Robert's tolls, unaware they are unjust. He knows the toll trade and the dripstone sales, and has criminal contacts along the Rhine he hopes to lead.\nShort sword: Init +3, Atk +10, Def +8, Dam +6. Thrown knife: Init +2, Atk +7, Def +6, Dam +3. Dagger: Init +2, Atk +7, Def +5, Dam +4. Fist: Init +2, Atk +4, Def +4, Dam +1. Soak +1; Encumbrance 0 (1).\nEquipment: 2 daggers, short sword, change of clothes."
+        },
+        "aging": {
+          "decrepitude": 0,
+          "effects": "",
+          "warping_score": 0,
+          "warping_points": 0,
+          "longevity_modifier": 0,
+          "longevity_year": null,
+          "longevity_by": "",
+          "decrepitude_points": 0,
+          "aging_points": {},
+          "apparent_age": null,
+          "recovering": "",
+          "twilight_until": ""
+        },
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "personality_traits": [
+          {
+            "name": "Self-Interest",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Loyal",
+            "score": 0,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Brave",
+            "score": -1,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "raw_vis": {},
+        "hermetic": {
+          "house": "",
+          "domus_magna": "",
+          "primus": "",
+          "parens": "",
+          "covenant_of_apprenticeship": "",
+          "age_of_apprenticeship": null,
+          "wizards_sigil": ""
+        },
+        "diary": [],
+        "tractatus_read": [],
+        "summae_read": [],
+        "lab_text_access": {},
+        "breakthroughs": [],
+        "grog_year": null,
+        "labor_points": 0,
+        "workshop_innovation": 0,
+        "workshop_raw_materials": 0,
+        "progress": [],
+        "formulas": [],
+        "ordeals": [],
+        "in_creation": false,
+        "creation_xp": [],
+        "creation_conditions": {
+          "lab_seasons": 0,
+          "aura": 3,
+          "lab_quality": 0,
+          "living_conditions": 1,
+          "aged_to": null
+        },
+        "portrait": "",
+        "detail": "Full",
+        "summary": "A branded thief and a possible grog, one of Robert's band on Pfalz Island. He would be handsome but for the livid brand on his cheek, hidden under shoulder-length brown hair; plain dress and a self-assured grace. Branded Criminal; Improved Characteristics and Social Contacts; Ambitious. Short sword (Attack +10, Defence +8, Damage +6) and thrown knife; Legerdemain 3, Stealth 3, Intrigue 3 (outlaws), Thrown Weapon 3, Rhine Lore 3 (criminals), Profession: Boatman 2. Baron Sch\u00f6nburg jailed him on Pfalz for theft and Robert freed him to help take tolls; he has no idea the tolls are unjust or that Robert is more than he seems. He knows the toll system, the dripstone trade against the Loreley, and the petty criminals and mercenaries of the towns up and down the Rhine.\n\nSecrets\nHis own aim is to lead his criminal contacts and get rich, perhaps with the covenant's resources.",
+        "links": []
+      },
+      {
+        "id": "karlotte_sch_nburg",
+        "name": "Karlotte Sch\u00f6nburg",
+        "type": "companion",
+        "covenant_id": null,
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "arts": {},
+        "abilities": [],
+        "virtues_flaws": [],
+        "spells_known": [],
+        "invented_spells": [],
+        "inventory": [],
+        "silver": 0,
+        "assigned_lab_id": null,
+        "background": {
+          "player": "",
+          "player_id": null,
+          "setting": "",
+          "size": 0,
+          "confidence_score": 0,
+          "confidence_points": 0,
+          "true_faith_score": 0,
+          "faith_points": 0,
+          "birth_name": "",
+          "year_born": null,
+          "race_nationality": "",
+          "place_of_origin": "",
+          "religion": "",
+          "title_profession": ""
+        },
+        "description": {
+          "height": null,
+          "weight": null,
+          "hair": "",
+          "eyes": "",
+          "handedness": "right",
+          "physical_description": "",
+          "biography": ""
+        },
+        "aging": {
+          "decrepitude": 0,
+          "effects": "",
+          "warping_score": 0,
+          "warping_points": 0,
+          "longevity_modifier": 0,
+          "longevity_year": null,
+          "longevity_by": "",
+          "decrepitude_points": 0,
+          "aging_points": {},
+          "apparent_age": null,
+          "recovering": "",
+          "twilight_until": ""
+        },
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "personality_traits": [],
+        "reputations": [],
+        "raw_vis": {},
+        "hermetic": {
+          "house": "",
+          "domus_magna": "",
+          "primus": "",
+          "parens": "",
+          "covenant_of_apprenticeship": "",
+          "age_of_apprenticeship": null,
+          "wizards_sigil": ""
+        },
+        "diary": [],
+        "tractatus_read": [],
+        "summae_read": [],
+        "lab_text_access": {},
+        "breakthroughs": [],
+        "grog_year": null,
+        "labor_points": 0,
+        "workshop_innovation": 0,
+        "workshop_raw_materials": 0,
+        "progress": [],
+        "formulas": [],
+        "ordeals": [],
+        "in_creation": false,
+        "creation_xp": [],
+        "creation_conditions": {
+          "lab_seasons": 0,
+          "aura": 3,
+          "lab_quality": 0,
+          "living_conditions": 1,
+          "aged_to": null
+        },
+        "portrait": "",
+        "detail": "Sketch",
+        "summary": "Baron Sch\u00f6nburg's daughter and heir, a striking red-haired young woman with more than the family's usual share of faerie blood, who knows her half-brother and rival Robert for what he is. On a recent journey she was attacked by an unknown dark figure in the woods west of the castle, and her seemingly slight wounds have left her in a coma from which nothing wakes her. The fae of Dark Summer will reveal a cure for a price.\n\nSecrets\nRobert is behind the attack; proving it and curing her wins the baron's gratitude and with it Pfalz Island.",
+        "links": []
+      },
+      {
+        "id": "ludold",
+        "name": "Ludold",
+        "type": "companion",
+        "covenant_id": null,
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "arts": {},
+        "abilities": [],
+        "virtues_flaws": [],
+        "spells_known": [],
+        "invented_spells": [],
+        "inventory": [],
+        "silver": 0,
+        "assigned_lab_id": null,
+        "background": {
+          "player": "",
+          "player_id": null,
+          "setting": "",
+          "size": 0,
+          "confidence_score": 0,
+          "confidence_points": 0,
+          "true_faith_score": 0,
+          "faith_points": 0,
+          "birth_name": "",
+          "year_born": null,
+          "race_nationality": "",
+          "place_of_origin": "",
+          "religion": "",
+          "title_profession": ""
+        },
+        "description": {
+          "height": null,
+          "weight": null,
+          "hair": "",
+          "eyes": "",
+          "handedness": "right",
+          "physical_description": "",
+          "biography": ""
+        },
+        "aging": {
+          "decrepitude": 0,
+          "effects": "",
+          "warping_score": 0,
+          "warping_points": 0,
+          "longevity_modifier": 0,
+          "longevity_year": null,
+          "longevity_by": "",
+          "decrepitude_points": 0,
+          "aging_points": {},
+          "apparent_age": null,
+          "recovering": "",
+          "twilight_until": ""
+        },
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "personality_traits": [],
+        "reputations": [],
+        "raw_vis": {},
+        "hermetic": {
+          "house": "",
+          "domus_magna": "",
+          "primus": "",
+          "parens": "",
+          "covenant_of_apprenticeship": "",
+          "age_of_apprenticeship": null,
+          "wizards_sigil": ""
+        },
+        "diary": [],
+        "tractatus_read": [],
+        "summae_read": [],
+        "lab_text_access": {},
+        "breakthroughs": [],
+        "grog_year": null,
+        "labor_points": 0,
+        "workshop_innovation": 0,
+        "workshop_raw_materials": 0,
+        "progress": [],
+        "formulas": [],
+        "ordeals": [],
+        "in_creation": false,
+        "creation_xp": [],
+        "creation_conditions": {
+          "lab_seasons": 0,
+          "aura": 3,
+          "lab_quality": 0,
+          "living_conditions": 1,
+          "aged_to": null
+        },
+        "portrait": "",
+        "detail": "Sketch",
+        "summary": "Elder of Waldheim, gaunt and white-haired with a necklace of bones: a cunning man and lesser hedge wizard of minor potions and charms, whose hut is shelved with bones, herbs, mushrooms and preserved organs, some perhaps vis, which he gathers round the glade. He will trade potions, charms or vis to magi who find a wife for his son Torven.",
+        "links": []
+      },
+      {
+        "id": "torven",
+        "name": "Torven",
+        "type": "companion",
+        "covenant_id": null,
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 1,
+          "strength": 0,
+          "stamina": 1,
+          "presence": -1,
+          "communication": -1,
+          "dexterity": 3,
+          "quickness": 1
+        },
+        "arts": {},
+        "abilities": [
+          {
+            "name": "Animal Ken",
+            "category": "Supernatural",
+            "xp": 30,
+            "specialty": "wolves"
+          },
+          {
+            "name": "Animal Handling",
+            "category": "General",
+            "xp": 30,
+            "specialty": "pigs"
+          },
+          {
+            "name": "Athletics",
+            "category": "General",
+            "xp": 15,
+            "specialty": "in forest"
+          },
+          {
+            "name": "Awareness",
+            "category": "General",
+            "xp": 15,
+            "specialty": "while hunting"
+          },
+          {
+            "name": "Bows",
+            "category": "Martial",
+            "xp": 15,
+            "specialty": "short bow"
+          },
+          {
+            "name": "Brawl",
+            "category": "General",
+            "xp": 15,
+            "specialty": "breaking holds"
+          },
+          {
+            "name": "Charm",
+            "category": "General",
+            "xp": 5,
+            "specialty": "peasants"
+          },
+          {
+            "name": "Chirurgy",
+            "category": "General",
+            "xp": 5,
+            "specialty": "animals"
+          },
+          {
+            "name": "Faerie Lore",
+            "category": "Arcane",
+            "xp": 15,
+            "specialty": "Bright Winter"
+          },
+          {
+            "name": "Forest Lore",
+            "category": "Arcane",
+            "xp": 30,
+            "specialty": "Westerwald"
+          },
+          {
+            "name": "Living Language: High German",
+            "category": "General",
+            "xp": 75,
+            "specialty": "Franconian"
+          },
+          {
+            "name": "Hunt",
+            "category": "General",
+            "xp": 30,
+            "specialty": "roe deer"
+          },
+          {
+            "name": "Leadership",
+            "category": "General",
+            "xp": 5,
+            "specialty": "Waldheim"
+          },
+          {
+            "name": "Magic Lore",
+            "category": "Arcane",
+            "xp": 15,
+            "specialty": "herbs"
+          },
+          {
+            "name": "Stealth",
+            "category": "General",
+            "xp": 30,
+            "specialty": "in forests"
+          },
+          {
+            "name": "Survival",
+            "category": "General",
+            "xp": 30,
+            "specialty": "forests"
+          },
+          {
+            "name": "Swim",
+            "category": "General",
+            "xp": 15,
+            "specialty": "rivers"
+          },
+          {
+            "name": "Teaching",
+            "category": "General",
+            "xp": 15,
+            "specialty": "wilderness skills"
+          },
+          {
+            "name": "Wilderness Sense",
+            "category": "Supernatural",
+            "xp": 30,
+            "specialty": "forest"
+          }
+        ],
+        "virtues_flaws": [
+          {
+            "vf_id": "vf_wise_one",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_animal_ken",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_intuition",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_latent_magic_ability",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_wilderness_sense",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_magical_air",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_magical_being_companion",
+            "params": {
+              "being": "animal"
+            },
+            "id": ""
+          },
+          {
+            "vf_id": "vf_reclusive",
+            "params": {},
+            "id": ""
+          }
+        ],
+        "spells_known": [],
+        "invented_spells": [],
+        "inventory": [],
+        "silver": 0,
+        "assigned_lab_id": null,
+        "background": {
+          "player": "",
+          "player_id": null,
+          "setting": "",
+          "size": 0,
+          "confidence_score": 1,
+          "confidence_points": 3,
+          "true_faith_score": 0,
+          "faith_points": 0,
+          "birth_name": "",
+          "year_born": 1196,
+          "race_nationality": "",
+          "place_of_origin": "",
+          "religion": "",
+          "title_profession": ""
+        },
+        "description": {
+          "height": null,
+          "weight": null,
+          "hair": "",
+          "eyes": "",
+          "handedness": "right",
+          "physical_description": "",
+          "biography": "Age 24. Son of Waldheim's elder and its reluctant leader, happier with animals than people. His companion Red-Hame is a faerie wolf (Faerie Might 12), the Winter Court's messenger. His Latent Magic Ability, which he cannot control, sometimes brings wolf packs to his aid.\nShort bow: Init 0, Atk +9, Def +4, Dam +6. Knife: Init +1, Atk +6, Def +3, Dam +2. Fist: Init +1, Atk +5, Def +3, Dam 0. Soak +2; Encumbrance 2 (2).\nEquipment: plain brown clothes, wolf-fur jerkin, bow."
+        },
+        "aging": {
+          "decrepitude": 0,
+          "effects": "",
+          "warping_score": 0,
+          "warping_points": 0,
+          "longevity_modifier": 0,
+          "longevity_year": null,
+          "longevity_by": "",
+          "decrepitude_points": 0,
+          "aging_points": {},
+          "apparent_age": null,
+          "recovering": "",
+          "twilight_until": ""
+        },
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "personality_traits": [
+          {
+            "name": "Brave",
+            "score": 2,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Loner",
+            "score": 2,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Loyal to Waldheim",
+            "score": 2,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [
+          {
+            "name": "Wise One",
+            "score": 1,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "raw_vis": {},
+        "hermetic": {
+          "house": "",
+          "domus_magna": "",
+          "primus": "",
+          "parens": "",
+          "covenant_of_apprenticeship": "",
+          "age_of_apprenticeship": null,
+          "wizards_sigil": ""
+        },
+        "diary": [],
+        "tractatus_read": [],
+        "summae_read": [],
+        "lab_text_access": {},
+        "breakthroughs": [],
+        "grog_year": null,
+        "labor_points": 0,
+        "workshop_innovation": 0,
+        "workshop_raw_materials": 0,
+        "progress": [],
+        "formulas": [],
+        "ordeals": [],
+        "in_creation": false,
+        "creation_xp": [],
+        "creation_conditions": {
+          "lab_seasons": 0,
+          "aura": 3,
+          "lab_quality": 0,
+          "living_conditions": 1,
+          "aged_to": null
+        },
+        "portrait": "",
+        "detail": "Full",
+        "summary": "Ludold's son, the Wise One of Waldheim and a possible companion: unassuming, with scruffy brown hair, a patchy beard and a wolf-fur jerkin (Dex +3). Animal Ken, Intuition, Latent Magical Ability and Wilderness Sense; a Magical Air; a Magical Animal Companion and Reclusive; locally reputed a Wise One. Short bow (Attack +9); Animal Ken 3 (wolves), Animal Handling 3 (pigs), Forest Lore 3 (Westerwald), Hunt 3, Stealth 3, Survival 3, Wilderness Sense 3, Faerie Lore 2 (Bright Winter), Magic Lore 2 (herbs), Teaching 2. The villagers revere him for befriending and speaking with animals and treat him as their unofficial leader, a role he hates; he is poor at talk and makes strangers wary, but animals trust him, and he would rather be deep in the forest with Red-Hame, the faerie wolf who brings the Winter Court's wishes through him. He feels responsible for the village and defends it first; his hunches have saved it from disasters natural and human, wolf packs appear to help him in dire need, and the glade's creatures, the tame wild pigs among them, obey an unspoken command of his. He learned the bow from his uncle, a Nassau forester.",
+        "links": []
+      },
+      {
+        "id": "isaac",
+        "name": "Isaac",
+        "type": "companion",
+        "covenant_id": null,
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "arts": {},
+        "abilities": [],
+        "virtues_flaws": [],
+        "spells_known": [],
+        "invented_spells": [],
+        "inventory": [],
+        "silver": 0,
+        "assigned_lab_id": null,
+        "background": {
+          "player": "",
+          "player_id": null,
+          "setting": "",
+          "size": 0,
+          "confidence_score": 0,
+          "confidence_points": 0,
+          "true_faith_score": 0,
+          "faith_points": 0,
+          "birth_name": "",
+          "year_born": null,
+          "race_nationality": "",
+          "place_of_origin": "",
+          "religion": "",
+          "title_profession": ""
+        },
+        "description": {
+          "height": null,
+          "weight": null,
+          "hair": "",
+          "eyes": "",
+          "handedness": "right",
+          "physical_description": "",
+          "biography": ""
+        },
+        "aging": {
+          "decrepitude": 0,
+          "effects": "",
+          "warping_score": 0,
+          "warping_points": 0,
+          "longevity_modifier": 0,
+          "longevity_year": null,
+          "longevity_by": "",
+          "decrepitude_points": 0,
+          "aging_points": {},
+          "apparent_age": null,
+          "recovering": "",
+          "twilight_until": ""
+        },
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "personality_traits": [],
+        "reputations": [],
+        "raw_vis": {},
+        "hermetic": {
+          "house": "",
+          "domus_magna": "",
+          "primus": "",
+          "parens": "",
+          "covenant_of_apprenticeship": "",
+          "age_of_apprenticeship": null,
+          "wizards_sigil": ""
+        },
+        "diary": [],
+        "tractatus_read": [],
+        "summae_read": [],
+        "lab_text_access": {},
+        "breakthroughs": [],
+        "grog_year": null,
+        "labor_points": 0,
+        "workshop_innovation": 0,
+        "workshop_raw_materials": 0,
+        "progress": [],
+        "formulas": [],
+        "ordeals": [],
+        "in_creation": false,
+        "creation_xp": [],
+        "creation_conditions": {
+          "lab_seasons": 0,
+          "aura": 3,
+          "lab_quality": 0,
+          "living_conditions": 1,
+          "aged_to": null
+        },
+        "portrait": "",
+        "detail": "Sketch",
+        "summary": "Manager of the wine shop on Trier's Fleischstrasse, the old front of Treverorum, for his uncle David ben David. He knows nothing of magi, sells wine to Gentiles under the recently relaxed rabbinical rule, and was told by the shop's last owner that the bricked-up passage in the cellar is haunted.",
+        "links": []
+      },
+      {
+        "id": "david_ben_david",
+        "name": "David ben David",
+        "type": "companion",
+        "covenant_id": null,
+        "characteristics": {
+          "intelligence": 2,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 1,
+          "presence": 0,
+          "communication": 2,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "arts": {},
+        "abilities": [
+          {
+            "name": "Dead Language: Aramaic",
+            "category": "Academic",
+            "xp": 30,
+            "specialty": "Torah"
+          },
+          {
+            "name": "Animal Handling",
+            "category": "General",
+            "xp": 15,
+            "specialty": "horses"
+          },
+          {
+            "name": "Artes Liberales",
+            "category": "Academic",
+            "xp": 30,
+            "specialty": "accounts"
+          },
+          {
+            "name": "Awareness",
+            "category": "General",
+            "xp": 15,
+            "specialty": "faulty goods"
+          },
+          {
+            "name": "Bargain",
+            "category": "General",
+            "xp": 75,
+            "specialty": "luxuries"
+          },
+          {
+            "name": "Area Lore: Bavaria",
+            "category": "General",
+            "xp": 15,
+            "specialty": "towns"
+          },
+          {
+            "name": "Carouse",
+            "category": "General",
+            "xp": 15,
+            "specialty": "amongst Jews"
+          },
+          {
+            "name": "Charm",
+            "category": "General",
+            "xp": 15,
+            "specialty": "gaining trust"
+          },
+          {
+            "name": "Civil and Canon Law",
+            "category": "Academic",
+            "xp": 30,
+            "specialty": "regarding merchants"
+          },
+          {
+            "name": "Etiquette",
+            "category": "General",
+            "xp": 15,
+            "specialty": "gentlemen"
+          },
+          {
+            "name": "Folk Ken",
+            "category": "General",
+            "xp": 30,
+            "specialty": "empathizing"
+          },
+          {
+            "name": "Living Language: French",
+            "category": "General",
+            "xp": 15,
+            "specialty": "trading"
+          },
+          {
+            "name": "Guile",
+            "category": "General",
+            "xp": 15,
+            "specialty": "perceiving cheats"
+          },
+          {
+            "name": "Living Language: High German",
+            "category": "General",
+            "xp": 105,
+            "specialty": "Yiddish"
+          },
+          {
+            "name": "Intrigue",
+            "category": "General",
+            "xp": 30,
+            "specialty": "merchants"
+          },
+          {
+            "name": "Living Language: Italian",
+            "category": "General",
+            "xp": 15,
+            "specialty": "trading"
+          },
+          {
+            "name": "Dead Language: Latin",
+            "category": "Academic",
+            "xp": 30,
+            "specialty": "bargaining"
+          },
+          {
+            "name": "Leadership",
+            "category": "General",
+            "xp": 5,
+            "specialty": "amongst Jews"
+          },
+          {
+            "name": "Living Language: Low German",
+            "category": "General",
+            "xp": 15,
+            "specialty": "trading"
+          },
+          {
+            "name": "Medicine",
+            "category": "Academic",
+            "xp": 15,
+            "specialty": "infected wounds"
+          },
+          {
+            "name": "Philosophiae",
+            "category": "Academic",
+            "xp": 15,
+            "specialty": "debate"
+          },
+          {
+            "name": "Profession: Merchant",
+            "category": "General",
+            "xp": 50,
+            "specialty": "luxury goods"
+          },
+          {
+            "name": "Profession: Ship's Captain",
+            "category": "General",
+            "xp": 15,
+            "specialty": "on the Rhine"
+          },
+          {
+            "name": "Area Lore: Rhine",
+            "category": "General",
+            "xp": 30,
+            "specialty": "towns"
+          },
+          {
+            "name": "Ride",
+            "category": "General",
+            "xp": 5,
+            "specialty": "good roads"
+          },
+          {
+            "name": "Area Lore: Swabia",
+            "category": "General",
+            "xp": 15,
+            "specialty": "towns"
+          },
+          {
+            "name": "Swim",
+            "category": "General",
+            "xp": 15,
+            "specialty": "rivers"
+          },
+          {
+            "name": "Teaching",
+            "category": "General",
+            "xp": 15,
+            "specialty": "Academic Abilities"
+          },
+          {
+            "name": "Theology: Judaism",
+            "category": "Academic",
+            "xp": 30,
+            "specialty": "duties"
+          }
+        ],
+        "virtues_flaws": [
+          {
+            "vf_id": "vf_merchant",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_wealthy",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_educated",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_puissant_ability",
+            "params": {
+              "ability": "bargain"
+            },
+            "id": ""
+          },
+          {
+            "vf_id": "vf_social_contacts",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_well_traveled",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_pious_major",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_outsider_major",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_judged_unfairly",
+            "params": {},
+            "id": ""
+          }
+        ],
+        "spells_known": [],
+        "invented_spells": [],
+        "inventory": [],
+        "silver": 0,
+        "assigned_lab_id": null,
+        "background": {
+          "player": "",
+          "player_id": null,
+          "setting": "",
+          "size": 0,
+          "confidence_score": 1,
+          "confidence_points": 3,
+          "true_faith_score": 0,
+          "faith_points": 0,
+          "birth_name": "",
+          "year_born": 1190,
+          "race_nationality": "",
+          "place_of_origin": "",
+          "religion": "",
+          "title_profession": ""
+        },
+        "description": {
+          "height": null,
+          "weight": null,
+          "hair": "",
+          "eyes": "",
+          "handedness": "right",
+          "physical_description": "",
+          "biography": "Age 30. A rich Jewish merchant of Trier trading between Trier, Koblenz, Bingen and Mainz, schooled at the Jewish academy in Mainz; married to Sophie, no children. He will not bend his faith for an easier life, and may soon be asked to become a rabbi. His nephew Isaac runs the wine shop above Treverorum for him.\nDodge: Init 0, Def 0. Soak +1; Encumbrance 0 (0).\nEquipment: plain merchant's clothes with the Jewish badge, skull cap."
+        },
+        "aging": {
+          "decrepitude": 0,
+          "effects": "",
+          "warping_score": 0,
+          "warping_points": 0,
+          "longevity_modifier": 0,
+          "longevity_year": null,
+          "longevity_by": "",
+          "decrepitude_points": 0,
+          "aging_points": {},
+          "apparent_age": 30,
+          "recovering": "",
+          "twilight_until": ""
+        },
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "personality_traits": [
+          {
+            "name": "Devout Jew",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Honest",
+            "score": 2,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Insensitive to Insults",
+            "score": 2,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [
+          {
+            "name": "Jew",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "raw_vis": {},
+        "hermetic": {
+          "house": "",
+          "domus_magna": "",
+          "primus": "",
+          "parens": "",
+          "covenant_of_apprenticeship": "",
+          "age_of_apprenticeship": null,
+          "wizards_sigil": ""
+        },
+        "diary": [],
+        "tractatus_read": [],
+        "summae_read": [],
+        "lab_text_access": {},
+        "breakthroughs": [],
+        "grog_year": null,
+        "labor_points": 0,
+        "workshop_innovation": 0,
+        "workshop_raw_materials": 0,
+        "progress": [],
+        "formulas": [],
+        "ordeals": [],
+        "in_creation": false,
+        "creation_xp": [],
+        "creation_conditions": {
+          "lab_seasons": 0,
+          "aura": 3,
+          "lab_quality": 0,
+          "living_conditions": 1,
+          "aged_to": null
+        },
+        "portrait": "",
+        "detail": "Full",
+        "summary": "A prominent Jewish merchant of Trier and a possible companion, owner of the wine shop over Treverorum: of average height with short black hair and long side-curls, skull-cap and prayer shawl worn openly, moderate dress with the wheel badge of Jewry (Int +2, Com +2). A wealthy merchant; Educated, Puissant Bargain, Social Contacts and Well-Travelled; Pious, an Outsider, Judged Unfairly; locally reputed simply as a Jew. Bargain 5+2, High German 6 (Yiddish), Profession: Merchant 4, Aramaic 3, Latin 3, Artes Liberales 3, Civil and Canon Law 3, Folk Ken 3, Intrigue 3, Rhine Lore 3, Jewish Theology 3, Profession: Ship's Captain 2, Medicine 2, French, Italian and Low German 2. From a still wealthier family trading between Trier, Koblenz, Bingen and Mainz, he travelled with father and uncles as a boy, entered the Jewish academy at Mainz at thirteen, and took over the business and married Sophie when his father died ten years ago; they have no children yet. He will not soften his devotion for his Christian rivals' hatred, is level-headed and thick-skinned, and is likely soon to be asked to serve as a rabbi.",
+        "links": []
+      },
+      {
+        "id": "jarvis",
+        "name": "Jarvis",
+        "type": "companion",
+        "covenant_id": null,
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "arts": {},
+        "abilities": [],
+        "virtues_flaws": [],
+        "spells_known": [],
+        "invented_spells": [],
+        "inventory": [],
+        "silver": 0,
+        "assigned_lab_id": null,
+        "background": {
+          "player": "",
+          "player_id": null,
+          "setting": "",
+          "size": 0,
+          "confidence_score": 0,
+          "confidence_points": 0,
+          "true_faith_score": 0,
+          "faith_points": 0,
+          "birth_name": "",
+          "year_born": null,
+          "race_nationality": "",
+          "place_of_origin": "",
+          "religion": "",
+          "title_profession": ""
+        },
+        "description": {
+          "height": null,
+          "weight": null,
+          "hair": "",
+          "eyes": "",
+          "handedness": "right",
+          "physical_description": "",
+          "biography": ""
+        },
+        "aging": {
+          "decrepitude": 0,
+          "effects": "",
+          "warping_score": 0,
+          "warping_points": 0,
+          "longevity_modifier": 0,
+          "longevity_year": null,
+          "longevity_by": "",
+          "decrepitude_points": 0,
+          "aging_points": {},
+          "apparent_age": null,
+          "recovering": "",
+          "twilight_until": ""
+        },
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "personality_traits": [],
+        "reputations": [],
+        "raw_vis": {},
+        "hermetic": {
+          "house": "",
+          "domus_magna": "",
+          "primus": "",
+          "parens": "",
+          "covenant_of_apprenticeship": "",
+          "age_of_apprenticeship": null,
+          "wizards_sigil": ""
+        },
+        "diary": [],
+        "tractatus_read": [],
+        "summae_read": [],
+        "lab_text_access": {},
+        "breakthroughs": [],
+        "grog_year": null,
+        "labor_points": 0,
+        "workshop_innovation": 0,
+        "workshop_raw_materials": 0,
+        "progress": [],
+        "formulas": [],
+        "ordeals": [],
+        "in_creation": false,
+        "creation_xp": [],
+        "creation_conditions": {
+          "lab_seasons": 0,
+          "aura": 3,
+          "lab_quality": 0,
+          "living_conditions": 1,
+          "aged_to": null
+        },
+        "portrait": "",
+        "detail": "Sketch",
+        "summary": "A forester of Semita Errabunda, suggested as a companion for the Gorge saga.",
+        "links": []
+      },
+      {
+        "id": "albertus_magnus",
+        "name": "Albertus Magnus",
+        "type": "companion",
+        "covenant_id": null,
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "arts": {},
+        "abilities": [],
+        "virtues_flaws": [],
+        "spells_known": [],
+        "invented_spells": [],
+        "inventory": [],
+        "silver": 0,
+        "assigned_lab_id": null,
+        "background": {
+          "player": "",
+          "player_id": null,
+          "setting": "",
+          "size": 0,
+          "confidence_score": 0,
+          "confidence_points": 0,
+          "true_faith_score": 0,
+          "faith_points": 0,
+          "birth_name": "",
+          "year_born": 1206,
+          "race_nationality": "",
+          "place_of_origin": "",
+          "religion": "",
+          "title_profession": ""
+        },
+        "description": {
+          "height": null,
+          "weight": null,
+          "hair": "",
+          "eyes": "",
+          "handedness": "right",
+          "physical_description": "",
+          "biography": ""
+        },
+        "aging": {
+          "decrepitude": 0,
+          "effects": "",
+          "warping_score": 0,
+          "warping_points": 0,
+          "longevity_modifier": 0,
+          "longevity_year": null,
+          "longevity_by": "",
+          "decrepitude_points": 0,
+          "aging_points": {},
+          "apparent_age": null,
+          "recovering": "",
+          "twilight_until": ""
+        },
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "personality_traits": [],
+        "reputations": [],
+        "raw_vis": {},
+        "hermetic": {
+          "house": "",
+          "domus_magna": "",
+          "primus": "",
+          "parens": "",
+          "covenant_of_apprenticeship": "",
+          "age_of_apprenticeship": null,
+          "wizards_sigil": ""
+        },
+        "diary": [],
+        "tractatus_read": [],
+        "summae_read": [],
+        "lab_text_access": {},
+        "breakthroughs": [],
+        "grog_year": null,
+        "labor_points": 0,
+        "workshop_innovation": 0,
+        "workshop_raw_materials": 0,
+        "progress": [],
+        "formulas": [],
+        "ordeals": [],
+        "in_creation": false,
+        "creation_xp": [],
+        "creation_conditions": {
+          "lab_seasons": 0,
+          "aura": 3,
+          "lab_quality": 0,
+          "living_conditions": 1,
+          "aged_to": null
+        },
+        "portrait": "",
+        "detail": "Sketch",
+        "summary": "Albert of Cologne, born in Bavaria in 1206. If history holds he becomes the greatest natural magician and philosopher of his age: schooled at Padua, an early Dominican, a student at Bologna, a teacher at Cologne, Regensburg, Hildesheim, Freiburg and Strassburg, in Paris from 1245 and bishop of Regensburg in 1260, writing on theology, natural science, alchemy, astrology and the divination of dreams and arguing all of them compatible with Christianity. He might meet the magi, or be recruited into the Order.\n\nSecrets\nIn the Divine reading of the curse his counsel is a path to grace.",
+        "links": []
+      },
+      {
+        "id": "tabanus",
+        "name": "Tabanus",
+        "type": "magus",
+        "covenant_id": null,
+        "characteristics": {
+          "intelligence": 3,
+          "perception": 2,
+          "strength": 0,
+          "stamina": 1,
+          "presence": 0,
+          "communication": 1,
+          "dexterity": -2,
+          "quickness": -1
+        },
+        "arts": {
+          "creo": {
+            "xp": 21
+          },
+          "intellego": {
+            "xp": 253
+          },
+          "muto": {
+            "xp": 15
+          },
+          "perdo": {
+            "xp": 15
+          },
+          "rego": {
+            "xp": 15
+          },
+          "animal": {
+            "xp": 15
+          },
+          "aquam": {
+            "xp": 15
+          },
+          "auram": {
+            "xp": 15
+          },
+          "corpus": {
+            "xp": 55
+          },
+          "herbam": {
+            "xp": 15
+          },
+          "ignem": {
+            "xp": 15
+          },
+          "imaginem": {
+            "xp": 15
+          },
+          "mentem": {
+            "xp": 171
+          },
+          "terram": {
+            "xp": 15
+          },
+          "vim": {
+            "xp": 55
+          }
+        },
+        "abilities": [
+          {
+            "name": "Area Lore: Rhine Tribunal",
+            "category": "General",
+            "xp": 30,
+            "specialty": "covenants"
+          },
+          {
+            "name": "Artes Liberales",
+            "category": "Academic",
+            "xp": 5,
+            "specialty": "logic"
+          },
+          {
+            "name": "Athletics",
+            "category": "General",
+            "xp": 15,
+            "specialty": "running"
+          },
+          {
+            "name": "Awareness",
+            "category": "General",
+            "xp": 15,
+            "specialty": "alertness"
+          },
+          {
+            "name": "Brawl",
+            "category": "General",
+            "xp": 15,
+            "specialty": "dodging"
+          },
+          {
+            "name": "Code of Hermes",
+            "category": "Arcane",
+            "xp": 50,
+            "specialty": "evidence"
+          },
+          {
+            "name": "Concentration",
+            "category": "General",
+            "xp": 30,
+            "specialty": "spell concentration"
+          },
+          {
+            "name": "Dead Language: Latin",
+            "category": "Academic",
+            "xp": 50,
+            "specialty": "Hermetic usage"
+          },
+          {
+            "name": "Finesse",
+            "category": "Arcane",
+            "xp": 15,
+            "specialty": "Intellego"
+          },
+          {
+            "name": "Folk Ken",
+            "category": "General",
+            "xp": 30,
+            "specialty": "magi"
+          },
+          {
+            "name": "Living Language: High German",
+            "category": "General",
+            "xp": 75,
+            "specialty": "eloquence"
+          },
+          {
+            "name": "Magic Lore",
+            "category": "Arcane",
+            "xp": 15,
+            "specialty": "regiones"
+          },
+          {
+            "name": "Magic Theory",
+            "category": "Arcane",
+            "xp": 50,
+            "specialty": "spells"
+          },
+          {
+            "name": "Organization Lore: Order of Hermes",
+            "category": "General",
+            "xp": 5,
+            "specialty": "the Rhine Tribunal"
+          },
+          {
+            "name": "Parma Magica",
+            "category": "Arcane",
+            "xp": 50,
+            "specialty": "Mentem"
+          },
+          {
+            "name": "Penetration",
+            "category": "Arcane",
+            "xp": 30,
+            "specialty": "Mentem"
+          },
+          {
+            "name": "Ride",
+            "category": "General",
+            "xp": 15,
+            "specialty": "long journeys"
+          },
+          {
+            "name": "Teaching",
+            "category": "General",
+            "xp": 5,
+            "specialty": "apprentices"
+          }
+        ],
+        "virtues_flaws": [
+          {
+            "vf_id": "vf_the_gift",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_hermetic_magus",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_hermetic_prestige",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_affinity_with_art",
+            "params": {
+              "art": "intellego"
+            },
+            "id": ""
+          },
+          {
+            "vf_id": "vf_clear_thinker",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_infamous",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_rolling_stone",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_proud",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_affinity_with_art",
+            "params": {
+              "art": "mentem"
+            },
+            "id": ""
+          }
+        ],
+        "spells_known": [
+          {
+            "spell_id": "spell_by_his_works",
+            "mastery_score": 0,
+            "mastery_xp": 0,
+            "mastery_abilities": []
+          },
+          {
+            "spell_id": "spell_hunter_s_sense",
+            "mastery_score": 0,
+            "mastery_xp": 0,
+            "mastery_abilities": []
+          },
+          {
+            "spell_id": "spell_call_of_the_rushing_waters",
+            "mastery_score": 0,
+            "mastery_xp": 0,
+            "mastery_abilities": []
+          },
+          {
+            "spell_id": "spell_eyes_of_the_bat",
+            "mastery_score": 0,
+            "mastery_xp": 0,
+            "mastery_abilities": []
+          },
+          {
+            "spell_id": "spell_the_maculate_noblewoman",
+            "mastery_score": 0,
+            "mastery_xp": 0,
+            "mastery_abilities": []
+          },
+          {
+            "spell_id": "spell_probe_nature_s_hidden_lore",
+            "mastery_score": 0,
+            "mastery_xp": 0,
+            "mastery_abilities": []
+          },
+          {
+            "spell_id": "spell_eyes_of_the_flame",
+            "mastery_score": 0,
+            "mastery_xp": 0,
+            "mastery_abilities": []
+          },
+          {
+            "spell_id": "spell_the_brushstrokes_revealed",
+            "mastery_score": 0,
+            "mastery_xp": 0,
+            "mastery_abilities": []
+          },
+          {
+            "spell_id": "spell_perception_of_the_conflicting_motives",
+            "mastery_score": 1,
+            "mastery_xp": 5,
+            "mastery_abilities": [
+              {
+                "name": "Multiple Casting",
+                "level": 0,
+                "xp": 0
+              }
+            ]
+          },
+          {
+            "spell_id": "spell_the_wisdom_of_sleep",
+            "mastery_score": 0,
+            "mastery_xp": 0,
+            "mastery_abilities": []
+          },
+          {
+            "spell_id": "spell_sense_of_magical_power",
+            "mastery_score": 0,
+            "mastery_xp": 0,
+            "mastery_abilities": []
+          },
+          {
+            "spell_id": "spell_scales_of_the_magical_weight",
+            "mastery_score": 0,
+            "mastery_xp": 0,
+            "mastery_abilities": []
+          },
+          {
+            "spell_id": "spell_apollo_s_fearful_gaze",
+            "mastery_score": 0,
+            "mastery_xp": 0,
+            "mastery_abilities": []
+          },
+          {
+            "spell_id": "spell_calm_mind_of_resolute_behavior",
+            "mastery_score": 0,
+            "mastery_xp": 0,
+            "mastery_abilities": []
+          }
+        ],
+        "invented_spells": [],
+        "inventory": [],
+        "silver": 0,
+        "assigned_lab_id": null,
+        "background": {
+          "player": "",
+          "player_id": null,
+          "setting": "",
+          "size": 0,
+          "confidence_score": 1,
+          "confidence_points": 3,
+          "true_faith_score": 0,
+          "faith_points": 0,
+          "birth_name": "",
+          "year_born": 1170,
+          "race_nationality": "",
+          "place_of_origin": "",
+          "religion": "",
+          "title_profession": ""
+        },
+        "description": {
+          "height": null,
+          "weight": null,
+          "hair": "",
+          "eyes": "",
+          "handedness": "right",
+          "physical_description": "",
+          "biography": "Guardians of the Forests: The Rhine Tribunal prints no stat block for this magus. These stats are not an official write-up: they are inferred from the book's description by the creation rules. The storyguide may change them freely. The book gives no age: 50 is assumed from the magus's rank."
+        },
+        "aging": {
+          "decrepitude": 0,
+          "effects": "",
+          "warping_score": 3,
+          "warping_points": 0,
+          "longevity_modifier": 0,
+          "longevity_year": null,
+          "longevity_by": "",
+          "decrepitude_points": 0,
+          "aging_points": {},
+          "apparent_age": null,
+          "recovering": "",
+          "twilight_until": ""
+        },
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "personality_traits": [],
+        "reputations": [],
+        "raw_vis": {},
+        "hermetic": {
+          "house": "house_guernicus",
+          "domus_magna": "",
+          "primus": "",
+          "parens": "",
+          "covenant_of_apprenticeship": "",
+          "age_of_apprenticeship": null,
+          "wizards_sigil": ""
+        },
+        "diary": [],
+        "tractatus_read": [],
+        "summae_read": [],
+        "lab_text_access": {},
+        "breakthroughs": [],
+        "grog_year": null,
+        "labor_points": 0,
+        "workshop_innovation": 0,
+        "workshop_raw_materials": 0,
+        "progress": [],
+        "formulas": [],
+        "ordeals": [],
+        "in_creation": false,
+        "creation_xp": [],
+        "creation_conditions": {
+          "lab_seasons": 0,
+          "aura": 3,
+          "lab_quality": 0,
+          "living_conditions": 1,
+          "aged_to": null
+        },
+        "portrait": "",
+        "detail": "Full",
+        "summary": "Quaesitor of House Guernicus, a peregrinator sent to the Rhine about ten years ago because the House thought its presence here weak. His evidence once Marched a Hawthorn Gild magus on what many called a technicality, and he is unpopular, that gild especially; he moves from covenant to covenant every few years, preferring young covenants that will not try to browbeat him. He lately left Triamore. With Winfrida of Durenmar he may be one of only two Guernicus in the Tribunal.",
+        "links": []
       }
     ],
     "laboratories": [],
@@ -49226,6 +51979,115 @@
       "portrait": "",
       "detail": "Sketch",
       "summary": "Master of House Tremere, of the Ash or Oak Gild like all Roznov's magi, and leader of Roznov Fort.\n\nVery tall and thin, wholly bald with a neat greying beard, a noted master of Terram who detests change of every kind. He holds his own sigil, as only he and Stentorius of Fengheld do among the Rhine's Tremere, and controls about two-fifths of the others.",
+      "links": []
+    },
+    "tabanus": {
+      "id": "tabanus",
+      "name": "Tabanus",
+      "type": "magus",
+      "covenant_id": null,
+      "characteristics": {
+        "intelligence": 0,
+        "perception": 0,
+        "strength": 0,
+        "stamina": 0,
+        "presence": 0,
+        "communication": 0,
+        "dexterity": 0,
+        "quickness": 0
+      },
+      "arts": {},
+      "abilities": [],
+      "virtues_flaws": [],
+      "spells_known": [],
+      "invented_spells": [],
+      "inventory": [],
+      "silver": 0,
+      "assigned_lab_id": null,
+      "background": {
+        "player": "",
+        "player_id": null,
+        "setting": "",
+        "size": 0,
+        "confidence_score": 0,
+        "confidence_points": 0,
+        "true_faith_score": 0,
+        "faith_points": 0,
+        "birth_name": "",
+        "year_born": null,
+        "race_nationality": "",
+        "place_of_origin": "",
+        "religion": "",
+        "title_profession": ""
+      },
+      "description": {
+        "height": null,
+        "weight": null,
+        "hair": "",
+        "eyes": "",
+        "handedness": "right",
+        "physical_description": "",
+        "biography": ""
+      },
+      "aging": {
+        "decrepitude": 0,
+        "effects": "",
+        "warping_score": 0,
+        "warping_points": 0,
+        "longevity_modifier": 0,
+        "longevity_year": null,
+        "longevity_by": "",
+        "decrepitude_points": 0,
+        "aging_points": {},
+        "apparent_age": null,
+        "recovering": "",
+        "twilight_until": ""
+      },
+      "wounds": {
+        "light": 0,
+        "medium": 0,
+        "heavy": 0,
+        "incapacitated": false,
+        "dead": false,
+        "soak": 0
+      },
+      "fatigue_level": "fresh",
+      "personality_traits": [],
+      "reputations": [],
+      "raw_vis": {},
+      "hermetic": {
+        "house": "house_guernicus",
+        "domus_magna": "",
+        "primus": "",
+        "parens": "",
+        "covenant_of_apprenticeship": "",
+        "age_of_apprenticeship": null,
+        "wizards_sigil": ""
+      },
+      "diary": [],
+      "tractatus_read": [],
+      "summae_read": [],
+      "lab_text_access": {},
+      "breakthroughs": [],
+      "grog_year": null,
+      "labor_points": 0,
+      "workshop_innovation": 0,
+      "workshop_raw_materials": 0,
+      "progress": [],
+      "formulas": [],
+      "ordeals": [],
+      "in_creation": false,
+      "creation_xp": [],
+      "creation_conditions": {
+        "lab_seasons": 0,
+        "aura": 3,
+        "lab_quality": 0,
+        "living_conditions": 1,
+        "aged_to": null
+      },
+      "portrait": "",
+      "detail": "Sketch",
+      "summary": "Quaesitor of House Guernicus, a peregrinator sent to the Rhine about ten years ago because the House thought its presence here weak. His evidence once Marched a Hawthorn Gild magus on what many called a technicality, and he is unpopular, that gild especially; he moves from covenant to covenant every few years, preferring young covenants that will not try to browbeat him. He lately left Triamore. With Winfrida of Durenmar he may be one of only two Guernicus in the Tribunal.",
       "links": []
     }
   }

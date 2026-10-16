@@ -217,6 +217,10 @@ The steps run in a fixed order:
   undecided votes, up to a Landslide's 60%, and from a Triumphant
   Victory 10% to 30% of the other side's too. The covenants are called
   one by one and the tally kept; what is left undecided abstains.
+- **The Praeco's succession**, on the first day under Normandy's
+  customs: with no Praeco, the eldest magus of the Tribunal (by Year
+  Born) is offered; set them aside by choosing the next eldest. The one
+  named becomes Praeco, and the minutes say who was passed over.
 - **Elections**, when the Tribunal's customs have offices (the Theban
   archai): each office's holder and when the term ends.
 - **Rulings and fines**: the ruling on each case, starting from how its
@@ -227,6 +231,10 @@ The steps run in a fixed order:
   toward the troupe's moves (a party that lost takes it ill, -1).
 - **Treasury and vis**: the treasury as it stands and the loans that
   fall due this year.
+- **The next host, by lot**, under Normandy's customs: a covenant of
+  the Tribunal is drawn, and may be drawn again once (the second draw
+  stands); it becomes the Tribunal's meeting place, and the minutes say
+  where it meets next.
 - **Closing**: each case with a ruling is decided and what its ruling
   says is written: the fine, owed to the Tribunal's treasury; the
   ruling, into the Peripheral Code; and the attitude's move, as a reason
@@ -626,12 +634,19 @@ the pack holds nothing of isn't asked about:
   docket and fines.
 - **The history**: each Tribunal's Diary, and the calendar entries.
 
+Then each of the pack's stories (its threats) that this saga doesn't
+already have is a **Begin** tick, shown while the mundane world is
+ticked. A story left unticked comes in **dormant**: listed among the
+Region's Threats as Dormant, it reaches no stage and nothing of it
+comes due until **Begin This Story** in its More starts it.
+
 The line under the ticks says what the pack brings with the ticks as they
 are. **Preview** then shows the import as above. What a left-out part
 held is matched by name to this saga's own (a covenant's place, a
 Tribunal's Praeco) or the link is dropped, and the preview lists which;
 a covenant whose place is left out sits nowhere until you place it.
-Starting a saga from a pack brings everything.
+Starting a saga from a pack brings everything, and asks which of its
+stories to begin in the same way.
 
 **See also:** [Content packs](help:export-pack), [Import Data](help:import-data), [How to import and export](help:guide-import-export)
 

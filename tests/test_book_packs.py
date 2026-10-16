@@ -9,9 +9,11 @@ import json
 from ars_magica_manager import book_packs, creation_forms, packs, sourcebooks, transfer
 from ars_magica_manager.book_packs import builder
 from ars_magica_manager.models import Saga
+from ars_magica_manager.tribunal_packages import normandy as normandy_package
 from ars_magica_manager.tribunal_packages import rhine as rhine_package
 
 RHINE = book_packs.PACKS["rhine"]
+NORMANDY = book_packs.PACKS["normandy"]
 
 
 def _texts(value) -> list[str]:
@@ -151,8 +153,13 @@ def test_new_saga_offers_the_shipped_packs_first():
     fields = {f.key: f for f in creation_forms.saga_fields(None)}
     options = fields["pack"].options or []
     assert options[0] == ("None", "")
-    assert options[1][0].startswith("Rhine Tribunal: 10 covenants, ")
-    assert options[1][1] == str(book_packs.path_of(RHINE))
+    shipped = {path: label for label, path in options[1:]}
+    assert shipped[str(book_packs.path_of(RHINE))].startswith(
+        "Rhine Tribunal: 10 covenants, "
+    )
+    assert shipped[str(book_packs.path_of(NORMANDY))].startswith(
+        "Normandy Tribunal: 15 covenants, "
+    )
 
 
 def test_masters_and_archmagi_carry_retired_magi_s_sigils():
@@ -197,3 +204,69 @@ def test_a_stat_block_names_only_catalog_virtues():
 
     with pytest.raises(KeyError):
         builder._virtue_flaw("No Such Virtue")
+
+
+# -- The Lion and the Lily --
+
+
+def test_the_normandy_pack_holds_the_tribunal_of_1220():
+    saga = NORMANDY.build()
+    (tribunal,) = saga.tribunals
+    assert tribunal.package == "normandy"
+    by_name = {c.name: c for c in saga.covenants}
+    assert len(by_name) == 15
+    # The Praeco's seat is vacant, and its succession heads the docket.
+    assert tribunal.praeco_id is None
+    assert tribunal.cases[0].title == "The Praeco's succession"
+    quaesitor = saga.character(tribunal.quaesitor_id)
+    assert quaesitor is not None and quaesitor.name.startswith("Proctor")
+    # The lines of fealty, each sworn with the oath's Boons and Hooks.
+    liege = {c.name: by_name_id for c in saga.covenants if (by_name_id := c.liege_id)}
+    assert liege["Exspectatio"] == by_name["Fudarus"].id
+    assert liege["Dragon's Rest"] == by_name["Confluensis"].id
+    assert liege["Requies Aeterna"] == by_name["Florum"].id
+    assert "covbh_hook_major_beholden" in {b.vf_id for b in by_name["Nidi"].boons_hooks}
+    # The fallen covenants are ruins; Branugurix keeps its regio.
+    ruins = {n.name: n for n in saga.neighbours if n.details.get("ruined")}
+    assert len(ruins) >= 15
+    assert any(n.details.get("levels") for n in ruins.values())
+    # The stories, every one offered to begin on import.
+    threats = {n.name for n in saga.neighbours if n.kind == "threat"}
+    assert "The Boar King's Hunt" in threats and "A Romantic Saga" in threats
+    assert normandy_package.tenures(tribunal)
+
+
+def test_the_normandy_pack_keeps_its_secrets_and_credit():
+    data = book_packs.data(NORMANDY)
+    texts = _texts(data["saga"])
+    assert len([t for t in texts if builder.SECRETS + "\n" in t]) >= 10
+    assert data["book"] == "L&L" and "Creative Commons" in data["source"]
+
+
+def test_the_shipped_normandy_pack_is_up_to_date():
+    shipped = json.loads(book_packs.path_of(NORMANDY).read_text(encoding="utf-8"))
+    built = book_packs.data(NORMANDY)
+    assert packs.summary(shipped) == packs.summary(built)
+    for kind in ("covenants", "characters", "neighbours", "books", "tribunals"):
+        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
+            (r["name"], r.get("detail")) for r in built["saga"][kind]
+        }, kind
+
+
+def test_the_normandy_pack_imports_clean_into_a_new_saga():
+    data = book_packs.data(NORMANDY)
+    target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
+    transfer.apply(target, transfer.plan_import(target, data))
+    assert packs.after_import(target, data) == [
+        "The Lion and the Lily: The Normandy Tribunal is now in play."
+    ]
+    assert target.books_in_play is not None and "L&L" in target.books_in_play
+    assert len(target.characters) == len(data["saga"]["characters"])
+    ids = {n.id for n in target.neighbours}
+    for record in [*target.covenants, *target.neighbours]:
+        assert record.place_id is None or record.place_id in ids
+    covenants = {c.id for c in target.covenants}
+    assert all(c.liege_id in covenants for c in target.covenants if c.liege_id)
+    # Its wandering magus, printed in full, comes too.
+    anacron = next(c for c in target.characters if c.name.startswith("Anacr"))
+    assert anacron.detail == "Full"

@@ -30,7 +30,11 @@ what the old ones recorded, hidden, and switching back shows it again.
 - **Normandy: Vis tenure** (The Lion and the Lily): every vis source is
   held on a tenure of the Perthean Compact, and the covenants' teams
   contest the Hermetic Tourney after each meeting; the sheet gains Tenure
-  and Tourney tabs.
+  and Tourney tabs. Its eldest magus is Praeco: while the seat is empty
+  the sheet's Praeco says **Vacant**, and the next meeting names one on
+  its first day. Each meeting ends by drawing the next host by
+  lot. New Covenant and Found a Covenant Here say what vis a covenant
+  founded in it must hold.
 - **Transylvania: Privileges** (Against the Dark): each covenant holds
   one of five privilege classes; the roster gains a Class column, entered
   with the roster's Edit beside its proxies.

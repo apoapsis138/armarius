@@ -423,7 +423,7 @@ More books follow in later versions.
 
 1. On the saga list, choose **New Saga**.
 2. Fill in the name, storyguide and date as usual. The packs are written as of the book's own year (the Rhine's is 1220), so a saga at another date keeps its own date and the pack's records their years.
-3. In **Start from a pack**, pick the book. The list shows the shipped packs first, then any pack in your exports folder.
+3. In **Start from a pack**, pick the book. The list shows the shipped packs first, then any pack in your exports folder. Under it, a **Begin** tick for each of the pack's stories (its threats): untick the ones to keep for later, and they come in dormant, to begin from their More when you want them.
 4. Create the saga: it begins with everything in the pack, and the pack's book is put in play (see [The saga](help:saga)), so the book's rules and neighbour kinds show.
 
 ### Adding a book to a saga you already have

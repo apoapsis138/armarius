@@ -15,7 +15,7 @@ from __future__ import annotations
 from enum import StrEnum
 from typing import TYPE_CHECKING, NamedTuple, Protocol
 
-from . import arms, giving, places, seasons, sourcebooks, world
+from . import arms, giving, places, seasons, sourcebooks, threats, world
 from . import book_value as bv
 from . import familiars as fam
 from . import inhabitants as inh
@@ -241,6 +241,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("r", "roll_fair", "Roll Income"),
     MenuItem("r", "roll_table", "Roll"),
     MenuItem("f", "found_covenant", "Found a Covenant Here"),
+    MenuItem("b", "begin_story", "Begin This Story"),
 )
 
 #: The More commands offered in one section only, by that section's id.
@@ -422,6 +423,8 @@ def available(action: str, facts: ActionFacts) -> bool:
         return facts.on_record() and record is not None and arms.bears_arms(record)
     if action == "found_covenant":
         return facts.on_record() and places.is_ruin(facts.record_to_delete())
+    if action == "begin_story":
+        return facts.on_record() and threats.is_dormant(facts.record_to_delete())
     if action not in _BY_SECTION:
         return True
     return _available_in_section(action, facts, facts.active_section() or "")

@@ -254,8 +254,11 @@ def characteristics(profile: Profile, greats: Mapping[str, int]) -> dict[str, in
     return scores
 
 
-def rank(summary: str, age: int) -> str:
-    """The Rhine rank the paragraph opens with ("Archmage of House...")."""
+def rank(summary: str, age: int, source: str = "GotF") -> str:
+    """The Rhine rank the paragraph opens with ("Archmage of House...");
+    a magus of another Tribunal's book is a plain Hermetic Magus."""
+    if source != "GotF":
+        return "Hermetic Magus"
     first = summary.split(maxsplit=1)[0].rstrip(",") if summary else ""
     if first.startswith("Archmag"):
         return "Archmage (Rhine Tribunal)"
@@ -280,6 +283,7 @@ def virtues(
     top_arts: Sequence[str],
     top_abilities: Sequence[str],
     age: int,
+    source: str = "GotF",
 ) -> list[Any]:
     """The Gift, the rank, the House Virtue when the profile leaves it
     out, the profile's own, and Affinities and Puissances on the top Arts
@@ -288,7 +292,7 @@ def virtues(
     entries: list[Any] = []
     if profile.gifted:
         entries.append("The Gift")
-    entries.append(rank(character.summary, age))
+    entries.append(rank(character.summary, age, source))
     entries.extend(profile.virtues)
     by_id = _virtue_defs()
     if house and house.virtues and profile.gifted:
@@ -419,7 +423,7 @@ def stat_block(
     top_arts = ranked[:4]
     named = sorted(profile.abilities, key=lambda n: -_weight(profile.abilities[n]))
     top_abilities = [*named, "Magic Theory", "Parma Magica", "Penetration"]
-    entries = virtues(character, profile, top_arts, top_abilities[:4], age)
+    entries = virtues(character, profile, top_arts, top_abilities[:4], age, source)
     greats: dict[str, int] = {}
     for name in _params(entries, "Great {characteristic}", "characteristic"):
         greats[name] = greats.get(name, 0) + 1

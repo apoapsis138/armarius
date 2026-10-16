@@ -31,6 +31,11 @@ def test_the_blazon_is_written_from_the_choices():
     assert arms.blazon(
         Arms("Argent", charge="Cross", count=2, charge_tincture="Gules")
     ) == ("Argent, two crosses gules")
+    knotted = Arms("Gules", charge="Lion, tail knotted")
+    assert arms.blazon(knotted) == "Gules, a lion queue-nowed or"
+    assert arms.blazon(Arms("Vert", charge="Lion, tail knotted", count=3)) == (
+        "Vert, three lions queue-nowed or"
+    )
 
 
 def test_colour_on_colour_is_warned_of_but_allowed():
@@ -58,11 +63,9 @@ def test_the_shield_is_drawn_from_its_divisions_and_charge():
     # The upper corners are on the shield, the lower ones off it.
     assert grid[0][0] == "Azure" and grid[0][19] == "Or"
     assert grid[23][0] is None and grid[23][19] is None
-    # The tower stands in the middle, its door cut out of it.
-    assert any(cell == "Gules" for row in grid for cell in row)
+    # The tower stands in the middle.
     left, top, side = arms.CHARGE_BOX
-    door = arms.tincture_at(shield, left + 0.5 * side, top + 0.9 * side)
-    assert door in ("Azure", "Or")
+    assert arms.tincture_at(shield, left + 0.5 * side, top + 0.5 * side) == "Gules"
     # Every charge and division draws something of its own.
     for charge in arms.CHARGES:
         drawn = arms.pixels(Arms("Azure", charge=charge, charge_tincture="Or"), 20)
@@ -109,9 +112,9 @@ def _spots(drawn: list[list[str | None]], tincture: str) -> int:
 
 
 def test_two_or_three_charges_are_placed_as_heralds_place_them():
-    one = arms.pixels(Arms("Azure", charge="Tree", count=1), 30)
-    two = arms.pixels(Arms("Azure", charge="Tree", count=2), 30)
-    three = arms.pixels(Arms("Azure", charge="Tree", count=3), 30)
+    one = arms.pixels(Arms("Azure", charge="Crown", count=1), 30)
+    two = arms.pixels(Arms("Azure", charge="Crown", count=2), 30)
+    three = arms.pixels(Arms("Azure", charge="Crown", count=3), 30)
     assert _spots(one, "Or") == 1 and _spots(two, "Or") == 2
     # Three: two above, and one below them in the middle.
     assert _spots(three, "Or") == 2

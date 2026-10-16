@@ -3,7 +3,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Normandy
 
-      Customs:       Normandy: Vis tenure      Praeco:              (not chosen)
+      Customs:       Normandy: Vis tenure      Praeco:              Vacant
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1227               Covenants:           0
       Meeting place: Confluensis               Magi:                0
@@ -46,7 +46,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Normandy
 
-      Customs:       Normandy: Vis tenure      Praeco:              (not chosen)
+      Customs:       Normandy: Vis tenure      Praeco:              Vacant
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1227               Covenants:           0
       Meeting place: Confluensis               Magi:                0
@@ -89,7 +89,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Normandy
 
-      Customs:       Normandy: Vis tenure      Praeco:              (not chosen)
+      Customs:       Normandy: Vis tenure      Praeco:              Vacant
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1227               Covenants:           0
       Meeting place: Confluensis               Magi:                0
@@ -132,7 +132,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Normandy
 
-      Customs:       Normandy: Vis tenure      Praeco:              (not chosen)
+      Customs:       Normandy: Vis tenure      Praeco:              Vacant
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1227               Covenants:           0
       Meeting place: Confluensis               Magi:                0
@@ -149,21 +149,21 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Order of Business (3 days)
 
-        Step                    Day
-      ○ Opening and the oaths   The First Day
+        Step                     Day
+      ○ Opening and the oaths    The First Day
       ○ Attendance and proxies
-      ○ Tourney                 The Third Day
+      ○ The Praeco's succession
+      ○ Tourney                  The Third Day
       ○ Rulings and fines
       ○ Treasury and vis
+      ○ The next host, by lot
       ○ Closing
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▅▅
     ▼ The Vote
 
-      No case to vote on.                                                         ▂▂
+      No case to vote on.
 
-
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 
   ▌
   ▌  Choose a step to read what was entered at it.
@@ -175,7 +175,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Normandy
 
-      Customs:       Normandy: Vis tenure      Praeco:              (not chosen)
+      Customs:       Normandy: Vis tenure      Praeco:              Vacant
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1227               Covenants:           0
       Meeting place: Confluensis               Magi:                0
@@ -188,7 +188,7 @@
 
   Normandy: Vis tenure. Every vis source is held on a tenure of the Perthean
   Compact, and the covenants' teams contest the Hermetic Tourney after each meeting
-  for prize pawns.
+  for prize pawns. The eldest magus is Praeco, and the next host is drawn by lot.
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Peripheral Code (0)
@@ -218,7 +218,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Normandy
 
-      Customs:       Normandy: Vis tenure      Praeco:              (not chosen)
+      Customs:       Normandy: Vis tenure      Praeco:              Vacant
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1227               Covenants:           0
       Meeting place: Confluensis               Magi:                0
@@ -261,7 +261,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Normandy
 
-      Customs:       Normandy: Vis tenure      Praeco:              (not chosen)
+      Customs:       Normandy: Vis tenure      Praeco:              Vacant
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1227               Covenants:           0
       Meeting place: Confluensis               Magi:                0
@@ -304,7 +304,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Normandy
 
-      Customs:       Normandy: Vis tenure      Praeco:              (not chosen)
+      Customs:       Normandy: Vis tenure      Praeco:              Vacant
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1227               Covenants:           0
       Meeting place: Confluensis               Magi:                0
@@ -347,7 +347,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Normandy
 
-      Customs:       Normandy: Vis tenure      Praeco:              (not chosen)
+      Customs:       Normandy: Vis tenure      Praeco:              Vacant
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1227               Covenants:           0
       Meeting place: Confluensis               Magi:                0

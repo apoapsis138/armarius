@@ -46,6 +46,32 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.94.0 — 2026-10-16
+
+- **The Normandy pack.** New Saga and Import offer *The Lion and the
+  Lily*: the Normandy Tribunal of 1220, with its fifteen covenants and
+  their magi, the places, towns, lords and churches of each region, the
+  ruins of its fallen covenants, its Peripheral Code and open cases, its
+  history, the vis held under the Perthean Compact, and the lines of
+  fealty between covenants. The text is a paraphrase of the book,
+  credited to it. The Rhine pack now also brings its wandering magi.
+- **Vassals and oaths.** A covenant can be sworn as the vassal of
+  another in its Tribunal, with the oath's duties written down and, if
+  you like, the Boons and Hooks the oath brings to each side. The
+  covenant's page shows "Vassal of" or its vassals.
+- **Dormant stories.** A pack's threats can be brought in asleep: a tick
+  per story on import or New Saga says which begin at once. A dormant
+  story stays out of What's Ahead and the season's turn until you choose
+  Begin This Story on its page, which sets its stages from next season.
+- **Normandy's meetings.** A Normandy Tribunal meeting now settles the
+  Praeco's succession (the eldest magus, unless set aside) and draws
+  the next host by lot. Founding a covenant there reminds you of the
+  vis its Code asks for.
+- **New heraldry.** The eagle, fleur-de-lis, tower, cross, crescent,
+  star and tree are now proper heraldic drawings from Wikimedia Commons,
+  in any tincture, and there is a new charge: a lion with its tail
+  knotted (queue-nowed).
+
 ## 2.93.0 — 2026-10-16
 
 - **Ruined covenants.** A place can be marked a ruined covenant: it

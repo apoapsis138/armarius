@@ -26,7 +26,7 @@ def create_saga(values: dict[str, Any]) -> Saga:
         values["season"],
     )
     if values.get("pack"):
-        packs.start_from(saga, Path(values["pack"]))
+        packs.start_from(saga, Path(values["pack"]), packs.start_choices(values))
     storage.save_saga(saga)
     return saga
 

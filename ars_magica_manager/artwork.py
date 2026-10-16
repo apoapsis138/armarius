@@ -39,8 +39,19 @@ SOUNDS_DIR = ASSETS / "sounds"
 CHARGES = ASSETS / "charges"
 DRAWN = ASSETS / "drawn"
 
-#: The heraldic charges drawn from a file, by charge name.
-CHARGE_DRAWINGS: dict[str, Path] = {"Lion": CHARGES / "lion.svg"}
+#: The heraldic charges drawn from a file (Wikimedia Commons drawings,
+#: credited in NOTICE.md), by charge name.
+CHARGE_DRAWINGS: dict[str, Path] = {
+    "Lion": CHARGES / "lion.svg",
+    "Lion, tail knotted": CHARGES / "lion-tail-knotted.svg",
+    "Eagle": CHARGES / "eagle.svg",
+    "Fleur-de-lis": CHARGES / "fleur-de-lis.svg",
+    "Tower": CHARGES / "tower.svg",
+    "Cross": CHARGES / "cross.svg",
+    "Crescent": CHARGES / "crescent.svg",
+    "Star": CHARGES / "star.svg",
+    "Tree": CHARGES / "tree.svg",
+}
 
 #: The app's window and taskbar icon (a Windows .ico of several sizes), and
 #: the sigil as a picture.

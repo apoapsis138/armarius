@@ -264,7 +264,11 @@ def _places(saga: Saga, start: int, stop: int) -> list[Entry]:
 def _threats(saga: Saga, start: int, stop: int) -> list[Entry]:
     found = []
     for threat in saga.neighbours:
-        if threat.kind != "threat" or not threats.by_date(threat):
+        if (
+            threat.kind != "threat"
+            or not threats.by_date(threat)
+            or threats.is_dormant(threat)
+        ):
             continue
         for stage in threats.stages(threat):
             if (stage.get("outcome") or threats.PENDING) != threats.PENDING:

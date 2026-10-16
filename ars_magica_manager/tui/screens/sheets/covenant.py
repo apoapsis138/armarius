@@ -22,6 +22,7 @@ from .... import (
     catalog,
     seasons,
     tribunals,
+    vassals,
     world,
     world_forms,
 )
@@ -764,10 +765,16 @@ class CovenantSheetView(SheetView):
         tribunal = tribunals.of(self.saga, self.covenant)
         return escape(tribunal.name) if tribunal is not None else "(not set)"
 
+    def _vassal_rows(self) -> list[tuple[str, str]]:
+        return [
+            (label, escape(value))
+            for label, value in vassals.rows(self.saga, self.covenant)
+        ]
+
     def _info_left_text(self) -> str:
         cov, saga = self.covenant, self.saga
         if self.sketch:
-            rows = [("Tribunal", self._tribunal_text())]
+            rows = [("Tribunal", self._tribunal_text()), *self._vassal_rows()]
             if cov.detail != LINE:
                 founded = (
                     "(not set)" if cov.year_founded is None else str(cov.year_founded)
@@ -800,6 +807,7 @@ class CovenantSheetView(SheetView):
         return aligned(
             [
                 ("Tribunal", self._tribunal_text()),
+                *self._vassal_rows(),
                 ("Current Season", self._inherited(saga.current_season)),
                 ("Current Year", self._inherited(str(saga.current_year))),
                 ("Aegis' Penetration", str(cov.aegis_penetration)),

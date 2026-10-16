@@ -80,6 +80,9 @@ class Covenant:
     own_realm: str = ""
     #: The Tribunal it belongs to (Saga.tribunals), if any.
     tribunal_id: str | None = None
+    #: The covenant it is vassal to (vassals.py), and the oath's duties.
+    liege_id: str | None = None
+    oath: str = ""
     year_founded: int | None = None
     aegis_of_the_hearth: int = 0
     aegis_penetration: int = 0

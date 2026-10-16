@@ -57,6 +57,7 @@ CHARGES: dict[str, str] = {
     "Chalice": "a chalice",
     "Eagle": "an eagle",
     "Lion": "a lion",
+    "Lion, tail knotted": "a lion queue-nowed",
     "Wheel": "a wheel",
     "Fleur-de-lis": "a fleur-de-lis",
     "Bend": "a bend",
@@ -70,7 +71,11 @@ ORDINARIES = frozenset({"Bend"})
 COUNTS: dict[int, str] = {1: "one", 2: "two", 3: "three"}
 
 #: The charges whose plural isn't the word with an s.
-_PLURALS = {"Cross": "crosses", "Fleur-de-lis": "fleurs-de-lis"}
+_PLURALS = {
+    "Cross": "crosses",
+    "Fleur-de-lis": "fleurs-de-lis",
+    "Lion, tail knotted": "lions queue-nowed",
+}
 
 #: The kinds of neighbour that bear arms: a church's are its bishop's or
 #: abbey's.
@@ -257,15 +262,6 @@ def _poly(*points: Point) -> Shape:
     return Shape(tuple(points))
 
 
-def _star() -> Shape:
-    points = []
-    for i in range(10):
-        r = 0.5 if i % 2 == 0 else 0.2
-        a = -math.pi / 2 + i * math.pi / 5
-        points.append((0.5 + r * math.cos(a), 0.53 + r * math.sin(a)))
-    return Shape(tuple(points))
-
-
 def shield_outline(steps: int = 12) -> tuple[Point, ...]:
     """The shield's edge: straight sides, curving to a point at the
     base."""
@@ -348,13 +344,6 @@ def armed_tincture(arms: Arms) -> str:
 
 #: Each charge's shapes, in a unit square.
 CHARGE_SHAPES: dict[str, tuple[Shape, ...]] = {
-    "Tower": (
-        _rect(0.2, 0.3, 0.8, 1.0),
-        _rect(0.2, 0.1, 0.32, 0.3),
-        _rect(0.44, 0.1, 0.56, 0.3),
-        _rect(0.68, 0.1, 0.8, 0.3),
-        _rect(0.42, 0.68, 0.58, 1.0, hole=True),
-    ),
     "Book": (
         _poly((0.04, 0.2), (0.47, 0.3), (0.47, 0.9), (0.04, 0.8)),
         _poly((0.53, 0.3), (0.96, 0.2), (0.96, 0.8), (0.53, 0.9)),
@@ -366,7 +355,6 @@ CHARGE_SHAPES: dict[str, tuple[Shape, ...]] = {
         _rect(0.56, 0.74, 0.74, 0.82),
         _rect(0.56, 0.88, 0.74, 0.96),
     ),
-    "Star": (_star(),),
     "Sword": (
         _poly((0.5, 0.0), (0.57, 0.1), (0.57, 0.68), (0.43, 0.68), (0.43, 0.1)),
         _rect(0.24, 0.68, 0.76, 0.76),
@@ -384,9 +372,6 @@ CHARGE_SHAPES: dict[str, tuple[Shape, ...]] = {
             (0.92, 0.85),
         ),
     ),
-    "Cross": (_rect(0.4, 0.04, 0.6, 0.96), _rect(0.12, 0.28, 0.88, 0.48)),
-    "Crescent": (_circle(0.5, 0.5, 0.42), _circle(0.62, 0.38, 0.36, hole=True)),
-    "Tree": (_circle(0.5, 0.36, 0.32), _rect(0.43, 0.6, 0.57, 0.98)),
     "Chalice": (
         _poly(
             (0.18, 0.08),
@@ -406,13 +391,6 @@ CHARGE_SHAPES: dict[str, tuple[Shape, ...]] = {
 }
 
 
-def _mirrored(*half: Point) -> Shape:
-    """A polygon symmetric about x = 0.5, from its right half given top
-    to bottom; the left half is the mirror, bottom to top."""
-    left = [(1 - x, y) for x, y in reversed(half)]
-    return Shape((*half, *left))
-
-
 def _spoke(angle: float, inner: float, outer: float, width: float) -> Shape:
     """A bar from the hub to the rim of a wheel centred on (0.5, 0.5)."""
     dx, dy = math.cos(angle), math.sin(angle)
@@ -425,45 +403,14 @@ def _spoke(angle: float, inner: float, outer: float, width: float) -> Shape:
     )
 
 
-# An eagle displayed: head turned to its right, wings spread, tail
-# fanned. Its right half, top to bottom, mirrored for the left; the head
-# and beak are added over it.
-CHARGE_SHAPES["Eagle"] = (
-    _mirrored(
-        (0.5, 0.14),
-        (0.56, 0.24),
-        (0.6, 0.3),
-        (0.74, 0.2),
-        (0.9, 0.08),
-        (0.99, 0.02),
-        (0.96, 0.18),
-        (0.9, 0.17),
-        (0.95, 0.32),
-        (0.87, 0.3),
-        (0.9, 0.45),
-        (0.8, 0.42),
-        (0.78, 0.54),
-        (0.66, 0.56),
-        (0.66, 0.7),
-        (0.62, 0.78),
-        (0.74, 0.82),
-        (0.76, 0.9),
-        (0.66, 0.88),
-        (0.72, 0.99),
-        (0.5, 0.93),
-    ),
-    _circle(0.45, 0.14, 0.1),
-    _poly((0.36, 0.1), (0.25, 0.17), (0.37, 0.19)),
-)
-
-
-# A lion rampant, drawn from a Wikimedia Commons file (see NOTICE.md):
-# its silhouette in the charge's tincture, its line work and its claws
-# and tongue painted over it.
-_LION = layers(CHARGE_DRAWINGS["Lion"])
-CHARGE_SHAPES["Lion"] = (_LION["body"],)
-CHARGE_LINES["Lion"] = _LION.get("lines")
-CHARGE_ARMED["Lion"] = _LION.get("armed")
+# The charges drawn from Wikimedia Commons files (see NOTICE.md): each
+# silhouette in the charge's tincture, its line work and any claws and
+# tongue painted over it.
+for _name, _path in CHARGE_DRAWINGS.items():
+    _drawn = layers(_path)
+    CHARGE_SHAPES[_name] = (_drawn["body"],)
+    CHARGE_LINES[_name] = _drawn.get("lines")
+    CHARGE_ARMED[_name] = _drawn.get("armed")
 
 # A wheel of six spokes (the wheel of Mainz).
 CHARGE_SHAPES["Wheel"] = (
@@ -471,41 +418,6 @@ CHARGE_SHAPES["Wheel"] = (
     _circle(0.5, 0.5, 0.36, hole=True),
     *(_spoke(i * math.pi / 3, 0.0, 0.4, 0.1) for i in range(6)),
     _circle(0.5, 0.5, 0.12),
-)
-
-# A fleur-de-lis: the middle petal, the two curling side petals and
-# the band that binds them.
-CHARGE_SHAPES["Fleur-de-lis"] = (
-    _mirrored(
-        (0.5, 0.02),
-        (0.6, 0.18),
-        (0.6, 0.5),
-        (0.56, 0.62),
-        (0.6, 0.8),
-        (0.58, 0.98),
-        (0.5, 0.9),
-    ),
-    _poly(
-        (0.6, 0.28),
-        (0.7, 0.16),
-        (0.84, 0.14),
-        (0.96, 0.26),
-        (0.95, 0.44),
-        (0.84, 0.54),
-        (0.6, 0.5),
-    ),
-    _poly(
-        (0.4, 0.28),
-        (0.3, 0.16),
-        (0.16, 0.14),
-        (0.04, 0.26),
-        (0.05, 0.44),
-        (0.16, 0.54),
-        (0.4, 0.5),
-    ),
-    _rect(0.3, 0.52, 0.7, 0.64),
-    _rect(0.6, 0.56, 0.9, 0.64),
-    _rect(0.1, 0.56, 0.4, 0.64),
 )
 
 

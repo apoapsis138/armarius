@@ -58,6 +58,14 @@ out of upkeep, income, Loyalty and the seasons, though its magi still count
 toward its Tribunal's votes. **Promote** and **Demote** move it one level;
 nothing is deleted. Promoting a sketch to Full moves it In Creation and
 opens the Creation Worksheet on what the sketch already has.
+
+A covenant may be the vassal of another, sworn to it by an oath: choose
+its liege in **Vassal of** in the covenant's Edit, and write the oath's
+duties beside it. The sheet then says **Vassal of** its liege, and the
+liege's sheet lists its **Vassals**, while both are in the same Tribunal.
+Ticking **Add the oath's Boons and Hooks** adds Beholden and Powerful Ally
+to the vassal and Favors Owed and Protector to its liege, each naming the
+other covenant; ones already taken aren't added twice.
 <!-- tui -->
 Both are in More (`m`) on the top panel.
 <!-- /tui -->
@@ -995,7 +1003,8 @@ choices make it: the **Field**'s tincture, how it is divided
 chevron, bendy or checky) and the **Second tincture** of a divided
 field, a **Charge** laid on it (a tower, a book, a key, a star, a sword,
 a crown, a cross, a crescent, a tree, a chalice, an eagle, a lion, a
-wheel, a fleur-de-lis, or a bend, the band from the top left corner to
+lion with its tail knotted (queue-nowed), a wheel, a fleur-de-lis, or a
+bend, the band from the top left corner to
 the bottom right, which is borne once), **How many** of it (one, two
 side by side, or three as two and one, as heralds place them) and the
 **Charge tincture**. A **Motto**, the bearer's own words, leads above

@@ -154,9 +154,11 @@ def covenants_grid(saga: Saga) -> Grid:
 
 def kind_text(neighbour: Neighbour) -> str:
     """Its kind as the lists show it: "Lord"; "Ruin" for a ruined
-    covenant's site."""
+    covenant's site, "Dormant" for a threat not yet begun."""
     if places.is_ruin(neighbour):
         return "Ruin"
+    if threats.is_dormant(neighbour):
+        return "Dormant"
     return neighbours.kind_of(neighbour).name
 
 

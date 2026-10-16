@@ -37,6 +37,7 @@ from . import (
     ruins,
     seasons,
     storage,
+    threats,
     transfer,
     tribunal_forms,
     tribunals,
@@ -330,6 +331,8 @@ MANAGE: dict[str, str] = {
     "chapters it no longer shows keep what they hold.",
     "found_covenant": "Raise a new covenant on this ruin, as Winter Ruins "
     "does: it starts In Creation, sited here, and the ruin becomes its claim.",
+    "begin_story": "Start this dormant story: its stages begin to come, the "
+    "first due next season at the soonest.",
     DELETE_RECORD: "Remove it from the saga, after saying what happens to "
     "what it holds.",
 }
@@ -1234,6 +1237,13 @@ def _found_command(page: Page) -> Command:
     return ruins.found_form(page.saga, record)
 
 
+def _begin_command(page: Page) -> Command:
+    record = page.record_to_delete()
+    if not isinstance(record, Neighbour) or not threats.is_dormant(record):
+        return Refuse("Begin This Story", "Only a dormant threat can be begun.")
+    return threats.begin_command(page.saga, record)
+
+
 def _arms_command(page: Page) -> Command:
     record = page.record_to_delete()
     if record is None or not arms.bears_arms(record):
@@ -1261,6 +1271,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "set_date": lambda page: set_date(page.saga),
     "edit_arms": _arms_command,
     "found_covenant": _found_command,
+    "begin_story": _begin_command,
     "edit_saga": lambda page: creation_forms.edit_saga_form(page.saga),
     "create_covenant": lambda page: creation_forms.new_covenant_form(page.saga),
     "create_tribunal": lambda page: tribunal_forms.new_tribunal_form(page.saga),

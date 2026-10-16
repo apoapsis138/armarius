@@ -9,7 +9,7 @@ Tribunal's package adds (tribunal_packages) is drawn the same way."""
 
 from __future__ import annotations
 
-from . import tribunal_packages, tribunals, world
+from . import threats, tribunal_packages, tribunals, world
 from .character_sheet import Fact, house_name
 from .grids import Grid
 from .markup import escape
@@ -42,6 +42,16 @@ def next_meeting(tribunal: Tribunal) -> str:
 def _officer(saga: Saga, character_id: str | None) -> str:
     character = saga.character(character_id)
     return character.name if character is not None else "(not chosen)"
+
+
+def _praeco(saga: Saga, tribunal: Tribunal) -> str:
+    """The Praeco; "Vacant" where the customs name the eldest magus at
+    the next meeting."""
+    if saga.character(tribunal.praeco_id) is None and (
+        "succession" in tribunal_packages.of(tribunal).meeting_steps
+    ):
+        return "Vacant"
+    return _officer(saga, tribunal.praeco_id)
 
 
 def _of_total(recorded: int, total: int | None) -> str:
@@ -137,11 +147,17 @@ def facts(saga: Saga, tribunal: Tribunal) -> list[Fact]:
         ),
         Fact("Meeting place", tribunal.meeting_place.strip() or "(not set)"),
         Fact("Cases", cases_fact(saga, tribunal)),
-        Fact("Praeco", _officer(saga, tribunal.praeco_id)),
+        Fact("Praeco", _praeco(saga, tribunal)),
         Fact("Presiding Quaesitor", _officer(saga, tribunal.quaesitor_id)),
         Fact("Covenants", _of_total(len(members), tribunal.covenants_total)),
         Fact("Magi", _of_total(magi, tribunal.magi_total)),
         Fact("Your votes", your_votes_text(saga, tribunal)),
+        # Only while a story waits to be begun.
+        *(
+            [Fact("Stories", threats.stories_text(saga))]
+            if threats.counts(saga)[1]
+            else []
+        ),
     ]
 
 

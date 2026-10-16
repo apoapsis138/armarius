@@ -634,6 +634,7 @@ def _plan_covenants(job: _Import) -> None:
         covenant.id = job.record_map[COVENANT][covenant.id]
         covenant.saga_id = job.target.id
         covenant.tribunal_id = job.tribunal_map.get(covenant.tribunal_id or "")
+        covenant.liege_id = job.link(COVENANT, covenant.liege_id)
         _relink(job, covenant)
         for held in covenant.boons_hooks:
             held.vf_id = job.entry(held.vf_id)

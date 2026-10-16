@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from . import books as bk
-from . import catalog, tribunals, world, world_forms
+from . import catalog, tribunals, vassals, world, world_forms
 from . import covenant_build as cov_build
 from . import covenant_diary as cov_diary
 from . import economics as eco
@@ -79,13 +79,14 @@ def charter_facts(saga: Saga, covenant: Covenant) -> list[Fact]:
     ]
     if covenant.in_creation:
         facts.append(Fact("Build Points", cov_build.summary(saga, covenant)))
-    return facts
+    return facts + [Fact(label, value) for label, value in vassals.rows(saga, covenant)]
 
 
 def sketch_facts(saga: Saga, covenant: Covenant) -> list[Fact]:
     """A Line or Sketch covenant's facts under its name."""
     tribunal = tribunals.of(saga, covenant)
     facts = [Fact("Tribunal", tribunal.name if tribunal is not None else "(not set)")]
+    facts += [Fact(label, value) for label, value in vassals.rows(saga, covenant)]
     if covenant.detail != LINE:
         founded = covenant.year_founded
         facts += [

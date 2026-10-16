@@ -78,6 +78,7 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
                 "and calendar are added to the new saga.",
             )
         )
+        fields += packs.start_story_fields(found)
     if saga is not None:
         fields.append(
             DialogField(

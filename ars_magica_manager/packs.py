@@ -19,12 +19,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from . import DATA_DIR, places, sourcebooks, storage, transfer
+from . import DATA_DIR, places, sourcebooks, storage, threats, transfer
 from .commands import Form, Refuse, notes
 from .files import write_atomic
 from .form_spec import DialogField
 from .markup import escape, todo
-from .models import Covenant, Neighbour, Saga, Tribunal
+from .models import Character, Covenant, Neighbour, Saga, Tribunal
 from .neighbours import kind_of
 
 PACK = transfer.PACK
@@ -80,6 +80,7 @@ def pack_data(
     *,
     with_characters: bool = True,
     with_calendar: bool = True,
+    characters_besides: list[Character] | None = None,
 ) -> dict[str, Any]:
     """The pack of the chosen records as JSON-ready data: the Tribunals,
     each with its covenants, and the covenants, each with the places and
@@ -87,7 +88,8 @@ def pack_data(
     with the places they sit in. `with_characters` adds the covenants'
     characters and laboratories and each Tribunal's officers;
     `with_calendar` the calendar entries of the covenants and the saga's
-    own."""
+    own; `characters_besides` adds characters who belong to no covenant
+    taken (a wandering magus)."""
     taken, round_them = contents(saga, tribunals, covenants)
     own_places = _places_round(saga, {n.place_id for n in neighbours if n.place_id})
     wanted = {n.id for n in [*round_them, *neighbours]} | own_places
@@ -103,6 +105,7 @@ def pack_data(
             if c.covenant_id in covenant_ids or c.id in officers
         ]
         labs = [lab for lab in saga.laboratories if lab.covenant_id in covenant_ids]
+        characters += [c for c in characters_besides or [] if c not in characters]
     calendar = (
         [
             entry
@@ -428,9 +431,54 @@ GROUPS: tuple[Group, ...] = (
 )
 
 
-def import_fields(data: dict[str, Any]) -> list[DialogField]:
+def story_key(neighbour_id: str, prefix: str = "") -> str:
+    """The import form's key for beginning one of the pack's stories."""
+    return f"{prefix}story_{neighbour_id}"
+
+
+def stories(data: dict[str, Any], saga: Saga | None = None) -> list[dict[str, Any]]:
+    """The pack's stories (its threats) that the saga doesn't already
+    have one of the same name."""
+    had = {n.name.casefold() for n in saga.neighbours} if saga is not None else set()
+    return [
+        n
+        for n in _held(data, "neighbours")
+        if n.get("kind") == threats.THREAT
+        and str(n.get("name") or "").casefold() not in had
+    ]
+
+
+def story_fields(
+    data: dict[str, Any],
+    saga: Saga | None = None,
+    *,
+    prefix: str = "",
+    show_if: Callable[[dict[str, Any]], bool] | None = None,
+) -> list[DialogField]:
+    """A tick for each of the pack's stories to begin, all ticked: one
+    left unticked comes in dormant, to begin later."""
+    return [
+        DialogField(
+            story_key(n["id"], prefix),
+            f"Begin: {escape(str(n.get('name') or ''))}",
+            "check",
+            True,
+            hint="Unticked, it comes in dormant: Begin This Story, in its "
+            "More, starts it later.",
+            show_if=show_if,
+        )
+        for n in stories(data, saga)
+    ]
+
+
+def _with_world(values: dict[str, Any]) -> bool:
+    return bool(values.get("world", True))
+
+
+def import_fields(data: dict[str, Any], saga: Saga | None = None) -> list[DialogField]:
     """Import a Content Pack: a tick for each group the pack holds any
-    of, all ticked. A group the pack has nothing of isn't asked about."""
+    of, all ticked, then one for each of its stories the saga doesn't
+    have, to begin. A group the pack has nothing of isn't asked about."""
     fields = []
     for group in GROUPS:
         number = group.count(data)
@@ -446,11 +494,33 @@ def import_fields(data: dict[str, Any]) -> list[DialogField]:
                 show_if=_with_people if group.key == GENERATED else None,
             )
         )
+    if any(f.key == "world" for f in fields):
+        fields += story_fields(data, saga, show_if=_with_world)
     return fields
 
 
 def _with_people(values: dict[str, Any]) -> bool:
     return bool(values.get("people", True))
+
+
+def _dormant(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
+    """`data` with each story left unticked in `values` marked dormant."""
+    asleep = {
+        n["id"]
+        for n in _held(data, "neighbours")
+        if n.get("kind") == threats.THREAT
+        and story_key(n["id"]) in values
+        and not values[story_key(n["id"])]
+    }
+    if not asleep:
+        return data
+    neighbours = [
+        {**n, "details": {**(n.get("details") or {}), threats.DORMANT: True}}
+        if n["id"] in asleep
+        else n
+        for n in _held(data, "neighbours")
+    ]
+    return {**data, "saga": {**data["saga"], "neighbours": neighbours}}
 
 
 def narrow(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
@@ -459,7 +529,9 @@ def narrow(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
     links instead, so the import plan matches what the pack points at
     to the saga's own of that name, or says the link is dropped. With
     the generated stats unticked, each magus the pack stats by inference
-    comes in as the book's sketch instead."""
+    comes in as the book's sketch instead. A story left unticked comes
+    in dormant."""
+    data = _dormant(data, values)
     out = ("people", GENERATED, "places", "world", "code", "history")
     left = {key for key in out if key in values and not values.get(key)}
     if not left:
@@ -556,12 +628,51 @@ def after_import(saga: Saga, data: dict[str, Any]) -> list[str]:
     return []
 
 
-def start_from(saga: Saga, path: Path) -> list[str]:
+def start_prefix(index: int) -> str:
+    """The key prefix of Start from a pack's story ticks for the
+    `index`th pack offered."""
+    return f"pack{index}_"
+
+
+def start_story_fields(found: list[tuple[str, str]]) -> list[DialogField]:
+    """Start from a pack's ticks for the stories to begin, each pack's
+    shown while it is the one chosen."""
+    fields = []
+    for index, (_label, path) in enumerate(found):
+        try:
+            data = transfer.read(Path(path))
+        except OSError, ValueError:
+            continue
+        fields += story_fields(
+            data,
+            prefix=start_prefix(index),
+            show_if=lambda values, path=path: values.get("pack") == path,
+        )
+    return fields
+
+
+def start_choices(values: dict[str, Any]) -> dict[str, Any]:
+    """The story ticks of the chosen pack in Start from a pack's
+    `values`, keyed as the import form keys them (only the chosen
+    pack's are shown, so only theirs are in `values`)."""
+    found = {}
+    for key, value in values.items():
+        head, _, rest = key.partition("_")
+        if head.startswith("pack") and head[4:].isdigit() and rest.startswith("story_"):
+            found[rest] = value
+    return found
+
+
+def start_from(
+    saga: Saga, path: Path, values: dict[str, Any] | None = None
+) -> list[str]:
     """Add the pack at `path` to `saga` (a new one): what it added, as
-    notes. The caller saves the saga."""
+    notes. `values` holds the stories to begin (start_choices); the
+    rest come in dormant. The caller saves the saga."""
     data = transfer.read(path)
     if data["kind"] != PACK:
         raise ValueError("it is not a content pack")
+    data = _dormant(data, values or {})
     plan = transfer.plan_import(saga, data)
     transfer.apply(saga, plan)
     return notes(escape(f"Started from {plan.name}: {summary(data)}.")) + after_import(

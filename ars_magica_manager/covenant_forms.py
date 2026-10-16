@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import boon_hook_text, catalog, places, sourcebooks
+from . import boon_hook_text, catalog, places, sourcebooks, vassals
 from . import covenants as cov_rules
 from . import economics as eco
 from .commands import Choice, Choose, Confirm, Form, SectionOps, notes
@@ -99,6 +99,7 @@ def covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
             hint="A player covenant: other records' attitudes point at it.",
         ),
         *package_fields(saga, cov),
+        *vassals.fields(saga, cov),
     ]
     if placed:
         fields = [f for f in fields if f.key != "aura_realm"]
@@ -125,6 +126,7 @@ def covenant_form(saga: Saga, covenant: Covenant) -> Form:
         values = dict(values)
         covenant.tribunal_id = values.get("tribunal_id", covenant.tribunal_id)
         save_package_fields(saga, covenant, values)
+        vassals.save(saga, covenant, values)
         apply_covenant(covenant, values)
         places.sync(saga)
 

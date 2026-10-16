@@ -203,9 +203,12 @@ class Builder:
         detail: str = SKETCH,
         season: str = "Summer",
         arms: Arms | None = None,
+        liege: Covenant | None = None,
+        oath: str = "",
     ) -> Covenant:
         """A covenant of the book's Tribunal, not played: its aura is the
-        one typed here, or its place's when it sits in one."""
+        one typed here, or its place's when it sits in one; `liege` is the
+        covenant it is sworn to, with the oath's duties in `oath`."""
         covenant = Covenant(
             id=self._covenant_id(name),
             saga_id=self.saga.id,
@@ -222,6 +225,8 @@ class Builder:
             unnamed_magi=unnamed_magi,
             what_matters=what_matters,
             arms=arms.to_dict() if arms else {},
+            liege_id=liege.id if liege is not None else None,
+            oath=oath,
         )
         if place is not None:
             covenant.place_id, covenant.place_level = place.id, level

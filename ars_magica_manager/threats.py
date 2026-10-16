@@ -10,9 +10,14 @@ storyguide moves the threat's position). A stage the troupe stopped or
 turned no longer comes; one marked as happened has come whatever the
 date.
 
-Kept in Neighbour.details: "antagonist", "moves", "position" and
-"stages" (each {"title", "year", "season", "at", "clues", "ignored",
-"stopped", "turned", "outcome"})."""
+A threat can be dormant: a story the storyguide hasn't begun (one left
+unticked when its pack was imported). It has reached no stage, nothing
+of it comes due, and Begin This Story starts it, its first stage due
+next season at the soonest.
+
+Kept in Neighbour.details: "antagonist", "moves", "position",
+"dormant" and "stages" (each {"title", "year", "season", "at", "clues",
+"ignored", "stopped", "turned", "outcome"})."""
 
 from __future__ import annotations
 
@@ -20,12 +25,17 @@ from dataclasses import dataclass
 from typing import Any
 
 from .character_sheet import Fact
-from .commands import SectionOps
+from .commands import Confirm, SectionOps, notes
 from .form_spec import DialogField, pairs
 from .grids import Grid
+from .markup import escape
 from .models import SEASONS, Neighbour, Saga
 from .neighbour_lists import KindList, KindTab, details_list, list_ops
 from .sections import STAGES_SECTION
+
+#: The neighbour kind, and the mark of a threat not yet begun.
+THREAT = "threat"
+DORMANT = "dormant"
 
 #: How a threat moves from one stage to the next.
 MOVES: tuple[str, ...] = ("Fixed dates", "A track", "An omen count")
@@ -54,6 +64,83 @@ def moves(neighbour: Neighbour) -> str:
 
 def by_date(neighbour: Neighbour) -> bool:
     return moves(neighbour) == MOVES[0]
+
+
+def is_threat(record: object) -> bool:
+    return isinstance(record, Neighbour) and record.kind == THREAT
+
+
+def is_dormant(record: object) -> bool:
+    """A threat not yet begun."""
+    return (
+        isinstance(record, Neighbour)
+        and record.kind == THREAT
+        and bool(record.details.get(DORMANT))
+    )
+
+
+def counts(saga: Saga) -> tuple[int, int]:
+    """How many of the saga's threats are under way, and how many
+    dormant."""
+    found = [n for n in saga.neighbours if is_threat(n)]
+    dormant = sum(1 for n in found if is_dormant(n))
+    return len(found) - dormant, dormant
+
+
+def stories_text(saga: Saga) -> str:
+    """ "3 under way, 2 dormant": the Tribunal sheet's Stories."""
+    active, dormant = counts(saga)
+    return f"{active} under way, {dormant} dormant"
+
+
+def begin(saga: Saga, neighbour: Neighbour) -> None:
+    """Begin a dormant threat: dated stages move later together, so the
+    first still to come is due next season at the soonest; a track or
+    omen count starts where it stands."""
+    neighbour.details.pop(DORMANT, None)
+    if not by_date(neighbour):
+        return
+    pending = [
+        stage_order(s)
+        for s in stages(neighbour)
+        if (s.get("outcome") or PENDING) == PENDING and stage_order(s) is not None
+    ]
+    if not pending:
+        return
+    shift = max(0, _now(saga) + 1 - min(o for o in pending if o is not None))
+    if not shift:
+        return
+    for stage in stages(neighbour):
+        when = stage_order(stage)
+        if when is None:
+            continue
+        year, index = divmod(when + shift, len(SEASONS))
+        if stage.get("season") in SEASONS:
+            stage["year"], stage["season"] = year, SEASONS[index]
+        else:
+            # A stage dated by its year alone comes at the year's start.
+            stage["year"] = year + (1 if index else 0)
+
+
+def begin_command(saga: Saga, neighbour: Neighbour) -> Confirm:
+    """More's Begin This Story on a dormant threat."""
+
+    def apply() -> list[str]:
+        begin(saga, neighbour)
+        upcoming = reached(saga, neighbour).next
+        line = f"{neighbour.name} has begun."
+        if upcoming is not None and (when := when_text(neighbour, upcoming)):
+            line = f"{neighbour.name} has begun: {upcoming['title']} comes {when}."
+        return notes(escape(line))
+
+    return Confirm(
+        f"Begin {escape(neighbour.name)}? Its stages start to come: a dated "
+        "first stage already past moves to next season, and the rest move "
+        "with it.",
+        apply,
+        yes_label="Begin",
+        title="Begin This Story",
+    )
 
 
 def position(neighbour: Neighbour) -> int:
@@ -89,6 +176,8 @@ def has_come(saga: Saga, neighbour: Neighbour, stage: dict[str, Any]) -> bool:
     outcome = stage.get("outcome") or PENDING
     if outcome != PENDING:
         return outcome == "Happened"
+    if is_dormant(neighbour):
+        return False
     if by_date(neighbour):
         when = stage_order(stage)
         return when is not None and when <= _now(saga)
@@ -97,7 +186,10 @@ def has_come(saga: Saga, neighbour: Neighbour, stage: dict[str, Any]) -> bool:
 
 
 def reached(saga: Saga, neighbour: Neighbour) -> Reached:
-    """The last stage that has come, and the first still to come."""
+    """The last stage that has come, and the first still to come; none
+    of either while it is dormant."""
+    if is_dormant(neighbour):
+        return Reached(None, None)
     current = None
     upcoming = None
     for stage in stages(neighbour):
@@ -138,6 +230,8 @@ def facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
         Fact("Antagonist", neighbour.details.get("antagonist", "")),
         Fact("Moves by", moves(neighbour).lower()),
     ]
+    if is_dormant(neighbour):
+        return [*found, Fact("Dormant", "not begun: More, Begin This Story")]
     if not by_date(neighbour):
         found.append(Fact("Position", str(position(neighbour))))
     found += [

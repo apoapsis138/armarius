@@ -79,6 +79,17 @@ on Wikimedia Commons, by Inductiveload after Jiří Louda, in the public
 domain. Its shapes were merged into a silhouette, line work and claws so
 the app can paint it in any tincture (`assets/charges/LICENSE.txt`).
 
+**The other drawn charges** in the same folder are adapted the same way
+from Wikimedia Commons files, each in the public domain or under CC0:
+the lion with its tail knotted (*Lion rampant (tail nowed)*, by
+Inductiveload), the eagle (*Meuble héraldique Aigle éployée*), the
+fleur-de-lis (*Meuble héraldique Fleur de lis*), the tower (*Meuble
+Héraldique Tour ajourée*), the cross (*Pièce héraldique croix dentelée*,
+CC0), the crescent (*Coa Illustration Elements Planet Crescent*, after
+Fox-Davies and Graham Johnston), the star (*Coa Illustration Elements
+Planet Star*) and the tree (*Coa Illustration Elements Plant Pear Tree*,
+after Jérôme de Bara). `assets/charges/LICENSE.txt` links each file.
+
 **The icons** in `ars_magica_manager/assets/icons/` are
 [Phosphor Icons](https://phosphoricons.com) (Light weight), © 2023
 Phosphor Icons, under the MIT licence (`assets/icons/LICENSE.txt`). **The
