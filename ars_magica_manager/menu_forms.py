@@ -33,6 +33,8 @@ from . import (
     neighbour_forms,
     neighbours,
     packs,
+    places,
+    ruins,
     seasons,
     storage,
     transfer,
@@ -326,6 +328,8 @@ MANAGE: dict[str, str] = {
     "demote": "Keep less of it: a full record becomes a sketch, left out "
     "of seasons, ageing and upkeep, and a sketch a line. Nothing is deleted; the "
     "chapters it no longer shows keep what they hold.",
+    "found_covenant": "Raise a new covenant on this ruin, as Winter Ruins "
+    "does: it starts In Creation, sited here, and the ruin becomes its claim.",
     DELETE_RECORD: "Remove it from the saga, after saying what happens to "
     "what it holds.",
 }
@@ -1221,6 +1225,15 @@ def _laboratory(page: Page) -> Laboratory | None:
     return page.laboratory
 
 
+def _found_command(page: Page) -> Command:
+    record = page.record_to_delete()
+    if not isinstance(record, Neighbour) or not places.is_ruin(record):
+        return Refuse(
+            "Found a Covenant Here", "Only a ruined covenant's site can be refounded."
+        )
+    return ruins.found_form(page.saga, record)
+
+
 def _arms_command(page: Page) -> Command:
     record = page.record_to_delete()
     if record is None or not arms.bears_arms(record):
@@ -1247,6 +1260,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "demote": _detail_command("demote"),
     "set_date": lambda page: set_date(page.saga),
     "edit_arms": _arms_command,
+    "found_covenant": _found_command,
     "edit_saga": lambda page: creation_forms.edit_saga_form(page.saga),
     "create_covenant": lambda page: creation_forms.new_covenant_form(page.saga),
     "create_tribunal": lambda page: tribunal_forms.new_tribunal_form(page.saga),

@@ -37,6 +37,7 @@ def _registered() -> set[Path]:
         | {path for paths in artwork.FONTS.values() for path in paths}
         | set(artwork.SOUNDS.values())
         | set(artwork.CHARGE_DRAWINGS.values())
+        | set(artwork.DRAWN_ICONS.values())
     )
 
 

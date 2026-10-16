@@ -291,7 +291,7 @@ def neighbour_card(
         neighbour.name,
         region_sheet.card_subtitle(neighbour),
         p,
-        symbol_label(artwork.icon(neighbours.kind_of(neighbour).key), p),
+        symbol_label(artwork.icon(neighbours.icon_concept(neighbour)), p),
     )
     facts = region_sheet.card_facts(saga, neighbour)
     if facts:

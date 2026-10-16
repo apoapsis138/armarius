@@ -98,6 +98,12 @@ class Opener:
     open: Callable[[object], object]
 
 
+def _found_covenant(ws) -> None:
+    """More's Found a Covenant Here, on the place marked a ruin first."""
+    ws.saga.neighbour("drachenfels").details["ruined"] = True
+    ws.action_found_covenant()
+
+
 def _open_saga_source(ws) -> None:
     """Edit a saga source, made in memory (saved only with the edit)."""
     if not ws.saga.sources:
@@ -306,6 +312,7 @@ OPENERS: dict[str, Opener] = {
         ),
     ),
     "edit place": Opener("place", lambda ws: ws._core_verb("section-nb-info", "edit")),
+    "found covenant": Opener("place", _found_covenant),
     "add regio level": Opener(
         "place", lambda ws: ws._core_verb("section-nb-levels", "add")
     ),

@@ -190,6 +190,12 @@ def kind_of(neighbour: Neighbour) -> NeighbourKind:
     return KINDS.get(neighbour.kind) or KINDS[FALLBACK]
 
 
+def icon_concept(neighbour: Neighbour) -> str:
+    """The artwork concept a neighbour's picture shows: its kind's, or a
+    ruin for a ruined covenant's site."""
+    return "ruin" if places.is_ruin(neighbour) else kind_of(neighbour).key
+
+
 def group(key: str) -> Group:
     return next(g for g in GROUPS if g.key == key)
 

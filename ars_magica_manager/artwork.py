@@ -17,6 +17,8 @@ it to its theme. Two sets:
 - charges/: heraldic charges from Wikimedia Commons (see NOTICE.md),
   cleaned by tools/clean_charge.py into layers (silhouette, line work,
   claws), each tinted by arms.py's tincture rules.
+- drawn/: icons the app draws itself, after a Phosphor one (a ruin is
+  the covenant's turret broken), each made by a script in tools/.
 - icons/: Phosphor Icons at Light weight (MIT), copied by
   tools/fetch_icons.py, for everything else.
 
@@ -35,6 +37,7 @@ SYMBOLS = ASSETS / "symbols"
 ICONS = ASSETS / "icons"
 SOUNDS_DIR = ASSETS / "sounds"
 CHARGES = ASSETS / "charges"
+DRAWN = ASSETS / "drawn"
 
 #: The heraldic charges drawn from a file, by charge name.
 CHARGE_DRAWINGS: dict[str, Path] = {"Lion": CHARGES / "lion.svg"}
@@ -148,9 +151,15 @@ ICON_NAMES: dict[str, str] = {
     "worksheet": "clipboard-text",
 }
 
+#: An app concept to an icon the app draws itself (drawn/), in place of
+#: a Phosphor one: a ruined covenant's broken turret (tools/draw_ruin.py).
+DRAWN_ICONS: dict[str, Path] = {"ruin": DRAWN / "ruin.svg"}
+
 
 def icon(concept: str) -> Path:
     """The icon for an app concept; KeyError for one the registry lacks."""
+    if concept in DRAWN_ICONS:
+        return DRAWN_ICONS[concept]
     return ICONS / f"{ICON_NAMES[concept]}.svg"
 
 

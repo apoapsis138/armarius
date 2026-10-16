@@ -342,6 +342,9 @@ A place is somewhere the saga's records can be: a forest, a ruin, a
 crag, a regio. It is a kind of neighbour without an attitude or a
 ruler, listed under Places in the Region. New Place and Edit record:
 
+- **Ruined covenant**: the place is a fallen covenant's site. It shows a
+  broken tower in place of the place's own picture, and "Ruin" in the
+  lists.
 - **Aura**: the aura of its surface (its mundane level); the Realm field
   says whose.
 - **Tethers**: the monuments, creatures or vis sources that anchor it.
@@ -366,6 +369,21 @@ its effects and its triggers; its Roll Tables and Diary tabs its tables
 and what has happened there; its Found Here tab its favours and links
 (the vis sources, books and creatures found there). Deleting a place
 leaves what was in it placed nowhere.
+
+**Found a Covenant Here** (More, on a ruined covenant's site) raises a
+new covenant on the ruin, as the Definitive Edition's Winter Ruins
+Situation does: New Covenant's form, named for the ruin and in its
+aura's realm, with **Take Winter Ruins** to add that Situation's Boons
+and Hooks. The covenant starts In Creation, sited on the place so it
+takes its aura, and the place is then claimed by it and no longer a
+ruin.
+
+A ruin with a regio asks for the covenant's **Site**: its surface or one
+of its regio levels, whose aura the covenant takes. In a level it takes
+the **Regio Boon** (Minor: entered in several ways; Major: entered only
+with a native guide). On the surface, the regio on its site is the
+**Regio Hook** (Minor, or Major when its folk come out and make trouble),
+with the Non-magical Regio Hook too when the regio isn't Magical.
 
 With the **Auras change** Rule Option on (Realms of Power: Magic, in
 Saga Content), Edit also asks for **Magic worked there** (+1 to +3 for

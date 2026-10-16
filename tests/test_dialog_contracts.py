@@ -528,6 +528,26 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"Name": ""}, {"Aura": "-1"}],
         shown={"#nb-kind-facts": "Magic 6"},
     ),
+    "found covenant": Contract(
+        prefill={
+            "Name": "The Drachenfels",
+            "Aura realm": "Magic",
+            "Take Winter Ruins": True,
+        },
+        edits={"Name": "Drachenhort", "Season": "Winter"},
+        saved=lambda s: [
+            (
+                c.place_id,
+                c.covenant_season,
+                bool(c.boons_hooks),
+                s.neighbour("drachenfels").details["ruined"],
+            )
+            for c in s.covenants
+            if c.name == "Drachenhort"
+        ],
+        expected=[("drachenfels", "Winter", True, False)],
+        invalid={"Name": ""},
+    ),
     "add regio level": Contract(
         prefill={"Name": "", "Realm": "Magic"},
         edits={

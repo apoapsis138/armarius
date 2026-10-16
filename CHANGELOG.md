@@ -46,6 +46,19 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.93.0 — 2026-10-16
+
+- **Ruined covenants.** A place can be marked a ruined covenant: it
+  shows a broken tower instead of its usual picture, and "Ruin" in the
+  lists. The Rhine's Rethra, Treverorum and Rudiaria's old site are
+  marked.
+- **Found a covenant on a ruin.** Found a Covenant Here (More in the
+  terminal, Manage on the desktop) raises a new covenant on a ruin, as
+  the Winter Ruins situation does: named for the ruin, sited there and
+  taking its aura, with Winter Ruins's Boons and Hooks if you like. On a
+  ruin with a regio you choose its site, the surface or a regio level,
+  and the Regio Boon or Hook that goes with it.
+
 ## 2.92.0 — 2026-10-16
 
 - **Spin boxes to match the drop-downs.** On the desktop the level

@@ -153,7 +153,10 @@ def covenants_grid(saga: Saga) -> Grid:
 
 
 def kind_text(neighbour: Neighbour) -> str:
-    """Its kind as the lists show it: "Lord"."""
+    """Its kind as the lists show it: "Lord"; "Ruin" for a ruined
+    covenant's site."""
+    if places.is_ruin(neighbour):
+        return "Ruin"
     return neighbours.kind_of(neighbour).name
 
 
@@ -306,9 +309,11 @@ def details_text(saga: Saga, record: Neighbour | Covenant | None) -> str:
 
 
 def card_subtitle(neighbour: Neighbour) -> str:
-    """ "Lord · Sketch"; a place's aura, "Place · Magic 5"."""
+    """ "Lord · Sketch"; a place's aura, "Place · Magic 5" ("Ruined
+    covenant · Magic 5")."""
     if places.is_place(neighbour):
-        return f"Place · {places.aura_text(neighbour)}"
+        what = "Ruined covenant" if places.is_ruin(neighbour) else "Place"
+        return f"{what} · {places.aura_text(neighbour)}"
     return f"{kind_text(neighbour)} · {neighbour.detail}"
 
 

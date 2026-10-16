@@ -1873,6 +1873,7 @@ def _east(rhine: Rhine) -> None:
         "rethra",
         "Rethra",
         inside=pomerania,
+        ruined=True,
         realm="Faerie",
         aura=4,
         tethers="The Oracle of Radegast",

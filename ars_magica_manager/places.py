@@ -19,7 +19,10 @@ yearly Warping, and an aura effect replaces the aura of its level.
 A covenant placed somewhere takes its aura from the place (sync); the
 aura typed on the covenant is kept, and comes back if it is moved out.
 
-Kept in Neighbour.details: "aura", "tethers", "status", "known",
+A place may be marked a ruined covenant (a fallen covenant's site,
+ruins.py): it shows a ruin, and can be founded anew.
+
+Kept in Neighbour.details: "ruined", "aura", "tethers", "status", "known",
 "claimed_by", "levels" (each {"name", "realm", "aura", "see", "enter",
 "notes"}, the first being Level 1, just above the surface) and "effects"
 (each {"what", "amount", "target", "where", "note"}). Where a record is:
@@ -63,6 +66,9 @@ STATUS: tuple[str, ...] = ("Rumoured", "Known", "Visited", "Claimed")
 KNOWN: tuple[str, ...] = ("Locally", "In the region", "In the Tribunal", "In the Order")
 
 SURFACE = "Surface"
+
+#: The detail that marks a place as a ruined covenant.
+RUINED = "ruined"
 
 
 @dataclass(frozen=True)
@@ -109,6 +115,16 @@ _CHARACTERISTICS["qik"] = "quickness"
 
 def is_place(record: object) -> bool:
     return isinstance(record, Neighbour) and record.kind == PLACE
+
+
+def is_ruin(record: object) -> bool:
+    """Whether `record` is a place marked as a ruined covenant: a fallen
+    covenant's site, which shows a ruin and can be founded anew."""
+    return (
+        isinstance(record, Neighbour)
+        and record.kind == PLACE
+        and bool(record.details.get(RUINED))
+    )
 
 
 def all_places(saga: Saga) -> list[Neighbour]:
@@ -502,6 +518,14 @@ def fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:
     """What New Place and Edit add to the common fields."""
     d = place.details if place is not None else {}
     return [
+        DialogField(
+            RUINED,
+            "Ruined covenant",
+            "check",
+            bool(d.get(RUINED)),
+            hint="A fallen covenant's site: it shows a ruin, and Found a "
+            "Covenant Here (More) raises a new one on it.",
+        ),
         DialogField(
             "aura",
             "Aura",

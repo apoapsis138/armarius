@@ -53,7 +53,9 @@ from .... import (
     neighbours,
     packs,
     place_events,
+    places,
     presence,
+    ruins,
     seasons,
     sourcebooks,
     storage,
@@ -298,6 +300,7 @@ _STORYGUIDE_ACTIONS = frozenset(
         "create_neighbour",
         "roll_fair",
         "roll_table",
+        "found_covenant",
         "create_character",
         "create_laboratory",
         "create_familiar",
@@ -2435,6 +2438,28 @@ class WorkspaceBase(Screen[None]):
             else "section-cov-info"
         )
         run_steps(self.app, arms.arms_form(record), lambda _end: self._commit(section))
+
+    def action_found_covenant(self) -> None:
+        """More's Found a Covenant Here on a ruined covenant's site: New
+        Covenant, prefilled, raised on the ruin; then its worksheet."""
+        record = self._record_to_delete()
+        if not isinstance(record, Neighbour) or not places.is_ruin(record):
+            return
+        before = {c.id for c in self.saga.covenants}
+
+        async def show(covenant: Covenant) -> None:
+            self.selected_covenant = covenant
+            self.selected_kind = NodeKind.COVENANT
+            await self._show_covenant_detail(covenant)
+            self._open_creation_worksheet(covenant)
+
+        def finished(_end: object) -> None:
+            fresh = [c for c in self.saga.covenants if c.id not in before]
+            self._commit(NEIGHBOUR_INFO_SECTION, tree=True)
+            if fresh:
+                self.run_worker(show(fresh[-1]))
+
+        run_steps(self.app, ruins.found_form(self.saga, record), finished)
 
     def action_set_date(self) -> None:
         saga = self.saga

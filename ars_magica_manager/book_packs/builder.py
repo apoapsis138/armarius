@@ -39,7 +39,7 @@ from ..models import (
     VirtueFlawInstance,
 )
 from ..models.world import FULL, SKETCH
-from ..places import PLACE
+from ..places import PLACE, RUINED
 from ..rules import aging, warping
 from ..rules import creation_access as access
 from ..rules.xp import ability_xp, art_xp
@@ -341,10 +341,12 @@ class Builder:
         tethers: str = "",
         levels: list[dict[str, Any]] | None = None,
         detail: str = SKETCH,
+        ruined: bool = False,
     ) -> Neighbour:
         """A forest, a site or a regio: its surface aura in `realm`, and
-        its regio levels as `level(...)` entries, each with its own aura."""
-        return self.neighbour(
+        its regio levels as `level(...)` entries, each with its own aura.
+        `ruined` marks a fallen covenant's site."""
+        found = self.neighbour(
             PLACE,
             name,
             summary=summary,
@@ -360,6 +362,9 @@ class Builder:
                 "levels": list(levels or []),
             },
         )
+        if ruined:
+            found.details[RUINED] = True
+        return found
 
     @staticmethod
     def level(

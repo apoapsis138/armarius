@@ -47,7 +47,7 @@ class NeighbourPage(QWidget):
                 neighbour.name,
                 region_sheet.card_subtitle(neighbour),
                 p,
-                neighbours.kind_of(neighbour).key,
+                neighbours.icon_concept(neighbour),
             )
         )
         outer.addWidget(fact_grid(region_sheet.neighbour_facts(saga, neighbour), p, 3))

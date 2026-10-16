@@ -81,7 +81,11 @@ the app can paint it in any tincture (`assets/charges/LICENSE.txt`).
 
 **The icons** in `ars_magica_manager/assets/icons/` are
 [Phosphor Icons](https://phosphoricons.com) (Light weight), © 2023
-Phosphor Icons, under the MIT licence (`assets/icons/LICENSE.txt`).
+Phosphor Icons, under the MIT licence (`assets/icons/LICENSE.txt`). **The
+ruin** in `ars_magica_manager/assets/drawn/` is drawn by the app's own
+code (`tools/draw_ruin.py`) after Phosphor's castle turret, its top
+broken off and fallen stones at its foot; as a modified Phosphor icon it
+is under the same MIT licence.
 
 **The sounds** in `ars_magica_manager/assets/sounds/` are recordings from
 [Freesound](https://freesound.org), each dedicated to the public domain

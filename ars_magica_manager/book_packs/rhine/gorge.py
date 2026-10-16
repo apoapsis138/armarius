@@ -186,6 +186,7 @@ def _gorge_places(rhine: Rhine, gorge: Neighbour, valley: Neighbour | None) -> N
 
     places["rudesheim_bromserburg"] = b.place(
         "Rüdesheim and the Brömserburg",
+        ruined=True,
         summary=secrets(
             paragraphs(
                 "The site of Rudiaria, the first covenant of the Gorge, on the "
@@ -603,6 +604,7 @@ def _gorge_places(rhine: Rhine, gorge: Neighbour, valley: Neighbour | None) -> N
 
     places["treverorum_site"] = b.place(
         "Treverorum",
+        ruined=True,
         summary=secrets(
             paragraphs(
                 "The lost covenant beneath Trier, between the Fleischstrasse that "
