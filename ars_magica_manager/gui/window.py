@@ -25,15 +25,20 @@ import shiboken6
 from PySide6.QtCore import QEvent, Qt, QTimer
 from PySide6.QtGui import QFont, QKeySequence, QShortcut, QShowEvent
 from PySide6.QtWidgets import (
+    QAbstractSpinBox,
     QApplication,
+    QComboBox,
     QDialog,
     QFileDialog,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
     QMainWindow,
+    QPlainTextEdit,
     QPushButton,
     QScrollArea,
     QStackedWidget,
+    QTextEdit,
     QVBoxLayout,
     QWidget,
 )
@@ -42,6 +47,7 @@ from .. import (
     advance_forms,
     creation_forms,
     help_text,
+    hotkeys,
     menu_forms,
     paths,
     print_forms,
@@ -248,10 +254,10 @@ class MainWindow(QMainWindow):
         bar.addWidget(self.advance)
         self.help = QPushButton("  Help")
         self.help.setFlat(True)
-        self.help.setToolTip("Help on this page (F1)")
+        self.help.setToolTip("Help on this page (? or F1)")
         self.help.clicked.connect(self.open_help)
         bar.addWidget(self.help)
-        QShortcut(QKeySequence(Qt.Key.Key_F1), self, self.open_help)
+        self._bind_hotkeys()
         bar.addWidget(self.theme)
         #: The sounds on or off (gui/sounds.py); its icon says which.
         self.sound = QPushButton()
@@ -262,6 +268,69 @@ class MainWindow(QMainWindow):
         self.controls = WindowButtons(self, self.palette_)
         bar.addWidget(self.controls, 0, Qt.AlignmentFlag.AlignTop)
         return bar
+
+    def _bind_hotkeys(self) -> None:
+        """The keys that work on every page (hotkeys.py): Help, Back and
+        Quit, each a shortcut on the whole window."""
+        handlers: dict[str, Callable[[], object]] = {
+            hotkeys.HELP: self._help_key,
+            hotkeys.BACK: self.back,
+            hotkeys.QUIT: self.close,
+        }
+        for hotkey in hotkeys.HOTKEYS:
+            act = handlers[hotkey.action]
+            for key in hotkey.keys:
+                # A sign typed with Shift (?) reaches Qt with Shift held on
+                # some keyboards and platforms and not on others, so both
+                # are bound; where both match, Qt calls it ambiguous.
+                shifted = hotkeys.is_typed(key) and not key.isalnum()
+                for sequence in (key, f"Shift+{key}") if shifted else (key,):
+                    shortcut = QShortcut(QKeySequence(sequence), self)
+                    for signal in (shortcut.activated, shortcut.activatedAmbiguously):
+                        signal.connect(
+                            lambda key=key, act=act: self._on_hotkey(key, act)
+                        )
+
+    def _on_hotkey(self, key: str, act: Callable[[], object]) -> None:
+        """Do what `key` does, unless it is a typed key and something is
+        being typed or a step is open (hotkeys.is_typed)."""
+        if hotkeys.is_typed(key) and (self._typing() or self._step_open()):
+            return
+        act()
+
+    def _typing(self) -> bool:
+        """Whether the focus is in a field that takes typing."""
+        focus = QApplication.focusWidget()
+        if isinstance(focus, QComboBox):
+            return focus.isEditable()
+        return (
+            isinstance(focus, QLineEdit | QTextEdit | QPlainTextEdit | QAbstractSpinBox)
+            and not getattr(focus, "isReadOnly", lambda: False)()
+        )
+
+    def _step_open(self) -> bool:
+        """Whether a step (a form, a list or a question) is open in place
+        on the page."""
+        return self._open is not None and shiboken6.isValid(self._open)
+
+    def _help_key(self) -> None:
+        """? or F1: Help on the page on show; on the title page, its own
+        way into Help."""
+        if self.title is not None:
+            self.leave_title(title_page.HELP)
+        else:
+            self.open_help()
+
+    def back(self) -> None:
+        """Esc: cancel the step open in place, else go back up the trail
+        to the page above (from Help, the page it was opened on)."""
+        if self.title is not None:
+            return
+        if self._step_open():
+            assert self._open is not None
+            self._open.reject()
+        elif len(self.trail) > 1:
+            self.go(self.trail[:-1])
 
     def showEvent(self, event: QShowEvent) -> None:
         snapping.make_snappable(self)

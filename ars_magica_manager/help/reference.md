@@ -41,12 +41,15 @@ In Help itself, the arrow keys choose a topic, `/` filters the topics,
 # Keys
 <!-- help: keys; gui -->
 
-The desktop version is used with the mouse: every action is a button on the page, in the chapter or section it acts on. A few keys work too.
+The desktop version is used with the mouse: every action is a button on the page, in the chapter or section it acts on. A few keys work too, the same ones as in the terminal.
 
 ### Always there
 <!-- help: keys-always; gui -->
 
-- `F1` opens Help on the page on show, as the top bar's **Help** does.
+- `?` or `F1` opens Help on the page on show, as the top bar's **Help** does.
+- `Esc` cancels the form or question that is open, as its Cancel does; with none open, it goes back a page, to the one above in the trail (from Help, to the page you opened it on).
+- `q` quits Armarius. Everything is already saved.
+- `?` and `q` are typed as letters while you are typing in a box, and do nothing while a form or question is open, so they never act by accident. `Esc` and `F1` always work.
 - **Advance Season**, in the top bar, advances the saga by one season (see [Advancing a season](help:advance-season)).
 - The trail at the top left goes back to any page above this one.
 
@@ -60,7 +63,7 @@ The desktop version is used with the mouse: every action is a button on the page
 ### On the title page and in Help
 <!-- help: keys-elsewhere; gui -->
 
-- On the title page, `Enter` takes the first way on (Open Saga, or All Sagas).
-- In Help, type in the filter box to narrow the topics, and click a topic to show it. A link in the page shows its topic; the trail leads back to the page Help was opened from.
+- On the title page, `Enter` takes the first way on (Open Saga, or All Sagas), `?` opens Help and `q` quits.
+- In Help, type in the filter box to narrow the topics, and click a topic to show it. A link in the page shows its topic; `Esc`, or the trail, leads back to the page Help was opened from.
 
 See [The window](help:workspace) for what the buttons act on.

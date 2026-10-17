@@ -122,7 +122,7 @@ Giving a laboratory to a magus who already had one frees their old laboratory, a
 Press `?` anywhere for help on the part of the screen that has focus; in a dialog where you are typing, press F1. The Help screen lists THIS SCREEN first, then the HOW-TO GUIDES, the REFERENCE pages (About this App, What's New with every version's changes, and Keys) and ALL PAGES. The arrow keys choose a topic, `/` filters the topics, Tab moves between the list and the page, and Esc closes Help.
 <!-- /tui -->
 <!-- gui -->
-Click **Help** in the top bar, or press F1, for help on the page and chapter on show. Help lists THIS SCREEN first, then the HOW-TO GUIDES, the REFERENCE pages (such as About this App and What's New, with every version's changes) and ALL PAGES; the box above the list filters them. Click a topic to read it, and a link to follow it. The trail leads back to the page you came from.
+Click **Help** in the top bar, or press `?` or F1, for help on the page and chapter on show. Help lists THIS SCREEN first, then the HOW-TO GUIDES, the REFERENCE pages (such as About this App and What's New, with every version's changes) and ALL PAGES; the box above the list filters them. Click a topic to read it, and a link to follow it. Esc, or the trail, leads back to the page you came from, and `q` quits the app.
 <!-- /gui -->
 
 ### Where to go next

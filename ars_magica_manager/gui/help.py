@@ -1,5 +1,5 @@
 """The desktop Help page: the same help pages the terminal's Help shows
-(help_text.py), opened with F1 or the top bar's Help on the help for the
+(help_text.py), opened with ? or F1 or the top bar's Help on the help for the
 page on show.
 
 The topics are listed on the left under THIS PAGE, HOW-TO GUIDES,

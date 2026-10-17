@@ -169,7 +169,7 @@ A covenant, laboratory or character still being made is In Creation: its page is
 - What the terminal keeps in its New and More menus is on the page itself: a New card at the end of the cards it adds to (**New Covenant**, **New Character**, **New Laboratory**), or a button in the chapter or section it acts on, such as **Give** beside a list's Add, Edit and Delete, **Set Up Research Library** on a covenant's Library or **Set Date** in the saga's Seasons chapter.
 - A record's **Manage** chapter holds what acts on the record as a whole: Export, Update from a File, Print to PDF and Delete.
 - **Advance Season**, in the top bar, shows the saga's date and advances it by one season. See [Advance Season](help:advance-season).
-- **Help**, or `F1`, opens Help on the page and chapter on show.
+- **Help**, or `?` or `F1`, opens Help on the page and chapter on show. `Esc` goes back a page (or cancels a form that is open), and `q` quits. See [Keys](help:keys).
 
 ### The Inspector and the theme
 <!-- help: workspace-status; gui -->

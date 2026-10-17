@@ -46,6 +46,16 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.96.0 — 2026-10-17
+
+- **Keys on the desktop.** The desktop version now answers the same
+  page-wide keys as the terminal: `?` (or F1) opens Help on the page
+  you're on, `Esc` cancels a form or question that's open (or, with none
+  open, goes back a page, and from Help back to the page you came from),
+  and `q` quits. While you're typing in a box, `?` and `q` just type, and
+  they do nothing while a form is open, so they never act by accident.
+  Help's Keys page lists them.
+
 ## 2.95.0 — 2026-10-16
 
 - **The Provence pack.** New Saga and Import offer *Faith & Flame*: the

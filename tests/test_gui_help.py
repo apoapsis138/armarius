@@ -1,4 +1,4 @@
-"""Help on the desktop: F1 or the top bar's Help opens the same help
+"""Help on the desktop: ? or F1 or the top bar's Help opens the same help
 pages as the terminal's, on the page on show, with a filter and links."""
 
 from __future__ import annotations
