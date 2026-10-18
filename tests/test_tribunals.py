@@ -236,21 +236,73 @@ def test_switching_customs_hides_the_old_ones_and_keeps_them():
     assert tribunal_sheet.roster_grid(saga, again).rows[0][5] == "Hermetic"
 
 
-def test_a_theban_tribunal_counts_tokens_and_marks_the_ostracised():
+def test_a_theban_tribunal_votes_by_magi_present_and_marks_the_ostracised():
     saga = everything_saga()
     thebes = saga.tribunal("thebes")
     assert thebes is not None
     facts = {f.label: f.value for f in tribunal_sheet.facts(saga, thebes)}
-    assert facts["Customs"] == "Theban: Tokens"
-    assert facts["Your votes"] == "2 tokens of 2"  # Leandro's, of Keep
+    assert facts["Customs"] == "Theban: The Polity"
+    # Tokens are merit, not votes: the votes are counted as under the core.
+    assert facts["Your votes"] == tribunal_sheet.your_votes_text(saga, thebes)
+    assert "token" not in facts["Your votes"]
     package = tribunal_packages.of(thebes)
-    assert package.meeting_steps == ("elections",)
+    assert package.meeting_steps == (
+        "assembly",
+        "ostrakismos",
+        "end_of_term",
+        "sortition",
+        "archon_polemarch",
+    )
     tokens = package.tabs[0].lists[0].grid(saga, thebes)
-    assert [row[5] for row in tokens.rows] == ["Archon of Rites", "Ostracised to 1225"]
+    assert tokens.columns[2] == "Status"
+    assert [row[2] for row in tokens.rows] == ["Polites", "Polites"]
+    assert [row[5] for row in tokens.rows] == ["0", "1"]
+    assert [row[6] for row in tokens.rows] == ["Archon", "Ostracised to 1225"]
     archai = package.tabs[0].lists[1].grid(saga, thebes)
     assert [row[1] for row in archai.rows] == ["Leandro", "vacant"]
     saga.current_year = 1226
     assert tokens_standing(saga, thebes, theban_magi(thebes)[1]) == ""
+
+
+def test_a_theban_save_that_says_liturgies_reads_them_as_services():
+    saga = everything_saga()
+    thebes = saga.tribunal("thebes")
+    assert thebes is not None
+    entry = thebes.package_data["theban"]["magi"][1]
+    entry["liturgies"] = entry.pop("services")
+    assert theban_magi(thebes)[1]["services"] == 1
+    assert "liturgies" not in theban_magi(thebes)[1]
+
+
+def test_a_theban_metoikos_holds_no_tokens_or_shards():
+    saga = everything_saga()
+    thebes = saga.tribunal("thebes")
+    assert thebes is not None
+    ops = tribunal_packages.of(thebes).tabs[0].lists[0].ops(saga, thebes)
+    form = ops.add()
+    assert form.validate is not None
+    guest = {"character_id": "mag1", "status": "metoikos", "tokens": 0, "shards": 0}
+    assert form.validate(guest) is None
+    assert form.validate({**guest, "shards": 1}) == (
+        "A metoikos holds no tokens or shards."
+    )
+
+
+def test_a_theban_covenant_keeps_its_phyle():
+    saga = everything_saga()
+    thebes = saga.tribunal("thebes")
+    keep = saga.covenant("cov1")
+    assert thebes is not None and keep is not None
+    package = tribunal_packages.of(thebes)
+    column = package.columns[0]
+    assert column.title == "Phyle"
+    assert column.value(saga, thebes, keep) == "Aegean"
+    assert column.save is not None
+    column.save(thebes, keep, "Kretan")
+    assert column.value(saga, thebes, keep) == "Kretan"
+    assert package.save_covenant is not None
+    package.save_covenant(thebes, keep.id, {"phyle": ""})
+    assert column.value(saga, thebes, keep) == ""
 
 
 def test_normandy_ranks_its_tourney_and_marks_lapsed_tenures():

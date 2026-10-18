@@ -46,6 +46,30 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.98.0 — 2026-10-18
+
+- **The Theban Tribunal in its own words.** The Theban customs now use
+  The Sundered Eagle's terms. Each magus is a polites (citizen) or a
+  metoikos (resident foreigner), and every magus present votes once, by
+  voting sigil, so Your votes counts as for any other Tribunal; tokens
+  are civic merit, not votes. A metoikos holds no tokens or shards.
+  Liturgies are now Services (older saves are read the same way). Each
+  covenant belongs to a phyle, Ionian, Aegean, Kretan or Propontian, set
+  on the covenant's form or the roster, and shown in the roster's Phyle
+  column. The tab is The Polity and its office list The Council of
+  Magistrates.
+- **The Theban meeting.** Holding a Theban Tribunal follows the book's
+  phases. On the first day the Hermetic Assembly sets the principal
+  phyle in turn and hears decrees of citizenship, contrition and
+  defamation, then holds the ostrakismos: the shard-holders are read and
+  the one chosen is ostracised for seven years. The Law Council and the
+  People's Court are the meeting's motions and cases. On the last day
+  the Council of Archai pays the outgoing magistrates their tokens (2
+  for an arche, 3 for the archon, 5 for the polemarch), draws four new
+  archai by lot from each phyle (one may be set aside for the next
+  drawn), and elects the archon, who becomes Praeco, and the polemarch.
+  Each step writes its minutes, and the new offices go into the Acta.
+
 ## 2.97.1 — 2026-10-18
 
 - **A shorter Tribunal page.** A long In the Saga, such as the Normandy

@@ -198,6 +198,18 @@ The steps run in a fixed order:
   are absent and the proxies it carries, and whether the Presiding
   Quaesitor allows them or sets them aside. Its votes in the hall are
   worked out, and the proxies are kept on the roster.
+- **The Hermetic Assembly**, on the first day under the Theban customs,
+  in two steps. **The Assembly's decrees**: the principal phyle governing the meeting
+  (the next in turn, Ionian, Aegean, Kretan, Propontian, unless you
+  choose another); a decree of citizenship for each metoikos, making
+  them a polites; a decree of contrition for each polites with a shard,
+  taking one away; and a decree of defamation against a polites, which
+  if upheld gives the accused a shard and if rejected gives the one who
+  brought it a shard. **The ostrakismos**: the logothete reads every
+  polites holding a shard, and the one on the most sherds (or no one)
+  is ostracised: they become a metoikos, lose their tokens and shards,
+  and may not return for seven years. The Theban Law Council and
+  People's Court are the meeting's motions and cases, below.
 - **Each case and motion**, on its day: the debate between the
   prosecutor and defender (for a motion, one who speaks for it and one
   against), taken from the case. Enter each side's debate Fatigue levels
@@ -221,8 +233,19 @@ The steps run in a fixed order:
   customs: with no Praeco, the eldest magus of the Tribunal (by Year
   Born) is offered; set them aside by choosing the next eldest. The one
   named becomes Praeco, and the minutes say who was passed over.
-- **Elections**, when the Tribunal's customs have offices (the Theban
-  archai): each office's holder and when the term ends.
+- **The Council of Archai**, on the last day under the Theban customs,
+  in three steps. **The outgoing magistrates' tokens**: each outgoing magistrate is
+  paid in tokens, 2 for an arche, 3 for the archon and 5 for the
+  polemarch (untick one to pay nothing). **The sortition**: four archai
+  are drawn by lot from each phyle, the principal phyle first, from its
+  politai who are not archai now (Redcaps are not drawn); the draw is
+  kept, so holding the step again draws no one new, and one magus drawn
+  may be set aside for the next drawn from the same phyle. A phyle with
+  fewer than four politai leaves its other seats for the logothete to
+  fill with Redcaps. The new archai serve until the next meeting.
+  **Archon and polemarch**: the new archai elect the archon from among
+  themselves (the eldest is offered) and the polemarch from every
+  polites; the archon becomes the Tribunal's Praeco.
 - **Rulings and fines**: the ruling on each case, starting from how its
   vote went; any fine, in pawns of an Art or (with no Art) pounds of
   silver, and who pays it; whether the ruling goes into the Peripheral

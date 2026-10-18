@@ -868,13 +868,19 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#trib-gilds-list": "Mercantile", "#trib-roster": "Hermetic, Mercan"},
     ),
     "add tokens": Contract(
-        prefill={"Tokens": "0", "Shards": "0", "Ostracised until (year)": ""},
-        edits={"Magus": "mag1", "Tokens": "3", "Liturgies served": "2"},
+        prefill={
+            "Status": "polites",
+            "Tokens": "0",
+            "Shards": "0",
+            "Services": "0",
+            "Ostracised until (year)": "",
+        },
+        edits={"Magus": "mag1", "Tokens": "3", "Services": "2"},
         saved=lambda s: s.tribunal("thebes").package_data["theban"]["magi"][-1][
             "tokens"
         ],
         expected=3,
-        invalid={"Shards": "-1"},
+        invalid=[{"Shards": "-1"}, {"Status": "metoikos", "Tokens": "1"}],
         shown={"#trib-tokens-list": "3"},
     ),
     "add tenure": Contract(
@@ -902,7 +908,7 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#trib-tourney-list": "50"},
     ),
     "edit office": Contract(
-        prefill={"Office": "Strategos"},
+        prefill={"Office": "Polemarch"},
         edits={"Held by": "mag1", "Term ends (year)": "1232"},
         saved=lambda s: s.tribunal("thebes").package_data["theban"]["archai"][1][
             "holder_id"

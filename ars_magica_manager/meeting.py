@@ -1361,6 +1361,16 @@ _PACKAGE_STEPS: dict[str, tuple[str, type[Step], str]] = {
 }
 
 
+#: The steps that fill the Tribunal's offices, so the Acta lists them.
+OFFICE_STEPS = {"elections", "sortition", "archon_polemarch"}
+
+
+def register_step(name: str, title: str, kind: type[Step], when: str) -> None:
+    """Makes a package's own step one the meeting can hold, under the name
+    its package lists in meeting_steps."""
+    _PACKAGE_STEPS[name] = (title, kind, when)
+
+
 def steps(tribunal: Tribunal, meeting: dict[str, Any]) -> list[Step]:
     """The order of business, in the order it is held."""
     last = days(meeting)
@@ -1494,7 +1504,7 @@ def acta_text(saga: Saga, tribunal: Tribunal, meeting: dict[str, Any]) -> str:
             kept = ruling_of(meeting, case)
             fine = fine_text(kept) if kept.get("fine") else ""
             builder.ruling(case.title, case.outcome, fine, kept.get("who", ""))
-    if "elections" in meeting.get("done", []):
+    if OFFICE_STEPS & set(meeting.get("done", [])):
         for office in tribunal_packages.entries(tribunal, tribunal.package, "archai"):
             holder = saga.character(office.get("holder_id"))
             if holder is not None:
@@ -1844,3 +1854,7 @@ def ops(saga: Saga, tribunal: Tribunal) -> dict[str, SectionOps]:
         ATTENDANCE_SECTION: attendance_ops(saga, tribunal),
         VOTE_SECTION: vote_ops(saga, tribunal),
     }
+
+
+# The packages' own steps register themselves with the meeting.
+from . import theban_meeting  # noqa: F401

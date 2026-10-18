@@ -23,10 +23,21 @@ what the old ones recorded, hidden, and switching back shows it again.
   as under the core rules.
   The book's Tribunal of 1220 ships as a content pack: see [How to start a
   saga from a Tribunal book](help:guide-book-packs).
-- **Theban: Tokens** (The Sundered Eagle): its magi vote with
-  tokens and ostracise with shards, and it elects its archai at each
-  meeting; the sheet gains a Tokens and Archai tab, and Your votes counts
-  the troupe's tokens.
+- **Theban: The Polity** (The Sundered Eagle), in the book's terms: its
+  magi are politai (citizens) or metoikoi (resident foreigners), and
+  every magus present votes once, by voting sigil, so Your votes counts
+  as under the core rules. A polites earns tokens for services to the
+  community and shards for acts against its unity. Each covenant belongs
+  to one of four phylai (Ionian, Aegean, Kretan, Propontian), chosen on
+  the covenant's own form or with the roster's Edit, and shown in the
+  roster's Phyle column. The Council of Magistrates (the archon, the
+  polemarch, the logothete and the archai) is chosen at each meeting.
+  The meeting follows the book's four phases: the Hermetic Assembly's
+  decrees and ostrakismos on the first day, the Law Council's motions
+  and the People's Court's cases, and on the last day the Council of
+  Archai pays the outgoing magistrates, draws the new archai by
+  sortition and elects the archon and polemarch (see [Hold
+  Tribunal](help:hold-tribunal)). The sheet gains a Polity tab.
 - **Normandy: Vis tenure** (The Lion and the Lily): every vis source is
   held on a tenure of the Perthean Compact, and the covenants' teams
   contest the Hermetic Tourney after each meeting; the sheet gains Tenure
@@ -339,27 +350,39 @@ small beside its name in the list, and large in the inspector when it is
 chosen.
 <!-- /gui -->
 
-## Tokens and Archai tab
+## The Polity tab
 <!-- help: tab-trib-tokens -->
 
-A Theban Tribunal's own records: each magus's tokens and shards, and the
-archai who hold its offices. Only a Tribunal following the Theban
+A Theban Tribunal's own records, named as The Sundered Eagle names them:
+each magus's place in the polity, tokens and shards, and the Council of
+Magistrates who hold its offices. Only a Tribunal following the Theban
 customs has this tab.
 
 ### Tokens and Shards
 <!-- help: section-trib-tokens -->
 
-Each magus of note's tokens (the Theban Tribunal's votes, earned by
-serving liturgies and passed between magi), the shards cast against
-them, the liturgies they have served, and their standing: an office they
-hold, or that they are ostracised and until when (they may not attend or
-vote until then). Add a magus, edit their counts or delete the entry.
+Each magus of note: their covenant; their status, polites
+(a citizen, who passed Gauntlet in the Tribunal) or metoikos (a resident
+foreigner: a guest, or a polites who has lost his rights); the tokens
+they hold, each earned by a service to the community; the shards against
+them, each for an act against the Tribunal's unity; the services they
+have done; and their standing: an office they hold, or that they are
+ostracised and until when. Tokens are not votes: every magus present
+votes once. A metoikos holds no tokens or shards, so the form refuses
+them. A token and a shard can be surrendered together for a season's
+service (neutralization), and any polites with a shard may be
+ostracised. Add a magus, edit their entry or delete it.
 
-### The Archai
+### The Council of Magistrates
 <!-- help: section-trib-archai -->
 
 The Tribunal's offices: who holds each (or that it is vacant), when
-their term ends, and its duties. The archai are elected at each meeting.
+their term ends, and its duties. The archon chairs the Council and is
+the Tribunal's Praeco; the polemarch enforces its sentences; the
+logothete, the Chief Redcap, keeps the register of tokens and shards;
+and the sixteen archai, four from each phyle, serve seven years on the
+Judicial, Legislative and Conciliatory Boards and the Treasury Council,
+led by its tamias (treasurer). The Council is chosen at each meeting.
 
 ## Tenure tab
 <!-- help: tab-trib-tenure -->

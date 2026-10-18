@@ -3,15 +3,15 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Theban
 
-      Customs:       Theban: Tokens            Praeco:              (not chosen)
+      Customs:       Theban: The Polity        Praeco:              (not chosen)
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1225               Covenants:           0
       Meeting place: Thebes                    Magi:                0
-      Cases:         none pending              Your votes:          2 tokens of 2
+      Cases:         none pending              Your votes:          0 of 0
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tokens
+   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Po
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -46,15 +46,15 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Theban
 
-      Customs:       Theban: Tokens            Praeco:              (not chosen)
+      Customs:       Theban: The Polity        Praeco:              (not chosen)
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1225               Covenants:           0
       Meeting place: Thebes                    Magi:                0
-      Cases:         none pending              Your votes:          2 tokens of 2
+      Cases:         none pending              Your votes:          0 of 0
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tokens
+   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Po
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   History: not written yet. Edit the Tribunal (e) to tell it.
@@ -89,15 +89,15 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Theban
 
-      Customs:       Theban: Tokens            Praeco:              (not chosen)
+      Customs:       Theban: The Polity        Praeco:              (not chosen)
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1225               Covenants:           0
       Meeting place: Thebes                    Magi:                0
-      Cases:         none pending              Your votes:          2 tokens of 2
+      Cases:         none pending              Your votes:          0 of 0
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tokens
+   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Po
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -132,15 +132,15 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Theban
 
-      Customs:       Theban: Tokens            Praeco:              (not chosen)
+      Customs:       Theban: The Polity        Praeco:              (not chosen)
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1225               Covenants:           0
       Meeting place: Thebes                    Magi:                0
-      Cases:         none pending              Your votes:          2 tokens of 2
+      Cases:         none pending              Your votes:          0 of 0
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tokens
+   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Po
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   The Next Meeting: Summer 1225
@@ -149,21 +149,21 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Order of Business (3 days)
 
-        Step                    Day
-      ○ Opening and the oaths   The First Day
+        Step                              Day
+      ○ Opening and the oaths             The First Day
       ○ Attendance and proxies
-      ○ Elections               The Third Day
+      ○ The Assembly's decrees
+      ○ The ostrakismos
+      ○ The outgoing magistrates' tokens  The Third Day
+      ○ The sortition
+      ○ Archon and polemarch
       ○ Rulings and fines
-      ○ Treasury and vis
+      ○ Treasury and vis                                                          ▆▆
       ○ Closing
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ The Vote
 
-      No case to vote on.                                                         ▂▂
-
-
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
 
   ▌
   ▌  Choose a step to read what was entered at it.
@@ -175,19 +175,20 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Theban
 
-      Customs:       Theban: Tokens            Praeco:              (not chosen)
+      Customs:       Theban: The Polity        Praeco:              (not chosen)
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1225               Covenants:           0
       Meeting place: Thebes                    Magi:                0
-      Cases:         none pending              Your votes:          2 tokens of 2
+      Cases:         none pending              Your votes:          0 of 0
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tokens and Archai
+  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Polity  8 Dia
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Theban: Tokens. Its magi vote with tokens and ostracise with shards, and elect its
-  archai at each meeting.
+  Theban: The Polity. Its magi are politai or metoikoi, each voting once; a polites
+  earns tokens for services and shards for wrongs; its covenants belong to four
+  phylai; and its Council of Magistrates is chosen at each meeting.
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Peripheral Code (0)
@@ -212,21 +213,20 @@
 
 
 
-
 ===== tab-trib-treasury
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Theban
 
-      Customs:       Theban: Tokens            Praeco:              (not chosen)
+      Customs:       Theban: The Polity        Praeco:              (not chosen)
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1225               Covenants:           0
       Meeting place: Thebes                    Magi:                0
-      Cases:         none pending              Your votes:          2 tokens of 2
+      Cases:         none pending              Your votes:          0 of 0
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tokens and Archai  8 Diary
+  istory  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Polity  8 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Silver in hand: 0 pounds
@@ -261,30 +261,30 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Theban
 
-      Customs:       Theban: Tokens            Praeco:              (not chosen)
+      Customs:       Theban: The Polity        Praeco:              (not chosen)
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1225               Covenants:           0
       Meeting place: Thebes                    Magi:                0
-      Cases:         none pending              Your votes:          2 tokens of 2
+      Cases:         none pending              Your votes:          0 of 0
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tokens and Archai  8 Diary
+  istory  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Polity  8 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Tokens and Shards (2)
 
-        Magus      Covenant  Tokens  Shards  Liturgies  Standing
-      ○ Leandro    Keep      2       1       0          Archon of Rites
-      ○ Severinus  Fengheld  0       3       1          Ostracised to 1225
+        Magus      Covenant  Status   Tokens  Shards  Services  Standing
+      ○ Leandro    Keep      Polites  2       1       0         Archon
+      ○ Severinus  Fengheld  Polites  0       3       1         Ostracised to 1225
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ The Archai (2)
+    ▼ The Council of Magistrates (2)
 
-        Office           Holder   Term     Duties
-      ○ Archon of Rites  Leandro  to 1225  The Tribunal's ceremonies and oaths
-      ○ Strategos        vacant
+        Office     Holder   Term     Duties
+      ○ Archon     Leandro  to 1225  Chairs the Council of Magistrates
+      ○ Polemarch  vacant
 
 
 
@@ -304,15 +304,15 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Theban
 
-      Customs:       Theban: Tokens            Praeco:              (not chosen)
+      Customs:       Theban: The Polity        Praeco:              (not chosen)
       Meets every:   7 years                   Presiding Quaesitor: (not chosen)
       Next meeting:  Summer 1225               Covenants:           0
       Meeting place: Thebes                    Magi:                0
-      Cases:         none pending              Your votes:          2 tokens of 2
+      Cases:         none pending              Your votes:          0 of 0
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Tokens and Archai  8 Diary
+  istory  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Polity  8 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

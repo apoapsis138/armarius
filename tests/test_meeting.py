@@ -159,13 +159,12 @@ def test_abandon_asks_and_needs_a_meeting():
     assert rhine.meeting is None
 
 
-def test_the_theban_meeting_holds_elections():
+def test_elections_give_each_office_its_holder_and_term():
     saga = everything_saga()
     thebes = saga.tribunal("thebes")
     assert thebes is not None
     _save(meeting.hold(saga, thebes))
-    found = meeting.steps(thebes, thebes.meeting)
-    elections = next(s for s in found if s.key == "elections")
+    elections = meeting.Elections("elections", "Elections", 1)
     form = meeting.step_form(saga, thebes, elections)
     _save(form, holder_1="mag1", term_1=1232)
     office = thebes.package_data["theban"]["archai"][1]
