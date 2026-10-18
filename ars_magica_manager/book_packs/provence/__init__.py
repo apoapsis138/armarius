@@ -53,6 +53,7 @@ PARTS = (
     "val_negra",
     "stories",
     "history",
+    "bestiary",
 )
 
 

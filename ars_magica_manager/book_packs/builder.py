@@ -22,10 +22,14 @@ from ..arts import ART_LOOKUP
 from ..models import (
     Ability,
     ArtScore,
+    BodyVis,
     Book,
     Case,
     Character,
     Covenant,
+    Creature,
+    CreatureAttack,
+    CreaturePower,
     KnownSpell,
     Link,
     MasteryAbility,
@@ -92,6 +96,9 @@ class Builder:
 
     def _neighbour_id(self, name: str) -> str:
         return storage.generate_unique_id(name, [n.id for n in self.saga.neighbours])
+
+    def _creature_id(self, name: str) -> str:
+        return storage.generate_unique_id(name, [c.id for c in self.saga.creatures])
 
     def _book_id(self, name: str) -> str:
         return storage.generate_unique_id(name, [b.id for b in self.saga.books])
@@ -570,6 +577,144 @@ class Builder:
             "stopped": stopped,
             "turned": turned,
         }
+
+    # -- the Bestiary --
+
+    def creature(
+        self,
+        name: str,
+        *,
+        page: str,
+        realm: str = "",
+        might: int = 0,
+        form: str = "",
+        size: int = 0,
+        block: StatBlock | None = None,
+        season: str = "",
+        attacks: list[CreatureAttack] | None = None,
+        soak: int = 0,
+        fatigue_levels: str = "",
+        powers: list[CreaturePower] | None = None,
+        vis: list[BodyVis] | None = None,
+        equipment: str = "",
+        appearance: str = "",
+        notes: str = "",
+        how_many: str = "",
+        place: Neighbour | None = None,
+        level: int = 0,
+        cunning: bool = False,
+        age: str = "",
+        confidence: tuple[int, int] | None = None,
+        encumbrance: str = "",
+        tires: bool = True,
+        can_be_wounded: bool = True,
+        order: str = "",
+        hierarchy: int | None = None,
+        weakness: str = "",
+    ) -> Creature:
+        """A creature's stat block as the book prints it: its realm, Might
+        and Form, Size, and the rest in `block`'s notation
+        ("characteristics", "virtues_flaws" (its Qualities and
+        Inferiorities too), "abilities", "traits", "reputations"), its
+        attacks and powers (`attack()`, `power()`), and the vis in its
+        body; `how_many` makes it a kind that comes in numbers. `page` is
+        where in the pack's book it is printed. `cunning` marks an animal
+        mind (its "intelligence" is Cunning), `confidence` is (Score,
+        Points), and `order`, `hierarchy` and `weakness` are a demon's."""
+        block = block or {}
+        creature = Creature(
+            id=self._creature_id(name),
+            name=name,
+            many=bool(how_many),
+            how_many=how_many,
+            realm=realm,
+            might=might if realm else 0,
+            might_form=form if realm else "",
+            size=size,
+            season=season,
+            attacks=list(attacks or []),
+            soak=soak,
+            fatigue_levels=fatigue_levels,
+            powers=list(powers or []),
+            vis=list(vis or []),
+            equipment=equipment,
+            appearance=appearance,
+            notes=notes,
+            source=f"{sourcebooks.title_of(self.source)} {page}",
+            detail=FULL,
+            cunning=cunning,
+            age=age,
+            confidence_score=confidence[0] if confidence else None,
+            confidence_points=confidence[1] if confidence else 0,
+            encumbrance=encumbrance,
+            tires=tires,
+            can_be_wounded=can_be_wounded,
+            order=order,
+            hierarchy=hierarchy,
+            weakness=weakness,
+        )
+        creature.characteristics = replace(
+            creature.characteristics, **block.get("characteristics", {})
+        )
+        creature.virtues_flaws = [
+            _virtue_flaw(entry) for entry in block.get("virtues_flaws", [])
+        ]
+        creature.abilities = [
+            Ability(
+                name=ability,
+                category=access.ability_category(ability),
+                xp=ability_xp(score),
+                specialty=specialty or None,
+            )
+            for ability, score, specialty in block.get("abilities", [])
+        ]
+        creature.personality_traits = [
+            ScoredTrait(n, s) for n, s in block.get("traits", {}).items()
+        ]
+        creature.reputations = [
+            ScoredTrait(n, s) for n, s in block.get("reputations", {}).items()
+        ]
+        if place is not None:
+            creature.place_id, creature.place_level = place.id, level
+        self.saga.creatures.append(creature)
+        return creature
+
+    @staticmethod
+    def attack(
+        name: str, init: int, attack: int | None, defense: int, damage: int | None
+    ) -> CreatureAttack:
+        """One line of a creature's Combat: its totals as printed (None
+        for one the book gives as n/a)."""
+        return CreatureAttack(name, init, attack, defense, damage)
+
+    @staticmethod
+    def power(
+        name: str,
+        might_cost: int,
+        init: int,
+        form: str,
+        *,
+        rtd: tuple[str, str, str] = ("", "", ""),
+        level: int | None = None,
+        penetration_bonus: int = 0,
+        does: str = "",
+    ) -> CreaturePower:
+        """One of a creature's Powers: its Might cost, Init and Form, its
+        Range, Duration and Target, the level of the effect it matches,
+        and what it does, in the pack's own words."""
+        reach, duration, target = rtd
+        return CreaturePower(
+            name,
+            might_cost=might_cost,
+            init=init,
+            form=form,
+            range=reach,
+            duration=duration,
+            target=target,
+            level=level,
+            penetration_bonus=penetration_bonus,
+            description=does,
+        )
 
     @staticmethod
     def link(record: Any, kind: str, target: Any, note: str = "") -> Link:

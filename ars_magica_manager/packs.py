@@ -24,7 +24,7 @@ from .commands import Form, Refuse, notes
 from .files import write_atomic
 from .form_spec import DialogField
 from .markup import escape, todo
-from .models import Character, Covenant, Neighbour, Saga, Tribunal
+from .models import Character, Covenant, Creature, Neighbour, Saga, Tribunal
 from .neighbours import kind_of
 
 PACK = transfer.PACK
@@ -81,6 +81,7 @@ def pack_data(
     with_characters: bool = True,
     with_calendar: bool = True,
     characters_besides: list[Character] | None = None,
+    creatures_besides: list[Creature] | None = None,
 ) -> dict[str, Any]:
     """The pack of the chosen records as JSON-ready data: the Tribunals,
     each with its covenants, and the covenants, each with the places and
@@ -89,7 +90,8 @@ def pack_data(
     characters and laboratories and each Tribunal's officers;
     `with_calendar` the calendar entries of the covenants and the saga's
     own; `characters_besides` adds characters who belong to no covenant
-    taken (a wandering magus)."""
+    taken (a wandering magus), and `creatures_besides` creatures found
+    nowhere it takes (a book's bestiary)."""
     taken, round_them = contents(saga, tribunals, covenants)
     own_places = _places_round(saga, {n.place_id for n in neighbours if n.place_id})
     wanted = {n.id for n in [*round_them, *neighbours]} | own_places
@@ -118,6 +120,7 @@ def pack_data(
     tribunal_ids = {t.id for t in tribunals} | {
         c.tribunal_id for c in taken if c.tribunal_id
     }
+    held = [n for n in saga.neighbours if n.id in wanted]
     return transfer.bundle_data(
         saga,
         PACK,
@@ -126,9 +129,34 @@ def pack_data(
         characters=characters,
         laboratories=labs,
         tribunals=[t for t in saga.tribunals if t.id in tribunal_ids],
-        neighbours=[n for n in saga.neighbours if n.id in wanted],
+        neighbours=held,
         calendar=calendar,
+        creatures=[
+            *(found := creatures_round(saga, taken, held)),
+            *(c for c in creatures_besides or [] if c not in found),
+        ],
     )
+
+
+def creatures_round(
+    saga: Saga, covenants: list[Covenant], neighbours: list[Neighbour]
+) -> list[Creature]:
+    """The creatures a pack takes: those found at its places, those that
+    link to its covenants, places or neighbours, and those they link to."""
+    ids = {c.id for c in covenants} | {n.id for n in neighbours}
+    linked = {
+        link.target_id
+        for record in neighbours
+        for link in record.links
+        if link.kind == "creatures"
+    }
+    return [
+        c
+        for c in saga.creatures
+        if c.place_id in ids
+        or c.id in linked
+        or any(link.target_id in ids for link in c.links)
+    ]
 
 
 def write(path: Path, data: dict[str, Any]) -> Path:
@@ -150,6 +178,7 @@ def summary(data: dict[str, Any], tribunals: bool = True) -> str:
             "place or neighbour",
             "places and neighbours",
         ),
+        (len(held.get("creatures") or []), "creature", "creatures"),
         (len(held.get("calendar") or []), "calendar entry", "calendar entries"),
     )
     return ", ".join(f"{n} {one if n == 1 else many}" for n, one, many in counts if n)
@@ -411,6 +440,12 @@ GROUPS: tuple[Group, ...] = (
         lambda data: sum(1 for n in _held(data, "neighbours") if not _is_place(n)),
     ),
     Group(
+        "bestiary",
+        "The Bestiary",
+        "The creatures found in the pack's places and stories, with their stat blocks.",
+        lambda data: len(_held(data, "creatures")),
+    ),
+    Group(
         "code",
         "Code, cases and fines",
         "Each Tribunal's Peripheral Code, docket and fines.",
@@ -532,7 +567,7 @@ def narrow(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
     comes in as the book's sketch instead. A story left unticked comes
     in dormant."""
     data = _dormant(data, values)
-    out = ("people", GENERATED, "places", "world", "code", "history")
+    out = ("people", GENERATED, "places", "world", "bestiary", "code", "history")
     left = {key for key in out if key in values and not values.get(key)}
     if not left:
         return data
@@ -562,6 +597,9 @@ def narrow(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
     if gone:
         name_links(transfer.NEIGHBOUR, gone)
         held["neighbours"] = [n for n in neighbours if n not in gone]
+    if "bestiary" in left:
+        name_links(transfer.CREATURE, held.get("creatures") or [])
+        held["creatures"] = []
     if "code" in left or "history" in left:
         blank = ("rulings", "cases", "treasury") if "code" in left else ()
         blank += ("diary",) if "history" in left else ()

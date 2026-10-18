@@ -33,7 +33,7 @@ def test_a_place_sits_inside_another_and_lists_what_is_here():
     assert outer is not None
     assert places.within(saga, outer) == {"drachenfels"}
     saga.covenants[0].place_id = "drachenfels"
-    assert places.here(saga, drachenfels) == ["Keep"]
+    assert places.here(saga, drachenfels) == ["Keep", "Aeolus"]
     assert places.here(saga, outer) == ["The Drachenfels"]
     assert places.inside_text(saga, drachenfels) == "The Siebengebirge"
     drachenfels.place_level = 0
@@ -118,7 +118,7 @@ def test_deleting_a_place_places_what_was_in_it_nowhere():
     assert covenant.aura == 5
     command = neighbour_forms.delete_neighbour(saga, _drachenfels(saga))
     assert isinstance(command, Confirm)
-    assert "Keep will be placed nowhere" in command.question
+    assert "Keep, Aeolus will be placed nowhere" in command.question
     command.apply()
     assert (covenant.place_id, covenant.aura) == (None, 2)
 

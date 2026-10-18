@@ -1193,9 +1193,11 @@ def _left_out(character: Character) -> set[str]:
     return left
 
 
-def characteristic_cards(ch: Characteristics, p: Palette) -> QWidget:
+def characteristic_cards(
+    ch: Characteristics, p: Palette, captions: dict[str, str] | None = None
+) -> QWidget:
     """The eight Characteristics as a row of cards, each coloured by its
-    sign."""
+    sign; `captions` renames some (a creature's Cunning)."""
     box = QWidget()
     row = QHBoxLayout(box)
     row.setContentsMargins(0, 0, 0, 0)
@@ -1223,7 +1225,8 @@ def characteristic_cards(ch: Characteristics, p: Palette) -> QWidget:
         card.column.setSpacing(0)
         number = text(f"{value:+d}" if value else "0", colour, serif(20, bold=True))
         number.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        caption = text(name.title(), p["label"], serif(10.5, caps=True))
+        words = (captions or {}).get(name, name.title())
+        caption = text(words, p["label"], serif(10.5, caps=True))
         caption.setAlignment(Qt.AlignmentFlag.AlignCenter)
         card.column.addWidget(number)
         card.column.addWidget(caption)

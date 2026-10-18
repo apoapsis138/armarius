@@ -61,6 +61,8 @@ _SHEET_VIEW_ATTR = {
     "threat": "_neighbour_sheet_view",
     "place": "_neighbour_sheet_view",
     "seasons": "_seasons_view",
+    "bestiary": "_bestiary_view",
+    "creature": "_creature_sheet_view",
 }
 
 
@@ -257,7 +259,13 @@ def _golden() -> dict:
 #: Each sheet's targets are split across this many tests, so that parallel
 #: workers share the long ones. Targets are independent: every dialog a key
 #: opens is cancelled, so nothing in the saga changes.
-SHARDS: dict[str, int] = {"covenant": 6, "character": 4, "familiar": 3, "laboratory": 2}
+SHARDS: dict[str, int] = {
+    "covenant": 6,
+    "character": 4,
+    "familiar": 3,
+    "laboratory": 2,
+    "creature": 2,
+}
 
 
 @pytest.mark.parametrize(

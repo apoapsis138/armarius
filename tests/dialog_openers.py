@@ -272,6 +272,22 @@ OPENERS: dict[str, Opener] = {
         "region", lambda ws: ws._core_verb("section-region-factions", "add")
     ),
     "filter neighbours": Opener("region", _filter_neighbours),
+    "create creature": Opener("bestiary", lambda ws: ws.action_create_creature()),
+    "edit creature": Opener(
+        "creature", lambda ws: ws._core_verb("section-cr-info", "edit")
+    ),
+    "edit creature characteristics": Opener(
+        "creature", lambda ws: ws._core_verb("section-cr-characteristics", "edit")
+    ),
+    "add creature attack": Opener(
+        "creature", lambda ws: ws._core_verb("section-cr-attacks", "add")
+    ),
+    "add creature power": Opener(
+        "creature", lambda ws: ws._core_verb("section-cr-powers", "add")
+    ),
+    "add creature vis": Opener(
+        "creature", lambda ws: ws._core_verb("section-cr-vis", "add")
+    ),
     "edit neighbour": Opener(
         "neighbour", lambda ws: ws._core_verb("section-nb-info", "edit")
     ),

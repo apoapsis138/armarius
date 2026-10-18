@@ -24,6 +24,8 @@ NOUNS: dict[str, tuple[str, str]] = {
     "section-fam-personality-traits": ("Personality Trait", "e.g. Loyal"),
     "section-fam-reputations": ("Reputation", "e.g. Fierce Protector"),
     "section-cov-reputations": ("Reputation", "e.g. Feared by the local nobility"),
+    "section-cr-personality-traits": ("Personality Trait", "e.g. Vain"),
+    "section-cr-reputations": ("Reputation", "e.g. Haunts the ford"),
 }
 
 #: The sections whose traits are Reputations.

@@ -59,6 +59,7 @@ def test_each_page_offers_what_applies_there():
         "Bind Familiar",
         "New Tribunal",
         "New Neighbour",
+        "New Creature",
     ]
     assert menu_forms.deletes(page) is None
 

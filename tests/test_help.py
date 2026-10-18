@@ -63,6 +63,8 @@ SHEETS = {
     "threat": "_neighbour_sheet_view",
     "place": "_neighbour_sheet_view",
     "seasons": "_seasons_view",
+    "bestiary": "_bestiary_view",
+    "creature": "_creature_sheet_view",
 }
 
 
@@ -374,6 +376,7 @@ GUIDES = [
     "guide-import-export",
     "guide-hosting",
     "guide-book-packs",
+    "guide-bestiary",
 ]
 
 

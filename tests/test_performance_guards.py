@@ -108,6 +108,8 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "threat": 40,
     "place": 40,
     "seasons": 40,
+    "bestiary": 30,
+    "creature": 50,
 }
 
 

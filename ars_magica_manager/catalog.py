@@ -22,6 +22,7 @@ from .models import (
     CharacterTemplateDef,
     CovenantBoonHookDef,
     CovenantSituationDef,
+    Creature,
     Familiar,
     HouseDef,
     LabFeatureDef,
@@ -298,6 +299,12 @@ HERMETIC_OR_OTHER_IDS: frozenset[str] = frozenset(
 #: The audiences a familiar is offered (a magical animal, with Magic Might).
 FAMILIAR_AUDIENCES: frozenset[str] = frozenset({"animal", "magic being"})
 
+#: The audiences a creature of the Bestiary is offered: every kind of
+#: being that isn't a person.
+CREATURE_AUDIENCES: frozenset[str] = frozenset(
+    {"faerie", "magic being", "corrupted beast", "animal"}
+)
+
 #: Each audience as named in an "only for ..." note.
 _AUDIENCE_PLURALS: dict[str, str] = {
     "faerie": "faeries",
@@ -354,6 +361,15 @@ class VirtueFlawChooser:
         held = {vf.vf_id for vf in familiar.virtues_flaws}
         return cls(
             gifted=bool(held & GIFT_IDS), audiences=FAMILIAR_AUDIENCES, books=books
+        )
+
+    @classmethod
+    def for_creature(
+        cls, creature: Creature, books: frozenset[str] | None = None
+    ) -> VirtueFlawChooser:
+        held = {vf.vf_id for vf in creature.virtues_flaws}
+        return cls(
+            gifted=bool(held & GIFT_IDS), audiences=CREATURE_AUDIENCES, books=books
         )
 
     def refusal(self, definition: VirtueFlawDef) -> str:

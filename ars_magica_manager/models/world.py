@@ -75,6 +75,7 @@ LINK_KINDS: tuple[str, ...] = (
     "possessions",
     "familiars",
     "places",
+    "creatures",
 )
 
 

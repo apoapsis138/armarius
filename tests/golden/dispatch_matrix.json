@@ -1898,8 +1898,8 @@
       "active": "section-links",
       "keys": {
         "a": "ChooseScreen: Link to what?",
-        "e": "(nothing)",
-        "d": "(nothing)",
+        "e": "FieldsDialog: Edit a Link",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"
       }
@@ -2024,6 +2024,150 @@
         "a": "(disabled)",
         "e": "(disabled)",
         "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    }
+  },
+  "bestiary": {
+    "PinnedCollapsible#section-bestiary-info": {
+      "active": "section-bestiary-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-bestiary": {
+      "active": "section-bestiary",
+      "keys": {
+        "a": "FieldsDialog: New Creature",
+        "e": "FieldsDialog: Edit Aeolus",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    }
+  },
+  "creature": {
+    "PinnedCollapsible#section-cr-info": {
+      "active": "section-cr-info",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Aeolus",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cr-characteristics": {
+      "active": "section-cr-characteristics",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Characteristics",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cr-virtues-flaws": {
+      "active": "section-cr-virtues-flaws",
+      "keys": {
+        "a": "ChooseScreen: Add a Virtue or Flaw",
+        "e": "(disabled)",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cr-personality-traits": {
+      "active": "section-cr-personality-traits",
+      "keys": {
+        "a": "FieldsDialog: Add a Personality Trait",
+        "e": "FieldsDialog: Edit a Personality Trait",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cr-reputations": {
+      "active": "section-cr-reputations",
+      "keys": {
+        "a": "FieldsDialog: Add a Reputation",
+        "e": "FieldsDialog: Edit a Reputation",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cr-abilities": {
+      "active": "section-cr-abilities",
+      "keys": {
+        "a": "ChooseScreen: Add an Ability",
+        "e": "FieldsDialog: Athletics",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cr-attacks": {
+      "active": "section-cr-attacks",
+      "keys": {
+        "a": "FieldsDialog: Add an Attack",
+        "e": "FieldsDialog: Edit Kick",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cr-health": {
+      "active": "section-cr-health",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Wounds and Fatigue",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cr-powers": {
+      "active": "section-cr-powers",
+      "keys": {
+        "a": "FieldsDialog: Add a Power",
+        "e": "FieldsDialog: Edit From Nag to Charger",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cr-vis": {
+      "active": "section-cr-vis",
+      "keys": {
+        "a": "FieldsDialog: Add Vis",
+        "e": "FieldsDialog: Edit 2 pawns of Animal, in head",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cr-description": {
+      "active": "section-cr-description",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Description",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-links": {
+      "active": "section-links",
+      "keys": {
+        "a": "ChooseScreen: Link to what?",
+        "e": "FieldsDialog: Edit a Link",
+        "d": "ConfirmScreen",
         "m": "(disabled)",
         "slash": "(disabled)"
       }

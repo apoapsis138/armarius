@@ -11,12 +11,17 @@ from ars_magica_manager.models import (
     SKETCH,
     Ability,
     Attitude,
+    BodyVis,
     BondPower,
     Book,
     CalendarEntry,
     Case,
     Character,
+    Characteristics,
     Covenant,
+    Creature,
+    CreatureAttack,
+    CreaturePower,
     DeviceComponent,
     DiaryEntry,
     EnchantedDevice,
@@ -30,6 +35,7 @@ from ars_magica_manager.models import (
     Laboratory,
     LabSpecialtyEntry,
     LabSpecialtyGrant,
+    Link,
     NamedDescription,
     Neighbour,
     Possession,
@@ -168,6 +174,8 @@ NODES: dict[str, tuple[str, ...]] = {
     "book_group": ("book_group",),
     "saga_content": ("saga_content",),
     "seasons": ("seasons",),
+    "bestiary": ("bestiary",),
+    "creature": ("creature", "aeolus"),
 }
 
 
@@ -548,6 +556,7 @@ def everything_saga() -> Saga:
                 id="crown",
                 name="The Hollow Crown",
                 kind="threat",
+                links=[Link("creatures", "aeolus", "Carries its messengers")],
                 details={
                     "antagonist": "A faerie king without a court",
                     "stages": [
@@ -650,6 +659,7 @@ def everything_saga() -> Saga:
                 },
             ),
         ],
+        creatures=[aeolus()],
         characters=[magus, companion, rival],
         laboratories=[lab],
         familiars=[familiar],
@@ -658,6 +668,44 @@ def everything_saga() -> Saga:
         spells=[
             Spell(id="own1", name="Own Spell", technique="Creo", form="Ignem", level=5)
         ],
+    )
+
+
+def aeolus() -> Creature:
+    """Realms of Power: Magic's example magical horse, found at the
+    Drachenfels, with every list of a creature's holding an entry."""
+    return Creature(
+        id="aeolus",
+        name="Aeolus",
+        realm="Magic",
+        might=8,
+        might_form="Animal",
+        characteristics=Characteristics(presence=2, strength=4, quickness=2),
+        size=2,
+        season="Summer",
+        virtues_flaws=[VirtueFlawInstance("vf_magic_animal")],
+        personality_traits=[ScoredTrait("Vain", 3)],
+        reputations=[ScoredTrait("Runs with the wind", 1)],
+        attacks=[CreatureAttack("Kick", init=4, attack=4, defense=8, damage=5)],
+        soak=3,
+        fatigue_levels="OK, 0, -1, -3, -5, Unconscious",
+        abilities=[Ability("Athletics", xp=ability_xp(5), specialty="running")],
+        powers=[
+            CreaturePower(
+                "From Nag to Charger",
+                might_cost=0,
+                form="Animal",
+                range="Per",
+                duration="Sun",
+                target="Ind",
+                level=15,
+            )
+        ],
+        vis=[BodyVis(2, "Animal", "in head")],
+        appearance="A chestnut horse of good breeding.",
+        source="Realms of Power: Magic p. 34",
+        place_id="drachenfels",
+        links=[Link("characters", "mag1", "Has ridden him once")],
     )
 
 

@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (
 
 from .. import (
     artwork,
+    creatures,
     menu_forms,
     neighbour_filter,
     neighbours,
@@ -30,10 +31,11 @@ from .. import (
     world,
 )
 from .. import character_sheet as cs
+from .. import creature_sheet as crs
 from .. import familiar_sheet as fs
 from .. import saga_content_sheet as scs
 from .. import saga_overview as ov
-from ..models import Character, Neighbour, Saga
+from ..models import Character, Creature, Neighbour, Saga
 from . import pictures
 from .figures import fact_grid
 from .menus import Placer
@@ -417,10 +419,48 @@ def region_chapter(
     return scrolling_page(p, *parts)
 
 
+def creature_card(
+    saga: Saga, creature: Creature, p: Palette, open_creature: Open
+) -> ClickableCard:
+    """A creature as a card that opens its page: its Might, Size and
+    where it is found."""
+    card = ClickableCard(p, pad=16)
+    card_title(
+        card,
+        creature.name,
+        crs.subtitle(creature),
+        p,
+        symbol_label(artwork.icon(creatures.icon_concept(creature)), p),
+    )
+    facts = [f for f in crs.facts(saga, creature) if f.label in ("Size", "Found at")]
+    card.column.addWidget(fact_grid(facts, p, 2))
+    card.clicked = lambda: open_creature(creature.id)
+    return card
+
+
+def bestiary_chapter(
+    saga: Saga, p: Palette, open_creature: Open, new: QWidget | None
+) -> QWidget:
+    """The Bestiary: its facts, then every creature as a card, by name,
+    and the New card that adds one."""
+    cards: list[QWidget] = [
+        creature_card(saga, c, p, open_creature) for c in creatures.listed(saga)
+    ]
+    listed = with_new(cards, new)
+    return scrolling_page(
+        p,
+        chapter_title(crs.bestiary_title(saga), p),
+        fact_grid(crs.bestiary_facts(saga), p, 3),
+        card_grid(listed)
+        if listed
+        else text("None yet.", p["dim"], serif(12.5, italic=True)),
+    )
+
+
 class SagaPage(QWidget):
     """A saga as a Codex: The World (its covenants, and the characters and
     laboratories that belong to none, each list ending in a New card),
-    The Region (its neighbours), its Seasons, its Rules and Content, and
+    The Region (its neighbours), The Bestiary (its creatures), its Seasons, its Rules and Content, and
     Saga Management."""
 
     def __init__(
@@ -435,6 +475,7 @@ class SagaPage(QWidget):
         open_laboratory: Open = lambda _id: None,
         open_tribunal: Open = lambda _id: None,
         open_neighbour: Open = lambda _id: None,
+        open_creature: Open = lambda _id: None,
     ) -> None:
         super().__init__()
         self.saga, self.p = saga, p
@@ -457,6 +498,11 @@ class SagaPage(QWidget):
             "The Region",
             "region",
             region_chapter(saga, p, self.open_neighbour, self._new("Neighbours")),
+        )
+        self.codex.add(
+            "The Bestiary",
+            "familiar",
+            bestiary_chapter(saga, p, open_creature, self._new("Creatures")),
         )
         self.codex.add("Seasons", "season", self._seasons(open_seasons))
         self.codex.add(

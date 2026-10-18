@@ -15,6 +15,7 @@ from .covenant import (
     BOON_HOOK_UNKNOWN,
     Covenant,
 )
+from .creature import Creature
 from .definitions import CovenantBoonHookDef, LabVirtueFlawDef, VirtueFlawDef
 from .devices import EnchantedDevice
 from .familiar import Familiar
@@ -79,6 +80,8 @@ class Saga:
     codices: list[Codex] = field(default_factory=list)
     spells: list[Spell] = field(default_factory=list)
     familiars: list[Familiar] = field(default_factory=list)
+    #: The Bestiary: the saga's creatures (creatures.py).
+    creatures: list[Creature] = field(default_factory=list)
     #: Every enchanted item in the saga, each shown on its holder's sheet.
     enchanted_devices: list[EnchantedDevice] = field(default_factory=list)
     #: The supplements and saga sources in play (sourcebooks.SUPPLEMENTS
@@ -144,6 +147,10 @@ class Saga:
         """The neighbour with this id, if there is one."""
         return next((n for n in self.neighbours if n.id == neighbour_id), None)
 
+    def creature(self, creature_id: str | None) -> Creature | None:
+        """The creature with this id, if there is one."""
+        return next((c for c in self.creatures if c.id == creature_id), None)
+
     def character(self, character_id: str | None) -> Character | None:
         """The character with this id, if there is one."""
         return next((c for c in self.characters if c.id == character_id), None)
@@ -165,6 +172,7 @@ class Saga:
             Laboratory.from_dict(lab) for lab in d.get("laboratories", [])
         ]
         d["familiars"] = [Familiar.from_dict(f) for f in d.get("familiars", [])]
+        d["creatures"] = [Creature.from_dict(c) for c in d.get("creatures", [])]
         d["enchanted_devices"] = [
             EnchantedDevice.from_dict(e) for e in d.get("enchanted_devices", [])
         ]

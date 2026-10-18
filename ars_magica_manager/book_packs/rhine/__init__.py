@@ -37,6 +37,7 @@ class Rhine:
 
 def assemble() -> Builder:
     from . import (
+        bestiary,
         covenants_east,
         covenants_west,
         gorge,
@@ -59,6 +60,7 @@ def assemble() -> Builder:
     world_west.build(rhine)
     world_north_east.build(rhine)
     gorge.build(rhine)
+    bestiary.build(rhine)
     stats_gorge.build(rhine)
     history.build(rhine)
     tribunal.finish(rhine)

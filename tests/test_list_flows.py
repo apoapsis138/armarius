@@ -16,6 +16,9 @@ from ars_magica_manager.models import (
     Breakthrough,
     Character,
     Covenant,
+    Creature,
+    CreatureAttack,
+    CreaturePower,
     DiaryEntry,
     Familiar,
     IncomeSource,
@@ -84,9 +87,15 @@ def _saga() -> Saga:
         DiaryEntry(1220, "Spring", "Built [first]"),
         DiaryEntry(1220, "Summer", "Moved in"),
     ]
+    creature = Creature(id="cr1", name="Boglin")
+    creature.personality_traits = two()
+    creature.reputations = two()
+    creature.attacks = [CreatureAttack("Bite [sharp]"), CreatureAttack("Claws")]
+    creature.powers = [CreaturePower("Hide [in mud]"), CreaturePower("Lure")]
     return Saga(
         id="test_saga",
         name="Flows",
+        creatures=[creature],
         covenants=[covenant],
         characters=[magus],
         familiars=[familiar],
@@ -133,6 +142,18 @@ TRAIT_LISTS: dict[str, ListCase] = {
         "fam-reputations-list",
         lambda s: s.familiars[0].reputations,
     ),
+    "creature-traits": ListCase(
+        ("creature", "cr1"),
+        "section-cr-personality-traits",
+        "cr-personality-traits-list",
+        lambda s: s.creatures[0].personality_traits,
+    ),
+    "creature-reputations": ListCase(
+        ("creature", "cr1"),
+        "section-cr-reputations",
+        "cr-reputations-list",
+        lambda s: s.creatures[0].reputations,
+    ),
 }
 
 #: The flows that don't depend on which row is chosen run on one character
@@ -147,6 +168,7 @@ _SHEET_VIEW_ATTR = {
     "familiar": "_familiar_sheet_view",
     "laboratory": "_laboratory_sheet_view",
     "saga_content": "_saga_content_view",
+    "creature": "_creature_sheet_view",
 }
 
 
@@ -428,6 +450,18 @@ ITEM_LISTS: dict[str, ListCase] = {
         "tab-lab-diary",
         "lab-diary-list",
         lambda s: s.laboratories[0].diary,
+    ),
+    "creature-attacks": ListCase(
+        ("creature", "cr1"),
+        "section-cr-attacks",
+        "cr-attacks-list",
+        lambda s: s.creatures[0].attacks,
+    ),
+    "creature-powers": ListCase(
+        ("creature", "cr1"),
+        "section-cr-powers",
+        "cr-powers-list",
+        lambda s: s.creatures[0].powers,
     ),
 }
 

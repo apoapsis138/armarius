@@ -399,6 +399,79 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Name": ""},
         shown={"#region-factions-list": "The Soest wool merchants"},
     ),
+    "create creature": Contract(
+        prefill={"Name": "", "Size": "0", "Realm": Select.NULL},
+        edits={
+            "Name": "Boglin",
+            "Realm": "Faerie",
+            "Might Score": "5",
+            "Might Form": "Aquam",
+            "Size": "-2",
+        },
+        saved=lambda s: [
+            (c.name, c.realm, c.might, c.might_form, c.size)
+            for c in s.creatures
+            if c.name == "Boglin"
+        ],
+        expected=[("Boglin", "Faerie", 5, "Aquam", -2)],
+        invalid=[{"Name": ""}, {"Size": "big"}],
+    ),
+    "edit creature": Contract(
+        prefill={"Name": "Aeolus", "Realm": "Magic", "Might Score": "8", "Size": "2"},
+        edits={
+            "Might Score": "12",
+            "Many of a kind": True,
+            "How many": "A herd",
+            "Age": "200 (40)",
+        },
+        saved=lambda s: (
+            s.creatures[0].might,
+            s.creatures[0].many,
+            s.creatures[0].how_many,
+            s.creatures[0].age,
+        ),
+        expected=(12, True, "A herd", "200 (40)"),
+        invalid={"Name": ""},
+        shown={"#cr-info-left": "Magic Might 12 (Animal)"},
+    ),
+    "edit creature characteristics": Contract(
+        prefill={"Soak": "3", "Fatigue levels": "OK, 0, -1, -3, -5, Unconscious"},
+        edits={"Soak": "5", "Cunning, not Intelligence": True, "Encumbrance": "0 (0)"},
+        saved=lambda s: (
+            s.creatures[0].soak,
+            s.creatures[0].cunning,
+            s.creatures[0].encumbrance,
+        ),
+        expected=(5, True, "0 (0)"),
+        invalid={"Soak": "hard"},
+        shown={"#cr-characteristics-content": "Cun"},
+    ),
+    "add creature attack": Contract(
+        prefill={"Attack": "", "Init": "0"},
+        edits={"Attack": "Bite", "Init": "1", "Damage (blank = n/a)": "7"},
+        saved=lambda s: [(a.name, a.init, a.damage) for a in s.creatures[0].attacks],
+        expected=[("Kick", 4, 5), ("Bite", 1, 7)],
+        invalid={"Attack": ""},
+        shown={"#cr-attacks-list": "Bite", "#section-cr-attacks": "(2)"},
+    ),
+    "add creature power": Contract(
+        prefill={"Power": "", "Might Point cost": "0"},
+        edits={"Power": "Gallop on the Wind", "Might Point cost": "1", "Form": "Auram"},
+        saved=lambda s: [(p.name, p.might_cost, p.form) for p in s.creatures[0].powers][
+            -1
+        ],
+        expected=("Gallop on the Wind", 1, "Auram"),
+        invalid={"Power": ""},
+        shown={"#cr-powers-list": "Gallop on the Wind"},
+    ),
+    "add creature vis": Contract(
+        prefill={"Pawns": "1", "Where in the body": ""},
+        edits={"Pawns": "3", "Art": "Auram", "Where in the body": "in its mane"},
+        saved=lambda s: [(v.pawns, v.art, v.where) for v in s.creatures[0].vis][-1],
+        expected=(3, "Auram", "in its mane"),
+        invalid={"Pawns": "0"},
+        shown={"#cr-vis-list": "3 pawns of Auram, in its mane"},
+    ),
     "filter neighbours": Contract(
         prefill={"Region": "siebengebirge"},
         edits={"Kind": "church"},

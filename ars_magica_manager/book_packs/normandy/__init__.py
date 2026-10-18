@@ -2,7 +2,7 @@
 paraphrase. Built in parts: the Tribunal itself and its Code, docket and
 ruined covenants; then each region's land, covenants, magi, libraries,
 vis and mundane world; Confluensis; the saga's stories; the history;
-and last the lines of fealty and the generated stats.
+the Bestiary's creatures, at the places they haunt; and last the lines of fealty and the generated stats.
 
 Source: The Lion and the Lily: The Normandy Tribunal (Atlas Games), open
 content under CC-BY-SA 4.0 at redcap.org; the text here is a summary of
@@ -79,6 +79,7 @@ PARTS = (
     "confluensis",
     "stories",
     "history",
+    "bestiary",
 )
 
 

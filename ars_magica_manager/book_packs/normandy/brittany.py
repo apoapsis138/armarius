@@ -9,7 +9,8 @@ paraphrase of The Lion and the Lily chapter four.
 The ruined covenants of Brittany (Branugurix, Kerguntuil) are
 tribunal.py's. Creatures (the Three Great Spirits of Ushant, the
 korrigan, the Nains of Carnac, the Black Dog, the Ankeu) are described in
-the summaries of the places they haunt, since there is no bestiary yet.
+the summaries of the places they haunt; those with a stat block are also
+bestiary.py's creatures.
 Records are kept in the Normandy dicts under slugs: the region is
 places["brittany"], the covenant sites places["ushant"] and
 places["exspectatio_site"], Mount Dol (Branugurix's hill) places["mount_dol"]

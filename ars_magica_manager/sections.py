@@ -152,6 +152,23 @@ EFFECTS_SECTION = "section-nb-effects"
 TRIGGERS_SECTION = "section-nb-triggers"
 TABLES_SECTION = "section-nb-tables"
 DIARY_SECTION = "section-nb-place-diary"
+#: The Bestiary's list of creatures, and a creature's sheet: its top
+#: panel, Characteristics, description, Virtues and Flaws (Qualities and
+#: Inferiorities among them), traits, combat, health, Abilities, powers
+#: and the vis in its body.
+BESTIARY_INFO_SECTION = "section-bestiary-info"
+BESTIARY_SECTION = "section-bestiary"
+CREATURE_INFO_SECTION = "section-cr-info"
+CREATURE_CHARACTERISTICS_SECTION = "section-cr-characteristics"
+CREATURE_DESCRIPTION_SECTION = "section-cr-description"
+CREATURE_VF_SECTION = "section-cr-virtues-flaws"
+CREATURE_TRAITS_SECTION = "section-cr-personality-traits"
+CREATURE_REPUTATIONS_SECTION = "section-cr-reputations"
+CREATURE_ATTACKS_SECTION = "section-cr-attacks"
+CREATURE_HEALTH_SECTION = "section-cr-health"
+CREATURE_ABILITIES_SECTION = "section-cr-abilities"
+CREATURE_POWERS_SECTION = "section-cr-powers"
+CREATURE_VIS_SECTION = "section-cr-vis"
 #: The saga's Seasons sheet: its top panel, what is coming, and the
 #: seasons recorded; and a covenant's own Ahead, on its Seasons tab.
 SEASONS_INFO_SECTION = "section-seasons-info"
@@ -202,6 +219,18 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     TRIGGERS_SECTION: frozenset({"add", "edit", "remove"}),
     TABLES_SECTION: frozenset({"add", "edit", "remove"}),
     DIARY_SECTION: frozenset({"add", "edit", "remove"}),
+    BESTIARY_SECTION: frozenset({"add", "edit", "remove"}),
+    CREATURE_INFO_SECTION: frozenset({"edit"}),
+    CREATURE_CHARACTERISTICS_SECTION: frozenset({"edit"}),
+    CREATURE_DESCRIPTION_SECTION: frozenset({"edit"}),
+    CREATURE_VF_SECTION: frozenset({"add", "remove"}),
+    CREATURE_TRAITS_SECTION: frozenset({"add", "edit", "remove"}),
+    CREATURE_REPUTATIONS_SECTION: frozenset({"add", "edit", "remove"}),
+    CREATURE_ATTACKS_SECTION: frozenset({"add", "edit", "remove"}),
+    CREATURE_HEALTH_SECTION: frozenset({"edit"}),
+    CREATURE_ABILITIES_SECTION: frozenset({"add", "edit", "remove"}),
+    CREATURE_POWERS_SECTION: frozenset({"add", "edit", "remove"}),
+    CREATURE_VIS_SECTION: frozenset({"add", "edit", "remove"}),
     SEASONS_INFO_SECTION: frozenset({"edit"}),
     AHEAD_SECTION: frozenset({"add", "edit", "remove"}),
     COV_AHEAD_SECTION: frozenset({"add", "edit", "remove"}),

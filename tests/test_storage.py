@@ -12,6 +12,7 @@ from ars_magica_manager.models import (
     ArtScore,
     Attitude,
     Background,
+    BodyVis,
     BondPower,
     Book,
     Breakthrough,
@@ -23,6 +24,9 @@ from ars_magica_manager.models import (
     CovenantBoonHookDef,
     CovenantDiaryEntry,
     CreationXp,
+    Creature,
+    CreatureAttack,
+    CreaturePower,
     Description,
     DeviceComponent,
     DiaryEntry,
@@ -402,6 +406,15 @@ def _saga_with_every_record() -> Saga:
     other.attitudes.append(Attitude(other.id, 1, [Reason("Helped at the ford", 1)]))
     other.favours.append(Favour("Shelter", "Fengheld", other.id))
     other.links.append(Link("characters", magus.id, "its founder"))
+    saga.creatures.append(
+        Creature(
+            "boglin",
+            "Boglin",
+            attacks=[CreatureAttack("Bite")],
+            powers=[CreaturePower("Vanish")],
+            vis=[BodyVis(1, "Herbam", "in its heart")],
+        )
+    )
     return saga
 
 

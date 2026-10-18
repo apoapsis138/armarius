@@ -212,7 +212,7 @@ def test_narrowing_a_pack_leaves_out_what_is_unticked():
     keep.place_id = "drachenfels"
     data = _rhine_pack(saga)
     fields = {f.key: f for f in packs.import_fields(data)}
-    assert set(fields) == {"people", "places", "world", "code", "history"}
+    assert set(fields) == {"people", "places", "world", "code", "history", "bestiary"}
     assert all(f.value is True for f in fields.values())
     assert fields["places"].label.startswith("Places and regiones (")
     # All ticked: the data as it is.
@@ -223,12 +223,14 @@ def test_narrowing_a_pack_leaves_out_what_is_unticked():
     held = bare["saga"]
     assert held["characters"] == [] and held["laboratories"] == []
     assert held["neighbours"] == [] and held["calendar"] == []
+    assert held["creatures"] == []
     assert all(t["diary"] == [] for t in held["tribunals"])
     assert {c["name"] for c in held["covenants"]} == {"Keep", "Fengheld"}
     # The records left out are named in the links, so the plan can say
     # what became of what pointed at them.
     assert bare["links"][transfer.NEIGHBOUR]["drachenfels"] == "The Drachenfels"
     assert "mag_sketch" in bare["links"][transfer.CHARACTER]
+    assert bare["links"][transfer.CREATURE]["aeolus"] == "Aeolus"
     assert data["saga"]["neighbours"], "the pack itself is untouched"
     # Places only: the mundane world stays out, the places come.
     some = packs.narrow(data, {**ticked, "world": False})

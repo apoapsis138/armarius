@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "2.93.0",
+  "app_version": "2.96.0",
   "kind": "pack",
   "name": "Guardians of the Forests: the Rhine Tribunal",
   "from_saga": "Guardians of the Forests: the Rhine Tribunal",
@@ -8,7 +8,8 @@
     "character": {},
     "laboratory": {},
     "covenant": {},
-    "neighbour": {}
+    "neighbour": {},
+    "creature": {}
   },
   "saga": {
     "id": "export",
@@ -781,7 +782,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "7498854d17bf"
+            "id": "ed9a2d2d8c4c"
           },
           {
             "title": "The Lusatia chapter and the Novgorod border",
@@ -798,7 +799,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "2b677c7f94ad"
+            "id": "68a40918c968"
           },
           {
             "title": "Choosing the Praeco by age",
@@ -815,7 +816,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "b272789138a3"
+            "id": "7772e806c542"
           },
           {
             "title": "Crintera and the Danes",
@@ -832,7 +833,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "9fc648d6638f"
+            "id": "ae0dc49c3142"
           },
           {
             "title": "Triamore's dealings with mundanes",
@@ -849,7 +850,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "7438e7375297"
+            "id": "da0c8398ab27"
           },
           {
             "title": "Fengheld's house at Durenmar",
@@ -866,7 +867,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "40d4df8464c2"
+            "id": "b817b74705c2"
           },
           {
             "title": "Waddenzee's piracy",
@@ -883,7 +884,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "d9ae00666af6"
+            "id": "640166441863"
           },
           {
             "title": "Odorpes of Fengheld's neglect",
@@ -900,7 +901,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "983fba2ed1ad"
+            "id": "258be7ef810c"
           },
           {
             "title": "The Rhine Gorge after the ban",
@@ -917,7 +918,7 @@
             "defender": "",
             "status": "open",
             "outcome": "",
-            "id": "44898c1b1bc9"
+            "id": "3f351946c93d"
           }
         ],
         "rulings": [
@@ -926,77 +927,77 @@
             "year": null,
             "says": "From the Tribunal's founding: every apprentice trained in the Rhine spends at least one season at Durenmar, taught by a magus of House Bonisagus.",
             "case_id": "",
-            "id": "34464fa2a15f"
+            "id": "f62b59548690"
           },
           {
             "title": "The laws of hospitality (961 AA)",
             "year": 822,
             "says": "A magus may ask hospitality of any lawful Rhine covenant, which must publish its conditions; a guest who accepts them is guaranteed at least three and at most seven years, pays at least three pawns of vis a year, and the conditions are the same for every guest in residence and change only when there are none.",
             "case_id": "",
-            "id": "e546507c1a7b"
+            "id": "ccd598564230"
           },
           {
             "title": "Proxy sigils (1017 AA)",
             "year": 878,
             "says": "Firm rules on the voting of retired magi, ending twenty years of dispute: a master is entrusted with one retired magus's sigil, an archmage with a second, cast in the retired magus's name and, by custom, by his likely wishes.",
             "case_id": "",
-            "id": "5545de7e65e4"
+            "id": "ca210dc1c448"
           },
           {
             "title": "Ranks",
             "year": null,
             "says": "Only a master may take an apprentice (a journeyman's filius is treated as a new hedge recruit); three masters of other covenants, Houses and gilds confer the rank; in any dispute certamen would otherwise settle, the higher rank has the right. House Tremere contests this, as it was made to curb them.",
             "case_id": "",
-            "id": "7cc044f159a7"
+            "id": "8c0d1874b5fe"
           },
           {
             "title": "Founding a covenant (1024 AA)",
             "year": 885,
             "says": "A new covenant needs a sponsoring magus from every existing covenant of the Tribunal. Arae Flaviae and Schwarzburg abolished the same year. Chapter houses need no such leave, which is how Fengheld grows.",
             "case_id": "",
-            "id": "8398ca8c6f40"
+            "id": "3aa4467224b8"
           },
           {
             "title": "Guardians of the Forests (1192 AA)",
             "year": 1053,
             "says": "Magi may actively defend the wilderness against those who would destroy it. In 1194 Caecilius ruled that the Danish occupation of R\u00fcgen is no such destruction, as no wilderness was invaded.",
             "case_id": "",
-            "id": "5ba1f2539eb6"
+            "id": "a4bffd9ca0d5"
           },
           {
             "title": "A day's march (1248 AA)",
             "year": 1109,
             "says": "A magical site within a day's march of a covenant belongs to it; Valdus of Tytalus, who harvested Treverorum's, was fined a pawn as the covenant had lost nothing, and told to ask in future.",
             "case_id": "",
-            "id": "1442c68b3604"
+            "id": "692d13af8b78"
           },
           {
             "title": "A covenant without a site",
             "year": 1144,
             "says": "At the Ash Gild's urging the Tribunal founded Oculus Septentrionalis to learn of the Norse wizards, ruling that a covenant needs no site at founding, only magi bound by a charter. In 1158 its magi were fined three pawns each for keeping neither.",
             "case_id": "",
-            "id": "34e049a3c674"
+            "id": "aaa059e032bf"
           },
           {
             "title": "Dankmar against Durenmar",
             "year": 1151,
             "says": "Durenmar, found to have molested the fay and plundered faerie sites, paid a rook of vis to every other covenant and was barred from faerie sites for fourteen years unless it made peace with them.",
             "case_id": "",
-            "id": "257901a0fc86"
+            "id": "c922cb115ed0"
           },
           {
             "title": "No magic in the Rhine Gorge (1339 AA)",
             "year": 1200,
             "says": "After Rheinstein was destroyed by the archbishop of Trier's army, largely through its own doing, no magical activity in the Rhine Gorge for twenty years: a ban that ends in 1220.",
             "case_id": "",
-            "id": "12887b5c7d0d"
+            "id": "7dc5a1b31562"
           },
           {
             "title": "Waddenzee is Terschelling",
             "year": 1207,
             "says": "The two survivors of Terschelling renamed it Waddenzee with a new charter and symbol; a vote to call it a new covenant needing leave failed, by the Oak and Ash Gilds. The same year Rethra, silent for decades, was declared abolished.",
             "case_id": "",
-            "id": "df24cc95fb23"
+            "id": "5c67099778e4"
           }
         ],
         "treasury": [],
@@ -1008,7 +1009,7 @@
             "details": "Priests of the Roman Cult of Mercury raise a temple deep in the Black Forest, on the ground Durenmar later takes, hoping to turn the primeval power of the Hercynian Forest to their own use. In the Roman years they bind the forest's spirit by its own oaths into what is now the Fane of the Founders; a wild splinter of it escapes south and in time becomes the King of the Black Mountain.",
             "changes": [],
             "margin": "",
-            "id": "9c7cd733207a"
+            "id": "f94e3fd600ea"
           },
           {
             "year": 74,
@@ -1017,7 +1018,7 @@
             "details": "The Eighth Legion under Cornelius Clemens completes the road from Offenburg to Rottweil with the help of Mercurian priests, who set warding milestones along it. The Roman limes of the same age cuts the Black Forest, and its spirit, off from the rest of the Hercynian Forest.",
             "changes": [],
             "margin": "",
-            "id": "fe5b3cff0cf8"
+            "id": "63c3a885e9f8"
           },
           {
             "year": 725,
@@ -1026,7 +1027,7 @@
             "details": "St Boniface cuts down the Donar Oak at Geismar in Thuringia and builds an oratory of St Peter from its wood. Pagan magic, relics and belief wane from that day, and the one great spirit of the Hercynian Forest is shattered into the many lesser forests of Germany.",
             "changes": [],
             "margin": "",
-            "id": "b02f3ab76254"
+            "id": "46c15204ab87"
           },
           {
             "year": 731,
@@ -1035,7 +1036,7 @@
             "details": "Trianoma finds Bonisagus in his cave in the Alps, becomes his apprentice and learns the Parma Magica.",
             "changes": [],
             "margin": "",
-            "id": "42ac3d344eb3"
+            "id": "d1fadaab924e"
           },
           {
             "year": 731,
@@ -1044,7 +1045,7 @@
             "details": "From 731 to 767 Trianoma seeks out the wizards who will be the Founders and brings them to Bonisagus, who refines his theory with each. Merinita comes in from the wild and persuades the shapeshifter Bjornaer to join, for which Bjornaer's old fellows, the sorceress Gyongy among them, condemn her.",
             "changes": [],
             "margin": "",
-            "id": "059305690745"
+            "id": "9339e778ee39"
           },
           {
             "year": 754,
@@ -1053,7 +1054,7 @@
             "details": "Bonisagus leaves his Alpine cave for the ruined Roman temple in the Black Forest, hoping to reconcile his Hermetic theory with the forest's primeval magic; between 754 and 767 the place is built up with room for many magi.",
             "changes": [],
             "margin": "",
-            "id": "cd082d409571"
+            "id": "52ee9f03f9d4"
           },
           {
             "year": 767,
@@ -1062,7 +1063,7 @@
             "details": "The Founders compose and swear the Oath at the Fane of the Founders and hold the first Tribunal gathering. Bonisagus's followers and some of the Founders settle at Durenmar and build the covenant.",
             "changes": [],
             "margin": "",
-            "id": "89a56e002f81"
+            "id": "5bde48b34578"
           },
           {
             "year": 767,
@@ -1071,7 +1072,7 @@
             "details": "Between 767 and 773 Flambeau and his apprentices leave to found Val-Negra in the Pyrenees, and other magi found covenants of their own after Durenmar's pattern.",
             "changes": [],
             "margin": "",
-            "id": "c1a341b15778"
+            "id": "45c7c1d92d67"
           },
           {
             "year": 771,
@@ -1080,7 +1081,7 @@
             "details": "Bjornaer and her followers meet in council on R\u00fcgen; her House has gathered there every twelve years since.",
             "changes": [],
             "margin": "",
-            "id": "e6b94f4b6425"
+            "id": "b2b79e1ad3fe"
           },
           {
             "year": 773,
@@ -1089,7 +1090,7 @@
             "details": "A Tribunal is ruled to need at least twelve magi from four covenants. Crintera, the domus magna of House Bjornaer, and Fenistal, the domus magna of House Merinita, are founded.",
             "changes": [],
             "margin": "",
-            "id": "a2d17005db2d"
+            "id": "cc83cf3d9fb9"
           },
           {
             "year": 780,
@@ -1098,7 +1099,7 @@
             "details": "The Rhine Tribunal meets for the first time, at Durenmar. Arae Flaviae in Swabia and Rethra in the Eastern Marches are founded.",
             "changes": [],
             "margin": "",
-            "id": "37915b15a345"
+            "id": "587e59e33809"
           },
           {
             "year": 789,
@@ -1107,7 +1108,7 @@
             "details": "Jerbiton, who has taken on the apprentices of the imperial mage-smith Carolinus, meets Charlemagne. The emperor outlaws sorcery and paganism but allows the kind of benevolent magic Jerbiton practises.",
             "changes": [],
             "margin": "",
-            "id": "19896f28e806"
+            "id": "f88e58fb0545"
           },
           {
             "year": 792,
@@ -1116,7 +1117,7 @@
             "details": "The Founder Merinita is seen for the last time, going to seek the spirit of the wilderness; the Bohemian chapter dates her going to 785 and says her last words are carved over Irencillia's gate. Fenistal becomes the first covenant to enter Winter, and the new Primus Quendalon founds Irencillia.",
             "changes": [],
             "margin": "",
-            "id": "f7c13dd6abb4"
+            "id": "1849578913a0"
           },
           {
             "year": 799,
@@ -1125,7 +1126,7 @@
             "details": "After the gathering Quendalon goes into the faerie woods of Bohemia, leaving Myanar to lead House Merinita.",
             "changes": [],
             "margin": "",
-            "id": "61c367c5a726"
+            "id": "ab6bd5e6a5b2"
           },
           {
             "year": 801,
@@ -1134,7 +1135,7 @@
             "details": "In 801 and 802 Quendalon comes back from the faerie woods and Myanar denies he is the true Quendalon. The struggle kills Myanar and loses Fenistal; Irencillia becomes the domus magna of House Merinita, the House turns to faerie magic, and the Elder Gild splits away from the Hawthorn Gild.",
             "changes": [],
             "margin": "",
-            "id": "4b08b221ca62"
+            "id": "696a25e982d3"
           },
           {
             "year": 807,
@@ -1143,7 +1144,7 @@
             "details": "The Founder Tytalus enters the Maddenhofen Woods in Bohemia, saying he will face the Queen of all the Fae, and is never seen again.",
             "changes": [],
             "margin": "",
-            "id": "f1c68b9d16ee"
+            "id": "b5f6f7196f28"
           },
           {
             "year": 817,
@@ -1152,7 +1153,7 @@
             "details": "",
             "changes": [],
             "margin": "",
-            "id": "f66aa1a33c49"
+            "id": "af493ab6b4a4"
           },
           {
             "year": 831,
@@ -1161,7 +1162,7 @@
             "details": "At the Gathering of Twelve Years at Crintera, Bjornaer speaks for the last time to her House and goes into the forest as a bear.",
             "changes": [],
             "margin": "",
-            "id": "fb08fb6d2ac4"
+            "id": "ab4c722af9d0"
           },
           {
             "year": 832,
@@ -1170,7 +1171,7 @@
             "details": "Grand Tribunals are to meet every thirty-three years from now on, and the regional Tribunals every seven years from 836.",
             "changes": [],
             "margin": "",
-            "id": "30e29b2d9584"
+            "id": "cd8b180f7d4e"
           },
           {
             "year": 850,
@@ -1179,7 +1180,7 @@
             "details": "From about 850 to 948 Hercynius of Bonisagus founds a lineage within his House and draws other magi to his teaching on the forest's magic.",
             "changes": [],
             "margin": "",
-            "id": "18df4976bae1"
+            "id": "b2bb7aea6828"
           },
           {
             "year": 857,
@@ -1188,7 +1189,7 @@
             "details": "The spirits of three magi lost to Twilight famously return to the gathering.",
             "changes": [],
             "margin": "",
-            "id": "8cf39ed0026e"
+            "id": "3ee940e77411"
           },
           {
             "year": 865,
@@ -1197,7 +1198,7 @@
             "details": "The borders of the Tribunals are fixed along the lines of the Frankish partition and named: Rhine, Normandy, Provencal, Britannian, Roman, Theban, Eastern and Greater Alps.",
             "changes": [],
             "margin": "",
-            "id": "2f8ee251257f"
+            "id": "52b8e7673421"
           },
           {
             "year": 878,
@@ -1206,7 +1207,7 @@
             "details": "Firm rules on the votes of retired magi end twenty years of dispute over whether and how their sigils may be cast.",
             "changes": [],
             "margin": "",
-            "id": "8c0db42360b7"
+            "id": "9371a36b81d9"
           },
           {
             "year": 885,
@@ -1215,7 +1216,7 @@
             "details": "Arae Flaviae and Schwarzburg are abolished, and strict rules for the founding of new covenants are agreed.",
             "changes": [],
             "margin": "",
-            "id": "3a68e0ec2590"
+            "id": "e9806ffe2b89"
           },
           {
             "year": 892,
@@ -1224,7 +1225,7 @@
             "details": "The Tribunal sponsors Rudiaria, a Flambeau-leaning covenant on the right bank of the Rhine opposite Bingen, and grants it every magical site along the river between Mainz and Cologne.",
             "changes": [],
             "margin": "",
-            "id": "544d5a809d5c"
+            "id": "36057b90c15f"
           },
           {
             "year": 898,
@@ -1233,7 +1234,7 @@
             "details": "",
             "changes": [],
             "margin": "",
-            "id": "20fd1dd5aa77"
+            "id": "7c83859aad58"
           },
           {
             "year": 930,
@@ -1242,7 +1243,7 @@
             "details": "Magyar raiders destroy the covenant of Sirmium in Meissen, and with it the region's known vis sources. Wiederich of Flambeau, the only survivor, joins Henry the Fowler's army for revenge and serves at Riade in 933 and on the Lech in 955; after the Magyars' defeat House Bjornaer adopts three Magyar shapechangers, whose horse-hearted line survives, and Wiederich's descendants have hounded them as blood enemies ever since.",
             "changes": [],
             "margin": "",
-            "id": "10454a02bece"
+            "id": "7f990ece9149"
           },
           {
             "year": 931,
@@ -1251,7 +1252,7 @@
             "details": "",
             "changes": [],
             "margin": "",
-            "id": "ebc4b4cbe4dc"
+            "id": "c4f779718117"
           },
           {
             "year": 934,
@@ -1260,7 +1261,7 @@
             "details": "Diedne magi found Oakdell in the Westerwald, a dozen miles east of the Rhine, with the Tribunal's sponsorship and on condition that it keeps out of Rudiaria's territory.",
             "changes": [],
             "margin": "",
-            "id": "7fa1b8e0e77f"
+            "id": "b6b64f16c874"
           },
           {
             "year": 941,
@@ -1269,7 +1270,7 @@
             "details": "The Tribunal's followers of Diedne, until now of the Hawthorn Gild, found the Rowan Gild.",
             "changes": [],
             "margin": "",
-            "id": "421e2cf80b09"
+            "id": "3cea37c8d24d"
           },
           {
             "year": 962,
@@ -1278,7 +1279,7 @@
             "details": "Charges of diabolism against Eginolf of Flambeau of Rudiaria are not proven, but the reports of malefic doings near the covenant are noted with disapproval; Rudiaria is ordered to investigate, report within seven years and stop troubling the mundanes.",
             "changes": [],
             "margin": "",
-            "id": "ab11ae02b471"
+            "id": "8ce35c1afad9"
           },
           {
             "year": 964,
@@ -1287,7 +1288,7 @@
             "details": "",
             "changes": [],
             "margin": "",
-            "id": "879653d3013e"
+            "id": "cd5572fb8730"
           },
           {
             "year": 969,
@@ -1296,7 +1297,7 @@
             "details": "House Mercere reports Rudiaria burnt out in what looks like a catastrophic magical accident, every magus slain or missing; diabolism is suspected. The fall comes with a crippling famine and unrest in the region.",
             "changes": [],
             "margin": "",
-            "id": "2dd26d406d56"
+            "id": "fbeb62809fa7"
           },
           {
             "year": 976,
@@ -1305,7 +1306,7 @@
             "details": "Nothing can be salvaged at Rudiaria; an archbishop of Mainz has sanctified the ground. Oakdell's claim to Rudiaria's sites is refused.",
             "changes": [],
             "margin": "",
-            "id": "b0506281bfb6"
+            "id": "247b109aad93"
           },
           {
             "year": 990,
@@ -1314,7 +1315,7 @@
             "details": "Followers of Hercynius leave Durenmar to found Waldherz, first as a chapter house and later as a disputed covenant in its own right.",
             "changes": [],
             "margin": "",
-            "id": "1fcd597c269b"
+            "id": "10960fc9a549"
           },
           {
             "year": 993,
@@ -1323,7 +1324,7 @@
             "details": "Crintera and Rethra sponsor Grand Silesia, the Order's easternmost covenant yet; its Bjornaer and the Bonisagi of Waldherz join the Rowan Gild.",
             "changes": [],
             "margin": "",
-            "id": "a20bdd799eb6"
+            "id": "4e1930722537"
           },
           {
             "year": 997,
@@ -1332,7 +1333,7 @@
             "details": "The Rhine's own gathering of this year is the first of three (997, 1004 and 1011) at which distrust within the Order stops the renewal of the Founders' vows at the Fane.",
             "changes": [],
             "margin": "",
-            "id": "8d1caf486098"
+            "id": "b6715ea0953f"
           },
           {
             "year": 997,
@@ -1341,7 +1342,7 @@
             "details": "Oakdell's accusations of espionage and meddling against magi of Durenmar are thrown out as spurious and unproven.",
             "changes": [],
             "margin": "",
-            "id": "416f68ff33a5"
+            "id": "79acb6dc3856"
           },
           {
             "year": 1004,
@@ -1350,7 +1351,7 @@
             "details": "The whole Rowan Gild is Marched, beginning the Schism War in the Rhine. Severus Maximus of Flambeau declares Wizard's War on Caithlinn of Oakdell and Cirion of Tremere on Pietro of Oakdell; Tremere and Flambeau magi set about destroying Oakdell and Waldherz.",
             "changes": [],
             "margin": "",
-            "id": "ba4344560ab0"
+            "id": "a1c8ab72673d"
           },
           {
             "year": 1008,
@@ -1359,7 +1360,7 @@
             "details": "The Slavic covenants, Rethra and Grand Silesia among them, break with their sponsors and declare a New Slavonic Tribunal. Grand Silesia is destroyed the same year.",
             "changes": [],
             "margin": "",
-            "id": "365ecdaf8356"
+            "id": "d3c9a246a2c8"
           },
           {
             "year": 1016,
@@ -1368,7 +1369,7 @@
             "details": "Oakdell is razed and all its Diedne magi slain in the Schism War.",
             "changes": [],
             "margin": "",
-            "id": "e810d2d297fb"
+            "id": "524a057c7739"
           },
           {
             "year": 1018,
@@ -1377,7 +1378,7 @@
             "details": "The Schism War is declared over; the Linden Gild grows up over the following decades. The renewal of the Founders' vows at the Fane resumes, an Ex Miscellanea magus taking the place Diedne's representative once held.",
             "changes": [],
             "margin": "",
-            "id": "146b5f5e034d"
+            "id": "09aa44fcc542"
           },
           {
             "year": 1030,
@@ -1386,7 +1387,7 @@
             "details": "Over the Rhine's protests, the New Slavonic Tribunal is given authority over new covenants in Slavic lands.",
             "changes": [],
             "margin": "",
-            "id": "1794e91828d8"
+            "id": "a3182311d275"
           },
           {
             "year": 1039,
@@ -1395,7 +1396,7 @@
             "details": "Veteran Tremere and Flambeau magi back from the Schism War in Britannia (fought in Stonehenge and Normandy) found Fengheld in the Harz with the Tribunal's ready approval, as a quiet retreat for ageing war heroes away from the mundanes.",
             "changes": [],
             "margin": "",
-            "id": "ed0d9a3ac8df"
+            "id": "86b53edde942"
           },
           {
             "year": 1039,
@@ -1404,7 +1405,7 @@
             "details": "Through the reign of Henry III (1039 to 1056) Fengheld's political Tremere, working with the Transylvanian Tribunal, take part in the emperor's conquests of Bohemia, Poland and Hungary and seize many vis sites.",
             "changes": [],
             "margin": "",
-            "id": "741508de8c67"
+            "id": "d07e208335e9"
           },
           {
             "year": 1048,
@@ -1413,7 +1414,7 @@
             "details": "Aschlaranda, once of Waldherz, reappears at Durenmar.",
             "changes": [],
             "margin": "",
-            "id": "cf40a0ea5e70"
+            "id": "7cbbf1369469"
           },
           {
             "year": 1052,
@@ -1422,7 +1423,7 @@
             "details": "Aschlaranda, exiled from Durenmar and from House Bonisagus, settles with her apprentice Schadrit at Dankmar in the Black Forest (the timeline puts their occupation of the site in 1053).",
             "changes": [],
             "margin": "",
-            "id": "60a9b7ddc48f"
+            "id": "1202249ad4d2"
           },
           {
             "year": 1052,
@@ -1431,7 +1432,7 @@
             "details": "Bjornaer magi once of Grand Silesia settle at Pripet Maior in the New Slavonic Tribunal, and Crintera and Pripet Maior form an alliance across the Tribunal border.",
             "changes": [],
             "margin": "",
-            "id": "8417364a9867"
+            "id": "ef174384d846"
           },
           {
             "year": 1053,
@@ -1440,7 +1441,7 @@
             "details": "The Guardians of the Forest ruling is made, allowing magi to defend wild places. Dankmar goes unrecognised as a covenant, Durenmar's influence seeing to it.",
             "changes": [],
             "margin": "",
-            "id": "dfde32e38842"
+            "id": "fb7ada761577"
           },
           {
             "year": 1063,
@@ -1449,7 +1450,7 @@
             "details": "To curb the Rhine, the Grand Tribunal rejects its claim to the Polish lands left empty by Grand Silesia's fall and grants all Slavic lands to the New Slavonic Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "f18cf8aded0e"
+            "id": "ca88179bdb66"
           },
           {
             "year": 1067,
@@ -1458,7 +1459,7 @@
             "details": "Roznov is founded in Moravia by three Ex Miscellanea magi, and Dankmar is at last recognised as a covenant of the Rhine.",
             "changes": [],
             "margin": "",
-            "id": "b2c3e5bfb01c"
+            "id": "0f5ccdacc2c0"
           },
           {
             "year": 1074,
@@ -1467,7 +1468,7 @@
             "details": "Roznov is admitted to the Rhine Tribunal; two Tremere from Transylvania join it almost at once.",
             "changes": [],
             "margin": "",
-            "id": "0b6eee6c0584"
+            "id": "0364c9341096"
           },
           {
             "year": 1081,
@@ -1476,7 +1477,7 @@
             "details": "Durenmar accuses Dankmar before the Tribunal of being secretly in league with the forest fay. Nothing is proven.",
             "changes": [],
             "margin": "",
-            "id": "09c4bd9efac1"
+            "id": "4bcb477981a3"
           },
           {
             "year": 1085,
@@ -1485,7 +1486,7 @@
             "details": "The great faerie lord of the Black Forest attacks Durenmar; several Bonisagus magi and many covenfolk are killed or carried off, and the captives are never returned. In the years after, Durenmar's magi devise the most powerful Aegis of the Hearth yet known.",
             "changes": [],
             "margin": "",
-            "id": "922baee845c8"
+            "id": "988bfe79bb2f"
           },
           {
             "year": 1088,
@@ -1494,7 +1495,7 @@
             "details": "Xantippes and Julia of Jerbiton and Selena Tibicena of Bonisagus propose a covenant in Trier to recover Roman secrets; with no sponsor from Irencillia, Crintera or Dankmar it is not recognised.",
             "changes": [],
             "margin": "",
-            "id": "643f74cbf206"
+            "id": "effab6e9657d"
           },
           {
             "year": 1095,
@@ -1503,7 +1504,7 @@
             "details": "The same three, now joined by Arliandus of Tremere, propose again and Treverorum is approved.",
             "changes": [],
             "margin": "",
-            "id": "73b4fcfade82"
+            "id": "7c7a63bab9a8"
           },
           {
             "year": 1096,
@@ -1512,7 +1513,7 @@
             "details": "",
             "changes": [],
             "margin": "",
-            "id": "da1c7678925c"
+            "id": "480b3d2a7189"
           },
           {
             "year": 1100,
@@ -1521,7 +1522,7 @@
             "details": "From about 1100 to 1150 Durenmar loses several magical sites to Z\u00e4hringen settlement, runs short of vis and raids the forest's faerie sites greedily to make it up. The Black Fir begins to grow at the edge of its Aegis about this time.",
             "changes": [],
             "margin": "",
-            "id": "d344a9fd94ff"
+            "id": "c7f60d130267"
           },
           {
             "year": 1109,
@@ -1530,7 +1531,7 @@
             "details": "Treverorum charges Valdus of Tytalus with twice harvesting vis from its site outside Trier's walls; he admits it but calls the site neglected and not theirs. The Tribunal rules that a site within a day's march of a covenant belongs to it, yet as Treverorum lost nothing Valdus pays one pawn and must ask leave in future.",
             "changes": [],
             "margin": "",
-            "id": "29ece17b3a8b"
+            "id": "d66fe00c98e6"
           },
           {
             "year": 1123,
@@ -1539,7 +1540,7 @@
             "details": "Schwall of Bjornaer and Fulmonious of Tytalus found Rheinstein on Pfalz Island in the Rhine Gorge with the Tribunal's sponsorship, promising every other covenant a tithe of three pawns of vis a Tribunal for five Tribunals.",
             "changes": [],
             "margin": "",
-            "id": "7c321d9f1078"
+            "id": "60db8c791396"
           },
           {
             "year": 1129,
@@ -1548,7 +1549,7 @@
             "details": "",
             "changes": [],
             "margin": "",
-            "id": "60cf95774f81"
+            "id": "f5dc554902d8"
           },
           {
             "year": 1144,
@@ -1557,7 +1558,7 @@
             "details": "At the Ash Gild's urging the Tribunal resolves to learn more of the Norse wizards, the supposed Order of Odin, and orders a covenant founded for the purpose; three magi under Axior volunteer and Oculus Septentrionalis is born. The Tribunal rules that a covenant need have no site at its founding, only magi bound by a charter.\n\nSecrets\nThree Verditius magestones were secretly given to the new covenant.",
             "changes": [],
             "margin": "",
-            "id": "eec2ad1c69c5"
+            "id": "8d53f639bd29"
           },
           {
             "year": 1151,
@@ -1566,7 +1567,7 @@
             "details": "Dankmar accuses Durenmar of molesting faeries and plundering the Black Forest's faerie sites for vis. With Crintera, Irencillia and Fengheld, and the Hawthorn and Elder Gilds, behind the charge, Durenmar is fined a rook of vis to every other covenant and barred from faerie-site vis for fourteen years unless it makes peace with the fay; no such peace has ever been made.",
             "changes": [],
             "margin": "",
-            "id": "8561172b5d0e"
+            "id": "a2167d719bde"
           },
           {
             "year": 1151,
@@ -1575,7 +1576,7 @@
             "details": "The newly risen Apple Gild founds Triamore at the court of Conrad III; Oculus Septentrionalis takes up the Gild as well.",
             "changes": [],
             "margin": "",
-            "id": "9644ac399f5a"
+            "id": "f2cd25198cd6"
           },
           {
             "year": 1151,
@@ -1584,7 +1585,7 @@
             "details": "The Redcap Ioanna is murdered in Trier; Treverorum denies all knowledge and a Quaesitorial investigation is ordered.",
             "changes": [],
             "margin": "",
-            "id": "8fe81b2bf88f"
+            "id": "496c0f2bba81"
           },
           {
             "year": 1158,
@@ -1593,7 +1594,7 @@
             "details": "The magi of Oculus Septentrionalis are found to have broken their charter: no site, no investigation, and still living in their old sancta. Each is fined three pawns of vis and ordered out of the old sancta within a year, with a permanent site to be found before the next Tribunal; two Jerbiton join them.",
             "changes": [],
             "margin": "",
-            "id": "c40b9b97a2a3"
+            "id": "ffc587c406c1"
           },
           {
             "year": 1158,
@@ -1602,7 +1603,7 @@
             "details": "Xantippes of Jerbiton is found guilty of major mundane meddling, having worked Mentem magic of his own devising on the people of Trier for gain, to the harm of the Order's standing and perhaps a cause of Ioanna's death. He is fined ten pawns, his fortune is shared equally among the Tribunal's covenants and he owes three seasons' scribing to the Great Library.",
             "changes": [],
             "margin": "",
-            "id": "9169ec724483"
+            "id": "a79ad0235d3a"
           },
           {
             "year": 1158,
@@ -1611,7 +1612,7 @@
             "details": "Agnes of Irencillia tells the Tribunal she has seen the Founder Merinita in Bohemia; few believe her.",
             "changes": [],
             "margin": "",
-            "id": "88204560172d"
+            "id": "2c406662e425"
           },
           {
             "year": 1158,
@@ -1620,7 +1621,7 @@
             "details": "Hildegard of Bingen is said to have been taken into House Jerbiton about this year as an unGifted maga under its protection and tutelage; she never attends a Tribunal and meets few magi, and the tale is unconfirmed.",
             "changes": [],
             "margin": "",
-            "id": "f39ca660ac7c"
+            "id": "36a7c529ce51"
           },
           {
             "year": 1160,
@@ -1629,7 +1630,7 @@
             "details": "About 1160 three magi of Oculus Septentrionalis settle in Henry the Lion's new city of L\u00fcbeck; Axior leaves them.",
             "changes": [],
             "margin": "",
-            "id": "48fdef39ce9d"
+            "id": "17e6aecd6333"
           },
           {
             "year": 1162,
@@ -1638,7 +1639,7 @@
             "details": "The Rhine again loses the Polish boundary dispute to Novgorod, as the New Slavonic Tribunal is now called.",
             "changes": [],
             "margin": "",
-            "id": "c269ffa63b49"
+            "id": "a12307c18a5d"
           },
           {
             "year": 1165,
@@ -1647,7 +1648,7 @@
             "details": "Oculus Septentrionalis announces its new seat at L\u00fcbeck, and the Quaesitores force additions to its charter, among them that it admit only Gentle-Gifted magi.",
             "changes": [],
             "margin": "",
-            "id": "25e3f5cf0755"
+            "id": "ca391299b728"
           },
           {
             "year": 1165,
@@ -1656,7 +1657,7 @@
             "details": "A Quaesitorial inquiry into the unrest in Trier finds Treverorum guilty of interfering with mundanes and the Church to the possible harm of its sodales; it is fined fifty pawns, payable by the next Tribunal, and ordered to repair its relations with the town.",
             "changes": [],
             "margin": "",
-            "id": "d0742794c22e"
+            "id": "6f8cf5a20ecc"
           },
           {
             "year": 1165,
@@ -1665,7 +1666,7 @@
             "details": "Axior of Flambeau founds Terschelling on the Frisian island of that name. He dies in a magical accident within twenty years.",
             "changes": [],
             "margin": "",
-            "id": "b229c5128215"
+            "id": "4d713f4ce178"
           },
           {
             "year": 1165,
@@ -1674,7 +1675,7 @@
             "details": "Urgen takes the Primacy of House Bjornaer, which he holds through the Danish conquest of R\u00fcgen until 1203.",
             "changes": [],
             "margin": "",
-            "id": "be504c1240e6"
+            "id": "143db09ebae2"
           },
           {
             "year": 1167,
@@ -1683,7 +1684,7 @@
             "details": "Jon Arnsson takes the Seat of the Stag on Crintera's council, a year before the Danes land on R\u00fcgen.",
             "changes": [],
             "margin": "",
-            "id": "50454b1e7000"
+            "id": "94c9f71af721"
           },
           {
             "year": 1168,
@@ -1692,7 +1693,7 @@
             "details": "Valdemar I of Denmark conquers R\u00fcgen and Bishop Absolon breaks the temple of Arkona the next year. Over the Wilderists' objections Crintera chooses to wait the Danes out; the covenant falls into crisis and the Winter it has lived in for fifty years begins.",
             "changes": [],
             "margin": "",
-            "id": "d8f5b46b68f3"
+            "id": "071d48cb340e"
           },
           {
             "year": 1172,
@@ -1701,7 +1702,7 @@
             "details": "Scholastus of Jerbiton declares himself Treverorum's last survivor and the covenant is abolished; he calls Trier unsafe for magi because of its churchmen, gives no details and leaves for the Greater Alps. The fine is partly unpaid, so he is held liable and a Redcap request follows him. No one from Crintera attends.",
             "changes": [],
             "margin": "",
-            "id": "d37ed4e73b22"
+            "id": "09214c934df4"
           },
           {
             "year": 1179,
@@ -1710,7 +1711,7 @@
             "details": "Primus Urgen of Bjornaer charges Oculus Septentrionalis with aiding the Danish invasion of R\u00fcgen but offers no proof. Failing, he declares Wizard's War on its leader Prudentum of Jerbiton and kills him.",
             "changes": [],
             "margin": "",
-            "id": "96a970c38283"
+            "id": "118a8742df9a"
           },
           {
             "year": 1179,
@@ -1719,7 +1720,7 @@
             "details": "Eule of Fengheld lays before the gathering her evidence that magi of Luctatio in the Roman Tribunal helped Milan beat Barbarossa at Legnano and that a necromancer of Vardian's Tomb made the plague that stopped his army before Rome.",
             "changes": [],
             "margin": "",
-            "id": "efb5d8d6d93a"
+            "id": "327b5ba490ee"
           },
           {
             "year": 1186,
@@ -1728,7 +1729,7 @@
             "details": "The Hawthorn Gild invokes the Guardians of the Forest ruling to strike back at the Danes on R\u00fcgen, with the Ash and, unexpectedly, the Elder Gilds in support. The Tribunal splits along factional lines and reaches no decision beyond a promised inquiry, so Crintera is refused leave to expel the Danes; several Bjornaer are prosecuted afterwards for attacking Danish settlers.",
             "changes": [],
             "margin": "",
-            "id": "6c4f187a8a9d"
+            "id": "f0328aecbfcb"
           },
           {
             "year": 1191,
@@ -1737,7 +1738,7 @@
             "details": "Avarret becomes Primus of House Bonisagus and turns the House back to the conservative refinement of existing theory.",
             "changes": [],
             "margin": "",
-            "id": "840b775646f1"
+            "id": "25cc44d09abf"
           },
           {
             "year": 1194,
@@ -1746,7 +1747,7 @@
             "details": "Held a year late because of the Grand Tribunal. Falke of Fengheld pleads passionately for Crintera to be allowed to resist the Danes, but Quaesitor Caecilius rules that no wilderness has been invaded or destroyed, Crintera's forest standing intact; the Guardians ruling is much narrowed and Crintera falls into factional infighting.",
             "changes": [],
             "margin": "",
-            "id": "5dd78ea41c77"
+            "id": "0d89510da78d"
           },
           {
             "year": 1195,
@@ -1755,7 +1756,7 @@
             "details": "Five magi of the Roman Tribunal are Marched over the Luctatio affair.",
             "changes": [],
             "margin": "",
-            "id": "d605b1a846a0"
+            "id": "8e86a7df2212"
           },
           {
             "year": 1200,
@@ -1764,7 +1765,7 @@
             "details": "Horst of Mercere reports Rheinstein attacked and destroyed by an army of angry mundanes led by the archbishop of Trier, its magi's fate unknown; their own conduct drew the attention that undid them. The Tribunal bans all magical activity in the Rhine Gorge for twenty years.",
             "changes": [],
             "margin": "",
-            "id": "b2963154ff29"
+            "id": "81788225d1b2"
           },
           {
             "year": 1200,
@@ -1773,7 +1774,7 @@
             "details": "Eric Ribecus and Hygwald Veritas join Terschelling and about this year kill a pirate chief and seize his three ships and their crews; the covenant takes to piracy, and Imanitos Mendax spends some years there as a guest soon after.",
             "changes": [],
             "margin": "",
-            "id": "68b06a9c652e"
+            "id": "2b60678b314a"
           },
           {
             "year": 1203,
@@ -1782,7 +1783,7 @@
             "details": "Urgen resigns the Primacy of House Bjornaer but keeps the Seat of the Bear; Falke of Fengheld is elected Prima and takes the Seat of the Wolf.",
             "changes": [],
             "margin": "",
-            "id": "84fda217fb28"
+            "id": "6e61dd178274"
           },
           {
             "year": 1207,
@@ -1791,7 +1792,7 @@
             "details": "Eric Ribecus and Hygwald Veritas announce they are the only magi left at Terschelling, rename it Waddenzee and change its charter and symbol. A Quaesitorial inquiry finds no wrongdoing, and a motion to treat it as a new covenant needing the Tribunal's leave narrowly fails, the Oak and Ash Gilds voting it down.",
             "changes": [],
             "margin": "",
-            "id": "6fd9f72194dd"
+            "id": "844962901718"
           },
           {
             "year": 1207,
@@ -1800,7 +1801,7 @@
             "details": "The Tribunal declares the Slavic covenant of Rethra abolished, nothing having been heard from its magi for decades; the Knights of the Sword had lately desecrated and plundered its site.",
             "changes": [],
             "margin": "",
-            "id": "7d96cd9f690a"
+            "id": "69307c9900f9"
           },
           {
             "year": 1208,
@@ -1809,7 +1810,7 @@
             "details": "The monastery of St Georgen in the Black Forest is destroyed and its monks found dead among dark vines; Dankmar is suspected.",
             "changes": [],
             "margin": "",
-            "id": "a1581f98a26d"
+            "id": "07afd06d98e7"
           },
           {
             "year": 1210,
@@ -1818,7 +1819,7 @@
             "details": "Over the last decade the religion of the God of Truth, preached by the prophet Iacob, spreads near the Bohemian Forest.",
             "changes": [],
             "margin": "",
-            "id": "b5bf3e81f75f"
+            "id": "ff0e41db9929"
           },
           {
             "year": 1213,
@@ -1827,7 +1828,7 @@
             "details": "Before his Final Twilight Primus Avarret names Murion his successor, passing over the better-qualified but 'too dangerous' Occultes and keeping the conservative line in charge of the House.",
             "changes": [],
             "margin": "",
-            "id": "612948014d04"
+            "id": "78926747a1bb"
           },
           {
             "year": 1214,
@@ -1836,7 +1837,7 @@
             "details": "The latest Rhine gathering raises the destruction of St Georgen; Jiphella, Dankmar's only delegate, denies any part in it, and a close vote declines to investigate.",
             "changes": [],
             "margin": "",
-            "id": "540e32c4a777"
+            "id": "7bf32e49890d"
           },
           {
             "year": 1215,
@@ -1845,7 +1846,7 @@
             "details": "Three Rhine magi found Heorot on the Danish island of Zealand, on the site of Hrothgar's hall, in what is formally Novgorod's territory; Theoderich of Jerbiton leaves Oculus Septentrionalis to join them. It means to ask the Tribunal of 1221 for membership.",
             "changes": [],
             "margin": "",
-            "id": "9eec40ff0b91"
+            "id": "a0ad485f355c"
           },
           {
             "year": 1220,
@@ -1854,7 +1855,7 @@
             "details": "The twenty-year ban on magic in the Rhine Gorge runs out. Durenmar's leadership, with no covenant founded for decades and Fengheld's chapters multiplying, sponsors newly Gauntleted magi to survey the Gorge's lost sites and found a new Middle Rhine covenant.",
             "changes": [],
             "margin": "",
-            "id": "32f82fb3afe0"
+            "id": "8b250caa7f17"
           },
           {
             "year": 1220,
@@ -1863,7 +1864,7 @@
             "details": "Fengheld, having been refused leave to sponsor daughter covenants of young Tremere, has lately founded a chapter house in Lusatia, ten miles from the agreed Novgorod border, provoking the latest boundary dispute between the two Tribunals; it has also loosened its Transylvanian ties, and Rudolph of Bonisagus proposes a Fengheld chapter at Durenmar itself.",
             "changes": [],
             "margin": "",
-            "id": "8fe7de0d9f68"
+            "id": "221f4c1d83f6"
           },
           {
             "year": 1220,
@@ -1872,7 +1873,7 @@
             "details": "Imanitos Mendax attains Master rank at Fengheld, Beechleaf joins its main site, Felecia, Dorana's apprentice, passes her Gauntlet and Garrinchus is newly Gauntleted at the Rheingasse chapter.",
             "changes": [],
             "margin": "",
-            "id": "748b26790141"
+            "id": "332a090ab1bf"
           },
           {
             "year": 1220,
@@ -1881,7 +1882,7 @@
             "details": "Waddenzee's pirates have lately taken the ship Nebelk\u00f6nigin, with vis and books aboard, from Oculus Septentrionalis; as the Quaesitores had forbidden the trading venture she carried, the covenant cannot lawfully pursue her.",
             "changes": [],
             "margin": "",
-            "id": "a5f473d0cbf0"
+            "id": "3ab5409a1831"
           },
           {
             "year": 1220,
@@ -1890,7 +1891,7 @@
             "details": "At Crintera the guest maga Caprea blinds the familiar of Carolus of Oculus Septentrionalis, sent as a peace envoy, and the two covenants' feud worsens.",
             "changes": [],
             "margin": "",
-            "id": "f393486b6ff9"
+            "id": "578d617b5d07"
           }
         ],
         "package_data": {
@@ -5862,7 +5863,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "creatures",
+            "target_id": "bockman",
+            "note": "their stat block",
+            "id": "722f15a6dd1f"
+          }
+        ],
         "arms": {}
       },
       {
@@ -5886,7 +5894,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "creatures",
+            "target_id": "the_king_fir_of_the_black_forest",
+            "note": "their dread ruler",
+            "id": "ab9f0dbd0a12"
+          }
+        ],
         "arms": {}
       },
       {
@@ -6081,7 +6096,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "creatures",
+            "target_id": "holzfrau",
+            "note": "the hunted wood-wife",
+            "id": "b88b112896e3"
+          }
+        ],
         "arms": {}
       },
       {
@@ -6211,7 +6233,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "creatures",
+            "target_id": "the_king_fir_of_the_black_forest",
+            "note": "the spirit behind the attacks",
+            "id": "119c3c9a189e"
+          }
+        ],
         "arms": {}
       },
       {
@@ -7083,7 +7112,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "creatures",
+            "target_id": "the_linden_of_neustadt",
+            "note": "the town's guardian",
+            "id": "8ac8868a5ba9"
+          }
+        ],
         "arms": {}
       },
       {
@@ -8158,7 +8194,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "creatures",
+            "target_id": "the_ash_of_nortorf",
+            "note": "the spirit of the ash",
+            "id": "fb845dbaa44b"
+          }
+        ],
         "arms": {}
       },
       {
@@ -8180,7 +8223,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "creatures",
+            "target_id": "boglin",
+            "note": "their stat block",
+            "id": "681de0d3f640"
+          }
+        ],
         "arms": {}
       },
       {
@@ -14547,7 +14597,14 @@
         "portrait": "",
         "detail": "Full",
         "summary": "Archmage of House Flambeau, of the Apromor lineage, leading figure of the Ash Gild and Protector of Durenmar, chosen by Murion, whose political ally he is. Called the Black: a smallish, well-built, cool and reserved man who looks ninety, somewhat deaf, bowed and creaky, in a black hooded cloak over darkest grey with a serrated dagger of human bone, his talisman, always at his belt. He has spent his life defending the Order against non-Hermetic wizards and is the Order's foremost master of Perdo; now, with Final Twilight near, he turns to politics, driving the Ash Gild's push for war on the Norse wizards beyond the Baltic and pressing Oculus Septentrionalis to investigate harder and to open a Mercere Portal to Durenmar, which would wound Fengheld. Most of Fengheld and its allies oppose him and several hedge wizards want him dead; he lives in the Watchtower on the cliffs, built apart so that his familiar Sordus, a basilisk whose gaze kills and whose presence withers plants and fouls water, should not blight the valley. His Twilight scars are many: he seems to grow when angry, his shadow moves on its own, flames dim when he enters, wine sours near him, black animals follow him, and only sons are born where he has lived a year. He has trained four apprentices and made the Wizard's Bridle, which binds a magus's words and gestures, and the Subtle Chain, a silver loop that lays six wards at once.",
-        "links": []
+        "links": [
+          {
+            "kind": "creatures",
+            "target_id": "sordus_a_basilisk",
+            "note": "his familiar",
+            "id": "f30744d89506"
+          }
+        ]
       },
       {
         "id": "gudrun_tigurina",
@@ -44389,6 +44446,2213 @@
     "codices": [],
     "spells": [],
     "familiars": [],
+    "creatures": [
+      {
+        "id": "the_courts_of_the_seasons",
+        "name": "The Courts of the Seasons",
+        "many": false,
+        "how_many": "",
+        "realm": "Faerie",
+        "might": 40,
+        "might_form": "",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [],
+        "personality_traits": [
+          {
+            "name": "Compassionate (Alder Prince)",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Secretive (Alder Prince)",
+            "score": 2,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Regal (King Oak)",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Generous (King Oak)",
+            "score": 2,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Manipulative (Willow Maiden)",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Uncaring (Willow Maiden)",
+            "score": 2,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Tyrannical (King Holly)",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Cold-hearted (King Holly)",
+            "score": 2,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [],
+        "soak": 0,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [],
+        "vis": [],
+        "equipment": "",
+        "appearance": "Four faerie rulers, each bound to a fragment of one broken forest spirit: the shy, red-hued Alder Prince in a misty western vale, generous but touchy King Oak beneath a great oak in the south, the scheming Willow Maiden in the east, and iron-willed King Holly in his northern holly grove.",
+        "notes": "The book prints Faerie Might 20-50 by the time of year. Each ruler keeps a Might score of 40 for Magic Resistance and Penetration all year, but the Might Pool swings: 50 (and an aura of 3 across the wood) in the month of its own solstice or equinox, losing 5 a month to the next court down to 20 at the opposite season, then gaining 5 a month back.\nSpecial Powers: Alder Prince: Shroud, Grant Virtue (Rapid Convalescence). King Oak: Guide, Grant Virtue (Inspirational). Willow Maiden: Guide, Grant Flaw (Weak-Willed). King Holly: Shroud, Grant Flaw (Depressed). All four: Control Weather, Regio. Each ruler should also have faerie powers of the storyguide's choosing.",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 34",
+        "detail": "Full",
+        "place_id": "the_four_seasonal_courts",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "the_king_fir_of_the_black_forest",
+        "name": "The King Fir of the Black Forest",
+        "many": false,
+        "how_many": "",
+        "realm": "Faerie",
+        "might": 90,
+        "might_form": "",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [],
+        "personality_traits": [
+          {
+            "name": "Malicious",
+            "score": 5,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Secretive",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Vengeful",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [],
+        "soak": 0,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [],
+        "vis": [],
+        "equipment": "",
+        "appearance": "A great dark fir alone on the bare summit of the Feldberg; the spirit, the King of the Black Mountain, is said to show itself as a huge man in a black cloak with a dreadful face.",
+        "notes": "Special Powers: Control Weather, Grant Flaw (many, among them Depressed, Fear, Lame and No Sense of Direction), Grant Victory (very seldom used), Grant Virtue (unknown, very seldom used), Possession, Regio, Shroud.\nThe splintered, faerie-twisted wild half of the Black Forest's first genius loci. Its regio under the Feldberg has several levels of Faerie aura 3 to 8 and a vast dungeon of enslaved trespassers; no mortal who sees the fir may leave the forest. It cannot reach the Glade of the Seven Waterfalls or the Fane of the Founders, and wants Durenmar destroyed so that the oath binding its other half lapses.",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 50",
+        "detail": "Full",
+        "place_id": "the_feldberg_and_the_hoellental",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "the_glade_of_the_seven_waterfalls",
+        "name": "The Glade of the Seven Waterfalls",
+        "many": false,
+        "how_many": "",
+        "realm": "Magic",
+        "might": 80,
+        "might_form": "",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [],
+        "personality_traits": [
+          {
+            "name": "Enigmatic",
+            "score": 4,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Wise",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [],
+        "soak": 0,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [],
+        "vis": [],
+        "equipment": "",
+        "appearance": "A stream falling over seven waterfalls down a steep valley of hazel and beech at the heart of the Black Forest; the spirit of the glade is peaceful and is spoken of as she.",
+        "notes": "Special Powers: Grant Virtue (Clear Thinker), Guide, Oath-Swearing, Regio, Shroud.\nWhat remains of the Black Forest's original genius locus, bound long ago by the Cult of Mercury's oath. Each waterfall is a level of its regio, and the spirit lets a visitor climb past one only after a Quest (and perhaps a Sacrifice), each granting deeper understanding of the Forest. The glade has never been found; some magi think its spirit has been replaced by a maga in Final Twilight, perhaps Merinita herself.",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 51",
+        "detail": "Full",
+        "place_id": "the_glade_of_the_seven_waterfalls",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "the_ash_of_nortorf",
+        "name": "The Ash of Nortorf",
+        "many": false,
+        "how_many": "",
+        "realm": "Infernal",
+        "might": 15,
+        "might_form": "",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [],
+        "personality_traits": [
+          {
+            "name": "Ambitious",
+            "score": 2,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [],
+        "soak": 0,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [],
+        "vis": [],
+        "equipment": "",
+        "appearance": "A small ash seedling in the churchyard of Nortorf in Holstein.",
+        "notes": "Infernal Might 15, with the potential to reach 60 once the ash is grown.\nSpecial Powers: Grant Victory, Grant Virtue (Entrancement), Grant Virtue (Inspirational), Grant Virtue (Tough).\nEvery New Year's Night a white horseman cuts the shoot down while a black horseman tries to stop him; if the black rider ever wins, the tree will grow, a king will tether his horse under it, and he will be unbeatable in a terrible battle while the horse stays there. Grown, it would be a rich source of vis.",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 69",
+        "detail": "Full",
+        "place_id": "the_ash_of_nortorf",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "the_teutoburger_forest",
+        "name": "The Teutoburger Forest",
+        "many": false,
+        "how_many": "",
+        "realm": "Magic",
+        "might": 50,
+        "might_form": "",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [],
+        "personality_traits": [
+          {
+            "name": "Patient",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Unforgiving",
+            "score": 1,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [],
+        "soak": 0,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [],
+        "vis": [],
+        "equipment": "",
+        "appearance": "A ring of ancient trees of different kinds round a great clearing at the forest's heart, which guard the wood together.",
+        "notes": "Special Powers: Grant Flaw (Simple-Minded), Grant Victory, Regio, Shroud, Stasis.\nIn the top level of its regio the Roman legionaries who fled into the forest after Hermann's victory still hold a fortified camp in the clearing: the guardians let them neither die nor leave, though they may hunt beyond the clearing and have come to revere the trees.",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 77",
+        "detail": "Full",
+        "place_id": "the_teutoburger_forest",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "the_apple_of_the_kyffh_user",
+        "name": "The Apple of the Kyffh\u00e4user",
+        "many": false,
+        "how_many": "",
+        "realm": "Magic",
+        "might": 70,
+        "might_form": "",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [],
+        "personality_traits": [
+          {
+            "name": "Regal",
+            "score": 4,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Peaceful",
+            "score": -1,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [],
+        "soak": 0,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [],
+        "vis": [],
+        "equipment": "",
+        "appearance": "A withered apple tree at the foot of the Kyffh\u00e4user's tallest peak, guarded by men-at-arms.",
+        "notes": "Special Powers: Grant Victory (to whoever hangs a shield on the tree), Grant Virtue (Unaging, to keep its men-at-arms in their prime), Heal Wounds, Possession (of any who fail to beat the men-at-arms).\nWhoever hangs his shield on it becomes lord of the West; those who try and fail serve forever among its guards. Clovis, Charlemagne and Barbarossa succeeded and cut it down, and each time it grew back and withered with their fortunes. It last bore fruit under Barbarossa.",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 86",
+        "detail": "Full",
+        "place_id": "the_apple_of_the_kyffh_user",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "the_donar_oak",
+        "name": "The Donar Oak",
+        "many": false,
+        "how_many": "",
+        "realm": "Divine",
+        "might": 40,
+        "might_form": "",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [],
+        "personality_traits": [
+          {
+            "name": "Peaceful",
+            "score": 5,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Wild",
+            "score": -3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [],
+        "soak": 0,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [],
+        "vis": [],
+        "equipment": "",
+        "appearance": "The stump of the great oak of Geismar, a plain cross set in its centre, with offshoots growing round it in a hidden glade.",
+        "notes": "Special Powers: Grant Virtue (various, rarely used), Healing.\nOnce the heart of the Hercynian Forest's pagan power, until St Boniface felled it into four pieces. Wild beasts grow docile in the glade; its acorns are Creo vis, tame any animal that eats one, and tame a forest where one grows to maturity. Some think the glade a gate to Eden.",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 88",
+        "detail": "Full",
+        "place_id": "the_donar_oak",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "the_linden_of_neustadt",
+        "name": "The Linden of Neustadt",
+        "many": false,
+        "how_many": "",
+        "realm": "Magic",
+        "might": 30,
+        "might_form": "",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [],
+        "personality_traits": [
+          {
+            "name": "Protective",
+            "score": 6,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [],
+        "soak": 0,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [],
+        "vis": [],
+        "equipment": "",
+        "appearance": "A great spreading lime tree whose broken boughs are held up by stone columns carved with the arms of the nobles who once defended the town.",
+        "notes": "Special Powers: Grant Victory, Grant Virtue (Berserk), Grant Virtue (Tough), given to the town's defenders.\nAlone among the forest spirits it has taken a town's people into its realm, which weakens it but keeps them sparing of the woods. It is said the town's freedom ends when the tree dies.",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 88",
+        "detail": "Full",
+        "place_id": "the_linden_of_neustadt",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "the_drudenbaum_of_harberg",
+        "name": "The Drudenbaum of Harberg",
+        "many": false,
+        "how_many": "",
+        "realm": "Magic",
+        "might": 30,
+        "might_form": "",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [],
+        "personality_traits": [
+          {
+            "name": "Mysterious",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [],
+        "soak": 0,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [],
+        "vis": [],
+        "equipment": "",
+        "appearance": "A tree of no known kind atop the Harberg above Nuremberg, a great black bird perched in its crown.",
+        "notes": "Special Powers: Grant Virtue (Magic Sensitivity), Grant Virtue (Second Sight), Possession.\nThe spirit possesses any tree of its domain, which then takes on the Drudenbaum's look and gifts, the black bird settling in its top. Its golden drops are Creo vis and the milk from its roots Vim vis, which is why wizards gather beneath it; the guarding dragon and treasure of the tale are only legend.",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 89",
+        "detail": "Full",
+        "place_id": "the_harberg_and_the_drudenbaum",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "the_holm_oak_of_romowe",
+        "name": "The Holm Oak of Romowe",
+        "many": false,
+        "how_many": "",
+        "realm": "Magic",
+        "might": 45,
+        "might_form": "",
+        "might_pool": 30,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [],
+        "personality_traits": [
+          {
+            "name": "Domineering",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Cruel",
+            "score": 1,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [],
+        "soak": 0,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [],
+        "vis": [],
+        "equipment": "",
+        "appearance": "A massive evergreen oak in the sacred grove of Romowe, hung with ribbons and talismans, a fire kept burning under its boughs.",
+        "notes": "Magic Might 45, currently 30 while it is trapped.\nSpecial Powers: Grant Flaw (Depression, on anyone who breaks a branch or kills a beast in the grove), Possession (of anyone who takes a branch).\nSt Adalbert of Prague drove the tyrant spirit back into the oak and lit the fire that holds it; a band of foresters keeps the fire fed, for if it goes out the spirit is free.",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 99",
+        "detail": "Full",
+        "place_id": "romowe_and_the_holm_oak",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "holzfrau",
+        "name": "Holzfrau",
+        "many": true,
+        "how_many": "many, in the forests of Germany",
+        "realm": "Faerie",
+        "might": 20,
+        "might_form": "",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 1,
+          "perception": 1,
+          "strength": -2,
+          "stamina": 0,
+          "presence": 2,
+          "communication": -1,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [
+          {
+            "vf_id": "vf_ways_of_the_land",
+            "params": {
+              "land": "Forest"
+            },
+            "id": ""
+          }
+        ],
+        "personality_traits": [
+          {
+            "name": "Kindly",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Shy",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [
+          {
+            "name": "Dodging",
+            "init": 0,
+            "attack": null,
+            "defense": 0,
+            "damage": null,
+            "id": "4137d5b2725d"
+          }
+        ],
+        "soak": 0,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": false,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [
+          {
+            "name": "Athletics",
+            "category": "General",
+            "xp": 15,
+            "specialty": "escaping pursuers"
+          },
+          {
+            "name": "Awareness",
+            "category": "General",
+            "xp": 15,
+            "specialty": "travelers"
+          },
+          {
+            "name": "Charm",
+            "category": "General",
+            "xp": 30,
+            "specialty": "men"
+          },
+          {
+            "name": "Chirurgy",
+            "category": "General",
+            "xp": 75,
+            "specialty": "infected wounds"
+          },
+          {
+            "name": "Faerie Lore",
+            "category": "Arcane",
+            "xp": 75,
+            "specialty": "faerie plants"
+          },
+          {
+            "name": "Magic Lore",
+            "category": "Arcane",
+            "xp": 50,
+            "specialty": "magical herbs"
+          },
+          {
+            "name": "Second Sight",
+            "category": "Supernatural",
+            "xp": 50,
+            "specialty": "animals"
+          },
+          {
+            "name": "Stealth",
+            "category": "General",
+            "xp": 30,
+            "specialty": "hiding from pursuers"
+          }
+        ],
+        "powers": [
+          {
+            "name": "Control Plants",
+            "might_cost": 1,
+            "init": 1,
+            "form": "Herbam",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "Any Creo or Rego Herbam effect up to 20th level, for 1 Might per magnitude; the cost doubles in winter.",
+            "id": "00b365586b48"
+          },
+          {
+            "name": "Fertility",
+            "might_cost": 4,
+            "init": 1,
+            "form": "Herbam",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "As The Bountiful Feast: fruitful, protected crops. She can take the blessing back if her kindness is abused.",
+            "id": "076d0011bea5"
+          },
+          {
+            "name": "Healing",
+            "might_cost": 4,
+            "init": -1,
+            "form": "Corpus",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "Her kiss eases pain, cleans infection from a wound or speeds healing: it cures a Light Wound from disease or gives +9 to recovery rolls.",
+            "id": "5494aedf27c7"
+          }
+        ],
+        "vis": [
+          {
+            "pawns": 4,
+            "art": "Herbam",
+            "where": "in her hair",
+            "id": "8cb0a36b4c1f"
+          }
+        ],
+        "equipment": "",
+        "appearance": "Always a woman, often young and lovely, barefoot in peasant dress, with some telling detail of clothing that marks which kind of wood-wife she is.",
+        "notes": "A wood-wife, a usually kindly faerie of growing things; many serve the Alder Prince of the Courts of the Seasons.\nFaerie nature: untouched by disease and age, understands and is understood in any tongue, has Second Sight, and its powers take the aura's bonus or penalty by the Realm Interaction table.\nVulnerable to iron: cold-forged iron pains her and she shuns its touch, though it does her no harm.\nWound penalties: -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20).",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 36",
+        "detail": "Full",
+        "place_id": null,
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "bockman",
+        "name": "Bockman",
+        "many": true,
+        "how_many": "many, though each hunts alone",
+        "realm": "Faerie",
+        "might": 20,
+        "might_form": "Animal",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": -1,
+          "perception": 1,
+          "strength": 1,
+          "stamina": 2,
+          "presence": -5,
+          "communication": 0,
+          "dexterity": 5,
+          "quickness": 2
+        },
+        "cunning": false,
+        "size": -1,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [
+          {
+            "vf_id": "vf_ways_of_the_land",
+            "params": {
+              "land": "Forest"
+            },
+            "id": ""
+          }
+        ],
+        "personality_traits": [
+          {
+            "name": "Malicious",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Brave",
+            "score": -1,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [
+          {
+            "name": "Claws",
+            "init": 9,
+            "attack": 13,
+            "defense": 9,
+            "damage": 3,
+            "id": "b6c69207a544"
+          }
+        ],
+        "soak": 5,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": false,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [
+          {
+            "name": "Athletics",
+            "category": "General",
+            "xp": 30,
+            "specialty": "leaping"
+          },
+          {
+            "name": "Awareness",
+            "category": "General",
+            "xp": 30,
+            "specialty": "forests"
+          },
+          {
+            "name": "Area Lore: Black Forest",
+            "category": "General",
+            "xp": 105,
+            "specialty": "roads"
+          },
+          {
+            "name": "Brawl",
+            "category": "General",
+            "xp": 30,
+            "specialty": "claws"
+          },
+          {
+            "name": "Second Sight",
+            "category": "Supernatural",
+            "xp": 50,
+            "specialty": "glamors"
+          },
+          {
+            "name": "Stealth",
+            "category": "General",
+            "xp": 30,
+            "specialty": "forests"
+          },
+          {
+            "name": "Survival",
+            "category": "General",
+            "xp": 105,
+            "specialty": "forests"
+          }
+        ],
+        "powers": [
+          {
+            "name": "The Patient Stance",
+            "might_cost": 0,
+            "init": 0,
+            "form": "Imaginem",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "Init n/a. Standing still in a forest it cannot be told from the undergrowth, in effect invisible.",
+            "id": "1955ef523e8e"
+          },
+          {
+            "name": "Unease of the Still Forest",
+            "might_cost": 2,
+            "init": 0,
+            "form": "Mentem",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "Init n/a; costs 2 points per hour. A hush and creeping dread for 100 paces round it: each hour gives a cumulative -1 to brave or bold Personality Traits and a like boost to ones such as Short-Tempered or Suspicious, and no one in it can sleep or recover Fatigue.",
+            "id": "2900eb56d8b3"
+          },
+          {
+            "name": "Fear",
+            "might_cost": 4,
+            "init": 2,
+            "form": "Mentem",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "Victims who fail a stress roll against 6 (adjusted by Brave) flee until exhausted, or cower until sunrise if they cannot run. Up to ten who can see it, or one target if it is unseen.",
+            "id": "850026a52d7f"
+          }
+        ],
+        "vis": [
+          {
+            "pawns": 1,
+            "art": "Animal",
+            "where": "in its right horn",
+            "id": "a8315e2a8d49"
+          },
+          {
+            "pawns": 1,
+            "art": "Mentem",
+            "where": "in its left horn",
+            "id": "09dd2579e67e"
+          }
+        ],
+        "equipment": "",
+        "appearance": "Man-shaped only in chest and arms, with a goat's head and legs, sharp swept-back horns, wild eyes and a drooling mouth of sharp teeth.",
+        "notes": "Lurks by the Black Forest's paths (and in many old German forests) to frighten travellers away: it spooks them and their mounts with its unease, then springs out with Fear. Weak and cowardly in a real fight. Its claws include the Ways of the Forest bonus.\nFaerie nature: untouched by disease and age, understands and is understood in any tongue, has Second Sight, and its powers take the aura's bonus or penalty by the Realm Interaction table.\nVulnerable to iron: iron weapons do it 2 extra damage.\nWound penalties: -1 (1-4), -3 (5-8), -5 (9-12), Incapacitated (13-16).",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 50",
+        "detail": "Full",
+        "place_id": "the_black_forest_road",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "loreley",
+        "name": "Loreley",
+        "many": false,
+        "how_many": "",
+        "realm": "Faerie",
+        "might": 30,
+        "might_form": "Aquam",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 1,
+          "strength": -2,
+          "stamina": -1,
+          "presence": 5,
+          "communication": 5,
+          "dexterity": 2,
+          "quickness": 0
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [],
+        "personality_traits": [
+          {
+            "name": "Hateful to Men",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Jealous of Women",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [
+          {
+            "name": "Dodging",
+            "init": 0,
+            "attack": null,
+            "defense": 0,
+            "damage": null,
+            "id": "16af4083d00f"
+          }
+        ],
+        "soak": 5,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": false,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [
+          {
+            "name": "Infatuation",
+            "might_cost": 4,
+            "init": 0,
+            "form": "Imaginem",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "Her song makes up to ten hearers a round long to reach her at any cost, into the river or onto the rocks. Resisted by an Intelligence stress roll against 9; women and those with waxed ears get +3, and a dripstone lets its wearer ignore it on a Perception roll against 6.",
+            "id": "97308a367d77"
+          },
+          {
+            "name": "Control Person",
+            "might_cost": 8,
+            "init": 2,
+            "form": "Mentem",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "On a man who meets her eyes, one at a time: unless he makes an Intelligence stress roll against 12 he does whatever she says, even leaping to his death.",
+            "id": "68df915a6292"
+          },
+          {
+            "name": "Control Water",
+            "might_cost": 1,
+            "init": 0,
+            "form": "Aquam",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "Any Creo or Rego Aquam effect up to 30th level, for 1 Might per magnitude.",
+            "id": "0b3e50cdecec"
+          },
+          {
+            "name": "Form of Water",
+            "might_cost": 10,
+            "init": 3,
+            "form": "Aquam",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "She becomes water and slips into the Rhine, regaining 5 Might an hour (four times her usual rate) and healing Light, Medium and Heavy wounds in minutes, hours and days; she is all but unkillable.",
+            "id": "c7d979605af6"
+          }
+        ],
+        "vis": [
+          {
+            "pawns": 6,
+            "art": "Aquam",
+            "where": "in her blood",
+            "id": "8336c1ae8e25"
+          },
+          {
+            "pawns": 4,
+            "art": "Imaginem",
+            "where": "in her comb",
+            "id": "8db7562ede18"
+          }
+        ],
+        "equipment": "",
+        "appearance": "A maiden of great beauty, clad only in long golden hair that she combs without end with a jewelled comb.",
+        "notes": "Faerie nature: untouched by disease and age, understands and is understood in any tongue, has Second Sight, and its powers take the aura's bonus or penalty by the Realm Interaction table.\nVulnerable to iron: the least touch of cold iron gives her a Light Wound, and an iron weapon that gets past her Soak raises its wound by one level.\nWound penalties: -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20).",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 127",
+        "detail": "Full",
+        "place_id": "loreley",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "sordus_a_basilisk",
+        "name": "Sordus, a Basilisk",
+        "many": false,
+        "how_many": "",
+        "realm": "Magic",
+        "might": 30,
+        "might_form": "Animal",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": -3,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 4,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": -3,
+          "quickness": -3
+        },
+        "cunning": false,
+        "size": -2,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [],
+        "personality_traits": [
+          {
+            "name": "Disdainful",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Lazy",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Indifferent",
+            "score": 1,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [],
+        "soak": 10,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "OK, -1, -5, Unconscious",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [
+          {
+            "name": "Folk Ken",
+            "category": "General",
+            "xp": 15,
+            "specialty": "intimidate"
+          },
+          {
+            "name": "Living Language: German",
+            "category": "General",
+            "xp": 75,
+            "specialty": "insults"
+          },
+          {
+            "name": "Hunt",
+            "category": "General",
+            "xp": 50,
+            "specialty": "lying in wait"
+          },
+          {
+            "name": "Dead Language: Latin",
+            "category": "Academic",
+            "xp": 75,
+            "specialty": "whispers"
+          },
+          {
+            "name": "Magic Lore",
+            "category": "Arcane",
+            "xp": 15,
+            "specialty": "beasts"
+          },
+          {
+            "name": "Living Language: West Norse",
+            "category": "General",
+            "xp": 30,
+            "specialty": "threats"
+          }
+        ],
+        "powers": [
+          {
+            "name": "Gaze of Death",
+            "might_cost": 8,
+            "init": -3,
+            "form": "Corpus",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "Anyone his gaze falls on, if he wills it, takes an Incapacitating wound.",
+            "id": "4826b63fad1c"
+          },
+          {
+            "name": "Horrid Wilting",
+            "might_cost": 0,
+            "init": 0,
+            "form": "Herbam",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "Init n/a; always on. Plants within 5 paces die, food rots and grows worms, and wood starts to decay within a day.",
+            "id": "df3636431c7a"
+          },
+          {
+            "name": "Pollute Water",
+            "might_cost": 0,
+            "init": 0,
+            "form": "Aquam",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "Init n/a; always on. Standing water within 5 paces stagnates, other liquids putrefy, and running water turns black until he moves on.",
+            "id": "dc4ebd2a0c71"
+          }
+        ],
+        "vis": [
+          {
+            "pawns": 10,
+            "art": "Perdo",
+            "where": "in his left eye",
+            "id": "53c9a8ba0eab"
+          },
+          {
+            "pawns": 10,
+            "art": "Perdo",
+            "where": "in his right eye",
+            "id": "e0d396ecdde5"
+          }
+        ],
+        "equipment": "",
+        "appearance": "A huge lizard about knee-high and six feet from snout to tail, with tiny diamond scales of grey, dark green and black and a crown-like fleshy crest; every movement slow and deliberate.",
+        "notes": "Familiar of Archmage Philippus Niger of Durenmar, who keeps him mostly out of sight but lets him prowl a room to underline a threat. Presence and Communication n/a. Too lazy to fight.\nBond (PeVi Lab Total 81): Bronze +2, Silver +2, Gold +4. Familiar power: Mental Communication (level 15), constant mental contact with Philippus, which either can shut off.\nWound penalties: -1 (1-3), -3 (4-6), -5 (7-9), Incapacitated (10-12).",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 61",
+        "detail": "Full",
+        "place_id": "the_valley_of_durenmar",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "boglin",
+        "name": "Boglin",
+        "many": true,
+        "how_many": "a few, each in its own foul pool",
+        "realm": "Magic",
+        "might": 25,
+        "might_form": "Aquam",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 1,
+          "perception": -2,
+          "strength": 5,
+          "stamina": 6,
+          "presence": -5,
+          "communication": -3,
+          "dexterity": -1,
+          "quickness": 2
+        },
+        "cunning": true,
+        "size": 3,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [
+          {
+            "vf_id": "vf_greater_immunity",
+            "params": {
+              "hazard": "bludgeoning weapons"
+            },
+            "id": ""
+          },
+          {
+            "vf_id": "vf_ways_of_the_land",
+            "params": {
+              "land": "Swamp"
+            },
+            "id": ""
+          },
+          {
+            "vf_id": "vf_tough",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_blind",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_greedy_major",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_obese",
+            "params": {},
+            "id": ""
+          },
+          {
+            "vf_id": "vf_tainted_with_evil",
+            "params": {},
+            "id": ""
+          }
+        ],
+        "personality_traits": [
+          {
+            "name": "Greedy",
+            "score": 5,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Reclusive",
+            "score": 2,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Guileful",
+            "score": 1,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [
+          {
+            "name": "Tentacle",
+            "init": 10,
+            "attack": 14,
+            "defense": 12,
+            "damage": 8,
+            "id": "a2a30489680d"
+          },
+          {
+            "name": "Bite",
+            "init": 3,
+            "attack": 10,
+            "defense": 11,
+            "damage": 13,
+            "id": "dc4f563ca2a2"
+          }
+        ],
+        "soak": 12,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [
+          {
+            "name": "Awareness",
+            "category": "General",
+            "xp": 75,
+            "specialty": "swamp"
+          },
+          {
+            "name": "Brawl",
+            "category": "General",
+            "xp": 180,
+            "specialty": "tentacle"
+          },
+          {
+            "name": "Stealth",
+            "category": "General",
+            "xp": 30,
+            "specialty": "swamp"
+          },
+          {
+            "name": "Survival",
+            "category": "General",
+            "xp": 105,
+            "specialty": "swamp"
+          },
+          {
+            "name": "Swim",
+            "category": "General",
+            "xp": 30,
+            "specialty": "swamp"
+          }
+        ],
+        "powers": [
+          {
+            "name": "Abominable Stench",
+            "might_cost": 5,
+            "init": 2,
+            "form": "Auram",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "A cloud of choking swamp gas from beneath the waterline spreads 15 yards over 3 rounds and takes 3 more to clear. Anyone in it fails a Stamina roll against 9 and can do nothing but reel back; a botch leaves them retching on the ground.",
+            "id": "98681f64737b"
+          },
+          {
+            "name": "Paralysis",
+            "might_cost": 3,
+            "init": 0,
+            "form": "Corpus",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "Init n/a; Corpus or Animal. A tentacle hit that wounds injects venom: unless the victim makes a Stamina roll against 9, his muscles cramp for -5 to physical actions for about an hour. Once per tentacle per fight.",
+            "id": "979143789834"
+          },
+          {
+            "name": "Writhing Grasp",
+            "might_cost": 0,
+            "init": 0,
+            "form": "Corpus",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "Init n/a; Corpus or Animal. A tentacle hit worth a Medium Wound or worse does only a Light Wound but wraps the victim. Each round he may try an opposed Strength roll to break free or an opposed Dexterity roll to free his hands; held, he is hauled to the maw in 3 rounds, and only then can it Bite.",
+            "id": "e702ebf5349e"
+          },
+          {
+            "name": "Regeneration",
+            "might_cost": 20,
+            "init": 0,
+            "form": "Animal",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "Init n/a. It hibernates and regrows one lost tentacle a season.",
+            "id": "993dd4ed18b1"
+          }
+        ],
+        "vis": [
+          {
+            "pawns": 8,
+            "art": "Animal",
+            "where": "one pawn in each tentacle",
+            "id": "46ceabf93301"
+          },
+          {
+            "pawns": 6,
+            "art": "Perdo",
+            "where": "in its brain, a black and stinking nodule",
+            "id": "d1c748805471"
+          }
+        ],
+        "equipment": "",
+        "appearance": "Eight slimy dark-brown tentacles twelve feet long round a huge, lumpy, shell-covered body that seldom leaves the murky water, with a wide toothed mouth somewhere within.",
+        "notes": "A foul primeval spirit of the north German swamps; a stink and faint murmuring betray its pool. The book gives Size +3 for the body, 0 for each tentacle. Its Greater Immunity makes it immune to damage from bludgeoning weapons; its attacks include the Ways of the Swamp bonus.\nEach tentacle fights as a separate creature with its own wounds; an Incapacitating blow may sever it, which costs the body a Light Wound. Wound penalties: body -1 (1-8), -3 (9-16), -5 (17-24), Incapacitated (25-32); each tentacle -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20).",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 79",
+        "detail": "Full",
+        "place_id": "the_northern_swamps",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "the_mice_of_the_m_useturm",
+        "name": "The Mice of the M\u00e4useturm",
+        "many": true,
+        "how_many": "about ten swarms, endlessly renewed by the aura",
+        "realm": "Infernal",
+        "might": 10,
+        "might_form": "Animal",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [],
+        "personality_traits": [],
+        "reputations": [],
+        "attacks": [],
+        "soak": 0,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [
+          {
+            "name": "Swarm",
+            "might_cost": 0,
+            "init": 0,
+            "form": "",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "A swarm of about a thousand mice engages about three people and bites bare flesh with no attack roll. Damage a round by protection (armour does not add to Soak): none, stress die +6; sturdy clothes, +3; winter garb or partial armour, +0; half armour, -3; full armour, -6; full armour with helm and gauntlets, -9.",
+            "id": "5191b03dcf02"
+          }
+        ],
+        "vis": [],
+        "equipment": "",
+        "appearance": "",
+        "notes": "Size -10 each; a swarm counts as one Size 0 creature. A victim kills 10 mice for every 5 points of his Brawl Attack Total each round, and the swarm flees once over half are dead. Area spells (Group, Room) can strike a whole swarm but will catch its victims too; an Animal spell at Voice, Concentration, Group affects one swarm, and one magnitude higher clears the island for a while. Their teeth burn and they are immune to fire. The island's Infernal aura breeds them anew until it is cleansed.",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 122",
+        "detail": "Full",
+        "place_id": "the_m_useturm",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "bishop_hatto",
+        "name": "Bishop Hatto",
+        "many": false,
+        "how_many": "",
+        "realm": "Infernal",
+        "might": 30,
+        "might_form": "Mentem",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 1,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [],
+        "personality_traits": [
+          {
+            "name": "Hateful",
+            "score": 6,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Merciless",
+            "score": 4,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Brave",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [
+          {
+            "name": "Touch",
+            "init": 3,
+            "attack": 6,
+            "defense": 0,
+            "damage": null,
+            "id": "2cd54ef39cd0"
+          }
+        ],
+        "soak": 0,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [
+          {
+            "name": "Lurk in Shadows",
+            "might_cost": 0,
+            "init": 0,
+            "form": "",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "Hidden wholly in a shadow; even moving in, the dark patch is seen only on Perception + Awareness against 12 (9 by day). His attacks can be dodged only once he is seen.",
+            "id": "768aed65a6f1"
+          },
+          {
+            "name": "Fear",
+            "might_cost": 4,
+            "init": 0,
+            "form": "Mentem",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "Up to ten people a use are filled with terror of the island; repeated, it can drive the trapped mad or kill them of fright, the fate of any who stay the night.",
+            "id": "09ee97a6d3b8"
+          },
+          {
+            "name": "Chill Touch",
+            "might_cost": 0,
+            "init": 3,
+            "form": "Corpus",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "description": "Init +3, with his attack. An icy touch that takes a Fatigue level from the target and gives the bishop 5 Might.",
+            "id": "0ebe94a390a4"
+          }
+        ],
+        "vis": [
+          {
+            "pawns": 6,
+            "art": "Perdo",
+            "where": "in his crosier, found only once he is destroyed",
+            "id": "2df1c2d9416c"
+          }
+        ],
+        "equipment": "",
+        "appearance": "A ragged shard of darkness, roughly man-shaped; close up, the bishop's demon-twisted face and mitre show in it.",
+        "notes": "The damned ghost of the bishop who haunts the M\u00e4useturm. His touch can be defended against only with Brawl: weapon defences fail as the blade passes through him. Its damage is his Chill Touch.",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 122",
+        "detail": "Full",
+        "place_id": "the_m_useturm",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "marcus_the_valiant",
+        "name": "Marcus the Valiant",
+        "many": false,
+        "how_many": "",
+        "realm": "Magic",
+        "might": 20,
+        "might_form": "",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 2,
+          "stamina": 3,
+          "presence": 1,
+          "communication": 2,
+          "dexterity": 3,
+          "quickness": 2
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [],
+        "personality_traits": [
+          {
+            "name": "Brave",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Duty-Bound",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Honorable",
+            "score": 1,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [
+          {
+            "name": "Gladius and round shield",
+            "init": 3,
+            "attack": 14,
+            "defense": 13,
+            "damage": 7,
+            "id": "8e09fea61e33"
+          },
+          {
+            "name": "Gladius",
+            "init": 3,
+            "attack": 13,
+            "defense": 10,
+            "damage": 7,
+            "id": "49c64c9a62c0"
+          },
+          {
+            "name": "Dagger",
+            "init": 2,
+            "attack": 11,
+            "defense": 8,
+            "damage": 5,
+            "id": "aa299e241cff"
+          }
+        ],
+        "soak": 7,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [],
+        "vis": [],
+        "equipment": "Round shield, manica on the right arm, greave on the left leg, gladius, ornate brimmed bronze helmet.",
+        "appearance": "The stocky leader of the three, armed as a hoplomachus.",
+        "notes": "One of three ghostly gladiators who form in the amphitheatre of Trier when the Trumpet of Ghostly Summoning is blown there at night. Each challenges all comers to a duel to the death, staking a trinket (worth 2 pawns of Mentem vis) against something of like value; the fight feels real but is truly non-lethal, a killing blow leaving the loser unconscious. A gladiator fades whether he wins or loses and cannot be called again that year.\nWound penalties: -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20).",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 134",
+        "detail": "Full",
+        "place_id": "the_amphitheatre_of_trier",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "cyrillus_of_argentoratum",
+        "name": "Cyrillus of Argentoratum",
+        "many": false,
+        "how_many": "",
+        "realm": "Magic",
+        "might": 20,
+        "might_form": "",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 2,
+          "stamina": 2,
+          "presence": 1,
+          "communication": 1,
+          "dexterity": 2,
+          "quickness": 4
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [],
+        "personality_traits": [
+          {
+            "name": "Brave",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Duty-Bound",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Crafty",
+            "score": 1,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [
+          {
+            "name": "Trident and net",
+            "init": 7,
+            "attack": 12,
+            "defense": 14,
+            "damage": 7,
+            "id": "3dbb851ee7d9"
+          },
+          {
+            "name": "Net",
+            "init": 4,
+            "attack": 11,
+            "defense": 11,
+            "damage": 7,
+            "id": "93cabd6ceff4"
+          },
+          {
+            "name": "Dagger",
+            "init": 4,
+            "attack": 8,
+            "defense": 8,
+            "damage": 5,
+            "id": "28aebd42526a"
+          }
+        ],
+        "soak": 4,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [],
+        "vis": [],
+        "equipment": "Trident, net, galerus (metal shoulder guard), manica of quilted linen on the left arm, copper mask of Poseidon.",
+        "appearance": "A wiry, dark-haired retiarius.",
+        "notes": "One of three ghostly gladiators who form in the amphitheatre of Trier when the Trumpet of Ghostly Summoning is blown there at night. Each challenges all comers to a duel to the death, staking a trinket (worth 2 pawns of Mentem vis) against something of like value; the fight feels real but is truly non-lethal, a killing blow leaving the loser unconscious. A gladiator fades whether he wins or loses and cannot be called again that year.\nHis net attack is resolved as a scuffle, to pin a foe or entangle a weapon.\nWound penalties: -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20).",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 134",
+        "detail": "Full",
+        "place_id": "the_amphitheatre_of_trier",
+        "place_level": 0,
+        "links": []
+      },
+      {
+        "id": "caudelix_the_gaul",
+        "name": "Caudelix the Gaul",
+        "many": false,
+        "how_many": "",
+        "realm": "Magic",
+        "might": 20,
+        "might_form": "",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 5,
+          "stamina": 4,
+          "presence": 1,
+          "communication": 0,
+          "dexterity": 2,
+          "quickness": 1
+        },
+        "cunning": false,
+        "size": 1,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "virtues_flaws": [],
+        "personality_traits": [
+          {
+            "name": "Brave",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Duty-Bound",
+            "score": 3,
+            "known": true,
+            "type": "",
+            "reach": ""
+          },
+          {
+            "name": "Violent",
+            "score": 1,
+            "known": true,
+            "type": "",
+            "reach": ""
+          }
+        ],
+        "reputations": [],
+        "attacks": [
+          {
+            "name": "Great axe",
+            "init": 1,
+            "attack": 16,
+            "defense": 9,
+            "damage": 15,
+            "id": "2fdccaa2fead"
+          },
+          {
+            "name": "Hatchet",
+            "init": 1,
+            "attack": 11,
+            "defense": 7,
+            "damage": 9,
+            "id": "3021544fd2fc"
+          },
+          {
+            "name": "Gauntlet",
+            "init": 1,
+            "attack": 8,
+            "defense": 8,
+            "damage": 7,
+            "id": "6d6d9fd3791a"
+          }
+        ],
+        "soak": 8,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [],
+        "vis": [],
+        "equipment": "Long-hafted axe, hatchet, iron skull cap with a spectacle mask, leather bracae on the thighs, bracers.",
+        "appearance": "A huge, burly man with fair braided hair.",
+        "notes": "One of three ghostly gladiators who form in the amphitheatre of Trier when the Trumpet of Ghostly Summoning is blown there at night. Each challenges all comers to a duel to the death, staking a trinket (worth 2 pawns of Mentem vis) against something of like value; the fight feels real but is truly non-lethal, a killing blow leaving the loser unconscious. A gladiator fades whether he wins or loses and cannot be called again that year.\nWound penalties: -1 (1-6), -3 (7-12), -5 (13-18), Incapacitated (19-24).",
+        "source": "Guardians of the Forests: The Rhine Tribunal p. 134",
+        "detail": "Full",
+        "place_id": "the_amphitheatre_of_trier",
+        "place_level": 0,
+        "links": []
+      }
+    ],
     "enchanted_devices": [],
     "books_in_play": null,
     "sources": [],

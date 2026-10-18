@@ -178,6 +178,7 @@ def test_a_character_takes_its_familiar_devices_books_and_spells():
         "laboratory": {"tower": "Tower"},
         "covenant": {"keep": "Keep"},
         "neighbour": {},
+        "creature": {},
     }
 
 

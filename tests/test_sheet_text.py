@@ -57,6 +57,8 @@ SHEETS = {
     "threat",
     "place",
     "seasons",
+    "bestiary",
+    "creature",
 }
 
 

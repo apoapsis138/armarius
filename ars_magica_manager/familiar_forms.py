@@ -37,6 +37,7 @@ from .models import (
     Ability,
     AbilityDef,
     BondPower,
+    Creature,
     Familiar,
     Possession,
     Saga,
@@ -406,7 +407,8 @@ def ability_choices(
     return found
 
 
-def ability_ops(saga: Saga, familiar: Familiar) -> SectionOps:
+def ability_ops(saga: Saga, familiar: Familiar | Creature) -> SectionOps:
+    """Add, Edit and Delete for a familiar's or a creature's Abilities."""
     abilities = familiar.abilities
 
     def details(name: str, category: str) -> Form:

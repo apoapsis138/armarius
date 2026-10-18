@@ -1,0 +1,172 @@
+===== tab-cr-traits
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Aeolus
+
+      Might:    Magic Might 8 (Animal)         Found at: The Drachenfels
+      Size:     +2                             Detail:   Sketch
+      Season:   Summer                         Source:   Realms of Power: Magic p.
+      How many: One                            34
+          Edit (e)
+
+   1 Traits  2 Combat  3 Powers & Vis  4 Description
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Characteristics
+
+      Characteristics: Int 0, Per 0, Pre +2, Com 0, Str +4, Sta 0, Dex 0, Qik +2
+      Soak:            +3
+      Fatigue levels:  OK, 0, -1, -3, -5, Unconscious
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Virtues, Flaws and Qualities (1)
+
+      ○ Magic Animal
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Personality Traits (1)                  ▼ Reputations (1)
+
+      ○ Vain: +3                                ○ Runs with the wind: +1
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Abilities (1)
+
+      General                 Score           XP
+      ○ Athletics (running)       5       75/105
+
+
+
+
+
+
+
+===== tab-cr-combat
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Aeolus
+
+      Might:    Magic Might 8 (Animal)         Found at: The Drachenfels
+      Size:     +2                             Detail:   Sketch
+      Season:   Summer                         Source:   Realms of Power: Magic p.
+      How many: One                            34
+          Edit (e)
+
+   1 Traits  2 Combat  3 Powers & Vis  4 Description
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Combat (1)
+
+        Attack  Init  Atk  Def  Dam
+      ○ Kick    +4    +4   +8   +5
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Health
+
+      Wound Penalties: -1 (1-7), -3 (8-14), -5 (15-21), Incapacitating (22-28), Dead
+      (29+)
+      Fatigue levels:  OK, 0, -1, -3, -5, Unconscious
+      Light Wounds:  0 (-1 each)
+      Medium Wounds: 0 (-3 each)
+      Heavy Wounds:  0 (-5 each)
+      Incapacitated: no
+      Dead: no
+      Fatigue Level: Fresh
+
+
+
+
+
+
+
+
+
+
+
+===== tab-cr-powers
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Aeolus
+
+      Might:    Magic Might 8 (Animal)         Found at: The Drachenfels
+      Size:     +2                             Detail:   Sketch
+      Season:   Summer                         Source:   Realms of Power: Magic p.
+      How many: One                            34
+          Edit (e)
+
+   1 Traits  2 Combat  3 Powers & Vis  4 Description
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Powers (1)
+
+        Power                Cost   Init  Form    Range, Duration, Target  Pen
+      ○ From Nag to Charger  0 pts  +0    Animal  R: Per, D: Sun, T: Ind   8
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Vis in its body
+
+      ○ 2 pawns of Animal, in head
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a power to see what it does.
+  ▌
+
+
+===== tab-cr-description
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Aeolus
+
+      Might:    Magic Might 8 (Animal)         Found at: The Drachenfels
+      Size:     +2                             Detail:   Sketch
+      Season:   Summer                         Source:   Realms of Power: Magic p.
+      How many: One                            34
+          Edit (e)
+
+   1 Traits  2 Combat  3 Powers & Vis  4 Description
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Description
+
+      Appearance: A chestnut horse of good breeding.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Links (1)
+
+      ○ Character: Leandro: Has ridden him once
+      Linked from:
+        The Hollow Crown: Carries its messengers
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

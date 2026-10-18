@@ -15,6 +15,7 @@ from .models import (
     Attitude,
     Character,
     Covenant,
+    Creature,
     Favour,
     Link,
     Neighbour,
@@ -184,10 +185,11 @@ def favour_rows(favours: list[Favour]) -> list[tuple[int | None, str]]:
     return rows
 
 
-def _records(saga: Saga) -> Iterator[Character | Covenant | Neighbour]:
+def _records(saga: Saga) -> Iterator[Character | Covenant | Neighbour | Creature]:
     yield from saga.covenants
     yield from saga.characters
     yield from saga.neighbours
+    yield from saga.creatures
 
 
 def link_target(saga: Saga, link: Link) -> Any | None:

@@ -35,6 +35,7 @@ from .markup import escape
 from .models import (
     FOCUS_FLAWS,
     Character,
+    Creature,
     Familiar,
     Laboratory,
     LabVirtueFlawDef,
@@ -46,7 +47,7 @@ from .models import (
 )
 from .rules import creation_characteristics as cch
 
-Owner = Character | Familiar | Laboratory
+Owner = Character | Familiar | Creature | Laboratory
 
 #: The eight Characteristics, as a Virtue or Flaw's {characteristic}.
 CHARACTERISTIC_NAMES: tuple[str, ...] = (
@@ -312,12 +313,16 @@ class _Adder:
     """Adding a character or familiar Virtue/Flaw: what is offered, and
     why one is refused."""
 
-    def __init__(self, saga: Saga, owner: Character | Familiar, side: str | None):
+    def __init__(
+        self, saga: Saga, owner: Character | Familiar | Creature, side: str | None
+    ):
         self.saga, self.owner, self.side = saga, owner, side
         books = sourcebooks.saga_books(saga)
         self.chooser = (
             catalog.VirtueFlawChooser.for_familiar(owner, books)
             if isinstance(owner, Familiar)
+            else catalog.VirtueFlawChooser.for_creature(owner, books)
+            if isinstance(owner, Creature)
             else catalog.VirtueFlawChooser.for_character(owner, books)
         )
 

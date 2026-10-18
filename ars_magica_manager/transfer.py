@@ -46,6 +46,7 @@ from .models import (
     Character,
     Codex,
     Covenant,
+    Creature,
     EnchantedDevice,
     Familiar,
     Laboratory,
@@ -65,6 +66,8 @@ CHARACTER, LABORATORY, COVENANT = "character", "laboratory", "covenant"
 SAGA, PACK = "saga", "pack"
 #: The kind of record a place or neighbour is, among the links.
 NEIGHBOUR = "neighbour"
+#: The kind of record a creature of the Bestiary is.
+CREATURE = "creature"
 KIND_LABELS: dict[str, str] = {
     CHARACTER: "Character",
     LABORATORY: "Laboratory",
@@ -72,9 +75,12 @@ KIND_LABELS: dict[str, str] = {
     SAGA: "Saga",
     PACK: "Content Pack",
     NEIGHBOUR: "Neighbour",
+    CREATURE: "Creature",
 }
 
 Record = Character | Laboratory | Covenant
+#: The kinds of record an export can link to outside it, by name.
+LINKED_KINDS = (CHARACTER, LABORATORY, COVENANT, NEIGHBOUR, CREATURE)
 
 
 def kind_of(record: Record) -> str:
@@ -146,11 +152,13 @@ def bundle_data(
     tribunals: list[Tribunal],
     neighbours: list[Neighbour] | None = None,
     calendar: list[CalendarEntry] | None = None,
+    creatures: list[Creature] | None = None,
 ) -> dict[str, Any]:
     """An export of the records given, and what travels with them, as
     JSON-ready data. A Tribunal's meeting under way stays behind."""
     labs = laboratories
     neighbours = neighbours or []
+    creatures = creatures or []
     character_ids = {c.id for c in characters}
     owners = (
         {(CHARACTER, c.id) for c in characters}
@@ -178,7 +186,7 @@ def bundle_data(
             spells.append(found)
     held = {
         vf.vf_id
-        for holder in [*characters, *familiars, *labs]
+        for holder in [*characters, *familiars, *labs, *creatures]
         for vf in holder.virtues_flaws
     } | {bh.vf_id for c in covenants for bh in c.boons_hooks}
     mini = Saga(
@@ -189,6 +197,7 @@ def bundle_data(
         covenants=covenants,
         tribunals=[replace(t, meeting=None) for t in tribunals],
         neighbours=neighbours,
+        creatures=creatures,
         calendar=list(calendar or []),
         characters=characters,
         laboratories=labs,
@@ -207,17 +216,14 @@ def bundle_data(
     # The records the file points at but doesn't hold, by name.
     used = set(strings(content))
     owners |= {(NEIGHBOUR, n.id) for n in neighbours}
-    links: dict[str, dict[str, str]] = {
-        CHARACTER: {},
-        LABORATORY: {},
-        COVENANT: {},
-        NEIGHBOUR: {},
-    }
+    owners |= {(CREATURE, c.id) for c in creatures}
+    links: dict[str, dict[str, str]] = {kind: {} for kind in LINKED_KINDS}
     for other_kind, others in (
         (CHARACTER, saga.characters),
         (LABORATORY, saga.laboratories),
         (COVENANT, saga.covenants),
         (NEIGHBOUR, saga.neighbours),
+        (CREATURE, saga.creatures),
     ):
         for other in others:
             if (other_kind, other.id) not in owners and other.id in used:
@@ -255,7 +261,7 @@ def export_saga_data(saga: Saga) -> dict[str, Any]:
         "kind": SAGA,
         "name": saga.name,
         "from_saga": saga.name,
-        "links": {CHARACTER: {}, LABORATORY: {}, COVENANT: {}, NEIGHBOUR: {}},
+        "links": {kind: {} for kind in LINKED_KINDS},
         "saga": asdict(
             replace(saga, tribunals=[replace(t, meeting=None) for t in saga.tribunals])
         ),
@@ -308,6 +314,7 @@ class ImportPlan:
     spells: list[Spell] = field(default_factory=list)
     custom: dict[str, list[Any]] = field(default_factory=dict)
     neighbours: list[Neighbour] = field(default_factory=list)
+    creatures: list[Creature] = field(default_factory=list)
     calendar: list[CalendarEntry] = field(default_factory=list)
     #: A pack's records the saga already has one of the same name of:
     #: "Covenant Keep". The saga's own is kept as it is, and links to the
@@ -424,6 +431,7 @@ def _map_records(job: _Import) -> None:
         (CHARACTER, source.characters, target.characters),
         (LABORATORY, source.laboratories, target.laboratories),
         (NEIGHBOUR, source.neighbours, target.neighbours),
+        (CREATURE, source.creatures, target.creatures),
     ):
         ids = _Ids(r.id for r in existing)
         names = {r.name for r in existing}
@@ -441,7 +449,7 @@ def _map_records(job: _Import) -> None:
                 job.kept[record_kind].add(record.id)
                 job.plan.already.append(f"{_label(record_kind, record)} {record.name}")
                 continue
-            if record.name in names and record_kind != NEIGHBOUR:
+            if record.name in names and record_kind not in (NEIGHBOUR, CREATURE):
                 job.plan.notes.append(
                     f"This saga already has a {KIND_LABELS[record_kind].lower()} "
                     f"named {record.name}: the imported one is added beside it."
@@ -463,8 +471,9 @@ def _match_outside(job: _Import) -> None:
         LABORATORY: job.target.laboratories,
         COVENANT: job.target.covenants,
         NEIGHBOUR: job.target.neighbours,
+        CREATURE: job.target.creatures,
     }
-    job.outside = {CHARACTER: {}, LABORATORY: {}, COVENANT: {}, NEIGHBOUR: {}}
+    job.outside = {kind: {} for kind in LINKED_KINDS}
     for record_kind, named in job.links.items():
         if record_kind not in targets:
             continue
@@ -614,6 +623,7 @@ def _relink(job: _Import, record: Any) -> None:
             "characters": lambda old: job.link(CHARACTER, old),
             "covenants": lambda old: job.link(COVENANT, old),
             "places": lambda old: job.link(NEIGHBOUR, old),
+            "creatures": lambda old: job.link(CREATURE, old),
             "books": job.book_map.get,
             "familiars": job.familiar_map.get,
             "possessions": lambda old: old if old in job.possessions else None,
@@ -844,6 +854,17 @@ def _plan_neighbours(job: _Import) -> None:
         job.plan.neighbours.append(neighbour)
 
 
+def _plan_creatures(job: _Import) -> None:
+    for creature in job.source.creatures:
+        if creature.id in job.kept[CREATURE]:
+            continue
+        creature.id = job.record_map[CREATURE][creature.id]
+        for held in creature.virtues_flaws:
+            held.vf_id = job.entry(held.vf_id)
+        _relink(job, creature)
+        job.plan.creatures.append(creature)
+
+
 def _plan_calendar(job: _Import) -> None:
     """Calendar entries: each for the whole saga or for a covenant that is
     here; one the saga already has is skipped."""
@@ -875,6 +896,7 @@ _PLANNERS: dict[str, Callable[[_Import], None]] = {
     "device": _plan_devices,
     "book": _plan_books,
     NEIGHBOUR: _plan_neighbours,
+    CREATURE: _plan_creatures,
     "calendar": _plan_calendar,
 }
 
@@ -941,6 +963,7 @@ def preview(plan: ImportPlan) -> str:
     lines += [f"  Character: {c.name} ({c.type})" for c in plan.characters]
     lines += [f"  Familiar: {f.name}" for f in plan.familiars]
     lines += [f"  {_label(NEIGHBOUR, n)}: {n.name}" for n in plan.neighbours]
+    lines += [f"  Creature: {c.name}" for c in plan.creatures]
     for number, noun in (
         (len(plan.books), "book"),
         (len(plan.devices), "enchanted device"),
@@ -979,6 +1002,7 @@ def apply(target: Saga, plan: ImportPlan) -> None:
     target.custom_lab_virtues_flaws += plan.custom.get("custom_lab_virtues_flaws", [])
     target.custom_boons_hooks += plan.custom.get("custom_boons_hooks", [])
     target.neighbours += plan.neighbours
+    target.creatures += plan.creatures
     target.calendar += plan.calendar
     for lab, owner_id in plan.new_owners:
         lab.owner_id = owner_id

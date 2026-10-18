@@ -90,6 +90,7 @@ def test_the_saga_page_sets_out_its_actions_in_its_chapters(app):
     assert window.page().chapters() == [  # type: ignore[union-attr]
         "The World",
         "The Region",
+        "The Bestiary",
         "Seasons",
         "Rules and Content",
         "Saga Management",
@@ -102,6 +103,8 @@ def test_the_saga_page_sets_out_its_actions_in_its_chapters(app):
     ]
     _saga_chapter(window, "The Region")
     assert list(_new(window)) == ["New Neighbour"]
+    _saga_chapter(window, "The Bestiary")
+    assert list(_new(window)) == ["New Creature"]
     _saga_chapter(window, "Seasons")
     assert "Set Date" in _buttons(window)
     _saga_chapter(window, "Saga Management")

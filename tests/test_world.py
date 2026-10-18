@@ -97,7 +97,11 @@ def test_a_link_is_followed_both_ways():
     covenant.links.append(link)
     assert world.link_target(saga, link) is magus
     assert world.link_label(saga, link) == f"{magus.name}: its founder"
-    assert world.links_to(saga, "characters", magus.id) == [(covenant, link)]
+    # The sample creature links to the magus too.
+    assert world.links_to(saga, "characters", magus.id) == [
+        (covenant, link),
+        (saga.creatures[0], saga.creatures[0].links[0]),
+    ]
     assert world.links_to(saga, "characters", "nobody") == []
     gone = Link("books", "burnt")
     assert world.link_target(saga, gone) is None

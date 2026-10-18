@@ -443,9 +443,62 @@ More books follow in later versions.
 - Magi: every magus the book names is a full character. Those it prints a stat block for have the book's stats; the rest have stats inferred from what the book says of them (their House, age, favoured Arts, Virtues and Flaws) by the creation rules: not an official write-up, as their Biography says. Untick **Generated stats for magi** when importing to bring those magi in as sketches instead. Where the book gives no age, one is assumed from the magus's rank and noted there too.
 - Places: the regions and forests as places, with the regiones inside them and their levels and auras; covenants and towns sit in them.
 - The mundane world: lords, towns, churches, schools, factions and threats, with historical arms where they are known.
+- The Bestiary: the creatures the book prints a stat block for (the Rhine's boglins, bockmen and great trees, Normandy's korrigans and the Boar King, Provence's faeries and demons), each found at the place it haunts and linked from the threat or faction it belongs to. Untick **The Bestiary** when importing to leave them out.
 - Secrets: what the book tells the storyguide and not the players is at the end of a record's summary or notes under a **Secrets** heading.
 
 The packs follow the Definitive Edition where a book's numbers differ from it; the differences are listed in the project's notes.
 
 **See also:** [Content packs](help:export-pack), [Choosing what a pack imports](help:import-pack), [Tribunal](help:tribunal), [How to import and export](help:guide-import-export)
 
+
+# How to add a creature from a book
+<!-- help: guide-bestiary -->
+
+The [Bestiary](help:bestiary) holds the saga's creatures with their stat blocks. A Tribunal book's pack brings the creatures it describes; this guide is for one you copy from a book yourself, such as a beast from Realms of Power: Magic.
+
+### Making the record
+<!-- help: guide-bestiary-record -->
+
+<!-- tui -->
+1. Press `n` (New) on the saga or the Bestiary and choose **New Creature**.
+2. Give its name. For a kind that comes in numbers (a pack of wolves, a swarm of boglins) tick **Many** and say how many.
+3. Choose its **Realm** and type its **Might** and the Might's Form, as the stat block's first line gives them ("Magic Might 8 (Animal)"). Leave the Realm blank for a mundane beast. For a demon, type its Order, Hierarchy and Weakness too; for anything with them, its Age and Confidence.
+4. Type its **Size**, and choose where it is **found**: a place in the Region, and a level of it if it lives in a regio.
+5. Create it. Its sheet opens; in the tree it sits under the Bestiary.
+<!-- /tui -->
+<!-- gui -->
+1. On the saga's page, click the New card in the Bestiary chapter.
+2. Give its name. For a kind that comes in numbers (a pack of wolves, a swarm of boglins) tick **Many** and say how many.
+3. Choose its **Realm** and type its **Might** and the Might's Form, as the stat block's first line gives them ("Magic Might 8 (Animal)"). Leave the Realm blank for a mundane beast. For a demon, type its Order, Hierarchy and Weakness too; for anything with them, its Age and Confidence.
+4. Type its **Size**, and choose where it is **found**: a place in the Region, and a level of it if it lives in a regio.
+5. Create it. Its page opens.
+<!-- /gui -->
+
+### Copying the stat block
+<!-- help: guide-bestiary-stats -->
+
+Work down the stat block, a heading at a time:
+
+<!-- tui -->
+1. **Characteristics, Soak, Fatigue levels and Encumbrance:** on the [Traits tab](help:tab-cr-traits) (`1`), press `e` in [Characteristics](help:section-cr-characteristics). Tick **Cunning** when the block gives Cun in place of Int, and untick **Can tire** or **Can be wounded** when the book says it does neither.
+2. **Virtues and Flaws, Qualities and Inferiorities:** add each with `a` in [Virtues, Flaws and Qualities](help:section-cr-virtues-flaws). Then the [Personality Traits](help:section-cr-personality-traits), [Reputations](help:section-cr-reputations) and [Abilities](help:section-cr-abilities).
+3. **Combat:** on the [Combat tab](help:tab-cr-combat) (`2`), add each natural weapon with `a` in [Combat](help:section-cr-attacks), typing the totals the book prints. The Wound Penalties follow from the Size, so there is nothing to type for them; check them against the book's.
+4. **Powers:** on the [Powers & Vis tab](help:tab-cr-powers) (`3`), add each with `a` in [Powers](help:section-cr-powers): its Might cost, Initiative, Form, Range, Duration and Target, and what it does. The Penetration is worked out, its Penetration Ability included; if the book's still differs, type the difference as the power's Penetration bonus.
+5. **Vis:** add the pawns in its body with `a` in [Vis in its body](help:section-cr-vis).
+6. **Appearance:** on the [Description tab](help:tab-cr-description) (`4`), press `e` in [Description](help:section-cr-description) for its appearance, equipment and notes.
+<!-- /tui -->
+<!-- gui -->
+1. **Characteristics, Soak, Fatigue levels and Encumbrance:** in the [Traits chapter](help:tab-cr-traits), click **Edit** in [Characteristics](help:section-cr-characteristics). Tick **Cunning** when the block gives Cun in place of Int, and untick **Can tire** or **Can be wounded** when the book says it does neither.
+2. **Virtues and Flaws, Qualities and Inferiorities:** add each with **Add** in [Virtues, Flaws and Qualities](help:section-cr-virtues-flaws). Then the [Personality Traits](help:section-cr-personality-traits), [Reputations](help:section-cr-reputations) and [Abilities](help:section-cr-abilities).
+3. **Combat:** in the [Combat chapter](help:tab-cr-combat), add each natural weapon with **Add** in [Combat](help:section-cr-attacks), typing the totals the book prints. The Wound Penalties follow from the Size, so there is nothing to type for them; check them against the book's.
+4. **Powers:** in the [Powers & Vis chapter](help:tab-cr-powers), add each with **Add** in [Powers](help:section-cr-powers): its Might cost, Initiative, Form, Range, Duration and Target, and what it does. The Penetration is worked out, its Penetration Ability included; if the book's still differs, type the difference as the power's Penetration bonus.
+5. **Vis:** add the pawns in its body with **Add** in [Vis in its body](help:section-cr-vis).
+6. **Appearance:** in the [Description chapter](help:tab-cr-description), click **Edit** in [Description](help:section-cr-description) for its appearance, equipment and notes.
+<!-- /gui -->
+
+### Tying it into the saga
+<!-- help: guide-bestiary-links -->
+
+Link the creature to the neighbours it belongs with, such as the threat it serves or the lord whose forest it haunts, in its [Links](help:section-links). A creature found at a place is listed on that place's sheet, and a pack exported from the saga carries the creatures found in its places.
+
+**See also:** [The Bestiary](help:bestiary), [A creature](help:creature)

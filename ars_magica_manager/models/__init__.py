@@ -67,6 +67,10 @@ from .covenant import STORY_EVENT as STORY_EVENT
 from .covenant import STORY_EVENT_STATUSES as STORY_EVENT_STATUSES
 from .covenant import Covenant as Covenant
 from .covenant import CovenantDiaryEntry as CovenantDiaryEntry
+from .creature import BodyVis as BodyVis
+from .creature import Creature as Creature
+from .creature import CreatureAttack as CreatureAttack
+from .creature import CreaturePower as CreaturePower
 from .definitions import COVENANT_BOON_HOOK_CATEGORIES as COVENANT_BOON_HOOK_CATEGORIES
 from .definitions import WEAPON_TABLES as WEAPON_TABLES
 from .definitions import AbilityDef as AbilityDef

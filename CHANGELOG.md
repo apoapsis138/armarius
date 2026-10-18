@@ -46,6 +46,29 @@ the troupe's players are to the storyguide; an *illuminatio* is the
 painted and gilded copy of a manuscript; *nomen novum* is a new name,
 and an *armarius* kept a monastery's books and records.
 
+## 2.97.0 — 2026-10-18
+
+- **The Bestiary.** The saga now keeps its creatures: beasts, spirits,
+  faeries, demons and angels, each with its stat block as the books
+  print one. The Bestiary has its own place in the navigation, after The
+  Region (on the desktop, a chapter of creature cards on the saga's
+  page), and each creature has its own sheet: its Might and Realm,
+  Characteristics (Cunning in place of Intelligence for an animal mind),
+  Size, Age and Confidence, Virtues, Flaws and Qualities, Personality
+  Traits, Reputations and Abilities; its natural weapons, Soak, Fatigue
+  levels and Encumbrance, with its Wound Penalties worked out from its
+  Size; its powers, each with its Might cost and its Penetration worked
+  out as the Definitive Edition gives it (Might, less five per Might
+  Point, plus its Penetration Ability); the vis in its body; and its
+  appearance and notes. A demon also has its Order, Hierarchy and
+  Weakness. A creature can be found at a place in the Region, and any
+  neighbour can link to it. New Creature is in the New menu.
+- **Creatures in the packs.** The Rhine, Normandy and Provence packs
+  bring every creature their books give a stat block, each at the place
+  it haunts and linked to the threat or court it belongs to.
+- **Help** has pages for the Bestiary and a creature's sheet, and a new
+  how-to: How to add a creature from a book.
+
 ## 2.96.0 — 2026-10-17
 
 - **Keys on the desktop.** The desktop version now answers the same

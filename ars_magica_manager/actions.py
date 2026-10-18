@@ -28,6 +28,7 @@ from .models import (
     TEXT_LONGEVITY,
     Character,
     Covenant,
+    Creature,
     Familiar,
     Laboratory,
     Neighbour,
@@ -40,6 +41,7 @@ from .sections import (
     CASES_SECTION,
     CATALOGS_SECTION,
     CORE_SECTIONS,
+    CREATURE_INFO_SECTION,
     DEVICE_SECTIONS,
     FAIRS_SECTION,
     HIDDEN_SECTION,
@@ -79,6 +81,8 @@ class NodeKind(StrEnum):
     TRIBUNAL = "tribunal"
     NEIGHBOUR_GROUP = "neighbour_group"
     NEIGHBOUR = "neighbour"
+    BESTIARY = "bestiary"
+    CREATURE = "creature"
 
 
 # -- the section verbs: a / d / e, and More's Restore --
@@ -209,6 +213,7 @@ NEW_MENU: tuple[MenuItem, ...] = (
     MenuItem("f", "create_familiar", "Bind Familiar"),
     MenuItem("t", "create_tribunal", "New Tribunal"),
     MenuItem("b", "create_neighbour", "New Neighbour"),
+    MenuItem("r", "create_creature", "New Creature"),
 )
 
 #: More: what only a few sections, or the record itself, can do. Each
@@ -265,6 +270,7 @@ CREATE_PLACES: dict[str, frozenset[NodeKind]] = {
     "create_neighbour": frozenset(
         {NodeKind.SAGA, NodeKind.REGION, NodeKind.NEIGHBOUR_GROUP, NodeKind.NEIGHBOUR}
     ),
+    "create_creature": frozenset({NodeKind.SAGA, NodeKind.BESTIARY, NodeKind.CREATURE}),
     "create_character": frozenset(
         {NodeKind.SAGA, NodeKind.COVENANT, NodeKind.CHARACTER_GROUP, NodeKind.CHARACTER}
     ),
@@ -291,6 +297,7 @@ RECORD_SECTION: dict[NodeKind, str] = {
     NodeKind.FAMILIAR: "section-fam-info",
     NodeKind.TRIBUNAL: TRIBUNAL_INFO_SECTION,
     NodeKind.NEIGHBOUR: NEIGHBOUR_INFO_SECTION,
+    NodeKind.CREATURE: CREATURE_INFO_SECTION,
 }
 
 
@@ -346,7 +353,16 @@ class ActionFacts(Protocol):
 
     def record_to_delete(
         self,
-    ) -> Covenant | Character | Laboratory | Familiar | Tribunal | Neighbour | None: ...
+    ) -> (
+        Covenant
+        | Character
+        | Laboratory
+        | Familiar
+        | Tribunal
+        | Neighbour
+        | Creature
+        | None
+    ): ...
 
     def can_send_files(self) -> bool:
         """Whether an exported file has somewhere to go (not over SSH)."""

@@ -61,7 +61,7 @@ def register(pack: BookPack) -> None:
 
 def data(pack: BookPack) -> dict[str, Any]:
     """The pack as JSON-ready data: everything its saga holds (its
-    wandering magi too), with the
+    wandering magi and its whole bestiary too), with the
     book it comes from, its credit line, and the sketch of each magus
     whose stats were generated (packs.GENERATED)."""
     b = pack.assemble()
@@ -73,6 +73,7 @@ def data(pack: BookPack) -> dict[str, Any]:
         saga.covenants,
         saga.neighbours,
         characters_besides=[c for c in saga.characters if not c.covenant_id],
+        creatures_besides=saga.creatures,
     )
     held = {c["id"] for c in found["saga"]["characters"]}
     sketches = {i: asdict(c) for i, c in b.sketches.items() if i in held}

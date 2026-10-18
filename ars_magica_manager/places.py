@@ -187,6 +187,7 @@ def here(saga: Saga, outer: Neighbour) -> list[str]:
     found += [
         n.name for n in saga.neighbours if n.place_id == outer.id and not is_place(n)
     ]
+    found += [c.name for c in saga.creatures if c.place_id == outer.id]
     return found + [p.name for p in all_places(saga) if p.place_id == outer.id]
 
 
@@ -313,7 +314,12 @@ def sync(saga: Saga) -> None:
     """Give each placed covenant its place's aura, keeping the one typed
     on it; restore that one when it is no longer placed. Records placed
     somewhere since deleted are placed nowhere."""
-    for record in [*saga.covenants, *saga.laboratories, *saga.neighbours]:
+    for record in [
+        *saga.covenants,
+        *saga.laboratories,
+        *saga.neighbours,
+        *saga.creatures,
+    ]:
         if record.place_id is not None and place(saga, record.place_id) is None:
             record.place_id, record.place_level = None, 0
     for covenant in saga.covenants:

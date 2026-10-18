@@ -26,6 +26,8 @@ from . import (
     arms,
     creation,
     creation_forms,
+    creature_forms,
+    creatures,
     deletion,
     giving,
     import_forms,
@@ -70,6 +72,7 @@ from .models import (
     Book,
     Character,
     Covenant,
+    Creature,
     Familiar,
     IncomeSource,
     Laboratory,
@@ -85,7 +88,7 @@ from .rules import lab_seasons
 from .sections import LAB_TEXTS_SECTION
 
 #: The record a page shows, as deletion and actions take it.
-Record = Covenant | Character | Laboratory | Familiar | Tribunal | Neighbour
+Record = Covenant | Character | Laboratory | Familiar | Tribunal | Neighbour | Creature
 
 #: Delete's action: the record on show, after a confirmation that says
 #: what happens to what it owns.
@@ -124,6 +127,7 @@ PAGE_SECTIONS: dict[NodeKind, tuple[str | None, ...]] = {
     NodeKind.FAMILIAR: (RECORD_SECTION[NodeKind.FAMILIAR],),
     NodeKind.TRIBUNAL: (RECORD_SECTION[NodeKind.TRIBUNAL],),
     NodeKind.NEIGHBOUR: (RECORD_SECTION[NodeKind.NEIGHBOUR],),
+    NodeKind.CREATURE: (RECORD_SECTION[NodeKind.CREATURE],),
     NodeKind.LABORATORY: (
         RECORD_SECTION[NodeKind.LABORATORY],
         "section-lab-raw-vis",
@@ -154,6 +158,7 @@ class Page:
     familiar: Familiar | None = None
     tribunal: Tribunal | None = None
     neighbour: Neighbour | None = None
+    creature: Creature | None = None
     section: str | None = None
 
     # -- actions.ActionFacts --
@@ -210,6 +215,8 @@ class Page:
             return self.tribunal
         if self.kind == NodeKind.NEIGHBOUR:
             return self.neighbour
+        if self.kind == NodeKind.CREATURE:
+            return self.creature
         return self.creation_record()
 
     def can_send_files(self) -> bool:
@@ -226,6 +233,7 @@ def page_for(
     familiar_id: str | None = None,
     tribunal_id: str | None = None,
     neighbour_id: str | None = None,
+    creature_id: str | None = None,
 ) -> Page:
     """The Page for a record's page, found by id: a character's or
     laboratory's covenant comes with it, and a familiar's magus."""
@@ -251,6 +259,7 @@ def page_for(
         familiar=familiar,
         tribunal=saga.tribunal(tribunal_id),
         neighbour=saga.neighbour(neighbour_id),
+        creature=saga.creature(creature_id),
     )
 
 
@@ -385,6 +394,7 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "create_covenant": ((NodeKind.SAGA, "Covenants"),),
     "create_tribunal": ((NodeKind.SAGA, "Tribunals"),),
     "create_neighbour": ((NodeKind.SAGA, "Neighbours"),),
+    "create_creature": ((NodeKind.SAGA, "Creatures"), (NodeKind.BESTIARY, "Creatures")),
     "create_character": (
         (NodeKind.SAGA, "Unassigned Characters"),
         (NodeKind.COVENANT, "People"),
@@ -516,6 +526,11 @@ def delete_record(saga: Saga, record: Record) -> Confirm:
 
 
 def _deletion_of(saga: Saga, record: Record) -> tuple[list[str], Callable[[], None]]:
+    if isinstance(record, Creature):
+        return (
+            creatures.deletion_consequences(saga, record),
+            lambda: creatures.delete(saga, record),
+        )
     if isinstance(record, Tribunal):
         return (
             tribunals.deletion_consequences(saga, record),
@@ -1276,6 +1291,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "create_covenant": lambda page: creation_forms.new_covenant_form(page.saga),
     "create_tribunal": lambda page: tribunal_forms.new_tribunal_form(page.saga),
     "create_neighbour": lambda page: neighbour_forms.new_neighbour(page.saga),
+    "create_creature": lambda page: creature_forms.new_creature_form(page.saga),
     "create_character": lambda page: creation_forms.new_character_form(
         page.saga, _covenant_id(page)
     ),
